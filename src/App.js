@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import './App.css'
 import {
 	HashRouter as Router,
@@ -11,11 +11,11 @@ class App extends Component {
 	render() {
 		return (
 			<Router>
-				<div>
+				<Fragment>
 					{/* TODO: nav bar */}
 
 					<Route exact path="/" component={Home}/>
-				</div>
+				</Fragment>
 			</Router>
 		)
 	}
