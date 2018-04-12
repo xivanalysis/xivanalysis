@@ -1,20 +1,27 @@
 import React, { Component, Fragment } from 'react'
-import './App.css'
 import {
 	HashRouter as Router,
-	Route
+	Route,
+	Link
 } from 'react-router-dom'
-
 import Home from './routes/Home'
+
+import './App.css'
 
 class App extends Component {
 	render() {
 		return (
 			<Router>
 				<Fragment>
-					{/* TODO: nav bar */}
+					<nav className="navbar navbar-dark bg-dark">
+						<div className="container">
+							<Link to="/" className="navbar-brand">xivanalysis</Link>
+						</div>
+					</nav>
 
-					<Route exact path="/" component={Home}/>
+					<div className="container">
+						<Route exact path="/" component={Home}/>
+					</div>
 				</Fragment>
 			</Router>
 		)
