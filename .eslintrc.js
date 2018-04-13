@@ -22,7 +22,8 @@ module.exports = {
 		'indent': ['error', 'tab'],
 		'linebreak-style': ['error', 'unix'],
 		'quotes': ['error', 'single'],
-		'semi': ['error', 'never']
+		'semi': ['error', 'never'],
+		'no-console': 'off'
 	},
 	overrides: [{
 		files: ['**/*.test.js'],
