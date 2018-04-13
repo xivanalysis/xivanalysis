@@ -1,6 +1,14 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router-dom'
+import PropTypes from 'prop-types'
 
 class ReportSearch extends Component {
+	static propTypes = {
+		history: PropTypes.shape({
+			push: PropTypes.func.isRequired
+		}).isRequired
+	}
+
 	static getCode(input) {
 		const match = input.match(/^(?:.*reports\/)?([a-zA-Z0-9]{16})\/?(?:#.*)?$/)
 		return match && match[1]
@@ -44,7 +52,7 @@ class ReportSearch extends Component {
 			url = ((fight && player)? 'analyse' : 'find') + url
 		}
 
-		console.log(url)
+		this.props.history.push(url)
 	}
 
 	render() {
@@ -67,4 +75,4 @@ class ReportSearch extends Component {
 	}
 }
 
-export default ReportSearch
+export default withRouter(ReportSearch)
