@@ -4,7 +4,8 @@ import {
 	Route,
 	Link
 } from 'react-router-dom'
-import Home from './routes/Home'
+
+import Home from '@/routes/Home'
 
 import './App.css'
 
