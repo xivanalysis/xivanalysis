@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react'
+import React, { Component } from 'react'
 
 import ReportSearch from '@/ui/ReportSearch'
 import DbLink from '@/ui/DbLink'
@@ -6,11 +6,11 @@ import DbLink from '@/ui/DbLink'
 class Home extends Component {
 	render() {
 		return (
-			<Fragment>
+			<div className="container">
 				<ReportSearch/>
 
 				<DbLink obj={{type: 'item', id: 16054, name: 'Terpander Lux'}}/>
-			</Fragment>
+			</div>
 		)
 	}
 }

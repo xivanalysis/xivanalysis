@@ -1,11 +1,13 @@
 import React, { Component, Fragment } from 'react'
 import {
 	HashRouter as Router,
+	Switch,
 	Route,
 	Link
 } from 'react-router-dom'
 
 import Home from '@/routes/Home'
+import Find from '@/routes/Find'
 
 import './App.css'
 
@@ -20,9 +22,10 @@ class App extends Component {
 						</div>
 					</nav>
 
-					<div className="container">
+					<Switch>
 						<Route exact path="/" component={Home}/>
-					</div>
+						<Route path="/find/:code/:fight?" component={Find}/>
+					</Switch>
 				</Fragment>
 			</Router>
 		)
