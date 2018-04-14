@@ -23,7 +23,7 @@
 	background-color: var(--dark);
 	background-size: 110%;
 	background-position: center;
-	filter: brightness(75%) blur(5px);
+	filter: brightness(60%) blur(5px);
 }
 
 .fight .zone {
@@ -33,4 +33,24 @@
 .fight .boss {
 	font-weight: bold;
 	font-size: 2em;
+}
+
+.fight .detail {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	padding-right: 2em;
+	/* font-size: 1.2em; */
+}
+
+.fight .progress {
+	display: inline-block;
+	width: 200px;
+	height: 1em;
+	margin-left: 1em;
+}
+
+.fight .progress-bar {
+	height: 100%;
 }

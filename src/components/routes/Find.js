@@ -18,6 +18,7 @@ class Find extends Component {
 			title: PropTypes.string.isRequired,
 			fights: PropTypes.arrayOf(PropTypes.shape({
 				// Not isRequired 'cus some fights (super short) seem to miss a lot of fields
+				boss: PropTypes.integer,
 				kill: PropTypes.bool
 			})).isRequired
 		})
@@ -36,10 +37,12 @@ class Find extends Component {
 			return <span>Loading...</span>
 		}
 
-		// TODO: configurable
-		const killsOnly = true
+		// Filter out boss === 0, they seem to be dodgy parses and i ceebs dealing
+		// TODO: confirm?
+		let fights = report.fights.filter(fight => fight.boss !== 0)
 
-		let fights = report.fights
+		// TODO: configurable
+		const killsOnly = false
 		if (killsOnly) {
 			fights = fights.filter(fight => fight.kill)
 		}
