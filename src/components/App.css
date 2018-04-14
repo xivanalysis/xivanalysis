@@ -4,7 +4,11 @@
 	position: relative;
 	color: white;
 	overflow: hidden;
-	padding: 10px 20px;
+	padding: 1em 2em;
+}
+
+.fight + .fight {
+	margin-top: .5em;
 }
 
 .fight .bg {

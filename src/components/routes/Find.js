@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
 import { fetchReportIfNeeded } from '@/store/actions'
+import FightList from '@/components/ui/FightList'
 
 class Find extends Component {
 	static propTypes = {
@@ -14,7 +15,11 @@ class Find extends Component {
 			}).isRequired
 		}).isRequired,
 		report: PropTypes.shape({
-
+			title: PropTypes.string.isRequired,
+			fights: PropTypes.arrayOf(PropTypes.shape({
+				// Not isRequired 'cus some fights (super short) seem to miss a lot of fields
+				kill: PropTypes.bool
+			})).isRequired
 		})
 	}
 
@@ -42,17 +47,7 @@ class Find extends Component {
 		return (
 			<div className="container">
 				<h1>{report.title}</h1>
-				<div className="fights">
-					{fights.map(fight => (
-						<div key={fight.id} className="fight">
-							<div className="bg"></div>
-							<div className="title">
-								<div className="zone">{fight.zoneName}</div>
-								<div className="boss">{fight.name}</div>
-							</div>
-						</div>
-					))}
-				</div>
+				<FightList fights={fights}/>
 			</div>
 		)
 	}
