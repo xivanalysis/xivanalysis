@@ -1,4 +1,4 @@
-import api from '@/api'
+import { fflogsApi } from '@/api'
 
 export const SET_REPORT = 'SET_REPORT'
 export function setReport(report) {
@@ -12,7 +12,7 @@ export function fetchReport(code) {
 	return async dispatch => {
 		dispatch(setReport(null))
 
-		const response = await api.get('/report/fights/' + code)
+		const response = await fflogsApi.get('/report/fights/' + code)
 		dispatch(setReport(response.data))
 	}
 }

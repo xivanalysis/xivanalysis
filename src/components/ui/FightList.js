@@ -1,9 +1,12 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
+import ZONES from '@/data/ZONES'
+
 class FightItem extends Component {
 	static propTypes = {
 		fight: PropTypes.shape({
+			id: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
 			zoneName: PropTypes.string.isRequired
 		}).isRequired
@@ -11,9 +14,18 @@ class FightItem extends Component {
 
 	render() {
 		const { fight } = this.props
+
+		// TODO: This is seriously temp
+		const backgroundStyle = {}
+		const zone = ZONES[fight.zoneID]
+		if (zone) {
+			backgroundStyle.backgroundImage = `url(${zone.banner})`
+		}
+		console.log(backgroundStyle)
+
 		return (
 			<div className="fight">
-				<div className="bg"></div>
+				<div className="bg" style={backgroundStyle}></div>
 				<div className="title">
 					<div className="zone">{fight.zoneName}</div>
 					<div className="boss">{fight.name}</div>
