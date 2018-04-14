@@ -3,11 +3,9 @@ import PropTypes from 'prop-types'
 
 class DbLink extends Component {
 	static propTypes = {
-		obj: PropTypes.shape({
-			type: PropTypes.string.isRequired,
-			id: PropTypes.number.isRequired,
-			name: PropTypes.string
-		}).isRequired
+		type: PropTypes.string.isRequired,
+		id: PropTypes.number.isRequired,
+		name: PropTypes.string
 	};
 
 	componentDidMount() {
@@ -39,9 +37,9 @@ class DbLink extends Component {
 	}
 
 	render() {
-		const obj = this.props.obj
+		const { type, id, name } = this.props
 		return (
-			<a href={'http://xivdb.com/'+ obj.type +'/' + obj.id}>{obj.name ? obj.name : 'Loading...'}</a>
+			<a href={'http://xivdb.com/'+ type +'/' + id}>{name ? name : 'Loading...'}</a>
 		)
 	}
 }

@@ -9,7 +9,7 @@ class Home extends Component {
 			<div className="container">
 				<ReportSearch/>
 
-				<DbLink obj={{type: 'item', id: 16054, name: 'Terpander Lux'}}/>
+				<DbLink {...{type: 'item', id: 16054, name: 'Terpander Lux'}}/>
 			</div>
 		)
 	}
