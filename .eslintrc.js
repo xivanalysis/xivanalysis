@@ -25,6 +25,9 @@ module.exports = {
 		'semi': ['error', 'never'],
 		'no-console': 'off'
 	},
+	globals: {
+		process: true
+	},
 	overrides: [{
 		files: ['**/*.test.js'],
 		env: {jest: true},

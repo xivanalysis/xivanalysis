@@ -6,10 +6,10 @@ import {
 	Link
 } from 'react-router-dom'
 
-import Home from '@/routes/Home'
-import Find from '@/routes/Find'
+import Home from '@/components/routes/Home'
+import Find from '@/components/routes/Find'
 
-import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css'
 
 class App extends Component {
 	render() {
