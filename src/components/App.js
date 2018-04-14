@@ -10,6 +10,7 @@ import Home from '@/components/routes/Home'
 import Find from '@/components/routes/Find'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
 
 class App extends Component {
 	render() {

@@ -39,14 +39,21 @@ class Find extends Component {
 			fights = fights.filter(fight => fight.kill)
 		}
 
-		console.log(fights)
-
 		return (
-			<ul className="container">
-				{fights.map(fight => (
-					<li key={fight.id}>{fight.name}</li>
-				))}
-			</ul>
+			<div className="container">
+				<h1>{report.title}</h1>
+				<div className="fights">
+					{fights.map(fight => (
+						<div key={fight.id} className="fight">
+							<div className="bg"></div>
+							<div className="title">
+								<div className="zone">{fight.zoneName}</div>
+								<div className="boss">{fight.name}</div>
+							</div>
+						</div>
+					))}
+				</div>
+			</div>
 		)
 	}
 }

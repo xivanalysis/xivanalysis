@@ -1,0 +1,32 @@
+/* TODO: It'd be nice to set up proper scoped modules at some point */
+
+.fight {
+	position: relative;
+	color: white;
+	overflow: hidden;
+	padding: 10px 20px;
+}
+
+.fight .bg {
+	position: absolute;
+	/* Need to make it way bigger to stop the blur bleeding into the view area */
+	top: -15%;
+	left: -15%;
+	width: 130%;
+	height: 130%;
+	z-index: -1;
+
+	background-color: var(--dark);
+	background-size: 110%;
+	background-position: center;
+	filter: brightness(75%) blur(5px);
+}
+
+.fight .zone {
+	font-style: italic;
+}
+
+.fight .boss {
+	font-weight: bold;
+	font-size: 2em;
+}
