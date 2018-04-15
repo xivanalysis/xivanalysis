@@ -2,7 +2,7 @@
 
 .fight {
 	position: relative;
-	color: white;
+	display: block;
 	overflow: hidden;
 	padding: 1em 2em;
 }
