@@ -1,6 +1,6 @@
 import { addExtraIndex } from '@/utilities'
 
-// TODO: Move banner lookup into an api call w/ server cache
+// TODO: Move banner lookup into an api call w/ server cache?
 
 const ZONES = {
 	O5S: {

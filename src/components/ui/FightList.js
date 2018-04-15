@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 
 import ZONES from '@/data/ZONES'
@@ -65,13 +65,34 @@ class FightList extends Component {
 		})).isRequired
 	}
 
+	state = {
+		killsOnly: true
+	}
+
 	render() {
-		const { fights } = this.props
+		let { fights } = this.props
+		const { killsOnly } = this.state
+
+		if (killsOnly) {
+			fights = fights.filter(fight => fight.kill)
+		}
 
 		return (
-			<div className="fights">
-				{fights.map(fight => <FightItem key={fight.id} fight={fight}/>)}
-			</div>
+			<Fragment>
+				<div className="custom-control custom-checkbox">
+					<input
+						type="checkbox"
+						checked={killsOnly}
+						className="custom-control-input"
+						id="kills-only"
+						onChange={e => this.setState({killsOnly: e.currentTarget.checked})}
+					/>
+					<label htmlFor="kills-only" className="custom-control-label">Kills only</label>
+				</div>
+				<div className="fights">
+					{fights.map(fight => <FightItem key={fight.id} fight={fight}/>)}
+				</div>
+			</Fragment>
 		)
 	}
 }

@@ -32,20 +32,15 @@ class Find extends Component {
 	render() {
 		const { report } = this.props
 
+		// TODO: should this logic be in the FightList, considering I might reuse that?
+
 		// If report is null, we're probably waiting for an api call to complete
 		if (report === null) {
 			return <span>Loading...</span>
 		}
 
 		// Filter out boss === 0, they seem to be dodgy parses and i ceebs dealing
-		// TODO: confirm?
 		let fights = report.fights.filter(fight => fight.boss !== 0)
-
-		// TODO: configurable
-		const killsOnly = false
-		if (killsOnly) {
-			fights = fights.filter(fight => fight.kill)
-		}
 
 		return (
 			<div className="container">
