@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
@@ -17,9 +16,7 @@ class FightItem extends Component {
 			start_time: PropTypes.number.isRequired,
 			end_time: PropTypes.number.isRequired
 		}).isRequired,
-		report: PropTypes.shape({
-			code: PropTypes.string.isRequired
-		}).isRequired
+		code: PropTypes.string.isRequired
 	}
 
 	formatDuration(duration) {
@@ -35,9 +32,8 @@ class FightItem extends Component {
 			name, zoneName
 		} = this.props.fight
 
-		const code = this.props.report.code
+		const code = this.props.code
 
-		// TODO: This is seriously temp
 		const backgroundStyle = {}
 		const zone = ZONES[zoneID]
 		if (zone) {
@@ -67,8 +63,4 @@ class FightItem extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	report: state.report
-})
-
-export default connect(mapStateToProps)(FightItem)
+export default FightItem

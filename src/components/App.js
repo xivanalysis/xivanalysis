@@ -8,6 +8,7 @@ import {
 
 import Home from '@/components/routes/Home'
 import Find from '@/components/routes/Find'
+import Analyse from '@/components/routes/Analyse'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'
@@ -26,6 +27,7 @@ class App extends Component {
 					<Switch>
 						<Route exact path="/" component={Home}/>
 						<Route path="/find/:code/:fight?" component={Find}/>
+						<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 					</Switch>
 				</Fragment>
 			</Router>

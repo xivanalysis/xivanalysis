@@ -5,9 +5,11 @@ import FightItem from './FightItem'
 
 class FightList extends Component {
 	static propTypes = {
-		fights: PropTypes.arrayOf(PropTypes.shape({
-			id: PropTypes.number.isRequired
-		})).isRequired
+		report: PropTypes.shape({
+			fights: PropTypes.arrayOf(PropTypes.shape({
+				id: PropTypes.number.isRequired
+			})).isRequired
+		}).isRequired
 	}
 
 	state = {
@@ -15,12 +17,17 @@ class FightList extends Component {
 	}
 
 	render() {
-		let { fights } = this.props
+		let { report } = this.props
 		const { killsOnly } = this.state
 
-		if (killsOnly) {
-			fights = fights.filter(fight => fight.kill)
-		}
+		let fights = report.fights
+
+		// Filter out trash fights w/ shoddy data, and wipes if we're filtering
+		fights = fights.filter(fight => {
+			if (fight.boss === 0) return false
+			if (killsOnly) return fight.kill
+			return true
+		})
 
 		return (
 			<Fragment>
@@ -35,7 +42,7 @@ class FightList extends Component {
 					<label htmlFor="kills-only" className="custom-control-label">Kills only</label>
 				</div>
 				<div className="fights">
-					{fights.map(fight => <FightItem key={fight.id} fight={fight}/>)}
+					{fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</div>
 			</Fragment>
 		)
