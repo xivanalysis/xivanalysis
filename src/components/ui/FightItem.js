@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
+import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Link, withRouter } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 
 import ZONES from '@/data/ZONES'
 
@@ -15,6 +16,9 @@ class FightItem extends Component {
 			zoneName: PropTypes.string.isRequired,
 			start_time: PropTypes.number.isRequired,
 			end_time: PropTypes.number.isRequired
+		}).isRequired,
+		report: PropTypes.shape({
+			code: PropTypes.string.isRequired
 		}).isRequired
 	}
 
@@ -31,9 +35,7 @@ class FightItem extends Component {
 			name, zoneName
 		} = this.props.fight
 
-		// TODO: Yeah should probably be in state tbh
-		// eslint-disable-next-line react/prop-types
-		const code = this.props.match.params.code
+		const code = this.props.report.code
 
 		// TODO: This is seriously temp
 		const backgroundStyle = {}
@@ -65,5 +67,8 @@ class FightItem extends Component {
 	}
 }
 
-// TODO: Nicer way of getting the report code? should it be in state?
-export default withRouter(FightItem)
+const mapStateToProps = state => ({
+	report: state.report
+})
+
+export default connect(mapStateToProps)(FightItem)

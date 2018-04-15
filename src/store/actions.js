@@ -13,7 +13,15 @@ export function fetchReport(code) {
 		dispatch(setReport(null))
 
 		const response = await fflogsApi.get('/report/fights/' + code)
-		dispatch(setReport(response.data))
+		// TODO: error checking
+
+		// Toss the code into the report object
+		const report = {
+			...response.data,
+			code
+		}
+
+		dispatch(setReport(report))
 	}
 }
 
