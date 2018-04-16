@@ -2,6 +2,8 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
+import JOBS from '@/data/JOBS'
+
 class CombatantList extends Component {
 	static propTypes = {
 		report: PropTypes.shape({
@@ -32,8 +34,11 @@ class CombatantList extends Component {
 			<ul>
 				{friendlies.map(friend =>
 					<li key={friend.id}>
-						{/* TODO: This is nasty */}
-						<Link to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}>{friend.name}</Link>
+						{/* TODO: This is legit trash */}
+						<Link to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}>
+							<img src={`https://secure.xivdb.com/img/classes/set2/${JOBS[friend.type].icon}.png`}/>
+							{friend.name}
+						</Link>
 					</li>
 				)}
 			</ul>
