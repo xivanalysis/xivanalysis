@@ -10,7 +10,7 @@ export function setReport(report) {
 
 export function fetchReport(code) {
 	return async dispatch => {
-		dispatch(setReport(null))
+		dispatch(setReport({loading: true}))
 
 		const response = await fflogsApi.get('/report/fights/' + code)
 		// TODO: error checking
@@ -18,7 +18,8 @@ export function fetchReport(code) {
 		// Toss the code into the report object
 		const report = {
 			...response.data,
-			code
+			code,
+			loading: false
 		}
 
 		dispatch(setReport(report))
@@ -27,8 +28,8 @@ export function fetchReport(code) {
 
 export function fetchReportIfNeeded(code) {
 	return (dispatch, getState) => {
-		const state = getState()
-		if (!state.report) {
+		const report = getState().report
+		if (!report || (report.code !== code && !report.loading)) {
 			return dispatch(fetchReport(code))
 		}
 	}
