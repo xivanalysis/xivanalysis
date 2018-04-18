@@ -37,7 +37,7 @@ class Find extends Component {
 			<div className="container">
 				<h1>{report.title}</h1>
 				{match.params.fight?
-					<CombatantList report={report} currentFight={match.params.fight}/> :
+					<CombatantList report={report} currentFight={parseInt(match.params.fight, 10)}/> :
 					<FightList report={report}/>
 				}
 			</div>

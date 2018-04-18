@@ -22,7 +22,7 @@ class CombatantList extends Component {
 
 	render() {
 		let { friendlies } = this.props.report
-		const currentFight = parseInt(this.props.currentFight, 10)
+		const currentFight = this.props.currentFight
 
 		// Filter down to just the friendlies in this fight (that aren't limit break)
 		friendlies = friendlies.filter(friendly => (
