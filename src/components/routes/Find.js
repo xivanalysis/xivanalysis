@@ -16,7 +16,8 @@ class Find extends Component {
 			}).isRequired
 		}).isRequired,
 		report: PropTypes.shape({
-			title: PropTypes.string.isRequired
+			loading: PropTypes.bool.isRequired,
+			title: PropTypes.string
 		})
 	}
 
@@ -29,7 +30,7 @@ class Find extends Component {
 		const { report, match } = this.props
 
 		// If report is null, we're probably waiting for an api call to complete
-		if (report === null) {
+		if (!report || report.loading) {
 			return <span>Loading...</span>
 		}
 
