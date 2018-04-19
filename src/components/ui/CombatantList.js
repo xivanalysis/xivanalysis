@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom'
 
 import JOBS from '@/data/JOBS'
 
+import JobIcon from './JobIcon'
+
 class CombatantList extends Component {
 	static propTypes = {
 		report: PropTypes.shape({
@@ -36,7 +38,7 @@ class CombatantList extends Component {
 					<li key={friend.id}>
 						{/* TODO: This is legit trash */}
 						<Link to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}>
-							<img src={`https://secure.xivdb.com/img/classes/set2/${JOBS[friend.type].icon}.png`}/>
+							<JobIcon job={JOBS[friend.type]}/>
 							{friend.name}
 						</Link>
 					</li>
