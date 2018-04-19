@@ -118,7 +118,7 @@ class Analyse extends Component {
 				translate: true // probs keep same?
 			}
 		})
-		const events = resp.events
+		const events = resp.data.events
 		console.log(events)
 	}
 
