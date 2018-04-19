@@ -11,6 +11,12 @@ class Parser {
 	static jobModules = {}
 
 	modules = {}
+	_timestamp = 0
+
+	get currentTimestamp() {
+		// TODO: this.finished?
+		return Math.min(this.fight.end_time, this._timestamp)
+	}
 
 	constructor(report, fight, combatant) {
 		this.report = report
@@ -42,6 +48,25 @@ class Parser {
 				module[dep] = this.modules[dep]
 			})
 			this.modules[mod] = module
+		})
+	}
+
+	fabricateEvent(event) {
+		// TODO: they've got a 'triggered' prop too...?
+		this.triggerEvent({
+			// Default to the current timestamp
+			timestamp: this.currentTimestamp,
+			// Rest of the event, mark it as fab'd
+			...event,
+			__fabricated: true
+		})
+	}
+
+	triggerEvent(event) {
+		// TODO: Do I need to keep a history?
+
+		this.moduleOrder.forEach(mod => {
+			this.modules[mod].triggerEvent(event)
 		})
 	}
 }

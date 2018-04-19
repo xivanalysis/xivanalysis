@@ -101,11 +101,10 @@ class Analyse extends Component {
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
 
-		// Grab the parser for the combatant
+		// Grab the parser for the combatant and broadcast an init to the modules
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
 		const parser = new config.parser(report, fight, combatant)
-		console.log(parser)
-
+		parser.fabricateEvent({type: 'init'})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
