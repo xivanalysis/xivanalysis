@@ -2,8 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { fetchReportIfNeeded } from '@/store/actions'
 import { fflogsApi } from '@/api'
+import AVAILABLE_CONFIGS from '@/parser/AVAILABLE_CONFIGS'
+import { fetchReportIfNeeded } from '@/store/actions'
 
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
@@ -54,6 +55,7 @@ class Analyse extends Component {
 		// TODO: actually check if needed
 		const changed = !prevProps
 			|| report !== prevProps.report
+			|| params !== prevProps.match.params
 		if (changed) {
 			// TODO: does it really need to reset here?
 			this.reset()
@@ -64,31 +66,60 @@ class Analyse extends Component {
 				&& !report.loading
 				&& params.fight
 				&& params.combatant
-
 			if (!valid) { return }
 
-			console.log('SENDING', report.code, params.fight, params.combatant)
-			this.fetchEventsAndParse()
+			// --- Sanity checks ---
+			// Fight exists
+			const fightId = parseInt(params.fight, 10)
+			const fight = report.fights.find(fight => fight.id === fightId)
+			if (!fight) {
+				alert(`Fight ${fightId} does not exist in report "${report.title}".`)
+				return
+			}
+
+			// Combatant exists
+			const combatantId = parseInt(params.combatant, 10)
+			const combatant = report.friendlies.find(friend => friend.id === combatantId)
+			if (!combatant) {
+				alert(`Combatant ${combatantId} does not exist in "${report.title}".`)
+				return
+			}
+
+			// Combatant took part in fight
+			if (!combatant.fights.find(fight => fight.id === fightId)) {
+				alert(`${combatant.name} did not take part in fight ${fightId}.`)
+				return
+			}
+
+			// Maybe sanity check we have a parser for job? maybe a bit deeper? dunno ey
+
+			// console.log('fetchEventsAndParse', report, fight, combatant)
+			this.fetchEventsAndParse(report, fight, combatant)
 		}
 	}
 
-	async fetchEventsAndParse() {
-		// fuck it just getting it as a test
-		// TODO: actually write this up properly
-		const report = this.props.report
-		const fightId = parseInt(this.props.match.params.fight, 10)
-		const fight = report.fights.filter(fight => fight.id === fightId)[0]
+	async fetchEventsAndParse(report, fight, combatant) {
+		// TODO: handle pets?
 
-		const resp = await fflogsApi.get('report/events/' + this.props.match.params.code, {
+		// Grab the parser for the combatant
+		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
+		const parser = new config.parser(report, fight, combatant)
+		console.log(parser)
+
+
+		// TODO: Should this be somewhere else?
+		// TODO: Looks like we don't need to paginate events requests any more... sure?
+		const resp = await fflogsApi.get(`report/events/${report.code}`, {
 			params: {
 				start: fight.start_time,
 				end: fight.end_time,
-				actorid: this.props.match.params.combatant,
+				actorid: combatant.id,
 				// filter?
 				translate: true // probs keep same?
 			}
 		})
-		console.log(resp)
+		const events = resp.events
+		console.log(events)
 	}
 
 	render() {
