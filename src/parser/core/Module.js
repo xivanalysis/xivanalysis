@@ -6,21 +6,21 @@ class Module {
 		this._callMethod('on_event', event)
 		this._callMethod(`on_${event.type}`, event)
 
+		if (this.parser.byPlayer(event)) {
+			this._callMethod(`on_${event.type}_byPlayer`, event)
+		}
+		if (this.parser.toPlayer(event)) {
+			this._callMethod(`on_${event.type}_toPlayer`, event)
+		}
+
 		// TODO: Work these out
-		// if (this.owner && this.owner.byPlayer(event)) {
-		//   this._callMethod(this._eventHandlerName(`byPlayer_${event.type}`), event);
-		// }
-		// if (this.owner && this.owner.toPlayer(event)) {
-		//   this._callMethod(this._eventHandlerName(`toPlayer_${event.type}`), event);
-		// }
+		// TODO: Probs should get pets working ey
 		// if (this.owner && this.owner.byPlayerPet(event)) {
 		//   this._callMethod(this._eventHandlerName(`byPlayerPet_${event.type}`), event);
 		// }
 		// if (this.owner && this.owner.toPlayerPet(event)) {
 		//   this._callMethod(this._eventHandlerName(`toPlayerPet_${event.type}`), event);
 		// }
-
-		// TODO: Probs should get pets working ey
 	}
 
 	_callMethod(methodName, ...args) {

@@ -3,10 +3,18 @@ import toposort from 'toposort'
 import Combatant from './modules/Combatant'
 
 class Parser {
+	// -----
+	// Properties
+	// -----
+
 	static defaultModules = {
 		combatant: Combatant
 	}
 	static jobModules = {}
+
+	report = null
+	fight = null
+	combatant = null
 
 	modules = {}
 	_timestamp = 0
@@ -15,6 +23,10 @@ class Parser {
 		// TODO: this.finished?
 		return Math.min(this.fight.end_time, this._timestamp)
 	}
+
+	// -----
+	// Constructor w/ module dep resolution
+	// -----
 
 	constructor(report, fight, combatant) {
 		this.report = report
@@ -41,13 +53,18 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			const module = new  constructors[mod]()
+			const module = new constructors[mod]()
 			module.constructor.dependencies.forEach(dep => {
 				module[dep] = this.modules[dep]
 			})
+			module.parser = this
 			this.modules[mod] = module
 		})
 	}
+
+	// -----
+	// Event handling
+	// -----
 
 	parseEvents(events) {
 		events.forEach(event => {
@@ -72,6 +89,18 @@ class Parser {
 		this.moduleOrder.forEach(mod => {
 			this.modules[mod].triggerEvent(event)
 		})
+	}
+
+	// -----
+	// Utilities
+	// -----
+
+	byPlayer(event, combatantId = this.combatant.id) {
+		return event.sourceID === combatantId
+	}
+
+	toPlayer(event, combatantId = this.combatant.id) {
+		return event.targetID === combatantId
 	}
 }
 

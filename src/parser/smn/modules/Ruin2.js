@@ -12,10 +12,8 @@ export default class Ruin2 extends Module {
 	lastGcd = null
 	ogcdUsed = false
 
-	on_cast(event) {
-		// TODO: Limiting to just me. Needs to be generalised into the function handler
-		if (event.sourceID !== 1) { return }
-
+	// Limiting to player, not worried about pets for this check
+	on_cast_byPlayer(event) {
 		// TODO: should move action lookup into an export from ACTIONS with fallback handling
 		const action = ACTIONS[event.ability.guid] || {}
 		const lastGcdAction = (this.lastGcd && ACTIONS[this.lastGcd.ability.guid]) || {}
