@@ -46,7 +46,6 @@ class Analyse extends Component {
 	}
 
 	fetchEventsAndParseIfNeeded(prevProps) {
-		// holy shit you can do this?
 		const {
 			report,
 			match: { params }
@@ -118,7 +117,12 @@ class Analyse extends Component {
 			}
 		})
 		const events = resp.data.events
-		console.log(events)
+
+		// TODO: Batch
+		parser.parseEvents(events)
+
+		// We're done, signal to the parser as such
+		parser.fabricateEvent({type: 'complete'})
 	}
 
 	render() {

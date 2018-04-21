@@ -1,12 +1,10 @@
 import toposort from 'toposort'
 
-import Test from './modules/test'
-import Test2 from './modules/test2'
+import Combatant from './modules/Combatant'
 
 class Parser {
 	static defaultModules = {
-		test2: Test2,
-		test: Test,
+		combatant: Combatant
 	}
 	static jobModules = {}
 
@@ -48,6 +46,12 @@ class Parser {
 				module[dep] = this.modules[dep]
 			})
 			this.modules[mod] = module
+		})
+	}
+
+	parseEvents(events) {
+		events.forEach(event => {
+			this.triggerEvent(event)
 		})
 	}
 
