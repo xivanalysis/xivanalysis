@@ -1,3 +1,4 @@
+import React, { Fragment } from 'react'
 import toposort from 'toposort'
 
 import Combatant from './modules/Combatant'
@@ -93,6 +94,29 @@ class Parser {
 		this.moduleOrder.forEach(mod => {
 			this.modules[mod].triggerEvent(event)
 		})
+	}
+
+	// -----
+	// Results handling
+	// -----
+
+	generateResults() {
+		// TODO: This is really barebones at the moment.
+		//       Will transition to a more structured approach when I can be assed copying it.
+		let results = []
+		this.moduleOrder.forEach(mod => {
+			const module = this.modules[mod]
+			const output = module.output()
+
+			if (output) {
+				results.push(<Fragment>
+					<h3>{module.constructor.name}</h3>
+					{output}
+				</Fragment>)
+			}
+		})
+
+		return <Fragment>{results}</Fragment>
 	}
 
 	// -----

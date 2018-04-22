@@ -24,6 +24,15 @@ class Analyse extends Component {
 		})
 	}
 
+	constructor(props) {
+		super(props)
+
+		this.state = {
+			parser: null,
+			complete: false
+		}
+	}
+
 	componentWillMount() {
 		this.fetchData()
 	}
@@ -103,6 +112,7 @@ class Analyse extends Component {
 		// Grab the parser for the combatant and broadcast an init to the modules
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
 		const parser = new config.parser(report, fight, combatant)
+		this.setState({parser: parser})
 		parser.fabricateEvent({type: 'init'})
 
 		// TODO: Should this be somewhere else?
@@ -123,12 +133,26 @@ class Analyse extends Component {
 
 		// We're done, signal to the parser as such
 		parser.fabricateEvent({type: 'complete'})
+		this.setState({complete: true})
 	}
 
 	render() {
-		return <span>
-			hi
-		</span>
+		const {parser, complete} = this.state
+
+		// Still loading the parser or running the parse
+		// TODO: Nice loading bar and shit
+		if (!parser && !complete) {
+			return <div className="container">
+				Loading...
+			</div>
+		}
+
+		// Report's done, build output
+		const results = parser.generateResults()
+
+		return <div className="container">
+			{results}
+		</div>
 	}
 }
 

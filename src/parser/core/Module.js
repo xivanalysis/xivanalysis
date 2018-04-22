@@ -23,6 +23,10 @@ class Module {
 		// }
 	}
 
+	output() {
+		return false
+	}
+
 	_callMethod(methodName, ...args) {
 		const method = this[methodName]
 		if (method) {
