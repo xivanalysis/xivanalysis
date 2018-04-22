@@ -33,6 +33,9 @@ class Parser {
 		this.fight = fight
 		this.combatant = combatant
 
+		// Set initial timestamp
+		this._timestamp = fight.start_time
+
 		// Join the child modules in over the defaults
 		const constructors = {
 			...this.constructor.defaultModules,
@@ -68,6 +71,7 @@ class Parser {
 
 	parseEvents(events) {
 		events.forEach(event => {
+			this._timestamp = event.timestamp
 			this.triggerEvent(event)
 		})
 	}

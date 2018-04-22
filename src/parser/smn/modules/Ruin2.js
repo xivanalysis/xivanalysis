@@ -4,7 +4,8 @@ import ACTIONS from '@/data/ACTIONS'
 
 export default class Ruin2 extends Module {
 	static dependencies = [
-		'combatant'
+		'combatant',
+		'gauge'
 	]
 
 	// TODO: If (when) I set up the timeline, should probably mark bad R2s on it
@@ -24,8 +25,6 @@ export default class Ruin2 extends Module {
 		const lastGcdAction = (this.lastGcd && ACTIONS[this.lastGcd.ability.guid]) || {}
 
 		// TODO: GCD metadata should be in a module
-		// TODO: I'm not checking for brohamut at the moment - no-movement, no oGCD r2
-		//       during akh morning is a-ok 'cus WWs
 		// If there was no oGCD cast between the R2 and now, mark an issue
 		if (
 			action.onGcd &&
@@ -49,10 +48,12 @@ export default class Ruin2 extends Module {
 			this.ogcdUsed = true
 		}
 
-		// If this is an R2 cast, track it and reset oGCD checker
+		// If this is an R2 cast, track it
 		if (action.id === ACTIONS.RUIN_II.id) {
 			this.all.push(event)
-			this.ogcdUsed = false
+			// Explicitly setting the ogcd tracker to true while bahamut is out,
+			// we don't want to fault people for using R2 for WWs during bahamut.
+			this.ogcdUsed = this.gauge.bahamutSummoned()
 		}
 	}
 
