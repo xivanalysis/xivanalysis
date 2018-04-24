@@ -1,5 +1,8 @@
 // Splitting ACN spells out of SMN/SCH so they aren't duped
 export default {
+	// -----
+	// Player
+	// -----
 	RUIN: {
 		id: 163,
 		name: 'Ruin',
@@ -98,4 +101,57 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000518.png',
 		onGcd: true
 	},
+
+	// -----
+	// Pet - Man if someone actually needs these, I've got words for 'em
+	// -----
+	// Emerald Carbuncle
+	GUST: {
+		id: 637,
+		name: 'Gust',
+		icon: 'https://secure.xivdb.com/img/game/000000/000561.png'
+	},
+
+	BACKDRAFT: {
+		id: 638,
+		name: 'Backdraft',
+		icon: 'https://secure.xivdb.com/img/game/000000/000563.png'
+	},
+
+	DOWNBURST: {
+		id: 639,
+		name: 'Downburst',
+		icon: 'https://secure.xivdb.com/img/game/000000/000562.png'
+	},
+
+	SHINING_EMERALD: {
+		id: 640,
+		name: 'Shining Emerald',
+		icon: 'https://secure.xivdb.com/img/game/000000/000564.png'
+	},
+
+	// Topaz Carbuncle
+	GOUGE: {
+		id: 633,
+		name: 'Gouge',
+		icon: 'https://secure.xivdb.com/img/game/000000/000551.png'
+	},
+
+	SHINING_TOPAZ: {
+		id: 634,
+		name: 'Shining Topaz',
+		icon: 'https://secure.xivdb.com/img/game/000000/000552.png'
+	},
+
+	CURL: {
+		id: 635,
+		name: 'Curl',
+		icon: 'https://secure.xivdb.com/img/game/000000/000553.png'
+	},
+
+	STORM: {
+		id: 636,
+		name: 'Storm',
+		icon: 'https://secure.xivdb.com/img/game/000000/000554.png'
+	}
 }
