@@ -79,20 +79,10 @@ export default class Ruin2 extends Module {
 	output() {
 		const potLossPerR2 = this.RUIN3_POT - this.RUIN2_POT
 		const issues = this.issues.length
+		const warnings = this.warnings.length
 
 		return <Fragment>
-			Of the {this.all.length} <ActionLink {...ACTIONS.RUIN_II}/> you cast,
-			<ul>
-				<li>
-					<span className='text-danger'>{issues}&nbsp;</span>
-					were unnecessary, a {issues * potLossPerR2} potency loss
-				</li>
-				<li>
-					<span className='text-warning'>{this.warnings.length}&nbsp;</span>
-					were used only to move
-				</li>
-			</ul>
-			Always use <ActionLink {...ACTIONS.RUIN_III}/> when you don&apos;t need to weave oGCDs or move. Try to utilise slidecasting and pre-positioning to reduce the casts required to move.
+			Try to limit your use of <ActionLink {...ACTIONS.RUIN_II}/> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE}/>s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/>. You lost {issues * potLossPerR2} potency to {issues} casts that could have been <ActionLink {...ACTIONS.RUIN_III}/>, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
 		</Fragment>
 	}
 }
