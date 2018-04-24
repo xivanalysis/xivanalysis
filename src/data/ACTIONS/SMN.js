@@ -203,7 +203,7 @@ export default {
 
 	// Demi-bahamut
 	WYRMWAVE: {
-		id: 748,
+		id: 7428,
 		name: 'Wyrmwave',
 		icon: 'https://secure.xivdb.com/img/game/002000/002692.png'
 	},
