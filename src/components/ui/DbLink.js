@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
-class DbLink extends Component {
+// -----
+// Main link component
+// -----
+export default class DbLink extends Component {
 	static propTypes = {
 		type: PropTypes.string.isRequired,
 		id: PropTypes.number.isRequired,
@@ -44,4 +47,7 @@ class DbLink extends Component {
 	}
 }
 
-export default DbLink
+// -----
+// Helpers 'cus i'm lazy
+// -----
+export const ActionLink = (props) => <DbLink type='action' {...props}/>

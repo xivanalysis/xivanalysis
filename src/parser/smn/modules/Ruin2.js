@@ -3,7 +3,7 @@ import React, { Fragment } from 'react'
 import Module from '@/parser/core/Module'
 import ACTIONS from '@/data/ACTIONS'
 
-import DbLink from '@/components/ui/DbLink'
+import { ActionLink } from '@/components/ui/DbLink'
 
 export default class Ruin2 extends Module {
 	static dependencies = [
@@ -81,7 +81,7 @@ export default class Ruin2 extends Module {
 		const issues = this.issues.length
 
 		return <Fragment>
-			Of the {this.all.length} <DbLink type='action' {...ACTIONS.RUIN_II}/> you cast,
+			Of the {this.all.length} <ActionLink {...ACTIONS.RUIN_II}/> you cast,
 			<ul>
 				<li>
 					<span className='text-danger'>{issues}&nbsp;</span>
@@ -92,7 +92,7 @@ export default class Ruin2 extends Module {
 					were used only to move
 				</li>
 			</ul>
-			Always use <DbLink type='action' {...ACTIONS.RUIN_III}/> when you don&apos;t need to weave oGCDs or move. Try to utilise slidecasting and pre-positioning to reduce the casts required to move.
+			Always use <ActionLink {...ACTIONS.RUIN_III}/> when you don&apos;t need to weave oGCDs or move. Try to utilise slidecasting and pre-positioning to reduce the casts required to move.
 		</Fragment>
 	}
 }
