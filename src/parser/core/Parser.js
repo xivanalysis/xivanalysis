@@ -109,7 +109,7 @@ class Parser {
 			const output = module.output()
 
 			if (output) {
-				results.push(<Fragment>
+				results.push(<Fragment key={module.constructor.name}>
 					<h3>{module.constructor.name}</h3>
 					{output}
 				</Fragment>)
