@@ -18,9 +18,7 @@ export default class Bahamut extends Module {
 	// TODO: Handle final push bahamut - push to just toss it in for those akh morns and shit
 
 	// TODO: Limit to pet only?
-	// TODO: THIS TRACKS MULTIPLE AMs WHEN HITTING MULTIPLE TARGETS.
-	//       /analyse/MfjxTpm1rtJqWPh2/9/6/
-	on_damage(event) {
+	on_cast(event) {
 		const abilityId = event.ability.guid
 
 		// Track casts - these only happen during the summon window so w/e
