@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import toposort from 'toposort'
 
 import Combatant from './modules/Combatant'
+import GlobalCooldown from './modules/GlobalCooldown'
 
 class Parser {
 	// -----
@@ -9,7 +10,8 @@ class Parser {
 	// -----
 
 	static defaultModules = {
-		combatant: Combatant
+		combatant: Combatant,
+		gcd: GlobalCooldown
 	}
 	static jobModules = {}
 

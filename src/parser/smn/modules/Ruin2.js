@@ -82,7 +82,7 @@ export default class Ruin2 extends Module {
 		const warnings = this.warnings.length
 
 		return <Fragment>
-			Try to limit your use of <ActionLink {...ACTIONS.RUIN_II}/> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE}/>s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/>. You lost {issues * potLossPerR2} potency to {issues} casts that could have been <ActionLink {...ACTIONS.RUIN_III}/>, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
+			Try to limit your use of <ActionLink {...ACTIONS.RUIN_II}/> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE}/>s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/>. You lost {issues * potLossPerR2} potency to {issues} casts that should have been <ActionLink {...ACTIONS.RUIN_III}/>, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
 		</Fragment>
 	}
 }
