@@ -5,6 +5,8 @@ import Module from '@/parser/core/Module'
 import ACTIONS from '@/data/ACTIONS'
 
 export default class GlobalCooldown extends Module {
+	static MIN_GCD = 1.5
+	static MAX_GCD = 2.5
 
 	lastGcd = -1
 	currentAction = null
@@ -20,7 +22,7 @@ export default class GlobalCooldown extends Module {
 
 		this.currentAction = action
 
-		this.tempCheckGcd(event)
+		this.saveGcd(event)
 	}
 
 
@@ -35,17 +37,10 @@ export default class GlobalCooldown extends Module {
 
 		if (finishingCast) { return }
 
-		this.tempCheckGcd(event)
+		this.saveGcd(event)
 	}
 
-	on_complete() {
-		console.log('median', math.median(this.gcds))
-		console.log('mean', math.mean(this.gcds))
-		console.log('mode', math.mean(math.mode(this.gcds)))
-	}
-
-	tempCheckGcd(event) {
-		// TEMP: just logging the time for now
+	saveGcd(event) {
 		if (this.lastGcd >= 0) {
 			const diff = event.timestamp - this.lastGcd
 
@@ -56,5 +51,26 @@ export default class GlobalCooldown extends Module {
 
 		// Store current gcd time for the check
 		this.lastGcd = event.timestamp
+	}
+
+	// Trashy output
+	output() {
+		if (this.gcds.length === 0) {
+			return 'Insufficient data.'
+		}
+		// console.log('median', math.median(this.gcds))
+		// console.log('mean', math.mean(this.gcds))
+		// console.log('mode', math.mean(math.mode(this.gcds)))
+
+		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
+
+		// Take a shot at the GCD based on the log
+		const estimate = math.mean(math.mode(this.gcds))
+
+		// Limit to possible values
+		let gcd = Math.min(estimate, this.constructor.MAX_GCD)
+		gcd = Math.max(gcd, this.constructor.MIN_GCD)
+
+		return 'Estimated GCD: ' + gcd
 	}
 }
