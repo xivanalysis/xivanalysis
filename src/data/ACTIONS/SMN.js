@@ -59,7 +59,8 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/002000/002685.png'
 	},
 
-	AETHERPACT: {
+	// Both SMN and SCH have Aetherpact, but they're different skills
+	SMN_AETHERPACT: {
 		id: 7423,
 		name: 'Aetherpact',
 		icon: 'https://secure.xivdb.com/img/game/002000/002687.png'
