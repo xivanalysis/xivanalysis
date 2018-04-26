@@ -4,10 +4,10 @@ import Module from '@/parser/core/Module'
 
 import ACTIONS from '@/data/ACTIONS'
 
-export default class GlobalCooldown extends Module {
-	static MIN_GCD = 1.5
-	static MAX_GCD = 2.5
+const MIN_GCD = 1.5
+const MAX_GCD = 2.5
 
+export default class GlobalCooldown extends Module {
 	lastGcd = -1
 	currentAction = null
 
@@ -64,13 +64,10 @@ export default class GlobalCooldown extends Module {
 
 		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
 
-		// Take a shot at the GCD based on the log
-		const estimate = math.mean(math.mode(this.gcds))
+		// Take a shot at the GCD based on the log, limiting to possible output range
+		const estimate = Math.max(MIN_GCD, Math.min(MAX_GCD, math.mean(math.mode(this.gcds))))
 
-		// Limit to possible values
-		let gcd = Math.min(estimate, this.constructor.MAX_GCD)
-		gcd = Math.max(gcd, this.constructor.MIN_GCD)
-
-		return 'Estimated GCD: ' + gcd
+		// Some lovely shoddy output
+		return 'Estimated GCD: ' + estimate
 	}
 }
