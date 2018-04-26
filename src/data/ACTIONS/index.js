@@ -4,7 +4,7 @@ import ROLE from './ROLE'
 import ACN from './ACN'
 import SMN from './SMN'
 
-const ACTIONS =  {
+const ACTIONS = {
 	...ROLE,
 	...ACN,
 	...SMN

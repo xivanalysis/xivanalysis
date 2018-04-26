@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import toposort from 'toposort'
 
 import Combatant from './modules/Combatant'
+import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 
 class Parser {
@@ -11,13 +12,14 @@ class Parser {
 
 	static defaultModules = {
 		combatant: Combatant,
+		enemies: Enemies,
 		gcd: GlobalCooldown
 	}
 	static jobModules = {}
 
 	report = null
 	fight = null
-	combatant = null
+	player = null
 
 	modules = {}
 	_timestamp = 0
@@ -27,14 +29,18 @@ class Parser {
 		return Math.min(this.fight.end_time, this._timestamp)
 	}
 
+	get fightDuration() {
+		return this.currentTimestamp - this.fight.start_time
+	}
+
 	// -----
 	// Constructor w/ module dep resolution
 	// -----
 
-	constructor(report, fight, combatant) {
+	constructor(report, fight, player) {
 		this.report = report
 		this.fight = fight
-		this.combatant = combatant
+		this.player = player
 
 		// Set initial timestamp
 		this._timestamp = fight.start_time
@@ -79,11 +85,12 @@ class Parser {
 		})
 	}
 
-	fabricateEvent(event) {
+	fabricateEvent(event, trigger) {
 		// TODO: they've got a 'triggered' prop too...?
 		this.triggerEvent({
 			// Default to the current timestamp
 			timestamp: this.currentTimestamp,
+			trigger,
 			// Rest of the event, mark it as fab'd
 			...event,
 			__fabricated: true
@@ -125,13 +132,15 @@ class Parser {
 	// Utilities
 	// -----
 
-	byPlayer(event, combatantId = this.combatant.id) {
-		return event.sourceID === combatantId
+	byPlayer(event, playerId = this.player.id) {
+		return event.sourceID === playerId
 	}
 
-	toPlayer(event, combatantId = this.combatant.id) {
-		return event.targetID === combatantId
+	toPlayer(event, playerId = this.player.id) {
+		return event.targetID === playerId
 	}
+
+	// TODO: Pet handling
 }
 
 export default Parser
