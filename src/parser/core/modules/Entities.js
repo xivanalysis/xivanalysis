@@ -1,4 +1,4 @@
-import Module from '@/parser/core/Module'
+import Module from 'parser/core/Module'
 
 const APPLY = 'apply'
 const REMOVE = 'remove'

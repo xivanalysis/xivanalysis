@@ -1,4 +1,4 @@
-import CoreParser from '@/parser/core/Parser'
+import CoreParser from 'parser/core/Parser'
 
 import Gauge from './modules/Gauge'
 import Ruin2 from './modules/Ruin2'

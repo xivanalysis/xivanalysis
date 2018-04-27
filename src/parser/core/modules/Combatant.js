@@ -1,4 +1,4 @@
-import Module from '@/parser/core/Module'
+import Module from 'parser/core/Module'
 
 export default class Combatant extends Module {
 	// TODO: Should probably abstract generic handling out of this so can use for enemies too

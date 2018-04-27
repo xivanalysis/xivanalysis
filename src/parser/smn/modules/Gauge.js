@@ -1,6 +1,6 @@
-import Module from '@/parser/core/Module'
+import Module from 'parser/core/Module'
 
-import ACTIONS from '@/data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {

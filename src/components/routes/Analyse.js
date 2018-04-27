@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { fflogsApi } from '@/api'
-import AVAILABLE_CONFIGS from '@/parser/AVAILABLE_CONFIGS'
-import { fetchReportIfNeeded } from '@/store/actions'
+import { fflogsApi } from 'api'
+import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+import { fetchReportIfNeeded } from 'store/actions'
 
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit

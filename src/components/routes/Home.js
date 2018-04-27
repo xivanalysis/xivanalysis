@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 
-import ReportSearch from '@/components/ui/ReportSearch'
-import DbLink from '@/components/ui/DbLink'
+import ReportSearch from 'components/ui/ReportSearch'
+import DbLink from 'components/ui/DbLink'
 
 class Home extends Component {
 	render() {

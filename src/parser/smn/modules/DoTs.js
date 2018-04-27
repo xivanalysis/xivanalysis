@@ -1,7 +1,7 @@
 // wow has dots spread across multiple files? dunno ey. this is pretty temp.
 import React, { Fragment } from 'react'
-import Module from '@/parser/core/Module'
-import STATUSES from '@/data/STATUSES'
+import Module from 'parser/core/Module'
+import STATUSES from 'data/STATUSES'
 
 export default class DoTs extends Module {
 	static dependencies = [

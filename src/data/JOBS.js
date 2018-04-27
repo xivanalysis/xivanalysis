@@ -1,4 +1,4 @@
-import { addExtraIndex } from '@/utilities'
+import { addExtraIndex } from 'utilities'
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
 const JOBS = {

@@ -1,4 +1,4 @@
-import { addExtraIndex } from '@/utilities'
+import { addExtraIndex } from 'utilities'
 
 import SMN from './SMN'
 

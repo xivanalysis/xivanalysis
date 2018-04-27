@@ -6,9 +6,9 @@ import {
 	Link
 } from 'react-router-dom'
 
-import Home from '@/components/routes/Home'
-import Find from '@/components/routes/Find'
-import Analyse from '@/components/routes/Analyse'
+import Home from 'components/routes/Home'
+import Find from 'components/routes/Find'
+import Analyse from 'components/routes/Analyse'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'

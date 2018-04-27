@@ -1,9 +1,9 @@
 import React, { Fragment } from 'react'
 
-import Module from '@/parser/core/Module'
-import ACTIONS from '@/data/ACTIONS'
+import Module from 'parser/core/Module'
+import ACTIONS from 'data/ACTIONS'
 
-import { ActionLink } from '@/components/ui/DbLink'
+import { ActionLink } from 'components/ui/DbLink'
 
 export default class Ruin2 extends Module {
 	static dependencies = [

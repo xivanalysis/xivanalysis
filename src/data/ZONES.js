@@ -1,4 +1,4 @@
-import { addExtraIndex } from '@/utilities'
+import { addExtraIndex } from 'utilities'
 
 // TODO: Move banner lookup into an api call w/ server cache?
 

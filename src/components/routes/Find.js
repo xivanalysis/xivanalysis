@@ -2,9 +2,9 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 
-import { fetchReportIfNeeded } from '@/store/actions'
-import FightList from '@/components/ui/FightList'
-import CombatantList from '@/components/ui/CombatantList'
+import { fetchReportIfNeeded } from 'store/actions'
+import FightList from 'components/ui/FightList'
+import CombatantList from 'components/ui/CombatantList'
 
 class Find extends Component {
 	static propTypes = {

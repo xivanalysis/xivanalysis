@@ -1,8 +1,8 @@
 import React, { Fragment } from 'react'
 
-import Module from '@/parser/core/Module'
+import Module from 'parser/core/Module'
 
-import ACTIONS from '@/data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 
 export default class Bahamut extends Module {
 	static dependencies = [

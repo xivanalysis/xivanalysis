@@ -1,8 +1,8 @@
 import math from 'mathjs'
 
-import Module from '@/parser/core/Module'
+import Module from 'parser/core/Module'
 
-import ACTIONS from '@/data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 
 const MIN_GCD = 1.5
 const MAX_GCD = 2.5
