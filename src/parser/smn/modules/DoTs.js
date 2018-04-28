@@ -10,8 +10,8 @@ export default class DoTs extends Module {
 
 	output() {
 		const fightLength = this.parser.fightDuration
-		const bioUptime = this.enemies.getBuffUptime(STATUSES.BIO_III.id)/fightLength
-		const miasmaUptime = this.enemies.getBuffUptime(STATUSES.MIASMA_III.id)/fightLength
+		const bioUptime = this.enemies.getStatusUptime(STATUSES.BIO_III.id)/fightLength
+		const miasmaUptime = this.enemies.getStatusUptime(STATUSES.MIASMA_III.id)/fightLength
 
 		return <Fragment>
 			<ul>

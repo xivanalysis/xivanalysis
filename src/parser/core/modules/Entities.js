@@ -10,7 +10,7 @@ export default class Entities extends Module {
 	// TODO: This implementation which I've shamelessly stolen seems to only track overall
 	//       uptime, ignoring potential gains from multidotting, etc. Should that be in here,
 	//       or is that a somewhere-else sort of thing...
-	getBuffUptime(statusId, sourceId = this.parser.player.id) {
+	getStatusUptime(statusId, sourceId = this.parser.player.id) {
 		const events = []
 
 		// Build up the events array
