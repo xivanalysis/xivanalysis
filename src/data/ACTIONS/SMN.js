@@ -12,7 +12,8 @@ export default {
 	FESTER: {
 		id: 181,
 		name: 'Fester',
-		icon: 'https://secure.xivdb.com/img/game/002000/002676.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002676.png',
+		cooldown: 5
 	},
 
 	TRI_BIND: {
@@ -25,13 +26,15 @@ export default {
 	ENKINDLE: {
 		id: 184,
 		name: 'Enkindle',
-		icon: 'https://secure.xivdb.com/img/game/002000/002677.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002677.png',
+		cooldown: 180
 	},
 
 	PAINFLARE: {
 		id: 3578,
 		name: 'Painflare',
-		icon: 'https://secure.xivdb.com/img/game/002000/002681.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002681.png',
+		cooldown: 5
 	},
 
 	RUIN_III: {
@@ -44,26 +47,30 @@ export default {
 	TRI_DISASTER: {
 		id: 3580,
 		name: 'Tri-disaster',
-		icon: 'https://secure.xivdb.com/img/game/002000/002683.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002683.png',
+		cooldown: 60
 	},
 
 	DREADWYRM_TRANCE: {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
-		icon: 'https://secure.xivdb.com/img/game/002000/002684.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002684.png',
+		cooldown: 20
 	},
 
 	DEATHFLARE: {
 		id: 3582,
 		name: 'Deathflare',
-		icon: 'https://secure.xivdb.com/img/game/002000/002685.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002685.png',
+		cooldown: 15
 	},
 
 	// Both SMN and SCH have Aetherpact, but they're different skills
 	SMN_AETHERPACT: {
 		id: 7423,
 		name: 'Aetherpact',
-		icon: 'https://secure.xivdb.com/img/game/002000/002687.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002687.png',
+		cooldown: 120
 	},
 
 	BIO_III: {
@@ -90,13 +97,15 @@ export default {
 	SUMMON_BAHAMUT: {
 		id: 7427,
 		name: 'Summon Bahamut',
-		icon: 'https://secure.xivdb.com/img/game/002000/002691.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002691.png',
+		cooldown: 30
 	},
 
 	ENKINDLE_BAHAMUT: {
 		id: 7429,
 		name: 'Enkindle Bahamut',
-		icon: 'https://secure.xivdb.com/img/game/002000/002693.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002693.png',
+		cooldown: 13
 	},
 
 	// -----
@@ -112,19 +121,22 @@ export default {
 	SHOCKWAVE: {
 		id: 793,
 		name: 'Shockwave',
-		icon: 'https://secure.xivdb.com/img/game/002000/002713.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002713.png',
+		cooldown: 90
 	},
 
 	AERIAL_SLASH: {
 		id: 794,
 		name: 'Aerial Slash',
-		icon: 'https://secure.xivdb.com/img/game/002000/002712.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002712.png',
+		cooldown: 30
 	},
 
 	CONTAGION: {
 		id: 795,
 		name: 'Contagion',
-		icon: 'https://secure.xivdb.com/img/game/002000/002714.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002714.png',
+		cooldown: 60
 	},
 
 	AERIAL_BLAST: {
@@ -143,19 +155,22 @@ export default {
 	MOUNTAIN_BUSTER: {
 		id: 788,
 		name: 'Mountain Buster',
-		icon: 'https://secure.xivdb.com/img/game/002000/002702.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002702.png',
+		cooldown: 15
 	},
 
 	EARTHEN_WARD: {
 		id: 789,
 		name: 'Earthen Ward',
-		icon: 'https://secure.xivdb.com/img/game/002000/002703.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002703.png',
+		cooldown: 120
 	},
 
 	LANDSLIDE: {
 		id: 790,
 		name: 'Landslide',
-		icon: 'https://secure.xivdb.com/img/game/002000/002704.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002704.png',
+		cooldown: 40
 	},
 
 	EARTHEN_FURY: {
@@ -168,7 +183,8 @@ export default {
 	CRIMSON_CYCLONE: {
 		id: 797,
 		name: 'Crimson Cyclone',
-		icon: 'https://secure.xivdb.com/img/game/002000/002721.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002721.png',
+		cooldown: 40
 	},
 
 	BURNING_STRIKE: {
@@ -180,13 +196,15 @@ export default {
 	RADIANT_SHIELD: {
 		id: 799,
 		name: 'Radiant Shield',
-		icon: 'https://secure.xivdb.com/img/game/002000/002723.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002723.png',
+		cooldown: 60
 	},
 
 	FLAMING_CRUSH: {
 		id: 800,
 		name: 'Flaming Crush',
-		icon: 'https://secure.xivdb.com/img/game/002000/002724.png'
+		icon: 'https://secure.xivdb.com/img/game/002000/002724.png',
+		cooldown: 30
 	},
 
 	INFERNO: {

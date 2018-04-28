@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 import toposort from 'toposort'
 
 import Combatant from './modules/Combatant'
+import Cooldowns from './modules/Cooldowns'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 
@@ -12,6 +13,7 @@ class Parser {
 
 	static defaultModules = {
 		combatant: Combatant,
+		cooldowns: Cooldowns,
 		enemies: Enemies,
 		gcd: GlobalCooldown
 	}

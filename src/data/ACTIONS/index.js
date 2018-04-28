@@ -11,3 +11,7 @@ const ACTIONS = {
 }
 
 export default addExtraIndex(ACTIONS, 'id')
+
+// TODO: warn when falling back?
+// TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?
+export const getAction = id => ACTIONS[id] || {}

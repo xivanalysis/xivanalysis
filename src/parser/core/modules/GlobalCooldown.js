@@ -2,7 +2,7 @@ import math from 'mathjs'
 
 import Module from 'parser/core/Module'
 
-import ACTIONS from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 
 const MIN_GCD = 1.5
 const MAX_GCD = 2.5
@@ -15,7 +15,7 @@ export default class GlobalCooldown extends Module {
 
 	// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
 	on_begincast_byPlayer(event) {
-		const action = ACTIONS[event.ability.guid] || {}
+		const action = getAction(event.ability.guid)
 		if (!action.onGcd) { return }
 
 		// Can I check for cancels?
@@ -27,7 +27,7 @@ export default class GlobalCooldown extends Module {
 
 
 	on_cast_byPlayer(event) {
-		const action = ACTIONS[event.ability.guid] || {}
+		const action = getAction(event.ability.guid)
 
 		// Ignore non-GCD casts
 		if (!action.onGcd) { return }

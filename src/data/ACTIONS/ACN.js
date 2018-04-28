@@ -27,13 +27,15 @@ export default {
 	AETHERFLOW: {
 		id: 166,
 		name: 'Aetherflow',
-		icon: 'https://secure.xivdb.com/img/game/000000/000510.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000510.png',
+		cooldown: 60
 	},
 
 	ENERGY_DRAIN: {
 		id: 167,
 		name: 'Energy Drain',
-		icon: 'https://secure.xivdb.com/img/game/000000/000514.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000514.png',
+		cooldown: 3
 	},
 
 	MIASMA: {
@@ -53,7 +55,8 @@ export default {
 	SUSTAIN: {
 		id: 171,
 		name: 'Sustain',
-		icon: 'https://secure.xivdb.com/img/game/000000/000508.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000508.png',
+		onGcd: true
 	},
 
 	RUIN_II: {
@@ -73,13 +76,15 @@ export default {
 	BANE: {
 		id: 174,
 		name: 'Bane',
-		icon: 'https://secure.xivdb.com/img/game/000000/000507.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000507.png',
+		cooldown: 10
 	},
 
 	ROUSE: {
 		id: 176,
 		name: 'Rouse',
-		icon: 'https://secure.xivdb.com/img/game/000000/000509.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000509.png',
+		cooldown: 60
 	},
 
 	BIO_II: {
@@ -92,7 +97,8 @@ export default {
 	SHADOW_FLARE: {
 		id: 179,
 		name: 'Shadow Flare',
-		icon: 'https://secure.xivdb.com/img/game/000000/000515.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000515.png',
+		cooldown: 60
 	},
 
 	PHYSICK: {
@@ -115,19 +121,22 @@ export default {
 	BACKDRAFT: {
 		id: 638,
 		name: 'Backdraft',
-		icon: 'https://secure.xivdb.com/img/game/000000/000563.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000563.png',
+		cooldown: 90
 	},
 
 	DOWNBURST: {
 		id: 639,
 		name: 'Downburst',
-		icon: 'https://secure.xivdb.com/img/game/000000/000562.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000562.png',
+		cooldown: 30
 	},
 
 	SHINING_EMERALD: {
 		id: 640,
 		name: 'Shining Emerald',
-		icon: 'https://secure.xivdb.com/img/game/000000/000564.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000564.png',
+		cooldown: 60
 	},
 
 	// Topaz Carbuncle
@@ -140,18 +149,21 @@ export default {
 	SHINING_TOPAZ: {
 		id: 634,
 		name: 'Shining Topaz',
-		icon: 'https://secure.xivdb.com/img/game/000000/000552.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000552.png',
+		cooldown: 15
 	},
 
 	CURL: {
 		id: 635,
 		name: 'Curl',
-		icon: 'https://secure.xivdb.com/img/game/000000/000553.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000553.png',
+		cooldown: 120
 	},
 
 	STORM: {
 		id: 636,
 		name: 'Storm',
-		icon: 'https://secure.xivdb.com/img/game/000000/000554.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000554.png',
+		cooldown: 40
 	}
 }
