@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from 'react'
 import {
-	HashRouter as Router,
 	Switch,
 	Route,
 	Link
@@ -15,31 +14,27 @@ import './App.css'
 
 class App extends Component {
 	render() {
-		return (
-			<Router>
-				<Fragment>
-					<nav className="navbar navbar-dark bg-dark">
-						<div className="container">
-							<Link to="/" className="navbar-brand">xivanalysis</Link>
-						</div>
-					</nav>
+		return <Fragment>
+			<nav className="navbar navbar-dark bg-dark">
+				<div className="container">
+					<Link to="/" className="navbar-brand">xivanalysis</Link>
+				</div>
+			</nav>
 
-					<div className="alert alert-danger">
-						<div className="container">
-							<strong>Please do not share links to this site.</strong><br/>
-							I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
-							If you come across a massive issue, drop me a DM (ackwell#3835).
-						</div>
-					</div>
+			<div className="alert alert-danger">
+				<div className="container">
+					<strong>Please do not share links to this site.</strong><br/>
+					I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
+					If you come across a massive issue, drop me a DM (ackwell#3835).
+				</div>
+			</div>
 
-					<Switch>
-						<Route exact path="/" component={Home}/>
-						<Route path="/find/:code/:fight?" component={Find}/>
-						<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
-					</Switch>
-				</Fragment>
-			</Router>
-		)
+			<Switch>
+				<Route exact path="/" component={Home}/>
+				<Route path="/find/:code/:fight?" component={Find}/>
+				<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+			</Switch>
+		</Fragment>
 	}
 }
 
