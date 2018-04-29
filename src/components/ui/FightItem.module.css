@@ -1,0 +1,55 @@
+.fight {
+	position: relative;
+	display: block;
+	overflow: hidden;
+	padding: 1em 2em;
+}
+
+.fight + .fight {
+	margin-top: .5em;
+}
+
+.bg {
+	position: absolute;
+	/* Need to make it way bigger to stop the blur bleeding into the view area */
+	top: -15%;
+	left: -15%;
+	width: 130%;
+	height: 130%;
+	z-index: -1;
+
+	background-color: var(--dark);
+	background-size: 110%;
+	background-position: center;
+	filter: brightness(60%) blur(5px);
+}
+
+.zone {
+	font-style: italic;
+}
+
+.boss {
+	font-weight: bold;
+	font-size: 2em;
+}
+
+.detail {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	padding-right: 2em;
+	/* font-size: 1.2em; */
+}
+
+/* Using global for the progress parts 'cus they're from BS */
+.fight :global(.progress) {
+	display: inline-block;
+	width: 200px;
+	height: 1em;
+	margin-left: 1em;
+}
+
+.fight :global(.progress-bar) {
+	height: 100%;
+}

@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
 
 import ZONES from 'data/ZONES'
+import styles from './FightItem.module.css'
 
 class FightItem extends Component {
 	static propTypes = {
@@ -46,13 +47,13 @@ class FightItem extends Component {
 		const duration = Math.round((end_time - start_time)/1000)
 
 		return (
-			<Link to={url} className="fight text-light">
-				<div className="bg" style={backgroundStyle}></div>
+			<Link to={url} className={`${styles.fight} text-light`}>
+				<div className={styles.bg} style={backgroundStyle}></div>
 				<div className="title">
-					<div className="zone">{zoneName}</div>
-					<div className="boss">{name}</div>
+					<div className={styles.zone}>{zoneName}</div>
+					<div className={styles.boss}>{name}</div>
 				</div>
-				<div className="detail">
+				<div className={styles.detail}>
 					<span className={`text-${colour}`}>{this.formatDuration(duration)}</span>
 					<div className="progress bg-dark">
 						<div className={`progress-bar bg-${colour}`} style={{width: progress}}></div>
