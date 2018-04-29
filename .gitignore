@@ -24,3 +24,4 @@ test.html
 # shh
 example-events.json
 example-fight.json
+*.ignore.*
