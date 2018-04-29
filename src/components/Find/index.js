@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Container } from 'semantic-ui-react'
+import { Container, Loader } from 'semantic-ui-react'
 
 import { fetchReportIfNeeded } from 'store/actions'
 import FightList from './FightList'
@@ -32,7 +32,9 @@ class Find extends Component {
 
 		// If report is null, we're probably waiting for an api call to complete
 		if (!report || report.loading) {
-			return <span>Loading...</span>
+			return <Container>
+				<Loader active>Loading report</Loader>
+			</Container>
 		}
 
 		return (
