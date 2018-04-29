@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 import JOBS from 'data/JOBS'
 
-import JobIcon from './JobIcon'
+import JobIcon from 'components/ui/JobIcon'
 
 class CombatantList extends Component {
 	static propTypes = {

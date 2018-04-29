@@ -1,10 +1,10 @@
 import React, { Component, Fragment } from 'react'
 import { Switch, Route } from 'react-router-dom'
 
+import Analyse from './Analyse'
+import Find from './Find'
 import Header from './Header'
-import Home from 'components/routes/Home'
-import Find from 'components/routes/Find'
-import Analyse from 'components/routes/Analyse'
+import Home from './Home'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './App.css'

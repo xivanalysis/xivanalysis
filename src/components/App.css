@@ -1,3 +1,7 @@
+body {
+	min-height: 100%;
+}
+
 /* Forcing no wrapping on xivdb links so the icons don't get split off */
 [data-xivdb-key] {
 	white-space: nowrap;
