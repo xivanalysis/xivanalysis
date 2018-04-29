@@ -15,7 +15,7 @@ class JobIcons extends Component {
 			set = 2
 		} = this.props
 
-		return <img src={`https://secure.xivdb.com/img/classes/set${set}/${icon}.png`}/>
+		return <img src={`https://secure.xivdb.com/img/classes/set${set}/${icon}.png`} alt={icon}/>
 	}
 }
 
