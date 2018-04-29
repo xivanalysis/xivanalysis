@@ -1,19 +1,17 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { Menu, Progress } from 'semantic-ui-react'
 
-import ZONES from 'data/ZONES'
 import styles from './FightItem.module.css'
 
 class FightItem extends Component {
 	static propTypes = {
 		fight: PropTypes.shape({
 			id: PropTypes.number.isRequired,
-			zoneID: PropTypes.number.isRequired,
 			kill: PropTypes.bool.isRequired,
 			fightPercentage: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
-			zoneName: PropTypes.string.isRequired,
 			start_time: PropTypes.number.isRequired,
 			end_time: PropTypes.number.isRequired
 		}).isRequired,
@@ -27,40 +25,26 @@ class FightItem extends Component {
 
 	render() {
 		const {
-			id, zoneID,
+			id,
 			kill, fightPercentage,
 			start_time, end_time,
-			name, zoneName
+			name
 		} = this.props.fight
 
 		const code = this.props.code
 
-		const backgroundStyle = {}
-		const zone = ZONES[zoneID]
-		if (zone) {
-			backgroundStyle.backgroundImage = `url(${zone.banner})`
-		}
-
 		const url = `/find/${code}/${id}/`
-		const colour = kill? 'success' : 'danger'
-		const progress = Math.round(100 - (fightPercentage/100)) + '%'
+		const colour = kill? 'green' : 'red'
+		const progress = Math.round(100 - (fightPercentage/100))
 		const duration = Math.round((end_time - start_time)/1000)
 
-		return (
-			<Link to={url} className={`${styles.fight} text-light`}>
-				<div className={styles.bg} style={backgroundStyle}></div>
-				<div className="title">
-					<div className={styles.zone}>{zoneName}</div>
-					<div className={styles.boss}>{name}</div>
-				</div>
-				<div className={styles.detail}>
-					<span className={`text-${colour}`}>{this.formatDuration(duration)}</span>
-					<div className="progress bg-dark">
-						<div className={`progress-bar bg-${colour}`} style={{width: progress}}></div>
-					</div>
-				</div>
-			</Link>
-		)
+		return <Menu.Item as={Link} to={url}>
+			{name}
+			<span className="pull-right">
+				{this.formatDuration(duration)}
+				<Progress percent={progress} size="small" className={styles.progress} color={colour}/>
+			</span>
+		</Menu.Item>
 	}
 }
 
