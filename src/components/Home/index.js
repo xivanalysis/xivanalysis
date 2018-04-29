@@ -1,13 +1,19 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { Container } from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
+import styles from './Home.module.css'
 
 class Home extends Component {
 	render() {
-		return <Container>
-			<ReportSearch/>
-		</Container>
+		return <Fragment>
+			<div className={styles.searchBox}>
+				<Container className={styles.search}>
+					<ReportSearch/>
+				</Container>
+			</div>
+			<p>TODO: Needs something here</p>
+		</Fragment>
 	}
 }
 

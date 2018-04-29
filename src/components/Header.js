@@ -73,7 +73,7 @@ class Header extends Component {
 			})
 		}
 
-		return <Menu fixed="top">
+		return <Menu fixed="top" inverted>
 			<Container>
 				<Menu.Item as={Link} to="/" header>xivanalysis</Menu.Item>
 				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}

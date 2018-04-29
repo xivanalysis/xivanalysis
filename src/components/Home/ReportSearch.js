@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Button, Input } from 'semantic-ui-react'
@@ -37,6 +37,13 @@ class ReportSearch extends Component {
 		const input = this.inputField.current.inputRef.value.trim()
 
 		const code = this.constructor.getCode(input)
+
+		// If we don't at least get a report code, just stop now
+		if (!code) {
+			console.log('TODO: Handle invalid url')
+			return
+		}
+
 		const fight = this.constructor.getFight(input)
 		const player = this.constructor.getPlayer(input)
 
@@ -59,14 +66,18 @@ class ReportSearch extends Component {
 	}
 
 	render() {
-		return <Input
-			type="text"
-			placeholder="https://www.fflogs.com/reports/..."
-			ref={this.inputField}
-			action={<Button onClick={this.parseReportUrl}>Analyse</Button>}
-			onChange={this.parseReportUrl}
-			className={styles.input}
-		/>
+		return <Fragment>
+			<span className={styles.text}><strong>Paste your log URL to get started</strong></span>
+			<Input
+				type="text"
+				placeholder="https://www.fflogs.com/reports/..."
+				ref={this.inputField}
+				action={<Button onClick={this.parseReportUrl}>Analyse</Button>}
+				onChange={this.parseReportUrl}
+				className={styles.input}
+				inverted
+			/>
+		</Fragment>
 	}
 }
 

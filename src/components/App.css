@@ -1,6 +1,6 @@
 /* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
 body {
-	padding-top: 3em;
+	padding-top: 40px;
 }
 
 /* Forcing no wrapping on xivdb links so the icons don't get split off */
