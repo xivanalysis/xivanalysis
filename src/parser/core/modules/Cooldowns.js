@@ -9,6 +9,7 @@ export default class Cooldowns extends Module {
 
 	// cooldown starts at the beginning of the casttime
 	// (though 99% of CD based abilities have no cast time)
+	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
 	on_begincast_byPlayer(event) {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
