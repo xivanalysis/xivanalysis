@@ -19,7 +19,7 @@ class CombatantList extends Component {
 				})).isRequired
 			})).isRequired
 		}).isRequired,
-		currentFight: PropTypes.string.isRequired
+		currentFight: PropTypes.number.isRequired
 	}
 
 	render() {

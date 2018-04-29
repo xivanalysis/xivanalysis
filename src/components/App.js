@@ -1,10 +1,7 @@
 import React, { Component, Fragment } from 'react'
-import {
-	Switch,
-	Route,
-	Link
-} from 'react-router-dom'
+import { Switch, Route } from 'react-router-dom'
 
+import Header from './Header'
 import Home from 'components/routes/Home'
 import Find from 'components/routes/Find'
 import Analyse from 'components/routes/Analyse'
@@ -15,11 +12,7 @@ import './App.css'
 class App extends Component {
 	render() {
 		return <Fragment>
-			<nav className="navbar navbar-dark bg-dark">
-				<div className="container">
-					<Link to="/" className="navbar-brand">xivanalysis</Link>
-				</div>
-			</nav>
+			<Header/>
 
 			<div className="alert alert-danger">
 				<div className="container">
