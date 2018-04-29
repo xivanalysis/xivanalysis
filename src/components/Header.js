@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Container, Menu } from 'semantic-ui-react'
 
 import { getPathMatch } from 'utilities'
 
@@ -72,16 +73,12 @@ class Header extends Component {
 			})
 		}
 
-		return <nav className="navbar navbar-expand navbar-dark bg-dark">
-			<div className="container">
-				<Link to="/" className="navbar-brand">xivanalysis</Link>
-				<ul className="navbar-nav mr-auto">
-					{crumbs.map(crumb => <li key={crumb.url} className="nav-item">
-						<Link to={crumb.url} className="nav-link">{crumb.title}</Link>
-					</li>)}
-				</ul>
-			</div>
-		</nav>
+		return <Menu fixed="top">
+			<Container>
+				<Menu.Item as={Link} to="/" header>xivanalysis</Menu.Item>
+				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
+			</Container>
+		</Menu>
 	}
 }
 

@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import { Checkbox } from 'semantic-ui-react'
 
 import FightItem from './FightItem'
 
@@ -31,16 +32,12 @@ class FightList extends Component {
 
 		return (
 			<Fragment>
-				<div className="custom-control custom-checkbox">
-					<input
-						type="checkbox"
-						checked={killsOnly}
-						className="custom-control-input"
-						id="kills-only"
-						onChange={e => this.setState({killsOnly: e.currentTarget.checked})}
-					/>
-					<label htmlFor="kills-only" className="custom-control-label">Kills only</label>
-				</div>
+				<Checkbox
+					toggle
+					label='Kills only'
+					defaultChecked={killsOnly}
+					onChange={(_, data) => this.setState({killsOnly: data.checked})}
+				/>
 				<div className="fights">
 					{fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</div>

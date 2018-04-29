@@ -1,6 +1,9 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { Button, Input } from 'semantic-ui-react'
+
+import styles from './ReportSearch.module.css'
 
 class ReportSearch extends Component {
 	static propTypes = {
@@ -31,7 +34,7 @@ class ReportSearch extends Component {
 
 	// Using arrow function to maintain bind
 	parseReportUrl = () => {
-		const input = this.inputField.current.value.trim()
+		const input = this.inputField.current.inputRef.value.trim()
 
 		const code = this.constructor.getCode(input)
 		const fight = this.constructor.getFight(input)
@@ -56,22 +59,14 @@ class ReportSearch extends Component {
 	}
 
 	render() {
-		return (
-			<div className="input-group">
-				<input
-					type="text"
-					className="form-control"
-					placeholder="https://www.fflogs.com/reports/..."
-					ref={this.inputField}
-					onChange={this.parseReportUrl}
-				/>
-				<div className="input-group-append">
-					<button type="button" className="btn btn-outline-primary" onClick={this.parseReportUrl}>
-						Analyse
-					</button>
-				</div>
-			</div>
-		)
+		return <Input
+			type="text"
+			placeholder="https://www.fflogs.com/reports/..."
+			ref={this.inputField}
+			action={<Button onClick={this.parseReportUrl}>Analyse</Button>}
+			onChange={this.parseReportUrl}
+			className={styles.input}
+		/>
 	}
 }
 

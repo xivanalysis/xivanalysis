@@ -1,14 +1,13 @@
 import React, { Component } from 'react'
+import { Container } from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
 
 class Home extends Component {
 	render() {
-		return (
-			<div className="container">
-				<ReportSearch/>
-			</div>
-		)
+		return <Container>
+			<ReportSearch/>
+		</Container>
 	}
 }
 

@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Container } from 'semantic-ui-react'
 
 import { fetchReportIfNeeded } from 'store/actions'
 import FightList from './FightList'
@@ -35,13 +36,13 @@ class Find extends Component {
 		}
 
 		return (
-			<div className="container">
+			<Container>
 				<h1>{report.title}</h1>
 				{match.params.fight?
 					<CombatantList report={report} currentFight={parseInt(match.params.fight, 10)}/> :
 					<FightList report={report}/>
 				}
-			</div>
+			</Container>
 		)
 	}
 }

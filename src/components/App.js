@@ -1,12 +1,14 @@
 import React, { Component, Fragment } from 'react'
 import { Switch, Route } from 'react-router-dom'
+import { Container, Message } from 'semantic-ui-react'
 
 import Analyse from './Analyse'
 import Find from './Find'
 import Header from './Header'
 import Home from './Home'
 
-import 'bootstrap/dist/css/bootstrap.min.css'
+// import 'bootstrap/dist/css/bootstrap.min.css'
+import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
 class App extends Component {
@@ -14,13 +16,13 @@ class App extends Component {
 		return <Fragment>
 			<Header/>
 
-			<div className="alert alert-danger">
-				<div className="container">
-					<strong>Please do not share links to this site.</strong><br/>
-					I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
-					If you come across a massive issue, drop me a DM (ackwell#3835).
-				</div>
-			</div>
+			<Message error>
+				<Container>
+					<Message.Header>Please do not share links to this site.</Message.Header>
+					<p>I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
+					If you come across a massive issue, drop me a DM (ackwell#3835).</p>
+				</Container>
+			</Message>
 
 			<Switch>
 				<Route exact path="/" component={Home}/>
