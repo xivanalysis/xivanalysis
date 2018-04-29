@@ -34,6 +34,13 @@ class ReportSearch extends Component {
 		const input = this.inputField.current.value.trim()
 
 		const code = this.constructor.getCode(input)
+
+		// If we don't at least get a report code, just stop now
+		if (!code) {
+			console.log('TODO: Handle invalid url')
+			return
+		}
+
 		const fight = this.constructor.getFight(input)
 		const player = this.constructor.getPlayer(input)
 
