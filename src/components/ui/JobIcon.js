@@ -6,16 +6,22 @@ class JobIcons extends Component {
 		job: PropTypes.shape({
 			icon: PropTypes.string.isRequired
 		}).isRequired,
-		set: PropTypes.number
+		set: PropTypes.number,
+		className: PropTypes.string
 	}
 
 	render() {
 		const {
 			job: { icon },
-			set = 2
+			set = 2,
+			className = ''
 		} = this.props
 
-		return <img src={`https://secure.xivdb.com/img/classes/set${set}/${icon}.png`} alt={icon}/>
+		return <img
+			src={`https://secure.xivdb.com/img/classes/set${set}/${icon}.png`}
+			alt={icon}
+			className={className}
+		/>
 	}
 }
 

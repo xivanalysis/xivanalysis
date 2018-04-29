@@ -1,9 +1,10 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router-dom'
+import { Header, Menu } from 'semantic-ui-react'
 
+import styles from './CombatantList.module.css'
 import JOBS from 'data/JOBS'
-
 import JobIcon from 'components/ui/JobIcon'
 
 class CombatantList extends Component {
@@ -27,24 +28,31 @@ class CombatantList extends Component {
 		const currentFight = this.props.currentFight
 
 		// Filter down to just the friendlies in this fight (that aren't limit break)
+		// TODO: Group by role?
 		friendlies = friendlies.filter(friendly => (
 			friendly.type !== 'LimitBreak' &&
 			friendly.fights.filter(fight => fight.id === currentFight).length > 0
 		))
 
-		return (
-			<ul>
+		return <Fragment>
+			<Header>
+				Select a combatant
+			</Header>
+
+			<Menu fluid vertical>
 				{friendlies.map(friend =>
-					<li key={friend.id}>
-						{/* TODO: This is legit trash */}
-						<Link to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}>
-							<JobIcon job={JOBS[friend.type]}/>
-							{friend.name}
-						</Link>
-					</li>
+					// TODO: This is legit trash
+					<Menu.Item
+						key={friend.id}
+						as={Link}
+						to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
+					>
+						<JobIcon job={JOBS[friend.type]} className={styles.jobIcon}/>
+						{friend.name}
+					</Menu.Item>
 				)}
-			</ul>
-		)
+			</Menu>
+		</Fragment>
 	}
 }
 
