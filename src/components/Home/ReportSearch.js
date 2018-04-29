@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, Fragment } from 'react'
 import { withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
@@ -63,7 +63,8 @@ class ReportSearch extends Component {
 	}
 
 	render() {
-		return (
+		return <Fragment>
+			<span className="text-light"><strong>Paste your log URL to get started</strong></span>
 			<div className="input-group">
 				<input
 					type="text"
@@ -73,12 +74,12 @@ class ReportSearch extends Component {
 					onChange={this.parseReportUrl}
 				/>
 				<div className="input-group-append">
-					<button type="button" className="btn btn-outline-primary" onClick={this.parseReportUrl}>
+					<button type="button" className="btn btn-outline-light" onClick={this.parseReportUrl}>
 						Analyse
 					</button>
 				</div>
 			</div>
-		)
+		</Fragment>
 	}
 }
 

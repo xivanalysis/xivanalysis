@@ -1,0 +1,13 @@
+.searchBox {
+	position: relative;
+	height: 400px;
+	background: url(./omega-dark-blur.jpg) no-repeat center;
+}
+
+.search {
+	position: absolute;
+	right: 0;
+	left: 0;
+	bottom: 50%;
+	margin-bottom: -19px; /* Half the input group's height */
+}
