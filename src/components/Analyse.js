@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
+import { Container, Loader } from 'semantic-ui-react'
 
 import { fflogsApi } from 'api'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
@@ -43,7 +44,7 @@ class Analyse extends Component {
 	}
 
 	reset() {
-		console.log('TODO: reset')
+		console.log('TODO: reset?')
 	}
 
 	fetchData(prevProps) {
@@ -142,17 +143,17 @@ class Analyse extends Component {
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
 		if (!parser && !complete) {
-			return <div className="container">
-				Loading...
-			</div>
+			return <Container>
+				<Loader>Loading analysis</Loader>
+			</Container>
 		}
 
 		// Report's done, build output
 		const results = parser.generateResults()
 
-		return <div className="container">
+		return <Container>
 			{results}
-		</div>
+		</Container>
 	}
 }
 
