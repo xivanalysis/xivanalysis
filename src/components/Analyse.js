@@ -1,7 +1,14 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
-import { Container, Loader } from 'semantic-ui-react'
+import {
+	Container,
+	Grid,
+	Loader,
+	Menu,
+	Sticky
+} from 'semantic-ui-react'
+import Scroll from 'react-scroll'
 
 import { fflogsApi } from 'api'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
@@ -25,13 +32,18 @@ class Analyse extends Component {
 		})
 	}
 
+	stickyContext = null
+
 	constructor(props) {
 		super(props)
 
 		this.state = {
 			parser: null,
-			complete: false
+			complete: false,
+			activeSegment: 0
 		}
+
+		this.stickyContext = React.createRef()
 	}
 
 	componentWillMount() {
@@ -152,7 +164,38 @@ class Analyse extends Component {
 		const results = parser.generateResults()
 
 		return <Container>
-			{results}
+			<Grid columns={12}>
+				<Grid.Column width={4}>
+					<Sticky context={this.stickyContext.current} offset={60}>
+						<Menu vertical pointing secondary fluid>
+							{results.map((result, index) => <Menu.Item
+								// Menu.Item props
+								key={index}
+								active={this.state.activeSegment === index}
+								as={Scroll.Link}
+								// Scroll.Link props
+								to={result.name}
+								offset={-50}
+								smooth
+								spy
+								onSetActive={() => this.setState({activeSegment: index})}
+							>
+								{result.name /* Doing manually so SUI doesn't modify my text */}
+							</Menu.Item>)}
+						</Menu>
+					</Sticky>
+				</Grid.Column>
+				<Grid.Column width={8}>
+					<div ref={this.stickyContext}>
+						{results.map((result, index) =>
+							<Scroll.Element name={result.name} key={index}>
+								<h3>{result.name}</h3>
+								{result.markup}
+							</Scroll.Element>
+						)}
+					</div>
+				</Grid.Column>
+			</Grid>
 		</Container>
 	}
 }

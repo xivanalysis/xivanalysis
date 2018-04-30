@@ -1,4 +1,3 @@
-import React, { Fragment } from 'react'
 import toposort from 'toposort'
 
 import Combatant from './modules/Combatant'
@@ -120,14 +119,14 @@ class Parser {
 			const output = module.output()
 
 			if (output) {
-				results.push(<Fragment key={module.constructor.name}>
-					<h3>{module.constructor.name}</h3>
-					{output}
-				</Fragment>)
+				results.push({
+					name: module.constructor.name,
+					markup: output
+				})
 			}
 		})
 
-		return <Fragment>{results}</Fragment>
+		return results
 	}
 
 	// -----
