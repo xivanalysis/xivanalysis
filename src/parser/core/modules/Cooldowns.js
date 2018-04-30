@@ -40,9 +40,6 @@ export default class Cooldowns extends Module {
 				cd.current = null
 			}
 		})
-
-		// TEMP
-		console.log(this.cooldowns[184])
 	}
 
 	getCooldown(action) {
@@ -90,5 +87,10 @@ export default class Cooldowns extends Module {
 		cd.current.length -= reduction * 1000
 
 		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
+	}
+
+	// Super temp
+	output() {
+		return JSON.stringify(this.cooldowns)
 	}
 }
