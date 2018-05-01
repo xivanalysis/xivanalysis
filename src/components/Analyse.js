@@ -165,7 +165,7 @@ class Analyse extends Component {
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
-		if (!parser && !complete) {
+		if (!parser || !complete) {
 			return <Container>
 				<Loader>Loading analysis</Loader>
 			</Container>
