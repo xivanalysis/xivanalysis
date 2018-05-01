@@ -181,7 +181,7 @@ class Analyse extends Component {
 						<Header.Content>
 							{config.job.name}
 							<Header.Subheader>
-								Updated for patch {config.patchCompatibility}
+								Patch <strong>{config.patchCompatibility}</strong>
 							</Header.Subheader>
 						</Header.Content>
 					</Header>

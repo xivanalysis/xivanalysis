@@ -1,6 +1,14 @@
 class Module {
 	static dependencies = []
 
+	_name = null
+	get name() {
+		return this._name || this.constructor.name
+	}
+	set name(value) {
+		this._name = value
+	}
+
 	triggerEvent(event) {
 		// Calling lots of events... if WoWA stops doing it maybe I will too :eyes:
 		this._callMethod('on_event', event)

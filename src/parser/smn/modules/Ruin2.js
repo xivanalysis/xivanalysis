@@ -11,6 +11,8 @@ export default class Ruin2 extends Module {
 		'gauge'
 	]
 
+	name = 'Ruin 2'
+
 	// Constants
 	// Unlike HW, don't need to worry about mana drain too much. It's just flat pot
 	// TODO: Ok where is this gcd metadata gonna be stored at the end of the day?

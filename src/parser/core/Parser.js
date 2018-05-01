@@ -120,7 +120,7 @@ class Parser {
 
 			if (output) {
 				results.push({
-					name: module.constructor.name,
+					name: module.name,
 					markup: output
 				})
 			}
