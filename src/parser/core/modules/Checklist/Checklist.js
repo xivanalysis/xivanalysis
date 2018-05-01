@@ -31,10 +31,19 @@ export default class Checklist extends Module {
 			},
 			content: {
 				key: `content-${index}`,
-				active: true,
 				content: <Fragment>
-					<Icon name="info"/>
-					{rule.description}
+					{rule.description && <Fragment>
+						{/* TODO: better styling for description */}
+						<Icon name="info"/>
+						{rule.description}
+					</Fragment>}
+					<ul>
+						{rule.requirements.map((requirement, index) =>
+							<li key={index}>
+								{requirement.name}: {requirement.percent}
+							</li>
+						)}
+					</ul>
 				</Fragment>
 			}
 		}))
