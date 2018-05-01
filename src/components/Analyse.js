@@ -4,13 +4,16 @@ import PropTypes from 'prop-types'
 import {
 	Container,
 	Grid,
+	Header,
 	Loader,
 	Menu,
+	Segment,
 	Sticky
 } from 'semantic-ui-react'
 import Scroll from 'react-scroll'
 
 import { fflogsApi } from 'api'
+import JobIcon from 'components/ui/JobIcon'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import { fetchReportIfNeeded } from 'store/actions'
 
@@ -38,6 +41,7 @@ class Analyse extends Component {
 		super(props)
 
 		this.state = {
+			config: null,
 			parser: null,
 			complete: false,
 			activeSegment: 0
@@ -125,7 +129,7 @@ class Analyse extends Component {
 		// Grab the parser for the combatant and broadcast an init to the modules
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
 		const parser = new config.parser(report, fight, combatant)
-		this.setState({parser: parser})
+		this.setState({ config: config, parser: parser})
 		parser.fabricateEvent({type: 'init'})
 
 		// TODO: Should this be somewhere else?
@@ -150,7 +154,12 @@ class Analyse extends Component {
 	}
 
 	render() {
-		const {parser, complete} = this.state
+		const {
+			config,
+			parser,
+			complete,
+			activeSegment
+		} = this.state
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
@@ -166,12 +175,25 @@ class Analyse extends Component {
 		return <Container>
 			<Grid columns={12}>
 				<Grid.Column width={4}>
+					<Header attached="top">
+						<JobIcon job={config.job} set={1}/>
+						<Header.Content>
+							{config.job.logType}
+							<Header.Subheader>
+								Updated for patch {config.patchCompatibility}
+							</Header.Subheader>
+						</Header.Content>
+					</Header>
+					<Segment attached="bottom">
+						{config.description}
+					</Segment>
+
 					<Sticky context={this.stickyContext.current} offset={60}>
 						<Menu vertical pointing secondary fluid>
 							{results.map((result, index) => <Menu.Item
 								// Menu.Item props
 								key={index}
-								active={this.state.activeSegment === index}
+								active={activeSegment === index}
 								as={Scroll.Link}
 								// Scroll.Link props
 								to={result.name}
