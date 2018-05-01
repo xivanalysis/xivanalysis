@@ -1,7 +1,9 @@
 export const DISPLAY_ORDER = {
-	FIRST: 0,
+	CHECKLIST: 0,
+	SUGGESTIONS: 1,
+	TOP: 10,
 	DEFAULT: 50,
-	LAST: 100
+	BOTTOM: 100
 }
 
 export default class Module {

@@ -5,7 +5,7 @@ import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 import styles from './Checklist.module.css'
 
 export default class Checklist extends Module {
-	static displayOrder = DISPLAY_ORDER.FIRST
+	static displayOrder = DISPLAY_ORDER.CHECKLIST
 
 	rules = []
 

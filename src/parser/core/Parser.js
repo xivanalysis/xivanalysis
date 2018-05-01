@@ -4,6 +4,7 @@ import Combatant from './modules/Combatant'
 import Cooldowns from './modules/Cooldowns'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
+import Suggestions from './modules/Suggestions'
 
 class Parser {
 	// -----
@@ -14,7 +15,8 @@ class Parser {
 		combatant: Combatant,
 		cooldowns: Cooldowns,
 		enemies: Enemies,
-		gcd: GlobalCooldown
+		gcd: GlobalCooldown,
+		suggestions: Suggestions
 	}
 	static jobModules = {}
 
