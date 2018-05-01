@@ -89,6 +89,7 @@ class Analyse extends Component {
 			// TODO: more checks
 			const valid = report
 				&& !report.loading
+				&& report.code === params.code
 				&& params.fight
 				&& params.combatant
 			if (!valid) { return }
