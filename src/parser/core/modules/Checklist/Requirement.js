@@ -9,7 +9,6 @@ export default class Requirement {
 	}
 	set percent(value) {
 		this._percent = value
-		// console.log(value)
 	}
 
 	constructor(options) {

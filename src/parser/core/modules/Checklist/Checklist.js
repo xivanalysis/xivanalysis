@@ -17,37 +17,49 @@ export default class Checklist extends Module {
 			</Message>
 		}
 
-		const panels = this.rules.map((rule, index) => ({
-			title: {
-				key: `title-${index}`,
-				className: styles.title,
-				content: <Fragment>
-					{/* Not sure 75 is a good aiming point. Maybe higher? */}
-					<Icon name={rule.percent > 75? 'checkmark' : 'remove'}/>
-					{rule.name}
-					{/* Using className for indicting to avoid the active animation */}
-					<Progress percent={rule.percent} className={`indicating ${styles.progress}`} size="small"/>
-				</Fragment>
-			},
-			content: {
-				key: `content-${index}`,
-				content: <Fragment>
-					{rule.description && <Fragment>
-						{/* TODO: better styling for description */}
-						<Icon name="info"/>
-						{rule.description}
-					</Fragment>}
-					<ul>
-						{rule.requirements.map((requirement, index) =>
-							<li key={index}>
-								{requirement.name}: {requirement.percent}
-							</li>
-						)}
-					</ul>
-				</Fragment>
+		const expanded = []
+		const panels = this.rules.map((rule, index) => {
+			const success = rule.percent > 75
+			if (!success) {
+				expanded.push(index)
 			}
-		}))
+			return {
+				title: {
+					key: `title-${index}`,
+					className: styles.title,
+					content: <Fragment>
+						{/* Not sure 75 is a good aiming point. Maybe higher? */}
+						<Icon name={success? 'checkmark' : 'remove'}/>
+						{rule.name}
+						{/* Using className for indicting to avoid the active animation */}
+						<Progress percent={rule.percent} className={`indicating ${styles.progress}`} size="small"/>
+					</Fragment>
+				},
+				content: {
+					key: `content-${index}`,
+					content: <Fragment>
+						{rule.description && <Fragment>
+							{/* TODO: better styling for description */}
+							<Icon name="info"/>
+							{rule.description}
+						</Fragment>}
+						<ul>
+							{rule.requirements.map((requirement, index) =>
+								<li key={index}>
+									{requirement.name}: {requirement.percent}
+								</li>
+							)}
+						</ul>
+					</Fragment>
+				}
+			}
+		})
 
-		return <Accordion exclusive={false} panels={panels} styled fluid/>
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			defaultActiveIndex={expanded}
+			styled fluid
+		/>
 	}
 }
