@@ -1,0 +1,12 @@
+.title {
+	position: relative;
+}
+
+.progress {
+	position: absolute !important;
+	top: 50%;
+	right: 1em;
+	width: 200px;
+	margin: 0 !important;
+	transform: translateY(-50%);
+}
