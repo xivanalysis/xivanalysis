@@ -178,7 +178,7 @@ class Analyse extends Component {
 					<Header attached="top">
 						<JobIcon job={config.job} set={1}/>
 						<Header.Content>
-							{config.job.logType}
+							{config.job.name}
 							<Header.Subheader>
 								Updated for patch {config.patchCompatibility}
 							</Header.Subheader>
