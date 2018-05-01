@@ -174,7 +174,7 @@ class Analyse extends Component {
 		const results = parser.generateResults()
 
 		return <Container>
-			<Grid columns={12}>
+			<Grid>
 				<Grid.Column width={4}>
 					<Header attached="top">
 						<JobIcon job={config.job} set={1}/>
@@ -208,7 +208,7 @@ class Analyse extends Component {
 						</Menu>
 					</Sticky>
 				</Grid.Column>
-				<Grid.Column width={8}>
+				<Grid.Column width={12}>
 					<div ref={this.stickyContext}>
 						{results.map((result, index) =>
 							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
