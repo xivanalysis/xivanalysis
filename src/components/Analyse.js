@@ -211,10 +211,10 @@ class Analyse extends Component {
 				<Grid.Column width={8}>
 					<div ref={this.stickyContext}>
 						{results.map((result, index) =>
-							<Scroll.Element name={result.name} key={index}>
-								<h3>{result.name}</h3>
+							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
+								<Header>{result.name}</Header>
 								{result.markup}
-							</Scroll.Element>
+							</Segment>
 						)}
 					</div>
 				</Grid.Column>

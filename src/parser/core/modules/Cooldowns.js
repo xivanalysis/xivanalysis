@@ -1,12 +1,14 @@
 import React from 'react'
 
-import Module from 'parser/core/Module'
+import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 import {getAction} from 'data/ACTIONS'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
-	currentAction = null
+	// I mean this isn't even going to have an output when I'm done, so throw it down bottom
+	static displayOrder = DISPLAY_ORDER.LAST
 
+	currentAction = null
 	cooldowns = {}
 
 	// cooldown starts at the beginning of the casttime

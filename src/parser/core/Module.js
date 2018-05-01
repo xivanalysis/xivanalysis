@@ -1,5 +1,12 @@
-class Module {
+export const DISPLAY_ORDER = {
+	FIRST: 0,
+	DEFAULT: 50,
+	LAST: 100
+}
+
+export default class Module {
 	static dependencies = []
+	static displayOrder = DISPLAY_ORDER.DEFAULT
 
 	_name = null
 	get name() {
@@ -42,5 +49,3 @@ class Module {
 		}
 	}
 }
-
-export default Module
