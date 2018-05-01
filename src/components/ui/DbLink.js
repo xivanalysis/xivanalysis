@@ -1,5 +1,8 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
+import Observer from 'react-intersection-observer'
+
+import 'intersection-observer'
 
 // -----
 // Main link component
@@ -11,16 +14,20 @@ export default class DbLink extends Component {
 		name: PropTypes.string
 	};
 
-	componentDidMount() {
-		// Might take a little bit for the tooltip lib to be ready, so just wait it out
-		const waitForTooltips = () => {
-			if (window.XIVDBTooltips) {
-				this.refreshTooltips()
-			} else {
-				setTimeout(waitForTooltips, 100)
+	hasLoaded = false
+
+	onObserverChange(isVisible) {
+		if (!this.hasLoaded && isVisible) {
+			// Might take a little bit for the tooltip lib to be ready, so just wait it out
+			const waitForTooltips = () => {
+				if (window.XIVDBTooltips) {
+					this.refreshTooltips()
+				} else {
+					setTimeout(waitForTooltips, 100)
+				}
 			}
+			waitForTooltips()
 		}
-		waitForTooltips()
 	}
 
 	refreshTooltips() {
@@ -36,14 +43,15 @@ export default class DbLink extends Component {
 		}
 
 		// Using getDelayed to act as a debounce
+		this.hasLoaded = true
 		XIVDBTooltips.getDelayed()
 	}
 
 	render() {
 		const { type, id, name } = this.props
-		return (
+		return <Observer tag='span' onChange={isVisible => this.onObserverChange(isVisible)}>
 			<a href={'http://xivdb.com/'+ type +'/' + id}>{name ? name : 'Loading...'}</a>
-		)
+		</Observer>
 	}
 }
 
