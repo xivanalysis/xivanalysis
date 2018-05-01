@@ -1,3 +1,5 @@
+import React from 'react'
+
 import Module from 'parser/core/Module'
 import {getAction} from 'data/ACTIONS'
 
@@ -89,8 +91,23 @@ export default class Cooldowns extends Module {
 		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
 	}
 
-	// Super temp
+	// Pretty temp
 	output() {
-		return JSON.stringify(this.cooldowns)
+		return <ul>
+			{Object.keys(this.cooldowns).map(actionId => {
+				const action = getAction(actionId)
+				return <li key={actionId}>
+					{action.name}
+					<ul>
+						{this.cooldowns[actionId].history.map(use =>
+							<li key={use.timestamp}>
+								TS: {this.parser.formatTimestamp(use.timestamp)}<br/>
+								CD: {this.parser.formatDuration(use.length)}
+							</li>
+						)}
+					</ul>
+				</li>
+			})}
+		</ul>
 	}
 }

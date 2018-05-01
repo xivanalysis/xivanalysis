@@ -142,6 +142,16 @@ class Parser {
 	}
 
 	// TODO: Pet handling
+
+	formatTimestamp(timestamp) {
+		return this.formatDuration(timestamp - this.fight.start_time)
+	}
+
+	formatDuration(duration) {
+		duration /= 1000
+		const seconds = Math.floor(duration % 60)
+		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	}
 }
 
 export default Parser
