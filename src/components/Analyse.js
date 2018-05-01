@@ -16,6 +16,7 @@ import { fflogsApi } from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import { fetchReportIfNeeded } from 'store/actions'
+import styles from './Analyse.module.css'
 
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
@@ -176,7 +177,7 @@ class Analyse extends Component {
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
-					<Header attached="top">
+					<Header attached="top" className={styles.sidebar}>
 						<JobIcon job={config.job} set={1}/>
 						<Header.Content>
 							{config.job.name}
