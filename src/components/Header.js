@@ -77,6 +77,8 @@ class Header extends Component {
 			<Container>
 				<Menu.Item as={Link} to="/" header>xivanalysis</Menu.Item>
 				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
+
+				<Menu.Item position="right" icon="github" href="https://github.com/ackwell/xivanalysis"/>
 			</Container>
 		</Menu>
 	}
