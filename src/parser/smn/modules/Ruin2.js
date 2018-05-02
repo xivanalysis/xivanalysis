@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 
 import Module from 'parser/core/Module'
+import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 import ACTIONS from 'data/ACTIONS'
 
 import { ActionLink } from 'components/ui/DbLink'
@@ -8,7 +9,8 @@ import { ActionLink } from 'components/ui/DbLink'
 export default class Ruin2 extends Module {
 	static dependencies = [
 		'combatant',
-		'gauge'
+		'gauge',
+		'suggestions'
 	]
 
 	name = 'Ruin 2'
@@ -78,13 +80,19 @@ export default class Ruin2 extends Module {
 		)
 	}
 
-	output() {
+	on_complete() {
 		const potLossPerR2 = this.RUIN3_POT - this.RUIN2_POT
 		const issues = this.issues.length
 		const warnings = this.warnings.length
 
-		return <Fragment>
-			Try to limit your use of <ActionLink {...ACTIONS.RUIN_II}/> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE}/>s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/>. You lost {issues * potLossPerR2} potency to {issues} casts that should have been <ActionLink {...ACTIONS.RUIN_III}/>, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
-		</Fragment>
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.RUIN_III.icon,
+			// This has _way_ too many actionlinks in it. Reduce to like 1 or 2
+			content: <Fragment>
+				Try to limit your use of <ActionLink {...ACTIONS.RUIN_II} /> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE} />s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT} />. You lost {issues * potLossPerR2} potency to {issues} casts that should have been <ActionLink {...ACTIONS.RUIN_III} />, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
+			</Fragment>,
+			why: 'TODO: Text for why, and dynamic severity',
+			severity: SEVERITY.MAJOR
+		}))
 	}
 }
