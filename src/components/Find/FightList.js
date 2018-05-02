@@ -64,12 +64,12 @@ class FightList extends Component {
 				<Header
 					attached="top"
 					inverted
-					className={styles.groupHeader}
+					className={group.zone.banner && styles.groupHeader}
 				>
-					<div
+					{group.zone.banner && <div
 						className={styles.groupHeaderBackground}
 						style={{backgroundImage: `url(${group.zone.banner})`}}
-					/>
+					/>}
 					{group.zone.name}
 				</Header>
 				<Menu attached="bottom" fluid vertical>
