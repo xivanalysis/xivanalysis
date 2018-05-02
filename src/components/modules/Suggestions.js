@@ -33,14 +33,16 @@ class Suggestions extends Component {
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR
 		)
 
+		const hasMinor = this.props.suggestions.some(suggestion => suggestion.SEVERITY === SEVERITY.MINOR)
+
 		return <Fragment>
-			<Checkbox
+			{hasMinor && <Checkbox
 				toggle
 				label="Show minor"
 				defaultChecked={showMinor}
 				onChange={(_, data) => this.setState({showMinor: data.checked})}
 				className={styles.checkbox}
-			/>
+			/>}
 			<Item.Group>
 				{suggestions.map((suggestion, index) => <Item key={index}>
 					<Item.Image size="mini" src={suggestion.icon} />
