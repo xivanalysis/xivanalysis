@@ -6,21 +6,19 @@ import ACTIONS from 'data/ACTIONS'
 
 import { ActionLink } from 'components/ui/DbLink'
 
+// Constants
+// Unlike HW, don't need to worry about mana drain too much. It's just flat pot.
+// TODO: Ok where is this gcd metadata gonna be stored at the end of the day?
+//       ACTIONS is looking more and more tasty
+const RUIN2_POT = 100
+const RUIN3_POT = 120
+
 export default class Ruin2 extends Module {
 	static dependencies = [
 		'combatant',
 		'gauge',
 		'suggestions'
 	]
-
-	name = 'Ruin 2'
-
-	// Constants
-	// Unlike HW, don't need to worry about mana drain too much. It's just flat pot
-	// TODO: Ok where is this gcd metadata gonna be stored at the end of the day?
-	//       ACTIONS is looking more and more tasty
-	RUIN2_POT = 100
-	RUIN3_POT = 120
 
 	// Events
 	// TODO: If (when) I set up the timeline, should probably mark bad R2s on it
@@ -81,7 +79,7 @@ export default class Ruin2 extends Module {
 	}
 
 	on_complete() {
-		const potLossPerR2 = this.RUIN3_POT - this.RUIN2_POT
+		const potLossPerR2 = RUIN3_POT - RUIN2_POT
 		const issues = this.issues.length
 		const warnings = this.warnings.length
 
