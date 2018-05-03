@@ -84,8 +84,8 @@ class Header extends Component {
 					xivanalysis
 				</Menu.Item>
 				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
-				<Menu.Item position="right" icon={<Icon icon={faDiscord}/>} href="https://discord.gg/jVbVe44"/>
-				<Menu.Item icon={<Icon icon={faGithub}/>} href="https://github.com/ackwell/xivanalysis"/>
+				<Menu.Item position="right" icon={<Icon icon={faDiscord}/>} href="https://discord.gg/jVbVe44" target="_blank"/>
+				<Menu.Item icon={<Icon icon={faGithub}/>} href="https://github.com/ackwell/xivanalysis" target="_blank"/>
 			</Container>
 		</Menu>
 	}
