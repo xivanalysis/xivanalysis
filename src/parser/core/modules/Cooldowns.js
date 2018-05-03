@@ -93,6 +93,14 @@ export default class Cooldowns extends Module {
 		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
 	}
 
+	// TODO: Should this be here?
+	getTimeOnCooldown(action) {
+		const cd = this.getCooldown(action)
+
+		// TODO: This doesn't account for anything in `current`.
+		return cd.history.reduce((time, status) => time + status.length, 0)
+	}
+
 	// Pretty temp
 	output() {
 		return <ul>

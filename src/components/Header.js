@@ -5,8 +5,7 @@ import PropTypes from 'prop-types'
 import { Container, Menu } from 'semantic-ui-react'
 
 import Icon from '@fortawesome/react-fontawesome'
-import faDiscord from '@fortawesome/fontawesome-free-brands/faDiscord'
-import faGithub from '@fortawesome/fontawesome-free-brands/faGithub'
+import { faDiscord, faGithub } from '@fortawesome/fontawesome-free-brands'
 
 import { getPathMatch } from 'utilities'
 import logo from './logo.png'

@@ -7,6 +7,7 @@ import CoreChecklist, { Rule, Requirement } from 'parser/core/modules/Checklist'
 
 export default class Checklist extends CoreChecklist {
 	static dependencies = [
+		'cooldowns',
 		'enemies'
 	]
 
@@ -24,6 +25,16 @@ export default class Checklist extends CoreChecklist {
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.MIASMA_III}/> uptime</Fragment>,
 					percent: () => (this.enemies.getStatusUptime(STATUSES.MIASMA_III.id) / this.parser.fightDuration) * 100
+				})
+			]
+		}),
+		new Rule({
+			name: <Fragment>Keep <ActionLink {...ACTIONS.AETHERFLOW}/>&apos;s cooldown rolling</Fragment>,
+			description: 'SMN\'s entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.',
+			requirements: [
+				new Requirement({
+					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
+					percent: () => (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW) / this.parser.fightDuration) * 100
 				})
 			]
 		})
