@@ -5,6 +5,7 @@ import PropTypes from 'prop-types'
 import { Container, Menu } from 'semantic-ui-react'
 
 import { getPathMatch } from 'utilities'
+import logo from './logo.png'
 
 class Header extends Component {
 	static propTypes = {
@@ -75,9 +76,11 @@ class Header extends Component {
 
 		return <Menu fixed="top" inverted>
 			<Container>
-				<Menu.Item as={Link} to="/" header>xivanalysis</Menu.Item>
+				<Menu.Item as={Link} to="/" header>
+					<img src={logo} style={{height: 20, width: 'auto', marginRight: '0.5em'}}/>
+					xivanalysis
+				</Menu.Item>
 				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
-
 				<Menu.Item position="right" icon="github" href="https://github.com/ackwell/xivanalysis"/>
 			</Container>
 		</Menu>
