@@ -16,6 +16,7 @@ import { fflogsApi } from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import { fetchReportIfNeeded } from 'store/actions'
+import JOBS from 'data/JOBS'
 import styles from './Analyse.module.css'
 
 class Analyse extends Component {
@@ -128,8 +129,14 @@ class Analyse extends Component {
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
 
-		// Grab the parser for the combatant and broadcast an init to the modules
+		// Get the config for the parser, stop now if there is none.
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
+		if (!config) {
+			alert(`${JOBS[combatant.type].name} is not currently supported. Sorry!`)
+			return
+		}
+
+		// Grab the parser for the combatant and broadcast an init to the modules
 		const parser = new config.parser(report, fight, combatant)
 		this.setState({ config: config, parser: parser})
 		parser.fabricateEvent({type: 'init'})
@@ -167,7 +174,7 @@ class Analyse extends Component {
 		// TODO: Nice loading bar and shit
 		if (!parser || !complete) {
 			return <Container>
-				<Loader>Loading analysis</Loader>
+				<Loader active>Loading analysis</Loader>
 			</Container>
 		}
 

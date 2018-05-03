@@ -6,6 +6,7 @@ import { Header, Menu, Segment } from 'semantic-ui-react'
 import styles from './CombatantList.module.css'
 import JOBS, { ROLES } from 'data/JOBS'
 import JobIcon from 'components/ui/JobIcon'
+import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 
 class CombatantList extends Component {
 	static propTypes = {
@@ -27,15 +28,20 @@ class CombatantList extends Component {
 		const { friendlies } = this.props.report
 		const currentFight = this.props.currentFight
 
+		const configs = AVAILABLE_CONFIGS.map(config => config.job.logType)
+
 		// Filter down to just the friendlies in this fight (that aren't limit break), grouping by role
 		const grouped = [] // Relying on magic here
 		friendlies.forEach(friendly => {
 			const inFight = friendly.fights.some(fight => fight.id === currentFight)
-			if (friendly.type === 'LimitBreak' || !inFight) {
+			const type = friendly.type
+			if (type === 'LimitBreak' || !inFight) {
 				return
 			}
 
-			const role = JOBS[friendly.type].role
+			// Get the job for the friendly. Gonna push jobs w/o a parser into a special group
+			const role = configs.includes(type) ? JOBS[type].role : ROLES.UNSUPPORTED.id
+
 			if (!grouped[role]) {
 				grouped[role] = []
 			}
@@ -48,8 +54,7 @@ class CombatantList extends Component {
 			</Header>
 
 			{grouped.map((friends, index) => {
-				const job = JOBS[friends[0].type]
-				const role = ROLES[job.role]
+				const role = ROLES[index]
 				return <Fragment key={index}>
 					<Segment color={role.colour} attached="top">
 						{role.name}

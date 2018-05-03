@@ -18,6 +18,13 @@ export const ROLES = addExtraIndex({
 		name: 'DPS',
 		colour: 'red'
 	},
+
+	// Not really a role but w/e
+	UNSUPPORTED: {
+		id: 100,
+		name: 'Unsupported',
+		colour: 'grey'
+	}
 }, 'id')
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
