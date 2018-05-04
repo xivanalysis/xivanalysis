@@ -4,9 +4,6 @@ import { Link, withRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { Container, Menu } from 'semantic-ui-react'
 
-import Icon from '@fortawesome/react-fontawesome'
-import { faDiscord, faGithub } from '@fortawesome/fontawesome-free-brands'
-
 import { getPathMatch } from 'utilities'
 import logo from './logo.png'
 
@@ -86,8 +83,8 @@ class Header extends Component {
 				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
 
 				<Menu.Menu position="right">
-					<Menu.Item icon={<Icon icon={faDiscord}/>} href="https://discord.gg/jVbVe44" target="_blank"/>
-					<Menu.Item icon={<Icon icon={faGithub}/>} href="https://github.com/ackwell/xivanalysis" target="_blank"/>
+					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
+					<Menu.Item icon="github" href="https://github.com/ackwell/xivanalysis" target="_blank"/>
 				</Menu.Menu>
 			</Container>
 		</Menu>
