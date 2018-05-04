@@ -97,9 +97,13 @@ export default class Cooldowns extends Module {
 	// TODO: Should this be here?
 	getTimeOnCooldown(action) {
 		const cd = this.getCooldown(action)
+		const currentTimestamp = this.parser.currentTimestamp
 
-		// TODO: This doesn't account for anything in `current`.
-		return cd.history.reduce((time, status) => time + status.length, 0)
+		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
+		return cd.history.reduce(
+			(time, status) => time + Math.min(status.length, currentTimestamp - status.timestamp),
+			cd.current? Math.min(cd.current.length, currentTimestamp - cd.current.timestamp) : 0
+		)
 	}
 
 	// Pretty temp
