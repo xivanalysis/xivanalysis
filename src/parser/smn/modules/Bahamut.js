@@ -8,6 +8,7 @@ export default class Bahamut extends Module {
 	static dependencies = [
 		'gauge'
 	]
+	name = 'Bahamut'
 
 	counting = false
 	wwCount = 0

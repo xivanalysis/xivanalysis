@@ -12,7 +12,7 @@ export default class Module {
 
 	_name = null
 	get name() {
-		return this._name || this.constructor.name
+		return this._name || ('DEV: ' + this.constructor.name)
 	}
 	set name(value) {
 		this._name = value

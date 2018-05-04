@@ -6,6 +6,7 @@ import styles from './Checklist.module.css'
 
 export default class Checklist extends Module {
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
+	name = 'Checklist'
 
 	rules = []
 

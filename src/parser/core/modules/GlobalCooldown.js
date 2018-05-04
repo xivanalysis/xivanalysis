@@ -8,6 +8,8 @@ const MIN_GCD = 1.5
 const MAX_GCD = 2.5
 
 export default class GlobalCooldown extends Module {
+	name = 'Global Cooldown'
+
 	lastGcd = -1
 	currentAction = null
 

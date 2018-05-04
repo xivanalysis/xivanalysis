@@ -7,6 +7,7 @@ import {getAction} from 'data/ACTIONS'
 export default class Cooldowns extends Module {
 	// I mean this isn't even going to have an output when I'm done, so throw it down bottom
 	static displayOrder = DISPLAY_ORDER.BOTTOM
+	name = 'Cooldowns'
 
 	currentAction = null
 	cooldowns = {}

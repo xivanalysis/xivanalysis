@@ -6,6 +6,7 @@ import Suggestion from './Suggestion'
 
 export default class Suggestions extends Module {
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
+	name = 'Suggestions'
 
 	suggestions = []
 
