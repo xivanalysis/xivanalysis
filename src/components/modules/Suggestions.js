@@ -33,7 +33,7 @@ class Suggestions extends Component {
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR
 		)
 
-		const hasMinor = this.props.suggestions.some(suggestion => suggestion.SEVERITY === SEVERITY.MINOR)
+		const hasMinor = this.props.suggestions.some(suggestion => suggestion.severity === SEVERITY.MINOR)
 
 		return <Fragment>
 			{hasMinor && <Checkbox
