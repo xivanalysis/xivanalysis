@@ -1,5 +1,6 @@
 import toposort from 'toposort'
 
+import AlwaysBeCasting from './modules/AlwaysBeCasting'
 import Checklist from './modules/Checklist'
 import Combatant from './modules/Combatant'
 import Cooldowns from './modules/Cooldowns'
@@ -14,6 +15,7 @@ class Parser {
 	// -----
 
 	static defaultModules = {
+		abc: AlwaysBeCasting,
 		checklist: Checklist,
 		combatant: Combatant,
 		cooldowns: Cooldowns,
