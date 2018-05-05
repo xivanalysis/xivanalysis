@@ -17,7 +17,7 @@
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.80.0",
+    "semantic-ui-react": "^0.79.1",
     "toposort": "^1.0.6"
   },
   "scripts": {
