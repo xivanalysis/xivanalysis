@@ -8,7 +8,8 @@ import CoreChecklist, { Rule, Requirement } from 'parser/core/modules/Checklist'
 export default class Checklist extends CoreChecklist {
 	static dependencies = [
 		'cooldowns',
-		'enemies'
+		'enemies',
+		'invuln'
 	]
 
 	rules = [
@@ -20,11 +21,11 @@ export default class Checklist extends CoreChecklist {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.BIO_III}/> uptime</Fragment>,
-					percent: () => (this.enemies.getStatusUptime(STATUSES.BIO_III.id) / this.parser.fightDuration) * 100
+					percent: () => this.getDotUptimePercent(STATUSES.BIO_III.id)
 				}),
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.MIASMA_III}/> uptime</Fragment>,
-					percent: () => (this.enemies.getStatusUptime(STATUSES.MIASMA_III.id) / this.parser.fightDuration) * 100
+					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id)
 				})
 			]
 		}),
@@ -39,4 +40,13 @@ export default class Checklist extends CoreChecklist {
 			]
 		})
 	]
+
+	getDotUptimePercent(statusId) {
+		const statusUptime = this.enemies.getStatusUptime(statusId)
+		let fightDuration = this.parser.fightDuration
+
+		fightDuration -= this.invuln.getInvulnerableUptime()
+
+		return (statusUptime / fightDuration) * 100
+	}
 }

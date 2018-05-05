@@ -37,6 +37,8 @@ class Parser {
 	}
 
 	get fightDuration() {
+		// TODO: should i have like... currentDuration and fightDuration?
+		//       this seems a bit jank
 		return this.currentTimestamp - this.fight.start_time
 	}
 
