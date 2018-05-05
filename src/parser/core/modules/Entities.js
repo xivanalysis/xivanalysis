@@ -4,6 +4,10 @@ const APPLY = 'apply'
 const REMOVE = 'remove'
 
 export default class Entities extends Module {
+	static dependencies = [
+		'invuln'
+	]
+
 	// -----
 	// API
 	// -----
@@ -16,6 +20,10 @@ export default class Entities extends Module {
 		// Build up the events array
 		const entities = this.getEntities()
 		Object.values(entities).forEach(entity => {
+			const invulns = this.invuln
+				.getInvulns(entity.id)
+				.filter(invuln => invuln.type === 'invulnerable')
+
 			entity.buffs.forEach(buff => {
 				if (
 					buff.ability.guid !== statusId ||
@@ -24,15 +32,48 @@ export default class Entities extends Module {
 					return
 				}
 
-				events.push({
-					timestamp: buff.start,
-					type: APPLY,
-					buff
-				})
-				events.push({
-					timestamp: buff.end || this.parser.currentTimestamp,
-					type: REMOVE,
-					buff
+				// TODO: What if we're trying to track a buff through an invuln window?
+				//       is that going to be a thing? Will need handlig if so.
+				const ranges = [buff]
+				invulns
+					.forEach(invuln => {
+						// discard invulns outside the span of the buff
+						if (invuln.end < buff.start || invuln.start > buff.end) {
+							return
+						}
+
+						// split ranges
+						for (let i = 0; i < ranges.length; i++) {
+							const range = ranges[i]
+
+							if (invuln.start < range.start && invuln.end > range.start) {
+								// Invuln chops start of range
+								range.start = invuln.end
+							} else if (invuln.start < range.end && invuln.end > range.end) {
+								// Invuln chops end of range
+								range.end = invuln.start
+							}	else if (invuln.start > range.start && invuln.end < range.end) {
+								// Invuln splits the range
+								ranges.splice(i, 1,
+									{start: range.start, end: invuln.start},
+									{start: invuln.end, end: range.end}
+								)
+							}
+						}
+					})
+
+				// Add faked events for all the ranges the buff was up
+				ranges.forEach(range => {
+					events.push({
+						timestamp: range.start,
+						type: APPLY,
+						buff
+					})
+					events.push({
+						timestamp: range.end || this.parser.currentTimestamp,
+						type: REMOVE,
+						buff
+					})
 				})
 			})
 		})
