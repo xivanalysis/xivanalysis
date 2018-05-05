@@ -18,6 +18,10 @@ export default class Module {
 		this._name = value
 	}
 
+	normalise(events) {
+		return events
+	}
+
 	triggerEvent(event) {
 		// Calling lots of events... if WoWA stops doing it maybe I will too :eyes:
 		this._callMethod('on_event', event)

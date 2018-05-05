@@ -4,6 +4,7 @@ import Combatant from './modules/Combatant'
 import Cooldowns from './modules/Cooldowns'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
+import Invulnerability from './modules/Invulnerability'
 import Suggestions from './modules/Suggestions'
 
 class Parser {
@@ -16,6 +17,7 @@ class Parser {
 		cooldowns: Cooldowns,
 		enemies: Enemies,
 		gcd: GlobalCooldown,
+		invuln: Invulnerability,
 		suggestions: Suggestions
 	}
 	static jobModules = {}
@@ -26,6 +28,8 @@ class Parser {
 
 	modules = {}
 	_timestamp = 0
+
+	moduleOrder = []
 
 	get currentTimestamp() {
 		// TODO: this.finished?
@@ -82,6 +86,13 @@ class Parser {
 	// -----
 
 	parseEvents(events) {
+		// Run normalisers
+		// TODO: This will need to be seperate if I start batching
+		this.moduleOrder.forEach(mod => {
+			events = this.modules[mod].normalise(events)
+		})
+
+		// Run the analysis pass
 		events.forEach(event => {
 			this._timestamp = event.timestamp
 			this.triggerEvent(event)
