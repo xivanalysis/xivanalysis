@@ -1,5 +1,6 @@
 import toposort from 'toposort'
 
+import Checklist from './modules/Checklist'
 import Combatant from './modules/Combatant'
 import Cooldowns from './modules/Cooldowns'
 import Enemies from './modules/Enemies'
@@ -13,6 +14,7 @@ class Parser {
 	// -----
 
 	static defaultModules = {
+		checklist: Checklist,
 		combatant: Combatant,
 		cooldowns: Cooldowns,
 		enemies: Enemies,

@@ -1,7 +1,8 @@
 import React, { Fragment } from 'react'
-import { Accordion, Icon, Message, Progress } from 'semantic-ui-react'
+import { Accordion, Icon, Progress } from 'semantic-ui-react'
 
 import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Rule from './Rule'
 import styles from './Checklist.module.css'
 
 export default class Checklist extends Module {
@@ -10,13 +11,18 @@ export default class Checklist extends Module {
 
 	rules = []
 
-	output() {
-		// If there's no rules, output a warning.
-		if (!this.rules.length) {
-			return <Message error>
-				The <code>Checklist</code> module has been included in this parser, but no rules have been defined for it. Make sure you&apos;re using your own subclass, and defining the <code>rules</code> class property.
-			</Message>
+	add(rule) {
+		if (!(rule instanceof Rule)) {
+			console.error('TODO: This error message')
+			return
 		}
+
+		this.rules.push(rule)
+	}
+
+	output() {
+		// If there's no rules, just stop now
+		if (!this.rules.length) { return false }
 
 		const expanded = []
 		const panels = this.rules.map((rule, index) => {

@@ -13,6 +13,7 @@ export default class Suggestions extends Module {
 	add(suggestion) {
 		if (!(suggestion instanceof Suggestion)) {
 			console.error('TODO: Proper error message for passing a non-suggestion to the suggestion add handler')
+			return
 		}
 
 		this.suggestions.push(suggestion)
