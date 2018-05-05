@@ -4,6 +4,8 @@ export default class Rule {
 	name = ''
 	description = null
 	requirements = []
+	target = 75
+	// TODO: Target mode percent/value
 
 	get percent() {
 		// wowa has a bunch of different modes for this stuff, i'm just going to use median for now

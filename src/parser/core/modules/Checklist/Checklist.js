@@ -26,7 +26,7 @@ export default class Checklist extends Module {
 
 		const expanded = []
 		const panels = this.rules.map((rule, index) => {
-			const success = rule.percent > 75
+			const success = rule.percent > rule.target
 			if (!success) {
 				expanded.push(index)
 			}
@@ -38,8 +38,12 @@ export default class Checklist extends Module {
 						{/* Not sure 75 is a good aiming point. Maybe higher? */}
 						<Icon name={success? 'checkmark' : 'remove'}/>
 						{rule.name}
-						{/* Using className for indicting to avoid the active animation */}
-						<Progress percent={rule.percent} className={`indicating ${styles.progress}`} size="small"/>
+						<Progress
+							percent={rule.percent}
+							className={styles.progress}
+							size="small"
+							color={success? 'green' : 'red'}
+						/>
 					</Fragment>
 				},
 				content: {
