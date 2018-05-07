@@ -106,6 +106,14 @@ export default class Cooldowns extends Module {
 		)
 	}
 
+	get used() {
+		return Object.keys(this.cooldowns)
+	}
+
+	getHistory(actionId) {
+		return this.cooldowns[actionId].history
+	}
+
 	// Pretty temp
 	output() {
 		return <ul>

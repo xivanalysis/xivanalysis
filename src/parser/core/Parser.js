@@ -8,6 +8,7 @@ import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 import Invulnerability from './modules/Invulnerability'
 import Suggestions from './modules/Suggestions'
+import Timeline from './modules/Timeline'
 
 class Parser {
 	// -----
@@ -22,7 +23,8 @@ class Parser {
 		enemies: Enemies,
 		gcd: GlobalCooldown,
 		invuln: Invulnerability,
-		suggestions: Suggestions
+		suggestions: Suggestions,
+		timeline: Timeline
 	}
 	static jobModules = {}
 

@@ -14,11 +14,13 @@
     "react-router-dom": "^4.2.2",
     "react-scripts": "2.0.0-next.66cc7a90",
     "react-scroll": "^1.7.9",
+    "react-visjs-timeline": "^1.5.0",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.79.1",
-    "toposort": "^1.0.6"
+    "toposort": "^1.0.6",
+    "vis": "^4.21.0"
   },
   "scripts": {
     "start": "react-scripts start",
