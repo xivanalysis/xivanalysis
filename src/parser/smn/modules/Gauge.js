@@ -33,6 +33,11 @@ export default class Gauge extends Module {
 	on_cast(event) {
 		const abilityId = event.ability.guid
 
+		// DWT resets 3D
+		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
+			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER)
+		}
+
 		// Summon Bahamut
 		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
 			this.lastSummonBahamut = event.timestamp

@@ -23,7 +23,7 @@ export default class Timeline extends Module {
 	getItems() {
 		const items = []
 		this.cooldowns.used.forEach(actionId => {
-			items.push(...this.cooldowns.getHistory(actionId).map(use => ({
+			items.push(...this.cooldowns.getCooldown({id: actionId}).history.map(use => ({
 				type: 'background',
 				start: use.timestamp - this.parser.fight.start_time,
 				end: use.timestamp + use.length - this.parser.fight.start_time,

@@ -94,6 +94,23 @@ export default class Cooldowns extends Module {
 		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
 	}
 
+	resetCooldown(action) {
+		const cd = this.getCooldown(action)
+
+		// If there's nothing running, we can just stop
+		// TODO: need to warn?
+		if (cd.current === null) {
+			return
+		}
+
+		// Fix up the length
+		cd.current.length = this.parser.currentTimestamp - cd.current.timestamp
+
+		// Move the CD into the history
+		cd.history.push(cd.current)
+		cd.current = null
+	}
+
 	// TODO: Should this be here?
 	getTimeOnCooldown(action) {
 		const cd = this.getCooldown(action)
@@ -108,10 +125,6 @@ export default class Cooldowns extends Module {
 
 	get used() {
 		return Object.keys(this.cooldowns)
-	}
-
-	getHistory(actionId) {
-		return this.cooldowns[actionId].history
 	}
 
 	// Pretty temp
