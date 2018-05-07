@@ -1,4 +1,5 @@
 import React from 'react'
+import vis from 'vis'
 import VisTimeline from 'react-visjs-timeline'
 
 import {getAction} from 'data/ACTIONS'
@@ -21,9 +22,11 @@ export default class Timeline extends Module {
 
 	getItems() {
 		const items = []
-		this.cooldowns.used.map(actionId => {
+		this.cooldowns.used.forEach(actionId => {
 			items.push(...this.cooldowns.getHistory(actionId).map(use => ({
-				start: use.timestamp,
+				type: 'background',
+				start: use.timestamp - this.parser.fight.start_time,
+				end: use.timestamp + use.length - this.parser.fight.start_time,
 				group: actionId
 			})))
 		})
@@ -32,7 +35,16 @@ export default class Timeline extends Module {
 
 	output() {
 		const options = {
-			width: '100%'
+			width: '100%',
+			align: 'left',
+			stack: false,
+
+			moment: (date) => vis.moment(date).utc(),
+			min: 0,
+			max: this.parser.fightDuration,
+			start: 0,
+			end: this.parser.fightDuration,
+			zoomMin: 10000
 		}
 
 		return <VisTimeline
