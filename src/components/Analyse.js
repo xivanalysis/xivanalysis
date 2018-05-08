@@ -39,6 +39,8 @@ class Analyse extends Component {
 
 	stickyContext = null
 
+	resultCache = null
+
 	constructor(props) {
 		super(props)
 
@@ -159,7 +161,16 @@ class Analyse extends Component {
 
 		// We're done, signal to the parser as such
 		parser.fabricateEvent({type: 'complete'})
+		this.resultCache = null
 		this.setState({complete: true})
+	}
+
+	getParserResults() {
+		if (!this.resultCache) {
+			this.resultCache = this.state.parser.generateResults()
+		}
+
+		return this.resultCache
 	}
 
 	render() {
@@ -179,7 +190,8 @@ class Analyse extends Component {
 		}
 
 		// Report's done, build output
-		const results = parser.generateResults()
+		// TODO: Need to cache results so re-render for menu and so on doesn't trigger a re-render of the entire parser
+		const results = this.getParserResults()
 
 		return <Container>
 			<Grid>
