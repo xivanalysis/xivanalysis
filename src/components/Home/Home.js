@@ -2,6 +2,7 @@ import React, { Component, Fragment } from 'react'
 import { Container } from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
+
 import styles from './Home.module.css'
 
 class Home extends Component {

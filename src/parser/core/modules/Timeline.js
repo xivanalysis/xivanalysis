@@ -1,5 +1,5 @@
-import React from 'react'
 import moment from 'moment'
+import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 
 import {getAction} from 'data/ACTIONS'

@@ -1,11 +1,11 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
 import { Container, Loader } from 'semantic-ui-react'
 
-import { fetchReportIfNeeded } from 'store/actions'
 import FightList from './FightList'
 import CombatantList from './CombatantList'
+import { fetchReportIfNeeded } from 'store/actions'
 
 class Find extends Component {
 	static propTypes = {

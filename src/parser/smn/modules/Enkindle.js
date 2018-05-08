@@ -1,6 +1,6 @@
-import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import Module from 'parser/core/Module'
 
 // TODO: I dunno if this deserves an entire file to itself
 export default class Enkindle extends Module {

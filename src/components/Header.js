@@ -1,7 +1,7 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Link, withRouter } from 'react-router-dom'
-import PropTypes from 'prop-types'
 import { Container, Menu } from 'semantic-ui-react'
 
 import { getPathMatch } from 'utilities'

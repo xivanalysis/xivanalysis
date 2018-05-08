@@ -1,8 +1,7 @@
 import math from 'mathjsCustom'
 
-import Module from 'parser/core/Module'
-
 import {getAction} from 'data/ACTIONS'
+import Module from 'parser/core/Module'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500

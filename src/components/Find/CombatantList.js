@@ -1,12 +1,13 @@
-import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
 import { Header, Menu, Segment } from 'semantic-ui-react'
 
-import styles from './CombatantList.module.css'
-import JOBS, { ROLES } from 'data/JOBS'
 import JobIcon from 'components/ui/JobIcon'
+import JOBS, { ROLES } from 'data/JOBS'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+
+import styles from './CombatantList.module.css'
 
 class CombatantList extends Component {
 	static propTypes = {

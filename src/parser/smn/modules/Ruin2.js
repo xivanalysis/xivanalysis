@@ -1,10 +1,9 @@
 import React, { Fragment } from 'react'
 
+import ACTIONS from 'data/ACTIONS'
+import { ActionLink } from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
-import ACTIONS from 'data/ACTIONS'
-
-import { ActionLink } from 'components/ui/DbLink'
 
 // Constants
 // Unlike HW, don't need to worry about mana drain too much. It's just flat pot.

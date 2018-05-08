@@ -1,10 +1,11 @@
-import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import React, { Component, Fragment } from 'react'
 import { Checkbox, Header, Menu } from 'semantic-ui-react'
 
-import styles from './FightList.module.css'
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
+
+import styles from './FightList.module.css'
 
 class FightList extends Component {
 	static propTypes = {

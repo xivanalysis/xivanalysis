@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+
 import { SET_REPORT } from './actions'
 
 function report(state=null, action) {

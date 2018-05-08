@@ -1,7 +1,7 @@
 import React from 'react'
 
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 import {getAction} from 'data/ACTIONS'
+import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {

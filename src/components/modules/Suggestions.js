@@ -1,9 +1,10 @@
-import React, { Component, Fragment } from 'react'
 import PropTypes from 'prop-types'
+import React, { Component, Fragment } from 'react'
 import { Checkbox, Item, Label } from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import { SEVERITY } from 'parser/core/modules/Suggestions/Suggestion'
+
 import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {

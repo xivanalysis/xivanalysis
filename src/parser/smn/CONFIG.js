@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
-import JOBS from 'data/JOBS'
+
 import Parser from './Parser'
+import JOBS from 'data/JOBS'
 
 export default {
 	// contributors?

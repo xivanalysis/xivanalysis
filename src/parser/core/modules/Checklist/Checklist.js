@@ -1,8 +1,9 @@
 import React, { Fragment } from 'react'
 import { Accordion, Icon, Progress } from 'semantic-ui-react'
 
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 import Rule from './Rule'
+import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+
 import styles from './Checklist.module.css'
 
 export default class Checklist extends Module {

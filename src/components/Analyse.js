@@ -1,6 +1,7 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+import Scroll from 'react-scroll'
 import {
 	Container,
 	Grid,
@@ -10,13 +11,13 @@ import {
 	Segment,
 	Sticky
 } from 'semantic-ui-react'
-import Scroll from 'react-scroll'
 
 import { fflogsApi } from 'api'
 import JobIcon from 'components/ui/JobIcon'
+import JOBS from 'data/JOBS'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import { fetchReportIfNeeded } from 'store/actions'
-import JOBS from 'data/JOBS'
+
 import styles from './Analyse.module.css'
 
 class Analyse extends Component {
