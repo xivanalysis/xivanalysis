@@ -1,4 +1,4 @@
-import math from 'mathjs'
+import math from 'mathjsCustom'
 
 export default class Rule {
 	name = ''

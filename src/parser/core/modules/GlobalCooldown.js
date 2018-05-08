@@ -1,4 +1,4 @@
-import math from 'mathjs'
+import math from 'mathjsCustom'
 
 import Module from 'parser/core/Module'
 

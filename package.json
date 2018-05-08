@@ -12,7 +12,6 @@
     "react-intersection-observer": "^3.0.3",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
-    "react-scripts": "2.0.0-next.66cc7a90",
     "react-scroll": "^1.7.9",
     "react-visjs-timeline": "^1.5.0",
     "redux": "^3.7.2",
@@ -23,6 +22,7 @@
     "vis": "^4.21.0"
   },
   "scripts": {
+    "analyze": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
@@ -40,5 +40,9 @@
       "Firefox ESR",
       "not ie < 11"
     ]
+  },
+  "devDependencies": {
+    "react-scripts": "2.0.0-next.66cc7a90",
+    "source-map-explorer": "^1.5.0"
   }
 }
