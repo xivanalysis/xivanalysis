@@ -6,6 +6,7 @@
     "axios": "^0.18.0",
     "intersection-observer": "^0.5.0",
     "mathjs": "^4.1.2",
+    "moment": "^2.22.1",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
@@ -22,7 +23,7 @@
     "vis": "^4.21.0"
   },
   "scripts": {
-    "analyze": "source-map-explorer build/static/js/main.*",
+    "analyse": "source-map-explorer build/static/js/main.*",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
