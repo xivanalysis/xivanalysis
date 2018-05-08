@@ -5,6 +5,8 @@ import VisTimeline from 'react-visjs-timeline'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 
+import styles from './Timeline.module.css'
+
 export default class Timeline extends Module {
 	static displayOrder = -100
 	static dependencies = [
@@ -23,11 +25,14 @@ export default class Timeline extends Module {
 	getItems() {
 		const items = []
 		this.cooldowns.used.forEach(actionId => {
+			const action = getAction(actionId)
 			items.push(...this.cooldowns.getCooldown({id: actionId}).history.map(use => ({
 				type: 'background',
 				start: use.timestamp - this.parser.fight.start_time,
 				end: use.timestamp + use.length - this.parser.fight.start_time,
-				group: actionId
+				group: actionId,
+				content: `<img src="${action.icon}" alt="${action.name}">`,
+				className: styles.cooldown
 			})))
 		})
 		return items
