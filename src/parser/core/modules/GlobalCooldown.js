@@ -57,6 +57,9 @@ export default class GlobalCooldown extends Module {
 	getEstimate() {
 		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
 
+		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
+		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
+
 		// Mode seems to get best results. Using mean in case there's module modes.
 		const estimate = math.mean(math.mode(this.gcds))
 

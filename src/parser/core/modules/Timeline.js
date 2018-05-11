@@ -1,6 +1,7 @@
-import moment from 'moment'
+// import moment from 'moment'
 import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
+import vis from 'vis/dist/vis-timeline-graph2d.min'
 
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -44,11 +45,14 @@ export default class Timeline extends Module {
 			align: 'left',
 			stack: false,
 
-			moment: (date) => moment(date).utc(),
+			moment: (date) => vis.moment(date).utc(),
+
 			min: 0,
 			max: this.parser.fightDuration,
+
 			start: 0,
 			end: this.parser.fightDuration,
+
 			zoomMin: 10000
 		}
 

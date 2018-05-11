@@ -6,7 +6,6 @@
     "axios": "^0.18.0",
     "intersection-observer": "^0.5.0",
     "mathjs": "^4.1.2",
-    "moment": "^2.22.1",
     "prop-types": "^15.6.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
