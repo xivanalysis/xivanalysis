@@ -41,19 +41,34 @@ export default class Timeline extends Module {
 
 	output() {
 		const options = {
+			// General styling
 			width: '100%',
 			align: 'left',
 			stack: false,
+			showCurrentTime: false,
 
+			// Date/time formatting
 			moment: (date) => vis.moment(date).utc(),
+			maxMinorChars: 4,
+			format: {
+				minorLabels: {
+					minute: 'm[m]'
+				},
+				majorLabels: {
+					second: 'm[m]',
+					minute: ''
+				}
+			},
 
+			// View constraints
 			min: 0,
 			max: this.parser.fightDuration,
+			zoomMin: 10000,
 
+			// View defaults
+			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,
-			end: this.parser.fightDuration,
-
-			zoomMin: 10000
+			end: Math.min(this.parser.fightDuration, 60000)
 		}
 
 		return <VisTimeline
