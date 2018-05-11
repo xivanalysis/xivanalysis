@@ -11,7 +11,8 @@ import styles from './Timeline.module.css'
 export default class Timeline extends Module {
 	static displayOrder = -100
 	static dependencies = [
-		'cooldowns'
+		'cooldowns',
+		'invuln'
 	]
 	name = 'Timeline'
 
@@ -24,18 +25,38 @@ export default class Timeline extends Module {
 	}
 
 	getItems() {
+		// TODO: This is going to get pretty big if I let it... and there's potential for
+		//       job-specific info that could be good on the timeline
+		//       Might be worth moving this into a format akin to checklist/suggestions
+		//       ... how would I do styling for that?
+
 		const items = []
+
+		var startTime = this.parser.fight.start_time
+
+		// Cooldown cooldowns
 		this.cooldowns.used.forEach(actionId => {
 			const action = getAction(actionId)
 			items.push(...this.cooldowns.getCooldown({id: actionId}).history.map(use => ({
 				type: 'background',
-				start: use.timestamp - this.parser.fight.start_time,
-				end: use.timestamp + use.length - this.parser.fight.start_time,
+				start: use.timestamp - startTime,
+				end: use.timestamp + use.length - startTime,
 				group: actionId,
 				content: `<img src="${action.icon}" alt="${action.name}">`,
 				className: styles.cooldown
 			})))
 		})
+
+		// All-target invuln periods
+		this.invuln.getInvulns().forEach(invuln => {
+			items.push({
+				type: 'background',
+				start: invuln.start - startTime,
+				end: invuln.end - startTime,
+				className: styles[invuln.type]
+			})
+		})
+
 		return items
 	}
 
