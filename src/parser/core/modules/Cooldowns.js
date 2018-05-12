@@ -67,7 +67,7 @@ export default class Cooldowns extends Module {
 					start: use.timestamp - startTime,
 					length: use.length,
 					group: id,
-					content: `<img src="${action.icon}" alt="${action.name}">`
+					content: <img src={action.icon} alt={action.name}/>
 				}))
 			})
 		})

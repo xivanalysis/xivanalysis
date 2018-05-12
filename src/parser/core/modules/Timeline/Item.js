@@ -1,3 +1,6 @@
+import React from 'react'
+import { renderToString } from 'react-dom/server'
+
 export default class Item {
 	_end = null
 	set end(value) {
@@ -16,10 +19,15 @@ export default class Item {
 	// Need to provide a means for generating the final output so getters work
 	// TODO: There's gotta be a better way right?
 	getObject() {
+		let content = this.content
+		if (React.isValidElement(content)) {
+			content = renderToString(content)
+		}
+
 		return {
 			className: this.className,
 			align: this.align,
-			content: this.content,
+			content,
 			end: this.end,
 			group: this.group,
 			id: this.id,
