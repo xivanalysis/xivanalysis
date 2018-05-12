@@ -1,10 +1,14 @@
 import React from 'react'
 
-import {getAction} from 'data/ACTIONS'
+import { getAction } from 'data/ACTIONS'
 import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import { Group, Item } from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
+	static dependencies = [
+		'timeline'
+	]
 	// I mean this isn't even going to have an output when I'm done, so throw it down bottom
 	static displayOrder = DISPLAY_ORDER.BOTTOM
 	name = 'Cooldowns'
@@ -37,13 +41,35 @@ export default class Cooldowns extends Module {
 	}
 
 	on_complete() {
-		// The parse has finished - clean out any 'current' cooldowns into the history
+		const startTime = this.parser.fight.start_time
+
 		Object.keys(this.cooldowns).forEach(id => {
 			const cd = this.cooldowns[id]
+
+			// Clean out any 'current' cooldowns into the history
 			if (cd.current) {
 				cd.history.push(cd.current)
 				cd.current = null
 			}
+
+			// Add CD info to the timeline
+			// TODO: Might want to move group generation somewhere else
+			//       though will need to handle hidden groups for things with no items
+			const action = getAction(id)
+			this.timeline.addGroup(new Group({
+				id,
+				content: action.name
+			}))
+
+			cd.history.forEach(use => {
+				this.timeline.addItem(new Item({
+					type: 'background',
+					start: use.timestamp - startTime,
+					end: use.timestamp + use.length - startTime,
+					group: id,
+					content: `<img src="${action.icon}" alt="${action.name}">`
+				}))
+			})
 		})
 	}
 
