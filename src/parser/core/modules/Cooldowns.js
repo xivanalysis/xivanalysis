@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { getAction } from 'data/ACTIONS'
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Module from 'parser/core/Module'
 import { Group, Item } from './Timeline'
 
 // Track the cooldowns on actions and shit
@@ -9,9 +9,6 @@ export default class Cooldowns extends Module {
 	static dependencies = [
 		'timeline'
 	]
-	// I mean this isn't even going to have an output when I'm done, so throw it down bottom
-	static displayOrder = DISPLAY_ORDER.BOTTOM
-	name = 'Cooldowns'
 
 	currentAction = null
 	cooldowns = {}
@@ -151,25 +148,5 @@ export default class Cooldowns extends Module {
 
 	get used() {
 		return Object.keys(this.cooldowns)
-	}
-
-	// Pretty temp
-	output() {
-		return <ul>
-			{Object.keys(this.cooldowns).map(actionId => {
-				const action = getAction(actionId)
-				return <li key={actionId}>
-					{action.name}
-					<ul>
-						{this.cooldowns[actionId].history.map(use =>
-							<li key={use.timestamp}>
-								TS: {this.parser.formatTimestamp(use.timestamp)}<br/>
-								CD: {this.parser.formatDuration(use.length)}
-							</li>
-						)}
-					</ul>
-				</li>
-			})}
-		</ul>
 	}
 }
