@@ -65,7 +65,7 @@ export default class Cooldowns extends Module {
 				this.timeline.addItem(new Item({
 					type: 'background',
 					start: use.timestamp - startTime,
-					end: use.timestamp + use.length - startTime,
+					length: use.length,
 					group: id,
 					content: `<img src="${action.icon}" alt="${action.name}">`
 				}))

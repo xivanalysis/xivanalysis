@@ -1,4 +1,12 @@
 export default class Item {
+	_end = null
+	set end(value) {
+		this._end = value
+	}
+	get end() {
+		return this._end || this.start + this.length
+	}
+
 	constructor(options) {
 		Object.keys(options || {}).forEach(key => {
 			this[key] = options[key]
