@@ -2,11 +2,15 @@ import math from 'mathjsCustom'
 
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
+import { Group, Item } from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
 
 export default class GlobalCooldown extends Module {
+	static dependencies = [
+		'timeline'
+	]
 	name = 'Global Cooldown'
 
 	lastGcd = -1
@@ -41,13 +45,36 @@ export default class GlobalCooldown extends Module {
 		this.saveGcd(event)
 	}
 
+	on_complete() {
+		const gcdLength = this.getEstimate()
+		const startTime = this.parser.fight.start_time
+
+		// TODO: Look into adding items to groups? Maybe?
+		this.timeline.addGroup(new Group({
+			id: 'gcd',
+			content: 'GCD'
+		}))
+
+		this.gcds.forEach(gcd => {
+			this.timeline.addItem(new Item({
+				type: 'background',
+				start: gcd.timestamp - startTime,
+				length: gcdLength,
+				group: 'gcd'
+			}))
+		})
+	}
+
 	saveGcd(event) {
 		if (this.lastGcd >= 0) {
 			const diff = event.timestamp - this.lastGcd
 
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			const gcd = Math.round(diff/10)
-			this.gcds.push(gcd*10)
+			const gcd = Math.round(diff/10)*10
+			this.gcds.push({
+				timestamp: event.timestamp,
+				length: gcd
+			})
 		}
 
 		// Store current gcd time for the check
@@ -60,8 +87,9 @@ export default class GlobalCooldown extends Module {
 		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
 		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
 
-		// Mode seems to get best results. Using mean in case there's module modes.
-		const estimate = math.mean(math.mode(this.gcds))
+		// Mode seems to get best results. Using mean in case there's multiple modes.
+		const lengths = this.gcds.map(gcd => gcd.length)
+		const estimate = math.mean(math.mode(lengths))
 
 		// Bound the result
 		return Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
