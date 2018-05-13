@@ -83,7 +83,7 @@ class Header extends Component {
 
 				<Menu.Menu position="right">
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
-					<Menu.Item icon="github" href="https://github.com/ackwell/xivanalysis" target="_blank"/>
+					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
 				</Menu.Menu>
 			</Container>
 		</Menu>
