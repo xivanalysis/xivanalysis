@@ -9,7 +9,7 @@ const MAX_WEAVES = 2
 export default class Weaving extends Module {
 	static displayOrder = -100
 
-	weaves = 0
+	weaves = []
 	gcdEvent = null
 	history = []
 
@@ -17,14 +17,14 @@ export default class Weaving extends Module {
 		const action = getAction(event.ability.guid)
 
 		// If it's not a GCD, just bump the weave count
-		if (!action.onGcd) {
-			this.weaves++
+		if (this.isOgcd(action)) {
+			this.weaves.push(event)
 			return
 		}
 
 		// If there's no gcd event, they're weaving on first GCD.
 		// TODO: Do I care?
-		if (this.gcdEvent === null && this.weaves > 0) {
+		if (this.gcdEvent === null && this.weaves.length > 0) {
 			console.warn(this.weaves, 'weaves before first GCD. Check.')
 		}
 
@@ -36,15 +36,24 @@ export default class Weaving extends Module {
 
 		// Reset
 		this.gcdEvent = event
-		this.weaves = 0
+		this.weaves = []
+	}
+
+	isOgcd(action) {
+		return !action.onGcd
+			&& !action.autoAttack
 	}
 
 	output() {
-		const badWeaves = this.history.filter(item => item.weaves > MAX_WEAVES)
+		const badWeaves = this.history.filter(item => item.weaves.length > MAX_WEAVES)
 		return <ul>
 			{badWeaves.map(item => <li key={item.gcdEvent.timestamp}>
 				TS: {this.parser.formatTimestamp(item.gcdEvent.timestamp)}<br/>
-				Weaves: {item.weaves}
+				Weaves: ({item.weaves.length}) <ul>
+					{item.weaves.map(weave => <li key={weave.timestamp}>
+						{weave.ability.name}
+					</li>)}
+				</ul>
 			</li>)}
 		</ul>
 	}

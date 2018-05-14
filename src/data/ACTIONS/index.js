@@ -1,11 +1,13 @@
 import { addExtraIndex } from 'utilities'
 
+import SHARED from './SHARED'
 import ROLE from './ROLE'
 import ACN from './ACN'
 import WHM from './WHM'
 import SMN from './SMN'
 
 const ACTIONS = {
+	...SHARED,
 	...ROLE,
 	...ACN,
 
