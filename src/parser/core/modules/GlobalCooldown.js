@@ -1,4 +1,5 @@
 import math from 'mathjsCustom'
+import React from 'react'
 
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -56,11 +57,13 @@ export default class GlobalCooldown extends Module {
 		}))
 
 		this.gcds.forEach(gcd => {
+			const action = getAction(gcd.actionId)
 			this.timeline.addItem(new Item({
 				type: 'background',
 				start: gcd.timestamp - startTime,
 				length: gcdLength,
-				group: 'gcd'
+				group: 'gcd',
+				content: <img src={action.icon} alt={action.name}/>
 			}))
 		})
 	}
@@ -73,7 +76,8 @@ export default class GlobalCooldown extends Module {
 			const gcd = Math.round(diff/10)*10
 			this.gcds.push({
 				timestamp: event.timestamp,
-				length: gcd
+				length: gcd,
+				actionId: event.ability.guid
 			})
 		}
 
