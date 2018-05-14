@@ -1,7 +1,7 @@
 import math from 'mathjsCustom'
 import React from 'react'
 
-import {getAction} from 'data/ACTIONS'
+import { getAction } from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import { Group, Item } from './Timeline'
 

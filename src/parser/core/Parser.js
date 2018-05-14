@@ -9,6 +9,7 @@ import GlobalCooldown from './modules/GlobalCooldown'
 import Invulnerability from './modules/Invulnerability'
 import Suggestions from './modules/Suggestions'
 import Timeline from './modules/Timeline'
+import Weaving from './modules/Weaving'
 
 class Parser {
 	// -----
@@ -24,7 +25,8 @@ class Parser {
 		gcd: GlobalCooldown,
 		invuln: Invulnerability,
 		suggestions: Suggestions,
-		timeline: Timeline
+		timeline: Timeline,
+		weaving: Weaving
 	}
 	static jobModules = {}
 
