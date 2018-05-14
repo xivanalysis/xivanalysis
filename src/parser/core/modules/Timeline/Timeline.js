@@ -2,12 +2,12 @@ import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
-import Module from 'parser/core/Module'
+import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 
 import './Timeline.module.css'
 
 export default class Timeline extends Module {
-	static displayOrder = -100
+	static displayOrder = DISPLAY_ORDER.BOTTOM
 	name = 'Timeline'
 
 	groups = []

@@ -96,6 +96,7 @@ export default class GlobalCooldown extends Module {
 		const estimate = math.mean(math.mode(lengths))
 
 		// Bound the result
+		// TODO: Warn somewhere if initial estimate is outside bounds
 		return Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
 	}
 
