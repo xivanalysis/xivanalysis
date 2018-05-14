@@ -7,6 +7,9 @@ import Module from 'parser/core/Module'
 const MAX_WEAVES = 2
 
 export default class Weaving extends Module {
+	static dependencies = [
+		'invuln'
+	]
 	static displayOrder = -100
 
 	weaves = []
@@ -17,7 +20,7 @@ export default class Weaving extends Module {
 		const action = getAction(event.ability.guid)
 
 		// If it's not a GCD, just bump the weave count
-		if (this.isOgcd(action)) {
+		if (this.isOgcd(action) && !this.invuln.isUntargetable()) {
 			this.weaves.push(event)
 			return
 		}
