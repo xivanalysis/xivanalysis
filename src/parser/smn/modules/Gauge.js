@@ -2,6 +2,7 @@ import React, { Fragment } from 'react'
 
 import { ActionLink } from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import { Rule, Requirement } from 'parser/core/modules/Checklist'
 
@@ -9,22 +10,20 @@ import { Rule, Requirement } from 'parser/core/modules/Checklist'
 export default class Gauge extends Module {
 	static dependencies = [
 		'checklist',
-		'cooldowns'
+		'cooldowns',
+		'pets'
 	]
 
 	// -----
 	// Properties
 	// -----
-	SUMMON_BAHAMUT_LENGTH = 20000
-
 	lastSummonBahamut = -1
 
 	// -----
 	// API
 	// -----
 	bahamutSummoned() {
-		const last = this.lastSummonBahamut
-		return last > 0 && this.parser.currentTimestamp - last <= this.SUMMON_BAHAMUT_LENGTH
+		return this.pets.getCurrentPet().id === PETS.DEMI_BAHAMUT.id
 	}
 
 	// -----
@@ -39,9 +38,7 @@ export default class Gauge extends Module {
 		}
 
 		// Summon Bahamut
-		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
-			this.lastSummonBahamut = event.timestamp
-		}
+		// TODO: Reset dreadwyrm aether
 	}
 
 	on_complete() {

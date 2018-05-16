@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 
 import ACTIONS from 'data/ACTIONS'
+import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 
 export default class Bahamut extends Module {
@@ -30,18 +31,20 @@ export default class Bahamut extends Module {
 		if (abilityId === ACTIONS.AKH_MORN.id) {
 			this.amCount ++
 		}
+	}
 
+	on_summonpet(event) {
 		// Set this up so we know that something's started
-		if (!this.counting && this.gauge.bahamutSummoned()) {
+		if (!this.counting && event.petId === PETS.DEMI_BAHAMUT.id) {
 			this.counting = true
+			this.wwCount = 0
+			this.amCount = 0
 		}
 
 		// Aaaand pull it apart again once we're done
-		if (this.counting && !this.gauge.bahamutSummoned()) {
+		if (this.counting && event.petId !== PETS.DEMI_BAHAMUT.id) {
 			this.counting = false
 			this.results.push({ww: this.wwCount, am: this.amCount})
-			this.wwCount = 0
-			this.amCount = 0
 		}
 	}
 
