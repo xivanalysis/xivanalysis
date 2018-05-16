@@ -102,11 +102,15 @@ class Parser {
 			events = this.modules[mod].normalise(events)
 		})
 
+		this.fabricateEvent({type: 'init'})
+
 		// Run the analysis pass
 		events.forEach(event => {
 			this._timestamp = event.timestamp
 			this.triggerEvent(event)
 		})
+
+		this.fabricateEvent({type: 'complete'})
 	}
 
 	fabricateEvent(event, trigger) {

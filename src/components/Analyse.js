@@ -142,7 +142,6 @@ class Analyse extends Component {
 		// Grab the parser for the combatant and broadcast an init to the modules
 		const parser = new config.parser(report, fight, combatant)
 		this.setState({ config: config, parser: parser})
-		parser.fabricateEvent({type: 'init'})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
@@ -160,8 +159,6 @@ class Analyse extends Component {
 		// TODO: Batch
 		parser.parseEvents(events)
 
-		// We're done, signal to the parser as such
-		parser.fabricateEvent({type: 'complete'})
 		this.resultCache = null
 		this.setState({complete: true})
 	}
