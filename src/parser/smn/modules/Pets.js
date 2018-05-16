@@ -1,3 +1,5 @@
+import React from 'react'
+
 import ACTIONS, { getAction } from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
@@ -13,6 +15,8 @@ const SUMMON_ACTIONS = {
 const SUMMON_BAHAMUT_LENGTH = 20000
 
 export default class Pets extends Module {
+	static displayOrder = -100
+
 	lastPet = null
 	currentPet = null
 	history = []
@@ -122,6 +126,19 @@ export default class Pets extends Module {
 	}
 
 	output() {
-		return JSON.stringify(this.history)
+		const fightDuration = this.parser.fightDuration
+
+		const petUptime = {}
+		this.history.forEach(history => {
+			petUptime[history.id] = (petUptime[history.id] || 0) + history.end - history.start
+		})
+
+		return <ul>
+			{Object.keys(petUptime).map(petId => <li key={petId}>
+				Pet: {PETS[petId].name}<br/>
+				Uptime: {this.parser.formatDuration(petUptime[petId])}<br/>
+				%: {(petUptime[petId]/fightDuration)*100}
+			</li>)}
+		</ul>
 	}
 }
