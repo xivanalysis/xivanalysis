@@ -23,7 +23,8 @@ export default class Gauge extends Module {
 	// API
 	// -----
 	bahamutSummoned() {
-		return this.pets.getCurrentPet().id === PETS.DEMI_BAHAMUT.id
+		const pet = this.pets.getCurrentPet()
+		return pet && pet.id === PETS.DEMI_BAHAMUT.id
 	}
 
 	// -----

@@ -15,6 +15,7 @@ const SUMMON_BAHAMUT_LENGTH = 20000
 export default class Pets extends Module {
 	lastPet = null
 	currentPet = null
+	history = []
 
 	lastSummonBahamut = -1
 
@@ -45,7 +46,7 @@ export default class Pets extends Module {
 			) { continue }
 
 			// We've found the first pet cast - that'll be our starting pet
-			this.lastPet = action.pet
+			this.lastPet = {id: action.pet}
 			break
 		}
 
@@ -54,7 +55,7 @@ export default class Pets extends Module {
 
 	on_init() {
 		// Just holding off the setPet until now so no events being created during normalise
-		this.setPet(this.lastPet)
+		this.setPet(this.lastPet.id)
 	}
 
 	on_cast_byPlayer(event) {
@@ -74,22 +75,40 @@ export default class Pets extends Module {
 
 	on_event(event) {
 		if (
-			this.currentPet === PETS.DEMI_BAHAMUT.id &&
+			this.currentPet &&
+			this.currentPet.id === PETS.DEMI_BAHAMUT.id &&
 			this.lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
 		) {
-			this.setPet(this.lastPet, this.lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+			this.setPet(this.lastPet.id, this.lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
 		}
+	}
+
+	on_complete(event) {
+		this.history.push({
+			id: this.currentPet.id,
+			start: this.currentPet.timestamp,
+			end: event.timestamp
+		})
 	}
 
 	// TODO: What about when a pet dies?
 
 	setPet(petId, timestamp) {
-		this.lastPet = this.currentPet
-		this.currentPet = petId
-
 		timestamp = timestamp || this.parser.currentTimestamp
 
-		// TODO: track the history
+		this.lastPet = this.currentPet
+		this.currentPet = {
+			id: petId,
+			timestamp
+		}
+
+		if (this.lastPet) {
+			this.history.push({
+				id: this.lastPet.id,
+				start: this.lastPet.timestamp,
+				end: timestamp
+			})
+		}
 
 		this.parser.fabricateEvent({
 			type: 'summonpet',
@@ -99,6 +118,10 @@ export default class Pets extends Module {
 	}
 
 	getCurrentPet() {
-		return PETS[this.currentPet]
+		return PETS[this.currentPet.id]
+	}
+
+	output() {
+		return JSON.stringify(this.history)
 	}
 }
