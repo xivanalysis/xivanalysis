@@ -1,3 +1,5 @@
+import PETS from '../PETS'
+
 // Splitting ACN spells out of SMN/SCH so they aren't duped
 export default {
 	// -----
@@ -115,55 +117,63 @@ export default {
 	GUST: {
 		id: 637,
 		name: 'Gust',
-		icon: 'https://secure.xivdb.com/img/game/000000/000561.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000561.png',
+		pet: PETS.EMERALD_CARBUNCLE.id
 	},
 
 	BACKDRAFT: {
 		id: 638,
 		name: 'Backdraft',
 		icon: 'https://secure.xivdb.com/img/game/000000/000563.png',
-		cooldown: 90
+		cooldown: 90,
+		pet: PETS.EMERALD_CARBUNCLE.id
 	},
 
 	DOWNBURST: {
 		id: 639,
 		name: 'Downburst',
 		icon: 'https://secure.xivdb.com/img/game/000000/000562.png',
-		cooldown: 30
+		cooldown: 30,
+		pet: PETS.EMERALD_CARBUNCLE.id
 	},
 
 	SHINING_EMERALD: {
 		id: 640,
 		name: 'Shining Emerald',
 		icon: 'https://secure.xivdb.com/img/game/000000/000564.png',
-		cooldown: 60
+		cooldown: 60,
+		pet: PETS.EMERALD_CARBUNCLE.id
 	},
 
 	// Topaz Carbuncle
 	GOUGE: {
 		id: 633,
 		name: 'Gouge',
-		icon: 'https://secure.xivdb.com/img/game/000000/000551.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000551.png',
+		pet: PETS.TOPAZ_CARBUNCLE.id
 	},
 
 	SHINING_TOPAZ: {
 		id: 634,
 		name: 'Shining Topaz',
 		icon: 'https://secure.xivdb.com/img/game/000000/000552.png',
-		cooldown: 15
+		cooldown: 15,
+		pet: PETS.TOPAZ_CARBUNCLE.id
 	},
 
 	CURL: {
 		id: 635,
 		name: 'Curl',
 		icon: 'https://secure.xivdb.com/img/game/000000/000553.png',
-		cooldown: 120
+		cooldown: 120,
+		pet: PETS.TOPAZ_CARBUNCLE.id
 	},
 
 	STORM: {
 		id: 636,
 		name: 'Storm',
 		icon: 'https://secure.xivdb.com/img/game/000000/000554.png',
-		cooldown: 40
+		cooldown: 40,
+		pet: PETS.TOPAZ_CARBUNCLE.id
 	}
 }
