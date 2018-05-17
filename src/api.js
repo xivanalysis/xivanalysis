@@ -1,10 +1,13 @@
 import axios from 'axios'
 
-// TODO: API Key should probably be proxied before this hits prod
+const options = {
+	baseURL: process.env.REACT_APP_LOGS_BASE_URL
+}
 
-export const fflogsApi = axios.create({
-	baseURL: 'https://www.fflogs.com/v1/',
-	params: {
+if (process.env.REACT_APP_LOGS_API_KEY) {
+	options.params = {
 		api_key: process.env.REACT_APP_LOGS_API_KEY
 	}
-})
+}
+
+export const fflogsApi = axios.create(options)
