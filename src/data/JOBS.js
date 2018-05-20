@@ -12,10 +12,21 @@ export const ROLES = addExtraIndex({
 		colour: 'green'
 	},
 
-	// TODO: Not sure if I want to split DPS roles, we don't really have enough combatants for it to be an issue
-	DPS: {
+	MELEE: {
 		id: 3,
-		name: 'DPS',
+		name: 'Melee DPS',
+		colour: 'red'
+	},
+
+	PHYSICAL_RANGED: {
+		id: 4,
+		name: 'Physical Ranged DPS',
+		colour: 'red'
+	},
+
+	MAGICAL_RANGED: {
+		id: 5,
+		name: 'Magical Ranged DPS',
 		colour: 'red'
 	},
 
@@ -74,25 +85,25 @@ const JOBS = {
 		name: 'Monk',
 		logType: 'Monk',
 		icon: 'monk',
-		role: ROLES.DPS.id
+		role: ROLES.MELEE.id
 	},
 	DRAGOON: {
 		name: 'Dragoon',
 		logType: 'Dragoon',
 		icon: 'dragoon',
-		role: ROLES.DPS.id
+		role: ROLES.MELEE.id
 	},
 	NINJA: {
 		name: 'Ninja',
 		logType: 'Ninja',
 		icon: 'ninja',
-		role: ROLES.DPS.id
+		role: ROLES.MELEE.id
 	},
 	SAMURAI: {
 		name: 'Samurai',
 		logType: 'Samurai',
 		icon: 'samurai',
-		role: ROLES.DPS.id
+		role: ROLES.MELEE.id
 	},
 
 	// Phys Ranged
@@ -100,13 +111,13 @@ const JOBS = {
 		name: 'Bard',
 		logType: 'Bard',
 		icon: 'bard',
-		role: ROLES.DPS.id
+		role: ROLES.PHYSICAL_RANGED.id
 	},
 	MACHINIST: {
 		name: 'Machinist',
 		logType: 'Machinist',
 		icon: 'machinist',
-		role: ROLES.DPS.id
+		role: ROLES.PHYSICAL_RANGED.id
 	},
 
 	// Magic Ranged
@@ -114,19 +125,19 @@ const JOBS = {
 		name: 'Black Mage',
 		logType: 'BlackMage',
 		icon: 'blackmage',
-		role: ROLES.DPS.id
+		role: ROLES.MAGICAL_RANGED.id
 	},
 	SUMMONER: {
 		name: 'Summoner',
 		logType: 'Summoner',
 		icon: 'summoner',
-		role: ROLES.DPS.id
+		role: ROLES.MAGICAL_RANGED.id
 	},
 	RED_MAGE: {
 		name: 'Red Mage',
 		logType: 'RedMage',
 		icon: 'redmage',
-		role: ROLES.DPS.id
+		role: ROLES.MAGICAL_RANGED.id
 	}
 }
 

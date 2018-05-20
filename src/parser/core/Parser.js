@@ -50,6 +50,13 @@ class Parser {
 		return this.currentTimestamp - this.fight.start_time
 	}
 
+	// Get the friendlies that took part in the current fight
+	get fightFriendlies() {
+		return this.report.friendlies.filter(
+			friend => friend.fights.some(fight => fight.id === this.fight.id)
+		)
+	}
+
 	// -----
 	// Constructor w/ module dep resolution
 	// -----

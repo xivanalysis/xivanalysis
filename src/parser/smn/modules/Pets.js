@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 
+import { ActionLink } from 'components/ui/DbLink'
 import ACTIONS, { getAction } from 'data/ACTIONS'
+import JOBS, { ROLES } from 'data/JOBS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
+import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
@@ -15,6 +18,9 @@ const SUMMON_ACTIONS = {
 const SUMMON_BAHAMUT_LENGTH = 20000
 
 export default class Pets extends Module {
+	static dependencies = [
+		'suggestions'
+	]
 	static displayOrder = -100
 
 	lastPet = null
@@ -22,6 +28,8 @@ export default class Pets extends Module {
 	history = []
 
 	lastSummonBahamut = -1
+
+	petUptime = {}
 
 	normalise(events) {
 		const petCache = {}
@@ -88,11 +96,70 @@ export default class Pets extends Module {
 	}
 
 	on_complete(event) {
-		this.history.push({
-			id: this.currentPet.id,
-			start: this.currentPet.timestamp,
-			end: event.timestamp
-		})
+		// Finalise the history
+		const id = this.currentPet.id
+		const start = this.currentPet.timestamp
+		const end = event.timestamp
+
+		this.history.push({id, start, end})
+		this.petUptime[id] = (this.petUptime[id] || 0) + end - start
+
+		// Work out the party comp
+		// TODO: Should this be in the parser?
+		const roles = this.parser.fightFriendlies.reduce((roles, friendly) => {
+			const job = JOBS[friendly.type]
+			if (!job) { return roles }
+
+			roles[job.role] = (roles[job.role] || 0) + 1
+			return roles
+		}, {})
+
+		// Pet suggestions based on party comp
+		const numCasters = roles[ROLES.MAGICAL_RANGED.id]
+		const mostUsedPet = parseInt(Object.keys(this.petUptime).sort(
+			(a, b) => this.petUptime[b] - this.petUptime[a]
+		)[0], 10)
+
+		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON.icon,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Garuda-Egi preferred.`,
+				severity: SEVERITY.MEDIUM,
+				content: <Fragment>
+					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>&apos;s Magic Vulnerability Up.
+				</Fragment>
+			}))
+		}
+
+		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+			console.log('MEDIUM: Should use ifrit')
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON_III.icon,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,
+				severity: SEVERITY.MEDIUM,
+				content: <Fragment>
+					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit&apos;s raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
+				</Fragment>
+			}))
+		}
+
+		// We'll let them get away with a tiny bit of Chucken Nugget, but... not too much.
+		const titanUptimePercent = this.getPetUptimePercent(PETS.TITAN_EGI.id)
+		if (titanUptimePercent > 10) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON_II.icon,
+				why: `${titanUptimePercent}% Titan-Egi uptime.`,
+				severity: SEVERITY.MAJOR,
+				content: <Fragment>
+					Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.
+				</Fragment>
+			}))
+		}
+	}
+
+	getPetUptimePercent(petId) {
+		const percent = (this.petUptime[petId] || 0) / this.parser.fightDuration
+		return Math.round(percent * 10000) / 100
 	}
 
 	// TODO: What about when a pet dies?
@@ -107,11 +174,12 @@ export default class Pets extends Module {
 		}
 
 		if (this.lastPet) {
-			this.history.push({
-				id: this.lastPet.id,
-				start: this.lastPet.timestamp,
-				end: timestamp
-			})
+			const id = this.lastPet.id
+			const start = this.lastPet.timestamp
+			const end = timestamp
+
+			this.history.push({id, start, end})
+			this.petUptime[id] = (this.petUptime[id] || 0) + end - start
 		}
 
 		this.parser.fabricateEvent({
@@ -128,16 +196,11 @@ export default class Pets extends Module {
 	output() {
 		const fightDuration = this.parser.fightDuration
 
-		const petUptime = {}
-		this.history.forEach(history => {
-			petUptime[history.id] = (petUptime[history.id] || 0) + history.end - history.start
-		})
-
 		return <ul>
-			{Object.keys(petUptime).map(petId => <li key={petId}>
+			{Object.keys(this.petUptime).map(petId => <li key={petId}>
 				Pet: {PETS[petId].name}<br/>
-				Uptime: {this.parser.formatDuration(petUptime[petId])}<br/>
-				%: {(petUptime[petId]/fightDuration)*100}
+				Uptime: {this.parser.formatDuration(this.petUptime[petId])}<br/>
+				%: {(this.petUptime[petId]/fightDuration)*100}
 			</li>)}
 		</ul>
 	}
