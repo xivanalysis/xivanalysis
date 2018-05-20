@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Pie as PieChart } from 'react-chartjs-2'
 
 import { ActionLink } from 'components/ui/DbLink'
 import ACTIONS, { getAction } from 'data/ACTIONS'
@@ -7,11 +8,20 @@ import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
+import styles from './Pets.module.css'
+
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
 	[ACTIONS.SUMMON_III.id]: PETS.IFRIT_EGI.id,
 	[ACTIONS.SUMMON_BAHAMUT.id]: PETS.DEMI_BAHAMUT.id
+}
+
+const CHART_COLOURS = {
+	[PETS.GARUDA_EGI.id]: '#4adede',
+	[PETS.TITAN_EGI.id]: '#f7ad18',
+	[PETS.IFRIT_EGI.id]: '#d60808',
+	[PETS.DEMI_BAHAMUT.id]: '#218cd6'
 }
 
 // Durations should probably be ACTIONS data
@@ -21,7 +31,7 @@ export default class Pets extends Module {
 	static dependencies = [
 		'suggestions'
 	]
-	static displayOrder = -100
+	name = 'Pets'
 
 	lastPet = null
 	currentPet = null
@@ -195,13 +205,52 @@ export default class Pets extends Module {
 
 	output() {
 		const fightDuration = this.parser.fightDuration
+		const uptimeKeys = Object.keys(this.petUptime)
 
-		return <ul>
-			{Object.keys(this.petUptime).map(petId => <li key={petId}>
-				Pet: {PETS[petId].name}<br/>
-				Uptime: {this.parser.formatDuration(this.petUptime[petId])}<br/>
-				%: {(this.petUptime[petId]/fightDuration)*100}
-			</li>)}
-		</ul>
+		const data = {
+			labels: uptimeKeys.map(petId => PETS[petId].name),
+			datasets: [{
+				data: uptimeKeys.map(petId => this.petUptime[petId]),
+				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId])
+			}]
+		}
+
+		const options = {
+			responsive: false,
+			legend: {display: false},
+			tooltips: {enabled: false}
+		}
+
+		return <Fragment>
+			<div className={styles.chartWrapper}>
+				<PieChart
+					data={data}
+					options={options}
+					width={100}
+					height={100}
+				/>
+			</div>
+			<table className={styles.table}>
+				<thead>
+					<tr>
+						<th></th>
+						<th>Pet</th>
+						<th>Uptime</th>
+						<th>%</th>
+					</tr>
+				</thead>
+				<tbody>
+					{uptimeKeys.map(petId => <tr key={petId}>
+						<td><span
+							className={styles.swatch}
+							style={{backgroundColor: CHART_COLOURS[petId]}}
+						/></td>
+						<td>{PETS[petId].name}</td>
+						<td>{this.parser.formatDuration(this.petUptime[petId])}</td>
+						<td>{Math.round(this.petUptime[petId]/fightDuration * 10000) / 100}%</td>
+					</tr>)}
+				</tbody>
+			</table>
+		</Fragment>
 	}
 }
