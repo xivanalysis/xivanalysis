@@ -59,4 +59,13 @@ export default class DbLink extends Component {
 // -----
 // Helpers 'cus i'm lazy
 // -----
-export const ActionLink = (props) => <DbLink type='action' {...props}/>
+export const ActionLink = (props) => <DbLink type='action' {...props} />
+export const StatusLink = (props) => <DbLink
+	type='status'
+	{...props}
+	id={props.id - 1000000}
+/>
+
+StatusLink.propTypes = {
+	id: PropTypes.number.isRequired
+}

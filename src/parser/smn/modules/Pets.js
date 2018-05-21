@@ -1,10 +1,11 @@
 import React, { Fragment } from 'react'
 import { Pie as PieChart } from 'react-chartjs-2'
 
-import { ActionLink } from 'components/ui/DbLink'
+import { ActionLink, StatusLink } from 'components/ui/DbLink'
 import ACTIONS, { getAction } from 'data/ACTIONS'
 import JOBS, { ROLES } from 'data/JOBS'
 import PETS from 'data/PETS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
@@ -18,6 +19,7 @@ const SUMMON_ACTIONS = {
 }
 
 const CHART_COLOURS = {
+	// [-1]: '',
 	[PETS.GARUDA_EGI.id]: '#4adede',
 	[PETS.TITAN_EGI.id]: '#f7ad18',
 	[PETS.IFRIT_EGI.id]: '#d60808',
@@ -105,6 +107,17 @@ export default class Pets extends Module {
 		}
 	}
 
+	on_death(event) {
+		// We're only interested if the death was the player's pet
+		const pets = this.parser.report.friendlyPets
+			.filter(pet => pet.petOwner === this.parser.player.id)
+			.map(pet => pet.id)
+
+		if (pets.includes(event.targetID)) {
+			this.setPet(-1)
+		}
+	}
+
 	on_complete(event) {
 		// Finalise the history
 		const id = this.currentPet.id
@@ -155,7 +168,7 @@ export default class Pets extends Module {
 
 		// We'll let them get away with a tiny bit of Chucken Nugget, but... not too much.
 		const titanUptimePercent = this.getPetUptimePercent(PETS.TITAN_EGI.id)
-		if (titanUptimePercent > 10) {
+		if (titanUptimePercent > 5) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_II.icon,
 				why: `${titanUptimePercent}% Titan-Egi uptime.`,
@@ -165,14 +178,25 @@ export default class Pets extends Module {
 				</Fragment>
 			}))
 		}
+
+		// Pets are important, k?
+		const noPetUptimePercent = this.getPetUptimePercent(-1)
+		if (noPetUptimePercent > 1) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON.icon,
+				why: `No pet summoned for ${noPetUptimePercent}% of the fight. (<1% is recommended)`,
+				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				content: <Fragment>
+					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+				</Fragment>
+			}))
+		}
 	}
 
 	getPetUptimePercent(petId) {
 		const percent = (this.petUptime[petId] || 0) / this.parser.fightDuration
 		return Math.round(percent * 10000) / 100
 	}
-
-	// TODO: What about when a pet dies?
 
 	setPet(petId, timestamp) {
 		timestamp = timestamp || this.parser.currentTimestamp
@@ -203,12 +227,20 @@ export default class Pets extends Module {
 		return PETS[this.currentPet.id]
 	}
 
+	getPetName(petId) {
+		if (petId === '-1') {
+			return 'No pet'
+		}
+
+		return PETS[petId].name
+	}
+
 	output() {
 		const fightDuration = this.parser.fightDuration
 		const uptimeKeys = Object.keys(this.petUptime)
 
 		const data = {
-			labels: uptimeKeys.map(petId => PETS[petId].name),
+			labels: uptimeKeys.map(petId => this.getPetName(petId)),
 			datasets: [{
 				data: uptimeKeys.map(petId => this.petUptime[petId]),
 				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId])
@@ -245,7 +277,7 @@ export default class Pets extends Module {
 							className={styles.swatch}
 							style={{backgroundColor: CHART_COLOURS[petId]}}
 						/></td>
-						<td>{PETS[petId].name}</td>
+						<td>{this.getPetName(petId)}</td>
 						<td>{this.parser.formatDuration(this.petUptime[petId])}</td>
 						<td>{Math.round(this.petUptime[petId]/fightDuration * 10000) / 100}%</td>
 					</tr>)}
