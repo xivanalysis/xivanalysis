@@ -19,9 +19,9 @@ const SUMMON_ACTIONS = {
 }
 
 const CHART_COLOURS = {
-	// [-1]: '',
-	[PETS.GARUDA_EGI.id]: '#4adede',
-	[PETS.TITAN_EGI.id]: '#f7ad18',
+	[-1]: '#888',
+	[PETS.GARUDA_EGI.id]: '#9c0',
+	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
 	[PETS.DEMI_BAHAMUT.id]: '#218cd6'
 }
