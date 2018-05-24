@@ -138,6 +138,7 @@ export default class Pets extends Module {
 		}, {})
 
 		// Pet suggestions based on party comp
+		// TODO: This does not account for invuln periods
 		const numCasters = roles[ROLES.MAGICAL_RANGED.id]
 		const mostUsedPet = parseInt(Object.keys(this.petUptime).sort(
 			(a, b) => this.petUptime[b] - this.petUptime[a]

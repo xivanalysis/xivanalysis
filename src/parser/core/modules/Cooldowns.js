@@ -22,7 +22,7 @@ export default class Cooldowns extends Module {
 
 		this.currentAction = action
 
-		this.startCooldown(action)
+		this.startCooldown(action.id)
 	}
 
 	on_cast_byPlayer(event) {
@@ -34,7 +34,7 @@ export default class Cooldowns extends Module {
 
 		if (finishingCast) { return }
 
-		this.startCooldown(action)
+		this.startCooldown(action.id)
 	}
 
 	on_complete() {
@@ -70,18 +70,18 @@ export default class Cooldowns extends Module {
 		})
 	}
 
-	getCooldown(action) {
-		return this.cooldowns[action.id] || {
+	getCooldown(actionId) {
+		return this.cooldowns[actionId] || {
 			current: null,
 			history: []
 		}
 	}
 
-	startCooldown(action) {
+	startCooldown(actionId) {
 		// TODO: handle shared CDs
 
 		// Get the current cooldown status, falling back to a new cooldown
-		const cd = this.getCooldown(action)
+		const cd = this.getCooldown(actionId)
 
 		// If there's a current object, move it into the history
 		// TODO: handle errors on CD overlap
@@ -89,17 +89,18 @@ export default class Cooldowns extends Module {
 			cd.history.push(cd.current)
 		}
 
+		const action = getAction(actionId)
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000 // CDs are in S, timestamps are in MS
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)
-		this.cooldowns[action.id] = cd
+		this.cooldowns[actionId] = cd
 	}
 
-	reduceCooldown(action, reduction) {
-		const cd = this.getCooldown(action)
+	reduceCooldown(actionId, reduction) {
+		const cd = this.getCooldown(actionId)
 
 		// Check if current isn't current
 		if (cd.current && cd.current.timestamp + cd.current.length < this.parser.currentTimestamp) {
@@ -117,8 +118,8 @@ export default class Cooldowns extends Module {
 		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
 	}
 
-	resetCooldown(action) {
-		const cd = this.getCooldown(action)
+	resetCooldown(actionId) {
+		const cd = this.getCooldown(actionId)
 
 		// If there's nothing running, we can just stop
 		// TODO: need to warn?
@@ -135,8 +136,8 @@ export default class Cooldowns extends Module {
 	}
 
 	// TODO: Should this be here?
-	getTimeOnCooldown(action) {
-		const cd = this.getCooldown(action)
+	getTimeOnCooldown(actionId) {
+		const cd = this.getCooldown(actionId)
 		const currentTimestamp = this.parser.currentTimestamp
 
 		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off

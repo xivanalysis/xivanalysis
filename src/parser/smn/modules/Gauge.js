@@ -35,7 +35,7 @@ export default class Gauge extends Module {
 
 		// DWT resets 3D
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
-			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER)
+			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
 		}
 
 		// Summon Bahamut
@@ -50,7 +50,7 @@ export default class Gauge extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: () => (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW) / this.parser.fightDuration) * 100
+					percent: () => (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / this.parser.fightDuration) * 100
 				})
 			]
 		}))

@@ -13,6 +13,6 @@ export default class Enkindle extends Module {
 		if (event.ability.guid !== STATUSES.FURTHER_RUIN.id) { return }
 
 		// Further Ruin (R4 proc) also reduces the CD on Enkindle by 10 seconds
-		this.cooldowns.reduceCooldown(ACTIONS.ENKINDLE, 10)
+		this.cooldowns.reduceCooldown(ACTIONS.ENKINDLE.id, 10)
 	}
 }
