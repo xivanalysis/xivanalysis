@@ -1,5 +1,11 @@
 // TODO: Fill in the rest of this
 export default {
+	DREADWYRM_TRANCE: {
+		id: 808,
+		name: 'Dreadwyrm Trance',
+		icon: 'https://secure.xivdb.com/img/game/012000/012680.png'
+	},
+
 	FURTHER_RUIN: {
 		id: 1212,
 		name: 'Further Ruin',
