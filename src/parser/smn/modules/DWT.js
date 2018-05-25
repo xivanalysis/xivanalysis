@@ -6,6 +6,7 @@ import Module from 'parser/core/Module'
 
 export default class DWT extends Module {
 	static displayOrder = -100 // temp
+	name = 'Dreadwyrm Trance'
 
 	active = false
 	dwt = {}
@@ -60,7 +61,8 @@ export default class DWT extends Module {
 	output() {
 		return <ul>
 			{this.history.map(dwt => <li key={dwt.start}>
-				{this.parser.formatTimestamp(dwt.start)}
+				TS: {this.parser.formatTimestamp(dwt.start)}<br/>
+				GCDs: {Object.keys(dwt.casts).reduce((prev, actionId) => prev + (getAction(actionId).onGcd? dwt.casts[actionId] : 0), 0)}
 				<ul>
 					{Object.keys(dwt.casts).map(actionId => <li key={actionId}>
 						{getAction(actionId).name}: {dwt.casts[actionId]}
