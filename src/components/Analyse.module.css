@@ -1,3 +1,7 @@
 .sidebar {
 	margin-top: 1em !important;
 }
+
+.resultsContainer {
+	margin-bottom: 25vh;
+}
