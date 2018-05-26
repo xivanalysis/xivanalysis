@@ -20,7 +20,7 @@ class App extends Component {
 				<Container>
 					<Message.Header>Please do not share links to this site.</Message.Header>
 					<p>I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
-					If you come across a massive issue, drop me a DM (ackwell#3835).</p>
+					If you come across a massive issue, drop a message in our discord channel.</p>
 				</Container>
 			</Message>
 
