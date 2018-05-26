@@ -25,6 +25,9 @@ export default class Suggestions extends Module {
 			return false
 		}
 
+		// Sort suggestions with most important at the top
+		this.suggestions.sort((a, b) => a.severity - b.severity)
+
 		// Rendering is in a specialised component so it's got some state to work with
 		return <SuggestionsComponent suggestions={this.suggestions}/>
 	}
