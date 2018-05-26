@@ -58,7 +58,7 @@ export default class Checklist extends Module {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {requirement.percent}
+									{requirement.name}: {requirement.percent.toFixed(2)}%
 								</li>
 							)}
 						</ul>

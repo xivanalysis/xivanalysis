@@ -196,7 +196,7 @@ export default class Pets extends Module {
 
 	getPetUptimePercent(petId) {
 		const percent = (this.petUptime[petId] || 0) / this.parser.fightDuration
-		return Math.round(percent * 10000) / 100
+		return (percent * 100).toFixed(2)
 	}
 
 	setPet(petId, timestamp) {
@@ -237,7 +237,6 @@ export default class Pets extends Module {
 	}
 
 	output() {
-		const fightDuration = this.parser.fightDuration
 		const uptimeKeys = Object.keys(this.petUptime)
 
 		const data = {
@@ -280,7 +279,7 @@ export default class Pets extends Module {
 						/></td>
 						<td>{this.getPetName(petId)}</td>
 						<td>{this.parser.formatDuration(this.petUptime[petId])}</td>
-						<td>{Math.round(this.petUptime[petId]/fightDuration * 10000) / 100}%</td>
+						<td>{this.getPetUptimePercent(petId)}%</td>
 					</tr>)}
 				</tbody>
 			</table>
