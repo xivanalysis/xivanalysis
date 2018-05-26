@@ -4,7 +4,7 @@ export default class Rule {
 	name = ''
 	description = null
 	requirements = []
-	target = 75
+	target = 95
 	// TODO: Target mode percent/value
 
 	get percent() {

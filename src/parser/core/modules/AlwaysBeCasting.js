@@ -1,31 +1,28 @@
-import React from 'react'
-
-import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import { Rule, Requirement } from 'parser/core/modules/Checklist'
 
 export default class AlwaysBeCasting extends Module {
 	static dependencies = [
+		'checklist',
 		'gcd',
-		'invuln',
-		'suggestions'
+		'invuln'
 	]
 
 	// Just using this for the suggestion for now
 	on_complete() {
 		const fightDuration = this.parser.fightDuration - this.invuln.getUntargetableUptime()
+		// TODO: better method for getting gcd count
+		const gcdUptime = this.gcd.gcds.length * this.gcd.getEstimate()
 
-		const gcdLength = this.gcd.getEstimate()
-
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.PRESENCE_OF_MIND.icon,
-			why: 'TODO',
-			severity: SEVERITY.MEDIUM,
-			content: <ul>
-				<li>Fight Duration: {this.parser.formatDuration(fightDuration)}</li>
-				<li>GCDs: {this.gcd.gcds.length /* TODO: Better access method*/}</li>
-				<li>Possible GCDs: {Math.floor(fightDuration / gcdLength)}</li>
-			</ul>
+		this.checklist.add(new Rule({
+			name: 'Always be casting',
+			description: 'Make sure you\'re always doing something. It\'s often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.',
+			requirements: [
+				new Requirement({
+					name: 'GCD uptime',
+					percent: gcdUptime / fightDuration * 100
+				})
+			]
 		}))
 	}
 }
