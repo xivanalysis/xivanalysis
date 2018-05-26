@@ -14,6 +14,7 @@ const CORRECT_GCDS = [
 
 export default class DWT extends Module {
 	static dependencies = [
+		'gcd',
 		'suggestions'
 	]
 	name = 'Dreadwyrm Trance'
@@ -63,10 +64,22 @@ export default class DWT extends Module {
 
 		// Run some analytics for suggestions
 		let badGcds = 0
+		let totalGcds = 0
 		this.history.forEach(dwt => {
-			badGcds += Object.keys(dwt.casts)
-				.filter(actionId => getAction(actionId).onGcd && !CORRECT_GCDS.includes(parseInt(actionId, 10)))
-				.reduce((prev, actionId) => prev + dwt.casts[actionId], 0)
+			Object.keys(dwt.casts)
+				.forEach(actionId => {
+					actionId = parseInt(actionId, 10)
+
+					if (!getAction(actionId).onGcd) {
+						return
+					}
+
+					const castCount = dwt.casts[actionId]
+					totalGcds += castCount
+					if (!CORRECT_GCDS.includes(actionId)) {
+						badGcds += castCount
+					}
+				})
 		})
 
 		// Suggestions
@@ -80,6 +93,15 @@ export default class DWT extends Module {
 				</Fragment>
 			}))
 		}
+
+		// DWT length is 16s, taking 1.5 off for two ogcds - DWT to open, and DF to close
+		const possibleGcds = Math.floor((16000 - 1500) / this.gcd.getEstimate()) + 1
+
+		// First DWT should only ever have two R3s in it
+		// TODO: Not accounting for rushed DWT at end of fight
+		const aimForGcds = (this.history.length - 1) * possibleGcds + 2
+		console.log(totalGcds, aimForGcds)
+		// TODO: Output
 	}
 
 	stopAndSave() {
