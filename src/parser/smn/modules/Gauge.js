@@ -89,6 +89,15 @@ export default class Gauge extends Module {
 		}
 	}
 
+	on_death_toPlayer() {
+		// Death just flat out resets everything. Rip.
+		// TODO: Count stuff lost at death towards mistakes from other stuff
+		this.aetherflow = 0
+		this.aethertrailAttunement = 0
+		this.dreadwyrmAether = 0
+		console.log('he ded')
+	}
+
 	on_complete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
