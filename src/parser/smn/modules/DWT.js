@@ -33,7 +33,7 @@ export default class DWT extends Module {
 		this.dwt = {
 			start: event.timestamp,
 			end: null,
-			casts: {}
+			casts: new Map()
 		}
 	}
 
@@ -53,7 +53,8 @@ export default class DWT extends Module {
 		}
 
 		const actionId = event.ability.guid
-		this.dwt.casts[actionId] = (this.dwt.casts[actionId] || 0) + 1
+		const value = (this.dwt.casts.get(actionId) || 0) + 1
+		this.dwt.casts.set(actionId, value)
 	}
 
 	on_complete() {
@@ -66,20 +67,16 @@ export default class DWT extends Module {
 		let badGcds = 0
 		let totalGcds = 0
 		this.history.forEach(dwt => {
-			Object.keys(dwt.casts)
-				.forEach(actionId => {
-					actionId = parseInt(actionId, 10)
+			dwt.casts.forEach((castCount, actionId) => {
+				if (!getAction(actionId).onGcd) {
+					return
+				}
 
-					if (!getAction(actionId).onGcd) {
-						return
-					}
-
-					const castCount = dwt.casts[actionId]
-					totalGcds += castCount
-					if (!CORRECT_GCDS.includes(actionId)) {
-						badGcds += castCount
-					}
-				})
+				totalGcds += castCount
+				if (!CORRECT_GCDS.includes(actionId)) {
+					badGcds += castCount
+				}
+			})
 		})
 
 		// Suggestions

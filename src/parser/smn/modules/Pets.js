@@ -41,7 +41,7 @@ export default class Pets extends Module {
 
 	lastSummonBahamut = -1
 
-	petUptime = {}
+	petUptime = new Map()
 
 	normalise(events) {
 		const petCache = {}
@@ -125,7 +125,8 @@ export default class Pets extends Module {
 		const end = event.timestamp
 
 		this.history.push({id, start, end})
-		this.petUptime[id] = (this.petUptime[id] || 0) + end - start
+		const value = (this.petUptime.get(id) || 0) + end - start
+		this.petUptime.set(id, value)
 
 		// Work out the party comp
 		// TODO: Should this be in the parser?
@@ -140,9 +141,9 @@ export default class Pets extends Module {
 		// Pet suggestions based on party comp
 		// TODO: This does not account for invuln periods
 		const numCasters = roles[ROLES.MAGICAL_RANGED.id]
-		const mostUsedPet = parseInt(Object.keys(this.petUptime).sort(
-			(a, b) => this.petUptime[b] - this.petUptime[a]
-		)[0], 10)
+		const mostUsedPet = Array.from(this.petUptime.keys()).sort(
+			(a, b) => this.petUptime.get(b) - this.petUptime.get(a)
+		)[0]
 
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
@@ -195,7 +196,7 @@ export default class Pets extends Module {
 	}
 
 	getPetUptimePercent(petId) {
-		const percent = (this.petUptime[petId] || 0) / this.parser.fightDuration
+		const percent = (this.petUptime.get(petId) || 0) / this.parser.fightDuration
 		return (percent * 100).toFixed(2)
 	}
 
@@ -214,7 +215,8 @@ export default class Pets extends Module {
 			const end = timestamp
 
 			this.history.push({id, start, end})
-			this.petUptime[id] = (this.petUptime[id] || 0) + end - start
+			const value = (this.petUptime.get(id) || 0) + end - start
+			this.petUptime.set(id, value)
 		}
 
 		this.parser.fabricateEvent({
@@ -229,7 +231,7 @@ export default class Pets extends Module {
 	}
 
 	getPetName(petId) {
-		if (petId === '-1') {
+		if (petId === -1) {
 			return 'No pet'
 		}
 
@@ -237,12 +239,12 @@ export default class Pets extends Module {
 	}
 
 	output() {
-		const uptimeKeys = Object.keys(this.petUptime)
+		const uptimeKeys = Array.from(this.petUptime.keys())
 
 		const data = {
 			labels: uptimeKeys.map(petId => this.getPetName(petId)),
 			datasets: [{
-				data: uptimeKeys.map(petId => this.petUptime[petId]),
+				data: Array.from(this.petUptime.values()),
 				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId])
 			}]
 		}
@@ -278,7 +280,7 @@ export default class Pets extends Module {
 							style={{backgroundColor: CHART_COLOURS[petId]}}
 						/></td>
 						<td>{this.getPetName(petId)}</td>
-						<td>{this.parser.formatDuration(this.petUptime[petId])}</td>
+						<td>{this.parser.formatDuration(this.petUptime.get(petId))}</td>
 						<td>{this.getPetUptimePercent(petId)}%</td>
 					</tr>)}
 				</tbody>
