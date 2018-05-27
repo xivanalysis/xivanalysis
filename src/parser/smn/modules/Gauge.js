@@ -31,6 +31,10 @@ export default class Gauge extends Module {
 	aethertrailAttunement = 0
 	dreadwyrmAether = 0
 
+	// Track lost stacks
+	lostAetherflow = 0
+	lostDreadwyrmAether = 0
+
 	// First DWT should be rushed. Also used for end-of-fight rush
 	rushing = true
 
@@ -51,9 +55,8 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.AETHERFLOW.id) {
 			// Flow restores up to 3 flow stacks
 			// flow + trail can never be >3
-			// TODO: Check for lost flow
 			this.aetherflow = 3 - this.aethertrailAttunement
-			console.log('flow filled')
+			this.lostAetherflow += this.aethertrailAttunement
 
 			// (Should be) rushing if it's the last flow of the fight, and there won't be enough time for a full rotation.
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
@@ -68,10 +71,9 @@ export default class Gauge extends Module {
 
 		if (AETHER_ACTIONS.includes(abilityId)) {
 			// Aether actions convert flow into trail
-			// TODO: Check for using flow when none
+			// TODO: Check for using flow when none (logic issue)
 			this.aetherflow --
 			this.aethertrailAttunement ++
-			console.log('flow spent,', this.aetherflow, this.aethertrailAttunement)
 		}
 
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
@@ -79,15 +81,14 @@ export default class Gauge extends Module {
 			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
 
 			// DWT spends 3 trail
-			// TODO: Check for DWT when <3 trail
+			// TODO: Check for DWT when <3 trail (logic issue)
 			this.aethertrailAttunement = 0
-			console.log('dwt started')
 		}
 
 		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
 			// Summon Bahamut spends both dwa
+			// TODO: Check for use when <2 dwa (logic issue)
 			this.dreadwyrmAether = 0
-			console.log('bro summoned')
 		}
 	}
 
@@ -96,19 +97,23 @@ export default class Gauge extends Module {
 
 		if (statusId === STATUSES.DREADWYRM_TRANCE.id) {
 			// The end of DWT (either DF or natural falloff) bestows 1 dwa, max 2.
-			// TODO: check for lost dwa
-			this.dreadwyrmAether = Math.min(this.dreadwyrmAether + 1, 2)
-			console.log('dwt over,', this.dreadwyrmAether)
+			if (this.dreadwyrmAether === 2) {
+				this.lostDreadwyrmAether ++
+			} else {
+				this.dreadwyrmAether ++
+			}
 		}
 	}
 
 	on_death_toPlayer() {
 		// Death just flat out resets everything. Rip.
-		// TODO: Count stuff lost at death towards mistakes from other stuff
+		this.lostAetherflow += this.aetherflow
+		this.lostDreadwyrmAether += this.dreadwyrmAether
+
 		this.aetherflow = 0
 		this.aethertrailAttunement = 0
 		this.dreadwyrmAether = 0
-		console.log('he ded')
+		console.log('death')
 	}
 
 	on_complete() {
@@ -123,5 +128,9 @@ export default class Gauge extends Module {
 				})
 			]
 		}))
+	}
+
+	output() {
+		return `Lost flow: ${this.lostAetherflow}, Lost DWA: ${this.lostDreadwyrmAether}`
 	}
 }
