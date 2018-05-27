@@ -15,7 +15,7 @@ export default class GlobalCooldown extends Module {
 	name = 'Global Cooldown'
 
 	lastGcd = -1
-	currentAction = null
+	castingEvent = null
 
 	gcds = []
 
@@ -26,11 +26,8 @@ export default class GlobalCooldown extends Module {
 
 		// Can I check for cancels?
 
-		this.currentAction = action
-
-		this.saveGcd(event)
+		this.castingEvent = event
 	}
-
 
 	on_cast_byPlayer(event) {
 		const action = getAction(event.ability.guid)
@@ -38,10 +35,12 @@ export default class GlobalCooldown extends Module {
 		// Ignore non-GCD casts
 		if (!action.onGcd) { return }
 
-		const finishingCast = this.currentAction && this.currentAction.id === action.id
-		this.currentAction = null
-
-		if (finishingCast) { return }
+		const castingEvent = this.castingEvent
+		this.castingEvent = null
+		if (castingEvent && castingEvent.ability.guid === action.id) {
+			this.saveGcd(castingEvent)
+			return
+		}
 
 		this.saveGcd(event)
 	}
