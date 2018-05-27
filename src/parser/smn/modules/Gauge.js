@@ -3,8 +3,16 @@ import React, { Fragment } from 'react'
 import { ActionLink } from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import { Rule, Requirement } from 'parser/core/modules/Checklist'
+
+const AETHER_ACTIONS = [
+	ACTIONS.ENERGY_DRAIN.id,
+	ACTIONS.BANE.id,
+	ACTIONS.FESTER.id,
+	ACTIONS.PAINFLARE.id
+]
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
@@ -17,7 +25,11 @@ export default class Gauge extends Module {
 	// -----
 	// Properties
 	// -----
-	lastSummonBahamut = -1
+	// I'm assuming they're starting with 3.
+	// TODO: Check this in some manner maybeeeeee?
+	aetherflow = 3
+	aethertrailAttunement = 0
+	dreadwyrmAether = 0
 
 	// -----
 	// API
@@ -30,16 +42,51 @@ export default class Gauge extends Module {
 	// -----
 	// Event handling
 	// -----
-	on_cast(event) {
+	on_cast_byPlayer(event) {
 		const abilityId = event.ability.guid
 
-		// DWT resets 3D
-		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
-			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
+		if (abilityId === ACTIONS.AETHERFLOW.id) {
+			// Flow restores up to 3 flow stacks
+			// flow + trail can never be >3
+			// TODO: Check for lost flow
+			this.aetherflow = 3 - this.aethertrailAttunement
+			console.log('flow filled')
 		}
 
-		// Summon Bahamut
-		// TODO: Reset dreadwyrm aether
+		if (AETHER_ACTIONS.includes(abilityId)) {
+			// Aether actions convert flow into trail
+			// TODO: Check for using flow when none
+			this.aetherflow --
+			this.aethertrailAttunement ++
+			console.log('flow spent,', this.aetherflow, this.aethertrailAttunement)
+		}
+
+		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
+			// DWT resets 3D
+			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
+
+			// DWT spends 3 trail
+			// TODO: Check for DWT when <3 trail
+			this.aethertrailAttunement = 0
+			console.log('dwt started')
+		}
+
+		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
+			// Summon Bahamut spends both dwa
+			this.dreadwyrmAether = 0
+			console.log('bro summoned')
+		}
+	}
+
+	on_removebuff_byPlayer(event) {
+		const statusId = event.ability.guid
+
+		if (statusId === STATUSES.DREADWYRM_TRANCE.id) {
+			// The end of DWT (either DF or natural falloff) bestows 1 dwa, max 2.
+			// TODO: check for lost dwa
+			this.dreadwyrmAether = Math.min(this.dreadwyrmAether + 1, 2)
+			console.log('dwt over,', this.dreadwyrmAether)
+		}
 	}
 
 	on_complete() {
