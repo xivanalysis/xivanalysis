@@ -31,6 +31,9 @@ export default class Gauge extends Module {
 	aethertrailAttunement = 0
 	dreadwyrmAether = 0
 
+	// First DWT should be rushed. Also used for end-of-fight rush
+	rushing = true
+
 	// -----
 	// API
 	// -----
@@ -51,6 +54,16 @@ export default class Gauge extends Module {
 			// TODO: Check for lost flow
 			this.aetherflow = 3 - this.aethertrailAttunement
 			console.log('flow filled')
+
+			// (Should be) rushing if it's the last flow of the fight, and there won't be enough time for a full rotation.
+			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
+			let reqRotationTime = 26000
+			if (this.dreadwyrmAether >= 1) {
+				reqRotationTime += 20000
+			}
+
+			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+			this.rushing = reqRotationTime >= fightTimeRemaining
 		}
 
 		if (AETHER_ACTIONS.includes(abilityId)) {
