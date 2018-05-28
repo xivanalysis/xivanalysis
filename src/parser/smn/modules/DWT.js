@@ -119,10 +119,10 @@ export default class DWT extends Module {
 		return <ul>
 			{this.history.map(dwt => <li key={dwt.start}>
 				TS: {this.parser.formatTimestamp(dwt.start)}<br/>
-				GCDs: {Object.keys(dwt.casts).reduce((prev, actionId) => prev + (getAction(actionId).onGcd? dwt.casts[actionId] : 0), 0)}
+				GCDs: {Array.from(dwt.casts.keys()).reduce((prev, actionId) => prev + (getAction(actionId).onGcd? dwt.casts.get(actionId) : 0), 0)}
 				<ul>
-					{Object.keys(dwt.casts).map(actionId => <li key={actionId}>
-						{getAction(actionId).name}: {dwt.casts[actionId]}
+					{Array.from(dwt.casts.entries()).map(([actionId, value]) => <li key={actionId}>
+						{getAction(actionId).name}: {value}
 					</li>)}
 				</ul>
 			</li>)}
