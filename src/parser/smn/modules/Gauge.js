@@ -46,6 +46,10 @@ export default class Gauge extends Module {
 		return pet && pet.id === PETS.DEMI_BAHAMUT.id
 	}
 
+	isRushing() {
+		return this.rushing
+	}
+
 	// -----
 	// Event handling
 	// -----
@@ -113,7 +117,6 @@ export default class Gauge extends Module {
 		this.aetherflow = 0
 		this.aethertrailAttunement = 0
 		this.dreadwyrmAether = 0
-		console.log('death')
 	}
 
 	on_complete() {

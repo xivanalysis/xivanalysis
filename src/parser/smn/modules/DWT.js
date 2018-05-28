@@ -14,6 +14,7 @@ const CORRECT_GCDS = [
 
 export default class DWT extends Module {
 	static dependencies = [
+		'gauge',
 		'gcd',
 		'suggestions'
 	]
@@ -33,6 +34,7 @@ export default class DWT extends Module {
 		this.dwt = {
 			start: event.timestamp,
 			end: null,
+			rushing: this.gauge.isRushing(),
 			casts: new Map()
 		}
 	}
@@ -66,13 +68,20 @@ export default class DWT extends Module {
 		// Run some analytics for suggestions
 		let badGcds = 0
 		let totalGcds = 0
+		let fullDwt = 0
 		this.history.forEach(dwt => {
+			if (!dwt.rushing) {
+				fullDwt++
+			}
+
 			dwt.casts.forEach((castCount, actionId) => {
 				if (!getAction(actionId).onGcd) {
 					return
 				}
 
-				totalGcds += castCount
+				if (!dwt.rushing) {
+					totalGcds += castCount
+				}
 				if (!CORRECT_GCDS.includes(actionId)) {
 					badGcds += castCount
 				}
@@ -80,11 +89,11 @@ export default class DWT extends Module {
 		})
 
 		// Suggestions
-		if (badGcds > 1) {
+		if (badGcds) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				why: `${badGcds} incorrect GCDs used during DWT.`,
-				severity: badGcds > 5 ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
+				severity: badGcds > 5 ? SEVERITY.MAJOR : badGcds > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.TRI_BIND}/> in AoE situations.
 				</Fragment>
@@ -94,10 +103,9 @@ export default class DWT extends Module {
 		// DWT length is 16s, taking 1.5 off for two ogcds - DWT to open, and DF to close
 		const possibleGcds = Math.floor((16000 - 1500) / this.gcd.getEstimate()) + 1
 
-		// First DWT should only ever have two R3s in it
-		// TODO: Not accounting for rushed DWT at end of fight
-		const aimForGcds = (this.history.length - 1) * possibleGcds + 2
-		console.log(totalGcds, aimForGcds)
+		// Work out how many they could have technically got (outside rushes)
+		const aimForGcds = fullDwt * possibleGcds
+		console.log(totalGcds, aimForGcds, fullDwt, possibleGcds)
 		// TODO: Output
 	}
 
