@@ -49,7 +49,7 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
-			if (reportLoaded) {
+			if (reportLoaded && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === parseInt(fightId, 10))
 				// Do I want the kill time too?
 				title = fight.name

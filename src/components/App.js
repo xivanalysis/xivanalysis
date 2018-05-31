@@ -6,6 +6,7 @@ import Analyse from './Analyse'
 import Find from './Find'
 import Header from './Header'
 import Home from './Home'
+import LastFightRedirect from './LastFightRedirect'
 
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import 'semantic-ui-css/semantic.min.css'
@@ -26,6 +27,7 @@ class App extends Component {
 
 			<Switch>
 				<Route exact path="/" component={Home}/>
+				<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
 				<Route path="/find/:code/:fight?" component={Find}/>
 				<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 			</Switch>
