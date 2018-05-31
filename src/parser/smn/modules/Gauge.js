@@ -69,6 +69,8 @@ export default class Gauge extends Module {
 				reqRotationTime += 20000
 			}
 
+			// TODO: Need to consider DWT rush vs bahamut rush. 46s is enough to get the DWT out without an issue, sure - but you need to wait for flow to not 'rush' bahamut.
+
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 			this.rushing = reqRotationTime >= fightTimeRemaining
 		}

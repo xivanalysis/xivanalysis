@@ -36,7 +36,8 @@
 - [ ] Shadowflare use (ticks had/expected total, alignment?)
 
 ## DWT
-- [ ] R3s/R4s in DWT (generally 6 minimum, check if any R2s are present? Mistaaaaake)
+- [x] R3s/R4s in DWT (generally 6 minimum, check if any R2s are present? Mistaaaaake)
+    - [ ] Currently checks for _not_ specified skills. Should that be swapped?
 - [ ] Time in DWT (cutting short if mismanaging AF vs letting timer go on and letting AF get delayed more and more)
 - [ ] Deathflare cancels
 - [ ] Ruin spells under Ruination in DWT

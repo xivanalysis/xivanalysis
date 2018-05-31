@@ -33,15 +33,12 @@ export default class Module {
 		if (this.parser.toPlayer(event)) {
 			this._callMethod(`on_${event.type}_toPlayer`, event)
 		}
-
-		// TODO: Work these out
-		// TODO: Probs should get pets working ey
-		// if (this.owner && this.owner.byPlayerPet(event)) {
-		//   this._callMethod(this._eventHandlerName(`byPlayerPet_${event.type}`), event);
-		// }
-		// if (this.owner && this.owner.toPlayerPet(event)) {
-		//   this._callMethod(this._eventHandlerName(`toPlayerPet_${event.type}`), event);
-		// }
+		if (this.parser.byPlayerPet(event)) {
+			this._callMethod(`on_${event.type}_byPlayerPet`, event)
+		}
+		if (this.parser.toPlayerPet(event)) {
+			this._callMethod(`on_${event.type}_toPlayerPet`, event)
+		}
 	}
 
 	output() {

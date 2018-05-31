@@ -178,6 +178,16 @@ class Parser {
 		return event.targetID === playerId
 	}
 
+	byPlayerPet(event, playerId = this.player.id) {
+		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
+		return pet && pet.petOwner === playerId
+	}
+
+	toPlayerPet(event, playerId = this.player.id) {
+		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
+		return pet && pet.petOwner === playerId
+	}
+
 	// TODO: Pet handling
 
 	formatTimestamp(timestamp) {

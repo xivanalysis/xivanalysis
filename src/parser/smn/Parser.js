@@ -7,6 +7,7 @@ import Enkindle from './modules/Enkindle'
 import Gauge from './modules/Gauge'
 import Pets from './modules/Pets'
 import Ruin2 from './modules/Ruin2'
+import Ruin4 from './modules/Ruin4'
 
 class Parser extends CoreParser {
 	static jobModules = {
@@ -16,7 +17,8 @@ class Parser extends CoreParser {
 		enkindle: Enkindle,
 		gauge: Gauge,
 		pets: Pets,
-		ruin2: Ruin2
+		ruin2: Ruin2,
+		ruin4: Ruin4
 	}
 }
 
