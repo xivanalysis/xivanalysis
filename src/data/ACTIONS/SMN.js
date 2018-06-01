@@ -153,6 +153,13 @@ export default {
 	},
 
 	// Titan-egi
+	TITAN_EGI_ATTACK: {
+		id: 1346,
+		name: 'Attack',
+		icon: '',
+		pet: PETS.TITAN_EGI.id
+	},
+
 	ROCK_BUSTER: {
 		id: 787,
 		name: 'Rock Buster',
@@ -192,6 +199,13 @@ export default {
 	},
 
 	// Ifrit-egi
+	IFRIT_EGI_ATTACK: {
+		id: 1347,
+		name: 'Attack',
+		icon: '',
+		pet: PETS.IFRIT_EGI.id
+	},
+
 	CRIMSON_CYCLONE: {
 		id: 797,
 		name: 'Crimson Cyclone',
