@@ -135,6 +135,15 @@ export default class Cooldowns extends Module {
 		cd.current = null
 	}
 
+	getCooldownRemaining(actionId) {
+		const current = this.getCooldown(actionId).current
+		if (!current) {
+			return 0
+		}
+
+		return current.length - (this.parser.currentTimestamp - current.timestamp)
+	}
+
 	// TODO: Should this be here?
 	getTimeOnCooldown(actionId) {
 		const cd = this.getCooldown(actionId)

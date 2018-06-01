@@ -69,8 +69,6 @@ export default class Gauge extends Module {
 				reqRotationTime += 20000
 			}
 
-			// TODO: Need to consider DWT rush vs bahamut rush. 46s is enough to get the DWT out without an issue, sure - but you need to wait for flow to not 'rush' bahamut.
-
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 			this.rushing = reqRotationTime >= fightTimeRemaining
 		}
@@ -107,6 +105,13 @@ export default class Gauge extends Module {
 				this.lostDreadwyrmAether ++
 			} else {
 				this.dreadwyrmAether ++
+			}
+
+			// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
+			const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
+			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+			if (this.dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
+				this.rushing = true
 			}
 		}
 	}
