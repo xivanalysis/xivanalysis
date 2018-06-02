@@ -134,7 +134,7 @@ export default class Gauge extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / this.parser.fightDuration) * 100
+					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - 15000)) * 100
 				})
 			]
 		}))
