@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react'
+import { Accordion } from 'semantic-ui-react'
 
 import ACTIONS, { getAction } from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -117,16 +118,32 @@ export default class DWT extends Module {
 	}
 
 	output() {
-		return <ul>
-			{this.history.map(dwt => <li key={dwt.start}>
-				TS: {this.parser.formatTimestamp(dwt.start)}<br/>
-				GCDs: {Array.from(dwt.casts.keys()).reduce((prev, actionId) => prev + (getAction(actionId).onGcd? dwt.casts.get(actionId) : 0), 0)}
-				<ul>
-					{Array.from(dwt.casts.entries()).map(([actionId, value]) => <li key={actionId}>
-						{getAction(actionId).name}: {value}
-					</li>)}
-				</ul>
-			</li>)}
-		</ul>
+		const panels = this.history.map(dwt => {
+			const gcds = Array.from(dwt.casts.keys()).reduce((prev, actionId) => prev + (getAction(actionId).onGcd ? dwt.casts.get(actionId) : 0), 0)
+			return {
+				title: {
+					key: 'title-' + dwt.start,
+					content: <Fragment>
+						<strong>{this.parser.formatTimestamp(dwt.start)}</strong>
+						&nbsp;({gcds} GCDs)
+					</Fragment>
+				},
+				content: {
+					key: 'content-' + dwt.start,
+					content: <ul>
+						{Array.from(dwt.casts.entries()).map(([actionId, value]) => <li key={actionId}>
+							{getAction(actionId).name}: {value}
+						</li>)}
+					</ul>
+				}
+			}
+		})
+
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
 	}
 }
