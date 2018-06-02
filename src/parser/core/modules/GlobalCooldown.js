@@ -107,7 +107,7 @@ export default class GlobalCooldown extends Module {
 		const estimate = this.getEstimate(false)
 
 		return <Fragment>
-			{estimate != this.getEstimate(true) && <Message warning>
+			{estimate !== this.getEstimate(true) && <Message warning>
 				<Icon name="warning sign"/>
 				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
 			</Message>}
