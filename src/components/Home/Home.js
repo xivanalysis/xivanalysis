@@ -13,7 +13,6 @@ class Home extends Component {
 					<ReportSearch/>
 				</Container>
 			</div>
-			<p>TODO: Needs something here</p>
 		</Fragment>
 	}
 }

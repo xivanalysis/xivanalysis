@@ -73,7 +73,10 @@ class Header extends Component {
 			})
 		}
 
-		return <Menu fixed="top" inverted>
+		// Is this reliable?
+		const onHome = !code
+
+		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
 			<Container>
 				<Menu.Item as={Link} to="/" header>
 					<img src={process.env.PUBLIC_URL + '/logo.png'} style={{height: 20, width: 'auto', marginRight: '0.5em'}} alt="logo"/>
