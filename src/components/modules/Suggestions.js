@@ -55,6 +55,12 @@ class Suggestions extends Component {
 						</Item.Extra>
 					</Item.Content>
 				</Item>)}
+				{suggestions.length === 0 && <Item>
+					<Item.Content>
+						<strong>There&apos;s nothing here!</strong><br/>
+						{hasMinor && 'You can check over the minor suggestions by flicking the "Show minor" switch in the top right.'}
+					</Item.Content>
+				</Item>}
 			</Item.Group>
 		</Fragment>
 	}
