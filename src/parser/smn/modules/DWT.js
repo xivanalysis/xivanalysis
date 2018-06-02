@@ -104,6 +104,7 @@ export default class DWT extends Module {
 		const possibleGcds = Math.floor((16000 - 1500) / this.gcd.getEstimate()) + 1
 
 		// Work out how many they could have technically got (outside rushes)
+		// TODO: Consider ending early for cleave and debuffs like trick
 		const aimForGcds = fullDwt * possibleGcds
 		console.log(totalGcds, aimForGcds, fullDwt, possibleGcds)
 		// TODO: Output

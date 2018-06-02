@@ -82,14 +82,26 @@ export default class Ruin2 extends Module {
 		const issues = this.issues.length
 		const warnings = this.warnings.length
 
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.RUIN_III.icon,
-			// This has _way_ too many actionlinks in it. Reduce to like 1 or 2
-			content: <Fragment>
-				Try to limit your use of <ActionLink {...ACTIONS.RUIN_II} /> to weaving oGCDs, and proccing <ActionLink {...ACTIONS.WYRMWAVE} />s during <ActionLink {...ACTIONS.SUMMON_BAHAMUT} />. You lost {issues * potLossPerR2} potency to {issues} casts that should have been <ActionLink {...ACTIONS.RUIN_III} />, and could gain up to {warnings * potLossPerR2} additional potency by reducing the {warnings} casts used only to move.
-			</Fragment>,
-			why: 'TODO: Text for why, and dynamic severity',
-			severity: SEVERITY.MAJOR
-		}))
+		if (issues) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RUIN_III.icon,
+				content: <Fragment>
+					<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
+				</Fragment>,
+				why: (issues * potLossPerR2) + ' potency lost to unnecessary Ruin II casts.',
+				severity: issues < 5? SEVERITY.MINOR : issues < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR
+			}))
+		}
+
+		if (warnings) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RUIN_II.icon,
+				content: <Fragment>
+					Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
+				</Fragment>,
+				why: (warnings * potLossPerR2) + ' potency lost Ruin II casts used only to move.',
+				severity: warnings < 5? SEVERITY.MINOR : warnings < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR
+			}))
+		}
 	}
 }

@@ -17,7 +17,7 @@
 - [ ] R3 vs R2 ratio
 - [ ] R4 use
 - [x] R3s lost to R2s due to unnecessary casts vs big moves
-    - [ ] Severity rating for suggestion, maybe split into two suggestions
+    - [x] Severity rating for suggestion, maybe split into two suggestions
 - [x] Average time between gcds
 
 ## oGCDs
