@@ -1,5 +1,6 @@
 import math from 'mathjsCustom'
-import React from 'react'
+import React, { Fragment } from 'react'
+import { Message, Icon } from 'semantic-ui-react'
 
 import { getAction } from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -84,7 +85,7 @@ export default class GlobalCooldown extends Module {
 		this.lastGcd = event.timestamp
 	}
 
-	getEstimate() {
+	getEstimate(bound = true) {
 		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
 
 		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
@@ -92,20 +93,25 @@ export default class GlobalCooldown extends Module {
 
 		// Mode seems to get best results. Using mean in case there's multiple modes.
 		const lengths = this.gcds.map(gcd => gcd.length)
-		const estimate = math.mean(math.mode(lengths))
+		let estimate = math.mean(math.mode(lengths))
 
-		// Bound the result
-		// TODO: Warn somewhere if initial estimate is outside bounds
-		return Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
-	}
-
-	// Trashy output
-	output() {
-		if (this.gcds.length === 0) {
-			return 'Insufficient data.'
+		// Bound the result if requested
+		if (bound) {
+			estimate = Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
 		}
 
-		// Some lovely shoddy output
-		return 'Estimated GCD: ' + this.getEstimate()
+		return estimate
+	}
+
+	output() {
+		const estimate = this.getEstimate(false)
+
+		return <Fragment>
+			{estimate != this.getEstimate(true) && <Message warning>
+				<Icon name="warning sign"/>
+				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
+			</Message>}
+			Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
+		</Fragment>
 	}
 }

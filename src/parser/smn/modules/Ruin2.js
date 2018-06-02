@@ -99,7 +99,7 @@ export default class Ruin2 extends Module {
 				content: <Fragment>
 					Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
 				</Fragment>,
-				why: (warnings * potLossPerR2) + ' potency lost Ruin II casts used only to move.',
+				why: (warnings * potLossPerR2) + ' potency lost to Ruin II casts used only to move.',
 				severity: warnings < 5? SEVERITY.MINOR : warnings < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR
 			}))
 		}

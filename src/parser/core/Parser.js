@@ -196,8 +196,12 @@ class Parser {
 
 	formatDuration(duration) {
 		duration /= 1000
-		const seconds = Math.floor(duration % 60)
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+		const seconds = duration % 60
+		if (duration < 60) {
+			return seconds.toFixed(seconds < 10? 2 : 0) + 's'
+		} else {
+			return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${Math.floor(seconds)}`
+		}
 	}
 }
 
