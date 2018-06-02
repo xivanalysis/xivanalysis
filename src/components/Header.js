@@ -23,7 +23,6 @@ class Header extends Component {
 			location: {pathname},
 			report
 		} = this.props
-		const reportLoaded = report && !report.loading
 
 		// This is horrid
 		const {params: {
@@ -32,6 +31,7 @@ class Header extends Component {
 			combatant: combatantId
 		}} = getPathMatch(pathname)
 
+		const reportLoaded = report && !report.loading && report.code === code
 		const crumbs = []
 
 		// Report
