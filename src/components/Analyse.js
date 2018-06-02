@@ -194,7 +194,7 @@ class Analyse extends Component {
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
-					<Header attached="top" className={styles.sidebar}>
+					<Header className={styles.sidebar}>
 						<JobIcon job={config.job} set={1}/>
 						<Header.Content>
 							{config.job.name}
@@ -203,9 +203,6 @@ class Analyse extends Component {
 							</Header.Subheader>
 						</Header.Content>
 					</Header>
-					<Segment attached="bottom">
-						{config.description}
-					</Segment>
 
 					<Sticky context={this.stickyContext.current} offset={60}>
 						<Menu vertical pointing secondary fluid>

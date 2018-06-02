@@ -1,5 +1,6 @@
 import CoreParser from 'parser/core/Parser'
 
+import About from './modules/About'
 import Bahamut from './modules/Bahamut'
 import DoTs from './modules/DoTs'
 import DWT from './modules/DWT'
@@ -10,6 +11,7 @@ import Ruin4 from './modules/Ruin4'
 
 class Parser extends CoreParser {
 	static jobModules = {
+		about: About,
 		bahamut: Bahamut,
 		dots: DoTs,
 		dwt: DWT,
