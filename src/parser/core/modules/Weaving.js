@@ -87,7 +87,7 @@ export default class Weaving extends Module {
 				key: 'title-' + item.gcdEvent.timestamp,
 				content: <Fragment>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
-					&nbsp;({item.weaves.length} weaves)
+					&nbsp;-&nbsp;{item.weaves.length} weaves
 				</Fragment>
 			},
 			content: {

@@ -124,8 +124,8 @@ export default class DWT extends Module {
 				title: {
 					key: 'title-' + dwt.start,
 					content: <Fragment>
-						<strong>{this.parser.formatTimestamp(dwt.start)}</strong>
-						&nbsp;({gcds} GCDs)
+						{this.parser.formatTimestamp(dwt.start)}
+						&nbsp;-&nbsp;{gcds} GCDs
 					</Fragment>
 				},
 				content: {
