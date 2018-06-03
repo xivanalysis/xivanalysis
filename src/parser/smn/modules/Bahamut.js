@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react'
-import { Accordion } from 'semantic-ui-react'
+import { Accordion, Message } from 'semantic-ui-react'
 
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
@@ -104,12 +104,17 @@ export default class Bahamut extends Module {
 			}
 		})
 
-		return <Accordion
-			exclusive={false}
-			panels={panels}
-			defaultActiveIndex={expanded}
-			styled
-			fluid
-		/>
+		return <Fragment>
+			<Message>
+				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <span className="text-warning">Yellow</span> highlighting has been applied to actions that likely ghosted, and <span className="text-error">Red</span>  to those that ghosted without a doubt.
+			</Message>
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				defaultActiveIndex={expanded}
+				styled
+				fluid
+			/>
+		</Fragment>
 	}
 }
