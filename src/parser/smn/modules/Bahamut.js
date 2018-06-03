@@ -106,7 +106,7 @@ export default class Bahamut extends Module {
 
 		return <Fragment>
 			<Message>
-				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <span className="text-warning">Yellow</span> highlighting has been applied to actions that likely ghosted, and <span className="text-error">Red</span>  to those that ghosted without a doubt.
+				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong>  to those that ghosted without a doubt.
 			</Message>
 			<Accordion
 				exclusive={false}
