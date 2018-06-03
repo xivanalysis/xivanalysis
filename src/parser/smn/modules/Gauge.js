@@ -6,6 +6,7 @@ import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import { Rule, Requirement } from 'parser/core/modules/Checklist'
+import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
 const AETHER_ACTIONS = [
 	ACTIONS.ENERGY_DRAIN.id,
@@ -19,7 +20,8 @@ export default class Gauge extends Module {
 	static dependencies = [
 		'checklist',
 		'cooldowns',
-		'pets'
+		'pets',
+		'suggestions'
 	]
 
 	// -----
@@ -138,9 +140,32 @@ export default class Gauge extends Module {
 				})
 			]
 		}))
-	}
 
-	output() {
-		return `Lost flow: ${this.lostAetherflow}, Lost DWA: ${this.lostDreadwyrmAether}`
+		// Suggestions for lost stacks
+		if (this.lostAetherflow) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.AETHERFLOW.icon,
+				content: <Fragment>
+					Ensure you gain a full 3 stacks of <ActionLink {...ACTIONS.AETHERFLOW}/> per cast. Every lost stack is a significant potency loss, and can push your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> (and hence Bahamut) out by up to a minute.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					{this.lostAetherflow} stack{this.lostAetherflow > 1 && 's'} of Aetherflow lost.
+				</Fragment>
+			}))
+		}
+
+		if (this.lostDreadwyrmAether) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON_BAHAMUT.icon,
+				content: <Fragment>
+					Ensure you always <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/> before your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>. Failing to do so will de-sync Bahamut in your rotation, and potentially lose you a summon over the duration of the fight.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					{this.lostDreadwyrmAether} stack{this.lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
+				</Fragment>
+			}))
+		}
 	}
 }
