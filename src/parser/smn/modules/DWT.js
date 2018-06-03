@@ -1,11 +1,12 @@
 import React, { Fragment } from 'react'
 import { Accordion } from 'semantic-ui-react'
 
+import { ActionLink } from 'components/ui/DbLink'
+import Rotation from 'components/ui/Rotation'
 import ACTIONS, { getAction } from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
-import { ActionLink } from 'components/ui/DbLink'
 
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
@@ -120,12 +121,7 @@ export default class DWT extends Module {
 				},
 				content: {
 					key: 'content-' + dwt.start,
-					content: <ul>
-						{dwt.casts.map(cast => <li key={cast.timestamp}>
-							<strong>{this.parser.formatTimestamp(cast.timestamp)}:</strong>&nbsp;
-							{cast.ability.name}
-						</li>)}
-					</ul>
+					content: <Rotation events={dwt.casts}/>
 				}
 			}
 		})
