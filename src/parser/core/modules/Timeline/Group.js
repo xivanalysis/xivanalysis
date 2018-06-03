@@ -1,4 +1,6 @@
 export default class Group {
+	order = 50
+
 	constructor(options) {
 		Object.keys(options || {}).forEach(key => {
 			this[key] = options[key]
@@ -16,8 +18,9 @@ export default class Group {
 			subgroupStack: this.subgroupStack,
 			title: this.title,
 			visible: this.visible,
-			nesterGroups: this.nesterGroups,
-			showNested: this.showNested
+			nestedGroups: this.nestedGroups,
+			showNested: this.showNested,
+			order: this.order
 		}
 	}
 }

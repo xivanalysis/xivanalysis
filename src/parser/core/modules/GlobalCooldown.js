@@ -53,7 +53,8 @@ export default class GlobalCooldown extends Module {
 		// TODO: Look into adding items to groups? Maybe?
 		this.timeline.addGroup(new Group({
 			id: 'gcd',
-			content: 'GCD'
+			content: 'GCD',
+			order: 0
 		}))
 
 		this.gcds.forEach(gcd => {
