@@ -8,11 +8,10 @@ import styles from './Home.module.css'
 class Home extends Component {
 	render() {
 		return <Fragment>
-			<div className={styles.searchBox}>
-				<Container className={styles.search}>
-					<ReportSearch/>
-				</Container>
-			</div>
+			<div className={styles.background}></div>
+			<Container className={styles.search}>
+				<ReportSearch />
+			</Container>
 		</Fragment>
 	}
 }
