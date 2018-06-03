@@ -27,7 +27,7 @@ const CHART_COLOURS = {
 }
 
 // Durations should probably be ACTIONS data
-const SUMMON_BAHAMUT_LENGTH = 20000
+export const SUMMON_BAHAMUT_LENGTH = 20000
 
 export default class Pets extends Module {
 	static dependencies = [
@@ -157,7 +157,6 @@ export default class Pets extends Module {
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
-			console.log('MEDIUM: Should use ifrit')
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
 				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,

@@ -1,6 +1,24 @@
 /* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
 body {
 	padding-top: 40px;
+
+	/* Colours 'cus SUI doesn't for w/e reason */
+	--red: #db2828;
+	--orange: #f2711c;
+	--yellow: #fbbd08;
+	--olive: #b5cc18;
+	--green: #21ba45;
+	--teal: #00b5ad;
+	--blue: #2185d0;
+	--purple: #a333c8;
+	--violet: #6435c9;
+	--pink: #e03997;
+	--brown: #a5673f;
+	--grey: #767676;
+
+	--info: var(--blue, blue);
+	--warning: var(--yellow, yellow);
+	--error: var(--red, red);
 }
 
 /* Forcing no wrapping on xivdb links so the icons don't get split off */
@@ -11,3 +29,7 @@ body {
 /* Utility shit */
 .pull-left { float: left; }
 .pull-right { float: right; }
+
+.text-info { color: var(--info); }
+.text-warning { color: var(--warning); }
+.text-error { color: var(--error); }
