@@ -36,8 +36,10 @@ export default class DWT extends Module {
 	}
 
 	on_cast_byPlayer(event) {
+		const actionId = event.ability.guid
+
 		// If it's a DWT cast, start tracking
-		if (event.ability.guid === ACTIONS.DREADWYRM_TRANCE.id) {
+		if (actionId === ACTIONS.DREADWYRM_TRANCE.id) {
 			this.active = true
 			this.dwt = {
 				start: event.timestamp,
@@ -48,7 +50,7 @@ export default class DWT extends Module {
 		}
 
 		// Only going to save casts during DWT
-		if (!this.active) {
+		if (!this.active || getAction(actionId).autoAttack) {
 			return
 		}
 
