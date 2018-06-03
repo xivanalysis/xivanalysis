@@ -96,8 +96,8 @@ export default class Bahamut extends Module {
 							key={cast.timestamp}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
-							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}</strong>
-							&nbsp;{cast.ability.name}
+							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;
+							{cast.ability.name}
 						</li>)}
 					</ul>
 				}

@@ -20,25 +20,11 @@ export default class DWT extends Module {
 		'suggestions'
 	]
 	name = 'Dreadwyrm Trance'
+	static displayOrder = -100
 
 	active = false
 	dwt = {}
 	history = []
-
-	on_applybuff_byPlayer(event) {
-		if (event.ability.guid !== STATUSES.DREADWYRM_TRANCE.id) {
-			return
-		}
-
-		// Start tracking
-		this.active = true
-		this.dwt = {
-			start: event.timestamp,
-			end: null,
-			rushing: this.gauge.isRushing(),
-			casts: new Map()
-		}
-	}
 
 	on_removebuff_byPlayer(event) {
 		if (event.ability.guid !== STATUSES.DREADWYRM_TRANCE.id) {
@@ -50,14 +36,24 @@ export default class DWT extends Module {
 	}
 
 	on_cast_byPlayer(event) {
-		// Only care about casts during DWT
+		// If it's a DWT cast, start tracking
+		if (event.ability.guid === ACTIONS.DREADWYRM_TRANCE.id) {
+			this.active = true
+			this.dwt = {
+				start: event.timestamp,
+				end: null,
+				rushing: this.gauge.isRushing(),
+				casts: []
+			}
+		}
+
+		// Only going to save casts during DWT
 		if (!this.active) {
 			return
 		}
 
-		const actionId = event.ability.guid
-		const value = (this.dwt.casts.get(actionId) || 0) + 1
-		this.dwt.casts.set(actionId, value)
+		// Save the event to the DWT casts
+		this.dwt.casts.push(event)
 	}
 
 	on_complete() {
@@ -71,22 +67,14 @@ export default class DWT extends Module {
 		let totalGcds = 0
 		let fullDwt = 0
 		this.history.forEach(dwt => {
+			const gcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+
 			if (!dwt.rushing) {
 				fullDwt++
+				totalGcds += gcds.length
 			}
 
-			dwt.casts.forEach((castCount, actionId) => {
-				if (!getAction(actionId).onGcd) {
-					return
-				}
-
-				if (!dwt.rushing) {
-					totalGcds += castCount
-				}
-				if (!CORRECT_GCDS.includes(actionId)) {
-					badGcds += castCount
-				}
-			})
+			badGcds += gcds.filter(cast => !CORRECT_GCDS.includes(cast.ability.guid)).length
 		})
 
 		// Suggestions
@@ -119,20 +107,21 @@ export default class DWT extends Module {
 
 	output() {
 		const panels = this.history.map(dwt => {
-			const gcds = Array.from(dwt.casts.keys()).reduce((prev, actionId) => prev + (getAction(actionId).onGcd ? dwt.casts.get(actionId) : 0), 0)
+			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			return {
 				title: {
 					key: 'title-' + dwt.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(dwt.start)}
-						&nbsp;-&nbsp;{gcds} GCDs
+						&nbsp;-&nbsp;{numGcds} GCDs
 					</Fragment>
 				},
 				content: {
 					key: 'content-' + dwt.start,
 					content: <ul>
-						{Array.from(dwt.casts.entries()).map(([actionId, value]) => <li key={actionId}>
-							{getAction(actionId).name}: {value}
+						{dwt.casts.map(cast => <li key={cast.timestamp}>
+							<strong>{this.parser.formatTimestamp(cast.timestamp)}:</strong>&nbsp;
+							{cast.ability.name}
 						</li>)}
 					</ul>
 				}
@@ -142,6 +131,7 @@ export default class DWT extends Module {
 		return <Accordion
 			exclusive={false}
 			panels={panels}
+			defaultActiveIndex={[0]} /* temp */
 			styled
 			fluid
 		/>
