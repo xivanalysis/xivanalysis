@@ -190,17 +190,19 @@ class Parser {
 
 	// TODO: Pet handling
 
-	formatTimestamp(timestamp) {
-		return this.formatDuration(timestamp - this.fight.start_time)
+	formatTimestamp(timestamp, secondPrecision) {
+		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
 	}
 
-	formatDuration(duration) {
+	formatDuration(duration, secondPrecision = null) {
 		duration /= 1000
 		const seconds = duration % 60
 		if (duration < 60) {
-			return seconds.toFixed(seconds < 10? 2 : 0) + 's'
+			const precision = secondPrecision !== null? secondPrecision : seconds < 10? 2 : 0
+			return seconds.toFixed(precision) + 's'
 		} else {
-			return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${Math.floor(seconds)}`
+			const precision = secondPrecision !== null ? secondPrecision : 0
+			return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
 		}
 	}
 }
