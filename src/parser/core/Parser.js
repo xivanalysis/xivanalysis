@@ -4,6 +4,7 @@ import AlwaysBeCasting from './modules/AlwaysBeCasting'
 import Checklist from './modules/Checklist'
 import Combatant from './modules/Combatant'
 import Cooldowns from './modules/Cooldowns'
+import Death from './modules/Death'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 import Invulnerability from './modules/Invulnerability'
@@ -21,6 +22,7 @@ class Parser {
 		checklist: Checklist,
 		combatant: Combatant,
 		cooldowns: Cooldowns,
+		death: Death,
 		enemies: Enemies,
 		gcd: GlobalCooldown,
 		invuln: Invulnerability,
