@@ -28,22 +28,34 @@ export default class Death extends Module {
 			return
 		}
 
-		this.addTimelineDeath(this.timestamp, event.timestamp)
-		this.timestamp = null
+		this.addDeathToTimeline(event.timestamp)
+	}
+
+	// If they cast/begincast, they were probably LB3'd, just mark end of death
+	// TODO: I mean there's an actual LB3 action cast, it's just not in the logs. Look into it.
+	on_event(event) {
+		if (
+			['cast', 'begincast'].includes(event.type) &&
+			this.parser.byPlayer(event) &&
+			this.timestamp
+		) {
+			this.addDeathToTimeline(event.timestamp)
+		}
 	}
 
 	on_complete() {
 		if (this.timestamp) {
-			this.addTimelineDeath(this.timestamp, this.parser.fight.end_time)
+			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 	}
 
-	addTimelineDeath(start, end) {
+	addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
 		this.timeline.addItem(new Item({
 			type: 'background',
-			start: start - startTime,
+			start: this.timestamp - startTime,
 			end: end - startTime
 		}))
+		this.timestamp = null
 	}
 }
