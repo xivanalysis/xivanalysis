@@ -1,9 +1,11 @@
 import { addExtraIndex } from 'utilities'
 
+import ENEMY from './ENEMY'
 import SHARED from './SHARED'
 import SMN from './SMN'
 
 const STATUSES = {
+	...ENEMY,
 	...SHARED,
 	...SMN
 }
