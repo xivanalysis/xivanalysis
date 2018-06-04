@@ -35,6 +35,7 @@ export default class Rotation extends Component {
 					key={event.timestamp}
 					src={action.icon}
 					className={className.join(' ')}
+					alt={action.name}
 				/>}
 			)}
 		</div>
