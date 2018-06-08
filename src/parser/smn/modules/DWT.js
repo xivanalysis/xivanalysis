@@ -128,7 +128,6 @@ export default class DWT extends Module {
 		return <Accordion
 			exclusive={false}
 			panels={panels}
-			defaultActiveIndex={[0]} /* temp */
 			styled
 			fluid
 		/>
