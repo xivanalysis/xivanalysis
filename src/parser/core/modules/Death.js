@@ -47,6 +47,8 @@ export default class Death extends Module {
 		if (this.timestamp) {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
+
+		// TODO: death suggestion
 	}
 
 	addDeathToTimeline(end) {

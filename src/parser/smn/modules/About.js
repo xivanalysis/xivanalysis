@@ -1,3 +1,5 @@
+import React from 'react'
+
 import Module, { DISPLAY_ORDER } from 'parser/core/Module'
 
 export default class About extends Module {
@@ -5,6 +7,6 @@ export default class About extends Module {
 	name = 'About'
 
 	output() {
-		return 'This isn\'t even remotely done.'
+		return <p>This isn&apos;t even remotely done.</p>
 	}
 }

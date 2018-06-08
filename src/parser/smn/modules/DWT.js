@@ -21,7 +21,6 @@ export default class DWT extends Module {
 		'suggestions'
 	]
 	name = 'Dreadwyrm Trance'
-	static displayOrder = -100
 
 	active = false
 	dwt = {}

@@ -61,6 +61,7 @@
 - [ ] Better pet action use (Contagion, RS, aerial/crush for aoe)
 - [ ] Rouse durations (any clipped due to S. Bahamut etc)
 - [ ] Enkindles w/ & w/o Rouse
+- [ ] Pet auto (burning crush etc) uptime
 
 adding more will have to be done with subtracting things, 2k limit is hard
 Alignment is one section I was also thinking of but that's so much harder to evaluate especially if everything is wishy washy
