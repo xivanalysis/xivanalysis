@@ -10,3 +10,12 @@
 	margin: 0 !important;
 	transform: translateY(-50%);
 }
+
+.description {
+	display: flex;
+	align-items: center;
+}
+
+.description p {
+	margin-left: 1em;
+}

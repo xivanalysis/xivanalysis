@@ -36,8 +36,10 @@ export default class Checklist extends Module {
 					key: `title-${index}`,
 					className: styles.title,
 					content: <Fragment>
-						{/* Not sure 75 is a good aiming point. Maybe higher? */}
-						<Icon name={success? 'checkmark' : 'remove'}/>
+						<Icon
+							name={success? 'checkmark' : 'remove'}
+							className={success? 'text-success' : 'text-error'}
+						/>
 						{rule.name}
 						<Progress
 							percent={rule.percent}
@@ -50,11 +52,11 @@ export default class Checklist extends Module {
 				content: {
 					key: `content-${index}`,
 					content: <Fragment>
-						{rule.description && <Fragment>
+						{rule.description && <div className={styles.description}>
 							{/* TODO: better styling for description */}
-							<Icon name="info"/>
-							{rule.description}
-						</Fragment>}
+							<Icon name="info" size="large"/>
+							<p>{rule.description}</p>
+						</div>}
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>

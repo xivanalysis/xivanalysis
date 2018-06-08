@@ -17,6 +17,7 @@ body {
 	--grey: #767676;
 
 	--info: var(--blue, blue);
+	--success: var(--green, green);
 	--warning: var(--yellow, yellow);
 	--error: var(--red, red);
 }
@@ -31,5 +32,6 @@ body {
 .pull-right { float: right; }
 
 .text-info { color: var(--info); }
+.text-success { color: var(--success); }
 .text-warning { color: var(--warning); }
 .text-error { color: var(--error); }
