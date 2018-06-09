@@ -140,7 +140,8 @@ class Analyse extends Component {
 		}
 
 		// Grab the parser for the combatant and broadcast an init to the modules
-		const parser = new config.parser(report, fight, combatant)
+		const Parser = await config.parser()
+		const parser = new Parser(report, fight, combatant)
 		this.setState({ config: config, parser: parser})
 
 		// TODO: Should this be somewhere else?

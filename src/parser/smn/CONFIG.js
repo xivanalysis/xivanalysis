@@ -1,4 +1,3 @@
-import Parser from './Parser'
 import JOBS from 'data/JOBS'
 
 export default {
@@ -6,5 +5,5 @@ export default {
 	patchCompatibility: '4.3',
 
 	job: JOBS.SUMMONER,
-	parser: Parser
+	parser: () => import('./Parser' /* webpackChunkName: "SMN" */).then(exports => exports.default)
 }
