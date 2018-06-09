@@ -8,7 +8,8 @@ export default {
 		id: 180,
 		name: 'Summon III',
 		icon: 'https://secure.xivdb.com/img/game/002000/002680.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 3
 	},
 
 	FESTER: {
@@ -22,7 +23,8 @@ export default {
 		id: 182,
 		name: 'Tri-bind',
 		icon: 'https://secure.xivdb.com/img/game/002000/002678.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2.5
 	},
 
 	ENKINDLE: {
@@ -43,7 +45,8 @@ export default {
 		id: 3579,
 		name: 'Ruin III',
 		icon: 'https://secure.xivdb.com/img/game/002000/002682.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2.5 // This is reduced to instant during DWT
 	},
 
 	TRI_DISASTER: {
@@ -86,7 +89,8 @@ export default {
 		id: 7425,
 		name: 'Miasma III',
 		icon: 'https://secure.xivdb.com/img/game/002000/002690.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2.5
 	},
 
 	RUIN_IV: {

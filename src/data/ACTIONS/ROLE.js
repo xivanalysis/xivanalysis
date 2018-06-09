@@ -51,7 +51,9 @@ export default {
 	DRAIN: {
 		id: 7564,
 		name: 'Drain',
-		icon: 'https://secure.xivdb.com/img/game/000000/000863.png'
+		icon: 'https://secure.xivdb.com/img/game/000000/000863.png',
+		onGcd: true,
+		castTime: 2.5
 	},
 
 	MANA_SHIFT: {

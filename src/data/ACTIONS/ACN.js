@@ -9,7 +9,8 @@ export default {
 		id: 163,
 		name: 'Ruin',
 		icon: 'https://secure.xivdb.com/img/game/000000/000501.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2.5
 	},
 
 	BIO: {
@@ -23,7 +24,8 @@ export default {
 		id: 165,
 		name: 'Summon',
 		icon: 'https://secure.xivdb.com/img/game/000000/000516.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 3
 	},
 
 	AETHERFLOW: {
@@ -44,21 +46,24 @@ export default {
 		id: 168,
 		name: 'Miasma',
 		icon: 'https://secure.xivdb.com/img/game/000000/000505.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2.5
 	},
 
 	SUMMON_II: {
 		id: 170,
 		name: 'Summon II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000517.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 3
 	},
 
 	SUSTAIN: {
 		id: 171,
 		name: 'Sustain',
 		icon: 'https://secure.xivdb.com/img/game/000000/000508.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 1
 	},
 
 	RUIN_II: {
@@ -72,7 +77,8 @@ export default {
 		id: 173,
 		name: 'Resurrection',
 		icon: 'https://secure.xivdb.com/img/game/000000/000511.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 8
 	},
 
 	BANE: {
@@ -107,7 +113,8 @@ export default {
 		id: 190,
 		name: 'Physick',
 		icon: 'https://secure.xivdb.com/img/game/000000/000518.png',
-		onGcd: true
+		onGcd: true,
+		castTime: 2
 	},
 
 	// -----
