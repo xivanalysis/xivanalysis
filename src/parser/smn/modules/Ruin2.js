@@ -51,6 +51,7 @@ export default class Ruin2 extends Module {
 			}
 		}
 
+		// TODO: combatant resources are janky. Replace.
 		if (action.onGcd) {
 			// If this cast is on the gcd, store it for comparison
 			this.lastGcd = event

@@ -3,6 +3,7 @@ import toposort from 'toposort'
 import AlwaysBeCasting from './modules/AlwaysBeCasting'
 import Checklist from './modules/Checklist'
 import Combatant from './modules/Combatant'
+import Combatants from './modules/Combatants'
 import Cooldowns from './modules/Cooldowns'
 import Death from './modules/Death'
 import Enemies from './modules/Enemies'
@@ -21,6 +22,7 @@ class Parser {
 		abc: AlwaysBeCasting,
 		checklist: Checklist,
 		combatant: Combatant,
+		combatants: Combatants,
 		cooldowns: Cooldowns,
 		death: Death,
 		enemies: Enemies,
@@ -189,8 +191,6 @@ class Parser {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
 		return pet && pet.petOwner === playerId
 	}
-
-	// TODO: Pet handling
 
 	formatTimestamp(timestamp, secondPrecision) {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
