@@ -1,6 +1,7 @@
 import React, { Fragment } from 'react'
 import { Accordion } from 'semantic-ui-react'
 
+import Rotation from 'components/ui/Rotation'
 import { getAction } from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
@@ -117,11 +118,10 @@ export default class Weaving extends Module {
 			},
 			content: {
 				key: 'content-' + item.gcdEvent.timestamp,
-				content: <ul>
-					{item.weaves.map(weave => <li key={weave.timestamp}>
-						{weave.ability.name}
-					</li>)}
-				</ul>
+				content: <Rotation events={[
+					...(item.gcdEvent.ability? [item.gcdEvent] : []),
+					...item.weaves
+				]}/>
 			}
 		}))
 
