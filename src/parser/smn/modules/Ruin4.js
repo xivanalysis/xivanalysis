@@ -69,14 +69,16 @@ export default class Ruin4 extends Module {
 		}
 
 		// console.log('wasted', this.overage)
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.RUIN_IV.icon,
-			content: <Fragment>
-				Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
-			</Fragment>,
-			severity: this.overage > 30000? SEVERITY.MAJOR : this.overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
-			why: `Further Ruin held for ${this.parser.formatDuration(this.overage)} longer than recommended over the course of the fight.`
-		}))
+		if (this.overage > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RUIN_IV.icon,
+				content: <Fragment>
+					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
+				</Fragment>,
+				severity: this.overage > 30000? SEVERITY.MAJOR : this.overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				why: `Further Ruin held for ${this.parser.formatDuration(this.overage)} longer than recommended over the course of the fight.`
+			}))
+		}
 	}
 
 	endProcHold(end) {
