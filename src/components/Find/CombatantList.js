@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, { Component, Fragment } from 'react'
 import { Link } from 'react-router-dom'
-import { Header, Menu, Segment } from 'semantic-ui-react'
+import { Header, Menu, Message, Segment } from 'semantic-ui-react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, { ROLES } from 'data/JOBS'
@@ -60,6 +60,13 @@ class CombatantList extends Component {
 					<Segment color={role.colour} attached="top">
 						{role.name}
 					</Segment>
+					{index === ROLES.UNSUPPORTED.id && <Message
+						info
+						attached
+						icon="code"
+						header="Favourite job unsupported?"
+						content="We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!"
+					/>}
 					<Menu fluid vertical attached="bottom">
 						{friends.map(friend =>
 							// TODO: This is legit trash
