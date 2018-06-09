@@ -6,7 +6,7 @@ import { getAction } from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
-// TODO: This doesn't account for Ninjutsu, or BRD weaves. Work it out later.
+// BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides
 const MAX_WEAVES = {
 	[undefined]: 2, // Default castTime is 0
 	0: 2,
@@ -91,7 +91,7 @@ export default class Weaving extends Module {
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
 		if (!maxWeaves) {
-			maxWeaves = MAX_WEAVES[action.castTime]
+			maxWeaves = MAX_WEAVES[action.castTime] || MAX_WEAVES.default
 		}
 
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
