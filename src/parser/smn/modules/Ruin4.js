@@ -29,6 +29,7 @@ export default class Ruin4 extends Module {
 		'invuln',
 		'suggestions'
 	]
+	name = 'Ruin IV'
 
 	procChances = 0
 	procs = 0
@@ -94,10 +95,10 @@ export default class Ruin4 extends Module {
 	}
 
 	output() {
-		return <Fragment>
+		return <p>
 			Chances: {this.procChances}<br/>
-			Expected procs: {this.procChances * PROC_RATE}<br/>
+			Expected procs: {Math.floor(this.procChances * PROC_RATE)}<br/>
 			Actual procs: {this.procs}
-		</Fragment>
+		</p>
 	}
 }
