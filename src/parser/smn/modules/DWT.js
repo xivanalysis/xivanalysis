@@ -107,6 +107,15 @@ export default class DWT extends Module {
 		this.history.push(this.dwt)
 	}
 
+	activeAt(time) {
+		// If it's during the current one, easy way out
+		if (this.active && this.dwt.start <= time) {
+			return true
+		}
+
+		return this.history.some(dwt => dwt.start <= time && dwt.end >= time)
+	}
+
 	output() {
 		const panels = this.history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
