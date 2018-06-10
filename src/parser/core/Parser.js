@@ -3,7 +3,6 @@ import toposort from 'toposort'
 import AlwaysBeCasting from './modules/AlwaysBeCasting'
 import CastTime from './modules/CastTime'
 import Checklist from './modules/Checklist'
-import Combatant from './modules/Combatant'
 import Combatants from './modules/Combatants'
 import Cooldowns from './modules/Cooldowns'
 import Death from './modules/Death'
@@ -24,7 +23,6 @@ class Parser {
 		abc: AlwaysBeCasting,
 		castTime: CastTime,
 		checklist: Checklist,
-		combatant: Combatant,
 		combatants: Combatants,
 		cooldowns: Cooldowns,
 		death: Death,

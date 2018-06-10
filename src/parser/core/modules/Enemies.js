@@ -9,18 +9,13 @@ export default class Enemies extends Entities {
 		return this.enemies
 	}
 
-	getEntity(event) {
-		if (event.targetIsFriendly) {
-			return null
-		}
-
-		const targetId = event.targetID
-		let enemy = this.enemies[targetId]
+	getEntity(actorId) {
+		let enemy = this.enemies[actorId]
 
 		if (!enemy) {
-			const info = this.parser.report.enemies.find(enemy => enemy.id === targetId)
+			const info = this.parser.report.enemies.find(enemy => enemy.id === actorId)
 			if (!info) { return null }
-			this.enemies[targetId] = enemy = new Enemy(this.parser, info)
+			this.enemies[actorId] = enemy = new Enemy(this.parser, info)
 		}
 
 		return enemy

@@ -14,7 +14,7 @@ const RUIN3_POT = 120
 
 export default class Ruin2 extends Module {
 	static dependencies = [
-		'combatant',
+		'combatants',
 		'gauge',
 		'suggestions'
 	]
@@ -55,7 +55,7 @@ export default class Ruin2 extends Module {
 		if (action.onGcd) {
 			// If this cast is on the gcd, store it for comparison
 			this.lastGcd = event
-			this.pos = this.combatant.resources
+			this.pos = this.combatants.selected.resources
 		} else {
 			// Otherwise take note that they've used an oGCD
 			this.ogcdUsed = true
@@ -73,8 +73,8 @@ export default class Ruin2 extends Module {
 	// TODO: Should this be in some other module?
 	movedSinceLastGcd() {
 		return (
-			Math.abs(this.combatant.resources.x - this.pos.x) > 1 &&
-			Math.abs(this.combatant.resources.y - this.pos.y) > 1
+			Math.abs(this.combatants.selected.resources.x - this.pos.x) > 1 &&
+			Math.abs(this.combatants.selected.resources.y - this.pos.y) > 1
 		)
 	}
 

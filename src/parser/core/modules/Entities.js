@@ -103,6 +103,7 @@ export default class Entities extends Module {
 	// -----
 	// Event handlers
 	// -----
+	// Buffs
 	on_applybuff(event)         { this.applyBuff(event) }
 	on_applydebuff(event)       { this.applyBuff(event, true) }
 	on_applybuffstack(event)    { this.updateBuffStack(event) }
@@ -112,6 +113,10 @@ export default class Entities extends Module {
 	on_removebuff(event)        { this.removeBuff(event) }
 	on_removedebuff(event)      { this.removeBuff(event, true) }
 
+	// Resources
+	on_damage(event) { this.updateResources(event) }
+	on_heal(event) { this.updateResources(event) }
+
 	// -----
 	// Logic
 	// -----
@@ -120,7 +125,7 @@ export default class Entities extends Module {
 		throw new Error('Not implemented')
 	}
 
-	getEntity(/* event */) {
+	getEntity(/* actorId */) {
 		throw new Error('Not implemented')
 	}
 
@@ -131,7 +136,8 @@ export default class Entities extends Module {
 			return null
 		}
 
-		return this.getEntity(event)
+		// Only checking buff target
+		return this.getEntity(event.targetID)
 	}
 
 	applyBuff(event, isDebuff) {
@@ -218,5 +224,18 @@ export default class Entities extends Module {
 			newStacks,
 			stacksGained: newStacks - oldStacks
 		}, buff)
+	}
+
+	updateResources(event) {
+		// Try to update both source and target
+		const source = this.getEntity(event.sourceID)
+		if (source && event.sourceResources) {
+			source.resources = event.sourceResources
+		}
+
+		const target = this.getEntity(event.targetID)
+		if (target && event.targetResources) {
+			target.resources = event.targetResources
+		}
 	}
 }

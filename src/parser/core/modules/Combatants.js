@@ -8,18 +8,13 @@ export default class Combatants extends Entities {
 		return this.players
 	}
 
-	getEntity(event) {
-		if (!event.targetIsFriendly) {
-			return null
-		}
-
-		const targetId = event.targetID
-		let player = this.players[targetId]
+	getEntity(actorId) {
+		let player = this.players[actorId]
 
 		if (!player) {
-			const info = this.parser.report.friendlies.find(player => player.id === targetId)
+			const info = this.parser.report.friendlies.find(player => player.id === actorId)
 			if (!info) { return null }
-			this.players[targetId] = player = new Combatant(this.parser, info)
+			this.players[actorId] = player = new Combatant(this.parser, info)
 		}
 
 		return player
