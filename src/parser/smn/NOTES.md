@@ -15,7 +15,7 @@
 
 ## GCDs
 - [ ] R3 vs R2 ratio
-- [ ] R4 use
+- [x] R4 use
 - [x] R3s lost to R2s due to unnecessary casts vs big moves
     - [x] Severity rating for suggestion, maybe split into two suggestions
 - [x] Average time between gcds
@@ -26,7 +26,7 @@
     - [ ] ST entirely Festers apart from 1 painflare, unless a final aether rush is done to rush dwt/bahamut at the end
     - [ ] Cleave/AoE Painflares/Bane where applicable
 - [x] Instances of doing > double weaves
-- [ ] General clipping
+- [x] General clipping (handled by weaving module)
 
 ## DoTs
 - [x] M3 uptime
@@ -48,18 +48,18 @@
 - [x] WW cast count
     - [ ] (+ actions used to achieve, look at wasted actions? 12 is a colossal meme)
 - [x] AM cast count
-- [ ] look at timestamps of lost action vs summon bahamut to identify ghost
-    - [ ] if timestamp of final action >= summon time + 20000ms, action 100% ghost
-    - [ ] if timestamp of final action < summon time + 20000ms by x ms, ghost odds = high
-        - [ ] evaluate x for AM ghost (with action windup, 1s + ???)
-        - [ ] evaluate x for WW ghost
+- [x] look at timestamps of lost action vs summon bahamut to identify ghost
+    - [x] if timestamp of final action >= summon time + 20000ms, action 100% ghost
+    - [x] if timestamp of final action < summon time + 20000ms by x ms, ghost odds = high
+        - [x] evaluate x for AM ghost (with action windup, 1s + ???)
+        - [x] evaluate x for WW ghost
 - [ ] Table view for Bahamuts instead of bullet list?
 - [ ] Bahamut use for cleave/multi target - not sure how feasible this is, maybe a phase2
 
 ## Egi Stuff
 - [ ] Pet actions #s
 - [ ] Better pet action use (Contagion, RS, aerial/crush for aoe)
-- [ ] Rouse durations (any clipped due to S. Bahamut etc)
+- [x] Rouse durations (any clipped due to S. Bahamut etc)
 - [ ] Enkindles w/ & w/o Rouse
 - [ ] Pet auto (burning crush etc) uptime
 
