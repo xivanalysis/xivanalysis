@@ -10,6 +10,7 @@ import Death from './modules/Death'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 import Invulnerability from './modules/Invulnerability'
+import PrecastStatus from './modules/PrecastStatus'
 import Suggestions from './modules/Suggestions'
 import Timeline from './modules/Timeline'
 import Weaving from './modules/Weaving'
@@ -30,6 +31,7 @@ class Parser {
 		enemies: Enemies,
 		gcd: GlobalCooldown,
 		invuln: Invulnerability,
+		precastStatus: PrecastStatus,
 		suggestions: Suggestions,
 		timeline: Timeline,
 		weaving: Weaving

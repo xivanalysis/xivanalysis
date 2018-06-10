@@ -83,7 +83,7 @@ export default class Ruin4 extends Module {
 	}
 
 	_endProcHold(end) {
-		const start = this._lastProc || this.parser.fight.start_time
+		const start = this._lastProc
 		const untargetable = this.invuln.getUntargetableUptime('all', start, end)
 		const holdTime = end - start - untargetable
 
