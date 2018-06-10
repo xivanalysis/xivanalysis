@@ -19,6 +19,7 @@ const MAJOR_SUGGESTION_ISSUES = 5
 
 export default class Weaving extends Module {
 	static dependencies = [
+		'castTime',
 		'invuln',
 		'suggestions'
 	]
@@ -87,11 +88,11 @@ export default class Weaving extends Module {
 		if (!weave.gcdEvent.ability) {
 			return weave.weaves.length
 		}
-		const action = getAction(weave.gcdEvent.ability.guid)
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
 		if (!maxWeaves) {
-			maxWeaves = MAX_WEAVES[action.castTime] || MAX_WEAVES.default
+			const castTime = this.castTime.forEvent(weave.gcdEvent)
+			maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
 		}
 
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
