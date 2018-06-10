@@ -16,6 +16,7 @@ const CORRECT_GCDS = [
 
 export default class DWT extends Module {
 	static dependencies = [
+		'castTime',
 		'gauge',
 		'gcd',
 		'suggestions'
@@ -25,6 +26,8 @@ export default class DWT extends Module {
 	active = false
 	dwt = {}
 	history = []
+
+	_ctIndex = null
 
 	on_removebuff_byPlayer(event) {
 		if (event.ability.guid !== STATUSES.DREADWYRM_TRANCE.id) {
@@ -47,6 +50,8 @@ export default class DWT extends Module {
 				rushing: this.gauge.isRushing(),
 				casts: []
 			}
+
+			this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
 		}
 
 		// Only going to save casts during DWT
@@ -105,6 +110,8 @@ export default class DWT extends Module {
 		this.active = false
 		this.dwt.end = this.parser.currentTimestamp
 		this.history.push(this.dwt)
+
+		this.castTime.reset(this._ctIndex)
 	}
 
 	activeAt(time) {

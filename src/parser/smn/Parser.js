@@ -9,7 +9,6 @@ import Pets from './modules/Pets'
 import Rouse from './modules/Rouse'
 import Ruin2 from './modules/Ruin2'
 import Ruin4 from './modules/Ruin4'
-import Weaving from './modules/Weaving'
 
 class Parser extends CoreParser {
 	static jobModules = {
@@ -21,8 +20,7 @@ class Parser extends CoreParser {
 		pets: Pets,
 		rouse: Rouse,
 		ruin2: Ruin2,
-		ruin4: Ruin4,
-		weaving: Weaving
+		ruin4: Ruin4
 	}
 }
 

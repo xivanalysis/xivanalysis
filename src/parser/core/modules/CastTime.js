@@ -9,16 +9,16 @@ export default class CastTime extends Module {
 	on_applybuff_toPlayer(event) {
 		// Only going do deal with SC here, job-specific can do it themselves
 		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
-		this._scIndex = this.setCastTime('all', 0)
+		this._scIndex = this.set('all', 0)
 	}
 
 	on_removebuff_toPlayer(event) {
 		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
-		this.resetCastTime(this._scIndex)
+		this.reset(this._scIndex)
 		this._scIndex = null
 	}
 
-	setCastTime(actions, castTime, start = this.parser.currentTimestamp, end = null) {
+	set(actions, castTime, start = this.parser.currentTimestamp, end = null) {
 		const newLength = this._castTimes.push({
 			actions,
 			castTime,
@@ -29,7 +29,7 @@ export default class CastTime extends Module {
 		return newLength - 1
 	}
 
-	resetCastTime(id, timestamp = this.parser.currentTimestamp) {
+	reset(id, timestamp = this.parser.currentTimestamp) {
 		this._castTimes[id].end = timestamp
 	}
 
