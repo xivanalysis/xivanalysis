@@ -10,6 +10,7 @@ const ROUSE_DURATION = 20000
 
 export default class Rouse extends Module {
 	static dependencies = [
+		'gauge',
 		'pets',
 		'suggestions'
 	]
@@ -26,7 +27,8 @@ export default class Rouse extends Module {
 
 	on_summonpet(event) {
 		const diff = event.timestamp - this._lastRouse
-		if (this._lastRouse === null || diff > ROUSE_DURATION) {
+		// TODO: Might need to check if the rush is in the opener, 'cus you don't want to be wasting rouse by using it before a petswap.
+		if (this._lastRouse === null || diff > ROUSE_DURATION || this.gauge.isRushing()) {
 			return
 		}
 		this._wasted += ROUSE_DURATION - diff
