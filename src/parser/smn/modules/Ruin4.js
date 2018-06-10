@@ -31,15 +31,15 @@ export default class Ruin4 extends Module {
 	]
 	name = 'Ruin IV'
 
-	procChances = 0
-	procs = 0
+	_procChances = 0
+	_procs = 0
 
-	lastProc = null
-	overage = 0
+	_lastProc = null
+	_overage = 0
 
 	on_cast_byPlayerPet(event) {
 		if (!ACTIONS_NO_PROC.includes(event.ability.guid)) {
-			this.procChances ++
+			this._procChances ++
 		}
 	}
 
@@ -52,53 +52,53 @@ export default class Ruin4 extends Module {
 		this.cooldowns.reduceCooldown(ACTIONS.ENKINDLE.id, 10)
 
 		// TODO: Probably need to do more than this, but it'll do for now
-		this.procs ++
+		this._procs ++
 
-		this.lastProc = event.timestamp
+		this._lastProc = event.timestamp
 	}
 
 	on_removebuff(event) {
 		// Only care about further ruin
 		if (event.ability.guid !== STATUSES.FURTHER_RUIN.id) { return }
 
-		this.endProcHold(event.timestamp)
+		this._endProcHold(event.timestamp)
 	}
 
 	on_complete() {
-		if (this.lastProc !== null) {
-			this.endProcHold(this.parser.fight.end_time)
+		if (this._lastProc !== null) {
+			this._endProcHold(this.parser.fight.end_time)
 		}
 
 		// console.log('wasted', this.overage)
-		if (this.overage > 0) {
+		if (this._overage > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RUIN_IV.icon,
 				content: <Fragment>
 					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
 				</Fragment>,
-				severity: this.overage > 30000? SEVERITY.MAJOR : this.overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				why: `Further Ruin held for ${this.parser.formatDuration(this.overage)} longer than recommended over the course of the fight.`
+				severity: this._overage > 30000? SEVERITY.MAJOR : this._overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				why: `Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.`
 			}))
 		}
 	}
 
-	endProcHold(end) {
-		const start = this.lastProc || this.parser.fight.start_time
+	_endProcHold(end) {
+		const start = this._lastProc || this.parser.fight.start_time
 		const untargetable = this.invuln.getUntargetableUptime('all', start, end)
 		const holdTime = end - start - untargetable
 
 		if (holdTime > MAX_PROC_HOLD) {
-			this.overage += holdTime - MAX_PROC_HOLD
+			this._overage += holdTime - MAX_PROC_HOLD
 		}
 
-		this.lastProc = null
+		this._lastProc = null
 	}
 
 	output() {
 		return <p>
-			Chances: {this.procChances}<br/>
-			Expected procs: {Math.floor(this.procChances * PROC_RATE)}<br/>
-			Actual procs: {this.procs}
+			Chances: {this._procChances}<br/>
+			Expected procs: {Math.floor(this._procChances * PROC_RATE)}<br/>
+			Actual procs: {this._procs}
 		</p>
 	}
 }
