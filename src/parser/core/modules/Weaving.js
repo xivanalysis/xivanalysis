@@ -114,8 +114,6 @@ export default class Weaving extends Module {
 			return false
 		}
 
-		console.log(badWeaves)
-
 		const panels = this.badWeaves.map(item => ({
 			title: {
 				key: 'title-' + item.gcdEvent.timestamp,
