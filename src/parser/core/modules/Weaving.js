@@ -85,7 +85,7 @@ export default class Weaving extends Module {
 		// They... really shouldn't be weaving before the first GCD... I think
 		// TODO: ^?
 		if (!weave.gcdEvent.ability) {
-			return true
+			return weave.weaves.length
 		}
 		const action = getAction(weave.gcdEvent.ability.guid)
 
