@@ -25,9 +25,9 @@ export default class Weaving extends Module {
 	]
 	name = 'Weaving Issues'
 
-	weaves = []
-	gcdEvent = null
-	badWeaves = []
+	_weaves = []
+	_gcdEvent = null
+	_badWeaves = []
 
 	on_cast_byPlayer(event) {
 		const action = getAction(event.ability.guid)
@@ -39,35 +39,30 @@ export default class Weaving extends Module {
 
 		// If it's not a GCD, just bump the weave count
 		if (this.isOgcd(action)) {
-			this.weaves.push(event)
+			this._weaves.push(event)
 			return
 		}
 
 		// If there's no gcd event, they're weaving on first GCD.
 		// TODO: Do I care?
-		if (this.gcdEvent === null && this.weaves.length > 0) {
-			console.warn(this.weaves, 'weaves before first GCD. Check.')
+		if (this._gcdEvent === null && this._weaves.length > 0) {
+			console.warn(this._weaves, 'weaves before first GCD. Check.')
 		}
 
 		// Throw the current state onto the history
-		const weave = {
-			gcdEvent: this.gcdEvent || {
-				timestamp: this.parser.fight.start_time
-			},
-			weaves: this.weaves
-		}
-		if (this.isBadWeave(weave)) {
-			this.badWeaves.push(weave)
-		}
+		this._saveIfBad()
 
 		// Reset
-		this.gcdEvent = event
-		this.weaves = []
+		this._gcdEvent = event
+		this._weaves = []
 	}
 
 	on_complete() {
+		// Run a cleanup
+		this._saveIfBad()
+
 		// Few triples is medium, any more is major
-		const badWeaves = this.badWeaves
+		const badWeaves = this._badWeaves
 		if (badWeaves.length) {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://secure.xivdb.com/img/game/001000/001785.png', // WVR Focused synth lmao
@@ -77,6 +72,18 @@ export default class Weaving extends Module {
 				severity: badWeaves.length > MAJOR_SUGGESTION_ISSUES? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: `${badWeaves.length} instances of incorrect weaving.`
 			}))
+		}
+	}
+
+	_saveIfBad() {
+		const weave = {
+			gcdEvent: this._gcdEvent || {
+				timestamp: this.parser.fight.start_time
+			},
+			weaves: this._weaves
+		}
+		if (this.isBadWeave(weave)) {
+			this._badWeaves.push(weave)
 		}
 	}
 
@@ -109,12 +116,12 @@ export default class Weaving extends Module {
 	}
 
 	output() {
-		const badWeaves = this.badWeaves
+		const badWeaves = this._badWeaves
 		if (badWeaves.length === 0) {
 			return false
 		}
 
-		const panels = this.badWeaves.map(item => ({
+		const panels = badWeaves.map(item => ({
 			title: {
 				key: 'title-' + item.gcdEvent.timestamp,
 				content: <Fragment>
