@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import { Container, Message } from 'semantic-ui-react'
 
 import Analyse from './Analyse'
+import ErrorBoundry from './ErrorBoundry'
 import Find from './Find'
 import Header from './Header'
 import Home from './Home'
@@ -25,12 +26,14 @@ class App extends Component {
 				</Container>
 			</Message>
 
-			<Switch>
-				<Route exact path="/" component={Home}/>
-				<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
-				<Route path="/find/:code/:fight?" component={Find}/>
-				<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
-			</Switch>
+			<ErrorBoundry>
+				<Switch>
+					<Route exact path="/" component={Home}/>
+					<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
+					<Route path="/find/:code/:fight?" component={Find}/>
+					<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+				</Switch>
+			</ErrorBoundry>
 		</Fragment>
 	}
 }
