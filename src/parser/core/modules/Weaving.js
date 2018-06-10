@@ -32,6 +32,11 @@ export default class Weaving extends Module {
 	on_cast_byPlayer(event) {
 		const action = getAction(event.ability.guid)
 
+		// If the action is an auto, just ignore it
+		if (action.autoAttack) {
+			return
+		}
+
 		// If it's not a GCD, just bump the weave count
 		if (this.isOgcd(action)) {
 			this.weaves.push(event)
@@ -108,6 +113,8 @@ export default class Weaving extends Module {
 		if (badWeaves.length === 0) {
 			return false
 		}
+
+		console.log(badWeaves)
 
 		const panels = this.badWeaves.map(item => ({
 			title: {
