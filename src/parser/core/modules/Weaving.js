@@ -97,7 +97,7 @@ export default class Weaving extends Module {
 
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
 		const weaveCount = weave.weaves.filter(
-			event => !this.invuln.isUntargetable('all', event.timeastamp)
+			event => !this.invuln.isUntargetable('all', event.timestamp)
 		).length
 
 		return weaveCount > maxWeaves
