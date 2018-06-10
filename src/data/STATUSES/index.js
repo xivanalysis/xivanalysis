@@ -1,11 +1,13 @@
 import { addExtraIndex } from 'utilities'
 
 import ENEMY from './ENEMY'
+import ROLE from './ROLE'
 import SHARED from './SHARED'
 import SMN from './SMN'
 
 const STATUSES = {
 	...ENEMY,
+	...ROLE,
 	...SHARED,
 	...SMN
 }
