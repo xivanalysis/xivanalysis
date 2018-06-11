@@ -2,13 +2,11 @@ import { combineReducers } from 'redux'
 
 import * as ActionTypes from './actions'
 
-function report(state=null, action) {
-	switch (action.type) {
-	case ActionTypes.SET_REPORT:
+const report = (state=null, action) => {
+	if (action.type === ActionTypes.SET_REPORT) {
 		return action.payload
-	default:
-		return state
 	}
+	return state
 }
 
 const globalError = (state=null, action) => {
