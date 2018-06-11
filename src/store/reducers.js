@@ -12,11 +12,14 @@ function report(state=null, action) {
 }
 
 const globalError = (state=null, action) => {
-	if (action.type === ActionTypes.SET_GLOBAL_ERROR) {
+	switch (action.type) {
+	case ActionTypes.SET_GLOBAL_ERROR:
 		return action.error
+	case ActionTypes.CLEAR_GLOBAL_ERROR:
+		return null
+	default:
+		return state
 	}
-
-	return state
 }
 
 const rootReducer = combineReducers({

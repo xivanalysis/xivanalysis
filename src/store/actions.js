@@ -7,6 +7,9 @@ export const setGlobalError = (error) => ({
 	error
 })
 
+export const CLEAR_GLOBAL_ERROR = 'CLEAR_GLOBAL_ERROR'
+export const clearGlobalError = () => ({type: CLEAR_GLOBAL_ERROR})
+
 export const SET_REPORT = 'SET_REPORT'
 export function setReport(report) {
 	return {
@@ -26,6 +29,7 @@ export function fetchReport(code) {
 			// Something's gone wrong, dispatch the error over state
 			console.log(e.response)
 			// TODO: This isn't actually correct handling
+			dispatch(setReport(null))
 			dispatch(setGlobalError(new LogNotFoundError()))
 			return
 		}
