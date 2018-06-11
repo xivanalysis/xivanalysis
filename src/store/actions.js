@@ -26,11 +26,15 @@ export function fetchReport(code) {
 		try {
 			response = await fflogsApi.get('/report/fights/' + code)
 		} catch (e) {
-			// Something's gone wrong, dispatch the error over state
-			console.log(e.response)
-			// TODO: This isn't actually correct handling
+			// Something's gone wrong, clear report status then dispatch an error
 			dispatch(setReport(null))
-			dispatch(setGlobalError(new Errors.LogNotFoundError()))
+
+			// TODO: Probably need more handling than this...
+			if (e.response.data.error === 'This report does not exist or is private.') {
+				dispatch(setGlobalError(new Errors.ReportNotFoundError()))
+			} else {
+				dispatch(setGlobalError(new Errors.UnknownApiError()))
+			}
 			return
 		}
 
