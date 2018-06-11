@@ -1,18 +1,27 @@
 import { combineReducers } from 'redux'
 
-import { SET_REPORT } from './actions'
+import * as ActionTypes from './actions'
 
 function report(state=null, action) {
 	switch (action.type) {
-	case SET_REPORT:
+	case ActionTypes.SET_REPORT:
 		return action.payload
 	default:
 		return state
 	}
 }
 
+const globalError = (state=null, action) => {
+	if (action.type === ActionTypes.SET_GLOBAL_ERROR) {
+		return action.error
+	}
+
+	return state
+}
+
 const rootReducer = combineReducers({
-	report
+	report,
+	globalError
 })
 
 export default rootReducer

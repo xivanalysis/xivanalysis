@@ -1,4 +1,11 @@
 import { fflogsApi } from 'api'
+import { LogNotFoundError } from 'components/ErrorBoundry'
+
+export const SET_GLOBAL_ERROR = 'SET_GLOBAL_ERROR'
+export const setGlobalError = (error) => ({
+	type: SET_GLOBAL_ERROR,
+	error
+})
 
 export const SET_REPORT = 'SET_REPORT'
 export function setReport(report) {
@@ -12,8 +19,16 @@ export function fetchReport(code) {
 	return async dispatch => {
 		dispatch(setReport({loading: true}))
 
-		const response = await fflogsApi.get('/report/fights/' + code)
-		// TODO: error checking
+		let response = null
+		try {
+			response = await fflogsApi.get('/report/fights/' + code)
+		} catch (e) {
+			// Something's gone wrong, dispatch the error over state
+			console.log(e.response)
+			// TODO: This isn't actually correct handling
+			dispatch(setGlobalError(new LogNotFoundError()))
+			return
+		}
 
 		// Toss the code into the report object
 		const report = {
