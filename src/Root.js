@@ -3,9 +3,7 @@ import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import App from 'components/App'
-import configureStore from 'store'
-
-const store = configureStore()
+import store from 'store'
 
 class Root extends Component {
 	render() {

@@ -3,7 +3,7 @@ import thunkMiddleware from 'redux-thunk'
 
 import reducers from './reducers'
 
-export default function configureStore(preloadedState) {
+function configureStore(preloadedState) {
 	return createStore(
 		reducers,
 		preloadedState,
@@ -12,3 +12,5 @@ export default function configureStore(preloadedState) {
 		)
 	)
 }
+
+export default configureStore()
