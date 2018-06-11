@@ -5,9 +5,28 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Container, Message } from 'semantic-ui-react'
 
+// Error type render config
+const ERROR_TYPES = {
+	ERROR: {
+		error: true,
+		icon: 'times circle outline'
+	},
+	WARNING: {
+		warning: true,
+		icon: 'warning sign'
+	}
+}
+
 // Global error types
-export class GlobalError extends ExtendableError {}
-export class LogNotFoundError extends GlobalError {}
+// TODO: Should I care about not being able to override the message?
+export class GlobalError extends ExtendableError {
+	type = ERROR_TYPES.ERROR
+}
+export class LogNotFoundError extends GlobalError {
+	type = ERROR_TYPES.WARNING
+	message = 'Report not found.'
+	detail = 'The report specified either does not exist, or is private. Make sure you pasted the correct URL, and your log is either public or unlisted.'
+}
 
 // Main component
 class ErrorBoundry extends Component {
@@ -38,12 +57,10 @@ class ErrorBoundry extends Component {
 
 		return <Container>
 			<Message
-				error
-				icon="times circle outline"
-				header="Ah, shit."
+				{...(error.type || ERROR_TYPES.ERROR)}
+				header={error.message || error.toString()}
 				content={<p>
-					Looks like something has gone wrong. The code monkies have been notified.<br/>
-					<code>{error.toString()}</code>
+					{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}
 				</p>}
 			/>
 		</Container>
