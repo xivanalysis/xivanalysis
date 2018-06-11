@@ -1,5 +1,5 @@
 import { fflogsApi } from 'api'
-import { LogNotFoundError } from 'components/ErrorBoundry'
+import * as Errors from 'errors'
 
 export const SET_GLOBAL_ERROR = 'SET_GLOBAL_ERROR'
 export const setGlobalError = (error) => ({
@@ -30,7 +30,7 @@ export function fetchReport(code) {
 			console.log(e.response)
 			// TODO: This isn't actually correct handling
 			dispatch(setReport(null))
-			dispatch(setGlobalError(new LogNotFoundError()))
+			dispatch(setGlobalError(new Errors.LogNotFoundError()))
 			return
 		}
 
