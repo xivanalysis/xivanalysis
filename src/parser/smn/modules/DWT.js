@@ -23,9 +23,9 @@ export default class DWT extends Module {
 	]
 	name = 'Dreadwyrm Trance'
 
-	active = false
-	dwt = {}
-	history = []
+	_active = false
+	_dwt = {}
+	_history = []
 
 	_ctIndex = null
 
@@ -43,8 +43,8 @@ export default class DWT extends Module {
 
 		// If it's a DWT cast, start tracking
 		if (actionId === ACTIONS.DREADWYRM_TRANCE.id) {
-			this.active = true
-			this.dwt = {
+			this._active = true
+			this._dwt = {
 				start: event.timestamp,
 				end: null,
 				rushing: this.gauge.isRushing(),
@@ -55,17 +55,17 @@ export default class DWT extends Module {
 		}
 
 		// Only going to save casts during DWT
-		if (!this.active || getAction(actionId).autoAttack) {
+		if (!this._active || getAction(actionId).autoAttack) {
 			return
 		}
 
 		// Save the event to the DWT casts
-		this.dwt.casts.push(event)
+		this._dwt.casts.push(event)
 	}
 
 	on_complete() {
 		// Clean up any existing casts
-		if (this.active) {
+		if (this._active) {
 			this.stopAndSave()
 		}
 
@@ -73,7 +73,7 @@ export default class DWT extends Module {
 		let badGcds = 0
 		let totalGcds = 0
 		let fullDwt = 0
-		this.history.forEach(dwt => {
+		this._history.forEach(dwt => {
 			const gcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 
 			if (!dwt.rushing) {
@@ -107,24 +107,24 @@ export default class DWT extends Module {
 	}
 
 	stopAndSave() {
-		this.active = false
-		this.dwt.end = this.parser.currentTimestamp
-		this.history.push(this.dwt)
+		this._active = false
+		this._dwt.end = this.parser.currentTimestamp
+		this._history.push(this._dwt)
 
 		this.castTime.reset(this._ctIndex)
 	}
 
 	activeAt(time) {
 		// If it's during the current one, easy way out
-		if (this.active && this.dwt.start <= time) {
+		if (this._active && this._dwt.start <= time) {
 			return true
 		}
 
-		return this.history.some(dwt => dwt.start <= time && dwt.end >= time)
+		return this._history.some(dwt => dwt.start <= time && dwt.end >= time)
 	}
 
 	output() {
-		const panels = this.history.map(dwt => {
+		const panels = this._history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			return {
 				title: {

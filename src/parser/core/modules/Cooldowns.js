@@ -10,8 +10,8 @@ export default class Cooldowns extends Module {
 		'timeline'
 	]
 
-	currentAction = null
-	cooldowns = {}
+	_currentAction = null
+	_cooldowns = {}
 
 	// cooldown starts at the beginning of the casttime
 	// (though 99% of CD based abilities have no cast time)
@@ -20,7 +20,7 @@ export default class Cooldowns extends Module {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
-		this.currentAction = action
+		this._currentAction = action
 
 		this.startCooldown(action.id)
 	}
@@ -29,8 +29,8 @@ export default class Cooldowns extends Module {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
-		const finishingCast = this.currentAction && this.currentAction.id === action.id
-		this.currentAction = null
+		const finishingCast = this._currentAction && this._currentAction.id === action.id
+		this._currentAction = null
 
 		if (finishingCast) { return }
 
@@ -40,8 +40,8 @@ export default class Cooldowns extends Module {
 	on_complete() {
 		const startTime = this.parser.fight.start_time
 
-		Object.keys(this.cooldowns).forEach(id => {
-			const cd = this.cooldowns[id]
+		Object.keys(this._cooldowns).forEach(id => {
+			const cd = this._cooldowns[id]
 
 			// Clean out any 'current' cooldowns into the history
 			if (cd.current) {
@@ -71,7 +71,7 @@ export default class Cooldowns extends Module {
 	}
 
 	getCooldown(actionId) {
-		return this.cooldowns[actionId] || {
+		return this._cooldowns[actionId] || {
 			current: null,
 			history: []
 		}
@@ -96,7 +96,7 @@ export default class Cooldowns extends Module {
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)
-		this.cooldowns[actionId] = cd
+		this._cooldowns[actionId] = cd
 	}
 
 	reduceCooldown(actionId, reduction) {
@@ -157,6 +157,6 @@ export default class Cooldowns extends Module {
 	}
 
 	get used() {
-		return Object.keys(this.cooldowns)
+		return Object.keys(this._cooldowns)
 	}
 }

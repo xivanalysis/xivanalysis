@@ -35,13 +35,13 @@ export default class Pets extends Module {
 	]
 	name = 'Pets'
 
-	lastPet = null
-	currentPet = null
-	history = []
+	_lastPet = null
+	_currentPet = null
+	_history = []
 
-	lastSummonBahamut = -1
+	_lastSummonBahamut = -1
 
-	petUptime = new Map()
+	_petUptime = new Map()
 
 	normalise(events) {
 		const petCache = {}
@@ -70,7 +70,7 @@ export default class Pets extends Module {
 			) { continue }
 
 			// We've found the first pet cast - that'll be our starting pet
-			this.lastPet = {id: action.pet}
+			this._lastPet = {id: action.pet}
 			break
 		}
 
@@ -79,7 +79,7 @@ export default class Pets extends Module {
 
 	on_init() {
 		// Just holding off the setPet until now so no events being created during normalise
-		this.setPet(this.lastPet.id)
+		this.setPet(this._lastPet.id)
 	}
 
 	on_cast_byPlayer(event) {
@@ -91,7 +91,7 @@ export default class Pets extends Module {
 
 		// If it's bahamut, we need to handle the timer
 		if (petId === PETS.DEMI_BAHAMUT.id) {
-			this.lastSummonBahamut = event.timestamp
+			this._lastSummonBahamut = event.timestamp
 		}
 
 		this.setPet(petId)
@@ -99,11 +99,11 @@ export default class Pets extends Module {
 
 	on_event(event) {
 		if (
-			this.currentPet &&
-			this.currentPet.id === PETS.DEMI_BAHAMUT.id &&
-			this.lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
+			this._currentPet &&
+			this._currentPet.id === PETS.DEMI_BAHAMUT.id &&
+			this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
 		) {
-			this.setPet(this.lastPet.id, this.lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+			this.setPet(this._lastPet.id, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
 		}
 	}
 
@@ -120,13 +120,13 @@ export default class Pets extends Module {
 
 	on_complete(event) {
 		// Finalise the history
-		const id = this.currentPet.id
-		const start = this.currentPet.timestamp
+		const id = this._currentPet.id
+		const start = this._currentPet.timestamp
 		const end = event.timestamp
 
-		this.history.push({id, start, end})
-		const value = (this.petUptime.get(id) || 0) + end - start
-		this.petUptime.set(id, value)
+		this._history.push({id, start, end})
+		const value = (this._petUptime.get(id) || 0) + end - start
+		this._petUptime.set(id, value)
 
 		// Work out the party comp
 		// TODO: Should this be in the parser?
@@ -141,8 +141,8 @@ export default class Pets extends Module {
 		// Pet suggestions based on party comp
 		// TODO: This does not account for invuln periods
 		const numCasters = roles[ROLES.MAGICAL_RANGED.id]
-		const mostUsedPet = Array.from(this.petUptime.keys()).sort(
-			(a, b) => this.petUptime.get(b) - this.petUptime.get(a)
+		const mostUsedPet = Array.from(this._petUptime.keys()).sort(
+			(a, b) => this._petUptime.get(b) - this._petUptime.get(a)
 		)[0]
 
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
@@ -195,27 +195,27 @@ export default class Pets extends Module {
 	}
 
 	getPetUptimePercent(petId) {
-		const percent = (this.petUptime.get(petId) || 0) / this.parser.fightDuration
+		const percent = (this._petUptime.get(petId) || 0) / this.parser.fightDuration
 		return (percent * 100).toFixed(2)
 	}
 
 	setPet(petId, timestamp) {
 		timestamp = timestamp || this.parser.currentTimestamp
 
-		this.lastPet = this.currentPet
-		this.currentPet = {
+		this._lastPet = this._currentPet
+		this._currentPet = {
 			id: petId,
 			timestamp
 		}
 
-		if (this.lastPet) {
-			const id = this.lastPet.id
-			const start = this.lastPet.timestamp
+		if (this._lastPet) {
+			const id = this._lastPet.id
+			const start = this._lastPet.timestamp
 			const end = timestamp
 
-			this.history.push({id, start, end})
-			const value = (this.petUptime.get(id) || 0) + end - start
-			this.petUptime.set(id, value)
+			this._history.push({id, start, end})
+			const value = (this._petUptime.get(id) || 0) + end - start
+			this._petUptime.set(id, value)
 		}
 
 		this.parser.fabricateEvent({
@@ -226,7 +226,7 @@ export default class Pets extends Module {
 	}
 
 	getCurrentPet() {
-		return PETS[this.currentPet.id]
+		return PETS[this._currentPet.id]
 	}
 
 	getPetName(petId) {
@@ -238,12 +238,12 @@ export default class Pets extends Module {
 	}
 
 	output() {
-		const uptimeKeys = Array.from(this.petUptime.keys())
+		const uptimeKeys = Array.from(this._petUptime.keys())
 
 		const data = {
 			labels: uptimeKeys.map(petId => this.getPetName(petId)),
 			datasets: [{
-				data: Array.from(this.petUptime.values()),
+				data: Array.from(this._petUptime.values()),
 				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId])
 			}]
 		}
@@ -279,7 +279,7 @@ export default class Pets extends Module {
 							style={{backgroundColor: CHART_COLOURS[petId]}}
 						/></td>
 						<td>{this.getPetName(petId)}</td>
-						<td>{this.parser.formatDuration(this.petUptime.get(petId))}</td>
+						<td>{this.parser.formatDuration(this._petUptime.get(petId))}</td>
 						<td>{this.getPetUptimePercent(petId)}%</td>
 					</tr>)}
 				</tbody>

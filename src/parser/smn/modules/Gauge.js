@@ -29,16 +29,16 @@ export default class Gauge extends Module {
 	// -----
 	// I'm assuming they're starting with 3.
 	// TODO: Check this in some manner maybeeeeee?
-	aetherflow = 3
-	aethertrailAttunement = 0
-	dreadwyrmAether = 0
+	_aetherflow = 3
+	_aethertrailAttunement = 0
+	_dreadwyrmAether = 0
 
 	// Track lost stacks
-	lostAetherflow = 0
-	lostDreadwyrmAether = 0
+	_lostAetherflow = 0
+	__lostDreadwyrmAether = 0
 
 	// First DWT should be rushed. Also used for end-of-fight rush
-	rushing = true
+	_rushing = true
 
 	// -----
 	// API
@@ -49,7 +49,7 @@ export default class Gauge extends Module {
 	}
 
 	isRushing() {
-		return this.rushing
+		return this._rushing
 	}
 
 	// -----
@@ -61,25 +61,25 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.AETHERFLOW.id) {
 			// Flow restores up to 3 flow stacks
 			// flow + trail can never be >3
-			this.aetherflow = 3 - this.aethertrailAttunement
-			this.lostAetherflow += this.aethertrailAttunement
+			this._aetherflow = 3 - this._aethertrailAttunement
+			this._lostAetherflow += this._aethertrailAttunement
 
 			// (Should be) rushing if it's the last flow of the fight, and there won't be enough time for a full rotation.
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
 			let reqRotationTime = 26000
-			if (this.dreadwyrmAether >= 1) {
+			if (this._dreadwyrmAether >= 1) {
 				reqRotationTime += 20000
 			}
 
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			this.rushing = reqRotationTime >= fightTimeRemaining
+			this._rushing = reqRotationTime >= fightTimeRemaining
 		}
 
 		if (AETHER_ACTIONS.includes(abilityId)) {
 			// Aether actions convert flow into trail
 			// TODO: Check for using flow when none (logic issue)
-			this.aetherflow --
-			this.aethertrailAttunement ++
+			this._aetherflow --
+			this._aethertrailAttunement ++
 		}
 
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
@@ -88,13 +88,13 @@ export default class Gauge extends Module {
 
 			// DWT spends 3 trail
 			// TODO: Check for DWT when <3 trail (logic issue)
-			this.aethertrailAttunement = 0
+			this._aethertrailAttunement = 0
 		}
 
 		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
 			// Summon Bahamut spends both dwa
 			// TODO: Check for use when <2 dwa (logic issue)
-			this.dreadwyrmAether = 0
+			this._dreadwyrmAether = 0
 		}
 	}
 
@@ -103,29 +103,29 @@ export default class Gauge extends Module {
 
 		if (statusId === STATUSES.DREADWYRM_TRANCE.id) {
 			// The end of DWT (either DF or natural falloff) bestows 1 dwa, max 2.
-			if (this.dreadwyrmAether === 2) {
-				this.lostDreadwyrmAether ++
+			if (this._dreadwyrmAether === 2) {
+				this._lostDreadwyrmAether ++
 			} else {
-				this.dreadwyrmAether ++
+				this._dreadwyrmAether ++
 			}
 
 			// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
 			const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			if (this.dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
-				this.rushing = true
+			if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
+				this._rushing = true
 			}
 		}
 	}
 
 	on_death_toPlayer() {
 		// Death just flat out resets everything. Rip.
-		this.lostAetherflow += this.aetherflow
-		this.lostDreadwyrmAether += this.dreadwyrmAether
+		this._lostAetherflow += this._aetherflow
+		this._lostDreadwyrmAether += this._dreadwyrmAether
 
-		this.aetherflow = 0
-		this.aethertrailAttunement = 0
-		this.dreadwyrmAether = 0
+		this._aetherflow = 0
+		this._aethertrailAttunement = 0
+		this._dreadwyrmAether = 0
 	}
 
 	on_complete() {
@@ -142,7 +142,7 @@ export default class Gauge extends Module {
 		}))
 
 		// Suggestions for lost stacks
-		if (this.lostAetherflow) {
+		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AETHERFLOW.icon,
 				content: <Fragment>
@@ -150,12 +150,12 @@ export default class Gauge extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					{this.lostAetherflow} stack{this.lostAetherflow > 1 && 's'} of Aetherflow lost.
+					{this._lostAetherflow} stack{this._lostAetherflow > 1 && 's'} of Aetherflow lost.
 				</Fragment>
 			}))
 		}
 
-		if (this.lostDreadwyrmAether) {
+		if (this._lostDreadwyrmAether) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_BAHAMUT.icon,
 				content: <Fragment>
@@ -163,7 +163,7 @@ export default class Gauge extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					{this.lostDreadwyrmAether} stack{this.lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
+					{this._lostDreadwyrmAether} stack{this._lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
 				</Fragment>
 			}))
 		}

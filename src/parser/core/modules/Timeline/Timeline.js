@@ -10,16 +10,16 @@ export default class Timeline extends Module {
 	static displayOrder = DISPLAY_ORDER.BOTTOM
 	name = 'Timeline'
 
-	groups = []
-	items = []
+	_groups = []
+	_items = []
 
 	// TODO: Do more with these, it's pretty bad rn
 	addGroup(group) {
-		this.groups.push(group)
+		this._groups.push(group)
 	}
 
 	addItem(item) {
-		this.items.push(item)
+		this._items.push(item)
 	}
 
 	output() {
@@ -56,8 +56,8 @@ export default class Timeline extends Module {
 
 		return <VisTimeline
 			options={options}
-			groups={this.groups.map(group => group.getObject())}
-			items={this.items.map(item => item.getObject())}
+			groups={this._groups.map(group => group.getObject())}
+			items={this._items.map(item => item.getObject())}
 		/>
 	}
 }

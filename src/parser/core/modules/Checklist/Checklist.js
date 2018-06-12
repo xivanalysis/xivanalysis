@@ -10,7 +10,7 @@ export default class Checklist extends Module {
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
 	name = 'Checklist'
 
-	rules = []
+	_rules = []
 
 	add(rule) {
 		if (!(rule instanceof Rule)) {
@@ -18,15 +18,15 @@ export default class Checklist extends Module {
 			return
 		}
 
-		this.rules.push(rule)
+		this._rules.push(rule)
 	}
 
 	output() {
 		// If there's no rules, just stop now
-		if (!this.rules.length) { return false }
+		if (!this._rules.length) { return false }
 
 		const expanded = []
-		const panels = this.rules.map((rule, index) => {
+		const panels = this._rules.map((rule, index) => {
 			const success = rule.percent > rule.target
 			if (!success) {
 				expanded.push(index)

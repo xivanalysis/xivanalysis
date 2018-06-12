@@ -15,8 +15,8 @@ export default class GlobalCooldown extends Module {
 	]
 	name = 'Global Cooldown'
 
-	lastGcd = -1
-	castingEvent = null
+	_lastGcd = -1
+	_castingEvent = null
 
 	gcds = []
 
@@ -27,7 +27,7 @@ export default class GlobalCooldown extends Module {
 
 		// Can I check for cancels?
 
-		this.castingEvent = event
+		this._castingEvent = event
 	}
 
 	on_cast_byPlayer(event) {
@@ -36,8 +36,8 @@ export default class GlobalCooldown extends Module {
 		// Ignore non-GCD casts
 		if (!action.onGcd) { return }
 
-		const castingEvent = this.castingEvent
-		this.castingEvent = null
+		const castingEvent = this._castingEvent
+		this._castingEvent = null
 		if (castingEvent && castingEvent.ability.guid === action.id) {
 			this.saveGcd(castingEvent)
 			return
@@ -70,8 +70,8 @@ export default class GlobalCooldown extends Module {
 	}
 
 	saveGcd(event) {
-		if (this.lastGcd >= 0) {
-			const diff = event.timestamp - this.lastGcd
+		if (this._lastGcd >= 0) {
+			const diff = event.timestamp - this._lastGcd
 
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
 			const gcd = Math.round(diff/10)*10
@@ -83,7 +83,7 @@ export default class GlobalCooldown extends Module {
 		}
 
 		// Store current gcd time for the check
-		this.lastGcd = event.timestamp
+		this._lastGcd = event.timestamp
 	}
 
 	getEstimate(bound = true) {

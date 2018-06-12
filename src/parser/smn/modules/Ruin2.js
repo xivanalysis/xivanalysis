@@ -21,67 +21,67 @@ export default class Ruin2 extends Module {
 
 	// Events
 	// TODO: If (when) I set up the timeline, should probably mark bad R2s on it
-	all = []
-	warnings = []
-	issues = []
+	_all = []
+	_warnings = []
+	_issues = []
 
 	// Tracking etc
-	lastGcd = null
-	ogcdUsed = false
-	pos = {}
+	_lastGcd = null
+	_ogcdUsed = false
+	_pos = {}
 
 	// Limiting to player, not worried about pets for this check
 	on_cast_byPlayer(event) {
 		// TODO: should move action lookup into an export from ACTIONS with fallback handling or something
 		const action = ACTIONS[event.ability.guid] || {}
-		const lastGcdAction = (this.lastGcd && ACTIONS[this.lastGcd.ability.guid]) || {}
+		const lastGcdAction = (this._lastGcd && ACTIONS[this._lastGcd.ability.guid]) || {}
 
 		// TODO: GCD metadata should be in a module?
 		// If there was no oGCD cast between the R2 and now, mark an issue
 		if (
 			action.onGcd &&
 			lastGcdAction.id === ACTIONS.RUIN_II.id &&
-			!this.ogcdUsed
+			!this._ogcdUsed
 		) {
 			// If they at least moved, only raise a warning
 			if (this.movedSinceLastGcd()) {
-				this.warnings.push(event)
+				this._warnings.push(event)
 			} else {
-				this.issues.push(event)
+				this._issues.push(event)
 			}
 		}
 
 		// TODO: combatant resources are janky. Replace.
 		if (action.onGcd) {
 			// If this cast is on the gcd, store it for comparison
-			this.lastGcd = event
-			this.pos = this.combatants.selected.resources
+			this._lastGcd = event
+			this._pos = this.combatants.selected.resources
 		} else {
 			// Otherwise take note that they've used an oGCD
-			this.ogcdUsed = true
+			this._ogcdUsed = true
 		}
 
 		// If this is an R2 cast, track it
 		if (action.id === ACTIONS.RUIN_II.id) {
-			this.all.push(event)
+			this._all.push(event)
 			// Explicitly setting the ogcd tracker to true while bahamut is out,
 			// we don't want to fault people for using R2 for WWs during bahamut.
-			this.ogcdUsed = this.gauge.bahamutSummoned()
+			this._ogcdUsed = this.gauge.bahamutSummoned()
 		}
 	}
 
 	// TODO: Should this be in some other module?
 	movedSinceLastGcd() {
 		return (
-			Math.abs(this.combatants.selected.resources.x - this.pos.x) > 1 &&
-			Math.abs(this.combatants.selected.resources.y - this.pos.y) > 1
+			Math.abs(this.combatants.selected.resources.x - this._pos.x) > 1 &&
+			Math.abs(this.combatants.selected.resources.y - this._pos.y) > 1
 		)
 	}
 
 	on_complete() {
 		const potLossPerR2 = RUIN3_POT - RUIN2_POT
-		const issues = this.issues.length
-		const warnings = this.warnings.length
+		const issues = this._issues.length
+		const warnings = this._warnings.length
 
 		if (issues) {
 			this.suggestions.add(new Suggestion({

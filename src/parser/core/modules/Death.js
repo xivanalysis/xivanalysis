@@ -14,12 +14,12 @@ export default class Death extends Module {
 		'timeline'
 	]
 
-	count = 0
-	timestamp = null
+	_count = 0
+	_timestamp = null
 
 	on_death_toPlayer(event) {
-		this.count ++
-		this.timestamp = event.timestamp
+		this._count ++
+		this._timestamp = event.timestamp
 	}
 
 	on_applydebuff_toPlayer(event) {
@@ -37,14 +37,14 @@ export default class Death extends Module {
 		if (
 			['cast', 'begincast'].includes(event.type) &&
 			this.parser.byPlayer(event) &&
-			this.timestamp
+			this._timestamp
 		) {
 			this.addDeathToTimeline(event.timestamp)
 		}
 	}
 
 	on_complete() {
-		if (this.timestamp) {
+		if (this._timestamp) {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 
@@ -55,9 +55,9 @@ export default class Death extends Module {
 		const startTime = this.parser.fight.start_time
 		this.timeline.addItem(new Item({
 			type: 'background',
-			start: this.timestamp - startTime,
+			start: this._timestamp - startTime,
 			end: end - startTime
 		}))
-		this.timestamp = null
+		this._timestamp = null
 	}
 }

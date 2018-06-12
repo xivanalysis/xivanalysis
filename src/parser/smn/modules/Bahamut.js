@@ -28,17 +28,17 @@ export default class Bahamut extends Module {
 	]
 	name = 'Bahamut'
 
-	current = null
-	history = []
+	_current = null
+	_history = []
 
 	on_cast_byPlayerPet(event) {
 		const abilityId = event.ability.guid
 
 		// Track Big B's casts, and mark potential ghosts
 		if (DEMI_BAHAMUT_ACTIONS.includes(abilityId)) {
-			const timeSinceSummon = event.timestamp - this.current.timestamp
+			const timeSinceSummon = event.timestamp - this._current.timestamp
 			const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
-			this.current.petCasts.push({
+			this._current.petCasts.push({
 				...event,
 				ghostChance
 			})
@@ -49,12 +49,12 @@ export default class Bahamut extends Module {
 		// They've summoned Bahamut.
 		if (event.petId === PETS.DEMI_BAHAMUT.id) {
 			// Save any existing tracking to history
-			if (this.current) {
-				this.history.push(this.current)
+			if (this._current) {
+				this._history.push(this._current)
 			}
 
 			// Set up fresh tracking
-			this.current = {
+			this._current = {
 				timestamp: event.timestamp,
 				// playerCasts: [],
 				petCasts: []
@@ -64,14 +64,14 @@ export default class Bahamut extends Module {
 
 	on_complete() {
 		// Clean out any current tracking
-		if (this.current) {
-			this.history.push(this.current)
+		if (this._current) {
+			this._history.push(this._current)
 		}
 	}
 
 	output() {
 		const expanded = []
-		const panels = this.history.map((sb, index) => {
+		const panels = this._history.map((sb, index) => {
 			const wws = sb.petCasts.filter(cast => cast.ability.guid === ACTIONS.WYRMWAVE.id)
 			const ams = sb.petCasts.filter(cast => cast.ability.guid === ACTIONS.AKH_MORN.id)
 
