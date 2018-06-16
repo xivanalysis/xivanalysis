@@ -5,7 +5,6 @@ import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Rule, Requirement } from 'parser/core/modules/Checklist'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
 const AETHER_ACTIONS = [
@@ -18,7 +17,6 @@ const AETHER_ACTIONS = [
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
 	static dependencies = [
-		'checklist',
 		'cooldowns',
 		'pets',
 		'suggestions'
@@ -129,18 +127,6 @@ export default class Gauge extends Module {
 	}
 
 	on_complete() {
-		// Checklist rule for aetherflow cooldown
-		this.checklist.add(new Rule({
-			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively</Fragment>,
-			description: 'SMN\'s entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.',
-			requirements: [
-				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - 15000)) * 100
-				})
-			]
-		}))
-
 		// Suggestions for lost stacks
 		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({
