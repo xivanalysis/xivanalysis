@@ -1,6 +1,9 @@
 version: 2
 jobs:
   build:
+    branches:
+      only:
+        - master
     working_directory: ~/xiva-client
     docker:
       - image: circleci/node:8
