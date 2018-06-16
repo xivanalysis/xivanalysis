@@ -1,6 +1,10 @@
+import React, { Fragment } from 'react'
+
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import { Item } from 'parser/core/modules/Timeline'
+import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
@@ -11,6 +15,7 @@ const RAISE_STATUSES = [
 
 export default class Death extends Module {
 	static dependencies = [
+		'suggestions',
 		'timeline'
 	]
 
@@ -48,7 +53,19 @@ export default class Death extends Module {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 
-		// TODO: death suggestion
+		// Deaths are always major
+		if (!this._count) {
+			return
+		}
+
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.RAISE.icon,
+			content: <Fragment>
+				Don&apos;t die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
+			</Fragment>,
+			severity: SEVERITY.MAJOR,
+			why: this._count + ' death' + (this._count !== 1? 's' : '')
+		}))
 	}
 
 	addDeathToTimeline(end) {
