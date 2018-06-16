@@ -1,0 +1,29 @@
+version: 2
+jobs:
+  build:
+    working_directory: ~/xiva-client
+    docker:
+      - image: circleci/node:8
+    steps:
+      - checkout
+      - run:
+          name: install-yarn
+          command: sudo npm install -g yarn
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: install-deps
+          command: yarn
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+      - run:
+          name: run-build
+          command: yarn build
+      - run:
+          name: upload-build
+          command: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:xivanalysis/client/deploy-cache
+      - run:
+          name: deploy
+          command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd xivanalysis/client && ./deploy.sh $CIRCLE_SHA1"
