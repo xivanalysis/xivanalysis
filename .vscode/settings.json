@@ -1,0 +1,4 @@
+{
+	"javascript.preferences.quoteStyle": "single",
+	"javascript.preferences.importModuleSpecifier": "non-relative"
+}
