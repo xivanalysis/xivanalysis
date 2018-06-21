@@ -101,9 +101,10 @@ export default class Cooldowns extends Module {
 
 	reduceCooldown(actionId, reduction) {
 		const cd = this.getCooldown(actionId)
+		const currentTimestamp = this.parser.currentTimestamp
 
 		// Check if current isn't current
-		if (cd.current && cd.current.timestamp + cd.current.length < this.parser.currentTimestamp) {
+		if (cd.current && cd.current.timestamp + cd.current.length < currentTimestamp) {
 			cd.history.push(cd.current)
 			cd.current = null
 		}
@@ -113,9 +114,13 @@ export default class Cooldowns extends Module {
 			return
 		}
 
+		// Reduce the CD
 		cd.current.length -= reduction * 1000
 
-		// TODO: should i check again if it needs to be history pushed, or can the next person deal with that?
+		// If the reduction would have made it come off CD earlier than now, reset it - the extra time reduction should be lost.
+		if (cd.current.timestamp + cd.current.length < currentTimestamp) {
+			this.resetCooldown(actionId)
+		}
 	}
 
 	resetCooldown(actionId) {
