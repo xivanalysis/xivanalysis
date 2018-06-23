@@ -24,7 +24,7 @@ class LastFightRedirect extends Component {
 		})
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		// Make sure we've got report data
 		const { dispatch, match } = this.props
 		dispatch(fetchReportIfNeeded(match.params.code))

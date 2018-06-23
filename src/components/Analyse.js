@@ -56,7 +56,7 @@ class Analyse extends Component {
 		this.stickyContext = React.createRef()
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		this.fetchData()
 	}
 
