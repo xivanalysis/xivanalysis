@@ -49,6 +49,12 @@ export default class Pets extends Module {
 		// Try to spot an event that'd signal what pet they've started with
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
+
+			// If there's no ability for the event, just skip it
+			if (!event.ability) {
+				continue
+			}
+
 			const action = getAction(event.ability.guid)
 
 			// I mean this shouldn't happen but people are stupid.
