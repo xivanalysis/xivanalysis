@@ -24,8 +24,11 @@ class Header extends Component {
 			report
 		} = this.props
 
-		// This is horrid
-		const pathParams = getPathMatch(pathname).params
+		// Need to do this janky shit to get the router path match
+		const pathMatch = getPathMatch(pathname)
+
+		// Grab the field we're interested in
+		const pathParams = pathMatch? pathMatch.params : {}
 		const code = pathParams.code
 		const fightId = parseInt(pathParams.fight, 10)
 		const combatantId = parseInt(pathParams.combatant, 10)
@@ -72,8 +75,7 @@ class Header extends Component {
 			})
 		}
 
-		// Is this reliable?
-		const onHome = !code
+		const onHome = pathname === '/'
 
 		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
 			<Container>
