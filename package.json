@@ -7,22 +7,22 @@
     "chart.js": "^2.7.2",
     "es6-error": "^4.1.1",
     "intersection-observer": "^0.5.0",
-    "mathjs": "^4.1.2",
+    "mathjs": "^5",
     "prop-types": "^15.6.1",
     "raven-js": "^3.25.2",
     "react": "^16.3.1",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.3.1",
-    "react-intersection-observer": "^3.0.3",
+    "react-intersection-observer": "^5",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scroll": "^1.7.9",
     "react-visjs-timeline": "^1.5.0",
-    "redux": "^3.7.2",
+    "redux": "^4",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.3.1",
     "semantic-ui-react": "^0.81",
-    "toposort": "^1.0.6",
+    "toposort": "^2",
     "vis": "^4.21.0"
   },
   "scripts": {
@@ -50,6 +50,6 @@
     "source-map-explorer": "^1.5.0"
   },
   "resolutions": {
-    "@babel/runtime": "7.0.0-beta.49"
+    "@babel/runtime": "7.0.0-beta.51"
   }
 }
