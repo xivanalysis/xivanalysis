@@ -22,6 +22,6 @@ export default class Combatants extends Entities {
 
 	get selected() {
 		// TODO: What if the player hasn't been checked yet?
-		return this._players[this.parser.player.id]
+		return this.getEntity(this.parser.player.id)
 	}
 }
