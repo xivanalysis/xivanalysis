@@ -33,7 +33,7 @@ export default class Entities extends Module {
 				}
 
 				// TODO: What if we're trying to track a buff through an invuln window?
-				//       is that going to be a thing? Will need handlig if so.
+				//       is that going to be a thing? Will need handling if so.
 				const ranges = [buff]
 				invulns
 					.forEach(invuln => {

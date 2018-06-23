@@ -53,10 +53,10 @@ export default class Checklist extends Module {
 					key: `content-${index}`,
 					content: <Fragment>
 						{rule.description && <div className={styles.description}>
-							{/* TODO: better styling for description */}
 							<Icon name="info" size="large"/>
 							<p>{rule.description}</p>
 						</div>}
+						{/* TODO: Better styling for these requirements */}
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>

@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, { getAction } from 'data/ACTIONS'
 import { ActionLink } from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
@@ -20,7 +20,7 @@ export default class Ruin2 extends Module {
 	]
 
 	// Events
-	// TODO: If (when) I set up the timeline, should probably mark bad R2s on it
+	// TODO: Should probably mark bad R2s on the timeline in some capacity
 	_all = []
 	_warnings = []
 	_issues = []
@@ -32,9 +32,8 @@ export default class Ruin2 extends Module {
 
 	// Limiting to player, not worried about pets for this check
 	on_cast_byPlayer(event) {
-		// TODO: should move action lookup into an export from ACTIONS with fallback handling or something
-		const action = ACTIONS[event.ability.guid] || {}
-		const lastGcdAction = (this._lastGcd && ACTIONS[this._lastGcd.ability.guid]) || {}
+		const action = getAction(event.ability.guid)
+		const lastGcdAction = this._lastGcd? getAction(this._lastGcd.ability.guid) : {}
 
 		// TODO: GCD metadata should be in a module?
 		// If there was no oGCD cast between the R2 and now, mark an issue
