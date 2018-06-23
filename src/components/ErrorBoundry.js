@@ -8,11 +8,11 @@ import * as Errors from 'errors'
 
 // Error type render config
 const ERROR_PROPS = {
-	[Errors.TYPES.ERROR]: {
+	[Errors.SEVERITY.ERROR]: {
 		error: true,
 		icon: 'times circle outline'
 	},
-	[Errors.TYPES.WARNING]: {
+	[Errors.SEVERITY.WARNING]: {
 		warning: true,
 		icon: 'warning sign'
 	}
@@ -48,7 +48,7 @@ class ErrorBoundry extends Component {
 
 		return <Container>
 			<Message
-				{...(ERROR_PROPS[error.type || Errors.TYPES.ERROR])}
+				{...(ERROR_PROPS[error.severity || Errors.SEVERITY.ERROR])}
 				header={error.message || error.toString()}
 				content={<p>
 					{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}

@@ -54,7 +54,10 @@ class CombatantList extends Component {
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
 		if (grouped.length === 0) {
-			store.dispatch(setGlobalError(new Errors.FightNotFoundError()))
+			store.dispatch(setGlobalError(new Errors.NotFoundError({
+				type: 'fight',
+				id: currentFight
+			})))
 			return null
 		}
 

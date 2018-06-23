@@ -106,7 +106,10 @@ class Analyse extends Component {
 			const fightId = parseInt(params.fight, 10)
 			const fight = report.fights.find(fight => fight.id === fightId)
 			if (!fight) {
-				dispatch(setGlobalError(new Errors.FightNotFoundError()))
+				dispatch(setGlobalError(new Errors.NotFoundError({
+					type: 'fight',
+					id: fightId
+				})))
 				return
 			}
 
@@ -114,19 +117,23 @@ class Analyse extends Component {
 			const combatantId = parseInt(params.combatant, 10)
 			const combatant = report.friendlies.find(friend => friend.id === combatantId)
 			if (!combatant) {
-				dispatch(setGlobalError(new Errors.CombatantNotFoundError()))
+				dispatch(setGlobalError(new Errors.NotFoundError({
+					type: 'friendly combatant',
+					id: combatantId
+				})))
 				return
 			}
 
 			// Combatant took part in fight
 			if (!combatant.fights.find(fight => fight.id === fightId)) {
-				alert(`${combatant.name} did not take part in fight ${fightId}.`)
+				dispatch(setGlobalError(new Errors.DidNotParticipateError({
+					combatant: combatant.name,
+					fight: fightId
+				})))
 				return
 			}
 
 			// Maybe sanity check we have a parser for job? maybe a bit deeper? dunno ey
-
-			// console.log('fetchEventsAndParse', report, fight, combatant)
 			this.fetchEventsAndParse(report, fight, combatant)
 		}
 	}
@@ -137,7 +144,9 @@ class Analyse extends Component {
 		// Get the config for the parser, stop now if there is none.
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
 		if (!config) {
-			alert(`${JOBS[combatant.type].name} is not currently supported. Sorry!`)
+			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
+				job: JOBS[combatant.type].name
+			})))
 			return
 		}
 
