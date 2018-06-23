@@ -5,7 +5,10 @@ import { Header, Menu, Message, Segment } from 'semantic-ui-react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, { ROLES } from 'data/JOBS'
+import * as Errors from 'errors'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+import store from 'store'
+import { setGlobalError } from 'store/actions'
 
 import styles from './CombatantList.module.css'
 
@@ -48,6 +51,12 @@ class CombatantList extends Component {
 			}
 			grouped[role].push(friendly)
 		})
+
+		// If there's no groups at all, the fight probably doesn't exist - show an error
+		if (grouped.length === 0) {
+			store.dispatch(setGlobalError(new Errors.FightNotFoundError()))
+			return null
+		}
 
 		return <Fragment>
 			<Header>

@@ -15,8 +15,9 @@ import {
 import { fflogsApi } from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
+import * as Errors from 'errors'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
-import { fetchReportIfNeeded } from 'store/actions'
+import { fetchReportIfNeeded, setGlobalError } from 'store/actions'
 
 import styles from './Analyse.module.css'
 
@@ -78,6 +79,7 @@ class Analyse extends Component {
 
 	fetchEventsAndParseIfNeeded(prevProps) {
 		const {
+			dispatch,
 			report,
 			match: { params }
 		} = this.props
@@ -104,7 +106,7 @@ class Analyse extends Component {
 			const fightId = parseInt(params.fight, 10)
 			const fight = report.fights.find(fight => fight.id === fightId)
 			if (!fight) {
-				alert(`Fight ${fightId} does not exist in report "${report.title}".`)
+				dispatch(setGlobalError(new Errors.FightNotFoundError()))
 				return
 			}
 
@@ -112,7 +114,7 @@ class Analyse extends Component {
 			const combatantId = parseInt(params.combatant, 10)
 			const combatant = report.friendlies.find(friend => friend.id === combatantId)
 			if (!combatant) {
-				alert(`Combatant ${combatantId} does not exist in "${report.title}".`)
+				dispatch(setGlobalError(new Errors.CombatantNotFoundError()))
 				return
 			}
 
