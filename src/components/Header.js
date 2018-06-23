@@ -25,11 +25,10 @@ class Header extends Component {
 		} = this.props
 
 		// This is horrid
-		const {params: {
-			code,
-			fight: fightId,
-			combatant: combatantId
-		}} = getPathMatch(pathname)
+		const pathParams = getPathMatch(pathname).params
+		const code = pathParams.code
+		const fightId = parseInt(pathParams.fight, 10)
+		const combatantId = parseInt(pathParams.combatant, 10)
 
 		const reportLoaded = report && !report.loading && report.code === code
 		const crumbs = []
@@ -50,9 +49,9 @@ class Header extends Component {
 		if (fightId) {
 			let title = fightId
 			if (reportLoaded && fightId !== 'last') {
-				const fight = report.fights.find(fight => fight.id === parseInt(fightId, 10))
+				const fight = report.fights.find(fight => fight.id === fightId)
 				// Do I want the kill time too?
-				title = fight.name
+				title = fight? fight.name : fightId
 			}
 			crumbs.push({
 				title,
@@ -64,8 +63,8 @@ class Header extends Component {
 		if (combatantId) {
 			let title = combatantId
 			if (reportLoaded) {
-				const combatant = report.friendlies.find(friendly => friendly.id === parseInt(combatantId, 10))
-				title = combatant.name
+				const combatant = report.friendlies.find(friendly => friendly.id === combatantId)
+				title = combatant? combatant.name : combatantId
 			}
 			crumbs.push({
 				title,
