@@ -2,7 +2,7 @@ import ExtendableError from 'es6-error'
 
 export const SEVERITY = {
 	ERROR: 'error',
-	WARNING: 'warning'
+	WARNING: 'warning',
 }
 
 // Global Errors
@@ -31,7 +31,7 @@ export class NotFoundError extends GlobalError {
 	constructor(options) {
 		super(Object.assign({
 			type: '[Not Specified]',
-			id: 0
+			id: 0,
 		}, options))
 	}
 	get detail() {
@@ -45,7 +45,7 @@ export class DidNotParticipateError extends GlobalError {
 	constructor(options) {
 		super(Object.assign({
 			combatant: '[Not Found]',
-			fight: 0
+			fight: 0,
 		}, options))
 	}
 	get detail() {
@@ -58,7 +58,7 @@ export class JobNotSupportedError extends GlobalError {
 	message = 'Not supported.'
 	constructor(options) {
 		super(Object.assign({
-			job: '[Not Specified]'
+			job: '[Not Specified]',
 		}, options))
 	}
 	get detail() {

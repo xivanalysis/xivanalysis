@@ -1,11 +1,11 @@
 import Module from 'parser/core/Module'
-import { Rule, Requirement } from 'parser/core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class AlwaysBeCasting extends Module {
 	static dependencies = [
 		'checklist',
 		'gcd',
-		'invuln'
+		'invuln',
 	]
 
 	// Just using this for the suggestion for now
@@ -20,9 +20,9 @@ export default class AlwaysBeCasting extends Module {
 			requirements: [
 				new Requirement({
 					name: 'GCD uptime',
-					percent: gcdUptime / fightDuration * 100
-				})
-			]
+					percent: gcdUptime / fightDuration * 100,
+				}),
+			],
 		}))
 	}
 }

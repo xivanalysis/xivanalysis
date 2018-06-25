@@ -1,9 +1,9 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
-import { ActionLink } from 'components/ui/DbLink'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {ActionLink} from 'components/ui/DbLink'
 
 // Should this be in the actions data?
 const ROUSE_DURATION = 20000
@@ -12,7 +12,7 @@ export default class Rouse extends Module {
 	static dependencies = [
 		'gauge',
 		'pets',
-		'suggestions'
+		'suggestions',
 	]
 
 	_lastRouse = null
@@ -42,7 +42,7 @@ export default class Rouse extends Module {
 					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
 				</Fragment>,
 				severity: this._wasted > ROUSE_DURATION? SEVERITY.MAJOR : this._wasted > 5000? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				why: `${this.parser.formatDuration(this._wasted)} of Rouse wasted.`
+				why: `${this.parser.formatDuration(this._wasted)} of Rouse wasted.`,
 			}))
 		}
 	}

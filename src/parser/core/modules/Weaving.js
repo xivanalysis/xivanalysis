@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
-import { Accordion } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides
 const MAX_WEAVES = {
@@ -13,7 +13,7 @@ const MAX_WEAVES = {
 	1: 1,
 	2: 1,
 	2.5: 0,
-	default: 0
+	default: 0,
 }
 const MAJOR_SUGGESTION_ISSUES = 5
 
@@ -21,7 +21,7 @@ export default class Weaving extends Module {
 	static dependencies = [
 		'castTime',
 		'invuln',
-		'suggestions'
+		'suggestions',
 	]
 	name = 'Weaving Issues'
 
@@ -70,7 +70,7 @@ export default class Weaving extends Module {
 					Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
 				</Fragment>,
 				severity: badWeaves.length > MAJOR_SUGGESTION_ISSUES? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: `${badWeaves.length} instances of incorrect weaving.`
+				why: `${badWeaves.length} instances of incorrect weaving.`,
 			}))
 		}
 	}
@@ -78,9 +78,9 @@ export default class Weaving extends Module {
 	_saveIfBad() {
 		const weave = {
 			gcdEvent: this._gcdEvent || {
-				timestamp: this.parser.fight.start_time
+				timestamp: this.parser.fight.start_time,
 			},
-			weaves: this._weaves
+			weaves: this._weaves,
 		}
 		if (this.isBadWeave(weave)) {
 			this._badWeaves.push(weave)
@@ -127,15 +127,15 @@ export default class Weaving extends Module {
 				content: <Fragment>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
 					&nbsp;-&nbsp;{item.weaves.length} weaves
-				</Fragment>
+				</Fragment>,
 			},
 			content: {
 				key: 'content-' + item.gcdEvent.timestamp,
 				content: <Rotation events={[
 					...(item.gcdEvent.ability? [item.gcdEvent] : []),
-					...item.weaves
-				]}/>
-			}
+					...item.weaves,
+				]}/>,
+			},
 		}))
 
 		return <Accordion

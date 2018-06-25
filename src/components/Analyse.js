@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
 import Scroll from 'react-scroll'
 import {
 	Container,
@@ -9,15 +9,15 @@ import {
 	Loader,
 	Menu,
 	Segment,
-	Sticky
+	Sticky,
 } from 'semantic-ui-react'
 
-import { fflogsApi } from 'api'
+import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
-import { fetchReportIfNeeded, setGlobalError } from 'store/actions'
+import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 
 import styles from './Analyse.module.css'
 
@@ -31,12 +31,12 @@ class Analyse extends Component {
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
 				fight: PropTypes.string.isRequired,
-				combatant: PropTypes.string.isRequired
-			}).isRequired
+				combatant: PropTypes.string.isRequired,
+			}).isRequired,
 		}).isRequired,
 		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired
-		})
+			loading: PropTypes.bool.isRequired,
+		}),
 	}
 
 	stickyContext = null
@@ -50,7 +50,7 @@ class Analyse extends Component {
 			config: null,
 			parser: null,
 			complete: false,
-			activeSegment: 0
+			activeSegment: 0,
 		}
 
 		this.stickyContext = React.createRef()
@@ -70,7 +70,7 @@ class Analyse extends Component {
 	}
 
 	fetchData(prevProps) {
-		const { dispatch, match } = this.props
+		const {dispatch, match} = this.props
 
 		// Make sure we've got a report, then run the parse
 		dispatch(fetchReportIfNeeded(match.params.code))
@@ -81,7 +81,7 @@ class Analyse extends Component {
 		const {
 			dispatch,
 			report,
-			match: { params }
+			match: {params},
 		} = this.props
 
 		// TODO: actually check if needed
@@ -108,7 +108,7 @@ class Analyse extends Component {
 			if (!fight) {
 				dispatch(setGlobalError(new Errors.NotFoundError({
 					type: 'fight',
-					id: fightId
+					id: fightId,
 				})))
 				return
 			}
@@ -119,7 +119,7 @@ class Analyse extends Component {
 			if (!combatant) {
 				dispatch(setGlobalError(new Errors.NotFoundError({
 					type: 'friendly combatant',
-					id: combatantId
+					id: combatantId,
 				})))
 				return
 			}
@@ -128,7 +128,7 @@ class Analyse extends Component {
 			if (!combatant.fights.find(fight => fight.id === fightId)) {
 				dispatch(setGlobalError(new Errors.DidNotParticipateError({
 					combatant: combatant.name,
-					fight: fightId
+					fight: fightId,
 				})))
 				return
 			}
@@ -145,7 +145,7 @@ class Analyse extends Component {
 		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
 		if (!config) {
 			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
-				job: JOBS[combatant.type].name
+				job: JOBS[combatant.type].name,
 			})))
 			return
 		}
@@ -153,7 +153,7 @@ class Analyse extends Component {
 		// Grab the parser for the combatant and broadcast an init to the modules
 		const Parser = await config.parser()
 		const parser = new Parser(report, fight, combatant)
-		this.setState({ config: config, parser: parser})
+		this.setState({config: config, parser: parser})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
@@ -163,8 +163,8 @@ class Analyse extends Component {
 				end: fight.end_time,
 				actorid: combatant.id,
 				// filter?
-				translate: true // probs keep same?
-			}
+				translate: true, // probs keep same?
+			},
 		})
 		const events = resp.data.events
 
@@ -188,7 +188,7 @@ class Analyse extends Component {
 			config,
 			parser,
 			complete,
-			activeSegment
+			activeSegment,
 		} = this.state
 
 		// Still loading the parser or running the parse
@@ -251,7 +251,7 @@ class Analyse extends Component {
 }
 
 const mapStateToProps = state => ({
-	report: state.report
+	report: state.report,
 })
 
 export default connect(mapStateToProps)(Analyse)

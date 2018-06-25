@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 
 import styles from './Rotation.module.css'
 
@@ -9,9 +9,9 @@ export default class Rotation extends Component {
 	static propTypes = {
 		events: PropTypes.arrayOf(PropTypes.shape({
 			ability: PropTypes.shape({
-				guid: PropTypes.number.isRequired
-			}).isRequired
-		})).isRequired
+				guid: PropTypes.number.isRequired,
+			}).isRequired,
+		})).isRequired,
 	}
 
 	render() {
@@ -36,7 +36,8 @@ export default class Rotation extends Component {
 					src={action.icon}
 					className={className.join(' ')}
 					alt={action.name}
-				/>}
+				/>
+			}
 			)}
 		</div>
 	}

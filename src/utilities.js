@@ -1,4 +1,4 @@
-import { matchPath } from 'react-router-dom'
+import {matchPath} from 'react-router-dom'
 
 export const addExtraIndex = (obj, index) => {
 	Object.keys(obj).forEach(key => {

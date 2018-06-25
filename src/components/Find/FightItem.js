@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
-import { Menu, Progress } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {Link} from 'react-router-dom'
+import {Menu, Progress} from 'semantic-ui-react'
 
 import styles from './FightItem.module.css'
 
@@ -13,9 +13,9 @@ class FightItem extends Component {
 			fightPercentage: PropTypes.number.isRequired,
 			name: PropTypes.string.isRequired,
 			start_time: PropTypes.number.isRequired,
-			end_time: PropTypes.number.isRequired
+			end_time: PropTypes.number.isRequired,
 		}).isRequired,
-		code: PropTypes.string.isRequired
+		code: PropTypes.string.isRequired,
 	}
 
 	formatDuration(duration) {
@@ -28,7 +28,7 @@ class FightItem extends Component {
 			id,
 			kill, fightPercentage,
 			start_time, end_time,
-			name
+			name,
 		} = this.props.fight
 
 		const code = this.props.code

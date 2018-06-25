@@ -32,7 +32,7 @@ class Parser {
 		precastStatus: PrecastStatus,
 		suggestions: Suggestions,
 		timeline: Timeline,
-		weaving: Weaving
+		weaving: Weaving,
 	}
 	static jobModules = {}
 
@@ -78,7 +78,7 @@ class Parser {
 		// Join the child modules in over the defaults
 		const constructors = {
 			...this.constructor.defaultModules,
-			...this.constructor.jobModules
+			...this.constructor.jobModules,
 		}
 
 		// Build the values we need for the topsort
@@ -134,7 +134,7 @@ class Parser {
 			trigger,
 			// Rest of the event, mark it as fab'd
 			...event,
-			__fabricated: true
+			__fabricated: true,
 		})
 	}
 
@@ -154,7 +154,7 @@ class Parser {
 		const displayOrder = this.moduleOrder
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
-		let results = []
+		const results = []
 		displayOrder.forEach(mod => {
 			const module = this.modules[mod]
 			const output = module.output()
@@ -162,7 +162,7 @@ class Parser {
 			if (output) {
 				results.push({
 					name: module.name,
-					markup: output
+					markup: output,
 				})
 			}
 		})
@@ -202,10 +202,10 @@ class Parser {
 		if (duration < 60) {
 			const precision = secondPrecision !== null? secondPrecision : seconds < 10? 2 : 0
 			return seconds.toFixed(precision) + 's'
-		} else {
-			const precision = secondPrecision !== null ? secondPrecision : 0
-			return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
 		}
+		const precision = secondPrecision !== null ? secondPrecision : 0
+		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
+
 	}
 }
 

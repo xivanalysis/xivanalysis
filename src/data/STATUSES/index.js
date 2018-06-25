@@ -1,4 +1,4 @@
-import { addExtraIndex } from 'utilities'
+import {addExtraIndex} from 'utilities'
 
 import ENEMY from './ENEMY'
 import ROLE from './ROLE'
@@ -9,7 +9,7 @@ const STATUSES = {
 	...ENEMY,
 	...ROLE,
 	...SHARED,
-	...SMN
+	...SMN,
 }
 
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.

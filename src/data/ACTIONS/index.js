@@ -1,4 +1,4 @@
-import { addExtraIndex } from 'utilities'
+import {addExtraIndex} from 'utilities'
 
 import SHARED from './SHARED'
 import ROLE from './ROLE'
@@ -18,7 +18,7 @@ const ACTIONS = {
 
 	...WHM,
 
-	...SMN
+	...SMN,
 }
 
 export default addExtraIndex(ACTIONS, 'id')

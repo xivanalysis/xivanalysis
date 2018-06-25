@@ -1,4 +1,4 @@
-import { combineReducers } from 'redux'
+import {combineReducers} from 'redux'
 
 import * as ActionTypes from './actions'
 
@@ -22,7 +22,7 @@ const globalError = (state=null, action) => {
 
 const rootReducer = combineReducers({
 	report,
-	globalError
+	globalError,
 })
 
 export default rootReducer

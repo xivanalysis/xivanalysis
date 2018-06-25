@@ -1,17 +1,17 @@
 import math from 'mathjsCustom'
-import React, { Fragment } from 'react'
-import { Message, Icon } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Message, Icon} from 'semantic-ui-react'
 
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Group, Item } from './Timeline'
+import {Group, Item} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
 
 export default class GlobalCooldown extends Module {
 	static dependencies = [
-		'timeline'
+		'timeline',
 	]
 	name = 'Global Cooldown'
 
@@ -54,7 +54,7 @@ export default class GlobalCooldown extends Module {
 		this.timeline.addGroup(new Group({
 			id: 'gcd',
 			content: 'GCD',
-			order: 0
+			order: 0,
 		}))
 
 		this.gcds.forEach(gcd => {
@@ -64,7 +64,7 @@ export default class GlobalCooldown extends Module {
 				start: gcd.timestamp - startTime,
 				length: gcdLength,
 				group: 'gcd',
-				content: <img src={action.icon} alt={action.name}/>
+				content: <img src={action.icon} alt={action.name}/>,
 			}))
 		})
 	}
@@ -78,7 +78,7 @@ export default class GlobalCooldown extends Module {
 			this.gcds.push({
 				timestamp: event.timestamp,
 				length: gcd,
-				actionId: event.ability.guid
+				actionId: event.ability.guid,
 			})
 		}
 

@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
-import { ActionLink, StatusLink } from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // there's also the case where if you have further ruin and an egi is about to do gcd + ogcd and they held, that can be considered a no no
 // also if they are holding further ruin during Bahamut what are they even doing
@@ -17,7 +17,7 @@ import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
 
 const ACTIONS_NO_PROC = [
 	ACTIONS.TITAN_EGI_ATTACK.id,
-	ACTIONS.IFRIT_EGI_ATTACK.id
+	ACTIONS.IFRIT_EGI_ATTACK.id,
 ]
 const PROC_RATE = 0.15
 
@@ -27,7 +27,7 @@ export default class Ruin4 extends Module {
 	static dependencies = [
 		'cooldowns',
 		'invuln',
-		'suggestions'
+		'suggestions',
 	]
 	name = 'Ruin IV'
 
@@ -77,7 +77,7 @@ export default class Ruin4 extends Module {
 					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
 				</Fragment>,
 				severity: this._overage > 30000? SEVERITY.MAJOR : this._overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				why: `Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.`
+				why: `Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.`,
 			}))
 		}
 	}

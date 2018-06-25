@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
-import { ActionLink } from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const AETHER_ACTIONS = [
 	ACTIONS.ENERGY_DRAIN.id,
 	ACTIONS.BANE.id,
 	ACTIONS.FESTER.id,
-	ACTIONS.PAINFLARE.id
+	ACTIONS.PAINFLARE.id,
 ]
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
@@ -19,7 +19,7 @@ export default class Gauge extends Module {
 	static dependencies = [
 		'cooldowns',
 		'pets',
-		'suggestions'
+		'suggestions',
 	]
 
 	// -----
@@ -137,7 +137,7 @@ export default class Gauge extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
 					{this._lostAetherflow} stack{this._lostAetherflow > 1 && 's'} of Aetherflow lost.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -150,7 +150,7 @@ export default class Gauge extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
 					{this._lostDreadwyrmAether} stack{this._lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 	}

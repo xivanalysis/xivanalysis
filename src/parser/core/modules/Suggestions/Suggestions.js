@@ -2,7 +2,7 @@ import React from 'react'
 
 import Suggestion from './Suggestion'
 import SuggestionsComponent from 'components/modules/Suggestions'
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class Suggestions extends Module {
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS

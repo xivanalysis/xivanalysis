@@ -5,7 +5,7 @@ const REMOVE = 'remove'
 
 export default class Entities extends Module {
 	static dependencies = [
-		'invuln'
+		'invuln',
 	]
 
 	// -----
@@ -67,12 +67,12 @@ export default class Entities extends Module {
 					events.push({
 						timestamp: range.start,
 						type: APPLY,
-						buff
+						buff,
 					})
 					events.push({
 						timestamp: range.end || this.parser.currentTimestamp,
 						type: REMOVE,
-						buff
+						buff,
 					})
 				})
 			})
@@ -151,7 +151,7 @@ export default class Entities extends Module {
 			start: event.timestamp,
 			end: null,
 			stackHistory: [{stacks: 1, timestamp: event.timestamp}],
-			isDebuff
+			isDebuff,
 		}
 
 		// Fire an event for all buffs for completeness' sake
@@ -204,7 +204,7 @@ export default class Entities extends Module {
 				start: startTime,
 				end: null,
 				stackHistory: [{stacks: 1, timestamp: startTime}],
-				isDebuff
+				isDebuff,
 			}
 			entity.buffs.push(buff)
 		}
@@ -222,7 +222,7 @@ export default class Entities extends Module {
 			timestamp,
 			oldStacks,
 			newStacks,
-			stacksGained: newStacks - oldStacks
+			stacksGained: newStacks - oldStacks,
 		}, buff)
 	}
 

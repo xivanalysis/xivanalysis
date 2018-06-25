@@ -1,27 +1,27 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Link, withRouter } from 'react-router-dom'
-import { Container, Menu } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Link, withRouter} from 'react-router-dom'
+import {Container, Menu} from 'semantic-ui-react'
 
-import { getPathMatch } from 'utilities'
+import {getPathMatch} from 'utilities'
 
 class Header extends Component {
 	static propTypes = {
 		location: PropTypes.shape({
-			pathname: PropTypes.string.isRequired
+			pathname: PropTypes.string.isRequired,
 		}).isRequired,
 		report: PropTypes.shape({
 			loading: PropTypes.bool.isRequired,
 			title: PropTypes.string,
-			code: PropTypes.string
-		})
+			code: PropTypes.string,
+		}),
 	}
 
 	render() {
 		const {
 			location: {pathname},
-			report
+			report,
 		} = this.props
 
 		// Need to do this janky shit to get the router path match
@@ -44,7 +44,7 @@ class Header extends Component {
 			}
 			crumbs.push({
 				title,
-				url: `/find/${code}/`
+				url: `/find/${code}/`,
 			})
 		}
 
@@ -58,7 +58,7 @@ class Header extends Component {
 			}
 			crumbs.push({
 				title,
-				url: `/find/${code}/${fightId}/`
+				url: `/find/${code}/${fightId}/`,
 			})
 		}
 
@@ -71,7 +71,7 @@ class Header extends Component {
 			}
 			crumbs.push({
 				title,
-				url: `/analyse/${code}/${fightId}/${combatantId}/`
+				url: `/analyse/${code}/${fightId}/${combatantId}/`,
 			})
 		}
 
@@ -95,7 +95,7 @@ class Header extends Component {
 }
 
 const mapStateToProps = state => ({
-	report: state.report
+	report: state.report,
 })
 
 export default withRouter(connect(mapStateToProps)(Header))

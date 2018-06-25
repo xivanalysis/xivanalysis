@@ -5,5 +5,5 @@ export default {
 	patchCompatibility: '4.3',
 
 	job: JOBS.SUMMONER,
-	parser: () => import('./Parser' /* webpackChunkName: "SMN" */).then(exports => exports.default)
+	parser: () => import('./Parser' /* webpackChunkName: "SMN" */).then(exports => exports.default),
 }

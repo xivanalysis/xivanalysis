@@ -22,7 +22,7 @@ class Parser extends CoreParser {
 		pets: Pets,
 		rouse: Rouse,
 		ruin2: Ruin2,
-		ruin4: Ruin4
+		ruin4: Ruin4,
 	}
 }
 

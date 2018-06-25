@@ -1,10 +1,10 @@
-import { fflogsApi } from 'api'
+import {fflogsApi} from 'api'
 import * as Errors from 'errors'
 
 export const SET_GLOBAL_ERROR = 'SET_GLOBAL_ERROR'
 export const setGlobalError = (error) => ({
 	type: SET_GLOBAL_ERROR,
-	error
+	error,
 })
 
 export const CLEAR_GLOBAL_ERROR = 'CLEAR_GLOBAL_ERROR'
@@ -13,7 +13,7 @@ export const clearGlobalError = () => ({type: CLEAR_GLOBAL_ERROR})
 export const SET_REPORT = 'SET_REPORT'
 export const setReport = (report) => ({
 	type: SET_REPORT,
-	payload: report
+	payload: report,
 })
 
 export const fetchReport = (code) => async dispatch => {
@@ -39,7 +39,7 @@ export const fetchReport = (code) => async dispatch => {
 	const report = {
 		...response.data,
 		code,
-		loading: false
+		loading: false,
 	}
 
 	dispatch(setReport(report))

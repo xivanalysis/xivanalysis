@@ -1,16 +1,16 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
-import { ActionLink } from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Rule, Requirement } from 'parser/core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class DoTs extends Module {
 	static dependencies = [
 		'checklist',
 		'enemies',
-		'invuln'
+		'invuln',
 	]
 
 	on_complete() {
@@ -23,13 +23,13 @@ export default class DoTs extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.BIO_III} /> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.BIO_III.id)
+					percent: () => this.getDotUptimePercent(STATUSES.BIO_III.id),
 				}),
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.MIASMA_III} /> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id)
-				})
-			]
+					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
+				}),
+			],
 		}))
 	}
 

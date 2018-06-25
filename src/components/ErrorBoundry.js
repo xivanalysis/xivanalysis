@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types'
 import Raven from 'raven-js'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Container, Message } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Container, Message} from 'semantic-ui-react'
 
 import * as Errors from 'errors'
 
@@ -10,12 +10,12 @@ import * as Errors from 'errors'
 const ERROR_PROPS = {
 	[Errors.SEVERITY.ERROR]: {
 		error: true,
-		icon: 'times circle outline'
+		icon: 'times circle outline',
 	},
 	[Errors.SEVERITY.WARNING]: {
 		warning: true,
-		icon: 'warning sign'
-	}
+		icon: 'warning sign',
+	},
 }
 
 
@@ -23,14 +23,14 @@ const ERROR_PROPS = {
 class ErrorBoundry extends Component {
 	static propTypes = {
 		children: PropTypes.node,
-		globalError: PropTypes.instanceOf(Errors.GlobalError)
+		globalError: PropTypes.instanceOf(Errors.GlobalError),
 	}
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			componentError: null
+			componentError: null,
 		}
 	}
 
@@ -59,7 +59,7 @@ class ErrorBoundry extends Component {
 }
 
 const mapStateToProps = state => ({
-	globalError: state.globalError
+	globalError: state.globalError,
 })
 
 export default connect(mapStateToProps)(ErrorBoundry)

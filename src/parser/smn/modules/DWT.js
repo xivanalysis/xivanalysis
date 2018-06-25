@@ -1,17 +1,17 @@
-import React, { Fragment } from 'react'
-import { Accordion } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
-import { ActionLink } from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, { getAction } from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
 	ACTIONS.RUIN_IV.id,
-	ACTIONS.TRI_BIND.id
+	ACTIONS.TRI_BIND.id,
 ]
 
 export default class DWT extends Module {
@@ -19,7 +19,7 @@ export default class DWT extends Module {
 		'castTime',
 		'gauge',
 		'gcd',
-		'suggestions'
+		'suggestions',
 	]
 	name = 'Dreadwyrm Trance'
 
@@ -48,7 +48,7 @@ export default class DWT extends Module {
 				start: event.timestamp,
 				end: null,
 				rushing: this.gauge.isRushing(),
-				casts: []
+				casts: [],
 			}
 
 			this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
@@ -92,7 +92,7 @@ export default class DWT extends Module {
 				severity: badGcds > 5 ? SEVERITY.MAJOR : badGcds > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.TRI_BIND}/> in AoE situations.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -132,12 +132,12 @@ export default class DWT extends Module {
 					content: <Fragment>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
-					</Fragment>
+					</Fragment>,
 				},
 				content: {
 					key: 'content-' + dwt.start,
-					content: <Rotation events={dwt.casts}/>
-				}
+					content: <Rotation events={dwt.casts}/>,
+				},
 			}
 		})
 

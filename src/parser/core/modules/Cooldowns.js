@@ -1,13 +1,13 @@
 import React from 'react'
 
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Group, Item } from './Timeline'
+import {Group, Item} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
 	static dependencies = [
-		'timeline'
+		'timeline',
 	]
 
 	_currentAction = null
@@ -55,7 +55,7 @@ export default class Cooldowns extends Module {
 			const action = getAction(id)
 			this.timeline.addGroup(new Group({
 				id,
-				content: action.name
+				content: action.name,
 			}))
 
 			cd.history.forEach(use => {
@@ -64,7 +64,7 @@ export default class Cooldowns extends Module {
 					start: use.timestamp - startTime,
 					length: use.length,
 					group: id,
-					content: <img src={action.icon} alt={action.name}/>
+					content: <img src={action.icon} alt={action.name}/>,
 				}))
 			})
 		})
@@ -73,7 +73,7 @@ export default class Cooldowns extends Module {
 	getCooldown(actionId) {
 		return this._cooldowns[actionId] || {
 			current: null,
-			history: []
+			history: [],
 		}
 	}
 
@@ -92,7 +92,7 @@ export default class Cooldowns extends Module {
 		const action = getAction(actionId)
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
-			length: action.cooldown * 1000 // CDs are in S, timestamps are in MS
+			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)

@@ -1,13 +1,13 @@
-import React, { Fragment } from 'react'
-import { Pie as PieChart } from 'react-chartjs-2'
+import React, {Fragment} from 'react'
+import {Pie as PieChart} from 'react-chartjs-2'
 
-import { ActionLink, StatusLink } from 'components/ui/DbLink'
-import ACTIONS, { getAction } from 'data/ACTIONS'
-import JOBS, { ROLES } from 'data/JOBS'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS, {getAction} from 'data/ACTIONS'
+import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import styles from './Pets.module.css'
 
@@ -15,7 +15,7 @@ const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
 	[ACTIONS.SUMMON_III.id]: PETS.IFRIT_EGI.id,
-	[ACTIONS.SUMMON_BAHAMUT.id]: PETS.DEMI_BAHAMUT.id
+	[ACTIONS.SUMMON_BAHAMUT.id]: PETS.DEMI_BAHAMUT.id,
 }
 
 const CHART_COLOURS = {
@@ -23,7 +23,7 @@ const CHART_COLOURS = {
 	[PETS.GARUDA_EGI.id]: '#9c0',
 	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
-	[PETS.DEMI_BAHAMUT.id]: '#218cd6'
+	[PETS.DEMI_BAHAMUT.id]: '#218cd6',
 }
 
 // Durations should probably be ACTIONS data
@@ -31,7 +31,7 @@ export const SUMMON_BAHAMUT_LENGTH = 20000
 
 export default class Pets extends Module {
 	static dependencies = [
-		'suggestions'
+		'suggestions',
 	]
 	name = 'Pets'
 
@@ -158,7 +158,7 @@ export default class Pets extends Module {
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
 					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>&apos;s Magic Vulnerability Up.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -169,7 +169,7 @@ export default class Pets extends Module {
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
 					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit&apos;s raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -182,7 +182,7 @@ export default class Pets extends Module {
 				severity: SEVERITY.MAJOR,
 				content: <Fragment>
 					Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -195,7 +195,7 @@ export default class Pets extends Module {
 				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				content: <Fragment>
 					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 	}
@@ -211,7 +211,7 @@ export default class Pets extends Module {
 		this._lastPet = this._currentPet
 		this._currentPet = {
 			id: petId,
-			timestamp
+			timestamp,
 		}
 
 		if (this._lastPet) {
@@ -227,7 +227,7 @@ export default class Pets extends Module {
 		this.parser.fabricateEvent({
 			type: 'summonpet',
 			timestamp,
-			petId: petId
+			petId: petId,
 		})
 	}
 
@@ -250,14 +250,14 @@ export default class Pets extends Module {
 			labels: uptimeKeys.map(petId => this.getPetName(petId)),
 			datasets: [{
 				data: Array.from(this._petUptime.values()),
-				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId])
-			}]
+				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId]),
+			}],
 		}
 
 		const options = {
 			responsive: false,
 			legend: {display: false},
-			tooltips: {enabled: false}
+			tooltips: {enabled: false},
 		}
 
 		return <Fragment>

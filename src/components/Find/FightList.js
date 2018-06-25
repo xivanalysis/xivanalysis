@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import React, { Component, Fragment } from 'react'
-import { Checkbox, Header, Menu } from 'semantic-ui-react'
+import React, {Component, Fragment} from 'react'
+import {Checkbox, Header, Menu} from 'semantic-ui-react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
@@ -11,18 +11,18 @@ class FightList extends Component {
 	static propTypes = {
 		report: PropTypes.shape({
 			fights: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired
-			})).isRequired
-		}).isRequired
+				id: PropTypes.number.isRequired,
+			})).isRequired,
+		}).isRequired,
 	}
 
 	state = {
-		killsOnly: true
+		killsOnly: true,
 	}
 
 	render() {
-		let { report } = this.props
-		const { killsOnly } = this.state
+		const {report} = this.props
+		const {killsOnly} = this.state
 
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
@@ -38,9 +38,9 @@ class FightList extends Component {
 				fights.push({
 					zone: {
 						...ZONES[fight.zoneID],
-						name: fight.zoneName
+						name: fight.zoneName,
 					},
-					fights: []
+					fights: [],
 				})
 				lastZone = fight.zoneID
 			}
@@ -54,7 +54,7 @@ class FightList extends Component {
 				Select a pull
 				<Checkbox
 					toggle
-					label='Kills only'
+					label="Kills only"
 					defaultChecked={killsOnly}
 					onChange={(_, data) => this.setState({killsOnly: data.checked})}
 					className="pull-right"

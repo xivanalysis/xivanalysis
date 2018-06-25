@@ -1,4 +1,4 @@
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
@@ -23,7 +23,7 @@ export default class CastTime extends Module {
 			actions,
 			castTime,
 			start,
-			end
+			end,
 		})
 
 		return newLength - 1

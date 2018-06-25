@@ -1,15 +1,15 @@
-import React, { Fragment } from 'react'
+import React, {Fragment} from 'react'
 
-import { ActionLink, StatusLink } from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import { Rule, Requirement } from 'parser/core/modules/Checklist'
-import { Suggestion, SEVERITY } from 'parser/core/modules/Suggestions'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const FESTER_STATUSES = [
 	STATUSES.BIO_III.id,
-	STATUSES.MIASMA_III.id
+	STATUSES.MIASMA_III.id,
 ]
 
 export default class Aetherflow extends Module {
@@ -18,7 +18,7 @@ export default class Aetherflow extends Module {
 		'cooldowns',
 		'enemies',
 		'gauge',
-		'suggestions'
+		'suggestions',
 	]
 
 	_painflareCast = null
@@ -68,9 +68,9 @@ export default class Aetherflow extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - 15000)) * 100
-				})
-			]
+					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - 15000)) * 100,
+				}),
+			],
 		}))
 
 		// Suggestion for bad festers
@@ -84,7 +84,7 @@ export default class Aetherflow extends Module {
 				severity: numBadFesters < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					{numBadFesters} cast{numBadFesters > 1 && 's'} of Fester on targets without both DoTs.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 
@@ -98,7 +98,7 @@ export default class Aetherflow extends Module {
 				severity: numBadPainflares < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					{numBadPainflares} single-target cast{numBadPainflares > 1 && 's'} of Painflare.
-				</Fragment>
+				</Fragment>,
 			}))
 		}
 	}

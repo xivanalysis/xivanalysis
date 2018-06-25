@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react'
-import { Accordion, Icon, Progress } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
 import Rule from './Rule'
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 import styles from './Checklist.module.css'
 
@@ -47,7 +47,7 @@ export default class Checklist extends Module {
 							size="small"
 							color={success? 'green' : 'red'}
 						/>
-					</Fragment>
+					</Fragment>,
 				},
 				content: {
 					key: `content-${index}`,
@@ -64,8 +64,8 @@ export default class Checklist extends Module {
 								</li>
 							)}
 						</ul>
-					</Fragment>
-				}
+					</Fragment>,
+				},
 			}
 		})
 

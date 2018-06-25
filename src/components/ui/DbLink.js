@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import Observer from 'react-intersection-observer'
 
 // Polyfill
@@ -12,7 +12,7 @@ export default class DbLink extends Component {
 	static propTypes = {
 		type: PropTypes.string.isRequired,
 		id: PropTypes.number.isRequired,
-		name: PropTypes.string
+		name: PropTypes.string,
 	};
 
 	hasLoaded = false
@@ -49,8 +49,8 @@ export default class DbLink extends Component {
 	}
 
 	render() {
-		const { type, id, name } = this.props
-		return <Observer tag='span' onChange={isVisible => this.onObserverChange(isVisible)}>
+		const {type, id, name} = this.props
+		return <Observer tag="span" onChange={isVisible => this.onObserverChange(isVisible)}>
 			<a href={'http://xivdb.com/'+ type +'/' + id}>{name ? name : 'Loading...'}</a>
 		</Observer>
 	}
@@ -59,13 +59,13 @@ export default class DbLink extends Component {
 // -----
 // Helpers 'cus i'm lazy
 // -----
-export const ActionLink = (props) => <DbLink type='action' {...props} />
+export const ActionLink = (props) => <DbLink type="action" {...props} />
 export const StatusLink = (props) => <DbLink
-	type='status'
+	type="status"
 	{...props}
 	id={props.id - 1000000}
 />
 
 StatusLink.propTypes = {
-	id: PropTypes.number.isRequired
+	id: PropTypes.number.isRequired,
 }

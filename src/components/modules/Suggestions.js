@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types'
-import React, { Component, Fragment } from 'react'
-import { Checkbox, Item, Label } from 'semantic-ui-react'
+import React, {Component, Fragment} from 'react'
+import {Checkbox, Item, Label} from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
-import { SEVERITY } from 'parser/core/modules/Suggestions/Suggestion'
+import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
 
 import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {
-	[SEVERITY.MAJOR]: { content: 'Major', color: 'red', icon: 'arrow up' },
-	[SEVERITY.MEDIUM]: { content: 'Medium', color: 'orange' },
-	[SEVERITY.MINOR]: { content: 'Minor', color: 'blue', icon: 'arrow down' }
+	[SEVERITY.MAJOR]: {content: 'Major', color: 'red', icon: 'arrow up'},
+	[SEVERITY.MEDIUM]: {content: 'Medium', color: 'orange'},
+	[SEVERITY.MINOR]: {content: 'Minor', color: 'blue', icon: 'arrow down'},
 }
 
 class Suggestions extends Component {
@@ -19,16 +19,16 @@ class Suggestions extends Component {
 			icon: PropTypes.string.isRequired,
 			content: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
 			why: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-			severity: PropTypes.number.isRequired
-		})).isRequired
+			severity: PropTypes.number.isRequired,
+		})).isRequired,
 	}
 
 	state = {
-		showMinor: false
+		showMinor: false,
 	}
 
 	render() {
-		const { showMinor } = this.state
+		const {showMinor} = this.state
 
 		const suggestions = this.props.suggestions.filter(
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR

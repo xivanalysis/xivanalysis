@@ -1,10 +1,10 @@
-import React, { Fragment } from 'react'
-import { Accordion, Message } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
-import { SUMMON_BAHAMUT_LENGTH } from './Pets'
+import {SUMMON_BAHAMUT_LENGTH} from './Pets'
 
 const DEMI_BAHAMUT_ACTIONS = Object.values(ACTIONS)
 	.filter(action => action.pet && action.pet === PETS.DEMI_BAHAMUT.id)
@@ -14,17 +14,17 @@ const GHOST_TIMEFRAME = 500
 const GHOST_CHANCE = {
 	NONE: 0,
 	LIKELY: 1,
-	ABSOLUTE: 2
+	ABSOLUTE: 2,
 }
 
 const GHOST_CLASSNAME = {
 	[GHOST_CHANCE.LIKELY]: 'text-warning',
-	[GHOST_CHANCE.ABSOLUTE]: 'text-error'
+	[GHOST_CHANCE.ABSOLUTE]: 'text-error',
 }
 
 export default class Bahamut extends Module {
 	static dependencies = [
-		'gauge'
+		'gauge',
 	]
 	name = 'Bahamut'
 
@@ -40,7 +40,7 @@ export default class Bahamut extends Module {
 			const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
 			this._current.petCasts.push({
 				...event,
-				ghostChance
+				ghostChance,
 			})
 		}
 	}
@@ -57,7 +57,7 @@ export default class Bahamut extends Module {
 			this._current = {
 				timestamp: event.timestamp,
 				// playerCasts: [],
-				petCasts: []
+				petCasts: [],
 			}
 		}
 	}
@@ -87,7 +87,7 @@ export default class Bahamut extends Module {
 						{this.parser.formatTimestamp(sb.timestamp)}
 						&nbsp;-&nbsp;
 						{wws.length} WWs, {ams.length} AMs
-					</Fragment>
+					</Fragment>,
 				},
 				content: {
 					key: 'content-' + index,
@@ -99,8 +99,8 @@ export default class Bahamut extends Module {
 							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;
 							{cast.ability.name}
 						</li>)}
-					</ul>
-				}
+					</ul>,
+				},
 			}
 		})
 

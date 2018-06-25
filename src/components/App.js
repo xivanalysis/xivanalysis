@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { Component, Fragment } from 'react'
-import { Switch, Route } from 'react-router-dom'
-import { Container, Message } from 'semantic-ui-react'
+import React, {Component, Fragment} from 'react'
+import {Switch, Route} from 'react-router-dom'
+import {Container, Message} from 'semantic-ui-react'
 
 import store from 'store'
-import { clearGlobalError } from 'store/actions'
+import {clearGlobalError} from 'store/actions'
 import Analyse from './Analyse'
 import ErrorBoundry from './ErrorBoundry'
 import Find from './Find'
@@ -20,9 +20,9 @@ class App extends Component {
 		router: PropTypes.shape({
 			history: PropTypes.shape({
 				location: PropTypes.object.isRequired,
-				listen: PropTypes.func.isRequired
-			}).isRequired
-		}).isRequired
+				listen: PropTypes.func.isRequired,
+			}).isRequired,
+		}).isRequired,
 	}
 
 	_unlisten = null

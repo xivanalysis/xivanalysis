@@ -4,7 +4,7 @@ export const DISPLAY_ORDER = {
 	SUGGESTIONS: -1,
 	TOP: 0,
 	DEFAULT: 50,
-	BOTTOM: 100
+	BOTTOM: 100,
 }
 
 export default class Module {

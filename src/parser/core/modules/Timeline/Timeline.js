@@ -2,7 +2,7 @@ import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 import './Timeline.module.css'
 
@@ -35,12 +35,12 @@ export default class Timeline extends Module {
 			maxMinorChars: 4,
 			format: {
 				minorLabels: {
-					minute: 'm[m]'
+					minute: 'm[m]',
 				},
 				majorLabels: {
 					second: 'm[m]',
-					minute: ''
-				}
+					minute: '',
+				},
 			},
 
 			// View constraints
@@ -51,7 +51,7 @@ export default class Timeline extends Module {
 			// View defaults
 			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,
-			end: Math.min(this.parser.fightDuration, 60000)
+			end: Math.min(this.parser.fightDuration, 60000),
 		}
 
 		return <VisTimeline

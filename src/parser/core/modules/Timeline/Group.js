@@ -20,7 +20,7 @@ export default class Group {
 			visible: this.visible,
 			nestedGroups: this.nestedGroups,
 			showNested: this.showNested,
-			order: this.order
+			order: this.order,
 		}
 	}
 }
