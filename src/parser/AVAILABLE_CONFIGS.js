@@ -9,5 +9,7 @@ function importJobConfig(jobFolder) {
 }
 
 export default {
-	[JOBS.SUMMONER.logType]: importJobConfig('smn'),
+	JOBS: {
+		[JOBS.SUMMONER.logType]: importJobConfig('jobs/smn'),
+	},
 }

@@ -6,7 +6,7 @@ import {Header, Menu, Message, Segment} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_JOBS from 'parser/jobs/AVAILABLE_JOBS'
+import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import store from 'store'
 import {setGlobalError} from 'store/actions'
 
@@ -32,7 +32,7 @@ class CombatantList extends Component {
 		const {friendlies} = this.props.report
 		const currentFight = this.props.currentFight
 
-		const configs = Object.keys(AVAILABLE_JOBS)
+		const configs = Object.keys(AVAILABLE_CONFIGS.JOBS)
 
 		// Filter down to just the friendlies in this fight (that aren't limit break), grouping by role
 		const grouped = [] // Relying on magic here

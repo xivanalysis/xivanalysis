@@ -16,7 +16,7 @@ import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_JOBS from 'parser/jobs/AVAILABLE_JOBS'
+import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 
@@ -143,7 +143,7 @@ class Analyse extends Component {
 		// TODO: handle pets?
 
 		// Get the config for the parser, stop now if there is none.
-		const configImport = AVAILABLE_JOBS[combatant.type]
+		const configImport = AVAILABLE_CONFIGS.JOBS[combatant.type]
 		if (!configImport) {
 			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
 				job: JOBS[combatant.type].name,
