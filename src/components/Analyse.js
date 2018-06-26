@@ -226,12 +226,21 @@ class Analyse extends Component {
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
-					<Header className={styles.sidebar}>
+					<Header className={styles.sidebar} attached="top">
 						<JobIcon job={job} set={1}/>
 						<Header.Content>
 							{job.name}
 							<Header.Subheader>
 								Patch <strong>{config.job.patchCompatibility}</strong>
+							</Header.Subheader>
+						</Header.Content>
+					</Header>
+					<Header attached="bottom">
+						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
+						<Header.Content>
+							{parser.fight.name}
+							<Header.Subheader>
+								{parser.fight.zoneName}
 							</Header.Subheader>
 						</Header.Content>
 					</Header>
