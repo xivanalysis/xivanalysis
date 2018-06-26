@@ -16,7 +16,8 @@ import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+import AVAILABLE_JOBS from 'parser/AVAILABLE_JOBS'
+import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 
 import styles from './Analyse.module.css'
@@ -142,17 +143,21 @@ class Analyse extends Component {
 		// TODO: handle pets?
 
 		// Get the config for the parser, stop now if there is none.
-		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
-		if (!config) {
+		const configImport = AVAILABLE_JOBS[combatant.type]
+		if (!configImport) {
 			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
 				job: JOBS[combatant.type].name,
 			})))
 			return
 		}
 
-		// Grab the parser for the combatant and broadcast an init to the modules
-		const Parser = await config.parser()
+		// The config exists - import it
+		const config = await configImport()
+
+		// Create a parser instance, add modules, then build the final module structure
 		const parser = new Parser(report, fight, combatant)
+		parser.addModules(config.modules)
+		parser.buildModules()
 		this.setState({config: config, parser: parser})
 
 		// TODO: Should this be somewhere else?
@@ -200,16 +205,16 @@ class Analyse extends Component {
 		}
 
 		// Report's done, build output
-		// TODO: Need to cache results so re-render for menu and so on doesn't trigger a re-render of the entire parser
+		const job = JOBS[parser.player.type]
 		const results = this.getParserResults()
 
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
 					<Header className={styles.sidebar}>
-						<JobIcon job={config.job} set={1}/>
+						<JobIcon job={job} set={1}/>
 						<Header.Content>
-							{config.job.name}
+							{job.name}
 							<Header.Subheader>
 								Patch <strong>{config.patchCompatibility}</strong>
 							</Header.Subheader>

@@ -34,14 +34,14 @@ class Parser {
 		timeline: Timeline,
 		weaving: Weaving,
 	}
-	static jobModules = {}
 
 	report = null
 	fight = null
 	player = null
+	_timestamp = 0
 
 	modules = {}
-	_timestamp = 0
+	_constructors = {}
 
 	moduleOrder = []
 
@@ -64,7 +64,7 @@ class Parser {
 	}
 
 	// -----
-	// Constructor w/ module dep resolution
+	// Constructor
 	// -----
 
 	constructor(report, fight, player) {
@@ -75,16 +75,24 @@ class Parser {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
-		// Join the child modules in over the defaults
-		const constructors = {
-			...this.constructor.defaultModules,
-			...this.constructor.jobModules,
-		}
+		// Start off with the core modules
+		this.addModules(this.constructor.defaultModules)
+	}
 
-		// Build the values we need for the topsort
-		const nodes = Object.keys(constructors)
+	// -----
+	// Module handling
+	// -----
+
+	addModules(modules) {
+		// Merge the modules into our constructor object
+		Object.assign(this._constructors, modules)
+	}
+
+	buildModules() {
+		// Build the values we need for the toposort
+		const nodes = Object.keys(this._constructors)
 		const edges = []
-		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
+		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, dep])
 		}))
 
@@ -95,7 +103,7 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			const module = new constructors[mod]()
+			const module = new this._constructors[mod]()
 			module.constructor.dependencies.forEach(dep => {
 				module[dep] = this.modules[dep]
 			})
