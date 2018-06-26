@@ -50,8 +50,11 @@ export default class DbLink extends Component {
 
 	render() {
 		const {type, id, name} = this.props
-		return <Observer tag="span" onChange={isVisible => this.onObserverChange(isVisible)}>
-			<a href={'http://xivdb.com/'+ type +'/' + id}>{name ? name : 'Loading...'}</a>
+		return <Observer>
+			{({inView, ref}) => {
+				this.onObserverChange(inView)
+				return <a href={'http://xivdb.com/'+ type +'/' + id} ref={ref}>{name ? name : 'Loading...'}</a>
+			}}
 		</Observer>
 	}
 }

@@ -13,7 +13,7 @@
     "react": "^16.3.1",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.3.1",
-    "react-intersection-observer": "^5",
+    "react-intersection-observer": "^6",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scroll": "^1.7.9",
