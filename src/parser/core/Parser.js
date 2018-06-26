@@ -1,5 +1,6 @@
 import toposort from 'toposort'
 
+import About from './modules/About'
 import AlwaysBeCasting from './modules/AlwaysBeCasting'
 import CastTime from './modules/CastTime'
 import Checklist from './modules/Checklist'
@@ -20,6 +21,7 @@ class Parser {
 	// -----
 
 	static defaultModules = {
+		about: About,
 		abc: AlwaysBeCasting,
 		castTime: CastTime,
 		checklist: Checklist,
