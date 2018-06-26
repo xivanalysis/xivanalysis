@@ -14,7 +14,7 @@ import {
 
 import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
-import JOBS from 'data/JOBS'
+import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
 import Parser from 'parser/core/Parser'
@@ -196,7 +196,6 @@ class Analyse extends Component {
 
 	render() {
 		const {
-			config,
 			parser,
 			complete,
 			activeSegment,
@@ -222,7 +221,7 @@ class Analyse extends Component {
 						<Header.Content>
 							{job.name}
 							<Header.Subheader>
-								Patch <strong>{config.job.patchCompatibility}</strong>
+								{ROLES[job.role].name}
 							</Header.Subheader>
 						</Header.Content>
 					</Header>

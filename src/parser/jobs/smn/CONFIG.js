@@ -11,6 +11,8 @@ import Ruin4 from './modules/Ruin4'
 
 export default {
 	// contributors?
+
+	// TODO: This might belong in the about module in some manner
 	patchCompatibility: '4.3',
 
 	modules: {
