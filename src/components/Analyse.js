@@ -141,39 +141,34 @@ class Analyse extends Component {
 
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
+		const config = {}
 
 		// Get the job config for the parser, stop now if there is none.
-		const jobConfigImport = AVAILABLE_CONFIGS.JOBS[combatant.type]
-		if (!jobConfigImport) {
+		config.job = AVAILABLE_CONFIGS.JOBS[combatant.type]
+		if (!config.job) {
 			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
 				job: JOBS[combatant.type].name,
 			})))
 			return
 		}
 
-		// The config exists - import it
-		const jobConfig = await jobConfigImport()
-
-		// Create the base parser instance and add the job modules in
+		// The config exists - import it and create the base parser
+		config.job = await config.job()
 		const parser = new Parser(report, fight, combatant)
-		parser.addModules(jobConfig.modules)
 
 		// Check if there's modules for this fight, add them if there are
-		const bossConfigImport = AVAILABLE_CONFIGS.BOSSES[fight.boss]
-		if (bossConfigImport) {
-			const bossConfig = await bossConfigImport()
-			parser.addModules(bossConfig.modules)
+		config.boss = AVAILABLE_CONFIGS.BOSSES[fight.boss]
+		if (config.boss) {
+			config.boss = await config.boss()
+			parser.addModules(config.boss.modules)
 		}
 
-		// Build the final module structure and set up our local state
+		// Add the job modules in and finalise the module structure
+		parser.addModules(config.job.modules)
 		parser.buildModules()
-		this.setState({
-			config: {
-				job: jobConfig,
-				boss: undefined,
-			},
-			parser: parser,
-		})
+
+		// Push all that into state
+		this.setState({config, parser})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
