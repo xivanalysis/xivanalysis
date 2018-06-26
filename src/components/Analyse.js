@@ -48,7 +48,7 @@ class Analyse extends Component {
 		super(props)
 
 		this.state = {
-			config: null,
+			config: {},
 			parser: null,
 			complete: false,
 			activeSegment: 0,
@@ -142,9 +142,9 @@ class Analyse extends Component {
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
 
-		// Get the config for the parser, stop now if there is none.
-		const configImport = AVAILABLE_CONFIGS.JOBS[combatant.type]
-		if (!configImport) {
+		// Get the job config for the parser, stop now if there is none.
+		const jobConfigImport = AVAILABLE_CONFIGS.JOBS[combatant.type]
+		if (!jobConfigImport) {
 			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
 				job: JOBS[combatant.type].name,
 			})))
@@ -152,13 +152,28 @@ class Analyse extends Component {
 		}
 
 		// The config exists - import it
-		const config = await configImport()
+		const jobConfig = await jobConfigImport()
 
-		// Create a parser instance, add modules, then build the final module structure
+		// Create the base parser instance and add the job modules in
 		const parser = new Parser(report, fight, combatant)
-		parser.addModules(config.modules)
+		parser.addModules(jobConfig.modules)
+
+		// Check if there's modules for this fight, add them if there are
+		const bossConfigImport = AVAILABLE_CONFIGS.BOSSES[fight.boss]
+		if (bossConfigImport) {
+			const bossConfig = await bossConfigImport()
+			parser.addModules(bossConfig.modules)
+		}
+
+		// Build the final module structure and set up our local state
 		parser.buildModules()
-		this.setState({config: config, parser: parser})
+		this.setState({
+			config: {
+				job: jobConfig,
+				boss: undefined,
+			},
+			parser: parser,
+		})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
@@ -216,7 +231,7 @@ class Analyse extends Component {
 						<Header.Content>
 							{job.name}
 							<Header.Subheader>
-								Patch <strong>{config.patchCompatibility}</strong>
+								Patch <strong>{config.job.patchCompatibility}</strong>
 							</Header.Subheader>
 						</Header.Content>
 					</Header>

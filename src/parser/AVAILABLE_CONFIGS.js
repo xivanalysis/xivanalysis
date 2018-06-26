@@ -1,15 +1,18 @@
 import JOBS from 'data/JOBS'
 
 // Pulling this handling out to reduce repetition below
-function importJobConfig(jobFolder) {
+function importConfig(folder) {
 	return () => import(
 		/* webpackChunkName: "[request]" */
-		`./${jobFolder}/CONFIG.js`
+		`./${folder}/CONFIG.js`
 	).then(exports => exports.default)
 }
 
 export default {
 	JOBS: {
-		[JOBS.SUMMONER.logType]: importJobConfig('jobs/smn'),
+		[JOBS.SUMMONER.logType]: importConfig('jobs/smn'),
+	},
+
+	BOSSES: {
 	},
 }
