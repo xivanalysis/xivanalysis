@@ -67,11 +67,12 @@ The parser is the meat of xivanalysis. Its primary job is to orchestrate modules
 The modules are split into a number of groups:
 
 - `core`: Unsurprisingly, the core system modules. These provide commonly-used functionality (see the section on dependency below), as well as job-agnostic modules such as "Don't die".
-- `[job]`: Each supported job has its own group of modules, that provide specialised analysis/information for that job.
+- `jobs/[job]`: Each supported job has its own group of modules, that provide specialised analysis/information for that job.
+- `bosses/[boss]`: Like jobs, some bosses have groups of modules, usually used to analyse unique fight mechanics, or provide concrete implementations that fflogs does not currently provide itself.
 
-The `core` module group is always loaded, followed by the modules for the job currently being analysed.
+Modules from `core` are loaded first, followed by bosses, then jobs.
 
-Each group of modules is contained in its own folder, alongside any other required files. Job-specific groups also require a `CONFIG.js`, which defines all required metadata for that job's analysis, including a reference to all the modules that should be loaded. These config files are referenced in `parser/jobs/AVAILABLE_JOBS.js`
+Each group of modules is contained in its own folder, alongside any other required files. All groups besides `core` also require a `CONFIG.js`, which defines all required metadata for their analysis, including a reference to all the modules that should be loaded. These config files are referenced in `parser/AVAILABLE_CONFIG.js`
 
 ### Modules
 
