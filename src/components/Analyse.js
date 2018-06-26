@@ -16,7 +16,7 @@ import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_JOBS from 'parser/AVAILABLE_JOBS'
+import AVAILABLE_JOBS from 'parser/jobs/AVAILABLE_JOBS'
 import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 

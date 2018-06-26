@@ -6,7 +6,7 @@ import {Header, Menu, Message, Segment} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_JOBS from 'parser/AVAILABLE_JOBS'
+import AVAILABLE_JOBS from 'parser/jobs/AVAILABLE_JOBS'
 import store from 'store'
 import {setGlobalError} from 'store/actions'
 
