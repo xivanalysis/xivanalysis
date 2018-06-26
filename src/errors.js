@@ -53,19 +53,6 @@ export class DidNotParticipateError extends GlobalError {
 	}
 }
 
-export class JobNotSupportedError extends GlobalError {
-	severity = SEVERITY.WARNING
-	message = 'Not supported.'
-	constructor(options) {
-		super(Object.assign({
-			job: '[Not Specified]',
-		}, options))
-	}
-	get detail() {
-		return `${this.job} is not currently supported. Sorry!`
-	}
-}
-
 export class UnknownApiError extends GlobalError {
 	detail = 'An error occured while requesting data from FFLogs. If this issue persists, let us know on Discord.'
 }
