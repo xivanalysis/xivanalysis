@@ -10,9 +10,14 @@ export default class AlwaysBeCasting extends Module {
 
 	// Just using this for the suggestion for now
 	on_complete() {
+		const numGcds = this.gcd.gcds.length
+		if (!numGcds) {
+			return
+		}
+
 		const fightDuration = this.parser.fightDuration - this.invuln.getUntargetableUptime()
 		// TODO: better method for getting gcd count
-		const gcdUptime = this.gcd.gcds.length * this.gcd.getEstimate()
+		const gcdUptime = numGcds * this.gcd.getEstimate()
 
 		this.checklist.add(new Rule({
 			name: 'Always be casting',
