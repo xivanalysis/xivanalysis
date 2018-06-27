@@ -92,6 +92,11 @@ export default class GlobalCooldown extends Module {
 		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
 		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
 
+		// If there's no GCDs, just return the max to stop this erroring out
+		if (!this.gcds.length) {
+			return MAX_GCD
+		}
+
 		// Mode seems to get best results. Using mean in case there's multiple modes.
 		const lengths = this.gcds.map(gcd => gcd.length)
 		let estimate = math.mean(math.mode(lengths))

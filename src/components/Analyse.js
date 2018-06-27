@@ -14,9 +14,10 @@ import {
 
 import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
-import JOBS from 'data/JOBS'
+import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
+import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 
 import styles from './Analyse.module.css'
@@ -47,7 +48,6 @@ class Analyse extends Component {
 		super(props)
 
 		this.state = {
-			config: null,
 			parser: null,
 			complete: false,
 			activeSegment: 0,
@@ -140,20 +140,30 @@ class Analyse extends Component {
 
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
+		// Build the base parser instance (implicitly loads core modules)
+		const parser = new Parser(report, fight, combatant)
 
-		// Get the config for the parser, stop now if there is none.
-		const config = AVAILABLE_CONFIGS.find(config => config.job.logType === combatant.type)
-		if (!config) {
-			this.props.dispatch(setGlobalError(new Errors.JobNotSupportedError({
-				job: JOBS[combatant.type].name,
-			})))
-			return
+		// Look up any modules we might want
+		const modules = {
+			job: AVAILABLE_MODULES.JOBS[combatant.type],
+			boss: AVAILABLE_MODULES.BOSSES[fight.boss],
 		}
 
-		// Grab the parser for the combatant and broadcast an init to the modules
-		const Parser = await config.parser()
-		const parser = new Parser(report, fight, combatant)
-		this.setState({config: config, parser: parser})
+		// Load any modules we've got
+		const modulePromises = []
+		const loadOrder = ['boss', 'job']
+		for (const group of loadOrder) {
+			if (!modules[group]) { continue }
+			modulePromises.push(modules[group]())
+		}
+		(await Promise.all(modulePromises)).forEach((loadedModules, index) => {
+			modules[loadOrder[index]] = loadedModules
+			parser.addModules(loadedModules)
+		})
+
+		// Finalise the module structure & push all that into state
+		parser.buildModules()
+		this.setState({parser})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?
@@ -185,7 +195,6 @@ class Analyse extends Component {
 
 	render() {
 		const {
-			config,
 			parser,
 			complete,
 			activeSegment,
@@ -200,18 +209,27 @@ class Analyse extends Component {
 		}
 
 		// Report's done, build output
-		// TODO: Need to cache results so re-render for menu and so on doesn't trigger a re-render of the entire parser
+		const job = JOBS[parser.player.type]
 		const results = this.getParserResults()
 
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
-					<Header className={styles.sidebar}>
-						<JobIcon job={config.job} set={1}/>
+					<Header className={styles.sidebar} attached="top">
+						<JobIcon job={job} set={1}/>
 						<Header.Content>
-							{config.job.name}
+							{job.name}
 							<Header.Subheader>
-								Patch <strong>{config.patchCompatibility}</strong>
+								{ROLES[job.role].name}
+							</Header.Subheader>
+						</Header.Content>
+					</Header>
+					<Header attached="bottom">
+						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
+						<Header.Content>
+							{parser.fight.name}
+							<Header.Subheader>
+								{parser.fight.zoneName}
 							</Header.Subheader>
 						</Header.Content>
 					</Header>

@@ -12,7 +12,7 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 
 - [Getting started](#getting-started)
 - [Structure of the parser](#structure-of-the-parser)
-	- [Parsers and config](#parsers-and-config)
+	- [Module groups](#module-groups)
 	- [Modules](#modules)
 
 ## Getting Started
@@ -60,16 +60,19 @@ yarn build
 
 ## Structure of the parser
 
-The parser is the meat of xivanalysis. Via modules (which we'll talk about in a bit), it reads through the event data, and generates the final analysis.
+The parser is the meat of xivanalysis. Its primary job is to orchestrate modules, which read event data and output the final analysis.
 
-### Parsers and config
+### Module groups
 
-Digging down a little, the "parser" is actually comprised of multiple parsers:
+The modules are split into a number of groups:
 
-- `core`: The base implementation that's used by all the others. It includes all the required parser handling, base classes for job-specific code to extend, and job-agnostic modules such as "Don't die".
-- `[job]`: Job-specific parser instances that provide specialised analysis and information. These extend the core implementation, providing their own modules.
+- `core`: Unsurprisingly, the core system modules. These provide commonly-used functionality (see the section on dependency below), as well as job-agnostic modules such as "Don't die".
+- `jobs/[job]`: Each supported job has its own group of modules, that provide specialised analysis/information for that job.
+- `bosses/[boss]`: Like jobs, some bosses have groups of modules, usually used to analyse unique fight mechanics, or provide concrete implementations that fflogs does not currently provide itself.
 
-Each parser, including `core`, is contained in its own folder, along with any other files required. In addition, each job-specific parser requires a `CONFIG.js` which should define metadata about the parser, and provide a link between the `data/JOBS` entry and the `Parser` class itself.
+Modules from `core` are loaded first, followed by bosses, then jobs.
+
+Each group of modules is contained in its own folder, alongside any other required files. All groups besides `core` also require an `index.js`, which provides a reference to all the modules that should be loaded. These index files are referenced in `parser/AVAILABLE_MODULES.js`
 
 ### Modules
 
@@ -92,14 +95,14 @@ export default class HelloWorld extends Module {
 
 Modules receive event data via function calls, called in the following order:
 
-1. on\_event(event)
-2. on\_\[event type\](event)
-3. on\_\[event type\]\_\[by|to\]Player\[Pet\]?(event)
+1. `on_event(event)`
+2. `on_[event type](event)`
+3. `on_[event type]_[by|to]Player[Pet]?(event)`
 
 The event types and data are straight from fflogs - you can inspect the request to see more info.
 
 To reduce code duplication, modules have a dependency system in place, that lets them reference other modules. Modules are guaranteed to run _before_ anything that depends on them (***NOTE:*** *this implicitly prevents circular dependencies - they will throw an error*).
 
-The object key a module is assigned to in the parser's `jobModules` property (or `defaultModules` in `core`) is the name that should be used to reference dependencies. Any depenencies specified for a module are then made available at runtime as `this.[name]`.
+The object key a module is assigned to in its `index.js` (or `defaultModules` in `core/Parser`) is the name that should be used to reference dependencies. Any dependencies specified for a module are then made available at runtime as `this.[name]`.
 
-This only covers the basics of modules, however. If you'd like to find out more, I would highly suggest checking the modules for the `core` and `smn` parsers - they should provide ample examples of what can be done.
+This only covers the basics of modules, however. If you'd like to find out more, I would highly suggest checking the modules for the `core` and `jobs/smn` groups - they should provide ample examples of what can be done.

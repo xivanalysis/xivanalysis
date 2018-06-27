@@ -58,8 +58,10 @@ export default class Weaving extends Module {
 	}
 
 	on_complete() {
-		// Run a cleanup
-		this._saveIfBad()
+		// If there's been at least one gcd, run a cleanup on any remnant data
+		if (this._gcdEvent) {
+			this._saveIfBad()
+		}
 
 		// Few triples is medium, any more is major
 		const badWeaves = this._badWeaves
