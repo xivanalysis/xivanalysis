@@ -10,21 +10,14 @@ import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
 
 export default {
-	// contributors?
-
-	// TODO: This might belong in the about module in some manner
-	patchCompatibility: '4.3',
-
-	modules: {
-		about: About,
-		aetherflow: Aetherflow,
-		bahamut: Bahamut,
-		dots: DoTs,
-		dwt: DWT,
-		gauge: Gauge,
-		pets: Pets,
-		rouse: Rouse,
-		ruin2: Ruin2,
-		ruin4: Ruin4,
-	},
+	about: About,
+	aetherflow: Aetherflow,
+	bahamut: Bahamut,
+	dots: DoTs,
+	dwt: DWT,
+	gauge: Gauge,
+	pets: Pets,
+	rouse: Rouse,
+	ruin2: Ruin2,
+	ruin4: Ruin4,
 }

@@ -16,7 +16,7 @@ import {fflogsApi} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
-import AVAILABLE_CONFIGS from 'parser/AVAILABLE_CONFIGS'
+import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 
@@ -48,7 +48,6 @@ class Analyse extends Component {
 		super(props)
 
 		this.state = {
-			config: {},
 			parser: null,
 			complete: false,
 			activeSegment: 0,
@@ -144,27 +143,27 @@ class Analyse extends Component {
 		// Build the base parser instance (implicitly loads core modules)
 		const parser = new Parser(report, fight, combatant)
 
-		// Look up any config we might want
-		const config = {
-			job: AVAILABLE_CONFIGS.JOBS[combatant.type],
-			boss: AVAILABLE_CONFIGS.BOSSES[fight.boss],
+		// Look up any modules we might want
+		const modules = {
+			job: AVAILABLE_MODULES.JOBS[combatant.type],
+			boss: AVAILABLE_MODULES.BOSSES[fight.boss],
 		}
 
 		// Load any modules we've got
-		const configPromises = []
+		const modulePromises = []
 		const loadOrder = ['boss', 'job']
 		for (const group of loadOrder) {
-			if (!config[group]) { continue }
-			configPromises.push(config[group]())
+			if (!modules[group]) { continue }
+			modulePromises.push(modules[group]())
 		}
-		(await Promise.all(configPromises)).forEach((loadedConfig, index) => {
-			config[loadOrder[index]] = loadedConfig
-			parser.addModules(loadedConfig.modules)
+		(await Promise.all(modulePromises)).forEach((loadedModules, index) => {
+			modules[loadOrder[index]] = loadedModules
+			parser.addModules(loadedModules)
 		})
 
 		// Finalise the module structure & push all that into state
 		parser.buildModules()
-		this.setState({config, parser})
+		this.setState({parser})
 
 		// TODO: Should this be somewhere else?
 		// TODO: Looks like we don't need to paginate events requests any more... sure?

@@ -1,7 +1,7 @@
 import JOBS from 'data/JOBS'
 
 // Pulling this handling out to reduce repetition below
-function importConfig(folder) {
+function importModules(folder) {
 	return () => import(
 		/* webpackChunkName: "[request]" */
 		`./${folder}`
@@ -10,7 +10,7 @@ function importConfig(folder) {
 
 export default {
 	JOBS: {
-		[JOBS.SUMMONER.logType]: importConfig('jobs/smn'),
+		[JOBS.SUMMONER.logType]: importModules('jobs/smn'),
 	},
 
 	BOSSES: {
