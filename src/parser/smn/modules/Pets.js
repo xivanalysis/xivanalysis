@@ -191,7 +191,7 @@ export default class Pets extends Module {
 		if (noPetUptimePercent > 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `No pet summoned for ${noPetUptimePercent}% of the fight. (<1% is recommended)`,
+				why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
 				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				content: <Fragment>
 					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
