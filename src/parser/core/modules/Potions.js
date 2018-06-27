@@ -6,7 +6,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Infusions are 30s, standard are 15.
 // Using 20 so lag/slight timing offsets don't miss the trigger
-const SHORT_POTION_THRESHOLD = 534
+const SHORT_POTION_THRESHOLD = 20
 
 export default class Potions extends Module {
 	static dependencies = [
