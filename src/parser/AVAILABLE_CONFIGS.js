@@ -4,7 +4,7 @@ import JOBS from 'data/JOBS'
 function importConfig(folder) {
 	return () => import(
 		/* webpackChunkName: "[request]" */
-		`./${folder}/CONFIG.js`
+		`./${folder}`
 	).then(exports => exports.default)
 }
 
