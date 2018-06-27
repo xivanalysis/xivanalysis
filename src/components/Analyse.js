@@ -215,7 +215,10 @@ class Analyse extends Component {
 		return <Container>
 			<Grid>
 				<Grid.Column width={4}>
-					<Header className={styles.sidebar} attached="top">
+					<Header
+						className={[styles.sidebar, styles.header]}
+						attached="top"
+					>
 						<JobIcon job={job} set={1}/>
 						<Header.Content>
 							{job.name}
@@ -224,7 +227,7 @@ class Analyse extends Component {
 							</Header.Subheader>
 						</Header.Content>
 					</Header>
-					<Header attached="bottom">
+					<Header className={styles.header} attached="bottom">
 						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
 						<Header.Content>
 							{parser.fight.name}

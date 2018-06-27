@@ -2,6 +2,14 @@
 	margin-top: 1em !important;
 }
 
+.header {
+	display: flex;
+}
+
+.header > img {
+	align-self: center;
+}
+
 .resultsContainer {
 	margin-bottom: 25vh;
 }
