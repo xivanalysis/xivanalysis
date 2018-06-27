@@ -9,6 +9,7 @@ import Death from './modules/Death'
 import Enemies from './modules/Enemies'
 import GlobalCooldown from './modules/GlobalCooldown'
 import Invulnerability from './modules/Invulnerability'
+import Potions from './modules/Potions'
 import PrecastStatus from './modules/PrecastStatus'
 import Suggestions from './modules/Suggestions'
 import Timeline from './modules/Timeline'
@@ -29,6 +30,7 @@ class Parser {
 		enemies: Enemies,
 		gcd: GlobalCooldown,
 		invuln: Invulnerability,
+		potions: Potions,
 		precastStatus: PrecastStatus,
 		suggestions: Suggestions,
 		timeline: Timeline,

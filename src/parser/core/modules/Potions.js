@@ -1,0 +1,56 @@
+import React, {Fragment} from 'react'
+
+import STATUSES from 'data/STATUSES'
+import Module from 'parser/core/Module'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+// Infusions are 30s, standard are 15.
+// Using 20 so lag/slight timing offsets don't miss the trigger
+const SHORT_POTION_THRESHOLD = 534
+
+export default class Potions extends Module {
+	static dependencies = [
+		'suggestions',
+	]
+
+	_start = null
+	_usingShortPotion = false
+
+	on_applybuff_toPlayer(event) {
+		// Only care about potions funnily enough
+		if (event.ability.guid !== STATUSES.MEDICATED.id) {
+			return
+		}
+
+		// Track the application of the pot
+		this._start = event.timestamp
+	}
+
+	on_removebuff_toPlayer(event) {
+		// Only care about potions funnily enough
+		if (event.ability.guid !== STATUSES.MEDICATED.id) {
+			return
+		}
+
+		const potionLength = (event.timestamp - this._start) / 1000
+		if (potionLength <= SHORT_POTION_THRESHOLD) {
+			this._usingShortPotion = true
+		}
+	}
+
+	on_complete() {
+		// Not checking pot timing on completion, need a concrete end time for that.
+
+		if (this._usingShortPotion) {
+			this.suggestions.add(new Suggestion({
+				// TODO: Would be nice to be able to suggest the correct pot for their current class, inc. icon...
+				icon: 'https://secure.xivdb.com/img/game_local/2/22450.jpg',
+				content: <Fragment>
+					It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <em>twice</em> the duration. It&apos;s likely the shorter duration will have caused important skills to miss the damage boost.
+				</Fragment>,
+				why: 'Used a short potion instead of an infusion.',
+				severity: SEVERITY.MEDIUM,
+			}))
+		}
+	}
+}
