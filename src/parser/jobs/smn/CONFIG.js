@@ -1,13 +1,13 @@
-import About from './modules/About'
-import Aetherflow from './modules/Aetherflow'
-import Bahamut from './modules/Bahamut'
-import DoTs from './modules/DoTs'
-import DWT from './modules/DWT'
-import Gauge from './modules/Gauge'
-import Pets from './modules/Pets'
-import Rouse from './modules/Rouse'
-import Ruin2 from './modules/Ruin2'
-import Ruin4 from './modules/Ruin4'
+import About from './About'
+import Aetherflow from './Aetherflow'
+import Bahamut from './Bahamut'
+import DoTs from './DoTs'
+import DWT from './DWT'
+import Gauge from './Gauge'
+import Pets from './Pets'
+import Rouse from './Rouse'
+import Ruin2 from './Ruin2'
+import Ruin4 from './Ruin4'
 
 export default {
 	// contributors?
