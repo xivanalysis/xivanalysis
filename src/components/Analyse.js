@@ -216,7 +216,7 @@ class Analyse extends Component {
 			<Grid>
 				<Grid.Column width={4}>
 					<Header
-						className={[styles.sidebar, styles.header]}
+						className={[styles.sidebar, styles.header].join(' ')}
 						attached="top"
 					>
 						<JobIcon job={job} set={1}/>
