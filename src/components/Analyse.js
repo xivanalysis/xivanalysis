@@ -156,7 +156,7 @@ class Analyse extends Component {
 			if (!modules[group]) { continue }
 			modulePromises.push(modules[group]())
 		}
-		(await Promise.all(modulePromises)).forEach((loadedModules, index) => {
+		(await Promise.all(modulePromises)).forEach(({default: loadedModules}, index) => {
 			modules[loadOrder[index]] = loadedModules
 			parser.addModules(loadedModules)
 		})
