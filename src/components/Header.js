@@ -1,10 +1,13 @@
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
-import {Container, Menu} from 'semantic-ui-react'
+import withSizes from 'react-sizes'
+import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
-import {getPathMatch} from 'utilities'
+import {compose, getPathMatch} from 'utilities'
+
+import styles from './Header.module.css'
 
 class Header extends Component {
 	static propTypes = {
@@ -16,6 +19,7 @@ class Header extends Component {
 			title: PropTypes.string,
 			code: PropTypes.string,
 		}),
+		collapseMenu: PropTypes.bool.isRequired,
 	}
 
 	render() {
@@ -76,14 +80,50 @@ class Header extends Component {
 		}
 
 		const onHome = pathname === '/'
+		const collapseMenu = this.props.collapseMenu && !onHome
 
 		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
 			<Container>
-				<Menu.Item as={Link} to="/" header>
-					<img src={process.env.PUBLIC_URL + '/logo.png'} style={{height: 20, width: 'auto', marginRight: '0.5em'}} alt="logo"/>
-					xivanalysis
-				</Menu.Item>
-				{crumbs.map(crumb => <Menu.Item key={crumb.url} as={Link} to={crumb.url}>{crumb.title}</Menu.Item>)}
+				{collapseMenu || <Fragment>
+					<Menu.Item as={Link} to="/" header>
+						<img src={process.env.PUBLIC_URL + '/logo.png'} className={styles.logo} alt="logo"/>
+						xivanalysis
+					</Menu.Item>
+
+					{crumbs.map(crumb => <Menu.Item
+						key={crumb.url}
+						as={Link}
+						to={crumb.url}
+					>
+						{crumb.title}
+					</Menu.Item>)}
+				</Fragment>}
+
+				{collapseMenu && <Dropdown
+					text={<Fragment>
+						<img
+							src={process.env.PUBLIC_URL + '/logo.png'}
+							className={styles.logo}
+							style={{verticalAlign: 'middle'}}
+							alt="logo"
+						/>
+						<strong>xivanalysis</strong>
+					</Fragment>}
+					className="link item"
+				>
+					<Dropdown.Menu>
+						<Dropdown.Item as={Link} to="/">
+							Home
+						</Dropdown.Item>
+						{crumbs.map(crumb => <Dropdown.Item
+							key={crumb.url}
+							as={Link}
+							to={crumb.url}
+						>
+							{crumb.title}
+						</Dropdown.Item>)}
+					</Dropdown.Menu>
+				</Dropdown>}
 
 				<Menu.Menu position="right">
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
@@ -94,8 +134,16 @@ class Header extends Component {
 	}
 }
 
+const mapSizesToProps = ({width}) => ({
+	collapseMenu: width < 992,
+})
+
 const mapStateToProps = state => ({
 	report: state.report,
 })
 
-export default withRouter(connect(mapStateToProps)(Header))
+export default compose(
+	withRouter,
+	withSizes(mapSizesToProps),
+	connect(mapStateToProps),
+)(Header)
