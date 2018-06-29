@@ -2,6 +2,7 @@
 	position: relative;
 	background: none !important;
 	overflow: hidden;
+	border: 0 !important;
 }
 
 .groupHeaderBackground {
@@ -13,6 +14,7 @@
 	height: 130%;
 	z-index: -1;
 
+	background: var(--grey);
 	background-size: 110%;
 	background-position: center;
 	filter: brightness(60%) blur(5px);
