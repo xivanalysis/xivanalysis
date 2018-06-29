@@ -214,7 +214,7 @@ class Analyse extends Component {
 
 		return <Container>
 			<Grid>
-				<Grid.Column width={4}>
+				<Grid.Column mobile={16} tablet={4} computer={4}>
 					<Header
 						className={[styles.sidebar, styles.header].join(' ')}
 						attached="top"
@@ -256,7 +256,8 @@ class Analyse extends Component {
 						</Menu>
 					</Sticky>
 				</Grid.Column>
-				<Grid.Column width={12}>
+
+				<Grid.Column mobile={16} tablet={12} computer={12}>
 					<div ref={this.stickyContext} className={styles.resultsContainer}>
 						{results.map((result, index) =>
 							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
