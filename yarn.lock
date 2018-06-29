@@ -7326,6 +7326,13 @@ react-scroll@^1.7.9:
     lodash.throttle "^4.1.1"
     prop-types "^15.5.8"
 
+react-sizes@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/react-sizes/-/react-sizes-1.0.4.tgz#7f09beddf972afe6f8662a0ffe446baac35f6bc5"
+  dependencies:
+    lodash.throttle "^4.1.1"
+    prop-types "^15.6.0"
+
 react-visjs-timeline@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/react-visjs-timeline/-/react-visjs-timeline-1.5.0.tgz#4f6769edc90c29494a2561791be7576d11e6eb00"

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Scroll from 'react-scroll'
+import withSizes from 'react-sizes'
 import {
 	Container,
 	Grid,
@@ -38,6 +39,7 @@ class Analyse extends Component {
 		report: PropTypes.shape({
 			loading: PropTypes.bool.isRequired,
 		}),
+		showMenu: PropTypes.bool.isRequired,
 	}
 
 	stickyContext = null
@@ -214,7 +216,7 @@ class Analyse extends Component {
 
 		return <Container>
 			<Grid>
-				<Grid.Column mobile={16} tablet={4} computer={4}>
+				<Grid.Column mobile={16} computer={4}>
 					<Header
 						className={[styles.sidebar, styles.header].join(' ')}
 						attached="top"
@@ -237,7 +239,7 @@ class Analyse extends Component {
 						</Header.Content>
 					</Header>
 
-					<Sticky context={this.stickyContext.current} offset={60}>
+					{this.props.showMenu && <Sticky context={this.stickyContext.current} offset={60}>
 						<Menu vertical pointing secondary fluid>
 							{results.map((result, index) => <Menu.Item
 								// Menu.Item props
@@ -254,10 +256,10 @@ class Analyse extends Component {
 								{result.name /* Doing manually so SUI doesn't modify my text */}
 							</Menu.Item>)}
 						</Menu>
-					</Sticky>
+					</Sticky>}
 				</Grid.Column>
 
-				<Grid.Column mobile={16} tablet={12} computer={12}>
+				<Grid.Column mobile={16} computer={12}>
 					<div ref={this.stickyContext} className={styles.resultsContainer}>
 						{results.map((result, index) =>
 							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
@@ -272,8 +274,12 @@ class Analyse extends Component {
 	}
 }
 
+const mapSizesToProps = ({width}) => ({
+	showMenu: width >= 992,
+})
+
 const mapStateToProps = state => ({
 	report: state.report,
 })
 
-export default connect(mapStateToProps)(Analyse)
+export default withSizes(mapSizesToProps)(connect(mapStateToProps)(Analyse))

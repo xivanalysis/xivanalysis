@@ -17,6 +17,7 @@
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scroll": "^1.7.9",
+    "react-sizes": "^1.0.4",
     "react-visjs-timeline": "^1.5.0",
     "redux": "^4",
     "redux-thunk": "^2.2.0",
