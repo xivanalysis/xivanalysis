@@ -70,15 +70,12 @@ export default class Bahamut extends Module {
 	}
 
 	output() {
-		const expanded = []
 		const panels = this._history.map((sb, index) => {
-			const wws = sb.petCasts.filter(cast => cast.ability.guid === ACTIONS.WYRMWAVE.id)
-			const ams = sb.petCasts.filter(cast => cast.ability.guid === ACTIONS.AKH_MORN.id)
-
-			// If there's ghosts, expand by default
-			if (sb.petCasts.some(cast => cast.ghostChance > GHOST_CHANCE.NONE)) {
-				expanded.push(index)
-			}
+			const counts = {}
+			sb.petCasts.forEach(cast => {
+				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
+				obj[cast.ghostChance] = (obj[cast.ghostChance] || 0) + 1
+			})
 
 			return {
 				title: {
@@ -86,7 +83,8 @@ export default class Bahamut extends Module {
 					content: <Fragment>
 						{this.parser.formatTimestamp(sb.timestamp)}
 						&nbsp;-&nbsp;
-						{wws.length} WWs, {ams.length} AMs
+						{this.renderHeaderCount(counts[ACTIONS.WYRMWAVE.id])} WWs,&nbsp;
+						{this.renderHeaderCount(counts[ACTIONS.AKH_MORN.id])} AMs
 					</Fragment>,
 				},
 				content: {
@@ -111,10 +109,20 @@ export default class Bahamut extends Module {
 			<Accordion
 				exclusive={false}
 				panels={panels}
-				defaultActiveIndex={expanded}
 				styled
 				fluid
 			/>
 		</Fragment>
+	}
+
+	renderHeaderCount(counts) {
+		return [
+			GHOST_CHANCE.NONE,
+			GHOST_CHANCE.LIKELY,
+			GHOST_CHANCE.ABSOLUTE,
+		].map((chance, i) => counts[chance] && <Fragment key={chance}>
+			{i > 0 && '/'}
+			<span className={GHOST_CLASSNAME[chance]}>{counts[chance]}</span>
+		</Fragment>)
 	}
 }
