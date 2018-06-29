@@ -33,7 +33,7 @@ export default class Gauge extends Module {
 
 	// Track lost stacks
 	_lostAetherflow = 0
-	__lostDreadwyrmAether = 0
+	_lostDreadwyrmAether = 0
 
 	// First DWT should be rushed. Also used for end-of-fight rush
 	_rushing = true
