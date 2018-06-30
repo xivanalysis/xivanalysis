@@ -14,6 +14,7 @@ const FESTER_STATUSES = [
 
 export default class Aetherflow extends Module {
 	static dependencies = [
+		'aoe', // Ensure AoE runs cleanup before us
 		'checklist',
 		'cooldowns',
 		'enemies',
@@ -21,17 +22,11 @@ export default class Aetherflow extends Module {
 		'suggestions',
 	]
 
-	_painflareCast = null
-	_painflareHits = 0
-
 	_badFesters = []
 	_badPainflares = []
 
 	on_cast_byPlayer(event) {
 		const actionId = event.ability.guid
-
-		// Process any painflare hits
-		this._processPainflare()
 
 		// Make sure all festers have the required dots up for Festers
 		if (actionId === ACTIONS.FESTER.id) {
@@ -41,26 +36,20 @@ export default class Aetherflow extends Module {
 				this._badFesters.push(event)
 			}
 		}
-
-		// When PF is cast, save the event in case we need it
-		if (actionId === ACTIONS.PAINFLARE.id) {
-			this._painflareCast = event
-		}
 	}
 
-	on_damage_byPlayer(event) {
-		const actionId = event.ability.guid
+	on_aoedamage_byPlayer(event) {
+		if (event.ability.guid !== ACTIONS.PAINFLARE.id) {
+			return
+		}
 
-		// If it was PF hit, add it to the counter
-		if (actionId === ACTIONS.PAINFLARE.id) {
-			this._painflareHits ++
+		// Only fault single target PFs _outside_ rushes.
+		if (event.hits.length <= 1 && !this.gauge.isRushing()) {
+			this._badPainflares.push(event.castEvent)
 		}
 	}
 
 	on_complete() {
-		// Clean up any PF hits in case it was the last skill cast
-		this._processPainflare()
-
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
 			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively</Fragment>,
@@ -101,21 +90,5 @@ export default class Aetherflow extends Module {
 				</Fragment>,
 			}))
 		}
-	}
-
-	_processPainflare() {
-		// Don't need to do anything if it wasn't cast.
-		if (!this._painflareCast) {
-			return
-		}
-
-		// Only fault single target PFs _outside_ rushes.
-		if (this._painflareHits <= 1 && !this.gauge.isRushing()) {
-			this._badPainflares.push(this._painflareCast)
-		}
-
-		// Reset the state for the next PF (if there is any)
-		this._painflareCast = null
-		this._painflareHits = 0
 	}
 }
