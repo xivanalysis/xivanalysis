@@ -20,30 +20,37 @@ export default class GlobalCooldown extends Module {
 
 	gcds = []
 
-	// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
-	on_begincast_byPlayer(event) {
-		const action = getAction(event.ability.guid)
-		if (!action.onGcd) { return }
+	// Using normalise so the estimate can be used throughout the parse
+	normalise(events) {
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
 
-		// Can I check for cancels?
+			// Only care about player GCDs
+			if (!this.parser.byPlayer(event) || !event.ability) { continue }
+			const action = getAction(event.ability.guid)
+			if (!action.onGcd) { continue }
 
-		this._castingEvent = event
-	}
+			// eslint-disable-next-line default-case
+			switch (event.type) {
+			// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
+			case 'begincast':
+				// Can I check for cancels?
+				this._castingEvent = event
+				break
 
-	on_cast_byPlayer(event) {
-		const action = getAction(event.ability.guid)
+			case 'cast':
+				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
+					this.saveGcd(this._castingEvent)
+				} else {
+					this.saveGcd(event)
+				}
 
-		// Ignore non-GCD casts
-		if (!action.onGcd) { return }
-
-		const castingEvent = this._castingEvent
-		this._castingEvent = null
-		if (castingEvent && castingEvent.ability.guid === action.id) {
-			this.saveGcd(castingEvent)
-			return
+				this._castingEvent = null
+				break
+			}
 		}
 
-		this.saveGcd(event)
+		return events
 	}
 
 	on_complete() {
