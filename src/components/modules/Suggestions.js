@@ -46,7 +46,7 @@ class Suggestions extends Component {
 			/>}
 			<div className={styles.items}>
 				{suggestions.map((suggestion, index) => <div key={index} className={styles.item}>
-					<img src={suggestion.icon}/>
+					<img src={suggestion.icon} alt=""/>
 					<div>
 						{suggestion.content}
 						<div className={styles.extra}>
