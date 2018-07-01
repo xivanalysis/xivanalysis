@@ -35,6 +35,7 @@ export default class DWT extends Module {
 	_ctIndex = null
 
 	_missedGcds = 0
+	_missedDeathflares = 0
 
 	on_cast_byPlayer(event) {
 		const actionId = event.ability.guid
@@ -125,6 +126,17 @@ export default class DWT extends Module {
 				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,
 			}))
 		}
+
+		if (this._missedDeathflares) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DEATHFLARE.icon,
+				content: <Fragment>
+					Make sure you always end <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> with a <ActionLink {...ACTIONS.DEATHFLARE}/>. Failing to do so is a huge damage loss.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: `${this._missedDeathflares} DWTs with no Deathflare.`,
+			}))
+		}
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
@@ -133,6 +145,11 @@ export default class DWT extends Module {
 		this._history.push(this._dwt)
 
 		this.castTime.reset(this._ctIndex)
+
+		// ...don't miss deathflare k
+		if (dfHits === 0) {
+			this._missedDeathflares ++
+		}
 
 		// If they're rushing, don't fault them for short DWTs
 		// Even a single additional hit makes a 0-gcd dwt worth it :eyes:
