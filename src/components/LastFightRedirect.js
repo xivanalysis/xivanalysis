@@ -37,7 +37,7 @@ class LastFightRedirect extends Component {
 		} = this.props
 
 		// Show a loader if we're still loading the main report
-		if (!report || report.loading) {
+		if (!report || report.code !== params.code || report.loading) {
 			return <Container>
 				<Loader active>Loading report</Loader>
 			</Container>
