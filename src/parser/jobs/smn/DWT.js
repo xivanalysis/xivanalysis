@@ -14,11 +14,16 @@ const CORRECT_GCDS = [
 	ACTIONS.TRI_BIND.id,
 ]
 
+const DWT_LENGTH = 16000
+const OGCD_LENGTH = 750
+
 export default class DWT extends Module {
 	static dependencies = [
+		'aoe', // Ensure AoE runs cleanup before us
 		'castTime',
 		'gauge',
 		'gcd',
+		'invuln',
 		'suggestions',
 	]
 	name = 'Dreadwyrm Trance'
@@ -29,14 +34,7 @@ export default class DWT extends Module {
 
 	_ctIndex = null
 
-	on_removebuff_byPlayer(event) {
-		if (event.ability.guid !== STATUSES.DREADWYRM_TRANCE.id) {
-			return
-		}
-
-		// Stop tracking and save to history
-		this.stopAndSave()
-	}
+	_missedGcds = 0
 
 	on_cast_byPlayer(event) {
 		const actionId = event.ability.guid
@@ -63,25 +61,40 @@ export default class DWT extends Module {
 		this._dwt.casts.push(event)
 	}
 
+	on_aoedamage_byPlayer(event) {
+		if (event.ability.guid !== ACTIONS.DEATHFLARE.id) {
+			return
+		}
+
+		this._stopAndSave(event.hits.length, event.castEvent.timestamp)
+	}
+
+	on_removebuff_byPlayer(event) {
+		if (event.ability.guid !== STATUSES.DREADWYRM_TRANCE.id) {
+			return
+		}
+
+		// Only save if there's no DF - the aoedamage will handle DWTs w/ DF (hopefully all of them lmao)
+		if (!this._dwt.casts.some(cast => cast.ability.guid === ACTIONS.DEATHFLARE.id)) {
+			this._stopAndSave(0)
+		}
+	}
+
 	on_complete() {
 		// Clean up any existing casts
 		if (this._active) {
-			this.stopAndSave()
+			this._stopAndSave(0)
 		}
 
 		// Run some analytics for suggestions
 		let badGcds = 0
-		let totalGcds = 0
-		let fullDwt = 0
 		this._history.forEach(dwt => {
-			const gcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
-
-			if (!dwt.rushing) {
-				fullDwt++
-				totalGcds += gcds.length
-			}
-
-			badGcds += gcds.filter(cast => !CORRECT_GCDS.includes(cast.ability.guid)).length
+			badGcds += dwt.casts
+				.filter(cast =>
+					getAction(cast.ability.guid).onGcd &&
+					!CORRECT_GCDS.includes(cast.ability.guid)
+				)
+				.length
 		})
 
 		// Suggestions
@@ -96,22 +109,54 @@ export default class DWT extends Module {
 			}))
 		}
 
-		// DWT length is 16s, taking 1.5 off for two ogcds - DWT to open, and DF to close
-		const possibleGcds = Math.floor((16000 - 1500) / this.gcd.getEstimate()) + 1
+		if (this._missedGcds) {
+			// Grabbing the full possible gcd count for suggestion text
+			const possibleGcds = Math.floor(
+				(DWT_LENGTH - OGCD_LENGTH * 2) /
+				this.gcd.getEstimate()
+			) + 1
 
-		// Work out how many they could have technically got (outside rushes)
-		// TODO: Consider ending early for cleave and debuffs like trick
-		const aimForGcds = fullDwt * possibleGcds
-		console.log(totalGcds, aimForGcds, fullDwt, possibleGcds)
-		// TODO: Output
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DREADWYRM_TRANCE.icon,
+				content: <Fragment>
+					At your current GCD length, you should be able to hit <strong>{possibleGcds}</strong> GCDs during each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>. Avoid cutting DWT short unless the boss is about to become invulnerable, you would be delaying an <ActionLink {...ACTIONS.AETHERFLOW}/> cast, or you are able to cleave multiple enemies with <ActionLink {...ACTIONS.DEATHFLARE}/>.
+				</Fragment>,
+				severity: this._missedGcds < 10? SEVERITY.MINOR : SEVERITY.MEDIUM,
+				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,
+			}))
+		}
 	}
 
-	stopAndSave() {
+	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
 		this._active = false
-		this._dwt.end = this.parser.currentTimestamp
+		this._dwt.end = endTime
 		this._history.push(this._dwt)
 
 		this.castTime.reset(this._ctIndex)
+
+		// If they're rushing, don't fault them for short DWTs
+		// Even a single additional hit makes a 0-gcd dwt worth it :eyes:
+		if (this.gauge.isRushing() || dfHits > 1) {
+			return
+		}
+
+		// Don't want to fault people for 'missing' gcds on invuln targets
+		const invulnTime = this.invuln.getInvulnerableUptime(
+			'all',
+			this._dwt.start,
+			this._dwt.start + DWT_LENGTH
+		)
+		// Taking off two ogcds - DWT to open, and DF to close
+		const availTime = DWT_LENGTH - invulnTime - OGCD_LENGTH*2
+
+		// The last gcd only needs to fit the instant cast in, hence the +1
+		const possibleGcds = Math.floor(availTime / this.gcd.getEstimate()) + 1
+
+		// Check the no. GCDs actually cast
+		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+
+		// Eyy, got there. Save out the details for now.
+		this._missedGcds += possibleGcds - gcds.length
 	}
 
 	activeAt(time) {
