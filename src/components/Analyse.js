@@ -20,6 +20,7 @@ import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
+import {compose} from 'utilities'
 
 import styles from './Analyse.module.css'
 
@@ -282,4 +283,7 @@ const mapStateToProps = state => ({
 	report: state.report,
 })
 
-export default withSizes(mapSizesToProps)(connect(mapStateToProps)(Analyse))
+export default compose(
+	withSizes(mapSizesToProps),
+	connect(mapStateToProps),
+)(Analyse)
