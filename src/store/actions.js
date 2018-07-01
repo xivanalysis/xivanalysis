@@ -21,7 +21,11 @@ export const fetchReport = (code) => async dispatch => {
 
 	let response = null
 	try {
-		response = await fflogsApi.get('/report/fights/' + code)
+		response = await fflogsApi.get(`/report/fights/${code}`, {
+			params: {
+				translate: true,
+			},
+		})
 	} catch (e) {
 		// Something's gone wrong, clear report status then dispatch an error
 		dispatch(setReport(null))
