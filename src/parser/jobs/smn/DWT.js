@@ -119,7 +119,7 @@ export default class DWT extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				content: <Fragment>
-					At your current GCD length, you should be able to hit <strong>{possibleGcds}</strong> GCDs during each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>. Avoid cutting DWT short unless the boss is about to become invulnerable, you would be delaying an <ActionLink {...ACTIONS.AETHERFLOW}/> cast, or you are able to cleave multiple enemies with <ActionLink {...ACTIONS.DEATHFLARE}/>.
+					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don&apos;t end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
 				</Fragment>,
 				severity: this._missedGcds < 10? SEVERITY.MINOR : SEVERITY.MEDIUM,
 				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,
@@ -146,8 +146,8 @@ export default class DWT extends Module {
 			this._dwt.start,
 			this._dwt.start + DWT_LENGTH
 		)
-		// Taking off two ogcds - DWT to open, and DF to close
-		const availTime = DWT_LENGTH - invulnTime - OGCD_LENGTH*2
+		// Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
+		const availTime = DWT_LENGTH - invulnTime - OGCD_LENGTH*3
 
 		// The last gcd only needs to fit the instant cast in, hence the +1
 		const possibleGcds = Math.floor(availTime / this.gcd.getEstimate()) + 1
