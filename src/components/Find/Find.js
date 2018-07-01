@@ -28,10 +28,13 @@ class Find extends Component {
 	}
 
 	render() {
-		const {report, match} = this.props
+		const {
+			report,
+			match: {params},
+		} = this.props
 
 		// If report is null, we're probably waiting for an api call to complete
-		if (!report || report.loading) {
+		if (!report || report.code !== params.code || report.loading) {
 			return <Container>
 				<Loader active>Loading report</Loader>
 			</Container>
@@ -40,8 +43,8 @@ class Find extends Component {
 		return (
 			<Container>
 				<h1>{report.title}</h1>
-				{match.params.fight?
-					<CombatantList report={report} currentFight={parseInt(match.params.fight, 10)}/> :
+				{params.fight?
+					<CombatantList report={report} currentFight={parseInt(params.fight, 10)}/> :
 					<FightList report={report}/>
 				}
 			</Container>
