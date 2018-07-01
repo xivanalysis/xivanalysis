@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
 import styles from './Checklist.module.css'
@@ -16,10 +17,11 @@ class Checklist extends Component {
 				percent: PropTypes.number.isRequired,
 			})),
 		})),
+		hideProgress: PropTypes.bool.isRequired,
 	}
 
 	render() {
-		const {rules} = this.props
+		const {rules, hideProgress} = this.props
 
 		// If there's no rules, just stop now
 		if (!rules.length) { return false }
@@ -40,12 +42,15 @@ class Checklist extends Component {
 							className={success ? 'text-success' : 'text-error'}
 						/>
 						{rule.name}
-						<Progress
-							percent={rule.percent}
-							className={styles.progress}
-							size="small"
-							color={success ? 'green' : 'red'}
-						/>
+						<div className={styles.percent + (success ? ' text-success' : ' text-error')}>
+							{rule.percent.toFixed(1)}%
+							{hideProgress || <Progress
+								percent={rule.percent}
+								className={styles.progress}
+								size="small"
+								color={success ? 'green' : 'red'}
+							/>}
+						</div>
 					</Fragment>,
 				},
 				content: {
@@ -77,4 +82,8 @@ class Checklist extends Component {
 	}
 }
 
-export default Checklist
+const mapSizesToProps = ({width}) => ({
+	hideProgress: width < 992,
+})
+
+export default withSizes(mapSizesToProps)(Checklist)
