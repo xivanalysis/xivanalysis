@@ -21,3 +21,7 @@ export const getPathMatch = pathname => {
 
 	return matchPath(pathname, path)
 }
+
+export const compose = (...fns) => fns.reduce(
+	(f, g) => (...args) => f(g(...args))
+)

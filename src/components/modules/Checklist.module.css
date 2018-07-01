@@ -2,13 +2,19 @@
 	position: relative;
 }
 
-.progress {
+.percent {
 	position: absolute !important;
 	top: 50%;
-	right: 1em;
-	width: 200px;
-	margin: 0 !important;
 	transform: translateY(-50%);
+	right: 1em;
+}
+
+.progress {
+	display: inline-block !important;
+	width: 200px;
+	margin: 0 0 0 1em !important;
+	text-align: right;
+	vertical-align: middle;
 }
 
 .description {

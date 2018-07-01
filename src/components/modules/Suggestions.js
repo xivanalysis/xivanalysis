@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
-import {Checkbox, Item, Label} from 'semantic-ui-react'
+import {Checkbox, Label} from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
@@ -44,24 +44,24 @@ class Suggestions extends Component {
 				onChange={(_, data) => this.setState({showMinor: data.checked})}
 				className={styles.checkbox}
 			/>}
-			<Item.Group>
-				{suggestions.map((suggestion, index) => <Item key={index}>
-					<Item.Image size="mini" src={suggestion.icon} />
-					<Item.Content>
+			<div className={styles.items}>
+				{suggestions.map((suggestion, index) => <div key={index} className={styles.item}>
+					<img src={suggestion.icon} alt=""/>
+					<div>
 						{suggestion.content}
-						<Item.Extra>
+						<div className={styles.extra}>
 							<Label horizontal {...SEVERITY_LABEL_PROPS[suggestion.severity]} />
 							{suggestion.why}
-						</Item.Extra>
-					</Item.Content>
-				</Item>)}
-				{suggestions.length === 0 && <Item>
-					<Item.Content>
+						</div>
+					</div>
+				</div>)}
+				{suggestions.length === 0 && <div className={styles.item}>
+					<div>
 						<strong>There&apos;s nothing here!</strong><br/>
 						{hasMinor && 'You can check over the minor suggestions by flicking the "Show minor" switch in the top right.'}
-					</Item.Content>
-				</Item>}
-			</Item.Group>
+					</div>
+				</div>}
+			</div>
 		</Fragment>
 	}
 }
