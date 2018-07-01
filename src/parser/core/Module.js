@@ -52,4 +52,7 @@ export default class Module {
 			method.call(this, ...args)
 		}
 	}
+
+	// on_init is basically the constructor, make sure people can call super on it
+	on_init(/* event */) {}
 }

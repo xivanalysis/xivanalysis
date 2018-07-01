@@ -20,14 +20,13 @@ export default class AoE extends Module {
 
 	on_damage(event) {
 		// Not interested in recording ticks
-		if (event.tick) {
+		// Calling base impl of isValidHit - can be subclassed for fight specific handling
+		if (event.tick || !this.isValidHit(event)) {
 			return
 		}
 
-		const source = this._getSource(event)
-
 		// Record the hit
-		source.hits.push({
+		this._getSource(event).hits.push({
 			id: event.targetID,
 			instance: event.targetInstance,
 		})
@@ -39,6 +38,12 @@ export default class AoE extends Module {
 			if (!source.ability || !source.hits.length) { return }
 			this._fireEvent(source)
 		})
+	}
+
+	isValidHit(/* event */) {
+		// Doesn't look like it's possible to derive invalid targets from fflog's api
+		// Leaving that to boss modules instead
+		return true
 	}
 
 	_getSource(event) {
