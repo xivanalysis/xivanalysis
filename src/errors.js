@@ -5,8 +5,8 @@ export const SEVERITY = {
 	WARNING: 'warning',
 }
 
-// Global Errors
-export class GlobalError extends ExtendableError {
+// Base error handling
+export class BaseError extends ExtendableError {
 	severity = SEVERITY.ERROR
 
 	constructor(options) {
@@ -16,6 +16,22 @@ export class GlobalError extends ExtendableError {
 		})
 	}
 }
+
+// Module broken due to a dependency being broken
+export class DependencyCascadeError extends BaseError {
+	message = 'Dependency error cascade.'
+	constructor(options) {
+		super(Object.assign({
+			dependency: '[Not Specified]',
+		}, options))
+	}
+	get detail() {
+		return `The ${this.dependency} module, which this module depends on, has failed.`
+	}
+}
+
+// Global Errors
+export class GlobalError extends BaseError {}
 
 // TODO: Should I care about not being able to override the message?
 export class ReportNotFoundError extends GlobalError {

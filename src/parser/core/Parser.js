@@ -1,4 +1,8 @@
+import React from 'react'
 import toposort from 'toposort'
+
+import ErrorMessage from 'components/ui/ErrorMessage'
+import {DependencyCascadeError} from 'errors'
 
 import About from './modules/About'
 import AlwaysBeCasting from './modules/AlwaysBeCasting'
@@ -50,6 +54,8 @@ class Parser {
 	_constructors = {}
 
 	moduleOrder = []
+	_triggerModules = []
+	_moduleErrors = {}
 
 	get currentTimestamp() {
 		// TODO: this.finished?
@@ -125,9 +131,13 @@ class Parser {
 	parseEvents(events) {
 		// Run normalisers
 		// TODO: This will need to be seperate if I start batching
+		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		this.moduleOrder.forEach(mod => {
 			events = this.modules[mod].normalise(events)
 		})
+
+		// Create a copy of the module order that we'll use while parsing
+		this._triggerModules = this.moduleOrder.slice(0)
 
 		this.fabricateEvent({type: 'init'})
 
@@ -154,9 +164,27 @@ class Parser {
 
 	triggerEvent(event) {
 		// TODO: Do I need to keep a history?
+		this._triggerModules.forEach(mod => {
+			try {
+				this.modules[mod].triggerEvent(event)
+			} catch (error) {
+				// There was an error, cascade the error through the dependency tree
+				this._setModuleError(mod, error)
+			}
+		})
+	}
 
-		this.moduleOrder.forEach(mod => {
-			this.modules[mod].triggerEvent(event)
+	_setModuleError(mod, error) {
+		// Set the error for the current module
+		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1)
+		this._moduleErrors[mod] = error
+
+		// Cascade via dependencies
+		Object.keys(this._constructors).forEach(key => {
+			const constructor = this._constructors[key]
+			if (constructor.dependencies.includes(mod)) {
+				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
+			}
 		})
 	}
 
@@ -171,6 +199,17 @@ class Parser {
 		const results = []
 		displayOrder.forEach(mod => {
 			const module = this.modules[mod]
+
+			// If there's an error, override output handling to show it
+			if (this._moduleErrors[mod]) {
+				const error = this._moduleErrors[mod]
+				results.push({
+					name: module.name,
+					markup: <ErrorMessage error={error} />,
+				})
+				return
+			}
+
 			const output = module.output()
 
 			if (output) {

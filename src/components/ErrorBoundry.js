@@ -2,28 +2,16 @@ import PropTypes from 'prop-types'
 import Raven from 'raven-js'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Container, Message} from 'semantic-ui-react'
+import {Container} from 'semantic-ui-react'
 
-import * as Errors from 'errors'
-
-// Error type render config
-const ERROR_PROPS = {
-	[Errors.SEVERITY.ERROR]: {
-		error: true,
-		icon: 'times circle outline',
-	},
-	[Errors.SEVERITY.WARNING]: {
-		warning: true,
-		icon: 'warning sign',
-	},
-}
-
+import {GlobalError} from 'errors'
+import ErrorMessage from './ui/ErrorMessage'
 
 // Main component
 class ErrorBoundry extends Component {
 	static propTypes = {
 		children: PropTypes.node,
-		globalError: PropTypes.instanceOf(Errors.GlobalError),
+		globalError: PropTypes.instanceOf(GlobalError),
 	}
 
 	constructor(props) {
@@ -47,13 +35,7 @@ class ErrorBoundry extends Component {
 		}
 
 		return <Container>
-			<Message
-				{...(ERROR_PROPS[error.severity || Errors.SEVERITY.ERROR])}
-				header={error.message || error.toString()}
-				content={<p>
-					{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}
-				</p>}
-			/>
+			<ErrorMessage error={error}/>
 		</Container>
 	}
 }
