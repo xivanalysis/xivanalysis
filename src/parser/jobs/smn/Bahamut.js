@@ -116,6 +116,10 @@ export default class Bahamut extends Module {
 	}
 
 	renderHeaderCount(counts) {
+		if (!counts) {
+			return '0'
+		}
+
 		return [
 			GHOST_CHANCE.NONE,
 			GHOST_CHANCE.LIKELY,
