@@ -1,3 +1,4 @@
+import Raven from 'raven-js'
 import React from 'react'
 import toposort from 'toposort'
 
@@ -168,7 +169,10 @@ class Parser {
 			try {
 				this.modules[mod].triggerEvent(event)
 			} catch (error) {
-				// There was an error, cascade the error through the dependency tree
+				// Error trying to handle an event, tell sentry
+				Raven.captureException(error)
+
+				// Also cascade the error through the dependency tree
 				this._setModuleError(mod, error)
 			}
 		})
@@ -210,11 +214,12 @@ class Parser {
 				return
 			}
 
-			// Use the ErrorMessage component for errors in the output too
+			// Use the ErrorMessage component for errors in the output too (and sentry)
 			let output = null
 			try {
 				output = module.output()
 			} catch (error) {
+				Raven.captureException(error)
 				results.push({
 					name: module.name,
 					markup: <ErrorMessage error={error} />,
