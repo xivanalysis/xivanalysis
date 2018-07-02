@@ -16,6 +16,8 @@ const CORRECT_GCDS = [
 
 const DWT_LENGTH = 16000
 const OGCD_LENGTH = 750
+// Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
+const USABLE_LENGTH = DWT_LENGTH - OGCD_LENGTH * 3
 
 export default class DWT extends Module {
 	static dependencies = [
@@ -112,10 +114,7 @@ export default class DWT extends Module {
 
 		if (this._missedGcds) {
 			// Grabbing the full possible gcd count for suggestion text
-			const possibleGcds = Math.floor(
-				(DWT_LENGTH - OGCD_LENGTH * 2) /
-				this.gcd.getEstimate()
-			) + 1
+			const possibleGcds = Math.floor(USABLE_LENGTH / this.gcd.getEstimate()) + 1
 
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
@@ -163,11 +162,9 @@ export default class DWT extends Module {
 			this._dwt.start,
 			this._dwt.start + DWT_LENGTH
 		)
-		// Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
-		const availTime = DWT_LENGTH - invulnTime - OGCD_LENGTH*3
 
 		// The last gcd only needs to fit the instant cast in, hence the +1
-		const possibleGcds = Math.floor(availTime / this.gcd.getEstimate()) + 1
+		const possibleGcds = Math.floor((USABLE_LENGTH - invulnTime) / this.gcd.getEstimate()) + 1
 
 		// Check the no. GCDs actually cast
 		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
