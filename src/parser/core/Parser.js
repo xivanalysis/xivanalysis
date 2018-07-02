@@ -210,7 +210,17 @@ class Parser {
 				return
 			}
 
-			const output = module.output()
+			// Use the ErrorMessage component for errors in the output too
+			let output = null
+			try {
+				output = module.output()
+			} catch (error) {
+				results.push({
+					name: module.name,
+					markup: <ErrorMessage error={error} />,
+				})
+				return
+			}
 
 			if (output) {
 				results.push({
