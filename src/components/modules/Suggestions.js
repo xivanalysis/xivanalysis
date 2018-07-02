@@ -17,8 +17,8 @@ class Suggestions extends Component {
 	static propTypes = {
 		suggestions: PropTypes.arrayOf(PropTypes.shape({
 			icon: PropTypes.string.isRequired,
-			content: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
-			why: PropTypes.oneOfType([PropTypes.string, PropTypes.element]).isRequired,
+			content: PropTypes.node.isRequired,
+			why: PropTypes.node.isRequired,
 			severity: PropTypes.number.isRequired,
 		})).isRequired,
 	}
