@@ -5,46 +5,10 @@ import toposort from 'toposort'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 
-import About from './modules/About'
-import AlwaysBeCasting from './modules/AlwaysBeCasting'
-import AoE from './modules/AoE'
-import CastTime from './modules/CastTime'
-import Checklist from './modules/Checklist'
-import Combatants from './modules/Combatants'
-import Cooldowns from './modules/Cooldowns'
-import Death from './modules/Death'
-import Enemies from './modules/Enemies'
-import GlobalCooldown from './modules/GlobalCooldown'
-import Invulnerability from './modules/Invulnerability'
-import Potions from './modules/Potions'
-import PrecastStatus from './modules/PrecastStatus'
-import Suggestions from './modules/Suggestions'
-import Timeline from './modules/Timeline'
-import Weaving from './modules/Weaving'
-
 class Parser {
 	// -----
 	// Properties
 	// -----
-
-	static defaultModules = {
-		about: About,
-		abc: AlwaysBeCasting,
-		aoe: AoE,
-		castTime: CastTime,
-		checklist: Checklist,
-		combatants: Combatants,
-		cooldowns: Cooldowns,
-		death: Death,
-		enemies: Enemies,
-		gcd: GlobalCooldown,
-		invuln: Invulnerability,
-		potions: Potions,
-		precastStatus: PrecastStatus,
-		suggestions: Suggestions,
-		timeline: Timeline,
-		weaving: Weaving,
-	}
 
 	report = null
 	fight = null
@@ -87,9 +51,6 @@ class Parser {
 
 		// Set initial timestamp
 		this._timestamp = fight.start_time
-
-		// Start off with the core modules
-		this.addModules(this.constructor.defaultModules)
 	}
 
 	// -----
@@ -133,7 +94,6 @@ class Parser {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		this.moduleOrder.forEach(mod => {
-			console.log(events)
 			events = this.modules[mod].normalise(events)
 		})
 		return events

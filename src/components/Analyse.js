@@ -143,18 +143,19 @@ class Analyse extends Component {
 
 	async fetchEventsAndParse(report, fight, combatant) {
 		// TODO: handle pets?
-		// Build the base parser instance (implicitly loads core modules)
+		// Build the base parser instance
 		const parser = new Parser(report, fight, combatant)
 
-		// Look up any modules we might want
+		// Look up any modules we might want (inc. core)
 		const modules = {
+			core: AVAILABLE_MODULES.CORE,
 			job: AVAILABLE_MODULES.JOBS[combatant.type],
 			boss: AVAILABLE_MODULES.BOSSES[fight.boss],
 		}
 
 		// Load any modules we've got
 		const modulePromises = []
-		const loadOrder = ['boss', 'job']
+		const loadOrder = ['core', 'boss', 'job']
 		for (const group of loadOrder) {
 			if (!modules[group]) { continue }
 			modulePromises.push(modules[group]())
