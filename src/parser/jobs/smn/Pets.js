@@ -105,6 +105,7 @@ export default class Pets extends Module {
 
 	on_event(event) {
 		if (
+			this._lastPet &&
 			this._currentPet &&
 			this._currentPet.id === PETS.DEMI_BAHAMUT.id &&
 			this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
