@@ -181,6 +181,9 @@ class Analyse extends Component {
 		})
 		const events = resp.data.events
 
+		// Normalise the events before we parse them
+		parser.normalise(events)
+
 		// TODO: Batch
 		parser.parseEvents(events)
 

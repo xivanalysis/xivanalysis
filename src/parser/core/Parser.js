@@ -129,14 +129,17 @@ class Parser {
 	// Event handling
 	// -----
 
-	parseEvents(events) {
+	normalise(events) {
 		// Run normalisers
-		// TODO: This will need to be seperate if I start batching
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		this.moduleOrder.forEach(mod => {
+			console.log(events)
 			events = this.modules[mod].normalise(events)
 		})
+		return events
+	}
 
+	parseEvents(events) {
 		// Create a copy of the module order that we'll use while parsing
 		this._triggerModules = this.moduleOrder.slice(0)
 
