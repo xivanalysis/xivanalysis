@@ -72,7 +72,7 @@ The modules are split into a number of groups:
 
 Modules from `core` are loaded first, followed by bosses, then jobs.
 
-Each group of modules is contained in its own folder, alongside any other required files. All groups besides `core` also require an `index.js`, which provides a reference to all the modules that should be loaded. These index files are referenced in `parser/AVAILABLE_MODULES.js`
+Each group of modules is contained in its own folder, alongside any other required files. All groups also require an `index.js`, which provides a reference to all the modules that should be loaded. These index files are referenced in `parser/AVAILABLE_MODULES.js`
 
 ### Modules
 
@@ -84,8 +84,10 @@ As a cliche example, a module Hello World:
 import Module from 'parser/core/Module'
 
 export default class HelloWorld extends Module {
+	static handle = 'hello'
+
 	// The name that should be shown above the module output. Only required if the module _has_ output.
-	name = 'Hello World'
+	static title = 'Hello World'
 
 	output() {
 		return 'Hello, world!'
@@ -103,6 +105,6 @@ The event types and data are straight from fflogs - you can inspect the request 
 
 To reduce code duplication, modules have a dependency system in place, that lets them reference other modules. Modules are guaranteed to run _before_ anything that depends on them (***NOTE:*** *this implicitly prevents circular dependencies - they will throw an error*).
 
-The object key a module is assigned to in its `index.js` (or `defaultModules` in `core/Parser`) is the name that should be used to reference dependencies. Any dependencies specified for a module are then made available at runtime as `this.[name]`.
+The `handle` static property is the name that should be used to reference dependencies. Any dependencies specified for a module are then made available at runtime as `this.[name]`.
 
 This only covers the basics of modules, however. If you'd like to find out more, I would highly suggest checking the modules for the `core` and `jobs/smn` groups - they should provide ample examples of what can be done.
