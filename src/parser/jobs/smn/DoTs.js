@@ -7,6 +7,7 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class DoTs extends Module {
+	static handle = 'dots'
 	static dependencies = [
 		'checklist',
 		'enemies',

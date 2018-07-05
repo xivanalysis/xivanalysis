@@ -24,12 +24,13 @@ const PROC_RATE = 0.15
 const MAX_PROC_HOLD = 5000
 
 export default class Ruin4 extends Module {
+	static handle = 'ruin4'
 	static dependencies = [
 		'cooldowns',
 		'invuln',
 		'suggestions',
 	]
-	name = 'Ruin IV'
+	static title = 'Ruin IV'
 
 	_procChances = 0
 	_procs = 0

@@ -1,6 +1,8 @@
 import Module from 'parser/core/Module'
 
 export default class AoE extends Module {
+	static handle = 'aoe'
+
 	// Track the current state per source (in case events get intermingled)
 	_sources = {}
 

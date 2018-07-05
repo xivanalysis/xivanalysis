@@ -14,6 +14,7 @@ const RAISE_STATUSES = [
 ]
 
 export default class Death extends Module {
+	static handle = 'death'
 	static dependencies = [
 		'suggestions',
 		'timeline',

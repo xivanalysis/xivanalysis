@@ -15,21 +15,21 @@ import Suggestions from './Suggestions'
 import Timeline from './Timeline'
 import Weaving from './Weaving'
 
-export default {
-	about: About,
-	abc: AlwaysBeCasting,
-	aoe: AoE,
-	castTime: CastTime,
-	checklist: Checklist,
-	combatants: Combatants,
-	cooldowns: Cooldowns,
-	death: Death,
-	enemies: Enemies,
-	gcd: GlobalCooldown,
-	invuln: Invulnerability,
-	potions: Potions,
-	precastStatus: PrecastStatus,
-	suggestions: Suggestions,
-	timeline: Timeline,
-	weaving: Weaving,
-}
+export default [
+	About,
+	AlwaysBeCasting,
+	AoE,
+	CastTime,
+	Checklist,
+	Combatants,
+	Cooldowns,
+	Death,
+	Enemies,
+	GlobalCooldown,
+	Invulnerability,
+	Potions,
+	PrecastStatus,
+	Suggestions,
+	Timeline,
+	Weaving,
+]

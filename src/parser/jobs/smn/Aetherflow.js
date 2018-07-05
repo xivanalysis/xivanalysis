@@ -13,6 +13,7 @@ const FESTER_STATUSES = [
 ]
 
 export default class Aetherflow extends Module {
+	static handle = 'aetherflow'
 	static dependencies = [
 		'aoe', // Ensure AoE runs cleanup before us
 		'checklist',

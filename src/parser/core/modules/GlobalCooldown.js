@@ -10,10 +10,11 @@ const MIN_GCD = 1500
 const MAX_GCD = 2500
 
 export default class GlobalCooldown extends Module {
+	static handle = 'gcd'
 	static dependencies = [
 		'timeline',
 	]
-	name = 'Global Cooldown'
+	static title = 'Global Cooldown'
 
 	_lastGcd = -1
 	_castingEvent = null

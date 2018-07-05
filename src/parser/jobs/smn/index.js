@@ -9,15 +9,15 @@ import Rouse from './Rouse'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
 
-export default {
-	about: About,
-	aetherflow: Aetherflow,
-	bahamut: Bahamut,
-	dots: DoTs,
-	dwt: DWT,
-	gauge: Gauge,
-	pets: Pets,
-	rouse: Rouse,
-	ruin2: Ruin2,
-	ruin4: Ruin4,
-}
+export default [
+	About,
+	Aetherflow,
+	Bahamut,
+	DoTs,
+	DWT,
+	Gauge,
+	Pets,
+	Rouse,
+	 Ruin2,
+	 Ruin4,
+]

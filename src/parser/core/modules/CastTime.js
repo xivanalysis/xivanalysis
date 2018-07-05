@@ -3,6 +3,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export default class CastTime extends Module {
+	static handle = 'castTime'
+
 	_castTimes = []
 	_scIndex = null
 

@@ -18,12 +18,13 @@ const MAX_WEAVES = {
 const MAJOR_SUGGESTION_ISSUES = 5
 
 export default class Weaving extends Module {
+	static handle = 'weaving'
 	static dependencies = [
 		'castTime',
 		'invuln',
 		'suggestions',
 	]
-	name = 'Weaving Issues'
+	static title = 'Weaving Issues'
 
 	_weaves = []
 	_gcdEvent = null

@@ -30,10 +30,11 @@ const CHART_COLOURS = {
 export const SUMMON_BAHAMUT_LENGTH = 20000
 
 export default class Pets extends Module {
+	static handle = 'pets'
 	static dependencies = [
 		'suggestions',
 	]
-	name = 'Pets'
+	static title = 'Pets'
 
 	_lastPet = null
 	_currentPet = null
