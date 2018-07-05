@@ -11,12 +11,33 @@ export default class Module {
 	static dependencies = []
 	static displayOrder = DISPLAY_ORDER.DEFAULT
 
-	_name = null
-	get name() {
-		return this._name || ('DEV: ' + this.constructor.name)
+	static _handle
+	static get handle() {
+		if (!this._handle) {
+			const handle = this.name.charAt(0).toLowerCase() + this.name.slice(1)
+			console.error(`\`${this.name}\` does not have an explicitly set handle. Using \`${handle}\`. This WILL break in minified builds.`)
+			this._handle = handle
+		}
+		return this._handle
 	}
+	static set handle(value) {
+		this._handle = value
+	}
+
+	static _title = null
+	static get title() {
+		if (!this._title) {
+			this._title = this.handle.charAt(0).toUpperCase() + this.handle.slice(1)
+		}
+		return this._title
+	}
+	static set title(value) {
+		this._title = value
+	}
+
 	set name(value) {
-		this._name = value
+		console.warn(`\`${this.constructor.handle}\` is setting the display title via the \`name\` instance property. Use \`static title\` instead.`)
+		this.constructor.title = value
 	}
 
 	constructor(parser) {
