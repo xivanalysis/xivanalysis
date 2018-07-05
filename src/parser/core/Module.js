@@ -19,6 +19,13 @@ export default class Module {
 		this._name = value
 	}
 
+	constructor(parser) {
+		this.parser = parser
+		this.constructor.dependencies.forEach(dep => {
+			this[dep] = parser.modules[dep]
+		})
+	}
+
 	normalise(events) {
 		return events
 	}

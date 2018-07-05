@@ -77,12 +77,7 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			const module = new this._constructors[mod]()
-			module.constructor.dependencies.forEach(dep => {
-				module[dep] = this.modules[dep]
-			})
-			module.parser = this
-			this.modules[mod] = module
+			this.modules[mod] = new this._constructors[mod](this)
 		})
 	}
 
