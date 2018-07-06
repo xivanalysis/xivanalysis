@@ -65,15 +65,13 @@ export default class Module {
 			if (!match) { return }
 
 			const filter = {}
-			let entityId = parser.player.id
+			let entity = 'player'
 
 			if (match[3]) {
-				entityId = parser.report.friendlyPets
-					.filter(pet => pet.petOwner === entityId)
-					.map(pet => pet.id)
+				entity = 'pet'
 			}
 			if (match[2]) {
-				filter[match[2] === 'by'? 'sourceID' : 'targetID'] = entityId
+				filter[match[2]] = entity
 			}
 
 			console.warn(`The \`${this.constructor.handle}\` module is using the old-style event hook \`${name}\`. Please update it to use the new \`addHook\` function.`)
@@ -87,11 +85,38 @@ export default class Module {
 	}
 
 	addHook(event, filter, cb) {
+		const mapFilterEntity = (qol, raw) => {
+			if (filter[qol]) {
+				switch (filter[qol]) {
+				case 'player':
+					filter[raw] = this.parser.player.id
+					break
+				case 'pet':
+					filter[raw] = this.parser.player.pets.map(pet => pet.id)
+					break
+				default:
+					filter[raw] = filter[qol]
+				}
+				delete filter[qol]
+			}
+		}
+
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		if (typeof filter === 'function') {
 			cb = filter
 			filter = {}
+		}
+
+		// QoL filter transforms
+		mapFilterEntity('to', 'targetID')
+		mapFilterEntity('by', 'sourceID')
+		if (filter.abilityId) {
+			if (!filter.ability) {
+				filter.ability = {}
+			}
+			filter.ability.guid = filter.abilityId
+			delete filter.abilityId
 		}
 
 		const hook = {

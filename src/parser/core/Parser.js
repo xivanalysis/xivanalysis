@@ -51,6 +51,9 @@ class Parser {
 
 		// Set initial timestamp
 		this._timestamp = fight.start_time
+
+		// Get a list of the current player's pets and set it on the player instance for easy reference
+		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
 	}
 
 	// -----
