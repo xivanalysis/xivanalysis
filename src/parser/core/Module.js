@@ -47,6 +47,40 @@ export default class Module {
 		this.constructor.dependencies.forEach(dep => {
 			this[dep] = parser.modules[dep]
 		})
+
+		// Backwards compat for the old event magic mehods
+		// TODO: Remove before final live
+		// Get a list of all the properties on this entire object's prototype chain
+		const props = new Set()
+		for (let obj = new.target.prototype; obj !== Object.prototype; obj = Object.getPrototypeOf(obj)) {
+			Object.getOwnPropertyNames(obj).forEach(name => {
+				props.add(name)
+			})
+		}
+
+		// Check for any functions in there that match the old magic method names and connect them to the new hooks
+		const exp = /on_([^_]+)(?:_(by|to)Player(Pet)?)?/
+		props.forEach(name => {
+			const match = exp.exec(name)
+			if (!match) { return }
+
+			const filter = {}
+			let entityId = parser.player.id
+
+			if (match[3]) {
+				entityId = parser.report.friendlyPets
+					.filter(pet => pet.petOwner === entityId)
+					.map(pet => pet.id)
+			}
+			if (match[2]) {
+				filter[match[2] === 'by'? 'sourceID' : 'targetID'] = entityId
+			}
+
+			console.warn(`The \`${this.constructor.handle}\` module is using the old-style event hook \`${name}\`. Please update it to use the new \`addHook\` function.`)
+
+			// Need to explicitly bind to prevent it scoping to the core module
+			this.addHook(match[1], filter, this[name].bind(this))
+		})
 	}
 
 	normalise(events) {
@@ -81,23 +115,6 @@ export default class Module {
 		// Run through hooks for all and this event
 		this._runHooks(event, this._hooks.get('all'))
 		this._runHooks(event, this._hooks.get(event.type))
-
-		// Calling lots of events... if WoWA stops doing it maybe I will too :eyes:
-		this._callMethod('on_event', event)
-		this._callMethod(`on_${event.type}`, event)
-
-		if (this.parser.byPlayer(event)) {
-			this._callMethod(`on_${event.type}_byPlayer`, event)
-		}
-		if (this.parser.toPlayer(event)) {
-			this._callMethod(`on_${event.type}_toPlayer`, event)
-		}
-		if (this.parser.byPlayerPet(event)) {
-			this._callMethod(`on_${event.type}_byPlayerPet`, event)
-		}
-		if (this.parser.toPlayerPet(event)) {
-			this._callMethod(`on_${event.type}_toPlayerPet`, event)
-		}
 	}
 
 	_runHooks(event, hooks) {
@@ -139,13 +156,6 @@ export default class Module {
 
 	output() {
 		return false
-	}
-
-	_callMethod(methodName, ...args) {
-		const method = this[methodName]
-		if (method) {
-			method.call(this, ...args)
-		}
 	}
 
 	// on_init is basically the constructor, make sure people can call super on it
