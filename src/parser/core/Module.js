@@ -78,7 +78,6 @@ export default class Module {
 
 			console.warn(`The \`${this.constructor.handle}\` module is using the old-style event hook \`${name}\`. Please update it to use the new \`addHook\` function.`)
 
-			// Need to explicitly bind to prevent it scoping to the core module
 			this.addHook(match[1], filter, this[name].bind(this))
 		})
 	}
@@ -98,7 +97,7 @@ export default class Module {
 		const hook = {
 			event,
 			filter,
-			callback: cb,
+			callback: cb.bind(this),
 		}
 
 		// Make sure the map has a key for us
