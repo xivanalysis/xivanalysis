@@ -40,6 +40,8 @@ export default class Module {
 		this.constructor.title = value
 	}
 
+	_hooks = new Map()
+
 	constructor(parser) {
 		this.parser = parser
 		this.constructor.dependencies.forEach(dep => {
@@ -51,7 +53,33 @@ export default class Module {
 		return events
 	}
 
+	addHook(event, filter, cb) {
+		if (typeof filter === 'function') {
+			cb = filter
+			filter = {}
+		}
+
+		const hook = {
+			event,
+			filter,
+			callback: cb,
+		}
+
+		// Make sure the map has a key for us
+		if (!this._hooks.has(event)) {
+			this._hooks.set(event, new Set())
+		}
+
+		// Set the hook and return it so it can be removed
+		this._hooks.get(event).add(hook)
+		return hook
+	}
+
 	triggerEvent(event) {
+		// Run through hooks for all and this event
+		this._runHooks(event, this._hooks.get('all'))
+		this._runHooks(event, this._hooks.get(event.type))
+
 		// Calling lots of events... if WoWA stops doing it maybe I will too :eyes:
 		this._callMethod('on_event', event)
 		this._callMethod(`on_${event.type}`, event)
@@ -68,6 +96,31 @@ export default class Module {
 		if (this.parser.toPlayerPet(event)) {
 			this._callMethod(`on_${event.type}_toPlayerPet`, event)
 		}
+	}
+
+	_runHooks(event, hooks) {
+		if (!hooks) { return }
+		hooks.forEach(hook => {
+			// Check the filter
+			// TODO: Handle nested stuff like event.ability.guid
+			if (!this._filterMatches(event, hook.filter)) {
+				return
+			}
+
+			hook.callback(event)
+		})
+	}
+
+	_filterMatches(event, filter) {
+		return Object.keys(filter).every(key => {
+			if (!event.hasOwnProperty(key)) {
+				return false
+			}
+			if (typeof filter[key] === 'object') {
+				return this._filterMatches(event[key], filter[key])
+			}
+			return filter[key] === event[key]
+		})
 	}
 
 	output() {
