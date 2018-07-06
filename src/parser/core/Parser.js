@@ -58,8 +58,25 @@ class Parser {
 	// -----
 
 	addModules(modules) {
+		let keyed = {}
+
+		if (Array.isArray(modules)) {
+			modules.forEach(mod => {
+				keyed[mod.handle] = mod
+			})
+		} else {
+			// Fall back to the 'old' way of doing things by setting the handle
+			// TODO: Remove before final live
+			const keys = Object.keys(modules)
+			console.warn('The following modules were loaded using the old-format object, please move handles to the module static property as soon as possible:', keys)
+			keys.forEach(key => {
+				modules[key].handle = key
+			})
+			keyed = modules
+		}
+
 		// Merge the modules into our constructor object
-		Object.assign(this._constructors, modules)
+		Object.assign(this._constructors, keyed)
 	}
 
 	buildModules() {
@@ -77,12 +94,7 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			const module = new this._constructors[mod]()
-			module.constructor.dependencies.forEach(dep => {
-				module[dep] = this.modules[dep]
-			})
-			module.parser = this
-			this.modules[mod] = module
+			this.modules[mod] = new this._constructors[mod](this)
 		})
 	}
 
@@ -171,7 +183,7 @@ class Parser {
 			if (this._moduleErrors[mod]) {
 				const error = this._moduleErrors[mod]
 				results.push({
-					name: module.name,
+					name: module.constructor.title,
 					markup: <ErrorMessage error={error} />,
 				})
 				return
@@ -184,7 +196,7 @@ class Parser {
 			} catch (error) {
 				Raven.captureException(error)
 				results.push({
-					name: module.name,
+					name: module.constructor.title,
 					markup: <ErrorMessage error={error} />,
 				})
 				return
@@ -192,7 +204,7 @@ class Parser {
 
 			if (output) {
 				results.push({
-					name: module.name,
+					name: module.constructor.title,
 					markup: output,
 				})
 			}

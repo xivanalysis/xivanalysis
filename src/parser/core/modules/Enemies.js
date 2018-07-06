@@ -2,6 +2,8 @@ import Entities from './Entities'
 import Enemy from '../Enemy'
 
 export default class Enemies extends Entities {
+	static handle = 'enemies'
+
 	_enemies = {}
 
 	getEntities() {

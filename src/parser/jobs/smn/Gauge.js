@@ -16,6 +16,7 @@ const AETHER_ACTIONS = [
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
+	static handle = 'gauge'
 	static dependencies = [
 		'cooldowns',
 		'pets',

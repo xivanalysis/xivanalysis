@@ -9,6 +9,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const SHORT_POTION_THRESHOLD = 20
 
 export default class Potions extends Module {
+	static handle = 'potions'
 	static dependencies = [
 		'suggestions',
 	]

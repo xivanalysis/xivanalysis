@@ -31,7 +31,7 @@ export const fetchReport = (code) => async dispatch => {
 		dispatch(setReport(null))
 
 		// TODO: Probably need more handling than this...
-		if (e.response.data.error === 'This report does not exist or is private.') {
+		if (e.response && e.response.data.error === 'This report does not exist or is private.') {
 			dispatch(setGlobalError(new Errors.ReportNotFoundError()))
 		} else {
 			dispatch(setGlobalError(new Errors.UnknownApiError()))

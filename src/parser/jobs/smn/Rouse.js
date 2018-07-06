@@ -9,6 +9,7 @@ import {ActionLink} from 'components/ui/DbLink'
 const ROUSE_DURATION = 20000
 
 export default class Rouse extends Module {
+	static handle = 'rouse'
 	static dependencies = [
 		'gauge',
 		'pets',

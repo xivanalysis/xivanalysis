@@ -6,6 +6,7 @@ import {Group, Item} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
+	static handle = 'cooldowns'
 	static dependencies = [
 		'timeline',
 	]

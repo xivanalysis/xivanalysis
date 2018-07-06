@@ -13,6 +13,7 @@ const RUIN2_POT = 100
 const RUIN3_POT = 120
 
 export default class Ruin2 extends Module {
+	static handle = 'ruin2'
 	static dependencies = [
 		'combatants',
 		'gauge',

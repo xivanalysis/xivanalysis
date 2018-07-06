@@ -23,10 +23,10 @@ const GHOST_CLASSNAME = {
 }
 
 export default class Bahamut extends Module {
+	static handle = 'bahamut'
 	static dependencies = [
 		'gauge',
 	]
-	name = 'Bahamut'
 
 	_current = null
 	_history = []

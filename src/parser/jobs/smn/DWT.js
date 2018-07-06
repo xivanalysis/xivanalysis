@@ -20,6 +20,7 @@ const OGCD_LENGTH = 750
 const USABLE_LENGTH = DWT_LENGTH - OGCD_LENGTH * 3
 
 export default class DWT extends Module {
+	static handle = 'dwt'
 	static dependencies = [
 		'aoe', // Ensure AoE runs cleanup before us
 		'castTime',
@@ -28,7 +29,7 @@ export default class DWT extends Module {
 		'invuln',
 		'suggestions',
 	]
-	name = 'Dreadwyrm Trance'
+	static title = 'Dreadwyrm Trance'
 
 	_active = false
 	_dwt = {}

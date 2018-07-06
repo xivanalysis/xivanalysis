@@ -2,6 +2,7 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class AlwaysBeCasting extends Module {
+	static handle = 'abc'
 	static dependencies = [
 		'checklist',
 		'gcd',

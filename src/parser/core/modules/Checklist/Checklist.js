@@ -5,8 +5,9 @@ import ChecklistComponent from 'components/modules/Checklist'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class Checklist extends Module {
+	static handle = 'checklist'
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
-	name = 'Checklist'
+	static title = 'Checklist'
 
 	_rules = []
 

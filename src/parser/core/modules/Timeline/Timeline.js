@@ -7,8 +7,9 @@ import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 import './Timeline.module.css'
 
 export default class Timeline extends Module {
+	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.BOTTOM
-	name = 'Timeline'
+	static title  = 'Timeline'
 
 	_groups = []
 	_items = []

@@ -4,8 +4,8 @@ import {Message} from 'semantic-ui-react'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class About extends Module {
+	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
-	name = 'About'
 
 	output() {
 		return <Message
