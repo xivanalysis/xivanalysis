@@ -3,15 +3,17 @@ import Parser from './Parser'
 
 // Testing modules
 class BasicModule extends Module {
+	static handle = 'test_basic'
 	normalise = jest.fn(events => events)
 	triggerEvent = jest.fn()
 }
-class BasicThrowingModule extends Module {
-	triggerEvent = jest.fn(events => {
+class BasicThrowingModule extends BasicModule {
+	triggerEvent = jest.fn((/* events */) => {
 		throw new Error('Test event')
 	})
 }
 class DependentModule extends Module {
+	static handle = 'test_dependent'
 	static dependencies = [
 		'test_basic',
 	]
@@ -33,7 +35,7 @@ const friendlyNotInFight = {
 	fights: [{id: 9000}],
 }
 const report = {
-	friendlies: [friendlyInFight, friendlyNotInFight]
+	friendlies: [friendlyInFight, friendlyNotInFight],
 }
 const fight = {
 	id: 1,
@@ -70,7 +72,7 @@ describe('Parser', () => {
 	it('does not exceed fight end time', () => {
 		parser.parseEvents([{
 			type: 'test',
-			timestamp: fight.end_time + 50
+			timestamp: fight.end_time + 50,
 		}])
 		expect(parser.currentTimestamp).toBe(fight.end_time)
 		expect(parser.fightDuration).toBe(fight.end_time - fight.start_time)
@@ -83,9 +85,7 @@ describe('Parser', () => {
 	})
 
 	it('loads modules', () => {
-		parser.addModules({
-			test_basic: BasicModule,
-		})
+		parser.addModules([BasicModule])
 		parser.buildModules()
 
 		expect(parser.modules).toHaveProperty('test_basic')
@@ -93,9 +93,7 @@ describe('Parser', () => {
 	})
 
 	it('runs normalisers', () => {
-		parser.addModules({
-			test_basic: BasicModule,
-		})
+		parser.addModules([BasicModule])
 		parser.buildModules()
 		parser.normalise([event])
 
@@ -105,9 +103,7 @@ describe('Parser', () => {
 	})
 
 	it('triggers events on modules', () => {
-		parser.addModules({
-			test_basic: BasicModule,
-		})
+		parser.addModules([BasicModule])
 		parser.buildModules()
 		parser.parseEvents([event])
 
@@ -119,9 +115,7 @@ describe('Parser', () => {
 	})
 
 	it('stops processing modules that error', () => {
-		parser.addModules({
-			test_basic: BasicThrowingModule,
-		})
+		parser.addModules([BasicThrowingModule])
 		parser.buildModules()
 		parser.parseEvents([event])
 
@@ -130,10 +124,7 @@ describe('Parser', () => {
 	})
 
 	it('links dependencies', () => {
-		parser.addModules({
-			test_basic: BasicModule,
-			test_dependent: DependentModule,
-		})
+		parser.addModules([BasicModule, DependentModule])
 		parser.buildModules()
 
 		const module = parser.modules.test_dependent
@@ -143,10 +134,7 @@ describe('Parser', () => {
 	})
 
 	it('cascades errors to dependents', () => {
-		parser.addModules({
-			test_basic: BasicThrowingModule,
-			test_dependent: DependentModule,
-		})
+		parser.addModules([BasicThrowingModule, DependentModule])
 		parser.buildModules()
 		parser.parseEvents([event])
 
@@ -154,6 +142,4 @@ describe('Parser', () => {
 		// I only want to ensure the module doesn't _continue_ to parse. It's ok if it stops mid-event trigger, and it's ok if it waits until the end of the current event.
 		expect(mock.calls.length).toBeLessThanOrEqual(1)
 	})
-
-	// TODO: (by|to)Player(Pet)?
 })
