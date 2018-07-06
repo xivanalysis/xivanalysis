@@ -54,6 +54,8 @@ export default class Module {
 	}
 
 	addHook(event, filter, cb) {
+		// I'm currently handling hooks at the module level
+		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		if (typeof filter === 'function') {
 			cb = filter
 			filter = {}
@@ -102,7 +104,6 @@ export default class Module {
 		if (!hooks) { return }
 		hooks.forEach(hook => {
 			// Check the filter
-			// TODO: Handle nested stuff like event.ability.guid
 			if (!this._filterMatches(event, hook.filter)) {
 				return
 			}
@@ -113,13 +114,26 @@ export default class Module {
 
 	_filterMatches(event, filter) {
 		return Object.keys(filter).every(key => {
+			// If the event doesn't have the key we're looking for, just shortcut out
 			if (!event.hasOwnProperty(key)) {
 				return false
 			}
-			if (typeof filter[key] === 'object') {
-				return this._filterMatches(event[key], filter[key])
+
+			const filterVal = filter[key]
+			const eventVal = event[key]
+
+			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
+			if (Array.isArray(filterVal)) {
+				return filterVal.includes(eventVal)
 			}
-			return filter[key] === event[key]
+
+			// If it's an object, I need to dig down. Mostly for the `ability` key
+			if (typeof filterVal === 'object') {
+				return this._filterMatches(eventVal, filterVal)
+			}
+
+			// Basic value check
+			return filterVal === eventVal
 		})
 	}
 
