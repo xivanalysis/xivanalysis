@@ -39,6 +39,17 @@ export default class Gauge extends Module {
 	// First DWT should be rushed. Also used for end-of-fight rush
 	_rushing = true
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('removebuff', {
+			by: 'player',
+			abilityId: STATUSES.DREADWYRM_TRANCE.id,
+		}, this._onRemoveDwt)
+		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// -----
 	// API
 	// -----
@@ -54,7 +65,7 @@ export default class Gauge extends Module {
 	// -----
 	// Event handling
 	// -----
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const abilityId = event.ability.guid
 
 		if (abilityId === ACTIONS.AETHERFLOW.id) {
@@ -97,27 +108,23 @@ export default class Gauge extends Module {
 		}
 	}
 
-	on_removebuff_byPlayer(event) {
-		const statusId = event.ability.guid
+	_onRemoveDwt(event) {
+		// The end of DWT (either DF or natural falloff) bestows 1 dwa, max 2.
+		if (this._dreadwyrmAether === 2) {
+			this._lostDreadwyrmAether ++
+		} else {
+			this._dreadwyrmAether ++
+		}
 
-		if (statusId === STATUSES.DREADWYRM_TRANCE.id) {
-			// The end of DWT (either DF or natural falloff) bestows 1 dwa, max 2.
-			if (this._dreadwyrmAether === 2) {
-				this._lostDreadwyrmAether ++
-			} else {
-				this._dreadwyrmAether ++
-			}
-
-			// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
-			const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
-			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
-				this._rushing = true
-			}
+		// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
+		const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
+		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
+			this._rushing = true
 		}
 	}
 
-	on_death_toPlayer() {
+	_onDeath() {
 		// Death just flat out resets everything. Rip.
 		this._lostAetherflow += this._aetherflow
 		this._lostDreadwyrmAether += this._dreadwyrmAether
@@ -127,7 +134,7 @@ export default class Gauge extends Module {
 		this._dreadwyrmAether = 0
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Suggestions for lost stacks
 		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({

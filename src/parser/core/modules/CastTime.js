@@ -8,14 +8,23 @@ export default class CastTime extends Module {
 	_castTimes = []
 	_scIndex = null
 
-	on_applybuff_toPlayer(event) {
+	constructor(...args) {
+		super(...args)
+
 		// Only going do deal with SC here, job-specific can do it themselves
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+		const filter = {
+			to: 'player',
+			abilityId: STATUSES.SWIFTCAST.id,
+		}
+		this.addHook('applybuff', filter, this._onApplySwiftcast)
+		this.addHook('removebuff', filter, this._onRemoveSwiftcast)
+	}
+
+	_onApplySwiftcast() {
 		this._scIndex = this.set('all', 0)
 	}
 
-	on_removebuff_toPlayer(event) {
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+	_onRemoveSwiftcast() {
 		this.reset(this._scIndex)
 		this._scIndex = null
 	}

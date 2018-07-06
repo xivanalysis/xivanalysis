@@ -31,8 +31,14 @@ export default class Ruin2 extends Module {
 	_ogcdUsed = false
 	_pos = {}
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// Limiting to player, not worried about pets for this check
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const action = getAction(event.ability.guid)
 		const lastGcdAction = this._lastGcd? getAction(this._lastGcd.ability.guid) : {}
 
@@ -78,7 +84,7 @@ export default class Ruin2 extends Module {
 		)
 	}
 
-	on_complete() {
+	_onComplete() {
 		const potLossPerR2 = RUIN3_POT - RUIN2_POT
 		const issues = this._issues.length
 		const warnings = this._warnings.length

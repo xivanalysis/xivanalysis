@@ -14,7 +14,12 @@ export default class DoTs extends Module {
 		'invuln',
 	]
 
-	on_complete() {
+	constructor(...args) {
+		super(...args)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
 			name: 'Keep your DoTs up',

@@ -9,8 +9,13 @@ export default class AlwaysBeCasting extends Module {
 		'invuln',
 	]
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// Just using this for the suggestion for now
-	on_complete() {
+	_onComplete() {
 		const numGcds = this.gcd.gcds.length
 		if (!numGcds) {
 			return

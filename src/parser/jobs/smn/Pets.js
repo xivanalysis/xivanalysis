@@ -43,6 +43,15 @@ export default class Pets extends Module {
 
 	_petUptime = new Map()
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('init', this._onInit)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('all', this._onEvent)
+		this.addHook('death', {to: 'pet'}, this._onPetDeath)
+		this.addHook('complete', this._onComplete)
+	}
+
 	normalise(events) {
 		const petCache = {}
 
@@ -83,12 +92,12 @@ export default class Pets extends Module {
 		return events
 	}
 
-	on_init() {
+	_onInit() {
 		// Just holding off the setPet until now so no events being created during normalise
 		this.setPet(this._lastPet.id)
 	}
 
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const petId = SUMMON_ACTIONS[event.ability.guid]
 
 		if (!petId) {
@@ -103,7 +112,7 @@ export default class Pets extends Module {
 		this.setPet(petId)
 	}
 
-	on_event(event) {
+	_onEvent(event) {
 		if (
 			this._lastPet &&
 			this._currentPet &&
@@ -114,18 +123,11 @@ export default class Pets extends Module {
 		}
 	}
 
-	on_death(event) {
-		// We're only interested if the death was the player's pet
-		const pets = this.parser.report.friendlyPets
-			.filter(pet => pet.petOwner === this.parser.player.id)
-			.map(pet => pet.id)
-
-		if (pets.includes(event.targetID)) {
-			this.setPet(-1)
-		}
+	_onPetDeath() {
+		this.setPet(-1)
 	}
 
-	on_complete(event) {
+	_onComplete(event) {
 		// Finalise the history
 		const id = this._currentPet.id
 		const start = this._currentPet.timestamp

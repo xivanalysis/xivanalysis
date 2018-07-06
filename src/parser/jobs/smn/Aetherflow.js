@@ -26,31 +26,36 @@ export default class Aetherflow extends Module {
 	_badFesters = []
 	_badPainflares = []
 
-	on_cast_byPlayer(event) {
-		const actionId = event.ability.guid
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.FESTER.id,
+		}, this._onCastFester)
+		this.addHook('aoedamage', {
+			by: 'player',
+			abilityId: ACTIONS.PAINFLARE.id,
+		}, this._onPainflareDamage)
+		this.addHook('complete', this._onComplete)
+	}
 
+	_onCastFester(event) {
 		// Make sure all festers have the required dots up for Festers
-		if (actionId === ACTIONS.FESTER.id) {
-			const target = this.enemies.getEntity(event.targetID)
-			const numStatuses = FESTER_STATUSES.filter(statusId => target.hasStatus(statusId)).length
-			if (numStatuses !== FESTER_STATUSES.length) {
-				this._badFesters.push(event)
-			}
+		const target = this.enemies.getEntity(event.targetID)
+		const numStatuses = FESTER_STATUSES.filter(statusId => target.hasStatus(statusId)).length
+		if (numStatuses !== FESTER_STATUSES.length) {
+			this._badFesters.push(event)
 		}
 	}
 
-	on_aoedamage_byPlayer(event) {
-		if (event.ability.guid !== ACTIONS.PAINFLARE.id) {
-			return
-		}
-
+	_onPainflareDamage(event) {
 		// Only fault single target PFs _outside_ rushes.
 		if (event.hits.length <= 1 && !this.gauge.isRushing()) {
 			this._badPainflares.push(event.castEvent)
 		}
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
 			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively</Fragment>,

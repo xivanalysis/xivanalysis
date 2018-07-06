@@ -103,19 +103,23 @@ export default class Entities extends Module {
 	// -----
 	// Event handlers
 	// -----
-	// Buffs
-	on_applybuff(event)         { this.applyBuff(event) }
-	on_applydebuff(event)       { this.applyBuff(event, true) }
-	on_applybuffstack(event)    { this.updateBuffStack(event) }
-	on_applydebuffstack(event)  { this.updateBuffStack(event, true) }
-	on_removebuffstack(event)   { this.updateBuffStack(event) }
-	on_removedebuffstack(event) { this.updateBuffStack(event, true) }
-	on_removebuff(event)        { this.removeBuff(event) }
-	on_removedebuff(event)      { this.removeBuff(event, true) }
+	constructor(...args) {
+		super(...args)
 
-	// Resources
-	on_damage(event) { this.updateResources(event) }
-	on_heal(event) { this.updateResources(event) }
+		// Buffs
+		this.addHook('applybuff', this.applyBuff)
+		this.addHook('applydebuff', event => this.applyBuff(event, true))
+		this.addHook('applybuffstack', this.updateBuffStack)
+		this.addHook('applydebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuffstack', this.updateBuffStack)
+		this.addHook('removedebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuff', this.removeBuff)
+		this.addHook('removedebuff', event => this.removeBuff(event, true))
+
+		// Resources
+		this.addHook('damage', this.updateResources)
+		this.addHook('heal', this.updateResources)
+	}
 
 	// -----
 	// Logic

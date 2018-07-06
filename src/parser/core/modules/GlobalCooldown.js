@@ -21,6 +21,12 @@ export default class GlobalCooldown extends Module {
 
 	gcds = []
 
+	constructor(...args) {
+		super(...args)
+
+		this.addHook('complete', this._onComplete)
+	}
+
 	// Using normalise so the estimate can be used throughout the parse
 	normalise(events) {
 		for (let i = 0; i < events.length; i++) {
@@ -54,7 +60,7 @@ export default class GlobalCooldown extends Module {
 		return events
 	}
 
-	on_complete() {
+	_onComplete() {
 		const gcdLength = this.getEstimate()
 		const startTime = this.parser.fight.start_time
 

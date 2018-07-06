@@ -14,10 +14,17 @@ export default class Cooldowns extends Module {
 	_currentAction = null
 	_cooldowns = {}
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// cooldown starts at the beginning of the casttime
 	// (though 99% of CD based abilities have no cast time)
 	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
-	on_begincast_byPlayer(event) {
+	_onBeginCast(event) {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
@@ -26,7 +33,7 @@ export default class Cooldowns extends Module {
 		this.startCooldown(action.id)
 	}
 
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
@@ -38,7 +45,7 @@ export default class Cooldowns extends Module {
 		this.startCooldown(action.id)
 	}
 
-	on_complete() {
+	_onComplete() {
 		const startTime = this.parser.fight.start_time
 
 		Object.keys(this._cooldowns).forEach(id => {

@@ -6,7 +6,14 @@ export default class AoE extends Module {
 	// Track the current state per source (in case events get intermingled)
 	_sources = {}
 
-	on_cast(event) {
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', this._onCast)
+		this.addHook('damage', this._onDamage)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onCast(event) {
 		const source = this._getSource(event)
 
 		// If there's an ability already, fire off an event for the 'end' of the aoe
@@ -20,7 +27,7 @@ export default class AoE extends Module {
 		source.hits = []
 	}
 
-	on_damage(event) {
+	_onDamage(event) {
 		// Not interested in recording ticks
 		// Calling base impl of isValidHit - can be subclassed for fight specific handling
 		if (event.tick || !this.isValidHit(event)) {
@@ -34,7 +41,7 @@ export default class AoE extends Module {
 		})
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Do a round of cleanup on all the sources
 		Object.values(this._sources).forEach(source => {
 			if (!source.ability || !source.hits.length) { return }

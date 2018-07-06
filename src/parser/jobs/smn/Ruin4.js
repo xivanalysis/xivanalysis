@@ -38,16 +38,28 @@ export default class Ruin4 extends Module {
 	_lastProc = null
 	_overage = 0
 
-	on_cast_byPlayerPet(event) {
+	constructor(...args) {
+		super(...args)
+
+		this.addHook('cast', {by: 'pet'}, this._onPetCast)
+
+		const frFilter = {
+			to: 'player',
+			abilityId: STATUSES.FURTHER_RUIN.id,
+		}
+		this.addHook('applybuff', frFilter, this._onApplyFurtherRuin)
+		this.addHook('removebuff', frFilter, this._onRemoveFurtherRuin)
+
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onPetCast(event) {
 		if (!ACTIONS_NO_PROC.includes(event.ability.guid)) {
 			this._procChances ++
 		}
 	}
 
-	on_applybuff(event) {
-		// Only care about further ruin
-		if (event.ability.guid !== STATUSES.FURTHER_RUIN.id) { return }
-
+	_onApplyFurtherRuin(event) {
 		// Further Ruin (R4 proc) also reduces the CD on Enkindle by 10 seconds
 		// TODO: Procs while buff is up don't refresh the buff... so I can't actually track reductions accurately. Should be OK as long as they're using their damn procs though.
 		this.cooldowns.reduceCooldown(ACTIONS.ENKINDLE.id, 10)
@@ -58,14 +70,11 @@ export default class Ruin4 extends Module {
 		this._lastProc = event.timestamp
 	}
 
-	on_removebuff(event) {
-		// Only care about further ruin
-		if (event.ability.guid !== STATUSES.FURTHER_RUIN.id) { return }
-
+	_onRemoveFurtherRuin(event) {
 		this._endProcHold(event.timestamp)
 	}
 
-	on_complete() {
+	_onComplete() {
 		if (this._lastProc !== null) {
 			this._endProcHold(this.parser.fight.end_time)
 		}

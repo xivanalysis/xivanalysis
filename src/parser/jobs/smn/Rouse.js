@@ -19,14 +19,21 @@ export default class Rouse extends Module {
 	_lastRouse = null
 	_wasted = 0
 
-	on_cast_byPlayer(event) {
-		if (event.ability.guid !== ACTIONS.ROUSE.id) {
-			return
-		}
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.ROUSE.id,
+		}, this._onCastRouse)
+		this.addHook('summonpet', this._onSummonPet)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onCastRouse(event) {
 		this._lastRouse = event.timestamp
 	}
 
-	on_summonpet(event) {
+	_onSummonPet(event) {
 		const diff = event.timestamp - this._lastRouse
 		// TODO: Might need to check if the rush is in the opener, 'cus you don't want to be wasting rouse by using it before a petswap.
 		if (this._lastRouse === null || diff > ROUSE_DURATION || this.gauge.isRushing()) {
@@ -35,7 +42,7 @@ export default class Rouse extends Module {
 		this._wasted += ROUSE_DURATION - diff
 	}
 
-	on_complete() {
+	_onComplete() {
 		if (this._wasted > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ROUSE.icon,

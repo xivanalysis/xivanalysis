@@ -31,38 +31,41 @@ export default class Bahamut extends Module {
 	_current = null
 	_history = []
 
-	on_cast_byPlayerPet(event) {
-		const abilityId = event.ability.guid
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {
+			by: 'pet',
+			abilityId: DEMI_BAHAMUT_ACTIONS,
+		}, this._onBahamutCast)
+		this.addHook('summonpet', {petId: PETS.DEMI_BAHAMUT.id}, this._onSummonBahamut)
+		this.addHook('complete', this._onComplete)
+	}
 
+	_onBahamutCast(event) {
 		// Track Big B's casts, and mark potential ghosts
-		if (DEMI_BAHAMUT_ACTIONS.includes(abilityId)) {
-			const timeSinceSummon = event.timestamp - this._current.timestamp
-			const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
-			this._current.petCasts.push({
-				...event,
-				ghostChance,
-			})
+		const timeSinceSummon = event.timestamp - this._current.timestamp
+		const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
+		this._current.petCasts.push({
+			...event,
+			ghostChance,
+		})
+	}
+
+	_onSummonBahamut(event) {
+		// Save any existing tracking to history
+		if (this._current) {
+			this._history.push(this._current)
+		}
+
+		// Set up fresh tracking
+		this._current = {
+			timestamp: event.timestamp,
+			// playerCasts: [],
+			petCasts: [],
 		}
 	}
 
-	on_summonpet(event) {
-		// They've summoned Bahamut.
-		if (event.petId === PETS.DEMI_BAHAMUT.id) {
-			// Save any existing tracking to history
-			if (this._current) {
-				this._history.push(this._current)
-			}
-
-			// Set up fresh tracking
-			this._current = {
-				timestamp: event.timestamp,
-				// playerCasts: [],
-				petCasts: [],
-			}
-		}
-	}
-
-	on_complete() {
+	_onComplete() {
 		// Clean out any current tracking
 		if (this._current) {
 			this._history.push(this._current)

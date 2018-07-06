@@ -17,29 +17,31 @@ export default class Potions extends Module {
 	_start = null
 	_usingShortPotion = false
 
-	on_applybuff_toPlayer(event) {
-		// Only care about potions funnily enough
-		if (event.ability.guid !== STATUSES.MEDICATED.id) {
-			return
-		}
+	constructor(...args) {
+		super(...args)
 
+		const filter = {
+			to: 'player',
+			abilityId: STATUSES.MEDICATED.id,
+		}
+		this.addHook('applybuff', filter, this._onApplyMedicated)
+		this.addHook('removebuff', filter, this._onRemoveMedicated)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onApplyMedicated(event) {
 		// Track the application of the pot
 		this._start = event.timestamp
 	}
 
-	on_removebuff_toPlayer(event) {
-		// Only care about potions funnily enough
-		if (event.ability.guid !== STATUSES.MEDICATED.id) {
-			return
-		}
-
+	_onRemoveMedicated(event) {
 		const potionLength = (event.timestamp - this._start) / 1000
 		if (potionLength <= SHORT_POTION_THRESHOLD) {
 			this._usingShortPotion = true
 		}
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Not checking pot timing on completion, need a concrete end time for that.
 
 		if (this._usingShortPotion) {

@@ -30,7 +30,13 @@ export default class Weaving extends Module {
 	_gcdEvent = null
 	_badWeaves = []
 
-	on_cast_byPlayer(event) {
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
 		// If the action is an auto, just ignore it
@@ -58,7 +64,7 @@ export default class Weaving extends Module {
 		this._weaves = []
 	}
 
-	on_complete() {
+	_onComplete() {
 		// If there's been at least one gcd, run a cleanup on any remnant data
 		if (this._gcdEvent) {
 			this._saveIfBad()
