@@ -157,7 +157,4 @@ export default class Module {
 	output() {
 		return false
 	}
-
-	// on_init is basically the constructor, make sure people can call super on it
-	on_init(/* event */) {}
 }

@@ -5,9 +5,7 @@ const EASTERLY_NAME = 'Easterly'
 export default class AoE extends CoreAoE {
 	_easterlyIds = []
 
-	on_init(event) {
-		super.on_init(event)
-
+	on_init() {
 		// It'd be nice to reference them by ID or something but it's not possible at the moment.
 		this._easterlyIds = this.parser.report.enemies
 			.filter(enemy => enemy.name === EASTERLY_NAME)
