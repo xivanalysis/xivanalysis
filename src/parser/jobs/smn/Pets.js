@@ -34,7 +34,6 @@ export default class Pets extends Module {
 	static dependencies = [
 		'suggestions',
 	]
-	static title = 'Pets'
 
 	_lastPet = null
 	_currentPet = null

@@ -27,7 +27,6 @@ export default class Bahamut extends Module {
 	static dependencies = [
 		'gauge',
 	]
-	static title = 'Bahamut'
 
 	_current = null
 	_history = []
