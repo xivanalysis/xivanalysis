@@ -22,7 +22,7 @@
     "redux": "^4",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.81",
+    "semantic-ui-react": "^0.82",
     "toposort": "^2",
     "vis": "^4.21.0"
   },
