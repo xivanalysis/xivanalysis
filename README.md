@@ -14,6 +14,8 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
+- [API Reference](#api-reference)
+	- [Module](#module)
 
 ## Getting Started
 
@@ -76,35 +78,60 @@ Each group of modules is contained in its own folder, alongside any other requir
 
 ### Modules
 
-Modules (which've been mentioned a few times already!) form the nitty-gritty of the parser's analysis. The parser itself simply orchestrates the modules - it's the modules that truly _analyse_ the data and provide output.
+With the parser orchestrating the modules, it's down to the modules themselves to analyse the data and provide the final output.
 
-As a cliche example, a module Hello World:
+Each module should be in charge of analysing a single statistic or feature, so azs to keep them as small and digestible as reasonably possible. To aid in this, modules are able to 'depend' on others, and directly access any data they may expose. Modules are guaranteed to run _before_ anything that depends on them - this also implicitly prevents circular dependencies from being formed (an error will be thrown).
 
-```js
-import Module from 'parser/core/Module'
+For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
-export default class HelloWorld extends Module {
-	static handle = 'hello'
+## API Reference
+### Module
+#### Properties
+##### `static handle`
 
-	// The name that should be shown above the module output. Only required if the module _has_ output.
-	static title = 'Hello World'
+**Required.** The name that should be used to reference this module throughout the system/dependencies. Without this set, the module will break during build minification.
 
-	output() {
-		return 'Hello, world!'
-	}
-}
-```
+##### `static title`
 
-Modules receive event data via function calls, called in the following order:
+The name that should be shown above any output the module generates. If not set, it will default to the module's `handle`, with the first letter capitalised.
 
-1. `on_event(event)`
-2. `on_[event type](event)`
-3. `on_[event type]_[by|to]Player[Pet]?(event)`
+##### `static dependencies`
 
-The event types and data are straight from fflogs - you can inspect the request to see more info.
+An array of module handles that this module depends on. Modules listed here will always be executed _before_ the current module, and will be available on the `this.<handle>` instance property.
 
-To reduce code duplication, modules have a dependency system in place, that lets them reference other modules. Modules are guaranteed to run _before_ anything that depends on them (***NOTE:*** *this implicitly prevents circular dependencies - they will throw an error*).
+##### `static displayOrder`
 
-The `handle` static property is the name that should be used to reference dependencies. Any dependencies specified for a module are then made available at runtime as `this.[name]`.
+A number used to control the position the module should have in the final output. The core Module file exports the `DISPLAY_ORDER` const with a few defaults.
 
-This only covers the basics of modules, however. If you'd like to find out more, I would highly suggest checking the modules for the `core` and `jobs/smn` groups - they should provide ample examples of what can be done.
+#### Methods
+##### `addHook(event[, filter], callback)`
+
+Add an event hook.
+
+`event` should be the name of the event you wish to listen for. `'all'` can be passed to listen for _all_ events.
+
+`filter`, if specified, is an object specifying properties that _must_ be matched by an event for the hook to fire. Keys can be anything that the event may have. There are a few special keys and values available to the filter:
+
+- Setting the value of a property to an array will check if _any_ of the values match the event.
+- `abilityId: <value>` is shorthand for `ability: {guid: <value>}`
+- `by: <value>` and `to: <value>` are shorthand for `sourceID` and `targetID` respectively, and support the following additional values:
+	- `'player'`: The ID of the current player
+	- `'pet'`: The IDs of all the current player's pets.
+
+`callback` is the function that should be called when an event (optionally passing the filter) is run. It will receive the full event object as its first parameter.
+
+A object representing the added hook is returned, that can be later used to modify it. The actual structure of this hook object should not be relied upon.
+
+##### `output()`
+
+Override this function to provide output for the user. Any markup returned will be displayed on the analysis page, under a header defined by `static title`.
+
+Return `false` (the default implementation does this) to prevent generating output for the module.
+
+##### `normalise(events)`
+
+Override this function if the module absolutely _needs_ to process events before the official 'parse', such as to add missing `applybuff` events. Avoid if `addHook` could be used instead.
+
+`events` is an array of every event that is about to be parsed.
+
+Return value should be the `events` array, with any required modifications made to it. Failing to return this will prevent the parser from parsing any events at all.
