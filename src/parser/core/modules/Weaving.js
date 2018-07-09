@@ -131,15 +131,14 @@ export default class Weaving extends Module {
 		}
 
 		const panels = badWeaves.map(item => ({
+			key: item.gcdEvent.timestamp,
 			title: {
-				key: 'title-' + item.gcdEvent.timestamp,
 				content: <Fragment>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
 					&nbsp;-&nbsp;{item.weaves.length} weaves
 				</Fragment>,
 			},
 			content: {
-				key: 'content-' + item.gcdEvent.timestamp,
 				content: <Rotation events={[
 					...(item.gcdEvent.ability? [item.gcdEvent] : []),
 					...item.weaves,

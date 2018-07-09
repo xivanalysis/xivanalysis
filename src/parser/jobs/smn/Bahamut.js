@@ -73,7 +73,7 @@ export default class Bahamut extends Module {
 	}
 
 	output() {
-		const panels = this._history.map((sb, index) => {
+		const panels = this._history.map(sb => {
 			const counts = {}
 			sb.petCasts.forEach(cast => {
 				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
@@ -81,8 +81,8 @@ export default class Bahamut extends Module {
 			})
 
 			return {
+				key: sb.timestamp,
 				title: {
-					key: 'title-' + index,
 					content: <Fragment>
 						{this.parser.formatTimestamp(sb.timestamp)}
 						&nbsp;-&nbsp;
@@ -91,7 +91,6 @@ export default class Bahamut extends Module {
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + index,
 					content: <ul>
 						{sb.petCasts.map(cast => <li
 							key={cast.timestamp}

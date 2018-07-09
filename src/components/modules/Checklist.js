@@ -33,8 +33,9 @@ class Checklist extends Component {
 				expanded.push(index)
 			}
 			return {
+				// This should be a handle of some sort
+				key: index,
 				title: {
-					key: `title-${index}`,
 					className: styles.title,
 					content: <Fragment>
 						<Icon
@@ -54,7 +55,6 @@ class Checklist extends Component {
 					</Fragment>,
 				},
 				content: {
-					key: `content-${index}`,
 					content: <Fragment>
 						{rule.description && <div className={styles.description}>
 							<Icon name="info" size="large" />

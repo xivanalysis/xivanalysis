@@ -193,15 +193,14 @@ export default class DWT extends Module {
 		const panels = this._history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			return {
+				key: dwt.start,
 				title: {
-					key: 'title-' + dwt.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + dwt.start,
 					content: <Rotation events={dwt.casts}/>,
 				},
 			}
