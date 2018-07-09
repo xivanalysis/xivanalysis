@@ -3,7 +3,15 @@ import React from 'react'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
-	output() {
+	getDescription() {
 		return <p>This isn&apos;t even remotely done.</p>
+	}
+
+	getContributors() {
+		return [
+			{user: 'ackwell', role: 'Maintainer'},
+			{user: 'Nemekeh', role: 'Contributor'},
+			{user: 'Fryte', role: 'Contributor'},
+		]
 	}
 }
