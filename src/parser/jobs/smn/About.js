@@ -1,5 +1,6 @@
 import React from 'react'
 
+import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
@@ -9,9 +10,9 @@ export default class About extends CoreAbout {
 
 	getContributors() {
 		return [
-			{user: 'ackwell', role: 'Maintainer'},
-			{user: 'Nemekh', role: 'Contributor'},
-			{user: 'Fryte', role: 'Contributor'},
+			{user: CONTRIBUTORS.ACKWELL, role: 'Maintainer'},
+			{user: CONTRIBUTORS.NEMEKH, role: 'Contributor'},
+			{user: CONTRIBUTORS.FRYTE, role: 'Contributor'},
 		]
 	}
 }

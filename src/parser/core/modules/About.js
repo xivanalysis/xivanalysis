@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
-import {Label, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 
+import ContributorLabel from 'components/ui/ContributorLabel'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class About extends Module {
@@ -21,11 +22,14 @@ export default class About extends Module {
 		return <Fragment>
 			{this.getDescription()}
 
-			{this.getContributors().map(contributor => <Label
-				key={contributor.user}
-				content={contributor.user}
-				detail={contributor.role}
-			/>)}
+			{this.getContributors().map(contributor => {
+				const user = contributor.user
+				return <ContributorLabel
+					key={typeof user === 'string'? user : user.name}
+					contributor={user}
+					detail={contributor.role}
+				/>
+			})}
 		</Fragment>
 	}
 
