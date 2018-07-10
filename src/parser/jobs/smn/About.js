@@ -10,7 +10,7 @@ export default class About extends CoreAbout {
 	getContributors() {
 		return [
 			{user: 'ackwell', role: 'Maintainer'},
-			{user: 'Nemekeh', role: 'Contributor'},
+			{user: 'Nemekh', role: 'Contributor'},
 			{user: 'Fryte', role: 'Contributor'},
 		]
 	}
