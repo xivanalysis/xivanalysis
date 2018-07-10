@@ -2,14 +2,17 @@
 export default {
 	ACKWELL: {
 		name: 'ackwell',
+		colour: '#2d9b78',
 		avatar: process.env.PUBLIC_URL + '/avatar/ackwell.png',
 	},
 	NEMEKH: {
 		name: 'Nemekh',
+		colour: '#2d9b78',
 		avatar: process.env.PUBLIC_URL + '/avatar/nemekh.png',
 	},
 	FRYTE: {
 		name: 'Fryte',
+		colour: '#2d9b78',
 		avatar: process.env.PUBLIC_URL + '/avatar/fryte.png',
 	},
 }
