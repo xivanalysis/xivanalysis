@@ -21,9 +21,11 @@ export default class ContributorLabel extends PureComponent {
 		const name = typeof contributor === 'string'? contributor : contributor.name
 
 		const style = {}
-		if (contributor.colour) {
-			style.backgroundColor = contributor.colour
-			const colour = Color(contributor.colour)
+		if (contributor.jobs && contributor.jobs.length) {
+			// I'm assuming the first job they list is their 'main'
+			const job = contributor.jobs[0]
+			style.backgroundColor = job.colour
+			const colour = Color(job.colour)
 			if (colour.isDark()) {
 				style.color = 'white'
 			}
