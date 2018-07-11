@@ -18,7 +18,6 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onCast(event) {
-		console.log('cast')
 		this._casts.push({
 			cast: event,
 			hits: [],
@@ -26,7 +25,6 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onDamage(event) {
-		console.log('da')
 		this._casts[this._casts.length - 1].hits.push(event)
 	}
 

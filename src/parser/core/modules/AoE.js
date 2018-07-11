@@ -58,7 +58,6 @@ export default class AoE extends Module {
 			const lastDamage = tracker.damageEvents[tracker.damageEvents.length - 1]
 			if (lastDamage && event.timestamp - lastDamage.timestamp > NEW_AOE_THRESHOLD) {
 				addEvent(tracker)
-				i++
 				tracker.damageEvents = []
 			}
 
