@@ -1,51 +1,94 @@
 import Module from 'parser/core/Module'
 
+// Blame Meishu. No touchy.
+const INTERNAL_EVENT_TYPE = Symbol('aoe')
+
 export default class AoE extends Module {
 	static handle = 'aoe'
 
-	// Track the current state per source (in case events get intermingled)
-	_sources = {}
-
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', this._onCast)
-		this.addHook('damage', this._onDamage)
-		this.addHook('complete', this._onComplete)
+		// Listen to our own event from normalisation
+		this.addHook(INTERNAL_EVENT_TYPE, this._onAoe)
 	}
 
-	_onCast(event) {
-		const source = this._getSource(event)
-
-		// If there's an ability already, fire off an event for the 'end' of the aoe
-		if (source.ability && source.hits.length) {
-			this._fireEvent(source)
+	// Need to normalise so the final events can go out at the right time
+	normalise(events) {
+		// Track hits by source
+		const sources = {}
+		function getSource(event) {
+			const id = event.sourceID
+			return sources[id] = sources[id] || {
+				castEvent: null,
+				damageEvents: [],
+				insertAfter: 0,
+			}
 		}
 
-		// Reset the tracking
-		source.castEvent = event
-		source.ability = event.ability
-		source.hits = []
-	}
-
-	_onDamage(event) {
-		// Not interested in recording ticks
-		// Calling base impl of isValidHit - can be subclassed for fight specific handling
-		if (event.tick || !this.isValidHit(event)) {
-			return
+		function addEvent(source) {
+			events.splice(source.insertAfter + 1, 0, {
+				...source,
+				type: INTERNAL_EVENT_TYPE,
+			})
 		}
 
-		// Record the hit
-		this._getSource(event).hits.push({
-			id: event.targetID,
-			instance: event.targetInstance,
-		})
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
+			const source = getSource(event)
+
+			// eslint-disable-next-line default-case
+			switch (event.type) {
+			case 'cast':
+				// If there's at least one hit, add the event in
+				if (source.damageEvents.length) {
+					addEvent(source)
+					i++
+				}
+
+				// start recording the hit
+				source.castEvent = event
+				source.damageEvents = []
+				break
+
+			case 'damage':
+				// Ignore ticks, they're a whole other ball game
+				if (event.tick) { continue }
+
+				// If there's no cast for whatever reason, generate one
+				if (!source.castEvent) {
+					source.castEvent = {...event, type: 'cast'}
+				}
+
+				// If the cast doesn't match the damage, something weird's happened but handle it
+				// TODO: Should I also check for damage events a given time away from one another?
+				if (source.castEvent.ability.guid !== event.ability.guid) {
+					addEvent(source)
+					i++
+					source.castEvent = {...event, type: 'cast'}
+					source.damageEvents = []
+				}
+
+				// Record a damage hit and the insert pos (adding event after the last damage)
+				source.damageEvents.push(event)
+				source.insertAfter = i
+			}
+		}
+
+		return events
 	}
 
-	_onComplete() {
-		// Do a round of cleanup on all the sources
-		Object.values(this._sources).forEach(source => {
-			if (!source.ability || !source.hits.length) { return }
-			this._fireEvent(source)
+	_onAoe(event) {
+		// Filter out any damage events that don't pass muster, and transform into a simplified format
+		const hits = event.damageEvents
+			.filter(this.isValidHit.bind(this))
+			.map(event => ({id: event.targetID, instance: event.targetInstance}))
+
+		this.parser.fabricateEvent({
+			type: 'aoedamage',
+			castEvent: event.castEvent,
+			ability: event.castEvent.ability,
+			hits,
+			sourceID: event.castEvent.sourceID,
 		})
 	}
 
@@ -53,23 +96,5 @@ export default class AoE extends Module {
 		// Doesn't look like it's possible to derive invalid targets from fflog's api
 		// Leaving that to boss modules instead
 		return true
-	}
-
-	_getSource(event) {
-		const id = event.sourceID
-		return this._sources[id] = this._sources[id] || {
-			id,
-			castEvent: null,
-			ability: null,
-			hits: [],
-		}
-	}
-
-	_fireEvent(source) {
-		this.parser.fabricateEvent({
-			type: 'aoedamage',
-			...source,
-			sourceID: source.id,
-		})
 	}
 }
