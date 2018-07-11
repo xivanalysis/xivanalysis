@@ -1,137 +1,155 @@
-import math from 'mathjsCustom'
-import React, {Fragment} from 'react'
-import {Message, Icon} from 'semantic-ui-react'
+import math from "mathjsCustom"
+import React, {Fragment} from "react"
+import {Message, Icon} from "semantic-ui-react"
 
-import {getAction} from 'data/ACTIONS'
-import Module from 'parser/core/Module'
-import {Group, Item} from './Timeline'
+import {getAction} from "data/ACTIONS"
+import Module from "parser/core/Module"
+import {Group, Item} from "./Timeline"
 
-const MIN_GCD = 1500
-const MAX_GCD = 2500
+const MIN_GCD = 1500;
+const MAX_GCD = 2500;
 
 export default class GlobalCooldown extends Module {
-	static handle = 'gcd'
+	static handle = "gcd"
+
 	static dependencies = [
-		'timeline',
+		"timeline",
 	]
-	static title = 'Global Cooldown'
+
+	static title = "Global Cooldown"
 
 	_lastGcd = -1
+
 	_castingEvent = null
 
 	gcds = []
 
 	constructor(...args) {
-		super(...args)
+		super(...args);
 
-		this.addHook('complete', this._onComplete)
+		this.addHook("complete", this._onComplete);
 	}
 
 	// Using normalise so the estimate can be used throughout the parse
 	normalise(events) {
 		for (let i = 0; i < events.length; i++) {
-			const event = events[i]
+			const event = events[i];
 
 			// Only care about player GCDs
-			if (!this.parser.byPlayer(event) || !event.ability) { continue }
-			const action = getAction(event.ability.guid)
-			if (!action.onGcd) { continue }
+			if (!this.parser.byPlayer(event) || !event.ability) {
+				continue
+			}
+			const action = getAction(event.ability.guid);
+			if (!action.onGcd) {
+				continue
+			}
 
 			// eslint-disable-next-line default-case
 			switch (event.type) {
-			// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
-			case 'begincast':
+				// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
+			case "begincast":
 				// Can I check for cancels?
-				this._castingEvent = event
-				break
+				this._castingEvent = event;
+				break;
 
-			case 'cast':
+			case "cast":
 				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
-					this.saveGcd(this._castingEvent)
+					this.saveGcd(this._castingEvent);
 				} else {
-					this.saveGcd(event)
+					this.saveGcd(event);
 				}
 
-				this._castingEvent = null
-				break
+				this._castingEvent = null;
+				break;
 			}
 		}
 
-		return events
+		return events;
 	}
 
 	_onComplete() {
-		const gcdLength = this.getEstimate()
-		const startTime = this.parser.fight.start_time
+		const gcdLength = this.getEstimate();
+		const startTime = this.parser.fight.start_time;
 
 		// TODO: Look into adding items to groups? Maybe?
 		this.timeline.addGroup(new Group({
-			id: 'gcd',
-			content: 'GCD',
+			id: "gcd",
+			content: "GCD",
 			order: 0,
-		}))
+		}));
 
 		this.gcds.forEach(gcd => {
-			const action = getAction(gcd.actionId)
+			const action = getAction(gcd.actionId);
 			this.timeline.addItem(new Item({
-				type: 'background',
+				type: "background",
 				start: gcd.timestamp - startTime,
 				length: gcdLength,
-				group: 'gcd',
-				content: <img src={action.icon} alt={action.name}/>,
-			}))
-		})
+				group: "gcd",
+				content: <img src={action.icon
+			};
+			alt = { action.name } /  > , ;
+		}));
+	})
+}
+
+saveGcd(event);
+{
+	if (this._lastGcd >= 0) {
+		const diff = event.timestamp - this._lastGcd;
+
+		// GCD is only to two decimal places, so round it there. Storing in Ms.
+		const gcd = Math.round(diff / 10) * 10;
+		this.gcds.push({
+			timestamp: event.timestamp,
+			length: gcd,
+			actionId: event.ability.guid,
+		});
 	}
 
-	saveGcd(event) {
-		if (this._lastGcd >= 0) {
-			const diff = event.timestamp - this._lastGcd
+	// Store current gcd time for the check
+	this._lastGcd = event.timestamp;
+}
 
-			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			const gcd = Math.round(diff/10)*10
-			this.gcds.push({
-				timestamp: event.timestamp,
-				length: gcd,
-				actionId: event.ability.guid,
-			})
-		}
+getEstimate(bound = true);
+{
+	// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
 
-		// Store current gcd time for the check
-		this._lastGcd = event.timestamp
+	// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
+	//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
+
+	// If there's no GCDs, just return the max to stop this erroring out
+	if (!this.gcds.length) {
+		return MAX_GCD;
 	}
 
-	getEstimate(bound = true) {
-		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
+	// Mode seems to get best results. Using mean in case there's multiple modes.
+	const lengths = this.gcds.map(gcd => gcd.length);
+	let estimate = math.mean(math.mode(lengths));
 
-		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
-		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
-
-		// If there's no GCDs, just return the max to stop this erroring out
-		if (!this.gcds.length) {
-			return MAX_GCD
-		}
-
-		// Mode seems to get best results. Using mean in case there's multiple modes.
-		const lengths = this.gcds.map(gcd => gcd.length)
-		let estimate = math.mean(math.mode(lengths))
-
-		// Bound the result if requested
-		if (bound) {
-			estimate = Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
-		}
-
-		return estimate
+	// Bound the result if requested
+	if (bound) {
+		estimate = Math.max(MIN_GCD, Math.min(MAX_GCD, estimate));
 	}
 
-	output() {
-		const estimate = this.getEstimate(false)
+	return estimate;
+}
 
-		return <Fragment>
-			{estimate !== this.getEstimate(true) && <Message warning>
-				<Icon name="warning sign"/>
-				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
-			</Message>}
-			Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
-		</Fragment>
-	}
+output();
+{
+	const estimate = this.getEstimate(false);
+
+	return <;
+	Fragment >
+	{ estimate !== this.getEstimate(true) && <Message warning>
+		<Icon name="warning sign"/>
+		The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.
+		getEstimate(true))
+}
+for calculations. < /
+Message > }
+Estimated;
+GCD: <;
+strong > { this.parser.formatDuration(estimate) } < /;
+strong >  < /;
+Fragment > ; }
 }

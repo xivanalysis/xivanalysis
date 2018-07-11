@@ -1,5 +1,5 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import PropTypes from "prop-types"
+import React, {Component} from "react"
 
 class JobIcons extends Component {
 	static propTypes = {
@@ -12,16 +12,16 @@ class JobIcons extends Component {
 
 	render() {
 		const {
-			job: {icon},
+			job: { icon },
 			set = 2,
-			className = '',
-		} = this.props
+			className = "",
+		} = this.props;
 
-		return <img
-			src={`https://secure.xivdb.com/img/classes/set${set}/${icon}.png`}
-			alt={icon}
-			className={className}
-		/>
+		return <;
+		img;
+		src = { `https://secure.xivdb.com/img/classes/set${set}/${icon}.png` };
+		alt = { icon };
+		className = { className } /  > ;
 	}
 }
 

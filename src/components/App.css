@@ -23,20 +23,23 @@ body {
 }
 
 /* Forcing no wrapping on xivdb links so the icons don't get split off */
-[data-xivdb-key] {
-	white-space: nowrap;
-}
+
+[data-xivdb-key] { white-space: nowrap; }
 
 /* Apparently !important and calc() are SUI's favourite dish. Why the fuck am I using this thing again? */
-.ui.attached {
-	width: 100% !important;
-}
+
+.ui.attached { width: 100% !important; }
 
 /* Utility shit */
+
 .pull-left { float: left; }
+
 .pull-right { float: right; }
 
 .text-info { color: var(--info); }
+
 .text-success { color: var(--success); }
+
 .text-warning { color: var(--warning); }
+
 .text-error { color: var(--error); }

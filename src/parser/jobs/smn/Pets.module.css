@@ -1,17 +1,15 @@
-.chartWrapper {
-	display: inline-block;
-}
+.chartWrapper { display: inline-block; }
 
 .table {
 	display: inline-block;
-	vertical-align: top;
 	text-align: left;
+	vertical-align: top;
 }
 
 .swatch {
-	display: inline-block;
-	width: 15px;
-	height: 15px;
 	border: 1px solid grey;
+	display: inline-block;
+	height: 15px;
 	vertical-align: middle;
+	width: 15px;
 }

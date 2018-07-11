@@ -1,18 +1,18 @@
 .background {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: -1;
 	background: url(./omega-dark-blur.jpg) no-repeat center;
 	background-size: cover;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: -1;
 }
 
 .search {
+	bottom: 50%;
+	left: 0;
+	margin-bottom: -19px; /* Half the input group's height */
 	position: absolute;
 	right: 0;
-	left: 0;
-	bottom: 50%;
-	margin-bottom: -19px; /* Half the input group's height */
 }

@@ -1,23 +1,11 @@
-.meta {
-	margin: 0;
-}
+.meta { margin: 0; }
 
-.meta dt {
-	font-weight: bold;
-}
+.meta dt { font-weight: bold; }
 
-.meta dd {
-	margin: 0;
-}
+.meta dd { margin: 0; }
 
-.meta dd + dt {
-	margin-top: 4px;
-}
+.meta dd + dt { margin-top: 4px; }
 
-.contributor {
-	display: block;
-}
+.contributor { display: block; }
 
-.contributor + .contributor {
-	margin-top: 4px;
-}
+.contributor + .contributor { margin-top: 4px; }

@@ -1,27 +1,23 @@
-.title {
-	position: relative;
-}
+.title { position: relative; }
 
 .percent {
 	position: absolute !important;
+	right: 1em;
 	top: 50%;
 	transform: translateY(-50%);
-	right: 1em;
 }
 
 .progress {
 	display: inline-block !important;
-	width: 200px;
 	margin: 0 0 0 1em !important;
 	text-align: right;
 	vertical-align: middle;
+	width: 200px;
 }
 
 .description {
-	display: flex;
 	align-items: center;
+	display: flex;
 }
 
-.description p {
-	margin-left: 1em;
-}
+.description p { margin-left: 1em; }

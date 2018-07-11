@@ -1,7 +1,7 @@
-import {createStore, applyMiddleware} from 'redux'
-import thunkMiddleware from 'redux-thunk'
+import {createStore, applyMiddleware} from "redux"
+import thunkMiddleware from "redux-thunk"
 
-import reducers from './reducers'
+import reducers from "./reducers"
 
 function configureStore(preloadedState) {
 	return createStore(
@@ -10,7 +10,7 @@ function configureStore(preloadedState) {
 		applyMiddleware(
 			thunkMiddleware
 		)
-	)
+	);
 }
 
 export default configureStore()

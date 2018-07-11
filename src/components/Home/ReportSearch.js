@@ -1,9 +1,9 @@
-import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
-import {withRouter} from 'react-router-dom'
-import {Button, Input} from 'semantic-ui-react'
+import PropTypes from "prop-types"
+import React, {Component, Fragment} from "react"
+import {withRouter} from "react-router-dom"
+import {Button, Input} from "semantic-ui-react"
 
-import styles from './ReportSearch.module.css'
+import styles from "./ReportSearch.module.css"
 
 class ReportSearch extends Component {
 	static propTypes = {
@@ -13,72 +13,87 @@ class ReportSearch extends Component {
 	}
 
 	static getCode(input) {
-		const match = input.match(/^(?:.*reports\/)?([a-zA-Z0-9]{16})\/?(?:#.*)?$/)
-		return match && match[1]
+		const match = input.match(/^(?:.*reports\/)?([a-zA-Z0-9]{16})\/?(?:#.*)?$/);
+		return match && match[1];
 	}
 
 	static getFight(input) {
-		const match = input.match(/fight=([^&]*)/)
-		return match && match[1]
+		const match = input.match(/fight=([^&]*)/);
+		return match && match[1];
 	}
 
 	static getPlayer(input) {
-		const match = input.match(/source=([^&]*)/)
-		return match && match[1]
+		const match = input.match(/source=([^&]*)/);
+		return match && match[1];
 	}
 
 	constructor(props) {
-		super(props)
-		this.inputField = React.createRef()
+		super(props);
+		this.inputField = React.createRef();
 	}
 
 	// Using arrow function to maintain bind
 	parseReportUrl = () => {
-		const input = this.inputField.current.inputRef.value.trim()
+		const input = this.inputField.current.inputRef.value.trim();
 
-		const code = this.constructor.getCode(input)
+		const code = this.constructor.getCode(input);
 
 		// If we don't at least get a report code, just stop now
 		if (!code) {
-			console.log('TODO: Handle invalid url')
-			return
+			console.log("TODO: Handle invalid url");
+			return;
 		}
 
-		const fight = this.constructor.getFight(input)
-		const player = this.constructor.getPlayer(input)
+		const fight = this.constructor.getFight(input);
+		const player = this.constructor.getPlayer(input);
 
-		let url = '/'
+		let url = "/";
 		if (code) {
-			url += `${code}/`
+			url += `${code}/`;
 
 			if (fight) {
-				url += `${fight}/`
+				url += `${fight}/`;
 
 				if (player) {
-					url += `${player}/`
+					url += `${player}/`;
 				}
 			}
 
-			url = ((fight && player)? 'analyse' : 'find') + url
+			url = ((fight && player) ? "analyse" : "find") + url;
 		}
 
-		this.props.history.push(url)
+		this.props.history.push(url);
 	}
 
 	render() {
-		return <Fragment>
-			<span className={styles.text}><strong>Paste your log URL to get started</strong></span>
-			<Input
-				type="text"
-				placeholder="https://www.fflogs.com/reports/..."
-				ref={this.inputField}
-				action={<Button onClick={this.parseReportUrl}>Analyse</Button>}
-				onChange={this.parseReportUrl}
-				className={styles.input}
-				inverted
-			/>
-		</Fragment>
+		return <;
+		Fragment >  < span;
+		className = { styles.text }>;<
+		strong > Paste;
+		your;
+		log;
+		URL;
+		to;
+		get;
+		started < /;
+		strong>;</
+		span >  < Input;
+		type = "text";
+		placeholder = "https://www.fflogs.com/reports/...";
+		ref = { this.inputField };
+		action = { <Button onClick={this.parseReportUrl } > Analyse < /;
+		Button > 
 	}
+
+	onChange={ this.parseReportUrl }
+
+	className={ styles.input }
+
+	inverted
+	/>
+	</
+	Fragment>
+}
 }
 
 export default withRouter(ReportSearch)

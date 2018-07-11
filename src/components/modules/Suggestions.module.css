@@ -1,12 +1,10 @@
 .checkbox {
 	position: absolute !important;
-	top: 1em;
 	right: 0;
+	top: 1em;
 }
 
-.items {
-	margin-top: 1.5em;
-}
+.items { margin-top: 1.5em; }
 
 .item {
 	display: flex;
@@ -14,13 +12,9 @@
 	width: 100%;
 }
 
-.item:first-child {
-	margin-top: 0;
-}
+.item:first-child { margin-top: 0; }
 
-.item:last-child {
-	margin-bottom: 0;
-}
+.item:last-child { margin-bottom: 0; }
 
 .item > img {
 	align-self: flex-start;
@@ -29,6 +23,6 @@
 }
 
 .extra {
-	margin-top: .5em;
 	color: rgba(0, 0, 0, .4);
+	margin-top: .5em;
 }

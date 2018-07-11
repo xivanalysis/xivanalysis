@@ -1,9 +1,9 @@
-import Raven from 'raven-js'
-import React from 'react'
-import toposort from 'toposort'
+import Raven from "raven-js"
+import React from "react"
+import toposort from "toposort"
 
-import ErrorMessage from 'components/ui/ErrorMessage'
-import {DependencyCascadeError} from 'errors'
+import ErrorMessage from "components/ui/ErrorMessage"
+import {DependencyCascadeError} from "errors"
 
 class Parser {
 	// -----
@@ -11,33 +11,39 @@ class Parser {
 	// -----
 
 	report = null
+
 	fight = null
+
 	player = null
+
 	_timestamp = 0
 
 	modules = {}
+
 	_constructors = {}
 
 	moduleOrder = []
+
 	_triggerModules = []
+
 	_moduleErrors = {}
 
 	get currentTimestamp() {
 		// TODO: this.finished?
-		return Math.min(this.fight.end_time, this._timestamp)
+		return Math.min(this.fight.end_time, this._timestamp);
 	}
 
 	get fightDuration() {
 		// TODO: should i have like... currentDuration and fightDuration?
 		//       this seems a bit jank
-		return this.currentTimestamp - this.fight.start_time
+		return this.currentTimestamp - this.fight.start_time;
 	}
 
 	// Get the friendlies that took part in the current fight
 	get fightFriendlies() {
 		return this.report.friendlies.filter(
 			friend => friend.fights.some(fight => fight.id === this.fight.id)
-		)
+		);
 	}
 
 	// -----
@@ -45,15 +51,15 @@ class Parser {
 	// -----
 
 	constructor(report, fight, player) {
-		this.report = report
-		this.fight = fight
-		this.player = player
+		this.report = report;
+		this.fight = fight;
+		this.player = player;
 
 		// Set initial timestamp
-		this._timestamp = fight.start_time
+		this._timestamp = fight.start_time;
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
-		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
+		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id);
 	}
 
 	// -----
@@ -61,44 +67,46 @@ class Parser {
 	// -----
 
 	addModules(modules) {
-		let keyed = {}
+		let keyed = {};
 
 		if (Array.isArray(modules)) {
 			modules.forEach(mod => {
-				keyed[mod.handle] = mod
-			})
+				keyed[mod.handle] = mod;
+			});
 		} else {
 			// Fall back to the 'old' way of doing things by setting the handle
 			// TODO: Remove before final live
-			const keys = Object.keys(modules)
-			console.warn('The following modules were loaded using the old-format object, please move handles to the module static property as soon as possible:', keys)
+			const keys = Object.keys(modules);
+			console.warn(
+				"The following modules were loaded using the old-format object, please move handles to the module static property as soon as possible:",
+				keys);
 			keys.forEach(key => {
-				modules[key].handle = key
-			})
-			keyed = modules
+				modules[key].handle = key;
+			});
+			keyed = modules;
 		}
 
 		// Merge the modules into our constructor object
-		Object.assign(this._constructors, keyed)
+		Object.assign(this._constructors, keyed);
 	}
 
 	buildModules() {
 		// Build the values we need for the toposort
-		const nodes = Object.keys(this._constructors)
-		const edges = []
+		const nodes = Object.keys(this._constructors);
+		const edges = [];
 		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
-			edges.push([mod, dep])
-		}))
+			edges.push([mod, dep]);
+		}));
 
 		// Sort modules to load dependencies first
 		// Reverse is required to switch it into depencency order instead of sequence
 		// This will naturally throw an error on cyclic deps
-		this.moduleOrder = toposort.array(nodes, edges).reverse()
+		this.moduleOrder = toposort.array(nodes, edges).reverse();
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			this.modules[mod] = new this._constructors[mod](this)
-		})
+			this.modules[mod] = new this._constructors[mod](this);
+		});
 	}
 
 	// -----
@@ -109,24 +117,24 @@ class Parser {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		this.moduleOrder.forEach(mod => {
-			events = this.modules[mod].normalise(events)
-		})
-		return events
+			events = this.modules[mod].normalise(events);
+		});
+		return events;
 	}
 
 	parseEvents(events) {
 		// Create a copy of the module order that we'll use while parsing
-		this._triggerModules = this.moduleOrder.slice(0)
+		this._triggerModules = this.moduleOrder.slice(0);
 
-		this.fabricateEvent({type: 'init'})
+		this.fabricateEvent({ type: "init" });
 
 		// Run the analysis pass
 		events.forEach(event => {
-			this._timestamp = event.timestamp
-			this.triggerEvent(event)
-		})
+			this._timestamp = event.timestamp;
+			this.triggerEvent(event);
+		});
 
-		this.fabricateEvent({type: 'complete'})
+		this.fabricateEvent({ type: "complete" });
 	}
 
 	fabricateEvent(event, trigger) {
@@ -138,36 +146,36 @@ class Parser {
 			// Rest of the event, mark it as fab'd
 			...event,
 			__fabricated: true,
-		})
+		});
 	}
 
 	triggerEvent(event) {
 		// TODO: Do I need to keep a history?
 		this._triggerModules.forEach(mod => {
 			try {
-				this.modules[mod].triggerEvent(event)
+				this.modules[mod].triggerEvent(event);
 			} catch (error) {
 				// Error trying to handle an event, tell sentry
-				Raven.captureException(error)
+				Raven.captureException(error);
 
 				// Also cascade the error through the dependency tree
-				this._setModuleError(mod, error)
+				this._setModuleError(mod, error);
 			}
-		})
+		});
 	}
 
 	_setModuleError(mod, error) {
 		// Set the error for the current module
-		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1)
-		this._moduleErrors[mod] = error
+		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1);
+		this._moduleErrors[mod] = error;
 
 		// Cascade via dependencies
 		Object.keys(this._constructors).forEach(key => {
-			const constructor = this._constructors[key]
+			const constructor = this._constructors[key];
 			if (constructor.dependencies.includes(mod)) {
-				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
+				this._setModuleError(key, new DependencyCascadeError({ dependency: mod }));
 			}
-		})
+		});
 	}
 
 	// -----
@@ -175,84 +183,99 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = this.moduleOrder
-		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
+		const displayOrder = this.moduleOrder;
+		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder);
 
-		const results = []
+		const results = [];
 		displayOrder.forEach(mod => {
-			const module = this.modules[mod]
+			const module = this.modules[mod];
 
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[mod]) {
-				const error = this._moduleErrors[mod]
+				const error = this._moduleErrors[mod];
 				results.push({
-					name: module.constructor.title,
-					markup: <ErrorMessage error={error} />,
-				})
-				return
-			}
-
-			// Use the ErrorMessage component for errors in the output too (and sentry)
-			let output = null
-			try {
-				output = module.output()
-			} catch (error) {
-				Raven.captureException(error)
-				results.push({
-					name: module.constructor.title,
-					markup: <ErrorMessage error={error} />,
-				})
-				return
-			}
-
-			if (output) {
-				results.push({
-					name: module.constructor.title,
-					markup: output,
-				})
-			}
-		})
-
-		return results
+						name: module.constructor.title,
+						markup: <ErrorMessage error={error
+					} /
+ 					>
+					, ;
+			});
+		return;
 	}
 
-	// -----
-	// Utilities
-	// -----
+	// Use the ErrorMessage component for errors in the output too (and sentry)
+	let
 
-	byPlayer(event, playerId = this.player.id) {
-		return event.sourceID === playerId
+	output = null
+
+	try {
+	output = module.output()
+} catch
+(error);
+{
+	Raven.captureException(error);
+	results.push({
+			name: module.constructor.title,
+			markup: <ErrorMessage error={error
+		} /
+ 		>
+		, ;
+})
+return; }
+
+if (output) {
+	results.push({
+		name: module.constructor.title,
+		markup: output,
+	});
+}
+})
+
+return results; }
+
+// -----
+// Utilities
+// -----
+
+byPlayer(event, playerId = this.player.id);
+{
+	return event.sourceID === playerId;
+}
+
+toPlayer(event, playerId = this.player.id);
+{
+	return event.targetID === playerId;
+}
+
+byPlayerPet(event, playerId = this.player.id);
+{
+	const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID);
+	return pet && pet.petOwner === playerId;
+}
+
+toPlayerPet(event, playerId = this.player.id);
+{
+	const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID);
+	return pet && pet.petOwner === playerId;
+}
+
+formatTimestamp(timestamp, secondPrecision);
+{
+	return this.formatDuration(timestamp - this.fight.start_time, secondPrecision);
+}
+
+formatDuration(duration, secondPrecision = null);
+{
+	duration /= 1000;
+	const seconds = duration % 60;
+	if (duration < 60) {
+		const precision = secondPrecision !== null ? secondPrecision : seconds < 10 ? 2 : 0;
+		return seconds.toFixed(precision) + "s";
 	}
+	const precision = secondPrecision !== null ? secondPrecision : 0;
+	return `${Math.floor(duration / 60)}:${seconds < 10 ? "0" : ""}${seconds.toFixed(precision)}`;
 
-	toPlayer(event, playerId = this.player.id) {
-		return event.targetID === playerId
-	}
-
-	byPlayerPet(event, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
-		return pet && pet.petOwner === playerId
-	}
-
-	toPlayerPet(event, playerId = this.player.id) {
-		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
-		return pet && pet.petOwner === playerId
-	}
-
-	formatTimestamp(timestamp, secondPrecision) {
-		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
-	}
-
-	formatDuration(duration, secondPrecision = null) {
-		duration /= 1000
-		const seconds = duration % 60
-		if (duration < 60) {
-			const precision = secondPrecision !== null? secondPrecision : seconds < 10? 2 : 0
-			return seconds.toFixed(precision) + 's'
-		}
-		const precision = secondPrecision !== null ? secondPrecision : 0
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
-
-	}
+}
 }
 
 export default Parser
