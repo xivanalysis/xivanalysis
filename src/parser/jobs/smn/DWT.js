@@ -146,6 +146,11 @@ export default class DWT extends Module {
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
+		// Make sure we've not already stopped this one
+		if (!this._active) {
+			return
+		}
+
 		this._active = false
 		this._dwt.end = endTime
 		this._history.push(this._dwt)
