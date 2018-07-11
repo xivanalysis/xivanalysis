@@ -3,8 +3,8 @@ export default class Group {
 
 	constructor(options) {
 		Object.keys(options || {}).forEach(key => {
-			this[key] = options[key];
-		});
+			this[key] = options[key]
+		})
 	}
 
 	// Need to provide a means for generating the final output so getters work
@@ -21,6 +21,6 @@ export default class Group {
 			nestedGroups: this.nestedGroups,
 			showNested: this.showNested,
 			order: this.order,
-		};
+		}
 	}
 }

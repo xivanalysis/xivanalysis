@@ -1,7 +1,15 @@
-.sidebar { margin-top: 1em !important; }
+.sidebar {
+	margin-top: 1em !important;
+}
 
-.header { display: flex; }
+.header {
+	display: flex;
+}
 
-.header > img { align-self: center; }
+.header > img {
+	align-self: center;
+}
 
-.resultsContainer { margin-bottom: 25vh; }
+.resultsContainer {
+	margin-bottom: 25vh;
+}

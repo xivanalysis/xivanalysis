@@ -1,4 +1,4 @@
-import AoE from "./AoE"
+import AoE from './AoE'
 
 export default [
 	AoE,

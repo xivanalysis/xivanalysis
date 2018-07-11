@@ -1,6 +1,8 @@
 :global .vis-background .vis-item-content {
-	height: 100%;
 	padding: 0;
+	height: 100%;
 }
 
-:global .vis-background .vis-item-content img { max-height: 100%; }
+:global .vis-background .vis-item-content img {
+	max-height: 100%;
+}

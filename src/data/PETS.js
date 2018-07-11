@@ -1,4 +1,4 @@
-import {addExtraIndex} from "utilities"
+import {addExtraIndex} from 'utilities'
 
 // TODO: MCH pets
 // TODO: SCH pets
@@ -6,33 +6,33 @@ import {addExtraIndex} from "utilities"
 const PETS = {
 	EMERALD_CARBUNCLE: {
 		id: 1650,
-		name: "Emerald Carbuncle",
+		name: 'Emerald Carbuncle',
 	},
 
 	TOPAZ_CARBUNCLE: {
 		id: 1700,
-		name: "Topaz Carbuncle",
+		name: 'Topaz Carbuncle',
 	},
 
 	GARUDA_EGI: {
 		id: 1651,
-		name: "Garuda-Egi",
+		name: 'Garuda-Egi',
 	},
 
 	TITAN_EGI: {
 		id: 1701,
-		name: "Titan-Egi",
+		name: 'Titan-Egi',
 	},
 
 	IFRIT_EGI: {
 		id: 180,
-		name: "Ifrit-Egi",
+		name: 'Ifrit-Egi',
 	},
 
 	DEMI_BAHAMUT: {
 		id: 7427,
-		name: "Demi-Bahamut",
+		name: 'Demi-Bahamut',
 	},
-};
+}
 
-export default addExtraIndex(PETS, "id")
+export default addExtraIndex(PETS, 'id')

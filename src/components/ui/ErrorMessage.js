@@ -1,33 +1,27 @@
-import PropTypes from "prop-types"
-import React from "react"
-import {Message} from "semantic-ui-react"
+import PropTypes from 'prop-types'
+import React from 'react'
+import {Message} from 'semantic-ui-react'
 
-import {SEVERITY} from "errors"
+import {SEVERITY} from 'errors'
 
 // Error type render config
 const ERROR_PROPS = {
 	[SEVERITY.ERROR]: {
 		error: true,
-		icon: "times circle outline",
+		icon: 'times circle outline',
 	},
 	[SEVERITY.WARNING]: {
 		warning: true,
-		icon: "warning sign",
+		icon: 'warning sign',
 	},
-};
-
-const ErrorMessage = ({ error }) =>  < Message;
-{
-	...
-	(ERROR_PROPS[error.severity || SEVERITY.ERROR])
 }
-header = { error.message || error.toString() };
-content = {
-		<p>
-		{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'
-	} <
-/;
-p > }
+
+const ErrorMessage = ({error}) => <Message
+	{...(ERROR_PROPS[error.severity || SEVERITY.ERROR])}
+	header={error.message || error.toString()}
+	content={<p>
+		{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}
+	</p>}
 />
 
 ErrorMessage.propTypes = {
@@ -36,6 +30,6 @@ ErrorMessage.propTypes = {
 		message: PropTypes.string,
 		detail: PropTypes.string,
 	}).isRequired,
-};
+}
 
 export default ErrorMessage

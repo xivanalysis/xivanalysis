@@ -1,5 +1,5 @@
-import {addExtraIndex} from "utilities"
-import ZONES from "./ZONES"
+import {addExtraIndex} from 'utilities'
+import ZONES from './ZONES'
 
 // I'm not including xivdb IDs for now, there's nothing meanigful to referenced on that end
 const BOSSES = {
@@ -24,6 +24,6 @@ const BOSSES = {
 		logId: 55,
 		zoneId: ZONES.O8S.logId,
 	},
-};
+}
 
-export default addExtraIndex(BOSSES, "logId")
+export default addExtraIndex(BOSSES, 'logId')

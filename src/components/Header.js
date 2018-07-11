@@ -1,13 +1,13 @@
-import PropTypes from "prop-types"
-import React, {Component, Fragment} from "react"
-import {connect} from "react-redux"
-import {Link, withRouter} from "react-router-dom"
-import withSizes from "react-sizes"
-import {Container, Dropdown, Menu} from "semantic-ui-react"
+import PropTypes from 'prop-types'
+import React, {Component, Fragment} from 'react'
+import {connect} from 'react-redux'
+import {Link, withRouter} from 'react-router-dom'
+import withSizes from 'react-sizes'
+import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
-import {compose, getPathMatch} from "utilities"
+import {compose, getPathMatch} from 'utilities'
 
-import styles from "./Header.module.css"
+import styles from './Header.module.css'
 
 class Header extends Component {
 	static propTypes = {
@@ -24,150 +24,123 @@ class Header extends Component {
 
 	render() {
 		const {
-			location: { pathname },
+			location: {pathname},
 			report,
-		} = this.props;
+		} = this.props
 
 		// Need to do this janky shit to get the router path match
-		const pathMatch = getPathMatch(pathname);
+		const pathMatch = getPathMatch(pathname)
 
 		// Grab the field we're interested in
-		const pathParams = pathMatch ? pathMatch.params : {};
-		const code = pathParams.code;
-		const fightId = parseInt(pathParams.fight, 10);
-		const combatantId = parseInt(pathParams.combatant, 10);
+		const pathParams = pathMatch? pathMatch.params : {}
+		const code = pathParams.code
+		const fightId = parseInt(pathParams.fight, 10)
+		const combatantId = parseInt(pathParams.combatant, 10)
 
-		const reportLoaded = report && !report.loading && report.code === code;
-		const crumbs = [];
+		const reportLoaded = report && !report.loading && report.code === code
+		const crumbs = []
 
 		// Report
 		if (code) {
-			let title = code;
+			let title = code
 			if (reportLoaded) {
-				title = report.title;
+				title = report.title
 			}
 			crumbs.push({
 				title,
 				url: `/find/${code}/`,
-			});
+			})
 		}
 
 		// Fight
 		if (fightId) {
-			let title = fightId;
-			if (reportLoaded && fightId !== "last") {
-				const fight = report.fights.find(fight => fight.id === fightId);
+			let title = fightId
+			if (reportLoaded && fightId !== 'last') {
+				const fight = report.fights.find(fight => fight.id === fightId)
 				// Do I want the kill time too?
-				title = fight ? fight.name : fightId;
+				title = fight? fight.name : fightId
 			}
 			crumbs.push({
 				title,
 				url: `/find/${code}/${fightId}/`,
-			});
+			})
 		}
 
 		// Combatant
 		if (combatantId) {
-			let title = combatantId;
+			let title = combatantId
 			if (reportLoaded) {
-				const combatant = report.friendlies.find(friendly => friendly.id === combatantId);
-				title = combatant ? combatant.name : combatantId;
+				const combatant = report.friendlies.find(friendly => friendly.id === combatantId)
+				title = combatant? combatant.name : combatantId
 			}
 			crumbs.push({
 				title,
 				url: `/analyse/${code}/${fightId}/${combatantId}/`,
-			});
+			})
 		}
 
-		const onHome = pathname === "/";
-		const collapseMenu = this.props.collapseMenu && !onHome;
+		const onHome = pathname === '/'
+		const collapseMenu = this.props.collapseMenu && !onHome
 
-		return <;
-		Menu;
-		fixed = "top";
-		inverted;
-		secondary = { onHome };
-		size = { onHome? 'massive': null } >  < Container >
-		{
-			collapseMenu || <Fragment>
-			<Menu.Item as={Link
-		};
-		to = "/";
-		header >  < img;
-		src = { process.env.PUBLIC_URL + '/logo.png' };
-		className = { styles.logo };
-		alt = "logo" /  >
-			xivanalysis <
-		/;
-		Menu.Item >
-		{
-			crumbs.map(crumb => <Menu.Item
-			key={crumb.url
-		};
-		as = { Link };
-		to = { crumb.url } >
-			{ crumb.title } <
-		/;
-		Menu.Item > )
+		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
+			<Container>
+				{collapseMenu || <Fragment>
+					<Menu.Item as={Link} to="/" header>
+						<img src={process.env.PUBLIC_URL + '/logo.png'} className={styles.logo} alt="logo"/>
+						xivanalysis
+					</Menu.Item>
+
+					{crumbs.map(crumb => <Menu.Item
+						key={crumb.url}
+						as={Link}
+						to={crumb.url}
+					>
+						{crumb.title}
+					</Menu.Item>)}
+				</Fragment>}
+
+				{collapseMenu && <Dropdown
+					text={<Fragment>
+						<img
+							src={process.env.PUBLIC_URL + '/logo.png'}
+							className={styles.logo}
+							style={{verticalAlign: 'middle'}}
+							alt="logo"
+						/>
+						<strong>xivanalysis</strong>
+					</Fragment>}
+					className="link item"
+				>
+					<Dropdown.Menu>
+						<Dropdown.Item as={Link} to="/">
+							Home
+						</Dropdown.Item>
+						{crumbs.map(crumb => <Dropdown.Item
+							key={crumb.url}
+							as={Link}
+							to={crumb.url}
+						>
+							{crumb.title}
+						</Dropdown.Item>)}
+					</Dropdown.Menu>
+				</Dropdown>}
+
+				<Menu.Menu position="right">
+					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
+					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
+				</Menu.Menu>
+			</Container>
+		</Menu>
 	}
-	</
-	Fragment>
 }
 
-{
-	collapseMenu &&  <;
-	Dropdown;
-	text = {
-		<Fragment>
-		<img
-		src={process.env.PUBLIC_URL + '/logo.png'
-	};
-	className = { styles.logo };
-	style = { {verticalAlign: "middle" }
-}
-alt = "logo" /  >  < strong > xivanalysis < /;
-strong >  < /;
-Fragment > }
-className = "link item" >  < Dropdown.Menu >  < Dropdown.Item;
-as = { Link };
-to = "/" >
-	Home <
-/;
-Dropdown.Item >
-{
-	crumbs.map(crumb => <Dropdown.Item
-	key={crumb.url
-};
-as = { Link };
-to = { crumb.url } >
-	{ crumb.title } <
-/;
-Dropdown.Item > )}
-;</
-Dropdown.Menu >  < /;
-Dropdown > }
-
-;<
-Menu.Menu;
-position = "right" >  < Menu.Item;
-icon = "discord";
-href = "https://discord.gg/jVbVe44";
-target = "_blank" /  >  < Menu.Item;
-icon = "github";
-href = "https://github.com/xivanalysis/xivanalysis";
-target = "_blank" /  >  < /;
-Menu.Menu >  < /;
-Container >  < /;
-Menu > ; }
-}
-
-const mapSizesToProps = ({ width }) => ({
+const mapSizesToProps = ({width}) => ({
 	collapseMenu: width < 992,
-});
+})
 
 const mapStateToProps = state => ({
 	report: state.report,
-});
+})
 
 export default compose(
 	withRouter,
