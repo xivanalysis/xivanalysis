@@ -80,7 +80,7 @@ export default class DWT extends Module {
 	}
 
 	_onDeathflareDamage(event) {
-		this._stopAndSave(event.hits.length, event.castEvent.timestamp)
+		this._stopAndSave(event.hits.length, event.timestamp)
 	}
 
 	_onRemoveDwt() {
