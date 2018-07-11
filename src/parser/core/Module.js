@@ -136,8 +136,10 @@ export default class Module {
 	}
 
 	triggerEvent(event) {
-		// Run through hooks for all and this event
-		this._runHooks(event, this._hooks.get('all'))
+		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
+		if (typeof event.type !== 'symbol') {
+			this._runHooks(event, this._hooks.get('all'))
+		}
 		this._runHooks(event, this._hooks.get(event.type))
 	}
 
