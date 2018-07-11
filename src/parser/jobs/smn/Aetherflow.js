@@ -51,7 +51,7 @@ export default class Aetherflow extends Module {
 	_onPainflareDamage(event) {
 		// Only fault single target PFs _outside_ rushes.
 		if (event.hits.length <= 1 && !this.gauge.isRushing()) {
-			this._badPainflares.push(event.castEvent)
+			this._badPainflares.push(event)
 		}
 	}
 

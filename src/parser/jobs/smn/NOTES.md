@@ -1,3 +1,6 @@
+- [ ] aflow drift in non-timeline visual?
+- [ ] show player actions for bahamut
+
 # SMN Analysis (Nem's thoughts)
 
 ## General Fight Considerations
