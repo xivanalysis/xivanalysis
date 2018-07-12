@@ -1,6 +1,5 @@
 import React from 'react'
 
-import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
@@ -12,8 +11,8 @@ export default class ShadowFlare extends Module {
 
 	constructor(...args) {
 		super(...args)
-
-		this.addHook('cast', {abilityId: ACTIONS.SHADOW_FLARE.id}, this._onCast)
+		// Using applybuff instead of cast in case it was precast - the buff will have a fab'd event for us to use
+		this.addHook('applybuff', {abilityId: STATUSES.SHADOW_FLARE.id}, this._onCast)
 		this.addHook('aoedamage', {abilityId: STATUSES.SHADOW_FLARE.id}, this._onDamage)
 	}
 
