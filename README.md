@@ -16,6 +16,7 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 	- [Modules](#modules)
 - [API Reference](#api-reference)
 	- [Module](#module)
+	- [Parser](#parser)
 
 ## Getting Started
 
@@ -32,6 +33,8 @@ Once you've set those up, you'll need to pull down the codebase. If you plan to 
 git clone https://github.com/xivanalysis/xivanalysis.git
 cd xivanalysis
 ```
+
+***NOTE:*** *Drop past our Discord channel before you get too into it, have a chat! Duping up on implementations is never fun.*
 
 If you are working with a fork, I would highly suggest [configuring an upstream](https://help.github.com/articles/configuring-a-remote-for-a-fork/) remote, and making sure you [sync it down](https://help.github.com/articles/syncing-a-fork/) reasonably frequently - you can check the #automations channel on Discord to get an idea of what's been changed.
 
@@ -86,6 +89,9 @@ For more details, check out the API Reference below, and have a look through the
 
 ## API Reference
 ### Module
+
+All modules should extend this class at some point in their hierarchy. It provides helpers to handle events, and provides a standard interface for the parser to work with.
+
 #### Properties
 ##### `static handle`
 
@@ -135,3 +141,47 @@ Override this function if the module absolutely _needs_ to process events before
 `events` is an array of every event that is about to be parsed.
 
 Return value should be the `events` array, with any required modifications made to it. Failing to return this will prevent the parser from parsing any events at all.
+
+### Parser
+
+The core parser object, orchestrating the modules and providing meta data about the fight. All modules have access to an instance of this via `this.parser`.
+
+#### Properties
+##### `report`, `fight`, `player`
+
+The full report metadata object, and the specific fight and player object from it for the current parse, respectively. The data in these is direct from FFLogs, check your networking tab to see the structure.
+
+##### `currentTimestamp`
+
+The timestamp of the event currently being parsed in ms. Note that timestamps do _not_ start at 0. Subtract `fight.start_time` to get a relative timestamp
+
+##### `fightDuration`
+
+The _remaining_ duration in the fight (yes, I'm aware it's badly named), in ms.
+
+##### `fightFriendlies`
+
+An array of friendly actors that took part in the fight currently being parsed.
+
+#### Methods
+##### `fabricateEvent(event[, trigger])`
+
+Trigger an event throughout the system.
+
+`event` should be the event object being called. A `type` property _must_ be defined for this do anything. If not specified, `timestamp` will be set to the current timestamp.
+
+##### `byPlayer(event[, playerId])`, `toPlayer(event[, playerId])`
+
+Checks if the specified event was by/to the specified player. If `playerId` is not set, the current user will be used.
+
+##### `byPlayerPet(event[, playerId])`, `toPlayerPet(event[, playerId])`
+
+The same as their `xxPlayer` counterparts, but check if the event was by/to one of the specified player's pets.
+
+##### `formatDuration(duration[, secondPrecision])`
+
+Formats the specified duration (in ms) as a `MM:SS` string. If under 60s, will display seconds with specified precision (default 2 decimal places).
+
+##### `formatTimestamp(timestamp[, secondPrecision])`
+
+The result of `formatDuration` for the duration of the fight up until the specified timestamp.
