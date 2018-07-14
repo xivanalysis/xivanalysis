@@ -13,3 +13,9 @@
 .resultsContainer {
 	margin-bottom: 25vh;
 }
+
+.menuLogo {
+	display: inline-block !important;
+	width: 2.5em !important;
+	margin-right: .75rem !important;
+}
