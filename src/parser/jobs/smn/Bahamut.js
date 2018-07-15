@@ -104,7 +104,7 @@ export default class Bahamut extends Module {
 				content: {
 					content: <ul>
 						{sb.casts.map(cast => <li
-							key={cast.timestamp}
+							key={cast.timestamp + '-' + cast.ability.guid}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
 							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;
