@@ -41,6 +41,8 @@ export default class Death extends Module {
 	}
 
 	_onDeath(event) {
+		if (!this.shouldCountDeath(event)) { return }
+
 		this._count ++
 		this._timestamp = event.timestamp
 	}
@@ -67,6 +69,11 @@ export default class Death extends Module {
 			severity: SEVERITY.MAJOR,
 			why: <Fragment>{this._count} death{this._count !== 1 && 's'}.</Fragment>,
 		}))
+	}
+
+	// Override this if a fight mechanic is a forced death *cough*ucob*cough* and shouldn't be counted towards the player
+	shouldCountDeath(/* event */) {
+		return true
 	}
 
 	addDeathToTimeline(end) {
