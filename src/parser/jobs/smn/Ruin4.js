@@ -79,8 +79,7 @@ export default class Ruin4 extends Module {
 			this._endProcHold(this.parser.fight.end_time)
 		}
 
-		// console.log('wasted', this.overage)
-		if (this._overage > 0) {
+		if (this._overage > 1000) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RUIN_IV.icon,
 				content: <Fragment>
