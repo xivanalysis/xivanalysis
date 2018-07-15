@@ -27,7 +27,7 @@ export default class Ruin4 extends Module {
 	static handle = 'ruin4'
 	static dependencies = [
 		'cooldowns',
-		'invuln',
+		'downtime',
 		'suggestions',
 	]
 	static title = 'Ruin IV'
@@ -93,7 +93,7 @@ export default class Ruin4 extends Module {
 
 	_endProcHold(end) {
 		const start = this._lastProc
-		const untargetable = this.invuln.getUntargetableUptime('all', start, end)
+		const untargetable = this.downtime.getDowntime(start, end)
 		const holdTime = end - start - untargetable
 
 		if (holdTime > MAX_PROC_HOLD) {

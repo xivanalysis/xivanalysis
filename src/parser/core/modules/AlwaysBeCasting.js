@@ -5,8 +5,8 @@ export default class AlwaysBeCasting extends Module {
 	static handle = 'abc'
 	static dependencies = [
 		'checklist',
+		'downtime',
 		'gcd',
-		'invuln',
 	]
 
 	constructor(...args) {
@@ -21,7 +21,7 @@ export default class AlwaysBeCasting extends Module {
 			return
 		}
 
-		const fightDuration = this.parser.fightDuration - this.invuln.getUntargetableUptime()
+		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 		// TODO: better method for getting gcd count
 		const gcdUptime = numGcds * this.gcd.getEstimate()
 

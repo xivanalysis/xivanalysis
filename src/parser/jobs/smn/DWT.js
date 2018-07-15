@@ -24,9 +24,9 @@ export default class DWT extends Module {
 	static dependencies = [
 		'aoe', // Ensure AoE runs cleanup before us
 		'castTime',
+		'downtime',
 		'gauge',
 		'gcd',
-		'invuln',
 		'suggestions',
 	]
 	static title = 'Dreadwyrm Trance'
@@ -168,12 +168,8 @@ export default class DWT extends Module {
 			return
 		}
 
-		// Don't want to fault people for 'missing' gcds on invuln targets
-		const invulnTime = this.invuln.getInvulnerableUptime(
-			'all',
-			this._dwt.start,
-			this._dwt.start + DWT_LENGTH
-		)
+		// Don't want to fault people for 'missing' gcds when they can't actually cast
+		const invulnTime = this.downtime.getDowntime(this._dwt.start, this._dwt.start + DWT_LENGTH)
 
 		// The last gcd only needs to fit the instant cast in, hence the +1
 		const possibleGcds = Math.floor((USABLE_LENGTH - invulnTime) / this.gcd.getEstimate()) + 1

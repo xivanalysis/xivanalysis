@@ -6,6 +6,7 @@ import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Cooldowns from './Cooldowns'
 import Death from './Death'
+import Downtime from './Downtime'
 import Enemies from './Enemies'
 import GlobalCooldown from './GlobalCooldown'
 import Invulnerability from './Invulnerability'
@@ -24,6 +25,7 @@ export default [
 	Combatants,
 	Cooldowns,
 	Death,
+	Downtime,
 	Enemies,
 	GlobalCooldown,
 	Invulnerability,
