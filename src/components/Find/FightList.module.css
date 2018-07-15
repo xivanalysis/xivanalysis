@@ -1,3 +1,13 @@
+.refresh {
+	font-size: 1rem;
+	cursor: pointer;
+}
+
+.refresh :global(.icon) {
+	margin-left: 1em;
+	margin-right: .25em !important;
+}
+
 .groupHeader {
 	position: relative;
 	background: none !important;

@@ -1,5 +1,7 @@
 - [ ] aflow drift in non-timeline visual?
-- [ ] show player actions for bahamut
+- [x] show player actions for bahamut
+- [ ] show status durations on timeline
+- [ ] i mean this is core stuff but down for the count maybe?
 
 # SMN Analysis (Nem's thoughts)
 
