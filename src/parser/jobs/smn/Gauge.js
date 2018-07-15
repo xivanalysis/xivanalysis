@@ -126,9 +126,7 @@ export default class Gauge extends Module {
 
 	_onDeath() {
 		// Death just flat out resets everything. Rip.
-		this._lostAetherflow += this._aetherflow
-		this._lostDreadwyrmAether += this._dreadwyrmAether
-
+		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this._aetherflow = 0
 		this._aethertrailAttunement = 0
 		this._dreadwyrmAether = 0
