@@ -147,6 +147,11 @@ class Parser {
 			try {
 				this.modules[mod].triggerEvent(event)
 			} catch (error) {
+				// If we're in dev, throw the error back up
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+
 				// Error trying to handle an event, tell sentry
 				Raven.captureException(error)
 
@@ -197,6 +202,9 @@ class Parser {
 			try {
 				output = module.output()
 			} catch (error) {
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
 				Raven.captureException(error)
 				results.push({
 					name: module.constructor.title,
