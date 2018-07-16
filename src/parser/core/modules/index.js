@@ -14,6 +14,7 @@ import Potions from './Potions'
 import PrecastStatus from './PrecastStatus'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
+import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [
@@ -33,5 +34,6 @@ export default [
 	PrecastStatus,
 	Suggestions,
 	Timeline,
+	UnableToAct,
 	Weaving,
 ]
