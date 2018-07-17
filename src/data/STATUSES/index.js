@@ -4,6 +4,13 @@ import ENEMY from './ENEMY'
 import ROLE from './ROLE'
 import SHARED from './SHARED'
 import ACN from './ACN'
+import SCH from './SCH'
+import AST from './AST'
+import MNK from './MNK'
+import DRG from './DRG'
+import NIN from './NIN'
+import BRD from './BRD'
+import MCH from './MCH'
 import SMN from './SMN'
 
 const STATUSES = {
@@ -11,6 +18,17 @@ const STATUSES = {
 	...ROLE,
 	...SHARED,
 	...ACN,
+
+	...SCH,
+	...AST,
+
+	...MNK,
+	...DRG,
+	...NIN,
+
+	...BRD,
+	...MCH,
+
 	...SMN,
 }
 

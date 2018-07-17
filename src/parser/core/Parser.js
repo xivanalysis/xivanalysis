@@ -105,12 +105,13 @@ class Parser {
 	// Event handling
 	// -----
 
-	normalise(events) {
+	async normalise(events) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		this.moduleOrder.forEach(mod => {
-			events = this.modules[mod].normalise(events)
-		})
+		for (const mod of this.moduleOrder) {
+			events = await this.modules[mod].normalise(events)
+		}
+
 		return events
 	}
 
