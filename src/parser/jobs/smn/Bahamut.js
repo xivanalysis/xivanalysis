@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {SUMMON_BAHAMUT_LENGTH} from './Pets'
@@ -33,6 +33,7 @@ export default class Bahamut extends Module {
 
 	constructor(...args) {
 		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onPlayerCast)
 		this.addHook('cast', {
 			by: 'pet',
 			abilityId: DEMI_BAHAMUT_ACTIONS,
@@ -41,11 +42,22 @@ export default class Bahamut extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
+	_onPlayerCast(event) {
+		// Ignore autos
+		const action = getAction(event.ability.guid)
+		if (action.autoAttack) { return }
+
+		// Track player actions during SB
+		if (this.gauge.bahamutSummoned()) {
+			this._current.casts.push(event)
+		}
+	}
+
 	_onBahamutCast(event) {
 		// Track Big B's casts, and mark potential ghosts
 		const timeSinceSummon = event.timestamp - this._current.timestamp
 		const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
-		this._current.petCasts.push({
+		this._current.casts.push({
 			...event,
 			ghostChance,
 		})
@@ -60,8 +72,7 @@ export default class Bahamut extends Module {
 		// Set up fresh tracking
 		this._current = {
 			timestamp: event.timestamp,
-			// playerCasts: [],
-			petCasts: [],
+			casts: [],
 		}
 	}
 
@@ -75,7 +86,7 @@ export default class Bahamut extends Module {
 	output() {
 		const panels = this._history.map(sb => {
 			const counts = {}
-			sb.petCasts.forEach(cast => {
+			sb.casts.forEach(cast => {
 				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
 				obj[cast.ghostChance] = (obj[cast.ghostChance] || 0) + 1
 			})
@@ -92,8 +103,8 @@ export default class Bahamut extends Module {
 				},
 				content: {
 					content: <ul>
-						{sb.petCasts.map(cast => <li
-							key={cast.timestamp}
+						{sb.casts.map(cast => <li
+							key={cast.timestamp + '-' + cast.ability.guid}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
 							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;

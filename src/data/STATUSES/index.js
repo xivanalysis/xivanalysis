@@ -17,7 +17,12 @@ const STATUSES = {
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
 const correctIdsToMatchLogs = obj => {
 	Object.keys(obj).forEach(key => {
-		obj[key].id = obj[key].id + 1000000
+		const status = obj[key]
+		if (Array.isArray(status.id)) {
+			status.id = status.id.map(id => id + 1000000)
+		} else {
+			status.id = status.id + 1000000
+		}
 	})
 	return obj
 }

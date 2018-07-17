@@ -16,7 +16,7 @@ export const setReport = (report) => ({
 	payload: report,
 })
 
-export const fetchReport = (code) => async dispatch => {
+export const fetchReport = (code, params) => async dispatch => {
 	dispatch(setReport({loading: true}))
 
 	let response = null
@@ -24,6 +24,7 @@ export const fetchReport = (code) => async dispatch => {
 		response = await fflogsApi.get(`/report/fights/${code}`, {
 			params: {
 				translate: true,
+				...params,
 			},
 		})
 	} catch (e) {
@@ -54,4 +55,10 @@ export const fetchReportIfNeeded = code => (dispatch, getState) => {
 	if (!report || (report.code !== code && !report.loading)) {
 		return dispatch(fetchReport(code))
 	}
+}
+
+export const refreshReport = () => (dispatch, getState) => {
+	const report = getState().report
+	if (!report || report.loading) { return }
+	dispatch(fetchReport(report.code, {bypassCache: true}))
 }

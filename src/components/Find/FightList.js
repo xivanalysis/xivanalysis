@@ -1,9 +1,11 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
-import {Checkbox, Header, Menu} from 'semantic-ui-react'
+import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
+import store from 'store'
+import {refreshReport} from 'store/actions'
 
 import styles from './FightList.module.css'
 
@@ -18,6 +20,10 @@ class FightList extends Component {
 
 	state = {
 		killsOnly: true,
+	}
+
+	refreshFights = () => {
+		store.dispatch(refreshReport())
 	}
 
 	render() {
@@ -52,13 +58,19 @@ class FightList extends Component {
 		return <Fragment>
 			<Header>
 				Select a pull
-				<Checkbox
-					toggle
-					label="Kills only"
-					defaultChecked={killsOnly}
-					onChange={(_, data) => this.setState({killsOnly: data.checked})}
-					className="pull-right"
-				/>
+				<div className="pull-right">
+					<Checkbox
+						toggle
+						label="Kills only"
+						defaultChecked={killsOnly}
+						onChange={(_, data) => this.setState({killsOnly: data.checked})}
+						// className="pull-right"
+					/>
+					<span className={styles.refresh} onClick={this.refreshFights}>
+						<Icon name="refresh"/>
+						Refresh
+					</span>
+				</div>
 			</Header>
 
 			{fights.map((group, index) => <Fragment key={index}>

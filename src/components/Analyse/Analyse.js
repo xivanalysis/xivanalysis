@@ -23,6 +23,7 @@ import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 import {compose} from 'utilities'
 
 import styles from './Analyse.module.css'
+import fflogsLogo from './fflogs.png'
 
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
@@ -200,6 +201,15 @@ class Analyse extends Component {
 		return this.resultCache
 	}
 
+	getReportUrl() {
+		const {
+			report,
+			match: {params},
+		} = this.props
+
+		return `https://www.fflogs.com/reports/${report.code}#fight=${params.fight}&source=${params.combatant}`
+	}
+
 	render() {
 		const {
 			parser,
@@ -234,7 +244,7 @@ class Analyse extends Component {
 							</Header.Subheader>
 						</Header.Content>
 					</Header>
-					<Header className={styles.header} attached="bottom">
+					<Header className={styles.header} attached>
 						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
 						<Header.Content>
 							{parser.fight.name}
@@ -243,6 +253,12 @@ class Analyse extends Component {
 							</Header.Subheader>
 						</Header.Content>
 					</Header>
+					<Menu vertical attached="bottom">
+						<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
+							<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
+							View report on FF Logs
+						</Menu.Item>
+					</Menu>
 
 					{this.props.showMenu && <Sticky context={this.stickyContext.current} offset={60}>
 						<Menu vertical pointing secondary fluid>

@@ -27,7 +27,7 @@ export default class Ruin4 extends Module {
 	static handle = 'ruin4'
 	static dependencies = [
 		'cooldowns',
-		'invuln',
+		'downtime',
 		'suggestions',
 	]
 	static title = 'Ruin IV'
@@ -79,8 +79,7 @@ export default class Ruin4 extends Module {
 			this._endProcHold(this.parser.fight.end_time)
 		}
 
-		// console.log('wasted', this.overage)
-		if (this._overage > 0) {
+		if (this._overage > 1000) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RUIN_IV.icon,
 				content: <Fragment>
@@ -94,7 +93,7 @@ export default class Ruin4 extends Module {
 
 	_endProcHold(end) {
 		const start = this._lastProc
-		const untargetable = this.invuln.getUntargetableUptime('all', start, end)
+		const untargetable = this.downtime.getDowntime(start, end)
 		const holdTime = end - start - untargetable
 
 		if (holdTime > MAX_PROC_HOLD) {
