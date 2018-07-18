@@ -23,10 +23,9 @@ export default {
 	},
 	LEYLIA: {
 		name: 'Leylia',
-		avatar: process.env.PUBLIC_URL + '/avatar/leyia.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/Leylia.png',
 		jobs: [
 			JOBS.RED_MAGE,
-			JOBS.SAMURAI
-		]
+		],
 	}
 }
