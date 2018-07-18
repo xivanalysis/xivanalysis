@@ -8,7 +8,6 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
-	STATUSES.PHOENIXS_BLESSING.id,
 	STATUSES.WEAKNESS.id,
 	STATUSES.BRINK_OF_DEATH.id,
 ]
