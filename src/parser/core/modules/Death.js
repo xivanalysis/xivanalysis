@@ -76,7 +76,6 @@ export default class Death extends Module {
 	}
 
 	addDeathToTimeline(end) {
-		console.log(this._timestamp, end)
 		const startTime = this.parser.fight.start_time
 		this.timeline.addItem(new Item({
 			type: 'background',
