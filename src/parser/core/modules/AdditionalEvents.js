@@ -61,15 +61,11 @@ export default class AdditionalEvents extends Module {
 		const targetQuery = Array.from(targets).join(' or ')
 
 		// Build the filter string
-		const filter = QUERY_FILTER.map(section => {
+		let filter = QUERY_FILTER.map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
 			const abilities = section.abilities.join(',')
-			const playerIds = [
-				this.parser.player.id,
-				...this.parser.player.pets.map(pet => pet.id),
-			].join(',')
 
-			let condition = `type in (${types}) and ability.id in (${abilities}) and source.id not in (${playerIds})`
+			let condition = `type in (${types}) and ability.id in (${abilities})`
 			if (section.targetsOnly) {
 				condition += ` and (${targetQuery})`
 			}
@@ -77,15 +73,23 @@ export default class AdditionalEvents extends Module {
 			return `(${condition})`
 		}).join(' or ')
 
+		// Exclude events by the current player and their pets, as we already have them from the main event lookup
+		const playerIds = [
+			this.parser.player.id,
+			...this.parser.player.pets.map(pet => pet.id),
+		].join(',')
+		filter +=  ` and source.id not in (${playerIds})`
+
+		// Request the new events
 		const newEvents = await getFflogsEvents(
 			this.parser.report.code,
 			this.parser.fight,
 			{filter}
 		)
 
+		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.
 		events.push.apply(events, newEvents)
 		stable.inplace(events, (a, b) => a.timestamp - b.timestamp)
-		// TODO: This will have generated a few dupes - do I need to filter them out?
 
 		return events
 	}
