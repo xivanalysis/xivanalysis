@@ -23,6 +23,12 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/015000/015017.png',
 	},
 
+	SILENCE: {
+		id: [7, 1060, 1347],
+		name: 'Silence',
+		icon: 'https://secure.xivdb.com/img/game/015000/015005.png',
+	},
+
 	CONFUSED: {
 		id: [11, 1047, 1283],
 		name: 'Confused',
