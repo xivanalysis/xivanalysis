@@ -10,6 +10,7 @@ export default class DoTs extends Module {
 	static handle = 'dots'
 	static dependencies = [
 		'checklist',
+		'cooldowns',
 		'enemies',
 		'invuln',
 	]
@@ -35,6 +36,10 @@ export default class DoTs extends Module {
 					name: <Fragment><ActionLink {...ACTIONS.MIASMA_III} /> uptime</Fragment>,
 					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
 				}),
+				new Requirement({
+					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FLARE}/> cooldown uptime</Fragment>,
+					percent: () => this.getShadowFlareUptimePercent(),
+				}),
 			],
 		}))
 	}
@@ -46,5 +51,18 @@ export default class DoTs extends Module {
 		fightDuration -= this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
+	}
+
+	getShadowFlareUptimePercent() {
+		// Need to do this manually, as I want to remove boss invuln periods from the total
+		const cdHistory = this.cooldowns.getCooldown(ACTIONS.SHADOW_FLARE.id).history
+		const uptime = cdHistory.reduce((carry, cd) => {
+			// Removing invuln time from the CD, we're not really counting it
+			const invulnTime = this.invuln.getInvulnerableUptime('all', cd.timestamp, cd.timestamp + cd.length)
+			return carry + cd.length - invulnTime
+		}, 0)
+
+		const duration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		return (uptime / duration) * 100
 	}
 }

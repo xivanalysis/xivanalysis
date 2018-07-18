@@ -7,10 +7,14 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+// Statuses that need to be up for Fester to do :ok_hand: damage
 const FESTER_STATUSES = [
 	STATUSES.BIO_III.id,
 	STATUSES.MIASMA_III.id,
 ]
+
+// Flow needs to be burnt before first use - 15s is optimal for first cast
+const FIRST_FLOW_TIMESTAMP = 15000
 
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
@@ -63,7 +67,7 @@ export default class Aetherflow extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - 15000)) * 100,
+					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - FIRST_FLOW_TIMESTAMP)) * 100,
 				}),
 			],
 		}))

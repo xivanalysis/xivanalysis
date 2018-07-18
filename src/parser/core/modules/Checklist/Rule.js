@@ -8,9 +8,9 @@ export default class Rule {
 	// TODO: Target mode percent/value
 
 	get percent() {
-		// wowa has a bunch of different modes for this stuff, i'm just going to use median for now
+		// WoWA has a bunch of different modes for this stuff, I'm just going to use mean for now. Because I'm mean. Hue.
 		// TODO: different requirement modes
-		return math.median(this.requirements.map(requirement => requirement.percent))
+		return math.mean(this.requirements.map(requirement => requirement.percent))
 	}
 
 	constructor(options) {
