@@ -97,6 +97,13 @@ const ZONES = {
 		dbId: 30057,
 		banner: 'https://secure.xivdb.com/img/game/112000/112261.png',
 	},
+
+	// UwU
+	UWU:{
+		logId: 777,
+		dbId: 30067,
+		banner: 'https://secure.xivdb.com/img/game/000000/000000.png',
+	}
 }
 
 export default addExtraIndex(ZONES, 'logId')
