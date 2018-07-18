@@ -1,5 +1,17 @@
 // TODO: Fill in the rest of this
 export default {
+	RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP: {
+		id: 493,
+		name: 'Physical Vulnerability Up',
+		icon: 'https://secure.xivdb.com/img/game/015000/015053.png',
+	},
+
+	CONTAGION_MAGIC_VULNERABILITY_UP: {
+		id: 494,
+		name: 'Magical Vulnerability Up',
+		icon: 'https://secure.xivdb.com/img/game/015000/015057.png',
+	},
+
 	DREADWYRM_TRANCE: {
 		id: 808,
 		name: 'Dreadwyrm Trance',
@@ -22,5 +34,11 @@ export default {
 		id: 1215,
 		name: 'Miasma III',
 		icon: 'https://secure.xivdb.com/img/game/012000/012683.png',
+	},
+
+	RUINATION: {
+		id: 1291,
+		name: 'Ruination',
+		icon: 'https://secure.xivdb.com/img/game/012000/012684.png',
 	},
 }

@@ -13,7 +13,7 @@ import {
 	Sticky,
 } from 'semantic-ui-react'
 
-import {fflogsApi} from 'api'
+import {getFflogsEvents} from 'api'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
@@ -170,24 +170,14 @@ class Analyse extends Component {
 		parser.buildModules()
 		this.setState({parser})
 
-		// TODO: Should this be somewhere else?
-		// TODO: Looks like we don't need to paginate events requests any more... sure?
-		const resp = await fflogsApi.get(`report/events/${report.code}`, {
-			params: {
-				start: fight.start_time,
-				end: fight.end_time,
-				actorid: combatant.id,
-				// filter?
-				translate: true, // probs keep same?
-			},
-		})
-		const events = resp.data.events
+		// Grab the events
+		let events = await getFflogsEvents(report.code, fight, {actorid: combatant.id})
 
 		// Normalise the events before we parse them
-		parser.normalise(events)
+		events = await parser.normalise(events)
 
 		// TODO: Batch
-		parser.parseEvents(events)
+		await parser.parseEvents(events)
 
 		this.resultCache = null
 		this.setState({complete: true})

@@ -1,4 +1,5 @@
 import About from './About'
+import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
 import CastTime from './CastTime'
@@ -19,6 +20,7 @@ import Weaving from './Weaving'
 
 export default [
 	About,
+	AdditionalEvents,
 	AlwaysBeCasting,
 	AoE,
 	CastTime,

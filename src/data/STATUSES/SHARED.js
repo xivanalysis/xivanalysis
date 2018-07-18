@@ -16,4 +16,10 @@ export default {
 		name: 'Medicated',
 		icon: 'https://secure.xivdb.com/img/game/016000/016203.png',
 	},
+
+	SLASHING_RESISTANCE_DOWN: {
+		id: 819,
+		name: 'Slashing Resistance Down',
+		icon: 'https://secure.xivdb.com/img/game/015000/015786.png',
+	},
 }
