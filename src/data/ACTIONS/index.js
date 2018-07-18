@@ -7,6 +7,7 @@ import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
 import SMN from './SMN'
+import BRD from './BRD'
 
 const ACTIONS = {
 	...SHARED,
@@ -17,6 +18,8 @@ const ACTIONS = {
 	...ACN,
 
 	...WHM,
+
+	...BRD,
 
 	...SMN,
 }

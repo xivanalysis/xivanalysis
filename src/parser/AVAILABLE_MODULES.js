@@ -6,6 +6,7 @@ export default {
 
 	JOBS: {
 		[JOBS.SUMMONER.logType]: () => import('./jobs/smn' /* webpackChunkName: "jobs-smn" */),
+		[JOBS.BARD.logType]: () => import('./jobs/brd' /* webpackChunkName: "jobs-smn" */),
 	},
 
 	BOSSES: {
