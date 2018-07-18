@@ -64,10 +64,16 @@ export default class AdditionalEvents extends Module {
 		const filter = QUERY_FILTER.map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
 			const abilities = section.abilities.join(',')
-			let condition = `type in (${types}) and ability.id in (${abilities})`
+			const playerIds = [
+				this.parser.player.id,
+				...this.parser.player.pets.map(pet => pet.id),
+			].join(',')
+
+			let condition = `type in (${types}) and ability.id in (${abilities}) and source.id not in (${playerIds})`
 			if (section.targetsOnly) {
 				condition += ` and (${targetQuery})`
 			}
+
 			return `(${condition})`
 		}).join(' or ')
 
