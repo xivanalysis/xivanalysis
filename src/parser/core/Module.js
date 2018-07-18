@@ -84,7 +84,7 @@ export default class Module {
 		return events
 	}
 
-	addHook(event, filter, cb) {
+	addHook(events, filter, cb) {
 		const mapFilterEntity = (qol, raw) => {
 			if (filter[qol]) {
 				switch (filter[qol]) {
@@ -118,20 +118,29 @@ export default class Module {
 			filter.ability.guid = filter.abilityId
 			delete filter.abilityId
 		}
-
 		const hook = {
-			event,
+			events,
 			filter,
 			callback: cb.bind(this),
 		}
 
-		// Make sure the map has a key for us
-		if (!this._hooks.has(event)) {
-			this._hooks.set(event, new Set())
+		// Make sure events is an array
+		if (!Array.isArray(events)) {
+			events = [events]
 		}
 
-		// Set the hook and return it so it can be removed
-		this._hooks.get(event).add(hook)
+		// Hook for each of the events
+		events.forEach(event => {
+			// Make sure the map has a key for us
+			if (!this._hooks.has(event)) {
+				this._hooks.set(event, new Set())
+			}
+
+			// Set the hook
+			this._hooks.get(event).add(hook)
+		})
+
+		// Return the hook representation so it can be removed (later)
 		return hook
 	}
 
