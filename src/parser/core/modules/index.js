@@ -1,4 +1,5 @@
 import About from './About'
+import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
 import CastTime from './CastTime'
@@ -14,10 +15,12 @@ import Potions from './Potions'
 import PrecastStatus from './PrecastStatus'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
+import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
 
 export default [
 	About,
+	AdditionalEvents,
 	AlwaysBeCasting,
 	AoE,
 	CastTime,
@@ -33,5 +36,6 @@ export default [
 	PrecastStatus,
 	Suggestions,
 	Timeline,
+	UnableToAct,
 	Weaving,
 ]

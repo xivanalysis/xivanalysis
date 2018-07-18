@@ -18,7 +18,6 @@ export const setReport = (report) => ({
 
 export const fetchReport = (code, params) => async dispatch => {
 	dispatch(setReport({loading: true}))
-	console.log(params)
 
 	let response = null
 	try {

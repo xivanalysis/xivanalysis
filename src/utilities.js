@@ -3,7 +3,11 @@ import {matchPath} from 'react-router-dom'
 export const addExtraIndex = (obj, index) => {
 	Object.keys(obj).forEach(key => {
 		const val = obj[key]
-		obj[val[index]] = val
+		let newKey = val[index]
+		if (!Array.isArray(newKey)) {
+			newKey = [newKey]
+		}
+		newKey.forEach(key => obj[key] = val)
 	})
 	return obj
 }

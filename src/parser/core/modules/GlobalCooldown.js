@@ -111,8 +111,10 @@ export default class GlobalCooldown extends Module {
 			return MAX_GCD
 		}
 
-		// Mode seems to get best results. Using mean in case there's multiple modes.
+		// Calculate the lengths of the GCD
 		const lengths = this.gcds.map(gcd => gcd.length)
+
+		// Mode seems to get best results. Using mean in case there's multiple modes.
 		let estimate = math.mean(math.mode(lengths))
 
 		// Bound the result if requested
@@ -127,6 +129,12 @@ export default class GlobalCooldown extends Module {
 		const estimate = this.getEstimate(false)
 
 		return <Fragment>
+			<Message info icon>
+				<Icon name="info"/>
+				<Message.Content>
+					Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
+				</Message.Content>
+			</Message>
 			{estimate !== this.getEstimate(true) && <Message warning>
 				<Icon name="warning sign"/>
 				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.

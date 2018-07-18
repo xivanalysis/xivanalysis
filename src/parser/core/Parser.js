@@ -105,12 +105,13 @@ class Parser {
 	// Event handling
 	// -----
 
-	normalise(events) {
+	async normalise(events) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		this.moduleOrder.forEach(mod => {
-			events = this.modules[mod].normalise(events)
-		})
+		for (const mod of this.moduleOrder) {
+			events = await this.modules[mod].normalise(events)
+		}
+
 		return events
 	}
 
@@ -147,6 +148,11 @@ class Parser {
 			try {
 				this.modules[mod].triggerEvent(event)
 			} catch (error) {
+				// If we're in dev, throw the error back up
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+
 				// Error trying to handle an event, tell sentry
 				Raven.captureException(error)
 
@@ -197,6 +203,9 @@ class Parser {
 			try {
 				output = module.output()
 			} catch (error) {
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
 				Raven.captureException(error)
 				results.push({
 					name: module.constructor.title,

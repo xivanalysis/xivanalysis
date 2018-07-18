@@ -126,6 +126,7 @@ class Header extends Component {
 				</Dropdown>}
 
 				<Menu.Menu position="right">
+					<Menu.Item className={styles.version}>{process.env.VERSION}</Menu.Item>
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
 					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
 				</Menu.Menu>
