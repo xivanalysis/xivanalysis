@@ -3,21 +3,21 @@ export default {
 	//Songs
 	WANDERERS_MINUET: {
 		id: 3559,
-		name: 'Wanderers Minuet',
+		name: 'Wanderer\'s Minuet',
 		icon: 'https://secure.xivdb.com/img/game/002000/002607.png',
 		cooldown: 80,
 	},
 
 	MAGES_BALLAD: {
 		id: 114,
-		name: 'Mages Ballad',
+		name: 'Mage\'s Ballad',
 		icon: 'https://secure.xivdb.com/img/game/002000/002602.png',
 		cooldown: 80,
 	},
 
 	ARMYS_PAEON: {
 		id: 116,
-		name: 'Armys Paeon',
+		name: 'Army\'s Paeon',
 		icon: 'https://secure.xivdb.com/img/game/002000/002603.png',
 		cooldown: 80,
 	},
@@ -27,7 +27,6 @@ export default {
 		name: 'Foe Requiem',
 		icon: 'https://secure.xivdb.com/img/game/002000/002611.png',
 		castTime: 1.5,
-		onGcd: true,
 	},
 
 	//Dots
@@ -98,7 +97,7 @@ export default {
 
 	MISERYS_END: {
 		id: 103,
-		name: 'Miserys End',
+		name: 'Misery\'s End',
 		icon: 'https://secure.xivdb.com/img/game/000000/000364.png',
 		cooldown: 12,
 	},
@@ -173,7 +172,7 @@ export default {
 	// Utility Def
 	NATURES_MINNE: {
 		id: 7408,
-		name: 'Natures Minne',
+		name: 'Nature\'s Minne',
 		icon: 'https://secure.xivdb.com/img/game/002000/002615.png',
 		cooldown: 45,
 	},
