@@ -84,17 +84,18 @@ export default class GlobalCooldown extends Module {
 	}
 
 	saveGcd(event) {
-		if (this._lastGcd >= 0) {
-			const diff = event.timestamp - this._lastGcd
+		let gcdLength = -1
 
+		if (this._lastGcd >= 0) {
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			const gcd = Math.round(diff/10)*10
-			this.gcds.push({
-				timestamp: event.timestamp,
-				length: gcd,
-				actionId: event.ability.guid,
-			})
+			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
 		}
+
+		this.gcds.push({
+			timestamp: event.timestamp,
+			length: gcdLength,
+			actionId: event.ability.guid,
+		})
 
 		// Store current gcd time for the check
 		this._lastGcd = event.timestamp
