@@ -60,7 +60,6 @@ export default {
 		name: 'Empyreal Arrow',
 		icon: 'https://secure.xivdb.com/img/game/002000/002606.png',
 		cooldown: 15,
-		onGcd: true,
 	},
 	REFULGENT_ARROW: {
 		id: 7409,
@@ -69,9 +68,27 @@ export default {
 		onGcd: true,
 	},
 	QUICK_NOCK: {
-		id: 7409,
+		id: 106,
 		name: 'Quick Nock',
 		icon: 'https://secure.xivdb.com/img/game/000000/000360.png',
 		onGcd: true,
+	},
+	BLOODLETTER: {
+		id: 110,
+		name: 'Bloodletter',
+		icon: 'https://secure.xivdb.com/img/game/000000/000361.png',
+		cooldown: 15,
+	},
+	MISERYS_END: {
+		id: 103,
+		name: 'Miserys End',
+		icon: 'https://secure.xivdb.com/img/game/000000/000361.png',
+		cooldown: 12,
+	},
+	SIDEWINDER: {
+		id: 3562,
+		name: 'Sidewinder',
+		icon: 'https://secure.xivdb.com/img/game/002000/002610.png',
+		cooldown: 60,
 	},
 }
