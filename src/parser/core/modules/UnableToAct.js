@@ -2,13 +2,14 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 // Yeah... there's a lot of them.
-// TODO: Need to work out how I should handle amnesia/paci
+// TODO: Need to work out how I should handle amnesia/paci/silence
 /* eslint-disable no-mixed-spaces-and-tabs */
 const STATUS_IDS = [
 	...STATUSES.STUN.id,
 	...STATUSES.SLEEP.id,
 	// ...STATUSES.AMNESIA.id,
 	// ...STATUSES.PACIFICATION.id,
+	// ...STATUSES.SILENCE.id,
 	...STATUSES.CONFUSED.id,
 	...STATUSES.TERROR.id,
 	...STATUSES.FETTERS.id,
