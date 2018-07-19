@@ -8,6 +8,7 @@ import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
 import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {
+	[SEVERITY.MORBID]: {content: 'Morbid', color: 'black', icon: 'times'},
 	[SEVERITY.MAJOR]: {content: 'Major', color: 'red', icon: 'arrow up'},
 	[SEVERITY.MEDIUM]: {content: 'Medium', color: 'orange'},
 	[SEVERITY.MINOR]: {content: 'Minor', color: 'blue', icon: 'arrow down'},

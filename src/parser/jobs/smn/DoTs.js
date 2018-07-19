@@ -13,10 +13,13 @@ const STATUS_DURATION = {
 	[STATUSES.MIASMA_III.id]: 30000,
 }
 
+const SHADOW_FLARE_DURATION = 15000
+
 export default class DoTs extends Module {
 	static handle = 'dots'
 	static dependencies = [
 		'checklist',
+		'combatants',
 		'cooldowns',
 		'enemies',
 		'gauge',
@@ -86,7 +89,7 @@ export default class DoTs extends Module {
 					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FLARE}/> cooldown uptime</Fragment>,
+					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime</Fragment>,
 					percent: () => this.getShadowFlareUptimePercent(),
 				}),
 			],
@@ -116,15 +119,19 @@ export default class DoTs extends Module {
 	}
 
 	getShadowFlareUptimePercent() {
-		// Need to do this manually, as I want to remove boss invuln periods from the total
-		const cdHistory = this.cooldowns.getCooldown(ACTIONS.SHADOW_FLARE.id).history
-		const uptime = cdHistory.reduce((carry, cd) => {
-			// Removing invuln time from the CD, we're not really counting it
-			const invulnTime = this.invuln.getInvulnerableUptime('all', cd.timestamp, cd.timestamp + cd.length)
-			return carry + cd.length - invulnTime
-		}, 0)
+		const dur = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		// Calc the total number of SF casts you coulda got off (minus the last 'cus floor)
+		const maxFullCasts = Math.floor(dur / (ACTIONS.SHADOW_FLARE.cooldown * 1000))
 
-		const duration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-		return (uptime / duration) * 100
+		// Calc the possible time for the last one
+		const lastCastMaxDuration = Math.min(
+			SHADOW_FLARE_DURATION,
+			dur - (maxFullCasts * ACTIONS.SHADOW_FLARE.cooldown)
+		)
+
+		const maxTotalDuration = (maxFullCasts * SHADOW_FLARE_DURATION) + lastCastMaxDuration
+
+		// Get as %. Capping to 100%.
+		return Math.min(100, (this.combatants.getStatusUptime(STATUSES.SHADOW_FLARE.id) / maxTotalDuration) * 100)
 	}
 }

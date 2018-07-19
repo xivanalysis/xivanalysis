@@ -65,7 +65,7 @@ export default class Death extends Module {
 			content: <Fragment>
 				Don&apos;t die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
 			</Fragment>,
-			severity: SEVERITY.MAJOR,
+			severity: SEVERITY.MORBID,
 			why: <Fragment>{this._count} death{this._count !== 1 && 's'}.</Fragment>,
 		}))
 	}
