@@ -4,8 +4,6 @@ import {getFflogsEvents} from 'api'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
-const TARGET_CHECK_EVENT_TYPES = ['damage', 'heal']
-
 const QUERY_FILTER = [
 	// Need to get RR info to determine card strength
 	{
@@ -38,27 +36,20 @@ const QUERY_FILTER = [
 
 export default class AdditionalEvents extends Module {
 	static handle = 'additionalEvents'
+	static dependencies = [
+		'enemies',
+	]
 
 	async normalise(events) {
-		// Get a set of every target that was _directly_ interacted with (avoiding all those dupe instances that get used for mechanics that still get buff applications ree)
-		const targets = new Set()
-		for (let i = 0; i < events.length; i++) {
-			const event = events[i]
-
-			// Only care about events by the player, directly onto something else
-			// Also only care when both data points are there
-			if (
-				!TARGET_CHECK_EVENT_TYPES.includes(event.type) ||
-				event.sourceID !== this.parser.player.id ||
-				!event.targetID ||
-				!event.targetInstance
-			) { continue }
-
-			// Compose a bit of filter query that we can add to the set
-			targets.add(`(target.id=${event.targetID} and target.instance=${event.targetInstance})`)
-		}
-
-		const targetQuery = Array.from(targets).join(' or ')
+		// Build a query from the active targets
+		const targetQuery = Object.keys(this.enemies.activeTargets).map(key => {
+			const instances = this.enemies.activeTargets[key]
+			let query = '(target.id=' + key
+			if (instances.size > 0) {
+				query += ` and target.instance in (${Array.from(instances).join(',')})`
+			}
+			return query + ')'
+		}).join(' or ')
 
 		// Build the filter string
 		let filter = QUERY_FILTER.map(section => {
