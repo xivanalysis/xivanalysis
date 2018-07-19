@@ -18,6 +18,7 @@ export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
 	static dependencies = [
 		'timeline',
+		'enemies',
 	]
 
 	_group = null
@@ -42,6 +43,11 @@ export default class RaidBuffs extends Module {
 	}
 
 	_onApply(event) {
+		// Only track active enemies
+		if (!this.enemies.isActive(event.targetID, event.targetInstance)) {
+			return
+		}
+
 		const buffs = this.getTargetBuffs(event)
 		const statusId = event.ability.guid
 
@@ -68,6 +74,11 @@ export default class RaidBuffs extends Module {
 	}
 
 	_onRemove(event) {
+		// Only track active enemies
+		if (!this.enemies.isActive(event.targetID, event.targetInstance)) {
+			return
+		}
+
 		const item = this.getTargetBuffs(event)[event.ability.guid]
 		item.end = event.timestamp - this.parser.fight.start_time
 		this.timeline.addItem(item)
