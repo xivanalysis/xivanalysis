@@ -68,7 +68,7 @@ export default class GlobalCooldown extends Module {
 		this.timeline.addGroup(new Group({
 			id: 'gcd',
 			content: 'GCD',
-			order: 0,
+			order: 1,
 		}))
 
 		this.gcds.forEach(gcd => {
