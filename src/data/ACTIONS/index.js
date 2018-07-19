@@ -23,7 +23,9 @@ const ACTIONS = {
 	...RDM,
 }
 
-export default addExtraIndex(ACTIONS, 'id')
+addExtraIndex(ACTIONS, 'id')
+
+export default ACTIONS
 
 // TODO: warn when falling back?
 // TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?

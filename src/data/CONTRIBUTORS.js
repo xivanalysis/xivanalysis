@@ -27,5 +27,5 @@ export default {
 		jobs: [
 			JOBS.RED_MAGE,
 		],
-	}
+	},
 }

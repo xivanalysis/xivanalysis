@@ -12,6 +12,7 @@ import NIN from './NIN'
 import BRD from './BRD'
 import MCH from './MCH'
 import SMN from './SMN'
+import RDM from './RDM'
 
 const STATUSES = {
 	...ENEMY,
@@ -30,6 +31,7 @@ const STATUSES = {
 	...MCH,
 
 	...SMN,
+	...RDM,
 }
 
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
@@ -45,4 +47,6 @@ const correctIdsToMatchLogs = obj => {
 	return obj
 }
 
-export default addExtraIndex(correctIdsToMatchLogs(STATUSES), 'id')
+addExtraIndex(correctIdsToMatchLogs(STATUSES), 'id')
+
+export default STATUSES
