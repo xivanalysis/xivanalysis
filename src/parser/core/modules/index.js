@@ -13,6 +13,7 @@ import GlobalCooldown from './GlobalCooldown'
 import Invulnerability from './Invulnerability'
 import Potions from './Potions'
 import PrecastStatus from './PrecastStatus'
+import RaidBuffs from './RaidBuffs'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
 import UnableToAct from './UnableToAct'
@@ -34,6 +35,7 @@ export default [
 	Invulnerability,
 	Potions,
 	PrecastStatus,
+	RaidBuffs,
 	Suggestions,
 	Timeline,
 	UnableToAct,

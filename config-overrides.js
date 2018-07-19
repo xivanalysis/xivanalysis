@@ -4,13 +4,12 @@ const GitRevisionPlugin = require('git-revision-webpack-plugin')
 
 module.exports = (config/* , env */) => {
 	const gitRevision = new GitRevisionPlugin({
-		branch: true,
 		commithashCommand: 'rev-parse --short HEAD',
 	})
 
 	config.plugins = (config.plugins || []).concat([
 		new webpack.DefinePlugin({
-			'process.env.VERSION': JSON.stringify(`${gitRevision.branch()}-${gitRevision.commithash()}`),
+			'process.env.VERSION': JSON.stringify(gitRevision.commithash()),
 		}),
 	])
 
