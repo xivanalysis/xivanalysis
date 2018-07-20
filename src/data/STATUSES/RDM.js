@@ -1,5 +1,5 @@
 export default {
-	  DUALCAST: {
+	DUALCAST: {
 		id: 1249,
 		name: 'Dualcast',
 		icon: 'https://secure.xivdb.com/img/game/013000/013406.png',
@@ -24,12 +24,12 @@ export default {
 		name: 'Acceleration',
 		icon: 'https://secure.xivdb.com/img/game/013000/013405.png',
 	},
-	EMBOLDEN: {//Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
+	EMBOLDEN_PHYSICAL: {//Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
 		id: 1297,
 		name: 'Embolden',
 		icon: 'https://secure.xivdb.com/img/game/018000/018941.png',
 	},
-	EMBOLDEN: {//Note that this is the Embolden that boosts Magic Damage - what the RDM casting receives
+	EMBOLDEN_MAGIC: {//Note that this is the Embolden that boosts Magic Damage - what the RDM casting receives
 		id: 1239,
 		name: 'Embolden',
 		icon: 'https://secure.xivdb.com/img/game/018000/018921.png',
