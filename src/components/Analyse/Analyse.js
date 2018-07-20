@@ -161,10 +161,17 @@ class Analyse extends Component {
 			if (!modules[group]) { continue }
 			modulePromises.push(modules[group]())
 		}
-		(await Promise.all(modulePromises)).forEach(({default: loadedModules}, index) => {
-			modules[loadOrder[index]] = loadedModules
-			parser.addModules(loadedModules)
-		})
+
+		// If this throws, then there was a deploy between page load and this call. Tell them to refresh.
+		try {
+			(await Promise.all(modulePromises)).forEach(({default: loadedModules}, index) => {
+				modules[loadOrder[index]] = loadedModules
+				parser.addModules(loadedModules)
+			})
+		} catch (e) {
+			this.props.dispatch(setGlobalError(new Errors.ModulesNotFoundError()))
+			return
+		}
 
 		// Finalise the module structure & push all that into state
 		parser.buildModules()
