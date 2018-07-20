@@ -111,22 +111,20 @@ export default class DoTs extends Module {
 
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.enemies.getStatusUptime(statusId)
-		let fightDuration = this.parser.fightDuration
-
-		fightDuration -= this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
 	}
 
 	getShadowFlareUptimePercent() {
-		const dur = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 		// Calc the total number of SF casts you coulda got off (minus the last 'cus floor)
-		const maxFullCasts = Math.floor(dur / (ACTIONS.SHADOW_FLARE.cooldown * 1000))
+		const maxFullCasts = Math.floor(fightDuration / (ACTIONS.SHADOW_FLARE.cooldown * 1000))
 
 		// Calc the possible time for the last one
 		const lastCastMaxDuration = Math.min(
 			SHADOW_FLARE_DURATION,
-			dur - (maxFullCasts * ACTIONS.SHADOW_FLARE.cooldown)
+			fightDuration - (maxFullCasts * ACTIONS.SHADOW_FLARE.cooldown)
 		)
 
 		const maxTotalDuration = (maxFullCasts * SHADOW_FLARE_DURATION) + lastCastMaxDuration

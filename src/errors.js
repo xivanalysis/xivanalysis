@@ -72,3 +72,8 @@ export class DidNotParticipateError extends GlobalError {
 export class UnknownApiError extends GlobalError {
 	detail = 'An error occured while requesting data from FFLogs. If this issue persists, let us know on Discord.'
 }
+
+export class ModulesNotFoundError extends GlobalError {
+	message = 'Modules not found.'
+	detail = 'A new version has probably been deployed. If refreshing the page does not fix this error, please let us know on Discord!'
+}
