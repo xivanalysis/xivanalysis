@@ -12,7 +12,6 @@ import NIN from './NIN'
 import BRD from './BRD'
 import MCH from './MCH'
 import SMN from './SMN'
-import MRD from './MRD'
 import WAR from './WAR'
 
 const STATUSES = {
@@ -20,7 +19,6 @@ const STATUSES = {
 	...ROLE,
 	...SHARED,
 	...ACN,
-	...MRD,
 
 	...WAR,
 
