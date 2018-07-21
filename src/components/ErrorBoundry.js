@@ -34,7 +34,7 @@ class ErrorBoundry extends Component {
 			return this.props.children
 		}
 
-		return <Container>
+		return <Container style={{marginTop: '1em'}}>
 			<ErrorMessage error={error}/>
 		</Container>
 	}
