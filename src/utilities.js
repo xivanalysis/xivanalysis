@@ -29,3 +29,14 @@ export const getPathMatch = pathname => {
 export const compose = (...fns) => fns.reduce(
 	(f, g) => (...args) => f(g(...args))
 )
+
+/**
+ * Create reverse key<->value mappings for an object and then freeze it to prevent further modifications.
+ * @param {*KeyValue object to reverse map} obj
+ */
+export function enumify(obj) {
+	for (const [key, val] of Object.entries(obj)) {
+		obj[val] = key
+	}
+	return Object.freeze(obj)
+}

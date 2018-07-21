@@ -1,12 +1,14 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {CASTTYPE, CORRECTGCDS} from 'parser/jobs/rdm/DualCastEnums'
+
+//const util = require('util')
 
 export default class DualCast extends Module {
 	static handle = 'dualCast'
@@ -19,10 +21,15 @@ export default class DualCast extends Module {
 		'suggestions',
 	]
 	static title = 'DualCast'
-	_active = false
+	//Default CastState
+	_castType = CASTTYPE.HardCast
+	//Used to 0 out CastTimes
 	_ctIndex = null
+	//Specifies if the buff has been used this cast
 	_usedCast = false
+	//cast Object - toned down event
 	_casts = {}
+	//Array of historical casts to do metrics against
 	_history = []
 	//Faded without being used
 	_missedDualCasts = 0
@@ -45,29 +52,21 @@ export default class DualCast extends Module {
 	}
 
 	_onCast(event) {
-		//const castTime = event.ability.castTime
 		const abilityID = event.ability.guid
 		const castTime = getAction(abilityID).castTime
-		//const util = require('util')
-		//console.log(util.inspect(event, {showHidden: true, depth: null}))
-		//console.log(`Ability: ${event.ability.name} Casttime: ${castTime} isActive? ${this._active}`)
-
-		if (castTime > 0 && this._active) {
+		if (castTime > 0 && this._castType === CASTTYPE.DualCast) {
 			this._ctIndex = this.castTime.set('all', 0)
-
-			if (abilityID !== ACTIONS.VERTHUNDER.id &&
-				abilityID !== ACTIONS.VERAREO.id &&
-				abilityID !== ACTIONS.VERRAISE.id) {
+			if (!CORRECTGCDS.includes(abilityID)) {
 				this._wastedDualCasts += 1
 				this._casts = {
-					casts: [],
+					id: abilityID,
+					timestamp: event.timestamp,
+					name: event.ability.name,
+					casttype: this._castType,
+					events: [],
 				}
-
-				this._casts.casts.push(event)
+				this._casts.events.push(event)
 				this._history.push(this._casts)
-			} else {
-				// const util = require('util')
-				// console.log(util.inspect(this._history, {showHidden: true, depth: null}))
 			}
 
 			this._usedCast = true
@@ -75,32 +74,24 @@ export default class DualCast extends Module {
 	}
 
 	_onGain() {
-		//console.log('Gained Buff!')
-		this._active = true
+		this._castType = CASTTYPE.DualCast
 		this._usedCast = false
 	}
 
 	_onRemove() {
-		console.log('Removed Buff!')
 		if (!this._usedCast) {
 			this._missedDualCasts += 1
 		}
 
-		this._active = false
+		this._castType = CASTTYPE.HardCast
 		this.castTime.reset(this._ctIndex)
 		this._ctIndex = null
 	}
 
 	_onComplete() {
-		console.log('DualCast Complete')
-		if (this._active) {
-			this._active = false
+		if (this._castType === CASTTYPE.DualCast) {
+			this._castType = CASTTYPE.HardCast
 		}
-
-		// this._wastedDualCasts = 10
-		// this._missedDualCasts = 20
-		// const util = require('util')
-		// console.log(util.inspect(this._history, {showHidden: true, depth: null}))
 
 		//Process Wasted DualCasts
 		if (this._wastedDualCasts) {
@@ -129,20 +120,17 @@ export default class DualCast extends Module {
 
 	output() {
 		const panels = this._history.map(casts => {
-			const numGcds = casts.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
-			const name = casts.casts.filter(cast => getAction(cast.ability.guid).onGcd).name
-			//console.log(`Number Of GCDs: ${numGcds}`)
-			//const util = require('util')
-			//console.log(util.inspect(cast, {showHidden: true, depth: null}))
+			//console.log(util.inspect(casts, {showHidden: true, depth: null}))
 			return {
-				key: name,
+				key: casts.timestamp,
 				title: {
 					content: <Fragment>
-						{numGcds} GCDs
+						{this.parser.formatTimestamp(casts.timestamp)}
+						&nbsp;-&nbsp;{casts.name}
 					</Fragment>,
 				},
 				content: {
-					content: <Rotation events={casts.casts}/>,
+					content: <Rotation events={casts.events}/>,
 				},
 			}
 		})
