@@ -15,7 +15,7 @@ const RAGE_ACTIONS = [
 ]
 
 // Actions that reduce Infuriate's cooldown.
-const INFURIATECD_ACTIONS = [
+const INFURIATE_CD_ACTIONS = [
 	ACTIONS.FELL_CLEAVE.id,
 	ACTIONS.INNER_BEAST.id,
 	ACTIONS.STEEL_CYCLONE.id,
@@ -78,7 +78,7 @@ export default class Gauge extends Module {
 			this._rage+= 20
 		}
 
-		if (INFURIATECD_ACTIONS.includes(abilityId)) {
+		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
 			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, 5)
 		}
 	}
