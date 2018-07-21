@@ -6,6 +6,7 @@ export default {
 
 	JOBS: {
 		[JOBS.SUMMONER.logType]: () => import('./jobs/smn' /* webpackChunkName: "jobs-smn" */),
+		[JOBS.RED_MAGE.logType]: () => import('./jobs/rdm' /* webpackChunkName: "jobs-rdm" */),
 	},
 
 	BOSSES: {
