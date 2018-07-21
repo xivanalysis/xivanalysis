@@ -70,6 +70,7 @@ export class DidNotParticipateError extends GlobalError {
 }
 
 export class UnknownApiError extends GlobalError {
+	message = 'API Error.'
 	detail = 'An error occured while requesting data from FFLogs. If this issue persists, let us know on Discord.'
 }
 
