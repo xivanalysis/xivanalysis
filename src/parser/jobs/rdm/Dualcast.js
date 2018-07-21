@@ -6,7 +6,7 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {CASTTYPE, CORRECTGCDS} from 'parser/jobs/rdm/DualCastEnums'
+import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/DualCastEnums'
 
 //const util = require('util')
 
@@ -22,13 +22,11 @@ export default class DualCast extends Module {
 	]
 	static title = 'DualCast'
 	//Default CastState
-	_castType = CASTTYPE.HardCast
+	_castType = CAST_TYPE.HardCast
 	//Used to 0 out CastTimes
 	_ctIndex = null
 	//Specifies if the buff has been used this cast
 	_usedCast = false
-	//cast Object - toned down event
-	_casts = {}
 	//Array of historical casts to do metrics against
 	_history = []
 	//Faded without being used
@@ -54,19 +52,19 @@ export default class DualCast extends Module {
 	_onCast(event) {
 		const abilityID = event.ability.guid
 		const castTime = getAction(abilityID).castTime
-		if (castTime > 0 && this._castType === CASTTYPE.DualCast) {
+		if (castTime > 0 && this._castType === CAST_TYPE.DualCast) {
 			this._ctIndex = this.castTime.set('all', 0)
-			if (!CORRECTGCDS.includes(abilityID)) {
+			if (!CORRECT_GCDS.includes(abilityID)) {
 				this._wastedDualCasts += 1
-				this._casts = {
+				const casts = {
 					id: abilityID,
 					timestamp: event.timestamp,
 					name: event.ability.name,
 					casttype: this._castType,
 					events: [],
 				}
-				this._casts.events.push(event)
-				this._history.push(this._casts)
+				casts.events.push(event)
+				this._history.push(casts)
 			}
 
 			this._usedCast = true
@@ -74,7 +72,7 @@ export default class DualCast extends Module {
 	}
 
 	_onGain() {
-		this._castType = CASTTYPE.DualCast
+		this._castType = CAST_TYPE.DualCast
 		this._usedCast = false
 	}
 
@@ -83,14 +81,14 @@ export default class DualCast extends Module {
 			this._missedDualCasts += 1
 		}
 
-		this._castType = CASTTYPE.HardCast
+		this._castType = CAST_TYPE.HardCast
 		this.castTime.reset(this._ctIndex)
 		this._ctIndex = null
 	}
 
 	_onComplete() {
-		if (this._castType === CASTTYPE.DualCast) {
-			this._castType = CASTTYPE.HardCast
+		if (this._castType === CAST_TYPE.DualCast) {
+			this._castType = CAST_TYPE.HardCast
 		}
 
 		//Process Wasted DualCasts
@@ -112,7 +110,7 @@ export default class DualCast extends Module {
 				why: `${this._missedDualCasts} DualCasts were Lost due to not casting.`,
 				severity: this._missedDualCasts > 5 ? SEVERITY.MAJOR : this._missedDualCasts > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
-					Spells used while DualCast is up should be limited to <ActionLink {...ACTIONS.VERAREO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
+					You should avoid wasting DualCast procs entirely as it is lost potency overtime.
 				</Fragment>,
 			}))
 		}

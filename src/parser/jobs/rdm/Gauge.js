@@ -51,88 +51,101 @@ export default class Gauge extends Module {
 			this.addHook('complete', this._onComplete)
 		}
 
+		_calculateManaImbalance(white, black) {
+			if (white && this._blackMana - this._whiteMana > 30) {
+				//If we have more than 30 black mana over White, our White gains are halved
+				this._whiteManaLostToImbalance += Math.ceil(white/2)
+				white = Math.floor(white/2)
+			}
+
+			if (black && this._whiteMana - this._blackMana > 30) {
+				//If we have more than 30 white mana over black, our black gains are halved
+				this._blackManaLostToImbalance += Math.ceil(black/2)
+				black = Math.floor(black/2)
+			}
+		}
+
+		_calculateManaWasted(white, black) {
+			if (this._whiteMana > 100) {
+				this._whiteManaWasted += this._whiteMana - 100
+				if (white || black) {
+					this._whiteOverallManaGained += (white - (this._whiteMana - 100))
+				}
+				this._whiteMana = 100
+			} else if (white || black) {
+				this._whiteOverallManaGained += white||0
+			}
+
+			if (this._blackMana > 100) {
+				this._blackManaWasted += this._blackMana - 100
+				if (white || black) {
+					this._blackOverallManaGained += (black - (this._blackMana - 100))
+				}
+				this._blackMana = 100
+			} else if (white || black) {
+				this._blackOverallManaGained += black||0
+			}
+		}
+
+		_calculateOverallManaGained(white, black) {
+			if (this._whiteMana > 100) {
+				this._whiteManaWasted += this._whiteMana - 100
+				if (white || black) {
+					this._whiteOverallManaGained += (white - (this._whiteMana - 100))
+				}
+				this._whiteMana = 100
+			} else if (white || black) {
+				this._whiteOverallManaGained += white||0
+			}
+
+			if (this._blackMana > 100) {
+				this._blackManaWasted += this._blackMana - 100
+				if (white || black) {
+					this._blackOverallManaGained += (black - (this._blackMana - 100))
+				}
+				this._blackMana = 100
+			} else if (white || black) {
+				this._blackOverallManaGained += black||0
+			}
+		}
+
+		_calculateManaFicationManaGained() {
+			this._whiteMana = this._whiteMana * 2
+			this._blackMana = this._blackMana * 2
+
+			this._calculateOverallManaGained(this._whiteMana, this._blackMana)
+			this._calculateManaWasted(this._whiteMana, this._blackMana)
+			this._calculateManaImbalance(this._whiteMana, this._blackMana)
+		}
+
 		_onCast(event) {
 			const abilityId = event.ability.guid
 			//This just lets us determine if we've modified the current Mana numbers at all
-			let isCalculated = false
+			//const isCalculated = false
 
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
-				//Manafication doubles the current mana
-				//console.log('Manafication')
-				if (this._whiteMana <= 50) {
-					this._whiteOverallManaGained += (this._whiteMana * 2)
-				} else {
-					this._whiteOverallManaGained += (100 - this._whiteMana)
-				}
-				if (this._blackMana <= 50) {
-					this._blackOverallManaGained += (this._blackMana * 2)
-				} else {
-					this._blackOverallManaGained += (100 - this._blackMana)
-				}
-				this._whiteMana = this._whiteMana * 2
-				this._blackMana = this._blackMana * 2
-
-				//This should be tracked in a seperate Manafication module
-				// this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
-				// this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
-				isCalculated = true
-			}
-
-			//Determine if the ability we used should yield any mana gain.
-			const manaGain = MANA_GAIN[abilityId] ? {...MANA_GAIN[abilityId]} : null
-			if (manaGain) {
-				isCalculated = true
-			}
-
-			if (abilityId === ACTIONS.SCATTER.id && isCalculated) {
-				//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
-				if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
-					manaGain.white = 8
-					manaGain.black = 8
-				}
-			}
-			if (isCalculated) {
-				if (manaGain) {
-					//console.log(`Ability: ${getAction(abilityId).name} White Gain: ${manaGain.white||0} Black Gain: ${manaGain.black||0}`)
-				}
-				if (manaGain && manaGain.white && this._blackMana - this._whiteMana > 30) {
-					//If we have more than 30 black mana over White, our White gains are halved
-					//console.log('Black Imbalance')
-					this._whiteManaLostToImbalance += Math.ceil(manaGain.white/2)
-					//console.log(`White Lost: ${this._whiteManaLostToImbalance}`)
-					manaGain.white = Math.floor(manaGain.white/2)
-				}
-
-				if (manaGain && manaGain.black && this._whiteMana - this._blackMana > 30) {
-					//If we have more than 30 white mana over black, our black gains are halved
-					this._blackManaLostToImbalance += Math.ceil(manaGain.black/2)
-					manaGain.black = Math.floor(manaGain.black/2)
-				}
-
-				if (manaGain) {
-					this._whiteMana += manaGain.white||0
-					this._blackMana += manaGain.black||0
-				}
-
-				if (this._whiteMana > 100) {
-					this._whiteManaWasted += this._whiteMana - 100
-					if (manaGain) {
-						this._whiteOverallManaGained += (manaGain.white - (this._whiteMana - 100))
+				this._calculateManaFicationManaGained()
+			} else {
+				//Determine if the ability we used should yield any mana gain.
+				let {white, black} = MANA_GAIN[abilityId] || {}
+				if (white || black) {
+					if (abilityId === ACTIONS.SCATTER.id) {
+						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
+						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
+							white = 8
+							black = 8
+						}
 					}
-					this._whiteMana = 100
-				} else if (manaGain) {
-					this._whiteOverallManaGained += manaGain.white||0
-				}
 
-				if (this._blackMana > 100) {
-					this._blackManaWasted += this._blackMana - 100
-					if (manaGain) {
-						this._blackOverallManaGained += (manaGain.black - (this._blackMana - 100))
+					if (white || black) {
+						this._whiteMana += white
+						this._blackMana += black
 					}
-					this._blackMana = 100
-				} else if (manaGain) {
-					this._blackOverallManaGained += manaGain.black||0
+
+					this._calculateManaImbalance(white, black)
+					this._calculateManaWasted(white, black)
+					this._calculateOverallManaGained(white, black)
 				}
 			}
 
@@ -144,26 +157,26 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERHOLY.icon,
 					content: <Fragment>
-										Ensure you don&#39;t overcap your White Mana before a combo, you lost {this._whiteManaWasted} White Mana
+						Ensure you don&apos;t overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._whiteManaWasted > 80 ? SEVERITY.MAJOR : this._whiteManaWasted > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 					why: <Fragment>
-										Overcapping White Mana indicates your balance was off, and you lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						You lost {this._whiteManaWasted} White Mana due to capped Gauge resources
 					</Fragment>,
 				}))
 			}
 
 			if (this._whiteManaLostToImbalance && this._whiteManaLostToImbalance> 0) {
 				this.suggestions.add(new Suggestion({
-					icon: ACTIONS.VERHOLY.icon,
+					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-										Ensure you don&#39;t allow a difference of more than 30 betwen mana types, you lost {this._whiteManaLostToImbalance} White Mana due to overage of Black Mana
+						Ensure you don&apos;t allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._whiteManaLostToImbalance > 80 ? SEVERITY.MAJOR : this._whiteManaLostToImbalance > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 					why: <Fragment>
-										Lost White Mana to Imbalance reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana
 					</Fragment>,
 				}))
 			}
@@ -172,11 +185,11 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-										Ensure you don&#39;t overcap your Black Mana before a combo, you lost {this._blackManaWasted} Black Mana
+						Ensure you don&apos;t overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
 					</Fragment>,
 					severity: this._blackManaWasted > 80 ? SEVERITY.MAJOR : this._blackManaWasted > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 					why: <Fragment>
-										Overcapping Black Mana indicates your balance was off, and you lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						You lost {this._blackManaWasted} Black Mana due to capped Gauge resources
 					</Fragment>,
 				}))
 			}
@@ -185,15 +198,14 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-										Ensure you don&#39;t allow a difference of more than 30 betwen mana types, you lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana
+						Ensure you don&apos;t allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._blackManaLostToImbalance > 80 ? SEVERITY.MAJOR : this._blackManaLostToImbalance > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 					why: <Fragment>
-										Lost Black Mana to Imbalance reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana
 					</Fragment>,
 				}))
 			}
-
 		}
 }
