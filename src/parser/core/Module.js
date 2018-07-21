@@ -35,48 +35,12 @@ export default class Module {
 		this._title = value
 	}
 
-	set name(value) {
-		console.warn(`\`${this.constructor.handle}\` is setting the display title via the \`name\` instance property. Use \`static title\` instead.`)
-		this.constructor.title = value
-	}
-
 	_hooks = new Map()
 
 	constructor(parser) {
 		this.parser = parser
 		this.constructor.dependencies.forEach(dep => {
 			this[dep] = parser.modules[dep]
-		})
-
-		// Backwards compat for the old event magic mehods
-		// TODO: Remove before final live
-		// Get a list of all the properties on this entire object's prototype chain
-		const props = new Set()
-		for (let obj = new.target.prototype; obj !== Object.prototype; obj = Object.getPrototypeOf(obj)) {
-			Object.getOwnPropertyNames(obj).forEach(name => {
-				props.add(name)
-			})
-		}
-
-		// Check for any functions in there that match the old magic method names and connect them to the new hooks
-		const exp = /on_([^_]+)(?:_(by|to)Player(Pet)?)?/
-		props.forEach(name => {
-			const match = exp.exec(name)
-			if (!match) { return }
-
-			const filter = {}
-			let entity = 'player'
-
-			if (match[3]) {
-				entity = 'pet'
-			}
-			if (match[2]) {
-				filter[match[2]] = entity
-			}
-
-			console.warn(`The \`${this.constructor.handle}\` module is using the old-style event hook \`${name}\`. Please update it to use the new \`addHook\` function.`)
-
-			this.addHook(match[1], filter, this[name].bind(this))
 		})
 	}
 

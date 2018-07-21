@@ -61,22 +61,11 @@ class Parser {
 	// -----
 
 	addModules(modules) {
-		let keyed = {}
+		const keyed = {}
 
-		if (Array.isArray(modules)) {
-			modules.forEach(mod => {
-				keyed[mod.handle] = mod
-			})
-		} else {
-			// Fall back to the 'old' way of doing things by setting the handle
-			// TODO: Remove before final live
-			const keys = Object.keys(modules)
-			console.warn('The following modules were loaded using the old-format object, please move handles to the module static property as soon as possible:', keys)
-			keys.forEach(key => {
-				modules[key].handle = key
-			})
-			keyed = modules
-		}
+		modules.forEach(mod => {
+			keyed[mod.handle] = mod
+		})
 
 		// Merge the modules into our constructor object
 		Object.assign(this._constructors, keyed)
