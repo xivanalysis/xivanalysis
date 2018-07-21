@@ -72,6 +72,7 @@ export default class Bahamut extends Module {
 		// Set up fresh tracking
 		this._current = {
 			timestamp: event.timestamp,
+			rushing: this.gauge.isRushing(),
 			casts: [],
 		}
 	}
@@ -99,6 +100,7 @@ export default class Bahamut extends Module {
 						&nbsp;-&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.WYRMWAVE.id])} WWs,&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.AKH_MORN.id])} AMs
+						{sb.rushing && <span className="text-info">&nbsp;(rushing)</span>}
 					</Fragment>,
 				},
 				content: {

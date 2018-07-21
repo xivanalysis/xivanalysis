@@ -199,6 +199,7 @@ export default class DWT extends Module {
 					content: <Fragment>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
+						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
 					</Fragment>,
 				},
 				content: {
