@@ -110,9 +110,11 @@ export default class Gauge extends Module {
 		}
 
 		_calculateManaFicationManaGained() {
+			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 			this._whiteMana = this._whiteMana * 2
 			this._blackMana = this._blackMana * 2
 
+			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 			this._calculateOverallManaGained(this._whiteMana, this._blackMana)
 			this._calculateManaWasted(this._whiteMana, this._blackMana)
 			this._calculateManaImbalance(this._whiteMana, this._blackMana)
@@ -125,9 +127,11 @@ export default class Gauge extends Module {
 
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
+				//console.log('Manafication')
 				this._calculateManaFicationManaGained()
 			} else {
 				//Determine if the ability we used should yield any mana gain.
+				//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 				let {white, black} = MANA_GAIN[abilityId] || {}
 				if (white || black) {
 					if (abilityId === ACTIONS.SCATTER.id) {
@@ -142,7 +146,7 @@ export default class Gauge extends Module {
 						this._whiteMana += white
 						this._blackMana += black
 					}
-
+					//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 					this._calculateManaImbalance(white, black)
 					this._calculateManaWasted(white, black)
 					this._calculateOverallManaGained(white, black)

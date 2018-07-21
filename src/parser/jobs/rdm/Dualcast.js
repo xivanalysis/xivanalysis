@@ -117,6 +117,10 @@ export default class DualCast extends Module {
 	}
 
 	output() {
+		if (this._history.length === 0) {
+			return false
+		}
+
 		const panels = this._history.map(casts => {
 			//console.log(util.inspect(casts, {showHidden: true, depth: null}))
 			return {
