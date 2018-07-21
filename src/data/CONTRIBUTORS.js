@@ -21,4 +21,10 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/fryte.png',
 		jobs: [JOBS.SUMMONER],
 	},
+
+	SAYAKA: {
+		name: 'Sayaka',
+		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
+		jobs: [JOBS.WARRIOR],
+	},
 }
