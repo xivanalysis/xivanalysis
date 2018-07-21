@@ -168,7 +168,10 @@ class Analyse extends Component {
 				modules[loadOrder[index]] = loadedModules
 				parser.addModules(loadedModules)
 			})
-		} catch (e) {
+		} catch (error) {
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
 			this.props.dispatch(setGlobalError(new Errors.ModulesNotFoundError()))
 			return
 		}

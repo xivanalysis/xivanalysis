@@ -95,7 +95,7 @@ export default class Ruin2 extends Module {
 				content: <Fragment>
 					<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
 				</Fragment>,
-				why: (issues * potLossPerR2) + ' potency lost to unnecessary Ruin II casts.',
+				why: <Fragment>{issues * potLossPerR2} potency lost to {issues} unnecessary Ruin II cast{issues !== 1 && 's'}.</Fragment>,
 				severity: issues < 5? SEVERITY.MINOR : issues < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			}))
 		}
@@ -106,7 +106,7 @@ export default class Ruin2 extends Module {
 				content: <Fragment>
 					Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
 				</Fragment>,
-				why: (warnings * potLossPerR2) + ' potency lost to Ruin II casts used only to move.',
+				why: <Fragment>{warnings * potLossPerR2} potency lost to {warnings} Ruin II cast{warnings !== 1 && 's'} used only to move.</Fragment>,
 				severity: warnings < 5? SEVERITY.MINOR : warnings < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			}))
 		}
