@@ -53,7 +53,7 @@ export default class DbLink extends Component {
 		return <Observer>
 			{({inView, ref}) => {
 				this.onObserverChange(inView)
-				return <a href={'http://xivdb.com/'+ type +'/' + id} ref={ref}>{name ? name : 'Loading...'}</a>
+				return <a href={'https://xivdb.com/'+ type +'/' + id} ref={ref}>{name ? name : 'Loading...'}</a>
 			}}
 		</Observer>
 	}

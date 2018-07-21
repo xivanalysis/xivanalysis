@@ -7,6 +7,7 @@ import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
 import SMN from './SMN'
+import RDM from './RDM'
 
 const ACTIONS = {
 	...SHARED,
@@ -19,9 +20,12 @@ const ACTIONS = {
 	...WHM,
 
 	...SMN,
+	...RDM,
 }
 
-export default addExtraIndex(ACTIONS, 'id')
+addExtraIndex(ACTIONS, 'id')
+
+export default ACTIONS
 
 // TODO: warn when falling back?
 // TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?
