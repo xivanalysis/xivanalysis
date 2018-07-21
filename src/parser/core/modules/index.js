@@ -2,6 +2,7 @@ import About from './About'
 import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
+import Arcanum from './Arcanum'
 import CastTime from './CastTime'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
@@ -24,6 +25,7 @@ export default [
 	AdditionalEvents,
 	AlwaysBeCasting,
 	AoE,
+	Arcanum,
 	CastTime,
 	Checklist,
 	Combatants,
