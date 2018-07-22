@@ -1,19 +1,17 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
-//import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-/*const CORRECT_CASTS = [
+const CORRECT_GCDS = [
 	ACTIONS.FELL_CLEAVE.id,
 	ACTIONS.DECIMATE.id,
-	ACTIONS.UPHEAVAL.id,
-	ACTIONS.ONSLAUGHT.id,
-]*/
+]
 
 //const IR_LENGTH = 10000
 
@@ -80,6 +78,40 @@ export default class InnerRelease extends Module {
 		// Clean up any existing casts
 		if (this._active) {
 			this._stopAndSave()
+		}
+
+		// Run analytics for suggestionszzzz
+		let badGcds = 0
+		this._history.forEach(ir => {
+			badGcds += ir.casts
+				.filter(cast =>
+					getAction(cast.ability.guid).onGcd &&
+					!CORRECT_GCDS.includes(cast.ability.guid)
+				)
+				.length
+		})
+
+		// Suggestions
+		if (badGcds) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.INNER_RELEASE.icon,
+				why: `${badGcds} incorrect GCDs used during IR.`,
+				severity: SEVERITY.MAJOR,
+				content: <Fragment>
+						GCDs used during Inner Release should be limited to <ActionLink {...ACTIONS.FELL_CLEAVE}/> for optimal damage, or  <ActionLink {...ACTIONS.DECIMATE}/> in AoE situations.
+				</Fragment>,
+			}))
+		}
+
+		if (this._missedGcds) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.INNER_RELEASE.icon,
+				why: `${this._missedGcds} GCDs missed inside of IR.`,
+				severity: SEVERITY.MAJOR,
+				content: <Fragment>
+						You missed <strong>{this._missedGcds}</strong> GCDs out of 5 inside of Inner Release. This is very, <em>very</em> bad. You should never miss a single GCD inside of Inner Release.
+				</Fragment>,
+			}))
 		}
 	}
 
