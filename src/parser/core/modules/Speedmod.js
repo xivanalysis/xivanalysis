@@ -29,7 +29,6 @@ export default class Speedmod extends Module {
 
 		const ids = Object.keys(STATUS_MAP).map(key => parseInt(key, 10))
 		const filter = {abilityId: ids, to: 'player'}
-		this.addHook('applyarcanum', filter, this._onApplyBuff)
 		this.addHook('applybuff', filter, this._onApplyBuff)
 		this.addHook('removebuff', filter, this._onRemoveBuff)
 	}
@@ -42,7 +41,6 @@ export default class Speedmod extends Module {
 		// Arrow needs special handling 'cus of RR
 		if (statusId === STATUSES.THE_ARROW.id) {
 			// We need the extra data, skip the normal buff event
-			if (event.type === 'applybuff') { return }
 			value *= event.strengthModifier
 		}
 
