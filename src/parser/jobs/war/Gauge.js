@@ -61,12 +61,10 @@ export default class Gauge extends Module {
 		if (rageAbility != null) { this._rage += rageAbility }
 
 		const wastedRage = this._rage - MAX_RAGE
-		//console.log(wastedRage)
+		console.log(wastedRage)
 		if (wastedRage > 0) {
 			this._wastedRage += wastedRage
-			this._rage -= MAX_RAGE
-			console.log(this._wastedRage)
-			//console.log(this._rage)
+			this._rage -= wastedRage
 		}
 
 		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
