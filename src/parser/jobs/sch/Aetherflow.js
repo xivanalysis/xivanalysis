@@ -28,7 +28,7 @@ export default class Aetherflow extends Module {
 	_onComplete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
-			name: <Fragment>Use all <ActionLink {...ACTIONS.AETHERFLOW} /> stacks before cooldown is up.</Fragment>,
+			name: <Fragment>Use all <ActionLink {...ACTIONS.AETHERFLOW} /> stacks within a 45 second window.</Fragment>,
 			description: `
 				The level 68 trait, Quickened Aetherflow, reduces your Aetherflow cooldown by 5 seconds after using a single stack of aetherflow.
 				Using all your stacks before the cooldown is up effectively reduces the cooldown from 60 to 45 seconds,
