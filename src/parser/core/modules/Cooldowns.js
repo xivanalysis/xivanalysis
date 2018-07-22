@@ -57,13 +57,22 @@ export default class Cooldowns extends Module {
 				cd.current = null
 			}
 
+			const action = getAction(id)
+
+			// If the action is on the GCD, GlobalCooldown will be managing its own group
+			if (action.onGcd) {
+				return
+			}
+
 			// Add CD info to the timeline
 			// TODO: Might want to move group generation somewhere else
 			//       though will need to handle hidden groups for things with no items
-			const action = getAction(id)
+			// Using the ID as an order param to give an explicit order.
+			// TODO: Allow jobs to group related actions a-la raid buffs
 			this.timeline.addGroup(new Group({
 				id,
 				content: action.name,
+				order: id,
 			}))
 
 			cd.history.forEach(use => {

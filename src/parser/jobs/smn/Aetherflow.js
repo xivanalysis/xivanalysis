@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {Table} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -100,5 +101,36 @@ export default class Aetherflow extends Module {
 				</Fragment>,
 			}))
 		}
+	}
+
+	output() {
+		// Really not happy with this output, but nem wanted it.
+		// Look into a better display somehow, hopefully integrate into timeline in some fashion.
+		const casts = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
+		let totalDrift = 0
+		return <Table collapsing unstackable>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell>Cast Time</Table.HeaderCell>
+					<Table.HeaderCell>Drift</Table.HeaderCell>
+					<Table.HeaderCell>Total Drift</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{casts.map((cast, i) => {
+					let drift = 0
+					if (i > 0) {
+						const prevCast = casts[i - 1]
+						drift = cast.timestamp - (prevCast.timestamp + prevCast.length)
+					}
+					totalDrift += drift
+					return <Table.Row key={cast.timestamp}>
+						<Table.Cell>{this.parser.formatTimestamp(cast.timestamp)}</Table.Cell>
+						<Table.Cell>{drift ? this.parser.formatDuration(drift) : '-'}</Table.Cell>
+						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
+					</Table.Row>
+				})}
+			</Table.Body>
+		</Table>
 	}
 }

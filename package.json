@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.54",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "color": "^3.0.0",
@@ -14,6 +15,7 @@
     "react": "^16.3.1",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.3.1",
+    "react-helmet": "^5.2.0",
     "react-intersection-observer": "^6",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",

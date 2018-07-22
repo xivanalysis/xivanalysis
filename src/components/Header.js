@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
@@ -55,7 +56,7 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
-			if (reportLoaded && fightId !== 'last') {
+			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
 				// Do I want the kill time too?
 				title = fight? fight.name : fightId
@@ -69,7 +70,7 @@ class Header extends Component {
 		// Combatant
 		if (combatantId) {
 			let title = combatantId
-			if (reportLoaded) {
+			if (reportLoaded && report.friendlies) {
 				const combatant = report.friendlies.find(friendly => friendly.id === combatantId)
 				title = combatant? combatant.name : combatantId
 			}
@@ -82,7 +83,19 @@ class Header extends Component {
 		const onHome = pathname === '/'
 		const collapseMenu = this.props.collapseMenu && !onHome
 
-		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
+		return <Menu
+			fixed="top"
+			inverted
+			secondary={onHome}
+			size={onHome? 'massive' : null}
+		>
+			<Helmet>
+				<title>
+					{crumbs.length? crumbs[crumbs.length - 1].title + ' | ' : ''}
+					xivanalysis
+				</title>
+			</Helmet>
+
 			<Container>
 				{collapseMenu || <Fragment>
 					<Menu.Item as={Link} to="/" header>

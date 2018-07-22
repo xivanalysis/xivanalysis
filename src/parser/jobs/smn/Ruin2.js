@@ -17,6 +17,8 @@ export default class Ruin2 extends Module {
 	static dependencies = [
 		'combatants',
 		'gauge',
+		'gcd',
+		'invuln',
 		'suggestions',
 	]
 
@@ -42,12 +44,25 @@ export default class Ruin2 extends Module {
 		const action = getAction(event.ability.guid)
 		const lastGcdAction = this._lastGcd? getAction(this._lastGcd.ability.guid) : {}
 
+		if (!action.onGcd) {
+			this._ogcdUsed = true
+			return
+		}
+
+		// Calc the time in the GCD that the boss can't be targeted - R2ing before an invuln to prevent an R3 cancel is good
+		const invulnTime = this.invuln.getUntargetableUptime(
+			'all',
+			event.timestamp,
+			event.timestamp + this.gcd.getEstimate()
+		)
+
 		// TODO: GCD metadata should be in a module?
 		// If there was no oGCD cast between the R2 and now, mark an issue
 		if (
 			action.onGcd &&
 			lastGcdAction.id === ACTIONS.RUIN_II.id &&
-			!this._ogcdUsed
+			!this._ogcdUsed &&
+			invulnTime === 0
 		) {
 			// If they at least moved, only raise a warning
 			if (this.movedSinceLastGcd()) {
@@ -57,15 +72,9 @@ export default class Ruin2 extends Module {
 			}
 		}
 
-		// TODO: combatant resources are janky. Replace.
-		if (action.onGcd) {
-			// If this cast is on the gcd, store it for comparison
-			this._lastGcd = event
-			this._pos = this.combatants.selected.resources
-		} else {
-			// Otherwise take note that they've used an oGCD
-			this._ogcdUsed = true
-		}
+		// If this cast is on the gcd, store it for comparison
+		this._lastGcd = event
+		this._pos = this.combatants.selected.resources
 
 		// If this is an R2 cast, track it
 		if (action.id === ACTIONS.RUIN_II.id) {
@@ -95,7 +104,7 @@ export default class Ruin2 extends Module {
 				content: <Fragment>
 					<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
 				</Fragment>,
-				why: (issues * potLossPerR2) + ' potency lost to unnecessary Ruin II casts.',
+				why: <Fragment>{issues * potLossPerR2} potency lost to {issues} unnecessary Ruin II cast{issues !== 1 && 's'}.</Fragment>,
 				severity: issues < 5? SEVERITY.MINOR : issues < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			}))
 		}
@@ -106,7 +115,7 @@ export default class Ruin2 extends Module {
 				content: <Fragment>
 					Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
 				</Fragment>,
-				why: (warnings * potLossPerR2) + ' potency lost to Ruin II casts used only to move.',
+				why: <Fragment>{warnings * potLossPerR2} potency lost to {warnings} Ruin II cast{warnings !== 1 && 's'} used only to move.</Fragment>,
 				severity: warnings < 5? SEVERITY.MINOR : warnings < 10? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			}))
 		}
