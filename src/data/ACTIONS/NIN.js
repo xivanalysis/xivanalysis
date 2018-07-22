@@ -35,6 +35,13 @@ export default {
 		onGcd: false,
 	},
 
+	NINJUTSU: {
+		id: 2260,
+		name: 'Ninjutsu',
+		icon: 'https://secure.xivdb.com/img/game/002000/002904.png',
+		onGcd: false,
+	},
+
 	FUMA_SHURIKEN: {
 		id: 2265,
 		name: 'Fuma Shuriken',
@@ -88,6 +95,27 @@ export default {
 		id: 2272,
 		name: 'Rabbit Medium',
 		icon: 'https://secure.xivdb.com/img/game/002000/002914.png',
+		onGcd: false,
+	},
+
+	KASSATSU: {
+		id: 2264,
+		name: 'Kassatsu',
+		icon: 'https://secure.xivdb.com/img/game/002000/002906.png',
+		onGcd: false,
+	},
+
+	DUALITY: {
+		id: 3567,
+		name: 'Duality',
+		icon: 'https://secure.xivdb.com/img/game/002000/002919.png',
+		onGcd: false,
+	},
+
+	DREAM_WITHIN_A_DREAM: {
+		id: 3566,
+		name: 'Dream Within A Dream',
+		icon: 'https://secure.xivdb.com/img/game/002000/002918.png',
 		onGcd: false,
 	},
 

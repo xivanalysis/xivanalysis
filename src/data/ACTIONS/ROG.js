@@ -38,6 +38,13 @@ export default {
 		onGcd: true,
 	},
 
+	THROWING_DAGGER: {
+		id: 2247,
+		name: 'Throwing Dagger',
+		icon: 'https://secure.xivdb.com/img/game/000000/000614.png',
+		onGcd: true,
+	},
+
 	// -----
 	// Player OGCDs
 	// -----
