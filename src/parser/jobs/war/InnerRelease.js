@@ -58,7 +58,7 @@ export default class InnerRelease extends Module {
 			return
 		}
 
-		console.log(this._ir)
+		//console.log(this._ir)
 		this._ir.casts.push(event)
 	}
 

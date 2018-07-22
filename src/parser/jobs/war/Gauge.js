@@ -7,12 +7,14 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // General actions that give Rage (this is how I'm referring to the Warrior gauge) -- Except Storm's Path, since it's a fringe case that gives +20 instead of 10.
-const RAGE_ACTIONS = [
-	ACTIONS.MAIM.id,
-	ACTIONS.STORMS_EYE.id,
-	ACTIONS.SKULL_SUNDER.id,
-	ACTIONS.BUTCHERS_BLOCK.id,
-]
+const RAGE_ACTIONS = {
+	[ACTIONS.MAIM.id]: 10,
+	[ACTIONS.STORMS_EYE.id]: 10,
+	[ACTIONS.SKULL_SUNDER.id]: 10,
+	[ACTIONS.BUTCHERS_BLOCK.id]: 10,
+	[ACTIONS.STORMS_PATH.id]: 20,
+	[ACTIONS.INFURIATE.id]: 50,
+}
 
 // Actions that reduce Infuriate's cooldown.
 const INFURIATE_CD_ACTIONS = [
@@ -54,6 +56,27 @@ export default class Gauge extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
+		const rageAbility = RAGE_ACTIONS[abilityId]
+		//console.log(rageAbility)
+		if (rageAbility != null) { this._rage += rageAbility }
+
+		const wastedRage = this._rage - MAX_RAGE
+		//console.log(wastedRage)
+		if (wastedRage > 0) {
+			this._wastedRage += wastedRage
+			this._rage -= MAX_RAGE
+			console.log(this._wastedRage)
+			//console.log(this._rage)
+		}
+
+		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
+			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, 5)
+		}
+	}
+
+	/*	_onCast(event) {
+		const abilityId = event.ability.guid
+
 		if (abilityId === ACTIONS.INFURIATE.id && this._rage >= MAX_RAGE) {
 			const finalRage = this._rage + 50
 			this._wastedRage += finalRage - MAX_RAGE
@@ -81,7 +104,7 @@ export default class Gauge extends Module {
 		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
 			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, 5)
 		}
-	}
+	}*/
 
 	_onDeath() {
 		// Death just flat out resets everything. Stop dying.
