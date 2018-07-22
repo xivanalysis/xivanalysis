@@ -22,8 +22,12 @@ export default class AlwaysBeCasting extends Module {
 		}
 
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
-		// TODO: better method for getting gcd count
-		const gcdUptime = numGcds * this.gcd.getEstimate()
+
+		const estimate = this.gcd.getEstimate()
+		const gcdUptime = this.gcd.gcds.reduce((carry, gcd) => {
+			const length = Math.min(gcd.length, estimate)
+			return carry + Math.min(length, this.parser.fight.end_time - gcd.timestamp)
+		}, 0)
 
 		this.checklist.add(new Rule({
 			name: 'Always be casting',
