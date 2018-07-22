@@ -1,8 +1,8 @@
-import React, { Fragment } from 'react'
-import { Accordion } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, { getAction } from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
@@ -10,7 +10,7 @@ export default class Triple extends Module {
 	static dependencies = [
 		'castTime',
 		'gcd',
-		'suggestions'
+		'suggestions',
 	]
 	name = 'Triplecast Usage'
 
@@ -20,16 +20,22 @@ export default class Triple extends Module {
 
 	_ctIndex = null
 
-	on_removebuff_byPlayer(event) {
-		if (event.ability.guid !== STATUSES.TRIPLECAST.id) {
-			return
-		}
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('removebuff', {
+			by: 'player',
+			abilityId: STATUSES.TRIPLECAST.id,
+		}, this._onRemoveTriple)
+		this.addHook('complete', this._onComplete)
+	}
 
+	_onRemoveTriple() {
 		// Stop tracking and save to history
 		this.stopAndSave()
 	}
 
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const actionId = event.ability.guid
 
 		// Start tracking
@@ -38,7 +44,7 @@ export default class Triple extends Module {
 			this._triple = {
 				start: event.timestamp,
 				end: null,
-				casts: []
+				casts: [],
 			}
 
 			this._ctIndex = this.castTime.set('all', 0)
@@ -53,7 +59,7 @@ export default class Triple extends Module {
 		this._triple.casts.push(event)
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Clean up any existing casts
 		if (this._active) {
 			this.stopAndSave()
@@ -86,12 +92,12 @@ export default class Triple extends Module {
 					content: <Fragment>
 						{this.parser.formatTimestamp(triple.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
-					</Fragment>
+					</Fragment>,
 				},
 				content: {
 					key: 'content-' + triple.start,
-					content: <Rotation events={triple.casts}/>
-				}
+					content: <Rotation events={triple.casts}/>,
+				},
 			}
 		})
 
