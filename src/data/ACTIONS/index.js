@@ -8,6 +8,8 @@ import ACN from './ACN'
 import WHM from './WHM'
 import SMN from './SMN'
 import RDM from './RDM'
+import MRD from './MRD'
+import WAR from './WAR'
 
 const ACTIONS = {
 	...SHARED,
@@ -16,6 +18,9 @@ const ACTIONS = {
 	...ITEMS,
 
 	...ACN,
+	...MRD,
+
+	...WAR,
 
 	...WHM,
 
