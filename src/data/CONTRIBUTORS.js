@@ -33,4 +33,9 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
+    VULCWEN: {
+        name: 'Vulcwen',
+        avatar: process.env.PUBLIC_URL + '/avatar/vulcwen.png',
+        jobs: [JOBS.WHITE_MAGE, JOBS.SUMMONER]
+    },
 }
