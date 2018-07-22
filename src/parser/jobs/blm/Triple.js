@@ -7,13 +7,13 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export default class Triple extends Module {
+	static handle = 'triple'
+	static title = 'Triplecast Usage'
 	static dependencies = [
 		'castTime',
 		'gcd',
 		'suggestions',
 	]
-
-	static title = 'Triplecast Usage'
 
     _active = false
     _triple = {}

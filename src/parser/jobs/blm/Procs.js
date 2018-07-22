@@ -3,6 +3,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export default class Procs extends Module {
+	static handle = 'procs'
 	static dependencies = [
 		'castTime',
 		'gcd',
