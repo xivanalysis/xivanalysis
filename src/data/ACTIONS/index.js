@@ -20,7 +20,7 @@ const ACTIONS = {
 	...DUTY,
 	...ITEMS,
 
-    ...ROG,
+	...ROG,
 	...ACN,
 	...MRD,
 
@@ -29,7 +29,7 @@ const ACTIONS = {
 	...WHM,
 	...SCH,
 
-    ...NIN,
+	...NIN,
 	...SMN,
 	...RDM,
 }

@@ -10,7 +10,7 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<b>The module is still throughly incomplete, this is only the most barebones support for <em>basic</em> analysis of NIN gameplay.</b> And while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!
+				<b>The module is still throughly incomplete, this is only the most barebones support for <em>basic</em> analysis of NIN gameplay.</b> And while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository!
 			</Message.Content>
 		</Message>
 	</Fragment>

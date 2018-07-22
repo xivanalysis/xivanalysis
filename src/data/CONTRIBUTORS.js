@@ -33,11 +33,8 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
-    TOASTDEIB: {
-        name: 'Toastdeib',
-        jobs: [
-            JOBS.NINJA,
-            JOBS.MONK,
-        ],
-    },
+	TOASTDEIB: {
+		name: 'Toastdeib',
+		jobs: [JOBS.NINJA],
+	},
 }

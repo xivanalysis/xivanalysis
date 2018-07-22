@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+//import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -10,9 +10,9 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 // Constants
 const MAX_NINKI = 100
 const NINKI_SPENDERS = [
-    ACTIONS.HELLFROG_MEDIUM.id,
-    ACTIONS.BHAVACAKRA.id,
-    ACTIONS.TEN_CHI_JIN.id,
+	ACTIONS.HELLFROG_MEDIUM.id,
+	ACTIONS.BHAVACAKRA.id,
+	ACTIONS.TEN_CHI_JIN.id,
 ]
 
 export default class Ninki extends Module {
@@ -20,9 +20,9 @@ export default class Ninki extends Module {
 	static dependencies = [
 		'suggestions',
 	]
-    
-    _ninki = 0
-    _wastedNinki = 0
+	
+	_ninki = 0
+	_wastedNinki = 0
 
 	constructor(...args) {
 		super(...args)
@@ -31,55 +31,49 @@ export default class Ninki extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-    _onCast(event) {
-        const abilityId = event.ability.guid
-        
-        if (abilityId === ACTIONS.MUG.id) {
-            this._addNinki(30)
-        }
+	_onCast(event) {
+		const abilityId = event.ability.guid
+		
+		if (abilityId === ACTIONS.MUG.id) {
+			this._addNinki(30)
+		}
 
-        if (abilityId === ACTIONS.ATTACK.id) {
-            this._addNinki(6)
-        }
+		if (abilityId === ACTIONS.ATTACK.id) {
+			this._addNinki(6)
+		}
 
-        if (NINKI_SPENDERS.includes(abilityId)) {
-            this._ninki -= 80
-        }
-    }
+		if (NINKI_SPENDERS.includes(abilityId)) {
+			this._ninki -= 80
+		}
+	}
 
-    _addNinki(amt) {
-        // Helper for adding Ninki to the running tally and calculating waste
-        this._ninki += amt 
-        if (this._ninki > MAX_NINKI) {
-            this._wastedNinki += (this._ninki - MAX_NINKI)
-            this._ninki = MAX_NINKI
-        }
-    }
+	_addNinki(amt) {
+		// Helper for adding Ninki to the running tally and calculating waste
+		this._ninki += amt 
+		if (this._ninki > MAX_NINKI) {
+			this._wastedNinki += (this._ninki - MAX_NINKI)
+			this._ninki = MAX_NINKI
+		}
+	}
 
-    _onDeath() {
-        // YOU DONE FUCKED UP NOW
-        this._wastedNinki += this._ninki
-        this._ninki = 0
-    }
+	_onDeath() {
+		// YOU DONE FUCKED UP NOW
+		this._wastedNinki += this._ninki
+		this._ninki = 0
+	}
 
-    _onComplete() {
-        if (this._wastedNinki >= 10) {
+	_onComplete() {
+		if (this._wastedNinki >= 10) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.BHAVACAKRA.icon,
 				content: <Fragment>
-					<Message warning icon>
-						<Icon name="warning sign"/>
-						<Message.Content>
-							We{'\''}re currently aware of the inaccuracy of the gauge calculation. The code is being currently rewritten.
-						</Message.Content>
-					</Message>
 					You used <ActionLink {...ACTIONS.MUG}/> or held your spenders through auto-attacks in a way that overcapped you.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You wasted {this._wastedNinki} Ninki by using abilities that overcapped your gauge.
+					You wasted {this._wastedNinki} Ninki by using abilities that overcapped your Ninki gauge or dying.
 				</Fragment>,
 			}))
 		}
-    }
+	}
 }

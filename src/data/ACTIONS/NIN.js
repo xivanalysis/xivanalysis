@@ -10,86 +10,86 @@ export default {
 		onGcd: true,
 	},
 
-    // -----
+	// -----
 	// Player OGCDs
 	// -----
 
-    TEN: {
-        id: 2259,
-        name: 'Ten',
-        icon: 'https://secure.xivdb.com/img/game/002000/002901.png',
-        onGcd: false,
-    },
+	TEN: {
+		id: 2259,
+		name: 'Ten',
+		icon: 'https://secure.xivdb.com/img/game/002000/002901.png',
+		onGcd: false,
+	},
 
-    CHI: {
-        id: 2261,
-        name: 'Chi',
-        icon: 'https://secure.xivdb.com/img/game/002000/002902.png',
-        onGcd: false,
-    },
+	CHI: {
+		id: 2261,
+		name: 'Chi',
+		icon: 'https://secure.xivdb.com/img/game/002000/002902.png',
+		onGcd: false,
+	},
 
-    JIN: {
-        id: 2263,
-        name: 'Jin',
-        icon: 'https://secure.xivdb.com/img/game/002000/002903.png',
-        onGcd: false,
-    },
+	JIN: {
+		id: 2263,
+		name: 'Jin',
+		icon: 'https://secure.xivdb.com/img/game/002000/002903.png',
+		onGcd: false,
+	},
 
-    FUMA_SHURIKEN: {
-        id: 2265,
-        name: 'Fuma Shuriken',
-        icon: 'https://secure.xivdb.com/img/game/002000/002907.png',
-        onGcd: false,
-    },
+	FUMA_SHURIKEN: {
+		id: 2265,
+		name: 'Fuma Shuriken',
+		icon: 'https://secure.xivdb.com/img/game/002000/002907.png',
+		onGcd: false,
+	},
 
-    KATON: {
-        id: 2266,
-        name: 'Katon',
-        icon: 'https://secure.xivdb.com/img/game/002000/002908.png',
-        onGcd: false,
-    },
+	KATON: {
+		id: 2266,
+		name: 'Katon',
+		icon: 'https://secure.xivdb.com/img/game/002000/002908.png',
+		onGcd: false,
+	},
 
-    RAITON: {
-        id: 2267,
-        name: 'Raiton',
-        icon: 'https://secure.xivdb.com/img/game/002000/002912.png',
-        onGcd: false,
-    },
+	RAITON: {
+		id: 2267,
+		name: 'Raiton',
+		icon: 'https://secure.xivdb.com/img/game/002000/002912.png',
+		onGcd: false,
+	},
 
-    HYOTON: {
-        id: 2268,
-        name: 'Hyoton',
-        icon: 'https://secure.xivdb.com/img/game/002000/002909.png',
-        onGcd: false,
-    },
+	HYOTON: {
+		id: 2268,
+		name: 'Hyoton',
+		icon: 'https://secure.xivdb.com/img/game/002000/002909.png',
+		onGcd: false,
+	},
 
-    HUTON: {
-        id: 2269,
-        name: 'Huton',
-        icon: 'https://secure.xivdb.com/img/game/002000/002910.png',
-        onGcd: false,
-    },
+	HUTON: {
+		id: 2269,
+		name: 'Huton',
+		icon: 'https://secure.xivdb.com/img/game/002000/002910.png',
+		onGcd: false,
+	},
 
-    DOTON: {
-        id: 2270,
-        name: 'Doton',
-        icon: 'https://secure.xivdb.com/img/game/002000/002911.png',
-        onGcd: false,
-    },
+	DOTON: {
+		id: 2270,
+		name: 'Doton',
+		icon: 'https://secure.xivdb.com/img/game/002000/002911.png',
+		onGcd: false,
+	},
 
-    SUITON: {
-        id: 2271,
-        name: 'Suiton',
-        icon: 'https://secure.xivdb.com/img/game/002000/002913.png',
-        onGcd: false,
-    },
+	SUITON: {
+		id: 2271,
+		name: 'Suiton',
+		icon: 'https://secure.xivdb.com/img/game/002000/002913.png',
+		onGcd: false,
+	},
 
-    RABBIT_MEDIUM: {
-        id: 2272,
-        name: 'Rabbit Medium',
-        icon: 'https://secure.xivdb.com/img/game/002000/002914.png',
-        onGcd: false,
-    },
+	RABBIT_MEDIUM: {
+		id: 2272,
+		name: 'Rabbit Medium',
+		icon: 'https://secure.xivdb.com/img/game/002000/002914.png',
+		onGcd: false,
+	},
 
 	HELLFROG_MEDIUM: {
 		id: 7401,
