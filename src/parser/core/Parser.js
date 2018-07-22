@@ -248,8 +248,10 @@ class Parser {
 			return seconds.toFixed(precision) + 's'
 		}
 		const precision = secondPrecision !== null ? secondPrecision : 0
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
-
+		const secondsText = seconds.toFixed(precision)
+		let pointPos = secondsText.indexOf('.')
+		if (pointPos === -1) { pointPos = secondsText.length }
+		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
 	}
 }
 

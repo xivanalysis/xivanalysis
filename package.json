@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.54",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "color": "^3.0.0",
