@@ -31,7 +31,7 @@ export default {
 	REPRISAL: {
 		id: 7535,
 		name: 'Reprisal',
-		icon: 'https://secure.xivdb.com/img/game/000000/000805.png',
+		icon: 'https://secure.xivdb.com/img/game/000000/000806.png',
 		cooldown: 60,
 	},
 
