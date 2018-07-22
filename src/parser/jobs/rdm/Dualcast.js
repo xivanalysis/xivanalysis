@@ -82,7 +82,9 @@ export default class DualCast extends Module {
 		}
 
 		this._castType = CAST_TYPE.HardCast
-		this.castTime.reset(this._ctIndex)
+		if (this._ctIndex != null) {
+			this.castTime.reset(this._ctIndex)
+		}
 		this._ctIndex = null
 	}
 
