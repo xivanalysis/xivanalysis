@@ -16,7 +16,6 @@ export default class GlobalCooldown extends Module {
 		'timeline',
 	]
 	static title = 'Global Cooldown'
-	static displayOrder = -100
 
 	_lastGcd = -1
 	_castingEvent = null
