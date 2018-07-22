@@ -139,4 +139,25 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/002000/002922.png',
 		onGcd: false,
 	},
+	
+	SMOKE_SCREEN: {
+		id: 3565,
+		name: 'Smoke Screen',
+		icon: 'https://secure.xivdb.com/img/game/002000/002917.png',
+		onGcd: false,
+	},
+
+	SHADEWALKER: {
+		id: 3564,
+		name: 'Shadewalker',
+		icon: 'https://secure.xivdb.com/img/game/002000/002916.png',
+		onGcd: false,
+	},
+
+	SHUKUCHI: {
+		id: 2262,
+		name: 'Shukuchi',
+		icon: 'https://secure.xivdb.com/img/game/002000/002905.png',
+		onGcd: false,
+	},
 }
