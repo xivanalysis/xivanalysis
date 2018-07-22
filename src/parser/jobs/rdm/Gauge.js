@@ -22,6 +22,7 @@ const MANA_GAIN = {
 	[ACTIONS.ENCHANTED_RIPOSTE.id]: {white: -30, black: -30},
 	[ACTIONS.ENCHANTED_ZWERCHHAU.id]: {white: -25, black: -25},
 	[ACTIONS.ENCHANTED_REDOUBLEMENT.id]: {white: -25, black: -25},
+	[ACTIONS.ENCHANTED_MOULINET.id]: {white: -30, black: -30},
 }
 
 export default class Gauge extends Module {
@@ -53,12 +54,14 @@ export default class Gauge extends Module {
 
 		_calculateManaImbalance(white, black) {
 			if (white && this._blackMana - this._whiteMana > 30) {
+				//console.log(`Imbalance White Lost, Current White: ${this._whiteMana} Current Black: ${this._blackMana}`)
 				//If we have more than 30 black mana over White, our White gains are halved
 				this._whiteManaLostToImbalance += Math.ceil(white/2)
 				white = Math.floor(white/2)
 			}
 
 			if (black && this._whiteMana - this._blackMana > 30) {
+				//console.log('Imbalance Black Lost')
 				//If we have more than 30 white mana over black, our black gains are halved
 				this._blackManaLostToImbalance += Math.ceil(black/2)
 				black = Math.floor(black/2)
@@ -77,6 +80,7 @@ export default class Gauge extends Module {
 			}
 
 			if (this._blackMana > 100) {
+				//console.log(`Wasted: ${this._blackMana - 100}`)
 				this._blackManaWasted += this._blackMana - 100
 				if (white || black) {
 					this._blackOverallManaGained += (black - (this._blackMana - 100))
@@ -99,6 +103,7 @@ export default class Gauge extends Module {
 			}
 
 			if (this._blackMana > 100) {
+				//console.log(`Wasted: ${this._blackMana - 100}`)
 				this._blackManaWasted += this._blackMana - 100
 				if (white || black) {
 					this._blackOverallManaGained += (black - (this._blackMana - 100))
@@ -111,8 +116,18 @@ export default class Gauge extends Module {
 
 		_calculateManaFicationManaGained() {
 			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
+			//console.log('manafication')
 			this._whiteMana = this._whiteMana * 2
 			this._blackMana = this._blackMana * 2
+
+			//TODO: Fix Handling for Manafication!!!!
+			//For now I'm excluding it from waste calculations
+			if (this._whiteMana > 100) {
+				this._whiteMana = 100
+			}
+			if (this._blackMana > 100) {
+				this._blackMana = 100
+			}
 
 			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 			this._calculateOverallManaGained(this._whiteMana, this._blackMana)
@@ -132,24 +147,36 @@ export default class Gauge extends Module {
 			} else {
 				//Determine if the ability we used should yield any mana gain.
 				//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
+				//console.log(`Ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 				let {white, black} = MANA_GAIN[abilityId] || {}
 				if (white || black) {
 					if (abilityId === ACTIONS.SCATTER.id) {
 						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
 						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
+							console.log('Enhanced Scatter On')
 							white = 8
 							black = 8
 						}
 					}
 
+					//console.log(`Gain ${white||0} White, Gain ${black||0} Black`)
+
 					if (white || black) {
 						this._whiteMana += white
 						this._blackMana += black
+
+						//We might be missing events from ACT's capture, so do not allow negatives!
+						if (this._whiteMana < 0) {
+							this._whiteMana = 0
+						}
+						if (this._blackMana < 0) {
+							this._blackMana = 0
+						}
 					}
 					//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-					this._calculateManaImbalance(white, black)
-					this._calculateManaWasted(white, black)
 					this._calculateOverallManaGained(white, black)
+					this._calculateManaWasted(white, black)
+					this._calculateManaImbalance(white, black)
 				}
 			}
 
