@@ -42,7 +42,7 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_ACTIONS).map(key => parseInt(key, 10))}, this._onCast)
 		/*		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.INNER_RELEASE.id,
