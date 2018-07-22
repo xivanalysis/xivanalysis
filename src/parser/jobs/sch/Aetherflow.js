@@ -8,7 +8,17 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-// Flow needs to be burnt before first use - 15s is optimal for first cast
+// Actions that reduce Aetherflow's cooldown.
+const AETHERFLOW_CD_ACTIONS = [
+	ACTIONS.LUSTRATE.id,
+	ACTIONS.EXCOGITATION.id,
+	ACTIONS.INDOMITABILITY.id,
+	ACTIONS.SACRED_SOIL.id,
+	ACTIONS.ENERGY_DRAIN.id,
+	ACTIONS.BANE.id,
+]
+
+// Flow needs to be burnt before first use - estimate at 10s for now
 const FIRST_FLOW_TIMESTAMP = 10000
 
 export default class Aetherflow extends Module {
@@ -22,13 +32,22 @@ export default class Aetherflow extends Module {
 
 	constructor(...args) {
 		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_onCast(event) {
+		const abilityId = event.ability.guid
+
+		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
+			this.cooldowns.reduceCooldown(ACTIONS.AETHERFLOW.id, 5)
+		}
 	}
 
 	_onComplete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
-			name: <Fragment>Use all <ActionLink {...ACTIONS.AETHERFLOW} /> stacks within a 45 second window.</Fragment>,
+			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> on cooldown.</Fragment>,
 			description: `
 				The level 68 trait, Quickened Aetherflow, reduces your Aetherflow cooldown by 5 seconds after using a single stack of aetherflow.
 				Using all your stacks before the cooldown is up effectively reduces the cooldown from 60 to 45 seconds,
@@ -37,22 +56,10 @@ export default class Aetherflow extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
-					percent: (this.getQuickenedAetherflowOnCooldown() / (this.parser.fightDuration - FIRST_FLOW_TIMESTAMP)) * 100,
+					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - FIRST_FLOW_TIMESTAMP)) * 100,
 				}),
 			],
 		}))
-	}
-
-	getQuickenedAetherflowOnCooldown() {
-		// We override this.cooldowns.getTimeOnCooldown for now to get an effective cd of 45 secs.
-		const cd = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id)
-		const currentTimestamp = this.parser.currentTimestamp
-
-		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
-		return cd.history.reduce(
-			(time, status) => time + Math.min(45000, currentTimestamp - status.timestamp),
-			cd.current? Math.min(cd.current.length, currentTimestamp - cd.current.timestamp) : 0
-		)
 	}
 
 	output() {
