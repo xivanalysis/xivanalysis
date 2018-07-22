@@ -12,6 +12,7 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		'speedmod',
 		'timeline',
 	]
 	static title = 'Global Cooldown'
@@ -90,6 +91,10 @@ export default class GlobalCooldown extends Module {
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
 			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
 		}
+
+		// Speedmod is full length -> actual length, we want to do the opposite here
+		const revSpeedMod = 1/this.speedmod.get(event.timestamp)
+		gcdLength *= revSpeedMod
 
 		this.gcds.push({
 			timestamp: event.timestamp,

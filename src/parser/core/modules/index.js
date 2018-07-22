@@ -2,6 +2,7 @@ import About from './About'
 import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
+import Arcanum from './Arcanum'
 import CastTime from './CastTime'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
@@ -16,6 +17,7 @@ import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
+import Speedmod from './Speedmod'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
 
@@ -24,6 +26,7 @@ export default [
 	AdditionalEvents,
 	AlwaysBeCasting,
 	AoE,
+	Arcanum,
 	CastTime,
 	Checklist,
 	Combatants,
@@ -38,6 +41,7 @@ export default [
 	RaidBuffs,
 	Suggestions,
 	Timeline,
+	Speedmod,
 	UnableToAct,
 	Weaving,
 ]

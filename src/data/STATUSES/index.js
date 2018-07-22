@@ -13,12 +13,15 @@ import BRD from './BRD'
 import MCH from './MCH'
 import SMN from './SMN'
 import RDM from './RDM'
+import WAR from './WAR'
 
 const STATUSES = {
 	...ENEMY,
 	...ROLE,
 	...SHARED,
 	...ACN,
+
+	...WAR,
 
 	...SCH,
 	...AST,

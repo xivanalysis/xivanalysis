@@ -28,4 +28,9 @@ export default {
 			JOBS.RED_MAGE,
 		],
 	},
+	SAYAKA: {
+		name: 'Sayaka',
+		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
+		jobs: [JOBS.WARRIOR],
+	},
 }

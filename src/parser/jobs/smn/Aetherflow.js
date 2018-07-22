@@ -108,7 +108,7 @@ export default class Aetherflow extends Module {
 		// Look into a better display somehow, hopefully integrate into timeline in some fashion.
 		const casts = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
 		let totalDrift = 0
-		return <Table collapsing>
+		return <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell>Cast Time</Table.HeaderCell>
