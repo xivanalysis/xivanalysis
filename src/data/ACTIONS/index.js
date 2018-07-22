@@ -6,6 +6,7 @@ import DUTY from './DUTY'
 import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
+import SCH from './SCH'
 import SMN from './SMN'
 import RDM from './RDM'
 import MRD from './MRD'
@@ -23,6 +24,7 @@ const ACTIONS = {
 	...WAR,
 
 	...WHM,
+	...SCH,
 
 	...SMN,
 	...RDM,
