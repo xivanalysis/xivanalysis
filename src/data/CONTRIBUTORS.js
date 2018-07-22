@@ -21,7 +21,6 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/fryte.png',
 		jobs: [JOBS.SUMMONER],
 	},
-<<<<<<< HEAD
 	LEYLIA: {
 		name: 'Leylia',
 		avatar: process.env.PUBLIC_URL + '/avatar/Leylia.png',
@@ -29,9 +28,6 @@ export default {
 			JOBS.RED_MAGE,
 		],
 	},
-=======
->>>>>>> e809b85810026d54dabe7e900082e6ec2cf7ac29
-
 	SAYAKA: {
 		name: 'Sayaka',
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
