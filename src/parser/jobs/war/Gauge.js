@@ -57,7 +57,7 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.INFURIATE.id && this._rage >= MAX_RAGE) {
 			const finalRage = this._rage + 50
 			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
+			this._rage -= MAX_RAGE
 		} else if (abilityId === ACTIONS.INFURIATE.id) {
 			this._rage += 50
 		}
@@ -65,7 +65,7 @@ export default class Gauge extends Module {
 		if (RAGE_ACTIONS.includes(abilityId) && this._rage >= MAX_RAGE) {
 			const finalRage = this._rage + 10
 			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
+			this._rage -= MAX_RAGE
 		} else if (RAGE_ACTIONS.includes(abilityId)) {
 			this._rage += 10
 		}
@@ -73,9 +73,9 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.STORMS_PATH.id && this._rage >= MAX_RAGE) {
 			const finalRage = this._rage + 20
 			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
+			this._rage -= MAX_RAGE
 		} else if (abilityId === ACTIONS.STORMS_PATH.ID) {
-			this._rage+= 20
+			this._rage += 20
 		}
 
 		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
