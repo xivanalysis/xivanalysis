@@ -80,6 +80,9 @@ export default class RaidBuffs extends Module {
 		}
 
 		const item = this.getTargetBuffs(event)[event.ability.guid]
+		// This shouldn't happen, but it do.
+		if (!item) { return }
+
 		item.end = event.timestamp - this.parser.fight.start_time
 		this.timeline.addItem(item)
 	}
