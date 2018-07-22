@@ -17,6 +17,7 @@ import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
+import Speedmod from './Speedmod'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
 
@@ -40,6 +41,7 @@ export default [
 	RaidBuffs,
 	Suggestions,
 	Timeline,
+	Speedmod,
 	UnableToAct,
 	Weaving,
 ]

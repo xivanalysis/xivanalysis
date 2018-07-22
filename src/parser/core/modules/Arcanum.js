@@ -22,42 +22,44 @@ const ARCANA = [
 // Handling AST cards in core as they can technically effect anyone
 export default class Arcanum extends Module {
 	static handle = 'arcanum'
+	static dependencies = [
+		'additionalEvents', // AE needs to run its normaliser first
+	]
 
-	// Track the latest RR
-	_royalRoad = null
+	normalise(events) {
+		let _royalRoad = null
+		const rrIds = Object.keys(ROYAL_ROAD_STRENGTH_MODIFIER).map(key => parseInt(key, 10))
 
-	constructor(...args) {
-		super(...args)
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
 
-		this.addHook('removebuff', {
-			abilityId: Object.keys(ROYAL_ROAD_STRENGTH_MODIFIER).map(key => parseInt(key, 10)),
-		}, this._onRemoveRoyalRoad)
-		this.addHook('applybuff', {abilityId: ARCANA}, this._onApplyArcanum)
-	}
+			if (!event.ability) { continue }
 
-	_onRemoveRoyalRoad(event) {
-		this._royalRoad = {
-			strengthModifier: ROYAL_ROAD_STRENGTH_MODIFIER[event.ability.guid],
-			rrAbility: event.ability,
-			rrTimestamp: event.timestamp,
+			// Store the most recent RR
+			if (event.type === 'removebuff' && rrIds.includes(event.ability.guid)) {
+				_royalRoad = {
+					strengthModifier: ROYAL_ROAD_STRENGTH_MODIFIER[event.ability.guid],
+					rrAbility: event.ability,
+					rrTimestamp: event.timestamp,
+				}
+				continue
+			}
+
+			// Look for card buffs and modify their event data
+			if (
+				event.type === 'applybuff' &&
+				ARCANA.includes(event.ability.guid)
+			) {
+				let props = {strengthModifier: 1}
+
+				if (_royalRoad && event.timestamp - _royalRoad.rrTimestamp <= ROYAL_ROAD_GRACE) {
+					props = _royalRoad
+				}
+
+				Object.assign(event, props)
+			}
 		}
-	}
 
-	_onApplyArcanum(event) {
-		const newEvent = {
-			...event,
-			type: 'applyarcanum',
-			strengthModifier: 1, // Overwritten if there's a RR
-		}
-
-		// If there's a recent RR drop, include that info
-		if (
-			this._royalRoad &&
-			event.timestamp - this._royalRoad.rrTimestamp <= ROYAL_ROAD_GRACE
-		) {
-			Object.assign(newEvent, this._royalRoad)
-		}
-
-		this.parser.fabricateEvent(newEvent)
+		return events
 	}
 }
