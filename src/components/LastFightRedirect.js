@@ -1,10 +1,10 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
-import { Container, Loader } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Redirect} from 'react-router-dom'
+import {Container, Loader} from 'semantic-ui-react'
 
-import { fetchReportIfNeeded } from 'store/actions'
+import {fetchReportIfNeeded} from 'store/actions'
 
 class LastFightRedirect extends Component {
 	static propTypes = {
@@ -13,31 +13,31 @@ class LastFightRedirect extends Component {
 			params: PropTypes.shape({
 				section: PropTypes.string.isRequired,
 				code: PropTypes.string.isRequired,
-				combatant: PropTypes.string
-			}).isRequired
+				combatant: PropTypes.string,
+			}).isRequired,
 		}).isRequired,
 		report: PropTypes.shape({
 			loading: PropTypes.bool.isRequired,
 			fights: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired
-			}))
-		})
+				id: PropTypes.number.isRequired,
+			})),
+		}),
 	}
 
-	componentWillMount() {
+	componentDidMount() {
 		// Make sure we've got report data
-		const { dispatch, match } = this.props
+		const {dispatch, match} = this.props
 		dispatch(fetchReportIfNeeded(match.params.code))
 	}
 
 	render() {
 		const {
 			report,
-			match: { params }
+			match: {params},
 		} = this.props
 
 		// Show a loader if we're still loading the main report
-		if (!report || report.loading) {
+		if (!report || report.code !== params.code || report.loading) {
 			return <Container>
 				<Loader active>Loading report</Loader>
 			</Container>
@@ -49,7 +49,7 @@ class LastFightRedirect extends Component {
 			params.section,
 			params.code,
 			fightId,
-			params.combatant || ''
+			params.combatant || '',
 		].join('/')
 
 		return <Redirect to={'/' + url}/>
@@ -57,7 +57,7 @@ class LastFightRedirect extends Component {
 }
 
 const mapStateToProps = state => ({
-	report: state.report
+	report: state.report,
 })
 
 export default connect(mapStateToProps)(LastFightRedirect)

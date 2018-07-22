@@ -10,14 +10,14 @@ export default {
 		name: 'Ruin',
 		icon: 'https://secure.xivdb.com/img/game/000000/000501.png',
 		onGcd: true,
-		castTime: 2.5
+		castTime: 2.5,
 	},
 
 	BIO: {
 		id: 164,
 		name: 'Bio',
 		icon: 'https://secure.xivdb.com/img/game/000000/000503.png',
-		onGcd: true
+		onGcd: true,
 	},
 
 	SUMMON: {
@@ -25,21 +25,21 @@ export default {
 		name: 'Summon',
 		icon: 'https://secure.xivdb.com/img/game/000000/000516.png',
 		onGcd: true,
-		castTime: 3
+		castTime: 3,
 	},
 
 	AETHERFLOW: {
 		id: 166,
 		name: 'Aetherflow',
 		icon: 'https://secure.xivdb.com/img/game/000000/000510.png',
-		cooldown: 60
+		cooldown: 60,
 	},
 
 	ENERGY_DRAIN: {
 		id: 167,
 		name: 'Energy Drain',
 		icon: 'https://secure.xivdb.com/img/game/000000/000514.png',
-		cooldown: 3
+		cooldown: 3,
 	},
 
 	MIASMA: {
@@ -47,7 +47,7 @@ export default {
 		name: 'Miasma',
 		icon: 'https://secure.xivdb.com/img/game/000000/000505.png',
 		onGcd: true,
-		castTime: 2.5
+		castTime: 2.5,
 	},
 
 	SUMMON_II: {
@@ -55,7 +55,7 @@ export default {
 		name: 'Summon II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000517.png',
 		onGcd: true,
-		castTime: 3
+		castTime: 3,
 	},
 
 	SUSTAIN: {
@@ -63,14 +63,14 @@ export default {
 		name: 'Sustain',
 		icon: 'https://secure.xivdb.com/img/game/000000/000508.png',
 		onGcd: true,
-		castTime: 1
+		castTime: 1,
 	},
 
 	RUIN_II: {
 		id: 172,
 		name: 'Ruin II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000502.png',
-		onGcd: true
+		onGcd: true,
 	},
 
 	RESURRECTION: {
@@ -78,35 +78,35 @@ export default {
 		name: 'Resurrection',
 		icon: 'https://secure.xivdb.com/img/game/000000/000511.png',
 		onGcd: true,
-		castTime: 8
+		castTime: 8,
 	},
 
 	BANE: {
 		id: 174,
 		name: 'Bane',
 		icon: 'https://secure.xivdb.com/img/game/000000/000507.png',
-		cooldown: 10
+		cooldown: 10,
 	},
 
 	ROUSE: {
 		id: 176,
 		name: 'Rouse',
 		icon: 'https://secure.xivdb.com/img/game/000000/000509.png',
-		cooldown: 60
+		cooldown: 60,
 	},
 
 	BIO_II: {
 		id: 178,
 		name: 'Bio II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000504.png',
-		onGcd: true
+		onGcd: true,
 	},
 
 	SHADOW_FLARE: {
 		id: 179,
 		name: 'Shadow Flare',
 		icon: 'https://secure.xivdb.com/img/game/000000/000515.png',
-		cooldown: 60
+		cooldown: 60,
 	},
 
 	PHYSICK: {
@@ -114,7 +114,7 @@ export default {
 		name: 'Physick',
 		icon: 'https://secure.xivdb.com/img/game/000000/000518.png',
 		onGcd: true,
-		castTime: 2
+		castTime: 2,
 	},
 
 	// -----
@@ -125,7 +125,7 @@ export default {
 		id: 637,
 		name: 'Gust',
 		icon: 'https://secure.xivdb.com/img/game/000000/000561.png',
-		pet: PETS.EMERALD_CARBUNCLE.id
+		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
 	BACKDRAFT: {
@@ -133,7 +133,7 @@ export default {
 		name: 'Backdraft',
 		icon: 'https://secure.xivdb.com/img/game/000000/000563.png',
 		cooldown: 90,
-		pet: PETS.EMERALD_CARBUNCLE.id
+		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
 	DOWNBURST: {
@@ -141,7 +141,7 @@ export default {
 		name: 'Downburst',
 		icon: 'https://secure.xivdb.com/img/game/000000/000562.png',
 		cooldown: 30,
-		pet: PETS.EMERALD_CARBUNCLE.id
+		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
 	SHINING_EMERALD: {
@@ -149,7 +149,7 @@ export default {
 		name: 'Shining Emerald',
 		icon: 'https://secure.xivdb.com/img/game/000000/000564.png',
 		cooldown: 60,
-		pet: PETS.EMERALD_CARBUNCLE.id
+		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
 	// Topaz Carbuncle
@@ -157,7 +157,7 @@ export default {
 		id: 633,
 		name: 'Gouge',
 		icon: 'https://secure.xivdb.com/img/game/000000/000551.png',
-		pet: PETS.TOPAZ_CARBUNCLE.id
+		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
 	SHINING_TOPAZ: {
@@ -165,7 +165,7 @@ export default {
 		name: 'Shining Topaz',
 		icon: 'https://secure.xivdb.com/img/game/000000/000552.png',
 		cooldown: 15,
-		pet: PETS.TOPAZ_CARBUNCLE.id
+		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
 	CURL: {
@@ -173,7 +173,7 @@ export default {
 		name: 'Curl',
 		icon: 'https://secure.xivdb.com/img/game/000000/000553.png',
 		cooldown: 120,
-		pet: PETS.TOPAZ_CARBUNCLE.id
+		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
 	STORM: {
@@ -181,6 +181,6 @@ export default {
 		name: 'Storm',
 		icon: 'https://secure.xivdb.com/img/game/000000/000554.png',
 		cooldown: 40,
-		pet: PETS.TOPAZ_CARBUNCLE.id
-	}
+		pet: PETS.TOPAZ_CARBUNCLE.id,
+	},
 }

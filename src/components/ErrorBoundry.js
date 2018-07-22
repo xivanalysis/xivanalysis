@@ -1,36 +1,24 @@
 import PropTypes from 'prop-types'
 import Raven from 'raven-js'
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Container, Message } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Container} from 'semantic-ui-react'
 
-import * as Errors from 'errors'
-
-// Error type render config
-const ERROR_PROPS = {
-	[Errors.TYPES.ERROR]: {
-		error: true,
-		icon: 'times circle outline'
-	},
-	[Errors.TYPES.WARNING]: {
-		warning: true,
-		icon: 'warning sign'
-	}
-}
-
+import {GlobalError} from 'errors'
+import ErrorMessage from './ui/ErrorMessage'
 
 // Main component
 class ErrorBoundry extends Component {
 	static propTypes = {
 		children: PropTypes.node,
-		globalError: PropTypes.instanceOf(Errors.GlobalError)
+		globalError: PropTypes.instanceOf(GlobalError),
 	}
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			componentError: null
+			componentError: null,
 		}
 	}
 
@@ -46,20 +34,14 @@ class ErrorBoundry extends Component {
 			return this.props.children
 		}
 
-		return <Container>
-			<Message
-				{...(ERROR_PROPS[error.type || Errors.TYPES.ERROR])}
-				header={error.message || error.toString()}
-				content={<p>
-					{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}
-				</p>}
-			/>
+		return <Container style={{marginTop: '1em'}}>
+			<ErrorMessage error={error}/>
 		</Container>
 	}
 }
 
 const mapStateToProps = state => ({
-	globalError: state.globalError
+	globalError: state.globalError,
 })
 
 export default connect(mapStateToProps)(ErrorBoundry)

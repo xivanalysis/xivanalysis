@@ -1,22 +1,30 @@
 import React from 'react'
 
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Group, Item } from './Timeline'
+import {Group, Item} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
+	static handle = 'cooldowns'
 	static dependencies = [
-		'timeline'
+		'timeline',
 	]
 
 	_currentAction = null
 	_cooldowns = {}
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// cooldown starts at the beginning of the casttime
 	// (though 99% of CD based abilities have no cast time)
 	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
-	on_begincast_byPlayer(event) {
+	_onBeginCast(event) {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
@@ -25,7 +33,7 @@ export default class Cooldowns extends Module {
 		this.startCooldown(action.id)
 	}
 
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const action = getAction(event.ability.guid)
 		if (!action.cooldown) { return }
 
@@ -37,7 +45,7 @@ export default class Cooldowns extends Module {
 		this.startCooldown(action.id)
 	}
 
-	on_complete() {
+	_onComplete() {
 		const startTime = this.parser.fight.start_time
 
 		Object.keys(this._cooldowns).forEach(id => {
@@ -49,13 +57,19 @@ export default class Cooldowns extends Module {
 				cd.current = null
 			}
 
+			const action = getAction(id)
+
+			// If the action is on the GCD, GlobalCooldown will be managing its own group
+			if (action.onGcd) {
+				return
+			}
+
 			// Add CD info to the timeline
 			// TODO: Might want to move group generation somewhere else
 			//       though will need to handle hidden groups for things with no items
-			const action = getAction(id)
 			this.timeline.addGroup(new Group({
 				id,
-				content: action.name
+				content: action.name,
 			}))
 
 			cd.history.forEach(use => {
@@ -64,7 +78,7 @@ export default class Cooldowns extends Module {
 					start: use.timestamp - startTime,
 					length: use.length,
 					group: id,
-					content: <img src={action.icon} alt={action.name}/>
+					content: <img src={action.icon} alt={action.name}/>,
 				}))
 			})
 		})
@@ -73,7 +87,7 @@ export default class Cooldowns extends Module {
 	getCooldown(actionId) {
 		return this._cooldowns[actionId] || {
 			current: null,
-			history: []
+			history: [],
 		}
 	}
 
@@ -92,7 +106,7 @@ export default class Cooldowns extends Module {
 		const action = getAction(actionId)
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
-			length: action.cooldown * 1000 // CDs are in S, timestamps are in MS
+			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)

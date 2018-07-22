@@ -1,7 +1,8 @@
 export const SEVERITY = {
+	MORBID: 0,
 	MAJOR: 1,
 	MEDIUM: 2,
-	MINOR: 3
+	MINOR: 3,
 }
 
 export default class Suggestion {

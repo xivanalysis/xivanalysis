@@ -1,41 +1,41 @@
-import { addExtraIndex } from 'utilities'
+import {addExtraIndex} from 'utilities'
 
 export const ROLES = addExtraIndex({
 	TANK: {
 		id: 1,
 		name: 'Tank',
-		colour: 'blue'
+		colour: 'blue',
 	},
 	HEALER: {
 		id: 2,
 		name: 'Healer',
-		colour: 'green'
+		colour: 'green',
 	},
 
 	MELEE: {
 		id: 3,
 		name: 'Melee DPS',
-		colour: 'red'
+		colour: 'red',
 	},
 
 	PHYSICAL_RANGED: {
 		id: 4,
 		name: 'Physical Ranged DPS',
-		colour: 'red'
+		colour: 'red',
 	},
 
 	MAGICAL_RANGED: {
 		id: 5,
 		name: 'Magical Ranged DPS',
-		colour: 'red'
+		colour: 'red',
 	},
 
 	// Not really a role but w/e
 	UNSUPPORTED: {
 		id: 100,
 		name: 'Unsupported',
-		colour: 'grey'
-	}
+		colour: 'grey',
+	},
 }, 'id')
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
@@ -45,19 +45,22 @@ const JOBS = {
 		name: 'Paladin',
 		logType: 'Paladin',
 		icon: 'paladin',
-		role: ROLES.TANK.id
+		colour: '#a8d2e6',
+		role: ROLES.TANK.id,
 	},
 	WARRIOR: {
 		name: 'Warrior',
 		logType: 'Warrior',
 		icon: 'warrior',
-		role: ROLES.TANK.id
+		colour: '#cf2621',
+		role: ROLES.TANK.id,
 	},
 	DARK_KNIGHT: {
 		name: 'Dark Knight',
 		logType: 'DarkKnight',
 		icon: 'darkknight',
-		role: ROLES.TANK.id
+		colour: '#d126cc',
+		role: ROLES.TANK.id,
 	},
 
 	// Healer
@@ -65,19 +68,22 @@ const JOBS = {
 		name: 'White Mage',
 		logType: 'WhiteMage',
 		icon: 'whitemage',
-		role: ROLES.HEALER.id
+		colour: '#fff0dc',
+		role: ROLES.HEALER.id,
 	},
 	SCHOLAR: {
 		name: 'Scholar',
 		logType: 'Scholar',
 		icon: 'scholar',
-		role: ROLES.HEALER.id
+		colour: '#8657ff',
+		role: ROLES.HEALER.id,
 	},
 	ASTROLOGIAN: {
 		name: 'Astrologian',
 		logType: 'Astrologian',
 		icon: 'astrologian',
-		role: ROLES.HEALER.id
+		colour: '#ffe74a',
+		role: ROLES.HEALER.id,
 	},
 
 	// Melee
@@ -85,25 +91,29 @@ const JOBS = {
 		name: 'Monk',
 		logType: 'Monk',
 		icon: 'monk',
-		role: ROLES.MELEE.id
+		colour: '#d69c00',
+		role: ROLES.MELEE.id,
 	},
 	DRAGOON: {
 		name: 'Dragoon',
 		logType: 'Dragoon',
 		icon: 'dragoon',
-		role: ROLES.MELEE.id
+		colour: '#4164cd',
+		role: ROLES.MELEE.id,
 	},
 	NINJA: {
 		name: 'Ninja',
 		logType: 'Ninja',
 		icon: 'ninja',
-		role: ROLES.MELEE.id
+		colour: '#af1964',
+		role: ROLES.MELEE.id,
 	},
 	SAMURAI: {
 		name: 'Samurai',
 		logType: 'Samurai',
 		icon: 'samurai',
-		role: ROLES.MELEE.id
+		colour: '#e46d04',
+		role: ROLES.MELEE.id,
 	},
 
 	// Phys Ranged
@@ -111,13 +121,15 @@ const JOBS = {
 		name: 'Bard',
 		logType: 'Bard',
 		icon: 'bard',
-		role: ROLES.PHYSICAL_RANGED.id
+		colour: '#91ba5e',
+		role: ROLES.PHYSICAL_RANGED.id,
 	},
 	MACHINIST: {
 		name: 'Machinist',
 		logType: 'Machinist',
 		icon: 'machinist',
-		role: ROLES.PHYSICAL_RANGED.id
+		colour: '#6ee1d6',
+		role: ROLES.PHYSICAL_RANGED.id,
 	},
 
 	// Magic Ranged
@@ -125,20 +137,23 @@ const JOBS = {
 		name: 'Black Mage',
 		logType: 'BlackMage',
 		icon: 'blackmage',
-		role: ROLES.MAGICAL_RANGED.id
+		colour: '#a579d6',
+		role: ROLES.MAGICAL_RANGED.id,
 	},
 	SUMMONER: {
 		name: 'Summoner',
 		logType: 'Summoner',
 		icon: 'summoner',
-		role: ROLES.MAGICAL_RANGED.id
+		colour: '#2d9b78',
+		role: ROLES.MAGICAL_RANGED.id,
 	},
 	RED_MAGE: {
 		name: 'Red Mage',
 		logType: 'RedMage',
 		icon: 'redmage',
-		role: ROLES.MAGICAL_RANGED.id
-	}
+		colour: '#e87b7b',
+		role: ROLES.MAGICAL_RANGED.id,
+	},
 }
 
 export default addExtraIndex(JOBS, 'logType')

@@ -3,33 +3,38 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.54",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
+    "color": "^3.0.0",
     "es6-error": "^4.1.1",
     "intersection-observer": "^0.5.0",
-    "mathjs": "^4.1.2",
+    "mathjs": "^5",
     "prop-types": "^15.6.1",
     "raven-js": "^3.25.2",
     "react": "^16.3.1",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.3.1",
-    "react-intersection-observer": "^3.0.3",
+    "react-helmet": "^5.2.0",
+    "react-intersection-observer": "^6",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
     "react-scroll": "^1.7.9",
+    "react-sizes": "^1.0.4",
     "react-visjs-timeline": "^1.5.0",
-    "redux": "^3.7.2",
+    "redux": "^4",
     "redux-thunk": "^2.2.0",
     "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.81",
-    "toposort": "^1.0.6",
+    "semantic-ui-react": "^0.82",
+    "stable": "^0.1.8",
+    "toposort": "^2",
     "vis": "^4.21.0"
   },
   "scripts": {
     "analyse": "source-map-explorer build/static/js/main.*",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --env=jsdom",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject"
   },
   "browserslist": {
@@ -46,10 +51,9 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "2.0.0-next.66cc7a90",
+    "git-revision-webpack-plugin": "^3.0.3",
+    "react-app-rewired": "^2.0.0",
+    "react-scripts": "2.0.0-next.3e165448",
     "source-map-explorer": "^1.5.0"
-  },
-  "resolutions": {
-    "@babel/runtime": "7.0.0-beta.49"
   }
 }

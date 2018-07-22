@@ -2,11 +2,12 @@ import React from 'react'
 
 import Suggestion from './Suggestion'
 import SuggestionsComponent from 'components/modules/Suggestions'
-import Module, { DISPLAY_ORDER } from 'parser/core/Module'
+import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class Suggestions extends Module {
+	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
-	name = 'Suggestions'
+	static title = 'Suggestions'
 
 	_suggestions = []
 

@@ -1,5 +1,5 @@
-import React, { Component, Fragment } from 'react'
-import { Container } from 'semantic-ui-react'
+import React, {Component, Fragment} from 'react'
+import {Container} from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
 

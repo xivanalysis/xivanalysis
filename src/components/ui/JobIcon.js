@@ -1,20 +1,20 @@
 import PropTypes from 'prop-types'
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 
 class JobIcons extends Component {
 	static propTypes = {
 		job: PropTypes.shape({
-			icon: PropTypes.string.isRequired
+			icon: PropTypes.string.isRequired,
 		}).isRequired,
 		set: PropTypes.number,
-		className: PropTypes.string
+		className: PropTypes.string,
 	}
 
 	render() {
 		const {
-			job: { icon },
+			job: {icon},
 			set = 2,
-			className = ''
+			className = '',
 		} = this.props
 
 		return <img

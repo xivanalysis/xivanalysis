@@ -1,5 +1,5 @@
-/* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
 body {
+	/* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
 	padding-top: 40px;
 
 	/* Colours 'cus SUI doesn't for w/e reason */
@@ -25,6 +25,11 @@ body {
 /* Forcing no wrapping on xivdb links so the icons don't get split off */
 [data-xivdb-key] {
 	white-space: nowrap;
+}
+
+/* Apparently !important and calc() are SUI's favourite dish. Why the fuck am I using this thing again? */
+.ui.attached {
+	width: 100% !important;
 }
 
 /* Utility shit */

@@ -1,0 +1,9 @@
+.logo {
+	height: 20px;
+	width: auto !important;
+	margin-right: .5em !important;
+}
+
+.version {
+	opacity: .5;
+}

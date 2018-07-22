@@ -5,7 +5,7 @@ const REMOVE = 'remove'
 
 export default class Entities extends Module {
 	static dependencies = [
-		'invuln'
+		'invuln',
 	]
 
 	// -----
@@ -67,12 +67,12 @@ export default class Entities extends Module {
 					events.push({
 						timestamp: range.start,
 						type: APPLY,
-						buff
+						buff,
 					})
 					events.push({
 						timestamp: range.end || this.parser.currentTimestamp,
 						type: REMOVE,
-						buff
+						buff,
 					})
 				})
 			})
@@ -103,19 +103,23 @@ export default class Entities extends Module {
 	// -----
 	// Event handlers
 	// -----
-	// Buffs
-	on_applybuff(event)         { this.applyBuff(event) }
-	on_applydebuff(event)       { this.applyBuff(event, true) }
-	on_applybuffstack(event)    { this.updateBuffStack(event) }
-	on_applydebuffstack(event)  { this.updateBuffStack(event, true) }
-	on_removebuffstack(event)   { this.updateBuffStack(event) }
-	on_removedebuffstack(event) { this.updateBuffStack(event, true) }
-	on_removebuff(event)        { this.removeBuff(event) }
-	on_removedebuff(event)      { this.removeBuff(event, true) }
+	constructor(...args) {
+		super(...args)
 
-	// Resources
-	on_damage(event) { this.updateResources(event) }
-	on_heal(event) { this.updateResources(event) }
+		// Buffs
+		this.addHook('applybuff', this.applyBuff)
+		this.addHook('applydebuff', event => this.applyBuff(event, true))
+		this.addHook('applybuffstack', this.updateBuffStack)
+		this.addHook('applydebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuffstack', this.updateBuffStack)
+		this.addHook('removedebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuff', this.removeBuff)
+		this.addHook('removedebuff', event => this.removeBuff(event, true))
+
+		// Resources
+		this.addHook('damage', this.updateResources)
+		this.addHook('heal', this.updateResources)
+	}
 
 	// -----
 	// Logic
@@ -151,7 +155,7 @@ export default class Entities extends Module {
 			start: event.timestamp,
 			end: null,
 			stackHistory: [{stacks: 1, timestamp: event.timestamp}],
-			isDebuff
+			isDebuff,
 		}
 
 		// Fire an event for all buffs for completeness' sake
@@ -204,7 +208,7 @@ export default class Entities extends Module {
 				start: startTime,
 				end: null,
 				stackHistory: [{stacks: 1, timestamp: startTime}],
-				isDebuff
+				isDebuff,
 			}
 			entity.buffs.push(buff)
 		}
@@ -222,7 +226,7 @@ export default class Entities extends Module {
 			timestamp,
 			oldStacks,
 			newStacks,
-			stacksGained: newStacks - oldStacks
+			stacksGained: newStacks - oldStacks,
 		}, buff)
 	}
 

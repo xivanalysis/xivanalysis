@@ -1,49 +1,26 @@
+import Raven from 'raven-js'
+import React from 'react'
 import toposort from 'toposort'
 
-import AlwaysBeCasting from './modules/AlwaysBeCasting'
-import CastTime from './modules/CastTime'
-import Checklist from './modules/Checklist'
-import Combatants from './modules/Combatants'
-import Cooldowns from './modules/Cooldowns'
-import Death from './modules/Death'
-import Enemies from './modules/Enemies'
-import GlobalCooldown from './modules/GlobalCooldown'
-import Invulnerability from './modules/Invulnerability'
-import PrecastStatus from './modules/PrecastStatus'
-import Suggestions from './modules/Suggestions'
-import Timeline from './modules/Timeline'
-import Weaving from './modules/Weaving'
+import ErrorMessage from 'components/ui/ErrorMessage'
+import {DependencyCascadeError} from 'errors'
 
 class Parser {
 	// -----
 	// Properties
 	// -----
 
-	static defaultModules = {
-		abc: AlwaysBeCasting,
-		castTime: CastTime,
-		checklist: Checklist,
-		combatants: Combatants,
-		cooldowns: Cooldowns,
-		death: Death,
-		enemies: Enemies,
-		gcd: GlobalCooldown,
-		invuln: Invulnerability,
-		precastStatus: PrecastStatus,
-		suggestions: Suggestions,
-		timeline: Timeline,
-		weaving: Weaving
-	}
-	static jobModules = {}
-
 	report = null
 	fight = null
 	player = null
-
-	modules = {}
 	_timestamp = 0
 
+	modules = {}
+	_constructors = {}
+
 	moduleOrder = []
+	_triggerModules = []
+	_moduleErrors = {}
 
 	get currentTimestamp() {
 		// TODO: this.finished?
@@ -64,7 +41,7 @@ class Parser {
 	}
 
 	// -----
-	// Constructor w/ module dep resolution
+	// Constructor
 	// -----
 
 	constructor(report, fight, player) {
@@ -75,16 +52,30 @@ class Parser {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
-		// Join the child modules in over the defaults
-		const constructors = {
-			...this.constructor.defaultModules,
-			...this.constructor.jobModules
-		}
+		// Get a list of the current player's pets and set it on the player instance for easy reference
+		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
+	}
 
-		// Build the values we need for the topsort
-		const nodes = Object.keys(constructors)
+	// -----
+	// Module handling
+	// -----
+
+	addModules(modules) {
+		const keyed = {}
+
+		modules.forEach(mod => {
+			keyed[mod.handle] = mod
+		})
+
+		// Merge the modules into our constructor object
+		Object.assign(this._constructors, keyed)
+	}
+
+	buildModules() {
+		// Build the values we need for the toposort
+		const nodes = Object.keys(this._constructors)
 		const edges = []
-		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
+		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, dep])
 		}))
 
@@ -95,12 +86,7 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			const module = new constructors[mod]()
-			module.constructor.dependencies.forEach(dep => {
-				module[dep] = this.modules[dep]
-			})
-			module.parser = this
-			this.modules[mod] = module
+			this.modules[mod] = new this._constructors[mod](this)
 		})
 	}
 
@@ -108,12 +94,19 @@ class Parser {
 	// Event handling
 	// -----
 
-	parseEvents(events) {
+	async normalise(events) {
 		// Run normalisers
-		// TODO: This will need to be seperate if I start batching
-		this.moduleOrder.forEach(mod => {
-			events = this.modules[mod].normalise(events)
-		})
+		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
+		for (const mod of this.moduleOrder) {
+			events = await this.modules[mod].normalise(events)
+		}
+
+		return events
+	}
+
+	parseEvents(events) {
+		// Create a copy of the module order that we'll use while parsing
+		this._triggerModules = this.moduleOrder.slice(0)
 
 		this.fabricateEvent({type: 'init'})
 
@@ -134,15 +127,41 @@ class Parser {
 			trigger,
 			// Rest of the event, mark it as fab'd
 			...event,
-			__fabricated: true
+			__fabricated: true,
 		})
 	}
 
 	triggerEvent(event) {
 		// TODO: Do I need to keep a history?
+		this._triggerModules.forEach(mod => {
+			try {
+				this.modules[mod].triggerEvent(event)
+			} catch (error) {
+				// If we're in dev, throw the error back up
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
 
-		this.moduleOrder.forEach(mod => {
-			this.modules[mod].triggerEvent(event)
+				// Error trying to handle an event, tell sentry
+				Raven.captureException(error)
+
+				// Also cascade the error through the dependency tree
+				this._setModuleError(mod, error)
+			}
+		})
+	}
+
+	_setModuleError(mod, error) {
+		// Set the error for the current module
+		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1)
+		this._moduleErrors[mod] = error
+
+		// Cascade via dependencies
+		Object.keys(this._constructors).forEach(key => {
+			const constructor = this._constructors[key]
+			if (constructor.dependencies.includes(mod)) {
+				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
+			}
 		})
 	}
 
@@ -154,15 +173,40 @@ class Parser {
 		const displayOrder = this.moduleOrder
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
-		let results = []
+		const results = []
 		displayOrder.forEach(mod => {
 			const module = this.modules[mod]
-			const output = module.output()
+
+			// If there's an error, override output handling to show it
+			if (this._moduleErrors[mod]) {
+				const error = this._moduleErrors[mod]
+				results.push({
+					name: module.constructor.title,
+					markup: <ErrorMessage error={error} />,
+				})
+				return
+			}
+
+			// Use the ErrorMessage component for errors in the output too (and sentry)
+			let output = null
+			try {
+				output = module.output()
+			} catch (error) {
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+				Raven.captureException(error)
+				results.push({
+					name: module.constructor.title,
+					markup: <ErrorMessage error={error} />,
+				})
+				return
+			}
 
 			if (output) {
 				results.push({
-					name: module.name,
-					markup: output
+					name: module.constructor.title,
+					markup: output,
 				})
 			}
 		})
@@ -202,10 +246,12 @@ class Parser {
 		if (duration < 60) {
 			const precision = secondPrecision !== null? secondPrecision : seconds < 10? 2 : 0
 			return seconds.toFixed(precision) + 's'
-		} else {
-			const precision = secondPrecision !== null ? secondPrecision : 0
-			return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
 		}
+		const precision = secondPrecision !== null ? secondPrecision : 0
+		const secondsText = seconds.toFixed(precision)
+		let pointPos = secondsText.indexOf('.')
+		if (pointPos === -1) { pointPos = secondsText.length }
+		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
 	}
 }
 

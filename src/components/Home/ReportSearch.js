@@ -1,15 +1,15 @@
 import PropTypes from 'prop-types'
-import React, { Component, Fragment } from 'react'
-import { withRouter } from 'react-router-dom'
-import { Button, Input } from 'semantic-ui-react'
+import React, {Component, Fragment} from 'react'
+import {withRouter} from 'react-router-dom'
+import {Button, Input} from 'semantic-ui-react'
 
 import styles from './ReportSearch.module.css'
 
 class ReportSearch extends Component {
 	static propTypes = {
 		history: PropTypes.shape({
-			push: PropTypes.func.isRequired
-		}).isRequired
+			push: PropTypes.func.isRequired,
+		}).isRequired,
 	}
 
 	static getCode(input) {

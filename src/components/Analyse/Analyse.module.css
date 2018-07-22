@@ -1,0 +1,21 @@
+.sidebar {
+	margin-top: 1em !important;
+}
+
+.header {
+	display: flex;
+}
+
+.header > img {
+	align-self: center;
+}
+
+.resultsContainer {
+	margin-bottom: 25vh;
+}
+
+.menuLogo {
+	display: inline-block !important;
+	width: 2.5em !important;
+	margin-right: .75rem !important;
+}

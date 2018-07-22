@@ -1,18 +1,33 @@
 import Module from 'parser/core/Module'
-import { Rule, Requirement } from 'parser/core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class AlwaysBeCasting extends Module {
+	static handle = 'abc'
 	static dependencies = [
 		'checklist',
+		'downtime',
 		'gcd',
-		'invuln'
 	]
 
+	constructor(...args) {
+		super(...args)
+		this.addHook('complete', this._onComplete)
+	}
+
 	// Just using this for the suggestion for now
-	on_complete() {
-		const fightDuration = this.parser.fightDuration - this.invuln.getUntargetableUptime()
-		// TODO: better method for getting gcd count
-		const gcdUptime = this.gcd.gcds.length * this.gcd.getEstimate()
+	_onComplete() {
+		const numGcds = this.gcd.gcds.length
+		if (!numGcds) {
+			return
+		}
+
+		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
+
+		const estimate = this.gcd.getEstimate()
+		const gcdUptime = this.gcd.gcds.reduce((carry, gcd) => {
+			const length = Math.min(gcd.length, estimate)
+			return carry + Math.min(length, this.parser.fight.end_time - gcd.timestamp)
+		}, 0)
 
 		this.checklist.add(new Rule({
 			name: 'Always be casting',
@@ -20,9 +35,9 @@ export default class AlwaysBeCasting extends Module {
 			requirements: [
 				new Requirement({
 					name: 'GCD uptime',
-					percent: gcdUptime / fightDuration * 100
-				})
-			]
+					percent: gcdUptime / fightDuration * 100,
+				}),
+			],
 		}))
 	}
 }

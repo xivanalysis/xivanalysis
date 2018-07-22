@@ -1,52 +1,67 @@
 import math from 'mathjsCustom'
-import React, { Fragment } from 'react'
-import { Message, Icon } from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Message, Icon} from 'semantic-ui-react'
 
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import { Group, Item } from './Timeline'
+import {Group, Item} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
 
 export default class GlobalCooldown extends Module {
+	static handle = 'gcd'
 	static dependencies = [
-		'timeline'
+		'speedmod',
+		'timeline',
 	]
-	name = 'Global Cooldown'
+	static title = 'Global Cooldown'
 
 	_lastGcd = -1
 	_castingEvent = null
 
 	gcds = []
 
-	// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
-	on_begincast_byPlayer(event) {
-		const action = getAction(event.ability.guid)
-		if (!action.onGcd) { return }
+	constructor(...args) {
+		super(...args)
 
-		// Can I check for cancels?
-
-		this._castingEvent = event
+		this.addHook('complete', this._onComplete)
 	}
 
-	on_cast_byPlayer(event) {
-		const action = getAction(event.ability.guid)
+	// Using normalise so the estimate can be used throughout the parse
+	normalise(events) {
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
 
-		// Ignore non-GCD casts
-		if (!action.onGcd) { return }
+			// Only care about player GCDs
+			if (!this.parser.byPlayer(event) || !event.ability) { continue }
+			const action = getAction(event.ability.guid)
+			if (!action.onGcd) { continue }
 
-		const castingEvent = this._castingEvent
-		this._castingEvent = null
-		if (castingEvent && castingEvent.ability.guid === action.id) {
-			this.saveGcd(castingEvent)
-			return
+			// eslint-disable-next-line default-case
+			switch (event.type) {
+			// wowa uses beginchannel for this...? need info for flamethrower/that ast skill/passage of arms
+			case 'begincast':
+				// Can I check for cancels?
+				this._castingEvent = event
+				break
+
+			case 'cast':
+				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
+					this.saveGcd(this._castingEvent)
+				} else {
+					this.saveGcd(event)
+				}
+
+				this._castingEvent = null
+				break
+			}
 		}
 
-		this.saveGcd(event)
+		return events
 	}
 
-	on_complete() {
+	_onComplete() {
 		const gcdLength = this.getEstimate()
 		const startTime = this.parser.fight.start_time
 
@@ -54,7 +69,7 @@ export default class GlobalCooldown extends Module {
 		this.timeline.addGroup(new Group({
 			id: 'gcd',
 			content: 'GCD',
-			order: 0
+			order: 1,
 		}))
 
 		this.gcds.forEach(gcd => {
@@ -64,23 +79,28 @@ export default class GlobalCooldown extends Module {
 				start: gcd.timestamp - startTime,
 				length: gcdLength,
 				group: 'gcd',
-				content: <img src={action.icon} alt={action.name}/>
+				content: <img src={action.icon} alt={action.name}/>,
 			}))
 		})
 	}
 
 	saveGcd(event) {
-		if (this._lastGcd >= 0) {
-			const diff = event.timestamp - this._lastGcd
+		let gcdLength = -1
 
+		if (this._lastGcd >= 0) {
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			const gcd = Math.round(diff/10)*10
-			this.gcds.push({
-				timestamp: event.timestamp,
-				length: gcd,
-				actionId: event.ability.guid
-			})
+			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
 		}
+
+		// Speedmod is full length -> actual length, we want to do the opposite here
+		const revSpeedMod = 1/this.speedmod.get(event.timestamp)
+		gcdLength *= revSpeedMod
+
+		this.gcds.push({
+			timestamp: event.timestamp,
+			length: gcdLength,
+			actionId: event.ability.guid,
+		})
 
 		// Store current gcd time for the check
 		this._lastGcd = event.timestamp
@@ -92,8 +112,15 @@ export default class GlobalCooldown extends Module {
 		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
 		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
 
-		// Mode seems to get best results. Using mean in case there's multiple modes.
+		// If there's no GCDs, just return the max to stop this erroring out
+		if (!this.gcds.length) {
+			return MAX_GCD
+		}
+
+		// Calculate the lengths of the GCD
 		const lengths = this.gcds.map(gcd => gcd.length)
+
+		// Mode seems to get best results. Using mean in case there's multiple modes.
 		let estimate = math.mean(math.mode(lengths))
 
 		// Bound the result if requested
@@ -108,6 +135,12 @@ export default class GlobalCooldown extends Module {
 		const estimate = this.getEstimate(false)
 
 		return <Fragment>
+			<Message info icon>
+				<Icon name="info"/>
+				<Message.Content>
+					Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
+				</Message.Content>
+			</Message>
 			{estimate !== this.getEstimate(true) && <Message warning>
 				<Icon name="warning sign"/>
 				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.

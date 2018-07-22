@@ -3,6 +3,8 @@ import Module from 'parser/core/Module'
 // Statuses applied before the pull won't have an apply(de)?buff event
 // Fake buff applications so modules don't need to take it into account
 export default class PrecastStatus extends Module {
+	static handle = 'precastStatus'
+
 	_combatantStatuses = {}
 
 	normalise(events) {

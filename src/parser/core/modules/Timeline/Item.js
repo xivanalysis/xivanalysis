@@ -1,5 +1,5 @@
 import React from 'react'
-import { renderToString } from 'react-dom/server'
+import {renderToString} from 'react-dom/server'
 
 export default class Item {
 	_end = null
@@ -37,7 +37,7 @@ export default class Item {
 			title: this.title,
 			type: this.type,
 			limitSize: this.limitSize,
-			editable: this.editable
+			editable: this.editable,
 		}
 	}
 }

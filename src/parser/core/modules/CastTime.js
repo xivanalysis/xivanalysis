@@ -1,19 +1,30 @@
-import { getAction } from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export default class CastTime extends Module {
+	static handle = 'castTime'
+
 	_castTimes = []
 	_scIndex = null
 
-	on_applybuff_toPlayer(event) {
+	constructor(...args) {
+		super(...args)
+
 		// Only going do deal with SC here, job-specific can do it themselves
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+		const filter = {
+			to: 'player',
+			abilityId: STATUSES.SWIFTCAST.id,
+		}
+		this.addHook('applybuff', filter, this._onApplySwiftcast)
+		this.addHook('removebuff', filter, this._onRemoveSwiftcast)
+	}
+
+	_onApplySwiftcast() {
 		this._scIndex = this.set('all', 0)
 	}
 
-	on_removebuff_toPlayer(event) {
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+	_onRemoveSwiftcast() {
 		this.reset(this._scIndex)
 		this._scIndex = null
 	}
@@ -23,14 +34,16 @@ export default class CastTime extends Module {
 			actions,
 			castTime,
 			start,
-			end
+			end,
 		})
 
 		return newLength - 1
 	}
 
 	reset(id, timestamp = this.parser.currentTimestamp) {
-		this._castTimes[id].end = timestamp
+		const ct = this._castTimes[id]
+		if (!ct) { return }
+		ct.end = timestamp
 	}
 
 	forEvent(event) {
