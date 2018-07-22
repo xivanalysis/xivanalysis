@@ -87,7 +87,10 @@ class CombatantList extends Component {
 								as={Link}
 								to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
 							>
-								<JobIcon job={JOBS[friend.type]} className={styles.jobIcon}/>
+								{JOBS[friend.type] && <JobIcon
+									job={JOBS[friend.type]}
+									className={styles.jobIcon}
+								/>}
 								{friend.name}
 							</Menu.Item>
 						)}
