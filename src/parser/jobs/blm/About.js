@@ -8,7 +8,7 @@ import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyser aims to identify how you're not actually casting <ActionLink {...ACTIONS.FIRE_4} /> as much as you think you are.</p>
+		<p>This analyser aims to identify how you&apos;re not actually casting <ActionLink {...ACTIONS.FIRE_4} /> as much as you think you are.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
