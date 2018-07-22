@@ -11,7 +11,14 @@ const STATUS_MAP = {
 
 export default class Speedmod extends Module {
 	static handle = 'speedmod'
+	static dependencies = [
+		'arcanum', // We rely on its normaliser to handle arrow strength mod
+	]
 
+	// Track history of speedmods
+	_history = [{speedmod: 1, start: 0, end: Infinity}]
+
+	// Internal stuff used by normalise/_calculate
 	_arrow = 0
 	_type1 = 0
 	_type2 = 0
@@ -24,36 +31,49 @@ export default class Speedmod extends Module {
 	get _riddleOfFire() { return 100 + this._riddleOfFireMod }
 	get _astralUmbral() { return 100 + this._astralUmbralMod }
 
-	constructor(...args) {
-		super(...args)
-
+	normalise(events) {
+		const types = ['applybuff', 'removebuff']
 		const ids = Object.keys(STATUS_MAP).map(key => parseInt(key, 10))
-		const filter = {abilityId: ids, to: 'player'}
-		this.addHook('applybuff', filter, this._onApplyBuff)
-		this.addHook('removebuff', filter, this._onRemoveBuff)
-	}
 
-	_onApplyBuff(event) {
-		const statusId = event.ability.guid
-		const map = STATUS_MAP[statusId]
-		let value = map.value
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
 
-		// Arrow needs special handling 'cus of RR
-		if (statusId === STATUSES.THE_ARROW.id) {
-			// We need the extra data, skip the normal buff event
-			value *= event.strengthModifier
+			// Only care about certain events to the player
+			if (
+				!event.ability ||
+				!types.includes(event.type) ||
+				!ids.includes(event.ability.guid) ||
+				!this.parser.toPlayer(event)
+			) { continue }
+
+			const map = STATUS_MAP[event.ability.guid]
+			let value = 0
+
+			if (event.type === 'applybuff') {
+				value = map.value
+
+				// Arrow needs special handling due to RR
+				if (event.ability.guid === STATUSES.THE_ARROW.id) {
+					value *= event.strengthModifier
+				}
+			}
+
+			this[map.field] = value
+
+			// Recalculate the speedmod and save to history
+			this._history[this._history.length - 1].end = event.timestamp-1
+			this._history.push({
+				speedmod: this._calculate(),
+				start: event.timestamp,
+				end: Infinity,
+			})
 		}
 
-		this[map.field] = value
+		return events
 	}
 
-	_onRemoveBuff(event) {
-		const map = STATUS_MAP[event.ability.guid]
-		this[map.field] = 0
-	}
-
-	// Retrieve the current speedmod
-	get() {
+	// Calculate the speedmod based on current class vars
+	_calculate() {
 		// Shh
 		const {floor: f, ceil: c} = Math
 
@@ -69,5 +89,9 @@ export default class Speedmod extends Module {
 
 		// With that done, we've got the modified 'GCD' in centiseconds, bump it back down to milli and compare
 		return (gcdc * 10) / gcdm
+	}
+
+	get(timestamp = this.parser.currentTimestamp) {
+		return this._history.find(h => h.start <= timestamp && h.end >= timestamp).speedmod
 	}
 }
