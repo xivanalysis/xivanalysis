@@ -8,7 +8,6 @@ export default class Procs extends Module {
 		'gcd',
 		'suggestions',
 	]
-	name = 'Proc Cast Times'
 
     _firestarter = null
 	_thundercloud = null

@@ -33,4 +33,9 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
+	LAQI: {
+		name: 'Laqi',
+		avatar: process.env.PUBLIC_URL + '/avatar/googlesnake.png',
+		jobs: [JOBS.BLACK_MAGE],
+	},
 }
