@@ -46,8 +46,8 @@ yarn
 
 While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
 
-- Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/accounts/changeuser).
+- Replace `REACT_APP_LOGS_BASE_URL` with `https://www.fflogs.com/v1/`.
+- Replace `REACT_APP_LOGS_API_KEY` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile) under Web API Keys. Ensure to set your application name as well.
 
 ***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
 
