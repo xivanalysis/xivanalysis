@@ -13,8 +13,6 @@ const CORRECT_GCDS = [
 	ACTIONS.DECIMATE.id,
 ]
 
-//const IR_LENGTH = 10000
-
 export default class InnerRelease extends Module {
 	static handle = 'ir'
 	static dependencies = [
@@ -35,10 +33,6 @@ export default class InnerRelease extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		/*		this.addHook('aoedamage', {
-			by: 'player',
-			abilityId: ACTIONS.DECIMATE.id,
-		}, this._onDecimateDamage)*/
 		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.INNER_RELEASE.id,
@@ -81,6 +75,7 @@ export default class InnerRelease extends Module {
 		}
 
 		// Run analytics for suggestionszzzz
+		// i like to meme on my comments btw
 		let badGcds = 0
 		this._history.forEach(ir => {
 			badGcds += ir.casts
