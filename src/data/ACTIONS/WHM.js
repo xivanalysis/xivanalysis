@@ -145,7 +145,7 @@ export default {
     MEDICA: {
         id: 124,
         name: "Medica",
-        icon: 'https://secure.xivdb.com/img/game/000000/000408.png'
+        icon: 'https://secure.xivdb.com/img/game/000000/000408.png',
         onGcd: true,
         castTime: 2.5
     },
@@ -159,7 +159,7 @@ export default {
     },
         
 
-    AERO_II {
+    AERO_II: {
         id: 132,
         name: "Aero II",
         icon: 'https://secure.xivdb.com/img/game/000000/000402.png',
@@ -173,7 +173,7 @@ export default {
         onGcd: true
     },
     
-        REPOSE: {
+    REPOSE: {
         id: 128,
         name: "Repose",
         icon: 'https://secure.xivdb.com/img/game/000000/000414.png',
