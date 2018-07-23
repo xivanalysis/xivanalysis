@@ -57,6 +57,7 @@ export default {
 		name:'Higanbana',
 		icon:'https://secure.xivdb.com/img/game/003000/003160.png'
 		onGCD: true,
+		castTime: 1.8,
 	},
 
 	GEKKO:
@@ -81,6 +82,7 @@ export default {
 		name: 'Tenka Goken',
 		icon: 'https://secure.xivdb.com/img/game/003000/003161.png',
 		onGCD: true,
+		castTime: 1.8,
 	},
 
 	KASHA:
@@ -105,6 +107,7 @@ export default {
 		name:'Midare Setsugekka',
 		icon: 'https://secure.xivdb.com/img/game/003000/003162.png'
 		onGCD: true,
+		castTime: 1.8,
 	},
 
 	YUKIKAZE:
