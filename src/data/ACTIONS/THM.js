@@ -65,7 +65,7 @@ export default {
 		cooldown: 2.5
 	},
 
-FIRE_III: {
+	FIRE_III: {
 		id: 152,
 		name: 'Fire III',
 		icon: 'https://secure.xivdb.com/img/game/000000/000453.png',

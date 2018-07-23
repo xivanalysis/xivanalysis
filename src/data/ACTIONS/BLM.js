@@ -112,7 +112,7 @@ export default {
 	TRIPLECAST: {
 		id: 7421,
 		name: 'Triplecast',
-		icon: 'https://secure.xivdb.com/img/game/002000/002663.pngg',
+		icon: 'https://secure.xivdb.com/img/game/002000/002663.png',
 		cooldown: 60,
 	},
 }

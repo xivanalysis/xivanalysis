@@ -11,18 +11,18 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const AF1_ACTIONS = [
 	ACTIONS.FIRE.id,
-	ACTIONS.FIRE_2.id,
+	ACTIONS.FIRE_II.id,
 ]
 const UI1_ACTIONS = [
 	ACTIONS.BLIZZARD.id,
-	ACTIONS.BLIZZARD_2.id,
+	ACTIONS.BLIZZARD_II.id,
 	ACTIONS.FREEZE.id,
 ]
 const AF_ACTIONS = [
 	ACTIONS.FIRE.id,
-	ACTIONS.FIRE_2.id,
-	ACTIONS.FIRE_3.id,
-	ACTIONS.FIRE_4.id,
+	ACTIONS.FIRE_II.id,
+	ACTIONS.FIRE_III.id,
+	ACTIONS.FIRE_IV.id,
 ]
 
 export default class Gauge extends Module {
@@ -168,14 +168,14 @@ export default class Gauge extends Module {
 		}
 			
 		//do F3 things
-		if (abilityId === ACTIONS.FIRE_3.id) {
+		if (abilityId === ACTIONS.FIRE_III.id) {
 			this._UI = 0
 			this._AF = 3
 			this._AFUITimer = event.timestamp
 		}
 
 		//do B3 things
-		if (abilityId === ACTIONS.BLIZZARD_3.id) {
+		if (abilityId === ACTIONS.BLIZZARD_III.id) {
 			this._UI = 3
 			this._AF = 0
 			this._AFUITimer = event.timestamp
@@ -202,7 +202,7 @@ export default class Gauge extends Module {
 		}
 
 		//keep track of UH
-		if (abilityId === ACTIONS.BLIZZARD_4.id) {
+		if (abilityId === ACTIONS.BLIZZARD_IV.id) {
 			this._UH = 3
 		}
 		//getting rid of UHs one AF action at a time
@@ -235,7 +235,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
 				content: <Fragment>
-					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_4}/> and <ActionLink {...ACTIONS.BLIZZARD_4}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.				
+					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.				
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
