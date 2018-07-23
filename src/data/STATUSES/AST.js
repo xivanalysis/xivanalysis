@@ -138,8 +138,6 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/013000/013240.png',
 	},
 
-
-
 	EARTHLY_DOMINANCE: {
 		id: 1224,
 		name: 'Earthly Dominance',
