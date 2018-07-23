@@ -17,6 +17,8 @@ export const CORRECT_GCDS = [
 	ACTIONS.VERAREO.id,
 	ACTIONS.VERTHUNDER.id,
 	ACTIONS.VERRAISE.id,
+	//Allowing globally for now, however I need to do some extra logic in relation to Scatter
+	ACTIONS.SCATTER.id,
 ]
 
 /**
