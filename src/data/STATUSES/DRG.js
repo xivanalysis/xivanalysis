@@ -34,4 +34,10 @@ export default {
 		name: 'Blood For Blood',
 		icon: 'https://secure.xivdb.com/img/game/010000/010304.png',
 	},
+
+	CHAOS_THRUST: {
+		id: 118,
+		name: 'Chaos Thrust',
+		icon: 'https://secure.xivdb.com/img/game/010000/010307.png',
+	},
 }
