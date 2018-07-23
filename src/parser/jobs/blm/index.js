@@ -3,6 +3,7 @@ import Gauge from './Gauge'
 import Triple from './Triple'
 import Procs from './Procs'
 import BlmWeaving from './BlmWeaving'
+import T3inUI from './T3inUI'
 
 export default [
 	About,
@@ -10,4 +11,5 @@ export default [
 	Triple,
 	Procs,
 	BlmWeaving,
+	T3inUI,
 ]

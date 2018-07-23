@@ -53,9 +53,6 @@ export default class Gauge extends Module {
 	}
 
 	_onBegin(event) {
-		const abilityId = event.ability.guid
-
-		//this._beginOfCast = event.timestamp
 
 		//reseting AF/UI and dropping eno due to going past the timer
 		if (event.timestamp - this._AFUITimer > 13000) {
@@ -70,6 +67,7 @@ export default class Gauge extends Module {
 			}
 			this._AF = 0
 			this._UI = 0
+			this._UH = 0
 			this._AFUITimer = 0
 		}
 
@@ -92,6 +90,7 @@ export default class Gauge extends Module {
 			}
 			this._AF = 0
 			this._UI = 0
+			this._UH = 0
 			this._AFUITimer = 0
 		}
 
@@ -123,6 +122,7 @@ export default class Gauge extends Module {
 			if (this._UI > 0) {
 				this._UI = 0
 				this._AF = 0
+				this._UH = 0
 				if (this._poly === 0 && this._eno > 0) {
 					this._eno = 0
 					this._enoTimer = 0
@@ -147,6 +147,7 @@ export default class Gauge extends Module {
 			if (this._AF > 0) {
 				this._AF = 0
 				this._UI = 0
+				this._UH = 0
 				this._AFUITimer = 0
 				if (this._poly === 0 && this._eno > 0) {
 					this._eno = 0
@@ -270,4 +271,15 @@ export default class Gauge extends Module {
 			}))
 		}
 	}
+
+	getAF() {
+		return this._AF
+	}
+	getUI() {
+		return this._UI
+	}
+	getUH() {
+		return this._UH
+	}
 }
+
