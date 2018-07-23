@@ -76,4 +76,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000618.png',
 		onGcd: false,
 	},
+
+	SHADE_SHIFT: {
+		id: 2241,
+		name: 'Shade Shift',
+		icon: 'https://secure.xivdb.com/img/game/000000/000607.png',
+		onGcd: false,
+	},
 }
