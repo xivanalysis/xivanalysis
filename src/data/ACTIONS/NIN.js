@@ -157,7 +157,7 @@ export default {
 		onGcd: false,
 		cooldown: 100,
 	},
-	
+
 	SMOKE_SCREEN: {
 		id: 3565,
 		name: 'Smoke Screen',

@@ -32,7 +32,7 @@ export default class NinWeaving extends Weaving {
 		let ninjutsuCounted = false
 
 		for (let i = 0; i < weave.weaves.length; i++) {
-			let abilityId = weave.weaves[i].ability.guid
+			const abilityId = weave.weaves[i].ability.guid
 			if (abilityId === ACTIONS.TEN_CHI_JIN.id) {
 				// Switch to TCJ mode, so we ignore the next 3 ninjutsu cast (unless we reset to state 0)
 				checkState = STATE.TCJ

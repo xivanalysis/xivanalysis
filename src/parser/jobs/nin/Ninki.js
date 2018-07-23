@@ -27,7 +27,7 @@ export default class Ninki extends Module {
 	static dependencies = [
 		'suggestions',
 	]
-	
+
 	_ninki = 0
 	_wastedNinki = 0
 	_wasteBySource = {
@@ -45,7 +45,7 @@ export default class Ninki extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		
+
 		if (abilityId === ACTIONS.MUG.id) {
 			this._wasteBySource.mug += this._addNinki(abilityId)
 		}
@@ -63,13 +63,13 @@ export default class Ninki extends Module {
 		// Helper for adding Ninki to the running tally and calculating waste. Returns the amount wasted.
 		this._ninki += NINKI_BUILDERS[abilityId]
 		if (this._ninki > MAX_NINKI) {
-			let waste = this._ninki - MAX_NINKI
+			const waste = this._ninki - MAX_NINKI
 			this._wastedNinki += waste
 			this._ninki = MAX_NINKI
-			return waste 
+			return waste
 		}
 
-		return 0 
+		return 0
 	}
 
 	_onDeath() {
@@ -84,7 +84,7 @@ export default class Ninki extends Module {
 			const severity = this._wastedNinki >= 24 ? SEVERITY.MEDIUM : SEVERITY.MINOR
 			const why = [
 				this._wasteBySource.mug > 0 && `${this._wasteBySource.mug} to Mug`,
-				this._wasteBySource.auto > 0 && `${this._wasteBySource.auto} to auto attacks`
+				this._wasteBySource.auto > 0 && `${this._wasteBySource.auto} to auto attacks`,
 			].filter(Boolean)
 
 			let suffix = ''
