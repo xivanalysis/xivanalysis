@@ -169,7 +169,7 @@ export default class Pets extends Module {
 				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>&apos;s Magic Vulnerability Up.
+					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
 				</Fragment>,
 			}))
 		}
@@ -180,7 +180,7 @@ export default class Pets extends Module {
 				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit&apos;s raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
+					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
 				</Fragment>,
 			}))
 		}
@@ -206,7 +206,7 @@ export default class Pets extends Module {
 				why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
 				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				content: <Fragment>
-					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+					Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
 				</Fragment>,
 			}))
 		}
