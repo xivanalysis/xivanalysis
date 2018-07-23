@@ -25,7 +25,5 @@ test.html
 *.ignore.*
 
 \.vs/
-# Forcing Unix line break
-*.js text eol=lf
 *.swp
 .vscode/taskmarks.json

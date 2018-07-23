@@ -1,10 +1,10 @@
-import React, {Fragment} from 'react'
+//import React, {Fragment} from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+//import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class Gauge extends Module {
 	static dependencies = [
@@ -12,9 +12,9 @@ export default class Gauge extends Module {
 		'suggestions',
 	]
 
-	_WANDERERS_MINUET = 0
-	_MAGES_BALLAD = 0
-	_ARMYS_PAEON = 0
+	_wanderersMinuet = 0
+	_magesBallad = 0
+	_armysPaeon = 0
 
 	constructor(...args) {
 		super(...args)
@@ -26,13 +26,13 @@ export default class Gauge extends Module {
 		const abilityId = event.ability.guid
 
 		if (abilityId === ACTIONS.WANDERERS_MINUET.id) {
-			this._WANDERERS_MINUET ++
+			this._wanderersMinuet ++
 		}
 		if (abilityId === ACTIONS.MAGES_BALLAD.id) {
-			this._MAGES_BALLAD ++
+			this._magesBallad ++
 		}
 		if (abilityId === ACTIONS.ARMYS_PAEON.id) {
-			this._ARMYS_PAEON ++
+			this._armysPaeon ++
 		}
 	}
 	_onDeath() {
@@ -41,6 +41,6 @@ export default class Gauge extends Module {
 	}
 	_onComplete() {
 		// Suggestions to git gud
-		console.log(this._WANDERERS_MINUET + this._MAGES_BALLAD + this._ARMYS_PAEON + ' - ' +  this._WANDERERS_MINUET + ',' + this._MAGES_BALLAD + ',' + this._ARMYS_PAEON)
+		console.log(this._wanderersMinuet + ',' + this._magesBallad + ',' + this._armysPaeon)
 	}
 }
