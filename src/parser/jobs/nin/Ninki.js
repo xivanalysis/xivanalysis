@@ -75,20 +75,17 @@ export default class Ninki extends Module {
 
 	_onComplete() {
 		if (this._wastedNinki >= 20) {
-			let why = []
-			if (this._wasteBySource.mug > 0) {
-				why.push(this._wasteBySource.mug + ' to Mug')
-			}
+			const why = [
+				this._wasteBySource.mug > 0 && `${this._wasteBySource.mug} to Mug`,
+				this._wasteBySource.auto > 0 && `${this._wasteBySource.auto} to auto attacks`
+			].filter(Boolean)
 
-			if (this._wasteBySource.auto > 0) {
-				why.push(this._wasteBySource.auto + ' to auto attacks')
-			}
-
+			let suffix = ''
 			if (why.length === 1) {
-				why[0] = why[0].replace(/^[0-9]+ /, '')
+				suffix = why[0].replace(/^\d+ /, '')
+			} else {
+				suffix = '- ' + why.join(' and ')
 			}
-
-			let suffix = why.length === 1 ? why[0] : '- ' + why.join(' and ')
 
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SHUKIHO.icon,
