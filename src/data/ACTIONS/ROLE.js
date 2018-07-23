@@ -202,4 +202,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000829.png',
 		cooldown: 90
 	},
+
+	ARMS_LENGTH: {
+		id: 7548,
+		name: 'Arm&apos;s Length',
+		icon: 'https://secure.xivdb.com/img/game/000000/000822.png',
+		cooldown: 90
+	},
 }

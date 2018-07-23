@@ -40,6 +40,7 @@ export default {
 		name: 'Ninjutsu',
 		icon: 'https://secure.xivdb.com/img/game/002000/002904.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	FUMA_SHURIKEN: {
@@ -47,6 +48,7 @@ export default {
 		name: 'Fuma Shuriken',
 		icon: 'https://secure.xivdb.com/img/game/002000/002907.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	KATON: {
@@ -54,6 +56,7 @@ export default {
 		name: 'Katon',
 		icon: 'https://secure.xivdb.com/img/game/002000/002908.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	RAITON: {
@@ -61,6 +64,7 @@ export default {
 		name: 'Raiton',
 		icon: 'https://secure.xivdb.com/img/game/002000/002912.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	HYOTON: {
@@ -68,6 +72,7 @@ export default {
 		name: 'Hyoton',
 		icon: 'https://secure.xivdb.com/img/game/002000/002909.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	HUTON: {
@@ -75,6 +80,7 @@ export default {
 		name: 'Huton',
 		icon: 'https://secure.xivdb.com/img/game/002000/002910.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	DOTON: {
@@ -82,6 +88,7 @@ export default {
 		name: 'Doton',
 		icon: 'https://secure.xivdb.com/img/game/002000/002911.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	SUITON: {
@@ -89,6 +96,7 @@ export default {
 		name: 'Suiton',
 		icon: 'https://secure.xivdb.com/img/game/002000/002913.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	RABBIT_MEDIUM: {
@@ -96,6 +104,7 @@ export default {
 		name: 'Rabbit Medium',
 		icon: 'https://secure.xivdb.com/img/game/002000/002914.png',
 		onGcd: false,
+		cooldown: 20,
 	},
 
 	KASSATSU: {
@@ -103,6 +112,7 @@ export default {
 		name: 'Kassatsu',
 		icon: 'https://secure.xivdb.com/img/game/002000/002906.png',
 		onGcd: false,
+		cooldown: 120,
 	},
 
 	DUALITY: {
@@ -110,6 +120,7 @@ export default {
 		name: 'Duality',
 		icon: 'https://secure.xivdb.com/img/game/002000/002919.png',
 		onGcd: false,
+		cooldown: 90,
 	},
 
 	DREAM_WITHIN_A_DREAM: {
@@ -117,6 +128,7 @@ export default {
 		name: 'Dream Within A Dream',
 		icon: 'https://secure.xivdb.com/img/game/002000/002918.png',
 		onGcd: false,
+		cooldown: 60,
 	},
 
 	HELLFROG_MEDIUM: {
@@ -131,6 +143,7 @@ export default {
 		name: 'Bhavacakra',
 		icon: 'https://secure.xivdb.com/img/game/002000/002921.png',
 		onGcd: false,
+		cooldown: 50,
 	},
 
 	TEN_CHI_JIN: {
@@ -138,6 +151,7 @@ export default {
 		name: 'Ten Chi Jin',
 		icon: 'https://secure.xivdb.com/img/game/002000/002922.png',
 		onGcd: false,
+		cooldown: 100,
 	},
 	
 	SMOKE_SCREEN: {
@@ -145,6 +159,7 @@ export default {
 		name: 'Smoke Screen',
 		icon: 'https://secure.xivdb.com/img/game/002000/002917.png',
 		onGcd: false,
+		cooldown: 180,
 	},
 
 	SHADEWALKER: {
@@ -152,6 +167,7 @@ export default {
 		name: 'Shadewalker',
 		icon: 'https://secure.xivdb.com/img/game/002000/002916.png',
 		onGcd: false,
+		cooldown: 120,
 	},
 
 	SHUKUCHI: {
@@ -159,6 +175,7 @@ export default {
 		name: 'Shukuchi',
 		icon: 'https://secure.xivdb.com/img/game/002000/002905.png',
 		onGcd: false,
+		cooldown: 60,
 	},
 
 	// -----

@@ -54,6 +54,7 @@ export default {
 		name: 'Jugulate',
 		icon: 'https://secure.xivdb.com/img/game/000000/000616.png',
 		onGcd: false,
+		cooldown: 30,
 	},
 
 	MUG: {
@@ -61,6 +62,7 @@ export default {
 		name: 'Mug',
 		icon: 'https://secure.xivdb.com/img/game/000000/000613.png',
 		onGcd: false,
+		cooldown: 90,
 	},
 
 	ASSASSINATE: {
@@ -68,6 +70,7 @@ export default {
 		name: 'Assassinate',
 		icon: 'https://secure.xivdb.com/img/game/000000/000612.png',
 		onGcd: false,
+		cooldown: 40,
 	},
 
 	TRICK_ATTACK: {
@@ -75,6 +78,7 @@ export default {
 		name: 'Trick Attack',
 		icon: 'https://secure.xivdb.com/img/game/000000/000618.png',
 		onGcd: false,
+		cooldown: 60,
 	},
 
 	SHADE_SHIFT: {
@@ -82,5 +86,6 @@ export default {
 		name: 'Shade Shift',
 		icon: 'https://secure.xivdb.com/img/game/000000/000607.png',
 		onGcd: false,
+		cooldown: 120,
 	},
 }
