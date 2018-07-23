@@ -9,7 +9,7 @@ export default {
 
 	LIGHTSPEED: {
 		id: 3606,
-		name: 'LIGHTSPEED',
+		name: 'Lightspeed',
 		icon: 'https://secure.xivdb.com/img/game/003000/003135.png',
 		cooldown: 120,
 	},
@@ -31,5 +31,5 @@ export default {
 		id: 8324,
 		name: 'Stellar Detonation',
 		icon: 'https://secure.xivdb.com/img/game/003000/003144.png',
-	}
+	},
 }
