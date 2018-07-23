@@ -7,6 +7,7 @@ import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
 import SCH from './SCH'
+import AST from './AST'
 import SMN from './SMN'
 import BLM from './BLM'
 import RDM from './RDM'
@@ -26,6 +27,7 @@ const ACTIONS = {
 
 	...WHM,
 	...SCH,
+	...AST,
 
 	...BLM,
 	...SMN,
