@@ -91,16 +91,19 @@ export default class DoTs extends Module {
 
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.AERO_II.icon,
-			content: <Fragment>
-				Avoid refreshing DoTs significantly before their expiration, this results in losing damage from Stone IV casts.
-			</Fragment>,
-			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-			why: <Fragment>
-				{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} and {this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
-			</Fragment>,
-		}))
+		if(maxClip > 500)
+		{
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.AERO_II.icon,
+				content: <Fragment>
+					Avoid refreshing DoTs significantly before their expiration, this results in losing damage from Stone IV casts.
+				</Fragment>,
+				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				why: <Fragment>
+					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} and {this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
+				</Fragment>,
+			}))
+		}
 	}
 
 	getDotUptimePercent(statusId) {

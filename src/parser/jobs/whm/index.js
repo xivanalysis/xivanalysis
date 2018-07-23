@@ -6,6 +6,6 @@ import Assize from './Assize'
 export default [
 	About,
 	DoTs,
-    Benison,
-    Assize
+	Benison,
+	Assize
 ]
