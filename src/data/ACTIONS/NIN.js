@@ -8,7 +8,7 @@ export default {
 		name: 'Armor Crush',
 		icon: 'https://secure.xivdb.com/img/game/002000/002915.png',
 		onGcd: true,
-	},
+	}, 
 
 	// -----
 	// Player OGCDs
