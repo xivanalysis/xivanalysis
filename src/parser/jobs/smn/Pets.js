@@ -68,7 +68,7 @@ export default class Pets extends Module {
 
 			// I mean this shouldn't happen but people are stupid.
 			// If there's a summon cast before any pet action, they didn't start with a pet.
-			if (Object.keys(SUMMON_ACTIONS).includes(action.id)) {
+			if (action.id && Object.keys(SUMMON_ACTIONS).includes(action.id.toString())) {
 				break
 			}
 
@@ -94,7 +94,9 @@ export default class Pets extends Module {
 
 	_onInit() {
 		// Just holding off the setPet until now so no events being created during normalise
-		this.setPet(this._lastPet.id)
+		if (this._lastPet) {
+			this.setPet(this._lastPet.id)
+		}
 	}
 
 	_onCast(event) {
@@ -114,12 +116,19 @@ export default class Pets extends Module {
 
 	_onEvent(event) {
 		if (
-			this._lastPet &&
+			(this._lastPet || this.parser.byPlayerPet(event)) &&
 			this._currentPet &&
 			this._currentPet.id === PETS.DEMI_BAHAMUT.id &&
 			this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
 		) {
-			this.setPet(this._lastPet.id, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+			let petId = null
+			if (this._lastPet) {
+				petId = this._lastPet.id
+			} else {
+				petId = getAction(event.ability.guid).pet
+			}
+
+			this.setPet(petId, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
 		}
 	}
 
@@ -235,6 +244,10 @@ export default class Pets extends Module {
 	}
 
 	getCurrentPet() {
+		if (!this._currentPet) {
+			return null
+		}
+
 		return PETS[this._currentPet.id]
 	}
 
