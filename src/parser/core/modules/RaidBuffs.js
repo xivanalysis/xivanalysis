@@ -1,27 +1,28 @@
 import React from 'react'
 
 import STATUSES from 'data/STATUSES'
+import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {Group, Item} from 'parser/core/modules/Timeline'
 
 // Are other jobs going to need to add to this?
-const RAID_BUFFS = [
-	STATUSES.THE_BALANCE.id, // Would be cool to put these all on the same line, player can only have one up at a time anyway
-	STATUSES.THE_ARROW.id,
-	STATUSES.THE_SPEAR.id,
-	STATUSES.BATTLE_LITANY.id,
-	STATUSES.BATTLE_VOICE.id, // notBRD
-	STATUSES.MEDITATIVE_BROTHERHOOD.id,
-	STATUSES.CHAIN_STRATAGEM.id,
-	// STATUSES.CRITIAL_UP.id // this should be up 100% - worth putting in here?
-	STATUSES.EMBOLDEN_PHYSICAL.id, // phys only?
-	STATUSES.FOE_REQUIEM_DEBUFF.id,
-	STATUSES.HYPERCHARGE_VULNERABILITY_UP.id,
-	STATUSES.LEFT_EYE.id, // add, notDRG
-	STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
-	// STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id,
-	STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id,
-]
+const RAID_BUFFS = {
+	[STATUSES.THE_BALANCE.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.THE_ARROW.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.THE_SPEAR.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.BATTLE_LITANY.id]: {},
+	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
+	[STATUSES.MEDITATIVE_BROTHERHOOD.id]: {},
+	[STATUSES.CHAIN_STRATAGEM.id]: {},
+	// [STATUSES.CRITIAL_UP.id]: {} // this should be up 100% - worth putting in here?
+	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
+	[STATUSES.FOE_REQUIEM_DEBUFF.id]: {},
+	[STATUSES.HYPERCHARGE_VULNERABILITY_UP.id]: {name: 'Hypercharge'},
+	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
+	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
+	// [STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id]: {},
+	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
+}
 
 export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
@@ -46,7 +47,7 @@ export default class RaidBuffs extends Module {
 		this.timeline.addGroup(this._group)
 
 		// Event hooks
-		const filter = {abilityId: RAID_BUFFS}
+		const filter = {abilityId: Object.keys(RAID_BUFFS).map(key => parseInt(key, 10))}
 		this.addHook('applybuff', {...filter, to: 'player'}, this._onApply)
 		this.addHook('applydebuff', filter, this._onApply)
 		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
@@ -61,13 +62,18 @@ export default class RaidBuffs extends Module {
 
 		const buffs = this.getTargetBuffs(event)
 		const statusId = event.ability.guid
+		const settings = RAID_BUFFS[statusId]
+
+		if (settings.exclude && settings.exclude.includes(this.parser.player.type)) {
+			return
+		}
 
 		// Make sure there's a nested group for us
-		const groupId = 'raidbuffs-' + statusId
+		const groupId = 'raidbuffs-' + (settings.group || statusId)
 		if (!this._group.nestedGroups.includes(groupId)) {
 			this.timeline.addGroup(new Group({
 				id: groupId,
-				content: event.ability.name,
+				content: settings.name || event.ability.name,
 			}))
 			this._group.nestedGroups.push(groupId)
 		}
