@@ -41,7 +41,7 @@ export default class T3inUI extends Module {
 	//check if that exact event happens
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		if (this._T3 && abilityId === ACTIONS.FIRE_III.id ) {
+		if (this._T3 && abilityId === ACTIONS.FIRE_III.id && this._UI === 3) {
 			this._UIEndingInT3 ++
 		}
 	}

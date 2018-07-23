@@ -10,16 +10,16 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 
 const AF1_ACTIONS = [
-	ACTIONS.FIRE.id,
+	ACTIONS.FIRE_I.id,
 	ACTIONS.FIRE_II.id,
 ]
 const UI1_ACTIONS = [
-	ACTIONS.BLIZZARD.id,
+	ACTIONS.BLIZZARD_I.id,
 	ACTIONS.BLIZZARD_II.id,
 	ACTIONS.FREEZE.id,
 ]
 const AF_ACTIONS = [
-	ACTIONS.FIRE.id,
+	ACTIONS.FIRE_I.id,
 	ACTIONS.FIRE_II.id,
 	ACTIONS.FIRE_III.id,
 	ACTIONS.FIRE_IV.id,
@@ -37,13 +37,14 @@ export default class Gauge extends Module {
 	_UI = 0
 	_UH = 0
 	_AFUITimer = 0
-	_eno = 0
+	_eno = false
 	_enoTimer = 0
 	_poly = 0
 	_droppedEno = 0
 	_lostFoul = 0
 	_overwrittenFoul = 0
 	_beginOfCast = 0
+
 	constructor(...args) {
 			super(...args)
 			this.addHook('begincast', {by: 'player'}, this._onBegin)
@@ -52,52 +53,56 @@ export default class Gauge extends Module {
 			this.addHook('complete', this._onComplete)
 	}
 
-	_onBegin(event) {
+	enoTimerCheck(event) {
+		const AFUIRunTime = event.timestamp - this._AFUITimer
 
 		//reseting AF/UI and dropping eno due to going past the timer
-		if (event.timestamp - this._AFUITimer > 13000) {
-			if (this._eno > 0){
-				this._eno = 0
+		if (AFUIRunTime > 13000) {
+			if (this._eno){
+				this._eno = false
 				this._enoTimer = 0
 				this._droppedEno ++
 				if (this._poly === 0) {
 					this._lostFoul ++
 				}
-
 			}
 			this._AF = 0
 			this._UI = 0
 			this._UH = 0
 			this._AFUITimer = 0
 		}
+	}
 
+	enoDrop() {
+		this._UI = 0
+		this._AF = 0
+		this._UH = 0
+		if (this._poly === 0 && this._eno) {
+			this._eno = false
+			this._enoTimer = 0
+			this._droppedEno ++
+			this._lostFoul ++
+		}
+		if (this._poly > 0 && this._eno) {
+			this._eno = false
+			this._enoTimer = 0
+			this._droppedEno ++
+		}
+	}
 
+	_onBegin(event) {
+		this.enoTimerCheck(event)
 	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-
-		//reseting AF/UI and dropping eno due to going past the timer if it happened DURING THE CASTING
-		if (event.timestamp - this._AFUITimer > 13000) {
-			if (this._eno > 0){
-				this._eno = 0
-				this._enoTimer = 0
-				this._droppedEno ++
-				if (this._poly === 0) {
-					this._lostFoul ++
-				}
-
-			}
-			this._AF = 0
-			this._UI = 0
-			this._UH = 0
-			this._AFUITimer = 0
-		}
+		this.enoTimerCheck(event)
 
 		//check if eno is active and update the eno timer for foul. Check for foul overwriting.
-		if (this._eno === 1) {
+		if (this._eno) {
 			const enoRunTime = event.timestamp - this._enoTimer
-			if (Math.floor(enoRunTime/30000) > 0) {
+			const numberOfFouls = Math.floor(enoRunTime/30000)
+			if (numberOfFouls > 0) {
 				const offSet = enoRunTime % 30000
 				this._enoTimer = event.timestamp - offSet
 				this._poly ++
@@ -110,56 +115,31 @@ export default class Gauge extends Module {
 
 		//set _eno to 1 to show it's on. Maybe should have used true/false. Also set timestamp.
 		if (abilityId === ACTIONS.ENOCHIAN.id) {
-			if (this._eno === 0) {
-				this._eno = 1
+			if (!this._eno) {
+				this._eno = true
 				this._enoTimer = event.timestamp
 			}
-			this._eno = 1
+			this._eno = true
 		}
 
 		//check for AF1 actions and update buffs accordingly. Also check for lost fouls and dropped enos while you're at it.
 		if (AF1_ACTIONS.includes(abilityId)) {
 			if (this._UI > 0) {
-				this._UI = 0
-				this._AF = 0
-				this._UH = 0
-				if (this._poly === 0 && this._eno > 0) {
-					this._eno = 0
-					this._enoTimer = 0
-					this._droppedEno ++
-					this._lostFoul ++
-				}
-				if (this._poly > 0 && this._eno > 0) {
-					this._eno = 0
-					this._enoTimer = 0
-					this._droppedEno ++
-				}
+				this.enoDrop()
+				
 			}
 			else {
 				this._AFUITimer = event.timestamp
-				this.AF ++
-				this.AF = Math.min(this.AF,3)
+				this._AF ++
+				this._AF = Math.min(this.AF,3)
 			}
 		}
 
 		//check for UI1 actions and update buffs accordingly. Also check for lost fouls and dropped enos while you're at it.
 		if (UI1_ACTIONS.includes(abilityId)) {
 			if (this._AF > 0) {
-				this._AF = 0
-				this._UI = 0
-				this._UH = 0
-				this._AFUITimer = 0
-				if (this._poly === 0 && this._eno > 0) {
-					this._eno = 0
-					this._enoTimer = 0
-					this._droppedEno ++
-					this._lostFoul ++
-				}
-				if (this._poly > 0 && this._eno > 0) {
-					this._eno = 0
-					this._enoTimer = 0
-					this._droppedEno ++
-				}
+				this.enoDrop()
+				
 			}
 			else {
 				this._AFUITimer = event.timestamp
@@ -215,10 +195,9 @@ export default class Gauge extends Module {
 		//Flare resetting UHs
 		if (abilityId === ACTIONS.FLARE.id && this._UH > 0) {
 			this._UH = 0
-		}
-
-		
+		}	
 	}
+
 	_onDeath() {
 		// Death just flat out resets everything except for poly. Rip.
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
@@ -226,7 +205,7 @@ export default class Gauge extends Module {
 		this._UI = 0
 		this._UH = 0
 		this._AFUITimer = 0
-		this._eno = 0
+		this._eno = false
 		this._enoTimer = 0
 		}
 
@@ -238,7 +217,7 @@ export default class Gauge extends Module {
 				content: <Fragment>
 					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.				
 				</Fragment>,
-				severity: SEVERITY.MAJOR,
+				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
 					You dropped Enochian {this._droppedEno} time{this._droppedEno > 1 && 's'}.
 				</Fragment>,
@@ -275,9 +254,11 @@ export default class Gauge extends Module {
 	getAF() {
 		return this._AF
 	}
+
 	getUI() {
 		return this._UI
 	}
+
 	getUH() {
 		return this._UH
 	}

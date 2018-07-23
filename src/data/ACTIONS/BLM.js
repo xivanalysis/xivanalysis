@@ -1,5 +1,5 @@
 export default {
-	BLIZZARD: {
+	BLIZZARD_I: {
 		id: 142,
 		name: 'Blizzard',
 		icon: 'https://secure.xivdb.com/img/game/000000/000454.png',
@@ -34,7 +34,7 @@ export default {
 		onGcd: true,
 		castTime: 3.0,
 	},
-	FIRE: {
+	FIRE_I: {
 		id: 141,
 		name: 'Fire',
 		icon: 'https://secure.xivdb.com/img/game/000000/000451.png',

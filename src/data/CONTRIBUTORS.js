@@ -42,7 +42,7 @@ export default {
 		name: 'Jump',
 		avatar: process.env.PUBLIC_URL + '/avatar/jump.png',
 		jobs: [JOBS.RED_MAGE],
-		},
+	},
 	FURST: {
 		name: 'Fürst',
 		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
