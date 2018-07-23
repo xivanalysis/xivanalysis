@@ -8,7 +8,7 @@ export default {
 		name: 'Armor Crush',
 		icon: 'https://secure.xivdb.com/img/game/002000/002915.png',
 		onGcd: true,
-	}, 
+	},
 
 	// -----
 	// Player OGCDs
@@ -159,5 +159,16 @@ export default {
 		name: 'Shukuchi',
 		icon: 'https://secure.xivdb.com/img/game/002000/002905.png',
 		onGcd: false,
+	},
+
+	// -----
+	// Player Traits
+	// -----
+
+	SHUKIHO: {
+		id: 50369,
+		name: 'Shukiho',
+		icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
+		onGcd: true,
 	},
 }

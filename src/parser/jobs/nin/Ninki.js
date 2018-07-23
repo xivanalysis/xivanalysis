@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 //import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+//import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -23,11 +23,15 @@ export default class Ninki extends Module {
 	
 	_ninki = 0
 	_wastedNinki = 0
+	_wasteBySource = {
+		mug: 0,
+		auto: 0,
+	}
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
+		//this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -35,11 +39,11 @@ export default class Ninki extends Module {
 		const abilityId = event.ability.guid
 		
 		if (abilityId === ACTIONS.MUG.id) {
-			this._addNinki(30)
+			this._wasteBySource.mug += this._addNinki(30)
 		}
 
 		if (abilityId === ACTIONS.ATTACK.id) {
-			this._addNinki(6)
+			this._wasteBySource.auto += this._addNinki(6)
 		}
 
 		if (NINKI_SPENDERS.includes(abilityId)) {
@@ -48,30 +52,57 @@ export default class Ninki extends Module {
 	}
 
 	_addNinki(amt) {
-		// Helper for adding Ninki to the running tally and calculating waste
+		// Helper for adding Ninki to the running tally and calculating waste. Returns the amount wasted.
 		this._ninki += amt 
 		if (this._ninki > MAX_NINKI) {
-			this._wastedNinki += (this._ninki - MAX_NINKI)
+			let waste = this._ninki - MAX_NINKI
+			this._wastedNinki += waste
 			this._ninki = MAX_NINKI
+			return waste 
 		}
+
+		return 0 
 	}
 
+/* Not used for now, but perhaps in the future
 	_onDeath() {
 		// YOU DONE FUCKED UP NOW
 		this._wastedNinki += this._ninki
+		this._wasteBySource.death += this._ninki
 		this._ninki = 0
+	}
+*/
+
+	_grammaticalJoin(array) {
+		switch (array.length) {
+			case 1:
+				return array[0]
+			case 2:
+				return array[0] + ' and ' + array[1]
+			default:
+				return array.slice(0, array.length - 1).join(', ') + ' and ' + array[array.length - 1]
+		}
 	}
 
 	_onComplete() {
-		if (this._wastedNinki >= 10) {
+		if (this._wastedNinki >= 20) {
+			let why = []
+			if (this._wasteBySource.mug > 0) {
+				why.push(this._wasteBySource.mug + ' with Mug')
+			}
+
+			if (this._wasteBySource.auto > 0) {
+				why.push(this._wasteBySource.auto + ' with auto attacks')
+			}
+
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.BHAVACAKRA.icon,
+				icon: ACTIONS.SHUKIHO.icon,
 				content: <Fragment>
-					You used <ActionLink {...ACTIONS.MUG}/> or held your spenders through auto-attacks in a way that overcapped you.
+					Avoid using Mug when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You wasted {this._wastedNinki} Ninki by using abilities that overcapped your Ninki gauge or dying.
+					You overcapped Ninki, losing {why.join(' and ')}, for a total of {this._wastedNinki} over the course of the fight.
 				</Fragment>,
 			}))
 		}

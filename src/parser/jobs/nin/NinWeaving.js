@@ -19,6 +19,7 @@ const COUNT_AS_ONE = [
 
 export default class NinWeaving extends Weaving {
 	isBadWeave(weave, maxWeaves) {
+		// TODO - This has an edge case of Ninjutsu > TCJ > more Ninjutsu in a single weave (would be flagged as 1). how2fix?
 		let weaveCount = 0, mudraAbilityCounted = false
 		for (let i = 0; i < weave.weaves.length; i++) {
 			if (COUNT_AS_ONE.includes(weave.weaves[i].ability.guid)) {
@@ -31,6 +32,10 @@ export default class NinWeaving extends Weaving {
 			}
 		}
 
-		return weaveCount > 1
+		if (mudraAbilityCounted) {
+			return weaveCount > 1
+		}
+
+		return super.isBadWeave(weave, maxWeaves)
 	}
 }
