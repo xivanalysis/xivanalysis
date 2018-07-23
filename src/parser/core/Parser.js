@@ -4,6 +4,7 @@ import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
+import {extractErrorContext} from 'utilities'
 
 class Parser {
 	// -----
@@ -143,7 +144,47 @@ class Parser {
 				}
 
 				// Error trying to handle an event, tell sentry
-				Raven.captureException(error)
+				// But first, gather some extra context
+				const tags = {
+					job: this.player && this.player.type,
+					module: mod,
+				}
+
+				const extra = {
+					report: this.report && this.report.code,
+					fight: this.fight && this.fight.id,
+					player: this.player && this.player.id,
+					event,
+				}
+
+				// Try gathering extra data for the event from
+				// the module with the error.
+				let extraData = undefined
+
+				if (typeof this.modules[mod].onError === 'function') {
+					try {
+						extraData = this.modules[mod].onError(error, event)
+					} catch (errorTwo) {
+						Raven.captureException(errorTwo, {
+							tags,
+							extra,
+						})
+					}
+				}
+
+				if (extraData === undefined) {
+					extraData = extractErrorContext(this.modules[mod])
+				}
+
+				// Now that we have all the possible context, submit the
+				// error to Raven.
+				Raven.captureException(error, {
+					tags,
+					extra: {
+						...extra,
+						moduleData: extraData,
+					},
+				})
 
 				// Also cascade the error through the dependency tree
 				this._setModuleError(mod, error)
