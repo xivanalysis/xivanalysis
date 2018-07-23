@@ -7,14 +7,16 @@ Letting procs drop
 Clipping gcds. Include fast-cast B3/F3
 - Clipping/weaving checks are in for Triple and Procs
 - TODO: Fast-cast F3/B3 weaving
+- done.
 - TODO: Add exceptions for Addle, Apoc, Shift, maybe Lucid
+- done.
 - TODO: Add exception for Eno in opener
+- done.
 
 Downtime between casts
 
 Ending ice with hard thunder
 - NOTE: May be able to cover this with FireCounter module
-
 - T3inUI.js keeps track of that but not if F4s are being lost because of it.
  
 Skipping B4 and getting less than 5 F4 next rotation
@@ -23,6 +25,7 @@ Not getting 6+ F4 per rotation with B4
 - Basic check for 6 F4 per rotation (8 with Convert) is in
 - TODO: Add previous ice phase info to show bad T3 usage better
 - TODO: Ignore phase-ending or battle-ending rotations
+- TODO: Check for fast F3 > ... > fast B3 to avoid showing F3 > trans > trans > trans > B3
 
 Be fancy and analyze last rotations before phase/fight end to determine of skipping B4 previous rotation would have been a gain
 
