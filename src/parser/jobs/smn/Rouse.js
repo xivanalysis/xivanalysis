@@ -43,7 +43,7 @@ export default class Rouse extends Module {
 	}
 
 	_onComplete() {
-		if (this._wasted > 0) {
+		if (this._wasted > 1000) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ROUSE.icon,
 				content: <Fragment>

@@ -54,6 +54,15 @@ export default class Bahamut extends Module {
 	}
 
 	_onBahamutCast(event) {
+		// If we've _somehow_ not got a _current, fake one
+		if (!this._current) {
+			this._current = {
+				timestamp: event.timestamp,
+				rushing: this.gauge.isRushing(),
+				casts: [],
+			}
+		}
+
 		// Track Big B's casts, and mark potential ghosts
 		const timeSinceSummon = event.timestamp - this._current.timestamp
 		const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
