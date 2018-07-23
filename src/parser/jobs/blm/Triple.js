@@ -15,8 +15,8 @@ export default class Triple extends Module {
 		'suggestions',
 	]
 
-    _active = false
-    _triple = {}
+	_active = false
+	_triple = {}
 	_history = []
 
 	_ctIndex = null
@@ -51,7 +51,6 @@ export default class Triple extends Module {
 			this._ctIndex = this.castTime.set('all', 0)
 		}
 
-		// Only going to save casts during DWT
 		if (!this._active || getAction(actionId).autoAttack) {
 			return
 		}
@@ -73,15 +72,6 @@ export default class Triple extends Module {
 		this._history.push(this._triple)
 
 		this.castTime.reset(this._ctIndex)
-	}
-
-	activeAt(time) {
-		// If it's during the current one, easy way out
-		if (this._active && this._triple.start <= time) {
-			return true
-		}
-
-		return this._history.some(triple => triple.start <= time && triple.end >= time)
 	}
 
 	output() {

@@ -1,26 +1,26 @@
 export default {
-	BLIZZARD_1: {
+	BLIZZARD_I: {
 		id: 142,
 		name: 'Blizzard',
 		icon: 'https://secure.xivdb.com/img/game/000000/000454.png',
 		onGcd: true,
 		castTime: 2.5,
 	},
-	BLIZZARD_2: {
+	BLIZZARD_II: {
 		id: 146,
 		name: 'Blizzard II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000455.png',
 		onGcd: true,
 		castTime: 2.0,
 	},
-	BLIZZARD_3: {
+	BLIZZARD_III: {
 		id: 154,
 		name: 'Blizzard III',
 		icon: 'https://secure.xivdb.com/img/game/000000/000456.png',
 		onGcd: true,
 		castTime: 3.5,
 	},
-	BLIZZARD_4: {
+	BLIZZARD_IV: {
 		id: 3576,
 		name: 'Blizzard IV',
 		icon: 'https://secure.xivdb.com/img/game/002000/002659.png',
@@ -34,28 +34,28 @@ export default {
 		onGcd: true,
 		castTime: 3.0,
 	},
-	FIRE_1: {
+	FIRE_I: {
 		id: 141,
 		name: 'Fire',
 		icon: 'https://secure.xivdb.com/img/game/000000/000451.png',
 		onGcd: true,
 		castTime: 2.5,
 	},
-	FIRE_2: {
+	FIRE_II: {
 		id: 147,
 		name: 'Fire II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000452.png',
 		onGcd: true,
 		castTime: 3.0,
 	},
-	FIRE_3: {
+	FIRE_III: {
 		id: 152,
 		name: 'Fire III',
 		icon: 'https://secure.xivdb.com/img/game/000000/000453.png',
 		onGcd: true,
 		castTime: 3.5,
 	},
-	FIRE_4: {
+	FIRE_IV: {
 		id: 3577,
 		name: 'Fire IV',
 		icon: 'https://secure.xivdb.com/img/game/002000/002660.png',
@@ -69,28 +69,28 @@ export default {
 		onGcd: true,
 		castTime: 4.0,
 	},
-	THUNDER_1: {
+	THUNDER_I: {
 		id: 144,
 		name: 'Thunder',
 		icon: 'https://secure.xivdb.com/img/game/000000/000457.png',
 		onGcd: true,
 		castTime: 2.5,
 	},
-	THUNDER_2: {
+	THUNDER_II: {
 		id: 7447,
 		name: 'Thunder II',
 		icon: 'https://secure.xivdb.com/img/game/000000/000468.png',
 		onGcd: true,
 		castTime: 3.0,
 	},
-	THUNDER_3: {
+	THUNDER_III: {
 		id: 153,
 		name: 'Thunder III',
 		icon: 'https://secure.xivdb.com/img/game/000000/000459.png',
 		onGcd: true,
 		castTime: 2.5,
 	},
-	THUNDER_4: {
+	THUNDER_IV: {
 		id: 7420,
 		name: 'Thunder IV',
 		icon: 'https://secure.xivdb.com/img/game/002000/002662.png',

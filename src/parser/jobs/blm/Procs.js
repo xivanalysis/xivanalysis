@@ -10,7 +10,7 @@ export default class Procs extends Module {
 		'suggestions',
 	]
 
-    _firestarter = null
+	_firestarter = null
 	_thundercloud = null
 
 	constructor(...args) {
@@ -50,10 +50,10 @@ export default class Procs extends Module {
 	_onApplyThundercloud() {
 		// TODO: This approach probably incorrectly counts hardcast thunder as instant if you gain thundercloud mid cast
 		// TODO: How do we make this set cast time for all thunder versions?
-		this._thundercloud = this.castTime.set([ACTIONS.THUNDER_3.id], 0)
+		this._thundercloud = this.castTime.set([ACTIONS.THUNDER_III.id], 0)
 	}
 
 	_onApplyFirestarter() {
-		this._firestarter = this.castTime.set([ACTIONS.FIRE_3.id], 0)
+		this._firestarter = this.castTime.set([ACTIONS.FIRE_III.id], 0)
 	}
 }
