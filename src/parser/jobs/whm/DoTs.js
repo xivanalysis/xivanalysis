@@ -24,14 +24,14 @@ export default class DoTs extends Module {
 		'invuln',
 		'suggestions',
 	]
-    
+
     _lastApplication = {}
 	_clip = {
 		[STATUSES.AERO_II.id]: 0,
 		[STATUSES.AERO_III.id]: 0,
 	}
-    
-    constructor(...args) {
+
+	constructor(...args) {
 		super(...args)
 
 		const filter = {
@@ -41,8 +41,8 @@ export default class DoTs extends Module {
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
 	}
-    
-    _onDotApply(event) {
+
+	_onDotApply(event) {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
@@ -69,8 +69,8 @@ export default class DoTs extends Module {
 
 		lastApplication[statusId] = event.timestamp
 	}
-    
-    _onComplete() {
+
+	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
 			name: 'Keep your DoTs up',
@@ -88,8 +88,8 @@ export default class DoTs extends Module {
 				}),
 			],
 		}))
-        
-        // Suggestion for DoT clipping
+
+		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.AERO_II.icon,
@@ -101,9 +101,9 @@ export default class DoTs extends Module {
 				{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} and {this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
 			</Fragment>,
 		}))
-    }
+	}
 
-    getDotUptimePercent(statusId) {
+	getDotUptimePercent(statusId) {
 		const statusUptime = this.enemies.getStatusUptime(statusId)
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
