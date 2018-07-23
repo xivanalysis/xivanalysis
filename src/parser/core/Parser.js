@@ -161,20 +161,18 @@ class Parser {
 				// the module with the error.
 				let extraData = undefined
 
-				if ( typeof this.modules[mod].onError === 'function' ) {
+				if (typeof this.modules[mod].onError === 'function') {
 					try {
 						extraData = this.modules[mod].onError(error, event)
-
 					} catch (errorTwo) {
 						Raven.captureException(errorTwo, {
 							tags,
 							extra,
 						})
 					}
-
 				}
 
-				if ( extraData === undefined ) {
+				if (extraData === undefined) {
 					extraData = extractErrorContext(this.modules[mod])
 				}
 
