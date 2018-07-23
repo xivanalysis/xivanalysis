@@ -38,4 +38,14 @@ export default {
         avatar: process.env.PUBLIC_URL + '/avatar/vulcwen.png',
         jobs: [JOBS.WHITE_MAGE, JOBS.SUMMONER]
     },
+	LAQI: {
+		name: 'Laqi',
+		avatar: process.env.PUBLIC_URL + '/avatar/laqi.png',
+		jobs: [JOBS.BLACK_MAGE],
+	},
+	JUMP: {
+		name: 'Jump',
+		avatar: process.env.PUBLIC_URL + '/avatar/jump.png',
+		jobs: [JOBS.RED_MAGE],
+	},
 }
