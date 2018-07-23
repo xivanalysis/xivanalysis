@@ -19,6 +19,7 @@ export default {
 		name: 'Ten',
 		icon: 'https://secure.xivdb.com/img/game/002000/002901.png',
 		onGcd: false,
+		cooldown: 0.5,
 	},
 
 	CHI: {
@@ -26,6 +27,7 @@ export default {
 		name: 'Chi',
 		icon: 'https://secure.xivdb.com/img/game/002000/002902.png',
 		onGcd: false,
+		cooldown: 0.5,
 	},
 
 	JIN: {
@@ -33,6 +35,7 @@ export default {
 		name: 'Jin',
 		icon: 'https://secure.xivdb.com/img/game/002000/002903.png',
 		onGcd: false,
+		cooldown: 0.5,
 	},
 
 	NINJUTSU: {
@@ -136,6 +139,7 @@ export default {
 		name: 'Hellfrog Medium',
 		icon: 'https://secure.xivdb.com/img/game/002000/002920.png',
 		onGcd: false,
+		cooldown: 0,
 	},
 
 	BHAVACAKRA: {
