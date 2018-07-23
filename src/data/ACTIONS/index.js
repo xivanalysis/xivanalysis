@@ -11,6 +11,8 @@ import SMN from './SMN'
 import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
+import THM from './THM'
+import BLM from './BLM'
 
 const ACTIONS = {
 	...SHARED,
@@ -20,6 +22,7 @@ const ACTIONS = {
 
 	...ACN,
 	...MRD,
+	...THM,
 
 	...WAR,
 
@@ -28,6 +31,7 @@ const ACTIONS = {
 
 	...SMN,
 	...RDM,
+	...BLM,
 }
 
 addExtraIndex(ACTIONS, 'id')
