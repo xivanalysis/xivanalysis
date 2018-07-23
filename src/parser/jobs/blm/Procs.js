@@ -2,6 +2,9 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
+// TODO: Very certain this doesn't catch all procs correctly
+// Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
+
 export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
