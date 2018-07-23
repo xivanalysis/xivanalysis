@@ -31,11 +31,6 @@ export default class Triple extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onRemoveTriple() {
-		// Stop tracking and save to history
-		this.stopAndSave()
-	}
-
 	_onCast(event) {
 		const actionId = event.ability.guid
 
@@ -62,16 +57,18 @@ export default class Triple extends Module {
 	_onComplete() {
 		// Clean up any existing casts
 		if (this._active) {
-			this.stopAndSave()
+			this._onRemoveTriple()
 		}
 	}
 
-	stopAndSave() {
-		this._active = false
-		this._triple.end = this.parser.currentTimestamp
-		this._history.push(this._triple)
+	_onRemoveTriple() {
+		if (this._active) {
+			this._active = false
+			this._triple.end = this.parser.currentTimestamp
+			this._history.push(this._triple)
 
-		this.castTime.reset(this._ctIndex)
+			this.castTime.reset(this._ctIndex)
+		}
 	}
 
 	output() {

@@ -7,7 +7,7 @@ import CoreAbout from 'parser/core/modules/About'
 export default class About extends CoreAbout {
 	description = <Fragment>
 		<p>This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.</p>
-		<p>Due to the nature of how SMN plays, there may be a near <em>overwhelming</em> number of suggestions showing up below. Don&apos;t fret it, just focus on one or two improvements at a time.</p>
+		<p>Due to the nature of how SMN plays, there may be a near <em>overwhelming</em> number of suggestions showing up below. Don't fret it, just focus on one or two improvements at a time.</p>
 		<p>If you would like to learn more about SMN, check the guides over at <a href="https://thebalanceffxiv.com/">The Balance</a>, and have a chat in the <code>#smn_questions</code> channel.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>

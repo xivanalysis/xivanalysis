@@ -1,6 +1,5 @@
 {
 	"javascript.preferences.quoteStyle": "single",
-	"javascript.preferences.importModuleSpecifier": "non-relative",
 	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 	"eslint.autoFixOnSave": true,
 	"eslint.packageManager": "yarn"

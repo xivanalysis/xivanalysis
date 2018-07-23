@@ -48,4 +48,9 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
 		jobs: [JOBS.BLACK_MAGE],
 	}
+	TOASTDEIB: {
+		name: 'Toastdeib',
+		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
+		jobs: [JOBS.NINJA],
+	},
 }
