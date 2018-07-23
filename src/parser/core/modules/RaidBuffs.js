@@ -6,10 +6,19 @@ import {Group, Item} from 'parser/core/modules/Timeline'
 
 // Are other jobs going to need to add to this?
 const RAID_BUFFS = [
-	STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
+	STATUSES.THE_BALANCE.id, // Would be cool to put these all on the same line, player can only have one up at a time anyway
+	STATUSES.THE_ARROW.id,
+	STATUSES.THE_SPEAR.id,
+	STATUSES.BATTLE_LITANY.id,
+	STATUSES.BATTLE_VOICE.id, // notBRD
+	STATUSES.MEDITATIVE_BROTHERHOOD.id,
 	STATUSES.CHAIN_STRATAGEM.id,
+	// STATUSES.CRITIAL_UP.id // this should be up 100% - worth putting in here?
+	STATUSES.EMBOLDEN_PHYSICAL.id, // phys only?
 	STATUSES.FOE_REQUIEM_DEBUFF.id,
 	STATUSES.HYPERCHARGE_VULNERABILITY_UP.id,
+	STATUSES.LEFT_EYE.id, // add, notDRG
+	STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
 	// STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id,
 	STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id,
 ]
@@ -38,13 +47,15 @@ export default class RaidBuffs extends Module {
 
 		// Event hooks
 		const filter = {abilityId: RAID_BUFFS}
+		this.addHook('applybuff', {...filter, to: 'player'}, this._onApply)
 		this.addHook('applydebuff', filter, this._onApply)
+		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
 		this.addHook('removedebuff', filter, this._onRemove)
 	}
 
 	_onApply(event) {
-		// Only track active enemies
-		if (!this.enemies.isActive(event.targetID, event.targetInstance)) {
+		// Only track active enemies when it's a debuff
+		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
 			return
 		}
 
@@ -75,7 +86,7 @@ export default class RaidBuffs extends Module {
 
 	_onRemove(event) {
 		// Only track active enemies
-		if (!this.enemies.isActive(event.targetID, event.targetInstance)) {
+		if (event.type.includes('debuff') && !this.enemies.isActive(event.targetID, event.targetInstance)) {
 			return
 		}
 
