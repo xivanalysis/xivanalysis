@@ -31,6 +31,26 @@ export default class Procs extends Module {
 			by: 'player',
 			abilityId: STATUSES.FIRESTARTER.id,
 		}, this._onApplyFirestarter)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.FIRE_III.id,
+		}, this._onCastFireIII)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.THUNDER_III.id,
+		}, this._onCastThunderIII)
+	}
+
+	_onCastFireIII(event) {
+		if (this._firestarter){
+			event.ability.overrideAction = ACTIONS.FIRE_III_PROC
+		}
+	}
+
+	_onCastThunderIII(event) {
+		if (this._thundercloud){
+			event.ability.overrideAction = ACTIONS.THUNDER_III_PROC
+		}
 	}
 
 	_onRemoveThundercloud() {

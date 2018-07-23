@@ -31,3 +31,5 @@ Eno dropping
 T4/T4p hitting 2 or less targets
 
 Foul or Flare hitting 1 target when 2+ are active and in proximity
+
+Custom proc icons for Firestarter and Thundercloud usage?
