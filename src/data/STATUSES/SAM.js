@@ -28,3 +28,12 @@ export default {
 		name:'Meditate',
 		icon: 'https://secure.xivdb.com/img/game/003000/003172.png',
 	},
+
+	HIGANBANA:
+	{
+		id:1319,
+		name:'Higanbana'
+		icon:'https://secure.xivdb.com/img/game/013000/013304.png',
+		
+	}
+},
