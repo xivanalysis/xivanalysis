@@ -27,6 +27,7 @@ export default {
 		name: 'Combust II',
 		icon: 'https://secure.xivdb.com/img/game/003000/003125.png',
 		onGcd: true,
+		castTime: 0
 	},
 
 	GRAVITY: {
@@ -57,6 +58,7 @@ export default {
 		name: 'Aspected Benefic',
 		icon: 'https://secure.xivdb.com/img/game/003000/003127.png',
 		onGcd: true,
+		castTime: 0
 	},
 
 	HELIOS: {
@@ -85,24 +87,28 @@ export default {
 		id: 7443,
 		name: 'Minor Arcana',
 		icon: 'https://secure.xivdb.com/img/game/003000/003106.png',
+		cooldown: 5
 	},
 
 	LADY_CROWNS: {
 		id: 7445,
 		name: 'Lady Of Crowns',
 		icon: 'https://secure.xivdb.com/img/game/003000/003146.png',
+		cooldown: 5
 	},
 
 	LORD_CROWNS: {
 		id: 7444,
 		name: 'Lord Of Crowns',
 		icon: 'https://secure.xivdb.com/img/game/003000/003147.png',
+		cooldown: 5
 	},
 
 	CELESTIAL_OPP: {
 		id: 3616,
 		name: 'Celestial Opposition',
 		icon: 'https://secure.xivdb.com/img/game/003000/003142.png',
+		cooldown: 120
 	},
 
 	TIME_DILATION: {
@@ -116,6 +122,7 @@ export default {
 		id: 7439,
 		name: 'Earthly Star',
 		icon: 'https://secure.xivdb.com/img/game/003000/003143.png',
+		cooldown: 60
 	},
 	
 	STELLAR_DETONATION: {
@@ -128,30 +135,35 @@ export default {
 		id: 3590,
 		name: 'Draw',
 		icon: 'https://secure.xivdb.com/img/game/003000/003101.png',
+		cooldown: 30
 	},
 
 	ROYAL_ROAD: {
 		id: 3591,
 		name: 'Royal Road',
 		icon: 'https://secure.xivdb.com/img/game/003000/003103.png',
+		cooldown: 15
 	},
 
 	SPREAD: {
 		id: 3592,
 		name: 'Spread',
 		icon: 'https://secure.xivdb.com/img/game/003000/003104.png',
+		cooldown: 30
 	},
 
 	REDRAW: {
 		id: 3593,
 		name: 'Redraw',
 		icon: 'https://secure.xivdb.com/img/game/003000/003105.png',
+		cooldown: 30
 	},
 
 	SLEEVE_DRAW: {
-		id: 7748,
+		id: 7448,
 		name: 'Sleeve Draw',
 		icon: 'https://secure.xivdb.com/img/game/003000/003107.png',
+		cooldown: 120
 	},
 
 	// -----

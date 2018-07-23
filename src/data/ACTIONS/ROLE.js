@@ -146,4 +146,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000881.png',
 		cooldown: 90
 	},
+
+	LARGESSE: {
+		id: 7570,
+		name: 'Largesse',
+		icon: 'https://secure.xivdb.com/img/game/000000/000888.png',
+		cooldown: 90
+	},
 }
