@@ -153,7 +153,7 @@ export default class Gauge extends Module {
 					if (abilityId === ACTIONS.SCATTER.id) {
 						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
 						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
-							console.log('Enhanced Scatter On')
+							//console.log('Enhanced Scatter On')
 							white = 8
 							black = 8
 						}
