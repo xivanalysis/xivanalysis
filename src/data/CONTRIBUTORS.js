@@ -35,6 +35,7 @@ export default {
 	},
 	TOASTDEIB: {
 		name: 'Toastdeib',
+		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
 		jobs: [JOBS.NINJA],
 	},
 }
