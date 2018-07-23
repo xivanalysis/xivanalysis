@@ -139,4 +139,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000870.png',
 		cooldown: 90,
 	},
+
+	CLERIC_STANCE: {
+		id: 7567,
+		name: 'Cleric Stance',
+		icon: 'https://secure.xivdb.com/img/game/000000/000881.png',
+		cooldown: 90
+	},
 }
