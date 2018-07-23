@@ -61,6 +61,8 @@ export default class UnableToAct extends Module {
 
 	_onRemove(event) {
 		const downtime = this._current
+		if (!downtime) { return }
+
 		downtime.depth--
 		downtime.removeEvents.push(event)
 

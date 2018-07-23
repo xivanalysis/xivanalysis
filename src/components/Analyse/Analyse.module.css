@@ -1,9 +1,9 @@
-.sidebar {
-	margin-top: 1em !important;
-}
-
 .header {
 	display: flex;
+}
+
+.header:first-child {
+	margin-top: 1em !important;
 }
 
 .header > img {

@@ -27,3 +27,5 @@ test.html
 \.vs/
 # Forcing Unix line break
 *.js text eol=lf
+*.swp
+.vscode/taskmarks.json

@@ -7,8 +7,11 @@ import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
 import SCH from './SCH'
+import ROG from './ROG'
+import NIN from './NIN'
 import SMN from './SMN'
 import BRD from './BRD'
+import BLM from './BLM'
 import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
@@ -19,6 +22,7 @@ const ACTIONS = {
 	...DUTY,
 	...ITEMS,
 
+	...ROG,
 	...ACN,
 	...MRD,
 
@@ -29,6 +33,9 @@ const ACTIONS = {
 
 	...BRD,
 
+	...NIN,
+
+	...BLM,
 	...SMN,
 	...RDM,
 }
