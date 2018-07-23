@@ -77,12 +77,18 @@ export default class Ninki extends Module {
 		if (this._wastedNinki >= 20) {
 			let why = []
 			if (this._wasteBySource.mug > 0) {
-				why.push(this._wasteBySource.mug + ' with Mug')
+				why.push(this._wasteBySource.mug + ' to Mug')
 			}
 
 			if (this._wasteBySource.auto > 0) {
-				why.push(this._wasteBySource.auto + ' with auto attacks')
+				why.push(this._wasteBySource.auto + ' to auto attacks')
 			}
+
+			if (why.length === 1) {
+				why[0] = why[0].replace(/^[0-9]+ /, '')
+			}
+
+			let suffix = why.length === 1 ? why[0] : '- ' + why.join(' and ')
 
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SHUKIHO.icon,
@@ -91,7 +97,7 @@ export default class Ninki extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You overcapped Ninki, losing {why.join(' and ')}, for a total of {this._wastedNinki} over the course of the fight.
+					Overcapping caused you to lose {this._wastedNinki} Ninki over the fight {suffix}.
 				</Fragment>,
 			}))
 		}
