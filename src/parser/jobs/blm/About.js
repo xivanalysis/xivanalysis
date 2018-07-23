@@ -1,6 +1,8 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
+import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
@@ -11,12 +13,13 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				The BLM Module is still in a <em>very early development stage</em>. If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!
+				This isn&apos;t even remotely done.
 			</Message.Content>
 		</Message>
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
 		{user: CONTRIBUTORS.FURST, role: 'Theorycrafter'},
+		{user: CONTRIBUTORS.LAQI, role: 'Maintainer'},
 	]
 }
