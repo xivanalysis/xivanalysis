@@ -21,6 +21,12 @@ export default {
 		onGcd: true,
 	},
 
+	EARTHLY_STAR: {
+		id: 7439,
+		name: 'Earthly Star',
+		icon: 'https://secure.xivdb.com/img/game/003000/003143.png',
+	},
+
 	STELLAR_DETONATION: {
 		id: 8324,
 		name: 'Stellar Detonation',
