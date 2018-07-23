@@ -35,7 +35,7 @@ export default {
 	},
 	LAQI: {
 		name: 'Laqi',
-		avatar: process.env.PUBLIC_URL + '/avatar/googlesnake.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/laqi.png',
 		jobs: [JOBS.BLACK_MAGE],
 	},
 }
