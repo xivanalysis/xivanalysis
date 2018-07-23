@@ -8,6 +8,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
+import {FIRE_SPELLS, ICE_SPELLS} from 'parser/jobs/blm/Elements'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
@@ -36,26 +37,12 @@ export default class FireCounter extends Module {
 	_onCast(event) {
 		const actionId = event.ability.guid
 
-		switch (actionId) {
-		case ACTIONS.BLIZZARD_I.id:
-		case ACTIONS.BLIZZARD_II.id:
-		case ACTIONS.BLIZZARD_III.id:
-		case ACTIONS.BLIZZARD_IV.id:
-		case ACTIONS.FREEZE.id:
-			this._stopRecording()
-			break
-		case ACTIONS.FIRE_I.id:
-		case ACTIONS.FIRE_II.id:
-		case ACTIONS.FIRE_III.id:
-		case ACTIONS.FIRE_IV.id:
-		case ACTIONS.FLARE.id:
+		if (FIRE_SPELLS.includes(actionId)) {
 			this._startRecording(event)
-			break
-		case ACTIONS.TRANSPOSE.id:
+		} else if (ICE_SPELLS.includes(actionId)) {
+			this._stopRecording()
+		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
-			break
-		default:
-			break
 		}
 
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
