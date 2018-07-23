@@ -325,5 +325,28 @@ export default {
 		name: 'The Spire (expanded)',
 		icon: 'https://secure.xivdb.com/img/game/003000/003115.png',
 	},
+
+
+	// -----
+	// OGCD Arcana removal
+	// -----
+
 	
+	UNDRAW_SPREAD: {
+		id: 4646,
+		name: 'Undraw Spread',
+		icon: 'https://secure.xivdb.com/img/game/003000/003149.png',
+	},
+
+	EMPTY_ROAD: {
+		id: 4645,
+		name: 'Empty Road',
+		icon: 'https://secure.xivdb.com/img/game/003000/003148.png',
+	},
+
+	UNDRAW: {
+		id: 9629,
+		name: 'Undraw',
+		icon: 'https://secure.xivdb.com/img/game/003000/003108.png',
+	},
 }
