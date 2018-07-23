@@ -39,7 +39,7 @@ export default class Ninjutsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HYOTON.icon,
 				content: <Fragment>
-					One or more of your Ninjutsu actions were spent on <ActionLink {...ACTIONS.HYOTON}/>. This should typically never be used in raid content, as it's the weakest of the mudra combinations.
+					Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it&apos;s the weakest of the mudra combinations and should typically never be used in raid content.
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
@@ -52,7 +52,7 @@ export default class Ninjutsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RABBIT_MEDIUM.icon,
 				content: <Fragment>
-					One or more of your Ninjutsu actions were spent on <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>. Be careful to avoid this, as it can cost you personal DPS at best and Trick Attacks at worst.
+					Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
