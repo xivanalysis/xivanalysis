@@ -33,11 +33,15 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
+	JUMP: {
+		name: 'Jump',
+		avatar: process.env.PUBLIC_URL + '/avatar/jump.png',
+		jobs: [JOBS.RED_MAGE],
+		}
 	FURST: {
 		name: 'Fürst',
 		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
 		jobs: [
-			JOBS.BLACK_MAGE,
-		],
-	},
+			JOBS.BLACK_MAGE,]}
+	
 }

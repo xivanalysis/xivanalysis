@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -74,7 +75,7 @@ export default class Gauge extends Module {
 			const finalRage = this._rage + 20
 			this._wastedRage += finalRage - MAX_RAGE
 			this._rage -= MAX_RAGE
-		} else if (abilityId === ACTIONS.STORMS_PATH.ID) {
+		} else if (abilityId === ACTIONS.STORMS_PATH.id) {
 			this._rage += 20
 		}
 
@@ -95,8 +96,13 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INFURIATE.icon,
 				content: <Fragment>
+					<Message warning icon>
+						<Icon name="warning sign"/>
+						<Message.Content>
+							We{'\''}re currently aware of the inaccuracy of the gauge calculation. The code is being currently rewritten.
+						</Message.Content>
+					</Message>
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
-					And you lost at least one Fell Cleave due to it.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
