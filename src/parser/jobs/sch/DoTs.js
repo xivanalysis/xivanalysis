@@ -99,7 +99,7 @@ export default class DoTs extends Module {
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.BIO.icon,
 			content: <Fragment>
-				Avoid refreshing DoTs significantly before their expiration, except when at the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you&apos;ll need to hardcast your DoTs.
+				Avoid refreshing DoTs significantly before their expiration, except when at the end of the fight. Unnecessary refreshes use up your mana more than necessary, and may cause you to go out of mana.
 			</Fragment>,
 			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
