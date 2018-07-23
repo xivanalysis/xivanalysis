@@ -3,5 +3,5 @@ import Goring from './Goring'
 
 export default [
 	About,
-	Goring
+	Goring,
 ]
