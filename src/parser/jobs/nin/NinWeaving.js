@@ -18,39 +18,48 @@ const NINJUTSU = [
 	ACTIONS.RABBIT_MEDIUM.id,
 ]
 
+const STATE = {
+	NORMAL: 0,
+	NINJUTSU: 1,
+	TCJ: 2,
+}
 
 export default class NinWeaving extends Weaving {
 	isBadWeave(weave, maxWeaves) {
-		let weaveCount = 0, checkState = 0, tcjCount = 0, ninjutsuCounted = false
+		let weaveCount = 0
+		let checkState = STATE.NORMAL
+		let tcjCount = 0
+		let ninjutsuCounted = false
+
 		for (let i = 0; i < weave.weaves.length; i++) {
 			let abilityId = weave.weaves[i].ability.guid
 			if (abilityId === ACTIONS.TEN_CHI_JIN.id) {
 				// Switch to TCJ mode, so we ignore the next 3 ninjutsu cast (unless we reset to state 0)
-				checkState = 2
+				checkState = STATE.TCJ
 				weaveCount++
 			} else if (MUDRA.includes(abilityId)) {
-				if (checkState === 0) {
+				if (checkState === STATE.NORMAL) {
 					// Switch to standard ninjutsu mode if we're in normal mode, burn otherwise
-					checkState = 1
+					checkState = STATE.NINJUTSU
 					weaveCount++
 				}
 			} else if (NINJUTSU.includes(abilityId)) {
-				if (checkState === 1) {
+				if (checkState === STATE.NINJUTSU) {
 					// Standard ninjutsu; increment the count and reset the state to 0
 					ninjutsuCounted = true
-					checkState = 0
-				} else if (checkState === 2) {
+					checkState = STATE.NORMAL
+				} else if (checkState === STATE.TCJ) {
 					// TCJ mode; if this is the third ninjutsu, behave as above, otherwise burn
 					if (++tcjCount >= 3) {
 						tcjCount = 0
 						ninjutsuCounted = true
-						checkState = 0
+						checkState = STATE.NORMAL
 					}
 				}
 			} else {
 				// Switch to normal mode and reset the TCJ count in case it was manually interrupted
 				tcjCount = 0
-				checkState = 0
+				checkState = STATE.NORMAL
 				weaveCount++
 			}
 		}

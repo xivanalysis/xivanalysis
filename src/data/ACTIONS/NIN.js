@@ -181,15 +181,4 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 	},
-
-	// -----
-	// Player Traits
-	// -----
-
-	SHUKIHO: {
-		id: 50369,
-		name: 'Shukiho',
-		icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
-		onGcd: true,
-	},
 }
