@@ -166,7 +166,7 @@ export default class Pets extends Module {
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Garuda-Egi preferred.`,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
 					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
@@ -175,9 +175,10 @@ export default class Pets extends Module {
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+			console.log(mostUsedPet)
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
 					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
