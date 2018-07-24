@@ -60,7 +60,7 @@ export default class Assize extends Module {
 				</Fragment>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : _usesMissed > WASTED_USES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				why: <Fragment>
-					Up to {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+					Around {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Fragment>,
 			}))
 		}
