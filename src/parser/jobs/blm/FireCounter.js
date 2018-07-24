@@ -22,21 +22,36 @@ export default class FireCounter extends Module {
 		'castTime',
 		'gcd',
 		'suggestions',
+		'gauge',
+		'invuln',
 	]
 
 	_inFireRotation = false
 	_fireCounter = {}
 	_history = []
 
+	//check for buffs
+	_UH = 0
+	_AF = 0
+	_UI = 0
+	_lockedBuffs = false
+
 	constructor(...args) {
 		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBegin)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
+	//snapshot buffs and UH at the beginning of your recording
+
+
+	_onBegin(){
+		this._lockingBuffs()
+	}
+
 	_onCast(event) {
 		const actionId = event.ability.guid
-
 		if (FIRE_SPELLS.includes(actionId)) {
 			this._startRecording(event)
 		} else if (ICE_SPELLS.includes(actionId)) {
@@ -44,7 +59,6 @@ export default class FireCounter extends Module {
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
 		}
-
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
 			this._fireCounter.casts.push(event)
 		}
@@ -54,9 +68,14 @@ export default class FireCounter extends Module {
 		this._stopRecording()
 	}
 
+	//if transpose is used under Encounter invul the recording gets resetted
 	_handleTranspose(event) {
 		if (this._inFireRotation){
-			this._stopRecording()
+			if (!this.invuln.isUntargetable('all', event.timestamp)) {
+				this._stopRecording()
+			} else {
+				this._resetRecording()
+			}
 		} else {
 			this._startRecording(event)
 		}
@@ -65,6 +84,7 @@ export default class FireCounter extends Module {
 	_startRecording(event) {
 		if (!this._inFireRotation) {
 			this._inFireRotation = true
+			this._lockingBuffs()
 			this._fireCounter = {
 				start: event.timestamp,
 				end: null,
@@ -75,11 +95,10 @@ export default class FireCounter extends Module {
 
 	_stopRecording() {
 		if (this._inFireRotation) {
+			this._lockedBuffs = false
 			this._inFireRotation = false
 			this._fireCounter.end = this.parser.currentTimestamp
-
-			// TODO: Check against B4. No-B4 should have 5 F4 per rotation
-			// TODO: Handle fight downtime / ending. Don't flag those rotations
+			// TODO: Handle fight ending and use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
 			const fire4Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
@@ -92,8 +111,15 @@ export default class FireCounter extends Module {
 		}
 	}
 
+	_resetRecording() {
+		this._inFireRotation = false
+		this._fireCounter = {}
+		this._lockedBuffs = false
+	}
+
 	_getMissingFire4Count(count, hasConvert) {
-		const missingFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - count
+		const NotEnoughUH = this._UH  < 2
+		const missingFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0) - count
 		return missingFire4
 	}
 
@@ -106,6 +132,14 @@ export default class FireCounter extends Module {
 		return count
 	}
 
+	_lockingBuffs() {
+		if (this._inFireRotation && !this._lockedBuffs) {
+			this._UH = this.gauge.getUH()
+			this._UI = this.gauge.getUI()
+			this._AF = this.gauge.getAF()
+			this._lockedBuffs = true
+		}
+	}
 	output() {
 		const panels = this._history.map(rotation => {
 			return {
