@@ -5,6 +5,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
 //Mana Gains and Expenditures
@@ -44,6 +45,10 @@ export default class Gauge extends Module {
 
 		_whiteOverallManaGained = 0
 		_blackOverallManaGained = 0
+
+		_missingAreo = false
+		_missingThunder = false
+		_manaficationUsed = false
 
 		constructor(...args) {
 			super(...args)
@@ -119,6 +124,7 @@ export default class Gauge extends Module {
 			//console.log('manafication')
 			this._whiteMana = this._whiteMana * 2
 			this._blackMana = this._blackMana * 2
+			this._manaficationUsed = true
 
 			//TODO: Fix Handling for Manafication!!!!
 			//For now I'm excluding it from waste calculations
@@ -167,10 +173,13 @@ export default class Gauge extends Module {
 
 						//We might be missing events from ACT's capture, so do not allow negatives!
 						if (this._whiteMana < 0) {
-							this._whiteMana = 0
+							this._missingAreo = true
+							this._whiteMana = this._manaficationUsed ? 22 : 11
 						}
 						if (this._blackMana < 0) {
-							this._blackMana = 0
+							this._missingThunder = true
+							this._blackMana = this._manaficationUsed ? 22 : 11
+							//this._blackMana = 0
 						}
 					}
 					//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
@@ -184,6 +193,32 @@ export default class Gauge extends Module {
 		}
 
 		_onComplete() {
+			if (this._missingAreo) {
+				this.suggestions.add(new Suggestion({
+					icon: ACTIONS.VERAREO.icon,
+					content: <Fragment>
+						You were missing an <ActionLink {...ACTIONS.VERAREO}/> at the start of the Log
+					</Fragment>,
+					severity: SEVERITY.MAJOR,
+					why: <Fragment>
+						You were the first damage event, it doesn&apos;t log your cast
+					</Fragment>,
+				}))
+			}
+
+			if (this._missingThunder) {
+				this.suggestions.add(new Suggestion({
+					icon: ACTIONS.VERTHUNDER.icon,
+					content: <Fragment>
+						You were missing an <ActionLink {...ACTIONS.VERTHUNDER}/> at the start of the Log
+					</Fragment>,
+					severity: SEVERITY.MAJOR,
+					why: <Fragment>
+						You were the first damage event, it doesn&apos;t log your cast
+					</Fragment>,
+				}))
+			}
+
 			if (this._whiteManaWasted && this._whiteManaWasted > 0) {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERHOLY.icon,
