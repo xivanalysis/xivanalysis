@@ -1,5 +1,4 @@
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -90,12 +89,6 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INFURIATE.icon,
 				content: <Fragment>
-					<Message warning icon>
-						<Icon name="warning sign"/>
-						<Message.Content>
-							We{'\''}re currently aware of the inaccuracy of the gauge calculation. The code is being currently rewritten.
-						</Message.Content>
-					</Message>
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
 				</Fragment>,
 				severity: this._wastedRage === 20? SEVERITY.MINOR : this._wastedRage >= 50? SEVERITY.MEDIUM : SEVERITY.MAJOR,
