@@ -31,4 +31,16 @@ export default {
 		icon:'https://secure.xivdb.com/img/game/013000/013304.png',
 		
 	},
+
+	KAITEN: {
+		id:1229,
+		name: 'Kaiten',
+		icon: 'https://secure.xivdb.com/img/game/003000/003168.png',
+	},
+
+	MEIKYO_SHISUI: {
+		id:1233,
+		name: 'Meikyo Shisui',
+		icon: 'https://secure.xivdb.com/img/game/004000/004206.png',
+	},
 }
