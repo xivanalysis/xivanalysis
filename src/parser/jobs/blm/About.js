@@ -12,12 +12,13 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				This isn't even remotely done.
+				This isn&apos;t even remotely done.
 			</Message.Content>
 		</Message>
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
+		{user: CONTRIBUTORS.FURST, role: 'Maintainer'},
 		{user: CONTRIBUTORS.LAQI, role: 'Maintainer'},
 	]
 }

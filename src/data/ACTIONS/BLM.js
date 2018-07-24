@@ -69,7 +69,7 @@ export default {
 		onGcd: true,
 		castTime: 4.0,
 	},
-	THUNDER_I: {
+	THUNDER: {
 		id: 144,
 		name: 'Thunder',
 		icon: 'https://secure.xivdb.com/img/game/000000/000457.png',
@@ -161,7 +161,7 @@ export default {
 	},
 	BETWEEN_THE_LINES: {
 		id: 7419,
-		name: 'Between The Lines',
+		name: 'Between the Lines',
 		icon: 'https://secure.xivdb.com/img/game/002000/002661.png',
 		cooldown: 3,
 	},
