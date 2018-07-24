@@ -1,6 +1,4 @@
 LOW HANGING FRUIT:
-DwaD not in Trick
-AC in Trick
 Duality not on AE
 SF clipping, Slashing falling off - This one sounds relatively easy.
 Trick not on CD

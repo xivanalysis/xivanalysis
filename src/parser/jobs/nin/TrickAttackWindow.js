@@ -28,15 +28,12 @@ export default class TrickAttackWindow extends Module {
 		const abilityId = event.ability.guid
 		
 		if (abilityId === ACTIONS.TRICK_ATTACK.id) {
-			console.log(`TA at ${event.timestamp}`)
 			this._taTimestamp = event.timestamp
 		} else if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
-			console.log(`DWaD at ${event.timestamp}`)
 			if (event.timestamp - this._taTimestamp > TA_DURATION_MILLIS) {
 				this._dwadOutsideTa++
 			}
 		} else if (abilityId === ACTIONS.ARMOR_CRUSH.id) {
-			console.log(`AC at ${event.timestamp}`)
 			if (event.timestamp - this._taTimestamp <= TA_DURATION_MILLIS) {
 				this._armorCrushInTa++
 			}
