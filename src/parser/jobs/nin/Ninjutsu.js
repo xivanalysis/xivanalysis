@@ -39,7 +39,7 @@ export default class Ninjutsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HYOTON.icon,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.
+					Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it&apos;s the weakest of the mudra combinations and should typically never be used in raid content.
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
