@@ -43,11 +43,11 @@ export default class ArcanaUndrawUsage extends Module {
 		// It's a OGCD Arcana Undraw. GET IT.
 		if (OGCD_ARCANA_REMOVAL.includes(actionId)) {
 			this._badUndraws.push(event)
-		} 
+		}
 	}
 
 	_onComplete() {
-		
+
 		const badUndraws = this._badUndraws
 		if (badUndraws.length) {
 			this.suggestions.add(new Suggestion({

@@ -9,7 +9,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
-	[STATUSES.COMBUST_II.id]: 30000
+	[STATUSES.COMBUST_II.id]: 30000,
 }
 
 export default class AstDot extends Module {
@@ -72,7 +72,7 @@ export default class AstDot extends Module {
 		this.checklist.add(new Rule({
 			name: 'Keep your DoT up',
 			description: <Fragment>
-				While Astrologians only have one DoT, it still makes up a good portion of your damage. The duration of 30 seconds matches the cooldown on (<ActionLink {...ACTIONS.DRAW} />), giving you space to manage cards. It also enables you to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times. 
+				While Astrologians only have one DoT, it still makes up a good portion of your damage. The duration of 30 seconds matches the cooldown on (<ActionLink {...ACTIONS.DRAW} />), giving you space to manage cards. It also enables you to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
 			</Fragment>,
 			requirements: [
 				new Requirement({
