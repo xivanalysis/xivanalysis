@@ -13,7 +13,7 @@ import {FIRE_SPELLS, ICE_SPELLS} from 'parser/jobs/blm/Elements'
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
 
-const DEBUG_LOG_ALL_FIRE_COUNTS = false
+const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 
 export default class FireCounter extends Module {
 	static handle = 'firecounter'
