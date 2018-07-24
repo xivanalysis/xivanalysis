@@ -85,13 +85,13 @@ export default class Gauge extends Module {
 	}
 
 	_onComplete() {
-		if (this._wastedRage >= 0) {
+		if (this._wastedRage >= 20) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INFURIATE.icon,
 				content: <Fragment>
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
 				</Fragment>,
-				severity: SEVERITY.MEDIUM,
+				severity: this._wastedRage === 20? SEVERITY.MINOR : this._wastedRage >= 50? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					You wasted {this._wastedRage} rage by using abilities that sent you over the cap.
 				</Fragment>,
