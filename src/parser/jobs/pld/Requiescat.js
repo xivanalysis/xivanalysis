@@ -6,12 +6,16 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosestLower} from 'utilities'
+import {Accordion} from 'semantic-ui-react'
+import Rotation from 'components/ui/Rotation'
 
 export default class Requiescat extends Module {
 	static handle = 'requiescat'
 	static dependencies = [
 		'suggestions',
 	]
+
+	static title = 'Requiescat Usage'
 
 	constructor(...args) {
 		super(...args)
@@ -27,7 +31,6 @@ export default class Requiescat extends Module {
 	_severityMissedHolySpirits = {
 		1: SEVERITY.MEDIUM,
 		5: SEVERITY.MAJOR,
-		10: SEVERITY.MORBID,
 	}
 
 	// Internal State Counters
@@ -36,6 +39,7 @@ export default class Requiescat extends Module {
 
 	// Result Counters
 	_missedHolySpirits = 0
+	_requiescatRotations = {}
 
 	_onCast(event) {
 		const actionId = event.ability.guid
@@ -44,8 +48,16 @@ export default class Requiescat extends Module {
 			this._requiescatStart = event.timestamp
 		}
 
-		if (this._requiescatStart !== null && actionId === ACTIONS.HOLY_SPIRIT.id) {
-			this._holySpiritCount++
+		if (this._requiescatStart !== null) {
+			if (actionId === ACTIONS.HOLY_SPIRIT.id) {
+				this._holySpiritCount++
+			}
+
+			if (!Array.isArray(this._requiescatRotations[this._requiescatStart])) {
+				this._requiescatRotations[this._requiescatStart] = []
+			}
+
+			this._requiescatRotations[this._requiescatStart].push(event)
 		}
 	}
 
@@ -66,5 +78,36 @@ export default class Requiescat extends Module {
 				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
 			</Fragment>,
 		}))
+	}
+
+	output() {
+		const panels = Object.keys(this._requiescatRotations)
+			.map(timestamp => ({
+				key: timestamp,
+				title: {
+					content: <Fragment>
+						{this.parser.formatTimestamp(timestamp)}
+						<span> - </span>
+						{
+							this._requiescatRotations[timestamp]
+								.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
+								.length
+						}
+						<span>x <ActionLink {...ACTIONS.HOLY_SPIRIT}/></span>
+					</Fragment>,
+				},
+				content: {
+					content: <Rotation events={this._requiescatRotations[timestamp]}/>,
+				},
+			}))
+
+		return (
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		)
 	}
 }
