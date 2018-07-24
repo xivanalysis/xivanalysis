@@ -103,7 +103,7 @@ export default class Gauge extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You wasted {this._wastedRage} rage by using abilities that overcapped your gauge. {parseInt(this._rage)}
+					You wasted {this._wastedRage} rage by using abilities that sent you over the cap.
 				</Fragment>,
 			}))
 		}
