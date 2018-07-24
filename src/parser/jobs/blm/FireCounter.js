@@ -44,9 +44,9 @@ export default class FireCounter extends Module {
 	}
 
 	//snapshot buffs and UH at the beginning of your recording
-	
 
-	_onBegin(){
+
+	_onBegin() {
 		this._lockingBuffs()
 	}
 
@@ -70,15 +70,13 @@ export default class FireCounter extends Module {
 
 	//if transpose is used under Encounter invul the recording gets resetted
 	_handleTranspose(event) {
-		if (this._inFireRotation){
+		if (this._inFireRotation) {
 			if (!this.invuln.isUntargetable('all', event.timestamp)) {
 				this._stopRecording()
-			}
-			else {
+			} else {
 				this._resetRecording()
 			}
-		} 
-		else {
+		} else {
 			this._startRecording(event)
 		}
 	}

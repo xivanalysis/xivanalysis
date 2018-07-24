@@ -189,5 +189,5 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
-	}
+	},
 }

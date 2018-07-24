@@ -8,7 +8,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
-	[STATUSES.GORING_BLADE.id]: 21000
+	[STATUSES.GORING_BLADE.id]: 21000,
 }
 
 export default class Goring extends Module {
@@ -23,7 +23,7 @@ export default class Goring extends Module {
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.GORING_BLADE.id]: 0
+		[STATUSES.GORING_BLADE.id]: 0,
 	}
 
 	constructor(...args) {

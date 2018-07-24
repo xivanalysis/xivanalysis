@@ -47,11 +47,11 @@ export default class Gauge extends Module {
 	_beginOfCast = 0
 
 	constructor(...args) {
-			super(...args)
-			this.addHook('begincast', {by: 'player'}, this._onBegin)
-			this.addHook('cast', {by: 'player'}, this._onCast)
-			this.addHook('death', {to: 'player'}, this._onDeath)
-			this.addHook('complete', this._onComplete)
+		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBegin)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('complete', this._onComplete)
 	}
 
 	enoTimerCheck(event) {
@@ -59,7 +59,7 @@ export default class Gauge extends Module {
 
 		//reseting AF/UI and dropping eno due to going past the timer
 		if (AFUIRunTime > ASTRAL_UMBRAL_DURATION) {
-			if (this._eno){
+			if (this._eno) {
 				this._eno = false
 				this._enoTimer = 0
 				this._droppedEno ++
@@ -127,12 +127,11 @@ export default class Gauge extends Module {
 		if (AF1_ACTIONS.includes(abilityId)) {
 			if (this._UI > 0) {
 				this.enoDrop()
-				
-			}
-			else {
+
+			} else {
 				this._AFUITimer = event.timestamp
 				this._AF ++
-				this._AF = Math.min(this.AF,3)
+				this._AF = Math.min(this.AF, 3)
 			}
 		}
 
@@ -140,15 +139,14 @@ export default class Gauge extends Module {
 		if (UI1_ACTIONS.includes(abilityId)) {
 			if (this._AF > 0) {
 				this.enoDrop()
-				
-			}
-			else {
+
+			} else {
 				this._AFUITimer = event.timestamp
 				this._UI ++
-				this._UI = Math.min(this._UI,3)
+				this._UI = Math.min(this._UI, 3)
 			}
 		}
-		
+
 		//keep track of UH
 		if (abilityId === ACTIONS.BLIZZARD_IV.id) {
 			this._UH = 3
@@ -183,7 +181,7 @@ export default class Gauge extends Module {
 			this._poly = 0
 		}
 
-		if(abilityId === ACTIONS.TRANSPOSE.id) {
+		if (abilityId === ACTIONS.TRANSPOSE.id) {
 			if (this._AF > 0) {
 				this._AF = 0
 				this._UI = 1
@@ -214,7 +212,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
 				content: <Fragment>
-					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.				
+					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
