@@ -100,7 +100,7 @@ export default class DoTs extends Module {
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.TRI_DISASTER.icon,
 			content: <Fragment>
-				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you&apos;ll need to hardcast your DoTs.
+				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you'll need to hardcast your DoTs.
 			</Fragment>,
 			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>

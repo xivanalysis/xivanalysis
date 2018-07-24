@@ -54,6 +54,15 @@ export default class Bahamut extends Module {
 	}
 
 	_onBahamutCast(event) {
+		// If we've _somehow_ not got a _current, fake one
+		if (!this._current) {
+			this._current = {
+				timestamp: event.timestamp,
+				rushing: this.gauge.isRushing(),
+				casts: [],
+			}
+		}
+
 		// Track Big B's casts, and mark potential ghosts
 		const timeSinceSummon = event.timestamp - this._current.timestamp
 		const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
@@ -92,6 +101,8 @@ export default class Bahamut extends Module {
 				obj[cast.ghostChance] = (obj[cast.ghostChance] || 0) + 1
 			})
 
+			const lastPetAction = sb.casts.reduce((carry, cast, i) => this.parser.byPlayerPet(cast)? i : carry, null)
+
 			return {
 				key: sb.timestamp,
 				title: {
@@ -105,7 +116,7 @@ export default class Bahamut extends Module {
 				},
 				content: {
 					content: <ul>
-						{sb.casts.map(cast => <li
+						{sb.casts.map((cast, i) => i <= lastPetAction && <li
 							key={cast.timestamp + '-' + cast.ability.guid}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
@@ -119,7 +130,8 @@ export default class Bahamut extends Module {
 
 		return <Fragment>
 			<Message>
-				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong>  to those that ghosted without a doubt.
+				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong>  to those that ghosted without a doubt.<br/>
+				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.
 			</Message>
 			<Accordion
 				exclusive={false}

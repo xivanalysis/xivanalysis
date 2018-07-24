@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png" alt="logo"></p>
+<p align="center"><a href="https://xivanalysis.com/" alt="xivanalysis"><img src="https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png" alt="logo"></a></p>
 <h1 align="center">xivanalysis</h1>
 <p align="center">
 	<a href="https://circleci.com/gh/xivanalysis/xivanalysis" title="Build"><img src="https://img.shields.io/circleci/project/github/xivanalysis/xivanalysis.svg?style=flat-square" alt="Build"></a>
@@ -47,7 +47,7 @@ yarn
 While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
 
 - Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/accounts/changeuser).
+- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile).
 
 ***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
 
@@ -83,7 +83,7 @@ Each group of modules is contained in its own folder, alongside any other requir
 
 With the parser orchestrating the modules, it's down to the modules themselves to analyse the data and provide the final output.
 
-Each module should be in charge of analysing a single statistic or feature, so azs to keep them as small and digestible as reasonably possible. To aid in this, modules are able to 'depend' on others, and directly access any data they may expose. Modules are guaranteed to run _before_ anything that depends on them - this also implicitly prevents circular dependencies from being formed (an error will be thrown).
+Each module should be in charge of analysing a single statistic or feature, so as to keep them as small and digestible as reasonably possible. To aid in this, modules are able to 'depend' on others, and directly access any data they may expose. Modules are guaranteed to run _before_ anything that depends on them - this also implicitly prevents circular dependencies from being formed (an error will be thrown).
 
 For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
@@ -126,7 +126,7 @@ Add an event hook.
 
 `callback` is the function that should be called when an event (optionally passing the filter) is run. It will receive the full event object as its first parameter.
 
-A object representing the added hook is returned, that can be later used to modify it. The actual structure of this hook object should not be relied upon.
+An object representing the added hook is returned, that can be later used to modify it. The actual structure of this hook object should not be relied upon.
 
 ##### `output()`
 
