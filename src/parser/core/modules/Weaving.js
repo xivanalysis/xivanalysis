@@ -11,6 +11,7 @@ const MAX_WEAVES = {
 	[undefined]: 2, // Default castTime is 0
 	0: 2,
 	1: 1,
+	1.5: 1,
 	2: 1,
 	2.5: 0,
 	default: 0,
