@@ -1,4 +1,10 @@
 export default {
+  DARKSIDE: {
+
+  },
+  GRIT: {
+
+  },
   BLOOD_WEAPON: {
 	id: 0,
 	name: 'Blood Weapon',

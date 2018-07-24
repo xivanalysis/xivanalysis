@@ -12,6 +12,16 @@ export default {
   THE_BLACKEST_NIGHT: {
 
   },
+  // Damage
+  PLUNGE: {
+
+  },
+  DARK_PASSENGER: {
+
+  },
+  CARVE_AND_SPIT: {
+
+  },
   // -----
   // GCDs
   // -----
