@@ -3,7 +3,7 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -13,16 +13,17 @@ const DUALITY_GCDS = {
 	[ACTIONS.AEOLIAN_EDGE.id]: 0,
 	[ACTIONS.SHADOW_FANG.id]: 1,
 	[ACTIONS.ARMOR_CRUSH.id]: 1,
+	[ACTIONS.THROWING_DAGGER.id]: 1,
 }
 
 export default class Duality extends Module {
 	static handle = 'duality'
 	static dependencies = [
+		'combatants',
 		'suggestions',
 	]
 
 	_badDualityUses = 0
-	_dualityActive = false
 
 	constructor(...args) {
 		super(...args)
@@ -32,12 +33,9 @@ export default class Duality extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		
-		if (abilityId === ACTIONS.DUALITY.id) {
-			this._dualityActive = true
-		} else if (this._dualityActive && DUALITY_GCDS.hasOwnProperty(abilityId)) {
+
+		if (this.combatants.selected.hasStatus(STATUSES.DUALITY.id) && DUALITY_GCDS.hasOwnProperty(abilityId)) {
 			this._badDualityUses += DUALITY_GCDS[abilityId] // Aeolian won't increment this, everything else will
-			this._dualityActive = false
 		}
 	}
 
