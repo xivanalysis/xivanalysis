@@ -41,7 +41,9 @@ export default class CastTime extends Module {
 	}
 
 	reset(id, timestamp = this.parser.currentTimestamp) {
-		this._castTimes[id].end = timestamp
+		const ct = this._castTimes[id]
+		if (!ct) { return }
+		ct.end = timestamp
 	}
 
 	forEvent(event) {

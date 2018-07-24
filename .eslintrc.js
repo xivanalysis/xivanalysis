@@ -51,6 +51,7 @@ module.exports = {
 		'quotes': ['error', 'single'],
 		'semi': ['error', 'never'],
 		'yoda': ['error', 'never', {exceptRange: true}],
+		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
 	},
 	globals: {
 		process: true

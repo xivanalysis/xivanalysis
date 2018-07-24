@@ -53,4 +53,16 @@ export default {
 		name: 'The Spire',
 		icon: 'https://secure.xivdb.com/img/game/013000/013209.png',
 	},
+
+	EARTHLY_DOMINANCE: {
+		id: 1224,
+		name: 'Earthly Dominance',
+		icon: 'https://secure.xivdb.com/img/game/013000/013241.png',
+	},
+
+	GIANT_DOMINANCE: {
+		id: 1248,
+		name: 'Giant Dominance',
+		icon: 'https://secure.xivdb.com/img/game/013000/013242.png',
+	},
 }

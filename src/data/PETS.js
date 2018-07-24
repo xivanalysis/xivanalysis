@@ -4,6 +4,18 @@ import {addExtraIndex} from 'utilities'
 // TODO: SCH pets
 // IDs aren't real IDs per se. Just fudging with summon action IDs and stuff
 const PETS = {
+	// SCH
+	EOS: {
+		id: 1652,
+		name: 'Eos',
+	},
+
+	SELENE: {
+		id: 1702,
+		name: 'Selene',
+	},
+
+	// SMN
 	EMERALD_CARBUNCLE: {
 		id: 1650,
 		name: 'Emerald Carbuncle',
@@ -35,4 +47,6 @@ const PETS = {
 	},
 }
 
-export default addExtraIndex(PETS, 'id')
+addExtraIndex(PETS, 'id')
+
+export default PETS

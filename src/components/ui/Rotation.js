@@ -17,7 +17,7 @@ export default class Rotation extends Component {
 	render() {
 		return <div>
 			{this.props.events.map(event => {
-				const action = getAction(event.ability.guid)
+				const action = event.ability.overrideAction ? event.ability.overrideAction : getAction(event.ability.guid)
 
 				// Stuff like the duty action doesn't have an icon mapping yet.
 				// TODO: Sort this out if it's a problem
