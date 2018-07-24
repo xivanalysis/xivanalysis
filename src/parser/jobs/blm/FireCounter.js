@@ -52,24 +52,16 @@ export default class FireCounter extends Module {
 
 	_onCast(event) {
 		const actionId = event.ability.guid
-
 		if (FIRE_SPELLS.includes(actionId)) {
-			console.log("start: ")
-			console.log(event.timestamp - this.parser.fight.start_time)
 			this._startRecording(event)
 		} else if (ICE_SPELLS.includes(actionId)) {
-			console.log("stop: ")
-			console.log(event.timestamp - this.parser.fight.start_time)
 			this._stopRecording()
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
 		}
-
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
 			this._fireCounter.casts.push(event)
 		}
-		console.log("Current UHs")
-		console.log(this._UH)
 	}
 
 	_onComplete() {
@@ -94,7 +86,6 @@ export default class FireCounter extends Module {
 	_startRecording(event) {
 		if (!this._inFireRotation) {
 			this._inFireRotation = true
-			console.log("In Fire")
 			this._lockingBuffs()
 			this._fireCounter = {
 				start: event.timestamp,
@@ -107,9 +98,7 @@ export default class FireCounter extends Module {
 	_stopRecording() {
 		if (this._inFireRotation) {
 			this._lockedBuffs = false
-			console.log("Unlocked")
 			this._inFireRotation = false
-			console.log("Out of fire")
 			this._fireCounter.end = this.parser.currentTimestamp
 			// TODO: Handle fight ending and use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
@@ -120,7 +109,6 @@ export default class FireCounter extends Module {
 			if (this._fireCounter.missingCount > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._fireCounter.fire4Count = fire4Count
 				this._history.push(this._fireCounter)
-				console.log(this._history)
 			}
 		}
 	}
@@ -133,9 +121,7 @@ export default class FireCounter extends Module {
 
 	_getMissingFire4Count(count, hasConvert) {
 		const NotEnoughUH = this._UH  < 2
-		console.log(NotEnoughUH)
 		const missingFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0) - count
-		console.log(missingFire4)
 		return missingFire4
 	}
 
@@ -154,7 +140,6 @@ export default class FireCounter extends Module {
 			this._UI = this.gauge.getUI()
 			this._AF = this.gauge.getAF()
 			this._lockedBuffs = true
-			console.log("Locked")
 		}
 	}
 	output() {

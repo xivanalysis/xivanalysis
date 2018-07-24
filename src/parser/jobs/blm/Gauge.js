@@ -195,7 +195,6 @@ export default class Gauge extends Module {
 				this._AFUITimer = event.timestamp
 			}
 		}
-	console.log(this._UH)
 	}
 
 	_onDeath() {
