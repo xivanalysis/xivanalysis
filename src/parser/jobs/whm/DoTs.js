@@ -14,6 +14,9 @@ const STATUS_DURATION = {
 	[STATUSES.AERO_III.id]: 24000,
 }
 
+const CLIP_MAX_MINOR = 10000
+const CLIP_MAX_MEDIUM = 30000
+
 export default class DoTs extends Module {
     static handle = 'dots'
 	static dependencies = [
@@ -95,7 +98,7 @@ export default class DoTs extends Module {
 				content: <Fragment>
 					Avoid refreshing DoTs significantly before their expiration, this results in losing damage from Stone IV casts.
 				</Fragment>,
-				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: maxClip <= CLIP_MAX_MINOR ? SEVERITY.MINOR : maxClip <= CLIP_MAX_MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} and {this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
 				</Fragment>,
