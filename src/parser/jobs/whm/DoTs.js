@@ -35,7 +35,7 @@ export default class DoTs extends Module {
 		'suggestions',
 	]
 
-    _lastApplication = {}
+	_lastApplication = {}
 	_clip = {
 		[STATUSES.AERO_II.id]: 0,
 		[STATUSES.AERO_III.id]: 0,
