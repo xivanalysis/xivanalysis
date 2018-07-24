@@ -78,12 +78,12 @@ export default class Dots extends Module{
 					percent: () => this.getDotUptimePercent(STATUSES.CHAOS_THRUST.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.HEAVY_THRUST} /> uptime </Fragment>,
+					name: <Fragment><ActionLink {...ACTIONS.HEAVY_THRUST} /> uptime</Fragment>,
 					percent: () => this.getHeavyThrustUptimePercent(),
 				}),
 			],
 		}))
-		//Suggestions
+		//Suggestions for buffs/dots
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new Suggestion({
 			icon: STATUSES.CHAOS_THRUST.icon,
