@@ -27,6 +27,9 @@ export default class Requiescat extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
+	// Internal constants
+	_targetCountHolySpirit = 5
+
 	// Internal Severity Lookups
 	_severityMissedHolySpirits = {
 		1: SEVERITY.MEDIUM,
@@ -65,7 +68,7 @@ export default class Requiescat extends Module {
 		this._requiescatStart = null
 
 		// Clamp to 0 since we can't miss negative
-		this._missedHolySpirits += Math.max(0, 5 - this._holySpiritCount)
+		this._missedHolySpirits += Math.max(0, this._targetCountHolySpirit - this._holySpiritCount)
 		this._holySpiritCount = 0
 	}
 
@@ -82,24 +85,25 @@ export default class Requiescat extends Module {
 
 	output() {
 		const panels = Object.keys(this._requiescatRotations)
-			.map(timestamp => ({
-				key: timestamp,
-				title: {
-					content: <Fragment>
-						{this.parser.formatTimestamp(timestamp)}
-						<span> - </span>
-						{
-							this._requiescatRotations[timestamp]
-								.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
-								.length
-						}
-						<span>x <ActionLink {...ACTIONS.HOLY_SPIRIT}/></span>
-					</Fragment>,
-				},
-				content: {
-					content: <Rotation events={this._requiescatRotations[timestamp]}/>,
-				},
-			}))
+			.map(timestamp => {
+				const holySpiritCount = this._requiescatRotations[timestamp]
+					.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
+					.length
+
+				return ({
+					key: timestamp,
+					title: {
+						content: <Fragment>
+							{this.parser.formatTimestamp(timestamp)}
+							<span> - </span>
+							<span>{holySpiritCount}/{this._targetCountHolySpirit} {ACTIONS.HOLY_SPIRIT.name}</span>
+						</Fragment>,
+					},
+					content: {
+						content: <Rotation events={this._requiescatRotations[timestamp]}/>,
+					},
+				})
+			})
 
 		return (
 			<Accordion
