@@ -25,14 +25,6 @@ const RAGE_SPENDERS ={
 	[ACTIONS.ONSLAUGHT.id]: 20,
 }
 
-// Actions that reduce Infuriate's cooldown.
-/*const INFURIATE_CD_ACTIONS = [
-	ACTIONS.FELL_CLEAVE.id,
-	ACTIONS.INNER_BEAST.id,
-	ACTIONS.STEEL_CYCLONE.id,
-	ACTIONS.DECIMATE.id,
-]*/
-
 // Max Rage
 const MAX_RAGE = 100
 
@@ -57,10 +49,6 @@ export default class Gauge extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		/*this.addHook('removebuff', {
-			by: 'player',
-			abilityId: STATUSES.INNER_RELEASE.id,
-		}, this._onRemoveInnerRelease)*/
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
