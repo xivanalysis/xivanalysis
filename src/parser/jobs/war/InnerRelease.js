@@ -53,12 +53,10 @@ export default class InnerRelease extends Module {
 			}
 		}
 
-		// Only going to save casts during IR
 		if (!this._active || getAction(actionId).autoAttack) {
 			return
 		}
 
-		//console.log(this._ir)
 		this._ir.casts.push(event)
 	}
 
@@ -110,7 +108,6 @@ export default class InnerRelease extends Module {
 		}
 	}
 
-	//For some reason this make the entire thing work and I don't know why
 	_stopAndSave(endTime = this.parser.currentTimestamp) {
 		if (!this._active) {
 			return
@@ -122,8 +119,6 @@ export default class InnerRelease extends Module {
 
 		// Making a const for each because why not
 		const possibleGcds = 5
-		// const possibleOnslaughts = 1
-		// const possibleUpheavals = 1
 
 		// Check for which gcds they hit
 		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)
