@@ -11,7 +11,7 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				This job is still in developement. Visit our discord for more details.
+				The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!
 			</Message.Content>
 		</Message>
 	</Fragment>
