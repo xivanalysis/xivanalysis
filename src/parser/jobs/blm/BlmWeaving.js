@@ -16,7 +16,7 @@ export default class BlmWeaving extends Weaving {
 		'castTime',
 		'invuln',
 		'suggestions',
-		'gauge'
+		'gauge',
 	]
 
 	//AF3/UI3 checks

@@ -147,7 +147,22 @@ export default class Gauge extends Module {
 				this._UI = Math.min(this._UI,3)
 			}
 		}
-			
+		
+		//keep track of UH
+		if (abilityId === ACTIONS.BLIZZARD_IV.id) {
+			this._UH = 3
+		}
+		//getting rid of UHs one AF action at a time
+		if (AF_ACTIONS.includes(abilityId) && this._UH > 0 && this._UI === 0) {
+			this._UH --
+			this._UH = Math.max(this._UH, 0)
+		}
+
+		//Flare resetting UHs
+		if (abilityId === ACTIONS.FLARE.id && this._UH > 0) {
+			this._UH = 0
+		}
+
 		//do F3 things
 		if (abilityId === ACTIONS.FIRE_III.id) {
 			this._UI = 0
@@ -179,23 +194,8 @@ export default class Gauge extends Module {
 				this._AF = 1
 				this._AFUITimer = event.timestamp
 			}
-
 		}
-
-		//keep track of UH
-		if (abilityId === ACTIONS.BLIZZARD_IV.id) {
-			this._UH = 3
-		}
-		//getting rid of UHs one AF action at a time
-		if (AF_ACTIONS.includes(abilityId) && this._UH > 0) {
-			this._UH --
-			this._UH = Math.max(this._UH, 0)
-		}
-
-		//Flare resetting UHs
-		if (abilityId === ACTIONS.FLARE.id && this._UH > 0) {
-			this._UH = 0
-		}	
+	console.log(this._UH)
 	}
 
 	_onDeath() {
