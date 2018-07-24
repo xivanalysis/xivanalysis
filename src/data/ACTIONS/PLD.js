@@ -142,7 +142,7 @@ export default {
 		cooldown: 120,
 	},
 	SPIRITS_WITHIN: {
-		id: 27,
+		id: 29,
 		name: 'Spirits Within',
 		icon: 'https://secure.xivdb.com/img/game/002000/002503.png',
 		onGcd: false,
