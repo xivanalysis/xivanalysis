@@ -25,3 +25,4 @@ test.html
 *.ignore.*
 *.swp
 .vscode/taskmarks.json
+.idea/

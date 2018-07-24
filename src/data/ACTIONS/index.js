@@ -14,6 +14,7 @@ import BLM from './BLM'
 import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
+import PLD from './PLD'
 
 const ACTIONS = {
 	...SHARED,
@@ -25,6 +26,7 @@ const ACTIONS = {
 	...ACN,
 	...MRD,
 
+	...PLD,
 	...WAR,
 
 	...WHM,

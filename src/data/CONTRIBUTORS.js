@@ -58,4 +58,9 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
 		jobs: [JOBS.NINJA],
 	},
+	MIKEMATRIX: {
+		name: 'MikeMatrix',
+		avatar: process.env.PUBLIC_URL + '/avatar/mikematrix.png',
+		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
+	},
 }
