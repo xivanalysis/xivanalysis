@@ -110,9 +110,30 @@ export default class InnerRelease extends Module {
 				</Fragment>,
 			}))
 		}
+
+		if (this._missedUpheavals) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.UPHEAVAL.icon,
+				why: `You missed a total of ${this._missedUpheavals} Upheavals missed inside of IR.`,
+				severity: SEVERITY.MAJOR,
+				content: <Fragment>
+						You missed <strong>{this._missedUpheavals}</strong> Upheavals inside of Inner Release. You must hit one Upheaval inside of each Inner Release.
+				</Fragment>,
+			}))
+		}
+
+		if (this._missedOnslaughts) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.ONSLAUGHT.icon,
+				why: `You missed a total of ${this._missedOnslaughts} Onslaughts missed inside of IR.`,
+				severity: SEVERITY.MEDIUM,
+				content: <Fragment>
+						You missed <strong>{this._missedOnslaughts}</strong> Onslaughts inside of Inner Release. You must hit one Onslaught inside of each Inner Release.
+				</Fragment>,
+			}))
+		}
 	}
 
-	//For some reason this make the entire thing work and I don't know why
 	_stopAndSave(endTime = this.parser.currentTimestamp) {
 		if (!this._active) {
 			return
@@ -123,22 +144,28 @@ export default class InnerRelease extends Module {
 		this._history.push(this._ir)
 
 
-		// Check for which gcds they hit
+		// Check for which gcds they hit, and for upheaval and onslaught :blobwizard:
 		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		const upheaval = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id)
+		const onslaught = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id)
 
 		this._missedGcds += possibleGcds - gcds.length
+		this._missedUpheavals += 1 - upheaval.length
+		this._missedOnslaughts += 1 - onslaught.length
 	}
 
 	output() {
 		const panels = this._history.map(ir => {
 			const numGcds = ir.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const numUpheavals = ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id).length
+			const numOnslaughts = ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id).length
 
 			return {
 				key: ir.start,
 				title: {
 					content: <Fragment>
 						{this.parser.formatTimestamp(ir.start)}
-						&nbsp;-&nbsp;{numGcds} GCDs
+						&nbsp;-&nbsp;{numGcds}/5 GCDs - {numUpheavals}/1 Upheaval - {numOnslaughts}/1 Onslaught
 					</Fragment>,
 				},
 				content: {
