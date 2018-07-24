@@ -233,8 +233,8 @@ export default {
 	HISSATSU_GUREN:
 	{
 		id:7496,
-		name: 'Hisstasu: Guren',
+		name: 'Hissatsu: Guren',
 		icon: 'https://secure.xivdb.com/img/game/003000/003177.png',
 		onGCD: false,
 		cooldown: 120,
-	},
+	}
