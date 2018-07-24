@@ -45,13 +45,13 @@ export default class Procs extends Module {
 	}
 
 	_onCastFireIII(event) {
-		if (this._firestarter){
+		if (this._firestarter) {
 			event.ability.overrideAction = ACTIONS.FIRE_III_PROC
 		}
 	}
 
 	_onCastThunderIII(event) {
-		if (this._thundercloud){
+		if (this._thundercloud) {
 			event.ability.overrideAction = ACTIONS.THUNDER_III_PROC
 		}
 	}

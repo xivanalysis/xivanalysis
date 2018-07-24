@@ -8,7 +8,7 @@ import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyser aims to identify how you&apos;re not actually casting <ActionLink {...ACTIONS.FIRE_IV} /> as much as you think you are.</p>
+		<p>This analyser aims to identify how you're not actually casting <ActionLink {...ACTIONS.FIRE_IV} /> as much as you think you are.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
@@ -18,6 +18,7 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
+		{user: CONTRIBUTORS.FURST, role: 'Maintainer'},
 		{user: CONTRIBUTORS.LAQI, role: 'Maintainer'},
 	]
 }
