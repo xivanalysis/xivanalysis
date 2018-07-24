@@ -75,7 +75,7 @@ export default class InnerRelease extends Module {
 		}
 
 		// Run analytics for suggestionszzzz
-		// i like to meme on my comments btw
+		// i like memes
 		let badGcds = 0
 		this._history.forEach(ir => {
 			badGcds += ir.casts

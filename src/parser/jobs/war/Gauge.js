@@ -7,28 +7,31 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // General actions that give Rage (this is how I'm referring to the Warrior gauge) -- Except Storm's Path, since it's a fringe case that gives +20 instead of 10.
-const RAGE_ACTIONS = {
+const RAGE_GENERATORS = {
 	[ACTIONS.MAIM.id]: 10,
 	[ACTIONS.STORMS_EYE.id]: 10,
 	[ACTIONS.SKULL_SUNDER.id]: 10,
 	[ACTIONS.BUTCHERS_BLOCK.id]: 10,
 	[ACTIONS.STORMS_PATH.id]: 20,
 	[ACTIONS.INFURIATE.id]: 50,
-	[ACTIONS.FELL_CLEAVE.id]: -50,
-	[ACTIONS.INNER_BEAST.id]: -50,
-	[ACTIONS.STEEL_CYCLONE.id]: -50,
-	[ACTIONS.DECIMATE.id]: -50,
-	[ACTIONS.UPHEAVAL.id]: -20,
-	[ACTIONS.ONSLAUGHT.id]: -20,
+}
+
+const RAGE_SPENDERS ={
+	[ACTIONS.FELL_CLEAVE.id]: 50,
+	[ACTIONS.INNER_BEAST.id]: 50,
+	[ACTIONS.STEEL_CYCLONE.id]: 50,
+	[ACTIONS.DECIMATE.id]: 50,
+	[ACTIONS.UPHEAVAL.id]: 20,
+	[ACTIONS.ONSLAUGHT.id]: 20,
 }
 
 // Actions that reduce Infuriate's cooldown.
-const INFURIATE_CD_ACTIONS = [
+/*const INFURIATE_CD_ACTIONS = [
 	ACTIONS.FELL_CLEAVE.id,
 	ACTIONS.INNER_BEAST.id,
 	ACTIONS.STEEL_CYCLONE.id,
 	ACTIONS.DECIMATE.id,
-]
+]*/
 
 // Max Rage
 const MAX_RAGE = 100
@@ -62,111 +65,27 @@ export default class Gauge extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_calculateRageWasted(rage) {
-		if (this._rage > 100) {
-			this._wastedRage += this._rage - 100
-			if (rage) {
-				this._overallRageGained += (rage - (this._rage - 100))
-			}
-			this._rage = 100
-		} else if (rage) {
-			this._overallRageGained += rage||0
-		}
-		console.log(rage)
-	}
-
-	_calculateOverallRageGained(rage) {
-		if (this._rage > 100) {
-			this._wastedRage += this._rage - 100
-			if (rage) {
-				this._overallRageGained += (rage - (this._rage - 100))
-			}
-			this._rage = 100
-		} else if (rage) {
-			this._overallRageGained += rage||0
-		}
-		console.log(rage)
-	}
-
-	_handleInfuriate() {
-		this._rage += 50
-
-		this._calculateOverallRageGained(this._rage)
-		this._calculateRageWasted(this._rage)
-	}
-
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
-		if (abilityId === ACTIONS.INFURIATE.id) {
-			this._handleInfuriate()
-		} else {
-			const rage = RAGE_ACTIONS[abilityId]
-			if (rage) {
-				// checks if IR is on the player.
-				if (rage) {
-					this._rage += rage
-				}
-
-				this._calculateRageWasted(rage)
-				this._calculateOverallRageGained(rage)
-				console.log(rage)
-			}
+		if (RAGE_GENERATORS[abilityId]) {
+			this._wastedRage += this._addRage(abilityId)
+		}
+		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
+			this._rage -= RAGE_SPENDERS[abilityId]
 		}
 	}
 
-	/*	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		const rageAbility = RAGE_ACTIONS[abilityId]
-		//console.log(rageAbility)
-		if (rageAbility != null && this._innerReleaseActive === false) {
-			this._rage += rageAbility
-
-			const wastedRage = this._rage - MAX_RAGE
-			console.log(wastedRage)
-			if (wastedRage > 0) {
-				this._wastedRage += wastedRage
-				this._rage -= wastedRage
-			}
+	_addRage(abilityId) {
+		this._rage += RAGE_GENERATORS[abilityId]
+		if (this._rage > MAX_RAGE) {
+			const waste = this._rage - MAX_RAGE
+			this._wastedRage += waste
+			this._rage = MAX_RAGE
+			return waste
 		}
-
-		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
-			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, 5)
-		}
-	}*/
-
-	/*	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		if (abilityId === ACTIONS.INFURIATE.id && this._rage >= MAX_RAGE) {
-			const finalRage = this._rage + 50
-			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
-		} else if (abilityId === ACTIONS.INFURIATE.id) {
-			this._rage += 50
-		}
-
-		if (RAGE_ACTIONS.includes(abilityId) && this._rage >= MAX_RAGE) {
-			const finalRage = this._rage + 10
-			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
-		} else if (RAGE_ACTIONS.includes(abilityId)) {
-			this._rage += 10
-		}
-
-		if (abilityId === ACTIONS.STORMS_PATH.id && this._rage >= MAX_RAGE) {
-			const finalRage = this._rage + 20
-			this._wastedRage += finalRage - MAX_RAGE
-			this._rage =- MAX_RAGE
-		} else if (abilityId === ACTIONS.STORMS_PATH.ID) {
-			this._rage+= 20
-		}
-
-		if (INFURIATE_CD_ACTIONS.includes(abilityId)) {
-			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, 5)
-		}
-	}*/
+		return 0
+	}
 
 	_onDeath() {
 		// Death just flat out resets everything. Stop dying.
@@ -181,7 +100,6 @@ export default class Gauge extends Module {
 				icon: ACTIONS.INFURIATE.icon,
 				content: <Fragment>
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
-					And you lost at least one Fell Cleave due to it.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
