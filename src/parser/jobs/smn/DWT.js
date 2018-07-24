@@ -126,7 +126,7 @@ export default class DWT extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				content: <Fragment>
-					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don&apos;t end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
+					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don't end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
 				</Fragment>,
 				severity: this._missedGcds < 10? SEVERITY.MINOR : SEVERITY.MEDIUM,
 				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,

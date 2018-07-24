@@ -2,6 +2,9 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
+// TODO: Very certain this doesn't catch all procs correctly
+// Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
+
 export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
@@ -31,6 +34,26 @@ export default class Procs extends Module {
 			by: 'player',
 			abilityId: STATUSES.FIRESTARTER.id,
 		}, this._onApplyFirestarter)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.FIRE_III.id,
+		}, this._onCastFireIII)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.THUNDER_III.id,
+		}, this._onCastThunderIII)
+	}
+
+	_onCastFireIII(event) {
+		if (this._firestarter) {
+			event.ability.overrideAction = ACTIONS.FIRE_III_PROC
+		}
+	}
+
+	_onCastThunderIII(event) {
+		if (this._thundercloud) {
+			event.ability.overrideAction = ACTIONS.THUNDER_III_PROC
+		}
 	}
 
 	_onRemoveThundercloud() {

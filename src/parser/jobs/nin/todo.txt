@@ -1,0 +1,12 @@
+LOW HANGING FRUIT:
+SF clipping, Slashing falling off - This one sounds relatively easy.
+Trick not on CD
+
+NEEDS RESEARCH:
+TCJ not counting against uptime
+Ninjustsu usage on CD
+GCD loss
+Wrong Ninki Usage
+
+IMPROVEMENTS ON EXISTING MODULES:
+TrickAttackWindow.js - use enemies module for debuff tracking rather than the current timer implementation

@@ -49,7 +49,7 @@ export default class Potions extends Module {
 				// TODO: Would be nice to be able to suggest the correct pot for their current class, inc. icon...
 				icon: 'https://secure.xivdb.com/img/game_local/2/22450.jpg',
 				content: <Fragment>
-					It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <em>twice</em> the duration. It&apos;s likely the shorter duration will have caused important skills to miss the damage boost.
+					It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <em>twice</em> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.
 				</Fragment>,
 				why: 'Used a short potion instead of an infusion.',
 				severity: SEVERITY.MEDIUM,
