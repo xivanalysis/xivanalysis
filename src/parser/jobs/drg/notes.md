@@ -1,9 +1,9 @@
 # DRG Analysis
 
 ## Rotational Check
-- [ ] Heavy Thrust uptime
-- [ ] Disembowel uptime
-- [ ] Chaos Thrust uptime
+- [X] Heavy Thrust uptime
+- [X] Disembowel uptime
+- [X] Chaos Thrust uptime
 - [ ] Chaos Thrust = Full Thrust combos casts
 
 ## Jumps/Gsk/Nastrond usage
