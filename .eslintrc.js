@@ -46,11 +46,14 @@ module.exports = {
 		'no-unneeded-ternary': 'error',
 		'no-var': 'error',
 		'object-curly-spacing': 'warn',
+		'object-property-newline': ['error', {allowAllPropertiesOnSameLine: true}],
 		'prefer-arrow-callback': 'warn',
 		'prefer-const': 'warn',
 		'quotes': ['error', 'single'],
 		'semi': ['error', 'never'],
+		'space-before-blocks': 'warn',
 		'yoda': ['error', 'never', {exceptRange: true}],
+		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
 	},
 	globals: {
 		process: true

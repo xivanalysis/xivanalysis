@@ -188,7 +188,7 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERHOLY.icon,
 					content: <Fragment>
-						Ensure you don&apos;t overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._whiteManaWasted > 80 ? SEVERITY.MAJOR : this._whiteManaWasted > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
@@ -202,7 +202,7 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don&apos;t allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._whiteManaLostToImbalance > 80 ? SEVERITY.MAJOR : this._whiteManaLostToImbalance > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
@@ -216,7 +216,7 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don&apos;t overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						Ensure you don't overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
 					</Fragment>,
 					severity: this._blackManaWasted > 80 ? SEVERITY.MAJOR : this._blackManaWasted > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 					why: <Fragment>
@@ -229,7 +229,7 @@ export default class Gauge extends Module {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don&apos;t allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						Ensure you don't allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
 					</Fragment>,
 					//severity: SEVERITY.MEDIUM,
 					severity: this._blackManaLostToImbalance > 80 ? SEVERITY.MAJOR : this._blackManaLostToImbalance > 20 ? SEVERITY.MEDIUM : SEVERITY.MINOR,

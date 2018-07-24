@@ -58,7 +58,7 @@ class Suggestions extends Component {
 				</div>)}
 				{suggestions.length === 0 && <div className={styles.item}>
 					<div>
-						<strong>There&apos;s nothing here!</strong><br/>
+						<strong>There's nothing here!</strong><br/>
 						{hasMinor && 'You can check over the minor suggestions by flicking the "Show minor" switch in the top right.'}
 					</div>
 				</div>}
