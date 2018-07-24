@@ -40,4 +40,10 @@ export default {
 		name: 'Chaos Thrust',
 		icon: 'https://secure.xivdb.com/img/game/010000/010307.png',
 	},
+
+	DISEMBOWEL: {
+		id: 121,
+		name: 'Disembowel',
+		icon: 'https://secure.xivdb.com/img/game/012000/012576.png',
+	},
 }

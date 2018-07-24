@@ -1,7 +1,7 @@
 import About from './About'
-import Buff_Uptimes from './Buff_Uptimes'
+import Buff_Debuff_Uptime from './Buff_Debuff_Uptime'
 
 export default [
 	About,
-	Buff_Uptimes,
+	Buff_Debuff_Uptime,
 ]
