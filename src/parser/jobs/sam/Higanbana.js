@@ -7,8 +7,7 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-const STATUS_DURATION = 
-	{
+const STATUS_DURATION = {
 	[STATUSES.HIGANBANA.id]: 60000
 	}	
 

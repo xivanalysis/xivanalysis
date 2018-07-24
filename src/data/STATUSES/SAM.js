@@ -1,39 +1,34 @@
 export default {
 	
-	THIRD_EYE: 
-	{
-		id: 7498,
+	THIRD_EYE: {
+		id: 1232,
 		name: 'Third Eye',
 		icon: 'https://secure.xivdb.com/img/game/003000/003153.png',
 	},
 
 
-	JINPU:
-	{
-		id:7478,
+	JINPU: 	{
+		id:1298,
 		name: 'Jinpu',
 		icon: 'https://secure.xivdb.com/img/game/003000/003152.png',
 	},
 
-	SHIFU:
-	{
-		id:7479,
+	SHIFU: 	{
+		id:1299,
 		name: 'Shifu',
 		icon: 'https://secure.xivdb.com/img/game/003000/003156.png',
 	},
 
-	MEDITATE:
-	{
-		id:7497,
+	MEDITATE: {
+		id:1231,
 		name:'Meditate',
 		icon: 'https://secure.xivdb.com/img/game/003000/003172.png',
 	},
 
-	HIGANBANA:
-	{
-		id:1319,
-		name:'Higanbana'
+	HIGANBANA: {
+		id:1228,
+		name:'Higanbana',
 		icon:'https://secure.xivdb.com/img/game/013000/013304.png',
 		
-	}
-},
+	},
+}
