@@ -26,7 +26,7 @@ export default class TrickAttackWindow extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		
+
 		if (abilityId === ACTIONS.TRICK_ATTACK.id) {
 			this._taTimestamp = event.timestamp
 		} else if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {

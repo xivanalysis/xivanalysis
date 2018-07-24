@@ -1,0 +1,5 @@
+# Just use what's in the repo.
+* -text
+
+# Maybe this'll help with those horrid diffs on GH
+*.js linguist-language=JSX

@@ -1,12 +1,13 @@
+# Config shared by all jobs
+defaults: &defaults
+  working_directory: /tmp/xiva-client
+  docker:
+    - image: circleci/node:10
+
 version: 2
 jobs:
-  build:
-    branches:
-      only:
-        - master
-    working_directory: ~/xiva-client
-    docker:
-      - image: circleci/node:10
+  setup:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -18,8 +19,29 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - xiva-client/*
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
       - run:
-          name: run-build
+          name: Lint
+          command: yarn eslint src --max-warnings 0 --format junit -o reports/eslint/results.xml
+      - store_test_results:
+          path: reports
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Run build
           command: yarn build
       - run:
           name: Upload build
@@ -27,3 +49,18 @@ jobs:
       - run:
           name: Run deploy script
           command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd ${DEPLOY_FOLDER}client && ./deploy.sh $CIRCLE_SHA1"
+
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - setup
+      - lint:
+          requires:
+            - setup
+      - deploy:
+          requires:
+            - lint
+          filters:
+            branches:
+              only: master
