@@ -12,11 +12,6 @@ const WASTED_USES_MAX_MEDIUM = 2
 export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
-		'checklist',
-		'combatants',
-		'cooldowns',
-		'enemies',
-		'invuln',
 		'suggestions',
 	]
 
