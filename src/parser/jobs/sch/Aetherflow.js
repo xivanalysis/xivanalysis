@@ -154,38 +154,21 @@ export default class Aetherflow extends Module {
 						if (drift > 0) {
 							totalDrift += drift
 						}
-<<<<<<< HEAD
 						let wasted = 0;
 						if (downtime > 45000) {
 							wasted = 3 - debit || 0;
 						totalWasted += wasted;
 						}
-=======
-						const wasted = 3 - debit || 0
-						totalWasted += wasted
->>>>>>> 54ec72466ca159e5f376d660f53b8b9d0c60354d
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
 							<Table.Cell>{drift > 0 && this.parser.formatDuration(drift)}</Table.Cell>
-<<<<<<< HEAD
 							<Table.Cell>
 								<Grid>
 									{id.map(id => <Grid.Column width={4}>
 									<ActionLink id={id} mini/>
 									</Grid.Column>)}
 								</Grid>
-=======
-							<Table.Cell className={styles.abilities}>
-								{/* All this is to align Aetherflows/Dissipate together */}
-								{index === 0 && <span className={styles.ability}>&nbsp;</span>}
-								{id.map(id =>
-									<span key={id} className={styles.ability}><ActionLink id={id} name="" /></span>
-								)}
-								{[...Array((index === 0 ? 3 : 4) - id.length)].map(id =>
-									<span key={id} className={styles.ability}>&nbsp;</span>
-								)}
->>>>>>> 54ec72466ca159e5f376d660f53b8b9d0c60354d
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>
