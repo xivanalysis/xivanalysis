@@ -10,9 +10,9 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 //Playing it safe always. Gotta use protection
 const STATUS_DURATION = {
-	[STATUSES.DISEMBOWEL.id]: 30000,
+	[STATUSES.PIERCING_RESISTANCE_DOWN.id]: 30000,
 	[STATUSES.CHAOS_THRUST.id]: 30000,
-//  [STATUSES.HEAVY_THRUST.id]: 30000,
+
 }
 const HEAVY_THRUST_DURATION = 30000
 
@@ -30,7 +30,7 @@ export default class Dots extends Module{
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.DISEMBOWEL.id]: 0,
+		[STATUSES.PIERCING_RESISTANCE_DOWN.id]: 0,
 		[STATUSES.CHAOS_THRUST.id]: 0,
 	}
 
@@ -38,7 +38,7 @@ export default class Dots extends Module{
 		super(...args)
 		const filter = {
 			by: 'player',
-			abilityId: [STATUSES.DISEMBOWEL.id, STATUSES.CHAOS_THRUST.id],
+			abilityId: [STATUSES.PIERCING_RESISTANCE_DOWN.id, STATUSES.CHAOS_THRUST.id],
 		}
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
@@ -71,7 +71,7 @@ export default class Dots extends Module{
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.DISEMBOWEL} /> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.DISEMBOWEL.id),
+					percent: () => this.getDotUptimePercent(STATUSES.PIERCING_RESISTANCE_DOWN.id),
 				}),
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.CHAOS_THRUST} /> uptime</Fragment>,
@@ -93,6 +93,16 @@ export default class Dots extends Module{
 			severity: (maxClip > 6000? SEVERITY.MINOR :( maxClip > 11000? SEVERITY.MEDIUM :( maxClip > 21000? SEVERITY.MAJOR: SEVERITY.MORBID))),
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.CHAOS_THRUST.id])} of {STATUSES[STATUSES.CHAOS_THRUST.id].name} lost to early refreshes.
+			</Fragment>,
+		}))
+		this.suggestions.add(new Suggestion({
+			icon: STATUSES.PIERCING_RESISTANCE_DOWN.icon,
+			content: <Fragment>
+				<ActionLink {...ACTIONS.DISEMBOWEL}/> Follows the same rules as <ActionLink {...ACTIONS.CHAOS_THRUST}/>.
+			</Fragment>,
+			severity: (maxClip > 6000? SEVERITY.MINOR :( maxClip > 11000? SEVERITY.MEDIUM :( maxClip > 21000? SEVERITY.MAJOR: SEVERITY.MORBID))),
+			why: <Fragment>
+				{this.parser.formatDuration(this._clip[STATUSES.PIERCING_RESISTANCE_DOWN.id])} of {STATUSES[STATUSES.PIERCING_RESISTANCE_DOWN.id].name} lost to early refreshes.
 			</Fragment>,
 		}))
 	}
