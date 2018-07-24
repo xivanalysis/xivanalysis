@@ -156,8 +156,11 @@ export default class Aetherflow extends Module {
 						if (drift > 0) {
 							totalDrift += drift;
 						}
-						let wasted = 3 - debit || 0;
+						let wasted = 0;
+						if (downtime > 45000) {
+							wasted = 3 - debit || 0;
 						totalWasted += wasted;
+						}
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
