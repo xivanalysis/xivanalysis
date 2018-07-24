@@ -14,9 +14,16 @@ const STATUS_DURATION = {
 	[STATUSES.AERO_III.id]: 24000,
 }
 
-const CLIP_MAX_MINOR = 10000
-const CLIP_MAX_MEDIUM = 30000
+//aero 2 clips are less severe as it may be used for the initial damage when moving
 
+const CLIP_MAX_MINOR = {
+	[STATUSES.AERO_II.id]: 30000,
+	[STATUSES.AERO_III.id]: 9000, //less than 3 gcds wasted
+}
+const CLIP_MAX_MEDIUM = {
+	[STATUSES.AERO_II.id]: 60000,
+	[STATUSES.AERO_III.id]: 24000,
+}
 export default class DoTs extends Module {
     static handle = 'dots'
 	static dependencies = [
@@ -89,18 +96,32 @@ export default class DoTs extends Module {
 			],
 		}))
 
-		// Suggestion for DoT clipping
-		const maxClip = Math.max(...Object.values(this._clip))
-		if(maxClip > 500)
-		{
+		//Suggestion for DoT clipping
+		if(this._clip[STATUSES.AERO_II.id] > 500){
+			const isMinor = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MINOR[STATUSES.AERO_II.id]
+			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AERO_II.icon,
 				content: <Fragment>
-					Avoid refreshing DoTs significantly before their expiration, this results in losing damage from Stone IV casts.
+					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)
 				</Fragment>,
-				severity: maxClip <= CLIP_MAX_MINOR ? SEVERITY.MINOR : maxClip <= CLIP_MAX_MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
-					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} and {this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
+					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} lost to early refreshes.
+				</Fragment>,
+			}))
+		}
+		if(this._clip[STATUSES.AERO_III.id] > 500) {
+			const isMinor = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MINOR[STATUSES.AERO_III.id]
+			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.AERO_III.icon,
+				content: <Fragment>
+					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.
+				</Fragment>,
+				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				why: <Fragment>
+					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
 				</Fragment>,
 			}))
 		}
