@@ -59,7 +59,7 @@ export default class Benison extends Module {
 				</Fragment>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : _usesMissed > WASTED_USES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				why: <Fragment>
-					Around {_usesMissed} uses of Divine Benison were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+					About {_usesMissed} uses of Divine Benison were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Fragment>,
 			}))
 		}
