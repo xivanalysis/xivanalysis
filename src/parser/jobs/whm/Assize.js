@@ -50,15 +50,15 @@ export default class Assize extends Module {
 	_onComplete(){
 
 		//uses missed reported in 1 decimal
-		const holdDuration = this._uses === 0 ? this.parser.fightDuration() : this._totalHeld
+		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
 		const _usesMissed = Math.floor(10 * holdDuration / (ACTIONS.ASSIZE.cooldown * 1000)) / 10
-		if (_usesMissed > 1) {
+		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ASSIZE.icon,
 				content: <Fragment>
-					Use Assize{this._uses && ' more frequently'}. Frequent use of Assize is typically a DPS gain and helps with MP management.
+					Use Assize{this._uses > 0 && ' more frequently'}. Frequent use of Assize is typically a DPS gain and helps with MP management.
 				</Fragment>,
-				severity: _usesMissed <= WASTED_USES_MAX_MINOR ? SEVERITY.MINOR : _usesMissed <= WASTED_USES_MAX_MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : _usesMissed > WASTED_USES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				why: <Fragment>
 					Up to {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Fragment>,
