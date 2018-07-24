@@ -79,3 +79,68 @@ export function extractErrorContext(object) {
 
 	return result
 }
+
+function _matchClosest(values, value, difference) {
+	const isArray = Array.isArray(values)
+	const isObject = typeof values === typeof {}
+
+	if (!isArray && !isObject) {
+		return
+	}
+
+	const workingValues = isArray ?
+		values :
+		isObject ?
+			Object.keys(values) :
+			[]
+
+	let closestIndex
+	let closest
+
+	workingValues
+		.map(v => difference(v, value))
+		.forEach((currentValue, currentIndex) => {
+			if (currentValue >= 0 && (typeof closest === typeof undefined || currentValue < closest)) {
+				closest = currentValue
+				closestIndex = currentIndex
+			}
+		})
+
+	if (isArray) {
+		return workingValues[closestIndex]
+	}
+
+	if (isObject) {
+		return values[workingValues[closestIndex]]
+	}
+}
+
+/**
+ * Matches to the closest nearby number of an Array or the Keys of an Object and returns the representative value.
+ * @param values {Array|Object} Array of values to match or Object with keys (have to be numeric) to match.
+ * @param value {Number} Number to match.
+ * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
+ */
+export function matchClosest(values, value) {
+	return _matchClosest(values, value, (value, baseValue) => Math.abs(value - baseValue))
+}
+
+/**
+ * Matches to the closest lower number of an Array or the Keys of an Object and returns the representative value.
+ * @param values {Array|Object} Array of values to match or Object with keys (have to be numeric) to match.
+ * @param value {Number} Number to match.
+ * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
+ */
+export function matchClosestLower(values, value) {
+	return _matchClosest(values, value, (value, baseValue) => baseValue - value)
+}
+
+/**
+ * Matches to the closest higher number of an Array or the Keys of an Object and returns the representative value.
+ * @param values {Array|Object} Array of values to match or Object with keys (have to be numeric) to match.
+ * @param value {Number} Number to match.
+ * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
+ */
+export function matchClosestHigher(values, value) {
+	return _matchClosest(values, value, (value, baseValue) => value - baseValue)
+}
