@@ -118,7 +118,7 @@ export default class Aetherflow extends Module {
 						let { id, debit, timestamp } = prev[prev.length-1];
 						if (curr.debit) {
 							prev[prev.length-1] = {
-								debit: debit + curr.debit,
+								debit: (debit || 0) + curr.debit,
 								id: [].concat(id, curr.id),
 								timestamp: [].concat(timestamp, curr.timestamp)
 							};
