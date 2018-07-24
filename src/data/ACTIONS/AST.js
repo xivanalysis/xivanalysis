@@ -38,14 +38,14 @@ export default {
 		castTime: 3,
 	},
 
-	DIGNITY: {
+	ESSENTIAL_DIGNITY: {
 		id: 3614,
 		name: 'Essential Dignity',
 		icon: 'https://secure.xivdb.com/img/game/003000/003141.png',
 		cooldown: 40
 	},
 
-	ASP_HELIOS: {
+	ASPECTED_HELIOS: {
 		id: 3601,
 		name: 'Aspected Helios',
 		icon: 'https://secure.xivdb.com/img/game/003000/003130.png',
@@ -53,7 +53,7 @@ export default {
 		castTime: 2.5,
 	},
 
-	ASP_BENEFIC: {
+	ASPECTED_BENEFIC: {
 		id: 3595,
 		name: 'Aspected Benefic',
 		icon: 'https://secure.xivdb.com/img/game/003000/003127.png',
@@ -76,7 +76,7 @@ export default {
 		cooldown: 90
 	},
 
-	COLLECTIVE_UNCON: {
+	COLLECTIVE_UNCONSCIOUS: {
 		id: 3613,
 		name: 'Collective Unconscious',
 		icon: 'https://secure.xivdb.com/img/game/003000/003140.png',
@@ -104,7 +104,7 @@ export default {
 		cooldown: 5
 	},
 
-	CELESTIAL_OPP: {
+	CELESTIAL_OPPOSITION: {
 		id: 3616,
 		name: 'Celestial Opposition',
 		icon: 'https://secure.xivdb.com/img/game/003000/003142.png',

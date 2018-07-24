@@ -49,7 +49,6 @@ export default class ArcanaUndrawUsage extends Module {
 	_onComplete() {
 		
 		const badUndraws = this._badUndraws
-			console.warn(this._badUndraws, 'undraws')
 		if (badUndraws.length) {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://secure.xivdb.com/img/game/003000/003108.png', // Undraw action
