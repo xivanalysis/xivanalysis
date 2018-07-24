@@ -6,7 +6,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-// General actions that give Rage (this is how I'm referring to the Warrior gauge) -- Except Storm's Path, since it's a fringe case that gives +20 instead of 10.
+// General actions that generate Rage
 const RAGE_GENERATORS = {
 	[ACTIONS.MAIM.id]: 10,
 	[ACTIONS.STORMS_EYE.id]: 10,
@@ -16,6 +16,7 @@ const RAGE_GENERATORS = {
 	[ACTIONS.INFURIATE.id]: 50,
 }
 
+//Actions that cost Rage
 const RAGE_SPENDERS ={
 	[ACTIONS.FELL_CLEAVE.id]: 50,
 	[ACTIONS.INNER_BEAST.id]: 50,
@@ -42,9 +43,6 @@ export default class Gauge extends Module {
 	// I'm assuming it'll start at 0 (which, in nine out of ten cases, should be it. I can't think of any fringe cases right now.)
 	_rage = 0
 	_wastedRage = 0
-	_overallRageGained = 0
-
-	_innerReleaseActive = false
 
 	constructor(...args) {
 		super(...args)
@@ -56,6 +54,10 @@ export default class Gauge extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
+		// THIS THING TOOK ME TOO LONG TO FIGURE OUT AND I LOST SOME OF MY HAIR BY THE END OF IT
+		//On a serious note, it just checks for the ability, then adds the rage with the _addRage function, which, handles the waste etc.
+		//The if below that is a check if the player is under inner release or not. If it is, the cost isn't subtracted from your current rage,
+		//And simply treats it like they didn't cost rage at all. Elegant solution.
 		if (RAGE_GENERATORS[abilityId]) {
 			this._wastedRage += this._addRage(abilityId)
 		}
