@@ -43,7 +43,7 @@ export default class Ninjutsu extends Module {
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
-					You cast Hyoton {this._hyotonCount} times.
+					You cast Hyoton {this._hyotonCount} time{this._hyotonCount !== 1 && 's'}.
 				</Fragment>,
 			}))
 		}
@@ -56,7 +56,7 @@ export default class Ninjutsu extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You cast Rabbit Medium {this._rabbitCount} times.
+					You cast Rabbit Medium {this._rabbitCount} time{this._rabbitCount !== 1 && 's'}.
 				</Fragment>,
 			}))
 		}
