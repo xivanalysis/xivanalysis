@@ -13,6 +13,8 @@ const CORRECT_GCDS = [
 	ACTIONS.DECIMATE.id,
 ]
 
+const possibleGcds = 5
+
 export default class InnerRelease extends Module {
 	static handle = 'ir'
 	static dependencies = [
@@ -102,7 +104,7 @@ export default class InnerRelease extends Module {
 				why: `${this._missedGcds} GCDs missed inside of IR.`,
 				severity: SEVERITY.MAJOR,
 				content: <Fragment>
-						You missed <strong>{this._missedGcds}</strong> GCDs out of 5 inside of Inner Release. This is very, <em>very</em> bad. You should never miss a single GCD inside of Inner Release.
+						You missed <strong>{this._missedGcds}</strong> GCDs inside of Inner Release. You should be hitting 5 GCDs per cast. If you can't hit 5 GCDs, consider adjusting your gearset for it.
 				</Fragment>,
 			}))
 		}
@@ -117,8 +119,6 @@ export default class InnerRelease extends Module {
 		this._ir.end = endTime
 		this._history.push(this._ir)
 
-		// Making a const for each because why not
-		const possibleGcds = 5
 
 		// Check for which gcds they hit
 		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)

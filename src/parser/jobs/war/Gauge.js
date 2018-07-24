@@ -59,7 +59,7 @@ export default class Gauge extends Module {
 		//The if below that is a check if the player is under inner release or not. If it is, the cost isn't subtracted from your current rage,
 		//And simply treats it like they didn't cost rage at all. Elegant solution.
 		if (RAGE_GENERATORS[abilityId]) {
-			this._wastedRage += this._addRage(abilityId)
+			this._addRage(abilityId)
 		}
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
