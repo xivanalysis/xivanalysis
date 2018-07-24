@@ -28,7 +28,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /tmp/xiva-client
+          at: /tmp
       - run:
           name: Lint
           command: yarn eslint src --max-warnings 0 --format junit -o reports/eslint/results.xml
@@ -39,7 +39,7 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /tmp/xiva-client
+          at: /tmp
       - run:
           name: Run build
           command: yarn build
