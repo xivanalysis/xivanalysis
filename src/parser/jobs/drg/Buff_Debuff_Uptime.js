@@ -12,11 +12,10 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const STATUS_DURATION = {
 	[STATUSES.DISEMBOWEL.id]: 30000,
 	[STATUSES.CHAOS_THRUST.id]: 30000,
-	[STATUSES.HEAVY_THRUST.id]: 30000,
+//  [STATUSES.HEAVY_THRUST.id]: 30000,
 }
+const HEAVY_THRUST_DURATION = 30000
 
-
-//const HEAVY_THRUST_DURATION = 30000
 
 export default class Dots extends Module{
 	static handle = 'dots'
@@ -49,10 +48,15 @@ export default class Dots extends Module{
 		const statusId = event.ability.guid
 
 		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
+		if (!lastApplication[statusId]) {
+			lastApplication[statusId] = event.timestamp
+			return
+		}
 		//Base clip calc
 		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
 		// Removes untarget time from clipping
 		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - STATUS_DURATION[statusId], event.timestamp)
+		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId]+ clip)
 		// Capping the clip to 0
 		this._clip[statusId] += Math.max(0, clip)
 		lastApplication[statusId] = event.timestamp
@@ -75,18 +79,18 @@ export default class Dots extends Module{
 				}),
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.HEAVY_THRUST} /> uptime </Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.HEAVY_THRUST.id),
+					percent: () => this.getHeavyThrustUptimePercent(),
 				}),
 			],
 		}))
-		//Suggestions for Chaos Thrust Clipping
+		//Suggestions
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new Suggestion({
 			icon: STATUSES.CHAOS_THRUST.icon,
 			content: <Fragment>
-				Avoid trying to use back to back Chaos Thrust comboes on the same target. If you have a Medium Warning, reduce your Skill Speed. Due to the Dragoon Rotation, Minor Clipping is expected.
+				Avoid trying to use back to back <ActionLink {...ACTIONS.CHAOS_THRUST}/> comboes on the same target. If you have a Medium Warning, reduce your Skill Speed. Due to the Dragoon Rotation, Minor Clipping is expected.
 			</Fragment>,
-			severity: (maxClip < 6000? SEVERITY.Minor :( maxClip < 11000? SEVERITY.MEDIUM :( maxClip < 21000? SEVERITY.MAJOR: SEVERITY.MORBID))),
+			severity: (maxClip > 6000? SEVERITY.MINOR :( maxClip > 11000? SEVERITY.MEDIUM :( maxClip > 21000? SEVERITY.MAJOR: SEVERITY.MORBID))),
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.CHAOS_THRUST.id])} of {STATUSES[STATUSES.CHAOS_THRUST.id].name} lost to early refreshes.
 			</Fragment>,
@@ -96,5 +100,17 @@ export default class Dots extends Module{
 		const statusUptime = this.enemies.getStatusUptime(statusId)
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightDuration) * 100
+	}
+	getHeavyThrustUptimePercent(){
+		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const maxFullCasts = Math.floor(fightDuration / (30*1000))
+
+		const lastCastMaxDuration = Math.min(
+			HEAVY_THRUST_DURATION,
+			fightDuration - (maxFullCasts * 30)
+		)
+		const maxTotalDuration = (maxFullCasts * 30) + lastCastMaxDuration
+
+		return Math.min(100, (this.combatants.getStatusUptime(STATUSES.HEAVY_THRUST.id) / maxTotalDuration) * 100)
 	}
 }
