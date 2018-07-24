@@ -15,5 +15,9 @@ export default class About extends CoreAbout {
 		</Message>
 	</Fragment>
 	supportedPatch = '4.35'
+	contributors = 
+		[
+		{user: CONTRIBUTORS.RYAN, role: 'Poor Sap'},
+		]	
 	
 }

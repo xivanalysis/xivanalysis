@@ -48,4 +48,10 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
 		jobs: [JOBS.NINJA],
 	},
+
+	RYAN: {
+		name: 'Ryan',
+		avatar: process.env.PUBLIC.URL + '/avatar/Rjb99.png',
+		jobs: [JOBS.SAM]
+	},
 }

@@ -95,7 +95,7 @@ export default class Higanbana extends Module {
 				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES[STATUSES.HIGANBANA.id].name} lost to early refreshes.
 			</Fragment>,
 		}))
-
+	}
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.enemies.getStatusUptime(statusId)
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
