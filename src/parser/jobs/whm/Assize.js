@@ -7,6 +7,10 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+
+const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
+const WASTED_USES_MAX_MEDIUM = 2
+
 //uses the benison code for now, but should also check healing efficiency
 export default class Assize extends Module {
 	static handle = 'assize'
@@ -67,7 +71,7 @@ export default class Assize extends Module {
 					content: <Fragment>
 						Use Assize more frequently. Frequent use of Assize is typically a DPS gain and helps with MP management.
 					</Fragment>,
-					severity: _usesMissed <= 1 ? SEVERITY.MINOR : _usesMissed <= 5 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+					severity: _usesMissed <= WASTED_USES_MAX_MINOR ? SEVERITY.MINOR : _usesMissed <= WASTED_USES_MAX_MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 					why: <Fragment>
 						Up to {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(this._totalHeld)}.
 					</Fragment>,

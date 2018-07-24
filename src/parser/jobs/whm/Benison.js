@@ -8,6 +8,9 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 
+const WASTED_USES_MAX_MINOR = 3
+const WASTED_USES_MAX_MEDIUM = 10
+
 export default class Benison extends Module {
 	static handle = 'benison'
 	static dependencies = [
@@ -67,7 +70,7 @@ export default class Benison extends Module {
 					content: <Fragment>
 						Use Divine Benison more frequently. Frequent uses of Divine Benison can mitigate a large amount of damage over the course of a fight, potentially resulting in less required healing GCDs.
 					</Fragment>,
-					severity: _usesMissed <= 1 ? SEVERITY.MINOR : _usesMissed <= 5 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+					severity: _usesMissed <= WASTED_USES_MAX_MINOR ? SEVERITY.MINOR : _usesMissed <= WASTED_USES_MAX_MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 					why: <Fragment>
 						Up to {_usesMissed} uses of Divine Benison were missed by holding it for at least a total of {this.parser.formatDuration(this._totalHeld)}.
 					</Fragment>,
