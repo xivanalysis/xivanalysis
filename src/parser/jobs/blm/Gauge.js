@@ -7,8 +7,6 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-
-
 const AF1_ACTIONS = [
 	ACTIONS.FIRE_I.id,
 	ACTIONS.FIRE_II.id,
@@ -25,13 +23,16 @@ const AF_ACTIONS = [
 	ACTIONS.FIRE_IV.id,
 ]
 
+const ENOCHIAN_DURATION_REQUIRED = 30000
+const ASTRAL_UMBRAL_DURATION = 13000
+
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
-			'combatants',
-			'cooldowns',
-			'suggestions',
-		]
+		'combatants',
+		'cooldowns',
+		'suggestions',
+	]
 
 	_AF = 0
 	_UI = 0
@@ -57,7 +58,7 @@ export default class Gauge extends Module {
 		const AFUIRunTime = event.timestamp - this._AFUITimer
 
 		//reseting AF/UI and dropping eno due to going past the timer
-		if (AFUIRunTime > 13000) {
+		if (AFUIRunTime > ASTRAL_UMBRAL_DURATION) {
 			if (this._eno){
 				this._eno = false
 				this._enoTimer = 0
@@ -101,9 +102,9 @@ export default class Gauge extends Module {
 		//check if eno is active and update the eno timer for foul. Check for foul overwriting.
 		if (this._eno) {
 			const enoRunTime = event.timestamp - this._enoTimer
-			const numberOfFouls = Math.floor(enoRunTime/30000)
+			const numberOfFouls = Math.floor(enoRunTime/ENOCHIAN_DURATION_REQUIRED)
 			if (numberOfFouls > 0) {
-				const offSet = enoRunTime % 30000
+				const offSet = enoRunTime % ENOCHIAN_DURATION_REQUIRED
 				this._enoTimer = event.timestamp - offSet
 				this._poly ++
 				if (this._poly > 1) {
@@ -180,7 +181,6 @@ export default class Gauge extends Module {
 		//Foul support and poly adjustment
 		if (abilityId === ACTIONS.FOUL.id) {
 			this._poly = 0
-
 		}
 
 		if(abilityId === ACTIONS.TRANSPOSE.id) {
@@ -206,7 +206,7 @@ export default class Gauge extends Module {
 		this._AFUITimer = 0
 		this._eno = false
 		this._enoTimer = 0
-		}
+	}
 
 	_onComplete() {
 		// Suggestions for lost eno
