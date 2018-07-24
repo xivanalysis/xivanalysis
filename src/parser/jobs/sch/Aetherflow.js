@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Table} from 'semantic-ui-react'
+import {Table,Grid,Loader} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -162,15 +162,12 @@ export default class Aetherflow extends Module {
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
 							<Table.Cell>{drift > 0 && this.parser.formatDuration(drift)}</Table.Cell>
-							<Table.Cell className={styles.abilities}>
-								{/* All this is to align Aetherflows/Dissipate together */}
-								{index === 0 && <span className={styles.ability}>&nbsp;</span>}
-								{id.map(id => 
-									<span className={styles.ability}><ActionLink id={id} name="" /></span>
-								)}
-								{[...Array((index === 0 ? 3 : 4) - id.length)].map(id =>
-									<span className={styles.ability}>&nbsp;</span>
-								)}
+							<Table.Cell>
+								<Grid>
+									{id.map(id => <Grid.Column width={4}>
+									<ActionLink id={id} mini/>
+									</Grid.Column>)}
+								</Grid>
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>
