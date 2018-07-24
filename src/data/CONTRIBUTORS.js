@@ -49,15 +49,4 @@ export default {
 		jobs: [JOBS.NINJA],
 	},
 
-	MIKEMATRIX: {
-		name: 'MikeMatrix'
-		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
-		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
-	},
-
-	RYAN: {
-		name: 'Ryan',
-		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',
-		jobs: [JOBS.SAMURAI],
-	},
 }
