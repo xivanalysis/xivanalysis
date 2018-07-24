@@ -89,7 +89,7 @@ export default class Dots extends Module{
 			content: <Fragment>
 				Avoid trying to use back to back <ActionLink {...ACTIONS.CHAOS_THRUST}/> comboes on the same target. If you have a Medium Warning, reduce your Skill Speed. Due to the Dragoon Rotation, Minor Clipping is expected.
 			</Fragment>,
-			severity: maxClip < 30000? SEVERITY.MINOR : maxClip < 45000? SEVERITY.MEDIUM : maxClip < 60000? SEVERITY.MAJOR: SEVERITY.MORBID,
+			severity: maxClip < 40000? SEVERITY.MINOR : maxClip < 50000? SEVERITY.MEDIUM : maxClip < 70000? SEVERITY.MAJOR: SEVERITY.MORBID,
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.CHAOS_THRUST.id])} of {STATUSES[STATUSES.CHAOS_THRUST.id].name} lost to early refreshes.
 			</Fragment>,
@@ -99,7 +99,7 @@ export default class Dots extends Module{
 			content: <Fragment>
 				<ActionLink {...ACTIONS.DISEMBOWEL}/> Follows the same rules as <ActionLink {...ACTIONS.CHAOS_THRUST}/>.
 			</Fragment>,
-			severity: maxClip < 6000? SEVERITY.MINOR : maxClip < 11000? SEVERITY.MEDIUM : maxClip < 21000? SEVERITY.MAJOR: SEVERITY.MORBID,
+			severity: maxClip < 40000? SEVERITY.MINOR : maxClip < 50000? SEVERITY.MEDIUM : maxClip < 70000? SEVERITY.MAJOR: SEVERITY.MORBID,
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.PIERCING_RESISTANCE_DOWN.id])} of {STATUSES[STATUSES.PIERCING_RESISTANCE_DOWN.id].name} lost to early refreshes.
 			</Fragment>,
