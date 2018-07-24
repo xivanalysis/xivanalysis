@@ -1,13 +1,11 @@
 import React, {Fragment} from 'react'
 import {Table} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import styles from './Aetherflow.module.css';
+import styles from './Aetherflow.module.css'
 
 // Actions that reduce Aetherflow's cooldown.
 const AETHERFLOW_CD_ACTIONS = [
@@ -41,7 +39,7 @@ export default class Aetherflow extends Module {
 	}
 
 	_durationWithAetherflowOnCooldown() {
-		return this.parser.fightDuration - FIRST_FLOW_TIMESTAMP;
+		return this.parser.fightDuration - FIRST_FLOW_TIMESTAMP
 	}
 
 	_possibleAetherflowCasts() {
@@ -53,11 +51,11 @@ export default class Aetherflow extends Module {
 
 		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
 			this.cooldowns.reduceCooldown(ACTIONS.AETHERFLOW.id, 5)
-			this._totalAetherflowCasts++;
+			this._totalAetherflowCasts++
 		}
-		
+
 		if (abilityId === ACTIONS.DISSIPATION.id) {
-			this._extraAetherflows += 3;
+			this._extraAetherflows += 3
 		}
 	}
 
@@ -77,25 +75,25 @@ export default class Aetherflow extends Module {
 				}),
 				new Requirement({
 					name: <Fragment>Total <ActionLink {...ACTIONS.AETHERFLOW} /> casts: {this._totalAetherflowCasts} out of {this._possibleAetherflowCasts()} possible</Fragment>,
-					percent: this._totalAetherflowCasts / this._possibleAetherflowCasts() * 100
-				})
+					percent: this._totalAetherflowCasts / this._possibleAetherflowCasts() * 100,
+				}),
 			],
 		}))
 	}
 
 	output() {
 		const aetherflows = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
-			.map(h => ({ timestamp: [h.timestamp], id: [ACTIONS.AETHERFLOW.id] }));
+			.map(h => ({timestamp: [h.timestamp], id: [ACTIONS.AETHERFLOW.id]}))
 		const dissipations = this.cooldowns.getCooldown(ACTIONS.DISSIPATION.id).history
-			.map(h => ({ timestamp: [h.timestamp], id: [ACTIONS.DISSIPATION.id] }));
-		const uses = AETHERFLOW_CD_ACTIONS.map(id => 
+			.map(h => ({timestamp: [h.timestamp], id: [ACTIONS.DISSIPATION.id]}))
+		const uses = AETHERFLOW_CD_ACTIONS.map(id =>
 			this.cooldowns.getCooldown(id).history
-				.map( h => ({ timestamp: [h.timestamp], debit: 1, id: [id] }))
-			);
+				.map( h => ({timestamp: [h.timestamp], debit: 1, id: [id]}))
+		)
 
-		let totalDrift = 0;
-		let totalWasted = 0;
-		
+		let totalDrift = 0
+		let totalWasted = 0
+
 		return <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
@@ -105,59 +103,59 @@ export default class Aetherflow extends Module {
 					<Table.HeaderCell>Abilities Used</Table.HeaderCell>
 					<Table.HeaderCell>Stacks Wasted</Table.HeaderCell>
 				</Table.Row>
-			</Table.Header>	
+			</Table.Header>
 			<Table.Body>
-				{[].concat(aetherflows,dissipations,...uses)
+				{[].concat(aetherflows, dissipations, ...uses)
 					.sort(( a, b ) => a.timestamp - b.timestamp)
 					.reduce((prev, curr) => {
 						if (prev.length === 0) {
-							return [curr];
+							return [curr]
 						}
-						
+
 						// group debits together
-						let { id, debit, timestamp } = prev[prev.length-1];
+						const {id, debit, timestamp} = prev[prev.length-1]
 						if (curr.debit) {
 							prev[prev.length-1] = {
 								debit: debit + curr.debit,
 								id: [].concat(id, curr.id),
-								timestamp: [].concat(timestamp, curr.timestamp)
-							};
-							return prev;
+								timestamp: [].concat(timestamp, curr.timestamp),
+							}
+							return prev
 						}
 
 						// not a debit, so it has to be a credit - insert a new item
-						return [...prev, curr];
+						return [...prev, curr]
 					}, [])
-					.map(({ timestamp, debit = 0, id }, index, all) => {
-						let downtime = 0;
-						let drift = 0;
+					.map(({timestamp, debit = 0, id}, index, all) => {
+						let downtime = 0
+						let drift = 0
 						if (id.includes(ACTIONS.AETHERFLOW.id)) {
-							let nextUptime;
+							let nextUptime
 
 							// next credit is an aetherflow, calculate downtime now
-							let nextCredit = all[index + 1];
+							const nextCredit = all[index + 1]
 							// if not, next next credit (due to dissipation)
-							let nextNextCredit = all[index + 2];
+							const nextNextCredit = all[index + 2]
 							// if not, just consider it the end of fight.
 							if (nextCredit && nextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
-								nextUptime = nextCredit.timestamp[0];
+								nextUptime = nextCredit.timestamp[0]
 							} else if (nextNextCredit && nextNextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
-								nextUptime = nextNextCredit.timestamp[0];
+								nextUptime = nextNextCredit.timestamp[0]
 								// dissipate turns the ideal downtime into 15s shorter
-								drift += 15000;
+								drift += 15000
 							} else {
-								nextUptime = this.parser.currentTimestamp;
+								nextUptime = this.parser.currentTimestamp
 							}
-							
-							downtime = nextUptime - timestamp[0];
+
+							downtime = nextUptime - timestamp[0]
 						}
-						drift += downtime;
-						drift -= 45000;
+						drift += downtime
+						drift -= 45000
 						if (drift > 0) {
-							totalDrift += drift;
+							totalDrift += drift
 						}
-						let wasted = 3 - debit || 0;
-						totalWasted += wasted;
+						const wasted = 3 - debit || 0
+						totalWasted += wasted
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
@@ -165,21 +163,21 @@ export default class Aetherflow extends Module {
 							<Table.Cell className={styles.abilities}>
 								{/* All this is to align Aetherflows/Dissipate together */}
 								{index === 0 && <span className={styles.ability}>&nbsp;</span>}
-								{id.map(id => 
-									<span className={styles.ability}><ActionLink id={id} name="" /></span>
+								{id.map(id =>
+									<span key={id} className={styles.ability}><ActionLink id={id} name="" /></span>
 								)}
 								{[...Array((index === 0 ? 3 : 4) - id.length)].map(id =>
-									<span className={styles.ability}>&nbsp;</span>
+									<span key={id} className={styles.ability}>&nbsp;</span>
 								)}
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>
 					}
-				)}
+					)}
 				<Table.Row>
-					<Table.Cell colSpan='2' textAlign='right' col>Total Drift</Table.Cell>
+					<Table.Cell colSpan="2" textAlign="right" col>Total Drift</Table.Cell>
 					<Table.Cell>{this.parser.formatDuration(totalDrift)}</Table.Cell>
-					<Table.Cell textAlign='right'>Total Stacks Wasted</Table.Cell>
+					<Table.Cell textAlign="right">Total Stacks Wasted</Table.Cell>
 					<Table.Cell>{totalWasted || '-'}</Table.Cell>
 				</Table.Row>
 			</Table.Body>
