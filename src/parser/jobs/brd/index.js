@@ -1,6 +1,6 @@
-import About from './about'
-import Dots from './dots'
-import Songs from './songs'
+import About from './About'
+import Dots from './Dots'
+import Songs from './Songs'
 
 export default [
 	About,
