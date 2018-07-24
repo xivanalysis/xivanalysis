@@ -8,21 +8,21 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 export default class T3inUI extends Module {
 	static handle = 't3inui'
 	static dependencies = [
-			'combatants',
-			'cooldowns',
-			'suggestions',
-			'gauge',
+		'combatants',
+		'cooldowns',
+		'suggestions',
+		'gauge',
 	]
 
 	_T3 = false
 	_UI = 0
 	_UIEndingInT3 = 0
-	
+
 	constructor(...args) {
-			super(...args)
-			this.addHook('begincast', {by: 'player'}, this._onBegin)
-			this.addHook('cast', {by: 'player'}, this._onCast)
-			this.addHook('complete', this._onComplete)
+		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBegin)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
 	}
 	//keep track of hard casted T3s followed by fast F3s.
 	_onBegin(event) {
@@ -30,7 +30,7 @@ export default class T3inUI extends Module {
 
 		this._UI = this.gauge.getUI()
 
-		if (!(abilityId === ACTIONS.FIRE_III.id)){
+		if (!(abilityId === ACTIONS.FIRE_III.id)) {
 			this._T3 = false
 		}
 		if (abilityId === ACTIONS.THUNDER_III.id) {
