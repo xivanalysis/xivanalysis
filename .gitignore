@@ -27,3 +27,4 @@ test.html
 \.vs/
 *.swp
 .vscode/taskmarks.json
+.idea/
