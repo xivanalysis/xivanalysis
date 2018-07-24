@@ -14,6 +14,7 @@ import MCH from './MCH'
 import SMN from './SMN'
 import RDM from './RDM'
 import WAR from './WAR'
+import DRK from './DRK'
 
 const STATUSES = {
 	...ENEMY,
