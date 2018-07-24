@@ -11,30 +11,30 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const SF_DURATION_MILLIS = 21000
 
 export default class ShadowFang extends Module {
-	static handle = 'shadowFang'
-	static dependencies = [
-		'checklist',
-		'combatants',
-		'enemies',
+    static handle = 'shadowFang'
+    static dependencies = [
+        'checklist',
+        'combatants',
+        'enemies',
         'invuln',
-		'suggestions',
-	]
+        'suggestions',
+    ]
 
     _lastApplication = {}
     _sfClip = 0
 
-	constructor(...args) {
-		super(...args)
+    constructor(...args) {
+        super(...args)
         const filter = {
-			by: 'player',
-			abilityId: [STATUSES.SHADOW_FANG.id],
-		}
-		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
-		this.addHook('complete', this._onComplete)
-	}
+            by: 'player',
+            abilityId: [STATUSES.SHADOW_FANG.id],
+        }
+        this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
+        this.addHook('complete', this._onComplete)
+    }
 
-	_onDotApply(event) {
-		// Make sure we're tracking for this target
+    _onDotApply(event) {
+        // Make sure we're tracking for this target
         const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || 0
         
         if (!lastApplication) {
@@ -56,24 +56,24 @@ export default class ShadowFang extends Module {
         this._sfClip += Math.max(0, clip)
 
         this._lastApplication[event.targetID] = event.timestamp
-	}
+    }
 
-	_onComplete() {
-		// Checklist rule for dot uptime
-		this.checklist.add(new Rule({
-			name: 'Keep Shadow Fang up',
-			description: <Fragment>
-				As a NIN, <ActionLink {...ACTIONS.SHADOW_FANG}/> is your strongest combo finisher (assuming at least 4 DoT ticks hit). In addition, it provides a slashing debuff which you, WARs, and SAMs are responsible for maintaining and should ideally never let lapse.
-			</Fragment>,
-			requirements: [
-				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FANG}/> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(),
-				}),
-			],
-		}))
+    _onComplete() {
+        // Checklist rule for dot uptime
+        this.checklist.add(new Rule({
+            name: 'Keep Shadow Fang up',
+            description: <Fragment>
+                As a NIN, <ActionLink {...ACTIONS.SHADOW_FANG}/> is your strongest combo finisher (assuming at least 4 DoT ticks hit). In addition, it provides a slashing debuff which you, WARs, and SAMs are responsible for maintaining and should ideally never let lapse.
+            </Fragment>,
+            requirements: [
+                new Requirement({
+                    name: <Fragment><ActionLink {...ACTIONS.SHADOW_FANG}/> uptime</Fragment>,
+                    percent: () => this.getDotUptimePercent(),
+                }),
+            ],
+        }))
 
-		// Suggestion for DoT clipping
+        // Suggestion for DoT clipping
         const severity = this.getDotClippingSeverity()
         if (severity) {
             this.suggestions.add(new Suggestion({
@@ -87,13 +87,13 @@ export default class ShadowFang extends Module {
                 </Fragment>,
             }))
         }
-	}
+    }
 
-	getDotUptimePercent() {
-		const statusUptime = this.enemies.getStatusUptime(STATUSES.SHADOW_FANG.id)
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-		return (statusUptime / fightDuration) * 100
-	}
+    getDotUptimePercent() {
+        const statusUptime = this.enemies.getStatusUptime(STATUSES.SHADOW_FANG.id)
+        const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+        return (statusUptime / fightDuration) * 100
+    }
 
     getDotClippingSeverity() {
         // Simplified math, bitches
