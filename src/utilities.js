@@ -80,38 +80,40 @@ export function extractErrorContext(object) {
 	return result
 }
 
-function _matchClosest(values, value, difference) {
-	const isArray = Array.isArray(values)
-	const isObject = typeof values === typeof {}
+function _matchClosestHoF(difference) {
+	return (values, value) => {
+		const isArray = Array.isArray(values)
+		const isObject = typeof values === typeof {}
 
-	if (!isArray && !isObject) {
-		return
-	}
+		if (!isArray && !isObject) {
+			return
+		}
 
-	const workingValues = isArray ?
-		values :
-		isObject ?
-			Object.keys(values) :
-			[]
+		const workingValues = isArray ?
+			values :
+			isObject ?
+				Object.keys(values) :
+				[]
 
-	let closestIndex
-	let closest
+		let closestIndex
+		let closest
 
-	workingValues
-		.map(v => difference(v, value))
-		.forEach((currentValue, currentIndex) => {
-			if (currentValue >= 0 && (typeof closest === typeof undefined || currentValue < closest)) {
-				closest = currentValue
-				closestIndex = currentIndex
-			}
-		})
+		workingValues
+			.map(v => difference(v, value))
+			.forEach((currentValue, currentIndex) => {
+				if (currentValue >= 0 && (typeof closest === typeof undefined || currentValue < closest)) {
+					closest = currentValue
+					closestIndex = currentIndex
+				}
+			})
 
-	if (isArray) {
-		return workingValues[closestIndex]
-	}
+		if (isArray) {
+			return workingValues[closestIndex]
+		}
 
-	if (isObject) {
-		return values[workingValues[closestIndex]]
+		if (isObject) {
+			return values[workingValues[closestIndex]]
+		}
 	}
 }
 
@@ -121,9 +123,7 @@ function _matchClosest(values, value, difference) {
  * @param value {Number} Number to match.
  * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
  */
-export function matchClosest(values, value) {
-	return _matchClosest(values, value, (value, baseValue) => Math.abs(value - baseValue))
-}
+export const matchClosest = _matchClosestHoF((value, baseValue) => Math.abs(value - baseValue))
 
 /**
  * Matches to the closest lower number of an Array or the Keys of an Object and returns the representative value.
@@ -131,9 +131,7 @@ export function matchClosest(values, value) {
  * @param value {Number} Number to match.
  * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
  */
-export function matchClosestLower(values, value) {
-	return _matchClosest(values, value, (value, baseValue) => baseValue - value)
-}
+export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValue - value)
 
 /**
  * Matches to the closest higher number of an Array or the Keys of an Object and returns the representative value.
@@ -141,6 +139,4 @@ export function matchClosestLower(values, value) {
  * @param value {Number} Number to match.
  * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
  */
-export function matchClosestHigher(values, value) {
-	return _matchClosest(values, value, (value, baseValue) => value - baseValue)
-}
+export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
