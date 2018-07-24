@@ -16,6 +16,7 @@ import BLM from './BLM'
 import RDM from './RDM'
 import WAR from './WAR'
 import WHM from './WHM'
+import PLD from './PLD'
 
 const STATUSES = {
 	...ENEMY,
@@ -23,10 +24,12 @@ const STATUSES = {
 	...SHARED,
 	...ACN,
 
+	...PLD,
 	...WAR,
 
 	...SCH,
 	...AST,
+	...WHM,
 
 	...MNK,
 	...DRG,
@@ -38,8 +41,6 @@ const STATUSES = {
 	...SMN,
 	...BLM,
 	...RDM,
-
-	...WHM,
 }
 
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
