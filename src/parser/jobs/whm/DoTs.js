@@ -97,7 +97,7 @@ export default class DoTs extends Module {
 		}))
 
 		//Suggestion for DoT clipping
-		if (this._clip[STATUSES.AERO_II.id] > 500){
+		if (this._clip[STATUSES.AERO_II.id] > 500) {
 			const isMinor = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MINOR[STATUSES.AERO_II.id]
 			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
@@ -133,5 +133,4 @@ export default class DoTs extends Module {
 
 		return (statusUptime / fightDuration) * 100
 	}
-
 }

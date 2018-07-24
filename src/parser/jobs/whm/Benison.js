@@ -18,7 +18,7 @@ export default class Benison extends Module {
 	_uses = 0
 	_totalHeld = 0
 
-	constructor(...args){
+	constructor(...args) {
 		super(...args)
 
 		const _filter = {
@@ -29,7 +29,7 @@ export default class Benison extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onApplyBenison(event){
+	_onApplyBenison(event) {
 		this._uses++
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
@@ -41,7 +41,7 @@ export default class Benison extends Module {
 		this._lastUse = event.timestamp
 	}
 
-	_onComplete(){
+	_onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
 		const _usesMissed = Math.floor(10 * holdDuration / (ACTIONS.DIVINE_BENISON.cooldown * 1000)) / 10
