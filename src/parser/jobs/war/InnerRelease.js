@@ -114,7 +114,7 @@ export default class InnerRelease extends Module {
 		if (this._missedUpheavals) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.UPHEAVAL.icon,
-				why: `You missed a total of ${this._missedUpheavals} Upheavals missed inside of IR.`,
+				why: `You missed a total of ${this._missedUpheavals} Upheavals inside of IR.`,
 				severity: SEVERITY.MAJOR,
 				content: <Fragment>
 						You missed <strong>{this._missedUpheavals}</strong> Upheavals inside of Inner Release. You must hit one Upheaval inside of each Inner Release.
@@ -125,7 +125,7 @@ export default class InnerRelease extends Module {
 		if (this._missedOnslaughts) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ONSLAUGHT.icon,
-				why: `You missed a total of ${this._missedOnslaughts} Onslaughts missed inside of IR.`,
+				why: `You missed a total of ${this._missedOnslaughts} Onslaughts inside of IR.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
 						You missed <strong>{this._missedOnslaughts}</strong> Onslaughts inside of Inner Release. You must hit one Onslaught inside of each Inner Release.
@@ -165,7 +165,12 @@ export default class InnerRelease extends Module {
 				title: {
 					content: <Fragment>
 						{this.parser.formatTimestamp(ir.start)}
-						&nbsp;-&nbsp;{numGcds}/5 GCDs - {numUpheavals}/1 Upheaval - {numOnslaughts}/1 Onslaught
+						&nbsp;-&nbsp;
+						<span>{numGcds}/5 GCDs</span>
+						<span> - </span>
+						<span>{numUpheavals}/1 Upheaval</span>
+						<span> - </span>
+						<span>{numOnslaughts}/1 Onslaught</span>
 					</Fragment>,
 				},
 				content: {
