@@ -7,5 +7,5 @@ export default [
 	About,
 	DoTs,
 	Benison,
-	Assize
+	Assize,
 ]

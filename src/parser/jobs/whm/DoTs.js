@@ -7,7 +7,7 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-//powerful copy paste code from SMN
+//powerful copy paste code from SMN that ended up being changed quite a bit
 
 const STATUS_DURATION = {
 	[STATUSES.AERO_II.id]: 18000,
@@ -97,7 +97,7 @@ export default class DoTs extends Module {
 		}))
 
 		//Suggestion for DoT clipping
-		if(this._clip[STATUSES.AERO_II.id] > 500){
+		if (this._clip[STATUSES.AERO_II.id] > 500){
 			const isMinor = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MINOR[STATUSES.AERO_II.id]
 			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
@@ -111,7 +111,7 @@ export default class DoTs extends Module {
 				</Fragment>,
 			}))
 		}
-		if(this._clip[STATUSES.AERO_III.id] > 500) {
+		if (this._clip[STATUSES.AERO_III.id] > 500) {
 			const isMinor = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MINOR[STATUSES.AERO_III.id]
 			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
 			this.suggestions.add(new Suggestion({
