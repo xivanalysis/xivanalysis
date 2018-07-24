@@ -60,7 +60,7 @@ workflows:
             - setup
       - deploy:
           requires:
-            - setup
+            - lint
           filters:
             branches:
               only: master
