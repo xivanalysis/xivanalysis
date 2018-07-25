@@ -179,7 +179,7 @@ export default class FightOrFlight extends Module {
 
 		if (this._fofMissedGcds > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+				icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
 				why: `${this._fofMissedGcds} GCD${this._fofMissedGcds !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
 				severity: matchClosestLower(this._severityMissedFofGcds, this._fofMissedGcds),
 				content: <Fragment>
