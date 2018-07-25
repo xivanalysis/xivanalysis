@@ -18,7 +18,7 @@ const AstUndrawMacros = [
 	{
 		action: 'Undraw',
 		content: <Fragment>
-				<code>
+			<code>
 					/statusoff "Bole Drawn"<br/>
 					/statusoff "Balance Drawn"<br/>
 					/statusoff "Arrow Drawn"<br/>
@@ -26,13 +26,13 @@ const AstUndrawMacros = [
 					/statusoff "Spire Drawn"<br/>
 					/statusoff "Ewer Drawn"<br/>
 					/micon "Undraw"
-				</code>
-			</Fragment>
+			</code>
+		</Fragment>,
 	},
 	{
 		action: 'Undraw Spread',
 		content: <Fragment>
-		<code>
+			<code>
 			/statusoff "Arrow Held"<br/>
 			/statusoff "Balance Held"<br/>
 			/statusoff "Spire Held"<br/>
@@ -40,21 +40,21 @@ const AstUndrawMacros = [
 			/statusoff "Ewer Held"<br/>
 			/statusoff "Spear Held"<br/>
 			/micon "Undraw Spread"
-		</code>
-		</Fragment>
+			</code>
+		</Fragment>,
 	},
 	{
 		action: 'Empty Road',
 		content: <Fragment>
-		<code>
+			<code>
 			/statusoff "Expanded Royal Road"<br/>
 			/statusoff "Enhanced Royal Road"<br/>
 			/statusoff "Extended Royal Road"<br/>
 			/micon "Empty Road"
-		</code>
-		</Fragment>
+			</code>
+		</Fragment>,
 	},
-] 
+]
 
 export default class ArcanaUndrawUsage extends Module {
 	static handle = 'arcanaundraws'
@@ -91,20 +91,20 @@ export default class ArcanaUndrawUsage extends Module {
 		const badUndraws = this._badUndraws
 
 		if (badUndraws.length) {
-				const panels = AstUndrawMacros.map(macro => {
-					return {
-						title: {
-							key: 'title-' + macro.action,
-							content: <Fragment>
-								{macro.action}
-							</Fragment>,
-						},
-						content: {
-							key: 'content-' + macro.action,
-							content: macro.content,
-						},
-					}
-				})
+			const panels = AstUndrawMacros.map(macro => {
+				return {
+					title: {
+						key: 'title-' + macro.action,
+						content: <Fragment>
+							{macro.action}
+						</Fragment>,
+					},
+					content: {
+						key: 'content-' + macro.action,
+						content: macro.content,
+					},
+				}
+			})
 
 
 
