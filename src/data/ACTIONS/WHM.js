@@ -146,7 +146,7 @@ export default {
 	},
 
 	STONE: {
-		id: 140,
+		id: 119,
 		name: 'Stone',
 		icon: 'https://secure.xivdb.com/img/game/000000/000403.png',
 		onGcd: true,
