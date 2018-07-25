@@ -41,9 +41,6 @@ const ACTIONS = {
 
 	...NIN,
 	...SAM,
-
-	...BRD,
-
 	...BRD,
 
 	...BLM,
