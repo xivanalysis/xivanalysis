@@ -1,10 +1,14 @@
 import About from './About'
-import Ninki from './Ninki'
+import Duality from './Duality'
 import Ninjutsu from './Ninjutsu'
+import Ninki from './Ninki'
 import NinWeaving from './NinWeaving'
+import TrickAttackWindow from './TrickAttackWindow'
 export default [
 	About,
-	Ninki,
+	Duality,
 	Ninjutsu,
+	Ninki,
 	NinWeaving,
+	TrickAttackWindow,
 ]

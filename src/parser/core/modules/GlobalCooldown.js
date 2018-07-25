@@ -12,6 +12,7 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
 	]
