@@ -16,7 +16,7 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!
+				This module is still in its early stages. Various functionalities are still missing or changing constantly. If you think something is clearly broken, head to our Discord server and reach out to any of the contributors!
 			</Message.Content>
 		</Message>
 	</Fragment>
