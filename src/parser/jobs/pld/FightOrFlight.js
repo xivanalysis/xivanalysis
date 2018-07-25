@@ -103,7 +103,6 @@ export default class FightOrFlight extends Module {
 
 					if (this._fofLastGoringGcd !== null) {
 						if (this._fofGcds - this._fofLastGoringGcd <= this._minimumFofGoringDistance) {
-							console.log(this._fofGcds - this._fofLastGoringGcd, this._fofGcds, this._fofLastGoringGcd)
 							this._fofGoringTooCloseCount++
 						}
 					}
