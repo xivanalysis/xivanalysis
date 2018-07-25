@@ -106,6 +106,6 @@ export default {
 		name: 'Refulgent Arrow',
 		icon: 'https://secure.xivdb.com/img/game/002000/002616.png',
 		onGcd: true,
-	}
+	},
 }
 

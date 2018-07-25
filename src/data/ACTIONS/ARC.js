@@ -63,5 +63,5 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000366.png',
 		onGcd: false,
 		cooldown: 30,
-	}
+	},
 }

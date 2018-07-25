@@ -88,5 +88,5 @@ export default {
 		id: 1202,
 		name: 'Nature\'s Minne',
 		icon: 'https://secure.xivdb.com/img/game/012000/012618.png',
-	}
+	},
 }
