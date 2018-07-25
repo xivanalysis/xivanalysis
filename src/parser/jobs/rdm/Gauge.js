@@ -1,6 +1,5 @@
 import React, {Fragment} from 'react'
-
-//import {ActionLink} from 'components/ui/DbLink'
+import {Icon, Message} from 'semantic-ui-react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -193,6 +192,24 @@ export default class Gauge extends Module {
 		}
 
 		_onComplete() {
+			if (this._missingAreo || this._missingThunder) {
+				this.suggestions.add(new Suggestion({
+					content: <Fragment>
+						<Message warning icon>
+							<Icon name="warning sign"/>
+							<Message.Content>
+									Due to a missing cast at the start of the log, mana calculations might be off.
+									Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.
+							</Message.Content>
+						</Message>
+					</Fragment>,
+					severity: SEVERITY.MAJOR,
+					why: <Fragment>
+						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
+					</Fragment>,
+				}))
+			}
+
 			if (this._missingAreo) {
 				this.suggestions.add(new Suggestion({
 					icon: ACTIONS.VERAREO.icon,
@@ -201,7 +218,7 @@ export default class Gauge extends Module {
 					</Fragment>,
 					severity: SEVERITY.MAJOR,
 					why: <Fragment>
-						You were the first damage event, it doesn&apos;t log your cast
+						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
 					</Fragment>,
 				}))
 			}
@@ -214,7 +231,7 @@ export default class Gauge extends Module {
 					</Fragment>,
 					severity: SEVERITY.MAJOR,
 					why: <Fragment>
-						You were the first damage event, it doesn&apos;t log your cast
+						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
 					</Fragment>,
 				}))
 			}

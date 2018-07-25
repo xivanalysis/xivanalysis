@@ -1,17 +1,17 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-
+import styles from './about.module.css'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyser aims to identify some of the low-hanging fruit that could be used to improve your RDM gameplay, as well as give a deeper insight into what happened during an encounter.</p>
+		<p>This analyzer aims to give you the information you need to turn you <span className={styles.bad}>parses</span> into <span className={styles.good}>parses</span></p>
 		<p>If you would like to learn more about RDM, check the guides over at <a href="https://thebalanceffxiv.com/">The Balance</a>, and have a chat in the <code>#rdm_questions</code> channel.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				The RDM Module is still in a <em>very early development stage</em>. If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!
+				This isn&apos;t even remotely done.
 			</Message.Content>
 		</Message>
 	</Fragment>
