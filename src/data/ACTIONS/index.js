@@ -7,6 +7,7 @@ import ITEMS from './ITEMS'
 import ACN from './ACN'
 import WHM from './WHM'
 import SCH from './SCH'
+import AST from './AST'
 import ROG from './ROG'
 import NIN from './NIN'
 import SMN from './SMN'
@@ -17,6 +18,7 @@ import WAR from './WAR'
 import PLD from './PLD'
 import ARC from './ARC'
 import BRD from './BRD'
+import SAM from './SAM'
 
 const ACTIONS = {
 	...SHARED,
@@ -34,8 +36,11 @@ const ACTIONS = {
 
 	...WHM,
 	...SCH,
+	...AST,
+
 
 	...NIN,
+	...SAM,
 
 	...BRD,
 
