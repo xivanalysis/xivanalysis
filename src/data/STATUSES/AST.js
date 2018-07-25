@@ -10,25 +10,25 @@ export default {
 	ASPECTED_BENEFIC: {
 		id: 835,
 		name: 'Aspected Benefic',
-		icon: 'https://secure.xivdb.com/img/game/013000/013215.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013215.png',
 	},
 
 	ASPECTED_HELIOS: {
 		id: 836,
 		name: 'Aspected Helios',
-		icon: 'https://secure.xivdb.com/img/game/013000/013216.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013216.png',
 	},
 
 	NOCTURNAL_FIELD: {
 		id: 837,
 		name: 'Nocturnal Field',
-		icon: 'https://secure.xivdb.com/img/game/013000/013217.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013217.png',
 	},
 
 	WHEEL_OF_FORTUNE: {
 		id: 956,
 		name: 'Wheel Of Fortune',
-		icon: 'https://secure.xivdb.com/img/game/013000/013225.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013225.png',
 	},
 
 	ENHANCED_ROYAL_ROAD: {
