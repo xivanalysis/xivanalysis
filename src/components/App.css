@@ -40,3 +40,5 @@ body {
 .text-success { color: var(--success); }
 .text-warning { color: var(--warning); }
 .text-error { color: var(--error); }
+.text-orange { color: var(--orange); }
+.text-grey { color: var(--grey); }
