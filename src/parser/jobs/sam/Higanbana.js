@@ -8,8 +8,8 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
-	[STATUSES.HIGANBANA.id]: 60000
-	}	
+	[STATUSES.HIGANBANA.id]: 60000,
+}
 
 export default class Higanbana extends Module {
 	static handle = 'higanbana'
@@ -23,7 +23,7 @@ export default class Higanbana extends Module {
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.HIGANBANA.id]: 0
+		[STATUSES.HIGANBANA.id]: 0,
 	}
 
 	constructor(...args) {

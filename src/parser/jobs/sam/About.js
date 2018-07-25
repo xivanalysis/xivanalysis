@@ -17,6 +17,6 @@ export default class About extends CoreAbout {
 	supportedPatch = '4.35'
 	contributors = [
 		{user: CONTRIBUTORS.RYAN, role: 'Maintainer'},
-		]	
-	
+	]
+
 }

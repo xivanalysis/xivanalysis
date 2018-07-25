@@ -1,8 +1,8 @@
 import About from './About'
 import Higanbana from './Higanbana'
-import Kaiten from './Kaiten' 
+import Kaiten from './Kaiten'
 
-export default 
+export default
 [
 	About,
 	Higanbana,

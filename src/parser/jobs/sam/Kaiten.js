@@ -24,7 +24,7 @@ const KAITEN_GCDS = {
 	[ACTIONS.HIGANBANA.id]: 0, //ALWAYS WITH KAITEN
 	[ACTIONS.TENKA_GOKEN.id]: 0,
 	[ACTIONS.MIDARE_SETSUGEKKA.id]: 0,
-		
+
 }
 
 export default class Kaiten extends Module {
@@ -55,7 +55,7 @@ export default class Kaiten extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HISSATSU_KAITEN.icon,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.HIGANBANA}/> and <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> These actions are worth it for the potency gain per kenki spent. 
+					Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.HIGANBANA}/> and <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> These actions are worth it for the potency gain per kenki spent.
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
