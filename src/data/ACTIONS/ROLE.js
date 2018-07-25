@@ -167,7 +167,7 @@ export default {
 		cooldown: 30,
 	},
 
-	NAME: {
+	PELOTON: {
 		id: 7557,
 		name: 'Peloton',
 		icon: 'https://secure.xivdb.com/img/game/000000/000844.png',
