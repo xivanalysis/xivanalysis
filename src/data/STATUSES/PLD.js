@@ -18,5 +18,5 @@ export default {
 		id: 76,
 		name: 'Fight Or Flight',
 		icon: 'https://secure.xivdb.com/img/game/010000/010155.png',
-	}
+	},
 }
