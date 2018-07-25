@@ -173,4 +173,13 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/002000/002812.png',
 		pet: PETS.SELENE.id,
 	},
+
+	// -----
+	// Traits
+	// -----
+	QUICKENED_AETHERFLOW: {
+		id: 50389,
+		name: 'Quickened Aetherflow',
+		icon: 'https://secure.xivdb.com/img/game/005000/005393.png',
+	},
 }

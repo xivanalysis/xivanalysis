@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/polyfill": "^7.0.0-beta.54",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "color": "^3.0.0",
@@ -51,8 +52,18 @@
   },
   "devDependencies": {
     "git-revision-webpack-plugin": "^3.0.3",
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.0",
     "react-app-rewired": "^2.0.0",
     "react-scripts": "2.0.0-next.3e165448",
     "source-map-explorer": "^1.5.0"
-  }
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.js": "eslint src --max-warnings 0"
+	}
 }

@@ -33,7 +33,8 @@ class FightList extends Component {
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
 		let lastZone = null
-		report.fights.forEach(fight => {
+
+		report.fights && report.fights.forEach(fight => {
 			// Filter out trash fights w/ shoddy data, and wipes if we're filtering
 			if (fight.boss === 0 || (killsOnly && !fight.kill)) {
 				return

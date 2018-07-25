@@ -23,3 +23,6 @@ test.html
 
 # shh
 *.ignore.*
+*.swp
+.vscode/taskmarks.json
+.idea/

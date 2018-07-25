@@ -47,7 +47,7 @@ yarn
 While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
 
 - Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/accounts/changeuser).
+- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile).
 
 ***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
 
@@ -141,6 +141,19 @@ Override this function if the module absolutely _needs_ to process events before
 `events` is an array of every event that is about to be parsed.
 
 Return value should be the `events` array, with any required modifications made to it. Failing to return this will prevent the parser from parsing any events at all.
+
+##### `getErrorContext(source, error, event)`
+
+Override this function to customize the information that the module provides for automatic
+error reporting. This function is called when an error occurs in event hooks or the
+`output()` method on the faulting module as well as all modules that module depends on.
+
+`source` is either `event` or `output`
+`error` is the error that occurred
+`event` is the error that was being processed when the error occurred, if applicable
+
+If this function is not overridden or if this function returns undefined, primitive values
+will be scraped from the module and uploaded with the error report.
 
 ### Parser
 

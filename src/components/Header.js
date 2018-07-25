@@ -56,7 +56,7 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
-			if (reportLoaded && fightId !== 'last') {
+			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
 				// Do I want the kill time too?
 				title = fight? fight.name : fightId
@@ -70,7 +70,7 @@ class Header extends Component {
 		// Combatant
 		if (combatantId) {
 			let title = combatantId
-			if (reportLoaded) {
+			if (reportLoaded && report.friendlies) {
 				const combatant = report.friendlies.find(friendly => friendly.id === combatantId)
 				title = combatant? combatant.name : combatantId
 			}
