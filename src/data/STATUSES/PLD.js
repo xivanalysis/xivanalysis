@@ -12,6 +12,6 @@ export default {
 	REQUIESCAT: {
 		id: 1368,
 		name: 'Requiescat',
-		icon: 'https://secure.xivdb.com/img/game/012000/012514.png'
-	}
+		icon: 'https://secure.xivdb.com/img/game/012000/012514.png',
+	},
 }
