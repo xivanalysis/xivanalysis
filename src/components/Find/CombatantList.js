@@ -36,7 +36,7 @@ class CombatantList extends Component {
 
 		// Filter down to just the friendlies in this fight (that aren't limit break), grouping by role
 		const grouped = [] // Relying on magic here
-		friendlies.forEach(friendly => {
+		friendlies && friendlies.forEach(friendly => {
 			const inFight = friendly.fights.some(fight => fight.id === currentFight)
 			const type = friendly.type
 			if (type === 'LimitBreak' || !inFight) {

@@ -232,8 +232,8 @@ class Analyse extends Component {
 		return <Container>
 			<Grid>
 				<Grid.Column mobile={16} computer={4}>
-					<Header
-						className={[styles.sidebar, styles.header].join(' ')}
+					{job && <Header
+						className={[styles.header].join(' ')}
 						attached="top"
 					>
 						<JobIcon job={job} set={1}/>
@@ -243,8 +243,8 @@ class Analyse extends Component {
 								{ROLES[job.role].name}
 							</Header.Subheader>
 						</Header.Content>
-					</Header>
-					<Header className={styles.header} attached>
+					</Header>}
+					<Header className={styles.header} attached={job? true : 'top'}>
 						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
 						<Header.Content>
 							{parser.fight.name}

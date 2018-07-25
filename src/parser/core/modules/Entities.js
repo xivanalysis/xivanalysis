@@ -32,35 +32,33 @@ export default class Entities extends Module {
 					return
 				}
 
-				// TODO: What if we're trying to track a buff through an invuln window?
-				//       is that going to be a thing? Will need handling if so.
+				// Split the buff over the invulns
 				const ranges = [buff]
-				invulns
-					.forEach(invuln => {
-						// discard invulns outside the span of the buff
-						if (invuln.end < buff.start || invuln.start > buff.end) {
-							return
-						}
+				invulns.forEach(invuln => {
+					// discard invulns outside the span of the buff
+					if (invuln.end < buff.start || invuln.start > buff.end) {
+						return
+					}
 
-						// split ranges
-						for (let i = 0; i < ranges.length; i++) {
-							const range = ranges[i]
+					// split ranges
+					for (let i = 0; i < ranges.length; i++) {
+						const range = ranges[i]
 
-							if (invuln.start < range.start && invuln.end > range.start) {
-								// Invuln chops start of range
-								range.start = invuln.end
-							} else if (invuln.start < range.end && invuln.end > range.end) {
-								// Invuln chops end of range
-								range.end = invuln.start
-							}	else if (invuln.start > range.start && invuln.end < range.end) {
-								// Invuln splits the range
-								ranges.splice(i, 1,
-									{start: range.start, end: invuln.start},
-									{start: invuln.end, end: range.end}
-								)
-							}
+						if (invuln.start < range.start && invuln.end > range.start) {
+							// Invuln chops start of range
+							range.start = invuln.end
+						} else if (invuln.start < range.end && invuln.end > range.end) {
+							// Invuln chops end of range
+							range.end = invuln.start
+						}	else if (invuln.start > range.start && invuln.end < range.end) {
+							// Invuln splits the range
+							ranges.splice(i, 1,
+								{start: range.start, end: invuln.start},
+								{start: invuln.end, end: range.end}
+							)
 						}
-					})
+					}
+				})
 
 				// Add faked events for all the ranges the buff was up
 				ranges.forEach(range => {

@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -20,7 +20,7 @@ export default class DualCast extends Module {
 		'gcd',
 		'suggestions',
 	]
-	static title = 'DualCast'
+	static title = 'Dualcast'
 	//Default CastState
 	_castType = CAST_TYPE.HardCast
 	//Used to 0 out CastTimes
@@ -33,6 +33,8 @@ export default class DualCast extends Module {
 	_missedDualCasts = 0
 	//Used on anything other than Verthunder/Verareo/Verraise
 	_wastedDualCasts = 0
+	//The last timestamp for a change in CastType
+	_castTypeLastChanged = null
 
 	constructor(...args) {
 		super(...args)
@@ -50,11 +52,16 @@ export default class DualCast extends Module {
 	}
 
 	_onCast(event) {
+		//TODO: Handle HardCast opener for thunder/areo properly
+		//TODO: Scatter and target counts?
 		const abilityID = event.ability.guid
 		const castTime = getAction(abilityID).castTime
+		const invuln = this.downtime.getDowntime(this._castTypeLastChanged||0, event.timestamp)
+		//console.log('Invuln:' + invuln)
+		//console.log(`Cast: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 		if (castTime > 0 && this._castType === CAST_TYPE.DualCast) {
 			this._ctIndex = this.castTime.set('all', 0)
-			if (!CORRECT_GCDS.includes(abilityID)) {
+			if (!CORRECT_GCDS.includes(abilityID) && invuln === 0) {
 				this._wastedDualCasts += 1
 				const casts = {
 					id: abilityID,
@@ -71,19 +78,26 @@ export default class DualCast extends Module {
 		}
 	}
 
-	_onGain() {
+	_onGain(event) {
 		this._castType = CAST_TYPE.DualCast
 		this._usedCast = false
+		this._castTypeLastChanged = event.timestamp
 	}
 
-	_onRemove() {
+	_onRemove(event) {
 		if (!this._usedCast) {
-			this._missedDualCasts += 1
+			const invuln = this.downtime.getDowntime(this._castTypeLastChanged||0, event.timestamp)
+			if (invuln === 0) {
+				this._missedDualCasts += 1
+			}
 		}
 
 		this._castType = CAST_TYPE.HardCast
-		this.castTime.reset(this._ctIndex)
+		if (this._ctIndex != null) {
+			this.castTime.reset(this._ctIndex)
+		}
 		this._ctIndex = null
+		this._castTypeLastChanged = event.timestamp
 	}
 
 	_onComplete() {
@@ -98,7 +112,7 @@ export default class DualCast extends Module {
 				why: `${this._wastedDualCasts} DualCasts were wasted on low cast-time spells.`,
 				severity: this._wastedDualCasts > 5 ? SEVERITY.MAJOR : this._wastedDualCasts > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
-					Spells used while DualCast is up should be limited to <ActionLink {...ACTIONS.VERAREO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
+					Spells used while <StatusLink {...STATUSES.DUALCAST}/> is up should be limited to <ActionLink {...ACTIONS.VERAREO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
 				</Fragment>,
 			}))
 		}
@@ -117,6 +131,10 @@ export default class DualCast extends Module {
 	}
 
 	output() {
+		if (this._history.length === 0) {
+			return false
+		}
+
 		const panels = this._history.map(casts => {
 			//console.log(util.inspect(casts, {showHidden: true, depth: null}))
 			return {

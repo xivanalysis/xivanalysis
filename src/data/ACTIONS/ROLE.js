@@ -31,7 +31,7 @@ export default {
 	REPRISAL: {
 		id: 7535,
 		name: 'Reprisal',
-		icon: 'https://secure.xivdb.com/img/game/000000/000805.png',
+		icon: 'https://secure.xivdb.com/img/game/000000/000806.png',
 		cooldown: 60,
 	},
 
@@ -81,6 +81,12 @@ export default {
 		id: 7558,
 		name: 'Break',
 		icon: 'https://secure.xivdb.com/img/game/000000/000862.png',
+	},
+
+	PROTECT: {
+		id: 7572,
+		name: 'Protect',
+		icon: 'https://secure.xivdb.com/img/game/000000/000883.png',
 	},
 
 	SURECAST: {
@@ -137,6 +143,76 @@ export default {
 		id: 7566,
 		name: 'Erase',
 		icon: 'https://secure.xivdb.com/img/game/000000/000870.png',
+		cooldown: 90,
+	},
+
+	CLERIC_STANCE: {
+		id: 7567,
+		name: 'Cleric Stance',
+		icon: 'https://secure.xivdb.com/img/game/000000/000881.png',
+		cooldown: 90,
+	},
+
+	SECOND_WIND: {
+		id: 7541,
+		name: 'Second Wind',
+		icon: 'https://secure.xivdb.com/img/game/000000/000821.png',
+		cooldown: 120,
+	},
+
+	LEG_SWEEP: {
+		id: 7863,
+		name: 'Leg Sweep',
+		icon: 'https://secure.xivdb.com/img/game/000000/000824.png',
+		cooldown: 40,
+	},
+
+	BLOODBATH: {
+		id: 7542,
+		name: 'Bloodbath',
+		icon: 'https://secure.xivdb.com/img/game/000000/000823.png',
+		cooldown: 90,
+	},
+
+	INVIGORATE: {
+		id: 7544,
+		name: 'Invigorate',
+		icon: 'https://secure.xivdb.com/img/game/000000/000825.png',
+		cooldown: 120,
+	},
+
+	GOAD: {
+		id: 7543,
+		name: 'Goad',
+		icon: 'https://secure.xivdb.com/img/game/000000/000826.png',
+		cooldown: 180,
+	},
+
+	TRUE_NORTH: {
+		id: 7546,
+		name: 'True North',
+		icon: 'https://secure.xivdb.com/img/game/000000/000830.png',
+		cooldown: 150,
+	},
+
+	FEINT: {
+		id: 7549,
+		name: 'Feint',
+		icon: 'https://secure.xivdb.com/img/game/000000/000828.png',
+		cooldown: 120,
+	},
+
+	CRUTCH: {
+		id: 7547,
+		name: 'Crutch',
+		icon: 'https://secure.xivdb.com/img/game/000000/000829.png',
+		cooldown: 90,
+	},
+
+	ARMS_LENGTH: {
+		id: 7548,
+		name: 'Arm&apos;s Length',
+		icon: 'https://secure.xivdb.com/img/game/000000/000822.png',
 		cooldown: 90,
 	},
 }

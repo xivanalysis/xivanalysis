@@ -1,5 +1,36 @@
 
 export default {
+
+	COMBUST_II: {
+		id: 843,
+		name: 'Combust II',
+		icon: 'https://secure.xivdb.com/img/game/013000/013214.png',
+	},
+
+	ASPECTED_BENEFIC: {
+		id: 835,
+		name: 'Aspected Benefic',
+		icon: 'https://secure.xivdb.com/img/game/013000/013215.png',
+	},
+
+	ASPECTED_HELIOS: {
+		id: 836,
+		name: 'Aspected Helios',
+		icon: 'https://secure.xivdb.com/img/game/013000/013216.png',
+	},
+
+	NOCTURNAL_FIELD: {
+		id: 837,
+		name: 'Nocturnal Field',
+		icon: 'https://secure.xivdb.com/img/game/013000/013217.png',
+	},
+
+	WHEEL_OF_FORTUNE: {
+		id: 956,
+		name: 'Wheel Of Fortune',
+		icon: 'https://secure.xivdb.com/img/game/013000/013225.png',
+	},
+
 	ENHANCED_ROYAL_ROAD: {
 		id: 816,
 		name: 'Enhanced Royal Road',
@@ -17,6 +48,10 @@ export default {
 		name: 'Extended Royal Road',
 		icon: 'https://secure.xivdb.com/img/game/013000/013212.png',
 	},
+
+	// -----
+	// Card buffs
+	// -----
 
 	THE_BALANCE: {
 		id: 829,
@@ -52,5 +87,97 @@ export default {
 		id: 834,
 		name: 'The Spire',
 		icon: 'https://secure.xivdb.com/img/game/013000/013209.png',
+	},
+
+	// -----
+	// Cards drawn
+	// -----
+
+	BALANCE_DRAWN: {
+		id: 913,
+		name: 'Balance Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013229.png',
+	},
+
+	BOLE_DRAWN: {
+		id: 914,
+		name: 'Bole Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013230.png',
+	},
+
+	ARROW_DRAWN: {
+		id: 915,
+		name: 'Arrow Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013231.png',
+	},
+
+	SPEAR_DRAWN: {
+		id: 916,
+		name: 'Spear Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013232.png',
+	},
+
+	EWER_DRAWN: {
+		id: 917,
+		name: 'Ewer Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013233.png',
+	},
+
+	SPIRE_DRAWN: {
+		id: 918,
+		name: 'Spire Drawn',
+		icon: 'https://secure.xivdb.com/img/game/013000/013234.png',
+	},
+
+	// -----
+	// Cards spread
+	// -----
+
+	BALANCE_HELD: {
+		id: 920,
+		name: 'Balance Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013235.png',
+	},
+
+	BOLE_HELD: {
+		id: 921,
+		name: 'Bole Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013236.png',
+	},
+
+	ARROW_HELD: {
+		id: 922,
+		name: 'Arrow Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013237.png',
+	},
+
+	SPEAR_HELD: {
+		id: 923,
+		name: 'Spear Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013238.png',
+	},
+
+	EWER_HELD: {
+		id: 924,
+		name: 'Ewer Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013239.png',
+	},
+
+	SPIRE_HELD: {
+		id: 925,
+		name: 'Spire Held',
+		icon: 'https://secure.xivdb.com/img/game/013000/013240.png',
+	},
+
+	EARTHLY_DOMINANCE: {
+		id: 1224,
+		name: 'Earthly Dominance',
+		icon: 'https://secure.xivdb.com/img/game/013000/013241.png',
+	},
+
+	GIANT_DOMINANCE: {
+		id: 1248,
+		name: 'Giant Dominance',
+		icon: 'https://secure.xivdb.com/img/game/013000/013242.png',
 	},
 }
