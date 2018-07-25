@@ -83,6 +83,12 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/000000/000862.png',
 	},
 
+	PROTECT: {
+		id: 7572,
+		name: 'Protect',
+		icon: 'https://secure.xivdb.com/img/game/000000/000883.png',
+	},
+
 	SURECAST: {
 		id: 7559,
 		name: 'Surecast',
