@@ -78,7 +78,7 @@ export default class Aetherflow extends Module {
 		}
 
 		if (numStatuses === 0){
-			this._reallyBadBanes.push(event)
+			this._reallyBadFesters.push(event)
 		}
 	}
 
