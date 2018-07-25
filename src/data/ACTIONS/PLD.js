@@ -184,7 +184,7 @@ export default {
 		cooldown: 60,
 	},
 	PASSAGE_OF_ARMS: {
-		id: 7383,
+		id: 7385,
 		name: 'Passage Of Arms',
 		icon: 'https://secure.xivdb.com/img/game/002000/002515.png',
 		onGcd: false,
