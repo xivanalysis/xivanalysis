@@ -58,7 +58,7 @@ export default class Module {
 	 * @param {Object} event The event that was being processed when the error occurred, if source is 'event'
 	 * @returns {Object|undefined} The data to attach to automatic error reports, or undefined to rely on primitive value detection
 	 */
-	getErrorContext(source, error, event) {
+	getErrorContext(/* source, error, event */) {
 		return
 	}
 
