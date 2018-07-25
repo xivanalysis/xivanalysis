@@ -2,6 +2,7 @@ import About from './About'
 import Dots from './Dots'
 import Songs from './Songs'
 import SongUptime from './SongUptime'
+import SongUsage from './SongUsage'
 
 
 export default [
@@ -9,4 +10,5 @@ export default [
 	Dots,
 	Songs,
 	SongUptime,
+	SongUsage,
 ]
