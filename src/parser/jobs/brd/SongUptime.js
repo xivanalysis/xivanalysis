@@ -17,12 +17,8 @@ export default class SongUptime extends Module {
 		'downtime',
 	]
 
-	_wmCounter = 0
-	_mbCounter = 0
-	_apCounter = 0
-
 	_songCastEvents = []
-	_invulnerableEvents = []
+	_deathEvents = []
 
 
 	constructor(...args) {
@@ -31,26 +27,19 @@ export default class SongUptime extends Module {
 		this.addHook('cast', {
 			by: 'player',
 			abilityId: [ACTIONS.THE_WANDERERS_MINUET.id, ACTIONS.MAGES_BALLAD.id, ACTIONS.ARMYS_PAEON.id],
-		}, this._onCastSong)
+		}, this._onSongCast)
+		this.addHook('death', {
+			to: 'player',
+		}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onCastSong(event) {
-		const actionId = event.ability.guid
-		switch (actionId) {
-		case ACTIONS.THE_WANDERERS_MINUET.id:
-			this._wmCounter += 1
-			break
-		case ACTIONS.MAGES_BALLAD.id:
-			this._mbCounter += 1
-			break
-		case ACTIONS.ARMYS_PAEON.id:
-			this._apCounter += 1
-			break
-		default:
-			break
-		}
+	_onSongCast(event) {
 		this._songCastEvents.push(event)
+	}
+
+	_onDeath(event) {
+		this._deathEvents.push(event)
 	}
 
 	_onComplete() {
@@ -59,12 +48,15 @@ export default class SongUptime extends Module {
 		const songlessTime = (this._getSonglessTime())/1000
 		const songlessPercentile = (songlessTime/fightDuration)*100
 
+		// Debug info
+		console.log('Fight duration: ' + fightDuration + ', Songless time: ' + songlessTime + ', Songless percentage: ' + songlessPercentile)
+
 		//TODO: Define a threshold for song uptime
-		if (songlessPercentile > 5) {
+		if (songlessPercentile > 3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THE_WANDERERS_MINUET.icon,
 				why: `Being songless for ${songlessTime} seconds (${songlessPercentile}%)`,
-				severity: songlessPercentile > 15 ? SEVERITY.MAJOR : songlessPercentile > 10? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				severity: songlessPercentile > 7 ? SEVERITY.MAJOR : songlessPercentile > 5? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
 				</Fragment>,
@@ -76,26 +68,41 @@ export default class SongUptime extends Module {
 
 		let totalSonglessTime = 0
 
-		// Iterate through each song cast, except the last one
-
+		// Iterate through each song cast
 		for (let i = 0; i < this._songCastEvents.length; i++) {
 
-			const songlessStart = this._songCastEvents[i].timestamp + 30000
-			let songlessEnd = 0
+			// Timestamps for songless period to be determined
+			const songless = {start: 0, end: 0}
 
-			// If this is the last song cast in the encounter, caster is songless until the end of encounter
+			// If this is the last song cast in the encounter, caster is songless until the end of encounter, otherwise songless until the next song is cast
 			if (i === this._songCastEvents.length - 1) {
-				songlessEnd = this.parser.fight.end_time
+				songless.end = this.parser.fight.end_time
 			} else {
-				songlessEnd = this._songCastEvents[i+1].timestamp
+				songless.end = this._songCastEvents[i+1].timestamp
 			}
 
-			const timeBetweenSongs =  Math.max(songlessEnd - songlessStart, 0)
+			// The start of a songless period can't be after the end of said period, só it's the minimum between the end of first song and end of assumed songless period
+			songless.start = Math.min(this._songCastEvents[i].timestamp + 30000, songless.end)
+
+			// If caster died after first song was cast
+			const deathEvent = this._deathEvents.find( d => d.timestamp > this._songCastEvents[i].timestamp)
+
+			// If death was before the theoretical songless period
+			if (deathEvent ? deathEvent.timestamp < songless.start : false) {
+				// Then death marks the start of the songless period
+				songless.start = deathEvent.timestamp
+			}
+
+			// Debug info
+			console.log('Songless start: ' + this._formatTimestamp(songless.start) + ', Songless end: ' + this._formatTimestamp(songless.end))
+
+			// Just in case it's negative, but it shouldn't be given the previous logic
+			const theoreticalSonglessTime =  Math.max(songless.end - songless.start, 0)
 
 			// If there's songless time between two songs, subtracts the amount of time the target was invulnerable during that interval
-			if (timeBetweenSongs > 0) {
-				const timeSongless = Math.max(timeBetweenSongs - this.downtime.getDowntime(songlessStart, songlessEnd), 0)
-				totalSonglessTime += timeSongless
+			if (theoreticalSonglessTime > 0) {
+				const effectiveSonglessTime = Math.max(theoreticalSonglessTime - this.downtime.getDowntime(songless.start, songless.end), 0)
+				totalSonglessTime += effectiveSonglessTime
 			}
 		}
 
