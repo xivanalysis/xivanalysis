@@ -94,6 +94,13 @@ export default {
 		castTime: 3,
 	},
 
+	SURECAST: {
+		id: 7559,
+		name: 'Surecast',
+		icon: 'https://secure.xivdb.com/img/game/000000/000869.png',
+		cooldown: 30,
+	},
+
 	ESUNA: {
 		id: 7568,
 		name: 'Esuna',
