@@ -82,6 +82,7 @@ export default {
 		name: 'Defiance',
 		icon: 'https://secure.xivdb.com/img/game/002000/002551.png',
 		cooldown: 10,
+		cooldownGroup: 1,
 	},
 
 	DELIVERANCE: {
@@ -89,6 +90,7 @@ export default {
 		name: 'Deliverance',
 		icon: 'https://secure.xivdb.com/img/game/002000/002556.png',
 		cooldown: 10,
+		cooldownGroup: 1,
 	},
 
 	INNER_RELEASE: {

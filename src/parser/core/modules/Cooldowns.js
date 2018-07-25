@@ -1,6 +1,7 @@
 import React from 'react'
+import _ from 'lodash'
 
-import {getAction} from 'data/ACTIONS'
+import {COOLDOWN_GROUPS, getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 
@@ -31,6 +32,9 @@ export default class Cooldowns extends Module {
 		this._currentAction = action
 
 		this.startCooldown(action.id)
+		if (!_.isNil(action.cooldownGroup)) {
+			this.startCooldownGroup(action.id, action.cooldownGroup)
+		}
 	}
 
 	_onCast(event) {
@@ -43,6 +47,9 @@ export default class Cooldowns extends Module {
 		if (finishingCast) { return }
 
 		this.startCooldown(action.id)
+		if (!_.isNil(action.cooldownGroup)) {
+			this.startCooldownGroup(action.id, action.cooldownGroup)
+		}
 	}
 
 	_onComplete() {
@@ -76,13 +83,15 @@ export default class Cooldowns extends Module {
 			}))
 
 			cd.history.forEach(use => {
-				this.timeline.addItem(new Item({
-					type: 'background',
-					start: use.timestamp - startTime,
-					length: use.length,
-					group: id,
-					content: <img src={action.icon} alt={action.name}/>,
-				}))
+				if (!use.shared) {
+					this.timeline.addItem(new Item({
+						type: 'background',
+						start: use.timestamp - startTime,
+						length: use.length,
+						group: id,
+						content: <img src={action.icon} alt={action.name}/>,
+					}))
+				}
 			})
 		})
 	}
@@ -94,7 +103,15 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	startCooldown(actionId) {
+	startCooldownGroup(originActionId, cooldownGroup) {
+		const sharedCooldownActions = _.get(COOLDOWN_GROUPS, cooldownGroup, [])
+		sharedCooldownActions
+			.map(action => action.id)
+			.filter(id => id !== originActionId)
+			.forEach(id => this.startCooldown(id, true))
+	}
+
+	startCooldown(actionId, sharedCooldown = false) {
 		// TODO: handle shared CDs
 
 		// Get the current cooldown status, falling back to a new cooldown
@@ -110,6 +127,7 @@ export default class Cooldowns extends Module {
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
+			shared: sharedCooldown,
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)

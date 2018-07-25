@@ -1,4 +1,5 @@
 import {addExtraIndex} from 'utilities'
+import _ from 'lodash'
 
 import SHARED from './SHARED'
 import ROLE from './ROLE'
@@ -48,6 +49,8 @@ const ACTIONS = {
 	...SMN,
 	...RDM,
 }
+
+export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 
 addExtraIndex(ACTIONS, 'id')
 
