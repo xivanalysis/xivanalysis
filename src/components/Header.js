@@ -23,6 +23,11 @@ class Header extends Component {
 		collapseMenu: PropTypes.bool.isRequired,
 	}
 
+	formatDuration(duration) {
+		const seconds = Math.floor(duration % 60)
+		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	}
+
 	render() {
 		const {
 			location: {pathname},
@@ -58,8 +63,14 @@ class Header extends Component {
 			let title = fightId
 			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
-				// Do I want the kill time too?
-				title = fight? fight.name : fightId
+				let time = ''
+				if(fight){
+					const start_time = parseInt(fight.start_time, 10)
+					const end_time = parseInt(fight.end_time, 10)
+					const duration = this.formatDuration(Math.floor(end_time - start_time)/1000)
+					time = duration
+				}
+				title = `${fight? fight.name : fightId} (${time})`
 			}
 			crumbs.push({
 				title,
