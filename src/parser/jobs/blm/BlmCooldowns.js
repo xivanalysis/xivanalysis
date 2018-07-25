@@ -8,10 +8,10 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 //tracking the important™ CDs
 const TRACKEDCDS = [
-ACTIONS.LEY_LINES.id,
-ACTIONS.SHARPCAST.id,
-ACTIONS.TRIPLECAST.id,
-ACTIONS.CONVERT.id,
+	ACTIONS.LEY_LINES.id,
+	ACTIONS.SHARPCAST.id,
+	ACTIONS.TRIPLECAST.id,
+	ACTIONS.CONVERT.id,
 ]
 
 //Time that laqi deems ok for a OGCD to be down : ^)
@@ -55,7 +55,7 @@ export default class Blmcooldowns extends Module {
 		const OGCDRequirements = []
 		Object.keys(this._downTime).forEach(id => {
 			const dt = this._downTime[id]
-			
+
 			//wrap up all the open ones and save them in history
 			if (dt.current) {
 				dt.current.stoptime = endTime
@@ -65,7 +65,7 @@ export default class Blmcooldowns extends Module {
 
 			//calculate the downtime based on the start and stop values and sum the array
 			const totalSumOfDownTime = dt.history.map(downTime => {
-				return Math.max(downTime.stoptime - downTime.starttime,0)
+				return Math.max(downTime.stoptime - downTime.starttime, 0)
 			}).reduce(
 				(accumulator, currentValue) => accumulator + currentValue
 			)
@@ -73,8 +73,8 @@ export default class Blmcooldowns extends Module {
 			//write the results as a new Requirement to show up later
 			OGCDRequirements.push(
 				new Requirement({
-				name: getAction(id).name,
-				percent: this._percentFunction(id, totalSumOfDownTime, encounterLength)
+					name: getAction(id).name,
+					percent: this._percentFunction(id, totalSumOfDownTime, encounterLength),
 				})
 			)
 		})
@@ -88,7 +88,7 @@ export default class Blmcooldowns extends Module {
 	}
 
 	//cool function that I invented that just sets ok usage as 98% and falls very quickly
-	_percentFunction(actionId, downtime, fightlength){
+	_percentFunction(actionId, downtime, fightlength) {
 		const cooldown = getAction(actionId).cooldown
 		const numberOfUses = Math.floor(fightlength/(cooldown*1000))
 		return Math.exp(-downtime*0.03/(DOWNTIME_OK_TIME*numberOfUses))*100
@@ -98,9 +98,9 @@ export default class Blmcooldowns extends Module {
 		const actionId = event.ability.guid
 
 		//if we get one of the OGCDs stop downtime the old downtime and start a new one
-		if (TRACKEDCDS.includes(actionId)){
-				this._stopDowntime(actionId)
-				this._startDowntime(actionId)
+		if (TRACKEDCDS.includes(actionId)) {
+			this._stopDowntime(actionId)
+			this._startDowntime(actionId)
 		}
 	}
 
@@ -133,10 +133,10 @@ export default class Blmcooldowns extends Module {
 		const dt = this._getDowntime(actionId)
 
 		//see if there is something to stop even
-		if(dt.current == null) {
+		if (dt.current == null) {
 			return
 		}
-		if(dt.current.starttime == null) {
+		if (dt.current.starttime == null) {
 			return
 		}
 
