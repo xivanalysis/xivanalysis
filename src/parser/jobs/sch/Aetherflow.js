@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {Table,Grid,Loader} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import styles from './Aetherflow.module.css'
@@ -157,7 +157,7 @@ export default class Aetherflow extends Module {
 						let wasted = 0;
 						if (downtime > 45000) {
 							wasted = 3 - debit || 0;
-						totalWasted += wasted;
+							totalWasted += wasted;
 						}
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
@@ -166,7 +166,7 @@ export default class Aetherflow extends Module {
 							<Table.Cell>
 								<Grid>
 									{id.map(id => <Grid.Column width={4}>
-									<ActionLink id={id} mini/>
+									<ActionLink {...getAction(id)} />
 									</Grid.Column>)}
 								</Grid>
 							</Table.Cell>
