@@ -75,4 +75,10 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',
 		jobs: [JOBS.SAMURAI],
 	},
+
+	YUMIYA: {
+		name: 'Yumiya',
+		avatar: null,
+		jobs: [JOBS.BARD],
+	},
 }
