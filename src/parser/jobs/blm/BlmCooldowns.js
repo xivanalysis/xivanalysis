@@ -1,9 +1,9 @@
-import React, {Fragment} from 'react'
-import {ActionLink} from 'components/ui/DbLink'
+//import React, {Fragment} from 'react'
+//import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 //tracking the important™ CDs
@@ -69,6 +69,7 @@ export default class Blmcooldowns extends Module {
 			}).reduce(
 				(accumulator, currentValue) => accumulator + currentValue
 			)
+
 			//write the results as a new Requirement to show up later
 			OGCDRequirements.push(
 				new Requirement({
@@ -76,7 +77,6 @@ export default class Blmcooldowns extends Module {
 				percent: this._percentFunction(id, totalSumOfDownTime, encounterLength)
 				})
 			)
-
 		})
 
 		//new Rule and adds the array of Requirements that just got generated

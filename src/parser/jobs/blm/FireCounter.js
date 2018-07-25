@@ -50,8 +50,6 @@ export default class FireCounter extends Module {
 	}
 
 	//snapshot buffs and UH at the beginning of your recording
-
-
 	_onBegin() {
 		this._lockingBuffs()
 	}
