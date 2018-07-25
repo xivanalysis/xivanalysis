@@ -51,9 +51,6 @@ export default class SongUptime extends Module {
 		const songlessTime = (this._getSonglessTime())/1000
 		const songlessPercentile = (songlessTime/fightDuration)*100
 
-		// Debug info
-		console.log('Fight duration: ' + fightDuration + ', Songless time: ' + songlessTime + ', Songless percentage: ' + songlessPercentile)
-
 		//TODO: Define a threshold for song uptime
 		if (songlessPercentile > 3) {
 			this.suggestions.add(new Suggestion({
@@ -96,9 +93,6 @@ export default class SongUptime extends Module {
 				songless.start = deathEvent.timestamp
 			}
 
-			// Debug info
-			console.log('Songless start: ' + this._formatTimestamp(songless.start) + ', Songless end: ' + this._formatTimestamp(songless.end))
-
 			// Just in case it's negative, but it shouldn't be given the previous logic
 			const theoreticalSonglessTime =  Math.max(songless.end - songless.start, 0)
 
@@ -112,8 +106,4 @@ export default class SongUptime extends Module {
 		return totalSonglessTime
 	}
 
-	// Method for debug purposes. Converts a timestamp into a time in seconds relative to the start of the encounter
-	_formatTimestamp(timestamp) {
-		return (timestamp - this.parser.fight.start_time)/1000
-	}
 }

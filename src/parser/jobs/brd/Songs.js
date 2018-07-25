@@ -1,10 +1,8 @@
-//import React, {Fragment} from 'react'
-
-//import {ActionLink} from 'components/ui/DbLink'
+/**
+ * @author Vayhyr
+ */
 import ACTIONS from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class Songs  extends Module {
 	static handle = 'songs'
