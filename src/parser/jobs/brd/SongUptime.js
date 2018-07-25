@@ -1,5 +1,8 @@
-import React, {Fragment} from 'react'
+/**
+ * @author Yumiya
+ */
 
+import React, {Fragment} from 'react'
 import {StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
