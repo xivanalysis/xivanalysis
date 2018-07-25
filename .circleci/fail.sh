@@ -5,5 +5,5 @@ export BRANCH_OR_PR="$(if [[ ! -z $CIRCLE_PR_NUMBER ]] ; then echo $CIRCLE_BRANC
 export BACKTICK='`';
 export TIMESTAMP=$(date --utc +%FT%TZ);
 export COMMIT_FORMATTED="[$BACKTICK${CIRCLE_SHA1:0:7}$BACKTICK]($CIRCLE_COMPARE_URL)";
-export COMMIT_MESSAGE=$(git log --format=%B -n 1 $CIRCLE_SHA1);
-curl -v -H User-Agent:bot -H Content-Type:application/json -d '{"avatar_url":"https://i.imgur.com/cEokhGU.png","username":"CircleCI","embeds":[{"author":{"name":"Build #'"$CIRCLE_BUILD_NUM"' Failed - '"$AUTHOR_NAME"'","url":"'"$CIRCLE_BUILD_URL"'"},"url":"'"$CIRCLE_COMPARE_URL"'","title":"['"$CIRCLE_PROJECT_REPONAME"':'"$BRANCH_OR_PR"'] ","color":16711680,"fields":[{"name":"_ _", "value": "'"$COMMIT_FORMATTED"' - '"$COMMIT_MESSAGE"'"}]}]}' $DISCORD_WEBHOOK_URL;
+export COMMIT_MESSAGE=$(git log --format=%s -n 1 $CIRCLE_SHA1);
+curl -v -H User-Agent:bot -H Content-Type:application/json -d "{\"embeds\":[{\"author\":{\"name\":\"Build #$CIRCLE_BUILD_NUM Failed\",\"url\":\"$CIRCLE_BUILD_URL\"},\"url\":\"$CIRCLE_COMPARE_URL\",\"color\":13700128,\"description\":\"$COMMIT_FORMATTED - $COMMIT_MESSAGE\"}]}" $DISCORD_WEBHOOK_URL;
