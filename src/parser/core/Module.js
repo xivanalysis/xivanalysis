@@ -48,6 +48,21 @@ export default class Module {
 		return events
 	}
 
+
+	/**
+	 * This method is called when an error occurs, either when running
+	 * event hooks or calling {@link Module#output} in this module or
+	 * a module that depends on this module.
+	 * @param {String} source Either 'event' or 'output'
+	 * @param {Error} error The error that occurred
+	 * @param {Object} event The event that was being processed when the error occurred, if source is 'event'
+	 * @returns {Object|undefined} The data to attach to automatic error reports, or undefined to rely on primitive value detection
+	 */
+	getErrorContext(/* source, error, event */) {
+		return
+	}
+
+
 	addHook(events, filter, cb) {
 		const mapFilterEntity = (qol, raw) => {
 			if (filter[qol]) {
