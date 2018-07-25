@@ -6,7 +6,7 @@ import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>Hey there, NIN friend! Are you tired of being looked down on by your MNK and BLM peers? Wish your raid team would stop using you for your Trick Attacks and appreciate you for who you really are? Well look no further! We&apos;ll help you bring yourself all the way up from <strong><span class="text-grey">this</span></strong> to <strong><span class="text-orange">this</span></strong>*!</p>
+		<p>Hey there, NIN friend! Are you tired of being looked down on by your MNK and BLM peers? Wish your raid team would stop using you for your Trick Attacks and appreciate you for who you really are? Well look no further! We&apos;ll help you bring yourself all the way up from <strong><span className="text-grey">this</span></strong> to <strong><span className="text-orange">this</span></strong>*!</p>
 		<p>*Results not guaranteed. Offer void where prohibited. Please don&apos;t sue us.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>

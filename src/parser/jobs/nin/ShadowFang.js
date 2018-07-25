@@ -36,7 +36,7 @@ export default class ShadowFang extends Module {
 	_onDotApply(event) {
 		// Make sure we're tracking for this target
 		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || 0
-		
+
 		if (!lastApplication) {
 			this._lastApplication[event.targetID] = event.timestamp
 			return
