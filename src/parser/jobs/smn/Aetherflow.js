@@ -8,8 +8,8 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-// Statuses that need to be up for Fester to do :ok_hand: damage
-const FESTER_STATUSES = [
+// Statuses that need to be up for Fester & Bane to actually do something good
+const SMNDOT_STATUSES = [
 	STATUSES.BIO_III.id,
 	STATUSES.MIASMA_III.id,
 ]
@@ -28,15 +28,22 @@ export default class Aetherflow extends Module {
 		'suggestions',
 	]
 
-	_badFesters = []
+	_badBanes = []			// In case we ever want to check for Banes where 1 or 0 DoTs are spread
+	_reallyBadBanes = [] 	// DoTless Bane...
+	_badFesters = []		// 1 DoT Fester. Oh no, it gets worse!
+	_reallyBadFesters = [] 	// 0 DoT Fester. :r333333:
 	_badPainflares = []
 
 	constructor(...args) {
 		super(...args)
+	   this.addHook('cast', {
+		   by: 'player',
+		   abilityId: ACTIONS.BANE.id,
+	   }, this._onCastSMNDOT)
 		this.addHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.FESTER.id,
-		}, this._onCastFester)
+	   }, this._onCastSMNDOT)
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.PAINFLARE.id,
@@ -44,14 +51,22 @@ export default class Aetherflow extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onCastFester(event) {
-		// Make sure all festers have the required dots up for Festers
+	_onCastSMNDOT(event) {
+		// Make sure all Festers & Banes have the required dots up
 		const target = this.enemies.getEntity(event.targetID)
-		const numStatuses = FESTER_STATUSES.filter(statusId => target.hasStatus(statusId)).length
-		if (numStatuses !== FESTER_STATUSES.length) {
-			this._badFesters.push(event)
-		}
-	}
+		const numStatuses = SMNDOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
+		
+		// Differentiates between partial (bad) or total (really bad) whiffs
+		if(numStatuses == 1){
+ 			this._badFesters.push(event)
+			this._badBanes.push(event)
+		}  
+		
+		if (numStatuses == 0){
+			this._reallyBadBanes.push(event)
+			this._reallyBadFesters.push(event)
+ 		}
+ 	}
 
 	_onPainflareDamage(event) {
 		// Only fault single target PFs _outside_ rushes.
@@ -73,21 +88,36 @@ export default class Aetherflow extends Module {
 			],
 		}))
 
-		// Suggestion for bad festers
+		// Suggestion for bad & really bad festers, also sorry for being bad and not knowing how to better structure
 		const numBadFesters = this._badFesters.length
-		if (numBadFesters) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FESTER.icon,
-				content: <Fragment>
-					To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target. Avoid casting Fester directly after DoT application, as the status takes a short period to apply.
-				</Fragment>,
-				severity: numBadFesters < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					{numBadFesters} cast{numBadFesters > 1 && 's'} of Fester on targets without both DoTs.
-				</Fragment>,
-			}))
-		}
+		const numReallyBadFesters = this._reallyBadFesters.length
+		// Feel this can be used as a better base metric for judging Fester whiff severity, imo < 600 is medium, > major
+		const totalFesterPotencyLost = (numBadFesters * 150 + numReallyBadFesters * 300)
 
+		// Adjust Fester reason and severity based on frequency and types of bad Fester casts
+		const reasonList = [];
+		if (numBadFesters > 0) {
+    		reasonList.push(`${numBadFesters} cast${numReallyBadFesters == 1 ? '' : 's'} of Fester on targets with 1 DoT`);
+		}
+		if (numReallyBadFesters > 0) {
+    		reasonList.push(`${numReallyBadFesters} cast${numReallyBadFesters == 1 ? '' : 's'} of Fester on targets with no DoTs`);
+		}
+		const reasonString = reasonList.join(" & ");
+
+		if (numBadFesters || numReallyBadFesters) {
+ 			this.suggestions.add(new Suggestion({
+ 				icon: ACTIONS.FESTER.icon,
+ 				content: <Fragment>
+ 					To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target. Avoid casting Fester directly after DoT application, as the status takes a short period to apply.
+ 				</Fragment>,
+				severity: totalFesterPotencyLost < 600 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+ 				why: <Fragment>
+					{reasonString}.
+ 				</Fragment>,
+ 			}))
+ 		}
+
+		// Painflare suggestion, I want to say < 4 is medium because 4 is greater than a Deathflare
 		const numBadPainflares = this._badPainflares.length
 		if (numBadPainflares) {
 			this.suggestions.add(new Suggestion({
@@ -95,7 +125,7 @@ export default class Aetherflow extends Module {
 				content: <Fragment>
 					Avoid casting <ActionLink {...ACTIONS.PAINFLARE}/> on a single target unless rushing a <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>, as it deals less damage than <ActionLink {...ACTIONS.FESTER}/> per hit.
 				</Fragment>,
-				severity: numBadPainflares < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: numBadPainflares < 4? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					{numBadPainflares} single-target cast{numBadPainflares > 1 && 's'} of Painflare.
 				</Fragment>,
@@ -103,8 +133,11 @@ export default class Aetherflow extends Module {
 		}
 	}
 
+	// Suggestion section for Bane for later. Tricky to deal with, but there's bane seeds for spreads
+	// However one good one to evaluate is single target banes (with the above included?)
+
 	output() {
-		// Really not happy with this output, but nem wanted it.
+		// Really not happy with this output, but nem wanted it. (Nem: I appreciate a ton for now, we'll work it out)
 		// Look into a better display somehow, hopefully integrate into timeline in some fashion.
 		const casts = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
 		let totalDrift = 0
