@@ -64,7 +64,7 @@ class Header extends Component {
 			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
 				let time = ''
-				if(fight){
+				if (fight){
 					const start_time = parseInt(fight.start_time, 10)
 					const end_time = parseInt(fight.end_time, 10)
 					const duration = this.formatDuration(Math.floor(end_time - start_time)/1000)
