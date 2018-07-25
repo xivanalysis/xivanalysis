@@ -13,3 +13,5 @@
 * Card CD drift from having something in the draw slot?
 * Card usage suggestions / analysis (needs heavy design) 
 * Card management algorithm (needs heavy design ) 
+* Aisu - Similar concept but simpler to work with: you can have another section that tells if you’ve wasted a potential lord/lady by holding onto it before Sleeve draw
+
