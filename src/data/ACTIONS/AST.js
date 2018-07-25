@@ -82,7 +82,7 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/003000/003140.png',
 		cooldown: 90,
 	},
-	
+
 	MINOR_ARCANA: {
 		id: 7443,
 		name: 'Minor Arcana',
@@ -124,12 +124,12 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/003000/003143.png',
 		cooldown: 60,
 	},
-	
+
 	STELLAR_DETONATION: {
 		id: 8324,
 		name: 'Stellar Detonation',
 		icon: 'https://secure.xivdb.com/img/game/003000/003144.png',
-	}, 
+	},
 
 	DRAW: {
 		id: 3590,
@@ -355,7 +355,7 @@ export default {
 	// OGCD Arcana removal
 	// -----
 
-	
+
 	UNDRAW_SPREAD: {
 		id: 4646,
 		name: 'Undraw Spread',
