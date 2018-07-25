@@ -35,7 +35,7 @@ const BOSSES = {
 	THE_ULTIMA_WEAPON: {
 		logId: 0,
 		zoneId: ZONES.UWU.logId,
-	}
+	},
 }
 
 export default addExtraIndex(BOSSES, 'logId')

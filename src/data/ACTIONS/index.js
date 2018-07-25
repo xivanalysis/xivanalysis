@@ -11,14 +11,14 @@ import AST from './AST'
 import ROG from './ROG'
 import NIN from './NIN'
 import SMN from './SMN'
-import BRD from './BRD'
 import BLM from './BLM'
 import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
 import PLD from './PLD'
 import SAM from './SAM'
-
+import ARC from './ARC'
+import BRD from './BRD'
 
 const ACTIONS = {
 	...SHARED,
@@ -27,6 +27,7 @@ const ACTIONS = {
 	...ITEMS,
 
 	...ROG,
+	...ARC,
 	...ACN,
 	...MRD,
 
@@ -38,10 +39,10 @@ const ACTIONS = {
 	...AST,
 
 
-	...BRD,
-
 	...NIN,
 	...SAM,
+
+	...BRD,
 
 	...BLM,
 	...SMN,
