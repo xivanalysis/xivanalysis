@@ -73,14 +73,16 @@ export default class Requiescat extends Module {
 	}
 
 	_onComplete() {
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.REQUIESCAT.icon,
-			why: `${this._missedHolySpirits} Holy Spirit${this._missedHolySpirits !== 1 ? 's' : ''} missed during Requiescat.`,
-			severity: matchClosestLower(this._severityMissedHolySpirits, this._missedHolySpirits),
-			content: <Fragment>
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
-			</Fragment>,
-		}))
+		if (this._missedHolySpirits > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.REQUIESCAT.icon,
+				why: `${this._missedHolySpirits} Holy Spirit${this._missedHolySpirits !== 1 ? 's' : ''} missed during Requiescat.`,
+				severity: matchClosestLower(this._severityMissedHolySpirits, this._missedHolySpirits),
+				content: <Fragment>
+					GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
+				</Fragment>,
+			}))
+		}
 	}
 
 	output() {
