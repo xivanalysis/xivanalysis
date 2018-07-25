@@ -1,11 +1,10 @@
 import React, {Fragment} from 'react'
-import {Table,Grid,Loader} from 'semantic-ui-react'
+import {Table, Grid} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import styles from './Aetherflow.module.css'
 
 // Actions that reduce Aetherflow's cooldown.
 const AETHERFLOW_CD_ACTIONS = [
@@ -154,10 +153,10 @@ export default class Aetherflow extends Module {
 						if (drift > 0) {
 							totalDrift += drift
 						}
-						let wasted = 0;
+						let wasted = 0
 						if (downtime > 45000) {
-							wasted = 3 - debit || 0;
-							totalWasted += wasted;
+							wasted = 3 - debit || 0
+							totalWasted += wasted
 						}
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
@@ -165,8 +164,8 @@ export default class Aetherflow extends Module {
 							<Table.Cell>{drift > 0 && this.parser.formatDuration(drift)}</Table.Cell>
 							<Table.Cell>
 								<Grid>
-									{id.map(id => <Grid.Column width={4}>
-									<ActionLink {...getAction(id)} />
+									{id.map((id, i) => <Grid.Column key={i} width={4}>
+										<ActionLink {...getAction(id)} />
 									</Grid.Column>)}
 								</Grid>
 							</Table.Cell>
