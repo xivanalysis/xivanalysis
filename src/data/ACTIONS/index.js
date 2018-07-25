@@ -44,6 +44,8 @@ const ACTIONS = {
 
 	...BRD,
 
+	...BRD,
+
 	...BLM,
 	...SMN,
 	...RDM,
