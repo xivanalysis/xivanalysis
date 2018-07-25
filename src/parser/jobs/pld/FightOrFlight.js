@@ -90,7 +90,7 @@ export default class FightOrFlight extends Module {
 			this._fofStart = event.timestamp
 		}
 
-		if (!!this._fofStart) {
+		if (this._fofStart) {
 			const action = getAction(actionId)
 
 			if (action.onGcd) {
@@ -98,24 +98,24 @@ export default class FightOrFlight extends Module {
 			}
 
 			switch (actionId) {
-				case ACTIONS.GORING_BLADE.id:
-					this._fofGorings++
+			case ACTIONS.GORING_BLADE.id:
+				this._fofGorings++
 
-					if (this._fofLastGoringGcd !== null) {
-						if (this._fofGcds - this._fofLastGoringGcd <= this._minimumFofGoringDistance) {
-							this._fofGoringTooCloseCount++
-						}
+				if (this._fofLastGoringGcd !== null) {
+					if (this._fofGcds - this._fofLastGoringGcd <= this._minimumFofGoringDistance) {
+						this._fofGoringTooCloseCount++
 					}
-					this._fofLastGoringGcd = this._fofGcds
-					break
-				case ACTIONS.CIRCLE_OF_SCORN.id:
-					this._fofCircleOfScorn++
-					break
-				case ACTIONS.SPIRITS_WITHIN.id:
-					this._fofSpiritsWithin++
-					break
-				default:
-					break
+				}
+				this._fofLastGoringGcd = this._fofGcds
+				break
+			case ACTIONS.CIRCLE_OF_SCORN.id:
+				this._fofCircleOfScorn++
+				break
+			case ACTIONS.SPIRITS_WITHIN.id:
+				this._fofSpiritsWithin++
+				break
+			default:
+				break
 			}
 
 			if (!Array.isArray(this._fofRotations[this._fofStart])) {
@@ -126,7 +126,7 @@ export default class FightOrFlight extends Module {
 		}
 	}
 
-	_onRemoveFightOrFlight(event) {
+	_onRemoveFightOrFlight() {
 		this._fofMissedCircleOfScorns += Math.max(0, this._expectedFofCircleOfScorns - this._fofCircleOfScorn)
 		this._fofMissedSpiritWithins += Math.max(0, this._expectedFofSpiritsWithin - this._fofSpiritsWithin)
 		this._fofMissedGcds += Math.max(0, this._expectedFofGcds - this._fofGcds)
