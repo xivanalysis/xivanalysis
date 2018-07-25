@@ -10,6 +10,7 @@ import SCH from './SCH'
 import ROG from './ROG'
 import NIN from './NIN'
 import SMN from './SMN'
+import BRD from './BRD'
 import BLM from './BLM'
 import RDM from './RDM'
 import MRD from './MRD'
@@ -31,6 +32,8 @@ const ACTIONS = {
 
 	...WHM,
 	...SCH,
+
+	...BRD,
 
 	...NIN,
 
