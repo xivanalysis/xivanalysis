@@ -58,11 +58,11 @@ export default class Aetherflow extends Module {
 		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
 
 		// Differentiates between partial (bad) or total (really bad) whiffs
-		if (numStatuses === 1){
+		if (numStatuses === 1) {
 			this._badBanes.push(event)
 		}
 
-		if (numStatuses === 0){
+		if (numStatuses === 0) {
 			this._reallyBadBanes.push(event)
 		}
 	}
@@ -73,11 +73,11 @@ export default class Aetherflow extends Module {
 		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
 
 		// Differentiates between partial (bad) or total (really bad) whiffs
-		if (numStatuses === 1){
+		if (numStatuses === 1) {
 			this._badFesters.push(event)
 		}
 
-		if (numStatuses === 0){
+		if (numStatuses === 0) {
 			this._reallyBadFesters.push(event)
 		}
 	}
