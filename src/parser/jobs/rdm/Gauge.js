@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
+//import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
 //Mana Gains and Expenditures
@@ -197,10 +197,8 @@ export default class Gauge extends Module {
 					content: <Fragment>
 						<Message warning icon>
 							<Icon name="warning sign"/>
-							<Message.Content>
-									Due to a missing cast at the start of the log, mana calculations might be off.
-									Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.
-							</Message.Content>
+								Due to a missing cast at the start of the log, mana calculations might be off.
+								Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.
 						</Message>
 					</Fragment>,
 					severity: SEVERITY.MAJOR,
@@ -210,31 +208,31 @@ export default class Gauge extends Module {
 				}))
 			}
 
-			if (this._missingAreo) {
-				this.suggestions.add(new Suggestion({
-					icon: ACTIONS.VERAREO.icon,
-					content: <Fragment>
-						You were missing an <ActionLink {...ACTIONS.VERAREO}/> at the start of the Log
-					</Fragment>,
-					severity: SEVERITY.MAJOR,
-					why: <Fragment>
-						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
-					</Fragment>,
-				}))
-			}
+			// if (this._missingAreo) {
+			// 	this.suggestions.add(new Suggestion({
+			// 		icon: ACTIONS.VERAREO.icon,
+			// 		content: <Fragment>
+			// 			You were missing an <ActionLink {...ACTIONS.VERAREO}/> at the start of the Log
+			// 		</Fragment>,
+			// 		severity: SEVERITY.MAJOR,
+			// 		why: <Fragment>
+			// 			You were the first damage event, so it doesn&apos;t log your first cast as cast by you
+			// 		</Fragment>,
+			// 	}))
+			// }
 
-			if (this._missingThunder) {
-				this.suggestions.add(new Suggestion({
-					icon: ACTIONS.VERTHUNDER.icon,
-					content: <Fragment>
-						You were missing an <ActionLink {...ACTIONS.VERTHUNDER}/> at the start of the Log
-					</Fragment>,
-					severity: SEVERITY.MAJOR,
-					why: <Fragment>
-						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
-					</Fragment>,
-				}))
-			}
+			// if (this._missingThunder) {
+			// 	this.suggestions.add(new Suggestion({
+			// 		icon: ACTIONS.VERTHUNDER.icon,
+			// 		content: <Fragment>
+			// 			You were missing an <ActionLink {...ACTIONS.VERTHUNDER}/> at the start of the Log
+			// 		</Fragment>,
+			// 		severity: SEVERITY.MAJOR,
+			// 		why: <Fragment>
+			// 			You were the first damage event, so it doesn&apos;t log your first cast as cast by you
+			// 		</Fragment>,
+			// 	}))
+			// }
 
 			if (this._whiteManaWasted && this._whiteManaWasted > 0) {
 				this.suggestions.add(new Suggestion({
