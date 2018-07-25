@@ -55,7 +55,7 @@ export default {
 	},
 	FURST: {
 		name: 'Fürst',
-		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/furst.png',
 		jobs: [JOBS.BLACK_MAGE],
 	},
 	TOASTDEIB: {

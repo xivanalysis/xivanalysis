@@ -9,6 +9,7 @@ import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {FIRE_SPELLS, ICE_SPELLS} from 'parser/jobs/blm/Elements'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
@@ -35,6 +36,11 @@ export default class FireCounter extends Module {
 	_AF = 0
 	_UI = 0
 	_lockedBuffs = false
+	_lastStop = false
+
+	//counter for suggestions
+	_missedF4s = 0
+	_extraF1s = 0
 
 	constructor(...args) {
 		super(...args)
@@ -44,8 +50,6 @@ export default class FireCounter extends Module {
 	}
 
 	//snapshot buffs and UH at the beginning of your recording
-
-
 	_onBegin() {
 		this._lockingBuffs()
 	}
@@ -65,7 +69,36 @@ export default class FireCounter extends Module {
 	}
 
 	_onComplete() {
+		this._lastStop = true
 		this._stopRecording()
+
+		//writing a suggestion to skip B4 end of fight.
+		if (this._missedF4s) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.FIRE_IV.icon,
+				content: <Fragment>
+					You lost at least  one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
+				</Fragment>,
+				severity: SEVERITY.MEDIUM,
+				why: <Fragment>
+					You missed {this._missedF4s} Fire IV{this._missedF4s > 1 && 's'}.
+				</Fragment>,
+			}))
+		}
+
+		//suggestion for unneccessary extra F1s.
+		if (this._extraF1s) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.FIRE_I.icon,
+				content: <Fragment>
+					Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					You casted {this._extraF1s} extra Fire I{this._extraF1s > 1 && 's'}.
+				</Fragment>,
+			}))
+		}
 	}
 
 	//if transpose is used under Encounter invul the recording gets resetted
@@ -98,15 +131,24 @@ export default class FireCounter extends Module {
 			this._lockedBuffs = false
 			this._inFireRotation = false
 			this._fireCounter.end = this.parser.currentTimestamp
-			// TODO: Handle fight ending and use a better trigger for downtime than transpose
+			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
 			const fire4Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
+			const fire1Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
 			const hasConvert = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
 			this._fireCounter.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
+			if (fire1Count > 1) {
+				this._extraF1s += fire1Count
+				this._extraF1s--
+			}
 			if (this._fireCounter.missingCount > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._fireCounter.fire4Count = fire4Count
 				this._history.push(this._fireCounter)
+				if (this._lastStop && this._UH > 0 && this._fireCounter.missingCount === 2) {
+					const missedF4s = this._fireCounter.missingCount --
+					this._missedF4s = missedF4s
+				}
 			}
 		}
 	}
