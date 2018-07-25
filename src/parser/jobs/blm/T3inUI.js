@@ -30,7 +30,7 @@ export default class T3inUI extends Module {
 
 		this._UI = this.gauge.getUI()
 
-		if (!(abilityId === ACTIONS.FIRE_III.id)){
+		if (!(abilityId === ACTIONS.FIRE_III.id)) {
 			this._T3 = false
 		}
 		if (abilityId === ACTIONS.THUNDER_III.id) {

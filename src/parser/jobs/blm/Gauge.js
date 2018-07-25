@@ -59,7 +59,7 @@ export default class Gauge extends Module {
 
 		//reseting AF/UI and dropping eno due to going past the timer
 		if (AFUIRunTime > ASTRAL_UMBRAL_DURATION) {
-			if (this._eno){
+			if (this._eno) {
 				this._eno = false
 				this._enoTimer = 0
 				this._droppedEno ++

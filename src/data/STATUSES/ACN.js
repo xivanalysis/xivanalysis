@@ -10,7 +10,7 @@ export default {
 		name: 'Bio II',
 		icon: 'https://secure.xivdb.com/img/game/010000/010505.png',
 	},
-	
+
 	SHADOW_FLARE: {
 		id: 190,
 		name: 'Shadow Flare',

@@ -38,6 +38,11 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
+	VULCWEN: {
+		name: 'Vulcwen',
+		avatar: process.env.PUBLIC_URL + '/avatar/vulcwen.png',
+		jobs: [JOBS.WHITE_MAGE, JOBS.SUMMONER],
+	},
 	LAQI: {
 		name: 'Laqi',
 		avatar: process.env.PUBLIC_URL + '/avatar/laqi.png',
@@ -58,9 +63,16 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
 		jobs: [JOBS.NINJA],
 	},
+
 	MIKEMATRIX: {
 		name: 'MikeMatrix',
 		avatar: process.env.PUBLIC_URL + '/avatar/mikematrix.png',
 		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
+	},
+	
+	RYAN: {
+		name: 'Ryan',
+		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',
+		jobs: [JOBS.SAMURAI],
 	},
 }

@@ -13,6 +13,7 @@ import Enemies from './Enemies'
 import GlobalCooldown from './GlobalCooldown'
 import Invulnerability from './Invulnerability'
 import Potions from './Potions'
+import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
 import Suggestions from './Suggestions'
@@ -37,6 +38,7 @@ export default [
 	GlobalCooldown,
 	Invulnerability,
 	Potions,
+	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,
 	Suggestions,

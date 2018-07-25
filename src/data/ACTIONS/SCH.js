@@ -181,5 +181,5 @@ export default {
 		id: 50389,
 		name: 'Quickened Aetherflow',
 		icon: 'https://secure.xivdb.com/img/game/005000/005393.png',
-	}
+	},
 }

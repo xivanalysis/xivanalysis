@@ -23,8 +23,6 @@ export default class BlmWeaving extends Weaving {
 	_AF3 = false
 	_UI3 = false
 
-
-
 	constructor(...args) {
 		super(...args)
 		this.addHook('begincast', {by: 'player'}, this._onBegin)
@@ -32,10 +30,10 @@ export default class BlmWeaving extends Weaving {
 
 	//check whether we are in UI3/AF3 precast
 	_onBegin() {
-		if (this.gauge.getUI() === 3){
+		if (this.gauge.getUI() === 3) {
 			this._UI3 = true
 		}
-		if (this.gauge.getAF() === 3){
+		if (this.gauge.getAF() === 3) {
 			this._AF3 = true
 		}
 	}
@@ -48,14 +46,14 @@ export default class BlmWeaving extends Weaving {
 			).length
 
 			//allow a single weave of the OGCD exceptions
-			if (weaveCount === 1 && OGCDExceptions.includes(weave.weaves[0].ability.guid)){
+			if (weaveCount === 1 && OGCDExceptions.includes(weave.weaves[0].ability.guid)) {
 				return false
 			}
 
 			//allow first eno to be ignored because it's a neccessary weave. 10s for that to happen because of O5s Eno delay.
-			if (weaveCount === 1){
+			if (weaveCount === 1) {
 				const ogcdTime = weave.weaves[0].timestamp - this.parser.fight.start_time
-				if (ogcdTime < 10000 && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id){
+				if (ogcdTime < 10000 && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id) {
 					return false
 				}
 			}

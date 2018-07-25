@@ -8,11 +8,11 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
-	[STATUSES.GORING_BLADE.id]: 21000,
-}
+	[STATUSES.HIGANBANA.id]: 60000
+	}	
 
-export default class Goring extends Module {
-	static handle = 'goring'
+export default class Higanbana extends Module {
+	static handle = 'higanbana'
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -23,7 +23,7 @@ export default class Goring extends Module {
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.GORING_BLADE.id]: 0,
+		[STATUSES.HIGANBANA.id]: 0
 	}
 
 	constructor(...args) {
@@ -31,7 +31,8 @@ export default class Goring extends Module {
 
 		const filter = {
 			by: 'player',
-			abilityId: [STATUSES.GORING_BLADE.id],
+
+			abilityId: [STATUSES.HIGANBANA.id],
 		}
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
@@ -68,15 +69,15 @@ export default class Goring extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep your Goring up',
+			name: 'Keep Higanbana up',
 			description: <Fragment>
-				As a Paladin, <ActionLink {...ACTIONS.GORING_BLADE} /> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.
+			As a Samurai, <ActionLink {...ACTIONS.HIGANBANA} /> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.
 			</Fragment>,
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.GORING_BLADE} /> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.GORING_BLADE.id),
+					name: <Fragment><ActionLink {...ACTIONS.HIGANBANA} /> uptime</Fragment>,
+					percent: () => this.getDotUptimePercent(STATUSES.HIGANBANA.id),
 				}),
 			],
 		}))
@@ -84,17 +85,16 @@ export default class Goring extends Module {
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.GORING_BLADE.icon,
+			icon: ACTIONS.HIGANBANA.icon,
 			content: <Fragment>
-				Avoid refreshing <ActionLink {...ACTIONS.GORING_BLADE} /> significantly before it's expiration.
+				Avoid refreshing <ActionLink {...ACTIONS.HIGANBANA} /> significantly before it expires.
 			</Fragment>,
 			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
-				{this.parser.formatDuration(this._clip[STATUSES.GORING_BLADE.id])} of {STATUSES[STATUSES.GORING_BLADE.id].name} lost to early refreshes.
+				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES[STATUSES.HIGANBANA.id].name} lost to early refreshes.
 			</Fragment>,
 		}))
 	}
-
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.enemies.getStatusUptime(statusId)
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()

@@ -15,8 +15,11 @@ import SMN from './SMN'
 import BLM from './BLM'
 import RDM from './RDM'
 import WAR from './WAR'
+import WHM from './WHM'
 import PLD from './PLD'
+import SAM from './SAM'
 
+	
 const STATUSES = {
 	...ENEMY,
 	...ROLE,
@@ -28,10 +31,12 @@ const STATUSES = {
 
 	...SCH,
 	...AST,
+	...WHM,
 
 	...MNK,
 	...DRG,
 	...NIN,
+	...SAM,
 
 	...BRD,
 	...MCH,

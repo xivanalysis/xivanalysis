@@ -9,18 +9,17 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Constants
 const MAX_NINKI = 100
-const SPENDER_COST = 80
 
 const NINKI_BUILDERS = {
 	[ACTIONS.MUG.id]: 30,
 	[ACTIONS.ATTACK.id]: 6,
 }
 
-const NINKI_SPENDERS = [
-	ACTIONS.HELLFROG_MEDIUM.id,
-	ACTIONS.BHAVACAKRA.id,
-	ACTIONS.TEN_CHI_JIN.id,
-]
+const NINKI_SPENDERS = {
+	[ACTIONS.HELLFROG_MEDIUM.id]: 80,
+	[ACTIONS.BHAVACAKRA.id]: 80,
+	[ACTIONS.TEN_CHI_JIN.id]: 80,
+}
 
 export default class Ninki extends Module {
 	static handle = 'ninki'
@@ -54,8 +53,8 @@ export default class Ninki extends Module {
 			this._wasteBySource.auto += this._addNinki(abilityId)
 		}
 
-		if (NINKI_SPENDERS.includes(abilityId)) {
-			this._ninki -= SPENDER_COST
+		if (NINKI_SPENDERS.hasOwnProperty(abilityId)) {
+			this._ninki -= NINKI_SPENDERS[abilityId]
 		}
 	}
 
