@@ -131,7 +131,7 @@ export default class Gauge extends Module {
 			} else {
 				this._AFUITimer = event.timestamp
 				this._AF ++
-				this._AF = Math.min(this.AF, 3)
+				this._AF = Math.min(this._AF, 3)
 			}
 		}
 
