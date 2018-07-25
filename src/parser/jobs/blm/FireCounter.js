@@ -140,12 +140,9 @@ export default class FireCounter extends Module {
 			const fire1Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
 			const hasConvert = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
 			this._fireCounter.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
-			console.log(fire1Count)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
-				console.log("extraF1")
-				console.log(this._extraF1s)
 			}
 			if (this._fireCounter.missingCount > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._fireCounter.fire4Count = fire4Count
