@@ -7,6 +7,7 @@ import Module from 'parser/core/Module'
 //import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class Songs  extends Module {
+	static handle = 'songs'
 	static dependencies = [
 		'cooldowns',
 		'suggestions',
@@ -25,7 +26,7 @@ export default class Songs  extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
-		if (abilityId === ACTIONS.WANDERERS_MINUET.id) {
+		if (abilityId === ACTIONS.THE_WANDERERS_MINUET.id) {
 			this._wanderersMinuet ++
 		}
 		if (abilityId === ACTIONS.MAGES_BALLAD.id) {
