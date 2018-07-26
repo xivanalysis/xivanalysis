@@ -144,6 +144,6 @@ export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value -
 
 //rennders a time given in seconds into the format mm:ss
 export function formatDuration(duration) {
-		const seconds = Math.floor(duration % 60)
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
-	}
+	const seconds = Math.floor(duration % 60)
+	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+}
