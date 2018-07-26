@@ -6,7 +6,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Statuses that need to be up for Fester & Bane to actually do something good
 const SMN_DOT_STATUSES = [
@@ -18,6 +18,18 @@ const SMN_DOT_STATUSES = [
 const FIRST_FLOW_TIMESTAMP = 15000
 
 const FESTER_POT_PER_DOT = 150
+
+// Severities
+// In potency
+const FESTER_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	600: SEVERITY.MAJOR,
+}
+
+const PAINFLARE_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
 
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
@@ -117,31 +129,29 @@ export default class Aetherflow extends Module {
 		}
 		const reasonString = reasonList.join(' & ') + '.'
 
-		if (numBadFesters || numReallyBadFesters) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FESTER.icon,
-				content: <Fragment>
-					To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target. Avoid casting Fester directly after DoT application, as the status takes a short period to apply.
-				</Fragment>,
-				severity: totalFesterPotencyLost < 600 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: reasonString,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FESTER.icon,
+			content: <Fragment>
+				To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target. Avoid casting Fester directly after DoT application, as the status takes a short period to apply.
+			</Fragment>,
+			why: reasonString,
+			tiers: FESTER_SEVERITY,
+			value: totalFesterPotencyLost,
+		}))
 
 		// Painflare suggestion, I want to say < 4 is medium because 4 is greater than a Deathflare
 		const numBadPainflares = this._badPainflares.length
-		if (numBadPainflares) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.PAINFLARE.icon,
-				content: <Fragment>
-					Avoid casting <ActionLink {...ACTIONS.PAINFLARE}/> on a single target unless rushing a <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>, as it deals less damage than <ActionLink {...ACTIONS.FESTER}/> per hit.
-				</Fragment>,
-				severity: numBadPainflares < 4? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					{numBadPainflares} single-target cast{numBadPainflares > 1 && 's'} of Painflare.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.PAINFLARE.icon,
+			content: <Fragment>
+				Avoid casting <ActionLink {...ACTIONS.PAINFLARE}/> on a single target unless rushing a <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>, as it deals less damage than <ActionLink {...ACTIONS.FESTER}/> per hit.
+			</Fragment>,
+			why: <Fragment>
+				{numBadPainflares} single-target cast{numBadPainflares > 1 && 's'} of Painflare.
+			</Fragment>,
+			tiers: PAINFLARE_SEVERITY,
+			value: numBadPainflares,
+		}))
 	}
 
 	// Suggestion section for Bane for later. Tricky to deal with, but there's bane seeds for spreads
