@@ -14,10 +14,14 @@ export default class CooldownDowntime extends Module {
 		'checklist',
 	]
 
+	//Downtime Actions IDs
 	_downTime = {}
 	//tracking the important™ CDs
 	_trackedcds = []
+	//Default alloted time before a spell is held too long.
 	_downtimeOkTime = 15000
+	//Determines if we're being overriden by an extension class
+	_extensionOverride = false
 
 	constructor(...args) {
 		super(...args)
@@ -27,12 +31,30 @@ export default class CooldownDowntime extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
+	/**
+	 *This just sets the internal ability list if you aren't going to use override functions and
+	 perform calculated data holding in your extended class
+	 * @param {List of Abilities to track} abilities
+	 */
 	setAbilityList(abilities) {
 		this._trackedcds = abilities
 	}
 
+	/**
+	 * This instructs the module how long a CD can be held for before it is
+	 * problematic to hold.
+	 * @param {Time in MS allowed to hold a CD for} duration
+	 */
 	setDownTimeDuration(duration) {
 		this._downtimeOkTime = duration
+	}
+
+	/**
+	 * Denotes if we're overriding this super from an extension
+	 * @param {boolean, whether or not we override this super from an extension} override
+	 */
+	setExtensionOverride(override) {
+		this._extensionOverride = override
 	}
 
 	_onBegin(event) {
@@ -86,7 +108,7 @@ export default class CooldownDowntime extends Module {
 		}))
 	}
 
-	//cool function that I invented that just sets ok usage as 98% and falls very quickly
+	//cool function that Furst invented that just sets ok usage as 98% and falls very quickly
 	_percentFunction(actionId, downtime, fightlength) {
 		const cooldown = getAction(actionId).cooldown
 		const numberOfUses = Math.floor(fightlength/(cooldown*1000))

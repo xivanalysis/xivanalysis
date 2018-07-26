@@ -4,16 +4,12 @@ import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 //tracking the important™ CDs
 const TRACKEDCDS = [
 	ACTIONS.FLECHE.id,
-	ACTIONS.CONTRE_SIXTE.id,
-	ACTIONS.ACCELERATION.id,
-	ACTIONS.CORPS_A_CORPS.id,
-	ACTIONS.DISPLACEMENT.id,
 ]
 
 //Time that Jump deems ok for a OGCD to be down : ^)
 const DOWNTIME_OK_TIME = 4000
 
-export default class RdmCooldownDowntime extends CooldownDowntime {
+export default class Fleche extends CooldownDowntime {
 
 	constructor(...args) {
 		super(...args)
