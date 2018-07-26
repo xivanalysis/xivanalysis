@@ -145,7 +145,7 @@ export default class FireCounter extends Module {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			if (this._fireCounter.missingCount > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._fireCounter.missingCount.missing > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._fireCounter.fire4Count = fire4Count
 				this._history.push(this._fireCounter)
 				if (this._lastStop && this._UH > 0 && this._fireCounter.missingCount === 2) {
@@ -164,8 +164,9 @@ export default class FireCounter extends Module {
 
 	_getMissingFire4Count(count, hasConvert) {
 		const NotEnoughUH = this._UH  < 2
-		const missingFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0) - count
-		return missingFire4
+		const ExpectedFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
+		const missingFire4 = ExpectedFire4 - count
+		return {missing: missingFire4, expected: ExpectedFire4}
 	}
 
 	_renderCount(count, missing) {
@@ -193,7 +194,7 @@ export default class FireCounter extends Module {
 					key: 'title-' + rotation.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(rotation.start)}
-						&nbsp;-&nbsp;{this._renderCount(rotation.fire4Count, rotation.missingCount)} Fire IVs
+						&nbsp;-&nbsp;{this._renderCount(rotation.fire4Count, rotation.missingCount.missing)} / {rotation.missingCount.expected} Fire IVs
 					</Fragment>,
 				},
 				content: {
