@@ -24,6 +24,13 @@
 - [ ] RoF basically on CD, take downtime into account or fights that derp a window
 - [ ] Brotherhood, same as RoF besides slight variance for duration
 
+### Forms
+- [x] Reset forms by using Opo-Opo form skills in a different form
+- [x] Form expiry (taking over 10s to transition)
+- [x] Form Shifting under PB (WHY IS THIS A THING?)
+- [x] Using formless DK or AotD
+- [x] Form Shifting mid-combo
+
 ### Chakras
 How do we track this? There's a game packet for meditative brotherhood procs but FFLogs doesn't use it
 Maybe check for FBC being used at low GL when the next GCD gives a stack
