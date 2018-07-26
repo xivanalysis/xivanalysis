@@ -5,6 +5,7 @@ import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
 import {Container, Dropdown, Menu} from 'semantic-ui-react'
+import {formatDuration} from 'utilities'
 
 import {compose, getPathMatch} from 'utilities'
 
@@ -21,11 +22,6 @@ class Header extends Component {
 			code: PropTypes.string,
 		}),
 		collapseMenu: PropTypes.bool.isRequired,
-	}
-
-	formatDuration(duration) {
-		const seconds = Math.floor(duration % 60)
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
 	}
 
 	render() {
