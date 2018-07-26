@@ -1,4 +1,23 @@
 export default {
+<<<<<<< HEAD
+=======
+	BENEFIC: {
+		id: 3594,
+		name: 'Benefic',
+		icon: 'https://secure.xivdb.com/img/game/003000/003126.png',
+		onGcd: true,
+		castTime: 2,
+	},
+
+	BENFIC_II: {
+		id: 3610,
+		name: 'Benefic II',
+		icon: 'https://secure.xivdb.com/img/game/003000/003128.png',
+		onGcd: true,
+		castTime: 2,
+	},
+
+>>>>>>> e534561669223acfe0a6b7a077846022115b6f46
 	ASCEND: {
 		id: 3603,
 		name: 'Ascend',

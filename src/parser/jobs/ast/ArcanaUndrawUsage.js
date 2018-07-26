@@ -19,6 +19,7 @@ const AstUndrawMacros = [
 		action: 'Undraw',
 		content: <Fragment>
 			<code>
+<<<<<<< HEAD
 				/statusoff "Bole Drawn"<br/>
 				/statusoff "Balance Drawn"<br/>
 				/statusoff "Arrow Drawn"<br/>
@@ -26,6 +27,15 @@ const AstUndrawMacros = [
 				/statusoff "Spire Drawn"<br/>
 				/statusoff "Ewer Drawn"<br/>
 				/micon "Undraw"
+=======
+					/statusoff "Bole Drawn"<br/>
+					/statusoff "Balance Drawn"<br/>
+					/statusoff "Arrow Drawn"<br/>
+					/statusoff "Spear Drawn"<br/>
+					/statusoff "Spire Drawn"<br/>
+					/statusoff "Ewer Drawn"<br/>
+					/micon "Undraw"
+>>>>>>> e534561669223acfe0a6b7a077846022115b6f46
 			</code>
 		</Fragment>,
 	},
@@ -33,6 +43,7 @@ const AstUndrawMacros = [
 		action: 'Undraw Spread',
 		content: <Fragment>
 			<code>
+<<<<<<< HEAD
 				/statusoff "Arrow Held"<br/>
 				/statusoff "Balance Held"<br/>
 				/statusoff "Spire Held"<br/>
@@ -40,6 +51,15 @@ const AstUndrawMacros = [
 				/statusoff "Ewer Held"<br/>
 				/statusoff "Spear Held"<br/>
 				/micon "Undraw Spread"
+=======
+			/statusoff "Arrow Held"<br/>
+			/statusoff "Balance Held"<br/>
+			/statusoff "Spire Held"<br/>
+			/statusoff "Bole Held"<br/>
+			/statusoff "Ewer Held"<br/>
+			/statusoff "Spear Held"<br/>
+			/micon "Undraw Spread"
+>>>>>>> e534561669223acfe0a6b7a077846022115b6f46
 			</code>
 		</Fragment>,
 	},
@@ -47,10 +67,17 @@ const AstUndrawMacros = [
 		action: 'Empty Road',
 		content: <Fragment>
 			<code>
+<<<<<<< HEAD
 				/statusoff "Expanded Royal Road"<br/>
 				/statusoff "Enhanced Royal Road"<br/>
 				/statusoff "Extended Royal Road"<br/>
 				/micon "Empty Road"
+=======
+			/statusoff "Expanded Royal Road"<br/>
+			/statusoff "Enhanced Royal Road"<br/>
+			/statusoff "Extended Royal Road"<br/>
+			/micon "Empty Road"
+>>>>>>> e534561669223acfe0a6b7a077846022115b6f46
 			</code>
 		</Fragment>,
 	},
