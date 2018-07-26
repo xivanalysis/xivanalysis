@@ -1,6 +1,4 @@
 export default {
-<<<<<<< HEAD
-=======
 	BENEFIC: {
 		id: 3594,
 		name: 'Benefic',
@@ -17,7 +15,6 @@ export default {
 		castTime: 2,
 	},
 
->>>>>>> e534561669223acfe0a6b7a077846022115b6f46
 	ASCEND: {
 		id: 3603,
 		name: 'Ascend',
