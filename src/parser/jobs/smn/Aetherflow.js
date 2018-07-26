@@ -55,6 +55,7 @@ export default class Aetherflow extends Module {
 	_onCastSmnBane(event) {
 		// Make sure all Banes have the required dots up
 		const target = this.enemies.getEntity(event.targetID)
+		if (!target) { return }
 		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
 
 		// Differentiates between partial (bad) or total (really bad) whiffs
@@ -70,6 +71,7 @@ export default class Aetherflow extends Module {
 	_onCastSmnFester(event) {
 		// Make sure all Festers have the required dots up
 		const target = this.enemies.getEntity(event.targetID)
+		if (!target) { return }
 		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
 
 		// Differentiates between partial (bad) or total (really bad) whiffs
