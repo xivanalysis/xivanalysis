@@ -89,13 +89,14 @@ export default class FireCounter extends Module {
 		}
 
 		//suggestion for unneccessary extra F1s.
+		//TODO: make severity based on fight length instead of static
 		if (this._extraF1s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_I.icon,
 				content: <Fragment>
 					Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
 				</Fragment>,
-				severity: SEVERITY.MINOR,
+				severity: (this._extraF1s > 1 ? SEVERITY.MEDIUM : SEVERITY.MINOR),
 				why: <Fragment>
 					You casted {this._extraF1s} extra Fire I{this._extraF1s > 1 && 's'}.
 				</Fragment>,
