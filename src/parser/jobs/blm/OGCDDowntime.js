@@ -89,8 +89,8 @@ export default class Blmcooldowns extends Module {
 	//cool function that I invented that just sets ok usage as 98% and falls very quickly
 	_percentFunction(actionId, downtime, fightlength) {
 		const cooldown = getAction(actionId).cooldown
-		const numberOfUses = Math.floor(fightlength/(cooldown*1000))
-		return ((numberOfUses - Math.floor(downtime/(cooldown*1000)))/numberOfUses)*100
+		const possibleNumberOfUses = Math.floor(fightlength/(cooldown*1000))
+		return ((possibleNumberOfUses - Math.floor(downtime/(cooldown*1000)))/possibleNumberOfUses)*100
 	}
 
 	_cooldownCheck(event) {
