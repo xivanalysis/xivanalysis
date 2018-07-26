@@ -31,6 +31,36 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/013000/013225.png',
 	},
 
+	ENHANCED_BENEFIC_II: {
+		id: 815,
+		name: 'Enhanced Benefic II',
+		icon: 'https://secure.xivdb.com/img/game/013000/013228.png',
+	},
+
+	LIGHTSPEED: {
+		id: 841,
+		name: 'Lightspeed',
+		icon: 'https://secure.xivdb.com/img/game/013000/013220.png',
+	},
+
+	SYNASTRY_SELF: {
+		id: 845,
+		name: 'Synastry (self)',
+		icon: 'https://secure.xivdb.com/img/game/013000/013223.png',
+	},
+
+	SYNASTRY: {
+		id: 846,
+		name: 'Synastry',
+		icon: 'https://secure.xivdb.com/img/game/013000/013224.png',
+	},
+
+	COLLECTIVE_UNCONSCIOUS: {
+		id: 849,
+		name: 'Collective Unconscious',
+		icon: 'https://secure.xivdb.com/img/game/013000/013226.png',
+	},
+
 	ENHANCED_ROYAL_ROAD: {
 		id: 816,
 		name: 'Enhanced Royal Road',
