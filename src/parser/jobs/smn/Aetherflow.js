@@ -17,6 +17,8 @@ const SMN_DOT_STATUSES = [
 // Flow needs to be burnt before first use - 15s is optimal for first cast
 const FIRST_FLOW_TIMESTAMP = 15000
 
+const FESTER_POT_PER_DOT = 150
+
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
 	static dependencies = [
@@ -28,22 +30,22 @@ export default class Aetherflow extends Module {
 		'suggestions',
 	]
 
-	_badBanes = []			// In case we ever want to check for Banes where 1 or 0 DoTs are spread
-	_reallyBadBanes = [] 	// DoTless Bane...
-	_badFesters = []		// 1 DoT Fester. Oh no, it gets worse!
-	_reallyBadFesters = [] 	// 0 DoT Fester. :r333333:
+	_badBanes = []         // In case we ever want to check for Banes where 1 or 0 DoTs are spread
+	_reallyBadBanes = []   // DoTless Bane...
+	_badFesters = []       // 1 DoT Fester. Oh no, it gets worse!
+	_reallyBadFesters = [] // 0 DoT Fester. :r333333:
 	_badPainflares = []
+
+	_badDotReqCasts = {}
 
 	constructor(...args) {
 		super(...args)
+
 		this.addHook('cast', {
 			by: 'player',
-			abilityId: ACTIONS.BANE.id,
-		}, this._onCastSmnBane)
-		this.addHook('cast', {
-			by: 'player',
-			abilityId: ACTIONS.FESTER.id,
-		}, this._onCastSmnFester)
+			abilityId: [ACTIONS.FESTER.id, ACTIONS.BANE.id],
+		}, this._onDotReqCast)
+
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.PAINFLARE.id,
@@ -51,37 +53,27 @@ export default class Aetherflow extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	// Separation of Bane and Fester for arrays, hope this is ok
-	_onCastSmnBane(event) {
-		// Make sure all Banes have the required dots up
+	_onDotReqCast(event) {
+		const actionId = event.ability.guid
+
 		const target = this.enemies.getEntity(event.targetID)
 		if (!target) { return }
-		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
+		const statusesMissing = SMN_DOT_STATUSES.length - SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
 
-		// Differentiates between partial (bad) or total (really bad) whiffs
-		if (numStatuses === 1) {
-			this._badBanes.push(event)
+		// Don't need to worry if they got them all up
+		if (statusesMissing === 0) { return }
+
+		// Make sure we're tracking this skill/num
+		if (!this._badDotReqCasts[actionId]) {
+			this._badDotReqCasts[actionId] = {}
+		}
+		if (!this._badDotReqCasts[actionId][statusesMissing]) {
+			this._badDotReqCasts[actionId][statusesMissing] = 0
 		}
 
-		if (numStatuses === 0) {
-			this._reallyBadBanes.push(event)
-		}
-	}
-
-	_onCastSmnFester(event) {
-		// Make sure all Festers have the required dots up
-		const target = this.enemies.getEntity(event.targetID)
-		if (!target) { return }
-		const numStatuses = SMN_DOT_STATUSES.filter(statusId => target.hasStatus(statusId)).length
-
-		// Differentiates between partial (bad) or total (really bad) whiffs
-		if (numStatuses === 1) {
-			this._badFesters.push(event)
-		}
-
-		if (numStatuses === 0) {
-			this._reallyBadFesters.push(event)
-		}
+		// Add to the appropriate key
+		// Just tracking flat count for now. Expand to events if need info (for the timeline, yes pls)
+		this._badDotReqCasts[actionId][statusesMissing]++
 	}
 
 	_onPainflareDamage(event) {
@@ -104,19 +96,24 @@ export default class Aetherflow extends Module {
 			],
 		}))
 
-		// Suggestion for bad & really bad festers, also sorry for being bad and not knowing how to better structure
-		const numBadFesters = this._badFesters.length
-		const numReallyBadFesters = this._reallyBadFesters.length
+
+		// Suggestion for fester
+		const badFesters = this._badDotReqCasts[ACTIONS.FESTER.id] || {}
+		const festerKeys = Object.keys(badFesters).map(num => parseInt(num, 10))
 		// Feel this can be used as a better base metric for judging Fester whiff severity, imo < 600 is medium, > major
-		const totalFesterPotencyLost = (numBadFesters * 150 + numReallyBadFesters * 300)
+		const totalFesterPotencyLost = festerKeys.reduce((carry, num) => carry + num * FESTER_POT_PER_DOT * badFesters[num], 0)
+
+		// Suggestion for bad & really bad festers, also sorry for being bad and not knowing how to better structure
+		const numBadFesters = festerKeys.reduce((carry, num) => carry + (num < SMN_DOT_STATUSES.length? badFesters[num] : 0), 0)
+		const numReallyBadFesters = festerKeys.reduce((carry, num) => carry + (num === SMN_DOT_STATUSES.length? badFesters[num] : 0), 0)
 
 		// Adjust Fester reason and severity based on frequency and types of bad Fester casts
 		const reasonList = []
 		if (numBadFesters > 0) {
-			reasonList.push(`${numBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets with 1 DoT`)
+			reasonList.push(`${numBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets missing DoTs`)
 		}
 		if (numReallyBadFesters > 0) {
-			reasonList.push(`${numReallyBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets with no DoTs`)
+			reasonList.push(`${numReallyBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets with no DoTs at all`)
 		}
 		const reasonString = reasonList.join(' & ') + '.'
 
