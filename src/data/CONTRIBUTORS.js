@@ -55,7 +55,7 @@ export default {
 	},
 	FURST: {
 		name: 'Fürst',
-		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/furst.png',
 		jobs: [JOBS.BLACK_MAGE],
 	},
 	TOASTDEIB: {
@@ -69,7 +69,11 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/mikematrix.png',
 		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
 	},
-
+	YUMIYA: {
+		name: 'Yumiya',
+		avatar: null,
+		jobs: [JOBS.BARD],
+	},
 	RYAN: {
 		name: 'Ryan',
 		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',

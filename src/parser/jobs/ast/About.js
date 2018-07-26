@@ -4,6 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
+
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
