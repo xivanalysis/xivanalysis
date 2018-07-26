@@ -3,10 +3,11 @@
 // import ArcanaUptime from './ArcanaUptime'
 import BuffExtensions from './BuffExtensions'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import DoT from './DoT'
+import AstDot from './AstDot'
 
 export default [
 	// About,
 	ArcanaUndrawUsage,
-	BuffExtensions,	DoT,
+	AstDot,
+	BuffExtensions,
 ]
