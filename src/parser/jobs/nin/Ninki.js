@@ -36,7 +36,6 @@ export default class Ninki extends Module {
 		auto: 0,
 		death: 0,
 	}
-	_lastFrog = 0
 	_erroneousFrogs = 0 // This is my new band name
 
 	constructor(...args) {
@@ -60,20 +59,6 @@ export default class Ninki extends Module {
 		return 0
 	}
 
-	_hellfrogUsed(time) {
-		// For corroborating Hellfrog casts with AoE damage events, so we know to ignore those in the erroneousFrog count
-		if (this._lastFrog === 0) {
-			// First event of a potential pair; set the tracking var
-			this._lastFrog = time
-		} else if (this._lastFrog === time) {
-			// Second event of a pair; reset the tracker, it was a valid use
-			this._lastFrog = 0
-		} else {
-			// First event of a potential pair, but with a hanging usage; increment the counter, then set the tracking var
-			this._erroneousFrogs++
-			this._lastFrog = time
-		}
-	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
@@ -88,18 +73,15 @@ export default class Ninki extends Module {
 
 		if (NINKI_SPENDERS.hasOwnProperty(abilityId)) {
 			this._ninki -= NINKI_SPENDERS[abilityId]
-			if (abilityId === ACTIONS.HELLFROG_MEDIUM.id &&
-				(this.cooldowns.getCooldownRemaining(ACTIONS.BHAVACAKRA.id) <= 0 ||
-				this.cooldowns.getCooldownRemaining(ACTIONS.TEN_CHI_JIN.id) <= 0)) {
-				// Hellfrog usage when Bhava, TCJ, or both were available; probably a bad decision
-				this._hellfrogUsed(event.timestamp)
-			}
 		}
 	}
 
 	_onAoe(event) {
-		if (event.ability.guid === ACTIONS.HELLFROG_MEDIUM.id && event.hits.length > 1) {
-			this._hellfrogUsed(event.timestamp)
+		if (event.ability.guid === ACTIONS.HELLFROG_MEDIUM.id && event.hits.length === 1 &&
+			(this.cooldowns.getCooldownRemaining(ACTIONS.BHAVACAKRA.id) <= 0 ||
+			this.cooldowns.getCooldownRemaining(ACTIONS.TEN_CHI_JIN.id) <= 0)) {
+			// If we have an Hellfrog AoE event with only one target while Bhava and/or TCJ are available, it was probably a bad life choice
+			this._erroneousFrogs++
 		}
 	}
 
@@ -111,11 +93,6 @@ export default class Ninki extends Module {
 	}
 
 	_onComplete() {
-		if (this._lastFrog !== 0) {
-			// If the last call to _hellfrogUsed() was on a bad cast, it won't wind up in the counter, so we need to do an extra check here
-			this._erroneousFrogs++
-		}
-
 		if (this._wastedNinki >= 12) {
 			const severity = this._wastedNinki >= 24 ? SEVERITY.MEDIUM : SEVERITY.MINOR
 			const why = [
