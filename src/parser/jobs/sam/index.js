@@ -1,8 +1,7 @@
 import About from './About'
 import Higanbana from './Higanbana'
 import Kaiten from './Kaiten'
-import Sen from './Sen'
-import Kenki from './Kenki'
+import Gauge from './Gauge'
 
 
 export default
@@ -10,6 +9,5 @@ export default
 	About,
 	Higanbana,
 	Kaiten,
-	Sen,
-	Kenki,
+	Gauge,
 ]

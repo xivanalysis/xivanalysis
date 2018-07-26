@@ -1,12 +1,14 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
+//import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
-
+//import {ActionLink} from 'components/ui/DbLink'
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyzer aims to identify some of the low-hanging fruit that could be used to improve your SAM gameplay, as well as give a deeper insight into what happened during an encounter.</p>
+		<p> So you study the blade do you? Well consider this analysis the exam to see exactly how much you've learned about the basics of Samurai. This tool will track your sen and kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight.</p>
+		<p> PLEASE NOTE: At this moment in time all Kenki/Sen calulations are done assuming you hit everything in a combo and the postionals on your finishers. This will be updated later to more accurately track those gains, but today is not that day. </p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
