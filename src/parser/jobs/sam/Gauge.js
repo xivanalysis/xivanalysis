@@ -39,6 +39,7 @@ const KENKI_SPENDERS = {
 }
 
 // sen stuff
+
 // 1 sen value for each finisher. using finisher with sen you already have is bad.
 const MAX_GEKKO_SEN = 1
 const MAX_KASHA_SEN = 1
@@ -56,6 +57,7 @@ export default class Gauge extends Module {
 	//kenki
 	_kenki = 0
 	_wastedKenki = 0
+
 	//sen
 	_gekkosen = 0
 	_kashasen = 0
@@ -69,7 +71,7 @@ export default class Gauge extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
-
+//check for kenki value changes, then sen changes
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		if (KENKI_BUILDERS[abilityId]) {
@@ -171,6 +173,7 @@ export default class Gauge extends Module {
 	}
 
 	_onComplete() {
+		//kenki suggestions
 		if (this._wastedKenki >= 20) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HAKAZE.icon,
@@ -183,7 +186,8 @@ export default class Gauge extends Module {
 				</Fragment>,
 			}))
 		}
-
+		
+		//sen suggestions
 		if (this._wastedsen >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
