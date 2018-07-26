@@ -25,6 +25,7 @@ export default class FireCounter extends Module {
 		'suggestions',
 		'gauge',
 		'invuln',
+		'combatants'
 	]
 
 	_inFireRotation = false
@@ -35,6 +36,7 @@ export default class FireCounter extends Module {
 	_UH = 0
 	_AF = 0
 	_UI = 0
+	_MP = 0
 	_lockedBuffs = false
 	_lastStop = false
 
@@ -179,6 +181,7 @@ export default class FireCounter extends Module {
 			this._UH = this.gauge.getUH()
 			this._UI = this.gauge.getUI()
 			this._AF = this.gauge.getAF()
+			this._MP = this.combatants.selected.resources.mp
 			this._lockedBuffs = true
 		}
 	}
