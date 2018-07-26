@@ -1,0 +1,29 @@
+.buffSetHeaderItem {
+	display: inline-block;
+	/*margin: 0 1em;*/
+}
+
+
+.buffSetHeaderItem span {
+	position: relative;
+	margin: 0 1em;
+	line-height: 2em;
+}
+
+.buffSetHeaderItemRight {
+	display: inline-block;
+	float: right;
+}
+.buffSetHeaderItemRight span {
+	position: relative;
+	margin: 0 1em;
+	line-height: 2em;
+}
+
+.jobIcon {
+	height: 2em;
+}
+
+.dilationEventIcon {
+	height: 2em;
+}
