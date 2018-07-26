@@ -140,3 +140,10 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
  * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
  */
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
+
+
+//rennders a time given in seconds into the format mm:ss
+export function formatDuration(duration) {
+		const seconds = Math.floor(duration % 60)
+		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	}

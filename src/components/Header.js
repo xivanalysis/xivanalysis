@@ -5,9 +5,8 @@ import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
 import {Container, Dropdown, Menu} from 'semantic-ui-react'
-import {formatDuration} from 'utilities'
 
-import {compose, getPathMatch} from 'utilities'
+import {compose, getPathMatch, formatDuration} from 'utilities'
 
 import styles from './Header.module.css'
 
@@ -63,7 +62,7 @@ class Header extends Component {
 				if (fight) {
 					const start_time = parseInt(fight.start_time, 10)
 					const end_time = parseInt(fight.end_time, 10)
-					const duration = this.formatDuration(Math.floor(end_time - start_time)/1000)
+					const duration = formatDuration(Math.floor(end_time - start_time)/1000)
 					time = duration
 				}
 				title = `${fight? fight.name : fightId} (${time})`
