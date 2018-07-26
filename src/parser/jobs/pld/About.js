@@ -3,14 +3,20 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
+import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyzer aims to identify some of the low-hanging fruit that could be used to improve your PLD gameplay, as well as give a deeper insight into what happened during an encounter.</p>
+		<p>As the illegitimate child of a WHM and BLM, you chose the Gory Path of a shield lobing, sword swinging Mage, that also tries to help everybody out.</p>
+		<p>This analyzer attempts to find just the right things to get you to be a fearsome Tank, that will show no <ActionLink {...ACTIONS.CLEMENCY}/> to his enemies, while being the true <ActionLink {...ACTIONS.HOLY_SPIRIT}/> of the Party.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<b>The module is still throughly incomplete, this is only the most barebones support for <em>basic</em> analysis of PLD gameplay.</b> And while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!
+				<p><b>Here be Dragons!</b></p>
+				<div>This Analyzer is still <b>Work in Progress</b> and is missing a lot of features as well as simplifying a couple of things for now.</div>
+				<div>Make sure to take the advice still with a grain of Salt.</div>
+				<div>If you notice any issues, concerns or suggestions, please drop by our Discord channel!</div>
 			</Message.Content>
 		</Message>
 	</Fragment>
