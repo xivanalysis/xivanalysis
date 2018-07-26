@@ -1,54 +1,67 @@
 export default {
-  // -----
-  // Cooldowns
-  // -----
-  // Resource Buffs
-  BLOOD_WEAPON: {
+	// -----
+	// Cooldowns
+	// -----
+	// Resource Buffs
+	BLOOD_WEAPON: {
 
-  },
-  BLOOD_PRICE: {
+	},
+	BLOOD_PRICE: {
 
-  },
-  THE_BLACKEST_NIGHT: {
+	},
+	THE_BLACKEST_NIGHT: {
 
-  },
-  // Damage
-  PLUNGE: {
+	},
+	// Damage
+	PLUNGE: {
 
-  },
-  DARK_PASSENGER: {
+	},
+	DARK_PASSENGER: {
 
-  },
-  CARVE_AND_SPIT: {
+	},
+	CARVE_AND_SPIT: {
 
-  },
-  // -----
-  // GCDs
-  // -----
-  // Combo
-  HARD_SLASH: {
+	},
+	SALTED_EARTH: {
 
-  },
-  SYPHON_STRIKE: {
+	},
+	// -----
+	// GCDs
+	// -----
+	// Combo
+	HARD_SLASH: {
 
-  },
-  SOULEATER: {
+	},
+	SYPHON_STRIKE: {
 
-  },
-  SPINNING_SLASH: {
+	},
+	SOULEATER: {
 
-  },
-  POWER_SLASH: {
+	},
+	SPINNING_SLASH: {
 
-  },
-  // Blood Consumers
-  BLOODSPILLER: {
+	},
+	POWER_SLASH: {
 
-  },
-  QUIETUS: {
+	},
+	// Other
+	ABYSSAL_DRAIN: {
 
-  },
-  DELIRIUM: {
+	},
+	UNLEASH: {
 
-  },
+	},
+	UNMEND : {
+
+	},
+	// Blood Consumers
+	BLOODSPILLER: {
+
+	},
+	QUIETUS: {
+
+	},
+	DELIRIUM: {
+
+	},
 }
