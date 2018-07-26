@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 //import {Icon, Message} from 'semantic-ui-react'
 
-//import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -24,6 +24,8 @@ const NINKI_SPENDERS = {
 export default class Ninki extends Module {
 	static handle = 'ninki'
 	static dependencies = [
+		'aoe',
+		'cooldowns',
 		'suggestions',
 	]
 
@@ -34,13 +36,29 @@ export default class Ninki extends Module {
 		auto: 0,
 		death: 0,
 	}
+	_erroneousFrogs = 0 // This is my new band name
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('aoedamage', {by: 'player'}, this._onAoe)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
+
+	_addNinki(abilityId) {
+		// Helper for adding Ninki to the running tally and calculating waste. Returns the amount wasted.
+		this._ninki += NINKI_BUILDERS[abilityId]
+		if (this._ninki > MAX_NINKI) {
+			const waste = this._ninki - MAX_NINKI
+			this._wastedNinki += waste
+			this._ninki = MAX_NINKI
+			return waste
+		}
+
+		return 0
+	}
+
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
@@ -58,17 +76,13 @@ export default class Ninki extends Module {
 		}
 	}
 
-	_addNinki(abilityId) {
-		// Helper for adding Ninki to the running tally and calculating waste. Returns the amount wasted.
-		this._ninki += NINKI_BUILDERS[abilityId]
-		if (this._ninki > MAX_NINKI) {
-			const waste = this._ninki - MAX_NINKI
-			this._wastedNinki += waste
-			this._ninki = MAX_NINKI
-			return waste
+	_onAoe(event) {
+		if (event.ability.guid === ACTIONS.HELLFROG_MEDIUM.id && event.hits.length === 1 &&
+			(this.cooldowns.getCooldownRemaining(ACTIONS.BHAVACAKRA.id) <= 0 ||
+			this.cooldowns.getCooldownRemaining(ACTIONS.TEN_CHI_JIN.id) <= 0)) {
+			// If we have an Hellfrog AoE event with only one target while Bhava and/or TCJ are available, it was probably a bad life choice
+			this._erroneousFrogs++
 		}
-
-		return 0
 	}
 
 	_onDeath() {
@@ -101,6 +115,20 @@ export default class Ninki extends Module {
 				severity: severity,
 				why: <Fragment>
 					Overcapping caused you to lose {this._wastedNinki} Ninki over the fight {suffix}.
+				</Fragment>,
+			}))
+		}
+
+		if (this._erroneousFrogs > 0) {
+			const severity = this._erroneousFrogs > 2 ? SEVERITY.MEDIUM : SEVERITY.MINOR
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.HELLFROG_MEDIUM.icon,
+				content: <Fragment>
+					Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.
+				</Fragment>,
+				severity: severity,
+				why: <Fragment>
+					You used Hellfrog Medium {this._erroneousFrogs} time{this._erroneousFrogs !== 1 && 's'} when other spenders were available.
 				</Fragment>,
 			}))
 		}
