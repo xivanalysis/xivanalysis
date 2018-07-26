@@ -16,8 +16,9 @@ import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
 import PLD from './PLD'
+import ARC from './ARC'
+import BRD from './BRD'
 import SAM from './SAM'
-
 
 const ACTIONS = {
 	...SHARED,
@@ -26,6 +27,7 @@ const ACTIONS = {
 	...ITEMS,
 
 	...ROG,
+	...ARC,
 	...ACN,
 	...MRD,
 
@@ -39,6 +41,8 @@ const ACTIONS = {
 
 	...NIN,
 	...SAM,
+
+	...BRD,
 
 	...BLM,
 	...SMN,

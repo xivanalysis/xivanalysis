@@ -14,9 +14,6 @@ const TRACKEDCDS = [
 	ACTIONS.CONVERT.id,
 ]
 
-//Time that laqi deems ok for a OGCD to be down : ^)
-const DOWNTIME_OK_TIME = 15000
-
 export default class Blmcooldowns extends Module {
 	static handle = 'blmcooldowns'
 	static dependencies = [
@@ -75,6 +72,7 @@ export default class Blmcooldowns extends Module {
 				new Requirement({
 					name: getAction(id).name,
 					percent: this._percentFunction(id, totalSumOfDownTime, encounterLength),
+
 				})
 			)
 		})
@@ -84,14 +82,15 @@ export default class Blmcooldowns extends Module {
 			name: 'Use your OGCDs',
 			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them. Utilize your procs or fast Blizzard III or Fire IIIs.',
 			requirements: OGCDRequirements,
+			target: 100,
 		}))
 	}
 
 	//cool function that I invented that just sets ok usage as 98% and falls very quickly
 	_percentFunction(actionId, downtime, fightlength) {
 		const cooldown = getAction(actionId).cooldown
-		const numberOfUses = Math.floor(fightlength/(cooldown*1000))
-		return Math.exp(-downtime*0.03/(DOWNTIME_OK_TIME*numberOfUses))*100
+		const possibleNumberOfUses = Math.floor(fightlength/(cooldown*1000))
+		return ((possibleNumberOfUses - Math.floor(downtime/(cooldown*1000)))/possibleNumberOfUses)*100
 	}
 
 	_cooldownCheck(event) {

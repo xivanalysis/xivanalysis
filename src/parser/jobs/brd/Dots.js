@@ -7,16 +7,15 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-// Can never be too careful :blobsweat:
 const STATUS_DURATION = {
-	[STATUSES.COMBUST_II.id]: 30000,
+	[STATUSES.CAUSTIC_BITE.id]: 30000,
+	[STATUSES.STORMBITE.id]: 30000,
 }
 
-export default class AstDot extends Module {
-	static handle = 'astdot'
+export default class DoTs extends Module {
+	static handle = 'dots'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'cooldowns',
 		'enemies',
 		'invuln',
@@ -25,7 +24,8 @@ export default class AstDot extends Module {
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.COMBUST_II.id]: 0,
+		[STATUSES.CAUSTIC_BITE.id]: 0,
+		[STATUSES.STORMBITE.id]: 0,
 	}
 
 	constructor(...args) {
@@ -33,7 +33,7 @@ export default class AstDot extends Module {
 
 		const filter = {
 			by: 'player',
-			abilityId: [STATUSES.COMBUST_II.id],
+			abilityId: [STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id],
 		}
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
@@ -45,8 +45,8 @@ export default class AstDot extends Module {
 		// Make sure we're tracking for this target
 		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
 
-		// If it's not been applied yet set it and skip out
-		if (!lastApplication[statusId] ) {
+		// If it's not been applied yet, or we're rushing, set it and skip out
+		if (!lastApplication[statusId]) {
 			lastApplication[statusId] = event.timestamp
 			return
 		}
@@ -54,7 +54,7 @@ export default class AstDot extends Module {
 		// Base clip calc
 		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
 
-		// Remove any untargetable time from the clip - often want to reapply after an invuln phase.
+		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
 		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - STATUS_DURATION[statusId], event.timestamp)
 
 		// Also remove invuln time in the future that casting later would just push dots into
@@ -70,40 +70,42 @@ export default class AstDot extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep your DoT up',
+			name: 'Keep your DoTs up',
 			description: <Fragment>
-				While Astrologians only have one DoT, it still makes up a good portion of your damage. The duration of 30 seconds matches the cooldown on (<ActionLink {...ACTIONS.DRAW} />), giving you space to manage cards. It also enables you to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
+				Brd + Dots = <img src="https://i.imgur.com/YzbDyRg.png" alt="blobmorning" height="27" width="32"></img>
 			</Fragment>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.COMBUST_II} /> uptime</Fragment>,
-					percent: () => this.getDotUptimePercent(STATUSES.COMBUST_II.id),
+					name: <Fragment><ActionLink {...ACTIONS.CAUSTIC_BITE} /> uptime</Fragment>,
+					percent: () => this.getDotUptimePercent(STATUSES.CAUSTIC_BITE.id),
+				}),
+				new Requirement({
+					name: <Fragment><ActionLink {...ACTIONS.STORMBITE} /> uptime</Fragment>,
+					percent: () => this.getDotUptimePercent(STATUSES.STORMBITE.id),
 				}),
 			],
 		}))
 
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
-
-		if (maxClip > 500) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.COMBUST_II.icon,
-				content: <Fragment>
-					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires. Aim to refresh it between 2 to 0 seconds remaining on the duration.
-				</Fragment>,
-				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					{this.parser.formatDuration(this._clip[STATUSES.COMBUST_II.id])} of {STATUSES[STATUSES.COMBUST_II.id].name} lost to early refreshes.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.IRON_JAWS.icon,
+			content: <Fragment>
+				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you&apos;ll need to hardcast your DoTs.
+			</Fragment>,
+			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+			why: <Fragment>
+				{this.parser.formatDuration(this._clip[STATUSES.CAUSTIC_BITE.id])} of {STATUSES[STATUSES.CAUSTIC_BITE.id].name} and {this.parser.formatDuration(this._clip[STATUSES.STORMBITE.id])} of {STATUSES[STATUSES.STORMBITE.id].name} lost to early refreshes.
+			</Fragment>,
+		}))
 	}
 
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.enemies.getStatusUptime(statusId)
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		let fightDuration = this.parser.fightDuration
+
+		fightDuration -= this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
 	}
-
 }

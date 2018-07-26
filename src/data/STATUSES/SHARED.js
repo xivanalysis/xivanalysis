@@ -22,4 +22,10 @@ export default {
 		name: 'Slashing Resistance Down',
 		icon: 'https://secure.xivdb.com/img/game/015000/015786.png',
 	},
+
+	WELL_FED: {
+		id: 48,
+		name: 'Well Fed',
+		icon: 'https://secure.xivdb.com/img/game/016000/016202.png',
+	},
 }

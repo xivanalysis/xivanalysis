@@ -10,25 +10,55 @@ export default {
 	ASPECTED_BENEFIC: {
 		id: 835,
 		name: 'Aspected Benefic',
-		icon: 'https://secure.xivdb.com/img/game/013000/013215.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013215.png',
 	},
 
 	ASPECTED_HELIOS: {
 		id: 836,
 		name: 'Aspected Helios',
-		icon: 'https://secure.xivdb.com/img/game/013000/013216.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013216.png',
 	},
 
 	NOCTURNAL_FIELD: {
 		id: 837,
 		name: 'Nocturnal Field',
-		icon: 'https://secure.xivdb.com/img/game/013000/013217.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013217.png',
 	},
 
 	WHEEL_OF_FORTUNE: {
 		id: 956,
 		name: 'Wheel Of Fortune',
-		icon: 'https://secure.xivdb.com/img/game/013000/013225.png'
+		icon: 'https://secure.xivdb.com/img/game/013000/013225.png',
+	},
+
+	ENHANCED_BENEFIC_II: {
+		id: 815,
+		name: 'Enhanced Benefic II',
+		icon: 'https://secure.xivdb.com/img/game/013000/013228.png',
+	},
+
+	LIGHTSPEED: {
+		id: 841,
+		name: 'Lightspeed',
+		icon: 'https://secure.xivdb.com/img/game/013000/013220.png',
+	},
+
+	SYNASTRY_SELF: {
+		id: 845,
+		name: 'Synastry (self)',
+		icon: 'https://secure.xivdb.com/img/game/013000/013223.png',
+	},
+
+	SYNASTRY: {
+		id: 846,
+		name: 'Synastry',
+		icon: 'https://secure.xivdb.com/img/game/013000/013224.png',
+	},
+
+	COLLECTIVE_UNCONSCIOUS: {
+		id: 849,
+		name: 'Collective Unconscious',
+		icon: 'https://secure.xivdb.com/img/game/013000/013226.png',
 	},
 
 	ENHANCED_ROYAL_ROAD: {

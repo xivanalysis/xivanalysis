@@ -10,4 +10,16 @@ export default {
 		name: 'Swiftcast',
 		icon: 'https://secure.xivdb.com/img/game/010000/010454.png',
 	},
+
+	PROTECT: {
+		id: 146,
+		name: 'Protect',
+		icon: 'https://secure.xivdb.com/img/game/010000/010405.png',
+	},
+
+	LUCID_DREAMING: {
+		id: 1204,
+		name: 'Lucid Dreaming',
+		icon: 'https://secure.xivdb.com/img/game/013000/013909.png',
+	},
 }
