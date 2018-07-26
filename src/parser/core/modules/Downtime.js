@@ -23,7 +23,7 @@ export default class Downtime extends Module {
 		const finalDowntime = [downtimePeriods.shift()]
 		downtimePeriods.forEach(dt => {
 			const last = finalDowntime[finalDowntime.length - 1]
-			if (dt.start < last.end) {
+			if (dt.start <= last.end) {
 				if (dt.end > last.end) {
 					last.end = dt.end
 				}
