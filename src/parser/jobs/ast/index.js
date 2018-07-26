@@ -1,13 +1,13 @@
-// import About from './About'
+import About from './About'
 // import EarthlyStar from './EarthlyStar'
 // import ArcanaUptime from './ArcanaUptime'
 import BuffExtensions from './BuffExtensions'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import AstDot from './AstDot'
+import DoT from './DoT'
 
 export default [
-	// About,
+	About,
 	ArcanaUndrawUsage,
-	AstDot,
+	DoT,
 	BuffExtensions,
 ]
