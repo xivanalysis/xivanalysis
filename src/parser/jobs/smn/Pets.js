@@ -7,7 +7,7 @@ import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import styles from './Pets.module.css'
 
@@ -28,6 +28,12 @@ const CHART_COLOURS = {
 
 // Durations should probably be ACTIONS data
 export const SUMMON_BAHAMUT_LENGTH = 20000
+
+// noPetUptime severity, in %
+const NO_PET_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
 
 export default class Pets extends Module {
 	static handle = 'pets'
@@ -201,16 +207,15 @@ export default class Pets extends Module {
 
 		// Pets are important, k?
 		const noPetUptimePercent = this.getPetUptimePercent(-1)
-		if (noPetUptimePercent > 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SUMMON.icon,
-				why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
-				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				content: <Fragment>
-					Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SUMMON.icon,
+			content: <Fragment>
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+			</Fragment>,
+			why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
+			tiers: NO_PET_SEVERITY,
+			value: noPetUptimePercent,
+		}))
 	}
 
 	getPetUptimePercent(petId) {

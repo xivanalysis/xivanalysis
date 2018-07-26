@@ -6,7 +6,7 @@ import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
 import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
-import {compose, getPathMatch} from 'utilities'
+import {compose, getPathMatch, formatDuration} from 'utilities'
 
 import styles from './Header.module.css'
 
@@ -56,13 +56,19 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
+			let subtitle = null
 			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
-				// Do I want the kill time too?
-				title = fight? fight.name : fightId
+				if (fight) {
+					const start_time = parseInt(fight.start_time, 10)
+					const end_time = parseInt(fight.end_time, 10)
+					subtitle = `(${formatDuration(Math.floor(end_time - start_time) / 1000)})`
+				}
+				title = `${fight? fight.name : fightId} `
 			}
 			crumbs.push({
 				title,
+				subtitle,
 				url: `/find/${code}/${fightId}/`,
 			})
 		}
@@ -109,6 +115,7 @@ class Header extends Component {
 						to={crumb.url}
 					>
 						{crumb.title}
+						{crumb.subtitle && <span className={styles.subtitle}>{crumb.subtitle}</span>}
 					</Menu.Item>)}
 				</Fragment>}
 

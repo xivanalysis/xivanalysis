@@ -7,3 +7,8 @@
 .version {
 	opacity: .5;
 }
+
+.subtitle {
+	margin-left: .5em;
+	opacity: .5;
+}

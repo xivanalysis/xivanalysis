@@ -55,7 +55,7 @@ export default {
 	},
 	FURST: {
 		name: 'Fürst',
-		avatar: process.env.PUBLIC_URL + '/avatar/Furst.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/furst.png',
 		jobs: [JOBS.BLACK_MAGE],
 	},
 	TOASTDEIB: {
@@ -78,5 +78,10 @@ export default {
 		name: 'Ryan',
 		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',
 		jobs: [JOBS.SAMURAI],
+	},
+	SUSHIROU: {
+		name: 'suShirou',
+		avatar: process.env.PUBLIC_URL + '/avatar/sushirou.png',
+		jobs: [JOBS.ASTROLOGIAN],
 	},
 }

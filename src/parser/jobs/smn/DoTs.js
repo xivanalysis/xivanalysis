@@ -5,7 +5,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
@@ -14,6 +14,13 @@ const STATUS_DURATION = {
 }
 
 const SHADOW_FLARE_DURATION = 15000
+
+// In ms
+const CLIPPING_SEVERITY = {
+	1000: SEVERITY.MINOR,
+	10000: SEVERITY.MEDIUM,
+	30000: SEVERITY.MAJOR,
+}
 
 export default class DoTs extends Module {
 	static handle = 'dots'
@@ -97,15 +104,16 @@ export default class DoTs extends Module {
 
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
-		this.suggestions.add(new Suggestion({
+		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.TRI_DISASTER.icon,
 			content: <Fragment>
 				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you'll need to hardcast your DoTs.
 			</Fragment>,
-			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.BIO_III.id])} of {STATUSES[STATUSES.BIO_III.id].name} and {this.parser.formatDuration(this._clip[STATUSES.MIASMA_III.id])} of {STATUSES[STATUSES.MIASMA_III.id].name} lost to early refreshes.
 			</Fragment>,
+			tiers: CLIPPING_SEVERITY,
+			value: maxClip,
 		}))
 	}
 

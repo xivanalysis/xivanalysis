@@ -47,6 +47,10 @@ export default class Requiescat extends Module {
 	_onCast(event) {
 		const actionId = event.ability.guid
 
+		if (actionId === ACTIONS.ATTACK.id) {
+			return
+		}
+
 		if (actionId === ACTIONS.REQUIESCAT.id) {
 			this._requiescatStart = event.timestamp
 		}
