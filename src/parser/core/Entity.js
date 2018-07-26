@@ -46,10 +46,10 @@ export default class Entity {
 	 * @param {number} sourceID - source ID the buff must have come from, or any source if null.
 	 * @returns {Object} - An array of buff objects on the target at the given timestamp. The buff object will have all the properties of the associated applybuff event, along with a start timestamp, an end timestamp if the buff has fallen, and an isDebuff flag. If multiple buffs meet the specifications, there's no guarantee which you'll get (this could happen if multiple spells with the same statusId but from different sources are on the same target)
 	 */
-	getStatuses(forTimestamp, bufferTime = 0, minimalActiveTime = 0, sourceID = null){
+	getStatuses(forTimestamp, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
 		const currentTimestamp = forTimestamp
-		
-		return this.buffs.filter(buff => 
+
+		return this.buffs.filter(buff =>
 			(currentTimestamp - minimalActiveTime) >= buff.start &&
 			(buff.end === null || (buff.end + bufferTime) >= currentTimestamp) &&
 			(sourceID === null || sourceID === buff.sourceID))
