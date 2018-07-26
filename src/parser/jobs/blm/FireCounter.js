@@ -25,7 +25,7 @@ export default class FireCounter extends Module {
 		'suggestions',
 		'gauge',
 		'invuln',
-		'combatants'
+		'combatants',
 	]
 
 	_inFireRotation = false
