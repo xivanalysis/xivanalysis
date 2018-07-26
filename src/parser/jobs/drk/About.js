@@ -10,7 +10,7 @@ export default class About extends CoreAbout {
 	<Message warning icon>
 	  <Icon name="warning sign"/>
 	  <Message.Content>
-		<b>The module is still thoroughly incomplete, this is only the most barebones support for <em>basic</em> analysis of WAR gameplay.</b> And while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!
+		This module focuses on assisting with Mana/Blood capping and Blood Weapon up-time, as well as general fundamentals of DRK gameplay.  Drop by the discord for any clarifications and corrections.
 	  </Message.Content>
 	</Message>
   </Fragment>
