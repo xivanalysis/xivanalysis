@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
+import JobIcon from 'components/ui/JobIcon'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -8,27 +9,21 @@ import {ROYAL_ROAD_STATES, HELD_ARCANA, DRAWN_ARCANA} from './ArcanaGroups'
 import Module from 'parser/core/Module'
 
 
-import JobIcon from 'components/ui/JobIcon'
 import BuffList from './BuffList'
-
 import styles from './BuffExtensions.module.css'
 
-
+// TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
-	static handle = 'buffdilation'
+	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
 	static dependencies = [
-		'castTime',
-		'gcd',
 		'suggestions',
 	]
 
-	// Lag allowance for applying aoe effects
+	// Latency allowance for applying aoe effects
 	_envEffectGracePeriod = 4500
-
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
 	_dilationUses = []
-
 	_oppositionEvent = null
 
 
@@ -60,23 +55,36 @@ export default class BuffExtensions extends Module {
 
 	}
 
-	// Grabs all the buffs the target has, packs it up with some info and adds to _dilationUses
+	/**
+	 * Grabs all the buffs the target has, packs it up with some info and add to _dilationUses
+	 *
+	 * @param {obj} log event of a Time Dilation cast
+	 * @return {void} null
+	 */
 	_onDilation(event) {
 
-		// TODO: prevent getEntity from returning null if target was a pet
+		// TODO: prevent getEntity from returning null if target was a pet - Sushi
 		// (Pets are stored under the player entities)
-		let refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
+		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
 		this._dilationUses.push({
 			event: event,
-			targetName: refreshedTarget.info.name,
-			targetJob: refreshedTarget.info.type,
-			buffs: refreshedTarget.getStatuses(event.timestamp, 0, 1000, event.sourceID),
+			targets: [{
+				id: event.targetID,
+				name: refreshedTarget.info.name,
+				job: refreshedTarget.info.type,
+				buffs: refreshedTarget.getStatuses(event.timestamp, 0, 1000, event.sourceID),
+			}],
+
 		})
 	}
 
-	// Need to check for who exactly was in range of the buff, before using the same idea as in Time Dilation
-	// Records the event and timestamp, then leaves the rest up to _onBuffRefresh
+	/**
+	 * Prepares an object to be populated by refresh events
+	 *
+	 * @param {obj} log event of a Celestial Opposition cast
+	 * @return {void} null
+	 */
 	_onOpposition(event) {
 
 		// Clear previous Opposition history
@@ -88,11 +96,19 @@ export default class BuffExtensions extends Module {
 		// Structure a new collection of refreshed buffs by this Opposition cast
 		this._oppositionEvent = {
 			event: event,
-			targets: []
+			targets: [],
 		}
 
 	}
 
+
+	/**
+	 * Checks if the timestamp is within allowable range from the Opposition Event
+	 * Populates the _oppositionEvent created in _onOpposition with refresh events on friendlies
+	 *
+	 * @param {obj} log event of a Celestial Opposition cast
+	 * @return {void} null
+	 */
 	_onBuffRefresh(event) {
 		const statusID = event.ability.guid
 
@@ -107,21 +123,21 @@ export default class BuffExtensions extends Module {
 			&& !DRAWN_ARCANA.includes(statusID)) {
 
 
-				let refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
+				const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
 				// If this target isn't in the target array, add it
-				if(!this._oppositionEvent.targets.find(target => {
+				if (!this._oppositionEvent.targets.find(target => {
 					return target.id === event.targetID
-				})){
+				})) {
 
 
-					// TODO: Doesn't work with pets
-					if(refreshedTarget){
+					// TODO: Doesn't work with pets - Sushi
+					if (refreshedTarget) {
 						this._oppositionEvent.targets.push({
 							id: event.targetID,
 							name: refreshedTarget.info.name,
 							job: refreshedTarget.info.type,
-							buffs: [event]
+							buffs: [event],
 						})
 					}
 				} else {
@@ -141,9 +157,19 @@ export default class BuffExtensions extends Module {
 			this._oppositionEvent = null
 		}
 
+		// Sorting chronologically
 		this._dilationUses.sort((a, b) => {
 			return a.event.timestamp - b.event.timestamp
 		})
+
+		// Sort the buffs so they're consistent
+		for (const dilation of this._dilationUses) {
+			for (const target of dilation.targets) {
+				target.buffs.sort((a, b) => {
+					return a.ability.guid - b.ability.guid
+				})
+			}
+		}
 
 
 
@@ -152,95 +178,84 @@ export default class BuffExtensions extends Module {
 	output() {
 		const panels = this._dilationUses.map(dilation => {
 
+			let descriptionText = ''
+			let emptyMessage = null
+			let targetRows = null
+
+
+			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
-				// Output for Time Dilation
-				const numBuffs = dilation.buffs.length
-
-				return {
-					title: {
-						key: 'title-' + dilation.event.timestamp,
-						content: <Fragment>
-							<div className={styles.buffSetHeaderItem}>
-								{this.parser.formatTimestamp(dilation.event.timestamp)}&nbsp;-&nbsp;
-							</div>
-							<div className={styles.buffSetHeaderItem}><img
-									key={dilation.event.timestamp}
-									src={ACTIONS[dilation.event.ability.guid].icon}
-									className={styles.dilationEventIcon}
-									alt={dilation.event.ability.name}
-								/>
-							</div>
-							<div className={styles.buffSetHeaderItem}>
-								{numBuffs} buffs extended.
-							</div>
-							<div className={styles.buffSetHeaderItemRight}>
-								<span>{dilation.targetName}</span>
-								<JobIcon
-									job={JOBS[dilation.targetJob]}
-									className={styles.jobIcon}
-								/>
-							</div>
-
-						</Fragment>,
-					},
-					content: {
-						key: 'content-' + dilation.event.timestamp,
-						content: <BuffList events={dilation.buffs}/>,
-					},
+				const numBuffs = dilation.targets[0].buffs.length
+				descriptionText = numBuffs + ' buffs extended'
+				if (numBuffs < 1) {
+					emptyMessage = 'No buffs extended.'
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
-				// Output for Celestial Opposition
 				const numTargets = dilation.targets.length
+				descriptionText = numTargets + ' targets affected'
 
-				return {
-					title: {
-						key: 'title-' + dilation.event.timestamp,
-						content: <Fragment>
-							<div className={styles.buffSetHeaderItem}>
-								{this.parser.formatTimestamp(dilation.event.timestamp)}&nbsp;-&nbsp;
-							</div>
-							<div className={styles.buffSetHeaderItem}><img
-									key={dilation.event.timestamp}
-									src={ACTIONS[dilation.event.ability.guid].icon}
-									className={styles.dilationEventIcon}
-									alt={dilation.event.ability.name}
-								/>
-							</div>
-							<div className={styles.buffSetHeaderItem}>
-								{numTargets} targets affected.
-							</div>
-
-						</Fragment>,
-					},
-					content: {
-						key: 'content-' + dilation.event.timestamp,
-						content: <div>{ dilation.targets.map(target => {
-							return <Fragment>
-								<table>
-									<tbody>
-										<tr>
-											<td>
-												<JobIcon
-													job={JOBS[target.job]}
-													className={styles.jobIcon}
-												/>
-											</td>
-											<td>{target.name}</td>
-												<BuffList events={target.buffs}></BuffList>
-											<td></td>
-										</tr>
-									</tbody>
-								</table>
-							</Fragment>
-						}
-						)}</div>,
-					}
-
+				if (numTargets < 1) {
+					emptyMessage = 'No buffs extended.'
 				}
 
-			} else {
-				return
 			}
+
+			// Either output the list of targets or the empty message
+			targetRows = dilation.targets.map(target => {
+				return <tr key={target.id}>
+					<td>
+						<JobIcon
+							job={JOBS[target.job]}
+							className={styles.buffextensions__jobIcon}
+						/>
+					</td>
+					<td>{target.name}</td>
+					<td>
+						<BuffList events={target.buffs}></BuffList>
+						<span className="text-error">{emptyMessage}</span>
+					</td>
+				</tr>
+			})
+
+
+
+			return {
+				title: {
+					key: 'title-' + dilation.event.timestamp,
+					content: <Fragment>
+						<div className={styles.buffextensions__headerItem}>
+							{this.parser.formatTimestamp(dilation.event.timestamp)}&nbsp;-&nbsp;
+						</div>
+						<div className={styles.buffextensions__headerItem}><img
+							key={dilation.event.timestamp}
+							src={ACTIONS[dilation.event.ability.guid].icon}
+							className={styles.buffextensions__dilationEventIcon}
+							alt={dilation.event.ability.name}
+						/>
+						</div>
+						<div className={styles.buffextensions__headerItem}>
+								&nbsp;-&nbsp;{descriptionText}
+						</div>
+
+					</Fragment>,
+				},
+				content: {
+					key: 'content-' + dilation.event.timestamp,
+					content: <Fragment>
+						<table className={styles.buffextensions__buffTable}>
+							<tbody>
+								{targetRows.length ? targetRows
+									: <tr>
+										{emptyMessage}
+									</tr>}
+							</tbody>
+						</table>
+					</Fragment>,
+				},
+
+			}
+
+
 
 		})
 

@@ -3,10 +3,10 @@ import React, {Component} from 'react'
 
 import STATUSES from 'data/STATUSES'
 
-import styles from './BuffList.module.css'
+// import styles from './BuffList.module.css'
 
 // Simple component to spit out a list of buff icons
-// Should this component be a common component like Rotation? It's very simple.
+// Should this component be a common component like Rotation? It's very simple. - Sushi
 export default class BuffList extends Component {
 	static propTypes = {
 		events: PropTypes.arrayOf(PropTypes.shape({
