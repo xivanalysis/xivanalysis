@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Link} from 'react-router-dom'
 import {Menu, Progress} from 'semantic-ui-react'
+import {formatDuration} from 'utilities'
 
 import styles from './FightItem.module.css'
 
@@ -16,11 +17,6 @@ class FightItem extends Component {
 			end_time: PropTypes.number.isRequired,
 		}).isRequired,
 		code: PropTypes.string.isRequired,
-	}
-
-	formatDuration(duration) {
-		const seconds = Math.floor(duration % 60)
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
 	}
 
 	render() {
@@ -41,7 +37,7 @@ class FightItem extends Component {
 		return <Menu.Item as={Link} to={url}>
 			{name}
 			<span className="pull-right">
-				{this.formatDuration(duration)}
+				{formatDuration(duration)}
 				<Progress percent={progress} size="small" className={styles.progress} color={colour}/>
 			</span>
 		</Menu.Item>
