@@ -4,9 +4,6 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
 
-//Time that laqi deems ok for a OGCD to be down : ^)
-//const DOWNTIME_OK_TIME = 15000
-
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
 	static dependencies = [
@@ -21,7 +18,7 @@ export default class CooldownDowntime extends Module {
 	//tracking the important™ CDs
 	_trackedcds = []
 	//Default alloted time before a spell is held too long.
-	_downtimeOkTime = 15000
+	_downtimeOkTime = 0
 	//Determines if we're being overriden by an extension class
 	_extensionOverride = false
 
