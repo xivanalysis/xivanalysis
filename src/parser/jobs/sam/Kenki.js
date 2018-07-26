@@ -20,12 +20,10 @@ const KENKI_BUILDERS = {
 	[ACTIONS.HAKAZE.id]: 5,
 	[ACTIONS.JINPU.id]: 5,
 	[ACTIONS.SHIFU.id]: 5,
-	
 	//aoe
 	[ACTIONS.MANGETSU.id]: 10,
 	[ACTIONS.OKA.id]: 10,
 	[ACTIONS.FUGA.id]: 5,
-
 	//ranged
 	[ACTIONS.ENPI.id]: 10,
 }
@@ -60,21 +58,17 @@ export default class Kenki extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	
-_onCast(event) {
+	_onCast(event) {
 		const abilityId = event.ability.guid
-
-		
 		if (KENKI_BUILDERS[abilityId]) {
 			this._addKenki(abilityId)
 		}
 		if (KENKI_SPENDERS[abilityId]) {
 			this._kenki -= KENKI_SPENDERS[abilityId]
 		}
-}
+	}
 
-
-_addKenki(abilityId) {
+	_addKenki(abilityId) {
 		this._kenki += KENKI_BUILDERS[abilityId]
 		if (this._kenki > MAX_KENKI) {
 			const waste = this._kenki - MAX_KENKI
@@ -85,13 +79,28 @@ _addKenki(abilityId) {
 		return 0
 	}
 
+	_Sen2Kenki() {
+		this._kenki += ((this._gekkosen + this._kashasen + this._yukikazesen) * 20)
+		if (this.kenki > MAX_KENKI) {
+			const waste = this._kenki - MAX_KENKI
+			this._wastedKenki += waste
+			this._kenki = MAX_KENKI
+			return waste
+		}
+		this._gekkosen = 0
+		this._kashasen = 0
+		this._yukikazesen = 0
+
+		return 0
+	}
+
 	_onDeath() {
 		// Death just flat out resets everything. Stop dying.
 		this._wastedKenki += this._kenki
 
 		this._kenki = 0
 	}
-_onComplete() {
+	_onComplete() {
 		if (this._wastedKenki >= 20) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HAKAZE.png,

@@ -1,10 +1,10 @@
 import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
+//import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
-//import Rotation from 'components/ui/Rotation' (nope, nothing here too)
-import ACTIONS, {getAction} from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES' (nothing to see here)
+//import Rotation from 'components/ui/Rotation'
+import ACTIONS from 'data/ACTIONS'
+//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -26,7 +26,7 @@ export default class Sen extends Module {
 	_gekkosen = 0
 	_kashasen = 0
 	_yukikazesen = 0
-	
+
 	_wastedsen = 0
 
 	constructor(...args) {
@@ -40,28 +40,19 @@ export default class Sen extends Module {
 	_onCast(event) {
 		const actionId = event.ability.guid
 
-		//now for the ugly 100% Ryan code.
-	
-		if(actionId === ACTIONS.HAGAKURE.id) {
+		//check if it's a sen gain or dump then handle it.
+
+		if (actionId === ACTIONS.HAGAKURE.id) {
 			this._Sen2Kenki()
-		}
-
-		else if(actionId ===ACTIONS.HIGANBANA.id || actionId === ACTIONS.TENKA_GOKEN.id || actionId === ACTIONS.MIDARE_SETSUGEKKA.id) {
+		} else if (actionId ===ACTIONS.HIGANBANA.id || actionId === ACTIONS.TENKA_GOKEN.id || actionId === ACTIONS.MIDARE_SETSUGEKKA.id) {
 			this._removeSen()
+		} else if (actionId === ACTIONS.GEKKO.id || actionId === ACTIONS.MANGETSU.id) {
+			this._addGekkoSen()
+		} else if (actionId === ACTIONS.KASHA.id || actionId === ACTIONS.OKA.id) {
+			this._addKashaSen()
+		} else if (actionId === ACTIONS.YUKIKAZE.id) {
+			this._addYukikazeSen()
 		}
-
-		else if(actionId === ACTIONS.GEKKO.id) {
-			this._addGekkoSen() 
-		}
-		
-		else if(actionId === ACTIONS.KASHA.id) {
-			this._addKashaSen() 
-		}
-
-		else if(actionId === ACTIONS.YUKIKAZE.id) {
-			this._addYukikazeSen() 
-		}
-
 	}
 
 	_addGekkoSen() {
@@ -74,48 +65,32 @@ export default class Sen extends Module {
 		return 0
 	}
 
-
-	 _addKashaSen()  {
-                this._kashasen += 1
-                if (this._kashasen > MAX_KASHA_SEN) {
-                        const waste = this._kashasen - MAX_KASHA_SEN
-                        this._wastedsen += waste
-                        return waste
-                }
-                return 0
-        }
-	
-	 _addYukikazeSen()  {
-                this._yukikazesen += 1
-                if (this._yukikazesen > MAX_YUKIKAZE_SEN) {
-                        const waste = this._yukikazesen - MAX_YUKIKAZE_SEN
-                        this._wastedsen += waste
-                        return waste
-                }
-                return 0
-        }
-
-	_removeSen()	{
-		this._gekkosen = 0
-		this._kashasen = 0
-		this._yukikazesen = 0
-	
+	_addKashaSen() {
+		this._kashasen += 1
+		if (this._kashasen > MAX_KASHA_SEN) {
+			const waste = this._kashasen - MAX_KASHA_SEN
+			this._wastedsen += waste
+			return waste
+		}
 		return 0
 	}
 
-	_Sen2Kenki() { 
-               		this._kenki += ((this._gekkosen + this._kashasen + this._yukikazesen) * 20)
-                        if(this.kenki > MAX_KENKI) {
-                                const waste = this._kenki - MAX_KENKI
-                                this._wastedKenki += waste
-                                this._kenki = MAX_KENKI
-                                return waste
-        		}
-		this._gekkosen = 0
-                this._kashasen = 0
-                this._yukikazesen = 0
+	_addYukikazeSen()  {
+		this._yukikazesen += 1
+		if (this._yukikazesen > MAX_YUKIKAZE_SEN) {
+			const waste = this._yukikazesen - MAX_YUKIKAZE_SEN
+			this._wastedsen += waste
+			return waste
+		}
+		return 0
+	}
 
-                return 0	
+	_removeSen() {
+		this._gekkosen = 0
+		this._kashasen = 0
+		this._yukikazesen = 0
+
+		return 0
 	}
 	_onDeath() {
 		//Death is such a waste

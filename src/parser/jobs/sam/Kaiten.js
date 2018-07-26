@@ -55,9 +55,7 @@ export default class Kaiten extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HISSATSU_KAITEN.icon,
 				content: <Fragment>
-
-					Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.IAIJUTSU}/>s moves. These actions are worth it for the potency gain per kenki spent. 
-
+				Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.IAIJUTSU}/>s moves. These actions are worth it because of the potency gain per kenki spent.
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
