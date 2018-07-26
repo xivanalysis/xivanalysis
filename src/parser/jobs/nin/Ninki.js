@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 //import {Icon, Message} from 'semantic-ui-react'
 
-//import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -24,6 +24,8 @@ const NINKI_SPENDERS = {
 export default class Ninki extends Module {
 	static handle = 'ninki'
 	static dependencies = [
+		'aoe',
+		'cooldowns',
 		'suggestions',
 	]
 
@@ -34,28 +36,15 @@ export default class Ninki extends Module {
 		auto: 0,
 		death: 0,
 	}
+	_lastFrog = 0
+	_erroneousFrogs = 0 // This is my new band name
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('aoedamage', {by: 'player'}, this._onAoe)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
-	}
-
-	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		if (abilityId === ACTIONS.MUG.id) {
-			this._wasteBySource.mug += this._addNinki(abilityId)
-		}
-
-		if (abilityId === ACTIONS.ATTACK.id) {
-			this._wasteBySource.auto += this._addNinki(abilityId)
-		}
-
-		if (NINKI_SPENDERS.hasOwnProperty(abilityId)) {
-			this._ninki -= NINKI_SPENDERS[abilityId]
-		}
 	}
 
 	_addNinki(abilityId) {
@@ -71,6 +60,49 @@ export default class Ninki extends Module {
 		return 0
 	}
 
+	_hellfrogUsed(time) {
+		// For corroborating Hellfrog casts with AoE damage events, so we know to ignore those in the erroneousFrog count
+		if (this._lastFrog === 0) {
+			// First event of a potential pair; set the tracking var
+			this._lastFrog = time
+		} else if (this._lastFrog === time) {
+			// Second event of a pair; reset the tracker, it was a valid use
+			this._lastFrog = 0
+		} else {
+			// First event of a potential pair, but with a hanging usage; increment the counter, then set the tracking var
+			this._erroneousFrogs++
+			this._lastFrog = time
+		}
+	}
+
+	_onCast(event) {
+		const abilityId = event.ability.guid
+
+		if (abilityId === ACTIONS.MUG.id) {
+			this._wasteBySource.mug += this._addNinki(abilityId)
+		}
+
+		if (abilityId === ACTIONS.ATTACK.id) {
+			this._wasteBySource.auto += this._addNinki(abilityId)
+		}
+
+		if (NINKI_SPENDERS.hasOwnProperty(abilityId)) {
+			this._ninki -= NINKI_SPENDERS[abilityId]
+			if (abilityId === ACTIONS.HELLFROG_MEDIUM.id &&
+				(this.cooldowns.getCooldownRemaining(ACTIONS.BHAVACAKRA.id) <= 0 ||
+				this.cooldowns.getCooldownRemaining(ACTIONS.TEN_CHI_JIN.id) <= 0)) {
+				// Hellfrog usage when Bhava, TCJ, or both were available; probably a bad decision
+				this._hellfrogUsed(event.timestamp)
+			}
+		}
+	}
+
+	_onAoe(event) {
+		if (event.ability.guid === ACTIONS.HELLFROG_MEDIUM.id && event.hits.length > 1) {
+			this._hellfrogUsed(event.timestamp)
+		}
+	}
+
 	_onDeath() {
 		// YOU DONE FUCKED UP NOW
 		//this._wastedNinki += this._ninki // Exclude this from the running total, but track it individually in case we want it in another module later
@@ -79,6 +111,11 @@ export default class Ninki extends Module {
 	}
 
 	_onComplete() {
+		if (this._lastFrog !== 0) {
+			// If the last call to _hellfrogUsed() was on a bad cast, it won't wind up in the counter, so we need to do an extra check here
+			this._erroneousFrogs++
+		}
+
 		if (this._wastedNinki >= 12) {
 			const severity = this._wastedNinki >= 24 ? SEVERITY.MEDIUM : SEVERITY.MINOR
 			const why = [
@@ -101,6 +138,20 @@ export default class Ninki extends Module {
 				severity: severity,
 				why: <Fragment>
 					Overcapping caused you to lose {this._wastedNinki} Ninki over the fight {suffix}.
+				</Fragment>,
+			}))
+		}
+
+		if (this._erroneousFrogs > 0) {
+			const severity = this._erroneousFrogs > 2 ? SEVERITY.MEDIUM : SEVERITY.MINOR
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.HELLFROG_MEDIUM.icon,
+				content: <Fragment>
+					Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.
+				</Fragment>,
+				severity: severity,
+				why: <Fragment>
+					You used Hellfrog Medium {this._erroneousFrogs} time{this._erroneousFrogs !== 1 && 's'} when other spenders were available.
 				</Fragment>,
 			}))
 		}
