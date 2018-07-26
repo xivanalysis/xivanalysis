@@ -19,6 +19,7 @@ export default class Sen extends Module {
 		'combatants',
 		'cooldowns',
 		'gcd',
+		'kenki',
 		'suggestions',
 	]
 
@@ -102,13 +103,19 @@ export default class Sen extends Module {
 		return 0
 	}
 
-	_Sen2Kenki() { //TODO: UPDATE THIS FOR KENKI GAIN AFTER IMPLMENTING KENKI
+	_Sen2Kenki() { 
+               		this._kenki += ((this._gekkosen + this._kashasen + this._yukikazesen) * 20)
+                        if(this.kenki > MAX_KENKI) {
+                                const waste = this._kenki - MAX_KENKI
+                                this._wastedKenki += waste
+                                this._kenki = MAX_KENKI
+                                return waste
+        		}
 		this._gekkosen = 0
                 this._kashasen = 0
                 this._yukikazesen = 0
 
-                return 0
-
+                return 0	
 	}
 	_onDeath() {
 		//Death is such a waste

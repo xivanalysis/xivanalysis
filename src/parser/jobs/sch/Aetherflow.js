@@ -1,11 +1,10 @@
 import React, {Fragment} from 'react'
-import {Table} from 'semantic-ui-react'
+import {Table, Grid} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import styles from './Aetherflow.module.css'
 
 // Actions that reduce Aetherflow's cooldown.
 const AETHERFLOW_CD_ACTIONS = [
@@ -116,7 +115,7 @@ export default class Aetherflow extends Module {
 						const {id, debit, timestamp} = prev[prev.length-1]
 						if (curr.debit) {
 							prev[prev.length-1] = {
-								debit: debit + curr.debit,
+								debit: (debit || 0) + curr.debit,
 								id: [].concat(id, curr.id),
 								timestamp: [].concat(timestamp, curr.timestamp),
 							}
@@ -154,21 +153,21 @@ export default class Aetherflow extends Module {
 						if (drift > 0) {
 							totalDrift += drift
 						}
-						const wasted = 3 - debit || 0
-						totalWasted += wasted
+						let wasted = 0
+						if (downtime > 45000) {
+							wasted = 3 - debit || 0
+							totalWasted += wasted
+						}
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
 							<Table.Cell>{drift > 0 && this.parser.formatDuration(drift)}</Table.Cell>
-							<Table.Cell className={styles.abilities}>
-								{/* All this is to align Aetherflows/Dissipate together */}
-								{index === 0 && <span className={styles.ability}>&nbsp;</span>}
-								{id.map(id =>
-									<span key={id} className={styles.ability}><ActionLink id={id} name="" /></span>
-								)}
-								{[...Array((index === 0 ? 3 : 4) - id.length)].map(id =>
-									<span key={id} className={styles.ability}>&nbsp;</span>
-								)}
+							<Table.Cell>
+								<Grid>
+									{id.map((id, i) => <Grid.Column key={i} width={4}>
+										<ActionLink {...getAction(id)} />
+									</Grid.Column>)}
+								</Grid>
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>

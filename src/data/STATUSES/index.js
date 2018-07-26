@@ -19,7 +19,7 @@ import WHM from './WHM'
 import PLD from './PLD'
 import SAM from './SAM'
 
-	
+
 const STATUSES = {
 	...ENEMY,
 	...ROLE,
