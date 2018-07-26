@@ -4,8 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {matchClosestLower} from 'utilities'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Accordion} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 
@@ -77,16 +76,15 @@ export default class Requiescat extends Module {
 	}
 
 	_onComplete() {
-		if (this._missedHolySpirits > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.REQUIESCAT.icon,
-				why: `${this._missedHolySpirits} Holy Spirit${this._missedHolySpirits !== 1 ? 's' : ''} missed during Requiescat.`,
-				severity: matchClosestLower(this._severityMissedHolySpirits, this._missedHolySpirits),
-				content: <Fragment>
-					GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.REQUIESCAT.icon,
+			why: `${this._missedHolySpirits} Holy Spirit${this._missedHolySpirits !== 1 ? 's' : ''} missed during Requiescat.`,
+			content: <Fragment>
+				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
+			</Fragment>,
+			tiers: this._severityMissedHolySpirits,
+			value: this._missedHolySpirits,
+		}))
 	}
 
 	output() {
