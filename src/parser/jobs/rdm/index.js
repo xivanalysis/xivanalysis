@@ -1,7 +1,7 @@
 import About from './About'
 import Gauge from './Gauge'
 import Dualcast from './Dualcast'
-import RdmCooldownDowntime from './RdmCooldownDowntime'
+import GeneralCDDowntime from './GeneralCDDowntime'
 //import Fleche from './Fleche'
 
 export default [
@@ -9,5 +9,5 @@ export default [
 	Gauge,
 	Dualcast,
 	//Fleche,
-	RdmCooldownDowntime,
+	GeneralCDDowntime,
 ]

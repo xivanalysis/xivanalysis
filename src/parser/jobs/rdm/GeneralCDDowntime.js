@@ -8,12 +8,13 @@ const TRACKEDCDS = [
 	ACTIONS.ACCELERATION.id,
 	ACTIONS.CORPS_A_CORPS.id,
 	ACTIONS.DISPLACEMENT.id,
+	ACTIONS.EMBOLDEN.id,
 ]
 
 //Time that Jump deems ok for a OGCD to be down : ^)
 const DOWNTIME_OK_TIME = 4000
 
-export default class RdmCooldownDowntime extends CooldownDowntime {
+export default class GeneralCDDowntime extends CooldownDowntime {
 
 	constructor(...args) {
 		super(...args)

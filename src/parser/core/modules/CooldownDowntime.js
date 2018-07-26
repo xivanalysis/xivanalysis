@@ -1,6 +1,8 @@
+import React from 'react'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {ActionLink} from 'components/ui/DbLink'
 
 //Time that laqi deems ok for a OGCD to be down : ^)
 //const DOWNTIME_OK_TIME = 15000
@@ -64,7 +66,6 @@ export default class CooldownDowntime extends Module {
 	}
 
 	_onCast(event) {
-
 		//do the check at every cast
 		this._cooldownCheck(event)
 	}
@@ -85,15 +86,17 @@ export default class CooldownDowntime extends Module {
 			}
 
 			//calculate the downtime based on the start and stop values and sum the array
+			//Adjust for the classes defined alloted time to allow a CD to be held
+			//this supports classes like RDMs who routinely hold CDs due to procs
 			const totalSumOfDownTime = dt.history.map(downTime => {
-				return Math.max(downTime.stoptime - downTime.starttime, 0)
+				return Math.max(downTime.stoptime - downTime.starttime - this._downtimeOkTime, 0)
 			}).reduce(
 				(accumulator, currentValue) => accumulator + currentValue
 			)
 			//write the results as a new Requirement to show up later
 			OGCDRequirements.push(
 				new Requirement({
-					name: getAction(id).name,
+					name: <ActionLink {...getAction(id)} />,
 					percent: this._percentFunction(id, totalSumOfDownTime, encounterLength),
 				})
 			)
@@ -105,14 +108,15 @@ export default class CooldownDowntime extends Module {
 			name: 'Use your OGCDs',
 			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them.',
 			requirements: OGCDRequirements,
+			target: 99,
 		}))
 	}
 
 	//cool function that Furst invented that just sets ok usage as 98% and falls very quickly
 	_percentFunction(actionId, downtime, fightlength) {
 		const cooldown = getAction(actionId).cooldown
-		const numberOfUses = Math.floor(fightlength/(cooldown*1000))
-		return Math.exp(-downtime*0.03/(this._downtimeOkTime*numberOfUses))*100
+		const possibleNumberOfUses = Math.floor(fightlength/(cooldown*1000))
+		return ((possibleNumberOfUses - Math.floor(downtime/(cooldown*1000)))/possibleNumberOfUses)*100
 	}
 
 	_cooldownCheck(event) {
