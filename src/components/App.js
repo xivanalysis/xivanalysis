@@ -49,7 +49,7 @@ class App extends Component {
 			<Header/>
 
 			<Container>
-				<Message error>
+				{/* <Message error>
 					<p><strong>We're under heavy load!</strong></p>
 					<p>
 						Due to an unexpected &amp; severe increase in traffic to our site, you may run into FFLogs API Errors. Please bear with us while we resolve the issue.<br/>
@@ -58,7 +58,7 @@ class App extends Component {
 						ご理解してくれてありがとうございます。<br/>
 					</p>
 					<p><em>xivanalysis Development Team</em></p>
-				</Message>
+				</Message> */}
 				<Message info>
 					<p><strong>このサイトの使用注意点</strong></p>
 					<p>現時点でこのアナリシストは不完全であり、召喚のみに適用されています(召喚でもまだ最適化中です）。全ジョブサポートは現在作業中です。そのため、対応されていないジョブにアナリシストを行うと分析の錯誤が出る恐れがあります。サポートやお問い合わせは<a href="https://discord.gg/jVbVe44">Discord</a> でお願いします。</p>
