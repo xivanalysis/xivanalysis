@@ -27,6 +27,8 @@ export default class InnerRelease extends Module {
 	_active = false
 	_ir = {}
 	_history = []
+	_isRushing = false
+	_irTime = 10000
 
 	_missedGcds = 0
 	_missedUpheavals = 0
@@ -53,6 +55,10 @@ export default class InnerRelease extends Module {
 				end: null,
 				casts: [],
 			}
+
+			// Calculates if we need to count Inner Release as a 'rush'
+			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+			this._isRushing = this._irTime >= fightTimeRemaining
 		}
 
 		// Only going to save casts during IR
@@ -60,7 +66,6 @@ export default class InnerRelease extends Module {
 			return
 		}
 
-		//console.log(this._ir)
 		this._ir.casts.push(event)
 	}
 
@@ -100,7 +105,7 @@ export default class InnerRelease extends Module {
 			}))
 		}
 
-		if (this._missedGcds) {
+		if (this._missedGcds && !this._isRushing) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_RELEASE.icon,
 				why: `${this._missedGcds} GCDs missed inside of IR.`,
@@ -148,6 +153,12 @@ export default class InnerRelease extends Module {
 		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 		const upheaval = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id)
 		const onslaught = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id)
+
+		// HOLA RUSH CHECK
+		// Basically makes sure that if you end the fight with IR active, the analysis won't fucking screech at you for missing IR stuff.
+		if (this._isRushing || gcds.length > 1) {
+			return
+		}
 
 		this._missedGcds += possibleGcds - gcds.length
 		this._missedUpheavals += 1 - upheaval.length

@@ -67,12 +67,18 @@ export default class Gauge extends Module {
 	}
 
 	_addRage(abilityId) {
+		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
 		this._rage += RAGE_GENERATORS[abilityId]
+		// Checks if _rage is going above MAX_RAGE, and adds it to waste, then returns if it is.
 		if (this._rage > MAX_RAGE) {
 			const waste = this._rage - MAX_RAGE
 			this._wastedRage += waste
 			this._rage = MAX_RAGE
 			return waste
+		}
+		//Fix for gauge going negative, maybe?
+		if (this._rage < 0) {
+			this._rage = 0
 		}
 		return 0
 	}
