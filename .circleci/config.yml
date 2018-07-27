@@ -35,7 +35,7 @@ jobs:
       - store_test_results:
           path: reports
 
-  deploy:
+  build:
     <<: *defaults
     steps:
       - attach_workspace:
@@ -43,6 +43,16 @@ jobs:
       - run:
           name: Run build
           command: yarn build
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - xiva-client/build/*
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
       - run:
           name: Upload build
           command: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:${DEPLOY_FOLDER}client/deploy-cache
@@ -69,9 +79,12 @@ workflows:
       - lint:
           requires:
             - setup
-      - deploy:
+      - build:
           requires:
             - lint
           filters:
             branches:
               only: master
+      - deploy:
+          requires:
+            - build
