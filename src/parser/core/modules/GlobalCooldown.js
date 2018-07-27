@@ -81,7 +81,7 @@ export default class GlobalCooldown extends Module {
 
 			const adjustedLength = Math.max(
 				MIN_GCD,
-				action.cooldown * 1000 * cooldownRatio * gcd.speedMod
+				(action.cooldown || MAX_GCD) * 1000 * cooldownRatio * gcd.speedMod
 			)
 
 			this.timeline.addItem(new Item({
