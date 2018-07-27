@@ -52,8 +52,10 @@ class App extends Component {
 				<Message error>
 					<p><strong>We're under heavy load!</strong></p>
 					<p>
-						We have hit our limit for requesting data from FFLogs due to an unexpected &amp; severe increase in traffic to our site. Please bear with us while we resolve the issue.<br/>
-						Thank you for your patience and understanding.<br/>
+						Due to an unexpected &amp; severe increase in traffic to our site, you may run into FFLogs API Errors. Please bear with us while we resolve the issue.<br/>
+						突然サイトのトラフィックが増えたので、FFLogsからデータ制限可能性があります。<br/>
+						Thank you for your patience and understanding.<br />
+						ご理解してくれてありがとうございます。<br/>
 					</p>
 					<p><em>xivanalysis Development Team</em></p>
 				</Message>
