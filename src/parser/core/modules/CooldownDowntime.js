@@ -105,7 +105,7 @@ export default class CooldownDowntime extends Module {
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
 			name: 'Use your OGCDs',
-			description: `Always make sure to use your OGCDs when they are up but don't clip them.  To account for random factors you are given a buffer of ${this._downtimeOkTime/1000} seconds per instance to use your CD`,
+			description: `Always make sure to use your OGCDs when they are up but don't clip them.  ${this._downtimeOkTime === 0 ? '' : `To account for random factors you are given a buffer of ${this._downtimeOkTime/1000} seconds per instance to use your CD`}`,
 			requirements: OGCDRequirements,
 			target: 95,
 		}))
