@@ -105,7 +105,7 @@ export default class CooldownDowntime extends Module {
 			name: 'Use your OGCDs',
 			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them.',
 			requirements: OGCDRequirements,
-			target: 99,
+			target: 95,
 		}))
 	}
 
