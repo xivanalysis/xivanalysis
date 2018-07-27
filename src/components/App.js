@@ -59,6 +59,10 @@ class App extends Component {
 					</p>
 					<p><em>xivanalysis Development Team</em></p>
 				</Message>
+				<Message info>
+					<p><strong>このサイトの使用注意点</strong></p>
+					<p>現時点でこのアナリシストは不完全であり、召喚のみに適用されています(召喚でもまだ最適化中です）。全ジョブサポートは現在作業中です。そのため、対応されていないジョブにアナリシストを行うと分析の錯誤が出る恐れがあります。サポートやお問い合わせは<a href="https://discord.gg/jVbVe44">Discord</a> でお願いします。</p>
+				</Message>
 			</Container>
 
 			<ErrorBoundry>
