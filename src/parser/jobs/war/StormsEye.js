@@ -52,10 +52,10 @@ export default class StormsEye extends Module {
 	}
 
 	_onComplete() {
-		//TODO: Change uptime from the hardcoded 95% when #71 is merged in.
 		this.checklist.add(new Rule({
 			name: 'Keep Storm\'s Eye up',
 			description: 'Storm\'s Eye increases your damage by 20%, it is a huge part of a Warrior\'s damage.',
+			target: 90,
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.STORMS_EYE} /> uptime</Fragment>,

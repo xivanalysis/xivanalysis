@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // General actions that generate Rage
 const RAGE_GENERATORS = {
@@ -24,6 +24,11 @@ const RAGE_SPENDERS ={
 	[ACTIONS.DECIMATE.id]: 50,
 	[ACTIONS.UPHEAVAL.id]: 20,
 	[ACTIONS.ONSLAUGHT.id]: 20,
+}
+
+const RAGE_USAGE_SEVERITY = {
+	20: SEVERITY.MINOR,
+	50: SEVERITY.MAJOR,
 }
 
 // Max Rage
@@ -91,17 +96,16 @@ export default class Gauge extends Module {
 	}
 
 	_onComplete() {
-		if (this._wastedRage >= 20) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.INFURIATE.icon,
-				content: <Fragment>
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.INFURIATE.icon,
+			content: <Fragment>
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
-				</Fragment>,
-				severity: SEVERITY.MAJOR,
-				why: <Fragment>
+			</Fragment>,
+			why: <Fragment>
 					You wasted {this._wastedRage} rage by using abilities that sent you over the cap.
-				</Fragment>,
-			}))
-		}
+			</Fragment>,
+			tiers: RAGE_USAGE_SEVERITY,
+			value: this._wastedRage,
+		}))
 	}
 }
