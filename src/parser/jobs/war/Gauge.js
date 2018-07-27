@@ -102,7 +102,7 @@ export default class Gauge extends Module {
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
 			</Fragment>,
 			why: <Fragment>
-					You wasted {this._wastedRage} rage by using abilities that sent you over the cap.
+				{this._wastedRage} rage wasted by using abilities that put you over the cap.
 			</Fragment>,
 			tiers: RAGE_USAGE_SEVERITY,
 			value: this._wastedRage,

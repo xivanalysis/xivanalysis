@@ -93,7 +93,7 @@ export default class InnerRelease extends Module {
 				.length
 		})
 
-		// Suggestions
+		// TODO: Account for Memeheaval opener.
 		if (badGcds) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_RELEASE.icon,
@@ -110,31 +110,25 @@ export default class InnerRelease extends Module {
 				icon: ACTIONS.INNER_RELEASE.icon,
 				why: `${this._missedGcds} GCDs missed inside of IR.`,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
-						You missed <strong>{this._missedGcds}</strong> GCDs inside of Inner Release. You should be hitting 5 GCDs per cast. If you can't hit 5 GCDs, consider adjusting your gearset for it.
-				</Fragment>,
+				content: `${this._missedGcds} GCD${this._missedGcds !== 1 ? 's' : ''} inside of Inner Release. You should be hitting 5 GCDs per cast. If you can't hit 5 GCDs, consider adjusting your gearset for it.`,
 			}))
 		}
 
 		if (this._missedUpheavals) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.UPHEAVAL.icon,
-				why: `You missed a total of ${this._missedUpheavals} Upheavals inside of IR.`,
+				why: `${this._missedUpheavals} Upheaval${this._missedUpheavals !== 1 ? 's' : ''} weren't inside of IR.`,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
-						You missed <strong>{this._missedUpheavals}</strong> Upheavals inside of Inner Release. You must hit one Upheaval inside of each Inner Release.
-				</Fragment>,
+				content: `${this._missedUpheavals} Upheaval${this._missedUpheavals !== 1 ? 's' : ''} inside of Inner Release. You must hit one Upheaval inside of each Inner Release.`,
 			}))
 		}
 
 		if (this._missedOnslaughts) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ONSLAUGHT.icon,
-				why: `You missed a total of ${this._missedOnslaughts} Onslaughts inside of IR.`,
+				why: `${this._missedOnslaughts} Onslaught${this._missedOnslaughts !== 1 ? 's' : ''} weren't inside of IR.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
-						You missed <strong>{this._missedOnslaughts}</strong> Onslaughts inside of Inner Release. You must hit one Onslaught inside of each Inner Release.
-				</Fragment>,
+				content: `${this._missedOnslaughts} Onslaught${this._missedOnslaughts !== 1 ? 's' : ''} inside of Inner Release. You must hit one Onslaught inside of each Inner Release.`,
 			}))
 		}
 	}
