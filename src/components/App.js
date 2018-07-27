@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Switch, Route} from 'react-router-dom'
+import {Container, Message} from 'semantic-ui-react'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
@@ -46,6 +47,23 @@ class App extends Component {
 	render() {
 		return <Fragment>
 			<Header/>
+
+			<Container>
+				<Message error>
+					<p><strong>We're under heavy load!</strong></p>
+					<p>
+						Due to an unexpected &amp; severe increase in traffic to our site, you may run into FFLogs API Errors. Please bear with us while we resolve the issue.<br/>
+						突然サイトのトラフィックが増えたので、FFLogsからデータ制限可能性があります。<br/>
+						Thank you for your patience and understanding.<br />
+						ご理解してくれてありがとうございます。<br/>
+					</p>
+					<p><em>xivanalysis Development Team</em></p>
+				</Message>
+				<Message info>
+					<p><strong>このサイトの使用注意点</strong></p>
+					<p>現時点でこのアナリシストは不完全であり、召喚のみに適用されています(召喚でもまだ最適化中です）。全ジョブサポートは現在作業中です。そのため、対応されていないジョブにアナリシストを行うと分析の錯誤が出る恐れがあります。サポートやお問い合わせは<a href="https://discord.gg/jVbVe44">Discord</a> でお願いします。</p>
+				</Message>
+			</Container>
 
 			<ErrorBoundry>
 				<Switch>
