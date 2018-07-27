@@ -11,6 +11,7 @@ export default class CooldownDowntime extends Module {
 		'cooldowns',
 		'suggestions',
 		'checklist',
+		'downtime',
 	]
 
 	//Downtime Actions IDs
@@ -86,7 +87,8 @@ export default class CooldownDowntime extends Module {
 			//Adjust for the classes defined alloted time to allow a CD to be held
 			//this supports classes like RDMs who routinely hold CDs due to procs
 			const totalSumOfDownTime = dt.history.map(downTime => {
-				return Math.max(downTime.stoptime - downTime.starttime - this._downtimeOkTime, 0)
+				return this._getDownTimeAdjustedForInvuln(downTime.starttime, downTime.stoptime)
+				//return Math.max(downTime.stoptime - downTime.starttime - this._downtimeOkTime, 0)
 			}).reduce(
 				(accumulator, currentValue) => accumulator + currentValue
 			)
@@ -103,10 +105,21 @@ export default class CooldownDowntime extends Module {
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
 			name: 'Use your OGCDs',
-			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them.',
+			description: `Always make sure to use your OGCDs when they are up but don't clip them.  To account for random factors you are given a buffer of ${this._downtimeOkTime/1000} seconds per instance to use your CD`,
 			requirements: OGCDRequirements,
 			target: 95,
 		}))
+	}
+
+	/**
+	 * Gets the Downtime of a CD adjusted for boss invuln windows as well as globally allowed
+	 * buffer set by the extender class module
+	 * @param {Start Time of the CD Downtime} startTime
+	 * @param {Stop Time of the CD Downtime} stopTime
+	 */
+	_getDownTimeAdjustedForInvuln(startTime, stopTime) {
+		const invuln = this.downtime.getDowntime(startTime, stopTime)
+		return Math.max(stopTime - startTime - invuln - this._downtimeOkTime, 0)
 	}
 
 	//cool function that Furst invented that just sets ok usage as 98% and falls very quickly
