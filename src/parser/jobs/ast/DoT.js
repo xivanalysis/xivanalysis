@@ -12,8 +12,8 @@ const STATUS_DURATION = {
 	[STATUSES.COMBUST_II.id]: 30000,
 }
 
-export default class AstDot extends Module {
-	static handle = 'astdot'
+export default class DoT extends Module {
+	static handle = 'dot'
 	static dependencies = [
 		'checklist',
 		'combatants',

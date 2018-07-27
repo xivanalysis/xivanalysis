@@ -25,11 +25,13 @@ Not getting 6+ F4 per rotation with B4
 - Basic check for 6 F4 per rotation (8 with Convert) is in
 - TODO: Add previous ice phase info to show bad T3 usage better
 - TODO: Ignore phase-ending or battle-ending rotations
-- TODO: Check for fast F3 > ... > fast B3 to avoid showing F3 > trans > trans > trans > B3
+- added a suggestion for missing F4s due to B4 usage
 
 Be fancy and analyze last rotations before phase/fight end to determine of skipping B4 previous rotation would have been a gain
+-is added for the last Fire rotation at least if you actually end in AF and shows how many F4s you missed due to B4 usage.
 
 Extraneous F1s per rotation
+-is added now
 
 Missing Sharp or Triple uses
 
