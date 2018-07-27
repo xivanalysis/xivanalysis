@@ -11,6 +11,13 @@ export default class About extends CoreAbout {
 				There is nothing here yet. For suggestions pop by our Discord channel!
 			</Message.Content>
 		</Message>
+
+		<Message warning icon>
+			<Icon name="warning sign"/>
+			<Message.Content>
+			Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.
+			</Message.Content>
+		</Message>
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [

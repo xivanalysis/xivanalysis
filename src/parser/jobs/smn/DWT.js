@@ -54,15 +54,21 @@ export default class DWT extends Module {
 
 	constructor(...args) {
 		super(...args)
+
 		this.addHook('cast', {by: 'player'}, this._onCast)
+
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.DEATHFLARE.id,
 		}, this._onDeathflareDamage)
-		this.addHook('removebuff', {
+
+		const dwtBuffFilter = {
 			by: 'player',
 			abilityId: STATUSES.DREADWYRM_TRANCE.id,
-		}, this._onRemoveDwt)
+		}
+		this.addHook('applybuff', dwtBuffFilter, this._onApplyDwt)
+		this.addHook('removebuff', dwtBuffFilter, this._onRemoveDwt)
+
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -71,15 +77,7 @@ export default class DWT extends Module {
 
 		// If it's a DWT cast, start tracking
 		if (actionId === ACTIONS.DREADWYRM_TRANCE.id) {
-			this._active = true
-			this._dwt = {
-				start: event.timestamp,
-				end: null,
-				rushing: this.gauge.isRushing(),
-				casts: [],
-			}
-
-			this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
+			this._startDwt(event.timestamp)
 		}
 
 		// Only going to save casts during DWT
@@ -93,6 +91,12 @@ export default class DWT extends Module {
 
 	_onDeathflareDamage(event) {
 		this._stopAndSave(event.hits.length, event.timestamp)
+	}
+
+	_onApplyDwt(event) {
+		// If we're not active at this point, they started the fight with DWT up. Clean up the mess.
+		if (this._active) { return }
+		this._startDwt(event.timestamp)
 	}
 
 	_onRemoveDwt() {
@@ -159,6 +163,18 @@ export default class DWT extends Module {
 		}
 	}
 
+	_startDwt(start) {
+		this._active = true
+		this._dwt = {
+			start,
+			end: null,
+			rushing: this.gauge.isRushing(),
+			casts: [],
+		}
+
+		this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
+	}
+
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
 		// Make sure we've not already stopped this one
 		if (!this._active) {
@@ -192,7 +208,7 @@ export default class DWT extends Module {
 		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 
 		// Eyy, got there. Save out the details for now.
-		this._missedGcds += possibleGcds - gcds.length
+		this._missedGcds += Math.max(0, possibleGcds - gcds.length)
 	}
 
 	activeAt(time) {

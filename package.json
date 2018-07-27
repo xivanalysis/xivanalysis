@@ -9,6 +9,7 @@
     "color": "^3.0.0",
     "es6-error": "^4.1.1",
     "intersection-observer": "^0.5.0",
+    "lodash": "^4.17.10",
     "mathjs": "^5",
     "prop-types": "^15.6.1",
     "raven-js": "^3.25.2",
@@ -35,7 +36,8 @@
     "start": "react-app-rewired start",
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-    "eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"lint": "eslint src"
   },
   "browserslist": {
     "development": [
@@ -53,6 +55,7 @@
   "devDependencies": {
     "git-revision-webpack-plugin": "^3.0.3",
     "react-app-rewire-eslint": "^0.2.3",
+    "react-app-rewire-lodash": "^2.0.0",
     "react-app-rewired": "^2.0.0",
     "react-scripts": "2.0.0-next.3e165448",
     "source-map-explorer": "^1.5.0"
