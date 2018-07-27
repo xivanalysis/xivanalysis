@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Switch, Route} from 'react-router-dom'
+import {Container, Message} from 'semantic-ui-react'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
@@ -46,6 +47,17 @@ class App extends Component {
 	render() {
 		return <Fragment>
 			<Header/>
+
+			<Container>
+				<Message error>
+					<p><strong>We're under heavy load!</strong></p>
+					<p>
+						We have hit our limit for requesting data from FFLogs due to an unexpected &amp; severe increase in traffic to our site. Please bear with us while we resolve the issue.<br/>
+						Thank you for your patience and understanding.<br/>
+					</p>
+					<p><em>xivanalysis Development Team</em></p>
+				</Message>
+			</Container>
 
 			<ErrorBoundry>
 				<Switch>
