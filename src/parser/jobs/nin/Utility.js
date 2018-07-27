@@ -74,14 +74,14 @@ export default class Utility extends Module {
 
 		if (statusId === STATUSES.SHADEWALKER.id) {
 			if (!this._shadewalkerCalculated && this._shadewalkerDuration >= 0) {
-				this._shadewalkerDuration = ((event.timestamp - this._shadewalkerDuration) / 10) * 10
+				this._shadewalkerDuration = event.timestamp - this._shadewalkerDuration
 			}
 
 			// Flag the calculation as done after the first instance of it falling off so we ignore subsequent casts
 			this._shadewalkerCalculated = true
 		} else if (statusId === STATUSES.SMOKE_SCREEN.id) {
 			if (!this._smokeScreenCalculated && this._smokeScreenDuration >= 0) {
-				this._smokeScreenDuration = ((event.timestamp - this._smokeScreenDuration) / 10) * 10
+				this._smokeScreenDuration = event.timestamp - this._smokeScreenDuration
 			}
 
 			this._smokeScreenCalculated = true
