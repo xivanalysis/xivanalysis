@@ -48,6 +48,7 @@ export default class FireCounter extends Module {
 		super(...args)
 		this.addHook('begincast', {by: 'player'}, this._onBegin)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('init', this._onFirst)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -68,6 +69,11 @@ export default class FireCounter extends Module {
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
 			this._fireCounter.casts.push(event)
 		}
+	}
+
+	//start recording at the first cast
+	_onFirst() {
+		this._startRecording()
 	}
 
 	_onComplete() {
