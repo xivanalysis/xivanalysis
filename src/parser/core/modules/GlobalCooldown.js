@@ -81,7 +81,7 @@ export default class GlobalCooldown extends Module {
 
 			const adjustedLength = Math.max(
 				MIN_GCD,
-				(action.cooldown || MAX_GCD) * 1000 * cooldownRatio * gcd.speedMod
+				(action.cooldown * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
 			)
 
 			this.timeline.addItem(new Item({
@@ -149,7 +149,7 @@ export default class GlobalCooldown extends Module {
 
 		return this.gcds.reduce((carry, gcd) => {
 			const cd = getAction(gcd.actionId).cooldown * 1000
-			const duration = cd * cooldownRatio * gcd.speedMod
+			const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
 				gcd.timestamp + duration
