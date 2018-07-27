@@ -45,10 +45,10 @@ jobs:
           command: yarn build
       - run:
           name: Upload build
-          command: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:${DEPLOY_FOLDER}client/deploy-cache
+          command: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:${DEPLOY_FOLDER}client/deploy-cache
       - run:
           name: Run deploy script
-          command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd ${DEPLOY_FOLDER}client && ./deploy.sh $CIRCLE_SHA1"
+          command: ssh -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd ${DEPLOY_FOLDER}client && ./deploy.sh $CIRCLE_SHA1"
       - run:
           name: Success webhook
           command: |
