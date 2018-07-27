@@ -61,12 +61,12 @@ export default class rotation extends Module {
 	_onCast(event) {
 		const actionId = event.ability.guid
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
-			if (!this._first) {this._stopRecording()}
+			if (!this._first) { this._stopRecording() }
 			this._startRecording(event)
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
 		}
-		if (this._first) {this._first = false}
+		if (this._first) { this._first = false }
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
 			this._rotation.casts.push(event)
 		}
