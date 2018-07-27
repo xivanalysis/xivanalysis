@@ -14,4 +14,9 @@ export default {
 		name: 'Requiescat',
 		icon: 'https://secure.xivdb.com/img/game/012000/012514.png',
 	},
+	FIGHT_OR_FLIGHT: {
+		id: 76,
+		name: 'Fight Or Flight',
+		icon: 'https://secure.xivdb.com/img/game/010000/010155.png',
+	},
 }

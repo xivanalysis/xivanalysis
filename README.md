@@ -142,6 +142,19 @@ Override this function if the module absolutely _needs_ to process events before
 
 Return value should be the `events` array, with any required modifications made to it. Failing to return this will prevent the parser from parsing any events at all.
 
+##### `getErrorContext(source, error, event)`
+
+Override this function to customize the information that the module provides for automatic
+error reporting. This function is called when an error occurs in event hooks or the
+`output()` method on the faulting module as well as all modules that module depends on.
+
+`source` is either `event` or `output`
+`error` is the error that occurred
+`event` is the error that was being processed when the error occurred, if applicable
+
+If this function is not overridden or if this function returns undefined, primitive values
+will be scraped from the module and uploaded with the error report.
+
 ### Parser
 
 The core parser object, orchestrating the modules and providing meta data about the fight. All modules have access to an instance of this via `this.parser`.

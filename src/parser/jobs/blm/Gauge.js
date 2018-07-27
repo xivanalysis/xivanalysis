@@ -131,7 +131,7 @@ export default class Gauge extends Module {
 			} else {
 				this._AFUITimer = event.timestamp
 				this._AF ++
-				this._AF = Math.min(this.AF, 3)
+				this._AF = Math.min(this._AF, 3)
 			}
 		}
 
@@ -157,9 +157,14 @@ export default class Gauge extends Module {
 			this._UH = Math.max(this._UH, 0)
 		}
 
-		//Flare resetting UHs
-		if (abilityId === ACTIONS.FLARE.id && this._UH > 0) {
-			this._UH = 0
+		//Flare stuff
+		if (abilityId === ACTIONS.FLARE.id) {
+			this._AF = 3
+			this._UI = 0
+			this._AFUITimer = event.timestamp
+			if (this._UH > 0) {
+				this._UH = 0
+			}
 		}
 
 		//do F3 things
