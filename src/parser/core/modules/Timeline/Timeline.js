@@ -8,7 +8,7 @@ import './Timeline.module.css'
 
 export default class Timeline extends Module {
 	static handle = 'timeline'
-	static displayOrder = DISPLAY_ORDER.BOTTOM
+	static displayOrder = -DISPLAY_ORDER.BOTTOM
 	static title  = 'Timeline'
 
 	_groups = []
