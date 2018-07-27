@@ -8,7 +8,7 @@ import {Rule, Requirement} from '../../core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STORMS_EYE_DURATION = 30000
-const STORMS_EYE_BUFFER = 5000
+const STORMS_EYE_BUFFER = 10000
 
 export default class StormsEye extends Module {
 	static handle = 'stormseye'
