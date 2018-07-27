@@ -6,16 +6,16 @@ import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
   description = <Fragment>
-	<p>This analyzer focuses on blood and mana usage.</p>
-	<Message warning icon>
+  	<p>This analyzer focuses on blood and mana usage, and then further explores common resource generation problems such as Blood Weapon up-time and dropping GCDs.</p>
+  	<Message warning icon>
 	  <Icon name="warning sign"/>
 	  <Message.Content>
-		This module focuses on assisting with Mana/Blood capping and Blood Weapon up-time, as well as general fundamentals of DRK gameplay.  Drop by the discord for any clarifications and corrections.
+		Heavily a work in progress. Complaints, concerns, and issues should be directed to the discord server.
 	  </Message.Content>
-	</Message>
+  	</Message>
   </Fragment>
   supportedPatch = '4.35'
   contributors = [
-	{user: CONTRIBUTORS.ACRI, role: 'Maintainer'},
+  	{user: CONTRIBUTORS.ACRI, role: 'Maintainer'},
   ]
 }

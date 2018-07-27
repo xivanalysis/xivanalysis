@@ -5,20 +5,18 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import CONSTANTS from './CONSTANTS'
-import CORE from './Core'
 
 
-export default class Mana extends Module {
-	static handle = 'mana'
-	static title = 'Mana Management'
+export default class DarkArts extends Module {
+	static handle = 'darkarts'
+	static title = 'Dark Arts Management'
 	static dependencies = [
-		'drk_core',
+		'library',
+		'resources',
+		'basics',
 		'suggestions',
 	]
 
-	_currentMana = CONSTANTS.MAX_MANA
-	_wastedMana = 0
 	// counters (uncombo'd GCDs ignored)
 	_countDA = 0 // Dark Arts
 	_countDroppedDA = 0 //dropped dark arts
@@ -44,26 +42,20 @@ export default class Mana extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		// drop if we failed combo, before we check if syphon strike added mana
-		if (CONSTANTS.GCD_COMBO_CHAIN.some(entry => entry.current === abilityId)) {
-			if (!CORE.inGCDCombo) {
+		if (this.library.GCD_COMBO_CHAIN.some(entry => entry.current === abilityId)) {
+			if (!this.basics.inGCDCombo) {
 				//gcd chain was not respected, immediately exit out
 				//this really only applies to syphon strike, but it looks pretty
 				return
 			}
 		}
-		if (CONSTANTS.MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
-			const manaModifier = CONSTANTS.MANA_MODIFIERS.find(entry => entry.id === abilityId).value
-			const newVals = CONSTANTS.bindValueToCeiling(this._currentMana, manaModifier, CONSTANTS.MAX_MANA)
-			this._currentMana = newVals.result
-			this._wastedMana += newVals.waste
+		if (this.library.MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
+			this.resources.modifyMana(this.library.MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
 		}
-		if (CONSTANTS.GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
-			const manaModifier = CONSTANTS.MANA_MODIFIERS.find(entry => entry.id === abilityId).mana
-			const newVals = CONSTANTS.bindValueToCeiling(this._currentMana, manaModifier, CONSTANTS.MAX_MANA)
-			this._currentMana = newVals.result
-			this._wastedMana += newVals.waste
+		if (this.library.GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
+			this.resources.modifyMana(this.library.MANA_MODIFIERS.find(entry => entry.id === abilityId).mana)
 		}
-		if (this._darkArtsOn && CONSTANTS.DARK_ARTS_CONSUMERS.includes(abilityId)) {
+		if (this._darkArtsOn && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
 			// DA will be consumed and resolved, manually increment targeted counters
 			if (abilityId === ACTIONS.DARK_PASSENGER.id) {
 				this._countDADP += 1
@@ -94,7 +86,7 @@ export default class Mana extends Module {
 		// remove DA status
 		this._darkArtsOn = false
 		// check if DA was consumed by an action, increment DA tally if so
-		if (this._darkArtsApplicationTime - event.timestamp > CONSTANTS.DARK_ARTS_DURATION) {
+		if (this._darkArtsApplicationTime - event.timestamp > this.library.DARK_ARTS_DURATION) {
 			// DA was consumed
 			this._countDA += 1
 		} else {
@@ -104,14 +96,12 @@ export default class Mana extends Module {
 	}
 
 	_onDeath() {
-		this._wastedMana += this._currentMana
-		this._currentMana = 0
+		this._darkArtsOn = false
 	}
 
 	_onComplete() {
 		// DA opener
-		// wasted DA uses
-		// wasted mana
+		// wasted DA uses - expand on mana loss earlier
 		// better spent enmity DAPSvsDASS
 		// carve and spit without DA
 	}

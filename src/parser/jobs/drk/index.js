@@ -1,12 +1,14 @@
 import About from './About'
-import CONSTANTS from './CONSTANTS'
-import Core from './Core'
+import Library from './Library'
+import Basics from './Basics'
 import Gauge from './Gauge'
-import Mana from './Mana'
+import DarkArts from './DarkArts'
+import Resources from './Resources'
 export default [
 	About,
-	Core,
+	Basics,
 	Gauge,
-	Mana,
-	CONSTANTS,
+	DarkArts,
+	Library,
+	Resources,
 ]
