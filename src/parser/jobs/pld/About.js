@@ -16,7 +16,7 @@ export default class About extends CoreAbout {
 				<p><b>Here be Dragons!</b></p>
 				<div>This Analyzer is still <b>Work in Progress</b> and is missing a lot of features as well as simplifying a couple of things for now.</div>
 				<div>Make sure to take the advice still with a grain of Salt.</div>
-				<div>If you notice any issues, concerns or suggestions, please drop by our Discord channel!</div>
+				<div>If you notice any issues, have concerns or suggestions, please drop by our Discord channel!</div>
 			</Message.Content>
 		</Message>
 	</Fragment>
