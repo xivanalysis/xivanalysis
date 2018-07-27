@@ -15,6 +15,13 @@ export default class About extends CoreAbout {
 			</Message.Content>
 		</Message>
 		<p>Currently this module can track DoT uptime, detect clipping and report about missed Divine Benison and Assize casts.</p>
+
+		<Message warning icon>
+			<Icon name="warning sign"/>
+			<Message.Content>
+				Currently, for all healers, boss invulnerability checking doesn't function properly. This means that the Always be casting checklist item is inaccurate.
+			</Message.Content>
+		</Message>
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
