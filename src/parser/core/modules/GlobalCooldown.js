@@ -12,6 +12,7 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		'downtime',
 		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
@@ -140,6 +141,21 @@ export default class GlobalCooldown extends Module {
 		}
 
 		return estimate
+	}
+
+	getUptime() {
+		const gcdLength = this.getEstimate()
+		const cooldownRatio = gcdLength / MAX_GCD
+
+		return this.gcds.reduce((carry, gcd) => {
+			const cd = getAction(gcd.actionId).cooldown * 1000
+			const duration = cd * cooldownRatio * gcd.speedMod
+			const downtime = this.downtime.getDowntime(
+				gcd.timestamp,
+				gcd.timestamp + duration
+			)
+			return carry + duration - downtime
+		}, 0)
 	}
 
 	output() {
