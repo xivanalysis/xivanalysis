@@ -16,7 +16,6 @@ export default class StormsEye extends Module {
 		'checklist',
 		'combatants',
 		'invuln',
-		'cooldowns',
 		'suggestions',
 	]
 
