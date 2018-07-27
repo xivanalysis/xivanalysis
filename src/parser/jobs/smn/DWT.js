@@ -208,7 +208,7 @@ export default class DWT extends Module {
 		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 
 		// Eyy, got there. Save out the details for now.
-		this._missedGcds += possibleGcds - gcds.length
+		this._missedGcds += Math.max(0, possibleGcds - gcds.length)
 	}
 
 	activeAt(time) {
