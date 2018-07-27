@@ -170,7 +170,7 @@ export default class InnerRelease extends Module {
 				title: {
 					content: <Fragment>
 						{this.parser.formatTimestamp(ir.start)}
-						&nbsp;-&nbsp;
+						-
 						<span>{numGcds}/5 GCDs</span>
 						<span> - </span>
 						<span>{numUpheavals}/1 Upheaval</span>
