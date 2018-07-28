@@ -2,7 +2,7 @@ import ACTIONS from 'data/ACTIONS'
 import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 
 //tracking the important™ CDs
-const TRACKEDCDS = [
+const TRACKED_COOLDOWNS = [
 	ACTIONS.FLECHE.id,
 	ACTIONS.CONTRE_SIXTE.id,
 	ACTIONS.ACCELERATION.id,
@@ -17,7 +17,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 
 	constructor(...args) {
 		super(...args)
-		super.setAbilityList(TRACKEDCDS)
-		super.setDownTimeDuration(DOWNTIME_OK_TIME)
+		super.trackedcds = TRACKED_COOLDOWNS
+		super.downtimeOkTime = DOWNTIME_OK_TIME
 	}
 }
