@@ -13,8 +13,10 @@ export default class DarkArts extends Module {
 	static dependencies = [
 		'library',
 		'resources',
-		'basics',
+		'buffs',
+		'gcds',
 		'suggestions',
+		'combatants',
 	]
 
 	// counters (uncombo'd GCDs ignored)
@@ -25,37 +27,25 @@ export default class DarkArts extends Module {
 	_countDASS = 0  // Dark Arts Spinning Slash (2 in hate chain)
 	_countDADP = 0  // Dark Arts Dark Passenger (no slashing bonus, slightly worse than DA other abilities)
 	// dark arts
-	_darkArtsOn = true
 	_darkArtsApplicationTime = -1
 	// flags
 	_darkArtsOpener = false
+
+	darkArtsActive() {
+		return this.combatants.selected.hasStatus(STATUSES.DARK_ARTS.id)
+	}
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.DARK_ARTS.id}, this._onApplyDarkArts)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DARK_ARTS.id}, this._onRemoveDarkArts)
-		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		// drop if we failed combo, before we check if syphon strike added mana
-		if (this.library.GCD_COMBO_CHAIN.some(entry => entry.current === abilityId)) {
-			if (!this.basics.inGCDCombo) {
-				//gcd chain was not respected, immediately exit out
-				//this really only applies to syphon strike, but it looks pretty
-				return
-			}
-		}
-		if (this.library.MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.resources.modifyMana(this.library.MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
-		}
-		if (this.library.GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
-			this.resources.modifyMana(this.library.MANA_MODIFIERS.find(entry => entry.id === abilityId).mana)
-		}
-		if (this._darkArtsOn && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
+		if (this.darkArtsActive() && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
 			// DA will be consumed and resolved, manually increment targeted counters
 			if (abilityId === ACTIONS.DARK_PASSENGER.id) {
 				this._countDADP += 1
@@ -68,7 +58,7 @@ export default class DarkArts extends Module {
 			}
 		}
 		// final check to see if we just CS'd without DA up
-		if ((!this._darkArtsOn) && abilityId === ACTIONS.CARVE_AND_SPIT) {
+		if ((!this.darkArtsActive()) && abilityId === ACTIONS.CARVE_AND_SPIT.id) {
 			this._countCSnoDA += 1
 		}
 	}
@@ -83,25 +73,17 @@ export default class DarkArts extends Module {
 	}
 
 	_onRemoveDarkArts(event) {
-		// remove DA status
-		this._darkArtsOn = false
 		// check if DA was consumed by an action, increment DA tally if so
-		if (this._darkArtsApplicationTime - event.timestamp > this.library.DARK_ARTS_DURATION) {
-			// DA was consumed
-			this._countDA += 1
-		} else {
+		if (!(this._darkArtsApplicationTime - event.timestamp > this.library.DARK_ARTS_DURATION)) {
 			// buff fell off
 			this._countDroppedDA += 1
 		}
-	}
-
-	_onDeath() {
-		this._darkArtsOn = false
+		// else buff was consumed
 	}
 
 	_onComplete() {
+		// dropped DAs
 		// DA opener
-		// wasted DA uses - expand on mana loss earlier
 		// better spent enmity DAPSvsDASS
 		// carve and spit without DA
 	}

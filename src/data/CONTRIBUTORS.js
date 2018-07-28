@@ -33,9 +33,9 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
-    ACRI: {
-	  	name: 'Acri',
+	ACRI: {
+		name: 'Acri',
 		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
 		jobs: [JOBS.DARK_KNIGHT],
-  },
+	},
 }

@@ -11,6 +11,7 @@ import SMN from './SMN'
 import RDM from './RDM'
 import MRD from './MRD'
 import WAR from './WAR'
+import DRK from './DRK'
 
 const ACTIONS = {
 	...SHARED,
@@ -22,6 +23,7 @@ const ACTIONS = {
 	...MRD,
 
 	...WAR,
+	...DRK,
 
 	...WHM,
 	...SCH,

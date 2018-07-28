@@ -1,14 +1,17 @@
 import About from './About'
 import Library from './Library'
-import Basics from './Basics'
-import Gauge from './Gauge'
-import DarkArts from './DarkArts'
 import Resources from './Resources'
+import ResourceEvaluator from './ResourceEvaluator'
+import GCDs from './GCDs'
+import Buffs from './Buffs'
+import DarkArts from './DarkArts'
+
 export default [
 	About,
-	Basics,
-	Gauge,
-	DarkArts,
 	Library,
 	Resources,
+	ResourceEvaluator,
+	GCDs,
+	Buffs,
+	DarkArts,
 ]

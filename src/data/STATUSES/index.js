@@ -23,6 +23,7 @@ const STATUSES = {
 	...ACN,
 
 	...WAR,
+	...DRK,
 
 	...SCH,
 	...AST,
