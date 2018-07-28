@@ -87,14 +87,26 @@ export default class AoE extends Module {
 
 	_onAoe(event) {
 		// Filter out any damage events that don't pass muster, and transform into a simplified format
-		const hits = event.damageEvents
+		const hitsByTarget = event.damageEvents
 			.filter(this.isValidHit.bind(this))
-			.map(event => ({id: event.targetID, instance: event.targetInstance}))
+			.reduce((carry, event) => {
+				const key = `${event.targetID}-${event.targetInstance}`
+				if (carry[key]) {
+					carry[key].times++
+				} else {
+					carry[key] = {
+						id: event.targetID,
+						instance: event.targetInstance,
+						times: 1,
+					}
+				}
+				return carry
+			}, {})
 
 		this.parser.fabricateEvent({
 			type: 'aoedamage',
 			ability: event.damageEvents[0].ability,
-			hits,
+			hits: Object.values(hitsByTarget),
 			sourceID: event.damageEvents[0].sourceID,
 		})
 	}
