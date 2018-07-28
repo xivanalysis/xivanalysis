@@ -12,7 +12,6 @@ export default class DarkArts extends Module {
 	static title = 'Dark Arts Management'
 	static dependencies = [
 		'library',
-		'resources',
 		'buffs',
 		'gcds',
 		'suggestions',

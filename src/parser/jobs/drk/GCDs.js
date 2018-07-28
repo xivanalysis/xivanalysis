@@ -39,7 +39,6 @@ export default class GCDs extends Module {
 	static title = 'GCD Combo'
 	static dependencies = [
 		'library',
-		'resources',
 		'cooldowns',
 		'suggestions',
 	]
@@ -47,8 +46,9 @@ export default class GCDs extends Module {
 	// gcd combo
 	_GCDComboActive = false
 	_lastComboAction = undefined
+	_last3eventsAndCurrent = []
 	_lastComboGCDTimeStamp = (this.library.GCD_COMBO_DURATION * -1)
-	_GCDChainDrops = 0
+	_GCDChainDrops = []
 
 	inGCDCombo() {
 		return this._GCDComboActive
@@ -60,6 +60,7 @@ export default class GCDs extends Module {
 	}
 
 	_onCast(event) {
+		this._last3eventsAndCurrent.push(event)
 		const abilityId = event.ability.guid
 		// check combo status
 		if (GCD_COMBO_ACTIONS.includes(abilityId)) {
@@ -70,28 +71,57 @@ export default class GCDs extends Module {
 						if (entry.next.includes(abilityId)) {
 							this._GCDComboActive = true
 						} else {
-							this._GCDChainDrops += 1
+							this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
 						}
 					}
 				}
 			}
 			this._lastComboAction = abilityId
 			this._lastComboGCDTimeStamp = event.timestamp
+			if (this._last3eventsAndCurrent.length > 4) {
+				this._last3eventsAndCurrent.shift()
+			}
 		}
 	}
 
 	output() {
 		//dropped combo chain
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.SPINNING_SLASH.icon,
-			content: <Fragment>
-				You dropped your GCD combo, loosing out on potency and/or mana.
-			</Fragment>,
-			severity: this._GCDChainDrops <= (4) ? SEVERITY.MINOR : this._GCDChainDrops <= (8) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-			why: <Fragment>
-				You wasted {this._GCDChainDrops} GCD chain actions.
-			</Fragment>,
-		}))
-		return false
+		if (this._GCDChainDrops.length > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SPINNING_SLASH.icon,
+				content: <Fragment>
+					You dropped your GCD combo, loosing out on potency and/or mana.
+				</Fragment>,
+				severity: this._GCDChainDrops.length <= (1) ? SEVERITY.MINOR : this._GCDChainDrops.length <= (4) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				why: <Fragment>
+					You wasted {this._GCDChainDrops} GCD chain actions.
+				</Fragment>,
+			}))
+			const panels = this._GCDChainDrops.map(entry => {
+				return {
+					title: {
+						key: 'title-' + entry.timestamp,
+						content: <Fragment>
+							{this.parser.formatTimestamp(entry.timestamp)}
+						</Fragment>,
+					},
+					content: {
+						key: 'content-' + entry.timestamp,
+						content: <Rotation events={entry.events}/>,
+					},
+				}
+			})
+			return <Fragment>
+				<Message>
+					Dropping GCD combo prevents mana generation from <ActionLink {...ACTIONS.SYPHON_STRIKE}/> and blood generation from <ActionLink {...ACTIONS.SOULEATER}/>, as well as lowering action potency.
+				</Message>
+				<Accordion
+					exclusive={false}
+					panels={panels}
+					styled
+					fluid
+				/>
+			</Fragment>
+		}
 	}
 }

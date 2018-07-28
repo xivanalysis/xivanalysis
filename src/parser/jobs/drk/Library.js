@@ -9,12 +9,11 @@ export default class Library extends Module {
 		// this.addHook('init', this._onInit)
 	}
 
-	// -----
-	// Meters
-	// ------
-	MAX_BLOOD = 100
-	MAX_MANA = 9480
-	MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA is used 1-3 ticks pre pull, if at all. Good to have regardless
+	// noinspection JSMethodCanBeStatic
+	upperCap(value, cap) {
+		return value > cap ? cap : value
+	}
+
 	// -----
 	// Timers
 	// -----

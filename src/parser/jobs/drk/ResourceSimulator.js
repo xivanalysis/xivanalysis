@@ -7,20 +7,29 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
-//const DARK_ARTS_MANA_COST_POTENCY_ESTIMATOR =  140
-//const BLOODSPILLER_BLOOD_COST_POTENCY_ESTIMATOR = 135
-
-const MAX_MANA = 9480
-const MAX_BLOOD = 100
+// -----
+// UI stuff
+// -----
 const DARK_ARTS_MANA_POTENCY = 140
 const DARK_ARTS_MANA_COST = 2400
 const BLOODSPILLER_BLOOD_POTENCY = 135
 const BLOODSPILLER_BLOOD_COST = 50
 
+// -----
+// Simulator fun time
+// ------
+// -----
+// Meters
+// ------
+const MAX_BLOOD = 100
+const MAX_MANA = 9480
+const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA is used 1-3 ticks pre pull, if at all. Good to have regardless
+
 const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT = 1
 const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT = 120
 const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
 const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
+const BLOOD_PRICE_MAX_DURATION = 15000
 
 const RESOURCE_STATUS_EFFECTS = [
 	{id: STATUSES.ANOTHER_VICTIM.id, duration: 15000,
@@ -95,14 +104,68 @@ export default class Resources extends Module {
 	static title = 'Resource Evaluator'
 	static dependencies = [
 		'library',
-		'resources',
 		'buffs',
 		'gcds',
 		'suggestions',
 		'checklist',
 	]
 
-	_droppedTBNs = 0
+	// -----
+	// Resource utilities
+	// -----
+	_totalGainedMana = 0
+	_totalSpentMana = 0
+	_currentMana = 0
+	_wastedMana = 0
+	_droppedMana = 0
+	_totalGainedBlood = 0
+	_totalSpentBlood = 0
+	_currentBlood = 0
+	_wastedBlood = 0
+	_droppedBlood = 0
+
+	modifyMana(value) {
+		if (value !== 0) {
+			if (value > 0) {
+				this._totalGainedMana += value
+			} else {
+				this._totalSpentMana += value
+			}
+			const vals = Resources._bindToCeiling(this._currentMana, value, this.library.MAX_MANA)
+			this._currentMana = vals.result
+			this._wastedMana += vals.waste
+		}
+	}
+	modifyBlood(value) {
+		if (value !== 0) {
+			if (value > 0) {
+				this._totalGainedBlood += value
+			} else {
+				this._totalSpentBlood += value
+			}
+			const vals = Resources._bindToCeiling(this._currentBlood, value, this.library.MAX_BLOOD)
+			this._currentMana = vals.result
+			this._wastedBlood += vals.waste
+		}
+	}
+	dumpResources() {
+		this._wastedMana += this._currentMana
+		this._wastedBlood += this._currentBlood
+		this._totalDroppedMana += this._currentMana
+		this._totalDroppedBlood += this._currentBlood
+		this._currentMana = 0
+		this._currentBlood = 0
+	}
+
+	static _bindToCeiling(op1, op2, ceiling) {
+		const waste = op1 + op2 > ceiling ? op1 + op2 - ceiling : 0
+		const result = op1 + op2 > ceiling ? ceiling : op1 + op2
+		return {waste: waste, result: result}
+	}
+
+	// -----
+	// simulator util
+	// ------
 
 	constructor(...args) {
 		super(...args)
@@ -112,29 +175,33 @@ export default class Resources extends Module {
 		this.addHook('damage', {by: 'player'}, this._onDamageDealt)
 		this.addHook('damage', {to: 'player'}, this._onDamageTaken)
 		this.addHook('applybuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onApplyResourceBuffs)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE}, this._bloodPriceStart)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE}, this._bloodPriceEnd)
 		this.addHook('removebuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onRemoveResourceBuffs)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
+	_droppedTBNs = 0
+
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		if (MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.resources.modifyMana(MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
+			this.modifyMana(MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
 		}
 		if (BLOOD_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.resources.modifyBlood(BLOOD_MODIFIERS.find(entry => entry.id === abilityId).value)
+			this.modifyBlood(BLOOD_MODIFIERS.find(entry => entry.id === abilityId).value)
 		}
 		if (this.gcds.inGCDCombo()) {
 			if (COMBO_GENERATORS.some(entry => entry.id === abilityId)) {
 				const entry = COMBO_GENERATORS.find(entry => entry.id === abilityId)
-				this.resources.modifyMana(entry.mana)
-				this.resources.modifyBlood(entry.blood)
+				this.modifyMana(entry.mana)
+				this.modifyBlood(entry.blood)
 			}
 			if (this.buffs.gritActive() && COMBO_GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
 				const entry = COMBO_GRIT_GENERATORS.find(entry => entry.id === abilityId)
-				this.resources.modifyMana(entry.mana)
-				this.resources.modifyBlood(entry.blood)
+				this.modifyMana(entry.mana)
+				this.modifyBlood(entry.blood)
 			}
 		}
 	}
@@ -158,12 +225,12 @@ export default class Resources extends Module {
 			const applicationTime = this._resourceBuffTimestamps[abilityId]
 			if (event.timestamp - applicationTime < entry.duration) {
 				//popped
-				this.resources.modifyBlood(entry.activate_blood)
-				this.resources.modifyMana(entry.activate_mana)
+				this.modifyBlood(entry.activate_blood)
+				this.modifyMana(entry.activate_mana)
 			} else {
 				//expired
-				this.resources.modifyBlood(entry.expire_blood)
-				this.resources.modifyMana(entry.expire_mana)
+				this.modifyBlood(entry.expire_blood)
+				this.modifyMana(entry.expire_mana)
 				//special handling for TBN since it's basically throwing away damage
 				this._droppedTBNs += 1
 			}
@@ -176,13 +243,13 @@ export default class Resources extends Module {
 		const hitCount = event.hits.length
 		if (AOE_GENERATORS.find(entry => entry.id === abilityId)) {
 			const entry = AOE_GENERATORS.find(entry => entry.id === abilityId)
-			this.resources.modifyMana(entry.mana * hitCount)
-			this.resources.modifyBlood(entry.blood * hitCount)
+			this.modifyMana(entry.mana * hitCount)
+			this.modifyBlood(entry.blood * hitCount)
 		}
 		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
 			const entry = BLOOD_WEAPON_GENERATORS.find(entry => entry.id === abilityId)
-			this.resources.modifyMana(entry.mana)
-			this.resources.modifyBlood(entry.blood)
+			this.modifyMana(entry.mana)
+			this.modifyBlood(entry.blood)
 		}
 	}
 
@@ -190,21 +257,42 @@ export default class Resources extends Module {
 		const abilityId = event.ability.guid
 		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
 			const entry = BLOOD_WEAPON_GENERATORS.find(entry => entry.id === abilityId)
-			this.resources.modifyMana(entry.mana)
-			this.resources.modifyBlood(entry.blood)
+			this.modifyMana(entry.mana)
+			this.modifyBlood(entry.blood)
 		}
 	}
 
-	_onDamageTaken(event) {
-		//blood price math
+	_bloodPriceStartTime = undefined
+
+	_bloodPriceStart(event) {
+		this._bloodPriceStartTime = event.timestamp
+	}
+
+	_onDamageTaken() {
+		if (this.buffs.bloodPriceActive()) {
+			this.modifyBlood(BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT)
+			this.modifyMana(BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT)
+		}
+	}
+
+	_bloodPriceEnd(event) {
+		//if we didn't see the start event, we just have to assume a full duration gain
+		let ticks = 0
+		if (this._bloodPriceStartTime !== undefined) {
+			ticks = Math.floor((event.timestamp - this._bloodPriceStartTime) / BLOOD_PRICE_BLOOD_PASSIVE_RATE)
+		} else {
+			//default duration 15s
+			ticks = BLOOD_PRICE_MAX_DURATION / BLOOD_PRICE_BLOOD_PASSIVE_RATE
+		}
+		this.modifyMana(BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
 	}
 
 	_onDeath() {
-		this.resources.dumpResources()
+		this.dumpResources()
 	}
 
 	_onComplete() {
-		this.resources.dumpResources()
+		this.dumpResources()
 	}
 
 	output(){
@@ -225,10 +313,10 @@ export default class Resources extends Module {
 				of <ActionLink {...ACTIONS.DARK_ARTS}/> or other spenders during the fight
 				(minimum {DARK_ARTS_MANA_COST_POTENCY_ESTIMATOR} potency each.)
 			</Fragment>,
-			severity: (this.resources.fetchWastedMana() <= (manaCostDA * 2) ? SEVERITY.MINOR : this.resources.fetchWastedMana() <= (manaCostDA * 6) ? SEVERITY.MEDIUM : SEVERITY.MAJOR),
+			severity: (this.fetchWastedMana() <= (manaCostDA * 2) ? SEVERITY.MINOR : this.fetchWastedMana() <= (manaCostDA * 6) ? SEVERITY.MEDIUM : SEVERITY.MAJOR),
 			why: <Fragment>
-				You wasted {this.resources.fetchWastedMana()} Mana, or {Math.floor(this.resources.fetchWastedMana() / manaCostDA)} <ActionLink {...ACTIONS.DARK_ARTS}/> uses by not spending generated mana, or a minimum
-				of {Math.floor(this.resources.fetchWastedMana() / manaCostDA) * DARK_ARTS_MANA_COST_POTENCY_ESTIMATOR} potency.
+				You wasted {this.fetchWastedMana()} Mana, or {Math.floor(this.fetchWastedMana() / manaCostDA)} <ActionLink {...ACTIONS.DARK_ARTS}/> uses by not spending generated mana, or a minimum
+				of {Math.floor(this.fetchWastedMana() / manaCostDA) * DARK_ARTS_MANA_COST_POTENCY_ESTIMATOR} potency.
 			</Fragment>,
 		}))
 		this.suggestions.add(new Suggestion({
@@ -238,13 +326,13 @@ export default class Resources extends Module {
 				of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
 				(minimum {BLOODSPILLER_BLOOD_COST_POTENCY_ESTIMATOR} potency each.)
 			</Fragment>,
-			severity: this.resources.fetchWastedBlood() <= (bloodCostBS * 1) ? SEVERITY.MINOR : this.resources.fetchWastedBlood() <= (bloodCostBS * 3) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+			severity: this.fetchWastedBlood() <= (bloodCostBS * 1) ? SEVERITY.MINOR : this.fetchWastedBlood() <= (bloodCostBS * 3) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
-				You wasted {this.resources.fetchWastedBlood()} Blood, or {Math.floor(this.resources.fetchWastedBlood() / bloodCostBS)} <ActionLink {...ACTIONS.BLOODSPILLER}/> uses by not spending generated blood, or a minimum
-				of {Math.floor(this.resources.fetchWastedBlood() / bloodCostBS) * BLOODSPILLER_BLOOD_COST_POTENCY_ESTIMATOR} potency.
+				You wasted {this.fetchWastedBlood()} Blood, or {Math.floor(this.fetchWastedBlood() / bloodCostBS)} <ActionLink {...ACTIONS.BLOODSPILLER}/> uses by not spending generated blood, or a minimum
+				of {Math.floor(this.fetchWastedBlood() / bloodCostBS) * BLOODSPILLER_BLOOD_COST_POTENCY_ESTIMATOR} potency.
 			</Fragment>,
 		}))
-		return this.resources._totalGainedBlood + ' ' + this.resources._totalGainedMana + '||' + this.resources._totalSpentBlood + ' ' + this.resources._totalSpentMana + ' '
+		return this._totalGainedBlood + ' ' + this._totalGainedMana + '||' + this._totalSpentBlood + ' ' + this._totalSpentMana + ' '
 		*/
 		this.checklist.add(new Rule({
 			name: 'Mana Utilization',
@@ -254,18 +342,20 @@ export default class Resources extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Mana Utilization',
-					percent: (Math.abs(this.resources._totalSpentMana) / this.resources._totalGainedMana) * 100,
+					//get a free dark arts because you shouldn't be spending less
+					percent: this.library.upperCap(((Math.abs(this._totalSpentMana) / (this._totalGainedMana - DARK_ARTS_MANA_COST)) * 100), 100),
 				}),
 			],
 		}))
 		this.checklist.add(new Rule({
 			name: 'Blood Utilization',
-			description: <Fragment> Blood needs to be spent fairly quickly once acquired, otherwise capping will occur.  Some cases of blood cap loss are unavoidable due to TBN usage, but otherwise aim for as high a percent as possible.  Remember that <ActionLink {...ACTIONS.BLOODSPILLER}
-			/> does not reset your <ActionLink {...ACTIONS.SOULEATER}/>combo, and can be used effectively with <ActionLink {...ACTIONS.GRIT}/>and <ActionLink {...ACTIONS.DARK_ARTS}/>.</Fragment>,
+			description: <Fragment> Blood needs to be spent fairly quickly once acquired, otherwise capping will occur.  Some cases of blood cap loss are unavoidable due to <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> usage, but otherwise aim for as high a percent as possible.  Remember that <ActionLink {...ACTIONS.BLOODSPILLER}
+			/> does not reset your <ActionLink {...ACTIONS.SOULEATER}/>combo, consumes <ActionLink {...ACTIONS.DARK_ARTS}/>, and bypasses the major potency penalty from <ActionLink {...ACTIONS.GRIT}/>.</Fragment>,
 			requirements: [
 				new Requirement({
 					name: 'Blood Utilization',
-					percent: (Math.abs(this.resources._totalSpentBlood) / this.resources._totalGainedBlood) * 100,
+					//get a free bloodspiller because you can't spend less than 50 blood
+					percent: this.library.upperCap(((Math.abs(this._totalSpentBlood) / (this._totalGainedBlood - BLOODSPILLER_BLOOD_COST)) * 100), 100),
 				}),
 			],
 		}))
@@ -277,7 +367,7 @@ export default class Resources extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed out on {this._droppedTBNs * 50} blood or {this._droppedTBNs * 140} potency of Dark Arts buffs.
+					You missed out on {this._droppedTBNs * 50} blood ({BLOODSPILLER_BLOOD_POTENCY} potency) or {this._droppedTBNs * 140} potency of Dark Arts buffs.
 				</Fragment>,
 			}))
 		}
