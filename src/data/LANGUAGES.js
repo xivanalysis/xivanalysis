@@ -1,29 +1,44 @@
 const LANGUAGES = {
 	en: {
-		text: 'English',
-		flag: 'gb',
+		menu: {
+			text: 'English',
+			flag: 'gb',
+		},
 		tooltip: 'en',
+		enable: true,
 	},
 	ja: {
-		text: '日本語',
-		flag: 'jp',
+		menu: {
+			text: '日本語',
+			flag: 'jp',
+		},
 		tooltip: 'ja',
+		enable: false,
 	},
 	fr: {
-		text: 'Français',
-		flag: 'fr',
+		menu: {
+			text: 'Français',
+			flag: 'fr',
+		},
 		tooltip: 'fr',
+		enable: false,
 	},
 	de: {
-		text: 'Deutsch',
-		flag: 'de',
+		menu: {
+			text: 'Deutsch',
+			flag: 'de',
+		},
 		tooltip: 'de',
+		enable: false,
 	},
 }
 
 export const LANGUAGE_ARRAY = Object.entries(LANGUAGES)
 	.map(([key, val]) => {
 		val.value = key
+		if ( val.menu ) {
+			val.menu.value = key
+		}
 		return val
 	})
 
