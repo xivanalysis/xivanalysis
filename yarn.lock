@@ -7388,10 +7388,6 @@ react-app-rewire-eslint@^0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/react-app-rewire-eslint/-/react-app-rewire-eslint-0.2.3.tgz#88e93d74569c33fe22185d46f6a2b521c4dd7fb6"
 
-react-app-rewire-lingui@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/react-app-rewire-lingui/-/react-app-rewire-lingui-1.2.0.tgz#d5903b232f3eb954c83353fdd45e35f123eabd4c"
-
 react-app-rewire-lodash@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-app-rewire-lodash/-/react-app-rewire-lodash-2.0.0.tgz#853ac405bf90f2409eec812a19015d7446cc5ddb"

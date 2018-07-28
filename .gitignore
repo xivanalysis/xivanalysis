@@ -9,7 +9,7 @@
 # production
 /build
 locale/_build/
-locale/**/*.js
+locale/*/*.js
 
 # misc
 .DS_Store
