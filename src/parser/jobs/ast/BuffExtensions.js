@@ -206,7 +206,7 @@ export default class BuffExtensions extends Module {
 					<td>
 						<JobIcon
 							job={JOBS[target.job]}
-							className={styles.buffextensions__jobIcon}
+							className={styles.jobIcon}
 						/>
 					</td>
 					<td>{target.name}</td>
@@ -223,17 +223,17 @@ export default class BuffExtensions extends Module {
 				title: {
 					key: 'title-' + dilation.event.timestamp,
 					content: <Fragment>
-						<div className={styles.buffextensions__headerItem}>
+						<div className={styles.headerItem}>
 							{this.parser.formatTimestamp(dilation.event.timestamp)}&nbsp;-&nbsp;
 						</div>
-						<div className={styles.buffextensions__headerItem}><img
+						<div className={styles.headerItem}><img
 							key={dilation.event.timestamp}
 							src={ACTIONS[dilation.event.ability.guid].icon}
-							className={styles.buffextensions__dilationEventIcon}
+							className={styles.dilationEventIcon}
 							alt={dilation.event.ability.name}
 						/>
 						</div>
-						<div className={styles.buffextensions__headerItem}>
+						<div className={styles.headerItem}>
 								&nbsp;-&nbsp;{descriptionText}
 						</div>
 
@@ -242,7 +242,7 @@ export default class BuffExtensions extends Module {
 				content: {
 					key: 'content-' + dilation.event.timestamp,
 					content: <Fragment>
-						<table className={styles.buffextensions__buffTable}>
+						<table className={styles.buffTable}>
 							<tbody>
 								{targetRows.length ? targetRows
 									: <tr>

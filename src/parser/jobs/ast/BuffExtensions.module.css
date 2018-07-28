@@ -1,24 +1,24 @@
-.buffextensions__headerItem {
+.headerItem {
 	display: inline-block;
 }
 
 
-.buffextensions__headerItem span {
+.headerItem span {
 	position: relative;
 	margin: 0 1em;
 	line-height: 2em;
 }
 
-.buffextensions__jobIcon {
+.jobIcon {
 	height: 2em;
 }
 
-.buffextensions__dilationEventIcon {
+.dilationEventIcon {
 	height: 2em;
 }
 
 
-.buffextensions__buffTable td:nth-child(2) {
+.buffTable td:nth-child(2) {
 	min-width: 150px;
 	margin-right: 1em;
 }
