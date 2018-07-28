@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
-import Weaving from 'parser/core/modules/Weaving'
+import CoreWeaving from 'parser/core/modules/Weaving'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const WEAVING_SEVERITY = {
@@ -11,7 +11,7 @@ const WEAVING_SEVERITY = {
 	10: SEVERITY.MAJOR,
 }
 
-export default class ScholarWeaving extends Weaving {
+export default class Weaving extends CoreWeaving {
 	static handle = 'weaving'
 	static dependencies = [
 		'combatants',
