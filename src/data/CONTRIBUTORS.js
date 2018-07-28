@@ -90,15 +90,15 @@ export default {
 
 export const ROLES = {
 	MAINTAINER: {
-		id: i18nMark('core.role.maintainer'),
+		i18n_id: i18nMark('core.role.maintainer'),
 		text: 'Maintainer',
 	},
 	THEORYCRAFT: {
-		id: i18nMark('core.role.theorycraft'),
+		i18n_id: i18nMark('core.role.theorycraft'),
 		text: 'Theorycraft',
 	},
 	DEVELOPER: {
-		id: i18nMark('core.role.developer'),
+		i18n_id: i18nMark('core.role.developer'),
 		text: 'Developer',
 	},
 }

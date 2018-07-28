@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Grid, Message, Segment} from 'semantic-ui-react'
+import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
@@ -19,7 +19,8 @@ export default class About extends Module {
 	output() {
 		// If this passes, we've not been subclassed. Render an error.
 		if (Object.getPrototypeOf(this) === About.prototype) {
-			return <Message warning icon="warning sign">
+			return <Message warning icon>
+				<Icon name="warning sign" />
 				<Message.Content>
 					<Message.Header>
 						<Trans id="core.about.unsupported.title">This job is currently unsupported</Trans>
@@ -56,7 +57,7 @@ export default class About extends Module {
 								>
 									<ContributorLabel
 										contributor={user}
-										detail={<Trans id={role.id} defaults={role.text} />}
+										detail={<Trans id={role.i18n_id} defaults={role.text} />}
 									/>
 								</div>
 							})}

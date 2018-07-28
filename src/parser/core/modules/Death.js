@@ -67,9 +67,10 @@ export default class Death extends Module {
 				Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
 			</Trans>,
 			severity: SEVERITY.MORBID,
-			why: <Plural id="core.deaths.why"
+			why: <Plural
+				id="core.deaths.why"
 				value={this._count}
-				one="# death"
+				_1="# death"
 				other="# deaths"
 			/>,
 		}))

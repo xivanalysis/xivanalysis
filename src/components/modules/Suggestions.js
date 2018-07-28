@@ -53,7 +53,7 @@ class Suggestions extends Component {
 						<SafeTrans id={suggestion.i18n_id} defaults={suggestion.content} />
 						<div className={styles.extra}>
 							<Label horizontal {...SEVERITY_LABEL_PROPS[suggestion.severity]} />
-							<SafeTrans id={suggestion.i18n_id} defaults={suggestion.why} />
+							<SafeTrans id={suggestion.i18n_why} defaults={suggestion.why} />
 						</div>
 					</div>
 				</div>)}

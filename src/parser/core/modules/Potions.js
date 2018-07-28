@@ -52,7 +52,7 @@ export default class Potions extends Module {
 				content: <Trans id="core.potions.content">
 					It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <em>twice</em> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.
 				</Trans>,
-				why_i18n: i18nMark('core.potions.why'),
+				i18n_why: i18nMark('core.potions.why'),
 				why: 'Used a short potion instead of an infusion.',
 				severity: SEVERITY.MEDIUM,
 			}))

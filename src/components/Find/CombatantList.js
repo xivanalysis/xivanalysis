@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
-import {Header, Menu, Message, Segment} from 'semantic-ui-react'
+import {Header, Menu, Message, Segment, Icon} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 import JobIcon from 'components/ui/JobIcon'
@@ -79,9 +79,17 @@ class CombatantList extends Component {
 						info
 						attached
 						icon="code"
-						header={<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>}
-						content={<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>}
-					/>}
+					>
+						<Icon name="code" />
+						<Message.Content>
+							<Message.Header>
+								<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>
+							</Message.Header>
+							<p>
+								<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
+							</p>
+						</Message.Content>
+					</Message>}
 					<Menu fluid vertical attached="bottom">
 						{friends.map(friend =>
 							// TODO: This is legit trash
