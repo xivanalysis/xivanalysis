@@ -2,13 +2,16 @@ import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 
 
-const OGCDExceptions = [
+const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,
 	ACTIONS.ADDLE.id,
 	ACTIONS.SURECAST.id,
 	ACTIONS.APOCATASTASIS.id,
 	ACTIONS.MANA_SHIFT.id,
+	ACTIONS.TRANSPOSE.id,
 ]
+
+const OPENER_ENO_TIME_THRESHHOLD = 10000
 
 export default class BlmWeaving extends Weaving {
 	static handle = 'weaving'
@@ -46,14 +49,14 @@ export default class BlmWeaving extends Weaving {
 			).length
 
 			//allow a single weave of the OGCD exceptions
-			if (weaveCount === 1 && OGCDExceptions.includes(weave.weaves[0].ability.guid)) {
+			if (weaveCount === 1 && OGCD_EXCEPTIONS.includes(weave.weaves[0].ability.guid)) {
 				return false
 			}
 
 			//allow first eno to be ignored because it's a neccessary weave. 10s for that to happen because of O5s Eno delay.
 			if (weaveCount === 1) {
 				const ogcdTime = weave.weaves[0].timestamp - this.parser.fight.start_time
-				if (ogcdTime < 10000 && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id) {
+				if (ogcdTime < OPENER_ENO_TIME_THRESHHOLD && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id) {
 					return false
 				}
 			}

@@ -18,6 +18,12 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 			// Browser Extensions
 			/extensions\//i,
 			/^chrome:\/\//i,
+			// XIVDB's tooltips fail to load jQuery quite frequently
+			/xivdb.com\/tooltips/i,
+		],
+		ignoreErrors: [
+			// Accessing the site via other services like google translate freaks the router out
+			/Failed to execute 'pushState' on 'History'/i,
 		],
 	}).install()
 }

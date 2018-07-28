@@ -4,7 +4,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // there's also the case where if you have further ruin and an egi is about to do gcd + ogcd and they held, that can be considered a no no
 // also if they are holding further ruin during Bahamut what are they even doing
@@ -22,6 +22,13 @@ const ACTIONS_NO_PROC = [
 const PROC_RATE = 0.15
 
 const MAX_PROC_HOLD = 5000
+
+// Severity in ms
+const OVERAGE_SEVERITY = {
+	1000: SEVERITY.MINOR,
+	10000: SEVERITY.MEDIUM,
+	30000: SEVERITY.MAJOR,
+}
 
 export default class Ruin4 extends Module {
 	static handle = 'ruin4'
@@ -80,13 +87,14 @@ export default class Ruin4 extends Module {
 		}
 
 		if (this._overage > 1000) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.RUIN_IV.icon,
 				content: <Fragment>
 					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
 				</Fragment>,
-				severity: this._overage > 30000? SEVERITY.MAJOR : this._overage > 10000? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				why: `Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.`,
+				tiers: OVERAGE_SEVERITY,
+				value: this._overage,
 			}))
 		}
 	}

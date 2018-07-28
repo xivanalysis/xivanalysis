@@ -2,11 +2,18 @@ import React, {Fragment} from 'react'
 
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 
 // Should this be in the actions data?
 const ROUSE_DURATION = 20000
+
+// Severity in ms
+const WASTED_ROUSE_SEVERITY = {
+	1000: SEVERITY.MINOR,
+	5000: SEVERITY.MEDIUM,
+	[ROUSE_DURATION]: SEVERITY.MAJOR,
+}
 
 export default class Rouse extends Module {
 	static handle = 'rouse'
@@ -44,13 +51,14 @@ export default class Rouse extends Module {
 
 	_onComplete() {
 		if (this._wasted > 1000) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.ROUSE.icon,
 				content: <Fragment>
 					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
 				</Fragment>,
-				severity: this._wasted > ROUSE_DURATION? SEVERITY.MAJOR : this._wasted > 5000? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				why: `${this.parser.formatDuration(this._wasted)} of Rouse wasted.`,
+				tiers: WASTED_ROUSE_SEVERITY,
+				value: this._wasted,
 			}))
 		}
 	}
