@@ -121,8 +121,6 @@ export default class BuffExtensions extends Module {
 	_onBuffRefresh(event) {
 		const statusID = event.ability.guid
 
-		if (event.targetID === 111 && statusID === STATUSES.WHEEL_OF_FORTUNE.id) {
-		}
 		// Ignore if timestamp is after aoe effect grace period
 		if (!this._oppositionEvent || event.timestamp > (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
 			return
