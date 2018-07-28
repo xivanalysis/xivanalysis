@@ -6,9 +6,10 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-const SF_DURATION_MILLIS = 21000
+const SF_DURATION_MILLIS = STATUSES.SHADOW_FANG.duration * 1000
+const CLIP_SECS_PER_MIN_THRESHOLD = 7
 
 export default class ShadowFang extends Module {
 	static handle = 'shadowFang'
@@ -74,14 +75,19 @@ export default class ShadowFang extends Module {
 		}))
 
 		// Suggestion for DoT clipping
-		const severity = this.getDotClippingSeverity()
-		if (severity) {
-			this.suggestions.add(new Suggestion({
+		const clipping = this.getDotClippingAmount()
+		if (clipping >= CLIP_SECS_PER_MIN_THRESHOLD) {
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SHADOW_FANG.icon,
 				content: <Fragment>
 					Avoid refreshing <ActionLink {...ACTIONS.SHADOW_FANG}/> significantly before its expiration, unless it would otherwise cost you significant uptime. Unnecessary refreshes risk overwriting buff snapshots and reduce the number of times you can use <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>.
 				</Fragment>,
-				severity: severity,
+				tiers: {
+					[CLIP_SECS_PER_MIN_THRESHOLD]: SEVERITY.MINOR,
+					10: SEVERITY.MEDIUM,
+					15: SEVERITY.MAJOR,
+				},
+				value: clipping,
 				why: <Fragment>
 					You lost {this.parser.formatDuration(this._sfClip)} of Shadow Fang to early refreshes.
 				</Fragment>,
@@ -95,10 +101,10 @@ export default class ShadowFang extends Module {
 		return (statusUptime / fightDuration) * 100
 	}
 
-	getDotClippingSeverity() {
+	getDotClippingAmount() {
 		// Simplified math, bitches
 		const fightDurationMillis = (this.parser.fightDuration - this.invuln.getInvulnerableUptime())
 		const clipSecsPerMin = Math.round((this._sfClip * 60) / fightDurationMillis)
-		return (clipSecsPerMin < 7 ? false : (clipSecsPerMin < 10 ? SEVERITY.MINOR : (clipSecsPerMin < 15 ? SEVERITY.MEDIUM : SEVERITY.MAJOR)))
+		return clipSecsPerMin
 	}
 }
