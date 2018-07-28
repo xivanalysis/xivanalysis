@@ -4,6 +4,7 @@ import {Checkbox, Label} from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
+import SafeTrans from 'components/ui/SafeTrans'
 
 import styles from './Suggestions.module.css'
 
@@ -40,7 +41,7 @@ class Suggestions extends Component {
 		return <Fragment>
 			{hasMinor && <Checkbox
 				toggle
-				label="Show minor"
+				label={<label><SafeTrans id="core.suggestion.show-minor">Show minor</SafeTrans></label>}
 				defaultChecked={showMinor}
 				onChange={(_, data) => this.setState({showMinor: data.checked})}
 				className={styles.checkbox}
@@ -49,17 +50,17 @@ class Suggestions extends Component {
 				{suggestions.map((suggestion, index) => <div key={index} className={styles.item}>
 					<img src={suggestion.icon} alt=""/>
 					<div>
-						{suggestion.content}
+						<SafeTrans id={suggestion.i18n_id} defaults={suggestion.content} />
 						<div className={styles.extra}>
 							<Label horizontal {...SEVERITY_LABEL_PROPS[suggestion.severity]} />
-							{suggestion.why}
+							<SafeTrans id={suggestion.i18n_id} defaults={suggestion.why} />
 						</div>
 					</div>
 				</div>)}
 				{suggestions.length === 0 && <div className={styles.item}>
 					<div>
-						<strong>There's nothing here!</strong><br/>
-						{hasMinor && 'You can check over the minor suggestions by flicking the "Show minor" switch in the top right.'}
+						<strong><SafeTrans id="core.suggestion.nothing">There's nothing here!</SafeTrans></strong><br/>
+						{hasMinor && <SafeTrans id="core.suggestion.nothing-but-minor">You can check over the minor suggestions by flicking the "Show minor" switch in the top right.</SafeTrans>}
 					</div>
 				</div>}
 			</div>

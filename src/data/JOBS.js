@@ -1,31 +1,38 @@
 import {addExtraIndex} from 'utilities'
 
+import {i18nMark} from '@lingui/react'
+
 export const ROLES = addExtraIndex({
 	TANK: {
 		id: 1,
+		i18n_id: i18nMark('game.roles.tank'),
 		name: 'Tank',
 		colour: 'blue',
 	},
 	HEALER: {
 		id: 2,
+		i18n_id: i18nMark('game.roles.healer'),
 		name: 'Healer',
 		colour: 'green',
 	},
 
 	MELEE: {
 		id: 3,
+		i18n_id: i18nMark('game.roles.melee-dps'),
 		name: 'Melee DPS',
 		colour: 'red',
 	},
 
 	PHYSICAL_RANGED: {
 		id: 4,
+		i18n_id: i18nMark('game.roles.physical-ranged-dps'),
 		name: 'Physical Ranged DPS',
 		colour: 'red',
 	},
 
 	MAGICAL_RANGED: {
 		id: 5,
+		i18n_id: i18nMark('game.roles.magical-ranged-dps'),
 		name: 'Magical Ranged DPS',
 		colour: 'red',
 	},
@@ -33,6 +40,7 @@ export const ROLES = addExtraIndex({
 	// Not really a role but w/e
 	UNSUPPORTED: {
 		id: 100,
+		i18n_id: i18nMark('game.roles.unsupported'),
 		name: 'Unsupported',
 		colour: 'grey',
 	},
@@ -42,6 +50,7 @@ export const ROLES = addExtraIndex({
 const JOBS = {
 	// Tank
 	PALADIN: {
+		i18n_id: i18nMark('game.job.paladin'),
 		name: 'Paladin',
 		logType: 'Paladin',
 		icon: 'paladin',
@@ -49,6 +58,7 @@ const JOBS = {
 		role: ROLES.TANK.id,
 	},
 	WARRIOR: {
+		i18n_id: i18nMark('game.job.warrior'),
 		name: 'Warrior',
 		logType: 'Warrior',
 		icon: 'warrior',
@@ -56,6 +66,7 @@ const JOBS = {
 		role: ROLES.TANK.id,
 	},
 	DARK_KNIGHT: {
+		i18n_id: i18nMark('game.job.dark-knight'),
 		name: 'Dark Knight',
 		logType: 'DarkKnight',
 		icon: 'darkknight',
@@ -65,6 +76,7 @@ const JOBS = {
 
 	// Healer
 	WHITE_MAGE: {
+		i18n_id: i18nMark('game.job.white-mage'),
 		name: 'White Mage',
 		logType: 'WhiteMage',
 		icon: 'whitemage',
@@ -72,6 +84,7 @@ const JOBS = {
 		role: ROLES.HEALER.id,
 	},
 	SCHOLAR: {
+		i18n_id: i18nMark('game.job.scholar'),
 		name: 'Scholar',
 		logType: 'Scholar',
 		icon: 'scholar',
@@ -79,6 +92,7 @@ const JOBS = {
 		role: ROLES.HEALER.id,
 	},
 	ASTROLOGIAN: {
+		i18n_id: i18nMark('game.job.astrologian'),
 		name: 'Astrologian',
 		logType: 'Astrologian',
 		icon: 'astrologian',
@@ -88,6 +102,7 @@ const JOBS = {
 
 	// Melee
 	MONK: {
+		i18n_id: i18nMark('game.job.monk'),
 		name: 'Monk',
 		logType: 'Monk',
 		icon: 'monk',
@@ -95,6 +110,7 @@ const JOBS = {
 		role: ROLES.MELEE.id,
 	},
 	DRAGOON: {
+		i18n_id: i18nMark('game.job.dragoon'),
 		name: 'Dragoon',
 		logType: 'Dragoon',
 		icon: 'dragoon',
@@ -102,6 +118,7 @@ const JOBS = {
 		role: ROLES.MELEE.id,
 	},
 	NINJA: {
+		i18n_id: i18nMark('game.job.ninja'),
 		name: 'Ninja',
 		logType: 'Ninja',
 		icon: 'ninja',
@@ -109,6 +126,7 @@ const JOBS = {
 		role: ROLES.MELEE.id,
 	},
 	SAMURAI: {
+		i18n_id: i18nMark('game.job.samurai'),
 		name: 'Samurai',
 		logType: 'Samurai',
 		icon: 'samurai',
@@ -118,6 +136,7 @@ const JOBS = {
 
 	// Phys Ranged
 	BARD: {
+		i18n_id: i18nMark('game.job.bard'),
 		name: 'Bard',
 		logType: 'Bard',
 		icon: 'bard',
@@ -125,6 +144,7 @@ const JOBS = {
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
 	MACHINIST: {
+		i18n_id: i18nMark('game.job.machinist'),
 		name: 'Machinist',
 		logType: 'Machinist',
 		icon: 'machinist',
@@ -134,6 +154,7 @@ const JOBS = {
 
 	// Magic Ranged
 	BLACK_MAGE: {
+		i18n_id: i18nMark('game.job.black-mage'),
 		name: 'Black Mage',
 		logType: 'BlackMage',
 		icon: 'blackmage',
@@ -141,6 +162,7 @@ const JOBS = {
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 	SUMMONER: {
+		i18n_id: i18nMark('game.job.summoner'),
 		name: 'Summoner',
 		logType: 'Summoner',
 		icon: 'summoner',
@@ -148,6 +170,7 @@ const JOBS = {
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 	RED_MAGE: {
+		i18n_id: i18nMark('game.job.red-mage'),
 		name: 'Red Mage',
 		logType: 'RedMage',
 		icon: 'redmage',

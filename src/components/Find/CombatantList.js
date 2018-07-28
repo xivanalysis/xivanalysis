@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {Header, Menu, Message, Segment} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
@@ -63,21 +64,23 @@ class CombatantList extends Component {
 
 		return <Fragment>
 			<Header>
-				Select a combatant
+				<Trans id="core.find.select-combatant">
+					Select a combatant
+				</Trans>
 			</Header>
 
 			{grouped.map((friends, index) => {
 				const role = ROLES[index]
 				return <Fragment key={index}>
 					<Segment color={role.colour} attached="top">
-						{role.name}
+						<Trans id={role.i18n_id} defaults={role.name} />
 					</Segment>
 					{index === ROLES.UNSUPPORTED.id && <Message
 						info
 						attached
 						icon="code"
-						header="Favourite job unsupported?"
-						content="We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!"
+						header={<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>}
+						content={<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>}
 					/>}
 					<Menu fluid vertical attached="bottom">
 						{friends.map(friend =>

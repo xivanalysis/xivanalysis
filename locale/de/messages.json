@@ -1,6 +1,6 @@
 {
   "core.about.contributors": {
-    "translation": "Mitwirkende:",
+    "translation": "",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -9,7 +9,7 @@
     ]
   },
   "core.about.patch": {
-    "translation": "Aufnäher {0}",
+    "translation": "",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -18,7 +18,7 @@
     ]
   },
   "core.about.unsupported.description": {
-    "translation": "Die unten gezeigte Ausgabe enthält keine auftragsspezifische Analyse und kann kritische Daten enthalten, die für ein genaues Ergebnis erforderlich sind.",
+    "translation": "",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -27,7 +27,7 @@
     ]
   },
   "core.about.unsupported.title": {
-    "translation": "Dieser Job wird derzeit nicht unterstützt.",
+    "translation": "",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -36,7 +36,7 @@
     ]
   },
   "core.about.updated-for": {
-    "translation": "Aktualisiert für:",
+    "translation": "",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -44,8 +44,89 @@
       ]
     ]
   },
+  "core.always-cast.description": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        30
+      ]
+    ]
+  },
+  "core.always-cast.gcd-uptime": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        34
+      ]
+    ]
+  },
+  "core.always-cast.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        28
+      ]
+    ]
+  },
+  "core.analyse.load-analysis": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Analyse/Analyse.js",
+        226
+      ]
+    ]
+  },
+  "core.analyse.load-report": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/LastFightRedirect.js",
+        45
+      ]
+    ]
+  },
+  "core.analyse.view-on-fflogs": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Analyse/Analyse.js",
+        264
+      ]
+    ]
+  },
+  "core.checklist.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Checklist/Checklist.js",
+        11
+      ]
+    ]
+  },
+  "core.deaths.content": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Death.js",
+        66
+      ]
+    ]
+  },
+  "core.deaths.why": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Death.js",
+        70
+      ]
+    ]
+  },
   "core.error.generic": {
-    "translation": "Sieht aus, als wäre etwas schief gelaufen. Die Code-Affen wurden benachrichtigt.",
+    "translation": "",
     "origin": [
       [
         "src/components/ui/ErrorMessage.js",
@@ -53,8 +134,143 @@
       ]
     ]
   },
+  "core.find.job-unsupported.description": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        83
+      ]
+    ]
+  },
+  "core.find.job-unsupported.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        82
+      ]
+    ]
+  },
+  "core.find.kills-only": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        68
+      ]
+    ]
+  },
+  "core.find.load-report": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/Find.js",
+        41
+      ]
+    ]
+  },
+  "core.find.refresh": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        75
+      ]
+    ]
+  },
+  "core.find.select-combatant": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        67
+      ]
+    ]
+  },
+  "core.find.select-pull": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        62
+      ]
+    ]
+  },
+  "core.gcd.estimate": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        182
+      ]
+    ]
+  },
+  "core.gcd.invalid-gcd": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        178
+      ]
+    ]
+  },
+  "core.gcd.no-statistics": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        171
+      ]
+    ]
+  },
+  "core.gcd.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        22
+      ]
+    ]
+  },
+  "core.home.analyse": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Home/ReportSearch.js",
+        80
+      ]
+    ]
+  },
+  "core.home.paste-url": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/Home/ReportSearch.js",
+        72
+      ]
+    ]
+  },
+  "core.potions.content": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        52
+      ]
+    ]
+  },
+  "core.potions.why": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        55
+      ]
+    ]
+  },
   "core.role.developer": {
-    "translation": "Entwickler",
+    "translation": "",
     "origin": [
       [
         "src/data/CONTRIBUTORS.js",
@@ -63,7 +279,7 @@
     ]
   },
   "core.role.maintainer": {
-    "translation": "Betreuer",
+    "translation": "",
     "origin": [
       [
         "src/data/CONTRIBUTORS.js",
@@ -72,11 +288,254 @@
     ]
   },
   "core.role.theorycraft": {
-    "translation": "Theoretiker",
+    "translation": "",
     "origin": [
       [
         "src/data/CONTRIBUTORS.js",
         97
+      ]
+    ]
+  },
+  "core.suggestions.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Suggestions/Suggestions.js",
+        11
+      ]
+    ]
+  },
+  "core.timeline.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Timeline/Timeline.js",
+        14
+      ]
+    ]
+  },
+  "core.weaving.content": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        86
+      ]
+    ]
+  },
+  "core.weaving.panel-count": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        152
+      ]
+    ]
+  },
+  "core.weaving.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        34
+      ]
+    ]
+  },
+  "core.weaving.why": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        89
+      ]
+    ]
+  },
+  "game.job.astrologian": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        95
+      ]
+    ]
+  },
+  "game.job.bard": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        139
+      ]
+    ]
+  },
+  "game.job.black-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        157
+      ]
+    ]
+  },
+  "game.job.dark-knight": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        69
+      ]
+    ]
+  },
+  "game.job.dragoon": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        113
+      ]
+    ]
+  },
+  "game.job.machinist": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        147
+      ]
+    ]
+  },
+  "game.job.monk": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        105
+      ]
+    ]
+  },
+  "game.job.ninja": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        121
+      ]
+    ]
+  },
+  "game.job.paladin": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        53
+      ]
+    ]
+  },
+  "game.job.red-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        173
+      ]
+    ]
+  },
+  "game.job.samurai": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        129
+      ]
+    ]
+  },
+  "game.job.scholar": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        87
+      ]
+    ]
+  },
+  "game.job.summoner": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        165
+      ]
+    ]
+  },
+  "game.job.warrior": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        61
+      ]
+    ]
+  },
+  "game.job.white-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        79
+      ]
+    ]
+  },
+  "game.roles.healer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        14
+      ]
+    ]
+  },
+  "game.roles.magical-ranged-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        35
+      ]
+    ]
+  },
+  "game.roles.melee-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        21
+      ]
+    ]
+  },
+  "game.roles.physical-ranged-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        28
+      ]
+    ]
+  },
+  "game.roles.tank": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        8
+      ]
+    ]
+  },
+  "game.roles.unsupported": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        43
       ]
     ]
   }

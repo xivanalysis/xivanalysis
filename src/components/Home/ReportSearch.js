@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {withRouter} from 'react-router-dom'
 import {Button, Input} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import styles from './ReportSearch.module.css'
 
@@ -67,12 +68,16 @@ class ReportSearch extends Component {
 
 	render() {
 		return <Fragment>
-			<span className={styles.text}><strong>Paste your log URL to get started</strong></span>
+			<span className={styles.text}><strong>
+				<Trans id="core.home.paste-url">
+					Paste your log URL to get started
+				</Trans>
+			</strong></span>
 			<Input
 				type="text"
 				placeholder="https://www.fflogs.com/reports/..."
 				ref={this.inputField}
-				action={<Button onClick={this.parseReportUrl}>Analyse</Button>}
+				action={<Button onClick={this.parseReportUrl}><Trans id="core.home.analyse">Analyse</Trans></Button>}
 				onChange={this.parseReportUrl}
 				className={styles.input}
 				inverted
