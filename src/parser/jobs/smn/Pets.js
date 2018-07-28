@@ -7,7 +7,7 @@ import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import styles from './Pets.module.css'
 
@@ -28,6 +28,12 @@ const CHART_COLOURS = {
 
 // Durations should probably be ACTIONS data
 export const SUMMON_BAHAMUT_LENGTH = 20000
+
+// noPetUptime severity, in %
+const NO_PET_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
 
 export default class Pets extends Module {
 	static handle = 'pets'
@@ -166,21 +172,22 @@ export default class Pets extends Module {
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Garuda-Egi preferred.`,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>&apos;s Magic Vulnerability Up.
+					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
 				</Fragment>,
 			}))
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+			console.log(mostUsedPet)
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,
+				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit&apos;s raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
+					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
 				</Fragment>,
 			}))
 		}
@@ -200,16 +207,15 @@ export default class Pets extends Module {
 
 		// Pets are important, k?
 		const noPetUptimePercent = this.getPetUptimePercent(-1)
-		if (noPetUptimePercent > 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SUMMON.icon,
-				why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
-				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				content: <Fragment>
-					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SUMMON.icon,
+			content: <Fragment>
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+			</Fragment>,
+			why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
+			tiers: NO_PET_SEVERITY,
+			value: noPetUptimePercent,
+		}))
 	}
 
 	getPetUptimePercent(petId) {

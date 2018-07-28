@@ -4,13 +4,19 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // In a single target scenario, SF should always tick 5 times
 const MIN_HITS = 5
 
 // Ticks every 3s
 const TICK_SPEED = 3000
+
+const MISSED_TICK_SEVERITY = {
+	1: SEVERITY.MINOR,
+	[MIN_HITS]: SEVERITY.MEDIUM,
+	[MIN_HITS * 2]: SEVERITY.MAJOR,
+}
 
 export default class ShadowFlare extends Module {
 	static handle = 'shadowFlare'
@@ -37,6 +43,10 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onDamage(event) {
+		// If there's no casts at all, use the damage event to fab one
+		if (!this._casts.length) {
+			this._onCast(event)
+		}
 		this._casts[this._casts.length - 1].hits.push(event)
 	}
 
@@ -51,13 +61,14 @@ export default class ShadowFlare extends Module {
 		}, 0)
 
 		if (missedTicks) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SHADOW_FLARE.icon,
 				content: <Fragment>
 					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
 				</Fragment>,
 				why: missedTicks + ' missed ticks of Shadow Flare.',
-				severity: missedTicks < MIN_HITS? SEVERITY.MINOR : missedTicks < MIN_HITS*2? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				tiers: MISSED_TICK_SEVERITY,
+				value: missedTicks,
 			}))
 		}
 	}

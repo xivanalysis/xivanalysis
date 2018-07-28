@@ -12,8 +12,12 @@ import NIN from './NIN'
 import BRD from './BRD'
 import MCH from './MCH'
 import SMN from './SMN'
+import BLM from './BLM'
 import RDM from './RDM'
 import WAR from './WAR'
+import WHM from './WHM'
+import PLD from './PLD'
+import SAM from './SAM'
 import DRK from './DRK'
 
 const STATUSES = {
@@ -22,20 +26,24 @@ const STATUSES = {
 	...SHARED,
 	...ACN,
 
+	...PLD,
 	...WAR,
 	...DRK,
 
 	...SCH,
 	...AST,
+	...WHM,
 
 	...MNK,
 	...DRG,
 	...NIN,
+	...SAM,
 
 	...BRD,
 	...MCH,
 
 	...SMN,
+	...BLM,
 	...RDM,
 }
 
