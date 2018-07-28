@@ -30,7 +30,5 @@ module.exports = (config, env) => {
 		loader: '@lingui/loader',
 	})
 
-	console.log(config.module.rules)
-
 	return config
 }
