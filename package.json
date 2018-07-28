@@ -57,7 +57,10 @@
   },
   "lingui": {
     "sourceLocale": "en"
-  },
+	},
+	"resolutions": {
+		"babel-core": "7.0.0-bridge.0"
+	},
   "devDependencies": {
     "@lingui/babel-plugin-transform-js": "^2.3.0",
     "@lingui/babel-plugin-transform-react": "^2.3.0",

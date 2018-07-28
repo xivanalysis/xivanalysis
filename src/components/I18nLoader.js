@@ -26,7 +26,7 @@ export class I18nLoader extends Component {
 		} else {
 			catalog = await import(
 				/* webpackMode: 'lazy', webpackChunkName: 'i18n-[index]' */
-				`../../locale/${language}/messages.js`
+				`../../locale/${language}/messages.json`
 			)
 		}
 
