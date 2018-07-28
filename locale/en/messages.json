@@ -1,6 +1,7 @@
 {
   "core.about.contributors": {
-    "translation": "core.about.contributors",
+    "translation": "Contributors:",
+    "defaults": "Contributors:",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -9,7 +10,8 @@
     ]
   },
   "core.about.patch": {
-    "translation": "core.about.patch",
+    "translation": "Patch {0}",
+    "defaults": "Patch {0}",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -18,7 +20,8 @@
     ]
   },
   "core.about.unsupported.description": {
-    "translation": "core.about.unsupported.description",
+    "translation": "The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.",
+    "defaults": "The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -27,7 +30,8 @@
     ]
   },
   "core.about.unsupported.title": {
-    "translation": "core.about.unsupported.title",
+    "translation": "This job is currently unsupported",
+    "defaults": "This job is currently unsupported",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -36,7 +40,8 @@
     ]
   },
   "core.about.updated-for": {
-    "translation": "core.about.updated-for",
+    "translation": "Updated For:",
+    "defaults": "Updated For:",
     "origin": [
       [
         "src/parser/core/modules/About.js",
@@ -72,7 +77,8 @@
     ]
   },
   "core.analyse.load-analysis": {
-    "translation": "core.analyse.load-analysis",
+    "translation": "Loading analysis",
+    "defaults": "Loading analysis",
     "origin": [
       [
         "src/components/Analyse/Analyse.js",
@@ -81,7 +87,8 @@
     ]
   },
   "core.analyse.load-report": {
-    "translation": "core.analyse.load-report",
+    "translation": "Loading report",
+    "defaults": "Loading report",
     "origin": [
       [
         "src/components/LastFightRedirect.js",
@@ -90,7 +97,8 @@
     ]
   },
   "core.analyse.view-on-fflogs": {
-    "translation": "core.analyse.view-on-fflogs",
+    "translation": "View report on FF Logs",
+    "defaults": "View report on FF Logs",
     "origin": [
       [
         "src/components/Analyse/Analyse.js",
@@ -108,7 +116,8 @@
     ]
   },
   "core.deaths.content": {
-    "translation": "core.deaths.content",
+    "translation": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
+    "defaults": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
     "origin": [
       [
         "src/parser/core/modules/Death.js",
@@ -117,7 +126,8 @@
     ]
   },
   "core.deaths.why": {
-    "translation": "core.deaths.why",
+    "translation": "{0, plural, =1 {# death} other {# deaths}}",
+    "defaults": "{0, plural, =1 {# death} other {# deaths}}",
     "origin": [
       [
         "src/parser/core/modules/Death.js",
@@ -126,7 +136,8 @@
     ]
   },
   "core.error.generic": {
-    "translation": "core.error.generic",
+    "translation": "Looks like something has gone wrong. The code monkies have been notified.",
+    "defaults": "Looks like something has gone wrong. The code monkies have been notified.",
     "origin": [
       [
         "src/components/ui/ErrorMessage.js",
@@ -135,7 +146,8 @@
     ]
   },
   "core.find.job-unsupported.description": {
-    "translation": "core.find.job-unsupported.description",
+    "translation": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
+    "defaults": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
     "origin": [
       [
         "src/components/Find/CombatantList.js",
@@ -144,7 +156,8 @@
     ]
   },
   "core.find.job-unsupported.title": {
-    "translation": "core.find.job-unsupported.title",
+    "translation": "Favourite job unsupported?",
+    "defaults": "Favourite job unsupported?",
     "origin": [
       [
         "src/components/Find/CombatantList.js",
@@ -153,7 +166,8 @@
     ]
   },
   "core.find.kills-only": {
-    "translation": "core.find.kills-only",
+    "translation": "Kills only",
+    "defaults": "Kills only",
     "origin": [
       [
         "src/components/Find/FightList.js",
@@ -162,7 +176,8 @@
     ]
   },
   "core.find.load-report": {
-    "translation": "core.find.load-report",
+    "translation": "Loading report",
+    "defaults": "Loading report",
     "origin": [
       [
         "src/components/Find/Find.js",
@@ -171,7 +186,8 @@
     ]
   },
   "core.find.refresh": {
-    "translation": "core.find.refresh",
+    "translation": "Refresh",
+    "defaults": "Refresh",
     "origin": [
       [
         "src/components/Find/FightList.js",
@@ -180,7 +196,8 @@
     ]
   },
   "core.find.select-combatant": {
-    "translation": "core.find.select-combatant",
+    "translation": "Select a combatant",
+    "defaults": "Select a combatant",
     "origin": [
       [
         "src/components/Find/CombatantList.js",
@@ -189,7 +206,8 @@
     ]
   },
   "core.find.select-pull": {
-    "translation": "core.find.select-pull",
+    "translation": "Select a pull",
+    "defaults": "Select a pull",
     "origin": [
       [
         "src/components/Find/FightList.js",
@@ -198,7 +216,8 @@
     ]
   },
   "core.gcd.estimate": {
-    "translation": "core.gcd.estimate",
+    "translation": "Estimated GCD: <0>{0}</0>",
+    "defaults": "Estimated GCD: <0>{0}</0>",
     "origin": [
       [
         "src/parser/core/modules/GlobalCooldown.js",
@@ -207,7 +226,8 @@
     ]
   },
   "core.gcd.invalid-gcd": {
-    "translation": "core.gcd.invalid-gcd",
+    "translation": "The estimated GCD falls outside possible GCD values, and has been bounded to {0} for calculations.",
+    "defaults": "The estimated GCD falls outside possible GCD values, and has been bounded to {0} for calculations.",
     "origin": [
       [
         "src/parser/core/modules/GlobalCooldown.js",
@@ -216,7 +236,8 @@
     ]
   },
   "core.gcd.no-statistics": {
-    "translation": "core.gcd.no-statistics",
+    "translation": "Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",
+    "defaults": "Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",
     "origin": [
       [
         "src/parser/core/modules/GlobalCooldown.js",
@@ -234,7 +255,8 @@
     ]
   },
   "core.home.analyse": {
-    "translation": "core.home.analyse",
+    "translation": "Analyse",
+    "defaults": "Analyse",
     "origin": [
       [
         "src/components/Home/ReportSearch.js",
@@ -243,7 +265,8 @@
     ]
   },
   "core.home.paste-url": {
-    "translation": "core.home.paste-url",
+    "translation": "Paste your log URL to get started",
+    "defaults": "Paste your log URL to get started",
     "origin": [
       [
         "src/components/Home/ReportSearch.js",
@@ -252,7 +275,8 @@
     ]
   },
   "core.potions.content": {
-    "translation": "core.potions.content",
+    "translation": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
+    "defaults": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
     "origin": [
       [
         "src/parser/core/modules/Potions.js",
@@ -315,7 +339,8 @@
     ]
   },
   "core.weaving.content": {
-    "translation": "core.weaving.content",
+    "translation": "Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <0>{0}</0> module below for more detailed analysis.",
+    "defaults": "Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <0>{0}</0> module below for more detailed analysis.",
     "origin": [
       [
         "src/parser/core/modules/Weaving.js",
@@ -324,7 +349,8 @@
     ]
   },
   "core.weaving.panel-count": {
-    "translation": "core.weaving.panel-count",
+    "translation": "{0, plural, =1 {# weave} other {# weaves}}",
+    "defaults": "{0, plural, =1 {# weave} other {# weaves}}",
     "origin": [
       [
         "src/parser/core/modules/Weaving.js",
@@ -342,7 +368,8 @@
     ]
   },
   "core.weaving.why": {
-    "translation": "core.weaving.why",
+    "translation": "{0, plural, =1 {# instance of incorrect weaving} other {# instances of incorrect weaving}}",
+    "defaults": "{0, plural, =1 {# instance of incorrect weaving} other {# instances of incorrect weaving}}",
     "origin": [
       [
         "src/parser/core/modules/Weaving.js",
