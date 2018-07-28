@@ -115,7 +115,7 @@ export default {
 		name: 'Enchanted Redoublement',
 		icon: 'https://secure.xivdb.com/img/game/003000/003227.png',
 		onGcd: true,
-		cooldown: 1.5,
+		cooldown: 2.2,
 		potency: 100, //consumes 25 white, 25 black
 		combo: {
 			from: 7528,

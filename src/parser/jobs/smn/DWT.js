@@ -6,7 +6,7 @@ import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
@@ -18,6 +18,18 @@ const DWT_LENGTH = 16000
 const OGCD_LENGTH = 750
 // Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
 const USABLE_LENGTH = DWT_LENGTH - OGCD_LENGTH * 3
+
+// Suggestion severity
+const BAD_GCD_SEVERITY = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	6: SEVERITY.MAJOR,
+}
+
+const MISSED_GCD_SEVERITY = {
+	1: SEVERITY.MINOR,
+	10: SEVERITY.MEDIUM,
+}
 
 export default class DWT extends Module {
 	static handle = 'dwt'
@@ -42,15 +54,21 @@ export default class DWT extends Module {
 
 	constructor(...args) {
 		super(...args)
+
 		this.addHook('cast', {by: 'player'}, this._onCast)
+
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.DEATHFLARE.id,
 		}, this._onDeathflareDamage)
-		this.addHook('removebuff', {
+
+		const dwtBuffFilter = {
 			by: 'player',
 			abilityId: STATUSES.DREADWYRM_TRANCE.id,
-		}, this._onRemoveDwt)
+		}
+		this.addHook('applybuff', dwtBuffFilter, this._onApplyDwt)
+		this.addHook('removebuff', dwtBuffFilter, this._onRemoveDwt)
+
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -59,15 +77,7 @@ export default class DWT extends Module {
 
 		// If it's a DWT cast, start tracking
 		if (actionId === ACTIONS.DREADWYRM_TRANCE.id) {
-			this._active = true
-			this._dwt = {
-				start: event.timestamp,
-				end: null,
-				rushing: this.gauge.isRushing(),
-				casts: [],
-			}
-
-			this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
+			this._startDwt(event.timestamp)
 		}
 
 		// Only going to save casts during DWT
@@ -81,6 +91,12 @@ export default class DWT extends Module {
 
 	_onDeathflareDamage(event) {
 		this._stopAndSave(event.hits.length, event.timestamp)
+	}
+
+	_onApplyDwt(event) {
+		// If we're not active at this point, they started the fight with DWT up. Clean up the mess.
+		if (this._active) { return }
+		this._startDwt(event.timestamp)
 	}
 
 	_onRemoveDwt() {
@@ -109,13 +125,14 @@ export default class DWT extends Module {
 
 		// Suggestions
 		if (badGcds) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
-				why: `${badGcds} incorrect GCDs used during DWT.`,
-				severity: badGcds > 5 ? SEVERITY.MAJOR : badGcds > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.TRI_BIND}/> in AoE situations.
 				</Fragment>,
+				why: `${badGcds} incorrect GCDs used during DWT.`,
+				tiers: BAD_GCD_SEVERITY,
+				value: badGcds,
 			}))
 		}
 
@@ -128,8 +145,9 @@ export default class DWT extends Module {
 				content: <Fragment>
 					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don't end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
 				</Fragment>,
-				severity: this._missedGcds < 10? SEVERITY.MINOR : SEVERITY.MEDIUM,
 				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,
+				tiers: MISSED_GCD_SEVERITY,
+				value: this._missedGcds,
 			}))
 		}
 
@@ -143,6 +161,18 @@ export default class DWT extends Module {
 				why: `${this._missedDeathflares} DWTs with no Deathflare.`,
 			}))
 		}
+	}
+
+	_startDwt(start) {
+		this._active = true
+		this._dwt = {
+			start,
+			end: null,
+			rushing: this.gauge.isRushing(),
+			casts: [],
+		}
+
+		this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {
@@ -178,7 +208,7 @@ export default class DWT extends Module {
 		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 
 		// Eyy, got there. Save out the details for now.
-		this._missedGcds += possibleGcds - gcds.length
+		this._missedGcds += Math.max(0, possibleGcds - gcds.length)
 	}
 
 	activeAt(time) {

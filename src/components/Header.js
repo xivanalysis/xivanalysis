@@ -56,19 +56,19 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
+			let subtitle = null
 			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
-				let time = ''
 				if (fight) {
 					const start_time = parseInt(fight.start_time, 10)
 					const end_time = parseInt(fight.end_time, 10)
-					const duration = formatDuration(Math.floor(end_time - start_time)/1000)
-					time = duration
+					subtitle = `(${formatDuration(Math.floor(end_time - start_time) / 1000)})`
 				}
-				title = `${fight? fight.name : fightId} (${time})`
+				title = `${fight? fight.name : fightId} `
 			}
 			crumbs.push({
 				title,
+				subtitle,
 				url: `/find/${code}/${fightId}/`,
 			})
 		}
@@ -115,6 +115,7 @@ class Header extends Component {
 						to={crumb.url}
 					>
 						{crumb.title}
+						{crumb.subtitle && <span className={styles.subtitle}>{crumb.subtitle}</span>}
 					</Menu.Item>)}
 				</Fragment>}
 
