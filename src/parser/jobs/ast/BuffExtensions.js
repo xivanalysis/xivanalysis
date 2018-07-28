@@ -75,13 +75,14 @@ export default class BuffExtensions extends Module {
 		// (Pets are stored under the player entities)
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
+
 		this._dilationUses.push({
 			event: event,
 			targets: [{
 				id: event.targetID,
 				name: refreshedTarget.info.name,
 				job: refreshedTarget.info.type,
-				buffs: refreshedTarget.getStatuses(event.timestamp, 0, 1000, event.sourceID),
+				buffs: refreshedTarget.getStatuses(null, event.timestamp, 0, 1000, event.sourceID),
 			}],
 
 		})
@@ -120,24 +121,24 @@ export default class BuffExtensions extends Module {
 	_onBuffRefresh(event) {
 		const statusID = event.ability.guid
 
+		if (event.targetID === 111 && statusID === STATUSES.WHEEL_OF_FORTUNE.id) {
+		}
 		// Ignore if timestamp is after aoe effect grace period
-		if (!this._oppositionEvent && event.timestamp < (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
+		if (!this._oppositionEvent || event.timestamp > (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
 			return
 		}
 
 		// Ignore refreshes on protects, royal road statuses,
-		if (IGNORE_STATUSES.includes(statusId)) {
+		if (IGNORE_STATUSES.includes(statusID)) {
 			return
 		}
+
 
 
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
 		// If this target isn't in the target array, add it
-		if (!this._oppositionEvent.targets.find(target => {
-			return target.id === event.targetID
-		})) {
-
+		if (!this._oppositionEvent.targets.find(target => target.id === event.targetID)) {
 
 			// TODO: Doesn't work with pets - Sushi
 			if (refreshedTarget) {
@@ -149,6 +150,7 @@ export default class BuffExtensions extends Module {
 				})
 			}
 		} else {
+			// else just add the buff to the target's list of buffs
 			this._oppositionEvent.targets.find(target => {
 				return target.id === event.targetID
 			}).buffs.push({...event})
@@ -177,7 +179,6 @@ export default class BuffExtensions extends Module {
 				})
 			}
 		}
-
 
 
 	}
@@ -222,7 +223,7 @@ export default class BuffExtensions extends Module {
 						<span className="text-error">{emptyMessage}</span>
 					</td>
 				</tr>
-		})
+			})
 
 
 
