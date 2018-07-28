@@ -75,11 +75,7 @@ class CombatantList extends Component {
 					<Segment color={role.colour} attached="top">
 						<Trans id={role.i18n_id} defaults={role.name} />
 					</Segment>
-					{index === ROLES.UNSUPPORTED.id && <Message
-						info
-						attached
-						icon="code"
-					>
+					{index === ROLES.UNSUPPORTED.id && <Message info icon attached>
 						<Icon name="code" />
 						<Message.Content>
 							<Message.Header>

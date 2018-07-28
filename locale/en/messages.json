@@ -5,7 +5,7 @@
     "origin": [
       [
         "src/parser/core/modules/About.js",
-        50
+        51
       ]
     ]
   },
@@ -15,7 +15,7 @@
     "origin": [
       [
         "src/parser/core/modules/About.js",
-        46
+        47
       ]
     ]
   },
@@ -25,7 +25,7 @@
     "origin": [
       [
         "src/parser/core/modules/About.js",
-        28
+        29
       ]
     ]
   },
@@ -35,7 +35,7 @@
     "origin": [
       [
         "src/parser/core/modules/About.js",
-        26
+        27
       ]
     ]
   },
@@ -45,7 +45,7 @@
     "origin": [
       [
         "src/parser/core/modules/About.js",
-        45
+        46
       ]
     ]
   },
@@ -317,6 +317,36 @@
       [
         "src/data/CONTRIBUTORS.js",
         97
+      ]
+    ]
+  },
+  "core.suggestion.nothing": {
+    "translation": "There's nothing here!",
+    "defaults": "There's nothing here!",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        65
+      ]
+    ]
+  },
+  "core.suggestion.nothing-but-minor": {
+    "translation": "You can check over the minor suggestions by flicking the \"Show minor\" switch in the top right.",
+    "defaults": "You can check over the minor suggestions by flicking the \"Show minor\" switch in the top right.",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        66
+      ]
+    ]
+  },
+  "core.suggestion.show-minor": {
+    "translation": "Show minor",
+    "defaults": "Show minor",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        47
       ]
     ]
   },

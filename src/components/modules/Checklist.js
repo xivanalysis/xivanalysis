@@ -11,9 +11,12 @@ class Checklist extends Component {
 		rules: PropTypes.arrayOf(PropTypes.shape({
 			percent: PropTypes.number.isRequired,
 			target: PropTypes.number.isRequired,
+			i18n_id: PropTypes.string,
 			name: PropTypes.node.isRequired,
+			i18n_description: PropTypes.string,
 			description: PropTypes.node,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
+				i18n_id: PropTypes.string,
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
 			})),

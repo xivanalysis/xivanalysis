@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
+import SafeTrans from 'components/ui/SafeTrans'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
@@ -34,7 +35,7 @@ export default class About extends Module {
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
-				{this.description}
+				<SafeTrans id={this.i18n_description} defaults={this.description} />
 			</Grid.Column>
 
 			{/* Meta box */}

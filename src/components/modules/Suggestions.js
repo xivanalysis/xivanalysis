@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
@@ -19,7 +20,9 @@ class Suggestions extends Component {
 	static propTypes = {
 		suggestions: PropTypes.arrayOf(PropTypes.shape({
 			icon: PropTypes.string.isRequired,
+			i18n_id: PropTypes.string,
 			content: PropTypes.node.isRequired,
+			i18n_why: PropTypes.string,
 			why: PropTypes.node.isRequired,
 			severity: PropTypes.number.isRequired,
 		})).isRequired,
@@ -41,7 +44,7 @@ class Suggestions extends Component {
 		return <Fragment>
 			{hasMinor && <Checkbox
 				toggle
-				label={<label><SafeTrans id="core.suggestion.show-minor">Show minor</SafeTrans></label>}
+				label={<label><Trans id="core.suggestion.show-minor">Show minor</Trans></label>}
 				defaultChecked={showMinor}
 				onChange={(_, data) => this.setState({showMinor: data.checked})}
 				className={styles.checkbox}
@@ -59,8 +62,8 @@ class Suggestions extends Component {
 				</div>)}
 				{suggestions.length === 0 && <div className={styles.item}>
 					<div>
-						<strong><SafeTrans id="core.suggestion.nothing">There's nothing here!</SafeTrans></strong><br/>
-						{hasMinor && <SafeTrans id="core.suggestion.nothing-but-minor">You can check over the minor suggestions by flicking the "Show minor" switch in the top right.</SafeTrans>}
+						<strong><Trans id="core.suggestion.nothing">There's nothing here!</Trans></strong><br/>
+						{hasMinor && <Trans id="core.suggestion.nothing-but-minor">You can check over the minor suggestions by flicking the "Show minor" switch in the top right.</Trans>}
 					</div>
 				</div>}
 			</div>
