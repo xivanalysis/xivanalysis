@@ -43,13 +43,11 @@ export default class TrickAttackWindow extends Module {
 
 	_onDwadHit(event) {
 		if (this._dwadCast) {
-			// Reset the flag so we only bother checking the first hit
+			// Reset the flag so we only check the first hit
 			this._dwadCast = false
 			if (!this._targetHasVuln(event.targetID)) {
 				this._dwadOutsideTa++
 			}
-
-			console.log(`dwad damage, ${event.targetID}`)
 		}
 	}
 
