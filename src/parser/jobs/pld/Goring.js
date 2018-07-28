@@ -4,8 +4,8 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
 	[STATUSES.GORING_BLADE.id]: 21000,
@@ -68,9 +68,10 @@ export default class Goring extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep your Goring up',
+			name: 'Keep your Goring Blade up',
 			description: <Fragment>
-				As a Paladin, <ActionLink {...ACTIONS.GORING_BLADE} /> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.
+				As a Paladin, <ActionLink {...ACTIONS.GORING_BLADE} /> is a significant portion of your sustained
+				damage, and is required to kept up for as much as possible, for the best damage output.
 			</Fragment>,
 			target: 90,
 			requirements: [
@@ -83,7 +84,7 @@ export default class Goring extends Module {
 
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
-		this.suggestions.add(new Suggestion({
+		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
 			content: <Fragment>
 				Avoid refreshing <ActionLink {...ACTIONS.GORING_BLADE} /> significantly before it's expiration.
@@ -92,6 +93,12 @@ export default class Goring extends Module {
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.GORING_BLADE.id])} of {STATUSES[STATUSES.GORING_BLADE.id].name} lost to early refreshes.
 			</Fragment>,
+			tiers: {
+				5000: SEVERITY.MINOR,
+				10000: SEVERITY.MEDIUM,
+				30000: SEVERITY.MAJOR,
+			},
+			value: maxClip,
 		}))
 	}
 

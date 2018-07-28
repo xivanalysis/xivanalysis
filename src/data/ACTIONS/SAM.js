@@ -10,7 +10,7 @@ export default {
 		onGcd: true,
 	},
 
-	JINPU: 	{
+	JINPU: {
 		id: 7478,
 		name: 'Jinpu',
 		icon: 'https://secure.xivdb.com/img/game/003000/003152.png',
@@ -54,7 +54,7 @@ export default {
 		castTime: 1.8,
 	},
 
-	GEKKO:	{
+	GEKKO: {
 		id: 7481,
 		name: 'Gekko',
 		icon: 'https://secure.xivdb.com/img/game/003000/003158.png',
@@ -76,7 +76,7 @@ export default {
 		castTime: 1.8,
 	},
 
-	KASHA: 	{
+	KASHA: {
 		id: 7482,
 		name: 'Kasha',
 		icon: 'https://secure.xivdb.com/img/game/003000/003164.png',
@@ -144,7 +144,7 @@ export default {
 		cooldown: 10,
 	},
 
-	HISSATSU_YATEN:	{
+	HISSATSU_YATEN: {
 		id: 7493,
 		name: 'Hissatsu: Yaten',
 		icon: 'https://secure.xivdb.com/img/game/003000/003170.png',
@@ -156,6 +156,7 @@ export default {
 		name: 'Merciful Eyes',
 		icon: 'https://secure.xivdb.com/img/game/003000/003171.png',
 		cooldown: 1,
+		cooldownGroup: 24,
 	},
 
 	MEDITATE: {
@@ -184,6 +185,7 @@ export default {
 		name: 'Hissatsu: Seigan',
 		icon: 'https://secure.xivdb.com/img/game/003000/003175.png',
 		cooldown: 1,
+		cooldownGroup: 24,
 	},
 
 	HAGAKURE: {
@@ -193,7 +195,7 @@ export default {
 		cooldown: 40,
 	},
 
-	HISSATSU_GUREN:	{
+	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
 		icon: 'https://secure.xivdb.com/img/game/003000/003177.png',
