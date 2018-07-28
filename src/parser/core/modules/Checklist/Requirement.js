@@ -1,18 +1,8 @@
 export default class Requirement {
 	name = ''
 	_percent = 0
-	_score = null
-
-	get score() {
-		if (this._score == null) { return this.percent }
-		const result = (typeof this._score === 'function') ? this._score() : this._score
-		// Make sure janky output is reverted to a number
-		return result || 0
-	}
-
-	set score(value) {
-		this._score = value
-	}
+	_text = null
+	_showPercent = true
 
 	get percent() {
 		const result = (typeof this._percent === 'function') ? this._percent() : this._percent
@@ -21,6 +11,21 @@ export default class Requirement {
 	}
 	set percent(value) {
 		this._percent = value
+	}
+
+	get showPercent() {
+		return this._showPercent || true
+	}
+	set showPercent(value) {
+		this._showPercent = value
+	}
+
+	get text() {
+		const text = (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
+		return (this.showPercent && `${this.percent.toFixed(2)}%`) + text
+	}
+	set text(value) {
+		this._text = value
 	}
 
 	constructor(options) {

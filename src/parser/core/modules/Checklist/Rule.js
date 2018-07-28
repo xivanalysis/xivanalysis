@@ -1,75 +1,45 @@
 import math from 'mathjsCustom'
+import {RATING_STYLES} from 'components/modules/Checklist'
 
 export default class Rule {
 	name = ''
 	description = null
 	requirements = []
 	target = 95
+	decentTarget = 95
+	showAsInfo = false
+	showPercent = true
+	_text = null
+	_percent = null
 
-	//aggregator functions for percentage and score
-	percentAggregator = math.mean
-	scoreAggregator = math.mean
 
-	//these are lambdas so you can conveniently override them in your module, while keeping the whole thing compatible :blobmorning:
-	_progress = (rule) => {
-		return rule.percent
-	}
-	_display = (rule) => {
-		return `${rule.percent.toFixed(1)}%`
-	}
-	_success = (rule) => {
-		return rule.percent >= rule.target
-	}
-	_reqDisplay = (req) => {
-		return `${req.percent.toFixed(2)}%`
+	get rating() {
+		if (this.showAsInfo) { return RATING_STYLES.info }
+		return this.percent >= this.target ? RATING_STYLES.success :
+			this.percent >= this.decentTarget ? RATING_STYLES.decent : RATING_STYLES.fail
+
 	}
 
 	//properties
 	get percent() {
-		//default case is mean if the function is broken
-		if (this.percentAggregator != null && typeof this.percentAggregator == 'function') {
-			return this.percentAggregator(this.requirements.map(requirement => requirement.percent))
-		}
-		return math.mean(this.requirements.map(requirement => requirement.percent))
+		//default case: take mean of percentage
+		//if this._percent is defined and is a function, evaluate it, if it's defined as a value, take the value
+		const percent = this._percent || math.mean(this.requirements.map(requirement => requirement.percent))
+		const result = (typeof percent === 'function') ? percent() : percent
+		return result || 0
 	}
 
-	get score() {
-		//default case is mean if the function is broken
-		if (this.scoreAggregator != null && typeof this.scoreAggregator == 'function') {
-			return this.scoreAggregator(this.requirements.map(requirement => requirement.score))
-		}
-		return math.mean(this.requirements.map(requirement => requirement.score))
+	set percent(value) {
+		this._percent = value
 	}
 
-	get display() {
-		return this._display(this)
+	get text() {
+		//using && means it renders 'false' if showPercent is false
+		const text = (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
+		return (this.showPercent ? `${this.percent.toFixed(1)}%` : '') + text
 	}
-	set display(value) {
-		this._display = value
-	}
-
-	get progress() {
-		return this._progress(this)
-	}
-	set progress(value) {
-		this._progress = value
-	}
-
-	get success() {
-		return this._success(this)
-	}
-	set success(value) {
-		this._success = value
-	}
-
-	//requirement display is defined here because the checklist can't grant access to members of requirement
-	//cannot make this one a property since it needs an argument
-	reqDisplay(req) {
-		return this._reqDisplay(req)
-	}
-	//but you can set it of course :)
-	set requirementDisplay(value) {
-		this._reqDisplay = value
+	set text(value) {
+		this._text = value
 	}
 
 	constructor(options) {

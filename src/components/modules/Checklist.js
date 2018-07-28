@@ -5,6 +5,14 @@ import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
 import styles from './Checklist.module.css'
 
+
+export const RATING_STYLES = {
+	success: {text: 'text-success', icon: 'checkmark', color: 'green'},
+	fail: {text: 'text-error', icon: 'remove', color: 'red'},
+	decent: {text: 'text-warning', icon: 'warning sign', color: 'yellow'},
+	info: {text: 'text-info', icon: 'info', color: 'blue'},
+}
+
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
@@ -14,12 +22,10 @@ class Checklist extends Component {
 			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
+				text: PropTypes.string.isRequired,
 			})),
-			score: PropTypes.number.isRequired,
-			display: PropTypes.string.isRequired,
-			reqDisplay: PropTypes.func.isRequired,
-			maxscore: PropTypes.number.isRequired,
-			success: PropTypes.bool.isRequired,
+			text: PropTypes.string.isRequired,
+			rating: PropTypes.oneOf(Object.values(RATING_STYLES)).isRequired,
 		})),
 		hideProgress: PropTypes.bool.isRequired,
 	}
@@ -41,17 +47,17 @@ class Checklist extends Component {
 					className: styles.title,
 					content: <Fragment>
 						<Icon
-							name={rule.success ? 'checkmark' : 'remove'}
-							className={rule.success ? 'text-success' : 'text-error'}
+							name={rule.rating.icon}
+							className={rule.rating.text}
 						/>
 						{rule.name}
-						<div className={styles.percent + (rule.success ? ' text-success' : ' text-error')}>
-							{rule.display}
+						<div className={styles.percent +' '+ rule.rating.text}>
+							{rule.text}
 							{hideProgress || <Progress
-								percent={rule.progress}
+								percent={rule.percent}
 								className={styles.progress}
 								size="small"
-								color={rule.success ? 'green' : 'red'}
+								color={rule.rating.color}
 							/>}
 						</div>
 					</Fragment>,
@@ -66,7 +72,7 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {rule.reqDisplay(requirement)}
+									{requirement.name}: {requirement.text}
 								</li>
 							)}
 						</ul>
