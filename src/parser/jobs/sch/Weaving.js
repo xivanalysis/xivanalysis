@@ -29,8 +29,7 @@ export default class Weaving extends CoreWeaving {
 	// Renamed so as not to overwrite parent module
 	// Just for tracking pos
 	_onScholarCast(event) {
-		const action = getAction(event.ability.guid)
-		if (!action.onGcd) {
+		if (!getAction(event.ability.guid).onGcd) {
 			return
 		}
 
@@ -39,7 +38,6 @@ export default class Weaving extends CoreWeaving {
 
 	// Now this, we want to overwrite
 	_onComplete() {
-		const badWeaves = this._badWeaves
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RUIN_II.icon,
 			content: <Fragment>
@@ -48,9 +46,9 @@ export default class Weaving extends CoreWeaving {
 				it is actually better to just clip your GCD with Broil than to waste your mana.
 				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
 			</Fragment>,
-			why: `${badWeaves.length} instances of weaving with Ruin II while not moving.`,
+			why: `${this._badWeaves.length} instances of weaving with Ruin II while not moving.`,
 			tiers: WEAVING_SEVERITY,
-			value: badWeaves.length,
+			value: this._badWeaves.length,
 		}))
 	}
 
