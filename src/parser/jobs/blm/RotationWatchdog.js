@@ -15,8 +15,8 @@ const FIRE4_FROM_CONVERT = 2
 
 const DEBUG_LOG_ALL_FIRE_COUNTS = false
 
-export default class rotation extends Module {
-	static handle = 'rotation'
+export default class RotationWatchdog extends Module {
+	static handle = 'RotationWatchdog'
 	static title = 'Fire IVs Per Rotation'
 	static dependencies = [
 		'castTime',
@@ -153,9 +153,7 @@ export default class rotation extends Module {
 			}
 			if (this._rotation.missingCount.missing > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
-				if (this._rotation.casts.length > 3) {
-					this._history.push(this._rotation)
-				}
+				if (this._rotation.casts.length > 3) { this._history.push(this._rotation) }
 				if (this._lastStop && this._UH > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
@@ -172,9 +170,9 @@ export default class rotation extends Module {
 
 	_getMissingFire4Count(count, hasConvert) {
 		const NotEnoughUH = this._UH  < 2
-		const ExpectedFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
-		const missingFire4 = ExpectedFire4 - count
-		return {missing: missingFire4, expected: ExpectedFire4}
+		const expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
+		const missing = expected - count
+		return {missing, expected}
 	}
 
 	_renderCount(count, missing) {
@@ -202,7 +200,7 @@ export default class rotation extends Module {
 					key: 'title-' + rotation.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(rotation.start)}
-						&nbsp;-&nbsp;{this._renderCount(rotation.fire4Count, rotation.missingCount.missing)} / {rotation.missingCount.expected} Fire IVs
+						<span> - </span>{this._renderCount(rotation.fire4Count, rotation.missingCount.missing)} / {rotation.missingCount.expected} Fire IVs
 					</Fragment>,
 				},
 				content: {
