@@ -5,6 +5,13 @@ import Module from 'parser/core/Module'
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
 
+const THUNDER_ACTIONS = [
+	ACTIONS.THUNDER.id,
+	ACTIONS.THUNDER_II.id,
+	ACTIONS.THUNDER_III.id,
+	ACTIONS.THUNDER_IV.id,
+]
+
 export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
@@ -72,8 +79,7 @@ export default class Procs extends Module {
 
 	_onApplyThundercloud() {
 		// TODO: This approach probably incorrectly counts hardcast thunder as instant if you gain thundercloud mid cast
-		// TODO: How do we make this set cast time for all thunder versions?
-		this._thundercloud = this.castTime.set([ACTIONS.THUNDER_III.id], 0)
+		this._thundercloud = this.castTime.set(THUNDER_ACTIONS, 0)
 	}
 
 	_onApplyFirestarter() {
