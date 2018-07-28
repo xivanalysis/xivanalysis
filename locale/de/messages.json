@@ -1,0 +1,83 @@
+{
+  "core.about.contributors": {
+    "translation": "Mitwirkende:",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        49
+      ]
+    ]
+  },
+  "core.about.patch": {
+    "translation": "Aufnäher {0}",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        45
+      ]
+    ]
+  },
+  "core.about.unsupported.description": {
+    "translation": "Die unten gezeigte Ausgabe enthält keine auftragsspezifische Analyse und kann kritische Daten enthalten, die für ein genaues Ergebnis erforderlich sind.",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        27
+      ]
+    ]
+  },
+  "core.about.unsupported.title": {
+    "translation": "Dieser Job wird derzeit nicht unterstützt.",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        25
+      ]
+    ]
+  },
+  "core.about.updated-for": {
+    "translation": "Aktualisiert für:",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        44
+      ]
+    ]
+  },
+  "core.error.generic": {
+    "translation": "Sieht aus, als wäre etwas schief gelaufen. Die Code-Affen wurden benachrichtigt.",
+    "origin": [
+      [
+        "src/components/ui/ErrorMessage.js",
+        24
+      ]
+    ]
+  },
+  "core.role.developer": {
+    "translation": "Entwickler",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        101
+      ]
+    ]
+  },
+  "core.role.maintainer": {
+    "translation": "Betreuer",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        93
+      ]
+    ]
+  },
+  "core.role.theorycraft": {
+    "translation": "Theoretiker",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        97
+      ]
+    ]
+  }
+}

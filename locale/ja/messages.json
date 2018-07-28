@@ -1,0 +1,83 @@
+{
+  "core.about.contributors": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        49
+      ]
+    ]
+  },
+  "core.about.patch": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        45
+      ]
+    ]
+  },
+  "core.about.unsupported.description": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        27
+      ]
+    ]
+  },
+  "core.about.unsupported.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        25
+      ]
+    ]
+  },
+  "core.about.updated-for": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        44
+      ]
+    ]
+  },
+  "core.error.generic": {
+    "translation": "",
+    "origin": [
+      [
+        "src/components/ui/ErrorMessage.js",
+        24
+      ]
+    ]
+  },
+  "core.role.developer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        101
+      ]
+    ]
+  },
+  "core.role.maintainer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        93
+      ]
+    ]
+  },
+  "core.role.theorycraft": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        97
+      ]
+    ]
+  }
+}

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
@@ -18,8 +18,8 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
-		{user: CONTRIBUTORS.ACKWELL, role: 'Maintainer'},
-		{user: CONTRIBUTORS.NEMEKH, role: 'Theorycraft'},
-		{user: CONTRIBUTORS.FRYTE, role: 'Theorycraft'},
+		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.NEMEKH, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
 	]
 }

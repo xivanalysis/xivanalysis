@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
@@ -16,6 +16,6 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
-		{user: CONTRIBUTORS.MIKEMATRIX, role: 'Maintainer'},
+		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
 	]
 }

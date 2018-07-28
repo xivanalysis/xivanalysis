@@ -1,0 +1,83 @@
+{
+  "core.about.contributors": {
+    "translation": "core.about.contributors",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        49
+      ]
+    ]
+  },
+  "core.about.patch": {
+    "translation": "core.about.patch",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        45
+      ]
+    ]
+  },
+  "core.about.unsupported.description": {
+    "translation": "core.about.unsupported.description",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        27
+      ]
+    ]
+  },
+  "core.about.unsupported.title": {
+    "translation": "core.about.unsupported.title",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        25
+      ]
+    ]
+  },
+  "core.about.updated-for": {
+    "translation": "core.about.updated-for",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        44
+      ]
+    ]
+  },
+  "core.error.generic": {
+    "translation": "core.error.generic",
+    "origin": [
+      [
+        "src/components/ui/ErrorMessage.js",
+        24
+      ]
+    ]
+  },
+  "core.role.developer": {
+    "translation": "core.role.developer",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        101
+      ]
+    ]
+  },
+  "core.role.maintainer": {
+    "translation": "core.role.maintainer",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        93
+      ]
+    ]
+  },
+  "core.role.theorycraft": {
+    "translation": "core.role.theorycraft",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        97
+      ]
+    ]
+  }
+}
