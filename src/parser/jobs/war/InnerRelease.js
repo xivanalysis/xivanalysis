@@ -105,7 +105,7 @@ export default class InnerRelease extends Module {
 			}))
 		}
 
-		if (this._missedGcds && !this._isRushing) {
+		if (this._missedGcds) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_RELEASE.icon,
 				why: `${this._missedGcds} GCDs missed inside of IR.`,
