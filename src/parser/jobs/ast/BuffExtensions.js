@@ -12,6 +12,14 @@ import Module from 'parser/core/Module'
 import BuffList from './BuffList'
 import styles from './BuffExtensions.module.css'
 
+const IGNORE_STATUSES = [
+	STATUSES.PROTECT.id,
+	STATUSES.COLLECTIVE_UNCONSCIOUS.id,
+	...ROYAL_ROAD_STATES,
+	...HELD_ARCANA,
+	...DRAWN_ARCANA,
+]
+
 // TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
@@ -113,40 +121,39 @@ export default class BuffExtensions extends Module {
 		const statusID = event.ability.guid
 
 		// Ignore if timestamp is after aoe effect grace period
-		if (this._oppositionEvent && event.timestamp < (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
-
-			// Ignore refreshes on protects, royal road statuses,
-			if (statusID !== STATUSES.PROTECT.id
-			&& statusID !== STATUSES.COLLECTIVE_UNCONSCIOUS.id
-			&& !ROYAL_ROAD_STATES.includes(statusID)
-			&& !HELD_ARCANA.includes(statusID)
-			&& !DRAWN_ARCANA.includes(statusID)) {
-
-
-				const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
-
-				// If this target isn't in the target array, add it
-				if (!this._oppositionEvent.targets.find(target => {
-					return target.id === event.targetID
-				})) {
-
-
-					// TODO: Doesn't work with pets - Sushi
-					if (refreshedTarget) {
-						this._oppositionEvent.targets.push({
-							id: event.targetID,
-							name: refreshedTarget.info.name,
-							job: refreshedTarget.info.type,
-							buffs: [event],
-						})
-					}
-				} else {
-					this._oppositionEvent.targets.find(target => {
-						return target.id === event.targetID
-					}).buffs.push({...event})
-				}
-			}
+		if (!this._oppositionEvent && event.timestamp < (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
+			return
 		}
+
+		// Ignore refreshes on protects, royal road statuses,
+		if (IGNORE_STATUSES.includes(statusId)) {
+			return
+		}
+
+
+		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
+
+		// If this target isn't in the target array, add it
+		if (!this._oppositionEvent.targets.find(target => {
+			return target.id === event.targetID
+		})) {
+
+
+			// TODO: Doesn't work with pets - Sushi
+			if (refreshedTarget) {
+				this._oppositionEvent.targets.push({
+					id: event.targetID,
+					name: refreshedTarget.info.name,
+					job: refreshedTarget.info.type,
+					buffs: [event],
+				})
+			}
+		} else {
+			this._oppositionEvent.targets.find(target => {
+				return target.id === event.targetID
+			}).buffs.push({...event})
+		}
+
 	}
 
 	_onComplete() {
@@ -215,7 +222,7 @@ export default class BuffExtensions extends Module {
 						<span className="text-error">{emptyMessage}</span>
 					</td>
 				</tr>
-			})
+		})
 
 
 
