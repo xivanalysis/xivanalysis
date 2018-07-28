@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const rewireEslint = require('react-app-rewire-eslint')
 const rewireLodash = require('react-app-rewire-lodash')
+const {rewireLingui} = require('react-app-rewire-lingui')
 
 module.exports = (config, env) => {
 	const gitRevision = new GitRevisionPlugin({
@@ -17,6 +18,7 @@ module.exports = (config, env) => {
 
 	config = rewireEslint(config, env)
 	config = rewireLodash(config, env)
+	config = rewireLingui(config, env)
 
 	return config
 }
