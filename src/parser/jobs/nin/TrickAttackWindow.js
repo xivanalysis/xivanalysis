@@ -3,40 +3,53 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-const TA_DURATION_MILLIS = 10000
 
 export default class TrickAttackWindow extends Module {
 	static handle = 'taWindow'
 	static dependencies = [
+		'enemies',
 		'suggestions',
 	]
 
-	_taTimestamp = -10000
 	_dwadOutsideTa = 0
 	_armorCrushInTa = 0
 
+	_dwadCast = false
+
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.DREAM_WITHIN_A_DREAM.id, ACTIONS.ARMOR_CRUSH.id]}, this._onCast)
+		this.addHook('damage', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_targetHasVuln(targetId) {
+		const target = this.enemies.getEntity(targetId)
+		return target && target.hasStatus(STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id)
 	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
-		if (abilityId === ACTIONS.TRICK_ATTACK.id) {
-			this._taTimestamp = event.timestamp
-		} else if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
-			if (event.timestamp - this._taTimestamp > TA_DURATION_MILLIS) {
+		if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
+			this._dwadCast = true // DWaD casts don't have a target, so just flag it and check the target in the damage event
+		} else if (abilityId === ACTIONS.ARMOR_CRUSH.id && this._targetHasVuln(event.targetID)) {
+			this._armorCrushInTa++
+		}
+	}
+
+	_onDwadHit(event) {
+		if (this._dwadCast) {
+			// Reset the flag so we only bother checking the first hit
+			this._dwadCast = false
+			if (!this._targetHasVuln(event.targetID)) {
 				this._dwadOutsideTa++
 			}
-		} else if (abilityId === ACTIONS.ARMOR_CRUSH.id) {
-			if (event.timestamp - this._taTimestamp <= TA_DURATION_MILLIS) {
-				this._armorCrushInTa++
-			}
+
+			console.log(`dwad damage, ${event.targetID}`)
 		}
 	}
 
