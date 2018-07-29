@@ -30,10 +30,6 @@ export default class DarkArts extends Module {
 	// flags
 	_darkArtsOpener = false
 
-	darkArtsActive() {
-		return this.combatants.selected.hasStatus(STATUSES.DARK_ARTS.id)
-	}
-
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
@@ -44,7 +40,7 @@ export default class DarkArts extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		if (this.darkArtsActive() && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
+		if (this.buffs.darkArtsActive() && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
 			// DA will be consumed and resolved, manually increment targeted counters
 			if (abilityId === ACTIONS.DARK_PASSENGER.id) {
 				this._countDADP += 1
@@ -55,10 +51,6 @@ export default class DarkArts extends Module {
 			if (abilityId === ACTIONS.POWER_SLASH.id) {
 				this._countDAPS += 1
 			}
-		}
-		// final check to see if we just CS'd without DA up
-		if ((!this.darkArtsActive()) && abilityId === ACTIONS.CARVE_AND_SPIT.id) {
-			this._countCSnoDA += 1
 		}
 	}
 
@@ -83,9 +75,7 @@ export default class DarkArts extends Module {
 	// noinspection JSMethodCanBeStatic
 	_onComplete() {
 		// dropped DAs
-		// DA opener
 		// better spent enmity DAPSvsDASS
-		// carve and spit without DA
 		return false
 	}
 }

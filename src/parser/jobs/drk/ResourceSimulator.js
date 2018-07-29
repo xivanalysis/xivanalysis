@@ -13,7 +13,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 const DARK_ARTS_MANA_POTENCY = 140
 const DARK_ARTS_MANA_COST = 2400
 const BLOODSPILLER_BLOOD_POTENCY = 135
-//const BLOODSPILLER_BLOOD_COST = 50
+const BLOODSPILLER_BLOOD_COST = 50
 
 // -----
 // Simulator fun time
@@ -208,6 +208,7 @@ export default class Resources extends Module {
 	}
 
 	_droppedTBNs = 0
+	_noDAcarve = 0
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
@@ -232,6 +233,11 @@ export default class Resources extends Module {
 			}
 		}
 		//one off case for checking for DA-less carve n spit, which we can then make a suggestion for because this is really bad
+		if (ACTIONS.CARVE_AND_SPIT.id === abilityId && !this.buffs.darkArtsActive()) {
+			//great why are we here
+			this._noDAcarve += 1
+			this.modifyMana(event.ability, 1200) //dravi had to go test this out since literally nobody knows this number
+		}
 	}
 
 	//timestamps for TBN and sole
@@ -338,6 +344,9 @@ export default class Resources extends Module {
 
 	output() {
 		// -----
+		// DA opener check
+		// noDA cs check
+		// -----
 		// future cool things
 		// graph mana and blood capping eventually
 		// flag negative mana points on debug
@@ -417,34 +426,34 @@ export default class Resources extends Module {
 			}))
 		}
 		*/
-		//if (this._totalDroppedBlood > BLOODSPILLER_BLOOD_COST) {
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.BLOODSPILLER.icon,
-			content: <Fragment>
-				You wasted blood, and could have gotten more uses
-				of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
-				(minimum {BLOODSPILLER_BLOOD_POTENCY} gained average combo potency increase each.)
-			</Fragment>,
-			severity: SEVERITY.MEDIUM,
-			why: <Fragment>
-				You wasted a total of {this._totalDroppedBlood} from deaths and end of fight leftovers (out of a total of {this._totalGainedBlood}.)
-			</Fragment>,
-		}))
-		//}
-		//if (this._totalDroppedMana > DARK_ARTS_MANA_COST) {
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.DARK_ARTS.icon,
-			content: <Fragment>
-				You wasted mana, and could have gotten more uses
-				of <ActionLink {...ACTIONS.DARK_ARTS}/> or other spenders during the fight
-				(minimum {DARK_ARTS_MANA_POTENCY} gained average combo potency increase each.)
-			</Fragment>,
-			severity: SEVERITY.MEDIUM,
-			why: <Fragment>
-				You wasted a total of {this._totalDroppedMana} from deaths and end of fight leftovers (out of a total of {this._totalGainedMana}.)
-			</Fragment>,
-		}))
-		//}
+		if (this._totalDroppedBlood > BLOODSPILLER_BLOOD_COST) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.BLOODSPILLER.icon,
+				content: <Fragment>
+					You wasted blood, and could have gotten more uses
+					of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
+					(minimum {BLOODSPILLER_BLOOD_POTENCY} gained average combo potency increase each.)
+				</Fragment>,
+				severity: SEVERITY.MEDIUM,
+				why: <Fragment>
+					You wasted a total of {this._totalDroppedBlood} from deaths and end of fight leftovers (out of a total of {this._totalGainedBlood}.)
+				</Fragment>,
+			}))
+		}
+		if (this._totalDroppedMana > DARK_ARTS_MANA_COST) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DARK_ARTS.icon,
+				content: <Fragment>
+					You wasted mana, and could have gotten more uses
+					of <ActionLink {...ACTIONS.DARK_ARTS}/> or other spenders during the fight
+					(minimum {DARK_ARTS_MANA_POTENCY} gained average combo potency increase each.)
+				</Fragment>,
+				severity: SEVERITY.MEDIUM,
+				why: <Fragment>
+					You wasted a total of {this._totalDroppedMana} from deaths and end of fight leftovers (out of a total of {this._totalGainedMana}.)
+				</Fragment>,
+			}))
+		}
 		/* If I ever need to see the raw mana values again during debug
 		const aggregator = {}
 		let out = ''
