@@ -126,6 +126,11 @@ export default class ClericStance extends Module {
 	}
 
 	output() {
+		// no cleric used, don't bother
+		if (Object.keys(this._buffRotations).length < 1) {
+			return null
+		}
+
 		const panels = Object.entries(this._buffRotations)
 			.map(([timestamp, rotation]) => {
 				return ({
