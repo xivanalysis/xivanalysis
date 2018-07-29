@@ -122,11 +122,12 @@ export default class ClericStance extends Module {
 	}
 
 	_getExpectedCastsPerRotation(timestamp, id, count) {
-		if (id === ACTIONS.SHADOW_FLARE.id) {
+		switch (id) {
+		case ACTIONS.SHADOW_FLARE.id:
 			return this._potentialShadowFlareUsages.includes(+timestamp) ? 1 : 0
+		default:
+			return count
 		}
-
-		return count
 	}
 
 	_getActualCastsPerRotation(rotation, id) {
