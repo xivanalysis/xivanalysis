@@ -227,7 +227,7 @@ export default class RotationWatchdog extends Module {
 				this._extraF1s--
 			}
 			//!!Statement deactivated until T3Ps are tracked correctly.!!
-			if (this._rotation.missingCount.missing > 0 || /*hardT3Count > 0*/ || DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._rotation.missingCount.missing > 0 || /*hardT3Count > 0 ||*/ DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
 
 				//Check if you actually lost an F4 due to ending UI in T3
