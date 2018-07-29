@@ -35,12 +35,12 @@ export default class Downtime extends Module {
 		return finalDowntimes
 	}
 
-	getDowntime(start = 0, end = this.parser.currentTimeStamp) {
+	getDowntime(start = 0, end = this.parser.currentTimestamp) {
 		// Return the final number
 		return this._internalDowntime(start, end).reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)
 	}
 
-	getDowntimes(start = 0, end = this.parser.currentTimeStamp, minimumDowntimeLength = -1) {
+	getDowntimes(start = 0, end = this.parser.currentTimestamp, minimumDowntimeLength = -1) {
 		return this._internalDowntime(start, end).reduce((aggregator, invuln) => {
 			if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumDowntimeLength, 0)) {
 				aggregator.push(Math.min(invuln.end, end) - Math.max(invuln.start, start))
