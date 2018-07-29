@@ -99,75 +99,6 @@ This project formats i18n ids using the syntax: `[job].[module].[thing]`
 As an example, for a Red Mage you might end up with the key `rdm.gauge.white-mana`. These
 keys should be somewhat descriptive to make it clear for translators what exactly they're editing.
 
-### Built-in Components
-
-#### About
-
-When setting a module's contributors, roles should be used from the `ROLES` enum exported
-from `data/CONTRIBUTORS`.
-
-While you technically can provide an i18n id for the description via the `i18n_description` property, this is almost always going to be rich content that you should do your own
-localization of.
-
-#### Checklist
-
-Checklist rules support localization by providing i18n ids via object properties. When
-setting an i18n id via property in this way, make sure to wrap the string in `i18nMark(...)`. Example:
-
-```javascript
-this.checklist.add(new Rule({
-	i18n_id: i18nMark('my-job.my-module.example-rule-title'),
-	name: 'Example Rule',
-	i18n_description: i18nMark('my-job.my-module.example-rule-description'),
-	description: 'This is an example of adding localization to checklist rules.',
-	requirements: [
-		new Requirement({
-			i18n_id: i18nMark('my-job.my-module.example-requirement'),
-			name: 'Example Requirement',
-			percent: 42
-		}),
-	],
-}))
-```
-
-You can also supply rich content that has already been localized. Example:
-
-```javascript
-this.checklist.add(new Rule({
-	name: <Trans id="my-job.my-module.example-rule-title">
-		Example <strong>Rule</strong>
-	</Trans>,
-	...
-}))
-```
-
-#### Suggestions
-
-Suggestions support localization by providing i18n ids via object properties. When
-setting an i18n id via property in this way, make sure to wrap the string in `i18nMark(...)`. Example:
-
-```javascript
-this.suggestions.add(new Suggestion({
-	icon: ACTIONS.RAISE.icon,
-	severity: SEVERITY.MORBID,
-	i18n_id: i18nMark('my-job.my-module.example-suggestion-title'),
-	content: 'Maybe you should follow this Example Suggestion',
-	i18n_why: i18nMark('my-job.my-module.example-suggestion-why'),
-	why: 'Localization is important',
-}))
-```
-
-You can also supply rich content that has already been localized. Example:
-
-```javascript
-this.suggestions.add(new Suggestion({
-	content: <Trans id="my-job.my-module.example-suggestion-title">
-		You should <strong>really</strong> use localization.
-	</Trans>,
-	...
-}))
-```
-
 ### API
 
 #### `i18nMark(id)`
@@ -177,6 +108,9 @@ this.suggestions.add(new Suggestion({
 This function marks a string for automatic i18n id extraction. You should wrap any
 i18n ids with this that aren't being directly supplied to a `<Trans />` or `<Plural />`
 
+If for nothing else, `i18nMark(id)` should be used for setting an `i18n_id` for custom
+modules to ensure their titles can be localized.
+
 
 #### `<Trans id="" />`
 
@@ -184,18 +118,26 @@ i18n ids with this that aren't being directly supplied to a `<Trans />` or `<Plu
 
 When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n id and you must provide one for the outermost `<Trans />` or `<Plural />`. Please see the jsLingui documentation for more.
 
+Example:
+
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.RAISE.icon,
+	severity: SEVERITY.MORBID,
+	content: <Trans id="my-job.my-module.example-suggestion-title">
+		You should <strong>really</strong> use localization.
+	</Trans>,
+	why: <Trans id="my-job.my-module.example-suggestion-why">
+		Localization is important
+	</Trans>,
+}))
+```
+
 #### `<Plural id="" ... />`
 
 `import {Plural} from '@lingui/react'`
 
 The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n id and you must provide one for the outermost `<Trans />` or `<Plural />`. Please see the jsLingui documentation for more.
-
-#### `<SafeTrans id="" defaults="" />`
-
-This is a custom tag that checks the type of the provided default value. If that value is a string, it renders a `<Trans />` tag with its provided id and defaults values. If the default value is rich content, that value is passed through.
-
-This is used in several places in the core to allow modules to return either rich content or a localizable string. You should probably not be using this in a job module.
-
 
 ## API Reference
 ### Module
