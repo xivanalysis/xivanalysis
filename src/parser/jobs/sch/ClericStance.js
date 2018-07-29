@@ -20,6 +20,7 @@ const EXPECTED_CASTS = [
 ]
 
 export default class ClericStance extends Module {
+	static displayOrder = 99;
 	static handle = 'clericstance';
 	static dependencies = [
 		'suggestions',

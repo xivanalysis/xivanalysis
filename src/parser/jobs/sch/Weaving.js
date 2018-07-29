@@ -12,7 +12,6 @@ const WEAVING_SEVERITY = {
 }
 
 export default class Weaving extends CoreWeaving {
-	static handle = 'weaving'
 	static dependencies = [
 		'combatants',
 		'castTime',
