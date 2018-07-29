@@ -9,7 +9,6 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const SF_DURATION_MILLIS = STATUSES.SHADOW_FANG.duration * 1000
-const CLIP_SECS_PER_MIN_THRESHOLD = 7
 
 export default class ShadowFang extends Module {
 	static handle = 'shadowFang'
@@ -75,24 +74,21 @@ export default class ShadowFang extends Module {
 		}))
 
 		// Suggestion for DoT clipping
-		const clipping = this.getDotClippingAmount()
-		if (clipping >= CLIP_SECS_PER_MIN_THRESHOLD) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SHADOW_FANG.icon,
-				content: <Fragment>
-					Avoid refreshing <ActionLink {...ACTIONS.SHADOW_FANG}/> significantly before its expiration, unless it would otherwise cost you significant uptime. Unnecessary refreshes risk overwriting buff snapshots and reduce the number of times you can use <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>.
-				</Fragment>,
-				tiers: {
-					[CLIP_SECS_PER_MIN_THRESHOLD]: SEVERITY.MINOR,
-					10: SEVERITY.MEDIUM,
-					15: SEVERITY.MAJOR,
-				},
-				value: clipping,
-				why: <Fragment>
-					You lost {this.parser.formatDuration(this._sfClip)} of Shadow Fang to early refreshes.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SHADOW_FANG.icon,
+			content: <Fragment>
+				Avoid refreshing <ActionLink {...ACTIONS.SHADOW_FANG}/> significantly before its expiration, unless it would otherwise cost you significant uptime. Unnecessary refreshes risk overwriting buff snapshots and reduce the number of times you can use <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>.
+			</Fragment>,
+			tiers: {
+				7: SEVERITY.MINOR,
+				10: SEVERITY.MEDIUM,
+				15: SEVERITY.MAJOR,
+			},
+			value: this.getDotClippingAmount(),
+			why: <Fragment>
+				You lost {this.parser.formatDuration(this._sfClip)} of Shadow Fang to early refreshes.
+			</Fragment>,
+		}))
 	}
 
 	getDotUptimePercent() {
