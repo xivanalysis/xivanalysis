@@ -8,6 +8,8 @@
 
 # production
 /build
+locale/_build/
+locale/*/*.js
 
 # misc
 .DS_Store

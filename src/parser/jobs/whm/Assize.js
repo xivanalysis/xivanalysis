@@ -4,7 +4,6 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-
 const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
 const WASTED_USES_MAX_MEDIUM = 2
 

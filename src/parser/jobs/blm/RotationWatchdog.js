@@ -8,7 +8,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {FIRE_SPELLS, ICE_SPELLS} from 'parser/jobs/blm/Elements'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const EXPECTED_FIRE4 = 6
@@ -16,8 +15,8 @@ const FIRE4_FROM_CONVERT = 2
 
 const DEBUG_LOG_ALL_FIRE_COUNTS = false
 
-export default class FireCounter extends Module {
-	static handle = 'firecounter'
+export default class RotationWatchdog extends Module {
+	static handle = 'RotationWatchdog'
 	static title = 'Fire IVs Per Rotation'
 	static dependencies = [
 		'castTime',
@@ -28,8 +27,7 @@ export default class FireCounter extends Module {
 		'combatants',
 	]
 
-	_inFireRotation = false
-	_fireCounter = {}
+	_rotation = {}
 	_history = []
 
 	//check for buffs
@@ -39,7 +37,7 @@ export default class FireCounter extends Module {
 	_MP = 0
 	_lockedBuffs = false
 	_lastStop = false
-
+	_first = true
 	//counter for suggestions
 	_missedF4s = 0
 	_extraF1s = 0
@@ -48,26 +46,35 @@ export default class FireCounter extends Module {
 		super(...args)
 		this.addHook('begincast', {by: 'player'}, this._onBegin)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('init', this._onFirst)
 		this.addHook('complete', this._onComplete)
 	}
 
 	//snapshot buffs and UH at the beginning of your recording
-	_onBegin() {
-		this._lockingBuffs()
+	_onBegin(event) {
+		const actionId = event.ability.guid
+		if (actionId === ACTIONS.FIRE_III.id) {
+			this._lockingBuffs()
+		}
 	}
 
 	_onCast(event) {
 		const actionId = event.ability.guid
-		if (FIRE_SPELLS.includes(actionId)) {
+		if (actionId === ACTIONS.BLIZZARD_III.id) {
+			if (!this._first) { this._stopRecording() }
 			this._startRecording(event)
-		} else if (ICE_SPELLS.includes(actionId)) {
-			this._stopRecording()
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
 		}
+		if (this._first) { this._first = false }
 		if (this._inFireRotation && !getAction(actionId).autoAttack) {
-			this._fireCounter.casts.push(event)
+			this._rotation.casts.push(event)
 		}
+	}
+
+	//start recording at the first cast
+	_onFirst(event) {
+		this._startRecording(event)
 	}
 
 	_onComplete() {
@@ -120,8 +127,7 @@ export default class FireCounter extends Module {
 	_startRecording(event) {
 		if (!this._inFireRotation) {
 			this._inFireRotation = true
-			this._lockingBuffs()
-			this._fireCounter = {
+			this._rotation = {
 				start: event.timestamp,
 				end: null,
 				casts: [],
@@ -133,23 +139,23 @@ export default class FireCounter extends Module {
 		if (this._inFireRotation) {
 			this._lockedBuffs = false
 			this._inFireRotation = false
-			this._fireCounter.end = this.parser.currentTimestamp
+			this._rotation.end = this.parser.currentTimestamp
 			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
-			const fire4Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
-			const fire1Count = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
-			const hasConvert = this._fireCounter.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
-			this._fireCounter.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
+			const fire4Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
+			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
+			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
+			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			if (this._fireCounter.missingCount > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
-				this._fireCounter.fire4Count = fire4Count
-				this._history.push(this._fireCounter)
-				if (this._lastStop && this._UH > 0 && this._fireCounter.missingCount === 2) {
-					const missedF4s = this._fireCounter.missingCount --
+			if (this._rotation.missingCount.missing > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
+				this._rotation.fire4Count = fire4Count
+				if (this._rotation.casts.length > 3) { this._history.push(this._rotation) }
+				if (this._lastStop && this._UH > 0 && this._rotation.missingCount === 2) {
+					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
 				}
 			}
@@ -158,14 +164,15 @@ export default class FireCounter extends Module {
 
 	_resetRecording() {
 		this._inFireRotation = false
-		this._fireCounter = {}
+		this._rotation = {}
 		this._lockedBuffs = false
 	}
 
 	_getMissingFire4Count(count, hasConvert) {
 		const NotEnoughUH = this._UH  < 2
-		const missingFire4 = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0) - count
-		return missingFire4
+		const expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
+		const missing = expected - count
+		return {missing, expected}
 	}
 
 	_renderCount(count, missing) {
@@ -193,7 +200,7 @@ export default class FireCounter extends Module {
 					key: 'title-' + rotation.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(rotation.start)}
-						&nbsp;-&nbsp;{this._renderCount(rotation.fire4Count, rotation.missingCount)} Fire IVs
+						<span> - </span>{this._renderCount(rotation.fire4Count, rotation.missingCount.missing)} / {rotation.missingCount.expected} Fire IVs
 					</Fragment>,
 				},
 				content: {

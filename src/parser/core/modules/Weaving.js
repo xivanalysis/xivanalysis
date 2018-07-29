@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
@@ -29,6 +30,8 @@ export default class Weaving extends Module {
 		'invuln',
 		'suggestions',
 	]
+
+	static i18n_id = i18nMark('core.weaving.title')
 	static title = 'Weaving Issues'
 
 	_weaves = []
@@ -80,10 +83,15 @@ export default class Weaving extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			// WVR Focused synth lmao
 			icon: 'https://secure.xivdb.com/img/game/001000/001785.png',
-			content: <Fragment>
+			content: <Trans id="core.weaving.content">
 				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
-			</Fragment>,
-			why: `${badWeaves.length} instances of incorrect weaving.`,
+			</Trans>,
+			why: <Plural
+				id="core.weaving.why"
+				value={badWeaves.length}
+				_1="# instance of incorrect weaving"
+				other="# instances of incorrect weaving"
+			/>,
 			tiers: WEAVING_SEVERITY,
 			value: badWeaves.length,
 		}))
@@ -140,7 +148,13 @@ export default class Weaving extends Module {
 			title: {
 				content: <Fragment>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
-					&nbsp;-&nbsp;{item.weaves.length} weaves
+					&nbsp;-&nbsp;
+					<Plural
+						id="core.weaving.panel-count"
+						value={item.weaves.length}
+						_1="# weave"
+						other="# weaves"
+					/>
 				</Fragment>,
 			},
 			content: {

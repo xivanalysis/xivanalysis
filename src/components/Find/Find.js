@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Container, Loader} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import FightList from './FightList'
 import CombatantList from './CombatantList'
@@ -36,7 +37,11 @@ class Find extends Component {
 		// If report is null, we're probably waiting for an api call to complete
 		if (!report || report.code !== params.code || report.loading) {
 			return <Container>
-				<Loader active>Loading report</Loader>
+				<Loader active>
+					<Trans id="core.find.load-report">
+						Loading report
+					</Trans>
+				</Loader>
 			</Container>
 		}
 

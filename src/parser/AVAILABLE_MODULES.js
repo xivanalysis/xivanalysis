@@ -5,6 +5,7 @@ export default {
 	CORE: () => import('./core/modules' /* webpackChunkName: "core" */),
 
 	JOBS: {
+		[JOBS.MONK.logType]: () => import('./jobs/mnk' /* webpackChunkName: "jobs-mnk" */),
 		[JOBS.NINJA.logType]: () => import('./jobs/nin' /* webpackChunkName: "jobs-nin" */),
 		[JOBS.SUMMONER.logType]: () => import('./jobs/smn' /* webpackChunkName: "jobs-smn" */),
 		[JOBS.BLACK_MAGE.logType]: () => import('./jobs/blm' /* webpackChunkName: "jobs-blm" */),
