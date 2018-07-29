@@ -13,7 +13,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 const DARK_ARTS_MANA_POTENCY = 140
 const DARK_ARTS_MANA_COST = 2400
 const BLOODSPILLER_BLOOD_POTENCY = 135
-const BLOODSPILLER_BLOOD_COST = 50
+//const BLOODSPILLER_BLOOD_COST = 50
 
 // -----
 // Simulator fun time
@@ -21,9 +21,11 @@ const BLOODSPILLER_BLOOD_COST = 50
 // -----
 // Meters
 // ------
-const MAX_BLOOD = 100
+
+//const MAX_BLOOD = 100
 const MAX_MANA = 9480
 const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA is used 1-3 ticks pre pull, if at all. Good to have regardless
+const DARKSIDE_MANA_COST = 600
 
 const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT = 1
 const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT = 120
@@ -32,21 +34,27 @@ const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
 const BLOOD_PRICE_MAX_DURATION = 15000
 
 const RESOURCE_STATUS_EFFECTS = [
-	{id: STATUSES.ANOTHER_VICTIM.id, duration: 15000,
-		expire_mana: MAX_MANA * 0.2, expire_blood: 0,
-		activate_mana: MAX_MANA * 0.3, activate_blood: 0,
+	{id: STATUSES.ANOTHER_VICTIM.id,
+		duration: 15000,
+		expire_mana: MAX_MANA * 0.2,
+		expire_blood: 0,
+		activate_mana: MAX_MANA * 0.3,
+		activate_blood: 0,
 	},
-	{id: STATUSES.BLACKEST_NIGHT.id, duration: 15000,
-		expire_mana: 0, expire_blood: 0,
-		activate_mana: 0, activate_blood: 50,
+	{id: STATUSES.BLACKEST_NIGHT.id,
+		duration: 15000,
+		expire_mana: 0,
+		expire_blood: 0,
+		activate_mana: 0,
+		activate_blood: 50,
 	},
 ]
 
 const MANA_MODIFIERS = [
 	// generators
-	{id: ACTIONS.SYPHON_STRIKE.id, value: 1200},
 	{id: ACTIONS.DELIRIUM.id, value: 2400},
 	// spenders
+	{id: ACTIONS.DARKSIDE.id, value: -600},
 	{id: ACTIONS.DARK_ARTS.id, value: -2400},
 	{id: ACTIONS.DARK_PASSENGER.id, value: -2400},
 	{id: ACTIONS.THE_BLACKEST_NIGHT.id, value: -2400},
@@ -65,10 +73,12 @@ const BLOOD_MODIFIERS = [
 ]
 
 //aoe abilities that generate resource on hits
+/* taken out for now, as the damage events work just fine.
 const AOE_GENERATORS = [
 	{id: ACTIONS.SALTED_EARTH.id, mana: 0, blood: 1},
 	{id: ACTIONS.QUIETUS.id, mana: 120, blood: 0},
 ]
+*/
 
 // Actions that generate blood and mana under blood weapon (Physical Damage actions - 3 blood, 480mp).
 // redundant, but this keeps consistency with the other mappings
@@ -100,14 +110,15 @@ const COMBO_GRIT_GENERATORS = [
 ]
 
 export default class Resources extends Module {
-	static handle = 'resourceevaluator'
-	static title = 'Resource Evaluator'
+	static handle = 'resourcesim'
+	static title = 'Resource Simulator'
 	static dependencies = [
 		'library',
 		'buffs',
 		'gcds',
 		'suggestions',
 		'checklist',
+		'downtime',
 	]
 
 	// -----
@@ -115,37 +126,46 @@ export default class Resources extends Module {
 	// -----
 	_totalGainedMana = 0
 	_totalSpentMana = 0
+	_totalDroppedMana = 0
 	_currentMana = 0
 	_wastedMana = 0
-	_droppedMana = 0
 	_totalGainedBlood = 0
 	_totalSpentBlood = 0
+	_totalDroppedBlood = 0
 	_currentBlood = 0
 	_wastedBlood = 0
-	_droppedBlood = 0
 
-	modifyMana(value) {
+	_mana_total_modifiers = []
+	_blood_total_modifiers = []
+
+	modifyMana(ability, value) {
 		if (value !== 0) {
 			if (value > 0) {
 				this._totalGainedMana += value
 			} else {
 				this._totalSpentMana += value
 			}
-			const vals = Resources._bindToCeiling(this._currentMana, value, this.library.MAX_MANA)
+			const vals = this._bindToCeiling(this._currentMana, value, this.library.MAX_MANA)
 			this._currentMana = vals.result
 			this._wastedMana += vals.waste
+			if (ability !== undefined){
+				this._mana_total_modifiers.push({ability: ability, value: value})
+			}
 		}
 	}
-	modifyBlood(value) {
+	modifyBlood(ability, value) {
 		if (value !== 0) {
 			if (value > 0) {
 				this._totalGainedBlood += value
 			} else {
 				this._totalSpentBlood += value
 			}
-			const vals = Resources._bindToCeiling(this._currentBlood, value, this.library.MAX_BLOOD)
-			this._currentMana = vals.result
+			const vals = this._bindToCeiling(this._currentBlood, value, this.library.MAX_BLOOD)
+			this._currentBlood = vals.result
 			this._wastedBlood += vals.waste
+			if (ability !== undefined){
+				this._blood_total_modifiers.push({ability: ability, value: value})
+			}
 		}
 	}
 	dumpResources() {
@@ -156,11 +176,14 @@ export default class Resources extends Module {
 		this._currentMana = 0
 		this._currentBlood = 0
 	}
+	correctMana(value) {
+		this._currentMana = value
+	}
 
-	static _bindToCeiling(op1, op2, ceiling) {
-		const waste = op1 + op2 > ceiling ? op1 + op2 - ceiling : 0
-		const result = op1 + op2 > ceiling ? ceiling : op1 + op2
-		return {waste: waste, result: result}
+
+	// noinspection JSMethodCanBeStatic
+	_bindToCeiling(op1, op2, ceiling) {
+		return {waste: op1 + op2 > ceiling ? (op1 + op2 - ceiling) : 0, result: op1 + op2 > ceiling ? ceiling : (op1 + op2)}
 	}
 
 	// -----
@@ -171,7 +194,7 @@ export default class Resources extends Module {
 		super(...args)
 		// this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('aoedamage', {by: 'player', abilityId: [ACTIONS.QUIETUS, ACTIONS.SALTED_EARTH]}, this._onAoEDamageDealt)
+		//this.addHook('aoedamage', {by: 'player', abilityId: [ACTIONS.QUIETUS, ACTIONS.SALTED_EARTH]}, this._onAoEDamageDealt)
 		this.addHook('damage', {by: 'player'}, this._onDamageDealt)
 		this.addHook('damage', {to: 'player'}, this._onDamageTaken)
 		this.addHook('applybuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onApplyResourceBuffs)
@@ -180,6 +203,8 @@ export default class Resources extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onRemoveResourceBuffs)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
+		//should be spending full mana + 3 out of combat ticks
+		this.modifyMana(undefined, MAX_MANA + (MANA_PER_OUT_OF_COMBAT_TICK * 3))
 	}
 
 	_droppedTBNs = 0
@@ -187,23 +212,26 @@ export default class Resources extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		if (MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.modifyMana(MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
+			this.modifyMana(event.ability, MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
 		}
 		if (BLOOD_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.modifyBlood(BLOOD_MODIFIERS.find(entry => entry.id === abilityId).value)
+			this.modifyBlood(event.ability, BLOOD_MODIFIERS.find(entry => entry.id === abilityId).value)
 		}
 		if (this.gcds.inGCDCombo()) {
 			if (COMBO_GENERATORS.some(entry => entry.id === abilityId)) {
 				const entry = COMBO_GENERATORS.find(entry => entry.id === abilityId)
-				this.modifyMana(entry.mana)
-				this.modifyBlood(entry.blood)
+				this.modifyMana(event.ability, entry.mana)
+				this.modifyBlood(event.ability, entry.blood)
 			}
-			if (this.buffs.gritActive() && COMBO_GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
-				const entry = COMBO_GRIT_GENERATORS.find(entry => entry.id === abilityId)
-				this.modifyMana(entry.mana)
-				this.modifyBlood(entry.blood)
+			if (this.buffs.gritActive()) {
+				if (COMBO_GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
+					const entry = COMBO_GRIT_GENERATORS.find(entry => entry.id === abilityId)
+					this.modifyMana(event.ability, entry.mana)
+					this.modifyBlood(event.ability, entry.blood)
+				}
 			}
 		}
+		//one off case for checking for DA-less carve n spit, which we can then make a suggestion for because this is really bad
 	}
 
 	//timestamps for TBN and sole
@@ -225,40 +253,49 @@ export default class Resources extends Module {
 			const applicationTime = this._resourceBuffTimestamps[abilityId]
 			if (event.timestamp - applicationTime < entry.duration) {
 				//popped
-				this.modifyBlood(entry.activate_blood)
-				this.modifyMana(entry.activate_mana)
+				this.modifyBlood(event.ability, entry.activate_blood)
+				this.modifyMana(event.ability, entry.activate_mana)
 			} else {
 				//expired
-				this.modifyBlood(entry.expire_blood)
-				this.modifyMana(entry.expire_mana)
+				this.modifyBlood(event.ability, entry.expire_blood)
+				this.modifyMana(event.ability, entry.expire_mana)
 				//special handling for TBN since it's basically throwing away damage
-				this._droppedTBNs += 1
+				if (abilityId === STATUSES.BLACKEST_NIGHT) {
+					this._droppedTBNs += 1
+				}
 			}
 		}
 
 	}
 
+	/* Only need this if the individual damage ticks ever get removed.
 	_onAoEDamageDealt(event) {
 		const abilityId = event.ability.guid
 		const hitCount = event.hits.length
 		if (AOE_GENERATORS.find(entry => entry.id === abilityId)) {
 			const entry = AOE_GENERATORS.find(entry => entry.id === abilityId)
-			this.modifyMana(entry.mana * hitCount)
-			this.modifyBlood(entry.blood * hitCount)
+			this.modifyMana(event.ability, entry.mana * hitCount)
+			this.modifyBlood(event.ability, entry.blood * hitCount)
 		}
 		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
 			const entry = BLOOD_WEAPON_GENERATORS.find(entry => entry.id === abilityId)
-			this.modifyMana(entry.mana)
-			this.modifyBlood(entry.blood)
+			this.modifyMana(event.ability, entry.mana)
+			this.modifyBlood(event.ability, entry.blood)
 		}
 	}
+	*/
 
 	_onDamageDealt(event) {
+		//update mana from provided snapshot if present
+		if (event.sourceResources !== undefined) {
+			this.correctMana(event.sourceResources.mp)
+		}
+		// blood weapon outgoing damage
 		const abilityId = event.ability.guid
 		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
 			const entry = BLOOD_WEAPON_GENERATORS.find(entry => entry.id === abilityId)
-			this.modifyMana(entry.mana)
-			this.modifyBlood(entry.blood)
+			this.modifyMana(event.ability, entry.mana)
+			this.modifyBlood(event.ability, entry.blood)
 		}
 	}
 
@@ -268,10 +305,13 @@ export default class Resources extends Module {
 		this._bloodPriceStartTime = event.timestamp
 	}
 
-	_onDamageTaken() {
+	_onDamageTaken(event) {
+		//update mana from provided snapshot
+		this.correctMana(event.targetResources.mp)
+		// blood price incoming damage
 		if (this.buffs.bloodPriceActive()) {
-			this.modifyBlood(BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT)
-			this.modifyMana(BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT)
+			this.modifyBlood(event.ability, BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT)
+			this.modifyMana(event.ability, BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT)
 		}
 	}
 
@@ -284,7 +324,7 @@ export default class Resources extends Module {
 			//default duration 15s
 			ticks = BLOOD_PRICE_MAX_DURATION / BLOOD_PRICE_BLOOD_PASSIVE_RATE
 		}
-		this.modifyMana(BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
+		this.modifyMana(event.ability, BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
 	}
 
 	_onDeath() {
@@ -292,10 +332,11 @@ export default class Resources extends Module {
 	}
 
 	_onComplete() {
+		//dump unused resources
 		this.dumpResources()
 	}
 
-	output(){
+	output() {
 		// -----
 		// future cool things
 		// graph mana and blood capping eventually
@@ -334,6 +375,11 @@ export default class Resources extends Module {
 		}))
 		return this._totalGainedBlood + ' ' + this._totalGainedMana + '||' + this._totalSpentBlood + ' ' + this._totalSpentMana + ' '
 		*/
+		//
+		//use fight downtime to try and predict free darkside down ticks
+		//really we want to make this decision for each segment, if it's worth it to take off DS or not
+		//so instead, we'll spread out time by 5, so a tick happens once every 15 seconds of downtime.
+		const possible_mana_gain = Math.max((((this.downtime.getDowntime() / 5 ) / 3000) * MANA_PER_OUT_OF_COMBAT_TICK) - DARKSIDE_MANA_COST, 0)
 		this.checklist.add(new Rule({
 			name: 'Mana Utilization',
 			description: <Fragment>Mana generated in the fight needs to be used, otherwise you face a potency loss of about {DARK_ARTS_MANA_POTENCY} per {DARK_ARTS_MANA_COST}, as you could have spent the mana on
@@ -342,8 +388,7 @@ export default class Resources extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Mana Utilization',
-					//get a free dark arts because you shouldn't be spending less
-					percent: this.library.upperCap(((Math.abs(this._totalSpentMana) / (this._totalGainedMana - DARK_ARTS_MANA_COST)) * 100), 100),
+					percent: ((Math.abs(this._totalSpentMana) / (this._totalGainedMana + possible_mana_gain)) * 100),
 				}),
 			],
 		}))
@@ -354,11 +399,11 @@ export default class Resources extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Blood Utilization',
-					//get a free bloodspiller because you can't spend less than 50 blood
-					percent: this.library.upperCap(((Math.abs(this._totalSpentBlood) / (this._totalGainedBlood - BLOODSPILLER_BLOOD_COST)) * 100), 100),
+					percent: ((Math.abs(this._totalSpentBlood) / (this._totalGainedBlood)) * 100),
 				}),
 			],
 		}))
+		/*
 		if (this._droppedTBNs > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THE_BLACKEST_NIGHT.icon,
@@ -371,5 +416,55 @@ export default class Resources extends Module {
 				</Fragment>,
 			}))
 		}
+		*/
+		//if (this._totalDroppedBlood > BLOODSPILLER_BLOOD_COST) {
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.BLOODSPILLER.icon,
+			content: <Fragment>
+				You wasted blood, and could have gotten more uses
+				of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
+				(minimum {BLOODSPILLER_BLOOD_POTENCY} gained average combo potency increase each.)
+			</Fragment>,
+			severity: SEVERITY.MEDIUM,
+			why: <Fragment>
+				You wasted a total of {this._totalDroppedBlood} from deaths and end of fight leftovers (out of a total of {this._totalGainedBlood}.)
+			</Fragment>,
+		}))
+		//}
+		//if (this._totalDroppedMana > DARK_ARTS_MANA_COST) {
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.DARK_ARTS.icon,
+			content: <Fragment>
+				You wasted mana, and could have gotten more uses
+				of <ActionLink {...ACTIONS.DARK_ARTS}/> or other spenders during the fight
+				(minimum {DARK_ARTS_MANA_POTENCY} gained average combo potency increase each.)
+			</Fragment>,
+			severity: SEVERITY.MEDIUM,
+			why: <Fragment>
+				You wasted a total of {this._totalDroppedMana} from deaths and end of fight leftovers (out of a total of {this._totalGainedMana}.)
+			</Fragment>,
+		}))
+		//}
+		/* If I ever need to see the raw mana values again during debug
+		const aggregator = {}
+		let out = ''
+		while (this._mana_total_modifiers.length > 0) {
+			const entry = this._mana_total_modifiers.pop()
+			let name = 'undefined'
+			if (entry.ability !== undefined) {
+				name = entry.ability.name
+			}
+			if (aggregator.hasOwnProperty(name)) {
+				aggregator[name] += entry.value
+			} else {
+				aggregator[name] = entry.value
+			}
+		}
+		for (const p in aggregator) {
+			out += '\n' + '::' + p + ':' + '\n' + aggregator[p] + '\n'
+		}
+		return out + '|||||||' + this._totalSpentMana + '||||' + this._totalGainedMana
+		*/
+		return false
 	}
 }

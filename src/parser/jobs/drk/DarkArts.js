@@ -1,10 +1,10 @@
-import React, {Fragment} from 'react'
+//import React, {Fragment} from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+//import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 
 export default class DarkArts extends Module {
@@ -80,10 +80,12 @@ export default class DarkArts extends Module {
 		// else buff was consumed
 	}
 
+	// noinspection JSMethodCanBeStatic
 	_onComplete() {
 		// dropped DAs
 		// DA opener
 		// better spent enmity DAPSvsDASS
 		// carve and spit without DA
+		return false
 	}
 }

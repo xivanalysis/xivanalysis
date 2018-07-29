@@ -1,7 +1,9 @@
 import React, {Fragment} from 'react'
-
+import {Accordion, Message} from 'semantic-ui-react'
+import Rotation from 'components/ui/Rotation'
 import {ActionLink} from 'components/ui/DbLink'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
@@ -47,7 +49,7 @@ export default class GCDs extends Module {
 	_GCDComboActive = false
 	_lastComboAction = undefined
 	_last3eventsAndCurrent = []
-	_lastComboGCDTimeStamp = (this.library.GCD_COMBO_DURATION * -1)
+	_lastComboGCDTimeStamp = undefined
 	_GCDChainDrops = []
 
 	inGCDCombo() {
@@ -60,25 +62,30 @@ export default class GCDs extends Module {
 	}
 
 	_onCast(event) {
-		this._last3eventsAndCurrent.push(event)
 		const abilityId = event.ability.guid
 		// check combo status
 		if (GCD_COMBO_ACTIONS.includes(abilityId)) {
-			if (this._lastComboAction !== undefined) {
-				if (GCD_COMBO_CHAIN.some(entry => entry.current === this._lastComboAction)) {
-					const entry = GCD_COMBO_CHAIN.find(entry => entry.current === this._lastComboAction)
-					if (entry.next !== undefined) {
-						if (entry.next.includes(abilityId)) {
-							this._GCDComboActive = true
+			this._last3eventsAndCurrent.push(event)
+			if (this._lastComboAction !== undefined && this._lastComboGCDTimeStamp !== undefined) {
+				if (event.timestamp - this._lastComboGCDTimeStamp < GCD_COMBO_DURATION) {
+					if (GCD_COMBO_CHAIN.some(entry => entry.current === this._lastComboAction)) {
+						const entry = GCD_COMBO_CHAIN.find(entry => entry.current === this._lastComboAction)
+						if (entry.next !== undefined) {
+							if (entry.next.includes(abilityId)) {
+								this._GCDComboActive = true
+							} else {
+								this._GCDComboActive = false
+								this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
+							}
 						} else {
-							this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
+							this._GCDComboActive = true
 						}
 					}
 				}
 			}
 			this._lastComboAction = abilityId
 			this._lastComboGCDTimeStamp = event.timestamp
-			if (this._last3eventsAndCurrent.length > 4) {
+			if (this._last3eventsAndCurrent.length > 2) {
 				this._last3eventsAndCurrent.shift()
 			}
 		}
@@ -123,5 +130,6 @@ export default class GCDs extends Module {
 				/>
 			</Fragment>
 		}
+		return false
 	}
 }
