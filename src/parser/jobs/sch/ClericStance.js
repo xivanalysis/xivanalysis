@@ -11,14 +11,17 @@ const defaultSeverityTiers = {
 	1: SEVERITY.MINOR,
 }
 
+// list of things to track for CS usage.
+// can override name/why/content with custom text
 const EXPECTED_CASTS = [
-	{...getAction(ACTIONS.CLERIC_STANCE.id), name: 'GCD', count: 6},
+	{...getAction(ACTIONS.CLERIC_STANCE.id), name: 'GCD', count: 6}, // track GCDs via the CS id
 	{...getAction(ACTIONS.BIO_II.id), count: 1},
 	{...getAction(ACTIONS.MIASMA.id), count: 1},
 	{...getAction(ACTIONS.SHADOW_FLARE.id),
 		count: 1,
 		content: <Fragment>
-		Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time. Avoid casting  <ActionLink {...ACTIONS.SHADOW_FLARE} /> right before  <ActionLink {...ACTIONS.CLERIC_STANCE} />
+			Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
+			Avoid casting <ActionLink {...ACTIONS.SHADOW_FLARE} /> right before  <ActionLink {...ACTIONS.CLERIC_STANCE} />
 		</Fragment>},
 ]
 
@@ -72,7 +75,8 @@ export default class ClericStance extends Module {
 
 		const cooldownRemaining = this.cooldowns.getCooldownRemaining(id)
 		if (cooldownRemaining - (STATUSES.CLERIC_STANCE.duration * 1000) < this.gcd.getEstimate()) {
-			// cooldown will come off before cleric stance duration expires
+			// cooldown will come off before CS duration expires
+			// this probably won't be accurate if the CS duration gets extended, idk.
 			return true
 		} if ((cooldown * 1000 - cooldownRemaining) < this.gcd.getEstimate()) {
 			// if it was recently used as far as 1 gcd before popping cleric,
@@ -126,7 +130,7 @@ export default class ClericStance extends Module {
 
 	_getActualCastsPerRotation(rotation, id) {
 		switch (id) {
-		case ACTIONS.CLERIC_STANCE.id: // gcd
+		case ACTIONS.CLERIC_STANCE.id: // sneaky way to check if GCD
 			return rotation.filter(event => getAction(event.ability.guid).onGcd).length
 		default:
 			// don't count extra casts beyond what is expected per rotation
@@ -171,10 +175,8 @@ export default class ClericStance extends Module {
 				<Message info icon>
 					<Icon name="info"/>
 					<Message.Content>
-						<div>Below is a detailed overview of GCD usage during Cleric Stance.</div>
-						<div>Since Cleric Stance only contributes to like 1% of your overall total DPS, it is not that important.</div>
-						<div>However, it is still good practice to maximize its usage.</div>
-						<div>Shadow Flare will be shown if it is available during the Cleric Stance window.</div>
+						Cleric Stance is about a 1% increase in DPS, which is lost if you end up clipping a GCD for it.
+						Focus on using it pre-pull or whenever you can freely weave it, especially when Shadow Flare is up.
 					</Message.Content>
 				</Message>
 				<Accordion
