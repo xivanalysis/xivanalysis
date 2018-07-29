@@ -5,7 +5,6 @@ import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
 import styles from './Checklist.module.css'
 
-
 export const RATING_STYLES = {
 	success: {text: 'text-success', icon: 'checkmark', color: 'green'},
 	fail: {text: 'text-error', icon: 'remove', color: 'red'},

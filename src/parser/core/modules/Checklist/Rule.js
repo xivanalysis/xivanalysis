@@ -12,7 +12,6 @@ export default class Rule {
 	_text = null
 	_percent = null
 
-
 	get rating() {
 		if (this.showAsInfo) { return RATING_STYLES.info }
 		return this.percent >= this.target ? RATING_STYLES.success :
