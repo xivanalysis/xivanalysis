@@ -10,6 +10,7 @@ export default class Cooldowns extends Module {
 	static handle = 'cooldowns'
 	static dependencies = [
 		'timeline',
+		'downtime',
 	]
 
 	_currentAction = null
@@ -128,6 +129,7 @@ export default class Cooldowns extends Module {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 			shared: sharedCooldown,
+			invulnTime: 0,
 		}
 
 		// Save the info back out (to ensure propagation if we've got a new info)
@@ -158,6 +160,26 @@ export default class Cooldowns extends Module {
 		}
 	}
 
+	setInvulnTime(actionId) {
+		const cd = this.getCooldown(actionId)
+		let previousEndTimestamp = this.parser.fight.start_time
+		let previousCooldown = {}
+		let isFirst = true
+
+		for (const cooldown of cd.history) {
+			if (isFirst) {
+				previousEndTimestamp = (cooldown.timestamp + cooldown.length)
+				isFirst = false
+				previousCooldown = cooldown
+			}
+
+			//We invuln time is the time the boss was invuln from when the CD came off CD and when it was next executed
+			previousCooldown.invulnTime = this.downtime.getDowntime(previousEndTimestamp, cooldown.timestamp)
+			previousEndTimestamp = (cooldown.timestamp + cooldown.length)
+			previousCooldown = cooldown
+		}
+	}
+
 	resetCooldown(actionId) {
 		const cd = this.getCooldown(actionId)
 
@@ -185,15 +207,32 @@ export default class Cooldowns extends Module {
 	}
 
 	// TODO: Should this be here?
-	getTimeOnCooldown(actionId) {
+	getTimeOnCooldown(actionId, considerInvulnTime = false, extension = 0) {
 		const cd = this.getCooldown(actionId)
 		const currentTimestamp = this.parser.currentTimestamp
 
-		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
+		if (considerInvulnTime) {
+			this.setInvulnTime(actionId)
+		}
+
 		return cd.history.reduce(
-			(time, status) => time + Math.min(status.length, currentTimestamp - status.timestamp),
-			cd.current? Math.min(cd.current.length, currentTimestamp - cd.current.timestamp) : 0
+			(time, status) => time + this.getAdjustedTimeOnCooldown(status, currentTimestamp, extension),
+			cd.current? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
 		)
+	}
+
+	getAdjustedTimeOnCooldown(cooldown, currentTimestamp, extension) {
+		let returnValue = 0
+		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
+		// Add to the length of the cooldown any invuln time for the boss
+		// Additionally account for any extension the caller allowed to the CD Length
+		returnValue = Math.min(cooldown.length + cooldown.invulnTime + extension, currentTimestamp - cooldown.timestamp)
+
+		if (returnValue < 0) {
+			returnValue = 0
+		}
+
+		return returnValue
 	}
 
 	get used() {
