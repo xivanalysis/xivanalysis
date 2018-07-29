@@ -3,9 +3,8 @@ import Gauge from './Gauge'
 import Triple from './Triple'
 import Procs from './Procs'
 import BlmWeaving from './Weaving'
-import T3inUI from './T3inUI'
 import RotationWatchdog from './RotationWatchdog'
-import BlmCooldowns from './OGCDDowntime'
+import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	About,
@@ -13,7 +12,6 @@ export default [
 	Triple,
 	Procs,
 	BlmWeaving,
-	T3inUI,
 	RotationWatchdog,
-	BlmCooldowns,
+	OGCDDowntime,
 ]
