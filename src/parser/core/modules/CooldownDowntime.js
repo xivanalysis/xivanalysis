@@ -7,11 +7,8 @@ import {ActionLink} from 'components/ui/DbLink'
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
 	static dependencies = [
-		'combatants',
 		'cooldowns',
-		'suggestions',
 		'checklist',
-		'downtime',
 	]
 
 	constructor(...args) {
