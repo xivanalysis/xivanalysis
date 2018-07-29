@@ -66,14 +66,15 @@ export default class RotationWatchdog extends Module {
 		this._AF = this.gauge.getAF()
 		if (actionId === ACTIONS.FIRE_III.id) {
 			this._lockingBuffs()
-		//Check to see if we get a T3 > F3
 		} else { this._T3 = false }
+
+		//Check to see if we get a T3 > F3
 		if (actionId === ACTIONS.THUNDER_III.id) { this._T3 = true }
 	}
 
 	_onCast(event) {
 		const actionId = event.ability.guid
-		console.log(event)
+
 		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
 		if (actionId === ACTIONS.FIRE_III.id && this._UI === 3) {
 			if (this._T3) {
@@ -83,11 +84,11 @@ export default class RotationWatchdog extends Module {
 			this._MP = this.combatants.selected.resources.mp
 		}
 
-		//If my T3 isn't a proc already and cast under AF, it's straight up wrong. Deactivated until T3Ps are tracked accurately
+		/*If my T3 isn't a proc already and cast under AF, it's straight up wrong. !!Deactivated until T3Ps are tracked accurately!!
 		if (!event.ability.overrideAction && actionId === ACTIONS.THUNDER_III.id && this._AF > 0) {
-			//event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
-			//this._wrongT3 ++
-		}
+			event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
+			this._wrongT3 ++
+		}*/
 
 		//start and stop trigger for our rotations is B3
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
@@ -214,23 +215,23 @@ export default class RotationWatchdog extends Module {
 			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
-			const MP = this._MP
 			const fire4Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
 			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
 			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
 
-			//Deactivated until T3Ps are tracked correctly.
-			const hardT3Count = 0//this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+			/* !!Deactivated until T3Ps are tracked correctly.!!
+			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length*/
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			if (this._rotation.missingCount.missing > 0 || DEBUG_LOG_ALL_FIRE_COUNTS || hardT3Count > 0) {
+			//!!Statement deactivated until T3Ps are tracked correctly.!!
+			if (this._rotation.missingCount.missing > 0 || /*hardT3Count > 0*/ || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
 
 				//Check if you actually lost an F4 due to ending UI in T3
-				if (MP < MIN_MP_LEAVING_UI_NORMALLY && this._T3inUIFlag && (fire4Count + fire1Count - 1) !== this._rotation.missingCount.expected) {
+				if (this._MP < MIN_MP_LEAVING_UI_NORMALLY && this._T3inUIFlag && (fire4Count + fire1Count - 1) !== this._rotation.missingCount.expected) {
 					this._missedF4sCauseEndingInT3 ++
 					this._T3inUIFlag = false
 				}
