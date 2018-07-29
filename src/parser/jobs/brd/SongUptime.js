@@ -23,7 +23,6 @@ export default class SongUptime extends Module {
 	_songCastEvents = []
 	_deathEvents = []
 
-
 	constructor(...args) {
 		super(...args)
 
@@ -85,7 +84,7 @@ export default class SongUptime extends Module {
 			songless.start = Math.min(this._songCastEvents[i].timestamp + 30000, songless.end)
 
 			// If caster died after first song was cast
-			const deathEvent = this._deathEvents.find( d => d.timestamp > this._songCastEvents[i].timestamp)
+			const deathEvent = this._deathEvents.find(d => d.timestamp > this._songCastEvents[i].timestamp)
 
 			// If death was before the theoretical songless period
 			if (deathEvent ? deathEvent.timestamp < songless.start : false) {

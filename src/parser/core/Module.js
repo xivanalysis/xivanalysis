@@ -48,7 +48,6 @@ export default class Module {
 		return events
 	}
 
-
 	/**
 	 * This method is called when an error occurs, either when running
 	 * event hooks or calling {@link Module#output} in this module or
@@ -61,7 +60,6 @@ export default class Module {
 	getErrorContext(/* source, error, event */) {
 		return
 	}
-
 
 	addHook(events, filter, cb) {
 		const mapFilterEntity = (qol, raw) => {

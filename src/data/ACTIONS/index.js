@@ -42,7 +42,6 @@ const ACTIONS = {
 	...SCH,
 	...AST,
 
-
 	...MNK,
 	...NIN,
 	...SAM,

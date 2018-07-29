@@ -4,7 +4,6 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-
 export default class T3inUI extends Module {
 	static handle = 't3inui'
 	static dependencies = [
