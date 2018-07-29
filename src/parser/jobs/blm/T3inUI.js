@@ -16,6 +16,7 @@ export default class T3inUI extends Module {
 	_T3 = false
 	_UI = 0
 	_UIEndingInT3 = 0
+	_T3inUIFlag = false
 
 	constructor(...args) {
 		super(...args)
@@ -42,6 +43,7 @@ export default class T3inUI extends Module {
 		const abilityId = event.ability.guid
 		if (this._T3 && abilityId === ACTIONS.FIRE_III.id && this._UI === 3) {
 			this._UIEndingInT3 ++
+			this._T3inUIFlag = true
 		}
 	}
 
@@ -51,7 +53,7 @@ export default class T3inUI extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III.icon,
 				content: <Fragment>
-					You ended your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and thus to less <ActionLink {...ACTIONS.FIRE_IV}/> under Astral Fire.
+					Ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
