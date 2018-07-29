@@ -12,6 +12,7 @@ export default class Speedmod extends Module {
 	static handle = 'speedmod'
 	static dependencies = [
 		'arcanum', // We rely on its normaliser to handle arrow strength mod
+		'precastStatus',
 	]
 
 	// Track history of speedmods
