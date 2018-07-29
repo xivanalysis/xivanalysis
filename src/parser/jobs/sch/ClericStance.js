@@ -41,7 +41,6 @@ export default class ClericStance extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_expectedBuffGcds = 5
 	_buffStart = null
 	_buffRotations = {}
 	_potentialShadowFlareUsages = [];
@@ -89,15 +88,16 @@ export default class ClericStance extends Module {
 	}
 
 	_onComplete() {
-		EXPECTED_CASTS.forEach(({id, name, icon, count, tiers, why}) => {
-			const expected = Object.keys(this._buffRotations).length * count
-			const actual =  Object.values(this._buffRotations).reduce(
-				// don't count extra casts beyond what is expected per rotation
-				(total, current) => total + Math.min(
-					this._getCastsPerRotation(current, id),
-					count
-				)
+		EXPECTED_CASTS.forEach(({id, name, icon, count, why, content, tiers}) => {
+			const expected = Object.keys(this._buffRotations).reduce(
+				(total, timestamp) => total +
+					this._getExpectedCastsPerRotation(timestamp, id, count)
 				, 0)
+
+			const actual = Object.values(this._buffRotations).reduce(
+				(total, rotation) => total + Math.min(
+					this._getActualCastsPerRotation(rotation, id)
+				), 0)
 
 			const diff = expected - actual
 			if (diff < 1) {
@@ -116,13 +116,22 @@ export default class ClericStance extends Module {
 		})
 	}
 
-	_getCastsPerRotation(rotation, id) {
-		return rotation.filter(
-			event => id === ACTIONS.CLERIC_STANCE.id
-				// edge case for gcds
-				? getAction(event.ability.guid).onGcd
-				: event.ability.guid === +id
-		).length
+	_getExpectedCastsPerRotation(timestamp, id, count) {
+		if (id === ACTIONS.SHADOW_FLARE.id) {
+			return this._potentialShadowFlareUsages.includes(+timestamp) ? 1 : 0
+		}
+
+		return count
+	}
+
+	_getActualCastsPerRotation(rotation, id) {
+		switch (id) {
+		case ACTIONS.CLERIC_STANCE.id: // gcd
+			return rotation.filter(event => getAction(event.ability.guid).onGcd).length
+		default:
+			// don't count extra casts beyond what is expected per rotation
+			return rotation.filter(event => event.ability.guid === +id).length
+		}
 	}
 
 	output() {
@@ -140,12 +149,12 @@ export default class ClericStance extends Module {
 							{[
 								this.parser.formatTimestamp(timestamp),
 								...EXPECTED_CASTS.map(({id, name, count}) => {
-									if (id === ACTIONS.SHADOW_FLARE.id
-									&& !this._potentialShadowFlareUsages.includes(+timestamp)) {
+									const expected = this._getExpectedCastsPerRotation(timestamp, id, count)
+									if (expected < 1) {
 										return null
 									}
 
-									return `${this._getCastsPerRotation(rotation, id)} / ${count} ${name}${count !== 1 ? 's' : ''} `
+									return `${this._getActualCastsPerRotation(rotation, id)} / ${expected} ${name}${count !== 1 ? 's' : ''} `
 								})
 									.filter(Boolean),
 							].join(' - ')}
@@ -168,12 +177,12 @@ export default class ClericStance extends Module {
 						<div>Shadow Flare will be shown if it is available during the Cleric Stance window.</div>
 					</Message.Content>
 				</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
+				<Accordion
+					exclusive={false}
+					panels={panels}
+					styled
+					fluid
+				/>
 			</Fragment>
 		)
 	}
