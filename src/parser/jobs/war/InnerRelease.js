@@ -143,7 +143,6 @@ export default class InnerRelease extends Module {
 		this._ir.end = endTime
 		this._history.push(this._ir)
 
-
 		// Check for which gcds they hit, and for upheaval and onslaught :blobwizard:
 		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)
 		const upheaval = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id)

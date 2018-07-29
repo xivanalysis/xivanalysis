@@ -1,22 +1,22 @@
 module.exports = {
 	env: {
 		browser: true,
-		es6: true
+		es6: true,
 	},
 	extends: [
 		'eslint:recommended',
-		'plugin:react/recommended'
+		'plugin:react/recommended',
 	],
 	parser: 'babel-eslint',
 	parserOptions: {
 		ecmaFeatures: {
 			experimentalObjectRestSpread: true,
-			jsx: true
+			jsx: true,
 		},
-		sourceType: 'module'
+		sourceType: 'module',
 	},
 	plugins: [
-		'react'
+		'react',
 	],
 	rules: {
 		'array-bracket-spacing': 'warn',
@@ -24,6 +24,7 @@ module.exports = {
 		'brace-style': ['error', '1tbs', {allowSingleLine: true}],
 		'comma-dangle': ['warn', 'always-multiline'],
 		'comma-spacing': 'warn',
+		'comma-style': 'warn',
 		'computed-property-spacing': 'warn',
 		'curly': ['error', 'all'],
 		'default-case': 'off',
@@ -54,20 +55,34 @@ module.exports = {
 		'space-before-blocks': 'warn',
 		'yoda': ['error', 'never', {exceptRange: true}],
 		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
+		'no-implicit-globals': 'error',
+		'func-call-spacing': 'warn',
+		'newline-per-chained-call': ['warn', {ignoreChainWithDepth: 3}],
+		'no-whitespace-before-property': 'error',
+		'space-in-parens': 'warn',
+		'no-multiple-empty-lines': ['error', {
+			max: 1,
+			maxBOF: 0,
+			maxEOF: 1,
+		}],
+		'prefer-spread': 'warn',
+		'template-curly-spacing': ['warn', 'never'],
+		'no-useless-rename': 'error',
+		'dot-notation': 'error',
 	},
 	globals: {
-		process: true
+		process: true,
 	},
 	overrides: [{
 		files: ['**/*.test.js'],
 		env: {jest: true},
 		plugins: ['jest'],
 		rules: {
-			"jest/no-disabled-tests": "warn",
-			"jest/no-focused-tests": "error",
-			"jest/no-identical-title": "error",
-			"jest/prefer-to-have-length": "warn",
-			"jest/valid-expect": "error"
-		}
-	}]
-};
+			'jest/no-disabled-tests': 'warn',
+			'jest/no-focused-tests': 'error',
+			'jest/no-identical-title': 'error',
+			'jest/prefer-to-have-length': 'warn',
+			'jest/valid-expect': 'error',
+		},
+	}],
+}

@@ -312,7 +312,6 @@ class Parser {
 					extra,
 				})
 
-
 				// Also add the error to the results to be displayed.
 				results.push({
 					name: module.constructor.title,

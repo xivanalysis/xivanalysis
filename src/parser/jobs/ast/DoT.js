@@ -46,7 +46,7 @@ export default class DoT extends Module {
 		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
 
 		// If it's not been applied yet set it and skip out
-		if (!lastApplication[statusId] ) {
+		if (!lastApplication[statusId]) {
 			lastApplication[statusId] = event.timestamp
 			return
 		}
