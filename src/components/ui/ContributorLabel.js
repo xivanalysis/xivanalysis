@@ -12,7 +12,7 @@ export default class ContributorLabel extends PureComponent {
 				avatar: PropTypes.string,
 			}),
 		]).isRequired,
-		detail: PropTypes.string,
+		detail: PropTypes.node,
 	}
 
 	render() {

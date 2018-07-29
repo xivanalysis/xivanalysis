@@ -2,6 +2,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import Scroll from 'react-scroll'
+import {Trans} from '@lingui/react'
 import withSizes from 'react-sizes'
 import {
 	Container,
@@ -221,7 +222,11 @@ class Analyse extends Component {
 		// TODO: Nice loading bar and shit
 		if (!parser || !complete) {
 			return <Container>
-				<Loader active>Loading analysis</Loader>
+				<Loader active>
+					<Trans id="core.analyse.load-analysis">
+						Loading analysis
+					</Trans>
+				</Loader>
 			</Container>
 		}
 
@@ -238,9 +243,9 @@ class Analyse extends Component {
 					>
 						<JobIcon job={job} set={1}/>
 						<Header.Content>
-							{job.name}
+							<Trans id={job.i18n_id} defaults={job.name} />
 							<Header.Subheader>
-								{ROLES[job.role].name}
+								<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
 							</Header.Subheader>
 						</Header.Content>
 					</Header>}
@@ -256,7 +261,9 @@ class Analyse extends Component {
 					<Menu vertical attached="bottom">
 						<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
 							<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
-							View report on FF Logs
+							<Trans id="core.analyse.view-on-fflogs">
+								View report on FF Logs
+							</Trans>
 						</Menu.Item>
 					</Menu>
 
@@ -274,7 +281,7 @@ class Analyse extends Component {
 								spy
 								onSetActive={() => this.setState({activeSegment: index})}
 							>
-								{result.name /* Doing manually so SUI doesn't modify my text */}
+								<Trans id={result.i18n_id} defaults={result.name /* Doing manually so SUI doesn't modify my text */} />
 							</Menu.Item>)}
 						</Menu>
 					</Sticky>}
@@ -284,7 +291,7 @@ class Analyse extends Component {
 					<div ref={this.stickyContext} className={styles.resultsContainer}>
 						{results.map((result, index) =>
 							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
-								<Header>{result.name}</Header>
+								<Header><Trans id={result.i18n_id} defaults={result.name} /></Header>
 								{result.markup}
 							</Segment>
 						)}

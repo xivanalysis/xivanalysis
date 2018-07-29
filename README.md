@@ -87,6 +87,58 @@ Each module should be in charge of analysing a single statistic or feature, so a
 
 For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
+## Localization
+
+All modules should use localization when displaying content. This project makes use
+[jsLingui](https://github.com/lingui/js-lingui).
+
+### i18n IDs
+
+This project formats i18n ids using the syntax: `[job].[module].[thing]`
+
+As an example, for a Red Mage you might end up with the key `rdm.gauge.white-mana`. These
+keys should be somewhat descriptive to make it clear for translators what exactly they're editing.
+
+### API
+
+#### `i18nMark(id)`
+
+`import {i18nMark} from '@lingui/react'`
+
+This function marks a string for automatic i18n id extraction. You should wrap any
+i18n ids with this that aren't being directly supplied to a `<Trans />` or `<Plural />`
+
+If for nothing else, `i18nMark(id)` should be used for setting an `i18n_id` for custom
+modules to ensure their titles can be localized.
+
+
+#### `<Trans id="" />`
+
+`import {Trans} from '@lingui/react'`
+
+When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n id and you must provide one for the outermost `<Trans />` or `<Plural />`. Please see the jsLingui documentation for more.
+
+Example:
+
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.RAISE.icon,
+	severity: SEVERITY.MORBID,
+	content: <Trans id="my-job.my-module.example-suggestion-title">
+		You should <strong>really</strong> use localization.
+	</Trans>,
+	why: <Trans id="my-job.my-module.example-suggestion-why">
+		Localization is important
+	</Trans>,
+}))
+```
+
+#### `<Plural id="" ... />`
+
+`import {Plural} from '@lingui/react'`
+
+The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n id and you must provide one for the outermost `<Trans />` or `<Plural />`. Please see the jsLingui documentation for more.
+
 ## API Reference
 ### Module
 
@@ -100,6 +152,11 @@ All modules should extend this class at some point in their hierarchy. It provid
 ##### `static title`
 
 The name that should be shown above any output the module generates. If not set, it will default to the module's `handle`, with the first letter capitalised.
+
+##### `static i18n_id`
+
+The i18n id for looking up the translated module title. If this is not set, the name of
+the module will not be localizable.
 
 ##### `static dependencies`
 

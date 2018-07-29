@@ -4,6 +4,8 @@ import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {Container, Loader} from 'semantic-ui-react'
 
+import {Trans} from '@lingui/react'
+
 import {fetchReportIfNeeded} from 'store/actions'
 
 class LastFightRedirect extends Component {
@@ -39,7 +41,11 @@ class LastFightRedirect extends Component {
 		// Show a loader if we're still loading the main report
 		if (!report || report.code !== params.code || report.loading) {
 			return <Container>
-				<Loader active>Loading report</Loader>
+				<Loader active>
+					<Trans id="core.analyse.load-report">
+						Loading report
+					</Trans>
+				</Loader>
 			</Container>
 		}
 
