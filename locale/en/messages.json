@@ -127,6 +127,45 @@
       ]
     ]
   },
+  "core.cooldowndowntime.ogcd-cd-buffer": {
+    "translation": "To account for random factors you are given a buffer of {0} seconds per instance to use your CD",
+    "defaults": "To account for random factors you are given a buffer of {0} seconds per instance to use your CD",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        50
+      ]
+    ]
+  },
+  "core.cooldowndowntime.ogcd-cd-metric": {
+    "translation": "Always make sure to use your OGCD CDs when they are up but don't clip them.  {0}",
+    "defaults": "Always make sure to use your OGCD CDs when they are up but don't clip them.  {0}",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        50
+      ]
+    ]
+  },
+  "core.cooldowndowntime.title": {
+    "translation": "core.cooldowndowntime.title",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        15
+      ]
+    ]
+  },
+  "core.cooldowndowntime.use-ogcd-cds": {
+    "translation": "Use your OGCD CDs",
+    "defaults": "Use your OGCD CDs",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        49
+      ]
+    ]
+  },
   "core.deaths.content": {
     "translation": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
     "defaults": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",

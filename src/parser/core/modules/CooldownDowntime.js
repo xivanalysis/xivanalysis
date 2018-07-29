@@ -3,13 +3,16 @@ import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
+import {i18nMark, Trans} from '@lingui/react'
 
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
+	static title = 'CooldownDownTime'
 	static dependencies = [
 		'cooldowns',
 		'checklist',
 	]
+	static i18n_id = i18nMark('core.cooldowndowntime.title')
 
 	constructor(...args) {
 		super(...args)
@@ -43,8 +46,8 @@ export default class CooldownDowntime extends Module {
 
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
-			name: 'Use your OGCD CDs',
-			description: `Always make sure to use your OGCD CDs when they are up but don't clip them.  ${this.allowedDowntime === 0 ? '' : `To account for random factors you are given a buffer of ${this.allowedDowntime/1000} seconds per instance to use your CD`}`,
+			name: <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCD CDs</Trans>,
+			description: <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCD CDs when they are up but don't clip them.  {this.allowedDowntime === 0 ? '' : <Trans id="core.cooldowndowntime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.allowedDowntime/1000} seconds per instance to use your CD</Trans>}</Trans>,
 			requirements: OGCDRequirements,
 			target: this.target,
 		}))
