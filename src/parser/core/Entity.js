@@ -52,7 +52,7 @@ export default class Entity {
 	_statusFilter(buff, statusId, forTimestamp, bufferTime, minimalActiveTime, sourceID) {
 		const currentTimestamp = forTimestamp > this.parser.currentTimestamp ? this.parser.currentTimestamp : forTimestamp
 
-		statusId = Number(statusId) || true
+		statusId = (buff.ability.guid === Number(statusId)) || true
 
 
 		return (statusId &&
