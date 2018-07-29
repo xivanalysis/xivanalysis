@@ -19,6 +19,15 @@
       ]
     ]
   },
+  "core.about.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        14
+      ]
+    ]
+  },
   "core.about.unsupported.description": {
     "translation": "",
     "defaults": "The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.",
@@ -51,6 +60,7 @@
   },
   "core.always-cast.description": {
     "translation": "",
+    "defaults": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
     "origin": [
       [
         "src/parser/core/modules/AlwaysBeCasting.js",
@@ -60,19 +70,21 @@
   },
   "core.always-cast.gcd-uptime": {
     "translation": "",
+    "defaults": "GCD Uptime",
     "origin": [
       [
         "src/parser/core/modules/AlwaysBeCasting.js",
-        34
+        37
       ]
     ]
   },
   "core.always-cast.title": {
     "translation": "",
+    "defaults": "Always be casting",
     "origin": [
       [
         "src/parser/core/modules/AlwaysBeCasting.js",
-        28
+        29
       ]
     ]
   },
@@ -276,20 +288,30 @@
   },
   "core.potions.content": {
     "translation": "",
-    "defaults": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
+    "defaults": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0>the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
     "origin": [
       [
         "src/parser/core/modules/Potions.js",
-        52
+        54
+      ]
+    ]
+  },
+  "core.potions.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        18
       ]
     ]
   },
   "core.potions.why": {
     "translation": "",
+    "defaults": "Used a short potion instead of an infusion.",
     "origin": [
       [
         "src/parser/core/modules/Potions.js",
-        55
+        60
       ]
     ]
   },
@@ -326,7 +348,7 @@
     "origin": [
       [
         "src/components/modules/Suggestions.js",
-        65
+        62
       ]
     ]
   },
@@ -336,7 +358,7 @@
     "origin": [
       [
         "src/components/modules/Suggestions.js",
-        66
+        63
       ]
     ]
   },
@@ -346,7 +368,7 @@
     "origin": [
       [
         "src/components/modules/Suggestions.js",
-        47
+        44
       ]
     ]
   },

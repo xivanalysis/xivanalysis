@@ -3,7 +3,6 @@ import React, {Component, Fragment} from 'react'
 import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
-import SafeTrans from 'components/ui/SafeTrans'
 import styles from './Checklist.module.css'
 
 class Checklist extends Component {
@@ -11,12 +10,9 @@ class Checklist extends Component {
 		rules: PropTypes.arrayOf(PropTypes.shape({
 			percent: PropTypes.number.isRequired,
 			target: PropTypes.number.isRequired,
-			i18n_id: PropTypes.string,
 			name: PropTypes.node.isRequired,
-			i18n_description: PropTypes.string,
 			description: PropTypes.node,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
-				i18n_id: PropTypes.string,
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
 			})),
@@ -46,7 +42,7 @@ class Checklist extends Component {
 							name={success ? 'checkmark' : 'remove'}
 							className={success ? 'text-success' : 'text-error'}
 						/>
-						<SafeTrans id={rule.i18n_id} defaults={rule.name} />
+						{rule.name}
 						<div className={styles.percent + (success ? ' text-success' : ' text-error')}>
 							{rule.percent.toFixed(1)}%
 							{hideProgress || <Progress
@@ -62,13 +58,13 @@ class Checklist extends Component {
 					content: <Fragment>
 						{rule.description && <div className={styles.description}>
 							<Icon name="info" size="large" />
-							<p><SafeTrans id={rule.i18n_description} defaults={rule.description} /></p>
+							<p>{rule.description}</p>
 						</div>}
 						{/* TODO: Better styling for these requirements */}
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									<SafeTrans id={requirement.i18n_id} defaults={requirement.name} />: {requirement.percent.toFixed(2)}%
+									{requirement.name}: {requirement.percent.toFixed(2)}%
 								</li>
 							)}
 						</ul>

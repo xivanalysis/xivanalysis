@@ -5,7 +5,6 @@ import {Trans} from '@lingui/react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import SafeTrans from 'components/ui/SafeTrans'
 
 import styles from './Suggestions.module.css'
 
@@ -20,9 +19,7 @@ class Suggestions extends Component {
 	static propTypes = {
 		suggestions: PropTypes.arrayOf(PropTypes.shape({
 			icon: PropTypes.string.isRequired,
-			i18n_id: PropTypes.string,
 			content: PropTypes.node.isRequired,
-			i18n_why: PropTypes.string,
 			why: PropTypes.node.isRequired,
 			severity: PropTypes.number.isRequired,
 		})).isRequired,
@@ -53,10 +50,10 @@ class Suggestions extends Component {
 				{suggestions.map((suggestion, index) => <div key={index} className={styles.item}>
 					<img src={suggestion.icon} alt=""/>
 					<div>
-						<SafeTrans id={suggestion.i18n_id} defaults={suggestion.content} />
+						{suggestion.content}
 						<div className={styles.extra}>
 							<Label horizontal {...SEVERITY_LABEL_PROPS[suggestion.severity]} />
-							<SafeTrans id={suggestion.i18n_why} defaults={suggestion.why} />
+							{suggestion.why}
 						</div>
 					</div>
 				</div>)}

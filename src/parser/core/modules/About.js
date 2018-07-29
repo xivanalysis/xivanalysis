@@ -1,17 +1,17 @@
 import React, {Fragment} from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
-import SafeTrans from 'components/ui/SafeTrans'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 
 import styles from './About.module.css'
 
 export default class About extends Module {
 	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
+	static i18n_id = i18nMark('core.about.title')
 
 	description = null
 	supportedPatch = null
@@ -35,7 +35,7 @@ export default class About extends Module {
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
-				<SafeTrans id={this.i18n_description} defaults={this.description} />
+				{this.description}
 			</Grid.Column>
 
 			{/* Meta box */}
@@ -58,7 +58,7 @@ export default class About extends Module {
 								>
 									<ContributorLabel
 										contributor={user}
-										detail={<Trans id={role.i18n_id} defaults={role.text} />}
+										detail={role && role.i18n_id ? <Trans id={role.i18n_id} defaults={role.text} /> : role}
 									/>
 								</div>
 							})}
