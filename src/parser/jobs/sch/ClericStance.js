@@ -7,12 +7,13 @@ import {Accordion, Message, Icon} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import STATUSES from 'data/STATUSES'
 
+// all these suggestions for CS are ultimately trivial :notlikeblob:
 const defaultSeverityTiers = {
 	1: SEVERITY.MINOR,
 }
 
 // list of things to track for CS usage.
-// can override name/why/content with custom text
+// can override the suggestions from the default template here
 const EXPECTED_CASTS = [
 	{...getAction(ACTIONS.CLERIC_STANCE.id), name: 'GCD', count: 6}, // track GCDs via the CS id
 	{...getAction(ACTIONS.BIO_II.id), count: 1},
