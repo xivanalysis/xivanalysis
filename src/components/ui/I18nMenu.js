@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Dropdown} from 'semantic-ui-react'
+
+import I18nUtils from './I18nUtils'
 
 import {setLanguage} from 'store/actions'
 
@@ -54,12 +56,15 @@ export class I18nMenu extends Component {
 			return null
 		}
 
-		return <Dropdown
-			className="link item"
-			value={this.state.currentLanguage}
-			options={this.state.languages}
-			onChange={this.handleChange}
-		/>
+		return <Fragment>
+			<Dropdown
+				className="link item"
+				value={this.state.currentLanguage}
+				options={this.state.languages}
+				onChange={this.handleChange}
+			/>
+			<I18nUtils language={this.state.language} enabled={true} />
+		</Fragment>
 	}
 }
 
