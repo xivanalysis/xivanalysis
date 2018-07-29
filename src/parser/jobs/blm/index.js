@@ -4,7 +4,7 @@ import Triple from './Triple'
 import Procs from './Procs'
 import BlmWeaving from './Weaving'
 import T3inUI from './T3inUI'
-import FireCounter from './FireCounter'
+import RotationWatchdog from './RotationWatchdog'
 import BlmCooldowns from './OGCDDowntime'
 
 export default [
@@ -14,6 +14,6 @@ export default [
 	Procs,
 	BlmWeaving,
 	T3inUI,
-	FireCounter,
+	RotationWatchdog,
 	BlmCooldowns,
 ]

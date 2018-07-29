@@ -11,6 +11,8 @@ import SCH from './SCH'
 import AST from './AST'
 import ROG from './ROG'
 import NIN from './NIN'
+import PGL from './PGL'
+import MNK from './MNK'
 import SMN from './SMN'
 import BLM from './BLM'
 import RDM from './RDM'
@@ -31,6 +33,7 @@ const ACTIONS = {
 	...ARC,
 	...ACN,
 	...MRD,
+	...PGL,
 
 	...PLD,
 	...WAR,
@@ -39,7 +42,7 @@ const ACTIONS = {
 	...SCH,
 	...AST,
 
-
+	...MNK,
 	...NIN,
 	...SAM,
 

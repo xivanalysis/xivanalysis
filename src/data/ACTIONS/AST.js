@@ -366,11 +366,9 @@ export default {
 		cooldown: 30,
 	},
 
-
 	// -----
 	// OGCD Arcana removal
 	// -----
-
 
 	UNDRAW_SPREAD: {
 		id: 4646,
