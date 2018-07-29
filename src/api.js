@@ -35,7 +35,7 @@ export const getFflogsEvents = async (code, fight, extra) => {
 	while (data.nextPageTimestamp) {
 		params.start = data.nextPageTimestamp
 		data = (await fflogsApi.get(`report/events/${code}`, {params})).data
-		events.push.apply(events, data.events)
+		events.push(...data.events)
 	}
 
 	// And done

@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {i18nMark, Trans} from '@lingui/react'
 
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -13,6 +14,8 @@ export default class Potions extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+
+	static i18n_id = i18nMark('core.potions.title')
 
 	_start = null
 	_usingShortPotion = false
@@ -48,10 +51,15 @@ export default class Potions extends Module {
 			this.suggestions.add(new Suggestion({
 				// TODO: Would be nice to be able to suggest the correct pot for their current class, inc. icon...
 				icon: 'https://secure.xivdb.com/img/game_local/2/22450.jpg',
-				content: <Fragment>
-					It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <em>twice</em> the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.
-				</Fragment>,
-				why: 'Used a short potion instead of an infusion.',
+				content: <Trans id="core.potions.content">
+					It looks like you used a pre-Stormblood potion. Openers and rotations
+					generally assume the use of infusions, which last for <em>twice</em>
+					the duration. It's likely the shorter duration will have caused
+					important skills to miss the damage boost.
+				</Trans>,
+				why: <Trans id="core.potions.why">
+					Used a short potion instead of an infusion.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
 			}))
 		}

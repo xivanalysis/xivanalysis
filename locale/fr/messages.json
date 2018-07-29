@@ -1,0 +1,621 @@
+{
+  "core.about.contributors": {
+    "translation": "",
+    "defaults": "Contributors:",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        51
+      ]
+    ]
+  },
+  "core.about.patch": {
+    "translation": "",
+    "defaults": "Patch {0}",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        47
+      ]
+    ]
+  },
+  "core.about.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        14
+      ]
+    ]
+  },
+  "core.about.unsupported.description": {
+    "translation": "",
+    "defaults": "The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        29
+      ]
+    ]
+  },
+  "core.about.unsupported.title": {
+    "translation": "",
+    "defaults": "This job is currently unsupported",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        27
+      ]
+    ]
+  },
+  "core.about.updated-for": {
+    "translation": "",
+    "defaults": "Updated For:",
+    "origin": [
+      [
+        "src/parser/core/modules/About.js",
+        46
+      ]
+    ]
+  },
+  "core.always-cast.description": {
+    "translation": "",
+    "defaults": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        30
+      ]
+    ]
+  },
+  "core.always-cast.gcd-uptime": {
+    "translation": "",
+    "defaults": "GCD Uptime",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        37
+      ]
+    ]
+  },
+  "core.always-cast.title": {
+    "translation": "",
+    "defaults": "Always be casting",
+    "origin": [
+      [
+        "src/parser/core/modules/AlwaysBeCasting.js",
+        29
+      ]
+    ]
+  },
+  "core.analyse.load-analysis": {
+    "translation": "",
+    "defaults": "Loading analysis",
+    "origin": [
+      [
+        "src/components/Analyse/Analyse.js",
+        226
+      ]
+    ]
+  },
+  "core.analyse.load-report": {
+    "translation": "",
+    "defaults": "Loading report",
+    "origin": [
+      [
+        "src/components/LastFightRedirect.js",
+        45
+      ]
+    ]
+  },
+  "core.analyse.view-on-fflogs": {
+    "translation": "",
+    "defaults": "View report on FF Logs",
+    "origin": [
+      [
+        "src/components/Analyse/Analyse.js",
+        264
+      ]
+    ]
+  },
+  "core.checklist.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Checklist/Checklist.js",
+        11
+      ]
+    ]
+  },
+  "core.deaths.content": {
+    "translation": "",
+    "defaults": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
+    "origin": [
+      [
+        "src/parser/core/modules/Death.js",
+        66
+      ]
+    ]
+  },
+  "core.deaths.why": {
+    "translation": "",
+    "defaults": "{0, plural, =1 {# death} other {# deaths}}",
+    "origin": [
+      [
+        "src/parser/core/modules/Death.js",
+        70
+      ]
+    ]
+  },
+  "core.error.generic": {
+    "translation": "",
+    "defaults": "Looks like something has gone wrong. The code monkies have been notified.",
+    "origin": [
+      [
+        "src/components/ui/ErrorMessage.js",
+        24
+      ]
+    ]
+  },
+  "core.find.job-unsupported.description": {
+    "translation": "",
+    "defaults": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        85
+      ]
+    ]
+  },
+  "core.find.job-unsupported.title": {
+    "translation": "",
+    "defaults": "Favourite job unsupported?",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        82
+      ]
+    ]
+  },
+  "core.find.kills-only": {
+    "translation": "",
+    "defaults": "Kills only",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        68
+      ]
+    ]
+  },
+  "core.find.load-report": {
+    "translation": "",
+    "defaults": "Loading report",
+    "origin": [
+      [
+        "src/components/Find/Find.js",
+        41
+      ]
+    ]
+  },
+  "core.find.refresh": {
+    "translation": "",
+    "defaults": "Refresh",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        75
+      ]
+    ]
+  },
+  "core.find.select-combatant": {
+    "translation": "",
+    "defaults": "Select a combatant",
+    "origin": [
+      [
+        "src/components/Find/CombatantList.js",
+        67
+      ]
+    ]
+  },
+  "core.find.select-pull": {
+    "translation": "",
+    "defaults": "Select a pull",
+    "origin": [
+      [
+        "src/components/Find/FightList.js",
+        62
+      ]
+    ]
+  },
+  "core.gcd.estimate": {
+    "translation": "",
+    "defaults": "Estimated GCD: <0>{0}</0>",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        182
+      ]
+    ]
+  },
+  "core.gcd.invalid-gcd": {
+    "translation": "",
+    "defaults": "The estimated GCD falls outside possible GCD values, and has been bounded to {0} for calculations.",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        178
+      ]
+    ]
+  },
+  "core.gcd.no-statistics": {
+    "translation": "",
+    "defaults": "Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        171
+      ]
+    ]
+  },
+  "core.gcd.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/GlobalCooldown.js",
+        22
+      ]
+    ]
+  },
+  "core.home.analyse": {
+    "translation": "",
+    "defaults": "Analyse",
+    "origin": [
+      [
+        "src/components/Home/ReportSearch.js",
+        80
+      ]
+    ]
+  },
+  "core.home.paste-url": {
+    "translation": "",
+    "defaults": "Paste your log URL to get started",
+    "origin": [
+      [
+        "src/components/Home/ReportSearch.js",
+        72
+      ]
+    ]
+  },
+  "core.potions.content": {
+    "translation": "",
+    "defaults": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0>the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        54
+      ]
+    ]
+  },
+  "core.potions.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        18
+      ]
+    ]
+  },
+  "core.potions.why": {
+    "translation": "",
+    "defaults": "Used a short potion instead of an infusion.",
+    "origin": [
+      [
+        "src/parser/core/modules/Potions.js",
+        60
+      ]
+    ]
+  },
+  "core.role.developer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        101
+      ]
+    ]
+  },
+  "core.role.maintainer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        93
+      ]
+    ]
+  },
+  "core.role.theorycraft": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/CONTRIBUTORS.js",
+        97
+      ]
+    ]
+  },
+  "core.suggestion.nothing": {
+    "translation": "",
+    "defaults": "There's nothing here!",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        62
+      ]
+    ]
+  },
+  "core.suggestion.nothing-but-minor": {
+    "translation": "",
+    "defaults": "You can check over the minor suggestions by flicking the \"Show minor\" switch in the top right.",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        63
+      ]
+    ]
+  },
+  "core.suggestion.show-minor": {
+    "translation": "",
+    "defaults": "Show minor",
+    "origin": [
+      [
+        "src/components/modules/Suggestions.js",
+        44
+      ]
+    ]
+  },
+  "core.suggestions.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Suggestions/Suggestions.js",
+        11
+      ]
+    ]
+  },
+  "core.timeline.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Timeline/Timeline.js",
+        14
+      ]
+    ]
+  },
+  "core.weaving.content": {
+    "translation": "",
+    "defaults": "Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <0>{0}</0> module below for more detailed analysis.",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        86
+      ]
+    ]
+  },
+  "core.weaving.panel-count": {
+    "translation": "",
+    "defaults": "{0, plural, =1 {# weave} other {# weaves}}",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        152
+      ]
+    ]
+  },
+  "core.weaving.title": {
+    "translation": "",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        34
+      ]
+    ]
+  },
+  "core.weaving.why": {
+    "translation": "",
+    "defaults": "{0, plural, =1 {# instance of incorrect weaving} other {# instances of incorrect weaving}}",
+    "origin": [
+      [
+        "src/parser/core/modules/Weaving.js",
+        89
+      ]
+    ]
+  },
+  "game.job.astrologian": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        95
+      ]
+    ]
+  },
+  "game.job.bard": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        139
+      ]
+    ]
+  },
+  "game.job.black-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        157
+      ]
+    ]
+  },
+  "game.job.dark-knight": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        69
+      ]
+    ]
+  },
+  "game.job.dragoon": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        113
+      ]
+    ]
+  },
+  "game.job.machinist": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        147
+      ]
+    ]
+  },
+  "game.job.monk": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        105
+      ]
+    ]
+  },
+  "game.job.ninja": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        121
+      ]
+    ]
+  },
+  "game.job.paladin": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        53
+      ]
+    ]
+  },
+  "game.job.red-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        173
+      ]
+    ]
+  },
+  "game.job.samurai": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        129
+      ]
+    ]
+  },
+  "game.job.scholar": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        87
+      ]
+    ]
+  },
+  "game.job.summoner": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        165
+      ]
+    ]
+  },
+  "game.job.warrior": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        61
+      ]
+    ]
+  },
+  "game.job.white-mage": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        79
+      ]
+    ]
+  },
+  "game.roles.healer": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        14
+      ]
+    ]
+  },
+  "game.roles.magical-ranged-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        35
+      ]
+    ]
+  },
+  "game.roles.melee-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        21
+      ]
+    ]
+  },
+  "game.roles.physical-ranged-dps": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        28
+      ]
+    ]
+  },
+  "game.roles.tank": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        8
+      ]
+    ]
+  },
+  "game.roles.unsupported": {
+    "translation": "",
+    "origin": [
+      [
+        "src/data/JOBS.js",
+        43
+      ]
+    ]
+  }
+}

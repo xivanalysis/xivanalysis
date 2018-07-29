@@ -82,7 +82,7 @@ export default class Blmcooldowns extends Module {
 			name: 'Use your OGCDs',
 			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them. Utilize your procs or fast Blizzard III or Fire IIIs.',
 			requirements: OGCDRequirements,
-			target: 100,
+			target: 99,
 		}))
 	}
 

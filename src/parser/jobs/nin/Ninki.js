@@ -59,7 +59,6 @@ export default class Ninki extends Module {
 		return 0
 	}
 
-
 	_onCast(event) {
 		const abilityId = event.ability.guid
 

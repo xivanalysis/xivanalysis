@@ -7,7 +7,7 @@ export default class Downtime extends Module {
 		'unableToAct',
 	]
 
-	getDowntime(start = 0, end = this.parser.currentTimestamp) {
+	_internalDowntime(start = 0, end = this.parser.currentTimestamp) {
 		// Get all the downtime from both unableToAct and invuln, and sort it
 		const downtimePeriods = [
 			...this.unableToAct.getDowntimes(start, end),
@@ -16,23 +16,45 @@ export default class Downtime extends Module {
 
 		// If there's nothing, just stop now
 		if (!downtimePeriods.length) {
-			return 0
+			return []
 		}
 
 		// Merge the downtimes that overlap
-		const finalDowntime = [downtimePeriods.shift()]
+		const finalDowntimes = [downtimePeriods.shift()]
 		downtimePeriods.forEach(dt => {
-			const last = finalDowntime[finalDowntime.length - 1]
+			const last = finalDowntimes[finalDowntimes.length - 1]
 			if (dt.start <= last.end) {
 				if (dt.end > last.end) {
 					last.end = dt.end
 				}
 			} else {
-				finalDowntime.push(dt)
+				finalDowntimes.push(dt)
 			}
 		})
 
+		return finalDowntimes
+	}
+
+	getDowntime(start = 0, end = this.parser.currentTimeStamp) {
 		// Return the final number
-		return finalDowntime.reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)
+		return this._internalDowntime(start, end).reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)
+	}
+
+	getDowntimes(start = 0, end = this.parser.currentTimeStamp, minimumDowntimeLength = -1) {
+		return this._internalDowntime(start, end).reduce((aggregator, invuln) => {
+			if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumDowntimeLength, 0)) {
+				aggregator.push(Math.min(invuln.end, end) - Math.max(invuln.start, start))
+			}
+			return aggregator
+		}, [])
+	}
+
+	getDowntimeWindows(start = 0, end = this.parser.currentTimestamp, minimumWindowSize = -1) {
+		return this._internalDowntime(start, end).reduce((aggregator, invuln) => {
+			if (Math.min(invuln.end, end) - Math.max(invuln.start, start) > Math.min(minimumWindowSize, 0)) {
+				aggregator.push({start: Math.max(invuln.start, start), end: Math.min(invuln.end, end)})
+			}
+			return aggregator
+		}, [])
 	}
 }

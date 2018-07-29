@@ -62,3 +62,9 @@ export const refreshReport = () => (dispatch, getState) => {
 	if (!report || report.loading) { return }
 	dispatch(fetchReport(report.code, {bypassCache: true}))
 }
+
+export const SET_LANGUAGE = 'SET_LANGUAGE'
+export const setLanguage = (language) => ({
+	type: SET_LANGUAGE,
+	payload: language,
+})

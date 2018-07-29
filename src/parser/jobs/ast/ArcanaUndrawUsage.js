@@ -62,7 +62,6 @@ export default class ArcanaUndrawUsage extends Module {
 		'suggestions',
 	]
 
-
 	constructor(...args) {
 		super(...args)
 
@@ -106,9 +105,6 @@ export default class ArcanaUndrawUsage extends Module {
 				}
 			})
 
-
-
-
 			this.suggestions.add(new Suggestion({
 				icon: 'https://secure.xivdb.com/img/game/003000/003108.png', // Undraw action
 				content: <Fragment>
@@ -126,11 +122,7 @@ export default class ArcanaUndrawUsage extends Module {
 			}))
 		}
 
-
 	}
 
-
 }
-
-
 
