@@ -43,6 +43,10 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onDamage(event) {
+		// If there's no casts at all, use the damage event to fab one
+		if (!this._casts.length) {
+			this._onCast(event)
+		}
 		this._casts[this._casts.length - 1].hits.push(event)
 	}
 

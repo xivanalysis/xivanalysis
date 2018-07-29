@@ -10,7 +10,8 @@ export default class Rule {
 	get percent() {
 		// WoWA has a bunch of different modes for this stuff, I'm just going to use mean for now. Because I'm mean. Hue.
 		// TODO: different requirement modes
-		return math.mean(this.requirements.map(requirement => requirement.percent))
+		const percents = this.requirements.map(requirement => requirement.percent)
+		return percents.length? math.mean(percents) : 0
 	}
 
 	constructor(options) {
