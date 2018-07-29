@@ -42,10 +42,10 @@ export default class Aetherflow extends Module {
 		'suggestions',
 	]
 
-	_badBanes = []         // In case we ever want to check for Banes where 1 or 0 DoTs are spread
-	_reallyBadBanes = []   // DoTless Bane...
-	_badFesters = []       // 1 DoT Fester. Oh no, it gets worse!
-	_reallyBadFesters = [] // 0 DoT Fester. :r333333:
+	// _badBanes = []         // In case we ever want to check for Banes where 1 or 0 DoTs are spread
+	// _reallyBadBanes = []   // DoTless Bane...
+	// _badFesters = []       // 1 DoT Fester. Oh no, it gets worse!
+	// _reallyBadFesters = [] // 0 DoT Fester. :r333333:
 	_badPainflares = []
 
 	_badDotReqCasts = {}
