@@ -1,10 +1,9 @@
 import React, {Fragment} from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Accordion} from 'semantic-ui-react'
+import {Accordion, Message, Icon} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import STATUSES from 'data/STATUSES'
 
@@ -16,7 +15,11 @@ const EXPECTED_CASTS = [
 	{...getAction(ACTIONS.CLERIC_STANCE.id), name: 'GCD', count: 6},
 	{...getAction(ACTIONS.BIO_II.id), count: 1},
 	{...getAction(ACTIONS.MIASMA.id), count: 1},
-	{...getAction(ACTIONS.SHADOW_FLARE.id), count: 1},
+	{...getAction(ACTIONS.SHADOW_FLARE.id),
+		count: 1,
+		content: <Fragment>
+		Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time. Avoid casting  <ActionLink {...ACTIONS.SHADOW_FLARE} /> right before  <ActionLink {...ACTIONS.CLERIC_STANCE} />
+		</Fragment>},
 ]
 
 export default class ClericStance extends Module {
@@ -102,7 +105,7 @@ export default class ClericStance extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon,
 				why: why || `${diff} cast${diff !== 1 ? 's' : ''} missed during ${ACTIONS.CLERIC_STANCE.name} windows.`,
-				content: <Fragment>
+				content: content || <Fragment>
 					Try to land {count} {name}{count !== 1 ? 's' : ''} during every <ActionLink {...ACTIONS.CLERIC_STANCE} /> window.
 				</Fragment>,
 				tiers: tiers || defaultSeverityTiers,
@@ -135,7 +138,7 @@ export default class ClericStance extends Module {
 										return null
 									}
 
-									return `${this._getCastsPerRotation(rotation, id)} / ${count} ${name}`
+									return `${this._getCastsPerRotation(rotation, id)} / ${count} ${name}${count !== 1 ? 's' : ''} `
 								})
 									.filter(Boolean),
 							].join(' - ')}
@@ -148,12 +151,23 @@ export default class ClericStance extends Module {
 			})
 
 		return (
+			<Fragment>
+				<Message info icon>
+					<Icon name="info"/>
+					<Message.Content>
+						<div>Below is a detailed overview of GCD usage during Cleric Stance.</div>
+						<div>Since Cleric Stance only contributes to like 1% of your overall total DPS, it is not that important.</div>
+						<div>However, it is still good practice to maximize its usage.</div>
+						<div>Shadow Flare will be shown if it is available during the Cleric Stance window.</div>
+					</Message.Content>
+				</Message>
 			<Accordion
 				exclusive={false}
 				panels={panels}
 				styled
 				fluid
 			/>
+			</Fragment>
 		)
 	}
 }
