@@ -8,6 +8,9 @@ const NEW_AOE_THRESHOLD = 20
 
 export default class AoE extends Module {
 	static handle = 'aoe'
+	static dependencies = [
+		'enemies',
+	]
 
 	constructor(...args) {
 		super(...args)
@@ -111,9 +114,8 @@ export default class AoE extends Module {
 		})
 	}
 
-	isValidHit(/* event */) {
-		// Doesn't look like it's possible to derive invalid targets from fflog's api
-		// Leaving that to boss modules instead
-		return true
+	isValidHit(event) {
+		// Checking the event's target - if we get a falsey value back, it's an invalid target
+		return !!this.enemies.getEntity(event.targetID)
 	}
 }

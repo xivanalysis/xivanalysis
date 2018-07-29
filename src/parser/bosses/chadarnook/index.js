@@ -1,5 +1,5 @@
-import AoE from './AoE'
+import Enemies from './Enemies'
 
 export default [
-	AoE,
+	Enemies,
 ]
