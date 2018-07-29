@@ -1,7 +1,7 @@
 export function loadState() {
 	try {
 		const serialized = localStorage.getItem('state')
-		if ( serialized == null ) {
+		if (serialized == null) {
 			return
 		}
 

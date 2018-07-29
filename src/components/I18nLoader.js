@@ -38,7 +38,7 @@ export class I18nLoader extends Component {
 			cleanMessages(catalog.messages)
 		}
 
-		if ( catalog.default && catalog.default.messages ) {
+		if (catalog.default && catalog.default.messages) {
 			cleanMessages(catalog.default.messages)
 		}
 
@@ -58,7 +58,7 @@ export class I18nLoader extends Component {
 		const {language} = nextProps
 		const {catalogs} = nextState
 
-		if (language !== this.props.language && !catalogs[language] ) {
+		if (language !== this.props.language && !catalogs[language]) {
 			this.loadCatalog(language)
 			return false
 		}
@@ -70,7 +70,7 @@ export class I18nLoader extends Component {
 		const {language} = this.props
 		const {catalogs} = this.state
 
-		if ( ! catalogs[language] ) {
+		if (! catalogs[language]) {
 			return <Container>
 				<Loader active>
 					Loading

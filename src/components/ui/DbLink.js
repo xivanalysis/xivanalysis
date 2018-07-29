@@ -45,11 +45,11 @@ export class DbLink extends Component {
 
 	componentDidUpdate() {
 		// If the language changes, we'll need to update the tooltip.
-		if ( this.state.language !== this.props.language ) {
+		if (this.state.language !== this.props.language) {
 			this.setState({
 				language: this.props.language,
 			}, () => {
-				if ( window.XIVDBTooltips ) {
+				if (window.XIVDBTooltips) {
 					this.refreshTooltips()
 				}
 			})
@@ -75,7 +75,7 @@ export class DbLink extends Component {
 
 		// Clear the tooltip data attributes from our link to ensure
 		// that XIVDB's tooltip helper doesn't just used cached data.
-		if ( this.link ) {
+		if (this.link) {
 			this.link.removeAttribute('data-xivdb-tooltip')
 			this.link.removeAttribute('data-xivdb-key')
 			this.link.removeAttribute('data-xivdb-isset')
@@ -117,7 +117,6 @@ const Wrapped = connect(state => ({
 }))(DbLink)
 
 export default Wrapped
-
 
 // -----
 // Helpers 'cus i'm lazy

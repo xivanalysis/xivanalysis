@@ -36,7 +36,7 @@ const LANGUAGES = {
 export const LANGUAGE_ARRAY = Object.entries(LANGUAGES)
 	.map(([key, val]) => {
 		val.value = key
-		if ( val.menu ) {
+		if (val.menu) {
 			val.menu.value = key
 		}
 		return val

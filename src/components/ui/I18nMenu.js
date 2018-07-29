@@ -37,7 +37,7 @@ export class I18nMenu extends Component {
 	}
 
 	componentDidUpdate() {
-		if ( this.props.language !== this.state.currentLanguage ) {
+		if (this.props.language !== this.state.currentLanguage) {
 			this.setState({
 				currentLanguage: this.props.language,
 				languages: this.filterLanguages(),
@@ -50,7 +50,7 @@ export class I18nMenu extends Component {
 	}
 
 	render() {
-		if ( this.state.languages.length < 2 ) {
+		if (this.state.languages.length < 2) {
 			return null
 		}
 
