@@ -72,13 +72,15 @@ export default class ClericStance extends Module {
 		const {id, cooldown} = getAction(ACTIONS.SHADOW_FLARE.id)
 
 		const cooldownRemaining = this.cooldowns.getCooldownRemaining(id)
-		if (cooldownRemaining - (STATUSES.CLERIC_STANCE.duration * 1000) < 0) {
-			console.log('usable')
+		if (cooldownRemaining - (STATUSES.CLERIC_STANCE.duration * 1000) < this.gcd.getEstimate()) {
+			// cooldown will come off before cleric stance duration expires
 			return true
-		} if ((cooldown * 1000 - cooldownRemaining) < 2 * this.gcd.getEstimate()) {
-			console.log('could have used')
+		} if ((cooldown * 1000 - cooldownRemaining) < this.gcd.getEstimate()) {
+			// if it was recently used as far as 1 gcd before popping cleric,
+			// let's count it as a potential wasted usage
 			return true
 		}
+
 		return false
 	}
 
