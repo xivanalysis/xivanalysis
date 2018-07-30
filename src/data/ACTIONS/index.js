@@ -59,6 +59,10 @@ const ACTIONS = {
 
 export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 
+export const HIT_TYPES = {
+	CRIT: 2,
+}
+
 addExtraIndex(ACTIONS, 'id')
 
 export default ACTIONS
