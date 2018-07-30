@@ -25,11 +25,13 @@ const STATE = {
 }
 
 export default class NinWeaving extends Weaving {
+	_lastDwadTimestamp = 0 // A necessary evil - logs go janky sometimes and have 3 cast events for a single DWaD
 	isBadWeave(weave, maxWeaves) {
 		let weaveCount = 0
 		let checkState = STATE.NORMAL
 		let tcjCount = 0
 		let ninjutsuCounted = false
+		let dwadDupe = false
 
 		for (let i = 0; i < weave.weaves.length; i++) {
 			const abilityId = weave.weaves[i].ability.guid
@@ -57,6 +59,18 @@ export default class NinWeaving extends Weaving {
 					}
 				}
 			} else {
+				if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
+					// Extra special DWaD sauce because ACT and/or fflogs are dumb, not sure which
+					if (this._lastDwadTimestamp !== weave.weaves[i].timestamp) {
+						// First DWaD in the weave, so update the timestamp we're tracking and count it
+						this._lastDwadTimestamp = weave.weaves[i].timestamp
+					} else {
+						// A duplicate DWaD, don't even process this event as it shouldn't exist
+						dwadDupe = true
+						continue
+					}
+				}
+
 				// Switch to normal mode and reset the TCJ count in case it was manually interrupted
 				tcjCount = 0
 				checkState = STATE.NORMAL
@@ -64,7 +78,7 @@ export default class NinWeaving extends Weaving {
 			}
 		}
 
-		if (ninjutsuCounted) {
+		if (ninjutsuCounted || dwadDupe) {
 			return weaveCount > 1
 		}
 
