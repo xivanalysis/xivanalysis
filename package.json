@@ -39,7 +39,7 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
-    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract",
+    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile"
   },
   "browserslist": {
@@ -56,7 +56,9 @@
     ]
   },
   "lingui": {
-    "sourceLocale": "en"
+    "fallbackLocale": "en",
+    "sourceLocale": "en",
+    "format": "minimal"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
