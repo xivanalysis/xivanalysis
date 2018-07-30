@@ -4,17 +4,21 @@
 - [ ] Don't clip or drop Demolish by more than 2 seconds, unless reapplying would be on GL0
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
 - [ ] GL3 uptime
+- [ ] GL3 efficient recovery
 - [ ] General auto-attack uptime
+- [ ] Earth Tackle, not even once
 
 ### AoE
-- [ ] Make sure there's enough enemies for RB or AotD effectiveness
+- [x] Make sure there's enough enemies for RB or AotD effectiveness
 - [ ] Allow AotD for Silence if we can tell if the enemy is actually interrupted
+- [ ] Warn on RB being used as a range extender
 
 ### Tornado Kick
 - [ ] Minor on 8th RoF GCD instead of 9th
 - [ ] Major if just after RoF drops
 - [ ] Check recovery doesn't take more than 4 GCDs (PB is 3, ending before Snap and using RoW is 4)
 - [ ] Use before forced downtime longer than RoE can be used, this might be fight specific and is hard to track since FFLogs is weird about GL refreshes
+- [ ] Implement setup/recovery scenarios? Usually this is just "fix your opener"
 
 ### Positionals
 - [ ] Can kinda guess this from the damage mainly because MNK potency is high but it's a bit giri-giri
@@ -23,6 +27,8 @@
 ### Buff Windows
 - [ ] RoF basically on CD, take downtime into account or fights that derp a window
 - [ ] Brotherhood, same as RoF besides slight variance for duration
+- [ ] RoF should last 9 GCDs
+- [ ] RoF and BH overlap drift (common in Omega 8S)
 
 ### Forms
 - [x] Reset forms by using Opo-Opo form skills in a different form
