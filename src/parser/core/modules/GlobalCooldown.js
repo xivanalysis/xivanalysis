@@ -124,6 +124,7 @@ export default class GlobalCooldown extends Module {
 
 		// TODO: Figure out how to apply 1.3x Riddle of Fire (MNK) and 0.5x Astral/Umbral (BLM)
 		// They are applied separately from SpeedMod (Astral/Umbral is applied at the end, need to confirm Riddle of Fire placement)
+		// Look at Weaving for ideas? Something like add some functions here that BLM/MNK modules can extend to report special modifiers for time windows
 
 		const action = getAction(this._lastCast.guid)
 		if (this._lastCast.isInstant) {
@@ -159,7 +160,14 @@ export default class GlobalCooldown extends Module {
 		}
 
 		// Calculate the lengths of the GCD
-		const lengths = this.gcds.map(gcd => gcd.length)
+		// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
+		let lengths = this.gcds.map(gcd => {
+			const action = getAction(gcd.actionId)
+			if (gcd.isInstant || action.castTime <= 2.5) {
+				return gcd.length
+			}
+		})
+		lengths = lengths.filter(n => n)
 
 		// Mode seems to get best results. Using mean in case there's multiple modes.
 		let estimate = math.mean(math.mode(lengths))
