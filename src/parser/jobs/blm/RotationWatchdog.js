@@ -13,7 +13,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
-const DEBUG_LOG_ALL_FIRE_COUNTS = false
+const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
