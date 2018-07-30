@@ -81,7 +81,7 @@ export default class GlobalCooldown extends Module {
 
 			const adjustedLength = Math.max(
 				MIN_GCD,
-				(action.cooldown * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
+				(action.castTime * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
 			)
 
 			this.timeline.addItem(new Item({
@@ -106,6 +106,9 @@ export default class GlobalCooldown extends Module {
 		const speedMod = this.speedmod.get(event.timestamp)
 		const revSpeedMod = 1 / speedMod
 		gcdLength *= revSpeedMod
+
+		// TODO: Figure out how to apply 1.3x Riddle of Fire (MNK) and 0.5x Astral/Umbral (BLM)
+		// They are applied separately from SpeedMod (Astral/Umbral is applied at the end, need to confirm Riddle of Fire placement)
 
 		this.gcds.push({
 			timestamp: event.timestamp,
@@ -148,7 +151,7 @@ export default class GlobalCooldown extends Module {
 		const cooldownRatio = gcdLength / MAX_GCD
 
 		return this.gcds.reduce((carry, gcd) => {
-			const cd = getAction(gcd.actionId).cooldown * 1000
+			const cd = getAction(gcd.actionId).castTime * 1000
 			const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
