@@ -97,6 +97,7 @@ export default class Gauge extends Module {
 	}
 
 	//kenki quick maths
+
 	_addKenki(abilityId) {
 		this._kenki += KENKI_BUILDERS[abilityId]
 		if (this._kenki > MAX_KENKI) {
@@ -116,6 +117,7 @@ export default class Gauge extends Module {
 			this._kenki = MAX_KENKI
 			return waste
 		}
+
 		this._gekkosen = 0
 		this._kashasen = 0
 		this._yukikazesen = 0
@@ -124,6 +126,7 @@ export default class Gauge extends Module {
 	}
 
 	//sen calcs
+
 	_addGekkoSen() {
 		this._gekkosen += 1
 		if (this._gekkosen > MAX_GEKKO_SEN) {
@@ -166,6 +169,7 @@ export default class Gauge extends Module {
 		// Death just flat out resets everything. Stop dying.
 		this._wastedKenki += this._kenki
 		this._kenki = 0
+
 		this._wastedsen += (this._gekkosen + this._kashasen + this._yukikzaesen)
 		this._gekkosen = this._kashasen = this._yukikazesen = 0
 	}
