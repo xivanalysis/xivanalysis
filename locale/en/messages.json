@@ -59,7 +59,7 @@
     ]
   },
   "core.always-cast.description": {
-    "translation": "core.always-cast.description",
+    "translation": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
     "defaults": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
     "origin": [
       [
@@ -69,7 +69,7 @@
     ]
   },
   "core.always-cast.gcd-uptime": {
-    "translation": "core.always-cast.gcd-uptime",
+    "translation": "GCD Uptime",
     "defaults": "GCD Uptime",
     "origin": [
       [
@@ -79,7 +79,7 @@
     ]
   },
   "core.always-cast.title": {
-    "translation": "core.always-cast.title",
+    "translation": "Always be casting",
     "defaults": "Always be casting",
     "origin": [
       [
@@ -345,7 +345,7 @@
     ]
   },
   "core.potions.why": {
-    "translation": "core.potions.why",
+    "translation": "Used a short potion instead of an infusion.",
     "defaults": "Used a short potion instead of an infusion.",
     "origin": [
       [

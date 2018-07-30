@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -25,16 +25,46 @@ export default class Goring extends Module {
 	_clip = {
 		[STATUSES.GORING_BLADE.id]: 0,
 	}
+	_lastRequiescatHolySpirit = null
+	_gcdsSinceLastReqHS = 0
+	_requiescatWindow = false
 
 	constructor(...args) {
 		super(...args)
 
-		const filter = {
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.REQUIESCAT.id}, this._onRequiescatRemove)
+		this.addHook(['applydebuff', 'refreshdebuff'], {
 			by: 'player',
 			abilityId: [STATUSES.GORING_BLADE.id],
-		}
-		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
+		}, this._onDotApply)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_onCast(event) {
+		const actionId = event.ability.guid
+
+		if (actionId === ACTIONS.REQUIESCAT.id) {
+			this._requiescatWindow = true
+			return
+		}
+
+		if (actionId === ACTIONS.HOLY_SPIRIT.id && this._requiescatWindow) {
+			this._lastRequiescatHolySpirit = event.timestamp
+			this._gcdsSinceLastReqHS = 0
+			return
+		}
+
+		if (!this._requiescatWindow) {
+			const action = getAction(actionId)
+			if (action.onGcd) {
+				this._gcdsSinceLastReqHS++
+			}
+		}
+	}
+
+	_onRequiescatRemove() {
+		this._requiescatWindow = false
 	}
 
 	_onDotApply(event) {
@@ -43,7 +73,7 @@ export default class Goring extends Module {
 		// Make sure we're tracking for this target
 		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
 
-		// If it's not been applied yet, or we're rushing, set it and skip out
+		// If it's not been applied yet, set it and skip out
 		if (!lastApplication[statusId]) {
 			lastApplication[statusId] = event.timestamp
 			return
@@ -52,21 +82,21 @@ export default class Goring extends Module {
 		// Base clip calc
 		let clip = STATUS_DURATION[statusId] - (event.timestamp - lastApplication[statusId])
 
-		// Remove any untargetable time from the clip - often want to hardcast after an invuln phase, but refresh w/ 3D shortly after.
 		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - STATUS_DURATION[statusId], event.timestamp)
-
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
 		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId] + clip)
 
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
+		// If we just came out of Requiescat rotation, allow leeway for 1 GCD
+		if (this._gcdsSinceLastReqHS === 3) {
+			clip -= 2500
+		}
+
 		this._clip[statusId] += Math.max(0, clip)
 
 		lastApplication[statusId] = event.timestamp
 	}
 
 	_onComplete() {
-		// Checklist rule for dot uptime
+		// Checklist rule for Goring Blade DoT uptime
 		this.checklist.add(new Rule({
 			name: 'Keep your Goring Blade up',
 			description: <Fragment>
@@ -82,23 +112,22 @@ export default class Goring extends Module {
 			],
 		}))
 
-		// Suggestion for DoT clipping
-		const maxClip = Math.max(...Object.values(this._clip))
+		// Suggestion for Goring Blade DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
 			content: <Fragment>
 				Avoid refreshing <ActionLink {...ACTIONS.GORING_BLADE} /> significantly before it's expiration.
 			</Fragment>,
-			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
-				{this.parser.formatDuration(this._clip[STATUSES.GORING_BLADE.id])} of {STATUSES[STATUSES.GORING_BLADE.id].name} lost to early refreshes.
+				{this.parser.formatDuration(this._clip[STATUSES.GORING_BLADE.id])} of {STATUSES.GORING_BLADE.name} lost
+				to early refreshes.
 			</Fragment>,
 			tiers: {
-				5000: SEVERITY.MINOR,
-				10000: SEVERITY.MEDIUM,
+				3000: SEVERITY.MINOR,
+				9000: SEVERITY.MEDIUM,
 				30000: SEVERITY.MAJOR,
 			},
-			value: maxClip,
+			value: this._clip[STATUSES.GORING_BLADE.id],
 		}))
 	}
 

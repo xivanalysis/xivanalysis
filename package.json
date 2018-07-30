@@ -39,7 +39,7 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
-    "extract": "rimraf locale/_build && cross-env NODE_ENV=development lingui extract",
+    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract",
     "compile": "lingui compile"
   },
   "browserslist": {
