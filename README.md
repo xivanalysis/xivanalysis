@@ -118,7 +118,7 @@ class MyModule extends Module {
 
 #### [`<Trans id="" />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans)
 
-When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n ID and wraps a block of content that should be translated. You *must* provide an i18nID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans) for more.
+When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n ID and wraps a block of content that should be translated. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans) for more.
 
 Example:
 
@@ -137,7 +137,7 @@ this.suggestions.add(new Suggestion({
 
 #### [`<Plural id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural)
 
-The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural) for more. You *must* provide an i18nID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
 
 Example:
 
@@ -157,21 +157,21 @@ this.suggestions.add(new Suggestion({
 }))
 ```
 
-#### [`<Select value={value} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#select)
+#### [`<Select id="" value={value} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#select)
 
-The `<Select />` tag is similar to the `<Plural />` tag but, rather than using plural forms, it it selects the form that matches the provided value. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#select) for more. You *must* provide an i18nID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+The `<Select />` tag is similar to the `<Plural />` tag but, rather than using plural forms, it it selects the form that matches the provided value. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#select) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
 
-#### [`<SelectOrdinal value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal)
+#### [`<SelectOrdinal id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal)
 
-The `<SelectOrdinal />` tag functions just as the `<Plural />` tag does, with the exception that it uses ordinal plural forms rather than cardinal forms. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal) for more. You *must* provide an i18nID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+The `<SelectOrdinal />` tag functions just as the `<Plural />` tag does, with the exception that it uses ordinal plural forms rather than cardinal forms. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
 
 #### [`<DateFormat value={date} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#dateformat)
 
-The `<DateFormat />` tag is a wrapper around `Intl.DateTimeFormat`. It accepts a `format` parameter with identical options to `Intl.DateTimeFormat`. This tag must be wrapped in a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+The `<DateFormat />` tag is a wrapper around `Intl.DateTimeFormat`. It accepts a `format` parameter with identical options to `Intl.DateTimeFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
 
 #### [`<NumberFormat value={number} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#numberformat)
 
-The `<NumberFormat />` tag is a wrapper around `Intl.NumberFormat`. It accepts a `format` parameter with identical options to `Intl.NumberFormat`. This tag must be wrapped in a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+The `<NumberFormat />` tag is a wrapper around `Intl.NumberFormat`. It accepts a `format` parameter with identical options to `Intl.NumberFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
 
 ## API Reference
 ### Module
