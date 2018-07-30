@@ -36,7 +36,7 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			if (!rule.success) {
+			if (rule.rating === RATING_STYLES.fail) {
 				expanded.push(index)
 			}
 			return {
