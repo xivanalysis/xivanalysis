@@ -17,7 +17,7 @@ export default class CooldownDowntime extends Module {
 	constructor(...args) {
 		super(...args)
 		//tracking the important™ CDs
-		this.trackedcds = []
+		this.trackedCds = []
 		//Default alloted time before a spell is held too long.
 		this.allowedDowntime = 0
 		//Default Target to hit
@@ -31,7 +31,7 @@ export default class CooldownDowntime extends Module {
 		const encounterLength = endTime - startTime
 		const OGCDRequirements = []
 
-		this.trackedcds.map(id => {
+		this.trackedCds.map(id => {
 			//calculate the downtime based on the start and stop values and sum the array
 			//Adjust for the classes defined alloted time to allow a CD to be held
 			//this supports classes like RDMs who routinely hold CDs due to procs

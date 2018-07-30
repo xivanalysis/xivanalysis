@@ -213,6 +213,10 @@ export default class Cooldowns extends Module {
 
 		if (considerInvulnTime) {
 			this.setInvulnTime(actionId)
+		} else {
+			cd.history.map(cooldown => {
+				cooldown.invulnTime = 0
+			})
 		}
 
 		return cd.history.reduce(

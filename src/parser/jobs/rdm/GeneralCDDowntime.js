@@ -4,7 +4,7 @@ import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 export default class GeneralCDDowntime extends CooldownDowntime {
 	//Time that Jump deems ok for a OGCD to be down : ^)
 	allowedDowntime = 4000
-	trackedcds = [
+	trackedCds = [
 		ACTIONS.FLECHE.id,
 		ACTIONS.CONTRE_SIXTE.id,
 		ACTIONS.ACCELERATION.id,
