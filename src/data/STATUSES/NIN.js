@@ -15,6 +15,7 @@ export default {
 		id: 508,
 		name: 'Shadow Fang',
 		icon: 'https://secure.xivdb.com/img/game/010000/010612.png',
+		duration: 21,
 	},
 
 	SILHOUETTE: {
