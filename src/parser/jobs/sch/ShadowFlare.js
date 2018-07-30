@@ -13,6 +13,7 @@ const MIN_HITS = 5
 const TICK_SPEED = 3000
 
 export default class ShadowFlare extends Module {
+	static displayOrder = 52;
 	static handle = 'shadowFlare'
 	static title = 'Shadow Flare'
 	static dependencies = [
