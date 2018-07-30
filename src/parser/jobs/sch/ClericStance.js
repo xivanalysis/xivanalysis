@@ -15,10 +15,21 @@ const defaultSeverityTiers = {
 // list of things to track for CS usage.
 // can override the suggestions from the default template here
 const EXPECTED_CASTS = [
-	{...getAction(ACTIONS.CLERIC_STANCE.id), name: 'GCD', count: 6}, // track GCDs via the CS id
-	{...getAction(ACTIONS.BIO_II.id), count: 1},
-	{...getAction(ACTIONS.MIASMA.id), count: 1},
-	{...getAction(ACTIONS.SHADOW_FLARE.id),
+	{
+		...getAction(ACTIONS.CLERIC_STANCE.id), // track GCDs via the CS id
+		name: 'GCD',
+		count: 6,
+	},
+	{
+		...getAction(ACTIONS.BIO_II.id),
+		count: 1,
+	},
+	{
+		...getAction(ACTIONS.MIASMA.id),
+		count: 1,
+	},
+	{
+		...getAction(ACTIONS.SHADOW_FLARE.id),
 		count: 1,
 		content: <Fragment>
 			Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
@@ -79,7 +90,9 @@ export default class ClericStance extends Module {
 			// cooldown will come off before CS duration expires
 			// this probably won't be accurate if the CS duration gets extended, idk.
 			return true
-		} if ((cooldown * 1000 - cooldownRemaining) < this.gcd.getEstimate()) {
+		}
+
+		if ((cooldown * 1000 - cooldownRemaining) < this.gcd.getEstimate()) {
 			// if it was recently used as far as 1 gcd before popping cleric,
 			// let's count it as a potential wasted usage
 			return true
@@ -105,9 +118,6 @@ export default class ClericStance extends Module {
 				), 0)
 
 			const diff = expected - actual
-			if (diff < 1) {
-				return
-			}
 
 			this.suggestions.add(new TieredSuggestion({
 				icon,
