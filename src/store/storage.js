@@ -1,5 +1,9 @@
+import _ from 'lodash'
+
+// We only want to store some keys of state - things like report are load-specific
 const ALLOWED_KEYS = ['language', 'i18nOverlay']
 
+// Load state from LS
 export function loadState() {
 	try {
 		const serialized = localStorage.getItem('state')
@@ -7,27 +11,19 @@ export function loadState() {
 			return
 		}
 
+		// Only pull allowed keys out of the LS
 		const parsed = JSON.parse(serialized)
-		for (const key in parsed) {
-			if (! ALLOWED_KEYS.includes(key)) {
-				delete parsed[key]
-			}
-		}
-
-		return parsed
-
+		return _.pick(parsed, ALLOWED_KEYS)
 	} catch (err) {
 		return
 	}
 }
 
+// Save state back into LS
 export function saveState(state) {
-	if (state) {
-		const saved = {}
-		for (const [key, val] of Object.entries(state)) {
-			saved[key] = val
-		}
+	if (!state) { return }
 
-		localStorage.setItem('state', JSON.stringify(saved))
-	}
+	// Only save permitted keys
+	const saved = _.pick(state, ALLOWED_KEYS)
+	localStorage.setItem('state', JSON.stringify(saved))
 }

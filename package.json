@@ -43,6 +43,16 @@
     "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.js": ["eslint --fix", "git add"]
+    }
+  },
   "browserslist": {
     "development": [
       "last 2 chrome versions",
@@ -72,6 +82,8 @@
     "@lingui/loader": "^2.3.0",
     "cross-env": "^5.2.0",
     "git-revision-webpack-plugin": "^3.0.3",
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.0",
     "react-app-rewire-eslint": "^0.2.3",
     "react-app-rewire-lodash": "^2.0.0",
     "react-app-rewired": "^2.0.0",
