@@ -18,8 +18,8 @@ export default class Entity {
 	 * @param {number} sourceID - source ID the buff must have come from, or any source if null
 	 * @returns {boolean} - Whether the buff is present with the given specifications.
 	 */
-	hasStatus(statusId, forTimestamp = null, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
-		return this.getStatus(statusId, forTimestamp, bufferTime, minimalActiveTime, sourceID) !== undefined
+	hasStatus(...args) {
+		return this.getStatus(...args) !== undefined
 	}
 
 	/**
@@ -30,9 +30,8 @@ export default class Entity {
 	 * @param {number} sourceID - source ID the buff must have come from, or any source if null.
 	 * @returns {Object} - A buff with the given specifications. The buff object will have all the properties of the associated applybuff event, along with a start timestamp, an end timestamp if the buff has fallen, and an isDebuff flag. If multiple buffs meet the specifications, there's no guarantee which you'll get (this could happen if multiple spells with the same statusId but from different sources are on the same target)
 	 */
-	getStatus(statusId = null, forTimestamp = null, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
-
-		return this.buffs.find(buff => this._statusFilter(buff, statusId, forTimestamp, bufferTime, minimalActiveTime, sourceID))
+	getStatus(...args) {
+		return this.buffs.find(buff => this._statusFilter(buff, ...args))
 	}
 
 	/**
@@ -43,22 +42,18 @@ export default class Entity {
 	 * @param {number} sourceID - source ID the buff must have come from, or any source if null.
 	 * @returns {Object} - An array of buff objects with the given specifications. The buff object will have all the properties of the associated applybuff event, along with a start timestamp, an end timestamp if the buff has fallen, and an isDebuff flag. If multiple buffs meet the specifications, there's no guarantee which you'll get (this could happen if multiple spells with the same statusId but from different sources are on the same target)
 	 */
-	getStatuses(statusId = null, forTimestamp = null, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
-
-		return this.buffs.filter(buff => this._statusFilter(buff, statusId, forTimestamp, bufferTime, minimalActiveTime, sourceID))
-
+	getStatuses(...args) {
+		return this.buffs.filter(buff => this._statusFilter(buff, ...args))
 	}
 
-	_statusFilter(buff, statusId, forTimestamp, bufferTime, minimalActiveTime, sourceID) {
+	_statusFilter(buff, statusId = null, forTimestamp = null, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
 		const currentTimestamp = forTimestamp > this.parser.currentTimestamp ? this.parser.currentTimestamp : forTimestamp
 
 		statusId = (buff.ability.guid === Number(statusId)) || true
-
 
 		return (statusId &&
 			(currentTimestamp - minimalActiveTime) >= buff.start &&
 			(buff.end === null || (buff.end + bufferTime) >= currentTimestamp) &&
 			(sourceID === null || sourceID === buff.sourceID))
-
 	}
 }

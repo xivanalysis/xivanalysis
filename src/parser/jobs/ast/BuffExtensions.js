@@ -8,7 +8,6 @@ import JOBS from 'data/JOBS'
 import {ROYAL_ROAD_STATES, HELD_ARCANA, DRAWN_ARCANA} from './ArcanaGroups'
 import Module from 'parser/core/Module'
 
-
 import BuffList from './BuffList'
 import styles from './BuffExtensions.module.css'
 
@@ -23,7 +22,6 @@ const IGNORE_STATUSES = [
 const PULSE_THRESHOLD = 200
 const CELESTIAL_OPPOSITION_LEAD_TIME = 1500
 
-
 // TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
@@ -37,7 +35,6 @@ export default class BuffExtensions extends Module {
 	_dilationUses = []
 	_oppositionEvent = null
 	_oppositionTracking = false
-
 
 	constructor(...args) {
 		super(...args)
@@ -72,7 +69,6 @@ export default class BuffExtensions extends Module {
 	 * @return {void} null
 	 */
 	_onDilation(event) {
-
 		// TODO: prevent getEntity from returning null if target was a pet - Sushi
 		// (Pets are stored under the player entities)
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
@@ -91,7 +87,6 @@ export default class BuffExtensions extends Module {
 					!IGNORE_STATUSES.includes(status.ability.guid)
 				),
 			}],
-
 		})
 	}
 
@@ -102,7 +97,6 @@ export default class BuffExtensions extends Module {
 	 * @return {void} null
 	 */
 	_onOpposition(event) {
-
 		// Structure a new collection of refreshed buffs by this Opposition cast
 		this._oppositionEvent = {
 			event: event,
@@ -110,18 +104,15 @@ export default class BuffExtensions extends Module {
 		}
 
 		this._oppositionTracking = true
-
 	}
 
 	_endOppositionChain() {
-
 		if (this._oppositionEvent) {
 
 			this._dilationUses.push({...this._oppositionEvent})
 			this._oppositionTracking = false
 			this._oppositionEvent = null
 		}
-
 	}
 
 	/**
@@ -140,7 +131,7 @@ export default class BuffExtensions extends Module {
 
 		// Ignore if timestamp is not part of the refresh event chains
 		// CO also seems to have at least 1200ms lead time from when the cast log is marked to the first refresh on self (oGCD things?)
-		if ( event.timestamp > (this._oppositionEvent.event.timestamp + CELESTIAL_OPPOSITION_LEAD_TIME + (PULSE_THRESHOLD * this._oppositionEvent.targets.length))) {
+		if (event.timestamp > (this._oppositionEvent.event.timestamp + CELESTIAL_OPPOSITION_LEAD_TIME + (PULSE_THRESHOLD * this._oppositionEvent.targets.length))) {
 
 			this._endOppositionChain()
 			return
@@ -163,7 +154,6 @@ export default class BuffExtensions extends Module {
 				})
 			}
 		}
-
 	}
 
 	_onComplete() {
@@ -187,11 +177,9 @@ export default class BuffExtensions extends Module {
 
 	output() {
 		const panels = this._dilationUses.map(dilation => {
-
 			let descriptionText = ''
 			let emptyMessage = null
 			let targetRows = null
-
 
 			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
@@ -207,7 +195,6 @@ export default class BuffExtensions extends Module {
 				if (numTargets < 1) {
 					emptyMessage = 'No buffs extended.'
 				}
-
 			}
 
 			// Either output the list of targets or the empty message
@@ -244,7 +231,6 @@ export default class BuffExtensions extends Module {
 						<div className={styles.headerItem}>
 								&nbsp;-&nbsp;{descriptionText}
 						</div>
-
 					</Fragment>,
 				},
 				content: {
@@ -260,9 +246,7 @@ export default class BuffExtensions extends Module {
 						</table>
 					</Fragment>,
 				},
-
 			}
-
 		})
 
 		return <Accordion

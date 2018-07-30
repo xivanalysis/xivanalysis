@@ -1,6 +1,5 @@
 import Module from 'parser/core/Module'
 
-
 // Blame Meishu. No touchy.
 const INTERNAL_EVENT_TYPE = Symbol('aoe')
 
@@ -16,7 +15,6 @@ const SUPPORTED_EVENTS = [
 	'refreshbuff',
 	'applybuff',
 ]
-
 
 export default class AoE extends Module {
 	static handle = 'aoe'
@@ -36,7 +34,6 @@ export default class AoE extends Module {
 		// Track hits by source
 		const trackers = {}
 		function getTracker(event) {
-
 			if (!event.ability) {
 				return {}
 			}
@@ -57,7 +54,6 @@ export default class AoE extends Module {
 
 		const toAdd = []
 		function addEvent(tracker) {
-
 			// Set the timestamp to be the very first of all the events
 			for (const eventType in tracker.events) {
 				if (tracker.events[eventType].length !== 0) {
@@ -70,16 +66,14 @@ export default class AoE extends Module {
 				...tracker,
 				type: INTERNAL_EVENT_TYPE,
 			})
-
 		}
 
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 
-			if (!SUPPORTED_EVENTS.includes(event.type) ) {
+			if (!SUPPORTED_EVENTS.includes(event.type)) {
 				continue
 			}
-
 
 			const tracker = getTracker(event)
 
@@ -95,7 +89,6 @@ export default class AoE extends Module {
 					}
 				}
 			}
-
 
 			// It seems to be that status events have a longer application gap
 			const AOE_THRESHOLD = event.type === 'refreshbuff' || event.type === 'applybuff' ? STATUS_AOE_THRESHOLD : DEFAULT_AOE_THRESHOLD
@@ -116,8 +109,6 @@ export default class AoE extends Module {
 			tracker.events[event.type].push(event)
 			tracker.insertAfter = i
 		}
-
-
 
 		// Run a cleanup
 		for (const sourceId in trackers) {
@@ -148,45 +139,38 @@ export default class AoE extends Module {
 	}
 
 	_onAoe(event) {
+		if (!Object.keys(event.events).length) { return }
 
-		if (Object.keys(event.events).length) {
-			for (const eventType in event.events) {
-
-				// Filter out any damage events that don't pass muster
-				let hitsByTarget = event.events[eventType]
-				if (eventType === 'damage') {
-					hitsByTarget = hitsByTarget.filter(this.isValidHit.bind(this))
-				}
-
-				// Transform into a simplified format
-				hitsByTarget = hitsByTarget.reduce((carry, event) => {
-					const key = `${event.targetID}-${event.targetInstance}`
-					if (carry[key]) {
-						carry[key].times++
-					} else {
-						carry[key] = {
-							id: event.targetID,
-							instance: event.targetInstance,
-							times: 1,
-						}
-					}
-					return carry
-				}, {})
-
-
-				this.parser.fabricateEvent({
-					type: 'aoe' + eventType,
-					ability: event.events[eventType][0].ability,
-					hits: Object.values(hitsByTarget),
-					sourceID: event.events[eventType][0].sourceID,
-				})
-
-
+		for (const eventType in event.events) {
+			// Filter out any damage events that don't pass muster
+			let hitsByTarget = event.events[eventType]
+			if (eventType === 'damage') {
+				hitsByTarget = hitsByTarget.filter(this.isValidHit.bind(this))
 			}
+
+			// Transform into a simplified format
+			hitsByTarget = hitsByTarget.reduce((carry, event) => {
+				const key = `${event.targetID}-${event.targetInstance}`
+				if (carry[key]) {
+					carry[key].times++
+				} else {
+					carry[key] = {
+						id: event.targetID,
+						instance: event.targetInstance,
+						times: 1,
+					}
+				}
+				return carry
+			}, {})
+
+			this.parser.fabricateEvent({
+				type: 'aoe' + eventType,
+				ability: event.events[eventType][0].ability,
+				hits: Object.values(hitsByTarget),
+				sourceID: event.events[eventType][0].sourceID,
+			})
 		}
-
 	}
-
 
 	isValidHit(event) {
 		// Checking the event's target - if we get a falsey value back, it's an invalid target
