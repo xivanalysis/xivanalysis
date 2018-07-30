@@ -113,8 +113,10 @@ export default class ClericStance extends Module {
 				, 0)
 
 			const actual = Object.values(this._buffRotations).reduce(
+				// Math.min will not count extra casts beyond what is expected per rotation
 				(total, rotation) => total + Math.min(
-					this._getActualCastsPerRotation(rotation, id)
+					this._getActualCastsPerRotation(rotation, id),
+					count
 				), 0)
 
 			const diff = expected - actual
@@ -145,7 +147,6 @@ export default class ClericStance extends Module {
 		case ACTIONS.CLERIC_STANCE.id: // sneaky way to check if GCD
 			return rotation.filter(event => getAction(event.ability.guid).onGcd).length
 		default:
-			// don't count extra casts beyond what is expected per rotation
 			return rotation.filter(event => event.ability.guid === +id).length
 		}
 	}
