@@ -14,6 +14,11 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 		environment: NODE_ENV,
 		release: VERSION,
 
+		whitelistUrls: [
+			// All our project's JavaScript should be loaded from /static/
+			/xivanalysis\.com\/static/,
+		],
+
 		ignoreUrls: [
 			// Browser Extensions
 			/extensions\//i,
