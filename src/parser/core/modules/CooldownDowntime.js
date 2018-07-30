@@ -31,15 +31,15 @@ export default class CooldownDowntime extends Module {
 		const encounterLength = endTime - startTime
 		const OGCDRequirements = []
 
-		Object.keys(this.trackedcds).forEach(id => {
+		this.trackedcds.map(id => {
 			//calculate the downtime based on the start and stop values and sum the array
 			//Adjust for the classes defined alloted time to allow a CD to be held
 			//this supports classes like RDMs who routinely hold CDs due to procs
 			//write the results as a new Requirement to show up later
 			OGCDRequirements.push(
 				new Requirement({
-					name: <ActionLink {...getAction(this.trackedcds[id])} />,
-					percent: this._percentFunction(this.trackedcds[id], encounterLength - this.cooldowns.getTimeOnCooldown(this.trackedcds[id], true, this.allowedDowntime), encounterLength),
+					name: <ActionLink {...getAction(id)} />,
+					percent: this._percentFunction(id, encounterLength - this.cooldowns.getTimeOnCooldown(id, true, this.allowedDowntime), encounterLength),
 				})
 			)
 		})

@@ -222,17 +222,12 @@ export default class Cooldowns extends Module {
 	}
 
 	getAdjustedTimeOnCooldown(cooldown, currentTimestamp, extension) {
-		let returnValue = 0
 		// Doesn't count time on CD outside the bounds of the current fight, it'll throw calcs off
 		// Add to the length of the cooldown any invuln time for the boss
 		// Additionally account for any extension the caller allowed to the CD Length
-		returnValue = Math.min(cooldown.length + cooldown.invulnTime + extension, currentTimestamp - cooldown.timestamp)
-
-		if (returnValue < 0) {
-			returnValue = 0
-		}
-
-		return returnValue
+		const duration = currentTimestamp - cooldown.timestamp
+		const maximumDuration = cooldown.length + cooldown.invulnTime + extension
+		return _.clamp(duration, 0, maximumDuration)
 	}
 
 	get used() {
