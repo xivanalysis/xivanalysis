@@ -19,6 +19,7 @@ export default class Weaving extends CoreWeaving {
 		'suggestions',
 	]
 	static title = 'Weaving Issues'
+	static displayOrder = 53
 
 	constructor(...args) {
 		super(...args)

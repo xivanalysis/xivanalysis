@@ -24,7 +24,6 @@ const WEAVING_SEVERITY = {
 }
 
 export default class Weaving extends Module {
-	static displayOrder = 53;
 	static handle = 'weaving'
 	static dependencies = [
 		'castTime',
