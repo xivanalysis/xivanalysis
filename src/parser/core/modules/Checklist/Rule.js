@@ -32,10 +32,13 @@ export default class Rule {
 		this._percent = value
 	}
 
+	get percentText() {
+		return this.showPercent ? `${this.percent.toFixed(1)}%` : ''
+	}
+
 	get text() {
 		//using && means it renders 'false' if showPercent is false
-		const text = (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
-		return (this.showPercent ? `${this.percent.toFixed(1)}%` : '') + text
+		return (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
 	}
 	set text(value) {
 		this._text = value

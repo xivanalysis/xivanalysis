@@ -20,9 +20,11 @@ export default class Requirement {
 		this._showPercent = value
 	}
 
+	get percentText() {
+		return this.showPercent ? `${this.percent.toFixed(2)}%`: ''
+	}
 	get text() {
-		const text = (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
-		return (this.showPercent && `${this.percent.toFixed(2)}%`) + text
+		return (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
 	}
 	set text(value) {
 		this._text = value

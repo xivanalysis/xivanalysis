@@ -51,7 +51,7 @@ class Checklist extends Component {
 						/>
 						{rule.name}
 						<div className={styles.percent +' '+ rule.rating.text}>
-							{rule.text}
+							{rule.percentText}{rule.text}
 							{hideProgress || <Progress
 								percent={rule.percent}
 								className={styles.progress}
@@ -71,7 +71,7 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {requirement.text}
+									{requirement.name}: {requirement.percentText}{requirement.text}
 								</li>
 							)}
 						</ul>
