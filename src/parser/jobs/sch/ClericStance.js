@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import _ from 'lodash'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -107,13 +108,13 @@ export default class ClericStance extends Module {
 
 	_onComplete() {
 		EXPECTED_CASTS.forEach(({id, name, icon, count, why, content, tiers}) => {
-			const expected = Object.keys(this._buffRotations).reduce(
-				(total, timestamp) => total +
+			const expected = _.reduce(this._buffRotations,
+				(total, rotation, timestamp) => total +
 					this._getExpectedCastsPerRotation(timestamp, id, count)
 				, 0)
 
-			const actual = Object.values(this._buffRotations).reduce(
-				// Math.min will not count extra casts beyond what is expected per rotation
+			// Math.min will not count extra casts beyond what is expected per rotation
+			const actual = _.reduce(this._buffRotations,
 				(total, rotation) => total + Math.min(
 					this._getActualCastsPerRotation(rotation, id),
 					count
