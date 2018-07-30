@@ -59,7 +59,7 @@
     ]
   },
   "core.always-cast.description": {
-    "translation": "core.always-cast.description",
+    "translation": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
     "defaults": "Make sure you're always doing something. It's often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.",
     "origin": [
       [
@@ -69,7 +69,7 @@
     ]
   },
   "core.always-cast.gcd-uptime": {
-    "translation": "core.always-cast.gcd-uptime",
+    "translation": "GCD Uptime",
     "defaults": "GCD Uptime",
     "origin": [
       [
@@ -79,7 +79,7 @@
     ]
   },
   "core.always-cast.title": {
-    "translation": "core.always-cast.title",
+    "translation": "Always be casting",
     "defaults": "Always be casting",
     "origin": [
       [
@@ -124,6 +124,45 @@
       [
         "src/parser/core/modules/Checklist/Checklist.js",
         11
+      ]
+    ]
+  },
+  "core.cooldowndowntime.ogcd-cd-buffer": {
+    "translation": "To account for random factors you are given a buffer of {0} seconds per instance to use your CD",
+    "defaults": "To account for random factors you are given a buffer of {0} seconds per instance to use your CD",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        50
+      ]
+    ]
+  },
+  "core.cooldowndowntime.ogcd-cd-metric": {
+    "translation": "Always make sure to use your OGCD CDs when they are up but don't clip them.  {0}",
+    "defaults": "Always make sure to use your OGCD CDs when they are up but don't clip them.  {0}",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        50
+      ]
+    ]
+  },
+  "core.cooldowndowntime.title": {
+    "translation": "core.cooldowndowntime.title",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        15
+      ]
+    ]
+  },
+  "core.cooldowndowntime.use-ogcd-cds": {
+    "translation": "Use your OGCD CDs",
+    "defaults": "Use your OGCD CDs",
+    "origin": [
+      [
+        "src/parser/core/modules/CooldownDowntime.js",
+        49
       ]
     ]
   },
@@ -306,7 +345,7 @@
     ]
   },
   "core.potions.why": {
-    "translation": "core.potions.why",
+    "translation": "Used a short potion instead of an infusion.",
     "defaults": "Used a short potion instead of an infusion.",
     "origin": [
       [
