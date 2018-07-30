@@ -23,7 +23,14 @@ export default class GlobalCooldown extends Module {
 	static title = 'Global Cooldown'
 
 	_lastGcd = -1
+	_lastGuid = 0
 	_castingEvent = null
+	_isInstant = false
+
+	_lastCast = {
+		isInstant: false,
+		guid: 0,
+	}
 
 	gcds = []
 
@@ -49,12 +56,16 @@ export default class GlobalCooldown extends Module {
 			case 'begincast':
 				// Can I check for cancels?
 				this._castingEvent = event
+				//console.log('begincast: ' + action.name)
 				break
 
 			case 'cast':
+				//console.log('cast: ' + action.name)
 				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
+					this._isInstant = false
 					this.saveGcd(this._castingEvent)
 				} else {
+					this._isInstant = true
 					this.saveGcd(event)
 				}
 
@@ -84,7 +95,7 @@ export default class GlobalCooldown extends Module {
 
 			const adjustedLength = Math.max(
 				MIN_GCD,
-				(action.castTime * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
+				((gcd.isInstant ? action.cooldown : Math.max(action.cooldown, action.castTime)) *  1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
 			)
 
 			this.timeline.addItem(new Item({
@@ -109,16 +120,28 @@ export default class GlobalCooldown extends Module {
 		const speedMod = this.speedmod.get(event.timestamp)
 		const revSpeedMod = 1 / speedMod
 		gcdLength *= revSpeedMod
+		gcdLength = Math.round(gcdLength)
 
 		// TODO: Figure out how to apply 1.3x Riddle of Fire (MNK) and 0.5x Astral/Umbral (BLM)
 		// They are applied separately from SpeedMod (Astral/Umbral is applied at the end, need to confirm Riddle of Fire placement)
+
+		const action = getAction(this._lastCast.guid)
+		if (this._lastCast.isInstant) {
+			console.log(gcdLength + ':' + action.name + ' instant cast')
+		} else {
+			console.log(gcdLength + ':' + action.name + ' cast[' + action.castTime + '] recast[' + action.cooldown + ']')
+		}
 
 		this.gcds.push({
 			timestamp: event.timestamp,
 			length: gcdLength,
 			speedMod,
-			actionId: event.ability.guid,
+			actionId: this._lastCast.guid,
+			isInstant: this._lastCast.isInstant,
 		})
+
+		this._lastCast.guid = event.ability.guid
+		this._lastCast.isInstant = this._isInstant
 
 		// Store current gcd time for the check
 		this._lastGcd = event.timestamp
@@ -154,7 +177,8 @@ export default class GlobalCooldown extends Module {
 		const cooldownRatio = gcdLength / MAX_GCD
 
 		return this.gcds.reduce((carry, gcd) => {
-			const cd = getAction(gcd.actionId).castTime * 1000
+			const action = getAction(gcd.actionId)
+			const cd = (gcd.isInstant ? action.cooldown : Math.max(action.cooldown, action.castTime)) * 1000
 			const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
