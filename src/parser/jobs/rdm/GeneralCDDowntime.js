@@ -10,5 +10,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		ACTIONS.ACCELERATION.id,
 		ACTIONS.CORPS_A_CORPS.id,
 		ACTIONS.DISPLACEMENT.id,
+		ACTIONS.SWIFTCAST.id,
 	]
 }
