@@ -20,19 +20,23 @@ const IGNORE_STATUSES = [
 	...DRAWN_ARCANA,
 ]
 
+const PULSE_THRESHOLD = 200
+const CELESTIAL_OPPOSITION_LEAD_TIME = 1500
+
+
 // TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
 	static dependencies = [
-		'suggestions',
+		'aoe',
+		'precastStatus'
 	]
 
-	// Latency allowance for applying aoe effects
-	_envEffectGracePeriod = 4500
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
 	_dilationUses = []
 	_oppositionEvent = null
+	_oppositionTracking = false
 
 
 	constructor(...args) {
@@ -59,8 +63,6 @@ export default class BuffExtensions extends Module {
 		if (actionID === ACTIONS.CELESTIAL_OPPOSITION.id) {
 			this._onOpposition(event)
 		}
-
-
 	}
 
 	/**
@@ -75,6 +77,9 @@ export default class BuffExtensions extends Module {
 		// (Pets are stored under the player entities)
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
+		if(!refreshedTarget) {
+			return
+		}
 
 		this._dilationUses.push({
 			event: event,
@@ -82,7 +87,9 @@ export default class BuffExtensions extends Module {
 				id: event.targetID,
 				name: refreshedTarget.info.name,
 				job: refreshedTarget.info.type,
-				buffs: refreshedTarget.getStatuses(null, event.timestamp, 0, 1000, event.sourceID),
+				buffs: refreshedTarget.getStatuses(null, event.timestamp, 1000, 1000, event.sourceID).filter(status =>
+					!IGNORE_STATUSES.includes(status.ability.guid)
+				),
 			}],
 
 		})
@@ -96,20 +103,28 @@ export default class BuffExtensions extends Module {
 	 */
 	_onOpposition(event) {
 
-		// Clear previous Opposition history
-		if (this._oppositionEvent) {
-			this._dilationUses.push({...this._oppositionEvent})
-			this._oppositionEvent = null
-		}
-
 		// Structure a new collection of refreshed buffs by this Opposition cast
 		this._oppositionEvent = {
 			event: event,
 			targets: [],
 		}
 
+		this._oppositionTracking = true
+
 	}
 
+	_endOppositionChain() {
+		console.log('end chain with:')
+		console.log(this._oppositionEvent)
+
+		if(this._oppositionEvent) {
+
+			this._dilationUses.push({...this._oppositionEvent})
+			this._oppositionTracking = false
+			this._oppositionEvent = null
+		}
+
+	}
 
 	/**
 	 * Checks if the timestamp is within allowable range from the Opposition Event
@@ -119,19 +134,19 @@ export default class BuffExtensions extends Module {
 	 * @return {void} null
 	 */
 	_onBuffRefresh(event) {
-		const statusID = event.ability.guid
+		// const statusID = event.ability.guid
 
-		// Ignore if timestamp is after aoe effect grace period
-		if (!this._oppositionEvent || event.timestamp > (this._oppositionEvent.event.timestamp + this._envEffectGracePeriod)) {
+		if (!this._oppositionTracking) {
 			return
 		}
 
-		// Ignore refreshes on protects, royal road statuses,
-		if (IGNORE_STATUSES.includes(statusID)) {
+		// Ignore if timestamp is not part of the refresh event chains
+		// CO also seems to have at least 1200ms lead time from when the cast log is marked to the first refresh on self (oGCD things?)
+		if( event.timestamp > (this._oppositionEvent.event.timestamp + CELESTIAL_OPPOSITION_LEAD_TIME + (PULSE_THRESHOLD * this._oppositionEvent.targets.length))){
+
+			this._endOppositionChain()
 			return
 		}
-
-
 
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
@@ -144,26 +159,20 @@ export default class BuffExtensions extends Module {
 					id: event.targetID,
 					name: refreshedTarget.info.name,
 					job: refreshedTarget.info.type,
-					buffs: [event],
+					buffs: refreshedTarget.getStatuses(null, event.timestamp, 1000, 1000, event.sourceID).filter(status =>
+						!IGNORE_STATUSES.includes(status.ability.guid)
+					)
 				})
 			}
-		} else {
-			// else just add the buff to the target's list of buffs
-			this._oppositionEvent.targets.find(target => {
-				return target.id === event.targetID
-			}).buffs.push({...event})
 		}
 
 	}
 
 	_onComplete() {
-
 		// clean up trailing opposition events
-		if (this._oppositionEvent) {
-			this._dilationUses.push({...this._oppositionEvent})
-			this._oppositionEvent = null
-		}
+		this._endOppositionChain()
 
+		console.log(this._dilationUses)
 		// Sorting chronologically
 		this._dilationUses.sort((a, b) => {
 			return a.event.timestamp - b.event.timestamp
@@ -177,8 +186,6 @@ export default class BuffExtensions extends Module {
 				})
 			}
 		}
-
-
 	}
 
 	output() {
@@ -223,8 +230,6 @@ export default class BuffExtensions extends Module {
 				</tr>
 			})
 
-
-
 			return {
 				title: {
 					key: 'title-' + dilation.event.timestamp,
@@ -260,8 +265,6 @@ export default class BuffExtensions extends Module {
 				},
 
 			}
-
-
 
 		})
 

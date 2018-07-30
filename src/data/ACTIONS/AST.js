@@ -147,6 +147,18 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/003000/003144.png',
 	},
 
+	STELLAR_BURST: {
+		id: 7440,
+		name: 'Stellar Burst',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
+
+	STELLAR_EXPLOSION: {
+		id: 7441,
+		name: 'Stellar Detonation',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
+
 	DRAW: {
 		id: 3590,
 		name: 'Draw',
