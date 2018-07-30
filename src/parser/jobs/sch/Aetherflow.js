@@ -87,7 +87,7 @@ export default class Aetherflow extends Module {
 			.map(h => ({timestamp: [h.timestamp], id: [ACTIONS.DISSIPATION.id]}))
 		const uses = AETHERFLOW_CD_ACTIONS.map(id =>
 			this.cooldowns.getCooldown(id).history
-				.map( h => ({timestamp: [h.timestamp], debit: 1, id: [id]}))
+				.map(h => ({timestamp: [h.timestamp], debit: 1, id: [id]}))
 		)
 
 		let totalDrift = 0
@@ -105,7 +105,7 @@ export default class Aetherflow extends Module {
 			</Table.Header>
 			<Table.Body>
 				{[].concat(aetherflows, dissipations, ...uses)
-					.sort(( a, b ) => a.timestamp - b.timestamp)
+					.sort((a, b) => a.timestamp - b.timestamp)
 					.reduce((prev, curr) => {
 						if (prev.length === 0) {
 							return [curr]

@@ -108,7 +108,6 @@ export default class Aetherflow extends Module {
 			],
 		}))
 
-
 		// Suggestion for fester
 		const badFesters = this._badDotReqCasts[ACTIONS.FESTER.id] || {}
 		const festerKeys = Object.keys(badFesters).map(num => parseInt(num, 10))

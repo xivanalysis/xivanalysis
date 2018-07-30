@@ -312,9 +312,9 @@ class Parser {
 					extra,
 				})
 
-
 				// Also add the error to the results to be displayed.
 				results.push({
+					i18n_id: module.constructor.i18n_id,
 					name: module.constructor.title,
 					markup: <ErrorMessage error={error} />,
 				})
@@ -323,6 +323,7 @@ class Parser {
 
 			if (output) {
 				results.push({
+					i18n_id: module.constructor.i18n_id,
 					name: module.constructor.title,
 					markup: output,
 				})

@@ -1,6 +1,7 @@
 import math from 'mathjsCustom'
 import React, {Fragment} from 'react'
 import {Message, Icon} from 'semantic-ui-react'
+import {i18nMark, Trans} from '@lingui/react'
 
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -17,6 +18,8 @@ export default class GlobalCooldown extends Module {
 		'speedmod',
 		'timeline',
 	]
+
+	static i18n_id = i18nMark('core.gcd.title')
 	static title = 'Global Cooldown'
 
 	_lastGcd = -1
@@ -168,14 +171,20 @@ export default class GlobalCooldown extends Module {
 			<Message info icon>
 				<Icon name="info"/>
 				<Message.Content>
-					Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
+					<Trans id="core.gcd.no-statistics">
+						Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
+					</Trans>
 				</Message.Content>
 			</Message>
 			{estimate !== this.getEstimate(true) && <Message warning>
 				<Icon name="warning sign"/>
-				The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
+				<Trans id="core.gcd.invalid-gcd">
+					The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
+				</Trans>
 			</Message>}
-			Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
+			<Trans id="core.gcd.estimate">
+				Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
+			</Trans>
 		</Fragment>
 	}
 }

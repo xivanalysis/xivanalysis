@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
@@ -40,7 +41,7 @@ class Suggestions extends Component {
 		return <Fragment>
 			{hasMinor && <Checkbox
 				toggle
-				label="Show minor"
+				label={<label><Trans id="core.suggestion.show-minor">Show minor</Trans></label>}
 				defaultChecked={showMinor}
 				onChange={(_, data) => this.setState({showMinor: data.checked})}
 				className={styles.checkbox}
@@ -58,8 +59,8 @@ class Suggestions extends Component {
 				</div>)}
 				{suggestions.length === 0 && <div className={styles.item}>
 					<div>
-						<strong>There's nothing here!</strong><br/>
-						{hasMinor && 'You can check over the minor suggestions by flicking the "Show minor" switch in the top right.'}
+						<strong><Trans id="core.suggestion.nothing">There's nothing here!</Trans></strong><br/>
+						{hasMinor && <Trans id="core.suggestion.nothing-but-minor">You can check over the minor suggestions by flicking the "Show minor" switch in the top right.</Trans>}
 					</div>
 				</div>}
 			</div>

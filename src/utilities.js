@@ -41,7 +41,6 @@ export function enumify(obj) {
 	return Object.freeze(obj)
 }
 
-
 /**
  * Extract primitive values from an object for inclusion in
  * an error report via Sentry.
@@ -54,13 +53,13 @@ export function extractErrorContext(object) {
 	for (const [key, val] of Object.entries(object)) {
 		switch (typeof val) {
 		case 'object':
-			if ( val == null ) {
+			if (val == null) {
 				result[key] = val
 
-			} else if ( Array.isArray(val) ) {
+			} else if (Array.isArray(val)) {
 				result[key] = `::Array(${val.length})`
 
-			} else if ( val.constructor === Object ) {
+			} else if (val.constructor === Object) {
 				result[key] = '::Object'
 			}
 
@@ -140,7 +139,6 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
  * @returns {*} Matched value of the Array or Value of the matched Key in the Object or undefined if no match.
  */
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
-
 
 //rennders a time given in seconds into the format mm:ss
 export function formatDuration(duration) {

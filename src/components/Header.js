@@ -8,6 +8,8 @@ import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
 import {compose, getPathMatch, formatDuration} from 'utilities'
 
+import I18nMenu from './ui/I18nMenu'
+
 import styles from './Header.module.css'
 
 class Header extends Component {
@@ -147,6 +149,7 @@ class Header extends Component {
 
 				<Menu.Menu position="right">
 					<Menu.Item className={styles.version}>{process.env.VERSION}</Menu.Item>
+					<I18nMenu />
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
 					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
 				</Menu.Menu>

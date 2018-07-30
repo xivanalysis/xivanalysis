@@ -1,7 +1,6 @@
 import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 
-
 const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,
 	ACTIONS.ADDLE.id,
