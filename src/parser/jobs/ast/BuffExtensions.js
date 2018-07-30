@@ -30,7 +30,7 @@ export default class BuffExtensions extends Module {
 	static title = 'Buff Extensions'
 	static dependencies = [
 		'aoe',
-		'precastStatus'
+		'precastStatus',
 	]
 
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
@@ -77,7 +77,7 @@ export default class BuffExtensions extends Module {
 		// (Pets are stored under the player entities)
 		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
 
-		if(!refreshedTarget) {
+		if (!refreshedTarget) {
 			return
 		}
 
@@ -114,10 +114,8 @@ export default class BuffExtensions extends Module {
 	}
 
 	_endOppositionChain() {
-		console.log('end chain with:')
-		console.log(this._oppositionEvent)
 
-		if(this._oppositionEvent) {
+		if (this._oppositionEvent) {
 
 			this._dilationUses.push({...this._oppositionEvent})
 			this._oppositionTracking = false
@@ -142,7 +140,7 @@ export default class BuffExtensions extends Module {
 
 		// Ignore if timestamp is not part of the refresh event chains
 		// CO also seems to have at least 1200ms lead time from when the cast log is marked to the first refresh on self (oGCD things?)
-		if( event.timestamp > (this._oppositionEvent.event.timestamp + CELESTIAL_OPPOSITION_LEAD_TIME + (PULSE_THRESHOLD * this._oppositionEvent.targets.length))){
+		if ( event.timestamp > (this._oppositionEvent.event.timestamp + CELESTIAL_OPPOSITION_LEAD_TIME + (PULSE_THRESHOLD * this._oppositionEvent.targets.length))) {
 
 			this._endOppositionChain()
 			return
@@ -161,7 +159,7 @@ export default class BuffExtensions extends Module {
 					job: refreshedTarget.info.type,
 					buffs: refreshedTarget.getStatuses(null, event.timestamp, 1000, 1000, event.sourceID).filter(status =>
 						!IGNORE_STATUSES.includes(status.ability.guid)
-					)
+					),
 				})
 			}
 		}
@@ -172,7 +170,6 @@ export default class BuffExtensions extends Module {
 		// clean up trailing opposition events
 		this._endOppositionChain()
 
-		console.log(this._dilationUses)
 		// Sorting chronologically
 		this._dilationUses.sort((a, b) => {
 			return a.event.timestamp - b.event.timestamp

@@ -112,11 +112,6 @@ export default class AoE extends Module {
 				tracker.events[event.type] = []
 			}
 
-
-			if(event.type === 'refreshbuff') {
-				// aaa
-			}
-
 			event.i = i
 			tracker.events[event.type].push(event)
 			tracker.insertAfter = i
