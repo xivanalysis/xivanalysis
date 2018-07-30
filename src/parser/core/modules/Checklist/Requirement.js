@@ -1,6 +1,8 @@
 export default class Requirement {
 	name = ''
 	_percent = 0
+	hidePercent = false
+	text = ''
 
 	get percent() {
 		const result = (typeof this._percent === 'function')? this._percent() : this._percent

@@ -5,6 +5,10 @@ export default class Rule {
 	description = null
 	requirements = []
 	target = 95
+	decentTarget = 95
+	hidePercent = false
+	showAsInfo = false
+	text = ''
 	// TODO: Target mode percent/value
 
 	get percent() {

@@ -28,8 +28,13 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			const success = rule.percent > rule.target
-			if (!success) {
+			const success = rule.showAsInfo ? 3 :
+				rule.percent >= rule.target ? 2:
+					rule.percent >= rule.decentTarget ? 1: 0
+			const classname = ['text-error', 'text-warning', 'text-success', 'text-info'][success]
+			const color = ['red', 'yellow', 'green', 'blue'][success]
+			const icon = ['remove', 'warning sign', 'remove', 'info'][success]
+			if (success === 0) {
 				expanded.push(index)
 			}
 			return {
@@ -39,17 +44,17 @@ class Checklist extends Component {
 					className: styles.title,
 					content: <Fragment>
 						<Icon
-							name={success ? 'checkmark' : 'remove'}
-							className={success ? 'text-success' : 'text-error'}
+							name={icon}
+							className={classname}
 						/>
 						{rule.name}
-						<div className={styles.percent + (success ? ' text-success' : ' text-error')}>
-							{rule.percent.toFixed(1)}%
+						<div className={styles.percent + ' ' + classname}>
+							{!rule.hidePercent ? `${rule.percent.toFixed(1)}%` : ''}{rule.text}
 							{hideProgress || <Progress
 								percent={rule.percent}
 								className={styles.progress}
 								size="small"
-								color={success ? 'green' : 'red'}
+								color={color}
 							/>}
 						</div>
 					</Fragment>,
@@ -64,7 +69,7 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {requirement.percent.toFixed(2)}%
+									{requirement.name}: {!requirement.hidePercent ? `${requirement.percent.toFixed(2)}%` : ''}{requirement.text}
 								</li>
 							)}
 						</ul>
