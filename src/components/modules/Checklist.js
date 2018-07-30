@@ -5,31 +5,38 @@ import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
 import styles from './Checklist.module.css'
 
+export const RATING_STYLES = {
+	success: {text: 'text-success', icon: 'checkmark', color: 'green'},
+	fail: {text: 'text-error', icon: 'remove', color: 'red'},
+	decent: {text: 'text-warning', icon: 'warning sign', color: 'yellow'},
+	info: {text: 'text-info', icon: 'info', color: 'blue'},
+}
+
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
-			percent: PropTypes.number.isRequired,
 			target: PropTypes.number.isRequired,
 			name: PropTypes.node.isRequired,
 			description: PropTypes.node,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
+				text: PropTypes.string.isRequired,
 			})),
+			text: PropTypes.string.isRequired,
+			rating: PropTypes.oneOf(Object.values(RATING_STYLES)).isRequired,
 		})),
 		hideProgress: PropTypes.bool.isRequired,
 	}
 
 	render() {
 		const {rules, hideProgress} = this.props
-
 		// If there's no rules, just stop now
 		if (!rules.length) { return false }
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			const success = rule.percent > rule.target
-			if (!success) {
+			if (rule.rating === RATING_STYLES.fail) {
 				expanded.push(index)
 			}
 			return {
@@ -39,17 +46,17 @@ class Checklist extends Component {
 					className: styles.title,
 					content: <Fragment>
 						<Icon
-							name={success ? 'checkmark' : 'remove'}
-							className={success ? 'text-success' : 'text-error'}
+							name={rule.rating.icon}
+							className={rule.rating.text}
 						/>
 						{rule.name}
-						<div className={styles.percent + (success ? ' text-success' : ' text-error')}>
-							{rule.percent.toFixed(1)}%
+						<div className={styles.percent +' '+ rule.rating.text}>
+							{rule.percentText}{rule.text}
 							{hideProgress || <Progress
 								percent={rule.percent}
 								className={styles.progress}
 								size="small"
-								color={success ? 'green' : 'red'}
+								color={rule.rating.color}
 							/>}
 						</div>
 					</Fragment>,
@@ -64,7 +71,7 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {requirement.percent.toFixed(2)}%
+									{requirement.name}: {requirement.percentText}{requirement.text}
 								</li>
 							)}
 						</ul>

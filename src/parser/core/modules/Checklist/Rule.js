@@ -1,17 +1,47 @@
 import math from 'mathjsCustom'
+import {RATING_STYLES} from 'components/modules/Checklist'
 
 export default class Rule {
 	name = ''
 	description = null
 	requirements = []
 	target = 95
-	// TODO: Target mode percent/value
+	decentTarget = 95
+	showAsInfo = false
+	showPercent = true
+	_text = null
+	_percent = null
 
+	get rating() {
+		if (this.showAsInfo) { return RATING_STYLES.info }
+		return this.percent >= this.target ? RATING_STYLES.success :
+			this.percent >= this.decentTarget ? RATING_STYLES.decent : RATING_STYLES.fail
+
+	}
+
+	//properties
 	get percent() {
-		// WoWA has a bunch of different modes for this stuff, I'm just going to use mean for now. Because I'm mean. Hue.
-		// TODO: different requirement modes
-		const percents = this.requirements.map(requirement => requirement.percent)
-		return percents.length? math.mean(percents) : 0
+		//default case: take mean of percentage
+		//if this._percent is defined and is a function, evaluate it, if it's defined as a value, take the value
+		const percent = this._percent || math.mean(this.requirements.map(requirement => requirement.percent))
+		const result = (typeof percent === 'function') ? percent() : percent
+		return result || 0
+	}
+
+	set percent(value) {
+		this._percent = value
+	}
+
+	get percentText() {
+		return this.showPercent ? `${this.percent.toFixed(1)}%` : ''
+	}
+
+	get text() {
+		//using && means it renders 'false' if showPercent is false
+		return (typeof this._text === 'function' ? this._text(this.percent) : this._text) || ''
+	}
+	set text(value) {
+		this._text = value
 	}
 
 	constructor(options) {
