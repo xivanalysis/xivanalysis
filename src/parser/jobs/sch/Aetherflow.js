@@ -20,6 +20,7 @@ const AETHERFLOW_CD_ACTIONS = [
 const FIRST_FLOW_TIMESTAMP = 10000
 
 export default class Aetherflow extends Module {
+	static displayOrder = 51
 	static handle = 'aetherflow'
 	static dependencies = [
 		'checklist',
