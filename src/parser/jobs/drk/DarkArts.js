@@ -27,8 +27,6 @@ export default class DarkArts extends Module {
 	_countDADP = 0  // Dark Arts Dark Passenger (no slashing bonus, slightly worse than DA other abilities)
 	// dark arts
 	_darkArtsApplicationTime = -1
-	// flags
-	_darkArtsOpener = false
 
 	constructor(...args) {
 		super(...args)

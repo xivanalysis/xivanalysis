@@ -91,7 +91,7 @@ export default class GCDs extends Module {
 		}
 	}
 
-	output() {
+	onComplete() {
 		//dropped combo chain
 		if (this._GCDChainDrops.length > 0) {
 			this.suggestions.add(new Suggestion({
@@ -104,6 +104,12 @@ export default class GCDs extends Module {
 					You wasted {this._GCDChainDrops} GCD chain actions.
 				</Fragment>,
 			}))
+		}
+	}
+
+	output() {
+		//dropped combo chain
+		if (this._GCDChainDrops.length > 0) {
 			const panels = this._GCDChainDrops.map(entry => {
 				return {
 					title: {

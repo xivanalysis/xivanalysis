@@ -85,26 +85,14 @@ export default class Buffs extends Module {
 	}
 
 	_onComplete(event) {
+		// cleanup
 		this._gritToggleStack.push({timestamp: event.timestamp, active: false})
 		this._darksideToggleStack.push({timestamp: event.timestamp, active: false})
 		this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: false})
 		this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: false})
-	}
-
-	static _parseEventStack(stack) {
-		let out = 0
-		let previous_entry = undefined
-		while (stack.length !== 0) {
-			const entry = stack.shift()
-			if (!entry.active && previous_entry !== undefined && previous_entry.active) {
-				out += entry.timestamp - previous_entry.timestamp
-			}
-			previous_entry = entry
-		}
-		return out
-	}
-
-	output() {
+		// -----
+		// UI Component
+		// -----
 		//calculating fight duration this way gives absurd downtime values for some parses.  Just using the raw values since the core bloodwep function has a lot of leeway anyways.
 		const rawFightDuration = this.parser.fightDuration
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
@@ -151,6 +139,22 @@ export default class Buffs extends Module {
 				}),
 			],
 		}))
+	}
+
+	static _parseEventStack(stack) {
+		let out = 0
+		let previous_entry = undefined
+		while (stack.length !== 0) {
+			const entry = stack.shift()
+			if (!entry.active && previous_entry !== undefined && previous_entry.active) {
+				out += entry.timestamp - previous_entry.timestamp
+			}
+			previous_entry = entry
+		}
+		return out
+	}
+
+	output() {
 		return false
 	}
 }
