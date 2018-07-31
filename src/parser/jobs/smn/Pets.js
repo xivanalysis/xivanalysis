@@ -1,3 +1,4 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
@@ -37,6 +38,7 @@ const NO_PET_SEVERITY = {
 
 export default class Pets extends Module {
 	static handle = 'pets'
+	static i18n_id = i18nMark('smn.pets.title')
 	static dependencies = [
 		'suggestions',
 	]
@@ -172,23 +174,26 @@ export default class Pets extends Module {
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.prefer-garuda.content">
 					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-garuda.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.
+				</Trans>,
 			}))
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
-			console.log(mostUsedPet)
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.prefer-ifrit.content">
 					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-ifrit.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.
+				</Trans>,
 			}))
 		}
 
@@ -197,11 +202,13 @@ export default class Pets extends Module {
 		if (titanUptimePercent > 5) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_II.icon,
-				why: `${titanUptimePercent}% Titan-Egi uptime.`,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.titan.content">
 					Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.titan.why">
+					{titanUptimePercent}% Titan-Egi uptime.
+				</Trans>,
 			}))
 		}
 
@@ -209,12 +216,14 @@ export default class Pets extends Module {
 		const noPetUptimePercent = this.getPetUptimePercent(-1)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SUMMON.icon,
-			content: <Fragment>
-				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-			</Fragment>,
-			why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
 			tiers: NO_PET_SEVERITY,
 			value: noPetUptimePercent,
+			content: <Trans id="smn.pets.suggestions.no-pet.content">
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+			</Trans>,
+			why: <Trans id="smn.pets.suggestions.no-pet.why">
+				No pet summoned for ${noPetUptimePercent}% of the fight (&lt;1% is recommended).
+			</Trans>,
 		}))
 	}
 

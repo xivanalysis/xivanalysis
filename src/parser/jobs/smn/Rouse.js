@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans} from '@lingui/react'
+import React from 'react'
 
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -53,12 +54,14 @@ export default class Rouse extends Module {
 		if (this._wasted > 1000) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.ROUSE.icon,
-				content: <Fragment>
-					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
-				</Fragment>,
-				why: `${this.parser.formatDuration(this._wasted)} of Rouse wasted.`,
 				tiers: WASTED_ROUSE_SEVERITY,
 				value: this._wasted,
+				content: <Trans id="smn.rouse.suggestions.wasted.content">
+					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
+				</Trans>,
+				why: <Trans id="smn.rouse.suggestions.wasted.why">
+					{this.parser.formatDuration(this._wasted)} of Rouse wasted.
+				</Trans>,
 			}))
 		}
 	}
