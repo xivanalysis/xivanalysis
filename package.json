@@ -14,6 +14,7 @@
     "mathjs": "^5",
     "prop-types": "^15.6.1",
     "raven-js": "^3.25.2",
+    "raw-loader": "^0.5.1",
     "react": "^16.3.1",
     "react-chartjs-2": "^2.7.2",
     "react-dom": "^16.3.1",
@@ -39,7 +40,7 @@
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
-    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract",
+    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile"
   },
   "husky": {
@@ -66,7 +67,9 @@
     ]
   },
   "lingui": {
-    "sourceLocale": "en"
+    "fallbackLocale": "en",
+    "sourceLocale": "en",
+    "format": "minimal"
   },
   "resolutions": {
     "babel-core": "7.0.0-bridge.0"
