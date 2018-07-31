@@ -215,6 +215,7 @@ export default class BuffExtensions extends Module {
 			})
 
 			return {
+				key: 'container-' + dilation.event.timestamp,
 				title: {
 					key: 'title-' + dilation.event.timestamp,
 					content: <Fragment>
