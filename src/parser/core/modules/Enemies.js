@@ -45,7 +45,7 @@ export default class Enemies extends Entities {
 
 	getEntities() {
 		// Don't need to init this, getEntity will always be called prior with enough deets
-		return _.compact(this._enemies)
+		return _.pickBy(this._enemies)
 	}
 
 	getEntity(actorId) {
