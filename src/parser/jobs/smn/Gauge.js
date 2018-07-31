@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Plural, Trans} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -137,26 +138,28 @@ export default class Gauge extends Module {
 		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AETHERFLOW.icon,
-				content: <Fragment>
+				content: <Trans id="smn.gauge.suggestions.lost-aetherflow.content">
 					Ensure you gain a full 3 stacks of <ActionLink {...ACTIONS.AETHERFLOW}/> per cast. Every lost stack is a significant potency loss, and can push your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> (and hence Bahamut) out by up to a minute.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					{this._lostAetherflow} stack{this._lostAetherflow > 1 && 's'} of Aetherflow lost.
-				</Fragment>,
+				why: <Trans id="smn.gauge.suggestions.lost-aetherflow.why">
+					<Plural value={this._lostAetherflow} one="# stack" other="# stacks"/>
+					of Aetherflow lost.
+				</Trans>,
 			}))
 		}
 
 		if (this._lostDreadwyrmAether) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_BAHAMUT.icon,
-				content: <Fragment>
+				content: <Trans id="smn.gauge.suggestions.lost-dreadwyrm-aether.content">
 					Ensure you always <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/> before your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>. Failing to do so will de-sync Bahamut in your rotation, and potentially lose you a summon over the duration of the fight.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					{this._lostDreadwyrmAether} stack{this._lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
-				</Fragment>,
+				why: <Trans id="smn.gauge.suggestions.lost-dreadwyrm-aether.why">
+					<Plural value={this._lostDreadwyrmAether} one="# stack" other="# stacks"/>
+					of Dreadwyrm Aether lost.
+				</Trans>,
 			}))
 		}
 	}
