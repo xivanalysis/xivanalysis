@@ -109,6 +109,6 @@ export class I18nLoader extends Component {
 }
 
 export default connect(state => ({
-	language: state.language,
+	language: state.language.site,
 	overlay: state.i18nOverlay,
 }))(I18nLoader)
