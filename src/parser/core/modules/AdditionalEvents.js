@@ -79,7 +79,7 @@ export default class AdditionalEvents extends Module {
 		)
 
 		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.
-		events.push.apply(events, newEvents)
+		events.push(...newEvents)
 		stable.inplace(events, (a, b) => a.timestamp - b.timestamp)
 
 		return events

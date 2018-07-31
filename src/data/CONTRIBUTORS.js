@@ -1,5 +1,7 @@
 import JOBS from './JOBS'
 
+import {i18nMark} from '@lingui/react'
+
 // Be cool to hook this up to discord at some point - but does raise concerns if the user leaves the guild
 export default {
 	ACKWELL: {
@@ -88,5 +90,20 @@ export default {
 		name: 'Acri',
 		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
 		jobs: [JOBS.DARK_KNIGHT],
+	},
+}
+
+export const ROLES = {
+	MAINTAINER: {
+		i18n_id: i18nMark('core.role.maintainer'),
+		text: 'Maintainer',
+	},
+	THEORYCRAFT: {
+		i18n_id: i18nMark('core.role.theorycraft'),
+		text: 'Theorycraft',
+	},
+	DEVELOPER: {
+		i18n_id: i18nMark('core.role.developer'),
+		text: 'Developer',
 	},
 }

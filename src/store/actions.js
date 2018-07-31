@@ -62,3 +62,20 @@ export const refreshReport = () => (dispatch, getState) => {
 	if (!report || report.loading) { return }
 	dispatch(fetchReport(report.code, {bypassCache: true}))
 }
+
+export const SET_LANGUAGE = 'SET_LANGUAGE'
+export const setLanguage = language => ({
+	type: SET_LANGUAGE,
+	payload: language,
+})
+
+export const TOGGLE_I18N_OVERLAY = 'TOGGLE_I18N_OVERLAY'
+export const toggleI18nOverlay = () => ({
+	type: TOGGLE_I18N_OVERLAY,
+})
+
+export const SET_I18N_OVERLAY = 'SET_I18N_OVERLAY'
+export const setI18nOverlay = state => ({
+	type: SET_I18N_OVERLAY,
+	payload: state,
+})

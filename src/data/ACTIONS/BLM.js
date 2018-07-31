@@ -183,6 +183,12 @@ export default {
 		icon: process.env.PUBLIC_URL + '/icon/action/t3p.png',
 		onGcd: true,
 	},
+	THUNDER_III_FALSE: {
+		id: '153FALSE',
+		name: 'Thunder III',
+		icon: process.env.PUBLIC_URL + '/icon/action/t3f.png',
+		onGcd: true,
+	},
 	THUNDER_IV_PROC: {
 		id: '742PROC',
 		name: 'Thunder IV',

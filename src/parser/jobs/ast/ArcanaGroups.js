@@ -3,7 +3,6 @@ import STATUSES from 'data/STATUSES'
 // Grouped cards for future convenience - whatever processing desired
 // For Royal Road calculation other than expanded, refer to /core/modules/arcanum.js
 
-
 /* Grouped actions */
 
 export const ARCANA_USE = [
@@ -68,7 +67,6 @@ export const SPIRE_USED = [
 	ACTIONS.THE_SPIRE_FROM_SPREAD.id,
 ]
 
-
 /* Arcana spread states */
 
 export const HELD_ARCANA = [
@@ -89,3 +87,8 @@ export const DRAWN_ARCANA = [
 	STATUSES.SPIRE_DRAWN.id,
 ]
 
+export const ROYAL_ROAD_STATES = [
+	STATUSES.EXPANDED_ROYAL_ROAD.id,
+	STATUSES.ENHANCED_ROYAL_ROAD.id,
+	STATUSES.EXTENDED_ROYAL_ROAD.id,
+]

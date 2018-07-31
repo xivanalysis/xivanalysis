@@ -14,6 +14,7 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
+- [Internationalization](#internationalization)
 - [API Reference](#api-reference)
 	- [Module](#module)
 	- [Parser](#parser)
@@ -47,7 +48,7 @@ yarn
 While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
 
 - Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile).
+- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile). Don't forget to set your Application Name there as well.
 
 ***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
 
@@ -87,6 +88,91 @@ Each module should be in charge of analysing a single statistic or feature, so a
 
 For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
+## Internationalization
+
+All modules should support i18n when displaying content. This project makes use of [jsLingui](https://github.com/lingui/js-lingui) with a dash of custom logic to make dynamic content a bit easier.
+
+### i18n IDs
+
+This project formats i18n IDs using the syntax: `[job].[module].[thing]`
+
+As an example, for a Red Mage you might end up with the key `rdm.gauge.white-mana`. These
+keys should be somewhat descriptive to make it clear for translators what exactly they're editing.
+
+### API
+
+These are all imported from `@lingui/react`
+
+#### [`i18nMark(id)`](https://lingui.github.io/js-lingui/ref/lingui-react.html#i18nmark)
+
+This function marks a string for automatic i18n id extraction. All i18n IDs that aren't directly declared in a `<Trans />` or `<Plural />` tag should be wrapped in `i18nMark()` to ensure that they are properly detected.
+
+Example:
+
+```javascript
+class MyModule extends Module {
+	static i18n_id = i18nMark('job.my-module.title')
+	static title = 'My Module'
+}
+```
+
+#### [`<Trans id="" />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans)
+
+When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n ID and wraps a block of content that should be translated. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans) for more.
+
+Example:
+
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.RAISE.icon,
+	severity: SEVERITY.MORBID,
+	content: <Trans id="my-job.my-module.example-suggestion-title">
+		You should <strong>really</strong> use localization.
+	</Trans>,
+	why: <Trans id="my-job.my-module.example-suggestion-why">
+		Localization is important
+	</Trans>,
+}))
+```
+
+#### [`<Plural id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural)
+
+The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+Example:
+
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.DANCE.icon,
+	severity: SEVERITY.MINOR,
+	content: <Trans id="my-job.my-module.dance-more">
+		You should be dancing more.
+	</Trans>,
+	why: <Plural
+		id="my-job.my-module.dance-more-count"
+		value={danceCount}
+		_1="# time"
+		other="# times"
+	/>
+}))
+```
+
+#### [`<Select id="" value={value} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#select)
+
+The `<Select />` tag is similar to the `<Plural />` tag but, rather than using plural forms, it it selects the form that matches the provided value. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#select) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<SelectOrdinal id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal)
+
+The `<SelectOrdinal />` tag functions just as the `<Plural />` tag does, with the exception that it uses ordinal plural forms rather than cardinal forms. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<DateFormat value={date} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#dateformat)
+
+The `<DateFormat />` tag is a wrapper around `Intl.DateTimeFormat`. It accepts a `format` parameter with identical options to `Intl.DateTimeFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<NumberFormat value={number} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#numberformat)
+
+The `<NumberFormat />` tag is a wrapper around `Intl.NumberFormat`. It accepts a `format` parameter with identical options to `Intl.NumberFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
 ## API Reference
 ### Module
 
@@ -100,6 +186,15 @@ All modules should extend this class at some point in their hierarchy. It provid
 ##### `static title`
 
 The name that should be shown above any output the module generates. If not set, it will default to the module's `handle`, with the first letter capitalised.
+
+##### `static i18n_id`
+
+The i18n id for looking up the translated module title. If this is not set, the name of
+the module will not be localizable. This should be a string, wrapped with the `i18nMark(...)` method from `@lingui/react`. Example:
+
+```javascript
+static i18n_id = i18nMark('my-job.my-module.title')
+```
 
 ##### `static dependencies`
 

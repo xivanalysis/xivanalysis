@@ -6,7 +6,6 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/003000/003153.png',
 	},
 
-
 	JINPU: 	{
 		id: 1298,
 		name: 'Jinpu',

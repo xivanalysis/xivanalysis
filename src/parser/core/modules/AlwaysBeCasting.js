@@ -1,5 +1,7 @@
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import React from 'react'
+import {Trans} from '@lingui/react'
 
 export default class AlwaysBeCasting extends Module {
 	static handle = 'abc'
@@ -24,11 +26,15 @@ export default class AlwaysBeCasting extends Module {
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 
 		this.checklist.add(new Rule({
-			name: 'Always be casting',
-			description: 'Make sure you\'re always doing something. It\'s often better to make small mistakes while keeping the GCD rolling than it is to perform the correct rotation slowly.',
+			name: <Trans id="core.always-cast.title">Always be casting</Trans>,
+			description: <Trans id="core.always-cast.description">
+				Make sure you're always doing something. It's often better to make small
+				mistakes while keeping the GCD rolling than it is to perform the correct
+				rotation slowly.
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: 'GCD uptime',
+					name: <Trans id="core.always-cast.gcd-uptime">GCD Uptime</Trans>,
 					percent: this.gcd.getUptime() / fightDuration * 100,
 				}),
 			],

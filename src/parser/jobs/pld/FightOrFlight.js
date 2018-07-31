@@ -84,7 +84,6 @@ export default class FightOrFlight extends Module {
 	_fofMissedGorings = 0
 	_fofGoringTooCloseCount = 0
 
-
 	_onCast(event) {
 		const actionId = event.ability.guid
 
