@@ -40,7 +40,7 @@
   "core.role.theorycraft": "core.role.theorycraft",
   "core.suggestion.nothing": "Hier scheint nichts zu sein!",
   "core.suggestion.nothing-but-minor": "You can check over the minor suggestions by flicking the \"Show minor\" switch in the top right.",
-  "core.suggestion.show-minor": "Show minor",
+  "core.suggestion.show-minor": "Zeige leichte Fehler",
   "core.suggestions.title": "core.suggestions.title",
   "core.timeline.title": "core.timeline.title",
   "core.weaving.content": "Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <0>{0}</0> module below for more detailed analysis.",
