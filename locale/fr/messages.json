@@ -13,7 +13,7 @@
   "core.analyse.view-on-fflogs": "Afficher le rapport sur FF Logs",
   "core.checklist.title": "Checklist",
   "core.cooldowndowntime.ogcd-cd-buffer": "Pour prendre en compte les facteurs aléatoires, vous disposez d'une marge de manœuvre de {0} secondes par instance pour utiliser votre cooldown",
-  "core.cooldowndowntime.ogcd-cd-metric": "Assurez-vous toujours d'ultiliser vos cooldowns oGCDs lorsqu'ils sont disponsibles mais ne les clip pas. {0}",
+  "core.cooldowndowntime.ogcd-cd-metric": "Assurez-vous de toujours utiliser vos oGCD lorsqu'ils sont disponibles mais prenez garde à ne pas les faire clipper. {0}",
   "core.cooldowndowntime.title": "Temps d'arrêt des Cooldowns",
   "core.cooldowndowntime.use-ogcd-cds": "Utilisez vos cooldowns OGCD",
   "core.deaths.content": "Ne mourez pas. Entre les temps d'arrêt, ressources de jauge perdues et les affaiblissements de résurrection, mourir est absolument <0>paralysant</0> à la production des dégâts.",
