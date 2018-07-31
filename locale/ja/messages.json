@@ -21,7 +21,7 @@
   "core.error.generic": "Looks like something has gone wrong. The code monkies have been notified.",
   "core.find.job-unsupported.description": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
   "core.find.job-unsupported.title": "お気に入りジョブはまだ未対応ですか？",
-  "core.find.kills-only": "Kills only",
+  "core.find.kills-only": "完走のみ",
   "core.find.load-report": "レポートを読み込み中",
   "core.find.refresh": "更新",
   "core.find.select-combatant": "プレイヤーを選択してください",
