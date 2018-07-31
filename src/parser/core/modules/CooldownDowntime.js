@@ -47,7 +47,7 @@ export default class CooldownDowntime extends Module {
 
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
-			name: <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCD CDs</Trans>,
+			name: <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCDs</Trans>,
 			description: this.description,
 			requirements: OGCDRequirements,
 			target: this.target,
