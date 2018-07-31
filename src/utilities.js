@@ -1,5 +1,5 @@
 import {matchPath} from 'react-router-dom'
-import LANGUAGES, {DEFAULT_LANGUAGE} from 'data/LANGUAGES'
+import LANGUAGES, {SHORT_LANGUAGE_MAP, DEFAULT_LANGUAGE} from 'data/LANGUAGES'
 
 export const addExtraIndex = (obj, index) => {
 	Object.keys(obj).forEach(key => {
@@ -181,15 +181,8 @@ export function getUserLanguage(languages = null) {
 
 	// In case we didn't get a match, try matching just the first part of each
 	// language. It's better than falling  back to nothing. This may be overkill.
-	const stripped = Object.keys(LANGUAGES).reduce(
-		(x, key) => {
-			x[stringBefore(key, '-')] = key
-			return x
-		},
-		{})
-
 	for (const lang of languages.map(l => stringBefore(l, '-'))) {
-		const match = stripped[lang]
+		const match = SHORT_LANGUAGE_MAP[lang]
 		if (LANGUAGES[match] && LANGUAGES[match].enable) {
 			return match
 		}
