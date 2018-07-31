@@ -38,13 +38,15 @@ const BLOOD_PRICE_MAX_DURATION = 15000
 const RESOURCE_STATUS_EFFECTS = [
 	{id: STATUSES.ANOTHER_VICTIM.id,
 		duration: 15000,
+		type: 'debuff',
 		expire_mana: MAX_MANA * 0.2,
 		expire_blood: 0,
 		activate_mana: MAX_MANA * 0.3,
 		activate_blood: 0,
 	},
 	{id: STATUSES.BLACKEST_NIGHT.id,
-		duration: 15000,
+		duration: 7000,
+		type: 'buff',
 		expire_mana: 0,
 		expire_blood: 0,
 		activate_mana: 0,
@@ -153,6 +155,8 @@ export default class Resources extends Module {
 			this._currentMana = vals.result
 			if (ability !== undefined) {
 				this._mana_total_modifiers.push({ability: ability, value: value})
+			} else {
+				this._mana_total_modifiers.push({ability: undefined, value: value})
 			}
 		}
 	}
@@ -182,21 +186,17 @@ export default class Resources extends Module {
 	}
 
 	_darkArtsOpener = undefined
+	/*
 	_lastSimulatedManaSnapshot = undefined
-
 	correctMana(value) {
-		if (this._lastSimulatedManaSnapshot === undefined) {
-			//opener damage tick, get to see if a DA was used pre-pull or not (or at least the fight was started at not max mana)
-			this._darkArtsOpener = value < MAX_MANA
-		} else {
-			//difference between current mana and the last recorded mana
-			this.modifyMana(undefined, value - this._lastSimulatedManaSnapshot)
-		}
+		//difference between current mana and the last recorded mana
+		this.modifyMana(undefined, value - this._lastSimulatedManaSnapshot)
 		// save snapshot for next cycle
 		this._lastSimulatedManaSnapshot = this._currentMana
 		// push corrected value
 		this._currentMana = value
 	}
+	*/
 
 
 	// noinspection JSMethodCanBeStatic
@@ -215,14 +215,16 @@ export default class Resources extends Module {
 		//this.addHook('aoedamage', {by: 'player', abilityId: [ACTIONS.QUIETUS, ACTIONS.SALTED_EARTH]}, this._onAoEDamageDealt)
 		this.addHook('damage', {by: 'player'}, this._onDamageDealt)
 		this.addHook('damage', {to: 'player'}, this._onDamageTaken)
-		this.addHook('applybuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onApplyResourceBuffs)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE}, this._bloodPriceStart)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE}, this._bloodPriceEnd)
-		this.addHook('removebuff', {by: 'player', abilityId: [STATUSES.ANOTHER_VICTIM.id, STATUSES.BLACKEST_NIGHT.id]}, this._onRemoveResourceBuffs)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._darksideApply)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._darksideRemove)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceStart)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceEnd)
+		this.addHook(['applybuff', 'applydebuff'], {by: 'player', abilityId: RESOURCE_STATUS_EFFECTS.map(entry => entry.id)}, this._onApplyResourceStatuses)
+		this.addHook(['removebuff', 'removedebuff'], {by: 'player', abilityId: RESOURCE_STATUS_EFFECTS.map(entry => entry.id)}, this._onRemoveResourceStatuses)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 		//should be spending full mana + 3 out of combat ticks
-		this.modifyMana(undefined, MAX_MANA + (MANA_PER_OUT_OF_COMBAT_TICK * 3))
+		this.modifyMana(undefined, MAX_MANA + (MANA_PER_OUT_OF_COMBAT_TICK * 2))
 	}
 
 	_droppedTBNs = 0
@@ -262,23 +264,24 @@ export default class Resources extends Module {
 	_resourceBuffTimestamps = {}
 
 
-	_onApplyResourceBuffs(event) {
-		//safety net
+	_onApplyResourceStatuses(event) {
+		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
 		if (RESOURCE_STATUS_EFFECTS.some(entry => entry.id === abilityId)) {
 			this._resourceBuffTimestamps[abilityId] = event.timestamp
 		}
 	}
 
-	_onRemoveResourceBuffs(event) {
+	_onRemoveResourceStatuses(event) {
+		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
 		if (RESOURCE_STATUS_EFFECTS.some(entry => entry.id === abilityId)) {
 			const entry = RESOURCE_STATUS_EFFECTS.find(entry => entry.id === abilityId)
 			const applicationTime = this._resourceBuffTimestamps[abilityId]
 			if (event.timestamp - applicationTime < entry.duration) {
 				//popped
-				this.modifyBlood(entry, entry.activate_blood)
-				this.modifyMana(entry, entry.activate_mana)
+				this.modifyBlood(event.ability, entry.activate_blood)
+				this.modifyMana(event.ability, entry.activate_mana)
 			} else {
 				//expired
 				this.modifyBlood(event.ability, entry.expire_blood)
@@ -309,11 +312,16 @@ export default class Resources extends Module {
 	}
 	*/
 
+	_firstDamageEvent = true
+
+	//this.correctMana(event.sourceResources.mp)
 	_onDamageDealt(event) {
-		//update mana from provided snapshot if present
-		if (event.sourceResources !== undefined) {
-			this.correctMana(event.sourceResources.mp)
+		// check if it's the first damage event
+		if (this._firstDamageEvent) {
+			// check if mana is missing or not, if so then DA opener was used
+			this._darkArtsOpener = (event.sourceResources.mp !== event.sourceResources.maxMP)
 		}
+		this._firstDamageEvent = false
 		// blood weapon outgoing damage
 		const abilityId = event.ability.guid
 		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
@@ -329,9 +337,7 @@ export default class Resources extends Module {
 		this._bloodPriceStartTime = event.timestamp
 	}
 
-	_onDamageTaken(event) {
-		//update mana from provided snapshot
-		this.correctMana(event.targetResources.mp)
+	_onDamageTaken() { //event) {
 		// blood price incoming damage
 		if (this.buffs.bloodPriceActive()) {
 			this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT)
@@ -339,16 +345,30 @@ export default class Resources extends Module {
 		}
 	}
 
+	_darksideRemoveTimestamp = undefined
+
+	_darksideApply(event) {
+		if (this._darksideRemoveTimestamp !== undefined) {
+			//give mana ticks for how long they had it down for
+			//using 2% of max mana per tick
+			const ticks = Math.floor((event.timestamp - this._darksideRemoveTimestamp) / 3000)
+			this.modifyMana(undefined, ticks * Math.floor(MAX_MANA * 0.02))
+			//reset darkside in case something breaks
+			this._darksideRemoveTimestamp = undefined
+		}
+	}
+
+	_darksideRemove(event) {
+		this._darksideRemoveTimestamp = event.timestamp
+	}
+
 	_bloodPriceEnd(event) {
 		//if we didn't see the start event, we just have to assume a full duration gain
-		let ticks = 0
+		let ticks = (BLOOD_PRICE_MAX_DURATION / BLOOD_PRICE_BLOOD_PASSIVE_RATE) * BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT
 		if (this._bloodPriceStartTime !== undefined) {
-			ticks = Math.floor((event.timestamp - this._bloodPriceStartTime) / BLOOD_PRICE_BLOOD_PASSIVE_RATE)
-		} else {
-			//default duration 15s
-			ticks = BLOOD_PRICE_MAX_DURATION / BLOOD_PRICE_BLOOD_PASSIVE_RATE
+			ticks = Math.round((event.timestamp - this._bloodPriceStartTime) / BLOOD_PRICE_BLOOD_PASSIVE_RATE) * BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT
 		}
-		this.modifyBlood(event.ability, BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
+		this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
 	}
 
 	_onDeath() {
@@ -494,11 +514,16 @@ export default class Resources extends Module {
 		const negativeEventAggregator = {}
 		const positiveOut = []
 		const negativeOut = []
+		let envNet = 0
 		while (arr.length > 0) {
 			const entry = arr.pop()
 			let name = 'Unknown'
 			if (entry.ability !== undefined) {
 				name = entry.ability.name
+			} else {
+				// environmental gains need to be aggregated and applied at the end
+				envNet += entry.value
+				continue
 			}
 			if (entry.value > 0) {
 				if (positiveAggregator.hasOwnProperty(name)) {
@@ -516,6 +541,14 @@ export default class Resources extends Module {
 					negativeAggregator[name] = entry.value
 					negativeEventAggregator[name] = entry.ability
 				}
+			}
+		}
+		if (envNet !== 0) {
+			//pushed the combined environmental set into the appropriate box
+			if (envNet > 0) {
+				positiveOut.push({name: 'Initial Mana and Regen', ability: undefined, value: envNet})
+			} else {
+				negativeOut.push({name: 'Initial Mana and Regen', ability: undefined, value: envNet})
 			}
 		}
 		for (const property in positiveAggregator) {
@@ -551,14 +584,15 @@ export default class Resources extends Module {
 			rows.push(
 				<tr style={{margin: 0, padding: 0}}>
 					<td>{entry.name === 'undefined' ? 'The Blackest Night' : entry.name}</td>
-					<td></td>
 					<td>{entry.value}</td>
 				</tr>
 			)
 		}
 		return <Fragment>
 			<table>
-				{rows}
+				<tbody>
+					{rows}
+				</tbody>
 			</table>
 		</Fragment>
 	}
@@ -620,6 +654,6 @@ export default class Resources extends Module {
 				styled
 				fluid
 			/>
-			{this._test}</Fragment>
+		</Fragment>
 	}
 }
