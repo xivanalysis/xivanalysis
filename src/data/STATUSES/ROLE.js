@@ -24,4 +24,16 @@ export default {
 		name: 'Lucid Dreaming',
 		icon: 'https://secure.xivdb.com/img/game/013000/013909.png',
 	},
+
+	LARGESSE: {
+		id: 1207,
+		name: 'Largesse',
+		icon: 'https://secure.xivdb.com/img/game/013000/013910.png',
+	},
+
+	SURECAST: {
+		id: 160,
+		name: 'Surecast',
+		icon: 'https://secure.xivdb.com/img/game/010000/010452.png',
+	},
 }
