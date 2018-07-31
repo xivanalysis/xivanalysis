@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import Entities from './Entities'
 import Enemy from '../Enemy'
 
@@ -43,18 +45,31 @@ export default class Enemies extends Entities {
 
 	getEntities() {
 		// Don't need to init this, getEntity will always be called prior with enough deets
-		return this._enemies
+		return _.compact(this._enemies)
 	}
 
 	getEntity(actorId) {
 		let enemy = this._enemies[actorId]
 
-		if (!enemy) {
+		if (enemy === undefined) {
 			const info = this.parser.report.enemies.find(enemy => enemy.id === actorId)
-			if (!info) { return null }
-			this._enemies[actorId] = enemy = new Enemy(this.parser, info)
+
+			// Check that the info is actually a valid enemy - if it's not, save it as null so we don't re-process
+			enemy = this.isValidEnemy(info)? new Enemy(this.parser, info) : null
+
+			this._enemies[actorId] = enemy
 		}
 
 		return enemy
+	}
+
+	// Overrideable method for boss modules
+	// If this returns false, the enemy will not be considered a valid target, and will automatically be excluded from checks in AoE and others.
+	isValidEnemy(enemy) {
+		if (enemy === undefined) {
+			return false
+		}
+
+		return true
 	}
 }
