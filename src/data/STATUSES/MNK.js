@@ -5,6 +5,12 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/015000/015064.png',
 	},
 
+	DEMOLISH: {
+		id: 246,
+		name: 'Demolish',
+		icon: 'https://secure.xivdb.com/img/game/000000/000204.png',
+	},
+
 	PERFECT_BALANCE: {
 		id: 110,
 		name: 'Perfect Balance',
