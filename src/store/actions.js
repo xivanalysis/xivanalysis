@@ -69,6 +69,11 @@ export const setLanguage = language => ({
 	payload: language,
 })
 
+export const UPDATE_LANGUAGE = 'UPDATE_LANGUAGE'
+export const updateLanguage = () => ({
+	type: UPDATE_LANGUAGE,
+})
+
 export const TOGGLE_I18N_OVERLAY = 'TOGGLE_I18N_OVERLAY'
 export const toggleI18nOverlay = () => ({
 	type: TOGGLE_I18N_OVERLAY,
