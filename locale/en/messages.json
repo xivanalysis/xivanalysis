@@ -12,8 +12,8 @@
   "core.analyse.load-report": "Loading report",
   "core.analyse.view-on-fflogs": "View report on FF Logs",
   "core.checklist.title": "core.checklist.title",
-  "core.cooldowndowntime.ogcd-cd-buffer": "To account for random factors you are given a buffer of {0} seconds per instance to use your CD",
-  "core.cooldowndowntime.ogcd-cd-metric": "Always make sure to use your OGCD CDs when they are up but don't clip them.  {0}",
+  "core.cooldowndowntime.ogcd-cd-buffer": "To account for random factors you are given a buffer of {0} seconds per instance to hold your cooldowns.",
+  "core.cooldowndowntime.ogcd-cd-metric": "Always make sure to use your OGCDs when they are up but don't clip them.  {0}",
   "core.cooldowndowntime.title": "core.cooldowndowntime.title",
   "core.cooldowndowntime.use-ogcd-cds": "Use your OGCD CDs",
   "core.deaths.content": "Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <0>crippling</0> to damage output.",
@@ -67,5 +67,7 @@
   "game.roles.melee-dps": "game.roles.melee-dps",
   "game.roles.physical-ranged-dps": "game.roles.physical-ranged-dps",
   "game.roles.tank": "game.roles.tank",
-  "game.roles.unsupported": "game.roles.unsupported"
+  "game.roles.unsupported": "game.roles.unsupported",
+  "smn.about.description": "smn.about.description",
+  "smn.about.description.warning": "While the analysis below should be reasonably accurate, this system is still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!"
 }

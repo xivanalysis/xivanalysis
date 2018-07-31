@@ -67,5 +67,7 @@
   "game.roles.melee-dps": "",
   "game.roles.physical-ranged-dps": "",
   "game.roles.tank": "",
-  "game.roles.unsupported": ""
+  "game.roles.unsupported": "",
+  "smn.about.description": "",
+  "smn.about.description.warning": ""
 }
