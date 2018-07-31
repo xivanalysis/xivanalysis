@@ -3,7 +3,7 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
 
 export default class About extends CoreAbout {
@@ -18,7 +18,7 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
-		{user: CONTRIBUTORS.FURST, role: 'Maintainer'},
-		{user: CONTRIBUTORS.LAQI, role: 'Maintainer'},
+		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LAQI, role: ROLES.MAINTAINER},
 	]
 }

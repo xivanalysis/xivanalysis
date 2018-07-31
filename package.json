@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@babel/polyfill": "^7.0.0-beta.54",
+    "@lingui/react": "^2.3.0",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "color": "^3.0.0",
@@ -34,10 +35,22 @@
   "scripts": {
     "analyse": "source-map-explorer build/static/js/main.*",
     "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
+    "build": "yarn run extract && react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
-		"eject": "react-scripts eject",
-		"lint": "eslint src"
+    "eject": "react-scripts eject",
+    "lint": "eslint src",
+    "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract",
+    "compile": "lingui compile"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.js": ["eslint --fix", "git add"]
+    }
   },
   "browserslist": {
     "development": [
@@ -52,12 +65,27 @@
       "not ie < 11"
     ]
   },
+  "lingui": {
+    "sourceLocale": "en"
+  },
+  "resolutions": {
+    "babel-core": "7.0.0-bridge.0"
+  },
   "devDependencies": {
+    "@lingui/babel-plugin-transform-js": "^2.3.0",
+    "@lingui/babel-plugin-transform-react": "^2.3.0",
+    "@lingui/babel-preset-react": "^2.3.0",
+    "@lingui/cli": "^2.3.0",
+    "@lingui/loader": "^2.3.0",
+    "cross-env": "^5.2.0",
     "git-revision-webpack-plugin": "^3.0.3",
+    "husky": "^1.0.0-rc.13",
+    "lint-staged": "^7.2.0",
     "react-app-rewire-eslint": "^0.2.3",
     "react-app-rewire-lodash": "^2.0.0",
     "react-app-rewired": "^2.0.0",
     "react-scripts": "2.0.0-next.3e165448",
+    "rimraf": "^2.6.2",
     "source-map-explorer": "^1.5.0"
   }
 }

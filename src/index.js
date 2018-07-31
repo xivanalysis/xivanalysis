@@ -14,16 +14,24 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 		environment: NODE_ENV,
 		release: VERSION,
 
+		whitelistUrls: [
+			// All our project's JavaScript should be loaded from /static/
+			/xivanalysis\.com\/static/,
+		],
+
 		ignoreUrls: [
 			// Browser Extensions
 			/extensions\//i,
 			/^chrome:\/\//i,
 			// XIVDB's tooltips fail to load jQuery quite frequently
 			/xivdb.com\/tooltips/i,
+			// Translate sites break a fair few things
+			/translate\.google/i,
+			/naver\.net/i,
 		],
 		ignoreErrors: [
-			// Accessing the site via other services like google translate freaks the router out
-			/Failed to execute 'pushState' on 'History'/i,
+			// As I was saying, translate sites...
+			'SecurityError',
 		],
 	}).install()
 }

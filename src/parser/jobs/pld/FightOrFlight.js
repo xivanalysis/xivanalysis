@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import STATUSES from 'data/STATUSES'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {matchClosestLower} from 'utilities'
 import {Accordion} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
@@ -62,6 +62,12 @@ export default class FightOrFlight extends Module {
 		4: SEVERITY.MAJOR,
 	}
 
+	_severityFofGoringsTooClose = {
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		4: SEVERITY.MAJOR,
+	}
+
 	// Internal State Counters
 	_fofStart = null
 	_fofLastGoringGcd = null
@@ -77,7 +83,6 @@ export default class FightOrFlight extends Module {
 	_fofMissedGcds = 0
 	_fofMissedGorings = 0
 	_fofGoringTooCloseCount = 0
-
 
 	_onCast(event) {
 		const actionId = event.ability.guid
@@ -141,65 +146,61 @@ export default class FightOrFlight extends Module {
 	}
 
 	_onComplete() {
-		if (this._fofMissedCircleOfScorns > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.CIRCLE_OF_SCORN.icon,
-				why: `${this._fofMissedCircleOfScorns} Circle Of Scorn${this._fofMissedCircleOfScorns !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
-				severity: matchClosestLower(this._severityMissedFofCircleOfScorns, this._fofMissedCircleOfScorns),
-				content: <Fragment>
-					Try to land one <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/> during
-					every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.CIRCLE_OF_SCORN.icon,
+			why: `${this._fofMissedCircleOfScorns} Circle Of Scorn${this._fofMissedCircleOfScorns !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
+			content: <Fragment>
+				Try to land one <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/> during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			</Fragment>,
+			tiers: this._severityMissedFofCircleOfScorns,
+			value: this._fofMissedCircleOfScorns,
+		}))
 
-		if (this._fofMissedSpiritWithins > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SPIRITS_WITHIN.icon,
-				why: `${this._fofMissedSpiritWithins} Spirits Within missed during Fight or Flight windows.`,
-				severity: matchClosestLower(this._severityMissedFofSpiritsWithin, this._fofMissedSpiritWithins),
-				content: <Fragment>
-					Try to land one <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> during
-					every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SPIRITS_WITHIN.icon,
+			why: `${this._fofMissedSpiritWithins} Spirits Within missed during Fight or Flight windows.`,
+			content: <Fragment>
+				Try to land one <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			</Fragment>,
+			tiers: this._severityMissedFofSpiritsWithin,
+			value: this._fofMissedSpiritWithins,
+		}))
 
-		if (this._fofMissedGorings > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.GORING_BLADE.icon,
-				why: `${this._fofMissedGorings} Goring Blade${this._fofMissedGorings !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
-				severity: matchClosestLower(this._severityMissedFofGorings, this._fofMissedGorings),
-				content: <Fragment>
-					Try to land 2 <ActionLink {...ACTIONS.GORING_BLADE}/> during
-					every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window. One at the beginning and one at the end.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.GORING_BLADE.icon,
+			why: `${this._fofMissedGorings} Goring Blade${this._fofMissedGorings !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
+			content: <Fragment>
+				Try to land 2 <ActionLink {...ACTIONS.GORING_BLADE}/> during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window. One at the beginning and one at the end.
+			</Fragment>,
+			tiers: this._severityMissedFofGorings,
+			value: this._fofMissedGorings,
+		}))
 
-		if (this._fofMissedGcds > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
-				why: `${this._fofMissedGcds} GCD${this._fofMissedGcds !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
-				severity: matchClosestLower(this._severityMissedFofGcds, this._fofMissedGcds),
-				content: <Fragment>
-					Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
+			why: `${this._fofMissedGcds} GCD${this._fofMissedGcds !== 1 ? 's' : ''} missed during Fight or Flight windows.`,
+			content: <Fragment>
+				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			</Fragment>,
+			tiers: this._severityMissedFofGcds,
+			value: this._fofMissedGcds,
+		}))
 
-		if (this._fofGoringTooCloseCount > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.GORING_BLADE.icon,
-				why: `${this._fofGoringTooCloseCount} Goring Blade${this._fofGoringTooCloseCount !== 1 ? 's' : ''} ${this._fofGoringTooCloseCount !== 1 ? 'were' : 'was'} refreshed too early during Fight Or Flight.`,
-				severity: matchClosestLower(this._severityMissedFofGcds, this._fofGoringTooCloseCount),
-				content: <Fragment>
-					Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
-					first <ActionLink {...ACTIONS.GORING_BLADE}/> in
-					a <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.GORING_BLADE.icon,
+			why: `${this._fofGoringTooCloseCount} Goring Blade${this._fofGoringTooCloseCount !== 1 ? 's' : ''} ${this._fofGoringTooCloseCount !== 1 ? 'were' : 'was'} refreshed too early during Fight Or Flight.`,
+			severity: matchClosestLower(this._severityMissedFofGcds, this._fofGoringTooCloseCount),
+			content: <Fragment>
+				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
+				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
+				a <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			</Fragment>,
+			tiers: this._severityFofGoringsTooClose,
+			value: this._fofGoringTooCloseCount,
+		}))
 	}
 
 	output() {

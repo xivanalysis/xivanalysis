@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Plural, Trans} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -62,11 +63,16 @@ export default class Death extends Module {
 
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.RAISE.icon,
-			content: <Fragment>
+			content: <Trans id="core.deaths.content">
 				Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
-			</Fragment>,
+			</Trans>,
 			severity: SEVERITY.MORBID,
-			why: <Fragment>{this._count} death{this._count !== 1 && 's'}.</Fragment>,
+			why: <Plural
+				id="core.deaths.why"
+				value={this._count}
+				_1="# death"
+				other="# deaths"
+			/>,
 		}))
 	}
 

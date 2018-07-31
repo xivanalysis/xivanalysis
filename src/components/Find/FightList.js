@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
@@ -58,18 +59,22 @@ class FightList extends Component {
 
 		return <Fragment>
 			<Header>
-				Select a pull
+				<Trans id="core.find.select-pull">
+					Select a pull
+				</Trans>
 				<div className="pull-right">
 					<Checkbox
 						toggle
-						label="Kills only"
+						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
 						defaultChecked={killsOnly}
 						onChange={(_, data) => this.setState({killsOnly: data.checked})}
 						// className="pull-right"
 					/>
 					<span className={styles.refresh} onClick={this.refreshFights}>
 						<Icon name="refresh"/>
-						Refresh
+						<Trans id="core.find.refresh">
+							Refresh
+						</Trans>
 					</span>
 				</div>
 			</Header>

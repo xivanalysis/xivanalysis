@@ -2,9 +2,13 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 //import ACTIONS from 'data/ACTIONS'
+
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+
 import CoreAbout from 'parser/core/modules/About'
 //import {ActionLink} from 'components/ui/DbLink'
+
 export default class About extends CoreAbout {
 	description = <Fragment>
 		<p> So you study the blade do you? Well consider this analysis the exam to see exactly how much you've learned about the basics of Samurai. This tool will track your sen and kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight.</p>
@@ -18,7 +22,7 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
-		{user: CONTRIBUTORS.RYAN, role: 'Maintainer'},
+		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
 	]
 
 }

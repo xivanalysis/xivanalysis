@@ -1,9 +1,5 @@
-//import React, {Fragment} from 'react'
-//import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 //tracking the important™ CDs
@@ -14,8 +10,8 @@ const TRACKEDCDS = [
 	ACTIONS.CONVERT.id,
 ]
 
-export default class Blmcooldowns extends Module {
-	static handle = 'blmcooldowns'
+export default class OGCDDowntime extends Module {
+	static handle = 'ogcddowntime'
 	static dependencies = [
 		'combatants',
 		'cooldowns',
@@ -82,7 +78,7 @@ export default class Blmcooldowns extends Module {
 			name: 'Use your OGCDs',
 			description: 'Always make sure to use your OGCDs when they are up but don\'t clip them. Utilize your procs or fast Blizzard III or Fire IIIs.',
 			requirements: OGCDRequirements,
-			target: 100,
+			target: 99,
 		}))
 	}
 

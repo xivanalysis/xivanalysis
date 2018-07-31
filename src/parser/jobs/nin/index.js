@@ -5,6 +5,7 @@ import Ninki from './Ninki'
 import NinWeaving from './NinWeaving'
 import ShadowFang from './ShadowFang'
 import TrickAttackWindow from './TrickAttackWindow'
+import Utility from './Utility'
 export default [
 	About,
 	Duality,
@@ -13,4 +14,5 @@ export default [
 	NinWeaving,
 	ShadowFang,
 	TrickAttackWindow,
+	Utility,
 ]
