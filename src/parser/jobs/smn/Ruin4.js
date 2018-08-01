@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, i18nMark} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -32,6 +33,7 @@ const OVERAGE_SEVERITY = {
 
 export default class Ruin4 extends Module {
 	static handle = 'ruin4'
+	static i18n_id = i18nMark('smn.ruin-iv.title')
 	static dependencies = [
 		'cooldowns',
 		'downtime',
@@ -89,12 +91,14 @@ export default class Ruin4 extends Module {
 		if (this._overage > 1000) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.RUIN_IV.icon,
-				content: <Fragment>
-					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
-				</Fragment>,
-				why: `Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.`,
 				tiers: OVERAGE_SEVERITY,
 				value: this._overage,
+				content: <Trans id="smn.ruin-iv.suggestions.overage.content">
+					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
+				</Trans>,
+				why: <Trans id="smn.ruin-iv.suggestions.overage.why">
+					Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.
+				</Trans>,
 			}))
 		}
 	}
@@ -113,9 +117,9 @@ export default class Ruin4 extends Module {
 
 	output() {
 		return <p>
-			Chances: {this._procChances}<br/>
-			Expected procs: {Math.floor(this._procChances * PROC_RATE)}<br/>
-			Actual procs: {this._procs}
+			<Trans id="smn.ruin-iv.chances">Chances: {this._procChances}</Trans><br/>
+			<Trans id="smn.ruin-iv.expected-procs">Expected procs: {Math.floor(this._procChances * PROC_RATE)}</Trans><br/>
+			<Trans id="smn.ruin-iv.actual-procs">Actual procs: {this._procs}</Trans>
 		</p>
 	}
 }

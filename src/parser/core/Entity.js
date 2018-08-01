@@ -47,13 +47,11 @@ export default class Entity {
 	}
 
 	_statusFilter(buff, statusId = null, forTimestamp = null, bufferTime = 0, minimalActiveTime = 0, sourceID = null) {
-		const currentTimestamp = forTimestamp > this.parser.currentTimestamp ? this.parser.currentTimestamp : forTimestamp
+		const currentTimestamp = Math.min(forTimestamp || this.parser.currentTimestamp, this.parser.currentTimestamp)
 
-		statusId = (buff.ability.guid === Number(statusId)) || true
-
-		return (statusId &&
+		return (statusId === null || buff.ability.guid === Number(statusId)) &&
 			(currentTimestamp - minimalActiveTime) >= buff.start &&
 			(buff.end === null || (buff.end + bufferTime) >= currentTimestamp) &&
-			(sourceID === null || sourceID === buff.sourceID))
+			(sourceID === null || sourceID === buff.sourceID)
 	}
 }

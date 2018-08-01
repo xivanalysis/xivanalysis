@@ -22,6 +22,7 @@ export default class CooldownDowntime extends Module {
 		this.allowedDowntime = 0
 		//Default Target to hit
 		this.target = 95
+		this.description = <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them.  {this.allowedDowntime === 0 ? '' : <Trans id="core.cooldowndowntime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.parser.formatDuration(this.allowedDowntime)} seconds per instance to hold your cooldowns.</Trans>}</Trans>
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -46,8 +47,8 @@ export default class CooldownDowntime extends Module {
 
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
-			name: <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCD CDs</Trans>,
-			description: <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCD CDs when they are up but don't clip them.  {this.allowedDowntime === 0 ? '' : <Trans id="core.cooldowndowntime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.allowedDowntime/1000} seconds per instance to use your CD</Trans>}</Trans>,
+			name: <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCDs</Trans>,
+			description: this.description,
 			requirements: OGCDRequirements,
 			target: this.target,
 		}))

@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+import React from 'react'
 import {Table} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -33,6 +34,7 @@ const PAINFLARE_SEVERITY = {
 
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
+	static i18n_id = i18nMark('smn.aetherflow.title')
 	static dependencies = [
 		'aoe', // Ensure AoE runs cleanup before us
 		'checklist',
@@ -98,11 +100,17 @@ export default class Aetherflow extends Module {
 	_onComplete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
-			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively</Fragment>,
-			description: 'SMN\'s entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.',
+			name: <Trans id="smn.aetherflow.checklist.name">
+				Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively
+			</Trans>,
+			description: <Trans id="smn.aetherflow.checklist.description">
+				SMN's entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
+					name: <Trans id="smn.aetherflow.checklist.requirement.aetherflow.name">
+						<ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime
+					</Trans>,
 					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - FIRST_FLOW_TIMESTAMP)) * 100,
 				}),
 			],
@@ -114,26 +122,20 @@ export default class Aetherflow extends Module {
 		// Feel this can be used as a better base metric for judging Fester whiff severity, imo < 600 is medium, > major
 		const totalFesterPotencyLost = festerKeys.reduce((carry, num) => carry + num * FESTER_POT_PER_DOT * badFesters[num], 0)
 
-		// Suggestion for bad & really bad festers, also sorry for being bad and not knowing how to better structure
-		const numBadFesters = festerKeys.reduce((carry, num) => carry + (num < SMN_DOT_STATUSES.length? badFesters[num] : 0), 0)
-		const numReallyBadFesters = festerKeys.reduce((carry, num) => carry + (num === SMN_DOT_STATUSES.length? badFesters[num] : 0), 0)
+		// Sorry Nem, I've simplified this a lot to smooth out the i18n process. We can have a look into improving the output later.
+		const numBadFesters = festerKeys.reduce((carry, num) => carry + badFesters[num], 0)
 
-		// Adjust Fester reason and severity based on frequency and types of bad Fester casts
-		const reasonList = []
-		if (numBadFesters > 0) {
-			reasonList.push(`${numBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets missing DoTs`)
-		}
-		if (numReallyBadFesters > 0) {
-			reasonList.push(`${numReallyBadFesters} cast${numReallyBadFesters === 1 ? '' : 's'} of Fester on targets with no DoTs at all`)
-		}
-		const reasonString = reasonList.join(' & ') + '.'
-
+		// Fester suggestion
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FESTER.icon,
-			content: <Fragment>
+			content: <Trans id="smn.aetherflow.suggestions.fester.content">
 				To get the most potency out of your <ActionLink {...ACTIONS.FESTER}/>s, ensure both <StatusLink {...STATUSES.BIO_III}/> and <StatusLink {...STATUSES.MIASMA_III}/> are applied to your target. Avoid casting Fester directly after DoT application, as the status takes a short period to apply.
-			</Fragment>,
-			why: reasonString,
+			</Trans>,
+			why: <Trans id="smn.aetherflow.suggestions.fester.why">
+				{totalFesterPotencyLost} potency lost to
+				<Plural value={numBadFesters} one="# cast" other="# casts"/>
+				of Fester on targets missing DoTs.
+			</Trans>,
 			tiers: FESTER_SEVERITY,
 			value: totalFesterPotencyLost,
 		}))
@@ -142,12 +144,14 @@ export default class Aetherflow extends Module {
 		const numBadPainflares = this._badPainflares.length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.PAINFLARE.icon,
-			content: <Fragment>
+			content: <Trans id="smn.aetherflow.suggestions.painflare.content">
 				Avoid casting <ActionLink {...ACTIONS.PAINFLARE}/> on a single target unless rushing a <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>, as it deals less damage than <ActionLink {...ACTIONS.FESTER}/> per hit.
-			</Fragment>,
-			why: <Fragment>
-				{numBadPainflares} single-target cast{numBadPainflares > 1 && 's'} of Painflare.
-			</Fragment>,
+			</Trans>,
+			why: <Trans id="smn.aetherflow.suggestions.painflare.why">
+				{numBadPainflares} single-target
+				<Plural value={numBadPainflares} one="cast" other="casts"/>
+				of Painflare.
+			</Trans>,
 			tiers: PAINFLARE_SEVERITY,
 			value: numBadPainflares,
 		}))
@@ -164,9 +168,9 @@ export default class Aetherflow extends Module {
 		return <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell>Cast Time</Table.HeaderCell>
-					<Table.HeaderCell>Drift</Table.HeaderCell>
-					<Table.HeaderCell>Total Drift</Table.HeaderCell>
+					<Table.HeaderCell><Trans id="smn.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="smn.aetherflow.drift">Drift</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="smn.aetherflow.total-drift">Total Drift</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>

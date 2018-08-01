@@ -25,6 +25,6 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatch = '4.35'
 	contributors = [
-		{user: CONTRIBUTORS.VULCWEN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
 	]
 }
