@@ -3,7 +3,6 @@ import {Icon, Message} from 'semantic-ui-react'
 
 //import ACTIONS from 'data/ACTIONS'
 
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 
 import CoreAbout from 'parser/core/modules/About'

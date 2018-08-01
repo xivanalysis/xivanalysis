@@ -71,7 +71,7 @@ export default class Gauge extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
-//check for kenki value changes, then sen changes
+	//check for kenki value changes, then sen changes
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		if (KENKI_BUILDERS[abilityId]) {
@@ -190,7 +190,7 @@ export default class Gauge extends Module {
 				</Fragment>,
 			}))
 		}
-		
+
 		//sen suggestions
 		if (this._wastedsen >= 1) {
 			this.suggestions.add(new Suggestion({
