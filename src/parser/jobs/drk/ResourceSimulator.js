@@ -513,20 +513,20 @@ export default class Resources extends Module {
 		while (list.length > 0) {
 			const entry = list.pop()
 			this._keyScumCounter += 1
-			const key = entry.name + '-' + this._keyScumCounter
+			const key = entry.name + '-' + this._keyScumCounter.toString()
 			//there's 100% a better fix for TBN to detect it as a status not an action, but frankly i'm too tired to care right now
 			rows.push(
-				<tr key={{key}} style={{margin: 0, padding: 0}}>
-					<td>{entry.name === 'undefined' ? 'The Blackest Night' : entry.name}</td>
-					<td>{entry.value}</td>
+				<tr key={key.toString() + '-row'} style={{margin: 0, padding: 0}}>
+					<td key={{key} + '-name'}>{entry.name === 'undefined' ? 'The Blackest Night' : entry.name}</td>
+					<td key={{key} + '-value'}>{entry.value}</td>
 				</tr>
 			)
 		}
 		this._keyScumCounter += 1
-		const key = this._keyScumCounter
-		return <Fragment>
-			<table>
-				<tbody key={{key}}>
+		const key = this._keyScumCounter.toString()
+		return <Fragment key={key + '-fragment'}>
+			<table key={key + '-table'}>
+				<tbody key={key + '-tbody'}>
 					{rows}
 				</tbody>
 			</table>
@@ -540,6 +540,7 @@ export default class Resources extends Module {
 		const panels = []
 		const lists = this._filterResourceTrackingLists()
 		panels.push({
+			key: 'key-bloodSpenders',
 			title: {
 				key: 'title-bloodSpenders',
 				content: <Fragment>Blood Spenders</Fragment>,
@@ -550,6 +551,7 @@ export default class Resources extends Module {
 			},
 		})
 		panels.push({
+			key: 'key-bloodGenerators',
 			title: {
 				key: 'title-bloodGenerators',
 				content: <Fragment>Blood Generators</Fragment>,
@@ -560,6 +562,7 @@ export default class Resources extends Module {
 			},
 		})
 		panels.push({
+			key: 'key-manaSpenders',
 			title: {
 				key: 'title-manaSpenders',
 				content: <Fragment>Mana Spenders</Fragment>,
@@ -570,6 +573,7 @@ export default class Resources extends Module {
 			},
 		})
 		panels.push({
+			key: 'key-manaGenerators',
 			title: {
 				key: 'title-manaGenerators',
 				content: <Fragment>Mana Generators</Fragment>,
