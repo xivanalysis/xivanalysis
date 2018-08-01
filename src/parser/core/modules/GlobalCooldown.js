@@ -122,10 +122,6 @@ export default class GlobalCooldown extends Module {
 		gcdLength *= revSpeedMod
 		gcdLength = Math.round(gcdLength)
 
-		// TODO: Figure out how to apply 1.3x Riddle of Fire (MNK) and 0.5x Astral/Umbral (BLM)
-		// They are applied separately from SpeedMod (Astral/Umbral is applied at the end, need to confirm Riddle of Fire placement)
-		// Look at Weaving for ideas? Something like add some functions here that BLM/MNK modules can extend to report special modifiers for time windows
-
 		const action = getAction(this._lastCast.guid)
 		if (this._lastCast.isInstant) {
 			console.log(gcdLength + ':' + action.name + ' instant cast')

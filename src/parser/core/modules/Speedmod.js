@@ -3,7 +3,6 @@ import Module from 'parser/core/Module'
 import {
 	PARTYWIDE_SPEED_BUFF_FLAGS,
 	JOB_SPEED_BUFF_TO_SPEEDMOD_MAP,
-	SPEED_BUFF_STATUS_IDS,
 	PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP,
 } from './SpeedmodConsts'
 
@@ -15,11 +14,27 @@ export default class Speedmod extends Module {
 		'precastStatus',
 	]
 
+	// List of statuses we natively handle (See SpeedmodConsts)
+	SPEED_BUFF_STATUS_IDS = [
+		STATUSES.THE_ARROW.id,
+		STATUSES.FEY_WIND.id,
+	]
+
 	// Track history of speedmods
 	_history = [{speedmod: 1, start: 0, end: Infinity}]
 
 	_activePartywideSpeedBuffFlags = 0
 	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
+
+	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
+	jobSpecificNormaliseLogic(event) { // eslint-disable-line no-unused-vars
+	}
+
+	// Override for scalars that function outside of speedmod
+	// NOTE: Only Riddle of Fire (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
+	getJobAdditionalSpeedbuffScalar() { // eslint-disable-line no-unused-vars
+		return 1.0
+	}
 
 	normalise(events) {
 		const types = ['applybuff', 'removebuff']
@@ -27,11 +42,13 @@ export default class Speedmod extends Module {
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 
+			this.jobSpecificNormaliseLogic(event)
+
 			// Only care about certain events to the player
 			if (
 				!event.ability ||
 				!types.includes(event.type) ||
-				!SPEED_BUFF_STATUS_IDS.includes(event.ability.guid) ||
+				!this.SPEED_BUFF_STATUS_IDS.includes(event.ability.guid) ||
 				!this.parser.toPlayer(event)
 			) { continue }
 
@@ -64,7 +81,7 @@ export default class Speedmod extends Module {
 			// Recalculate the speedmod and save to history
 			this._history[this._history.length - 1].end = event.timestamp-1
 			this._history.push({
-				speedmod: this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100,
+				speedmod: (this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100) * this.getJobAdditionalSpeedbuffScalar(),
 				start: event.timestamp,
 				end: Infinity,
 			})
