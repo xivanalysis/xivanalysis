@@ -97,7 +97,7 @@ export default class Ruin4 extends Module {
 					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
 				</Trans>,
 				why: <Trans id="smn.ruin-iv.suggestions.overage.why">
-					Further Ruin held for ${this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.
+					Further Ruin held for {this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.
 				</Trans>,
 			}))
 		}
