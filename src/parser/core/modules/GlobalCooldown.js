@@ -23,14 +23,10 @@ export default class GlobalCooldown extends Module {
 	static title = 'Global Cooldown'
 
 	_lastGcd = -1
-	_lastGuid = 0
 	_castingEvent = null
-	_isInstant = false
 
-	_lastCast = {
-		isInstant: false,
-		guid: 0,
-	}
+	_lastGcdIsInstant = false
+	_lastGcdGuid = 0
 
 	gcds = []
 
@@ -56,17 +52,13 @@ export default class GlobalCooldown extends Module {
 			case 'begincast':
 				// Can I check for cancels?
 				this._castingEvent = event
-				//console.log('begincast: ' + action.name)
 				break
 
 			case 'cast':
-				//console.log('cast: ' + action.name)
 				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
-					this._isInstant = false
-					this.saveGcd(this._castingEvent)
+					this.saveGcd(this._castingEvent, false)
 				} else {
-					this._isInstant = true
-					this.saveGcd(event)
+					this.saveGcd(event, true)
 				}
 
 				this._castingEvent = null
@@ -108,7 +100,7 @@ export default class GlobalCooldown extends Module {
 		})
 	}
 
-	saveGcd(event) {
+	saveGcd(event, isInstant) {
 		let gcdLength = -1
 
 		if (this._lastGcd >= 0) {
@@ -122,23 +114,16 @@ export default class GlobalCooldown extends Module {
 		gcdLength *= revSpeedMod
 		gcdLength = Math.round(gcdLength)
 
-		const action = getAction(this._lastCast.guid)
-		if (this._lastCast.isInstant) {
-			console.log(gcdLength + ':' + action.name + ' instant cast')
-		} else {
-			console.log(gcdLength + ':' + action.name + ' cast[' + action.castTime + '] recast[' + action.cooldown + ']')
-		}
-
 		this.gcds.push({
 			timestamp: event.timestamp,
 			length: gcdLength,
 			speedMod,
-			actionId: this._lastCast.guid,
-			isInstant: this._lastCast.isInstant,
+			actionId: this._lastGcdGuid,
+			isInstant: this._lastGcdIsInstant,
 		})
 
-		this._lastCast.guid = event.ability.guid
-		this._lastCast.isInstant = this._isInstant
+		this._lastGcdGuid = event.ability.guid
+		this._lastGcdIsInstant = isInstant
 
 		// Store current gcd time for the check
 		this._lastGcd = event.timestamp
