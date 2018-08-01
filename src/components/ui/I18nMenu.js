@@ -1,23 +1,25 @@
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Dropdown} from 'semantic-ui-react'
 
-import {setLanguage} from 'store/actions'
+import {setLanguage, toggleI18nOverlay} from 'store/actions'
 
-import {LANGUAGE_ARRAY} from 'data/LANGUAGES'
+import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
 
-const {NODE_ENV} = process.env
+const DEBUG = process.env.NODE_ENV === 'development'
 
 export class I18nMenu extends Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		language: PropTypes.string.isRequired,
+		overlay: PropTypes.bool.isRequired,
 	}
 
 	constructor(props) {
 		super(props)
 
+		this.toggleOverlay = this.toggleOverlay.bind(this)
 		this.handleChange = this.handleChange.bind(this)
 
 		this.state = {
@@ -29,7 +31,7 @@ export class I18nMenu extends Component {
 	filterLanguages() {
 		const currentLanguage = this.props.language
 		let languages = LANGUAGE_ARRAY
-		if (NODE_ENV === 'production') {
+		if (! DEBUG) {
 			languages = languages.filter(lang => lang.enable || currentLanguage === lang.value)
 		}
 
@@ -49,20 +51,44 @@ export class I18nMenu extends Component {
 		this.props.dispatch(setLanguage(data.value))
 	}
 
+	toggleOverlay() {
+		this.props.dispatch(toggleI18nOverlay())
+	}
+
 	render() {
-		if (this.state.languages.length < 2) {
+		const {overlay} = this.props
+		const {currentLanguage, languages} = this.state
+		const lang = LANGUAGES[currentLanguage]
+
+		if (languages.length < 2) {
 			return null
 		}
 
 		return <Dropdown
 			className="link item"
-			value={this.state.currentLanguage}
-			options={this.state.languages}
-			onChange={this.handleChange}
-		/>
+			text={lang ? lang.menu.text : 'Language'}
+		>
+			<Dropdown.Menu>
+				{ languages.map(option => <Dropdown.Item
+					key={option.value}
+					active={currentLanguage === option.value}
+					onClick={this.handleChange}
+					{...option}
+				/>) }
+				{DEBUG && <Fragment>
+					<Dropdown.Divider />
+					<Dropdown.Item
+						onClick={this.toggleOverlay}
+						icon={overlay? 'eye slash' : 'eye'}
+						text={overlay ? 'Hide Overlay' : 'Show Overlay'}
+					/>
+				</Fragment>}
+			</Dropdown.Menu>
+		</Dropdown>
 	}
 }
 
 export default connect(state => ({
 	language: state.language,
+	overlay: state.i18nOverlay,
 }))(I18nMenu)

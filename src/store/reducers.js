@@ -31,10 +31,22 @@ const language = (state=DEFAULT_LANGUAGE, action) => {
 	}
 }
 
+const i18nOverlay = (state=false, action) => {
+	switch (action.type) {
+	case ActionTypes.TOGGLE_I18N_OVERLAY:
+		return ! state
+	case ActionTypes.SET_I18N_OVERLAY:
+		return action.payload
+	default:
+		return state
+	}
+}
+
 const rootReducer = combineReducers({
 	report,
 	globalError,
 	language,
+	i18nOverlay,
 })
 
 export default rootReducer

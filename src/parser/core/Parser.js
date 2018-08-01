@@ -250,7 +250,7 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = this.moduleOrder
+		const displayOrder = [...this.moduleOrder]
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
 		const results = []

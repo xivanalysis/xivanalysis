@@ -3,12 +3,14 @@ export default {
 		id: 145,
 		name: 'Cleric Stance',
 		icon: 'https://secure.xivdb.com/img/game/010000/010402.png',
+		duration: 15,
 	},
 
 	SWIFTCAST: {
 		id: 167,
 		name: 'Swiftcast',
 		icon: 'https://secure.xivdb.com/img/game/010000/010454.png',
+		duration: 10,
 	},
 
 	PROTECT: {
