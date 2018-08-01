@@ -1,11 +1,10 @@
-//import React, {Fragment} from 'react'
+import React, {Fragment} from 'react'
 
-//import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class DarkArts extends Module {
 	static handle = 'darkarts'
@@ -62,18 +61,64 @@ export default class DarkArts extends Module {
 	}
 
 	_onRemoveDarkArts(event) {
-		// check if DA was consumed by an action, increment DA tally if so
-		if (!(this._darkArtsApplicationTime - event.timestamp > this.library.DARK_ARTS_DURATION)) {
-			// buff fell off
-			this._countDroppedDA += 1
+		// see if we have recorded a DA appliation
+		if (this._darkArtsApplicationTime !== undefined) {
+			// check if DA was consumed by an action, increment DA tally if so
+			if (this._darkArtsApplicationTime - event.timestamp >= this.library.DARK_ARTS_DURATION) {
+				// buff fell off
+				this._countDroppedDA += 1
+			}
+			// else buff was consumed
+			//reset timer
+			this._darkArtsApplicationTime = undefined
 		}
-		// else buff was consumed
 	}
 
-	// noinspection JSMethodCanBeStatic
 	_onComplete() {
-		// dropped DAs
-		// better spent enmity DAPSvsDASS
+		if (this._countDroppedDA > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DARK_ARTS.icon,
+				content: <Fragment>
+					One or more <ActionLink {...ACTIONS.DARK_ARTS}/> applications expired.  Hopefully this was caused by a downtime transition, otherwise there are more serious problems (4/5 GCD, most oGCDs consume DA.)
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					You missed out on {this._countDroppedDA * 140} potency due to {this._countDroppedDA} dropped DAs.
+				</Fragment>,
+			}))
+		}
+		if (this._countDADP > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DARK_PASSENGER.icon,
+				content: <Fragment>
+					Try to avoid using <ActionLink {...ACTIONS.DARK_PASSENGER}/> with <ActionLink {...ACTIONS.DARK_ARTS}/> if possible.  It is a very powerful enmity tool, but does not benefit from <StatusLink id={STATUSES.SLASHING_RESISTANCE_DOWN.id}/>
+					, and is a slight damage loss compared to the other options.  However, as it is one of the most powerful enmity tools in your arsenal, don't be scared to use it if needed.
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					You missed out on {this._countDADP * 4} potency due to {this._countDADP} DADPs.
+				</Fragment>,
+			}))
+		}
+		if (this._countDASS > this._countDAPS) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SPINNING_SLASH.icon,
+				content: <Fragment>
+					While <ActionLink {...ACTIONS.SPINNING_SLASH}/> and <ActionLink {...ACTIONS.POWER_SLASH}/> gain the same potency bonus from <ActionLink {...ACTIONS.DARK_ARTS}/>
+					, and both gain an increased enmity modifier, <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> does more damage and has a larger modifier, which results in an overall enmity gain
+					.  Using <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.SPINNING_SLASH}/> more than <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> generally indicates excessive enmity GCD combos being used
+					.  Try to restrict <ActionLink {...ACTIONS.DARK_ARTS}/> usage to either just the <ActionLink {...ACTIONS.POWER_SLASH}/> finisher or both <ActionLink {...ACTIONS.POWER_SLASH}/> and <ActionLink {...ACTIONS.SPINNING_SLASH}/>.
+				</Fragment>,
+				severity: SEVERITY.MEDIUM,
+				why: <Fragment>
+					You used <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.SPINNING_SLASH}/> {this._countDASS} times, but <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> only {this._countDAPS} times.
+				</Fragment>,
+			}))
+		}
+	}
+
+	output() {
+		//
 		return false
 	}
 }

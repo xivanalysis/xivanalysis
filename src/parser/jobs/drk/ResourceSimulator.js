@@ -198,7 +198,6 @@ export default class Resources extends Module {
 	}
 	*/
 
-
 	// noinspection JSMethodCanBeStatic
 	_bindToCeiling(op1, op2, ceiling) {
 		return {waste: op1 + op2 > ceiling ? (op1 + op2 - ceiling) : 0, result: op1 + op2 > ceiling ? ceiling : (op1 + op2)}
@@ -262,7 +261,6 @@ export default class Resources extends Module {
 
 	//timestamps for TBN and sole
 	_resourceBuffTimestamps = {}
-
 
 	_onApplyResourceStatuses(event) {
 		//safety net, since we're getting buffs and debuffs
@@ -456,11 +454,11 @@ export default class Resources extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DARK_ARTS.icon,
 				content: <Fragment>
-					Missing a <ActionLink {...ACTIONS.DARK_ARTS}/> pre-pull for use during the opener is a large potency and enmity loss.  Pressing DA at around 6-7 seconds before pull gives ample time to use it.
+					Missing a <ActionLink {...ACTIONS.DARK_ARTS}/> pre-pull for use during the opener is a large potency and enmity loss.  Pressing DA at around 6-7 seconds before pull gives ample time to use it as well as two pre-fight mana ticks.
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					Mana was logged at 100% when the fight started, which implies that a <ActionLink {...ACTIONS.DARK_ARTS}/> was not used pre-pull.  If mana was at 100% for some other reason, then hopefully this is redundant.
+					Mana was logged at 100% when the fight started, which implies that a <ActionLink {...ACTIONS.DARK_ARTS}/> was not used pre-pull.  Ignore this if mana was at 100% for some other reason.
 				</Fragment>,
 			}))
 		}
@@ -473,6 +471,19 @@ export default class Resources extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
 					You missed out on {this._droppedTBNs * 50} blood ({BLOODSPILLER_BLOOD_POTENCY} potency) or {this._droppedTBNs * 140} potency of Dark Arts buffs.
+				</Fragment>,
+			}))
+		}
+		if (this._noDAcarve > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.CARVE_AND_SPIT.icon,
+				content: <Fragment>
+					One or more <ActionLink {...ACTIONS.CARVE_AND_SPIT}/> was used without <ActionLink {...ACTIONS.DARK_ARTS}/>
+					.  Even though this generates the same amount of mana as <ActionLink {...ACTIONS.SYPHON_STRIKE}/>, it loses out on 300 potency, a massive part of your damage as a DRK.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					You missed out on {this._noDAcarve * 350} potency due to {this._noDAcarve} due to no buff carves.
 				</Fragment>,
 			}))
 		}
