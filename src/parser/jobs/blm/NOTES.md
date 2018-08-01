@@ -18,7 +18,7 @@ Downtime between casts
 Ending ice with hard thunder
 - NOTE: May be able to cover this with FireCounter module
 - T3inUI.js keeps track of that but not if F4s are being lost because of it.
-
+ 
 Skipping B4 and getting less than 5 F4 next rotation
 
 Not getting 6+ F4 per rotation with B4
@@ -56,4 +56,3 @@ Foul or Flare hitting 1 target when 2+ are active and in proximity
 Custom proc icons for Firestarter and Thundercloud usage?
 - Added to Rotation view
 - TODO: General Rotation/Timeline support for job-specific display is planned
-- TODO: FFLogs seems to randomly miss Thundercloud buff, which makes the current implementation unreliable. See https://www.fflogs.com/reports/FNaDPhvGTzJd8Wwn#fight=20&type=damage-done&translate=true for a parse with 22 t3p, but only one tc buff.
