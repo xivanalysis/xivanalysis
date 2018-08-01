@@ -5,8 +5,12 @@
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
 - [ ] GL3 uptime
 - [ ] GL3 efficient recovery
+- [ ] GL3 holding with RoE
+- [ ] GL loading with RoW (warn on WT without RoW after it)
 - [ ] General auto-attack uptime
 - [ ] Earth Tackle, not even once
+- [x] Fists, make sure at least one is up
+- [ ] Fists of Fire uptime?
 
 ### AoE
 - [x] Make sure there's enough enemies for RB or AotD effectiveness
@@ -28,7 +32,10 @@
 - [ ] RoF basically on CD, take downtime into account or fights that derp a window
 - [ ] Brotherhood, same as RoF besides slight variance for duration
 - [ ] RoF should last 9 GCDs
-- [ ] RoF and BH overlap drift (common in Omega 8S)
+- [ ] RoF and BH overlap drift
+- [ ] IR for every Howling and Elixir
+- [ ] IR-RoF drift, every second RoF should include an IR
+- [ ] Howling and Elixir drift, they should ideally be weaved in the same GCD, or no more than 1 GCD apart
 
 ### Forms
 - [x] Reset forms by using Opo-Opo form skills in a different form

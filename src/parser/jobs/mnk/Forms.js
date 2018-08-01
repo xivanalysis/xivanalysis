@@ -3,6 +3,7 @@ import React, {Fragment} from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -84,8 +85,7 @@ export default class Forms extends Module {
 				if (OPO_OPO_SKILLS.includes(action)) { this._resetForms++ }
 				break
 			default:
-				// Only Bootshine gets a special effect without a form
-				if ([ACTIONS.DRAGON_KICK.id, ACTIONS.ARM_OF_THE_DESTROYER.id].includes(action)) {
+				if (OPO_OPO_SKILLS.includes(action)) {
 					this._formless++
 				}
 
@@ -130,7 +130,7 @@ export default class Forms extends Module {
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> and <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. Their special effects only activate when in the correct form.
+					Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> and <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. Their special effects only activate when in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has higher potency.
 				</Fragment>,
 				why: `${this._formless} combo-starters were used Formlessly, cancelling this special effects.`,
 			}))

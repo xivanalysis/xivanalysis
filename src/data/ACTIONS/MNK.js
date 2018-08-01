@@ -36,6 +36,7 @@ export default {
 		name: 'Meditation',
 		icon: 'https://secure.xivdb.com/img/game/002000/002534.png',
 		onGcd: true,
+		cooldown: 1.2,
 	},
 
 	// -----
