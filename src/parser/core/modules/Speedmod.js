@@ -6,7 +6,6 @@ import {
 	PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP,
 } from './SpeedmodConsts'
 
-// TODO: Prepull Fey Wind is not caught by this. Probably same with Arrow. Need to do something to handle that
 export default class Speedmod extends Module {
 	static handle = 'speedmod'
 	static dependencies = [
