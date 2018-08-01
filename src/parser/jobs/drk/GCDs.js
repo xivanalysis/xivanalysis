@@ -35,7 +35,6 @@ const GCD_COMBO_CHAIN = [
 		next: undefined},
 ]
 
-
 export default class GCDs extends Module {
 	static handle = 'gcds'
 	static title = 'GCD Combo'

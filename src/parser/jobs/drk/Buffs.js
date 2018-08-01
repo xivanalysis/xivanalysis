@@ -21,6 +21,8 @@ export default class Buffs extends Module {
 	// -----
 	// Accessors
 	// -----
+	// this entire block used to have more logic to handle TBN and some weird blood weapon cases,
+	// but ended up just getting simplified.  Probably will be expanded upon later.
 	darkSideActive() {
 		return this.combatants.selected.hasStatus(STATUSES.DARKSIDE.id)
 	}
@@ -41,6 +43,7 @@ export default class Buffs extends Module {
 	// Evaluation Metrics
 	// -----
 	// stack object: {timestamp: int, overwrite: boolean, duration: int}
+	// trigger implies a refreshbuff is relevant, toggle does not
 	_gritToggleStack = []
 	_darksideToggleStack = []
 	_bloodWeaponTriggerStack = []
@@ -84,63 +87,6 @@ export default class Buffs extends Module {
 		}
 	}
 
-	_onComplete(event) {
-		// cleanup
-		this._gritToggleStack.push({timestamp: event.timestamp, active: false})
-		this._darksideToggleStack.push({timestamp: event.timestamp, active: false})
-		this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: false})
-		this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: false})
-		// -----
-		// UI Component
-		// -----
-		//calculating fight duration this way gives absurd downtime values for some parses.  Just using the raw values since the core bloodwep function has a lot of leeway anyways.
-		const rawFightDuration = this.parser.fightDuration
-		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
-		//15 seconds every 40 seconds, 8 seconds every 80 seconds.
-		//the +20 seconds for the downtime buffer seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
-		const optimalFightBloodWeaponDuration = (Math.floor(fightDuration / 40000) * 15000) + (Math.floor(fightDuration / 80000) * 8000) + (Math.floor(((rawFightDuration - fightDuration) + 20000) / 40000) * 15000)
-		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
-		const fightDarksideDuration = Buffs._parseEventStack(this._darksideToggleStack)
-		const fightGritDuration = Buffs._parseEventStack(this._gritToggleStack)
-		//later, use the blood price application times to check if blood weapon windows were missed
-		//darkside uptime
-		//grit uptime
-		//blood weapon uptime
-		this.checklist.add(new Rule({
-			name: <Fragment><ActionLink {...ACTIONS.DARKSIDE}/></Fragment>,
-			description: 'Darkside should only be removed during downtime, to allow for mana to be regained.  This meter is normalized against simulated fight downtime; anything above 97% is effectively 100% due to' +
-				'how FFLogs handles darkside refreshing itself, and values are capped to 100% due to simulator inaccuracies.',
-			requirements: [
-				new Requirement({
-					name: 'Darkside Total Uptime',
-					percent: this.library.upperCap(((fightDarksideDuration / fightDuration) * 100), 100),
-				}),
-			],
-		}))
-		this.checklist.add(new Rule({
-			name: <Fragment><ActionLink {...ACTIONS.BLOOD_WEAPON}/></Fragment>,
-			description: <Fragment>As your primary blood generation tool, keeping blood weapon up as much as possible is a fundamental part of your damage.  <ActionLink {...ACTIONS.DELIRIUM}/>
-				with an 8 second refresh and raw duration vs cooldown let you have an ideal dummy uptime of 47.5%, with changes per fight based on downtime and length. </Fragment>,
-			requirements: [
-				new Requirement({
-					name: 'Blood Weapon Normalized Uptime',
-					percent: this.library.upperCap((fightBloodWeaponDuration / optimalFightBloodWeaponDuration) * 100, 100),
-				}),
-			],
-		}))
-		this.checklist.add(new Rule({
-			name: <Fragment>No <ActionLink {...ACTIONS.GRIT}/></Fragment>,
-			description: <Fragment>As a powerful defensive cooldown and enmity tool, grit will have to be used in specific parts of the fight.  By using strong defensive cooldowns more often like
-				<ActionLink {...ACTIONS.SHADOW_WALL}/> or spending <ActionLink {...ACTIONS.DARK_ARTS}/> for a higher enmity bonus on <ActionLink {...ACTIONS.PLUNGE}/>,<ActionLink {...ACTIONS.DARK_PASSENGER}/>,<ActionLink {...ACTIONS.SPINNING_SLASH}/>, or <ActionLink {...ACTIONS.POWER_SLASH}/>, you can greatly reduce time spent in grit to directly increase damage.</Fragment>,
-			requirements: [
-				new Requirement({
-					name: 'Fight Spent without Grit',
-					percent:  this.library.upperCap((100 - ((fightGritDuration / fightDuration) * 100)), 100),
-				}),
-			],
-		}))
-	}
-
 	static _parseEventStack(stack) {
 		let out = 0
 		let previous_entry = undefined
@@ -152,6 +98,59 @@ export default class Buffs extends Module {
 			previous_entry = entry
 		}
 		return out
+	}
+
+	_onComplete(event) {
+		// cleanup
+		this._gritToggleStack.push({timestamp: event.timestamp, active: false})
+		this._darksideToggleStack.push({timestamp: event.timestamp, active: false})
+		this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: false})
+		this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: false})
+		// -----
+		// UI Component
+		// -----
+		//using only duration and fightduration ends up with weird results.  mixture of both has worked really well in near-matching fflogs
+		const rawFightDuration = this.parser.fightDuration
+		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
+		//15 seconds every 40 seconds (BW), 8 seconds every 80 seconds (del).
+		//the +20 seconds for the downtime buffer seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
+		// or at least when it doesn't consider a DRK running off to LD second wind in o6s as downtime.
+		const optimalFightBloodWeaponDuration = (Math.floor(fightDuration / 40000) * 15000) + (Math.floor(fightDuration / 80000) * 8000) + (Math.floor(((rawFightDuration - fightDuration) + 20000) / 40000) * 15000)
+		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
+		const fightDarksideDuration = Buffs._parseEventStack(this._darksideToggleStack)
+		const fightGritDuration = Buffs._parseEventStack(this._gritToggleStack)
+		//later, use the blood price application times to check if blood weapon windows were missed, but not really needed for core functionality
+		this.checklist.add(new Rule({
+			name: <Fragment><ActionLink {...ACTIONS.DARKSIDE}/></Fragment>,
+			description: 'Darkside should only be removed during downtime natural mana regeneration.  This value has already been corrected based on fight downtime and fflogs inaccuracy.  Aim for 100%.',
+			requirements: [
+				new Requirement({
+					name: 'Darkside Total Uptime',
+					percent: this.library.upperCap(((fightDarksideDuration / fightDuration) * 100), 100),
+				}),
+			],
+		}))
+		this.checklist.add(new Rule({
+			name: <Fragment><ActionLink {...ACTIONS.BLOOD_WEAPON}/></Fragment>,
+			description: <Fragment>As your primary blood generation and damage tool, keeping blood weapon up as much as possible is a fundamental part of your damage.  <ActionLink {...ACTIONS.DELIRIUM}/>
+				and a 15s natural cooldown allow for striking dummy uptime of 47.5%, with changes per fight based on downtime and length.  This value is pre-corrected, aim for at least 95%.</Fragment>,
+			requirements: [
+				new Requirement({
+					name: 'Blood Weapon Normalized Uptime',
+					percent: this.library.upperCap((fightBloodWeaponDuration / optimalFightBloodWeaponDuration) * 100, 100),
+				}),
+			],
+		}))
+		this.checklist.add(new Rule({
+			name: <Fragment>No <ActionLink {...ACTIONS.GRIT}/></Fragment>,
+			description: <Fragment>Grit is required for enmity openers and some points of excessive damage, but drastically reduces damage output.</Fragment>,
+			requirements: [
+				new Requirement({
+					name: 'Fight Spent without Grit',
+					percent:  this.library.upperCap((100 - ((fightGritDuration / fightDuration) * 100)), 100),
+				}),
+			],
+		}))
 	}
 
 	output() {

@@ -6,9 +6,7 @@ export default {
 		id: 3629,
 		name: 'Grit',
 		icon: 'https://secure.xivdb.com/img/game/003000/003070.png',
-		//this is a GCD, but since it has no potency it might as well be downtime.
-		//onGcd: true,
-		cooldown: 2.5,
+		onGcd: true,
 	},
 	DARKSIDE: {
 		id: 3628,

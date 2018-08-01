@@ -20,7 +20,6 @@ export default class DarkArts extends Module {
 	// counters (uncombo'd GCDs ignored)
 	_countDA = 0 // Dark Arts
 	_countDroppedDA = 0 //dropped dark arts
-	_countCSnoDA = 0 // Carve and Spit, without DA (350 potency loss)
 	_countDAPS = 0  // Dark Arts Power Slash    (3 in hate chain, better hate mod than 2).
 	_countDASS = 0  // Dark Arts Spinning Slash (2 in hate chain)
 	_countDADP = 0  // Dark Arts Dark Passenger (no slashing bonus, slightly worse than DA other abilities)
@@ -104,12 +103,9 @@ export default class DarkArts extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SPINNING_SLASH.icon,
 				content: <Fragment>
-					While <ActionLink {...ACTIONS.SPINNING_SLASH}/> and <ActionLink {...ACTIONS.POWER_SLASH}/> gain the same potency bonus from <ActionLink {...ACTIONS.DARK_ARTS}/>
-					, and both gain an increased enmity modifier, <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> does more damage and has a larger modifier, which results in an overall enmity gain
-					.  Using <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.SPINNING_SLASH}/> more than <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> generally indicates excessive enmity GCD combos being used
-					.  Try to restrict <ActionLink {...ACTIONS.DARK_ARTS}/> usage to either just the <ActionLink {...ACTIONS.POWER_SLASH}/> finisher or both <ActionLink {...ACTIONS.POWER_SLASH}/> and <ActionLink {...ACTIONS.SPINNING_SLASH}/>.
+					<ActionLink {...ACTIONS.DARK_ARTS}/> has a greater impact on total enmity when used with <ActionLink {...ACTIONS.POWER_SLASH}/> than <ActionLink {...ACTIONS.SPINNING_SLASH}/>.  Prioritize boosting either both or just Power Slash, otherwise you may be using too many enmity GCDs.
 				</Fragment>,
-				severity: SEVERITY.MEDIUM,
+				severity: SEVERITY.MINOR,
 				why: <Fragment>
 					You used <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.SPINNING_SLASH}/> {this._countDASS} times, but <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> only {this._countDAPS} times.
 				</Fragment>,
