@@ -113,7 +113,7 @@ export class DbLink extends Component {
 }
 
 const Wrapped = connect(state => ({
-	language: state.language,
+	language: state.language.site,
 }))(DbLink)
 
 export default Wrapped

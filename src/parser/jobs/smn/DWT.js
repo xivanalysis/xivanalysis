@@ -1,3 +1,4 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -33,6 +34,7 @@ const MISSED_GCD_SEVERITY = {
 
 export default class DWT extends Module {
 	static handle = 'dwt'
+	static i18n_id = i18nMark('smn.dwt.title')
 	static dependencies = [
 		'aoe', // Ensure AoE runs cleanup before us
 		'castTime',
@@ -127,10 +129,12 @@ export default class DWT extends Module {
 		if (badGcds) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
-				content: <Fragment>
+				content: <Trans id="smn.dwt.suggestions.bad-gcds.content">
 					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.TRI_BIND}/> in AoE situations.
-				</Fragment>,
-				why: `${badGcds} incorrect GCDs used during DWT.`,
+				</Trans>,
+				why: <Trans id="smn.dwt.suggestions.bad-gcds.why">
+					{badGcds} incorrect GCDs used during DWT.
+				</Trans>,
 				tiers: BAD_GCD_SEVERITY,
 				value: badGcds,
 			}))
@@ -142,10 +146,12 @@ export default class DWT extends Module {
 
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
-				content: <Fragment>
+				content: <Trans id="smn.dwt.suggestions.missed-gcds.content">
 					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don't end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
-				</Fragment>,
-				why: `${this._missedGcds} additional GCDs could have been used during DWT.`,
+				</Trans>,
+				why: <Trans id="smn.dwt.suggestions.missed-gcds.why">
+					{this._missedGcds} additional GCDs could have been used during DWT.
+				</Trans>,
 				tiers: MISSED_GCD_SEVERITY,
 				value: this._missedGcds,
 			}))
@@ -154,11 +160,13 @@ export default class DWT extends Module {
 		if (this._missedDeathflares) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DEATHFLARE.icon,
-				content: <Fragment>
+				content: <Trans id="smn.dwt.suggestions.missed-deathflares.content">
 					Make sure you always end <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> with a <ActionLink {...ACTIONS.DEATHFLARE}/>. Failing to do so is a huge damage loss.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: `${this._missedDeathflares} DWTs with no Deathflare.`,
+				why: <Trans id="smn.dwt.suggestions.missed-deathflares.why">
+					{this._missedDeathflares} DWTs with no Deathflare.
+				</Trans>,
 			}))
 		}
 	}

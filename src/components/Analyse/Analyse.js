@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
@@ -92,7 +93,7 @@ class Analyse extends Component {
 		// TODO: actually check if needed
 		const changed = !prevProps
 			|| report !== prevProps.report
-			|| params !== prevProps.match.params
+			|| !_.isEqual(params, prevProps.match.params)
 		if (changed) {
 			// TODO: does it really need to reset here?
 			this.reset()
