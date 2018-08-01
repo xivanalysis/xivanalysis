@@ -36,6 +36,20 @@ export class I18nLoader extends Component {
 			`../../locale/${language}/messages.json`
 		)
 
+		if (!window.Intl) {
+			await import(
+				/* webpackMode: 'lazy', webpackChunkName: 'intl-polyfill' */
+				'intl'
+			)
+			// TODO: This is also including `kde` and I've got no idea how to get rid of it
+			await import(
+				/* webpackMode: 'lazy' */
+				/* webpackChunkName: 'intl-polyfill-[index]' */
+				/* webpackInclude: /(?:de|en|fr|ja).js/ */
+				`intl/locale-data/jsonp/${language}.js`
+			)
+		}
+
 		// In some misguided attempt to be useful, lingui compiles
 		// messages so that values without translation are set to
 		// their keys. We're using a forked babel transformation that
