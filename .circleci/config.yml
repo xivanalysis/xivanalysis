@@ -75,7 +75,10 @@ workflows:
   version: 2
   flow:
     jobs:
-      - setup
+      - setup:
+          filters:
+            branches:
+              ignore: i18n-master
       - lint:
           requires:
             - setup
