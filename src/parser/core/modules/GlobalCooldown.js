@@ -26,7 +26,6 @@ export default class GlobalCooldown extends Module {
 	_castingEvent = null
 
 	_lastGcdIsInstant = false
-	_lastGcdGuid = 0
 
 	gcds = []
 
@@ -118,11 +117,10 @@ export default class GlobalCooldown extends Module {
 			timestamp: event.timestamp,
 			length: gcdLength,
 			speedMod,
-			actionId: this._lastGcdGuid,
+			actionId: event.ability.guid,
 			isInstant: this._lastGcdIsInstant,
 		})
 
-		this._lastGcdGuid = event.ability.guid
 		this._lastGcdIsInstant = isInstant
 
 		// Store current gcd time for the check
