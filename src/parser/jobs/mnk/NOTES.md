@@ -5,6 +5,8 @@
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
 - [ ] GL3 uptime
 - [ ] General auto-attack uptime
+- [x] Twin snakes uptime and clipping
+- [x] Dragon kick uptime and clipping
 
 ### AoE
 - [ ] Make sure there's enough enemies for RB or AotD effectiveness
