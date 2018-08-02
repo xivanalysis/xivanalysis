@@ -8,14 +8,16 @@ import styles from './Checklist.module.css'
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
-			percent: PropTypes.number.isRequired,
-			target: PropTypes.number.isRequired,
-			name: PropTypes.node.isRequired,
-			description: PropTypes.node,
-			requirements: PropTypes.arrayOf(PropTypes.shape({
+			//percent: PropTypes.number.isRequired,
+			//target: PropTypes.number.isRequired,
+			//name: PropTypes.node.isRequired,
+			content: PropTypes.node.isRequired,
+			/* requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
-			})),
+				value: PropTypes.number.isRequired,
+				target: PropTypes.number.isRequired,
+			})), */
 		})),
 		hideProgress: PropTypes.bool.isRequired,
 	}
@@ -28,13 +30,7 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			const success = rule.showAsInfo ? 3 :
-				rule.percent >= rule.target ? 2:
-					rule.percent >= rule.decentTarget ? 1: 0
-			const classname = ['text-error', 'text-warning', 'text-success', 'text-info'][success]
-			const color = ['red', 'yellow', 'green', 'blue'][success]
-			const icon = ['remove', 'warning sign', 'remove', 'info'][success]
-			if (success === 0) {
+			if (rule.styles.autoExpand) {
 				expanded.push(index)
 			}
 			return {
@@ -44,17 +40,17 @@ class Checklist extends Component {
 					className: styles.title,
 					content: <Fragment>
 						<Icon
-							name={icon}
-							className={classname}
+							name={rule.styles.icon}
+							className={rule.styles.text}
 						/>
 						{rule.name}
-						<div className={styles.percent + ' ' + classname}>
-							{!rule.hidePercent ? `${rule.percent.toFixed(1)}%` : ''}{rule.text}
+						<div className={styles.percent + ' ' + rule.styles.text}>
+							{rule.percent.toFixed(1)}%
 							{hideProgress || <Progress
 								percent={rule.percent}
 								className={styles.progress}
 								size="small"
-								color={color}
+								color={rule.styles.color}
 							/>}
 						</div>
 					</Fragment>,
@@ -69,7 +65,7 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {!requirement.hidePercent ? `${requirement.percent.toFixed(2)}%` : ''}{requirement.text}
+									{requirement.name}: {requirement.content}
 								</li>
 							)}
 						</ul>

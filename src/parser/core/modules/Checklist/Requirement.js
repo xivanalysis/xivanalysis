@@ -1,13 +1,19 @@
 export default class Requirement {
 	name = ''
-	_percent = 0
-	hidePercent = false
-	text = ''
+	_percent = null
+	value = null
+	target = 100
 
+	get content() {
+		if (this._percent !== null || this.value === null) { return `${this.percent.toFixed(2)}%` }
+		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` //avoid weird floating point shit
+	}
 	get percent() {
-		const result = (typeof this._percent === 'function')? this._percent() : this._percent
-		// Make sure janky output is reverted to a number
-		return result || 0
+		if (this._percent === null) {
+			if (this.value === null) { return 0 }
+			return 100 * (((typeof this.value === 'function')? this.value() : this.value) || 0) / this.target
+		}
+		return ((typeof this._percent === 'function')? this._percent() : this._percent) || 0
 	}
 	set percent(value) {
 		this._percent = value
