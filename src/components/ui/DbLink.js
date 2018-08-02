@@ -32,6 +32,19 @@ export class XIVDBTooltipProvider {
 		this.cache = {}
 		this.pending = {}
 
+		this.canRun = true
+
+		// See if we need to polyfill for IE11
+		if (!window.URLSearchParams) {
+			this.canRun = false
+
+			// TODO: Should this be moved into a separate chunk?
+			import('url-search-params-polyfill').then(() => {
+				this.canRun = true
+				this.run()
+			})
+		}
+
 		// Make sure we have the styles
 		const tooltipStyle = document.createElement('link')
 		tooltipStyle.href = `${this.source}/tooltips.css?v=${getTooltipCacheBuster()}`
@@ -59,7 +72,14 @@ export class XIVDBTooltipProvider {
 
 			fetch(`${this.source}/tooltip?t=${Date.now()}`, {
 				method: 'POST',
-				body: params,
+				headers: {
+					// Set this manually for IE11. Normally, URLSearchParams
+					// would take care of it.
+					'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+				},
+				// Likewise, call `toString()` because the polyfill IE11 uses
+				// doesn't know what to do with the URLSearchParams polyfill.
+				body: params.toString(),
 
 			}).then(resp => resp.json()).then(data => {
 				if (! data || typeof data !== 'object') {
@@ -119,8 +139,9 @@ export class XIVDBTooltipProvider {
 		const typePending = languagePending[type] = languagePending[type] || []
 		typePending.push(id)
 
-		this.run.cancel()
-		this.run()
+		if (this.canRun) {
+			this.run()
+		}
 
 		return new Promise(s => cache.waiting.push(s))
 	}
