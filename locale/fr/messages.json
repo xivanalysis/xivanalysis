@@ -16,6 +16,8 @@
   "core.cooldowndowntime.ogcd-cd-metric": "",
   "core.cooldowndowntime.title": "",
   "core.cooldowndowntime.use-ogcd-cds": "",
+  "core.dblink.loading": "",
+  "core.dblink.not-found": "",
   "core.deaths.content": "",
   "core.deaths.why": "",
   "core.error.generic": "",
