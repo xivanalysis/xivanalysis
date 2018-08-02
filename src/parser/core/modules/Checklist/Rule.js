@@ -3,14 +3,8 @@ import {matchClosestLower} from 'utilities'
 
 export const TARGET = {
 	SUCCESS: 2,
-	DECENT: 1,
-	FAIL: 0,
-}
-
-const STYLES = {
-	[TARGET.SUCCESS]: {text: 'text-success', color: 'green', icon: 'checkmark', autoExpand: false},
-	[TARGET.DECENT]: {text: 'text-warning', color: 'yellow', icon: 'warning sign', autoExpand: true},
-	[TARGET.FAIL]: {text: 'text-error', color: 'red', icon: 'remove', autoExpand: true},
+	WARN: 1,
+	FAIL: undefined,
 }
 
 export default class Rule {
@@ -18,12 +12,12 @@ export default class Rule {
 	description = null
 	requirements = []
 	target = 95
-	decentTarget = 95
 
-	get styles() {
-		//specifically check target first, so if the decentTarget is higher, we show success anyway
-		const target = this.percent >= this.target ? TARGET.SUCCESS : this.percent >= this.decentTarget ? TARGET.DECENT : TARGET.FAIL
-		return STYLES[target]
+	get tier() {
+		return matchClosestLower(
+			{[this.target]: TARGET.SUCCESS},
+			this.percent
+		)
 	}
 
 	get percent() {
@@ -49,7 +43,7 @@ export class TieredRule extends Rule {
 		})
 	}
 
-	get styles() {
-		return STYLES[this.matcher(this.tiers, this.percent)]
+	get tier() {
+		return this.matcher(this.tiers, this.percent)
 	}
 }

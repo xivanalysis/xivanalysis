@@ -3,13 +3,21 @@ import React, {Component, Fragment} from 'react'
 import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
+import {TARGET} from 'parser/core/modules/Checklist/Rule'
+
 import styles from './Checklist.module.css'
+
+const RULE_STYLES = {
+	[TARGET.SUCCESS]: {text: 'text-success', color: 'green', icon: 'checkmark', autoExpand: false},
+	[TARGET.WARN]: {text: 'text-warning', color: 'yellow', icon: 'warning sign', autoExpand: true},
+	[TARGET.FAIL]: {text: 'text-error', color: 'red', icon: 'remove', autoExpand: true},
+}
 
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
 			percent: PropTypes.number.isRequired,
-			styles: PropTypes.object.isRequired,
+			tier: PropTypes.oneOf(Object.values(TARGET)),
 			name: PropTypes.node.isRequired,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
@@ -27,7 +35,9 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			if (rule.styles.autoExpand) {
+			const ruleStyles = RULE_STYLES[rule.tier]
+
+			if (ruleStyles.autoExpand) {
 				expanded.push(index)
 			}
 			return {
@@ -37,17 +47,17 @@ class Checklist extends Component {
 					className: styles.title,
 					content: <Fragment>
 						<Icon
-							name={rule.styles.icon}
-							className={rule.styles.text}
+							name={ruleStyles.icon}
+							className={ruleStyles.text}
 						/>
 						{rule.name}
-						<div className={styles.percent + ' ' + rule.styles.text}>
+						<div className={styles.percent + ' ' + ruleStyles.text}>
 							{rule.percent.toFixed(1)}%
 							{hideProgress || <Progress
 								percent={rule.percent}
 								className={styles.progress}
 								size="small"
-								color={rule.styles.color}
+								color={ruleStyles.color}
 							/>}
 						</div>
 					</Fragment>,
