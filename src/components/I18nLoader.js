@@ -43,7 +43,7 @@ export class I18nLoader extends Component {
 			promises.push(
 				import(
 					/* webpackMode: 'lazy' */
-					/* webpackChunkName: 'intl-polyfill' */
+					/* webpackChunkName: 'nv-intl-polyfill' */
 					'intl'
 				)
 			)
@@ -57,7 +57,7 @@ export class I18nLoader extends Component {
 			// TODO: This is also including `kde` and I've got no idea how to get rid of it
 			await import(
 				/* webpackMode: 'lazy' */
-				/* webpackChunkName: 'intl-polyfill-[index]' */
+				/* webpackChunkName: 'nv-intl-polyfill-[index]' */
 				/* webpackInclude: /(?:de|en|fr|ja).js/ */
 				`intl/locale-data/jsonp/${language}.js`
 			)

@@ -33,7 +33,10 @@ module.exports = (config, env) => {
 	})
 
 	// Tweaking chunk splitting so intl polyfill doens't get pulled in
-	config.optimization.splitChunks.chunks = chunk => !chunk.name.includes('intl-polyfill')
+	config.optimization.splitChunks.chunks = chunk => {
+		if (!chunk.name) { return true }
+		return !chunk.name.includes('nv-')
+	}
 
 	return config
 }
