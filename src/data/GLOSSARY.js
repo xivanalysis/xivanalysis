@@ -6,7 +6,9 @@ const TERMS = {
 		text: 'proc',
 
 		i18n_description: i18nMark('core.glossary.proc-description'),
-		description: 'proc stands for programmed random occurence.',
+		description: `Proc is a term used in gaming to refer to an event (a "procedure") that is triggered under certain circumstances.
+
+For example, [~action/VERTHUNDER] has a 50% chance of triggering the status [~status/VERFIRE_READY] when cast.`,
 	},
 }
 

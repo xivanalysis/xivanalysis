@@ -2,10 +2,11 @@ import {withI18n} from '@lingui/react'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {Popup, Icon} from 'semantic-ui-react'
-import ReactMarkdown from 'react-markdown'
 
 import styles from './GlossaryTerm.module.css'
 import TERMS from 'data/GLOSSARY'
+
+import TransMarkdown from './TransMarkdown'
 
 class GlossaryTerm extends PureComponent {
 	static propTypes = {
@@ -43,14 +44,10 @@ class GlossaryTerm extends PureComponent {
 				{ title }
 			</Popup.Header>
 			<Popup.Content>
-				<ReactMarkdown
-					source={i18n._(term.i18n_description, {}, {defaults: term.description})}
-					renderers={{
-						link: props => React.createElement('a', {
-							target: '_blank',
-							href: props.href,
-						}, props.children),
-					}}
+				<TransMarkdown
+					id={term.i18n_description}
+					source={term.description}
+					linkTarget="_blank"
 				/>
 			</Popup.Content>
 		</Popup>
