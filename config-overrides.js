@@ -32,5 +32,8 @@ module.exports = (config, env) => {
 		loader: '@lingui/loader',
 	})
 
+	// Tweaking chunk splitting so intl polyfill doens't get pulled in
+	config.optimization.splitChunks.chunks = chunk => !chunk.name.includes('intl-polyfill')
+
 	return config
 }
