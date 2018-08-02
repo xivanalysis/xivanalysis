@@ -8,16 +8,13 @@ import styles from './Checklist.module.css'
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
-			//percent: PropTypes.number.isRequired,
-			//target: PropTypes.number.isRequired,
-			//name: PropTypes.node.isRequired,
-			content: PropTypes.node.isRequired,
-			/* requirements: PropTypes.arrayOf(PropTypes.shape({
+			percent: PropTypes.number.isRequired,
+			styles: PropTypes.object.isRequired,
+			name: PropTypes.node.isRequired,
+			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
 				percent: PropTypes.number.isRequired,
-				value: PropTypes.number.isRequired,
-				target: PropTypes.number.isRequired,
-			})), */
+			})),
 		})),
 		hideProgress: PropTypes.bool.isRequired,
 	}
