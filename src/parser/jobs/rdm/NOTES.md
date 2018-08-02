@@ -1,7 +1,7 @@
 # RDM Analysis (Jump's thoughts)
 
 ## Cooldowns
-- [ ] Fleche, Contre Sixte, Acceleration should be used on CD
+- [X] Fleche, Contre Sixte, Acceleration should be used on CD
 - [ ] Corps-a-Corps and Displacement should be equal to or greater than the number of melee combos
 - [ ] If the downtime in a fight is > 10s Corps-a-Corps and Displacement should be > melee combos
 - [ ] TBD how we handle Embolden usage - raid or selfish?
@@ -19,7 +19,7 @@
 - [ ] Ensure not overwriting Verstone/Verfire procs with their finishers
 - [ ] Ensure that Impact never drops - outside of downtime
 - [ ] Determine if possible to verify that the player used vercure to bring up dualcast, but didn't waste it after during a boss invuln phase
-- [ ] Handle opener exception for Thunder/Areo
+- [X] Handle opener exception for Thunder/Areo
 
 ## General Casting
 - [ ] Track Dropping Impactful, Verstone, or Verfire
@@ -31,3 +31,6 @@
 - [ ] Going into a melee combo with procs up
 - [ ] Going into a melee combo with low Black and fire is up
 - [ ] Going into a melee combo with low white and stone is up
+
+## Weaving
+- [ ] Don't use oGCDs after Displacement if > 30 seconds into a fight
