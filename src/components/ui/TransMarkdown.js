@@ -33,10 +33,6 @@ const LINK_TYPES = {
 		})
 	},
 
-	test: (href, children) => {
-		return <b>{href} ({children})</b>
-	},
-
 	status: (statusID, children) => {
 		if (STATUSES[statusID]) {
 			statusID = STATUSES[statusID].id
