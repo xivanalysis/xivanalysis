@@ -38,7 +38,8 @@ export class I18nLoader extends Component {
 		)]
 
 		// Polyfill
-		if (!window.Intl) {
+		const needsPolyfill = !window.Intl
+		if (needsPolyfill) {
 			promises.push(
 				import(
 					/* webpackMode: 'lazy' */
@@ -52,7 +53,7 @@ export class I18nLoader extends Component {
 		const catalog = (await Promise.all(promises))[0]
 
 		// This _must_ be run after `intl` is included and ready.
-		if (!window.Intl) {
+		if (needsPolyfill) {
 			// TODO: This is also including `kde` and I've got no idea how to get rid of it
 			await import(
 				/* webpackMode: 'lazy' */
