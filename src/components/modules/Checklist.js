@@ -13,7 +13,7 @@ class Checklist extends Component {
 			name: PropTypes.node.isRequired,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
-				percent: PropTypes.number.isRequired,
+				content: PropTypes.string.isRequired,
 			})),
 		})),
 		hideProgress: PropTypes.bool.isRequired,
