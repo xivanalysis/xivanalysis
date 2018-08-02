@@ -111,14 +111,13 @@ export default class GCDs extends Module {
 		if (this._GCDChainDrops.length > 0) {
 			const panels = this._GCDChainDrops.map(entry => {
 				return {
+					key: 'panel-' + entry.timestamp,
 					title: {
-						key: 'title-' + entry.timestamp,
 						content: <Fragment>
 							{this.parser.formatTimestamp(entry.timestamp)}
 						</Fragment>,
 					},
 					content: {
-						key: 'content-' + entry.timestamp,
 						content: <Rotation events={entry.events}/>,
 					},
 				}
