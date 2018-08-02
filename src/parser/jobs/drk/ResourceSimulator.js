@@ -12,6 +12,7 @@ import {Accordion, Message} from 'semantic-ui-react'
 // UI stuff
 // -----
 const DARK_ARTS_MANA_POTENCY = 140
+const DARK_ARTS_CARVE_BOOST_POTENCY = 350
 const DARK_ARTS_MANA_COST = 2400
 const BLOODSPILLER_BLOOD_POTENCY = 135
 const BLOODSPILLER_BLOOD_COST = 50
@@ -22,8 +23,6 @@ const BLOODSPILLER_BLOOD_COST = 50
 // -----
 // Meters
 // ------
-
-//const MAX_BLOOD = 100
 const MAX_MANA = 9480
 const MAX_BLOOD = 100
 const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
@@ -117,7 +116,6 @@ export default class Resources extends Module {
 	static handle = 'resourcesim'
 	static title = 'Resource Analyzer'
 	static dependencies = [
-		'library',
 		'buffs',
 		'gcds',
 		'suggestions',
@@ -404,7 +402,7 @@ export default class Resources extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed out on {this._droppedTBNs * 50} blood ({BLOODSPILLER_BLOOD_POTENCY} potency) or {this._droppedTBNs * 140} potency of Dark Arts buffs.
+					You missed out on {this._droppedTBNs * BLOODSPILLER_BLOOD_COST} blood ({BLOODSPILLER_BLOOD_POTENCY} potency) or {this._droppedTBNs * DARK_ARTS_MANA_POTENCY} potency of Dark Arts buffs.
 				</Fragment>,
 			}))
 		}
@@ -413,11 +411,11 @@ export default class Resources extends Module {
 				icon: ACTIONS.CARVE_AND_SPIT.icon,
 				content: <Fragment>
 					One or more <ActionLink {...ACTIONS.CARVE_AND_SPIT}/> was used without <ActionLink {...ACTIONS.DARK_ARTS}/>
-					.  Even though this generates the same amount of mana as <ActionLink {...ACTIONS.SYPHON_STRIKE}/>, it loses out on 300 potency, a massive part of your damage as a DRK.
+					.  Even though this generates the same amount of mana as <ActionLink {...ACTIONS.SYPHON_STRIKE}/>, it loses out on {DARK_ARTS_CARVE_BOOST_POTENCY} potency, a massive part of your damage as a DRK.
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed out on {this._noDACarve * 350} potency due to {this._noDACarve} due to no buff carves.
+					You missed out on {this._noDACarve * DARK_ARTS_CARVE_BOOST_POTENCY} potency due to {this._noDACarve} due to no buff carves.
 				</Fragment>,
 			}))
 		}

@@ -6,11 +6,28 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+const DARK_ARTS_DURATION = 10000
+const DARK_ARTS_MANA_POTENCY = 140
+//const DARK_ARTS_MANA_COST = 2400
+
+// actions that consume DA status
+const DARK_ARTS_CONSUMERS = [
+	ACTIONS.SYPHON_STRIKE.id,
+	ACTIONS.SOULEATER.id,
+	ACTIONS.SPINNING_SLASH.id,
+	ACTIONS.POWER_SLASH.id,
+	ACTIONS.DARK_PASSENGER.id,
+	ACTIONS.PLUNGE.id,
+	ACTIONS.ABYSSAL_DRAIN.id,
+	ACTIONS.CARVE_AND_SPIT.id,
+	ACTIONS.QUIETUS.id,
+	ACTIONS.BLOODSPILLER.id,
+]
+
 export default class DarkArts extends Module {
 	static handle = 'darkarts'
 	static title = 'Dark Arts Management'
 	static dependencies = [
-		'library',
 		'buffs',
 		'gcds',
 		'suggestions',
@@ -19,6 +36,7 @@ export default class DarkArts extends Module {
 
 	// counters (uncombo'd GCDs ignored)
 	_countDA = 0 // Dark Arts
+	_countOverwrittenDA = 0 //DAing when DA is up doesn't give you a double DA
 	_countDroppedDA = 0 //dropped dark arts
 	_countDAPS = 0  // Dark Arts Power Slash    (3 in hate chain, better hate mod than 2).
 	_countDASS = 0  // Dark Arts Spinning Slash (2 in hate chain)
@@ -36,7 +54,7 @@ export default class DarkArts extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		if (this.buffs.darkArtsActive() && this.library.DARK_ARTS_CONSUMERS.includes(abilityId)) {
+		if (this.buffs.darkArtsActive() && DARK_ARTS_CONSUMERS.includes(abilityId)) {
 			// DA will be consumed and resolved, manually increment targeted counters
 			if (abilityId === ACTIONS.DARK_PASSENGER.id) {
 				this._countDADP += 1
@@ -47,6 +65,8 @@ export default class DarkArts extends Module {
 			if (abilityId === ACTIONS.POWER_SLASH.id) {
 				this._countDAPS += 1
 			}
+			//mark the DA as consumed by resetting the timer
+			this._darkArtsApplicationTime = undefined
 		}
 	}
 
@@ -55,15 +75,21 @@ export default class DarkArts extends Module {
 			//opener DA put in with a fabricated event
 			this._darkArtsOpener = true
 		}
-		this._countDA += 1
+		// check for overwritten DA
+		if (this._darkArtsApplicationTime !== undefined) {
+			this._countDA += 1
+		} else {
+			//overwritten DA, good job buddy
+			this._countOverwrittenDA += 1
+		}
 		this._darkArtsApplicationTime = event.timestamp
 	}
 
 	_onRemoveDarkArts(event) {
-		// see if we have recorded a DA appliation
+		// see if we have recorded a DA application, or haven't resolved it earlier
 		if (this._darkArtsApplicationTime !== undefined) {
 			// check if DA was consumed by an action, increment DA tally if so
-			if (this._darkArtsApplicationTime - event.timestamp >= this.library.DARK_ARTS_DURATION) {
+			if (this._darkArtsApplicationTime - event.timestamp >= DARK_ARTS_DURATION) {
 				// buff fell off
 				this._countDroppedDA += 1
 			}
@@ -74,6 +100,18 @@ export default class DarkArts extends Module {
 	}
 
 	_onComplete() {
+		if (this._countOverwrittenDA > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DARK_ARTS.icon,
+				content: <Fragment>
+					One or more <ActionLink {...ACTIONS.DARK_ARTS}/> applications was overwritten by a Dark Arts recast.  This is effectively the same as dropping a Dark Arts.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					You missed out on {this._countDroppedDA * DARK_ARTS_MANA_POTENCY} potency due to {this._countOverwrittenDA} overwritten DAs.
+				</Fragment>,
+			}))
+		}
 		if (this._countDroppedDA > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DARK_ARTS.icon,
@@ -82,7 +120,7 @@ export default class DarkArts extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed out on {this._countDroppedDA * 140} potency due to {this._countDroppedDA} dropped DAs.
+					You missed out on {this._countDroppedDA * DARK_ARTS_MANA_POTENCY} potency due to {this._countDroppedDA} dropped DAs.
 				</Fragment>,
 			}))
 		}
@@ -94,6 +132,7 @@ export default class DarkArts extends Module {
 					, and is a slight damage loss compared to the other options.  However, as it is one of the most powerful enmity tools in your arsenal, don't be scared to use it if needed.
 				</Fragment>,
 				severity: SEVERITY.MINOR,
+				// the 4 potency is the 10% loss from not having slashing.  this has 0 use anywhere else
 				why: <Fragment>
 					You missed out on {this._countDADP * 4} potency due to {this._countDADP} DADPs.
 				</Fragment>,

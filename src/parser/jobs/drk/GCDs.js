@@ -39,7 +39,6 @@ export default class GCDs extends Module {
 	static handle = 'gcds'
 	static title = 'GCD Combo'
 	static dependencies = [
-		'library',
 		'cooldowns',
 		'suggestions',
 	]

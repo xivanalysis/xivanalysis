@@ -6,11 +6,36 @@ import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
+/* CURRENTLY UNUSED. FUTURE IMPROVEMENT
+// Things that should eventually get flagged if they show up under grit and darkside
+// Later on, this should be a map of potency loss and hate bonus
+const OFFENSIVE_ACTIONS = [
+	//gcd
+	//combo
+	ACTIONS.HARD_SLASH.id,
+	ACTIONS.SYPHON_STRIKE.id,
+	ACTIONS.SOULEATER.id,
+	ACTIONS.SPINNING_SLASH.id,
+	ACTIONS.POWER_SLASH.id,
+	//blood
+	ACTIONS.BLOODSPILLER.id,
+	ACTIONS.QUIETUS.id,
+	//non combo
+	ACTIONS.UNLEASH.id,
+	ACTIONS.UNMEND.id,
+	ACTIONS.ABYSSAL_DRAIN.id,
+	//ogcd
+	ACTIONS.PLUNGE.id,
+	ACTIONS.CARVE_AND_SPIT.id,
+	ACTIONS.DARK_PASSENGER.id,
+	ACTIONS.SALTED_EARTH.id,
+]
+*/
+
 export default class Buffs extends Module {
 	static handle = 'buffs'
 	static title = 'Buffs and Stances'
 	static dependencies = [
-		'library',
 		'downtime',
 		'cooldowns',
 		'combatants',
@@ -113,7 +138,7 @@ export default class Buffs extends Module {
 		const rawFightDuration = this.parser.fightDuration
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 		//15 seconds every 40 seconds (BW), 8 seconds every 80 seconds (del).
-		//the +20 seconds for the downtime buffer seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
+		//the +20 seconds for the downtime buffer (half blood wep CD) seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
 		// or at least when it doesn't consider a DRK running off to LD second wind in o6s as downtime.
 		const optimalFightBloodWeaponDuration = (Math.floor(fightDuration / 40000) * 15000) + (Math.floor(fightDuration / 80000) * 8000) + (Math.floor(((rawFightDuration - fightDuration) + 20000) / 40000) * 15000)
 		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
@@ -126,7 +151,7 @@ export default class Buffs extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Darkside Total Uptime',
-					percent: this.library.upperCap(((fightDarksideDuration / fightDuration) * 100), 100),
+					percent: Math.min(((fightDarksideDuration / fightDuration) * 100), 100),
 				}),
 			],
 		}))
@@ -137,7 +162,7 @@ export default class Buffs extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Blood Weapon Normalized Uptime',
-					percent: this.library.upperCap((fightBloodWeaponDuration / optimalFightBloodWeaponDuration) * 100, 100),
+					percent: Math.min((fightBloodWeaponDuration / optimalFightBloodWeaponDuration) * 100, 100),
 				}),
 			],
 		}))
@@ -147,7 +172,7 @@ export default class Buffs extends Module {
 			requirements: [
 				new Requirement({
 					name: 'Fight Spent without Grit',
-					percent:  this.library.upperCap((100 - ((fightGritDuration / fightDuration) * 100)), 100),
+					percent:  Math.min((100 - ((fightGritDuration / fightDuration) * 100)), 100),
 				}),
 			],
 		}))
