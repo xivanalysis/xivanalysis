@@ -1,17 +1,20 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import {Trans} from '@lingui/react'
 
-const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
-const WASTED_USES_MAX_MEDIUM = 2
+//const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
+//const WASTED_USES_MAX_MEDIUM = 2
 
 //uses the benison code for now, but should also check healing efficiency
 export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
-		'suggestions',
+		'checklist',
+		'invuln',
 	]
 
 	_lastUse = 0
@@ -25,11 +28,11 @@ export default class Assize extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.ASSIZE.id],
 		}
-		this.addHook('cast', _filter, this._onApplyBenison)
+		this.addHook('cast', _filter, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onApplyBenison(event) {
+	_onCast(event) {
 		this._uses++
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
@@ -45,17 +48,19 @@ export default class Assize extends Module {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
 		const _usesMissed = Math.floor(10 * holdDuration / (ACTIONS.ASSIZE.cooldown * 1000)) / 10
-		if (_usesMissed > 1 || this._uses === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ASSIZE.icon,
-				content: <Fragment>
-					Use Assize{this._uses > 0 && ' more frequently'}. Frequent use of Assize is typically a DPS gain and helps with MP management.
-				</Fragment>,
-				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : _usesMissed > WASTED_USES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				why: <Fragment>
-					About {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
-				</Fragment>,
-			}))
-		}
+		const maxUsesInt = this._uses + Math.floor(_usesMissed)
+		const warnTarget = 100 * Math.floor(0.9 * maxUsesInt) / maxUsesInt
+		this.checklist.add(new TieredRule({
+			name: 'Use Assize Frequently',
+			description: <Trans id="whm.assize.checklist.description"> Frequent use of <ActionLink {...ACTIONS.ASSIZE} /> is typically a DPS gain and helps with MP management. </Trans>,
+			tiers: {[warnTarget]: TARGET.WARN, 95: TARGET.SUCCESS},
+			requirements: [
+				new Requirement({
+					name: <Trans id="whm.assize.checklist.description"><ActionLink {...ACTIONS.ASSIZE} /> uptime </Trans>,
+					value: Math.floor(this._uses),
+					target: maxUsesInt,
+				}),
+			],
+		}))
 	}
 }
