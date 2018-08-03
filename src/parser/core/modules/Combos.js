@@ -107,7 +107,7 @@ export default class Combos extends Module {
 
 	comboHit(/*event*/) {
 		// To be overridden by subclasses. This is for tracking anything a successful combo hit gets you (e.g. Beast Gauge or Kenki).
-		// The parameter is the ID of the combo action (in case that wasn't obvious).
+		// The parameter is the event containing the combo action.
 	}
 
 	addJobSpecificSuggestions(/*comboBreakers, uncomboedGcds*/) {
