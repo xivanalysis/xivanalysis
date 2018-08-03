@@ -4,6 +4,10 @@ import Module from 'parser/core/Module'
 // Fake buff applications so modules don't need to take it into account
 export default class PrecastStatus extends Module {
 	static handle = 'precastStatus'
+	static dependencies = [
+		// Forcing action to run first, cus we want to always splice in before it.
+		'precastAction',
+	]
 
 	_combatantStatuses = {}
 
