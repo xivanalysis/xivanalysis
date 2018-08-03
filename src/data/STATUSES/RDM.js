@@ -8,16 +8,19 @@ export default {
 		id: 1367,
 		name: 'Impactful',
 		icon: 'https://secure.xivdb.com/img/game/013000/013401.png',
+		duration: 30,
 	},
 	VERSTONE_READY: {
 		id: 1235,
 		name: 'Verstone Ready',
 		icon: 'https://secure.xivdb.com/img/game/013000/013403.png',
+		duration: 30,
 	},
 	VERFIRE_READY: {
 		id: 1234,
 		name: 'Verfire Ready',
 		icon: 'https://secure.xivdb.com/img/game/013000/013402.png',
+		duration: 30,
 	},
 	ACCELERATION: {
 		id: 1238,
@@ -38,5 +41,6 @@ export default {
 		id: 1237,
 		name: 'Enhanced Scatter',
 		icon: 'https://secure.xivdb.com/img/game/013000/013404.png', //Yields 8 white/Black Mana instead of 3
+		duration: 10,
 	},
 }
