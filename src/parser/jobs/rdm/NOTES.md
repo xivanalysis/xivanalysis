@@ -17,14 +17,15 @@
 ## Dualcast
 - [ ] It's not worth dumping a proc if you overflow 8+ mana, consider checking this as it's worth wasting dual castr if you aren't wasting this much mana.
 - [ ] Ensure not overwriting Verstone/Verfire procs with their finishers
-- [ ] Ensure that Impact never drops - outside of downtime
+- [X] Ensure that Impact never drops - outside of downtime
 - [ ] Determine if possible to verify that the player used vercure to bring up dualcast, but didn't waste it after during a boss invuln phase
 - [X] Handle opener exception for Thunder/Areo
 
 ## General Casting
-- [ ] Track Dropping Impactful, Verstone, or Verfire
-- [ ] Track if Jolt wast cast while Impactful, Verstone, or Verfire were up or if Swiftcast was off CD
-- [ ] Dont' use Areo/Thunder while Stone/Fire are up, using Flare/Holy when Fire/Stone are up
+- [X] Track Dropping Impactful, Verstone, or Verfire
+- [X] Track if Jolt wast cast while Impactful, Verstone, or Verfire were up or if Swiftcast was off CD
+- [X] Dont' use Areo/Thunder while Stone/Fire are up
+- [ ] Don't use Flare/Holy when Fire/Stone are up
 
 ## Melee Combo
 - [ ] Derping a melee combo, either breaking it, or not finishing it.
