@@ -6,16 +6,20 @@ import Module from 'parser/core/Module'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
 
+const EXCUSED_HOLD_DEFAULT = 1500 //time allowed to hold it every time it's off cd
+
 export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
 		'checklist',
 		'invuln',
+		'downtime',
 	]
 
 	_lastUse = 0
 	_uses = 0
 	_totalHeld = 0
+	_excusedHeld = 0
 
 	constructor(...args) {
 		super(...args)
@@ -32,9 +36,15 @@ export default class Assize extends Module {
 		this._uses++
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
-		const _held = event.timestamp - this._lastUse - (ACTIONS.ASSIZE.cooldown * 1000)
+		const firstOpportunity = (this._lastUse + ACTIONS.ASSIZE.cooldown * 1000)
+		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
+			//get downtimes in the period we're holding the cooldown
+			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, event.timestamp)
+			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
+			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
+			console.log(firstEnd - firstOpportunity)
 		}
 		//update the last use
 		this._lastUse = event.timestamp
@@ -43,8 +53,8 @@ export default class Assize extends Module {
 	_onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
-		const _usesMissed = Math.floor(10 * holdDuration / (ACTIONS.ASSIZE.cooldown * 1000)) / 10
-		const maxUsesInt = this._uses + Math.floor(_usesMissed)
+		const _usesMissed = Math.floor((holdDuration - this._excusedHeld)/ (ACTIONS.ASSIZE.cooldown * 1000))
+		const maxUsesInt = this._uses + _usesMissed
 		const warnTarget = 100 * Math.floor(0.9 * maxUsesInt) / maxUsesInt
 		this.checklist.add(new TieredRule({
 			name: 'Use Assize Frequently',
@@ -53,8 +63,8 @@ export default class Assize extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="whm.assize.checklist.description"><ActionLink {...ACTIONS.ASSIZE} /> uptime </Trans>,
-					value: Math.floor(this._uses),
-					target: maxUsesInt,
+					value: this._uses,
+					target: Math.max(maxUsesInt, this._uses),
 				}),
 			],
 		}))

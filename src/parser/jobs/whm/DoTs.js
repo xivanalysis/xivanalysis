@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 //powerful copy paste code from SMN that ended up being changed quite a bit
@@ -79,11 +79,12 @@ export default class DoTs extends Module {
 
 	_onComplete() {
 		// Checklist rule for dot uptime
-		this.checklist.add(new Rule({
+		this.checklist.add(new TieredRule({
 			name: 'Keep your DoTs up',
 			description: <Fragment>
 				As a White Mage, DoTs are significant portion of your sustained damage. Aim to keep them up at all times.
 			</Fragment>,
+			tiers: {90: TARGET.WARN, 95: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.AERO_II} /> uptime</Fragment>,
