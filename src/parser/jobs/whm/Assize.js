@@ -6,10 +6,6 @@ import Module from 'parser/core/Module'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
 
-//const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
-//const WASTED_USES_MAX_MEDIUM = 2
-
-//uses the benison code for now, but should also check healing efficiency
 export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
