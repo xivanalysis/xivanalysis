@@ -122,7 +122,7 @@
   "smn.ruin-iv.chances": "Chances: {0}",
   "smn.ruin-iv.expected-procs": "Expected procs: {0}",
   "smn.ruin-iv.suggestions.overage.content": "Use <0/> as soon as possible to avoid missing additional <1/> procs.",
-  "smn.ruin-iv.suggestions.overage.why": "Further Ruin held for ${0} longer than recommended over the course of the fight.",
+  "smn.ruin-iv.suggestions.overage.why": "Further Ruin held for {0} longer than recommended over the course of the fight.",
   "smn.ruin-iv.title": "smn.ruin-iv.title",
   "smn.shadow-flare.hits": "{0, plural, one {# hit} other {# hits}}",
   "smn.shadow-flare.suggestions.missed-ticks.content": "Ensure you place <0/> such that it can deal damage for its entire duration, or can hit multiple targets per tick.",
