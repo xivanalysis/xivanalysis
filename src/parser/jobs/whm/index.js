@@ -2,12 +2,12 @@ import About from './About'
 import DoTs from './DoTs'
 import Benison from './Benison'
 import Assize from './Assize'
-import EffectiveHealing from './EffectiveHealing'
+import Overheal from './Overheal'
 import Speedmod from './Speedmod'
 
 export default [
 	About,
-	EffectiveHealing,
+	Overheal,
 	DoTs,
 	Benison,
 	Assize,

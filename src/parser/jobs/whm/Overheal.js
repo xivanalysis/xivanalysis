@@ -1,6 +1,8 @@
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import {Trans} from '@lingui/react'
+import React from 'react'
 
 export default class Overheal extends Module {
 	static handle = 'overheal'
@@ -36,20 +38,20 @@ export default class Overheal extends Module {
 	_onComplete() {
 		console.log(this.healOverTimeStatuses)
 		this.checklist.add(new TieredRule({
-			name: 'Avoid overheal',
-			description: 'Avoid wasting heals by healing for more than required to fill a target\'s HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.',
-			tiers: {[100-35]: TARGET.SUCCESS, [100-50]: TARGET.WARN},
+			name: <Trans id="whm.overheal.rule.name">Avoid overheal</Trans>,
+			description: <Trans id="whm.overheal.rule.description"> Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management. </Trans>,
+			tiers: {[100-35]: TARGET.SUCCESS, [100-50]: TARGET.WARN}, //doing 100-x where x is the overheal % for clarity
 			requirements: [
 				new InvertedRequirement({
-					name: 'Overheal (non-HoT)',
+					name: <Trans id="whm.overheal.requirement.nonhot"> Overheal (non-HoT) </Trans>,
 					percent: 100 * this._healingDirect / (this._healingDirect + this._overhealDirect), //put in inverted data
 				}),
 				new InvertedRequirement({
-					name: 'Overheal (HoT)',
+					name: <Trans id="whm.overheal.requirement.hot"> Overheal (HoT) </Trans>,
 					percent: 100 * this._healingOverTime / (this._healingOverTime + this._overhealOverTime), //put in inverted data
 				}),
 				new InvertedRequirement({
-					name: 'Overheal (all sources)',
+					name: <Trans id="whm.overheal.requirement.all"> Overheal (all sources)</Trans>,
 					percent: 100 * (this._healingOverTime + this._healingDirect) / (this._healingDirect + this._overhealDirect + this._healingOverTime + this._overhealOverTime), //put in inverted data
 				}),
 			],
