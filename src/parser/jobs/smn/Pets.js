@@ -222,7 +222,7 @@ export default class Pets extends Module {
 				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
 			</Trans>,
 			why: <Trans id="smn.pets.suggestions.no-pet.why">
-				No pet summoned for ${noPetUptimePercent}% of the fight (&lt;1% is recommended).
+				No pet summoned for {noPetUptimePercent}% of the fight (&lt;1% is recommended).
 			</Trans>,
 		}))
 	}

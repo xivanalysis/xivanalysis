@@ -3,6 +3,7 @@ import DoTs from './DoTs'
 import Benison from './Benison'
 import Assize from './Assize'
 import EffectiveHealing from './EffectiveHealing'
+import Speedmod from './Speedmod'
 
 export default [
 	About,
@@ -10,4 +11,5 @@ export default [
 	DoTs,
 	Benison,
 	Assize,
+	Speedmod,
 ]

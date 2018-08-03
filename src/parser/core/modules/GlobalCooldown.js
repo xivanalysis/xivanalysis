@@ -25,6 +25,8 @@ export default class GlobalCooldown extends Module {
 	_lastGcd = -1
 	_castingEvent = null
 
+	_lastGcdIsInstant = false
+
 	gcds = []
 
 	constructor(...args) {
@@ -53,9 +55,9 @@ export default class GlobalCooldown extends Module {
 
 			case 'cast':
 				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
-					this.saveGcd(this._castingEvent)
+					this.saveGcd(this._castingEvent, false)
 				} else {
-					this.saveGcd(event)
+					this.saveGcd(event, true)
 				}
 
 				this._castingEvent = null
@@ -84,7 +86,7 @@ export default class GlobalCooldown extends Module {
 
 			const adjustedLength = Math.max(
 				MIN_GCD,
-				(action.cooldown * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
+				((gcd.isInstant ? action.cooldown : Math.max(action.cooldown, action.castTime)) *  1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
 			)
 
 			this.timeline.addItem(new Item({
@@ -97,7 +99,7 @@ export default class GlobalCooldown extends Module {
 		})
 	}
 
-	saveGcd(event) {
+	saveGcd(event, isInstant) {
 		let gcdLength = -1
 
 		if (this._lastGcd >= 0) {
@@ -109,13 +111,17 @@ export default class GlobalCooldown extends Module {
 		const speedMod = this.speedmod.get(event.timestamp)
 		const revSpeedMod = 1 / speedMod
 		gcdLength *= revSpeedMod
+		gcdLength = Math.round(gcdLength)
 
 		this.gcds.push({
 			timestamp: event.timestamp,
 			length: gcdLength,
 			speedMod,
 			actionId: event.ability.guid,
+			isInstant: this._lastGcdIsInstant,
 		})
+
+		this._lastGcdIsInstant = isInstant
 
 		// Store current gcd time for the check
 		this._lastGcd = event.timestamp
@@ -133,7 +139,14 @@ export default class GlobalCooldown extends Module {
 		}
 
 		// Calculate the lengths of the GCD
-		const lengths = this.gcds.map(gcd => gcd.length)
+		// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
+		let lengths = this.gcds.map(gcd => {
+			const action = getAction(gcd.actionId)
+			if (gcd.isInstant || action.castTime <= 2.5) {
+				return gcd.length
+			}
+		})
+		lengths = lengths.filter(n => n)
 
 		// Mode seems to get best results. Using mean in case there's multiple modes.
 		let estimate = math.mean(math.mode(lengths))
@@ -151,7 +164,8 @@ export default class GlobalCooldown extends Module {
 		const cooldownRatio = gcdLength / MAX_GCD
 
 		return this.gcds.reduce((carry, gcd) => {
-			const cd = getAction(gcd.actionId).cooldown * 1000
+			const action = getAction(gcd.actionId)
+			const cd = (gcd.isInstant ? action.cooldown : Math.max(action.cooldown, action.castTime)) * 1000
 			const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
