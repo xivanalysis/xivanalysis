@@ -22,18 +22,18 @@ const GCD_COMBO_ACTIONS = [
 ]
 
 // GCD Combo Chain.  If this chain isn't respected, all additional effects of attacks are discarded.
-const GCD_COMBO_CHAIN = [
-	{current: ACTIONS.HARD_SLASH.id,
+const GCD_COMBO_CHAIN = {
+	[ACTIONS.HARD_SLASH.id]: {
 		next: [ACTIONS.SYPHON_STRIKE.id, ACTIONS.SPINNING_SLASH.id]},
-	{current: ACTIONS.SYPHON_STRIKE.id,
+	[ACTIONS.SYPHON_STRIKE.id]: {
 		next: [ACTIONS.SOULEATER.id]},
-	{current: ACTIONS.SOULEATER.id,
+	[ACTIONS.SOULEATER.id]: {
 		next: undefined},
-	{current: ACTIONS.SPINNING_SLASH.id,
+	[ACTIONS.SPINNING_SLASH.id]: {
 		next: [ACTIONS.POWER_SLASH.id]},
-	{current: ACTIONS.POWER_SLASH.id,
+	[ACTIONS.POWER_SLASH.id]: {
 		next: undefined},
-]
+}
 
 export default class GCDs extends Module {
 	static handle = 'gcds'
@@ -64,21 +64,21 @@ export default class GCDs extends Module {
 		// check combo status
 		if (GCD_COMBO_ACTIONS.includes(abilityId)) {
 			this._last3eventsAndCurrent.push(event)
-			if (this._lastComboAction !== undefined && this._lastComboGCDTimeStamp !== undefined) {
-				if (event.timestamp - this._lastComboGCDTimeStamp < GCD_COMBO_DURATION) {
-					if (GCD_COMBO_CHAIN.some(entry => entry.current === this._lastComboAction)) {
-						const entry = GCD_COMBO_CHAIN.find(entry => entry.current === this._lastComboAction)
-						if (entry.next !== undefined) {
-							if (entry.next.includes(abilityId)) {
-								this._GCDComboActive = true
-							} else {
-								this._GCDComboActive = false
-								this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
-							}
-						} else {
-							this._GCDComboActive = true
-						}
+			if (
+				(this._lastComboAction !== undefined && this._lastComboGCDTimeStamp !== undefined) &&
+				(event.timestamp - this._lastComboGCDTimeStamp < GCD_COMBO_DURATION) &&
+				(GCD_COMBO_CHAIN.hasOwnProperty(this._lastComboAction))
+			) {
+				const entry = GCD_COMBO_CHAIN[this._lastComboAction]
+				if (entry.next !== undefined) {
+					if (entry.next.includes(abilityId)) {
+						this._GCDComboActive = true
+					} else {
+						this._GCDComboActive = false
+						this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
 					}
+				} else {
+					this._GCDComboActive = true
 				}
 			}
 			this._lastComboAction = abilityId
@@ -97,7 +97,7 @@ export default class GCDs extends Module {
 				content: <Fragment>
 					You dropped your GCD combo, loosing out on potency and/or mana.
 				</Fragment>,
-				severity: this._GCDChainDrops.length <= (1) ? SEVERITY.MINOR : this._GCDChainDrops.length <= (4) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: this._GCDChainDrops.length <= (1) ? SEVERITY.MINOR : this._GCDChainDrops.length <= (6) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					You wasted {this._GCDChainDrops} GCD chain actions.
 				</Fragment>,

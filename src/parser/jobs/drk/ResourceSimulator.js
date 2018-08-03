@@ -34,8 +34,8 @@ const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
 const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
 const BLOOD_PRICE_MAX_DURATION = 15000
 
-const RESOURCE_STATUS_EFFECTS = [
-	{id: STATUSES.ANOTHER_VICTIM.id,
+const RESOURCE_STATUS_EFFECTS = {
+	[STATUSES.ANOTHER_VICTIM.id]: {
 		duration: 15000,
 		type: 'debuff',
 		expire_mana: MAX_MANA * 0.2,
@@ -43,7 +43,7 @@ const RESOURCE_STATUS_EFFECTS = [
 		activate_mana: MAX_MANA * 0.3,
 		activate_blood: 0,
 	},
-	{id: STATUSES.BLACKEST_NIGHT.id,
+	[STATUSES.BLACKEST_NIGHT.id]: {
 		duration: 7000,
 		type: 'buff',
 		expire_mana: 0,
@@ -51,66 +51,66 @@ const RESOURCE_STATUS_EFFECTS = [
 		activate_mana: 0,
 		activate_blood: 50,
 	},
-]
+}
 
-const MANA_MODIFIERS = [
+const MANA_MODIFIERS = {
 	// generators
-	{id: ACTIONS.DELIRIUM.id, value: 2400},
+	[ACTIONS.DELIRIUM.id]: {value: 2400},
 	// spenders
-	{id: ACTIONS.DARKSIDE.id, value: -600},
-	{id: ACTIONS.DARK_ARTS.id, value: -2400},
-	{id: ACTIONS.DARK_PASSENGER.id, value: -2400},
-	{id: ACTIONS.THE_BLACKEST_NIGHT.id, value: -2400},
-	{id: ACTIONS.ABYSSAL_DRAIN.id, value: -1320},
-	{id: ACTIONS.UNLEASH.id, value: -1080},
-	{id: ACTIONS.UNMEND.id, value: -480},
-	{id: ACTIONS.GRIT.id, value: -1200},
-	{id: ACTIONS.DARKSIDE.id, value: -600},
-]
+	[ACTIONS.DARKSIDE.id]: {value: -600},
+	[ACTIONS.DARK_ARTS.id]: {value: -2400},
+	[ACTIONS.DARK_PASSENGER.id]: {value: -2400},
+	[ACTIONS.THE_BLACKEST_NIGHT.id]: {value: -2400},
+	[ACTIONS.ABYSSAL_DRAIN.id]: {value: -1320},
+	[ACTIONS.UNLEASH.id]: {value: -1080},
+	[ACTIONS.UNMEND.id]: {value: -480},
+	[ACTIONS.GRIT.id]: {value: -1200},
+	[ACTIONS.DARKSIDE.id]: {value: -600},
+}
 
-const BLOOD_MODIFIERS = [
+const BLOOD_MODIFIERS = {
 	// spenders
-	{id: ACTIONS.BLOODSPILLER.id, value: -50},
-	{id: ACTIONS.QUIETUS.id, value: -50},
-	{id: ACTIONS.DELIRIUM.id, value: -50},
-]
+	[ACTIONS.BLOODSPILLER.id]: {value: -50},
+	[ACTIONS.QUIETUS.id]: {value: -50},
+	[ACTIONS.DELIRIUM.id]: {value: -50},
+}
 
 //aoe abilities that generate resource on hits
 /* taken out for now, as the raw damage events work just fine.
-const AOE_GENERATORS = [
-	{id: ACTIONS.SALTED_EARTH.id, mana: 0, blood: 1},
-	{id: ACTIONS.QUIETUS.id, mana: 120, blood: 0},
-]
+const AOE_GENERATORS = {
+	[ACTIONS.SALTED_EARTH.id]: {mana: 0, blood: 1},
+	[ACTIONS.QUIETUS.id]: {mana: 120, blood: 0},
+}
 */
 
 // Actions that generate blood and mana under blood weapon (Physical Damage actions - 3 blood, 480mp).
 // redundant, but this keeps consistency with the other mappings
-const BLOOD_WEAPON_GENERATORS = [
+const BLOOD_WEAPON_GENERATORS = {
 	// Auto
-	{id: ACTIONS.ATTACK.id, mana: 480, blood: 3},
+	[ACTIONS.ATTACK.id]: {mana: 480, blood: 3},
 	// Combo GCDs
-	{id: ACTIONS.HARD_SLASH.id, mana: 480, blood: 3},
-	{id: ACTIONS.SYPHON_STRIKE.id, mana: 480, blood: 3},
-	{id: ACTIONS.SOULEATER.id, mana: 480, blood: 3},
-	{id: ACTIONS.SPINNING_SLASH.id, mana: 480, blood: 3},
-	{id: ACTIONS.POWER_SLASH.id, mana: 480, blood: 3},
+	[ACTIONS.HARD_SLASH.id]: {mana: 480, blood: 3},
+	[ACTIONS.SYPHON_STRIKE.id]: {mana: 480, blood: 3},
+	[ACTIONS.SOULEATER.id]: {mana: 480, blood: 3},
+	[ACTIONS.SPINNING_SLASH.id]: {mana: 480, blood: 3},
+	[ACTIONS.POWER_SLASH.id]: {mana: 480, blood: 3},
 	// other GCDs
-	{id: ACTIONS.BLOODSPILLER.id, mana: 480, blood: 3},
-	{id: ACTIONS.QUIETUS.id, mana: 480, blood: 3},
+	[ACTIONS.BLOODSPILLER.id]: {mana: 480, blood: 3},
+	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 3},
 	// oGCDs
-	{id: ACTIONS.PLUNGE.id, mana: 480, blood: 3},
-	{id: ACTIONS.CARVE_AND_SPIT.id, mana: 480, blood: 3},
-]
+	[ACTIONS.PLUNGE.id]: {mana: 480, blood: 3},
+	[ACTIONS.CARVE_AND_SPIT.id]: {mana: 480, blood: 3},
+}
 
 // Actions that generate resources in GCD combo
-const COMBO_GENERATORS = [
-	{id: ACTIONS.SOULEATER.id, mana: 0, blood: 10},
-	{id: ACTIONS.SYPHON_STRIKE.id, mana: 1200, blood: 0},
-]
+const COMBO_GENERATORS = {
+	[ACTIONS.SOULEATER.id]: {mana: 0, blood: 10},
+	[ACTIONS.SYPHON_STRIKE.id]: {mana: 1200, blood: 0},
+}
 // Combo actions that generate bonus resource if grit is active
-const COMBO_GRIT_GENERATORS = [
-	{id: ACTIONS.SYPHON_STRIKE.id, mana: 1200, blood: 0},
-]
+const COMBO_GRIT_GENERATORS = {
+	[ACTIONS.SYPHON_STRIKE.id]: {mana: 1200, blood: 0},
+}
 
 export default class Resources extends Module {
 	static handle = 'resourcesim'
@@ -165,8 +165,8 @@ export default class Resources extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._darksideRemove)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceStart)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceEnd)
-		this.addHook(['applybuff', 'applydebuff'], {by: 'player', abilityId: RESOURCE_STATUS_EFFECTS.map(entry => entry.id)}, this._onApplyResourceStatuses)
-		this.addHook(['removebuff', 'removedebuff'], {by: 'player', abilityId: RESOURCE_STATUS_EFFECTS.map(entry => entry.id)}, this._onRemoveResourceStatuses)
+		this.addHook(['applybuff', 'applydebuff'], {by: 'player', abilityId: Object.keys(RESOURCE_STATUS_EFFECTS).map(Number)}, this._onApplyResourceStatuses)
+		this.addHook(['removebuff', 'removedebuff'], {by: 'player', abilityId: Object.keys(RESOURCE_STATUS_EFFECTS).map(Number)}, this._onRemoveResourceStatuses)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 		//should be spending full mana + 2 out of combat ticks, so just give that much mana to start
@@ -237,21 +237,21 @@ export default class Resources extends Module {
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		if (MANA_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.modifyMana(event.ability, MANA_MODIFIERS.find(entry => entry.id === abilityId).value)
+		if (MANA_MODIFIERS.hasOwnProperty(abilityId)) {
+			this.modifyMana(event.ability, MANA_MODIFIERS[abilityId].value)
 		}
-		if (BLOOD_MODIFIERS.some(entry => entry.id === abilityId)) {
-			this.modifyBlood(event.ability, BLOOD_MODIFIERS.find(entry => entry.id === abilityId).value)
+		if (BLOOD_MODIFIERS.hasOwnProperty(abilityId)) {
+			this.modifyBlood(event.ability, BLOOD_MODIFIERS[abilityId].value)
 		}
 		if (this.gcds.inGCDCombo()) {
-			if (COMBO_GENERATORS.some(entry => entry.id === abilityId)) {
-				const entry = COMBO_GENERATORS.find(entry => entry.id === abilityId)
+			if (COMBO_GENERATORS.hasOwnProperty(abilityId)) {
+				const entry = COMBO_GENERATORS[abilityId]
 				this.modifyMana(event.ability, entry.mana)
 				this.modifyBlood(event.ability, entry.blood)
 			}
 			if (this.buffs.gritActive()) {
-				if (COMBO_GRIT_GENERATORS.some(entry => entry.id === abilityId)) {
-					const entry = COMBO_GRIT_GENERATORS.find(entry => entry.id === abilityId)
+				if (COMBO_GRIT_GENERATORS.hasOwnProperty(abilityId)) {
+					const entry = COMBO_GRIT_GENERATORS[abilityId]
 					this.modifyMana(event.ability, entry.mana)
 					this.modifyBlood(event.ability, entry.blood)
 				}
@@ -268,7 +268,7 @@ export default class Resources extends Module {
 	_onApplyResourceStatuses(event) {
 		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
-		if (RESOURCE_STATUS_EFFECTS.some(entry => entry.id === abilityId)) {
+		if (RESOURCE_STATUS_EFFECTS.hasOwnProperty(abilityId)) {
 			this._resourceBuffTimestamps[abilityId] = event.timestamp
 		}
 	}
@@ -276,10 +276,10 @@ export default class Resources extends Module {
 	_onRemoveResourceStatuses(event) {
 		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
-		if (RESOURCE_STATUS_EFFECTS.some(entry => entry.id === abilityId)) {
-			const entry = RESOURCE_STATUS_EFFECTS.find(entry => entry.id === abilityId)
+		if (RESOURCE_STATUS_EFFECTS.hasOwnProperty(abilityId)) {
+			const entry = RESOURCE_STATUS_EFFECTS[abilityId]
 			const applicationTime = this._resourceBuffTimestamps[abilityId]
-			if (event.timestamp - applicationTime < entry.duration) {
+			if (event.timestamp - applicationTime <= entry.duration) {
 				//popped
 				this.modifyBlood(event.ability, entry.activate_blood)
 				this.modifyMana(event.ability, entry.activate_mana)
@@ -336,8 +336,8 @@ export default class Resources extends Module {
 		this._firstDamageEvent = false
 		// blood weapon outgoing damage
 		const abilityId = event.ability.guid
-		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.some(entry => entry.id === abilityId)) {
-			const entry = BLOOD_WEAPON_GENERATORS.find(entry => entry.id === abilityId)
+		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
+			const entry = BLOOD_WEAPON_GENERATORS[abilityId]
 			this.modifyMana(ACTIONS.BLOOD_WEAPON, entry.mana)
 			this.modifyBlood(ACTIONS.BLOOD_WEAPON, entry.blood)
 		}
@@ -512,10 +512,9 @@ export default class Resources extends Module {
 			const entry = list.pop()
 			this._keyScumCounter += 1
 			const key = entry.name + '-' + this._keyScumCounter.toString()
-			//there's 100% a better fix for TBN to detect it as a status not an action, but frankly i'm too tired to care right now
 			rows.push(
 				<tr key={key.toString() + '-row'} style={{margin: 0, padding: 0}}>
-					<td key={{key} + '-name'}>{entry.name === 'undefined' ? 'The Blackest Night' : entry.name}</td>
+					<td key={{key} + '-name'}>{entry.name}</td>
 					<td key={{key} + '-value'}>{entry.value}</td>
 				</tr>
 			)

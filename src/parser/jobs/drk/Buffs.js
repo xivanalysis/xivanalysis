@@ -134,13 +134,21 @@ export default class Buffs extends Module {
 		// -----
 		// UI Component
 		// -----
+		// Math Constants
+		const BLOOD_WEAPON_COOLDOWN = 40000
+		const BLOOD_WEAPON_DURATION = 15000
+		const DELIRIUM_COOLDOWN = 80000
+		const DELIRIUM_BLOOD_WEAPON_EXTENSION = 8000
 		//using only duration and fightduration ends up with weird results.  mixture of both has worked really well in near-matching fflogs
 		const rawFightDuration = this.parser.fightDuration
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 		//15 seconds every 40 seconds (BW), 8 seconds every 80 seconds (del).
 		//the +20 seconds for the downtime buffer (half blood wep CD) seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
 		// or at least when it doesn't consider a DRK running off to LD second wind in o6s as downtime.
-		const optimalFightBloodWeaponDuration = (Math.floor(fightDuration / 40000) * 15000) + (Math.floor(fightDuration / 80000) * 8000) + (Math.floor(((rawFightDuration - fightDuration) + 20000) / 40000) * 15000)
+		const optimalFightBloodWeaponDuration =
+			(Math.floor(fightDuration / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) + //raw blood wep
+			(Math.floor(fightDuration / DELIRIUM_COOLDOWN) * DELIRIUM_BLOOD_WEAPON_EXTENSION) + //raw delirium
+			(Math.floor(((rawFightDuration - fightDuration) + (BLOOD_WEAPON_COOLDOWN / 2)) / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) //corrective factor
 		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
 		const fightDarksideDuration = Buffs._parseEventStack(this._darksideToggleStack)
 		const fightGritDuration = Buffs._parseEventStack(this._gritToggleStack)

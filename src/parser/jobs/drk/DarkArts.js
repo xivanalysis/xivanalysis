@@ -42,7 +42,7 @@ export default class DarkArts extends Module {
 	_countDASS = 0  // Dark Arts Spinning Slash (2 in hate chain)
 	_countDADP = 0  // Dark Arts Dark Passenger (no slashing bonus, slightly worse than DA other abilities)
 	// dark arts
-	_darkArtsApplicationTime = -1
+	_darkArtsApplicationTime = undefined
 
 	constructor(...args) {
 		super(...args)
@@ -73,15 +73,16 @@ export default class DarkArts extends Module {
 	_onApplyDarkArts(event) {
 		if (event.timestamp === this.parser.fight.start_time) {
 			//opener DA put in with a fabricated event
-			this._darkArtsOpener = true
+			//this._darkArtsOpener = true
 		}
 		// check for overwritten DA
-		if (this._darkArtsApplicationTime !== undefined) {
+		if (this._darkArtsApplicationTime === undefined) {
 			this._countDA += 1
 		} else {
 			//overwritten DA, good job buddy
 			this._countOverwrittenDA += 1
 		}
+		//give a full duration DA. going to trigger some false positives for start of fight, but at least they tried
 		this._darkArtsApplicationTime = event.timestamp
 	}
 
@@ -124,6 +125,8 @@ export default class DarkArts extends Module {
 				</Fragment>,
 			}))
 		}
+		// the 14 potency is the 10% loss from not having slashing.  this has 0 use anywhere else and is basically only relevant if someone DAs every DP
+		const DADPPotencyLossBecauseDPDoesntGetSlashing = 14
 		if (this._countDADP > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DARK_PASSENGER.icon,
@@ -132,9 +135,8 @@ export default class DarkArts extends Module {
 					, and is a slight damage loss compared to the other options.  However, as it is one of the most powerful enmity tools in your arsenal, don't be scared to use it if needed.
 				</Fragment>,
 				severity: SEVERITY.MINOR,
-				// the 4 potency is the 10% loss from not having slashing.  this has 0 use anywhere else
 				why: <Fragment>
-					You missed out on {this._countDADP * 4} potency due to {this._countDADP} DADPs.
+					You missed out on {this._countDADP * DADPPotencyLossBecauseDPDoesntGetSlashing} potency due to {this._countDADP} DADPs.
 				</Fragment>,
 			}))
 		}
