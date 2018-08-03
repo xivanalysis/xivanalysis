@@ -1,9 +1,9 @@
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 
-export default class EffectiveHealing extends Module {
-	static handle = 'effectivehealing'
+export default class Overheal extends Module {
+	static handle = 'overheal'
 	static dependencies = [
 		'checklist',
 	]
@@ -35,25 +35,40 @@ export default class EffectiveHealing extends Module {
 
 	_onComplete() {
 		console.log(this.healOverTimeStatuses)
-		this.checklist.add(new Rule({
-			name: 'Minimize overheal / Heal effectively',
-			description: 'Heal effectively, avoid wasting heals by healing for more than their HP bar (also called overhealing). Doing this allows you to conserve MP better and find more spots to deal damage.',
+		this.checklist.add(new TieredRule({
+			name: 'Avoid overheal',
+			description: 'Avoid wasting heals by healing for more than required to fill a target\'s HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.',
+			tiers: {[100-35]: TARGET.SUCCESS, [100-50]: TARGET.WARN},
 			requirements: [
-				new Requirement({
-					name: 'Effective healing through direct heals',
-					percent: 100 * this._healingDirect / (this._healingDirect + this._overhealDirect),
-					weight: 100,
+				new InvertedRequirement({
+					name: 'Overheal (non-HoT)',
+					percent: 100 * this._healingDirect / (this._healingDirect + this._overhealDirect), //put in inverted data
 				}),
-				new Requirement({
-					name: 'Effective healing through HoTs',
-					percent: 100 * this._healingOverTime / (this._healingOverTime + this._overhealOverTime),
-					weight: 50,
+				new InvertedRequirement({
+					name: 'Overheal (HoT)',
+					percent: 100 * this._healingOverTime / (this._healingOverTime + this._overhealOverTime), //put in inverted data
 				}),
-				new Requirement({
-					name: 'Effective healing (all sources)',
-					percent: 100 * (this._healingOverTime + this._healingDirect) / (this._healingDirect + this._overhealDirect + this._healingOverTime + this._overhealOverTime),
+				new InvertedRequirement({
+					name: 'Overheal (all sources)',
+					percent: 100 * (this._healingOverTime + this._healingDirect) / (this._healingDirect + this._overhealDirect + this._healingOverTime + this._overhealOverTime), //put in inverted data
 				}),
 			],
 		}))
+	}
+}
+
+//yeh, I'm not doing this in core, but I really want to show overheal as overheal, since that's what the community understands
+export class InvertedRequirement extends Requirement {
+	constructor(options) {
+		super(options)
+
+	}
+	get percentInverted() {
+		return 100 - this.percent
+	}
+
+	get content() {
+		if (this._percent !== null || this.value === null) { return `${this.percentInverted.toFixed(2)}%` }
+		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` //avoid weird floating point shit
 	}
 }
