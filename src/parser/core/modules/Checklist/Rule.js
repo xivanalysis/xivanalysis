@@ -1,11 +1,24 @@
 import math from 'mathjsCustom'
+import {matchClosestLower} from 'utilities'
+
+export const TARGET = {
+	SUCCESS: 2,
+	WARN: 1,
+	FAIL: undefined,
+}
 
 export default class Rule {
 	name = ''
 	description = null
 	requirements = []
 	target = 95
-	// TODO: Target mode percent/value
+
+	get tier() {
+		return matchClosestLower(
+			{[this.target]: TARGET.SUCCESS},
+			this.percent
+		)
+	}
 
 	get percent() {
 		// WoWA has a bunch of different modes for this stuff, I'm just going to use mean for now. Because I'm mean. Hue.
@@ -18,5 +31,19 @@ export default class Rule {
 		Object.keys(options || {}).forEach(key => {
 			this[key] = options[key]
 		})
+	}
+}
+
+export class TieredRule extends Rule {
+	constructor(options) {
+		super({
+			tiers: {},
+			matcher: matchClosestLower,
+			...options,
+		})
+	}
+
+	get tier() {
+		return this.matcher(this.tiers, this.percent)
 	}
 }

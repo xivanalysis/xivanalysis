@@ -6,5 +6,6 @@ const math = mathjsCore.create()
 math.import(require('mathjs/lib/function/statistics/mean'))
 math.import(require('mathjs/lib/function/statistics/median'))
 math.import(require('mathjs/lib/function/statistics/mode'))
+math.import(require('mathjs/lib/function/statistics/sum'))
 
 export default math

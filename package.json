@@ -10,6 +10,7 @@
     "color": "^3.0.0",
     "es6-error": "^4.1.1",
     "intersection-observer": "^0.5.0",
+    "intl": "^1.2.5",
     "lodash": "^4.17.10",
     "mathjs": "^5",
     "prop-types": "^15.6.1",
@@ -32,6 +33,7 @@
     "semantic-ui-react": "^0.82",
     "stable": "^0.1.8",
     "toposort": "^2",
+    "url-search-params-polyfill": "^4.0.1",
     "vis": "^4.21.0"
   },
   "scripts": {
@@ -52,8 +54,7 @@
   "lint-staged": {
     "linters": {
       "src/**/*.js": [
-        "eslint --fix",
-        "git add"
+        "eslint --fix --max-warnings 0"
       ]
     }
   },
@@ -85,6 +86,7 @@
     "@lingui/cli": "^2.3.0",
     "@lingui/loader": "^2.3.0",
     "cross-env": "^5.2.0",
+    "eslint-plugin-jest": "^21.18.0",
     "git-revision-webpack-plugin": "^3.0.3",
     "husky": "^1.0.0-rc.13",
     "lint-staged": "^7.2.0",
