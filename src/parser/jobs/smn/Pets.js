@@ -43,7 +43,7 @@ export default class Pets extends Module {
 		'suggestions',
 	]
 
-	_lastPet = null
+	_lastPet = {id: -1}
 	_currentPet = null
 	_history = []
 
@@ -102,9 +102,7 @@ export default class Pets extends Module {
 
 	_onInit() {
 		// Just holding off the setPet until now so no events being created during normalise
-		if (this._lastPet) {
-			this.setPet(this._lastPet.id)
-		}
+		this.setPet(this._lastPet.id)
 	}
 
 	_onCast(event) {
