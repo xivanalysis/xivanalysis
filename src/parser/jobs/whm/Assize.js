@@ -44,7 +44,6 @@ export default class Assize extends Module {
 			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
 			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
-			console.log(firstEnd - firstOpportunity)
 		}
 		//update the last use
 		this._lastUse = event.timestamp
