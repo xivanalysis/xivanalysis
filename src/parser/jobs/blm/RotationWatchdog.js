@@ -2,6 +2,7 @@
 // Flag rotations that do not and list those as warnings
 
 import React, {Fragment} from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -14,18 +15,21 @@ const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false
+const AFUIBUFFMAXSTACK = 3
+
+// This is feelycraft at the moment. Rotations longer than that get put into the history array to sort out transpose shenanigans.
+// TODO: consider downtime and do something with it. Like throwing out the rotation or godknows.
+const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
-	static title = 'Issues in Rotation'
+	static i18n_id = i18nMark('blm.rotationwatchdog.title')
+	static title = 'Rotation Issues'
 	static dependencies = [
-		'castTime',
-		'gcd',
 		'suggestions',
 		'gauge',
 		'invuln',
 		'combatants',
-		'procs',
 	]
 
 	_rotation = {}
@@ -76,7 +80,7 @@ export default class RotationWatchdog extends Module {
 		const actionId = event.ability.guid
 
 		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
-		if (actionId === ACTIONS.FIRE_III.id && this._UI === 3) {
+		if (actionId === ACTIONS.FIRE_III.id && this._UI === AFUIBUFFMAXSTACK) {
 			if (this._T3) {
 				this._UIEndingInT3 ++
 				this._T3inUIFlag = true
@@ -115,13 +119,13 @@ export default class RotationWatchdog extends Module {
 		if (this._missedF4s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_IV.icon,
-				content: <Fragment>
+				content: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s.content">
 					You lost at least  one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					You missed {this._missedF4s} Fire IV{this._missedF4s > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s.why">
+					<Plural value={this._missedF4s} one="# Fire IV was" other="# Fire IVs were"/> missed.
+				</Trans>,
 			}))
 		}
 
@@ -130,13 +134,13 @@ export default class RotationWatchdog extends Module {
 		if (this._extraF1s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_I.icon,
-				content: <Fragment>
+				content: <Trans id="blm.rotationwatchdog.suggestions.extraf1s.content">
 					Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
-				</Fragment>,
+				</Trans>,
 				severity: (this._extraF1s > 1 ? SEVERITY.MEDIUM : SEVERITY.MINOR),
-				why: <Fragment>
-					You casted {this._extraF1s} extra Fire I{this._extraF1s > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.rotationwatchdog.suggestions.extraf1s.why">
+					<Plural value={this._extraF1s} one="# Fire I" other="# Fire Is"/> have been casted.
+				</Trans>,
 			}))
 		}
 
@@ -144,13 +148,13 @@ export default class RotationWatchdog extends Module {
 		if (this._UIEndingInT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III.icon,
-				content: <Fragment>
+				content: <Trans id="blm.rotationwatchdog.suggestions.ui_ending_in_t3.content">
 					Avoid ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					You ended Umbral Ice {this._UIEndingInT3} time{this._UIEndingInT3 > 1 && 's'} with Thunder III.
-				</Fragment>,
+				why: <Trans id="blm.rotationwatchdog.suggestions.ui_ending_in_t3.why">
+					{this._UIEndingInT3} Umbral Ice <Plural value={this._UIEndingInT3} one="phase" other="phases"/> ended with Thunder III.
+				</Trans>,
 			}))
 		}
 
@@ -158,13 +162,13 @@ export default class RotationWatchdog extends Module {
 		if (this._missedF4sCauseEndingInT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Fragment>
+				content: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.content">
 					Ending Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/> actually costed you at least one <ActionLink {...ACTIONS.FIRE_IV}/>.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					Ending Umbral Ice with a Thunder III costed you {this._missedF4sCauseEndingInT3} Fire IV{this._missedF4sCauseEndingInT3 > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.why">
+					Ending Umbral Ice with a Thunder III costed you <Plural value={this._missedF4sCauseEndingInT3} one="# Fire IV" other="# Fire IVs"/>.
+				</Trans>,
 			}))
 		}
 
@@ -172,13 +176,13 @@ export default class RotationWatchdog extends Module {
 		if (this._wrongT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Fragment>
+				content: <Trans id="blm.rotationwatchdog.suggestions.wrong_t3.content">
 					Never hard cast a <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					{this._wrongT3} Thunder III{this._wrongT3 > 1 && 's'} were hard casted under Astral Fire.
-				</Fragment>,
+				why: <Trans id="blm.rotationwatchdog.suggestions.wrong_t3.why">
+					<Plural value={this._wrongT3} one="# Thunder III" other="# Thunder IIIs"/> were hard casted under Astral Fire.
+				</Trans>,
 			}))
 		}
 	}
@@ -237,7 +241,7 @@ export default class RotationWatchdog extends Module {
 				}
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
-				if (this._rotation.casts.length > 3) { this._history.push(this._rotation) }
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH) { this._history.push(this._rotation) }
 				if (this._lastStop && this._UH > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
@@ -295,8 +299,10 @@ export default class RotationWatchdog extends Module {
 
 		return <Fragment>
 			<Message>
-				The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
-				Avoid missing Fire IV casts where possible.
+				<Trans id="blm.rotationwatchdog.accordion.message">
+					The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
+					Avoid missing Fire IV casts where possible.
+				</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

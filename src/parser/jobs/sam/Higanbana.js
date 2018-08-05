@@ -21,7 +21,6 @@ export default class Higanbana extends Module {
 	static handle = 'higanbana'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'enemies',
 		'invuln',
 		'suggestions',

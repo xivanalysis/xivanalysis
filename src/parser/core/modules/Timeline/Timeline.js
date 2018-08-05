@@ -7,6 +7,9 @@ import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 import './Timeline.module.css'
 
+// We default to showing the first minute of the pull
+const ONE_MINUTE = 60000
+
 export default class Timeline extends Module {
 	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.BOTTOM
@@ -55,7 +58,7 @@ export default class Timeline extends Module {
 			// View defaults
 			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,
-			end: Math.min(this.parser.fightDuration, 60000),
+			end: Math.min(this.parser.fightDuration, ONE_MINUTE),
 		}
 
 		return <VisTimeline

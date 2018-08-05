@@ -38,7 +38,6 @@ export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
 		'combatants',
-		'cooldowns',
 		'suggestions',
 	]
 

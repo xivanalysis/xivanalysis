@@ -89,6 +89,6 @@ export class I18nMenu extends Component {
 }
 
 export default connect(state => ({
-	language: state.language,
+	language: state.language.site,
 	overlay: state.i18nOverlay,
 }))(I18nMenu)

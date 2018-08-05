@@ -115,7 +115,7 @@ export default {
 
 	GREASED_LIGHTNING_III: {
 		id: 113,
-		name: 'Greased Lightning I',
+		name: 'Greased Lightning III',
 		icon: 'https://secure.xivdb.com/img/game/010000/010209.png',
 	},
 }

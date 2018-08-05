@@ -36,7 +36,8 @@ export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
 	static i18n_id = i18nMark('smn.aetherflow.title')
 	static dependencies = [
-		'aoe', // Ensure AoE runs cleanup before us
+		// Ensure AoE runs cleanup before us
+		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'checklist',
 		'cooldowns',
 		'enemies',
