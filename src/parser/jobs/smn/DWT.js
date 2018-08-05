@@ -37,7 +37,8 @@ export default class DWT extends Module {
 	static handle = 'dwt'
 	static i18n_id = i18nMark('smn.dwt.title')
 	static dependencies = [
-		'aoe', // Ensure AoE runs cleanup before us
+		// Ensure AoE runs cleanup before us
+		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
 		'gauge',

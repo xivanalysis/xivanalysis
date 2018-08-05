@@ -13,9 +13,8 @@ const WEAVING_SEVERITY = {
 
 export default class Weaving extends CoreWeaving {
 	static dependencies = [
+		...CoreWeaving.dependencies,
 		'combatants',
-		'castTime',
-		'invuln',
 		'suggestions',
 	]
 	static title = 'Weaving Issues'

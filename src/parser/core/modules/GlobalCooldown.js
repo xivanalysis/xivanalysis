@@ -13,9 +13,10 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		// We need this to normalise before us
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
-		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
 	]

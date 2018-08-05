@@ -20,7 +20,6 @@ export default class Rouse extends Module {
 	static handle = 'rouse'
 	static dependencies = [
 		'gauge',
-		'pets',
 		'suggestions',
 	]
 

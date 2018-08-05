@@ -17,6 +17,7 @@ module.exports = {
 	},
 	plugins: [
 		'react',
+		'xivanalysis'
 	],
 	rules: {
 		'array-bracket-spacing': 'warn',
@@ -76,6 +77,7 @@ module.exports = {
 		'template-curly-spacing': ['warn', 'never'],
 		'yoda': ['error', 'never', {exceptRange: true}],
 		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
+		'xivanalysis/no-unused-dependencies': 'error',
 	},
 	globals: {
 		process: true,

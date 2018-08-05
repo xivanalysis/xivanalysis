@@ -16,8 +16,6 @@ export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
 		'castTime',
-		'gcd',
-		'suggestions',
 	]
 
 	_firestarter = null

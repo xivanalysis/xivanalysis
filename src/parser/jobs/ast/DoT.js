@@ -16,8 +16,6 @@ export default class DoT extends Module {
 	static handle = 'dot'
 	static dependencies = [
 		'checklist',
-		'combatants',
-		'cooldowns',
 		'enemies',
 		'invuln',
 		'suggestions',

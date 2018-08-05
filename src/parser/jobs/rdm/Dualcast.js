@@ -13,11 +13,8 @@ import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/DualCastEnums'
 export default class DualCast extends Module {
 	static handle = 'dualCast'
 	static dependencies = [
-		'aoe',
 		'castTime',
 		'downtime',
-		'gauge',
-		'gcd',
 		'suggestions',
 	]
 	static title = 'Dualcast'
