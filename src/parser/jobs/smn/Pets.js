@@ -1,3 +1,4 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
@@ -11,6 +12,8 @@ import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugges
 
 import styles from './Pets.module.css'
 
+const NO_PET_ID = -1
+
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
@@ -19,12 +22,14 @@ const SUMMON_ACTIONS = {
 }
 
 const CHART_COLOURS = {
-	[-1]: '#888',
+	[NO_PET_ID]: '#888',
 	[PETS.GARUDA_EGI.id]: '#9c0',
 	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
 	[PETS.DEMI_BAHAMUT.id]: '#218cd6',
 }
+
+const TITAN_WARN_PERCENT = 5
 
 // Durations should probably be ACTIONS data
 export const SUMMON_BAHAMUT_LENGTH = 20000
@@ -37,11 +42,12 @@ const NO_PET_SEVERITY = {
 
 export default class Pets extends Module {
 	static handle = 'pets'
+	static i18n_id = i18nMark('smn.pets.title')
 	static dependencies = [
 		'suggestions',
 	]
 
-	_lastPet = null
+	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
 	_history = []
 
@@ -100,9 +106,7 @@ export default class Pets extends Module {
 
 	_onInit() {
 		// Just holding off the setPet until now so no events being created during normalise
-		if (this._lastPet) {
-			this.setPet(this._lastPet.id)
-		}
+		this.setPet(this._lastPet.id)
 	}
 
 	_onCast(event) {
@@ -139,7 +143,7 @@ export default class Pets extends Module {
 	}
 
 	_onPetDeath() {
-		this.setPet(-1)
+		this.setPet(NO_PET_ID)
 	}
 
 	_onComplete(event) {
@@ -172,49 +176,56 @@ export default class Pets extends Module {
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.prefer-garuda.content">
 					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-garuda.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.
+				</Trans>,
 			}))
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
-			console.log(mostUsedPet)
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.prefer-ifrit.content">
 					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-ifrit.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.
+				</Trans>,
 			}))
 		}
 
 		// We'll let them get away with a tiny bit of Chucken Nugget, but... not too much.
 		const titanUptimePercent = this.getPetUptimePercent(PETS.TITAN_EGI.id)
-		if (titanUptimePercent > 5) {
+		if (titanUptimePercent > TITAN_WARN_PERCENT) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_II.icon,
-				why: `${titanUptimePercent}% Titan-Egi uptime.`,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.titan.content">
 					Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.titan.why">
+					{titanUptimePercent}% Titan-Egi uptime.
+				</Trans>,
 			}))
 		}
 
 		// Pets are important, k?
-		const noPetUptimePercent = this.getPetUptimePercent(-1)
+		const noPetUptimePercent = this.getPetUptimePercent(NO_PET_ID)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SUMMON.icon,
-			content: <Fragment>
-				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-			</Fragment>,
-			why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
 			tiers: NO_PET_SEVERITY,
 			value: noPetUptimePercent,
+			content: <Trans id="smn.pets.suggestions.no-pet.content">
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+			</Trans>,
+			why: <Trans id="smn.pets.suggestions.no-pet.why">
+				No pet summoned for {noPetUptimePercent}% of the fight (&lt;1% is recommended).
+			</Trans>,
 		}))
 	}
 
@@ -258,7 +269,7 @@ export default class Pets extends Module {
 	}
 
 	getPetName(petId) {
-		if (petId === -1) {
+		if (petId === NO_PET_ID) {
 			return 'No pet'
 		}
 

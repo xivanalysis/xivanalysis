@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -20,6 +21,7 @@ const MISSED_TICK_SEVERITY = {
 
 export default class ShadowFlare extends Module {
 	static handle = 'shadowFlare'
+	static i18n_id = i18nMark('smn.shadow-flare.title')
 	static title = 'Shadow Flare'
 	static dependencies = [
 		'suggestions',
@@ -63,12 +65,15 @@ export default class ShadowFlare extends Module {
 		if (missedTicks) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SHADOW_FLARE.icon,
-				content: <Fragment>
-					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
-				</Fragment>,
-				why: missedTicks + ' missed ticks of Shadow Flare.',
 				tiers: MISSED_TICK_SEVERITY,
 				value: missedTicks,
+				content: <Trans id="smn.shadow-flare.suggestions.missed-ticks.content">
+					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
+				</Trans>,
+				why: <Trans id="smn.shadow-flare.suggestions.missed-ticks.why">
+					<Plural value={missedTicks} one="# missed tick" other="# missed ticks"/>
+					of Shadow Flare.
+				</Trans>,
 			}))
 		}
 	}
@@ -77,8 +82,8 @@ export default class ShadowFlare extends Module {
 		return <ul>
 			{this._casts.map(cast => <li key={cast.cast.timestamp}>
 				<strong>{this.parser.formatTimestamp(cast.cast.timestamp)}</strong>:&nbsp;
-				{cast.hits.length} ticks,&nbsp;
-				{cast.hits.reduce((carry, value) => carry + value.hits.length, 0)} hits
+				<Plural id="smn.shadow-flare.ticks" value={cast.hits.length} one="# tick" other="# ticks"/>,&nbsp;
+				<Plural id="smn.shadow-flare.hits" value={cast.hits.reduce((carry, value) => carry + value.hits.length, 0)} one="# hit" other="# hits"/>
 			</li>)}
 		</ul>
 	}

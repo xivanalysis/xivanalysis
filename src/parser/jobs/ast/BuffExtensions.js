@@ -26,10 +26,6 @@ const CELESTIAL_OPPOSITION_LEAD_TIME = 1500
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
-	static dependencies = [
-		'aoe',
-		'precastStatus',
-	]
 
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
 	_dilationUses = []

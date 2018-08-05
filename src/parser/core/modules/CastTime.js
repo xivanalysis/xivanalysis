@@ -47,13 +47,15 @@ export default class CastTime extends Module {
 	}
 
 	forEvent(event) {
-		const actionId = event.ability.guid
+		return this.forAction(event.ability.guid, event.timestamp)
+	}
 
+	forAction(actionId, timestamp = this.parser.currentTimestamp) {
 		// Get any cast time modifiers active when the event took place
 		const matchingTimes = this._castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
-			ct.start <= event.timestamp &&
-			(ct.end === null || ct.end >= event.timestamp)
+			ct.start <= timestamp &&
+			(ct.end === null || ct.end >= timestamp)
 		)
 
 		const defaultCastTime = getAction(actionId).castTime

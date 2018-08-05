@@ -6,6 +6,7 @@ import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
 import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
+import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
 import {compose, getPathMatch, formatDuration} from 'utilities'
 
 import I18nMenu from './ui/I18nMenu'
@@ -159,7 +160,7 @@ class Header extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	collapseMenu: width < 992,
+	collapseMenu: width < MOBILE_BREAKPOINT,
 })
 
 const mapStateToProps = state => ({

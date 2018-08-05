@@ -14,7 +14,6 @@ export default class ShadowFang extends Module {
 	static handle = 'shadowFang'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'enemies',
 		'invuln',
 		'suggestions',

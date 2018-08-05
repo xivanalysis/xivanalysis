@@ -15,9 +15,8 @@ const OPENER_ENO_TIME_THRESHHOLD = 10000
 export default class BlmWeaving extends Weaving {
 	static handle = 'weaving'
 	static dependencies = [
-		'castTime',
+		...Weaving.dependencies,
 		'invuln',
-		'suggestions',
 		'gauge',
 	]
 

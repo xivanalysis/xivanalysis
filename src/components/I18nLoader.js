@@ -31,10 +31,37 @@ export class I18nLoader extends Component {
 	}
 
 	async loadCatalog(language) {
-		const catalog = await import(
-			/* webpackMode: 'lazy', webpackChunkName: 'i18n-[index]' */
+		const promises = [import(
+			/* webpackMode: 'lazy' */
+			/* webpackChunkName: 'i18n-[index]' */
 			`../../locale/${language}/messages.json`
-		)
+		)]
+
+		// Polyfill
+		const needsPolyfill = !window.Intl
+		if (needsPolyfill) {
+			promises.push(
+				import(
+					/* webpackMode: 'lazy' */
+					/* webpackChunkName: 'nv-intl-polyfill' */
+					'intl'
+				)
+			)
+		}
+
+		// Wait for the initial i18n promises before we continue. Our catalog will always be the first arg.
+		const catalog = (await Promise.all(promises))[0]
+
+		// This _must_ be run after `intl` is included and ready.
+		if (needsPolyfill) {
+			// TODO: This is also including `kde` and I've got no idea how to get rid of it
+			await import(
+				/* webpackMode: 'lazy' */
+				/* webpackChunkName: 'nv-intl-polyfill-[index]' */
+				/* webpackInclude: /(?:de|en|fr|ja).js/ */
+				`intl/locale-data/jsonp/${language}.js`
+			)
+		}
 
 		// In some misguided attempt to be useful, lingui compiles
 		// messages so that values without translation are set to
@@ -109,6 +136,6 @@ export class I18nLoader extends Component {
 }
 
 export default connect(state => ({
-	language: state.language,
+	language: state.language.site,
 	overlay: state.i18nOverlay,
 }))(I18nLoader)
