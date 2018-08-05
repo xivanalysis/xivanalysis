@@ -1,18 +1,20 @@
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
+import {i18nMark, Trans} from '@lingui/react'
+import TransMarkdown from 'components/ui/TransMarkdown'
+
+const description = 'This analyser aims to identify how you\'re not actually casting [~action/FIRE_IV] as much as you think you are.'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
-		<p>This analyser aims to identify how you're not actually casting <ActionLink {...ACTIONS.FIRE_IV} /> as much as you think you are.</p>
+		<TransMarkdown id={i18nMark('blm.about.description')} source={description}/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				This isn&apos;t even remotely done.
+				<Trans id="blm.about.description.warning">This isn&apos;t even remotely done.</Trans>
 			</Message.Content>
 		</Message>
 	</Fragment>
