@@ -31,7 +31,7 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          command: yarn eslint src --max-warnings 0 --format junit -o reports/eslint/results.xml
+          command: yarn eslint src --format junit -o reports/eslint/results.xml
       - store_test_results:
           path: reports
 

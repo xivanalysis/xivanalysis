@@ -11,8 +11,6 @@ export default class Triple extends Module {
 	static title = 'Triplecast Usage'
 	static dependencies = [
 		'castTime',
-		'gcd',
-		'suggestions',
 	]
 
 	_active = false

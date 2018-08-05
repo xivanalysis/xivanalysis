@@ -15,7 +15,6 @@ export default class Goring extends Module {
 	static handle = 'goring'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'enemies',
 		'invuln',
 		'suggestions',

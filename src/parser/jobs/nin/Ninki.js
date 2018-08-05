@@ -24,7 +24,6 @@ const NINKI_SPENDERS = {
 export default class Ninki extends Module {
 	static handle = 'ninki'
 	static dependencies = [
-		'aoe',
 		'cooldowns',
 		'suggestions',
 	]

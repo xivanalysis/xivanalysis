@@ -13,10 +13,6 @@ const TRACKEDCDS = [
 export default class OGCDDowntime extends Module {
 	static handle = 'ogcddowntime'
 	static dependencies = [
-		'combatants',
-		'cooldowns',
-		'suggestions',
-		'gauge',
 		'checklist',
 	]
 

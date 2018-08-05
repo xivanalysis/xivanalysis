@@ -19,13 +19,10 @@ export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
 	static title = 'Issues in Rotation'
 	static dependencies = [
-		'castTime',
-		'gcd',
 		'suggestions',
 		'gauge',
 		'invuln',
 		'combatants',
-		'procs',
 	]
 
 	_rotation = {}

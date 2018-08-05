@@ -29,8 +29,6 @@ const ASTRAL_UMBRAL_DURATION = 13000
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
-		'combatants',
-		'cooldowns',
 		'suggestions',
 	]
 

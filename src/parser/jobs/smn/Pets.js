@@ -12,6 +12,8 @@ import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugges
 
 import styles from './Pets.module.css'
 
+const NO_PET_ID = -1
+
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
@@ -20,12 +22,14 @@ const SUMMON_ACTIONS = {
 }
 
 const CHART_COLOURS = {
-	[-1]: '#888',
+	[NO_PET_ID]: '#888',
 	[PETS.GARUDA_EGI.id]: '#9c0',
 	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
 	[PETS.DEMI_BAHAMUT.id]: '#218cd6',
 }
+
+const TITAN_WARN_PERCENT = 5
 
 // Durations should probably be ACTIONS data
 export const SUMMON_BAHAMUT_LENGTH = 20000
@@ -43,7 +47,7 @@ export default class Pets extends Module {
 		'suggestions',
 	]
 
-	_lastPet = {id: -1}
+	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
 	_history = []
 
@@ -139,7 +143,7 @@ export default class Pets extends Module {
 	}
 
 	_onPetDeath() {
-		this.setPet(-1)
+		this.setPet(NO_PET_ID)
 	}
 
 	_onComplete(event) {
@@ -197,7 +201,7 @@ export default class Pets extends Module {
 
 		// We'll let them get away with a tiny bit of Chucken Nugget, but... not too much.
 		const titanUptimePercent = this.getPetUptimePercent(PETS.TITAN_EGI.id)
-		if (titanUptimePercent > 5) {
+		if (titanUptimePercent > TITAN_WARN_PERCENT) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_II.icon,
 				severity: SEVERITY.MAJOR,
@@ -211,7 +215,7 @@ export default class Pets extends Module {
 		}
 
 		// Pets are important, k?
-		const noPetUptimePercent = this.getPetUptimePercent(-1)
+		const noPetUptimePercent = this.getPetUptimePercent(NO_PET_ID)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SUMMON.icon,
 			tiers: NO_PET_SEVERITY,
@@ -265,7 +269,7 @@ export default class Pets extends Module {
 	}
 
 	getPetName(petId) {
-		if (petId === -1) {
+		if (petId === NO_PET_ID) {
 			return 'No pet'
 		}
 

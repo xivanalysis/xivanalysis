@@ -1,4 +1,4 @@
-commit_message: "[skip ci] New translations: {fileName} ({languageName})"
+commit_message: "[skip ci]"
 files:
   - source: /locale/en/*.json
     translation: /locale/%two_letters_code%/%original_file_name%

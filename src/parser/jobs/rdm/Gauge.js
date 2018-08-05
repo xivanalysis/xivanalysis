@@ -29,7 +29,6 @@ export default class Gauge extends Module {
 		static handle = 'gauge'
 		static dependencies = [
 			'combatants',
-			'cooldowns',
 			'suggestions',
 		]
 		//Keeps track of our current mana gauge.

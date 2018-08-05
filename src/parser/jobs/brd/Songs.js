@@ -6,10 +6,6 @@ import Module from 'parser/core/Module'
 
 export default class Songs  extends Module {
 	static handle = 'songs'
-	static dependencies = [
-		'cooldowns',
-		'suggestions',
-	]
 
 	_wanderersMinuet = 0
 	_magesBallad = 0

@@ -7,11 +7,13 @@ export const TARGET = {
 	FAIL: undefined,
 }
 
+const DEFAULT_TARGET = 95
+
 export default class Rule {
 	name = ''
 	description = null
 	requirements = []
-	target = 95
+	target = DEFAULT_TARGET
 
 	get tier() {
 		return matchClosestLower(
