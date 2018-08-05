@@ -4,6 +4,7 @@ import Ninjutsu from './Ninjutsu'
 import Ninki from './Ninki'
 import NinWeaving from './NinWeaving'
 import ShadowFang from './ShadowFang'
+import TrickAttackPositional from './TrickAttackPositional'
 import TrickAttackWindow from './TrickAttackWindow'
 import Utility from './Utility'
 export default [
@@ -13,6 +14,7 @@ export default [
 	Ninki,
 	NinWeaving,
 	ShadowFang,
+	TrickAttackPositional,
 	TrickAttackWindow,
 	Utility,
 ]

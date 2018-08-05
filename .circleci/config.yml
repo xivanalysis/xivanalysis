@@ -31,7 +31,7 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          command: yarn eslint src --max-warnings 0 --format junit -o reports/eslint/results.xml
+          command: yarn eslint src --format junit -o reports/eslint/results.xml
       - store_test_results:
           path: reports
 
@@ -42,7 +42,7 @@ jobs:
           at: /tmp
       - run:
           name: Run build
-          command: yarn build
+          command: CI=false yarn build
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -75,7 +75,10 @@ workflows:
   version: 2
   flow:
     jobs:
-      - setup
+      - setup:
+          filters:
+            branches:
+              ignore: i18n-master
       - lint:
           requires:
             - setup

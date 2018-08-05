@@ -250,7 +250,7 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = this.moduleOrder
+		const displayOrder = [...this.moduleOrder]
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
 		const results = []
@@ -360,6 +360,7 @@ class Parser {
 	}
 
 	formatDuration(duration, secondPrecision = null) {
+		/* eslint-disable no-magic-numbers */
 		duration /= 1000
 		const seconds = duration % 60
 		if (duration < 60) {
@@ -371,6 +372,7 @@ class Parser {
 		let pointPos = secondsText.indexOf('.')
 		if (pointPos === -1) { pointPos = secondsText.length }
 		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
+		/* eslint-enable no-magic-numbers */
 	}
 }
 

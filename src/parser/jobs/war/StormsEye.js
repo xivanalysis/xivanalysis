@@ -53,7 +53,7 @@ export default class StormsEye extends Module {
 	_onComplete() {
 		this.checklist.add(new Rule({
 			name: 'Keep Storm\'s Eye up',
-			description: 'Storm\'s Eye increases your damage by 20%, it is a huge part of a Warrior\'s damage.',
+			description: 'Storm\'s Eye increases your damage by 10%, it is a huge part of a Warrior\'s damage.',
 			target: 90,
 			requirements: [
 				new Requirement({

@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
@@ -16,6 +17,7 @@ import {
 
 import {getFflogsEvents} from 'api'
 import JobIcon from 'components/ui/JobIcon'
+import {MOBILE_BREAKPOINT}  from 'components/STYLE_CONSTS'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
@@ -92,7 +94,7 @@ class Analyse extends Component {
 		// TODO: actually check if needed
 		const changed = !prevProps
 			|| report !== prevProps.report
-			|| params !== prevProps.match.params
+			|| !_.isEqual(params, prevProps.match.params)
 		if (changed) {
 			// TODO: does it really need to reset here?
 			this.reset()
@@ -303,7 +305,7 @@ class Analyse extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	showMenu: width >= 992,
+	showMenu: width >= MOBILE_BREAKPOINT,
 })
 
 const mapStateToProps = state => ({

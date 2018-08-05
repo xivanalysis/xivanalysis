@@ -1,3 +1,4 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -24,6 +25,7 @@ const GHOST_CLASSNAME = {
 
 export default class Bahamut extends Module {
 	static handle = 'bahamut'
+	static i18n_id = i18nMark('smn.bahamut.title')
 	static dependencies = [
 		'gauge',
 	]
@@ -130,8 +132,8 @@ export default class Bahamut extends Module {
 
 		return <Fragment>
 			<Message>
-				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong>  to those that ghosted without a doubt.<br/>
-				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.
+				<Trans id="smn.bahamut.ghost-disclaimer">Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
+				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

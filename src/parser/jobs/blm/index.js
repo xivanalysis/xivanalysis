@@ -5,6 +5,7 @@ import Procs from './Procs'
 import BlmWeaving from './Weaving'
 import RotationWatchdog from './RotationWatchdog'
 import OGCDDowntime from './OGCDDowntime'
+import Speedmod from './Speedmod'
 
 export default [
 	About,
@@ -14,4 +15,5 @@ export default [
 	BlmWeaving,
 	RotationWatchdog,
 	OGCDDowntime,
+	Speedmod,
 ]
