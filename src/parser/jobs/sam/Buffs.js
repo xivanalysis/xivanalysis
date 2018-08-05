@@ -6,6 +6,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from '../../core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+//import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const JINPU_DURATION = 30000
 const SHIFU_DURATION = 30000
@@ -34,8 +35,10 @@ export default class Buffs extends Module {
 			by: 'player',
 			abilityId: [STATUSES.JINPU.id, STATUSES.SHIFU.id],
 		}
-		this.addHook('applybuff', filter, this._onShifuApplication, this._onJinpuApplication)
-		this.addHook('refreshbuff', filter, this._onShifuApplication, this._onJinpuApplication)
+		this.addHook(['applybuff', 'refreshbuff'], filter, event => {
+			this._onShifuApplication(event)
+			this._onJinpuApplication(event)
+		})
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -79,12 +82,12 @@ export default class Buffs extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.JINPU} /> uptime</Fragment>,
-					percent: () => this.getJinpuUptimePercent(),
+					percent: () => this.getUptimePercent(STATUSES.JINPU.id),
 				}),
 
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.SHIFU} /> uptime</Fragment>,
-					percent: () => this.getShifuUptimePercent(),
+					percent: () => this.getUptimePercent(STATUSES.SHIFU.id),
 				}),
 
 			],
@@ -119,15 +122,8 @@ export default class Buffs extends Module {
 	}
 
 	//
-	getJinpuUptimePercent() {
-		const statusUptime = this.combatants.getStatusUptime(STATUSES.JINPU.id, this.parser.player.id)
-		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusUptime / fightUptime) * 100
-	}
-
-	getShifuUptimePercent() {
-		const statusUptime = this.combatants.getStatusUptime(STATUSES.SHIFU.id, this.parser.player.id)
+	getUptimePercent(StatusId) {
+		const statusUptime = this.combatants.getStatusUptime((StatusId), this.parser.player.id)
 		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightUptime) * 100
