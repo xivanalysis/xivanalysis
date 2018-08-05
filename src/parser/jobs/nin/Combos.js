@@ -1,9 +1,7 @@
 import ACTIONS from 'data/ACTIONS'
-import Combos from 'parser/core/modules/Combos'
+import CoreCombos from 'parser/core/modules/Combos'
 
-export default class NinCombos extends Combos {
-	static handle = 'combos'
-
+export default class Combos extends CoreCombos {
 	// Overrides
 	static suggestionIcon = ACTIONS.SPINNING_EDGE.icon
 

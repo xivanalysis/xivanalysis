@@ -1,6 +1,6 @@
 import About from './About'
+import Combos from './Combos'
 import Duality from './Duality'
-import NinCombos from './NinCombos'
 import Ninjutsu from './Ninjutsu'
 import Ninki from './Ninki'
 import NinWeaving from './NinWeaving'
@@ -9,8 +9,8 @@ import TrickAttackWindow from './TrickAttackWindow'
 import Utility from './Utility'
 export default [
 	About,
+	Combos,
 	Duality,
-	NinCombos,
 	Ninjutsu,
 	Ninki,
 	NinWeaving,

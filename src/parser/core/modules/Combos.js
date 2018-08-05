@@ -1,6 +1,7 @@
 // If you can make it through this entire file without hitting semantic saturation of the word "combo", hats off to you. IT DOESN'T LOOK REAL ANYMORE.
 
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Plural, Trans} from '@lingui/react'
 
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
@@ -28,7 +29,7 @@ export default class Combos extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast) // TODO - Can we filter to onGcd=true? That would be neat.
+		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -87,18 +88,18 @@ export default class Combos extends Module {
 
 	_onComplete() {
 		if (this._brokenComboCount > 0 || this._uncomboedGcdCount > 0) {
-			const why = [
-				this._brokenComboCount > 0 && `broke ${this._brokenComboCount} combo${this._brokenComboCount !== 1 ? 's' : ''}`,
-				this._uncomboedGcdCount > 0 && `used ${this._uncomboedGcdCount} uncomboed GCD${this._uncomboedGcdCount !== 1 ? 's' : ''}`,
-			].filter(Boolean)
-
 			this.suggestions.add(new Suggestion({
 				icon: this.constructor.suggestionIcon,
-				content: <Fragment>
+				content: <Trans id="core.combos.content">
 					Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM, // TODO
-				why: <Fragment>You {why.join(' and ')}.</Fragment>,
+				why: <Plural
+					id="core.combos.why"
+					value={this._brokenComboCount + this._uncomboedGcdCount}
+					one="You misused # combo action."
+					other="You misused # combo actions."
+				/>,
 			}))
 		}
 
