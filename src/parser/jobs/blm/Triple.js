@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {i18nMark} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
@@ -8,6 +9,7 @@ import Module from 'parser/core/Module'
 
 export default class Triple extends Module {
 	static handle = 'triple'
+	static i18n_id = i18nMark('blm.triple.title')
 	static title = 'Triplecast Usage'
 	static dependencies = [
 		'castTime',
