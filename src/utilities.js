@@ -141,10 +141,12 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
  */
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
 
-//rennders a time given in seconds into the format mm:ss
+// Renders a time given in seconds into the format mm:ss
 export function formatDuration(duration) {
+	/* eslint-disable no-magic-numbers */
 	const seconds = Math.floor(duration % 60)
 	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	/* eslint-enable no-magic-numbers */
 }
 
 /**

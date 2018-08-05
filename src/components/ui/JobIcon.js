@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 
+const DEFAULT_ICON_SET = 2
+
 class JobIcons extends Component {
 	static propTypes = {
 		job: PropTypes.shape({
@@ -13,7 +15,7 @@ class JobIcons extends Component {
 	render() {
 		const {
 			job: {icon},
-			set = 2,
+			set = DEFAULT_ICON_SET,
 			className = '',
 		} = this.props
 

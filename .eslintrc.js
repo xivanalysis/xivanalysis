@@ -46,6 +46,17 @@ module.exports = {
 		'no-else-return': ['error', {allowElseIf: false}],
 		'no-implicit-globals': 'error',
 		'no-lonely-if': 'error',
+		'no-magic-numbers': ['warn', {
+			ignoreArrayIndexes: true,
+			ignore: [
+				-1,   // Used by a lot of stuff (inc stdlib) to represent not found
+				0,    // I prefer .length===0 checks most of the time
+				1,    // THE NUMBER ONE
+				2,    // Often used for number formatting and similar
+				100,  // Percents
+				1000, // Lots of translation between s and ms
+			],
+		}],
 		'no-multiple-empty-lines': ['warn', {max: 1, maxBOF: 0, maxEOF: 1}],
 		'no-return-await': 'error',
 		'no-trailing-spaces': 'error',
@@ -80,5 +91,11 @@ module.exports = {
 			'jest/prefer-to-have-length': 'warn',
 			'jest/valid-expect': 'error',
 		},
+	}, {
+		// Data files have a lot of magic numbers
+		files: ['src/data/**/*.js'],
+		rules: {
+			'no-magic-numbers': 'off',
+		}
 	}],
 }

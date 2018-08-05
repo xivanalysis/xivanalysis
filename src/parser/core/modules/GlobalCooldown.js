@@ -99,6 +99,7 @@ export default class GlobalCooldown extends Module {
 
 		if (this._lastGcd >= 0) {
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
+			// eslint-disable-next-line no-magic-numbers
 			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
 		}
 
@@ -133,7 +134,7 @@ export default class GlobalCooldown extends Module {
 			// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
 			let lengths = this.gcds.map(gcd => {
 				const action = getAction(gcd.actionId)
-				if (gcd.isInstant || action.castTime <= 2.5) {
+				if (gcd.isInstant || action.castTime <= (MAX_GCD/1000)) {
 					return gcd.length
 				}
 			})

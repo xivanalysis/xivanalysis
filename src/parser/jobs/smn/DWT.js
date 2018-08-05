@@ -18,6 +18,7 @@ const CORRECT_GCDS = [
 const DWT_LENGTH = 16000
 const OGCD_LENGTH = 750
 // Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
+// eslint-disable-next-line no-magic-numbers
 const USABLE_LENGTH = DWT_LENGTH - OGCD_LENGTH * 3
 
 // Suggestion severity
