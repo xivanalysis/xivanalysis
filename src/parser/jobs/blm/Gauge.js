@@ -248,7 +248,7 @@ export default class Gauge extends Module {
 					You overwrote <ActionLink {...ACTIONS.FOUL}/> due to not casting it every 30s. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.overwrittenfoul.content">
+				why: <Trans id="blm.gauge.suggestions.overwrittenfoul.why">
 					Foul got overwritten <Plural value={this._overwrittenFoul} one="# time" other="# times"/>.
 				</Trans>,
 			}))
