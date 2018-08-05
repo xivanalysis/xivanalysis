@@ -9,8 +9,9 @@ import {
 export default class Speedmod extends Module {
 	static handle = 'speedmod'
 	static dependencies = [
-		'arcanum', // We rely on its normaliser to handle arrow strength mod
-		'precastStatus',
+		// We rely on these modules for normaliser logic
+		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
 
 	// List of statuses we natively handle (See SpeedmodConsts)

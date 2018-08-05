@@ -1,14 +1,16 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {connect} from 'react-redux'
 import {Popup, Icon} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
-import _ from 'lodash'
+import LANGUAGES from 'data/LANGUAGES'
+import {STATUS_ID_OFFSET} from 'data/STATUSES'
 
 import styles from './DbLink.module.css'
 
-import LANGUAGES from 'data/LANGUAGES'
+const DEFAULT_DEBOUNCE_DELAY = 50
 
 function getTooltipCacheBuster() {
 	const now = new Date()
@@ -26,7 +28,7 @@ export class XIVDBTooltipProvider {
 		return this._instance = new this()
 	}
 
-	constructor(source = 'https://secure.xivdb.com', delay = 50) {
+	constructor(source = 'https://secure.xivdb.com', delay = DEFAULT_DEBOUNCE_DELAY) {
 		this.source = source
 
 		this.cache = {}
@@ -265,7 +267,7 @@ export const ActionLink = props => <Wrapped type="action" {...props} />
 export const StatusLink = props => <Wrapped
 	type="status"
 	{...props}
-	id={props.id - 1000000}
+	id={props.id - STATUS_ID_OFFSET}
 />
 
 StatusLink.propTypes = {

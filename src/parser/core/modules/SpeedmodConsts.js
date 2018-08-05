@@ -1,5 +1,7 @@
 import STATUSES from 'data/STATUSES'
 
+/* eslint-disable no-magic-numbers */
+
 export const PARTYWIDE_SPEED_BUFF_FLAGS = {
 	NONE: 0,
 	FEY_WIND: 1,

@@ -13,9 +13,10 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		// We need this to normalise before us
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
-		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
 	]
@@ -99,6 +100,7 @@ export default class GlobalCooldown extends Module {
 
 		if (this._lastGcd >= 0) {
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
+			// eslint-disable-next-line no-magic-numbers
 			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
 		}
 
@@ -125,29 +127,27 @@ export default class GlobalCooldown extends Module {
 	getEstimate(bound = true) {
 		const gcdLength = this.gcds.length
 
-		// If there's no GCDs, just return the max to stop this erroring out
-		if (!gcdLength) {
-			return MAX_GCD
+		let estimate = this._estimate
+
+		// If we don't have cache, need to recaculate it
+		if (estimate === null || gcdLength !== this._estimateGcdCount) {
+			// Calculate the lengths of the GCD
+			// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
+			let lengths = this.gcds.map(gcd => {
+				const action = getAction(gcd.actionId)
+				if (gcd.isInstant || action.castTime <= (MAX_GCD/1000)) {
+					return gcd.length
+				}
+			})
+			lengths = lengths.filter(n => n)
+
+			// Mode seems to get best results. Using mean in case there's multiple modes.
+			estimate = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD
+
+			// Save the cache out
+			this._estimate = estimate
+			this._estimateGcdCount = gcdLength
 		}
-
-		// If we've got a cache and there's not been any new gcds, just use the cache
-		if (this._estimate !== null && gcdLength === this._estimateGcdCount) {
-			return this._estimate
-		}
-		this._estimateGcdCount = gcdLength
-
-		// Calculate the lengths of the GCD
-		// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
-		let lengths = this.gcds.map(gcd => {
-			const action = getAction(gcd.actionId)
-			if (gcd.isInstant || action.castTime <= 2.5) {
-				return gcd.length
-			}
-		})
-		lengths = lengths.filter(n => n)
-
-		// Mode seems to get best results. Using mean in case there's multiple modes.
-		let estimate = math.mean(math.mode(lengths))
 
 		// Bound the result if requested
 		if (bound) {

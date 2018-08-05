@@ -13,6 +13,7 @@
 ### Trick Attack
 - [x] Aligning DWaD with Trick Attack windows (TrickAttackWindow.js)
 - [x] Avoiding Armor Crush inside Trick Attack windows (TrickAttackWindow.js)
+- [x] Missing Trick Attack positionals (TrickAttackPositional.js)
 - [ ] Using Trick Attack on cooldown
 
 ### DoTs

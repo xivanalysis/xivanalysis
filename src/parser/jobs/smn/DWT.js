@@ -18,6 +18,7 @@ const CORRECT_GCDS = [
 const DWT_LENGTH = 16000
 const OGCD_LENGTH = 750
 // Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
+// eslint-disable-next-line no-magic-numbers
 const USABLE_LENGTH = DWT_LENGTH - OGCD_LENGTH * 3
 
 // Suggestion severity
@@ -36,7 +37,8 @@ export default class DWT extends Module {
 	static handle = 'dwt'
 	static i18n_id = i18nMark('smn.dwt.title')
 	static dependencies = [
-		'aoe', // Ensure AoE runs cleanup before us
+		// Ensure AoE runs cleanup before us
+		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
 		'gauge',
