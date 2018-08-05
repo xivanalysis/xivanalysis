@@ -24,16 +24,16 @@ For example, [~action/VERTHUNDER] has a 50% chance of triggering the status [~st
 		text: 'ogcd',
 
 		i18n_description: i18nMark('core.glossary.ogcd-description'),
-		description: `OGCD stands for "Off Global Cooldown" and refers to actions which do not fall under the GCD time. Many of them are special abilities or buffs with a way longer cooldown than GCD skills. OGCDs come up very often, when it's about which actions to weave.
+		description: `oGCD stands for "off Global Cooldown" and refers to actions which do not fall under the GCD time. Many of them are special abilities or buffs with a way longer cooldown than GCD skills. oGCDs come up very often, when it's about which actions to weave.
 
-		An example for a OGCD would be [~action/FOES_REQUIEM].`,
+		An example for a oGCD would be [~action/FOES_REQUIEM].`,
 	},
 	WEAVING: {
 		i18n_id: i18nMark('core.glossary.weaving'),
 		text: 'WEAVING',
 
 		i18n_description: i18nMark('core.glossary.weaving-description'),
-		description: `Weaving refers to using one or more OGCD action while the GCD is already running down.  Players usually talk about either single, or double weaving, which refers to using either one or two OGCDs after a GCD. It is commonly used since OGCD actions have varying animation locks which would prevent casting another GCD during it. So weaving is an effort to always keep the GCD rolling (ABC). This also means GCD actions with cast times that are as long or nearly as long as a GCD can't be used for weaving.
+		description: `Weaving refers to using one or more oGCD action while the GCD is already running down.  Players usually talk about either single, or double weaving, which refers to using either one or two oGCDs after a GCD. It is commonly used since oGCD actions have varying animation locks which would prevent casting another GCD during it. So weaving is an effort to always keep the GCD rolling (ABC). This also means GCD actions with cast times that are as long or nearly as long as a GCD can't be used for weaving.
 		An example for a single weave would be using [~action/DREADWYRM_TRANCE] while the GCD for [~action/RUIN_II] is running.`,
 	},
 }
