@@ -26,6 +26,9 @@ const AF_ACTIONS = [
 const ENOCHIAN_DURATION_REQUIRED = 30000
 const ASTRAL_UMBRAL_DURATION = 13000
 
+//max number of AFUI and UH stacks
+const MAX_STACK_COUNT = 3
+
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
@@ -129,7 +132,7 @@ export default class Gauge extends Module {
 			} else {
 				this._AFUITimer = event.timestamp
 				this._AF ++
-				this._AF = Math.min(this._AF, 3)
+				this._AF = Math.min(this._AF, MAX_STACK_COUNT)
 			}
 		}
 
@@ -141,7 +144,7 @@ export default class Gauge extends Module {
 			} else {
 				this._AFUITimer = event.timestamp
 				this._UI ++
-				this._UI = Math.min(this._UI, 3)
+				this._UI = Math.min(this._UI, MAX_STACK_COUNT)
 			}
 		}
 

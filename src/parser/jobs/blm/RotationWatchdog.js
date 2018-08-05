@@ -14,6 +14,11 @@ const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false
+const AFUIBUFFMAXSTACK = 3
+
+// This is feelycraft at the moment. Rotations longer than that get put into the history array to sort out transpose shenanigans.
+// TODO: consider downtime and do something with it. Like throwing out the rotation or godknows.
+const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
@@ -73,7 +78,7 @@ export default class RotationWatchdog extends Module {
 		const actionId = event.ability.guid
 
 		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
-		if (actionId === ACTIONS.FIRE_III.id && this._UI === 3) {
+		if (actionId === ACTIONS.FIRE_III.id && this._UI === AFUIBUFFMAXSTACK) {
 			if (this._T3) {
 				this._UIEndingInT3 ++
 				this._T3inUIFlag = true
@@ -234,7 +239,7 @@ export default class RotationWatchdog extends Module {
 				}
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
-				if (this._rotation.casts.length > 3) { this._history.push(this._rotation) }
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH) { this._history.push(this._rotation) }
 				if (this._lastStop && this._UH > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
