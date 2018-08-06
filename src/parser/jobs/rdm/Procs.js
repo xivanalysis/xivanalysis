@@ -4,19 +4,17 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {CAST_STATE, PROCS, SEVERITY_MISSED_PROCS, SEVERITY_OVERWRITTEN_PROCS, SEVERITY_INVULN_PROCS} from 'parser/jobs/rdm/ProcsEnum'
+import {PROCS, SEVERITY_MISSED_PROCS, SEVERITY_OVERWRITTEN_PROCS, SEVERITY_INVULN_PROCS} from 'parser/jobs/rdm/ProcsEnum'
 import {i18nMark} from '@lingui/react'
+
+const IMPACT_OVERRIDE_THRESHOLD = 8000
 
 export default class Procs extends Module {
 	static handle = 'procs'
 	static title = 'Procs'
 	static dependencies = [
-		'aoe',
-		'castTime',
 		'downtime',
-		'gcd',
 		'suggestions',
-		'gauge',
 	]
 	static i18n_id = i18nMark('rdm.procs.title')
 
@@ -43,7 +41,7 @@ export default class Procs extends Module {
 		impactfulGained: 0,
 		enhancedScatterGained: 0,
 	}
-	_castState = CAST_STATE.NA
+	_castState = null
 	_impactfulProcOverride = false
 	_previousCast = null
 	_bossWasInvuln = false
@@ -69,34 +67,15 @@ export default class Procs extends Module {
 		this._previousCast = event.timestamp
 		this._bossWasInvuln = invuln > 0
 
-		switch (abilityID) {
-		case ACTIONS.IMPACT.id:
-			this._castState = CAST_STATE.IMPACT
+		if (abilityID === ACTIONS.IMPACT.id) {
 			const impactRemainingDuration = event.timestamp - this._currentProcs.impactfulGained
-			if (impactRemainingDuration <= 8000) {
+			if (impactRemainingDuration <= IMPACT_OVERRIDE_THRESHOLD) {
 				//Use Impactful at 8 or less seconds remaining, regardless of all other procs
 				this._impactfulProcOverride = true
 			}
-			break
-		case ACTIONS.VERSTONE.id:
-			this._castState = CAST_STATE.VERSTONE
-			break
-		case ACTIONS.VERFIRE.id:
-			this._castState = CAST_STATE.VERFIRE
-			break
-		case ACTIONS.VERTHUNDER.id:
-			this._castState = CAST_STATE.VERTHUNDER
-			break
-		case ACTIONS.VERAREO.id:
-			this._castState = CAST_STATE.VERAREO
-			break
-		case ACTIONS.SCATTER.id:
-			this._castState = CAST_STATE.SCATTER
-			break
-		default:
-			this._castState = CAST_STATE.NA
-			break
 		}
+
+		this._castState = abilityID
 	}
 
 	_onGain(event) {
@@ -141,28 +120,28 @@ export default class Procs extends Module {
 		case STATUSES.VERSTONE_READY.id:
 			if (this._bossWasInvuln) {
 				this._history.invulnStone++
-			} else if (this._castState !== CAST_STATE.VERSTONE) {
+			} else if (this._castState !== ACTIONS.VERSTONE.id) {
 				this._history.missedStone++
 			}
 			break
 		case STATUSES.VERFIRE_READY.id:
 			if (this._bossWasInvuln) {
 				this._history.invulnFire++
-			} else if (this._castState !== CAST_STATE.VERFIRE) {
+			} else if (this._castState !== ACTIONS.VERFIRE.id) {
 				this._history.missedFire++
 			}
 			break
 		case STATUSES.IMPACTFUL.id:
 			if (this._bossWasInvuln) {
 				this._history.invulnImpactful++
-			} else if (this._castState !== CAST_STATE.IMPACT) {
+			} else if (this._castState !== ACTIONS.IMPACT.id) {
 				this._history.missedImpactful++
 			}
 			break
 		case STATUSES.ENHANCED_SCATTER.id:
 			if (this._bossWasInvuln) {
 				this._currentProcs.invulnScatter++
-			} else if (this._castState !== CAST_STATE.SCATTER) {
+			} else if (this._castState !== ACTIONS.SCATTER.id) {
 				this._history.missedScatter++
 			}
 			break
