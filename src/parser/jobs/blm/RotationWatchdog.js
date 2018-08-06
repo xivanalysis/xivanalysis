@@ -23,7 +23,7 @@ const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
-	static i18n_id = i18nMark('blm.rotationwatchdog.title')
+	static i18n_id = i18nMark('blm.rotation-watchdog.title')
 	static title = 'Rotation Issues'
 	static dependencies = [
 		'suggestions',
@@ -119,11 +119,11 @@ export default class RotationWatchdog extends Module {
 		if (this._missedF4s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_IV.icon,
-				content: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s.content">
+				content: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.content">
 					You lost at least  one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s.why">
+				why: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.why">
 					<Plural value={this._missedF4s} one="# Fire IV was" other="# Fire IVs were"/> missed.
 				</Trans>,
 			}))
@@ -134,11 +134,11 @@ export default class RotationWatchdog extends Module {
 		if (this._extraF1s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_I.icon,
-				content: <Trans id="blm.rotationwatchdog.suggestions.extraf1s.content">
+				content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
 					Casting more than one <ActionLink {...ACTIONS.FIRE_I}/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.
 				</Trans>,
 				severity: (this._extraF1s > 1 ? SEVERITY.MEDIUM : SEVERITY.MINOR),
-				why: <Trans id="blm.rotationwatchdog.suggestions.extraf1s.why">
+				why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
 					<Plural value={this._extraF1s} one="# Fire I" other="# Fire Is"/> have been casted.
 				</Trans>,
 			}))
@@ -148,11 +148,11 @@ export default class RotationWatchdog extends Module {
 		if (this._UIEndingInT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III.icon,
-				content: <Trans id="blm.rotationwatchdog.suggestions.ui_ending_in_t3.content">
+				content: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.content">
 					Avoid ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.rotationwatchdog.suggestions.ui_ending_in_t3.why">
+				why: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.why">
 					{this._UIEndingInT3} Umbral Ice <Plural value={this._UIEndingInT3} one="phase" other="phases"/> ended with Thunder III.
 				</Trans>,
 			}))
@@ -162,11 +162,11 @@ export default class RotationWatchdog extends Module {
 		if (this._missedF4sCauseEndingInT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.content">
+				content: <Trans id="blm.rotation-watchdog.suggestions.f4-lost-to-t3-finisher.content">
 					Ending Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/> actually costed you at least one <ActionLink {...ACTIONS.FIRE_IV}/>.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.why">
+				why: <Trans id="blm.rotation-watchdog.suggestions.f4-lost-to-t3-finisher.why">
 					Ending Umbral Ice with a Thunder III costed you <Plural value={this._missedF4sCauseEndingInT3} one="# Fire IV" other="# Fire IVs"/>.
 				</Trans>,
 			}))
@@ -176,11 +176,11 @@ export default class RotationWatchdog extends Module {
 		if (this._wrongT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Trans id="blm.rotationwatchdog.suggestions.wrong_t3.content">
+				content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
 					Never hard cast a <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.rotationwatchdog.suggestions.wrong_t3.why">
+				why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
 					<Plural value={this._wrongT3} one="# Thunder III" other="# Thunder IIIs"/> were hard casted under Astral Fire.
 				</Trans>,
 			}))
@@ -299,7 +299,7 @@ export default class RotationWatchdog extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="blm.rotationwatchdog.accordion.message">
+				<Trans id="blm.rotation-watchdog.accordion.message">
 					The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
 					Avoid missing Fire IV casts where possible.
 				</Trans>

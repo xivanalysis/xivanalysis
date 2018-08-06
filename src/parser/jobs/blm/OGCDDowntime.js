@@ -7,7 +7,7 @@ const TARGETPERCENT = 99
 
 export default class OGCDDowntime extends CooldownDowntime {
 
-	static i18n_id = i18nMark('blm.ogcddowntime.title')
+	static i18n_id = i18nMark('blm.ogcd-downtime.title')
 	//Time in ms that Laqi deems ok for a OGCD to be down : ^)
 	allowedDowntime = 0
 	trackedCds = [
@@ -17,6 +17,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 		ACTIONS.CONVERT.id,
 	]
 	target = TARGETPERCENT
-	description = <Trans id="blm.ogcddowntime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. {this.allowedDowntime === 0 ? '' : <Trans id="blm.ogcddowntime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.parser.formatDuration(this.allowedDowntime)} seconds per instance to hold your cooldowns.</Trans>}</Trans>
+	description = <Trans id="blm.ogcd-downtime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. {this.allowedDowntime === 0 ? '' : <Trans id="blm.ogcd-downtime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.parser.formatDuration(this.allowedDowntime)} seconds per instance to hold your cooldowns.</Trans>}</Trans>
 
 }
