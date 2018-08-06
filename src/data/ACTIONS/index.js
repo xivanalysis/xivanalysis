@@ -23,6 +23,9 @@ import ARC from './ARC'
 import BRD from './BRD'
 import SAM from './SAM'
 
+const DEFAULT_GCD_CASTTIME = 0
+const DEFAULT_GCD_COOLDOWN = 2.5
+
 const ACTIONS = {
 	...SHARED,
 	...ROLE,
@@ -53,9 +56,21 @@ const ACTIONS = {
 	...RDM,
 }
 
+const addDefaultValues = obj => {
+	Object.keys(obj).forEach(key => {
+		const action = obj[key]
+		if (action.onGcd) {
+			action.castTime = action.castTime || DEFAULT_GCD_CASTTIME
+			action.cooldown = action.cooldown || DEFAULT_GCD_COOLDOWN
+		}
+	})
+	return obj
+}
+
 export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 
 addExtraIndex(ACTIONS, 'id')
+addExtraIndex(addDefaultValues(ACTIONS), 'id')
 
 export default ACTIONS
 
