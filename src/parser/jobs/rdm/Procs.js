@@ -11,12 +11,8 @@ export default class Procs extends Module {
 	static handle = 'procs'
 	static title = 'Procs'
 	static dependencies = [
-		'aoe',
-		'castTime',
 		'downtime',
-		'gcd',
 		'suggestions',
-		'gauge',
 	]
 	static i18n_id = i18nMark('rdm.procs.title')
 
