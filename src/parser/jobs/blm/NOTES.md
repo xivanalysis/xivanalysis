@@ -18,7 +18,7 @@ Downtime between casts
 Ending ice with hard thunder
 - NOTE: May be able to cover this with FireCounter module
 - T3inUI.js keeps track of that but not if F4s are being lost because of it.
- 
+
 Skipping B4 and getting less than 5 F4 next rotation
 
 Not getting 6+ F4 per rotation with B4
@@ -56,3 +56,18 @@ Foul or Flare hitting 1 target when 2+ are active and in proximity
 Custom proc icons for Firestarter and Thundercloud usage?
 - Added to Rotation view
 - TODO: General Rotation/Timeline support for job-specific display is planned
+- TODO: FFLogs seems to randomly miss Thundercloud buff, which makes the current implementation unreliable. See https://www.fflogs.com/reports/FNaDPhvGTzJd8Wwn#fight=20&type=damage-done&translate=true for a parse with 22 t3p, but only one tc buff.
+
+Check for movement during Swift/Triple or subsequent cast(s). Clipping is fine/less bad if movement was required
+
+Check for Fouls that could be held for adds
+
+Warn about T4/T4p usage on 2 or fewer targets
+
+Confirm that proc marking carries over to all sections, especially Weaving. Fix it if it doesn't
+
+Confirm last rotation check works correctly in Kefka. Fix it if not. See https://www.xivanalysis.com/analyse/kMAJTPDcBgqWYFfL/6/1/
+
+Allow losing Convert uses if Convert's used during buff windows or for AOE
+
+Check for hardcast T3 as first ice cast after fast-cast F3
