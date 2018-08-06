@@ -139,27 +139,28 @@ export default class Buffs extends Module {
 		const BLOOD_WEAPON_DURATION = 15000
 		const DELIRIUM_COOLDOWN = 80000
 		const DELIRIUM_BLOOD_WEAPON_EXTENSION = 8000
-		//using only duration and fightduration ends up with weird results.  mixture of both has worked really well in near-matching fflogs
+		//using only duration or fightduration ends up with weird results.  mixture of both has worked really well in near-matching fflogs
 		const rawFightDuration = this.parser.fightDuration
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 		//15 seconds every 40 seconds (BW), 8 seconds every 80 seconds (del).
 		//the +20 seconds for the downtime buffer (half blood wep CD) seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
 		// or at least when it doesn't consider a DRK running off to LD second wind in o6s as downtime.
 		const optimalFightBloodWeaponDuration =
-			(Math.floor(fightDuration / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) + //raw blood wep
-			(Math.floor(fightDuration / DELIRIUM_COOLDOWN) * DELIRIUM_BLOOD_WEAPON_EXTENSION) + //raw delirium
-			(Math.floor(((rawFightDuration - fightDuration) + (BLOOD_WEAPON_COOLDOWN / 2)) / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) //corrective factor
+			(Math.floor(rawFightDuration / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) + //raw blood wep
+			(Math.floor(rawFightDuration / DELIRIUM_COOLDOWN) * DELIRIUM_BLOOD_WEAPON_EXTENSION) + //raw delirium
+			(Math.floor(((rawFightDuration - fightDuration) + (BLOOD_WEAPON_COOLDOWN / 1.5)) / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) //corrective factor
 		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
 		const fightDarksideDuration = Buffs._parseEventStack(this._darksideToggleStack)
 		const fightGritDuration = Buffs._parseEventStack(this._gritToggleStack)
 		//later, use the blood price application times to check if blood weapon windows were missed, but not really needed for core functionality
 		this.checklist.add(new Rule({
 			name: <Fragment><ActionLink {...ACTIONS.DARKSIDE}/></Fragment>,
-			description: 'Darkside should only be removed during downtime natural mana regeneration.  This value has already been corrected based on fight downtime and fflogs inaccuracy.  Aim for 100%.',
+			description: 'Darkside should only be removed during downtime natural mana regeneration.',
 			requirements: [
 				new Requirement({
 					name: 'Darkside Total Uptime',
-					percent: Math.min(((fightDarksideDuration / fightDuration) * 100), 100),
+					//up to 3% of the fight's darkside gets lost by fflogs because of it being a buff that gets refreshed instead of a stance. :)
+					percent: Math.min(((fightDarksideDuration / rawFightDuration) * 100) + 3, 100),
 				}),
 			],
 		}))

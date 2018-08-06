@@ -25,7 +25,7 @@ const BLOODSPILLER_BLOOD_COST = 50
 // ------
 const MAX_MANA = 9480
 const MAX_BLOOD = 100
-const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
+//const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
 //const DARKSIDE_MANA_COST = 600
 
 const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT = 1
@@ -34,6 +34,7 @@ const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
 const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
 const BLOOD_PRICE_MAX_DURATION = 15000
 
+//using this as a lookup table instead of a collector
 const RESOURCE_STATUS_EFFECTS = {
 	[STATUSES.ANOTHER_VICTIM.id]: {
 		duration: 15000,
@@ -65,7 +66,6 @@ const MANA_MODIFIERS = {
 	[ACTIONS.UNLEASH.id]: {value: -1080},
 	[ACTIONS.UNMEND.id]: {value: -480},
 	[ACTIONS.GRIT.id]: {value: -1200},
-	[ACTIONS.DARKSIDE.id]: {value: -600},
 }
 
 const BLOOD_MODIFIERS = {
@@ -76,12 +76,10 @@ const BLOOD_MODIFIERS = {
 }
 
 //aoe abilities that generate resource on hits
-/* taken out for now, as the raw damage events work just fine.
 const AOE_GENERATORS = {
 	[ACTIONS.SALTED_EARTH.id]: {mana: 0, blood: 1},
-	[ACTIONS.QUIETUS.id]: {mana: 120, blood: 0},
+	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 0},
 }
-*/
 
 // Actions that generate blood and mana under blood weapon (Physical Damage actions - 3 blood, 480mp).
 // redundant, but this keeps consistency with the other mappings
@@ -100,6 +98,7 @@ const BLOOD_WEAPON_GENERATORS = {
 	// oGCDs
 	[ACTIONS.PLUNGE.id]: {mana: 480, blood: 3},
 	[ACTIONS.CARVE_AND_SPIT.id]: {mana: 480, blood: 3},
+	//[ACTIONS.SALTED_EARTH.id]: {mana: 480, blood: 3},
 }
 
 // Actions that generate resources in GCD combo
@@ -169,8 +168,6 @@ export default class Resources extends Module {
 		this.addHook(['removebuff', 'removedebuff'], {by: 'player', abilityId: Object.keys(RESOURCE_STATUS_EFFECTS).map(Number)}, this._onRemoveResourceStatuses)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
-		//should be spending full mana + 2 out of combat ticks, so just give that much mana to start
-		this.modifyMana(undefined, MAX_MANA + (MANA_PER_OUT_OF_COMBAT_TICK * 2))
 	}
 
 	// -----
@@ -188,11 +185,7 @@ export default class Resources extends Module {
 			const vals = this._bindToCeiling(currentManaSnapshot, value, MAX_MANA)
 			this._wastedMana += vals.waste
 			this._currentMana = vals.result
-			if (ability !== undefined) {
-				this._mana_total_modifiers.push({ability: ability, value: value})
-			} else {
-				this._mana_total_modifiers.push({ability: undefined, value: value})
-			}
+			this._mana_total_modifiers.push({ability: ability, value: value})
 		}
 	}
 
@@ -207,9 +200,7 @@ export default class Resources extends Module {
 			const vals = this._bindToCeiling(currentBloodSnapshot, value, MAX_BLOOD)
 			this._wastedBlood += vals.waste
 			this._currentBlood = vals.result
-			if (ability !== undefined) {
-				this._blood_total_modifiers.push({ability: ability, value: value})
-			}
+			this._blood_total_modifiers.push({ability: ability, value: value})
 		}
 	}
 
@@ -266,20 +257,21 @@ export default class Resources extends Module {
 	}
 
 	_onApplyResourceStatuses(event) {
-		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
-		if (RESOURCE_STATUS_EFFECTS.hasOwnProperty(abilityId)) {
+		if (abilityId === STATUSES.ANOTHER_VICTIM.id) {
 			this._resourceBuffTimestamps[abilityId] = event.timestamp
 		}
+		// no need to check for TBN, since we can resolve it with part of the event return
 	}
 
 	_onRemoveResourceStatuses(event) {
 		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
-		if (RESOURCE_STATUS_EFFECTS.hasOwnProperty(abilityId)) {
-			const entry = RESOURCE_STATUS_EFFECTS[abilityId]
+		const entry = RESOURCE_STATUS_EFFECTS[abilityId]
+		if (abilityId === STATUSES.ANOTHER_VICTIM.id) {
 			const applicationTime = this._resourceBuffTimestamps[abilityId]
-			if (event.timestamp - applicationTime <= entry.duration) {
+			//+/-100ms demonstrated wiggle room for the pop to show up.
+			if (event.timestamp - applicationTime <= (entry.duration - 100)) {
 				//popped
 				this.modifyBlood(event.ability, entry.activate_blood)
 				this.modifyMana(event.ability, entry.activate_mana)
@@ -287,7 +279,20 @@ export default class Resources extends Module {
 				//expired
 				this.modifyBlood(event.ability, entry.expire_blood)
 				this.modifyMana(event.ability, entry.expire_mana)
-				//special handling for TBN since it's basically throwing away damage
+			}
+		}
+		if (abilityId === STATUSES.BLACKEST_NIGHT.id) {
+			//absorbed := total damage absorbed
+			//absorb := damage left in the shield
+			const poppedTBN = event.absorb === 0
+			if (poppedTBN) {
+				//popped
+				this.modifyBlood(event.ability, entry.activate_blood)
+				this.modifyMana(event.ability, entry.activate_mana)
+			} else {
+				//expired
+				this.modifyBlood(event.ability, entry.expire_blood)
+				this.modifyMana(event.ability, entry.expire_mana)
 				if (abilityId === STATUSES.BLACKEST_NIGHT) {
 					this._droppedTBNs += 1
 				}
@@ -332,6 +337,8 @@ export default class Resources extends Module {
 		if (this._firstDamageEvent) {
 			// check if mana is missing or not, if so then DA opener was used
 			this._darkArtsOpener = (event.sourceResources.mp !== event.sourceResources.maxMP)
+			// set mana to the value found here
+			this.modifyMana(undefined, event.sourceResources.mp)
 		}
 		this._firstDamageEvent = false
 		// blood weapon outgoing damage
@@ -340,6 +347,11 @@ export default class Resources extends Module {
 			const entry = BLOOD_WEAPON_GENERATORS[abilityId]
 			this.modifyMana(ACTIONS.BLOOD_WEAPON, entry.mana)
 			this.modifyBlood(ACTIONS.BLOOD_WEAPON, entry.blood)
+		}
+		if (AOE_GENERATORS.hasOwnProperty(abilityId)) {
+			const entry = AOE_GENERATORS[abilityId]
+			this.modifyMana(event.ability, entry.mana)
+			this.modifyBlood(event.ability, entry.blood)
 		}
 	}
 
@@ -419,7 +431,7 @@ export default class Resources extends Module {
 				</Fragment>,
 			}))
 		}
-		if (this._totalDroppedBlood > BLOODSPILLER_BLOOD_COST) {
+		if (this._wastedBlood > BLOODSPILLER_BLOOD_COST) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.BLOODSPILLER.icon,
 				content: <Fragment>
@@ -429,11 +441,11 @@ export default class Resources extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You wasted a total of {this._totalDroppedBlood} from deaths and end of fight leftovers.
+					You wasted a total of {this._wastedBlood} from capping, deaths, end of fight leftovers.
 				</Fragment>,
 			}))
 		}
-		if (this._totalDroppedMana > DARK_ARTS_MANA_COST) {
+		if (this._wastedMana > DARK_ARTS_MANA_COST) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DARK_ARTS.icon,
 				content: <Fragment>
@@ -443,7 +455,7 @@ export default class Resources extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You wasted a total of {this._totalDroppedMana} from deaths and end of fight leftovers.
+					You wasted a total of {this._wastedMana} from capping, deaths, end of fight leftovers.
 				</Fragment>,
 			}))
 		}
@@ -582,8 +594,8 @@ export default class Resources extends Module {
 		})
 		return <Fragment>
 			<Message>
-				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood} - {Math.floor(((this._totalSpentBlood * -1)/this._totalGainedBlood) * 10000) / 100}%</p>
-				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana} - {Math.floor(((this._totalSpentMana * -1)/this._totalGainedMana) * 10000) / 100}%</p>
+				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood + (this._wastedBlood * -1)} - {Math.floor(((this._totalSpentBlood * -1)/(this._totalGainedBlood + (this._wastedBlood * -1))) * 10000) / 100}%</p>
+				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana + (this._wastedMana * -1)} - {Math.floor(((this._totalSpentMana * -1)/(this._totalGainedMana + (this._wastedMana * -1))) * 10000) / 100}%</p>
 			</Message>
 			<Accordion
 				exclusive={false}

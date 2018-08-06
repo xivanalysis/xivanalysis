@@ -10,29 +10,36 @@ import ACTIONS from 'data/ACTIONS'
 
 const GCD_COMBO_DURATION = 10000
 
-// GCD Combo affecting actions.
-const GCD_COMBO_ACTIONS = [
-	ACTIONS.HARD_SLASH.id,
-	ACTIONS.SYPHON_STRIKE.id,
-	ACTIONS.SOULEATER.id,
-	ACTIONS.SPINNING_SLASH.id,
-	ACTIONS.POWER_SLASH.id,
-	ACTIONS.UNMEND.id,
-	ACTIONS.ABYSSAL_DRAIN.id,
-]
-
-// GCD Combo Chain.  If this chain isn't respected, all additional effects of attacks are discarded.
-const GCD_COMBO_CHAIN = {
+// GCD Combo affecting actions, being ones that are either part of the GCD combo chain, or forcibly stop the chain.
+const GCD_COMBO_ACTIONS = {
 	[ACTIONS.HARD_SLASH.id]: {
-		next: [ACTIONS.SYPHON_STRIKE.id, ACTIONS.SPINNING_SLASH.id]},
+		endsCombo: false,
+		next: [ACTIONS.SYPHON_STRIKE.id, ACTIONS.SPINNING_SLASH.id],
+	},
 	[ACTIONS.SYPHON_STRIKE.id]: {
-		next: [ACTIONS.SOULEATER.id]},
+		endsCombo: false,
+		next: [ACTIONS.SOULEATER.id],
+	},
 	[ACTIONS.SOULEATER.id]: {
-		next: undefined},
+		endsCombo: false,
+		next: [undefined],
+	},
 	[ACTIONS.SPINNING_SLASH.id]: {
-		next: [ACTIONS.POWER_SLASH.id]},
+		endsCombo: false,
+		next: [ACTIONS.POWER_SLASH.id],
+	},
 	[ACTIONS.POWER_SLASH.id]: {
-		next: undefined},
+		endsCombo: false,
+		next: [undefined],
+	},
+	[ACTIONS.UNMEND.id]: {
+		endsCombo: true,
+		next: [undefined],
+	},
+	[ACTIONS.ABYSSAL_DRAIN.id]: {
+		endsCombo: true,
+		next: [undefined],
+	},
 }
 
 export default class GCDs extends Module {
@@ -62,23 +69,23 @@ export default class GCDs extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 		// check combo status
-		if (GCD_COMBO_ACTIONS.includes(abilityId)) {
+		if (GCD_COMBO_ACTIONS.hasOwnProperty(abilityId)) {
 			this._last3eventsAndCurrent.push(event)
 			if (
 				(this._lastComboAction !== undefined && this._lastComboGCDTimeStamp !== undefined) &&
-				(event.timestamp - this._lastComboGCDTimeStamp < GCD_COMBO_DURATION) &&
-				(GCD_COMBO_CHAIN.hasOwnProperty(this._lastComboAction))
+				(event.timestamp - this._lastComboGCDTimeStamp < GCD_COMBO_DURATION)
 			) {
-				const entry = GCD_COMBO_CHAIN[this._lastComboAction]
-				if (entry.next !== undefined) {
-					if (entry.next.includes(abilityId)) {
+				const thisActionEntry = GCD_COMBO_ACTIONS[abilityId]
+				const lastActionEntry = GCD_COMBO_ACTIONS[this._lastComboAction]
+				if (!thisActionEntry.endsCombo) {
+					if (lastActionEntry.next[0] === undefined || lastActionEntry.next.includes(abilityId)) {
 						this._GCDComboActive = true
 					} else {
 						this._GCDComboActive = false
 						this._GCDChainDrops.push({timestamp: event.timestamp, events: this._last3eventsAndCurrent.slice()})
 					}
 				} else {
-					this._GCDComboActive = true
+					this._GCDComboActive = false
 				}
 			}
 			this._lastComboAction = abilityId
