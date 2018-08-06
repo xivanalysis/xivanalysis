@@ -218,11 +218,11 @@ export default class Gauge extends Module {
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
-				content: <Trans id="blm.gauge.suggestions.droppedeno.content">
+				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
 					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.gauge.suggestions.droppedeno.why">
+				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
 					{this._droppedEno} dropped Enochian <Plural value={this._droppedEno} one="buff" other="buffs"/>.
 				</Trans>,
 			}))
@@ -231,11 +231,11 @@ export default class Gauge extends Module {
 		if (this._lostFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.lostfoul.content">
+				content: <Trans id="blm.gauge.suggestions.lost-foul.content">
 					You lost <ActionLink {...ACTIONS.FOUL}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.lostfoul.why">
+				why: <Trans id="blm.gauge.suggestions.lost-foul.why">
 					<Plural value={this._lostFoul} one="# Foul was" other="# Fouls were"/> lost.
 				</Trans>,
 			}))
@@ -244,11 +244,11 @@ export default class Gauge extends Module {
 		if (this._overwrittenFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.overwrittenfoul.content">
+				content: <Trans id="blm.gauge.suggestions.overwritten-foul.content">
 					You overwrote <ActionLink {...ACTIONS.FOUL}/> due to not casting it every 30s. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.overwrittenfoul.why">
+				why: <Trans id="blm.gauge.suggestions.overwritten-foul.why">
 					Foul got overwritten <Plural value={this._overwrittenFoul} one="# time" other="# times"/>.
 				</Trans>,
 			}))

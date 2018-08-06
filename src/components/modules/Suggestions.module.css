@@ -26,6 +26,7 @@
 	align-self: flex-start;
 	margin-right: 1.5em;
 	width: 40px;
+	flex-shrink: 0;
 }
 
 .extra {
