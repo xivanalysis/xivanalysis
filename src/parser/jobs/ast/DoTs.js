@@ -87,7 +87,7 @@ export default class DoTs extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.COMBUST_II.icon,
 				content: <Fragment>
-					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires. Aim to refresh it between 2 to 0 seconds remaining on the duration.
+					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires.
 				</Fragment>,
 				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < STATUS_DURATION[ACTIONS.COMBUST_II.id] ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
