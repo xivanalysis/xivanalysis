@@ -25,8 +25,6 @@ export default class Aetherflow extends Module {
 	static dependencies = [
 		'checklist',
 		'cooldowns',
-		'enemies',
-		'suggestions',
 	]
 
 	_totalAetherflowCasts = 0

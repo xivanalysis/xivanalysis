@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -27,7 +28,6 @@ export default class DoTs extends Module {
 	static dependencies = [
 		'checklist',
 		'combatants',
-		'cooldowns',
 		'enemies',
 		'gauge',
 		'invuln',
@@ -82,21 +82,27 @@ export default class DoTs extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep your DoTs up',
-			description: <Fragment>
+			name: <Trans id="smn.dots.checklist.name">Keep your DoTs up</Trans>,
+			description: <Trans id="smn.dots.checklist.description">
 				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
-			</Fragment>,
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.BIO_III} /> uptime</Fragment>,
+					name: <Trans id="smn.dots.checklist.requirement.bio-iii.name">
+						<ActionLink {...ACTIONS.BIO_III} /> uptime
+					</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.BIO_III.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.MIASMA_III} /> uptime</Fragment>,
+					name: <Trans id="smn.dots.checklist.requirement.miasma-iii.name">
+						<ActionLink {...ACTIONS.MIASMA_III} /> uptime
+					</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime</Fragment>,
+					name: <Trans id="smn.dots.checklist.requirement.shadow-flare.name">
+						<ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime
+					</Trans>,
 					percent: () => this.getShadowFlareUptimePercent(),
 				}),
 			],
@@ -106,12 +112,12 @@ export default class DoTs extends Module {
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.TRI_DISASTER.icon,
-			content: <Fragment>
+			content: <Trans id="smn.dots.suggestions.clipping.content">
 				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you'll need to hardcast your DoTs.
-			</Fragment>,
-			why: <Fragment>
+			</Trans>,
+			why: <Trans id="smn.dots.suggestions.clipping.why">
 				{this.parser.formatDuration(this._clip[STATUSES.BIO_III.id])} of {STATUSES[STATUSES.BIO_III.id].name} and {this.parser.formatDuration(this._clip[STATUSES.MIASMA_III.id])} of {STATUSES[STATUSES.MIASMA_III.id].name} lost to early refreshes.
-			</Fragment>,
+			</Trans>,
 			tiers: CLIPPING_SEVERITY,
 			value: maxClip,
 		}))

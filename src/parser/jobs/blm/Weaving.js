@@ -12,12 +12,14 @@ const OGCD_EXCEPTIONS = [
 
 const OPENER_ENO_TIME_THRESHHOLD = 10000
 
+//max number of AFUI stacks
+const MAX_BUFF_STACKS = 3
+
 export default class BlmWeaving extends Weaving {
 	static handle = 'weaving'
 	static dependencies = [
-		'castTime',
+		...Weaving.dependencies,
 		'invuln',
-		'suggestions',
 		'gauge',
 	]
 
@@ -32,10 +34,10 @@ export default class BlmWeaving extends Weaving {
 
 	//check whether we are in UI3/AF3 precast
 	_onBegin() {
-		if (this.gauge.getUI() === 3) {
+		if (this.gauge.getUI() === MAX_BUFF_STACKS) {
 			this._UI3 = true
 		}
-		if (this.gauge.getAF() === 3) {
+		if (this.gauge.getAF() === MAX_BUFF_STACKS) {
 			this._AF3 = true
 		}
 	}
