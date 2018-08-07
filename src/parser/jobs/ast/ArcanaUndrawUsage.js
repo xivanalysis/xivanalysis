@@ -92,6 +92,7 @@ export default class ArcanaUndrawUsage extends Module {
 		if (badUndraws.length) {
 			const panels = AstUndrawMacros.map(macro => {
 				return {
+					key: 'container-' + macro.action,
 					title: {
 						key: 'title-' + macro.action,
 						content: <Fragment>
