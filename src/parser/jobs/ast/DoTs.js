@@ -12,8 +12,8 @@ const STATUS_DURATION = {
 	[STATUSES.COMBUST_II.id]: 30000,
 }
 
-export default class DoT extends Module {
-	static handle = 'dot'
+export default class DoTs extends Module {
+	static handle = 'dots'
 	static dependencies = [
 		'checklist',
 		'enemies',
@@ -89,7 +89,7 @@ export default class DoT extends Module {
 				content: <Fragment>
 					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires. Aim to refresh it between 2 to 0 seconds remaining on the duration.
 				</Fragment>,
-				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < STATUS_DURATION[ACTIONS.COMBUST_II.id] ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
 					{this.parser.formatDuration(this._clip[STATUSES.COMBUST_II.id])} of {STATUSES[STATUSES.COMBUST_II.id].name} lost to early refreshes.
 				</Fragment>,
