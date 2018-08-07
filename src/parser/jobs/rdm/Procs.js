@@ -18,29 +18,20 @@ export default class Procs extends Module {
 	]
 	static i18n_id = i18nMark('rdm.procs.title')
 
-	_history = {
-		wastedStone: 0,
-		overWrittenStone: 0,
-		invulnStone: 0,
-		missedStone: 0,
-		wastedFire: 0,
-		overWrittenFire: 0,
-		invulnFire: 0,
-		missedFire: 0,
-		wastedImpactful: 0,
-		overWrittenImpactful: 0,
-		invulnImpactful: 0,
-		missedImpactful: 0,
-		wastedEnhancedScatters: 0,
-		invulnScatter: 0,
-		missedScatter: 0,
+	_history = {}
+	_castStateMap = {
+		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERSTONE,
+		[STATUSES.VERFIRE_READY.id]: ACTIONS.VERFIRE,
+		[STATUSES.IMPACTFUL.id]: ACTIONS.IMPACT,
+		[STATUSES.ENHANCED_SCATTER.id]: ACTIONS.SCATTER,
 	}
-	_currentProcs = {
-		verStoneGained: 0,
-		verFireGained: 0,
-		impactfulGained: 0,
-		enhancedScatterGained: 0,
+	_doNotCastMap = {
+		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERAREO,
+		[STATUSES.VERFIRE_READY.id]: ACTIONS.VERTHUNDER,
+		[STATUSES.IMPACTFUL.id]: ACTIONS.JOLT_II,
 	}
+	//Global timestamp tracking per Proc
+	_currentProcs = {}
 	_castState = null
 	_impactfulProcOverride = false
 	_previousCast = null
@@ -58,6 +49,10 @@ export default class Procs extends Module {
 			to: 'player',
 			abilityId: PROCS,
 		}, this._onRemove)
+		this.addHook('refreshbuff', {
+			to: 'player',
+			abilityId: PROCS,
+		}, this._onRefresh)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -67,8 +62,8 @@ export default class Procs extends Module {
 		this._previousCast = event.timestamp
 		this._bossWasInvuln = invuln > 0
 
-		if (abilityID === ACTIONS.IMPACT.id) {
-			const impactRemainingDuration = event.timestamp - this._currentProcs.impactfulGained
+		if (abilityID === ACTIONS.IMPACT.id && this._currentProcs[STATUSES.IMPACTFUL.id]) {
+			const impactRemainingDuration = event.timestamp - (this._currentProcs[STATUSES.IMPACTFUL.id] || 0)
 			if (impactRemainingDuration <= IMPACT_OVERRIDE_THRESHOLD) {
 				//Use Impactful at 8 or less seconds remaining, regardless of all other procs
 				this._impactfulProcOverride = true
@@ -81,220 +76,93 @@ export default class Procs extends Module {
 	_onGain(event) {
 		const statusID = event.ability.guid
 
-		switch (statusID) {
-		case STATUSES.VERSTONE_READY.id:
-			if (this._currentProcs.verStoneGained > 0 && !this._impactfulProcOverride) {
-				//Wasted!
-				this._history.overWrittenStone++
+		//Initialize if not present
+		if (!(statusID in this._history)) {
+			this._history[statusID] = {
+				overWritten: 0,
+				invuln: 0,
+				missed: 0,
+				wasted: 0,
 			}
-			this._currentProcs.verStoneGained = event.timestamp
-			break
-		case STATUSES.VERFIRE_READY.id:
-			if (this._currentProcs.verFireGained > 0 && !this._impactfulProcOverride) {
-				//Wasted!
-				this._history.overWrittenFire++
-			}
-			this._currentProcs.verFireGained = event.timestamp
-			break
-		case STATUSES.IMPACTFUL.id:
-			if (this._currentProcs.impactfulGained > 0) {
-				//Wasted!
-				this._history.overWrittenImpactful++
-			}
-			this._currentProcs.impactfulGained = event.timestamp
-			break
-		case STATUSES.ENHANCED_SCATTER.id:
-		//Impossible to waste this one on gain
-			this._currentProcs.enhancedScatterGained = event.timestamp
-			break
-		default:
-		//Nothing to see here
-			break
 		}
+
+		if (!(statusID in this._currentProcs)) {
+			this._currentProcs[statusID] = 0
+		}
+
+		this._currentProcs[statusID] = event.timestamp
+	}
+
+	_onRefresh(event) {
+		const statusID = event.ability.guid
+
+		if (this._currentProcs[statusID] > 0 && !this._impactfulProcOverride && statusID !== STATUSES.ENHANCED_SCATTER.id) {
+			this._history[statusID].overWritten++
+		}
+
+		this._currentProcs[statusID] = event.timestamp
 	}
 
 	_onRemove(event) {
 		const statusID = event.ability.guid
 
-		switch (statusID) {
-		case STATUSES.VERSTONE_READY.id:
-			if (this._bossWasInvuln) {
-				this._history.invulnStone++
-			} else if (this._castState !== ACTIONS.VERSTONE.id) {
-				this._history.missedStone++
-			}
-			break
-		case STATUSES.VERFIRE_READY.id:
-			if (this._bossWasInvuln) {
-				this._history.invulnFire++
-			} else if (this._castState !== ACTIONS.VERFIRE.id) {
-				this._history.missedFire++
-			}
-			break
-		case STATUSES.IMPACTFUL.id:
-			if (this._bossWasInvuln) {
-				this._history.invulnImpactful++
-			} else if (this._castState !== ACTIONS.IMPACT.id) {
-				this._history.missedImpactful++
-			}
-			break
-		case STATUSES.ENHANCED_SCATTER.id:
-			if (this._bossWasInvuln) {
-				this._currentProcs.invulnScatter++
-			} else if (this._castState !== ACTIONS.SCATTER.id) {
-				this._history.missedScatter++
-			}
-			break
-		default:
-		//Nothing to see here
-			break
+		if (this._bossWasInvuln) {
+			this._history[statusID].invuln++
+		} else if (this._castState !== this._castStateMap[statusID].id) {
+			this._history[statusID].missed++
+		}
+
+		if (this._castState === this._castStateMap[statusID].id) {
+		//Reset this statusID!
+			this._currentProcs[statusID] = 0
 		}
 	}
 
 	_onComplete() {
-		this.verifyVerStone()
-		this.verifyVerFire()
-		this.verifyImpactful()
-		this.verifyScatter()
+		for (const statusID in this._history) {
+			//Leaving here for future debug purposes.
+			//const util = require('util')
+			// console.log(statusID)
+			// console.log(STATUSES[statusID].name)
+			// console.log(util.inspect(this._history[statusID], {showHidden: true, depth: null}))
+			this.generateSuggestions(statusID)
+		}
 	}
 
-	verifyVerStone() {
-		if (this._history.missedStone) {
+	generateSuggestions(statusID) {
+		if (this._history[statusID].missed) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERSTONE.icon,
-				why: `${this._history.missedStone} Verstone${this._history.missedStone !== 1 ? 's' : ''} casts missed due to buff falling off`,
+				icon: this._castStateMap[statusID].icon,
+				why: `${this._history[statusID].missed} ${this._castStateMap[statusID].name}${this._history[statusID].missed !== 1 ? 's' : ''} casts missed due to buff falling off`,
 				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.VERSTONE}/> whenever <StatusLink {...STATUSES.VERSTONE_READY}/> is up to avoid losing out on mana gains
+					Try to use <ActionLink {...this._castStateMap[statusID]}/> whenever <StatusLink {...STATUSES[statusID]}/> is up to avoid losing out on mana gains
 				</Fragment>,
 				tiers: SEVERITY_MISSED_PROCS,
-				value: this._history.missedStone,
+				value: this._history[statusID].missed,
 			}))
 		}
 
-		if (this._history.overWrittenStone) {
+		if (this._history[statusID].overWritten) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERSTONE.icon,
-				why: `${this._history.overWrittenStone} Verstone${this._history.overWrittenStone !== 1 ? 's' : ''} Procs Overwritten due to casting Verareo when VerStone ready is up`,
+				icon: this._castStateMap[statusID].icon,
+				why: `${this._history[statusID].overWritten} ${this._castStateMap[statusID].name}${this._history[statusID].overWritten !== 1 ? 's' : ''} Procs Overwritten due to casting ${this._doNotCastMap[statusID].name} when ${this._castStateMap[statusID].name} ready is up`,
 				content: <Fragment>
-					Don't cast <ActionLink {...ACTIONS.VERAREO}/> when you have <StatusLink {...STATUSES.VERSTONE_READY}/> up
+					Don't cast <ActionLink {...this._doNotCastMap[statusID]}/> when you have <StatusLink {...STATUSES[statusID]}/> up
 				</Fragment>,
 				tiers: SEVERITY_OVERWRITTEN_PROCS,
-				value: this._history.overWrittenStone,
+				value: this._history[statusID].overWritten,
 			}))
 		}
 
-		if (this._history.invulnStone) {
+		if (this._history[statusID].invuln) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERSTONE.icon,
-				why: `${this._history.invulnStone} Verstone${this._history.invulnStone !== 1 ? 's' : ''} Procs used on a boss while the boss was invulnerable`,
+				icon: this._castStateMap[statusID].icon,
+				why: `${this._history[statusID].invuln} ${this._castStateMap[statusID].name}${this._history[statusID].invuln !== 1 ? 's' : ''} Procs used on a boss while the boss was invulnerable`,
 				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.VERSTONE}/> whenever <StatusLink {...STATUSES.VERSTONE_READY}/> is up, but not while the boss is invulnerable
+					Try to use <ActionLink {...this._castStateMap[statusID]}/> whenever <StatusLink {...STATUSES[statusID]}/> is up, but not while the boss is invulnerable
 				</Fragment>,
 				tiers: SEVERITY_INVULN_PROCS,
-				value: this._history.invulnStone,
-			}))
-		}
-	}
-
-	verifyVerFire() {
-		if (this._history.missedFire) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERFIRE.icon,
-				why: `${this._history.missedFire} Verfire${this._history.missedFire !== 1 ? 's' : ''} casts missed due to buff falling off`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.VERFIRE}/> whenever <StatusLink {...STATUSES.VERFIRE_READY}/> is up to avoid losing out on mana gains
-				</Fragment>,
-				tiers: SEVERITY_MISSED_PROCS,
-				value: this._history.missedFire,
-			}))
-		}
-
-		if (this._history.overWrittenFire) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERFIRE.icon,
-				why: `${this._history.overWrittenFire} Verfire${this._history.overWrittenFire !== 1 ? 's' : ''} Procs Overwritten due to casting Verthunder when Verfire ready is up`,
-				content: <Fragment>
-					Don't cast <ActionLink {...ACTIONS.VERTHUNDER}/> when you have <StatusLink {...STATUSES.VERFIRE_READY}/> up
-				</Fragment>,
-				tiers: SEVERITY_OVERWRITTEN_PROCS,
-				value: this._history.overWrittenFire,
-			}))
-		}
-
-		if (this._history.invulnFire) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERFIRE.icon,
-				why: `${this._history.invulnFire} Verfire${this._history.invulnFire !== 1 ? 's' : ''} Procs used on a boss while the boss was invulnerable`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.VERFIRE}/> whenever <StatusLink {...STATUSES.VERFIRE_READY}/> is up, but not while the boss is invulnerable
-				</Fragment>,
-				tiers: SEVERITY_INVULN_PROCS,
-				value: this._history.invulnFire,
-			}))
-		}
-	}
-
-	verifyImpactful() {
-		if (this._history.missedImpactful) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.IMPACT.icon,
-				why: `${this._history.missedImpactful} Impact${this._history.missedImpactful !== 1 ? 's' : ''} casts missed due to buff falling off`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.IMPACT}/> whenever <StatusLink {...STATUSES.IMPACTFUL}/> is up to avoid losing out on mana gains
-				</Fragment>,
-				tiers: SEVERITY_MISSED_PROCS,
-				value: this._history.missedImpactful,
-			}))
-		}
-
-		if (this._history.overWrittenFire) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.IMPACT.icon,
-				why: `${this._history.overWrittenFire} Impact${this._history.overWrittenFire !== 1 ? 's' : ''} procs overwritten due to casting <ActionLink Jolt II when Impactful is up`,
-				content: <Fragment>
-					Don't cast <ActionLink {...ACTIONS.JOLT_II}/> when you have <StatusLink {...STATUSES.IMPACTFUL}/> up
-				</Fragment>,
-				tiers: SEVERITY_OVERWRITTEN_PROCS,
-				value: this._history.overWrittenFire,
-			}))
-		}
-
-		if (this._history.invulnImpactful) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.IMPACT.icon,
-				why: `${this._history.invulnImpactful} Impact${this._history.invulnImpactful !== 1 ? 's' : ''} procs used on a boss while the boss was invulnerable`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.IMPACT}/> whenever <StatusLink {...STATUSES.IMPACTFUL}/> is up, but not while the boss is invulnerable
-				</Fragment>,
-				tiers: SEVERITY_INVULN_PROCS,
-				value: this._history.invulnImpactful,
-			}))
-		}
-	}
-
-	verifyScatter() {
-		if (this._history.missedScatter) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SCATTER.icon,
-				why: `${this._history.missedScatter} Scatter${this._history.missedScatter !== 1 ? 's' : ''} procs missed due to buff falling off`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.SCATTER}/> whenever <StatusLink {...STATUSES.ENHANCED_SCATTER}/> is up to avoid losing out on mana gains,
-					this applies even if only one target is left and the buff is up, since it yields 8|8 gains.
-				</Fragment>,
-				tiers: SEVERITY_MISSED_PROCS,
-				value: this._history.missedScatter,
-			}))
-		}
-
-		if (this._history.invulnScatter) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SCATTER.icon,
-				why: `${this._history.invulnScatter} Scatter${this._history.invulnScatter !== 1 ? 's' : ''} procs used on a boss while the boss was invulnerable`,
-				content: <Fragment>
-					Try to use <ActionLink {...ACTIONS.SCATTER}/> whenever <StatusLink {...STATUSES.ENHANCED_SCATTER}/> is up, but not while the boss is invulnerable
-				</Fragment>,
-				tiers: SEVERITY_INVULN_PROCS,
-				value: this._history.invulnScatter,
+				value: this._history[statusID].invuln,
 			}))
 		}
 	}
