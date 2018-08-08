@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-import {Line} from 'react-chartjs-2'
+import TimeLineChart from 'components/ui/TimeLineChart'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -49,7 +49,9 @@ export default class Gauge extends Module {
 	// I'm assuming it'll start at 0 (which, in nine out of ten cases, should be it. I can't think of any fringe cases right now.)
 	_rage = 0
 	_wastedRage = 0
-	_graphedRage = [0]
+	_history = {
+		rage: [],
+	}
 
 	constructor(...args) {
 		super(...args)
@@ -67,10 +69,13 @@ export default class Gauge extends Module {
 		//And simply treats it like they didn't cost rage at all. Elegant solution.
 		if (RAGE_GENERATORS[abilityId]) {
 			this._addRage(abilityId)
-			this._graphedRage.push(this._rage)
 		}
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
+		}
+
+		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS) {
+			this._pushToGraph()
 		}
 	}
 
@@ -91,11 +96,16 @@ export default class Gauge extends Module {
 		return 0
 	}
 
+	_pushToGraph() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this._history.rage.push({t: timestamp, y: this._rage})
+	}
+
 	_onDeath() {
 		// Death just flat out resets everything. Stop dying.
 		this._wastedRage += this._rage
-
 		this._rage = 0
+		this._pushToGraph()
 	}
 
 	_onComplete() {
@@ -114,36 +124,17 @@ export default class Gauge extends Module {
 
 	output() {
 		const data = {
-			labels: new Array(this._graphedRage.length),
-			y: 2,
-			x: this.parser.fightDuration,
 			datasets: [
 				{
 					label: 'Rage',
-					fill: false,
-					data: this._graphedRage,
+					steppedLine: true,
+					data: this._history.rage,
 				},
 			],
 		}
 
-		const options = {
-			scales: {
-				xAxes: [
-					{
-						time: {
-							unit: 'minute',
-						},
-					},
-				],
-			},
-		}
-
-		console.log(this._graphedRage)
-		return <Fragment>
-			<Line
-				data={data}
-				options={options}
-			/>
-		</Fragment>
+		return <TimeLineChart
+			data={data}
+		/>
 	}
 }
