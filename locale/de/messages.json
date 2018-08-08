@@ -37,6 +37,8 @@
   "core.analyse.load-report": "",
   "core.analyse.view-on-fflogs": "",
   "core.checklist.title": "Checkliste",
+  "core.combos.content": "",
+  "core.combos.why": "",
   "core.cooldowndowntime.ogcd-cd-buffer": "",
   "core.cooldowndowntime.ogcd-cd-metric": "",
   "core.cooldowndowntime.title": "",
