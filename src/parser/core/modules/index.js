@@ -6,6 +6,7 @@ import Arcanum from './Arcanum'
 import CastTime from './CastTime'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
+import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Death from './Death'
 import Downtime from './Downtime'
@@ -31,6 +32,7 @@ export default [
 	CastTime,
 	Checklist,
 	Combatants,
+	Combos,
 	Cooldowns,
 	Death,
 	Downtime,
