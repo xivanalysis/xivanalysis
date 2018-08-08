@@ -12,7 +12,6 @@ export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
 		'checklist',
-		'invuln',
 		'downtime',
 	]
 
