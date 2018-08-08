@@ -71,7 +71,6 @@ export default class Gauge extends Module {
 		//And simply treats it like they didn't cost rage at all. Elegant solution.
 		if (RAGE_GENERATORS[abilityId]) {
 			this._addRage(abilityId)
-			this._graphedRage.push(this._rage)
 		}
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
