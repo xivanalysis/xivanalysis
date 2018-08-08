@@ -15,9 +15,6 @@ export default class About extends CoreAbout {
 		keep your party alive. If you plan out your heals and communicate with your co-healer, you will naturally end
 		up putting out more DPS with the extra GCDs gained.
 		</p>
-		<p>Currently: This tool displays the usual uptime and gcd recommendations. It also gives a simple print-out
-			for buffs you've extended.<br/>
-			Coming soon: Arcana usage and uptime analysis, healing analysis. More detail on buff extension maybe.</p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
@@ -25,6 +22,9 @@ export default class About extends CoreAbout {
 				please pop by our Discord channel!
 			</Message.Content>
 		</Message>
+		<p>Currently: This tool displays the usual uptime and gcd recommendations. It also gives a simple print-out
+			for buffs you've extended.<br/>
+			Coming soon: Arcana usage and uptime analysis, healing analysis. More detail on buff extension hopefully.</p>
 
 		<Message warning icon>
 			<Icon name="warning sign"/>

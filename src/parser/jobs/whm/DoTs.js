@@ -1,11 +1,12 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans} from '@lingui/react'
 
 //powerful copy paste code from SMN that ended up being changed quite a bit
 
@@ -77,18 +78,19 @@ export default class DoTs extends Module {
 
 	_onComplete() {
 		// Checklist rule for dot uptime
-		this.checklist.add(new Rule({
-			name: 'Keep your DoTs up',
-			description: <Fragment>
+		this.checklist.add(new TieredRule({
+			name: <Trans id="whm.dots.rule.name"> Keep your DoTs up </Trans>,
+			description: <Trans id="whm.dots.rule.description">
 				As a White Mage, DoTs are significant portion of your sustained damage. Aim to keep them up at all times.
-			</Fragment>,
+			</Trans>,
+			tiers: {90: TARGET.WARN, 95: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.AERO_II} /> uptime</Fragment>,
+					name: <Trans id="whm.dots.requirement.uptime-a2.name"><ActionLink {...ACTIONS.AERO_II} /> uptime</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.AERO_II.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.AERO_III} /> uptime</Fragment>,
+					name: <Trans id="whm.dots.requirement.uptime-a3.name"><ActionLink {...ACTIONS.AERO_III} /> uptime</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.AERO_III.id),
 				}),
 			],
@@ -100,13 +102,13 @@ export default class DoTs extends Module {
 			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AERO_II.icon,
-				content: <Fragment>
+				content: <Trans id="whm.dots.suggestion.clip-a2.content">
 					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)
-				</Fragment>,
+				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
+				why: <Trans id="whm.dots.suggestion.clip-a2.why">
 					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} lost to early refreshes.
-				</Fragment>,
+				</Trans>,
 			}))
 		}
 		if (this._clip[STATUSES.AERO_III.id] > 500) {
@@ -114,13 +116,13 @@ export default class DoTs extends Module {
 			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AERO_III.icon,
-				content: <Fragment>
+				content: <Trans id="whm.dots.suggestion.clip-a3.content">
 					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.
-				</Fragment>,
+				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
+				why: <Trans id="whm.dots.suggestion.clip-a3.why">
 					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
-				</Fragment>,
+				</Trans>,
 			}))
 		}
 	}

@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
+import {ActionLink} from 'components/ui/DbLink'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -21,6 +22,8 @@ const IGNORE_STATUSES = [
 
 const PULSE_THRESHOLD = 200
 const CELESTIAL_OPPOSITION_LEAD_TIME = 1500
+const STATUS_BUFFER_TIME = 1000
+const STATUS_MIN_ACTIVE_TIME = 0
 
 // TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
@@ -79,7 +82,7 @@ export default class BuffExtensions extends Module {
 				id: event.targetID,
 				name: refreshedTarget.info.name,
 				job: refreshedTarget.info.type,
-				buffs: refreshedTarget.getStatuses(null, event.timestamp, 1000, 1000, event.sourceID).filter(status =>
+				buffs: refreshedTarget.getStatuses(null, event.timestamp, STATUS_BUFFER_TIME, STATUS_MIN_ACTIVE_TIME, event.sourceID).filter(status =>
 					!IGNORE_STATUSES.includes(status.ability.guid)
 				),
 			}],
@@ -144,7 +147,7 @@ export default class BuffExtensions extends Module {
 					id: event.targetID,
 					name: refreshedTarget.info.name,
 					job: refreshedTarget.info.type,
-					buffs: refreshedTarget.getStatuses(null, event.timestamp, 1000, 1000, event.sourceID).filter(status =>
+					buffs: refreshedTarget.getStatuses(null, event.timestamp, CELESTIAL_OPPOSITION_LEAD_TIME, STATUS_MIN_ACTIVE_TIME, event.sourceID).filter(status =>
 						!IGNORE_STATUSES.includes(status.ability.guid)
 					),
 				})
@@ -211,6 +214,7 @@ export default class BuffExtensions extends Module {
 			})
 
 			return {
+				key: 'container-' + dilation.event.timestamp,
 				title: {
 					key: 'title-' + dilation.event.timestamp,
 					content: <Fragment>
@@ -245,12 +249,19 @@ export default class BuffExtensions extends Module {
 			}
 		})
 
-		return <Accordion
-			exclusive={false}
-			panels={panels}
-			styled
-			fluid
-		/>
+		return <Fragment>
+			<p>
+			This section displays a history of targets affected with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.
+				<br/>
+			* Excluded statuses: <ActionLink {...ACTIONS.PROTECT} />
+			</p>
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		</Fragment>
 	}
 }
 
