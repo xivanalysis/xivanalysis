@@ -97,6 +97,9 @@
   "game.roles.unsupported": "",
   "glossary.proc.description": "",
   "glossary.proc.title": "",
+  "mch.about.description": "",
+  "mch.about.description.warning": "",
+  "rdm.procs.title": "",
   "smn.about.description": "Introduction",
   "smn.about.description.warning": "Bien que cette analyse soit un temps soit peu précise, le système est toujours en développement et peut mélanger certains éléments quelques fois. Si vous remarquez des problèmes, ou si vous avez des préoccupations, merci de passer par notre chaîne Discord!",
   "smn.aetherflow.cast-time": "",
@@ -159,5 +162,17 @@
   "whm.about.description": "",
   "whm.about.description.devwarning": "",
   "whm.about.description.invulnwarning": "",
-  "whm.about.description.support": ""
+  "whm.about.description.support": "",
+  "whm.assize.checklist.description": "",
+  "whm.assize.checklist.requirement.assize.name": "",
+  "whm.benison.suggestion.content": "",
+  "whm.benison.suggestion.why": "",
+  "whm.dots.requirement.uptime-a2.name": "",
+  "whm.dots.requirement.uptime-a3.name": "",
+  "whm.dots.rule.description": "",
+  "whm.dots.rule.name": "",
+  "whm.dots.suggestion.clip-a2.content": "",
+  "whm.dots.suggestion.clip-a2.why": "",
+  "whm.dots.suggestion.clip-a3.content": "",
+  "whm.dots.suggestion.clip-a3.why": ""
 }
