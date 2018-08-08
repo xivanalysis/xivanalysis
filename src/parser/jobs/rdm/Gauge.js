@@ -31,10 +31,12 @@ const MANA_GAIN = {
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
+		static i18n_id = 'rdm.gauge.title'
 		static dependencies = [
 			'combatants',
 			'suggestions',
 		]
+
 		//Keeps track of our current mana gauge.
 		_whiteMana = 0
 		_blackMana = 0
@@ -62,6 +64,7 @@ export default class Gauge extends Module {
 			super(...args)
 
 			this.addHook('cast', {by: 'player'}, this._onCast)
+			this.addHook('death', {to: 'player'}, this._onDeath)
 			this.addHook('complete', this._onComplete)
 		}
 
@@ -149,6 +152,12 @@ export default class Gauge extends Module {
 			this._calculateManaImbalance(this._whiteMana, this._blackMana)
 		}
 
+		_pushToGraph() {
+			const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+			this._history.white.push({t: timestamp, y: this._whiteMana})
+			this._history.black.push({t: timestamp, y: this._blackMana})
+		}
+
 		_onCast(event) {
 			const abilityId = event.ability.guid
 			//This just lets us determine if we've modified the current Mana numbers at all
@@ -198,10 +207,14 @@ export default class Gauge extends Module {
 			}
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
-				const timestamp = event.timestamp - this.parser.fight.start_time
-				this._history.white.push({t: timestamp, y: this._whiteMana})
-				this._history.black.push({t: timestamp, y: this._blackMana})
+				this._pushToGraph()
 			}
+		}
+
+		_onDeath() {
+			this._whiteMana = 0
+			this._blackMana = 0
+			this._pushToGraph()
 		}
 
 		_onComplete() {
