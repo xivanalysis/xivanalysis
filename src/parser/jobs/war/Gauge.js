@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {Line} from 'react-chartjs-2'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -36,6 +37,7 @@ const MAX_RAGE = 100
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
+	static title = 'Gauge Usage'
 	static dependencies = [
 		'combatants',
 		'suggestions',
@@ -117,5 +119,23 @@ export default class Gauge extends Module {
 			tiers: RAGE_USAGE_SEVERITY,
 			value: this._wastedRage,
 		}))
+	}
+
+	output() {
+		const data = {
+			datasets: [
+				{
+					fill: false,
+					data: this._graphedRage,
+				},
+			],
+		}
+
+		console.log(this._graphedRage)
+		return <Fragment>
+			<Line
+				data={data}
+			/>
+		</Fragment>
 	}
 }
