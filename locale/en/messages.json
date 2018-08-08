@@ -37,6 +37,8 @@
   "core.analyse.load-report": "Loading report",
   "core.analyse.view-on-fflogs": "View report on FF Logs",
   "core.checklist.title": "core.checklist.title",
+  "core.combos.content": "Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.",
+  "core.combos.why": "{0, plural, one {You misused # combo action.} other {You misused # combo actions.}}",
   "core.cooldowndowntime.ogcd-cd-buffer": "To account for random factors you are given a buffer of {0} seconds per instance to hold your cooldowns.",
   "core.cooldowndowntime.ogcd-cd-metric": "Always make sure to use your OGCDs when they are up but don't clip them.  {0}",
   "core.cooldowndowntime.title": "core.cooldowndowntime.title",
