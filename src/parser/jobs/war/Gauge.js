@@ -1,9 +1,11 @@
+import Color from 'color'
 import React, {Fragment} from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -74,7 +76,7 @@ export default class Gauge extends Module {
 			this._rage -= RAGE_SPENDERS[abilityId]
 		}
 
-		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS) {
+		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._pushToGraph()
 		}
 	}
@@ -123,12 +125,17 @@ export default class Gauge extends Module {
 	}
 
 	output() {
+		const _rageColor = Color(JOBS.WARRIOR.colour)
+
+		/* eslint-disable no-magic-numbers */
 		const data = {
 			datasets: [
 				{
 					label: 'Rage',
 					steppedLine: true,
 					data: this._history.rage,
+					backgroundColor: _rageColor.fade(0.8),
+					borderColor: _rageColor.fade(0.5),
 				},
 			],
 		}
@@ -136,5 +143,6 @@ export default class Gauge extends Module {
 		return <TimeLineChart
 			data={data}
 		/>
+		/* eslint-enable no-magic-numbers */
 	}
 }
