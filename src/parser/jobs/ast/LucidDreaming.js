@@ -40,7 +40,7 @@ export default class LucidDreaming extends Module {
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
-		if(!action.onGcd) {
+		if (!action.onGcd) {
 			return
 		}
 
@@ -56,8 +56,8 @@ export default class LucidDreaming extends Module {
 
 		if (this._MPthresholdTime
 			&& event.timestamp - this._MPthresholdTime > 20000
-			&& ( this._uses === 0 || this._lastUse > (ACTIONS.LUCID_DREAMING.cooldown * 1000) )) {
-			console.log('================== Not using LUCID? ==================')
+			&& (this._uses === 0 || this._lastUse > (ACTIONS.LUCID_DREAMING.cooldown * 1000))) {
+			console.log('No lucid being used. lastUse: ' + this.parser.formatTimestamp(this._lastUse))
 		}
 
 	}
