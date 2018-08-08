@@ -49,7 +49,7 @@ export default class Gauge extends Module {
 	// I'm assuming it'll start at 0 (which, in nine out of ten cases, should be it. I can't think of any fringe cases right now.)
 	_rage = 0
 	_wastedRage = 0
-	_graphedRage = []
+	_graphedRage = [0]
 
 	constructor(...args) {
 		super(...args)
@@ -67,19 +67,12 @@ export default class Gauge extends Module {
 		//And simply treats it like they didn't cost rage at all. Elegant solution.
 		if (RAGE_GENERATORS[abilityId]) {
 			this._addRage(abilityId)
+			this._graphedRage.push(this._rage)
 		}
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
-			this._graphedRage.push(this._rage)
+			//this._graphedRage.push(this._rage)
 		}
-	}
-
-	getTotalRage() {
-		if (!this._graphedRage) {
-			return null
-		}
-
-		return this._graphedRage
 	}
 
 	_addRage(abilityId) {
@@ -90,7 +83,6 @@ export default class Gauge extends Module {
 			const waste = this._rage - MAX_RAGE
 			this._wastedRage += waste
 			this._rage = MAX_RAGE
-			this._graphedRage.push(this._rage)
 			return waste
 		}
 		//Fix for gauge going negative, maybe?
@@ -123,8 +115,10 @@ export default class Gauge extends Module {
 
 	output() {
 		const data = {
+			labels: new Array(this._graphedRage.length),
 			datasets: [
 				{
+					label: 'Rage',
 					fill: false,
 					data: this._graphedRage,
 				},
