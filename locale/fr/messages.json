@@ -37,6 +37,8 @@
   "core.analyse.load-report": "Chargement du rapport",
   "core.analyse.view-on-fflogs": "Afficher le rapport sur FF Logs",
   "core.checklist.title": "Checklist",
+  "core.combos.content": "",
+  "core.combos.why": "",
   "core.cooldowndowntime.ogcd-cd-buffer": "Pour prendre en compte les facteurs aléatoires, vous disposez d'une marge de manœuvre de {0} secondes par instance pour conserver vos cooldowns.",
   "core.cooldowndowntime.ogcd-cd-metric": "Assurez-vous de toujours utiliser vos oGCD lorsqu'ils sont disponibles mais prenez garde à ne pas les faire clipper. {0}",
   "core.cooldowndowntime.title": "Temps d'inactivité des Cooldowns",
