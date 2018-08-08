@@ -1,6 +1,10 @@
+import Color from 'color'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+
+import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
+import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -47,6 +51,12 @@ export default class Gauge extends Module {
 		_missingAreo = false
 		_missingThunder = false
 		_manaficationUsed = false
+
+		// Chart handling
+		_history = {
+			white: [],
+			black: [],
+		}
 
 		constructor(...args) {
 			super(...args)
@@ -187,7 +197,11 @@ export default class Gauge extends Module {
 				}
 			}
 
-			return
+			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
+				const timestamp = event.timestamp - this.parser.fight.start_time
+				this._history.white.push({t: timestamp, y: this._whiteMana})
+				this._history.black.push({t: timestamp, y: this._blackMana})
+			}
 		}
 
 		_onComplete() {
@@ -287,5 +301,32 @@ export default class Gauge extends Module {
 					</Fragment>,
 				}))
 			}
+		}
+
+		output() {
+			const whm = Color(JOBS.WHITE_MAGE.colour)
+			const blm = Color(JOBS.BLACK_MAGE.colour)
+
+			// Disabling magic numbers for the chart, 'cus it's a chart
+			/* eslint-disable no-magic-numbers */
+			const data = {
+				datasets: [{
+					label: 'White Mana',
+					data: this._history.white,
+					backgroundColor: whm.fade(0.5),
+					borderColor: whm.fade(0.2),
+					steppedLine: true,
+				}, {
+					label: 'Black Mana',
+					data: this._history.black,
+					backgroundColor: blm.fade(0.5),
+					borderColor: blm.fade(0.2),
+					steppedLine: true,
+				}],
+			}
+			return <TimeLineChart
+				data={data}
+			/>
+			/* eslint-enable no-magic-numbers */
 		}
 }
