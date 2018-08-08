@@ -71,7 +71,6 @@ export default class Gauge extends Module {
 		}
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
-			//this._graphedRage.push(this._rage)
 		}
 	}
 
@@ -116,6 +115,8 @@ export default class Gauge extends Module {
 	output() {
 		const data = {
 			labels: new Array(this._graphedRage.length),
+			y: 2,
+			x: this.parser.fightDuration,
 			datasets: [
 				{
 					label: 'Rage',
@@ -125,10 +126,23 @@ export default class Gauge extends Module {
 			],
 		}
 
+		const options = {
+			scales: {
+				xAxes: [
+					{
+						time: {
+							unit: 'minute',
+						},
+					},
+				],
+			},
+		}
+
 		console.log(this._graphedRage)
 		return <Fragment>
 			<Line
 				data={data}
+				options={options}
 			/>
 		</Fragment>
 	}
