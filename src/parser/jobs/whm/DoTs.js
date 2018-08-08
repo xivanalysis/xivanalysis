@@ -86,11 +86,11 @@ export default class DoTs extends Module {
 			tiers: {90: TARGET.WARN, 95: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
-					name: <Trans id="whm.dots.requirement.uptime.a2.name"><ActionLink {...ACTIONS.AERO_II} /> uptime</Trans>,
+					name: <Trans id="whm.dots.requirement.uptime-a2.name"><ActionLink {...ACTIONS.AERO_II} /> uptime</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.AERO_II.id),
 				}),
 				new Requirement({
-					name: <Trans id="whm.dots.requirement.uptime.a3.name"><ActionLink {...ACTIONS.AERO_III} /> uptime</Trans>,
+					name: <Trans id="whm.dots.requirement.uptime-a3.name"><ActionLink {...ACTIONS.AERO_III} /> uptime</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.AERO_III.id),
 				}),
 			],
@@ -102,11 +102,11 @@ export default class DoTs extends Module {
 			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AERO_II.icon,
-				content: <Trans id="whm.dots.suggestion.clip.a2.content">
+				content: <Trans id="whm.dots.suggestion.clip-a2.content">
 					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)
 				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Trans id="whm.dots.suggestion.clip.a2.why">
+				why: <Trans id="whm.dots.suggestion.clip-a2.why">
 					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} lost to early refreshes.
 				</Trans>,
 			}))
@@ -116,11 +116,11 @@ export default class DoTs extends Module {
 			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AERO_III.icon,
-				content: <Trans id="whm.dots.suggestion.clip.a3.content">
+				content: <Trans id="whm.dots.suggestion.clip-a3.content">
 					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.
 				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Trans id="whm.dots.suggestion.clip.a3.why">
+				why: <Trans id="whm.dots.suggestion.clip-a3.why">
 					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
 				</Trans>,
 			}))

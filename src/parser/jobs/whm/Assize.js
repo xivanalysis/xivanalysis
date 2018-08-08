@@ -61,7 +61,7 @@ export default class Assize extends Module {
 			tiers: {[warnTarget]: TARGET.WARN, 95: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
-					name: <Trans id="whm.assize.checklist.description"><ActionLink {...ACTIONS.ASSIZE} /> uptime </Trans>,
+					name: <Trans id="whm.assize.checklist.requirement.assize.name"><ActionLink {...ACTIONS.ASSIZE} /> uses </Trans>,
 					value: this._uses,
 					target: Math.max(maxUsesInt, this._uses),
 				}),
