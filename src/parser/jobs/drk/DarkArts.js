@@ -29,9 +29,7 @@ export default class DarkArts extends Module {
 	static title = 'Dark Arts Management'
 	static dependencies = [
 		'buffs',
-		'gcds',
 		'suggestions',
-		'combatants',
 	]
 
 	// counters (uncombo'd GCDs ignored)

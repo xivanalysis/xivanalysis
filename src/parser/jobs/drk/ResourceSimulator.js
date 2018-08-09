@@ -119,7 +119,6 @@ export default class Resources extends Module {
 		'gcds',
 		'suggestions',
 		'checklist',
-		'downtime',
 	]
 
 	// -----

@@ -37,11 +37,9 @@ export default class Buffs extends Module {
 	static title = 'Buffs and Stances'
 	static dependencies = [
 		'downtime',
-		'cooldowns',
 		'combatants',
 		'downtime',
 		'checklist',
-		'suggestions',
 	]
 	// -----
 	// Accessors
