@@ -23,6 +23,7 @@ import ARC from './ARC'
 import BRD from './BRD'
 import SAM from './SAM'
 import DRK from './DRK'
+import MCH from './MCH'
 
 const ACTIONS = {
 	...SHARED,
@@ -49,6 +50,7 @@ const ACTIONS = {
 	...SAM,
 
 	...BRD,
+	...MCH,
 
 	...BLM,
 	...SMN,

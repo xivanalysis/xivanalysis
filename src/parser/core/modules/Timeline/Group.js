@@ -1,5 +1,7 @@
+const DEFAULT_GROUP_ORDER = 50
+
 export default class Group {
-	order = 50
+	order = DEFAULT_GROUP_ORDER
 
 	constructor(options) {
 		Object.keys(options || {}).forEach(key => {

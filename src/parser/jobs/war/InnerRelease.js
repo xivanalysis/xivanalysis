@@ -18,8 +18,6 @@ const possibleGcds = 5
 export default class InnerRelease extends Module {
 	static handle = 'ir'
 	static dependencies = [
-		'gauge',
-		'gcd',
 		'suggestions',
 	]
 	static title = 'Inner Release Usage'

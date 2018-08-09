@@ -47,14 +47,16 @@ const STATUSES = {
 	...RDM,
 }
 
+export const STATUS_ID_OFFSET = 1000000
+
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
 const correctIdsToMatchLogs = obj => {
 	Object.keys(obj).forEach(key => {
 		const status = obj[key]
 		if (Array.isArray(status.id)) {
-			status.id = status.id.map(id => id + 1000000)
+			status.id = status.id.map(id => id + STATUS_ID_OFFSET)
 		} else {
-			status.id = status.id + 1000000
+			status.id = status.id + STATUS_ID_OFFSET
 		}
 	})
 	return obj

@@ -8,6 +8,10 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://secure.xivdb.com/img/game/000000/000601.png',
 		onGcd: true,
+		potency: 150,
+		combo: {
+			start: true,
+		},
 	},
 
 	GUST_SLASH: {
@@ -15,6 +19,11 @@ export default {
 		name: 'Gust Slash',
 		icon: 'https://secure.xivdb.com/img/game/000000/000602.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2240,
+			potency: 200,
+		},
 	},
 
 	AEOLIAN_EDGE: {
@@ -22,6 +31,12 @@ export default {
 		name: 'Aeolian Edge',
 		icon: 'https://secure.xivdb.com/img/game/000000/000605.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2242,
+			potency: 340, // TODO - *Cries in positionals*
+			end: true,
+		},
 	},
 
 	SHADOW_FANG: {
@@ -29,6 +44,12 @@ export default {
 		name: 'Shadow Fang',
 		icon: 'https://secure.xivdb.com/img/game/000000/000606.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2242,
+			potency: 200,
+			end: true,
+		},
 	},
 
 	DEATH_BLOSSOM: {
@@ -36,6 +57,8 @@ export default {
 		name: 'Death Blossom',
 		icon: 'https://secure.xivdb.com/img/game/000000/000615.png',
 		onGcd: true,
+		potency: 110,
+		breaksCombo: true,
 	},
 
 	THROWING_DAGGER: {
@@ -43,6 +66,8 @@ export default {
 		name: 'Throwing Dagger',
 		icon: 'https://secure.xivdb.com/img/game/000000/000614.png',
 		onGcd: true,
+		potency: 120,
+		breaksCombo: true,
 	},
 
 	// -----
