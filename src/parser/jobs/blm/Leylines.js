@@ -57,8 +57,8 @@ export default class Leylines extends Module {
 	}
 
 	//TODO: make a better one that tracks actual LL durations so that you don't have to filter out the last LL use in a fight.
-	_percentFunction(numberOfLeyLines, SumOfCoPUpime) {
-		return (SumOfCoPUpime/(numberOfLeyLines*LEYLINE_DURATION))*100
+	_percentFunction(numberOfLeyLines, sumOfCoPUpTime) {
+		return (sumOfCoPUpTime/(numberOfLeyLines*LEYLINE_DURATION))*100
 	}
 
 	_onComplete(event) {
@@ -83,7 +83,7 @@ export default class Leylines extends Module {
 			requirements: [
 				new Requirement({
 					name: <ActionLink {...ACTIONS.LEY_LINES} />,
-					percent: this._percentFunction(numberOfLeyLines, SumOfCoPUpime),
+					percent: this._percentFunction(numberOfLeyLines, sumOfCoPUpTime),
 				}),
 			],
 			//pretty random. Should be revised, maybe based on fights? 10% is ~ 1 GCD. So we allow that.
