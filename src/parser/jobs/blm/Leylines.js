@@ -77,7 +77,6 @@ export default class Leylines extends Module {
 			}
 			this.cop.history.push(this.cop.current)
 		}
-		console.log(this._CircleOfPowers)
 		//filter out the last possible LL usage because it would make things weird.
 		this.cop.history.filter(cops => cops.start < (event.timestamp - LEYLINE_DURATION))
 		this._LeyLineHistory.filter(timestamps => timestamps < (event.timestamp - LEYLINE_DURATION))
@@ -86,7 +85,7 @@ export default class Leylines extends Module {
 		const numberOfLeyLines = this._LeyLineHistory.length
 
 		this.checklist.add(new Rule({
-			name: <Trans id="blm.leylines.checklist-caption">Stay in you your Ley Lines</Trans>,
+			name: <Trans id="blm.leylines.checklist-caption">Stay in your Ley Lines</Trans>,
 			description: <Trans id="blm.leylines.checklist">Maximize the time you stay in your Ley Lines, but don't get hit unneccessarly by AOEs, or tell your Healers to adjust. Preplanning its uses is key, as always.</Trans>,
 			requirements: [
 				new Requirement({
