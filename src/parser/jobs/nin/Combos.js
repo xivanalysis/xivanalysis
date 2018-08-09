@@ -135,6 +135,7 @@ export default class Combos extends CoreCombos {
 					percent: () => uptime,
 				}),
 			],
+			target: 99,
 		}))
 
 		if (clippedDuration > 0) {
