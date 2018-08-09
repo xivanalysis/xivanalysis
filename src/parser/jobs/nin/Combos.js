@@ -8,6 +8,7 @@ import BOSSES from 'data/BOSSES'
 import CoreCombos from 'parser/core/modules/Combos'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const HUTON_MAX_DURATION_MILLIS = 70000 // Not in STATUSES/NIN.js because lolgauges
 const HUTON_START_DURATION_MILLIS = {
@@ -127,6 +128,7 @@ export default class Combos extends CoreCombos {
 					</Message.Content>
 				</Message>
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.HUTON,
 			requirements: [
 				new Requirement({
 					name: <Trans id="nin.huton.checklist.requirement.name"><ActionLink {...ACTIONS.HUTON}/> uptime</Trans>,
