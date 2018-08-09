@@ -22,6 +22,7 @@ import PLD from './PLD'
 import ARC from './ARC'
 import BRD from './BRD'
 import SAM from './SAM'
+import DRK from './DRK'
 import MCH from './MCH'
 
 const ACTIONS = {
@@ -38,6 +39,7 @@ const ACTIONS = {
 
 	...PLD,
 	...WAR,
+	...DRK,
 
 	...WHM,
 	...SCH,
