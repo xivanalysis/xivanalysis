@@ -333,7 +333,7 @@ export default class Resources extends Module {
 	//this.correctMana(event.sourceResources.mp)
 	_onDamageDealt(event) {
 		// check if it's the first damage event
-		if (this._firstDamageEvent) {
+		if (this._firstDamageEvent && event.sourceResources) {
 			// check if mana is missing or not, if so then DA opener was used
 			this._darkArtsOpener = (event.sourceResources.mp !== event.sourceResources.maxMP)
 			// set mana to the value found here
