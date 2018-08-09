@@ -54,7 +54,6 @@ export default class Leylines extends Module {
 		if (this._circleOfPowers.current) {
 			this._circleOfPowers.current.stop = event.timestamp
 		}
-		this._circleOfPowers = this._circleOfPowers
 	}
 
 	//TODO: make a better one that tracks actual LL durations so that you don't have to filter out the last LL use in a fight.
@@ -63,7 +62,6 @@ export default class Leylines extends Module {
 	}
 
 	_onComplete(event) {
-		this._circleOfPowers = this._circleOfPowers
 		if (this._circleOfPowers.current) {
 			if (!this._circleOfPowers.current.stop) {
 				this._circleOfPowers.current.stop = event.timestamp
