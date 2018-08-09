@@ -1,3 +1,4 @@
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -45,11 +46,15 @@ export default class TrickAttackPositional extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TRICK_ATTACK.icon,
 				content: <Fragment>
-					<ActionLink {...ACTIONS.TRICK_ATTACK}/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.
+					<Trans id="nin.ta-positional.suggestions.missed.content"><ActionLink {...ACTIONS.TRICK_ATTACK}/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.</Trans>
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed the positional on Trick Attack {missed.length} time{missed.length !== 1 && 's'}.
+					<Plural
+						id="nin.ta-positional.suggestions.missed.why"
+						value={missed.length}
+						one="You missed the positional on Trick Attack # time."
+						other="You missed the positional on Trick Attack # times."/>
 				</Fragment>,
 			}))
 		}

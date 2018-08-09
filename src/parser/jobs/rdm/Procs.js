@@ -62,6 +62,11 @@ export default class Procs extends Module {
 		this._previousCast = event.timestamp
 		this._bossWasInvuln = invuln > 0
 
+		// Debug
+		// if (abilityID in ACTIONS) {
+		// 	console.log(`Ability: ${ACTIONS[abilityID].name} Timestamp: ${event.timestamp}`)
+		// }
+
 		if (abilityID === ACTIONS.IMPACT.id && this._currentProcs[STATUSES.IMPACTFUL.id]) {
 			const impactRemainingDuration = event.timestamp - (this._currentProcs[STATUSES.IMPACTFUL.id] || 0)
 			if (impactRemainingDuration <= IMPACT_OVERRIDE_THRESHOLD) {
@@ -75,6 +80,8 @@ export default class Procs extends Module {
 
 	_onGain(event) {
 		const statusID = event.ability.guid
+		// Debug
+		// console.log(`Gain Status: ${STATUSES[statusID].name} Timestamp: ${event.timestamp}`)
 
 		//Initialize if not present
 		if (!(statusID in this._history)) {
@@ -95,6 +102,8 @@ export default class Procs extends Module {
 
 	_onRefresh(event) {
 		const statusID = event.ability.guid
+		// Debug
+		// console.log(`Refresh Status: ${STATUSES[statusID].name} Timestamp: ${event.timestamp}`)
 
 		if (this._currentProcs[statusID] > 0 && !this._impactfulProcOverride && statusID !== STATUSES.ENHANCED_SCATTER.id) {
 			this._history[statusID].overWritten++
@@ -106,10 +115,17 @@ export default class Procs extends Module {
 	_onRemove(event) {
 		const statusID = event.ability.guid
 
+		// Debug
+		// console.log(`Remove Status: ${STATUSES[statusID].name} Timestamp: ${event.timestamp}`)
+
 		if (this._bossWasInvuln) {
 			this._history[statusID].invuln++
 		} else if (this._castState !== this._castStateMap[statusID].id) {
 			this._history[statusID].missed++
+		}
+
+		if (statusID === STATUSES.IMPACTFUL.id) {
+			this._impactfulProcOverride = false
 		}
 
 		if (this._castState === this._castStateMap[statusID].id) {

@@ -23,6 +23,8 @@ export default class Checklist extends Module {
 	}
 
 	output() {
-		return <ChecklistComponent rules={this._rules}/>
+		const sortedRules = [...this._rules]
+		sortedRules.sort((a, b) => a.displayOrder - b.displayOrder)
+		return <ChecklistComponent rules={sortedRules}/>
 	}
 }

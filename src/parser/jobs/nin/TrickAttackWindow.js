@@ -1,5 +1,5 @@
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-//import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -56,11 +56,14 @@ export default class TrickAttackWindow extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREAM_WITHIN_A_DREAM.icon,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they&apos;re both on 60 second cooldowns, they should always be paired to maximize DPS.
+					<Trans id="nin.ta-window.suggestions.dream.content">Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they&apos;re both on 60 second cooldowns, they should always be paired to maximize DPS.</Trans>
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You used Dream Within A Dream {this._dwadOutsideTa} time{this._dwadOutsideTa !== 1 && 's'} outside of Trick Attack.
+					<Plural id="nin.ta-window.suggestions.dream.why"
+						value={this._dwadOutsideTa}
+						one="You used Dream Within A Dream # time outside of Trick Attack."
+						other="You used Dream Within A Dream # times outside of Trick Attack."/>
 				</Fragment>,
 			}))
 		}
@@ -69,11 +72,14 @@ export default class TrickAttackWindow extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ARMOR_CRUSH.icon,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.
+					<Trans id="nin.ta-window.suggestions.armor-crush.content">Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.</Trans>
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You used Armor Crush {this._armorCrushInTa} time{this._armorCrushInTa !== 1 && 's'} during Trick Attack.
+					<Plural id="nin.ta-window.suggestions.armor-crush.why"
+						value={this._armorCrushInTa}
+						one="You used Armor Crush # time during Trick Attack."
+						other="You used Armor Crush # times during Trick Attack."/>
 				</Fragment>,
 			}))
 		}
