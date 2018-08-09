@@ -16,11 +16,11 @@ export default class Leylines extends Module {
 	static dependencies = [
 		'checklist',
 	]
-	_CircleOfPowers = {
+	_circleOfPowers = {
 		current: null,
 		history: [],
 	}
-	_LeyLineHistory = []
+	_leyLineHistory = []
 
 	constructor(...args) {
 		super(...args)
@@ -39,62 +39,57 @@ export default class Leylines extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onCastLeyLines(event) {
-		this.ll = this._LeyLineHistory
-		this.ll.push(event.timestamp)
-
-	}
+	_onCastLeyLines(event) { this._leyLineHistory.push(event.timestamp) }
 
 	_onApplyCircleOfPower(event) {
-		this.cop = this._CircleOfPowers
-		if (this.cop.current) { this.cop.history.push(this.cop.current) }
+		if (this._circleOfPowers.current) { this._circleOfPowers.history.push(this._circleOfPowers.current) }
 
-		this.cop.current = {
+		this._circleOfPowers.current = {
 			start: event.timestamp,
 			stop: null,
 		}
-		this._CircleOfPowers = this.cop
 	}
 
 	_onRemoveCircleOfPower(event) {
-		this.cop = this._CircleOfPowers
-		if (this.cop.current) {
-			this.cop.current.stop = event.timestamp
+		if (this._circleOfPowers.current) {
+			this._circleOfPowers.current.stop = event.timestamp
 		}
-		this._CircleOfPowers = this.cop
+		this._circleOfPowers = this._circleOfPowers
 	}
 
+	//TODO: make a better one that tracks actual LL durations so that you don't have to filter out the last LL use in a fight.
 	_percentFunction(numberOfLeyLines, SumOfCoPUpime) {
 		return (SumOfCoPUpime/(numberOfLeyLines*LEYLINE_DURATION))*100
 	}
 
 	_onComplete(event) {
-		this.cop = this._CircleOfPowers
-		if (!this.cop.history.length) { return }
-		if (this.cop.current) {
-			if (!this.cop.current.stop) {
-				this.cop.current.stop = event.timestamp
+		this._circleOfPowers = this._circleOfPowers
+		if (this._circleOfPowers.current) {
+			if (!this._circleOfPowers.current.stop) {
+				this._circleOfPowers.current.stop = event.timestamp
 			}
-			this.cop.history.push(this.cop.current)
+			this._circleOfPowers.history.push(this._circleOfPowers.current)
 		}
+		//check if there even were any events
+		if (!this._circleOfPowers.history.length) { return }
 		//filter out the last possible LL usage because it would make things weird.
-		this.cop.history.filter(cops => cops.start < (event.timestamp - LEYLINE_DURATION))
-		this._LeyLineHistory.filter(timestamps => timestamps < (event.timestamp - LEYLINE_DURATION))
-		const circleOfPowerDurations = this.cop.history.map(cops => Math.max(cops.stop - cops.start, 0))
+		this._circleOfPowers.history = this._circleOfPowers.history.filter(cops => cops.start < (event.timestamp - LEYLINE_DURATION))
+		this._leyLineHistory = this._leyLineHistory.filter(timestamps => timestamps < (event.timestamp - LEYLINE_DURATION))
+		const circleOfPowerDurations = this._circleOfPowers.history.map(cops => Math.max(cops.stop - cops.start, 0))
 		const SumOfCoPUpime = circleOfPowerDurations.reduce((accumulator, currentValue) => accumulator + currentValue)
-		const numberOfLeyLines = this._LeyLineHistory.length
+		const numberOfLeyLines = this._leyLineHistory.length
 
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.leylines.checklist-caption">Stay in your Ley Lines</Trans>,
-			description: <Trans id="blm.leylines.checklist">Maximize the time you stay in your Ley Lines, but don't get hit unneccessarly by AOEs, or tell your Healers to adjust. Preplanning its uses is key, as always.</Trans>,
+			description: <Trans id="blm.leylines.checklist">Try to avoid leaving your Ley Lines after placing them. Take advantage of Ley Lines' size to stay in them while dodging AOEs and being in range of healers. If you can't stay in them for the majority of a Ley Lines' duration, consider changing where they're placed in the fight.</Trans>,
 			requirements: [
 				new Requirement({
 					name: <ActionLink {...ACTIONS.LEY_LINES} />,
 					percent: this._percentFunction(numberOfLeyLines, SumOfCoPUpime),
 				}),
 			],
-			//pretty random. Should be revised, maybe based on fights?
-			target: 95,
+			//pretty random. Should be revised, maybe based on fights? 10% is ~ 1 GCD. So we allow that.
+			target: 90,
 		}))
 	}
 }
