@@ -12,8 +12,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const HUTON_MAX_DURATION_MILLIS = 70000 // Not in STATUSES/NIN.js because lolgauges
 const HUTON_START_DURATION_MILLIS = {
-	high: 63000,
-	low: 58000,
+	high: 65000,
+	low: 59000,
 }
 const ARMOR_CRUSH_EXTENSION_MILLIS = 30000
 
