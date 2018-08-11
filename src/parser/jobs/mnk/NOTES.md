@@ -1,11 +1,13 @@
 ## how2monk good and punch other things good too
 
 ### Uptime
-- [ ] Don't clip or drop Demolish by more than 2 seconds, unless reapplying would be on GL0
+- [?] Don't clip or drop Demolish by more than 2 seconds, unless reapplying would be on GL0
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
-- [ ] GL3 uptime
+- [x] GL3 uptime
 - [ ] GL3 efficient recovery
-- [ ] GL3 holding with RoE
+- [x] GL3 holding with RoE
+- [ ] Advise when downtime was short enough and damage taken for RoE?
+- [x] Wasted RoE
 - [ ] GL loading with RoW (warn on WT without RoW after it)
 - [ ] General auto-attack uptime
 - [ ] Earth Tackle, not even once
@@ -26,14 +28,14 @@
 
 ### Positionals
 - [ ] Can kinda guess this from the damage mainly because MNK potency is high but it's a bit giri-giri
-- [ ] Crit the Boot
+- [x] Crit the Boot
 
 ### Buff Windows
 - [ ] RoF basically on CD, take downtime into account or fights that derp a window
 - [ ] Brotherhood, same as RoF besides slight variance for duration
 - [ ] RoF should last 9 GCDs
 - [ ] RoF and BH overlap drift
-- [ ] IR for every Howling and Elixir
+- [ ] IR for every Howling and second Elixir
 - [ ] IR-RoF drift, every second RoF should include an IR
 - [ ] Howling and Elixir drift, they should ideally be weaved in the same GCD, or no more than 1 GCD apart
 

@@ -20,9 +20,10 @@ const DEFAULT_OPTIONS = {
 export default class TimeLineChart extends PureComponent {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
+		options: PropTypes.object,
 	}
 
 	render() {
-		return <Line data={this.props.data} options={DEFAULT_OPTIONS}/>
+		return <Line data={this.props.data} options={this.props.options || DEFAULT_OPTIONS}/>
 	}
 }
