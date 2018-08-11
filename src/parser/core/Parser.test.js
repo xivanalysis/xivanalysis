@@ -1,6 +1,8 @@
 import Module from './Module'
 import Parser from './Parser'
 
+/* eslint-disable xivanalysis/no-unused-dependencies, no-magic-numbers */
+
 // Testing modules
 class BasicModule extends Module {
 	static handle = 'test_basic'
@@ -36,6 +38,7 @@ const friendlyNotInFight = {
 }
 const report = {
 	friendlies: [friendlyInFight, friendlyNotInFight],
+	friendlyPets: [],
 }
 const fight = {
 	id: 1,
