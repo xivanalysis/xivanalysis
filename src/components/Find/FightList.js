@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
-import {Checkbox, Header, Menu} from 'semantic-ui-react'
+import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
+import store from 'store'
+import {refreshReport} from 'store/actions'
 
 import styles from './FightList.module.css'
 
@@ -20,6 +23,10 @@ class FightList extends Component {
 		killsOnly: true,
 	}
 
+	refreshFights = () => {
+		store.dispatch(refreshReport())
+	}
+
 	render() {
 		const {report} = this.props
 		const {killsOnly} = this.state
@@ -27,7 +34,8 @@ class FightList extends Component {
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
 		let lastZone = null
-		report.fights.forEach(fight => {
+
+		report.fights && report.fights.forEach(fight => {
 			// Filter out trash fights w/ shoddy data, and wipes if we're filtering
 			if (fight.boss === 0 || (killsOnly && !fight.kill)) {
 				return
@@ -51,14 +59,24 @@ class FightList extends Component {
 
 		return <Fragment>
 			<Header>
-				Select a pull
-				<Checkbox
-					toggle
-					label="Kills only"
-					defaultChecked={killsOnly}
-					onChange={(_, data) => this.setState({killsOnly: data.checked})}
-					className="pull-right"
-				/>
+				<Trans id="core.find.select-pull">
+					Select a pull
+				</Trans>
+				<div className="pull-right">
+					<Checkbox
+						toggle
+						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
+						defaultChecked={killsOnly}
+						onChange={(_, data) => this.setState({killsOnly: data.checked})}
+						// className="pull-right"
+					/>
+					<span className={styles.refresh} onClick={this.refreshFights}>
+						<Icon name="refresh"/>
+						<Trans id="core.find.refresh">
+							Refresh
+						</Trans>
+					</span>
+				</div>
 			</Header>
 
 			{fights.map((group, index) => <Fragment key={index}>

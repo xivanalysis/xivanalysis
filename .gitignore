@@ -8,6 +8,8 @@
 
 # production
 /build
+locale/_build/
+locale/*/*.js
 
 # misc
 .DS_Store
@@ -23,3 +25,8 @@ test.html
 
 # shh
 *.ignore.*
+
+\.vs/
+*.swp
+.vscode/taskmarks.json
+.idea/

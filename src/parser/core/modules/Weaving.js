@@ -1,21 +1,27 @@
 import React, {Fragment} from 'react'
+import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides
 const MAX_WEAVES = {
 	[undefined]: 2, // Default castTime is 0
 	0: 2,
 	1: 1,
+	1.5: 1,
 	2: 1,
 	2.5: 0,
 	default: 0,
 }
-const MAJOR_SUGGESTION_ISSUES = 5
+
+const WEAVING_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
 
 export default class Weaving extends Module {
 	static handle = 'weaving'
@@ -24,13 +30,21 @@ export default class Weaving extends Module {
 		'invuln',
 		'suggestions',
 	]
+
+	static i18n_id = i18nMark('core.weaving.title')
 	static title = 'Weaving Issues'
 
 	_weaves = []
 	_gcdEvent = null
 	_badWeaves = []
 
-	on_cast_byPlayer(event) {
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
+	}
+
+	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
 		// If the action is an auto, just ignore it
@@ -58,7 +72,7 @@ export default class Weaving extends Module {
 		this._weaves = []
 	}
 
-	on_complete() {
+	_onComplete() {
 		// If there's been at least one gcd, run a cleanup on any remnant data
 		if (this._gcdEvent) {
 			this._saveIfBad()
@@ -66,16 +80,21 @@ export default class Weaving extends Module {
 
 		// Few triples is medium, any more is major
 		const badWeaves = this._badWeaves
-		if (badWeaves.length) {
-			this.suggestions.add(new Suggestion({
-				icon: 'https://secure.xivdb.com/img/game/001000/001785.png', // WVR Focused synth lmao
-				content: <Fragment>
-					Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
-				</Fragment>,
-				severity: badWeaves.length > MAJOR_SUGGESTION_ISSUES? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: `${badWeaves.length} instances of incorrect weaving.`,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			// WVR Focused synth lmao
+			icon: 'https://secure.xivdb.com/img/game/001000/001785.png',
+			content: <Trans id="core.weaving.content">
+				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
+			</Trans>,
+			why: <Plural
+				id="core.weaving.why"
+				value={badWeaves.length}
+				_1="# instance of incorrect weaving"
+				other="# instances of incorrect weaving"
+			/>,
+			tiers: WEAVING_SEVERITY,
+			value: badWeaves.length,
+		}))
 	}
 
 	_saveIfBad() {
@@ -125,15 +144,20 @@ export default class Weaving extends Module {
 		}
 
 		const panels = badWeaves.map(item => ({
+			key: item.gcdEvent.timestamp,
 			title: {
-				key: 'title-' + item.gcdEvent.timestamp,
 				content: <Fragment>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
-					&nbsp;-&nbsp;{item.weaves.length} weaves
+					&nbsp;-&nbsp;
+					<Plural
+						id="core.weaving.panel-count"
+						value={item.weaves.length}
+						_1="# weave"
+						other="# weaves"
+					/>
 				</Fragment>,
 			},
 			content: {
-				key: 'content-' + item.gcdEvent.timestamp,
 				content: <Rotation events={[
 					...(item.gcdEvent.ability? [item.gcdEvent] : []),
 					...item.weaves,

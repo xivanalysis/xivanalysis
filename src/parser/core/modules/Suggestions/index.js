@@ -1,2 +1,3 @@
 export {default} from './Suggestions'
-export {default as Suggestion, SEVERITY} from './Suggestion'
+export {default as Suggestion} from './Suggestion'
+export * from './Suggestion'

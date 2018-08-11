@@ -35,10 +35,7 @@ export default class Module {
 		this._title = value
 	}
 
-	set name(value) {
-		console.warn(`\`${this.constructor.handle}\` is setting the display title via the \`name\` instance property. Use \`static title\` instead.`)
-		this.constructor.title = value
-	}
+	_hooks = new Map()
 
 	constructor(parser) {
 		this.parser = parser
@@ -51,36 +48,125 @@ export default class Module {
 		return events
 	}
 
-	triggerEvent(event) {
-		// Calling lots of events... if WoWA stops doing it maybe I will too :eyes:
-		this._callMethod('on_event', event)
-		this._callMethod(`on_${event.type}`, event)
+	/**
+	 * This method is called when an error occurs, either when running
+	 * event hooks or calling {@link Module#output} in this module or
+	 * a module that depends on this module.
+	 * @param {String} source Either 'event' or 'output'
+	 * @param {Error} error The error that occurred
+	 * @param {Object} event The event that was being processed when the error occurred, if source is 'event'
+	 * @returns {Object|undefined} The data to attach to automatic error reports, or undefined to rely on primitive value detection
+	 */
+	getErrorContext(/* source, error, event */) {
+		return
+	}
 
-		if (this.parser.byPlayer(event)) {
-			this._callMethod(`on_${event.type}_byPlayer`, event)
+	addHook(events, filter, cb) {
+		const mapFilterEntity = (qol, raw) => {
+			if (filter[qol]) {
+				switch (filter[qol]) {
+				case 'player':
+					filter[raw] = this.parser.player.id
+					break
+				case 'pet':
+					filter[raw] = this.parser.player.pets.map(pet => pet.id)
+					break
+				default:
+					filter[raw] = filter[qol]
+				}
+				delete filter[qol]
+			}
 		}
-		if (this.parser.toPlayer(event)) {
-			this._callMethod(`on_${event.type}_toPlayer`, event)
+
+		// I'm currently handling hooks at the module level
+		// Should performance become a concern, this can be moved up to the Parser without breaking the API
+		if (typeof filter === 'function') {
+			cb = filter
+			filter = {}
 		}
-		if (this.parser.byPlayerPet(event)) {
-			this._callMethod(`on_${event.type}_byPlayerPet`, event)
+
+		// QoL filter transforms
+		mapFilterEntity('to', 'targetID')
+		mapFilterEntity('by', 'sourceID')
+		if (filter.abilityId) {
+			if (!filter.ability) {
+				filter.ability = {}
+			}
+			filter.ability.guid = filter.abilityId
+			delete filter.abilityId
 		}
-		if (this.parser.toPlayerPet(event)) {
-			this._callMethod(`on_${event.type}_toPlayerPet`, event)
+		const hook = {
+			events,
+			filter,
+			callback: cb.bind(this),
 		}
+
+		// Make sure events is an array
+		if (!Array.isArray(events)) {
+			events = [events]
+		}
+
+		// Hook for each of the events
+		events.forEach(event => {
+			// Make sure the map has a key for us
+			if (!this._hooks.has(event)) {
+				this._hooks.set(event, new Set())
+			}
+
+			// Set the hook
+			this._hooks.get(event).add(hook)
+		})
+
+		// Return the hook representation so it can be removed (later)
+		return hook
+	}
+
+	triggerEvent(event) {
+		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
+		if (typeof event.type !== 'symbol') {
+			this._runHooks(event, this._hooks.get('all'))
+		}
+		this._runHooks(event, this._hooks.get(event.type))
+	}
+
+	_runHooks(event, hooks) {
+		if (!hooks) { return }
+		hooks.forEach(hook => {
+			// Check the filter
+			if (!this._filterMatches(event, hook.filter)) {
+				return
+			}
+
+			hook.callback(event)
+		})
+	}
+
+	_filterMatches(event, filter) {
+		return Object.keys(filter).every(key => {
+			// If the event doesn't have the key we're looking for, just shortcut out
+			if (!event.hasOwnProperty(key)) {
+				return false
+			}
+
+			const filterVal = filter[key]
+			const eventVal = event[key]
+
+			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
+			if (Array.isArray(filterVal)) {
+				return filterVal.includes(eventVal)
+			}
+
+			// If it's an object, I need to dig down. Mostly for the `ability` key
+			if (typeof filterVal === 'object') {
+				return this._filterMatches(eventVal, filterVal)
+			}
+
+			// Basic value check
+			return filterVal === eventVal
+		})
 	}
 
 	output() {
 		return false
 	}
-
-	_callMethod(methodName, ...args) {
-		const method = this[methodName]
-		if (method) {
-			method.call(this, ...args)
-		}
-	}
-
-	// on_init is basically the constructor, make sure people can call super on it
-	on_init(/* event */) {}
 }

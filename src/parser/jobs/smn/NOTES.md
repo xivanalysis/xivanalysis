@@ -1,3 +1,8 @@
+- [ ] aflow drift in non-timeline visual?
+- [x] show player actions for bahamut
+- [ ] show status durations on timeline
+- [ ] i mean this is core stuff but down for the count maybe?
+
 # SMN Analysis (Nem's thoughts)
 
 ## General Fight Considerations
@@ -23,7 +28,7 @@
 ## oGCDs
 - [x] Aetherflow
 - [ ] Fester vs nonFester count
-    - [ ] ST entirely Festers apart from 1 painflare, unless a final aether rush is done to rush dwt/bahamut at the end
+    - [x] ST entirely Festers apart from 1 painflare, unless a final aether rush is done to rush dwt/bahamut at the end
     - [ ] Cleave/AoE Painflares/Bane where applicable
 - [x] Instances of doing > double weaves
 - [x] General clipping (handled by weaving module)
@@ -33,7 +38,7 @@
 - [x] B3 uptime
 - [ ] # of hardcasts
 - [ ] Clipping
-- [ ] Shadowflare use (ticks had/expected total, alignment?)
+- [x] Shadowflare use (ticks had/expected total, alignment?)
 
 ## DWT
 - [x] R3s/R4s in DWT (generally 6 minimum, check if any R2s are present? Mistaaaaake)
@@ -46,7 +51,8 @@
 
 ## Bahamut
 - [x] WW cast count
-    - [ ] (+ actions used to achieve, look at wasted actions? 12 is a colossal meme)
+    - [x] (+ actions used to achieve, look at wasted actions? 12 is a colossal meme)
+	- [ ] mark wasted actions?
 - [x] AM cast count
 - [x] look at timestamps of lost action vs summon bahamut to identify ghost
     - [x] if timestamp of final action >= summon time + 20000ms, action 100% ghost

@@ -4,6 +4,7 @@ import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
+import {extractErrorContext} from 'utilities'
 
 class Parser {
 	// -----
@@ -51,6 +52,9 @@ class Parser {
 
 		// Set initial timestamp
 		this._timestamp = fight.start_time
+
+		// Get a list of the current player's pets and set it on the player instance for easy reference
+		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
 	}
 
 	// -----
@@ -58,22 +62,11 @@ class Parser {
 	// -----
 
 	addModules(modules) {
-		let keyed = {}
+		const keyed = {}
 
-		if (Array.isArray(modules)) {
-			modules.forEach(mod => {
-				keyed[mod.handle] = mod
-			})
-		} else {
-			// Fall back to the 'old' way of doing things by setting the handle
-			// TODO: Remove before final live
-			const keys = Object.keys(modules)
-			console.warn('The following modules were loaded using the old-format object, please move handles to the module static property as soon as possible:', keys)
-			keys.forEach(key => {
-				modules[key].handle = key
-			})
-			keyed = modules
-		}
+		modules.forEach(mod => {
+			keyed[mod.handle] = mod
+		})
 
 		// Merge the modules into our constructor object
 		Object.assign(this._constructors, keyed)
@@ -102,12 +95,13 @@ class Parser {
 	// Event handling
 	// -----
 
-	normalise(events) {
+	async normalise(events) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		this.moduleOrder.forEach(mod => {
-			events = this.modules[mod].normalise(events)
-		})
+		for (const mod of this.moduleOrder) {
+			events = await this.modules[mod].normalise(events)
+		}
+
 		return events
 	}
 
@@ -144,8 +138,47 @@ class Parser {
 			try {
 				this.modules[mod].triggerEvent(event)
 			} catch (error) {
+				// If we're in dev, throw the error back up
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+
 				// Error trying to handle an event, tell sentry
-				Raven.captureException(error)
+				// But first, gather some extra context
+				const tags = {
+					type: 'event',
+					event: event.type,
+					job: this.player && this.player.type,
+					module: mod,
+				}
+
+				const extra = {
+					report: this.report && this.report.code,
+					fight: this.fight && this.fight.id,
+					player: this.player && this.player.id,
+					event,
+				}
+
+				// Gather extra data for the error report.
+				const [data, errors] = this._gatherErrorContext(mod, 'event', error, event)
+				extra.modules = data
+
+				for (const [m, err] of errors) {
+					Raven.captureException(err, {
+						tags: {
+							...tags,
+							module: m,
+						},
+						extra,
+					})
+				}
+
+				// Now that we have all the possible context, submit the
+				// error to Raven.
+				Raven.captureException(error, {
+					tags,
+					extra,
+				})
 
 				// Also cascade the error through the dependency tree
 				this._setModuleError(mod, error)
@@ -167,12 +200,57 @@ class Parser {
 		})
 	}
 
+	/**
+	 * Get error context for the named module and all of its dependencies.
+	 * @param {String} mod The name of the module with the faulting code
+	 * @param {String} source Either 'event' or 'output'
+	 * @param {Error} error The error that we're gathering context for
+	 * @param {Object} event The event that was being processed when the error occurred
+	 * @returns {[Object, Object]} The resulting data along with an object containing errors that were encountered running getErrorContext methods.
+	 */
+	_gatherErrorContext(mod, source, error, event) {
+		const output = {}
+		const errors = []
+		const visited = new Set()
+
+		const crawler = m => {
+			visited.add(m)
+
+			const constructor = this._constructors[m]
+			const module = this.modules[m]
+
+			if (typeof module.getErrorContext === 'function') {
+				try {
+					output[m] = module.getErrorContext(source, error, event)
+				} catch (error) {
+					errors.push([m, error])
+				}
+			}
+
+			if (output[m] === undefined) {
+				output[m] = extractErrorContext(module)
+			}
+
+			if (constructor && Array.isArray(constructor.dependencies)) {
+				for (const dep of constructor.dependencies) {
+					if (!visited.has(dep)) {
+						crawler(dep)
+					}
+				}
+			}
+		}
+
+		crawler(mod)
+
+		return [output, errors]
+	}
+
 	// -----
 	// Results handling
 	// -----
 
 	generateResults() {
-		const displayOrder = this.moduleOrder
+		const displayOrder = [...this.moduleOrder]
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
 		const results = []
@@ -194,8 +272,49 @@ class Parser {
 			try {
 				output = module.output()
 			} catch (error) {
-				Raven.captureException(error)
+				if (process.env.NODE_ENV === 'development') {
+					throw error
+				}
+
+				// Error generating output for a module. Tell Sentry, but first,
+				// gather some extra context
+
+				const tags = {
+					type: 'output',
+					job: this.player && this.player.type,
+					module: mod,
+				}
+
+				const extra = {
+					report: this.report && this.report.code,
+					fight: this.fight && this.fight.id,
+					player: this.player && this.player.id,
+				}
+
+				// Gather extra data for the error report.
+				const [data, errors] = this._gatherErrorContext(mod, 'output', error, null)
+				extra.modules = data
+
+				for (const [m, err] of errors) {
+					Raven.captureException(err, {
+						tags: {
+							...tags,
+							module: m,
+						},
+						extra,
+					})
+				}
+
+				// Now that we have all the possible context, submit the
+				// error to Raven.
+				Raven.captureException(error, {
+					tags,
+					extra,
+				})
+
+				// Also add the error to the results to be displayed.
 				results.push({
+					i18n_id: module.constructor.i18n_id,
 					name: module.constructor.title,
 					markup: <ErrorMessage error={error} />,
 				})
@@ -204,6 +323,7 @@ class Parser {
 
 			if (output) {
 				results.push({
+					i18n_id: module.constructor.i18n_id,
 					name: module.constructor.title,
 					markup: output,
 				})
@@ -240,6 +360,7 @@ class Parser {
 	}
 
 	formatDuration(duration, secondPrecision = null) {
+		/* eslint-disable no-magic-numbers */
 		duration /= 1000
 		const seconds = duration % 60
 		if (duration < 60) {
@@ -247,8 +368,11 @@ class Parser {
 			return seconds.toFixed(precision) + 's'
 		}
 		const precision = secondPrecision !== null ? secondPrecision : 0
-		return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds.toFixed(precision)}`
-
+		const secondsText = seconds.toFixed(precision)
+		let pointPos = secondsText.indexOf('.')
+		if (pointPos === -1) { pointPos = secondsText.length }
+		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
+		/* eslint-enable no-magic-numbers */
 	}
 }
 

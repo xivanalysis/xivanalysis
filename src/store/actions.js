@@ -16,7 +16,7 @@ export const setReport = (report) => ({
 	payload: report,
 })
 
-export const fetchReport = (code) => async dispatch => {
+export const fetchReport = (code, params) => async dispatch => {
 	dispatch(setReport({loading: true}))
 
 	let response = null
@@ -24,6 +24,7 @@ export const fetchReport = (code) => async dispatch => {
 		response = await fflogsApi.get(`/report/fights/${code}`, {
 			params: {
 				translate: true,
+				...params,
 			},
 		})
 	} catch (e) {
@@ -55,3 +56,31 @@ export const fetchReportIfNeeded = code => (dispatch, getState) => {
 		return dispatch(fetchReport(code))
 	}
 }
+
+export const refreshReport = () => (dispatch, getState) => {
+	const report = getState().report
+	if (!report || report.loading) { return }
+	dispatch(fetchReport(report.code, {bypassCache: true}))
+}
+
+export const SET_LANGUAGE = 'SET_LANGUAGE'
+export const setLanguage = language => ({
+	type: SET_LANGUAGE,
+	payload: language,
+})
+
+export const UPDATE_LANGUAGE = 'UPDATE_LANGUAGE'
+export const updateLanguage = () => ({
+	type: UPDATE_LANGUAGE,
+})
+
+export const TOGGLE_I18N_OVERLAY = 'TOGGLE_I18N_OVERLAY'
+export const toggleI18nOverlay = () => ({
+	type: TOGGLE_I18N_OVERLAY,
+})
+
+export const SET_I18N_OVERLAY = 'SET_I18N_OVERLAY'
+export const setI18nOverlay = state => ({
+	type: SET_I18N_OVERLAY,
+	payload: state,
+})

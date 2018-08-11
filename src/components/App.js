@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Switch, Route} from 'react-router-dom'
-import {Container, Message} from 'semantic-ui-react'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
@@ -47,14 +46,6 @@ class App extends Component {
 	render() {
 		return <Fragment>
 			<Header/>
-
-			<Message error>
-				<Container>
-					<Message.Header>Please do not share links to this site.</Message.Header>
-					<p>I&apos;m really excited at the possibilities of this system, and I hope you are too. But right now, there&apos;s a <em>lot</em> of work to be done before this can be considered stable, and the advice/info it gives can be considered accurate.<br/>
-					If you come across a massive issue, drop a message in our discord channel.</p>
-				</Container>
-			</Message>
 
 			<ErrorBoundry>
 				<Switch>

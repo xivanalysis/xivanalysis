@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Message} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import {SEVERITY} from 'errors'
 
@@ -20,7 +21,7 @@ const ErrorMessage = ({error}) => <Message
 	{...(ERROR_PROPS[error.severity || SEVERITY.ERROR])}
 	header={error.message || error.toString()}
 	content={<p>
-		{error.detail || 'Looks like something has gone wrong. The code monkies have been notified.'}
+		{error.detail || <Trans id="core.error.generic">Looks like something has gone wrong. The code monkies have been notified.</Trans>}
 	</p>}
 />
 

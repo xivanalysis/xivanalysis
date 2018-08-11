@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Plural, Trans} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -8,7 +9,6 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
-	STATUSES.PHOENIXS_BLESSING.id,
 	STATUSES.WEAKNESS.id,
 	STATUSES.BRINK_OF_DEATH.id,
 ]
@@ -23,33 +23,35 @@ export default class Death extends Module {
 	_count = 0
 	_timestamp = null
 
-	on_death_toPlayer(event) {
+	constructor(...args) {
+		super(...args)
+
+		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('applydebuff', {
+			to: 'player',
+			abilityId: RAISE_STATUSES,
+		}, this._onRaise)
+		this.addHook('complete', this._onComplete)
+
+		// If they (begin)cast, they were probably LB3'd, just mark end of death
+		// TODO: I mean there's an actual LB3 action cast, it's just not in the logs because of my filter. Look into it.
+		const checkLb3 = event => this._timestamp && this._onRaise(event)
+		this.addHook('begincast', {by: 'player'}, checkLb3)
+		this.addHook('cast', {by: 'player'}, checkLb3)
+	}
+
+	_onDeath(event) {
+		if (!this.shouldCountDeath(event)) { return }
+
 		this._count ++
 		this._timestamp = event.timestamp
 	}
 
-	on_applydebuff_toPlayer(event) {
-		// Only care about raises
-		if (!RAISE_STATUSES.includes(event.ability.guid)) {
-			return
-		}
-
+	_onRaise(event) {
 		this.addDeathToTimeline(event.timestamp)
 	}
 
-	// If they cast/begincast, they were probably LB3'd, just mark end of death
-	// TODO: I mean there's an actual LB3 action cast, it's just not in the logs. Look into it.
-	on_event(event) {
-		if (
-			['cast', 'begincast'].includes(event.type) &&
-			this.parser.byPlayer(event) &&
-			this._timestamp
-		) {
-			this.addDeathToTimeline(event.timestamp)
-		}
-	}
-
-	on_complete() {
+	_onComplete() {
 		if (this._timestamp) {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
@@ -61,12 +63,22 @@ export default class Death extends Module {
 
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.RAISE.icon,
-			content: <Fragment>
-				Don&apos;t die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
-			</Fragment>,
-			severity: SEVERITY.MAJOR,
-			why: <Fragment>{this._count} death{this._count !== 1 && 's'}.</Fragment>,
+			content: <Trans id="core.deaths.content">
+				Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
+			</Trans>,
+			severity: SEVERITY.MORBID,
+			why: <Plural
+				id="core.deaths.why"
+				value={this._count}
+				_1="# death"
+				other="# deaths"
+			/>,
 		}))
+	}
+
+	// Override this if a fight mechanic is a forced death *cough*ucob*cough* and shouldn't be counted towards the player
+	shouldCountDeath(/* event */) {
+		return true
 	}
 
 	addDeathToTimeline(end) {

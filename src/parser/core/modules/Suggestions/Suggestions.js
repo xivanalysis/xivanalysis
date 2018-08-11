@@ -1,12 +1,14 @@
 import React from 'react'
+import {i18nMark} from '@lingui/react'
 
-import Suggestion from './Suggestion'
+import Suggestion, {SEVERITY} from './Suggestion'
 import SuggestionsComponent from 'components/modules/Suggestions'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 export default class Suggestions extends Module {
 	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
+	static i18n_id = i18nMark('core.suggestions.title')
 	static title = 'Suggestions'
 
 	_suggestions = []
@@ -26,10 +28,12 @@ export default class Suggestions extends Module {
 			return false
 		}
 
-		// Sort suggestions with most important at the top
-		this._suggestions.sort((a, b) => a.severity - b.severity)
+		// Sort suggestions with most important at the top, and remove ignored
+		const suggestions = this._suggestions
+			.filter(suggestion => suggestion.severity !== SEVERITY.IGNORE)
+			.sort((a, b) => a.severity - b.severity)
 
 		// Rendering is in a specialised component so it's got some state to work with
-		return <SuggestionsComponent suggestions={this._suggestions}/>
+		return <SuggestionsComponent suggestions={suggestions}/>
 	}
 }

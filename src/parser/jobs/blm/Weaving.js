@@ -1,0 +1,75 @@
+import Weaving from 'parser/core/modules/Weaving'
+import ACTIONS from 'data/ACTIONS'
+
+const OGCD_EXCEPTIONS = [
+	ACTIONS.LUCID_DREAMING.id,
+	ACTIONS.ADDLE.id,
+	ACTIONS.SURECAST.id,
+	ACTIONS.APOCATASTASIS.id,
+	ACTIONS.MANA_SHIFT.id,
+	ACTIONS.TRANSPOSE.id,
+]
+
+const OPENER_ENO_TIME_THRESHHOLD = 10000
+
+//max number of AFUI stacks
+const MAX_BUFF_STACKS = 3
+
+export default class BlmWeaving extends Weaving {
+	static handle = 'weaving'
+	static dependencies = [
+		...Weaving.dependencies,
+		'invuln',
+		'gauge',
+	]
+
+	//AF3/UI3 checks
+	_AF3 = false
+	_UI3 = false
+
+	constructor(...args) {
+		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBegin)
+	}
+
+	//check whether we are in UI3/AF3 precast
+	_onBegin() {
+		if (this.gauge.getUI() === MAX_BUFF_STACKS) {
+			this._UI3 = true
+		}
+		if (this.gauge.getAF() === MAX_BUFF_STACKS) {
+			this._AF3 = true
+		}
+	}
+
+	//check for fast casted F3/B3 and allow 1 weave if you get one
+	isBadWeave(weave, maxWeaves) {
+		if (weave.gcdEvent.ability) {
+			const weaveCount = weave.weaves.filter(
+				event => !this.invuln.isUntargetable('all', event.timestamp)
+			).length
+
+			//allow a single weave of the OGCD exceptions
+			if (weaveCount === 1 && OGCD_EXCEPTIONS.includes(weave.weaves[0].ability.guid)) {
+				return false
+			}
+
+			//allow first eno to be ignored because it's a neccessary weave. 10s for that to happen because of O5s Eno delay.
+			if (weaveCount === 1) {
+				const ogcdTime = weave.weaves[0].timestamp - this.parser.fight.start_time
+				if (ogcdTime < OPENER_ENO_TIME_THRESHHOLD && weave.weaves[0].ability.guid === ACTIONS.ENOCHIAN.id) {
+					return false
+				}
+			}
+
+			//allow single weave under fast B3/F3
+			if ((weave.gcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._UI3) || (weave.gcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._AF3)) {
+				if (weaveCount === 1) {
+					return false
+				}
+			}
+		}
+
+		return super.isBadWeave(weave, maxWeaves)
+	}
+}

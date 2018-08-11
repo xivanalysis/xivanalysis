@@ -3,5 +3,9 @@
 		"target": "es6",
 		"module": "commonjs",
 		"baseUrl": "./src"
-	}
+	},
+
+	"include": [
+        "src/**/*"
+    ]
 }

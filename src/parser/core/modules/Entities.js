@@ -32,35 +32,33 @@ export default class Entities extends Module {
 					return
 				}
 
-				// TODO: What if we're trying to track a buff through an invuln window?
-				//       is that going to be a thing? Will need handling if so.
+				// Split the buff over the invulns
 				const ranges = [buff]
-				invulns
-					.forEach(invuln => {
-						// discard invulns outside the span of the buff
-						if (invuln.end < buff.start || invuln.start > buff.end) {
-							return
-						}
+				invulns.forEach(invuln => {
+					// discard invulns outside the span of the buff
+					if (invuln.end < buff.start || invuln.start > buff.end) {
+						return
+					}
 
-						// split ranges
-						for (let i = 0; i < ranges.length; i++) {
-							const range = ranges[i]
+					// split ranges
+					for (let i = 0; i < ranges.length; i++) {
+						const range = ranges[i]
 
-							if (invuln.start < range.start && invuln.end > range.start) {
-								// Invuln chops start of range
-								range.start = invuln.end
-							} else if (invuln.start < range.end && invuln.end > range.end) {
-								// Invuln chops end of range
-								range.end = invuln.start
-							}	else if (invuln.start > range.start && invuln.end < range.end) {
-								// Invuln splits the range
-								ranges.splice(i, 1,
-									{start: range.start, end: invuln.start},
-									{start: invuln.end, end: range.end}
-								)
-							}
+						if (invuln.start < range.start && invuln.end > range.start) {
+							// Invuln chops start of range
+							range.start = invuln.end
+						} else if (invuln.start < range.end && invuln.end > range.end) {
+							// Invuln chops end of range
+							range.end = invuln.start
+						}	else if (invuln.start > range.start && invuln.end < range.end) {
+							// Invuln splits the range
+							ranges.splice(i, 1,
+								{start: range.start, end: invuln.start},
+								{start: invuln.end, end: range.end}
+							)
 						}
-					})
+					}
+				})
 
 				// Add faked events for all the ranges the buff was up
 				ranges.forEach(range => {
@@ -103,19 +101,23 @@ export default class Entities extends Module {
 	// -----
 	// Event handlers
 	// -----
-	// Buffs
-	on_applybuff(event)         { this.applyBuff(event) }
-	on_applydebuff(event)       { this.applyBuff(event, true) }
-	on_applybuffstack(event)    { this.updateBuffStack(event) }
-	on_applydebuffstack(event)  { this.updateBuffStack(event, true) }
-	on_removebuffstack(event)   { this.updateBuffStack(event) }
-	on_removedebuffstack(event) { this.updateBuffStack(event, true) }
-	on_removebuff(event)        { this.removeBuff(event) }
-	on_removedebuff(event)      { this.removeBuff(event, true) }
+	constructor(...args) {
+		super(...args)
 
-	// Resources
-	on_damage(event) { this.updateResources(event) }
-	on_heal(event) { this.updateResources(event) }
+		// Buffs
+		this.addHook('applybuff', this.applyBuff)
+		this.addHook('applydebuff', event => this.applyBuff(event, true))
+		this.addHook('applybuffstack', this.updateBuffStack)
+		this.addHook('applydebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuffstack', this.updateBuffStack)
+		this.addHook('removedebuffstack', event => this.updateBuffStack(event, true))
+		this.addHook('removebuff', this.removeBuff)
+		this.addHook('removedebuff', event => this.removeBuff(event, true))
+
+		// Resources
+		this.addHook('damage', this.updateResources)
+		this.addHook('heal', this.updateResources)
+	}
 
 	// -----
 	// Logic

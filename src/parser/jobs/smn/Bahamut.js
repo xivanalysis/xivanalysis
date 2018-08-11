@@ -1,7 +1,8 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {SUMMON_BAHAMUT_LENGTH} from './Pets'
@@ -24,6 +25,7 @@ const GHOST_CLASSNAME = {
 
 export default class Bahamut extends Module {
 	static handle = 'bahamut'
+	static i18n_id = i18nMark('smn.bahamut.title')
 	static dependencies = [
 		'gauge',
 	]
@@ -31,38 +33,62 @@ export default class Bahamut extends Module {
 	_current = null
 	_history = []
 
-	on_cast_byPlayerPet(event) {
-		const abilityId = event.ability.guid
+	constructor(...args) {
+		super(...args)
+		this.addHook('cast', {by: 'player'}, this._onPlayerCast)
+		this.addHook('cast', {
+			by: 'pet',
+			abilityId: DEMI_BAHAMUT_ACTIONS,
+		}, this._onBahamutCast)
+		this.addHook('summonpet', {petId: PETS.DEMI_BAHAMUT.id}, this._onSummonBahamut)
+		this.addHook('complete', this._onComplete)
+	}
 
-		// Track Big B's casts, and mark potential ghosts
-		if (DEMI_BAHAMUT_ACTIONS.includes(abilityId)) {
-			const timeSinceSummon = event.timestamp - this._current.timestamp
-			const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
-			this._current.petCasts.push({
-				...event,
-				ghostChance,
-			})
+	_onPlayerCast(event) {
+		// Ignore autos
+		const action = getAction(event.ability.guid)
+		if (action.autoAttack) { return }
+
+		// Track player actions during SB
+		if (this.gauge.bahamutSummoned()) {
+			this._current.casts.push(event)
 		}
 	}
 
-	on_summonpet(event) {
-		// They've summoned Bahamut.
-		if (event.petId === PETS.DEMI_BAHAMUT.id) {
-			// Save any existing tracking to history
-			if (this._current) {
-				this._history.push(this._current)
-			}
-
-			// Set up fresh tracking
+	_onBahamutCast(event) {
+		// If we've _somehow_ not got a _current, fake one
+		if (!this._current) {
 			this._current = {
 				timestamp: event.timestamp,
-				// playerCasts: [],
-				petCasts: [],
+				rushing: this.gauge.isRushing(),
+				casts: [],
 			}
+		}
+
+		// Track Big B's casts, and mark potential ghosts
+		const timeSinceSummon = event.timestamp - this._current.timestamp
+		const ghostChance = timeSinceSummon >= SUMMON_BAHAMUT_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < SUMMON_BAHAMUT_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
+		this._current.casts.push({
+			...event,
+			ghostChance,
+		})
+	}
+
+	_onSummonBahamut(event) {
+		// Save any existing tracking to history
+		if (this._current) {
+			this._history.push(this._current)
+		}
+
+		// Set up fresh tracking
+		this._current = {
+			timestamp: event.timestamp,
+			rushing: this.gauge.isRushing(),
+			casts: [],
 		}
 	}
 
-	on_complete() {
+	_onComplete() {
 		// Clean out any current tracking
 		if (this._current) {
 			this._history.push(this._current)
@@ -70,28 +96,30 @@ export default class Bahamut extends Module {
 	}
 
 	output() {
-		const panels = this._history.map((sb, index) => {
+		const panels = this._history.map(sb => {
 			const counts = {}
-			sb.petCasts.forEach(cast => {
+			sb.casts.forEach(cast => {
 				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
 				obj[cast.ghostChance] = (obj[cast.ghostChance] || 0) + 1
 			})
 
+			const lastPetAction = sb.casts.reduce((carry, cast, i) => this.parser.byPlayerPet(cast)? i : carry, null)
+
 			return {
+				key: sb.timestamp,
 				title: {
-					key: 'title-' + index,
 					content: <Fragment>
 						{this.parser.formatTimestamp(sb.timestamp)}
 						&nbsp;-&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.WYRMWAVE.id])} WWs,&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.AKH_MORN.id])} AMs
+						{sb.rushing && <span className="text-info">&nbsp;(rushing)</span>}
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + index,
 					content: <ul>
-						{sb.petCasts.map(cast => <li
-							key={cast.timestamp}
+						{sb.casts.map((cast, i) => i <= lastPetAction && <li
+							key={cast.timestamp + '-' + cast.ability.guid}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
 							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;
@@ -104,7 +132,8 @@ export default class Bahamut extends Module {
 
 		return <Fragment>
 			<Message>
-				Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong>  to those that ghosted without a doubt.
+				<Trans id="smn.bahamut.ghost-disclaimer">Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
+				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

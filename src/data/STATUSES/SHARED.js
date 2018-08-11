@@ -16,4 +16,16 @@ export default {
 		name: 'Medicated',
 		icon: 'https://secure.xivdb.com/img/game/016000/016203.png',
 	},
+
+	SLASHING_RESISTANCE_DOWN: {
+		id: 819,
+		name: 'Slashing Resistance Down',
+		icon: 'https://secure.xivdb.com/img/game/015000/015786.png',
+	},
+
+	WELL_FED: {
+		id: 48,
+		name: 'Well Fed',
+		icon: 'https://secure.xivdb.com/img/game/016000/016202.png',
+	},
 }

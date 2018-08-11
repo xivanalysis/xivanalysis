@@ -3,6 +3,12 @@ import ZONES from './ZONES'
 
 // I'm not including xivdb IDs for now, there's nothing meanigful to referenced on that end
 const BOSSES = {
+	// 4.1
+	BAHAMUT_PRIME: {
+		logId: 1039,
+		zoneId: ZONES.UCOB.logId,
+	},
+
 	// 4.2
 	PHANTOM_TRAIN: {
 		logId: 51,
@@ -23,6 +29,12 @@ const BOSSES = {
 	GOD_KEFKA: {
 		logId: 55,
 		zoneId: ZONES.O8S.logId,
+	},
+
+	// UwU
+	THE_ULTIMA_WEAPON: {
+		logId: 0,
+		zoneId: ZONES.UWU.logId,
 	},
 }
 

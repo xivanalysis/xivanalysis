@@ -1,3 +1,4 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
@@ -7,9 +8,11 @@ import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import styles from './Pets.module.css'
+
+const NO_PET_ID = -1
 
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
@@ -19,29 +22,47 @@ const SUMMON_ACTIONS = {
 }
 
 const CHART_COLOURS = {
-	[-1]: '#888',
+	[NO_PET_ID]: '#888',
 	[PETS.GARUDA_EGI.id]: '#9c0',
 	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
 	[PETS.DEMI_BAHAMUT.id]: '#218cd6',
 }
 
+const TITAN_WARN_PERCENT = 5
+
 // Durations should probably be ACTIONS data
 export const SUMMON_BAHAMUT_LENGTH = 20000
 
+// noPetUptime severity, in %
+const NO_PET_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
+}
+
 export default class Pets extends Module {
 	static handle = 'pets'
+	static i18n_id = i18nMark('smn.pets.title')
 	static dependencies = [
 		'suggestions',
 	]
 
-	_lastPet = null
+	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
 	_history = []
 
 	_lastSummonBahamut = -1
 
 	_petUptime = new Map()
+
+	constructor(...args) {
+		super(...args)
+		this.addHook('init', this._onInit)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('all', this._onEvent)
+		this.addHook('death', {to: 'pet'}, this._onPetDeath)
+		this.addHook('complete', this._onComplete)
+	}
 
 	normalise(events) {
 		const petCache = {}
@@ -59,7 +80,7 @@ export default class Pets extends Module {
 
 			// I mean this shouldn't happen but people are stupid.
 			// If there's a summon cast before any pet action, they didn't start with a pet.
-			if (Object.keys(SUMMON_ACTIONS).includes(action.id)) {
+			if (action.id && Object.keys(SUMMON_ACTIONS).includes(action.id.toString())) {
 				break
 			}
 
@@ -83,12 +104,12 @@ export default class Pets extends Module {
 		return events
 	}
 
-	on_init() {
+	_onInit() {
 		// Just holding off the setPet until now so no events being created during normalise
 		this.setPet(this._lastPet.id)
 	}
 
-	on_cast_byPlayer(event) {
+	_onCast(event) {
 		const petId = SUMMON_ACTIONS[event.ability.guid]
 
 		if (!petId) {
@@ -103,29 +124,29 @@ export default class Pets extends Module {
 		this.setPet(petId)
 	}
 
-	on_event(event) {
+	_onEvent(event) {
 		if (
-			this._lastPet &&
+			(this._lastPet || this.parser.byPlayerPet(event)) &&
 			this._currentPet &&
 			this._currentPet.id === PETS.DEMI_BAHAMUT.id &&
 			this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
 		) {
-			this.setPet(this._lastPet.id, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+			let petId = null
+			if (this._lastPet) {
+				petId = this._lastPet.id
+			} else {
+				petId = getAction(event.ability.guid).pet
+			}
+
+			this.setPet(petId, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
 		}
 	}
 
-	on_death(event) {
-		// We're only interested if the death was the player's pet
-		const pets = this.parser.report.friendlyPets
-			.filter(pet => pet.petOwner === this.parser.player.id)
-			.map(pet => pet.id)
-
-		if (pets.includes(event.targetID)) {
-			this.setPet(-1)
-		}
+	_onPetDeath() {
+		this.setPet(NO_PET_ID)
 	}
 
-	on_complete(event) {
+	_onComplete(event) {
 		// Finalise the history
 		const id = this._currentPet.id
 		const start = this._currentPet.timestamp
@@ -155,50 +176,57 @@ export default class Pets extends Module {
 		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Garuda-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
-					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>&apos;s Magic Vulnerability Up.
-				</Fragment>,
+				content: <Trans id="smn.pets.suggestions.prefer-garuda.content">
+					You should be primarily using Garuda-Egi when in parties with casters other than yourself - they will benefit from <ActionLink {...ACTIONS.CONTAGION}/>'s Magic Vulnerability Up.
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-garuda.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Garuda-Egi preferred.
+				</Trans>,
 			}))
 		}
 
 		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
-				why: `${this.getPetUptimePercent(mostUsedPet)}% ${PETS[mostUsedPet].name} uptime, Ifrit-Egi preferred.`,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
-					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit&apos;s raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
-				</Fragment>,
+				content: <Trans id="smn.pets.suggestions.prefer-ifrit.content">
+					You should be primarily using Ifrit-Egi when there are no other casters in the party - Ifrit's raw damage and <ActionLink {...ACTIONS.RADIANT_SHIELD}/> provide more than Garuda can bring to the table in these scenarios.
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.prefer-ifrit.why">
+					{this.getPetUptimePercent(mostUsedPet)}% {this.getPetName(mostUsedPet)} uptime, Ifrit-Egi preferred.
+				</Trans>,
 			}))
 		}
 
 		// We'll let them get away with a tiny bit of Chucken Nugget, but... not too much.
 		const titanUptimePercent = this.getPetUptimePercent(PETS.TITAN_EGI.id)
-		if (titanUptimePercent > 5) {
+		if (titanUptimePercent > TITAN_WARN_PERCENT) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_II.icon,
-				why: `${titanUptimePercent}% Titan-Egi uptime.`,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="smn.pets.suggestions.titan.content">
 					Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="smn.pets.suggestions.titan.why">
+					{titanUptimePercent}% Titan-Egi uptime.
+				</Trans>,
 			}))
 		}
 
 		// Pets are important, k?
-		const noPetUptimePercent = this.getPetUptimePercent(-1)
-		if (noPetUptimePercent > 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SUMMON.icon,
-				why: `No pet summoned for ${noPetUptimePercent}% of the fight (<1% is recommended).`,
-				severity: noPetUptimePercent < 5? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				content: <Fragment>
-					Pets provide a <em>lot</em> of SMN&apos;s passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
-				</Fragment>,
-			}))
-		}
+		const noPetUptimePercent = this.getPetUptimePercent(NO_PET_ID)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SUMMON.icon,
+			tiers: NO_PET_SEVERITY,
+			value: noPetUptimePercent,
+			content: <Trans id="smn.pets.suggestions.no-pet.content">
+				Pets provide a <em>lot</em> of SMN's passive damage, and are essential for <StatusLink {...STATUSES.FURTHER_RUIN}/> procs and <ActionLink {...ACTIONS.ENKINDLE}/>. Make sure you have a pet summoned at all times, and keep them out of boss AoEs.
+			</Trans>,
+			why: <Trans id="smn.pets.suggestions.no-pet.why">
+				No pet summoned for {noPetUptimePercent}% of the fight (&lt;1% is recommended).
+			</Trans>,
+		}))
 	}
 
 	getPetUptimePercent(petId) {
@@ -233,11 +261,15 @@ export default class Pets extends Module {
 	}
 
 	getCurrentPet() {
+		if (!this._currentPet) {
+			return null
+		}
+
 		return PETS[this._currentPet.id]
 	}
 
 	getPetName(petId) {
-		if (petId === -1) {
+		if (petId === NO_PET_ID) {
 			return 'No pet'
 		}
 

@@ -8,14 +8,23 @@ export default class CastTime extends Module {
 	_castTimes = []
 	_scIndex = null
 
-	on_applybuff_toPlayer(event) {
+	constructor(...args) {
+		super(...args)
+
 		// Only going do deal with SC here, job-specific can do it themselves
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+		const filter = {
+			to: 'player',
+			abilityId: STATUSES.SWIFTCAST.id,
+		}
+		this.addHook('applybuff', filter, this._onApplySwiftcast)
+		this.addHook('removebuff', filter, this._onRemoveSwiftcast)
+	}
+
+	_onApplySwiftcast() {
 		this._scIndex = this.set('all', 0)
 	}
 
-	on_removebuff_toPlayer(event) {
-		if (event.ability.guid !== STATUSES.SWIFTCAST.id) { return }
+	_onRemoveSwiftcast() {
 		this.reset(this._scIndex)
 		this._scIndex = null
 	}
@@ -32,17 +41,21 @@ export default class CastTime extends Module {
 	}
 
 	reset(id, timestamp = this.parser.currentTimestamp) {
-		this._castTimes[id].end = timestamp
+		const ct = this._castTimes[id]
+		if (!ct) { return }
+		ct.end = timestamp
 	}
 
 	forEvent(event) {
-		const actionId = event.ability.guid
+		return this.forAction(event.ability.guid, event.timestamp)
+	}
 
+	forAction(actionId, timestamp = this.parser.currentTimestamp) {
 		// Get any cast time modifiers active when the event took place
 		const matchingTimes = this._castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
-			ct.start <= event.timestamp &&
-			(ct.end === null || ct.end >= event.timestamp)
+			ct.start <= timestamp &&
+			(ct.end === null || ct.end >= timestamp)
 		)
 
 		const defaultCastTime = getAction(actionId).castTime

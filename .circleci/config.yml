@@ -1,12 +1,13 @@
+# Config shared by all jobs
+defaults: &defaults
+  working_directory: /tmp/xiva-client
+  docker:
+    - image: circleci/node:10
+
 version: 2
 jobs:
-  build:
-    branches:
-      only:
-        - master
-    working_directory: ~/xiva-client
-    docker:
-      - image: circleci/node:10
+  setup:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -18,12 +19,75 @@ jobs:
           key: dependency-cache-{{ checksum "yarn.lock" }}
           paths:
             - node_modules/
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - xiva-client/*
+
+  lint:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
       - run:
-          name: run-build
-          command: yarn build
+          name: Lint
+          command: yarn eslint src --format junit -o reports/eslint/results.xml
+      - store_test_results:
+          path: reports
+
+  build:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Run build
+          command: CI=false yarn build
+      - persist_to_workspace:
+          root: /tmp
+          paths:
+            - xiva-client/build/*
+
+  deploy:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
       - run:
           name: Upload build
-          command: scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:xivanalysis/client/deploy-cache
+          command: scp -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -r build/* $SSH_USER@$SSH_HOST:${DEPLOY_FOLDER}client/deploy-cache
       - run:
           name: Run deploy script
-          command: ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd xivanalysis/client && ./deploy.sh $CIRCLE_SHA1"
+          command: ssh -4 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null $SSH_USER@$SSH_HOST "cd ${DEPLOY_FOLDER}client && ./deploy.sh $CIRCLE_SHA1"
+      - run:
+          name: Success webhook
+          command: |
+            chmod +x .circleci/success.sh
+            ./.circleci/success.sh
+      - run:
+          name: Failure webhook
+          command: |
+            chmod +x .circleci/fail.sh
+            ./.circleci/fail.sh
+          when: on_fail
+
+workflows:
+  version: 2
+  flow:
+    jobs:
+      - setup:
+          filters:
+            branches:
+              ignore: i18n-master
+      - lint:
+          requires:
+            - setup
+      - build:
+          requires:
+            - lint
+          filters:
+            branches:
+              only: master
+      - deploy:
+          requires:
+            - build

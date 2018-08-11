@@ -1,4 +1,4 @@
-<p align="center"><img src="https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png" alt="logo"></p>
+<p align="center"><a href="https://xivanalysis.com/" alt="xivanalysis"><img src="https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png" alt="logo"></a></p>
 <h1 align="center">xivanalysis</h1>
 <p align="center">
 	<a href="https://circleci.com/gh/xivanalysis/xivanalysis" title="Build"><img src="https://img.shields.io/circleci/project/github/xivanalysis/xivanalysis.svg?style=flat-square" alt="Build"></a>
@@ -14,6 +14,10 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
+- [Internationalization](#internationalization)
+- [API Reference](#api-reference)
+	- [Module](#module)
+	- [Parser](#parser)
 
 ## Getting Started
 
@@ -31,6 +35,8 @@ git clone https://github.com/xivanalysis/xivanalysis.git
 cd xivanalysis
 ```
 
+***NOTE:*** *Drop past our Discord channel before you get too into it, have a chat! Duping up on implementations is never fun.*
+
 If you are working with a fork, I would highly suggest [configuring an upstream](https://help.github.com/articles/configuring-a-remote-for-a-fork/) remote, and making sure you [sync it down](https://help.github.com/articles/syncing-a-fork/) reasonably frequently - you can check the #automations channel on Discord to get an idea of what's been changed.
 
 You've now got the primary codebase locally, next you'll need to download all the project's dependencies. Please do use `yarn` for this - using `npm` will ignore the lockfile, and potentially pull down untested updates.
@@ -42,7 +48,7 @@ yarn
 While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
 
 - Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/accounts/changeuser).
+- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile). Don't forget to set your Application Name there as well.
 
 ***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
 
@@ -76,35 +82,214 @@ Each group of modules is contained in its own folder, alongside any other requir
 
 ### Modules
 
-Modules (which've been mentioned a few times already!) form the nitty-gritty of the parser's analysis. The parser itself simply orchestrates the modules - it's the modules that truly _analyse_ the data and provide output.
+With the parser orchestrating the modules, it's down to the modules themselves to analyse the data and provide the final output.
 
-As a cliche example, a module Hello World:
+Each module should be in charge of analysing a single statistic or feature, so as to keep them as small and digestible as reasonably possible. To aid in this, modules are able to 'depend' on others, and directly access any data they may expose. Modules are guaranteed to run _before_ anything that depends on them - this also implicitly prevents circular dependencies from being formed (an error will be thrown).
 
-```js
-import Module from 'parser/core/Module'
+For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
-export default class HelloWorld extends Module {
-	static handle = 'hello'
+## Internationalization
 
-	// The name that should be shown above the module output. Only required if the module _has_ output.
-	static title = 'Hello World'
+All modules should support i18n when displaying content. This project makes use of [jsLingui](https://github.com/lingui/js-lingui) with a dash of custom logic to make dynamic content a bit easier.
 
-	output() {
-		return 'Hello, world!'
-	}
+### i18n IDs
+
+This project formats i18n IDs using the syntax: `[job].[module].[thing]`
+
+As an example, for a Red Mage you might end up with the key `rdm.gauge.white-mana`. These
+keys should be somewhat descriptive to make it clear for translators what exactly they're editing.
+
+### API
+
+These are all imported from `@lingui/react`
+
+#### [`i18nMark(id)`](https://lingui.github.io/js-lingui/ref/lingui-react.html#i18nmark)
+
+This function marks a string for automatic i18n id extraction. All i18n IDs that aren't directly declared in a `<Trans />` or `<Plural />` tag should be wrapped in `i18nMark()` to ensure that they are properly detected.
+
+Example:
+
+```javascript
+class MyModule extends Module {
+	static i18n_id = i18nMark('job.my-module.title')
+	static title = 'My Module'
 }
 ```
 
-Modules receive event data via function calls, called in the following order:
+#### [`<Trans id="" />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans)
 
-1. `on_event(event)`
-2. `on_[event type](event)`
-3. `on_[event type]_[by|to]Player[Pet]?(event)`
+When generating custom content, you'll want to use the `<Trans />` tag from jsLingui. This tag accepts an i18n ID and wraps a block of content that should be translated. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#trans) for more.
 
-The event types and data are straight from fflogs - you can inspect the request to see more info.
+Example:
 
-To reduce code duplication, modules have a dependency system in place, that lets them reference other modules. Modules are guaranteed to run _before_ anything that depends on them (***NOTE:*** *this implicitly prevents circular dependencies - they will throw an error*).
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.RAISE.icon,
+	severity: SEVERITY.MORBID,
+	content: <Trans id="my-job.my-module.example-suggestion-title">
+		You should <strong>really</strong> use localization.
+	</Trans>,
+	why: <Trans id="my-job.my-module.example-suggestion-why">
+		Localization is important
+	</Trans>,
+}))
+```
 
-The `handle` static property is the name that should be used to reference dependencies. Any dependencies specified for a module are then made available at runtime as `this.[name]`.
+#### [`<Plural id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural)
 
-This only covers the basics of modules, however. If you'd like to find out more, I would highly suggest checking the modules for the `core` and `jobs/smn` groups - they should provide ample examples of what can be done.
+The `<Plural />` tag is used for pluralizing translatable content. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#plural) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+Example:
+
+```javascript
+this.suggestions.add(new Suggestion({
+	icon: ACTIONS.DANCE.icon,
+	severity: SEVERITY.MINOR,
+	content: <Trans id="my-job.my-module.dance-more">
+		You should be dancing more.
+	</Trans>,
+	why: <Plural
+		id="my-job.my-module.dance-more-count"
+		value={danceCount}
+		_1="# time"
+		other="# times"
+	/>
+}))
+```
+
+#### [`<Select id="" value={value} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#select)
+
+The `<Select />` tag is similar to the `<Plural />` tag but, rather than using plural forms, it it selects the form that matches the provided value. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#select) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<SelectOrdinal id="" value={number} ... />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal)
+
+The `<SelectOrdinal />` tag functions just as the `<Plural />` tag does, with the exception that it uses ordinal plural forms rather than cardinal forms. This tag accepts an i18n ID, a value to fork on, and multiple possibilities. Please see the [jsLingui documentation](https://lingui.github.io/js-lingui/ref/lingui-react.html#selectordinal) for more. You *must* provide an i18n ID for the outermost `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<DateFormat value={date} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#dateformat)
+
+The `<DateFormat />` tag is a wrapper around `Intl.DateTimeFormat`. It accepts a `format` parameter with identical options to `Intl.DateTimeFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+#### [`<NumberFormat value={number} />`](https://lingui.github.io/js-lingui/ref/lingui-react.html#numberformat)
+
+The `<NumberFormat />` tag is a wrapper around `Intl.NumberFormat`. It accepts a `format` parameter with identical options to `Intl.NumberFormat`. This tag should be contained within a `<Trans />`, `<Plural />`, `<Select />`, or `<SelectOrdinal />` tag.
+
+## API Reference
+### Module
+
+All modules should extend this class at some point in their hierarchy. It provides helpers to handle events, and provides a standard interface for the parser to work with.
+
+#### Properties
+##### `static handle`
+
+**Required.** The name that should be used to reference this module throughout the system/dependencies. Without this set, the module will break during build minification.
+
+##### `static title`
+
+The name that should be shown above any output the module generates. If not set, it will default to the module's `handle`, with the first letter capitalised.
+
+##### `static i18n_id`
+
+The i18n id for looking up the translated module title. If this is not set, the name of
+the module will not be localizable. This should be a string, wrapped with the `i18nMark(...)` method from `@lingui/react`. Example:
+
+```javascript
+static i18n_id = i18nMark('my-job.my-module.title')
+```
+
+##### `static dependencies`
+
+An array of module handles that this module depends on. Modules listed here will always be executed _before_ the current module, and will be available on the `this.<handle>` instance property.
+
+##### `static displayOrder`
+
+A number used to control the position the module should have in the final output. The core Module file exports the `DISPLAY_ORDER` const with a few defaults.
+
+#### Methods
+##### `addHook(event[, filter], callback)`
+
+Add an event hook.
+
+`event` should be the name of the event you wish to listen for. `'all'` can be passed to listen for _all_ events.
+
+`filter`, if specified, is an object specifying properties that _must_ be matched by an event for the hook to fire. Keys can be anything that the event may have. There are a few special keys and values available to the filter:
+
+- Setting the value of a property to an array will check if _any_ of the values match the event.
+- `abilityId: <value>` is shorthand for `ability: {guid: <value>}`
+- `by: <value>` and `to: <value>` are shorthand for `sourceID` and `targetID` respectively, and support the following additional values:
+	- `'player'`: The ID of the current player
+	- `'pet'`: The IDs of all the current player's pets.
+
+`callback` is the function that should be called when an event (optionally passing the filter) is run. It will receive the full event object as its first parameter.
+
+An object representing the added hook is returned, that can be later used to modify it. The actual structure of this hook object should not be relied upon.
+
+##### `output()`
+
+Override this function to provide output for the user. Any markup returned will be displayed on the analysis page, under a header defined by `static title`.
+
+Return `false` (the default implementation does this) to prevent generating output for the module.
+
+##### `normalise(events)`
+
+Override this function if the module absolutely _needs_ to process events before the official 'parse', such as to add missing `applybuff` events. Avoid if `addHook` could be used instead.
+
+`events` is an array of every event that is about to be parsed.
+
+Return value should be the `events` array, with any required modifications made to it. Failing to return this will prevent the parser from parsing any events at all.
+
+##### `getErrorContext(source, error, event)`
+
+Override this function to customize the information that the module provides for automatic
+error reporting. This function is called when an error occurs in event hooks or the
+`output()` method on the faulting module as well as all modules that module depends on.
+
+`source` is either `event` or `output`
+`error` is the error that occurred
+`event` is the error that was being processed when the error occurred, if applicable
+
+If this function is not overridden or if this function returns undefined, primitive values
+will be scraped from the module and uploaded with the error report.
+
+### Parser
+
+The core parser object, orchestrating the modules and providing meta data about the fight. All modules have access to an instance of this via `this.parser`.
+
+#### Properties
+##### `report`, `fight`, `player`
+
+The full report metadata object, and the specific fight and player object from it for the current parse, respectively. The data in these is direct from FFLogs, check your networking tab to see the structure.
+
+##### `currentTimestamp`
+
+The timestamp of the event currently being parsed in ms. Note that timestamps do _not_ start at 0. Subtract `fight.start_time` to get a relative timestamp
+
+##### `fightDuration`
+
+The _remaining_ duration in the fight (yes, I'm aware it's badly named), in ms.
+
+##### `fightFriendlies`
+
+An array of friendly actors that took part in the fight currently being parsed.
+
+#### Methods
+##### `fabricateEvent(event[, trigger])`
+
+Trigger an event throughout the system.
+
+`event` should be the event object being called. A `type` property _must_ be defined for this do anything. If not specified, `timestamp` will be set to the current timestamp.
+
+##### `byPlayer(event[, playerId])`, `toPlayer(event[, playerId])`
+
+Checks if the specified event was by/to the specified player. If `playerId` is not set, the current user will be used.
+
+##### `byPlayerPet(event[, playerId])`, `toPlayerPet(event[, playerId])`
+
+The same as their `xxPlayer` counterparts, but check if the event was by/to one of the specified player's pets.
+
+##### `formatDuration(duration[, secondPrecision])`
+
+Formats the specified duration (in ms) as a `MM:SS` string. If under 60s, will display seconds with specified precision (default 2 decimal places).
+
+##### `formatTimestamp(timestamp[, secondPrecision])`
+
+The result of `formatDuration` for the duration of the fight up until the specified timestamp.

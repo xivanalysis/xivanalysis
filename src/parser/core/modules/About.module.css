@@ -1,0 +1,23 @@
+.meta {
+	margin: 0;
+}
+
+.meta dt {
+	font-weight: bold;
+}
+
+.meta dd {
+	margin: 0;
+}
+
+.meta dd + dt {
+	margin-top: 4px;
+}
+
+.contributor {
+	display: block;
+}
+
+.contributor + .contributor {
+	margin-top: 4px;
+}

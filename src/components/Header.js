@@ -1,11 +1,15 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
 import {Container, Dropdown, Menu} from 'semantic-ui-react'
 
-import {compose, getPathMatch} from 'utilities'
+import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
+import {compose, getPathMatch, formatDuration} from 'utilities'
+
+import I18nMenu from './ui/I18nMenu'
 
 import styles from './Header.module.css'
 
@@ -55,13 +59,19 @@ class Header extends Component {
 		// Fight
 		if (fightId) {
 			let title = fightId
-			if (reportLoaded && fightId !== 'last') {
+			let subtitle = null
+			if (reportLoaded && report.fights && fightId !== 'last') {
 				const fight = report.fights.find(fight => fight.id === fightId)
-				// Do I want the kill time too?
-				title = fight? fight.name : fightId
+				if (fight) {
+					const start_time = parseInt(fight.start_time, 10)
+					const end_time = parseInt(fight.end_time, 10)
+					subtitle = `(${formatDuration(Math.floor(end_time - start_time) / 1000)})`
+				}
+				title = `${fight? fight.name : fightId} `
 			}
 			crumbs.push({
 				title,
+				subtitle,
 				url: `/find/${code}/${fightId}/`,
 			})
 		}
@@ -69,7 +79,7 @@ class Header extends Component {
 		// Combatant
 		if (combatantId) {
 			let title = combatantId
-			if (reportLoaded) {
+			if (reportLoaded && report.friendlies) {
 				const combatant = report.friendlies.find(friendly => friendly.id === combatantId)
 				title = combatant? combatant.name : combatantId
 			}
@@ -82,7 +92,19 @@ class Header extends Component {
 		const onHome = pathname === '/'
 		const collapseMenu = this.props.collapseMenu && !onHome
 
-		return <Menu fixed="top" inverted secondary={onHome} size={onHome? 'massive' : null}>
+		return <Menu
+			fixed="top"
+			inverted
+			secondary={onHome}
+			size={onHome? 'massive' : null}
+		>
+			<Helmet>
+				<title>
+					{crumbs.length? crumbs[crumbs.length - 1].title + ' | ' : ''}
+					xivanalysis
+				</title>
+			</Helmet>
+
 			<Container>
 				{collapseMenu || <Fragment>
 					<Menu.Item as={Link} to="/" header>
@@ -96,6 +118,7 @@ class Header extends Component {
 						to={crumb.url}
 					>
 						{crumb.title}
+						{crumb.subtitle && <span className={styles.subtitle}>{crumb.subtitle}</span>}
 					</Menu.Item>)}
 				</Fragment>}
 
@@ -126,6 +149,8 @@ class Header extends Component {
 				</Dropdown>}
 
 				<Menu.Menu position="right">
+					<Menu.Item className={styles.version}>{process.env.VERSION}</Menu.Item>
+					<I18nMenu />
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
 					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
 				</Menu.Menu>
@@ -135,7 +160,7 @@ class Header extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	collapseMenu: width < 992,
+	collapseMenu: width < MOBILE_BREAKPOINT,
 })
 
 const mapStateToProps = state => ({

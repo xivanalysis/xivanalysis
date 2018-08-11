@@ -8,6 +8,7 @@ import Pets from './Pets'
 import Rouse from './Rouse'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
+import ShadowFlare from './ShadowFlare'
 
 export default [
 	About,
@@ -18,6 +19,7 @@ export default [
 	Gauge,
 	Pets,
 	Rouse,
-	 Ruin2,
-	 Ruin4,
+	Ruin2,
+	Ruin4,
+	ShadowFlare,
 ]
