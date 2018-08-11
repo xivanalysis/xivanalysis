@@ -18,7 +18,7 @@ export default class AlwaysBeCasting extends Module {
 
 	// Just using this for the suggestion for now
 	_onComplete() {
-		const numGcds = this.gcd.gcds.length
+		const numGcds = this.gcd.unmodifiedGcds.length
 		if (!numGcds) {
 			return
 		}

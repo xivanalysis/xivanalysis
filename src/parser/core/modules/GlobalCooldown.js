@@ -23,15 +23,17 @@ export default class GlobalCooldown extends Module {
 	static i18n_id = i18nMark('core.gcd.title')
 	static title = 'Global Cooldown'
 
-	_lastGcd = -1
+	_lastGcdTimestamp = -1
 	_castingEvent = null
 
 	_lastGcdIsInstant = false
+	_lastGcdGuid = 0
 
 	_estimate = null
 	_estimateGcdCount = -1
 
-	gcds = []
+	unmodifiedGcds = []
+	gcdsNormalizedTo2_5 = []
 
 	constructor(...args) {
 		super(...args)
@@ -82,7 +84,19 @@ export default class GlobalCooldown extends Module {
 			order: 1,
 		}))
 
-		this.gcds.forEach(gcd => {
+		this.unmodifiedGcds.forEach(gcd => {
+			const action = getAction(gcd.actionId)
+			this.timeline.addItem(new Item({
+				type: 'background',
+				start: gcd.timestamp - startTime,
+				length: gcd.length,
+				group: 'gcd',
+				content: <img src={action.icon} alt={action.name}/>,
+			}))
+		})
+
+		/*
+		this.gcdsNormalizedTo2_5.forEach(gcd => {
 			const action = getAction(gcd.actionId)
 			this.timeline.addItem(new Item({
 				type: 'background',
@@ -92,52 +106,86 @@ export default class GlobalCooldown extends Module {
 				content: <img src={action.icon} alt={action.name}/>,
 			}))
 		})
+		*/
 	}
 
 	saveGcd(event, isInstant) {
 		let gcdLength = -1
+		let unmodifiedGcdLength = -1
+		let normalizedGcdLength2_5 = -1
 
-		if (this._lastGcd >= 0) {
+		const action = getAction(this._lastGcdGuid)
+		let isCasterTaxed = false
+
+		if (this._lastGcdTimestamp >= 0) {
+			gcdLength = event.timestamp - this._lastGcdTimestamp
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
+			gcdLength = Math.round((event.timestamp - this._lastGcdTimestamp)/10)*10
+			unmodifiedGcdLength = gcdLength
+			normalizedGcdLength2_5 = gcdLength
+		}
+
+		if (!this._lastGcdIsInstant) {
+			const castTime = action.castTime ? action.castTime : 0
+			const cooldown = action.cooldown ? action.cooldown : 2.5
+			if (castTime >= cooldown) {
+				// Caster tax. Feelsbad. TODO: Reddit link explaining it
+				gcdLength -= 100
+				normalizedGcdLength2_5 -= 100
+				// TODO: Caster tax unmodifiedGcdLength?
+				isCasterTaxed = true
+				//console.log('Caster Taxing ' + action.name)
+			}
+
+			if (castTime > 2.5 && castTime !== 3.5) {
+				normalizedGcdLength2_5 = normalizedGcdLength2_5 * (2.5 / castTime)
+			}
 		}
 
 		// Speedmod is full length -> actual length, we want to do the opposite here
 		const speedMod = this.speedmod.get(event.timestamp)
 		const revSpeedMod = 1 / speedMod
-		gcdLength *= revSpeedMod
-		gcdLength = Math.round(gcdLength)
+		normalizedGcdLength2_5 *= revSpeedMod
+		normalizedGcdLength2_5 = Math.round(normalizedGcdLength2_5)
 
-		this.gcds.push({
-			timestamp: event.timestamp,
-			length: gcdLength,
-			speedMod,
-			actionId: event.ability.guid,
-			isInstant: this._lastGcdIsInstant,
-		})
+		if (this._lastGcdGuid !== 0) {
+			this.gcdsNormalizedTo2_5.push({
+				timestamp: event.timestamp,
+				length: normalizedGcdLength2_5,
+				speedMod,
+				casterTaxed: isCasterTaxed,
+				actionId: this._lastGcdGuid,
+				isInstant: this._lastGcdIsInstant,
+			})
 
+			this.unmodifiedGcds.push({
+				timestamp: event.timestamp,
+				length: unmodifiedGcdLength,
+				speedMod,
+				casterTaxed: isCasterTaxed,
+				actionId: this._lastGcdGuid,
+				isInstant: this._lastGcdIsInstant,
+			})
+
+			//console.log(action.name + ': ' + gcdLength)
+		}
+
+		this._lastGcdGuid = event.ability.guid
 		this._lastGcdIsInstant = isInstant
 
 		// Store current gcd time for the check
-		this._lastGcd = event.timestamp
+		this._lastGcdTimestamp = event.timestamp
 	}
 
 	getEstimate(bound = true) {
-		const gcdLength = this.gcds.length
+		const gcdLength = this.gcdsNormalizedTo2_5.length
 
 		let estimate = this._estimate
 
 		// If we don't have cache, need to recaculate it
 		if (estimate === null || gcdLength !== this._estimateGcdCount) {
 			// Calculate the lengths of the GCD
-			// TODO: Ideally don't explicitly check only instants and 2.5s casts. Being able to use 2.8s casts would give tons more samples to consider for more accurate values
-			let lengths = this.gcds.map(gcd => {
-				const action = getAction(gcd.actionId)
-				if (gcd.isInstant || action.castTime <= 2.5) {
-					return gcd.length
-				}
-			})
-			lengths = lengths.filter(n => n)
+			const lengths = this.gcdsNormalizedTo2_5.map(gcd => gcd.length)
 
 			// Mode seems to get best results. Using mean in case there's multiple modes.
 			estimate = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD
@@ -156,8 +204,8 @@ export default class GlobalCooldown extends Module {
 	}
 
 	getUptime() {
-		return this.gcds.reduce((carry, gcd) => {
-			const duration = this._getGcdLength(gcd)
+		return this.unmodifiedGcds.reduce((carry, gcd) => {
+			const duration = this._getGcdLength(gcd)// + gcd.casterTaxed ? 100 : 0
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
 				gcd.timestamp + duration
@@ -170,7 +218,22 @@ export default class GlobalCooldown extends Module {
 		const cooldownRatio = this.getEstimate() / MAX_GCD
 
 		const action = getAction(gcd.actionId)
-		let cd = (gcd.isInstant ? action.cooldown : Math.max(action.cooldown, action.castTime)) * 1000
+		let castTime = action.castTime ? action.castTime : 0
+		const cooldown = action.cooldown ? action.cooldown : 2.5
+
+		// TODO: Complete hack. Remove and make BLM-specific
+		if (castTime === 3.5 && gcd.length < 2500) {
+			//console.log('FastCast')
+			castTime = 1.75
+		}
+
+		let cd = (gcd.isInstant || castTime <= cooldown) ? cooldown : Math.max(castTime, cooldown)
+		cd *= 1000
+
+		const duration = (cd * cooldownRatio * gcd.speedMod) + (gcd.isCasterTaxed ? 100 : 0)
+
+		/*
+		let cd = (gcd.isInstant ? cooldown : Math.max(cooldown, castTime)) * 1000
 
 		// If the cast time of the skill has been reduced beneath the GCD, cap it at max - it'll be adjusted below.
 		if (this.castTime.forAction(gcd.actionId, gcd.timestamp) < MAX_GCD) {
@@ -178,6 +241,9 @@ export default class GlobalCooldown extends Module {
 		}
 
 		const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
+		*/
+
+		//console.log(action.name + ': ' + duration)
 
 		return duration
 	}
