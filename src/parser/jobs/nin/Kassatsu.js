@@ -40,7 +40,6 @@ export default class Kassatsu extends Module {
 			this._kassatsuUses[abilityId]++
 			this._kassatsuSpent = true
 		}
-
 	}
 
 	_onRemoveKassatsu() {
