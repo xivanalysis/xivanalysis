@@ -38,4 +38,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/012000/012909.png',
 		duration: 20,
 	},
+
+	KASSATSU: {
+		id: 497,
+		name: 'Kassatsu',
+		icon: 'https://secure.xivdb.com/img/game/012000/012902.png',
+		duration: 15,
+	},
 }

@@ -1,6 +1,7 @@
 import About from './About'
 import Combos from './Combos'
 import Duality from './Duality'
+import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'
 import Ninki from './Ninki'
 import ShadowFang from './ShadowFang'
@@ -12,6 +13,7 @@ export default [
 	About,
 	Combos,
 	Duality,
+	Kassatsu,
 	Ninjutsu,
 	Ninki,
 	ShadowFang,
