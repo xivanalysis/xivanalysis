@@ -7,6 +7,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SF_DURATION_MILLIS = STATUSES.SHADOW_FANG.duration * 1000
 
@@ -60,6 +61,7 @@ export default class ShadowFang extends Module {
 			description: <Fragment>
 				<Trans id="nin.shadowfang.checklist.description"><ActionLink {...ACTIONS.SHADOW_FANG}/> is your strongest combo finisher (assuming at least 4 DoT ticks hit). In addition, it provides a slashing debuff which you, WARs, and SAMs are responsible for maintaining and should ideally never let lapse.</Trans>
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.SHADOW_FANG,
 			requirements: [
 				new Requirement({
 					name: <Trans id="nin.shadowfang.checklist.requirement.name"><ActionLink {...ACTIONS.SHADOW_FANG}/> uptime</Trans>,
