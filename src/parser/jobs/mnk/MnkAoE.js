@@ -54,7 +54,7 @@ export default class MnkAoE extends Module {
 				icon: ACTIONS.ARM_OF_THE_DESTROYER.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only TP efficient when there are more than {AOTD_MIN_TARGETS} targets.
+					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only efficient when there are more than {AOTD_MIN_TARGETS} targets.
 				</Fragment>,
 				why: <Fragment>
 					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> used on too few targets {this._badAotDs.length} times.
@@ -67,7 +67,7 @@ export default class MnkAoE extends Module {
 				icon: ACTIONS.ROCKBREAKER.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Fragment>
-					<ActionLink {...ACTIONS.ROCKBREAKER}/> is only TP efficient when there are more than {ROCKBREAKER_MIN_TARGETS} targets.
+					<ActionLink {...ACTIONS.ROCKBREAKER}/> is only efficient when there are more than {ROCKBREAKER_MIN_TARGETS} targets.
 				</Fragment>,
 				why: <Fragment>
 					<ActionLink {...ACTIONS.ROCKBREAKER}/> used on too few targets {this._badRocks.length} times.
@@ -75,4 +75,6 @@ export default class MnkAoE extends Module {
 			}))
 		}
 	}
+
+	output() {}
 }
