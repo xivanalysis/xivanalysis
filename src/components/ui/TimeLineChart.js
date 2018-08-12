@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {Line} from 'react-chartjs-2'
@@ -24,6 +25,7 @@ export default class TimeLineChart extends PureComponent {
 	}
 
 	render() {
-		return <Line data={this.props.data} options={this.props.options || DEFAULT_OPTIONS}/>
+		const options = _.merge({}, DEFAULT_OPTIONS, this.props.options || {})
+		return <Line data={this.props.data} options={options}/>
 	}
 }
