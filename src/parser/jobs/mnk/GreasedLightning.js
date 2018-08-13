@@ -276,16 +276,6 @@ export default class GreasedLightning extends Module {
 			legend: {display: false},
 			tooltips: {enabled: false},
 			scales: {
-				xAxes: [{
-					type: 'time',
-					time: {
-						displayFormats: {
-							minute: 'm:ss',
-							second: 'm:ss',
-							millisecond: 'm:ss.SS',
-						},
-					},
-				}],
 				yAxes: [{
 					ticks: {
 						max: 3,
