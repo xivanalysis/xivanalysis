@@ -71,3 +71,5 @@ Confirm last rotation check works correctly in Kefka. Fix it if not. See https:/
 Allow losing Convert uses if Convert's used during buff windows or for AOE
 
 Check for hardcast T3 as first ice cast after fast-cast F3
+
+Check for overkill on hardcasts (especially F4, Foul). Add notes about not hardcasting on things that are dead or will die before the cast can finish. Ignore end-of-fight casts (but do watch adds)
