@@ -135,13 +135,11 @@ export default class Gauge extends Module {
 		this._toAdd.forEach((i) => console.log(i))
 
 		// Add all the events we gathered up in, in order
-		/*
 		let offset = 0
 		this._toAdd.sort((a, b) => a.insertAfter - b.insertAfter).forEach(event => {
 			events.splice(event.insertAfter + 1 + offset, 0, event)
 			offset++
 		})
-		*/
 
 		return events
 	}
