@@ -55,7 +55,9 @@ export default class Gauge extends Module {
 	_droppedEno = 0
 	_lostFoul = 0
 	_overwrittenFoul = 0
+
 	_normalizeIndex = 0
+	_currentTimestamp = 0
 
 	_toAdd = []
 
@@ -77,6 +79,7 @@ export default class Gauge extends Module {
 
 			this._toAdd.push({
 				type: BLM_GAUGE_EVENT,
+				timestamp: this._currentTimestamp,
 				insertAfter: this._normalizeIndex,
 				astralFire: this._astralFireStacks,
 				umbralIce: this._umbralIceStacks,
@@ -100,6 +103,7 @@ export default class Gauge extends Module {
 	normalise(events) {
 		this._toAdd.push({
 			type: BLM_GAUGE_EVENT,
+			timestamp: events[0].timestamp,
 			insertAfter: this._normalizeIndex,
 			astralFire: this._astralFireStacks,
 			umbralIce: this._umbralIceStacks,
@@ -110,6 +114,7 @@ export default class Gauge extends Module {
 
 		for (this._normalizeIndex = 0; this._normalizeIndex < events.length; this._normalizeIndex++) {
 			const event = events[this._normalizeIndex]
+			this._currentTimestamp = event.timestamp
 
 			this.updateStackTimers(event)
 
