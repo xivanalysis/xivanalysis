@@ -22,6 +22,8 @@ import PLD from './PLD'
 import ARC from './ARC'
 import BRD from './BRD'
 import SAM from './SAM'
+import DRK from './DRK'
+import MCH from './MCH'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
@@ -40,6 +42,7 @@ const ACTIONS = {
 
 	...PLD,
 	...WAR,
+	...DRK,
 
 	...WHM,
 	...SCH,
@@ -50,6 +53,7 @@ const ACTIONS = {
 	...SAM,
 
 	...BRD,
+	...MCH,
 
 	...BLM,
 	...SMN,
@@ -68,6 +72,10 @@ const addDefaultValues = obj => {
 }
 
 export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
+
+export const HIT_TYPES = {
+	CRIT: 2,
+}
 
 addExtraIndex(ACTIONS, 'id')
 addExtraIndex(addDefaultValues(ACTIONS), 'id')

@@ -3,6 +3,7 @@ import React, {Component, Fragment} from 'react'
 import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
+import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
 import {TARGET} from 'parser/core/modules/Checklist/Rule'
 
 import styles from './Checklist.module.css'
@@ -91,7 +92,7 @@ class Checklist extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	hideProgress: width < 992,
+	hideProgress: width < MOBILE_BREAKPOINT,
 })
 
 export default withSizes(mapSizesToProps)(Checklist)

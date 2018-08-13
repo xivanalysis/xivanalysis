@@ -23,7 +23,8 @@ const ARCANA = [
 export default class Arcanum extends Module {
 	static handle = 'arcanum'
 	static dependencies = [
-		'additionalEvents', // AE needs to run its normaliser first
+		// AE needs to run its normaliser first
+		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
 
 	normalise(events) {

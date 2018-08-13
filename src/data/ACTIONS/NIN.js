@@ -8,6 +8,12 @@ export default {
 		name: 'Armor Crush',
 		icon: 'https://secure.xivdb.com/img/game/002000/002915.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2242,
+			potency: 300,
+			end: true,
+		},
 	},
 
 	// -----

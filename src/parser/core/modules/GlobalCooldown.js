@@ -13,9 +13,10 @@ const MAX_GCD = 2500
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
-		'castTime',
+		// We need this to normalise before us
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'castTime', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'downtime',
-		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
 	]
@@ -120,14 +121,15 @@ export default class GlobalCooldown extends Module {
 		if (this._lastGcdTimestamp >= 0) {
 			gcdLength = event.timestamp - this._lastGcdTimestamp
 			// GCD is only to two decimal places, so round it there. Storing in Ms.
+			// eslint-disable-next-line no-magic-numbers
 			gcdLength = Math.round((event.timestamp - this._lastGcdTimestamp)/10)*10
 			unmodifiedGcdLength = gcdLength
 			normalizedGcdLength2_5 = gcdLength
 		}
 
 		if (!this._lastGcdIsInstant) {
-			const castTime = action.castTime ? action.castTime : 0
-			const cooldown = action.cooldown ? action.cooldown : 2.5
+			const castTime = action.castTime ? action.castTime : 0 // esling-disable-line no-magic-numbers
+			const cooldown = action.cooldown ? action.cooldown : 2.5 // esling-disable-line no-magic-numbers
 			if (castTime >= cooldown) {
 				// Caster tax. Feelsbad. TODO: Reddit link explaining it
 				gcdLength -= 100

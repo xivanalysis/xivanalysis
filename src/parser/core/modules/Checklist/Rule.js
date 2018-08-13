@@ -1,5 +1,6 @@
 import math from 'mathjsCustom'
 import {matchClosestLower} from 'utilities'
+import {DISPLAY_ORDER} from 'parser/core/Module'
 
 export const TARGET = {
 	SUCCESS: 2,
@@ -7,11 +8,14 @@ export const TARGET = {
 	FAIL: undefined,
 }
 
+const DEFAULT_TARGET = 95
+
 export default class Rule {
 	name = ''
 	description = null
 	requirements = []
-	target = 95
+	target = DEFAULT_TARGET
+	displayOrder = DISPLAY_ORDER.DEFAULT
 
 	get tier() {
 		return matchClosestLower(

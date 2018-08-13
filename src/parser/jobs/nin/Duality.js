@@ -1,5 +1,5 @@
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-//import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -27,15 +27,13 @@ export default class Duality extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(DUALITY_GCDS).map(Number)}, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		if (this.combatants.selected.hasStatus(STATUSES.DUALITY.id) && DUALITY_GCDS.hasOwnProperty(abilityId)) {
-			this._badDualityUses += DUALITY_GCDS[abilityId] // Aeolian won't increment this, everything else will
+		if (this.combatants.selected.hasStatus(STATUSES.DUALITY.id)) {
+			this._badDualityUses += DUALITY_GCDS[event.ability.guid] // Aeolian won't increment this, everything else will
 		}
 	}
 
@@ -44,11 +42,15 @@ export default class Duality extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DUALITY.icon,
 				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.DUALITY}/> on any GCDs besides <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>. The side effects of the GCD aren&apos;t duplicated, only the damage, so your highest damage combo hit is always ideal.
+					<Trans id="nin.duality.suggestions.misuse.content">Avoid using <ActionLink {...ACTIONS.DUALITY}/> on any GCDs besides <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>. The side effects of the GCD aren&apos;t duplicated, only the damage, so your highest damage combo hit is always ideal.</Trans>
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 				why: <Fragment>
-					You used Duality {this._badDualityUses} time{this._badDualityUses !== 1 && 's'} on non-optimal GCDs.
+					<Plural
+						id="nin.duality.suggestions.misuse.why"
+						value={this._badDualityUses}
+						one="You used Duality # time on non-optimal GCDs."
+						other="You used Duality # times on non-optimal GCDs."/>
 				</Fragment>,
 			}))
 		}

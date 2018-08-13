@@ -1,9 +1,9 @@
 //I've heard it's cool to build your own job gauge.
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -39,9 +39,8 @@ const ASTRAL_UMBRAL_DURATION = 13000
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
+	static i18n_id = i18nMark('blm.gauge.title')
 	static dependencies = [
-		'combatants',
-		'cooldowns',
 		'suggestions',
 	]
 
@@ -310,39 +309,39 @@ export default class Gauge extends Module {
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
-				content: <Fragment>
+				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
 					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					You dropped Enochian {this._droppedEno} time{this._droppedEno > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
+					{this._droppedEno} dropped Enochian <Plural value={this._droppedEno} one="buff" other="buffs"/>.
+				</Trans>,
 			}))
 		}
 
 		if (this._lostFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Fragment>
+				content: <Trans id="blm.gauge.suggestions.lost-foul.content">
 					You lost <ActionLink {...ACTIONS.FOUL}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					You lost Foul {this._lostFoul} time{this._lostFoul > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.gauge.suggestions.lost-foul.why">
+					<Plural value={this._lostFoul} one="# Foul was" other="# Fouls were"/> lost.
+				</Trans>,
 			}))
 		}
 
 		if (this._overwrittenFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Fragment>
+				content: <Trans id="blm.gauge.suggestions.overwritten-foul.content">
 					You overwrote <ActionLink {...ACTIONS.FOUL}/> due to not casting it every 30s. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					You overwrote Foul {this._overwrittenFoul} time{this._overwrittenFoul > 1 && 's'}.
-				</Fragment>,
+				why: <Trans id="blm.gauge.suggestions.overwritten-foul.why">
+					Foul got overwritten <Plural value={this._overwrittenFoul} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 	}

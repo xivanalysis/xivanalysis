@@ -17,6 +17,7 @@ import {
 
 import {getFflogsEvents} from 'api'
 import JobIcon from 'components/ui/JobIcon'
+import {MOBILE_BREAKPOINT}  from 'components/STYLE_CONSTS'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
@@ -304,7 +305,7 @@ class Analyse extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	showMenu: width >= 992,
+	showMenu: width >= MOBILE_BREAKPOINT,
 })
 
 const mapStateToProps = state => ({
