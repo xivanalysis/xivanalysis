@@ -319,13 +319,13 @@ export default class Gauge extends Module {
 			/* eslint-disable no-magic-numbers */
 			const data = {
 				datasets: [{
-					label: <Trans id="rdm.gauge.white-mana-graph.label">White Mana,</Trans>,
+					label: 'White Mana',
 					data: this._history.white,
 					backgroundColor: whm.fade(0.5),
 					borderColor: whm.fade(0.2),
 					steppedLine: true,
 				}, {
-					label: <Trans id="rdm.gauge.black-mana-graph.label">Black Mana</Trans>,
+					label: 'Black Mana',
 					data: this._history.black,
 					backgroundColor: blm.fade(0.5),
 					borderColor: blm.fade(0.2),
