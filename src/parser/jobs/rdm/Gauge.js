@@ -8,6 +8,7 @@ import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {i18nMark, Trans} from '@lingui/react'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
@@ -50,7 +51,7 @@ const MANAIFCATION_MULTIPLIER = 2
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
-		static i18n_id = 'rdm.gauge.title'
+		static i18n_id = i18nMark('rdm.gauge.title')
 		static dependencies = [
 			'combatants',
 			'suggestions',
@@ -242,13 +243,13 @@ export default class Gauge extends Module {
 					content: <Fragment>
 						<Message warning icon>
 							<Icon name="warning sign"/>
-								Due to a missing cast at the start of the log, mana calculations might be off.
-								Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.
+							<Trans id="rdm.gauge.missing-cast.warning.content">Due to a missing cast at the start of the log, mana calculations might be off.
+								Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.</Trans>
 						</Message>
 					</Fragment>,
 					severity: SEVERITY.MAJOR,
 					why: <Fragment>
-						You were the first damage event, so it doesn&apos;t log your first cast as cast by you
+						<Trans id="rdm.gauge.missing-cast.warning.why">You were the first damage event, so it doesn&apos;t log your first cast as cast by you</Trans>
 					</Fragment>,
 				}))
 			}
@@ -257,12 +258,12 @@ export default class Gauge extends Module {
 				this.suggestions.add(new TieredSuggestion({
 					icon: ACTIONS.VERHOLY.icon,
 					content: <Fragment>
-						Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						<Trans id="rdm.gauge.white-mana-wasted.content">Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
 					</Fragment>,
 					tiers: SEVERITY_WASTED_MANA,
 					value: this._whiteManaWasted,
 					why: <Fragment>
-						You lost {this._whiteManaWasted} White Mana due to capped Gauge resources
+						<Trans id="rdm.gauge.white-mana-wasted.why">You lost {this._whiteManaWasted} White Mana due to capped Gauge resources</Trans>
 					</Fragment>,
 				}))
 			}
@@ -271,12 +272,12 @@ export default class Gauge extends Module {
 				this.suggestions.add(new TieredSuggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						<Trans id="rdm.gauge.white-mana-lost.content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
 					</Fragment>,
 					tiers: SEVERITY_LOST_MANA,
 					value: this._whiteManaLostToImbalance,
 					why: <Fragment>
-						You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana
+						<Trans id="rdm.gauge.white-mana-lost.why">You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana</Trans>
 					</Fragment>,
 				}))
 			}
@@ -285,12 +286,12 @@ export default class Gauge extends Module {
 				this.suggestions.add(new TieredSuggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don't overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.
+						<Trans id="rdm.gauge.black-mana-wasted.content">Ensure you don't overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
 					</Fragment>,
 					tiers: SEVERITY_WASTED_MANA,
 					value: this._blackManaWasted,
 					why: <Fragment>
-						You lost {this._blackManaWasted} Black Mana due to capped Gauge resources
+						<Trans id="rdm.gauge.black-mana-wasted.why">You lost {this._blackManaWasted} Black Mana due to capped Gauge resources</Trans>
 					</Fragment>,
 				}))
 			}
@@ -299,12 +300,12 @@ export default class Gauge extends Module {
 				this.suggestions.add(new TieredSuggestion({
 					icon: ACTIONS.VERFLARE.icon,
 					content: <Fragment>
-						Ensure you don't allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos
+						<Trans id="rdm.gauge.black-mana-lost.content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
 					</Fragment>,
 					tiers: SEVERITY_LOST_MANA,
 					value: this._blackManaLostToImbalance,
 					why: <Fragment>
-						You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana
+						<Trans id="rdm.gauge.black-mana-lost.why">You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana</Trans>
 					</Fragment>,
 				}))
 			}
@@ -318,13 +319,13 @@ export default class Gauge extends Module {
 			/* eslint-disable no-magic-numbers */
 			const data = {
 				datasets: [{
-					label: 'White Mana',
+					label: <Trans id="rdm.gauge.white-mana-graph.label">White Mana,</Trans>,
 					data: this._history.white,
 					backgroundColor: whm.fade(0.5),
 					borderColor: whm.fade(0.2),
 					steppedLine: true,
 				}, {
-					label: 'Black Mana',
+					label: <Trans id="rdm.gauge.black-mana-graph.label">Black Mana</Trans>,
 					data: this._history.black,
 					backgroundColor: blm.fade(0.5),
 					borderColor: blm.fade(0.2),
