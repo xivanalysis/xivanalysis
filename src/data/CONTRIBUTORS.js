@@ -86,6 +86,11 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/sushirou.png',
 		jobs: [JOBS.ASTROLOGIAN],
 	},
+	ACRI: {
+		name: 'Acri',
+		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
+		jobs: [JOBS.DARK_KNIGHT],
+	},
 }
 
 export const ROLES = {
