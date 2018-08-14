@@ -3,22 +3,31 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+const DOTON_TICK_TARGET = 6
+const TCJ_DOTON_TICK_TARGET = 7
+const JUSTIFIABLE_DOTON_TICKS = 10
 
 export default class Ninjutsu extends Module {
 	static handle = 'ninjutsu'
 	static dependencies = [
+		'combatants',
 		'suggestions',
 	]
 
 	_hyotonCount = 0
 	_rabbitCount = 0
+	_dotonCasts = []
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HYOTON.id}, this._onHyotonCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, this._onRabbitCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DOTON.id}, this._onDotonCast)
+		this.addHook('aoedamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -30,8 +39,54 @@ export default class Ninjutsu extends Module {
 		this._rabbitCount++
 	}
 
+	_onDotonCast(event) {
+		this._dotonCasts.push({
+			cast: event,
+			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id), // STDs are only okay under TCJ
+			ticks: [],
+		})
+	}
+
+	_onDotonDamage(event) {
+		// If there are no casts at all, use the damage event to fabricate one
+		if (this._dotonCasts.length === 0) {
+			this._onDotonCast(event)
+		}
+
+		this._dotonCasts[this._dotonCasts.length - 1].ticks.push(event.hits.length) // Track the number of enemies hit per tick
+	}
+
+	_appraiseDotonCasts() {
+		const result = {
+			badTcjs: 0, // TCJ Dotons that fell short of 7 ticks (TCJ Suiton will be more damage)
+			badAoes: 0, // AoE Dotons that fell short of 6 ticks (Katon will be more damage)
+			badStds: 0, // Single-target regular Dotons (do not do this)
+		}
+
+		for (let i = 0; i < this._dotonCasts.length; i++) {
+			const cast = this._dotonCasts[i]
+			if (cast.tcj && cast.ticks.every(tick => tick === 1)) {
+				// If it's a fully single-target TCJ that doesn't land every Doton tick, flag it
+				if (cast.ticks.length < TCJ_DOTON_TICK_TARGET) {
+					result.badTcjs++
+				}
+			} else if (cast.ticks.every(tick => tick > 1)) {
+				// If it's a fully multi-target Doton that misses at least 2 ticks, flag it
+				if (cast.ticks.length < DOTON_TICK_TARGET) {
+					result.badAoes++
+				}
+			} else if (cast.ticks.reduce((accum, value) => accum + value) < JUSTIFIABLE_DOTON_TICKS) {
+				// If it's a partial or entirely single-target and it doesn't reach the hit threshold for a good Doton, flag it
+				// Note: Fully single-target Dotons will never reach this threshold
+				result.badStds++
+			}
+		}
+
+		return result
+	}
+
 	_onComplete() {
-		if (this._hyotonCount >= 1) {
+		if (this._hyotonCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HYOTON.icon,
 				content: <Fragment>
@@ -48,7 +103,7 @@ export default class Ninjutsu extends Module {
 			}))
 		}
 
-		if (this._rabbitCount >= 1) {
+		if (this._rabbitCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RABBIT_MEDIUM.icon,
 				content: <Fragment>
@@ -61,6 +116,58 @@ export default class Ninjutsu extends Module {
 						value={this._rabbitCount}
 						one="You cast Rabbit Medium # time."
 						other="You cast Rabbit Medium # times."/>
+				</Fragment>,
+			}))
+		}
+
+		const {badTcjs, badAoes, badStds} = this._appraiseDotonCasts()
+		if (badTcjs > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DOTON.icon,
+				content: <Fragment>
+					<Trans id="nin.ninjutsu.suggestions.tcj-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you&apos;re up against multiple targets. On a single target that&apos;s about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.</Trans>
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					<Plural
+						id="nin.ninjutsu.suggestions.tcj-doton.why"
+						value={badTcjs}
+						one="You had # unoptimized Doton cast under Ten Chi Jin."
+						other="You had # unoptimized Doton casts under Ten Chi Jin."/>
+				</Fragment>,
+			}))
+		}
+
+		if (badAoes > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DOTON.icon,
+				content: <Fragment>
+					<Trans id="nin.ninjutsu.suggestions.aoe-doton.content"><ActionLink {...ACTIONS.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...ACTIONS.KATON}/> instead against adds that will die quickly.</Trans>
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					<Plural
+						id="nin.ninjutsu.suggestions.aoe-doton.why"
+						value={badAoes}
+						one="You had # unoptimized Doton cast."
+						other="You had # unoptimized Doton casts."/>
+				</Fragment>,
+			}))
+		}
+
+		if (badStds > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DOTON.icon,
+				content: <Fragment>
+					<Trans id="nin.ninjutsu.suggestions.st-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.</Trans>
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+					<Plural
+						id="nin.ninjutsu.suggestions.st-doton.why"
+						value={badStds}
+						one="You cast # single-target Doton."
+						other="You cast # single-target Dotons."/>
 				</Fragment>,
 			}))
 		}
