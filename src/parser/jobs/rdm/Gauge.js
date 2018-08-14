@@ -243,72 +243,64 @@ export default class Gauge extends Module {
 					content: <Fragment>
 						<Message warning icon>
 							<Icon name="warning sign"/>
-							<Trans id="rdm.gauge.missing-cast.warning.content">Due to a missing cast at the start of the log, mana calculations might be off.
+							<Trans id="rdm.gauge.suggestions.missing-cast-warning-content">Due to a missing cast at the start of the log, mana calculations might be off.
 								Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.</Trans>
 						</Message>
 					</Fragment>,
 					severity: SEVERITY.MAJOR,
 					why: <Fragment>
-						<Trans id="rdm.gauge.missing-cast.warning.why">You were the first damage event, so it doesn&apos;t log your first cast as cast by you</Trans>
+						<Trans id="rdm.gauge.suggetsions.missing-cast-warning-why">You were the first damage event, so it doesn&apos;t log your first cast as cast by you</Trans>
 					</Fragment>,
 				}))
 			}
 
-			if (this._whiteManaWasted && this._whiteManaWasted > 0) {
-				this.suggestions.add(new TieredSuggestion({
-					icon: ACTIONS.VERHOLY.icon,
-					content: <Fragment>
-						<Trans id="rdm.gauge.white-mana-wasted.content">Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
-					</Fragment>,
-					tiers: SEVERITY_WASTED_MANA,
-					value: this._whiteManaWasted,
-					why: <Fragment>
-						<Trans id="rdm.gauge.white-mana-wasted.why">You lost {this._whiteManaWasted} White Mana due to capped Gauge resources</Trans>
-					</Fragment>,
-				}))
-			}
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERHOLY.icon,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-wasted-content">Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
+				</Fragment>,
+				tiers: SEVERITY_WASTED_MANA,
+				value: this._whiteManaWasted,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-wasted-why">You lost {this._whiteManaWasted} White Mana due to capped Gauge resources</Trans>
+				</Fragment>,
+			}))
 
-			if (this._whiteManaLostToImbalance && this._whiteManaLostToImbalance> 0) {
-				this.suggestions.add(new TieredSuggestion({
-					icon: ACTIONS.VERFLARE.icon,
-					content: <Fragment>
-						<Trans id="rdm.gauge.white-mana-lost.content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
-					</Fragment>,
-					tiers: SEVERITY_LOST_MANA,
-					value: this._whiteManaLostToImbalance,
-					why: <Fragment>
-						<Trans id="rdm.gauge.white-mana-lost.why">You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana</Trans>
-					</Fragment>,
-				}))
-			}
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERFLARE.icon,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-lost-content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
+				</Fragment>,
+				tiers: SEVERITY_LOST_MANA,
+				value: this._whiteManaLostToImbalance,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-lost-why">You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana</Trans>
+				</Fragment>,
+			}))
 
-			if (this._blackManaWasted && this._blackManaWasted > 0) {
-				this.suggestions.add(new TieredSuggestion({
-					icon: ACTIONS.VERFLARE.icon,
-					content: <Fragment>
-						<Trans id="rdm.gauge.black-mana-wasted.content">Ensure you don't overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
-					</Fragment>,
-					tiers: SEVERITY_WASTED_MANA,
-					value: this._blackManaWasted,
-					why: <Fragment>
-						<Trans id="rdm.gauge.black-mana-wasted.why">You lost {this._blackManaWasted} Black Mana due to capped Gauge resources</Trans>
-					</Fragment>,
-				}))
-			}
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERFLARE.icon,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-wasted-content">Ensure you don't overcap your Black Mana before a combo, overcapping Black Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.</Trans>
+				</Fragment>,
+				tiers: SEVERITY_WASTED_MANA,
+				value: this._blackManaWasted,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-wasted-why">You lost {this._blackManaWasted} Black Mana due to capped Gauge resources</Trans>
+				</Fragment>,
+			}))
 
-			if (this._blackManaLostToImbalance && this._blackManaLostToImbalance> 0) {
-				this.suggestions.add(new TieredSuggestion({
-					icon: ACTIONS.VERFLARE.icon,
-					content: <Fragment>
-						<Trans id="rdm.gauge.black-mana-lost.content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
-					</Fragment>,
-					tiers: SEVERITY_LOST_MANA,
-					value: this._blackManaLostToImbalance,
-					why: <Fragment>
-						<Trans id="rdm.gauge.black-mana-lost.why">You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana</Trans>
-					</Fragment>,
-				}))
-			}
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERFLARE.icon,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-lost-content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost Black Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
+				</Fragment>,
+				tiers: SEVERITY_LOST_MANA,
+				value: this._blackManaLostToImbalance,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-lost-why">You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana</Trans>
+				</Fragment>,
+			}))
 		}
 
 		output() {
