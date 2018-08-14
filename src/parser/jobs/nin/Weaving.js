@@ -28,7 +28,7 @@ const MAX_NINJUTSU_PER_TCJ = 3
 
 export default class Weaving extends CoreWeaving {
 	_lastDwadTimestamp = 0 // A necessary evil - logs go janky sometimes and have 3 cast events for a single DWaD
-	isBadWeave(weave, maxWeaves) {
+	isBadWeave(weave/*, maxWeaves*/) {
 		let weaveCount = 0
 		let checkState = STATE.NORMAL
 		let tcjCount = 0
@@ -84,6 +84,6 @@ export default class Weaving extends CoreWeaving {
 			return weaveCount > 1
 		}
 
-		return super.isBadWeave(weave, maxWeaves)
+		return super.isBadWeave(weave, 1)
 	}
 }
