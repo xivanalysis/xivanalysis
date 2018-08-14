@@ -35,10 +35,8 @@ export default class Buffs extends Module {
 			by: 'player',
 			abilityId: [STATUSES.JINPU.id, STATUSES.SHIFU.id],
 		}
-		this.addHook(['applybuff', 'refreshbuff'], filter, event => {
-			this._onShifuApplication(event)
-			this._onJinpuApplication(event)
-		})
+		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.JINPU.id}, this._onJinpuApplication)
+		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.SHIFU.id}, this._onShifuApplication)
 		this.addHook('complete', this._onComplete)
 	}
 
