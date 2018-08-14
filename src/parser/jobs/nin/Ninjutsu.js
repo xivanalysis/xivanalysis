@@ -5,7 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const DOTON_TICK_TARGET = 6
 const TCJ_DOTON_TICK_TARGET = 7
@@ -63,8 +63,7 @@ export default class Ninjutsu extends Module {
 			badStds: 0, // Single-target regular Dotons (do not do this)
 		}
 
-		for (let i = 0; i < this._dotonCasts.length; i++) {
-			const cast = this._dotonCasts[i]
+		this._dotonCasts.forEach(cast => {
 			if (cast.tcj && cast.ticks.every(tick => tick === 1)) {
 				// If it's a fully single-target TCJ that doesn't land every Doton tick, flag it
 				if (cast.ticks.length < TCJ_DOTON_TICK_TARGET) {
@@ -75,68 +74,74 @@ export default class Ninjutsu extends Module {
 				if (cast.ticks.length < DOTON_TICK_TARGET) {
 					result.badAoes++
 				}
-			} else if (cast.ticks.reduce((accum, value) => accum + value) < JUSTIFIABLE_DOTON_TICKS) {
+			} else if (cast.ticks.reduce((accum, value) => accum + value, 0) < JUSTIFIABLE_DOTON_TICKS) {
 				// If it's a partial or entirely single-target and it doesn't reach the hit threshold for a good Doton, flag it
 				// Note: Fully single-target Dotons will never reach this threshold
 				result.badStds++
 			}
-		}
+		})
 
 		return result
 	}
 
 	_onComplete() {
-		if (this._hyotonCount > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.HYOTON.icon,
-				content: <Fragment>
-					<Trans id="nin.ninjutsu.suggestions.hyoton.content">Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it&apos;s the weakest of the mudra combinations and should typically never be used in raid content.</Trans>
-				</Fragment>,
-				severity: SEVERITY.MINOR,
-				why: <Fragment>
-					<Plural
-						id="nin.ninjutsu.suggestions.hyoton.why"
-						value={this._hyotonCount}
-						one="You cast Hyoton # time."
-						other="You cast Hyoton # times."/>
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HYOTON.icon,
+			content: <Fragment>
+				<Trans id="nin.ninjutsu.suggestions.hyoton.content">Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.</Trans>
+			</Fragment>,
+			tiers: {
+				1: SEVERITY.MINOR, // Probably a fat finger
+				2: SEVERITY.MEDIUM, // Probably deliberate
+			},
+			value: this._hyotonCount,
+			why: <Fragment>
+				<Plural
+					id="nin.ninjutsu.suggestions.hyoton.why"
+					value={this._hyotonCount}
+					one="You cast Hyoton # time."
+					other="You cast Hyoton # times."/>
+			</Fragment>,
+		}))
 
-		if (this._rabbitCount > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.RABBIT_MEDIUM.icon,
-				content: <Fragment>
-					<Trans id="nin.ninjutsu.suggestions.rabbit.content">Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.</Trans>
-				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Plural
-						id="nin.ninjutsu.suggestions.rabbit.why"
-						value={this._rabbitCount}
-						one="You cast Rabbit Medium # time."
-						other="You cast Rabbit Medium # times."/>
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.RABBIT_MEDIUM.icon,
+			content: <Fragment>
+				<Trans id="nin.ninjutsu.suggestions.rabbit.content">Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.</Trans>
+			</Fragment>,
+			tiers: {
+				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
+				3: SEVERITY.MAJOR, // Holy shit get better internet
+			},
+			value: this._rabbitCount,
+			why: <Fragment>
+				<Plural
+					id="nin.ninjutsu.suggestions.rabbit.why"
+					value={this._rabbitCount}
+					one="You cast Rabbit Medium # time."
+					other="You cast Rabbit Medium # times."/>
+			</Fragment>,
+		}))
 
 		const {badTcjs, badAoes, badStds} = this._appraiseDotonCasts()
-		if (badTcjs > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DOTON.icon,
-				content: <Fragment>
-					<Trans id="nin.ninjutsu.suggestions.tcj-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you&apos;re up against multiple targets. On a single target that&apos;s about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.</Trans>
-				</Fragment>,
-				severity: SEVERITY.MINOR,
-				why: <Fragment>
-					<Plural
-						id="nin.ninjutsu.suggestions.tcj-doton.why"
-						value={badTcjs}
-						one="You had # unoptimized Doton cast under Ten Chi Jin."
-						other="You had # unoptimized Doton casts under Ten Chi Jin."/>
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.DOTON.icon,
+			content: <Fragment>
+				<Trans id="nin.ninjutsu.suggestions.tcj-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you're up against multiple targets. On a single target that's about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.</Trans>
+			</Fragment>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+			},
+			value: badTcjs,
+			why: <Fragment>
+				<Plural
+					id="nin.ninjutsu.suggestions.tcj-doton.why"
+					value={badTcjs}
+					one="You had # unoptimized Doton cast under Ten Chi Jin."
+					other="You had # unoptimized Doton casts under Ten Chi Jin."/>
+			</Fragment>,
+		}))
 
 		if (badAoes > 0) {
 			this.suggestions.add(new Suggestion({
