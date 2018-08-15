@@ -229,4 +229,32 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 	},
+
+	// -----
+	// Turret attacks
+	// -----
+
+	VOLLEY_FIRE: { // Rook auto attacks
+		id: 2891,
+		name: 'Volley Fire',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
+
+	CHARGED_VOLLEY_FIRE: {
+		id: 3588,
+		name: 'Charged Volley Fire',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
+
+	AETHER_MORTAR: { // Bishop auto attacks
+		id: 2892,
+		name: 'Aether Mortar',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
+
+	CHARGED_AETHER_MORTAR: {
+		id: 3589,
+		name: 'Charged Aether Mortar',
+		icon: 'https://secure.xivdb.com/img/game/000000/000405.png',
+	},
 }

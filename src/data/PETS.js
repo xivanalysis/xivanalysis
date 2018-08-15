@@ -1,7 +1,5 @@
 import {addExtraIndex} from 'utilities'
 
-// TODO: MCH pets
-// TODO: SCH pets
 // IDs aren't real IDs per se. Just fudging with summon action IDs and stuff
 const PETS = {
 	// SCH
@@ -44,6 +42,17 @@ const PETS = {
 	DEMI_BAHAMUT: {
 		id: 7427,
 		name: 'Demi-Bahamut',
+	},
+
+	// MCH
+	ROOK_AUTOTURRET: {
+		id: 2864,
+		name: 'Rook Autoturret',
+	},
+
+	BISHOP_AUTOTURRET: {
+		id: 2865,
+		name: 'Bishop Autoturret',
 	},
 }
 
