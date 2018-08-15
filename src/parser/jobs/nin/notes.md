@@ -2,8 +2,9 @@
 
 ### Ninjutsu
 - [x] Hyoton and Rabbit Medium casts (Ninjutsu.js)
+- [x] Single-target Dotons outside of TCJ (Ninjutsu.js)
 - [x] Huton uptime (Combos.js)
-- [ ] Single-target Dotons outside of TCJ
+- [x] Kassatsu use and misuse (Kassatsu.js)
 - [ ] Using Ninjutsu on cooldown
 
 ### Ninki
