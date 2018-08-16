@@ -62,7 +62,7 @@ export default class BlmWeaving extends Weaving {
 				}
 			}
 
-			//allow single weave under fast B3/F3 and all a double weave with the OGCD exceptions
+			//allow single weave under fast B3/F3 and allow a double weave with the OGCD exceptions
 			if ((weave.gcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._UI3) || (weave.gcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._AF3)) {
 				if (weaveCount === 1) {
 					return false
