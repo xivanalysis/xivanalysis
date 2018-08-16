@@ -25,4 +25,11 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/013000/013017.png',
 		duration: 10,
 	},
+
+	TURRET_RESET: {
+		id: 1251,
+		name: 'Turret Reset',
+		icon: 'https://secure.xivdb.com/img/game/013000/013018.png',
+		duration: 30,
+	},
 }
