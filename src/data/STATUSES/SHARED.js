@@ -23,6 +23,12 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/015000/015786.png',
 	},
 
+	BLUNT_RESISTANCE_DOWN: {
+		id: 821,
+		name: 'Blunt Resistance Down',
+		icon: 'https://secure.xivdb.com/img/game/015000/015064.png',
+	},
+
 	WELL_FED: {
 		id: 48,
 		name: 'Well Fed',
