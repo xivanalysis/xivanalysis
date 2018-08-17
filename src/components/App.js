@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
-import {Switch, Route} from 'react-router-dom'
+import {Switch, Route, withRouter} from 'react-router-dom'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
@@ -15,12 +15,10 @@ import 'semantic-ui-css/semantic.min.css'
 import './App.css'
 
 class App extends Component {
-	static contextTypes = {
-		router: PropTypes.shape({
-			history: PropTypes.shape({
-				location: PropTypes.object.isRequired,
-				listen: PropTypes.func.isRequired,
-			}).isRequired,
+	static propTypes = {
+		history: PropTypes.shape({
+			location: PropTypes.object.isRequired,
+			listen: PropTypes.func.isRequired,
 		}).isRequired,
 	}
 
@@ -28,7 +26,7 @@ class App extends Component {
 
 	componentDidMount() {
 		// Set up a history listener
-		const history = this.context.router.history
+		const {history} = this.props
 		this._locationDidChange(history.location)
 		this._unlisten = history.listen(this._locationDidChange)
 	}
@@ -59,4 +57,4 @@ class App extends Component {
 	}
 }
 
-export default App
+export default withRouter(App)
