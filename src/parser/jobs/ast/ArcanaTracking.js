@@ -77,17 +77,37 @@ export default class ArcanaTracking extends Module {
 	}
 
 	_onBuff(event) {
-		if (ARCANA.includes(event.ability.guid)) {
-			console.log(event)
+		if (!ARCANA.includes(event.ability.guid)) {
+			return
 		}
+
+		// console.log(event)
+		const rrAbility = event.rrAbility || null
+
+		if (rrAbility) {
+			this._cardStateLog[this._cardStateLog.length - 2].rrAbility = rrAbility
+		}
+
 	}
 
 	_onRoyalRoadOff(event) {
-		if (ROYAL_ROAD_STATES.includes(event.ability.guid)) {
-			console.log(event)
+		if (!ROYAL_ROAD_STATES.includes(event.ability.guid)) {
+			return
 		}
 
+		const isAfterCard = DRAWN_ARCANA_USE.includes(_.last(this._cardStateLog).lastEvent.ability.guid) || HELD_ARCANA_USE.includes(_.last(this._cardStateLog).lastEvent.ability.guid)
+
+		if (!isAfterCard || _.last(this._cardStateLog).lastEvent.timestamp !== event.timestamp) {
+			console.log(event)
+			const cardStateItem = {..._.last(this._cardStateLog)}
+
+			cardStateItem.lastEvent = event
+			cardStateItem.rrAbility = null
+
+			this._cardStateLog.push(cardStateItem)
+		}
 	}
+
 	_onCast(event) {
 
 		// console.log(event)
@@ -97,18 +117,17 @@ export default class ArcanaTracking extends Module {
 		// Piecing together what they have on prepull
 		if (this._cardStateLog.length === 0) {
 			this._cardStateLog.push(this._initPullState(event))
-
 		}
 
 		const cardStateItem = {..._.last(this._cardStateLog)}
 
 		cardStateItem.lastEvent = event
 
-		// If they used any arcana, consider the rrstate consumed
+		// If they used any arcana, consider the rrAbility consumed
 		if (DRAWN_ARCANA_USE.includes(actionId) || HELD_ARCANA_USE.includes(actionId)) {
-			// const rrModifier = cardStateItem.rrState
-			console.log(event)
-			cardStateItem.rrState = null
+			// const rrModifier = cardStateItem.rrAbility
+			// console.log(event)
+			cardStateItem.rrAbility = null
 		}
 
 		if (actionId === ACTIONS.ROYAL_ROAD.id) {
@@ -124,6 +143,10 @@ export default class ArcanaTracking extends Module {
 			this._onSleeveDraw(event)
 		}
 
+		if (actionId === ACTIONS.EMPTY_ROAD.id) {
+			//
+		}
+
 		if (MINOR_ARCANA_USE.includes(actionId)) {
 			this._onMinorArcanaUse(event)
 		}
@@ -137,7 +160,7 @@ export default class ArcanaTracking extends Module {
 
 		const pullStateItem = {
 			lastEvent: null,
-			rrState: null,
+			rrAbility: null,
 			drawState: null,
 			spreadState: null,
 			minorState: null,
@@ -145,7 +168,7 @@ export default class ArcanaTracking extends Module {
 
 		if (EXPANDED_ARCANA_USE.includes(actionId)) {
 			// They had an expanded RR first!
-			pullStateItem.rrState = 'EXPANDED'
+			pullStateItem.rrAbility = 'EXPANDED'
 
 		}
 
@@ -215,7 +238,7 @@ export default class ArcanaTracking extends Module {
 
 	_onComplete() {
 		// console.log(this._minorArcanaHistory)
-		// console.log(this._cardStateLog)
+		console.log(this._cardStateLog)
 
 		const sleeveUses = this._minorArcanaHistory.filter(artifact => artifact.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
 
