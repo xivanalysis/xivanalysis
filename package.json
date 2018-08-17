@@ -77,7 +77,8 @@
     "format": "minimal"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
+    "babel-core": "7.0.0-bridge.0",
+    "react-scripts/fsevents": "^1.2.4"
   },
   "devDependencies": {
     "@lingui/babel-plugin-transform-js": "^2.3.0",
