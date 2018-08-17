@@ -1,6 +1,6 @@
 // This is all right from /PatchList - should be easy to sync Eventually™
 
-export default {
+const PATCHES = {
 	// Not going to support pre-4.0 at all
 	'4.0': {
 		date: 1497517200,
@@ -42,3 +42,13 @@ export default {
 		date: 1533635005,
 	},
 }
+
+export default PATCHES
+
+// This is intentionally in newest->oldest order
+const sortedPatches = Object.keys(PATCHES).sort(
+	(a, b) => PATCHES[b].date - PATCHES[a].date
+)
+
+export const getPatch = (timestamp = (new Date()).getTime()) =>
+	sortedPatches.find(key => PATCHES[key].date < timestamp)

@@ -28,7 +28,7 @@
   "blm.rotation-watchdog.title": "blm.rotation-watchdog.title",
   "blm.triple.title": "blm.triple.title",
   "core.about.contributors": "Contributors:",
-  "core.about.patch-unsupported.description": "This report was logged during a patch that is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.",
+  "core.about.patch-unsupported.description": "This report was logged during patch {0}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.",
   "core.about.patch-unsupported.title": "Report patch unsupported",
   "core.about.supported-patches": "Supported Patches:",
   "core.about.title": "core.about.title",

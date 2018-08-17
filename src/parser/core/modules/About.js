@@ -4,7 +4,7 @@ import React, {Fragment} from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
-import PATCHES from 'data/PATCHES'
+import PATCHES, {getPatch} from 'data/PATCHES'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 import styles from './About.module.css'
@@ -47,6 +47,9 @@ export default class About extends Module {
 			</Message>
 		}
 
+		// The report timestamp is relative to the report timestamp, and in ms. Convert.
+		const parseDate = Math.round((this.parser.report.start + this.parser.fight.start_time) / 1000)
+
 		// Work out the supported patch range (and if we're in it)
 		let supported = false
 		const {from, to = from} = this.supportedPatches
@@ -62,9 +65,6 @@ export default class About extends Module {
 			const fromDate = PATCHES[from].date
 			const toDate = nextPatch.date
 
-			// The report timestamp is relative to the report timestamp, and in ms. Convert.
-			const parseDate = Math.round((this.parser.report.start + this.parser.fight.start_time) / 1000)
-
 			supported = _.inRange(parseDate, fromDate, toDate)
 		}
 
@@ -78,7 +78,7 @@ export default class About extends Module {
 							<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
 						</Message.Header>
 						<Trans id="core.about.patch-unsupported.description">
-							This report was logged during a patch that is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+							This report was logged during patch {getPatch(parseDate)}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
 						</Trans>
 					</Message.Content>
 				</Message>}
