@@ -5,7 +5,7 @@ import {Switch, Route} from 'react-router-dom'
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
 import Analyse from './Analyse'
-import ErrorBoundry from './ErrorBoundry'
+import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
 import Header from './Header'
 import Home from './Home'
@@ -47,14 +47,14 @@ class App extends Component {
 		return <Fragment>
 			<Header/>
 
-			<ErrorBoundry>
+			<ErrorBoundary>
 				<Switch>
 					<Route exact path="/" component={Home}/>
 					<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
 					<Route path="/find/:code/:fight?" component={Find}/>
 					<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 				</Switch>
-			</ErrorBoundry>
+			</ErrorBoundary>
 		</Fragment>
 	}
 }

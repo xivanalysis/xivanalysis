@@ -8,7 +8,7 @@ import {GlobalError} from 'errors'
 import ErrorMessage from './ui/ErrorMessage'
 
 // Main component
-class ErrorBoundry extends Component {
+class ErrorBoundary extends Component {
 	static propTypes = {
 		children: PropTypes.node,
 		globalError: PropTypes.instanceOf(GlobalError),
@@ -44,4 +44,4 @@ const mapStateToProps = state => ({
 	globalError: state.globalError,
 })
 
-export default connect(mapStateToProps)(ErrorBoundry)
+export default connect(mapStateToProps)(ErrorBoundary)
