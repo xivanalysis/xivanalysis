@@ -45,4 +45,18 @@ export default {
 		icon: 'https://secure.xivdb.com/img/game/012000/012902.png',
 		duration: 15,
 	},
+
+	DOTON: {
+		id: 501,
+		name: 'Doton',
+		icon: 'https://secure.xivdb.com/img/game/012000/012904.png',
+		duration: 24,
+	},
+
+	TEN_CHI_JIN: {
+		id: 1186,
+		name: 'Ten Chi Jin',
+		icon: 'https://secure.xivdb.com/img/game/012000/012911.png',
+		duration: 10,
+	},
 }
