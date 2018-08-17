@@ -32,7 +32,10 @@ export default class About extends CoreAbout {
 			</Message.Content>
 		</Message>
 	</Fragment>
-	supportedPatch = '4.35'
+	supportedPatches = {
+		from: '4.05',
+		to: '4.36',
+	}
 	contributors = [
 		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
 	]

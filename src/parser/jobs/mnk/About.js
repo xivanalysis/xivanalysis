@@ -14,5 +14,8 @@ export default class About extends CoreAbout {
 			</Message.Content>
 		</Message>
 	</Fragment>
-	supportedPatch = '4.35'
+	supportedPatches = {
+		from: '4.2',
+		to: '4.36',
+	}
 }
