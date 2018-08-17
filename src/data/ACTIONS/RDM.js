@@ -7,27 +7,25 @@ export default {
 		name: 'Embolden',
 		icon: 'https://secure.xivdb.com/img/game/003000/003218.png',
 		cooldown: 120,
-		preservesCombo: true,
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
 		icon: 'https://secure.xivdb.com/img/game/003000/003214.png',
 		cooldown: 35,
-		preservesCombo: true,
 	},
 	MANAFICATION: {
 		id: 7521,
 		name: 'Manafication',
 		icon: 'https://secure.xivdb.com/img/game/003000/003219.png',
 		cooldown: 120,
+		breaksCombo: true,
 	},
 	CONTRE_SIXTE: {
 		id: 7519,
 		name: 'Contre Sixte',
 		icon: 'https://secure.xivdb.com/img/game/003000/003217.png',
 		cooldown: 45,
-		preservesCombo: true,
 		potency: 300, //Note 2nd enemy takes 10% less, 3rd 20%, 4th 30%, 5th 40%, and beyond 50%
 	},
 	DISPLACEMENT: {
@@ -35,7 +33,6 @@ export default {
 		name: 'Displacement',
 		icon: 'https://secure.xivdb.com/img/game/003000/003211.png',
 		cooldown: 35,
-		preservesCombo: true,
 		potency: 130,
 	},
 	CORPS_A_CORPS: {
@@ -43,7 +40,6 @@ export default {
 		name: 'Corps-a-corps',
 		icon: 'https://secure.xivdb.com/img/game/003000/003204.png',
 		cooldown: 40,
-		preservesCombo: true,
 		potency: 130,
 	},
 	FLECHE: {
@@ -51,7 +47,6 @@ export default {
 		name: 'Fleche',
 		icon: 'https://secure.xivdb.com/img/game/003000/003212.png',
 		cooldown: 25,
-		preservesCombo: true,
 		potency: 420,
 	},
 
@@ -65,6 +60,9 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 130,
+		combo: {
+			start: true,
+		},
 	},
 	ENCHANTED_RIPOSTE: {
 		id: 7527,
@@ -73,6 +71,9 @@ export default {
 		onGcd: true,
 		cooldown: 1.5,
 		potency: 210, //consumes 30 white, 30 black
+		combo: {
+			start: true,
+		},
 	},
 	ZWERCHHAU: {
 		id: 7512,
@@ -132,6 +133,7 @@ export default {
 		combo: {
 			from: 7529,
 			potency: 550,
+			end: true,
 		},
 	},
 	VERHOLY: {
@@ -144,6 +146,7 @@ export default {
 		combo: {
 			from: 7529,
 			potency: 550,
+			end: true,
 		},
 	},
 	JOLT: {

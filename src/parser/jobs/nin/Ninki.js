@@ -1,11 +1,10 @@
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-//import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Constants
 const MAX_NINKI = 100
@@ -91,44 +90,38 @@ export default class Ninki extends Module {
 	}
 
 	_onComplete() {
-		if (this._wastedNinki >= 12) {
-			const severity = this._wastedNinki >= 24 ? SEVERITY.MEDIUM : SEVERITY.MINOR
-			const why = [
-				this._wasteBySource.mug > 0 && `${this._wasteBySource.mug} to Mug`,
-				this._wasteBySource.auto > 0 && `${this._wasteBySource.auto} to auto attacks`,
-			].filter(Boolean)
+		this.suggestions.add(new TieredSuggestion({
+			icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
+			content: <Fragment>
+				<Trans id="nin.ninki.suggestions.waste.content">Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.</Trans>
+			</Fragment>,
+			tiers: {
+				12: SEVERITY.MINOR,
+				24: SEVERITY.MEDIUM,
+			},
+			value: this._wastedNinki,
+			why: <Fragment>
+				<Trans id="nin.ninki.suggestions.waste.why">Overcapping caused you to lose {this._wastedNinki} Ninki over the fight.</Trans>
+			</Fragment>,
+		}))
 
-			let suffix = ''
-			if (why.length === 1) {
-				suffix = why[0].replace(/^\d+ /, '')
-			} else {
-				suffix = '- ' + why.join(' and ')
-			}
-
-			this.suggestions.add(new Suggestion({
-				icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
-				content: <Fragment>
-					Avoid using Mug when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
-				</Fragment>,
-				severity: severity,
-				why: <Fragment>
-					Overcapping caused you to lose {this._wastedNinki} Ninki over the fight {suffix}.
-				</Fragment>,
-			}))
-		}
-
-		if (this._erroneousFrogs > 0) {
-			const severity = this._erroneousFrogs > 2 ? SEVERITY.MEDIUM : SEVERITY.MINOR
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.HELLFROG_MEDIUM.icon,
-				content: <Fragment>
-					Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.
-				</Fragment>,
-				severity: severity,
-				why: <Fragment>
-					You used Hellfrog Medium {this._erroneousFrogs} time{this._erroneousFrogs !== 1 && 's'} when other spenders were available.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HELLFROG_MEDIUM.icon,
+			content: <Fragment>
+				<Trans id="nin.ninki.suggestions.frog.content">Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.</Trans>
+			</Fragment>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+			},
+			value: this._erroneousFrogs,
+			why: <Fragment>
+				<Plural
+					id="nin.ninki.suggestions.frog.why"
+					value={this._erroneousFrogs}
+					one="You used Hellfrog Medium # time when other spenders were available."
+					other="You used Hellfrog Medium # times when other spenders were available."/>
+			</Fragment>,
+		}))
 	}
 }
