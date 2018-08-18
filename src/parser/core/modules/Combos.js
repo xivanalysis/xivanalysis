@@ -17,7 +17,7 @@ export default class Combos extends Module {
 	]
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
-	static suggestionIcon = 'https://secure.xivdb.com/img/game/000000/000405.png'
+	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
 
 	_lastAction = NO_COMBO
 	_lastGcdTime = this.parser.fight.start_time

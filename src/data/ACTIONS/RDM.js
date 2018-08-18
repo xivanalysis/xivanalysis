@@ -5,47 +5,47 @@ export default {
 	EMBOLDEN: {
 		id: 7520,
 		name: 'Embolden',
-		icon: 'https://secure.xivdb.com/img/game/003000/003218.png',
+		icon: 'https://xivapi.com/i/003000/003218.png',
 		cooldown: 120,
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
-		icon: 'https://secure.xivdb.com/img/game/003000/003214.png',
+		icon: 'https://xivapi.com/i/003000/003214.png',
 		cooldown: 35,
 	},
 	MANAFICATION: {
 		id: 7521,
 		name: 'Manafication',
-		icon: 'https://secure.xivdb.com/img/game/003000/003219.png',
+		icon: 'https://xivapi.com/i/003000/003219.png',
 		cooldown: 120,
 		breaksCombo: true,
 	},
 	CONTRE_SIXTE: {
 		id: 7519,
 		name: 'Contre Sixte',
-		icon: 'https://secure.xivdb.com/img/game/003000/003217.png',
+		icon: 'https://xivapi.com/i/003000/003217.png',
 		cooldown: 45,
 		potency: 300, //Note 2nd enemy takes 10% less, 3rd 20%, 4th 30%, 5th 40%, and beyond 50%
 	},
 	DISPLACEMENT: {
 		id: 7515,
 		name: 'Displacement',
-		icon: 'https://secure.xivdb.com/img/game/003000/003211.png',
+		icon: 'https://xivapi.com/i/003000/003211.png',
 		cooldown: 35,
 		potency: 130,
 	},
 	CORPS_A_CORPS: {
 		id: 7506,
 		name: 'Corps-a-corps',
-		icon: 'https://secure.xivdb.com/img/game/003000/003204.png',
+		icon: 'https://xivapi.com/i/003000/003204.png',
 		cooldown: 40,
 		potency: 130,
 	},
 	FLECHE: {
 		id: 7517,
 		name: 'Fleche',
-		icon: 'https://secure.xivdb.com/img/game/003000/003212.png',
+		icon: 'https://xivapi.com/i/003000/003212.png',
 		cooldown: 25,
 		potency: 420,
 	},
@@ -56,7 +56,7 @@ export default {
 	RIPOSTE: {
 		id: 7504,
 		name: 'Riposte',
-		icon: 'https://secure.xivdb.com/img/game/003000/003201.png',
+		icon: 'https://xivapi.com/i/003000/003201.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 130,
@@ -67,7 +67,7 @@ export default {
 	ENCHANTED_RIPOSTE: {
 		id: 7527,
 		name: 'Enchanted Riposte',
-		icon: 'https://secure.xivdb.com/img/game/003000/003225.png',
+		icon: 'https://xivapi.com/i/003000/003225.png',
 		onGcd: true,
 		cooldown: 1.5,
 		potency: 210, //consumes 30 white, 30 black
@@ -78,7 +78,7 @@ export default {
 	ZWERCHHAU: {
 		id: 7512,
 		name: 'Zwerchhau',
-		icon: 'https://secure.xivdb.com/img/game/003000/003210.png',
+		icon: 'https://xivapi.com/i/003000/003210.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 100,
@@ -90,7 +90,7 @@ export default {
 	ENCHANTED_ZWERCHHAU: {
 		id: 7528,
 		name: 'Enchanted Zwerchhau',
-		icon: 'https://secure.xivdb.com/img/game/003000/003226.png',
+		icon: 'https://xivapi.com/i/003000/003226.png',
 		onGcd: true,
 		cooldown: 1.5,
 		potency: 100, //consumes 25 white, 25 black
@@ -102,7 +102,7 @@ export default {
 	REDOUBLEMENT: {
 		id: 7516,
 		name: 'Redoublement',
-		icon: 'https://secure.xivdb.com/img/game/003000/003213.png',
+		icon: 'https://xivapi.com/i/003000/003213.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 100,
@@ -114,7 +114,7 @@ export default {
 	ENCHANTED_REDOUBLEMENT: {
 		id: 7529,
 		name: 'Enchanted Redoublement',
-		icon: 'https://secure.xivdb.com/img/game/003000/003227.png',
+		icon: 'https://xivapi.com/i/003000/003227.png',
 		onGcd: true,
 		cooldown: 2.2,
 		potency: 100, //consumes 25 white, 25 black
@@ -126,7 +126,7 @@ export default {
 	VERFLARE: {
 		id: 7525,
 		name: 'Verflare',
-		icon: 'https://secure.xivdb.com/img/game/003000/003223.png',
+		icon: 'https://xivapi.com/i/003000/003223.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 550, //Gains 21 Black Mana, if Black is lower 100% Verfire ready
@@ -139,7 +139,7 @@ export default {
 	VERHOLY: {
 		id: 7526,
 		name: 'Verholy',
-		icon: 'https://secure.xivdb.com/img/game/003000/003224.png',
+		icon: 'https://xivapi.com/i/003000/003224.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 550, //Gains 21 white, if White is lower 100% Verstone ready
@@ -152,7 +152,7 @@ export default {
 	JOLT: {
 		id: 7503,
 		name: 'Jolt',
-		icon: 'https://secure.xivdb.com/img/game/003000/003202.png',
+		icon: 'https://xivapi.com/i/003000/003202.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 180,
@@ -161,7 +161,7 @@ export default {
 	JOLT_II: {
 		id: 7524,
 		name: 'Jolt II',
-		icon: 'https://secure.xivdb.com/img/game/003000/003220.png',
+		icon: 'https://xivapi.com/i/003000/003220.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -170,7 +170,7 @@ export default {
 	IMPACT: {
 		id: 7522,
 		name: 'Impact',
-		icon: 'https://secure.xivdb.com/img/game/003000/003222.png',
+		icon: 'https://xivapi.com/i/003000/003222.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -179,7 +179,7 @@ export default {
 	VERTHUNDER: {
 		id: 7505,
 		name: 'Verthunder',
-		icon: 'https://secure.xivdb.com/img/game/003000/003203.png',
+		icon: 'https://xivapi.com/i/003000/003203.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
@@ -188,7 +188,7 @@ export default {
 	VERFIRE: {
 		id: 7510,
 		name: 'Verfire',
-		icon: 'https://secure.xivdb.com/img/game/003000/003208.png',
+		icon: 'https://xivapi.com/i/003000/003208.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -197,7 +197,7 @@ export default {
 	VERAREO: {
 		id: 7507,
 		name: 'Verareo',
-		icon: 'https://secure.xivdb.com/img/game/003000/003205.png',
+		icon: 'https://xivapi.com/i/003000/003205.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
@@ -206,7 +206,7 @@ export default {
 	VERSTONE: {
 		id: 7511,
 		name: 'Verstone',
-		icon: 'https://secure.xivdb.com/img/game/003000/003209.png',
+		icon: 'https://xivapi.com/i/003000/003209.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -215,7 +215,7 @@ export default {
 	TETHER: {
 		id: 7508,
 		name: 'Tether',
-		icon: 'https://secure.xivdb.com/img/game/003000/003206.png',
+		icon: 'https://xivapi.com/i/003000/003206.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2.5,
@@ -223,7 +223,7 @@ export default {
 	SCATTER: {
 		id: 7509,
 		name: 'Scatter',
-		icon: 'https://secure.xivdb.com/img/game/003000/003207.png',
+		icon: 'https://xivapi.com/i/003000/003207.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -232,7 +232,7 @@ export default {
 	MOULINET: {
 		id: 7513,
 		name: 'Moulinet',
-		icon: 'https://secure.xivdb.com/img/game/003000/003215.png',
+		icon: 'https://xivapi.com/i/003000/003215.png',
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 60,
@@ -240,7 +240,7 @@ export default {
 	ENCHANTED_MOULINET: {
 		id: 7530,
 		name: 'Enchanted Moulinet',
-		icon: 'https://secure.xivdb.com/img/game/003000/003228.png',
+		icon: 'https://xivapi.com/i/003000/003228.png',
 		onGcd: true,
 		cooldown: 1.5,
 		potency: 200, //Costs 30 White and Black
@@ -248,7 +248,7 @@ export default {
 	VERCURE: {
 		id: 7514,
 		name: 'Vercure',
-		icon: 'https://secure.xivdb.com/img/game/003000/003216.png',
+		icon: 'https://xivapi.com/i/003000/003216.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
@@ -257,7 +257,7 @@ export default {
 	VERRAISE: {
 		id: 7523,
 		name: 'Verraise',
-		icon: 'https://secure.xivdb.com/img/game/003000/003221.png',
+		icon: 'https://xivapi.com/i/003000/003221.png',
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 10,

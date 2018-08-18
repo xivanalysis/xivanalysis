@@ -50,7 +50,7 @@ export default class Potions extends Module {
 		if (this._usingShortPotion) {
 			this.suggestions.add(new Suggestion({
 				// TODO: Would be nice to be able to suggest the correct pot for their current class, inc. icon...
-				icon: 'https://secure.xivdb.com/img/game_local/2/22450.jpg',
+				icon: 'https://xivapi.com/i/020000/020704.png',
 				content: <Trans id="core.potions.content">
 					It looks like you used a pre-Stormblood potion. Openers and rotations
 					generally assume the use of infusions, which last for <em>twice</em>

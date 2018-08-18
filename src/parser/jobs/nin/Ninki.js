@@ -91,7 +91,7 @@ export default class Ninki extends Module {
 
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
+			icon: 'https://xivapi.com/i/005000/005411.png',
 			content: <Fragment>
 				<Trans id="nin.ninki.suggestions.waste.content">Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.</Trans>
 			</Fragment>,
