@@ -83,7 +83,7 @@ export class XIVDBTooltipProvider {
 				// doesn't know what to do with the URLSearchParams polyfill.
 				body: params.toString(),
 
-			}).then(resp => resp.json()).then(data => {
+			}).then(resp => resp.json()).catch(() => ({})).then(data => {
 				if (! data || typeof data !== 'object') {
 					console.log('Invalid Response from Tooltip Provider', data)
 					data = {}
@@ -167,6 +167,7 @@ export class DbLink extends PureComponent {
 
 		type: PropTypes.string.isRequired,
 		id: PropTypes.number.isRequired,
+		name: PropTypes.string,
 		children: PropTypes.node,
 
 		showIcon: PropTypes.bool.isRequired,
@@ -214,7 +215,7 @@ export class DbLink extends PureComponent {
 	}
 
 	render() {
-		const {type, id, children, showTooltip, showIcon, useColors, darkenColors} = this.props
+		const {type, id, name, children, showTooltip, showIcon, useColors, darkenColors} = this.props
 		const {loading, data} = this.state
 
 		if (loading) {
@@ -224,12 +225,13 @@ export class DbLink extends PureComponent {
 			</a>
 		}
 
-		const item = data.data
-		if (!item.name) {
+		if (!data) {
 			return <a href={`https://xivdb.com/${type}/${id}`}>
-				{children || <Trans id="core.dblink.not-found">Unable to Load</Trans>}
+				{children || <Trans id="core.dblink.not-found">{name}</Trans>}
 			</a>
 		}
+
+		const item = data.data
 
 		const color = useColors && item.color
 		const colorClass = color && `xivdb-rarity-${color}${darkenColors && '-darken'}`
@@ -239,8 +241,8 @@ export class DbLink extends PureComponent {
 			href={`https://xivdb.com/${type}/${id}`}
 			data-xivdb-key
 		>
-			{showIcon && <img src={data.data.icon} alt="" />}
-			{children || data.data.name}
+			{showIcon && <img src={item.icon} alt="" />}
+			{children || item.name}
 		</a>
 
 		if (!showTooltip) {
