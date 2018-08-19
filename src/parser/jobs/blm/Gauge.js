@@ -16,31 +16,16 @@ const GAUGE_EVENTS = [
 
 export const BLM_GAUGE_EVENT = Symbol('blmgauge')
 
-/*
-const AF1_ACTIONS = [
-	ACTIONS.FIRE_I.id,
-	ACTIONS.FIRE_II.id,
-]
-const UI1_ACTIONS = [
-	ACTIONS.BLIZZARD_I.id,
-	ACTIONS.BLIZZARD_II.id,
-	ACTIONS.FREEZE.id,
-]
-const AF_ACTIONS = [
-	ACTIONS.FIRE_I.id,
-	ACTIONS.FIRE_II.id,
-	ACTIONS.FIRE_III.id,
-	ACTIONS.FIRE_IV.id,
-]
-*/
-
 const ENOCHIAN_DURATION_REQUIRED = 30000
 const ASTRAL_UMBRAL_DURATION = 13000
+const MAX_BUFF_STACKS = 3
+const FLARE_MAX_HEART_CONSUMPTION = 3
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static i18n_id = i18nMark('blm.gauge.title')
 	static dependencies = [
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
 	]
 
@@ -60,23 +45,27 @@ export default class Gauge extends Module {
 	_currentTimestamp = 0
 
 	_toAdd = []
+	_lastAdded = null
+
+	gaugeValuesChanged(lastGaugeEvent) {
+		if (!lastGaugeEvent) {
+			return true
+		}
+		if (lastGaugeEvent.astralFire !== this._astralFireStacks ||
+			lastGaugeEvent.umbralIce !== this._umbralIceStacks ||
+			lastGaugeEvent.umbralHearts !== this._umbralHeartStacks ||
+			lastGaugeEvent.enochian !== this._hasEnochian ||
+			lastGaugeEvent.polyglot !== this._hasPolyglot
+		) {
+			return true
+		}
+		return false
+	}
 
 	addEvent() {
-		const lastAdded = this._toAdd[this._toAdd.length - 1]
-		if (!lastAdded) {
-			return
-		}
+		const lastAdded = this._toAdd.length > 0 ? this._toAdd[this._toAdd.length - 1] : null
 
-		if (lastAdded.astralFire !== this._astralFireStacks ||
-			lastAdded.umbralIce !== this._umbralIceStacks ||
-			lastAdded.umbralHearts !== this._umbralHeartStacks ||
-			lastAdded.enochian !== this._hasEnochian ||
-			lastAdded.polyglot !== this._hasPolyglot
-		) {
-			if (lastAdded.insertAfter === this._normalizeIndex) {
-				this._toAdd.pop()
-			}
-
+		if (this.gaugeValuesChanged(lastAdded)) {
 			this._toAdd.push({
 				type: BLM_GAUGE_EVENT,
 				timestamp: this._currentTimestamp,
@@ -86,31 +75,21 @@ export default class Gauge extends Module {
 				umbralHearts: this._umbralHeartStacks,
 				enochian: this._hasEnochian,
 				polyglot: this._hasPolyglot,
+				lastGaugeEvent: this._lastAdded,
 			})
+			this._lastAdded = this._toAdd[this._toAdd.length - 1]
 		}
 	}
 
 	constructor(...args) {
 		super(...args)
-		/*
-		this.addHook('begincast', {by: 'player'}, this._onBegin)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		*/
 		this.addHook('complete', this._onComplete)
 	}
 
 	normalise(events) {
-		this._toAdd.push({
-			type: BLM_GAUGE_EVENT,
-			timestamp: events[0].timestamp,
-			insertAfter: this._normalizeIndex,
-			astralFire: this._astralFireStacks,
-			umbralIce: this._umbralIceStacks,
-			umbralHearts: this._umbralHeartStacks,
-			enochian: this._hasEnochian,
-			polyglot: this._hasPolyglot,
-		})
+		// Add initial event
+		this._currentTimestamp = events[0].timestamp
+		this.addEvent()
 
 		for (this._normalizeIndex = 0; this._normalizeIndex < events.length; this._normalizeIndex++) {
 			const event = events[this._normalizeIndex]
@@ -136,7 +115,7 @@ export default class Gauge extends Module {
 			}
 		}
 
-		this._toAdd.forEach((i) => console.log(i))
+		//this._toAdd.forEach((i) => console.log(i))
 
 		// Add all the events we gathered up in, in order
 		let offset = 0
@@ -191,7 +170,7 @@ export default class Gauge extends Module {
 			this.onAstralUmbralTimeout()
 		} else {
 			this._astralUmbralStackTimer = event.timestamp
-			this._umbralIceStacks = Math.min(this._umbralIceStacks + 1, 3)
+			this._umbralIceStacks = Math.min(this._umbralIceStacks + 1, MAX_BUFF_STACKS)
 			this.addEvent()
 		}
 	}
@@ -201,7 +180,7 @@ export default class Gauge extends Module {
 			this.onAstralUmbralTimeout()
 		} else {
 			this._astralUmbralStackTimer = event.timestamp
-			this._astralFireStacks = Math.min(this._astralFireStacks + 1, 3)
+			this._astralFireStacks = Math.min(this._astralFireStacks + 1, MAX_BUFF_STACKS)
 			this.addEvent()
 		}
 	}
@@ -242,7 +221,9 @@ export default class Gauge extends Module {
 	}
 
 	updateStackTimers(event) {
-		if (event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION) {
+		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
+			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
+		) {
 			this.onAstralUmbralTimeout()
 		}
 
@@ -286,7 +267,7 @@ export default class Gauge extends Module {
 			this.onGainMaxAstralFireStacks(event)
 			break
 		case ACTIONS.FLARE.id:
-			this.tryConsumeUmbralHearts(event, 3, true)
+			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainMaxAstralFireStacks(event)
 			break
 		case ACTIONS.FOUL.id:
