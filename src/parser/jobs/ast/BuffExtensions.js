@@ -169,7 +169,7 @@ export default class BuffExtensions extends Module {
 			return a.event.timestamp - b.event.timestamp
 		})
 
-		console.log(this._dilationUses)
+		// console.log(this._dilationUses)
 		// iteration through dilation data
 		for (const dilation of this._dilationUses) {
 			// const actionID = dilation.event.ability.guid
