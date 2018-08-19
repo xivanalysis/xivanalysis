@@ -10,6 +10,7 @@ import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {BLM_GAUGE_EVENT} from './Gauge'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
@@ -27,7 +28,7 @@ export default class RotationWatchdog extends Module {
 	static title = 'Rotation Issues'
 	static dependencies = [
 		'suggestions',
-		'gauge',
+		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'invuln',
 		'combatants',
 	]
@@ -36,14 +37,14 @@ export default class RotationWatchdog extends Module {
 	_history = []
 
 	//check for buffs
-	_UH = 0
-	_AF = 0
+	_umbralHeartStacks = 0
+	_astralFireStacks = 0
 	_MP = 0
 	_lockedBuffs = false
 	_lastStop = false
 	_first = true
 	//check for UI ending with T3 things
-	_UI = 0
+	_umbralIceStacks = 0
 	_T3 = false
 	_T3inUIFlag = false
 	//counter for suggestions
@@ -53,12 +54,21 @@ export default class RotationWatchdog extends Module {
 	_missedF4sCauseEndingInT3 = 0
 	_wrongT3 = 0
 
+	_gaugeState = {}
+
 	constructor(...args) {
 		super(...args)
 		this.addHook('begincast', {by: 'player'}, this._onBegin)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('init', this._onFirst)
 		this.addHook('complete', this._onComplete)
+		this.addHook(BLM_GAUGE_EVENT, this._onGaugeChange)
+	}
+
+	_onGaugeChange(event) {
+		this._gaugeState.astralFire = event.astralFire
+		this._gaugeState.umbralIce = event.umbralIce
+		this._gaugeState.umbralHearts = event.umbralHearts
 	}
 
 	//snapshot buffs and UH at the beginning of your recording
@@ -66,8 +76,8 @@ export default class RotationWatchdog extends Module {
 		const actionId = event.ability.guid
 
 		//get UI status for to check for T3
-		this._UI = this.gauge.getUI()
-		this._AF = this.gauge.getAF()
+		this._umbralIceStacks = this._gaugeState.umbralIce
+		this._astralFireStacks = this._gaugeState.astralFire
 		if (actionId === ACTIONS.FIRE_III.id) {
 			this._lockingBuffs()
 		} else { this._T3 = false }
@@ -80,7 +90,7 @@ export default class RotationWatchdog extends Module {
 		const actionId = event.ability.guid
 
 		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
-		if (actionId === ACTIONS.FIRE_III.id && this._UI === AFUIBUFFMAXSTACK) {
+		if (actionId === ACTIONS.FIRE_III.id && this._umbralIceStacks === AFUIBUFFMAXSTACK) {
 			if (this._T3) {
 				this._UIEndingInT3 ++
 				this._T3inUIFlag = true
@@ -242,7 +252,7 @@ export default class RotationWatchdog extends Module {
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				if (this._rotation.casts.length > MIN_ROTATION_LENGTH) { this._history.push(this._rotation) }
-				if (this._lastStop && this._UH > 0 && this._rotation.missingCount === 2) {
+				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
 				}
@@ -259,7 +269,7 @@ export default class RotationWatchdog extends Module {
 	}
 
 	_getMissingFire4Count(count, hasConvert) {
-		const NotEnoughUH = this._UH  < 2
+		const NotEnoughUH = this._umbralHeartStacks  < 2
 		const expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
 		const missing = expected - count
 		return {missing, expected}
@@ -276,7 +286,7 @@ export default class RotationWatchdog extends Module {
 
 	_lockingBuffs() {
 		if (this._inRotation && !this._lockedBuffs) {
-			this._UH = this.gauge.getUH()
+			this._umbralHeartStacks = this._gaugeState.umbralHearts
 			this._lockedBuffs = true
 		}
 	}

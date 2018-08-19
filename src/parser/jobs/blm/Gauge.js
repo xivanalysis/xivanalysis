@@ -244,6 +244,7 @@ export default class Gauge extends Module {
 			if (!this._hasEnochian) {
 				this._hasEnochian = true
 				this._enochianTimer = event.timestamp
+				this.addEvent()
 			}
 			break
 		case ACTIONS.BLIZZARD_I.id:
@@ -256,6 +257,7 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.BLIZZARD_IV.id:
 			this._umbralHeartStacks = 3
+			this.addEvent()
 			break
 		case ACTIONS.FIRE_I.id:
 		case ACTIONS.FIRE_II.id:
@@ -330,18 +332,6 @@ export default class Gauge extends Module {
 				</Trans>,
 			}))
 		}
-	}
-
-	getAF() {
-		return this._astralFireStacks
-	}
-
-	getUI() {
-		return this._umbralIceStacks
-	}
-
-	getUH() {
-		return this._umbralHeartStacks
 	}
 }
 
