@@ -18,7 +18,8 @@ export const BLM_GAUGE_EVENT = Symbol('blmgauge')
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
 const ASTRAL_UMBRAL_DURATION = 13000
-const MAX_BUFF_STACKS = 3
+const MAX_ASTRAL_UMBRAL_STACKS = 3
+const MAX_UMBRAL_HEART_STACKS = 3
 const FLARE_MAX_HEART_CONSUMPTION = 3
 
 export default class Gauge extends Module {
@@ -115,8 +116,6 @@ export default class Gauge extends Module {
 			}
 		}
 
-		//this._toAdd.forEach((i) => console.log(i))
-
 		// Add all the events we gathered up in, in order
 		let offset = 0
 		this._toAdd.sort((a, b) => a.insertAfter - b.insertAfter).forEach(event => {
@@ -170,7 +169,7 @@ export default class Gauge extends Module {
 			this.onAstralUmbralTimeout()
 		} else {
 			this._astralUmbralStackTimer = event.timestamp
-			this._umbralIceStacks = Math.min(this._umbralIceStacks + 1, MAX_BUFF_STACKS)
+			this._umbralIceStacks = Math.min(this._umbralIceStacks + 1, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
 	}
@@ -180,21 +179,21 @@ export default class Gauge extends Module {
 			this.onAstralUmbralTimeout()
 		} else {
 			this._astralUmbralStackTimer = event.timestamp
-			this._astralFireStacks = Math.min(this._astralFireStacks + 1, MAX_BUFF_STACKS)
+			this._astralFireStacks = Math.min(this._astralFireStacks + 1, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
 	}
 
 	onGainMaxAstralFireStacks(event) {
 		this._umbralIceStacks = 0
-		this._astralFireStacks = 3
+		this._astralFireStacks = MAX_ASTRAL_UMBRAL_STACKS
 		this._astralUmbralStackTimer = event.timestamp
 		this.addEvent()
 	}
 
 	onGainMaxUmbralIceStacks(event) {
 		this._astralFireStacks = 0
-		this._umbralIceStacks = 3
+		this._umbralIceStacks = MAX_ASTRAL_UMBRAL_STACKS
 		this._astralUmbralStackTimer = event.timestamp
 		this.addEvent()
 	}
@@ -230,8 +229,8 @@ export default class Gauge extends Module {
 		if (this._hasEnochian) {
 			const enoRunTime = event.timestamp - this._enochianTimer
 			if (enoRunTime >= ENOCHIAN_DURATION_REQUIRED) {
-				this.onGainPolyglot()
 				this._enochianTimer = event.timestamp - (enoRunTime - ENOCHIAN_DURATION_REQUIRED)
+				this.onGainPolyglot()
 			}
 		}
 	}
@@ -256,7 +255,7 @@ export default class Gauge extends Module {
 			this.onGainMaxUmbralIceStacks(event)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
-			this._umbralHeartStacks = 3
+			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
 			break
 		case ACTIONS.FIRE_I.id:
@@ -267,6 +266,9 @@ export default class Gauge extends Module {
 		case ACTIONS.FIRE_III.id:
 			this.tryConsumeUmbralHearts(event, 1)
 			this.onGainMaxAstralFireStacks(event)
+			break
+		case ACTIONS.FIRE_IV.id:
+			this.tryConsumeUmbralHearts(event, 1)
 			break
 		case ACTIONS.FLARE.id:
 			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
@@ -290,6 +292,7 @@ export default class Gauge extends Module {
 		this._astralUmbralStackTimer = 0
 		this._hasEnochian = false
 		this._enochianTimer = 0
+		this.addEvent()
 	}
 
 	_onComplete() {
