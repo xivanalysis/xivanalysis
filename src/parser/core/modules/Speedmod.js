@@ -36,6 +36,16 @@ export default class Speedmod extends Module {
 		return 1.0
 	}
 
+	recalcSpeedmodAndSaveHistory(event) {
+		// Recalculate the speedmod and save to history
+		this._history[this._history.length - 1].end = event.timestamp-1
+		this._history.push({
+			speedmod: (this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100) * this.getJobAdditionalSpeedbuffScalar(),
+			start: event.timestamp,
+			end: Infinity,
+		})
+	}
+
 	normalise(events) {
 		const types = ['applybuff', 'removebuff']
 
@@ -78,13 +88,7 @@ export default class Speedmod extends Module {
 				}
 			}
 
-			// Recalculate the speedmod and save to history
-			this._history[this._history.length - 1].end = event.timestamp-1
-			this._history.push({
-				speedmod: (this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100) * this.getJobAdditionalSpeedbuffScalar(),
-				start: event.timestamp,
-				end: Infinity,
-			})
+			this.recalcSpeedmodAndSaveHistory(event)
 		}
 
 		return events
