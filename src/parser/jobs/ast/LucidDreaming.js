@@ -107,13 +107,13 @@ export default class LucidDreaming extends Module {
 	}
 
 	_onComplete() {
-		console.log(this)
+		// console.log(this)
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
-		console.log(holdDuration)
-		console.log(this.parser.formatDuration(holdDuration))
+		// console.log(holdDuration)
+		// console.log(this.parser.formatDuration(holdDuration))
 		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
-		console.log('no mp: ' + this._gcdCountHoldingLucid)
+		// console.log('no mp: ' + this._gcdCountHoldingLucid)
 
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
