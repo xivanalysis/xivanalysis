@@ -140,7 +140,6 @@ export default class Gauge extends Module {
 			}
 			this._droppedEno++
 		}
-		this._hasPolyglot = false
 		this._hasEnochian = false
 		this._enochianTimer = 0
 		this._umbralHeartStacks = 0
@@ -284,13 +283,13 @@ export default class Gauge extends Module {
 	}
 
 	_onDeath() {
-		// Death just flat out resets everything except for poly. Rip.
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this._astralFireStacks = 0
 		this._umbralIceStacks = 0
 		this._umbralHeartStacks = 0
 		this._astralUmbralStackTimer = 0
 		this._hasEnochian = false
+		this._hasPolyglot = false
 		this._enochianTimer = 0
 		this.addEvent()
 	}
