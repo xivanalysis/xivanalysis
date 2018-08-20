@@ -268,4 +268,6 @@ export default class Heat extends Module {
 	}
 
 	get overheated() { return this._barrelState === BARREL_STATE.OVERHEATED }
+
+	get cooling() { return this._barrelState === BARREL_STATE.COOLING }
 }
