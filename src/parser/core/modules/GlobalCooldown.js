@@ -116,102 +116,47 @@ export default class GlobalCooldown extends Module {
 
 		// GCD is only to two decimal places, so round it there. Storing in Ms.
 		// eslint-disable-next-line no-magic-numbers
-		const gcdLength = Math.round((event.timestamp - this._lastGcd.timestamp)/10)*10
+		let gcdLength = Math.round((event.timestamp - this._lastGcd.timestamp)/10)*10
 
 		if (!isInstant && action.castTime >= action.cooldown) {
+			gcdLength -= CASTER_TAX_IN_MILLIS
 			isCasterTaxed = true
 		}
 
+		let normalizedGcd = gcdLength
+		if (!isInstant) {
+			normalizedGcd = normalizedGcd * (BASE_GCD_IN_SECONDS / action.castTime)
+		}
+
 		const speedMod = this.speedmod.get(event.timestamp)
+		normalizedGcd *= (1 / speedMod)
+		normalizedGcd = Math.round(normalizedGcd)
 
 		if (action.id) {
 			this.gcds.push({
-				timestamp: event.timestamp,
+				timestamp: this._lastGcd.timestamp,
 				length: gcdLength,
-				normalizedLength: gcdLength,
+				normalizedLength: normalizedGcd,
 				speedMod: this._lastGcd.speedMod,
-				casterTaxed: isCasterTaxed,
+				casterTaxed: this._lastGcd.casterTaxed,
 				actionId: action.id,
 				isInstant: this._lastGcd.isInstant,
 			})
 
+			// NOTE: Please sanity-check results when messing with saveGcd. Good test cases include:
+			// - Attributing 1.5s and 2.2s to correct RDM melee gcds
+			// - Sub-0.5s speedmod for BLM fast-casts and generally correct Instant-pairing
 			const lastGcdPushed = this.gcds[this.gcds.length - 1]
-			console.log(this.parser.formatTimestamp(lastGcdPushed.timestamp) + ' ' + getAction(lastGcdPushed.actionId).name +
-						'[' + lastGcdPushed.length + '] Speedmod[' + lastGcdPushed.speedMod + ']' + (lastGcdPushed.isInstant ? ' INSTANT' : ''))
+			console.log(this.parser.formatTimestamp(lastGcdPushed.timestamp) + ' ' + getAction(lastGcdPushed.actionId).name + '[' + lastGcdPushed.length +
+						'|' + lastGcdPushed.normalizedLength + '] Speedmod[' + lastGcdPushed.speedMod + ']' +
+						(lastGcdPushed.isInstant ? ' Instant' : '') + (lastGcdPushed.casterTaxed ? ' CasterTaxed' : ''))
 		}
 
 		this._lastGcd.isInstant = isInstant
 		this._lastGcd.guid = event.ability.guid
 		this._lastGcd.timestamp = event.timestamp
 		this._lastGcd.speedMod = speedMod
-
-		/*
-		let gcdLength = -1
-		let unmodifiedGcdLength = -1
-		let normalizedGcdLength2_5 = -1
-
-		const action = getAction(this._lastGcdGuid)
-		let isCasterTaxed = false
-
-		if (this._lastGcdTimestamp >= 0) {
-			gcdLength = event.timestamp - this._lastGcdTimestamp
-			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			// eslint-disable-next-line no-magic-numbers
-			gcdLength = Math.round((event.timestamp - this._lastGcdTimestamp)/10)*10
-			unmodifiedGcdLength = gcdLength
-			normalizedGcdLength2_5 = gcdLength
-		}
-
-		if (!this._lastGcdIsInstant) {
-			const castTime = action.castTime ? action.castTime : 0
-			const cooldown = action.cooldown ? action.cooldown : BASE_GCD_IN_SECONDS
-			if (castTime >= cooldown) {
-				gcdLength -= CASTER_TAX_IN_MILLIS
-				normalizedGcdLength2_5 -= CASTER_TAX_IN_MILLIS
-				// TODO: Caster tax unmodifiedGcdLength?
-				isCasterTaxed = true
-				//console.log('Caster Taxing ' + action.name)
-			}
-
-			//			if (castTime > BASE_GCD_IN_SECONDS && castTime !== 3.5) {
-			normalizedGcdLength2_5 = normalizedGcdLength2_5 * (BASE_GCD_IN_SECONDS / castTime)
-			//			}
-		}
-
-		// Speedmod is full length -> actual length, we want to do the opposite here
-		const speedMod = this.speedmod.get(this._lastGcdTimestamp >= 0 ? this._lastGcdTimestamp : event.timestamp)
-		const revSpeedMod = 1 / speedMod
-		normalizedGcdLength2_5 *= revSpeedMod
-		normalizedGcdLength2_5 = Math.round(normalizedGcdLength2_5)
-
-		if (this._lastGcdGuid !== 0) {
-			this.gcdsNormalizedToBase.push({
-				timestamp: event.timestamp,
-				length: normalizedGcdLength2_5,
-				speedMod,
-				casterTaxed: isCasterTaxed,
-				actionId: this._lastGcdGuid,
-				isInstant: this._lastGcdIsInstant,
-			})
-
-			this.unmodifiedGcds.push({
-				timestamp: event.timestamp,
-				length: unmodifiedGcdLength,
-				speedMod,
-				casterTaxed: isCasterTaxed,
-				actionId: this._lastGcdGuid,
-				isInstant: this._lastGcdIsInstant,
-			})
-
-			//console.log(action.name + '[' + gcdLength + '] Speedmod[' + speedMod + ']' + ' Time[' + this.parser.formatTimestamp(event.timestamp) + ']')
-		}
-
-		this._lastGcdGuid = event.ability.guid
-		this._lastGcdIsInstant = isInstant
-
-		// Store current gcd time for the check
-		this._lastGcdTimestamp = event.timestamp
-		*/
+		this._lastGcd.casterTaxed = isCasterTaxed
 	}
 
 	getEstimate(bound = true) {
