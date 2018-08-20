@@ -14,8 +14,6 @@ import styles from '../smn/Pets.module.css'
 const NO_TURRET_ID = -1
 const TURRET_RESET_ID = -2
 
-const FIRST_TURRET_AUTO_THRESHOLD = 3000
-
 const TURRET_SUMMON_ACTIONS = {
 	[ACTIONS.ROOK_AUTOTURRET.id]: PETS.ROOK_AUTOTURRET.id,
 	[ACTIONS.BISHOP_AUTOTURRET.id]: PETS.BISHOP_AUTOTURRET.id,
@@ -45,12 +43,13 @@ export default class Turrets extends Module {
 	_lastTurretSummon = this.parser.fight.start_time
 	_activeTurret = PETS.ROOK_AUTOTURRET.id // Null assumption
 	_turretUptime = {}
-	_firstTurretAuto = true
+	_turretHasFired = false
 
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'pet', abilityId: TURRET_AUTO_ATTACKS}, this._onTurretAuto)
 		this.addHook('cast', {by: 'player', abilityId: Object.keys(TURRET_SUMMON_ACTIONS).map(Number)}, this._onTurretSummoned)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.ROOK_OVERDRIVE.id, ACTIONS.BISHOP_OVERDRIVE.id]}, this._onOverdriveCast)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.TURRET_RESET.id}, this._onApplyReset)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.TURRET_RESET.id}, this._onRemoveReset)
 		this.addHook('death', {to: 'pet'}, this._onTurretDeath)
@@ -58,22 +57,15 @@ export default class Turrets extends Module {
 	}
 
 	_onTurretAuto(event) {
-		if (this._firstTurretAuto) {
-			if (event.timestamp - this.parser.fight.start_time < FIRST_TURRET_AUTO_THRESHOLD) {
-				// The first turret auto was within the first 3 seconds of the fight; we good
-				if (event.ability.guid === ACTIONS.AETHER_MORTAR.id) {
-					// ...But it was from a Bishop turret, so flip the null assumption accordingly
-					this._activeTurret = PETS.BISHOP_AUTOTURRET.id
-				}
-			} else {
-				// If it's outside the threshold, they started with no turret, so add downtime for the initial chunk of the fight up to the first summon
-				const misassignedTime = this._lastTurretSummon - this.parser.fight.start_time
-				this._turretUptime[PETS.ROOK_AUTOTURRET.id] -= misassignedTime // Null assumption is Rook, so this should be populated after the first summon
-				this._turretUptime[NO_TURRET_ID] = misassignedTime // And this should be unpopulated until now, so we won't be clobbering any data
+		if (!this._turretHasFired) {
+			// This is the first turret event, so we started with a turret out
+			if (event.ability.guid === ACTIONS.AETHER_MORTAR.id || event.ability.guid === ACTIONS.CHARGED_AETHER_MORTAR.id) {
+				// ...But the attack came from a Bishop turret, so flip the null assumption accordingly
+				this._activeTurret = PETS.BISHOP_AUTOTURRET.id
 			}
-		}
 
-		this._firstTurretAuto = false
+			this._turretHasFired = true
+		}
 	}
 
 	_handleTurretChange(turretId) {
@@ -87,7 +79,25 @@ export default class Turrets extends Module {
 	}
 
 	_onTurretSummoned(event) {
+		if (!this._turretHasFired) {
+			// No turrets have actually fired yet, so correct the null assumption and clear the flag since we're in concrete data land now
+			this._activeTurret = NO_TURRET_ID
+			this._turretHasFired = true
+		}
+
 		this._handleTurretChange(TURRET_SUMMON_ACTIONS[event.ability.guid])
+	}
+
+	_onOverdriveCast(event) {
+		if (!this._turretHasFired) {
+			// If Overdrive is the first recorded turret shot, handle it the same way we handle autos (highly unlikely but better safe)
+			if (event.ability.guid === ACTIONS.BISHOP_OVERDRIVE.id) {
+				// Fix the assumption if it was a Bishop Overdrive, otherwise it's already correct
+				this._activeTurret = PETS.BISHOP_AUTOTURRET.id
+			}
+
+			this._turretHasFired = true
+		}
 	}
 
 	_onApplyReset() {
