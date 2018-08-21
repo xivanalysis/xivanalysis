@@ -293,15 +293,14 @@ export default class RotationWatchdog extends Module {
 	output() {
 		const panels = this._history.map(rotation => {
 			return {
+				key: 'title-' + rotation.start,
 				title: {
-					key: 'title-' + rotation.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(rotation.start)}
 						<span> - </span>{this._renderCount(rotation.fire4Count, rotation.missingCount.missing)} / {rotation.missingCount.expected} Fire IVs
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + rotation.start,
 					content: <Rotation events={rotation.casts}/>,
 				},
 			}
