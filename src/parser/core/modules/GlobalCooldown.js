@@ -12,7 +12,7 @@ const MAX_GCD_IN_MILLIS = 2500
 const BASE_GCD_IN_SECONDS = 2.5
 const CASTER_TAX_IN_MILLIS = 100
 
-const DEBUG_LOG_SAVED_GCDS = true && process.env.NODE_ENV !== 'production'
+const DEBUG_LOG_SAVED_GCDS = false && process.env.NODE_ENV !== 'production'
 
 // NOTE: Caster tax refers to spells taking 0.1s longer than their tooltip claims if their cast time is at least as long as their recast time.
 // See https://www.reddit.com/r/ffxiv/comments/8s05rn/the_recast_time_on_your_tooltip_can_be_up_to_85/, specifically:
@@ -133,6 +133,16 @@ export default class GlobalCooldown extends Module {
 		}
 
 		const action = getAction(gcdInfo.event.ability.guid)
+		let speedMod = this.speedmod.get(gcdInfo.event.timestamp)
+		let castTime = action.castTime
+
+		// HACK NOTE TODO: Need to properly account for abilities that alter only the cast or recast of attacks.
+		// Thinking of moving this into a module like speedmod, that can be called with a timestamp to grab modified base castTime/cooldown values
+		const HACK_ASTRAL_UMBRAL_SPEED_SCALAR = 0.5
+		if (speedMod <= HACK_ASTRAL_UMBRAL_SPEED_SCALAR) {
+			speedMod /= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
+			castTime *= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
+		}
 
 		let isCasterTaxed = false
 
@@ -140,17 +150,16 @@ export default class GlobalCooldown extends Module {
 		// eslint-disable-next-line no-magic-numbers
 		let gcdLength = Math.round((timestamp - gcdInfo.event.timestamp)/10)*10
 
-		if (!gcdInfo.isInstant && action.castTime >= action.cooldown) {
+		if (!gcdInfo.isInstant && castTime >= action.cooldown) {
 			gcdLength -= CASTER_TAX_IN_MILLIS
 			isCasterTaxed = true
 		}
 
 		let normalizedGcd = gcdLength
 		if (!gcdInfo.isInstant) {
-			normalizedGcd = normalizedGcd * (BASE_GCD_IN_SECONDS / action.castTime)
+			normalizedGcd = normalizedGcd * (BASE_GCD_IN_SECONDS / castTime)
 		}
 
-		const speedMod = this.speedmod.get(gcdInfo.event.timestamp)
 		normalizedGcd *= (1 / speedMod)
 		normalizedGcd = Math.round(normalizedGcd)
 
@@ -160,6 +169,8 @@ export default class GlobalCooldown extends Module {
 				length: gcdLength,
 				normalizedLength: normalizedGcd,
 				speedMod: speedMod,
+				castTime: castTime,
+				cooldown: action.cooldown,
 				casterTaxed: isCasterTaxed,
 				actionId: action.id,
 				isInstant: gcdInfo.isInstant,
@@ -189,9 +200,8 @@ export default class GlobalCooldown extends Module {
 	}
 
 	getUptime() {
-		// TODO NOTE: Used by ABC module to get uptime percent. getUptime/fightDuration
 		return this.gcds.reduce((carry, gcd) => {
-			const duration = this._getGcdLength(gcd)// + gcd.casterTaxed ? CASTER_TAX_IN_MILLIS : 0
+			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
 				gcd.timestamp + duration
@@ -201,19 +211,12 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_getGcdLength(gcd) {
-		// TODO NOTE: Return the theoretical length of the given gcd, based on our gcd estimate. Is this supposed to take speedmod into account?
 		const cooldownRatio = this.getEstimate() / MAX_GCD_IN_MILLIS
 
-		const action = getAction(gcd.actionId)
-		const castTime = action.castTime ? action.castTime : 0
-		const cooldown = action.cooldown ? action.cooldown : BASE_GCD_IN_SECONDS
-
-		let cd = (gcd.isInstant || castTime <= cooldown) ? cooldown : Math.max(castTime, cooldown)
+		let cd = (gcd.isInstant || gcd.castTime <= gcd.cooldown) ? gcd.cooldown : Math.max(gcd.castTime, gcd.cooldown)
 		cd *= 1000
 
-		const duration = (cd * cooldownRatio * gcd.speedMod) + (gcd.isCasterTaxed ? CASTER_TAX_IN_MILLIS : 0)
-
-		//console.log(action.name + ': ' + duration)
+		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX_IN_MILLIS : 0))
 
 		return duration
 	}
