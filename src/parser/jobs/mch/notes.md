@@ -4,20 +4,25 @@
 - [ ] 5 GCDs in the burst window
 
 ### Ammo
-- [ ] Using ammo on appropriate abilities
-- [ ] Avoiding overwriting ammo with Reload/Quick Reload
+- [x] Using ammo on appropriate abilities (Ammo.js)
+- [x] Avoiding overwriting ammo with Reload/Quick Reload (Ammo.js)
 
 ### Procs
 - [ ] Not letting procs drop
 - [ ] Not overwriting procs
 
 ### Buffs
-- [ ] Hotshot uptime and clipping
-- [ ] Buff alignment
+- [x] Hot Shot uptime (HotShot.js)
+- [x] Refreshing Hot Shot during cooling windows (HotShot.js)
 
-## Turrets
-- [ ] Turret uptime (base it on SMN pets?)
+### Cooldowns
+- [ ] OGCD alignment
+
+### Turrets
+- [x] Turret uptime (Turrets.js)
 
 ### Heat management
+- [x] 6 GCDs under overheat window (Heat.js)
+- [x] Reapplying Gauss Barrel as soon as possible (Heat.js)
+- [x] Not using Cooldown to dip below 50 heat (Heat.js)
 - [ ] Time spent unheated
-- [ ] 6 GCDs under Overheat window

@@ -15,7 +15,7 @@ const STANCES = [
 ]
 
 const STANCELESS_SEVERITY = {
-	0: SEVERITY.MEDIUM,
+	1: SEVERITY.MEDIUM,
 	12: SEVERITY.MAJOR,
 }
 
@@ -38,10 +38,7 @@ export default class Fists extends Module {
 
 	_onGain(event) {
 		if (this._stanceDropped.length > 0) {
-			const lostTime = event.timestamp - _.last(this._stanceDropped).timestamp
-			if (lostTime > 0) {
-				this._stanceless += lostTime
-			}
+			this._stanceless += event.timestamp - _.last(this._stanceDropped).timestamp
 		}
 
 		this._stanceApplied.push(event)
@@ -53,17 +50,14 @@ export default class Fists extends Module {
 	}
 
 	_onComplete() {
-		if (this._stanceless > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.FISTS_OF_FIRE.icon,
-				severity: SEVERITY.MAJOR,
-				content: <Fragment>
-					Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
-				</Fragment>,
-				why: `No Fist buff was active for ${this.parser.formatDuration(this._stanceless)}.`,
-				tiers: STANCELESS_SEVERITY,
-				value: this._stanceless,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FISTS_OF_FIRE.icon,
+			content: <Fragment>
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
+			</Fragment>,
+			why: `No Fist buff was active for ${this.parser.formatDuration(this._stanceless)}.`,
+			tiers: STANCELESS_SEVERITY,
+			value: this._stanceless,
+		}))
 	}
 }

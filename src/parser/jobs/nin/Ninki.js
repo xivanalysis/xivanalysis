@@ -91,7 +91,7 @@ export default class Ninki extends Module {
 
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: 'https://secure.xivdb.com/img/game/005000/005411.png',
+			icon: 'https://xivapi.com/i/005000/005411.png',
 			content: <Fragment>
 				<Trans id="nin.ninki.suggestions.waste.content">Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.</Trans>
 			</Fragment>,
@@ -111,7 +111,7 @@ export default class Ninki extends Module {
 				<Trans id="nin.ninki.suggestions.frog.content">Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.</Trans>
 			</Fragment>,
 			tiers: {
-				0: SEVERITY.MINOR,
+				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
 			},
 			value: this._erroneousFrogs,
