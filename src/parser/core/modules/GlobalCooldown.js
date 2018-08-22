@@ -119,7 +119,7 @@ export default class GlobalCooldown extends Module {
 			this.timeline.addItem(new Item({
 				type: 'background',
 				start: gcd.timestamp - startTime,
-				length: gcd.length,
+				length: this._getGcdLength(gcd),
 				group: 'gcd',
 				content: <img src={action.icon} alt={action.name}/>,
 			}))
