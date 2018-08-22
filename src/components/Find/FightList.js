@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import {connect} from 'react-redux'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
-import store from 'store'
-import {refreshReport} from 'store/actions'
+import {refreshReport, updateSettings} from 'store/actions'
 
 import styles from './FightList.module.css'
 
@@ -17,19 +17,24 @@ class FightList extends Component {
 				id: PropTypes.number.isRequired,
 			})).isRequired,
 		}).isRequired,
-	}
-
-	state = {
-		killsOnly: true,
+		dispatch: PropTypes.func.isRequired,
+		killsOnly: PropTypes.bool,
 	}
 
 	refreshFights = () => {
-		store.dispatch(refreshReport())
+		this.props.dispatch(refreshReport())
 	}
 
 	render() {
-		const {report} = this.props
-		const {killsOnly} = this.state
+		const {
+			dispatch,
+			report,
+		} = this.props
+
+		let killsOnly = this.props.killsOnly
+		if (killsOnly === undefined) {
+			killsOnly = true
+		}
 
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
@@ -67,7 +72,9 @@ class FightList extends Component {
 						toggle
 						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
 						defaultChecked={killsOnly}
-						onChange={(_, data) => this.setState({killsOnly: data.checked})}
+						onChange={(_, data) => dispatch(updateSettings({
+							fightListKillsOnly: data.checked,
+						}))}
 						// className="pull-right"
 					/>
 					<span className={styles.refresh} onClick={this.refreshFights}>
@@ -99,4 +106,6 @@ class FightList extends Component {
 	}
 }
 
-export default FightList
+export default connect(state => ({
+	killsOnly: state.settings.fightListKillsOnly,
+}))(FightList)
