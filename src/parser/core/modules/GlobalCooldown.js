@@ -7,10 +7,10 @@ import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 
-const MIN_GCD_IN_MILLIS = 1500
-const MAX_GCD_IN_MILLIS = 2500
-const BASE_GCD_IN_SECONDS = 2.5
-const CASTER_TAX_IN_MILLIS = 100
+const MIN_GCD = 1500
+const MAX_GCD = 2500
+const BASE_GCD = 2500
+const CASTER_TAX = 100
 
 const DEBUG_LOG_SAVED_GCDS = false && process.env.NODE_ENV !== 'production'
 
@@ -72,7 +72,7 @@ export default class GlobalCooldown extends Module {
 			case 'cast':
 				const hasBeginCast = this._castingEvent !== null && this._castingEvent.ability.guid === action.id
 				const relevantEvent = hasBeginCast ? this._castingEvent : event
-				this.saveGcd(this._lastGcd, relevantEvent.timestamp) // Save last gcd with current timestamp
+				this.saveGcd({...this._lastGcd}, relevantEvent.timestamp) // Save last gcd with current timestamp
 
 				this._lastGcd.isInstant = !hasBeginCast
 				this._lastGcd.event = relevantEvent
@@ -82,7 +82,7 @@ export default class GlobalCooldown extends Module {
 			}
 		}
 
-		this.saveGcd(this._lastGcd, events[events.length - 1].timestamp)
+		this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
 		this._debugLogSavedGcds()
 
 		return events
@@ -151,13 +151,13 @@ export default class GlobalCooldown extends Module {
 		let gcdLength = Math.round((timestamp - gcdInfo.event.timestamp)/10)*10
 
 		if (!gcdInfo.isInstant && castTime >= action.cooldown) {
-			gcdLength -= CASTER_TAX_IN_MILLIS
+			gcdLength -= CASTER_TAX
 			isCasterTaxed = true
 		}
 
 		let normalizedGcd = gcdLength
 		if (!gcdInfo.isInstant) {
-			normalizedGcd = normalizedGcd * (BASE_GCD_IN_SECONDS / castTime)
+			normalizedGcd = normalizedGcd * ((BASE_GCD / 1000) / castTime)
 		}
 
 		normalizedGcd *= (1 / speedMod)
@@ -187,13 +187,13 @@ export default class GlobalCooldown extends Module {
 			const lengths = this.gcds.map(gcd => gcd.normalizedLength)
 
 			// Mode seems to get best results. Using mean in case there's multiple modes.
-			this._estimatedBaseGcd = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD_IN_MILLIS
+			this._estimatedBaseGcd = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD
 			this._estimateGcdCount = gcdLength
 		}
 
 		// Bound the result if requested
 		if (bound) {
-			this._estimatedBaseGcd = Math.max(MIN_GCD_IN_MILLIS, Math.min(MAX_GCD_IN_MILLIS, this._estimatedBaseGcd))
+			this._estimatedBaseGcd = Math.max(MIN_GCD, Math.min(MAX_GCD, this._estimatedBaseGcd))
 		}
 
 		return this._estimatedBaseGcd
@@ -211,12 +211,12 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_getGcdLength(gcd) {
-		const cooldownRatio = this.getEstimate() / MAX_GCD_IN_MILLIS
+		const cooldownRatio = this.getEstimate() / MAX_GCD
 
 		let cd = (gcd.isInstant || gcd.castTime <= gcd.cooldown) ? gcd.cooldown : Math.max(gcd.castTime, gcd.cooldown)
 		cd *= 1000
 
-		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX_IN_MILLIS : 0))
+		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX : 0))
 
 		return duration
 	}
