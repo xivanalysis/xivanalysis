@@ -39,7 +39,7 @@ export default class Assize extends Module {
 		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
 			//get downtimes in the period we're holding the cooldown
-			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, event.timestamp)
+			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, firstOpportunity + EXCUSED_HOLD_DEFAULT)
 			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
 			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
