@@ -163,38 +163,26 @@ export default class Gauge extends Module {
 		this.addEvent()
 	}
 
-	onGainUmbralIceStack(event) {
-		if (this._astralFireStacks > 0) {
+	onGainAstralFireStacks(event, stackCount, dropsElementOnSwap = true) {
+		if (this._umbralIceStacks > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
+			this._umbralIceStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
-			this._umbralIceStacks = Math.min(this._umbralIceStacks + 1, MAX_ASTRAL_UMBRAL_STACKS)
+			this._astralFireStacks = Math.min(this._astralFireStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
 	}
 
-	onGainAstralFireStack(event) {
-		if (this._umbralIceStacks > 0) {
+	onGainUmbralIceStacks(event, stackCount, dropsElementOnSwap = true) {
+		if (this._astralFireStacks > 0 && dropsElementOnSwap) {
 			this.onAstralUmbralTimeout()
 		} else {
+			this._astralFireStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
-			this._astralFireStacks = Math.min(this._astralFireStacks + 1, MAX_ASTRAL_UMBRAL_STACKS)
+			this._umbralIceStacks = Math.min(this._umbralIceStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
 			this.addEvent()
 		}
-	}
-
-	onGainMaxAstralFireStacks(event) {
-		this._umbralIceStacks = 0
-		this._astralFireStacks = MAX_ASTRAL_UMBRAL_STACKS
-		this._astralUmbralStackTimer = event.timestamp
-		this.addEvent()
-	}
-
-	onGainMaxUmbralIceStacks(event) {
-		this._astralFireStacks = 0
-		this._umbralIceStacks = MAX_ASTRAL_UMBRAL_STACKS
-		this._astralUmbralStackTimer = event.timestamp
-		this.addEvent()
 	}
 
 	onTransposeStacks(event) {
@@ -248,10 +236,10 @@ export default class Gauge extends Module {
 		case ACTIONS.BLIZZARD_I.id:
 		case ACTIONS.BLIZZARD_II.id:
 		case ACTIONS.FREEZE.id:
-			this.onGainUmbralIceStack(event)
+			this.onGainUmbralIceStacks(event, 1)
 			break
 		case ACTIONS.BLIZZARD_III.id:
-			this.onGainMaxUmbralIceStacks(event)
+			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
 			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
@@ -259,19 +247,19 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.FIRE_I.id:
 		case ACTIONS.FIRE_II.id:
-			this.onGainAstralFireStack(event)
 			this.tryConsumeUmbralHearts(event, 1)
+			this.onGainAstralFireStacks(event, 1)
 			break
 		case ACTIONS.FIRE_III.id:
 			this.tryConsumeUmbralHearts(event, 1)
-			this.onGainMaxAstralFireStacks(event)
+			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FIRE_IV.id:
 			this.tryConsumeUmbralHearts(event, 1)
 			break
 		case ACTIONS.FLARE.id:
 			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
-			this.onGainMaxAstralFireStacks(event)
+			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FOUL.id:
 			this.onConsumePolyglot()
