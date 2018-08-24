@@ -1,5 +1,5 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -92,36 +92,33 @@ export default class Ninki extends Module {
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: 'https://xivapi.com/i/005000/005411.png',
-			content: <Fragment>
-				<Trans id="nin.ninki.suggestions.waste.content">Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.</Trans>
-			</Fragment>,
+			content: <Trans id="nin.ninki.suggestions.waste.content">
+				Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
+			</Trans>,
 			tiers: {
 				12: SEVERITY.MINOR,
 				24: SEVERITY.MEDIUM,
 			},
 			value: this._wastedNinki,
-			why: <Fragment>
-				<Trans id="nin.ninki.suggestions.waste.why">Overcapping caused you to lose {this._wastedNinki} Ninki over the fight.</Trans>
-			</Fragment>,
+			why: <Trans id="nin.ninki.suggestions.waste.why">
+				Overcapping caused you to lose {this._wastedNinki} Ninki over the fight.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HELLFROG_MEDIUM.icon,
-			content: <Fragment>
-				<Trans id="nin.ninki.suggestions.frog.content">Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.</Trans>
-			</Fragment>,
+			content: <Trans id="nin.ninki.suggestions.frog.content">
+				Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you have one of your other spenders available (unless there are multiple targets), as it has the lowest potency of the three by a significant margin when used on only one.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
 			},
 			value: this._erroneousFrogs,
-			why: <Fragment>
-				<Plural
-					id="nin.ninki.suggestions.frog.why"
-					value={this._erroneousFrogs}
-					one="You used Hellfrog Medium # time when other spenders were available."
-					other="You used Hellfrog Medium # times when other spenders were available."/>
-			</Fragment>,
+			why: <Plural id="nin.ninki.suggestions.frog.why"
+				value={this._erroneousFrogs}
+				one="You used Hellfrog Medium # time when other spenders were available."
+				other="You used Hellfrog Medium # times when other spenders were available."/>,
 		}))
 	}
 }

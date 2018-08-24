@@ -1,5 +1,5 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -41,17 +41,14 @@ export default class Duality extends Module {
 		if (this._badDualityUses > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DUALITY.icon,
-				content: <Fragment>
-					<Trans id="nin.duality.suggestions.misuse.content">Avoid using <ActionLink {...ACTIONS.DUALITY}/> on any GCDs besides <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>. The side effects of the GCD aren&apos;t duplicated, only the damage, so your highest damage combo hit is always ideal.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.duality.suggestions.misuse.content">
+					Avoid using <ActionLink {...ACTIONS.DUALITY}/> on any GCDs besides <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>. The side effects of the GCD aren't duplicated, only the damage, so your highest damage combo hit is always ideal.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Plural
-						id="nin.duality.suggestions.misuse.why"
-						value={this._badDualityUses}
-						one="You used Duality # time on non-optimal GCDs."
-						other="You used Duality # times on non-optimal GCDs."/>
-				</Fragment>,
+				why: <Plural id="nin.duality.suggestions.misuse.why"
+					value={this._badDualityUses}
+					one="You used Duality # time on non-optimal GCDs."
+					other="You used Duality # times on non-optimal GCDs."/>,
 			}))
 		}
 	}

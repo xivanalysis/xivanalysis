@@ -120,7 +120,7 @@ export default class Combos extends CoreCombos {
 		this.checklist.add(new Rule({
 			name: <Trans id="nin.huton.checklist.name">Keep Huton up</Trans>,
 			description: <Fragment>
-				<Trans id="nin.huton.checklist.description"><ActionLink {...ACTIONS.HUTON}/> provides you with a 15% attack speed increase and as such is a <em>huge</em> part of a NIN&apos;s personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.</Trans>
+				<Trans id="nin.huton.checklist.description"><ActionLink {...ACTIONS.HUTON}/> provides you with a 15% attack speed increase and as such is a <em>huge</em> part of a NIN's personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.</Trans>
 				<Message warning icon>
 					<Icon name="warning sign"/>
 					<Message.Content>
@@ -141,34 +141,32 @@ export default class Combos extends CoreCombos {
 		if (clippedDuration > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.HUTON.icon,
-				content: <Fragment>
-					<Trans id="nin.huton.suggestions.clipping.content">Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.huton.suggestions.clipping.content">
+					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.
+				</Trans>,
 				tiers: {
 					5000: SEVERITY.MINOR,
 					10000: SEVERITY.MEDIUM,
 					20000: SEVERITY.MAJOR,
 				},
 				value: clippedDuration,
-				why: <Fragment>
-					<Trans id="nin.huton.suggestions.clipping.why">You clipped {this.parser.formatDuration(clippedDuration)} of Huton with early Armor Crushes.</Trans>
-				</Fragment>,
+				why: <Trans id="nin.huton.suggestions.clipping.why">
+					You clipped {this.parser.formatDuration(clippedDuration)} of Huton with early Armor Crushes.
+				</Trans>,
 			}))
 		}
 
 		if (futileArmorCrushes > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ARMOR_CRUSH.icon,
-				content: <Fragment>
-					<Trans id="nin.huton.suggestions.futile-ac.content">Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.huton.suggestions.futile-ac.content">
+					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Plural id="nin.huton.suggestions.futile-ac.why"
-						value={futileArmorCrushes}
-						one="You used Armor Crush # time when Huton was down."
-						other="You used Armor Crush # times when Huton was down."/>
-				</Fragment>,
+				why: <Plural id="nin.huton.suggestions.futile-ac.why"
+					value={futileArmorCrushes}
+					one="You used Armor Crush # time when Huton was down."
+					other="You used Armor Crush # times when Huton was down."/>,
 			}))
 		}
 	}
