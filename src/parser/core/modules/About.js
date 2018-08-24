@@ -1,10 +1,11 @@
+import {Trans, i18nMark} from '@lingui/react'
+import _ from 'lodash'
 import React, {Fragment} from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
+import PATCHES, {getPatch} from 'data/PATCHES'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
-
-import {Trans, i18nMark} from '@lingui/react'
 
 import styles from './About.module.css'
 
@@ -14,8 +15,21 @@ export default class About extends Module {
 	static i18n_id = i18nMark('core.about.title')
 
 	description = null
-	supportedPatch = null
 	contributors = []
+
+	supportedPatches = {
+		// from: ...,
+		// to: ...,
+	}
+
+	set supportedPatch(value) {
+		// Warn the dev that they're using a deprecated prop
+		if (process.env.NODE_ENV === 'development') {
+			console.warn('About.suportedPatch has been deprecated. Please use the About.supportedPatches object instead.')
+		}
+
+		this.supportedPatches.from = value
+	}
 
 	output() {
 		// If this passes, we've not been subclassed. Render an error.
@@ -33,19 +47,49 @@ export default class About extends Module {
 			</Message>
 		}
 
+		// The report timestamp is relative to the report timestamp, and in ms. Convert.
+		const parseDate = Math.round((this.parser.report.start + this.parser.fight.start_time) / 1000)
+
+		// Work out the supported patch range (and if we're in it)
+		let supported = false
+		const {from, to = from} = this.supportedPatches
+		if (from && PATCHES[from]) {
+			// Work out what the next patch is - if there is none, next patch "never" comes (until we add it!)
+			const sortedPatches = Object.keys(PATCHES).sort(
+				(a, b) => PATCHES[a].date - PATCHES[b].date
+			)
+			const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) + 1]
+			const nextPatch = PATCHES[nextPatchKey] || {date: Infinity}
+
+			// Grab the dates for the from/to
+			const fromDate = PATCHES[from].date
+			const toDate = nextPatch.date
+
+			supported = _.inRange(parseDate, fromDate, toDate)
+		}
+
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
 				{this.description}
+				{!supported && <Message error icon>
+					<Icon name="times circle outline"/>
+					<Message.Content>
+						<Message.Header>
+							<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
+						</Message.Header>
+						<Trans id="core.about.patch-unsupported.description">
+							This report was logged during patch {getPatch(parseDate)}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+						</Trans>
+					</Message.Content>
+				</Message>}
 			</Grid.Column>
 
 			{/* Meta box */}
 			{/* TODO: This looks abysmal */}
 			<Grid.Column mobile={16} computer={6}>
 				<Segment as="dl" className={styles.meta}>
-					{this.supportedPatch && <Fragment>
-						<dt><Trans id="core.about.updated-for">Updated For:</Trans></dt>
-						<dd><Trans id="core.about.patch">Patch {this.supportedPatch}</Trans></dd>
-					</Fragment>}
+					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
+					<dd>{from || 'Unsupported'}{from !== to && `–${to}`}</dd>
 
 					{this.contributors.length > 0 && <Fragment>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>

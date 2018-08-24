@@ -82,7 +82,7 @@ export default class Weaving extends Module {
 		const badWeaves = this._badWeaves
 		this.suggestions.add(new TieredSuggestion({
 			// WVR Focused synth lmao
-			icon: 'https://secure.xivdb.com/img/game/001000/001785.png',
+			icon: 'https://xivapi.com/i/001000/001785.png',
 			content: <Trans id="core.weaving.content">
 				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
 			</Trans>,
