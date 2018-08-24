@@ -83,43 +83,44 @@ export class XIVDBTooltipProvider {
 				// doesn't know what to do with the URLSearchParams polyfill.
 				body: params.toString(),
 
-			}).then(resp => resp.json()).catch(() => ({})).then(data => {
-				if (! data || typeof data !== 'object') {
-					console.log('Invalid Response from Tooltip Provider', data)
-					data = {}
-				}
+			}).then(resp => resp.json()).catch(() => ({}))
+				.then(data => {
+					if (! data || typeof data !== 'object') {
+						console.log('Invalid Response from Tooltip Provider', data)
+						data = {}
+					}
 
-				for (const type of Object.keys(types)) {
-					const typeCache = languageCache[type] = languageCache[type] || {}
-					const typeData = data[type]
-					if (Array.isArray(typeData)) {
-						for (const entry of typeData) {
-							const id = entry && entry.data && entry.data.id
-							const cached = typeCache[id]
-							if (cached && !cached.done) {
-								cached.done = true
-								cached.value = entry
-								for (const promise of cached.waiting) {
-									promise(entry)
+					for (const type of Object.keys(types)) {
+						const typeCache = languageCache[type] = languageCache[type] || {}
+						const typeData = data[type]
+						if (Array.isArray(typeData)) {
+							for (const entry of typeData) {
+								const id = entry && entry.data && entry.data.id
+								const cached = typeCache[id]
+								if (cached && !cached.done) {
+									cached.done = true
+									cached.value = entry
+									for (const promise of cached.waiting) {
+										promise(entry)
+									}
+									cached.waiting = null
 								}
-								cached.waiting = null
 							}
-						}
-					} else {
-						for (const entry of Object.values(types[type])) {
-							const cached = typeCache[entry]
-							if (cached && !cached.done) {
-								cached.done = true
-								cached.value = null
-								for (const promise of cached.waiting) {
-									promise(null)
+						} else {
+							for (const entry of Object.values(types[type])) {
+								const cached = typeCache[entry]
+								if (cached && !cached.done) {
+									cached.done = true
+									cached.value = null
+									for (const promise of cached.waiting) {
+										promise(null)
+									}
+									cached.waiting = null
 								}
-								cached.waiting = null
 							}
 						}
 					}
-				}
-			})
+				})
 		}
 	}
 

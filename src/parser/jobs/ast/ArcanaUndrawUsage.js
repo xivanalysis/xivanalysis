@@ -6,6 +6,7 @@ import Module from 'parser/core/Module'
 
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
+import {Trans} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 const OGCD_ARCANA_REMOVAL = [
@@ -19,6 +20,7 @@ const AstUndrawMacros = [
 		action: 'Undraw',
 		content: <Fragment>
 			<code>
+				<Trans id="ast.arcanaundrawusage.macros.undraw">
 					/statusoff "Bole Drawn"<br/>
 					/statusoff "Balance Drawn"<br/>
 					/statusoff "Arrow Drawn"<br/>
@@ -26,6 +28,7 @@ const AstUndrawMacros = [
 					/statusoff "Spire Drawn"<br/>
 					/statusoff "Ewer Drawn"<br/>
 					/micon "Undraw"
+				</Trans>
 			</code>
 		</Fragment>,
 	},
@@ -33,13 +36,15 @@ const AstUndrawMacros = [
 		action: 'Undraw Spread',
 		content: <Fragment>
 			<code>
-			/statusoff "Arrow Held"<br/>
-			/statusoff "Balance Held"<br/>
-			/statusoff "Spire Held"<br/>
-			/statusoff "Bole Held"<br/>
-			/statusoff "Ewer Held"<br/>
-			/statusoff "Spear Held"<br/>
-			/micon "Undraw Spread"
+				<Trans id="ast.arcanaundrawusage.macros.undrawspread">
+					/statusoff "Arrow Held"<br/>
+					/statusoff "Balance Held"<br/>
+					/statusoff "Spire Held"<br/>
+					/statusoff "Bole Held"<br/>
+					/statusoff "Ewer Held"<br/>
+					/statusoff "Spear Held"<br/>
+					/micon "Undraw Spread"
+				</Trans>
 			</code>
 		</Fragment>,
 	},
@@ -47,10 +52,12 @@ const AstUndrawMacros = [
 		action: 'Empty Road',
 		content: <Fragment>
 			<code>
-			/statusoff "Expanded Royal Road"<br/>
-			/statusoff "Enhanced Royal Road"<br/>
-			/statusoff "Extended Royal Road"<br/>
-			/micon "Empty Road"
+				<Trans id="ast.arcanaundrawusage.macros.emptyroad">
+					/statusoff "Expanded Royal Road"<br/>
+					/statusoff "Enhanced Royal Road"<br/>
+					/statusoff "Extended Royal Road"<br/>
+					/micon "Empty Road"
+				</Trans>
 			</code>
 		</Fragment>,
 	},
@@ -109,8 +116,10 @@ export default class ArcanaUndrawUsage extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://xivapi.com/i/003000/003108.png', // Undraw action
 				content: <Fragment>
-					<strong>Avoid using the Arcana Removal actions.</strong> (<ActionLink {...ACTIONS.UNDRAW} />) (<ActionLink {...ACTIONS.UNDRAW_SPREAD} />) (<ActionLink {...ACTIONS.EMPTY_ROAD} />) <br/>
-					They take up an unnecessary oGCD slot. Instead, try clicking off the relevant buffs or try using macros.<br/><br/>
+					<Trans id="ast.arcanaundrawusage.suggestions.content">
+						<strong>Avoid using the Arcana Removal actions.</strong> (<ActionLink {...ACTIONS.UNDRAW} />) (<ActionLink {...ACTIONS.UNDRAW_SPREAD} />) (<ActionLink {...ACTIONS.EMPTY_ROAD} />) <br/>
+					They take up an unnecessary oGCD slot. Instead, try clicking off the relevant buffs or try using macros.</Trans>
+					<br/><br/>
 					<Accordion
 						exclusive={false}
 						panels={panels}
@@ -119,7 +128,9 @@ export default class ArcanaUndrawUsage extends Module {
 					/>
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
-				why: `${badUndraws.length} instances of using an ogcd Arcana undraw action.`,
+
+				why: <Trans id="ast.arcanaundrawusage.suggestions.why">
+				${badUndraws.length} instances of using an ogcd Arcana undraw action.</Trans>,
 			}))
 		}
 

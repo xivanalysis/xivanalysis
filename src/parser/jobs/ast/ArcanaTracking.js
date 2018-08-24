@@ -130,6 +130,60 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.rrAbility = null
 		}
 
+		// If it was a drawn arcana, they had to have been holding onto this from the last instance of a DRAW/SLEEVE_DRAW/REDRAW
+		// Loop backward and find it
+		if (DRAWN_ARCANA_USE.includes(actionId)) {
+			let lastDrawIndex = _.findLastIndex(this._cardStateLog,
+				stateItem =>
+					stateItem.lastEvent &&
+				(stateItem.lastEvent.ability.guid === ACTIONS.DRAW.id
+				|| stateItem.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id
+				|| stateItem.lastEvent.ability.guid === ACTIONS.REDRAW.id)
+			)
+
+			console.log(event)
+			console.log(lastDrawIndex)
+			if (lastDrawIndex === -1) {
+				// There were no draws. They had it prepull, so assume this is 0
+				lastDrawIndex = 0
+			}
+
+			// Modify log, they were holding onto this card since index
+			_.forEachRight(this._cardStateLog,
+				(stateItem, index) => {
+					if (index >= lastDrawIndex) { stateItem.drawState = getAction(actionId) }
+				})
+
+			cardStateItem.drawState = null
+		}
+
+		// If it was a drawn arcana, they had to have been holding onto this from the last instance of a SPREAD/SLEEVE_DRAW
+		// Loop backward and find it
+		if (HELD_ARCANA_USE.includes(actionId)) {
+			let lastSpreadIndex = _.findLastIndex(this._cardStateLog,
+				stateItem =>
+					stateItem.lastEvent &&
+				(stateItem.lastEvent.ability.guid === ACTIONS.SPREAD.id
+				|| stateItem.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id)
+			)
+
+			console.log(event)
+			console.log(lastSpreadIndex)
+			if (lastSpreadIndex === -1) {
+				// There were no spreads. They had it prepull, so assume this is 0
+				lastSpreadIndex = 0
+			}
+
+			// Modify log, they were holding onto this card since index
+			_.forEachRight(this._cardStateLog,
+				(stateItem, index) => {
+					if (index >= lastSpreadIndex) { stateItem.spreadState = getAction(actionId) }
+				})
+
+			cardStateItem.spreadState = null
+
+		}
+
 		if (actionId === ACTIONS.ROYAL_ROAD.id) {
 			//
 		}
@@ -260,6 +314,5 @@ export default class ArcanaTracking extends Module {
 
 		</Fragment>
 	}
-
 }
 

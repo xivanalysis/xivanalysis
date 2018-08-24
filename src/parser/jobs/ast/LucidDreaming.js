@@ -5,6 +5,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
+import {Trans} from '@lingui/react'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 const WASTED_USES_MAX_MEDIUM = 2
@@ -119,7 +120,9 @@ export default class LucidDreaming extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.LUCID_DREAMING.icon,
 				content: <Fragment>
+					<Trans id="ast.luciddreaming.suggestion.content">
 					Keep <ActionLink {...ACTIONS.LUCID_DREAMING} /> on cooldown for better MP management, unless there's a specific part of the fight you need to drop aggro quick.
+					</Trans>
 				</Fragment>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Fragment>
@@ -147,8 +150,10 @@ export default class LucidDreaming extends Module {
 		this.checklist.add(new Rule({
 			name: 'Extend Lucid Dreaming',
 			description: <Fragment>
+				<Trans id="ast.luciddreaming.checklist.content">
 				Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to "Always be casting" they frequently
 				find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> to maximize MP benefits.
+				</Trans>
 			</Fragment>,
 			requirements: [
 				new Requirement({

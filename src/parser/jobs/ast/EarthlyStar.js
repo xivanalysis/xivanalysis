@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Trans} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 // import STATUSES from 'data/STATUSES'
@@ -60,11 +61,15 @@ export default class EarthlyStar extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.STELLAR_DETONATION.icon,
 				content: <Fragment>
+					<Trans id="ast.earthlystar.suggestion.uncooked.content">
 					Plan your <ActionLink {...ACTIONS.EARTHLY_STAR} /> placements so that it's always cooked enough for the full potency when you need it.
+					</Trans>
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					{earlyBurstCount} instances of detonating an uncooked Earthly Star.
+					<Trans id="ast.earthlystar.suggestion.uncooked.why">
+						{earlyBurstCount} instances of detonating an uncooked Earthly Star.
+					</Trans>
 				</Fragment>,
 			}))
 

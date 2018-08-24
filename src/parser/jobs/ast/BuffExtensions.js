@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 // import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -211,7 +212,7 @@ export default class BuffExtensions extends Module {
 		if (this._dilationUses.length === 0) {
 			return <Fragment>
 				<p>
-					<span className="text-error">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</span>
+					<span className="text-error"><Trans id="ast.buffextensions.messages.nocasts">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</Trans></span>
 				</p>
 			</Fragment>
 		}
@@ -226,14 +227,14 @@ export default class BuffExtensions extends Module {
 				const numBuffs = dilation.targets[0].buffs.length
 				descriptionText = numBuffs + ' buffs extended'
 				if (numBuffs < 1) {
-					emptyMessage = 'No buffs extended.'
+					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
 				descriptionText = numTargets + ' targets affected'
 
 				if (numTargets < 1) {
-					emptyMessage = 'No buffs extended.'
+					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
 				}
 			}
 
@@ -292,9 +293,11 @@ export default class BuffExtensions extends Module {
 
 		return <Fragment>
 			<p>
+				<Trans id="ast.buffextensions.messages.explanation">
 			This section displays a history of targets affected with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.
-				<br/>
+					<br/>
 			* Excluded statuses: <ActionLink {...ACTIONS.PROTECT} />
+				</Trans>
 			</p>
 			<Accordion
 				exclusive={false}
