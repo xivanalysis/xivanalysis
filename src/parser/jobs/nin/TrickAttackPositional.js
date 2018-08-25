@@ -49,10 +49,9 @@ export default class TrickAttackPositional extends Module {
 					<ActionLink {...ACTIONS.TRICK_ATTACK}/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Plural id="nin.ta-positional.suggestions.missed.why"
-					value={missed.length}
-					one="You missed the positional on Trick Attack # time."
-					other="You missed the positional on Trick Attack # times."/>,
+				why: <Trans id="nin.ta-positional.suggestions.missed.why">
+					You missed the positional on Trick Attack <Plural value={missed.length} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 	}

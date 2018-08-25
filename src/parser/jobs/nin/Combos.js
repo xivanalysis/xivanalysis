@@ -163,10 +163,9 @@ export default class Combos extends CoreCombos {
 					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.huton.suggestions.futile-ac.why"
-					value={futileArmorCrushes}
-					one="You used Armor Crush # time when Huton was down."
-					other="You used Armor Crush # times when Huton was down."/>,
+				why: <Trans id="nin.huton.suggestions.futile-ac.why">
+					You used Armor Crush <Plural value={futileArmorCrushes} one="# time" other="# times"/> when Huton was down.
+				</Trans>,
 			}))
 		}
 	}

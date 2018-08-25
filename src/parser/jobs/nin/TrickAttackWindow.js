@@ -59,10 +59,9 @@ export default class TrickAttackWindow extends Module {
 					Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they're both on 60 second cooldowns, they should always be paired to maximize DPS.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.ta-window.suggestions.dream.why"
-					value={this._dwadOutsideTa}
-					one="You used Dream Within A Dream # time outside of Trick Attack."
-					other="You used Dream Within A Dream # times outside of Trick Attack."/>,
+				why: <Trans id="nin.ta-window.suggestions.dream.why">
+					You used Dream Within A Dream <Plural value={this._dwadOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
+				</Trans>,
 			}))
 		}
 
@@ -73,10 +72,9 @@ export default class TrickAttackWindow extends Module {
 					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.ta-window.suggestions.armor-crush.why"
-					value={this._armorCrushInTa}
-					one="You used Armor Crush # time during Trick Attack."
-					other="You used Armor Crush # times during Trick Attack."/>,
+				why: <Trans id="nin.ta-window.suggestions.armor-crush.why">
+					You used Armor Crush <Plural value={this._armorCrushInTa} one="# time" other="# times"/> during Trick Attack.
+				</Trans>,
 			}))
 		}
 	}

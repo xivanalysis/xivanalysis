@@ -95,10 +95,9 @@ export default class Ninjutsu extends Module {
 				2: SEVERITY.MEDIUM, // Probably deliberate
 			},
 			value: this._hyotonCount,
-			why: <Plural id="nin.ninjutsu.suggestions.hyoton.why"
-				value={this._hyotonCount}
-				one="You cast Hyoton # time."
-				other="You cast Hyoton # times."/>,
+			why: <Trans id="nin.ninjutsu.suggestions.hyoton.why">
+				You cast Hyoton <Plural value={this._hyotonCount} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -111,10 +110,9 @@ export default class Ninjutsu extends Module {
 				3: SEVERITY.MAJOR, // Holy shit get better internet
 			},
 			value: this._rabbitCount,
-			why: <Plural id="nin.ninjutsu.suggestions.rabbit.why"
-				value={this._rabbitCount}
-				one="You cast Rabbit Medium # time."
-				other="You cast Rabbit Medium # times."/>,
+			why: <Trans id="nin.ninjutsu.suggestions.rabbit.why">
+				You cast Rabbit Medium <Plural value={this._rabbitCount} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		const {badTcjs, badAoes, badStds} = this._appraiseDotonCasts()
@@ -128,10 +126,9 @@ export default class Ninjutsu extends Module {
 				3: SEVERITY.MEDIUM,
 			},
 			value: badTcjs,
-			why: <Plural id="nin.ninjutsu.suggestions.tcj-doton.why"
-				value={badTcjs}
-				one="You had # unoptimized Doton cast under Ten Chi Jin."
-				other="You had # unoptimized Doton casts under Ten Chi Jin."/>,
+			why: <Trans id="nin.ninjutsu.suggestions.tcj-doton.why">
+				You cast an unoptimized Doton under Ten Chi Jin <Plural value={badTcjs} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		if (badAoes > 0) {
@@ -141,10 +138,9 @@ export default class Ninjutsu extends Module {
 					<ActionLink {...ACTIONS.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...ACTIONS.KATON}/> instead against adds that will die quickly.
 				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Plural id="nin.ninjutsu.suggestions.aoe-doton.why"
-					value={badAoes}
-					one="You had # unoptimized Doton cast."
-					other="You had # unoptimized Doton casts."/>,
+				why: <Trans id="nin.ninjutsu.suggestions.aoe-doton.why">
+					You cast an unoptimized Doton cast <Plural value={badAoes} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 
@@ -155,10 +151,9 @@ export default class Ninjutsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Plural id="nin.ninjutsu.suggestions.st-doton.why"
-					value={badStds}
-					one="You cast # single-target Doton."
-					other="You cast # single-target Dotons."/>,
+				why: <Trans id="nin.ninjutsu.suggestions.st-doton.why">
+					You cast a single-target Doton <Plural value={badStds} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 	}

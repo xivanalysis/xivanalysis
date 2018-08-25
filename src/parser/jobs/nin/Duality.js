@@ -45,10 +45,9 @@ export default class Duality extends Module {
 					Avoid using <ActionLink {...ACTIONS.DUALITY}/> on any GCDs besides <ActionLink {...ACTIONS.AEOLIAN_EDGE}/>. The side effects of the GCD aren't duplicated, only the damage, so your highest damage combo hit is always ideal.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.duality.suggestions.misuse.why"
-					value={this._badDualityUses}
-					one="You used Duality # time on non-optimal GCDs."
-					other="You used Duality # times on non-optimal GCDs."/>,
+				why: <Trans id="nin.duality.suggestions.misuse.why">
+					You used Duality <Plural value={this._badDualityUses} one="# time" other="# times"/> on non-optimal GCDs.
+				</Trans>,
 			}))
 		}
 	}

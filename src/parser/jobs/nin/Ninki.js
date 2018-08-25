@@ -115,10 +115,9 @@ export default class Ninki extends Module {
 				3: SEVERITY.MEDIUM,
 			},
 			value: this._erroneousFrogs,
-			why: <Plural id="nin.ninki.suggestions.frog.why"
-				value={this._erroneousFrogs}
-				one="You used Hellfrog Medium # time when other spenders were available."
-				other="You used Hellfrog Medium # times when other spenders were available."/>,
+			why: <Trans id="nin.ninki.suggestions.frog.why">
+				You used Hellfrog Medium <Plural value={this._erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
+			</Trans>,
 		}))
 	}
 }

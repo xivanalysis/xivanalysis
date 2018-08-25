@@ -59,10 +59,9 @@ export default class Kassatsu extends Module {
 					Be careful not to let <ActionLink {...ACTIONS.KASSATSU}/> fall off, as it wastes a guaranteed crit and means that you're delaying your Ninjutsu casts significantly.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.kassatsu.suggestions.waste.why"
-					value={this._kassatsuWastes}
-					one="You allowed Kassatsu to fall off # time."
-					other="You allowed Kassatsu to fall off # times."/>,
+				why: <Trans id="nin.kassatsu.suggestions.waste.why">
+					You allowed Kassatsu to fall off <Plural value={this._kassatsuWastes} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 
@@ -73,10 +72,9 @@ export default class Kassatsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.KATON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it against multiple targets. On single targets, it's better to use <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> or <ActionLink {...ACTIONS.RAITON}/>.
 				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Plural id="nin.kassatsu.suggestions.katon.why"
-					value={this._kassatsuUses[ACTIONS.KATON.id]}
-					one="You cast Katon # time under Kassatsu."
-					other="You cast Katon # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.katon.why">
+					You cast Katon <Plural value={this._kassatsuUses[ACTIONS.KATON.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 
@@ -87,10 +85,9 @@ export default class Kassatsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.HYOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>. Both <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> and <ActionLink {...ACTIONS.RAITON}/> do significantly more damage.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Plural id="nin.kassatsu.suggestions.hyoton.why"
-					value={this._kassatsuUses[ACTIONS.HYOTON.id]}
-					one="You cast Hyoton # time under Kassatsu."
-					other="You cast Hyoton # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.hyoton.why">
+					You cast Hyoton <Plural value={this._kassatsuUses[ACTIONS.HYOTON.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 
@@ -101,10 +98,9 @@ export default class Kassatsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.HUTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>, as it does no damage and completely wastes the guaranteed crit Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Plural id="nin.kassatsu.suggestions.huton.why"
-					value={this._kassatsuUses[ACTIONS.HUTON.id]}
-					one="You cast Huton # time under Kassatsu."
-					other="You cast Huton # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.huton.why">
+					You cast Huton <Plural value={this._kassatsuUses[ACTIONS.HUTON.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 
@@ -115,10 +111,9 @@ export default class Kassatsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it against multiple targets that you expect to die slowly. If the targets will die in under 15 seconds, <ActionLink {...ACTIONS.KATON}/> is the better AoE option.
 				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Plural id="nin.kassatsu.suggestions.doton.why"
-					value={this._kassatsuUses[ACTIONS.DOTON.id]}
-					one="You cast Doton # time under Kassatsu."
-					other="You cast Doton # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.doton.why">
+					You cast Doton <Plural value={this._kassatsuUses[ACTIONS.DOTON.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 
@@ -129,10 +124,9 @@ export default class Kassatsu extends Module {
 					Avoid using <ActionLink {...ACTIONS.SUITON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...ACTIONS.TRICK_ATTACK}/>. Otherwise, reserve it for <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> and <ActionLink {...ACTIONS.RAITON}/>, as they both do significantly more damage.
 				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Plural id="nin.kassatsu.suggestions.suiton.why"
-					value={this._kassatsuUses[ACTIONS.SUITON.id]}
-					one="You cast Suiton # time under Kassatsu."
-					other="You cast Suiton # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.suiton.why">
+					You cast Suiton <Plural value={this._kassatsuUses[ACTIONS.SUITON.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 
@@ -143,10 +137,9 @@ export default class Kassatsu extends Module {
 					Be especially careful not to flub your mudras under <ActionLink {...ACTIONS.KASSATSU}/>, as <ActionLink {...ACTIONS.RABBIT_MEDIUM}/> does no damage and completely wastes the guaranteed crit Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Plural id="nin.kassatsu.suggestions.rabbit.why"
-					value={this._kassatsuUses[ACTIONS.RABBIT_MEDIUM.id]}
-					one="You cast Rabbit Medium # time under Kassatsu."
-					other="You cast Rabbit Medium # times under Kassatsu."/>,
+				why: <Trans id="nin.kassatsu.suggestions.rabbit.why">
+					You cast Rabbit Medium <Plural value={this._kassatsuUses[ACTIONS.RABBIT_MEDIUM.id]} one="# time" other="# times"/> under Kassatsu.
+				</Trans>,
 			}))
 		}
 	}
