@@ -268,5 +268,10 @@
   "whm.dots.suggestion.clip-a2.content": "Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)",
   "whm.dots.suggestion.clip-a2.why": "{0} of {1} lost to early refreshes.",
   "whm.dots.suggestion.clip-a3.content": "Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.",
-  "whm.dots.suggestion.clip-a3.why": "{0} of {1} lost to early refreshes."
+  "whm.dots.suggestion.clip-a3.why": "{0} of {1} lost to early refreshes.",
+  "whm.overheal.requirement.all": "Overheal (all sources)",
+  "whm.overheal.requirement.hot": "Overheal (HoT)",
+  "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
+  "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
+  "whm.overheal.rule.name": "Avoid overheal"
 }
