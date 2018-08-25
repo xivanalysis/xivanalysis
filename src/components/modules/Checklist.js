@@ -38,6 +38,12 @@ class Checklist extends Component {
 		const panels = rules.map((rule, index) => {
 			const ruleStyles = RULE_STYLES[rule.tier]
 
+			// We cap the percent @ 100 in production mode - calculations can always be a bit janky
+			let percent = rule.percent
+			if (process.env.NODE_ENV === 'production') {
+				percent = Math.min(percent, 100)
+			}
+
 			if (ruleStyles.autoExpand) {
 				expanded.push(index)
 			}
@@ -53,9 +59,9 @@ class Checklist extends Component {
 						/>
 						{rule.name}
 						<div className={styles.percent + ' ' + ruleStyles.text}>
-							{rule.percent.toFixed(1)}%
+							{percent.toFixed(1)}%
 							{hideProgress || <Progress
-								percent={rule.percent}
+								percent={percent}
 								className={styles.progress}
 								size="small"
 								color={ruleStyles.color}
