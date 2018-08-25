@@ -104,6 +104,10 @@ export default class Weaving extends Module {
 			},
 			weaves: this._weaves,
 		}
+		if (weave.weaves.length === 0) {
+			return
+		}
+
 		if (this.isBadWeave(weave)) {
 			this._badWeaves.push(weave)
 		}

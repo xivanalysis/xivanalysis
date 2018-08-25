@@ -75,15 +75,14 @@ export default class Triple extends Module {
 		const panels = this._history.map(triple => {
 			const numGcds = triple.casts.filter(cast => !getAction(cast.ability.guid).onGcd).length - 1 // 1 is Triplecast itself
 			return {
+				key: 'title-' + triple.start,
 				title: {
-					key: 'title-' + triple.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(triple.start)}
 						&nbsp;-&nbsp;{numGcds} oGCD(s)
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + triple.start,
 					content: <Rotation events={triple.casts}/>,
 				},
 			}
