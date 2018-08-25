@@ -5,6 +5,7 @@ import BuffExtensions from './BuffExtensions'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import DoTs from './DoTs'
 import LucidDreaming from './LucidDreaming'
+import Draw from './Draw'
 
 export default [
 	About,
@@ -13,4 +14,5 @@ export default [
 	BuffExtensions,
 	EarthlyStar,
 	LucidDreaming,
+	Draw,
 ]
