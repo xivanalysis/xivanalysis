@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -7,13 +8,16 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // TODO: Figure out how to check CD of Draw before Sleeve Draw is cast
+// TODO: Ensure Sleeve Draw is used with an empty hand
 
 // Amount of time it's okay to hold off Sleeve Draw (SD)
 const EXCUSED_HOLD_DEFAULT = 1500
 const WASTED_USES_MAX_MEDIUM = 1
 
 export default class Draw extends Module {
-	static handle = 'sleeve draw'
+	static handle = 'sleeve-draw'
+	static title  = 'Sleeve Draw'
+	static i18n_id = i18nMark('ast.sleeve-draw.title')
 	static dependencies = [
 		'suggestions',
 		'checklist',
@@ -62,22 +66,30 @@ export default class Draw extends Module {
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
-				content: <Fragment>
-					Keep <ActionLink {...ACTIONS.SLEEVE_DRAW} /> on cooldown.
-				</Fragment>,
+				content: <Trans id="ast.sleeve-draw.suggestions.uses.content">
+					An Astrologian's bread and butter are his cards. In order to get the largest amount of cards possible
+					throughout the fight, you want to use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> as much as you can.
+				</Trans>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: <Fragment>
-					About {_usesMissed} uses of Sleeve Draw were missed by holding it for a total
-					of {this.parser.formatDuration(holdDuration)}.
-				</Fragment>,
+				why: <Trans id="ast.sleeve-draw.suggestions.uses.content">
+					<Plural value={_usesMissed} one="# use" other="# uses" /> of Sleeve Draw were lost by holding it
+					for a total of {this.parser.formatDuration(holdDuration)}
+				</Trans>,
 			}))
 		}
 		this.checklist.add(new Rule({
-			name: <Fragment>Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently</Fragment>,
-			description: 'Cards are the bread and butter of the Astrologian, so we want to use them as frequently as possible. Sleeve Draw gives us more cards',
+			name: <Trans id="ast.sleeve-draw.checklist.name">
+				Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> frequently
+			</Trans>,
+			description: <Trans id="ast.sleeve-draw.checklist.description">
+				Cards are the main mechanic of the Astrologian, so we want to use as many of them as possible.
+				That means using Sleeve Draw as often as possible.
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Fragment>Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently</Fragment>,
+					name: <Trans id="ast.sleeve-draw.checklist.requirement.uses.name">
+						Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently
+					</Trans>,
 					value: this._uses,
 					target: Math.max(maxUses, this._uses),
 				}),
