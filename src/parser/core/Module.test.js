@@ -115,4 +115,12 @@ describe('Module', () => {
 			expect(hook).toHaveBeenCalledTimes(1)
 		})
 	})
+
+	it('can remove hooks', () => {
+		const hookRef = module.addHook(event.type, hook)
+		module.triggerEvent(event)
+		module.removeHook(hookRef)
+		module.triggerEvent(event)
+		expect(hook).toHaveBeenCalledTimes(1)
+	})
 })

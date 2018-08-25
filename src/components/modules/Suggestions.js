@@ -1,10 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import {connect} from 'react-redux'
 import {Checkbox, Label} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
+import {updateSettings} from 'store/actions'
 
 import styles from './Suggestions.module.css'
 
@@ -23,14 +25,12 @@ class Suggestions extends Component {
 			why: PropTypes.node.isRequired,
 			severity: PropTypes.number.isRequired,
 		})).isRequired,
-	}
-
-	state = {
-		showMinor: false,
+		dispatch: PropTypes.func.isRequired,
+		showMinor: PropTypes.bool,
 	}
 
 	render() {
-		const {showMinor} = this.state
+		const {dispatch, showMinor} = this.props
 
 		const suggestions = this.props.suggestions.filter(
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR
@@ -43,7 +43,9 @@ class Suggestions extends Component {
 				toggle
 				label={<label><Trans id="core.suggestion.show-minor">Show minor</Trans></label>}
 				defaultChecked={showMinor}
-				onChange={(_, data) => this.setState({showMinor: data.checked})}
+				onChange={(_, data) => dispatch(updateSettings({
+					suggestionsShowMinor: data.checked,
+				}))}
 				className={styles.checkbox}
 			/>}
 			<div className={styles.items}>
@@ -68,4 +70,6 @@ class Suggestions extends Component {
 	}
 }
 
-export default Suggestions
+export default connect(state => ({
+	showMinor: state.settings.suggestionsShowMinor,
+}))(Suggestions)
