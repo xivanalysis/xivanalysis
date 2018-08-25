@@ -4,15 +4,18 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // TODO: Figure out how to check CD of Draw before Sleeve Draw is cast
 
 // Amount of time it's okay to hold off Sleeve Draw (SD)
 const EXCUSED_HOLD_DEFAULT = 1500
+const WASTED_USES_MAX_MEDIUM = 1
 
 export default class Draw extends Module {
 	static handle = 'sleeve draw'
 	static dependencies = [
+		'suggestions',
 		'checklist',
 		'unableToAct',
 	]
@@ -53,9 +56,22 @@ export default class Draw extends Module {
 
 	_onComplete() {
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
-		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / (ACTIONS.ASSIZE.cooldown * 1000))
+		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
 		const maxUses = this._uses + _usesMissed
 
+		if (_usesMissed > 1 || this._uses === 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SLEEVE_DRAW.icon,
+				content: <Fragment>
+					Keep <ActionLink {...ACTIONS.SLEEVE_DRAW} /> on cooldown.
+				</Fragment>,
+				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
+				why: <Fragment>
+					About {_usesMissed} uses of Sleeve Draw were missed by holding it for a total
+					of {this.parser.formatDuration(holdDuration)}.
+				</Fragment>,
+			}))
+		}
 		this.checklist.add(new Rule({
 			name: <Fragment>Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently</Fragment>,
 			description: 'Cards are the bread and butter of the Astrologian, so we want to use them as frequently as possible. Sleeve Draw gives us more cards',
