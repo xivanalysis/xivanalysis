@@ -170,6 +170,12 @@
   "nin.shadowfang.suggestions.clipping.why": "You lost {0} of Shadow Fang to early refreshes.",
   "nin.ta-positional.suggestions.missed.content": "<0/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.",
   "nin.ta-positional.suggestions.missed.why": "{0, plural, one {You missed the positional on Trick Attack # time.} other {You missed the positional on Trick Attack # times.}}",
+  "nin.ta-usage.suggestions.missed.content": "Avoid holding <0/> for extended periods of time. It's typically ideal to use it as close to on cooldown as possible in order to keep it aligned with all the other raid buffs and personal burst windows, as well as maximizing the number of uses per fight.",
+  "nin.ta-usage.suggestions.missed.why": "You delayed Trick Attack for a cumulative {0}, costing you {lostCasts} potential {lostCasts, plural, one {use} other {uses}}.",
+  "nin.ta-usage.suggestions.none.content": "<0/> is the single most powerful raid buff in your kit and should be used on cooldown, or as close to it as possible depending on the flow of the fight.",
+  "nin.ta-usage.suggestions.none.why": "You didn't use Trick Attack once the entire fight.",
+  "nin.ta-usage.suggestions.opener.content": "Avoid unconventional timings for your first <0/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in after {OPTIMAL_GCD_COUNT} GCDs.",
+  "nin.ta-usage.suggestions.opener.why": "Your first Trick Attack was {0} {1, plural, one {GCD} other {GCDs}} into your opener.",
   "nin.ta-window.suggestions.armor-crush.content": "Avoid using <0/> during Trick Attack windows. Unless Huton would otherwise fall off, <1/> or <2/> are always preferable for the additional damage.",
   "nin.ta-window.suggestions.armor-crush.why": "{0, plural, one {You used Armor Crush # time during Trick Attack.} other {You used Armor Crush # times during Trick Attack.}}",
   "nin.ta-window.suggestions.dream.content": "Avoid using <0/> outside of Trick Attack windows. Since they're both on 60 second cooldowns, they should always be paired to maximize DPS.",
@@ -268,5 +274,10 @@
   "whm.dots.suggestion.clip-a2.content": "Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)",
   "whm.dots.suggestion.clip-a2.why": "{0} of {1} lost to early refreshes.",
   "whm.dots.suggestion.clip-a3.content": "Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.",
-  "whm.dots.suggestion.clip-a3.why": "{0} of {1} lost to early refreshes."
+  "whm.dots.suggestion.clip-a3.why": "{0} of {1} lost to early refreshes.",
+  "whm.overheal.requirement.all": "Overheal (all sources)",
+  "whm.overheal.requirement.hot": "Overheal (HoT)",
+  "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
+  "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
+  "whm.overheal.rule.name": "Avoid overheal"
 }
