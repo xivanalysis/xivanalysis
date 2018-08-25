@@ -70,7 +70,7 @@ export default class TrickAttackUsage extends Module {
 					3: SEVERITY.MAJOR,
 				},
 				why: <Trans id="nin.ta-usage.suggestions.missed.why">
-					You delayed Trick Attack for a cumulative {this.parser.formatDuration(this._lostTime)}, costing you {lostCasts} potential <Plural value={lostCasts} one="use" other="uses"/>.
+					You delayed Trick Attack for a cumulative {this.parser.formatDuration(this._lostTime)}, costing you <Plural value={lostCasts} one="# potential use" other="# potential uses"/>.
 				</Trans>,
 			}))
 
@@ -86,7 +86,7 @@ export default class TrickAttackUsage extends Module {
 					2: SEVERITY.MAJOR,
 				},
 				why: <Trans id="nin.ta-usage.suggestions.opener.why">
-					Your first Trick Attack was {this._gcdCount} <Plural value={this._gcdCount} one="GCD" other="GCDs"/> into your opener.
+					Your first Trick Attack was <Plural value={this._gcdCount} one="# GCD" other="# GCDs"/> into your opener.
 				</Trans>,
 			}))
 		} else {
