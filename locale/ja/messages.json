@@ -268,5 +268,10 @@
   "whm.dots.suggestion.clip-a2.content": "",
   "whm.dots.suggestion.clip-a2.why": "",
   "whm.dots.suggestion.clip-a3.content": "",
-  "whm.dots.suggestion.clip-a3.why": ""
+  "whm.dots.suggestion.clip-a3.why": "",
+  "whm.overheal.requirement.all": "",
+  "whm.overheal.requirement.hot": "",
+  "whm.overheal.requirement.nonhot": "",
+  "whm.overheal.rule.description": "",
+  "whm.overheal.rule.name": ""
 }
