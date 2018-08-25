@@ -63,7 +63,7 @@ export default class SleeveDraw extends Module {
 		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
 		const maxUses = this._uses + _usesMissed
 
-		if (_usesMissed > 1 || this._uses === 0) {
+		if (_usesMissed >= 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.sleeve-draw.suggestions.uses.content">
@@ -71,8 +71,8 @@ export default class SleeveDraw extends Module {
 					throughout the fight, you want to use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> as much as you can.
 				</Trans>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: <Trans id="ast.sleeve-draw.suggestions.uses.content">
-					<Plural value={_usesMissed} one="# use" other="# uses" /> of Sleeve Draw were lost by holding it
+				why: <Trans id="ast.sleeve-draw.suggestions.uses.why">
+					<Plural value={_usesMissed} one="# use" other="# uses" /> of Sleeve Draw was lost by holding it
 					for a total of {this.parser.formatDuration(holdDuration)}
 				</Trans>,
 			}))
@@ -91,7 +91,7 @@ export default class SleeveDraw extends Module {
 						Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently
 					</Trans>,
 					value: this._uses,
-					target: Math.max(maxUses, this._uses),
+					target: Math.max(maxUses, this._uses, 1),
 				}),
 			],
 		}))
