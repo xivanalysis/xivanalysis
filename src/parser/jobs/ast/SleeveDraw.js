@@ -14,7 +14,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const EXCUSED_HOLD_DEFAULT = 1500
 const WASTED_USES_MAX_MEDIUM = 1
 
-export default class Draw extends Module {
+export default class SleeveDraw extends Module {
 	static handle = 'sleeve-draw'
 	static title  = 'Sleeve Draw'
 	static i18n_id = i18nMark('ast.sleeve-draw.title')
