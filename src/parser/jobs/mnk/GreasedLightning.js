@@ -117,7 +117,7 @@ export default class GreasedLightning extends Module {
 				// Fall through to reapply
 				if (event.type === 'applybuffstack') {
 					currentStacks = Math.min(currentStacks + 1, GL_MAX_STACKS)
-					event.stacks = currentStacks
+					event.stack = currentStacks
 				}
 
 				// Reset TK
@@ -143,7 +143,7 @@ export default class GreasedLightning extends Module {
 	}
 
 	_onGlRefresh(event) {
-		if (event.stack > this._currentStacks.stacks) {
+		if (event.stack > this._currentStacks.stack) {
 			this._currentStacks = {
 				stacks: event.stack,
 				timestamp: event.timestamp,
@@ -247,7 +247,7 @@ export default class GreasedLightning extends Module {
 
 		const statusUptime = this._stacks.reduce((duration, value, index) => {
 			const last = this._stacks[index-1] || {}
-			if (value.stacks === 0 && last.stacks === GL_MAX_STACKS) {
+			if (value.stack === 0 && last.stack === GL_MAX_STACKS) {
 				duration += value.timestamp - last.timestamp
 			}
 

@@ -27,12 +27,12 @@ export default class Speedmod extends Module {
 	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
 
 	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
-	jobSpecificNormaliseLogic(event) { // eslint-disable-line no-unused-vars
+	jobSpecificNormaliseLogic(/* event */) {
 	}
 
 	// Override for scalars that function outside of speedmod
 	// NOTE: Only Riddle of Fire (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
-	getJobAdditionalSpeedbuffScalar() { // eslint-disable-line no-unused-vars
+	getJobAdditionalSpeedbuffScalar() {
 		return 1.0
 	}
 
