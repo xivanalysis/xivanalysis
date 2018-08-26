@@ -74,7 +74,7 @@ export default class Leylines extends Module {
 		this._circleOfPowers.history = this._circleOfPowers.history.filter(cops => cops.start < (event.timestamp - LEYLINE_DURATION))
 		this._leyLineHistory = this._leyLineHistory.filter(timestamps => timestamps < (event.timestamp - LEYLINE_DURATION))
 		const circleOfPowerDurations = this._circleOfPowers.history.map(cops => Math.max(cops.stop - cops.start, 0))
-		const sumOfCoPUpTime = circleOfPowerDurations.reduce((accumulator, currentValue) => accumulator + currentValue)
+		const sumOfCoPUpTime = circleOfPowerDurations.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 		const numberOfLeyLines = this._leyLineHistory.length
 
 		this.checklist.add(new Rule({

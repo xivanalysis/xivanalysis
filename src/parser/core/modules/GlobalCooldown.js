@@ -82,7 +82,9 @@ export default class GlobalCooldown extends Module {
 			}
 		}
 
-		this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
+		if (events.length) {
+			this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
+		}
 		this._debugLogSavedGcds()
 
 		return events

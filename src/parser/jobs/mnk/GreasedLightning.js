@@ -104,7 +104,7 @@ export default class GreasedLightning extends Module {
 					}
 
 					// We timed out, reset stacks
-					if (event.timestamp - lastStackEvent.timestamp > GL_TIMEOUT_MILLIS) {
+					if (event.timestamp - lastStackEvent.timestamp >= GL_TIMEOUT_MILLIS) {
 						currentStacks = 0
 					}
 				}
@@ -114,10 +114,15 @@ export default class GreasedLightning extends Module {
 					event.type = 'applybuffstack'
 				}
 
+				// If it's still an applybuff, make sure we're recording the correct current stack count
+				if (event.type === 'applybuff') {
+					currentStacks = event.stack || 1
+				}
+
 				// Fall through to reapply
 				if (event.type === 'applybuffstack') {
 					currentStacks = Math.min(currentStacks + 1, GL_MAX_STACKS)
-					event.stacks = currentStacks
+					event.stack = currentStacks
 				}
 
 				// Reset TK
@@ -134,7 +139,7 @@ export default class GreasedLightning extends Module {
 
 	_onGlGain(event) {
 		this._currentStacks = {
-			stacks: 1,
+			stack: event.stack || 1,
 			timestamp: event.timestamp,
 		}
 
@@ -143,9 +148,9 @@ export default class GreasedLightning extends Module {
 	}
 
 	_onGlRefresh(event) {
-		if (event.stack > this._currentStacks.stacks) {
+		if (event.stack > this._currentStacks.stack) {
 			this._currentStacks = {
-				stacks: event.stack,
+				stack: event.stack,
 				timestamp: event.timestamp,
 			}
 
@@ -175,7 +180,7 @@ export default class GreasedLightning extends Module {
 
 	_onDrop(event) {
 		this._currentStacks = {
-			stacks: 0,
+			stack: 0,
 			timestamp: event.timestamp,
 		}
 
@@ -190,7 +195,7 @@ export default class GreasedLightning extends Module {
 
 	_onComplete() {
 		// Push the final GL count so that it lasts to the end of the fight
-		this._stacks.push({stacks: 0, timestamp: this.parser.fight.end_time})
+		this._stacks.push({stack: 0, timestamp: this.parser.fight.end_time})
 
 		// Push wasted saves for failed RoE
 		this._earthSaves.forEach(earth => {
@@ -247,7 +252,7 @@ export default class GreasedLightning extends Module {
 
 		const statusUptime = this._stacks.reduce((duration, value, index) => {
 			const last = this._stacks[index-1] || {}
-			if (value.stacks === 0 && last.stacks === GL_MAX_STACKS) {
+			if (value.stack === 0 && last.stack === GL_MAX_STACKS) {
 				duration += value.timestamp - last.timestamp
 			}
 
@@ -265,7 +270,7 @@ export default class GreasedLightning extends Module {
 		const data = {
 			datasets: [{
 				label: 'GL Stacks',
-				data: this._stacks.map(({stacks, timestamp}) => ({y: stacks, t: timestamp - this.parser.fight.start_time})),
+				data: this._stacks.map(({stack, timestamp}) => ({y: stack, t: timestamp - this.parser.fight.start_time})),
 				backgroundColor: Color(JOBS.MONK.colour).fade(0.5),
 				borderColor: Color(JOBS.MONK.colour).fade(0.2),
 				steppedLine: true,
