@@ -1,5 +1,5 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -87,93 +87,73 @@ export default class Ninjutsu extends Module {
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HYOTON.icon,
-			content: <Fragment>
-				<Trans id="nin.ninjutsu.suggestions.hyoton.content">Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.</Trans>
-			</Fragment>,
+			content: <Trans id="nin.ninjutsu.suggestions.hyoton.content">
+				Avoid using <ActionLink {...ACTIONS.HYOTON}/>, as it's the weakest of the mudra combinations and should typically never be used in raid content.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR, // Probably a fat finger
 				2: SEVERITY.MEDIUM, // Probably deliberate
 			},
 			value: this._hyotonCount,
-			why: <Fragment>
-				<Plural
-					id="nin.ninjutsu.suggestions.hyoton.why"
-					value={this._hyotonCount}
-					one="You cast Hyoton # time."
-					other="You cast Hyoton # times."/>
-			</Fragment>,
+			why: <Trans id="nin.ninjutsu.suggestions.hyoton.why">
+				You cast Hyoton <Plural value={this._hyotonCount} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RABBIT_MEDIUM.icon,
-			content: <Fragment>
-				<Trans id="nin.ninjutsu.suggestions.rabbit.content">Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.</Trans>
-			</Fragment>,
+			content: <Trans id="nin.ninjutsu.suggestions.rabbit.content">
+				Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.
 				3: SEVERITY.MAJOR, // Holy shit get better internet
 			},
 			value: this._rabbitCount,
-			why: <Fragment>
-				<Plural
-					id="nin.ninjutsu.suggestions.rabbit.why"
-					value={this._rabbitCount}
-					one="You cast Rabbit Medium # time."
-					other="You cast Rabbit Medium # times."/>
-			</Fragment>,
+			why: <Trans id="nin.ninjutsu.suggestions.rabbit.why">
+				You cast Rabbit Medium <Plural value={this._rabbitCount} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		const {badTcjs, badAoes, badStds} = this._appraiseDotonCasts()
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DOTON.icon,
-			content: <Fragment>
-				<Trans id="nin.ninjutsu.suggestions.tcj-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you're up against multiple targets. On a single target that's about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.</Trans>
-			</Fragment>,
+			content: <Trans id="nin.ninjutsu.suggestions.tcj-doton.content">
+				Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you're up against multiple targets. On a single target that's about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
 			},
 			value: badTcjs,
-			why: <Fragment>
-				<Plural
-					id="nin.ninjutsu.suggestions.tcj-doton.why"
-					value={badTcjs}
-					one="You had # unoptimized Doton cast under Ten Chi Jin."
-					other="You had # unoptimized Doton casts under Ten Chi Jin."/>
-			</Fragment>,
+			why: <Trans id="nin.ninjutsu.suggestions.tcj-doton.why">
+				You cast an unoptimized Doton under Ten Chi Jin <Plural value={badTcjs} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 
 		if (badAoes > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DOTON.icon,
-				content: <Fragment>
-					<Trans id="nin.ninjutsu.suggestions.aoe-doton.content"><ActionLink {...ACTIONS.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...ACTIONS.KATON}/> instead against adds that will die quickly.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.ninjutsu.suggestions.aoe-doton.content">
+					<ActionLink {...ACTIONS.DOTON}/> requires at least {DOTON_TICK_TARGET} ticks to be worthwhile in an AoE setting. Use <ActionLink {...ACTIONS.KATON}/> instead against adds that will die quickly.
+				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <Fragment>
-					<Plural
-						id="nin.ninjutsu.suggestions.aoe-doton.why"
-						value={badAoes}
-						one="You had # unoptimized Doton cast."
-						other="You had # unoptimized Doton casts."/>
-				</Fragment>,
+				why: <Trans id="nin.ninjutsu.suggestions.aoe-doton.why">
+					You cast an unoptimized Doton cast <Plural value={badAoes} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 
 		if (badStds > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DOTON.icon,
-				content: <Fragment>
-					<Trans id="nin.ninjutsu.suggestions.st-doton.content">Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.ninjutsu.suggestions.st-doton.content">
+					Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					<Plural
-						id="nin.ninjutsu.suggestions.st-doton.why"
-						value={badStds}
-						one="You cast # single-target Doton."
-						other="You cast # single-target Dotons."/>
-				</Fragment>,
+				why: <Trans id="nin.ninjutsu.suggestions.st-doton.why">
+					You cast a single-target Doton <Plural value={badStds} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 	}
