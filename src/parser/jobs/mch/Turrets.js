@@ -125,18 +125,18 @@ export default class Turrets extends Module {
 		const turretDowntime = this._getTurretUptimePercent(NO_TURRET_ID)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.ROOK_AUTOTURRET.icon,
-			content: <Fragment>
-				<Trans id="mch.turrets.suggestions.no-turret.content">Turrets provide a significant portion of a MCH's passive damage and are required to use <ActionLink {...ACTIONS.HYPERCHARGE}/>. Make sure you resummon your turret immediately after <StatusLink {...STATUSES.TURRET_RESET}/> wears off or if it dies to AoEs.</Trans>
-			</Fragment>,
+			content: <Trans id="mch.turrets.suggestions.no-turret.content">
+				Turrets provide a significant portion of a MCH's passive damage and are required to use <ActionLink {...ACTIONS.HYPERCHARGE}/>. Make sure you resummon your turret immediately after <StatusLink {...STATUSES.TURRET_RESET}/> wears off or if it dies to AoEs.
+			</Trans>,
 			tiers: {
 				2: SEVERITY.MINOR,
 				4: SEVERITY.MEDIUM,
 				6: SEVERITY.MAJOR,
 			},
 			value: turretDowntime,
-			why: <Fragment>
-				<Trans id="mch.turrets.suggestions.no-turret.why">No turret was active for {turretDowntime}% of the fight.</Trans>
-			</Fragment>,
+			why: <Trans id="mch.turrets.suggestions.no-turret.why">
+				No turret was active for {turretDowntime}% of the fight.
+			</Trans>,
 		}))
 	}
 

@@ -193,35 +193,32 @@ export default class Heat extends Module {
 		const averageGaussDowntime = this._barrelStateTime[BARREL_STATE.NORMAL] / this._overheatWindows.history.length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GAUSS_BARREL.icon,
-			content: <Fragment>
-				<Trans id="mch.heat.suggestions.downtime.content">Make sure to use <ActionLink {...ACTIONS.GAUSS_BARREL}/> as soon as it's available after overheat/cooldown windows, as you can't build up heat without it.</Trans>
-			</Fragment>,
+			content: <Trans id="mch.heat.suggestions.downtime.content">
+				Make sure to use <ActionLink {...ACTIONS.GAUSS_BARREL}/> as soon as it's available after overheat/cooldown windows, as you can't build up heat without it.
+			</Trans>,
 			tiers: {
 				1000: SEVERITY.MINOR,
 				3000: SEVERITY.MEDIUM,
 			},
 			value: averageGaussDowntime,
-			why: <Fragment>
-				<Trans id="mch.heat.suggestions.downtime.why">Gauss Barrel was down for {this.parser.formatDuration(this._barrelStateTime[BARREL_STATE.NORMAL])}.</Trans>
-			</Fragment>,
+			why: <Trans id="mch.heat.suggestions.downtime.why">
+				Gauss Barrel was down for {this.parser.formatDuration(this._barrelStateTime[BARREL_STATE.NORMAL])}.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.COOLDOWN.icon,
-			content: <Fragment>
-				<Trans id="mch.heat.suggestions.cooldown.content">Avoid using <ActionLink {...ACTIONS.COOLDOWN}/> if it would bring you below {HEATED_POINT} heat. Dipping too low will cost you heated shots and may delay overheat windows, throwing off your rotation and OGCD alignment.</Trans>
-			</Fragment>,
+			content: <Trans id="mch.heat.suggestions.cooldown.content">
+				Avoid using <ActionLink {...ACTIONS.COOLDOWN}/> if it would bring you below {HEATED_POINT} heat. Dipping too low will cost you heated shots and may delay overheat windows, throwing off your rotation and OGCD alignment.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
 			value: this._badCooldowns,
-			why: <Fragment>
-				<Plural id="mch.heat.suggestions.cooldown.why"
-					value={this._badCooldowns}
-					one="You misused Cooldown # time."
-					other="You misused Cooldown # times."/>
-			</Fragment>,
+			why: <Trans id="mch.heat.suggestions.cooldown.why">
+				You misused Cooldown <Plural value={this._badCooldowns} one="# time" other="# times"/>.
+			</Trans>,
 		}))
 	}
 
