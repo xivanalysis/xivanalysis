@@ -12,6 +12,20 @@ export default {
 		duration: 60,
 	},
 
+	ENHANCED_SLUG_SHOT: {
+		id: 856,
+		name: 'Enhanced Slug Shot',
+		icon: 'https://xivapi.com/i/013000/013004.png',
+		duration: 30,
+	},
+
+	CLEANER_SHOT: {
+		id: 857,
+		name: 'Cleaner Shot',
+		icon: 'https://xivapi.com/i/013000/013006.png',
+		duration: 30,
+	},
+
 	DISMANTLED: {
 		id: 860,
 		name: 'Flamethrower',
