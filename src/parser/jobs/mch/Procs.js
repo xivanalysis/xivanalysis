@@ -58,7 +58,7 @@ export default class Procs extends Module {
 		this._activeProcs[event.ability.guid] = true
 	}
 
-	_onProcOverwritten(event) {
+	_onProcOverwritten() {
 		this._overwrittenProcs++
 	}
 
