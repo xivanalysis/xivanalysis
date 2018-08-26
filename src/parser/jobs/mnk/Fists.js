@@ -20,7 +20,7 @@ const STANCELESS_SEVERITY = {
 }
 
 export default class Fists extends Module {
-	static handler = 'fists'
+	static handle = 'fists'
 	static dependencies = [
 		'suggestions',
 	]
