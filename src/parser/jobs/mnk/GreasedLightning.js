@@ -58,7 +58,7 @@ export default class GreasedLightning extends Module {
 
 	normalise(events) {
 		let currentStacks = 0
-		let lastStackEvent = null
+		let lastStackEvent = {timestamp: this.parser.fight.start_time}
 		let usedTornadoKick = false
 
 		for (let i = 0; i < events.length; i++) {
