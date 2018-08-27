@@ -13,6 +13,8 @@
 - [ ] Earth Tackle, not even once
 - [x] Fists, make sure at least one is up
 - [ ] Fists of Fire uptime?
+- [x] Dragon Kick uptime and clipping
+- [x] Twin Snakes uptime and clipping
 
 ### AoE
 - [x] Make sure there's enough enemies for RB or AotD effectiveness

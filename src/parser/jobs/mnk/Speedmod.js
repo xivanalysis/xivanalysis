@@ -9,13 +9,14 @@ const GREASED_LIGHTNING_STATUSES = [
 	STATUSES.GREASED_LIGHTNING_III.id,
 ]
 
+const ROF_SPEEDMOD = 1.15
+
 export default class Speedmod extends CoreSpeedmod {
-	/* NOTE: Use this to force modules to run before Speedmod. ie: normalise to generate Huton events so Speedmod can pick them up natively
+	// Force modules to run before Speedmod. ie: normalise to Greased Lightning events so Speedmod can pick them up natively
 	static dependencies = [
 		...CoreSpeedmod.dependencies,
-		'forms',
+		'greasedlightning', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
-	*/
 
 	_isRofActive = false
 
@@ -53,9 +54,6 @@ export default class Speedmod extends CoreSpeedmod {
 	}
 
 	getJobAdditionalSpeedbuffScalar() {
-		if (this._isRofActive) {
-			return 1.15
-		}
-		return 1.0
+		return this._isRofActive ? ROF_SPEEDMOD : 1
 	}
 }
