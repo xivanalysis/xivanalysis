@@ -7,7 +7,12 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-const GCD_CYCLE_LENGTH = 5
+const GCD_CYCLE_LENGTH = 6
+
+const BUFF_CHECK_SKILLS = [
+	ACTIONS.DRAGON_KICK.id,
+	ACTIONS.TWIN_SNAKES.id,
+]
 
 export default class BuffUptime extends Module {
 	static handle = 'BuffUptime'
@@ -49,9 +54,15 @@ export default class BuffUptime extends Module {
 			return
 		}
 
-		if (action.onGcd) {
-			this._gcdsSinceDK[event.targetID] += 1
-			this._gcdsSinceTS++
+		// Only include GCDs, but don't double increment either
+		if (action.onGcd && !BUFF_CHECK_SKILLS.includes(action)) {
+			if (this._lastDragonKickUse[event.targetID]) {
+        this._gcdsSinceDK[event.targetID] += 1
+			}
+
+			if (this._lastTwinSnakesUse !== null) {
+        this._gcdsSinceTS++
+			}
 		}
 	}
 
@@ -130,7 +141,7 @@ export default class BuffUptime extends Module {
 		}
 
 		if (this._earlyTwinSnakes) {
-			const _lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
+			const lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
 
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TWIN_SNAKES.icon,
@@ -139,7 +150,7 @@ export default class BuffUptime extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					{_lostTruePotency} potency lost to {this._earlyTwinSnakes} early refreshes.
+					{lostTruePotency} potency lost to {this._earlyTwinSnakes} early refreshes.
 				</Fragment>,
 			}))
 		}
