@@ -4,12 +4,15 @@ import _ from 'lodash'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES, {getStatus} from 'data/STATUSES'
 import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYAL_ROAD_STATES, DRAWN_ARCANA, HELD_ARCANA} from './ArcanaGroups'
+import JOBS from 'data/JOBS'
 // import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
+import JobIcon from 'components/ui/JobIcon'
 // import {Accordion} from 'semantic-ui-react'
+import {Table, Grid} from 'semantic-ui-react'
 
 const MINOR_ARCANA_USE = [
 	ACTIONS.LADY_OF_CROWNS.id,
@@ -115,17 +118,16 @@ export default class ArcanaTracking extends Module {
 			})
 		}
 
-		if (ARCANA_STATUSES.includes(event.ability.guid)) {
-			console.log(event)
-		}
+		// if (ARCANA_STATUSES.includes(event.ability.guid)) {
+		// 	console.log(event)
+		// }
 	}
 
 	_onArcanaBuff(event) {
-		console.log('ON ARCANA BUFF')
-		console.log(event)
+		// console.log('ON ARCANA BUFF')
+		// console.log(event)
 		// this is coming right after an arcana cast with no rrAbility, so if there is, we need to go back and fix the log
 		if (ARCANA_STATUSES.includes(event.ability.guid) && event.rrAbility) {
-
 			let lastRoyalRoadIndex = _.findLastIndex(this._cardStateLog,
 				stateItem =>
 					stateItem.lastEvent &&
@@ -133,7 +135,7 @@ export default class ArcanaTracking extends Module {
 				|| stateItem.lastEvent.ability.guid === ACTIONS.ROYAL_ROAD.id)
 			)
 
-			console.log(lastRoyalRoadIndex)
+			// console.log(lastRoyalRoadIndex)
 			if (lastRoyalRoadIndex === -1) {
 				// There were no RRs or Sleeve Draws. They had it prepull, so assume this is 0
 				lastRoyalRoadIndex = 0
@@ -147,7 +149,7 @@ export default class ArcanaTracking extends Module {
 			}
 		}
 
-		console.log(this._cardStateLog.findIndex(stateItem => stateItem.lastEvent && ARCANA_USE.includes(stateItem.lastEvent.ability.guid)))
+		// console.log(this._cardStateLog.findIndex(stateItem => stateItem.lastEvent && ARCANA_USE.includes(stateItem.lastEvent.ability.guid)))
 		this.removeHook(this._onArcanaBuffHook)
 	}
 
@@ -188,11 +190,9 @@ export default class ArcanaTracking extends Module {
 
 		// If they used any arcana, consider the rrAbility consumed
 		if (DRAWN_ARCANA_USE.includes(actionId) || HELD_ARCANA_USE.includes(actionId)) {
-
 			// If this is the first Arcana they've played and there is no rrAbility, get suspicious about prepull rr states
 			if (this._cardStateLog.findIndex(stateItem => stateItem.lastEvent
-				&& [...ARCANA_USE, ...EXPANDED_ARCANA_USE].includes(stateItem.lastEvent.ability.guid)) < 0
-				&& !cardStateItem.rrAbility) {
+				&& [...ARCANA_USE, ...EXPANDED_ARCANA_USE].includes(stateItem.lastEvent.ability.guid)) === -1) {
 				// Look out for the next arcana buff to check the rrState
 				this._onArcanaBuffHook = this.addHook('applybuff', {by: 'player'}, this._onArcanaBuff)
 			}
@@ -204,7 +204,6 @@ export default class ArcanaTracking extends Module {
 		// If it was a drawn arcana, they had to have been holding onto this from the last instance of a DRAW/SLEEVE_DRAW/REDRAW
 		// Loop backward and find it
 		if (DRAWN_ARCANA_USE.includes(actionId)) {
-			console.log(event)
 			cardStateItem.drawState = null
 
 			let lastDrawIndex = _.findLastIndex(this._cardStateLog,
@@ -233,7 +232,6 @@ export default class ArcanaTracking extends Module {
 		// If it was a drawn arcana, they had to have been holding onto this from the last instance of a SPREAD/SLEEVE_DRAW
 		// Loop backward and find it
 		if (HELD_ARCANA_USE.includes(actionId)) {
-			console.log(event)
 			cardStateItem.spreadState = null
 
 			let lastSpreadIndex = _.findLastIndex(this._cardStateLog,
@@ -260,7 +258,6 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.ROYAL_ROAD.id) {
-			console.log(event)
 			cardStateItem.drawState = null
 		}
 
@@ -271,7 +268,6 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
-			console.log(event)
 			this._onSleeveDraw(event)
 		}
 
@@ -419,9 +415,64 @@ export default class ArcanaTracking extends Module {
 	}
 
 	output() {
-		return <Fragment>
+		console.log(this.parser)
+		const cardLogs = this._cardStateLog.map(artifact => {
 
-		</Fragment>
+			const isArcana = artifact.lastEvent && ARCANA_USE.includes(artifact.lastEvent.ability.guid)
+			const target = isArcana ? this.parser.modules.combatants.getEntity(event.targetID) : null
+			const targetName = target ? target.info.name : null
+			const targetJob = target ? target.info.type : null
+
+			return {
+				timestamp: artifact.lastEvent ? artifact.lastEvent.timestamp : this.parser.fight.start_time,
+				lastAction: artifact.lastEvent ? {
+					id: artifact.lastEvent.ability.guid,
+					targetName: targetName,
+					targetJob: targetJob,
+					isArcana: isArcana,
+				} : null,
+				state: {
+					rrAbility: artifact.rrAbility,
+					spread: artifact.spreadState,
+					draw: artifact.drawState,
+					minorArcana: artifact.minorState,
+				},
+			}
+		})
+
+		return <Table collapsing unstackable>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell>Time</Table.HeaderCell>
+					<Table.HeaderCell>Lastest Action</Table.HeaderCell>
+					<Table.HeaderCell>Spread After Action</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{cardLogs.forEach(artifact => {
+					return <Table.Row key={artifact.timestamp}>
+						<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
+						<Table.Cell>
+							<Grid>
+								<Grid.Row>
+									<Grid.Column><ActionLink {...getAction(artifact.lastAction.id)} /></Grid.Column>
+								</Grid.Row>
+								<Grid.Row>
+									<Grid.Column>
+										<JobIcon job={JOBS[artifact.targetJob]} />
+										{artifact.targetName}
+									</Grid.Column>
+								</Grid.Row>
+							</Grid>
+						</Table.Cell>
+						<Table.Cell>
+								testing
+						</Table.Cell>
+					</Table.Row>
+				}
+				)}
+			</Table.Body>
+		</Table>
 	}
 }
 
