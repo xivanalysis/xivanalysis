@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -79,34 +79,34 @@ export default class Ammo extends Module {
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RELOAD.icon,
-			content: <Fragment>
-				<Trans id="mch.ammo.suggestions.waste.content">Avoid using <ActionLink {...ACTIONS.RELOAD}/> and <ActionLink {...ACTIONS.QUICK_RELOAD}/> if they would put you over capacity. Wasting ammo costs you potency and guaranteed procs.</Trans>
-			</Fragment>,
+			content: <Trans id="mch.ammo.suggestions.waste.content">
+				Avoid using <ActionLink {...ACTIONS.RELOAD}/> and <ActionLink {...ACTIONS.QUICK_RELOAD}/> if they would put you over capacity. Wasting ammo costs you potency and guaranteed procs.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
 				5: SEVERITY.MAJOR,
 			},
 			value: this._wastedAmmo,
-			why: <Fragment>
-				<Trans id="mch.ammo.suggestions.waste.why">You wasted {this._wastedAmmo} ammo.</Trans>
-			</Fragment>,
+			why: <Trans id="mch.ammo.suggestions.waste.why">
+				You wasted {this._wastedAmmo} ammo.
+			</Trans>,
 		}))
 
 		const totalBadAmmoUses = Object.values(this._badAmmoUses).reduce((accum, value) => accum + value, 0)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RELOAD.icon,
-			content: <Fragment>
-				<Trans id="mch.ammo.suggestions.bad-use.content">Avoid using ammo on abilities like <ActionLink {...ACTIONS.HOT_SHOT}/> and <ActionLink {...ACTIONS.COOLDOWN}/>, as they only get a potency benefit. Your ammo is best spent on <ActionLink {...ACTIONS.SPLIT_SHOT}/> and <ActionLink {...ACTIONS.SLUG_SHOT}/> for the guaranteed procs.</Trans>
-			</Fragment>,
+			content: <Trans id="mch.ammo.suggestions.bad-use.content">
+				Avoid using ammo on abilities like <ActionLink {...ACTIONS.HOT_SHOT}/> and <ActionLink {...ACTIONS.COOLDOWN}/>, as they only get a potency benefit. Your ammo is best spent on <ActionLink {...ACTIONS.SPLIT_SHOT}/> and <ActionLink {...ACTIONS.SLUG_SHOT}/> for the guaranteed procs.
+			</Trans>,
 			tiers: {
 				5: SEVERITY.MINOR,
 				12: SEVERITY.MEDIUM,
 			},
 			value: totalBadAmmoUses,
-			why: <Fragment>
-				<Trans id="mch.ammo.suggestions.bad-use.why">You used {totalBadAmmoUses} ammo on non-optimal GCDs.</Trans>
-			</Fragment>,
+			why: <Trans id="mch.ammo.suggestions.bad-use.why">
+				You used {totalBadAmmoUses} ammo on non-optimal GCDs.
+			</Trans>,
 		}))
 	}
 
