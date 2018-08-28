@@ -130,7 +130,7 @@ export default class ArcanaUndrawUsage extends Module {
 				severity: SEVERITY.MEDIUM,
 
 				why: <Trans id="ast.arcanaundrawusage.suggestions.why">
-				${badUndraws.length} instances of using an ogcd Arcana undraw action.</Trans>,
+					{badUndraws.length} instances of using an ogcd Arcana undraw action.</Trans>,
 			}))
 		}
 

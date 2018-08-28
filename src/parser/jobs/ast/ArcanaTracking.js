@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import _ from 'lodash'
 
 import ACTIONS, {getAction} from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import STATUSES, {getStatus} from 'data/STATUSES'
 import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYAL_ROAD_STATES, DRAWN_ARCANA, HELD_ARCANA} from './ArcanaGroups'
 // import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -44,6 +44,12 @@ const ARCANA_STATUSES = [
 	STATUSES.THE_SPIRE.id,
 ]
 
+const DRAWN_ACTION_TO_STATUS_LOOKUP = _.zipObject(DRAWN_ARCANA_USE, [...DRAWN_ARCANA, ...DRAWN_ARCANA])
+const HELD_ACTION_TO_STATUS_LOOKUP = _.zipObject(HELD_ARCANA_USE, [...HELD_ARCANA, ...HELD_ARCANA])
+console.log(DRAWN_ARCANA)
+console.log(DRAWN_ACTION_TO_STATUS_LOOKUP)
+console.log(HELD_ACTION_TO_STATUS_LOOKUP)
+
 export default class ArcanaTracking extends Module {
 	static handle = 'arcanatracking'
 	static title = 'Arcana Tracking'
@@ -66,8 +72,9 @@ export default class ArcanaTracking extends Module {
 		// }
 
 		this.addHook('cast', cardActionFilter, this._onCast)
-		this.addHook('applybuff', {by: 'player'}, this._onBuff)
-		this.addHook('removebuff', {by: 'player'}, this._offRoyalRoad)
+		this.addHook('applybuff', {by: 'player'}, this._onSelfBuff)
+		this._onArcanaBuffHook = null
+		this.addHook('removebuff', {by: 'player'}, this._offStatus)
 		this.addHook('complete', this._onComplete)
 
 		this._minorArcanaHistory = []
@@ -76,15 +83,14 @@ export default class ArcanaTracking extends Module {
 
 	}
 
-	_onBuff(event) {
+	_onSelfBuff(event) {
 		if (![...ARCANA_STATUSES, ...ROYAL_ROAD_STATES, ...DRAWN_ARCANA, ...HELD_ARCANA].includes(event.ability.guid)) {
 			return
 		}
 
 		if (ROYAL_ROAD_STATES.includes(event.ability.guid)) {
 			// console.log(event)
-			// TODO: WHY AM I DOING THIS WITH FIND()
-			this._cardStateLog.find(stateItem => {
+			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent && stateItem.lastEvent.timestamp === event.timestamp) {
 					stateItem.rrAbility = event.ability
 				}
@@ -93,8 +99,7 @@ export default class ArcanaTracking extends Module {
 
 		if (DRAWN_ARCANA.includes(event.ability.guid)) {
 			// console.log(event)
-			// TODO: WHY AM I DOING THIS WITH FIND()
-			this._cardStateLog.find(stateItem => {
+			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent && stateItem.lastEvent.timestamp === event.timestamp) {
 					stateItem.drawState = event.ability
 				}
@@ -103,58 +108,72 @@ export default class ArcanaTracking extends Module {
 
 		if (HELD_ARCANA.includes(event.ability.guid)) {
 			// console.log(event)
-			// TODO: WHY AM I DOING THIS WITH FIND()
-			this._cardStateLog.find(stateItem => {
+			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent && stateItem.lastEvent.timestamp === event.timestamp) {
 					stateItem.spreadState = event.ability
 				}
 			})
 		}
 
-		// if (event.rrAbility && ARCANA_STATUSES.includes(event.ability.guid)) {
-		// 	const castIndex = this._cardStateLog.findIndex(stateItem => stateItem.lastEvent && stateItem.lastEvent.timestamp === event.rrTimestamp)
-
-		// 	if(!this._cardStateLog[castIndex - 1].rrAbility) {
-		// 		console.log(event)
-		// 		console.log(castIndex)
-
-		// 		for(let i = 0; i < castIndex - 1; i++) {
-		// 			this._cardStateLog[i].rrAbility = event.rrAbility
-		// 		}
-		// 	}
-		// }
-
-		// console.log(event)
-		// const rrAbility = event.rrAbility || null
-
-		// if (rrAbility) {
-		// 	this._cardStateLog[this._cardStateLog.length - 2].rrAbility = rrAbility
-		// }
-
+		if (ARCANA_STATUSES.includes(event.ability.guid)) {
+			console.log(event)
+		}
 	}
 
-	// TODO: Off Royal road is broken??
-	_offRoyalRoad(event) {
+	_onArcanaBuff(event) {
+		console.log('ON ARCANA BUFF')
+		console.log(event)
+		// this is coming right after an arcana cast with no rrAbility, so if there is, we need to go back and fix the log
+		if (ARCANA_STATUSES.includes(event.ability.guid) && event.rrAbility) {
+
+			let lastRoyalRoadIndex = _.findLastIndex(this._cardStateLog,
+				stateItem =>
+					stateItem.lastEvent &&
+				(stateItem.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id
+				|| stateItem.lastEvent.ability.guid === ACTIONS.ROYAL_ROAD.id)
+			)
+
+			console.log(lastRoyalRoadIndex)
+			if (lastRoyalRoadIndex === -1) {
+				// There were no RRs or Sleeve Draws. They had it prepull, so assume this is 0
+				lastRoyalRoadIndex = 0
+
+				// Modify log, they were holding onto this card since index
+				_.forEachRight(this._cardStateLog,
+					(stateItem, index) => {
+						if (index >= lastRoyalRoadIndex) { stateItem.rrAbility = event.rrAbility }
+					})
+
+			}
+		}
+
+		console.log(this._cardStateLog.findIndex(stateItem => stateItem.lastEvent && ARCANA_USE.includes(stateItem.lastEvent.ability.guid)))
+		this.removeHook(this._onArcanaBuffHook)
+	}
+
+	_offStatus(event) {
+
 		if (!ROYAL_ROAD_STATES.includes(event.ability.guid)) {
 			return
 		}
 
-		const isAfterCard = DRAWN_ARCANA_USE.includes(_.last(this._cardStateLog).lastEvent.ability.guid) || HELD_ARCANA_USE.includes(_.last(this._cardStateLog).lastEvent.ability.guid)
+		const isEmptyRoad = !this._cardStateLog.findIndex(stateItem => stateItem.lastEvent && stateItem.lastEvent.timestamp === event.timestamp)
 
-		if (!isAfterCard || _.last(this._cardStateLog).lastEvent.timestamp !== event.timestamp) {
-			// console.log(event)
-			const cardStateItem = {..._.last(this._cardStateLog)}
-
-			cardStateItem.lastEvent = event
-			cardStateItem.rrAbility = null
-
-			this._cardStateLog.push(cardStateItem)
+		if (!isEmptyRoad) {
+			return
 		}
+
+		console.log('EMPTY ROAD')
+		console.log(event)
+
+		const cardStateItem = {..._.last(this._cardStateLog)}
+
+		cardStateItem.lastEvent = event
+		cardStateItem.rrAbility = null
+
 	}
 
 	_onCast(event) {
-
-		// console.log(event)
 
 		const actionId = event.ability.guid
 
@@ -169,8 +188,17 @@ export default class ArcanaTracking extends Module {
 
 		// If they used any arcana, consider the rrAbility consumed
 		if (DRAWN_ARCANA_USE.includes(actionId) || HELD_ARCANA_USE.includes(actionId)) {
+
+			// If this is the first Arcana they've played and there is no rrAbility, get suspicious about prepull rr states
+			if (this._cardStateLog.findIndex(stateItem => stateItem.lastEvent
+				&& [...ARCANA_USE, ...EXPANDED_ARCANA_USE].includes(stateItem.lastEvent.ability.guid)) < 0
+				&& !cardStateItem.rrAbility) {
+				// Look out for the next arcana buff to check the rrState
+				this._onArcanaBuffHook = this.addHook('applybuff', {by: 'player'}, this._onArcanaBuff)
+			}
 			cardStateItem.lastEvent.rrAbility = cardStateItem.rrAbility
 			cardStateItem.rrAbility = null
+
 		}
 
 		// If it was a drawn arcana, they had to have been holding onto this from the last instance of a DRAW/SLEEVE_DRAW/REDRAW
@@ -196,7 +224,7 @@ export default class ArcanaTracking extends Module {
 
 				_.forEachRight(this._cardStateLog,
 					(stateItem, index) => {
-						if (index >= lastDrawIndex) { stateItem.drawState = getAction(actionId) }
+						if (index >= lastDrawIndex) { stateItem.drawState = getStatus(this.arcanaActionToStatus(actionId)) }
 					})
 
 			}
@@ -224,7 +252,7 @@ export default class ArcanaTracking extends Module {
 				// Modify log, they were holding onto this card since index
 				_.forEachRight(this._cardStateLog,
 					(stateItem, index) => {
-						if (index >= lastSpreadIndex) { stateItem.spreadState = getAction(actionId) }
+						if (index >= lastSpreadIndex) { stateItem.spreadState = getStatus(this.arcanaActionToStatus(actionId)) }
 					})
 
 			}
@@ -292,7 +320,7 @@ export default class ArcanaTracking extends Module {
 
 		if (EXPANDED_ARCANA_USE.includes(actionId)) {
 			// They had an expanded RR first!
-
+			pullStateItem.rrAbility = STATUSES.EXPANDED_ROYAL_ROAD
 		}
 
 		if (DRAWN_ARCANA_USE.includes(actionId)
@@ -376,6 +404,18 @@ export default class ArcanaTracking extends Module {
 				{this._minorArcanasLost} of {sleeveUses} Sleeve Draws were used despite already having a filled Minor Arcana slot.
 			</Fragment>,
 		}))
+	}
+
+	arcanaActionToStatus(arcanaId) {
+		if (DRAWN_ARCANA_USE.includes(arcanaId)) {
+			arcanaId = DRAWN_ACTION_TO_STATUS_LOOKUP[arcanaId]
+		}
+
+		if (HELD_ARCANA_USE.includes(arcanaId)) {
+			arcanaId = HELD_ACTION_TO_STATUS_LOOKUP[arcanaId]
+		}
+
+		return arcanaId
 	}
 
 	output() {
