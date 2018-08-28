@@ -19,6 +19,7 @@ export default {
 		[JOBS.ASTROLOGIAN.logType]: () => import('./jobs/ast' /*webpackChunkName: "jobs-ast" */),
 		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
 		[JOBS.MACHINIST.logType]: () => import('./jobs/mch' /* webpackChunkName: "jobs-mch" */),
+		[JOBS.DRAGOON.logType]: () => import('./jobs/drg' /* webpackChunkName: "jobs-drg" */),
 	},
 
 	BOSSES: {
