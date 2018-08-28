@@ -57,6 +57,7 @@ jobs:
           name: Run build
           command: |
             yarn extract
+            sleep 10
             CI=false yarn build
       - persist_to_workspace:
           root: /tmp
