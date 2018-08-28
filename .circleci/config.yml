@@ -55,7 +55,9 @@ jobs:
           at: /tmp
       - run:
           name: Run build
-          command: CI=false yarn build
+          command: |
+            yarn extract
+            CI=false yarn build
       - persist_to_workspace:
           root: /tmp
           paths:
