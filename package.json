@@ -39,7 +39,7 @@
   "scripts": {
     "analyse": "source-map-explorer build/static/js/main.*",
     "start": "react-app-rewired start",
-    "build": "yarn run extract && react-app-rewired build",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
