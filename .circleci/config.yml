@@ -55,7 +55,7 @@ jobs:
           at: /tmp
       - run:
           name: Run build
-          command: CI=false yarn build
+          command: CI=false sudo yarn build
       - persist_to_workspace:
           root: /tmp
           paths:
