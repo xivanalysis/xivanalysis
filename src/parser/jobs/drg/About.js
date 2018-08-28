@@ -16,7 +16,7 @@ export default class About extends CoreAbout {
 		</Message>
 	</Fragment>
 	supportedPatches = {
-		from: '4.2', // TODO
+		from: '4.05',
 		to: '4.36',
 	}
 	contributors = [
