@@ -25,7 +25,6 @@ export default class Fists extends Module {
 	static dependencies = [
 		'checklist',
 		'combatants',
-		'invuln',
 		'suggestions',
 	]
 
@@ -65,6 +64,7 @@ export default class Fists extends Module {
 					percent: () => this.getBuffUptimePercent(STATUSES.FISTS_OF_FIRE.id),
 				}),
 			],
+			// For frequent TK+RoW (maybe 2 GCDs every 30s), you end up with 93%ish, rounded down to 90 to handle the occasional RoE
 			target: 90,
 		}))
 
@@ -81,8 +81,7 @@ export default class Fists extends Module {
 
 	getBuffUptimePercent(statusId) {
 		const statusUptime = this.combatants.getStatusUptime(statusId, this.parser.player.id)
-		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
-		return (statusUptime / fightUptime) * 100
+		return (statusUptime / this.parser.fightDuration) * 100
 	}
 }
