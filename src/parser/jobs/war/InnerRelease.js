@@ -69,7 +69,7 @@ export default class InnerRelease extends Module {
 
 	_onRemoveIR() {
 		// TODO: You may need to make adjustments so the guard isn't necessary. The applybuff event is fab'd for things at the start of the fight, it may be a go.
-		if (this._ir && !this._ir.casts.some(cast => cast.ability.guid === ACTIONS.FELL_CLEAVE.id) < 5) {
+		if (this._ir.casts && !this._ir.casts.some(cast => cast.ability.guid === ACTIONS.FELL_CLEAVE.id) < 5) {
 			this._stopAndSave()
 		}
 	}
