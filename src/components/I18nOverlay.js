@@ -88,7 +88,7 @@ export default class I18nOverlay extends Component {
 
 	renderTooltip(instance) {
 		const {id, defaults, values} = instance.props
-		const i18nParent = instance.getI18n()
+		const i18nParent = instance.context.linguiPublisher || {}
 		const i18n = i18nParent && i18nParent.i18n
 
 		let valueBlock, i18nBlock

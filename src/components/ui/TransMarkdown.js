@@ -52,7 +52,7 @@ class TransMarkdown extends PureComponent {
 		id: PropTypes.string.isRequired,
 		i18n: PropTypes.shape({
 			_: PropTypes.func.isRequired,
-		}).isRequired,
+		}),
 		source: PropTypes.string.isRequired,
 		renderers: PropTypes.object,
 		linkTarget: PropTypes.string,
@@ -76,8 +76,14 @@ class TransMarkdown extends PureComponent {
 	render() {
 		const {id, i18n, source, renderers} = this.props
 
+		// i18n might not be ready yet, load the default as a fallback
+		let finalSource = source
+		if (i18n) {
+			finalSource = i18n._(id, {}, {defaults: source})
+		}
+
 		return <ReactMarkdown
-			source={i18n._(id, {}, {defaults: source})}
+			source={finalSource}
 			renderers={{
 				...renderers,
 				link: props => this.renderLink(props),
