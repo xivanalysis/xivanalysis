@@ -57,11 +57,11 @@ export default class BuffUptime extends Module {
 		// Only include GCDs, but don't double increment either
 		if (action.onGcd && !BUFF_CHECK_SKILLS.includes(action)) {
 			if (this._lastDragonKickUse[event.targetID]) {
-        this._gcdsSinceDK[event.targetID] += 1
+				this._gcdsSinceDK[event.targetID] += 1
 			}
 
 			if (this._lastTwinSnakesUse !== null) {
-        this._gcdsSinceTS++
+				this._gcdsSinceTS++
 			}
 		}
 	}
