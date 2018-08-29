@@ -102,8 +102,7 @@
     "@babel/template": "^7.0.0",
     "@babel/traverse": "^7.0.0",
     "@babel/types": "^7.0.0",
-    "babel-preset-react-app": "file:./preset-react-app-custom",
-    "fsevents": "^1.2.4"
+    "babel-preset-react-app": "file:./preset-react-app-custom"
   },
   "devDependencies": {
     "@lingui/babel-plugin-transform-js": "^2.5.0",
