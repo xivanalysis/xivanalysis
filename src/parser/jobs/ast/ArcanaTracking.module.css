@@ -1,12 +1,19 @@
 .jobIcon {
 	height: 1.4285em;
-	margin: 0 0.25em 0 0;
+	margin: 0 5px 1px 0;
 }
 
 .buffIcon {
 	width: 1.4285em;
-	margin: 0 0 0 0.25em;
+	margin-left: .25em;
 	vertical-align: baseline;
+}
+
+.spread_slot3 {
+	width: 1.4285em;
+	margin-left: .25em;
+	vertical-align: baseline;
+	margin-bottom: 3px;
 }
 
 .buffDummy {
