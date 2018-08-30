@@ -104,8 +104,7 @@ export default class Gauge extends Module {
 	}
 
 	_onDeath() {
-		// Death just flat out resets everything. Stop dying.
-		this._wastedRage += this._rage
+		// Death just flat out resets everything. AND IT DOESN'T ADD DEATH TO GAUGE LOSS ANYMORE I'M SORRY
 		this._rage = 0
 		this._pushToGraph()
 	}
@@ -117,7 +116,7 @@ export default class Gauge extends Module {
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
 			</Fragment>,
 			why: <Fragment>
-				{this._wastedRage} rage wasted by using abilities that put you over the cap.
+				{this._wastedRage} rage wasted by using abilities that sent you over the cap.
 			</Fragment>,
 			tiers: RAGE_USAGE_SEVERITY,
 			value: this._wastedRage,
