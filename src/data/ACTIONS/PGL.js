@@ -16,6 +16,7 @@ export default {
 		name: 'True Strike',
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
+		potency: 180,
 	},
 
 	SNAP_PUNCH: {
@@ -30,6 +31,7 @@ export default {
 		name: 'Twin Snakes',
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
+		potency: 130,
 	},
 
 	ARM_OF_THE_DESTROYER: {
