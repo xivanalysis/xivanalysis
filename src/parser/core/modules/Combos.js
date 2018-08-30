@@ -33,6 +33,13 @@ export default class Combos extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
+	_fabricateComboEvent(event) {
+		const combo = {...event}
+		combo.type = 'combo'
+		delete combo.timestamp // Since fabricateEvent adds that in anyway
+		this.parser.fabricateEvent(combo)
+	}
+
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
@@ -56,6 +63,7 @@ export default class Combos extends Module {
 					// Combo starter, we good
 					this._lastAction = action.id
 					this.comboHit(event)
+					this._fabricateComboEvent(event)
 				} else if (action.combo.from) {
 					// Combo action that isn't a starter, that's a paddlin'
 					this._uncomboedGcdCount++
@@ -65,6 +73,7 @@ export default class Combos extends Module {
 				// Continuing a combo correctly, yay
 				this._lastAction = action.combo.end ? NO_COMBO : action.id // If it's a finisher, reset the combo
 				this.comboHit(event)
+				this._fabricateComboEvent(event)
 			} else if (action.combo.start) {
 				// Combo starter mid-combo, that's a paddlin'
 				this._lastAction = action.id
@@ -106,7 +115,10 @@ export default class Combos extends Module {
 		this.addJobSpecificSuggestions(this._comboBreakers, this._uncomboedGcds)
 	}
 
+	// DEPRECATED - DO NOT USE
+	// Hook into 'combo' events instead now that we're fabbing those
 	comboHit(/*event*/) {
+		// TODO - Remove this once all subclasses are decoupled properly
 		// To be overridden by subclasses. This is for tracking anything a successful combo hit gets you (e.g. Beast Gauge or Kenki).
 		// The parameter is the event containing the combo action.
 	}
