@@ -5,7 +5,7 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const GCD_CYCLE_LENGTH = 6
 
@@ -57,7 +57,7 @@ export default class BuffUptime extends Module {
 		// Only include GCDs, but don't double increment either
 		if (action.onGcd && !BUFF_CHECK_SKILLS.includes(action)) {
 			if (this._lastDragonKickUse[event.targetID]) {
-				this._gcdsSinceDK[event.targetID] += 1
+				this._gcdsSinceDK[event.targetID]++
 			}
 
 			if (this._lastTwinSnakesUse !== null) {
@@ -143,12 +143,16 @@ export default class BuffUptime extends Module {
 		if (this._earlyTwinSnakes) {
 			const lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
 
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.TWIN_SNAKES.icon,
 				content: <Fragment>
 					Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
 				</Fragment>,
-				severity: SEVERITY.MAJOR,
+				tiers: {
+					1: SEVERITY.MEDIUM,
+					4: SEVERITY.MAJOR,
+				},
+				value: this._earlyTwinSnakes,
 				why: <Fragment>
 					{lostTruePotency} potency lost to {this._earlyTwinSnakes} early refreshes.
 				</Fragment>,
