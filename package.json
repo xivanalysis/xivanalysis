@@ -113,7 +113,6 @@
     "cross-env": "^5.2.0",
     "eslint-plugin-jest": "^21.22.0",
     "eslint-plugin-xivanalysis": "file:./linter",
-    "git-revision-webpack-plugin": "^3.0.3",
     "husky": "^1.0.0-rc.13",
     "jest-chain": "^1.0.3",
     "jest-extended": "^0.8.1",

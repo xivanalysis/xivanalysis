@@ -4,7 +4,7 @@ import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
 import withSizes from 'react-sizes'
-import {Container, Dropdown, Menu} from 'semantic-ui-react'
+import {Container, Dropdown, Menu, Popup} from 'semantic-ui-react'
 
 import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
 import {compose, getPathMatch, formatDuration} from 'utilities'
@@ -92,6 +92,11 @@ class Header extends Component {
 		const onHome = pathname === '/'
 		const collapseMenu = this.props.collapseMenu && !onHome
 
+		// Version info
+		const version = process.env.REACT_APP_VERSION || 'DEV'
+		const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
+		const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
+
 		return <Menu
 			fixed="top"
 			inverted
@@ -149,7 +154,19 @@ class Header extends Component {
 				</Dropdown>}
 
 				<Menu.Menu position="right">
-					<Menu.Item className={styles.version}>{process.env.VERSION}</Menu.Item>
+					<Popup
+						trigger={<Menu.Item content={'#' + version} className={styles.version}/>}
+						position="bottom center"
+					>
+						<Popup.Content>
+							<dl className={styles.versionInfo}>
+								<dt>Commit</dt>
+								<dd>{gitCommit}</dd>
+								<dt>Branch</dt>
+								<dd>{gitBranch}</dd>
+							</dl>
+						</Popup.Content>
+					</Popup>
 					<I18nMenu />
 					<Menu.Item icon="discord" href="https://discord.gg/jVbVe44" target="_blank"/>
 					<Menu.Item icon="github" href="https://github.com/xivanalysis/xivanalysis" target="_blank"/>
