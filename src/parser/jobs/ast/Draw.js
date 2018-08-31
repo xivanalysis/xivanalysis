@@ -11,7 +11,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 // Time allowed to hold every time action occures (not sure if we want to implement this/what times to put)
 const EXCUSED_CARD_HOLD_DEFAULT = 1500
 const EXCUSED_DRAW_HOLD_DEFAULT = 1500
-const EXCUSED_SLEEVE_OVERWRITE_DEFAULT = 1500
+const EXCUSED_SLEEVE_OVERWRITE_DEFAULT = 10000
 
 const DRAW_MISSED_MAX_WARN = 1
 
@@ -122,17 +122,15 @@ export default class Draw extends Module {
 		const cardHoldDuration = this._usesDraw === 0 ? this.parser.fightDuration : this._totalHeldCard
 		const sleeveHoldDuration = this._drawTimeLossFromSleeve
 
-		console.log(this._excusedHeldCard)
+		const drawUsesMissedFromCards = ((cardHoldDuration - this._excusedHeldCard) / (ACTIONS.DRAW.cooldown * 1000))
+		const drawUsesMissedFromDrift = ((drawHoldDuration - this._excusedHeldDraw) / (ACTIONS.DRAW.cooldown * 1000))
+		const drawUsesMissedFromSleeve = ((sleeveHoldDuration - this._excusedDrawTimeLossFromSleeve) / (ACTIONS.DRAW.cooldown * 1000))
 
-		const _drawUsesMissedFromCards = ((cardHoldDuration - this._excusedHeldCard) / (ACTIONS.DRAW.cooldown * 1000))
-		const _drawUsesMissedFromDrift = ((drawHoldDuration - this._excusedHeldDraw) / (ACTIONS.DRAW.cooldown * 1000))
-		const _drawUsesMissedFromSleeve = ((sleeveHoldDuration - this._excusedDrawTimeLossFromSleeve) / (ACTIONS.DRAW.cooldown * 1000))
+		const drawUsesMissedFromCardsRounded = Math.floor(drawUsesMissedFromCards)
+		// const drawUsesMissedFromDriftRounded = Math.floor(_drawUsesMissedFromDrift)
+		const drawUsesMissedFromSleeveRounded = Math.floor(drawUsesMissedFromSleeve)
 
-		const drawUsesMissedFromCards = Math.floor(_drawUsesMissedFromCards)
-		// const drawUsesMissedFromDrift = Math.floor(_drawUsesMissedFromDrift)
-		const drawUsesMissedFromSleeve = Math.floor(_drawUsesMissedFromSleeve)
-
-		const totalDrawUsesMissed = Math.floor(_drawUsesMissedFromCards + _drawUsesMissedFromDrift + _drawUsesMissedFromSleeve)
+		const totalDrawUsesMissed = Math.floor(drawUsesMissedFromCards + drawUsesMissedFromDrift + drawUsesMissedFromSleeve)
 		const maxDrawUses = this._usesDraw + totalDrawUsesMissed
 
 		const drawWarnTarget = 100 * (maxDrawUses - DRAW_MISSED_MAX_WARN) / maxDrawUses
@@ -142,8 +140,8 @@ export default class Draw extends Module {
 				Use Draw Frequently
 			</Trans>,
 			description: <Trans id="ast.draw.checklist.description">
-				<ActionLink {...ACTIONS.DRAW} /> is the main mechanic of the Astrologians,
-				so you want to use it as many uses out of it as possible.
+				<ActionLink {...ACTIONS.DRAW} /> is the main mechanic of the Astrologian,
+				so you want to use it as many times as possible.
 			</Trans>,
 			tiers: {[drawWarnTarget]: TARGET.WARN, [drawWarnTarget-1]: TARGET.FAIL, [drawWarnTarget+1]: TARGET.SUCCESS},
 			requirements: [
@@ -162,14 +160,14 @@ export default class Draw extends Module {
 			content: <Trans id="ast.draw.suggestions.cards.content">
 					It is almost never worth it to hold onto cards for too long.
 					Doing so will delay your next card draw and may even make you lose Draws over the duration of the fight.
-					Always try to use your cards as fast as possible.
+					Always try to use your cards as fast as possible unless there is alredy another card active.
 			</Trans>,
 			why: <Trans id="ast.draw.suggestions.cards.why">
-				<Plural value={drawUsesMissedFromCards} one="# cast" other="# casts" />
-					of Draw missed from holding onto cards for too long.
+				<Plural value={drawUsesMissedFromCardsRounded} one="# Draw" other="# Draws" />
+					lost.
 			</Trans>,
 			tiers: CARD_LOSS_SEVERITY,
-			value: drawUsesMissedFromCards,
+			value: drawUsesMissedFromCardsRounded,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -179,11 +177,11 @@ export default class Draw extends Module {
 					so you want to always use Sleeve Draw right after using Draw in order to get as many cards in as possible.
 			</Trans>,
 			why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
-				<Plural value={drawUsesMissedFromSleeve} one="# cast" other="# casts" />
-					of Draw missed from using Sleeve Draw.
+				<Plural value={drawUsesMissedFromSleeveRounded} one="# Draw" other="# Draws" />
+					lost.
 			</Trans>,
 			tiers: CARD_LOSS_SEVERITY,
-			value: drawUsesMissedFromSleeve,
+			value: drawUsesMissedFromSleeveRounded,
 		}))
 	}
 }
