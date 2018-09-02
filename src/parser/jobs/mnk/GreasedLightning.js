@@ -26,6 +26,7 @@ export default class GreasedLightning extends Module {
 	static title = 'Greased Lightning'
 	static dependencies = [
 		'checklist',
+		'combatants',
 		'invuln',
 		'suggestions',
 	]
@@ -37,8 +38,12 @@ export default class GreasedLightning extends Module {
 	_usedTornadoKick = false
 
 	_stacks = []
+
 	_earthSaves = []
-	_wastedSaves = []
+	_wastedEarth = []
+
+	_windSaves = []
+	_wastedWind = []
 
 	constructor(...args) {
 		super(...args)
@@ -49,6 +54,9 @@ export default class GreasedLightning extends Module {
 		this.addHook('removebuff', GL_FILTER, this._onDrop)
 
 		this.addHook('damage', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this._onTornadoKick)
+
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_WIND.id}, this._onRoWGain)
+		this.addHook('damage', {by: 'player', abilityId: ACTIONS.RIDDLE_OF_WIND.id}, this._onRoWUse)
 
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this._onRoE)
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this._onReply)
@@ -166,12 +174,36 @@ export default class GreasedLightning extends Module {
 
 	_onReply(event) {
 		if (event.timestamp - this._lastRefresh > GL_TIMEOUT_MILLIS) {
-			this._wastedSaves.push(event.timestamp)
+			this._wastedEarth.push(event.timestamp)
 		} else {
 			this._lastRefresh = event.timestamp
 		}
 
 		this._earthSaves[0].clean = true
+	}
+
+	_onRoWGain(event) {
+		this._windSaves.unshift({clean: false, timestamp: event.timestamp})
+	}
+
+	_onRoWUse(event) {
+		// Ignore if we're building stacks
+		if (this._currentStacks.stack < GL_MAX_STACKS) {
+			return
+		}
+
+		// This is kinda derpy since it really depends on GCD length but,
+		// if we're in Coeurl and it's still live, there was no point to RoW.
+		// If we're not in Coeurl we'll assume stacks were gonna drop.
+		if (this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
+			if (event.timestamp - this._lastRefresh < GL_TIMEOUT_MILLIS) {
+				this._wastedWind.push(event.timestamp)
+			}
+		} else {
+			this._lastRefresh = event.timestamp
+		}
+
+		this._windSaves[0].clean = true
 	}
 
 	_onTornadoKick() {
@@ -197,10 +229,16 @@ export default class GreasedLightning extends Module {
 		// Push the final GL count so that it lasts to the end of the fight
 		this._stacks.push({stack: 0, timestamp: this.parser.fight.end_time})
 
-		// Push wasted saves for failed RoE
+		// Push wasted saves
 		this._earthSaves.forEach(earth => {
 			if (!earth.clean) {
-				this._wastedSaves++
+				this._wastedEarth++
+			}
+		})
+
+		this._windSaves.forEach(earth => {
+			if (!earth.clean) {
+				this._wastedWind++
 			}
 		})
 
@@ -222,7 +260,7 @@ export default class GreasedLightning extends Module {
 
 		if (this._droppedStacks > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.TORNADO_KICK.icon,
+				icon: 'https://secure.xivdb.com/img/game/001000/001775.png', // Name of Lightning
 				content: <Fragment>
 					Avoid dropping stacks except when using <ActionLink {...ACTIONS.TORNADO_KICK} />.
 				</Fragment>,
@@ -233,7 +271,7 @@ export default class GreasedLightning extends Module {
 			}))
 		}
 
-		if (this._wastedSaves > 0) {
+		if (this._wastedEarth > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
 				content: <Fragment>
@@ -241,7 +279,20 @@ export default class GreasedLightning extends Module {
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedSaves} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedEarth} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+				</Fragment>,
+			}))
+		}
+
+		if (this._wastedWind > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RIDDLE_OF_WIND.icon,
+				content: <Fragment>
+					Check the fight timeline to see when you can save <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> with <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />.
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used {this._wastedWind} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
 				</Fragment>,
 			}))
 		}

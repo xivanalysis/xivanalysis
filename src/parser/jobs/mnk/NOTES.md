@@ -8,8 +8,7 @@
 - [x] GL3 holding with RoE
 - [ ] Advise when downtime was short enough and damage taken for RoE?
 - [x] Wasted RoE
-- [ ] GL loading with RoW (warn on WT without RoW after it)
-- [ ] General auto-attack uptime
+- [x] Wasted RoW
 - [ ] Earth Tackle, not even once
 - [x] Fists, make sure at least one is up
 - [x] Fists of Fire uptime
