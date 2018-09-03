@@ -7,6 +7,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // In a single target scenario, SF should always tick 5 times
 const MIN_HITS = 5
 
@@ -26,6 +28,7 @@ export default class ShadowFlare extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+	static displayOrder = DISPLAY_ORDER.SHADOW_FLARE
 
 	_casts = []
 

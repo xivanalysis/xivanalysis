@@ -7,6 +7,8 @@ import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {SUMMON_BAHAMUT_LENGTH} from './Pets'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const DEMI_BAHAMUT_ACTIONS = Object.values(ACTIONS)
 	.filter(action => action.pet && action.pet === PETS.DEMI_BAHAMUT.id)
 	.map(action => action.id)
@@ -29,6 +31,7 @@ export default class Bahamut extends Module {
 	static dependencies = [
 		'gauge',
 	]
+	static displayOrder = DISPLAY_ORDER.BAHAMUT
 
 	_current = null
 	_history = []

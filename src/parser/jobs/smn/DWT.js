@@ -9,6 +9,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
 	ACTIONS.RUIN_IV.id,
@@ -46,6 +48,7 @@ export default class DWT extends Module {
 		'suggestions',
 	]
 	static title = 'Dreadwyrm Trance'
+	static displayOrder = DISPLAY_ORDER.DWT
 
 	_active = false
 	_dwt = {}
