@@ -79,6 +79,10 @@ export default class ShadowFlare extends Module {
 	}
 
 	output() {
+		if (!this._casts.length) {
+			return null
+		}
+
 		return <ul>
 			{this._casts.map(cast => <li key={cast.cast.timestamp}>
 				<strong>{this.parser.formatTimestamp(cast.cast.timestamp)}</strong>:&nbsp;
