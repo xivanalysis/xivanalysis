@@ -233,6 +233,7 @@ export default class DWT extends Module {
 	output() {
 		const panels = this._history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const noDeathflare = dwt.casts.filter(cast => cast.ability.guid === ACTIONS.DEATHFLARE.id).length === 0
 			return {
 				key: dwt.start,
 				title: {
@@ -240,6 +241,7 @@ export default class DWT extends Module {
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
 						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
+						{noDeathflare && <span className="text-error">&nbsp;(no Deathflare)</span>}
 					</Fragment>,
 				},
 				content: {
