@@ -9,18 +9,21 @@ export default {
 		id: 107,
 		name: 'Opo-Opo Form',
 		icon: 'https://xivapi.com/i/010000/010212.png',
+		duration: 10000,
 	},
 
 	RAPTOR_FORM: {
 		id: 108,
 		name: 'Raptor Form',
 		icon: 'https://xivapi.com/i/010000/010213.png',
+		duration: 10000,
 	},
 
 	COEURL_FORM: {
 		id: 109,
 		name: 'Coeurl Form',
 		icon: 'https://xivapi.com/i/010000/010214.png',
+		duration: 10000,
 	},
 
 	MANTRA: {

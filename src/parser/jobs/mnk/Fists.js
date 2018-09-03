@@ -6,7 +6,6 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STANCES = [
@@ -23,10 +22,11 @@ const STANCELESS_SEVERITY = {
 export default class Fists extends Module {
 	static handle = 'fists'
 	static dependencies = [
-		'checklist',
 		'combatants',
 		'suggestions',
 	]
+
+	static title = 'Fist Stances'
 
 	_stanceApplied = []
 	_stanceDropped = []
@@ -53,21 +53,6 @@ export default class Fists extends Module {
 	}
 
 	_onComplete() {
-		this.checklist.add(new Rule({
-			name: 'Keep Fists of Fire up',
-			description: <Fragment>
-				Fists of Fire is a low effort 5% buff to all your damage.
-			</Fragment>,
-			requirements: [
-				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.FISTS_OF_FIRE} /> uptime</Fragment>,
-					percent: () => this.getBuffUptimePercent(STATUSES.FISTS_OF_FIRE.id),
-				}),
-			],
-			// For frequent TK+RoW (maybe 2 GCDs every 30s), you end up with 93%ish, rounded down to 90 to handle the occasional RoE
-			target: 90,
-		}))
-
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
 			content: <Fragment>
@@ -79,9 +64,9 @@ export default class Fists extends Module {
 		}))
 	}
 
-	getBuffUptimePercent(statusId) {
+	getFistUptimePercent(statusId) {
 		const statusUptime = this.combatants.getStatusUptime(statusId, this.parser.player.id)
 
-		return (statusUptime / this.parser.fightDuration) * 100
+		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
 	}
 }
