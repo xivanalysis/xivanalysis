@@ -33,6 +33,7 @@ const HEAT_BUILDERS = {
 }
 const FLAMETHROWER_TICK_HEAT_GAIN = 20
 const FLAMETHROWER_TICK_MILLIS = 1000
+const FLAMETHROWER_FUZZ_MILLIS = 50 // Fuzz factor for FT - if it ends within 50ms of the next tick, we should count the tick
 
 const OVERHEAT_DURATION_MILLIS = 10000
 const COOLING_DURATION_MILLIS = 10000
@@ -177,7 +178,7 @@ export default class Heat extends Module {
 	_onRemoveFlamethrower(event) {
 		if (this._flamethrowerApplied > -1) {
 			// The first tick is always within a few milliseconds of the buff application and all subsequent ticks fire 1 second after the last
-			const ticks = Math.floor((event.timestamp - this._flamethrowerApplied) / FLAMETHROWER_TICK_MILLIS) + 1
+			const ticks = Math.floor((event.timestamp - this._flamethrowerApplied + FLAMETHROWER_FUZZ_MILLIS) / FLAMETHROWER_TICK_MILLIS) + 1
 			this._addHeat(ticks * FLAMETHROWER_TICK_HEAT_GAIN)
 			this._flamethrowerApplied = -1
 		}
