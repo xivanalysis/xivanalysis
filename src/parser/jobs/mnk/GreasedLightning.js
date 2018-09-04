@@ -188,7 +188,7 @@ export default class GreasedLightning extends Module {
 
 	_onRoWUse(event) {
 		// Ignore if we're building stacks
-		if (this._currentStacks.stack < GL_MAX_STACKS) {
+		if (!this._currentStacks || this._currentStacks.stack < GL_MAX_STACKS) {
 			return
 		}
 
