@@ -111,6 +111,7 @@
     "@lingui/cli": "^2.5.0",
     "@lingui/loader": "^2.5.0",
     "cross-env": "^5.2.0",
+    "eslint-plugin-babel": "^5.1.0",
     "eslint-plugin-jest": "^21.22.0",
     "eslint-plugin-xivanalysis": "file:./linter",
     "husky": "^1.0.0-rc.13",

@@ -1,5 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -296,7 +296,7 @@ export default class Pets extends Module {
 			tooltips: {enabled: false},
 		}
 
-		return <Fragment>
+		return <>
 			<div className={styles.chartWrapper}>
 				<PieChart
 					data={data}
@@ -326,6 +326,6 @@ export default class Pets extends Module {
 					</tr>)}
 				</tbody>
 			</table>
-		</Fragment>
+		</>
 	}
 }

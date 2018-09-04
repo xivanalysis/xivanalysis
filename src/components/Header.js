@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {Helmet} from 'react-helmet'
 import {connect} from 'react-redux'
 import {Link, withRouter} from 'react-router-dom'
@@ -111,7 +111,7 @@ class Header extends Component {
 			</Helmet>
 
 			<Container>
-				{collapseMenu || <Fragment>
+				{collapseMenu || <>
 					<Menu.Item as={Link} to="/" header>
 						<img src={process.env.PUBLIC_URL + '/logo.png'} className={styles.logo} alt="logo"/>
 						xivanalysis
@@ -125,10 +125,10 @@ class Header extends Component {
 						{crumb.title}
 						{crumb.subtitle && <span className={styles.subtitle}>{crumb.subtitle}</span>}
 					</Menu.Item>)}
-				</Fragment>}
+				</>}
 
 				{collapseMenu && <Dropdown
-					text={<Fragment>
+					text={<>
 						<img
 							src={process.env.PUBLIC_URL + '/logo.png'}
 							className={styles.logo}
@@ -136,7 +136,7 @@ class Header extends Component {
 							alt="logo"
 						/>
 						<strong>xivanalysis</strong>
-					</Fragment>}
+					</>}
 					className="link item"
 				>
 					<Dropdown.Menu>

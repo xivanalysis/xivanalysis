@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {Switch, Route, withRouter} from 'react-router-dom'
 
 import store from 'store'
@@ -42,7 +42,7 @@ class App extends Component {
 	}
 
 	render() {
-		return <Fragment>
+		return <>
 			<Header/>
 
 			<ErrorBoundary>
@@ -53,7 +53,7 @@ class App extends Component {
 					<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 				</Switch>
 			</ErrorBoundary>
-		</Fragment>
+		</>
 	}
 }
 

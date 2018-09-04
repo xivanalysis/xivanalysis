@@ -62,7 +62,7 @@ class FightList extends Component {
 			fights[fights.length-1].fights.push(fight)
 		})
 
-		return <Fragment>
+		return <>
 			<Header>
 				<Trans id="core.find.select-pull">
 					Select a pull
@@ -102,7 +102,7 @@ class FightList extends Component {
 					{group.fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</Menu>
 			</Fragment>)}
-		</Fragment>
+		</>
 	}
 }
 

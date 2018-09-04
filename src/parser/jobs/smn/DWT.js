@@ -1,5 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -240,12 +240,12 @@ export default class DWT extends Module {
 			return {
 				key: dwt.start,
 				title: {
-					content: <Fragment>
+					content: <>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
 						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
 						{noDeathflare && <span className="text-error">&nbsp;(no Deathflare)</span>}
-					</Fragment>,
+					</>,
 				},
 				content: {
 					content: <Rotation events={dwt.casts}/>,

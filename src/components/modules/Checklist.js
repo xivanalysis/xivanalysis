@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
@@ -52,7 +52,7 @@ class Checklist extends Component {
 				key: index,
 				title: {
 					className: styles.title,
-					content: <Fragment>
+					content: <>
 						<Icon
 							name={ruleStyles.icon}
 							className={ruleStyles.text}
@@ -67,10 +67,10 @@ class Checklist extends Component {
 								color={ruleStyles.color}
 							/>}
 						</div>
-					</Fragment>,
+					</>,
 				},
 				content: {
-					content: <Fragment>
+					content: <>
 						{rule.description && <div className={styles.description}>
 							<Icon name="info" size="large" />
 							<p>{rule.description}</p>
@@ -83,7 +83,7 @@ class Checklist extends Component {
 								</li>
 							)}
 						</ul>
-					</Fragment>,
+					</>,
 				},
 			}
 		})

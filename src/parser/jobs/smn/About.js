@@ -1,5 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
@@ -15,7 +15,7 @@ If you would like to learn more about SMN, check the guides over at [The Balance
 `
 
 export default class About extends CoreAbout {
-	description = <Fragment>
+	description = <>
 		<TransMarkdown id={i18nMark('smn.about.description')} source={description}/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -23,7 +23,7 @@ export default class About extends CoreAbout {
 				<Trans id="smn.about.description.warning">While the analysis below should be reasonably accurate, this system is still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
-	</Fragment>
+	</>
 	supportedPatches = {
 		from: '4.2',
 		to: '4.36',

@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Checkbox, Label} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
@@ -38,7 +38,7 @@ class Suggestions extends Component {
 
 		const hasMinor = this.props.suggestions.some(suggestion => suggestion.severity === SEVERITY.MINOR)
 
-		return <Fragment>
+		return <>
 			{hasMinor && <Checkbox
 				toggle
 				label={<label><Trans id="core.suggestion.show-minor">Show minor</Trans></label>}
@@ -66,7 +66,7 @@ class Suggestions extends Component {
 					</div>
 				</div>}
 			</div>
-		</Fragment>
+		</>
 	}
 }
 

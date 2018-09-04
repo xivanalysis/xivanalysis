@@ -16,6 +16,7 @@ module.exports = {
 		sourceType: 'module',
 	},
 	plugins: [
+		'babel',
 		'react',
 		'xivanalysis'
 	],
@@ -70,7 +71,7 @@ module.exports = {
 		'prefer-arrow-callback': 'error',
 		'prefer-const': 'warn',
 		'prefer-spread': 'error',
-		'quotes': ['error', 'single'],
+		'babel/quotes': ['error', 'single'],
 		'semi': ['error', 'never'],
 		'space-before-blocks': 'warn',
 		'space-in-parens': 'warn',
