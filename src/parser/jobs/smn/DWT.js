@@ -9,6 +9,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
 	ACTIONS.RUIN_IV.id,
@@ -46,6 +48,7 @@ export default class DWT extends Module {
 		'suggestions',
 	]
 	static title = 'Dreadwyrm Trance'
+	static displayOrder = DISPLAY_ORDER.DWT
 
 	_active = false
 	_dwt = {}
@@ -233,6 +236,7 @@ export default class DWT extends Module {
 	output() {
 		const panels = this._history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const noDeathflare = dwt.casts.filter(cast => cast.ability.guid === ACTIONS.DEATHFLARE.id).length === 0
 			return {
 				key: dwt.start,
 				title: {
@@ -240,6 +244,7 @@ export default class DWT extends Module {
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
 						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
+						{noDeathflare && <span className="text-error">&nbsp;(no Deathflare)</span>}
 					</Fragment>,
 				},
 				content: {

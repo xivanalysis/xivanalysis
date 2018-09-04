@@ -10,6 +10,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './Pets.module.css'
 
 const NO_PET_ID = -1
@@ -46,6 +47,7 @@ export default class Pets extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+	static displayOrder = DISPLAY_ORDER.PETS
 
 	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
