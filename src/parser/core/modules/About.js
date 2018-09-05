@@ -1,6 +1,6 @@
 import {Trans, i18nMark} from '@lingui/react'
 import _ from 'lodash'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
@@ -91,7 +91,7 @@ export default class About extends Module {
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
 					<dd>{from || 'Unsupported'}{from !== to && `–${to}`}</dd>
 
-					{this.contributors.length > 0 && <Fragment>
+					{this.contributors.length > 0 && <>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>
 						<dd>
 							{this.contributors.map(contributor => {
@@ -107,7 +107,7 @@ export default class About extends Module {
 								</div>
 							})}
 						</dd>
-					</Fragment>}
+					</>}
 				</Segment>
 			</Grid.Column>
 		</Grid>

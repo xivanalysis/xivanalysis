@@ -8,6 +8,14 @@
 	opacity: .5;
 }
 
+.versionInfo,
+.versionInfo dd {
+	margin: 0;
+}
+.versionInfo dt {
+	font-weight: bold;
+}
+
 .subtitle {
 	margin-left: .5em;
 	opacity: .5;

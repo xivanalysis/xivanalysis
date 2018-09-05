@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -150,7 +150,7 @@ export default class Weaving extends Module {
 		const panels = badWeaves.map(item => ({
 			key: item.gcdEvent.timestamp,
 			title: {
-				content: <Fragment>
+				content: <>
 					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
 					&nbsp;-&nbsp;
 					<Plural
@@ -159,7 +159,7 @@ export default class Weaving extends Module {
 						_1="# weave"
 						other="# weaves"
 					/>
-				</Fragment>,
+				</>,
 			},
 			content: {
 				content: <Rotation events={[

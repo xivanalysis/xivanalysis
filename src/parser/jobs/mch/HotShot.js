@@ -94,10 +94,9 @@ export default class HotShot extends Module {
 				6: SEVERITY.MAJOR,
 			},
 			value: this._badRefreshes,
-			why: <Plural id="mch.hotshot.suggestions.refresh.why"
-				value={this._badRefreshes}
-				one="You refreshed Hot Shot # time outside of your cooling windows."
-				other="You refreshed Hot Shot # times outside of your cooling windows."/>,
+			why: <Trans id="mch.hotshot.suggestions.refresh.why">
+				You refreshed Hot Shot <Plural value={this._badRefreshes} one="# time" other="# times"/> outside of your cooling windows.
+			</Trans>,
 		}))
 	}
 }

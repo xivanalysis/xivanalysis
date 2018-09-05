@@ -1,4 +1,5 @@
 import About from './About'
+import BuffUptime from './BuffUptime'
 import Demolish from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
@@ -8,6 +9,7 @@ import Speedmod from './Speedmod'
 
 export default [
 	About,
+	BuffUptime,
 	Demolish,
 	Fists,
 	Forms,

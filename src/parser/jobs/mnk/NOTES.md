@@ -8,11 +8,14 @@
 - [x] GL3 holding with RoE
 - [ ] Advise when downtime was short enough and damage taken for RoE?
 - [x] Wasted RoE
-- [ ] GL loading with RoW (warn on WT without RoW after it)
-- [ ] General auto-attack uptime
+- [x] Wasted RoW
 - [ ] Earth Tackle, not even once
 - [x] Fists, make sure at least one is up
-- [ ] Fists of Fire uptime?
+- [x] Fists of Fire uptime
+- [x] Dragon Kick uptime and clipping
+- [x] Twin Snakes uptime and clipping
+
+turn FoF uptime check into pie chart of fists
 
 ### AoE
 - [x] Make sure there's enough enemies for RB or AotD effectiveness

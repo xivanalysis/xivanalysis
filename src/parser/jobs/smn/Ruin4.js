@@ -7,6 +7,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // there's also the case where if you have further ruin and an egi is about to do gcd + ogcd and they held, that can be considered a no no
 // also if they are holding further ruin during Bahamut what are they even doing
 // that one is major as hell
@@ -42,6 +44,7 @@ export default class Ruin4 extends Module {
 		'suggestions',
 	]
 	static title = 'Ruin IV'
+	static displayOrder = DISPLAY_ORDER.RUIN_IV
 
 	_procChances = 0
 	_procs = 0

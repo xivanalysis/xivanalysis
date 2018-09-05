@@ -8,8 +8,9 @@
 - [x] Avoiding overwriting ammo with Reload/Quick Reload (Ammo.js)
 
 ### Procs
-- [ ] Not letting procs drop
-- [ ] Not overwriting procs
+- [x] Not using Slug/Clean without procs (Procs.js)
+- [x] Not letting procs drop (Procs.js)
+- [x] Not overwriting procs (Procs.js)
 
 ### Buffs
 - [x] Hot Shot uptime (HotShot.js)

@@ -24,6 +24,8 @@ import BRD from './BRD'
 import SAM from './SAM'
 import DRK from './DRK'
 import MCH from './MCH'
+import LNC from './LNC'
+import DRG from './DRG'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
@@ -39,6 +41,7 @@ const ACTIONS = {
 	...ACN,
 	...MRD,
 	...PGL,
+	...LNC,
 
 	...PLD,
 	...WAR,
@@ -51,6 +54,7 @@ const ACTIONS = {
 	...MNK,
 	...NIN,
 	...SAM,
+	...DRG,
 
 	...BRD,
 	...MCH,

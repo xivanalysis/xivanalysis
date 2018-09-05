@@ -26,6 +26,7 @@ export default class GreasedLightning extends Module {
 	static title = 'Greased Lightning'
 	static dependencies = [
 		'checklist',
+		'combatants',
 		'invuln',
 		'suggestions',
 	]
@@ -37,8 +38,12 @@ export default class GreasedLightning extends Module {
 	_usedTornadoKick = false
 
 	_stacks = []
+
 	_earthSaves = []
-	_wastedSaves = []
+	_wastedEarth = []
+
+	_windSaves = []
+	_wastedWind = []
 
 	constructor(...args) {
 		super(...args)
@@ -50,6 +55,9 @@ export default class GreasedLightning extends Module {
 
 		this.addHook('damage', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this._onTornadoKick)
 
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_WIND.id}, this._onRoWGain)
+		this.addHook('damage', {by: 'player', abilityId: ACTIONS.RIDDLE_OF_WIND.id}, this._onRoWUse)
+
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this._onRoE)
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this._onReply)
 
@@ -58,7 +66,7 @@ export default class GreasedLightning extends Module {
 
 	normalise(events) {
 		let currentStacks = 0
-		let lastStackEvent = null
+		let lastStackEvent = {timestamp: this.parser.fight.start_time}
 		let usedTornadoKick = false
 
 		for (let i = 0; i < events.length; i++) {
@@ -104,7 +112,7 @@ export default class GreasedLightning extends Module {
 					}
 
 					// We timed out, reset stacks
-					if (event.timestamp - lastStackEvent.timestamp > GL_TIMEOUT_MILLIS) {
+					if (event.timestamp - lastStackEvent.timestamp >= GL_TIMEOUT_MILLIS) {
 						currentStacks = 0
 					}
 				}
@@ -114,10 +122,15 @@ export default class GreasedLightning extends Module {
 					event.type = 'applybuffstack'
 				}
 
+				// If it's still an applybuff, make sure we're recording the correct current stack count
+				if (event.type === 'applybuff') {
+					currentStacks = event.stack || 1
+				}
+
 				// Fall through to reapply
 				if (event.type === 'applybuffstack') {
 					currentStacks = Math.min(currentStacks + 1, GL_MAX_STACKS)
-					event.stacks = currentStacks
+					event.stack = currentStacks
 				}
 
 				// Reset TK
@@ -134,7 +147,7 @@ export default class GreasedLightning extends Module {
 
 	_onGlGain(event) {
 		this._currentStacks = {
-			stacks: 1,
+			stack: event.stack || 1,
 			timestamp: event.timestamp,
 		}
 
@@ -143,9 +156,9 @@ export default class GreasedLightning extends Module {
 	}
 
 	_onGlRefresh(event) {
-		if (event.stack > this._currentStacks.stacks) {
+		if (event.stack > this._currentStacks.stack) {
 			this._currentStacks = {
-				stacks: event.stack,
+				stack: event.stack,
 				timestamp: event.timestamp,
 			}
 
@@ -161,12 +174,36 @@ export default class GreasedLightning extends Module {
 
 	_onReply(event) {
 		if (event.timestamp - this._lastRefresh > GL_TIMEOUT_MILLIS) {
-			this._wastedSaves.push(event.timestamp)
+			this._wastedEarth.push(event.timestamp)
 		} else {
 			this._lastRefresh = event.timestamp
 		}
 
 		this._earthSaves[0].clean = true
+	}
+
+	_onRoWGain(event) {
+		this._windSaves.unshift({clean: false, timestamp: event.timestamp})
+	}
+
+	_onRoWUse(event) {
+		// Ignore if we're building stacks
+		if (!this._currentStacks || this._currentStacks.stack < GL_MAX_STACKS) {
+			return
+		}
+
+		// This is kinda derpy since it really depends on GCD length but,
+		// if we're in Coeurl and it's still live, there was no point to RoW.
+		// If we're not in Coeurl we'll assume stacks were gonna drop.
+		if (this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
+			if (event.timestamp - this._lastRefresh < GL_TIMEOUT_MILLIS) {
+				this._wastedWind.push(event.timestamp)
+			}
+		} else {
+			this._lastRefresh = event.timestamp
+		}
+
+		this._windSaves[0].clean = true
 	}
 
 	_onTornadoKick() {
@@ -175,7 +212,7 @@ export default class GreasedLightning extends Module {
 
 	_onDrop(event) {
 		this._currentStacks = {
-			stacks: 0,
+			stack: 0,
 			timestamp: event.timestamp,
 		}
 
@@ -190,12 +227,18 @@ export default class GreasedLightning extends Module {
 
 	_onComplete() {
 		// Push the final GL count so that it lasts to the end of the fight
-		this._stacks.push({stacks: 0, timestamp: this.parser.fight.end_time})
+		this._stacks.push({stack: 0, timestamp: this.parser.fight.end_time})
 
-		// Push wasted saves for failed RoE
+		// Push wasted saves
 		this._earthSaves.forEach(earth => {
 			if (!earth.clean) {
-				this._wastedSaves++
+				this._wastedEarth++
+			}
+		})
+
+		this._windSaves.forEach(earth => {
+			if (!earth.clean) {
+				this._wastedWind++
 			}
 		})
 
@@ -217,7 +260,7 @@ export default class GreasedLightning extends Module {
 
 		if (this._droppedStacks > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.TORNADO_KICK.icon,
+				icon: 'https://secure.xivdb.com/img/game/001000/001775.png', // Name of Lightning
 				content: <Fragment>
 					Avoid dropping stacks except when using <ActionLink {...ACTIONS.TORNADO_KICK} />.
 				</Fragment>,
@@ -228,7 +271,7 @@ export default class GreasedLightning extends Module {
 			}))
 		}
 
-		if (this._wastedSaves > 0) {
+		if (this._wastedEarth > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
 				content: <Fragment>
@@ -236,7 +279,20 @@ export default class GreasedLightning extends Module {
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedSaves} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedEarth} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+				</Fragment>,
+			}))
+		}
+
+		if (this._wastedWind > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RIDDLE_OF_WIND.icon,
+				content: <Fragment>
+					Check the fight timeline to see when you can save <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> with <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />.
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used {this._wastedWind} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
 				</Fragment>,
 			}))
 		}
@@ -247,7 +303,7 @@ export default class GreasedLightning extends Module {
 
 		const statusUptime = this._stacks.reduce((duration, value, index) => {
 			const last = this._stacks[index-1] || {}
-			if (value.stacks === 0 && last.stacks === GL_MAX_STACKS) {
+			if (value.stack === 0 && last.stack === GL_MAX_STACKS) {
 				duration += value.timestamp - last.timestamp
 			}
 
@@ -265,7 +321,7 @@ export default class GreasedLightning extends Module {
 		const data = {
 			datasets: [{
 				label: 'GL Stacks',
-				data: this._stacks.map(({stacks, timestamp}) => ({y: stacks, t: timestamp - this.parser.fight.start_time})),
+				data: this._stacks.map(({stack, timestamp}) => ({y: stack, t: timestamp - this.parser.fight.start_time})),
 				backgroundColor: Color(JOBS.MONK.colour).fade(0.5),
 				borderColor: Color(JOBS.MONK.colour).fade(0.2),
 				steppedLine: true,

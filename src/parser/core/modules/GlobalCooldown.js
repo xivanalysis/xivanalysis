@@ -1,5 +1,5 @@
 import math from 'mathjsCustom'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Message, Icon} from 'semantic-ui-react'
 import {i18nMark, Trans} from '@lingui/react'
 
@@ -82,7 +82,9 @@ export default class GlobalCooldown extends Module {
 			}
 		}
 
-		this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
+		if (events.length) {
+			this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
+		}
 		this._debugLogSavedGcds()
 
 		return events
@@ -224,7 +226,7 @@ export default class GlobalCooldown extends Module {
 	output() {
 		const estimate = this.getEstimate(false)
 
-		return <Fragment>
+		return <>
 			<Message info icon>
 				<Icon name="info"/>
 				<Message.Content>
@@ -242,6 +244,6 @@ export default class GlobalCooldown extends Module {
 			<Trans id="core.gcd.estimate">
 				Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
 			</Trans>
-		</Fragment>
+		</>
 	}
 }

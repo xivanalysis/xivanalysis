@@ -36,10 +36,11 @@ export default class Demolish extends Module {
 
 	// Aggregate Demo uptime
 	_onApply(event) {
-		const lastDemo = this._lastDemo[event.targetID] = this._lastDemo[event.targetID] || 0
+		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const lastDemo = this._lastDemo[applicationKey] = this._lastDemo[applicationKey] || 0
 
 		if (!lastDemo) {
-			this._lastDemo[event.targetID] = event.timestamp
+			this._lastDemo[applicationKey] = event.timestamp
 			return
 		}
 
@@ -49,7 +50,7 @@ export default class Demolish extends Module {
 		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + DEMO_DURATION_MILLIS + clip)
 
 		this._clipDemo += Math.max(0, clip)
-		this._lastDemo[event.targetID] = event.timestamp
+		this._lastDemo[applicationKey] = event.timestamp
 	}
 
 	_onComplete() {

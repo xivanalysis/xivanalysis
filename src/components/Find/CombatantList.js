@@ -62,7 +62,7 @@ class CombatantList extends Component {
 			return null
 		}
 
-		return <Fragment>
+		return <>
 			<Header>
 				<Trans id="core.find.select-combatant">
 					Select a combatant
@@ -104,7 +104,7 @@ class CombatantList extends Component {
 					</Menu>
 				</Fragment>
 			})}
-		</Fragment>
+		</>
 	}
 }
 

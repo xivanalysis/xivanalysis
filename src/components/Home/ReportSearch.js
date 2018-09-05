@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {withRouter} from 'react-router-dom'
 import {Button, Input} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
@@ -67,7 +67,7 @@ class ReportSearch extends Component {
 	}
 
 	render() {
-		return <Fragment>
+		return <>
 			<span className={styles.text}><strong>
 				<Trans id="core.home.paste-url">
 					Paste your log URL to get started
@@ -82,7 +82,7 @@ class ReportSearch extends Component {
 				className={styles.input}
 				inverted
 			/>
-		</Fragment>
+		</>
 	}
 }
 
