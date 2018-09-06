@@ -324,6 +324,9 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
+			cardStateItem.minorState = {
+				name: 'Unknown',
+			}
 			if (_.last(this._cardStateLog).minorState) {
 				// Minor arcana lost
 				this._minorArcanasLost++
@@ -644,7 +647,9 @@ export default class ArcanaTracking extends Module {
 				alt={draw.name}
 			/>}
 			{!draw && <span className={styles.buffDummy} />}
-			{minorArcana && <img
+			{minorArcana && minorArcana.name === 'Unknown'
+			&& <span className={styles.buffUnknown}><span>?</span></span>}
+			{minorArcana && minorArcana.name !== 'Unknown' && <img
 				src={minorArcana.icon}
 				className={styles.spread_slot3}
 				alt={minorArcana.name}
