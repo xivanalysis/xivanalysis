@@ -6,7 +6,6 @@ import STATUSES, {getStatus} from 'data/STATUSES'
 import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYAL_ROAD_STATES, DRAWN_ARCANA, HELD_ARCANA} from './ArcanaGroups'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
-// import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -105,9 +104,7 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (DRAWN_ARCANA.includes(event.ability.guid)) {
-			console.log(event)
 			this._cardStateLog.forEach((stateItem) => {
-				console.log(stateItem.lastEvent)
 				if (stateItem.lastEvent
 					&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD)) {
 					stateItem.drawState = getStatus(event.ability.guid)
@@ -116,7 +113,6 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (HELD_ARCANA.includes(event.ability.guid)) {
-			console.log(event)
 			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent
 					&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD)) {
@@ -151,7 +147,6 @@ export default class ArcanaTracking extends Module {
 
 			// TODO: Differenciate between draw timeouts and intentional undraws
 			if (isPaired < 0) {
-				console.log('IS UNDRAW')
 				const cardStateItem = {..._.last(this._cardStateLog)}
 				const lastEvent = {
 					ability: {...ACTIONS.UNDRAW, guid: ACTIONS.UNDRAW.id},
@@ -197,8 +192,6 @@ export default class ArcanaTracking extends Module {
 				&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD))
 
 			if (isPaired < 0) {
-				console.log('EMPTY ROAD')
-
 				const cardStateItem = {..._.last(this._cardStateLog)}
 				const lastEvent = {
 					ability: {...ACTIONS.EMPTY_ROAD, guid: ACTIONS.EMPTY_ROAD.id},
@@ -445,8 +438,6 @@ export default class ArcanaTracking extends Module {
 	}
 
 	_onComplete() {
-		console.log(this._cardStateLog)
-
 		const sleeveUses = this._cardStateLog.filter(artifact => artifact.lastEvent && artifact.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
 
 		if (this._minorArcanasLost > 0) {
