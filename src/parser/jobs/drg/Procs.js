@@ -60,7 +60,7 @@ export default class Procs extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: droppedFang >= droppedWheeling ? ACTIONS.FANG_AND_CLAW.icon : ACTIONS.WHEELING_THRUST.icon,
-			content: <Trans id="drg.procs.suggestions.fang.content">
+			content: <Trans id="drg.procs.suggestions.extenders.content">
 				Avoid interrupting your combos at the <ActionLink {...ACTIONS.FANG_AND_CLAW}/> and <ActionLink {...ACTIONS.WHEELING_THRUST}/> stages, as it causes you to lose the procs that allow you to cast them, costing you both the cast and the <ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> duration that comes with it.
 			</Trans>,
 			tiers: {
@@ -69,7 +69,7 @@ export default class Procs extends Module {
 				4: SEVERITY.MAJOR,
 			},
 			value: droppedFang + droppedWheeling,
-			why: <Trans id="drg.procs.suggestions.fang.why">
+			why: <Trans id="drg.procs.suggestions.extenders.why">
 				You dropped <Plural value={droppedFang} one="# Fang and Claw proc" other="# Fang and Claw procs"/> and <Plural value={droppedWheeling} one="# Wheeling Thrust proc" other="# Wheeling Thrust procs"/>.
 			</Trans>,
 		}))
