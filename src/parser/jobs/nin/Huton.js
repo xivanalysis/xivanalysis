@@ -101,7 +101,7 @@ export default class Huton extends Module {
 	}
 
 	_onRaise(event) {
-		// So floor time doesn't count against BotD uptime
+		// So floor time doesn't count against Huton uptime
 		this._lastEventTime = event.timestamp
 	}
 
