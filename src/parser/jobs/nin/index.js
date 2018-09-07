@@ -1,6 +1,7 @@
 import About from './About'
 import Combos from './Combos'
 import Duality from './Duality'
+import Huton from './Huton'
 import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'
 import Ninki from './Ninki'
@@ -14,6 +15,7 @@ export default [
 	About,
 	Combos,
 	Duality,
+	Huton,
 	Kassatsu,
 	Ninjutsu,
 	Ninki,
