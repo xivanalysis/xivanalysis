@@ -14,109 +14,63 @@ export default class Procs extends Module {
 		'suggestions',
 	]
 
-	_fangAndClaw = {
-		casts: 0,
-		removed: 0,
+	_casts = {
+		[ACTIONS.FANG_AND_CLAW.id]: 0,
+		[ACTIONS.WHEELING_THRUST.id]: 0,
+		[ACTIONS.MIRAGE_DIVE.id]: 0,
 	}
-	_wheelingThrust = {
-		casts: 0,
-		removed: 0,
+	_removedProcs = {
+		[STATUSES.SHARPER_FANG_AND_CLAW.id]: 0,
+		[STATUSES.ENHANCED_WHEELING_THRUST.id]: 0,
+		[STATUSES.DIVE_READY.id]: 0,
 	}
-	_mirageDive = {
-		casts: 0,
-		removed: 0,
-		overwritten: 0,
-	}
+	_overwrittenDiveReady = 0
 
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.FANG_AND_CLAW.id}, this._onFangAndClaw)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.WHEELING_THRUST.id}, this._onWheelingThrust)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.MIRAGE_DIVE.id}, this._onMirageDive)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
 		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.DIVE_READY.id}, this._onReadyOverwritten) // The other two can't be overwritten due to how they drop
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPER_FANG_AND_CLAW.id}, this._onSharperRemoved)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.ENHANCED_WHEELING_THRUST.id}, this._onEnhancedRemoved)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DIVE_READY.id}, this._onReadyRemoved)
+		this.addHook('removebuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._onProcRemoved)
 		this.addHook('complete', this._onComplete)
 	}
 
 	// For all of our cast/removal tracking, we only want to know if it happened outside of downtime to avoid errant penalization.
 	// The only one that doesn't need the check is overwriting Mirage Dive, since you can't get a proc from an invulnerable target.
-	_onFangAndClaw(event) {
+	_onCast(event) {
 		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._fangAndClaw.casts++
-		}
-	}
-
-	_onWheelingThrust(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._wheelingThrust.casts++
-		}
-	}
-
-	_onMirageDive(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._mirageDive.casts++
+			this._casts[event.ability.guid]++
 		}
 	}
 
 	_onReadyOverwritten() {
-		this._mirageDive.overwritten++
+		this._overwrittenDiveReady++
 	}
 
-	_onSharperRemoved(event) {
+	_onProcRemoved(event) {
 		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._fangAndClaw.removed++
-		}
-	}
-
-	_onEnhancedRemoved(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._wheelingThrust.removed++
-		}
-	}
-
-	_onReadyRemoved(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._mirageDive.removed++
+			this._removedProcs[event.ability.guid]++
 		}
 	}
 
 	_onComplete() {
-		const droppedFang = this._fangAndClaw.removed - this._fangAndClaw.casts
-		const droppedWheeling = this._wheelingThrust.removed - this._wheelingThrust.casts
-		const droppedMirage = this._mirageDive.removed - this._mirageDive.casts
+		const droppedFang = this._removedProcs[STATUSES.SHARPER_FANG_AND_CLAW.id] - this._casts[ACTIONS.FANG_AND_CLAW.id]
+		const droppedWheeling = this._removedProcs[STATUSES.ENHANCED_WHEELING_THRUST.id] - this._casts[ACTIONS.WHEELING_THRUST.id]
+		const droppedMirage = this._removedProcs[STATUSES.DIVE_READY.id] - this._casts[ACTIONS.MIRAGE_DIVE.id]
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FANG_AND_CLAW.icon,
+			icon: droppedFang >= droppedWheeling ? ACTIONS.FANG_AND_CLAW.icon : ACTIONS.WHEELING_THRUST.icon,
 			content: <Trans id="drg.procs.suggestions.fang.content">
-				Avoid interrupting your combos at the <ActionLink {...ACTIONS.FANG_AND_CLAW}/> stage, as it causes you to lose your <StatusLink {...STATUSES.SHARPER_FANG_AND_CLAW}/> proc, costing you a cast and the <ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> duration that comes with it.
+				Avoid interrupting your combos at the <ActionLink {...ACTIONS.FANG_AND_CLAW}/> and <ActionLink {...ACTIONS.WHEELING_THRUST}/> stages, as it causes you to lose the procs that allow you to cast them, costing you both the cast and the <ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> duration that comes with it.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
 				4: SEVERITY.MAJOR,
 			},
-			value: droppedFang,
+			value: droppedFang + droppedWheeling,
 			why: <Trans id="drg.procs.suggestions.fang.why">
-				You dropped <Plural value={droppedFang} one="# Fang and Claw proc" other="# Fang and Claw procs"/>.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.WHEELING_THRUST.icon,
-			content: <Trans id="drg.procs.suggestions.wheeling.content">
-				Avoid interrupting your combos at the <ActionLink {...ACTIONS.WHEELING_THRUST}/> stage, as it causes you to lose your <StatusLink {...STATUSES.ENHANCED_WHEELING_THRUST}/> proc, costing you a cast and the <ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> duration that comes with it.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				4: SEVERITY.MAJOR,
-			},
-			value: droppedWheeling,
-			why: <Trans id="drg.procs.suggestions.wheeling.why">
-				You dropped <Plural value={droppedWheeling} one="# Wheeling Thrust proc" other="# Wheeling Thrust procs"/>.
+				You dropped <Plural value={droppedFang} one="# Fang and Claw proc" other="# Fang and Claw procs"/> and <Plural value={droppedWheeling} one="# Wheeling Thrust proc" other="# Wheeling Thrust procs"/>.
 			</Trans>,
 		}))
 
@@ -144,9 +98,9 @@ export default class Procs extends Module {
 				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
-			value: this._mirageDive.overwritten,
+			value: this._overwrittenDiveReady,
 			why: <Trans id="drg.procs.suggestions.mirage-overwritten.why">
-				You overwrote <Plural value={this._mirageDive.overwritten} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
+				You overwrote <Plural value={this._overwrittenDiveReady} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
 			</Trans>,
 		}))
 	}
