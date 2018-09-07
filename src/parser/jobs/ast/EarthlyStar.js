@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 // import STATUSES from 'data/STATUSES'
@@ -68,7 +68,7 @@ export default class EarthlyStar extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
 					<Trans id="ast.earthlystar.suggestion.uncooked.why">
-						{earlyBurstCount} instances of detonating an uncooked Earthly Star.
+						<Plural value={earlyBurstCount} one="# detonation" other="# detonations" /> of an uncooked Earthly Star.
 					</Trans>
 				</Fragment>,
 			}))
