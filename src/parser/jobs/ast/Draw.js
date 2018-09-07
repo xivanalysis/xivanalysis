@@ -4,7 +4,7 @@ import {Trans, i18nMark, Plural} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ActionLink} from 'components/ui/DbLink'
-import {DRAWN_CARD_USE} from './ArcanaGroups'
+import {DRAWN_ARCANA_USE} from './ArcanaGroups'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -47,7 +47,7 @@ export default class Draw extends Module {
 
 		const drawnCardFilter = {
 			by: 'player',
-			abilityId: DRAWN_CARD_USE.concat([ACTIONS.ROYAL_ROAD.id, ACTIONS.SPREAD.id, ACTIONS.MINOR_ARCANA.id]),
+			abilityId: DRAWN_ARCANA_USE.concat([ACTIONS.ROYAL_ROAD.id, ACTIONS.SPREAD.id, ACTIONS.MINOR_ARCANA.id]),
 		}
 
 		const drawFilter = {
