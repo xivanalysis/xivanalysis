@@ -7,8 +7,8 @@
 - [x] 3 Nastronds per window (Combos.js)
 
 ### Procs
-- [ ] Not missing/dropping Wheeling Thrust/Fang & Claw
-- [ ] Not overwriting/dropping Mirage Dive procs
+- [x] Not missing/dropping Wheeling Thrust/Fang & Claw (Procs.js)
+- [x] Not overwriting/dropping Mirage Dive procs (Procs.js)
 - [ ] Using Jumps on cooldown (with more leniance for Dragonfire than the other two)
 - [ ] Not double weaving with Jump actions
 
