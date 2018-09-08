@@ -1,6 +1,7 @@
 import About from './About'
 import Combos from './Combos'
 import Duality from './Duality'
+import GlobalCooldown from './GlobalCooldown'
 import Huton from './Huton'
 import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'
@@ -15,6 +16,7 @@ export default [
 	About,
 	Combos,
 	Duality,
+	GlobalCooldown,
 	Huton,
 	Kassatsu,
 	Ninjutsu,
