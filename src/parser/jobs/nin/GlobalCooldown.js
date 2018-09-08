@@ -21,7 +21,6 @@ export default class GlobalCooldown extends CoreGlobalCooldown {
 
 	getUptime() {
 		// Include the total TCJ duration (minus 50% of a GCD per cast) in our uptime calculation so it doesn't count against GCD usage
-		const tcjUptime = this.combatants.getStatusUptime(STATUSES.TEN_CHI_JIN.id)
-		return super.getUptime() + tcjUptime - (this._tcjUses * this.getEstimate() / 2)
+		return super.getUptime() + this.combatants.getStatusUptime(STATUSES.TEN_CHI_JIN.id) - (this._tcjUses * this.getEstimate() / 2)
 	}
 }
