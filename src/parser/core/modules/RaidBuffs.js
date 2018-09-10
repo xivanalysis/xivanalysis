@@ -52,6 +52,7 @@ export default class RaidBuffs extends Module {
 		this.addHook('applydebuff', filter, this._onApply)
 		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
 		this.addHook('removedebuff', filter, this._onRemove)
+		this.addHook('complete', this._onComplete)
 	}
 
 	_onApply(event) {
@@ -102,6 +103,13 @@ export default class RaidBuffs extends Module {
 
 		item.end = event.timestamp - this.parser.fight.start_time
 		this.timeline.addItem(item)
+	}
+
+	_onComplete() {
+		// If there's no buffs at all (:eyes:), hide the group
+		if (Object.keys(this._buffs).length === 0) {
+			this._group.visible = false
+		}
 	}
 
 	getTargetBuffs(event) {
