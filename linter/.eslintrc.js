@@ -3,6 +3,6 @@ module.exports = {
 		'plugin:xivanalysis/recommended'
 	],
 	env: {
-		browser: true,
+		node: true
 	}
 }

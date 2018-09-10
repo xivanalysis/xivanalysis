@@ -3,7 +3,6 @@
  * @author ackwell
  */
 'use strict'
-/* global require */
 
 //------------------------------------------------------------------------------
 // Requirements
