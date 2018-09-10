@@ -65,7 +65,6 @@ export const HELD_ARCANA_USE = [
 	ACTIONS.THE_SPIRE_EXPANDED_FROM_SPREAD.id,
 ]
 
-
 /* Single target usage */
 
 export const BALANCE_USED = [

@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 // import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -31,6 +31,7 @@ const STATUS_MIN_ACTIVE_TIME = 0
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
+	static i18n_id = i18nMark('ast.buffextensions.title')
 	// static dependencies = [
 	// 	// 'suggestions',
 	// ]

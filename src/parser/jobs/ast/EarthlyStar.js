@@ -1,6 +1,6 @@
 import React, {Fragment} from 'react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 // import STATUSES from 'data/STATUSES'
@@ -13,6 +13,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
 	static title = 'Earthly Star'
+	static i18n_id = i18nMark('ast.earthlystar.title')
 	static dependencies = [
 		'suggestions',
 	]

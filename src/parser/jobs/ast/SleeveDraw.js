@@ -62,16 +62,15 @@ export default class SleeveDraw extends Module {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="ast.sleeve-draw.checklist.name">
-				Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> frequently
+				Use Sleeve Draw frequently
 			</Trans>,
 			description: <Trans id="ast.sleeve-draw.checklist.description">
-				Cards are the main mechanic of the Astrologian, so we want to use as many of them as possible.
-				That means using Sleeve Draw as often as possible.
+				More Sleeve Draw uses mean more cards, and we want as many of those as possible.
 			</Trans>,
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.sleeve-draw.checklist.requirement.uses.name">
-						Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> Frequently
+						<ActionLink {...ACTIONS.SLEEVE_DRAW} /> uses
 					</Trans>,
 					value: this._uses,
 					target: Math.max(maxUses, this._uses, 1),

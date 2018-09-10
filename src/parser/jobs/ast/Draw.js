@@ -140,8 +140,7 @@ export default class Draw extends Module {
 				Use Draw Frequently
 			</Trans>,
 			description: <Trans id="ast.draw.checklist.description">
-				<ActionLink {...ACTIONS.DRAW} /> is the main mechanic of the Astrologian,
-				so you want to use it as many times as possible.
+			Draw is the main mechanic of the Astrologian, so aim to use it as many times as possible.
 			</Trans>,
 			tiers: {[drawWarnTarget]: TARGET.WARN, [drawWarnTarget-1]: TARGET.FAIL, [drawWarnTarget+1]: TARGET.SUCCESS},
 			requirements: [
@@ -158,9 +157,9 @@ export default class Draw extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.THE_BALANCE.icon,
 			content: <Trans id="ast.draw.suggestions.cards.content">
-					It is almost never worth it to hold onto cards for too long.
+					It is rarely worth it to hold onto cards for too long.
 					Doing so will delay your next card draw and may even make you lose Draws over the duration of the fight.
-					Always try to use your cards as fast as possible unless there is alredy another card active.
+					Always try to clear the draw slot as soon as possible, unless there is already another card active.
 			</Trans>,
 			why: <Trans id="ast.draw.suggestions.cards.why">
 				<Plural value={drawUsesMissedFromCardsRounded} one="# Draw" other="# Draws" />
