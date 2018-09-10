@@ -3088,12 +3088,23 @@ eslint-plugin-react@7.8.2:
     jsx-ast-utils "^2.0.1"
     prop-types "^15.6.0"
 
+eslint-plugin-react@^7.11.1:
+  version "7.11.1"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.11.1.tgz#c01a7af6f17519457d6116aa94fc6d2ccad5443c"
+  dependencies:
+    array-includes "^3.0.3"
+    doctrine "^2.1.0"
+    has "^1.0.3"
+    jsx-ast-utils "^2.0.1"
+    prop-types "^15.6.2"
+
 eslint-plugin-xivanalysis@xivanalysis/linter:
   version "0.0.1"
-  resolved "https://codeload.github.com/xivanalysis/linter/tar.gz/f2f52d91d6eb0fc09ad9ec59493aa70c5f234dac"
+  resolved "https://codeload.github.com/xivanalysis/linter/tar.gz/728d60d50ff24b48250414b31d275050c372c3ef"
   dependencies:
     eslint-plugin-babel "^5.2.0"
     eslint-plugin-jest "^21.22.0"
+    eslint-plugin-react "^7.11.1"
     requireindex "^1.1.0"
 
 eslint-rule-composer@^0.3.0:
@@ -4041,7 +4052,7 @@ has-values@^1.0.0:
     is-number "^3.0.0"
     kind-of "^4.0.0"
 
-has@^1.0.1:
+has@^1.0.1, has@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/has/-/has-1.0.3.tgz#722d7cbfc1f6aa8241f16dd814e011e1f41e8796"
   dependencies:
