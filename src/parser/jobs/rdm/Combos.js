@@ -30,18 +30,18 @@ export default class Combos extends CoreCombos {
 
 		if (this._comboBreakers.length > 0) {
 			console.log('Breaker')
-			this._comboBreakers.map(breaker => {
-				const util = require('util')
-				console.log(util.inspect(breaker, {showHidden: true, depth: null}))
-			})
+			// this._comboBreakers.map(breaker => {
+			// 	const util = require('util')
+			// 	console.log(util.inspect(breaker, {showHidden: true, depth: null}))
+			// })
 		}
 
 		if (this._uncomboedGcdCount.length > 0) {
 			console.log('uncomboed')
-			this._uncomboedGcdCount.map(breaker => {
-				const util = require('util')
-				console.log(util.inspect(breaker, {showHidden: true, depth: null}))
-			})
+			// this._uncomboedGcdCount.map(breaker => {
+			// 	//const util = require('util')
+			// 	//console.log(util.inspect(breaker, {showHidden: true, depth: null}))
+			// })
 		}
 	}
 }
