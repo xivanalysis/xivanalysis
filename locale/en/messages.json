@@ -1,30 +1,4 @@
 {
-<<<<<<< HEAD
-  "blm.about.description": "blm.about.description",
-  "blm.about.description.warning": "This isn't even remotely done.",
-  "blm.gauge.suggestions.droppedeno.content": "Dropping <0/> may lead to lost <1/>, more clipping because of additional <2/> casts, unavailability of <3/> and <4/> or straight up missing out on the 10% damage bonus that <5/> provides.",
-  "blm.gauge.suggestions.droppedeno.why": "{0} dropped Enochian {1, plural, one {buff} other {buffs}}.",
-  "blm.gauge.suggestions.lostfoul.content": "You lost <0/> due to dropped <1/>. <2/> is your strongest GCD, so always maximize its casts.",
-  "blm.gauge.suggestions.lostfoul.why": "{0, plural, one {# Foul was} other {# Fouls were}} lost.",
-  "blm.gauge.suggestions.overwrittenfoul.content": "You overwrote <0/> due to not casting it every 30s. <1/> is your strongest GCD, so always maximize its casts.",
-  "blm.gauge.suggestions.overwrittenfoul.why": "Foul got overwritten {0, plural, one {# time} other {# times}}.",
-  "blm.gauge.title": "blm.gauge.title",
-  "blm.ogcddowntime.ogcd-cd-buffer": "To account for random factors you are given a buffer of {0} seconds per instance to hold your cooldowns.",
-  "blm.ogcddowntime.ogcd-cd-metric": "Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. {0}",
-  "blm.ogcddowntime.title": "blm.ogcddowntime.title",
-  "blm.rotationwatchdog.accordion.message": "The core of BLM consists of 6 <0/>s per rotation (8 with <1/>, 5 if skipping <2/>).<3/>Avoid missing Fire IV casts where possible.",
-  "blm.rotationwatchdog.suggestions.extraf1s.content": "Casting more than one <0/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.",
-  "blm.rotationwatchdog.suggestions.extraf1s.why": "{0, plural, one {# Fire I} other {# Fire Is}} have been casted.",
-  "blm.rotationwatchdog.suggestions.missed_f4s.content": "You lost at least  one <0/> by not skipping <1/> in the Umbral Ice phase before the fight finished.",
-  "blm.rotationwatchdog.suggestions.missed_f4s.why": "{0, plural, one {# Fire IV was} other {# Fire IVs were}} missed.",
-  "blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.content": "Ending Umbral Ice with a non-proc <0/> actually costed you at least one <1/>.",
-  "blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.why": "Ending Umbral Ice with a Thunder III costed you {0, plural, one {# Fire IV} other {# Fire IVs}}.",
-  "blm.rotationwatchdog.suggestions.ui_ending_in_t3.content": "Avoid ending your Umbral Ice with a non-proc <0/>. This can lead to MP issues and fewer <1/> casts under Astral Fire.",
-  "blm.rotationwatchdog.suggestions.ui_ending_in_t3.why": "{0} Umbral Ice {1, plural, one {phase} other {phases}} ended with Thunder III.",
-  "blm.rotationwatchdog.suggestions.wrong_t3.content": "Never hard cast a <0/> in your Astral Fire phase, since that costs MP which could be used for more <1/>s.",
-  "blm.rotationwatchdog.suggestions.wrong_t3.why": "{0, plural, one {# Thunder III} other {# Thunder IIIs}} were hard casted under Astral Fire.",
-  "blm.rotationwatchdog.title": "blm.rotationwatchdog.title",
-=======
   "ast.draw.checklist.description": "<0/> is the main mechanic of the Astrologian, so you want to use it as many times as possible.",
   "ast.draw.checklist.name": "Use Draw Frequently",
   "ast.draw.checklist.requirement.name": "<0/> uses",
@@ -64,7 +38,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Never hard cast a <0/> in your Astral Fire phase, since that costs MP which could be used for more <1/>s.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "{0, plural, one {# Thunder III} other {# Thunder IIIs}} were hard casted under Astral Fire.",
   "blm.rotation-watchdog.title": "blm.rotation-watchdog.title",
->>>>>>> upstream/master
   "blm.triple.title": "blm.triple.title",
   "core.about.contributors": "Contributors:",
   "core.about.patch-unsupported.description": "This report was logged during patch {0}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.",
@@ -102,14 +75,9 @@
   "core.gcd.invalid-gcd": "The estimated GCD falls outside possible GCD values, and has been bounded to {0} for calculations.",
   "core.gcd.no-statistics": "Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",
   "core.gcd.title": "core.gcd.title",
-<<<<<<< HEAD
-  "core.glossary.proc": "core.glossary.proc",
-  "core.glossary.proc-description": "core.glossary.proc-description",
-=======
   "core.home.about.content": "core.home.about.content",
   "core.home.about.link": "What is this?",
   "core.home.about.title": "About xivanalysis",
->>>>>>> upstream/master
   "core.home.analyse": "Analyse",
   "core.home.paste-url": "Paste your log URL to get started",
   "core.potions.content": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0>the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
@@ -332,9 +300,6 @@
   "whm.about.description": "whm.about.description",
   "whm.about.description.devwarning": "The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!",
   "whm.about.description.invulnwarning": "Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.",
-<<<<<<< HEAD
-  "whm.about.description.support": "Currently this module can track DoT uptime, detect clipping and report about missed Divine Benison and Assize casts."
-=======
   "whm.about.description.support": "Currently this module can track DoT uptime, detect clipping and report about missed Divine Benison and Assize casts.",
   "whm.assize.checklist.description": "Frequent use of <0/> is typically a DPS gain and helps with MP management.",
   "whm.assize.checklist.requirement.assize.name": "<0/> uses",
@@ -353,5 +318,4 @@
   "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
   "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
   "whm.overheal.rule.name": "Avoid overheal"
->>>>>>> upstream/master
 }
