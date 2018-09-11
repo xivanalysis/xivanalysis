@@ -72,8 +72,6 @@ export default class ArcanaSuggestions extends Module {
 			}
 		})
 
-		console.log(this.cardLogs)
-
 	}
 
 	// Card management critique follows
