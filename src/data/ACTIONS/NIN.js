@@ -6,8 +6,14 @@ export default {
 	ARMOR_CRUSH: {
 		id: 3563,
 		name: 'Armor Crush',
-		icon: 'https://secure.xivdb.com/img/game/002000/002915.png',
+		icon: 'https://xivapi.com/i/002000/002915.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2242,
+			potency: 300,
+			end: true,
+		},
 	},
 
 	// -----
@@ -17,7 +23,7 @@ export default {
 	TEN: {
 		id: 2259,
 		name: 'Ten',
-		icon: 'https://secure.xivdb.com/img/game/002000/002901.png',
+		icon: 'https://xivapi.com/i/002000/002901.png',
 		onGcd: false,
 		cooldown: 0.5,
 	},
@@ -25,7 +31,7 @@ export default {
 	CHI: {
 		id: 2261,
 		name: 'Chi',
-		icon: 'https://secure.xivdb.com/img/game/002000/002902.png',
+		icon: 'https://xivapi.com/i/002000/002902.png',
 		onGcd: false,
 		cooldown: 0.5,
 	},
@@ -33,7 +39,7 @@ export default {
 	JIN: {
 		id: 2263,
 		name: 'Jin',
-		icon: 'https://secure.xivdb.com/img/game/002000/002903.png',
+		icon: 'https://xivapi.com/i/002000/002903.png',
 		onGcd: false,
 		cooldown: 0.5,
 	},
@@ -41,7 +47,7 @@ export default {
 	NINJUTSU: {
 		id: 2260,
 		name: 'Ninjutsu',
-		icon: 'https://secure.xivdb.com/img/game/002000/002904.png',
+		icon: 'https://xivapi.com/i/002000/002904.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -49,7 +55,7 @@ export default {
 	FUMA_SHURIKEN: {
 		id: 2265,
 		name: 'Fuma Shuriken',
-		icon: 'https://secure.xivdb.com/img/game/002000/002907.png',
+		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -57,7 +63,7 @@ export default {
 	KATON: {
 		id: 2266,
 		name: 'Katon',
-		icon: 'https://secure.xivdb.com/img/game/002000/002908.png',
+		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -65,7 +71,7 @@ export default {
 	RAITON: {
 		id: 2267,
 		name: 'Raiton',
-		icon: 'https://secure.xivdb.com/img/game/002000/002912.png',
+		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -73,7 +79,7 @@ export default {
 	HYOTON: {
 		id: 2268,
 		name: 'Hyoton',
-		icon: 'https://secure.xivdb.com/img/game/002000/002909.png',
+		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -81,7 +87,7 @@ export default {
 	HUTON: {
 		id: 2269,
 		name: 'Huton',
-		icon: 'https://secure.xivdb.com/img/game/002000/002910.png',
+		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -89,7 +95,7 @@ export default {
 	DOTON: {
 		id: 2270,
 		name: 'Doton',
-		icon: 'https://secure.xivdb.com/img/game/002000/002911.png',
+		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -97,7 +103,7 @@ export default {
 	SUITON: {
 		id: 2271,
 		name: 'Suiton',
-		icon: 'https://secure.xivdb.com/img/game/002000/002913.png',
+		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -105,7 +111,7 @@ export default {
 	RABBIT_MEDIUM: {
 		id: 2272,
 		name: 'Rabbit Medium',
-		icon: 'https://secure.xivdb.com/img/game/002000/002914.png',
+		icon: 'https://xivapi.com/i/002000/002914.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -113,7 +119,7 @@ export default {
 	KASSATSU: {
 		id: 2264,
 		name: 'Kassatsu',
-		icon: 'https://secure.xivdb.com/img/game/002000/002906.png',
+		icon: 'https://xivapi.com/i/002000/002906.png',
 		onGcd: false,
 		cooldown: 120,
 	},
@@ -121,7 +127,7 @@ export default {
 	DUALITY: {
 		id: 3567,
 		name: 'Duality',
-		icon: 'https://secure.xivdb.com/img/game/002000/002919.png',
+		icon: 'https://xivapi.com/i/002000/002919.png',
 		onGcd: false,
 		cooldown: 90,
 	},
@@ -129,7 +135,7 @@ export default {
 	DREAM_WITHIN_A_DREAM: {
 		id: 3566,
 		name: 'Dream Within A Dream',
-		icon: 'https://secure.xivdb.com/img/game/002000/002918.png',
+		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60,
 	},
@@ -137,7 +143,7 @@ export default {
 	HELLFROG_MEDIUM: {
 		id: 7401,
 		name: 'Hellfrog Medium',
-		icon: 'https://secure.xivdb.com/img/game/002000/002920.png',
+		icon: 'https://xivapi.com/i/002000/002920.png',
 		onGcd: false,
 		cooldown: 0.5, // Not strictly accurate, but it has to be >0 to display on the timeline. Hellfrog is weird.
 	},
@@ -145,7 +151,7 @@ export default {
 	BHAVACAKRA: {
 		id: 7402,
 		name: 'Bhavacakra',
-		icon: 'https://secure.xivdb.com/img/game/002000/002921.png',
+		icon: 'https://xivapi.com/i/002000/002921.png',
 		onGcd: false,
 		cooldown: 50,
 	},
@@ -153,7 +159,7 @@ export default {
 	TEN_CHI_JIN: {
 		id: 7403,
 		name: 'Ten Chi Jin',
-		icon: 'https://secure.xivdb.com/img/game/002000/002922.png',
+		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
 		cooldown: 100,
 	},
@@ -161,7 +167,7 @@ export default {
 	SMOKE_SCREEN: {
 		id: 3565,
 		name: 'Smoke Screen',
-		icon: 'https://secure.xivdb.com/img/game/002000/002917.png',
+		icon: 'https://xivapi.com/i/002000/002917.png',
 		onGcd: false,
 		cooldown: 180,
 	},
@@ -169,7 +175,7 @@ export default {
 	SHADEWALKER: {
 		id: 3564,
 		name: 'Shadewalker',
-		icon: 'https://secure.xivdb.com/img/game/002000/002916.png',
+		icon: 'https://xivapi.com/i/002000/002916.png',
 		onGcd: false,
 		cooldown: 120,
 	},
@@ -177,7 +183,7 @@ export default {
 	SHUKUCHI: {
 		id: 2262,
 		name: 'Shukuchi',
-		icon: 'https://secure.xivdb.com/img/game/002000/002905.png',
+		icon: 'https://xivapi.com/i/002000/002905.png',
 		onGcd: false,
 		cooldown: 60,
 	},

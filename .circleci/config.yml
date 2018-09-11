@@ -31,7 +31,20 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          command: yarn eslint src --format junit -o reports/eslint/results.xml
+          command: yarn lint --format junit -o reports/eslint/results.xml
+      - store_test_results:
+          path: reports
+
+  test:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: Tests
+          command: yarn test --ci --reporters=jest-junit
+          environment:
+            JEST_JUNIT_OUTPUT: reports/jest/results.xml
       - store_test_results:
           path: reports
 
@@ -42,7 +55,12 @@ jobs:
           at: /tmp
       - run:
           name: Run build
-          command: CI=false yarn build
+          command: |
+            yarn extract
+            export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
+            export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
+            export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
+            CI=false yarn build
       - persist_to_workspace:
           root: /tmp
           paths:
@@ -82,9 +100,13 @@ workflows:
       - lint:
           requires:
             - setup
+      - test:
+          requires:
+            - setup
       - build:
           requires:
             - lint
+            - test
           filters:
             branches:
               only: master

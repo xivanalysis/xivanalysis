@@ -58,6 +58,9 @@ export default class Gauge extends Module {
 	_kenki = 0
 	_wastedKenki = 0
 
+	//meditate
+	_Meditate = []
+
 	//sen
 	_gekkosen = 0
 	_kashasen = 0
@@ -69,6 +72,10 @@ export default class Gauge extends Module {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('removebuff', {
+			by: 'player',
+			abilityId: STATUSES.MEDITATE.id,
+		}, this._onRemoveMeditate)
 		this.addHook('complete', this._onComplete)
 	}
 	//check for kenki value changes, then sen changes
@@ -95,7 +102,14 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.YUKIKAZE.id) {
 			this._addYukikazeSen()
 		}
+		if (abilityId === ACTIONS.MEDITATE.id) {
+			const startMeditate = this.Meditate[0].timestamp
+		}
+	}
 
+	_onRemoveMediate() {
+		const endMeditate = this.Meditate[1].timestamp
+		this._MeditateKenki
 	}
 
 	//kenki quick maths
@@ -120,11 +134,29 @@ export default class Gauge extends Module {
 			return waste
 		}
 
-		this._gekkosen = 0
-		this._kashasen = 0
-		this._yukikazesen = 0
+		this._removeSen()
 
 		return 0
+	}
+
+	_MeditateKenki() {
+
+		const MeditateChannel = endMeditate - startMeditate
+
+		const MKG = ((MeditateChannel / 100) % 3) * 10
+
+		this.kenki += MKG
+		if (this.kenki > MAX_KENKI) {
+			const waste = this._kenki - MAX_KENKI
+			this._wastedKenki += waste
+			this._kenki = MAX_KENKI
+			return waste
+		}
+
+		this._removeSen()
+
+		return 0
+
 	}
 
 	//sen calcs

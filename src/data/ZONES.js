@@ -7,7 +7,7 @@ const ZONES = {
 	RABANASTRE: {
 		logId: 734,
 		dbId: 30058,
-		banner: 'https://secure.xivdb.com/img/game/112000/112256.png',
+		banner: 'https://xivapi.com/i/112000/112256.png',
 	},
 
 	RIDORANA_LIGHTHOUSE: {
@@ -19,25 +19,25 @@ const ZONES = {
 	SUSANO_EX: {
 		logId: 677,
 		dbId: 20047,
-		banner: 'https://secure.xivdb.com/img/game/112000/112245.png',
+		banner: 'https://xivapi.com/i/112000/112245.png',
 	},
 
 	LAKSHMI_EX: {
 		logId: 720,
 		dbId: 20049,
-		banner: 'https://secure.xivdb.com/img/game/112000/112246.png',
+		banner: 'https://xivapi.com/i/112000/112246.png',
 	},
 
 	SHINRYU_EX: {
 		logId: 730,
 		dbId: 20050,
-		banner: 'https://secure.xivdb.com/img/game/112000/112258.png',
+		banner: 'https://xivapi.com/i/112000/112258.png',
 	},
 
 	BYAKKO_EX: {
 		logId: 758,
 		dbId: 20052,
-		banner: 'https://secure.xivdb.com/img/game/112000/112274.png',
+		banner: 'https://xivapi.com/i/112000/112274.png',
 	},
 
 	TSUKUYOMI_EX: {
@@ -49,60 +49,60 @@ const ZONES = {
 	// O1-4S seem to all be zoneId 17 for w/e reason
 	O1S: {
 		dbId: 30053,
-		banner: 'https://secure.xivdb.com/img/game/112000/112238.png',
+		banner: 'https://xivapi.com/i/112000/112238.png',
 	},
 
 	O2S: {
 		dbId: 30054,
-		banner: 'https://secure.xivdb.com/img/game/112000/112239.png',
+		banner: 'https://xivapi.com/i/112000/112239.png',
 	},
 
 	O3S: {
 		dbId: 30055,
-		banner: 'https://secure.xivdb.com/img/game/112000/112240.png',
+		banner: 'https://xivapi.com/i/112000/112240.png',
 	},
 
 	O4S: {
 		dbId: 30056,
-		banner: 'https://secure.xivdb.com/img/game/112000/112241.png',
+		banner: 'https://xivapi.com/i/112000/112241.png',
 	},
 
 	O5S: {
 		logId: 752,
 		dbId: 30063,
-		banner: 'https://secure.xivdb.com/img/game/112000/112266.png',
+		banner: 'https://xivapi.com/i/112000/112266.png',
 	},
 
 	O6S: {
 		logId: 753,
 		dbId: 30064,
-		banner: 'https://secure.xivdb.com/img/game/112000/112268.png',
+		banner: 'https://xivapi.com/i/112000/112268.png',
 	},
 
 	O7S: {
 		logId: 754,
 		dbId: 30065,
-		banner: 'https://secure.xivdb.com/img/game/112000/112270.png',
+		banner: 'https://xivapi.com/i/112000/112270.png',
 	},
 
 	O8S: {
 		logId: 755,
 		dbId: 30066,
-		banner: 'https://secure.xivdb.com/img/game/112000/112272.png',
+		banner: 'https://xivapi.com/i/112000/112272.png',
 	},
 
 	// Ultimate
 	UCOB: {
 		logId: 733,
 		dbId: 30057,
-		banner: 'https://secure.xivdb.com/img/game/112000/112261.png',
+		banner: 'https://xivapi.com/i/112000/112261.png',
 	},
 
 	// UwU
 	UWU: {
 		logId: 777,
 		dbId: 30067,
-		banner: 'https://secure.xivdb.com/img/game/000000/000000.png',
+		banner: 'https://xivapi.com/i/112000/112296.png',
 	},
 }
 

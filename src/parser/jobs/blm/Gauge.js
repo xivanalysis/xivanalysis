@@ -7,210 +7,279 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-const AF1_ACTIONS = [
-	ACTIONS.FIRE_I.id,
-	ACTIONS.FIRE_II.id,
+const GAUGE_EVENTS = [
+	'begincast',
+	'cast',
+	'damage',
+	'death',
 ]
-const UI1_ACTIONS = [
-	ACTIONS.BLIZZARD_I.id,
-	ACTIONS.BLIZZARD_II.id,
-	ACTIONS.FREEZE.id,
-]
-const AF_ACTIONS = [
-	ACTIONS.FIRE_I.id,
-	ACTIONS.FIRE_II.id,
-	ACTIONS.FIRE_III.id,
-	ACTIONS.FIRE_IV.id,
-]
+
+export const BLM_GAUGE_EVENT = Symbol('blmgauge')
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
 const ASTRAL_UMBRAL_DURATION = 13000
-
-//max number of AFUI and UH stacks
-const MAX_STACK_COUNT = 3
+const MAX_ASTRAL_UMBRAL_STACKS = 3
+const MAX_UMBRAL_HEART_STACKS = 3
+const FLARE_MAX_HEART_CONSUMPTION = 3
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static i18n_id = i18nMark('blm.gauge.title')
 	static dependencies = [
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
 	]
 
-	_AF = 0
-	_UI = 0
-	_UH = 0
-	_AFUITimer = 0
-	_eno = false
-	_enoTimer = 0
-	_poly = 0
+	_astralFireStacks = 0
+	_umbralIceStacks = 0
+	_umbralHeartStacks = 0
+	_astralUmbralStackTimer = 0
+	_hasEnochian = false
+	_enochianTimer = 0
+	_hasPolyglot = false
+
 	_droppedEno = 0
 	_lostFoul = 0
 	_overwrittenFoul = 0
-	_beginOfCast = 0
+
+	_normalizeIndex = 0
+	_currentTimestamp = 0
+
+	_toAdd = []
+	_lastAdded = null
+
+	gaugeValuesChanged(lastGaugeEvent) {
+		if (!lastGaugeEvent) {
+			return true
+		}
+		if (lastGaugeEvent.astralFire !== this._astralFireStacks ||
+			lastGaugeEvent.umbralIce !== this._umbralIceStacks ||
+			lastGaugeEvent.umbralHearts !== this._umbralHeartStacks ||
+			lastGaugeEvent.enochian !== this._hasEnochian ||
+			lastGaugeEvent.polyglot !== this._hasPolyglot
+		) {
+			return true
+		}
+		return false
+	}
+
+	addEvent() {
+		const lastAdded = this._toAdd.length > 0 ? this._toAdd[this._toAdd.length - 1] : null
+
+		if (this.gaugeValuesChanged(lastAdded)) {
+			this._toAdd.push({
+				type: BLM_GAUGE_EVENT,
+				timestamp: this._currentTimestamp,
+				insertAfter: this._normalizeIndex,
+				astralFire: this._astralFireStacks,
+				umbralIce: this._umbralIceStacks,
+				umbralHearts: this._umbralHeartStacks,
+				enochian: this._hasEnochian,
+				polyglot: this._hasPolyglot,
+				lastGaugeEvent: this._lastAdded,
+			})
+			this._lastAdded = this._toAdd[this._toAdd.length - 1]
+		}
+	}
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('begincast', {by: 'player'}, this._onBegin)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
-	enoTimerCheck(event) {
-		const AFUIRunTime = event.timestamp - this._AFUITimer
+	normalise(events) {
+		// Add initial event
+		this._currentTimestamp = events[0].timestamp
+		this.addEvent()
 
-		//reseting AF/UI and dropping eno due to going past the timer
-		if (AFUIRunTime > ASTRAL_UMBRAL_DURATION) {
-			if (this._eno) {
-				this._eno = false
-				this._enoTimer = 0
-				this._droppedEno ++
-				if (this._poly === 0) {
-					this._lostFoul ++
-				}
+		for (this._normalizeIndex = 0; this._normalizeIndex < events.length; this._normalizeIndex++) {
+			const event = events[this._normalizeIndex]
+			this._currentTimestamp = event.timestamp
+
+			this.updateStackTimers(event)
+
+			if (!this.parser.byPlayer(event) || !GAUGE_EVENTS.includes(event.type)) {
+				continue
 			}
-			this._AF = 0
-			this._UI = 0
-			this._UH = 0
-			this._AFUITimer = 0
+
+			switch (event.type) {
+			case 'begincast':
+				break
+			case 'cast':
+				this._onCast(event)
+				break
+			case 'damage':
+				break
+			case 'death':
+				this._onDeath(event)
+				break
+			}
+		}
+
+		// Add all the events we gathered up in, in order
+		let offset = 0
+		this._toAdd.sort((a, b) => a.insertAfter - b.insertAfter).forEach(event => {
+			events.splice(event.insertAfter + 1 + offset, 0, event)
+			offset++
+		})
+
+		return events
+	}
+
+	onAstralUmbralTimeout() {
+		this._astralFireStacks = 0
+		this._umbralIceStacks = 0
+		this._astralUmbralStackTimer = 0
+		this.onEnoDropped()
+	}
+
+	onEnoDropped() {
+		if (this._hasEnochian) {
+			if (!this._hasPolyglot) {
+				this._lostFoul++
+			}
+			this._droppedEno++
+		}
+		this._hasEnochian = false
+		this._enochianTimer = 0
+		this._umbralHeartStacks = 0
+		this.addEvent()
+	}
+
+	onGainPolyglot() {
+		if (this._hasPolyglot) {
+			this._overwrittenFoul++
+		}
+		this._hasPolyglot = true
+		this.addEvent()
+	}
+
+	onConsumePolyglot() {
+		if (!this._hasPolyglot && this._overwrittenFoul > 0) {
+			// Safety to catch ordering issues where Foul is used late enough to trigger our overwrite check but happens before Poly actually overwrites
+			this._overwrittenFoul--
+		}
+		this._hasPolyglot = false
+		this.addEvent()
+	}
+
+	onGainAstralFireStacks(event, stackCount, dropsElementOnSwap = true) {
+		if (this._umbralIceStacks > 0 && dropsElementOnSwap) {
+			this.onAstralUmbralTimeout()
+		} else {
+			this._umbralIceStacks = 0
+			this._astralUmbralStackTimer = event.timestamp
+			this._astralFireStacks = Math.min(this._astralFireStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.addEvent()
 		}
 	}
 
-	enoDrop() {
-		this._UI = 0
-		this._AF = 0
-		this._UH = 0
-		if (this._poly === 0 && this._eno) {
-			this._eno = false
-			this._enoTimer = 0
-			this._droppedEno ++
-			this._lostFoul ++
-		}
-		if (this._poly > 0 && this._eno) {
-			this._eno = false
-			this._enoTimer = 0
-			this._droppedEno ++
+	onGainUmbralIceStacks(event, stackCount, dropsElementOnSwap = true) {
+		if (this._astralFireStacks > 0 && dropsElementOnSwap) {
+			this.onAstralUmbralTimeout()
+		} else {
+			this._astralFireStacks = 0
+			this._astralUmbralStackTimer = event.timestamp
+			this._umbralIceStacks = Math.min(this._umbralIceStacks + stackCount, MAX_ASTRAL_UMBRAL_STACKS)
+			this.addEvent()
 		}
 	}
 
-	_onBegin(event) {
-		this.enoTimerCheck(event)
+	onTransposeStacks(event) {
+		if (this._astralFireStacks > 0 || this._umbralIceStacks > 0) {
+			this._astralUmbralStackTimer = event.timestamp
+			if (this._astralFireStacks > 0) {
+				this._astralFireStacks = 0
+				this._umbralIceStacks = 1
+			} else {
+				this._astralFireStacks = 1
+				this._umbralIceStacks = 0
+			}
+			this.addEvent()
+		}
+	}
+
+	tryConsumeUmbralHearts(event, count, force = false) {
+		if (this._umbralHeartStacks > 0 && (this._astralFireStacks > 0 || force)) {
+			this._umbralHeartStacks = Math.max(this._umbralHeartStacks - count, 0)
+			this.addEvent()
+		}
+	}
+
+	updateStackTimers(event) {
+		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
+			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
+		) {
+			this.onAstralUmbralTimeout()
+		}
+
+		if (this._hasEnochian) {
+			const enoRunTime = event.timestamp - this._enochianTimer
+			if (enoRunTime >= ENOCHIAN_DURATION_REQUIRED) {
+				this._enochianTimer = event.timestamp - (enoRunTime - ENOCHIAN_DURATION_REQUIRED)
+				this.onGainPolyglot()
+			}
+		}
 	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		this.enoTimerCheck(event)
 
-		//check if eno is active and update the eno timer for foul. Check for foul overwriting.
-		if (this._eno) {
-			const enoRunTime = event.timestamp - this._enoTimer
-			const numberOfFouls = Math.floor(enoRunTime/ENOCHIAN_DURATION_REQUIRED)
-			if (numberOfFouls > 0) {
-				const offSet = enoRunTime % ENOCHIAN_DURATION_REQUIRED
-				this._enoTimer = event.timestamp - offSet
-				this._poly ++
-				if (this._poly > 1) {
-					this._poly = 1
-					this._overwrittenFoul ++
-				}
+		switch (abilityId) {
+		case ACTIONS.ENOCHIAN.id:
+			if (!this._hasEnochian) {
+				this._hasEnochian = true
+				this._enochianTimer = event.timestamp
+				this.addEvent()
 			}
-		}
-
-		//set _eno to 1 to show it's on. Maybe should have used true/false. Also set timestamp.
-		if (abilityId === ACTIONS.ENOCHIAN.id) {
-			if (!this._eno) {
-				this._eno = true
-				this._enoTimer = event.timestamp
-			}
-			this._eno = true
-		}
-
-		//check for AF1 actions and update buffs accordingly. Also check for lost fouls and dropped enos while you're at it.
-		if (AF1_ACTIONS.includes(abilityId)) {
-			if (this._UI > 0) {
-				this.enoDrop()
-
-			} else {
-				this._AFUITimer = event.timestamp
-				this._AF ++
-				this._AF = Math.min(this._AF, MAX_STACK_COUNT)
-			}
-		}
-
-		//check for UI1 actions and update buffs accordingly. Also check for lost fouls and dropped enos while you're at it.
-		if (UI1_ACTIONS.includes(abilityId)) {
-			if (this._AF > 0) {
-				this.enoDrop()
-
-			} else {
-				this._AFUITimer = event.timestamp
-				this._UI ++
-				this._UI = Math.min(this._UI, MAX_STACK_COUNT)
-			}
-		}
-
-		//keep track of UH
-		if (abilityId === ACTIONS.BLIZZARD_IV.id) {
-			this._UH = 3
-		}
-		//getting rid of UHs one AF action at a time
-		if (AF_ACTIONS.includes(abilityId) && this._UH > 0 && this._UI === 0) {
-			this._UH --
-			this._UH = Math.max(this._UH, 0)
-		}
-
-		//Flare stuff
-		if (abilityId === ACTIONS.FLARE.id) {
-			this._AF = 3
-			this._UI = 0
-			this._AFUITimer = event.timestamp
-			if (this._UH > 0) {
-				this._UH = 0
-			}
-		}
-
-		//do F3 things
-		if (abilityId === ACTIONS.FIRE_III.id) {
-			this._UI = 0
-			this._AF = 3
-			this._AFUITimer = event.timestamp
-		}
-
-		//do B3 things
-		if (abilityId === ACTIONS.BLIZZARD_III.id) {
-			this._UI = 3
-			this._AF = 0
-			this._AFUITimer = event.timestamp
-		}
-
-		//Foul support and poly adjustment
-		if (abilityId === ACTIONS.FOUL.id) {
-			this._poly = 0
-		}
-
-		if (abilityId === ACTIONS.TRANSPOSE.id) {
-			if (this._AF > 0) {
-				this._AF = 0
-				this._UI = 1
-				this._AFUITimer = event.timestamp
-			}
-			if (this._UI > 0) {
-				this._UI = 0
-				this._AF = 1
-				this._AFUITimer = event.timestamp
-			}
+			break
+		case ACTIONS.BLIZZARD_I.id:
+		case ACTIONS.BLIZZARD_II.id:
+		case ACTIONS.FREEZE.id:
+			this.onGainUmbralIceStacks(event, 1)
+			break
+		case ACTIONS.BLIZZARD_III.id:
+			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
+			break
+		case ACTIONS.BLIZZARD_IV.id:
+			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
+			this.addEvent()
+			break
+		case ACTIONS.FIRE_I.id:
+		case ACTIONS.FIRE_II.id:
+			this.tryConsumeUmbralHearts(event, 1)
+			this.onGainAstralFireStacks(event, 1)
+			break
+		case ACTIONS.FIRE_III.id:
+			this.tryConsumeUmbralHearts(event, 1)
+			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
+			break
+		case ACTIONS.FIRE_IV.id:
+			this.tryConsumeUmbralHearts(event, 1)
+			break
+		case ACTIONS.FLARE.id:
+			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
+			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
+			break
+		case ACTIONS.FOUL.id:
+			this.onConsumePolyglot()
+			break
+		case ACTIONS.TRANSPOSE.id:
+			this.onTransposeStacks(event)
+			break
 		}
 	}
 
 	_onDeath() {
-		// Death just flat out resets everything except for poly. Rip.
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
-		this._AF = 0
-		this._UI = 0
-		this._UH = 0
-		this._AFUITimer = 0
-		this._eno = false
-		this._enoTimer = 0
+		this._astralFireStacks = 0
+		this._umbralIceStacks = 0
+		this._umbralHeartStacks = 0
+		this._astralUmbralStackTimer = 0
+		this._hasEnochian = false
+		this._hasPolyglot = false
+		this._enochianTimer = 0
+		this.addEvent()
 	}
 
 	_onComplete() {
@@ -218,11 +287,11 @@ export default class Gauge extends Module {
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
-				content: <Trans id="blm.gauge.suggestions.droppedeno.content">
+				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
 					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="blm.gauge.suggestions.droppedeno.why">
+				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
 					{this._droppedEno} dropped Enochian <Plural value={this._droppedEno} one="buff" other="buffs"/>.
 				</Trans>,
 			}))
@@ -231,11 +300,11 @@ export default class Gauge extends Module {
 		if (this._lostFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.lostfoul.content">
+				content: <Trans id="blm.gauge.suggestions.lost-foul.content">
 					You lost <ActionLink {...ACTIONS.FOUL}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.lostfoul.why">
+				why: <Trans id="blm.gauge.suggestions.lost-foul.why">
 					<Plural value={this._lostFoul} one="# Foul was" other="# Fouls were"/> lost.
 				</Trans>,
 			}))
@@ -244,27 +313,15 @@ export default class Gauge extends Module {
 		if (this._overwrittenFoul) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.overwrittenfoul.content">
+				content: <Trans id="blm.gauge.suggestions.overwritten-foul.content">
 					You overwrote <ActionLink {...ACTIONS.FOUL}/> due to not casting it every 30s. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.overwrittenfoul.why">
+				why: <Trans id="blm.gauge.suggestions.overwritten-foul.why">
 					Foul got overwritten <Plural value={this._overwrittenFoul} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
-	}
-
-	getAF() {
-		return this._AF
-	}
-
-	getUI() {
-		return this._UI
-	}
-
-	getUH() {
-		return this._UH
 	}
 }
 

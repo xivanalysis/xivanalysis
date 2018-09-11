@@ -84,3 +84,9 @@ export const setI18nOverlay = state => ({
 	type: SET_I18N_OVERLAY,
 	payload: state,
 })
+
+export const UPDATE_SETTINGS = 'UPDATE_SETTINGS'
+export const updateSettings = settings => ({
+	type: UPDATE_SETTINGS,
+	payload: settings,
+})

@@ -1,5 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -10,6 +10,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './Pets.module.css'
 
 const NO_PET_ID = -1
@@ -46,6 +47,7 @@ export default class Pets extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+	static displayOrder = DISPLAY_ORDER.PETS
 
 	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
@@ -60,6 +62,7 @@ export default class Pets extends Module {
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('all', this._onEvent)
+		this.addHook('summonpet', this._onChangePet)
 		this.addHook('death', {to: 'pet'}, this._onPetDeath)
 		this.addHook('complete', this._onComplete)
 	}
@@ -139,6 +142,24 @@ export default class Pets extends Module {
 			}
 
 			this.setPet(petId, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+		}
+	}
+
+	_onChangePet(event) {
+		this._lastPet = this._currentPet
+		this._currentPet = {
+			id: event.petId,
+			timestamp: event.timestamp,
+		}
+
+		if (this._lastPet) {
+			const id = this._lastPet.id
+			const start = this._lastPet.timestamp
+			const end = event.timestamp
+
+			this._history.push({id, start, end})
+			const value = (this._petUptime.get(id) || 0) + end - start
+			this._petUptime.set(id, value)
 		}
 	}
 
@@ -235,27 +256,9 @@ export default class Pets extends Module {
 	}
 
 	setPet(petId, timestamp) {
-		timestamp = timestamp || this.parser.currentTimestamp
-
-		this._lastPet = this._currentPet
-		this._currentPet = {
-			id: petId,
-			timestamp,
-		}
-
-		if (this._lastPet) {
-			const id = this._lastPet.id
-			const start = this._lastPet.timestamp
-			const end = timestamp
-
-			this._history.push({id, start, end})
-			const value = (this._petUptime.get(id) || 0) + end - start
-			this._petUptime.set(id, value)
-		}
-
 		this.parser.fabricateEvent({
 			type: 'summonpet',
-			timestamp,
+			timestamp: timestamp || this.parser.currentTimestamp,
 			petId: petId,
 		})
 	}
@@ -293,7 +296,7 @@ export default class Pets extends Module {
 			tooltips: {enabled: false},
 		}
 
-		return <Fragment>
+		return <>
 			<div className={styles.chartWrapper}>
 				<PieChart
 					data={data}
@@ -323,6 +326,6 @@ export default class Pets extends Module {
 					</tr>)}
 				</tbody>
 			</table>
-		</Fragment>
+		</>
 	}
 }

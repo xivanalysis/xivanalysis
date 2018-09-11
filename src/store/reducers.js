@@ -65,11 +65,23 @@ const i18nOverlay = (state=false, action) => {
 	}
 }
 
+const settings = (state={}, action) => {
+	if (action.type !== ActionTypes.UPDATE_SETTINGS) {
+		return state
+	}
+
+	return {
+		...state,
+		...action.payload,
+	}
+}
+
 const rootReducer = combineReducers({
 	report,
 	globalError,
 	language,
 	i18nOverlay,
+	settings,
 })
 
 export default rootReducer

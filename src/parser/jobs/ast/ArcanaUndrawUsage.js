@@ -92,6 +92,7 @@ export default class ArcanaUndrawUsage extends Module {
 		if (badUndraws.length) {
 			const panels = AstUndrawMacros.map(macro => {
 				return {
+					key: 'container-' + macro.action,
 					title: {
 						key: 'title-' + macro.action,
 						content: <Fragment>
@@ -106,7 +107,7 @@ export default class ArcanaUndrawUsage extends Module {
 			})
 
 			this.suggestions.add(new Suggestion({
-				icon: 'https://secure.xivdb.com/img/game/003000/003108.png', // Undraw action
+				icon: 'https://xivapi.com/i/003000/003108.png', // Undraw action
 				content: <Fragment>
 					<strong>Avoid using the Arcana Removal actions.</strong> (<ActionLink {...ACTIONS.UNDRAW} />) (<ActionLink {...ACTIONS.UNDRAW_SPREAD} />) (<ActionLink {...ACTIONS.EMPTY_ROAD} />) <br/>
 					They take up an unnecessary oGCD slot. Instead, try clicking off the relevant buffs or try using macros.<br/><br/>

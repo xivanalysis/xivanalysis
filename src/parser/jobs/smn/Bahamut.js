@@ -7,6 +7,8 @@ import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {SUMMON_BAHAMUT_LENGTH} from './Pets'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const DEMI_BAHAMUT_ACTIONS = Object.values(ACTIONS)
 	.filter(action => action.pet && action.pet === PETS.DEMI_BAHAMUT.id)
 	.map(action => action.id)
@@ -29,6 +31,7 @@ export default class Bahamut extends Module {
 	static dependencies = [
 		'gauge',
 	]
+	static displayOrder = DISPLAY_ORDER.BAHAMUT
 
 	_current = null
 	_history = []
@@ -108,13 +111,13 @@ export default class Bahamut extends Module {
 			return {
 				key: sb.timestamp,
 				title: {
-					content: <Fragment>
+					content: <>
 						{this.parser.formatTimestamp(sb.timestamp)}
 						&nbsp;-&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.WYRMWAVE.id])} WWs,&nbsp;
 						{this.renderHeaderCount(counts[ACTIONS.AKH_MORN.id])} AMs
 						{sb.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-					</Fragment>,
+					</>,
 				},
 				content: {
 					content: <ul>
@@ -130,7 +133,7 @@ export default class Bahamut extends Module {
 			}
 		})
 
-		return <Fragment>
+		return <>
 			<Message>
 				<Trans id="smn.bahamut.ghost-disclaimer">Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
 				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
@@ -141,7 +144,7 @@ export default class Bahamut extends Module {
 				styled
 				fluid
 			/>
-		</Fragment>
+		</>
 	}
 
 	renderHeaderCount(counts) {

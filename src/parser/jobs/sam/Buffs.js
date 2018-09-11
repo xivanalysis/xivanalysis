@@ -31,12 +31,9 @@ export default class Buffs extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const filter = {
-			by: 'player',
-			abilityId: [STATUSES.JINPU.id, STATUSES.SHIFU.id],
-		}
 		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.JINPU.id}, this._onJinpuApplication)
 		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.SHIFU.id}, this._onShifuApplication)
+
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -119,7 +116,6 @@ export default class Buffs extends Module {
 
 	}
 
-	//
 	getUptimePercent(StatusId) {
 		const statusUptime = this.combatants.getStatusUptime((StatusId), this.parser.player.id)
 		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()

@@ -27,10 +27,10 @@ export default class BuffList extends Component {
 					return false
 				}
 
-				// const className = [styles.status]
+				const key = 'buff-' + status.name + status.timestamp
 
 				return <img
-					key={event.timestamp}
+					key={key}
 					src={status.icon}
 					// className={className.join(' ')}
 					alt={status.name}
