@@ -7,9 +7,9 @@ import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYA
 
 import Module from 'parser/core/Module'
 
-// import {ActionLink} from 'components/ui/DbLink'
-// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Trans, i18nMark} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 
 const LINKED_EVENT_THRESHOLD = 20
 
@@ -54,6 +54,7 @@ export default class ArcanaTracking extends Module {
 	static dependencies = [
 		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'suggestions',
 	]
 	static title = 'Arcana Tracking'
 	static i18n_id = i18nMark('ast.arcanaTracking.title')
@@ -453,21 +454,21 @@ export default class ArcanaTracking extends Module {
 
 	_onComplete() {
 
-		// const sleeveUses = this._cardStateLog.filter(artifact => artifact.lastEvent && artifact.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
+		const sleeveUses = this._cardStateLog.filter(artifact => artifact.lastEvent && artifact.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
 
-		// if (this._minorArcanasLost > 0) {
-		// 	this.suggestions.add(new Suggestion({
-		// 		icon: ACTIONS.MINOR_ARCANA.icon,
-		// 		content: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.content">
-		// 				Never use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> before clearing your <ActionLink {...ACTIONS.MINOR_ARCANA} /> slot. You lose
-		// 				out on the opportunity to obtain another <ActionLink {...ACTIONS.LORD_OF_CROWNS} /> or <ActionLink {...ACTIONS.LADY_OF_CROWNS} /> for free.
-		// 		</Trans>,
-		// 		severity: SEVERITY.MAJOR,
-		// 		why: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.why">
-		// 			{this._minorArcanasLost} out of <Plural value={sleeveUses} one="# Sleeve Draw" other="# Sleeve Draws" /> were used despite already having a filled Minor Arcana slot.
-		// 		</Trans>,
-		// 	}))
-		// }
+		if (this._minorArcanasLost > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.MINOR_ARCANA.icon,
+				content: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.content">
+						Never use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> before clearing your <ActionLink {...ACTIONS.MINOR_ARCANA} /> slot. You lose
+						out on the opportunity to obtain another <ActionLink {...ACTIONS.LORD_OF_CROWNS} /> or <ActionLink {...ACTIONS.LADY_OF_CROWNS} /> for free.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.why">
+					{this._minorArcanasLost} out of <Plural value={sleeveUses} one="# Sleeve Draw" other="# Sleeve Draws" /> were used despite already having a filled Minor Arcana slot.
+				</Trans>,
+			}))
+		}
 
 	}
 
