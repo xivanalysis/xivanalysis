@@ -1,28 +1,4 @@
 {
-  "blm.about.description": "",
-  "blm.about.description.warning": "",
-  "blm.gauge.suggestions.droppedeno.content": "",
-  "blm.gauge.suggestions.droppedeno.why": "",
-  "blm.gauge.suggestions.lostfoul.content": "",
-  "blm.gauge.suggestions.lostfoul.why": "",
-  "blm.gauge.suggestions.overwrittenfoul.content": "",
-  "blm.gauge.suggestions.overwrittenfoul.why": "",
-  "blm.gauge.title": "",
-  "blm.ogcddowntime.ogcd-cd-buffer": "",
-  "blm.ogcddowntime.ogcd-cd-metric": "",
-  "blm.ogcddowntime.title": "",
-  "blm.rotationwatchdog.accordion.message": "",
-  "blm.rotationwatchdog.suggestions.extraf1s.content": "",
-  "blm.rotationwatchdog.suggestions.extraf1s.why": "",
-  "blm.rotationwatchdog.suggestions.missed_f4s.content": "",
-  "blm.rotationwatchdog.suggestions.missed_f4s.why": "",
-  "blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.content": "",
-  "blm.rotationwatchdog.suggestions.missed_f4s_cause_ending_in_t3.why": "",
-  "blm.rotationwatchdog.suggestions.ui_ending_in_t3.content": "",
-  "blm.rotationwatchdog.suggestions.ui_ending_in_t3.why": "",
-  "blm.rotationwatchdog.suggestions.wrong_t3.content": "",
-  "blm.rotationwatchdog.suggestions.wrong_t3.why": "",
-  "blm.rotationwatchdog.title": "",
   "ast.draw.checklist.description": "",
   "ast.draw.checklist.name": "",
   "ast.draw.checklist.requirement.name": "",
@@ -99,13 +75,9 @@
   "core.gcd.invalid-gcd": "",
   "core.gcd.no-statistics": "",
   "core.gcd.title": "",
-
-  "core.glossary.proc": "",
-  "core.glossary.proc-description": "",
-
   "core.home.about.content": "",
   "core.home.about.link": "",
-
+  "core.home.about.title": "",
   "core.home.analyse": "",
   "core.home.paste-url": "",
   "core.potions.content": "",
@@ -328,9 +300,6 @@
   "whm.about.description": "",
   "whm.about.description.devwarning": "",
   "whm.about.description.invulnwarning": "",
-
-  "whm.about.description.support": ""
-
   "whm.about.description.support": "",
   "whm.assize.checklist.description": "",
   "whm.assize.checklist.requirement.assize.name": "",
@@ -349,5 +318,4 @@
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
   "whm.overheal.rule.name": ""
-
 }
