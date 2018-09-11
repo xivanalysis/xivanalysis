@@ -1,5 +1,4 @@
 {
-<<<<<<< HEAD
   "blm.about.description": "",
   "blm.about.description.warning": "",
   "blm.gauge.suggestions.droppedeno.content": "",
@@ -64,7 +63,6 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
   "blm.rotation-watchdog.title": "",
->>>>>>> upstream/master
   "blm.triple.title": "",
   "core.about.contributors": "",
   "core.about.patch-unsupported.description": "",
@@ -102,14 +100,13 @@
   "core.gcd.invalid-gcd": "",
   "core.gcd.no-statistics": "",
   "core.gcd.title": "",
-<<<<<<< HEAD
+
   "core.glossary.proc": "",
   "core.glossary.proc-description": "",
-=======
+
   "core.home.about.content": "",
   "core.home.about.link": "",
-  "core.home.about.title": "",
->>>>>>> upstream/master
+
   "core.home.analyse": "",
   "core.home.paste-url": "",
   "core.potions.content": "",
@@ -332,9 +329,9 @@
   "whm.about.description": "",
   "whm.about.description.devwarning": "",
   "whm.about.description.invulnwarning": "",
-<<<<<<< HEAD
+
   "whm.about.description.support": ""
-=======
+
   "whm.about.description.support": "",
   "whm.assize.checklist.description": "",
   "whm.assize.checklist.requirement.assize.name": "",
@@ -353,5 +350,5 @@
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
   "whm.overheal.rule.name": ""
->>>>>>> upstream/master
+
 }
