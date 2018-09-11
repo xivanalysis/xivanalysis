@@ -109,6 +109,7 @@ export default {
 		combo: {
 			from: 7512,
 			potency: 230,
+			end: true,
 		},
 	},
 	ENCHANTED_REDOUBLEMENT: {
