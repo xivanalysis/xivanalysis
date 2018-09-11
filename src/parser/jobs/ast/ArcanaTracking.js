@@ -1,18 +1,15 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import _ from 'lodash'
 
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES, {getStatus} from 'data/STATUSES'
 import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYAL_ROAD_STATES, DRAWN_ARCANA, HELD_ARCANA} from './ArcanaGroups'
-import JobIcon from 'components/ui/JobIcon'
-import JOBS from 'data/JOBS'
+
 import Module from 'parser/core/Module'
 
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
-import {Table} from 'semantic-ui-react'
-import {Trans, i18nMark, Plural} from '@lingui/react'
-import styles from './ArcanaTracking.module.css'
+// import {ActionLink} from 'components/ui/DbLink'
+// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans, i18nMark} from '@lingui/react'
 
 const LINKED_EVENT_THRESHOLD = 20
 
@@ -57,10 +54,13 @@ export default class ArcanaTracking extends Module {
 	static dependencies = [
 		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'suggestions',
 	]
 	static title = 'Arcana Tracking'
 	static i18n_id = i18nMark('ast.arcanaTracking.title')
+
+	_cardStateLog = []
+	_completeCardLog = []
+	_minorArcanasLost = 0
 
 	constructor(...args) {
 		super(...args)
@@ -76,26 +76,24 @@ export default class ArcanaTracking extends Module {
 		this.addHook('removebuff', {by: 'player'}, this._offStatus)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
-
-		this._cardStateLog = []
-		this._completeCardLog = []
-		this._minorArcanasLost = 0
-
 	}
 
-	// get getcardLogs() {
-	// 	return this._cardStateLog
-	// }
+	get getCardLogs() {
+		if (this._cardStateLog.length === 0) {
+			return []
+		}
+		return this._cardStateLog
+	}
 
 	/**
 	 * @param {number} timestamp - desired timestamp to get the state. Defaults to pull state.
 	 * @returns {Object} - object containing the card state and last event
 	 */
-	// getCardState(timestamp = this.parser.start_time) {
-	// 	const stateItem = this._completeCardLog.find(artifact => timestamp > artifact.timestamp)
+	getCardState(timestamp = this.parser.start_time) {
+		const stateItem = this._cardStateLog.find(artifact => artifact.lastEvent && timestamp > artifact.lastEvent.timestamp)
 
-	// 	return stateItem
-	// }
+		return stateItem
+	}
 
 	/**
 	 * This will run on applybuff. Looks for Arcanas Drawn, Arcanas Held and Royal Road statuses.
@@ -455,100 +453,22 @@ export default class ArcanaTracking extends Module {
 
 	_onComplete() {
 
-		this._completeCardLog = this._cardStateLog.map(artifact => {
+		// const sleeveUses = this._cardStateLog.filter(artifact => artifact.lastEvent && artifact.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
 
-			const isArcana = artifact.lastEvent && [...DRAWN_ARCANA_USE, ...HELD_ARCANA_USE].includes(artifact.lastEvent.ability.guid)
-			const target = isArcana ? this.parser.modules.combatants.getEntity(artifact.lastEvent.targetID) : null
-			const targetName = target ? target.info.name : null
-			const targetJob = target ? target.info.type : null
+		// if (this._minorArcanasLost > 0) {
+		// 	this.suggestions.add(new Suggestion({
+		// 		icon: ACTIONS.MINOR_ARCANA.icon,
+		// 		content: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.content">
+		// 				Never use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> before clearing your <ActionLink {...ACTIONS.MINOR_ARCANA} /> slot. You lose
+		// 				out on the opportunity to obtain another <ActionLink {...ACTIONS.LORD_OF_CROWNS} /> or <ActionLink {...ACTIONS.LADY_OF_CROWNS} /> for free.
+		// 		</Trans>,
+		// 		severity: SEVERITY.MAJOR,
+		// 		why: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.why">
+		// 			{this._minorArcanasLost} out of <Plural value={sleeveUses} one="# Sleeve Draw" other="# Sleeve Draws" /> were used despite already having a filled Minor Arcana slot.
+		// 		</Trans>,
+		// 	}))
+		// }
 
-			return {
-				timestamp: artifact.lastEvent ? artifact.lastEvent.timestamp : this.parser.fight.start_time,
-				lastAction: artifact.lastEvent ? {
-					id: artifact.lastEvent.ability.guid,
-					actionName: artifact.lastEvent.ability.name,
-					targetName: targetName,
-					targetJob: targetJob,
-					isArcana: isArcana,
-					overrideDBlink: artifact.lastEvent.overrideDBlink,
-					rrAbility: artifact.lastEvent.rrAbility,
-				} : null,
-				state: {
-					rrAbility: artifact.rrAbility,
-					spread: artifact.spreadState,
-					draw: artifact.drawState,
-					minorArcana: artifact.minorState,
-				},
-			}
-		})
-
-		const sleeveUses = this._cardStateLog.filter(artifact => artifact.lastEvent && artifact.lastEvent.ability.guid === ACTIONS.SLEEVE_DRAW.id).length
-
-		if (this._minorArcanasLost > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.MINOR_ARCANA.icon,
-				content: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.content">
-						Never use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> before clearing your <ActionLink {...ACTIONS.MINOR_ARCANA} /> slot. You lose
-						out on the opportunity to obtain another <ActionLink {...ACTIONS.LORD_OF_CROWNS} /> or <ActionLink {...ACTIONS.LADY_OF_CROWNS} /> for free.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="ast.arcanaTracking.suggestions.sleevedraw.why">
-					{this._minorArcanasLost} out of <Plural value={sleeveUses} one="# Sleeve Draw" other="# Sleeve Draws" /> were used despite already having a filled Minor Arcana slot.
-				</Trans>,
-			}))
-		}
-
-	}
-
-	output() {
-		const cardLogs = [...this._completeCardLog]
-
-		const pullState = cardLogs.shift()
-
-		return <Fragment>
-			<p>
-				<Trans id="ast.arcanaTracking.messages.explanation">
-					This section keeps track of every card action made during the fight, and the state of the spread after each action.
-				</Trans>
-			</p>
-			<Table collapsing unstackable>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell width={1}>
-							<Trans id="ast.arcanaTracking.messages.header1">
-													Time
-							</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell width={4}>
-							<Trans id="ast.arcanaTracking.messages.header2">
-												Lastest Action</Trans></Table.HeaderCell>
-						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcanaTracking.messages.header3">Spread State</Trans></Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					<Table.Row key={pullState.timestamp}>
-						<Table.Cell>{this.parser.formatTimestamp(pullState.timestamp)}</Table.Cell>
-						<Table.Cell>
-							<Trans id="ast.arcanaTracking.messages.pull">
-												Pull
-							</Trans>
-						</Table.Cell>
-						{this.RenderSpreadState(pullState)}
-					</Table.Row>
-
-					{cardLogs.map(artifact => {
-						return <Table.Row key={artifact.timestamp}>
-							<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
-							{this.RenderAction(artifact)}
-							{this.RenderSpreadState(artifact)}
-						</Table.Row>
-					}
-					)}
-				</Table.Body>
-			</Table>
-
-		</Fragment>
 	}
 
 	/**
@@ -624,75 +544,5 @@ export default class ArcanaTracking extends Module {
 		return arcanaId
 	}
 
-	// Helper for output()
-	RenderAction(artifact) {
-		if (artifact.lastAction.isArcana) {
-			const status = artifact.lastAction.rrAbility || null
-			return <Table.Cell>
-				<ActionLink {...getAction(artifact.lastAction.id)} />
-				{status && <img
-					src={status.icon}
-					className={styles.buffIcon}
-					alt={status.name}
-				/> }<br/>
-				{artifact.lastAction.targetJob &&
-					<JobIcon
-						job={JOBS[artifact.lastAction.targetJob]}
-						className={styles.jobIcon}
-					/>
-				}
-
-				{artifact.lastAction.targetName}
-			</Table.Cell>
-		}
-		return <Table.Cell>
-			{artifact.lastAction.overrideDBlink &&
-			<Fragment>{artifact.lastAction.actionName}</Fragment>
-			}
-			{!artifact.lastAction.overrideDBlink &&
-			<ActionLink {...getAction(artifact.lastAction.id)} />
-			}
-		</Table.Cell>
-
-	}
-
-	// Helper for output()
-	RenderSpreadState(artifact) {
-
-		const spread = artifact.state.spread || null
-		const draw = artifact.state.draw || null
-		const rrAbility = artifact.state.rrAbility || null
-		const minorArcana = artifact.state.minorArcana
-
-		return <Table.Cell>
-			{rrAbility && <img
-				src={rrAbility.icon}
-				className={styles.buffIcon}
-				alt={rrAbility.name}
-			/>}
-			{!rrAbility && <span className={styles.buffDummy} />}
-			<br/>
-			{spread && <img
-				src={spread.icon}
-				className={styles.buffIcon}
-				alt={spread.name}
-			/>}
-			{!spread && <span className={styles.buffDummy} />}
-			{draw && <img
-				src={draw.icon}
-				className={styles.buffIcon}
-				alt={draw.name}
-			/>}
-			{!draw && <span className={styles.buffDummy} />}
-			{minorArcana && minorArcana.name === 'Unknown'
-			&& <span className={styles.buffUnknown}><span>?</span></span>}
-			{minorArcana && minorArcana.name !== 'Unknown' && <img
-				src={minorArcana.icon}
-				className={styles.spread_slot3}
-				alt={minorArcana.name}
-			/>}
-			{!minorArcana && <span className={styles.buffDummy} />}
-		</Table.Cell>
-	}
 }
 
