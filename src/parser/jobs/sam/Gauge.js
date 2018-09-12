@@ -5,7 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 //future-proofing for more kenki actions
 
@@ -130,6 +130,7 @@ export default class Gauge extends Module {
 		this._gekkosen += 1
 		if (this._gekkosen > MAX_GEKKO_SEN) {
 			const waste = this._gekkosen - MAX_GEKKO_SEN
+			this._gekkosen -= waste
 			this._wastedsen += waste
 			return waste
 		}
@@ -140,6 +141,7 @@ export default class Gauge extends Module {
 		this._kashasen += 1
 		if (this._kashasen > MAX_KASHA_SEN) {
 			const waste = this._kashasen - MAX_KASHA_SEN
+			this._kashasen -= waste
 			this._wastedsen += waste
 			return waste
 		}
@@ -150,6 +152,7 @@ export default class Gauge extends Module {
 		this._yukikazesen += 1
 		if (this._yukikazesen > MAX_YUKIKAZE_SEN) {
 			const waste = this._yukikazesen - MAX_YUKIKAZE_SEN
+			this._yukikazesen -= waste
 			this._wastedsen += waste
 			return waste
 		}
@@ -175,31 +178,37 @@ export default class Gauge extends Module {
 
 	_onComplete() {
 		//kenki suggestions
-		if (this._wastedKenki >= 20) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.HAKAZE.icon,
-				content: <Fragment>
-					You used kenki builders in a way that overcapped you.
-				</Fragment>,
-				severity: this._wastedKenki === 20? SEVERITY.MINOR : this._wastedKenki >= 50? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					You wasted {this._wastedKenki} kenki by using abilities that sent you over the cap.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HAKAZE.icon,
+			content: <Fragment>
+				You used kenki builders in a way that overcapped you.
+			</Fragment>,
+			tiers: {
+				20: SEVERITY.MINOR,
+				21: SEVERITY.MEDIUM,
+				50: SEVERITY.MAJOR,
+			},
+			value: this._wastedKenki,
+			why: <Fragment>
+				You wasted {this._wastedKenki} kenki by using abilities that sent you over the cap.
+			</Fragment>,
+		}))
 
 		//sen suggestions
-		if (this._wastedsen >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.MEIKYO_SHISUI.icon,
-				content: <Fragment>
-					You used <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/>, <ActionLink {...ACTIONS.YUKIKAZE}/>, at a time when you already had that sen, thus wasting a combo because it did not give you sen.
-				</Fragment>,
-				severity: this._wastedsen === 1? SEVERITY.MINOR : this._wastedsen >= 3? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					You lost {this._wastedsen} sen by using finishing combos that gave you sen you already had.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.MEIKYO_SHISUI.icon,
+			content: <Fragment>
+				You used <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/>, <ActionLink {...ACTIONS.YUKIKAZE}/>, at a time when you already had that sen, thus wasting a combo because it did not give you sen.
+			</Fragment>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			value: this._wastedsen,
+			why: <Fragment>
+				You lost {this._wastedsen} sen by using finishing combos that gave you sen you already had.
+			</Fragment>,
+		}))
 	}
 }
