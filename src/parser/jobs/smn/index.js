@@ -1,6 +1,7 @@
 import About from './About'
 import Aetherflow from './Aetherflow'
 import Bahamut from './Bahamut'
+import Contagion from './Contagion'
 import DoTs from './DoTs'
 import DWT from './DWT'
 import Gauge from './Gauge'
@@ -14,6 +15,7 @@ export default [
 	About,
 	Aetherflow,
 	Bahamut,
+	Contagion,
 	DoTs,
 	DWT,
 	Gauge,
