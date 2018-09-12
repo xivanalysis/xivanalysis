@@ -424,16 +424,14 @@ export default class ArcanaTracking extends Module {
 	_initPullState(event) {
 		const actionId = event.ability.guid
 
-		const pullStateItem = this._cardStateLog[0]
-
 		if (EXPANDED_ARCANA_USE.includes(actionId)) {
 			// They had an expanded RR first!
-			pullStateItem.rrAbility = STATUSES.EXPANDED_ROYAL_ROAD
+			this._cardStateLog[0].rrAbility = STATUSES.EXPANDED_ROYAL_ROAD
 		}
 
 		if (DRAWN_ARCANA_USE.includes(actionId)) {
 			// They had something in the draw slot
-			pullStateItem.drawState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].drawState = getStatus(this.arcanaActionToStatus(actionId))
 		}
 
 		// if(actionId === ACTIONS.MINOR_ARCANA.id || actionId === ACTIONS.ROYAL_ROAD.id) {
@@ -442,16 +440,13 @@ export default class ArcanaTracking extends Module {
 
 		if (HELD_ARCANA_USE.includes(actionId)) {
 			// They had something in spread
-			pullStateItem.spreadState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].spreadState = getStatus(this.arcanaActionToStatus(actionId))
 		}
 
 		if (MINOR_ARCANA_USE.includes(actionId)) {
 			// They had a minor arcana
-			pullStateItem.minorState = getAction(actionId)
+			this._cardStateLog[0].minorState = getAction(actionId)
 		}
-
-		this._cardStateLog[0] = pullStateItem
-
 	}
 
 	_onComplete() {
