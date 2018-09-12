@@ -7,7 +7,7 @@ export default {
 		castTime: 2,
 	},
 
-	BENFIC_II: {
+	BENEFIC_II: {
 		id: 3610,
 		name: 'Benefic II',
 		icon: 'https://xivapi.com/i/003000/003128.png',
@@ -106,14 +106,14 @@ export default {
 		cooldown: 5,
 	},
 
-	LADY_CROWNS: {
+	LADY_OF_CROWNS: {
 		id: 7445,
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 5,
 	},
 
-	LORD_CROWNS: {
+	LORD_OF_CROWNS: {
 		id: 7444,
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',

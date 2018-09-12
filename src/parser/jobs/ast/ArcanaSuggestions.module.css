@@ -1,0 +1,38 @@
+.jobIcon {
+	height: 1.4285em;
+	margin: 0 5px 1px 0;
+}
+
+.cardActionTable .cardActionRow td {
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+.buffIcon {
+	width: 1.4285em;
+	margin-left: .25em;
+	vertical-align: baseline;
+}
+
+.spread_slot3 {
+	width: 1.4285em;
+	margin-left: .25em;
+	vertical-align: baseline;
+	margin-bottom: 3px;
+}
+
+.buffDummy, .buffUnknown {
+	width: 1.4285em;
+	margin: 0 0 0 0.25em;
+	vertical-align: baseline;
+	height: 26px;
+	background-color: #efefef;
+	border: 1px solid #9f9f9f;
+	display: inline-block;
+	position: relative;
+}
+
+.buffUnknown span {
+	position: absolute;
+	left: 5px;
+}

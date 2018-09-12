@@ -65,3 +65,5 @@ const correctIdsToMatchLogs = obj => {
 addExtraIndex(correctIdsToMatchLogs(STATUSES), 'id')
 
 export default STATUSES
+
+export const getStatus = id => STATUSES[id] || {}

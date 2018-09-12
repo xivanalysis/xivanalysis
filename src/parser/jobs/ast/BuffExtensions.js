@@ -1,6 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 // import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -16,6 +17,7 @@ import styles from './BuffExtensions.module.css'
 const IGNORE_STATUSES = [
 	STATUSES.PROTECT.id,
 	STATUSES.COLLECTIVE_UNCONSCIOUS.id,
+	STATUSES.COLLECTIVE_UNCONSCIOUS_EFFECT.id,
 	...ROYAL_ROAD_STATES,
 	...HELD_ARCANA,
 	...DRAWN_ARCANA,
@@ -30,6 +32,7 @@ const STATUS_MIN_ACTIVE_TIME = 0
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
+	static i18n_id = i18nMark('ast.buffextensions.title')
 	// static dependencies = [
 	// 	// 'suggestions',
 	// ]
@@ -211,7 +214,7 @@ export default class BuffExtensions extends Module {
 		if (this._dilationUses.length === 0) {
 			return <Fragment>
 				<p>
-					<span className="text-error">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</span>
+					<span className="text-error"><Trans id="ast.buffextensions.messages.nocasts">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</Trans></span>
 				</p>
 			</Fragment>
 		}
@@ -224,16 +227,16 @@ export default class BuffExtensions extends Module {
 			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
 				const numBuffs = dilation.targets[0].buffs.length
-				descriptionText = numBuffs + ' buffs extended'
+				descriptionText = <Trans id="ast.buffextensions.messages.buffsextended"><Plural value={numBuffs} one="# buff" other="# buffs" /> extended</Trans>
 				if (numBuffs < 1) {
-					emptyMessage = 'No buffs extended.'
+					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
-				descriptionText = numTargets + ' targets affected'
+				descriptionText = <Trans id="ast.buffextensions.messages.targetsaffected"><Plural value={numTargets} one="# target" other="# targets" /> affected</Trans>
 
 				if (numTargets < 1) {
-					emptyMessage = 'No buffs extended.'
+					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
 				}
 			}
 
@@ -292,9 +295,11 @@ export default class BuffExtensions extends Module {
 
 		return <Fragment>
 			<p>
+				<Trans id="ast.buffextensions.messages.explanation">
 			This section displays a history of targets affected with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.
-				<br/>
+					<br/>
 			* Excluded statuses: <ActionLink {...ACTIONS.PROTECT} />
+				</Trans>
 			</p>
 			<Accordion
 				exclusive={false}
