@@ -155,7 +155,6 @@ export default class ArcanaTracking extends Module {
 	_offStatus(event) {
 
 		if (DRAWN_ARCANA.includes(event.ability.guid)) {
-			console.log(event)
 			// a) check if this card was obtained legally, if not, retcon the logs
 			this.retconSearch([ACTIONS.DRAW.id, ACTIONS.SLEEVE_DRAW.id, ACTIONS.REDRAW.id], 'drawState', event.ability.guid)
 
@@ -485,12 +484,6 @@ export default class ArcanaTracking extends Module {
 	 * @return {void} null
 	 */
 	retconSearch(abilityLookups, slot, cardId) {
-		console.log(abilityLookups)
-		console.log(slot)
-		console.log(cardId)
-		console.log(getStatus(cardId))
-		console.log(this._cardStateLog)
-
 		let searchLatest = true
 
 		const latestActionId =  _.last(this._cardStateLog).lastEvent ? _.last(this._cardStateLog).lastEvent.ability.guid : null
