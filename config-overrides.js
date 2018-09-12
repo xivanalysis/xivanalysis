@@ -1,9 +1,40 @@
 /* global require, module */
+const _ = require('lodash')
+const glob = require('glob')
 const {injectBabelPlugin} = require('react-app-rewired')
 const rewireEslint = require('react-app-rewire-eslint')
 const rewireLodash = require('react-app-rewire-lodash')
+const webpack = require('webpack')
+
+const packageJson = require('./package.json')
 
 module.exports = (config, env) => {
+	// Pull in all the locale files
+	const localeFiles = glob.sync('./locale/*/messages.json')
+	const localeKeyRegex = /\/(\w{2})\/messages/
+	const localeCount = {}
+	localeFiles.forEach(file => {
+		const localeKey = localeKeyRegex.exec(file)[1]
+		const data = require(file)
+		localeCount[localeKey] = Object.values(data)
+			.reduce((carry, value) => carry + (value? 1 : 0), 0)
+	})
+
+	// Calculate the completion
+	const sourceLocale = packageJson.lingui.sourceLocale
+	const localeCompletion = _.reduce(localeCount, (carry, value, key) => {
+		carry[key] = ((value / localeCount[sourceLocale]) * 100).toFixed(0)
+		return carry
+	}, {})
+
+	// Add the completion%s to the environment
+	config.plugins = (config.plugins || []).concat([
+		new webpack.DefinePlugin({
+			'process.env.LOCALE_COMPLETION': localeCompletion,
+		}),
+	])
+
+	// Rest of the rewires
 	config = rewireEslint(config, env)
 	config = rewireLodash(config, env)
 

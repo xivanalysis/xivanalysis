@@ -1,5 +1,11 @@
 // TODO: Fill in the rest of this
 export default {
+	RADIANT_SHIELD: {
+		id: 313,
+		name: 'Radiant Shield',
+		icon: 'https://xivapi.com/i/012000/012711.png',
+	},
+
 	RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP: {
 		id: 493,
 		name: 'Physical Vulnerability Up',
@@ -22,6 +28,12 @@ export default {
 		id: 1212,
 		name: 'Further Ruin',
 		icon: 'https://xivapi.com/i/012000/012685.png',
+	},
+
+	DEVOTION: {
+		id: 1213,
+		name: 'Devotion',
+		icon: 'https://xivapi.com/i/012000/012681.png',
 	},
 
 	BIO_III: {

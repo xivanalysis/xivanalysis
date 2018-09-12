@@ -102,7 +102,7 @@ const ZONES = {
 	UWU: {
 		logId: 777,
 		dbId: 30067,
-		banner: 'https://xivapi.com/i/000000/000000.png',
+		banner: 'https://xivapi.com/i/112000/112296.png',
 	},
 }
 

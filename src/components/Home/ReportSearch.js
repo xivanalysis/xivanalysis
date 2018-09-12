@@ -68,11 +68,11 @@ class ReportSearch extends Component {
 
 	render() {
 		return <>
-			<span className={styles.text}><strong>
+			<strong>
 				<Trans id="core.home.paste-url">
 					Paste your log URL to get started
 				</Trans>
-			</strong></span>
+			</strong>
 			<Input
 				type="text"
 				placeholder="https://www.fflogs.com/reports/..."
