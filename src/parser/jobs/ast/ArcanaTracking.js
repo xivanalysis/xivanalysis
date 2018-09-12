@@ -59,7 +59,13 @@ export default class ArcanaTracking extends Module {
 	static title = 'Arcana Tracking'
 	static i18n_id = i18nMark('ast.arcana-tracking.title')
 
-	_cardStateLog = []
+	_cardStateLog = [{
+		lastEvent: null,
+		rrAbility: null,
+		drawState: null,
+		spreadState: null,
+		minorState: null,
+	}]
 	_completeCardLog = []
 	_minorArcanasLost = 0
 
@@ -271,8 +277,8 @@ export default class ArcanaTracking extends Module {
 		const actionId = event.ability.guid
 
 		// Piecing together what they have on prepull
-		if (this._cardStateLog.length === 0) {
-			this._cardStateLog.push(this._initPullState(event))
+		if (this._cardStateLog.length <= 1) {
+			this._initPullState(event)
 		}
 
 		const cardStateItem = {..._.last(this._cardStateLog)}
@@ -418,22 +424,14 @@ export default class ArcanaTracking extends Module {
 	_initPullState(event) {
 		const actionId = event.ability.guid
 
-		const pullStateItem = {
-			lastEvent: null,
-			rrAbility: null,
-			drawState: null,
-			spreadState: null,
-			minorState: null,
-		}
-
 		if (EXPANDED_ARCANA_USE.includes(actionId)) {
 			// They had an expanded RR first!
-			pullStateItem.rrAbility = STATUSES.EXPANDED_ROYAL_ROAD
+			this._cardStateLog[0].rrAbility = STATUSES.EXPANDED_ROYAL_ROAD
 		}
 
 		if (DRAWN_ARCANA_USE.includes(actionId)) {
 			// They had something in the draw slot
-			pullStateItem.drawState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].drawState = getStatus(this.arcanaActionToStatus(actionId))
 		}
 
 		// if(actionId === ACTIONS.MINOR_ARCANA.id || actionId === ACTIONS.ROYAL_ROAD.id) {
@@ -442,15 +440,13 @@ export default class ArcanaTracking extends Module {
 
 		if (HELD_ARCANA_USE.includes(actionId)) {
 			// They had something in spread
-			pullStateItem.spreadState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].spreadState = getStatus(this.arcanaActionToStatus(actionId))
 		}
 
 		if (MINOR_ARCANA_USE.includes(actionId)) {
 			// They had a minor arcana
-			pullStateItem.minorState = getAction(actionId)
+			this._cardStateLog[0].minorState = getAction(actionId)
 		}
-
-		return pullStateItem
 	}
 
 	_onComplete() {
@@ -483,7 +479,6 @@ export default class ArcanaTracking extends Module {
 	 * @return {void} null
 	 */
 	retconSearch(abilityLookups, slot, cardId) {
-
 		let searchLatest = true
 
 		const latestActionId =  _.last(this._cardStateLog).lastEvent ? _.last(this._cardStateLog).lastEvent.ability.guid : null
