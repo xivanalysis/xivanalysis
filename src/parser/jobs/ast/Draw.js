@@ -177,7 +177,7 @@ export default class Draw extends Module {
 			</Trans>,
 			why: <Trans id="ast.sleeve-draw.suggestions.draw.why">
 				<Plural value={drawUsesMissedFromSleeveRounded} one="# Draw" other="# Draws" />
-					lost.
+					lost by having their cooldowns reset by Sleeve Draw.
 			</Trans>,
 			tiers: CARD_LOSS_SEVERITY,
 			value: drawUsesMissedFromSleeveRounded,

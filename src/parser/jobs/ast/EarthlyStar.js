@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import {Trans, i18nMark, Plural} from '@lingui/react'
 
@@ -6,10 +6,16 @@ import ACTIONS from 'data/ACTIONS'
 // import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Tiny module to count the number of early detonations on Earthly Star.
 // TODO: Could expand to analyse Earthly Star usage, timing, overheal, etc - Sushi
+
+const UNCOOKED_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	2: SEVERITY.MAJOR,
+}
+
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
 	static title = 'Earthly Star'
@@ -59,19 +65,16 @@ export default class EarthlyStar extends Module {
 
 		if (earlyBurstCount > 0) {
 
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.STELLAR_DETONATION.icon,
-				content: <Fragment>
-					<Trans id="ast.earthlystar.suggestion.uncooked.content">
+				content: <Trans id="ast.earthlystar.suggestion.uncooked.content">
 					Plan your <ActionLink {...ACTIONS.EARTHLY_STAR} /> placements so that it's always cooked enough for the full potency when you need it.
-					</Trans>
-				</Fragment>,
-				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					<Trans id="ast.earthlystar.suggestion.uncooked.why">
-						<Plural value={earlyBurstCount} one="# detonation" other="# detonations" /> of an uncooked Earthly Star.
-					</Trans>
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="ast.earthlystar.suggestion.uncooked.why">
+					<Plural value={earlyBurstCount} one="# detonation" other="# detonations" /> of an uncooked Earthly Star.
+				</Trans>,
+				tiers: UNCOOKED_SEVERITY,
+				value: earlyBurstCount,
 			}))
 
 		}
