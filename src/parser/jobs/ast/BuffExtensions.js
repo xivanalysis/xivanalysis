@@ -233,7 +233,7 @@ export default class BuffExtensions extends Module {
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
-				descriptionText = <Trans id="ast.buffextensions.messages.targetsaffected"><Plural value={numTargets} one="# target" other="# targets" /> extended</Trans>
+				descriptionText = <Trans id="ast.buffextensions.messages.targetsaffected"><Plural value={numTargets} one="# target" other="# targets" /> affected</Trans>
 
 				if (numTargets < 1) {
 					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
