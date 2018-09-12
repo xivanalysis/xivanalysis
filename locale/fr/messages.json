@@ -128,6 +128,7 @@
   "core.suggestion.show-minor": "",
   "core.suggestions.title": "Suggestions d'Amélioration",
   "core.timeline.title": "Chronologie",
+  "core.weaving.between-gcds": "",
   "core.weaving.content": "",
   "core.weaving.panel-count": "{0, plural, =1 {# weave} other {# weaves}}",
   "core.weaving.title": "Weaving",
