@@ -35,14 +35,20 @@ export default class Weaving extends Module {
 	static title = 'Weaving Issues'
 
 	_weaves = []
+	_ongoingCastEvent = null
 	_leadingGcdEvent = null
 	_trailingGcdEvent = null
 	_badWeaves = []
 
 	constructor(...args) {
 		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_onBeginCast(event) {
+		this._ongoingCastEvent = event
 	}
 
 	_onCast(event) {
@@ -59,14 +65,24 @@ export default class Weaving extends Module {
 			return
 		}
 
-		// If there's no gcd event, they're weaving on first GCD.
+		// If there's no leading gcd event, they're weaving on first GCD.
 		// TODO: Do I care?
-		if (this._gcdEvent === null && this._weaves.length > 0) {
+		if (this._leadingGcdEvent === null && this._weaves.length > 0) {
 			console.warn(this._weaves, 'weaves before first GCD. Check.')
 		}
 
-		// This GCD ends a string of weaved oGCDs
-		this._trailingGcdEvent = event
+		if (this._ongoingCastEvent && this._ongoingCastEvent.ability.guid === action.id) {
+			// This event is the end of a GCD cast
+			this._trailingGcdEvent = {
+				...event,
+				// Override the timestamp of the GCD with when its cast began
+				timestamp: this._ongoingCastEvent.timestamp,
+			}
+			this._ongoingCastEvent = null
+		} else {
+			// This event was an instant GCD (or log missed the cast starting)
+			this._trailingGcdEvent = event
+		}
 
 		// Throw the current state onto the history
 		this._saveIfBad()
