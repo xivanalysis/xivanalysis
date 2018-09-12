@@ -59,7 +59,13 @@ export default class ArcanaTracking extends Module {
 	static title = 'Arcana Tracking'
 	static i18n_id = i18nMark('ast.arcana-tracking.title')
 
-	_cardStateLog = []
+	_cardStateLog = [{
+		lastEvent: null,
+		rrAbility: null,
+		drawState: null,
+		spreadState: null,
+		minorState: null,
+	}]
 	_completeCardLog = []
 	_minorArcanasLost = 0
 
@@ -149,6 +155,7 @@ export default class ArcanaTracking extends Module {
 	_offStatus(event) {
 
 		if (DRAWN_ARCANA.includes(event.ability.guid)) {
+			console.log(event)
 			// a) check if this card was obtained legally, if not, retcon the logs
 			this.retconSearch([ACTIONS.DRAW.id, ACTIONS.SLEEVE_DRAW.id, ACTIONS.REDRAW.id], 'drawState', event.ability.guid)
 
@@ -271,8 +278,8 @@ export default class ArcanaTracking extends Module {
 		const actionId = event.ability.guid
 
 		// Piecing together what they have on prepull
-		if (this._cardStateLog.length === 0) {
-			this._cardStateLog.push(this._initPullState(event))
+		if (this._cardStateLog.length <= 1) {
+			this._initPullState(event)
 		}
 
 		const cardStateItem = {..._.last(this._cardStateLog)}
@@ -418,13 +425,7 @@ export default class ArcanaTracking extends Module {
 	_initPullState(event) {
 		const actionId = event.ability.guid
 
-		const pullStateItem = {
-			lastEvent: null,
-			rrAbility: null,
-			drawState: null,
-			spreadState: null,
-			minorState: null,
-		}
+		const pullStateItem = this._cardStateLog[0]
 
 		if (EXPANDED_ARCANA_USE.includes(actionId)) {
 			// They had an expanded RR first!
@@ -450,7 +451,8 @@ export default class ArcanaTracking extends Module {
 			pullStateItem.minorState = getAction(actionId)
 		}
 
-		return pullStateItem
+		this._cardStateLog[0] = pullStateItem
+
 	}
 
 	_onComplete() {
@@ -483,6 +485,11 @@ export default class ArcanaTracking extends Module {
 	 * @return {void} null
 	 */
 	retconSearch(abilityLookups, slot, cardId) {
+		console.log(abilityLookups)
+		console.log(slot)
+		console.log(cardId)
+		console.log(getStatus(cardId))
+		console.log(this._cardStateLog)
 
 		let searchLatest = true
 
