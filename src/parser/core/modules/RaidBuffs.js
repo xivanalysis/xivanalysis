@@ -21,7 +21,9 @@ const RAID_BUFFS = {
 	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
 	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
 	// [STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id]: {},
+	[STATUSES.RADIANT_SHIELD.id]: {},
 	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
+	[STATUSES.DEVOTION.id]: {},
 }
 
 export default class RaidBuffs extends Module {
