@@ -19,7 +19,7 @@ import styles from './ArcanaSuggestions.module.css'
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
 	static title = 'Arcana Logs'
-	static i18n_id = i18nMark('ast.arcanaSuggestions.title')
+	static i18n_id = i18nMark('ast.arcana-suggestions.title')
 	static dependencies = [
 		'suggestions',
 		'arcanaTracking',
@@ -102,11 +102,11 @@ export default class ArcanaSuggestions extends Module {
 		if (count > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THE_SPEAR.icon,
-				content: <Trans id="ast.arcanaSuggestions.suggestions.bardnospear.content">
+				content: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.content">
 					Bards gain bonuses when they make criticals, so they should be the recipient of single-target Spears instead.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Trans id="ast.arcanaSuggestions.suggestions.bardnospear.why">
+				why: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.why">
 					{count} Spear arcanas not given to bard.
 				</Trans>,
 			}))
@@ -119,19 +119,19 @@ export default class ArcanaSuggestions extends Module {
 
 		// The header cell for when we do get suggestions
 		// <Table.HeaderCell width={4}>
-		//					<Trans id="ast.arcanaSuggestions.messages.header4">Remarks</Trans></Table.HeaderCell>
+		//					<Trans id="ast.arcana-suggestions.messages.header4">Remarks</Trans></Table.HeaderCell>
 		// {this.RenderRemark(artifact)}
 
 		return <Fragment>
 			<p>
-				<Trans id="ast.arcanaSuggestions.messages.explanation">
+				<Trans id="ast.arcana-suggestions.messages.explanation">
 					This section keeps track of every card action made during the fight, and the state of the spread after each action.
 				</Trans>
 			</p>
 			<Message warning icon>
 				<Icon name="warning sign"/>
 				<Message.Content>
-					<Trans id="ast.arcanaSuggestions.messages.disclaimer">
+					<Trans id="ast.arcana-suggestions.messages.disclaimer">
 							Card management critique is still a work in progress. No recommendations are being made yet. <br/>
 							The intention of this section is to give a general recommendation of best practices. It will not take into consideration which party member was playing better, or whether they were in burst phase.
 					</Trans>
@@ -141,15 +141,15 @@ export default class ArcanaSuggestions extends Module {
 				<Table.Header>
 					<Table.Row>
 						<Table.HeaderCell width={1}>
-							<Trans id="ast.arcanaSuggestions.messages.header1">
+							<Trans id="ast.arcana-suggestions.messages.time">
 								Time
 							</Trans>
 						</Table.HeaderCell>
 						<Table.HeaderCell width={4}>
-							<Trans id="ast.arcanaSuggestions.messages.header2">Lastest Action</Trans>
+							<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
 						</Table.HeaderCell>
 						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcanaSuggestions.messages.header3">Spread State</Trans>
+							<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
 						</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
@@ -157,7 +157,7 @@ export default class ArcanaSuggestions extends Module {
 					<Table.Row key={pullState.timestamp} className={styles.cardActionRow}>
 						<Table.Cell>{this.parser.formatTimestamp(pullState.timestamp)}</Table.Cell>
 						<Table.Cell>
-							<Trans id="ast.arcanaSuggestions.messages.pull">
+							<Trans id="ast.arcana-suggestions.messages.pull">
 								Pull
 							</Trans>
 						</Table.Cell>

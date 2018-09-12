@@ -20,7 +20,7 @@ const AstUndrawMacros = [
 		action: 'Undraw',
 		content: <Fragment>
 			<code>
-				<Trans id="ast.arcanaundrawusage.macros.undraw">
+				<Trans id="ast.arcana-undraw-usage.macros.undraw">
 					/statusoff "Bole Drawn"<br/>
 					/statusoff "Balance Drawn"<br/>
 					/statusoff "Arrow Drawn"<br/>
@@ -36,7 +36,7 @@ const AstUndrawMacros = [
 		action: 'Undraw Spread',
 		content: <Fragment>
 			<code>
-				<Trans id="ast.arcanaundrawusage.macros.undrawspread">
+				<Trans id="ast.arcana-undraw-usage.macros.undrawspread">
 					/statusoff "Arrow Held"<br/>
 					/statusoff "Balance Held"<br/>
 					/statusoff "Spire Held"<br/>
@@ -52,7 +52,7 @@ const AstUndrawMacros = [
 		action: 'Empty Road',
 		content: <Fragment>
 			<code>
-				<Trans id="ast.arcanaundrawusage.macros.emptyroad">
+				<Trans id="ast.arcana-undraw-usage.macros.emptyroad">
 					/statusoff "Expanded Royal Road"<br/>
 					/statusoff "Enhanced Royal Road"<br/>
 					/statusoff "Extended Royal Road"<br/>
@@ -116,7 +116,7 @@ export default class ArcanaUndrawUsage extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://xivapi.com/i/003000/003108.png', // Undraw action
 				content: <Fragment>
-					<Trans id="ast.arcanaundrawusage.suggestions.content">
+					<Trans id="ast.arcana-undraw-usage.suggestions.content">
 						<strong>Avoid using the Arcana Removal actions.</strong> (<ActionLink {...ACTIONS.UNDRAW} />) (<ActionLink {...ACTIONS.UNDRAW_SPREAD} />) (<ActionLink {...ACTIONS.EMPTY_ROAD} />) <br/>
 					They take up an unnecessary oGCD slot. Instead, try clicking off the relevant buffs or try using macros.</Trans>
 					<br/><br/>
@@ -129,7 +129,7 @@ export default class ArcanaUndrawUsage extends Module {
 				</Fragment>,
 				severity: SEVERITY.MEDIUM,
 
-				why: <Trans id="ast.arcanaundrawusage.suggestions.why">
+				why: <Trans id="ast.arcana-undraw-usage.suggestions.why">
 					{badUndraws.length} instances of using an ogcd Arcana undraw action.</Trans>,
 			}))
 		}
