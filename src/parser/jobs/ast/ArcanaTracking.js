@@ -197,10 +197,11 @@ export default class ArcanaTracking extends Module {
 
 		if (ROYAL_ROAD_STATES.includes(event.ability.guid)) {
 
+			// a) check if this existed, if not, retcon the logs
 			this.retconSearch([ACTIONS.ROYAL_ROAD.id, ACTIONS.SLEEVE_DRAW.id], 'rrAbility', event.ability.guid)
 
 			// b) check if this was a standalone statusoff/empty road, if so, add to logs
-			const isPaired = !this._cardStateLog.findIndex(stateItem => stateItem.lastEvent
+			const isPaired = this._cardStateLog.findIndex(stateItem => stateItem.lastEvent
 				&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD))
 
 			if (isPaired < 0) {
@@ -436,7 +437,7 @@ export default class ArcanaTracking extends Module {
 		}
 
 		// if(actionId === ACTIONS.MINOR_ARCANA.id || actionId === ACTIONS.ROYAL_ROAD.id) {
-		// 	// They had something in the draw slot
+		// 	// They had something in the draw slot but we can't tell what just by these events
 		// }
 
 		if (HELD_ARCANA_USE.includes(actionId)) {
@@ -527,8 +528,7 @@ export default class ArcanaTracking extends Module {
 	}
 
 	/**
-	 * Loops back to see if the specified card id was in possession without the possiblity of it being obtained via legal abilities.
-	 * This is presumed to mean they had it prepull. This function will then retcon the history since we know they had it.
+	 * Flips an arcana action id to the matching arcana status id
 	 *
 	 * @param arcanaId{int} The ID of an arcana.
 	 * @return {int} the ID of the arcana in status, or the same id received if it didn't match the flip lookup.

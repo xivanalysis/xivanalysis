@@ -1,7 +1,7 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
-import {Trans, i18nMark} from '@lingui/react'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 // import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -17,6 +17,7 @@ import styles from './BuffExtensions.module.css'
 const IGNORE_STATUSES = [
 	STATUSES.PROTECT.id,
 	STATUSES.COLLECTIVE_UNCONSCIOUS.id,
+	STATUSES.COLLECTIVE_UNCONSCIOUS_EFFECT.id,
 	...ROYAL_ROAD_STATES,
 	...HELD_ARCANA,
 	...DRAWN_ARCANA,
@@ -226,13 +227,13 @@ export default class BuffExtensions extends Module {
 			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
 				const numBuffs = dilation.targets[0].buffs.length
-				descriptionText = numBuffs + ' buffs extended'
+				descriptionText = <Trans id="ast.buffextensions.messages.buffsextended"><Plural value={numBuffs} one="# buff" other="# buffs" /> extended</Trans>
 				if (numBuffs < 1) {
 					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
-				descriptionText = numTargets + ' targets affected'
+				descriptionText = <Trans id="ast.buffextensions.messages.targetsaffected"><Plural value={numTargets} one="# target" other="# targets" /> extended</Trans>
 
 				if (numTargets < 1) {
 					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>

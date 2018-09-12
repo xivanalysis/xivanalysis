@@ -54,10 +54,16 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013224.png',
 	},
 
-	COLLECTIVE_UNCONSCIOUS: {
+	COLLECTIVE_UNCONSCIOUS_EFFECT: {
 		id: 849,
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/013000/013226.png',
+	},
+
+	COLLECTIVE_UNCONSCIOUS: {
+		id: 848,
+		name: 'Collective Unconscious',
+		icon: 'https://xivapi.com/i/013000/013227.png',
 	},
 
 	ENHANCED_ROYAL_ROAD: {
