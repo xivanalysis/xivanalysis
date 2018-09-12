@@ -4,6 +4,9 @@ import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
 import React from 'react'
 
+const SUCCESS_TARGET = 35
+const WARN_TARGET = 50
+
 export default class Overheal extends Module {
 	static handle = 'overheal'
 	static dependencies = [
@@ -40,7 +43,7 @@ export default class Overheal extends Module {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="whm.overheal.rule.name">Avoid overheal</Trans>,
 			description: <Trans id="whm.overheal.rule.description"> Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management. </Trans>,
-			tiers: {[100-35]: TARGET.SUCCESS, [100-50]: TARGET.WARN}, //doing 100-x where x is the overheal % for clarity
+			tiers: {[100-SUCCESS_TARGET]: TARGET.SUCCESS, [100-WARN_TARGET]: TARGET.WARN}, //doing 100-x where x is the overheal % for clarity
 			requirements: [
 				new InvertedRequirement({
 					name: <Trans id="whm.overheal.requirement.nonhot"> Overheal (non-HoT) </Trans>,
