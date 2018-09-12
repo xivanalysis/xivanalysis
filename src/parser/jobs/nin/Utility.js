@@ -25,70 +25,74 @@ export default class Utility extends Module {
 		'suggestions',
 	]
 
-	_fightStarted = false
+	_castHook = null
 
 	_shadewalkerUsed = false
 	_smokeScreenUsed = false
 
 	_shadewalkerDuration = -1
-	_shadewalkerCalculated = false
+	_shadewalkerRemovedHook = null
 	_smokeScreenDuration = -1
-	_smokeScreenCalcualted = false
+	_smokeScreenRemovedHook = null
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('removebuff', {abilityId: [STATUSES.SHADEWALKER.id, STATUSES.SMOKE_SCREEN.id]}, this._onRemoveBuff)
+		this._castHook = this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SHADEWALKER.id}, this._onShadewalkerCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SMOKE_SCREEN.id}, this._onSmokeScreenCast)
+		this._shadewalkerRemovedHook = this.addHook('removebuff', {abilityId: STATUSES.SHADEWALKER.id}, this._onShadewalkerRemoved)
+		this._smokeScreenRemovedHook = this.addHook('removebuff', {abilityId: STATUSES.SMOKE_SCREEN.id}, this._onSmokeScreenRemoved)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		if (!this._fightStarted) {
-			this._fightStarted = true
-
-			this._shadewalkerUsed = this.combatants.selected.hasStatus(STATUSES.SHADEWALKER.id)
-			if (this._shadewalkerUsed) {
-				this._shadewalkerDuration = this.parser.fight.start_time
-			}
-
-			const entities = this.combatants.getEntities()
-			const ssTarget = Object.values(entities).find(entity => entity.hasStatus(STATUSES.SMOKE_SCREEN.id))
-			if (ssTarget) {
-				this._smokeScreenUsed = true
-				this._smokeScreenDuration = this.parser.fight.start_time
-			}
+	_onCast() {
+		// This will only fire for the first cast of the fight - we need to check Shadewalker/Smoke Screen status for pre-pull use
+		if (this.combatants.selected.hasStatus(STATUSES.SHADEWALKER.id)) {
+			this._shadewalkerUsed = true
+			this._shadewalkerDuration = this.parser.fight.start_time
 		}
 
-		if (abilityId === ACTIONS.SHADEWALKER.id) {
-			if (event.timestamp - this.parser.fight.start_time <= SHADEWALKER_EXPECTED_BY_MILLIS) {
-				this._shadewalkerUsed = true
-			}
-		} else if (abilityId === ACTIONS.SMOKE_SCREEN.id) {
-			if (event.timestamp - this.parser.fight.start_time <= SMOKE_SCREEN_EXPECTED_BY_MILLIS) {
-				this._smokeScreenUsed = true
-			}
+		const entities = this.combatants.getEntities()
+		const ssTarget = Object.values(entities).find(entity => entity.hasStatus(STATUSES.SMOKE_SCREEN.id))
+		if (ssTarget) {
+			this._smokeScreenUsed = true
+			this._smokeScreenDuration = this.parser.fight.start_time
+		}
+
+		this.removeHook(this._castHook)
+		this._castHook = null
+	}
+
+	_onShadewalkerCast(event) {
+		if (event.timestamp - this.parser.fight.start_time <= SHADEWALKER_EXPECTED_BY_MILLIS) {
+			this._shadewalkerUsed = true
 		}
 	}
 
-	_onRemoveBuff(event) {
-		const statusId = event.ability.guid
-
-		if (statusId === STATUSES.SHADEWALKER.id) {
-			if (!this._shadewalkerCalculated && this._shadewalkerDuration >= 0) {
-				this._shadewalkerDuration = event.timestamp - this._shadewalkerDuration
-			}
-
-			// Flag the calculation as done after the first instance of it falling off so we ignore subsequent casts
-			this._shadewalkerCalculated = true
-		} else if (statusId === STATUSES.SMOKE_SCREEN.id) {
-			if (!this._smokeScreenCalculated && this._smokeScreenDuration >= 0) {
-				this._smokeScreenDuration = event.timestamp - this._smokeScreenDuration
-			}
-
-			this._smokeScreenCalculated = true
+	_onSmokeScreenCast(event) {
+		if (event.timestamp - this.parser.fight.start_time <= SMOKE_SCREEN_EXPECTED_BY_MILLIS) {
+			this._smokeScreenUsed = true
 		}
+	}
+
+	_onShadewalkerRemoved(event) {
+		if (this._shadewalkerDuration >= 0) {
+			// Only true if it was used pre-pull
+			this._shadewalkerDuration = event.timestamp - this._shadewalkerDuration
+		}
+
+		this.removeHook(this._shadewalkerRemovedHook)
+		this._shadewalkerRemovedHook = null
+	}
+
+	_onSmokeScreenRemoved(event) {
+		if (this._smokeScreenDuration >= 0) {
+			// Only true if it was used pre-pull
+			this._smokeScreenDuration = event.timestamp - this._smokeScreenDuration
+		}
+
+		this.removeHook(this._smokeScreenRemovedHook)
+		this._smokeScreenRemovedHook = null
 	}
 
 	_onComplete() {

@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import BOSSES from 'data/BOSSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const HUTON_MAX_DURATION_MILLIS = 70000 // Not in STATUSES/NIN.js because lolgauges
@@ -112,7 +112,6 @@ export default class Huton extends Module {
 				clippedDuration: this._clippedDuration.high,
 				downtime: this._downtime.high,
 				futileArmorCrushes: this._futileArmorCrushes.high,
-				averaged: false,
 			}
 		}
 
@@ -121,12 +120,11 @@ export default class Huton extends Module {
 			clippedDuration: Math.round((this._clippedDuration.high + this._clippedDuration.low) / 2),
 			downtime: Math.round((this._downtime.high + this._downtime.low) / 2),
 			futileArmorCrushes: Math.round((this._futileArmorCrushes.high + this._futileArmorCrushes.low) / 2),
-			averaged: true,
 		}
 	}
 
 	_onComplete() {
-		const {clippedDuration, downtime, futileArmorCrushes/*, averaged*/} = this._getHutonAverages()
+		const {clippedDuration, downtime, futileArmorCrushes} = this._getHutonAverages()
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - downtime) / duration) * 100
 		this.checklist.add(new Rule({
@@ -150,35 +148,35 @@ export default class Huton extends Module {
 			target: 99,
 		}))
 
-		if (clippedDuration > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.HUTON.icon,
-				content: <Trans id="nin.huton.suggestions.clipping.content">
-					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.
-				</Trans>,
-				tiers: {
-					5000: SEVERITY.MINOR,
-					10000: SEVERITY.MEDIUM,
-					20000: SEVERITY.MAJOR,
-				},
-				value: clippedDuration,
-				why: <Trans id="nin.huton.suggestions.clipping.why">
-					You clipped {this.parser.formatDuration(clippedDuration)} of Huton with early Armor Crushes.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HUTON.icon,
+			content: <Trans id="nin.huton.suggestions.clipping.content">
+				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.
+			</Trans>,
+			tiers: {
+				5000: SEVERITY.MINOR,
+				10000: SEVERITY.MEDIUM,
+				20000: SEVERITY.MAJOR,
+			},
+			value: clippedDuration,
+			why: <Trans id="nin.huton.suggestions.clipping.why">
+				You clipped {this.parser.formatDuration(clippedDuration)} of Huton with early Armor Crushes.
+			</Trans>,
+		}))
 
-		if (futileArmorCrushes > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ARMOR_CRUSH.icon,
-				content: <Trans id="nin.huton.suggestions.futile-ac.content">
-					Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.huton.suggestions.futile-ac.why">
-					You used Armor Crush <Plural value={futileArmorCrushes} one="# time" other="# times"/> when Huton was down.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.ARMOR_CRUSH.icon,
+			content: <Trans id="nin.huton.suggestions.futile-ac.content">
+				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> is down, as it provides no benefit and does less DPS than your other combo finishers.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+			},
+			value: futileArmorCrushes,
+			why: <Trans id="nin.huton.suggestions.futile-ac.why">
+				You used Armor Crush <Plural value={futileArmorCrushes} one="# time" other="# times"/> when Huton was down.
+			</Trans>,
+		}))
 	}
 }
