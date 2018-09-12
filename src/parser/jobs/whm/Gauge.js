@@ -1,3 +1,4 @@
+/* eslint-disable */
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 
@@ -12,8 +13,8 @@ const COOLDOWN_REDUCTION = {
 
 const MAX_LILIES = 3
 
-export default class Guage extends Module {
-	static handle = 'guage'
+export default class Gauge extends Module {
+	static handle = 'gauge'
 	static dependencies = [
 		'cooldowns',
 	]
@@ -25,6 +26,7 @@ export default class Guage extends Module {
 
 		this.addHook('heal', {by: 'player'}, this._onHeal)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+
 	}
 
 	_onHeal(event) {
@@ -42,7 +44,7 @@ export default class Guage extends Module {
 			if (this.lilies > 0) {
 				const reduction = Math.floor(getAction(abilityId).cooldown * COOLDOWN_REDUCTION[this.lilies])
 				this.cooldowns.reduceCooldown(abilityId, reduction)
-				this.fabricateEvent({type: 'consumelilies', abilityId: abilityId, consumed: this.lilies, cooldownReduction: reduction})
+				this.parser.fabricateEvent({type: 'consumelilies', abilityId: abilityId, consumed: this.lilies, cooldownReduction: reduction})
 			}
 			//currently, all lily consumers consume them all
 			this.lilies = 0
