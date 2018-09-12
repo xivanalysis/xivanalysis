@@ -146,10 +146,11 @@ export default class ArcanaSuggestions extends Module {
 							</Trans>
 						</Table.HeaderCell>
 						<Table.HeaderCell width={4}>
-							<Trans id="ast.arcanaSuggestions.messages.header2">
-												Lastest Action</Trans></Table.HeaderCell>
+							<Trans id="ast.arcanaSuggestions.messages.header2">Lastest Action</Trans>
+						</Table.HeaderCell>
 						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcanaSuggestions.messages.header3">Spread State</Trans></Table.HeaderCell>
+							<Trans id="ast.arcanaSuggestions.messages.header3">Spread State</Trans>
+						</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
 				<Table.Body>
@@ -157,7 +158,7 @@ export default class ArcanaSuggestions extends Module {
 						<Table.Cell>{this.parser.formatTimestamp(pullState.timestamp)}</Table.Cell>
 						<Table.Cell>
 							<Trans id="ast.arcanaSuggestions.messages.pull">
-												Pull
+								Pull
 							</Trans>
 						</Table.Cell>
 						{this.RenderSpreadState(pullState)}
@@ -169,8 +170,7 @@ export default class ArcanaSuggestions extends Module {
 							{this.RenderAction(artifact)}
 							{this.RenderSpreadState(artifact)}
 						</Table.Row>
-					}
-					)}
+					})}
 				</Table.Body>
 			</Table>
 
@@ -200,10 +200,10 @@ export default class ArcanaSuggestions extends Module {
 		}
 		return <Table.Cell>
 			{artifact.lastAction.overrideDBlink &&
-			<Fragment>{artifact.lastAction.actionName}</Fragment>
+				<Fragment>{artifact.lastAction.actionName}</Fragment>
 			}
 			{!artifact.lastAction.overrideDBlink &&
-			<ActionLink {...getAction(artifact.lastAction.id)} />
+				<ActionLink {...getAction(artifact.lastAction.id)} />
 			}
 		</Table.Cell>
 
@@ -237,8 +237,9 @@ export default class ArcanaSuggestions extends Module {
 				alt={draw.name}
 			/>}
 			{!draw && <span className={styles.buffDummy} />}
-			{minorArcana && minorArcana.name === 'Unknown'
-			&& <span className={styles.buffUnknown}><span>?</span></span>}
+			{minorArcana && minorArcana.name === 'Unknown' &&
+				<span className={styles.buffUnknown}><span>?</span></span>
+			}
 			{minorArcana && minorArcana.name !== 'Unknown' && <img
 				src={minorArcana.icon}
 				className={styles.spread_slot3}
