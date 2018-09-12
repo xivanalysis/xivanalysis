@@ -15,6 +15,7 @@ export default class Ninjutsu extends Module {
 	static handle = 'ninjutsu'
 	static dependencies = [
 		'combatants',
+		'downtime',
 		'suggestions',
 	]
 
@@ -36,7 +37,10 @@ export default class Ninjutsu extends Module {
 	}
 
 	_onRabbitCast() {
-		this._rabbitCount++
+		if (!this.downtime.isDowntime(event.timestamp)) {
+			// Don't penalize for Rabbits during downtime - if a boss jumps mid-mudra, it's the most efficient way to get it on CD
+			this._rabbitCount++
+		}
 	}
 
 	_onDotonCast(event) {
@@ -103,7 +107,7 @@ export default class Ninjutsu extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RABBIT_MEDIUM.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.rabbit.content">
-				Avoid using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/>, as it can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.
+				Be careful not to flub your mudras, as using <ActionLink {...ACTIONS.RABBIT_MEDIUM}/> can cost you personal DPS at best and raid DPS at worst by reducing the number of <ActionLink {...ACTIONS.TRICK_ATTACK}/>s you can do during the fight.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM, // You were having a bad day, mudra lag, etc.

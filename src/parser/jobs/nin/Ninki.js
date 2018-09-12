@@ -28,53 +28,38 @@ export default class Ninki extends Module {
 	]
 
 	_ninki = 0
-	_wastedNinki = 0
 	_wasteBySource = {
-		mug: 0,
-		auto: 0,
-		death: 0,
+		[ACTIONS.MUG.id]: 0,
+		[ACTIONS.ATTACK.id]: 0,
 	}
 	_erroneousFrogs = 0 // This is my new band name
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('aoedamage', {by: 'player'}, this._onAoe)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(this._wasteBySource).map(Number)}, this._onBuilderCast)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(NINKI_SPENDERS).map(Number)}, this._onSpenderCast)
+		this.addHook('aoedamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this._onHellfrogAoe)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_addNinki(abilityId) {
-		// Helper for adding Ninki to the running tally and calculating waste. Returns the amount wasted.
+	_onBuilderCast(event) {
+		const abilityId = event.ability.guid
+
 		this._ninki += NINKI_BUILDERS[abilityId]
 		if (this._ninki > MAX_NINKI) {
 			const waste = this._ninki - MAX_NINKI
-			this._wastedNinki += waste
+			this._wasteBySource[abilityId] += waste
 			this._ninki = MAX_NINKI
-			return waste
-		}
-
-		return 0
-	}
-
-	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		if (abilityId === ACTIONS.MUG.id) {
-			this._wasteBySource.mug += this._addNinki(abilityId)
-		}
-
-		if (abilityId === ACTIONS.ATTACK.id) {
-			this._wasteBySource.auto += this._addNinki(abilityId)
-		}
-
-		if (NINKI_SPENDERS.hasOwnProperty(abilityId)) {
-			this._ninki -= NINKI_SPENDERS[abilityId]
 		}
 	}
 
-	_onAoe(event) {
-		if (event.ability.guid === ACTIONS.HELLFROG_MEDIUM.id && event.hits.length === 1 &&
+	_onSpenderCast(event) {
+		this._ninki = Math.max(this._ninki - NINKI_SPENDERS[event.ability.guid], 0)
+	}
+
+	_onHellfrogAoe(event) {
+		if (event.hits.length === 1 &&
 			(this.cooldowns.getCooldownRemaining(ACTIONS.BHAVACAKRA.id) <= 0 ||
 			this.cooldowns.getCooldownRemaining(ACTIONS.TEN_CHI_JIN.id) <= 0)) {
 			// If we have an Hellfrog AoE event with only one target while Bhava and/or TCJ are available, it was probably a bad life choice
@@ -84,24 +69,23 @@ export default class Ninki extends Module {
 
 	_onDeath() {
 		// YOU DONE FUCKED UP NOW
-		//this._wastedNinki += this._ninki // Exclude this from the running total, but track it individually in case we want it in another module later
-		this._wasteBySource.death += this._ninki
 		this._ninki = 0
 	}
 
 	_onComplete() {
+		const totalWaste = this._wasteBySource[ACTIONS.MUG.id] + this._wasteBySource[ACTIONS.ATTACK.id]
 		this.suggestions.add(new TieredSuggestion({
 			icon: 'https://xivapi.com/i/005000/005411.png',
 			content: <Trans id="nin.ninki.suggestions.waste.content">
 				Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
 			</Trans>,
 			tiers: {
-				12: SEVERITY.MINOR,
-				24: SEVERITY.MEDIUM,
+				24: SEVERITY.MINOR,
+				80: SEVERITY.MEDIUM,
 			},
-			value: this._wastedNinki,
+			value: totalWaste,
 			why: <Trans id="nin.ninki.suggestions.waste.why">
-				Overcapping caused you to lose {this._wastedNinki} Ninki over the fight.
+				Overcapping caused you to lose {totalWaste} Ninki over the fight.
 			</Trans>,
 		}))
 
