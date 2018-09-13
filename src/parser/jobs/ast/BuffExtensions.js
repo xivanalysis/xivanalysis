@@ -32,7 +32,7 @@ const STATUS_MIN_ACTIVE_TIME = 0
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
-	static i18n_id = i18nMark('ast.buffextensions.title')
+	static i18n_id = i18nMark('ast.buff-extensions.title')
 	// static dependencies = [
 	// 	// 'suggestions',
 	// ]
@@ -214,29 +214,31 @@ export default class BuffExtensions extends Module {
 		if (this._dilationUses.length === 0) {
 			return <Fragment>
 				<p>
-					<span className="text-error"><Trans id="ast.buffextensions.messages.nocasts">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</Trans></span>
+					<span className="text-error"><Trans id="ast.buff-extensions.messages.no-casts">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</Trans></span>
 				</p>
 			</Fragment>
 		}
 
 		const panels = this._dilationUses.map(dilation => {
 			let descriptionText = ''
-			let emptyMessage = null
+			let noExtensions = false
 			let targetRows = null
+
+			const emptyMessage = <Trans id="ast.buff-extensions.messages.no-buffs">No buffs extended.</Trans>
 
 			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
 				const numBuffs = dilation.targets[0].buffs.length
-				descriptionText = <Trans id="ast.buffextensions.messages.buffsextended"><Plural value={numBuffs} one="# buff" other="# buffs" /> extended</Trans>
+				descriptionText = <Trans id="ast.buff-extensions.messages.buffs-extended"><Plural value={numBuffs} one="# buff" other="# buffs" /> extended</Trans>
 				if (numBuffs < 1) {
-					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
+					noExtensions = true
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
-				descriptionText = <Trans id="ast.buffextensions.messages.targetsaffected"><Plural value={numTargets} one="# target" other="# targets" /> affected</Trans>
+				descriptionText = <Trans id="ast.buff-extensions.messages.targets-affected"><Plural value={numTargets} one="# target" other="# targets" /> affected</Trans>
 
 				if (numTargets < 1) {
-					emptyMessage = <Trans id="ast.buffextensions.messages.nobuffs">No buffs extended.</Trans>
+					noExtensions = true
 				}
 			}
 
@@ -252,7 +254,9 @@ export default class BuffExtensions extends Module {
 					<td>{target.name}</td>
 					<td>
 						<BuffList events={target.buffs}></BuffList>
-						<span className="text-error">{emptyMessage}</span>
+						<span className="text-error">
+							{noExtensions && emptyMessage}
+						</span>
 					</td>
 				</tr>
 			})
@@ -284,7 +288,7 @@ export default class BuffExtensions extends Module {
 							<tbody>
 								{targetRows.length ? targetRows
 									: <tr>
-										{emptyMessage}
+										{noExtensions && emptyMessage}
 									</tr>}
 							</tbody>
 						</table>
@@ -295,7 +299,7 @@ export default class BuffExtensions extends Module {
 
 		return <Fragment>
 			<p>
-				<Trans id="ast.buffextensions.messages.explanation">
+				<Trans id="ast.buff-extensions.messages.explanation">
 			This section displays a history of targets affected with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.
 					<br/>
 			* Excluded statuses: <ActionLink {...ACTIONS.PROTECT} />
