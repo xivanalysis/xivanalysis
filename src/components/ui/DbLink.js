@@ -24,10 +24,21 @@ export const Provider = connect(state => ({
 
 class TooltipBase extends React.PureComponent {
 	static propTypes = {
+		// Props from the HOC
 		baseUrl: PropTypes.string,
 		loading: PropTypes.bool.isRequired,
 		data: PropTypes.object,
 		Content: PropTypes.node,
+
+		// Other props we accept
+		children: PropTypes.node,
+		showIcon: PropTypes.bool.isRequired,
+		showTooltip: PropTypes.bool.isRequired,
+	}
+
+	static defaultProps = {
+		showIcon: true,
+		showTooltip: true,
 	}
 
 	render() {
@@ -37,11 +48,11 @@ class TooltipBase extends React.PureComponent {
 			loading,
 			data,
 			Content,
-		} = this.props
 
-		const showIcon = true
-		const children = null
-		const showTooltip = true
+			children,
+			showIcon,
+			showTooltip,
+		} = this.props
 
 		if (loading) {
 			return <span>
