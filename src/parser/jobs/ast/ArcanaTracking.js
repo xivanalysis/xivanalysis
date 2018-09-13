@@ -11,6 +11,8 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, i18nMark, Plural} from '@lingui/react'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const LINKED_EVENT_THRESHOLD = 20
 
 const MINOR_ARCANA_USE = [
@@ -58,6 +60,7 @@ export default class ArcanaTracking extends Module {
 	]
 	static title = 'Arcana Tracking'
 	static i18n_id = i18nMark('ast.arcana-tracking.title')
+	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	_cardStateLog = [{
 		lastEvent: null,

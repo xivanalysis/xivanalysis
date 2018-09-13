@@ -37,6 +37,8 @@
   "ast.earthly-star.suggestion.uncooked.content": "Plan your <0/> placements so that it's always cooked enough for the full potency when you need it.",
   "ast.earthly-star.suggestion.uncooked.why": "{earlyBurstCount, plural, one {# detonation} other {# detonations}} of an uncooked Earthly Star.",
   "ast.earthly-star.title": "ast.earthly-star.title",
+  "ast.lightspeed.messages.explanation": "Some of the applications of <0/> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs. To further complicate usage, <1/> can reduce the cooldown, and the buff can be extended by <2/>.<3/>At this point of time it's difficult to identify what is optimal, since each fight calls for a different strategy.",
+  "ast.lightspeed.title": "ast.lightspeed.title",
   "ast.lucid-dreaming.checklist.content": "Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to \"Always be casting\" they frequently find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <0/> to maximize MP benefits.",
   "ast.lucid-dreaming.checklist.name": "Extend Lucid Dreaming",
   "ast.lucid-dreaming.checklist.requirement.name": "<0/> extensions",

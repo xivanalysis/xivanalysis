@@ -5,6 +5,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003126.png',
 		onGcd: true,
 		castTime: 2,
+		mpCostFactor: 4,
+		mpCost: 480,
 	},
 
 	BENEFIC_II: {
@@ -13,6 +15,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003128.png',
 		onGcd: true,
 		castTime: 2,
+		mpCostFactor: 9,
+		mpCost: 1080,
 	},
 
 	ASCEND: {
@@ -21,6 +25,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003132.png',
 		onGcd: true,
 		castTime: 8,
+		mpCostFactor: 30,
+		mpCost: 3600,
 	},
 
 	LIGHTSPEED: {
@@ -36,6 +42,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003145.png',
 		onGcd: true,
 		castTime: 1.5,
+		mpCostFactor: 5,
+		mpCost: 600,
 	},
 
 	COMBUST_II: {
@@ -44,6 +52,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003125.png',
 		onGcd: true,
 		castTime: 0,
+		mpCostFactor: 5,
+		mpCost: 600,
 	},
 
 	GRAVITY: {
@@ -52,6 +62,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
 		castTime: 3,
+		mpCostFactor: 16,
+		mpCost: 1920,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -67,6 +79,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		castTime: 2.5,
+		mpCostFactor: 15,
+		mpCost: 1800,
 	},
 
 	ASPECTED_BENEFIC: {
@@ -75,6 +89,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,
 		castTime: 0,
+		mpCostFactor: 12,
+		mpCost: 1440,
 	},
 
 	HELIOS: {
@@ -83,6 +99,8 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003129.png',
 		onGcd: true,
 		castTime: 2.5,
+		mpCostFactor: 12,
+		mpCost: 1440,
 	},
 
 	SYNASTRY: {

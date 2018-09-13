@@ -15,11 +15,13 @@ import {Trans, i18nMark} from '@lingui/react'
 import {Table, Icon, Message, Label} from 'semantic-ui-react'
 
 import styles from './ArcanaSuggestions.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
 	static title = 'Arcana Logs'
 	static i18n_id = i18nMark('ast.arcana-suggestions.title')
+	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
 		'suggestions',
 		'arcanaTracking',
