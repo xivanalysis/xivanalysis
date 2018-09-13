@@ -1,7 +1,9 @@
 ## MCH Notes
 
 ### Wildfire
-- [ ] 5 GCDs in the burst window
+- [x] 5 GCDs in the burst window (Wildfire.js)
+- [x] Wildfire falling mostly inside Overheat (Wildfire.js)
+- [ ] Not timing Wildfire poorly so it fizzles due to boss jumps
 
 ### Ammo
 - [x] Using ammo on appropriate abilities (Ammo.js)
