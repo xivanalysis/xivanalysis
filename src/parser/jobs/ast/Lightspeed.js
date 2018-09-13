@@ -14,20 +14,6 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const LIGHTSPEED_CAST_TIME_MOD = -2.5
 // const LIGHTSPEED_LENGTH = 10000
 
-// const OGCD_LENGTH = 750
-
-// Suggestion severity
-// const BAD_GCD_SEVERITY = {
-// 	1: SEVERITY.MINOR,
-// 	2: SEVERITY.MEDIUM,
-// 	6: SEVERITY.MAJOR,
-// }
-
-// const MISSED_GCD_SEVERITY = {
-// 	1: SEVERITY.MINOR,
-// 	10: SEVERITY.MEDIUM,
-// }
-
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
 	static i18n_id = i18nMark('ast.lightspeed.title')
