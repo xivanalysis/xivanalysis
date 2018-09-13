@@ -83,6 +83,8 @@ export default {
 		id: 7558,
 		name: 'Break',
 		icon: 'https://xivapi.com/i/000000/000862.png',
+		mpCost: 0,
+		mpCostFactor: 0,
 	},
 
 	PROTECT: {
@@ -92,6 +94,8 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 3,
+		mpCost: 0,
+		mpCostFactor: 0,
 	},
 
 	ESUNA: {
@@ -101,6 +105,8 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 1,
+		mpCost: 600,
+		mpCostFactor: 5,
 	},
 
 	LUCID_DREAMING: {

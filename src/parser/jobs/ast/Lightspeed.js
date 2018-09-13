@@ -125,6 +125,12 @@ export default class LIGHTSPEED extends Module {
 	}
 
 	output() {
+		const noCastsMessage = <Fragment>
+			<p>
+				<span className="text-error"><Trans id="ast.lightspeed.messages.no-casts">Zero casts recorded for <ActionLink {...ACTIONS.LIGHTSPEED} /></Trans></span>
+			</p>
+		</Fragment>
+
 		const panels = this._history.map(lightspeed => {
 			const numGcds = lightspeed.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			const mpSavings = lightspeed.casts
@@ -148,20 +154,24 @@ export default class LIGHTSPEED extends Module {
 			}
 		})
 
+		const lightspeedDisplay = <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
+
 		return <Fragment>
 			<p>
 				<Trans id="ast.lightspeed.messages.explanation">
 				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs.
-				To further complicate usage, <ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and the buff can be extended by <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} />.<br/>
+				To further complicate usage, <ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and the buff can be extended by <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} />.<br/><br/>
 				At this point of time it's difficult to identify what is optimal, since each fight calls for a different strategy.
 				</Trans>
 			</p>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
+			{panels.length === 0 && noCastsMessage}
+			{panels.length > 0 && lightspeedDisplay}
+
 		</Fragment>
 	}
 }
