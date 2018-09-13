@@ -4,6 +4,7 @@ import Heat from './Heat'
 import HotShot from './HotShot'
 import Procs from './Procs'
 import Turrets from './Turrets'
+import Wildfire from './Wildfire'
 export default [
 	About,
 	Ammo,
@@ -11,4 +12,5 @@ export default [
 	HotShot,
 	Procs,
 	Turrets,
+	Wildfire,
 ]
