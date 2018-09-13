@@ -36,7 +36,7 @@ export default class Ninjutsu extends Module {
 		this._hyotonCount++
 	}
 
-	_onRabbitCast() {
+	_onRabbitCast(event) {
 		if (!this.downtime.isDowntime(event.timestamp)) {
 			// Don't penalize for Rabbits during downtime - if a boss jumps mid-mudra, it's the most efficient way to get it on CD
 			this._rabbitCount++
