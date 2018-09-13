@@ -33,6 +33,13 @@ export default {
 		duration: 5,
 	},
 
+	WILDFIRE: {
+		id: 861,
+		name: 'Wildfire',
+		icon: 'https://xivapi.com/i/013000/013011.png',
+		duration: 10,
+	},
+
 	FLAMETHROWER: {
 		id: 1205,
 		name: 'Flamethrower',

@@ -24,7 +24,7 @@ export default class HotShot extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: STATUSES.HOT_SHOT.id}, this._onHotShotCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HOT_SHOT.id}, this._onHotShotCast)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.HOT_SHOT.id}, this._onApplyHotShot)
 		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.HOT_SHOT.id}, this._onRefreshHotShot)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.HOT_SHOT.id}, this._onRemoveHotShot)
