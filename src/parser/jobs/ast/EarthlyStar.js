@@ -19,7 +19,7 @@ const UNCOOKED_SEVERITY = {
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
 	static title = 'Earthly Star'
-	static i18n_id = i18nMark('ast.earthlystar.title')
+	static i18n_id = i18nMark('ast.earthly-star.title')
 	static dependencies = [
 		'suggestions',
 	]
@@ -67,10 +67,10 @@ export default class EarthlyStar extends Module {
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.STELLAR_DETONATION.icon,
-				content: <Trans id="ast.earthlystar.suggestion.uncooked.content">
+				content: <Trans id="ast.earthly-star.suggestion.uncooked.content">
 					Plan your <ActionLink {...ACTIONS.EARTHLY_STAR} /> placements so that it's always cooked enough for the full potency when you need it.
 				</Trans>,
-				why: <Trans id="ast.earthlystar.suggestion.uncooked.why">
+				why: <Trans id="ast.earthly-star.suggestion.uncooked.why">
 					<Plural value={earlyBurstCount} one="# detonation" other="# detonations" /> of an uncooked Earthly Star.
 				</Trans>,
 				tiers: UNCOOKED_SEVERITY,
