@@ -65,12 +65,6 @@ export default class Weaving extends Module {
 			return
 		}
 
-		// If there's no leading gcd event, they're weaving on first GCD.
-		// TODO: Do I care?
-		if (this._leadingGcdEvent === null && this._weaves.length > 0) {
-			console.warn(this._weaves, 'weaves before first GCD. Check.')
-		}
-
 		if (this._ongoingCastEvent && this._ongoingCastEvent.ability.guid === action.id) {
 			// This event is the end of a GCD cast
 			this._trailingGcdEvent = {
@@ -141,23 +135,23 @@ export default class Weaving extends Module {
 
 	// Basic weave check. For job-specific weave concerns, subclass Weaving and override this method. Make sure it's included under the same module key to override the base implementation.
 	isBadWeave(weave, maxWeaves) {
-		// The first weave won't have an ability (faked event)
-		// They... really shouldn't be weaving before the first GCD... I think
-		// TODO: ^?
-		if (!weave.leadingGcdEvent.ability) {
-			return weave.weaves.length
-		}
-
-		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
-		if (!maxWeaves) {
-			const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
-			maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
-		}
-
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
 		const weaveCount = weave.weaves.filter(
 			event => !this.invuln.isUntargetable('all', event.timestamp)
 		).length
+
+		maxWeaves = undefined
+
+		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
+		if (!maxWeaves) {
+			// If there's no leading ability, it's the first GCD. Allow the 'default' cast time's amount
+			if (!weave.leadingGcdEvent.ability) {
+				maxWeaves = MAX_WEAVES[undefined]
+			} else {
+				const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
+				maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
+			}
+		}
 
 		return weaveCount > maxWeaves
 	}
