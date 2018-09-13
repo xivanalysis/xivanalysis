@@ -5,7 +5,6 @@ import Benison from './Benison'
 import Assize from './Assize'
 import Overheal from './Overheal'
 import Speedmod from './Speedmod'
-import Gauge from './Gauge'
 
 export default [
 	About,
@@ -15,5 +14,4 @@ export default [
 	Benison,
 	Assize,
 	Speedmod,
-	Gauge,
 ]
