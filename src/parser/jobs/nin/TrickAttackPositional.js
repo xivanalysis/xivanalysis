@@ -33,7 +33,7 @@ export default class TrickAttackPositional extends Module {
 			// Should always be true, but just as a precaution
 			const lastCast = this._taCasts[this._taCasts.length - 1]
 			if (lastCast.missed && event.timestamp - lastCast.timestamp < VULN_APPLICATION_BUFFER) {
-				// Make sure the last recorded TA cast was less than a second ago
+				// Make sure the last recorded TA cast was less than two seconds ago
 				// This should also always be true, but I DON'T TRUST FFLOGS ANYMORE
 				lastCast.missed = false
 			}
