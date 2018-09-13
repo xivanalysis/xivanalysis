@@ -182,7 +182,15 @@ export default class Weaving extends Module {
 					/>
 					&nbsp;
 					(
-					{this.parser.formatDuration(item.trailingGcdEvent.timestamp - item.leadingGcdEvent.timestamp)}
+					{this.parser.formatDuration(
+						item.trailingGcdEvent.timestamp -
+						item.leadingGcdEvent.timestamp -
+						this.invuln.getUntargetableUptime(
+							'all',
+							item.leadingGcdEvent.timestamp,
+							item.trailingGcdEvent.timestamp
+						)
+					)}
 					&nbsp;
 					<Trans id="core.weaving.between-gcds">between GCDs</Trans>
 					)
