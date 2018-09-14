@@ -12,6 +12,7 @@ import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
+import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 
 class App extends Component {
