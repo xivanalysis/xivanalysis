@@ -879,9 +879,9 @@
 
 "@xivanalysis/tooltips@xivanalysis/tooltips":
   version "0.0.1"
-  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/99d18db9c168d06509fac8b91191d7e42d574ce0"
+  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/e1f17a620bfa77b7671d9a10d5f9be4101b3b87d"
   dependencies:
-    lodash-es "^4.17.11"
+    lodash "^4.17.11"
     prop-types "^15.6.2"
   optionalDependencies:
     reactjs-popup "^1.2.0"
@@ -5525,7 +5525,7 @@ locate-path@^3.0.0:
     p-locate "^3.0.0"
     path-exists "^3.0.0"
 
-lodash-es@^4.17.11, lodash-es@^4.17.5:
+lodash-es@^4.17.5:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash-es/-/lodash-es-4.17.11.tgz#145ab4a7ac5c5e52a3531fb4f310255a152b4be0"
 
@@ -5581,6 +5581,10 @@ lodash.uniq@^4.5.0:
 "lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.15.0, lodash@^4.17.10, lodash@^4.17.3, lodash@^4.17.4, lodash@^4.17.5, lodash@^4.3.0:
   version "4.17.10"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.10.tgz#1b7793cf7259ea38fb3661d4d38b3260af8ae4e7"
+
+lodash@^4.17.11:
+  version "4.17.11"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
 
 log-symbols@^1.0.2:
   version "1.0.2"

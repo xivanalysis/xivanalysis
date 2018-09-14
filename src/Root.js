@@ -6,7 +6,6 @@ import App from 'components/App'
 import I18nLoader from 'components/I18nLoader'
 import {Provider as TooltipProvider} from 'components/ui/DbLink'
 import store from 'store'
-console.log(store)
 
 class Root extends Component {
 	render() {
