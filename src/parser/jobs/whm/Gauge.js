@@ -1,4 +1,3 @@
-/* eslint-disable */
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 
