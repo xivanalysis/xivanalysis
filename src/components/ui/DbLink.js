@@ -58,9 +58,9 @@ class TooltipBase extends React.PureComponent {
 			</span>
 		}
 
-		const link = <span className={styles.link}>
-			{showIcon && <img src={baseUrl + data.icon} alt="" />}
-			{children || data.name}
+		const link = <span>
+			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image}/>}
+			<span className={styles.link}>{children || data.name}</span>
 		</span>
 
 		if (!showTooltip) {
