@@ -1,7 +1,9 @@
-import {Trans, Plural} from '@lingui/react'
-import React from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+import React, {Fragment} from 'react'
+import {Accordion, Header, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -34,9 +36,13 @@ const STATUS_MAP = {
 }
 
 const BUFF_GCD_TARGET = 8
+const BUFF_GCD_WARNING = 7
+const BUFF_GCD_ERROR = 0
 
-export default class HotShot extends Module {
-	static handle = 'hotShot'
+export default class Buffs extends Module {
+	static handle = 'buffs'
+	static i18n_id = i18nMark('mch.buffs.title')
+	static title = 'Blood for Blood & Dragon Sight'
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -97,15 +103,16 @@ export default class HotShot extends Module {
 					}
 				}
 			}
-
-			this._pushToWindow(event, STATUSES.BLOOD_FOR_BLOOD.id)
-			this._pushToWindow(event, STATUSES.RIGHT_EYE.id)
 		}
+
+		this._pushToWindow(event, STATUSES.BLOOD_FOR_BLOOD.id)
+		this._pushToWindow(event, STATUSES.RIGHT_EYE.id)
 	}
 
 	_onBuffCast(event) {
 		const tracker = this._buffWindows[STATUS_MAP[event.ability.guid]]
 		if (tracker.current !== null) {
+			tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			tracker.history.push(tracker.current)
 		}
 
@@ -123,7 +130,9 @@ export default class HotShot extends Module {
 
 	_closeLastWindow(statusId) {
 		if (!this.combatants.selected.hasStatus(statusId)) {
+			// So we don't include partial windows
 			const tracker = this._buffWindows[statusId]
+			tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
 			tracker.history.push(tracker.current)
 		}
 	}
@@ -160,38 +169,6 @@ export default class HotShot extends Module {
 			</Trans>,
 		}))
 
-		const shortBfbWindows = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.filter(window => window.casts.length < BUFF_GCD_TARGET).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.BLOOD_FOR_BLOOD.icon,
-			content: <Trans id="drg.buffs.suggestions.bfb-gcds.content">
-				Make sure to get at least {BUFF_GCD_TARGET} GCDs in under each <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> window ({BUFF_GCD_TARGET + 1} if you have high skill speed or speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/> from your party).
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
-			},
-			value: shortBfbWindows,
-			why: <Trans id="drg.buffs.suggestions.bfb-gcds.why">
-				{shortBfbWindows} of your Blood for Blood windows contained fewer than {BUFF_GCD_TARGET} GCDs.
-			</Trans>,
-		}))
-
-		const shortDsWindows = this._buffWindows[STATUSES.RIGHT_EYE.id].history.filter(window => window.casts.length < BUFF_GCD_TARGET).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DRAGON_SIGHT.icon,
-			content: <Trans id="drg.buffs.suggestions.ds-gcds.content">
-				Make sure to get at least {BUFF_GCD_TARGET} GCDs in under each <ActionLink {...ACTIONS.DRAGON_SIGHT}/> window ({BUFF_GCD_TARGET + 1} if you have high skill speed or speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/> from your party).
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
-			},
-			value: shortDsWindows,
-			why: <Trans id="drg.buffs.suggestions.ds-gcds.why">
-				{shortDsWindows} of your Dragon Sight windows contained fewer than {BUFF_GCD_TARGET} GCDs.
-			</Trans>,
-		}))
-
 		const badlyTimedBfbs = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.filter(window => window.casts.length > 0 && !BFB_FIRST_ACTIONS.includes(window.casts[0].ability.guid)).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLOOD_FOR_BLOOD.icon,
@@ -200,12 +177,83 @@ export default class HotShot extends Module {
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MEDIUM,
 			},
 			value: badlyTimedBfbs,
 			why: <Trans id="drg.buffs.suggestions.bad-bfbs.why">
 				{badlyTimedBfbs} of your Blood for Blood windows started on a non-optimal GCD.
 			</Trans>,
 		}))
+	}
+
+	_formatGcdCount(count) {
+		if (count === BUFF_GCD_ERROR) {
+			return <span className="text-error">{count}</span>
+		}
+
+		if (count <= BUFF_GCD_WARNING) {
+			return <span className="text-warning">{count}</span>
+		}
+
+		return count
+	}
+
+	output() {
+		const bfbPanels = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.map(window => {
+			return {
+				title: {
+					key: 'title-' + window.start,
+					content: <Fragment>
+						{this.parser.formatTimestamp(window.start)}
+						<span> - </span>
+						<Trans id="drg.buffs.panel-count">
+							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
+						</Trans>
+					</Fragment>,
+				},
+				content: {
+					key: 'content-' + window.start,
+					content: <Rotation events={window.casts}/>,
+				},
+			}
+		})
+		const dsPanels = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map(window => {
+			return {
+				title: {
+					key: 'title-' + window.start,
+					content: <Fragment>
+						{this.parser.formatTimestamp(window.start)}
+						<span> - </span>
+						<Trans id="drg.buffs.panel-count">
+							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
+						</Trans>
+					</Fragment>,
+				},
+				content: {
+					key: 'content-' + window.start,
+					content: <Rotation events={window.casts}/>,
+				},
+			}
+		})
+
+		return <Fragment>
+			<Message>
+				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+			</Message>
+			<Header size="small">Blood for Blood</Header>
+			<Accordion
+				exclusive={false}
+				panels={bfbPanels}
+				styled
+				fluid
+			/>
+			<Header size="small">Dragon Sight</Header>
+			<Accordion
+				exclusive={false}
+				panels={dsPanels}
+				styled
+				fluid
+			/>
+		</Fragment>
 	}
 }
