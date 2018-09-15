@@ -5,6 +5,7 @@ import {Pie as PieChart} from 'react-chartjs-2'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
+import PATCHES, {getPatch} from 'data/PATCHES'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -194,7 +195,12 @@ export default class Pets extends Module {
 			(a, b) => this._petUptime.get(b) - this._petUptime.get(a)
 		)[0]
 
-		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
+		// Disabling garuda/ifrit check post-4.4 due to changed to RS
+		// TODO: Revisit this in more detail once math is solidified
+		const currentPatch = getPatch(this.parser.parseDate)
+		const pre44 = PATCHES[currentPatch].date < PATCHES['4.4'].date
+
+		if (pre44 && numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
 				severity: SEVERITY.MEDIUM,
@@ -207,7 +213,7 @@ export default class Pets extends Module {
 			}))
 		}
 
-		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+		if (pre44 && numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
 				severity: SEVERITY.MEDIUM,
