@@ -41,6 +41,9 @@ const PATCHES = {
 	'4.36': {
 		date: 1533635005,
 	},
+	'4.4': {
+		date: 1537268400,
+	},
 }
 
 export default PATCHES
