@@ -41,7 +41,7 @@ const BUFF_GCD_ERROR = 0
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
-	static i18n_id = i18nMark('mch.buffs.title')
+	static i18n_id = i18nMark('drg.buffs.title')
 	static title = 'Blood for Blood & Dragon Sight'
 	static dependencies = [
 		'checklist',
@@ -240,14 +240,18 @@ export default class Buffs extends Module {
 			<Message>
 				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
-			<Header size="small">Blood for Blood</Header>
+			<Header size="small">
+				<Trans id="drg.buffs.accordion.bfb-header">Blood for Blood</Trans>
+			</Header>
 			<Accordion
 				exclusive={false}
 				panels={bfbPanels}
 				styled
 				fluid
 			/>
-			<Header size="small">Dragon Sight</Header>
+			<Header size="small">
+				<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
+			</Header>
 			<Accordion
 				exclusive={false}
 				panels={dsPanels}
