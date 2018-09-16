@@ -872,7 +872,7 @@
 
 "@xivanalysis/tooltips@xivanalysis/tooltips":
   version "0.0.1"
-  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/5e1aee1bce55e278e3aaab36a3be6a72a851597c"
+  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/67e7c1330258dd56e83a2ef26225efd556c1ae3e"
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
