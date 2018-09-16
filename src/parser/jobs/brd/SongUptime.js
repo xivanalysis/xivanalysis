@@ -43,14 +43,16 @@ export default class SongUptime extends Module {
 	_onComplete() {
 
 		const fightDuration = (this.parser.fightDuration - this.downtime.getDowntime())/1000
-		const songlessTime = (this._getSonglessTime())/1000
-		const songlessPercentile = (songlessTime/fightDuration)*100
+		const songlessTime = this._formatDecimal((this._getSonglessTime())/1000)
+		const songlessPercentile = this._formatDecimal((songlessTime/fightDuration)*100)
 
 		//TODO: Define a threshold for song uptime
-		if (songlessPercentile > 3) {
+		if (songlessPercentile > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THE_WANDERERS_MINUET.icon,
-				why: `Being songless for ${songlessTime} seconds (${songlessPercentile}%)`,
+				why: <Fragment>
+					Being songless for {songlessTime} seconds ({songlessPercentile}%).
+				</Fragment>,
 				severity: songlessPercentile > 7 ? SEVERITY.MAJOR : songlessPercentile > 5? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
@@ -99,6 +101,10 @@ export default class SongUptime extends Module {
 		}
 
 		return totalSonglessTime
+	}
+
+	_formatDecimal(number) {
+		return Math.round(number * 100)/100
 	}
 
 }
