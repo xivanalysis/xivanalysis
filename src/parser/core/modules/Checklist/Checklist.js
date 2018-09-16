@@ -3,7 +3,8 @@ import {i18nMark} from '@lingui/react'
 
 import Rule from './Rule'
 import ChecklistComponent from 'components/modules/Checklist'
-import Module, {DISPLAY_ORDER} from 'parser/core/Module'
+import Module from 'parser/core/Module'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 export default class Checklist extends Module {
 	static handle = 'checklist'

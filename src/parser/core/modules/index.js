@@ -3,6 +3,7 @@ import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
 import Arcanum from './Arcanum'
+import BrokenLog from './BrokenLog'
 import CastTime from './CastTime'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
@@ -29,6 +30,7 @@ export default [
 	AlwaysBeCasting,
 	AoE,
 	Arcanum,
+	BrokenLog,
 	CastTime,
 	Checklist,
 	Combatants,
