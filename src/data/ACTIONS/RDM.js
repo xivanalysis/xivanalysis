@@ -158,6 +158,7 @@ export default {
 		cooldown: 2.5,
 		potency: 180,
 		castTime: 2, //Increase White and Black by 3
+		breaksCombo: true,
 	},
 	JOLT_II: {
 		id: 7524,
@@ -167,6 +168,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 240, //Increase White and Black by 3
+		breaksCombo: true,
 	},
 	IMPACT: {
 		id: 7522,
@@ -176,6 +178,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 270, //Increase White and Black by 4
+		breaksCombo: true,
 	},
 	VERTHUNDER: {
 		id: 7505,
@@ -185,6 +188,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 5,
 		potency: 300, //Increase Black by 11
+		breaksCombo: true,
 	},
 	VERFIRE: {
 		id: 7510,
@@ -194,6 +198,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 270, //Increase Black by 9
+		breaksCombo: true,
 	},
 	VERAREO: {
 		id: 7507,
@@ -203,6 +208,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 5,
 		potency: 300, //Increase White by 11
+		breaksCombo: true,
 	},
 	VERSTONE: {
 		id: 7511,
@@ -212,6 +218,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 270, //Increase White by 9
+		breaksCombo: true,
 	},
 	TETHER: {
 		id: 7508,
@@ -220,6 +227,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2.5,
+		breaksCombo: true,
 	},
 	SCATTER: {
 		id: 7509,
@@ -229,6 +237,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 100, //Increase White and black by 3
+		breaksCombo: true,
 	},
 	MOULINET: {
 		id: 7513,
@@ -237,6 +246,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 60,
+		breaksCombo: true,
 	},
 	ENCHANTED_MOULINET: {
 		id: 7530,
@@ -245,6 +255,7 @@ export default {
 		onGcd: true,
 		cooldown: 1.5,
 		potency: 200, //Costs 30 White and Black
+		breaksCombo: true,
 	},
 	VERCURE: {
 		id: 7514,
@@ -254,6 +265,7 @@ export default {
 		cooldown: 2.5,
 		castTime: 2,
 		potency: 350,
+		breaksCombo: true,
 	},
 	VERRAISE: {
 		id: 7523,
@@ -262,5 +274,6 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 10,
+		breaksCombo: true,
 	},
 }
