@@ -1,7 +1,7 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-
+import {getPatch} from 'data/PATCHES'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
@@ -45,9 +45,11 @@ export const SEVERITY_LOST_MANA = {
 const MANA_DIFFERENCE_THRESHOLD = 30
 const MANA_LOST_DIVISOR = 2
 const MANA_CAP = 100
-const ENCHANCED_SCATTER_GAIN = 8
+const ENHANCED_SCATTER_GAIN = 8
+const ENHANCED_SCATTER_44_GAIN = 10
 const MISSING_HARDCAST_MANA_VALUE = 11
 const MANAIFCATION_MULTIPLIER = 2
+const ENHANCED_SCATTER_MANA_CHANGE_PATCH = '4.4'
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
@@ -79,6 +81,9 @@ export default class Gauge extends Module {
 			white: [],
 			black: [],
 		}
+
+		// The report timestamp is relative to the report timestamp, and in ms. Convert.
+		_parseDate = Math.round((this.parser.report.start + this.parser.fight.start_time) / 1000)
 
 		constructor(...args) {
 			super(...args)
@@ -197,8 +202,13 @@ export default class Gauge extends Module {
 						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
 						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
 							//console.log('Enhanced Scatter On')
-							white = ENCHANCED_SCATTER_GAIN
-							black = ENCHANCED_SCATTER_GAIN
+							if (getPatch(this._parseDate) < ENHANCED_SCATTER_MANA_CHANGE_PATCH) {
+								white = ENHANCED_SCATTER_GAIN
+								black = ENHANCED_SCATTER_GAIN
+							} else {
+								white = ENHANCED_SCATTER_44_GAIN
+								black = ENHANCED_SCATTER_44_GAIN
+							}
 						}
 					}
 

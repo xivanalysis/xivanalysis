@@ -28,8 +28,8 @@
 - [ ] Don't use Flare/Holy when Fire/Stone are up
 
 ## Melee Combo
-- [ ] Derping a melee combo, either breaking it, or not finishing it.
-- [ ] Going into a melee combo without enough mana
+- [X] Derping a melee combo, either breaking it, or not finishing it.
+- [X] Going into a melee combo without enough mana
 - [ ] Going into a melee combo with procs up
 - [ ] Going into a melee combo with low Black and fire is up
 - [ ] Going into a melee combo with low white and stone is up
