@@ -51,7 +51,7 @@ export default class BlmWeaving extends Weaving {
 
 	//check for fast casted F3/B3 and allow 1 weave if you get one
 	isBadWeave(weave, maxWeaves) {
-		if (weave.gcdEvent.ability) {
+		if (weave.leadingGcdEvent.ability) {
 			const weaveCount = weave.weaves.filter(
 				event => !this.invuln.isUntargetable('all', event.timestamp)
 			).length
@@ -70,8 +70,8 @@ export default class BlmWeaving extends Weaving {
 			}
 
 			//allow single weave under fast B3/F3
-			if ((weave.gcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._lastF3FastCast) ||
-				(weave.gcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._lastB3FastCast)
+			if ((weave.leadingGcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._lastF3FastCast) ||
+				(weave.leadingGcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._lastB3FastCast)
 			) {
 				if (weaveCount === 1) {
 					return false

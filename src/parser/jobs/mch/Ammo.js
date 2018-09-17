@@ -110,5 +110,11 @@ export default class Ammo extends Module {
 		}))
 	}
 
+	negateBadAmmoUse(abilityId) {
+		if (this._badAmmoUses.hasOwnProperty(abilityId)) {
+			this._badAmmoUses[abilityId]--
+		}
+	}
+
 	get ammoSpent() { return this._ammoSpent }
 }

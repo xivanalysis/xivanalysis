@@ -43,6 +43,11 @@ class Parser {
 		)
 	}
 
+	get parseDate() {
+		// The report timestamp is relative to the report timestamp, and in ms. Convert.
+		return Math.round((this.report.start + this.fight.start_time) / 1000)
+	}
+
 	// -----
 	// Constructor
 	// -----

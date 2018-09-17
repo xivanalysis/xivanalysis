@@ -26,7 +26,7 @@ export default class About extends CoreAbout {
 	</>
 	supportedPatches = {
 		from: '4.2',
-		to: '4.36',
+		to: '4.4',
 	}
 	contributors = [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},

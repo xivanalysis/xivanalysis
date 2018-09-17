@@ -147,9 +147,10 @@ export default class Heat extends Module {
 			if (abilityId === ACTIONS.GAUSS_BARREL.id) {
 				this._fixNullAssumption()
 			} else if (event.timestamp - this._lastBarrelStateChange < OVERHEAT_DURATION_MILLIS) {
-				if (abilityId !== ACTIONS.SHOT.id) {
-					// We don't really need auto attacks in here, they'll just clog up the display
-					this._overheatWindows.current.casts.push(event)
+				this._overheatWindows.current.casts.push(event)
+				if (this.ammo.ammoSpent) {
+					// Don't count typically bad ammo expenditures if they happen during OH
+					this.ammo.negateBadAmmoUse(abilityId)
 				}
 			} else {
 				this._overheatWindows.current.gcdCount = this._overheatWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
@@ -242,7 +243,8 @@ export default class Heat extends Module {
 					key: 'title-' + overheat.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(overheat.start)}
-						<span> - </span>{this._formatGcdCount(overheat.gcdCount)}/{OVERHEAT_GCD_TARGET}
+						<span> - </span>
+						{this._formatGcdCount(overheat.gcdCount)}/{OVERHEAT_GCD_TARGET} <Plural id="mch.heat.panel-count" value={overheat.gcdCount} one="GCD" other="GCDs"/>
 					</Fragment>,
 				},
 				content: {
@@ -254,7 +256,7 @@ export default class Heat extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.heat.accordion.message">Every overheat window should ideally include <ActionLink {...ACTIONS.WILDFIRE}/>, <ActionLink {...ACTIONS.RAPID_FIRE}/>, and {OVERHEAT_GCD_TARGET} GCDs. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="mch.heat.accordion.message">Every overheat window should ideally include <ActionLink {...ACTIONS.WILDFIRE}/>, <ActionLink {...ACTIONS.RAPID_FIRE}/>, and {OVERHEAT_GCD_TARGET} GCDs ({OVERHEAT_GCD_TARGET - 1} is also fine if you play with high ping). Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

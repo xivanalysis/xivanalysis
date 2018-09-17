@@ -1,7 +1,4 @@
 export const DISPLAY_ORDER = {
-	ABOUT: -3,
-	CHECKLIST: -2,
-	SUGGESTIONS: -1,
 	TOP: 0,
 	DEFAULT: 50,
 	BOTTOM: 100,

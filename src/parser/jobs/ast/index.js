@@ -1,6 +1,7 @@
 import About from './About'
 import EarthlyStar from './EarthlyStar'
-// import ArcanaUptime from './ArcanaUptime'
+import ArcanaTracking from './ArcanaTracking'
+import ArcanaSuggestions from './ArcanaSuggestions'
 import BuffExtensions from './BuffExtensions'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import DoTs from './DoTs'
@@ -17,4 +18,6 @@ export default [
 	LucidDreaming,
 	SleeveDraw,
 	Draw,
+	ArcanaTracking,
+	ArcanaSuggestions,
 ]
