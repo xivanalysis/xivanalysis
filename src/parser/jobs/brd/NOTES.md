@@ -10,6 +10,7 @@
 * Usage count [HIGH]
 * Alignment with RS [HIGH]
   * Ignore alignment for last usage [MEDIUM]
+* Bad barrages (not EA or RA) [HIGH]
 
 ## Fishing window [HIGH]
 
@@ -21,8 +22,8 @@
 * Early applications [MEDIUM]
   * Ignore early applications for the purpose of having it up after a transition [LOW]
   * Ignore early applications that were avoiding the fishing window [LOW]
-* Uptime [HIGH]
-* Bad use (straighter shot up) [HIGH]
+* ~~Uptime [HIGH]~~
+* ~~Bad use (straighter shot up) [HIGH]~~
   * Ignore sequential boss fights where RA would've been overkill and SS is kept until next boss [LOW]
 
 ## Dots [HIGH]
@@ -40,7 +41,7 @@
 ## Song usage [MEDIUM]
 
 * Find best song usage for the given parse [LOW]
-* Song uptime [HIGH]
+* ~~Song uptime [HIGH]~~
 * Early clips [LOW]
 
 ## Iron Jaws [MEDIUM]
