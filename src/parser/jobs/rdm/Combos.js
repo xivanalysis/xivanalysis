@@ -116,11 +116,11 @@ export default class Combos extends CoreCombos {
 				why: <Plural
 					id="rdm.therestcombos.why"
 					value={theRest}
-					one="# enchanted combo was lost due to general combo breakage"
-					other= "# enchanted combos were lost due to general combo breakage"
+					one="# enchanted combo was lost due to general combo breakage or combo timing out"
+					other= "# enchanted combos were lost due to general combo breakage or combo timing out"
 				/>,
 				content: <Trans id="rdm.therestcombos.why">
-					Do not use GCD Skills or Manafication during your enchanted combos
+					Do not allow your combo to timeout or use GCD Skills or Manafication during your enchanted combos
 				</Trans>,
 				tiers: this._severityGenericActions,
 				value: theRest,

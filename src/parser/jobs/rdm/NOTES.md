@@ -12,7 +12,7 @@
 - [ ] the Wasted Mana metric is not necessarily useful as a global.  Consider doing it by ability with grouping
 - [ ] Track the mana gain from Manafication to ensure that the user was (45|45 - 65|65) when used.
 - [ ] If Manafication is used in sub optimal ranges, check to see if boss is currently Invuln, if so allow it
-- [ ] Used Verholy when should have used Verflare or vice versa
+- [X] Used Verholy when should have used Verflare or vice versa
 
 ## Dualcast
 - [ ] It's not worth dumping a proc if you overflow 8+ mana, consider checking this as it's worth wasting dual castr if you aren't wasting this much mana.
@@ -25,14 +25,15 @@
 - [X] Track Dropping Impactful, Verstone, or Verfire
 - [X] Track if Jolt wast cast while Impactful, Verstone, or Verfire were up or if Swiftcast was off CD
 - [X] Dont' use Areo/Thunder while Stone/Fire are up
-- [ ] Don't use Flare/Holy when Fire/Stone are up
+- [X] Don't use Flare/Holy when Fire/Stone are up
 
 ## Melee Combo
 - [X] Derping a melee combo, either breaking it, or not finishing it.
 - [X] Going into a melee combo without enough mana
-- [ ] Going into a melee combo with procs up
-- [ ] Going into a melee combo with low Black and fire is up
-- [ ] Going into a melee combo with low white and stone is up
+- [X] Going into a melee combo with procs up
+- [X] Going into a melee combo with low Black and fire is up
+- [X] Going into a melee combo with low white and stone is up
+- [ ] Allowing Finisher or Combo to timeout
 
 ## Weaving
 - [ ] Don't use oGCDs after Displacement if > 30 seconds into a fight

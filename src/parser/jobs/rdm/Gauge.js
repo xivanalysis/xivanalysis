@@ -8,7 +8,9 @@ import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {i18nMark, Trans} from '@lingui/react'
+import {i18nMark, Trans, Plural} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
+//import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
@@ -42,6 +44,12 @@ export const SEVERITY_LOST_MANA = {
 	80: SEVERITY.MAJOR,
 }
 
+export const SEVERITY_WASTED_FINISHER = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 const MANA_DIFFERENCE_THRESHOLD = 30
 const MANA_LOST_DIVISOR = 2
 const MANA_CAP = 100
@@ -50,6 +58,8 @@ const ENHANCED_SCATTER_44_GAIN = 10
 const MISSING_HARDCAST_MANA_VALUE = 11
 const MANAIFCATION_MULTIPLIER = 2
 const ENHANCED_SCATTER_MANA_CHANGE_PATCH = '4.4'
+const MANA_DONT_CAST_THRESHOLD = 96
+const FINISHER_GAIN = 21
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
@@ -57,6 +67,7 @@ export default class Gauge extends Module {
 		static dependencies = [
 			'combatants',
 			'suggestions',
+			'cooldowns',
 		]
 
 		//Keeps track of our current mana gauge.
@@ -80,6 +91,13 @@ export default class Gauge extends Module {
 		_history = {
 			white: [],
 			black: [],
+		}
+
+		//Finisher Handling
+		_incorrectFinishers = {
+			verholy: 0,
+			verflare: 0,
+			bothprocsup: 0,
 		}
 
 		// The report timestamp is relative to the report timestamp, and in ms. Convert.
@@ -185,8 +203,8 @@ export default class Gauge extends Module {
 
 		_onCast(event) {
 			const abilityId = event.ability.guid
-			//This just lets us determine if we've modified the current Mana numbers at all
-			//const isCalculated = false
+			//Handle Finisher BEFORE adjusting mana
+			this._handleFinisher(abilityId)
 
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
@@ -238,6 +256,71 @@ export default class Gauge extends Module {
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()
+			}
+		}
+
+		_handleFinisher(abilityId) {
+			if (abilityId !== ACTIONS.VERFLARE.id && abilityId !== ACTIONS.VERHOLY.id) {
+				//Not a finisher, bail bail!
+				return
+			}
+
+			const isFireReady = this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id)
+			const isStoneReady = this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id)
+			const white = this._whiteMana
+			const black = this._blackMana
+			const isAccelerationUp = this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0
+			let useVerHoly = false
+			let useVerFlare = false
+			let doesntMatter = false
+			let useOnBadProc = false
+
+			if (isStoneReady &&
+				isFireReady &&
+				white >= MANA_DONT_CAST_THRESHOLD &&
+				black >= MANA_DONT_CAST_THRESHOLD) {
+				doesntMatter = true
+			} else if (isAccelerationUp &&
+				isFireReady &&
+				!isStoneReady &&
+				black < white &&
+				white + FINISHER_GAIN - black <= MANA_DIFFERENCE_THRESHOLD) {
+				useVerHoly = true
+			} else if (isAccelerationUp &&
+					!isFireReady &&
+					isStoneReady &&
+					white < black &&
+					black + FINISHER_GAIN - white <= MANA_DIFFERENCE_THRESHOLD) {
+				useVerFlare = true
+			} else if (white < black) {
+				useVerHoly = true
+				if (isStoneReady) {
+					useOnBadProc = true
+				}
+			} else if (black < white) {
+				useVerFlare = true
+				if (isFireReady) {
+					useOnBadProc = true
+				}
+			} else if (isStoneReady && isFireReady) {
+				this._incorrectFinishers.bothprocsup++
+				return
+			}
+
+			if (doesntMatter) {
+				//Doesn't matter, so return
+				return
+			}
+
+			if (useVerFlare && abilityId === ACTIONS.VERHOLY.id) {
+				this._incorrectFinishers.verholy++
+			} else if (useVerHoly && useOnBadProc) {
+				this._incorrectFinishers.verholy++
+			}
+			if (useVerHoly && abilityId === ACTIONS.VERFLARE.id) {
+				this._incorrectFinishers.verflare++
+			} else if (useVerFlare && useOnBadProc) {
+				this._incorrectFinishers.verflare++
 			}
 		}
 
@@ -310,6 +393,51 @@ export default class Gauge extends Module {
 				why: <Fragment>
 					<Trans id="rdm.gauge.suggestions.black-mana-lost-why">You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana</Trans>
 				</Fragment>,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERHOLY.icon,
+				content: <Trans id="rdm.gauge.suggestions.wasted-verholy-content">
+					Do not use <ActionLink {...ACTIONS.VERFLARE}/> when you should use <ActionLink {...ACTIONS.VERHOLY}/>
+				</Trans>,
+				why: <Plural
+					id="rdm.gauge.suggestions.wasted-verholy-why"
+					value={this._incorrectFinishers.verflare}
+					one="# Verstone cast were lost due to using Verflare at the incorrect time"
+					other="# Verstone casts were lost due to using Verflare at the incorrect time"
+				/>,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.verflare,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERFLARE.icon,
+				content: <Trans id="rdm.gauge.suggestions.wasted-verflare-content">
+					Do not use <ActionLink {...ACTIONS.VERHOLY}/> when you should use <ActionLink {...ACTIONS.VERFLARE}/>
+				</Trans>,
+				why: <Plural
+					id="rdm.gauge.suggestions.wasted-verflare-why"
+					value={this._incorrectFinishers.verholy}
+					one="# Verfire cast were lost due to using Verholy at the incorrect time"
+					other="# Verfire casts were lost due to using Verholy at the incorrect time"
+				/>,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.verholy,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERSTONE.icon,
+				content: <Trans id="rdm.gauge.suggestions.wasted-procs-content">
+					Do not enter your combo with both procs up when <ActionLink {...ACTIONS.ACCELERATION}/> is down
+				</Trans>,
+				why: <Plural
+					id="rdm.gauge.suggestions.wasted-procs-why"
+					value={this._incorrectFinishers.bothprocsup}
+					one="# Procs cast were lost due to entering the melee combo with both procs up"
+					other="# Procs casts were lost due to entering the melee combo with both procs up"
+				/>,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.bothprocsup,
 			}))
 		}
 
