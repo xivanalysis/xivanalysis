@@ -9,6 +9,9 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+const SETUP_TIME = 3200 // Assuming song being used after second GCD (2.50s from first GCD + 0.70s from second GCD animation lock)
+const SONG_DURATION = 30000
+
 export default class SongUptime extends Module {
 	static handle = 'songuptime'
 	static dependencies = [
@@ -18,6 +21,7 @@ export default class SongUptime extends Module {
 
 	_songCastEvents = []
 	_deathEvents = []
+	_songlessTolerance = SETUP_TIME
 
 	constructor(...args) {
 		super(...args)
@@ -41,19 +45,17 @@ export default class SongUptime extends Module {
 	}
 
 	_onComplete() {
-
-		const fightDuration = (this.parser.fightDuration - this.downtime.getDowntime())/1000
+		this._setTolerance()
 		const songlessTime = this._formatDecimal((this._getSonglessTime())/1000)
-		const songlessPercentile = this._formatDecimal((songlessTime/fightDuration)*100)
+		const songlessTolerance = this._songlessTolerance / 1000
 
-		//TODO: Define a threshold for song uptime
-		if (songlessPercentile > 0) {
+		if (songlessTime > songlessTolerance) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THE_WANDERERS_MINUET.icon,
 				why: <Fragment>
-					Being songless for {songlessTime} seconds ({songlessPercentile}%).
+					Being songless for {songlessTime} seconds.
 				</Fragment>,
-				severity: songlessPercentile > 7 ? SEVERITY.MAJOR : songlessPercentile > 5? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				severity: songlessTime > songlessTolerance + 15 ? SEVERITY.MAJOR : songlessTime > songlessTolerance + 10 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
 				</Fragment>,
@@ -78,8 +80,8 @@ export default class SongUptime extends Module {
 				songless.end = this._songCastEvents[i+1].timestamp
 			}
 
-			// The start of a songless period can't be after the end of said period, só it's the minimum between the end of first song and end of assumed songless period
-			songless.start = Math.min(this._songCastEvents[i].timestamp + 30000, songless.end)
+			// The start of a songless period can't be after the end of said period, so it's the minimum between the end of first song and end of assumed songless period
+			songless.start = Math.min(this._songCastEvents[i].timestamp + SONG_DURATION, songless.end)
 
 			// If caster died after first song was cast
 			const deathEvent = this._deathEvents.find(d => d.timestamp > this._songCastEvents[i].timestamp)
@@ -101,6 +103,16 @@ export default class SongUptime extends Module {
 		}
 
 		return totalSonglessTime
+	}
+
+	_setTolerance() {
+		// For each song, if the end of the song fell into a downtime, next song will require a set-up time
+		// This set-up time is added to the tolerance
+		this._songCastEvents.forEach(c => {
+			if (this.downtime.isDowntime(c.timestamp + SONG_DURATION)) {
+				this._songlessTolerance += SETUP_TIME
+			}
+		})
 	}
 
 	_formatDecimal(number) {
