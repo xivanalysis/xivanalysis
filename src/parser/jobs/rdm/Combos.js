@@ -1,9 +1,8 @@
 import CoreCombos from 'parser/core/modules/Combos'
 import ACTIONS from 'data/ACTIONS'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
-//import Rotation from 'components/ui/Rotation'
-//import {Accordion} from 'semantic-ui-react'
+import React from 'react'
+import {Plural, Trans} from '@lingui/react'
 
 export default class Combos extends CoreCombos {
 	// Overrides
@@ -33,35 +32,39 @@ export default class Combos extends CoreCombos {
 		2: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	}
+	//Generics, not handled by the rest
+	_severityGenericActions = {
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		4: SEVERITY.MAJOR,
+	}
 
 	//Overrides
 	addJobSpecificSuggestions(comboBreakers, uncomboedGcds) {
 		this._comboBreakers = comboBreakers
 		this._uncomboedGcdCount = uncomboedGcds
 
-		console.log('Output is Output!')
+		//console.log('Output is Output!')
 		if (this._comboBreakers.length === 0 && this._uncomboedGcdCount.length === 0) {
-			console.log('Output with no breakers!')
+			//console.log('Output with no breakers!')
 			return false
 		}
-
-		console.log('Output with breakers!')
 
 		//const panels = []
 		let derpComboCount = 0
 		let notEnoughManaCount = 0
 
 		if (this._comboBreakers.length > 0) {
-			console.log('Breaker')
+			//console.log('Breaker')
 			this._comboBreakers.map(breaker => {
 				// const util = require('util')
 				// console.log(util.inspect(breaker, {showHidden: true, depth: null}))
 				if (this._derpComboActions.includes(breaker.ability.guid)) {
-					console.log(`${derpComboCount}: derpComboCount`)
+					//console.log(`${derpComboCount}: derpComboCount`)
 					derpComboCount++
 				}
 				if (this._notEnoughManaActions.includes(breaker.ability.guid)) {
-					console.log(`${notEnoughManaCount}: notEnoughManaCount`)
+					//console.log(`${notEnoughManaCount}: notEnoughManaCount`)
 					notEnoughManaCount++
 				}
 			})
@@ -71,10 +74,15 @@ export default class Combos extends CoreCombos {
 		if (derpComboCount > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.ENCHANTED_REDOUBLEMENT.icon,
-				why: `${derpComboCount} enchanted combos were lost due to using the combo skills out of order`,
-				content: <Fragment>
+				why: <Plural
+					id="rdm.derpcombos.why"
+					value={derpComboCount}
+					one="# enchanted combo was lost due to using the combo skills out of order"
+					other= "# enchanted combos were lost due to using the combo skills out of order"
+				/>,
+				content: <Trans id="rdm.derpcombos.content">
 					Be sure not to use combo actions out of order.
-				</Fragment>,
+				</Trans>,
 				tiers: this._severityDerpComboActions,
 				value: derpComboCount,
 			}))
@@ -84,22 +92,40 @@ export default class Combos extends CoreCombos {
 		if (notEnoughManaCount > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
-				why: `${notEnoughManaCount} enchanted combos were lost due to entering the combo before having enough mana`,
-				content: <Fragment>
-				Be sure not to enter your combo before having 80|80 mana
-				</Fragment>,
+				why: <Plural
+					id="rdm.notenoughmanacombos.why"
+					value={notEnoughManaCount}
+					one="# enchanted combo was lost due to entering the combo before having enough mana"
+					other= "# enchanted combos were lost due to entering the combo before having enough mana"
+				/>,
+				content: <Trans id="rdm.notenoughmanacombos.content">
+					Be sure not to enter your combo before having 80|80 mana
+				</Trans>,
 				tiers: this._severityNotEnoughManaActions,
 				value: notEnoughManaCount,
 			}))
 		}
 
-		// if (this._uncomboedGcdCount.length > 0) {
-		// 	console.log('uncomboed')
-		// 	this._uncomboedGcdCount.map(breaker => {
-		// 		const util = require('util')
-		// 		console.log(util.inspect(breaker, {showHidden: true, depth: null}))
-		// 	})
-		// }
+		const theRest = this._comboBreakers.length + this._uncomboedGcdCount.length - derpComboCount - notEnoughManaCount
+		//console.log(`TheRest: ${theRest}`)
+
+		//Process The Rest
+		if (theRest > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.ENCHANTED_REDOUBLEMENT.icon,
+				why: <Plural
+					id="rdm.therestcombos.why"
+					value={theRest}
+					one="# enchanted combo was lost due to general combo breakage"
+					other= "# enchanted combos were lost due to general combo breakage"
+				/>,
+				content: <Trans id="rdm.therestcombos.why">
+					Do not use GCD Skills or Manafication during your enchanted combos
+				</Trans>,
+				tiers: this._severityGenericActions,
+				value: theRest,
+			}))
+		}
 
 		return true
 	}
