@@ -22,6 +22,7 @@ export default class Wildfire extends Module {
 	static i18n_id = i18nMark('mch.wildfire.title')
 	static title = 'Wildfire'
 	static dependencies = [
+		'brokenLog',
 		'enemies',
 		'heat',
 		'suggestions',
@@ -55,13 +56,24 @@ export default class Wildfire extends Module {
 	}
 
 	_onWildfireDamage(event) {
-		this._wildfireWindows.current.casts = this._wildfireWindows.current.casts.filter(cast => cast.compoundDamage <= event.amount) // Pop any extraneous events off the end
-		const gcds = this._wildfireWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd)
-		this._wildfireWindows.current.gcdCount = gcds.length
-		this._wildfireWindows.current.overheatedGcdCount = gcds.filter(cast => cast.overheated).length
-		this._wildfireWindows.current.damage = event.amount
-		this._wildfireWindows.history.push(this._wildfireWindows.current)
-		this._wildfireWindows.current = null
+		if (this._wildfireWindows.current !== null) {
+			this._wildfireWindows.current.casts = this._wildfireWindows.current.casts.filter(cast => cast.compoundDamage <= event.amount) // Pop any extraneous events off the end
+			const gcds = this._wildfireWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+			this._wildfireWindows.current.gcdCount = gcds.length
+			this._wildfireWindows.current.overheatedGcdCount = gcds.filter(cast => cast.overheated).length
+			this._wildfireWindows.current.damage = event.amount
+			this._wildfireWindows.history.push(this._wildfireWindows.current)
+			this._wildfireWindows.current = null
+		} else {
+			// Something fucky this way comes - we got a WF damage event without a corresponding applydebuff, which means the log is probably jank.
+			// Create a fake window so we still display time/damage and notify the "broken log" module.
+			this.brokenLog.trigger()
+			this._wildfireWindows.history.push({
+				spoofed: true,
+				start: event.timestamp - (STATUSES.WILDFIRE.duration * 1000),
+				damage: event.amount,
+			})
+		}
 	}
 
 	_onWildfireApplied(event) {
@@ -104,6 +116,25 @@ export default class Wildfire extends Module {
 
 	output() {
 		const panels = this._wildfireWindows.history.map(wildfire => {
+			if (wildfire.spoofed) {
+				return {
+					title: {
+						key: 'title-' + wildfire.start,
+						content: <Fragment>
+							{this.parser.formatTimestamp(wildfire.start)}
+							<span> - </span>
+							<Trans id="mch.wildfire.panel-count">
+								? GCDs, {wildfire.damage} damage
+							</Trans>
+						</Fragment>,
+					},
+					content: {
+						key: 'content-' + wildfire.start,
+						content: <img src="https://xivapi.com/i/064000/064033.png"/>,
+					},
+				}
+			}
+
 			return {
 				title: {
 					key: 'title-' + wildfire.start,
