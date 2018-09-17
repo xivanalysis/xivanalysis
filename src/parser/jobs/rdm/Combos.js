@@ -119,7 +119,7 @@ export default class Combos extends CoreCombos {
 					one="# enchanted combo was lost due to general combo breakage or combo timing out"
 					other= "# enchanted combos were lost due to general combo breakage or combo timing out"
 				/>,
-				content: <Trans id="rdm.therestcombos.why">
+				content: <Trans id="rdm.therestcombos.content">
 					Do not allow your combo to timeout or use GCD Skills or Manafication during your enchanted combos
 				</Trans>,
 				tiers: this._severityGenericActions,
