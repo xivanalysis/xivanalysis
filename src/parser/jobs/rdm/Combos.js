@@ -8,8 +8,6 @@ export default class Combos extends CoreCombos {
 	// Overrides
 	static suggestionIcon = ACTIONS.ENCHANTED_REDOUBLEMENT.icon
 
-	_comboBreakers = []
-	_uncomboedGcds = []
 	//These actions are considered a combo DERP
 	_derpComboActions = [
 		ACTIONS.ENCHANTED_RIPOSTE.id,
@@ -41,11 +39,8 @@ export default class Combos extends CoreCombos {
 
 	//Overrides
 	addJobSpecificSuggestions(comboBreakers, uncomboedGcds) {
-		this._comboBreakers = comboBreakers
-		this._uncomboedGcdCount = uncomboedGcds
-
 		//console.log('Output is Output!')
-		if (this._comboBreakers.length === 0 && this._uncomboedGcdCount.length === 0) {
+		if (comboBreakers.length === 0 && uncomboedGcds.length === 0) {
 			//console.log('Output with no breakers!')
 			return false
 		}
@@ -54,9 +49,9 @@ export default class Combos extends CoreCombos {
 		let derpComboCount = 0
 		let notEnoughManaCount = 0
 
-		if (this._comboBreakers.length > 0) {
+		if (comboBreakers.length > 0) {
 			//console.log('Breaker')
-			this._comboBreakers.map(breaker => {
+			comboBreakers.map(breaker => {
 				// const util = require('util')
 				// console.log(util.inspect(breaker, {showHidden: true, depth: null}))
 				if (this._derpComboActions.includes(breaker.ability.guid)) {
@@ -74,13 +69,8 @@ export default class Combos extends CoreCombos {
 		if (derpComboCount > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.ENCHANTED_REDOUBLEMENT.icon,
-				why: <Plural
-					id="rdm.derpcombos.why"
-					value={derpComboCount}
-					one="# enchanted combo was lost due to using the combo skills out of order"
-					other= "# enchanted combos were lost due to using the combo skills out of order"
-				/>,
-				content: <Trans id="rdm.derpcombos.content">
+				why: <Plural id="rdm.combos.suggestions.derpcombos.why" value={derpComboCount} one="# enchanted combo was lost due to using the combo skills out of order" other= "# enchanted combos were lost due to using the combo skills out of order" />,
+				content: <Trans id="rdm.combos.suggestions.derpcombos.content">
 					Be sure not to use combo actions out of order.
 				</Trans>,
 				tiers: this._severityDerpComboActions,
@@ -92,13 +82,8 @@ export default class Combos extends CoreCombos {
 		if (notEnoughManaCount > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
-				why: <Plural
-					id="rdm.notenoughmanacombos.why"
-					value={notEnoughManaCount}
-					one="# enchanted combo was lost due to entering the combo before having enough mana"
-					other= "# enchanted combos were lost due to entering the combo before having enough mana"
-				/>,
-				content: <Trans id="rdm.notenoughmanacombos.content">
+				why: <Plural id="rdm.combos.suggestions.notenoughmanacombos.why" value={notEnoughManaCount} one="# enchanted combo was lost due to entering the combo before having enough mana" other= "# enchanted combos were lost due to entering the combo before having enough mana" />,
+				content: <Trans id="rdm.combos.suggestions.notenoughmanacombos.content">
 					Be sure not to enter your combo before having 80|80 mana
 				</Trans>,
 				tiers: this._severityNotEnoughManaActions,
@@ -106,20 +91,15 @@ export default class Combos extends CoreCombos {
 			}))
 		}
 
-		const theRest = this._comboBreakers.length + this._uncomboedGcdCount.length - derpComboCount - notEnoughManaCount
+		const theRest = comboBreakers.length + uncomboedGcds.length - derpComboCount - notEnoughManaCount
 		//console.log(`TheRest: ${theRest}`)
 
 		//Process The Rest
 		if (theRest > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.ENCHANTED_REDOUBLEMENT.icon,
-				why: <Plural
-					id="rdm.therestcombos.why"
-					value={theRest}
-					one="# enchanted combo was lost due to general combo breakage or combo timing out"
-					other= "# enchanted combos were lost due to general combo breakage or combo timing out"
-				/>,
-				content: <Trans id="rdm.therestcombos.content">
+				why: <Plural id="rdm.combos.suggestions.therestcombos.why" value={theRest} one="# enchanted combo was lost due to general combo breakage or combo timing out" other= "# enchanted combos were lost due to general combo breakage or combo timing out" />,
+				content: <Trans id="rdm.combos.suggestions.therestcombos.content">
 					Do not allow your combo to timeout or use GCD Skills or Manafication during your enchanted combos
 				</Trans>,
 				tiers: this._severityGenericActions,
