@@ -123,7 +123,7 @@ export default class Wildfire extends Module {
 						content: <Fragment>
 							{this.parser.formatTimestamp(wildfire.start)}
 							<span> - </span>
-							<Trans id="mch.wildfire.panel-count">
+							<Trans id="mch.wildfire.panel-count-spoofed">
 								? GCDs, {wildfire.damage} damage
 							</Trans>
 						</Fragment>,
