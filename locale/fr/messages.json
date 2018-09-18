@@ -1,4 +1,5 @@
 {
+  "ast.arcana-suggestions.messages.accordion-title": "",
   "ast.arcana-suggestions.messages.disclaimer": "",
   "ast.arcana-suggestions.messages.explanation": "",
   "ast.arcana-suggestions.messages.latest-action": "",
@@ -37,6 +38,9 @@
   "ast.earthly-star.suggestion.uncooked.content": "",
   "ast.earthly-star.suggestion.uncooked.why": "",
   "ast.earthly-star.title": "",
+  "ast.lightspeed.messages.explanation": "",
+  "ast.lightspeed.messages.no-casts": "",
+  "ast.lightspeed.title": "",
   "ast.lucid-dreaming.checklist.content": "",
   "ast.lucid-dreaming.checklist.name": "",
   "ast.lucid-dreaming.checklist.requirement.name": "",
