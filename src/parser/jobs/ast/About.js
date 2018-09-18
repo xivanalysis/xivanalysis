@@ -17,13 +17,13 @@ export default class About extends CoreAbout {
 		</p>
 		<p>
 			This tool displays the usual uptime and gcd recommendations. It also gives a simple print-out
-			for buffs you've extended, and the card actions you've made.
+			for buffs you've extended and the card actions you've made.
 		</p>
-		<p>Coming soon: Healing analysis. There will be some suggestions based on the decisions made with cards. More details on buff extensions.</p>
+		<p>Coming soon: Healing analysis. There will be some suggestions based on the decisions made with cards. </p>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				There is really nothing truly AST specific here yet. If you have a suggestion of what is worth tracking
+				There's still lots more work to be done for this tool to be comprehensive! If you have a suggestion for what is worth tracking
 				please pop by our Discord channel!
 			</Message.Content>
 		</Message>
@@ -36,7 +36,7 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatches = {
 		from: '4.3',
-		to: '4.36',
+		to: '4.4',
 	}
 	contributors = [
 		{user: CONTRIBUTORS.SUSHIROU, role: 'Maintainer'},
