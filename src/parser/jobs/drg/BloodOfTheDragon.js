@@ -23,9 +23,6 @@ export default class BloodOfTheDragon extends Module {
 		'suggestions',
 	]
 
-	// Overrides
-	//static suggestionIcon = ACTIONS.FULL_THRUST.icon
-
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 20s anyway.
 	// Also, this way we don't count the first second of the fight as erroneous downtime.

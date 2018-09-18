@@ -58,4 +58,10 @@ export default {
 		name: 'Dive Ready',
 		icon: 'https://xivapi.com/i/012000/012583.png',
 	},
+
+	LIFE_SURGE: {
+		id: 116,
+		name: 'Life Surge',
+		icon: 'https://xivapi.com/i/010000/010302.png',
+	},
 }
