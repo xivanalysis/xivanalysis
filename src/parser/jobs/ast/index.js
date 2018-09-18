@@ -1,5 +1,6 @@
 import About from './About'
 import EarthlyStar from './EarthlyStar'
+import Lightspeed from './Lightspeed'
 import ArcanaTracking from './ArcanaTracking'
 import ArcanaSuggestions from './ArcanaSuggestions'
 import BuffExtensions from './BuffExtensions'
@@ -14,6 +15,7 @@ export default [
 	ArcanaUndrawUsage,
 	DoTs,
 	BuffExtensions,
+	Lightspeed,
 	EarthlyStar,
 	LucidDreaming,
 	SleeveDraw,

@@ -13,6 +13,7 @@ import Module from 'parser/core/Module'
 
 import BuffList from './BuffList'
 import styles from './BuffExtensions.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const IGNORE_STATUSES = [
 	STATUSES.PROTECT.id,
@@ -33,6 +34,7 @@ export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
 	static i18n_id = i18nMark('ast.buff-extensions.title')
+	static displayOrder = DISPLAY_ORDER.BUFF_EXTENSIONS
 	// static dependencies = [
 	// 	// 'suggestions',
 	// ]

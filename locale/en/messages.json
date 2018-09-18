@@ -1,4 +1,5 @@
 {
+  "ast.arcana-suggestions.messages.accordion-title": "Full Arcana Logs",
   "ast.arcana-suggestions.messages.disclaimer": "Card management critique is still a work in progress. No recommendations are being made yet. <0/>The intention of this section is to give a general recommendation of best practices. It will not take into consideration which party member was playing better, or whether they were in burst phase.",
   "ast.arcana-suggestions.messages.explanation": "This section keeps track of every card action made during the fight, and the state of the spread after each action.",
   "ast.arcana-suggestions.messages.latest-action": "Lastest Action",
@@ -37,6 +38,9 @@
   "ast.earthly-star.suggestion.uncooked.content": "Plan your <0/> placements so that it's always cooked enough for the full potency when you need it.",
   "ast.earthly-star.suggestion.uncooked.why": "{earlyBurstCount, plural, one {# detonation} other {# detonations}} of an uncooked Earthly Star.",
   "ast.earthly-star.title": "ast.earthly-star.title",
+  "ast.lightspeed.messages.explanation": "Some of the applications of <0/> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs. To further complicate usage, <1/> can reduce the cooldown, and the buff can be extended by <2/>.<3/><4/>At this point of time it's difficult to identify what is optimal, since each fight calls for a different strategy.",
+  "ast.lightspeed.messages.no-casts": "Zero casts recorded for <0/>",
+  "ast.lightspeed.title": "ast.lightspeed.title",
   "ast.lucid-dreaming.checklist.content": "Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to \"Always be casting\" they frequently find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <0/> to maximize MP benefits.",
   "ast.lucid-dreaming.checklist.name": "Extend Lucid Dreaming",
   "ast.lucid-dreaming.checklist.requirement.name": "<0/> extensions",

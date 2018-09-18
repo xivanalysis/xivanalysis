@@ -12,14 +12,16 @@ import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import {ActionLink} from 'components/ui/DbLink'
 import {Trans, i18nMark} from '@lingui/react'
-import {Table, Icon, Message, Label} from 'semantic-ui-react'
+import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
 
 import styles from './ArcanaSuggestions.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
 	static title = 'Arcana Logs'
 	static i18n_id = i18nMark('ast.arcana-suggestions.title')
+	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
 		'suggestions',
 		'arcanaTracking',
@@ -122,6 +124,51 @@ export default class ArcanaSuggestions extends Module {
 		//					<Trans id="ast.arcana-suggestions.messages.header4">Remarks</Trans></Table.HeaderCell>
 		// {this.RenderRemark(artifact)}
 
+		const cardDisplayPanel = [{
+			key: 'arcana-logs',
+			title: {
+				content: <Trans id="ast.arcana-suggestions.messages.accordion-title">Full Arcana Logs</Trans>,
+			},
+			content: {
+				content: <Table collapsing unstackable className={styles.cardActionTable}>
+					<Table.Header>
+						<Table.Row>
+							<Table.HeaderCell width={1}>
+								<Trans id="ast.arcana-suggestions.messages.time">
+											Time
+								</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell width={4}>
+								<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell width={2}>
+								<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
+							</Table.HeaderCell>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						<Table.Row key={pullState.timestamp} className={styles.cardActionRow}>
+							<Table.Cell>{this.parser.formatTimestamp(pullState.timestamp)}</Table.Cell>
+							<Table.Cell>
+								<Trans id="ast.arcana-suggestions.messages.pull">
+											Pull
+								</Trans>
+							</Table.Cell>
+							{this.RenderSpreadState(pullState)}
+						</Table.Row>
+
+						{this.cardLogs.map(artifact => {
+							return <Table.Row key={artifact.timestamp} className={styles.cardActionRow}>
+								<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
+								{this.RenderAction(artifact)}
+								{this.RenderSpreadState(artifact)}
+							</Table.Row>
+						})}
+					</Table.Body>
+				</Table>,
+			},
+		}]
+
 		return <Fragment>
 			<p>
 				<Trans id="ast.arcana-suggestions.messages.explanation">
@@ -137,42 +184,12 @@ export default class ArcanaSuggestions extends Module {
 					</Trans>
 				</Message.Content>
 			</Message>
-			<Table collapsing unstackable className={styles.cardActionTable}>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell width={1}>
-							<Trans id="ast.arcana-suggestions.messages.time">
-								Time
-							</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell width={4}>
-							<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell width={2}>
-							<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
-						</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					<Table.Row key={pullState.timestamp} className={styles.cardActionRow}>
-						<Table.Cell>{this.parser.formatTimestamp(pullState.timestamp)}</Table.Cell>
-						<Table.Cell>
-							<Trans id="ast.arcana-suggestions.messages.pull">
-								Pull
-							</Trans>
-						</Table.Cell>
-						{this.RenderSpreadState(pullState)}
-					</Table.Row>
-
-					{this.cardLogs.map(artifact => {
-						return <Table.Row key={artifact.timestamp} className={styles.cardActionRow}>
-							<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
-							{this.RenderAction(artifact)}
-							{this.RenderSpreadState(artifact)}
-						</Table.Row>
-					})}
-				</Table.Body>
-			</Table>
+			<Accordion
+				exclusive={false}
+				panels={cardDisplayPanel}
+				styled
+				fluid
+			/>
 
 		</Fragment>
 	}
