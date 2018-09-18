@@ -302,7 +302,7 @@ export default class Gauge extends Module {
 				if (isFireReady) {
 					useOnBadProc = true
 				}
-			} else if (isStoneReady && isFireReady) {
+			} else if (isStoneReady && isFireReady && (white <= MANA_DONT_CAST_THRESHOLD || black < MANA_DONT_CAST_THRESHOLD)) {
 				this._incorrectFinishers.bothprocsup++
 				return
 			}
@@ -398,7 +398,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
 				content: <Trans id="rdm.gauge.suggestions.wastedverholy.content">
-					When white mana is lower, mana is even and Verfire is up, or Acceleration is available with Verfire available you should use <ActionLink {...ACTIONS.VERFLARE}/> instead <ActionLink {...ACTIONS.VERHOLY}/>
+					When white mana is lower, mana is even and Verfire is up, or Acceleration is available with Verfire available you should use <ActionLink {...ACTIONS.VERHOLY}/> instead <ActionLink {...ACTIONS.VERFLARE}/>
 				</Trans>,
 				why: <Plural id="rdm.gauge.suggestions.wastedverholy.why" value={this._incorrectFinishers.verflare} one="# Verstone cast was lost due to using Verflare incorrectly" other="# Verstone casts were lost due to using Verflare incorrectly" />,
 				tiers: SEVERITY_WASTED_FINISHER,
@@ -408,7 +408,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERFLARE.icon,
 				content: <Trans id="rdm.gauge.suggestions.wastedverflare.content">
-					When black mana is lower, mana is even and Verstone is up, or Acceleration is available with Verstone available you should use <ActionLink {...ACTIONS.VERHOLY}/> instead of <ActionLink {...ACTIONS.VERFLARE}/>
+					When black mana is lower, mana is even and Verstone is up, or Acceleration is available with Verstone available you should use <ActionLink {...ACTIONS.VERFLARE}/> instead of <ActionLink {...ACTIONS.VERHOLY}/>
 				</Trans>,
 				why: <Plural id="rdm.gauge.suggestions.wastedverflare.why" value={this._incorrectFinishers.verholy} one="# Verfire cast was lost due to using Verholy incorrectly" other="# Verfire casts were lost due to using Verholy incorrectly" />,
 				tiers: SEVERITY_WASTED_FINISHER,
