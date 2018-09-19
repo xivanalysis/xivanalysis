@@ -59,6 +59,7 @@ const MISSING_HARDCAST_MANA_VALUE = 11
 const MANAIFCATION_MULTIPLIER = 2
 const MANA_DONT_CAST_THRESHOLD = 96
 const FINISHER_GAIN = 21
+const MELEE_COMBO_COST = 80
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
@@ -98,10 +99,6 @@ export default class Gauge extends Module {
 			verflare: 0,
 			bothprocsup: 0,
 		}
-
-		// The report timestamp is relative to the report timestamp, and in ms. Convert.
-		_parseDate = getPatch(this.parser.parseDate)
-		_pre44 = PATCHES[this._parseDate].date < PATCHES['4.4'].date
 
 		constructor(...args) {
 			super(...args)
@@ -204,7 +201,9 @@ export default class Gauge extends Module {
 		_onCast(event) {
 			const abilityId = event.ability.guid
 			//Handle Finisher BEFORE adjusting mana
-			this._handleFinisher(abilityId)
+			if (abilityId === ACTIONS.VERFLARE.id || abilityId === ACTIONS.VERHOLY.id) {
+				this._handleFinisher(abilityId)
+			}
 
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
@@ -220,7 +219,7 @@ export default class Gauge extends Module {
 						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
 						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
 							//console.log('Enhanced Scatter On')
-							if (this._pre44) {
+							if (this._getIsPre44) {
 								white = ENHANCED_SCATTER_GAIN
 								black = ENHANCED_SCATTER_GAIN
 							} else {
@@ -260,21 +259,21 @@ export default class Gauge extends Module {
 		}
 
 		_handleFinisher(abilityId) {
-			if (abilityId !== ACTIONS.VERFLARE.id && abilityId !== ACTIONS.VERHOLY.id) {
-				//Not a finisher, bail bail!
-				return
-			}
-
 			const isFireReady = this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id)
 			const isStoneReady = this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id)
-			const white = this._whiteMana
-			const black = this._blackMana
+			//All the logic is calculated as a decision to be made before entering the melee combo because of how RDM Works
+			//I have a different idea for how to represent this logic, I'll implement it when I factor this out to its own module
+			const white = this._whiteMana + MELEE_COMBO_COST
+			const black = this._blackMana + MELEE_COMBO_COST
 			const isAccelerationUp = this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0
 			let useVerHoly = false
 			let useVerFlare = false
 			let doesntMatter = false
 			let useOnBadProc = false
 
+			//TODO in refactor recompare it against Jump's guide - especially if he updates due to potency changes.
+			//Its possible the current threshold rules are no longer valid with the increase to thunder/aero and finisher
+			//potency with patch 4.4
 			if (isStoneReady &&
 				isFireReady &&
 				white >= MANA_DONT_CAST_THRESHOLD &&
@@ -465,5 +464,11 @@ export default class Gauge extends Module {
 		*/
 		get blackMana() {
 			return this._blackMana
+		}
+
+		get _getIsPre44() {
+			const currentParseDate = getPatch(this.parser.parseDate)
+			// The report timestamp is relative to the report timestamp, and in ms. Convert.
+			return PATCHES[currentParseDate].date < PATCHES['4.4'].date
 		}
 }
