@@ -25,7 +25,7 @@ class TooltipBase extends React.PureComponent {
 		baseUrl: PropTypes.string,
 		loading: PropTypes.bool.isRequired,
 		data: PropTypes.object,
-		Content: PropTypes.node,
+		Content: PropTypes.any,
 
 		// Other props we accept
 		children: PropTypes.node,
