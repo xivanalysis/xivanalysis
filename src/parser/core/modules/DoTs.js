@@ -1,6 +1,9 @@
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
+// Absurdly large fallback number, so missing duration properties will result in both a console warning and stupid suggestions
+const DEFAULT_DURATION_MILLIS = 120000
+
 export default class DoTs extends Module {
 	static handle = 'dots'
 	static dependencies = [
@@ -18,7 +21,14 @@ export default class DoTs extends Module {
 	constructor(...args) {
 		super(...args)
 		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
-		this.constructor.statusesToTrack.forEach(statusId => this._statusDuration[statusId] = STATUSES[statusId].duration * 1000)
+		this.constructor.statusesToTrack.forEach(statusId => {
+			if (!STATUSES[statusId].hasOwnProperty('duration')) {
+				console.warn(`statusId ${statusId} is missing a duration property`)
+				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
+			} else {
+				this._statusDuration[statusId] = STATUSES[statusId].duration * 1000
+			}
+		})
 		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
 		this.addHook('complete', this._onComplete)
 	}
