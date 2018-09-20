@@ -129,12 +129,20 @@ export default class Buffs extends Module {
 	}
 
 	_closeLastWindow(statusId) {
-		if (!this.combatants.selected.hasStatus(statusId)) {
-			// So we don't include partial windows
-			const tracker = this._buffWindows[statusId]
-			tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
-			tracker.history.push(tracker.current)
+		// So we don't include partial windows
+		if (this.combatants.selected.hasStatus(statusId)) {
+			return
 		}
+
+		const tracker = this._buffWindows[statusId]
+
+		// If there's no current cast just stop here
+		if (!tracker.current) {
+			return
+		}
+
+		tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+		tracker.history.push(tracker.current)
 	}
 
 	_onComplete() {
@@ -240,24 +248,28 @@ export default class Buffs extends Module {
 			<Message>
 				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
-			<Header size="small">
-				<Trans id="drg.buffs.accordion.bfb-header">Blood for Blood</Trans>
-			</Header>
-			<Accordion
-				exclusive={false}
-				panels={bfbPanels}
-				styled
-				fluid
-			/>
-			<Header size="small">
-				<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
-			</Header>
-			<Accordion
-				exclusive={false}
-				panels={dsPanels}
-				styled
-				fluid
-			/>
+			{bfbPanels.length > 0 && <>
+				<Header size="small">
+					<Trans id="drg.buffs.accordion.bfb-header">Blood for Blood</Trans>
+				</Header>
+				<Accordion
+					exclusive={false}
+					panels={bfbPanels}
+					styled
+					fluid
+				/>
+			</>}
+			{dsPanels.length > 0 && <>
+				<Header size="small">
+					<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
+				</Header>
+				<Accordion
+					exclusive={false}
+					panels={dsPanels}
+					styled
+					fluid
+				/>
+			</>}
 		</Fragment>
 	}
 }
