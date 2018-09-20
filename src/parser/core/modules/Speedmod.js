@@ -38,9 +38,12 @@ export default class Speedmod extends Module {
 
 	recalcSpeedmodAndSaveHistory(event) {
 		// Recalculate the speedmod and save to history
+		const modifier = this._activeSpeedMap[this._activePartywideSpeedBuffFlags] ||
+			this._activeSpeedMap[PARTYWIDE_SPEED_BUFF_FLAGS.NONE]
+
 		this._history[this._history.length - 1].end = event.timestamp-1
 		this._history.push({
-			speedmod: (this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100) * this.getJobAdditionalSpeedbuffScalar(),
+			speedmod: (modifier / 100) * this.getJobAdditionalSpeedbuffScalar(),
 			start: event.timestamp,
 			end: Infinity,
 		})
