@@ -17,7 +17,8 @@ export default class DoTs extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.constructor.statusesToTrack.forEach(statusId => this._statusDuration[statusId] = STATUSES[statusId].duration * 1000) // TODO - What happens if we have missing data?
+		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
+		this.constructor.statusesToTrack.forEach(statusId => this._statusDuration[statusId] = STATUSES[statusId].duration * 1000)
 		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
 		this.addHook('complete', this._onComplete)
 	}
