@@ -3,6 +3,13 @@ import {addExtraIndex} from 'utilities'
 // TODO: Move banner lookup into an api call w/ server cache?
 
 const ZONES = {
+	// Special case "Trash" zone so we can display trash
+	_TRASH: {
+		logId: NaN,
+		dbId: NaN,
+		banner: '',
+	},
+
 	// 24man
 	RABANASTRE: {
 		logId: 734,
