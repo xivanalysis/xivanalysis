@@ -36,4 +36,9 @@ export default {
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/010000/010452.png',
 	},
+	EYE_FOR_AN_EYE: {
+		id: 185,
+		name: 'Eye For An Eye',
+		icon: 'https://xivapi.com/i/013000/013918.png',
+	}
 }
