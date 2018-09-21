@@ -40,5 +40,5 @@ export default {
 		id: 185,
 		name: 'Eye For An Eye',
 		icon: 'https://xivapi.com/i/013000/013918.png',
-	}
+	},
 }
