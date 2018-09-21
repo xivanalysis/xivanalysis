@@ -114,6 +114,7 @@
   "core.find.refresh": "Refresh",
   "core.find.select-combatant": "Select a combatant",
   "core.find.select-pull": "Select a pull",
+  "core.find.trash": "Trash",
   "core.gcd.estimate": "Estimated GCD: <0>{0}</0>",
   "core.gcd.invalid-gcd": "The estimated GCD falls outside possible GCD values, and has been bounded to {0} for calculations.",
   "core.gcd.no-statistics": "Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <0>estimate</0>, and may well be incorrect. If it is reporting a GCD length <1>longer</1> than reality, you likely need to focus on keeping your GCD rolling.",

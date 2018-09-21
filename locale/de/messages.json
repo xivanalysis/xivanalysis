@@ -114,6 +114,7 @@
   "core.find.refresh": "",
   "core.find.select-combatant": "",
   "core.find.select-pull": "",
+  "core.find.trash": "",
   "core.gcd.estimate": "",
   "core.gcd.invalid-gcd": "",
   "core.gcd.no-statistics": "",
