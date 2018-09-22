@@ -38,7 +38,7 @@ export default {
 	},
 	EYE_FOR_AN_EYE: {
 		id: 185,
-		name: 'Eye For An Eye',
+		name: 'Eye for an Eye',
 		icon: 'https://xivapi.com/i/013000/013918.png',
 	},
 }
