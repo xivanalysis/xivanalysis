@@ -9,6 +9,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS = [
 	ACTIONS.TRUE_THRUST.id,
@@ -153,6 +154,7 @@ export default class Buffs extends Module {
 			description: <Trans id="drg.buffs.checklist.description">
 				<ActionLink {...ACTIONS.HEAVY_THRUST}/> provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
+			displayOrder: DISPLAY_ORDER.HEAVY_THRUST,
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.buffs.checklist.requirement.name"><ActionLink {...ACTIONS.HEAVY_THRUST}/> uptime</Trans>,
