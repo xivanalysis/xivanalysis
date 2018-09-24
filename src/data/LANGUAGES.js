@@ -15,7 +15,7 @@ const LANGUAGES = {
 			flag: 'jp',
 		},
 		tooltip: 'ja',
-		enable: false,
+		enable: true,
 	},
 	fr: {
 		menu: {
@@ -23,7 +23,7 @@ const LANGUAGES = {
 			flag: 'fr',
 		},
 		tooltip: 'fr',
-		enable: false,
+		enable: true,
 	},
 	de: {
 		menu: {
@@ -31,7 +31,7 @@ const LANGUAGES = {
 			flag: 'de',
 		},
 		tooltip: 'de',
-		enable: false,
+		enable: true,
 	},
 }
 
