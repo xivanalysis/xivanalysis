@@ -61,6 +61,11 @@ const ITEMS = {
 		name: 'Grade 2 Infusion of Mind',
 		icon: 'https://xivapi.com/i/020000/020705.png',
 	},
+	SUPER_ETHER: {
+		id: 23168,
+		name: 'Super-Ether',
+		icon: 'https://xivapi.com/i/020000/020627.png',
+	}
 }
 
 // Items have an ID 1m higher than the xivdb ID
