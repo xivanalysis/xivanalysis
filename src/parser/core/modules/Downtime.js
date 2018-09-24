@@ -35,6 +35,10 @@ export default class Downtime extends Module {
 		return finalDowntimes
 	}
 
+	isDowntime(when = this.parser.currentTimestamp) {
+		return this._internalDowntime(when, when).length > 0
+	}
+
 	getDowntime(start = 0, end = this.parser.currentTimestamp) {
 		// Return the final number
 		return this._internalDowntime(start, end).reduce((uptime, invuln) => uptime + Math.min(invuln.end, end) - Math.max(invuln.start, start), 0)

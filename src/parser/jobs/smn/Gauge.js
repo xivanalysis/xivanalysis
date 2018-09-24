@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Plural, Trans} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -14,6 +15,11 @@ const AETHER_ACTIONS = [
 	ACTIONS.PAINFLARE.id,
 ]
 
+const MAX_AETHERFLOW = 3
+const DREADWYRM_TRANCE_DURATION = 16000
+const MIN_DWT_BUILD = DREADWYRM_TRANCE_DURATION + (ACTIONS.FESTER.cooldown * 1000) * 2
+const SUMMON_BAHAMUT_DURATION = 20000
+
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
 	static handle = 'gauge'
@@ -26,9 +32,9 @@ export default class Gauge extends Module {
 	// -----
 	// Properties
 	// -----
-	// I'm assuming they're starting with 3.
+	// I'm assuming they're starting with max.
 	// TODO: Check this in some manner maybeeeeee?
-	_aetherflow = 3
+	_aetherflow = MAX_AETHERFLOW
 	_aethertrailAttunement = 0
 	_dreadwyrmAether = 0
 
@@ -71,14 +77,14 @@ export default class Gauge extends Module {
 		if (abilityId === ACTIONS.AETHERFLOW.id) {
 			// Flow restores up to 3 flow stacks
 			// flow + trail can never be >3
-			this._aetherflow = 3 - this._aethertrailAttunement
+			this._aetherflow = MAX_AETHERFLOW - this._aethertrailAttunement
 			this._lostAetherflow += this._aethertrailAttunement
 
 			// (Should be) rushing if it's the last flow of the fight, and there won't be enough time for a full rotation.
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
-			let reqRotationTime = 26000
+			let reqRotationTime = MIN_DWT_BUILD
 			if (this._dreadwyrmAether >= 1) {
-				reqRotationTime += 20000
+				reqRotationTime += SUMMON_BAHAMUT_DURATION
 			}
 
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
@@ -119,7 +125,7 @@ export default class Gauge extends Module {
 		// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
 		const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
 		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + 20000) {
+		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + SUMMON_BAHAMUT_DURATION) {
 			this._rushing = true
 		}
 	}
@@ -137,26 +143,28 @@ export default class Gauge extends Module {
 		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AETHERFLOW.icon,
-				content: <Fragment>
+				content: <Trans id="smn.gauge.suggestions.lost-aetherflow.content">
 					Ensure you gain a full 3 stacks of <ActionLink {...ACTIONS.AETHERFLOW}/> per cast. Every lost stack is a significant potency loss, and can push your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> (and hence Bahamut) out by up to a minute.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					{this._lostAetherflow} stack{this._lostAetherflow > 1 && 's'} of Aetherflow lost.
-				</Fragment>,
+				why: <Trans id="smn.gauge.suggestions.lost-aetherflow.why">
+					<Plural value={this._lostAetherflow} one="# stack" other="# stacks"/>
+					of Aetherflow lost.
+				</Trans>,
 			}))
 		}
 
 		if (this._lostDreadwyrmAether) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_BAHAMUT.icon,
-				content: <Fragment>
+				content: <Trans id="smn.gauge.suggestions.lost-dreadwyrm-aether.content">
 					Ensure you always <ActionLink {...ACTIONS.SUMMON_BAHAMUT}/> before your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>. Failing to do so will de-sync Bahamut in your rotation, and potentially lose you a summon over the duration of the fight.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					{this._lostDreadwyrmAether} stack{this._lostDreadwyrmAether > 1 && 's'} of Dreadwyrm Aether lost.
-				</Fragment>,
+				why: <Trans id="smn.gauge.suggestions.lost-dreadwyrm-aether.why">
+					<Plural value={this._lostDreadwyrmAether} one="# stack" other="# stacks"/>
+					of Dreadwyrm Aether lost.
+				</Trans>,
 			}))
 		}
 	}

@@ -1,7 +1,4 @@
 export const DISPLAY_ORDER = {
-	ABOUT: -3,
-	CHECKLIST: -2,
-	SUGGESTIONS: -1,
 	TOP: 0,
 	DEFAULT: 50,
 	BOTTOM: 100,
@@ -95,15 +92,17 @@ export default class Module {
 			filter.ability.guid = filter.abilityId
 			delete filter.abilityId
 		}
-		const hook = {
-			events,
-			filter,
-			callback: cb.bind(this),
-		}
 
 		// Make sure events is an array
 		if (!Array.isArray(events)) {
 			events = [events]
+		}
+
+		// Final hook representation
+		const hook = {
+			events,
+			filter,
+			callback: cb.bind(this),
 		}
 
 		// Hook for each of the events
@@ -119,6 +118,13 @@ export default class Module {
 
 		// Return the hook representation so it can be removed (later)
 		return hook
+	}
+
+	removeHook(hook) {
+		hook.events.forEach(event => {
+			if (!this._hooks.has(event)) { return }
+			this._hooks.get(event).delete(hook)
+		})
 	}
 
 	triggerEvent(event) {

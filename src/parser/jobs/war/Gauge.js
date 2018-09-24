@@ -1,8 +1,11 @@
+import Color from 'color'
 import React, {Fragment} from 'react'
+import TimeLineChart from 'components/ui/TimeLineChart'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -36,9 +39,9 @@ const MAX_RAGE = 100
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
+	static title = 'Gauge Usage'
 	static dependencies = [
 		'combatants',
-		'cooldowns',
 		'suggestions',
 	]
 
@@ -48,6 +51,9 @@ export default class Gauge extends Module {
 	// I'm assuming it'll start at 0 (which, in nine out of ten cases, should be it. I can't think of any fringe cases right now.)
 	_rage = 0
 	_wastedRage = 0
+	_history = {
+		rage: [],
+	}
 
 	constructor(...args) {
 		super(...args)
@@ -69,6 +75,10 @@ export default class Gauge extends Module {
 		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage -= RAGE_SPENDERS[abilityId]
 		}
+
+		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
+			this._pushToGraph()
+		}
 	}
 
 	_addRage(abilityId) {
@@ -88,11 +98,15 @@ export default class Gauge extends Module {
 		return 0
 	}
 
-	_onDeath() {
-		// Death just flat out resets everything. Stop dying.
-		this._wastedRage += this._rage
+	_pushToGraph() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this._history.rage.push({t: timestamp, y: this._rage})
+	}
 
+	_onDeath() {
+		// Death just flat out resets everything. AND IT DOESN'T ADD DEATH TO GAUGE LOSS ANYMORE I'M SORRY
 		this._rage = 0
+		this._pushToGraph()
 	}
 
 	_onComplete() {
@@ -102,10 +116,32 @@ export default class Gauge extends Module {
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
 			</Fragment>,
 			why: <Fragment>
-				{this._wastedRage} rage wasted by using abilities that put you over the cap.
+				{this._wastedRage} rage wasted by using abilities that sent you over the cap.
 			</Fragment>,
 			tiers: RAGE_USAGE_SEVERITY,
 			value: this._wastedRage,
 		}))
+	}
+
+	output() {
+		const _rageColor = Color(JOBS.WARRIOR.colour)
+
+		/* eslint-disable no-magic-numbers */
+		const data = {
+			datasets: [
+				{
+					label: 'Rage',
+					steppedLine: true,
+					data: this._history.rage,
+					backgroundColor: _rageColor.fade(0.8),
+					borderColor: _rageColor.fade(0.5),
+				},
+			],
+		}
+
+		return <TimeLineChart
+			data={data}
+		/>
+		/* eslint-enable no-magic-numbers */
 	}
 }

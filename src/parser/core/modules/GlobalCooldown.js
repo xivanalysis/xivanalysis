@@ -1,5 +1,5 @@
 import math from 'mathjsCustom'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Message, Icon} from 'semantic-ui-react'
 import {i18nMark, Trans} from '@lingui/react'
 
@@ -9,12 +9,24 @@ import {Group, Item} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
+const BASE_GCD = 2500
+const CASTER_TAX = 100
+
+const DEBUG_LOG_SAVED_GCDS = false && process.env.NODE_ENV !== 'production'
+
+// NOTE: Caster tax refers to spells taking 0.1s longer than their tooltip claims if their cast time is at least as long as their recast time.
+// See https://www.reddit.com/r/ffxiv/comments/8s05rn/the_recast_time_on_your_tooltip_can_be_up_to_85/, specifically:
+//    There is also another issue that influences how long recast times actually take that isn’t as heavily influenced by fps but is still affected,
+//    which is animation delay that happen between casts, this means that if you have a spell with a cast time that is equal to or
+//    greater than the recast time you will end up taking longer between casts than the (re)cast time. The delay is around 100 ms at 100+ fps
 
 export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
+		// We need this to normalise before us
+		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'castTime', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'downtime',
-		'precastAction', // We need this to normalise before us
 		'speedmod',
 		'timeline',
 	]
@@ -22,9 +34,15 @@ export default class GlobalCooldown extends Module {
 	static i18n_id = i18nMark('core.gcd.title')
 	static title = 'Global Cooldown'
 
-	_lastGcd = -1
 	_castingEvent = null
 
+	_estimatedBaseGcd = null
+	_estimateGcdCount = -1
+
+	_lastGcd = {
+		isInstant: false,
+		event: null,
+	}
 	gcds = []
 
 	constructor(...args) {
@@ -52,24 +70,43 @@ export default class GlobalCooldown extends Module {
 				break
 
 			case 'cast':
-				if (this._castingEvent && this._castingEvent.ability.guid === action.id) {
-					this.saveGcd(this._castingEvent)
-				} else {
-					this.saveGcd(event)
-				}
+				const hasBeginCast = this._castingEvent !== null && this._castingEvent.ability.guid === action.id
+				const relevantEvent = hasBeginCast ? this._castingEvent : event
+				this.saveGcd({...this._lastGcd}, relevantEvent.timestamp) // Save last gcd with current timestamp
+
+				this._lastGcd.isInstant = !hasBeginCast
+				this._lastGcd.event = relevantEvent
 
 				this._castingEvent = null
 				break
 			}
 		}
 
+		if (events.length) {
+			this.saveGcd({...this._lastGcd}, events[events.length - 1].timestamp)
+		}
+		this._debugLogSavedGcds()
+
 		return events
 	}
 
-	_onComplete() {
-		const gcdLength = this.getEstimate()
-		const cooldownRatio = gcdLength / MAX_GCD
+	_debugLogSavedGcds() {
+		if (!DEBUG_LOG_SAVED_GCDS) {
+			return
+		}
 
+		// NOTE: Please sanity-check results when changing normalise or saveGcd. Good test cases include:
+		// - Attributing 1.5s and 2.2s to correct RDM melee gcds
+		// - Sub-0.5s speedmod for BLM fast-casts and correct Instant/CasterTaxed flagging
+		// - Correct timestamp for last event before long gaps (ie: Kefka normal)
+		this.gcds.forEach((gcd) => {
+			console.log(this.parser.formatTimestamp(gcd.timestamp) + ' ' + getAction(gcd.actionId).name + '[' + gcd.length +
+						'|' + gcd.normalizedLength + '] Speedmod[' + gcd.speedMod + ']' +
+						(gcd.isInstant ? ' Instant' : '') + (gcd.casterTaxed ? ' CasterTaxed' : ''))
+		})
+	}
+
+	_onComplete() {
 		const startTime = this.parser.fight.start_time
 
 		// TODO: Look into adding items to groups? Maybe?
@@ -81,78 +118,92 @@ export default class GlobalCooldown extends Module {
 
 		this.gcds.forEach(gcd => {
 			const action = getAction(gcd.actionId)
-
-			const adjustedLength = Math.max(
-				MIN_GCD,
-				(action.cooldown * 1000 || MAX_GCD) * cooldownRatio * gcd.speedMod
-			)
-
 			this.timeline.addItem(new Item({
 				type: 'background',
 				start: gcd.timestamp - startTime,
-				length: adjustedLength,
+				length: this._getGcdLength(gcd),
 				group: 'gcd',
 				content: <img src={action.icon} alt={action.name}/>,
 			}))
 		})
 	}
 
-	saveGcd(event) {
-		let gcdLength = -1
-
-		if (this._lastGcd >= 0) {
-			// GCD is only to two decimal places, so round it there. Storing in Ms.
-			gcdLength = Math.round((event.timestamp - this._lastGcd)/10)*10
+	//saveGcd(event, isInstant) {
+	saveGcd(gcdInfo, timestamp) {
+		if (!gcdInfo.event) {
+			return
 		}
 
-		// Speedmod is full length -> actual length, we want to do the opposite here
-		const speedMod = this.speedmod.get(event.timestamp)
-		const revSpeedMod = 1 / speedMod
-		gcdLength *= revSpeedMod
+		const action = getAction(gcdInfo.event.ability.guid)
+		let speedMod = this.speedmod.get(gcdInfo.event.timestamp)
+		let castTime = action.castTime
 
-		this.gcds.push({
-			timestamp: event.timestamp,
-			length: gcdLength,
-			speedMod,
-			actionId: event.ability.guid,
-		})
+		// HACK NOTE TODO: Need to properly account for abilities that alter only the cast or recast of attacks.
+		// Thinking of moving this into a module like speedmod, that can be called with a timestamp to grab modified base castTime/cooldown values
+		const HACK_ASTRAL_UMBRAL_SPEED_SCALAR = 0.5
+		if (speedMod <= HACK_ASTRAL_UMBRAL_SPEED_SCALAR) {
+			speedMod /= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
+			castTime *= HACK_ASTRAL_UMBRAL_SPEED_SCALAR
+		}
 
-		// Store current gcd time for the check
-		this._lastGcd = event.timestamp
+		let isCasterTaxed = false
+
+		// GCD is only to two decimal places, so round it there. Storing in Ms.
+		// eslint-disable-next-line no-magic-numbers
+		let gcdLength = Math.round((timestamp - gcdInfo.event.timestamp)/10)*10
+
+		if (!gcdInfo.isInstant && castTime >= action.cooldown) {
+			gcdLength -= CASTER_TAX
+			isCasterTaxed = true
+		}
+
+		let normalizedGcd = gcdLength
+		if (!gcdInfo.isInstant) {
+			normalizedGcd = normalizedGcd * ((BASE_GCD / 1000) / castTime)
+		}
+
+		normalizedGcd *= (1 / speedMod)
+		normalizedGcd = Math.round(normalizedGcd)
+
+		if (action.id) {
+			this.gcds.push({
+				timestamp: gcdInfo.event.timestamp,
+				length: gcdLength,
+				normalizedLength: normalizedGcd,
+				speedMod: speedMod,
+				castTime: castTime,
+				cooldown: action.cooldown,
+				casterTaxed: isCasterTaxed,
+				actionId: action.id,
+				isInstant: gcdInfo.isInstant,
+			})
+		}
 	}
 
 	getEstimate(bound = true) {
-		// TODO: THIS WILL BREAK ON BLM 'CUS F4's CAST IS LONGER THAN THE GCD
+		const gcdLength = this.gcds.length
 
-		// TODO: /analyse/jgYqcMxtpDTCX264/8/50/
-		//       Estimate is 2.31, actual is 2.35. High Arrow uptime.
+		// If we don't have cache, need to recaculate it
+		if (this._estimatedBaseGcd === null || gcdLength !== this._estimateGcdCount) {
+			// Calculate the lengths of the GCD
+			const lengths = this.gcds.map(gcd => gcd.normalizedLength)
 
-		// If there's no GCDs, just return the max to stop this erroring out
-		if (!this.gcds.length) {
-			return MAX_GCD
+			// Mode seems to get best results. Using mean in case there's multiple modes.
+			this._estimatedBaseGcd = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD
+			this._estimateGcdCount = gcdLength
 		}
-
-		// Calculate the lengths of the GCD
-		const lengths = this.gcds.map(gcd => gcd.length)
-
-		// Mode seems to get best results. Using mean in case there's multiple modes.
-		let estimate = math.mean(math.mode(lengths))
 
 		// Bound the result if requested
 		if (bound) {
-			estimate = Math.max(MIN_GCD, Math.min(MAX_GCD, estimate))
+			this._estimatedBaseGcd = Math.max(MIN_GCD, Math.min(MAX_GCD, this._estimatedBaseGcd))
 		}
 
-		return estimate
+		return this._estimatedBaseGcd
 	}
 
 	getUptime() {
-		const gcdLength = this.getEstimate()
-		const cooldownRatio = gcdLength / MAX_GCD
-
 		return this.gcds.reduce((carry, gcd) => {
-			const cd = getAction(gcd.actionId).cooldown * 1000
-			const duration = (cd || MAX_GCD) * cooldownRatio * gcd.speedMod
+			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
 				gcd.timestamp + duration
@@ -161,10 +212,21 @@ export default class GlobalCooldown extends Module {
 		}, 0)
 	}
 
+	_getGcdLength(gcd) {
+		const cooldownRatio = this.getEstimate() / MAX_GCD
+
+		let cd = (gcd.isInstant || gcd.castTime <= gcd.cooldown) ? gcd.cooldown : Math.max(gcd.castTime, gcd.cooldown)
+		cd *= 1000
+
+		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX : 0))
+
+		return duration
+	}
+
 	output() {
 		const estimate = this.getEstimate(false)
 
-		return <Fragment>
+		return <>
 			<Message info icon>
 				<Icon name="info"/>
 				<Message.Content>
@@ -182,6 +244,6 @@ export default class GlobalCooldown extends Module {
 			<Trans id="core.gcd.estimate">
 				Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
 			</Trans>
-		</Fragment>
+		</>
 	}
 }

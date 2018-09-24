@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural} from '@lingui/react'
+import React from 'react'
 
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
@@ -107,20 +108,27 @@ export default class Ruin2 extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RUIN_III.icon,
-			content: <Fragment>
-				<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
-			</Fragment>,
-			why: <Fragment>{issues * potLossPerR2} potency lost to {issues} unnecessary Ruin II cast{issues !== 1 && 's'}.</Fragment>,
 			tiers: BAD_CAST_SEVERITY,
 			value: issues,
+			content: <Trans id="smn.ruin-ii.suggestions.issues.content">
+				<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
+			</Trans>,
+			why: <Trans id="smn.ruin-ii.suggestions.issues.why">
+				{issues * potLossPerR2} potency lost to {issues} unnecessary Ruin II
+				<Plural value={issues} one="cast" other="casts"/>.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RUIN_II.icon,
-			content: <Fragment>
+			content: <Trans id="smn.ruin-ii.suggestions.warnings.content">
 				Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
-			</Fragment>,
-			why: <Fragment>{warnings * potLossPerR2} potency lost to {warnings} Ruin II cast{warnings !== 1 && 's'} used only to move.</Fragment>,
+			</Trans>,
+			why: <Trans id="smn.ruin-ii.suggestions.warnings.why">
+				{warnings * potLossPerR2} potency lost to {warnings} Ruin II
+				<Plural value={warnings} one="cast" other="casts"/>
+				used only to move.
+			</Trans>,
 			tiers: BAD_CAST_SEVERITY,
 			value: warnings,
 		}))

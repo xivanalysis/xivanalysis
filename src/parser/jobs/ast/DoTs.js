@@ -6,18 +6,19 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans} from '@lingui/react'
 
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
 	[STATUSES.COMBUST_II.id]: 30000,
 }
+const MINOR_CLIPPING_THRESHOLD = 10000
+const MAXCLIP_THRESHOLD = 500
 
-export default class DoT extends Module {
-	static handle = 'dot'
+export default class DoTs extends Module {
+	static handle = 'dots'
 	static dependencies = [
 		'checklist',
-		'combatants',
-		'cooldowns',
 		'enemies',
 		'invuln',
 		'suggestions',
@@ -43,7 +44,8 @@ export default class DoT extends Module {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
-		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
+		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
 
 		// If it's not been applied yet set it and skip out
 		if (!lastApplication[statusId]) {
@@ -70,13 +72,19 @@ export default class DoT extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep your DoT up',
+			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Fragment>
+				<Trans id="ast.dots.rule.description">
 				While Astrologians only have one DoT, it still makes up a good portion of your damage. The duration of 30 seconds matches the cooldown on (<ActionLink {...ACTIONS.DRAW} />), giving you space to manage cards. It also enables you to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
+				</Trans>
 			</Fragment>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.COMBUST_II} /> uptime</Fragment>,
+					name: <Fragment>
+						<Trans id="ast.dots.requirement.uptime.name">
+							<ActionLink {...ACTIONS.COMBUST_II} /> uptime
+						</Trans>
+					</Fragment>,
 					percent: () => this.getDotUptimePercent(STATUSES.COMBUST_II.id),
 				}),
 			],
@@ -85,15 +93,19 @@ export default class DoT extends Module {
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
 
-		if (maxClip > 500) {
+		if (maxClip > MAXCLIP_THRESHOLD) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.COMBUST_II.icon,
 				content: <Fragment>
-					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires. Aim to refresh it between 2 to 0 seconds remaining on the duration.
+					<Trans id="ast.dots.suggestion.clip.content">
+					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_II} /> significantly before it expires.
+					</Trans>
 				</Fragment>,
-				severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: maxClip < MINOR_CLIPPING_THRESHOLD ? SEVERITY.MINOR : maxClip < STATUS_DURATION[ACTIONS.COMBUST_II.id] ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
-					{this.parser.formatDuration(this._clip[STATUSES.COMBUST_II.id])} of {STATUSES[STATUSES.COMBUST_II.id].name} lost to early refreshes.
+					<Trans id="ast.dots.suggestion.clip.why">
+						{this.parser.formatDuration(this._clip[STATUSES.COMBUST_II.id])} of {STATUSES[STATUSES.COMBUST_II.id].name} lost to early refreshes.
+					</Trans>
 				</Fragment>,
 			}))
 		}

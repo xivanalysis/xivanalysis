@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {i18nMark} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
@@ -8,11 +9,10 @@ import Module from 'parser/core/Module'
 
 export default class Triple extends Module {
 	static handle = 'triple'
+	static i18n_id = i18nMark('blm.triple.title')
 	static title = 'Triplecast Usage'
 	static dependencies = [
 		'castTime',
-		'gcd',
-		'suggestions',
 	]
 
 	_active = false
@@ -75,15 +75,14 @@ export default class Triple extends Module {
 		const panels = this._history.map(triple => {
 			const numGcds = triple.casts.filter(cast => !getAction(cast.ability.guid).onGcd).length - 1 // 1 is Triplecast itself
 			return {
+				key: 'title-' + triple.start,
 				title: {
-					key: 'title-' + triple.start,
 					content: <Fragment>
 						{this.parser.formatTimestamp(triple.start)}
 						&nbsp;-&nbsp;{numGcds} oGCD(s)
 					</Fragment>,
 				},
 				content: {
-					key: 'content-' + triple.start,
 					content: <Rotation events={triple.casts}/>,
 				},
 			}

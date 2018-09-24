@@ -2,7 +2,7 @@ import {combineReducers} from 'redux'
 
 import * as ActionTypes from './actions'
 
-import {DEFAULT_LANGUAGE} from 'data/LANGUAGES'
+import {getUserLanguage} from 'utilities'
 
 const report = (state=null, action) => {
 	if (action.type === ActionTypes.SET_REPORT) {
@@ -22,11 +22,34 @@ const globalError = (state=null, action) => {
 	}
 }
 
-const language = (state=DEFAULT_LANGUAGE, action) => {
+const language = (state=null, action) => {
+	if (!state || typeof state !== 'object') {
+		state = {
+			site_set: false,
+			site: getUserLanguage(),
+		}
+	}
+
 	switch (action.type) {
 	case ActionTypes.SET_LANGUAGE:
-		return action.payload
+		return {
+			...state,
+			site_set: true,
+			site: action.payload,
+		}
+
+	case ActionTypes.UPDATE_LANGUAGE:
 	default:
+		if (!state.site_set || !state.site) {
+			const site = getUserLanguage()
+			if (site !== state.site) {
+				return {
+					...state,
+					site: getUserLanguage(),
+				}
+			}
+		}
+
 		return state
 	}
 }
@@ -42,11 +65,23 @@ const i18nOverlay = (state=false, action) => {
 	}
 }
 
+const settings = (state={}, action) => {
+	if (action.type !== ActionTypes.UPDATE_SETTINGS) {
+		return state
+	}
+
+	return {
+		...state,
+		...action.payload,
+	}
+}
+
 const rootReducer = combineReducers({
 	report,
 	globalError,
 	language,
 	i18nOverlay,
+	settings,
 })
 
 export default rootReducer

@@ -47,13 +47,15 @@ export default class CastTime extends Module {
 	}
 
 	forEvent(event) {
-		const actionId = event.ability.guid
+		return this.forAction(event.ability.guid, event.timestamp)
+	}
 
+	forAction(actionId, timestamp = this.parser.currentTimestamp) {
 		// Get any cast time modifiers active when the event took place
 		const matchingTimes = this._castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
-			ct.start <= event.timestamp &&
-			(ct.end === null || ct.end >= event.timestamp)
+			ct.start <= timestamp &&
+			(ct.end === null || ct.end >= timestamp)
 		)
 
 		const defaultCastTime = getAction(actionId).castTime
@@ -66,7 +68,12 @@ export default class CastTime extends Module {
 		// Find the shortest cast time and assume that.
 		// TODO: Is the above correct? SE probably has some seriously janky ass shit going on their end...
 		return matchingTimes.reduce(
-			(min, ct) => ct.castTime < min ? ct.castTime : min,
+			(min, ct) => {
+				// if ct.castTime is a negative number, reduce the default by that amount.
+				// Don't let the result drop below 0
+				const castTime = ct.castTime < 0 ? Math.max(0, min + ct.castTime) : ct.castTime
+				return castTime < min ? castTime : min
+			},
 			defaultCastTime
 		)
 	}

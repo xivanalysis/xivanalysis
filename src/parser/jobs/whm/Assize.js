@@ -1,22 +1,25 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import {Trans} from '@lingui/react'
 
-const WASTED_USES_MAX_MINOR = 0 //a single lost assize is worth not being hidden as a minor issue
-const WASTED_USES_MAX_MEDIUM = 2
+const EXCUSED_HOLD_DEFAULT = 1500 //time allowed to hold it every time it's off cd
+const WARN_TARGET_PERCENT = 0.9 //percentage as a decimal for warning tier on checklist
 
-//uses the benison code for now, but should also check healing efficiency
 export default class Assize extends Module {
 	static handle = 'assize'
 	static dependencies = [
-		'suggestions',
+		'checklist',
+		'downtime',
 	]
 
 	_lastUse = 0
 	_uses = 0
 	_totalHeld = 0
+	_excusedHeld = 0
 
 	constructor(...args) {
 		super(...args)
@@ -25,17 +28,22 @@ export default class Assize extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.ASSIZE.id],
 		}
-		this.addHook('cast', _filter, this._onApplyBenison)
+		this.addHook('cast', _filter, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onApplyBenison(event) {
+	_onCast(event) {
 		this._uses++
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
-		const _held = event.timestamp - this._lastUse - (ACTIONS.ASSIZE.cooldown * 1000)
+		const firstOpportunity = (this._lastUse + ACTIONS.ASSIZE.cooldown * 1000)
+		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
+			//get downtimes in the period we're holding the cooldown
+			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, firstOpportunity + EXCUSED_HOLD_DEFAULT)
+			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
+			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
 		}
 		//update the last use
 		this._lastUse = event.timestamp
@@ -44,18 +52,20 @@ export default class Assize extends Module {
 	_onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
-		const _usesMissed = Math.floor(10 * holdDuration / (ACTIONS.ASSIZE.cooldown * 1000)) / 10
-		if (_usesMissed > 1 || this._uses === 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ASSIZE.icon,
-				content: <Fragment>
-					Use Assize{this._uses > 0 && ' more frequently'}. Frequent use of Assize is typically a DPS gain and helps with MP management.
-				</Fragment>,
-				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : _usesMissed > WASTED_USES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				why: <Fragment>
-					About {_usesMissed} uses of Assize were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
-				</Fragment>,
-			}))
-		}
+		const _usesMissed = Math.floor((holdDuration - this._excusedHeld)/ (ACTIONS.ASSIZE.cooldown * 1000))
+		const maxUsesInt = this._uses + _usesMissed
+		const warnTarget = 100 * Math.floor(WARN_TARGET_PERCENT * maxUsesInt) / maxUsesInt
+		this.checklist.add(new TieredRule({
+			name: 'Use Assize Frequently',
+			description: <Trans id="whm.assize.checklist.description"> Frequent use of <ActionLink {...ACTIONS.ASSIZE} /> is typically a DPS gain and helps with MP management. </Trans>,
+			tiers: {[warnTarget]: TARGET.WARN, 95: TARGET.SUCCESS},
+			requirements: [
+				new Requirement({
+					name: <Trans id="whm.assize.checklist.requirement.assize.name"><ActionLink {...ACTIONS.ASSIZE} /> uses </Trans>,
+					value: this._uses,
+					target: Math.max(maxUsesInt, this._uses),
+				}),
+			],
+		}))
 	}
 }

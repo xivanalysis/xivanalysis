@@ -1,5 +1,6 @@
 import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
+import {BLM_GAUGE_EVENT} from './Gauge'
 
 const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,
@@ -12,37 +13,45 @@ const OGCD_EXCEPTIONS = [
 
 const OPENER_ENO_TIME_THRESHHOLD = 10000
 
+//max number of AFUI stacks
+const MAX_BUFF_STACKS = 3
+
 export default class BlmWeaving extends Weaving {
 	static handle = 'weaving'
 	static dependencies = [
-		'castTime',
+		...Weaving.dependencies,
 		'invuln',
-		'suggestions',
-		'gauge',
+		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
 
-	//AF3/UI3 checks
-	_AF3 = false
-	_UI3 = false
+	_astralFireStacks = 0
+	_umbralIceStacks = 0
+
+	_lastF3FastCast = false
+	_lastB3FastCast = false
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('begincast', {by: 'player'}, this._onBegin)
+		this.addHook(BLM_GAUGE_EVENT, this._onGaugeChange)
+		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.FIRE_III.id}, this._beginFire3)
+		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.BLIZZARD_III.id}, this._beginBlizzard3)
 	}
 
-	//check whether we are in UI3/AF3 precast
-	_onBegin() {
-		if (this.gauge.getUI() === 3) {
-			this._UI3 = true
-		}
-		if (this.gauge.getAF() === 3) {
-			this._AF3 = true
-		}
+	_beginFire3() {
+		this._lastF3FastCast = this._umbralIceStacks === MAX_BUFF_STACKS
+	}
+	_beginBlizzard3() {
+		this._lastB3FastCast = this._astralFireStacks === MAX_BUFF_STACKS
+	}
+
+	_onGaugeChange(event) {
+		this._astralFireStacks = event.astralFire
+		this._umbralIceStacks = event.umbralIce
 	}
 
 	//check for fast casted F3/B3 and allow 1 weave if you get one
 	isBadWeave(weave, maxWeaves) {
-		if (weave.gcdEvent.ability) {
+		if (weave.leadingGcdEvent.ability) {
 			const weaveCount = weave.weaves.filter(
 				event => !this.invuln.isUntargetable('all', event.timestamp)
 			).length
@@ -61,7 +70,9 @@ export default class BlmWeaving extends Weaving {
 			}
 
 			//allow single weave under fast B3/F3
-			if ((weave.gcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._UI3) || (weave.gcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._AF3)) {
+			if ((weave.leadingGcdEvent.ability.guid === ACTIONS.FIRE_III.id && this._lastF3FastCast) ||
+				(weave.leadingGcdEvent.ability.guid === ACTIONS.BLIZZARD_III.id && this._lastB3FastCast)
+			) {
 				if (weaveCount === 1) {
 					return false
 				}

@@ -1,20 +1,28 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
+import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
+import {TARGET} from 'parser/core/modules/Checklist/Rule'
+
 import styles from './Checklist.module.css'
+
+const RULE_STYLES = {
+	[TARGET.SUCCESS]: {text: 'text-success', color: 'green', icon: 'checkmark', autoExpand: false},
+	[TARGET.WARN]: {text: 'text-warning', color: 'yellow', icon: 'warning sign', autoExpand: true},
+	[TARGET.FAIL]: {text: 'text-error', color: 'red', icon: 'remove', autoExpand: true},
+}
 
 class Checklist extends Component {
 	static propTypes = {
 		rules: PropTypes.arrayOf(PropTypes.shape({
 			percent: PropTypes.number.isRequired,
-			target: PropTypes.number.isRequired,
+			tier: PropTypes.oneOf(Object.values(TARGET)),
 			name: PropTypes.node.isRequired,
-			description: PropTypes.node,
 			requirements: PropTypes.arrayOf(PropTypes.shape({
 				name: PropTypes.node.isRequired,
-				percent: PropTypes.number.isRequired,
+				content: PropTypes.string.isRequired,
 			})),
 		})),
 		hideProgress: PropTypes.bool.isRequired,
@@ -28,8 +36,15 @@ class Checklist extends Component {
 
 		const expanded = []
 		const panels = rules.map((rule, index) => {
-			const success = rule.percent > rule.target
-			if (!success) {
+			const ruleStyles = RULE_STYLES[rule.tier]
+
+			// We cap the percent @ 100 in production mode - calculations can always be a bit janky
+			let percent = rule.percent
+			if (process.env.NODE_ENV === 'production') {
+				percent = Math.min(percent, 100)
+			}
+
+			if (ruleStyles.autoExpand) {
 				expanded.push(index)
 			}
 			return {
@@ -37,25 +52,25 @@ class Checklist extends Component {
 				key: index,
 				title: {
 					className: styles.title,
-					content: <Fragment>
+					content: <>
 						<Icon
-							name={success ? 'checkmark' : 'remove'}
-							className={success ? 'text-success' : 'text-error'}
+							name={ruleStyles.icon}
+							className={ruleStyles.text}
 						/>
 						{rule.name}
-						<div className={styles.percent + (success ? ' text-success' : ' text-error')}>
-							{rule.percent.toFixed(1)}%
+						<div className={styles.percent + ' ' + ruleStyles.text}>
+							{percent.toFixed(1)}%
 							{hideProgress || <Progress
-								percent={rule.percent}
+								percent={percent}
 								className={styles.progress}
 								size="small"
-								color={success ? 'green' : 'red'}
+								color={ruleStyles.color}
 							/>}
 						</div>
-					</Fragment>,
+					</>,
 				},
 				content: {
-					content: <Fragment>
+					content: <>
 						{rule.description && <div className={styles.description}>
 							<Icon name="info" size="large" />
 							<p>{rule.description}</p>
@@ -64,11 +79,11 @@ class Checklist extends Component {
 						<ul>
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
-									{requirement.name}: {requirement.percent.toFixed(2)}%
+									{requirement.name}: {requirement.content}
 								</li>
 							)}
 						</ul>
-					</Fragment>,
+					</>,
 				},
 			}
 		})
@@ -83,7 +98,7 @@ class Checklist extends Component {
 }
 
 const mapSizesToProps = ({width}) => ({
-	hideProgress: width < 992,
+	hideProgress: width < MOBILE_BREAKPOINT,
 })
 
 export default withSizes(mapSizesToProps)(Checklist)

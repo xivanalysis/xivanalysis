@@ -12,11 +12,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 export default class SongUptime extends Module {
 	static handle = 'songuptime'
 	static dependencies = [
-		'checklist',
-		'cooldowns',
-		'enemies',
 		'suggestions',
-		'invuln',
 		'downtime',
 	]
 

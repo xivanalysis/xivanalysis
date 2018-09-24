@@ -15,7 +15,6 @@ export default class Goring extends Module {
 	static handle = 'goring'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'enemies',
 		'invuln',
 		'suggestions',
@@ -71,7 +70,8 @@ export default class Goring extends Module {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
-		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
+		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
 
 		// If it's not been applied yet, set it and skip out
 		if (!lastApplication[statusId]) {

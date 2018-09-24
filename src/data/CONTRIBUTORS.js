@@ -63,7 +63,7 @@ export default {
 	TOASTDEIB: {
 		name: 'Toastdeib',
 		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
-		jobs: [JOBS.NINJA],
+		jobs: [JOBS.NINJA, JOBS.MACHINIST],
 	},
 
 	MIKEMATRIX: {
@@ -85,6 +85,11 @@ export default {
 		name: 'suShirou',
 		avatar: process.env.PUBLIC_URL + '/avatar/sushirou.png',
 		jobs: [JOBS.ASTROLOGIAN],
+	},
+	ACRI: {
+		name: 'Acri',
+		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
+		jobs: [JOBS.DARK_KNIGHT],
 	},
 }
 

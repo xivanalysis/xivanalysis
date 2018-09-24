@@ -18,6 +18,7 @@ import WAR from './WAR'
 import WHM from './WHM'
 import PLD from './PLD'
 import SAM from './SAM'
+import DRK from './DRK'
 
 const STATUSES = {
 	...ENEMY,
@@ -27,6 +28,7 @@ const STATUSES = {
 
 	...PLD,
 	...WAR,
+	...DRK,
 
 	...SCH,
 	...AST,
@@ -45,14 +47,16 @@ const STATUSES = {
 	...RDM,
 }
 
+export const STATUS_ID_OFFSET = 1000000
+
 // Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
 const correctIdsToMatchLogs = obj => {
 	Object.keys(obj).forEach(key => {
 		const status = obj[key]
 		if (Array.isArray(status.id)) {
-			status.id = status.id.map(id => id + 1000000)
+			status.id = status.id.map(id => id + STATUS_ID_OFFSET)
 		} else {
-			status.id = status.id + 1000000
+			status.id = status.id + STATUS_ID_OFFSET
 		}
 	})
 	return obj
@@ -61,3 +65,5 @@ const correctIdsToMatchLogs = obj => {
 addExtraIndex(correctIdsToMatchLogs(STATUSES), 'id')
 
 export default STATUSES
+
+export const getStatus = id => STATUSES[id] || {}

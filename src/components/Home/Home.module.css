@@ -15,4 +15,10 @@
 	left: 0;
 	bottom: 50%;
 	margin-bottom: -19px; /* Half the input group's height */
+	color: white;
+}
+
+.about {
+	cursor: pointer;
+	border-bottom: 1px dashed white;
 }

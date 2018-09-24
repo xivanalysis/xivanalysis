@@ -1,7 +1,11 @@
 import _ from 'lodash'
 
 // We only want to store some keys of state - things like report are load-specific
-const ALLOWED_KEYS = ['language', 'i18nOverlay']
+const ALLOWED_KEYS = [
+	'i18nOverlay',
+	'language',
+	'settings',
+]
 
 // Load state from LS
 export function loadState() {

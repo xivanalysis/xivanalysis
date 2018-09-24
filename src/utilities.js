@@ -1,4 +1,5 @@
 import {matchPath} from 'react-router-dom'
+import LANGUAGES, {SHORT_LANGUAGE_MAP, DEFAULT_LANGUAGE} from 'data/LANGUAGES'
 
 export const addExtraIndex = (obj, index) => {
 	Object.keys(obj).forEach(key => {
@@ -140,8 +141,54 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
  */
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
 
-//rennders a time given in seconds into the format mm:ss
+// Renders a time given in seconds into the format mm:ss
 export function formatDuration(duration) {
+	/* eslint-disable no-magic-numbers */
 	const seconds = Math.floor(duration % 60)
 	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	/* eslint-enable no-magic-numbers */
+}
+
+/**
+ * Get a slice of a string up until the first instance of a sub-string.
+ * @param {String} haystack The string to slice
+ * @param {String} needle The sub-string to search for
+ * @returns {String} All of string before needle
+ */
+export function stringBefore(haystack, needle) {
+	const idx = haystack.indexOf(needle)
+	return idx === -1 ? haystack : haystack.slice(0, idx)
+}
+
+/**
+ * Iterate over a list of languages and return the first matching, enabled language.
+ * Returns the default language if none match.
+ * @param {String[]} [languages] An array of languages to check, defaults to `navigator.languages`
+ * @returns {String} Language Code
+ */
+export function getUserLanguage(languages = null) {
+	if (!languages) {
+		if (Array.isArray(navigator.languages)) {
+			languages = navigator.languages
+		} else {
+			languages = [navigator.language]
+		}
+	}
+
+	for (const lang of languages) {
+		if (LANGUAGES[lang] && LANGUAGES[lang].enable) {
+			return lang
+		}
+	}
+
+	// In case we didn't get a match, try matching just the first part of each
+	// language. It's better than falling  back to nothing. This may be overkill.
+	for (const lang of languages.map(l => stringBefore(l, '-'))) {
+		const match = SHORT_LANGUAGE_MAP[lang]
+		if (LANGUAGES[match] && LANGUAGES[match].enable) {
+			return match
+		}
+	}
+
+	return DEFAULT_LANGUAGE
 }

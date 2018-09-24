@@ -34,6 +34,25 @@ const QUERY_FILTER = [
 	},
 ]
 
+const EVENT_TYPE_ORDER = {
+	death: -4,
+	begincast: -3,
+	cast: -2,
+	damage: -1,
+	heal: -1,
+	default: 0,
+	removebuff: 1,
+	removebuffstack: 1,
+	removedebuff: 1,
+	removedebuffstack: 1,
+	refreshbuff: 2,
+	refreshdebuff: 2,
+	applybuff: 3,
+	applybuffstack: 3,
+	applydebuff: 3,
+	applydebuffstack: 3,
+}
+
 export default class AdditionalEvents extends Module {
 	static handle = 'additionalEvents'
 	static dependencies = [
@@ -69,7 +88,7 @@ export default class AdditionalEvents extends Module {
 			this.parser.player.id,
 			...this.parser.player.pets.map(pet => pet.id),
 		].join(',')
-		filter +=  ` and source.id not in (${playerIds})`
+		filter =  `(${filter}) and source.id not in (${playerIds})`
 
 		// Request the new events
 		const newEvents = await getFflogsEvents(
@@ -80,7 +99,14 @@ export default class AdditionalEvents extends Module {
 
 		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.
 		events.push(...newEvents)
-		stable.inplace(events, (a, b) => a.timestamp - b.timestamp)
+		stable.inplace(events, (a, b) => {
+			if (a.timestamp === b.timestamp) {
+				const aTypeOrder = EVENT_TYPE_ORDER[a.type] || EVENT_TYPE_ORDER.default
+				const bTypeOrder = EVENT_TYPE_ORDER[b.type] || EVENT_TYPE_ORDER.default
+				return aTypeOrder - bTypeOrder
+			}
+			return a.timestamp - b.timestamp
+		})
 
 		return events
 	}

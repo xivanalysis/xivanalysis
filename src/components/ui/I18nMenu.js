@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Dropdown} from 'semantic-ui-react'
 
@@ -75,20 +75,20 @@ export class I18nMenu extends Component {
 					onClick={this.handleChange}
 					{...option}
 				/>) }
-				{DEBUG && <Fragment>
+				{DEBUG && <>
 					<Dropdown.Divider />
 					<Dropdown.Item
 						onClick={this.toggleOverlay}
 						icon={overlay? 'eye slash' : 'eye'}
 						text={overlay ? 'Hide Overlay' : 'Show Overlay'}
 					/>
-				</Fragment>}
+				</>}
 			</Dropdown.Menu>
 		</Dropdown>
 	}
 }
 
 export default connect(state => ({
-	language: state.language,
+	language: state.language.site,
 	overlay: state.i18nOverlay,
 }))(I18nMenu)

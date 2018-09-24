@@ -1,4 +1,4 @@
-import Weaving from 'parser/core/modules/Weaving'
+import CoreWeaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 
 const MUDRA = [
@@ -24,9 +24,11 @@ const STATE = {
 	TCJ: 2,
 }
 
-export default class NinWeaving extends Weaving {
+const MAX_NINJUTSU_PER_TCJ = 3
+
+export default class Weaving extends CoreWeaving {
 	_lastDwadTimestamp = 0 // A necessary evil - logs go janky sometimes and have 3 cast events for a single DWaD
-	isBadWeave(weave, maxWeaves) {
+	isBadWeave(weave/*, maxWeaves*/) {
 		let weaveCount = 0
 		let checkState = STATE.NORMAL
 		let tcjCount = 0
@@ -38,23 +40,23 @@ export default class NinWeaving extends Weaving {
 			if (abilityId === ACTIONS.TEN_CHI_JIN.id) {
 				// Switch to TCJ mode, so we ignore the next 3 ninjutsu cast (unless we reset to state 0)
 				checkState = STATE.TCJ
+				ninjutsuCounted = true
 				weaveCount++
 			} else if (MUDRA.includes(abilityId)) {
 				if (checkState === STATE.NORMAL) {
 					// Switch to standard ninjutsu mode if we're in normal mode, burn otherwise
 					checkState = STATE.NINJUTSU
+					ninjutsuCounted = true
 					weaveCount++
 				}
 			} else if (NINJUTSU.includes(abilityId)) {
 				if (checkState === STATE.NINJUTSU) {
 					// Standard ninjutsu; increment the count and reset the state to 0
-					ninjutsuCounted = true
 					checkState = STATE.NORMAL
 				} else if (checkState === STATE.TCJ) {
 					// TCJ mode; if this is the third ninjutsu, behave as above, otherwise burn
-					if (++tcjCount >= 3) {
+					if (++tcjCount >= MAX_NINJUTSU_PER_TCJ) {
 						tcjCount = 0
-						ninjutsuCounted = true
 						checkState = STATE.NORMAL
 					}
 				}
@@ -82,6 +84,6 @@ export default class NinWeaving extends Weaving {
 			return weaveCount > 1
 		}
 
-		return super.isBadWeave(weave, maxWeaves)
+		return super.isBadWeave(weave, 1)
 	}
 }

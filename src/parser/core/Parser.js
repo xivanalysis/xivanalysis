@@ -23,6 +23,8 @@ class Parser {
 	_triggerModules = []
 	_moduleErrors = {}
 
+	_fabricationQueue = []
+
 	get currentTimestamp() {
 		// TODO: this.finished?
 		return Math.min(this.fight.end_time, this._timestamp)
@@ -39,6 +41,11 @@ class Parser {
 		return this.report.friendlies.filter(
 			friend => friend.fights.some(fight => fight.id === this.fight.id)
 		)
+	}
+
+	get parseDate() {
+		// The report timestamp is relative to the report timestamp, and in ms. Convert.
+		return Math.round((this.report.start + this.fight.start_time) / 1000)
 	}
 
 	// -----
@@ -106,30 +113,52 @@ class Parser {
 	}
 
 	parseEvents(events) {
+		// Iterator we're using to handle fabrication
+		function* iterateEvents(events) {
+			const eventIterator = events[Symbol.iterator]()
+
+			// Start the parse with an 'init' fab
+			yield this.hydrateFabrication({type: 'init'})
+
+			let obj
+			// eslint-disable-next-line no-cond-assign
+			while (!(obj = eventIterator.next()).done) {
+				// Iterate over the actual event first
+				yield obj.value
+
+				// Iterate over any fabrications arising from the event and clear the queue
+				yield* this._fabricationQueue
+				this._fabricationQueue = []
+			}
+
+			// Finish with 'complete' fab
+			yield this.hydrateFabrication({type: 'complete'})
+		}
+
 		// Create a copy of the module order that we'll use while parsing
 		this._triggerModules = this.moduleOrder.slice(0)
 
-		this.fabricateEvent({type: 'init'})
-
-		// Run the analysis pass
-		events.forEach(event => {
+		// Loop & trigger all the events & fabrications
+		for (const event of iterateEvents.bind(this)(events)) {
 			this._timestamp = event.timestamp
 			this.triggerEvent(event)
-		})
-
-		this.fabricateEvent({type: 'complete'})
+		}
 	}
 
-	fabricateEvent(event, trigger) {
+	hydrateFabrication(event) {
 		// TODO: they've got a 'triggered' prop too...?
-		this.triggerEvent({
+		return {
 			// Default to the current timestamp
 			timestamp: this.currentTimestamp,
-			trigger,
+
 			// Rest of the event, mark it as fab'd
 			...event,
 			__fabricated: true,
-		})
+		}
+	}
+
+	fabricateEvent(event) {
+		this._fabricationQueue.push(this.hydrateFabrication(event))
 	}
 
 	triggerEvent(event) {
@@ -250,7 +279,7 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = this.moduleOrder
+		const displayOrder = [...this.moduleOrder]
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
 		const results = []
@@ -360,6 +389,7 @@ class Parser {
 	}
 
 	formatDuration(duration, secondPrecision = null) {
+		/* eslint-disable no-magic-numbers */
 		duration /= 1000
 		const seconds = duration % 60
 		if (duration < 60) {
@@ -367,10 +397,11 @@ class Parser {
 			return seconds.toFixed(precision) + 's'
 		}
 		const precision = secondPrecision !== null ? secondPrecision : 0
-		const secondsText = seconds.toFixed(precision)
+		const secondsText = precision ? seconds.toFixed(precision) : '' + Math.floor(seconds)
 		let pointPos = secondsText.indexOf('.')
 		if (pointPos === -1) { pointPos = secondsText.length }
 		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
+		/* eslint-enable no-magic-numbers */
 	}
 }
 
