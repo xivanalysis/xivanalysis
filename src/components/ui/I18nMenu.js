@@ -3,9 +3,10 @@ import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Dropdown} from 'semantic-ui-react'
 
+import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
 import {setLanguage, toggleI18nOverlay} from 'store/actions'
 
-import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
+import styles from './I18nMenu.module.css'
 
 const DEBUG = process.env.NODE_ENV === 'development'
 
@@ -74,6 +75,7 @@ export class I18nMenu extends Component {
 					active={currentLanguage === option.value}
 					onClick={this.handleChange}
 					{...option}
+					className={styles.menuItem}
 				/>) }
 				{DEBUG && <>
 					<Dropdown.Divider />
