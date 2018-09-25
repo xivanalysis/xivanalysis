@@ -9,6 +9,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+const DEBUFF_APPLICATION_BUFFER = 1000 // Buffer for the empty window check, since debuff applications always happen 9 times in the logs for some ungodly reason
+
 const WILDFIRE_DAMAGE_FACTOR = 0.25
 
 const WILDFIRE_GCD_TARGET = 5
@@ -55,15 +57,22 @@ export default class Wildfire extends Module {
 		}
 	}
 
+	_closeWildfireWindow(damage) {
+		if (damage > 0) {
+			this._wildfireWindows.current.casts = this._wildfireWindows.current.casts.filter(cast => cast.compoundDamage <= damage) // Pop any extraneous events off the end
+		}
+		const gcds = this._wildfireWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		this._wildfireWindows.current.gcdCount = gcds.length
+		this._wildfireWindows.current.overheatedGcdCount = gcds.filter(cast => cast.overheated).length
+		this._wildfireWindows.current.damage = damage
+		this._wildfireWindows.history.push(this._wildfireWindows.current)
+		this._wildfireWindows.current = null
+
+	}
+
 	_onWildfireDamage(event) {
 		if (this._wildfireWindows.current !== null) {
-			this._wildfireWindows.current.casts = this._wildfireWindows.current.casts.filter(cast => cast.compoundDamage <= event.amount) // Pop any extraneous events off the end
-			const gcds = this._wildfireWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd)
-			this._wildfireWindows.current.gcdCount = gcds.length
-			this._wildfireWindows.current.overheatedGcdCount = gcds.filter(cast => cast.overheated).length
-			this._wildfireWindows.current.damage = event.amount
-			this._wildfireWindows.history.push(this._wildfireWindows.current)
-			this._wildfireWindows.current = null
+			this._closeWildfireWindow(event.amount)
 		} else {
 			// Something fucky this way comes - we got a WF damage event without a corresponding applydebuff, which means the log is probably jank.
 			// Create a fake window so we still display time/damage and notify the "broken log" module.
@@ -77,10 +86,15 @@ export default class Wildfire extends Module {
 	}
 
 	_onWildfireApplied(event) {
-		this._wildfireWindows.current = {
-			start: event.timestamp,
-			casts: [],
-			targetId: event.targetID,
+		if (this._wildfireWindows.current === null) {
+			this._wildfireWindows.current = {
+				start: event.timestamp,
+				casts: [],
+				targetId: event.targetID,
+			}
+		} else if (this._wildfireWindows.current.start + DEBUFF_APPLICATION_BUFFER < event.timestamp) {
+			// We have an unfinished WF window; the lack of a damage event to close it implies that it fizzled due to downtime, so track that
+			this._closeWildfireWindow(0)
 		}
 	}
 
@@ -92,7 +106,7 @@ export default class Wildfire extends Module {
 				Try to align your <ActionLink {...ACTIONS.WILDFIRE}/> windows as closely as possible with your overheat windows to maximize damage. Casting Wildfire too early or too late can cost you significant damage gains from heated shots and the 20% damage buff from overheating.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MEDIUM, // TODO - Tiers
+				1: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
 			value: badWildfires,
@@ -100,6 +114,23 @@ export default class Wildfire extends Module {
 				{badWildfires} of your Wildfire windows contained at least {NON_OVERHEATED_GCD_THRESHOLD} non-overheated GCDs.
 			</Trans>,
 		}))
+
+		const fizzledWildfires = this._wildfireWindows.history.filter(wildfire => wildfire.damage === 0).length
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.WILDFIRE.icon,
+			content: <Trans id="mch.wildfire.suggestions.fizzle.content">
+				Be careful to time your <ActionLink {...ACTIONS.WILDFIRE}/> windows so that the damage resolves during uptime. Wildfire makes up a significant portion of your overall damage, so losing the final burst can cost you a lot.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			value: fizzledWildfires,
+			why: <Trans id="mch.wildfire.suggestions.fizzle.why">
+				{fizzledWildfires} of your Wildfire windows resolved for 0 damage.
+			</Trans>,
+		}))
+
 	}
 
 	_formatGcdCount(count) {
@@ -112,6 +143,14 @@ export default class Wildfire extends Module {
 		}
 
 		return count
+	}
+
+	_formatDamage(damage) {
+		if (damage === 0) {
+			return <span className="text-error">{damage}</span>
+		}
+
+		return damage
 	}
 
 	output() {
@@ -142,7 +181,7 @@ export default class Wildfire extends Module {
 						{this.parser.formatTimestamp(wildfire.start)}
 						<span> - </span>
 						<Trans id="mch.wildfire.panel-count">
-							{this._formatGcdCount(wildfire.gcdCount)} <Plural value={wildfire.gcdCount} one="GCD" other="GCDs"/>, {wildfire.damage} damage
+							{this._formatGcdCount(wildfire.gcdCount)} <Plural value={wildfire.gcdCount} one="GCD" other="GCDs"/>, {this._formatDamage(wildfire.damage)} damage
 						</Trans>
 					</Fragment>,
 				},
