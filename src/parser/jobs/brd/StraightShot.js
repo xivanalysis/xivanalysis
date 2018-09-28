@@ -51,7 +51,7 @@ export default class StraightShot extends Module {
 		// If there's a previous cast of Straight Shot, checks for early casts
 		if (lastApplication) {
 			if (this._getTimeLeftOnStraightShot(event.timestamp) > STRAIGHT_SHOT_THRESHOLD) {
-				// TODO: Checks if the Straight Shot was used early for transitional purposes
+				// TODO: Check if the Straight Shot was used early for transitional purposes
 				// TODO: Check if the Straight Shot was used to prevent it from falling inside Raging Strikes
 				this._earlyStraightShotCasts.push(event)
 			}

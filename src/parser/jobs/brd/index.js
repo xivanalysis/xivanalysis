@@ -1,6 +1,7 @@
 import About from './About'
-import EightyBoi from './EightyBoi'
+import Barrage from './Barrage'
 import CritRate from './CritRate'
+import EightyBoi from './EightyBoi'
 import SongUptime from './SongUptime'
 import SongUsage from './SongUsage'
 import StraightShot from './StraightShot'
@@ -9,6 +10,7 @@ import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	About,
+	Barrage,
 	CritRate,
 	EightyBoi,
 	OGCDDowntime,
