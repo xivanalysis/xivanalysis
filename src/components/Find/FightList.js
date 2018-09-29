@@ -40,9 +40,17 @@ class FightList extends Component {
 		const fights = []
 		let lastZone = null
 
+		const trashFights = []
+
 		report.fights && report.fights.forEach(fight => {
-			// Filter out trash fights w/ shoddy data, and wipes if we're filtering
-			if (fight.boss === 0 || (killsOnly && !fight.kill)) {
+			// Group all trash together in case they want to see it
+			if (fight.boss === 0) {
+				trashFights.push(fight)
+				return
+			}
+
+			// Filter out wipes if we're filtering
+			if (killsOnly && !fight.kill) {
 				return
 			}
 
@@ -61,6 +69,17 @@ class FightList extends Component {
 			// Add the fight to the current grouping
 			fights[fights.length-1].fights.push(fight)
 		})
+
+		// If there are any trash fights, add them in now
+		if (trashFights.length) {
+			fights.push({
+				zone: {
+					...ZONES._TRASH,
+					name: <Trans id="core.find.trash">Trash</Trans>,
+				},
+				fights: trashFights,
+			})
+		}
 
 		return <>
 			<Header>

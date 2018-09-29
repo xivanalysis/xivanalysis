@@ -40,7 +40,7 @@ export default class GreasedLightning extends Module {
 	_stacks = []
 
 	_earthSaves = []
-	_wastedEarth = []
+	_wastedEarth = 0
 
 	_windSaves = []
 	_wastedWind = []
@@ -174,7 +174,7 @@ export default class GreasedLightning extends Module {
 
 	_onReply(event) {
 		if (event.timestamp - this._lastRefresh > GL_TIMEOUT_MILLIS) {
-			this._wastedEarth.push(event.timestamp)
+			this._wastedEarth++
 		} else {
 			this._lastRefresh = event.timestamp
 		}

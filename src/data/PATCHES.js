@@ -2,6 +2,9 @@
 
 const PATCHES = {
 	// Not going to support pre-4.0 at all
+	'2.0 - 3.57': {
+		date: 0,
+	},
 	'4.0': {
 		date: 1497517200,
 	},

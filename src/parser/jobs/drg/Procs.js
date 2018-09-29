@@ -92,7 +92,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MIRAGE_DIVE.icon,
 			content: <Trans id="drg.procs.suggestions.mirage-overwritten.content">
-				Avoid casting <ActionLink {...ACTIONS.JUMP.id}/> and <ActionLink {...ACTIONS.SPINESHATTER_DIVE.id}/> when you already have a <StatusLink {...STATUSES.DIVE_READY}/> procs, as it overwrites them and can delay your Life of the Dragon windows and potentially cost you a lot of DPS.
+				Avoid casting <ActionLink {...ACTIONS.JUMP}/> and <ActionLink {...ACTIONS.SPINESHATTER_DIVE}/> when you already have a <StatusLink {...STATUSES.DIVE_READY}/> procs, as it overwrites them and can delay your Life of the Dragon windows and potentially cost you a lot of DPS.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,

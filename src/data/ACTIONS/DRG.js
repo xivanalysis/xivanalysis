@@ -105,6 +105,7 @@ export default{
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
 		cooldown: 1,
+		potency: 210,
 	},
 
 	NASTROND: {

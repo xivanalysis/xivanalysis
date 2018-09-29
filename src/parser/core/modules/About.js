@@ -5,7 +5,8 @@ import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 import PATCHES, {getPatch} from 'data/PATCHES'
-import Module, {DISPLAY_ORDER} from 'parser/core/Module'
+import Module from 'parser/core/Module'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 import styles from './About.module.css'
 

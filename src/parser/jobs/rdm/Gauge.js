@@ -1,14 +1,16 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-
+import PATCHES, {getPatch} from 'data/PATCHES'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {i18nMark, Trans} from '@lingui/react'
+import {i18nMark, Trans, Plural} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
+//import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
@@ -42,12 +44,22 @@ export const SEVERITY_LOST_MANA = {
 	80: SEVERITY.MAJOR,
 }
 
+export const SEVERITY_WASTED_FINISHER = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 const MANA_DIFFERENCE_THRESHOLD = 30
 const MANA_LOST_DIVISOR = 2
 const MANA_CAP = 100
-const ENCHANCED_SCATTER_GAIN = 8
+const ENHANCED_SCATTER_GAIN = 8
+const ENHANCED_SCATTER_44_GAIN = 10
 const MISSING_HARDCAST_MANA_VALUE = 11
 const MANAIFCATION_MULTIPLIER = 2
+const MANA_DONT_CAST_THRESHOLD = 96
+const FINISHER_GAIN = 21
+const MELEE_COMBO_COST = 80
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
@@ -55,6 +67,7 @@ export default class Gauge extends Module {
 		static dependencies = [
 			'combatants',
 			'suggestions',
+			'cooldowns',
 		]
 
 		//Keeps track of our current mana gauge.
@@ -78,6 +91,13 @@ export default class Gauge extends Module {
 		_history = {
 			white: [],
 			black: [],
+		}
+
+		//Finisher Handling
+		_incorrectFinishers = {
+			verholy: 0,
+			verflare: 0,
+			bothprocsup: 0,
 		}
 
 		constructor(...args) {
@@ -180,8 +200,10 @@ export default class Gauge extends Module {
 
 		_onCast(event) {
 			const abilityId = event.ability.guid
-			//This just lets us determine if we've modified the current Mana numbers at all
-			//const isCalculated = false
+			//Handle Finisher BEFORE adjusting mana
+			if (abilityId === ACTIONS.VERFLARE.id || abilityId === ACTIONS.VERHOLY.id) {
+				this._handleFinisher(abilityId)
+			}
 
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
@@ -197,8 +219,13 @@ export default class Gauge extends Module {
 						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
 						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
 							//console.log('Enhanced Scatter On')
-							white = ENCHANCED_SCATTER_GAIN
-							black = ENCHANCED_SCATTER_GAIN
+							if (this._getIsPre44) {
+								white = ENHANCED_SCATTER_GAIN
+								black = ENHANCED_SCATTER_GAIN
+							} else {
+								white = ENHANCED_SCATTER_44_GAIN
+								black = ENHANCED_SCATTER_44_GAIN
+							}
 						}
 					}
 
@@ -228,6 +255,71 @@ export default class Gauge extends Module {
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()
+			}
+		}
+
+		_handleFinisher(abilityId) {
+			const isFireReady = this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id)
+			const isStoneReady = this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id)
+			//All the logic is calculated as a decision to be made before entering the melee combo because of how RDM Works
+			//I have a different idea for how to represent this logic, I'll implement it when I factor this out to its own module
+			const white = this._whiteMana + MELEE_COMBO_COST
+			const black = this._blackMana + MELEE_COMBO_COST
+			const isAccelerationUp = this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0
+			let useVerHoly = false
+			let useVerFlare = false
+			let doesntMatter = false
+			let useOnBadProc = false
+
+			//TODO in refactor recompare it against Jump's guide - especially if he updates due to potency changes.
+			//Its possible the current threshold rules are no longer valid with the increase to thunder/aero and finisher
+			//potency with patch 4.4
+			if (isStoneReady &&
+				isFireReady &&
+				white >= MANA_DONT_CAST_THRESHOLD &&
+				black >= MANA_DONT_CAST_THRESHOLD) {
+				doesntMatter = true
+			} else if (isAccelerationUp &&
+				isFireReady &&
+				!isStoneReady &&
+				black < white &&
+				white + FINISHER_GAIN - black <= MANA_DIFFERENCE_THRESHOLD) {
+				useVerHoly = true
+			} else if (isAccelerationUp &&
+					!isFireReady &&
+					isStoneReady &&
+					white < black &&
+					black + FINISHER_GAIN - white <= MANA_DIFFERENCE_THRESHOLD) {
+				useVerFlare = true
+			} else if (white < black && white < MANA_DONT_CAST_THRESHOLD) {
+				useVerHoly = true
+				if (isStoneReady) {
+					useOnBadProc = true
+				}
+			} else if (black < white && black < MANA_DONT_CAST_THRESHOLD) {
+				useVerFlare = true
+				if (isFireReady) {
+					useOnBadProc = true
+				}
+			} else if (isStoneReady && isFireReady && (white <= MANA_DONT_CAST_THRESHOLD || black < MANA_DONT_CAST_THRESHOLD)) {
+				this._incorrectFinishers.bothprocsup++
+				return
+			}
+
+			if (doesntMatter || (!useVerFlare && !useVerHoly)) {
+				//Doesn't matter, so return
+				return
+			}
+
+			if (useVerFlare && abilityId === ACTIONS.VERHOLY.id) {
+				this._incorrectFinishers.verholy++
+			} else if (useVerHoly && useOnBadProc) {
+				this._incorrectFinishers.verholy++
+			}
+			if (useVerHoly && abilityId === ACTIONS.VERFLARE.id) {
+				this._incorrectFinishers.verflare++
+			} else if (useVerFlare && useOnBadProc) {
+				this._incorrectFinishers.verflare++
 			}
 		}
 
@@ -301,6 +393,36 @@ export default class Gauge extends Module {
 					<Trans id="rdm.gauge.suggestions.black-mana-lost-why">You lost {this._blackManaLostToImbalance} Black Mana due to overage of White Mana</Trans>
 				</Fragment>,
 			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERHOLY.icon,
+				content: <Trans id="rdm.gauge.suggestions.wastedverholy.content">
+					When white mana is lower, mana is even and Verfire is up, or Acceleration is available with Verfire available you should use <ActionLink {...ACTIONS.VERHOLY}/> instead <ActionLink {...ACTIONS.VERFLARE}/>
+				</Trans>,
+				why: <Plural id="rdm.gauge.suggestions.wastedverholy.why" value={this._incorrectFinishers.verflare} one="# Verstone cast was lost due to using Verflare incorrectly" other="# Verstone casts were lost due to using Verflare incorrectly" />,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.verflare,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERFLARE.icon,
+				content: <Trans id="rdm.gauge.suggestions.wastedverflare.content">
+					When black mana is lower, mana is even and Verstone is up, or Acceleration is available with Verstone available you should use <ActionLink {...ACTIONS.VERFLARE}/> instead of <ActionLink {...ACTIONS.VERHOLY}/>
+				</Trans>,
+				why: <Plural id="rdm.gauge.suggestions.wastedverflare.why" value={this._incorrectFinishers.verholy} one="# Verfire cast was lost due to using Verholy incorrectly" other="# Verfire casts were lost due to using Verholy incorrectly" />,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.verholy,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERSTONE.icon,
+				content: <Trans id="rdm.gauge.suggestions.wastedprocs.content">
+					Do not enter your combo with both procs up when <ActionLink {...ACTIONS.ACCELERATION}/> is down, consider dumping one of the procs before entering the melee combo as long as you gain at least 4 mana
+				</Trans>,
+				why: <Plural id="rdm.gauge.suggestions.wastedprocs.why" value={this._incorrectFinishers.bothprocsup} one="# Proc cast was lost due to entering the melee combo with both procs up." other="# Procs casts were lost due to entering the melee combo with both procs up." />,
+				tiers: SEVERITY_WASTED_FINISHER,
+				value: this._incorrectFinishers.bothprocsup,
+			}))
 		}
 
 		output() {
@@ -342,5 +464,11 @@ export default class Gauge extends Module {
 		*/
 		get blackMana() {
 			return this._blackMana
+		}
+
+		get _getIsPre44() {
+			const currentParseDate = getPatch(this.parser.parseDate)
+			// The report timestamp is relative to the report timestamp, and in ms. Convert.
+			return PATCHES[currentParseDate].date < PATCHES['4.4'].date
 		}
 }

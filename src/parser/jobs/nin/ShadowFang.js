@@ -4,59 +4,23 @@ import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import DoTs from 'parser/core/modules/DoTs'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const SF_DURATION_MILLIS = STATUSES.SHADOW_FANG.duration * 1000
-
-export default class ShadowFang extends Module {
-	static handle = 'shadowFang'
+export default class ShadowFang extends DoTs {
 	static dependencies = [
+		...DoTs.dependencies,
 		'checklist',
-		'enemies',
-		'invuln',
 		'suggestions',
 	]
 
-	_lastApplication = {}
-	_sfClip = 0
+	static statusesToTrack = [
+		STATUSES.SHADOW_FANG.id,
+	]
 
-	constructor(...args) {
-		super(...args)
-		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: STATUSES.SHADOW_FANG.id}, this._onDotApply)
-		this.addHook('complete', this._onComplete)
-	}
-
-	_onDotApply(event) {
-		// Make sure we're tracking for this target
-		const applicationKey = `${event.targetID}|${event.targetInstance}`
-		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
-
-		if (!lastApplication) {
-			this._lastApplication[event.targetID] = event.timestamp
-			return
-		}
-
-		// Base clip calc
-		let clip = SF_DURATION_MILLIS - (event.timestamp - lastApplication)
-
-		// Remove any untargetable time from the clip
-		clip -= this.invuln.getUntargetableUptime('all', event.timestamp - SF_DURATION_MILLIS, event.timestamp)
-
-		// Also remove invuln time in the future that casting later would just push dots into
-		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
-		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + SF_DURATION_MILLIS + clip)
-
-		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._sfClip += Math.max(0, clip)
-
-		this._lastApplication[event.targetID] = event.timestamp
-	}
-
-	_onComplete() {
-		// Checklist rule for dot uptime
+	addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: <Trans id="nin.shadowfang.checklist.name">Keep Shadow Fang up</Trans>,
 			description: <Trans id="nin.shadowfang.checklist.description">
@@ -66,12 +30,13 @@ export default class ShadowFang extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="nin.shadowfang.checklist.requirement.name"><ActionLink {...ACTIONS.SHADOW_FANG}/> uptime</Trans>,
-					percent: () => this.getDotUptimePercent(),
+					percent: () => this.getUptimePercent(STATUSES.SHADOW_FANG.id),
 				}),
 			],
 		}))
+	}
 
-		// Suggestion for DoT clipping
+	addClippingSuggestions(clip) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SHADOW_FANG.icon,
 			content: <Trans id="nin.shadowfang.suggestions.clipping.content">
@@ -82,24 +47,10 @@ export default class ShadowFang extends Module {
 				10: SEVERITY.MEDIUM,
 				15: SEVERITY.MAJOR,
 			},
-			value: this.getDotClippingAmount(),
+			value: this.getClippingAmount(STATUSES.SHADOW_FANG.id),
 			why: <Trans id="nin.shadowfang.suggestions.clipping.why">
-				You lost {this.parser.formatDuration(this._sfClip)} of Shadow Fang to early refreshes.
+				You lost {this.parser.formatDuration(clip[STATUSES.SHADOW_FANG.id])} of Shadow Fang to early refreshes.
 			</Trans>,
 		}))
-	}
-
-	getDotUptimePercent() {
-		const statusUptime = this.enemies.getStatusUptime(STATUSES.SHADOW_FANG.id)
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-		return (statusUptime / fightDuration) * 100
-	}
-
-	getDotClippingAmount() {
-		// This normalises clipping as seconds clipped per minute, since some level of clipping is expected and we need tiers that work for both long and short fights
-		const fightDurationMillis = (this.parser.fightDuration - this.invuln.getInvulnerableUptime())
-		// eslint-disable-next-line no-magic-numbers
-		const clipSecsPerMin = Math.round((this._sfClip * 60) / fightDurationMillis)
-		return clipSecsPerMin
 	}
 }

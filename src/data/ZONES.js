@@ -3,6 +3,13 @@ import {addExtraIndex} from 'utilities'
 // TODO: Move banner lookup into an api call w/ server cache?
 
 const ZONES = {
+	// Special case "Trash" zone so we can display trash
+	_TRASH: {
+		logId: NaN,
+		dbId: NaN,
+		banner: '',
+	},
+
 	// 24man
 	RABANASTRE: {
 		logId: 734,
@@ -89,6 +96,30 @@ const ZONES = {
 		logId: 755,
 		dbId: 30066,
 		banner: 'https://xivapi.com/i/112000/112272.png',
+	},
+
+	O9S: {
+		logId: 802,
+		dbId: 30073,
+		banner: 'https://xivapi.com/i/112000/112316.png',
+	},
+
+	O10S: {
+		logId: 803,
+		dbId: 30074,
+		banner: 'https://xivapi.com/i/112000/112317.png',
+	},
+
+	O11S: {
+		logId: 804,
+		dbId: 30075,
+		banner: 'https://xivapi.com/i/112000/112318.png',
+	},
+
+	O12S: {
+		logId: 805,
+		dbId: 30076,
+		banner: 'https://xivapi.com/i/112000/112319.png',
 	},
 
 	// Ultimate

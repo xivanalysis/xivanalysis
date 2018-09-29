@@ -62,7 +62,6 @@ export default class Combos extends Module {
 				if (action.combo.start) {
 					// Combo starter, we good
 					this._lastAction = action.id
-					this.comboHit(event)
 					this._fabricateComboEvent(event)
 				} else if (action.combo.from) {
 					// Combo action that isn't a starter, that's a paddlin'
@@ -72,7 +71,6 @@ export default class Combos extends Module {
 			} else if (action.combo.from === this._lastAction) {
 				// Continuing a combo correctly, yay
 				this._lastAction = action.combo.end ? NO_COMBO : action.id // If it's a finisher, reset the combo
-				this.comboHit(event)
 				this._fabricateComboEvent(event)
 			} else if (action.combo.start) {
 				// Combo starter mid-combo, that's a paddlin'
@@ -96,6 +94,9 @@ export default class Combos extends Module {
 	}
 
 	_onComplete() {
+		if (this.addJobSpecificSuggestions(this._comboBreakers, this._uncomboedGcds)) {
+			return
+		}
 		if (this._brokenComboCount > 0 || this._uncomboedGcdCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.constructor.suggestionIcon,
@@ -111,21 +112,13 @@ export default class Combos extends Module {
 				/>,
 			}))
 		}
-
-		this.addJobSpecificSuggestions(this._comboBreakers, this._uncomboedGcds)
-	}
-
-	// DEPRECATED - DO NOT USE
-	// Hook into 'combo' events instead now that we're fabbing those
-	comboHit(/*event*/) {
-		// TODO - Remove this once all subclasses are decoupled properly
-		// To be overridden by subclasses. This is for tracking anything a successful combo hit gets you (e.g. Beast Gauge or Kenki).
-		// The parameter is the event containing the combo action.
 	}
 
 	addJobSpecificSuggestions(/*comboBreakers, uncomboedGcds*/) {
 		// To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
 		// broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
 		// what particular actions were misused and when in the fight.
+		// The overriding module should return true if the default suggestion is not wanted
+		return false
 	}
 }

@@ -7,6 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const DRAGON_MAX_DURATION_MILLIS = 30000
 const DRAGON_DEFAULT_DURATION_MILLIS = 20000
@@ -22,9 +23,6 @@ export default class BloodOfTheDragon extends Module {
 		'death',
 		'suggestions',
 	]
-
-	// Overrides
-	//static suggestionIcon = ACTIONS.FULL_THRUST.icon
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 20s anyway.
@@ -157,6 +155,7 @@ export default class BloodOfTheDragon extends Module {
 					</Message.Content>
 				</Message>
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON,
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.blood.checklist.requirement.name"><ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> uptime</Trans>,
