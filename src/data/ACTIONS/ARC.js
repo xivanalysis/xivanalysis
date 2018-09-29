@@ -4,18 +4,21 @@ export default {
 		name: 'Heavy Shot',
 		icon: 'https://xivapi.com/i/000000/000358.png',
 		onGcd: true,
+		potency: 150,
 	},
 	VENOMOUS_BITE: {
 		id: 100,
 		name: 'Venomous Bite',
 		icon: 'https://xivapi.com/i/000000/000363.png',
 		onGcd: true,
+		potency: 100,
 	},
 	QUICK_NOCK: {
 		id: 106,
 		name: 'Quick Nock',
 		icon: 'https://xivapi.com/i/000000/000360.png',
 		onGcd: true,
+		potency: 110,
 	},
 	BLOODLETTER: {
 		id: 110,
@@ -23,12 +26,14 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000361.png',
 		onGcd: false,
 		cooldown: 15,
+		potency: 130,
 	},
 	STRAIGHT_SHOT: {
 		id: 98,
 		name: 'Straight Shot',
 		icon: 'https://xivapi.com/i/000000/000359.png',
 		onGcd: true,
+		potency: 140,
 	},
 	BARRAGE: {
 		id: 107,
@@ -43,12 +48,14 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000364.png',
 		onGcd: false,
 		cooldown: 12,
+		potency: 190,
 	},
 	WINDBITE: {
 		id: 113,
 		name: 'Windbite',
 		icon: 'https://xivapi.com/i/000000/000367.png',
 		onGcd: true,
+		potency: 60,
 	},
 	RAGING_STRIKES: {
 		id: 101,

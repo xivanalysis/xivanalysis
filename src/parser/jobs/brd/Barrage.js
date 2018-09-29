@@ -2,9 +2,10 @@
  * @author Yumiya
  */
 import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 import Module from '../../core/Module'
 import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
@@ -37,10 +38,7 @@ export default class Barrage extends Module {
 	_cuckedByDeath = []
 	_droppedBarrages = []
 	_unalignedBarrages = []
-	_lastStWeaponskill = {
-		event: null,
-		count: 0,
-	}
+	_lastStWeaponskill = []
 
 	_barrageEvents = []
 
@@ -74,6 +72,7 @@ export default class Barrage extends Module {
 
 		barrageEvent.castEvent = event
 		barrageEvent.skillBarraged = null
+		barrageEvent.damageEvents = []
 
 		// Checks for alignment and ignores last use alignment
 		if (!this.combatants.selected.hasStatus(STATUSES.RAGING_STRIKES.id) && this._timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000) {
@@ -85,22 +84,20 @@ export default class Barrage extends Module {
 	}
 
 	_onStWeaponskillDamage(event) {
-		if (this._lastStWeaponskill.event && this._timeSince(this._lastStWeaponskill.event) <= TRIPLE_HIT_BUFFER) {
+		if (this._lastStWeaponskill.length && this._timeSince(this._lastStWeaponskill[0]) <= TRIPLE_HIT_BUFFER && this._lastStWeaponskill[0].ability.guid === event.ability.guid) {
 
-			if (this._lastStWeaponskill.event.ability.guid === event.ability.guid) {
+			this._lastStWeaponskill.push(event)
 
-				this._lastStWeaponskill.count++
+			if (this._lastStWeaponskill.length === 3) {
+				this._barrageEvents[0].skillBarraged = event.ability.guid
+				this._barrageEvents[0].damageEvents = this._lastStWeaponskill.slice()
 
-				if (this._lastStWeaponskill.count === 3) {
-					this._barrageEvents[0].skillBarraged = event
-
-					this._lastStWeaponskill.event = null
-					this._lastStWeaponskill.count = 0
-				}
+				this._lastStWeaponskill = []
 			}
+
 		} else {
-			this._lastStWeaponskill.event = event
-			this._lastStWeaponskill.count = 1
+			this._lastStWeaponskill = []
+			this._lastStWeaponskill.push(event)
 		}
 	}
 
@@ -116,7 +113,7 @@ export default class Barrage extends Module {
 
 	_onComplete() {
 		const unalignedPercentage = this._unalignedBarrages.length && this._barrageCasts.length && (this._unalignedBarrages.length / this._barrageCasts.length) * 100
-		const badBarrages = this._barrageEvents.filter(x => BAD_ST_WEAPONSKILLS.includes(x.skillBarraged.ability.guid))
+		const badBarrages = this._barrageEvents.filter(x => BAD_ST_WEAPONSKILLS.includes(x.skillBarraged))
 
 		if (badBarrages && badBarrages.length) {
 			this.checklist.add(new Rule({
@@ -148,12 +145,75 @@ export default class Barrage extends Module {
 		}
 	}
 
+	output() {
+		const badBarrages = this._barrageEvents.reverse().filter(x => BAD_ST_WEAPONSKILLS.includes(x.skillBarraged) || x.aligned === false)
+
+		if (badBarrages.length === 0) {
+			return
+		}
+
+		const panels = badBarrages.map(barrage => {
+
+			const panel = {
+				key: null,
+				title: null,
+				content: null,
+			}
+			panel.key = barrage.timestamp
+
+			if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged)) {
+				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
+				const totalEmpyrealEquivalent = Math.trunc(ACTIONS.EMPYREAL_ARROW.potency * totalDamage / getAction(barrage.skillBarraged).potency)
+				const totalRefulgentEquivalent = Math.trunc(ACTIONS.REFULGENT_ARROW.potency * totalDamage / getAction(barrage.skillBarraged).potency)
+
+				const totalDPS = this._formatDecimal(totalDamage*1000/this.parser.fightDuration)
+				const totalEmpyrealDPS = this._formatDecimal(totalEmpyrealEquivalent*1000/this.parser.fightDuration)
+				const totalRefulgentDPS = this._formatDecimal(totalRefulgentEquivalent*1000/this.parser.fightDuration)
+
+				panel.title = {
+					content: <Fragment>
+						{this.parser.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...getAction(barrage.skillBarraged)} />.
+					</Fragment>,
+				}
+
+				panel.content = {
+					content: <Fragment>
+						<p>Total damage: {totalDamage}</p>
+						<p>Potential damage: {totalEmpyrealEquivalent} - {totalRefulgentEquivalent}</p>
+						<p>DPS loss: {this._formatDecimal(totalEmpyrealDPS-totalDPS)} - {this._formatDecimal(totalRefulgentDPS-totalDPS)}</p>
+					</Fragment>,
+				}
+			// If it's not a bad single target skill, then it was unaligned
+			} else {
+				panel.title = {
+					content: <Fragment>
+						{this.parser.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} not aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} />.
+					</Fragment>,
+				}
+			}
+
+			return panel
+
+		})
+
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
+	}
+
 	_timeUntilFinish(event) {
 		return this.parser.fight.end_time - event.timestamp
 	}
 
 	_timeSince(event) {
 		return this.parser.currentTimestamp - event.timestamp
+	}
+
+	_formatDecimal(number) {
+		return Math.trunc(number*100)/100
 	}
 }
 
@@ -162,11 +222,12 @@ class BarrageEvent {
 	castEvent = null
 
 	skillBarraged = null
+	damageEvents = []
 
 	// Assuming barrage was aligned with Raging Strikes. Will set to false if determined otherwise
 	aligned = true
 
 	get timestamp() {
-		this.castEvent && this.castEvent.timestamp
+		return this.castEvent && this.castEvent.timestamp
 	}
 }
