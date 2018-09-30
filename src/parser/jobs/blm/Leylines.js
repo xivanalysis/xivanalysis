@@ -5,14 +5,9 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import {ActionLink} from 'components/ui/DbLink'
 import {i18nMark, Trans} from '@lingui/react'
-import {Accordion} from 'semantic-ui-react'
-import VisTimeline from 'react-visjs-timeline'
-import vis from 'vis/dist/vis-timeline-graph2d.min'
+import {Accordion, Button} from 'semantic-ui-react'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-
-const LEYLINE_DURATION = 30000
-const SERVER_TICK_BUFFER = 3000
 
 export default class Leylines extends Module {
 	static handle = 'leylines'
@@ -28,16 +23,16 @@ export default class Leylines extends Module {
 		current: null,
 		history: [],
 	}
-	_leyLineHistory = []
+	_leyLines = {
+		current: null,
+		history: [],
+	}
 	_buffs = {}
 	_group = null
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {
-			by: 'player',
-			abilityId: ACTIONS.LEY_LINES.id,
-		}, this._onCastLeyLines)
+
 		this.addHook('applybuff', {
 			by: 'player',
 			abilityId: STATUSES.CIRCLE_OF_POWER.id,
@@ -45,7 +40,7 @@ export default class Leylines extends Module {
 		this.addHook('applybuff', {
 			by: 'player',
 			abilityId: STATUSES.LEY_LINES.id,
-		}, this._onApplyBuff)
+		}, this._onApplyLeyLines)
 		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.CIRCLE_OF_POWER.id,
@@ -53,7 +48,7 @@ export default class Leylines extends Module {
 		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.LEY_LINES.id,
-		}, this._onLoseBuff)
+		}, this._onRemoveLeyLines)
 		this.addHook('complete', this._onComplete)
 
 		this._group = new Group({
@@ -65,9 +60,7 @@ export default class Leylines extends Module {
 		this.timeline.addGroup(this._group)
 	}
 
-	_onCastLeyLines(event) { this._leyLineHistory.push(event.timestamp) }
-
-	// _onApplyBuff and _onLostBuff retooled from RaidBuffs.js
+	// _onApplyBuff and _onLoseBuff retooled from RaidBuffs.js
 	_onApplyBuff(event) {
 		const buffs = this.getTargetBuffs(event)
 		const statusId = event.ability.guid
@@ -92,6 +85,7 @@ export default class Leylines extends Module {
 			content: <img src={status.icon} alt={status.name}/>,
 		})
 	}
+
 	_onLoseBuff(event) {
 		const item = this.getTargetBuffs(event)[event.ability.guid]
 		// This shouldn't happen, but it do.
@@ -99,6 +93,24 @@ export default class Leylines extends Module {
 
 		item.end = event.timestamp - this.parser.fight.start_time
 		this.timeline.addItem(item)
+	}
+
+	_onApplyLeyLines(event) {
+		if (this._leyLines.current) { this._leyLines.history.push(this._leyLines.current) }
+
+		this._leyLines.current = {
+			start: event.timestamp,
+			stop: null,
+		}
+
+		this._onApplyBuff(event)
+	}
+
+	_onRemoveLeyLines(event) {
+		if (this._leyLines.current) {
+			this._leyLines.current.stop = event.timestamp
+		}
+		this._onLoseBuff(event)
 	}
 
 	_onApplyCircleOfPower(event) {
@@ -118,9 +130,8 @@ export default class Leylines extends Module {
 		this._onLoseBuff(event) // Also track application time for accordion UI
 	}
 
-	//TODO: make a better one that tracks actual LL durations so that you don't have to filter out the last LL use in a fight.
-	_percentFunction(numberOfLeyLines, sumOfCoPUpTime) {
-		return (sumOfCoPUpTime/(numberOfLeyLines*LEYLINE_DURATION))*100
+	_percentFunction(sumOfLeyLineDurations, sumOfCoPUpTime) {
+		return (sumOfCoPUpTime/(sumOfLeyLineDurations))*100
 	}
 
 	_onComplete(event) {
@@ -130,14 +141,21 @@ export default class Leylines extends Module {
 			}
 			this._circleOfPowers.history.push(this._circleOfPowers.current)
 		}
+		if (this._leyLines.current) {
+			if (!this._leyLines.current.stop) {
+				this._leyLines.current.stop = event.timestamps
+			}
+			this._leyLines.history.push(this._leyLines.current)
+		}
 		//check if there even were any events
 		if (!this._circleOfPowers.history.length) { return }
-		//filter out the last possible LL usage because it would make things weird.
-		this._circleOfPowers.history = this._circleOfPowers.history.filter(cops => cops.start < (event.timestamp - LEYLINE_DURATION))
-		this._leyLineHistory = this._leyLineHistory.filter(timestamps => timestamps < (event.timestamp - LEYLINE_DURATION))
+		if (!this._leyLines.history.length) { return }
+
+		// Get the total duration of CoP uptime and ley lines, so we can get the overall percentage uptime
 		const circleOfPowerDurations = this._circleOfPowers.history.map(cops => Math.max(cops.stop - cops.start, 0))
 		const sumOfCoPUpTime = circleOfPowerDurations.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-		const numberOfLeyLines = this._leyLineHistory.length
+		const leyLinesDurations = this._leyLines.history.map(lines => Math.max(lines.stop - lines.start, 0))
+		const sumOfLeyLineDurations = leyLinesDurations.reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.leylines.checklist-caption">Stay in your Ley Lines</Trans>,
@@ -145,7 +163,7 @@ export default class Leylines extends Module {
 			requirements: [
 				new Requirement({
 					name: <ActionLink {...ACTIONS.LEY_LINES} />,
-					percent: this._percentFunction(numberOfLeyLines, sumOfCoPUpTime),
+					percent: this._percentFunction(sumOfLeyLineDurations, sumOfCoPUpTime),
 				}),
 			],
 			//pretty random. Should be revised, maybe based on fights? 10% is ~ 1 GCD. So we allow that.
@@ -154,58 +172,25 @@ export default class Leylines extends Module {
 	}
 
 	output() {
-		const panels = this._leyLineHistory.map(timestamp => {
-			const options = {
-				// General styling
-				width: '100%',
-				align: 'left',
-				stack: false,
-				showCurrentTime: false,
-
-				// Date/time formatting
-				moment: (date) => vis.moment(date).utc(),
-				maxMinorChars: 4,
-				format: {
-					minorLabels: {
-						minute: 'm[m]',
-					},
-					majorLabels: {
-						second: 'm[m]',
-						minute: '',
-					},
-				},
-
-				// View constraints
-				min: timestamp - this.parser.fight.start_time,
-				max: timestamp + LEYLINE_DURATION - this.parser.fight.start_time,
-				zoomMin: 10000,
-
-				// View defaults
-				// Show first minute by default, full fight view is a bit hard to grok.
-				start: timestamp - this.parser.fight.start_time,
-				end: timestamp + LEYLINE_DURATION - this.parser.fight.start_time,
-			}
-
+		const panels = this._leyLines.history.map(leyLinesEvent => {
 			// Get the uptime percentage of Circle of Power for this Ley Lines usage
-			// Note: we need to filter for Circle of Power events that end up to a server tick after the Ley Lines buff duration due to the way the CoP buff is handled
-			const thisHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= timestamp) & (cops.stop <= timestamp + LEYLINE_DURATION + SERVER_TICK_BUFFER)))
-			const thisUptime = thisHistory.map(cops => Math.max(cops.stop - cops.start, 0)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-			const thisPercent = this._percentFunction(1, thisUptime).toFixed(0)
+			const thisCoPHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= leyLinesEvent.start) & (cops.stop <= leyLinesEvent.stop)))
+			const thisCoPUptime = thisCoPHistory.map(cops => Math.max(cops.stop - cops.start, 0)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+			// Note that since we're getting the actual duration, rather than the expected duration, technically we'll call it 100% uptime if you stay in the lines and die halfway through...
+			// However, since that'll get flagged as a morbid checklist item, that's probably ok.
+			const thisLeyLinesDuration = leyLinesEvent.stop - leyLinesEvent.start
+			const thisPercent = this._percentFunction(thisLeyLinesDuration, thisCoPUptime).toFixed(2)
 
 			return {
-				key: 'title-' + timestamp,
+				key: 'title-' + leyLinesEvent.start,
 				title: {
 					content: <Fragment>
-						{this.parser.formatTimestamp(timestamp)}
+						{this.parser.formatTimestamp(leyLinesEvent.start)}
 						&nbsp;-&nbsp;{thisPercent}% uptime
 					</Fragment>,
 				},
 				content: {
-					content: <VisTimeline
-						options={options}
-						groups={this.timeline._groups.map(group => group.getObject())}
-						items={this.timeline._items.map(item => item.getObject())}
-					/>,
+					content: <Button onClick={() => this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}><Trans id="blm.leylines.timelinebutton">View Timeline</Trans></Button>,
 				},
 			}
 		})
