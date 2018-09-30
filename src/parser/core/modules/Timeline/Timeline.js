@@ -59,6 +59,10 @@ export default class Timeline extends Module {
 			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,
 			end: Math.min(this.parser.fightDuration, ONE_MINUTE),
+
+			// Zoom key handling
+			zoomKey: 'ctrlKey',
+			horizontalScroll: true,
 		}
 
 		return <VisTimeline
