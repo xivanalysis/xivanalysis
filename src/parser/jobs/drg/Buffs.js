@@ -75,15 +75,20 @@ export default class Buffs extends Module {
 	_pushToWindow(event, statusId) {
 		const tracker = this._buffWindows[statusId]
 		if (this.combatants.selected.hasStatus(statusId)) {
+			const action = getAction(event.ability.guid)
 			if (tracker.current === null) {
 				// This can potentially happen if either B4B or DS are used pre-pull
 				tracker.current = {
 					start: this.parser.fight.start_time,
 					casts: [],
+					firstGcd: -1,
 				}
 			}
 
 			tracker.current.casts.push(event)
+			if (tracker.current.firstGcd === -1 && action.onGcd) {
+				tracker.current.firstGcd = action.id
+			}
 		}
 	}
 
@@ -120,6 +125,7 @@ export default class Buffs extends Module {
 		tracker.current = {
 			start: event.timestamp,
 			casts: [],
+			firstGcd: -1,
 		}
 	}
 
@@ -179,7 +185,7 @@ export default class Buffs extends Module {
 			</Trans>,
 		}))
 
-		const badlyTimedBfbs = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.filter(window => window.casts.length > 0 && !BFB_FIRST_ACTIONS.includes(window.casts[0].ability.guid)).length
+		const badlyTimedBfbs = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.filter(window => window.casts.length > 0 && !BFB_FIRST_ACTIONS.includes(window.firstGcd)).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLOOD_FOR_BLOOD.icon,
 			content: <Trans id="drg.buffs.suggestions.bad-bfbs.content">
