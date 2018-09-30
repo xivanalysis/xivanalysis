@@ -1,5 +1,6 @@
 import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
+import {scroller} from 'react-scroll'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
@@ -15,10 +16,20 @@ export default class Timeline extends Module {
 	static displayOrder = DISPLAY_ORDER.BOTTOM
 
 	static i18n_id = i18nMark('core.timeline.title')
-	static title  = 'Timeline'
+	static title = 'Timeline'
 
+	// Data to be displayed on the timeline
 	_groups = []
 	_items = []
+
+	// Ref for the timeline component so we can modify it post-render
+	_ref = null
+
+	constructor(...args) {
+		super(...args)
+
+		this._ref = React.createRef()
+	}
 
 	// TODO: Do more with these, it's pretty bad rn
 	addGroup(group) {
@@ -27,6 +38,23 @@ export default class Timeline extends Module {
 
 	addItem(item) {
 		this._items.push(item)
+	}
+
+	/**
+	 * Move & zoom the viewport to show the specified range
+	 * @param {number} start - Timestamp of the start of the range
+	 * @param {number} end - Timestamp of the end of the range
+	 * @param {boolean} [scrollTo=true] - If true, the page will scroll to reveal the timeline on call.
+	 */
+	show(start, end, scrollTo=true) {
+		// Grab the vis instance. This is a bit hacky but so is vis so /shrug
+		const vis = this._ref.current.$el
+		vis.setWindow(start, end)
+
+		// If not disabled, scroll the page to us
+		if (scrollTo) {
+			scroller.scrollTo(this.constructor.title)
+		}
 	}
 
 	output() {
@@ -70,6 +98,7 @@ export default class Timeline extends Module {
 				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
 			</Trans>
 			<VisTimeline
+				ref={this._ref}
 				options={options}
 				groups={this._groups.map(group => group.getObject())}
 				items={this._items.map(item => item.getObject())}
