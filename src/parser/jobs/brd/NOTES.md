@@ -7,10 +7,10 @@
 
 ## Barrage [HIGH]
 
-* Usage count [HIGH]
-* Alignment with RS [HIGH]
-  * Ignore alignment for last usage [MEDIUM]
-* Bad barrages (not EA or RA) [HIGH]
+* ~~Usage count [HIGH]~~
+* ~~Alignment with RS [HIGH]~~
+  * ~~Ignore alignment for last usage [MEDIUM]~~
+* ~~Bad barrages (not EA or RA) [HIGH]~~
 
 ## Fishing window [HIGH]
 

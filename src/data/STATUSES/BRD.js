@@ -11,12 +11,14 @@ export default {
 		name: 'Raging Strikes',
 		icon: 'https://xivapi.com/i/010000/010354.png',
 		duration: 20,
+		amount: 0.1,
 	},
 	BARRAGE: {
 		id: 128,
 		name: 'Barrage',
 		icon: 'https://xivapi.com/i/010000/010356.png',
 		duration: 10,
+		amount: 3,
 	},
 	STRAIGHT_SHOT: {
 		id: 130,
