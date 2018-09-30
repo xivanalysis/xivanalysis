@@ -1,3 +1,15 @@
+.helpText {
+	font-style: italic;
+}
+
+@media (min-width: 992px) {
+	.helpText {
+		position: absolute;
+		top: 1em;
+		right: 0;
+	}
+}
+
 :global .vis-background .vis-item-content {
 	padding: 0;
 	height: 100%;

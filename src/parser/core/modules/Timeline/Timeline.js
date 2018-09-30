@@ -1,11 +1,11 @@
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
-import {i18nMark} from '@lingui/react'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
-import './Timeline.module.css'
+import styles from './Timeline.module.css'
 
 // We default to showing the first minute of the pull
 const ONE_MINUTE = 60000
@@ -65,10 +65,15 @@ export default class Timeline extends Module {
 			horizontalScroll: true,
 		}
 
-		return <VisTimeline
-			options={options}
-			groups={this._groups.map(group => group.getObject())}
-			items={this._items.map(item => item.getObject())}
-		/>
+		return <>
+			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
+				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
+			</Trans>
+			<VisTimeline
+				options={options}
+				groups={this._groups.map(group => group.getObject())}
+				items={this._items.map(item => item.getObject())}
+			/>
+		</>
 	}
 }
