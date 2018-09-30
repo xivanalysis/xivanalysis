@@ -190,7 +190,10 @@ export default class Leylines extends Module {
 					</Fragment>,
 				},
 				content: {
-					content: <Button onClick={() => this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}><Trans id="blm.leylines.timelinebutton">View Timeline</Trans></Button>,
+					content: <Button onClick={() =>
+						this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
+						<Trans id="blm.leylines.timelinebutton">View Timeline</Trans>
+					</Button>,
 				},
 			}
 		})
