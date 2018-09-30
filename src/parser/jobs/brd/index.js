@@ -2,11 +2,12 @@ import About from './About'
 import Barrage from './Barrage'
 import CritRate from './CritRate'
 import EightyBoi from './EightyBoi'
+import OGCDDowntime from './OGCDDowntime'
 import SongUptime from './SongUptime'
 import SongUsage from './SongUsage'
 import StraightShot from './StraightShot'
 import RoyalRoadTest from './RoyalRoadTest'
-import OGCDDowntime from './OGCDDowntime'
+import Weaving from './Weaving'
 
 export default [
 	About,
@@ -18,4 +19,5 @@ export default [
 	SongUsage,
 	StraightShot,
 	RoyalRoadTest,
+	Weaving,
 ]
