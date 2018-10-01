@@ -78,6 +78,7 @@
     "format": "minimal"
   },
   "resolutions": {
+    "@babel/core": "^7.1.0",
     "babel-eslint": "^9.0.0"
   },
   "devDependencies": {
