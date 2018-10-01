@@ -28,7 +28,7 @@
 
 ## Dots [HIGH]
 
-* Uptime [HIGH]
+* ~~Uptime [HIGH]~~
 * Dropped dots [HIGH]
   * Ignore unavoidable drops (downtime) [HIGH]
 

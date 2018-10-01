@@ -203,7 +203,7 @@ export default class Barrage extends Module {
 					// Applies RS modifier
 					potentialEmpyrealDamage = Math.trunc(potentialEmpyrealDamage * (1 +STATUSES.RAGING_STRIKES.amount))
 					potentialRefulgentDamage = Math.trunc(potentialRefulgentDamage * (1 +STATUSES.RAGING_STRIKES.amount))
-					potentialDamage = potentialDamage * (1 + STATUSES.RAGING_STRIKES.amount)
+					potentialDamage = Math.trunc(potentialDamage * (1 + STATUSES.RAGING_STRIKES.amount))
 
 					panel.headers.push({
 						issue: <>
@@ -221,7 +221,7 @@ export default class Barrage extends Module {
 				const potentialEmpyrealDPS = this._formatDecimal(potentialEmpyrealDamage * 1000 / this.parser.fightDuration)
 				const potentialRefulgentDPS = this._formatDecimal(potentialRefulgentDamage * 1000 / this.parser.fightDuration)
 
-				let dpsLoss = potentialDPS - totalDPS
+				let dpsLoss = this._formatDecimal(potentialDPS - totalDPS)
 
 				if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged)) {
 
@@ -358,35 +358,27 @@ class BarragePanel {
 
 	build() {
 
-		const issueElements =  <>
-			{ this.headers && this.headers.length && this.headers.map(h => {
-				return h.issue && <Message key={this.headers.indexOf(h)} error={h.severity === ERROR} warning={h.severity === WARNING} success={h.severity === SUCCESS}>
-					<Icon name={SEVERITY[h.severity].icon}/>
-					<span>{h.issue}</span>
-				</Message>
-			})
-			}
-		</>
+		const issueElements = this.headers && this.headers.length && this.headers.map(h => {
+			return h.issue && <Message key={this.headers.indexOf(h)} error={h.severity === ERROR} warning={h.severity === WARNING} success={h.severity === SUCCESS}>
+				<Icon name={SEVERITY[h.severity].icon}/>
+				<span>{h.issue}</span>
+			</Message>
+		}) || undefined
 
-		const reasonElements = <>
-			{ this.headers && this.headers.length && <div className={styles.description}>
-				<List bulleted relaxed>
-					{ this.headers.map(h => {
-						return <List.Item key={this.headers.indexOf(h)}>{h.reason}</List.Item>
-					})
-					}
-				</List>
-			</div> }
-		</>
+		const reasonElements = this.headers && this.headers.length && <div className={styles.description}>
+			<List bulleted relaxed>
+				{ this.headers.map(h => {
+					return <List.Item key={this.headers.indexOf(h)}>{h.reason}</List.Item>
+				})
+				}
+			</List>
+		</div> || undefined
 
-		const contentElements = <>
-			{ this.contents && this.contents.length && this.contents.map(c => {
-				return <Fragment key={this.contents.indexOf(c)}>
-					{c}
-				</Fragment>
-			})
-			}
-		</>
+		const contentElements = this.contents && this.contents.length && this.contents.map(c => {
+			return <Fragment key={this.contents.indexOf(c)}>
+				{c}
+			</Fragment>
+		}) || undefined
 
 		return {
 			key: this.barrage.timestamp,
