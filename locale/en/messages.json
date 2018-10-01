@@ -134,6 +134,7 @@
   "core.suggestion.nothing-but-minor": "You can check over the minor suggestions by flicking the \"Show minor\" switch in the top right.",
   "core.suggestion.show-minor": "Show minor",
   "core.suggestions.title": "core.suggestions.title",
+  "core.timeline.help-text": "Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.",
   "core.timeline.title": "core.timeline.title",
   "core.weaving.between-gcds": "between GCDs",
   "core.weaving.content": "Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <0>{0}</0> module below for more detailed analysis.",
