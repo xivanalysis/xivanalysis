@@ -134,6 +134,7 @@
   "core.suggestion.nothing-but-minor": "Vous pouvez consulter vos suggestions d'amélioration mineures en appuyant sur le bouton \"Montrer les suggestions mineures\" en haut à droite.",
   "core.suggestion.show-minor": "Montrer les suggestions mineures",
   "core.suggestions.title": "Suggestions d'Amélioration",
+  "core.timeline.help-text": "",
   "core.timeline.title": "Chronologie",
   "core.weaving.between-gcds": "",
   "core.weaving.content": "Évitez de faire plus d'actions par weaving que vous n'en avez le temps dans une seule fenêtre de GCD. Cela retardera votre prochain GCD, réduisant ainsi le temps de disponibilité possible. Vérifiez le module <0>{0}</0> ci-dessous pour une analyse plus détaillée.",
