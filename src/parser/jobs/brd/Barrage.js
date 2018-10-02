@@ -57,7 +57,7 @@ export default class Barrage extends Module {
 	static dependencies = [
 		'checklist',
 		'combatants',
-		'enemies',
+		'util',
 	]
 
 	_cuckedByDeath = []
@@ -100,7 +100,7 @@ export default class Barrage extends Module {
 		barrageEvent.damageEvents = []
 
 		// Checks for alignment and ignores last use alignment
-		if (!this.combatants.selected.hasStatus(STATUSES.RAGING_STRIKES.id) && this._timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000) {
+		if (!this.combatants.selected.hasStatus(STATUSES.RAGING_STRIKES.id) && this.util.timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000) {
 			barrageEvent.aligned = false
 		}
 
@@ -109,7 +109,7 @@ export default class Barrage extends Module {
 	}
 
 	_onStWeaponskillDamage(event) {
-		if (this._lastStWeaponskill.length && this._timeSince(this._lastStWeaponskill[0]) <= TRIPLE_HIT_BUFFER && this._lastStWeaponskill[0].ability.guid === event.ability.guid) {
+		if (this._lastStWeaponskill.length && this.util.timeSince(this._lastStWeaponskill[0]) <= TRIPLE_HIT_BUFFER && this._lastStWeaponskill[0].ability.guid === event.ability.guid) {
 
 			this._lastStWeaponskill.push(event)
 
@@ -129,7 +129,7 @@ export default class Barrage extends Module {
 	_onDeath() {
 		if (this._barrageEvents.length
 			&& !this._barrageEvents.skillBarraged
-			&& this._timeSince(this._barrageEvents[0]) < STATUSES.BARRAGE.duration + BARRAGE_BUFFER) {
+			&& this.util.timeSince(this._barrageEvents[0]) < STATUSES.BARRAGE.duration + BARRAGE_BUFFER) {
 
 			this._cuckedByDeath.push(this._barrageEvents[0])
 
@@ -186,13 +186,12 @@ export default class Barrage extends Module {
 				title: null,
 				headers: [],
 				contents: [],
-				parser: this.parser,
-				enemies: this.enemies,
+				util: this.util,
 			})
 			if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged) || !barrage.aligned) {
 
 				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
-				const totalDPS = this._formatDecimal(totalDamage * 1000 / this.parser.fightDuration)
+				const totalDPS = this.util.formatDecimal(totalDamage * 1000 / this.parser.fightDuration)
 
 				let potentialDamage = totalDamage
 				let potentialEmpyrealDamage = Math.trunc(ACTIONS.EMPYREAL_ARROW.potency * totalDamage / getAction(barrage.skillBarraged).potency)
@@ -217,16 +216,16 @@ export default class Barrage extends Module {
 
 				}
 
-				const potentialDPS = this._formatDecimal(potentialDamage * 1000 / this.parser.fightDuration)
-				const potentialEmpyrealDPS = this._formatDecimal(potentialEmpyrealDamage * 1000 / this.parser.fightDuration)
-				const potentialRefulgentDPS = this._formatDecimal(potentialRefulgentDamage * 1000 / this.parser.fightDuration)
+				const potentialDPS = this.util.formatDecimal(potentialDamage * 1000 / this.parser.fightDuration)
+				const potentialEmpyrealDPS = this.util.formatDecimal(potentialEmpyrealDamage * 1000 / this.parser.fightDuration)
+				const potentialRefulgentDPS = this.util.formatDecimal(potentialRefulgentDamage * 1000 / this.parser.fightDuration)
 
-				let dpsLoss = this._formatDecimal(potentialDPS - totalDPS)
+				let dpsLoss = this.util.formatDecimal(potentialDPS - totalDPS)
 
 				if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged)) {
 
 					potentialDamage = `${potentialEmpyrealDamage} - ${potentialRefulgentDamage}`
-					dpsLoss = `${this._formatDecimal(potentialEmpyrealDPS - totalDPS)} - ${this._formatDecimal(potentialRefulgentDPS- totalDPS)}`
+					dpsLoss = `${this.util.formatDecimal(potentialEmpyrealDPS - totalDPS)} - ${this.util.formatDecimal(potentialRefulgentDPS- totalDPS)}`
 
 					panel.headers.push({
 						issue: <>
@@ -275,18 +274,6 @@ export default class Barrage extends Module {
 			styled
 			fluid
 		/>
-	}
-
-	_timeUntilFinish(event) {
-		return this.parser.fight.end_time - event.timestamp
-	}
-
-	_timeSince(event) {
-		return this.parser.currentTimestamp - event.timestamp
-	}
-
-	_formatDecimal(number) {
-		return Math.trunc(number*100)/100
 	}
 }
 
@@ -343,10 +330,10 @@ class BarragePanel {
 	title = null
 	headers = []
 	contents = []
-	parser = null
-	enemies = null
+	util = null
 
 	constructor(options) {
+
 		Object.keys(options || {}).forEach(key => {
 			this[key] = options[key]
 		})
@@ -388,7 +375,7 @@ class BarragePanel {
 						name={SEVERITY[this.severity].icon}
 						className={SEVERITY[this.severity].text}
 					/>
-					{this.parser.formatTimestamp(this.barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...getAction(this.barrage.skillBarraged)}/>
+					{this.util.formatTimestamp(this.barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...getAction(this.barrage.skillBarraged)}/>
 					{this.title}.
 				</>,
 			},
@@ -405,15 +392,15 @@ class BarragePanel {
 							<List.Content>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this._formatDamageLog(this.barrage.damageEvents[0])}
+									{this.util.formatDamageLog(this.barrage.damageEvents[0])}
 								</List.Item>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this._formatDamageLog(this.barrage.damageEvents[1])}
+									{this.util.formatDamageLog(this.barrage.damageEvents[1])}
 								</List.Item>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this._formatDamageLog(this.barrage.damageEvents[2])}
+									{this.util.formatDamageLog(this.barrage.damageEvents[2])}
 								</List.Item>
 							</List.Content>
 						</List>
@@ -421,21 +408,6 @@ class BarragePanel {
 				</>,
 			},
 		}
-	}
-
-	_formatDamageLog(event) {
-		let modifier = ''
-
-		if (event.multistrike && event.hitType && event.hitType === 2) {
-			modifier = 'Critical direct hit! '
-		} else if (!event.multistrike && event.hitType && event.hitType === 2) {
-			modifier = 'Critical! '
-		} else if (event.multistrike && !event.hitType || event.hitType === 1) {
-			modifier = 'Direct hit! '
-		}
-
-		return `${modifier}${this.enemies.getEntity(event.targetID).name} takes ${event.amount} damage.`
-
 	}
 
 	_severitySelector(severities) {

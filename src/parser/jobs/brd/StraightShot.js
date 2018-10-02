@@ -12,13 +12,18 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const STRAIGHT_SHOT_THRESHOLD = 5000
 const GCD_RECAST_FLOOR = 1500
 
+const TIER = {
+	MINOR: 2,
+	MEDIUM: 5,
+}
+
 export default class StraightShot extends Module {
 	static handle = 'straightshot'
 	static dependencies = [
 		'combatants',
 		'checklist',
-		'invuln',
 		'suggestions',
+		'util',
 	]
 
 	_lastStraightShot
@@ -78,7 +83,7 @@ export default class StraightShot extends Module {
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.STRAIGHT_SHOT} /> uptime</Fragment>,
-					percent: () => this._getStraightShotUptime(),
+					percent: () => this.util.getBuffUptime(STATUSES.STRAIGHT_SHOT),
 				}),
 			],
 		}))
@@ -89,9 +94,9 @@ export default class StraightShot extends Module {
 				content: <Fragment>
 					{ACTIONS.STRAIGHT_SHOT.name} should ideally be refreshed with {STRAIGHT_SHOT_THRESHOLD / 1000} seconds or less left on the effect. More {ACTIONS.STRAIGHT_SHOT.name} casts than necessary mean less <ActionLink {...ACTIONS.HEAVY_SHOT} /> casts, which in turn mean a lower <ActionLink {...ACTIONS.REFULGENT_ARROW} /> chance.
 				</Fragment>,
-				severity: this._earlyStraightShotCasts.length <= 2 ? SEVERITY.MINOR : this._earlyStraightShotCasts.length <= 5 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: this._earlyStraightShotCasts.length <= TIER.MINOR ? SEVERITY.MINOR : this._earlyStraightShotCasts.length <= TIER.MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Fragment>
-					{this._earlyStraightShotCasts.length} casts with more than {STRAIGHT_SHOT_THRESHOLD / 1000} seconds left on <StatusLink {...STATUSES.STRAIGHT_SHOT} />.
+					{this._earlyStraightShotCasts.length} {this._earlyStraightShotCasts.length === 1 ? 'cast' : 'casts'} with more than {STRAIGHT_SHOT_THRESHOLD / 1000} seconds left on <StatusLink {...STATUSES.STRAIGHT_SHOT} />.
 				</Fragment>,
 			}))
 		}
@@ -110,15 +115,8 @@ export default class StraightShot extends Module {
 		}
 	}
 
-	_getStraightShotUptime() {
-		const straightShotTime = this.combatants.getStatusUptime(STATUSES.STRAIGHT_SHOT.id, this.parser.player.id)
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (straightShotTime / uptime) * 100
-	}
-
 	_getTimeLeftOnStraightShot(timestamp) {
-		return Math.min(STATUSES.STRAIGHT_SHOT.duration * 1000 - timestamp + this._lastStraightShot.timestamp, 0)
+		return Math.max(STATUSES.STRAIGHT_SHOT.duration * 1000 + this._lastStraightShot.timestamp - timestamp, 0)
 	}
 
 }

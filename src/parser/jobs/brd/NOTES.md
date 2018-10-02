@@ -53,9 +53,9 @@
 
 ## Triple weaves [MEDIUM]
 
-* Override weaving module [HIGH]
-  * BL EA BL case [HIGH]
-  * Barr PP EA case [MEDIUM]
+* ~~Override weaving module [HIGH]~~
+  * ~~BL EA BL case [HIGH]~~
+  * ~~Barr PP EA case [MEDIUM]~~
 
 ## Foe Requiem [MEDIUM]
 

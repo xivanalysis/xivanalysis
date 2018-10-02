@@ -12,11 +12,17 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const SETUP_TIME = 3200 // Assuming song being used after second GCD (2.50s from first GCD + 0.70s from second GCD animation lock)
 const SONG_DURATION = 30000
 
+const TIER = {
+	MAJOR: 15,
+	MEDIUM: 10,
+}
+
 export default class SongUptime extends Module {
 	static handle = 'songuptime'
 	static dependencies = [
 		'suggestions',
 		'downtime',
+		'util',
 	]
 
 	_songCastEvents = []
@@ -46,7 +52,7 @@ export default class SongUptime extends Module {
 
 	_onComplete() {
 		this._setTolerance()
-		const songlessTime = this._formatDecimal((this._getSonglessTime())/1000)
+		const songlessTime = this.util.formatDecimal((this._getSonglessTime())/1000)
 		const songlessTolerance = this._songlessTolerance / 1000
 
 		if (songlessTime > songlessTolerance) {
@@ -55,7 +61,7 @@ export default class SongUptime extends Module {
 				why: <Fragment>
 					Being songless for {songlessTime} seconds.
 				</Fragment>,
-				severity: songlessTime > songlessTolerance + 15 ? SEVERITY.MAJOR : songlessTime > songlessTolerance + 10 ? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				severity: songlessTime > songlessTolerance + TIER.MAJOR ? SEVERITY.MAJOR : songlessTime > songlessTolerance + TIER.MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
 				</Fragment>,
@@ -114,9 +120,4 @@ export default class SongUptime extends Module {
 			}
 		})
 	}
-
-	_formatDecimal(number) {
-		return Math.round(number * 100)/100
-	}
-
 }
