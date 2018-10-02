@@ -99,7 +99,7 @@ export default class Weaving extends Module {
 			// WVR Focused synth lmao
 			icon: 'https://xivapi.com/i/001000/001785.png',
 			content: <Trans id="core.weaving.content">
-				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
+				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
 				id="core.weaving.why"
