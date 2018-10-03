@@ -1,7 +1,7 @@
 /**
  * @author Yumiya
  */
-import CooldownDowntime from '../../core/modules/CooldownDowntime'
+import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 import ACTIONS from 'data/ACTIONS'
 
 export default class OGCDDowntime extends CooldownDowntime {

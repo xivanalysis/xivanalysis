@@ -3,7 +3,7 @@
  */
 import React, {Fragment} from 'react'
 import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'

@@ -2,14 +2,9 @@
  * @author Yumiya
  */
 
-//import React, {Fragment} from 'react'
-//import {StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-//import STATUSES from 'data/STATUSES'
-import Module from '../../core/Module'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Module from 'parser/core/Module'
 
-//const SETUP_TIME = 4000
 const SONG_MAX_DURATION = 30000
 
 export default class SongUsage extends Module {

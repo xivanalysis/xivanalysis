@@ -2,7 +2,7 @@
  * @author Yumiya
  */
 
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 

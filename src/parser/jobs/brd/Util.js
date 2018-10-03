@@ -1,7 +1,7 @@
 /**
  * @author Yumiya
  */
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 
 export default class Util extends Module {
 	static handle = 'util'

@@ -3,7 +3,7 @@
  */
 
 import ACTIONS from 'data/ACTIONS'
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 
 const SETUP_TIME = 3800
 const SONG_MAX_DURATION = 30000

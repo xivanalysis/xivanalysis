@@ -2,7 +2,7 @@
  * @author Yumiya
  */
 import React, {Fragment} from 'react'
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'

@@ -2,11 +2,11 @@
  * @author Yumiya
  */
 import React, {Fragment} from 'react'
-import Module from '../../core/Module'
+import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {Rule, Requirement} from '../../core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STRAIGHT_SHOT_THRESHOLD = 5000
