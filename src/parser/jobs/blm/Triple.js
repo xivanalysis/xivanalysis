@@ -6,11 +6,14 @@ import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class Triple extends Module {
 	static handle = 'triple'
 	static i18n_id = i18nMark('blm.triple.title')
 	static title = 'Triplecast Usage'
+	static displayOrder = DISPLAY_ORDER.TRIPLE
+
 	static dependencies = [
 		'castTime',
 	]

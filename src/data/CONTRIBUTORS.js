@@ -91,6 +91,11 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
 		jobs: [JOBS.DARK_KNIGHT],
 	},
+	AKAIRYU: {
+		name: 'Akairyu',
+		avatar: process.env.PUBLIC_URL + '/avatar/Akairyu.png',
+		jobs: [JOBS.BLACK_MAGE],
+	},
 }
 
 export const ROLES = {

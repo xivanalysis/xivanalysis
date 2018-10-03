@@ -1,6 +1,7 @@
 import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 import {BLM_GAUGE_EVENT} from './Gauge'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,
@@ -18,6 +19,8 @@ const MAX_BUFF_STACKS = 3
 
 export default class BlmWeaving extends Weaving {
 	static handle = 'weaving'
+	static displayOrder = DISPLAY_ORDER.WEAVING
+
 	static dependencies = [
 		...Weaving.dependencies,
 		'invuln',

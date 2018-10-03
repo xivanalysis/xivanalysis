@@ -11,6 +11,7 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
@@ -26,6 +27,8 @@ export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
 	static i18n_id = i18nMark('blm.rotation-watchdog.title')
 	static title = 'Rotation Issues'
+	static displayOrder = DISPLAY_ORDER.ROTATION
+
 	static dependencies = [
 		'suggestions',
 		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
