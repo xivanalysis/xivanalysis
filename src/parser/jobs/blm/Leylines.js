@@ -138,12 +138,22 @@ export default class Leylines extends Module {
 		if (this._circleOfPowers.current) {
 			if (!this._circleOfPowers.current.stop) {
 				this._circleOfPowers.current.stop = event.timestamp
+
+				// Ensure this CoP buff makes it onto the Timeline view
+				const itemCoP = this._buffs[this.parser.player.id][STATUSES.CIRCLE_OF_POWER.id]
+				itemCoP.end = event.timestamp
+				this.timeline.addItem(itemCoP)
 			}
 			this._circleOfPowers.history.push(this._circleOfPowers.current)
 		}
 		if (this._leyLines.current) {
 			if (!this._leyLines.current.stop) {
-				this._leyLines.current.stop = event.timestamps
+				this._leyLines.current.stop = event.timestamp
+
+				// Ensure this Ley Lines buff makes it onto the Timeline view
+				const itemLeyLines = this._buffs[this.parser.player.id][STATUSES.LEY_LINES.id]
+				itemLeyLines.end = event.timeline
+				this.timeline.addItem(itemLeyLines)
 			}
 			this._leyLines.history.push(this._leyLines.current)
 		}
