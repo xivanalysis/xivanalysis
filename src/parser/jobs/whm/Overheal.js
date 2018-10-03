@@ -39,7 +39,6 @@ export default class Overheal extends Module {
 	}
 
 	_onComplete() {
-		console.log(this.healOverTimeStatuses)
 		this.checklist.add(new TieredRule({
 			name: <Trans id="whm.overheal.rule.name">Avoid overheal</Trans>,
 			description: <Trans id="whm.overheal.rule.description"> Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management. </Trans>,

@@ -134,6 +134,7 @@
   "core.suggestion.nothing-but-minor": "Du kannst die kleineren Verbesserungsvorschläge sehen, indem du den Button \"Zeige kleinere\" oben rechts drückst.",
   "core.suggestion.show-minor": "Zeige leichte Fehler",
   "core.suggestions.title": "Verbesserungsvorschläge",
+  "core.timeline.help-text": "",
   "core.timeline.title": "Zeitachse",
   "core.weaving.between-gcds": "",
   "core.weaving.content": "Vermeide mehr Aktionen zu machen, als die globale Abklingzeit zulässt. Du verzögerst dadurch deine nächste globale Abklingzeit und verlierst wertvolle \"Uptime???\". \nPrüfe das <0>{0}</0> Modul unten, um eine genauere Analyse zu bekommen.",

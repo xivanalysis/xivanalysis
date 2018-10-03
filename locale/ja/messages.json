@@ -134,6 +134,7 @@
   "core.suggestion.nothing-but-minor": "右上にある「小ミスを表示する」をクリックし、更に小さなミスを無くす細かい提案や忠告を確認すうことができます。",
   "core.suggestion.show-minor": "小ミスを表示する",
   "core.suggestions.title": "core.提案.title",
+  "core.timeline.help-text": "",
   "core.timeline.title": "タイムライン",
   "core.weaving.between-gcds": "GCDの間",
   "core.weaving.content": "GCDとGCDの間に過度なアビリティを挟み込む行為は避けてください。挟み込みすぎると次のGCD回しが遅くなり、稼働時間も下がってしまいます。詳細の分析を見るには下にある<0>{0}</0>のモジュールをご参考ください。",
