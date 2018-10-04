@@ -61,7 +61,6 @@ export default class Barrage extends Module {
 	static handle = 'barrage'
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'util',
 	]
 	// First two currently unused
@@ -75,54 +74,39 @@ export default class Barrage extends Module {
 	constructor(...args) {
 		super(...args)
 
-		// Filters used for the hooks
-		const castFilter = {
+		// Event hooks
+		this.addHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.BARRAGE.id,
-		}
+		}, this._onBarrageCast)
 
-		const stWeaponskillFilter = {
+		this.addHook('damage', {
 			by: 'player',
 			abilityId: WEAPONSKILLS,
-		}
+		}, this._onStWeaponskillDamage)
 
-		const deathFilter = {
+		this.addHook('death', {
 			to: 'player',
-		}
+		}, this._onDeath)
 
-		// Event hooks
-		this.addHook('cast', castFilter, this._onBarrageCast)
-		this.addHook('damage', stWeaponskillFilter, this._onStWeaponskillDamage)
-		this.addHook('death', deathFilter, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
 	}
 
 	_onBarrageCast(event) {
-
-		// Creates a new BarrageEvent with only the cast information for now
-		const barrageEvent = new BarrageEvent()
-
-		barrageEvent.castEvent = event
-		barrageEvent.skillBarraged = null
-		barrageEvent.damageEvents = []
-
-		// Checks for Raging Strikes alignment, ignoring the alignment check in case this cast was the last possible usage
-		if (!this.combatants.selected.hasStatus(STATUSES.RAGING_STRIKES.id) && this.util.timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000) {
-			barrageEvent.aligned = false
-		}
-
-		// Reverse array
-		this._barrageEvents.unshift(barrageEvent)
+		// Creates a new BarrageEvent with only the cast information and Raging Strikes alignment for now
+		this._barrageEvents.push(new BarrageEvent(event, this.util))
 	}
 
 	_onStWeaponskillDamage(event) {
 		// Checks for damage events that are the same as the last weaponskill damage registered,
 		// within TRIPLE_HIT_BUFFER milliseconds of each other
 
-		if (this._lastStWeaponskill.length
+		if (
+			this._lastStWeaponskill.length
 			&& this.util.timeSince(this._lastStWeaponskill[0]) <= TRIPLE_HIT_BUFFER
-			&& this._lastStWeaponskill[0].ability.guid === event.ability.guid) {
+			&& this._lastStWeaponskill[0].ability.guid === event.ability.guid
+		) {
 
 			// Adds this weaponskill damage event to the list
 			this._lastStWeaponskill.push(event)
@@ -131,8 +115,11 @@ export default class Barrage extends Module {
 			// checks out a Barrage by adding these damage events to the latest BarrageEvent object
 			// (that only contains the cast event and alignment status at this point)
 			if (this._lastStWeaponskill.length === STATUSES.BARRAGE.amount) {
-				this._barrageEvents[0].skillBarraged = event.ability.guid
-				this._barrageEvents[0].damageEvents = this._lastStWeaponskill.slice()
+
+				const last = this._barrageEvents.length - 1
+
+				this._barrageEvents[last].skillBarraged = event.ability.guid
+				this._barrageEvents[last].damageEvents = this._lastStWeaponskill.slice()
 
 				// Empties the arrays that holds up to the last three weaponskill damage events
 				this._lastStWeaponskill = []
@@ -146,11 +133,14 @@ export default class Barrage extends Module {
 
 	_onDeath() {
 		// Currently unused, but will be used to check for Barrage drops cause by death
-		if (this._barrageEvents.length
-			&& !this._barrageEvents.skillBarraged
-			&& this.util.timeSince(this._barrageEvents[0]) < STATUSES.BARRAGE.duration + BARRAGE_BUFFER) {
 
-			this._cuckedByDeath.push(this._barrageEvents[0])
+		const last = this._barrageEvents.length - 1
+
+		if (this._barrageEvents.length
+			&& !this._barrageEvents[last].skillBarraged
+			&& this.util.timeSince(this._barrageEvents[last]) < STATUSES.BARRAGE.duration + BARRAGE_BUFFER) {
+
+			this._cuckedByDeath.push(this._barrageEvents[last])
 
 		}
 	}
@@ -198,7 +188,7 @@ export default class Barrage extends Module {
 	}
 
 	output() {
-		const badBarrages = this._barrageEvents.reverse()
+		const badBarrages = this._barrageEvents
 
 		if (badBarrages.length === 0) {
 			return
@@ -323,14 +313,27 @@ export default class Barrage extends Module {
 // Contains information about the cast event, the damage events, the id of the barraged skill, and alignment status with Raging Strikes
 
 class BarrageEvent {
+	util = null
 
 	castEvent = null
-
 	skillBarraged = null
 	damageEvents = []
-
 	// Assuming barrage was aligned with Raging Strikes. Will set to false if determined otherwise
 	aligned = true
+
+	constructor(event, util) {
+		this.util = util
+
+		this.castEvent = event
+
+		// Checks for Raging Strikes alignment, ignoring the alignment check in case this cast was the last possible usage
+		if (
+			this.util.hasBuff(STATUSES.RAGING_STRIKES)
+			&& this.util.timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000
+		) {
+			this.aligned = false
+		}
+	}
 
 	get timestamp() {
 		return this.castEvent && this.castEvent.timestamp

@@ -12,6 +12,10 @@ export default class Util extends Module {
 		'invuln',
 	]
 
+	hasBuff(status) {
+		return this.combatants.selected.hasStatus(status.id)
+	}
+
 	getDebuffUptime(status) {
 		const statusTime = this.enemies.getStatusUptime(status.id)
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
