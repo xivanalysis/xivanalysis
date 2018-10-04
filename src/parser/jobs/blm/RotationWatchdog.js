@@ -101,11 +101,11 @@ export default class RotationWatchdog extends Module {
 			this._MP = this.combatants.selected.resources.mp
 		}
 
-		/*If my T3 isn't a proc already and cast under AF, it's straight up wrong. !!Deactivated until T3Ps are tracked accurately!!
+		//If my T3 isn't a proc already and cast under AF, it's straight up wrong. !!Deactivated until T3Ps are tracked accurately!!
 		if (!event.ability.overrideAction && actionId === ACTIONS.THUNDER_III.id && this._AF > 0) {
 			event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
 			this._wrongT3 ++
-		}*/
+		}
 
 		//start and stop trigger for our rotations is B3
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
@@ -236,15 +236,15 @@ export default class RotationWatchdog extends Module {
 			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
 			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
 
-			/* !!Deactivated until T3Ps are tracked correctly.!!
-			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length*/
+			// !!Deactivated until T3Ps are tracked correctly.!!
+			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
 			//!!Statement deactivated until T3Ps are tracked correctly.!!
-			if (this._rotation.missingCount.missing > 0 || /*hardT3Count > 0 ||*/ DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._rotation.missingCount.missing > 0 || hardT3Count > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
 
 				//Check if you actually lost an F4 due to ending UI in T3
