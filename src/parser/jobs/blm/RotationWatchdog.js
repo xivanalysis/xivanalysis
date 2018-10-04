@@ -206,7 +206,7 @@ export default class RotationWatchdog extends Module {
 			if (!this.invuln.isUntargetable('all', event.timestamp)) {
 				this._stopRecording()
 			} else {
-				this._resetRecording()
+				this._resetRecording(event)
 			}
 		} else {
 			this._startRecording(event)
@@ -263,10 +263,11 @@ export default class RotationWatchdog extends Module {
 		}
 	}
 
-	_resetRecording() {
+	_resetRecording(event) {
 		this._inRotation = false
 		this._rotation = {}
 		this._lockedBuffs = false
+		this._startRecording(event) // Make sure we start a new recording to catch actions when the boss returns
 	}
 
 	_getMissingFire4Count(count, hasConvert) {
