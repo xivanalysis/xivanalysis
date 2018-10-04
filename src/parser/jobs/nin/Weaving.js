@@ -80,8 +80,8 @@ export default class Weaving extends CoreWeaving {
 			}
 		}
 
-		if (ninjutsuCounted || dwadDupe) {
-			return weaveCount > 1
+		if ((ninjutsuCounted || dwadDupe) && weaveCount === 1) {
+			return false
 		}
 
 		return super.isBadWeave(weave, 1)
