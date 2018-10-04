@@ -66,10 +66,9 @@
       "last 2 edge versions"
     ],
     "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
+      ">0.25%",
+      "not op_mini all",
+      "ie 11"
     ]
   },
   "lingui": {
