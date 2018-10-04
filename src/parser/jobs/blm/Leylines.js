@@ -1,11 +1,11 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import {ActionLink} from 'components/ui/DbLink'
 import {i18nMark, Trans} from '@lingui/react'
-import {Accordion, Button} from 'semantic-ui-react'
+import {Table, Button} from 'semantic-ui-react'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -138,12 +138,22 @@ export default class Leylines extends Module {
 		if (this._circleOfPowers.current) {
 			if (!this._circleOfPowers.current.stop) {
 				this._circleOfPowers.current.stop = event.timestamp
+
+				// Ensure this CoP buff makes it onto the Timeline view
+				const itemCoP = this._buffs[this.parser.player.id][STATUSES.CIRCLE_OF_POWER.id]
+				itemCoP.end = event.timestamp
+				this.timeline.addItem(itemCoP)
 			}
 			this._circleOfPowers.history.push(this._circleOfPowers.current)
 		}
 		if (this._leyLines.current) {
 			if (!this._leyLines.current.stop) {
-				this._leyLines.current.stop = event.timestamps
+				this._leyLines.current.stop = event.timestamp
+
+				// Ensure this Ley Lines buff makes it onto the Timeline view
+				const itemLeyLines = this._buffs[this.parser.player.id][STATUSES.LEY_LINES.id]
+				itemLeyLines.end = event.timeline
+				this.timeline.addItem(itemLeyLines)
 			}
 			this._leyLines.history.push(this._leyLines.current)
 		}
@@ -172,35 +182,37 @@ export default class Leylines extends Module {
 	}
 
 	output() {
-		const panels = this._leyLines.history.map(leyLinesEvent => {
-			// Get the uptime percentage of Circle of Power for this Ley Lines usage
-			const thisCoPHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= leyLinesEvent.start) & (cops.stop <= leyLinesEvent.stop)))
-			const thisCoPUptime = thisCoPHistory.map(cops => Math.max(cops.stop - cops.start, 0)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-			// Note that since we're getting the actual duration, rather than the expected duration, technically we'll call it 100% uptime if you stay in the lines and die halfway through...
-			// However, since that'll get flagged as a morbid checklist item, that's probably ok.
-			const thisLeyLinesDuration = leyLinesEvent.stop - leyLinesEvent.start
-			const thisPercent = this._percentFunction(thisLeyLinesDuration, thisCoPUptime).toFixed(2)
+		return <Table collapsing unstackable compact="very">
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell><Trans id="blm.leylines.timestamp-header">Timestamp</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="blm.leylines.uptime-header">Uptime</Trans></Table.HeaderCell>
+					<Table.HeaderCell></Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{this._leyLines.history.map(leyLinesEvent => {
+					// Get the uptime percentage of Circle of Power for this Ley Lines usage
+					const thisCoPHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= leyLinesEvent.start) & (cops.stop <= leyLinesEvent.stop)))
+					const thisCoPUptime = thisCoPHistory.map(cops => Math.max(cops.stop - cops.start, 0)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+					// Note that since we're getting the actual duration, rather than the expected duration, technically we'll call it 100% uptime if you stay in the lines and die halfway through...
+					// However, since that'll get flagged as a morbid checklist item, that's probably ok.
+					const thisLeyLinesDuration = leyLinesEvent.stop - leyLinesEvent.start
+					const thisPercent = this._percentFunction(thisLeyLinesDuration, thisCoPUptime).toFixed(2)
 
-			return {
-				key: 'title-' + leyLinesEvent.start,
-				title: {
-					content: <Fragment>
-						{this.parser.formatTimestamp(leyLinesEvent.start)}
-						&nbsp;-&nbsp;{thisPercent}% uptime
-					</Fragment>,
-				},
-				content: {
-					content: <Button onClick={() => this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}><Trans id="blm.leylines.timelinebutton">View Timeline</Trans></Button>,
-				},
-			}
-		})
-
-		return <Accordion
-			exclusive={false}
-			panels={panels}
-			styled
-			fluid
-		/>
+					return <Table.Row key={leyLinesEvent.start}>
+						<Table.Cell>{this.parser.formatTimestamp(leyLinesEvent.start)}</Table.Cell>
+						<Table.Cell>{thisPercent}%</Table.Cell>
+						<Table.Cell>
+							<Button onClick={() =>
+								this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
+								<Trans id="blm.leylines.timelinelink-button">Jump to Timeline</Trans>
+							</Button>
+						</Table.Cell>
+					</Table.Row>
+				})}
+			</Table.Body>
+		</Table>
 	}
 
 	getTargetBuffs(event) {

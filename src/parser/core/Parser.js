@@ -1,5 +1,6 @@
 import Raven from 'raven-js'
 import React from 'react'
+import {scroller} from 'react-scroll'
 import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
@@ -402,6 +403,18 @@ class Parser {
 		if (pointPos === -1) { pointPos = secondsText.length }
 		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
 		/* eslint-enable no-magic-numbers */
+	}
+
+	/**
+	 * Scroll to the specified module
+	 * @param {string} handle - Handle of the module to scroll to
+	 */
+	scrollTo(handle) {
+		const module = this.modules[handle]
+		scroller.scrollTo(module.constructor.title, {
+			offset: -50,
+			smooth: true,
+		})
 	}
 }
 

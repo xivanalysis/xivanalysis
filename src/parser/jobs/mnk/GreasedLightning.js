@@ -13,7 +13,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 const GL_MAX_STACKS = 3
 
-const GL_TIMEOUT_MILLIS = 16000
+const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING_I.duration * 1000
 
 const GL_REFRESHERS = [
 	STATUSES.GREASED_LIGHTNING_I.id,
@@ -25,6 +25,7 @@ export default class GreasedLightning extends Module {
 	static handle = 'greasedlightning'
 	static title = 'Greased Lightning'
 	static dependencies = [
+		'brokenLog',
 		'checklist',
 		'combatants',
 		'invuln',
@@ -43,7 +44,7 @@ export default class GreasedLightning extends Module {
 	_wastedEarth = 0
 
 	_windSaves = []
-	_wastedWind = []
+	_wastedWind = 0
 
 	constructor(...args) {
 		super(...args)
@@ -189,6 +190,7 @@ export default class GreasedLightning extends Module {
 	_onRoWUse(event) {
 		// Ignore if we're building stacks
 		if (!this._currentStacks || this._currentStacks.stack < GL_MAX_STACKS) {
+			this._windSaves.shift()
 			return
 		}
 
@@ -197,7 +199,7 @@ export default class GreasedLightning extends Module {
 		// If we're not in Coeurl we'll assume stacks were gonna drop.
 		if (this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
 			if (event.timestamp - this._lastRefresh < GL_TIMEOUT_MILLIS) {
-				this._wastedWind.push(event.timestamp)
+				this._wastedWind++
 			}
 		} else {
 			this._lastRefresh = event.timestamp
@@ -227,7 +229,15 @@ export default class GreasedLightning extends Module {
 
 	_onComplete() {
 		// Push the final GL count so that it lasts to the end of the fight
-		this._stacks.push({stack: 0, timestamp: this.parser.fight.end_time})
+		this._stacks.push({...this.currentStacks, timestamp: this.parser.fight.end_time})
+
+		// Check for broken GL transitions
+		this._stacks.forEach((value, index) => {
+			const last = this._stacks[index-1] || {}
+			if ([1, 2].includes(value.stack) && last.stack === GL_MAX_STACKS) {
+				this.brokenLog.trigger()
+			}
+		})
 
 		// Push wasted saves
 		this._earthSaves.forEach(earth => {
@@ -236,8 +246,8 @@ export default class GreasedLightning extends Module {
 			}
 		})
 
-		this._windSaves.forEach(earth => {
-			if (!earth.clean) {
+		this._windSaves.forEach(wind => {
+			if (!wind.clean) {
 				this._wastedWind++
 			}
 		})
@@ -279,7 +289,7 @@ export default class GreasedLightning extends Module {
 				</Fragment>,
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedEarth} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedEarth} times without triggering <StatusLink {...STATUSES.EARTHS_REPLY} />,
 				</Fragment>,
 			}))
 		}

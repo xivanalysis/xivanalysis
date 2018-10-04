@@ -116,17 +116,20 @@ export default {
 		id: 111,
 		name: 'Greased Lightning I',
 		icon: 'https://xivapi.com/i/010000/010207.png',
+		duration: 16,
 	},
 
 	GREASED_LIGHTNING_II: {
 		id: 112,
 		name: 'Greased Lightning II',
 		icon: 'https://xivapi.com/i/010000/010208.png',
+		duration: 16,
 	},
 
 	GREASED_LIGHTNING_III: {
 		id: 113,
 		name: 'Greased Lightning III',
 		icon: 'https://xivapi.com/i/010000/010209.png',
+		duration: 16,
 	},
 }

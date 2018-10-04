@@ -1,6 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
-import {scroller} from 'react-scroll'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
@@ -53,7 +52,7 @@ export default class Timeline extends Module {
 
 		// If not disabled, scroll the page to us
 		if (scrollTo) {
-			scroller.scrollTo(this.constructor.title)
+			this.parser.scrollTo(this.constructor.handle)
 		}
 	}
 
