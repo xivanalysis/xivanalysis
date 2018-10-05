@@ -121,8 +121,8 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	_onNastrondCast(event) {
-		if (this._lifeWindows.current !== null) {
-			// Sanity check; this should never be false, but better safe
+		if (this._lifeWindows.current !== null && !this._lifeWindows.current.nastronds.some(nastrond => nastrond.timestamp === event.timestamp)) {
+			// Ensure we have an open window and dedupe Nastrond casts, since that can occasionally happen
 			this._lifeWindows.current.nastronds.push(event)
 		}
 	}
