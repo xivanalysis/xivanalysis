@@ -84,6 +84,10 @@
     "@lingui/loader": "^2.5.0",
     "@types/react": "^16.4.14",
     "@types/react-dom": "^16.0.8",
+    "@types/react-redux": "^6.0.9",
+    "@types/react-router-dom": "^4.3.1",
+    "@types/redux": "^3.6.0",
+    "@types/redux-thunk": "^2.1.0",
     "@types/webpack-env": "^1.13.6",
     "cross-env": "^5.2.0",
     "eslint-plugin-xivanalysis": "xivanalysis/linter",
@@ -104,7 +108,9 @@
     "typescript": "^3.1.1"
   },
   "jest": {
-    "collectCoverageFrom": ["src/**/*.{ts,tsx}"],
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}"
+    ],
     "testMatch": [
       "<rootDir>/src/**/__tests__/**/*.{ts,tsx}",
       "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
@@ -112,7 +118,10 @@
     "transform": {
       "^.+\\.[tj]sx?$": "ts-jest"
     },
-    "moduleFileExtensions": [ "ts", "tsx" ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx"
+    ],
     "globals": {
       "ts-jest": {
         "babelConfig": ".babelrc"

@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Provider as ReduxProvider} from 'react-redux'
 import {BrowserRouter as Router} from 'react-router-dom'
 
@@ -7,7 +7,7 @@ import I18nLoader from 'components/I18nLoader'
 import {Provider as TooltipProvider} from 'components/ui/DbLink'
 import store from 'store'
 
-class Root extends Component {
+export default class Root extends React.Component {
 	render() {
 		return (
 			<ReduxProvider store={store}>
@@ -22,5 +22,3 @@ class Root extends Component {
 		)
 	}
 }
-
-export default Root

@@ -6,6 +6,7 @@
 		"allowSyntheticDefaultImports": true,
 		"target": "esnext",
 		"module": "esnext",
+		"moduleResolution": "node",
 		"jsx": "preserve",
 		"lib": [
 			"es2015",
