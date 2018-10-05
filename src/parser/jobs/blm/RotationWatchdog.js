@@ -252,7 +252,10 @@ export default class RotationWatchdog extends Module {
 				}
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
-				if (this._rotation.casts.length > MIN_ROTATION_LENGTH) { this._history.push(this._rotation) }
+				//Also throw out rotations with no Fire spells
+				const fire3Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_III.id).length
+				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) { this._history.push(this._rotation) }
 				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
