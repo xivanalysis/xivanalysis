@@ -168,21 +168,21 @@ export function stringBefore(haystack: string, needle: string) {
 	return idx === -1 ? haystack : haystack.slice(0, idx)
 }
 
+
+function getNavigatorLanguages (): ReadonlyArray<string> {
+	if (Array.isArray(navigator.languages)) {
+		return navigator.languages
+	}
+	return [navigator.language]
+}
+
 /**
  * Iterate over a list of languages and return the first matching, enabled language.
  * Returns the default language if none match.
  * @param {String[]} [languages] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languages: string[]|null = null): string {
-	if (!languages) {
-		if (Array.isArray(navigator.languages)) {
-			languages = navigator.languages
-		} else {
-			languages = [navigator.language]
-		}
-	}
-
+export function getUserLanguage(languages: ReadonlyArray<string> = getNavigatorLanguages()): string {
 	for (const lang of languages) {
 		if (LANGUAGES[lang] && LANGUAGES[lang].enable) {
 			return lang
