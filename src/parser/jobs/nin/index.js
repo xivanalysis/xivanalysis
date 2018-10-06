@@ -1,5 +1,6 @@
 import About from './About'
 import Combos from './Combos'
+import Cooldowns from './Cooldowns'
 import Duality from './Duality'
 import GlobalCooldown from './GlobalCooldown'
 import Huton from './Huton'
@@ -15,6 +16,7 @@ import Weaving from './Weaving'
 export default [
 	About,
 	Combos,
+	Cooldowns,
 	Duality,
 	GlobalCooldown,
 	Huton,

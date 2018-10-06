@@ -15,9 +15,21 @@ export default class Cooldowns extends Module {
 
 	_currentAction = null
 	_cooldowns = {}
+	_sortOrder = {}
+
+	// An array of objects to be overridden by subclasses to group certain actions together in the timeline.
+	// Entries should be in the format: {name: 'Group name', actions: [actionId, otherActionId]}. Actions in
+	// the actions arrays will display within the group in the order provided.
+	static cooldownGroups = []
+	// An array of action IDs to order. The actions will show below groups and above any other non-included
+	// actions in the order provided.
+	static cooldownOrder = []
 
 	constructor(...args) {
 		super(...args)
+		let index = (this.constructor.cooldownGroups.length + this.constructor.cooldownOrder.length) * -1
+		this.constructor.cooldownGroups.forEach(group => group.sortOrder = index++)
+		this.constructor.cooldownOrder.forEach(actionId => this._sortOrder[actionId] = index++)
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
@@ -53,47 +65,77 @@ export default class Cooldowns extends Module {
 		}
 	}
 
+	_addToTimeline(actionId, orderOverride = 0) {
+		const cd = this._cooldowns[actionId]
+		if (!cd) {
+			return false
+		}
+
+		// Clean out any 'current' cooldowns into the history
+		if (cd.current) {
+			cd.history.push(cd.current)
+			cd.current = null
+		}
+
+		const action = getAction(actionId)
+
+		// If the action is on the GCD, GlobalCooldown will be managing its own group
+		if (action.onGcd) {
+			return false
+		}
+
+		// Add CD info to the timeline
+		// TODO: Might want to move group generation somewhere else
+		//       though will need to handle hidden groups for things with no items
+		// Using the ID as an order param to give an explicit order.
+		// TODO: Allow jobs to group related actions a-la raid buffs
+		this.timeline.addGroup(new Group({
+			id: actionId,
+			content: action.name,
+			order: this._sortOrder[actionId] || orderOverride || actionId,
+		}))
+
+		cd.history.forEach(use => {
+			if (!use.shared) {
+				this.timeline.addItem(new Item({
+					type: 'background',
+					start: use.timestamp - this.parser.fight.start_time,
+					length: use.length,
+					group: actionId,
+					content: <img src={action.icon} alt={action.name}/>,
+				}))
+			}
+		})
+
+		return true
+	}
+
 	_onComplete() {
-		const startTime = this.parser.fight.start_time
+		const skip = {}
+		this.constructor.cooldownGroups.forEach(group => {
+			const g = new Group({
+				id: group.name,
+				content: group.name,
+				order: group.sortOrder,
+				nestedGroups: [],
+			})
 
-		Object.keys(this._cooldowns).forEach(id => {
-			const cd = this._cooldowns[id]
-
-			// Clean out any 'current' cooldowns into the history
-			if (cd.current) {
-				cd.history.push(cd.current)
-				cd.current = null
-			}
-
-			const action = getAction(id)
-
-			// If the action is on the GCD, GlobalCooldown will be managing its own group
-			if (action.onGcd) {
-				return
-			}
-
-			// Add CD info to the timeline
-			// TODO: Might want to move group generation somewhere else
-			//       though will need to handle hidden groups for things with no items
-			// Using the ID as an order param to give an explicit order.
-			// TODO: Allow jobs to group related actions a-la raid buffs
-			this.timeline.addGroup(new Group({
-				id,
-				content: action.name,
-				order: id,
-			}))
-
-			cd.history.forEach(use => {
-				if (!use.shared) {
-					this.timeline.addItem(new Item({
-						type: 'background',
-						start: use.timestamp - startTime,
-						length: use.length,
-						group: id,
-						content: <img src={action.icon} alt={action.name}/>,
-					}))
+			group.actions.forEach((actionId, index) => {
+				if (this._addToTimeline(actionId, index + 1)) {
+					skip[actionId] = true
+					g.nestedGroups.push(actionId)
 				}
 			})
+
+			if (g.nestedGroups.length > 0) {
+				this.timeline.addGroup(g)
+			}
+		})
+
+		Object.keys(this._cooldowns).forEach(actionId => {
+			if (!skip[actionId]) {
+				this._addToTimeline(actionId)
+			}
 		})
 	}
 
