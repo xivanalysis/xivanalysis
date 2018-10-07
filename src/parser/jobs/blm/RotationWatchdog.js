@@ -211,7 +211,6 @@ export default class RotationWatchdog extends Module {
 					1: SEVERITY.MINOR,
 					3: SEVERITY.MEDIUM,
 					5: SEVERITY.MAJOR,
-					10: SEVERITY.MORBID,
 				},
 				value: this._rotationsWithoutFire,
 				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
