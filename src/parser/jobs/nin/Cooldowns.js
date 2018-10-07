@@ -6,9 +6,15 @@ export default class Cooldowns extends CoreCooldowns {
 		{
 			name: 'Ninjutsu',
 			actions: [
-				ACTIONS.TEN.id,
-				ACTIONS.CHI.id,
-				ACTIONS.JIN.id,
+				{
+					name: 'Mudra',
+					merge: true,
+					actions: [
+						ACTIONS.TEN.id,
+						ACTIONS.CHI.id,
+						ACTIONS.JIN.id,
+					],
+				},
 				ACTIONS.FUMA_SHURIKEN.id,
 				ACTIONS.RAITON.id,
 				ACTIONS.SUITON.id,

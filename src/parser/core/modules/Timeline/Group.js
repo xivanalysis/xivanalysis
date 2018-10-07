@@ -48,6 +48,7 @@ export class ItemGroup extends Group {
 	}
 
 	addItem(item) {
+		item.group = this.id
 		this._items.push(item)
 	}
 }

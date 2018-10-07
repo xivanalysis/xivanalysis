@@ -36,7 +36,7 @@ export default class Cooldowns extends Module {
 		// If there's no groups, noop
 		if (!groups) { return }
 
-		groups.forEach((data, i) => {
+		const ids = groups.map((data, i) => {
 			const order = -(groups.length - i)
 
 			// If it's just an action id, build a group for it and stop
@@ -46,33 +46,37 @@ export default class Cooldowns extends Module {
 					content: getAction(data).name,
 					order,
 				})
-				return
+				return data
 			}
 
-			// Build the groups for all the nested actions
-			data.actions.forEach((id, i) => {
-				this._buildGroup({
-					id,
-					content: getAction(id).name,
-					order: i,
-				})
-			})
-
-			// Build parent group
-			this._buildGroup({
+			// Build the base group
+			const group = this._buildGroup({
 				id: data.name,
 				content: data.name,
-				nestedGroups: data.actions,
 				order,
 			})
+
+			if (data.merge) {
+				// If it's a merge group, we only need to register our group for each of the IDs
+				data.actions.forEach(id => {
+					this._groups[id] = group
+				})
+			} else {
+				// Otherwise, build nested groups for each action
+				group.nestedGroups = this._buildGroups(data.actions)
+			}
+
+			return data.name
 		})
 
+		return ids
 	}
 
 	_buildGroup(opts) {
 		const group = new ItemGroup(opts)
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
+		return group
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -146,7 +150,6 @@ export default class Cooldowns extends Module {
 					type: 'background',
 					start: use.timestamp - this.parser.fight.start_time,
 					length: use.length,
-					group: actionId,
 					content: <img src={action.icon} alt={action.name} />,
 				}))
 			}
