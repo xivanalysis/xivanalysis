@@ -213,6 +213,7 @@ export default class RotationWatchdog extends Module {
 					5: SEVERITY.MAJOR,
 					10: SEVERITY.MORBID,
 				},
+				value: this._rotationsWithoutFire,
 				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
 					<Plural value={this._rotationsWithoutFire} one="# rotations" other="# rotations"/> were performed with no fire spells.
 				</Trans>,
