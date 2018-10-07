@@ -3,9 +3,9 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {i18nMark, Trans} from '@lingui/react'
-import {Table, Button, Message, Icon} from 'semantic-ui-react'
+import {Table, Button} from 'semantic-ui-react'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -18,6 +18,7 @@ export default class Leylines extends Module {
 	static dependencies = [
 		'timeline',
 		'checklist',
+		'brokenLog',
 	]
 	_circleOfPowers = {
 		current: null,
@@ -160,7 +161,12 @@ export default class Leylines extends Module {
 			this._leyLines.history.push(this._leyLines.current)
 		}
 		//check if there even were any events
-		if (!this._circleOfPowers.history.length) { return }
+		if (!this._circleOfPowers.history.length) {
+			if (this._leyLines.history.length) { // Ley Lines events with no Circle of Powers should be impossible...
+				this.brokenLog.trigger()
+			}
+			return
+		}
 		if (!this._leyLines.history.length) { return }
 
 		// Get the total duration of CoP uptime and ley lines, so we can get the overall percentage uptime
@@ -184,18 +190,7 @@ export default class Leylines extends Module {
 	}
 
 	output() {
-		return <>{(!this._circleOfPowers.history.length || !this._leyLines.history.length) && <>
-			<Message warning icon>
-				<Icon name="warning sign"/>
-				<Message.Content>
-					<Trans id="blm.leylines.accordion.warning-message">
-						Some information regarding your <StatusLink {...STATUSES.LEY_LINES}/> and <StatusLink {...STATUSES.CIRCLE_OF_POWER}/> usage is missing.<br/>
-						The uptime percentages are likely to be incorrect.
-					</Trans>
-				</Message.Content>
-			</Message>
-		</>}
-		<Table collapsing unstackable compact="very">
+		return <Table collapsing unstackable compact="very">
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="blm.leylines.timestamp-header">Timestamp</Trans></Table.HeaderCell>
@@ -226,7 +221,6 @@ export default class Leylines extends Module {
 				})}
 			</Table.Body>
 		</Table>
-		</>
 	}
 
 	getTargetBuffs(event) {
