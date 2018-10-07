@@ -65,7 +65,7 @@
   "blm.leylines.checklist-caption": "Restez dans vos lignes de Manalignements",
   "blm.leylines.timelinelink-button": "",
   "blm.leylines.timestamp-header": "",
-  "blm.leylines.title": "manalignements",
+  "blm.leylines.title": "Manalignements",
   "blm.leylines.uptime-header": "",
   "blm.ogcd-downtime.ogcd-cd-buffer": "Pour prendre en compte les facteurs aléatoires, vous disposez d'une marge de manœuvre de {0} secondes par instance pour conserver vos cooldowns.",
   "blm.ogcd-downtime.ogcd-cd-metric": "Faites en sorte d'utiliser au maximum vos oGCDs quand ils sont disponibles, en utilisant vos procs ou les temps d'incantations courts de Méga Feu ou Méga Glace en changement de phase.{0}",
