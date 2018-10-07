@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import {COOLDOWN_GROUPS, getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Group, Item} from './Timeline'
+import {ItemGroup, Item} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -70,7 +70,7 @@ export default class Cooldowns extends Module {
 	}
 
 	_buildGroup(opts) {
-		const group = new Group(opts)
+		const group = new ItemGroup(opts)
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
 	}
@@ -130,7 +130,7 @@ export default class Cooldowns extends Module {
 			return false
 		}
 
-		// Add CD info to the timeline
+		// Ensure we've got a group for this item
 		if (!this._groups[actionId]) {
 			this._buildGroup({
 				id: actionId,
@@ -139,9 +139,10 @@ export default class Cooldowns extends Module {
 			})
 		}
 
+		// Add CD info to the timeline
 		cd.history.forEach(use => {
 			if (!use.shared) {
-				this.timeline.addItem(new Item({
+				this._groups[actionId].addItem(new Item({
 					type: 'background',
 					start: use.timestamp - this.parser.fight.start_time,
 					length: use.length,
