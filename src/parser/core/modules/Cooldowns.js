@@ -18,7 +18,6 @@ export default class Cooldowns extends Module {
 
 	_currentAction = null
 	_cooldowns = {}
-	_sortOrder = {}
 	_groups = {}
 
 	constructor(...args) {
