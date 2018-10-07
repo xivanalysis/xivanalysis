@@ -94,7 +94,7 @@ export default class Procs extends Module {
 				if (this._firestarter !== null) {
 					event.ability.overrideAction = ACTIONS.FIRE_III_PROC
 				}
-			} else if (THUNDER_ACTIONS.find(event.ability.guid)) {
+			} else if (THUNDER_ACTIONS.includes(event.ability.guid)) {
 				if (this._thundercloud) {
 					this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
 					if (event.ability.guid === ACTIONS.THUNDER_III.id) {

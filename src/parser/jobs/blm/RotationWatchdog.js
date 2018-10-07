@@ -9,7 +9,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -56,6 +56,7 @@ export default class RotationWatchdog extends Module {
 	_UIEndingInT3 = 0
 	_missedF4sCauseEndingInT3 = 0
 	_wrongT3 = 0
+	_rotationsWithoutFire = 0
 
 	_gaugeState = {}
 
@@ -198,6 +199,24 @@ export default class RotationWatchdog extends Module {
 				</Trans>,
 			}))
 		}
+
+		if (this._rotationsWithoutFire > 0) { // Don't icemage :(
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.BLIZZARD_II.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
+					Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...ACTIONS.FIRE_IV}/>s cast during the fight.
+				</Trans>,
+				tiers: {
+					1: SEVERITY.MINOR,
+					3: SEVERITY.MEDIUM,
+					5: SEVERITY.MAJOR,
+					10: SEVERITY.MORBID,
+				},
+				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
+					<Plural value={this._rotationsWithoutFire} one="# rotations" other="# rotations"/> were performed with no fire spells.
+				</Trans>,
+			}))
+		}
 	}
 
 	//if transpose is used under Encounter invul the recording gets resetted
@@ -255,6 +274,9 @@ export default class RotationWatchdog extends Module {
 				//Also throw out rotations with no Fire spells
 				const fire3Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_III.id).length
 				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+				if (fireCount === 0) {
+					this._rotationsWithoutFire++
+				}
 				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) { this._history.push(this._rotation) }
 				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
