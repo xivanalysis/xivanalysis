@@ -311,19 +311,21 @@ export default class RotationWatchdog extends Module {
 			}
 		})
 
-		return <Fragment>
-			<Message>
-				<Trans id="blm.rotation-watchdog.accordion.message">
-					The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
-					Avoid missing Fire IV casts where possible.
-				</Trans>
-			</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
-		</Fragment>
+		if (panels.length > 0) {
+			return <Fragment>
+				<Message>
+					<Trans id="blm.rotation-watchdog.accordion.message">
+						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
+						Avoid missing Fire IV casts where possible.
+					</Trans>
+				</Message>
+				<Accordion
+					exclusive={false}
+					panels={panels}
+					styled
+					fluid
+				/>
+			</Fragment>
+		}
 	}
 }
