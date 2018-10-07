@@ -1,5 +1,5 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -33,7 +33,7 @@ export default class TrickAttackPositional extends Module {
 			// Should always be true, but just as a precaution
 			const lastCast = this._taCasts[this._taCasts.length - 1]
 			if (lastCast.missed && event.timestamp - lastCast.timestamp < VULN_APPLICATION_BUFFER) {
-				// Make sure the last recorded TA cast was less than a second ago
+				// Make sure the last recorded TA cast was less than two seconds ago
 				// This should also always be true, but I DON'T TRUST FFLOGS ANYMORE
 				lastCast.missed = false
 			}
@@ -45,17 +45,13 @@ export default class TrickAttackPositional extends Module {
 		if (missed.length > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TRICK_ATTACK.icon,
-				content: <Fragment>
-					<Trans id="nin.ta-positional.suggestions.missed.content"><ActionLink {...ACTIONS.TRICK_ATTACK}/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.ta-positional.suggestions.missed.content">
+					<ActionLink {...ACTIONS.TRICK_ATTACK}/> provides a huge raid buff to you and your party. Missing the positional can be crippling to raid DPS, especially if it happens more than once in a single fight.
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					<Plural
-						id="nin.ta-positional.suggestions.missed.why"
-						value={missed.length}
-						one="You missed the positional on Trick Attack # time."
-						other="You missed the positional on Trick Attack # times."/>
-				</Fragment>,
+				why: <Trans id="nin.ta-positional.suggestions.missed.why">
+					You missed the positional on Trick Attack <Plural value={missed.length} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 	}

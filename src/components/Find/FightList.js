@@ -1,12 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
+import {connect} from 'react-redux'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
-import store from 'store'
-import {refreshReport} from 'store/actions'
+import {refreshReport, updateSettings} from 'store/actions'
 
 import styles from './FightList.module.css'
 
@@ -17,27 +17,40 @@ class FightList extends Component {
 				id: PropTypes.number.isRequired,
 			})).isRequired,
 		}).isRequired,
-	}
-
-	state = {
-		killsOnly: true,
+		dispatch: PropTypes.func.isRequired,
+		killsOnly: PropTypes.bool,
 	}
 
 	refreshFights = () => {
-		store.dispatch(refreshReport())
+		this.props.dispatch(refreshReport())
 	}
 
 	render() {
-		const {report} = this.props
-		const {killsOnly} = this.state
+		const {
+			dispatch,
+			report,
+		} = this.props
+
+		let killsOnly = this.props.killsOnly
+		if (killsOnly === undefined) {
+			killsOnly = true
+		}
 
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
 		let lastZone = null
 
+		const trashFights = []
+
 		report.fights && report.fights.forEach(fight => {
-			// Filter out trash fights w/ shoddy data, and wipes if we're filtering
-			if (fight.boss === 0 || (killsOnly && !fight.kill)) {
+			// Group all trash together in case they want to see it
+			if (fight.boss === 0) {
+				trashFights.push(fight)
+				return
+			}
+
+			// Filter out wipes if we're filtering
+			if (killsOnly && !fight.kill) {
 				return
 			}
 
@@ -57,7 +70,18 @@ class FightList extends Component {
 			fights[fights.length-1].fights.push(fight)
 		})
 
-		return <Fragment>
+		// If there are any trash fights, add them in now
+		if (trashFights.length) {
+			fights.push({
+				zone: {
+					...ZONES._TRASH,
+					name: <Trans id="core.find.trash">Trash</Trans>,
+				},
+				fights: trashFights,
+			})
+		}
+
+		return <>
 			<Header>
 				<Trans id="core.find.select-pull">
 					Select a pull
@@ -67,7 +91,9 @@ class FightList extends Component {
 						toggle
 						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
 						defaultChecked={killsOnly}
-						onChange={(_, data) => this.setState({killsOnly: data.checked})}
+						onChange={(_, data) => dispatch(updateSettings({
+							fightListKillsOnly: data.checked,
+						}))}
 						// className="pull-right"
 					/>
 					<span className={styles.refresh} onClick={this.refreshFights}>
@@ -95,8 +121,10 @@ class FightList extends Component {
 					{group.fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</Menu>
 			</Fragment>)}
-		</Fragment>
+		</>
 	}
 }
 
-export default FightList
+export default connect(state => ({
+	killsOnly: state.settings.fightListKillsOnly,
+}))(FightList)

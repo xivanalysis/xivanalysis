@@ -9,6 +9,8 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // Statuses that need to be up for Fester & Bane to actually do something good
 const SMN_DOT_STATUSES = [
 	STATUSES.BIO_III.id,
@@ -44,6 +46,7 @@ export default class Aetherflow extends Module {
 		'gauge',
 		'suggestions',
 	]
+	static displayOrder = DISPLAY_ORDER.AETHERFLOW
 
 	// _badBanes = []         // In case we ever want to check for Banes where 1 or 0 DoTs are spread
 	// _reallyBadBanes = []   // DoTless Bane...
@@ -176,15 +179,18 @@ export default class Aetherflow extends Module {
 			</Table.Header>
 			<Table.Body>
 				{casts.map((cast, i) => {
-					let drift = 0
+					let drift = null
 					if (i > 0) {
 						const prevCast = casts[i - 1]
 						drift = cast.timestamp - (prevCast.timestamp + prevCast.length)
+						if (process.env.NODE_ENV === 'production') {
+							drift = Math.max(drift, 0)
+						}
 					}
 					totalDrift += drift
 					return <Table.Row key={cast.timestamp}>
 						<Table.Cell>{this.parser.formatTimestamp(cast.timestamp)}</Table.Cell>
-						<Table.Cell>{drift ? this.parser.formatDuration(drift) : '-'}</Table.Cell>
+						<Table.Cell>{drift !== null ? this.parser.formatDuration(drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
 					</Table.Row>
 				})}

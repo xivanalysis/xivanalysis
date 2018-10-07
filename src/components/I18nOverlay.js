@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types'
-import React, {Component, Fragment} from 'react'
+import React, {Component} from 'react'
 import {Popup, List} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
@@ -88,7 +88,7 @@ export default class I18nOverlay extends Component {
 
 	renderTooltip(instance) {
 		const {id, defaults, values} = instance.props
-		const i18nParent = instance.getI18n()
+		const i18nParent = instance.context.linguiPublisher || {}
 		const i18n = i18nParent && i18nParent.i18n
 
 		let valueBlock, i18nBlock
@@ -96,11 +96,11 @@ export default class I18nOverlay extends Component {
 
 		if (values) {
 			try {
-				valueBlock = <Fragment>
+				valueBlock = <>
 					<hr />
 					<strong>values:</strong>
 					<pre>{ _.map(values, (val, key) => `${key}: ${JSON.stringify(val)}`) }</pre>
-				</Fragment>
+				</>
 			} catch (err) { /* no-op */ }
 		}
 
@@ -112,7 +112,7 @@ export default class I18nOverlay extends Component {
 				translated = false
 			}
 
-			i18nBlock = <Fragment>
+			i18nBlock = <>
 				<hr />
 				<List>
 					<List.Item>
@@ -124,13 +124,13 @@ export default class I18nOverlay extends Component {
 						}
 					</List.Item>
 				</List>
-			</Fragment>
+			</>
 		}
 
 		return {
 			id,
 			translated,
-			tooltip: <Fragment>
+			tooltip: <>
 				<Popup.Header>
 					Localized String
 				</Popup.Header>
@@ -146,7 +146,7 @@ export default class I18nOverlay extends Component {
 					{valueBlock}
 					{i18nBlock}
 				</Popup.Content>
-			</Fragment>,
+			</>,
 		}
 	}
 

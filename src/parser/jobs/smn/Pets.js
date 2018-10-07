@@ -1,15 +1,17 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
+import PATCHES, {getPatch} from 'data/PATCHES'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './Pets.module.css'
 
 const NO_PET_ID = -1
@@ -46,6 +48,7 @@ export default class Pets extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+	static displayOrder = DISPLAY_ORDER.PETS
 
 	_lastPet = {id: NO_PET_ID}
 	_currentPet = null
@@ -60,6 +63,7 @@ export default class Pets extends Module {
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('all', this._onEvent)
+		this.addHook('summonpet', this._onChangePet)
 		this.addHook('death', {to: 'pet'}, this._onPetDeath)
 		this.addHook('complete', this._onComplete)
 	}
@@ -142,6 +146,24 @@ export default class Pets extends Module {
 		}
 	}
 
+	_onChangePet(event) {
+		this._lastPet = this._currentPet
+		this._currentPet = {
+			id: event.petId,
+			timestamp: event.timestamp,
+		}
+
+		if (this._lastPet) {
+			const id = this._lastPet.id
+			const start = this._lastPet.timestamp
+			const end = event.timestamp
+
+			this._history.push({id, start, end})
+			const value = (this._petUptime.get(id) || 0) + end - start
+			this._petUptime.set(id, value)
+		}
+	}
+
 	_onPetDeath() {
 		this.setPet(NO_PET_ID)
 	}
@@ -173,7 +195,12 @@ export default class Pets extends Module {
 			(a, b) => this._petUptime.get(b) - this._petUptime.get(a)
 		)[0]
 
-		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
+		// Disabling garuda/ifrit check post-4.4 due to changed to RS
+		// TODO: Revisit this in more detail once math is solidified
+		const currentPatch = getPatch(this.parser.parseDate)
+		const pre44 = PATCHES[currentPatch].date < PATCHES['4.4'].date
+
+		if (pre44 && numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
 				severity: SEVERITY.MEDIUM,
@@ -186,7 +213,7 @@ export default class Pets extends Module {
 			}))
 		}
 
-		if (numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+		if (pre44 && numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
 				severity: SEVERITY.MEDIUM,
@@ -235,27 +262,9 @@ export default class Pets extends Module {
 	}
 
 	setPet(petId, timestamp) {
-		timestamp = timestamp || this.parser.currentTimestamp
-
-		this._lastPet = this._currentPet
-		this._currentPet = {
-			id: petId,
-			timestamp,
-		}
-
-		if (this._lastPet) {
-			const id = this._lastPet.id
-			const start = this._lastPet.timestamp
-			const end = timestamp
-
-			this._history.push({id, start, end})
-			const value = (this._petUptime.get(id) || 0) + end - start
-			this._petUptime.set(id, value)
-		}
-
 		this.parser.fabricateEvent({
 			type: 'summonpet',
-			timestamp,
+			timestamp: timestamp || this.parser.currentTimestamp,
 			petId: petId,
 		})
 	}
@@ -293,7 +302,7 @@ export default class Pets extends Module {
 			tooltips: {enabled: false},
 		}
 
-		return <Fragment>
+		return <>
 			<div className={styles.chartWrapper}>
 				<PieChart
 					data={data}
@@ -323,6 +332,6 @@ export default class Pets extends Module {
 					</tr>)}
 				</tbody>
 			</table>
-		</Fragment>
+		</>
 	}
 }

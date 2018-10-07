@@ -1,3 +1,9 @@
-.link img {
+.link {
+	border-bottom: 1px dotted currentColor;
+}
+
+.image {
+	margin-right: .25em;
 	height: 1.4285em;
+	vertical-align: bottom;
 }

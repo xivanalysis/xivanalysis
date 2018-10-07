@@ -1,3 +1,4 @@
+import {Trans, i18nMark, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -16,6 +17,7 @@ const CORRECT_GCDS = [
 const possibleGcds = 5
 
 export default class InnerRelease extends Module {
+	static i18n_id = i18nMark('war.ir.title')
 	static handle = 'ir'
 	static dependencies = [
 		'suggestions',
@@ -69,7 +71,7 @@ export default class InnerRelease extends Module {
 
 	_onRemoveIR() {
 		// TODO: You may need to make adjustments so the guard isn't necessary. The applybuff event is fab'd for things at the start of the fight, it may be a go.
-		if (this._ir && !this._ir.casts.some(cast => cast.ability.guid === ACTIONS.FELL_CLEAVE.id) < 5) {
+		if (this._ir.casts && !this._ir.casts.some(cast => cast.ability.guid === ACTIONS.FELL_CLEAVE.id) < 5) {
 			this._stopAndSave()
 		}
 	}
@@ -96,38 +98,52 @@ export default class InnerRelease extends Module {
 		if (badGcds) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_RELEASE.icon,
-				why: `${badGcds} incorrect GCDs used during IR.`,
+				why: <Trans id="war.ir.suggestions.badgcd.content">
+					{badGcds} incorrect <Plural value={badGcds} one="GCD" other="GCDs"/> used during IR.`,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="war.ir.suggestions.badgcd.why">
 						GCDs used during Inner Release should be limited to <ActionLink {...ACTIONS.FELL_CLEAVE}/> for optimal damage, or  <ActionLink {...ACTIONS.DECIMATE}/> in AoE situations.
-				</Fragment>,
+				</Trans>,
 			}))
 		}
 
 		if (this._missedGcds) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_RELEASE.icon,
-				why: `${this._missedGcds} GCDs missed inside of IR.`,
+				why: <Trans id="war.ir.suggestions.missedgcd.content">
+					{this._missedGcds} <Plural value={this._missedGcds} one="GCD" other="GCDs"/> missed inside of IR.
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				content: `${this._missedGcds} GCD${this._missedGcds !== 1 ? 's' : ''} inside of Inner Release. You should be hitting 5 GCDs per cast. If you can't hit 5 GCDs, consider adjusting your gearset for it.`,
+				content: <Trans id="war.ir.suggestions.missedgcd.why">
+					{this._missedGcds} <Plural value={this._missedGcds} one="GCD" other="GCDs"/> inside of Inner Release. You should be hitting 5 GCDs per cast. If you can't hit 5 GCDs, consider adjusting your gearset for it.
+				</Trans>,
 			}))
 		}
 
 		if (this._missedUpheavals) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.UPHEAVAL.icon,
-				why: `${this._missedUpheavals} Upheaval${this._missedUpheavals !== 1 ? 's' : ''} weren't inside of IR.`,
+				why: <Trans id="war.ir.suggestions.upheaval.content">
+					{this._missedUpheavals} <Plural value={this._missedUpheavals} one="Upheaval" other="Upheavals"/> weren't inside of IR.
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				content: `${this._missedUpheavals} Upheaval${this._missedUpheavals !== 1 ? 's' : ''} inside of Inner Release. You must hit one Upheaval inside of each Inner Release.`,
+				content: <Trans id="war.ir.suggestions.upheaval.why">
+					{this._missedUpheavals} <Plural value={this._missedUpheavals} one="Upheaval" other="Upheavals"/> inside of Inner Release. You must hit one Upheaval inside of each Inner Release.
+				</Trans>,
 			}))
 		}
 
 		if (this._missedOnslaughts) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ONSLAUGHT.icon,
-				why: `${this._missedOnslaughts} Onslaught${this._missedOnslaughts !== 1 ? 's' : ''} weren't inside of IR.`,
+				why: <Trans id="war.ir.suggestions.onslaught.content">
+					{this._missedOnslaughts} <Plural value={this._missedOnslaughts} one="Onslaught" other="Onslaughts"/> weren't inside of IR.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				content: `${this._missedOnslaughts} Onslaught${this._missedOnslaughts !== 1 ? 's' : ''} inside of Inner Release. You must hit one Onslaught inside of each Inner Release.`,
+				content: <Trans id="war.ir.suggestions.onslaught.why">
+					{this._missedOnslaughts} <Plural value={this._missedOnslaughts} one="Onslaught" other="Onslaughts"/> inside of Inner Release. You must hit one Onslaught inside of each Inner Release.
+				</Trans>,
 			}))
 		}
 	}
@@ -146,7 +162,7 @@ export default class InnerRelease extends Module {
 		const upheaval = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id)
 		const onslaught = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id)
 
-		// HOLA RUSH CHECK
+		// HOLA "RUSH" CHECK
 		// Basically makes sure that if you end the fight with IR active, the analysis won't fucking screech at you for missing IR stuff.
 		if (this._isRushing || gcds.length > 1) {
 			return

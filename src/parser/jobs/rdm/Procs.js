@@ -14,6 +14,7 @@ export default class Procs extends Module {
 	static title = 'Procs'
 	static dependencies = [
 		'downtime',
+		'invuln',
 		'suggestions',
 	]
 	static i18n_id = i18nMark('rdm.procs.title')
@@ -35,7 +36,8 @@ export default class Procs extends Module {
 	_castState = null
 	_impactfulProcOverride = false
 	_previousCast = null
-	_bossWasInvuln = false
+	_targetWasInvuln = false
+	_playerWasInDowntime = false
 
 	constructor(...args) {
 		super(...args)
@@ -58,9 +60,10 @@ export default class Procs extends Module {
 
 	_onCast(event) {
 		const abilityID = event.ability.guid
-		const invuln = this.downtime.getDowntime(this._previousCast||0, event.timestamp)
+		const downtime = this.downtime.getDowntime(this._previousCast||0, event.timestamp)
 		this._previousCast = event.timestamp
-		this._bossWasInvuln = invuln > 0
+		this._playerWasInDowntime = downtime > 0
+		this._targetWasInvuln = this.invuln.isInvulnerable(event.targetID, event.timestamp)
 
 		// Debug
 		// if (abilityID in ACTIONS) {
@@ -118,9 +121,11 @@ export default class Procs extends Module {
 		// Debug
 		// console.log(`Remove Status: ${STATUSES[statusID].name} Timestamp: ${event.timestamp}`)
 
-		if (this._bossWasInvuln) {
+		if (this._targetWasInvuln) {
+			// Debug
+			//console.log(`spell: ${this._castStateMap[statusID].name}, rawstamp: ${event.timestamp}, formatStamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 			this._history[statusID].invuln++
-		} else if (this._castState !== this._castStateMap[statusID].id) {
+		} else if (this._castState !== this._castStateMap[statusID].id && !this._playerWasInDowntime) {
 			this._history[statusID].missed++
 		}
 

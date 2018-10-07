@@ -2,6 +2,8 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import CoreAbout from 'parser/core/modules/About'
+import ACTIONS from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
 
 export default class About extends CoreAbout {
 	description = <Fragment>
@@ -10,11 +12,14 @@ export default class About extends CoreAbout {
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				This isn&apos;t even remotely done.
+				Openers, advanced <ActionLink {...ACTIONS.CORPS_A_CORPS}/>, <ActionLink {...ACTIONS.DISPLACEMENT}/>, and <ActionLink {...ACTIONS.MANAFICATION}/> rules are currently not supported at this time.
 			</Message.Content>
 		</Message>
 	</Fragment>
-	supportedPatch = '4.35'
+	supportedPatches = {
+		from: '4.0',
+		to: '4.4',
+	}
 	contributors = [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},

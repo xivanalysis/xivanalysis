@@ -55,12 +55,12 @@ export default class Weaving extends CoreWeaving {
 		// The first weave won't have an ability (faked event)
 		// They... really shouldn't be weaving before the first GCD... I think
 		// TODO: ^?
-		if (!weave.gcdEvent.ability) {
+		if (!weave.leadingGcdEvent.ability) {
 			return weave.weaves.length
 		}
 
 		// Ruin 2 is just bad for weaving
-		if (weave.gcdEvent.ability.guid === ACTIONS.RUIN_II.id &&
+		if (weave.leadingGcdEvent.ability.guid === ACTIONS.RUIN_II.id &&
 			weave.weaves.length > 0
 		) {
 			// ...unless you were using it for movement

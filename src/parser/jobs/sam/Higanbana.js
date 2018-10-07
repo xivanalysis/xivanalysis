@@ -5,12 +5,18 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
 	[STATUSES.HIGANBANA.id]: 60000,
 }
 
+const CLIPPING_SEVERITY = {
+	1000: SEVERITY.MINOR,
+	30000: SEVERITY.MEDIUM,
+	60000: SEVERITY.MAJOR,
+}
 export default class Higanbana extends Module {
 	static handle = 'higanbana'
 	static dependencies = [
@@ -41,7 +47,8 @@ export default class Higanbana extends Module {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
-		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
+		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
 
 		// If it's not been applied yet, or we're rushing, set it and skip out
 		if (!lastApplication[statusId]) {
@@ -83,15 +90,16 @@ export default class Higanbana extends Module {
 
 		// Suggestion for DoT clipping
 		const maxClip = Math.max(...Object.values(this._clip))
-		this.suggestions.add(new Suggestion({
+		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HIGANBANA.icon,
 			content: <Fragment>
 				Avoid refreshing <ActionLink {...ACTIONS.HIGANBANA} /> significantly before it expires.
 			</Fragment>,
-			severity: maxClip < 10000? SEVERITY.MINOR : maxClip < 30000? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			why: <Fragment>
 				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES[STATUSES.HIGANBANA.id].name} lost to early refreshes.
 			</Fragment>,
+			tiers: CLIPPING_SEVERITY,
+			value: maxClip,
 		}))
 	}
 	getDotUptimePercent(statusId) {

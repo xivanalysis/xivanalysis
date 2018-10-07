@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -11,6 +11,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 const MAX_WEAVES = {
 	[undefined]: 2, // Default castTime is 0
 	0: 2,
+	0.5: 2,
 	1: 1,
 	1.5: 1,
 	2: 1,
@@ -27,7 +28,9 @@ export default class Weaving extends Module {
 	static handle = 'weaving'
 	static dependencies = [
 		'castTime',
+		'gcd',
 		'invuln',
+		'speedmod',
 		'suggestions',
 	]
 
@@ -35,13 +38,20 @@ export default class Weaving extends Module {
 	static title = 'Weaving Issues'
 
 	_weaves = []
-	_gcdEvent = null
+	_ongoingCastEvent = null
+	_leadingGcdEvent = null
+	_trailingGcdEvent = null
 	_badWeaves = []
 
 	constructor(...args) {
 		super(...args)
+		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_onBeginCast(event) {
+		this._ongoingCastEvent = event
 	}
 
 	_onCast(event) {
@@ -58,23 +68,30 @@ export default class Weaving extends Module {
 			return
 		}
 
-		// If there's no gcd event, they're weaving on first GCD.
-		// TODO: Do I care?
-		if (this._gcdEvent === null && this._weaves.length > 0) {
-			console.warn(this._weaves, 'weaves before first GCD. Check.')
+		if (this._ongoingCastEvent && this._ongoingCastEvent.ability.guid === action.id) {
+			// This event is the end of a GCD cast
+			this._trailingGcdEvent = {
+				...event,
+				// Override the timestamp of the GCD with when its cast began
+				timestamp: this._ongoingCastEvent.timestamp,
+			}
+			this._ongoingCastEvent = null
+		} else {
+			// This event was an instant GCD (or log missed the cast starting)
+			this._trailingGcdEvent = event
 		}
 
 		// Throw the current state onto the history
 		this._saveIfBad()
 
 		// Reset
-		this._gcdEvent = event
+		this._leadingGcdEvent = this._trailingGcdEvent
 		this._weaves = []
 	}
 
 	_onComplete() {
 		// If there's been at least one gcd, run a cleanup on any remnant data
-		if (this._gcdEvent) {
+		if (this._leadingGcdEvent) {
 			this._saveIfBad()
 		}
 
@@ -82,9 +99,9 @@ export default class Weaving extends Module {
 		const badWeaves = this._badWeaves
 		this.suggestions.add(new TieredSuggestion({
 			// WVR Focused synth lmao
-			icon: 'https://secure.xivdb.com/img/game/001000/001785.png',
+			icon: 'https://xivapi.com/i/001000/001785.png',
 			content: <Trans id="core.weaving.content">
-				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
+				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
 				id="core.weaving.why"
@@ -98,12 +115,22 @@ export default class Weaving extends Module {
 	}
 
 	_saveIfBad() {
+		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.fight.start_time}
+		const gcdTimeDiff = this._trailingGcdEvent.timestamp -
+			leadingGcdEvent.timestamp -
+			this.invuln.getUntargetableUptime('all', 	leadingGcdEvent.timestamp, this._trailingGcdEvent.timestamp)
+
 		const weave = {
-			gcdEvent: this._gcdEvent || {
-				timestamp: this.parser.fight.start_time,
-			},
+			leadingGcdEvent,
+			trailingGcdEvent: this._trailingGcdEvent,
+			gcdTimeDiff,
 			weaves: this._weaves,
 		}
+
+		if (weave.weaves.length === 0) {
+			return
+		}
+
 		if (this.isBadWeave(weave)) {
 			this._badWeaves.push(weave)
 		}
@@ -116,25 +143,29 @@ export default class Weaving extends Module {
 
 	// Basic weave check. For job-specific weave concerns, subclass Weaving and override this method. Make sure it's included under the same module key to override the base implementation.
 	isBadWeave(weave, maxWeaves) {
-		// The first weave won't have an ability (faked event)
-		// They... really shouldn't be weaving before the first GCD... I think
-		// TODO: ^?
-		if (!weave.gcdEvent.ability) {
-			return weave.weaves.length
-		}
-
-		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
-		if (!maxWeaves) {
-			const castTime = this.castTime.forEvent(weave.gcdEvent)
-			maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
-		}
-
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
 		const weaveCount = weave.weaves.filter(
 			event => !this.invuln.isUntargetable('all', event.timestamp)
 		).length
 
-		return weaveCount > maxWeaves
+		maxWeaves = undefined
+
+		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
+		if (!maxWeaves) {
+			// If there's no leading ability, it's the first GCD. Allow the 'default' cast time's amount
+			if (!weave.leadingGcdEvent.ability) {
+				maxWeaves = MAX_WEAVES[undefined]
+			} else {
+				const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
+				maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
+			}
+		}
+
+		// It's possible that they did a bunch of weaves during downtime or similar - that's fine.
+		const speedmod = this.speedmod.get(this.parser.timestamp)
+		const gcdLength = this.gcd.getEstimate() * speedmod
+
+		return weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
 	}
 
 	output() {
@@ -144,10 +175,10 @@ export default class Weaving extends Module {
 		}
 
 		const panels = badWeaves.map(item => ({
-			key: item.gcdEvent.timestamp,
+			key: item.leadingGcdEvent.timestamp,
 			title: {
-				content: <Fragment>
-					<strong>{this.parser.formatTimestamp(item.gcdEvent.timestamp)}</strong>
+				content: <>
+					<strong>{this.parser.formatTimestamp(item.leadingGcdEvent.timestamp)}</strong>
 					&nbsp;-&nbsp;
 					<Plural
 						id="core.weaving.panel-count"
@@ -155,11 +186,16 @@ export default class Weaving extends Module {
 						_1="# weave"
 						other="# weaves"
 					/>
-				</Fragment>,
+					&nbsp;(
+					{this.parser.formatDuration(item.gcdTimeDiff)}
+					&nbsp;
+					<Trans id="core.weaving.between-gcds">between GCDs</Trans>
+					)
+				</>,
 			},
 			content: {
 				content: <Rotation events={[
-					...(item.gcdEvent.ability? [item.gcdEvent] : []),
+					...(item.leadingGcdEvent.ability? [item.leadingGcdEvent] : []),
 					...item.weaves,
 				]}/>,
 			},

@@ -3,23 +3,26 @@ import CoreSpeedmod from 'parser/core/modules/Speedmod'
 import STATUSES from 'data/STATUSES'
 import {JOB_SPEED_BUFF_TO_SPEEDMOD_MAP} from 'parser/core/modules/SpeedmodConsts'
 
+const GREASED_LIGHTNING_STATUSES = [
+	STATUSES.GREASED_LIGHTNING_I.id,
+	STATUSES.GREASED_LIGHTNING_II.id,
+	STATUSES.GREASED_LIGHTNING_III.id,
+]
+
+const ROF_SPEEDMOD = 1.15
+
 export default class Speedmod extends CoreSpeedmod {
-	/* NOTE: Use this to force modules to run before Speedmod. ie: normalise to generate Huton events so Speedmod can pick them up natively
+	// Force modules to run before Speedmod. ie: normalise to Greased Lightning events so Speedmod can pick them up natively
 	static dependencies = [
 		...CoreSpeedmod.dependencies,
-		'forms',
+		'greasedlightning', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
-	*/
 
 	_isRofActive = false
 
 	constructor(...args) {
 		super(...args)
-		this.SPEED_BUFF_STATUS_IDS.push(
-			STATUSES.GREASED_LIGHTNING_I.id,
-			STATUSES.GREASED_LIGHTNING_II.id,
-			STATUSES.GREASED_LIGHTNING_III.id,
-		)
+		this.SPEED_BUFF_STATUS_IDS.push(...GREASED_LIGHTNING_STATUSES)
 	}
 
 	jobSpecificNormaliseLogic(event) {
@@ -44,16 +47,13 @@ export default class Speedmod extends CoreSpeedmod {
 			if (event.ability.guid === STATUSES.GREASED_LIGHTNING_I.id) {
 				// applybuffstack only shows for stacks 2 and 3 of GL
 				// removebuffstack doesn't show for GL. This is handled by removebuff in parent
-				this._activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[event.ability.guid + event.stack - 1]
+				this._activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[GREASED_LIGHTNING_STATUSES[event.stack - 1]]
 			}
 			break
 		}
 	}
 
 	getJobAdditionalSpeedbuffScalar() {
-		if (this._isRofActive) {
-			return 1.15
-		}
-		return 1.0
+		return this._isRofActive ? ROF_SPEEDMOD : 1
 	}
 }

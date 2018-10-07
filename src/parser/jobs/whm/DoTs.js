@@ -25,6 +25,9 @@ const CLIP_MAX_MEDIUM = {
 	[STATUSES.AERO_II.id]: 60000,
 	[STATUSES.AERO_III.id]: 24000,
 }
+
+const DOT_CLIPPING_THRESHOLD = 500 // ms of dot clipping to warrant a suggestion
+
 export default class DoTs extends Module {
     static handle = 'dots'
 	static dependencies = [
@@ -55,7 +58,8 @@ export default class DoTs extends Module {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
-		const lastApplication = this._lastApplication[event.targetID] = this._lastApplication[event.targetID] || {}
+		const applicationKey = `${event.targetID}|${event.targetInstance}`
+		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
 
 		// If it's not been applied yet, or we're rushing, set it and skip out
 		if (!lastApplication[statusId]) {
@@ -97,7 +101,7 @@ export default class DoTs extends Module {
 		}))
 
 		//Suggestion for DoT clipping
-		if (this._clip[STATUSES.AERO_II.id] > 500) {
+		if (this._clip[STATUSES.AERO_II.id] > DOT_CLIPPING_THRESHOLD) {
 			const isMinor = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MINOR[STATUSES.AERO_II.id]
 			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
 			this.suggestions.add(new Suggestion({
@@ -111,7 +115,7 @@ export default class DoTs extends Module {
 				</Trans>,
 			}))
 		}
-		if (this._clip[STATUSES.AERO_III.id] > 500) {
+		if (this._clip[STATUSES.AERO_III.id] > DOT_CLIPPING_THRESHOLD) {
 			const isMinor = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MINOR[STATUSES.AERO_III.id]
 			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
 			this.suggestions.add(new Suggestion({

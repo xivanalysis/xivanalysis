@@ -17,7 +17,7 @@ export default class Combos extends Module {
 	]
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
-	static suggestionIcon = 'https://secure.xivdb.com/img/game/000000/000405.png'
+	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
 
 	_lastAction = NO_COMBO
 	_lastGcdTime = this.parser.fight.start_time
@@ -31,6 +31,13 @@ export default class Combos extends Module {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_fabricateComboEvent(event) {
+		const combo = {...event}
+		combo.type = 'combo'
+		delete combo.timestamp // Since fabricateEvent adds that in anyway
+		this.parser.fabricateEvent(combo)
 	}
 
 	_onCast(event) {
@@ -55,7 +62,7 @@ export default class Combos extends Module {
 				if (action.combo.start) {
 					// Combo starter, we good
 					this._lastAction = action.id
-					this.comboHit(event)
+					this._fabricateComboEvent(event)
 				} else if (action.combo.from) {
 					// Combo action that isn't a starter, that's a paddlin'
 					this._uncomboedGcdCount++
@@ -64,7 +71,7 @@ export default class Combos extends Module {
 			} else if (action.combo.from === this._lastAction) {
 				// Continuing a combo correctly, yay
 				this._lastAction = action.combo.end ? NO_COMBO : action.id // If it's a finisher, reset the combo
-				this.comboHit(event)
+				this._fabricateComboEvent(event)
 			} else if (action.combo.start) {
 				// Combo starter mid-combo, that's a paddlin'
 				this._lastAction = action.id
@@ -87,6 +94,9 @@ export default class Combos extends Module {
 	}
 
 	_onComplete() {
+		if (this.addJobSpecificSuggestions(this._comboBreakers, this._uncomboedGcds)) {
+			return
+		}
 		if (this._brokenComboCount > 0 || this._uncomboedGcdCount > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.constructor.suggestionIcon,
@@ -102,18 +112,13 @@ export default class Combos extends Module {
 				/>,
 			}))
 		}
-
-		this.addJobSpecificSuggestions(this._comboBreakers, this._uncomboedGcds)
-	}
-
-	comboHit(/*event*/) {
-		// To be overridden by subclasses. This is for tracking anything a successful combo hit gets you (e.g. Beast Gauge or Kenki).
-		// The parameter is the event containing the combo action.
 	}
 
 	addJobSpecificSuggestions(/*comboBreakers, uncomboedGcds*/) {
 		// To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
 		// broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
 		// what particular actions were misused and when in the fight.
+		// The overriding module should return true if the default suggestion is not wanted
+		return false
 	}
 }

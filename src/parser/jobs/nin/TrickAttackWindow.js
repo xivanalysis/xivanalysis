@@ -1,11 +1,11 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class TrickAttackWindow extends Module {
 	static handle = 'taWindow'
@@ -21,7 +21,8 @@ export default class TrickAttackWindow extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.DREAM_WITHIN_A_DREAM.id, ACTIONS.ARMOR_CRUSH.id]}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadCast)
+		this.addHook('combo', {by: 'player', abilityId: ACTIONS.ARMOR_CRUSH.id}, this._onArmorCrush)
 		this.addHook('damage', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
 		this.addHook('complete', this._onComplete)
 	}
@@ -31,12 +32,12 @@ export default class TrickAttackWindow extends Module {
 		return target && target.hasStatus(STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id)
 	}
 
-	_onCast(event) {
-		const abilityId = event.ability.guid
+	_onDwadCast() {
+		this._dwadCast = true // DWaD casts don't have a target, so just flag it and check the target in the damage event
+	}
 
-		if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
-			this._dwadCast = true // DWaD casts don't have a target, so just flag it and check the target in the damage event
-		} else if (abilityId === ACTIONS.ARMOR_CRUSH.id && this._targetHasVuln(event.targetID)) {
+	_onArmorCrush(event) {
+		if (this._targetHasVuln(event.targetID)) {
 			this._armorCrushInTa++
 		}
 	}
@@ -55,33 +56,29 @@ export default class TrickAttackWindow extends Module {
 		if (this._dwadOutsideTa > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREAM_WITHIN_A_DREAM.icon,
-				content: <Fragment>
-					<Trans id="nin.ta-window.suggestions.dream.content">Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they&apos;re both on 60 second cooldowns, they should always be paired to maximize DPS.</Trans>
-				</Fragment>,
+				content: <Trans id="nin.ta-window.suggestions.dream.content">
+					Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they're both on 60 second cooldowns, they should always be paired to maximize DPS.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Plural id="nin.ta-window.suggestions.dream.why"
-						value={this._dwadOutsideTa}
-						one="You used Dream Within A Dream # time outside of Trick Attack."
-						other="You used Dream Within A Dream # times outside of Trick Attack."/>
-				</Fragment>,
+				why: <Trans id="nin.ta-window.suggestions.dream.why">
+					You used Dream Within A Dream <Plural value={this._dwadOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
+				</Trans>,
 			}))
 		}
 
-		if (this._armorCrushInTa > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ARMOR_CRUSH.icon,
-				content: <Fragment>
-					<Trans id="nin.ta-window.suggestions.armor-crush.content">Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.</Trans>
-				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<Plural id="nin.ta-window.suggestions.armor-crush.why"
-						value={this._armorCrushInTa}
-						one="You used Armor Crush # time during Trick Attack."
-						other="You used Armor Crush # times during Trick Attack."/>
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.ARMOR_CRUSH.icon,
+			content: <Trans id="nin.ta-window.suggestions.armor-crush.content">
+				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+			},
+			value: this._armorCrushInTa,
+			why: <Trans id="nin.ta-window.suggestions.armor-crush.why">
+				You used Armor Crush <Plural value={this._armorCrushInTa} one="# time" other="# times"/> during Trick Attack.
+			</Trans>,
+		}))
 	}
 }

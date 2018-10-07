@@ -21,6 +21,7 @@ export default class Death extends Module {
 	]
 
 	_count = 0
+	_deadTime = 0
 	_timestamp = null
 
 	constructor(...args) {
@@ -49,6 +50,10 @@ export default class Death extends Module {
 
 	_onRaise(event) {
 		this.addDeathToTimeline(event.timestamp)
+		this.parser.fabricateEvent({
+			type: 'raise',
+			targetID: event.targetID,
+		})
 	}
 
 	_onComplete() {
@@ -56,11 +61,16 @@ export default class Death extends Module {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 
-		// Deaths are always major
+		if (!this.parser.fight.kill) {
+			// If the parse was a wipe, refund one death since the last one is pretty meaningless to ding them on
+			this._count--
+		}
+
 		if (!this._count) {
 			return
 		}
 
+		// Deaths are always major
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.RAISE.icon,
 			content: <Trans id="core.deaths.content">
@@ -88,6 +98,9 @@ export default class Death extends Module {
 			start: this._timestamp - startTime,
 			end: end - startTime,
 		}))
+		this._deadTime += (end - this._timestamp)
 		this._timestamp = null
 	}
+
+	get deadTime() { return this._deadTime }
 }

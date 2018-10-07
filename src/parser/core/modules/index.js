@@ -3,6 +3,7 @@ import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
 import Arcanum from './Arcanum'
+import BrokenLog from './BrokenLog'
 import CastTime from './CastTime'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
@@ -12,6 +13,7 @@ import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
 import GlobalCooldown from './GlobalCooldown'
+import HitType from './HitType'
 import Invulnerability from './Invulnerability'
 import Potions from './Potions'
 import PrecastAction from './PrecastAction'
@@ -29,6 +31,7 @@ export default [
 	AlwaysBeCasting,
 	AoE,
 	Arcanum,
+	BrokenLog,
 	CastTime,
 	Checklist,
 	Combatants,
@@ -38,6 +41,7 @@ export default [
 	Downtime,
 	Enemies,
 	GlobalCooldown,
+	HitType,
 	Invulnerability,
 	Potions,
 	PrecastAction,

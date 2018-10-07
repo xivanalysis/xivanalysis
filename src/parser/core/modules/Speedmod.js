@@ -27,13 +27,26 @@ export default class Speedmod extends Module {
 	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
 
 	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
-	jobSpecificNormaliseLogic(event) { // eslint-disable-line no-unused-vars
+	jobSpecificNormaliseLogic(/* event */) {
 	}
 
 	// Override for scalars that function outside of speedmod
 	// NOTE: Only Riddle of Fire (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
-	getJobAdditionalSpeedbuffScalar() { // eslint-disable-line no-unused-vars
+	getJobAdditionalSpeedbuffScalar() {
 		return 1.0
+	}
+
+	recalcSpeedmodAndSaveHistory(event) {
+		// Recalculate the speedmod and save to history
+		const modifier = this._activeSpeedMap[this._activePartywideSpeedBuffFlags] ||
+			this._activeSpeedMap[PARTYWIDE_SPEED_BUFF_FLAGS.NONE]
+
+		this._history[this._history.length - 1].end = event.timestamp-1
+		this._history.push({
+			speedmod: (modifier / 100) * this.getJobAdditionalSpeedbuffScalar(),
+			start: event.timestamp,
+			end: Infinity,
+		})
 	}
 
 	normalise(events) {
@@ -78,13 +91,7 @@ export default class Speedmod extends Module {
 				}
 			}
 
-			// Recalculate the speedmod and save to history
-			this._history[this._history.length - 1].end = event.timestamp-1
-			this._history.push({
-				speedmod: (this._activeSpeedMap[this._activePartywideSpeedBuffFlags] / 100) * this.getJobAdditionalSpeedbuffScalar(),
-				start: event.timestamp,
-				end: Infinity,
-			})
+			this.recalcSpeedmodAndSaveHistory(event)
 		}
 
 		return events

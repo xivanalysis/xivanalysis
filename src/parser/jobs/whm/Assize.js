@@ -7,6 +7,7 @@ import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
 
 const EXCUSED_HOLD_DEFAULT = 1500 //time allowed to hold it every time it's off cd
+const WARN_TARGET_PERCENT = 0.9 //percentage as a decimal for warning tier on checklist
 
 export default class Assize extends Module {
 	static handle = 'assize'
@@ -39,7 +40,7 @@ export default class Assize extends Module {
 		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
 			//get downtimes in the period we're holding the cooldown
-			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, event.timestamp)
+			const downtimes = this.downtime.getDowntimeWindows(firstOpportunity, firstOpportunity + EXCUSED_HOLD_DEFAULT)
 			const firstEnd = downtimes.length ? downtimes[0].end : firstOpportunity
 			this._totalHeld += _held
 			this._excusedHeld += EXCUSED_HOLD_DEFAULT + (firstEnd - firstOpportunity)
@@ -53,7 +54,7 @@ export default class Assize extends Module {
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
 		const _usesMissed = Math.floor((holdDuration - this._excusedHeld)/ (ACTIONS.ASSIZE.cooldown * 1000))
 		const maxUsesInt = this._uses + _usesMissed
-		const warnTarget = 100 * Math.floor(0.9 * maxUsesInt) / maxUsesInt
+		const warnTarget = 100 * Math.floor(WARN_TARGET_PERCENT * maxUsesInt) / maxUsesInt
 		this.checklist.add(new TieredRule({
 			name: 'Use Assize Frequently',
 			description: <Trans id="whm.assize.checklist.description"> Frequent use of <ActionLink {...ACTIONS.ASSIZE} /> is typically a DPS gain and helps with MP management. </Trans>,

@@ -1,7 +1,9 @@
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import JobIcon from 'components/ui/JobIcon'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -11,10 +13,12 @@ import Module from 'parser/core/Module'
 
 import BuffList from './BuffList'
 import styles from './BuffExtensions.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const IGNORE_STATUSES = [
 	STATUSES.PROTECT.id,
 	STATUSES.COLLECTIVE_UNCONSCIOUS.id,
+	STATUSES.COLLECTIVE_UNCONSCIOUS_EFFECT.id,
 	...ROYAL_ROAD_STATES,
 	...HELD_ARCANA,
 	...DRAWN_ARCANA,
@@ -29,11 +33,17 @@ const STATUS_MIN_ACTIVE_TIME = 0
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
 	static title = 'Buff Extensions'
+	static i18n_id = i18nMark('ast.buff-extensions.title')
+	static displayOrder = DISPLAY_ORDER.BUFF_EXTENSIONS
+	// static dependencies = [
+	// 	// 'suggestions',
+	// ]
 
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
 	_dilationUses = []
 	_oppositionEvent = null
 	_oppositionTracking = false
+	_missedLucidExtensions = 0
 
 	constructor(...args) {
 		super(...args)
@@ -164,35 +174,73 @@ export default class BuffExtensions extends Module {
 			return a.event.timestamp - b.event.timestamp
 		})
 
-		// Sort the buffs so they're consistent
+		// console.log(this._dilationUses)
+		// iteration through dilation data
 		for (const dilation of this._dilationUses) {
+			// const actionID = dilation.event.ability.guid
 			for (const target of dilation.targets) {
+				// Sort the buffs so they're consistent
 				target.buffs.sort((a, b) => {
 					return a.ability.guid - b.ability.guid
 				})
+
+				// const isPlayer = target.id === this.parser.player.id
+
+				// Checks if they didn't extend lucid
+				// if (actionID === ACTIONS.CELESTIAL_OPPOSITION.id
+				// 	&& isPlayer
+				// 	&& !target.buffs.find(buff => buff.ability.guid === STATUSES.LUCID_DREAMING.id)) {
+				// 	this._missedLucidExtensions++
+				// }
 			}
 		}
+
+		// if (this._missedLucidExtensions > 0) {
+		// 	this.suggestions.add(new Suggestion({
+		// 		icon: ACTIONS.CELESTIAL_OPPOSITION.icon,
+		// 		content: <Fragment>
+		// 			Use <ActionLink {...ACTIONS.LUCID_DREAMING} /> together with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} />. They share the
+		// 			same cooldown and the extra MP regeneration vastly improves Astrologian MP management.
+		// 		</Fragment>,
+		// 		severity: SEVERITY.MEDIUM,
+		// 		why: <Fragment>
+		// 			{this._missedLucidExtensions} instances of not having an extended Lucid Dreaming status with Celestial Opposition
+		// 		</Fragment>,
+		// 	}))
+		// }
+
 	}
 
 	output() {
+
+		if (this._dilationUses.length === 0) {
+			return <Fragment>
+				<p>
+					<span className="text-error"><Trans id="ast.buff-extensions.messages.no-casts">Zero casts recorded for <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.</Trans></span>
+				</p>
+			</Fragment>
+		}
+
 		const panels = this._dilationUses.map(dilation => {
 			let descriptionText = ''
-			let emptyMessage = null
+			let noExtensions = false
 			let targetRows = null
+
+			const emptyMessage = <Trans id="ast.buff-extensions.messages.no-buffs">No buffs extended.</Trans>
 
 			// Changes copy depnding on ability
 			if (dilation.event.ability.guid === ACTIONS.TIME_DILATION.id) {
 				const numBuffs = dilation.targets[0].buffs.length
-				descriptionText = numBuffs + ' buffs extended'
+				descriptionText = <Trans id="ast.buff-extensions.messages.buffs-extended"><Plural value={numBuffs} one="# buff" other="# buffs" /> extended</Trans>
 				if (numBuffs < 1) {
-					emptyMessage = 'No buffs extended.'
+					noExtensions = true
 				}
 			} else if (dilation.event.ability.guid === ACTIONS.CELESTIAL_OPPOSITION.id) {
 				const numTargets = dilation.targets.length
-				descriptionText = numTargets + ' targets affected'
+				descriptionText = <Trans id="ast.buff-extensions.messages.targets-affected"><Plural value={numTargets} one="# target" other="# targets" /> affected</Trans>
 
 				if (numTargets < 1) {
-					emptyMessage = 'No buffs extended.'
+					noExtensions = true
 				}
 			}
 
@@ -208,7 +256,9 @@ export default class BuffExtensions extends Module {
 					<td>{target.name}</td>
 					<td>
 						<BuffList events={target.buffs}></BuffList>
-						<span className="text-error">{emptyMessage}</span>
+						<span className="text-error">
+							{noExtensions && emptyMessage}
+						</span>
 					</td>
 				</tr>
 			})
@@ -240,7 +290,7 @@ export default class BuffExtensions extends Module {
 							<tbody>
 								{targetRows.length ? targetRows
 									: <tr>
-										{emptyMessage}
+										{noExtensions && emptyMessage}
 									</tr>}
 							</tbody>
 						</table>
@@ -251,9 +301,11 @@ export default class BuffExtensions extends Module {
 
 		return <Fragment>
 			<p>
+				<Trans id="ast.buff-extensions.messages.explanation">
 			This section displays a history of targets affected with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> and <ActionLink {...ACTIONS.TIME_DILATION} />.
-				<br/>
+					<br/>
 			* Excluded statuses: <ActionLink {...ACTIONS.PROTECT} />
+				</Trans>
 			</p>
 			<Accordion
 				exclusive={false}

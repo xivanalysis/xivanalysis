@@ -1,0 +1,5 @@
+export default {
+	BUFF_EXTENSIONS: 51,
+	LIGHTSPEED: 52,
+	ARCANA_TRACKING: 55,
+}

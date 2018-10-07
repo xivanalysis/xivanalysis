@@ -20,10 +20,13 @@ const STANCELESS_SEVERITY = {
 }
 
 export default class Fists extends Module {
-	static handler = 'fists'
+	static handle = 'fists'
 	static dependencies = [
+		'combatants',
 		'suggestions',
 	]
+
+	static title = 'Fist Stances'
 
 	_stanceApplied = []
 	_stanceDropped = []
@@ -59,5 +62,11 @@ export default class Fists extends Module {
 			tiers: STANCELESS_SEVERITY,
 			value: this._stanceless,
 		}))
+	}
+
+	getFistUptimePercent(statusId) {
+		const statusUptime = this.combatants.getStatusUptime(statusId, this.parser.player.id)
+
+		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
 	}
 }

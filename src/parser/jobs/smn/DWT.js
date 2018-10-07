@@ -1,5 +1,5 @@
 import {Trans, i18nMark} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -8,6 +8,8 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
@@ -46,6 +48,7 @@ export default class DWT extends Module {
 		'suggestions',
 	]
 	static title = 'Dreadwyrm Trance'
+	static displayOrder = DISPLAY_ORDER.DWT
 
 	_active = false
 	_dwt = {}
@@ -233,14 +236,16 @@ export default class DWT extends Module {
 	output() {
 		const panels = this._history.map(dwt => {
 			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const noDeathflare = dwt.casts.filter(cast => cast.ability.guid === ACTIONS.DEATHFLARE.id).length === 0
 			return {
 				key: dwt.start,
 				title: {
-					content: <Fragment>
+					content: <>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
 						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-					</Fragment>,
+						{noDeathflare && <span className="text-error">&nbsp;(no Deathflare)</span>}
+					</>,
 				},
 				content: {
 					content: <Rotation events={dwt.casts}/>,

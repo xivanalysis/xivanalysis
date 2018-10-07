@@ -3,8 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@babel/polyfill": "^7.0.0-beta.54",
-    "@lingui/react": "^2.3.0",
+    "@babel/polyfill": "^7.0.0",
+    "@lingui/react": "^2.5.0",
+    "@xivanalysis/tooltips": "xivanalysis/tooltips",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
     "color": "^3.0.0",
@@ -12,15 +13,15 @@
     "intersection-observer": "^0.5.0",
     "intl": "^1.2.5",
     "lodash": "^4.17.10",
-    "mathjs": "^5",
+    "mathjs": "^5.1.1",
     "prop-types": "^15.6.1",
-    "raven-js": "^3.25.2",
+    "raven-js": "^3.26.4",
     "raw-loader": "^0.5.1",
-    "react": "^16.3.1",
-    "react-chartjs-2": "^2.7.2",
-    "react-dom": "^16.3.1",
+    "react": "^16.5.2",
+    "react-chartjs-2": "^2.7.4",
+    "react-dom": "^16.5.2",
     "react-helmet": "^5.2.0",
-    "react-intersection-observer": "^6",
+    "react-intersection-observer": "^6.1.1",
     "react-markdown": "^3.4.1",
     "react-redux": "^5.0.7",
     "react-router-dom": "^4.2.2",
@@ -29,17 +30,17 @@
     "react-visjs-timeline": "^1.5.0",
     "redux": "^4",
     "redux-thunk": "^2.2.0",
-    "semantic-ui-css": "^2.3.1",
-    "semantic-ui-react": "^0.82",
+    "semantic-ui-css": "^2.4.0",
+    "semantic-ui-react": "^0.82.3",
     "stable": "^0.1.8",
     "toposort": "^2",
-    "url-search-params-polyfill": "^4.0.1",
+    "url-search-params-polyfill": "^5.0.0",
     "vis": "^4.21.0"
   },
   "scripts": {
     "analyse": "source-map-explorer build/static/js/main.*",
     "start": "react-app-rewired start",
-    "build": "yarn run extract && react-app-rewired build",
+    "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
     "lint": "eslint src",
@@ -58,47 +59,41 @@
       ]
     }
   },
-  "browserslist": {
-    "development": [
-      "last 2 chrome versions",
-      "last 2 firefox versions",
-      "last 2 edge versions"
-    ],
-    "production": [
-      ">1%",
-      "last 4 versions",
-      "Firefox ESR",
-      "not ie < 11"
-    ]
-  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
   "lingui": {
     "fallbackLocale": "en",
     "sourceLocale": "en",
     "format": "minimal"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
+    "@babel/core": "^7.1.0",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^9.0.0"
   },
   "devDependencies": {
-    "@lingui/babel-plugin-transform-js": "^2.3.0",
-    "@lingui/babel-plugin-transform-react": "^2.3.0",
-    "@lingui/babel-preset-react": "^2.3.0",
-    "@lingui/cli": "^2.3.0",
-    "@lingui/loader": "^2.3.0",
+    "@lingui/babel-plugin-transform-js": "^2.5.0",
+    "@lingui/babel-plugin-transform-react": "^2.5.0",
+    "@lingui/babel-preset-react": "^2.5.0",
+    "@lingui/cli": "^2.5.0",
+    "@lingui/loader": "^2.5.0",
     "cross-env": "^5.2.0",
-    "eslint-plugin-jest": "^21.18.0",
-    "eslint-plugin-xivanalysis": "file:./linter",
-    "git-revision-webpack-plugin": "^3.0.3",
-    "husky": "^1.0.0-rc.13",
+    "eslint-plugin-xivanalysis": "xivanalysis/linter",
+    "glob": "^7.1.3",
+    "husky": "^1.0.1",
     "jest-chain": "^1.0.3",
-    "jest-extended": "^0.7.2",
-    "jest-junit": "^5.1.0",
-    "lint-staged": "^7.2.0",
+    "jest-extended": "^0.10.0",
+    "jest-junit": "^5.2.0",
+    "lint-staged": "^7.3.0",
     "react-app-rewire-eslint": "^0.2.3",
     "react-app-rewire-lodash": "^2.0.0",
     "react-app-rewired": "^2.0.0",
-    "react-scripts": "2.0.0-next.3e165448",
+    "react-scripts": "^2.0.3",
     "rimraf": "^2.6.2",
-    "source-map-explorer": "^1.5.0"
+    "source-map-explorer": "^1.6.0"
   }
 }

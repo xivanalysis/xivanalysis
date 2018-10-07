@@ -3,7 +3,8 @@ import {i18nMark} from '@lingui/react'
 
 import Suggestion, {SEVERITY} from './Suggestion'
 import SuggestionsComponent from 'components/modules/Suggestions'
-import Module, {DISPLAY_ORDER} from 'parser/core/Module'
+import Module from 'parser/core/Module'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 export default class Suggestions extends Module {
 	static handle = 'suggestions'
