@@ -78,7 +78,7 @@ export default class Procs extends Module {
 			order: 0,
 			nestedGroups: [],
 		})
-		this.timeline.addGroup(this._group)
+		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
 	}
 
 	// Keep track of casts we start to help look for instant casts
@@ -108,6 +108,7 @@ export default class Procs extends Module {
 		if (this._castingSpell) { this._castingSpell = null }
 	}
 
+	// Handle displaying this proc buff on the timeline
 	applyBuff(timestamp, status) {
 		const groupId = 'procbuffs-' + status.id
 		if (!this._group.nestedGroups.includes(groupId)) {
@@ -127,6 +128,7 @@ export default class Procs extends Module {
 
 	_onRefreshBuff(event) {
 		const statusId = event.ability.guid
+		// When the buff refreshes, reset the wear-off timestamp, and, for timeline display purposes, end the previous buff and start a new one
 		if (statusId === STATUSES.FIRESTARTER.id) {
 			this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
 			this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
@@ -149,7 +151,7 @@ export default class Procs extends Module {
 
 	_onRemoveThundercloud(event) {
 		this._thundercloud = false
-		if (event.timestamp >= this._thundercloudWears) {
+		if (event.timestamp >= this._thundercloudWears) { // If this wore off because of time, note it
 			this._droppedT3Ps++
 		}
 		this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
@@ -168,10 +170,11 @@ export default class Procs extends Module {
 
 	_onApplyThundercloud(event) {
 		this._thundercloud = true // just save a boolean value, we'll handle the castTime information elsewhere
-		this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION
+		this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION // Note when this buff will wear off, to check for dropped procs
 		this.applyBuff(event.timestamp, STATUSES.THUNDERCLOUD)
 	}
 
+	// Same stuff as _onApplyThundercloud, but for Firestarters
 	_onApplyFirestarter(event) {
 		this._firestarter = this.castTime.set([ACTIONS.FIRE_III.id], 0)
 		this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
@@ -179,6 +182,7 @@ export default class Procs extends Module {
 	}
 
 	_onComplete(event) {
+		// Finalise buffs for timeline display
 		if (this._buffs[STATUSES.FIRESTARTER.id]) {
 			if (!this._buffs[STATUSES.FIRESTARTER.id].end) {
 				this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
@@ -189,6 +193,7 @@ export default class Procs extends Module {
 				this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
 			}
 		}
+		// Suggestions to use procs that wore off.
 		if (this._droppedT3Ps) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_PROC.icon,
