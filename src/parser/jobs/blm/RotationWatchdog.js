@@ -200,7 +200,8 @@ export default class RotationWatchdog extends Module {
 			}))
 		}
 
-		if (this._rotationsWithoutFire > 0) { // Don't icemage :(
+		// Suggestion not to icemage... :(
+		if (this._rotationsWithoutFire > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.BLIZZARD_II.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
