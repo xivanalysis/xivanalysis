@@ -2,7 +2,7 @@ import CoreCooldowns from 'parser/core/modules/Cooldowns'
 import ACTIONS from 'data/ACTIONS'
 
 export default class Cooldowns extends CoreCooldowns {
-	static cooldownGroups = [
+	static cooldownOrder = [
 		{
 			name: 'Ninjutsu',
 			actions: [
@@ -27,8 +27,6 @@ export default class Cooldowns extends CoreCooldowns {
 				ACTIONS.HELLFROG_MEDIUM.id,
 			],
 		},
-	]
-	static cooldownOrder = [
 		ACTIONS.TRICK_ATTACK.id,
 		ACTIONS.DREAM_WITHIN_A_DREAM.id,
 	]

@@ -13,26 +13,66 @@ export default class Cooldowns extends Module {
 		'downtime',
 	]
 
+	// Array used to sort cooldowns in the timeline. Elements should be either IDs for top-level groups, or objects of the format {name: string, actions: array} for nested groups. Actions not specified here will be sorted by their ID below.
+	static cooldownOrder = []
+
 	_currentAction = null
 	_cooldowns = {}
 	_sortOrder = {}
-
-	// An array of objects to be overridden by subclasses to group certain actions together in the timeline.
-	// Entries should be in the format: {name: 'Group name', actions: [actionId, otherActionId]}. Actions in
-	// the actions arrays will display within the group in the order provided.
-	static cooldownGroups = []
-	// An array of action IDs to order. The actions will show below groups and above any other non-included
-	// actions in the order provided.
-	static cooldownOrder = []
+	_groups = {}
 
 	constructor(...args) {
 		super(...args)
-		let index = (this.constructor.cooldownGroups.length + this.constructor.cooldownOrder.length) * -1
-		this.constructor.cooldownGroups.forEach(group => group.sortOrder = index++)
-		this.constructor.cooldownOrder.forEach(actionId => this._sortOrder[actionId] = index++)
+
+		// Pre-build groups for actions explicitly set by subclasses
+		this._buildGroups(this.constructor.cooldownOrder)
+
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_buildGroups(groups) {
+		// If there's no groups, noop
+		if (!groups) { return }
+
+		groups.forEach((data, i) => {
+			const order = -(groups.length - i)
+
+			// If it's just an action id, build a group for it and stop
+			if (typeof data === 'number') {
+				this._buildGroup({
+					id: data,
+					content: getAction(data).name,
+					order,
+				})
+				return
+			}
+
+			// Build the groups for all the nested actions
+			data.actions.forEach((id, i) => {
+				this._buildGroup({
+					id,
+					content: getAction(id).name,
+					order: i,
+				})
+			})
+
+			// Build parent group
+			this._buildGroup({
+				id: data.name,
+				content: data.name,
+				nestedGroups: data.actions,
+				order,
+			})
+		})
+
+	}
+
+	_buildGroup(opts) {
+		const group = new Group(opts)
+		this.timeline.addGroup(group)
+		this._groups[opts.id] = group
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -65,7 +105,13 @@ export default class Cooldowns extends Module {
 		}
 	}
 
-	_addToTimeline(actionId, orderOverride = 0) {
+	_onComplete() {
+		Object.keys(this._cooldowns).forEach(actionId => {
+			this._addToTimeline(actionId)
+		})
+	}
+
+	_addToTimeline(actionId) {
 		const cd = this._cooldowns[actionId]
 		if (!cd) {
 			return false
@@ -85,15 +131,13 @@ export default class Cooldowns extends Module {
 		}
 
 		// Add CD info to the timeline
-		// TODO: Might want to move group generation somewhere else
-		//       though will need to handle hidden groups for things with no items
-		// Using the ID as an order param to give an explicit order.
-		// TODO: Allow jobs to group related actions a-la raid buffs
-		this.timeline.addGroup(new Group({
-			id: actionId,
-			content: action.name,
-			order: this._sortOrder[actionId] || orderOverride || actionId,
-		}))
+		if (!this._groups[actionId]) {
+			this._buildGroup({
+				id: actionId,
+				content: action.name,
+				order: actionId,
+			})
+		}
 
 		cd.history.forEach(use => {
 			if (!use.shared) {
@@ -102,41 +146,12 @@ export default class Cooldowns extends Module {
 					start: use.timestamp - this.parser.fight.start_time,
 					length: use.length,
 					group: actionId,
-					content: <img src={action.icon} alt={action.name}/>,
+					content: <img src={action.icon} alt={action.name} />,
 				}))
 			}
 		})
 
 		return true
-	}
-
-	_onComplete() {
-		const skip = {}
-		this.constructor.cooldownGroups.forEach(group => {
-			const g = new Group({
-				id: group.name,
-				content: group.name,
-				order: group.sortOrder,
-				nestedGroups: [],
-			})
-
-			group.actions.forEach((actionId, index) => {
-				if (this._addToTimeline(actionId, index + 1)) {
-					skip[actionId] = true
-					g.nestedGroups.push(actionId)
-				}
-			})
-
-			if (g.nestedGroups.length > 0) {
-				this.timeline.addGroup(g)
-			}
-		})
-
-		Object.keys(this._cooldowns).forEach(actionId => {
-			if (!skip[actionId]) {
-				this._addToTimeline(actionId)
-			}
-		})
 	}
 
 	getCooldown(actionId) {
