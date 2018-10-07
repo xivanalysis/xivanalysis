@@ -81,7 +81,7 @@
   "blm.rotation-watchdog.suggestions.ui-ending-in-t3.why": "{0} {1, plural, one {phase de Glace Ombrale terminée} other {phases de Glace Ombrale terminées}} avec Méga-Foudre.",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Ne lancez jamais <0/> manuellement (hardcast) pendant votre phase de Feu Astral, car cela coûterait du mana qui pourrait être utilisé pour incanter plus de <1/>.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "{0, plural, one {# Méga-Foudre a été lancé} other {# Méga-Foudre ont été lancés}} manuellement sous Feu Astral.",
-  "blm.rotation-watchdog.title": "Problèmes de rotation",
+  "blm.rotation-watchdog.title": "Problèmes de Rotation",
   "blm.triple.title": "Triple Sort",
   "core.about.contributors": "Contributeurs:",
   "core.about.patch-unsupported.description": "Ce rapport a été généré durant la patch {0}, qui n'est pas supportée par l'analyseur. Les calculs et suggestions peuvent être impactés par les changements depuis ce temps.",
