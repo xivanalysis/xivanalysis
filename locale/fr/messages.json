@@ -290,7 +290,7 @@
   "nin.ta-usage.suggestions.none.why": "Vous n'avez pas utilisé Attaque Sournoise pendant le combat.",
   "nin.ta-usage.suggestions.opener.content": "Évitez d'utiliser votre premier <0/> du combat dans des temps non-conventionnels pour pouvoir bien l'aligner avec tous les autres buffs personnels et buffs de raid. Dans la plupart des openers, Attaque Sournoise devrait être utilisé après {OPTIMAL_GCD_COUNT} GCDs.",
   "nin.ta-usage.suggestions.opener.why": "Votre première Attaque Sournoise a été utilisé après {0, plural,one {# GCD}other {# GCDs}} dans votre opener.",
-  "nin.ta-window.suggestions.armor-crush.content": "Évitez d'utiliser <0/> pendant la vulnérabilité causée par l'Attaque sournoise. A moins que vous ne soyez sur le point de perdre le buff de Fûton, utilisez en priorité <1/> ou <2/> pour causer plus de dégâts.",
+  "nin.ta-window.suggestions.armor-crush.content": "Évitez d'utiliser <0/> pendant la vulnérabilité causée par l'Attaque Sournoise. A moins que vous ne soyez sur le point de perdre le buff de Fûton, utilisez en priorité <1/> ou <2/> pour causer plus de dégâts.",
   "nin.ta-window.suggestions.armor-crush.why": "Vous avez utilisé Perce-Armure {0, plural,one {# fois}other {# fois}} pendant Attaque Sournoise.",
   "nin.ta-window.suggestions.dream.content": "Évitez d'utiliser <0/> en dehors de la vulnérabilité causée par l'Attaque Sournoise. Ces deux sorts ont un cd de 60s, ils devraient donc être utilisés ensemble la plupart du temps.",
   "nin.ta-window.suggestions.dream.why": "Vous avez utilisé Rêve Dans Un Rêve {0, plural,one {# fois}other {# fois}} en dehors d'Attaque Sournoise.",
