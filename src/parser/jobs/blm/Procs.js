@@ -1,6 +1,11 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import React from 'react'
+import {Group, Item} from 'parser/core/modules/Timeline'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans, Plural} from '@lingui/react'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
@@ -12,27 +17,30 @@ const THUNDER_ACTIONS = [
 	ACTIONS.THUNDER_IV.id,
 ]
 
-/*
-   Value to multiply our first thunder's damage by to filter for T3Ps. Anything above _firstThunderDamage * T3P_DAMAGE_SCALAR
-   will be counted. This scalar value is somewhat handwavy and was derived by looking at the values of the hardest hitting
-   vanilla T3 casts and the weakest T3P casts across a couple different logs. ~3x seemed to be the norm, so I'm using 2.5x to
-   play it safe without having to worry too much about monster direct crit vanilla casts getting counted. This could probably
-   be improved even further but this ought to provide a good enough second layer of sanity checking for T3Ps.
-*/
-const T3P_DAMAGE_SCALAR = 2.5
+// Yeah they're the same duration now, but it could change...
+const THUNDERCLOUD_DURATION = 18000
+const FIRESTARTER_DURATION = 18000
 
 export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
 		'castTime',
+		'timeline',
+		'suggestions',
 	]
 
 	_firestarter = null
 	_thundercloud = false
 	_castingSpell = null
 
-	_firstThunderDamage = null
-	_thunderDamages = []
+	_firestarterWears = null
+	_thundercloudWears = null
+
+	_droppedT3Ps = 0
+	_droppedF3Ps = 0
+
+	_buffs = {}
+	_group = null
 
 	constructor(...args) {
 		super(...args)
@@ -52,32 +60,25 @@ export default class Procs extends Module {
 			by: 'player',
 			abilityId: STATUSES.FIRESTARTER.id,
 		}, this._onApplyFirestarter)
+		this.addHook('refreshbuff', {
+			by: 'player',
+			abilityId: [STATUSES.FIRESTARTER.id, STATUSES.THUNDERCLOUD.id],
+		}, this._onRefreshBuff)
 		this.addHook('begincast', {
 			by: 'player',
 		}, this._onBeginCast)
 		this.addHook('cast', {
 			by: 'player',
 		}, this._onCast)
-	}
+		this.addHook('complete', this._onComplete)
 
-	// Run a normaliser to record the Thunder 3 damage events so we can refer to them later
-	// when evaluating the corresponding cast events
-	normalise(events) {
-		for (let i = 0; i < events.length; i++) {
-			const event = events[i]
-
-			if (!this.parser.byPlayer(event) || !event.ability) { continue }
-
-			if (event.ability.guid === ACTIONS.THUNDER_III.id && event.type === 'damage') {
-				if (!this._firstThunderDamage) { this._firstThunderDamage = event.amount }
-				this._thunderDamages.push({
-					timestamp: event.timestamp,
-					amount: event.amount,
-				})
-			}
-		}
-
-		return events
+		this._group = new Group({
+			id: 'procbuffs',
+			content: 'Procs',
+			order: 0,
+			nestedGroups: [],
+		})
+		this.timeline.addGroup(this._group)
 	}
 
 	// Keep track of casts we start to help look for instant casts
@@ -94,37 +95,123 @@ export default class Procs extends Module {
 					event.ability.overrideAction = ACTIONS.FIRE_III_PROC
 				}
 			} else if (THUNDER_ACTIONS.includes(event.ability.guid)) {
-				if (event.ability.guid === ACTIONS.THUNDER_III.id) {
-					// More rigorous check for Thunder 3 procs since FFlogs data is unreliable, check the damage amounts too
-					const damage = this._thunderDamages.filter(damages => damages.timestamp === event.timestamp)[0].amount
-					if (this._thundercloud || damage > this._firstThunderDamage * T3P_DAMAGE_SCALAR) {
-						event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this as a proc for use elsewhere
-						this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
+				if (this._thundercloud) {
+					this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
+					if (event.ability.guid === ACTIONS.THUNDER_III.id) {
+						event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this T3 as a proc for use elsewhere
+					} else if (event.ability.guid === ACTIONS.THUNDER_IV.id) {
+						event.ability.overrideAction = ACTIONS.THUNDER_IV_PROC // Might as well mark out T4 procs as well...
 					}
-				} else if (this._thundercloud) { // Less-careful about T1/2/4 proc tracking since they're not used in high-end settings as much/at all
-					this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp)
 				}
 			}
 		}
 		if (this._castingSpell) { this._castingSpell = null }
 	}
 
-	_onRemoveThundercloud() {
-		this._thundercloud = false
+	applyBuff(timestamp, status) {
+		const groupId = 'procbuffs-' + status.id
+		if (!this._group.nestedGroups.includes(groupId)) {
+			this.timeline.addGroup(new Group({
+				id: groupId,
+				content: status.name,
+			}))
+			this._group.nestedGroups.push(groupId)
+		}
+		this._buffs[status.id] = new Item({
+			type: 'background',
+			start: timestamp - this.parser.fight.start_time,
+			group: groupId,
+			content: <img src={status.icon} alt={status.name}/>,
+		})
 	}
 
-	_onRemoveFirestarter() {
+	_onRefreshBuff(event) {
+		const statusId = event.ability.guid
+		if (statusId === STATUSES.FIRESTARTER.id) {
+			this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
+			this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
+			this.applyBuff(event.timestamp, STATUSES.FIRESTARTER)
+		} else if (statusId === STATUSES.THUNDERCLOUD.id) {
+			this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION
+			this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
+			this.applyBuff(event.timestamp, STATUSES.THUNDERCLOUD)
+		}
+	}
+
+	loseBuff(timestamp, status) {
+		const item = this._buffs[status.id]
+		// This shouldn't happen, but it do.
+		if (!item) { return }
+
+		item.end = timestamp - this.parser.fight.start_time
+		this.timeline.addItem(item)
+	}
+
+	_onRemoveThundercloud(event) {
+		this._thundercloud = false
+		if (event.timestamp >= this._thundercloudWears) {
+			this._droppedT3Ps++
+		}
+		this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
+	}
+
+	_onRemoveFirestarter(event) {
 		if (this._firestarter !== null) {
 			this.castTime.reset(this._firestarter)
 			this._firestarter = null
 		}
+		if (event.timestamp >= this._firestarterWears) {
+			this._droppedF3Ps++
+		}
+		this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
 	}
 
-	_onApplyThundercloud() {
+	_onApplyThundercloud(event) {
 		this._thundercloud = true // just save a boolean value, we'll handle the castTime information elsewhere
+		this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION
+		this.applyBuff(event.timestamp, STATUSES.THUNDERCLOUD)
 	}
 
-	_onApplyFirestarter() {
+	_onApplyFirestarter(event) {
 		this._firestarter = this.castTime.set([ACTIONS.FIRE_III.id], 0)
+		this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
+		this.applyBuff(event.timestamp, STATUSES.FIRESTARTER)
+	}
+
+	_onComplete(event) {
+		if (this._buffs[STATUSES.FIRESTARTER.id]) {
+			if (!this._buffs[STATUSES.FIRESTARTER.id].end) {
+				this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
+			}
+		}
+		if (this._buffs[STATUSES.THUNDERCLOUD.id]) {
+			if (!this._buffs[STATUSES.THUNDERCLOUD.id].end) {
+				this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
+			}
+		}
+		if (this._droppedT3Ps) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.THUNDER_III_PROC.icon,
+				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
+					You lost at least  one <ActionLink {...ACTIONS.THUNDER_III_PROC}/> by allowing <StatusLink {...STATUSES.THUNDERCLOUD}/> to expire without using it.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
+					<Plural value={this._droppedT3Ps} one="# Thundercloud was" other="# Thunderclouds were"/> expired.
+				</Trans>,
+			}))
+		}
+		if (this._droppedF3Ps) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.FIRE_III_PROC.icon,
+				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
+					You lost at least  one <ActionLink {...ACTIONS.FIRE_III_PROC}/> by allowing <StatusLink {...STATUSES.FIRESTARTER}/> to expire without using it.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="blm.procs.suggestions.dropped-f3ps.why">
+					<Plural value={this._droppedF3Ps} one="# Firestarter was" other="# Firestarters were"/> expired.
+				</Trans>,
+			}))
+		}
 	}
 }
