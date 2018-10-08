@@ -42,6 +42,7 @@ module.exports = (config, env) => {
 	config = injectBabelPlugin('@lingui/babel-plugin-transform-js', config)
 	config = injectBabelPlugin('./locale/babel-plugin-transform-react', config)
 
+	// Set up TypeScript
 	const loader = getBabelLoader(config.module.rules)
 	assert.equal(loader.test.toString(), String.raw`/\.(js|mjs|jsx)$/`)
 	loader.test = /\.(js|mjs|jsx|tsx?)$/
