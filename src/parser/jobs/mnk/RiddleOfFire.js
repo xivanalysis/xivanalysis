@@ -75,10 +75,9 @@ export default class RiddleOfFire extends Module {
 			rofs.push(riddle.casts.filter(cast => getAction(cast.ability.guid).onGcd).length)
 		})
 
-		if (this._missedGcds > 0) {
+		if (this._missedGcds) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.RIDDLE_OF_FIRE.icon,
-				severity: SEVERITY.MAJOR,
 				content: <Fragment>
 					Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
 				</Fragment>,
@@ -92,7 +91,7 @@ export default class RiddleOfFire extends Module {
 			}))
 		}
 
-		if (this._missedTks > 0) {
+		if (this._missedTks) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TORNADO_KICK.icon,
 				severity: SEVERITY.MEDIUM,
