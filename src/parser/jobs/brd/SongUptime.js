@@ -7,7 +7,7 @@ import {StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const SETUP_TIME = 3200 // Assuming song being used after second GCD (2.50s from first GCD + 0.70s from second GCD animation lock)
 const SONG_DURATION = 30000
@@ -27,7 +27,6 @@ export default class SongUptime extends Module {
 
 	_songCastEvents = []
 	_deathEvents = []
-	_songlessTolerance = SETUP_TIME
 
 	constructor(...args) {
 		super(...args)
@@ -51,17 +50,21 @@ export default class SongUptime extends Module {
 	}
 
 	_onComplete() {
-		this._setTolerance()
-		const songlessTime = this.util.formatDecimal((this._getSonglessTime())/1000)
-		const songlessTolerance = this._songlessTolerance / 1000
+		const songlessTime = this.util.formatDecimal(this._getSonglessTime())
+		const songlessTolerance = this.util.formatDecimal(this._getTolerance())
 
 		if (songlessTime > songlessTolerance) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.THE_WANDERERS_MINUET.icon,
+				tiers: {
+					[songlessTolerance + TIER.MAJOR]: SEVERITY.MAJOR,
+					[songlessTolerance + TIER.MEDIUM]: SEVERITY.MEDIUM,
+					0: SEVERITY.MINOR,
+				},
+				value: songlessTime,
 				why: <Fragment>
-					Being songless for {songlessTime} seconds.
+					You were songless for {songlessTime} seconds.
 				</Fragment>,
-				severity: songlessTime > songlessTolerance + TIER.MAJOR ? SEVERITY.MAJOR : songlessTime > songlessTolerance + TIER.MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MINOR,
 				content: <Fragment>
 					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
 				</Fragment>,
@@ -108,16 +111,20 @@ export default class SongUptime extends Module {
 			}
 		}
 
-		return totalSonglessTime
+		return totalSonglessTime / 1000
 	}
 
-	_setTolerance() {
+	_getTolerance() {
 		// For each song, if the end of the song fell into a downtime, next song will require a set-up time
 		// This set-up time is added to the tolerance
+		let tolerance = SETUP_TIME
+
 		this._songCastEvents.forEach(c => {
 			if (this.downtime.isDowntime(c.timestamp + SONG_DURATION)) {
-				this._songlessTolerance += SETUP_TIME
+				tolerance += SETUP_TIME
 			}
 		})
+
+		return tolerance / 1000
 	}
 }

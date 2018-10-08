@@ -68,11 +68,11 @@ export default class Util extends Module {
 		return this.parser.formatTimestamp(timestamp)
 	}
 
-	timeSince(event) {
-		return this.parser.currentTimestamp - event.timestamp
+	timeSince(timestamp) {
+		return this.parser.currentTimestamp - timestamp
 	}
 
-	timeUntilFinish(event) {
-		return this.parser.fight.end_time - event.timestamp
+	timeUntilFinish(timestamp) {
+		return this.parser.fight.end_time - timestamp
 	}
 }

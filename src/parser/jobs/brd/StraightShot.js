@@ -7,15 +7,10 @@ import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STRAIGHT_SHOT_THRESHOLD = 5000
 const GCD_RECAST_FLOOR = 1500
-
-const TIER = {
-	MINOR: 2,
-	MEDIUM: 5,
-}
 
 export default class StraightShot extends Module {
 	static handle = 'straightshot'
@@ -89,12 +84,17 @@ export default class StraightShot extends Module {
 		}))
 
 		if (this._earlyStraightShotCasts.length) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.STRAIGHT_SHOT.icon,
 				content: <Fragment>
 					{ACTIONS.STRAIGHT_SHOT.name} should ideally be refreshed with {STRAIGHT_SHOT_THRESHOLD / 1000} seconds or less left on the effect. More {ACTIONS.STRAIGHT_SHOT.name} casts than necessary mean less <ActionLink {...ACTIONS.HEAVY_SHOT} /> casts, which in turn mean a lower <ActionLink {...ACTIONS.REFULGENT_ARROW} /> chance.
 				</Fragment>,
-				severity: this._earlyStraightShotCasts.length <= TIER.MINOR ? SEVERITY.MINOR : this._earlyStraightShotCasts.length <= TIER.MEDIUM ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				tiers: {
+					5: SEVERITY.MAJOR,
+					3: SEVERITY.MEDIUM,
+					1: SEVERITY.MINOR,
+				},
+				value: this._earlyStraightShotCasts.length,
 				why: <Fragment>
 					{this._earlyStraightShotCasts.length} {this._earlyStraightShotCasts.length === 1 ? 'cast' : 'casts'} with more than {STRAIGHT_SHOT_THRESHOLD / 1000} seconds left on <StatusLink {...STATUSES.STRAIGHT_SHOT} />.
 				</Fragment>,
@@ -102,12 +102,16 @@ export default class StraightShot extends Module {
 		}
 
 		if (this._wastedStraighterShots.length) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.STRAIGHT_SHOT.icon,
 				content: <Fragment>
 					Using {ACTIONS.STRAIGHT_SHOT.name} when you have a <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc available consumes it. <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> procs should all be used on <ActionLink {...ACTIONS.REFULGENT_ARROW} /> casts.
 				</Fragment>,
-				severity: this._wastedStraighterShots.length <= 1 ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				tiers: {
+					2: SEVERITY.MAJOR,
+					1: SEVERITY.MEDIUM,
+				},
+				value: this._wastedStraighterShots.length,
 				why: <Fragment>
 					{this._wastedStraighterShots.length} instances of <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> procs being used on {ACTIONS.STRAIGHT_SHOT.name} casts.
 				</Fragment>,

@@ -9,7 +9,7 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 
-import styles from 'parser/jobs/brd/Barrage.module.css'
+import styles from './Barrage.module.css'
 
 const SUCCESS = TARGET.SUCCESS
 const WARNING = TARGET.WARN
@@ -30,15 +30,12 @@ const SEVERITY = {
 	},
 }
 
-// Buffer in ms when checking for barrage status
-const BARRAGE_BUFFER = 700
 // Buffer in ms when checking for multiple hits close enough to be from the same cast (completely arbitraty, fite me)
 const TRIPLE_HIT_BUFFER = 500
 
 // Weights for each possible bad barrage, for calculating the percent
-const WORST_BARRAGE_NA_WEIGHT = 0.5
-const BAD_BARRAGE_WEIGHT = 0.4
-const UNALIGNED_BARRAGE_WEIGHT = 0.1
+const BAD_BARRAGE_WEIGHT = 8
+const UNALIGNED_BARRAGE_WEIGHT = 2
 
 // List of ARC/BRD single-target weaponskills that can be Barrage'd, but shouldn't
 const BAD_ST_WEAPONSKILLS = [
@@ -63,12 +60,8 @@ export default class Barrage extends Module {
 		'checklist',
 		'util',
 	]
-	// First two currently unused
-	_cuckedByDeath = []
-	_droppedBarrages = []
-	_unalignedBarrages = []
-	_lastStWeaponskill = []
 
+	_lastWeaponskill = undefined
 	_barrageEvents = []
 
 	constructor(...args) {
@@ -85,136 +78,99 @@ export default class Barrage extends Module {
 			abilityId: WEAPONSKILLS,
 		}, this._onStWeaponskillDamage)
 
-		this.addHook('death', {
-			to: 'player',
-		}, this._onDeath)
-
 		this.addHook('complete', this._onComplete)
 
 	}
 
 	_onBarrageCast(event) {
-		// Creates a new BarrageEvent with only the cast information and Raging Strikes alignment for now
-		this._barrageEvents.push(new BarrageEvent(event, this.util))
+		// Creates a new Barrage Event with only the cast information and Raging Strikes alignment for now
+		this._addBarrage(event)
 	}
 
 	_onStWeaponskillDamage(event) {
 		// Checks for damage events that are the same as the last weaponskill damage registered,
 		// within TRIPLE_HIT_BUFFER milliseconds of each other
+		const skill = this._getLastWeaponskill()
 
 		if (
-			this._lastStWeaponskill.length
-			&& this.util.timeSince(this._lastStWeaponskill[0]) <= TRIPLE_HIT_BUFFER
-			&& this._lastStWeaponskill[0].ability.guid === event.ability.guid
+			skill
+			&& this.util.timeSince(skill.timestamp) <= TRIPLE_HIT_BUFFER
+			&& skill.id === event.ability.guid
 		) {
 
 			// Adds this weaponskill damage event to the list
-			this._lastStWeaponskill.push(event)
+			skill.addDamageEvent(event)
 
 			// When there are three damage events from the same weaponskill within the buffer time,
-			// checks out a Barrage by adding these damage events to the latest BarrageEvent object
+			// checks out a Barrage by adding these damage events to the latest Barrage Event object
 			// (that only contains the cast event and alignment status at this point)
-			if (this._lastStWeaponskill.length === STATUSES.BARRAGE.amount) {
-
-				const last = this._barrageEvents.length - 1
-
-				this._barrageEvents[last].skillBarraged = event.ability.guid
-				this._barrageEvents[last].damageEvents = this._lastStWeaponskill.slice()
-
-				// Empties the arrays that holds up to the last three weaponskill damage events
-				this._lastStWeaponskill = []
+			if (skill.hits === STATUSES.BARRAGE.amount) {
+				this._checkOutBarrage(skill)
 			}
-		// Otherwise, empties the weaponskill damage events array and pushes this one into it
+		// Otherwise, sets a new last weaponskill event
 		} else {
-			this._lastStWeaponskill = []
-			this._lastStWeaponskill.push(event)
-		}
-	}
-
-	_onDeath() {
-		// Currently unused, but will be used to check for Barrage drops cause by death
-
-		const last = this._barrageEvents.length - 1
-
-		if (this._barrageEvents.length
-			&& !this._barrageEvents[last].skillBarraged
-			&& this.util.timeSince(this._barrageEvents[last]) < STATUSES.BARRAGE.duration + BARRAGE_BUFFER) {
-
-			this._cuckedByDeath.push(this._barrageEvents[last])
-
+			this._setLastWeaponskill(event)
 		}
 	}
 
 	_onComplete() {
-		// Separates the three kinds of bad barrages:
 		// - badBarrage: Barrage that was used in a skill from BAD_ST_WEAPONSKILLS list
 		// - unalignedBarrage: Barrage that was not aligned with Raging Strikes
-		// - worstBarrageNA: All of the above
-		const badBarrages = this._barrageEvents.filter(x => BAD_ST_WEAPONSKILLS.includes(x.skillBarraged) && x.aligned)
-		const unalignedBarrages = this._barrageEvents.filter(x => !BAD_ST_WEAPONSKILLS.includes(x.skillBarraged) && !x.aligned)
-		const worstBarragesNA = this._barrageEvents.filter(x => BAD_ST_WEAPONSKILLS.includes(x.skillBarraged) && !x.aligned)
+		const badBarrages = this._barrageEvents.filter(x => x.isBad)
+		const unalignedBarrages = this._barrageEvents.filter(x => !x.aligned)
 
 		// Barrage usage Rule added to the checklist
-		// Explanation of each custom class in the comments below
-		if (badBarrages && badBarrages.length || unalignedBarrages && unalignedBarrages.length || worstBarragesNA && worstBarragesNA.length) {
-			this.checklist.add(new BarrageRule({
+		if (this._getBarrage()) {
+			this.checklist.add(new WeightedTieredRule({
 				name: 'Barrage usage',
 				description: <Fragment>
-					Some of your {ACTIONS.BARRAGE.name} casts weren't optimal. More details below.
+					An analysis of your {ACTIONS.BARRAGE.name} casts. More details in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
 				</Fragment>,
 				tiers: {0: ERROR, 90: WARNING, 100: SUCCESS},
 				requirements: [
-					new BarrageRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s used on wrong skills</Fragment>,
-						percent: () => { return (badBarrages.length + worstBarragesNA.length)* 100 / this._barrageEvents.length },
+					new WeightedRequirement({
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s used on the right skills</Fragment>,
+						percent: () => { return 100 - ((badBarrages.length)* 100 / this._barrageEvents.length) },
 						weight: BAD_BARRAGE_WEIGHT,
 					}),
-					new BarrageRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s not aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} /></Fragment>,
-						percent: () => { return (unalignedBarrages.length + worstBarragesNA.length) * 100 / this._barrageEvents.length },
+					new WeightedRequirement({
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} /></Fragment>,
+						percent: () => { return  100 - ((unalignedBarrages.length) * 100 / this._barrageEvents.length) },
 						weight: UNALIGNED_BARRAGE_WEIGHT,
 					}),
 				],
-				extras: [
-					new BarrageRequirement({
-						name: 'worstBarragesNA',
-						percent: () => { return worstBarragesNA.length * 100 / this._barrageEvents.length },
-						weight: WORST_BARRAGE_NA_WEIGHT,
-					}),
-				],
-				reverse: true,
 			}))
 		}
+		//TODO: if there are no barrage casts at all, yell at the user
 	}
 
 	output() {
-		const badBarrages = this._barrageEvents
+		const barrageEvents = this._barrageEvents
 
-		if (badBarrages.length === 0) {
+		if (barrageEvents.length === 0) {
 			return
 		}
 
 		// Builds a panel for each barrage event
-		const panels = badBarrages.map(barrage => {
+		const panels = barrageEvents.map(barrage => {
 
-			const panel = new BarragePanel({
+			const panelProperties = {
 				barrage: barrage,
-				title: null,
-				headers: [],
+				title: undefined,
+				tuples: [],
 				contents: [],
-				util: this.util,
-			})
+			}
 
 			// If it's any of the three kinds of bad barrages:
-			if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged) || !barrage.aligned) {
+			if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged.id) || !barrage.aligned) {
 
 				// Calculates the total damage, total DPS, and potential damage for each "good" barrage skill
 				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
 				const totalDPS = this.util.formatDecimal(totalDamage * 1000 / this.parser.fightDuration)
 
 				let potentialDamage = totalDamage
-				let potentialEmpyrealDamage = Math.trunc(ACTIONS.EMPYREAL_ARROW.potency * totalDamage / getAction(barrage.skillBarraged).potency)
-				let potentialRefulgentDamage = Math.trunc(ACTIONS.REFULGENT_ARROW.potency * totalDamage / getAction(barrage.skillBarraged).potency)
+				let potentialEmpyrealDamage = Math.trunc(ACTIONS.EMPYREAL_ARROW.potency * totalDamage / barrage.skillBarraged.potency)
+				let potentialRefulgentDamage = Math.trunc(ACTIONS.REFULGENT_ARROW.potency * totalDamage / barrage.skillBarraged.potency)
 
 				// If this barrage is not aligned, multiplies the potential damage with Raging Strikes damage modifier (10%)
 				if (!barrage.aligned) {
@@ -225,7 +181,7 @@ export default class Barrage extends Module {
 					potentialDamage = Math.trunc(potentialDamage * (1 + STATUSES.RAGING_STRIKES.amount))
 
 					// Adds the {issue, severity, reason} tuple corresponding an unalignedBarrage to the panel
-					panel.headers.push({
+					panelProperties.tuples.push({
 						issue: <>
 							This barrage did <strong>not</strong> receive the effects of <StatusLink {...STATUSES.RAGING_STRIKES}/>.
 						</>,
@@ -248,14 +204,14 @@ export default class Barrage extends Module {
 				let dpsLoss = this.util.formatDecimal(potentialDPS - totalDPS)
 
 				// If this was a badBarrage
-				if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged)) {
+				if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged.id)) {
 
 					// Potential damage and DPS loss then become an interval, because a badBarrage could've been either Empyreal Arrow or Refulgent Arrow
 					potentialDamage = `${potentialEmpyrealDamage} - ${potentialRefulgentDamage}`
 					dpsLoss = `${this.util.formatDecimal(potentialEmpyrealDPS - totalDPS)} - ${this.util.formatDecimal(potentialRefulgentDPS- totalDPS)}`
 
 					// Adds the {issue, severity, reason} tuple corresponding a badBarrage to the panel
-					panel.headers.push({
+					panelProperties.tuples.push({
 						issue: <>
 							This barrage was <strong>not</strong> used on <ActionLink {...ACTIONS.EMPYREAL_ARROW}/> or <ActionLink {...ACTIONS.REFULGENT_ARROW}/>.
 						</>,
@@ -268,7 +224,7 @@ export default class Barrage extends Module {
 
 				// Only adds the DPS loss table as a custom content in case it was any case of bad barrage (badBarrage, unalignedBarrage, worstBarrageNA)
 				// That's what the first 'if' is for
-				panel.contents.push(<>
+				panelProperties.contents.push(<>
 					<Table collapsing unstackable celled>
 						<Table.Header>
 							<Table.Row>
@@ -295,7 +251,7 @@ export default class Barrage extends Module {
 			}
 
 			// Then builds the panel and returns it in the mapping function
-			return panel.build()
+			return this.buildPanel(panelProperties)
 
 		})
 
@@ -307,158 +263,122 @@ export default class Barrage extends Module {
 			fluid
 		/>
 	}
-}
 
-// BarrageEvent is an object used to describe a Barrage.
-// Contains information about the cast event, the damage events, the id of the barraged skill, and alignment status with Raging Strikes
+	// Adds a new barrage event to the array, with only cast and alignment information for now
+	_addBarrage(event) {
+		let aligned = true
 
-class BarrageEvent {
-	util = null
-
-	castEvent = null
-	skillBarraged = null
-	damageEvents = []
-	// Assuming barrage was aligned with Raging Strikes. Will set to false if determined otherwise
-	aligned = true
-
-	constructor(event, util) {
-		this.util = util
-
-		this.castEvent = event
-
-		// Checks for Raging Strikes alignment, ignoring the alignment check in case this cast was the last possible usage
+		// Checks for Raging Strikes alignment
 		if (
-			this.util.hasBuff(STATUSES.RAGING_STRIKES)
-			&& this.util.timeUntilFinish(event) >= ACTIONS.BARRAGE.cooldown * 1000
+			!this.util.hasBuff(STATUSES.RAGING_STRIKES)
+			&& this.util.timeUntilFinish(event.timestamp) >= ACTIONS.BARRAGE.cooldown * 1000
 		) {
-			this.aligned = false
+			aligned = false
+		}
+
+		// Adds the barrage event to the array
+		this._barrageEvents.push({
+			castEvent: event,
+			aligned: aligned,
+			get timestamp() { return this.castEvent && this.castEvent.timestamp },
+			get isBad() { return this.skillBarraged && this.skillBarraged.id && BAD_ST_WEAPONSKILLS.includes(this.skillBarraged.id) || undefined },
+		})
+	}
+
+	// Returns the most recent barrage event, or undefined if there's none
+	_getBarrage() {
+		const index = this._barrageEvents.length - 1
+		return index >= 0 && this._barrageEvents[index]
+	}
+
+	// Checks out a barrage by adding the damage events information to the barrage event and resetting the last skill tracker
+	_checkOutBarrage(skill) {
+
+		const barrage = this._getBarrage()
+		barrage.skillBarraged = skill.action
+		barrage.damageEvents = skill.damageEvents.slice()
+
+		this._lastWeaponskill = undefined
+	}
+
+	// Returns the last weaponskill used information (action and damage events)
+	_getLastWeaponskill() {
+		return this._lastWeaponskill
+	}
+
+	// Sets the last weaponskill tracker given the damage event
+	_setLastWeaponskill(event) {
+
+		this._lastWeaponskill = {
+			action: getAction(event.ability.guid),
+			damageEvents: [event],
+			get id() { return this.action && this.action.id },
+			get timestamp() { return this.damageEvents && this.damageEvents[0] && this.damageEvents[0].timestamp },
+			get hits() { return this.damageEvents && this.damageEvents.length },
+			addDamageEvent(event) { this.damageEvents.push(event) },
 		}
 	}
 
-	get timestamp() {
-		return this.castEvent && this.castEvent.timestamp
-	}
-}
+	// Builds a panel for each cast of Barrage and its respectives issues, to be provided to the final Accordion
+	// Each panel has the following components:
+	// - A title, containing:
+	//    - timestamp
+	//    - name of the barrage'd skill
+	//    - icon indicating severity
+	//    - a custom content, provided via constructor, to be added to the title
+	// - A list of issues, containing:
+	//    - severity icon and color (tuples[].severity)
+	//    - issue description (tuples[].issue)
+	// - A list of reasons, containing:
+	//    - the reason explaining why each issue is... an issue (tuples[].reason)
+	// - A list of contents, containing:
+	//    - a custom content, provided via constructor, to be added after the issues and reasons (i.e.: the DPS loss table)
+	// - A message block, containing:
+	//    - a formatted text log for each barrage hit
+	buildPanel({barrage, title, tuples, contents}) {
 
-// BarrageRule is an extention of TieredRule, with the following additions:
-// - Able to pass Requirements that are used for calculating the percentage, but are not shown in the Rule panel
-// - Defined a custom percentage method to consider weights for each issue
-// - Added a 'reverse' boolean, for cases where 100% means 100% BAD (i.e.: 100% of barrages were bad barrages)
+		// Sorting the tuples by severity
+		tuples.sort((a, b) => (a.severity || 0) - (b.severity || 0))
 
-class BarrageRule extends TieredRule {
-
-	constructor(options) {
-		super({
-			extras: [],
-			reverse: false,
-			...options,
-		})
-
-	}
-
-	get percent() {
-
-		const percents = this.requirements.map(requirement => { return {percent: requirement.percent, weight: requirement.weight} })
-		const extraPercents = this.extras.map(extra => { return {percent: extra.percent, weight: extra.weight} })
-		const percent = percents.reduce((acc, val) => acc + (val.percent * val.weight), 0) + extraPercents.reduce((acc, val) => acc + (val.percent * val.weight), 0)
-
-		return this.reverse ? 100 - percent : percent
-	}
-}
-
-// BarrageRequirement is an extension of Requirement, with the following addition:
-// - A requirement now can have a weight attached to it, used when calculating the overall Rule percentage
-
-class BarrageRequirement extends Requirement {
-
-	constructor(options) {
-		super({
-			weight: 1,
-			...options,
-		})
-	}
-
-}
-
-// BarragePanel is a custom class that defines and builds a modular panel,
-//  for each cast of Barrage and its respectives issues,
-//  to be provided to the final Accordion
-
-// Each panel has the following components:
-// - A title, containing:
-//    - timestamp
-//    - name of the barrage'd skill
-//    - icon indicating severity
-//    - a custom content, provided via constructor, to be added to the title
-// - A list of issues, containing:
-//    - severity icon and color (header[].severity)
-//    - issue description (header[].issue)
-// - A list of reasons, containing:
-//    - the reason explaining why each issue is... an issue (header[].reason)
-// - A list of contents, containing:
-//    - a custom content, provided via constructor, to be added after the issues and reasons (i.e.: the DPS loss table)
-// - A message block, containing:
-//    - a formatted text log for each barrage hit
-
-class BarragePanel {
-
-	barrage = null
-	title = null
-	headers = []
-	contents = []
-	util = null
-
-	constructor(options) {
-
-		Object.keys(options || {}).forEach(key => {
-			this[key] = options[key]
-		})
-	}
-
-	// Severity of a panel is determined by the highest severity of the issues in it described
-	get severity() {
-		return this.headers.length ? this._severitySelector(this.headers.map(h => h.severity)) : SUCCESS
-	}
-
-	// Builds the panel to be given to the Accordion
-	build() {
+		// Severity of a panel is determined by the highest severity of the issues in it described
+		const severity = tuples.length ? this._severitySelector(tuples.map(t => t.severity)) : SUCCESS
 
 		// List of issues
-		const issueElements = this.headers && this.headers.length && this.headers.map(h => {
-			return h.issue && <Message key={this.headers.indexOf(h)} error={h.severity === ERROR} warning={h.severity === WARNING} success={h.severity === SUCCESS}>
-				<Icon name={SEVERITY[h.severity].icon}/>
-				<span>{h.issue}</span>
+		const issueElements = tuples && tuples.length && tuples.map(t => {
+			return t.issue && <Message key={tuples.indexOf(t)} error={t.severity === ERROR} warning={t.severity === WARNING} success={t.severity === SUCCESS}>
+				<Icon name={SEVERITY[t.severity].icon}/>
+				<span>{t.issue}</span>
 			</Message>
 		}) || undefined
 
 		// List of reasons
-		const reasonElements = this.headers && this.headers.length && <div className={styles.description}>
+		const reasonElements = tuples && tuples.length && <div className={styles.description}>
 			<List bulleted relaxed>
-				{ this.headers.map(h => {
-					return <List.Item key={this.headers.indexOf(h)}>{h.reason}</List.Item>
+				{ tuples.map(t => {
+					return <List.Item key={tuples.indexOf(t)}>{t.reason}</List.Item>
 				})
 				}
 			</List>
 		</div> || undefined
 
 		// List of contents
-		const contentElements = this.contents && this.contents.length && this.contents.map(c => {
-			return <Fragment key={this.contents.indexOf(c)}>
+		const contentElements = contents && contents.length && contents.map(c => {
+			return <Fragment key={contents.indexOf(c)}>
 				{c}
 			</Fragment>
 		}) || undefined
 
 		// Builds the full panel
 		return {
-			key: this.barrage.timestamp,
+			key: barrage.timestamp,
 			title: {
 				content: <>
 					<Icon
-						name={SEVERITY[this.severity].icon}
-						className={SEVERITY[this.severity].text}
+						name={SEVERITY[severity].icon}
+						className={SEVERITY[severity].text}
 					/>
-					{this.util.formatTimestamp(this.barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...getAction(this.barrage.skillBarraged)}/>
-					{this.title}.
+					{this.util.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...barrage.skillBarraged}/>
+					{title}.
 				</>,
 			},
 			content: {
@@ -474,15 +394,15 @@ class BarragePanel {
 							<List.Content>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(this.barrage.damageEvents[0])}
+									{this.util.formatDamageLog(barrage.damageEvents[0])}
 								</List.Item>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(this.barrage.damageEvents[1])}
+									{this.util.formatDamageLog(barrage.damageEvents[1])}
 								</List.Item>
 								<List.Item>
 									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(this.barrage.damageEvents[2])}
+									{this.util.formatDamageLog(barrage.damageEvents[2])}
 								</List.Item>
 							</List.Content>
 						</List>
@@ -500,3 +420,37 @@ class BarragePanel {
 	}
 }
 
+// WeightedTieredRule is an extention of TieredRule, with the following additions:
+// - Defined a custom percentage method to consider weights for each requirement
+
+class WeightedTieredRule extends TieredRule {
+
+	constructor(options) {
+		super({
+			...options,
+		})
+
+		// Normalize the weights
+		const totalWeight = this.requirements.reduce((acc, req) => acc + (req.weight || 1), 0)
+		this.requirements.forEach(r => r.weight = (r.weight || 1) / totalWeight)
+
+	}
+
+	get percent() {
+		return this.requirements.reduce((acc, req) => acc + (req.percent * req.weight), 0)
+	}
+}
+
+// WeightedRequirement is an extension of Requirement, with the following addition:
+// - A requirement now can have a weight attached to it, used when calculating the overall Rule percentage
+
+class WeightedRequirement extends Requirement {
+
+	constructor(options) {
+		super({
+			weight: 1,
+			...options,
+		})
+	}
+
+}

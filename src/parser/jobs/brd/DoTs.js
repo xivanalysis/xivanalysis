@@ -8,7 +8,7 @@ import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Rule, Requirement} from '../../core/modules/Checklist'
 
-const DROP_TOLERANCE = 1000
+//const DROP_TOLERANCE = 1000
 
 export default class DoTs extends Module {
 	static handle = 'dots'
@@ -17,18 +17,18 @@ export default class DoTs extends Module {
 		'util',
 	]
 
-	_dotComponent = new DotComponent(STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id)
+	//_dotComponent = new DotComponent(STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id)
 
 	constructor(...args) {
 		super(...args)
 
-		const dotFilter = {
+		/*const dotFilter = {
 			by: 'player',
 			abilityId: [STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id],
-		}
+		}*/
 
-		this.addHook('applydebuff', dotFilter, this._onDotApply)
-		this.addHook('removedebuff', dotFilter, this._onDotRemove)
+		//this.addHook('applydebuff', dotFilter, this._onDotApply)
+		//this.addHook('removedebuff', dotFilter, this._onDotRemove)
 		this.addHook('complete', this._onComplete)
 
 	}
@@ -63,16 +63,16 @@ export default class DoTs extends Module {
 	}
 }
 
-class DotComponent {
+/*class DotComponent {
 
 	constructor(...actions) {
 		for (const action of actions) {
 			this[action] = new DotObject()
 		}
 	}
-}
+}*/
 
-class DotObject {
+/*class DotObject {
 	_windows = []
 
 	apply(t) {
@@ -99,4 +99,4 @@ class DotObject {
 	isRunning() {
 		return this._windows.length && !this._windows[this._windows.length - 1].end
 	}
-}
+}*/
