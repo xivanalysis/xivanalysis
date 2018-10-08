@@ -161,8 +161,8 @@ export default class Barrage extends Module {
 				contents: [],
 			}
 
-			// If it's any of the three kinds of bad barrages:
-			if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged.id) || !barrage.aligned) {
+			// If it's any kind of bad barrages:
+			if (barrage.isBad || !barrage.aligned) {
 
 				// Calculates the total damage, total DPS, and potential damage for each "good" barrage skill
 				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
@@ -204,7 +204,7 @@ export default class Barrage extends Module {
 				let dpsLoss = this.util.formatDecimal(potentialDPS - totalDPS)
 
 				// If this was a badBarrage
-				if (BAD_ST_WEAPONSKILLS.includes(barrage.skillBarraged.id)) {
+				if (barrage.isBad) {
 
 					// Potential damage and DPS loss then become an interval, because a badBarrage could've been either Empyreal Arrow or Refulgent Arrow
 					potentialDamage = `${potentialEmpyrealDamage} - ${potentialRefulgentDamage}`
