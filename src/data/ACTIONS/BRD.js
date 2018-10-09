@@ -5,6 +5,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002602.png',
 		onGcd: false,
 		cooldown: 80,
+		potency: 100,
 	},
 	FOE_REQUIEM: {
 		id: 115,
@@ -19,6 +20,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002603.png',
 		onGcd: false,
 		cooldown: 80,
+		potency: 100,
 	},
 	RAIN_OF_DEATH: {
 		id: 117,
@@ -26,6 +28,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002605.png',
 		onGcd: false,
 		cooldown: 15,
+		potency: 100,
 	},
 	BATTLE_VOICE: {
 		id: 118,
@@ -40,6 +43,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002606.png',
 		onGcd: false,
 		cooldown: 15,
+		potency: 230,
 	},
 	THE_WANDERERS_MINUET: {
 		id: 3559,
@@ -47,12 +51,14 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002607.png',
 		onGcd: false,
 		cooldown: 80,
+		potency: 100,
 	},
 	IRON_JAWS: {
 		id: 3560,
 		name: 'Iron Jaws',
 		icon: 'https://xivapi.com/i/002000/002608.png',
 		onGcd: true,
+		potency: 100,
 	},
 	THE_WARDENS_PAEAN: {
 		id: 3561,
@@ -67,6 +73,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
 		cooldown: 60,
+		potency: [100, 175, 260],
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -74,6 +81,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002611.png',
 		onGcd: false,
 		cooldown: 3,
+		potency: [100, 240, 420],
 	},
 	TROUBADOUR: {
 		id: 7405,
@@ -87,12 +95,14 @@ export default {
 		name: 'Caustic Bite',
 		icon: 'https://xivapi.com/i/002000/002613.png',
 		onGcd: true,
+		potency: 120,
 	},
 	STORMBITE: {
 		id: 7407,
 		name: 'Stormbite',
 		icon: 'https://xivapi.com/i/002000/002614.png',
 		onGcd: true,
+		potency: 120,
 	},
 	NATURES_MINNE: {
 		id: 7408,
@@ -106,6 +116,7 @@ export default {
 		name: 'Refulgent Arrow',
 		icon: 'https://xivapi.com/i/002000/002616.png',
 		onGcd: true,
+		potency: 300,
 	},
 }
 
