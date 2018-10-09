@@ -3,7 +3,7 @@ import _ from 'lodash'
 
 import {COOLDOWN_GROUPS, getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Group, Item} from './Timeline'
+import {ItemGroup, Item} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -13,14 +13,72 @@ export default class Cooldowns extends Module {
 		'downtime',
 	]
 
+	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
+	// top-level groups, or objects of the format {name: string, actions: array} for
+	// nested groups. Actions not specified here will be sorted by their ID below.
+	// Check the NIN and SMN modules for examples.
+	static cooldownOrder = []
+
 	_currentAction = null
 	_cooldowns = {}
+	_groups = {}
 
 	constructor(...args) {
 		super(...args)
+
+		// Pre-build groups for actions explicitly set by subclasses
+		this._buildGroups(this.constructor.cooldownOrder)
+
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_buildGroups(groups) {
+		// If there's no groups, noop
+		if (!groups) { return }
+
+		const ids = groups.map((data, i) => {
+			const order = -(groups.length - i)
+
+			// If it's just an action id, build a group for it and stop
+			if (typeof data === 'number') {
+				this._buildGroup({
+					id: data,
+					content: getAction(data).name,
+					order,
+				})
+				return data
+			}
+
+			// Build the base group
+			const group = this._buildGroup({
+				id: data.name,
+				content: data.name,
+				order,
+			})
+
+			if (data.merge) {
+				// If it's a merge group, we only need to register our group for each of the IDs
+				data.actions.forEach(id => {
+					this._groups[id] = group
+				})
+			} else {
+				// Otherwise, build nested groups for each action
+				group.nestedGroups = this._buildGroups(data.actions)
+			}
+
+			return data.name
+		})
+
+		return ids
+	}
+
+	_buildGroup(opts) {
+		const group = new ItemGroup(opts)
+		this.timeline.addGroup(group)
+		this._groups[opts.id] = group
+		return group
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -54,47 +112,52 @@ export default class Cooldowns extends Module {
 	}
 
 	_onComplete() {
-		const startTime = this.parser.fight.start_time
-
-		Object.keys(this._cooldowns).forEach(id => {
-			const cd = this._cooldowns[id]
-
-			// Clean out any 'current' cooldowns into the history
-			if (cd.current) {
-				cd.history.push(cd.current)
-				cd.current = null
-			}
-
-			const action = getAction(id)
-
-			// If the action is on the GCD, GlobalCooldown will be managing its own group
-			if (action.onGcd) {
-				return
-			}
-
-			// Add CD info to the timeline
-			// TODO: Might want to move group generation somewhere else
-			//       though will need to handle hidden groups for things with no items
-			// Using the ID as an order param to give an explicit order.
-			// TODO: Allow jobs to group related actions a-la raid buffs
-			this.timeline.addGroup(new Group({
-				id,
-				content: action.name,
-				order: id,
-			}))
-
-			cd.history.forEach(use => {
-				if (!use.shared) {
-					this.timeline.addItem(new Item({
-						type: 'background',
-						start: use.timestamp - startTime,
-						length: use.length,
-						group: id,
-						content: <img src={action.icon} alt={action.name}/>,
-					}))
-				}
-			})
+		Object.keys(this._cooldowns).forEach(actionId => {
+			this._addToTimeline(actionId)
 		})
+	}
+
+	_addToTimeline(actionId) {
+		const cd = this._cooldowns[actionId]
+		if (!cd) {
+			return false
+		}
+
+		// Clean out any 'current' cooldowns into the history
+		if (cd.current) {
+			cd.history.push(cd.current)
+			cd.current = null
+		}
+
+		const action = getAction(actionId)
+
+		// If the action is on the GCD, GlobalCooldown will be managing its own group
+		if (action.onGcd) {
+			return false
+		}
+
+		// Ensure we've got a group for this item
+		if (!this._groups[actionId]) {
+			this._buildGroup({
+				id: actionId,
+				content: action.name,
+				order: actionId,
+			})
+		}
+
+		// Add CD info to the timeline
+		cd.history.forEach(use => {
+			if (!use.shared) {
+				this._groups[actionId].addItem(new Item({
+					type: 'background',
+					start: use.timestamp - this.parser.fight.start_time,
+					length: use.length,
+					content: <img src={action.icon} alt={action.name} />,
+				}))
+			}
+		})
+
+		return true
 	}
 
 	getCooldown(actionId) {
