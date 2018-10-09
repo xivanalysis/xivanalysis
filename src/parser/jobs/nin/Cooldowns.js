@@ -7,7 +7,7 @@ export default class Cooldowns extends CoreCooldowns {
 			name: 'Ninjutsu',
 			actions: [
 				{
-					name: 'Mudra',
+					name: 'Mudras',
 					merge: true,
 					actions: [
 						ACTIONS.TEN.id,

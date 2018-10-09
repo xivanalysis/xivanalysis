@@ -13,7 +13,10 @@ export default class Cooldowns extends Module {
 		'downtime',
 	]
 
-	// Array used to sort cooldowns in the timeline. Elements should be either IDs for top-level groups, or objects of the format {name: string, actions: array} for nested groups. Actions not specified here will be sorted by their ID below.
+	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
+	// top-level groups, or objects of the format {name: string, actions: array} for
+	// nested groups. Actions not specified here will be sorted by their ID below.
+	// Check the NIN and SMN modules for examples.
 	static cooldownOrder = []
 
 	_currentAction = null
