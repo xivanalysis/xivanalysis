@@ -62,7 +62,7 @@ export default class Fists extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('casts', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('applybuff', {to: 'player', abilityId: STANCES}, this._onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: STANCES}, this._onRemove)
 		this.addHook('complete', this._onComplete)
