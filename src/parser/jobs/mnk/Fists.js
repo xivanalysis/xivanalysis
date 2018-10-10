@@ -56,7 +56,7 @@ export default class Fists extends Module {
 
 	_activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
 	_fistUptime = {[STANCELESS]: 0} // Initialise stanceless to prevent weird UI shit
-	_fistGCDs = {}
+	_fistGCDs = {[STANCELESS]: 0} // Initialise empty
 
 	_lastFistChange = this.parser.fight.start_time
 
@@ -109,7 +109,7 @@ export default class Fists extends Module {
 			</Fragment>,
 			why: `No Fist buff was active for ${this._fistGCDs[STANCELESS]} GCDs.`,
 			tiers: STANCELESS_SEVERITY,
-			value: this._fistGcds[STANCELESS],
+			value: this._fistGCDs[STANCELESS],
 		}))
 
 		// Semi lenient trigger, this assumes RoE is only used during downtime
