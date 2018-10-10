@@ -3,12 +3,12 @@ import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES, {getStatus} from 'data/STATUSES'
 
 import Module from 'parser/core/Module'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Shamelessly import Muscle Mage, you must cast Fist to continue
 import styles from '../smn/Pets.module.css'
@@ -30,7 +30,19 @@ const CHART_COLOURS = {
 
 const STANCELESS_SEVERITY = {
 	1: SEVERITY.MEDIUM,
-	12: SEVERITY.MAJOR,
+	3: SEVERITY.MAJOR,
+}
+
+// Medium on a full combo, major on 2 since they should be GL3 by now
+const WIND_SEVERITY = {
+	3: SEVERITY.MEDIUM,
+	6: SEVERITY.MAJOR,
+}
+
+// Forced disengaging is rarely more than 2 GCDs
+const EARTH_SEVERITY = {
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
 }
 
 export default class Fists extends Module {
@@ -44,14 +56,36 @@ export default class Fists extends Module {
 
 	_activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
 	_fistUptime = {[STANCELESS]: 0} // Initialise stanceless to prevent weird UI shit
+	_fistGCDs = {}
 
 	_lastFistChange = this.parser.fight.start_time
 
 	constructor(...args) {
 		super(...args)
+		this.addHook('cats', {by: 'player'}, this._onCast)
 		this.addHook('applybuff', {to: 'player', abilityId: STANCES}, this._onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: STANCES}, this._onRemove)
 		this.addHook('complete', this._onComplete)
+	}
+
+	handleFistChange(stanceId) {
+		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
+			this._fistUptime[this._activeFist] = 0
+		}
+
+		this._fistUptime[this._activeFist] += (this.parser.currentTimestamp - this._lastFistChange)
+		this._lastFistChange = this.parser.currentTimestamp
+		this._activeFist = stanceId
+	}
+
+	_onCast(event) {
+		const action = getAction(event.ability.guid)
+
+		if (!action || !action.onGcd) {
+			return
+		}
+
+		this._fistGCDs[this._activeFist]++
 	}
 
 	_onGain(event) {
@@ -73,28 +107,41 @@ export default class Fists extends Module {
 			content: <Fragment>
 				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
 			</Fragment>,
-			why: `No Fist buff was active for ${this.parser.formatDuration(this._fistUptime[STANCELESS])}.`,
+			why: `No Fist buff was active for ${this._fistGCDs[STANCELESS]} GCDs.`,
 			tiers: STANCELESS_SEVERITY,
-			value: this._fistUptime[STANCELESS],
+			value: this._fistGcds[STANCELESS],
 		}))
 
-		// Super lenient trigger, this assumes RoE on cooldown, we could probably work off Earth's Reply
-		// but this is a pretty niche situation already, and the Fists chart should make it obvious enough.
-		if (this._fistUptime[STATUSES.FISTS_OF_EARTH.id] > this.parser.fightDuration / 60 * 2) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FISTS_OF_EARTH.icon,
-				content: <Fragment>
-					When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back
-					to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
-				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for
-					{this.parser.formatDuration(this._fistUptime[STATUSES.FISTS_OF_EARTH.id])}.
-					Did you forget to swap back to <StatusLink {...STATUSES.FISTS_OF_FIRE} />?
-				</Fragment>,
-			}))
-		}
+		// Semi lenient trigger, this assumes RoE is only used during downtime
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FISTS_OF_EARTH.icon,
+			content: <Fragment>
+				When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back
+				to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
+			</Fragment>,
+			tiers: EARTH_SEVERITY,
+			why: <Fragment>
+				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for
+				{this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} GCDs.
+				Did you forget to swap back to <StatusLink {...STATUSES.FISTS_OF_FIRE} />?
+			</Fragment>,
+			value: this._fistGCDs[STATUSES.FISTS_OF_EARTH.id],
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FISTS_OF_WIND.icon,
+			content: <Fragment>
+				When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back
+				to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
+			</Fragment>,
+			tiers: WIND_SEVERITY,
+			why: <Fragment>
+				<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for
+				{this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} GCDs.
+				Did you forget to swap back to <StatusLink {...STATUSES.FISTS_OF_FIRE} />?
+			</Fragment>,
+			value: this._fistGCDs[STATUSES.FISTS_OF_WIND.id],
+		}))
 	}
 
 	getStanceUptimePercent(stanceId) {
@@ -110,16 +157,6 @@ export default class Fists extends Module {
 
 		// If this fucking errors...
 		return getStatus(stanceId).name
-	}
-
-	handleFistChange(stanceId) {
-		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
-			this._fistUptime[this._activeFist] = 0
-		}
-
-		this._fistUptime[this._activeFist] += (this.parser.currentTimestamp - this._lastFistChange)
-		this._lastFistChange = this.parser.currentTimestamp
-		this._activeFist = stanceId
 	}
 
 	output() {
