@@ -62,7 +62,7 @@ export default class Fists extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cats', {by: 'player'}, this._onCast)
+		this.addHook('casts', {by: 'player'}, this._onCast)
 		this.addHook('applybuff', {to: 'player', abilityId: STANCES}, this._onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: STANCES}, this._onRemove)
 		this.addHook('complete', this._onComplete)
@@ -107,7 +107,7 @@ export default class Fists extends Module {
 			content: <Fragment>
 				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
 			</Fragment>,
-			why: `No Fist buff was active for ${this._fistGCDs[STANCELESS]} GCDs.`,
+			why: `${this._fistGCDs[STANCELESS]} GCDs had no Fists buff active.`,
 			tiers: STANCELESS_SEVERITY,
 			value: this._fistGCDs[STANCELESS],
 		}))
