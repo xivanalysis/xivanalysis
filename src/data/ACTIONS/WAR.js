@@ -8,6 +8,7 @@ export default {
 		name: 'Steel Cyclone',
 		icon: 'https://xivapi.com/i/002000/002552.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 
 	DECIMATE: {
@@ -15,6 +16,7 @@ export default {
 		name: 'Decimate',
 		icon: 'https://xivapi.com/i/002000/002558.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 
 	FELL_CLEAVE: {
@@ -22,6 +24,7 @@ export default {
 		name: 'Fell Cleave',
 		icon: 'https://xivapi.com/i/002000/002557.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 
 	INNER_BEAST: {
@@ -29,6 +32,7 @@ export default {
 		name: 'Inner Beast',
 		icon: 'https://xivapi.com/i/002000/002553.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 
 	// -----

@@ -17,11 +17,11 @@ const RAGE_GENERATORS = {
 	[ACTIONS.SKULL_SUNDER.id]: 10,
 	[ACTIONS.BUTCHERS_BLOCK.id]: 10,
 	[ACTIONS.STORMS_PATH.id]: 20,
-	[ACTIONS.INFURIATE.id]: 50,
+//	[ACTIONS.INFURIATE.id]: 50,
 }
 
 //Actions that cost Rage
-const RAGE_SPENDERS ={
+const RAGE_SPENDERS = {
 	[ACTIONS.FELL_CLEAVE.id]: 50,
 	[ACTIONS.INNER_BEAST.id]: 50,
 	[ACTIONS.STEEL_CYCLONE.id]: 50,
@@ -58,11 +58,16 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		//this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_SPENDERS).map(Number)}, this._onSpenderCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.INFURIATE.id}, this._onInfuriateCast)
+		this.addHook('combo', {by: 'player'/*, abilityId: [ACTIONS.MAIM.id, ACTIONS.STORMS_EYE.id]*/}, this._onBuilderCast)
 		this.addHook('complete', this._onComplete)
+		console.log(`rage gen keys: ${Object.keys(RAGE_GENERATORS).map(Number)}`)
 	}
 
+	/*
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
@@ -81,22 +86,48 @@ export default class Gauge extends Module {
 			this._pushToGraph()
 		}
 	}
+	*/
 
-	_addRage(abilityId) {
+	_onBuilderCast(event) {
+		const abilityId = event.ability.guid
+
+		console.log(`abilityId: ${abilityId}`)
 		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
 		this._rage += RAGE_GENERATORS[abilityId]
-		// Checks if _rage is going above MAX_RAGE, and adds it to waste, then returns if it is.
+		console.log(`${RAGE_GENERATORS[abilityId]}`)
+		console.log(`Current rage as it's being added: ${this._rage}`)
+		// Checks _rage against MAX_RAGE, and adds to waste if it's waste, does nothing if not.
 		if (this._rage > MAX_RAGE) {
 			const waste = this._rage - MAX_RAGE
 			this._wastedRage += waste
 			this._rage = MAX_RAGE
-			return waste
+			console.log(` _rage: ${this._rage}`)
 		}
-		//Fix for gauge going negative, maybe?
-		if (this._rage < 0) {
-			this._rage = 0
+		this._pushToGraph()
+	}
+
+	_onInfuriateCast(event) {
+		const abilityId = event.ability.guid
+
+		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
+		this._rage += RAGE_GENERATORS[abilityId]
+
+		// Checks _rage against MAX_RAGE, and adds to waste if it's waste, does nothing if not.
+		if (this._rage > MAX_RAGE) {
+			const waste = this._rage - MAX_RAGE
+			this._wastedRage += waste
+			this._rage = MAX_RAGE
+			console.log(this._rage)
 		}
-		return 0
+		this._pushToGraph()
+	}
+
+	_onSpenderCast(event) {
+		if (!this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
+			this._rage = Math.max(this._rage - RAGE_SPENDERS[event.ability.guid], 0)
+			console.log(`Current rage on spender cast: ${this._rage}`)
+		}
+		this._pushToGraph()
 	}
 
 	_pushToGraph() {

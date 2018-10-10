@@ -7,7 +7,11 @@ export default {
 		id: 31,
 		name: 'Heavy Swing',
 		icon: 'https://xivapi.com/i/000000/000260.png',
+		potency: 160,
 		onGcd: true,
+		combo: {
+			start: true,
+		},
 	},
 
 	SKULL_SUNDER: {
@@ -15,6 +19,11 @@ export default {
 		name: 'Skull Sunder',
 		icon: 'https://xivapi.com/i/000000/000257.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 31,
+			potency: 210,
+		},
 	},
 
 	BUTCHERS_BLOCK: {
@@ -22,6 +31,12 @@ export default {
 		name: 'Butcher\'s Block',
 		icon: 'https://xivapi.com/i/000000/000262.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 35,
+			potency: 300,
+			end: true,
+		},
 	},
 
 	OVERPOWER: {
@@ -29,6 +44,8 @@ export default {
 		name: 'Overpower',
 		icon: 'https://xivapi.com/i/000000/000254.png',
 		onGcd: true,
+		potency: 130,
+		breaksCombo: true,
 	},
 
 	TOMAHAWK: {
@@ -36,6 +53,8 @@ export default {
 		name: 'Tomahawk',
 		icon: 'https://xivapi.com/i/000000/000261.png',
 		onGcd: true,
+		potency: 140,
+		breaksCombo: true,
 	},
 
 	MAIM: {
@@ -43,6 +62,12 @@ export default {
 		name: 'Maim',
 		icon: 'https://xivapi.com/i/000000/000255.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 31,
+			potency: 200,
+			end: true,
+		},
 	},
 
 	STORMS_PATH: {
@@ -50,6 +75,12 @@ export default {
 		name: 'Storm\'s Path',
 		icon: 'https://xivapi.com/i/000000/000258.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 37,
+			potency: 280,
+			end: true,
+		},
 	},
 
 	STORMS_EYE: {
@@ -57,6 +88,12 @@ export default {
 		name: 'Storm\'s Eye',
 		icon: 'https://xivapi.com/i/000000/000264.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 37,
+			potency: 280,
+			end: true,
+		},
 	},
 
 	// -----
