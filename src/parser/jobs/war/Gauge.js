@@ -62,7 +62,7 @@ export default class Gauge extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_SPENDERS).map(Number)}, this._onSpenderCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.INFURIATE.id}, this._onInfuriateCast)
-		this.addHook('combo', {by: 'player'/*, abilityId: [ACTIONS.MAIM.id, ACTIONS.STORMS_EYE.id]*/}, this._onBuilderCast)
+		this.addHook('combo', {by: 'player'}, this._onBuilderCast)
 		this.addHook('complete', this._onComplete)
 		console.log(`rage gen keys: ${Object.keys(RAGE_GENERATORS).map(Number)}`)
 	}
