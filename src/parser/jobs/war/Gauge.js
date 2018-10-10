@@ -60,14 +60,9 @@ export default class Gauge extends Module {
 		super(...args)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_SPENDERS).map(Number)}, this._onSpenderCast)
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_GENERATORS).map(Number)}, this._onBuilderCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.INFURIATE.id}, this._onInfuriateCast)
+		this.addHook('combo', {by: 'player', abilityId: Object.keys(RAGE_GENERATORS).map(Number)}, this._onBuilderCast)
 		this.addHook('complete', this._onComplete)
-	}
-
-	_onBuilderCast(event) {
-		const abilityId = event.ability.guid
-		this._addRage(abilityId)
-		this._pushToGraph()
 	}
 
 	_addRage(abilityId) {
@@ -84,6 +79,11 @@ export default class Gauge extends Module {
 		return 0
 	}
 
+	_onBuilderCast(event) {
+		this._addRage(event.ability.guid)
+		this._pushToGraph()
+	}
+
 	_onSpenderCast(event) {
 		if (!this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage = Math.max(this._rage - RAGE_SPENDERS[event.ability.guid], 0)
@@ -92,6 +92,11 @@ export default class Gauge extends Module {
 		// The whole point of this is to show when IR is being used. Might try using different colors for the dots depending on which ability
 		// They were used on.
 		// TODO: Check if coloring the dots differently per ability is possible.
+		this._pushToGraph()
+	}
+
+	_onInfuriateCast(event) {
+		this._addRage(event.ability.guid)
 		this._pushToGraph()
 	}
 
