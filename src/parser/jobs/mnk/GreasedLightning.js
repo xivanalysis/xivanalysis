@@ -229,7 +229,7 @@ export default class GreasedLightning extends Module {
 
 	_onComplete() {
 		// Push the final GL count so that it lasts to the end of the fight
-		this._stacks.push({...this.currentStacks, timestamp: this.parser.fight.end_time})
+		this._stacks.push({...this._currentStacks, timestamp: this.parser.fight.end_time})
 
 		// Check for broken GL transitions
 		this._stacks.forEach((value, index) => {
