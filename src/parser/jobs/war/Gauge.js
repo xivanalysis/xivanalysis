@@ -17,7 +17,7 @@ const RAGE_GENERATORS = {
 	[ACTIONS.SKULL_SUNDER.id]: 10,
 	[ACTIONS.BUTCHERS_BLOCK.id]: 10,
 	[ACTIONS.STORMS_PATH.id]: 20,
-//	[ACTIONS.INFURIATE.id]: 50,
+	[ACTIONS.INFURIATE.id]: 50,
 }
 
 //Actions that cost Rage
@@ -58,75 +58,40 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		//this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_SPENDERS).map(Number)}, this._onSpenderCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.INFURIATE.id}, this._onInfuriateCast)
-		this.addHook('combo', {by: 'player'}, this._onBuilderCast)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_GENERATORS).map(Number)}, this._onBuilderCast)
 		this.addHook('complete', this._onComplete)
-		console.log(`rage gen keys: ${Object.keys(RAGE_GENERATORS).map(Number)}`)
 	}
-
-	/*
-	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		// THIS THING TOOK ME TOO LONG TO FIGURE OUT AND I LOST SOME OF MY HAIR BY THE END OF IT
-		//On a serious note, it just checks for the ability, then adds the rage with the _addRage function, which, handles the waste etc.
-		//The if below that is a check if the player is under inner release or not. If it is, the cost isn't subtracted from your current rage,
-		//And simply treats it like they didn't cost rage at all. Elegant solution.
-		if (RAGE_GENERATORS[abilityId]) {
-			this._addRage(abilityId)
-		}
-		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
-			this._rage -= RAGE_SPENDERS[abilityId]
-		}
-
-		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
-			this._pushToGraph()
-		}
-	}
-	*/
 
 	_onBuilderCast(event) {
 		const abilityId = event.ability.guid
-
-		console.log(`abilityId: ${abilityId}`)
-		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
-		this._rage += RAGE_GENERATORS[abilityId]
-		console.log(`${RAGE_GENERATORS[abilityId]}`)
-		console.log(`Current rage as it's being added: ${this._rage}`)
-		// Checks _rage against MAX_RAGE, and adds to waste if it's waste, does nothing if not.
-		if (this._rage > MAX_RAGE) {
-			const waste = this._rage - MAX_RAGE
-			this._wastedRage += waste
-			this._rage = MAX_RAGE
-			console.log(` _rage: ${this._rage}`)
-		}
+		this._addRage(abilityId)
 		this._pushToGraph()
 	}
 
-	_onInfuriateCast(event) {
-		const abilityId = event.ability.guid
-
+	_addRage(abilityId) {
 		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
 		this._rage += RAGE_GENERATORS[abilityId]
 
-		// Checks _rage against MAX_RAGE, and adds to waste if it's waste, does nothing if not.
+		// Checks if _rage is going above MAX_RAGE, and adds it to waste, then returns if it is.
 		if (this._rage > MAX_RAGE) {
 			const waste = this._rage - MAX_RAGE
 			this._wastedRage += waste
 			this._rage = MAX_RAGE
-			console.log(this._rage)
+			return waste
 		}
-		this._pushToGraph()
+		return 0
 	}
 
 	_onSpenderCast(event) {
 		if (!this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage = Math.max(this._rage - RAGE_SPENDERS[event.ability.guid], 0)
-			console.log(`Current rage on spender cast: ${this._rage}`)
 		}
+		// This pushes everytime a spender is used -- Even if under Inner Release. That makes the graph have multiple dots, meaning a spender was used each dot.
+		// The whole point of this is to show when IR is being used. Might try using different colors for the dots depending on which ability
+		// They were used on.
+		// TODO: Check if coloring the dots differently per ability is possible.
 		this._pushToGraph()
 	}
 

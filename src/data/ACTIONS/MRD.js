@@ -66,7 +66,6 @@ export default {
 		combo: {
 			from: 31,
 			potency: 200,
-			end: true,
 		},
 	},
 
@@ -105,6 +104,7 @@ export default {
 		name: 'Thrill of Battle',
 		icon: 'https://xivapi.com/i/000000/000263.png',
 		cooldown: 120,
+		onGcd: false,
 	},
 
 	HOLMGANG: {
@@ -112,6 +112,7 @@ export default {
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		cooldown: 180,
+		onGcd: false,
 	},
 
 	VENGEANCE: {
@@ -119,5 +120,6 @@ export default {
 		name: 'Vengeance',
 		icon: 'https://xivapi.com/i/000000/000267.png',
 		cooldown: 120,
+		onGcd: false,
 	},
 }

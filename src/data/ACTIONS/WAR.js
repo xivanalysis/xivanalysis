@@ -44,6 +44,7 @@ export default {
 		name: 'Raw Intuition',
 		icon: 'https://xivapi.com/i/002000/002559.png',
 		cooldown: 90,
+		onGcd: false,
 	},
 
 	SHAKE_IT_OFF: {
@@ -51,6 +52,7 @@ export default {
 		name: 'Shake It Off',
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90,
+		onGcd: false,
 	},
 
 	ONSLAUGHT: {
@@ -58,6 +60,7 @@ export default {
 		name: 'Onslaught',
 		icon: 'https://xivapi.com/i/002000/002561.png',
 		cooldown: 15,
+		onGcd: false,
 	},
 
 	UPHEAVAL: {
@@ -65,6 +68,7 @@ export default {
 		name: 'Upheaval',
 		icon: 'https://xivapi.com/i/002000/002562.png',
 		cooldown: 30,
+		onGcd: false,
 	},
 
 	EQUILIBRIUM: {
@@ -72,6 +76,7 @@ export default {
 		name: 'Equilibrium',
 		icon: 'https://xivapi.com/i/002000/002560.png',
 		cooldown: 60,
+		onGcd: false,
 	},
 
 	UNCHAINED: {
@@ -79,6 +84,7 @@ export default {
 		name: 'Unchained',
 		icon: 'https://xivapi.com/i/002000/002554.png',
 		cooldown: 90,
+		onGcd: false,
 	},
 
 	DEFIANCE: {
@@ -87,6 +93,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002551.png',
 		cooldown: 10,
 		cooldownGroup: 1,
+		onGcd: false,
 	},
 
 	DELIVERANCE: {
@@ -95,6 +102,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002556.png',
 		cooldown: 10,
 		cooldownGroup: 1,
+		onGcd: false,
 	},
 
 	INNER_RELEASE: {
@@ -102,6 +110,7 @@ export default {
 		name: 'Inner Release',
 		icon: 'https://xivapi.com/i/002000/002564.png',
 		cooldown: 90,
+		onGcd: false,
 	},
 
 	INFURIATE: {
@@ -109,5 +118,6 @@ export default {
 		name: 'Infuriate',
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
+		onGcd: false,
 	},
 }
