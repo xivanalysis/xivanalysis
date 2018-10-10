@@ -21,5 +21,6 @@ export default class About extends CoreAbout {
 	}
 	contributors = [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 	]
 }

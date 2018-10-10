@@ -20,7 +20,6 @@
 
 ### DoTs
 - [x] Shadow Fang uptime and clipping (ShadowFang.js)
-- [ ] Updating the Shadow Fang module once we have a core DoT module
 
 ### Other Offensive OGCDs
 - [x] Avoiding non-Aeolian Edge finishers under Duality (Duality.js)
