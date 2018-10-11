@@ -1,7 +1,7 @@
 import {addExtraIndex} from 'utilities'
 
 // IDs aren't real IDs per se. Just fudging with summon action IDs and stuff
-const PETS = {
+const PETS = addExtraIndex({
 	// SCH
 	EOS: {
 		id: 1652,
@@ -54,8 +54,6 @@ const PETS = {
 		id: 2865,
 		name: 'Bishop Autoturret',
 	},
-}
-
-addExtraIndex(PETS, 'id')
+}, 'id')
 
 export default PETS
