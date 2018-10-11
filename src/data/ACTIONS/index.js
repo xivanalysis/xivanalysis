@@ -30,7 +30,7 @@ import DRG from './DRG'
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
 
-const ACTIONS = {
+const ACTIONS = addExtraIndex(addDefaultValues({
 	...SHARED,
 	...ROLE,
 	...DUTY,
@@ -62,9 +62,18 @@ const ACTIONS = {
 	...BLM,
 	...SMN,
 	...RDM,
-}
+}), 'id')
 
-const addDefaultValues = obj => {
+// NOTE: this is not 100% sound because if something had `onGcd: false` this would also add
+// castTime and cooldown to their types; but it's not possible to getting something perfect here without
+// wrapping each object with, say, a `gcdAction({...})` function that would set onGcd, castTime and cooldown
+// for us.
+/**
+ * @template T extends object
+ * @param {T} obj
+ * @returns {{ [K in keyof T]: T[K] & (T[K]['onGcd'] extends boolean ? { castTime: number; cooldown: number } : {})}
+ */
+function addDefaultValues (obj) {
 	Object.keys(obj).forEach(key => {
 		const action = obj[key]
 		if (action.onGcd) {
@@ -81,11 +90,15 @@ export const HIT_TYPES = {
 	CRIT: 2,
 }
 
-addExtraIndex(ACTIONS, 'id')
-addExtraIndex(addDefaultValues(ACTIONS), 'id')
-
 export default ACTIONS
 
 // TODO: warn when falling back?
 // TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?
+// this actually should have 2 overloads: one for when `id` is `T extends keyof STATUSES`, and one for when `id` is numeric
+// this, and getStatuses, should just be allowed to return undefined for additional safety.
+// TODO: remove the '|| {}' once call sites are type-checked, or at least audited
+/**
+ * @param {number} id
+ * @returns {ACTIONS[number] | { id?: never }}
+ */
 export const getAction = id => ACTIONS[id] || {}
