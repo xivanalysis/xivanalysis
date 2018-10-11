@@ -22,8 +22,11 @@
 			"jest"
 		],
 
-		"baseUrl": "./src"
+		"baseUrl": "./src",
+		"outDir": "./dist"
 	},
+
+	"compileOnSave": false,
 
 	"include": [
 		"src/**/*"
