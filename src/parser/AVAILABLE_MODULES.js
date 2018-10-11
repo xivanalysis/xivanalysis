@@ -2,13 +2,15 @@ import BOSSES from 'data/BOSSES'
 import JOBS from 'data/JOBS'
 
 import CORE from './core'
+import SMN from './jobs/smn'
+
 export default {
 	CORE,
 
 	JOBS: {
 		[JOBS.MONK.logType]: () => import('./jobs/mnk' /* webpackChunkName: "jobs-mnk" */),
 		[JOBS.NINJA.logType]: () => import('./jobs/nin' /* webpackChunkName: "jobs-nin" */),
-		[JOBS.SUMMONER.logType]: () => import('./jobs/smn' /* webpackChunkName: "jobs-smn" */),
+		[JOBS.SUMMONER.logType]: SMN,
 		[JOBS.BLACK_MAGE.logType]: () => import('./jobs/blm' /* webpackChunkName: "jobs-blm" */),
 		[JOBS.RED_MAGE.logType]: () => import('./jobs/rdm' /* webpackChunkName: "jobs-rdm" */),
 		[JOBS.WARRIOR.logType]: () => import('./jobs/war' /* webpackChunkName: "jobs-war" */),
