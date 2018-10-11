@@ -16,6 +16,8 @@
 			"dom",
 			"dom.iterable"
 		],
+		"noEmitHelpers": true,
+		"importHelpers": true,
 
 		"types": [
 			"webpack-env",
