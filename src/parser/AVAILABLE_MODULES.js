@@ -1,8 +1,9 @@
 import BOSSES from 'data/BOSSES'
 import JOBS from 'data/JOBS'
 
+import CORE from './core'
 export default {
-	CORE: () => import('./core/modules' /* webpackChunkName: "core" */),
+	CORE,
 
 	JOBS: {
 		[JOBS.MONK.logType]: () => import('./jobs/mnk' /* webpackChunkName: "jobs-mnk" */),

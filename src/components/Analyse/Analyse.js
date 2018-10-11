@@ -152,24 +152,24 @@ class Analyse extends Component {
 
 		// Look up any modules we might want (inc. core)
 		const modules = {
-			core: AVAILABLE_MODULES.CORE,
-			job: AVAILABLE_MODULES.JOBS[combatant.type],
-			boss: AVAILABLE_MODULES.BOSSES[fight.boss],
+			core: this.normaliseModuleMeta(AVAILABLE_MODULES.CORE),
+			job: this.normaliseModuleMeta(AVAILABLE_MODULES.JOBS[combatant.type]),
+			boss: this.normaliseModuleMeta(AVAILABLE_MODULES.BOSSES[fight.boss]),
 		}
 
 		// Load any modules we've got
 		const modulePromises = []
 		const loadOrder = ['core', 'boss', 'job']
 		for (const group of loadOrder) {
-			if (!modules[group]) { continue }
-			modulePromises.push(modules[group]())
+			modulePromises.push(modules[group].modules())
 		}
 
 		// If this throws, then there was a deploy between page load and this call. Tell them to refresh.
 		try {
-			(await Promise.all(modulePromises)).forEach(({default: loadedModules}, index) => {
-				modules[loadOrder[index]] = loadedModules
-				parser.addModules(loadedModules)
+			(await Promise.all(modulePromises)).forEach(({default: loadedModules = []}, index) => {
+				const meta = modules[loadOrder[index]]
+				meta.modules = loadedModules
+				parser.addMeta(meta)
 			})
 		} catch (error) {
 			if (process.env.NODE_ENV === 'development') {
@@ -194,6 +194,22 @@ class Analyse extends Component {
 
 		this.resultCache = null
 		this.setState({complete: true})
+	}
+
+	// Normalise module metadata - old modules are just an async to load the module group, new ones have proper metadata
+	normaliseModuleMeta(meta) {
+		// If meta is an object, it probably doesn't need adjusting
+		if (typeof meta === 'object') {
+			return meta
+		}
+
+		return {
+			modules: meta || (() => []),
+			description: null,
+			supportedPatches: null,
+			contributors: [],
+			changelog: [],
+		}
 	}
 
 	getParserResults() {

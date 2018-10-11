@@ -32,9 +32,19 @@ export default class About extends Module {
 		this.supportedPatches.from = value
 	}
 
+	constructor(...args) {
+		super(...args)
+
+		// Merge the parser's metadata in
+		const fields = ['description', 'contributors', 'supportedPatches']
+		fields.forEach(field => {
+			this[field] = this.parser.meta[field]
+		})
+	}
+
 	output() {
-		// If this passes, we've not been subclassed. Render an error.
-		if (Object.getPrototypeOf(this) === About.prototype) {
+		// If they've not set the supported patch range, we're assuming it's not supported at all
+		if (!this.supportedPatches) {
 			return <Message warning icon>
 				<Icon name="warning sign" />
 				<Message.Content>
@@ -87,7 +97,7 @@ export default class About extends Module {
 			<Grid.Column mobile={16} computer={6}>
 				<Segment as="dl" className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
-					<dd>{from || 'Unsupported'}{from !== to && `–${to}`}</dd>
+					<dd>{from }{from !== to && `–${to}`}</dd>
 
 					{this.contributors.length > 0 && <>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>

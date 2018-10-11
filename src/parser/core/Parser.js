@@ -1,3 +1,4 @@
+import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
 import {scroller} from 'react-scroll'
@@ -15,6 +16,7 @@ class Parser {
 	report = null
 	fight = null
 	player = null
+	meta = {}
 	_timestamp = 0
 
 	modules = {}
@@ -69,6 +71,19 @@ class Parser {
 	// Module handling
 	// -----
 
+	addMeta(meta) {
+		// Add the modules to the main system
+		this.addModules(meta.modules)
+
+		// Merge the meta in
+		mergeWith(this.meta, meta, (obj, src) => {
+			if (Array.isArray(obj)) { return obj.concat(src) }
+		})
+
+		// Remove the modules key. I'm sure this could be done more nicely but I'm tired and on a bus rn.
+		delete this.meta.modules
+	}
+
 	addModules(modules) {
 		const keyed = {}
 
@@ -81,6 +96,9 @@ class Parser {
 	}
 
 	buildModules() {
+		// Sort the changelog by the date
+		this.meta.changelog = sortBy(this.meta.changelog, 'date')
+
 		// Build the values we need for the toposort
 		const nodes = Object.keys(this._constructors)
 		const edges = []
