@@ -50,7 +50,7 @@ export const SHORT_LANGUAGE_MAP = Object.keys(LANGUAGES).reduce(
 		x[stringBefore(key, '-')] = key
 		return x
 	},
-	/** @type {Record<string, string>} */ ({})
+	/** @type {Record<string, keyof typeof LANGUAGES | undefined>} */ ({})
 )
 
 export default LANGUAGES

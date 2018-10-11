@@ -182,9 +182,10 @@ function getNavigatorLanguages (): ReadonlyArray<string> {
  * @param {String[]} [languages] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languages: ReadonlyArray<string> = getNavigatorLanguages()): string {
+export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): string {
+	const languages = languagesInput.filter((lang): lang is keyof typeof LANGUAGES => lang in LANGUAGES)
 	for (const lang of languages) {
-		if (LANGUAGES[lang] && LANGUAGES[lang].enable) {
+		if (LANGUAGES[lang].enable) {
 			return lang
 		}
 	}
@@ -193,7 +194,7 @@ export function getUserLanguage(languages: ReadonlyArray<string> = getNavigatorL
 	// language. It's better than falling  back to nothing. This may be overkill.
 	for (const lang of languages.map(l => stringBefore(l, '-'))) {
 		const match = SHORT_LANGUAGE_MAP[lang]
-		if (LANGUAGES[match] && LANGUAGES[match].enable) {
+		if (match && LANGUAGES[match].enable) {
 			return match
 		}
 	}
