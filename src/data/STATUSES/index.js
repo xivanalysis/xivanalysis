@@ -20,6 +20,8 @@ import PLD from './PLD'
 import SAM from './SAM'
 import DRK from './DRK'
 
+export const STATUS_ID_OFFSET = 1000000
+
 const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...ENEMY,
 	...ROLE,
@@ -46,8 +48,6 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...BLM,
 	...RDM,
 }), 'id')
-
-export const STATUS_ID_OFFSET = 1000000
 
 /**
  * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.
