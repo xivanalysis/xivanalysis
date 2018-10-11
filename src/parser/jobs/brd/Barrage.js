@@ -34,8 +34,9 @@ const SEVERITY = {
 const TRIPLE_HIT_BUFFER = 500
 
 // Weights for each possible bad barrage, for calculating the percent
-const BAD_BARRAGE_WEIGHT = 8
-const UNALIGNED_BARRAGE_WEIGHT = 2
+const BAD_BARRAGE_WEIGHT = 4
+const UNALIGNED_BARRAGE_WEIGHT = 1
+const DROPPED_BARRAGE_WEIGHT = 5
 
 // List of ARC/BRD single-target weaponskills that can be Barrage'd, but shouldn't
 const BAD_ST_WEAPONSKILLS = [
@@ -118,6 +119,7 @@ export default class Barrage extends Module {
 		// - unalignedBarrage: Barrage that was not aligned with Raging Strikes
 		const badBarrages = this._barrageEvents.filter(x => x.isBad)
 		const unalignedBarrages = this._barrageEvents.filter(x => !x.aligned)
+		const droppedBarrages = this._barrageEvents.filter(x => x.isDropped)
 
 		// Barrage usage Rule added to the checklist
 		if (this._getBarrage()) {
@@ -137,6 +139,11 @@ export default class Barrage extends Module {
 						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} /></Fragment>,
 						percent: () => { return  100 - ((unalignedBarrages.length) * 100 / this._barrageEvents.length) },
 						weight: UNALIGNED_BARRAGE_WEIGHT,
+					}),
+					new WeightedRequirement({
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s that dealt damage</Fragment>,
+						percent: () => { return  100 - ((droppedBarrages.length) * 100 / this._barrageEvents.length) },
+						weight: DROPPED_BARRAGE_WEIGHT,
 					}),
 				],
 			}))
@@ -162,7 +169,17 @@ export default class Barrage extends Module {
 			}
 
 			// If it's any kind of bad barrages:
-			if (barrage.isBad || !barrage.aligned) {
+			if (barrage.isDropped) {
+				panelProperties.tuples.push({
+					issue: <>
+						This barrage did <strong>not</strong> deal any damage.
+					</>,
+					severity: ERROR,
+					reason: <>
+						Using <StatusLink {...STATUSES.BARRAGE} /> on <strong>anything</strong> is better than letting it drop. Be mindful of transitions and invulnerability periods.
+					</>,
+				})
+			} else if (barrage.isBad || !barrage.aligned) {
 
 				// Calculates the total damage, total DPS, and potential damage for each "good" barrage skill
 				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
@@ -282,6 +299,7 @@ export default class Barrage extends Module {
 			aligned: aligned,
 			get timestamp() { return this.castEvent && this.castEvent.timestamp },
 			get isBad() { return this.skillBarraged && this.skillBarraged.id && BAD_ST_WEAPONSKILLS.includes(this.skillBarraged.id) || undefined },
+			get isDropped() { return !this.damageEvents || !this.damageEvents.length },
 		})
 	}
 
@@ -343,6 +361,11 @@ export default class Barrage extends Module {
 		// Severity of a panel is determined by the highest severity of the issues in it described
 		const severity = tuples.length ? this._severitySelector(tuples.map(t => t.severity)) : SUCCESS
 
+		// Default panel title
+		const defaultTitle = <>
+			{this.util.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} used{!barrage.isDropped && <> on <ActionLink {...barrage.skillBarraged} /></>}
+		</>
+
 		// List of issues
 		const issueElements = tuples && tuples.length && tuples.map(t => {
 			return t.issue && <Message key={tuples.indexOf(t)} error={t.severity === ERROR} warning={t.severity === WARNING} success={t.severity === SUCCESS}>
@@ -368,6 +391,29 @@ export default class Barrage extends Module {
 			</Fragment>
 		}) || undefined
 
+		// Damage log
+		const damageElements = barrage.damageEvents && barrage.damageEvents.length && <Message info>
+			<List>
+				<List.Header>
+					Damage:
+				</List.Header>
+				<List.Content>
+					<List.Item>
+						<Icon name={'arrow right'}/>
+						{this.util.formatDamageLog(barrage.damageEvents[0])}
+					</List.Item>
+					<List.Item>
+						<Icon name={'arrow right'}/>
+						{this.util.formatDamageLog(barrage.damageEvents[1])}
+					</List.Item>
+					<List.Item>
+						<Icon name={'arrow right'}/>
+						{this.util.formatDamageLog(barrage.damageEvents[2])}
+					</List.Item>
+				</List.Content>
+			</List>
+		</Message> || undefined
+
 		// Builds the full panel
 		return {
 			key: barrage.timestamp,
@@ -377,7 +423,7 @@ export default class Barrage extends Module {
 						name={SEVERITY[severity].icon}
 						className={SEVERITY[severity].text}
 					/>
-					{this.util.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} used on <ActionLink {...barrage.skillBarraged}/>
+					{defaultTitle}
 					{title}.
 				</>,
 			},
@@ -386,27 +432,7 @@ export default class Barrage extends Module {
 					{issueElements}
 					{reasonElements}
 					{contentElements}
-					<Message info>
-						<List>
-							<List.Header>
-								Damage:
-							</List.Header>
-							<List.Content>
-								<List.Item>
-									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(barrage.damageEvents[0])}
-								</List.Item>
-								<List.Item>
-									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(barrage.damageEvents[1])}
-								</List.Item>
-								<List.Item>
-									<Icon name={'arrow right'}/>
-									{this.util.formatDamageLog(barrage.damageEvents[2])}
-								</List.Item>
-							</List.Content>
-						</List>
-					</Message>
+					{damageElements}
 				</>,
 			},
 		}
