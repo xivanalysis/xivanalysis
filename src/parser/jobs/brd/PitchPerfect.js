@@ -2,8 +2,7 @@
  * @author Yumiya
  */
 import Module from 'parser/core/Module'
-import STATUSES from 'data/STATUSES'
-
+//import STATUSES from 'data/STATUSES'
 /*
 const DOTS = [
 	STATUSES.STORMBITE.id,
@@ -41,6 +40,8 @@ const PLAYER_DEBUFFS = [
 // Enemies
 const ENEMIES = {}
 
+//const PLAYER = {}
+
 export default class PitchPerfect extends Module {
 	static handle = 'pitchperfect'
 	static dependencies = [
@@ -50,26 +51,21 @@ export default class PitchPerfect extends Module {
 
 	normalise(events) {
 
+		for (const event in events) {
+			console.log(event)
+		}
+
 		return events
 	}
 
 	getEnemy(targetId) {
-		return ENEMIES[targetId] || {
-			id: targetId,
-			dots: {
-				[STATUSES.CAUSTIC_BITE.id]: {
-					application: null,
-					removal: null,
-					isRunning: () => { return this.application && this.application.timestamp || this.removal < 0 && this.removal.timestamp || 0 },
-				},
-				[STATUSES.STORMBITE.id]: {
-					application: null,
-					removal: null,
-					isRunning: () => { return this.application && this.application.timestamp || this.removal < 0 && this.removal.timestamp || 0 },
-				},
-			},
-			hasDot: (id) => { return this.dots[id] || false },
+		if (!ENEMIES[targetId]) {
+			ENEMIES[targetId] = {
+				statuses: {},
+			}
 		}
+
+		return ENEMIES[targetId]
 	}
 
 }
