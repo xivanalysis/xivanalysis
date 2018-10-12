@@ -97,16 +97,16 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 			return
 		}
 
-		const workingValues: ReadonlyArray<number> = isArray ?
+		const workingValues: ReadonlyArray<number|string> = isArray ?
 			values as ReadonlyArray<number> :
 			isObject ?
-				Object.keys(values) as any as ReadonlyArray<number> :
+				Object.keys(values) :
 				[]
 
 		let closestIndex: number|undefined
 		let closest: number|undefined
 
-		;(workingValues as ReadonlyArray<string|number>)
+		workingValues
 			.map(v => difference(+v, value))
 			.forEach((currentValue, currentIndex) => {
 				if (currentValue >= 0 && (closest === undefined || currentValue < closest)) {
@@ -120,7 +120,7 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 		}
 
 		if (isObject) {
-			return values[workingValues[closestIndex!]]
+			return values[+workingValues[closestIndex!]]
 		}
 	}
 }
