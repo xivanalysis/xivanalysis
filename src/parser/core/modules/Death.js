@@ -62,8 +62,9 @@ export default class Death extends Module {
 		}
 
 		if (!this.parser.fight.kill) {
-			// If the parse was a wipe, refund one death since the last one is pretty meaningless to ding them on
-			this._count--
+			// If the parse was a wipe, refund one death since the last one is pretty meaningless to ding them on.
+			// ...But max at 0 because apparently dummy parses don't get flagged as kills and -1 deaths makes very little sense.
+			this._count = Math.max(this._count - 1, 0)
 		}
 
 		if (!this._count) {
