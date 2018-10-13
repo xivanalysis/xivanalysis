@@ -68,7 +68,7 @@ export default class Fists extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	handleFistChange(stanceId) {
+	_handleFistChange(stanceId) {
 		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
 			this._fistUptime[this._activeFist] = 0
 		}
@@ -81,27 +81,39 @@ export default class Fists extends Module {
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
+		// If we don't have a valid action or it's not a GCD, skip
 		if (!action || !action.onGcd) {
 			return
+		}
+
+		// Ignore Meditation and Form Shift
+		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action)) {
+			return
+		}
+
+		// Initialise new stance
+		if (!this._fistGCDs.hasOwnProperty(this._activeFist)) {
+			this._fistGCDs[this._activeFist] = 0
 		}
 
 		this._fistGCDs[this._activeFist]++
 	}
 
 	_onGain(event) {
-		this.handleFistChange(event.ability.guid)
+		this._handleFistChange(event.ability.guid)
 	}
 
-	_onRemove() {
-		// This is kinda flaky, there's a chance for remove to run after gain and effectively
-		// set the entire active fist to be null. Open to ideas on making this more deterministic.
-		// It seems to work fine in tests tho so YOLO.
-
-		// Treat it as stanceless, switching Fist without dropping the old one has the same timestamp
-		this.handleFistChange(0)
+	_onRemove(event) {
+		// If we're removing a fist that isn't active, it's just log order weirdness due to timestamps
+		if (this._activeFist === event.ability.guid) {
+			this._handleFistChange(0)
+		}
 	}
 
 	_onComplete() {
+		// Flush the last stance
+		this._handleFistChange(0)
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
 			content: <Fragment>
@@ -121,9 +133,7 @@ export default class Fists extends Module {
 			</Fragment>,
 			tiers: EARTH_SEVERITY,
 			why: <Fragment>
-				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for
-				{this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} GCDs.
-				Did you forget to swap back to <StatusLink {...STATUSES.FISTS_OF_FIRE} />?
+				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for {this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} GCDs.
 			</Fragment>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_EARTH.id],
 		}))
@@ -136,9 +146,7 @@ export default class Fists extends Module {
 			</Fragment>,
 			tiers: WIND_SEVERITY,
 			why: <Fragment>
-				<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for
-				{this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} GCDs.
-				Did you forget to swap back to <StatusLink {...STATUSES.FISTS_OF_FIRE} />?
+				<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for {this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} GCDs.
 			</Fragment>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_WIND.id],
 		}))
