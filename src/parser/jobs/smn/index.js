@@ -35,9 +35,5 @@ export default {
 		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
 	],
 
-	changelog: [{
-		date: new Date('2018-03-01'),
-		changes: 'hi this is SMN',
-		contributors: [CONTRIBUTORS.ACKWELL],
-	}],
+	changelog: [],
 }
