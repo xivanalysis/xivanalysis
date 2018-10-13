@@ -11,7 +11,7 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Shamelessly import Muscle Mage, you must cast Fist to continue
-import styles from '../smn/Pets.module.css'
+import styles from '../smn/modules/Pets.module.css'
 
 const STANCELESS = 0
 
