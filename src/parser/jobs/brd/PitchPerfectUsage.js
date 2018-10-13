@@ -27,9 +27,8 @@ const PP = {
 
 // Issues
 const NONE = 0
-const PP3_ON_HIGH_CRIT = 1
-const PP2_ON_LOW_CRIT = 2
-const PP1_NOT_AT_END = 3
+const PP2_ON_LOW_CRIT = 1
+const PP1_NOT_AT_END = 2
 
 export default class PitchPerfectUsage extends Module {
 	static handle = 'ppUsage'
@@ -112,22 +111,16 @@ export default class PitchPerfectUsage extends Module {
 			ppEvent.critOnDot[STATUSES.STORMBITE.id] = enemy.tick[STATUSES.STORMBITE.id] && enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR
 
 			// If crit is above threshold for PP2
+			// Using PP1 when not at the end of the song is not ideal
 			if (
 				enemy.tick[STATUSES.CAUSTIC_BITE.id]
 				&& enemy.tick[STATUSES.STORMBITE.id]
 				&& enemy.tick[STATUSES.CAUSTIC_BITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
 				&& enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
 			) {
-				// Using PP3 when crit is above the threshold is not ideal
-				if (event.stacks === PP[3]) {
-
-					ppEvent.issue = PP3_ON_HIGH_CRIT
-
 				// Using PP1 when not at the end of the song is not ideal
-				} else if (event.stacks === PP[1]) {
-
+				if (event.stacks === PP[1]) {
 					ppEvent.issue = PP1_NOT_AT_END
-
 				}
 			// Using PP2 when crit is below the threshold is not ideal
 			} else if (event.stacks === PP[2]) {
@@ -172,7 +165,7 @@ export default class PitchPerfectUsage extends Module {
 			return
 		}
 
-		// Builds a panel for each barrage event
+		// Builds a panel for each pp event
 		const panels = badPPevents.map(pp => {
 
 			const panelProperties = {
@@ -180,24 +173,19 @@ export default class PitchPerfectUsage extends Module {
 				tuples: [],
 			}
 
-			// If it's any kind of bad barrages:
-			if (pp.issue === PP3_ON_HIGH_CRIT) {
-				panelProperties.tuples.push({
-					issue: <>
-						When your critical hit rate is higher than <strong>{PP2_THRESHOLD}%</strong> on both your DoTs, {ACTIONS.PITCH_PERFECT.name} should be used at <strong>2 stacks</strong>.
-					</>,
-					reason: <>
-						This happens because both your DoTs can give you Repertoire procs at the same time. If you already have 2 stacks on your bank, getting a double proc wastes one stack.
-						At <strong>{PP2_THRESHOLD}%</strong> critical hit rate, you are more likely to get a double proc and waste a stack than not.
-					</>,
-				})
-			} else if (pp.issue === PP2_ON_LOW_CRIT) {
+			// For each PP issue
+			if (pp.issue === PP2_ON_LOW_CRIT) {
 				panelProperties.tuples.push({
 					issue: <>
 						When your critical hit rate is lower than or equal to <strong>{PP2_THRESHOLD}%</strong> on both your DoTs, {ACTIONS.PITCH_PERFECT.name} should be used at <strong>3 stacks</strong>.
 					</>,
 					reason: <>
 						A {ACTIONS.PITCH_PERFECT.name} at 3 stacks has the highest <strong>potency per stack</strong> value, with 140 potency per stack.
+						<br/>
+						Using {ACTIONS.PITCH_PERFECT.name} at 2 stacks is only optimal when your critical hit rate is greater than <strong>{PP2_THRESHOLD}%</strong> on both your DoTs.
+						<br/>
+						This happens because both your DoTs can give you Repertoire procs at the same time. If you already have 2 stacks on your bank, getting a double proc wastes one stack.
+						At <strong>{PP2_THRESHOLD}%</strong> critical hit rate or higher, you are more likely to get a double proc and waste a stack than not.
 					</>,
 				})
 			} else if (pp.issue === PP1_NOT_AT_END) {
