@@ -64,6 +64,7 @@ export default class Util extends Module {
 	}
 
 	formatTimestamp(timestamp) {
+		timestamp = Math.max(timestamp, this.parser.fight.start_time)
 		return this.parser.formatTimestamp(timestamp)
 	}
 
