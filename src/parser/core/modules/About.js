@@ -1,10 +1,9 @@
 import {Trans, i18nMark} from '@lingui/react'
-import _ from 'lodash'
 import React from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
-import PATCHES, {getPatch} from 'data/PATCHES'
+import {getPatch, patchSupported} from 'data/PATCHES'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -18,10 +17,11 @@ export default class About extends Module {
 	description = null
 	contributors = []
 
-	supportedPatches = {
-		// from: ...,
-		// to: ...,
-	}
+	supportedPatches = null
+	// {
+	//		from: ...,
+	//		to: ...,
+	// }
 
 	set supportedPatch(value) {
 		// Warn the dev that they're using a deprecated prop
@@ -59,22 +59,8 @@ export default class About extends Module {
 		}
 
 		// Work out the supported patch range (and if we're in it)
-		let supported = false
 		const {from, to = from} = this.supportedPatches
-		if (from && PATCHES[from]) {
-			// Work out what the next patch is - if there is none, next patch "never" comes (until we add it!)
-			const sortedPatches = Object.keys(PATCHES).sort(
-				(a, b) => PATCHES[a].date - PATCHES[b].date
-			)
-			const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) + 1]
-			const nextPatch = PATCHES[nextPatchKey] || {date: Infinity}
-
-			// Grab the dates for the from/to
-			const fromDate = PATCHES[from].date
-			const toDate = nextPatch.date
-
-			supported = _.inRange(this.parser.parseDate, fromDate, toDate)
-		}
+		const supported = patchSupported(from, to, this.parser.parseDate)
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
