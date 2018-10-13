@@ -33,7 +33,7 @@ class CombatantList extends Component {
 		const {friendlies} = this.props.report
 		const currentFight = this.props.currentFight
 
-		const configs = Object.keys(AVAILABLE_MODULES.JOBS)
+		const jobMeta = AVAILABLE_MODULES.JOBS
 
 		// Filter down to just the friendlies in this fight (that aren't limit break), grouping by role
 		const grouped = [] // Relying on magic here
@@ -45,7 +45,7 @@ class CombatantList extends Component {
 			}
 
 			// Get the job for the friendly. Gonna push jobs w/o a parser into a special group
-			const role = configs.includes(type) ? JOBS[type].role : ROLES.UNSUPPORTED.id
+			const role = (type in jobMeta) ? JOBS[type].role : ROLES.UNSUPPORTED.id
 
 			if (!grouped[role]) {
 				grouped[role] = []
@@ -87,20 +87,25 @@ class CombatantList extends Component {
 						</Message.Content>
 					</Message>}
 					<Menu fluid vertical attached="bottom">
-						{friends.map(friend =>
-							// TODO: This is legit trash
-							<Menu.Item
+						{friends.map(friend => {
+							const job = JOBS[friend.type]
+							const supportedPatches = jobMeta[friend.type].supportedPatches
+							return <Menu.Item
 								key={friend.id}
 								as={Link}
+								className={styles.combatantLink}
 								to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
 							>
-								{JOBS[friend.type] && <JobIcon
-									job={JOBS[friend.type]}
+								{job && <JobIcon
+									job={job}
 									className={styles.jobIcon}
 								/>}
 								{friend.name}
+								{supportedPatches && <span className={styles.supportedPatches}>
+									{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}
+								</span>}
 							</Menu.Item>
-						)}
+						})}
 					</Menu>
 				</Fragment>
 			})}

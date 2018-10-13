@@ -83,7 +83,7 @@ export default class About extends Module {
 			<Grid.Column mobile={16} computer={6}>
 				<Segment as="dl" className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
-					<dd>{from }{from !== to && `–${to}`}</dd>
+					<dd>{from}{from !== to && `–${to}`}</dd>
 
 					{this.contributors.length > 0 && <>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>
