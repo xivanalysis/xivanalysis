@@ -6,6 +6,7 @@ import {Trans} from '@lingui/react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
+import {patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import store from 'store'
@@ -17,6 +18,7 @@ class CombatantList extends Component {
 	static propTypes = {
 		report: PropTypes.shape({
 			code: PropTypes.string.isRequired,
+			start: PropTypes.number.isRequired,
 			friendlies: PropTypes.arrayOf(PropTypes.shape({
 				id: PropTypes.number.isRequired,
 				name: PropTypes.string.isRequired,
@@ -30,7 +32,7 @@ class CombatantList extends Component {
 	}
 
 	render() {
-		const {friendlies} = this.props.report
+		const {friendlies, start} = this.props.report
 		const currentFight = this.props.currentFight
 
 		const jobMeta = AVAILABLE_MODULES.JOBS
@@ -45,7 +47,18 @@ class CombatantList extends Component {
 			}
 
 			// Get the job for the friendly. Gonna push jobs w/o a parser into a special group
-			const role = (type in jobMeta) ? JOBS[type].role : ROLES.UNSUPPORTED.id
+			let role = ROLES.UNSUPPORTED.id
+			if (type in jobMeta) {
+				role = JOBS[type].role
+
+				const supportedPatches = jobMeta[type].supportedPatches
+				if (supportedPatches) {
+					const {from, to = from} = supportedPatches
+					if (!patchSupported(from, to, start)) {
+						role = ROLES.OUTDATED.id
+					}
+				}
+			}
 
 			if (!grouped[role]) {
 				grouped[role] = []
@@ -62,6 +75,8 @@ class CombatantList extends Component {
 			return null
 		}
 
+		let warningDisplayed = false
+
 		return <>
 			<Header>
 				<Trans id="core.find.select-combatant">
@@ -71,11 +86,16 @@ class CombatantList extends Component {
 
 			{grouped.map((friends, index) => {
 				const role = ROLES[index]
+				const showWarning = !warningDisplayed && [
+					ROLES.OUTDATED.id,
+					ROLES.UNSUPPORTED.id,
+				].includes(index)
+				if (showWarning) {
+					warningDisplayed = true
+				}
+
 				return <Fragment key={index}>
-					<Segment color={role.colour} attached="top">
-						<Trans id={role.i18n_id} defaults={role.name} />
-					</Segment>
-					{index === ROLES.UNSUPPORTED.id && <Message info icon attached>
+					{showWarning && <Message info icon>
 						<Icon name="code" />
 						<Message.Content>
 							<Message.Header>
@@ -86,10 +106,16 @@ class CombatantList extends Component {
 							</p>
 						</Message.Content>
 					</Message>}
+
+					<Segment color={role.colour} attached="top">
+						<Trans id={role.i18n_id} defaults={role.name} />
+					</Segment>
 					<Menu fluid vertical attached="bottom">
 						{friends.map(friend => {
 							const job = JOBS[friend.type]
-							const supportedPatches = jobMeta[friend.type].supportedPatches
+							const meta = jobMeta[friend.type]
+							const supportedPatches = (meta || {}).supportedPatches
+
 							return <Menu.Item
 								key={friend.id}
 								as={Link}

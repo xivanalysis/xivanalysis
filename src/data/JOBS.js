@@ -37,7 +37,14 @@ export const ROLES = addExtraIndex({
 		colour: 'red',
 	},
 
-	// Not really a role but w/e
+	// Not really roles but w/e
+	OUTDATED: {
+		id: 99,
+		i18n_id: i18nMark('game.roles.outdated'),
+		name: 'Outdated',
+		colour: 'grey',
+	},
+
 	UNSUPPORTED: {
 		id: 100,
 		i18n_id: i18nMark('game.roles.unsupported'),
