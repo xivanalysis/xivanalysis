@@ -16,14 +16,19 @@
 			"dom",
 			"dom.iterable"
 		],
+		"noEmitHelpers": true,
+		"importHelpers": true,
 
 		"types": [
 			"webpack-env",
 			"jest"
 		],
 
-		"baseUrl": "./src"
+		"baseUrl": "./src",
+		"outDir": "./dist"
 	},
+
+	"compileOnSave": false,
 
 	"include": [
 		"src/**/*"

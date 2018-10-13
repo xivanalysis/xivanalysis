@@ -1095,7 +1095,7 @@
   version "0.0.1"
   resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/6e167ca29a9a67d4c3959157fe5ffbf4febf6ea0"
   dependencies:
-    lodash-es "^4.17.11"
+    lodash "^4.17.11"
     prop-types "^15.6.2"
   optionalDependencies:
     reactjs-popup "^1.2.0"
@@ -10225,7 +10225,7 @@ ts-loader@^5.2.1:
     micromatch "^3.1.4"
     semver "^5.0.1"
 
-tslib@^1.9.0:
+tslib@^1.9.0, tslib@^1.9.3:
   version "1.9.3"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.9.3.tgz#d7e4dd79245d85428c4d7e4822a79917954ca286"
   integrity sha512-4krF8scpejhaOgqzBEcGM7yDIEfi0/8+8zDRZhNZZ2kjmHJ4hv3zCbQWxoJGz1iw5U0Jl0nma13xzHXcncMavQ==

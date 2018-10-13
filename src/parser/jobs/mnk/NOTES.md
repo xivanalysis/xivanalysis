@@ -15,8 +15,6 @@
 - [x] Dragon Kick uptime and clipping
 - [x] Twin Snakes uptime and clipping
 
-turn FoF uptime check into pie chart of fists
-
 ### AoE
 - [x] Make sure there's enough enemies for RB or AotD effectiveness
 - [ ] Allow AotD for Silence if we can tell if the enemy is actually interrupted
