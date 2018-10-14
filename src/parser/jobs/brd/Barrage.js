@@ -283,12 +283,14 @@ export default class Barrage extends Module {
 
 	// Adds a new barrage event to the array, with only cast and alignment information for now
 	_addBarrage(event) {
+
 		let aligned = true
 
 		// Checks for Raging Strikes alignment
 		if (
-			!this.util.hasBuff(STATUSES.RAGING_STRIKES)
-			&& this.util.timeUntilFinish(event.timestamp) >= ACTIONS.BARRAGE.cooldown * 1000
+			!event
+			|| this.util.timeUntilFinish(event.timestamp) >= ACTIONS.BARRAGE.cooldown * 1000
+			&& !this.util.hasBuff(STATUSES.RAGING_STRIKES)
 		) {
 			aligned = false
 		}
@@ -297,7 +299,7 @@ export default class Barrage extends Module {
 		this._barrageEvents.push({
 			castEvent: event,
 			aligned: aligned,
-			get timestamp() { return this.castEvent && this.castEvent.timestamp },
+			get timestamp() { return this.castEvent ? this.castEvent.timestamp : 0 },
 			get isBad() { return this.skillBarraged && this.skillBarraged.id && BAD_ST_WEAPONSKILLS.includes(this.skillBarraged.id) || undefined },
 			get isDropped() { return !this.damageEvents || !this.damageEvents.length },
 		})
@@ -306,13 +308,20 @@ export default class Barrage extends Module {
 	// Returns the most recent barrage event, or undefined if there's none
 	_getBarrage() {
 		const index = this._barrageEvents.length - 1
-		return index >= 0 && this._barrageEvents[index]
+		return index >= 0 ? this._barrageEvents[index] : undefined
 	}
 
 	// Checks out a barrage by adding the damage events information to the barrage event and resetting the last skill tracker
 	_checkOutBarrage(skill) {
 
-		const barrage = this._getBarrage()
+		let barrage = this._getBarrage()
+
+		if (!barrage) {
+			// If no previous barrage cast was found, we assume it was pre-pull. We add a barrage with an undefined event
+			this._addBarrage()
+			barrage = this._getBarrage()
+		}
+
 		barrage.skillBarraged = skill.action
 		barrage.damageEvents = skill.damageEvents.slice()
 
