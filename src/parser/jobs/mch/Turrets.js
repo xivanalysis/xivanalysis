@@ -9,7 +9,9 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-import styles from '../smn/Pets.module.css'
+// TOOOAAAAASSST
+// TODO: Generalise pie chart handling
+import styles from '../smn/modules/Pets.module.css'
 
 const NO_TURRET_ID = -1
 const TURRET_RESET_ID = -2
