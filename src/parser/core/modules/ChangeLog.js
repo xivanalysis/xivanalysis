@@ -1,7 +1,11 @@
 import {i18nMark} from '@lingui/react'
-//import React from 'react'
+import React, {Fragment} from 'react'
+import {Header, Segment} from 'semantic-ui-react'
 
+import ContributorLabel from 'components/ui/ContributorLabel'
 import Module, {DISPLAY_ORDER} from 'parser/core/Module'
+
+import styles from './ChangeLog.module.css'
 
 let _changeLog = []
 
@@ -20,9 +24,26 @@ export default class ChangeLog extends Module {
 	}
 
 	output() {
-		return _changeLog.map((item) => {
-			const contributors = Array.from(Object.keys(item.contributors), k=>item.contributors[k])
-			console.log(`${item.date.toLocaleString()}, ${contributors[0].name} and ${item.changes}`)
-		})
+		return <div>
+			{_changeLog.map((item, key) => {
+				// Fixes the issue with the 'attach' property. Basically, if it's the first one it's just gonna attach to the top, if not, it'll attach to the segment/header above it.
+				const attach = (key === 0) ? 'top' : true
+
+				return <Fragment key={key}>
+					<Header as="h5" attached={attach}>
+						{item.date.toLocaleDateString()}
+						<span className={styles.contributor}>{item.contributors.map(contributor => {
+							console.log(contributor)
+							return <div key={typeof contributor === 'string' ? contributor : contributor.name}>
+								<ContributorLabel contributor={contributor} />
+							</div>
+						})}</span>
+					</Header>
+					<Segment attached className={styles.changes}>
+						{item.changes}
+					</Segment>
+				</Fragment>
+			})}
+		</div>
 	}
 }

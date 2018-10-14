@@ -49,5 +49,10 @@ export default {
 		date: new Date('2018-03-02'),
 		changes: 'hi this is a test 3',
 		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2018-03-02'),
+		changes: 'hi this is a test 3 aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+		contributors: [CONTRIBUTORS.ACKWELL],
 	}],
 }
