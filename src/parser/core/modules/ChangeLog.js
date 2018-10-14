@@ -37,7 +37,6 @@ export default class ChangeLog extends Module {
 					<Header as="h5" attached={attach}>
 						{item.date.toLocaleDateString()}
 						<span className={styles.contributor}>{item.contributors.map(contributor => {
-							console.log(contributor)
 							return <div key={typeof contributor === 'string' ? contributor : contributor.name}>
 								<ContributorLabel contributor={contributor} />
 							</div>
