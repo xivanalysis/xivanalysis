@@ -28,7 +28,7 @@ export default class InnerRelease extends Module {
 	_ir = {}
 	_history = []
 	_isRushing = false
-	_irTime = 10000
+	_irTime = 10000 /* eslint-disable-line no-magic-numbers */
 
 	_missedGcds = 0
 	_missedUpheavals = 0
@@ -71,6 +71,7 @@ export default class InnerRelease extends Module {
 
 	_onRemoveIR() {
 		// TODO: You may need to make adjustments so the guard isn't necessary. The applybuff event is fab'd for things at the start of the fight, it may be a go.
+		/* eslint-disable-next-line no-magic-numbers */
 		if (this._ir.casts && !this._ir.casts.some(cast => cast.ability.guid === ACTIONS.FELL_CLEAVE.id) < 5) {
 			this._stopAndSave()
 		}
