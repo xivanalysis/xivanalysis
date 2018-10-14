@@ -35,5 +35,19 @@ export default {
 		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
 	],
 
-	changelog: [],
+	changelog: [{
+		date: new Date('2018-03-01'),
+		changes: 'hi this is a test',
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2018-03-03'),
+		changes: 'hi this is a test 2',
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2018-03-02'),
+		changes: 'hi this is a test 3',
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}],
 }
