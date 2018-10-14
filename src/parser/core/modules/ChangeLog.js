@@ -20,9 +20,9 @@ export default class ChangeLog extends Module {
 	}
 
 	output() {
-		return _changeLog.map((item, key) => {
-			//const contributors = Array.from(Object.keys(item.contributors), k=>item.contributors[k])
-			//console.log(`${item.date.toLocaleString()}, ${contributors[0].name} and ${item.changes}`)
+		return _changeLog.map((item) => {
+			const contributors = Array.from(Object.keys(item.contributors), k=>item.contributors[k])
+			console.log(`${item.date.toLocaleString()}, ${contributors[0].name} and ${item.changes}`)
 		})
 	}
 }
