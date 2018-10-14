@@ -1,41 +1,45 @@
 import {matchPath} from 'react-router-dom'
 import LANGUAGES, {SHORT_LANGUAGE_MAP, DEFAULT_LANGUAGE} from 'data/LANGUAGES'
 
-export const addExtraIndex = (obj, index) => {
+import compose from 'lodash/fp/compose'
+export { compose }
+
+function ensureArray<T> (val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+	if (!Array.isArray(val)) {
+		return [val as T]
+	}
+	return val // need to add a .slice() here if we want the return to be T[]
+}
+
+export function addExtraIndex<T extends Record<string, object>, K extends keyof T[keyof T]> (obj: T, index: K) {
+	const result = obj as T & Record<number, T[keyof T]>
 	Object.keys(obj).forEach(key => {
-		const val = obj[key]
-		let newKey = val[index]
-		if (!Array.isArray(newKey)) {
-			newKey = [newKey]
-		}
-		newKey.forEach(key => obj[key] = val)
+		const val = obj[key as keyof T]
+		let newKey = ensureArray(val[index])
+		newKey.forEach(key => result[key as any as number] = val)
 	})
-	return obj
+	return result
 }
 
 // This is pretty damn nasty, but it'll do for now
-export const getPathMatch = pathname => {
-	const page = matchPath(pathname, '/:page?')
+export function getPathMatch (pathname: string) {
+	const page = matchPath<{ page: string }>(pathname, { path: '/:page?' })
 
 	let path = '/'
-	switch (page.params.page) {
+	switch (page !== null && page.params.page) {
 	case 'find':    path = '/find/:code/:fight?'; break
 	case 'analyse': path = '/analyse/:code/:fight/:combatant'; break
 	default:        // Do nothing
 	}
 
-	return matchPath(pathname, path)
+	return matchPath(pathname, { path })
 }
-
-export const compose = (...fns) => fns.reduce(
-	(f, g) => (...args) => f(g(...args))
-)
 
 /**
  * Create reverse key<->value mappings for an object and then freeze it to prevent further modifications.
  * @param {*KeyValue object to reverse map} obj
  */
-export function enumify(obj) {
+export function enumify <T extends Record<string|number, string|number>> (obj: T): Readonly<T> {
 	for (const [key, val] of Object.entries(obj)) {
 		obj[val] = key
 	}
@@ -48,8 +52,8 @@ export function enumify(obj) {
  * @param {Object} object The object to extra data from.
  * @returns {Object} Data that should be safe to JSON encode.
  */
-export function extractErrorContext(object) {
-	const result = {}
+export function extractErrorContext(object: any): object {
+	const result: Record<string, string|number|boolean|null> = {}
 
 	for (const [key, val] of Object.entries(object)) {
 		switch (typeof val) {
@@ -69,7 +73,7 @@ export function extractErrorContext(object) {
 		case 'string':
 		case 'number':
 		case 'boolean':
-			result[key] = val
+			result[key] = val as string|number|boolean
 			break
 
 		default:
@@ -80,8 +84,12 @@ export function extractErrorContext(object) {
 	return result
 }
 
-function _matchClosestHoF(difference) {
-	return (values, value) => {
+function _matchClosestHoF(difference: (a: number, b: number) => number) {
+	return matcher
+
+	function matcher(values: ReadonlyArray<number>, value: number): number
+	function matcher<T>(values: Record<number, T>, value: number): T
+	function matcher (values: ReadonlyArray<number>|Record<number, any>, value: any) {
 		const isArray = Array.isArray(values)
 		const isObject = typeof values === typeof {}
 
@@ -89,30 +97,30 @@ function _matchClosestHoF(difference) {
 			return
 		}
 
-		const workingValues = isArray ?
-			values :
+		const workingValues: ReadonlyArray<number|string> = isArray ?
+			values as ReadonlyArray<number> :
 			isObject ?
 				Object.keys(values) :
 				[]
 
-		let closestIndex
-		let closest
+		let closestIndex: number|undefined
+		let closest: number|undefined
 
 		workingValues
-			.map(v => difference(v, value))
+			.map(v => difference(+v, value))
 			.forEach((currentValue, currentIndex) => {
-				if (currentValue >= 0 && (typeof closest === typeof undefined || currentValue < closest)) {
+				if (currentValue >= 0 && (closest === undefined || currentValue < closest)) {
 					closest = currentValue
 					closestIndex = currentIndex
 				}
 			})
 
 		if (isArray) {
-			return workingValues[closestIndex]
+			return workingValues[closestIndex!]
 		}
 
 		if (isObject) {
-			return values[workingValues[closestIndex]]
+			return values[+workingValues[closestIndex!]]
 		}
 	}
 }
@@ -142,7 +150,7 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
 
 // Renders a time given in seconds into the format mm:ss
-export function formatDuration(duration) {
+export function formatDuration(duration: number) {
 	/* eslint-disable no-magic-numbers */
 	const seconds = Math.floor(duration % 60)
 	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
@@ -155,9 +163,17 @@ export function formatDuration(duration) {
  * @param {String} needle The sub-string to search for
  * @returns {String} All of string before needle
  */
-export function stringBefore(haystack, needle) {
+export function stringBefore(haystack: string, needle: string) {
 	const idx = haystack.indexOf(needle)
 	return idx === -1 ? haystack : haystack.slice(0, idx)
+}
+
+
+function getNavigatorLanguages (): ReadonlyArray<string> {
+	if (Array.isArray(navigator.languages)) {
+		return navigator.languages
+	}
+	return [navigator.language]
 }
 
 /**
@@ -166,17 +182,10 @@ export function stringBefore(haystack, needle) {
  * @param {String[]} [languages] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languages = null) {
-	if (!languages) {
-		if (Array.isArray(navigator.languages)) {
-			languages = navigator.languages
-		} else {
-			languages = [navigator.language]
-		}
-	}
-
+export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): string {
+	const languages = languagesInput.filter((lang): lang is keyof typeof LANGUAGES => lang in LANGUAGES)
 	for (const lang of languages) {
-		if (LANGUAGES[lang] && LANGUAGES[lang].enable) {
+		if (LANGUAGES[lang].enable) {
 			return lang
 		}
 	}
@@ -185,7 +194,7 @@ export function getUserLanguage(languages = null) {
 	// language. It's better than falling  back to nothing. This may be overkill.
 	for (const lang of languages.map(l => stringBefore(l, '-'))) {
 		const match = SHORT_LANGUAGE_MAP[lang]
-		if (LANGUAGES[match] && LANGUAGES[match].enable) {
+		if (match && LANGUAGES[match].enable) {
 			return match
 		}
 	}
