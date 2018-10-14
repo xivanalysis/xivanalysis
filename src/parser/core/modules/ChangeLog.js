@@ -12,7 +12,7 @@ let _changeLog = []
 export default class ChangeLog extends Module {
 
 	static handle = 'changelog'
-	static displayOrder = DISPLAY_ORDER.BOTTOM;
+	static displayOrder = DISPLAY_ORDER.BOTTOM
 
 	static title = 'Changelog'
 	static i18n_id = i18nMark('core.changelog.title')
@@ -24,6 +24,10 @@ export default class ChangeLog extends Module {
 	}
 
 	output() {
+		if (_changeLog.length === 0) {
+			return false
+		}
+
 		return <div>
 			{_changeLog.map((item, key) => {
 				// Fixes the issue with the 'attach' property. Basically, if it's the first one it's just gonna attach to the top, if not, it'll attach to the segment/header above it.
