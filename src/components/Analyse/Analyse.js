@@ -28,6 +28,16 @@ import {compose} from 'utilities'
 import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
 
+/**
+ * @template T
+ * @typedef {Object} UnloadedModuleMeta
+ * @prop {() => Promise<T>} modules
+ * @prop {React.ReactNode|null} description
+ * @prop {TODO} supportedPatches
+ * @prop {ReadonlyArray<TODO>} contributors
+ * @prop {ReadonlyArray<TODO>} changelog
+ */
+
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
 	// TODO: maybe flow?
@@ -150,27 +160,20 @@ class Analyse extends Component {
 		// Build the base parser instance
 		const parser = new Parser(report, fight, combatant)
 
-		// Look up any modules we might want (inc. core)
-		const modules = {
-			core: this.normaliseModuleMeta(AVAILABLE_MODULES.CORE),
-			job: this.normaliseModuleMeta(AVAILABLE_MODULES.JOBS[combatant.type]),
-			boss: this.normaliseModuleMeta(AVAILABLE_MODULES.BOSSES[fight.boss]),
-		}
-
-		// Load any modules we've got
-		const modulePromises = []
-		const loadOrder = ['core', 'boss', 'job']
-		for (const group of loadOrder) {
-			modulePromises.push(modules[group].modules())
-		}
+		const modules = [
+			this.normaliseModuleMeta(AVAILABLE_MODULES.CORE),
+			this.normaliseModuleMeta(AVAILABLE_MODULES.BOSSES[fight.boss]),
+			this.normaliseModuleMeta(AVAILABLE_MODULES.JOBS[combatant.type]),
+		]
 
 		// If this throws, then there was a deploy between page load and this call. Tell them to refresh.
 		try {
-			(await Promise.all(modulePromises)).forEach(({default: loadedModules = []}, index) => {
-				const meta = modules[loadOrder[index]]
-				meta.modules = loadedModules
-				parser.addMeta(meta)
-			})
+			(await Promise.all(modules.map(meta => meta.modules())))
+				.forEach(({default: loadedModules = []}, index) => {
+					const meta = modules[index]
+					meta.modules = loadedModules
+					parser.addMeta(meta)
+				})
 		} catch (error) {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
@@ -197,6 +200,11 @@ class Analyse extends Component {
 	}
 
 	// Normalise module metadata - old modules are just an async to load the module group, new ones have proper metadata
+	/**
+	 * @template T extends import('../Module').default
+	 * @param {UnloadedModuleMeta<T>|(() => Promise<T>)} meta
+	 * @returns {UnloadedModuleMeta<T>}
+	 */
 	normaliseModuleMeta(meta) {
 		// If meta is an object, it probably doesn't need adjusting
 		if (typeof meta === 'object') {
