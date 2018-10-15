@@ -2,8 +2,7 @@ import {merge} from 'lodash'
 import React from 'react'
 import {ChartComponentProps, Pie} from 'react-chartjs-2'
 
-// import styles from './PieChartWithLegend.module.css'
-const styles = require('./PieChartWithLegend.module.css')
+import * as styles from './PieChartWithLegend.module.css'
 
 type DataPoint = {
 	value: number,
@@ -44,8 +43,6 @@ export default class PieChartWithLegend extends React.PureComponent<Props> {
 			legend: {display: false},
 			tooltips: {enabled: false},
 		}, this.props.options)
-
-		console.log(data)
 
 		return <>
 			<div className={styles.chartWrapper}>
