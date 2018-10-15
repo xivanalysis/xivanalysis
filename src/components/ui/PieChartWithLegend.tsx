@@ -21,7 +21,7 @@ type Props = ChartComponentProps & {
 
 const MISSING_COLOUR_FALLBACK = '#888';
 
-export default class PieChartWithLegend extends React.PureComponent<Props> {
+export default class PieChartWithLegend extends React.Component<Props> {
 	render() {
 		const {
 			data: propData,
