@@ -202,7 +202,7 @@ class Analyse extends Component {
 
 	// Normalise module metadata - old modules are just an async to load the module group, new ones have proper metadata
 	/**
-	 * @template T extends import('../Module').default
+	 * @template T extends (typeof import('../Module').default)[]
 	 * @param {UnloadedModuleMeta<T>|(() => Promise<T>)} meta
 	 * @returns {UnloadedModuleMeta<T>}
 	 */
