@@ -170,10 +170,10 @@ class Analyse extends Component {
 		try {
 			(await Promise.all(modules.map(meta => meta.modules())))
 				.forEach(({default: loadedModules = []}, index) => {
-					// TODO: at this point the UnloadedModuleMeta should be cast to a proper ModuleMeta once that is defined
-					const meta = modules[index]
-					meta.modules = loadedModules
-					parser.addMeta(meta)
+					parser.addMeta({
+						...modules[index],
+						modules: loadedModules,
+					})
 				})
 		} catch (error) {
 			if (process.env.NODE_ENV === 'development') {
