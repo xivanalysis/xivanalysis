@@ -1,7 +1,7 @@
 /**
  * @author Yumiya
  */
-import React, {Fragment} from 'react'
+import React from 'react'
 import Module from 'parser/core/Module'
 import {Accordion, Icon, Message, List} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
@@ -9,7 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-import styles from './Barrage.module.css'
+import styles from './PitchPerfectUsage.module.css'
 
 const DOT_TICK_FREQUENCY = 3000 // 3s
 const SONG_DURATION = 30000 // 30s
@@ -34,7 +34,6 @@ export default class PitchPerfectUsage extends Module {
 	static handle = 'ppUsage'
 	static title = 'Pitch Perfect'
 	static dependencies = [
-		'pitchPerfect', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
 		'util',
 	]
@@ -139,23 +138,25 @@ export default class PitchPerfectUsage extends Module {
 	_onComplete() {
 		const badPPs = this._ppEvents.filter(pp => pp.issue !== NONE).length
 
-		if (badPPs > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.PITCH_PERFECT.icon,
-				content: <Fragment>
-					Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
-				</Fragment>,
-				tiers: {
-					8: SEVERITY.MAJOR,
-					5: SEVERITY.MEDIUM,
-					2: SEVERITY.MINOR,
-				},
-				value: badPPs,
-				why: <Fragment>
-					{badPPs} casts of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks
-				</Fragment>,
-			}))
+		if (badPPs === 0) {
+			return
 		}
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.PITCH_PERFECT.icon,
+			content: <>
+				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
+			</>,
+			tiers: {
+				8: SEVERITY.MAJOR,
+				5: SEVERITY.MEDIUM,
+				2: SEVERITY.MINOR,
+			},
+			value: badPPs,
+			why: <>
+				{badPPs} casts of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
+			</>,
+		}))
 	}
 
 	output() {
@@ -204,7 +205,7 @@ export default class PitchPerfectUsage extends Module {
 
 		})
 
-		// Output is an Accordion made with panels, one for each barrage event
+		// Output is an Accordion made with panels, one for each wrong PP event
 		return <Accordion
 			exclusive={false}
 			panels={panels}
