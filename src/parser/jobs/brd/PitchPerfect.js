@@ -32,7 +32,7 @@ const CRIT_MODIFIERS = [
 	},
 ]
 
-// Skills that snapshot dots and their respective dot statuses
+// Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
 const SNAPSHOTTERS = {
 	[ACTIONS.IRON_JAWS.id]: [
 		STATUSES.CAUSTIC_BITE.id,
@@ -46,7 +46,7 @@ const SNAPSHOTTERS = {
 	],
 }
 
-// Relevant dot statuses
+// Relevant dot statuses (let's do it BRD only for now)
 const DOTS = [
 	STATUSES.CAUSTIC_BITE.id,
 	STATUSES.STORMBITE.id,
@@ -87,6 +87,8 @@ export default class PitchPerfect extends Module {
 	_ppEvents = []
 	_critFromDots = []
 
+	_debug = 0
+
 	normalise(events) {
 
 		for (const event of events) {
@@ -109,10 +111,12 @@ export default class PitchPerfect extends Module {
 							return this._getSnapshotter(action)
 						})
 						console.log(snapshotters)
+
 						// We snapshot statuses from either the direct dot application or from Iron Jaws, whichever happened last
 						const snapshotter = snapshotters.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
+						const dot = this._getDot(enemy, event.ability.guid)
 
-						this._snapshotStatuses(enemy.dots, snapshotter)
+						this._snapshotStatuses(dot, snapshotter)
 					}
 
 				}
@@ -164,25 +168,34 @@ export default class PitchPerfect extends Module {
 					}
 				// If it's a dot tick (yay, they have/used a dot!), we will collect the data to get a better critMod approximation
 				// Not comfortable with counting Spears just yet
-				} else if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
+				} else {
+					const enemy = this._getEnemy(event.targetID)
+					const dot = this._getDot(enemy, event.ability.guid)
 
-					const accumulatedCritBuffs = this._parseDotCritBuffs(event)
-					console.log(accumulatedCritBuffs)
-					const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
+					if (!this._hasStatus(dot, STATUSES.THE_SPEAR.id)) {
 
-					this._critFromDots.push(critRate)
+						const accumulatedCritBuffs = this._parseDotCritBuffs(event)
+						const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
 
+						console.log('Crit on dot:' + event.expectedCritRate + ' Accumulated: ' + accumulatedCritBuffs)
+
+						this._critFromDots.push(critRate)
+
+					}
 				}
 			// We also register the last snapshotter cast, to... snapshot the statuses on the dots
 			} else if (
 				event.type === 'cast'
 				&& event.sourceID === this.combatants.selected.id
 				&& event.ability
-				&& Object.keys(SNAPSHOTTERS).includes(event.ability.guid)
+				&& Object.keys(SNAPSHOTTERS).includes(event.ability.guid.toString()) // Why do I have to use toString() here? This is dumb
 			) {
 				const snapshotter = this._getSnapshotter(event.ability.guid)
 				const player = this._player
 				const enemy = this._getEnemy(event.targetID)
+
+				console.log('Snapshotting...')
+				this._debug++
 
 				this._snapshotStatuses(snapshotter, player, enemy)
 				snapshotter.timestamp = event.timestamp
@@ -227,13 +240,23 @@ export default class PitchPerfect extends Module {
 		if (!this._enemies[targetId]) {
 			this._enemies[targetId] = {
 				statuses: {},
-				dots: {
-					statuses: {},
-				},
+				dots: {},
 			}
 		}
 
 		return this._enemies[targetId]
+	}
+
+	// Returns the dot state from an enemy given the status ID
+	_getDot(enemy, statusId) {
+
+		if (!enemy.dots[statusId]) {
+			enemy.dots[statusId] = {
+				statuses: {},
+			}
+		}
+
+		return enemy.dots[statusId]
 	}
 
 	// Returns the latest snapshotter state
@@ -254,9 +277,11 @@ export default class PitchPerfect extends Module {
 
 	// Copies all the statuses from multiple sources to a target entity
 	_snapshotStatuses(target, ...sources) {
+
 		sources.forEach(source => {
 			Object.keys(source.statuses).forEach(status => {
-				target[status] = source[status]
+				target.statuses[status] = source.statuses[status]
+
 			})
 		})
 	}
@@ -278,12 +303,12 @@ export default class PitchPerfect extends Module {
 			} else {
 				hasStatus = this._hasStatus(player, modifier.id)
 			}
-
 			if (hasStatus) {
 				accumulatedCritBuffs += modifier.strength
 			}
 
 		}
+
 		return accumulatedCritBuffs
 	}
 
@@ -291,10 +316,7 @@ export default class PitchPerfect extends Module {
 	_parseDotCritBuffs(event) {
 		// We need the enemy to which the dot was applied
 		const enemy = this._getEnemy(event.targetID)
-		const dot = enemy.dots[event.ability.guid]
-
-		console.log(enemy)
-		console.log(dot)
+		const dot = this._getDot(enemy, event.ability.guid)
 
 		if (!dot) {
 			return 0
@@ -302,14 +324,26 @@ export default class PitchPerfect extends Module {
 
 		let accumulatedCritBuffs = 0
 
-		for (const modifier in CRIT_MODIFIERS) {
+		for (const modifier of CRIT_MODIFIERS) {
 
 			const hasStatus = this._hasStatus(dot, modifier.id)
-
+			//console.log('Status: ' + modifier.id + ' Has?: ' + hasStatus)
 			if (hasStatus) {
 				accumulatedCritBuffs += modifier.strength
 			}
+
+			if (this._debug === 3) {
+				console.log(dot.statuses[1001221])
+				console.log('ID: ' + modifier.id)
+				console.log('Status: ' + hasStatus)
+				console.log('Strength ' + modifier.strength)
+				console.log('Acc: ' + accumulatedCritBuffs)
+
+			}
+
 		}
+
+		console.log('Acc: ' + accumulatedCritBuffs)
 
 		return accumulatedCritBuffs
 	}
