@@ -19,11 +19,16 @@ class Parser {
 	meta = {}
 	_timestamp = 0
 
+	/** @type {Record<string, import('./Module').default>} */
 	modules = {}
+	/** @type {Record<string, typeof import('./Module').default>} */
 	_constructors = {}
 
+	/** @type {string[]} */
 	moduleOrder = []
+	/** @type {string[]} */
 	_triggerModules = []
+	/** @type {Record<string, Error | { toString (): string }>} */
 	_moduleErrors = {}
 
 	_fabricationQueue = []
