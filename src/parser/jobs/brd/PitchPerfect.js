@@ -1,509 +1,368 @@
 /**
  * @author Yumiya
  */
+import React from 'react'
 import Module from 'parser/core/Module'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {Accordion, Icon, Message, List} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
-import math from 'mathjsCustom'
+import ACTIONS from 'data/ACTIONS'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosest} from 'utilities'
 
-// Relevant crit buffs
-const CRIT_MODIFIERS = [
-	{
-		id: STATUSES.BATTLE_LITANY.id,
-		strength: 0.15,
-	},
-	{
-		id: STATUSES.CHAIN_STRATAGEM.id,
-		strength: 0.15,
-	},
-	{
-		id: STATUSES.CRITICAL_UP.id,
-		strength: 0.02,
-	},
-	{
-		id: STATUSES.THE_SPEAR.id,
-		//fuck royal road
-		strength: 0.10,
-	},
-	{
-		id: STATUSES.STRAIGHT_SHOT.id,
-		strength: 0.10,
-	},
-]
+import styles from './PitchPerfect.module.css'
 
-// Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
-const SNAPSHOTTERS = {
-	[ACTIONS.IRON_JAWS.id]: [
-		STATUSES.CAUSTIC_BITE.id,
-		STATUSES.STORMBITE.id,
-	],
-	[ACTIONS.CAUSTIC_BITE.id]: [
-		STATUSES.CAUSTIC_BITE.id,
-	],
-	[ACTIONS.STORMBITE.id]: [
-		STATUSES.STORMBITE.id,
-	],
-}
+const DOT_TICK_FREQUENCY = 3000 // 3s
+const SONG_DURATION = 30000 // 30s
+const ANIMATION_LOCK = 700 // 700ms (arbitrary, fite me)
 
-// Relevant dot statuses (let's do it BRD only for now)
-const DOTS = [
-	STATUSES.CAUSTIC_BITE.id,
-	STATUSES.STORMBITE.id,
-]
+const PP2_THRESHOLD = 61 // 61% crit rate
+const CONVERSION_FACTOR = 0.1
 
 const DHIT_MOD = 1.25
 
 const DISEMBOWEL_STRENGTH = 0.05
 const TRAIT_STRENGTH = 0.20
 
-const DEVIATION_PRECISION = 3
+// Where's the lazy scale again?
+const PP = {
+	1: 1,
+	2: 2,
+	3: 3,
+}
 
-const BASE_SUBSTAT_70 = 364
-const LEVEL_MOD_70 = 2170
+// Issues
+const NONE = 0
+const PP2_ON_LOW_CRIT = 1
+const PP1_NOT_AT_END = 2
 
 export default class PitchPerfect extends Module {
 	static handle = 'pitchPerfect'
+	static title = 'Pitch Perfect'
 	static dependencies = [
-		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'combatants',
-		// Relying on the normaliser from this for the hit type fields
-		'hitType', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'additionalStats',
+		'enemies',
+		'suggestions',
+		'util',
 	]
 
-	// Represents a map of IDs and statuses for each enemy in this parse
 	_enemies = {}
+	_lastWMCast = undefined
 
-	// Represents the player statuses
-	_player = {
-		statuses: {},
-	}
-
-	// Represents a map of IDs and statuses for each snapshotter skill in this parse
-	_snapshotters = {}
-
-	// Let's store these in the class like normal people
-	_damageInstances = {}
 	_ppEvents = []
-	_critFromDots = []
 
-	_debug = 0
+	constructor(...args) {
+		super(...args)
 
-	normalise(events) {
+		this.addHook('damage', {
+			by: 'player',
+			abilityId: ACTIONS.PITCH_PERFECT.id,
+		}, this._onPPDamage)
 
-		for (const event of events) {
-			// Registers buffs/debuffs statuses on the respective entity (either player or enemies)
-			if (event.type.match(/^(apply|remove)(de)?buff(stack)?$/)) {
-				if (event.targetID === this.combatants.selected.id && event.ability) {
-					this._player.statuses[event.ability.guid] = event.type.startsWith('apply')
-				} else if (!event.targetIsFriendly) {
-					const enemy = this._getEnemy(event.targetID)
-					enemy.statuses[event.ability.guid] = event.type.startsWith('apply')
+		this.addHook('pitchPerfect', this._onPPEvent)
 
-					// Separately checks for dot application, too
-					if (
-						DOTS.includes(event.ability.guid)
-						&& event.type.startsWith('apply')
-					) {
-						const snapshotters = Object.keys(SNAPSHOTTERS).filter(action => {
-							return SNAPSHOTTERS[action].includes(event.ability.guid)
-						}).map(action => {
-							return this._getSnapshotter(action)
-						})
-						console.log(snapshotters)
+		this.addHook('damage', {
+			by: 'player',
+			abilityId: [STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id],
+			tick: true,
+		}, this._onDotTick)
 
-						// We snapshot statuses from either the direct dot application or from Iron Jaws, whichever happened last
-						const snapshotter = snapshotters.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
-						const dot = this._getDot(enemy, event.ability.guid)
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.THE_WANDERERS_MINUET.id,
+		}, this._onWMCast)
 
-						this._snapshotStatuses(dot, snapshotter)
-					}
+		this.addHook('complete', this._onComplete)
 
-				}
-
-			// For every damage event that:
-			// - comes from the player
-			// - has an ability attached to it
-			} else if (
-				event.type === 'damage'
-				&& event.sourceID === this.combatants.selected.id
-				&& event.ability
-			) {
-				// If it's not a dot tick
-				if (!event.tick) {
-					// Fixing the multiplier
-					let fixedMultiplier = event.debugMultiplier
-					if (
-						event.ability.guid !== ACTIONS.THE_WANDERERS_MINUET.id
-						&& event.ability.guid !== ACTIONS.MAGES_BALLAD.id
-						&& event.ability.guid !== ACTIONS.ARMYS_PAEON.id
-					) {
-						// Band-aid fix for disembowel (why, oh, why)
-						if (this._hasStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
-							fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
-						}
-						// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
-						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
-					}
-
-					// If it's a Pitch Perfect damage
-					if (event.ability.guid === ACTIONS.PITCH_PERFECT.id) {
-
-						this._ppEvents.push({event: event, rawDamage: event.amount / fixedMultiplier})
-
-					// Otherwise, if it doesn't have a conditional potency (Sidewinder and Pitch Perfect), it will be used to calculate 'K'
-					} else if (event.ability.guid !== ACTIONS.SIDEWINDER.id) {
-
-						// ...let's not count Spears for now
-						if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
-
-							const critTier = this._parseCritBuffs(event)
-
-							if (!this._damageInstances[critTier]) {
-								this._damageInstances[critTier] = []
-							}
-
-							this._damageInstances[critTier].push({event: event, rawDamage: event.amount / fixedMultiplier})
-						}
-					}
-				// If it's a dot tick (yay, they have/used a dot!), we will collect the data to get a better critMod approximation
-				// Not comfortable with counting Spears just yet
-				} else {
-					const enemy = this._getEnemy(event.targetID)
-					const dot = this._getDot(enemy, event.ability.guid)
-
-					if (!this._hasStatus(dot, STATUSES.THE_SPEAR.id)) {
-
-						const accumulatedCritBuffs = this._parseDotCritBuffs(event)
-						const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
-
-						console.log('Crit on dot:' + event.expectedCritRate + ' Accumulated: ' + accumulatedCritBuffs)
-
-						this._critFromDots.push(critRate)
-
-					}
-				}
-			// We also register the last snapshotter cast, to... snapshot the statuses on the dots
-			} else if (
-				event.type === 'cast'
-				&& event.sourceID === this.combatants.selected.id
-				&& event.ability
-				&& Object.keys(SNAPSHOTTERS).includes(event.ability.guid.toString()) // Why do I have to use toString() here? This is dumb
-			) {
-				const snapshotter = this._getSnapshotter(event.ability.guid)
-				const player = this._player
-				const enemy = this._getEnemy(event.targetID)
-
-				console.log('Snapshotting...')
-				this._debug++
-
-				this._snapshotStatuses(snapshotter, player, enemy)
-				snapshotter.timestamp = event.timestamp
-			}
-		}
-
-		// We use the damage events to determine 'K'
-		// tl;dr: 'K' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision
-		const k = this._getK(this._damageInstances)
-
-		this._debugLog(2513)
-
-		// We now use 'K' to guesstimate PP potency:
-		for (const pp of this._ppEvents) {
-
-			// We already have the unbuffed damage, we now need to strip PP off crit/dhit mods:
-			let rawDamage = pp.rawDamage
-
-			if (pp.event.criticalHit) {
-				rawDamage = Math.trunc(rawDamage / this._getCritMod())
-			}
-
-			if (pp.event.directHit) {
-				rawDamage = Math.trunc(rawDamage / DHIT_MOD)
-			}
-
-			// We get the approximated potency and then match to the closest real potency
-			const approximatedPotency = rawDamage * 100 / k
-			const potency = matchClosest(ACTIONS.PITCH_PERFECT.potency, approximatedPotency)
-
-			// We then add the amount of stacks to the event
-			pp.event.stacks = ACTIONS.PITCH_PERFECT.potency.indexOf(potency) + 1
-
-		}
-
-		// Return all this shit
-		return events
 	}
 
-	// Returns the enemy statuses state and dots state given the ID
-	_getEnemy(targetId) {
-		if (!this._enemies[targetId]) {
-			this._enemies[targetId] = {
-				statuses: {},
-				dots: {},
-			}
+	_onDotTick(event) {
+		// Keeping track of the first dot tick of each enemy
+		// We only need to know when the first tick happens, since the frequency is known
+		const enemy = this._getEnemy(event.targetID)
+
+		enemy.tick[event.ability.guid] = event
+
+	}
+
+	_onWMCast(event) {
+		this._lastWMCast = event
+	}
+
+	_onPPDamage(event) {
+		const k = this.additionalStats.k
+
+		let fixedMultiplier = event.debugMultiplier
+
+		// Band-aid fix for disembowel (why, oh, why)
+		if (this.enemies.getEntity(event.targetID).hasStatus(STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
+			fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
+		}
+		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
+		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
+
+		// We get the unbuffed damage
+		let rawDamage = event.amount / fixedMultiplier
+
+		// And then strip off critical hit and direct hit mods
+		if (event.criticalHit) {
+			rawDamage = Math.trunc(rawDamage / this.additionalStats.critMod)
 		}
 
-		return this._enemies[targetId]
-	}
-
-	// Returns the dot state from an enemy given the status ID
-	_getDot(enemy, statusId) {
-
-		if (!enemy.dots[statusId]) {
-			enemy.dots[statusId] = {
-				statuses: {},
-			}
+		if (event.directHit) {
+			rawDamage = Math.trunc(rawDamage / DHIT_MOD)
 		}
 
-		return enemy.dots[statusId]
-	}
+		// We get the approximated potency and then match to the closest real potency
+		const approximatedPotency = rawDamage * 100 / k
+		const potency = matchClosest(ACTIONS.PITCH_PERFECT.potency, approximatedPotency)
 
-	// Returns the latest snapshotter state
-	_getSnapshotter(skillId) {
-		if (!this._snapshotters[skillId]) {
-			this._snapshotters[skillId] = {
-				statuses: {},
-				timestamp: 0,
-			}
-		}
+		// We then infer the amount of stacks
+		const stacks = ACTIONS.PITCH_PERFECT.potency.indexOf(potency) + 1
 
-		return this._snapshotters[skillId]
-	}
-
-	_hasStatus(entity, status) {
-		return entity.statuses[status] || false
-	}
-
-	// Copies all the statuses from multiple sources to a target entity
-	_snapshotStatuses(target, ...sources) {
-
-		sources.forEach(source => {
-			Object.keys(source.statuses).forEach(status => {
-				target.statuses[status] = source.statuses[status]
-
-			})
+		// And finally we fabricate the event
+		this.parser.fabricateEvent({
+			...event,
+			type: 'pitchPerfect',
+			stacks: stacks,
+			rawDamage: rawDamage,
 		})
 	}
 
-	// Returns the accumulated crit modifier from all the currently active crit buffs/debuffs
-	_parseCritBuffs(event) {
-		// We need to get the specific enemy in case it's Chain Stratagem
+	_onPPEvent(event) {
 		const enemy = this._getEnemy(event.targetID)
-		const player = this._player
+		const wm = this._lastWMCast
 
-		let accumulatedCritBuffs = 0
-
-		for (const modifier of CRIT_MODIFIERS) {
-
-			let hasStatus = false
-
-			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id) {
-				hasStatus = this._hasStatus(enemy, modifier.id)
-			} else {
-				hasStatus = this._hasStatus(player, modifier.id)
-			}
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
-			}
-
+		if (event.stacks === undefined) {
+			//Fuck, abort!
+			return
 		}
 
-		return accumulatedCritBuffs
+		const ppEvent = {
+			damageEvent: event,
+			issue: NONE,
+			timeLeftOnSong: Math.max(wm.timestamp + SONG_DURATION - event.timestamp, 0),
+			critOnDot: {
+				[STATUSES.CAUSTIC_BITE.id]: 0,
+				[STATUSES.STORMBITE.id]: 0,
+			},
+			get stacks() { return this.damageEvent && this.damageEvent.stacks || undefined },
+			get timestamp() { return this.damageEvent && this.damageEvent.timestamp },
+		}
+
+		this._ppEvents.push(ppEvent)
+
+		// Only an issue if there are dot ticks left on the song and sufficient time to use PP (animation lock)
+		// TODO: Consider pre-downtime case
+		if (enemy.lastTick + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - ANIMATION_LOCK) {
+			return
+		}
+
+		// We write down the crit on each dot, to provide the information later
+		ppEvent.critOnDot[STATUSES.CAUSTIC_BITE.id] = enemy.tick[STATUSES.CAUSTIC_BITE.id] && enemy.tick[STATUSES.CAUSTIC_BITE.id].expectedCritRate * CONVERSION_FACTOR
+		ppEvent.critOnDot[STATUSES.STORMBITE.id] = enemy.tick[STATUSES.STORMBITE.id] && enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR
+
+		// If crit is above threshold for PP2
+		// Using PP1 when not at the end of the song is not ideal
+		if (
+			enemy.tick[STATUSES.CAUSTIC_BITE.id]
+			&& enemy.tick[STATUSES.STORMBITE.id]
+			&& enemy.tick[STATUSES.CAUSTIC_BITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
+			&& enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
+		) {
+			// Using PP1 when not at the end of the song is not ideal
+			if (event.stacks === PP[1]) {
+				ppEvent.issue = PP1_NOT_AT_END
+			}
+		// Using PP2 when crit is below the threshold is not ideal
+		} else if (event.stacks === PP[2]) {
+
+			ppEvent.issue = PP2_ON_LOW_CRIT
+
+		// Using PP1 when not at the end of the song is not ideal
+		} else if (event.stacks === PP[1]) {
+
+			ppEvent.issue = PP1_NOT_AT_END
+
+		}
 	}
 
-	// Same as above, but dots statuses are snapshotted, so they're stored separately
-	_parseDotCritBuffs(event) {
-		// We need the enemy to which the dot was applied
-		const enemy = this._getEnemy(event.targetID)
-		const dot = this._getDot(enemy, event.ability.guid)
+	_onComplete() {
+		const badPPs = this._ppEvents.filter(pp => pp.issue !== NONE).length
 
-		if (!dot) {
-			return 0
+		if (badPPs === 0) {
+			// Good job!
+			return
 		}
 
-		let accumulatedCritBuffs = 0
-
-		for (const modifier of CRIT_MODIFIERS) {
-
-			const hasStatus = this._hasStatus(dot, modifier.id)
-			//console.log('Status: ' + modifier.id + ' Has?: ' + hasStatus)
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
-			}
-
-			if (this._debug === 3) {
-				console.log(dot.statuses[1001221])
-				console.log('ID: ' + modifier.id)
-				console.log('Status: ' + hasStatus)
-				console.log('Strength ' + modifier.strength)
-				console.log('Acc: ' + accumulatedCritBuffs)
-
-			}
-
-		}
-
-		console.log('Acc: ' + accumulatedCritBuffs)
-
-		return accumulatedCritBuffs
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.PITCH_PERFECT.icon,
+			content: <>
+				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
+			</>,
+			tiers: {
+				8: SEVERITY.MAJOR,
+				5: SEVERITY.MEDIUM,
+				2: SEVERITY.MINOR,
+			},
+			value: badPPs,
+			why: <>
+				{badPPs} casts of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
+			</>,
+		}))
 	}
 
-	// Sorry, but these constants are all fucking magic
-	/* eslint-disable no-magic-numbers */
+	output() {
+		const badPPevents = this._ppEvents.filter(pp => pp.issue !== NONE)
 
-	// Reference to the formulas: https://docs.google.com/document/d/1h85J3xPhVZ2ubqR77gzoD16L4T-Pltv3dnsKthE4k60/edit
-	// Credits to The TheoryJerks
-	_getCritMod() {
-
-		let critRate = 0
-
-		// If we have crit rate information from dots, we use that instead
-		if (this._critFromDots.length) {
-			critRate = this._getEmpiricalRuleSubsetMean(this._critFromDots, DEVIATION_PRECISION)
-
-		// Otherwise, some mathmagic takes place to approximate the crit rate
-		} else {
-			// Alright, time to guesstimate crit rate
-			const rates = []
-			for (const critTier of Object.keys(this._damageInstances)) {
-				const sampleSize = this._damageInstances[critTier].length
-				const critAmount= this._damageInstances[critTier].filter(x => x.event.criticalHit).length
-				const rate = Math.max((critAmount/sampleSize) - Number.parseFloat(critTier), 0)
-
-				rates.push({rate: rate, amount: sampleSize})
-			}
-			const weightedRates = rates.reduce((acc, value) => acc + value.rate * value.amount, 0)
-			const totalAmount = rates.reduce((acc, value) => acc + value.amount, 0)
-
-			critRate = weightedRates/totalAmount
+		if (badPPevents.length === 0) {
+			return
 		}
 
-		// Time to guesstimate the critical hit rate attribute
-		const chr = (((critRate * 1000) - 50) * LEVEL_MOD_70 / 200) + BASE_SUBSTAT_70
+		// Builds a panel for each pp event
+		const panels = badPPevents.map(pp => {
 
-		// Time to guesstimate the critMod:
-		return Math.floor((200 * (chr - BASE_SUBSTAT_70) / LEVEL_MOD_70) + 1400) / 1000
+			const panelProperties = {
+				pp: pp,
+				tuples: [],
+			}
 
+			// For each PP issue
+			if (pp.issue === PP2_ON_LOW_CRIT) {
+				panelProperties.tuples.push({
+					issue: <>
+						When your critical hit rate is lower than or equal to <strong>{PP2_THRESHOLD}%</strong> on both your DoTs, {ACTIONS.PITCH_PERFECT.name} should be used at <strong>3 stacks</strong>.
+					</>,
+					reason: <>
+						A {ACTIONS.PITCH_PERFECT.name} at 3 stacks has the highest <strong>potency per stack</strong> value, with 140 potency per stack.
+						<br/>
+						Using {ACTIONS.PITCH_PERFECT.name} at 2 stacks is only optimal when your critical hit rate is greater than <strong>{PP2_THRESHOLD}%</strong> on both your DoTs.
+						<br/>
+						This happens because both your DoTs can give you Repertoire procs at the same time. If you already have 2 stacks on your bank, getting a double proc wastes one stack.
+						At <strong>{PP2_THRESHOLD}%</strong> critical hit rate or higher, you are more likely to get a double proc and waste a stack than not.
+					</>,
+				})
+			} else if (pp.issue === PP1_NOT_AT_END) {
+				panelProperties.tuples.push({
+					issue: <>
+						{ACTIONS.PITCH_PERFECT.name} should only be used at 1 stack when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
+					</>,
+					reason: <>
+						Any left over stack is lost when your song ends, so using whatever stacks you have before it ends is always a gain.
+					</>,
+				})
+			}
+
+			// Then builds the panel and returns it in the mapping function
+			return this._buildPanel(panelProperties)
+
+		})
+
+		// Output is an Accordion made with panels, one for each wrong PP event
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
 	}
-	/* eslint-enable no-magic-numbers */
 
-	_getK() {
-		// 'K' is an approximation to damage to potency ratio
-		const values = []
+	// Builds a panel for each cast of Pitch Perfect and its respectives issues, to be provided to the final Accordion
+	// Each panel has the following components:
+	// - A title, containing:
+	//    - timestamp
+	//    - amount of stacks
+	// - A list of issues, containing:
+	//    - issue description (tuples[].issue)
+	// - A list of reasons, containing:
+	//    - the reason explaining why each issue is... an issue (tuples[].reason)
+	// - A message block, containing:
+	//    - information about critical hit rate and time left on song
+	_buildPanel({pp, tuples}) {
 
-		// We iterate over all damage events, across all crit buff tiers
-		for (const critTier of Object.keys(this._damageInstances)) {
-			for (const instance of this._damageInstances[critTier]) {
+		// Default panel title
+		const defaultTitle = <>
+			{this.util.formatTimestamp(pp.timestamp)} - {ACTIONS.PITCH_PERFECT.name} used at {pp.stacks} stack{pp.stacks > 1 && 's'}
+		</>
 
-				// Let's not count auto attacks, because they have a different formula and aren't affected by the 20% trait
-				if (instance.event.ability.guid === ACTIONS.SHOT.id) {
-					continue
+		// List of issues
+		const issueElements = tuples && tuples.length && tuples.map(t => {
+			return t.issue && <Message key={tuples.indexOf(t)} error>
+				<Icon name={'remove'}/>
+				<span>{t.issue}</span>
+			</Message>
+		}) || undefined
+
+		// List of reasons
+		const reasonElements = tuples && tuples.length && <div className={styles.description}>
+			<List bulleted relaxed>
+				{ tuples.map(t => {
+					return <List.Item key={tuples.indexOf(t)}>{t.reason}</List.Item>
+				})
 				}
+			</List>
+		</div> || undefined
 
-				const skill = getAction(instance.event.ability.guid)
+		// Information
+		const informationElements = <Message info>
+			<List>
+				<List.Content>
+					<List.Item>
+						<Icon name={'exclamation circle'}/>
+						<strong>{pp.critOnDot[STATUSES.CAUSTIC_BITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
+					</List.Item>
+					<List.Item>
+						<Icon name={'exclamation circle'}/>
+						<strong>{pp.critOnDot[STATUSES.STORMBITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
+					</List.Item>
+					<List.Item>
+						<Icon name={'hourglass'}/>
+						<strong>{this.util.milliToSeconds(pp.timeLeftOnSong)}</strong> second{pp.timeLeftOnSong !== 1000 && 's'} left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />
+					</List.Item>
+				</List.Content>
+			</List>
+		</Message> || undefined
 
-				// We have already calculated the unbuffed damage, now we need to strip crit/dhit modifiers
-				let rawDamage = instance.rawDamage
+		// Builds the full panel
+		return {
+			key: pp.timestamp,
+			title: {
+				content: <>
+					<Icon
+						name={'remove'}
+						className={'text-error'}
+					/>
+					{defaultTitle}
+				</>,
+			},
+			content: {
+				content: <>
+					{issueElements}
+					{reasonElements}
+					{informationElements}
+				</>,
+			},
+		}
+	}
 
-				if (instance.event.criticalHit) {
-					rawDamage = Math.trunc(rawDamage / this._getCritMod())
-				}
+	_getEnemy(targetId) {
 
-				if (instance.event.directHit) {
-					rawDamage = Math.trunc(rawDamage / DHIT_MOD)
-				}
-
-				// If we have the potency information for the current skill, we add it's potency ratio to the array of potential 'K' values
-				if (skill.potency) {
-					values.push(Math.round(rawDamage * 100 / skill.potency))
-				}
+		if (!this._enemies[targetId]) {
+			this._enemies[targetId] = {
+				tick: {
+					[STATUSES.CAUSTIC_BITE.id]: undefined,
+					[STATUSES.STORMBITE.id]: undefined,
+				},
+				get lastTick() {
+					return this.tick[STATUSES.CAUSTIC_BITE.id]
+						&& this.tick[STATUSES.CAUSTIC_BITE.id].timestamp
+						|| this.tick[STATUSES.STORMBITE.id]
+						&& this.tick[STATUSES.STORMBITE.id].timestamp
+				},
 			}
-		}
-
-		return this._getEmpiricalRuleSubsetMean(values, DEVIATION_PRECISION)
-
-	}
-
-	// This method returns the mean of the data subset within {n} standard deviations of the mean of the data set
-	_getEmpiricalRuleSubsetMean(dataset, n) {
-		const mean = math.mean(dataset)
-		const standardDeviation = math.std(dataset)
-
-		return math.mean(dataset.filter(v => v > mean - n * standardDeviation && v < mean + n * standardDeviation))
-	}
-
-	_debugLog(realCrit) {
-
-		if (!realCrit) {
-			realCrit = 0
-		}
-
-		let rateDots = 0
-		let rateSkills = 0
-		let chrDots = 0
-		let chrSkills = 0
-
-		console.log('Critical Hit Rate from dots:')
-		if (this._critFromDots.length === 0) {
-			console.log(NaN)
-		} else {
-			rateDots = this._getEmpiricalRuleSubsetMean(this._critFromDots, DEVIATION_PRECISION)
-			console.log(rateDots*100)
-		}
-
-		console.log('Critical Hit Rate from skills:')
-		// Alright, time to guesstimate crit rate
-		const rates = []
-		for (const critTier of Object.keys(this._damageInstances)) {
-			const sampleSize = this._damageInstances[critTier].length
-			const critAmount= this._damageInstances[critTier].filter(x => x.event.criticalHit).length
-			const rate = Math.max((critAmount/sampleSize) - Number.parseFloat(critTier), 0)
-
-			rates.push({rate: rate, amount: sampleSize})
-		}
-		const weightedRates = rates.reduce((acc, value) => acc + value.rate * value.amount, 0)
-		const totalAmount = rates.reduce((acc, value) => acc + value.amount, 0)
-
-		rateSkills = weightedRates/totalAmount
-
-		console.log(rateSkills*100)
-
-		console.log('Crit Attribute from dots:')
-		if (this._critFromDots.length === 0) {
-			console.log(NaN)
-		} else {
-			chrDots = (((rateDots * 1000) - 50) * LEVEL_MOD_70 / 200) + BASE_SUBSTAT_70
-			console.log(chrDots)
-		}
-		console.log('Crit Attribute from skills:')
-		chrSkills = (((rateSkills * 1000) - 50) * LEVEL_MOD_70 / 200) + BASE_SUBSTAT_70
-		console.log(chrSkills)
-
-		console.log('CritMod from dots:')
-		if (this._critFromDots.length === 0) {
-			console.log(NaN)
-		} else {
-			console.log(Math.floor((200 * (chrDots - BASE_SUBSTAT_70) / LEVEL_MOD_70) + 1400) / 1000)
-		}
-		console.log('CritMod from skills:')
-		console.log(Math.floor((200 * (chrSkills - BASE_SUBSTAT_70) / LEVEL_MOD_70) + 1400) / 1000)
-
-		if (realCrit > 0) {
-			console.log('Real Critical Hit Rate:')
-
-			const realRate = Math.floor((200*(realCrit-BASE_SUBSTAT_70)/LEVEL_MOD_70) + 50)/10
-			console.log(realRate)
-
-			console.log('Real Crit Attribute:')
-
-			console.log(realCrit)
-
-			console.log('Real CritMod:')
-			const realMod = Math.floor((200 * (realCrit - BASE_SUBSTAT_70) / LEVEL_MOD_70) + 1400) / 1000
-			console.log(realMod)
 
 		}
-
+		return this._enemies[targetId]
 	}
 
 }
