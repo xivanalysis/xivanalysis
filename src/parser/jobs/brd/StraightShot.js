@@ -83,10 +83,8 @@ export default class StraightShot extends Module {
 	}
 
 	_onComplete() {
-		console.log(this._straightShotEvents)
 		// Let's ignore early casts that are used for transitional purposes or to not fall inside RS
 		this._cleanUpEarlyShots()
-		console.log(this._straightShotEvents)
 
 		const earlyRefreshes = this._straightShotEvents.filter(x => x.issue & EARLY)
 		const wastedShots = this._straightShotEvents.filter(x => x.issue & WASTED)
