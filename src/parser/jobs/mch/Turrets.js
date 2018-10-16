@@ -11,7 +11,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // TOOOAAAAASSST
 // TODO: Generalise pie chart handling
-import styles from '../smn/modules/Pets.module.css'
+import styles from 'components/ui/PieChartWithLegend.module.css'
 
 const NO_TURRET_ID = -1
 const TURRET_RESET_ID = -2

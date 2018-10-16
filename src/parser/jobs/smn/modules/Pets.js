@@ -1,8 +1,8 @@
 import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
-import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import PATCHES, {getPatch} from 'data/PATCHES'
@@ -12,7 +12,6 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import styles from './Pets.module.css'
 
 const NO_PET_ID = -1
 
@@ -288,50 +287,28 @@ export default class Pets extends Module {
 	output() {
 		const uptimeKeys = Array.from(this._petUptime.keys())
 
-		const data = {
-			labels: uptimeKeys.map(petId => this.getPetName(petId)),
-			datasets: [{
-				data: Array.from(this._petUptime.values()),
-				backgroundColor: uptimeKeys.map(petId => CHART_COLOURS[petId]),
-			}],
-		}
+		const data = uptimeKeys.map(id => {
+			const value = this._petUptime.get(id)
+			return {
+				value,
+				label: this.getPetName(id),
+				backgroundColor: CHART_COLOURS[id],
+				additional: [
+					this.parser.formatDuration(value),
+					this.getPetUptimePercent(id) + '%',
+				],
+			}
+		})
 
-		const options = {
-			responsive: false,
-			legend: {display: false},
-			tooltips: {enabled: false},
-		}
-
-		return <>
-			<div className={styles.chartWrapper}>
-				<PieChart
-					data={data}
-					options={options}
-					width={100}
-					height={100}
-				/>
-			</div>
-			<table className={styles.table}>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Pet</th>
-						<th>Uptime</th>
-						<th>%</th>
-					</tr>
-				</thead>
-				<tbody>
-					{uptimeKeys.map(petId => <tr key={petId}>
-						<td><span
-							className={styles.swatch}
-							style={{backgroundColor: CHART_COLOURS[petId]}}
-						/></td>
-						<td>{this.getPetName(petId)}</td>
-						<td>{this.parser.formatDuration(this._petUptime.get(petId))}</td>
-						<td>{this.getPetUptimePercent(petId)}%</td>
-					</tr>)}
-				</tbody>
-			</table>
-		</>
+		return <PieChartWithLegend
+			headers={{
+				label: 'Pet',
+				additional: [
+					'Uptime',
+					'%',
+				],
+			}}
+			data={data}
+		/>
 	}
 }
