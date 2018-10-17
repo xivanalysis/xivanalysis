@@ -5,6 +5,7 @@ import CORE from './core'
 import NIN from './jobs/nin'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
+import MCH from './jobs/mch'
 
 export default {
 	CORE,
@@ -23,7 +24,7 @@ export default {
 		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
 		[JOBS.ASTROLOGIAN.logType]: () => import('./jobs/ast' /*webpackChunkName: "jobs-ast" */),
 		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
-		[JOBS.MACHINIST.logType]: () => import('./jobs/mch' /* webpackChunkName: "jobs-mch" */),
+		[JOBS.MACHINIST.logType]: MCH,
 		[JOBS.DRAGOON.logType]: () => import('./jobs/drg' /* webpackChunkName: "jobs-drg" */),
 	},
 
