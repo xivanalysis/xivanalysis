@@ -3,7 +3,7 @@ import ACTIONS from 'data/ACTIONS'
 import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 import {i18nMark, Trans} from '@lingui/react'
 
-const TARGETPERCENT = 99
+const TARGETPERCENT = 95
 
 export default class OGCDDowntime extends CooldownDowntime {
 
