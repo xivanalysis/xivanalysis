@@ -6,7 +6,7 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/DualCastEnums'
+import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/modules/DualCastEnums'
 
 //const util = require('util')
 
