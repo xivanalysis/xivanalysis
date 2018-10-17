@@ -70,12 +70,13 @@ export default class BloodOfTheDragon extends Module {
 			}
 		} else {
 			this._bloodDuration -= elapsedTime
-			if (this._bloodDuration <= 0) {
-				// Blood fell off; reset everything
-				this._bloodDowntime -= this._bloodDuration // Actually addition
-				this._bloodDuration = 0
-				this._eyes = 0
-			}
+		}
+
+		if (this._bloodDuration <= 0) {
+			// Blood fell off; reset everything
+			this._bloodDowntime -= this._bloodDuration // Actually addition
+			this._bloodDuration = 0
+			this._eyes = 0
 		}
 
 		this._lastEventTime = this.parser.currentTimestamp

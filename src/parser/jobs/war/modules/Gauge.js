@@ -21,7 +21,7 @@ const RAGE_GENERATORS = {
 }
 
 //Actions that cost Rage
-const RAGE_SPENDERS ={
+const RAGE_SPENDERS = {
 	[ACTIONS.FELL_CLEAVE.id]: 50,
 	[ACTIONS.INNER_BEAST.id]: 50,
 	[ACTIONS.STEEL_CYCLONE.id]: 50,
@@ -58,33 +58,17 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
+		this.addHook('cast', {by: 'player', abilityId: Object.keys(RAGE_SPENDERS).map(Number)}, this._onSpenderCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.INFURIATE.id}, this._onInfuriateCast)
+		this.addHook('combo', {by: 'player', abilityId: Object.keys(RAGE_GENERATORS).map(Number)}, this._onBuilderCast)
 		this.addHook('complete', this._onComplete)
-	}
-
-	_onCast(event) {
-		const abilityId = event.ability.guid
-
-		// THIS THING TOOK ME TOO LONG TO FIGURE OUT AND I LOST SOME OF MY HAIR BY THE END OF IT
-		//On a serious note, it just checks for the ability, then adds the rage with the _addRage function, which, handles the waste etc.
-		//The if below that is a check if the player is under inner release or not. If it is, the cost isn't subtracted from your current rage,
-		//And simply treats it like they didn't cost rage at all. Elegant solution.
-		if (RAGE_GENERATORS[abilityId]) {
-			this._addRage(abilityId)
-		}
-		if (RAGE_SPENDERS[abilityId] && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
-			this._rage -= RAGE_SPENDERS[abilityId]
-		}
-
-		if (abilityId in RAGE_GENERATORS || abilityId in RAGE_SPENDERS && !this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
-			this._pushToGraph()
-		}
 	}
 
 	_addRage(abilityId) {
 		// Adds rage directly from the RAGE_GENERATOR object, using the abilityId handle.
 		this._rage += RAGE_GENERATORS[abilityId]
+
 		// Checks if _rage is going above MAX_RAGE, and adds it to waste, then returns if it is.
 		if (this._rage > MAX_RAGE) {
 			const waste = this._rage - MAX_RAGE
@@ -92,11 +76,28 @@ export default class Gauge extends Module {
 			this._rage = MAX_RAGE
 			return waste
 		}
-		//Fix for gauge going negative, maybe?
-		if (this._rage < 0) {
-			this._rage = 0
-		}
 		return 0
+	}
+
+	_onBuilderCast(event) {
+		this._addRage(event.ability.guid)
+		this._pushToGraph()
+	}
+
+	_onSpenderCast(event) {
+		if (!this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
+			this._rage = Math.max(this._rage - RAGE_SPENDERS[event.ability.guid], 0)
+		}
+		// This pushes everytime a spender is used -- Even if under Inner Release. That makes the graph have multiple dots, meaning a spender was used each dot.
+		// The whole point of this is to show when IR is being used. Might try using different colors for the dots depending on which ability
+		// They were used on.
+		// TODO: Check if coloring the dots differently per ability is possible.
+		this._pushToGraph()
+	}
+
+	_onInfuriateCast(event) {
+		this._addRage(event.ability.guid)
+		this._pushToGraph()
 	}
 
 	_pushToGraph() {

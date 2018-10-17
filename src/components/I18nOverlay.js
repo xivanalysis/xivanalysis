@@ -172,7 +172,7 @@ export default class I18nOverlay extends Component {
 
 			const {id, translated, tooltip} = t.renderTooltip(this)
 
-			return <Popup trigger={<span className={`${styles.segment} ${translated ? '' : styles['not-translated']} ${id ? '' : styles['missing-id']}`}>{content}</span>} inverted>{
+			return <Popup trigger={<span className={`${styles.segment} ${translated ? '' : styles.notTranslated} ${id ? '' : styles.missingId}`}>{content}</span>} inverted>{
 				tooltip
 			}</Popup>
 		}

@@ -25,15 +25,19 @@ export default class Cooldowns extends CoreCooldowns {
 				ACTIONS.RABBIT_MEDIUM.id,
 			],
 		},
-		{
-			name: 'Spenders',
-			actions: [
-				ACTIONS.TEN_CHI_JIN.id,
-				ACTIONS.BHAVACAKRA.id,
-				ACTIONS.HELLFROG_MEDIUM.id,
-			],
-		},
+		ACTIONS.KASSATSU.id,
+		ACTIONS.TEN_CHI_JIN.id,
 		ACTIONS.TRICK_ATTACK.id,
 		ACTIONS.DREAM_WITHIN_A_DREAM.id,
+		ACTIONS.DUALITY.id,
+		ACTIONS.BHAVACAKRA.id,
+		ACTIONS.MUG.id,
+		ACTIONS.JUGULATE.id,
+		ACTIONS.HELLFROG_MEDIUM.id,
+		ACTIONS.ASSASSINATE.id,
+		ACTIONS.SHADEWALKER.id,
+		ACTIONS.SMOKE_SCREEN.id,
+		ACTIONS.SHUKUCHI.id,
+		ACTIONS.SHADE_SHIFT.id,
 	]
 }

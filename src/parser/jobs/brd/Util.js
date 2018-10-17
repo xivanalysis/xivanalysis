@@ -59,12 +59,12 @@ export default class Util extends Module {
 		} else if (event.multistrike && !event.hitType || event.hitType === 1) {
 			modifier = 'Direct hit! '
 		}
-
-		return `${modifier}${this.enemies.getEntity(event.targetID).name} takes ${event.amount} damage.`
+		return `${modifier}${event.target && event.target.name ? event.target.name : this.enemies.getEntity(event.targetID).name || 'Target'} takes ${event.amount} damage.`
 
 	}
 
 	formatTimestamp(timestamp) {
+		timestamp = Math.max(timestamp, this.parser.fight.start_time)
 		return this.parser.formatTimestamp(timestamp)
 	}
 
