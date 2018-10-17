@@ -202,10 +202,10 @@ export default class AdditionalStats extends Module {
 		}
 
 		// We calculate this info
-		this.k = this._getK()
 		this.criticalHitProbability = this._getCriticalHitProbability()
 		this.criticalHitRate = this._getCriticalHitRate()
 		this.critMod = this._getCritMod()
+		this.k = this._getK()
 
 		// Return all this shit
 		return events
