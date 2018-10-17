@@ -154,26 +154,22 @@ export default class AdditionalStats extends Module {
 						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 					}
 
-					// If it doesn't have a conditional potency (Sidewinder and Pitch Perfect), it will be used to calculate 'K'
+					// Collects the damage instances, to be used for calculating crit and 'K'
 					// TODO: Have a filtered array with skills
-					if (
-						event.ability.guid !== ACTIONS.SIDEWINDER.id
-						&& event.ability.guid !== ACTIONS.PITCH_PERFECT.id
-					) {
 
-						// ...let's not count Spears for now
-						if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
+					// ...let's not count Spears for now
+					if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
 
-							const critTier = this._parseCritBuffs(event)
+						const critTier = this._parseCritBuffs(event)
 
-							// We store the damage event, grouping them by Δcrit tiers
-							if (!this._damageInstances[critTier]) {
-								this._damageInstances[critTier] = []
-							}
-
-							this._damageInstances[critTier].push({event: event, rawDamage: event.amount / fixedMultiplier})
+						// We store the damage event, grouping them by Δcrit tiers
+						if (!this._damageInstances[critTier]) {
+							this._damageInstances[critTier] = []
 						}
+
+						this._damageInstances[critTier].push({event: event, rawDamage: event.amount / fixedMultiplier})
 					}
+
 				// If it's a dot tick (yay, they have/used a dot!), we will collect the data to get a better critMod approximation
 				} else {
 					const enemy = this._getEnemy(event.targetID)
@@ -385,8 +381,8 @@ export default class AdditionalStats extends Module {
 					rawDamage = Math.trunc(rawDamage / DHIT_MOD)
 				}
 
-				// If we have the potency information for the current skill, we add it's potency ratio to the array of potential 'K' values
-				if (skill.potency) {
+				// If we have the potency information for the current skill and it's not a conditional potency skill, we add it's potency ratio to the array of potential 'K' values
+				if (skill.potency && !isNaN(skill.potency)) {
 					values.push(Math.round(rawDamage * 100 / skill.potency))
 				}
 			}
