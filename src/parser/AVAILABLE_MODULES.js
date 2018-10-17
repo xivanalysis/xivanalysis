@@ -6,6 +6,7 @@ import NIN from './jobs/nin'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import MCH from './jobs/mch'
+import RDM from './jobs/rdm'
 
 export default {
 	CORE,
@@ -15,7 +16,7 @@ export default {
 		[JOBS.NINJA.logType]: NIN,
 		[JOBS.SUMMONER.logType]: SMN,
 		[JOBS.BLACK_MAGE.logType]: () => import('./jobs/blm' /* webpackChunkName: "jobs-blm" */),
-		[JOBS.RED_MAGE.logType]: () => import('./jobs/rdm' /* webpackChunkName: "jobs-rdm" */),
+		[JOBS.RED_MAGE.logType]: RDM,
 		[JOBS.WARRIOR.logType]: WAR,
 		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
 		[JOBS.PALADIN.logType]: () => import('./jobs/pld' /* webpackChunkName: "jobs-pld" */),
