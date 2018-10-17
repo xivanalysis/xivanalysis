@@ -22,8 +22,8 @@
 - [ ] Picking appropriate Dragon Sight targets
 
 ### Debuffs
-- [ ] Piercing Resist Down uptime
-- [ ] Chaos Thrust uptime
+- [x] Piercing Resist Down uptime (Debuffs.js)
+- [x] Chaos Thrust uptime and clipping (Debuffs.js)
 
 ### Rotation
 - [ ] Adhering to the standard 11-GCD rotation

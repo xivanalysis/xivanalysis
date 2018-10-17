@@ -1,6 +1,7 @@
 import {matchClosestLower} from 'utilities'
 
 export const SEVERITY = {
+	// NOTE: Don't use MORBID, It's for deaths. I _will_ block the PRs on this.
 	MORBID: 0,
 	MAJOR: 1,
 	MEDIUM: 2,

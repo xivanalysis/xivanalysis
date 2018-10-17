@@ -1,7 +1,8 @@
 /* global require, module */
+const assert = require('assert')
 const _ = require('lodash')
 const glob = require('glob')
-const {injectBabelPlugin} = require('react-app-rewired')
+const {injectBabelPlugin, getBabelLoader} = require('react-app-rewired')
 const rewireEslint = require('react-app-rewire-eslint')
 const rewireLodash = require('react-app-rewire-lodash')
 const webpack = require('webpack')
@@ -40,6 +41,33 @@ module.exports = (config, env) => {
 
 	config = injectBabelPlugin('@lingui/babel-plugin-transform-js', config)
 	config = injectBabelPlugin('./locale/babel-plugin-transform-react', config)
+
+	// Set up TypeScript
+	const loader = getBabelLoader(config.module.rules)
+	assert.equal(loader.test.toString(), String.raw`/\.(js|mjs|jsx)$/`)
+	loader.test = /\.(js|mjs|jsx|tsx?)$/
+	assert.equal(typeof loader.use, 'undefined')
+	assert.equal(typeof loader.loader, 'string')
+	loader.use = [
+		{
+			loader: loader.loader,
+			options: loader.options,
+		},
+		{
+			loader: 'ts-loader',
+			options: {
+				// TODO: set up happyPackMode et al
+				onlyCompileBundledFiles: true,
+			},
+		},
+	]
+	delete loader.loader
+	delete loader.options
+
+	config.resolve.extensions.unshift('.tsx', '.ts')
+	// remove unnecessary "index.js" from the path that would be resolved by webpack anyway
+	// allows a potential conversion to .ts
+	config.entry = config.entry.map(file => file.replace(/[/\\]index\.js$/, ''))
 
 	// We have to set the type for lingui files here, rather than doing
 	// it inline when we import the files, because webpack 4 decided

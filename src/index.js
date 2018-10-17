@@ -4,7 +4,6 @@ import Raven from 'raven-js'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
-import registerServiceWorker from './registerServiceWorker'
 import Root from './Root'
 
 // If we're in prod, boot up sentry
@@ -37,4 +36,3 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 }
 
 ReactDOM.render(<Root />, document.getElementById('root'))
-registerServiceWorker()

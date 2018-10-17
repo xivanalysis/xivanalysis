@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -52,12 +53,12 @@ export default class StormsEye extends Module {
 
 	_onComplete() {
 		this.checklist.add(new Rule({
-			name: 'Keep Storm\'s Eye up',
-			description: 'Storm\'s Eye increases your damage by 10%, it is a huge part of a Warrior\'s damage.',
+			name: <Trans id="war.stormseye.checklist.name">Keep Storm's Eye Up</Trans>,
+			description: <Trans id="war.stormseye.checklist.description">Storm's Eye increases your damage by 10%, it is a substantial part of a Warrior's damage.</Trans>,
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.STORMS_EYE} /> uptime</Fragment>,
+					name: <Trans id="war.stormseye.checklist.uptime"><ActionLink {...ACTIONS.STORMS_EYE} /> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
@@ -66,13 +67,13 @@ export default class StormsEye extends Module {
 		if (this._earlyApplications) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.STORMS_EYE.icon,
-				content: <Fragment>
+				content: <Trans id="war.suggestions.stormseye.content">
 						Avoid refreshing {ACTIONS.STORMS_EYE.name} significantly before its expiration -- That might be making you possibly lose <ActionLink {...ACTIONS.STORMS_PATH} /> uses.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
+				why: <Trans id="war.suggestions.stormseye.why">
 					{this._earlyApplications} reapplications that were {STORMS_EYE_BUFFER / 1000} or more seconds before expiration.
-				</Fragment>,
+				</Trans>,
 			}))
 		}
 	}

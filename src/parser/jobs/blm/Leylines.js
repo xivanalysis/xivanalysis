@@ -18,6 +18,7 @@ export default class Leylines extends Module {
 	static dependencies = [
 		'timeline',
 		'checklist',
+		'brokenLog',
 	]
 	_circleOfPowers = {
 		current: null,
@@ -134,15 +135,19 @@ export default class Leylines extends Module {
 		return (sumOfCoPUpTime/(sumOfLeyLineDurations))*100
 	}
 
+	finaliseBuff(event, statusId) {
+		const item = this._buffs[this.parser.player.id][statusId]
+		item.end = event.timestamp
+		this.timeline.addItem(item)
+	}
+
 	_onComplete(event) {
 		if (this._circleOfPowers.current) {
 			if (!this._circleOfPowers.current.stop) {
 				this._circleOfPowers.current.stop = event.timestamp
 
 				// Ensure this CoP buff makes it onto the Timeline view
-				const itemCoP = this._buffs[this.parser.player.id][STATUSES.CIRCLE_OF_POWER.id]
-				itemCoP.end = event.timestamp
-				this.timeline.addItem(itemCoP)
+				this.finaliseBuff(event, STATUSES.CIRCLE_OF_POWER.id)
 			}
 			this._circleOfPowers.history.push(this._circleOfPowers.current)
 		}
@@ -151,14 +156,17 @@ export default class Leylines extends Module {
 				this._leyLines.current.stop = event.timestamp
 
 				// Ensure this Ley Lines buff makes it onto the Timeline view
-				const itemLeyLines = this._buffs[this.parser.player.id][STATUSES.LEY_LINES.id]
-				itemLeyLines.end = event.timeline
-				this.timeline.addItem(itemLeyLines)
+				this.finaliseBuff(event, STATUSES.LEY_LINES.id)
 			}
 			this._leyLines.history.push(this._leyLines.current)
 		}
 		//check if there even were any events
-		if (!this._circleOfPowers.history.length) { return }
+		if (!this._circleOfPowers.history.length) {
+			if (this._leyLines.history.length) { // Ley Lines events with no Circle of Powers should be impossible...
+				this.brokenLog.trigger()
+			}
+			return
+		}
 		if (!this._leyLines.history.length) { return }
 
 		// Get the total duration of CoP uptime and ley lines, so we can get the overall percentage uptime

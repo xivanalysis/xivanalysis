@@ -1,5 +1,6 @@
 import Color from 'color'
-import React, {Fragment} from 'react'
+import {Trans} from '@lingui/react'
+import React from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -112,12 +113,12 @@ export default class Gauge extends Module {
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.INFURIATE.icon,
-			content: <Fragment>
+			content: <Trans id="war.gauge.suggestions.lost-rage.content">
 					You used <ActionLink {...ACTIONS.STORMS_PATH}/>, <ActionLink {...ACTIONS.STORMS_EYE}/>, <ActionLink {...ACTIONS.INFURIATE}/>, or any gauge generators in a way that overcapped you.
-			</Fragment>,
-			why: <Fragment>
+			</Trans>,
+			why: <Trans id="war.gauge.suggestions.lost-rage.why">
 				{this._wastedRage} rage wasted by using abilities that sent you over the cap.
-			</Fragment>,
+			</Trans>,
 			tiers: RAGE_USAGE_SEVERITY,
 			value: this._wastedRage,
 		}))

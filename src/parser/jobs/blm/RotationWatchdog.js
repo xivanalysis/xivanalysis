@@ -9,7 +9,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -56,6 +56,7 @@ export default class RotationWatchdog extends Module {
 	_UIEndingInT3 = 0
 	_missedF4sCauseEndingInT3 = 0
 	_wrongT3 = 0
+	_rotationsWithoutFire = 0
 
 	_gaugeState = {}
 
@@ -101,11 +102,11 @@ export default class RotationWatchdog extends Module {
 			this._MP = this.combatants.selected.resources.mp
 		}
 
-		/*If my T3 isn't a proc already and cast under AF, it's straight up wrong. !!Deactivated until T3Ps are tracked accurately!!
+		//If my T3 isn't a proc already and cast under AF, it's straight up wrong.
 		if (!event.ability.overrideAction && actionId === ACTIONS.THUNDER_III.id && this._AF > 0) {
 			event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
 			this._wrongT3 ++
-		}*/
+		}
 
 		//start and stop trigger for our rotations is B3
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
@@ -198,6 +199,25 @@ export default class RotationWatchdog extends Module {
 				</Trans>,
 			}))
 		}
+
+		// Suggestion not to icemage... :(
+		if (this._rotationsWithoutFire > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.BLIZZARD_II.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
+					Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...ACTIONS.FIRE_IV}/>s cast during the fight.
+				</Trans>,
+				tiers: {
+					1: SEVERITY.MINOR,
+					3: SEVERITY.MEDIUM,
+					5: SEVERITY.MAJOR,
+				},
+				value: this._rotationsWithoutFire,
+				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
+					<Plural value={this._rotationsWithoutFire} one="# rotations" other="# rotations"/> were performed with no fire spells.
+				</Trans>,
+			}))
+		}
 	}
 
 	//if transpose is used under Encounter invul the recording gets resetted
@@ -206,7 +226,7 @@ export default class RotationWatchdog extends Module {
 			if (!this.invuln.isUntargetable('all', event.timestamp)) {
 				this._stopRecording()
 			} else {
-				this._resetRecording()
+				this._resetRecording(event)
 			}
 		} else {
 			this._startRecording(event)
@@ -236,15 +256,13 @@ export default class RotationWatchdog extends Module {
 			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
 			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
 
-			/* !!Deactivated until T3Ps are tracked correctly.!!
-			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length*/
+			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			//!!Statement deactivated until T3Ps are tracked correctly.!!
-			if (this._rotation.missingCount.missing > 0 || /*hardT3Count > 0 ||*/ DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._rotation.missingCount.missing > 0 || hardT3Count > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
 
 				//Check if you actually lost an F4 due to ending UI in T3
@@ -254,7 +272,13 @@ export default class RotationWatchdog extends Module {
 				}
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
-				if (this._rotation.casts.length > MIN_ROTATION_LENGTH) { this._history.push(this._rotation) }
+				//Also throw out rotations with no Fire spells
+				const fire3Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_III.id).length
+				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+				if (fireCount === 0) {
+					this._rotationsWithoutFire++
+				}
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) { this._history.push(this._rotation) }
 				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
@@ -265,10 +289,11 @@ export default class RotationWatchdog extends Module {
 		}
 	}
 
-	_resetRecording() {
+	_resetRecording(event) {
 		this._inRotation = false
 		this._rotation = {}
 		this._lockedBuffs = false
+		this._startRecording(event) // Make sure we start a new recording to catch actions when the boss returns
 	}
 
 	_getMissingFire4Count(count, hasConvert) {
@@ -309,19 +334,21 @@ export default class RotationWatchdog extends Module {
 			}
 		})
 
-		return <Fragment>
-			<Message>
-				<Trans id="blm.rotation-watchdog.accordion.message">
-					The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
-					Avoid missing Fire IV casts where possible.
-				</Trans>
-			</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
-		</Fragment>
+		if (panels.length > 0) {
+			return <Fragment>
+				<Message>
+					<Trans id="blm.rotation-watchdog.accordion.message">
+						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
+						Avoid missing Fire IV casts where possible.
+					</Trans>
+				</Message>
+				<Accordion
+					exclusive={false}
+					panels={panels}
+					styled
+					fluid
+				/>
+			</Fragment>
+		}
 	}
 }
