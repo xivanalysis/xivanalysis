@@ -7,6 +7,7 @@ import Module, {DISPLAY_ORDER} from 'parser/core/Module'
 
 import styles from './ChangeLog.module.css'
 
+// TODO: Make it work with Core changelog.
 let _changeLog = []
 
 export default class ChangeLog extends Module {
