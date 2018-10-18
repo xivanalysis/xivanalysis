@@ -41,6 +41,7 @@ export default class PitchPerfect extends Module {
 	static title = 'Pitch Perfect'
 	static dependencies = [
 		'additionalStats',
+		'downtime',
 		'enemies',
 		'suggestions',
 		'util',
@@ -77,8 +78,7 @@ export default class PitchPerfect extends Module {
 	}
 
 	_onDotTick(event) {
-		// Keeping track of the first dot tick of each enemy
-		// We only need to know when the first tick happens, since the frequency is known
+		// Keeping track of the dot tick on each enemy
 		const enemy = this._getEnemy(event.targetID)
 
 		enemy.tick[event.ability.guid] = event
@@ -146,6 +146,7 @@ export default class PitchPerfect extends Module {
 				[STATUSES.CAUSTIC_BITE.id]: 0,
 				[STATUSES.STORMBITE.id]: 0,
 			},
+			lastTickOnEnemy: enemy.lastTick,
 			get stacks() { return this.damageEvent && this.damageEvent.stacks || undefined },
 			get timestamp() { return this.damageEvent && this.damageEvent.timestamp },
 		}
@@ -154,7 +155,7 @@ export default class PitchPerfect extends Module {
 
 		// Only an issue if there are dot ticks left on the song and sufficient time to use PP (animation lock)
 		// TODO: Consider pre-downtime case
-		if (enemy.lastTick + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - ANIMATION_LOCK) {
+		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - ANIMATION_LOCK) {
 			return
 		}
 
@@ -188,6 +189,9 @@ export default class PitchPerfect extends Module {
 	}
 
 	_onComplete() {
+		// We remove bad PPs that were used because of downtime
+		this._cleanUpPPs()
+
 		const badPPs = this._ppEvents.filter(pp => pp.issue !== NONE).length
 
 		if (badPPs === 0) {
@@ -213,14 +217,14 @@ export default class PitchPerfect extends Module {
 	}
 
 	output() {
-		const badPPevents = this._ppEvents.filter(pp => pp.issue !== NONE)
+		const badPPs = this._ppEvents.filter(pp => pp.issue !== NONE)
 
-		if (badPPevents.length === 0) {
+		if (badPPs.length === 0) {
 			return
 		}
 
 		// Builds a panel for each pp event
-		const panels = badPPevents.map(pp => {
+		const panels = badPPs.map(pp => {
 
 			const panelProperties = {
 				pp: pp,
@@ -363,6 +367,15 @@ export default class PitchPerfect extends Module {
 
 		}
 		return this._enemies[targetId]
+	}
+
+	_cleanUpPPs() {
+
+		for (const pp of this._ppEvents) {
+			if (this.downtime.isDowntime(pp.lastTickOnEnemy + DOT_TICK_FREQUENCY + ANIMATION_LOCK)) {
+				this._ppEvents.splice(this._ppEvents.indexOf(pp), 1)
+			}
+		}
 	}
 
 }
