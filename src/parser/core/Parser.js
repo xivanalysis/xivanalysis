@@ -1,12 +1,13 @@
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
-import {scroller} from 'react-scroll'
 import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {extractErrorContext} from 'utilities'
+
+import {OFFSET_FROM_VIEWPORT_TOP} from 'components/Analyse/components/ResultSegment'
 
 /**
  * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
@@ -443,10 +444,13 @@ class Parser {
 	 */
 	scrollTo(handle) {
 		const module = this.modules[handle]
-		scroller.scrollTo(module.constructor.title, {
-			offset: -50,
-			smooth: true,
-		})
+		const element = document.getElementById(module.constructor.title)
+		if (element !== null) {
+			scrollBy({
+				top: element.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP + 1,
+				behavior: 'smooth',
+			})
+		}
 	}
 }
 

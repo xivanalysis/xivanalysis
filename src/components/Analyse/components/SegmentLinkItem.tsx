@@ -1,31 +1,27 @@
 import React from 'react'
 
 import _ from 'lodash'
-import Scroll from 'react-scroll'
 import {Trans} from '@lingui/react'
 import {
 	Menu,
 } from 'semantic-ui-react'
 
+import { Consumer, Context } from './SegmentPositionContext'
+
 import { ParserResult } from 'parser/core/Parser'
 
 interface Props {
+	index: number
 	result: ParserResult
-	active: boolean
-	onSetActive (): void
 }
 
-export default function SegmentLinkItem ({ result, active, onSetActive }: Props) {
-	return <Menu.Item
-		active={active}
-		as={Scroll.Link}
-		// Scroll.Link props
-		to={result.name}
-		offset={-50}
-		smooth
-		spy
-		onSetActive={onSetActive}
-	>
-		<Trans id={result.i18n_id} defaults={result.name /* Doing manually so SUI doesn't modify my text */} />
-	</Menu.Item>
+export default function SegmentLinkItem ({ result, index }: Props) {
+	return <Consumer>{({ active, scrollToId }) => (
+		<Menu.Item
+			active={active === index}
+			onClick={() => { scrollToId(index) }}
+		>
+			<Trans id={result.i18n_id} defaults={result.name /* Doing manually so SUI doesn't modify my text */} />
+		</Menu.Item>
+	)}</Consumer>
 }
