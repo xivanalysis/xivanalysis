@@ -1,14 +1,46 @@
+import {cloneDeep} from 'lodash'
+import 'reflect-metadata'
+
+import {Event} from 'fflogs'
+import Parser from './Parser'
+
 export const DISPLAY_ORDER = {
 	TOP: 0,
 	DEFAULT: 50,
 	BOTTOM: 100,
 }
 
+export function dependency(target: Module, key: string) {
+	const dependency: typeof Module = Reflect.getMetadata('design:type', target, key)
+	const constructor = target.constructor as typeof Module
+
+	// Make sure we're not modifying every single module
+	if (constructor.dependencies === Module.dependencies) {
+		constructor.dependencies = []
+	}
+
+	constructor.dependencies.push(dependency.handle)
+}
+
+type Filter<T extends Event> = Partial<T> & Partial<{
+	abilityId: number // TODO
+	to: 'player' | 'pet' | T['targetID']
+	by: 'player' | 'pet' | T['sourceID']
+}>
+
+type HookCallback<T extends Event> = (event: T) => void
+
+interface Hook<T extends Event> {
+	events: T['type'][]
+	filter: Filter<T>
+	callback: HookCallback<T>
+}
+
 export default class Module {
-	static dependencies = []
+	static dependencies: string[] = []
 	static displayOrder = DISPLAY_ORDER.DEFAULT
 
-	static _handle
+	private static _handle: string
 	static get handle() {
 		if (!this._handle) {
 			const handle = this.name.charAt(0).toLowerCase() + this.name.slice(1)
@@ -21,7 +53,7 @@ export default class Module {
 		this._handle = value
 	}
 
-	static _title = null
+	private static _title: string
 	static get title() {
 		if (!this._title) {
 			this._title = this.handle.charAt(0).toUpperCase() + this.handle.slice(1)
@@ -32,20 +64,26 @@ export default class Module {
 		this._title = value
 	}
 
-	_hooks = new Map()
+	// DI FunTimes™
+	[key: string]: any;
 
-	/**
-	 *
-	 * @param {import('./Parser').default} parser
-	 */
-	constructor(parser) {
-		this.parser = parser
-		this.constructor.dependencies.forEach(dep => {
+	// TODO
+	private _hooks = new Map<Event['type'], Set<Hook<Event>>>()
+
+	constructor(
+		protected readonly parser: Parser
+	) {
+		const module = this.constructor as typeof Module
+		module.dependencies.forEach(dep => {
 			this[dep] = parser.modules[dep]
 		})
+		this.init()
 	}
 
-	normalise(events) {
+	// So TS peeps don't need to pass the parser down
+	protected init() {}
+
+	normalise(events: Event[]) {
 		return events
 	}
 
@@ -58,37 +96,35 @@ export default class Module {
 	 * @param {Object} event The event that was being processed when the error occurred, if source is 'event'
 	 * @returns {Object|undefined} The data to attach to automatic error reports, or undefined to rely on primitive value detection
 	 */
-	getErrorContext(/* source, error, event */) {
+	getErrorContext(source: 'event' | 'output', error: Error, event?: Event): any {
 		return
 	}
 
-	addHook(events, filter, cb) {
-		const mapFilterEntity = (qol, raw) => {
-			if (filter[qol]) {
-				switch (filter[qol]) {
-				case 'player':
-					filter[raw] = this.parser.player.id
-					break
-				case 'pet':
-					filter[raw] = this.parser.player.pets.map(pet => pet.id)
-					break
-				default:
-					filter[raw] = filter[qol]
-				}
-				delete filter[qol]
-			}
-		}
-
+	protected addHook<T extends Event>(
+		events: T['type'] | T['type'][],
+		cb: HookCallback<T>
+	): Hook<T>
+	protected addHook<T extends Event>(
+		events: T['type'] | T['type'][],
+		filter: Filter<T> | HookCallback<T>,
+		cb: HookCallback<T>,
+	): Hook<T>
+	protected addHook<T extends Event>(
+		events: T['type'] | T['type'][],
+		_filter: Filter<T> | HookCallback<T>,
+		_cb?: HookCallback<T>,
+	): Hook<T> | undefined {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
-		if (typeof filter === 'function') {
-			cb = filter
-			filter = {}
-		}
+		const cb = typeof _filter === 'function'? _filter : _cb
+		let filter = typeof _filter === 'function'? {} : _filter
+
+		// If there's no callback just... stop
+		if (!cb) { return }
 
 		// QoL filter transforms
-		mapFilterEntity('to', 'targetID')
-		mapFilterEntity('by', 'sourceID')
+		filter = this.mapFilterEntity(filter, 'to', 'targetID')
+		filter = this.mapFilterEntity(filter, 'by', 'sourceID')
 		if (filter.abilityId) {
 			if (!filter.ability) {
 				filter.ability = {}
@@ -111,27 +147,58 @@ export default class Module {
 
 		// Hook for each of the events
 		events.forEach(event => {
+			let hooks = this._hooks.get(event)
+
 			// Make sure the map has a key for us
-			if (!this._hooks.has(event)) {
-				this._hooks.set(event, new Set())
+			if (!hooks) {
+				hooks = new Set()
+				this._hooks.set(event, hooks)
 			}
 
 			// Set the hook
-			this._hooks.get(event).add(hook)
+			hooks.add(hook)
 		})
 
 		// Return the hook representation so it can be removed (later)
 		return hook
 	}
 
-	removeHook(hook) {
+	private mapFilterEntity<T extends Event>(
+		filter: Filter<T>,
+		qol: keyof Filter<T>,
+		raw: keyof T,
+	) {
+		if (!filter[qol]) { return filter }
+
+		const _filter = cloneDeep(filter)
+
+		// TODO: Typing on parser req. for some of this stuff
+		switch (_filter[qol]) {
+			case 'player':
+				_filter[raw] = this.parser.player.id
+				break
+			case 'pet':
+				_filter[raw] = this.parser.player.pets.map((pet: any) => pet.id)
+				break
+			default:
+				_filter[raw] = _filter[qol]
+		}
+
+		delete _filter[qol]
+
+		return _filter
+	}
+
+	// TODO: Test
+	protected removeHook(hook: Hook<any>) {
 		hook.events.forEach(event => {
-			if (!this._hooks.has(event)) { return }
-			this._hooks.get(event).delete(hook)
+			const hooks = this._hooks.get(event)
+			if (!hooks) { return }
+			hooks.delete(hook)
 		})
 	}
 
-	triggerEvent(event) {
+	triggerEvent(event: Event) {
 		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
 		if (typeof event.type !== 'symbol') {
 			this._runHooks(event, this._hooks.get('all'))
@@ -139,7 +206,7 @@ export default class Module {
 		this._runHooks(event, this._hooks.get(event.type))
 	}
 
-	_runHooks(event, hooks) {
+	private _runHooks(event: Event, hooks?: Set<Hook<Event>>) {
 		if (!hooks) { return }
 		hooks.forEach(hook => {
 			// Check the filter
@@ -151,8 +218,8 @@ export default class Module {
 		})
 	}
 
-	_filterMatches(event, filter) {
-		return Object.keys(filter).every(key => {
+	private _filterMatches(event: Event, filter: Filter<Event>) {
+		const match = Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
 			if (!event.hasOwnProperty(key)) {
 				return false
@@ -174,6 +241,8 @@ export default class Module {
 			// Basic value check
 			return filterVal === eventVal
 		})
+
+		return match
 	}
 
 	output() {
