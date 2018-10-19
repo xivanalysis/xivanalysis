@@ -1,4 +1,5 @@
 import '@babel/polyfill'
+import 'intersection-observer'
 
 import Raven from 'raven-js'
 import React from 'react'
