@@ -8,6 +8,10 @@ import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {extractErrorContext} from 'utilities'
 
+/**
+ * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
+ */
+
 class Parser {
 	// -----
 	// Properties
@@ -309,6 +313,7 @@ class Parser {
 		const displayOrder = [...this.moduleOrder]
 		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
 
+		/** @type {ParserResult[]} */
 		const results = []
 		displayOrder.forEach(mod => {
 			const module = this.modules[mod]
@@ -324,6 +329,7 @@ class Parser {
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
+			/** @type {import('./Module').ModuleOutput|null} */
 			let output = null
 			try {
 				output = module.output()
