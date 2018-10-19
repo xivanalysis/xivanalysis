@@ -888,6 +888,13 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.5.tgz#870a1434208b60603745bfd214fc3fc675142364"
   integrity sha512-3LI+vUC3Wju28vbjIjsTKakhMB8HC4l+tMz+Z8WRzVK+kmvezE5jcOvKtBpznWSI5KDLFo+FouUhpTKoekadCA==
 
+"@types/lingui__react@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@types/lingui__react/-/lingui__react-2.5.0.tgz#3a8a1ac0aee94ea504abe9c693cca61983c84356"
+  integrity sha512-0NXl2jJFWaieAMYKBHxg4mK3unFZcvH96CUYiTl7Q+oIWYuvtplvLzAl2ylGCjuUWo7WTrQIbJV1hGu+x9u9Qw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/lodash@^4.14.116":
   version "4.14.117"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.117.tgz#695a7f514182771a1e0f4345d189052ee33c8778"
@@ -8731,14 +8738,6 @@ react-scripts@^2.0.3:
     workbox-webpack-plugin "3.6.2"
   optionalDependencies:
     fsevents "1.2.4"
-
-react-scroll@^1.7.9:
-  version "1.7.10"
-  resolved "https://registry.yarnpkg.com/react-scroll/-/react-scroll-1.7.10.tgz#b59cfa11a899a362c6489607ed5865c9c5fd0b53"
-  integrity sha512-7K1caXF19PQ/jck+QRCdRMytqWei1ktv7jtcsgMap2s55pGOUc/a5phr4loajZRFRx3qKj9Tz12KDtELp91xMg==
-  dependencies:
-    lodash.throttle "^4.1.1"
-    prop-types "^15.5.8"
 
 react-side-effect@^1.1.0:
   version "1.1.5"
