@@ -17,10 +17,10 @@ export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-smn" */),
 
 	description: <>
-		<TransMarkdown id={i18nMark('smn.about.description')} source={description}/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
+		<TransMarkdown id={i18nMark('smn.about.description')} source={description} key="smn.about.description"/>
+		<Message warning icon key="smn.about.description.warning">
+			<Icon name="warning sign" key="smn.about.description.warning.icon"/>
+			<Message.Content key="smn.about.description.warning.content">
 				<Trans id="smn.about.description.warning">While the analysis below should be reasonably accurate, this system is still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
