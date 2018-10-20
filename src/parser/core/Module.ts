@@ -10,16 +10,29 @@ export const DISPLAY_ORDER = {
 	BOTTOM: 100,
 }
 
-export function dependency(target: Module, key: string) {
-	const dependency: typeof Module = Reflect.getMetadata('design:type', target, key)
+export function dependency(target: Module, prop: string) {
+	const dependency: typeof Module = Reflect.getMetadata('design:type', target, prop)
 	const constructor = target.constructor as typeof Module
+
+	// Check that the dep is actually a module
+	if (!Module.isPrototypeOf(dependency)) {
+		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Module\`, got \`${dependency.name}\`.`)
+	}
 
 	// Make sure we're not modifying every single module
 	if (constructor.dependencies === Module.dependencies) {
 		constructor.dependencies = []
 	}
 
-	constructor.dependencies.push(dependency.handle)
+	constructor.dependencies.push({
+		handle: dependency.handle,
+		prop,
+	})
+}
+
+interface MappedDependency {
+	handle: string
+	prop: string
 }
 
 type Filter<T extends Event> = Partial<T> & Partial<{
@@ -37,7 +50,7 @@ interface Hook<T extends Event> {
 }
 
 export default class Module {
-	static dependencies: string[] = []
+	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder = DISPLAY_ORDER.DEFAULT
 
 	private static _handle: string
@@ -75,7 +88,11 @@ export default class Module {
 	) {
 		const module = this.constructor as typeof Module
 		module.dependencies.forEach(dep => {
-			this[dep] = parser.modules[dep]
+			if (typeof dep === 'string') {
+				dep = {handle: dep, prop: dep}
+			}
+
+			this[dep.prop] = parser.modules[dep.handle]
 		})
 		this.init()
 	}
