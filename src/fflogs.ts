@@ -113,7 +113,7 @@ export interface Ability {
 
 export interface Event {
 	timestamp: number
-	type: string
+	type: string | symbol
 
 	sourceID: number
 	sourceIsFriendly: boolean

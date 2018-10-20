@@ -4,10 +4,10 @@ import 'reflect-metadata'
 import {Event, Ability} from 'fflogs'
 import Parser from './Parser'
 
-export const DISPLAY_ORDER = {
-	TOP: 0,
-	DEFAULT: 50,
-	BOTTOM: 100,
+export enum DISPLAY_ORDER {
+	TOP = 0,
+	DEFAULT = 50,
+	BOTTOM = 100,
 }
 
 export function dependency(target: Module, prop: string) {
@@ -113,10 +113,10 @@ export default class Module {
 	 * This method is called when an error occurs, either when running
 	 * event hooks or calling {@link Module#output} in this module or
 	 * a module that depends on this module.
-	 * @param {String} source Either 'event' or 'output'
-	 * @param {Error} error The error that occurred
-	 * @param {Object} event The event that was being processed when the error occurred, if source is 'event'
-	 * @returns {Object|undefined} The data to attach to automatic error reports, or undefined to rely on primitive value detection
+	 * @param source Either 'event' or 'output'
+	 * @param error The error that occurred
+	 * @param event The event that was being processed when the error occurred, if source is 'event'
+	 * @returns The data to attach to automatic error reports, or undefined to rely on primitive value detection
 	 */
 	getErrorContext(source: 'event' | 'output', error: Error, event?: Event): any {
 		return
@@ -133,13 +133,13 @@ export default class Module {
 	): Hook<T>
 	protected addHook<T extends Event>(
 		events: T['type'] | T['type'][],
-		_filter: Filter<T> | HookCallback<T>,
-		_cb?: HookCallback<T>,
+		filterArg: Filter<T> | HookCallback<T>,
+		cbArg?: HookCallback<T>,
 	): Hook<T> | undefined {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
-		const cb = typeof _filter === 'function'? _filter : _cb
-		let filter = typeof _filter === 'function'? {} : _filter
+		const cb = typeof filterArg === 'function'? filterArg : cbArg
+		let filter = typeof filterArg === 'function'? {} : filterArg
 
 		// If there's no callback just... stop
 		if (!cb) { return }
@@ -186,29 +186,29 @@ export default class Module {
 	}
 
 	private mapFilterEntity<T extends Event>(
-		filter: Filter<T>,
+		filterArg: Filter<T>,
 		qol: keyof Filter<T>,
 		raw: keyof T,
 	) {
-		if (!filter[qol]) { return filter }
+		if (!filterArg[qol]) { return filterArg }
 
-		const _filter = cloneDeep(filter)
+		const filter = cloneDeep(filterArg)
 
 		// TODO: Typing on parser req. for some of this stuff
-		switch (_filter[qol]) {
+		switch (filter[qol]) {
 			case 'player':
-				_filter[raw] = this.parser.player.id
+				filter[raw] = this.parser.player.id
 				break
 			case 'pet':
-				_filter[raw] = this.parser.player.pets.map((pet: any) => pet.id)
+				filter[raw] = this.parser.player.pets.map((pet: any) => pet.id)
 				break
 			default:
-				_filter[raw] = _filter[qol]
+				filter[raw] = filter[qol]
 		}
 
-		delete _filter[qol]
+		delete filter[qol]
 
-		return _filter
+		return filter
 	}
 
 	// TODO: Test
@@ -267,7 +267,7 @@ export default class Module {
 		return match
 	}
 
-	output() {
+	output(): React.ReactNode {
 		return false
 	}
 }
