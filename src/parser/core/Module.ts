@@ -1,7 +1,7 @@
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 
-import {Event} from 'fflogs'
+import {Event, Ability} from 'fflogs'
 import Parser from './Parser'
 
 export const DISPLAY_ORDER = {
@@ -42,7 +42,7 @@ interface MappedDependency {
 }
 
 type Filter<T extends Event> = Partial<T> & Partial<{
-	abilityId: number // TODO
+	abilityId: Ability['guid']
 	to: 'player' | 'pet' | T['targetID']
 	by: 'player' | 'pet' | T['sourceID']
 }>
@@ -86,7 +86,6 @@ export default class Module {
 	// DI FunTimes™
 	[key: string]: any;
 
-	// TODO
 	private _hooks = new Map<Event['type'], Set<Hook<Event>>>()
 
 	constructor(
