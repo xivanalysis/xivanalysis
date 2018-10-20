@@ -94,12 +94,21 @@ export interface ActorResources {
 // Events
 // -----
 
+export enum AbilityType {
+	PHYSICAL_DOT = 1,
+	HEAL = 8,
+	SPECIAL = 32,
+	MAGICAL_DOT = 64,
+	PHYSICAL_DIRECT = 128,
+	LIMIT_BREAK = 256,
+	MAGICAL_DIRECT = 1024,
+}
+
 export interface Ability {
 	abilityIcon: string
 	guid: number
 	name: string
-	// TODO: AbilityType enum would be nice
-	type: number
+	type: AbilityType
 }
 
 export interface Event {
@@ -141,6 +150,8 @@ interface EffectEvent extends AbilityEvent {
 	multiplier?: number
 }
 
+export interface DeathEvent extends Event { type: 'death' }
+export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
 export interface DamageEvent extends EffectEvent {
 	type: 'damage'
 	absorbed: number
@@ -149,6 +160,16 @@ export interface DamageEvent extends EffectEvent {
 export interface HealEvent extends EffectEvent {
 	type: 'heal'
 	overheal: number
+}
+export interface BuffEvent extends AbilityEvent {
+	type: (
+		'applybuff' |
+		'applydebuff' |
+		'refreshbuff' |
+		'refreshdebuff' |
+		'removebuff' |
+		'removedebuff'
+	)
 }
 export interface BuffStackEvent extends AbilityEvent {
 	type: (
