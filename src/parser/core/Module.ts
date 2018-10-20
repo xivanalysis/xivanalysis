@@ -11,17 +11,23 @@ export const DISPLAY_ORDER = {
 }
 
 export function dependency(target: Module, prop: string) {
-	const dependency: typeof Module = Reflect.getMetadata('design:type', target, prop)
+	const dependency = Reflect.getMetadata('design:type', target, prop)
 	const constructor = target.constructor as typeof Module
-
-	// Check that the dep is actually a module
-	if (!Module.isPrototypeOf(dependency)) {
-		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Module\`, got \`${dependency.name}\`.`)
-	}
 
 	// Make sure we're not modifying every single module
 	if (constructor.dependencies === Module.dependencies) {
 		constructor.dependencies = []
+	}
+
+	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
+	if (dependency === Object) {
+		constructor.dependencies.push(prop)
+		return
+	}
+
+	// Check that the dep is actually a module
+	if (!Module.isPrototypeOf(dependency)) {
+		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Module\`, got \`${dependency.name}\`.`)
 	}
 
 	constructor.dependencies.push({
