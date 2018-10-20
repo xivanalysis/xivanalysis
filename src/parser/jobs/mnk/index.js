@@ -19,7 +19,7 @@ export default {
 		from: '4.2',
 		to: '4.4',
 	},
-	contributors = [
+	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
 	],
 	changelog: [],
