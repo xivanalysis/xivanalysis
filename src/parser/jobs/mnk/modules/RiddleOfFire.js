@@ -9,6 +9,8 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosestHigher} from 'utilities'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
 
 const POSSIBLE_GCDS = 9
@@ -20,6 +22,7 @@ export default class RiddleOfFire extends Module {
 	]
 
 	static title = 'Riddle of Fire'
+	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	_active = false
 	_history = []

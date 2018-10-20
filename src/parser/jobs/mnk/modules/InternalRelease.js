@@ -8,6 +8,8 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const IR_DURATION = STATUSES.INTERNAL_RELEASE.duration * 1000
 
 export default class InternalRelease extends Module {
@@ -17,6 +19,7 @@ export default class InternalRelease extends Module {
 	]
 
 	static title = 'Internal Release'
+	static displayOrder = DISPLAY_ORDER.INTERNAL_RELEASE
 
 	_active = false
 	_history = []

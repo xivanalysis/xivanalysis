@@ -10,6 +10,8 @@ import STATUSES, {getStatus} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // Shamelessly import Muscle Mage, you must cast Fist to continue
 import styles from 'components/ui/PieChartWithLegend.module.css'
 
@@ -53,6 +55,7 @@ export default class Fists extends Module {
 	]
 
 	static title = 'Fist Stances'
+	static displayOrder = DISPLAY_ORDER.FISTS
 
 	_activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
 	_fistUptime = {[STANCELESS]: 0} // Initialise stanceless to prevent weird UI shit
