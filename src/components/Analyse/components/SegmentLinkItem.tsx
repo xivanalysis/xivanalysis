@@ -1,22 +1,22 @@
 import React from 'react'
 
-import _ from 'lodash'
 import {Trans} from '@lingui/react'
+import _ from 'lodash'
 import {
 	Menu,
 } from 'semantic-ui-react'
 
-import { Consumer, Context } from './SegmentPositionContext'
+import {Consumer, Context} from './SegmentPositionContext'
 
-import { ParserResult } from 'parser/core/Parser'
+import {ParserResult} from 'parser/core/Parser'
 
 interface Props {
 	index: number
 	result: ParserResult
 }
 
-export default function SegmentLinkItem ({ result, index }: Props) {
-	return <Consumer>{({ active, scrollToId }) => (
+export default function SegmentLinkItem({result, index}: Props) {
+	return <Consumer>{({active, scrollToId}) => (
 		<Menu.Item
 			active={active === index}
 			onClick={() => { scrollToId(index) }}
