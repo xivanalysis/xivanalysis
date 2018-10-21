@@ -198,7 +198,7 @@ export default class Procs extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_PROC.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
-					You lost at least  one <ActionLink {...ACTIONS.THUNDER_III}/> proc by allowing <StatusLink {...STATUSES.THUNDERCLOUD}/> to expire without using it.
+					You lost at least one <ActionLink {...ACTIONS.THUNDER_III}/> proc by allowing <StatusLink {...STATUSES.THUNDERCLOUD}/> to expire without using it.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
