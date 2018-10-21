@@ -67,6 +67,7 @@ export default class Heat extends Module {
 		history: [],
 	}
 	_badCooldowns = 0
+	_lockoutCooldowns = 0
 
 	constructor(...args) {
 		super(...args)
@@ -165,6 +166,8 @@ export default class Heat extends Module {
 				if (abilityId === ACTIONS.GAUSS_BARREL.id) {
 					this._setBarrelState(BARREL_STATE.GAUSS)
 				}
+			} else if (abilityId === ACTIONS.COOLDOWN.id) {
+				this._lockoutCooldowns++
 			} else if (abilityId === ACTIONS.GAUSS_BARREL.id) {
 				this._fixNullAssumption()
 			}
@@ -220,6 +223,22 @@ export default class Heat extends Module {
 			value: this._badCooldowns,
 			why: <Trans id="mch.heat.suggestions.cooldown.why">
 				You misused Cooldown <Plural value={this._badCooldowns} one="# time" other="# times"/>.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.COOLDOWN.icon,
+			content: <Trans id="mch.heat.suggestions.cooldown-lockout.content">
+				Avoid using <ActionLink {...ACTIONS.COOLDOWN}/> while your barrel is cooling after an overheat window, as it has the second lowest potency of your single-target weaponskills when your heat gauge is below 50.
+			</Trans>,
+			tiers: {
+				2: SEVERITY.MINOR,
+				5: SEVERITY.MEDIUM,
+				10: SEVERITY.MAJOR,
+			},
+			value: this._lockoutCooldowns,
+			why: <Trans id="mch.heat.suggestions.cooldown-lockout.why">
+				You cast Cooldown <Plural value={this._lockoutCooldowns} one="# time" other="# times"/> while your barrel was cooling.
 			</Trans>,
 		}))
 	}

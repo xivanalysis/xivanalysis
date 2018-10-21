@@ -86,7 +86,7 @@ export default class Cooldowns extends Module {
 	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
 	_onBeginCast(event) {
 		const action = getAction(event.ability.guid)
-		if (!action.cooldown) { return }
+		if (action.cooldown == null) { return }
 
 		this._currentAction = action
 
@@ -98,7 +98,7 @@ export default class Cooldowns extends Module {
 
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
-		if (!action.cooldown) { return }
+		if (action.cooldown == null) { return }
 
 		const finishingCast = this._currentAction && this._currentAction.id === action.id
 		this._currentAction = null

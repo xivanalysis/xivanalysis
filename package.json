@@ -32,7 +32,7 @@
     "redux-thunk": "^2.2.0",
     "reflect-metadata": "^0.1.12",
     "semantic-ui-css": "^2.4.0",
-    "semantic-ui-react": "^0.82.3",
+    "semantic-ui-react": "^0.83",
     "stable": "^0.1.8",
     "toposort": "^2",
     "tslib": "^1.9.3",
@@ -107,8 +107,11 @@
     "source-map-explorer": "^1.6.0",
     "ts-jest": "^23.10.3",
     "ts-loader": "^5.2.1",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-loader": "^3.5.4",
     "typescript": "^3.1.1",
-    "typings-for-css-modules-loader": "^1.7.0"
+    "typings-for-css-modules-loader": "xivanalysis/typings-for-css-modules-loader"
   },
   "jest": {
     "collectCoverageFrom": [

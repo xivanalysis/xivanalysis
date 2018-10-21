@@ -217,6 +217,8 @@
   "mch.ammo.suggestions.waste.why": "Vous avez gâché {0} munitions spéciales.",
   "mch.heat.accordion.message": "",
   "mch.heat.panel-count": "",
+  "mch.heat.suggestions.cooldown-lockout.content": "",
+  "mch.heat.suggestions.cooldown-lockout.why": "",
   "mch.heat.suggestions.cooldown.content": "Évitez d'utiliser <0/> si cela vous mène en-dessous de {HEATED_POINT} dans votre jauge de chaleur. Être trop bas vous coûtera des tirs chauffés et pourrait retarder la surchauffe, ce qui briserait votre rotation et l'alignement de vos OGCDs.",
   "mch.heat.suggestions.cooldown.why": "Vous avez fait une mauvaise utilisation de Refroidissement {0, plural,one {# fois}other {# fois}}.",
   "mch.heat.suggestions.downtime.content": "Équipez rapidement le <0/> dès que possible après votre surchauffe, car vous ne pouvez pas accumuler de la jauge de chaleur sans lui.",

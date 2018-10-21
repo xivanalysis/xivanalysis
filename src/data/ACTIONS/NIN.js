@@ -145,7 +145,7 @@ export default {
 		name: 'Hellfrog Medium',
 		icon: 'https://xivapi.com/i/002000/002920.png',
 		onGcd: false,
-		cooldown: 0.5, // Not strictly accurate, but it has to be >0 to display on the timeline. Hellfrog is weird.
+		cooldown: 0,
 	},
 
 	BHAVACAKRA: {

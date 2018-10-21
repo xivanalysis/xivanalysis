@@ -68,6 +68,10 @@ export default class Util extends Module {
 		return this.parser.formatTimestamp(timestamp)
 	}
 
+	milliToSeconds(time, precision) {
+		return this.formatDecimal(time / 1000, precision)
+	}
+
 	timeSince(timestamp) {
 		return this.parser.currentTimestamp - timestamp
 	}
