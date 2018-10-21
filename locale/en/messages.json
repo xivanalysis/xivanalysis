@@ -217,6 +217,8 @@
   "mch.ammo.suggestions.waste.why": "You wasted {0} ammo.",
   "mch.heat.accordion.message": "Every overheat window should ideally include <0/>, <1/>, and {OVERHEAT_GCD_TARGET} GCDs ({0} is also fine if you play with high ping). Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.",
   "mch.heat.panel-count": "{0, plural, one {GCD} other {GCDs}}",
+  "mch.heat.suggestions.cooldown-lockout.content": "Avoid using <0/> while your barrel is cooling after an overheat window, as it has the second lowest potency of your single-target weaponskills when your heat gauge is below 50.",
+  "mch.heat.suggestions.cooldown-lockout.why": "You cast Cooldown {0, plural, one {# time} other {# times}} while your barrel was cooling.",
   "mch.heat.suggestions.cooldown.content": "Avoid using <0/> if it would bring you below {HEATED_POINT} heat. Dipping too low will cost you heated shots and may delay overheat windows, throwing off your rotation and OGCD alignment.",
   "mch.heat.suggestions.cooldown.why": "You misused Cooldown {0, plural, one {# time} other {# times}}.",
   "mch.heat.suggestions.downtime.content": "Make sure to use <0/> as soon as it's available after overheat/cooldown windows, as you can't build up heat without it.",
