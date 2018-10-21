@@ -217,6 +217,8 @@
   "mch.ammo.suggestions.waste.why": "弾薬を無駄にした回数：{0}回。",
   "mch.heat.accordion.message": "",
   "mch.heat.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
+  "mch.heat.suggestions.cooldown-lockout.content": "",
+  "mch.heat.suggestions.cooldown-lockout.why": "",
   "mch.heat.suggestions.cooldown.content": "",
   "mch.heat.suggestions.cooldown.why": "",
   "mch.heat.suggestions.downtime.content": "",
