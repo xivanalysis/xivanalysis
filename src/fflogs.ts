@@ -120,12 +120,9 @@ export interface Event {
 	targetID: number
 	targetInstance: number
 	targetIsFriendly: boolean
-
-	// Hell if I know _every_ event key - cop out for anything not explicitly set
-	[key: string]: any
 }
 
-interface AbilityEvent extends Event {
+export interface AbilityEvent extends Event {
 	ability: Ability
 }
 

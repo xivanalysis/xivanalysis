@@ -1,7 +1,7 @@
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 
-import {Event, Ability} from 'fflogs'
+import {Ability, AbilityEvent, Event} from 'fflogs'
 import Parser from './Parser'
 
 export enum DISPLAY_ORDER {
@@ -41,7 +41,8 @@ interface MappedDependency {
 	prop: string
 }
 
-type Filter<T extends Event> = Partial<T> & Partial<{
+type DeepPartial<T> = {[K in keyof T]?: DeepPartial<T[K]>}
+type Filter<T extends Event> = DeepPartial<T> & Partial<{
 	abilityId: Ability['guid']
 	to: 'player' | 'pet' | T['targetID']
 	by: 'player' | 'pet' | T['sourceID']
@@ -86,7 +87,8 @@ export default class Module {
 	// DI FunTimes™
 	[key: string]: any;
 
-	private _hooks = new Map<Event['type'], Set<Hook<Event>>>()
+	// Bite me.
+	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
 
 	constructor(
 		protected readonly parser: Parser
@@ -128,7 +130,7 @@ export default class Module {
 	): Hook<T>
 	protected addHook<T extends Event>(
 		events: T['type'] | T['type'][],
-		filter: Filter<T> | HookCallback<T>,
+		filter: Filter<T>,
 		cb: HookCallback<T>,
 	): Hook<T>
 	protected addHook<T extends Event>(
@@ -148,11 +150,12 @@ export default class Module {
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
 		filter = this.mapFilterEntity(filter, 'by', 'sourceID')
 		if (filter.abilityId) {
-			if (!filter.ability) {
-				filter.ability = {}
+			const abilityFilter = filter as Filter<AbilityEvent>
+			if (!abilityFilter.ability) {
+				abilityFilter.ability = {}
 			}
-			filter.ability.guid = filter.abilityId
-			delete filter.abilityId
+			abilityFilter.ability.guid = abilityFilter.abilityId
+			delete abilityFilter.abilityId
 		}
 
 		// Make sure events is an array
@@ -240,15 +243,15 @@ export default class Module {
 		})
 	}
 
-	private _filterMatches(event: Event, filter: Filter<Event>) {
+	private _filterMatches<T, F extends DeepPartial<T>>(event: T, filter: F) {
 		const match = Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
 			if (!event.hasOwnProperty(key)) {
 				return false
 			}
 
-			const filterVal = filter[key]
-			const eventVal = event[key]
+			const filterVal = filter[key as keyof typeof filter]
+			const eventVal = event[key as keyof typeof event]
 
 			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
 			if (Array.isArray(filterVal)) {
@@ -257,7 +260,10 @@ export default class Module {
 
 			// If it's an object, I need to dig down. Mostly for the `ability` key
 			if (typeof filterVal === 'object') {
-				return this._filterMatches(eventVal, filterVal)
+				return this._filterMatches(
+					eventVal,
+					filterVal as DeepPartial<typeof eventVal>
+				)
 			}
 
 			// Basic value check
