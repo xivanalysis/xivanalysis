@@ -11,6 +11,8 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const GL_MAX_STACKS = 3
 
 const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING_I.duration * 1000
@@ -31,6 +33,8 @@ export default class GreasedLightning extends Module {
 		'invuln',
 		'suggestions',
 	]
+
+	static displayOrder = DISPLAY_ORDER.GREASED_LIGHTNING
 
 	_currentStacks = null
 	_droppedStacks = 0
