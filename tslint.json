@@ -39,6 +39,7 @@
 		},
 		"no-shadowed-variable": false,
 		"object-curly-spacing": {"options": "never"},
+		"object-literal-sort-keys": false,
 		"quotemark": {
 			"options": [
 				"single",
