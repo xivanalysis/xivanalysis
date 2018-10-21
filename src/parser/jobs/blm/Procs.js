@@ -202,7 +202,7 @@ export default class Procs extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
-					<Plural value={this._droppedT3Ps} one="# Thundercloud proc" other="# Thunderclouds procs"/> expired.
+					<Plural value={this._droppedT3Ps} one="# Thundercloud proc" other="# Thundercloud procs"/> expired.
 				</Trans>,
 			}))
 		}
@@ -214,7 +214,7 @@ export default class Procs extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-f3ps.why">
-					<Plural value={this._droppedF3Ps} one="# Firestarter proc" other="# Firestarters procs"/> expired.
+					<Plural value={this._droppedF3Ps} one="# Firestarter proc" other="# Firestarter procs"/> expired.
 				</Trans>,
 			}))
 		}
