@@ -20,7 +20,7 @@ export default class Item {
 	get className() {
 		let cn = this._className
 
-		if (this.start && this.end) {
+		if (this.start && this.end && this.end - this.start === 0) {
 			cn = classNames(cn, styles.allowOverflow)
 		}
 
