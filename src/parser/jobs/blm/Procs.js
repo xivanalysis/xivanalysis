@@ -198,11 +198,11 @@ export default class Procs extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_PROC.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
-					You lost at least  one <ActionLink {...ACTIONS.THUNDER_III_PROC}/> by allowing <StatusLink {...STATUSES.THUNDERCLOUD}/> to expire without using it.
+					You lost at least one <ActionLink {...ACTIONS.THUNDER_III}/> proc by allowing <StatusLink {...STATUSES.THUNDERCLOUD}/> to expire without using it.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
-					<Plural value={this._droppedT3Ps} one="# Thundercloud was" other="# Thunderclouds were"/> expired.
+					<Plural value={this._droppedT3Ps} one="# Thundercloud proc" other="# Thundercloud procs"/> expired.
 				</Trans>,
 			}))
 		}
@@ -210,11 +210,11 @@ export default class Procs extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_III_PROC.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
-					You lost at least  one <ActionLink {...ACTIONS.FIRE_III_PROC}/> by allowing <StatusLink {...STATUSES.FIRESTARTER}/> to expire without using it.
+					You lost at least  one <ActionLink {...ACTIONS.FIRE_III}/> proc by allowing <StatusLink {...STATUSES.FIRESTARTER}/> to expire without using it.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-f3ps.why">
-					<Plural value={this._droppedF3Ps} one="# Firestarter was" other="# Firestarters were"/> expired.
+					<Plural value={this._droppedF3Ps} one="# Firestarter proc" other="# Firestarter procs"/> expired.
 				</Trans>,
 			}))
 		}
