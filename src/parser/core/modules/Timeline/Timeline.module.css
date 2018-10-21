@@ -18,3 +18,7 @@
 :global .vis-background .vis-item-content img {
 	max-height: 100%;
 }
+
+.allowOverflow :global .vis-item-overflow {
+	overflow: visible;
+}
