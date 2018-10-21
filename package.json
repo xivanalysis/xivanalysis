@@ -45,7 +45,9 @@
     "build": "react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "eject": "react-scripts eject",
-    "lint": "eslint src",
+    "lint": "yarn run lint:js && yarn run lint:ts",
+    "lint:js": "eslint src",
+    "lint:ts": "tslint src/**/*.ts{,x}",
     "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile"
   },
@@ -56,8 +58,11 @@
   },
   "lint-staged": {
     "linters": {
-      "src/**/*.js": [
+      "src/**/*.js{,x}": [
         "eslint --fix"
+      ],
+      "src/**/*.ts{,x}": [
+        "tslint --fix"
       ]
     }
   },

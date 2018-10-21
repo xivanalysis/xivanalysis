@@ -169,8 +169,12 @@ export default class Pets extends Module {
 
 	_onComplete(event) {
 		// Finalise the history
-		const id = this._currentPet.id
-		const start = this._currentPet.timestamp
+		let id = NO_PET_ID
+		let start = this.parser.fight.start_time
+		if (this._currentPet) {
+			id = this._currentPet.id
+			start = this._currentPet.timestamp
+		}
 		const end = event.timestamp
 
 		this._history.push({id, start, end})
