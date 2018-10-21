@@ -106,6 +106,9 @@
     "source-map-explorer": "^1.6.0",
     "ts-jest": "^23.10.3",
     "ts-loader": "^5.2.1",
+    "tslint": "^5.11.0",
+    "tslint-eslint-rules": "^5.4.0",
+    "tslint-loader": "^3.5.4",
     "typescript": "^3.1.1",
     "typings-for-css-modules-loader": "xivanalysis/typings-for-css-modules-loader"
   },

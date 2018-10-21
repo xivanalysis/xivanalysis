@@ -98,6 +98,16 @@ module.exports = (config, env) => {
 	// allows a potential conversion to .ts
 	config.entry = config.entry.map(file => file.replace(/[/\\]index\.js$/, ''))
 
+	// Add TSLint
+	config.module.rules.unshift({
+		test: /.tsx?$/,
+		enforce: 'pre',
+		use: [{
+			loader: 'tslint-loader',
+			// options: {},
+		}],
+	})
+
 	// We have to set the type for lingui files here, rather than doing
 	// it inline when we import the files, because webpack 4 decided
 	// it would be "helpful" and support JSON by default.
