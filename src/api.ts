@@ -18,7 +18,7 @@ export const fflogsApi = axios.create(options)
 async function requestEvents(code: string, options: ReportEventsQuery) {
 	const response = await fflogsApi.get<ReportEventsResponse>(
 		`report/events/${code}`,
-		options
+		options,
 	)
 	return response.data
 }
@@ -27,7 +27,7 @@ async function requestEvents(code: string, options: ReportEventsQuery) {
 export async function getFflogsEvents(
 	code: string,
 	fight: Fight,
-	extra: ReportEventsQuery['params']
+	extra: ReportEventsQuery['params'],
 ) {
 	// Base parameters
 	const params = {

@@ -43,8 +43,8 @@ interface MappedDependency {
 
 type DeepPartial<T> = {[K in keyof T]?: DeepPartial<T[K]>}
 type Filter<T extends Event> = DeepPartial<T> & Partial<{
-	abilityId: Ability['guid']
-	to: 'player' | 'pet' | T['targetID']
+	abilityId: Ability['guid'],
+	to: 'player' | 'pet' | T['targetID'],
 	by: 'player' | 'pet' | T['sourceID'],
 }>
 

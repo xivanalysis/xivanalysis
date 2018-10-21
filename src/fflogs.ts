@@ -58,7 +58,7 @@ export enum ActorType {
 	LIMIT_BREAK = 'LimitBreak',
 
 	// Pet
-	PET = 'Pet'
+	PET = 'Pet',
 }
 
 export interface ActorFightInstance {
@@ -184,7 +184,7 @@ export interface BuffStackEvent extends AbilityEvent {
 
 export interface ReportFightsQuery extends AxiosRequestConfig {
 	params?: {
-		translate?: boolean
+		translate?: boolean,
 	}
 }
 
@@ -205,17 +205,17 @@ export interface ReportFightsResponse {
 
 export interface ReportEventsQuery extends AxiosRequestConfig {
 	params?: {
-		start?: number
-		end?: number
-		actorid?: Actor['id']
-		actorinstance?: number
-		actorclass?: ActorType
-		cutoff?: number
-		encounter?: Fight['boss']
-		wipes?: number
-		difficulty?: number
-		filter?: string
-		translate?: boolean
+		start?: number,
+		end?: number,
+		actorid?: Actor['id'],
+		actorinstance?: number,
+		actorclass?: ActorType,
+		cutoff?: number,
+		encounter?: Fight['boss'],
+		wipes?: number,
+		difficulty?: number,
+		filter?: string,
+		translate?: boolean,
 	}
 }
 
