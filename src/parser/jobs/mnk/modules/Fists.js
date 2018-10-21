@@ -1,6 +1,6 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
-import {Pie as PieChart} from 'react-chartjs-2'
+import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -11,9 +11,6 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-
-// Shamelessly import Muscle Mage, you must cast Fist to continue
-import styles from 'components/ui/PieChartWithLegend.module.css'
 
 const STANCELESS = 0
 
@@ -173,50 +170,28 @@ export default class Fists extends Module {
 	output() {
 		const uptimeKeys = Object.keys(this._fistUptime).map(Number)
 
-		const data = {
-			labels: uptimeKeys.map(stanceId => this.getStanceName(stanceId)),
-			datasets: [{
-				data: Object.values(this._fistUptime),
-				backgroundColor: uptimeKeys.map(stanceId => CHART_COLOURS[stanceId]),
-			}],
-		}
+		const data = uptimeKeys.map(id => {
+			const value = this._fistUptime[id]
+			return {
+				value,
+				label: this.getStanceName(id),
+				backgroundColor: CHART_COLOURS[id],
+				additional: [
+					this.parser.formatDuration(value),
+					this.getStanceUptimePercent(id) + '%',
+				],
+			}
+		})
 
-		const options = {
-			responsive: false,
-			legend: {display: false},
-			tooltips: {enabled: false},
-		}
-
-		return <Fragment>
-			<div className={styles.chartWrapper}>
-				<PieChart
-					data={data}
-					options={options}
-					height={100}
-					width={200}
-				/>
-			</div>
-			<table className={styles.table}>
-				<thead>
-					<tr>
-						<th></th>
-						<th>Stance</th>
-						<th>Uptime</th>
-						<th>%</th>
-					</tr>
-				</thead>
-				<tbody>
-					{uptimeKeys.map(stanceId => <tr key={stanceId}>
-						<td><span
-							className={styles.swatch}
-							style={{backgroundColor: CHART_COLOURS[stanceId]}}
-						/></td>
-						<td>{this.getStanceName(stanceId)}</td>
-						<td>{this.parser.formatDuration(this._fistUptime[stanceId])}</td>
-						<td>{this.getStanceUptimePercent(stanceId)}%</td>
-					</tr>)}
-				</tbody>
-			</table>
-		</Fragment>
+		return <PieChartWithLegend
+			headers={{
+				label: 'Stance',
+				additional: [
+					'Uptime',
+					'%',
+				],
+			}}
+			data={data}
+		/>
 	}
 }
