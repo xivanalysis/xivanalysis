@@ -4,6 +4,11 @@
 		"tslint:recommended",
 		"tslint-eslint-rules"
 	],
+	"linterOptions": {
+		"exclude": [
+			"src/**/*.module.css.d.ts"
+		]
+	},
 	"rules": {
 		"arrow-parens": false,
 		"indent": {"options": "tabs"},
