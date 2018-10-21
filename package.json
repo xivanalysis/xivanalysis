@@ -107,7 +107,7 @@
     "ts-jest": "^23.10.3",
     "ts-loader": "^5.2.1",
     "typescript": "^3.1.1",
-    "typings-for-css-modules-loader": "^1.7.0"
+    "typings-for-css-modules-loader": "xivanalysis/typings-for-css-modules-loader"
   },
   "jest": {
     "collectCoverageFrom": [
