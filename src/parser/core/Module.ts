@@ -45,13 +45,13 @@ type DeepPartial<T> = {[K in keyof T]?: DeepPartial<T[K]>}
 type Filter<T extends Event> = DeepPartial<T> & Partial<{
 	abilityId: Ability['guid']
 	to: 'player' | 'pet' | T['targetID']
-	by: 'player' | 'pet' | T['sourceID']
+	by: 'player' | 'pet' | T['sourceID'],
 }>
 
 type HookCallback<T extends Event> = (event: T) => void
 
 interface Hook<T extends Event> {
-	events: T['type'][]
+	events: Array<T['type']>
 	filter: Filter<T>
 	callback: HookCallback<T>
 }
@@ -91,7 +91,7 @@ export default class Module {
 	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
 
 	constructor(
-		protected readonly parser: Parser
+		protected readonly parser: Parser,
 	) {
 		const module = this.constructor as typeof Module
 		module.dependencies.forEach(dep => {
@@ -125,16 +125,16 @@ export default class Module {
 	}
 
 	protected addHook<T extends Event>(
-		events: T['type'] | T['type'][],
-		cb: HookCallback<T>
+		events: T['type'] | Array<T['type']>,
+		cb: HookCallback<T>,
 	): Hook<T>
 	protected addHook<T extends Event>(
-		events: T['type'] | T['type'][],
+		events: T['type'] | Array<T['type']>,
 		filter: Filter<T>,
 		cb: HookCallback<T>,
 	): Hook<T>
 	protected addHook<T extends Event>(
-		events: T['type'] | T['type'][],
+		events: T['type'] | Array<T['type']>,
 		filterArg: Filter<T> | HookCallback<T>,
 		cbArg?: HookCallback<T>,
 	): Hook<T> | undefined {
@@ -262,7 +262,7 @@ export default class Module {
 			if (typeof filterVal === 'object') {
 				return this._filterMatches(
 					eventVal,
-					filterVal as DeepPartial<typeof eventVal>
+					filterVal as DeepPartial<typeof eventVal>,
 				)
 			}
 
