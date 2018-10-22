@@ -1,23 +1,21 @@
-import React, {Fragment} from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
-import {Accordion, Message} from 'semantic-ui-react'
+import React, {Fragment} from 'react' // eslint-disable-line
+import {Trans, Plural, i18nMark} from '@lingui/react' // eslint-disable-line
+import {Accordion, Message} from 'semantic-ui-react' // eslint-disable-line
 
-import {ActionLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {ActionLink} from 'components/ui/DbLink' // eslint-disable-line
+import Rotation from 'components/ui/Rotation' // eslint-disable-line
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions' // eslint-disable-line
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-
 const OGCDS = [
-ACTIONS.TRIPLECAST.id,
-ACTIONS.LEY_LINES.id,
-ACTIONS.CONVERT.id,
-ACTIONS.SWIFTCAST.id,
+	ACTIONS.TRIPLECAST.id,
+	ACTIONS.LEY_LINES.id,
+	ACTIONS.CONVERT.id,
+	ACTIONS.SWIFTCAST.id,
 ]
-
 
 export default class Reopeners extends Module {
 	static handle = 'Reopeners'
@@ -26,10 +24,10 @@ export default class Reopeners extends Module {
 	static displayOrder = DISPLAY_ORDER.REOPENERS
 
 	static dependencies = [
-		'suggestions',
+		'suggestions', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'invuln',
-		'cooldowns',
+		'cooldowns', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'combatants',
 	]
 
@@ -64,15 +62,14 @@ export default class Reopeners extends Module {
 
 	_onCast(event) {
 		const actionId = event.ability.guid
-		if(actionId === ACTIONS.TRANSPOSE.id && this.invuln.isUntargetable('all', event.timestamp)) {
+		if (actionId === ACTIONS.TRANSPOSE.id && this.invuln.isUntargetable('all', event.timestamp)) {
 			this._startRecording(event)
 		}
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
 			const cast = this._rotation.casts[this._rotation.casts.length - 1]
 			if (cast && cast.event.ability.guid !== ACTIONS.TRANSPOSE.id) {
 				this._stopRecording()
-			}
-			else {
+			} else {
 				this._startWithBlizzardThree ++
 				this._stopRecording()
 			}
@@ -89,10 +86,10 @@ export default class Reopeners extends Module {
 			this._astralFireStacks = this._gaugeState.astralFire
 			this._umbralHeartStacks = this._gaugeState.umbralHearts
 			this._MP = this.combatants.selected.resources.mp
-			OGCDS.forEach( cooldownTracking(ogcs) {
+			OGCDS.forEach(function cooldownTracking(ogcds) {
 				const name = getAction(ogcds).name
 				this._ogcds.push(name)
-				this._ogcds[name] = cooldowns.getCooldownRemaining(ogcds)
+				this._ogcds[name] = this.cooldowns.getCooldownRemaining(ogcds)
 			})
 			this._rotation = {
 				start: event.timestamp,
@@ -108,3 +105,4 @@ export default class Reopeners extends Module {
 			this._rotation.end = this.parser.currentTimestamp
 		}
 	}
+}
