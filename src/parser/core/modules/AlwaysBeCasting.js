@@ -35,7 +35,7 @@ export default class AlwaysBeCasting extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="core.always-cast.gcd-uptime">GCD Uptime</Trans>,
-					percent: this.gcd.getUptime() / fightDuration * 100,
+					percent: Math.min(this.gcd.getUptime() / fightDuration * 100,100),
 				}),
 			],
 		}))

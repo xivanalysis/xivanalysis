@@ -9,6 +9,9 @@ import {Table, Button} from 'semantic-ui-react'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+//had logs where buff applied before action used. So we are giving some lenience in ms
+const LENIENCE = 10
+
 export default class Leylines extends Module {
 	static handle = 'leylines'
 	static i18n_id = i18nMark('blm.leylines.title')
@@ -132,7 +135,7 @@ export default class Leylines extends Module {
 	}
 
 	_percentFunction(sumOfLeyLineDurations, sumOfCoPUpTime) {
-		return (sumOfCoPUpTime/(sumOfLeyLineDurations))*100
+		return Math.min((sumOfCoPUpTime/(sumOfLeyLineDurations))*100,100)
 	}
 
 	finaliseBuff(event, statusId) {
@@ -201,7 +204,7 @@ export default class Leylines extends Module {
 			<Table.Body>
 				{this._leyLines.history.map(leyLinesEvent => {
 					// Get the uptime percentage of Circle of Power for this Ley Lines usage
-					const thisCoPHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= leyLinesEvent.start) & (cops.stop <= leyLinesEvent.stop)))
+					const thisCoPHistory = this._circleOfPowers.history.filter(cops => ((cops.start >= leyLinesEvent.start) & (cops.stop <= leyLinesEvent.stop + LENIENCE)))
 					const thisCoPUptime = thisCoPHistory.map(cops => Math.max(cops.stop - cops.start, 0)).reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 					// Note that since we're getting the actual duration, rather than the expected duration, technically we'll call it 100% uptime if you stay in the lines and die halfway through...
 					// However, since that'll get flagged as a morbid checklist item, that's probably ok.

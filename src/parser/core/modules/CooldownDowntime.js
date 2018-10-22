@@ -59,7 +59,7 @@ export default class CooldownDowntime extends Module {
 		if (downtime < 0) {
 			downtime = 0
 		}
-		const possibleNumberOfUses = Math.floor(fightlength/(cooldown*1000))
+		const possibleNumberOfUses = Math.ceil(fightlength/(cooldown*1000))
 		return ((possibleNumberOfUses - Math.floor(downtime/(cooldown*1000)))/possibleNumberOfUses)*100
 	}
 }
