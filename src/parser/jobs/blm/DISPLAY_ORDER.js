@@ -3,4 +3,5 @@ export default {
 	LEY_LINES: 2,
 	TRIPLE: 3,
 	WEAVING: 4,
+	REOPENERS: 5,
 }
