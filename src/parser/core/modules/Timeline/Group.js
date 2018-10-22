@@ -26,3 +26,29 @@ export default class Group {
 		}
 	}
 }
+
+export class ItemGroup extends Group {
+	_items = []
+	get items() {
+		return this._items
+	}
+
+	_visible = null
+	set visible(value) {
+		this._visible = value
+	}
+	get visible() {
+		if (this._visible !== null) {
+			return this._visible
+		}
+
+		const hasNested = this.nestedGroups && this.nestedGroups.length
+		// Needs to be bool or vis doesn't like it
+		return !!(hasNested || this._items.length)
+	}
+
+	addItem(item) {
+		item.group = this.id
+		this._items.push(item)
+	}
+}

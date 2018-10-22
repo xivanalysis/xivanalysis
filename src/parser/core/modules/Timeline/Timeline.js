@@ -92,6 +92,14 @@ export default class Timeline extends Module {
 			horizontalScroll: true,
 		}
 
+		let items = this._items
+		const groups = this._groups.map(group => {
+			if (group.items) {
+				items = items.concat(group.items)
+			}
+			return group.getObject()
+		})
+
 		return <>
 			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
 				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
@@ -99,8 +107,8 @@ export default class Timeline extends Module {
 			<VisTimeline
 				ref={this._ref}
 				options={options}
-				groups={this._groups.map(group => group.getObject())}
-				items={this._items.map(item => item.getObject())}
+				groups={groups}
+				items={items.map(item => item.getObject())}
 			/>
 		</>
 	}

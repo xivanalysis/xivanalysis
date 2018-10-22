@@ -3,6 +3,7 @@
 ## Please try to keep this up to date, so there's a quick summary of what's in and what still needs work
 
 Letting procs drop
+- Suggestions added, done.
 
 Clipping gcds. Include fast-cast B3/F3
 - Clipping/weaving checks are in for Triple and Procs
@@ -44,6 +45,7 @@ Missing LL uses. Ideally based on fight duration and inactive fight segments
 
 LL vs Circle of Power buff comparison
 - added under LeyLines. It gives you the percentage of how long you've been in the circle.
+- Now enhanced to track actual LL duration during the fight and show on the timeline
 
 Scathe use outside of finishers
 
@@ -64,6 +66,7 @@ Custom proc icons for Firestarter and Thundercloud usage?
 - Added to Rotation view
 - TODO: General Rotation/Timeline support for job-specific display is planned
 - TODO: FFLogs seems to randomly miss Thundercloud buff, which makes the current implementation unreliable. See https://www.fflogs.com/reports/FNaDPhvGTzJd8Wwn#fight=20&type=damage-done&translate=true for a parse with 22 t3p, but only one tc buff.
+- We're pretty sure above log is just broken, haven't found any other instances of this actually being a problem. Considering TODO a non-issue until other evidence surfaces.
 
 Check for movement during Swift/Triple or subsequent cast(s). Clipping is fine/less bad if movement was required
 
@@ -80,3 +83,9 @@ Allow losing Convert uses if Convert's used during buff windows or for AOE
 Check for hardcast T3 as first ice cast after fast-cast F3
 
 Check for overkill on hardcasts (especially F4, Foul). Add notes about not hardcasting on things that are dead or will die before the cast can finish. Ignore end-of-fight casts (but do watch adds)
+
+RotationWatchdog now ignores rotations that don't contain any Fire casts
+
+Added a bugfix to keep Transpose spam during extended boss downtime from oscillating between recording a rotation and not
+
+TODO: Add a re-opener module to handle the more intricate cases that a boss returning to the field causes that differ from the standard rotation

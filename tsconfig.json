@@ -1,0 +1,36 @@
+{
+	"compilerOptions": {
+		"strict": true,
+		"allowJs": true,
+		"esModuleInterop": true,
+		"allowSyntheticDefaultImports": true,
+		"target": "esnext",
+		"module": "esnext",
+		"moduleResolution": "node",
+		"jsx": "preserve",
+		"lib": [
+			"es2015",
+			"es2016",
+			"es2017",
+			"es2018",
+			"dom",
+			"dom.iterable"
+		],
+		"noEmitHelpers": true,
+		"importHelpers": true,
+
+		"types": [
+			"webpack-env",
+			"jest"
+		],
+
+		"baseUrl": "./src",
+		"outDir": "./dist"
+	},
+
+	"compileOnSave": false,
+
+	"include": [
+		"src/**/*"
+	]
+}

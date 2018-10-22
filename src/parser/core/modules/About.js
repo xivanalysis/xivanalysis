@@ -1,10 +1,9 @@
 import {Trans, i18nMark} from '@lingui/react'
-import _ from 'lodash'
 import React from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
-import PATCHES, {getPatch} from 'data/PATCHES'
+import {getPatch, patchSupported} from 'data/PATCHES'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -18,10 +17,11 @@ export default class About extends Module {
 	description = null
 	contributors = []
 
-	supportedPatches = {
-		// from: ...,
-		// to: ...,
-	}
+	supportedPatches = null
+	// {
+	//		from: ...,
+	//		to: ...,
+	// }
 
 	set supportedPatch(value) {
 		// Warn the dev that they're using a deprecated prop
@@ -32,9 +32,19 @@ export default class About extends Module {
 		this.supportedPatches.from = value
 	}
 
+	constructor(...args) {
+		super(...args)
+
+		// Merge the parser's metadata in
+		const fields = ['description', 'contributors', 'supportedPatches']
+		fields.forEach(field => {
+			this[field] = this.parser.meta[field]
+		})
+	}
+
 	output() {
-		// If this passes, we've not been subclassed. Render an error.
-		if (Object.getPrototypeOf(this) === About.prototype) {
+		// If they've not set the supported patch range, we're assuming it's not supported at all
+		if (!this.supportedPatches) {
 			return <Message warning icon>
 				<Icon name="warning sign" />
 				<Message.Content>
@@ -49,22 +59,8 @@ export default class About extends Module {
 		}
 
 		// Work out the supported patch range (and if we're in it)
-		let supported = false
 		const {from, to = from} = this.supportedPatches
-		if (from && PATCHES[from]) {
-			// Work out what the next patch is - if there is none, next patch "never" comes (until we add it!)
-			const sortedPatches = Object.keys(PATCHES).sort(
-				(a, b) => PATCHES[a].date - PATCHES[b].date
-			)
-			const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) + 1]
-			const nextPatch = PATCHES[nextPatchKey] || {date: Infinity}
-
-			// Grab the dates for the from/to
-			const fromDate = PATCHES[from].date
-			const toDate = nextPatch.date
-
-			supported = _.inRange(this.parser.parseDate, fromDate, toDate)
-		}
+		const supported = patchSupported(from, to, this.parser.parseDate)
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
@@ -87,7 +83,7 @@ export default class About extends Module {
 			<Grid.Column mobile={16} computer={6}>
 				<Segment as="dl" className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
-					<dd>{from || 'Unsupported'}{from !== to && `–${to}`}</dd>
+					<dd>{from}{from !== to && `–${to}`}</dd>
 
 					{this.contributors.length > 0 && <>
 						<dt><Trans id="core.about.contributors">Contributors:</Trans></dt>

@@ -25,6 +25,6 @@ export default class About extends CoreAbout {
 		to: '4.36',
 	}
 	contributors = [
-		{user: CONTRIBUTORS.YUMIYA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	]
 }

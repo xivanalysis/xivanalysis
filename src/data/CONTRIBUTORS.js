@@ -65,7 +65,6 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
 		jobs: [JOBS.NINJA, JOBS.MACHINIST],
 	},
-
 	MIKEMATRIX: {
 		name: 'MikeMatrix',
 		avatar: process.env.PUBLIC_URL + '/avatar/mikematrix.png',
@@ -95,6 +94,16 @@ export default {
 		name: 'Akairyu',
 		avatar: process.env.PUBLIC_URL + '/avatar/Akairyu.png',
 		jobs: [JOBS.BLACK_MAGE],
+	},
+	ASTRALEAH: {
+		name: 'Astraleah',
+		avatar: process.env.PUBLIC_URL + '/avatar/astraleah.png',
+		jobs: [JOBS.DRAGOON],
+	},
+	ACCHAN: {
+		name: 'acchan',
+		avatar: process.env.PUBLIC_URL + '/avatar/acchan.png',
+		jobs: [JOBS.MONK],
 	},
 }
 

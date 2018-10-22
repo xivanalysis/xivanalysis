@@ -31,7 +31,11 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          command: yarn lint --format junit -o reports/eslint/results.xml
+          # I love how tslint needs its hand help with making directories
+          command: |
+            yarn lint:js --format junit -o reports/eslint/results.xml
+            mkdir -p reports/tslint
+            yarn lint:ts --format junit -o reports/tslint/results.xml
       - store_test_results:
           path: reports
 

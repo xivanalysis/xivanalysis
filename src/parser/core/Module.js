@@ -34,6 +34,10 @@ export default class Module {
 
 	_hooks = new Map()
 
+	/**
+	 *
+	 * @param {import('./Parser').default} parser
+	 */
 	constructor(parser) {
 		this.parser = parser
 		this.constructor.dependencies.forEach(dep => {
