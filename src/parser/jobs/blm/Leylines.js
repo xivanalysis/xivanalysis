@@ -135,7 +135,7 @@ export default class Leylines extends Module {
 	}
 
 	_percentFunction(sumOfLeyLineDurations, sumOfCoPUpTime) {
-		return Math.min((sumOfCoPUpTime/(sumOfLeyLineDurations))*100,100)
+		return Math.min((sumOfCoPUpTime/(sumOfLeyLineDurations))*100, 100)
 	}
 
 	finaliseBuff(event, statusId) {
