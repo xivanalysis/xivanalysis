@@ -10,6 +10,7 @@ import MCH from './jobs/mch'
 import DRG from './jobs/drg'
 import RDM from './jobs/rdm'
 import AST from './jobs/ast'
+import BLM from './jobs/blm'
 
 export default {
 	CORE,
@@ -18,7 +19,7 @@ export default {
 		[JOBS.MONK.logType]: MNK,
 		[JOBS.NINJA.logType]: NIN,
 		[JOBS.SUMMONER.logType]: SMN,
-		[JOBS.BLACK_MAGE.logType]: () => import('./jobs/blm' /* webpackChunkName: "jobs-blm" */),
+		[JOBS.BLACK_MAGE.logType]: BLM,
 		[JOBS.RED_MAGE.logType]: RDM,
 		[JOBS.WARRIOR.logType]: WAR,
 		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
