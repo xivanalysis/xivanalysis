@@ -2,37 +2,53 @@ import BOSSES from 'data/BOSSES'
 import JOBS from 'data/JOBS'
 
 import CORE from './core'
+
+import AST from './jobs/ast'
+import BLM from './jobs/blm'
+import BRD from './jobs/brd'
+import DRG from './jobs/drg'
+import DRK from './jobs/drk'
+import MCH from './jobs/mch'
 import MNK from './jobs/mnk'
 import NIN from './jobs/nin'
+import PLD from './jobs/pld'
+import RDM from './jobs/rdm'
+import SAM from './jobs/sam'
+import SCH from './jobs/sch'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
-import MCH from './jobs/mch'
-import DRG from './jobs/drg'
-import RDM from './jobs/rdm'
+import WHM from './jobs/whm'
+
+import BAHAMUT_PRIME from './bosses/bahamutPrime'
+import DEMON_CHADARNOOK from './bosses/chadarnook'
 
 export default {
 	CORE,
 
 	JOBS: {
-		[JOBS.MONK.logType]: MNK,
-		[JOBS.NINJA.logType]: NIN,
-		[JOBS.SUMMONER.logType]: SMN,
-		[JOBS.BLACK_MAGE.logType]: () => import('./jobs/blm' /* webpackChunkName: "jobs-blm" */),
-		[JOBS.RED_MAGE.logType]: RDM,
+		[JOBS.PALADIN.logType]: PLD,
 		[JOBS.WARRIOR.logType]: WAR,
-		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
-		[JOBS.PALADIN.logType]: () => import('./jobs/pld' /* webpackChunkName: "jobs-pld" */),
-		[JOBS.SCHOLAR.logType]: () => import('./jobs/sch' /* webpackChunkName: "jobs-sch" */),
-		[JOBS.BARD.logType]: () => import('./jobs/brd' /* webpackChunkName: "jobs-brd" */),
-		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
-		[JOBS.ASTROLOGIAN.logType]: () => import('./jobs/ast' /*webpackChunkName: "jobs-ast" */),
-		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
-		[JOBS.MACHINIST.logType]: MCH,
+		[JOBS.DARK_KNIGHT.logType]: DRK,
+
+		[JOBS.WHITE_MAGE.logType]: WHM,
+		[JOBS.SCHOLAR.logType]: SCH,
+		[JOBS.ASTROLOGIAN.logType]: AST,
+
+		[JOBS.MONK.logType]: MNK,
 		[JOBS.DRAGOON.logType]: DRG,
+		[JOBS.NINJA.logType]: NIN,
+		[JOBS.SAMURAI.logType]: SAM,
+
+		[JOBS.BARD.logType]: BRD,
+		[JOBS.MACHINIST.logType]: MCH,
+
+		[JOBS.BLACK_MAGE.logType]: BLM,
+		[JOBS.SUMMONER.logType]: SMN,
+		[JOBS.RED_MAGE.logType]: RDM,
 	},
 
 	BOSSES: {
-		[BOSSES.BAHAMUT_PRIME.logId]: () => import('./bosses/bahamutPrime' /* webpackChunkName: "bosses-bahamutPrime" */),
-		[BOSSES.DEMON_CHADARNOOK.logId]: () => import('./bosses/chadarnook' /* webpackChunkName: "bosses-chadarnook" */),
+		[BOSSES.BAHAMUT_PRIME.logId]: BAHAMUT_PRIME,
+		[BOSSES.DEMON_CHADARNOOK.logId]: DEMON_CHADARNOOK,
 	},
 }
