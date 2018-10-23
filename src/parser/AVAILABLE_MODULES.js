@@ -9,6 +9,7 @@ import WAR from './jobs/war'
 import MCH from './jobs/mch'
 import DRG from './jobs/drg'
 import RDM from './jobs/rdm'
+import AST from './jobs/ast'
 
 export default {
 	CORE,
@@ -25,7 +26,7 @@ export default {
 		[JOBS.SCHOLAR.logType]: () => import('./jobs/sch' /* webpackChunkName: "jobs-sch" */),
 		[JOBS.BARD.logType]: () => import('./jobs/brd' /* webpackChunkName: "jobs-brd" */),
 		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
-		[JOBS.ASTROLOGIAN.logType]: () => import('./jobs/ast' /*webpackChunkName: "jobs-ast" */),
+		[JOBS.ASTROLOGIAN.logType]: AST,
 		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
 		[JOBS.MACHINIST.logType]: MCH,
 		[JOBS.DRAGOON.logType]: DRG,
