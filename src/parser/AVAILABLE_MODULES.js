@@ -13,6 +13,7 @@ import AST from './jobs/ast'
 import BLM from './jobs/blm'
 import BRD from './jobs/brd'
 import DRK from './jobs/drk'
+import PLD from './jobs/pld'
 
 export default {
 	CORE,
@@ -25,7 +26,7 @@ export default {
 		[JOBS.RED_MAGE.logType]: RDM,
 		[JOBS.WARRIOR.logType]: WAR,
 		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
-		[JOBS.PALADIN.logType]: () => import('./jobs/pld' /* webpackChunkName: "jobs-pld" */),
+		[JOBS.PALADIN.logType]: PLD,
 		[JOBS.SCHOLAR.logType]: () => import('./jobs/sch' /* webpackChunkName: "jobs-sch" */),
 		[JOBS.BARD.logType]: () => BRD,
 		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
