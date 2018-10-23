@@ -18,6 +18,8 @@ import SAM from './jobs/sam'
 import SCH from './jobs/sch'
 import WHM from './jobs/whm'
 
+import DEMON_CHADARNOOK from './bosses/chadarnook'
+
 export default {
 	CORE,
 
@@ -31,7 +33,7 @@ export default {
 		[JOBS.WHITE_MAGE.logType]: WHM,
 		[JOBS.PALADIN.logType]: PLD,
 		[JOBS.SCHOLAR.logType]: SCH,
-		[JOBS.BARD.logType]: () => BRD,
+		[JOBS.BARD.logType]: BRD,
 		[JOBS.SAMURAI.logType]: SAM,
 		[JOBS.ASTROLOGIAN.logType]: AST,
 		[JOBS.DARK_KNIGHT.logType]: DRK,
@@ -41,6 +43,6 @@ export default {
 
 	BOSSES: {
 		[BOSSES.BAHAMUT_PRIME.logId]: () => import('./bosses/bahamutPrime' /* webpackChunkName: "bosses-bahamutPrime" */),
-		[BOSSES.DEMON_CHADARNOOK.logId]: () => import('./bosses/chadarnook' /* webpackChunkName: "bosses-chadarnook" */),
+		[BOSSES.DEMON_CHADARNOOK.logId]: DEMON_CHADARNOOK,
 	},
 }
