@@ -135,8 +135,6 @@ export default class Leylines extends Module {
 	}
 
 	_percentFunction(sumOfLeyLineDurations, sumOfCoPUpTime) {
-		console.log('sumOfLeyLineDurations ' + sumOfLeyLineDurations)
-		console.log('sumOfCoPUpTime' + sumOfCoPUpTime)
 		return Math.min((sumOfCoPUpTime/(sumOfLeyLineDurations))*100, 100)
 	}
 
@@ -147,7 +145,6 @@ export default class Leylines extends Module {
 	}
 
 	_onComplete(event) {
-		console.log(this._circleOfPowers.history)
 		if (this._circleOfPowers.current) {
 			if (!this._circleOfPowers.current.stop) {
 				this._circleOfPowers.current.stop = event.timestamp
