@@ -4,7 +4,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from '../../core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 //import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
