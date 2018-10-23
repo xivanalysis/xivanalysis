@@ -107,8 +107,9 @@ export default class Leylines extends Module {
 		}
 	}
 
+	// A reminder of man's ability to generate electricity
 	_dontMovePercent(power, lines) {
-		return (power / (lines)) * 100
+		return (power / lines) * 100
 	}
 
 	_onComplete() {
@@ -142,7 +143,7 @@ export default class Leylines extends Module {
 			})
 		})
 
-		// Get the total duration of CoP uptime and ley lines, so we can get the overall percentage uptime
+		// Get the total duration of CoP uptime and Ley Lines, so we can get the overall percentage uptime
 		const copDuration = this._buffWindows[STATUSES.CIRCLE_OF_POWER.id].history.reduce((duration, cop) => duration + Math.max(cop.stop - cop.start, 0), 0)
 		const linesDuration = this._buffWindows[STATUSES.LEY_LINES.id].history.reduce((duration, lines) => duration + Math.max(lines.stop - lines.start, 0), 0)
 
