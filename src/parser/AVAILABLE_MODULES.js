@@ -16,6 +16,7 @@ import DRK from './jobs/drk'
 import PLD from './jobs/pld'
 import SAM from './jobs/sam'
 import SCH from './jobs/sch'
+import WHM from './jobs/whm'
 
 export default {
 	CORE,
@@ -27,7 +28,7 @@ export default {
 		[JOBS.BLACK_MAGE.logType]: BLM,
 		[JOBS.RED_MAGE.logType]: RDM,
 		[JOBS.WARRIOR.logType]: WAR,
-		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
+		[JOBS.WHITE_MAGE.logType]: WHM,
 		[JOBS.PALADIN.logType]: PLD,
 		[JOBS.SCHOLAR.logType]: SCH,
 		[JOBS.BARD.logType]: () => BRD,
