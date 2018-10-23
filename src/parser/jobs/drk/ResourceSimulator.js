@@ -426,7 +426,7 @@ export default class Resources extends Module {
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
-					You missed out on {this._noDACarve * DARK_ARTS_CARVE_BOOST_POTENCY} potency due to {this._noDACarve} due to no buff carves.
+					You missed out on {this._noDACarve * DARK_ARTS_CARVE_BOOST_POTENCY} potency due to {this._noDACarve} unbuffed carves.
 				</Fragment>,
 			}))
 		}
