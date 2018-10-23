@@ -11,6 +11,7 @@ import DRG from './jobs/drg'
 import RDM from './jobs/rdm'
 import AST from './jobs/ast'
 import BLM from './jobs/blm'
+import BRD from './jobs/brd'
 
 export default {
 	CORE,
@@ -25,7 +26,7 @@ export default {
 		[JOBS.WHITE_MAGE.logType]: () => import('./jobs/whm' /* webpackChunkName: "jobs-whm" */),
 		[JOBS.PALADIN.logType]: () => import('./jobs/pld' /* webpackChunkName: "jobs-pld" */),
 		[JOBS.SCHOLAR.logType]: () => import('./jobs/sch' /* webpackChunkName: "jobs-sch" */),
-		[JOBS.BARD.logType]: () => import('./jobs/brd' /* webpackChunkName: "jobs-brd" */),
+		[JOBS.BARD.logType]: () => BRD,
 		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
 		[JOBS.ASTROLOGIAN.logType]: AST,
 		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
