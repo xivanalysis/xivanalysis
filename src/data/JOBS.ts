@@ -11,10 +11,7 @@ export interface Role {
 	colour: SemanticCOLORS
 }
 
-interface RoleData {
-	[key: string]: Role
-}
-const roleData: RoleData = {
+const roleData: Record<string, Role> = {
 	TANK: {
 		id: 1,
 		i18n_id: i18nMark('game.roles.tank'),
@@ -77,10 +74,7 @@ export interface Job {
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
-interface JobData {
-	[key: string]: Job
-}
-const JOBS: JobData = {
+const JOBS: Record<string, Job> = {
 	// Tank
 	PALADIN: {
 		i18n_id: i18nMark('game.job.paladin'),
