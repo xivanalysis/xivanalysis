@@ -12,6 +12,7 @@ import RDM from './jobs/rdm'
 import AST from './jobs/ast'
 import BLM from './jobs/blm'
 import BRD from './jobs/brd'
+import DRK from './jobs/drk'
 
 export default {
 	CORE,
@@ -29,7 +30,7 @@ export default {
 		[JOBS.BARD.logType]: () => BRD,
 		[JOBS.SAMURAI.logType]: () => import('./jobs/sam' /*webpackChunkName: "jobs-sam" */),
 		[JOBS.ASTROLOGIAN.logType]: AST,
-		[JOBS.DARK_KNIGHT.logType]: () => import('./jobs/drk' /* webpackChunkName: "jobs-drk" */),
+		[JOBS.DARK_KNIGHT.logType]: DRK,
 		[JOBS.MACHINIST.logType]: MCH,
 		[JOBS.DRAGOON.logType]: DRG,
 	},
