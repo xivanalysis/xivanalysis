@@ -124,7 +124,7 @@ export default class DarkArts extends Module {
 			}))
 		}
 		// the 14 potency is the 10% loss from not having slashing.  this has 0 use anywhere else and is basically only relevant if someone DAs every DP
-		const DADPPotencyLossBecauseDPDoesntGetSlashing = 14
+		const DADPPotencyLossBecauseDPDoesntGetSlashing = 28
 		if (this._countDADP > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DARK_PASSENGER.icon,
