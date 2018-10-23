@@ -18,6 +18,7 @@ export default class Triple extends Module {
 		'castTime',
 	]
 
+	_tripleFlag = false
 	_active = false
 	_triple = {}
 	_history = []
@@ -36,7 +37,7 @@ export default class Triple extends Module {
 
 	_onCast(event) {
 		const actionId = event.ability.guid
-
+		const gcdAction = getAction(actionId).onGcd
 		// Start tracking
 		if (actionId === ACTIONS.TRIPLECAST.id) {
 			this._active = true
@@ -53,8 +54,25 @@ export default class Triple extends Module {
 			return
 		}
 
-		// Save the event to the DWT casts
-		this._triple.casts.push(event)
+		//stop tracking
+		if (this._tripleFlag) {
+			//check if we are at the next GCD and finish up the list
+			if (gcdAction) {
+				if (this._active) {
+					this._active = false
+					this._tripleFlag = false
+					this._triple.end = this.parser.currentTimestamp
+					this._history.push(this._triple)
+					this.castTime.reset(this._ctIndex)
+				}
+			} else {
+				//OGCD? Better saving that
+				this._triple.casts.push(event)
+			}
+		} else {
+			// Save the event to the DWT-- ehhh Triple casts
+			this._triple.casts.push(event)
+		}
 	}
 
 	_onComplete() {
@@ -65,13 +83,8 @@ export default class Triple extends Module {
 	}
 
 	_onRemoveTriple() {
-		if (this._active) {
-			this._active = false
-			this._triple.end = this.parser.currentTimestamp
-			this._history.push(this._triple)
-
-			this.castTime.reset(this._ctIndex)
-		}
+		//flag to stop tracking
+		this._tripleFlag = true
 	}
 
 	output() {
