@@ -45,6 +45,7 @@ export default class Leylines extends Module {
 
 		this.addHook('applybuff', {by: 'player', abilityId: LL_BUFFS}, this._onGain)
 		this.addHook('removebuff', {by: 'player', abilityId: LL_BUFFS}, this._onDrop)
+		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
 		this._group = new Group({
@@ -85,6 +86,11 @@ export default class Leylines extends Module {
 
 	_onDrop(event) {
 		this._stopAndSave(event.ability.guid, event.timestamp)
+	}
+
+	// We died, close windows
+	_onDeath(event) {
+		this._stopAndSave(STATUSES.LEY_LINES.id, event.timestamp)
 	}
 
 	// Finalise a buff window
