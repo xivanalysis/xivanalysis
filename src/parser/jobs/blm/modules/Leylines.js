@@ -24,7 +24,6 @@ export default class Leylines extends Module {
 	static dependencies = [
 		'timeline',
 		'checklist',
-		'brokenLog',
 	]
 
 	_buffWindows = {
@@ -122,14 +121,6 @@ export default class Leylines extends Module {
 		// Current time will be end of fight so no need to pass it here
 		if (this._buffWindows[STATUSES.LEY_LINES.id].current) {
 			this._stopAndSave(STATUSES.LEY_LINES.id)
-		}
-
-		// Validate event history
-		if (!this._buffWindows[STATUSES.CIRCLE_OF_POWER.id].history.length) {
-			// Ley Lines events with no Circle of Powers should be impossible...
-			if (this._buffWindows[STATUSES.LEY_LINES.id].history.length) {
-				this.brokenLog.trigger()
-			}
 		}
 
 		// For each buff, add it to timeline
