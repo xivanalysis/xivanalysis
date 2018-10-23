@@ -18,6 +18,7 @@ import SAM from './jobs/sam'
 import SCH from './jobs/sch'
 import WHM from './jobs/whm'
 
+import BAHAMUT_PRIME from './bosses/bahamutPrime'
 import DEMON_CHADARNOOK from './bosses/chadarnook'
 
 export default {
@@ -42,7 +43,7 @@ export default {
 	},
 
 	BOSSES: {
-		[BOSSES.BAHAMUT_PRIME.logId]: () => import('./bosses/bahamutPrime' /* webpackChunkName: "bosses-bahamutPrime" */),
+		[BOSSES.BAHAMUT_PRIME.logId]: BAHAMUT_PRIME,
 		[BOSSES.DEMON_CHADARNOOK.logId]: DEMON_CHADARNOOK,
 	},
 }
