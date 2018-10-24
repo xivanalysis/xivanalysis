@@ -1,5 +1,8 @@
+import classNames from 'classnames'
 import React from 'react'
 import {renderToString} from 'react-dom/server'
+
+import styles from './Timeline.module.css'
 
 export default class Item {
 	_end = null
@@ -8,6 +11,20 @@ export default class Item {
 	}
 	get end() {
 		return this._end || this.start + this.length
+	}
+
+	_className
+	set className(value) {
+		this._className = value
+	}
+	get className() {
+		let cn = this._className
+
+		if (this.start && this.end && this.end - this.start === 0) {
+			cn = classNames(cn, styles.allowOverflow)
+		}
+
+		return cn
 	}
 
 	constructor(options) {

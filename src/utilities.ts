@@ -1,29 +1,30 @@
-import {matchPath} from 'react-router-dom'
-import LANGUAGES, {SHORT_LANGUAGE_MAP, DEFAULT_LANGUAGE} from 'data/LANGUAGES'
-
 import compose from 'lodash/fp/compose'
-export { compose }
+import {matchPath} from 'react-router-dom'
 
-function ensureArray<T> (val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
+
+export {compose}
+
+function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}
 	return val // need to add a .slice() here if we want the return to be T[]
 }
 
-export function addExtraIndex<T extends Record<string, object>, K extends keyof T[keyof T]> (obj: T, index: K) {
+export function addExtraIndex<T extends Record<string, object>, K extends keyof T[keyof T]>(obj: T, index: K) {
 	const result = obj as T & Record<number, T[keyof T]>
 	Object.keys(obj).forEach(key => {
 		const val = obj[key as keyof T]
-		let newKey = ensureArray(val[index])
+		const newKey = ensureArray(val[index])
 		newKey.forEach(key => result[key as any as number] = val)
 	})
 	return result
 }
 
 // This is pretty damn nasty, but it'll do for now
-export function getPathMatch (pathname: string) {
-	const page = matchPath<{ page: string }>(pathname, { path: '/:page?' })
+export function getPathMatch(pathname: string) {
+	const page = matchPath<{ page: string }>(pathname, {path: '/:page?'})
 
 	let path = '/'
 	switch (page !== null && page.params.page) {
@@ -32,14 +33,14 @@ export function getPathMatch (pathname: string) {
 	default:        // Do nothing
 	}
 
-	return matchPath(pathname, { path })
+	return matchPath(pathname, {path})
 }
 
 /**
  * Create reverse key<->value mappings for an object and then freeze it to prevent further modifications.
  * @param {*KeyValue object to reverse map} obj
  */
-export function enumify <T extends Record<string|number, string|number>> (obj: T): Readonly<T> {
+export function enumify<T extends Record<string|number, string|number>>(obj: T): Readonly<T> {
 	for (const [key, val] of Object.entries(obj)) {
 		obj[val] = key
 	}
@@ -89,7 +90,7 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 
 	function matcher(values: ReadonlyArray<number>, value: number): number
 	function matcher<T>(values: Record<number, T>, value: number): T
-	function matcher (values: ReadonlyArray<number>|Record<number, any>, value: any) {
+	function matcher(values: ReadonlyArray<number>|Record<number, any>, value: any) {
 		const isArray = Array.isArray(values)
 		const isObject = typeof values === typeof {}
 
@@ -151,10 +152,10 @@ export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value -
 
 // Renders a time given in seconds into the format mm:ss
 export function formatDuration(duration: number) {
-	/* eslint-disable no-magic-numbers */
+	/* tslint:disable:no-magic-numbers */
 	const seconds = Math.floor(duration % 60)
 	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
-	/* eslint-enable no-magic-numbers */
+	/* tslint:enable:no-magic-numbers */
 }
 
 /**
@@ -165,11 +166,10 @@ export function formatDuration(duration: number) {
  */
 export function stringBefore(haystack: string, needle: string) {
 	const idx = haystack.indexOf(needle)
-	return idx === -1 ? haystack : haystack.slice(0, idx)
+	return idx === -1? haystack : haystack.slice(0, idx)
 }
 
-
-function getNavigatorLanguages (): ReadonlyArray<string> {
+function getNavigatorLanguages(): ReadonlyArray<string> {
 	if (Array.isArray(navigator.languages)) {
 		return navigator.languages
 	}

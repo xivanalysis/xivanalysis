@@ -100,6 +100,11 @@ export default {
 		avatar: process.env.PUBLIC_URL + '/avatar/astraleah.png',
 		jobs: [JOBS.DRAGOON],
 	},
+	ACCHAN: {
+		name: 'acchan',
+		avatar: process.env.PUBLIC_URL + '/avatar/acchan.png',
+		jobs: [JOBS.MONK],
+	},
 }
 
 export const ROLES = {

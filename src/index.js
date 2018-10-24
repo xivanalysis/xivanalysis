@@ -36,3 +36,11 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 }
 
 ReactDOM.render(<Root />, document.getElementById('root'))
+
+// Make sure there isn't a service worker running, it doesn't really work with what we do
+// Code ✂️'d from CRA@2's generated thing
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.ready.then(registration => {
+		registration.unregister()
+	})
+}
