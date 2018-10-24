@@ -36,7 +36,7 @@ export function dependency(target: Module, prop: string) {
 	})
 }
 
-interface MappedDependency {
+export interface MappedDependency {
 	handle: string
 	prop: string
 }

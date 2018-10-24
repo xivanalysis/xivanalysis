@@ -6,32 +6,35 @@ import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
+import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {extractErrorContext} from 'utilities'
+import {Meta} from '.'
+import Module, {MappedDependency} from './Module'
+
+interface Player extends Actor {
+	pets: Pet[]
+}
+
+interface LoadedMeta extends Meta {
+	loadedModules: Array<typeof Module>
+}
 
 class Parser {
 	// -----
 	// Properties
 	// -----
 
-	report = null
-	fight = null
-	player = null
-	meta = {}
+	meta: Partial<LoadedMeta> = {}
 	_timestamp = 0
 
-	/** @type {Record<string, import('./Module').default>} */
-	modules = {}
-	/** @type {Record<string, typeof import('./Module').default>} */
-	_constructors = {}
+	modules: Record<string, Module> = {}
+	_constructors: Record<string, typeof Module> = {}
 
-	/** @type {string[]} */
-	moduleOrder = []
-	/** @type {string[]} */
-	_triggerModules = []
-	/** @type {Record<string, Error | { toString (): string }>} */
-	_moduleErrors = {}
+	moduleOrder: string[] = []
+	_triggerModules: string[] = []
+	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	_fabricationQueue = []
+	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
 		// TODO: this.finished?
@@ -47,7 +50,7 @@ class Parser {
 	// Get the friendlies that took part in the current fight
 	get fightFriendlies() {
 		return this.report.friendlies.filter(
-			friend => friend.fights.some(fight => fight.id === this.fight.id)
+			friend => friend.fights.some(fight => fight.id === this.fight.id),
 		)
 	}
 
@@ -60,11 +63,11 @@ class Parser {
 	// Constructor
 	// -----
 
-	constructor(report, fight, player) {
-		this.report = report
-		this.fight = fight
-		this.player = player
-
+	constructor(
+		private readonly report: ReportFightsResponse,
+		private readonly fight: Fight,
+		private readonly player: Player,
+	) {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
@@ -76,9 +79,9 @@ class Parser {
 	// Module handling
 	// -----
 
-	addMeta(meta) {
+	addMeta(meta: LoadedMeta) {
 		// Add the modules to the main system
-		this.addModules(meta.modules)
+		this.addModules(meta.loadedModules)
 
 		// Merge the meta in
 		mergeWith(this.meta, meta, (obj, src) => {
@@ -89,8 +92,8 @@ class Parser {
 		delete this.meta.modules
 	}
 
-	addModules(modules) {
-		const keyed = {}
+	addModules(modules: Array<typeof Module>) {
+		const keyed: Record<string, typeof Module> = {}
 
 		modules.forEach(mod => {
 			keyed[mod.handle] = mod
@@ -106,7 +109,7 @@ class Parser {
 
 		// Build the values we need for the toposort
 		const nodes = Object.keys(this._constructors)
-		const edges = []
+		const edges: Array<[string, string]> = []
 		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, this._getDepHandle(dep)])
 		}))
@@ -122,7 +125,7 @@ class Parser {
 		})
 	}
 
-	_getDepHandle = (dep) => typeof dep === 'string'? dep : dep.handle
+	_getDepHandle = (dep: string | MappedDependency) => typeof dep === 'string'? dep : dep.handle
 
 	// -----
 	// Event handling

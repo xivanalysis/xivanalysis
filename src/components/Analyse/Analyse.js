@@ -172,7 +172,7 @@ class Analyse extends Component {
 				.forEach(({default: loadedModules = []}, index) => {
 					parser.addMeta({
 						...modules[index],
-						modules: loadedModules,
+						loadedModules,
 					})
 				})
 		} catch (error) {
