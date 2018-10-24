@@ -21,6 +21,9 @@ export default class ChangeLog extends Module {
 			return false
 		}
 
+		// Sorts the changelog by date. New to old.
+		changelog.sort((a, b) => b.date - a.date)
+
 		return <div>
 			{changelog.map((item, index) => {
 				// Fixes the issue with the 'attach' property. Basically, if it's the first one it's just gonna attach to the top, if not, it'll attach to the segment/header above it.
