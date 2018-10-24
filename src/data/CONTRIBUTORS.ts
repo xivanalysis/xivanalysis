@@ -9,7 +9,7 @@ export interface Contributor {
 }
 
 // Be cool to hook this up to discord at some point - but does raise concerns if the user leaves the guild
-const CONTRIBUTORS: Record<string, Contributor> = {
+const CONTRIBUTORS = {
 	ACKWELL: {
 		name: 'ackwell',
 		avatar: process.env.PUBLIC_URL + '/avatar/ackwell.png',
@@ -111,14 +111,14 @@ const CONTRIBUTORS: Record<string, Contributor> = {
 		jobs: [JOBS.MONK],
 	},
 }
-export default CONTRIBUTORS
+export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 
 export interface Role {
 	i18n_id: string
 	text: string
 }
 
-export const ROLES: Record<string, Role> = {
+const roleData = {
 	MAINTAINER: {
 		i18n_id: i18nMark('core.role.maintainer'),
 		text: 'Maintainer',
@@ -132,3 +132,5 @@ export const ROLES: Record<string, Role> = {
 		text: 'Developer',
 	},
 }
+
+export const ROLES = roleData as Record<keyof typeof roleData, Role>

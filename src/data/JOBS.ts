@@ -11,7 +11,7 @@ export interface Role {
 	colour: SemanticCOLORS
 }
 
-const roleData: Record<string, Role> = {
+const roleData = {
 	TANK: {
 		id: 1,
 		i18n_id: i18nMark('game.roles.tank'),
@@ -62,7 +62,7 @@ const roleData: Record<string, Role> = {
 	},
 }
 
-export const ROLES = addExtraIndex(roleData, 'id')
+export const ROLES = addExtraIndex(roleData as Record<keyof typeof roleData, Role>, 'id')
 
 export interface Job {
 	i18n_id: string
@@ -74,7 +74,7 @@ export interface Job {
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
-const JOBS: Record<string, Job> = {
+const JOBS = {
 	// Tank
 	PALADIN: {
 		i18n_id: i18nMark('game.job.paladin'),
@@ -206,4 +206,4 @@ const JOBS: Record<string, Job> = {
 	},
 }
 
-export default addExtraIndex(JOBS, 'logType')
+export default addExtraIndex(JOBS as Record<keyof typeof JOBS, Job>, 'logType')

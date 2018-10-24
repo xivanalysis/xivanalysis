@@ -55,7 +55,7 @@ const PATCHES = {
 }
 
 export type PatchNumber = keyof typeof PATCHES
-export default PATCHES as {[P in PatchNumber]: Patch}
+export default PATCHES as Record<PatchNumber, Patch>
 
 interface PatchData {[key: string]: Patch}
 const patchData: PatchData = PATCHES
