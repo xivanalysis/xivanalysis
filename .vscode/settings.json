@@ -2,5 +2,7 @@
 	"javascript.preferences.quoteStyle": "single",
 	"javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
 	"eslint.autoFixOnSave": true,
-	"eslint.packageManager": "yarn"
+	"eslint.packageManager": "yarn",
+	"tslint.autoFixOnSave": true,
+	"tslint.configFile": "tslint.json"
 }

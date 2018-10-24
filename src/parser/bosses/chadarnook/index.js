@@ -1,5 +1,3 @@
-import Enemies from './Enemies'
-
-export default [
-	Enemies,
-]
+export default {
+	modules: () => import('./modules' /* webpackChunkName: "bosses-chadarnook" */),
+}

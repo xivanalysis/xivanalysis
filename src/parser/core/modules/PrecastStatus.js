@@ -37,7 +37,7 @@ export default class PrecastStatus extends Module {
 					// Can inherit most of the event data from the current one
 					...event,
 					// Override a few vals
-					timestamp: startTime,
+					timestamp: startTime - 1,
 					type: 'applybuff',
 				})
 

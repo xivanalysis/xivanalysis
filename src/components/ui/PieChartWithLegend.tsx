@@ -4,7 +4,7 @@ import {ChartComponentProps, Pie} from 'react-chartjs-2'
 
 import * as styles from './PieChartWithLegend.module.css'
 
-type DataPoint = {
+interface DataPoint {
 	value: number,
 	label: string,
 	backgroundColor?: string,
@@ -19,7 +19,7 @@ type Props = ChartComponentProps & {
 	data: DataPoint[],
 }
 
-const MISSING_COLOUR_FALLBACK = '#888';
+const MISSING_COLOUR_FALLBACK = '#888'
 
 export default class PieChartWithLegend extends React.Component<Props> {
 	render() {
@@ -35,7 +35,7 @@ export default class PieChartWithLegend extends React.Component<Props> {
 			datasets: [{
 				data: propData.map(d => d.value),
 				backgroundColor: backgrounds,
-			}]
+			}],
 		}
 
 		const options = merge({
@@ -60,7 +60,7 @@ export default class PieChartWithLegend extends React.Component<Props> {
 						<th></th>
 						<th>{headers.label || 'Label'}</th>
 						{headers.additional && headers.additional.map(
-							(val, index) => <th key={index}>{val}</th>
+							(val, index) => <th key={index}>{val}</th>,
 						)}
 					</tr>
 				</thead>}
@@ -75,7 +75,7 @@ export default class PieChartWithLegend extends React.Component<Props> {
 							</td>
 							<td>{val.label}</td>
 							{val.additional && val.additional.map(
-								(val, index) => <td key={index}>{val}</td>
+								(val, index) => <td key={index}>{val}</td>,
 							)}
 						</tr>
 					})}

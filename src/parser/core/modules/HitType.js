@@ -6,7 +6,7 @@ const ACTION_EVENT_TYPES = [
 ]
 
 export default class HitType extends Module {
-	static handle = 'hittype'
+	static handle = 'hitType'
 
 	normalise(events) {
 		for (let i = 0; i < events.length; i++) {

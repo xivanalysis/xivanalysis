@@ -1,5 +1,5 @@
 import Color from 'color'
-import {Trans} from '@lingui/react'
+import {i18nMark, Trans} from '@lingui/react'
 import React from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
 
@@ -41,6 +41,7 @@ const MAX_RAGE = 100
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static title = 'Gauge Usage'
+	static i18n_id = i18nMark('war.gauge.title')
 	static dependencies = [
 		'combatants',
 		'suggestions',
