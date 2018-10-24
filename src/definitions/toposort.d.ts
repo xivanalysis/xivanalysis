@@ -1,7 +1,7 @@
 declare module 'toposort' {
 	interface ToposortFunction {
-		(edges: Array<[any, any]>): any[]
-		array(nodes: any[], edges: Array<[any, any]>): any[]
+		<T>(edges: Array<[T, T]>): T[]
+		array<T>(nodes: T[], edges: Array<[T, T]>): T[]
 	}
 	const toposort: ToposortFunction
 	export = toposort
