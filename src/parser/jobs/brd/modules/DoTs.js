@@ -6,7 +6,7 @@ import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {Rule, Requirement} from '../../core/modules/Checklist'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 //const DROP_TOLERANCE = 1000
 
