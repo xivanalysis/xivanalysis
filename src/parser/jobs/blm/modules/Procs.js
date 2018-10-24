@@ -1,5 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import STATUSES, {getStatus} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {Group, Item} from 'parser/core/modules/Timeline'
@@ -17,9 +17,16 @@ const THUNDER_ACTIONS = [
 	ACTIONS.THUNDER_IV.id,
 ]
 
+const PROC_BUFFS = [
+	STATUSES.THUNDERCLOUD.id,
+	STATUSES.FIRESTARTER.id,
+]
+
 // Yeah they're the same duration now, but it could change...
-const THUNDERCLOUD_DURATION = 18000
-const FIRESTARTER_DURATION = 18000
+const BUFF_DURATIONS = {
+	[STATUSES.THUNDERCLOUD.id]: 18000,
+	[STATUSES.FIRESTARTER.id]: 18000,
+}
 
 export default class Procs extends Module {
 	static handle = 'procs'
@@ -29,47 +36,34 @@ export default class Procs extends Module {
 		'suggestions',
 	]
 
-	_firestarter = null
-	_thundercloud = false
 	_castingSpell = null
 
-	_firestarterWears = null
-	_thundercloudWears = null
+	_buffWindows = {
+		[STATUSES.THUNDERCLOUD.id]: {
+			current: null,
+			history: [],
+		},
+		[STATUSES.FIRESTARTER.id]: {
+			current: null,
+			history: [],
+		},
+	}
 
-	_droppedT3Ps = 0
-	_droppedF3Ps = 0
+	_droppedProcs = {
+		[STATUSES.THUNDERCLOUD.id]: 0,
+		[STATUSES.FIRESTARTER.id]: 0,
+	}
 
-	_buffs = {}
 	_group = null
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('removebuff', {
-			by: 'player',
-			abilityId: STATUSES.THUNDERCLOUD.id,
-		}, this._onRemoveThundercloud)
-		this.addHook('removebuff', {
-			by: 'player',
-			abilityId: STATUSES.FIRESTARTER.id,
-		}, this._onRemoveFirestarter)
-		this.addHook('applybuff', {
-			by: 'player',
-			abilityId: STATUSES.THUNDERCLOUD.id,
-		}, this._onApplyThundercloud)
-		this.addHook('applybuff', {
-			by: 'player',
-			abilityId: STATUSES.FIRESTARTER.id,
-		}, this._onApplyFirestarter)
-		this.addHook('refreshbuff', {
-			by: 'player',
-			abilityId: [STATUSES.FIRESTARTER.id, STATUSES.THUNDERCLOUD.id],
-		}, this._onRefreshBuff)
-		this.addHook('begincast', {
-			by: 'player',
-		}, this._onBeginCast)
-		this.addHook('cast', {
-			by: 'player',
-		}, this._onCast)
+		this.addHook('removebuff', {by: 'player', abilityId: PROC_BUFFS}, this._onLoseProc)
+		this.addHook('applybuff', {by: 'player', abilityId: PROC_BUFFS}, this._onGainProc)
+		this.addHook('refreshbuff', {by: 'player', abilityId: PROC_BUFFS}, this._onRefreshProc)
+		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
 		this._group = new Group({
@@ -81,6 +75,38 @@ export default class Procs extends Module {
 		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
 	}
 
+	_onLoseProc(event) {
+		this._stopAndSave(event.ability.guid, event.timestamp)
+	}
+
+	_onGainProc(event) {
+		const status = getStatus(event.ability.guid)
+
+		if (!status) {
+			return
+		}
+
+		const tracker = this._buffWindows[status.id]
+		tracker.current = {
+			start: event.timestamp,
+			wear: event.timestamp + BUFF_DURATIONS[status.id],
+		}
+
+		const groupId = 'procbuffs-' + status.id
+		if (!this._group.nestedGroups.includes(groupId)) {
+			this.timeline.addGroup(new Group({
+				id: groupId,
+				content: status.name,
+			}))
+			this._group.nestedGroups.push(groupId)
+		}
+	}
+
+	_onRefreshProc(event) {
+		this._stopAndSave(event.ability.guid, event.timestamp)
+		this._onGainProc(event)
+	}
+
 	// Keep track of casts we start to help look for instant casts
 	_onBeginCast(event) {
 		this._castingSpell = event.ability
@@ -90,111 +116,70 @@ export default class Procs extends Module {
 	_onCast(event) {
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
 		if (!this._castingSpell || this._castingSpell !== event.ability) {
-			if (event.ability.guid === ACTIONS.FIRE_III.id) {
-				if (this._firestarter !== null) {
-					event.ability.overrideAction = ACTIONS.FIRE_III_PROC
+			if (event.ability.guid === ACTIONS.FIRE_III.id && this._buffWindows[STATUSES.FIRESTARTER.id].current) {
+				this.castTime.set([ACTIONS.FIRE_III.id], 0, event.timestamp, event.timestamp)
+				event.ability.overrideAction = ACTIONS.FIRE_III_PROC
+				this._stopAndSave(STATUSES.FIRESTARTER.id, event.timestamp, false) // Stop the buff and don't count is as a drop in case of latency/timing weirdness
+			} else if (THUNDER_ACTIONS.includes(event.ability.guid) && this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
+				this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
+				if (event.ability.guid === ACTIONS.THUNDER_III.id) {
+					event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this T3 as a proc for use elsewhere
+				} else if (event.ability.guid === ACTIONS.THUNDER_IV.id) {
+					event.ability.overrideAction = ACTIONS.THUNDER_IV_PROC // Might as well mark out T4 procs as well...
 				}
-			} else if (THUNDER_ACTIONS.includes(event.ability.guid)) {
-				if (this._thundercloud) {
-					this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
-					if (event.ability.guid === ACTIONS.THUNDER_III.id) {
-						event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this T3 as a proc for use elsewhere
-					} else if (event.ability.guid === ACTIONS.THUNDER_IV.id) {
-						event.ability.overrideAction = ACTIONS.THUNDER_IV_PROC // Might as well mark out T4 procs as well...
-					}
-				}
+				this._stopAndSave(STATUSES.THUNDERCLOUD.id, event.timestamp, false)
 			}
 		}
 		if (this._castingSpell) { this._castingSpell = null }
 	}
 
-	// Handle displaying this proc buff on the timeline
-	applyBuff(timestamp, status) {
-		const groupId = 'procbuffs-' + status.id
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
+	_onDeath(event) {
+		this._stopAndSave(STATUSES.THUNDERCLOUD.id, event.timestamp)
+		this._stopAndSave(STATUSES.FIRESTARTER.id, event.timestamp)
+	}
+
+	_stopAndSave(statusId, endTime = this.parser.currentTimestamp, countDrops = true) {
+		const tracker = this._buffWindows[statusId]
+
+		if (!tracker.current) {
+			return
 		}
-		this._buffs[status.id] = new Item({
-			type: 'background',
-			start: timestamp - this.parser.fight.start_time,
-			group: groupId,
-			content: <img src={status.icon} alt={status.name}/>,
-		})
-	}
 
-	_onRefreshBuff(event) {
-		const statusId = event.ability.guid
-		// When the buff refreshes, reset the wear-off timestamp, and, for timeline display purposes, end the previous buff and start a new one
-		if (statusId === STATUSES.FIRESTARTER.id) {
-			this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
-			this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
-			this.applyBuff(event.timestamp, STATUSES.FIRESTARTER)
-		} else if (statusId === STATUSES.THUNDERCLOUD.id) {
-			this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION
-			this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
-			this.applyBuff(event.timestamp, STATUSES.THUNDERCLOUD)
+		tracker.current.stop = endTime
+		if (tracker.current.stop >= tracker.current.wear && countDrops) {
+			this._droppedProcs[statusId]++
 		}
+		tracker.history.push(tracker.current)
+		tracker.current = null
 	}
 
-	loseBuff(timestamp, status) {
-		const item = this._buffs[status.id]
-		// This shouldn't happen, but it do.
-		if (!item) { return }
-
-		item.end = timestamp - this.parser.fight.start_time
-		this.timeline.addItem(item)
-	}
-
-	_onRemoveThundercloud(event) {
-		this._thundercloud = false
-		if (event.timestamp >= this._thundercloudWears) { // If this wore off because of time, note it
-			this._droppedT3Ps++
-		}
-		this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
-	}
-
-	_onRemoveFirestarter(event) {
-		if (this._firestarter !== null) {
-			this.castTime.reset(this._firestarter)
-			this._firestarter = null
-		}
-		if (event.timestamp >= this._firestarterWears) {
-			this._droppedF3Ps++
-		}
-		this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
-	}
-
-	_onApplyThundercloud(event) {
-		this._thundercloud = true // just save a boolean value, we'll handle the castTime information elsewhere
-		this._thundercloudWears = event.timestamp + THUNDERCLOUD_DURATION // Note when this buff will wear off, to check for dropped procs
-		this.applyBuff(event.timestamp, STATUSES.THUNDERCLOUD)
-	}
-
-	// Same stuff as _onApplyThundercloud, but for Firestarters
-	_onApplyFirestarter(event) {
-		this._firestarter = this.castTime.set([ACTIONS.FIRE_III.id], 0)
-		this._firestarterWears = event.timestamp + FIRESTARTER_DURATION
-		this.applyBuff(event.timestamp, STATUSES.FIRESTARTER)
-	}
-
-	_onComplete(event) {
+	_onComplete() {
 		// Finalise buffs for timeline display
-		if (this._buffs[STATUSES.FIRESTARTER.id]) {
-			if (!this._buffs[STATUSES.FIRESTARTER.id].end) {
-				this.loseBuff(event.timestamp, STATUSES.FIRESTARTER)
-			}
+		if (this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
+			this._stopAndSave(STATUSES.THUNDERCLOUD.id)
 		}
-		if (this._buffs[STATUSES.THUNDERCLOUD.id]) {
-			if (!this._buffs[STATUSES.THUNDERCLOUD.id].end) {
-				this.loseBuff(event.timestamp, STATUSES.THUNDERCLOUD)
-			}
+		if (this._buffWindows[STATUSES.FIRESTARTER.id].current) {
+			this._stopAndSave(STATUSES.FIRESTARTER.id)
 		}
+
+		PROC_BUFFS.forEach(buff => {
+			const status = getStatus(buff)
+			const groupId = 'procbuffs-' + status.id
+			const fightStart = this.parser.fight.start_time
+
+			this._buffWindows[buff].history.forEach(window => {
+				this.timeline.addItem(new Item({
+					type: 'background',
+					start: window.start - fightStart,
+					end: window.stop - fightStart,
+					group: groupId,
+					content: <img src={status.icon} alt={status.name}/>,
+				}))
+			})
+		})
+
 		// Suggestions to use procs that wore off.
-		if (this._droppedT3Ps) {
+		if (this._droppedProcs[STATUSES.THUNDERCLOUD.id]) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III_PROC.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-t3ps.content">
@@ -202,11 +187,11 @@ export default class Procs extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-t3ps.why">
-					<Plural value={this._droppedT3Ps} one="# Thundercloud proc" other="# Thundercloud procs"/> expired.
+					<Plural value={this._droppedProcs[STATUSES.THUNDERCLOUD.id]} one="# Thundercloud proc" other="# Thundercloud procs"/> expired.
 				</Trans>,
 			}))
 		}
-		if (this._droppedF3Ps) {
+		if (this._droppedProcs[STATUSES.FIRESTARTER.id]) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_III_PROC.icon,
 				content: <Trans id="blm.procs.suggestions.dropped-f3ps.content">
@@ -214,7 +199,7 @@ export default class Procs extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.procs.suggestions.dropped-f3ps.why">
-					<Plural value={this._droppedF3Ps} one="# Firestarter proc" other="# Firestarter procs"/> expired.
+					<Plural value={this._droppedProcs[STATUSES.FIRESTARTER.id]} one="# Firestarter proc" other="# Firestarter procs"/> expired.
 				</Trans>,
 			}))
 		}
