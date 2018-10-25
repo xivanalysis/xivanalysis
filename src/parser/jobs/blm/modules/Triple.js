@@ -3,7 +3,7 @@ import {i18nMark} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -28,6 +28,10 @@ export default class Triple extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('applybuff', {
+			by: 'player',
+			abilityId: STATUSES.TRIPLECAST.id,
+		}, this._onApplyTriple)
 		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.TRIPLECAST.id,
@@ -36,60 +40,55 @@ export default class Triple extends Module {
 	}
 
 	_onCast(event) {
-		const actionId = event.ability.guid
-		const gcdAction = getAction(actionId).onGcd
-		// Start tracking
-		if (actionId === ACTIONS.TRIPLECAST.id) {
-			this._active = true
-			this._triple = {
-				start: event.timestamp,
-				end: null,
-				casts: [],
-			}
+		const action = getAction(event.ability.guid)
 
-			this._ctIndex = this.castTime.set('all', 0)
-		}
-
-		if (!this._active || getAction(actionId).autoAttack) {
+		if (!this._active || getAction(action.id).autoAttack) {
 			return
 		}
-
-		//stop tracking
-		if (this._tripleFlag) {
-			//check if we are at the next GCD and finish up the list
-			if (gcdAction) {
-				if (this._active) {
-					this._active = false
-					this._tripleFlag = false
-					this._triple.end = this.parser.currentTimestamp
-					this._history.push(this._triple)
-					this.castTime.reset(this._ctIndex)
-				}
+		//check if Triple window is active
+		if (this._active) {
+			//stop tracking on next GCD after triple is gone
+			if (action.onGcd && this._tripleFlag) {
+				this._stopRecording()
 			} else {
-				//OGCD? Better saving that
 				this._triple.casts.push(event)
 			}
-		} else {
-			// Save the event to the DWT-- ehhh Triple casts
-			this._triple.casts.push(event)
 		}
 	}
 
 	_onComplete() {
 		// Clean up any existing casts
 		if (this._active) {
-			this._onRemoveTriple()
+			this._stopRecording()
 		}
 	}
 
+	_onApplyTriple(event) {
+		//start tracking
+		this._active = true
+		this._triple = {
+			start: event.timestamp,
+			end: null,
+			casts: [],
+		}
+		this._ctIndex = this.castTime.set('all', 0)
+	}
+
 	_onRemoveTriple() {
-		//flag to stop tracking
 		this._tripleFlag = true
+	}
+
+	_stopRecording() {
+		this._active = false
+		this._tripleFlag = false
+		this._triple.end = this.parser.currentTimestamp
+		this._history.push(this._triple)
+		this.castTime.reset(this._ctIndex)
 	}
 
 	output() {
 		const panels = this._history.map(triple => {
-			const numGcds = triple.casts.filter(cast => !getAction(cast.ability.guid).onGcd).length - 1 // 1 is Triplecast itself
+			const numGcds = triple.casts.filter(cast => !getAction(cast.ability.guid).onGcd).length
 			return {
 				key: 'title-' + triple.start,
 				title: {
