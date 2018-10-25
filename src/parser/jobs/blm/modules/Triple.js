@@ -42,7 +42,7 @@ export default class Triple extends Module {
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
 
-		if (!this._active || getAction(action.id).autoAttack) {
+		if (!this._active || action.autoAttack) {
 			return
 		}
 		//check if Triple window is active
