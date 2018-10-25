@@ -61,6 +61,7 @@ const DEVIATION_PRECISION = 3
 
 const BASE_SUBSTAT_70 = 364
 const LEVEL_MOD_70 = 2170
+const BASE_CRIT_PROBABILITY = 50 //5%
 
 export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
@@ -174,6 +175,16 @@ export default class AdditionalStats extends Module {
 				} else {
 					const enemy = this._getEnemy(event.targetID)
 					const dot = this._getDot(enemy, event.ability.guid)
+					const accumulatedCritBuffs = this._parseDotCritBuffs(event)
+
+					// First of all, let's fix cases of 0 crit, since it's impossible
+					if (event.expectedCritRate === 0) {
+						event.expectedCritRate -= accumulatedCritBuffs
+					}
+					while (event.expectedCritRate < BASE_CRIT_PROBABILITY) {
+						event.expectedCritRate += 256
+					}
+					console.log(event.expectedCritRate)
 
 					// Not comfortable with counting Spears just yet
 					if (!this._hasStatus(dot, STATUSES.THE_SPEAR.id)) {
