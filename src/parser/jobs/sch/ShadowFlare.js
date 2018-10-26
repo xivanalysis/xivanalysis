@@ -31,7 +31,6 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onCast(event) {
-		console.log(event)
 		this._casts.push({
 			cast: event,
 			hits: [],
