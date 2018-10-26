@@ -155,7 +155,7 @@ export default class PitchPerfect extends Module {
 
 		// Only an issue if there are dot ticks left on the song and sufficient time to use PP (animation lock)
 		// TODO: Consider pre-downtime case
-		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - ANIMATION_LOCK) {
+		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - 2 * ANIMATION_LOCK) {
 			return
 		}
 
