@@ -22,12 +22,6 @@ const PROC_BUFFS = [
 	STATUSES.FIRESTARTER.id,
 ]
 
-// Yeah they're the same duration now, but it could change...
-const BUFF_DURATIONS = {
-	[STATUSES.THUNDERCLOUD.id]: 18000,
-	[STATUSES.FIRESTARTER.id]: 18000,
-}
-
 export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
@@ -36,7 +30,7 @@ export default class Procs extends Module {
 		'suggestions',
 	]
 
-	_castingSpell = null
+	_castingSpellId = null
 
 	_buffWindows = {
 		[STATUSES.THUNDERCLOUD.id]: {
@@ -80,19 +74,18 @@ export default class Procs extends Module {
 	}
 
 	_onGainProc(event) {
-		const status = getStatus(event.ability.guid)
+		const statusId = getStatus(event.ability.guid).id
 
-		if (!status) {
+		if (!statusId) {
 			return
 		}
 
-		const tracker = this._buffWindows[status.id]
+		const tracker = this._buffWindows[statusId]
 		tracker.current = {
 			start: event.timestamp,
-			wear: event.timestamp + BUFF_DURATIONS[status.id],
 		}
 
-		const groupId = 'procbuffs-' + status.id
+		const groupId = 'procbuffs-' + statusId
 		if (!this._group.nestedGroups.includes(groupId)) {
 			this.timeline.addGroup(new Group({
 				id: groupId,
@@ -109,18 +102,21 @@ export default class Procs extends Module {
 
 	// Keep track of casts we start to help look for instant casts
 	_onBeginCast(event) {
-		this._castingSpell = event.ability
+		this._castingSpellId = event.ability.guid
 	}
 
 	// Consolidate old onCast functions into one central function
 	_onCast(event) {
+		const actionId = event.ability.guid
+
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
-		if (!this._castingSpell || this._castingSpell !== event.ability) {
-			if (event.ability.guid === ACTIONS.FIRE_III.id && this._buffWindows[STATUSES.FIRESTARTER.id].current) {
+		if (!this._castingSpellId || this._castingSpellId !== actionId) {
+			if (actionId === ACTIONS.FIRE_III.id && this._buffWindows[STATUSES.FIRESTARTER.id].current) {
 				this.castTime.set([ACTIONS.FIRE_III.id], 0, event.timestamp, event.timestamp)
 				event.ability.overrideAction = ACTIONS.FIRE_III_PROC
-				this._stopAndSave(STATUSES.FIRESTARTER.id, event.timestamp, false) // Stop the buff and don't count is as a drop in case of latency/timing weirdness
-			} else if (THUNDER_ACTIONS.includes(event.ability.guid) && this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
+				// Stop the buff and don't count is as a drop in case of latency/timing weirdness
+				this._stopAndSave(STATUSES.FIRESTARTER.id, event.timestamp, false)
+			} else if (THUNDER_ACTIONS.includes(actionId) && this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
 				this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
 				if (event.ability.guid === ACTIONS.THUNDER_III.id) {
 					event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this T3 as a proc for use elsewhere
@@ -130,7 +126,7 @@ export default class Procs extends Module {
 				this._stopAndSave(STATUSES.THUNDERCLOUD.id, event.timestamp, false)
 			}
 		}
-		if (this._castingSpell) { this._castingSpell = null }
+		this._castingSpellId = null
 	}
 
 	_onDeath(event) {
@@ -146,7 +142,7 @@ export default class Procs extends Module {
 		}
 
 		tracker.current.stop = endTime
-		if (tracker.current.stop >= tracker.current.wear && countDrops) {
+		if (tracker.current.stop - tracker.current.start >= getStatus(statusId).duration * 1000 && countDrops) {
 			this._droppedProcs[statusId]++
 		}
 		tracker.history.push(tracker.current)

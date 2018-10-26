@@ -29,11 +29,13 @@ export default {
 		id: 165,
 		name: 'Firestarter',
 		icon: 'https://xivapi.com/i/010000/010460.png',
+		duration: 18,
 	},
 	THUNDERCLOUD: {
 		id: 164,
 		name: 'Thundercloud',
 		icon: 'https://xivapi.com/i/010000/010461.png',
+		duration: 18,
 	},
 	LEY_LINES: {
 		id: 737,
