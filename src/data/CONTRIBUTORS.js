@@ -72,7 +72,7 @@ export default {
 	},
 	YUMIYA: {
 		name: 'Yumiya',
-		avatar: null,
+		avatar: process.env.PUBLIC_URL + '/avatar/yumiya.png',
 		jobs: [JOBS.BARD],
 	},
 	RYAN: {
