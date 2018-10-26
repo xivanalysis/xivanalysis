@@ -1,3 +1,4 @@
+import _ from 'lodash'
 // This is all right from /PatchList - should be easy to sync Eventually™
 
 const PATCHES = {
@@ -58,3 +59,15 @@ const sortedPatches = Object.keys(PATCHES).sort(
 
 export const getPatch = (timestamp = (new Date()).getTime()) =>
 	sortedPatches.find(key => PATCHES[key].date < timestamp)
+
+export const patchSupported = (from, to, at = (new Date()).getTime()) => {
+	if (!from) { return false }
+
+	const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) - 1]
+	const nextPatch = PATCHES[nextPatchKey] || {date: Infinity}
+
+	const fromDate = PATCHES[from].date
+	const toDate = nextPatch.date
+
+	return _.inRange(at, fromDate, toDate)
+}

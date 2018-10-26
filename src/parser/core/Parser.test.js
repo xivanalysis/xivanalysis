@@ -14,10 +14,19 @@ class BasicThrowingModule extends BasicModule {
 		throw new Error('Test event')
 	})
 }
+class RenamedModule extends Module {
+	static handle = 'test_renamed'
+}
+class RenamedThrowingModule extends RenamedModule {
+	triggerEvent = jest.fn((/* events */) => {
+		throw new Error('Test event')
+	})
+}
 class DependentModule extends Module {
 	static handle = 'test_dependent'
 	static dependencies = [
 		'test_basic',
+		{handle: 'test_renamed', prop: 'renamed'},
 	]
 	triggerEvent = jest.fn()
 }
@@ -127,22 +136,34 @@ describe('Parser', () => {
 	})
 
 	it('links dependencies', () => {
-		parser.addModules([BasicModule, DependentModule])
+		parser.addModules([BasicModule, DependentModule, RenamedModule])
 		parser.buildModules()
 
 		const module = parser.modules.test_dependent
 		expect(module.test_basic)
 			.toBeInstanceOf(BasicModule)
 			.toBe(parser.modules.test_basic)
+		expect(module.renamed)
+			.toBeInstanceOf(RenamedModule)
+			.toBe(parser.modules.test_renamed)
 	})
 
 	it('cascades errors to dependents', () => {
-		parser.addModules([BasicThrowingModule, DependentModule])
+		parser.addModules([BasicThrowingModule, RenamedModule, DependentModule])
 		parser.buildModules()
 		parser.parseEvents([event])
 
 		const mock = parser.modules.test_dependent.triggerEvent.mock
 		// I only want to ensure the module doesn't _continue_ to parse. It's ok if it stops mid-event trigger, and it's ok if it waits until the end of the current event.
+		expect(mock.calls.length).toBeLessThanOrEqual(1)
+	})
+
+	it('cascades errors to dependents while renamed', () => {
+		parser.addModules([BasicModule, RenamedThrowingModule, DependentModule])
+		parser.buildModules()
+		parser.parseEvents([event])
+
+		const mock = parser.modules.test_dependent.triggerEvent.mock
 		expect(mock.calls.length).toBeLessThanOrEqual(1)
 	})
 })

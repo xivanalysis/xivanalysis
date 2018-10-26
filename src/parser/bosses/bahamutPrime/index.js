@@ -1,5 +1,3 @@
-import Death from './Death'
-
-export default [
-	Death,
-]
+export default {
+	modules: () => import('./modules' /* webpackChunkName: "bosses-bahamutPrime" */),
+}

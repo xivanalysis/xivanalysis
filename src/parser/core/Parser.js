@@ -1,5 +1,7 @@
+import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
+import {scroller} from 'react-scroll'
 import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
@@ -14,13 +16,19 @@ class Parser {
 	report = null
 	fight = null
 	player = null
+	meta = {}
 	_timestamp = 0
 
+	/** @type {Record<string, import('./Module').default>} */
 	modules = {}
+	/** @type {Record<string, typeof import('./Module').default>} */
 	_constructors = {}
 
+	/** @type {string[]} */
 	moduleOrder = []
+	/** @type {string[]} */
 	_triggerModules = []
+	/** @type {Record<string, Error | { toString (): string }>} */
 	_moduleErrors = {}
 
 	_fabricationQueue = []
@@ -68,6 +76,19 @@ class Parser {
 	// Module handling
 	// -----
 
+	addMeta(meta) {
+		// Add the modules to the main system
+		this.addModules(meta.modules)
+
+		// Merge the meta in
+		mergeWith(this.meta, meta, (obj, src) => {
+			if (Array.isArray(obj)) { return obj.concat(src) }
+		})
+
+		// Remove the modules key. I'm sure this could be done more nicely but I'm tired and on a bus rn.
+		delete this.meta.modules
+	}
+
 	addModules(modules) {
 		const keyed = {}
 
@@ -80,11 +101,14 @@ class Parser {
 	}
 
 	buildModules() {
+		// Sort the changelog by the date
+		this.meta.changelog = sortBy(this.meta.changelog, 'date')
+
 		// Build the values we need for the toposort
 		const nodes = Object.keys(this._constructors)
 		const edges = []
 		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
-			edges.push([mod, dep])
+			edges.push([mod, this._getDepHandle(dep)])
 		}))
 
 		// Sort modules to load dependencies first
@@ -97,6 +121,8 @@ class Parser {
 			this.modules[mod] = new this._constructors[mod](this)
 		})
 	}
+
+	_getDepHandle = (dep) => typeof dep === 'string'? dep : dep.handle
 
 	// -----
 	// Event handling
@@ -223,7 +249,7 @@ class Parser {
 		// Cascade via dependencies
 		Object.keys(this._constructors).forEach(key => {
 			const constructor = this._constructors[key]
-			if (constructor.dependencies.includes(mod)) {
+			if (constructor.dependencies.some(dep => this._getDepHandle(dep) === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
 		})
@@ -262,8 +288,9 @@ class Parser {
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
 				for (const dep of constructor.dependencies) {
-					if (!visited.has(dep)) {
-						crawler(dep)
+					const handle = this._getDepHandle(dep)
+					if (!visited.has(handle)) {
+						crawler(handle)
 					}
 				}
 			}
@@ -402,6 +429,18 @@ class Parser {
 		if (pointPos === -1) { pointPos = secondsText.length }
 		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
 		/* eslint-enable no-magic-numbers */
+	}
+
+	/**
+	 * Scroll to the specified module
+	 * @param {string} handle - Handle of the module to scroll to
+	 */
+	scrollTo(handle) {
+		const module = this.modules[handle]
+		scroller.scrollTo(module.constructor.title, {
+			offset: -50,
+			smooth: true,
+		})
 	}
 }
 
