@@ -41,26 +41,20 @@ export default class Triple extends Module {
 
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
-
-		if (!this._active || action.autoAttack) {
-			return
-		}
 		//check if Triple window is active
-		if (this._active) {
-			//stop tracking on next GCD after triple is gone
-			if (action.onGcd && this._tripleFlag) {
-				this._stopRecording()
-			} else {
-				this._triple.casts.push(event)
-			}
+		if (!this._active || action.autoAttack) { return }
+		//stop tracking on next GCD after triple is gone
+		if (action.onGcd && this._tripleFlag) {
+			this._stopRecording()
+		} else {
+			this._triple.casts.push(event)
 		}
 	}
 
 	_onComplete() {
 		// Clean up any existing casts
-		if (this._active) {
-			this._stopRecording()
-		}
+		if (!this._active) { return }
+		this._stopRecording()
 	}
 
 	_onApplyTriple(event) {
@@ -76,6 +70,7 @@ export default class Triple extends Module {
 
 	_onRemoveTriple() {
 		this._tripleFlag = true
+		this.castTime.reset(this._ctIndex)
 	}
 
 	_stopRecording() {
@@ -83,7 +78,6 @@ export default class Triple extends Module {
 		this._tripleFlag = false
 		this._triple.end = this.parser.currentTimestamp
 		this._history.push(this._triple)
-		this.castTime.reset(this._ctIndex)
 	}
 
 	output() {
