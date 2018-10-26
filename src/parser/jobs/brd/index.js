@@ -6,7 +6,7 @@ import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import ACTIONS from 'data/ACTIONS'
 
 export default {
-	modules: () => import('./modules' /* webpackChunkName: "jobs-blm" */),
+	modules: () => import('./modules' /* webpackChunkName: "jobs-brd" */),
 
 	description: <Fragment>
 		<p>Welcome to the Bard module! Despite being a very straightforward job, Bard's complexity is deceiving.</p>
