@@ -67,8 +67,9 @@ export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
 	static dependencies = [
 		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'brokenLog',
 		'combatants',
-		// Relying on the normaliser from this for the hit type fields
 		'hitType', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
 
@@ -101,25 +102,55 @@ export default class AdditionalStats extends Module {
 			if (event.type.match(/^(apply|remove|refresh)(de)?buff(stack)?$/)) {
 				// In case it's a status on the selected player
 				if (event.targetID === this.combatants.selected.id && event.ability) {
-					this._player.statuses[event.ability.guid] = event.type.startsWith('apply') || event.type.startsWith('refresh')
+					const player = this._player
+					player.statuses[event.ability.guid] = {
+						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
+					}
+
+					// If the current status is a crit modifier, we add the strength onto it to use later
+					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
+					if (critModifier) {
+
+						// If it's a spear card, we get the modifier from the event, thank's to arcanum
+						if (critModifier.id === STATUSES.THE_SPEAR.id) {
+							player.statuses[event.ability.guid].strength = critModifier.strength * event.strengthModifier
+						// Otherwise, we get it from the const array
+						} else {
+							player.statuses[event.ability.guid].strength = critModifier.strength
+						}
+
+					}
 
 				// In case it's a status on an enemy, we attribute it to that specific enemy by the ID
 				} else if (!event.targetIsFriendly) {
 					const enemy = this._getEnemy(event.targetID)
-					enemy.statuses[event.ability.guid] = event.type.startsWith('apply') || event.type.startsWith('refresh')
+					enemy.statuses[event.ability.guid] = {
+						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
+					}
+					// If the current status is a crit modifier, we add the strength onto it to use later
+					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
+					if (critModifier) {
+
+						// If it's a spear card, we get the modifier from the event, thank's to arcanum
+						if (critModifier.id === STATUSES.THE_SPEAR.id) {
+							enemy.statuses[event.ability.guid].strength = event.strengthModifier
+						// Otherwise, we get it from the const array
+						} else {
+							enemy.statuses[event.ability.guid].strength = critModifier.strength
+						}
+
+					}
 
 					// Separately checks for dot application, too
 					if (
 						DOTS.includes(event.ability.guid)
 						&& (event.type.startsWith('apply') || event.type.startsWith('refresh'))
 					) {
-						// We fetch only the snapshotters that affect the current dot
-						const snapshotters = Object.keys(SNAPSHOTTERS)
+						// We fetch only the most recent snapshotter that affects the current dot
+						const snapshotter = Object.keys(SNAPSHOTTERS)
 							.filter(action => SNAPSHOTTERS[action].includes(event.ability.guid))
 							.map(action => this._getSnapshotter(action))
-
-						// We snapshot statuses from the most recent snapshotter that affects this dot
-						const snapshotter = snapshotters.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
+							.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
 
 						// We get the dot component from the enemy
 						const dot = this._getDot(enemy, event.ability.guid)
@@ -177,13 +208,15 @@ export default class AdditionalStats extends Module {
 					const dot = this._getDot(enemy, event.ability.guid)
 					const accumulatedCritBuffs = this._parseDotCritBuffs(event)
 
-					// First of all, let's fix cases of 0 crit, since it's impossible
-					if (event.expectedCritRate === 0) {
-						event.expectedCritRate -= accumulatedCritBuffs
-					}
+					// First of all, let's fix cases of broken crit
+					event.expectedCritRate -= accumulatedCritBuffs * 1000
+
 					while (event.expectedCritRate < BASE_CRIT_PROBABILITY) {
 						event.expectedCritRate += 256
 					}
+
+					event.expectedCritRate += accumulatedCritBuffs * 1000
+
 					console.log(event.expectedCritRate)
 
 					// Not comfortable with counting Spears just yet
@@ -283,15 +316,13 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			let hasStatus = false
+			const enemyStatus = this._hasStatus(enemy, modifier.id)
+			const playerStatus = this._hasStatus(player, modifier.id)
 
-			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id) {
-				hasStatus = this._hasStatus(enemy, modifier.id)
-			} else {
-				hasStatus = this._hasStatus(player, modifier.id)
-			}
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
+			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id && enemyStatus && enemyStatus.isActive) {
+				accumulatedCritBuffs += enemyStatus.strength
+			} else if (playerStatus && playerStatus.isActive) {
+				accumulatedCritBuffs += playerStatus.strength
 			}
 
 		}
@@ -309,9 +340,10 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			const hasStatus = this._hasStatus(dot, modifier.id)
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
+			const dotStatus = this._hasStatus(dot, modifier.id)
+
+			if (dotStatus && dotStatus.isActive) {
+				accumulatedCritBuffs += dotStatus.strength
 			}
 
 		}
@@ -329,7 +361,6 @@ export default class AdditionalStats extends Module {
 		// If we have crit rate information from dots, we use that instead
 		if (this._critFromDots.length) {
 			return this._getEmpiricalRuleSubsetMean(this._critFromDots, DEVIATION_PRECISION)
-
 		}
 		// Otherwise, some mathmagic takes place to approximate the crit rate
 
@@ -398,6 +429,11 @@ export default class AdditionalStats extends Module {
 				}
 			}
 		}
+		// If there are no damage instances, we can't really calculate K. Let's trigger brokenLog and return 1
+		if (!values || !values.length) {
+			this.brokenLog.trigger()
+			return 1
+		}
 
 		return this._getEmpiricalRuleSubsetMean(values, DEVIATION_PRECISION)
 
@@ -408,7 +444,7 @@ export default class AdditionalStats extends Module {
 		const mean = math.mean(dataset)
 		const standardDeviation = math.std(dataset)
 
-		return math.mean(dataset.filter(v => v > mean - n * standardDeviation && v < mean + n * standardDeviation))
+		return math.mean(dataset.filter(v => v >= mean - n * standardDeviation && v <= mean + n * standardDeviation))
 	}
 
 }
