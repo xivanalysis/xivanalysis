@@ -313,11 +313,11 @@ export default class PitchPerfect extends Module {
 				<List.Content>
 					<List.Item>
 						<Icon name={'exclamation circle'}/>
-						<strong>{pp.critOnDot[STATUSES.CAUSTIC_BITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
+						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.CAUSTIC_BITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
 					</List.Item>
 					<List.Item>
 						<Icon name={'exclamation circle'}/>
-						<strong>{pp.critOnDot[STATUSES.STORMBITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
+						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.STORMBITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
 					</List.Item>
 					<List.Item>
 						<Icon name={'hourglass'}/>
