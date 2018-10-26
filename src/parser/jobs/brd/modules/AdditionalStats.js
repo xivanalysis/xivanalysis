@@ -68,7 +68,6 @@ export default class AdditionalStats extends Module {
 	static dependencies = [
 		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'brokenLog',
 		'combatants',
 		'hitType', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
@@ -92,7 +91,7 @@ export default class AdditionalStats extends Module {
 	criticalHitProbability
 	criticalHitRate
 	critMod
-	k
+	potencyDamageRatio
 
 	normalise(events) {
 
@@ -100,48 +99,15 @@ export default class AdditionalStats extends Module {
 
 			// Registers buffs/debuffs statuses on the respective entity (either player or enemies)
 			if (event.type.match(/^(apply|remove|refresh)(de)?buff(stack)?$/)) {
-				// In case it's a status on the selected player
+				let actor
+
+				// Determines if it's a status on the selected player or on an enemy
 				if (event.targetID === this.combatants.selected.id && event.ability) {
-					const player = this._player
-					player.statuses[event.ability.guid] = {
-						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
-					}
-
-					// If the current status is a crit modifier, we add the strength onto it to use later
-					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
-					if (critModifier) {
-
-						// If it's a spear card, we get the modifier from the event, thank's to arcanum
-						if (critModifier.id === STATUSES.THE_SPEAR.id) {
-							player.statuses[event.ability.guid].strength = critModifier.strength * event.strengthModifier
-						// Otherwise, we get it from the const array
-						} else {
-							player.statuses[event.ability.guid].strength = critModifier.strength
-						}
-
-					}
-
-				// In case it's a status on an enemy, we attribute it to that specific enemy by the ID
+					actor = this._player
 				} else if (!event.targetIsFriendly) {
-					const enemy = this._getEnemy(event.targetID)
-					enemy.statuses[event.ability.guid] = {
-						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
-					}
-					// If the current status is a crit modifier, we add the strength onto it to use later
-					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
-					if (critModifier) {
+					actor = this._getEnemy(event.targetID)
 
-						// If it's a spear card, we get the modifier from the event, thank's to arcanum
-						if (critModifier.id === STATUSES.THE_SPEAR.id) {
-							enemy.statuses[event.ability.guid].strength = event.strengthModifier
-						// Otherwise, we get it from the const array
-						} else {
-							enemy.statuses[event.ability.guid].strength = critModifier.strength
-						}
-
-					}
-
-					// Separately checks for dot application, too
+					// Separately checks for dot application on enemies, too
 					if (
 						DOTS.includes(event.ability.guid)
 						&& (event.type.startsWith('apply') || event.type.startsWith('refresh'))
@@ -153,11 +119,30 @@ export default class AdditionalStats extends Module {
 							.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
 
 						// We get the dot component from the enemy
-						const dot = this._getDot(enemy, event.ability.guid)
+						const dot = this._getDot(actor, event.ability.guid)
 
 						this._snapshotStatuses(dot, snapshotter)
 					}
+				}
 
+				// If it's a status on either the selected player or on an enemy
+				if (actor) {
+					actor.statuses[event.ability.guid] = {
+						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
+					}
+
+					// If the current status is a crit modifier, we add the strength onto it to use later
+					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
+					if (critModifier) {
+
+						actor.statuses[event.ability.guid].strength = critModifier.strength
+
+						// If it's a spear card, we get the modifier from the event, thanks to arcanum
+						if (critModifier.id === STATUSES.THE_SPEAR.id && event.strengthModifier) {
+							actor.statuses[event.ability.guid].strength *= event.strengthModifier
+						}
+
+					}
 				}
 
 			// For every damage event that:
@@ -179,18 +164,18 @@ export default class AdditionalStats extends Module {
 						&& event.ability.guid !== ACTIONS.ARMYS_PAEON.id
 					) {
 						// Band-aid fix for disembowel (why, oh, why)
-						if (this._hasStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
+						if (this._getStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
 							fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
 						}
 						// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 					}
 
-					// Collects the damage instances, to be used for calculating crit and 'K'
+					// Collects the damage instances, to be used for calculating crit and 'potencyDamageRatio'
 					// TODO: Have a filtered array with skills
 
 					// ...let's not count Spears for now
-					if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
+					if (!this._getStatus(this._player, STATUSES.THE_SPEAR.id)) {
 
 						const critTier = this._parseCritBuffs(event)
 
@@ -217,10 +202,8 @@ export default class AdditionalStats extends Module {
 
 					event.expectedCritRate += accumulatedCritBuffs * 1000
 
-					console.log(event.expectedCritRate)
-
 					// Not comfortable with counting Spears just yet
-					if (!this._hasStatus(dot, STATUSES.THE_SPEAR.id)) {
+					if (!this._getStatus(dot, STATUSES.THE_SPEAR.id)) {
 
 						const accumulatedCritBuffs = this._parseDotCritBuffs(event)
 						const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
@@ -249,7 +232,7 @@ export default class AdditionalStats extends Module {
 		this.criticalHitProbability = this._getCriticalHitProbability()
 		this.criticalHitRate = this._getCriticalHitRate()
 		this.critMod = this._getCritMod()
-		this.k = this._getK()
+		this.potencyDamageRatio = this._getPotencyDamageRatio()
 
 		// Return all this shit
 		return events
@@ -291,7 +274,7 @@ export default class AdditionalStats extends Module {
 		return this._snapshotters[skillId]
 	}
 
-	_hasStatus(entity, status) {
+	_getStatus(entity, status) {
 		return entity.statuses[status] || false
 	}
 
@@ -316,8 +299,8 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			const enemyStatus = this._hasStatus(enemy, modifier.id)
-			const playerStatus = this._hasStatus(player, modifier.id)
+			const enemyStatus = this._getStatus(enemy, modifier.id)
+			const playerStatus = this._getStatus(player, modifier.id)
 
 			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id && enemyStatus && enemyStatus.isActive) {
 				accumulatedCritBuffs += enemyStatus.strength
@@ -340,7 +323,7 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			const dotStatus = this._hasStatus(dot, modifier.id)
+			const dotStatus = this._getStatus(dot, modifier.id)
 
 			if (dotStatus && dotStatus.isActive) {
 				accumulatedCritBuffs += dotStatus.strength
@@ -395,9 +378,9 @@ export default class AdditionalStats extends Module {
 	}
 	/* eslint-enable no-magic-numbers */
 
-	// We use the damage events to determine 'K'
-	// tl;dr: 'K' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision
-	_getK() {
+	// We use the damage events to determine 'potencyDamageRatio'
+	// tl;dr: 'potencyDamageRatio' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision
+	_getPotencyDamageRatio() {
 		const values = []
 		const critMod = this.critMod || this._getCritMod()
 
@@ -429,9 +412,8 @@ export default class AdditionalStats extends Module {
 				}
 			}
 		}
-		// If there are no damage instances, we can't really calculate K. Let's trigger brokenLog and return 1
+		// If there are no damage instances, we can't really calculate the ratio. Let's return 1. Will be broken as fuck, but there are no damage events anyway, so lol
 		if (!values || !values.length) {
-			this.brokenLog.trigger()
 			return 1
 		}
 
