@@ -9,8 +9,8 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// In a single target scenario, SF should always tick 5 times
-const MIN_HITS = 5
+// In a single target scenario, SF should always tick 5 times + 1 time on the cast (4.4 patch)
+const MIN_HITS = 6
 
 // Ticks every 3s
 const TICK_SPEED = 3000
