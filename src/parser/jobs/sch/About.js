@@ -24,7 +24,7 @@ export default class About extends CoreAbout {
 	</Fragment>
 	supportedPatches = {
 		from: '4.3',
-		to: '4.36',
+		to: '4.4',
 	}
 	contributors = [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
