@@ -25,12 +25,13 @@ interface Report extends ReportFightsResponse {
 }
 
 export interface Result {
-	i18n_id?: string,
-	name: string,
+	i18n_id?: string
+	handle: string
+	name: string
 	markup: React.ReactNode
 }
 
-import {OFFSET_FROM_VIEWPORT_TOP} from 'components/Analyse/ResultSegment'
+import ResultSegment from 'components/Analyse/ResultSegment'
 
 /**
  * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
@@ -349,6 +350,7 @@ class Parser {
 			const constructor = module.constructor as typeof Module
 			const resultMeta = {
 				name: constructor.title,
+				handle: constructor.handle,
 				i18n_id: constructor.i18n_id,
 			}
 
@@ -475,13 +477,7 @@ class Parser {
 	 */
 	scrollTo(handle: string) {
 		const module = this.modules[handle]
-		const element = document.getElementById((module.constructor as typeof Module).title)
-		if (element !== null) {
-			scrollBy({
-				top: element.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP + 1,
-				behavior: 'smooth',
-			})
-		}
+		ResultSegment.scrollIntoView((module.constructor as typeof Module).handle)
 	}
 }
 

@@ -19,8 +19,16 @@ interface Props {
 export const OFFSET_FROM_VIEWPORT_TOP = 50
 
 export default class ResultSegment extends React.PureComponent<Props> implements Scrollable {
+	private static instances = new Map<string, ResultSegment>()
+	public static scrollIntoView(handle: string) {
+		const instance = this.instances.get(handle)
+		if (instance !== undefined) {
+			instance.scrollIntoView()
+		}
+	}
+
 	private readonly observer = new IntersectionObserver(this.handleIntersection.bind(this), {
-		rootMargin: `${-OFFSET_FROM_VIEWPORT_TOP}px 0px 0px 0px`,
+		rootMargin: `${-(OFFSET_FROM_VIEWPORT_TOP + 1)}px 0px 0px 0px`,
 	})
 	private ref: HTMLElement|null = null
 	private positionContext!: Context
@@ -37,6 +45,10 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		// just jam it in as a 0-size child that wouldn't cause any trouble.
 		this.ref = ReactDOM.findDOMNode(this) as HTMLElement
 		this.observer.observe(this.ref)
+
+		if (!ResultSegment.instances.has(this.props.result.handle)) {
+			ResultSegment.instances.set(this.props.result.handle, this)
+		}
 	}
 
 	componentDidUpdate(prevProps: Readonly<Props>) {
@@ -54,6 +66,10 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 	}
 
 	componentWillUnmount() {
+		if (ResultSegment.instances.get(this.props.result.handle) === this) {
+			ResultSegment.instances.delete(this.props.result.handle)
+		}
+
 		this.observer.disconnect()
 		this.positionContext.unregister(this.props.index)
 	}
@@ -71,7 +87,7 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 
 	private handleIntersection(entries: IntersectionObserverEntry[]) {
 		for (const entry of entries) {
-			const active = entry.boundingClientRect.bottom >= OFFSET_FROM_VIEWPORT_TOP
+			const active = entry.boundingClientRect.bottom > OFFSET_FROM_VIEWPORT_TOP
 			this.positionContext.register(this, this.props.index, active)
 		}
 	}
@@ -79,9 +95,7 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 	scrollIntoView() {
 		// there actually is a this.ref!.scrollIntoView method, but it doesn't support offsets
 		scrollBy({
-			// the "+ 1" is needed to actually nudge it enough that the intersection observer detects it
-			// the alternative is to change the ">=" in handleIntersection with a ">"
-			top: this.ref!.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP + 1,
+			top: this.ref!.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP,
 			behavior: 'smooth',
 		})
 	}
