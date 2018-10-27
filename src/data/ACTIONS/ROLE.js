@@ -83,6 +83,8 @@ export default {
 		id: 7558,
 		name: 'Break',
 		icon: 'https://xivapi.com/i/000000/000862.png',
+		onGcd: true,
+		castTime: 2.5,
 		mpCost: 0,
 		mpCostFactor: 0,
 	},

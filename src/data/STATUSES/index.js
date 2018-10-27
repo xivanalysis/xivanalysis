@@ -20,7 +20,9 @@ import PLD from './PLD'
 import SAM from './SAM'
 import DRK from './DRK'
 
-const STATUSES = {
+export const STATUS_ID_OFFSET = 1000000
+
+const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...ENEMY,
 	...ROLE,
 	...SHARED,
@@ -45,12 +47,17 @@ const STATUSES = {
 	...SMN,
 	...BLM,
 	...RDM,
-}
+}), 'id')
 
-export const STATUS_ID_OFFSET = 1000000
-
-// Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID. I'm not gonna get everyone to do that in here, so just automating it.
-const correctIdsToMatchLogs = obj => {
+/**
+ * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.
+ * I'm not gonna get everyone to do that in here, so just automating it.
+ *
+ * @template T extends object
+ * @param {T} obj
+ * @returns {T}
+ */
+function correctIdsToMatchLogs (obj) {
 	Object.keys(obj).forEach(key => {
 		const status = obj[key]
 		if (Array.isArray(status.id)) {
@@ -62,8 +69,11 @@ const correctIdsToMatchLogs = obj => {
 	return obj
 }
 
-addExtraIndex(correctIdsToMatchLogs(STATUSES), 'id')
-
 export default STATUSES
 
+// this actually should have 2 overloads: one for when `id` is `T extends keyof STATUSES`, and one for when `id` is numeric
+/**
+ * @param {number} id
+ * @returns {STATUSES[number] | { id?: never }}
+ */
 export const getStatus = id => STATUSES[id] || {}

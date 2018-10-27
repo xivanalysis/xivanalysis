@@ -43,7 +43,7 @@ export default class RaidBuffs extends Module {
 		this._group = new Group({
 			id: 'raidbuffs',
 			content: 'Raid Buffs',
-			order: 0,
+			order: -100,
 			nestedGroups: [],
 		})
 		this.timeline.addGroup(this._group)

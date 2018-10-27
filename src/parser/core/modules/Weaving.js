@@ -28,7 +28,9 @@ export default class Weaving extends Module {
 	static handle = 'weaving'
 	static dependencies = [
 		'castTime',
+		'gcd',
 		'invuln',
+		'speedmod',
 		'suggestions',
 	]
 
@@ -99,7 +101,7 @@ export default class Weaving extends Module {
 			// WVR Focused synth lmao
 			icon: 'https://xivapi.com/i/001000/001785.png',
 			content: <Trans id="core.weaving.content">
-				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <em>{this.name}</em> module below for more detailed analysis.
+				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
 				id="core.weaving.why"
@@ -113,13 +115,18 @@ export default class Weaving extends Module {
 	}
 
 	_saveIfBad() {
+		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.fight.start_time}
+		const gcdTimeDiff = this._trailingGcdEvent.timestamp -
+			leadingGcdEvent.timestamp -
+			this.invuln.getUntargetableUptime('all', 	leadingGcdEvent.timestamp, this._trailingGcdEvent.timestamp)
+
 		const weave = {
-			leadingGcdEvent: this._leadingGcdEvent || {
-				timestamp: this.parser.fight.start_time,
-			},
+			leadingGcdEvent,
 			trailingGcdEvent: this._trailingGcdEvent,
+			gcdTimeDiff,
 			weaves: this._weaves,
 		}
+
 		if (weave.weaves.length === 0) {
 			return
 		}
@@ -154,7 +161,11 @@ export default class Weaving extends Module {
 			}
 		}
 
-		return weaveCount > maxWeaves
+		// It's possible that they did a bunch of weaves during downtime or similar - that's fine.
+		const speedmod = this.speedmod.get(this.parser.timestamp)
+		const gcdLength = this.gcd.getEstimate() * speedmod
+
+		return weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
 	}
 
 	output() {
@@ -175,17 +186,8 @@ export default class Weaving extends Module {
 						_1="# weave"
 						other="# weaves"
 					/>
-					&nbsp;
-					(
-					{this.parser.formatDuration(
-						item.trailingGcdEvent.timestamp -
-						item.leadingGcdEvent.timestamp -
-						this.invuln.getUntargetableUptime(
-							'all',
-							item.leadingGcdEvent.timestamp,
-							item.trailingGcdEvent.timestamp
-						)
-					)}
+					&nbsp;(
+					{this.parser.formatDuration(item.gcdTimeDiff)}
 					&nbsp;
 					<Trans id="core.weaving.between-gcds">between GCDs</Trans>
 					)

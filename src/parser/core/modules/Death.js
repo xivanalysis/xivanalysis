@@ -61,11 +61,17 @@ export default class Death extends Module {
 			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 
-		// Deaths are always major
+		if (!this.parser.fight.kill) {
+			// If the parse was a wipe, refund one death since the last one is pretty meaningless to ding them on.
+			// ...But max at 0 because apparently dummy parses don't get flagged as kills and -1 deaths makes very little sense.
+			this._count = Math.max(this._count - 1, 0)
+		}
+
 		if (!this._count) {
 			return
 		}
 
+		// Deaths are always major
 		this.suggestions.add(new Suggestion({
 			icon: ACTIONS.RAISE.icon,
 			content: <Trans id="core.deaths.content">

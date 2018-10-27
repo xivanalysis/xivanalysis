@@ -1,0 +1,25 @@
+.change {
+	display: flex;
+	align-items: center;
+	color: inherit !important;
+	font-weight: normal !important;
+}
+
+.date {
+	flex-shrink: 0;
+	margin-right: 1em;
+	opacity: .5;
+}
+
+.message {
+	margin-right: 1em;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.contributors {
+	flex-shrink: 0;
+	margin-left: auto;
+	justify-self: flex-end;
+}
