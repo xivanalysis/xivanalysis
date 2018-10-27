@@ -261,6 +261,7 @@ export default class GreasedLightning extends Module {
 			description: <Fragment>
 				<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.GREASED_LIGHTNING,
 			requirements: [
 				new Requirement({
 					name: <Fragment><StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> uptime</Fragment>,
