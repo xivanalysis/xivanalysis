@@ -23,7 +23,7 @@ export default {
 	</Fragment>,
 	supportedPatches: {
 		from: '4.06',
-		to: '4.36',
+		to: '4.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
