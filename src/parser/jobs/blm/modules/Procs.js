@@ -80,13 +80,9 @@ export default class Procs extends Module {
 	}
 
 	_onGainProc(event) {
-		const statusId = getStatus(event.ability.guid).id
-
-		if (!statusId) {
-			return
-		}
-
+		const statusId = event.ability.guid
 		const tracker = this._buffWindows[statusId]
+
 		tracker.current = {
 			start: event.timestamp,
 		}
