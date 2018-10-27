@@ -134,6 +134,7 @@
   "core.home.about.title": "xivanalysisについて",
   "core.home.analyse": "分析",
   "core.home.paste-url": "ログURLをここに貼り付けてください。",
+  "core.i18n.help-translate": "",
   "core.potions.content": "新生・蒼天頃にあった薬（妙薬、霊薬、竜薬など）を使ったようですね。今回のスキル回しは主に効果時間が<0>2倍</0>で更に威力が高い薬湯の使用を前提にして分析しています。古い薬を使うと効果時間が短い原因で威力の高いスキルにバフが入らない可能性がありますので薬湯以外の使用はご遠慮ください。",
   "core.potions.title": "薬湯",
   "core.potions.why": "薬湯ではなく効果時間が短い薬を使いました。",
