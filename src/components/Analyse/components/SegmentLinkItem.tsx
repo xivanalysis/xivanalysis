@@ -8,11 +8,11 @@ import {
 
 import {Consumer, Context} from './SegmentPositionContext'
 
-import {ParserResult} from 'parser/core/Parser'
+import {Result} from 'parser/core/Parser'
 
 interface Props {
 	index: number
-	result: ParserResult
+	result: Result
 }
 
 export default function SegmentLinkItem({result, index}: Props) {

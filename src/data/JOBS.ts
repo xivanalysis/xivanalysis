@@ -1,8 +1,17 @@
+import {i18nMark} from '@lingui/react'
+import {SemanticCOLORS} from 'semantic-ui-react'
+
+import {ActorType} from 'fflogs'
 import {addExtraIndex} from 'utilities'
 
-import {i18nMark} from '@lingui/react'
+export interface Role {
+	id: number
+	i18n_id: string
+	name: string
+	colour: SemanticCOLORS
+}
 
-export const ROLES = addExtraIndex({
+const roleData = {
 	TANK: {
 		id: 1,
 		i18n_id: i18nMark('game.roles.tank'),
@@ -51,7 +60,18 @@ export const ROLES = addExtraIndex({
 		name: 'Unsupported',
 		colour: 'grey',
 	},
-}, 'id')
+}
+
+export const ROLES = addExtraIndex(roleData as Record<keyof typeof roleData, Role>, 'id')
+
+export interface Job {
+	i18n_id: string
+	name: string
+	logType: ActorType
+	icon: string
+	colour: string
+	role: Role['id']
+}
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
 const JOBS = {
@@ -59,7 +79,7 @@ const JOBS = {
 	PALADIN: {
 		i18n_id: i18nMark('game.job.paladin'),
 		name: 'Paladin',
-		logType: 'Paladin',
+		logType: ActorType.PALADIN,
 		icon: 'paladin',
 		colour: '#a8d2e6',
 		role: ROLES.TANK.id,
@@ -67,7 +87,7 @@ const JOBS = {
 	WARRIOR: {
 		i18n_id: i18nMark('game.job.warrior'),
 		name: 'Warrior',
-		logType: 'Warrior',
+		logType: ActorType.WARRIOR,
 		icon: 'warrior',
 		colour: '#cf2621',
 		role: ROLES.TANK.id,
@@ -75,7 +95,7 @@ const JOBS = {
 	DARK_KNIGHT: {
 		i18n_id: i18nMark('game.job.dark-knight'),
 		name: 'Dark Knight',
-		logType: 'DarkKnight',
+		logType: ActorType.DARK_KNIGHT,
 		icon: 'darkknight',
 		colour: '#d126cc',
 		role: ROLES.TANK.id,
@@ -85,7 +105,7 @@ const JOBS = {
 	WHITE_MAGE: {
 		i18n_id: i18nMark('game.job.white-mage'),
 		name: 'White Mage',
-		logType: 'WhiteMage',
+		logType: ActorType.WHITE_MAGE,
 		icon: 'whitemage',
 		colour: '#fff0dc',
 		role: ROLES.HEALER.id,
@@ -93,7 +113,7 @@ const JOBS = {
 	SCHOLAR: {
 		i18n_id: i18nMark('game.job.scholar'),
 		name: 'Scholar',
-		logType: 'Scholar',
+		logType: ActorType.SCHOLAR,
 		icon: 'scholar',
 		colour: '#8657ff',
 		role: ROLES.HEALER.id,
@@ -101,7 +121,7 @@ const JOBS = {
 	ASTROLOGIAN: {
 		i18n_id: i18nMark('game.job.astrologian'),
 		name: 'Astrologian',
-		logType: 'Astrologian',
+		logType: ActorType.ASTROLOGIAN,
 		icon: 'astrologian',
 		colour: '#ffe74a',
 		role: ROLES.HEALER.id,
@@ -111,7 +131,7 @@ const JOBS = {
 	MONK: {
 		i18n_id: i18nMark('game.job.monk'),
 		name: 'Monk',
-		logType: 'Monk',
+		logType: ActorType.MONK,
 		icon: 'monk',
 		colour: '#d69c00',
 		role: ROLES.MELEE.id,
@@ -119,7 +139,7 @@ const JOBS = {
 	DRAGOON: {
 		i18n_id: i18nMark('game.job.dragoon'),
 		name: 'Dragoon',
-		logType: 'Dragoon',
+		logType: ActorType.DRAGOON,
 		icon: 'dragoon',
 		colour: '#4164cd',
 		role: ROLES.MELEE.id,
@@ -127,7 +147,7 @@ const JOBS = {
 	NINJA: {
 		i18n_id: i18nMark('game.job.ninja'),
 		name: 'Ninja',
-		logType: 'Ninja',
+		logType: ActorType.NINJA,
 		icon: 'ninja',
 		colour: '#af1964',
 		role: ROLES.MELEE.id,
@@ -135,7 +155,7 @@ const JOBS = {
 	SAMURAI: {
 		i18n_id: i18nMark('game.job.samurai'),
 		name: 'Samurai',
-		logType: 'Samurai',
+		logType: ActorType.SAMURAI,
 		icon: 'samurai',
 		colour: '#e46d04',
 		role: ROLES.MELEE.id,
@@ -145,7 +165,7 @@ const JOBS = {
 	BARD: {
 		i18n_id: i18nMark('game.job.bard'),
 		name: 'Bard',
-		logType: 'Bard',
+		logType: ActorType.BARD,
 		icon: 'bard',
 		colour: '#91ba5e',
 		role: ROLES.PHYSICAL_RANGED.id,
@@ -153,7 +173,7 @@ const JOBS = {
 	MACHINIST: {
 		i18n_id: i18nMark('game.job.machinist'),
 		name: 'Machinist',
-		logType: 'Machinist',
+		logType: ActorType.MACHINIST,
 		icon: 'machinist',
 		colour: '#6ee1d6',
 		role: ROLES.PHYSICAL_RANGED.id,
@@ -163,7 +183,7 @@ const JOBS = {
 	BLACK_MAGE: {
 		i18n_id: i18nMark('game.job.black-mage'),
 		name: 'Black Mage',
-		logType: 'BlackMage',
+		logType: ActorType.BLACK_MAGE,
 		icon: 'blackmage',
 		colour: '#a579d6',
 		role: ROLES.MAGICAL_RANGED.id,
@@ -171,7 +191,7 @@ const JOBS = {
 	SUMMONER: {
 		i18n_id: i18nMark('game.job.summoner'),
 		name: 'Summoner',
-		logType: 'Summoner',
+		logType: ActorType.SUMMONER,
 		icon: 'summoner',
 		colour: '#2d9b78',
 		role: ROLES.MAGICAL_RANGED.id,
@@ -179,11 +199,11 @@ const JOBS = {
 	RED_MAGE: {
 		i18n_id: i18nMark('game.job.red-mage'),
 		name: 'Red Mage',
-		logType: 'RedMage',
+		logType: ActorType.RED_MAGE,
 		icon: 'redmage',
 		colour: '#e87b7b',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 }
 
-export default addExtraIndex(JOBS, 'logType')
+export default addExtraIndex(JOBS as Record<keyof typeof JOBS, Job>, 'logType')

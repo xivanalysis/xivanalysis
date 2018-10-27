@@ -7,13 +7,13 @@ import {
 	Segment,
 } from 'semantic-ui-react'
 
-import {ParserResult} from 'parser/core/Parser'
+import {Result} from 'parser/core/Parser'
 
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 
 interface Props {
 	index: number
-	result: ParserResult
+	result: Result
 }
 
 export const OFFSET_FROM_VIEWPORT_TOP = 50
