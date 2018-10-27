@@ -30,7 +30,7 @@ export interface Result {
 	markup: React.ReactNode
 }
 
-import {OFFSET_FROM_VIEWPORT_TOP} from 'components/Analyse/components/ResultSegment'
+import {OFFSET_FROM_VIEWPORT_TOP} from 'components/Analyse/ResultSegment'
 
 /**
  * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult

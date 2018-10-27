@@ -22,9 +22,9 @@ import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 import {compose} from 'utilities'
 
-import ResultSegment from './components/ResultSegment'
-import SegmentLinkItem from './components/SegmentLinkItem'
-import {SegmentPositionProvider} from './components/SegmentPositionContext'
+import ResultSegment from './ResultSegment'
+import SegmentLinkItem from './SegmentLinkItem'
+import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
