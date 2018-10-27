@@ -287,7 +287,7 @@ class Analyse extends Component {
 							<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
 								<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
 								<Trans id="core.analyse.view-on-fflogs">
-								View report on FF Logs
+									View report on FF Logs
 								</Trans>
 							</Menu.Item>
 						</Menu>
