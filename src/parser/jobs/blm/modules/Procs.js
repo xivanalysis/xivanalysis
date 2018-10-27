@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES, {getStatus} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
@@ -21,6 +21,12 @@ const PROC_BUFFS = [
 	STATUSES.THUNDERCLOUD.id,
 	STATUSES.FIRESTARTER.id,
 ]
+
+const ACTION_PROCS = {
+	[ACTIONS.FIRE_III.id]: ACTIONS.FIRE_III_PROC,
+	[ACTIONS.THUNDER_III.id]: ACTIONS.THUNDER_III_PROC,
+	[ACTIONS.THUNDER_IV.id]: ACTIONS.THUNDER_IV_PROC,
+}
 
 export default class Procs extends Module {
 	static handle = 'procs'
@@ -110,23 +116,44 @@ export default class Procs extends Module {
 		const actionId = event.ability.guid
 
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
-		if (!this._castingSpellId || this._castingSpellId !== actionId) {
-			if (actionId === ACTIONS.FIRE_III.id && this._buffWindows[STATUSES.FIRESTARTER.id].current) {
-				this.castTime.set([ACTIONS.FIRE_III.id], 0, event.timestamp, event.timestamp)
-				event.ability.overrideAction = ACTIONS.FIRE_III_PROC
-				// Stop the buff and don't count is as a drop in case of latency/timing weirdness
-				this._stopAndSave(STATUSES.FIRESTARTER.id, event.timestamp, false)
-			} else if (THUNDER_ACTIONS.includes(actionId) && this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
-				this.castTime.set(THUNDER_ACTIONS, 0, event.timestamp, event.timestamp) // Note that this cast was 0 time
-				if (event.ability.guid === ACTIONS.THUNDER_III.id) {
-					event.ability.overrideAction = ACTIONS.THUNDER_III_PROC // Mark this T3 as a proc for use elsewhere
-				} else if (event.ability.guid === ACTIONS.THUNDER_IV.id) {
-					event.ability.overrideAction = ACTIONS.THUNDER_IV_PROC // Might as well mark out T4 procs as well...
-				}
-				this._stopAndSave(STATUSES.THUNDERCLOUD.id, event.timestamp, false)
-			}
+		if (getAction(actionId).onGcd && (!this._castingSpellId || this._castingSpellId !== actionId)) {
+			this._tryConsumeProc(event)
 		}
+
 		this._castingSpellId = null
+	}
+
+	_tryConsumeProc(event) {
+		if (!event) {
+			return
+		}
+
+		const actionId = event.ability.guid
+
+		PROC_BUFFS.map(statusId => {
+			// If this proc is active and affects the action we're taking, consume it
+			if (this._buffWindows[statusId].current && this._getAffectedActions(statusId).includes(actionId)) {
+				// Procs have 0 cast time
+				this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
+				// Set overrideAction if we're tracking it for this spell
+				if (ACTION_PROCS[actionId]) {
+					event.ability.overrideAction = ACTION_PROCS[actionId]
+				}
+				// Stop the buff window, and ensure it's not marked as a drop
+				this._stopAndSave(statusId, event.timestamp, false)
+			}
+		})
+	}
+
+	_getAffectedActions(statusId) {
+		switch (statusId) {
+		case STATUSES.THUNDERCLOUD.id:
+			return THUNDER_ACTIONS
+		case STATUSES.FIRESTARTER.id:
+			return [ACTIONS.FIRE_III.id]
+		default:
+			return null
+		}
 	}
 
 	_onDeath(event) {
