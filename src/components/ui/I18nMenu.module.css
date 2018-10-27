@@ -1,0 +1,9 @@
+.menuItem :global(.text) {
+	margin-right: 3em;
+}
+
+.crowdinLogo {
+	margin-right: .25em !important;
+	width: 24px !important;
+	vertical-align: middle !important;
+}
