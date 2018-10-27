@@ -134,6 +134,7 @@
   "core.home.about.title": "About xivanalysis",
   "core.home.analyse": "Analyse",
   "core.home.paste-url": "Paste your log URL to get started",
+  "core.i18n.help-translate": "Help translate!",
   "core.potions.content": "It looks like you used a pre-Stormblood potion. Openers and rotations generally assume the use of infusions, which last for <0>twice</0>the duration. It's likely the shorter duration will have caused important skills to miss the damage boost.",
   "core.potions.title": "core.potions.title",
   "core.potions.why": "Used a short potion instead of an infusion.",
