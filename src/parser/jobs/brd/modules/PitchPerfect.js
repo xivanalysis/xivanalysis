@@ -90,7 +90,7 @@ export default class PitchPerfect extends Module {
 	}
 
 	_onPPDamage(event) {
-		const k = this.additionalStats.k
+		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
 
 		let fixedMultiplier = event.debugMultiplier
 
@@ -114,7 +114,7 @@ export default class PitchPerfect extends Module {
 		}
 
 		// We get the approximated potency and then match to the closest real potency
-		const approximatedPotency = rawDamage * 100 / k
+		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
 		const potency = matchClosest(ACTIONS.PITCH_PERFECT.potency, approximatedPotency)
 
 		// We then infer the amount of stacks
