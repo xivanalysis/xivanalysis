@@ -78,6 +78,7 @@ const CONTRIBUTORS = {
 	},
 	YUMIYA: {
 		name: 'Yumiya',
+		avatar: process.env.PUBLIC_URL + '/avatar/yumiya.png',
 		jobs: [JOBS.BARD],
 	},
 	RYAN: {

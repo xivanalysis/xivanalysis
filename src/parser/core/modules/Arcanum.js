@@ -48,7 +48,7 @@ export default class Arcanum extends Module {
 
 			// Look for card buffs and modify their event data
 			if (
-				event.type === 'applybuff' &&
+				(event.type === 'applybuff' || event.type === 'refreshbuff') &&
 				ARCANA.includes(event.ability.guid)
 			) {
 				let props = {strengthModifier: 1}

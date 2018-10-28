@@ -90,7 +90,7 @@ export default class PitchPerfect extends Module {
 	}
 
 	_onPPDamage(event) {
-		const k = this.additionalStats.k
+		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
 
 		let fixedMultiplier = event.debugMultiplier
 
@@ -114,7 +114,7 @@ export default class PitchPerfect extends Module {
 		}
 
 		// We get the approximated potency and then match to the closest real potency
-		const approximatedPotency = rawDamage * 100 / k
+		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
 		const potency = matchClosest(ACTIONS.PITCH_PERFECT.potency, approximatedPotency)
 
 		// We then infer the amount of stacks
@@ -155,7 +155,7 @@ export default class PitchPerfect extends Module {
 
 		// Only an issue if there are dot ticks left on the song and sufficient time to use PP (animation lock)
 		// TODO: Consider pre-downtime case
-		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - ANIMATION_LOCK) {
+		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - 2 * ANIMATION_LOCK) {
 			return
 		}
 
@@ -313,11 +313,11 @@ export default class PitchPerfect extends Module {
 				<List.Content>
 					<List.Item>
 						<Icon name={'exclamation circle'}/>
-						<strong>{pp.critOnDot[STATUSES.CAUSTIC_BITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
+						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.CAUSTIC_BITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
 					</List.Item>
 					<List.Item>
 						<Icon name={'exclamation circle'}/>
-						<strong>{pp.critOnDot[STATUSES.STORMBITE.id]}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
+						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.STORMBITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
 					</List.Item>
 					<List.Item>
 						<Icon name={'hourglass'}/>
