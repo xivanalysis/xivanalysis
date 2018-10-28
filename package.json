@@ -5,6 +5,7 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@lingui/react": "^2.5.0",
+    "@types/lingui__react": "^2.5.0",
     "@xivanalysis/tooltips": "xivanalysis/tooltips",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
@@ -95,6 +96,7 @@
     "@types/react-dom": "^16.0.8",
     "@types/react-redux": "^6.0.9",
     "@types/react-router-dom": "^4.3.1",
+    "@types/react-scroll": "^1.5.4",
     "@types/webpack-env": "^1.13.6",
     "cross-env": "^5.2.0",
     "eslint-plugin-xivanalysis": "xivanalysis/linter",
