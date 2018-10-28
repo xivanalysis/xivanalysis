@@ -1,7 +1,6 @@
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
-import React, {ReactNode} from 'react'
-import {scroller} from 'react-scroll'
+import React from 'react'
 import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
@@ -25,11 +24,18 @@ interface Report extends ReportFightsResponse {
 	loading: boolean
 }
 
-interface Result {
-	i18n_id?: string,
-	name: string,
-	markup: ReactNode
+export interface Result {
+	i18n_id?: string
+	handle: string
+	name: string
+	markup: React.ReactNode
 }
+
+import ResultSegment from 'components/Analyse/ResultSegment'
+
+/**
+ * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
+ */
 
 class Parser {
 	// -----
@@ -344,6 +350,7 @@ class Parser {
 			const constructor = module.constructor as typeof Module
 			const resultMeta = {
 				name: constructor.title,
+				handle: constructor.handle,
 				i18n_id: constructor.i18n_id,
 			}
 
@@ -358,6 +365,7 @@ class Parser {
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
+			/** @type {import('./Module').ModuleOutput|null} */
 			let output = null
 			try {
 				output = module.output()
@@ -469,13 +477,7 @@ class Parser {
 	 */
 	scrollTo(handle: string) {
 		const module = this.modules[handle]
-		scroller.scrollTo(
-			(module.constructor as typeof Module).title,
-			{
-				offset: -50,
-				smooth: true,
-			},
-		)
+		ResultSegment.scrollIntoView((module.constructor as typeof Module).handle)
 	}
 }
 
