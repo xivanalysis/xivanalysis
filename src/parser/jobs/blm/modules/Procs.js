@@ -118,13 +118,14 @@ export default class Procs extends Module {
 
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
 		if (getAction(actionId).onGcd && (!this._castingSpellId || this._castingSpellId !== actionId)) {
-			this._tryConsumeProc(actionId)
+			this._tryConsumeProc(event)
 		}
 
 		this._castingSpellId = null
 	}
 
-	_tryConsumeProc(actionId) {
+	_tryConsumeProc(event) {
+		const actionId = event.ability.guid
 		const statusId = this._getAffectingProcId(actionId)
 
 		// If this action isn't affected by a proc (or something is wrong), bail out
@@ -135,7 +136,7 @@ export default class Procs extends Module {
 		// If this proc is active, consume it
 		if (this._buffWindows[statusId].current) {
 			// Procs have 0 cast time
-			this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
+			this.castTime.set([actionId], 0, event.timestamp, event.imestamp)
 			// Set overrideAction if we're tracking it for this spell
 			if (ACTION_PROCS[actionId]) {
 				event.ability.overrideAction = ACTION_PROCS[actionId]
