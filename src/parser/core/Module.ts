@@ -1,7 +1,7 @@
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 
-import {Ability, AbilityEvent, Event} from 'fflogs'
+import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
 import Parser from './Parser'
 
 export enum DISPLAY_ORDER {
@@ -36,7 +36,7 @@ export function dependency(target: Module, prop: string) {
 	})
 }
 
-interface MappedDependency {
+export interface MappedDependency {
 	handle: string
 	prop: string
 }
@@ -58,7 +58,9 @@ interface Hook<T extends Event> {
 
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
-	static displayOrder = DISPLAY_ORDER.DEFAULT
+	static displayOrder: number = DISPLAY_ORDER.DEFAULT
+	// TODO: Refactor this var
+	static i18n_id?: string // tslint:disable-line
 
 	private static _handle: string
 	static get handle() {
@@ -197,13 +199,13 @@ export default class Module {
 
 		const filter = cloneDeep(filterArg)
 
-		// TODO: Typing on parser req. for some of this stuff
+		// Sorry not sorry for the `any`s. Ceebs working out this filter _again_.
 		switch (filter[qol]) {
 			case 'player':
-				filter[raw] = this.parser.player.id
+				filter[raw] = this.parser.player.id as any
 				break
 			case 'pet':
-				filter[raw] = this.parser.player.pets.map((pet: any) => pet.id)
+				filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
 				break
 			default:
 				filter[raw] = filter[qol]
