@@ -29,5 +29,61 @@ export default {
 		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},
 	],
 
-	changelog: [],
+	changelog: [
+		{
+			date: new Date('2018-07-21'),
+			changes: 'Initial release of the Red Mage module.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-22'),
+			changes: 'Fixed issues with Manafication overage being lost, issues Scatter in Dualcast, as well as some Invulnerability handling for Dualcast.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-29'),
+			changes: 'Added tracking of Cooldown Downtime for oGCDs',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-30'),
+			changes: 'Added Swiftcast to the list of tracked oGCDs for Cooldown Downtime',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-08'),
+			changes: 'Initial support for Procs - Impactful, Verfire, Verstone',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-09'),
+			changes: 'Resolved an issue with the Impactful force cast override not being reset',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-16'),
+			changes: 'Added localization to Gauge suggestions, resolved some wording with chart, backend cleanup',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-18'),
+			changes: 'Fixed a bug related to all 3 procs when a boss is invulnerable',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-09-20'),
+			changes: 'Initial support for Melee combo and Finishers, added support to Mana changes for Enhanced Scatter for 4.4.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-10-16'),
+			changes: 'Fixed a few text errors, but mostly backend changes',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-10-29'),
+			changes: 'Condensed Proc Suggestions, clarified wording, added Trans/Plural support for Localization and added a Listing of what Targets the RDM hit with Proc spells',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+	],
 }
