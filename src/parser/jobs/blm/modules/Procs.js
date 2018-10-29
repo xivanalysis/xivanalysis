@@ -22,6 +22,11 @@ const PROC_BUFFS = [
 	STATUSES.FIRESTARTER.id,
 ]
 
+const STATUS_DURATION_MILLIS = {
+	[STATUSES.THUNDERCLOUD.id]: STATUSES.THUNDERCLOUD.duration * 1000,
+	[STATUSES.FIRESTARTER.id]: STATUSES.FIRESTARTER.duration * 1000,
+}
+
 const ACTION_PROCS = {
 	[ACTIONS.FIRE_III.id]: ACTIONS.FIRE_III_PROC,
 	[ACTIONS.THUNDER_III.id]: ACTIONS.THUNDER_III_PROC,
@@ -113,43 +118,41 @@ export default class Procs extends Module {
 
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
 		if (getAction(actionId).onGcd && (!this._castingSpellId || this._castingSpellId !== actionId)) {
-			this._tryConsumeProc(event)
+			this._tryConsumeProc(actionId)
 		}
 
 		this._castingSpellId = null
 	}
 
-	_tryConsumeProc(event) {
-		if (!event) {
+	_tryConsumeProc(actionId) {
+		const statusId = this._getAffectingProcId(actionId)
+
+		// If this action isn't affected by a proc (or something is wrong), bail out
+		if (!statusId) {
 			return
 		}
 
-		const actionId = event.ability.guid
-
-		PROC_BUFFS.map(statusId => {
-			// If this proc is active and affects the action we're taking, consume it
-			if (this._buffWindows[statusId].current && this._getAffectedActions(statusId).includes(actionId)) {
-				// Procs have 0 cast time
-				this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
-				// Set overrideAction if we're tracking it for this spell
-				if (ACTION_PROCS[actionId]) {
-					event.ability.overrideAction = ACTION_PROCS[actionId]
-				}
-				// Stop the buff window, and ensure it's not marked as a drop
-				this._stopAndSave(statusId, event.timestamp, false)
+		// If this proc is active, consume it
+		if (this._buffWindows[statusId].current) {
+			// Procs have 0 cast time
+			this.castTime.set([actionId], 0, event.timestamp, event.timestamp)
+			// Set overrideAction if we're tracking it for this spell
+			if (ACTION_PROCS[actionId]) {
+				event.ability.overrideAction = ACTION_PROCS[actionId]
 			}
-		})
+			// Stop the buff window, and ensure it's not marked as a drop
+			this._stopAndSave(statusId, event.timestamp, false)
+		}
 	}
 
-	_getAffectedActions(statusId) {
-		switch (statusId) {
-		case STATUSES.THUNDERCLOUD.id:
-			return THUNDER_ACTIONS
-		case STATUSES.FIRESTARTER.id:
-			return [ACTIONS.FIRE_III.id]
-		default:
-			return null
+	_getAffectingProcId(actionId) {
+		if (THUNDER_ACTIONS.includes(actionId)) {
+			return STATUSES.THUNDERCLOUD.id
 		}
+		if (actionId === ACTIONS.FIRE_III.id) {
+			return STATUSES.FIRESTARTER.id
+		}
+		return null
 	}
 
 	_onDeath(event) {
@@ -165,7 +168,7 @@ export default class Procs extends Module {
 		}
 
 		tracker.current.stop = endTime
-		if (tracker.current.stop - tracker.current.start >= getStatus(statusId).duration * 1000 && countDrops) {
+		if (tracker.current.stop - tracker.current.start >= STATUS_DURATION_MILLIS[statusId] && countDrops) {
 			this._droppedProcs[statusId]++
 		}
 		tracker.history.push(tracker.current)
