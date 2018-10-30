@@ -1,0 +1,11 @@
+enum DISPLAY_ORDER {
+	ABOUT = -4,
+	BROKEN_LOG = -3,
+	CHECKLIST = -2,
+	SUGGESTIONS = -1,
+	// Module DO is 0-100
+	TIMELINE = 101,
+	CHANGELOG = 102,
+}
+
+export default DISPLAY_ORDER
