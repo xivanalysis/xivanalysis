@@ -6,6 +6,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GCD_CYCLE_LENGTH = 6
 
@@ -106,6 +107,7 @@ export default class BuffUptime extends Module {
 			description: <Fragment>
 				Dragon Kick's blunt resistance debuff should always be applied to your primary target.
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.DRAGON_KICK,
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.DRAGON_KICK} /> uptime</Fragment>,
@@ -119,6 +121,7 @@ export default class BuffUptime extends Module {
 			description: <Fragment>
 				Twin Snakes is an easy 10% buff to your DPS across the board.
 			</Fragment>,
+			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
 					name: <Fragment><ActionLink {...ACTIONS.TWIN_SNAKES} /> uptime</Fragment>,
