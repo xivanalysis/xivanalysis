@@ -1,6 +1,10 @@
 import _ from 'lodash'
 // This is all right from /PatchList - should be easy to sync Eventually™
 
+export interface Patch {
+	date: number
+}
+
 const PATCHES = {
 	// Not going to support pre-4.0 at all
 	'2.0 - 3.57': {
@@ -50,23 +54,33 @@ const PATCHES = {
 	},
 }
 
-export default PATCHES
+export type PatchNumber = keyof typeof PATCHES
+export default PATCHES as Record<PatchNumber, Patch>
+
+interface PatchData {[key: string]: Patch}
+const patchData: PatchData = PATCHES
 
 // This is intentionally in newest->oldest order
-const sortedPatches = Object.keys(PATCHES).sort(
-	(a, b) => PATCHES[b].date - PATCHES[a].date
+const sortedPatches = (Object.keys(patchData) as PatchNumber[]).sort(
+	(a, b) => patchData[b].date - patchData[a].date,
 )
 
-export const getPatch = (timestamp = (new Date()).getTime()) =>
-	sortedPatches.find(key => PATCHES[key].date < timestamp)
+export function getPatch(timestamp = (new Date()).getTime()): PatchNumber {
+	const key = sortedPatches.find(key => patchData[key].date < timestamp)
+	return key!
+}
 
-export const patchSupported = (from, to, at = (new Date()).getTime()) => {
+export function patchSupported(
+	from: PatchNumber,
+	to: PatchNumber,
+	at = (new Date()).getTime(),
+) {
 	if (!from) { return false }
 
 	const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) - 1]
-	const nextPatch = PATCHES[nextPatchKey] || {date: Infinity}
+	const nextPatch = patchData[nextPatchKey] || {date: Infinity}
 
-	const fromDate = PATCHES[from].date
+	const fromDate = patchData[from].date
 	const toDate = nextPatch.date
 
 	return _.inRange(at, fromDate, toDate)

@@ -1,9 +1,15 @@
-import JOBS from './JOBS'
-
 import {i18nMark} from '@lingui/react'
 
+import JOBS, {Job} from './JOBS'
+
+export interface Contributor {
+	name: string
+	avatar?: string
+	jobs: Job[]
+}
+
 // Be cool to hook this up to discord at some point - but does raise concerns if the user leaves the guild
-export default {
+const CONTRIBUTORS = {
 	ACKWELL: {
 		name: 'ackwell',
 		avatar: process.env.PUBLIC_URL + '/avatar/ackwell.png',
@@ -72,7 +78,7 @@ export default {
 	},
 	YUMIYA: {
 		name: 'Yumiya',
-		avatar: null,
+		avatar: process.env.PUBLIC_URL + '/avatar/yumiya.png',
 		jobs: [JOBS.BARD],
 	},
 	RYAN: {
@@ -106,8 +112,14 @@ export default {
 		jobs: [JOBS.MONK],
 	},
 }
+export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 
-export const ROLES = {
+export interface Role {
+	i18n_id: string
+	text: string
+}
+
+const roleData = {
 	MAINTAINER: {
 		i18n_id: i18nMark('core.role.maintainer'),
 		text: 'Maintainer',
@@ -121,3 +133,5 @@ export const ROLES = {
 		text: 'Developer',
 	},
 }
+
+export const ROLES = roleData as Record<keyof typeof roleData, Role>

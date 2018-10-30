@@ -2,7 +2,6 @@ import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import Scroll from 'react-scroll'
 import {Trans} from '@lingui/react'
 import withSizes from 'react-sizes'
 import {
@@ -11,8 +10,6 @@ import {
 	Header,
 	Loader,
 	Menu,
-	Segment,
-	Sticky,
 } from 'semantic-ui-react'
 
 import {getFflogsEvents} from 'api'
@@ -24,6 +21,10 @@ import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import Parser from 'parser/core/Parser'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 import {compose} from 'utilities'
+
+import ResultSegment from './ResultSegment'
+import SegmentLinkItem from './SegmentLinkItem'
+import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
@@ -57,20 +58,17 @@ class Analyse extends Component {
 		showMenu: PropTypes.bool.isRequired,
 	}
 
-	stickyContext = null
-
+	/** @type {ReadonlyArray<import('parser/core/Parser').ParserResult>|null} */
 	resultCache = null
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
+			/** @type {import('parser/core/Parser').default|null} */
 			parser: null,
 			complete: false,
-			activeSegment: 0,
 		}
-
-		this.stickyContext = React.createRef()
 	}
 
 	componentDidMount() {
@@ -172,7 +170,7 @@ class Analyse extends Component {
 				.forEach(({default: loadedModules = []}, index) => {
 					parser.addMeta({
 						...modules[index],
-						modules: loadedModules,
+						loadedModules,
 					})
 				})
 		} catch (error) {
@@ -242,7 +240,6 @@ class Analyse extends Component {
 		const {
 			parser,
 			complete,
-			activeSegment,
 		} = this.state
 
 		// Still loading the parser or running the parse
@@ -261,71 +258,57 @@ class Analyse extends Component {
 		const job = JOBS[parser.player.type]
 		const results = this.getParserResults()
 
-		return <Container>
-			<Grid>
-				<Grid.Column mobile={16} computer={4}>
-					{job && <Header
-						className={[styles.header].join(' ')}
-						attached="top"
-					>
-						<JobIcon job={job} set={1}/>
-						<Header.Content>
-							<Trans id={job.i18n_id} defaults={job.name} />
-							<Header.Subheader>
-								<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
-							</Header.Subheader>
-						</Header.Content>
-					</Header>}
-					<Header className={styles.header} attached={job? true : 'top'}>
-						<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
-						<Header.Content>
-							{parser.fight.name}
-							<Header.Subheader>
-								{parser.fight.zoneName}
-							</Header.Subheader>
-						</Header.Content>
-					</Header>
-					<Menu vertical attached="bottom">
-						<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
-							<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
-							<Trans id="core.analyse.view-on-fflogs">
-								View report on FF Logs
-							</Trans>
-						</Menu.Item>
-					</Menu>
-
-					{this.props.showMenu && <Sticky context={this.stickyContext.current} offset={60}>
-						<Menu vertical pointing secondary fluid>
-							{results.map((result, index) => <Menu.Item
-								// Menu.Item props
-								key={index}
-								active={activeSegment === index}
-								as={Scroll.Link}
-								// Scroll.Link props
-								to={result.name}
-								offset={-50}
-								smooth
-								spy
-								onSetActive={() => this.setState({activeSegment: index})}
-							>
-								<Trans id={result.i18n_id} defaults={result.name /* Doing manually so SUI doesn't modify my text */} />
-							</Menu.Item>)}
+		return <SegmentPositionProvider>
+			<Container>
+				<Grid>
+					<Grid.Column mobile={16} computer={4}>
+						{job && <Header
+							className={[styles.header].join(' ')}
+							attached="top"
+						>
+							<JobIcon job={job} set={1}/>
+							<Header.Content>
+								<Trans id={job.i18n_id} defaults={job.name} />
+								<Header.Subheader>
+									<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
+								</Header.Subheader>
+							</Header.Content>
+						</Header>}
+						<Header className={styles.header} attached={job? true : 'top'}>
+							<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
+							<Header.Content>
+								{parser.fight.name}
+								<Header.Subheader>
+									{parser.fight.zoneName}
+								</Header.Subheader>
+							</Header.Content>
+						</Header>
+						<Menu vertical attached="bottom">
+							<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
+								<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
+								<Trans id="core.analyse.view-on-fflogs">
+									View report on FF Logs
+								</Trans>
+							</Menu.Item>
 						</Menu>
-					</Sticky>}
-				</Grid.Column>
 
-				<Grid.Column mobile={16} computer={12}>
-					<div ref={this.stickyContext} className={styles.resultsContainer}>
-						{results.map((result, index) =>
-							<Segment vertical as={Scroll.Element} name={result.name} key={index}>
-								<Header><Trans id={result.i18n_id} defaults={result.name} /></Header>
-								{result.markup}
-							</Segment>
-						)}
-					</div>
-				</Grid.Column>
-			</Grid>
-		</Container>
+						{this.props.showMenu &&
+							<Menu className={styles.sticky} vertical pointing secondary fluid>
+								{results.map((result, index) => <SegmentLinkItem
+									key={index}
+									index={index}
+									result={result}
+								/>)}
+							</Menu>
+						}
+					</Grid.Column>
+
+					<Grid.Column className={styles.resultsContainer} mobile={16} computer={12}>
+						{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}
+					</Grid.Column>
+				</Grid>
+			</Container>
+		</SegmentPositionProvider>
 	}
 }
 
