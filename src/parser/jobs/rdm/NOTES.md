@@ -26,6 +26,7 @@
 - [X] Track if Jolt wast cast while Impactful, Verstone, or Verfire were up or if Swiftcast was off CD
 - [X] Dont' use Areo/Thunder while Stone/Fire are up
 - [X] Don't use Flare/Holy when Fire/Stone are up
+- [ ] Figure out how to split out 0 entries in the Overwrite/Invuln/Missed Trans/Plural tags
 
 ## Melee Combo
 - [X] Derping a melee combo, either breaking it, or not finishing it.
