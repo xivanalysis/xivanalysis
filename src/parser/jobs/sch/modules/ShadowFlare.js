@@ -2,16 +2,22 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import PATCHES from 'data/PATCHES'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {matchClosestLower} from 'utilities'
 
-// In a single target scenario, SF should always tick 5 times
-const MIN_HITS = 5
+// In a single target scenario, SF should always tick 5 times + 1 time on the cast (4.4 patch)
+const MIN_HITS = {
+	[PATCHES['4.0'].date]: 5,
+	[PATCHES['4.4'].date]: 6,
+}
 
 // Ticks every 3s
 const TICK_SPEED = 3000
 
+// TODO: Consolidate this between SMN and SCH
 export default class ShadowFlare extends Module {
 	static displayOrder = 52;
 	static handle = 'shadowFlare'
@@ -42,11 +48,14 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onComplete() {
+		// Work out the appropriate number of hits based on patch
+		const minHits = matchClosestLower(MIN_HITS, this.parser.parseDate)
+
 		const missedTicks = this._casts.reduce((carry, cast) => {
 			const hits = cast.hits.reduce((carry, value) => carry + value.hits.length, 0)
 
 			// Not going to fault for missing ticks after the boss died
-			const possibleTicks = Math.min(MIN_HITS, Math.floor((this.parser.fight.end_time - cast.cast.timestamp) / TICK_SPEED))
+			const possibleTicks = Math.min(minHits, Math.floor((this.parser.fight.end_time - cast.cast.timestamp) / TICK_SPEED))
 
 			return carry + (possibleTicks - Math.min(possibleTicks, hits))
 		}, 0)
@@ -58,7 +67,7 @@ export default class ShadowFlare extends Module {
 					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
 				</Fragment>,
 				why: missedTicks + ' missed ticks of Shadow Flare.',
-				severity: missedTicks < MIN_HITS? SEVERITY.MINOR : missedTicks < MIN_HITS*2? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				severity: missedTicks < minHits? SEVERITY.MINOR : missedTicks < minHits*2? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 			}))
 		}
 	}

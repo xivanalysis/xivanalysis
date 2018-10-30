@@ -1,37 +1,58 @@
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
-import {scroller} from 'react-scroll'
 import toposort from 'toposort'
 
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
+import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {extractErrorContext} from 'utilities'
+import {Meta} from '.'
+import Module, {MappedDependency} from './Module'
+
+interface Player extends Actor {
+	pets: Pet[]
+}
+
+interface LoadedMeta extends Meta {
+	loadedModules: Array<typeof Module>
+}
+
+// TODO: This should probably be in the store, once the store gets ported
+interface Report extends ReportFightsResponse {
+	code: string
+	loading: boolean
+}
+
+export interface Result {
+	i18n_id?: string
+	handle: string
+	name: string
+	markup: React.ReactNode
+}
+
+import ResultSegment from 'components/Analyse/ResultSegment'
+
+/**
+ * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
+ */
 
 class Parser {
 	// -----
 	// Properties
 	// -----
 
-	report = null
-	fight = null
-	player = null
-	meta = {}
+	meta: Partial<LoadedMeta> = {}
 	_timestamp = 0
 
-	/** @type {Record<string, import('./Module').default>} */
-	modules = {}
-	/** @type {Record<string, typeof import('./Module').default>} */
-	_constructors = {}
+	modules: Record<string, Module> = {}
+	_constructors: Record<string, typeof Module> = {}
 
-	/** @type {string[]} */
-	moduleOrder = []
-	/** @type {string[]} */
-	_triggerModules = []
-	/** @type {Record<string, Error | { toString (): string }>} */
-	_moduleErrors = {}
+	moduleOrder: string[] = []
+	_triggerModules: string[] = []
+	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	_fabricationQueue = []
+	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
 		// TODO: this.finished?
@@ -47,7 +68,7 @@ class Parser {
 	// Get the friendlies that took part in the current fight
 	get fightFriendlies() {
 		return this.report.friendlies.filter(
-			friend => friend.fights.some(fight => fight.id === this.fight.id)
+			friend => friend.fights.some(fight => fight.id === this.fight.id),
 		)
 	}
 
@@ -60,11 +81,11 @@ class Parser {
 	// Constructor
 	// -----
 
-	constructor(report, fight, player) {
-		this.report = report
-		this.fight = fight
-		this.player = player
-
+	constructor(
+		readonly report: Report,
+		readonly fight: Fight,
+		readonly player: Player,
+	) {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
@@ -76,9 +97,9 @@ class Parser {
 	// Module handling
 	// -----
 
-	addMeta(meta) {
+	addMeta(meta: LoadedMeta) {
 		// Add the modules to the main system
-		this.addModules(meta.modules)
+		this.addModules(meta.loadedModules)
 
 		// Merge the meta in
 		mergeWith(this.meta, meta, (obj, src) => {
@@ -89,8 +110,8 @@ class Parser {
 		delete this.meta.modules
 	}
 
-	addModules(modules) {
-		const keyed = {}
+	addModules(modules: Array<typeof Module>) {
+		const keyed: Record<string, typeof Module> = {}
 
 		modules.forEach(mod => {
 			keyed[mod.handle] = mod
@@ -106,7 +127,7 @@ class Parser {
 
 		// Build the values we need for the toposort
 		const nodes = Object.keys(this._constructors)
-		const edges = []
+		const edges: Array<[string, string]> = []
 		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, this._getDepHandle(dep)])
 		}))
@@ -122,13 +143,13 @@ class Parser {
 		})
 	}
 
-	_getDepHandle = (dep) => typeof dep === 'string'? dep : dep.handle
+	_getDepHandle = (dep: string | MappedDependency) => typeof dep === 'string'? dep : dep.handle
 
 	// -----
 	// Event handling
 	// -----
 
-	async normalise(events) {
+	async normalise(events: Event[]) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		for (const mod of this.moduleOrder) {
@@ -138,56 +159,61 @@ class Parser {
 		return events
 	}
 
-	parseEvents(events) {
-		// Iterator we're using to handle fabrication
-		function* iterateEvents(events) {
-			const eventIterator = events[Symbol.iterator]()
-
-			// Start the parse with an 'init' fab
-			yield this.hydrateFabrication({type: 'init'})
-
-			let obj
-			// eslint-disable-next-line no-cond-assign
-			while (!(obj = eventIterator.next()).done) {
-				// Iterate over the actual event first
-				yield obj.value
-
-				// Iterate over any fabrications arising from the event and clear the queue
-				yield* this._fabricationQueue
-				this._fabricationQueue = []
-			}
-
-			// Finish with 'complete' fab
-			yield this.hydrateFabrication({type: 'complete'})
-		}
-
+	parseEvents(events: Event[]) {
 		// Create a copy of the module order that we'll use while parsing
 		this._triggerModules = this.moduleOrder.slice(0)
 
 		// Loop & trigger all the events & fabrications
-		for (const event of iterateEvents.bind(this)(events)) {
+		for (const event of this.iterateEvents(events)) {
 			this._timestamp = event.timestamp
 			this.triggerEvent(event)
 		}
 	}
 
-	hydrateFabrication(event) {
+	*iterateEvents(events: Event[]) {
+		const eventIterator = events[Symbol.iterator]()
+
+		// Start the parse with an 'init' fab
+		yield this.hydrateFabrication({type: 'init'})
+
+		let obj
+		// eslint-disable-next-line no-cond-assign
+		while (!(obj = eventIterator.next()).done) {
+			// Iterate over the actual event first
+			yield obj.value
+
+			// Iterate over any fabrications arising from the event and clear the queue
+			yield* this._fabricationQueue
+			this._fabricationQueue = []
+
+		}
+
+		// Finish with 'complete' fab
+		yield this.hydrateFabrication({type: 'complete'})
+	}
+
+	hydrateFabrication(event: Partial<Event>): Event {
 		// TODO: they've got a 'triggered' prop too...?
 		return {
-			// Default to the current timestamp
+			// Provide default fields
 			timestamp: this.currentTimestamp,
+			type: 'fabrication',
+			sourceID: -1,
+			sourceIsFriendly: true,
+			targetID: -1,
+			targetInstance: -1,
+			targetIsFriendly: true,
 
-			// Rest of the event, mark it as fab'd
+			// Fill out with any overwritten fields
 			...event,
-			__fabricated: true,
 		}
 	}
 
-	fabricateEvent(event) {
+	fabricateEvent(event: Partial<Event>) {
 		this._fabricationQueue.push(this.hydrateFabrication(event))
 	}
 
-	triggerEvent(event) {
+	triggerEvent(event: Event) {
 		// TODO: Do I need to keep a history?
 		this._triggerModules.forEach(mod => {
 			try {
@@ -202,12 +228,12 @@ class Parser {
 				// But first, gather some extra context
 				const tags = {
 					type: 'event',
-					event: event.type,
+					event: event.type.toString(),
 					job: this.player && this.player.type,
 					module: mod,
 				}
 
-				const extra = {
+				const extra: Record<string, any> = {
 					report: this.report && this.report.code,
 					fight: this.fight && this.fight.id,
 					player: this.player && this.player.id,
@@ -241,7 +267,7 @@ class Parser {
 		})
 	}
 
-	_setModuleError(mod, error) {
+	_setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1)
 		this._moduleErrors[mod] = error
@@ -257,18 +283,23 @@ class Parser {
 
 	/**
 	 * Get error context for the named module and all of its dependencies.
-	 * @param {String} mod The name of the module with the faulting code
-	 * @param {String} source Either 'event' or 'output'
-	 * @param {Error} error The error that we're gathering context for
-	 * @param {Object} event The event that was being processed when the error occurred
-	 * @returns {[Object, Object]} The resulting data along with an object containing errors that were encountered running getErrorContext methods.
+	 * @param mod The name of the module with the faulting code
+	 * @param source Either 'event' or 'output'
+	 * @param error The error that we're gathering context for
+	 * @param event The event that was being processed when the error occurred
+	 * @returns The resulting data along with an object containing errors that were encountered running getErrorContext methods.
 	 */
-	_gatherErrorContext(mod, source, error, event) {
-		const output = {}
-		const errors = []
-		const visited = new Set()
+	_gatherErrorContext(
+		mod: string,
+		source: 'event' | 'output',
+		error: Error,
+		event?: Event,
+	): [Record<string, any>, Array<[string, Error]>] {
+		const output: Record<string, any> = {}
+		const errors: Array<[string, Error]> = []
+		const visited = new Set<string>()
 
-		const crawler = m => {
+		const crawler = (m: string) => {
 			visited.add(m)
 
 			const constructor = this._constructors[m]
@@ -307,23 +338,34 @@ class Parser {
 
 	generateResults() {
 		const displayOrder = [...this.moduleOrder]
-		displayOrder.sort((a, b) => this.modules[a].constructor.displayOrder - this.modules[b].constructor.displayOrder)
+		displayOrder.sort((a, b) => {
+			const aConstructor = this.modules[a].constructor as typeof Module
+			const bConstructor = this.modules[b].constructor as typeof Module
+			return aConstructor.displayOrder - bConstructor.displayOrder
+		})
 
-		const results = []
+		const results: Result[] = []
 		displayOrder.forEach(mod => {
 			const module = this.modules[mod]
+			const constructor = module.constructor as typeof Module
+			const resultMeta = {
+				name: constructor.title,
+				handle: constructor.handle,
+				i18n_id: constructor.i18n_id,
+			}
 
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[mod]) {
 				const error = this._moduleErrors[mod]
 				results.push({
-					name: module.constructor.title,
+					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				})
 				return
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
+			/** @type {import('./Module').ModuleOutput|null} */
 			let output = null
 			try {
 				output = module.output()
@@ -341,14 +383,14 @@ class Parser {
 					module: mod,
 				}
 
-				const extra = {
+				const extra: Record<string, any> = {
 					report: this.report && this.report.code,
 					fight: this.fight && this.fight.id,
 					player: this.player && this.player.id,
 				}
 
 				// Gather extra data for the error report.
-				const [data, errors] = this._gatherErrorContext(mod, 'output', error, null)
+				const [data, errors] = this._gatherErrorContext(mod, 'output', error)
 				extra.modules = data
 
 				for (const [m, err] of errors) {
@@ -370,8 +412,7 @@ class Parser {
 
 				// Also add the error to the results to be displayed.
 				results.push({
-					i18n_id: module.constructor.i18n_id,
-					name: module.constructor.title,
+					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				})
 				return
@@ -379,8 +420,7 @@ class Parser {
 
 			if (output) {
 				results.push({
-					i18n_id: module.constructor.i18n_id,
-					name: module.constructor.title,
+					...resultMeta,
 					markup: output,
 				})
 			}
@@ -393,54 +433,51 @@ class Parser {
 	// Utilities
 	// -----
 
-	byPlayer(event, playerId = this.player.id) {
+	byPlayer(event: Event, playerId = this.player.id) {
 		return event.sourceID === playerId
 	}
 
-	toPlayer(event, playerId = this.player.id) {
+	toPlayer(event: Event, playerId = this.player.id) {
 		return event.targetID === playerId
 	}
 
-	byPlayerPet(event, playerId = this.player.id) {
+	byPlayerPet(event: Event, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
 		return pet && pet.petOwner === playerId
 	}
 
-	toPlayerPet(event, playerId = this.player.id) {
+	toPlayerPet(event: Event, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
 		return pet && pet.petOwner === playerId
 	}
 
-	formatTimestamp(timestamp, secondPrecision) {
+	formatTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(timestamp - this.fight.start_time, secondPrecision)
 	}
 
-	formatDuration(duration, secondPrecision = null) {
-		/* eslint-disable no-magic-numbers */
+	formatDuration(duration: number, secondPrecision?: number) {
+		/* tslint:disable:no-magic-numbers */
 		duration /= 1000
 		const seconds = duration % 60
 		if (duration < 60) {
-			const precision = secondPrecision !== null? secondPrecision : seconds < 10? 2 : 0
+			const precision = secondPrecision !== undefined? secondPrecision : seconds < 10? 2 : 0
 			return seconds.toFixed(precision) + 's'
 		}
-		const precision = secondPrecision !== null ? secondPrecision : 0
+		const precision = secondPrecision !== undefined ? secondPrecision : 0
 		const secondsText = precision ? seconds.toFixed(precision) : '' + Math.floor(seconds)
 		let pointPos = secondsText.indexOf('.')
 		if (pointPos === -1) { pointPos = secondsText.length }
 		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
-		/* eslint-enable no-magic-numbers */
+		/* tslint:enable:no-magic-numbers */
 	}
 
 	/**
 	 * Scroll to the specified module
-	 * @param {string} handle - Handle of the module to scroll to
+	 * @param handle - Handle of the module to scroll to
 	 */
-	scrollTo(handle) {
+	scrollTo(handle: string) {
 		const module = this.modules[handle]
-		scroller.scrollTo(module.constructor.title, {
-			offset: -50,
-			smooth: true,
-		})
+		ResultSegment.scrollIntoView((module.constructor as typeof Module).handle)
 	}
 }
 

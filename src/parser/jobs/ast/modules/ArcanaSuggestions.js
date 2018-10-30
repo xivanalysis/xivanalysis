@@ -259,7 +259,7 @@ export default class ArcanaSuggestions extends Module {
 			}
 			{minorArcana && minorArcana.name !== 'Unknown' && <img
 				src={minorArcana.icon}
-				className={styles.spread_slot3}
+				className={styles.spreadSlot3}
 				alt={minorArcana.name}
 			/>}
 			{!minorArcana && <span className={styles.buffDummy} />}

@@ -198,12 +198,7 @@ export default class Pets extends Module {
 			(a, b) => this._petUptime.get(b) - this._petUptime.get(a)
 		)[0]
 
-		// Disabling garuda/ifrit check post-4.4 due to changed to RS
-		// TODO: Revisit this in more detail once math is solidified
-		const currentPatch = getPatch(this.parser.parseDate)
-		const pre44 = PATCHES[currentPatch].date < PATCHES['4.4'].date
-
-		if (pre44 && numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
+		if (numCasters > 1 && mostUsedPet !== PETS.GARUDA_EGI.id) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON.icon,
 				severity: SEVERITY.MEDIUM,
@@ -215,6 +210,10 @@ export default class Pets extends Module {
 				</Trans>,
 			}))
 		}
+
+		// Disabling ifrit check post-4.4 due to changes made to RS
+		const currentPatch = getPatch(this.parser.parseDate)
+		const pre44 = PATCHES[currentPatch].date < PATCHES['4.4'].date
 
 		if (pre44 && numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
 			this.suggestions.add(new Suggestion({

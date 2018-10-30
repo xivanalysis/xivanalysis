@@ -3,23 +3,22 @@ import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import PATCHES from 'data/PATCHES'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {matchClosestLower} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// In a single target scenario, SF should always tick 5 times
-const MIN_HITS = 5
+// In a single target scenario, SF should always tick 5 times + 1 time on the cast (4.4 patch)
+const MIN_HITS = {
+	[PATCHES['4.0'].date]: 5,
+	[PATCHES['4.4'].date]: 6,
+}
 
 // Ticks every 3s
 const TICK_SPEED = 3000
-
-const MISSED_TICK_SEVERITY = {
-	1: SEVERITY.MINOR,
-	[MIN_HITS]: SEVERITY.MEDIUM,
-	[MIN_HITS * 2]: SEVERITY.MAJOR,
-}
 
 export default class ShadowFlare extends Module {
 	static handle = 'shadowFlare'
@@ -56,29 +55,34 @@ export default class ShadowFlare extends Module {
 	}
 
 	_onComplete() {
+		// Work out the appropriate number of hits based on patch
+		const minHits = matchClosestLower(MIN_HITS, this.parser.parseDate)
+
 		const missedTicks = this._casts.reduce((carry, cast) => {
 			const hits = cast.hits.reduce((carry, value) => carry + value.hits.length, 0)
 
 			// Not going to fault for missing ticks after the boss died
-			const possibleTicks = Math.min(MIN_HITS, Math.floor((this.parser.fight.end_time - cast.cast.timestamp) / TICK_SPEED))
+			const possibleTicks = Math.min(minHits, Math.floor((this.parser.fight.end_time - cast.cast.timestamp) / TICK_SPEED))
 
 			return carry + (possibleTicks - Math.min(possibleTicks, hits))
 		}, 0)
 
-		if (missedTicks) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SHADOW_FLARE.icon,
-				tiers: MISSED_TICK_SEVERITY,
-				value: missedTicks,
-				content: <Trans id="smn.shadow-flare.suggestions.missed-ticks.content">
-					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
-				</Trans>,
-				why: <Trans id="smn.shadow-flare.suggestions.missed-ticks.why">
-					<Plural value={missedTicks} one="# missed tick" other="# missed ticks"/>
-					of Shadow Flare.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SHADOW_FLARE.icon,
+			tiers: {
+				1: SEVERITY.MINOR,
+				[minHits]: SEVERITY.MEDIUM,
+				[minHits * 2]: SEVERITY.MAJOR,
+			},
+			value: missedTicks,
+			content: <Trans id="smn.shadow-flare.suggestions.missed-ticks.content">
+				Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
+			</Trans>,
+			why: <Trans id="smn.shadow-flare.suggestions.missed-ticks.why">
+				<Plural value={missedTicks} one="# missed tick" other="# missed ticks"/>
+				of Shadow Flare.
+			</Trans>,
+		}))
 	}
 
 	output() {

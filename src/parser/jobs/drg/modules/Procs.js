@@ -85,7 +85,7 @@ export default class Procs extends Module {
 			},
 			value: droppedMirage,
 			why: <Trans id="drg.procs.suggestions.mirage-dropped.why">
-				You dropped <Plural value={droppedWheeling} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
+				You dropped <Plural value={droppedMirage} one="# Mirage Dive proc" other="# Mirage Dive procs"/>.
 			</Trans>,
 		}))
 
