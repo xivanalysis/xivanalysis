@@ -177,18 +177,15 @@ export default class Procs extends Module {
 	}
 
 	_onComplete() {
-		// Finalise buffs for timeline display
-		if (this._buffWindows[STATUSES.THUNDERCLOUD.id].current) {
-			this._stopAndSave(STATUSES.THUNDERCLOUD.id)
-		}
-		if (this._buffWindows[STATUSES.FIRESTARTER.id].current) {
-			this._stopAndSave(STATUSES.FIRESTARTER.id)
-		}
-
 		PROC_BUFFS.forEach(buff => {
 			const status = getStatus(buff)
 			const groupId = 'procbuffs-' + status.id
 			const fightStart = this.parser.fight.start_time
+
+			// Finalise the buff if it was still active
+			if (this._buffWindows[buff].current) {
+				this._stopAndSave(buff)
+			}
 
 			this._buffWindows[buff].history.forEach(window => {
 				this.timeline.addItem(new Item({
