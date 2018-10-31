@@ -77,21 +77,23 @@ export default class RotationWatchdog extends Module {
 
 	_onCast(event) {
 		const action = getAction(event.ability.guid)
-		if (action.onGcd) {
-			if (action.id === ACTIONS.HEAVY_THRUST.id) {
-				// Heavy Thrust is the start of our 11-GCD rotation
-				if (this._rotation.current !== null) {
-					this._rotation.history.push(this._rotation.current)
-				}
+		if (!action.onGcd) {
+			return
+		}
 
-				this._rotation.current = {
-					start: event.timestamp,
-					casts: [],
-				}
+		if (action.id === ACTIONS.HEAVY_THRUST.id || this._rotation.current === null) {
+			// Heavy Thrust (or the first GCD) is the start of our 11-GCD rotation
+			if (this._rotation.current !== null) {
+				this._rotation.history.push(this._rotation.current)
 			}
 
-			this._rotation.current.casts.push(event)
+			this._rotation.current = {
+				start: event.timestamp,
+				casts: [],
+			}
 		}
+
+		this._rotation.current.casts.push(event)
 	}
 
 	_isValidRotation(casts) {
