@@ -1,5 +1,5 @@
 import React, {Fragment} from 'react'
-//import {Icon, Message} from 'semantic-ui-react'
+import {clamp} from 'lodash'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -11,31 +11,35 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const MAX_KENKI = 100
 
-const KENKI_BUILDERS = {
 
-	//single target
-	[ACTIONS.GEKKO.id]: 10,
-	[ACTIONS.KASHA.id]: 10,
-	[ACTIONS.YUKIKAZE.id]: 10,
+const KENKI_ACTIONS = {
+	// single target
 	[ACTIONS.HAKAZE.id]: 5,
-	[ACTIONS.JINPU.id]: 5,
-	[ACTIONS.SHIFU.id]: 5,
-	//aoe
-	[ACTIONS.MANGETSU.id]: 10,
-	[ACTIONS.OKA.id]: 10,
-	[ACTIONS.FUGA.id]: 5,
-	//ranged
-	[ACTIONS.ENPI.id]: 10,
-}
+	[ACTIONS.JINPU.id]: 5, // combo5
+	[ACTIONS.SHIFU.id]: 5, // combo 5
+	[ACTIONS.YUKIKAZE.id]: 10, // combo 10
+	[ACTIONS.GEKKO.id]: 10, // combo 5, positional 5
+	[ACTIONS.KASHA.id]: 10, // combo 5 positional 5
 
-const KENKI_SPENDERS = {
-	[ACTIONS.HISSATSU_GYOTEN.id]: 10,
-	[ACTIONS.HISSATSU_YATEN.id]: 10,
-	[ACTIONS.HISSATSU_SEIGAN.id]: 15,
-	[ACTIONS.HISSATSU_KAITEN.id]: 20,
-	[ACTIONS.HISSATSU_SHINTEN.id]: 25,
-	[ACTIONS.HISSATSU_KYUTEN.id]: 25,
-	[ACTIONS.HISSATSU_GUREN.id]: 50,
+	// aoe
+	[ACTIONS.FUGA.id]: 5,
+	[ACTIONS.MANGETSU.id]: 10, // combo 10
+	[ACTIONS.OKA.id]: 10, // combo 10
+
+	// ranged
+	[ACTIONS.ENPI.id]: 10,
+
+	// spenders
+	[ACTIONS.HISSATSU_GYOTEN.id]: -10,
+	[ACTIONS.HISSATSU_YATEN.id]: -10,
+	[ACTIONS.HISSATSU_SEIGAN.id]: -15,
+	[ACTIONS.HISSATSU_KAITEN.id]: -20,
+	[ACTIONS.HISSATSU_SHINTEN.id]: -25,
+	[ACTIONS.HISSATSU_KYUTEN.id]: -25,
+	[ACTIONS.HISSATSU_GUREN.id]: -50,
+
+	// TODO: MEDITATION
+	// TODO: AGEHA
 }
 
 // sen stuff
@@ -67,19 +71,22 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
+
+		this.addHook(
+			'cast',
+			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
+			event => this._modifyKenki(KENKI_ACTIONS[event.ability.guid])
+		)
+
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
+
 	//check for kenki value changes, then sen changes
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		if (KENKI_BUILDERS[abilityId]) {
-			this._addKenki(abilityId)
-		}
-		if (KENKI_SPENDERS[abilityId]) {
-			this._kenki -= KENKI_SPENDERS[abilityId]
-		}
+
 		if (abilityId === ACTIONS.HAGAKURE.id) {
 			this._Sen2Kenki()
 		}
@@ -99,15 +106,17 @@ export default class Gauge extends Module {
 
 	//kenki quick maths
 
-	_addKenki(abilityId) {
-		this._kenki += KENKI_BUILDERS[abilityId]
-		if (this._kenki > MAX_KENKI) {
-			const waste = this._kenki - MAX_KENKI
-			this._wastedKenki += waste
-			this._kenki = MAX_KENKI
-			return waste
+	_modifyKenki(amount) {
+		const kenki = this._kenki + amount
+		this._kenki = clamp(kenki, 0, MAX_KENKI)
+
+		this._wastedKenki += Math.max(0, kenki - this._kenki)
+
+		// This should theoretically never happen but we all know damn well it will.
+		if (kenki - this._kenki < 0) {
+			console.error(`Dropping below 0 kenki: ${kenki}/100`)
 		}
-		return 0
+
 	}
 
 	_Sen2Kenki() {
