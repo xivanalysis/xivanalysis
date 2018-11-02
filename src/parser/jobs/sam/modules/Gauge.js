@@ -1,6 +1,6 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
-import {clamp} from 'lodash'
+import _ from 'lodash'
 
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -14,6 +14,7 @@ import JOBS from 'data/JOBS'
 
 const MAX_KENKI = 100
 
+const KENKI_PER_SEN = 20
 
 const KENKI_ACTIONS = {
 	// single target
@@ -45,74 +46,116 @@ const KENKI_ACTIONS = {
 	// TODO: AGEHA
 }
 
-// sen stuff
+const SEN = {
+	SETSU: 'Setsu',
+	GETSU: 'Getsu',
+	KA: 'Ka',
+}
 
-// 1 sen value for each finisher. using finisher with sen you already have is bad.
-const MAX_GEKKO_SEN = 1
-const MAX_KASHA_SEN = 1
-const MAX_YUKIKAZE_SEN = 1
+const SEN_ACTIONS = {
+	[ACTIONS.YUKIKAZE.id]: SEN.SETSU,
+
+	[ACTIONS.GEKKO.id]: SEN.GETSU,
+	[ACTIONS.MANGETSU.id]: SEN.GETSU,
+
+	[ACTIONS.KASHA.id]: SEN.KA,
+	[ACTIONS.OKA.id]: SEN.KA,
+}
+
+const IAIJUTSU = [
+	ACTIONS.HIGANBANA.id,
+	ACTIONS.TENKA_GOKEN.id,
+	ACTIONS.MIDARE_SETSUGEKKA.id,
+]
+
+// sen stuff
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
 		'suggestions',
 	]
+	static displayOrder = -100
 
-	//kenki
+	// kenki
 	_kenki = 0
 	_wastedKenki = 0
 	_kenkiHistory = []
 
-	//meditate
+	// meditate
 	_Meditate = []
 
-	//sen
-	_gekkosen = 0
-	_kashasen = 0
-	_yukikazesen = 0
+	// sen
+	_sen = {
+		[SEN.SETSU]: false,
+		[SEN.GETSU]: false,
+		[SEN.KA]: false,
+	}
 
 	_wastedsen = 0
 
 	constructor(...args) {
 		super(...args)
 
+		// Kenki
 		this.addHook(
 			'cast',
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
-			event => this._modifyKenki(KENKI_ACTIONS[event.ability.guid])
+			event => this._modifyKenki(KENKI_ACTIONS[event.ability.guid]),
 		)
 
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		// Sen
+		this.addHook(
+			'cast',
+			{by: 'player', abilityId: Object.keys(SEN_ACTIONS).map(Number)},
+			this._onSenAction,
+		)
+		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this._removeSen)
+
+		// Hagakure because he's a speshul boi
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HAGAKURE.id}, this._onHagakure)
+
+		// Misc
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
-	//check for kenki value changes, then sen changes
-	_onCast(event) {
-		const abilityId = event.ability.guid
+	_onSenAction(event) {
+		const sen = SEN_ACTIONS[event.ability.guid]
 
-		if (abilityId === ACTIONS.HAGAKURE.id) {
-			this._Sen2Kenki()
+		if (this._sen[sen]) {
+			this._wastedsen ++
 		}
-		if (abilityId ===ACTIONS.HIGANBANA.id || abilityId === ACTIONS.TENKA_GOKEN.id || abilityId === ACTIONS.MIDARE_SETSUGEKKA.id) {
-			this._removeSen()
-		}
-		if (abilityId === ACTIONS.GEKKO.id || abilityId === ACTIONS.MANGETSU.id) {
-			this._addGekkoSen()
-		}
-		if (abilityId === ACTIONS.KASHA.id || abilityId === ACTIONS.OKA.id) {
-			this._addKashaSen()
-		}
-		if (abilityId === ACTIONS.YUKIKAZE.id) {
-			this._addYukikazeSen()
-		}
+
+		this._sen[sen] = true
 	}
 
-	//kenki quick maths
+	_onHagakure() {
+		// Work out how many sen are currently active
+		const activeSen = Object.entries(this._sen)
+			.filter(([, active]) => active)
+			.length
 
+		// Add the new kenki, wipe the sen
+		this._modifyKenki(activeSen * KENKI_PER_SEN)
+		this._removeSen()
+	}
+
+	_removeSen() {
+		this._sen = _.mapValues(this._sen, () => false)
+	}
+
+	_onDeath() {
+		// Death just flat out resets everything. Stop dying.
+		// Not marking as wasted, they're already being flagged w/ the morbid
+		this._kenki = 0
+		this._removeSen()
+	}
+
+	// kenki quick maths
 	_modifyKenki(amount) {
 		const kenki = this._kenki + amount
-		this._kenki = clamp(kenki, 0, MAX_KENKI)
+		this._kenki = _.clamp(kenki, 0, MAX_KENKI)
 
 		this._wastedKenki += Math.max(0, kenki - this._kenki)
 
@@ -125,72 +168,6 @@ export default class Gauge extends Module {
 			t: this.parser.currentTimestamp,
 			y: this._kenki,
 		})
-	}
-
-	_Sen2Kenki() {
-		this._kenki += ((this._gekkosen + this._kashasen + this._yukikazesen) * 20)
-		if (this.kenki > MAX_KENKI) {
-			const waste = this._kenki - MAX_KENKI
-			this._wastedKenki += waste
-			this._kenki = MAX_KENKI
-			return waste
-		}
-
-		this._removeSen()
-
-		return 0
-	}
-
-	//sen calcs
-
-	_addGekkoSen() {
-		this._gekkosen += 1
-		if (this._gekkosen > MAX_GEKKO_SEN) {
-			const waste = this._gekkosen - MAX_GEKKO_SEN
-			this._gekkosen -= waste
-			this._wastedsen += waste
-			return waste
-		}
-		return 0
-	}
-
-	_addKashaSen() {
-		this._kashasen += 1
-		if (this._kashasen > MAX_KASHA_SEN) {
-			const waste = this._kashasen - MAX_KASHA_SEN
-			this._kashasen -= waste
-			this._wastedsen += waste
-			return waste
-		}
-		return 0
-	}
-
-	_addYukikazeSen()  {
-		this._yukikazesen += 1
-		if (this._yukikazesen > MAX_YUKIKAZE_SEN) {
-			const waste = this._yukikazesen - MAX_YUKIKAZE_SEN
-			this._yukikazesen -= waste
-			this._wastedsen += waste
-			return waste
-		}
-		return 0
-	}
-
-	_removeSen() {
-		this._gekkosen = 0
-		this._kashasen = 0
-		this._yukikazesen = 0
-
-		return 0
-	}
-
-	_onDeath() {
-		// Death just flat out resets everything. Stop dying.
-		this._wastedKenki += this._kenki
-		this._kenki = 0
-
-		this._wastedsen += (this._gekkosen + this._kashasen + this._yukikzaesen)
-		this._gekkosen = this._kashasen = this._yukikazesen = 0
 	}
 
 	_onComplete() {
