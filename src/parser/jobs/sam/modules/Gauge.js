@@ -42,9 +42,16 @@ const KENKI_ACTIONS = {
 	[ACTIONS.HISSATSU_KYUTEN.id]: -25,
 	[ACTIONS.HISSATSU_GUREN.id]: -50,
 
-	// TODO: MEDITATION
-	// TODO: AGEHA
+	// TODO: MEDITATION - 10/tick, max 5 ticks
+	// TODO: AGEHA - 10, 30 if kill
 }
+
+// Meditate:
+// cast
+// applybuff
+// applybuffstack
+// ...
+// removebuff
 
 const SEN = {
 	SETSU: 'Setsu',
@@ -83,7 +90,7 @@ export default class Gauge extends Module {
 	_kenkiHistory = []
 
 	// meditate
-	_Meditate = []
+	// _Meditate = []
 
 	// sen
 	_sen = {
