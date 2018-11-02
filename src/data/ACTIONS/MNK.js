@@ -97,6 +97,7 @@ export default {
 		name: 'Earth Tackle',
 		icon: 'https://xivapi.com/i/002000/002538.png',
 		cooldown: 30,
+		potency: 100,
 	},
 
 	RIDDLE_OF_WIND: {
@@ -104,6 +105,7 @@ export default {
 		name: 'Riddle of Wind',
 		icon: 'https://xivapi.com/i/002000/002543.png',
 		cooldown: 0,
+		potency: 65,
 	},
 
 	WIND_TACKLE: {
@@ -111,6 +113,7 @@ export default {
 		name: 'Wind Tackle',
 		icon: 'https://xivapi.com/i/002000/002539.png',
 		cooldown: 30,
+		potency: 65,
 	},
 
 	RIDDLE_OF_FIRE: {
@@ -125,6 +128,7 @@ export default {
 		name: 'Fire Tackle',
 		icon: 'https://xivapi.com/i/002000/002540.png',
 		cooldown: 30,
+		potency: 130,
 	},
 
 	BROTHERHOOD: {

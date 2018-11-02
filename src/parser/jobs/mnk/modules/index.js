@@ -8,6 +8,7 @@ import InternalRelease from './InternalRelease'
 import MnkAoE from './MnkAoE'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
+import Undesirables from './Undesirables'
 
 export default [
 	BuffUptime,
@@ -20,4 +21,5 @@ export default [
 	MnkAoE,
 	RiddleOfFire,
 	Speedmod,
+	Undesirables,
 ]

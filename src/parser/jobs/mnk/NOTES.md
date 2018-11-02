@@ -3,14 +3,14 @@
 ### Uptime
 - [?] Don't clip or drop Demolish by more than 2 seconds, unless reapplying would be on GL0
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
-- [ ] Migrate Demo to core DoTs module
 - [x] GL3 uptime
 - [ ] GL3 efficient recovery
 - [x] GL3 holding with RoE
 - [ ] Advise when downtime was short enough and damage taken for RoE, or if Tackle is off cooldown for RoW
 - [x] Wasted RoE
 - [x] Wasted RoW
-- [ ] Earth Tackle, not even once
+- [x] Earth Tackle, not even once
+- [x] One-Ilm Punch is Officially Undesirable
 - [x] Fists, make sure at least one is up
 - [x] Dragon Kick uptime and clipping
 - [x] Twin Snakes uptime and clipping
