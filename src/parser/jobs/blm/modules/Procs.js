@@ -91,15 +91,6 @@ export default class Procs extends Module {
 		tracker.current = {
 			start: event.timestamp,
 		}
-
-		const groupId = 'procbuffs-' + statusId
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
-		}
 	}
 
 	_onRefreshProc(event) {
@@ -187,6 +178,15 @@ export default class Procs extends Module {
 				this._stopAndSave(buff)
 			}
 
+			// Make sure a timeline group exists for this buff
+			if (!this._group.nestedGroups.includes(groupId)) {
+				this.timeline.addGroup(new Group({
+					id: groupId,
+					content: status.name,
+				}))
+				this._group.nestedGroups.push(groupId)
+			}
+			// Add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
 				this.timeline.addItem(new Item({
 					type: 'background',
