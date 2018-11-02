@@ -1,11 +1,14 @@
+import Color from 'color'
 import React, {Fragment} from 'react'
 import {clamp} from 'lodash'
 
 import {ActionLink} from 'components/ui/DbLink'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import JOBS from 'data/JOBS'
 
 //future-proofing for more kenki actions
 
@@ -58,6 +61,7 @@ export default class Gauge extends Module {
 	//kenki
 	_kenki = 0
 	_wastedKenki = 0
+	_kenkiHistory = []
 
 	//meditate
 	_Meditate = []
@@ -117,6 +121,10 @@ export default class Gauge extends Module {
 			console.error(`Dropping below 0 kenki: ${kenki}/100`)
 		}
 
+		this._kenkiHistory.push({
+			t: this.parser.currentTimestamp,
+			y: this._kenki,
+		})
 	}
 
 	_Sen2Kenki() {
@@ -219,5 +227,26 @@ export default class Gauge extends Module {
 				You lost {this._wastedsen} sen by using finishing combos that gave you sen you already had.
 			</Fragment>,
 		}))
+	}
+
+	output() {
+		const sam = Color(JOBS.SAMURAI.colour)
+
+		// Disabling magic numbers for the chart, 'cus it's a chart
+		/* eslint-disable no-magic-numbers */
+		const data = {
+			datasets: [{
+				label: 'Kenki',
+				data: this._kenkiHistory,
+				backgroundColor: sam.fade(0.5),
+				borderColor: sam.fade(0.2),
+				steppedLine: true,
+			}],
+		}
+		/* eslint-enable no-magic-numbers */
+
+		return <TimeLineChart
+			data={data}
+		/>
 	}
 }
