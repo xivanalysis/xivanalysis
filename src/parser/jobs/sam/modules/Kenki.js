@@ -89,7 +89,7 @@ export default class Kenki extends Module {
 		}
 
 		this._history.push({
-			t: this.parser.currentTimestamp,
+			t: this.parser.currentTimestamp - this.parser.fight.start_time,
 			y: this._kenki,
 		})
 	}
@@ -140,6 +140,7 @@ export default class Kenki extends Module {
 
 		return <TimeLineChart
 			data={data}
+			options={{legend: false}}
 		/>
 	}
 }
