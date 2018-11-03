@@ -243,13 +243,8 @@ export default class GreasedLightning extends Module {
 			}
 		})
 
-		// Push wasted saves
-		this._earthSaves.forEach(earth => {
-			if (!earth.clean) {
-				this._wastedEarth++
-			}
-		})
-
+		// Count missed saves
+		const missedEarth = this._earthSaves.filter(earth => !earth.clean).length
 		this._windSaves.forEach(wind => {
 			if (!wind.clean) {
 				this._wastedWind++
@@ -273,7 +268,7 @@ export default class GreasedLightning extends Module {
 			target: 92,
 		}))
 
-		if (this._droppedStacks > 0) {
+		if (this._droppedStacks) {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://secure.xivdb.com/img/game/001000/001775.png', // Name of Lightning
 				content: <Fragment>
@@ -286,7 +281,7 @@ export default class GreasedLightning extends Module {
 			}))
 		}
 
-		if (this._wastedEarth > 0) {
+		if (this._wastedEarth) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
 				content: <Fragment>
@@ -299,7 +294,20 @@ export default class GreasedLightning extends Module {
 			}))
 		}
 
-		if (this._wastedWind > 0) {
+		if (missedEarth) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
+				content: <Fragment>
+					Check the fight timeline to see when you can save <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> with <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />.
+				</Fragment>,
+				severity: SEVERITY.MINOR,
+				why: <Fragment>
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {missedEarth} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />,
+				</Fragment>,
+			}))
+		}
+
+		if (this._wastedWind) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_WIND.icon,
 				content: <Fragment>

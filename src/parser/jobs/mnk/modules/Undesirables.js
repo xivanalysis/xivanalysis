@@ -45,7 +45,7 @@ export default class Undesirables extends Module {
 	_onComplete() {
 		const oneIlmPunchCount = this._undesirables.filter(event => event.id === ACTIONS.ONE_ILM_PUNCH.id).length
 		const earthTackleCount = this._undesirables.filter(event => event.id === ACTIONS.EARTH_TACKLE.id).length
-		const lostTacklePotency = earthTackleCount * (ACTIONS.FIRE_TACKLE.potency -	ACTIONS.EARTH_TACKLE.potency)
+		const lostTacklePotency = earthTackleCount * (ACTIONS.FIRE_TACKLE.potency - ACTIONS.EARTH_TACKLE.potency)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EARTH_TACKLE.icon,
@@ -58,7 +58,7 @@ export default class Undesirables extends Module {
 			},
 			value: earthTackleCount,
 			why: <Fragment>
-				{lostTacklePotency} potency lost to <ActionLink {...ACTIONS.EARTH_TACKLE} />.
+				{lostTacklePotency} potency lost to inefficient tackles.
 			</Fragment>,
 		}))
 
