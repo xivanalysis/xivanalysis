@@ -35,9 +35,9 @@ export default class BuffExtensions extends Module {
 	static title = 'Buff Extensions'
 	static i18n_id = i18nMark('ast.buff-extensions.title')
 	static displayOrder = DISPLAY_ORDER.BUFF_EXTENSIONS
-	// static dependencies = [
-	// 	// 'suggestions',
-	// ]
+	static dependencies = [
+		'combatants',
+	]
 
 	// Array of objects detailing each use of either Time Dilation or Celestial Opposition
 	_dilationUses = []
@@ -80,7 +80,7 @@ export default class BuffExtensions extends Module {
 	_onDilation(event) {
 		// TODO: prevent getEntity from returning null if target was a pet - Sushi
 		// (Pets are stored under the player entities)
-		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
+		const refreshedTarget = this.combatants.getEntity(event.targetID)
 
 		if (!refreshedTarget) {
 			return
@@ -146,7 +146,7 @@ export default class BuffExtensions extends Module {
 			return
 		}
 
-		const refreshedTarget = this.parser.modules.combatants.getEntity(event.targetID)
+		const refreshedTarget = this.combatants.getEntity(event.targetID)
 
 		// If this target isn't in the target array, add it
 		if (!this._oppositionEvent.targets.find(target => target.id === event.targetID)) {
