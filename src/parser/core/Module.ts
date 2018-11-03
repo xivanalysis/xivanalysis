@@ -90,9 +90,6 @@ export default class Module {
 		this._title = value
 	}
 
-	// DI FunTimes™
-	[key: string]: any;
-
 	// Bite me.
 	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
 
@@ -105,7 +102,9 @@ export default class Module {
 				dep = {handle: dep, prop: dep}
 			}
 
-			this[dep.prop] = parser.modules[dep.handle]
+			// TS Modules should use the @dependency decorator to pull them in,
+			// but this is still required for JS modules (and internal handling)
+			(this as any)[dep.prop] = parser.modules[dep.handle]
 		})
 		this.init()
 	}
