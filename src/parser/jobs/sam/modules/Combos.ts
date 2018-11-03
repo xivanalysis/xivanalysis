@@ -10,7 +10,7 @@ export default class Combos extends CoreCombos {
 	@dependency private combatants!: Combatants
 
 	// TODO: Type for the combo data once ACTIONS is typed
-	checkCombo(combo: any, event: Event) {
+	checkCombo(combo: TODO, event: Event) {
 		// If they've got Meikyo Shisui up, all combos are correct, and nothing combos together
 		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id)) {
 			return false
