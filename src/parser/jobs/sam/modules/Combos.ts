@@ -13,6 +13,7 @@ export default class Combos extends CoreCombos {
 	checkCombo(combo: TODO, event: Event) {
 		// If they've got Meikyo Shisui up, all combos are correct, and nothing combos together
 		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id)) {
+			this.fabricateComboEvent(event)
 			return false
 		}
 

@@ -12,29 +12,29 @@ const MAX_KENKI = 100
 
 const KENKI_ACTIONS = {
 	// single target
-	[ACTIONS.HAKAZE.id]: 5,
-	[ACTIONS.JINPU.id]: 5, // combo5
-	[ACTIONS.SHIFU.id]: 5, // combo 5
-	[ACTIONS.YUKIKAZE.id]: 10, // combo 10
-	[ACTIONS.GEKKO.id]: 10, // combo 5, positional 5
-	[ACTIONS.KASHA.id]: 10, // combo 5 positional 5
+	[ACTIONS.HAKAZE.id]: {cast: 5},
+	[ACTIONS.JINPU.id]: {combo: 5}, // combo 5
+	[ACTIONS.SHIFU.id]: {combo: 5}, // combo 5
+	[ACTIONS.YUKIKAZE.id]: {combo: 10}, // combo 10
+	[ACTIONS.GEKKO.id]: {combo: 10}, // combo 5, positional 5
+	[ACTIONS.KASHA.id]: {combo: 10}, // combo 5 positional 5
 
 	// aoe
-	[ACTIONS.FUGA.id]: 5,
-	[ACTIONS.MANGETSU.id]: 10, // combo 10
-	[ACTIONS.OKA.id]: 10, // combo 10
+	[ACTIONS.FUGA.id]: {cast: 5},
+	[ACTIONS.MANGETSU.id]: {combo: 10}, // combo 10
+	[ACTIONS.OKA.id]: {combo: 10}, // combo 10
 
 	// ranged
-	[ACTIONS.ENPI.id]: 10,
+	[ACTIONS.ENPI.id]: {cast: 10},
 
 	// spenders
-	[ACTIONS.HISSATSU_GYOTEN.id]: -10,
-	[ACTIONS.HISSATSU_YATEN.id]: -10,
-	[ACTIONS.HISSATSU_SEIGAN.id]: -15,
-	[ACTIONS.HISSATSU_KAITEN.id]: -20,
-	[ACTIONS.HISSATSU_SHINTEN.id]: -25,
-	[ACTIONS.HISSATSU_KYUTEN.id]: -25,
-	[ACTIONS.HISSATSU_GUREN.id]: -50,
+	[ACTIONS.HISSATSU_GYOTEN.id]: {cast: -10},
+	[ACTIONS.HISSATSU_YATEN.id]: {cast: -10},
+	[ACTIONS.HISSATSU_SEIGAN.id]: {cast: -15},
+	[ACTIONS.HISSATSU_KAITEN.id]: {cast: -20},
+	[ACTIONS.HISSATSU_SHINTEN.id]: {cast: -25},
+	[ACTIONS.HISSATSU_KYUTEN.id]: {cast: -25},
+	[ACTIONS.HISSATSU_GUREN.id]: {cast: -50},
 
 	// TODO: MEDITATION - 10/tick, max 5 ticks
 	// TODO: AGEHA - 10, 30 if kill
@@ -62,11 +62,11 @@ export default class Kenki extends Module {
 	constructor(...args) {
 		super(...args)
 
-		// Kenki
+		// Kenki actions
 		this.addHook(
-			'cast',
+			['cast', 'combo'],
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
-			event => this.modify(KENKI_ACTIONS[event.ability.guid]),
+			this._onAction,
 		)
 
 		// Death just flat out resets everything. Stop dying.
@@ -92,6 +92,16 @@ export default class Kenki extends Module {
 			t: this.parser.currentTimestamp,
 			y: this._kenki,
 		})
+	}
+
+	_onAction(event) {
+		const action = KENKI_ACTIONS[event.ability.guid]
+
+		if (!action | !action[event.type]) {
+			return
+		}
+
+		this.modify(action[event.type])
 	}
 
 	_onComplete() {
