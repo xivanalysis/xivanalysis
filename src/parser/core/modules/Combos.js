@@ -33,11 +33,60 @@ export default class Combos extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_fabricateComboEvent(event) {
+	/** @protected */
+	fabricateComboEvent(event) {
 		const combo = {...event}
 		combo.type = 'combo'
 		delete combo.timestamp // Since fabricateEvent adds that in anyway
 		this.parser.fabricateEvent(combo)
+	}
+
+	/** @protected */
+	recordBrokenCombo(event) {
+		this._brokenComboCount++
+		this._comboBreakers.push(event)
+	}
+
+	/** @protected */
+	recordUncomboedGcd(event) {
+		this._uncomboedGcdCount++
+		this._uncomboedGcds.push(event)
+	}
+
+	/** @protected */
+	checkCombo(combo, event) {
+		// Not in a combo
+		if (this._lastAction === NO_COMBO) {
+			// Combo starter, we good
+			if (combo.start) {
+				this.fabricateComboEvent(event)
+				return true
+			}
+
+			// Combo action that isn't a starter, that's a paddlin'
+			if (combo.from) {
+				this.recordUncomboedGcd(event)
+				return false
+			}
+		}
+
+		// Continuing a combo correctly, yay
+		if (combo.from === this._lastAction) {
+			this.fabricateComboEvent(event)
+			// If it's a finisher, reset the combo
+			return !combo.end
+		}
+
+		// Combo starter mid-combo, that's a paddlin'
+		if (combo.start) {
+			this.recordBrokenCombo(event)
+			return true
+		}
+
+		// Incorrect combo action, that's a paddlin'
+		this.recordBrokenCombo(event)
+		this.recordUncomboedGcd(event)
+		return false
 	}
 
 	_onCast(event) {
@@ -56,40 +105,16 @@ export default class Combos extends Module {
 			this._lastGcdTime = event.timestamp
 		}
 
+		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
-			if (this._lastAction === NO_COMBO) {
-				// Not in a combo
-				if (action.combo.start) {
-					// Combo starter, we good
-					this._lastAction = action.id
-					this._fabricateComboEvent(event)
-				} else if (action.combo.from) {
-					// Combo action that isn't a starter, that's a paddlin'
-					this._uncomboedGcdCount++
-					this._uncomboedGcds.push(event)
-				}
-			} else if (action.combo.from === this._lastAction) {
-				// Continuing a combo correctly, yay
-				this._lastAction = action.combo.end ? NO_COMBO : action.id // If it's a finisher, reset the combo
-				this._fabricateComboEvent(event)
-			} else if (action.combo.start) {
-				// Combo starter mid-combo, that's a paddlin'
-				this._lastAction = action.id
-				this._brokenComboCount++
-				this._comboBreakers.push(event)
-			} else {
-				// Incorrect combo action, that's a paddlin'
-				this._lastAction = NO_COMBO
-				this._brokenComboCount++
-				this._comboBreakers.push(event)
-				this._uncomboedGcdCount++
-				this._uncomboedGcds.push(event)
-			}
-		} else if (action.breaksCombo && this._lastAction !== NO_COMBO) {
+			const continueCombo = this.checkCombo(action.combo, event)
+			this._lastAction = continueCombo? action.id : NO_COMBO
+		}
+
+		if (action.breaksCombo && this._lastAction !== NO_COMBO) {
 			// Combo breaking action, that's a paddlin'
 			this._lastAction = NO_COMBO
-			this._brokenComboCount++
-			this._comboBreakers.push(event)
+			this.recordBrokenCombo(event)
 		}
 	}
 
