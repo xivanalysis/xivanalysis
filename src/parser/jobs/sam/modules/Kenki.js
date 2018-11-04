@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+// import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const MAX_KENKI = 100
 
@@ -17,14 +17,14 @@ const KENKI_ACTIONS = {
 	[ACTIONS.JINPU.id]: {combo: 5},
 	[ACTIONS.SHIFU.id]: {combo: 5},
 	[ACTIONS.YUKIKAZE.id]: {combo: 10},
-	[ACTIONS.GEKKO.id]: {combo: 10}, // combo 5, positional 5
-	[ACTIONS.KASHA.id]: {combo: 10}, // combo 5 positional 5
+	[ACTIONS.GEKKO.id]: {combo: 5, positional: 5},
+	[ACTIONS.KASHA.id]: {combo: 5, positional: 5},
 	[ACTIONS.AGEHA.id]: {cast: 10}, // cast 10, kill 20
 
 	// aoe
 	[ACTIONS.FUGA.id]: {cast: 5},
-	[ACTIONS.MANGETSU.id]: {combo: 10}, // combo 10
-	[ACTIONS.OKA.id]: {combo: 10}, // combo 10
+	[ACTIONS.MANGETSU.id]: {combo: 10},
+	[ACTIONS.OKA.id]: {combo: 10},
 
 	// ranged
 	[ACTIONS.ENPI.id]: {cast: 10},
@@ -46,14 +46,21 @@ const MAX_MEDITATE_TICKS = 5
 export default class Kenki extends Module {
 	static handle = 'kenki'
 	static dependencies = [
-		'suggestions',
+		// 'suggestions',
 	]
 	static displayOrder = -100
 
 	// Kenki
-	_kenki = 0
-	_wasted = 0
-	_history = []
+	_kenki = {
+		min: 0,
+		max: 0,
+	}
+	_history = {
+		min: [],
+		max: [],
+	}
+
+	// _wasted = 0
 
 	constructor(...args) {
 		super(...args)
@@ -71,28 +78,26 @@ export default class Kenki extends Module {
 		this.addHook('removebuff', filter, this._onRemoveMeditate)
 
 		// Death just flat out resets everything. Stop dying.
-		this.addHook('death', {to: 'player'}, () => this._kenki = 0)
+		this.addHook('death', {to: 'player'}, () => this.modify(-MAX_KENKI))
 
 		// Misc
 		this.addHook('complete', this._onComplete)
 	}
 
 	// kenki quick maths
-	modify(amount) {
-		const kenki = this._kenki + amount
-		this._kenki = _.clamp(kenki, 0, MAX_KENKI)
+	modify(known, potential = 0) {
+		this._kenki.min = _.clamp(this._kenki.min + known, 0, MAX_KENKI)
+		this._kenki.max = _.clamp(this._kenki.max + known + potential, 0, MAX_KENKI)
 
-		this._wasted += Math.max(0, kenki - this._kenki)
+		// TODO: Calc diff between clamped min and baseline
+		// TODO: Diff shows minimum wrongnessnessness, backtrack and adjust?
 
-		// This should theoretically never happen but we all know damn well it will.
-		if (kenki - this._kenki < 0) {
-			console.error(`Dropping below 0 kenki: ${kenki}/100`)
-		}
+		// TODO: Warn waste somehow
+		// this._wasted += Math.max(0, kenki - this._kenki)
 
-		this._history.push({
-			t: this.parser.currentTimestamp - this.parser.fight.start_time,
-			y: this._kenki,
-		})
+		const t = this.parser.currentTimestamp - this.parser.fight.start_time
+		this._history.min.push({t, y: this._kenki.min})
+		this._history.max.push({t, y: this._kenki.max})
 	}
 
 	_onAction(event) {
@@ -102,7 +107,8 @@ export default class Kenki extends Module {
 			return
 		}
 
-		this.modify(action[event.type])
+		// We can't track positionals, so passing the positional kenki values through as a potential gain
+		this.modify(action[event.type], action.positional)
 	}
 
 	_onApplyMeditate(event) {
@@ -112,29 +118,28 @@ export default class Kenki extends Module {
 	_onRemoveMeditate(event) {
 		const diff = event.timestamp - this.meditateStart
 
-		// Ticks could occur at any point in the duration (server tick) - add an extra tick to be sure we don't under-guess
-		// TODO: Handle the extra tick with potential kenki handling
-		const ticks = Math.min(Math.floor(diff / MEDITATE_TICK_FREQUENCY) + 1, MAX_MEDITATE_TICKS)
+		const ticks = Math.min(Math.floor(diff / MEDITATE_TICK_FREQUENCY), MAX_MEDITATE_TICKS)
 
-		this.modify(ticks * KENKI_PER_MEDITATE_TICK)
+		// Ticks could occur at any point in the duration (server tick) - add an extra potential tick if they missed one so we don't under-guess
+		this.modify(ticks * KENKI_PER_MEDITATE_TICK, ticks === MAX_MEDITATE_TICKS? 0 : KENKI_PER_MEDITATE_TICK)
 	}
 
 	_onComplete() {
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HAKAZE.icon,
-			content: <>
-				You used kenki builders in a way that overcapped you.
-			</>,
-			tiers: {
-				20: SEVERITY.MINOR,
-				21: SEVERITY.MEDIUM,
-				50: SEVERITY.MAJOR,
-			},
-			value: this._wasted,
-			why: <>
-				You wasted {this._wasted} kenki by using abilities that sent you over the cap.
-			</>,
-		}))
+		// this.suggestions.add(new TieredSuggestion({
+		// 	icon: ACTIONS.HAKAZE.icon,
+		// 	content: <>
+		// 		You used kenki builders in a way that overcapped you.
+		// 	</>,
+		// 	tiers: {
+		// 		20: SEVERITY.MINOR,
+		// 		21: SEVERITY.MEDIUM,
+		// 		50: SEVERITY.MAJOR,
+		// 	},
+		// 	value: this._wasted,
+		// 	why: <>
+		// 		You wasted {this._wasted} kenki by using abilities that sent you over the cap.
+		// 	</>,
+		// }))
 	}
 
 	output() {
@@ -144,18 +149,35 @@ export default class Kenki extends Module {
 		/* eslint-disable no-magic-numbers */
 		const data = {
 			datasets: [{
-				label: 'Kenki',
-				data: this._history,
+				label: 'Minimum',
+				data: this._history.min,
+				steppedLine: true,
+				fill: false,
+				borderColor: 'transparent',
+				pointRadius: 0,
+				pointHitRadius: 10,
+			}, {
+				label: 'Maximum',
+				data: this._history.max,
+				steppedLine: true,
 				backgroundColor: sam.fade(0.5),
 				borderColor: sam.fade(0.2),
-				steppedLine: true,
+				fill: '-1',
+				pointRadius: 0,
+				pointHitRadius: 10,
 			}],
 		}
 		/* eslint-enable no-magic-numbers */
 
 		return <TimeLineChart
 			data={data}
-			options={{legend: false}}
+			options={{
+				legend: false,
+				tooltips: {
+					mode: 'index',
+					displayColors: false,
+				},
+			}}
 		/>
 	}
 }
