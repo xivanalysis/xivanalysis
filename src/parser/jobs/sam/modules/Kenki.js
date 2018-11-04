@@ -60,7 +60,11 @@ export default class Kenki extends Module {
 		max: [],
 	}
 
-	// _wasted = 0
+	_wasted = {
+		min: 0,
+		max: 0,
+		transfer: 0,
+	}
 
 	constructor(...args) {
 		super(...args)
@@ -78,22 +82,43 @@ export default class Kenki extends Module {
 		this.addHook('removebuff', filter, this._onRemoveMeditate)
 
 		// Death just flat out resets everything. Stop dying.
-		this.addHook('death', {to: 'player'}, () => this.modify(-MAX_KENKI))
+		this.addHook('death', {to: 'player'}, () => this._set(0, 0))
 
 		// Misc
 		this.addHook('complete', this._onComplete)
 	}
 
-	// kenki quick maths
+	/**
+	 * Modify kenki value, optionally including a potential gain
+	 * @param {number} known Known gained kenki
+	 * @param {number} [potential=0] Potential gained kenki
+	 */
 	modify(known, potential = 0) {
-		this._kenki.min = _.clamp(this._kenki.min + known, 0, MAX_KENKI)
-		this._kenki.max = _.clamp(this._kenki.max + known + potential, 0, MAX_KENKI)
+		const min = this._kenki.min + known
+		const max = this._kenki.max + known + potential
+		this._set(min, max)
 
-		// TODO: Calc diff between clamped min and baseline
-		// TODO: Diff shows minimum wrongnessnessness, backtrack and adjust?
+		// _kenki's been clamped, anything above it is wastage
+		this._wasted.min += Math.max(0, min - this._kenki.min)
+		const newMaxWaste = Math.max(0, max - this._kenki.max)
+		this._wasted.max += newMaxWaste
+		this._wasted.transfer += newMaxWaste
 
-		// TODO: Warn waste somehow
-		// this._wasted += Math.max(0, kenki - this._kenki)
+		// Potential increases muddy the ability to track waste when they hit 0 - remove it from the bank
+		this._wasted.transfer = Math.max(0, this._wasted.transfer - potential)
+
+		// If the minimum went sub-0, we've reduced the possible kenki range, adjust the waste within the transfer range
+		if (min < 0) {
+			this._wasted.min += Math.min(this._wasted.transfer, -min)
+			this._wasted.transfer = Math.max(0, this._wasted.transfer + min)
+		}
+	}
+
+	_set(min, max) {
+		this._kenki = {
+			min: _.clamp(min, 0, MAX_KENKI),
+			max: _.clamp(max, 0, MAX_KENKI),
+		}
 
 		const t = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.min.push({t, y: this._kenki.min})
@@ -125,6 +150,10 @@ export default class Kenki extends Module {
 	}
 
 	_onComplete() {
+		// console.log(this._wasted)
+		// TODO: use average as tier value?
+		// boxer reckons ~25 as point to start whining
+
 		// this.suggestions.add(new TieredSuggestion({
 		// 	icon: ACTIONS.HAKAZE.icon,
 		// 	content: <>
