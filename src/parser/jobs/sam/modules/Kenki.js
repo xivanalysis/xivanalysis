@@ -1,14 +1,15 @@
 import Color from 'color'
 import React from 'react'
-import _ from 'lodash'
+// import _ from 'lodash'
 
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
+import JOBS from 'data/JOBS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import JOBS from 'data/JOBS'
 
-const MAX_KENKI = 100
+// const MAX_KENKI = 100
 
 const KENKI_ACTIONS = {
 	// single target
@@ -36,16 +37,12 @@ const KENKI_ACTIONS = {
 	[ACTIONS.HISSATSU_KYUTEN.id]: {cast: -25},
 	[ACTIONS.HISSATSU_GUREN.id]: {cast: -50},
 
-	// TODO: MEDITATION - 10/tick, max 5 ticks
 	// TODO: AGEHA - 10, 30 if kill
 }
 
-// Meditate:
-// cast
-// applybuff
-// applybuffstack
-// ...
-// removebuff
+const KENKI_PER_MEDITATE_TICK = 10
+const MEDITATE_TICK_FREQUENCY = 3000
+const MAX_MEDITATE_TICKS = 5
 
 export default class Kenki extends Module {
 	static handle = 'kenki'
@@ -69,6 +66,11 @@ export default class Kenki extends Module {
 			this._onAction,
 		)
 
+		// Meditate
+		const filter = {by: 'player', abilityId: STATUSES.MEDITATE.id}
+		this.addHook('applybuff', filter, this._onApplyMeditate)
+		this.addHook('removebuff', filter, this._onRemoveMeditate)
+
 		// Death just flat out resets everything. Stop dying.
 		this.addHook('death', {to: 'player'}, () => this._kenki = 0)
 
@@ -79,7 +81,7 @@ export default class Kenki extends Module {
 	// kenki quick maths
 	modify(amount) {
 		const kenki = this._kenki + amount
-		this._kenki = _.clamp(kenki, 0, MAX_KENKI)
+		this._kenki = kenki // _.clamp(kenki, 0, MAX_KENKI)
 
 		this._wasted += Math.max(0, kenki - this._kenki)
 
@@ -102,6 +104,20 @@ export default class Kenki extends Module {
 		}
 
 		this.modify(action[event.type])
+	}
+
+	_onApplyMeditate(event) {
+		this.meditateStart = event.timestamp
+	}
+
+	_onRemoveMeditate(event) {
+		const diff = event.timestamp - this.meditateStart
+
+		// Ticks could occur at any point in the duration (server tick) - add an extra tick to be sure we don't under-guess
+		// TODO: Handle the extra tick with potential kenki handling
+		const ticks = Math.min(Math.floor(diff / MEDITATE_TICK_FREQUENCY) + 1, MAX_MEDITATE_TICKS)
+
+		this.modify(ticks * KENKI_PER_MEDITATE_TICK)
 	}
 
 	_onComplete() {

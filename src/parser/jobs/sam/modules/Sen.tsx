@@ -6,6 +6,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+
 import Kenki from './Kenki'
 
 enum SEN {
@@ -80,8 +81,8 @@ export default class Sen extends Module {
 
 	private onHagakure() {
 		// Work out how many sen are currently active
-		const activeSen = Object.entries(this.sen)
-			.filter(([, active]) => active)
+		const activeSen = Object.values(this.sen)
+			.filter(active => active)
 			.length
 
 		// Add the new kenki, wipe the sen
