@@ -1,13 +1,15 @@
 import Color from 'color'
-import React from 'react'
 import _ from 'lodash'
+import React from 'react'
 
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-// import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+import kenkiIcon from './kenki.png'
 
 const MAX_KENKI = 100
 
@@ -46,9 +48,8 @@ const MAX_MEDITATE_TICKS = 5
 export default class Kenki extends Module {
 	static handle = 'kenki'
 	static dependencies = [
-		// 'suggestions',
+		'suggestions',
 	]
-	static displayOrder = -100
 
 	// Kenki
 	_kenki = {
@@ -150,25 +151,19 @@ export default class Kenki extends Module {
 	}
 
 	_onComplete() {
-		// console.log(this._wasted)
-		// TODO: use average as tier value?
-		// boxer reckons ~25 as point to start whining
+		const {min, max} = this._wasted
 
-		// this.suggestions.add(new TieredSuggestion({
-		// 	icon: ACTIONS.HAKAZE.icon,
-		// 	content: <>
-		// 		You used kenki builders in a way that overcapped you.
-		// 	</>,
-		// 	tiers: {
-		// 		20: SEVERITY.MINOR,
-		// 		21: SEVERITY.MEDIUM,
-		// 		50: SEVERITY.MAJOR,
-		// 	},
-		// 	value: this._wasted,
-		// 	why: <>
-		// 		You wasted {this._wasted} kenki by using abilities that sent you over the cap.
-		// 	</>,
-		// }))
+		this.suggestions.add(new TieredSuggestion({
+			icon: kenkiIcon,
+			content: <>Kenki is your primary resource, and a significant source of damage. Avoid wasting potential kenki by using it before you hit the maximum of {MAX_KENKI}.</>,
+			why: <>You wasted between {min} and {max} kenki.</>,
+			value: (min + max) / 2,
+			tiers: {
+				5: SEVERITY.MINOR,
+				20: SEVERITY.MEDIUM,
+				35: SEVERITY.MAJOR,
+			},
+		}))
 	}
 
 	output() {
