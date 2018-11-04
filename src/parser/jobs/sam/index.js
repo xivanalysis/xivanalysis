@@ -26,4 +26,12 @@ export default {
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
 	],
+
+	changelog: [
+		{
+			date: new Date('2018-11-04'),
+			changes: <>Added tracking and suggestions for combos, sen, and emulated kenki. Also a kenki graph. I like graphs.</>,
+			contributors: [CONTRIBUTORS.ACKWELL],
+		},
+	],
 }
