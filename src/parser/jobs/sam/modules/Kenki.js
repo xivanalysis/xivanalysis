@@ -10,6 +10,7 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import kenkiIcon from './kenki.png'
+import styles from './Kenki.module.css'
 
 const MAX_KENKI = 100
 
@@ -193,15 +194,22 @@ export default class Kenki extends Module {
 		}
 		/* eslint-enable no-magic-numbers */
 
-		return <TimeLineChart
-			data={data}
-			options={{
-				legend: false,
-				tooltips: {
-					mode: 'index',
-					displayColors: false,
-				},
-			}}
-		/>
+		return <>
+			<span className={styles.helpText}>
+				The visible area represents possible kenki values if positionals were missed.
+			</span>
+			<div>
+				<TimeLineChart
+					data={data}
+					options={{
+						legend: false,
+						tooltips: {
+							mode: 'index',
+							displayColors: false,
+						},
+					}}
+				/>
+			</div>
+		</>
 	}
 }

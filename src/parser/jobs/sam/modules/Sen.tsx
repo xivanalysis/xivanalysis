@@ -94,7 +94,7 @@ export default class Sen extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MEIKYO_SHISUI.icon,
 			content: <>
-				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, <ActionLink {...ACTIONS.YUKIKAZE} />, at a time when you already had that sen, thus wasting a combo because it did not give you sen.
+				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, or <ActionLink {...ACTIONS.YUKIKAZE} /> at a time when you already had that sen, thus wasting a combo because it did not give you sen.
 			</>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -102,9 +102,7 @@ export default class Sen extends Module {
 				3: SEVERITY.MAJOR,
 			},
 			value: this.wasted,
-			why: <>
-				You lost {this.wasted} sen by using finishing combos that gave you sen you already had.
-			</>,
+			why: <>You wasted {this.wasted} sen.</>,
 		}))
 	}
 }
