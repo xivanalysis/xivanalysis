@@ -1,6 +1,6 @@
 import Color from 'color'
 import React from 'react'
-// import _ from 'lodash'
+import _ from 'lodash'
 
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
@@ -9,16 +9,17 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-// const MAX_KENKI = 100
+const MAX_KENKI = 100
 
 const KENKI_ACTIONS = {
 	// single target
 	[ACTIONS.HAKAZE.id]: {cast: 5},
-	[ACTIONS.JINPU.id]: {combo: 5}, // combo 5
-	[ACTIONS.SHIFU.id]: {combo: 5}, // combo 5
-	[ACTIONS.YUKIKAZE.id]: {combo: 10}, // combo 10
+	[ACTIONS.JINPU.id]: {combo: 5},
+	[ACTIONS.SHIFU.id]: {combo: 5},
+	[ACTIONS.YUKIKAZE.id]: {combo: 10},
 	[ACTIONS.GEKKO.id]: {combo: 10}, // combo 5, positional 5
 	[ACTIONS.KASHA.id]: {combo: 10}, // combo 5 positional 5
+	[ACTIONS.AGEHA.id]: {cast: 10}, // cast 10, kill 20
 
 	// aoe
 	[ACTIONS.FUGA.id]: {cast: 5},
@@ -36,8 +37,6 @@ const KENKI_ACTIONS = {
 	[ACTIONS.HISSATSU_SHINTEN.id]: {cast: -25},
 	[ACTIONS.HISSATSU_KYUTEN.id]: {cast: -25},
 	[ACTIONS.HISSATSU_GUREN.id]: {cast: -50},
-
-	// TODO: AGEHA - 10, 30 if kill
 }
 
 const KENKI_PER_MEDITATE_TICK = 10
@@ -81,7 +80,7 @@ export default class Kenki extends Module {
 	// kenki quick maths
 	modify(amount) {
 		const kenki = this._kenki + amount
-		this._kenki = kenki // _.clamp(kenki, 0, MAX_KENKI)
+		this._kenki = _.clamp(kenki, 0, MAX_KENKI)
 
 		this._wasted += Math.max(0, kenki - this._kenki)
 
