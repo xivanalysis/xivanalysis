@@ -57,6 +57,8 @@ export default class RotationWatchdog extends Module {
 	_missedF4sCauseEndingInT3 = 0
 	_wrongT3 = 0
 	_rotationsWithoutFire = 0
+	_umbralIceBeforeFire = 0
+	_atypicalAFStartId = false
 
 	_gaugeState = {}
 
@@ -70,6 +72,10 @@ export default class RotationWatchdog extends Module {
 	}
 
 	_onGaugeChange(event) {
+		// Keep track of how many UI stacks we had upon entering AF, affects expected F4 counts for the cycle
+		if (event.astralFire > 0 && this._gaugeState.astralFire === 0) {
+			this._umbralIceBeforeFire = this._gaugeState.umbralIce
+		}
 		this._gaugeState.astralFire = event.astralFire
 		this._gaugeState.umbralIce = event.umbralIce
 		this._gaugeState.umbralHearts = event.umbralHearts
@@ -94,12 +100,22 @@ export default class RotationWatchdog extends Module {
 		const actionId = event.ability.guid
 
 		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
-		if (actionId === ACTIONS.FIRE_III.id && this._umbralIceStacks === AFUIBUFFMAXSTACK) {
-			if (this._T3) {
-				this._UIEndingInT3 ++
-				this._T3inUIFlag = true
+		if (actionId === ACTIONS.FIRE_III.id) {
+			if (this._umbralIceStacks === AFUIBUFFMAXSTACK) {
+				if (this._T3) {
+					this._UIEndingInT3 ++
+					this._T3inUIFlag = true
+				}
+				this._MP = this.combatants.selected.resources.mp
 			}
-			this._MP = this.combatants.selected.resources.mp
+			// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
+			if (this._astralFire !== AFUIBUFFMAXSTACK) {
+				if (event.ability.overrideAction) {
+					this._atypicalAFStartId = event.ability.overrideAction
+				} else {
+					this._atypicalAFStartId = ACTIONS.FIRE_III.id
+				}
+			}
 		}
 
 		//If my T3 isn't a proc already and cast under AF, it's straight up wrong.
@@ -114,6 +130,9 @@ export default class RotationWatchdog extends Module {
 			this._startRecording(event)
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
+		} else if (actionId === ACTIONS.FIRE_III.id && !this._inRotation) {
+			// Catch oddly-begun fire phases in case something weird was going on.
+			this._startRecording(event)
 		}
 		if (this._first) { this._first = false }
 		if (this._inRotation && !getAction(actionId).autoAttack) {
@@ -286,6 +305,7 @@ export default class RotationWatchdog extends Module {
 			}
 			//reset the flag
 			this._T3inUIFlag = false
+			this._atypicalAFStartId = null
 		}
 	}
 
@@ -297,8 +317,36 @@ export default class RotationWatchdog extends Module {
 	}
 
 	_getMissingFire4Count(count, hasConvert) {
-		const NotEnoughUH = this._umbralHeartStacks  < 2
-		const expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0) - (NotEnoughUH ? 1 : 0)
+		let expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0)
+
+		if (this._atypicalAFStartId === ACTIONS.FIRE_III_PROC.id || (this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && this._atypicalAFStartId !== ACTIONS.FIRE_III.id)) {
+			// If we arrived in Astral Fire from UI3 normally or via F3P, but didn't have 2 or 3 hearts, we lose a F4
+			if (this._umbralHeartStacks < 2) {
+				expected--
+			}
+			// If you Convert when you have an even number of UH stacks going into this fire phase from UI3, the extra MP
+			// from converting is only enough to grant one additional Fire 4 as compared to not converting
+			// So remove one of the expected casts granted by FIRE4_FROM_CONVERT
+			if (hasConvert && this._umbralHeartStacks % 2 === 0 && this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && !this._astralFireBeganWithF3P) {
+				expected--
+			}
+		} else if (this._umbralIceBeforeFire > 0 || this._atypicalAFStartId) { // If we came from Ice other than UI3, we're probably losing Fire 4s
+			// If we don't have max hearts, we lose at least one cast
+			if (this._umbralHeartStacks < AFUIBUFFMAXSTACK) {
+				expected--
+			}
+			// If we have no hearts, we lose another one :(
+			if (this._umbralHeartStacks === 0) {
+				expected--
+			}
+			// If we started the fire phase with a Fire 3 hardcast not under ice (ie. AF1 b/c of Transpose), we lose a cast.
+			if (this._atypicalAFStartId) {
+				expected--
+			}
+		} else { // If we entered AF raw, we're losing two F4s
+			expected -= 2
+		}
+
 		const missing = expected - count
 		return {missing, expected}
 	}
