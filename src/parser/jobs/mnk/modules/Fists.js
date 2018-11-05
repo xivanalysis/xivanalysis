@@ -20,6 +20,16 @@ const STANCES = [
 	STATUSES.FISTS_OF_WIND.id,
 ]
 
+// Stance mapping for event splicing
+// We don't need Riddle of Wind because a tackle triggers it
+const STANCE_MAP = {
+	[ACTIONS.EARTH_TACKLE.id]: STATUSES.FISTS_OF_EARTH.id,
+	[ACTIONS.FIRE_TACKLE.id]: STATUSES.FISTS_OF_FIRE.id,
+	[ACTIONS.WIND_TACKLE.id]: STATUSES.FISTS_OF_WIND,
+	[ACTIONS.RIDDLE_OF_EARTH.id]: STATUSES.FISTS_OF_EARTH.id,
+	[ACTIONS.RIDDLE_OF_FIRE.id]: STATUSES.FISTS_OF_FIRE.id,
+}
+
 const CHART_COLOURS = {
 	[STANCELESS]: '#888',
 	[STATUSES.FISTS_OF_EARTH.id]: Color(JOBS.MONK.colour),   // idk it matches
@@ -66,6 +76,48 @@ export default class Fists extends Module {
 		this.addHook('applybuff', {to: 'player', abilityId: STANCES}, this._onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: STANCES}, this._onRemove)
 		this.addHook('complete', this._onComplete)
+	}
+
+	normalise(events) {
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
+			const abilityId = event.ability.guid
+			const startTime = this.parser.fight.start_time
+
+			// Ignore any non-ability events
+			if (!abilityId) {
+				continue
+			}
+
+			// We got a remove (PrecastStatus will handle this), or an initial apply
+			if (['removebuff', 'applybuff'].includes(event.type) && STANCES.includes(abilityId)) {
+				break
+			}
+
+			// Check for any specific casts that imply stance
+			if (event.type === 'cast') {
+				// They dun goofed
+				if (abilityId === ACTIONS.SHOULDER_TACKLE.id) {
+					break
+				}
+
+				// It was a legit Tackle, we know what's up
+				if (Object.keys(STANCE_MAP).map(Number).includes(abilityId)) {
+					events.splice(0, 0, {
+						...event,
+						ability: {
+							guid: STANCE_MAP[abilityId],
+						},
+						timestamp: startTime - 1,
+						type: 'applybuff',
+					})
+
+					break
+				}
+			}
+		}
+
+		return events
 	}
 
 	_handleFistChange(stanceId) {
@@ -153,7 +205,7 @@ export default class Fists extends Module {
 	}
 
 	getStanceUptimePercent(stanceId) {
-		const statusUptime = this.combatants.getStatusUptime(stanceId, this.parser.player.id)
+		const statusUptime = this.combatants.getStatusUptime(stanceId)
 
 		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
 	}
@@ -168,7 +220,7 @@ export default class Fists extends Module {
 	}
 
 	output() {
-		const uptimeKeys = Object.keys(this._fistUptime).map(Number)
+		const uptimeKeys = Object.keys(this._fistUptime).map(Number).filter(fist => fist > 0)
 
 		const data = uptimeKeys.map(id => {
 			const value = this._fistUptime[id]
