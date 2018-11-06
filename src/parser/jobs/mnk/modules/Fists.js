@@ -230,7 +230,7 @@ export default class Fists extends Module {
 	}
 
 	output() {
-		const uptimeKeys = Object.keys(this._fistUptime).map(Number).filter(fist => fist > 0)
+		const uptimeKeys = Object.keys(this._fistUptime).map(Number).filter(fist => this._fistUptime[fist] > 0)
 
 		const data = uptimeKeys.map(id => {
 			const value = this._fistUptime[id]
