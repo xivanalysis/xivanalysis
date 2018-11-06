@@ -25,7 +25,7 @@ const STANCES = [
 const STANCE_MAP = {
 	[ACTIONS.EARTH_TACKLE.id]: STATUSES.FISTS_OF_EARTH.id,
 	[ACTIONS.FIRE_TACKLE.id]: STATUSES.FISTS_OF_FIRE.id,
-	[ACTIONS.WIND_TACKLE.id]: STATUSES.FISTS_OF_WIND,
+	[ACTIONS.WIND_TACKLE.id]: STATUSES.FISTS_OF_WIND.id,
 	[ACTIONS.RIDDLE_OF_EARTH.id]: STATUSES.FISTS_OF_EARTH.id,
 	[ACTIONS.RIDDLE_OF_FIRE.id]: STATUSES.FISTS_OF_FIRE.id,
 }
@@ -64,9 +64,9 @@ export default class Fists extends Module {
 	static title = 'Fist Stances'
 	static displayOrder = DISPLAY_ORDER.FISTS
 
-	_activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
-	_fistUptime = {[STANCELESS]: 0} // Initialise stanceless to prevent weird UI shit
-	_fistGCDs = {[STANCELESS]: 0} // Initialise empty
+	_activeFist = null
+	_fistUptime = {}
+	_fistGCDs = {}
 
 	_lastFistChange = this.parser.fight.start_time
 
@@ -82,7 +82,6 @@ export default class Fists extends Module {
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 			const abilityId = event.ability.guid
-			const startTime = this.parser.fight.start_time
 
 			// Ignore any non-ability events
 			if (!abilityId) {
@@ -108,7 +107,7 @@ export default class Fists extends Module {
 						ability: {
 							guid: STANCE_MAP[abilityId],
 						},
-						timestamp: startTime - 1,
+						timestamp: this.parser.fight.start_time - 1,
 						type: 'applybuff',
 					})
 
@@ -121,6 +120,13 @@ export default class Fists extends Module {
 	}
 
 	_handleFistChange(stanceId) {
+		// Init to stanceless because:
+		//  first event applybuff will change it with zero uptime
+		//  first event cast will set the activeFist anyway
+		if (!this._activeFist) {
+			this._activeFist = STANCELESS
+		}
+
 		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
 			this._fistUptime[this._activeFist] = 0
 		}
@@ -144,6 +150,10 @@ export default class Fists extends Module {
 		}
 
 		// Initialise new stance
+		if (!this._activeFist) {
+			this._activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
+		}
+
 		if (!this._fistGCDs.hasOwnProperty(this._activeFist)) {
 			this._fistGCDs[this._activeFist] = 0
 		}
@@ -158,13 +168,13 @@ export default class Fists extends Module {
 	_onRemove(event) {
 		// If we're removing a fist that isn't active, it's just log order weirdness due to timestamps
 		if (this._activeFist === event.ability.guid) {
-			this._handleFistChange(0)
+			this._handleFistChange(STANCELESS)
 		}
 	}
 
 	_onComplete() {
 		// Flush the last stance
-		this._handleFistChange(0)
+		this._handleFistChange(STANCELESS)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
