@@ -1,6 +1,0 @@
-{
-	"presets": [
-		"react-app",
-		"@lingui/babel-preset-react"
-	]
-}
