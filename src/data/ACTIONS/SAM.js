@@ -8,6 +8,10 @@ export default {
 		name: 'Hakazae',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
+		potency:  150,
+		combo: {
+			start: true,
+		},
 	},
 
 	JINPU: {
@@ -15,6 +19,11 @@ export default {
 		name: 'Jinpu',
 		icon: 'https://xivapi.com/i/003000/003152.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7477,
+			potency: 300,
+		},
 	},
 
 	ENPI: {
@@ -22,6 +31,7 @@ export default {
 		name: 'Enpi',
 		icon: 'https://xivapi.com/i/003000/003155.png',
 		onGcd: true,
+		breaksCombo: true,
 	},
 
 	SHIFU: {
@@ -29,6 +39,11 @@ export default {
 		name: 'Shifu',
 		icon: 'https://xivapi.com/i/003000/003156.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7477,
+			potency: 300,
+		},
 	},
 
 	FUGA: {
@@ -36,6 +51,9 @@ export default {
 		name: 'Fuga',
 		icon: 'https://xivapi.com/i/003000/003157.png',
 		onGcd: true,
+		combo: {
+			start: true,
+		},
 	},
 
 	IAIJUTSU: {
@@ -59,6 +77,12 @@ export default {
 		name: 'Gekko',
 		icon: 'https://xivapi.com/i/003000/003158.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7478,
+			potency: 440,
+			end: true,
+		},
 	},
 
 	MANGETSU: {
@@ -66,6 +90,12 @@ export default {
 		name: 'Mangetsu',
 		icon: 'https://xivapi.com/i/003000/003163.png',
 		onGcd: true,
+		potency: 100, // diminishing returns?
+		combo: {
+			from: 7483,
+			potency: 200,
+			end: true,
+		},
 	},
 
 	TENKA_GOKEN: {
@@ -81,6 +111,12 @@ export default {
 		name: 'Kasha',
 		icon: 'https://xivapi.com/i/003000/003164.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7479,
+			potency: 440,
+			end: true,
+		},
 	},
 
 	OKA: {
@@ -88,6 +124,12 @@ export default {
 		name: 'Oka',
 		icon: 'https://xivapi.com/i/003000/003165.png',
 		onGcd: true,
+		potency: 100, // diminishing returns?
+		combo: {
+			from: 7483,
+			potency: 200,
+			end: true,
+		},
 	},
 
 	MIDARE_SETSUGEKKA: {
@@ -103,6 +145,12 @@ export default {
 		name: 'Yukikaze',
 		icon: 'https://xivapi.com/i/003000/003166.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7477,
+			potency: 380,
+			end: true,
+		},
 	},
 
 	//-----

@@ -1,16 +1,17 @@
+import Buffs from './Buffs'
+import Combos from './Combos'
 import Higanbana from './Higanbana'
 import Kaiten from './Kaiten'
-//import Gauge from './Gauge' DIASABLED BECAUSE I MAKE TRASH CODE
-//import Meditate from './Meditate' DISABLED BECAUSE I MAKE TRASH CODE
-import Buffs from './Buffs'
+import Kenki from './Kenki'
+import Sen from './Sen'
 import Speedmod from './Speedmod'
 
-export default
-[
+export default [
+	Buffs,
+	Combos,
 	Higanbana,
 	Kaiten,
-	//Gauge,
-	//Meditate,
-	Buffs,
+	Kenki,
+	Sen,
 	Speedmod,
 ]
