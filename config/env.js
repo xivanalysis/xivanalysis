@@ -1,8 +1,25 @@
+const dotenv = require('dotenv')
+const dotenvExpand = require('dotenv-expand')
+const fs = require('fs')
 const glob = require('glob')
 const _ = require('lodash')
 const {DefinePlugin} = require('webpack')
 
 const packageJson = require('../package.json')
+
+// Load the environment files
+const {NODE_ENV} = process.env
+const envFile = '.env'
+const envFiles = [
+	`${envFile}.${NODE_ENV}.local`,
+	`${envFile}.${NODE_ENV}`,
+	NODE_ENV !== 'test' && `${envFile}.local`,
+	envFile
+].filter(Boolean)
+envFiles.forEach(path => {
+	if (!fs.existsSync(path)) { return }
+	dotenvExpand(dotenv.config({path}))
+})
 
 module.exports = neutrino => {
 	// Locale completion calc

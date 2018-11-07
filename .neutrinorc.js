@@ -1,23 +1,5 @@
-const dotenv = require('dotenv')
-const dotenvExpand = require('dotenv-expand')
-const fs = require('fs')
-
 const envConfig = require('./config/env')
 const jestConfig = require('./config/jest')
-
-// Load the environment files
-const {NODE_ENV} = process.env
-const envFile = '.env'
-const envFiles = [
-	`${envFile}.${NODE_ENV}.local`,
-	`${envFile}.${NODE_ENV}`,
-	NODE_ENV !== 'test' && `${envFile}.local`,
-	envFile
-].filter(Boolean)
-envFiles.forEach(path => {
-	if (!fs.existsSync(path)) { return }
-	dotenvExpand(dotenv.config({path}))
-})
 
 module.exports = {
 	options: {
