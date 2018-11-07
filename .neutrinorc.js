@@ -83,6 +83,7 @@ module.exports = {
 				}
 			},
 
+			// Tweaks for babel
 			babel: {
 				presets: [
 					'@lingui/babel-preset-react',
@@ -92,6 +93,12 @@ module.exports = {
 					'@lingui/babel-plugin-transform-js',
 					'./locale/babel-plugin-transform-react',
 				],
+			},
+
+			// Tweaks for WDS, mostly to emulate react-scripts handling more-or-less
+			devServer: {
+				port: 3000,
+				overlay: true,
 			},
 		}],
 
