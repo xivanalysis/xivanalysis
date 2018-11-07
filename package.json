@@ -108,6 +108,7 @@
     "eslint-plugin-xivanalysis": "xivanalysis/linter",
     "glob": "^7.1.3",
     "husky": "^1.0.1",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^23.6.0",
     "jest-chain": "^1.0.3",
     "jest-extended": "^0.10.0",
@@ -125,26 +126,5 @@
     "webpack": "^4.25.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.10"
-  },
-  "jest": {
-    "collectCoverageFrom": [
-      "src/**/*.{ts,tsx}"
-    ],
-    "testMatch": [
-      "<rootDir>/src/**/__tests__/**/*.{ts,tsx}",
-      "<rootDir>/src/**/*.(spec|test).{ts,tsx}"
-    ],
-    "transform": {
-      "^.+\\.[tj]sx?$": "ts-jest"
-    },
-    "moduleFileExtensions": [
-      "ts",
-      "tsx"
-    ],
-    "globals": {
-      "ts-jest": {
-        "babelConfig": ".babelrc"
-      }
-    }
   }
 }

@@ -5,6 +5,7 @@ const glob = require('glob')
 const _ = require('lodash')
 const {DefinePlugin} = require('webpack')
 
+const jestConfig = require('./config/jest')
 const packageJson = require('./package.json')
 
 // Load the environment files
@@ -179,10 +180,6 @@ module.exports = {
 		}],
 
 		// Test stuff
-		['@neutrinojs/jest', {
-			rootDir: 'src',
-			setupTestFrameworkScriptFile: '<rootDir>/setupTests.js',
-			testRegex:'(/__tests__/.*|(\\.|/)(test|spec))\\.[jt]sx?$',
-		}]
+		jestConfig
 	]
 }
