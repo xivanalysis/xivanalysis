@@ -64,7 +64,9 @@ export default class Fists extends Module {
 	static title = 'Fist Stances'
 	static displayOrder = DISPLAY_ORDER.FISTS
 
-	_activeFist = null
+	// Assume stanceless by default
+	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
+	_activeFist = STANCELESS
 	_fistUptime = {}
 	_fistGCDs = {}
 
@@ -120,18 +122,21 @@ export default class Fists extends Module {
 	}
 
 	_handleFistChange(stanceId) {
-		// Init to stanceless because:
-		//  first event applybuff will change it with zero uptime
-		//  first event cast will set the activeFist anyway
-		if (!this._activeFist) {
-			this._activeFist = STANCELESS
+		// Initial state correction, set it and dip out
+		if (this.parser.currentTimestamp <= this.parser.fight.start_time) {
+			this._activeFist = stanceId
+			return
 		}
 
-		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
-			this._fistUptime[this._activeFist] = 0
+		const duration = this.parser.currentTimestamp - this._lastFistChange
+		if (duration > 0) {
+			if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
+				this._fistUptime[this._activeFist] = duration
+			} else {
+				this._fistUptime[this._activeFist] += duration
+			}
 		}
 
-		this._fistUptime[this._activeFist] += (this.parser.currentTimestamp - this._lastFistChange)
 		this._lastFistChange = this.parser.currentTimestamp
 		this._activeFist = stanceId
 	}
@@ -145,15 +150,11 @@ export default class Fists extends Module {
 		}
 
 		// Ignore Meditation and Form Shift
-		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action)) {
+		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action.id)) {
 			return
 		}
 
-		// Initialise new stance
-		if (!this._activeFist) {
-			this._activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
-		}
-
+		// By the time we get here, _activeFist should be correct
 		if (!this._fistGCDs.hasOwnProperty(this._activeFist)) {
 			this._fistGCDs[this._activeFist] = 0
 		}
@@ -230,7 +231,7 @@ export default class Fists extends Module {
 	}
 
 	output() {
-		const uptimeKeys = Object.keys(this._fistUptime).map(Number).filter(fist => this._fistUptime[fist] > 0)
+		const uptimeKeys = Object.keys(this._fistUptime).map(Number)
 
 		const data = uptimeKeys.map(id => {
 			const value = this._fistUptime[id]
