@@ -1,3 +1,5 @@
+const WebpackBar = require('webpackbar');
+
 const envConfig = require('./config/env')
 const jestConfig = require('./config/jest')
 
@@ -131,6 +133,9 @@ module.exports = {
 		}],
 
 		// Test stuff
-		jestConfig
+		jestConfig,
+
+		// WebpackBar because loooking pretty is Important™
+		neutrino => neutrino.config.plugin('webpackbar').use(new WebpackBar()),
 	]
 }
