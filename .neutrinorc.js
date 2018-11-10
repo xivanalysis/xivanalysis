@@ -69,9 +69,6 @@ module.exports = {
 
 			// Tweaks for babel
 			babel: {
-				presets: [
-					'@lingui/babel-preset-react',
-				],
 				plugins: [
 					'lodash',
 					'@lingui/babel-plugin-transform-js',

@@ -82,7 +82,6 @@
   "devDependencies": {
     "@lingui/babel-plugin-transform-js": "^2.5.0",
     "@lingui/babel-plugin-transform-react": "^2.5.0",
-    "@lingui/babel-preset-react": "^2.5.0",
     "@lingui/cli": "^2.5.0",
     "@lingui/loader": "^2.5.0",
     "@neutrinojs/copy": "^9.0.0-beta.1",
@@ -100,6 +99,7 @@
     "@types/react-scroll": "^1.5.4",
     "@types/webpack-env": "^1.13.6",
     "babel-plugin-lodash": "^3.3.4",
+    "babel-plugin-macros": "^2.4.2",
     "cross-env": "^5.2.0",
     "dotenv": "^6.1.0",
     "dotenv-expand": "^4.2.0",
