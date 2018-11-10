@@ -72,7 +72,7 @@
   "blm.ogcd-downtime.title": "oGCDs",
   "blm.procs.suggestions.dropped-f3ps.content": "En laissant expirer <1/> sans l'utiliser, vous avez perdu au moins un proc de <0/>.",
   "blm.procs.suggestions.dropped-f3ps.why": "",
-  "blm.procs.suggestions.dropped-t3ps.content": "",
+  "blm.procs.suggestions.dropped-t3ps.content": "Vous avez perdu un proc de <0/> car vous avez laissez <1/> expirer sans l'utiliser.",
   "blm.procs.suggestions.dropped-t3ps.why": "",
   "blm.rotation-watchdog.accordion.message": "Le principe de base du gameplay du Mage Noir est de lancer 6 <0/> par rotation (8 avec <1/> et 5 si vous utilisez <2/>). <3/>Évitez de manquer l'utilisation de Giga-Feu sauf si les mécaniques l'imposent.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Incanter plus d'un <0/> pendant votre phase de Feu Astral est une perte qui devrait être évitée grâce a une meilleure connaissance des mécaniques du combat.",
