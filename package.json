@@ -46,7 +46,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@lingui/react": "^2.5.0",
-    "@types/lingui__react": "^2.5.0",
     "@xivanalysis/tooltips": "xivanalysis/tooltips",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
