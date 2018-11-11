@@ -85,5 +85,15 @@ export default {
 			changes: 'Condensed Proc Suggestions, clarified wording, added Trans/Plural support for Localization and added a Listing of what Targets the RDM hit with Proc spells',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
+		{
+			date: new Date('2018-11-05'),
+			changes: 'Modified Severity for Wasted/Missed Dualcasts based on feedback',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-11-06'),
+			changes: 'Resolved a number of issues with logs that do not contain one or more procs, and issues with Omega(story) invuln target being unavailable',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 	],
 }

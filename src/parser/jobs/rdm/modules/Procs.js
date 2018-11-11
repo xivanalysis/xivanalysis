@@ -59,6 +59,7 @@ export default class Procs extends Module {
 			abilityId: PROCS,
 		}, this._onRefresh)
 		this.addHook('complete', this._onComplete)
+		this._initializeHistory()
 	}
 
 	_onCast(event) {
@@ -78,6 +79,35 @@ export default class Procs extends Module {
 		}
 
 		this._castState = abilityID
+	}
+
+	_initializeHistory() {
+		if (!(STATUSES.VERFIRE_READY in this._history)) {
+			this._history[STATUSES.VERFIRE_READY.id] = {
+				overWritten: 0,
+				invuln: 0,
+				missed: 0,
+				wasted: 0,
+			}
+		}
+
+		if (!(STATUSES.VERSTONE_READY in this._history)) {
+			this._history[STATUSES.VERSTONE_READY.id] = {
+				overWritten: 0,
+				invuln: 0,
+				missed: 0,
+				wasted: 0,
+			}
+		}
+
+		if (!(STATUSES.IMPACTFUL in this._history)) {
+			this._history[STATUSES.IMPACTFUL.id] = {
+				overWritten: 0,
+				invuln: 0,
+				missed: 0,
+				wasted: 0,
+			}
+		}
 	}
 
 	_onGain(event) {
@@ -128,7 +158,11 @@ export default class Procs extends Module {
 			// const util = require('util')
 			// console.log(util.inspect(event, {showHidden: true, depth: null}))
 			//console.log(this.parser.formatTimestamp(timestamp))
-			const lastTargetName = this.enemies.getEntity(this._lastTargetID).name
+			let lastTargetName = 'Unavailable'
+			const lastTarget = this.enemies.getEntity(this._lastTargetID)
+			if (lastTarget) {
+				lastTargetName = lastTarget.name
+			}
 			const invulnEvent = {
 				statusID,
 				gcdTimeDiff,
@@ -151,15 +185,15 @@ export default class Procs extends Module {
 	}
 
 	_onComplete() {
-		const missedFire = this._history[STATUSES.VERFIRE_READY.id].missed
-		const invulnFire = this._history[STATUSES.VERFIRE_READY.id].invuln
-		const overWrittenFire = this._history[STATUSES.VERFIRE_READY.id].overWritten
-		const missedStone = this._history[STATUSES.VERSTONE_READY.id].missed
-		const invulnStone = this._history[STATUSES.VERSTONE_READY.id].invuln
-		const overWrittenStone = this._history[STATUSES.VERSTONE_READY.id].overWritten
-		const missedImpact = this._history[STATUSES.IMPACTFUL.id].missed
-		const invulnImpact = this._history[STATUSES.IMPACTFUL.id].invuln
-		const overWrittenImpact = this._history[STATUSES.IMPACTFUL.id].overWritten
+		const missedFire = this._history[STATUSES.VERFIRE_READY.id].missed||0
+		const invulnFire = this._history[STATUSES.VERFIRE_READY.id].invuln||0
+		const overWrittenFire = this._history[STATUSES.VERFIRE_READY.id].overWritten||0
+		const missedStone = this._history[STATUSES.VERSTONE_READY.id].missed||0
+		const invulnStone = this._history[STATUSES.VERSTONE_READY.id].invuln||0
+		const overWrittenStone = this._history[STATUSES.VERSTONE_READY.id].overWritten||0
+		const missedImpact = this._history[STATUSES.IMPACTFUL.id].missed||0
+		const invulnImpact = this._history[STATUSES.IMPACTFUL.id].invuln||0
+		const overWrittenImpact = this._history[STATUSES.IMPACTFUL.id].overWritten||0
 
 		//Icons always default to the White Mana spell if black/jolt spells don't have more bad items.
 		//TODO I need to figure out a good way of excluding items that evaluated to 0 in the condensed groups.

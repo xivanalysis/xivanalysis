@@ -27,6 +27,7 @@
 - [X] Dont' use Areo/Thunder while Stone/Fire are up
 - [X] Don't use Flare/Holy when Fire/Stone are up
 - [ ] Figure out how to split out 0 entries in the Overwrite/Invuln/Missed Trans/Plural tags
+- [ ] Add support for AOE Checks on Scatter for Target Count
 
 ## Melee Combo
 - [X] Derping a melee combo, either breaking it, or not finishing it.

@@ -41,8 +41,12 @@ export interface MappedDependency {
 	prop: string
 }
 
-type DeepPartial<T> = {[K in keyof T]?: DeepPartial<T[K]>}
-type Filter<T extends Event> = DeepPartial<T> & Partial<{
+type FilterPartial<T> = {
+	[K in keyof T]?: T[K] extends object
+		? FilterPartial<T[K]>
+		: FilterPartial<T[K]> | Array<FilterPartial<T[K]>>
+}
+type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
 	abilityId: Ability['guid'],
 	to: 'player' | 'pet' | T['targetID'],
 	by: 'player' | 'pet' | T['sourceID'],
@@ -86,9 +90,6 @@ export default class Module {
 		this._title = value
 	}
 
-	// DI FunTimes™
-	[key: string]: any;
-
 	// Bite me.
 	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
 
@@ -101,7 +102,9 @@ export default class Module {
 				dep = {handle: dep, prop: dep}
 			}
 
-			this[dep.prop] = parser.modules[dep.handle]
+			// TS Modules should use the @dependency decorator to pull them in,
+			// but this is still required for JS modules (and internal handling)
+			(this as any)[dep.prop] = parser.modules[dep.handle]
 		})
 		this.init()
 	}
@@ -183,7 +186,7 @@ export default class Module {
 			}
 
 			// Set the hook
-			hooks.add(hook)
+			hooks.add(hook as any)
 		})
 
 		// Return the hook representation so it can be removed (later)
@@ -245,15 +248,16 @@ export default class Module {
 		})
 	}
 
-	private _filterMatches<T, F extends DeepPartial<T>>(event: T, filter: F) {
+	private _filterMatches<T, F extends FilterPartial<T>>(event: T, filter: F) {
 		const match = Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
 			if (!event.hasOwnProperty(key)) {
 				return false
 			}
 
-			const filterVal = filter[key as keyof typeof filter]
-			const eventVal = event[key as keyof typeof event]
+			// Just trust me 'aite
+			const filterVal: any = filter[key as keyof typeof filter]
+			const eventVal: any = event[key as keyof typeof event]
 
 			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
 			if (Array.isArray(filterVal)) {
@@ -264,7 +268,7 @@ export default class Module {
 			if (typeof filterVal === 'object') {
 				return this._filterMatches(
 					eventVal,
-					filterVal as DeepPartial<typeof eventVal>,
+					filterVal,
 				)
 			}
 
