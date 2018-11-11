@@ -301,7 +301,9 @@ export default class Gauge extends Module {
 	}
 
 	_onComplete(event) {
-		this._enoDownTimerStop(event)
+		if (this._enochianDownTimer.start) {
+			this._enoDownTimerStop(event)
+		}
 		this._lostFoul = this._renderLostFouls(this._enochianDownTimer.time)
 
 		// Suggestions for lost eno
