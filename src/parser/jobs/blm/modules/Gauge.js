@@ -227,7 +227,7 @@ export default class Gauge extends Module {
 
 	_enoDownTimerStop(event) {
 		this._enochianDownTimer.stop = event.timestamp
-		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start,0)
+		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start, 0)
 		//reset the timer again to prevent weirdness/errors
 		this._enochianDownTimer.start = 0
 		this._enochianDownTimer.stop = 0
