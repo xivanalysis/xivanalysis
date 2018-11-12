@@ -141,6 +141,8 @@ export default class Gauge extends Module {
 	onEnoDropped(event) {
 		if (this._hasEnochian) {
 			this._enochianDownTimer.start = event.timestamp
+			//add the time remaining on the eno timer to total downtime
+			this._enochianDownTimer.time += this._enochianTimer
 			this._droppedEno++
 		}
 		this._hasEnochian = false
