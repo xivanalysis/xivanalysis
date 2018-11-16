@@ -28,6 +28,8 @@
 - [X] Don't use Flare/Holy when Fire/Stone are up
 - [ ] Figure out how to split out 0 entries in the Overwrite/Invuln/Missed Trans/Plural tags
 - [ ] Add support for AOE Checks on Scatter for Target Count
+- [ ] Add a flag in Procs to ignore penalties if mana is > 80|80 in any ratio
+- [ ] Make Procs rely upon gauge to determine if mana gained was at least 4 in a waste scenario if both procs were up, as this is a proc dump and not an issue.
 
 ## Melee Combo
 - [X] Derping a melee combo, either breaking it, or not finishing it.
