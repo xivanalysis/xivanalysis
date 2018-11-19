@@ -65,9 +65,8 @@ export default class TrickAttackUsage extends Module {
 				</Trans>,
 				value: lostCasts,
 				tiers: {
-					1: SEVERITY.MINOR,
-					2: SEVERITY.MEDIUM,
-					3: SEVERITY.MAJOR,
+					1: SEVERITY.MEDIUM,
+					2: SEVERITY.MAJOR,
 				},
 				why: <Trans id="nin.ta-usage.suggestions.missed.why">
 					You delayed Trick Attack for a cumulative {this.parser.formatDuration(this._lostTime)}, costing you <Plural value={lostCasts} one="# potential use" other="# potential uses"/>.
