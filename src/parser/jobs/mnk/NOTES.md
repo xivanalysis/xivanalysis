@@ -7,8 +7,8 @@
 - [ ] GL3 efficient recovery
 - [x] GL3 holding with RoE
 - [ ] Advise when downtime was short enough and damage taken for RoE, or if Tackle is off cooldown for RoW
-- [x] Wasted RoE
-- [x] Wasted RoW
+- [x] Wasted RoE (no trigger RoE, or no save stacks)
+- [x] Wasted RoW (TODO: deal with WT without using RoW)
 - [x] Earth Tackle, not even once
 - [x] One-Ilm Punch is Officially Undesirable
 - [x] Fists, make sure at least one is up

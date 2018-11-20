@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -49,31 +49,31 @@ export default class Undesirables extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EARTH_TACKLE.icon,
-			content: <Fragment>
+			content: <>
 				Avoid using <ActionLink {...ACTIONS.EARTH_TACKLE} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.FIRE_TACKLE} />.
-			</Fragment>,
+			</>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
 			value: earthTackleCount,
-			why: <Fragment>
+			why: <>
 				{lostTacklePotency} potency lost to inefficient tackles.
-			</Fragment>,
+			</>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.ONE_ILM_PUNCH.icon,
-			content: <Fragment>
+			content: <>
 				Avoid using <ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} /> and <ActionLink {...ACTIONS.TWIN_SNAKES} />.
-			</Fragment>,
+			</>,
 			tiers: {
 				1: SEVERITY.MAJOR,
 			},
 			value: oneIlmPunchCount,
-			why: <Fragment>
+			why: <>
 				<ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> cost {oneIlmPunchCount} more potent GCDs.
-			</Fragment>,
+			</>,
 		}))
 	}
 
