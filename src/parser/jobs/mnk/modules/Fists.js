@@ -83,32 +83,38 @@ export default class Fists extends Module {
 	normalise(events) {
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
-			const abilityId = event.ability.guid
 
 			// Ignore any non-ability events
-			if (!abilityId) {
+			if (!event.ability) {
 				continue
 			}
 
 			// We got a remove (PrecastStatus will handle this), or an initial apply
-			if (['removebuff', 'applybuff'].includes(event.type) && STANCES.includes(abilityId)) {
+			if (['removebuff', 'applybuff'].includes(event.type) && STANCES.includes(event.ability.guid)) {
 				break
 			}
 
 			// Check for any specific casts that imply stance
 			if (event.type === 'cast') {
 				// They dun goofed
-				if (abilityId === ACTIONS.SHOULDER_TACKLE.id) {
+				if (event.ability.guid === ACTIONS.SHOULDER_TACKLE.id) {
 					break
 				}
 
 				// It was a legit Tackle, we know what's up
-				if (Object.keys(STANCE_MAP).map(Number).includes(abilityId)) {
+				if (Object.keys(STANCE_MAP).map(Number).includes(event.ability.guid)) {
+					const status = getStatus(STANCE_MAP[event.ability.guid])
+
 					events.splice(0, 0, {
 						...event,
 						ability: {
-							guid: STANCE_MAP[abilityId],
+							abilityIcon: status.abilityIcon,
+							guid: status.id,
+							name: status.name,
+							type: 1,
 						},
+						targetID: event.sourceID,
+						targetIsFriendly: true,
 						timestamp: this.parser.fight.start_time - 1,
 						type: 'applybuff',
 					})
