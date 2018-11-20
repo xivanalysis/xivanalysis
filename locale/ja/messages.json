@@ -161,7 +161,7 @@
   "drg.blood.nastrond.hits": "",
   "drg.blood.nastrond.preface": "",
   "drg.blood.suggestions.eyes.content": "",
-  "drg.blood.suggestions.eyes.why": "",
+  "drg.blood.suggestions.eyes.why": "{MAX_EYES} があったのに、ミラージュダイブを {0, plural, one {# 回} other {# times}}使ってしまいました。",
   "drg.blood.title": "",
   "drg.buffs.accordion.bfb-header": "捨身",
   "drg.buffs.accordion.ds-header": "ドラゴンサイト",
