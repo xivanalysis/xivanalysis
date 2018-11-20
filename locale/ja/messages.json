@@ -282,7 +282,7 @@
   "nin.ninjutsu.suggestions.hyoton.content": "",
   "nin.ninjutsu.suggestions.hyoton.why": "",
   "nin.ninjutsu.suggestions.rabbit.content": "",
-  "nin.ninjutsu.suggestions.rabbit.why": "",
+  "nin.ninjutsu.suggestions.rabbit.why": "ウサギさんが {0, plural, one {# 回} other {# 回}} 出てきましたよ！",
   "nin.ninjutsu.suggestions.st-doton.content": "",
   "nin.ninjutsu.suggestions.st-doton.why": "",
   "nin.ninjutsu.suggestions.tcj-doton.content": "",
