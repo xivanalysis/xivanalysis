@@ -251,7 +251,7 @@
   "mch.wildfire.suggestions.fizzle.content": "",
   "mch.wildfire.suggestions.fizzle.why": "",
   "mch.wildfire.title": "",
-  "nin.about.description": "",
+  "nin.about.description": "<0>おーい、忍者さんたち！ モンクや黒の友達に軽んじられていますか？それを飽きていますよね。 そして、固定にきみも魅力じゃなくて、だまし討ちが持ってるから選べられるのも嫌ですよね。じゃ、心配しないで！。私達は手伝います！ 自分のログが<1>この色</1> から <2>この色</2>になるように頑張りましょう！</0><3>忍者はスキル回しを厳しく従う職じゃなくて、状態に合わせる職なので、基本的な提案が現れますね。 もしかして、問題がいっぱい出たら、パニックせずに一つずつ乗り越えましょう！</3>",
   "nin.about.description.warning": "",
   "nin.duality.suggestions.misuse.content": "<1/> 以外 <0/> を使わないでください。スキルの追加効果やコンボボーナスは1回しか発生されないので、一番ダメージが高いスキルを使ったら方がいいなんです。",
   "nin.duality.suggestions.misuse.why": "最良じゃないGCDと、ー双を {0, plural, one {# 回} other {# 回}} 使いましたよ。",
