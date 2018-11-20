@@ -305,7 +305,7 @@
   "nin.ta-usage.suggestions.opener.content": "",
   "nin.ta-usage.suggestions.opener.why": "あなたの最初のだまし討ちは開幕の {0, plural, one {# 番目のGCD} other {# 番目のGCD}} なんです。",
   "nin.ta-window.suggestions.armor-crush.content": "",
-  "nin.ta-window.suggestions.armor-crush.why": "",
+  "nin.ta-window.suggestions.armor-crush.why": "だまし討ち中、強甲破点突を {0, plural, one {# 回} other {# 回}} 使いましたよ。",
   "nin.ta-window.suggestions.dream.content": "",
   "nin.ta-window.suggestions.dream.why": "",
   "nin.utility.suggestions.early-shade.content": "",
