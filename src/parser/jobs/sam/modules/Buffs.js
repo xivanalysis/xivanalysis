@@ -6,14 +6,12 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
-
 export default class Buffs extends Module {
 	static handle = 'buffs'
 	static dependencies = [
 		'checklist',
 		'combatants',
 		'invuln',
-		'suggestions',
 	]
 
 	constructor(...args) {
