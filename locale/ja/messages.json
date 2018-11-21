@@ -90,7 +90,7 @@
   "blm.rotation-watchdog.title": "",
   "blm.triple.title": "三連魔",
   "core.about.contributors": "貢献者:",
-  "core.about.patch-unsupported.description": "",
+  "core.about.patch-unsupported.description": "このログはパッチ {0} の時にアップされていたらしいです。そのパッチはスポートされていないので計算や提案は間違っているかもしれませんので、ご理解ください。",
   "core.about.patch-unsupported.title": "報告された未対応パッチ",
   "core.about.supported-patches": "対応パッチ：",
   "core.about.title": "分析について",
