@@ -20,6 +20,16 @@ const STANCES = [
 	STATUSES.FISTS_OF_WIND.id,
 ]
 
+// Stance mapping for event splicing
+// We don't need Riddle of Wind because a tackle triggers it
+const STANCE_MAP = {
+	[ACTIONS.EARTH_TACKLE.id]: STATUSES.FISTS_OF_EARTH.id,
+	[ACTIONS.FIRE_TACKLE.id]: STATUSES.FISTS_OF_FIRE.id,
+	[ACTIONS.WIND_TACKLE.id]: STATUSES.FISTS_OF_WIND.id,
+	[ACTIONS.RIDDLE_OF_EARTH.id]: STATUSES.FISTS_OF_EARTH.id,
+	[ACTIONS.RIDDLE_OF_FIRE.id]: STATUSES.FISTS_OF_FIRE.id,
+}
+
 const CHART_COLOURS = {
 	[STANCELESS]: '#888',
 	[STATUSES.FISTS_OF_EARTH.id]: Color(JOBS.MONK.colour),   // idk it matches
@@ -54,9 +64,11 @@ export default class Fists extends Module {
 	static title = 'Fist Stances'
 	static displayOrder = DISPLAY_ORDER.FISTS
 
-	_activeFist = STANCES.find(fist => this.combatants.selected.hasStatus(fist)) || STANCELESS
-	_fistUptime = {[STANCELESS]: 0} // Initialise stanceless to prevent weird UI shit
-	_fistGCDs = {[STANCELESS]: 0} // Initialise empty
+	// Assume stanceless by default
+	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
+	_activeFist = STANCELESS
+	_fistUptime = {}
+	_fistGCDs = {}
 
 	_lastFistChange = this.parser.fight.start_time
 
@@ -68,12 +80,69 @@ export default class Fists extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_handleFistChange(stanceId) {
-		if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
-			this._fistUptime[this._activeFist] = 0
+	normalise(events) {
+		for (let i = 0; i < events.length; i++) {
+			const event = events[i]
+
+			// Ignore any non-ability events
+			if (!event.ability) {
+				continue
+			}
+
+			// We got a remove (PrecastStatus will handle this), or an initial apply
+			if (['removebuff', 'applybuff'].includes(event.type) && STANCES.includes(event.ability.guid)) {
+				break
+			}
+
+			// Check for any specific casts that imply stance
+			if (event.type === 'cast') {
+				// They dun goofed
+				if (event.ability.guid === ACTIONS.SHOULDER_TACKLE.id) {
+					break
+				}
+
+				// It was a legit Tackle, we know what's up
+				if (Object.keys(STANCE_MAP).map(Number).includes(event.ability.guid)) {
+					const status = getStatus(STANCE_MAP[event.ability.guid])
+
+					events.splice(0, 0, {
+						...event,
+						ability: {
+							abilityIcon: status.abilityIcon,
+							guid: status.id,
+							name: status.name,
+							type: 1,
+						},
+						targetID: event.sourceID,
+						targetIsFriendly: true,
+						timestamp: this.parser.fight.start_time - 1,
+						type: 'applybuff',
+					})
+
+					break
+				}
+			}
 		}
 
-		this._fistUptime[this._activeFist] += (this.parser.currentTimestamp - this._lastFistChange)
+		return events
+	}
+
+	_handleFistChange(stanceId) {
+		// Initial state correction, set it and dip out
+		if (this.parser.currentTimestamp <= this.parser.fight.start_time) {
+			this._activeFist = stanceId
+			return
+		}
+
+		const duration = this.parser.currentTimestamp - this._lastFistChange
+		if (duration > 0) {
+			if (!this._fistUptime.hasOwnProperty(this._activeFist)) {
+				this._fistUptime[this._activeFist] = duration
+			} else {
+				this._fistUptime[this._activeFist] += duration
+			}
+		}
+
 		this._lastFistChange = this.parser.currentTimestamp
 		this._activeFist = stanceId
 	}
@@ -87,11 +156,11 @@ export default class Fists extends Module {
 		}
 
 		// Ignore Meditation and Form Shift
-		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action)) {
+		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action.id)) {
 			return
 		}
 
-		// Initialise new stance
+		// By the time we get here, _activeFist should be correct
 		if (!this._fistGCDs.hasOwnProperty(this._activeFist)) {
 			this._fistGCDs[this._activeFist] = 0
 		}
@@ -106,13 +175,13 @@ export default class Fists extends Module {
 	_onRemove(event) {
 		// If we're removing a fist that isn't active, it's just log order weirdness due to timestamps
 		if (this._activeFist === event.ability.guid) {
-			this._handleFistChange(0)
+			this._handleFistChange(STANCELESS)
 		}
 	}
 
 	_onComplete() {
 		// Flush the last stance
-		this._handleFistChange(0)
+		this._handleFistChange(STANCELESS)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
@@ -153,7 +222,7 @@ export default class Fists extends Module {
 	}
 
 	getStanceUptimePercent(stanceId) {
-		const statusUptime = this.combatants.getStatusUptime(stanceId, this.parser.player.id)
+		const statusUptime = this.combatants.getStatusUptime(stanceId)
 
 		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
 	}
