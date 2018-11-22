@@ -247,9 +247,15 @@ export default class DWT extends Module {
 					content: <>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
-						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-						{noDeathflare && !dwt.died && <span className="text-error">&nbsp;(no Deathflare)</span>}
-						{dwt.died && <span className="text-error">&nbsp;(died)</span>}
+						{dwt.rushing && <>
+							&nbsp;<Trans id="smn.dwt.rushing" render="span" className="text-info">(rushing)</Trans>
+						</>}
+						{noDeathflare && !dwt.died && <>
+							&nbsp;<Trans id="smn.dwt.no-deathflare" render="span" className="text-error">(no Deathflare)</Trans>
+						</>}
+						{dwt.died && <>
+							&nbsp;<Trans id="smn.dwt.died" render="span" className="text-error">(died)</Trans>
+						</>}
 					</>,
 				},
 				content: {
