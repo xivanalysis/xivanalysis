@@ -452,7 +452,7 @@
   "whm.benison.suggestion.why": "",
   "whm.dots.requirement.uptime-a2.name": "アクティブ率: <0/>",
   "whm.dots.requirement.uptime-a3.name": "アクティブ率: <0/>",
-  "whm.dots.rule.description": "",
+  "whm.dots.rule.description": "DoTは白魔道士にとってメジャーなダメージ持続力で、常にDoTを切らさず維持してください。",
   "whm.dots.rule.name": "常にDoTを切らさないようにしてください。",
   "whm.dots.suggestion.clip-a2.content": "",
   "whm.dots.suggestion.clip-a2.why": "早すぎる更新により{0}の{1}とのが失いました。",
