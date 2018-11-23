@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+import React from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -19,6 +20,7 @@ export default class InternalRelease extends Module {
 	]
 
 	static title = 'Internal Release'
+	static i18n_id = i18nMark('mnk.ir.title')
 	static displayOrder = DISPLAY_ORDER.INTERNAL_RELEASE
 
 	_active = false
@@ -87,12 +89,17 @@ export default class InternalRelease extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ELIXIR_FIELD.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
-					Try to get every second <ActionLink {...ACTIONS.ELIXIR_FIELD} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.
-				</Fragment>,
-				why: <Fragment>
-					{this._badElixirs} Elixir Field{this._badElixirs !== 1 ? 's were' : ' was'} missed inside of IR.
-				</Fragment>,
+				content: <>
+					<Trans id="mnk.ir.suggestions.elixir.content">Try to get every second <ActionLink {...ACTIONS.ELIXIR_FIELD} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.</Trans>
+				</>,
+				why: <>
+					<Plural
+						id="mnk.ir.suggestions.elixir.why"
+						value={this._badElixirs}
+						one="# Elixir Field was missed inside of IR."
+						other="# Elixir Fields were missed inside of IR."
+					/>
+				</>,
 			}))
 		}
 
@@ -100,12 +107,17 @@ export default class InternalRelease extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HOWLING_FIST.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
-					Try to get every <ActionLink {...ACTIONS.HOWLING_FIST} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.
-				</Fragment>,
-				why: <Fragment>
-					{this._badHowlings} Howling Fist{this._badHowlings !== 1 ? 's were' : ' was'} outside of IR.
-				</Fragment>,
+				content: <>
+					<Trans id="mnk.ir.suggestions.howling.content">Try to get every <ActionLink {...ACTIONS.HOWLING_FIST} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.</Trans>
+				</>,
+				why: <>
+					<Plural
+						id="mnk.ir.suggestions.howling.why"
+						value={this._badHowlings}
+						one="# Howling Fist was outside of IR."
+						other="# Howling Fists were outside of IR."
+					/>
+				</>,
 			}))
 		}
 	}
@@ -119,16 +131,16 @@ export default class InternalRelease extends Module {
 			return {
 				key: ir.start,
 				title: {
-					content: <Fragment>
+					content: <>
 						{this.parser.formatTimestamp(ir.start)}
 						<span> - </span>
-						<span>{numGcds} GCDs</span>
+						<span><Plural id="mnk.ir.table.gcd.count" value={numGcds} one="# GCD" other="# GCDs" /></span>
 						<span> - </span>
 						<span>{numElixirs}/1 Elixir Field</span>
 						<span> - </span>
 						<span>{numHowlings}/1 Howling Fist</span>
 						{ir.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-					</Fragment>,
+					</>,
 				},
 				content: {
 					content: <Rotation events={ir.casts}/>,

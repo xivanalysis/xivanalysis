@@ -1,5 +1,6 @@
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
+import React from 'react'
 import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -61,7 +62,8 @@ export default class Fists extends Module {
 		'suggestions',
 	]
 
-	static title = 'Fist Stances'
+	static title = 'Fists'
+	static i18n_id = i18nMark('mnk.fists.title')
 	static displayOrder = DISPLAY_ORDER.FISTS
 
 	// Assume stanceless by default
@@ -185,10 +187,17 @@ export default class Fists extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
-			content: <Fragment>
-				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
-			</Fragment>,
-			why: `${this._fistGCDs[STANCELESS]} GCDs had no Fists buff active.`,
+			content: <>
+				<Trans id="mnk.fists.suggestions.stanceless.content">Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.</Trans>
+			</>,
+			why: <>
+				<Plural
+					id="mnk.fists.suggestions.stanceless.why"
+					value={this._fistGCDs[STANCELESS]}
+					one="# GCD had no Fists buff active."
+					other="# GCDs had no Fists buff active."
+				/>
+			</>,
 			tiers: STANCELESS_SEVERITY,
 			value: this._fistGCDs[STANCELESS],
 		}))
@@ -196,27 +205,29 @@ export default class Fists extends Module {
 		// Semi lenient trigger, this assumes RoE is only used during downtime
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_EARTH.icon,
-			content: <Fragment>
-				When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back
-				to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
-			</Fragment>,
+			content: <>
+				<Trans id="mnk.fists.suggestions.foe.content">When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.</Trans>
+			</>,
 			tiers: EARTH_SEVERITY,
-			why: <Fragment>
-				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for {this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} GCDs.
-			</Fragment>,
+			why: <>
+				<Trans id="mnk.fists.suggestions.foe.why">
+					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} one="# GCD" other="# GCDs"/>.
+				</Trans>
+			</>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_EARTH.id],
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_WIND.icon,
-			content: <Fragment>
-				When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back
-				to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
-			</Fragment>,
+			content: <>
+				<Trans id="mnk.fists.suggestions.fow.content">When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.</Trans>
+			</>,
 			tiers: WIND_SEVERITY,
-			why: <Fragment>
-				<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for {this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} GCDs.
-			</Fragment>,
+			why: <>
+				<Trans id="mnk.fists.suggestions.fow.why">
+					<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} one="# GCD" other="# GCDs"/>.
+				</Trans>
+			</>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_WIND.id],
 		}))
 	}

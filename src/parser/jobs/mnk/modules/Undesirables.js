@@ -1,3 +1,4 @@
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -20,6 +21,7 @@ export default class Undesirables extends Module {
 	]
 
 	static title = 'Undesirable Skills'
+	static i18n_id = i18nMark('mnk.undesirables.title')
 	static displayOrder = DISPLAY_ORDER.UNDESIRABLES
 
 	_undesirables = []
@@ -50,7 +52,7 @@ export default class Undesirables extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EARTH_TACKLE.icon,
 			content: <>
-				Avoid using <ActionLink {...ACTIONS.EARTH_TACKLE} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.FIRE_TACKLE} />.
+				<Trans id="mnk.undesirables.suggestions.earthtackle.content">Avoid using <ActionLink {...ACTIONS.EARTH_TACKLE} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.FIRE_TACKLE} />.</Trans>
 			</>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -58,21 +60,23 @@ export default class Undesirables extends Module {
 			},
 			value: earthTackleCount,
 			why: <>
-				{lostTacklePotency} potency lost to inefficient tackles.
+				<Trans id="mnk.undesirables.suggestions.earthtackle.why">{lostTacklePotency} potency lost to inefficient tackling.</Trans>
 			</>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.ONE_ILM_PUNCH.icon,
 			content: <>
-				Avoid using <ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} /> and <ActionLink {...ACTIONS.TWIN_SNAKES} />.
+				<Trans id="mnk.undesirables.suggestions.oneilm.content">Avoid using <ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} /> and <ActionLink {...ACTIONS.TWIN_SNAKES} />.</Trans>
 			</>,
 			tiers: {
 				1: SEVERITY.MAJOR,
 			},
 			value: oneIlmPunchCount,
 			why: <>
-				<ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> cost {oneIlmPunchCount} more potent GCDs.
+				<Trans id="mnk.undesirables.suggestions.oneilm.why">
+					<ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> cost <Plural value={oneIlmPunchCount} one="# more potent GCD" other="# more potent GCDs" />.
+				</Trans>
 			</>,
 		}))
 	}
@@ -85,8 +89,8 @@ export default class Undesirables extends Module {
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell>Skill</Table.HeaderCell>
-					<Table.HeaderCell>Time</Table.HeaderCell>
+					<Table.HeaderCell><Trans id="mnk.undesirables.table.header.skill">Skill</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="mnk.undesirables.table.header.time">Time</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
