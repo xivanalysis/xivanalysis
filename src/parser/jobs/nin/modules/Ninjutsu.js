@@ -148,17 +148,19 @@ export default class Ninjutsu extends Module {
 			}))
 		}
 
-		if (badStds > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DOTON.icon,
-				content: <Trans id="nin.ninjutsu.suggestions.st-doton.content">
-					Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="nin.ninjutsu.suggestions.st-doton.why">
-					You cast a single-target Doton <Plural value={badStds} one="# time" other="# times"/>.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.DOTON.icon,
+			content: <Trans id="nin.ninjutsu.suggestions.st-doton.content">
+				Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.
+			</Trans>,
+			tiers: {
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			value: badStds,
+			why: <Trans id="nin.ninjutsu.suggestions.st-doton.why">
+				You cast a single-target Doton <Plural value={badStds} one="# time" other="# times"/>.
+			</Trans>,
+		}))
 	}
 }
