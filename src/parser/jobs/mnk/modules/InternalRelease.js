@@ -126,11 +126,11 @@ export default class InternalRelease extends Module {
 						<span> - </span>
 						<span><Plural id="mnk.ir.table.gcd" value={numGcds} one="# GCD" other="# GCDs" /></span>
 						<span> - </span>
-						<Trans id="mnk.ir.table.ef">
+						<Trans id="mnk.ir.table.ef" render="span">
 							{numElixirs}/1 Elixir Field
 						</Trans>
 						<span> - </span>
-						<Trans id="mnk.ir.table.hf">
+						<Trans id="mnk.ir.table.hf" render="span">
 							{numHowlings}/1 Howling Fist
 						</Trans>
 						{ir.rushing && <>

@@ -161,11 +161,11 @@ export default class RiddleOfFire extends Module {
 					content: <>
 						{this.parser.formatTimestamp(riddle.start)}
 						<span> - </span>
-						<Trans id="mnk.rof.table.gcd">
+						<Trans id="mnk.rof.table.gcd" render="span">
 							{this._formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
 						</Trans>
 						<span> - </span>
-						<Trans id="mnk.rof.table.tk">
+						<Trans id="mnk.rof.table.tk" render="span">
 							{numTKs}/1 Tornado Kick
 						</Trans>
 						{riddle.rushing && <>
