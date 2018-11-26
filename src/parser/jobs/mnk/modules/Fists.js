@@ -187,17 +187,12 @@ export default class Fists extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
-			content: <>
-				<Trans id="mnk.fists.suggestions.stanceless.content">Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.</Trans>
-			</>,
-			why: <>
-				<Plural
-					id="mnk.fists.suggestions.stanceless.why"
-					value={this._fistGCDs[STANCELESS]}
-					one="# GCD had no Fists buff active."
-					other="# GCDs had no Fists buff active."
-				/>
-			</>,
+			content: <Trans id="mnk.fists.suggestions.stanceless.content">
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
+			</Trans>,
+			why: <Trans id="mnk.fists.suggestions.stanceless.why">
+				<Plural value={this._fistGCDs[STANCELESS]} one="# GCD" other="# GCDs"	/> had no Fists buff active.
+			</Trans>,
 			tiers: STANCELESS_SEVERITY,
 			value: this._fistGCDs[STANCELESS],
 		}))
@@ -205,29 +200,25 @@ export default class Fists extends Module {
 		// Semi lenient trigger, this assumes RoE is only used during downtime
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_EARTH.icon,
-			content: <>
-				<Trans id="mnk.fists.suggestions.foe.content">When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.</Trans>
-			</>,
+			content: <Trans id="mnk.fists.suggestions.foe.content">
+				When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
+			</Trans>,
 			tiers: EARTH_SEVERITY,
-			why: <>
-				<Trans id="mnk.fists.suggestions.foe.why">
-					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} one="# GCD" other="# GCDs"/>.
-				</Trans>
-			</>,
+			why: <Trans id="mnk.fists.suggestions.foe.why">
+				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_EARTH.id]} one="# GCD" other="# GCDs"/>.
+			</Trans>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_EARTH.id],
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_WIND.icon,
-			content: <>
-				<Trans id="mnk.fists.suggestions.fow.content">When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.</Trans>
-			</>,
+			content: <Trans id="mnk.fists.suggestions.fow.content">
+				When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
+			</Trans>,
 			tiers: WIND_SEVERITY,
-			why: <>
-				<Trans id="mnk.fists.suggestions.fow.why">
-					<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} one="# GCD" other="# GCDs"/>.
-				</Trans>
-			</>,
+			why: <Trans id="mnk.fists.suggestions.fow.why">
+				<StatusLink {...STATUSES.FISTS_OF_WIND} /> was active for <Plural value={this._fistGCDs[STATUSES.FISTS_OF_WIND.id]} one="# GCD" other="# GCDs"/>.
+			</Trans>,
 			value: this._fistGCDs[STATUSES.FISTS_OF_WIND.id],
 		}))
 	}
@@ -240,7 +231,7 @@ export default class Fists extends Module {
 
 	getStanceName(stanceId) {
 		if (stanceId === STANCELESS) {
-			return 'Stanceless'
+			return <Trans id="mnk.fists.stanceless.name">Stanceless</Trans>
 		}
 
 		// If this fucking errors...
@@ -265,9 +256,9 @@ export default class Fists extends Module {
 
 		return <PieChartWithLegend
 			headers={{
-				label: 'Stance',
+				label: <Trans id="mnk.fists.chart.header.stance">Stance</Trans>,
 				additional: [
-					'Uptime',
+					<Trans id="mnk.fists.chart.header.uptime" key="mnk.fists.chart.header.uptime">Uptime</Trans>,
 					'%',
 				],
 			}}

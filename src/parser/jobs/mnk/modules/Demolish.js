@@ -24,9 +24,7 @@ export default class Demolish extends DoTs {
 	addChecklistRules() {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.demolish.checklist.name">Keep Demolish up</Trans>,
-			description: <>
-				<Trans id="mnk.demolish.checklist.description"><ActionLink {...ACTIONS.DEMOLISH}/> is your strongest finisher (assuming at least 4 DoT ticks hit).</Trans>
-			</>,
+			description: <Trans id="mnk.demolish.checklist.description"><ActionLink {...ACTIONS.DEMOLISH}/> is your strongest finisher (assuming at least 4 DoT ticks hit).</Trans>,
 			displayOrder: DISPLAY_ORDER.DEMOLISH,
 			requirements: [
 				new Requirement({
@@ -43,18 +41,14 @@ export default class Demolish extends DoTs {
 	addClippingSuggestions(clip) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DEMOLISH.icon,
-			content: <>
-				<Trans id="mnk.demolish.suggestion.content">Avoid refreshing <ActionLink {...ACTIONS.DEMOLISH}/> significantly before its expiration, unless it would result in a bad refresh due to <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> recovery. Unnecessary refreshes risk overwriting buff snapshots.</Trans>
-			</>,
+			content: <Trans id="mnk.demolish.suggestion.content">Avoid refreshing <ActionLink {...ACTIONS.DEMOLISH}/> significantly before its expiration, unless it would result in a bad refresh due to <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> recovery. Unnecessary refreshes risk overwriting buff snapshots.</Trans>,
 			tiers: {
 				7: SEVERITY.MINOR,
 				10: SEVERITY.MEDIUM,
 				12: SEVERITY.MAJOR,
 			},
 			value: this.getClippingAmount(STATUSES.DEMOLISH.id),
-			why: <>
-				<Trans id="mnk.demolish.suggestion.why">You lost {this.parser.formatDuration(clip[STATUSES.DEMOLISH.id])} of Demolish to early refreshes.</Trans>
-			</>,
+			why: <Trans id="mnk.demolish.suggestion.why">You lost {this.parser.formatDuration(clip[STATUSES.DEMOLISH.id])} of Demolish to early refreshes.</Trans>,
 		}))
 	}
 }

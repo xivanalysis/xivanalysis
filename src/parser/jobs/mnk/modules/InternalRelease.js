@@ -89,17 +89,12 @@ export default class InternalRelease extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ELIXIR_FIELD.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <>
-					<Trans id="mnk.ir.suggestions.elixir.content">Try to get every second <ActionLink {...ACTIONS.ELIXIR_FIELD} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.</Trans>
-				</>,
-				why: <>
-					<Plural
-						id="mnk.ir.suggestions.elixir.why"
-						value={this._badElixirs}
-						one="# Elixir Field was missed inside of IR."
-						other="# Elixir Fields were missed inside of IR."
-					/>
-				</>,
+				content: <Trans id="mnk.ir.suggestions.elixir.content">
+					Try to get every second <ActionLink {...ACTIONS.ELIXIR_FIELD} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.
+				</Trans>,
+				why: <Trans id="mnk.ir.suggestions.elixir.why">
+					<Plural value={this._badElixirs} one="# Elixir Field was" other="# Elixir Fields were" /> missed inside of IR.
+				</Trans>,
 			}))
 		}
 
@@ -107,17 +102,12 @@ export default class InternalRelease extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HOWLING_FIST.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <>
-					<Trans id="mnk.ir.suggestions.howling.content">Try to get every <ActionLink {...ACTIONS.HOWLING_FIST} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.</Trans>
-				</>,
-				why: <>
-					<Plural
-						id="mnk.ir.suggestions.howling.why"
-						value={this._badHowlings}
-						one="# Howling Fist was outside of IR."
-						other="# Howling Fists were outside of IR."
-					/>
-				</>,
+				content: <Trans id="mnk.ir.suggestions.howling.content">
+					Try to get every <ActionLink {...ACTIONS.HOWLING_FIST} /> inside <StatusLink {...STATUSES.INTERNAL_RELEASE} />.
+				</Trans>,
+				why: <Trans id="mnk.ir.suggestions.howling.why">
+					<Plural value={this._badHowlings} one="# Howling Fist was" other="# Howling Fists were" /> executed outside of IR.
+				</Trans>,
 			}))
 		}
 	}
@@ -134,12 +124,18 @@ export default class InternalRelease extends Module {
 					content: <>
 						{this.parser.formatTimestamp(ir.start)}
 						<span> - </span>
-						<span><Plural id="mnk.ir.table.gcd.count" value={numGcds} one="# GCD" other="# GCDs" /></span>
+						<span><Plural id="mnk.ir.table.gcd" value={numGcds} one="# GCD" other="# GCDs" /></span>
 						<span> - </span>
-						<span>{numElixirs}/1 Elixir Field</span>
+						<Trans id="mnk.ir.table.ef">
+							{numElixirs}/1 Elixir Field
+						</Trans>
 						<span> - </span>
-						<span>{numHowlings}/1 Howling Fist</span>
-						{ir.rushing && <span className="text-info">&nbsp;(rushing)</span>}
+						<Trans id="mnk.ir.table.hf">
+							{numHowlings}/1 Howling Fist
+						</Trans>
+						{ir.rushing && <>
+							&nbsp;<Trans id="mnk.ir.table.rushing" render="span" className="text-info">(rushing)</Trans>
+						</>}
 					</>,
 				},
 				content: {

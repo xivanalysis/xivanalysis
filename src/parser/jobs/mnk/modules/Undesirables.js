@@ -51,33 +51,31 @@ export default class Undesirables extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EARTH_TACKLE.icon,
-			content: <>
-				<Trans id="mnk.undesirables.suggestions.earthtackle.content">Avoid using <ActionLink {...ACTIONS.EARTH_TACKLE} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.FIRE_TACKLE} />.</Trans>
-			</>,
+			content: <Trans id="mnk.undesirables.suggestions.earthtackle.content">
+				Avoid using <ActionLink {...ACTIONS.EARTH_TACKLE} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.FIRE_TACKLE} />.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
 			value: earthTackleCount,
-			why: <>
-				<Trans id="mnk.undesirables.suggestions.earthtackle.why">{lostTacklePotency} potency lost to inefficient tackling.</Trans>
-			</>,
+			why: <Trans id="mnk.undesirables.suggestions.earthtackle.why">
+				{lostTacklePotency} potency lost to inefficient tackling.
+			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.ONE_ILM_PUNCH.icon,
-			content: <>
-				<Trans id="mnk.undesirables.suggestions.oneilm.content">Avoid using <ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} /> and <ActionLink {...ACTIONS.TWIN_SNAKES} />.</Trans>
-			</>,
+			content: <Trans id="mnk.undesirables.suggestions.oneilm.content">
+				Avoid using <ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} /> and <ActionLink {...ACTIONS.TWIN_SNAKES} />.
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MAJOR,
 			},
 			value: oneIlmPunchCount,
-			why: <>
-				<Trans id="mnk.undesirables.suggestions.oneilm.why">
-					<ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> cost <Plural value={oneIlmPunchCount} one="# more potent GCD" other="# more potent GCDs" />.
-				</Trans>
-			</>,
+			why: <Trans id="mnk.undesirables.suggestions.oneilm.why">
+				<ActionLink {...ACTIONS.ONE_ILM_PUNCH} /> cost <Plural value={oneIlmPunchCount} one="# more potent GCD" other="# more potent GCDs" />.
+			</Trans>,
 		}))
 	}
 

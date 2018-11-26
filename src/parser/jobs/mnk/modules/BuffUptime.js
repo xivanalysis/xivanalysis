@@ -107,9 +107,7 @@ export default class BuffUptime extends Module {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.buffs.checklist.dragonkick.name">Keep Dragon Kick up</Trans>,
-			description: <>
-				<Trans id="mnk.buffs.checklist.dragonkick.description">Dragon Kick's blunt resistance debuff should always be applied to your primary target.</Trans>
-			</>,
+			description: <Trans id="mnk.buffs.checklist.dragonkick.description">Dragon Kick's blunt resistance debuff should always be applied to your primary target.</Trans>,
 			displayOrder: DISPLAY_ORDER.DRAGON_KICK,
 			requirements: [
 				new Requirement({
@@ -121,9 +119,7 @@ export default class BuffUptime extends Module {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.buffs.checklist.twinsnakes.name">Keep Twin Snakes up</Trans>,
-			description: <>
-				<Trans id="mnk.buffs.checklist.twinsnakes.description">Twin Snakes is an easy 10% buff to your DPS across the board.</Trans>
-			</>,
+			description: <Trans id="mnk.buffs.checklist.twinsnakes.description">Twin Snakes is an easy 10% buff to your DPS across the board.</Trans>,
 			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
@@ -136,35 +132,30 @@ export default class BuffUptime extends Module {
 		if (this._earlyDragonKicks) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DRAGON_KICK.icon,
-				content: <>
-					<Trans id="mnk.buffs.suggestions.dragonkick.early.content">Avoid refreshing <ActionLink {...ACTIONS.DRAGON_KICK} /> signficantly before its expiration as you're trading it for the higher damage <ActionLink {...ACTIONS.BOOTSHINE} />.</Trans>
-				</>,
+				content: <Trans id="mnk.buffs.suggestions.dragonkick.early.content">
+					Avoid refreshing <ActionLink {...ACTIONS.DRAGON_KICK} /> signficantly before its expiration as you're trading it for the higher damage <ActionLink {...ACTIONS.BOOTSHINE} />.
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <>
-					<Plural
-						id="mnk.buffs.suggestions.dragonkick.early.why"
-						value={this._earlyDragonKicks}
-						one="# rotation cycle was interrupted by an early refresh."
-						other="# rotation cycles were interrupted by early refreshes."
-					/>
-				</>,
+				why: <Trans id="mnk.buffs.suggestions.dragonkick.early.why">
+					<Plural value={this._earlyDragonKicks} one="# rotation cycle was" other="# rotation cycles were" /> interrupted by an early refresh.
+				</Trans>,
 			}))
 		}
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.TWIN_SNAKES.icon,
-			content: <>
-				<Trans id="mnk.buffs.suggestions.twinsnakes.early.content">Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.</Trans>
-			</>,
+			content: <Trans id="mnk.buffs.suggestions.twinsnakes.early.content">
+				Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
+			</Trans>,
 			tiers: {
 				0: SEVERITY.MINOR,
 				1: SEVERITY.MEDIUM,
 				4: SEVERITY.MAJOR,
 			},
 			value: this._earlyTwinSnakes,
-			why: <>
-				<Trans id="mnk.buffs.suggestions.twinsnakes.early.why">{lostTruePotency} potency lost to <Plural value={this._earlyTwinSnakes} one="# early refresh" other="# early refreshes" />.</Trans>
-			</>,
+			why: <Trans id="mnk.buffs.suggestions.twinsnakes.early.why">
+				{lostTruePotency} potency lost to <Plural value={this._earlyTwinSnakes} one="# early refresh" other="# early refreshes" />.
+			</Trans>,
 		}))
 	}
 

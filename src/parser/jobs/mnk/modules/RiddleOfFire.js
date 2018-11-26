@@ -16,9 +16,11 @@ const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
 
 const POSSIBLE_GCDS = 9
 
-const ROF_GCD_TARGET = 9
-const ROF_GCD_WARNING = 8
-const ROF_GCD_ERROR = 7
+const ROF_GCD = {
+	TARGET: 9,
+	WARNING: 8,
+	ERROR: 7,
+}
 
 export default class RiddleOfFire extends Module {
 	static handle = 'riddleoffire'
@@ -87,23 +89,17 @@ export default class RiddleOfFire extends Module {
 		if (this._missedGcds) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.RIDDLE_OF_FIRE.icon,
-				content: <>
-					<Trans id="mnk.rof.suggestions.gcd.content">Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.</Trans>
-				</>,
+				content: <Trans id="mnk.rof.suggestions.gcd.content">
+					Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
+				</Trans>,
 				matcher: matchClosestHigher,
 				tiers: {
 					7: SEVERITY.MAJOR,
 					8: SEVERITY.MEDIUM,
 				},
 				value: Math.min(...rofs),
-				why: <>
-					<Plural
-						id="mnk.rof.suggestions.gcd.why"
-						value={this._missedGcds}
-						one="# GCD was missed during RoF."
-						other="# GCDs were missed during RoF."
-					/>
-				</>,
+				why: <Trans id="mnk.rof.suggestions.gcd.why">
+					<Plural value={this._missedGcds} one="# GCD was" other="# GCDs were" /> missed during RoF.</Trans>,
 			}))
 		}
 
@@ -111,17 +107,12 @@ export default class RiddleOfFire extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TORNADO_KICK.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <>
-					<Trans id="mnk.rof.suggestions.tk.content">Try to fit a <ActionLink {...ACTIONS.TORNADO_KICK} /> at the end of every <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.</Trans>
-				</>,
-				why: <>
-					<Plural
-						id="mnk.rof.suggestions.tk.why"
-						value={this._missedTks}
-						one="# Tornado Kick was missed during RoF."
-						other="# Tornado Kicks were missed during RoF."
-					/>
-				</>,
+				content: <Trans id="mnk.rof.suggestions.tk.content">
+					Try to fit a <ActionLink {...ACTIONS.TORNADO_KICK} /> at the end of every <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
+				</Trans>,
+				why: <Trans id="mnk.rof.suggestions.tk.why">
+					<Plural value={this._missedTks} one="# Tornado Kick was" other="# Tornado Kicks were" /> missed during RoF.
+				</Trans>,
 			}))
 		}
 	}
@@ -148,11 +139,11 @@ export default class RiddleOfFire extends Module {
 	}
 
 	_formatGcdCount(count) {
-		if (count <= ROF_GCD_ERROR) {
+		if (count <= ROF_GCD.ERROR) {
 			return <span className="text-error">{count}</span>
 		}
 
-		if (count === ROF_GCD_WARNING) {
+		if (count === ROF_GCD.WARNING) {
 			return <span className="text-warning">{count}</span>
 		}
 
@@ -170,12 +161,16 @@ export default class RiddleOfFire extends Module {
 					content: <>
 						{this.parser.formatTimestamp(riddle.start)}
 						<span> - </span>
-						<Trans id="mnk.rof.table.gcd.count">
+						<Trans id="mnk.rof.table.gcd">
 							{this._formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
 						</Trans>
 						<span> - </span>
-						<span>{numTKs}/1 Tornado Kick</span>
-						{riddle.rushing && <span className="text-info">&nbsp;(rushing)</span>}
+						<Trans id="mnk.rof.table.tk">
+							{numTKs}/1 Tornado Kick
+						</Trans>
+						{riddle.rushing && <>
+							&nbsp;<Trans id="mnk.rof.table.rushing" render="span" className="text-info">(rushing)</Trans>
+						</>}
 					</>,
 				},
 				content: {
@@ -186,7 +181,9 @@ export default class RiddleOfFire extends Module {
 
 		return <>
 			<Message>
-				<Trans id="mnk.rof.accordion.message">Every <StatusLink {...STATUSES.RIDDLE_OF_FIRE}/> window should ideally contain {ROF_GCD_TARGET} GCDs as your skill speed allows and as many OGCDs as you can weave.</Trans>
+				<Trans id="mnk.rof.accordion.message">
+					Every <StatusLink {...STATUSES.RIDDLE_OF_FIRE}/> window should ideally contain {ROF_GCD.TARGET} GCDs as your skill speed allows and as many OGCDs as you can weave.
+				</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

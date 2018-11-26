@@ -54,14 +54,12 @@ export default class MnkAoE extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ARM_OF_THE_DESTROYER.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <>
-					<Trans id="mnk.aoe.suggestions.aotd.content"><ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only efficient when there are {AOTD_MIN_TARGETS} or more targets.</Trans>
-				</>,
-				why: <>
-					<Trans id="mnk.aoe.suggestions.aotd.why">
-						<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> used on too few targets <Plural value={this._badAotDs.length} one="# time" other="# times" />.
-					</Trans>
-				</>,
+				content: <Trans id="mnk.aoe.suggestions.aotd.content">
+					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only efficient when there are {AOTD_MIN_TARGETS} or more targets.
+				</Trans>,
+				why: <Trans id="mnk.aoe.suggestions.aotd.why">
+					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> used on too few targets <Plural value={this._badAotDs.length} one="# time" other="# times" />.
+				</Trans>,
 			}))
 		}
 
@@ -69,14 +67,12 @@ export default class MnkAoE extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ROCKBREAKER.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <>
-					<Trans id="mnk.aoe.suggestions.rockbreaker.content"><ActionLink {...ACTIONS.ROCKBREAKER}/> is only efficient when there are {ROCKBREAKER_MIN_TARGETS} or more targets.</Trans>
-				</>,
-				why: <>
-					<Trans id="mnk.aoe.suggestions.rockbreaker.why">
-						<ActionLink {...ACTIONS.ROCKBREAKER}/> used on too few targets <Plural value={this._badRocks.length} one="# time" other="# times" />.
-					</Trans>
-				</>,
+				content: <Trans id="mnk.aoe.suggestions.rockbreaker.content">
+					<ActionLink {...ACTIONS.ROCKBREAKER}/> is only efficient when there are {ROCKBREAKER_MIN_TARGETS} or more targets.
+				</Trans>,
+				why: <Trans id="mnk.aoe.suggestions.rockbreaker.why">
+					<ActionLink {...ACTIONS.ROCKBREAKER}/> used on too few targets <Plural value={this._badRocks.length} one="# time" other="# times" />.
+				</Trans>,
 			}))
 		}
 	}
