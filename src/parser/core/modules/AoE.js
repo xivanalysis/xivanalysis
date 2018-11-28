@@ -176,6 +176,11 @@ export default class AoE extends Module {
 
 	isValidHit(event) {
 		// Checking the event's target - if we get a falsey value back, it's an invalid target
-		return !!this.enemies.getEntity(event.targetID)
+		const validTarget = !!this.enemies.getEntity(event.targetID)
+
+		// If there's an amount key but it's 0, it was likely a hit on an invuln target
+		const zeroAmount = event.amount === 0
+
+		return validTarget && !zeroAmount
 	}
 }

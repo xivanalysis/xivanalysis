@@ -1,6 +1,6 @@
 import {ReactNode} from 'react'
 
-import {Contributor, Role} from 'data/CONTRIBUTORS'
+import CONTRIBUTORS, {Contributor, Role} from 'data/CONTRIBUTORS'
 import {PatchNumber} from 'data/PATCHES'
 import Module from './Module'
 
@@ -30,5 +30,9 @@ export interface Meta {
 
 export default {
 	modules: () => import('./modules' /* webpackChunkName: "core" */),
-	changelog: [],
+	changelog: [{
+		date: new Date('2018-11-22'),
+		changes: 'Prevented hits that do zero damage from counting towards AoE hit counts.',
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}],
 }
