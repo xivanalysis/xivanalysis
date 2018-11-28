@@ -38,6 +38,7 @@ ACT doesn't track this, the best we can do is simulate from damage but it's pret
 - [x] IR always includes a Howling and Elixir
 - [ ] IR-RoF drift, every second RoF should include an IR
 - [ ] Howling and Elixir drift, they should ideally be weaved in the same GCD, or no more than 1 GCD apart
+- [ ] Death-flagging during buffs
 
 ### Forms
 - [x] Reset forms by using Opo-Opo form skills in a different form

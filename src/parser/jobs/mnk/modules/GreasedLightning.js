@@ -1,3 +1,4 @@
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import Color from 'color'
 import React from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -25,7 +26,6 @@ const GL_REFRESHERS = [
 
 export default class GreasedLightning extends Module {
 	static handle = 'greasedlightning'
-	static title = 'Greased Lightning'
 	static dependencies = [
 		'brokenLog',
 		'checklist',
@@ -34,6 +34,8 @@ export default class GreasedLightning extends Module {
 		'suggestions',
 	]
 
+	static title = 'Greased Lightning'
+	static i18n_id = i18nMark('mnk.gl.title')
 	static displayOrder = DISPLAY_ORDER.GREASED_LIGHTNING
 
 	_currentStacks = null
@@ -255,14 +257,14 @@ export default class GreasedLightning extends Module {
 		})
 
 		this.checklist.add(new Rule({
-			name: 'Keep Greased Lightning running',
-			description: <>
+			name: <Trans id="mnk.gl.checklist.name">Keep Greased Lightning running</Trans>,
+			description: <Trans id="mnk.gl.checklist.description">
 				<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
-			</>,
+			</Trans>,
 			displayOrder: DISPLAY_ORDER.GREASED_LIGHTNING,
 			requirements: [
 				new Requirement({
-					name: <><StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> uptime</>,
+					name: <Trans id="mnk.gl.checklist.requirement.name"><StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
@@ -274,54 +276,54 @@ export default class GreasedLightning extends Module {
 		if (this._droppedStacks) {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://secure.xivdb.com/img/game/001000/001775.png', // Name of Lightning
-				content: <>
+				content: <Trans id="mnk.gl.suggestions.dropped.content">
 					Avoid dropping stacks except when using <ActionLink {...ACTIONS.TORNADO_KICK} />.
-				</>,
+				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <>
-					<StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> dropped {this._droppedStacks} times.
-				</>,
+				why: <Trans id="mnk.gl.suggestions.dropped.why">
+					<StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> dropped <Plural value={this._droppedStacks} one="# time" other="# times"/>.
+				</Trans>,
 			}))
 		}
 
 		if (missedEarth) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
-				content: <>
+				content: <Trans id="mnk.gl.suggestions.roe.missed.content">
 					Avoid using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> when you won't take any damage.
-				</>,
+				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <>
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {missedEarth} times without triggering <StatusLink {...STATUSES.EARTHS_REPLY} />.
-				</>,
+				why: <Trans id="mnk.gl.suggestions.roe.missed.why">
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={missedEarth} one="# time" other="# times" /> without triggering <StatusLink {...STATUSES.EARTHS_REPLY} />.
+				</Trans>,
 			}))
 		}
 
 		if (this._wastedEarth) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_EARTH.icon,
-				content: <>
+				content: <Trans id="mnk.gl.suggestions.roe.wasted.content">
 					Avoid using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> if your stacks won't drop.
 					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> has the same defensive buff on its own,
 					unless you need the prolonged defense of <StatusLink {...STATUSES.EARTHS_REPLY} />.
-				</>,
+				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <>
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used {this._wastedEarth} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
-				</>,
+				why: <Trans id="mnk.gl.suggestions.roe.wasted.why">
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
+				</Trans>,
 			}))
 		}
 
 		if (this._wastedWind) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RIDDLE_OF_WIND.icon,
-				content: <>
+				content: <Trans id="mnk.gl.suggestions.row.wasted.content">
 					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> without saving stacks is a potency loss since you lose the damage buff from <StatusLink {...STATUSES.FISTS_OF_FIRE} />.
-				</>,
+				</Trans>,
 				severity: SEVERITY.MINOR,
-				why: <>
-					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used {this._wastedWind} times without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
-				</>,
+				why: <Trans id="mnk.gl.suggestions.row.wasted.why">
+					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used <Plural value={this._wastedWind} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
+				</Trans>,
 			}))
 		}
 	}
