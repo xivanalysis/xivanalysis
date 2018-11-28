@@ -1,0 +1,54 @@
+.sidebar {
+	position: relative;
+	flex-shrink: 0;
+	margin-right: 20px;
+	padding: 20px;
+	width: 300px;
+}
+
+.sidebar::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	width: 50vw;
+	height: 100%;
+	background: white;
+}
+
+.logo {
+	color: black;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.logo:hover {
+	color: black;
+}
+
+.logoImage {
+	/* Adjust for the off-center-ness of the logo */
+	margin: -10px .5em 0 0;
+	height: 50px;
+	vertical-align: middle;
+}
+
+.options {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+}
+
+.version {
+	opacity: .5;
+}
+
+.versionInfo, .versionInfo dd {
+	margin: 0;
+}
+
+.versionInfo dt {
+	font-weight: bold;
+}

@@ -1,6 +1,5 @@
 body {
-	/* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
-	padding-top: 40px;
+	background: #f5f8fa;
 
 	/* Colours 'cus SUI doesn't for w/e reason */
 	--red: #db2828;

@@ -1,0 +1,46 @@
+.crumbs {
+	position: relative;
+	margin: 20px -20px 0;
+	padding: 15px 20px;
+	overflow: hidden;
+}
+
+.crumbsBackground {
+	position: absolute;
+	top: -5px;
+	bottom: -5px;
+	left: -5px;
+	right: -5px;
+	z-index: -1;
+	background-size: 150%;
+	background-position: center;
+	filter: blur(5px);
+}
+
+.crumbsBackground::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(255, 255, 255, .5);
+}
+
+.link {
+	display: block;
+	padding: 5px 0;
+	color: black;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.link:hover {
+	color: black;
+	font-weight: bold;
+}
+
+.linkSubtitle {
+	opacity: .5;
+}

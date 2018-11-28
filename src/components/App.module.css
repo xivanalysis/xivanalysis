@@ -1,0 +1,19 @@
+.container {
+	display: flex;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 1340px;
+	min-height: 100vh;
+}
+
+.content {
+	flex-grow: 1;
+	padding: 20px 0;
+}
+
+/* TODO: Proper metrics file? */
+@media (min-width: 768px) {
+	.container {
+		padding: 0 20px;
+	}
+}

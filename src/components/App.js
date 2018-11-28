@@ -1,19 +1,20 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Switch, Route, withRouter} from 'react-router-dom'
+import {Route, Switch, withRouter} from 'react-router-dom'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
 import Analyse from './Analyse'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
-import Header from './Header'
+import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
+import styles from './App.module.css'
 
 class App extends Component {
 	static propTypes = {
@@ -43,18 +44,20 @@ class App extends Component {
 	}
 
 	render() {
-		return <>
-			<Header/>
+		return <div className={styles.container}>
+			<GlobalSidebar/>
 
-			<ErrorBoundary>
-				<Switch>
-					<Route exact path="/" component={Home}/>
-					<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
-					<Route path="/find/:code/:fight?" component={Find}/>
-					<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
-				</Switch>
-			</ErrorBoundary>
-		</>
+			<div className={styles.content}>
+				<ErrorBoundary>
+					<Switch>
+						<Route exact path="/" component={Home}/>
+						<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
+						<Route path="/find/:code/:fight?" component={Find}/>
+						<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+					</Switch>
+				</ErrorBoundary>
+			</div>
+		</div>
 	}
 }
 
