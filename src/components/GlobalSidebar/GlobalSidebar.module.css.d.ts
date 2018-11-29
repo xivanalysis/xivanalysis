@@ -4,5 +4,3 @@ export const sidebarContent: string;
 export const logo: string;
 export const logoImage: string;
 export const options: string;
-export const version: string;
-export const versionInfo: string;

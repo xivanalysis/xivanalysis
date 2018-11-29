@@ -46,15 +46,3 @@
 	bottom: 0;
 	left: 0;
 }
-
-.version {
-	opacity: .5;
-}
-
-.versionInfo, .versionInfo dd {
-	margin: 0;
-}
-
-.versionInfo dt {
-	font-weight: bold;
-}
