@@ -9,6 +9,8 @@
 .content {
 	flex-grow: 1;
 	padding: 20px 0;
+	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
+	width: 0;
 }
 
 /* TODO: Proper metrics file? */
