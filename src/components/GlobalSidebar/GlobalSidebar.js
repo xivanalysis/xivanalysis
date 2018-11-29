@@ -14,8 +14,8 @@ class GlobalSidebar extends React.PureComponent {
 		const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
 		const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
 
-		return <>
-			<div className={styles.sidebar}>
+		return <div className={styles.sidebar}>
+			<div className={styles.sidebarContent}>
 				{/* Main logo */}
 				<Link to="/" className={styles.logo}>
 					<img
@@ -62,7 +62,7 @@ class GlobalSidebar extends React.PureComponent {
 					</a>
 				</div>
 			</div>
-		</>
+		</div>
 	}
 }
 

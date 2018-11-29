@@ -2,7 +2,6 @@
 	position: relative;
 	flex-shrink: 0;
 	margin-right: 20px;
-	padding: 20px;
 	width: 300px;
 }
 
@@ -16,6 +15,13 @@
 	width: 50vw;
 	height: 100%;
 	background: white;
+}
+
+.sidebarContent {
+	position: fixed;
+	padding: 20px;
+	width: 300px;
+	min-height: 100%;
 }
 
 .logo {
