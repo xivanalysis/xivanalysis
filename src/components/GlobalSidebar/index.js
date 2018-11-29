@@ -1,1 +1,1 @@
-export {default} from './GlobalSidebar'
+export {default, SidebarContent} from './GlobalSidebar'

@@ -1,4 +1,6 @@
+import PropTypes from 'prop-types'
 import React from 'react'
+import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 import {Icon, Popup} from 'semantic-ui-react'
 
@@ -7,7 +9,10 @@ import I18nMenu from 'components/ui/I18nMenu'
 import Breadcrumbs from './Breadcrumbs'
 import styles from './GlobalSidebar.module.css'
 
-class GlobalSidebar extends React.PureComponent {
+// TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
+let contentRef = React.createRef() // eslint-disable-line prefer-const
+
+export default class GlobalSidebar extends React.Component {
 	render() {
 		// Version info
 		const version = process.env.REACT_APP_VERSION || 'DEV'
@@ -27,6 +32,9 @@ class GlobalSidebar extends React.PureComponent {
 				</Link>
 
 				<Breadcrumbs/>
+
+				{/* Content */}
+				<div ref={contentRef}/>
 
 				{/* Options pinned to the bottom */}
 				<div className={styles.options}>
@@ -66,4 +74,14 @@ class GlobalSidebar extends React.PureComponent {
 	}
 }
 
-export default GlobalSidebar
+export class SidebarContent extends React.Component {
+	static propTypes = {
+		children: PropTypes.node,
+	}
+	render() {
+		return ReactDOM.createPortal(
+			this.props.children,
+			contentRef.current,
+		)
+	}
+}
