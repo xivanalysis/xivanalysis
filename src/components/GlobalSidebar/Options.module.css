@@ -1,5 +1,26 @@
+.row {
+	padding: 0 20px;
+	line-height: 40px;
+}
+
+.row + .row {
+	border-top: 1px solid #f5f8fa;
+}
+
+.icon {
+	color: black;
+	font-size: 20px;
+	vertical-align: middle;
+}
+
+.icon:hover {
+	color: black;
+	opacity: .75;
+}
+
 .version {
 	opacity: .5;
+	float: right;
 }
 
 .versionInfo, .versionInfo dd {

@@ -13,36 +13,42 @@ const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
 export default class Options extends React.PureComponent {
 	render() {
 		return <>
-			<I18nMenu />
+			<div className={styles.row}>
+				<I18nMenu />
+			</div>
 
-			<Popup
-				trigger={<span className={styles.version}>{'#' + version}</span>}
-				position="bottom center"
-			>
-				<Popup.Content>
-					<dl className={styles.versionInfo}>
-						<dt>Commit</dt>
-						<dd>{gitCommit}</dd>
-						<dt>Branch</dt>
-						<dd>{gitBranch}</dd>
-					</dl>
-				</Popup.Content>
-			</Popup>
+			<div className={styles.row}>
+				<a
+					href="https://discord.gg/jVbVe44"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={styles.icon}
+				>
+					<Icon name="discord" />
+				</a>
+				<a
+					href="https://github.com/xivanalysis/xivanalysis"
+					target="_blank"
+					rel="noopener noreferrer"
+					className={styles.icon}
+				>
+					<Icon name="github" />
+				</a>
 
-			<a
-				href="https://discord.gg/jVbVe44"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<Icon name="discord" />
-			</a>
-			<a
-				href="https://github.com/xivanalysis/xivanalysis"
-				target="_blank"
-				rel="noopener noreferrer"
-			>
-				<Icon name="github" />
-			</a>
+				<Popup
+					trigger={<span className={styles.version}>{'#' + version}</span>}
+					position="bottom center"
+				>
+					<Popup.Content>
+						<dl className={styles.versionInfo}>
+							<dt>Commit</dt>
+							<dd>{gitCommit}</dd>
+							<dt>Branch</dt>
+							<dd>{gitBranch}</dd>
+						</dl>
+					</Popup.Content>
+				</Popup>
+			</div>
 		</>
 	}
 }
