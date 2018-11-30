@@ -1,0 +1,9 @@
+.segment {
+	position: relative;
+	padding: 20px;
+	background: white;
+}
+
+.segment + .segment {
+	margin-top: 20px;
+}
