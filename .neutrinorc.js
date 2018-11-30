@@ -107,6 +107,27 @@ module.exports = {
 						}))
 		},
 
+		// Set up postcss
+		neutrino => {
+			const options = {
+				plugins: [
+					require('autoprefixer'),
+					require('cssnano')({
+						preset: ['default', {
+							// Need to disable this, it mangles relative imports which freaks other loaders out
+							normalizeUrl: false,
+						}]
+					})
+				]
+			}
+			neutrino.config.module.rule('style').use('postcss').loader('postcss-loader').options(options)
+			neutrino.config.module.rule('style-modules').use('postcss').loader('postcss-loader').options(options)
+
+			const addExtraImport = options => Object.assign(options, {importLoaders: options.importLoaders + 1})
+			neutrino.config.module.rule('style').use('css').tap(addExtraImport)
+			neutrino.config.module.rule('style-modules').use('css-modules').tap(addExtraImport)
+		},
+
 		// Set up TypeScript
 		neutrino => {
 			neutrino.config.module
@@ -133,7 +154,7 @@ module.exports = {
 		// Test stuff
 		jestConfig,
 
-		// WebpackBar because loooking pretty is Important™
+		// WebpackBar because looking pretty is Important™
 		neutrino => neutrino.config.plugin('webpackbar').use(new WebpackBar()),
 	]
 }
