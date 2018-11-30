@@ -1,5 +1,5 @@
 .background {
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
 	width: 100%;
@@ -11,10 +11,9 @@
 
 .search {
 	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: 50%;
-	margin-bottom: -19px; /* Half the input group's height */
+	top: 50%;
+	transform: translateY(-50%);
+	width: 100%;
 	color: white;
 }
 

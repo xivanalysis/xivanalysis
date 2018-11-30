@@ -1,5 +1,6 @@
 .sidebar {
 	position: relative;
+	z-index: 1;
 	flex-shrink: 0;
 	margin-right: 20px;
 	width: 300px;
@@ -17,6 +18,11 @@
 	background: white;
 }
 
+.sidebar.home::before {
+	/* TODO: light/dark blurred theme background */
+	background: rgba(255, 255, 255, .5);
+}
+
 .sidebarContent {
 	position: fixed;
 	padding: 20px;
@@ -32,6 +38,12 @@
 
 .logo:hover {
 	color: black;
+}
+
+.sidebar.home .logo {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 .logoImage {

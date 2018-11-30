@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 
 import Breadcrumbs from './Breadcrumbs'
 import Options from './Options'
@@ -11,9 +11,27 @@ import styles from './GlobalSidebar.module.css'
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
 let contentRef = React.createRef() // eslint-disable-line prefer-const
 
-export default class GlobalSidebar extends React.Component {
+@withRouter
+class GlobalSidebar extends React.Component {
+	static propTypes = {
+		location: PropTypes.shape({
+			pathname: PropTypes.string.isRequired,
+		}).isRequired,
+	}
+
 	render() {
-		return <div className={styles.sidebar}>
+		const {location: {pathname}} = this.props
+		const onHome = pathname === '/'
+
+		// TODO: classnames
+		const sidebarStyles = [
+			styles.sidebar,
+			onHome && styles.home,
+		]
+			.filter(Boolean)
+			.join(' ')
+
+		return <div className={sidebarStyles}>
 			<div className={styles.sidebarContent}>
 				{/* Main logo */}
 				<Link to="/" className={styles.logo}>
@@ -50,3 +68,5 @@ export class SidebarContent extends React.Component {
 		)
 	}
 }
+
+export default GlobalSidebar

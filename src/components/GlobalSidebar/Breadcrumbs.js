@@ -93,8 +93,6 @@ class Breadcrumbs extends React.Component {
 			})
 		}
 
-		// const onHome = pathname === '/'
-
 		return <>
 			<Helmet>
 				<title>
@@ -103,7 +101,7 @@ class Breadcrumbs extends React.Component {
 				</title>
 			</Helmet>
 
-			{crumbs.length && (
+			{crumbs.length > 0 && (
 				<div className={styles.crumbs}>
 					{crumbsBackground && (
 						<div
