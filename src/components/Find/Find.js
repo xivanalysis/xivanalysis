@@ -45,13 +45,9 @@ class Find extends Component {
 			)
 		}
 
-		return <>
-			<h1>{report.title}</h1>
-			{params.fight?
-				<CombatantList report={report} currentFight={parseInt(params.fight, 10)}/> :
-				<FightList report={report}/>
-			}
-		</>
+		return params.fight
+			? <CombatantList report={report} currentFight={parseInt(params.fight, 10)}/>
+			: <FightList report={report}/>
 	}
 }
 
