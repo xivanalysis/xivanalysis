@@ -32,7 +32,7 @@ class GlobalSidebar extends React.Component {
 			.join(' ')
 
 		return <div className={sidebarStyles}>
-			<div className={styles.sidebarContent}>
+			<div className={styles.wrapper}>
 				{/* Main logo */}
 				<Link to="/" className={styles.logo}>
 					<img
@@ -46,7 +46,7 @@ class GlobalSidebar extends React.Component {
 				<Breadcrumbs/>
 
 				{/* Content */}
-				<div ref={contentRef}/>
+				<div ref={contentRef} className={styles.content}/>
 
 				{/* Options pinned to the bottom */}
 				<div className={styles.options}>

@@ -271,15 +271,6 @@ class Analyse extends Component {
 						</Header.Subheader>
 					</Header.Content>
 				</Header>}
-				<Header className={styles.header} attached={job? true : 'top'}>
-					<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
-					<Header.Content>
-						{parser.fight.name}
-						<Header.Subheader>
-							{parser.fight.zoneName}
-						</Header.Subheader>
-					</Header.Content>
-				</Header>
 				<Menu vertical attached="bottom">
 					<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
 						<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>

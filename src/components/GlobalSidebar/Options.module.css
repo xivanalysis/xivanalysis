@@ -4,7 +4,7 @@
 }
 
 .row + .row {
-	border-top: 1px solid #f5f8fa;
+	border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
 .icon {

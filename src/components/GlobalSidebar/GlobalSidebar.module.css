@@ -23,11 +23,18 @@
 	background: rgba(255, 255, 255, .5);
 }
 
-.sidebarContent {
+.wrapper {
 	position: fixed;
-	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	padding: 20px 20px 0;
 	width: 300px;
-	min-height: 100%;
+	height: 100%;
+	overflow-y: auto;
+}
+
+.wrapper > * {
+	flex-shrink: 0;
 }
 
 .logo {
@@ -53,9 +60,10 @@
 	vertical-align: middle;
 }
 
+.content {
+	flex-grow: 1;
+}
+
 .options {
-	position: absolute;
-	bottom: 0;
-	left: 0;
-	width: 100%;
+	margin: 20px -20px 0;
 }
