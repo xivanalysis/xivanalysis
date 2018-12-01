@@ -1,14 +1,11 @@
-import React from 'react'
-
 import {Trans} from '@lingui/react'
 import _ from 'lodash'
+import {Result} from 'parser/core/Parser'
+import React from 'react'
 import {
 	Menu,
 } from 'semantic-ui-react'
-
 import {Consumer, Context} from './SegmentPositionContext'
-
-import {Result} from 'parser/core/Parser'
 
 interface Props {
 	index: number

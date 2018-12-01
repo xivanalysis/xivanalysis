@@ -31,7 +31,7 @@ export class SegmentPositionProvider extends React.PureComponent<{}, ProviderSta
 	componentDidUpdate(_prevProps: Readonly<{}>, prevState: Readonly<ProviderState>) {
 		const {registry} = this.state
 		if (registry !== prevState.registry) {
-			const toCheck = Array.from(registry.keys()).sort()
+			const toCheck = Array.from(registry.keys()).sort((a, b) => a - b)
 			const activeId = toCheck.find(id => registry.get(id)!)
 			const active = activeId !== undefined ? activeId : (
 				toCheck.length > 0 ? toCheck[toCheck.length - 1] : null
