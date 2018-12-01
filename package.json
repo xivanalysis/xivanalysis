@@ -90,6 +90,7 @@
     "@neutrinojs/jest": "^9.0.0-beta.1",
     "@neutrinojs/react": "^9.0.0-beta.1",
     "@types/chart.js": "^2.7.37",
+    "@types/classnames": "^2.2.6",
     "@types/jest": "^23.3.3",
     "@types/lingui__react": "^2.5.0",
     "@types/lodash": "^4.14.116",

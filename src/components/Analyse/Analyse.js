@@ -280,15 +280,13 @@ class Analyse extends Component {
 					</Menu.Item>
 				</Menu>
 
-				{this.props.showMenu &&
-					<Menu className={styles.sticky} vertical pointing secondary fluid>
-						{results.map((result, index) => <SegmentLinkItem
-							key={index}
-							index={index}
-							result={result}
-						/>)}
-					</Menu>
-				}
+				{this.props.showMenu && results.map(
+					(result, index) => <SegmentLinkItem
+						key={index}
+						index={index}
+						result={result}
+					/>
+				)}
 			</SidebarContent>
 
 			{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}

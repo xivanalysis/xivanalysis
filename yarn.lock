@@ -913,6 +913,11 @@
   resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.37.tgz#6d3443f6ea2561c1a229d8e5e51976b1812b139c"
   integrity sha512-fObBolG64X0Ns/8K7F+yW1aas5eaJWkpdYUcxutSUbCWHvPhcs90jfmG0b8U4WIvCZAT96hoAU99TT/EOWhoxA==
 
+"@types/classnames@^2.2.6":
+  version "2.2.6"
+  resolved "https://registry.yarnpkg.com/@types/classnames/-/classnames-2.2.6.tgz#dbe8a666156d556ed018e15a4c65f08937c3f628"
+  integrity sha512-XHcYvVdbtAxVstjKxuULYqYaWIzHR15yr1pZj4fnGChuBVJlIAp9StJna0ZJNSgxPh4Nac2FL4JM3M11Tm6fqQ==
+
 "@types/history@*":
   version "4.7.1"
   resolved "https://registry.yarnpkg.com/@types/history/-/history-4.7.1.tgz#66849a23ceef917b57f0787c885f41ce03480f5c"

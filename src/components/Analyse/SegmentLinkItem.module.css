@@ -1,0 +1,16 @@
+@value gutter from "theme.module.css";
+
+.link {
+	margin: 0 calc(-1 * gutter);
+	padding: 5px gutter;
+	cursor: pointer;
+}
+
+.active, .link:hover {
+	font-weight: bold;
+}
+
+.active {
+	/* TODO: Themable? */
+	background: #e1e4e6;
+}
