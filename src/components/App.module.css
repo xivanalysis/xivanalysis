@@ -1,18 +1,33 @@
-@value gutter, lg, themeBackground from "theme.module.css";
+@value gutter, md, lg, themeBackground from "theme.module.css";
+
+.mobileHeader {
+	position: fixed;
+	z-index: 5;
+	padding: 0 20px;
+	width: 100%;
+	height: 40px;
+	background: themeBackground;
+	line-height: 40px;
+}
 
 .container {
 	display: flex;
 	margin: 0 auto;
+	padding-top: calc(gutter + 40px);
 	width: 100%;
 	max-width: 1340px;
 	min-height: 100vh;
 }
 
 .sidebar {
-	position: relative;
-	z-index: 1;
+	position: absolute;
+	top: 0;
+	z-index: 6;
 	flex-shrink: 0;
 	width: 250px;
+	height: 100%;
+	transform: translateX(-100%);
+	transition: transform .2s ease-in-out;
 }
 
 .sidebar::before {
@@ -35,9 +50,28 @@
 .content {
 	position: relative;
 	flex-grow: 1;
-	margin: gutter;
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
+}
+
+@media md {
+	.mobileHeader {
+		display: none;
+	}
+
+	.container {
+		padding-top: 0;
+	}
+
+	.sidebar {
+		position: relative;
+		height: auto;
+		transform: initial;
+	}
+
+	.content {
+		margin: gutter;
+	}
 }
 
 @media lg {

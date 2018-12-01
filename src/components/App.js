@@ -49,25 +49,33 @@ class App extends Component {
 		const {history: {location: {pathname}}} = this.props
 		const onHome = pathname === '/'
 
-		return <div className={styles.container}>
-			<div className={classnames(
-				styles.sidebar,
-				onHome && styles.home,
-			)}>
-				<GlobalSidebar centerLogo={onHome}/>
+		return <>
+			<div className={styles.mobileHeader}>
+				<div className={styles.headerContent}>
+					Header
+				</div>
 			</div>
 
-			<div className={styles.content}>
-				<ErrorBoundary>
-					<Switch>
-						<Route exact path="/" component={Home}/>
-						<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
-						<Route path="/find/:code/:fight?" component={Find}/>
-						<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
-					</Switch>
-				</ErrorBoundary>
+			<div className={styles.container}>
+				<div className={classnames(
+					styles.sidebar,
+					onHome && styles.home,
+				)}>
+					<GlobalSidebar centerLogo={onHome}/>
+				</div>
+
+				<div className={styles.content}>
+					<ErrorBoundary>
+						<Switch>
+							<Route exact path="/" component={Home}/>
+							<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
+							<Route path="/find/:code/:fight?" component={Find}/>
+							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+						</Switch>
+					</ErrorBoundary>
+				</div>
 			</div>
-		</div>
+		</>
 	}
 }
 
