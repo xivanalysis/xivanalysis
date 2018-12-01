@@ -1,4 +1,4 @@
-@value gutter, md, themeBackground from "theme.module.css";
+@value gutter, lg, themeBackground from "theme.module.css";
 
 .container {
 	display: flex;
@@ -12,7 +12,7 @@
 	position: relative;
 	z-index: 1;
 	flex-shrink: 0;
-	width: 300px;
+	width: 250px;
 }
 
 .sidebar::before {
@@ -35,7 +35,11 @@
 .content {
 	position: relative;
 	flex-grow: 1;
-	padding: gutter;
+	margin: gutter;
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
+}
+
+@media lg {
+	.sidebar { width: 300px; }
 }
