@@ -5,8 +5,8 @@
 @media (min-width: 992px) {
 	.helpText {
 		position: absolute;
-		top: 1em;
-		right: 0;
+		top: 20px;
+		right: 20px;
 	}
 }
 
