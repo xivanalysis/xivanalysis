@@ -75,11 +75,13 @@ export default class Weaving extends Module {
 				// Override the timestamp of the GCD with when its cast began
 				timestamp: this._ongoingCastEvent.timestamp,
 			}
-			this._ongoingCastEvent = null
 		} else {
 			// This event was an instant GCD (or log missed the cast starting)
 			this._trailingGcdEvent = event
 		}
+
+		// Always reset the ongoing cast
+		this._ongoingCastEvent = null
 
 		// Throw the current state onto the history
 		this._saveIfBad()
@@ -165,7 +167,9 @@ export default class Weaving extends Module {
 		const speedmod = this.speedmod.get(this.parser.timestamp)
 		const gcdLength = this.gcd.getEstimate() * speedmod
 
-		return weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
+		const temp = weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
+		if (temp) { console.log(weave) }
+		return temp
 	}
 
 	output() {

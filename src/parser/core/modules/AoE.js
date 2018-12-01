@@ -179,7 +179,8 @@ export default class AoE extends Module {
 		const validTarget = !!this.enemies.getEntity(event.targetID)
 
 		// If there's an amount key but it's 0, it was likely a hit on an invuln target
-		const zeroAmount = event.amount === 0
+		// Allow hits w/ overkill, as the fflogs algo for that shit is flakey
+		const zeroAmount = event.amount === 0 && !event.overkill
 
 		return validTarget && !zeroAmount
 	}
