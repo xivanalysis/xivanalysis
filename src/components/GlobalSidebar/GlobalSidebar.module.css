@@ -1,29 +1,4 @@
-@value gutter, themeText, themeBackground from "theme.module.css";
-
-.sidebar {
-	position: relative;
-	z-index: 1;
-	flex-shrink: 0;
-	margin-right: gutter;
-	width: 300px;
-}
-
-.sidebar::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: -1;
-	display: block;
-	width: 50vw;
-	height: 100%;
-	background: themeBackground;
-}
-
-.sidebar.home::before {
-	background: themeBackground;
-	opacity: .5;
-}
+@value gutter, themeText from "theme.module.css";
 
 .wrapper {
 	position: fixed;
@@ -49,7 +24,7 @@
 	color: themeText;
 }
 
-.sidebar.home .logo {
+.logo.center {
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);

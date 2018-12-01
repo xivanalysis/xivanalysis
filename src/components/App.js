@@ -1,3 +1,4 @@
+import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Route, Switch, withRouter} from 'react-router-dom'
@@ -16,6 +17,7 @@ import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
 
+@withRouter
 class App extends Component {
 	static propTypes = {
 		history: PropTypes.shape({
@@ -44,8 +46,16 @@ class App extends Component {
 	}
 
 	render() {
+		const {history: {location: {pathname}}} = this.props
+		const onHome = pathname === '/'
+
 		return <div className={styles.container}>
-			<GlobalSidebar/>
+			<div className={classnames(
+				styles.sidebar,
+				onHome && styles.home,
+			)}>
+				<GlobalSidebar centerLogo={onHome}/>
+			</div>
 
 			<div className={styles.content}>
 				<ErrorBoundary>
@@ -61,4 +71,4 @@ class App extends Component {
 	}
 }
 
-export default withRouter(App)
+export default App

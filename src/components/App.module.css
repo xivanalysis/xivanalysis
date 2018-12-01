@@ -1,4 +1,4 @@
-@value gutter, md from "theme.module.css";
+@value gutter, md, themeBackground from "theme.module.css";
 
 .container {
 	display: flex;
@@ -8,16 +8,34 @@
 	min-height: 100vh;
 }
 
+.sidebar {
+	position: relative;
+	z-index: 1;
+	flex-shrink: 0;
+	width: 300px;
+}
+
+.sidebar::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: -1;
+	display: block;
+	width: 50vw;
+	height: 100%;
+	background: themeBackground;
+}
+
+.sidebar.home::before {
+	background: themeBackground;
+	opacity: .5;
+}
+
 .content {
 	position: relative;
 	flex-grow: 1;
-	padding: gutter 0;
+	padding: gutter;
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
-}
-
-@media md {
-	.container {
-		padding: 0 gutter;
-	}
 }
