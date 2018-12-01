@@ -1,0 +1,23 @@
+/* Sizing */
+@value gutter: 20px;
+
+/* Breakpoints */
+@value sm: (min-width: 576px);
+@value md: (min-width: 768px);
+@value lg: (min-width: 992px);
+@value xl: (min-width: 1340px);
+
+/* Colours */
+@value themeBlack: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
+@value themeLight: #f5f8fa;
+@value themeWhite: white;
+
+/* Theming passthroughs */
+:root {
+	--theme-text: themeBlack;
+	--theme-background: themeWhite;
+	--theme-backdrop: themeLight;
+}
+@value themeText: var(--theme-text, themeBlack);
+@value themeBackground: var(--theme-background, themeWhite);
+@value themeBackdrop: var(--theme-backdrop, themeLight);

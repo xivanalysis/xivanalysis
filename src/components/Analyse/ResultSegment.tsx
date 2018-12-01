@@ -4,7 +4,6 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {
 	Header,
-	Segment,
 } from 'semantic-ui-react'
 import styles from './ResultSegment.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'

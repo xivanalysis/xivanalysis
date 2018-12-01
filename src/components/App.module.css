@@ -1,3 +1,5 @@
+@value gutter, md from "theme.module.css";
+
 .container {
 	display: flex;
 	margin: 0 auto;
@@ -9,14 +11,13 @@
 .content {
 	position: relative;
 	flex-grow: 1;
-	padding: 20px 0;
+	padding: gutter 0;
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
 }
 
-/* TODO: Proper metrics file? */
-@media (min-width: 768px) {
+@media md {
 	.container {
-		padding: 0 20px;
+		padding: 0 gutter;
 	}
 }

@@ -1,20 +1,23 @@
+@value themeText from "theme.module.css";
+
 .row {
 	padding: 0 20px;
 	line-height: 40px;
 }
 
 .row + .row {
+	/* This is kinda nasty */
 	border-top: 1px solid rgba(0, 0, 0, .1);
 }
 
 .icon {
-	color: black;
+	color: themeText;
 	font-size: 20px;
 	vertical-align: middle;
 }
 
 .icon:hover {
-	color: black;
+	color: themeText;
 	opacity: .75;
 }
 

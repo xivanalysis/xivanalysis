@@ -1,5 +1,7 @@
+@value themeBackdrop from "theme.module.css";
+
 body {
-	background: #f5f8fa;
+	background: themeBackdrop;
 
 	/* Colours 'cus SUI doesn't for w/e reason */
 	--red: #db2828;

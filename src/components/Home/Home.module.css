@@ -1,3 +1,5 @@
+@value themeText, themeBackground from "theme.module.css";
+
 .background {
 	position: fixed;
 	top: -10px;
@@ -17,7 +19,8 @@
 	left: 0;
 	width: 100%;
 	height: 100%;
-	background: rgba(255, 255, 255, .5);
+	background: themeBackground;
+	opacity: .5;
 }
 
 .search {
@@ -25,10 +28,10 @@
 	top: 50%;
 	transform: translateY(-50%);
 	width: 100%;
-	color: black;
+	color: themeText;
 }
 
 .about {
 	cursor: pointer;
-	border-bottom: 1px dashed black;
+	border-bottom: 1px dashed themeText;
 }
