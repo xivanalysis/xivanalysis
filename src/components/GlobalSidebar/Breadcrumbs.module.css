@@ -44,6 +44,9 @@
 	font-weight: bold;
 }
 
+.link:first-of-type { padding-top: 0; }
+.link:last-of-type { padding-bottom: 0; }
+
 .linkSubtitle {
 	opacity: .5;
 }

@@ -7,7 +7,6 @@ import withSizes from 'react-sizes'
 import {
 	Header,
 	Loader,
-	Menu,
 } from 'semantic-ui-react'
 
 import {getFflogsEvents} from 'api'
@@ -261,7 +260,6 @@ class Analyse extends Component {
 			<SidebarContent>
 				{job && <Header
 					className={[styles.header].join(' ')}
-					attached="top"
 				>
 					<JobIcon job={job} set={1}/>
 					<Header.Content>
@@ -271,14 +269,6 @@ class Analyse extends Component {
 						</Header.Subheader>
 					</Header.Content>
 				</Header>}
-				<Menu vertical attached="bottom">
-					<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
-						<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
-						<Trans id="core.analyse.view-on-fflogs">
-							View report on FF Logs
-						</Trans>
-					</Menu.Item>
-				</Menu>
 
 				{this.props.showMenu && results.map(
 					(result, index) => <SegmentLinkItem
@@ -287,6 +277,18 @@ class Analyse extends Component {
 						result={result}
 					/>
 				)}
+
+				<a
+					href={this.getReportUrl()}
+					target="_blank"
+					rel="noopener noreferrer"
+					className={styles.reportLink}
+				>
+					<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
+					<Trans id="core.analyse.view-on-fflogs">
+						View report on FF Logs
+					</Trans>
+				</a>
 			</SidebarContent>
 
 			{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}
