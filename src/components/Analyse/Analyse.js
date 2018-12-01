@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Trans} from '@lingui/react'
-import withSizes from 'react-sizes'
 import {
 	Header,
 	Loader,
@@ -12,7 +11,6 @@ import {
 import {getFflogsEvents} from 'api'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
-import {MOBILE_BREAKPOINT}  from 'components/STYLE_CONSTS'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
@@ -53,7 +51,6 @@ class Analyse extends Component {
 		report: PropTypes.shape({
 			loading: PropTypes.bool.isRequired,
 		}),
-		showMenu: PropTypes.bool.isRequired,
 	}
 
 	/** @type {ReadonlyArray<import('parser/core/Parser').ParserResult>|null} */
@@ -270,7 +267,7 @@ class Analyse extends Component {
 					</Header.Content>
 				</Header>}
 
-				{this.props.showMenu && results.map(
+				{results.map(
 					(result, index) => <SegmentLinkItem
 						key={index}
 						index={index}
@@ -296,15 +293,10 @@ class Analyse extends Component {
 	}
 }
 
-const mapSizesToProps = ({width}) => ({
-	showMenu: width >= MOBILE_BREAKPOINT,
-})
-
 const mapStateToProps = state => ({
 	report: state.report,
 })
 
 export default compose(
-	withSizes(mapSizesToProps),
 	connect(mapStateToProps),
 )(Analyse)
