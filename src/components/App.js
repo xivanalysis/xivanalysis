@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Route, Switch, withRouter} from 'react-router-dom'
+import {Icon} from  'semantic-ui-react'
 
 import store from 'store'
 import {clearGlobalError} from 'store/actions'
@@ -28,6 +29,10 @@ class App extends Component {
 
 	_unlisten = null
 
+	state = {
+		sidebarOpen: false,
+	}
+
 	componentDidMount() {
 		// Set up a history listener
 		const {history} = this.props
@@ -45,21 +50,37 @@ class App extends Component {
 		store.dispatch(clearGlobalError())
 	}
 
+	_toggleSidebar = () => {
+		console.log('a')
+		this.setState(state => ({sidebarOpen: !state.sidebarOpen}))
+	}
+
 	render() {
 		const {history: {location: {pathname}}} = this.props
+		const {sidebarOpen} = this.state
+
 		const onHome = pathname === '/'
 
 		return <>
 			<div className={styles.mobileHeader}>
-				<div className={styles.headerContent}>
-					Header
-				</div>
+				<Icon
+					name="bars"
+					className={styles.hamburger}
+					onClick={this._toggleSidebar}
+				/>
+				<img
+					src={process.env.PUBLIC_URL + '/logo.png'}
+					alt="logo"
+					className={styles.logo}
+				/>
+				xivanalysis
 			</div>
 
 			<div className={styles.container}>
 				<div className={classnames(
 					styles.sidebar,
 					onHome && styles.home,
+					sidebarOpen && styles.open,
 				)}>
 					<GlobalSidebar centerLogo={onHome}/>
 				</div>

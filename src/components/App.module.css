@@ -3,11 +3,26 @@
 .mobileHeader {
 	position: fixed;
 	z-index: 5;
-	padding: 0 20px;
 	width: 100%;
 	height: 40px;
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
 	background: themeBackground;
+	font-size: 18px;
 	line-height: 40px;
+}
+
+.hamburger {
+	margin: 0 !important;
+	padding: 0 gutter 0 10px;
+	width: auto !important;
+	height: 40px !important;
+	cursor: pointer;
+}
+
+.logo {
+	margin: 0 5px 5px 0;
+	max-height: 25px;
+	vertical-align: middle;
 }
 
 .container {
@@ -22,12 +37,12 @@
 .sidebar {
 	position: absolute;
 	top: 0;
+	left: -250px;
 	z-index: 6;
 	flex-shrink: 0;
 	width: 250px;
 	height: 100%;
-	transform: translateX(-100%);
-	transition: transform .2s ease-in-out;
+	transition: left .2s ease-in-out;
 }
 
 .sidebar::before {
@@ -40,6 +55,10 @@
 	width: 50vw;
 	height: 100%;
 	background: themeBackground;
+}
+
+.sidebar.open {
+	left: 0;
 }
 
 .sidebar.home::before {
@@ -66,7 +85,7 @@
 	.sidebar {
 		position: relative;
 		height: auto;
-		transform: initial;
+		left: 0;
 	}
 
 	.content {

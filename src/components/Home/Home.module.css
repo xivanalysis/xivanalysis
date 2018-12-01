@@ -1,4 +1,4 @@
-@value themeText, themeBackground from "theme.module.css";
+@value md, themeText, themeBackground from "theme.module.css";
 
 .background {
 	position: fixed;
@@ -27,6 +27,7 @@
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
+	padding: 0 20px;
 	width: 100%;
 	color: themeText;
 }
@@ -34,4 +35,10 @@
 .about {
 	cursor: pointer;
 	border-bottom: 1px dashed themeText;
+}
+
+@media md {
+	.search {
+		padding: 0;
+	}
 }

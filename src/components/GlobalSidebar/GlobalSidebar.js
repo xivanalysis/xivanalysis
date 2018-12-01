@@ -14,7 +14,7 @@ let contentRef = React.createRef() // eslint-disable-line prefer-const
 
 class GlobalSidebar extends React.Component {
 	static propTypes = {
-		centerLogo: PropTypes.boolean,
+		centerLogo: PropTypes.bool,
 	}
 
 	render() {

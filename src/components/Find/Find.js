@@ -8,6 +8,8 @@ import FightList from './FightList'
 import CombatantList from './CombatantList'
 import {fetchReportIfNeeded} from 'store/actions'
 
+import styles from './Find.module.css'
+
 class Find extends Component {
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
@@ -45,9 +47,10 @@ class Find extends Component {
 			)
 		}
 
-		return params.fight
+		const content = params.fight
 			? <CombatantList report={report} currentFight={parseInt(params.fight, 10)}/>
 			: <FightList report={report}/>
+		return <div className={styles.find}>{content}</div>
 	}
 }
 
