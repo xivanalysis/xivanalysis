@@ -1,9 +1,9 @@
-@value themeText, themeBackground from "theme.module.css";
+@value gutter, md, themeText, themeBackground from "theme.module.css";
 
 .crumbs {
 	position: relative;
-	margin: 20px -20px 0;
-	padding: 15px 20px;
+	margin: calc(-1 * gutter) calc(-1 * gutter) 0;
+	padding: 15px gutter;
 	overflow: hidden;
 }
 
@@ -49,4 +49,10 @@
 
 .linkSubtitle {
 	opacity: .5;
+}
+
+@media md {
+	.crumbs {
+		margin-top: gutter;
+	}
 }

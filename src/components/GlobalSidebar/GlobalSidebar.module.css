@@ -1,20 +1,18 @@
-@value gutter, themeText from "theme.module.css";
+@value gutter, md, themeText from "theme.module.css";
 
-.wrapper {
-	position: fixed;
+.sidebar {
 	display: flex;
 	flex-direction: column;
 	padding: gutter gutter 0;
-	width: inherit;
 	height: 100%;
-	overflow-y: auto;
 }
 
-.wrapper > * {
+.sidebar > * {
 	flex-shrink: 0;
 }
 
 .logo {
+	display: none;
 	color: themeText;
 	font-size: 24px;
 	font-weight: bold;
@@ -44,4 +42,10 @@
 
 .options {
 	margin: 0 calc(-1 * gutter);
+}
+
+@media md {
+ .logo {
+	 display: block;
+ }
 }

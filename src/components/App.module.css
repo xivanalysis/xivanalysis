@@ -36,25 +36,13 @@
 
 .sidebar {
 	position: absolute;
-	top: 0;
+	top: 40px;
 	left: -250px;
 	z-index: 6;
 	flex-shrink: 0;
 	width: 250px;
-	height: 100%;
+	height: calc(100% - 40px);
 	transition: left .2s ease-in-out;
-}
-
-.sidebar::before {
-	content: '';
-	position: absolute;
-	top: 0;
-	right: 0;
-	z-index: -1;
-	display: block;
-	width: 50vw;
-	height: 100%;
-	background: themeBackground;
 }
 
 .sidebar.open {
@@ -64,6 +52,14 @@
 .sidebar.home::before {
 	background: themeBackground;
 	opacity: .5;
+}
+
+.sidebarWrapper {
+	position: fixed;
+	width: inherit;
+	height: calc(100% - 40px);
+	overflow-y: auto;
+	background: themeBackground;
 }
 
 .content {
@@ -85,7 +81,25 @@
 	.sidebar {
 		position: relative;
 		height: auto;
+		top: 0;
 		left: 0;
+	}
+
+	.sidebar::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: -1;
+		display: block;
+		width: 50vw;
+		height: 100%;
+		background: themeBackground;
+	}
+
+	.sidebarWrapper {
+		height: 100%;
+		background: none;
 	}
 
 	.content {

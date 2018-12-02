@@ -82,7 +82,9 @@ class App extends Component {
 					onHome && styles.home,
 					sidebarOpen && styles.open,
 				)}>
-					<GlobalSidebar centerLogo={onHome}/>
+					<div className={styles.sidebarWrapper}>
+						<GlobalSidebar centerLogo={onHome}/>
+					</div>
 				</div>
 
 				<div className={styles.content}>

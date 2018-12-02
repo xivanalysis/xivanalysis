@@ -20,7 +20,7 @@ class GlobalSidebar extends React.Component {
 	render() {
 		const {centerLogo} = this.props
 
-		return <div className={styles.wrapper}>
+		return <div className={styles.sidebar}>
 			{/* Main logo */}
 			<Link to="/" className={classnames(
 				styles.logo,

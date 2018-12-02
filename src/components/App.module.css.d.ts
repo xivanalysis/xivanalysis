@@ -10,4 +10,5 @@ export const container: string;
 export const sidebar: string;
 export const open: string;
 export const home: string;
+export const sidebarWrapper: string;
 export const content: string;
