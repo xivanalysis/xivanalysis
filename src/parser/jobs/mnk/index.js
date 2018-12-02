@@ -15,7 +15,7 @@ export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),
 
 	description: <>
-		<TransMarkdown id={i18nMark('mnk.about.description')} src={description} key="mnk.about.description" />
+		<TransMarkdown id={i18nMark('mnk.about.description')} source={description} key="mnk.about.description" />
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>

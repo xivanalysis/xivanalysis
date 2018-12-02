@@ -231,7 +231,9 @@ export default class Fists extends Module {
 
 	getStanceName(stanceId) {
 		if (stanceId === STANCELESS) {
-			return <Trans id="mnk.fists.stanceless.name">Stanceless</Trans>
+			// NOTE: Do /not/ return a <Trans> here - it will cause Chart.js to try and clone the entire react tree.
+			// TODO: Work out how to translate this shit.
+			return 'Stanceless'
 		}
 
 		// If this fucking errors...

@@ -274,7 +274,6 @@
   "mnk.demolish.suggestion.why": "You lost {0} of Demolish to early refreshes.",
   "mnk.fists.chart.header.stance": "Stance",
   "mnk.fists.chart.header.uptime": "Uptime",
-  "mnk.fists.stanceless.name": "Stanceless",
   "mnk.fists.suggestions.foe.content": "When using <0/>, remember to change back to <1/> as soon as possible.",
   "mnk.fists.suggestions.foe.why": "<0/> was active for {0, plural, one {# GCD} other {# GCDs}}.",
   "mnk.fists.suggestions.fow.content": "When using <0/>, remember to change back to <1/> as soon as possible.",
