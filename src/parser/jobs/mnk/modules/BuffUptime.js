@@ -148,7 +148,6 @@ export default class BuffUptime extends Module {
 				Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
 			</Trans>,
 			tiers: {
-				0: SEVERITY.MINOR,
 				1: SEVERITY.MEDIUM,
 				4: SEVERITY.MAJOR,
 			},
