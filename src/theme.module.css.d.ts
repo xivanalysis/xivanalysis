@@ -10,3 +10,4 @@ export const themeWhite: string;
 export const themeText: string;
 export const themeBackground: string;
 export const themeBackdrop: string;
+export const themeInverse: string;
