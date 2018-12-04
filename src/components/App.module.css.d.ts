@@ -4,6 +4,7 @@ export const md: string;
 export const lg: string;
 export const themeBackground: string;
 export const themeInverse: string;
+export const headerHeight: string;
 export const mobileHeader: string;
 export const home: string;
 export const hamburger: string;
