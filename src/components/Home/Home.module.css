@@ -1,4 +1,4 @@
-@value md, themeText, themeBackground from "theme.module.css";
+@value gutter, md, themeText, themeBackground from "theme.module.css";
 
 .background {
 	position: fixed;
@@ -43,7 +43,7 @@
 	position: absolute;
 	top: 50%;
 	transform: translateY(-50%);
-	padding: 0 20px;
+	padding: 0 gutter;
 	width: 100%;
 	color: themeText;
 }

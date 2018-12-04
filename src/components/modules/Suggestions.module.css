@@ -1,7 +1,9 @@
+@value gutter from "theme.module.css";
+
 .checkbox {
 	position: absolute !important;
-	top: 20px;
-	right: 20px;
+	top: gutter;
+	right: gutter;
 }
 
 .items {

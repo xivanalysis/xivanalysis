@@ -1,4 +1,4 @@
-@value themeText from "theme.module.css";
+@value gutter, themeText from "theme.module.css";
 
 .horizontal {
 	display: flex;
@@ -9,7 +9,7 @@
 }
 
 .row {
-	padding: 0 20px;
+	padding: 0 gutter;
 	line-height: 40px;
 }
 
