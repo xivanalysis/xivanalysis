@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {Modal} from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
+import {Options} from 'components/GlobalSidebar'
 import TransMarkdown from 'components/ui/TransMarkdown'
 
 import styles from './Home.module.css'
@@ -21,6 +22,14 @@ class Home extends Component {
 	render() {
 		return <>
 			<div className={styles.background}/>
+			<div className={styles.logo}>
+				<img
+					src={process.env.PUBLIC_URL + '/logo.png'}
+					alt="logo"
+					className={styles.logoImage}
+				/>
+				xivanalysis
+			</div>
 			<div className={styles.search}>
 				<ReportSearch />
 
@@ -34,6 +43,9 @@ class Home extends Component {
 						<TransMarkdown id={i18nMark('core.home.about.content')} source={about}/>
 					</Modal.Content>
 				</Modal>
+			</div>
+			<div className={styles.options}>
+				<Options view="horizontal"/>
 			</div>
 		</>
 	}

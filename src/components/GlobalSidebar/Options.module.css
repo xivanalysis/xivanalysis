@@ -1,13 +1,26 @@
 @value themeText from "theme.module.css";
 
+.horizontal {
+	display: flex;
+}
+
+.horizontal > * {
+	flex-grow: 1;
+}
+
 .row {
 	padding: 0 20px;
 	line-height: 40px;
 }
 
 .row + .row {
-	/* This is kinda nasty */
-	border-top: 1px solid rgba(0, 0, 0, .1);
+	border-style: solid;
+	border-color: rgba(0, 0, 0, .1);
+	border-width: 1px 0 0;
+}
+
+.horizontal .row + .row {
+	border-width: 0 0 0 1px;
 }
 
 .icon {

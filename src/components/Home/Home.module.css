@@ -23,6 +23,22 @@
 	opacity: .5;
 }
 
+.logo {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.logo img {
+	display: block;
+	margin: 0 auto 5px;
+	max-width: 120px;
+}
+
 .search {
 	position: absolute;
 	top: 50%;
@@ -37,8 +53,23 @@
 	border-bottom: 1px dashed themeText;
 }
 
+.options {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+
 @media md {
+	.logo {
+		display: none;
+	}
+
 	.search {
 		padding: 0;
+	}
+
+	.options {
+		display: none;
 	}
 }

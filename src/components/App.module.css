@@ -11,6 +11,11 @@
 	line-height: 40px;
 }
 
+/* Don't show the header on the home page */
+.mobileHeader.home {
+	display: none;
+}
+
 .hamburger {
 	margin: 0 !important;
 	padding: 0 gutter 0 10px;
@@ -28,10 +33,13 @@
 .container {
 	display: flex;
 	margin: 0 auto;
-	padding-top: calc(gutter + 40px);
 	width: 100%;
 	max-width: 1340px;
 	min-height: 100vh;
+}
+
+.container:not(.home) {
+	padding-top: calc(gutter + 40px);
 }
 
 .sidebar {
@@ -89,7 +97,7 @@
 		display: none;
 	}
 
-	.container {
+	.container:not(.home) {
 		padding-top: 0;
 	}
 
@@ -112,7 +120,7 @@
 		background: themeBackground;
 	}
 
-	.sidebar.home::before {
+	.home .sidebar::before {
 		opacity: .5;
 	}
 

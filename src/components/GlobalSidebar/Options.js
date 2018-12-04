@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import {Icon, Popup} from 'semantic-ui-react'
 
@@ -11,8 +12,17 @@ const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
 const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
 
 export default class Options extends React.PureComponent {
+	static propTypes = {
+		view: PropTypes.oneOf([
+			'vertial',
+			'horizontal',
+		]),
+	}
+
 	render() {
-		return <>
+		const {view = 'vertical'} = this.props
+
+		return <div className={view === 'horizontal' && styles.horizontal}>
 			<div className={styles.row}>
 				<I18nMenu />
 			</div>
@@ -49,6 +59,6 @@ export default class Options extends React.PureComponent {
 					</Popup.Content>
 				</Popup>
 			</div>
-		</>
+		</div>
 	}
 }

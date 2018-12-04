@@ -62,7 +62,10 @@ class App extends Component {
 		const onHome = pathname === '/'
 
 		return <>
-			<div className={styles.mobileHeader}>
+			<div className={classnames(
+				styles.mobileHeader,
+				onHome && styles.home,
+			)}>
 				<Icon
 					name="bars"
 					className={styles.hamburger}
@@ -76,10 +79,12 @@ class App extends Component {
 				xivanalysis
 			</div>
 
-			<div className={styles.container}>
+			<div className={classnames(
+				styles.container,
+				onHome && styles.home,
+			)}>
 				<div className={classnames(
 					styles.sidebar,
-					onHome && styles.home,
 					sidebarOpen && styles.open,
 				)}>
 					<div className={styles.sidebarWrapper}>
