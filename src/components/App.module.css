@@ -61,10 +61,12 @@
 	background: themeInverse;
 	opacity: 0;
 	transition: opacity .2s ease-in-out;
+	pointer-events: none;
 }
 
 .sidebar.open::after {
 	opacity: .5;
+	pointer-events: initial;
 }
 
 .sidebarWrapper {
