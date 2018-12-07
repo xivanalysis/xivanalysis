@@ -73,7 +73,6 @@ module.exports = neutrino => { neutrino.register('jest', neutrino => {
 					...mapper,
 					[`^${key}$`]: `${getFinalPath(aliases[key])}$1`
 				}), {
-					// [extensionsToNames(media)]: require.resolve('@neutrinojs/jest/src/file-mock'),
 					[extensionsToNames(style)]: 'identity-obj-proxy'
 				}),
 		transform: {
