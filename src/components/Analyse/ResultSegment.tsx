@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom'
 import {
 	Header,
 } from 'semantic-ui-react'
+import {gutter} from 'theme'
 import styles from './ResultSegment.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 
@@ -13,7 +14,7 @@ interface Props {
 	result: Result
 }
 
-export const OFFSET_FROM_VIEWPORT_TOP = 20
+export const OFFSET_FROM_VIEWPORT_TOP = gutter
 
 export default class ResultSegment extends React.PureComponent<Props> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
