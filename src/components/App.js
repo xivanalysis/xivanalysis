@@ -1,7 +1,7 @@
 import classnames from 'classnames'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Route, Switch, withRouter} from 'react-router-dom'
+import {Route, Switch, withRouter, Link} from 'react-router-dom'
 import {Icon} from  'semantic-ui-react'
 
 import store from 'store'
@@ -71,12 +71,14 @@ class App extends Component {
 					className={styles.hamburger}
 					onClick={this._toggleSidebar}
 				/>
-				<img
-					src={process.env.PUBLIC_URL + '/logo.png'}
-					alt="logo"
-					className={styles.logo}
-				/>
-				xivanalysis
+				<Link to="/" className={styles.logo}>
+					<img
+						src={process.env.PUBLIC_URL + '/logo.png'}
+						alt="logo"
+						className={styles.logoImage}
+					/>
+					xivanalysis
+				</Link>
 			</div>
 
 			<div className={classnames(

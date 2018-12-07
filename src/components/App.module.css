@@ -1,4 +1,4 @@
-@value gutter, md, lg, themeBackground, themeInverse from "theme.module.css";
+@value gutter, md, lg, themeText, themeBackground, themeInverse from "theme.module.css";
 
 @value headerHeight: 40px;
 
@@ -27,6 +27,14 @@
 }
 
 .logo {
+	color: themeText;
+}
+
+.logo:hover {
+	color: themeText;
+}
+
+.logoImage {
 	margin: 0 5px 5px 0;
 	max-height: 25px;
 	vertical-align: middle;
