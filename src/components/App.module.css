@@ -69,7 +69,7 @@
 	left: 0;
 }
 
-.sidebar::after {
+.sidebarBackdrop {
 	content: '';
 	position: fixed;
 	top: 0;
@@ -83,7 +83,7 @@
 	pointer-events: none;
 }
 
-.sidebar.open::after {
+.sidebar.open .sidebarBackdrop {
 	opacity: .5;
 	pointer-events: initial;
 }
@@ -142,9 +142,10 @@
 	}
 
 	/* This should only be visible on mobile, but let's be super sure */
-	.sidebar.open::after {
+	.sidebar.open .sidebarBackdrop {
 		opacity: 0;
 		transition: none;
+		pointer-events: none;
 	}
 
 	.sidebarWrapper {

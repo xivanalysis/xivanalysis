@@ -92,6 +92,11 @@ class App extends Component {
 					<div className={styles.sidebarWrapper}>
 						<GlobalSidebar centerLogo={onHome}/>
 					</div>
+
+					<div
+						className={styles.sidebarBackdrop}
+						onClick={this._toggleSidebar}
+					/>
 				</div>
 
 				<div className={styles.content}>
