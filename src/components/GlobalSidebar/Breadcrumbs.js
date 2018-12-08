@@ -1,4 +1,3 @@
-import {compose} from 'lodash/fp/compose'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Helmet} from 'react-helmet'
@@ -6,7 +5,7 @@ import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 
 import ZONES from 'data/ZONES'
-import {formatDuration, getPathMatch} from 'utilities'
+import {compose, formatDuration, getPathMatch} from 'utilities'
 
 import styles from './Breadcrumbs.module.css'
 
