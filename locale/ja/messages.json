@@ -160,7 +160,7 @@
   "drg.blood.checklist.requirement.name": "アクティブ率: <0/>",
   "drg.blood.nastrond.hits": "",
   "drg.blood.nastrond.preface": "以下の行では、紅血の継続時間を表し、発動時間、秒数、およびその中に含まれている<0/>の回数を示している。理想的にはそれぞれの発動時に少なくとも24秒間が必要で、3回ナーストレンドを入れるようにしましょう。",
-  "drg.blood.suggestions.eyes.content": "",
+  "drg.blood.suggestions.eyes.content": "</>がプロックしている時は<0/> と</> の使用は避けて下さい。使用すると上書きされ、紅の竜血になることを遅延させ、潜在的に多くのDPSを犠牲にする可能性があります。",
   "drg.blood.suggestions.eyes.why": "{MAX_EYES} があったのに、ミラージュダイブを {0, plural, one {# 回} other {# 回}}使ってしまいました。",
   "drg.blood.title": "",
   "drg.buffs.accordion.bfb-header": "捨身",
