@@ -142,7 +142,7 @@
   "core.role.maintainer": "メンテナー",
   "core.role.theorycraft": "セオリークラフタ―",
   "core.suggestion.nothing": "ここに何もありませんよ！",
-  "core.suggestion.nothing-but-minor": "右上にある「小ミスを表示する」をクリックし、更に小さなミスを無くす細かい提案や忠告を確認すうことができます。",
+  "core.suggestion.nothing-but-minor": "右上にある「小ミスを表示する」をクリックし、更に小さなミスを無くす細かい提案や忠告を確認することができます。",
   "core.suggestion.show-minor": "小ミスを表示する",
   "core.suggestions.title": "提案",
   "core.timeline.help-text": "",
