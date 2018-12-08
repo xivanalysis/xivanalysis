@@ -179,7 +179,7 @@
   "drg.debuffs.checklist.name": "デバフの維持率",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "アクティブ率: <0/>",
   "drg.debuffs.checklist.requirement.disembowel.name": "アクティブ率: <0/>",
-  "drg.debuffs.suggestions.clipping.content": "",
+  "drg.debuffs.suggestions.clipping.content": "更新を回避 <0/> 大幅その有効期限前にそれは通常回転、エラーを示します。DRG の厳密な 11 GCD 回転はスキル速度に応じて、残り 1-2 秒でカオスの推力を更新する必要があります。１−２秒で更新する必要があります。",
   "drg.debuffs.suggestions.clipping.why": "早すぎる更新により桜華狂咲が失った回数： {0}回",
   "drg.procs.suggestions.extenders.content": "<0/> と<1/>の時点ではコンボを中断しないようにしましょう、Procが失われることで<2/>の維持をするために両方とも使用でするようにしましょう。",
   "drg.procs.suggestions.extenders.why": "",
