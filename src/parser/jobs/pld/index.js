@@ -23,7 +23,7 @@ export default {
 	</Fragment>,
 	supportedPatches: {
 		from: '4.2',
-		to: '4.36',
+		to: '4.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
