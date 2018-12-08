@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import withSizes from 'react-sizes'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
 
-import {MOBILE_BREAKPOINT} from 'components/STYLE_CONSTS'
 import {TARGET} from 'parser/core/modules/Checklist/Rule'
 
 import styles from './Checklist.module.css'
@@ -25,11 +23,10 @@ class Checklist extends Component {
 				content: PropTypes.string.isRequired,
 			})),
 		})),
-		hideProgress: PropTypes.bool.isRequired,
 	}
 
 	render() {
-		const {rules, hideProgress} = this.props
+		const {rules} = this.props
 
 		// If there's no rules, just stop now
 		if (!rules.length) { return false }
@@ -60,12 +57,12 @@ class Checklist extends Component {
 						{rule.name}
 						<div className={styles.percent + ' ' + ruleStyles.text}>
 							{percent.toFixed(1)}%
-							{hideProgress || <Progress
+							<Progress
 								percent={percent}
 								className={styles.progress}
 								size="small"
 								color={ruleStyles.color}
-							/>}
+							/>
 						</div>
 					</>,
 				},
@@ -97,8 +94,4 @@ class Checklist extends Component {
 	}
 }
 
-const mapSizesToProps = ({width}) => ({
-	hideProgress: width < MOBILE_BREAKPOINT,
-})
-
-export default withSizes(mapSizesToProps)(Checklist)
+export default (Checklist)

@@ -112,13 +112,21 @@ module.exports = {
 			const options = {
 				plugins: [
 					require('autoprefixer'),
+					require('postcss-modules-values-replace')({
+						resolve: {
+							modules: ['src'],
+							extensions: ['.css'],
+						},
+					}),
+					require('postcss-modules-values'),
+					require('postcss-calc'),
 					require('cssnano')({
 						preset: ['default', {
 							// Need to disable this, it mangles relative imports which freaks other loaders out
 							normalizeUrl: false,
-						}]
-					})
-				]
+						}],
+					}),
+				],
 			}
 			neutrino.config.module.rule('style').use('postcss').loader('postcss-loader').options(options)
 			neutrino.config.module.rule('style-modules').use('postcss').loader('postcss-loader').options(options)
