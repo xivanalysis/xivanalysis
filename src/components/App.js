@@ -18,7 +18,6 @@ import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
 
-@withRouter
 class App extends Component {
 	static propTypes = {
 		history: PropTypes.shape({
@@ -114,4 +113,4 @@ class App extends Component {
 	}
 }
 
-export default App
+export default withRouter(App)

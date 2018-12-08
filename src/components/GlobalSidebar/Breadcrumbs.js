@@ -1,3 +1,4 @@
+import {compose} from 'lodash/fp/compose'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Helmet} from 'react-helmet'
@@ -9,10 +10,6 @@ import {formatDuration, getPathMatch} from 'utilities'
 
 import styles from './Breadcrumbs.module.css'
 
-@withRouter
-@connect(state => ({
-	report: state.report,
-}))
 class Breadcrumbs extends React.Component {
 	static propTypes = {
 		location: PropTypes.shape({
@@ -127,4 +124,9 @@ class Breadcrumbs extends React.Component {
 	}
 }
 
-export default Breadcrumbs
+export default compose(
+	withRouter,
+	connect(state => ({
+		report: state.report,
+	})),
+)(Breadcrumbs)
