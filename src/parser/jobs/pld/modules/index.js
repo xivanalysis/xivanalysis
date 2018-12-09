@@ -1,9 +1,13 @@
-import Goring from './Goring'
-import Requiescat from './Requiescat'
+import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'
+import Goring from './Goring'
+import OGCDDowntime from './OGCDDowntime'
+import Requiescat from './Requiescat'
 
 export default [
-	Goring,
-	Requiescat,
+	Cooldowns,
 	FightOrFlight,
+	Goring,
+	OGCDDowntime,
+	Requiescat,
 ]
