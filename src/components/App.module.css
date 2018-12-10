@@ -148,6 +148,10 @@
 		pointer-events: none;
 	}
 
+	.sidebar.open + .content {
+		filter: none;
+	}
+
 	.sidebarWrapper {
 		height: 100%;
 		background: none;

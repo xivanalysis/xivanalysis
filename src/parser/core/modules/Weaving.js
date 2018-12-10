@@ -167,9 +167,7 @@ export default class Weaving extends Module {
 		const speedmod = this.speedmod.get(this.parser.timestamp)
 		const gcdLength = this.gcd.getEstimate() * speedmod
 
-		const temp = weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
-		if (temp) { console.log(weave) }
-		return temp
+		return weave.gcdTimeDiff > gcdLength && weaveCount > maxWeaves
 	}
 
 	output() {
