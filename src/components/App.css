@@ -33,6 +33,18 @@ body {
 	width: 100% !important;
 }
 
+/*
+Dimmer sits at 1000, which _also_ happens to be the where the loaders sit. Sidebar needs to be in-between :blobrage:
+Resulting stack:
+ - 1000: loaders
+ - 1001: sidebar
+ - 1002: header
+ - 1003: dimmer
+*/
+.ui.dimmer {
+	z-index: 1003 !important;
+}
+
 /* Utility shit */
 .pull-left { float: left; }
 .pull-right { float: right; }
