@@ -506,7 +506,7 @@
   "war.gauge.suggestions.lost-rage.why": "{0} rage gâchée en utilisant des actions qui vous ont fait dépasser la limite de la jauge.",
   "war.gauge.title": "",
   "war.ir.suggestions.badgcd.content": "",
-  "war.ir.suggestions.badgcd.why": "",
+  "war.ir.suggestions.badgcd.why": "Les actions utilisées lors de Relâchement Bestial doivent être restreintes à <0/> pour des dégâts optimaux ou a <1/> en situation d'AoE.",
   "war.ir.suggestions.missedgcd.content": "",
   "war.ir.suggestions.missedgcd.why": "",
   "war.ir.suggestions.onslaught.content": "",
