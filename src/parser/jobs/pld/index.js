@@ -37,6 +37,8 @@ export default {
 				<ul>
 					<li>Uptime checks for <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> and <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/>,</li>
 					<li>Added support for tracking <ActionLink {...ACTIONS.SWORD_OATH}/> uptime,</li>
+					<li>Display failed <ActionLink {...ACTIONS.REQUIESCAT}/> buffs,</li>
+					<li>Support for tracking combo issues,</li>
 					<li>Adjustments to Goring blade breakpoint, and</li>
 					<li>Tweaks to cooldown ordering in the timeline.</li>
 				</ul>
