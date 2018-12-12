@@ -3,7 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, DamageEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
+import Module, {dependency, Hook} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Downtime from 'parser/core/modules/Downtime'
 import React from 'react'
@@ -22,7 +22,7 @@ export default class Oath extends Module {
 	private lastSwordOathApplication: number | null = null
 
 	private swordOathWindows: FightWindow[] = []
-	private prefightSwordOathHook!: any
+	private prefightSwordOathHook!: Hook<DamageEvent>
 
 	protected init() {
 		this.prefightSwordOathHook = this.addHook<DamageEvent>('damage', {by: 'player', abilityId: ACTIONS.SWORD_OATH.id}, this.onSwordOathDamage)
