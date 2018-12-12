@@ -64,36 +64,36 @@ export default class FightOrFlight extends Module {
 	static title = 'Fight Or Flight Usage'
 	static i18n_id = i18nMark('pld.fightorflight.title') // tslint:disable-line:variable-name
 
-	@dependency suggestions!: Suggestions
+	@dependency private suggestions!: Suggestions
 
 	// Internal State Counters
-	_fofStart: number | null = null
-	_fofLastGoringGcd: number | null = null
-	_fofGorings = 0
-	_fofGcds = 0
-	_fofCircleOfScorn = 0
-	_fofSpiritsWithin = 0
+	private fofStart: number | null = null
+	private fofLastGoringGcd: number | null = null
+	private fofGorings = 0
+	private fofGcds = 0
+	private fofCircleOfScorn = 0
+	private fofSpiritsWithin = 0
 
 	// Result Counters
-	_fofRotations: TimestampRotationMap = {}
-	_fofMissedCircleOfScorns = 0
-	_fofMissedSpiritWithins = 0
-	_fofMissedGcds = 0
-	_fofMissedGorings = 0
-	_fofGoringTooCloseCount = 0
+	private fofRotations: TimestampRotationMap = {}
+	private fofMissedCircleOfScorns = 0
+	private fofMissedSpiritWithins = 0
+	private fofMissedGcds = 0
+	private fofMissedGorings = 0
+	private fofGoringTooCloseCount = 0
 
 	protected init() {
-		this.addHook<CastEvent>('cast', {by: 'player'}, this._onCast)
-		this.addHook<BuffEvent>('removebuff', {
+		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('removebuff', {
 				by: 'player',
 				to: 'player',
 				abilityId: [STATUSES.FIGHT_OR_FLIGHT.id],
 			}
-			, this._onRemoveFightOrFlight)
-		this.addHook('complete', this._onComplete)
+			, this.onRemoveFightOrFlight)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onCast(event: CastEvent) {
+	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
 		if (actionId === ACTIONS.ATTACK.id) {
@@ -101,60 +101,60 @@ export default class FightOrFlight extends Module {
 		}
 
 		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
-			this._fofStart = event.timestamp
+			this.fofStart = event.timestamp
 		}
 
-		if (this._fofStart) {
+		if (this.fofStart) {
 			const action = getAction(actionId) as any
 
 			if (action.onGcd) {
-				this._fofGcds++
+				this.fofGcds++
 			}
 
 			switch (actionId) {
 				case ACTIONS.GORING_BLADE.id:
-					this._fofGorings++
+					this.fofGorings++
 
-					if (this._fofLastGoringGcd !== null) {
-						if (this._fofGcds - this._fofLastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
-							this._fofGoringTooCloseCount++
+					if (this.fofLastGoringGcd !== null) {
+						if (this.fofGcds - this.fofLastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
+							this.fofGoringTooCloseCount++
 						}
 					}
-					this._fofLastGoringGcd = this._fofGcds
+					this.fofLastGoringGcd = this.fofGcds
 					break
 				case ACTIONS.CIRCLE_OF_SCORN.id:
-					this._fofCircleOfScorn++
+					this.fofCircleOfScorn++
 					break
 				case ACTIONS.SPIRITS_WITHIN.id:
-					this._fofSpiritsWithin++
+					this.fofSpiritsWithin++
 					break
 				default:
 					break
 			}
 
-			if (!Array.isArray(this._fofRotations[this._fofStart])) {
-				this._fofRotations[this._fofStart] = []
+			if (!Array.isArray(this.fofRotations[this.fofStart])) {
+				this.fofRotations[this.fofStart] = []
 			}
 
-			this._fofRotations[this._fofStart].push(event)
+			this.fofRotations[this.fofStart].push(event)
 		}
 	}
 
-	_onRemoveFightOrFlight() {
-		this._fofMissedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this._fofCircleOfScorn)
-		this._fofMissedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this._fofSpiritsWithin)
-		this._fofMissedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this._fofGcds)
-		this._fofMissedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this._fofGorings)
+	private onRemoveFightOrFlight() {
+		this.fofMissedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofCircleOfScorn)
+		this.fofMissedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofSpiritsWithin)
+		this.fofMissedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofGcds)
+		this.fofMissedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofGorings)
 
-		this._fofStart = null
-		this._fofGorings = 0
-		this._fofGcds = 0
-		this._fofCircleOfScorn = 0
-		this._fofSpiritsWithin = 0
-		this._fofLastGoringGcd = null
+		this.fofStart = null
+		this.fofGorings = 0
+		this.fofGcds = 0
+		this.fofCircleOfScorn = 0
+		this.fofSpiritsWithin = 0
+		this.fofLastGoringGcd = null
 	}
 
-	_onComplete() {
+	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.CIRCLE_OF_SCORN.icon,
 			content: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.content">
@@ -162,10 +162,10 @@ export default class FightOrFlight extends Module {
 				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.why">
-				<Plural value={this._fofMissedCircleOfScorns} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofMissedCircleOfScorns} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_CIRCLE_OF_SCORN,
-			value: this._fofMissedCircleOfScorns,
+			value: this.fofMissedCircleOfScorns,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -175,10 +175,10 @@ export default class FightOrFlight extends Module {
 				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.spirits-within.why">
-				<Plural value={this._fofMissedSpiritWithins} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofMissedSpiritWithins} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_SPIRIT_WITHIN,
-			value: this._fofMissedSpiritWithins,
+			value: this.fofMissedSpiritWithins,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -188,10 +188,10 @@ export default class FightOrFlight extends Module {
 				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window. One at the beginning and one at the end.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
-				<Plural value={this._fofMissedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofMissedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_GORING,
-			value: this._fofMissedGorings,
+			value: this.fofMissedGorings,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -200,46 +200,46 @@ export default class FightOrFlight extends Module {
 				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
-				<Plural value={this._fofMissedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofMissedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_GCD,
-			value: this._fofMissedGcds,
+			value: this.fofMissedGcds,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
-			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this._fofGoringTooCloseCount),
+			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this.fofGoringTooCloseCount),
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
 				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
 				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
 				a <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
-				<Plural value={this._fofGoringTooCloseCount} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofGoringTooCloseCount} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.GORING_CLIP,
-			value: this._fofGoringTooCloseCount,
+			value: this.fofGoringTooCloseCount,
 		}))
 	}
 
 	output() {
-		const panels = Object.keys(this._fofRotations)
+		const panels = Object.keys(this.fofRotations)
 			.map(timestamp => {
 				const ts = _.toNumber(timestamp)
 
-				const gcdCount = this._fofRotations[ts]
+				const gcdCount = this.fofRotations[ts]
 					.filter(event => (getAction(event.ability.guid) as any).onGcd)
 					.length
 
-				const goringCount = this._fofRotations[ts]
+				const goringCount = this.fofRotations[ts]
 					.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
 					.length
 
-				const spiritsWithinCount = this._fofRotations[ts]
+				const spiritsWithinCount = this.fofRotations[ts]
 					.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
 					.length
 
-				const circleOfScornCount = this._fofRotations[ts]
+				const circleOfScornCount = this.fofRotations[ts]
 					.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
 					.length
 
@@ -259,7 +259,7 @@ export default class FightOrFlight extends Module {
 						</>,
 					},
 					content: {
-						content: <Rotation events={this._fofRotations[ts]}/>,
+						content: <Rotation events={this.fofRotations[ts]}/>,
 					},
 				})
 			})

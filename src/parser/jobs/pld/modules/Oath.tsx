@@ -16,73 +16,73 @@ interface FightWindow {
 export default class Oath extends Module {
 	static handle = 'oath'
 
-	@dependency downtime!: Downtime
-	@dependency checklist!: Checklist
+	@dependency private downtime!: Downtime
+	@dependency private checklist!: Checklist
 
-	_lastSwordOathApplication: number | null = null
+	private lastSwordOathApplication: number | null = null
 
-	_swordOathWindows: FightWindow[] = []
-	_prefightSwordOathHook!: any
+	private swordOathWindows: FightWindow[] = []
+	private prefightSwordOathHook!: any
 
 	protected init() {
-		this._prefightSwordOathHook = this.addHook<DamageEvent>('damage', {by: 'player', abilityId: ACTIONS.SWORD_OATH.id}, this._onSwordOathDamage)
-		this.addHook<BuffEvent>('applybuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onApplySwordOath)
-		this.addHook<BuffEvent>('removebuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onRemoveSwordOath)
-		this.addHook('complete', this._onComplete)
+		this.prefightSwordOathHook = this.addHook<DamageEvent>('damage', {by: 'player', abilityId: ACTIONS.SWORD_OATH.id}, this.onSwordOathDamage)
+		this.addHook('applybuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this.onApplySwordOath)
+		this.addHook('removebuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this.onRemoveSwordOath)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onSwordOathDamage() {
-		if (this._lastSwordOathApplication == null) {
+	private onSwordOathDamage() {
+		if (this.lastSwordOathApplication == null) {
 			// First hit, but no buff applied yet, so it was up before the fight
-			this._applySwordOath(this.parser.fight.start_time)
+			this.applySwordOath(this.parser.fight.start_time)
 		}
 		// Only run this once, we only want to know the first instance, in case Sword Oath was on before the fight.
-		this.removeHook(this._prefightSwordOathHook)
+		this.removeHook(this.prefightSwordOathHook)
 	}
 
-	_onApplySwordOath(event: BuffEvent) {
-		this._applySwordOath(event.timestamp)
+	private onApplySwordOath(event: BuffEvent) {
+		this.applySwordOath(event.timestamp)
 	}
 
-	_onRemoveSwordOath(event: BuffEvent) {
-		this._removeSwordOath(event.timestamp)
+	private onRemoveSwordOath(event: BuffEvent) {
+		this.removeSwordOath(event.timestamp)
 	}
 
-	_applySwordOath(timestamp: number) {
-		if (this._lastSwordOathApplication == null) {
-			this._lastSwordOathApplication = timestamp
+	private applySwordOath(timestamp: number) {
+		if (this.lastSwordOathApplication == null) {
+			this.lastSwordOathApplication = timestamp
 		}
 	}
 
-	_removeSwordOath(timestamp: number) {
-		if (this._lastSwordOathApplication != null) {
-			this._swordOathWindows = [
-				...this._swordOathWindows,
+	private removeSwordOath(timestamp: number) {
+		if (this.lastSwordOathApplication != null) {
+			this.swordOathWindows = [
+				...this.swordOathWindows,
 				{
-					start: this._lastSwordOathApplication,
+					start: this.lastSwordOathApplication,
 					end: timestamp,
 				},
 			]
 
-			this._lastSwordOathApplication = null
+			this.lastSwordOathApplication = null
 		}
 	}
 
-	_swordOathUptime() {
-		return this._swordOathWindows.reduce((sum, window) => sum + (window.end - window.start), 0)
+	private swordOathUptime() {
+		return this.swordOathWindows.reduce((sum, window) => sum + (window.end - window.start), 0)
 	}
 
-	_swordOathUptimePercent() {
+	private swordOathUptimePercent() {
 		// Consider downtime switches, it's ok to Shield Oath, when you can't even do any damage
 		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
 
 		// Cap this at 100
-		return Math.min(this._swordOathUptime() / fightDuration * 100, 100)
+		return Math.min(this.swordOathUptime() / fightDuration * 100, 100)
 	}
 
-	_onComplete() {
+	private onComplete() {
 		// Make sure we push the last uptime into our list
-		this._removeSwordOath(this.parser.currentTimestamp)
+		this.removeSwordOath(this.parser.currentTimestamp)
 
 		this.checklist.add(new Rule({
 			name: 'Keep in Sword Oath when possible',
@@ -94,7 +94,7 @@ export default class Oath extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="pld.requiescat.checklist.swordoath.requirement.uptime"><ActionLink {...ACTIONS.SWORD_OATH} /> uptime</Trans>,
-					percent: () => this._swordOathUptimePercent(),
+					percent: () => this.swordOathUptimePercent(),
 				}),
 			],
 		}))

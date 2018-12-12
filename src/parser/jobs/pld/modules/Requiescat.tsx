@@ -42,28 +42,28 @@ export default class Requiescat extends Module {
 	static title = 'Requiescat Usage'
 	static i18n_id = i18nMark('pld.requiescat.title') // tslint:disable-line:variable-name
 
-	@dependency suggestions!: Suggestions
-	@dependency combatants!: Combatants
+	@dependency private suggestions!: Suggestions
+	@dependency private combatants!: Combatants
 
 	// Internal State Counters
-	_requiescatStart: number | null = null
-	_holySpiritCount = 0
+	private requiescatStart: number | null = null
+	private holySpiritCount = 0
 
 	// Result Counters
-	_missedHolySpirits = 0
-	_requiescatNoBuff = 0
-	_requiescatRotations: TimestampRotationMap = {}
+	private missedHolySpirits = 0
+	private requiescatNoBuff = 0
+	private requiescatRotations: TimestampRotationMap = {}
 
 	protected init() {
-		this.addHook<CastEvent>('cast', {by: 'player'}, this._onCast)
-		this.addHook<BuffEvent>('removebuff', {
+		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.REQUIESCAT.id,
-		}, this._onRemoveRequiescat)
-		this.addHook('complete', this._onComplete)
+		}, this.onRemoveRequiescat)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onCast(event: CastEvent) {
+	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
 		if (actionId === ACTIONS.ATTACK.id) {
@@ -76,65 +76,65 @@ export default class Requiescat extends Module {
 			// We only track buff windows
 			// Allow for inaccuracies of 1 MP Tick
 			if ((mp + CONSTANTS.MP.TICK_AMOUNT) / maxMP >= CONSTANTS.REQUIESCAT.MP_THRESHOLD) {
-				this._requiescatStart = event.timestamp
+				this.requiescatStart = event.timestamp
 			} else {
-				this._requiescatNoBuff++
+				this.requiescatNoBuff++
 			}
 		}
 
-		if (this._requiescatStart !== null) {
+		if (this.requiescatStart !== null) {
 			if (actionId === ACTIONS.HOLY_SPIRIT.id) {
-				this._holySpiritCount++
+				this.holySpiritCount++
 			}
 
-			if (!Array.isArray(this._requiescatRotations[this._requiescatStart])) {
-				this._requiescatRotations[this._requiescatStart] = []
+			if (!Array.isArray(this.requiescatRotations[this.requiescatStart])) {
+				this.requiescatRotations[this.requiescatStart] = []
 			}
 
-			this._requiescatRotations[this._requiescatStart].push(event)
+			this.requiescatRotations[this.requiescatStart].push(event)
 		}
 	}
 
-	_onRemoveRequiescat() {
-		this._requiescatStart = null
+	private onRemoveRequiescat() {
+		this.requiescatStart = null
 
 		// Clamp to 0 since we can't miss negative
-		this._missedHolySpirits += Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - this._holySpiritCount)
-		this._holySpiritCount = 0
+		this.missedHolySpirits += Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - this.holySpiritCount)
+		this.holySpiritCount = 0
 	}
 
-	_onComplete() {
+	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.REQUIESCAT.icon,
 			why: <Trans id="pld.requiescat.suggestions.wrong-gcd.why">
-				<Plural value={this._missedHolySpirits} one="# wrong GCD" other="# wrong GCDs"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
+				<Plural value={this.missedHolySpirits} one="# wrong GCD" other="# wrong GCDs"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
 				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_HOLY_SPIRITS,
-			value: this._missedHolySpirits,
+			value: this.missedHolySpirits,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.REQUIESCAT.icon,
 			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
-				<Plural value={this._requiescatNoBuff} one="# usage" other="# usages"/> while under 80% MP.
+				<Plural value={this.requiescatNoBuff} one="# usage" other="# usages"/> while under 80% MP.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
 				<ActionLink {...ACTIONS.REQUIESCAT}/> should only be used when over 80% MP. Try to not miss on the 20% Magic Damage buff <StatusLink {...STATUSES.REQUIESCAT}/> provides.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
-			value: this._requiescatNoBuff,
+			value: this.requiescatNoBuff,
 		}))
 	}
 
 	output() {
-		const panels = Object.keys(this._requiescatRotations)
+		const panels = Object.keys(this.requiescatRotations)
 			.map(timestamp => {
 				const ts = _.toNumber(timestamp)
 
-				const holySpiritCount = this._requiescatRotations[ts]
+				const holySpiritCount = this.requiescatRotations[ts]
 					.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
 					.length
 
@@ -148,7 +148,7 @@ export default class Requiescat extends Module {
 						</>,
 					},
 					content: {
-						content: <Rotation events={this._requiescatRotations[ts]}/>,
+						content: <Rotation events={this.requiescatRotations[ts]}/>,
 					},
 				})
 			})

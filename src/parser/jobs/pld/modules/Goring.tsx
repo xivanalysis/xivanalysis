@@ -23,8 +23,8 @@ export default class Goring extends DoTs {
 		STATUSES.GORING_BLADE.id,
 	]
 
-	@dependency checklist!: Checklist
-	@dependency suggestions!: Suggestions
+	@dependency private checklist!: Checklist
+	@dependency private suggestions!: Suggestions
 
 	addChecklistRules() {
 		this.checklist.add(new Rule({
