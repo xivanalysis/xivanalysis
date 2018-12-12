@@ -45,7 +45,9 @@ export default class DoTs extends Module {
 		// more than just DoTs with this module (e.g. DRG's Disembowel).
 	}
 
-	addClippingSuggestions(/*clip*/) {
+	// Allow Typescript overrides using the parameter
+	// eslint-disable-next-line no-unused-vars
+	addClippingSuggestions(clip) {
 		// To be overridden by submodules to display any clipping suggestions. This should also be handled on a job-by-job
 		// basis, since different jobs have different thresholds for what constitutes bad clipping with varying explanations
 		// for why.

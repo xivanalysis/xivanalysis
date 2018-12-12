@@ -1,26 +1,33 @@
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Requirement, Rule} from 'parser/core/modules/Checklist'
-import React, {Fragment} from 'react'
+import {BuffEvent, DamageEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Downtime from 'parser/core/modules/Downtime'
+import React from 'react'
+
+interface FightWindow {
+	start: number
+	end: number
+}
 
 export default class Oath extends Module {
 	static handle = 'oath'
-	static dependencies = [
-		'downtime',
-		'checklist',
-	]
 
-	_lastSwordOathApplication = null
+	@dependency downtime!: Downtime
+	@dependency checklist!: Checklist
 
-	_swordOathWindows = []
+	_lastSwordOathApplication: number | null = null
 
-	constructor(...args) {
-		super(...args)
-		this._prefightSwordOathHook = this.addHook('damage', {by: 'player', abilityId: ACTIONS.SWORD_OATH.id}, this._onSwordOathDamage)
-		this.addHook('applybuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onApplySwordOath)
-		this.addHook('removebuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onRemoveSwordOath)
+	_swordOathWindows: FightWindow[] = []
+	_prefightSwordOathHook!: any
+
+	protected init() {
+		this._prefightSwordOathHook = this.addHook<DamageEvent>('damage', {by: 'player', abilityId: ACTIONS.SWORD_OATH.id}, this._onSwordOathDamage)
+		this.addHook<BuffEvent>('applybuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onApplySwordOath)
+		this.addHook<BuffEvent>('removebuff', {by: 'player', abilityId: [STATUSES.SWORD_OATH.id]}, this._onRemoveSwordOath)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -33,21 +40,21 @@ export default class Oath extends Module {
 		this.removeHook(this._prefightSwordOathHook)
 	}
 
-	_onApplySwordOath(event) {
+	_onApplySwordOath(event: BuffEvent) {
 		this._applySwordOath(event.timestamp)
 	}
 
-	_onRemoveSwordOath(event) {
+	_onRemoveSwordOath(event: BuffEvent) {
 		this._removeSwordOath(event.timestamp)
 	}
 
-	_applySwordOath(timestamp) {
+	_applySwordOath(timestamp: number) {
 		if (this._lastSwordOathApplication == null) {
 			this._lastSwordOathApplication = timestamp
 		}
 	}
 
-	_removeSwordOath(timestamp) {
+	_removeSwordOath(timestamp: number) {
 		if (this._lastSwordOathApplication != null) {
 			this._swordOathWindows = [
 				...this._swordOathWindows,
@@ -79,14 +86,14 @@ export default class Oath extends Module {
 
 		this.checklist.add(new Rule({
 			name: 'Keep in Sword Oath when possible',
-			description: <Fragment>
+			description: <Trans id="pld.oath.checklist.swordoath.description">
 				As a Paladin, <ActionLink {...ACTIONS.SWORD_OATH} /> is a decent chunk of your sustained
 				damage, and should be used as much as possible, for the best damage output.
-			</Fragment>,
+			</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SWORD_OATH} /> uptime</Fragment>,
+					name: <Trans id="pld.requiescat.checklist.swordoath.requirement.uptime"><ActionLink {...ACTIONS.SWORD_OATH} /> uptime</Trans>,
 					percent: () => this._swordOathUptimePercent(),
 				}),
 			],
