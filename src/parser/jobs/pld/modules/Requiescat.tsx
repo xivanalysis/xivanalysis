@@ -137,7 +137,7 @@ export default class Requiescat extends Module {
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
-						<strong>Fight Time</strong>
+						<strong>Time</strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell textAlign="center" collapsing>
 						<strong><ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/></strong>
