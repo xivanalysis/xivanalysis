@@ -1,4 +1,5 @@
 import {i18nMark, Plural, Trans} from '@lingui/react'
+import {center} from 'components/GlobalSidebar/GlobalSidebar.module.css'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS from 'data/ACTIONS'
@@ -8,8 +9,9 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Accordion, Button, Table} from 'semantic-ui-react'
 
 interface TimestampRotationMap {
 	[timestamp: number]: CastEvent[]
@@ -44,6 +46,7 @@ export default class Requiescat extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private combatants!: Combatants
+	@dependency private timeline!: Timeline
 
 	// Internal State Counters
 	private requiescatStart: number | null = null
@@ -130,36 +133,45 @@ export default class Requiescat extends Module {
 	}
 
 	output() {
-		const panels = Object.keys(this.requiescatRotations)
-			.map(timestamp => {
-				const ts = _.toNumber(timestamp)
+		return <Table compact unstackable celled>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong>Fight Time</strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell textAlign="center" collapsing>
+						<strong><ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong>Rotation</strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{
+					Object.keys(this.requiescatRotations)
+						.map(timestamp => {
+							const ts = _.toNumber(timestamp)
 
-				const holySpiritCount = this.requiescatRotations[ts]
-					.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
-					.length
+							const holySpiritCount = this.requiescatRotations[ts]
+								.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
+								.length
 
-				return ({
-					key: timestamp,
-					title: {
-						content: <>
-							{this.parser.formatTimestamp(ts)}
-							<span> - </span>
-							<span>{holySpiritCount}/{CONSTANTS.HOLY_SPIRIT.EXPECTED} <ActionLink {...ACTIONS.HOLY_SPIRIT}/></span>
-						</>,
-					},
-					content: {
-						content: <Rotation events={this.requiescatRotations[ts]}/>,
-					},
-				})
-			})
-
-		return (
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
-		)
+							return <Table.Row key={timestamp}>
+								<Table.Cell textAlign="center">
+									<span style={{marginRight: 5}}>{this.parser.formatTimestamp(ts)}</span>
+									<Button circular compact size="mini" icon="time" onClick={() => this.timeline.show(ts - this.parser.fight.start_time, ts + (STATUSES.REQUIESCAT.duration * 1000) - this.parser.fight.start_time)}/>
+								</Table.Cell>
+								<Table.Cell textAlign="center" positive={holySpiritCount >= CONSTANTS.HOLY_SPIRIT.EXPECTED} negative={holySpiritCount < CONSTANTS.HOLY_SPIRIT.EXPECTED}>
+									{holySpiritCount}/{CONSTANTS.HOLY_SPIRIT.EXPECTED}
+								</Table.Cell>
+								<Table.Cell>
+									<Rotation events={this.requiescatRotations[ts]}/>
+								</Table.Cell>
+							</Table.Row>
+						})
+				}
+			</Table.Body>
+		</Table>
 	}
 }

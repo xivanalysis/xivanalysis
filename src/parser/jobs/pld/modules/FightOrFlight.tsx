@@ -3,12 +3,13 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 
 interface TimestampRotationMap {
@@ -65,6 +66,7 @@ export default class FightOrFlight extends Module {
 	static i18n_id = i18nMark('pld.fightorflight.title') // tslint:disable-line:variable-name
 
 	@dependency private suggestions!: Suggestions
+	@dependency private timeline!: Timeline
 
 	// Internal State Counters
 	private fofStart: number | null = null
@@ -223,54 +225,75 @@ export default class FightOrFlight extends Module {
 	}
 
 	output() {
-		const panels = Object.keys(this.fofRotations)
-			.map(timestamp => {
-				const ts = _.toNumber(timestamp)
+		return <Table compact unstackable celled>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong>Time</strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell textAlign="center" collapsing>
+						<strong>GCDs</strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell textAlign="center" collapsing>
+						<strong><ActionLink showName={false} {...ACTIONS.SPIRITS_WITHIN}/></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell textAlign="center" collapsing>
+						<strong><ActionLink showName={false} {...ACTIONS.CIRCLE_OF_SCORN}/></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell textAlign="center" collapsing>
+						<strong><ActionLink showName={false} {...ACTIONS.GORING_BLADE}/></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong>Rotation</strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{
+					Object.keys(this.fofRotations)
+						.map(timestamp => {
+							const ts = _.toNumber(timestamp)
 
-				const gcdCount = this.fofRotations[ts]
-					.filter(event => (getAction(event.ability.guid) as any).onGcd)
-					.length
+							const gcdCount = this.fofRotations[ts]
+								.filter(event => (getAction(event.ability.guid) as any).onGcd)
+								.length
 
-				const goringCount = this.fofRotations[ts]
-					.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
-					.length
+							const goringCount = this.fofRotations[ts]
+								.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
+								.length
 
-				const spiritsWithinCount = this.fofRotations[ts]
-					.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
-					.length
+							const spiritsWithinCount = this.fofRotations[ts]
+								.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
+								.length
 
-				const circleOfScornCount = this.fofRotations[ts]
-					.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
-					.length
+							const circleOfScornCount = this.fofRotations[ts]
+								.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
+								.length
 
-				return ({
-					key: timestamp,
-					title: {
-						content: <>
-							{this.parser.formatTimestamp(ts)}
-							<span> - </span>
-							<span>{gcdCount} GCDs</span>
-							<span> - </span>
-							<span>{goringCount} / {CONSTANTS.GORING.EXPECTED} <ActionLink {...ACTIONS.GORING_BLADE}/></span>
-							<span> - </span>
-							<span>{circleOfScornCount} / {CONSTANTS.CIRCLE_OF_SCORN.EXPECTED} <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/></span>
-							<span> - </span>
-							<span>{spiritsWithinCount} / {CONSTANTS.SPIRITS_WITHIN.EXPECTED} <ActionLink {...ACTIONS.SPIRITS_WITHIN}/></span>
-						</>,
-					},
-					content: {
-						content: <Rotation events={this.fofRotations[ts]}/>,
-					},
-				})
-			})
-
-		return (
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
-		)
+							return <Table.Row key={timestamp}>
+								<Table.Cell textAlign="center">
+									<span style={{marginRight: 5}}>{this.parser.formatTimestamp(ts)}</span>
+									<Button circular compact size="mini" icon="time" onClick={() => this.timeline.show(ts - this.parser.fight.start_time, ts + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000) - this.parser.fight.start_time)}/>
+								</Table.Cell>
+								<Table.Cell textAlign="center" positive={gcdCount >= CONSTANTS.GCD.EXPECTED} negative={gcdCount < CONSTANTS.GCD.EXPECTED}>
+									{gcdCount}/{CONSTANTS.GCD.EXPECTED}
+								</Table.Cell>
+								<Table.Cell textAlign="center" positive={spiritsWithinCount >= CONSTANTS.SPIRITS_WITHIN.EXPECTED} negative={spiritsWithinCount < CONSTANTS.SPIRITS_WITHIN.EXPECTED}>
+									{spiritsWithinCount}/{CONSTANTS.SPIRITS_WITHIN.EXPECTED}
+								</Table.Cell>
+								<Table.Cell textAlign="center" positive={circleOfScornCount >= CONSTANTS.CIRCLE_OF_SCORN.EXPECTED} negative={circleOfScornCount < CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}>
+									{circleOfScornCount}/{CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}
+								</Table.Cell>
+								<Table.Cell textAlign="center" positive={goringCount >= CONSTANTS.GORING.EXPECTED} negative={goringCount < CONSTANTS.GORING.EXPECTED}>
+									{goringCount}/{CONSTANTS.GORING.EXPECTED}
+								</Table.Cell>
+								<Table.Cell>
+									<Rotation events={this.fofRotations[ts]}/>
+								</Table.Cell>
+							</Table.Row>
+						})
+				}
+			</Table.Body>
+		</Table>
 	}
 }
