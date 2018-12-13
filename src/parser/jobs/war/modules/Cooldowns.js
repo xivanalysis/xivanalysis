@@ -17,6 +17,7 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.HOLMGANG.id,
 		ACTIONS.VENGEANCE.id,
 		ACTIONS.RAMPART.id,
+		ACTIONS.THRILL_OF_BATTLE.id,
 		ACTIONS.RAW_INTUITION.id,
 		ACTIONS.CONVALESCENCE.id,
 		ACTIONS.AWARENESS.id,
