@@ -137,13 +137,13 @@ export default class Requiescat extends Module {
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
-						<strong>Time</strong>
+						<strong><Trans id="pld.requiescat.table.header.time">Time</Trans></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell textAlign="center" collapsing>
 						<strong><ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/></strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell>
-						<strong>Rotation</strong>
+						<strong><Trans id="pld.requiescat.table.header.rotation">Rotation</Trans></strong>
 					</Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
