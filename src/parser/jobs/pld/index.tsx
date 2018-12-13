@@ -3,7 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 const description = `As the illegitimate child of a WHM and BLM, you chose the Gory Path of a shield lobing, sword swinging Mage, that also tries to help everybody out.
@@ -24,7 +24,7 @@ If you notice any issues, have concerns or suggestions, please drop by our Disco
 export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-pld" */),
 
-	description: <Fragment>
+	description: <>
 		<TransMarkdown id={i18nMark('pld.about.description')} source={description} key="pld.about.description"/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -32,7 +32,7 @@ export default {
 				<TransMarkdown id={i18nMark('pld.about.description.warning')} source={descriptionWarning} key="'pld.about.description.warning'"/>
 			</Message.Content>
 		</Message>
-	</Fragment>,
+	</>,
 	supportedPatches: {
 		from: '4.2',
 		to: '4.4',
