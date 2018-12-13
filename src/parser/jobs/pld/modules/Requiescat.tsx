@@ -1,17 +1,16 @@
 import {i18nMark, Plural, Trans} from '@lingui/react'
-import {center} from 'components/GlobalSidebar/GlobalSidebar.module.css'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Accordion, Button, Table} from 'semantic-ui-react'
+import {Button, Table} from 'semantic-ui-react'
 
 interface TimestampRotationMap {
 	[timestamp: number]: CastEvent[]
