@@ -164,6 +164,7 @@ export interface DamageEvent extends EffectEvent {
 	type: 'damage'
 	absorbed: number
 	multistrike?: boolean
+	blocked?: number
 }
 export interface HealEvent extends EffectEvent {
 	type: 'heal'
