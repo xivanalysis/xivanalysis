@@ -31,11 +31,13 @@ class TooltipBase extends React.PureComponent {
 		children: PropTypes.node,
 		showIcon: PropTypes.bool.isRequired,
 		showTooltip: PropTypes.bool.isRequired,
+		showName: PropTypes.bool.isRequired,
 	}
 
 	static defaultProps = {
 		showIcon: true,
 		showTooltip: true,
+		showName: true,
 	}
 
 	render() {
@@ -49,18 +51,19 @@ class TooltipBase extends React.PureComponent {
 			children,
 			showIcon,
 			showTooltip,
+			showName,
 		} = this.props
 
 		if (loading) {
 			return <span>
 				{showIcon && <Icon loading name="circle notch" />}
-				{children || <Trans id="core.dblink.loading">Loading...</Trans>}
+				{showName && (children || <Trans id="core.dblink.loading">Loading...</Trans>)}
 			</span>
 		}
 
 		const link = <span>
 			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image}/>}
-			<span className={styles.link}>{children || data.name}</span>
+			{showName && <span className={styles.link}>{children || data.name}</span>}
 		</span>
 
 		if (!showTooltip) {
