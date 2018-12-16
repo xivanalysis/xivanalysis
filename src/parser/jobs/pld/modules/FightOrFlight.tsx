@@ -8,6 +8,8 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
+import {FightOrFlightErrorResult} from 'parser/jobs/pld/modules/FightOrFlightErrorResult'
+import {FightOrFlightState} from 'parser/jobs/pld/modules/FightOrFlightState'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
@@ -69,29 +71,22 @@ export default class FightOrFlight extends Module {
 	@dependency private timeline!: Timeline
 
 	// Internal State Counters
-	private fofStart: number | null = null
-	private fofLastGoringGcd: number | null = null
-	private fofGorings = 0
-	private fofGcds = 0
-	private fofCircleOfScorn = 0
-	private fofSpiritsWithin = 0
-
-	// Result Counters
+	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of FoFState, so we can reduce the error result out of the saved rotations
+	private fofState = new FightOrFlightState()
 	private fofRotations: TimestampRotationMap = {}
-	private fofMissedCircleOfScorns = 0
-	private fofMissedSpiritWithins = 0
-	private fofMissedGcds = 0
-	private fofMissedGorings = 0
-	private fofGoringTooCloseCount = 0
+	private fofErrorResult = new FightOrFlightErrorResult()
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('removebuff', {
+		this.addHook(
+			'removebuff',
+			{
 				by: 'player',
 				to: 'player',
 				abilityId: [STATUSES.FIGHT_OR_FLIGHT.id],
-			}
-			, this.onRemoveFightOrFlight)
+			},
+			this.onRemoveFightOrFlight,
+		)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -103,84 +98,63 @@ export default class FightOrFlight extends Module {
 		}
 
 		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
-			this.fofStart = event.timestamp
+			this.fofState.start = event.timestamp
 		}
 
-		if (this.fofStart) {
-			const action = getAction(actionId) as any
+		if (this.fofState.start) {
+			const action = getAction(actionId) as TODO // Should be an Action type
 
 			if (action.onGcd) {
-				this.fofGcds++
+				this.fofState.gcdCounter++
 			}
 
 			switch (actionId) {
 				case ACTIONS.GORING_BLADE.id:
-					this.fofGorings++
+					this.fofState.goringCounter++
 
-					if (this.fofLastGoringGcd !== null) {
-						if (this.fofGcds - this.fofLastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
-							this.fofGoringTooCloseCount++
+					if (this.fofState.lastGoringGcd !== null) {
+						if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
+							this.fofErrorResult.goringTooCloseCounter++
 						}
 					}
-					this.fofLastGoringGcd = this.fofGcds
+					this.fofState.lastGoringGcd = this.fofState.gcdCounter
 					break
 				case ACTIONS.CIRCLE_OF_SCORN.id:
-					this.fofCircleOfScorn++
+					this.fofState.circleOfScornCounter++
 					break
 				case ACTIONS.SPIRITS_WITHIN.id:
-					this.fofSpiritsWithin++
-					break
-				default:
+					this.fofState.spiritsWithinCounter++
 					break
 			}
 
-			if (!Array.isArray(this.fofRotations[this.fofStart])) {
-				this.fofRotations[this.fofStart] = []
+			if (!Array.isArray(this.fofRotations[this.fofState.start])) {
+				this.fofRotations[this.fofState.start] = []
 			}
 
-			this.fofRotations[this.fofStart].push(event)
+			this.fofRotations[this.fofState.start].push(event)
 		}
 	}
 
 	private onRemoveFightOrFlight() {
-		this.fofMissedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofCircleOfScorn)
-		this.fofMissedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofSpiritsWithin)
-		this.fofMissedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofGcds)
-		this.fofMissedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofGorings)
+		this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
+		this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
+		this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
+		this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
 
-		this.fofStart = null
-		this.fofGorings = 0
-		this.fofGcds = 0
-		this.fofCircleOfScorn = 0
-		this.fofSpiritsWithin = 0
-		this.fofLastGoringGcd = null
+		this.fofState = new FightOrFlightState()
 	}
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.CIRCLE_OF_SCORN.icon,
-			content: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.content">
-				Try to land one <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/> during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
+			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
+				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.why">
-				<Plural value={this.fofMissedCircleOfScorns} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
+				<Plural value={this.fofErrorResult.missedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_CIRCLE_OF_SCORN,
-			value: this.fofMissedCircleOfScorns,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.SPIRITS_WITHIN.icon,
-			content: <Trans id="pld.fightorflight.suggestions.spirits-within.content">
-				Try to land one <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.spirits-within.why">
-				<Plural value={this.fofMissedSpiritWithins} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERETIES.MISSED_SPIRIT_WITHIN,
-			value: this.fofMissedSpiritWithins,
+			tiers: SEVERETIES.MISSED_GCD,
+			value: this.fofErrorResult.missedGcds,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -190,38 +164,92 @@ export default class FightOrFlight extends Module {
 				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window. One at the beginning and one at the end.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
-				<Plural value={this.fofMissedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofErrorResult.missedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_GORING,
-			value: this.fofMissedGorings,
+			value: this.fofErrorResult.missedGorings,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
-			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			icon: ACTIONS.SPIRITS_WITHIN.icon,
+			content: <Trans id="pld.fightorflight.suggestions.spirits-within.content">
+				Try to land one <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
-				<Plural value={this.fofMissedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+			why: <Trans id="pld.fightorflight.suggestions.spirits-within.why">
+				<Plural value={this.fofErrorResult.missedSpiritWithins} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_GCD,
-			value: this.fofMissedGcds,
+			tiers: SEVERETIES.MISSED_SPIRIT_WITHIN,
+			value: this.fofErrorResult.missedSpiritWithins,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.CIRCLE_OF_SCORN.icon,
+			content: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.content">
+				Try to land one <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/> during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+			</Trans>,
+			why: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.why">
+				<Plural value={this.fofErrorResult.missedCircleOfScorns} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+			</Trans>,
+			tiers: SEVERETIES.MISSED_CIRCLE_OF_SCORN,
+			value: this.fofErrorResult.missedCircleOfScorns,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
-			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this.fofGoringTooCloseCount),
+			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
 				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
 				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
 				a <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
-				<Plural value={this.fofGoringTooCloseCount} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofErrorResult.goringTooCloseCounter} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.GORING_CLIP,
-			value: this.fofGoringTooCloseCount,
+			value: this.fofErrorResult.goringTooCloseCounter,
 		}))
+	}
+
+	private RotationTableRow = ({timestamp, rotation}: {timestamp: number, rotation: CastEvent[]}) => {
+		const gcdCount = rotation
+			.filter(event => (getAction(event.ability.guid) as any).onGcd)
+			.length
+
+		const goringCount = rotation
+			.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
+			.length
+
+		const spiritsWithinCount = rotation
+			.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
+			.length
+
+		const circleOfScornCount = rotation
+			.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
+			.length
+
+		return <Table.Row>
+			<Table.Cell textAlign="center">
+				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(timestamp)}</span>
+				<Button circular compact size="mini" icon="time" onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000) - this.parser.fight.start_time)}/>
+			</Table.Cell>
+			<Table.Cell textAlign="center" positive={gcdCount >= CONSTANTS.GCD.EXPECTED} negative={gcdCount < CONSTANTS.GCD.EXPECTED}>
+				{gcdCount}/{CONSTANTS.GCD.EXPECTED}
+			</Table.Cell>
+			<Table.Cell textAlign="center" positive={spiritsWithinCount >= CONSTANTS.SPIRITS_WITHIN.EXPECTED} negative={spiritsWithinCount < CONSTANTS.SPIRITS_WITHIN.EXPECTED}>
+				{spiritsWithinCount}/{CONSTANTS.SPIRITS_WITHIN.EXPECTED}
+			</Table.Cell>
+			<Table.Cell textAlign="center" positive={circleOfScornCount >= CONSTANTS.CIRCLE_OF_SCORN.EXPECTED} negative={circleOfScornCount < CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}>
+				{circleOfScornCount}/{CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}
+			</Table.Cell>
+			<Table.Cell textAlign="center" positive={goringCount >= CONSTANTS.GORING.EXPECTED} negative={goringCount < CONSTANTS.GORING.EXPECTED}>
+				{goringCount}/{CONSTANTS.GORING.EXPECTED}
+			</Table.Cell>
+			<Table.Cell>
+				<Rotation events={rotation}/>
+			</Table.Cell>
+		</Table.Row>
 	}
 
 	output() {
@@ -254,43 +282,11 @@ export default class FightOrFlight extends Module {
 						.map(timestamp => {
 							const ts = _.toNumber(timestamp)
 
-							const gcdCount = this.fofRotations[ts]
-								.filter(event => (getAction(event.ability.guid) as any).onGcd)
-								.length
-
-							const goringCount = this.fofRotations[ts]
-								.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
-								.length
-
-							const spiritsWithinCount = this.fofRotations[ts]
-								.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
-								.length
-
-							const circleOfScornCount = this.fofRotations[ts]
-								.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
-								.length
-
-							return <Table.Row key={timestamp}>
-								<Table.Cell textAlign="center">
-									<span style={{marginRight: 5}}>{this.parser.formatTimestamp(ts)}</span>
-									<Button circular compact size="mini" icon="time" onClick={() => this.timeline.show(ts - this.parser.fight.start_time, ts + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000) - this.parser.fight.start_time)}/>
-								</Table.Cell>
-								<Table.Cell textAlign="center" positive={gcdCount >= CONSTANTS.GCD.EXPECTED} negative={gcdCount < CONSTANTS.GCD.EXPECTED}>
-									{gcdCount}/{CONSTANTS.GCD.EXPECTED}
-								</Table.Cell>
-								<Table.Cell textAlign="center" positive={spiritsWithinCount >= CONSTANTS.SPIRITS_WITHIN.EXPECTED} negative={spiritsWithinCount < CONSTANTS.SPIRITS_WITHIN.EXPECTED}>
-									{spiritsWithinCount}/{CONSTANTS.SPIRITS_WITHIN.EXPECTED}
-								</Table.Cell>
-								<Table.Cell textAlign="center" positive={circleOfScornCount >= CONSTANTS.CIRCLE_OF_SCORN.EXPECTED} negative={circleOfScornCount < CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}>
-									{circleOfScornCount}/{CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}
-								</Table.Cell>
-								<Table.Cell textAlign="center" positive={goringCount >= CONSTANTS.GORING.EXPECTED} negative={goringCount < CONSTANTS.GORING.EXPECTED}>
-									{goringCount}/{CONSTANTS.GORING.EXPECTED}
-								</Table.Cell>
-								<Table.Cell>
-									<Rotation events={this.fofRotations[ts]}/>
-								</Table.Cell>
-							</Table.Row>
+							return <this.RotationTableRow
+								key={ts}
+								timestamp={ts}
+								rotation={this.fofRotations[ts]}
+							/>
 						})
 				}
 			</Table.Body>
