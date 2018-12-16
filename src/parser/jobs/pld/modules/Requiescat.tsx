@@ -3,7 +3,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
@@ -11,10 +11,6 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-
-interface TimestampRotationMap {
-	[timestamp: number]: CastEvent[]
-}
 
 const SEVERITIES = {
 	MISSED_HOLY_SPIRITS: {
@@ -27,25 +23,24 @@ const SEVERITIES = {
 }
 
 const CONSTANTS = {
-	MP: {
-		TICK_AMOUNT: 141,
-	},
-	REQUIESCAT: {
-		MP_THRESHOLD: 0.8,
-	},
 	HOLY_SPIRIT: {
 		EXPECTED: 5,
 	},
 }
 
 class RequiescatState {
-	start: number | null = null
-	holySpirits: number = 0
-}
+	start: number
+	end: number | null = null
+	rotation: CastEvent[] = []
+	hasAscociatedBuff: boolean = false
 
-class RequiescatErrorResult {
-	missedHolySpirits: number = 0
-	missedRequiescatBuffs: number = 0
+	constructor(start: number) {
+		this.start = start
+	}
+
+	get holySpirits(): number {
+		return this.rotation.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id).length
+	}
 }
 
 export default class Requiescat extends Module {
@@ -57,14 +52,20 @@ export default class Requiescat extends Module {
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
 
-	// Internal State Counters
-	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of RequiState, so we can reduce the error result out of the saved rotations
-	private requiescatState = new RequiescatState()
-	private requiescatRotations: TimestampRotationMap = {}
-	private requiescatErrorResult = new RequiescatErrorResult()
+	// Requiescat Casts
+	private requiescats: RequiescatState[] = []
+
+	private get lastRequiescat(): RequiescatState | undefined {
+		return _.last(this.requiescats)
+	}
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook(
+			'applybuff',
+			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
+			this.onApplyRequiescat,
+		)
 		this.addHook(
 			'removebuff',
 			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
@@ -81,76 +82,83 @@ export default class Requiescat extends Module {
 		}
 
 		if (actionId === ACTIONS.REQUIESCAT.id) {
-			const {mp, maxMP} = this.combatants.selected.resources
-
-			// We only track buff windows
-			// Allow for inaccuracies of 1 MP Tick
-			if ((mp + CONSTANTS.MP.TICK_AMOUNT) / maxMP >= CONSTANTS.REQUIESCAT.MP_THRESHOLD) {
-				this.requiescatState.start = event.timestamp
-			} else {
-				this.requiescatErrorResult.missedRequiescatBuffs++
-			}
+			// Add new cast to the list
+			this.requiescats.push(new RequiescatState(event.timestamp))
 		}
 
-		if (this.requiescatState.start != null) {
-			if (actionId === ACTIONS.HOLY_SPIRIT.id) {
-				this.requiescatState.holySpirits++
-			}
+		const lastRequiescat = this.lastRequiescat
 
-			if (!Array.isArray(this.requiescatRotations[this.requiescatState.start])) {
-				this.requiescatRotations[this.requiescatState.start] = []
-			}
-
-			this.requiescatRotations[this.requiescatState.start].push(event)
+		// If we're still in the considered window, log our actions to it
+		if (lastRequiescat != null && lastRequiescat.end == null) {
+			lastRequiescat.rotation.push(event)
 		}
 	}
 
-	private onRemoveRequiescat() {
-		// Clamp to 0 since we can't miss negative
-		this.requiescatErrorResult.missedHolySpirits += Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - this.requiescatState.holySpirits)
-		this.requiescatState = new RequiescatState()
+	private onApplyRequiescat() {
+		const lastRequiescat = this.lastRequiescat
+
+		if (lastRequiescat != null) {
+			lastRequiescat.hasAscociatedBuff = true
+		}
+	}
+
+	private onRemoveRequiescat(event: BuffEvent) {
+		const lastRequiescat = this.lastRequiescat
+
+		if (lastRequiescat != null) {
+			lastRequiescat.end = event.timestamp
+		}
 	}
 
 	private onComplete() {
+		const missedHolySpirits = this.requiescats
+			.filter(requiescat => requiescat.hasAscociatedBuff)
+			.reduce((sum, requiescat) => sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits), 0)
+		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAscociatedBuff).length
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.REQUIESCAT.icon,
 			why: <Trans id="pld.requiescat.suggestions.wrong-gcd.why">
-				<Plural value={this.requiescatErrorResult.missedHolySpirits} one="# wrong GCD" other="# wrong GCDs"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
+				<Plural value={missedHolySpirits} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
 				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_HOLY_SPIRITS,
-			value: this.requiescatErrorResult.missedHolySpirits,
+			value: missedHolySpirits,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.REQUIESCAT.icon,
 			why: <Trans id="pld.requiescat.suggestions.nobuff.why">
-				<Plural value={this.requiescatErrorResult.missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
+				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
 				<ActionLink {...ACTIONS.REQUIESCAT}/> should only be used when over 80% MP. Try to not miss on the 20% Magic Damage buff <StatusLink {...STATUSES.REQUIESCAT}/> provides.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
-			value: this.requiescatErrorResult.missedRequiescatBuffs,
+			value: missedRequiescatBuffs,
 		}))
 	}
 
-	private RotationTableRow = ({timestamp, rotation}: {timestamp: number, rotation: CastEvent[]}) => {
+	private onNavigateTimelineTo = (timestampStart: number, timestampEnd: number) => () => {
+		this.timeline.show(timestampStart - this.parser.fight.start_time, timestampEnd - this.parser.fight.start_time)
+	}
+
+	private RotationTableRow = ({from, to, rotation}: {from: number, to: number, rotation: CastEvent[]}) => {
 		const holySpiritCount = rotation
 			.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
 			.length
 
 		return <Table.Row>
 			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(timestamp)}</span>
+				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(from)}</span>
 				<Button
 					circular
 					compact
 					size="mini"
 					icon="time"
-					onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp + (STATUSES.REQUIESCAT.duration * 1000) - this.parser.fight.start_time)}
+					onClick={this.onNavigateTimelineTo(from, to)}
 				/>
 			</Table.Cell>
 			<Table.Cell textAlign="center" positive={holySpiritCount >= CONSTANTS.HOLY_SPIRIT.EXPECTED} negative={holySpiritCount < CONSTANTS.HOLY_SPIRIT.EXPECTED}>
@@ -179,16 +187,14 @@ export default class Requiescat extends Module {
 			</Table.Header>
 			<Table.Body>
 				{
-					Object.keys(this.requiescatRotations)
-						.map(timestamp => {
-							const ts = _.toNumber(timestamp)
-
-							return <this.RotationTableRow
-								key={timestamp}
-								timestamp={ts}
-								rotation={this.requiescatRotations[ts]}
-							/>
-						})
+					this.requiescats
+						.filter(requiescat => requiescat.hasAscociatedBuff)
+						.map(requiescat => <this.RotationTableRow
+								key={requiescat.start}
+								from={requiescat.start}
+								to={requiescat.end || requiescat.start + (STATUSES.REQUIESCAT.duration * 1000)}
+								rotation={requiescat.rotation}
+							/>)
 				}
 			</Table.Body>
 		</Table>
