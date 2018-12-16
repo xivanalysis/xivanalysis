@@ -8,8 +8,6 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-import {FightOrFlightErrorResult} from 'parser/jobs/pld/modules/FightOrFlightErrorResult'
-import {FightOrFlightState} from 'parser/jobs/pld/modules/FightOrFlightState'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
@@ -60,6 +58,23 @@ const CONSTANTS = {
 	GCD: {
 		EXPECTED: 10,
 	},
+}
+
+class FightOrFlightState {
+	start: number | null = null
+	lastGoringGcd: number | null = null
+	gcdCounter: number = 0
+	goringCounter: number = 0
+	circleOfScornCounter: number = 0
+	spiritsWithinCounter: number = 0
+}
+
+class FightOrFlightErrorResult {
+	missedGcds: number = 0
+	missedGorings: number = 0
+	missedSpiritWithins: number = 0
+	missedCircleOfScorns: number = 0
+	goringTooCloseCounter: number = 0
 }
 
 export default class FightOrFlight extends Module {

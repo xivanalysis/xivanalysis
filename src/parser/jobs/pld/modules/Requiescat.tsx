@@ -9,8 +9,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-import {RequiescatErrorResult} from 'parser/jobs/pld/modules/RequiescatErrorResult'
-import {RequiescatState} from 'parser/jobs/pld/modules/RequiescatState'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 
@@ -38,6 +36,16 @@ const CONSTANTS = {
 	HOLY_SPIRIT: {
 		EXPECTED: 5,
 	},
+}
+
+class RequiescatState {
+	start: number | null = null
+	holySpirits: number = 0
+}
+
+class RequiescatErrorResult {
+	missedHolySpirits: number = 0
+	missedRequiescatBuffs: number = 0
 }
 
 export default class Requiescat extends Module {
