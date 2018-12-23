@@ -1,6 +1,6 @@
 import {i18nMark, Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
@@ -10,7 +10,6 @@ import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
 
 const SEVERITIES = {
 	MISSED_HOLY_SPIRITS: {
@@ -141,62 +140,36 @@ export default class Requiescat extends Module {
 		}))
 	}
 
-	private onNavigateTimelineTo = (timestampStart: number, timestampEnd: number) => () => {
-		this.timeline.show(timestampStart - this.parser.fight.start_time, timestampEnd - this.parser.fight.start_time)
+	private countAbility(rotation: CastEvent[], abilityId: number) {
+		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
 	}
 
-	private RotationTableRow = ({from, to, rotation}: {from: number, to: number, rotation: CastEvent[]}) => {
-		const holySpiritCount = rotation
-			.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id)
-			.length
-
-		return <Table.Row>
-			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(from)}</span>
-				<Button
-					circular
-					compact
-					size="mini"
-					icon="time"
-					onClick={this.onNavigateTimelineTo(from, to)}
-				/>
-			</Table.Cell>
-			<Table.Cell textAlign="center" positive={holySpiritCount >= CONSTANTS.HOLY_SPIRIT.EXPECTED} negative={holySpiritCount < CONSTANTS.HOLY_SPIRIT.EXPECTED}>
-				{holySpiritCount}/{CONSTANTS.HOLY_SPIRIT.EXPECTED}
-			</Table.Cell>
-			<Table.Cell>
-				<Rotation events={rotation}/>
-			</Table.Cell>
-		</Table.Row>
+	private gotoTimeLine = (start: number, end: number) => {
+		this.timeline.show(start, end)
 	}
 
 	output() {
-		return <Table compact unstackable celled>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="pld.requiescat.table.header.time">Time</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell textAlign="center" collapsing>
-						<strong><ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell>
-						<strong><Trans id="pld.requiescat.table.header.rotation">Rotation</Trans></strong>
-					</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
+		return <RotationTable
+			targets={[
 				{
-					this.requiescats
-						.filter(requiescat => requiescat.hasAscociatedBuff)
-						.map(requiescat => <this.RotationTableRow
-								key={requiescat.start}
-								from={requiescat.start}
-								to={requiescat.end || requiescat.start + (STATUSES.REQUIESCAT.duration * 1000)}
-								rotation={requiescat.rotation}
-							/>)
-				}
-			</Table.Body>
-		</Table>
+					header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
+					accessor: (entry) => ({
+						actual: this.countAbility(entry.rotation, ACTIONS.HOLY_SPIRIT.id),
+						expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
+					}),
+				},
+			]}
+			data={this.requiescats
+				.filter(requiescat => requiescat.hasAscociatedBuff)
+				.map(requiescat => ({
+					start: requiescat.start - this.parser.fight.start_time,
+					end: requiescat.end != null ?
+						requiescat.end - this.parser.fight.start_time
+						: requiescat.start - this.parser.fight.start_time,
+					rotation: requiescat.rotation,
+				}))
+			}
+			onGoto={this.gotoTimeLine}
+		/>
 	}
 }

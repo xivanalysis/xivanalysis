@@ -1,6 +1,6 @@
 import {i18nMark, Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
+import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
@@ -9,7 +9,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 
 interface TimestampRotationMap {
@@ -227,84 +226,60 @@ export default class FightOrFlight extends Module {
 		}))
 	}
 
-	private RotationTableRow = ({timestamp, rotation}: {timestamp: number, rotation: CastEvent[]}) => {
-		const gcdCount = rotation
-			.filter(event => (getAction(event.ability.guid) as any).onGcd)
-			.length
+	private countAbility(rotation: CastEvent[], abilityId: number) {
+		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
+	}
 
-		const goringCount = rotation
-			.filter(event => event.ability.guid === ACTIONS.GORING_BLADE.id)
-			.length
+	private countGCDs(rotation: CastEvent[]) {
+		return rotation.reduce((sum, event) => sum + ((getAction(event.ability.guid) as any).onGcd ? 1 : 0), 0)
+	}
 
-		const spiritsWithinCount = rotation
-			.filter(event => event.ability.guid === ACTIONS.SPIRITS_WITHIN.id)
-			.length
-
-		const circleOfScornCount = rotation
-			.filter(event => event.ability.guid === ACTIONS.CIRCLE_OF_SCORN.id)
-			.length
-
-		return <Table.Row>
-			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(timestamp)}</span>
-				<Button circular compact size="mini" icon="time" onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000) - this.parser.fight.start_time)}/>
-			</Table.Cell>
-			<Table.Cell textAlign="center" positive={gcdCount >= CONSTANTS.GCD.EXPECTED} negative={gcdCount < CONSTANTS.GCD.EXPECTED}>
-				{gcdCount}/{CONSTANTS.GCD.EXPECTED}
-			</Table.Cell>
-			<Table.Cell textAlign="center" positive={spiritsWithinCount >= CONSTANTS.SPIRITS_WITHIN.EXPECTED} negative={spiritsWithinCount < CONSTANTS.SPIRITS_WITHIN.EXPECTED}>
-				{spiritsWithinCount}/{CONSTANTS.SPIRITS_WITHIN.EXPECTED}
-			</Table.Cell>
-			<Table.Cell textAlign="center" positive={circleOfScornCount >= CONSTANTS.CIRCLE_OF_SCORN.EXPECTED} negative={circleOfScornCount < CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}>
-				{circleOfScornCount}/{CONSTANTS.CIRCLE_OF_SCORN.EXPECTED}
-			</Table.Cell>
-			<Table.Cell textAlign="center" positive={goringCount >= CONSTANTS.GORING.EXPECTED} negative={goringCount < CONSTANTS.GORING.EXPECTED}>
-				{goringCount}/{CONSTANTS.GORING.EXPECTED}
-			</Table.Cell>
-			<Table.Cell>
-				<Rotation events={rotation}/>
-			</Table.Cell>
-		</Table.Row>
+	private gotoTimeLine = (start: number, end: number) => {
+		this.timeline.show(start, end)
 	}
 
 	output() {
-		return <Table compact unstackable celled>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell collapsing>
-						<strong><Trans id="pld.fightorflight.table.header.time">Time</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell textAlign="center" collapsing>
-						<strong><Trans id="pld.fightorflight.table.header.gcds">GCDs</Trans></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell textAlign="center" collapsing>
-						<strong><ActionLink showName={false} {...ACTIONS.SPIRITS_WITHIN}/></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell textAlign="center" collapsing>
-						<strong><ActionLink showName={false} {...ACTIONS.CIRCLE_OF_SCORN}/></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell textAlign="center" collapsing>
-						<strong><ActionLink showName={false} {...ACTIONS.GORING_BLADE}/></strong>
-					</Table.HeaderCell>
-					<Table.HeaderCell>
-						<strong><Trans id="pld.fightorflight.table.header.rotation">Rotation</Trans></strong>
-					</Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
+		return <RotationTable
+			targets={[
 				{
-					Object.keys(this.fofRotations)
-						.map(timestamp => {
-							const ts = _.toNumber(timestamp)
+					header: <Trans id="pld.fightorflight.table.header.gcds">GCDs</Trans>,
+					accessor: (entry) => ({
+						actual: this.countGCDs(entry.rotation),
+						expected: CONSTANTS.GCD.EXPECTED,
+					}),
+				},
+				{
+					header: <ActionLink showName={false} {...ACTIONS.SPIRITS_WITHIN}/>,
+					accessor: (entry) => ({
+						actual: this.countAbility(entry.rotation, ACTIONS.SPIRITS_WITHIN.id),
+						expected: CONSTANTS.SPIRITS_WITHIN.EXPECTED,
+					}),
+				},
+				{
+					header: <ActionLink showName={false} {...ACTIONS.CIRCLE_OF_SCORN}/>,
+					accessor: (entry) => ({
+						actual: this.countAbility(entry.rotation, ACTIONS.CIRCLE_OF_SCORN.id),
+						expected: CONSTANTS.CIRCLE_OF_SCORN.EXPECTED,
+					}),
+				},
+				{
+					header: <ActionLink showName={false} {...ACTIONS.GORING_BLADE}/>,
+					accessor: (entry) => ({
+						actual: this.countAbility(entry.rotation, ACTIONS.GORING_BLADE.id),
+						expected: CONSTANTS.GORING.EXPECTED,
+					}),
+				},
+			]}
+			data={_.map(this.fofRotations, (rotation, timestamp): RotationTableEntry => {
+				const ts = _.toNumber(timestamp)
 
-							return <this.RotationTableRow
-								key={ts}
-								timestamp={ts}
-								rotation={this.fofRotations[ts]}
-							/>
-						})
+				return {
+					start: ts - this.parser.fight.start_time,
+					end: ts - this.parser.fight.start_time + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000),
+					rotation,
 				}
-			</Table.Body>
-		</Table>
+			})}
+			onGoto={this.gotoTimeLine}
+		/>
 	}
 }
