@@ -350,7 +350,7 @@
   "nin.kassatsu.suggestions.katon.why": "Vous avez utilisé Katon {0, plural,one {# fois}other {# fois}} sous l'effet de Kassatsu.",
   "nin.kassatsu.suggestions.rabbit.content": "Faites attention a ne pas vous tromper dans vos mudrâ avec <0/>, car <1/> ne fait aucun dégât, et vous ferait perdre le crit garanti par Kassatsu.",
   "nin.kassatsu.suggestions.rabbit.why": "Vous avez utilisé Kuchiyose {0, plural,one {# fois}other {# fois}} sous l'effet de Kassatsu.",
-  "nin.kassatsu.suggestions.suiton.content": "Évitez d'utiliser <0/> avec <1/> sauf si vous devez absolument mettre une <2/>. Sinon, réservez le buff pour <3/> et <4/> car ils font beaucoup plus de dégâts.",
+  "nin.kassatsu.suggestions.suiton.content": "",
   "nin.kassatsu.suggestions.suiton.why": "Vous avez utilisé Suiton {0, plural,one {# fois}other {# fois}} sous l'effet de Kassatsu.",
   "nin.kassatsu.suggestions.waste.content": "Pensez a utiliser <0/> avant que le buff ne disparaisse sinon vous perdez un crit garanti et vous retardez votre prochain Ninjutsu.",
   "nin.kassatsu.suggestions.waste.why": "Vous avez laissé tombé l'effet de Kassatsu {0, plural,one {# fois}other {# fois}}.",
