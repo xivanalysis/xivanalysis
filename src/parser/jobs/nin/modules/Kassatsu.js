@@ -121,9 +121,9 @@ export default class Kassatsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUITON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.suiton.content">
-					Avoid using <ActionLink {...ACTIONS.SUITON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...ACTIONS.TRICK_ATTACK}/>. Otherwise, reserve it for <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> and <ActionLink {...ACTIONS.RAITON}/>, as they both do significantly more damage.
+					Avoid using <ActionLink {...ACTIONS.SUITON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...ACTIONS.TRICK_ATTACK}/>. It's generally best to use it on <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> while Trick Attack is up, as its cooldown should align it with every other window.
 				</Trans>,
-				severity: SEVERITY.MINOR,
+				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.suiton.why">
 					You cast Suiton <Plural value={this._kassatsuUses[ACTIONS.SUITON.id]} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
