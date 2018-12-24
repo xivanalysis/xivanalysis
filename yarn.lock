@@ -1167,7 +1167,7 @@
 
 "@xivanalysis/tooltips@xivanalysis/tooltips":
   version "0.0.1"
-  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/6e167ca29a9a67d4c3959157fe5ffbf4febf6ea0"
+  resolved "https://codeload.github.com/xivanalysis/tooltips/tar.gz/f3fe8680389f7d84a22a99d4e8dcb9ee256b3873"
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
@@ -8098,9 +8098,9 @@ react@^16.5.2:
     schedule "^0.5.0"
 
 reactjs-popup@^1.2.0:
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.3.0.tgz#5a53fa6ac38e549213e0add3329c0f433fbdbd8d"
-  integrity sha512-vkDuuD05IT4RxZDs+czLS3f2yWdoLCjDDhy3tH4+qA52Sp8mzSMZn/srcufDQF8kQ9DhraOgI0ROcIvCRXTuZw==
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.3.2.tgz#7f7861443fc5edfb0184da1d01838dbd5db690cd"
+  integrity sha512-BwfaOkKpLHNHxSmiMcX/yc61twJvjGbJ/SBE+fYovJudFlaZDYXGPSp+3dTCE0UoNsEqF8oc/pNkYlGgmrnsrw==
 
 read-pkg-up@^1.0.1:
   version "1.0.1"
