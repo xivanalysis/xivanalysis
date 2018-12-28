@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
 import {CastEvent} from 'fflogs'
-import {Duration} from 'luxon'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
+import {formatDuration} from 'utilities'
 
 export interface RotationTarget {
 	header: React.ReactNode
@@ -39,7 +39,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static Row = ({onGoto, targets, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) => {
 		return <Table.Row>
 			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{Duration.fromMillis(start).toFormat('mm:ss')}</span>
+				<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
 				<Button
 					circular
 					compact
