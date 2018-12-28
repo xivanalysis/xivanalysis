@@ -29,6 +29,10 @@ export default class Timeline extends Module {
 		super(...args)
 
 		this._ref = React.createRef()
+
+		this.addGroup = this.addGroup.bind(this)
+		this.addItem = this.addItem.bind(this)
+		this.show = this.show.bind(this)
 	}
 
 	// TODO: Do more with these, it's pretty bad rn

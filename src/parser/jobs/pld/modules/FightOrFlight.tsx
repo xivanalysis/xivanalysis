@@ -234,40 +234,24 @@ export default class FightOrFlight extends Module {
 		return rotation.reduce((sum, event) => sum + ((getAction(event.ability.guid) as any).onGcd ? 1 : 0), 0)
 	}
 
-	private gotoTimeLine = (start: number, end: number) => {
-		this.timeline.show(start, end)
-	}
-
 	output() {
 		return <RotationTable
 			targets={[
 				{
 					header: <Trans id="pld.fightorflight.table.header.gcds">GCDs</Trans>,
-					accessor: (entry) => ({
-						actual: this.countGCDs(entry.rotation),
-						expected: CONSTANTS.GCD.EXPECTED,
-					}),
+					accessor: 'gcds',
 				},
 				{
 					header: <ActionLink showName={false} {...ACTIONS.SPIRITS_WITHIN}/>,
-					accessor: (entry) => ({
-						actual: this.countAbility(entry.rotation, ACTIONS.SPIRITS_WITHIN.id),
-						expected: CONSTANTS.SPIRITS_WITHIN.EXPECTED,
-					}),
+					accessor: 'spiritsWithin',
 				},
 				{
 					header: <ActionLink showName={false} {...ACTIONS.CIRCLE_OF_SCORN}/>,
-					accessor: (entry) => ({
-						actual: this.countAbility(entry.rotation, ACTIONS.CIRCLE_OF_SCORN.id),
-						expected: CONSTANTS.CIRCLE_OF_SCORN.EXPECTED,
-					}),
+					accessor: 'circleOfScorn',
 				},
 				{
 					header: <ActionLink showName={false} {...ACTIONS.GORING_BLADE}/>,
-					accessor: (entry) => ({
-						actual: this.countAbility(entry.rotation, ACTIONS.GORING_BLADE.id),
-						expected: CONSTANTS.GORING.EXPECTED,
-					}),
+					accessor: 'goring',
 				},
 			]}
 			data={_.map(this.fofRotations, (rotation, timestamp): RotationTableEntry => {
@@ -276,10 +260,28 @@ export default class FightOrFlight extends Module {
 				return {
 					start: ts - this.parser.fight.start_time,
 					end: ts - this.parser.fight.start_time + (STATUSES.FIGHT_OR_FLIGHT.duration * 1000),
+					targetsData: {
+						gcds: {
+							actual: this.countGCDs(rotation),
+							expected: CONSTANTS.GCD.EXPECTED,
+						},
+						spiritsWithin: {
+							actual: this.countAbility(rotation, ACTIONS.SPIRITS_WITHIN.id),
+							expected: CONSTANTS.SPIRITS_WITHIN.EXPECTED,
+						},
+						circleOfScorn: {
+							actual: this.countAbility(rotation, ACTIONS.CIRCLE_OF_SCORN.id),
+							expected: CONSTANTS.CIRCLE_OF_SCORN.EXPECTED,
+						},
+						goring: {
+							actual: this.countAbility(rotation, ACTIONS.GORING_BLADE.id),
+							expected: CONSTANTS.GORING.EXPECTED,
+						},
+					},
 					rotation,
 				}
 			})}
-			onGoto={this.gotoTimeLine}
+			onGoto={this.timeline.show}
 		/>
 	}
 }

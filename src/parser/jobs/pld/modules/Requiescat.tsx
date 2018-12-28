@@ -144,19 +144,12 @@ export default class Requiescat extends Module {
 		return rotation.reduce((sum, event) => sum + (event.ability.guid === abilityId ? 1 : 0), 0)
 	}
 
-	private gotoTimeLine = (start: number, end: number) => {
-		this.timeline.show(start, end)
-	}
-
 	output() {
 		return <RotationTable
 			targets={[
 				{
 					header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
-					accessor: (entry) => ({
-						actual: this.countAbility(entry.rotation, ACTIONS.HOLY_SPIRIT.id),
-						expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
-					}),
+					accessor: 'holySpirit',
 				},
 			]}
 			data={this.requiescats
@@ -166,10 +159,16 @@ export default class Requiescat extends Module {
 					end: requiescat.end != null ?
 						requiescat.end - this.parser.fight.start_time
 						: requiescat.start - this.parser.fight.start_time,
+					targetsData: {
+						holySpirit: {
+							actual: this.countAbility(requiescat.rotation, ACTIONS.HOLY_SPIRIT.id),
+							expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
+						},
+					},
 					rotation: requiescat.rotation,
 				}))
 			}
-			onGoto={this.gotoTimeLine}
+			onGoto={this.timeline.show}
 		/>
 	}
 }
