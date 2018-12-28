@@ -15,9 +15,14 @@ import styles from './DbLink.module.css'
 // Wrapping the provider w/ connect to pick up lang changes
 export const Provider = connect(state => ({
 	language: state.language.site,
-}))(({language, children}) => <TooltipProvider language={language}>
-	{children}
-</TooltipProvider>)
+}))(({language, children}) => (
+	<TooltipProvider
+		language={language}
+		apiKey={process.env.REACT_APP_XIVAPI_API_KEY}
+	>
+		{children}
+	</TooltipProvider>
+))
 
 class TooltipBase extends React.PureComponent {
 	static propTypes = {
