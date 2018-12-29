@@ -59,7 +59,9 @@ export default class CooldownDowntime extends Module {
 		if (downtime < 0) {
 			downtime = 0
 		}
+		//Code below takes remainder time into account. Imagine a 2 min encounter and a 90s OGCD. If you have a downtime of 30+s you will lose a usage due to encounter length constraints.
+		const fightLengthRemainder = fightlength % (cooldown*1000)
 		const possibleNumberOfUses = Math.ceil(fightlength/(cooldown*1000))
-		return ((possibleNumberOfUses - Math.floor(downtime/(cooldown*1000)))/possibleNumberOfUses)*100
+		return ((possibleNumberOfUses - (Math.floor(downtime/(cooldown*1000) + (downtime > fightLengthRemainder ? 1 : 0))))/possibleNumberOfUses)*100
 	}
 }
