@@ -1,24 +1,75 @@
+@value gutter, md, themeText, themeBackground from "theme.module.css";
+
 .background {
+	position: fixed;
+	top: -10px;
+	left: -10px;
+	bottom: -10px;
+	right: -10px;
+	z-index: -1;
+	background: url(./background.jpg) no-repeat center;
+	background-size: cover;
+	filter: blur(5px);
+}
+
+.background::after {
+	content: '';
 	position: absolute;
 	top: 0;
 	left: 0;
 	width: 100%;
 	height: 100%;
-	z-index: -1;
-	background: url(./omega-dark-blur.jpg) no-repeat center;
-	background-size: cover;
+	background: themeBackground;
+	opacity: .5;
+}
+
+.logo {
+	position: absolute;
+	top: 20%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	font-size: 24px;
+	font-weight: bold;
+	text-align: center;
+}
+
+.logo img {
+	display: block;
+	margin: 0 auto 5px;
+	max-width: 120px;
 }
 
 .search {
 	position: absolute;
-	right: 0;
-	left: 0;
-	bottom: 50%;
-	margin-bottom: -19px; /* Half the input group's height */
-	color: white;
+	top: 50%;
+	transform: translateY(-50%);
+	padding: 0 gutter;
+	width: 100%;
+	color: themeText;
 }
 
 .about {
 	cursor: pointer;
-	border-bottom: 1px dashed white;
+	border-bottom: 1px dashed themeText;
+}
+
+.options {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+}
+
+@media md {
+	.logo {
+		display: none;
+	}
+
+	.search {
+		padding: 0;
+	}
+
+	.options {
+		display: none;
+	}
 }

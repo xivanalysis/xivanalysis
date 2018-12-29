@@ -54,7 +54,7 @@ type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
 
 type HookCallback<T extends Event> = (event: T) => void
 
-interface Hook<T extends Event> {
+export interface Hook<T extends Event> {
 	events: Array<T['type']>
 	filter: Filter<T>
 	callback: HookCallback<T>

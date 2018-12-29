@@ -18,6 +18,13 @@
 	text-overflow: ellipsis;
 }
 
+/* Using this junk to "flatten" out any children */
+.message * {
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
 .contributors {
 	flex-shrink: 0;
 	margin-left: auto;

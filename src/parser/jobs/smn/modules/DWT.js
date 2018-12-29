@@ -76,6 +76,8 @@ export default class DWT extends Module {
 		this.addHook('applybuff', dwtBuffFilter, this._onApplyDwt)
 		this.addHook('removebuff', dwtBuffFilter, this._onRemoveDwt)
 
+		this.addHook('death', {to: 'player'}, () => this._dwt.died = true)
+
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -182,6 +184,7 @@ export default class DWT extends Module {
 			start,
 			end: null,
 			rushing: this.gauge.isRushing(),
+			died: false,
 			casts: [],
 		}
 
@@ -201,7 +204,8 @@ export default class DWT extends Module {
 		this.castTime.reset(this._ctIndex)
 
 		// ...don't miss deathflare k
-		if (dfHits === 0) {
+		// Don't flag if they died, the death suggestion is morbid enough.
+		if (dfHits === 0 && !this._dwt.died) {
 			this._missedDeathflares ++
 		}
 
@@ -243,8 +247,15 @@ export default class DWT extends Module {
 					content: <>
 						{this.parser.formatTimestamp(dwt.start)}
 						&nbsp;-&nbsp;{numGcds} GCDs
-						{dwt.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-						{noDeathflare && <span className="text-error">&nbsp;(no Deathflare)</span>}
+						{dwt.rushing && <>
+							&nbsp;<Trans id="smn.dwt.rushing" render="span" className="text-info">(rushing)</Trans>
+						</>}
+						{noDeathflare && !dwt.died && <>
+							&nbsp;<Trans id="smn.dwt.no-deathflare" render="span" className="text-error">(no Deathflare)</Trans>
+						</>}
+						{dwt.died && <>
+							&nbsp;<Trans id="smn.dwt.died" render="span" className="text-error">(died)</Trans>
+						</>}
 					</>,
 				},
 				content: {

@@ -226,7 +226,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: overWrittenFire > overWrittenStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
 			content: <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> available or <ActionLink {...ACTIONS.VERAREO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} /> available
+				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERAREO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />
 			</Trans>,
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overWrittenFire + overWrittenStone,
@@ -238,7 +238,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.IMPACT.icon,
 			content: <Trans id="rdm.procs.suggestions.impact.overwritten.content">
-				Don't cast <ActionLink {...ACTIONS.JOLT_II} /> when you have <StatusLink {...STATUSES.IMPACTFUL} /> available
+				Don't cast <ActionLink {...ACTIONS.JOLT_II} /> when you have <StatusLink {...STATUSES.IMPACTFUL} />
 			</Trans>,
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overWrittenImpact,

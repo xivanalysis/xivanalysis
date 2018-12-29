@@ -6,4 +6,5 @@ export default {
 	DRAGON_KICK: 5,
 	TWIN_SNAKES: 6,
 	DEMOLISH: 7,
+	UNDESIRABLES: 10,
 }

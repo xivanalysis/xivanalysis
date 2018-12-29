@@ -1,0 +1,11 @@
+@value md from "theme.module.css";
+
+.find {
+	padding: 0 20px;
+}
+
+@media md {
+	.find {
+		padding: 0;
+	}
+}

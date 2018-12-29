@@ -1,0 +1,58 @@
+@value gutter, md, themeText, themeBackground from "theme.module.css";
+
+.crumbs {
+	position: relative;
+	margin: calc(-1 * gutter) calc(-1 * gutter) 0;
+	padding: 15px gutter;
+	overflow: hidden;
+}
+
+.crumbsBackground {
+	position: absolute;
+	top: -5px;
+	bottom: -5px;
+	left: -5px;
+	right: -5px;
+	z-index: -1;
+	background-size: 150%;
+	background-position: center;
+	filter: blur(5px);
+}
+
+.crumbsBackground::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: themeBackground;
+	opacity: .5;
+}
+
+.link {
+	display: block;
+	padding: 5px 0;
+	color: themeText;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.link:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.link:first-of-type { padding-top: 0; }
+.link:last-of-type { padding-bottom: 0; }
+
+.linkSubtitle {
+	opacity: .5;
+}
+
+@media md {
+	.crumbs {
+		margin-top: gutter;
+	}
+}

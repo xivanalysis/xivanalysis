@@ -15,6 +15,7 @@ const STATUS_DURATION = {
 }
 
 const SHADOW_FLARE_DURATION = 15000
+const SHADOW_FLARE_MAX_FUZZ = 30000
 
 // In ms
 const CLIPPING_SEVERITY = {
@@ -132,7 +133,17 @@ export default class DoTs extends Module {
 	}
 
 	getShadowFlareUptimePercent() {
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		// Get the first usage of SF - we'll use it to allow a bit of wiggle room around how many SFs they could have cast.
+		const sfBuffs = this.combatants.selected.buffs
+			.filter(buff => buff.ability.guid === STATUSES.SHADOW_FLARE.id)
+			.sort((a, b) => a.start - b.start)
+		const firstCast = sfBuffs[0] || {start: 0}
+		const wiggleRoom = Math.min(firstCast.start, SHADOW_FLARE_MAX_FUZZ)
+
+		// Possible duration that SF should have been rolled within
+		// TODO: Look into more accurate duration - a short downtime betwen SFs should _not_ be subtracted.
+		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime() - wiggleRoom
+
 		// Calc the total number of SF casts you coulda got off (minus the last 'cus floor)
 		const maxFullCasts = Math.floor(fightDuration / (ACTIONS.SHADOW_FLARE.cooldown * 1000))
 

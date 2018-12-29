@@ -1,3 +1,5 @@
+@value gutter, themeText from "theme.module.css";
+
 .header {
 	display: flex;
 }
@@ -14,13 +16,27 @@
 	margin-bottom: 25vh;
 }
 
-.menuLogo {
-	display: inline-block !important;
-	width: 2.5em !important;
-	margin-right: .75rem !important;
+.reportLink {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	display: block;
+	margin: 0 calc(-1 * gutter);
+	border-bottom: 1px solid rgba(0,0,0,.1);
+	padding: 0 gutter;
+	color: themeText;
+	line-height: 40px;
 }
 
-.sticky {
-	position: sticky;
-	top: 50px;
+.reportLink:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.menuLogo {
+	display: inline-block;
+	margin-right: 13px;
+	height: 30px;
+	vertical-align: middle;
 }

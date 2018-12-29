@@ -15,9 +15,14 @@ import styles from './DbLink.module.css'
 // Wrapping the provider w/ connect to pick up lang changes
 export const Provider = connect(state => ({
 	language: state.language.site,
-}))(({language, children}) => <TooltipProvider language={language}>
-	{children}
-</TooltipProvider>)
+}))(({language, children}) => (
+	<TooltipProvider
+		language={language}
+		apiKey={process.env.REACT_APP_XIVAPI_API_KEY}
+	>
+		{children}
+	</TooltipProvider>
+))
 
 class TooltipBase extends React.PureComponent {
 	static propTypes = {
@@ -31,11 +36,13 @@ class TooltipBase extends React.PureComponent {
 		children: PropTypes.node,
 		showIcon: PropTypes.bool.isRequired,
 		showTooltip: PropTypes.bool.isRequired,
+		showName: PropTypes.bool.isRequired,
 	}
 
 	static defaultProps = {
 		showIcon: true,
 		showTooltip: true,
+		showName: true,
 	}
 
 	render() {
@@ -49,18 +56,19 @@ class TooltipBase extends React.PureComponent {
 			children,
 			showIcon,
 			showTooltip,
+			showName,
 		} = this.props
 
 		if (loading) {
 			return <span>
 				{showIcon && <Icon loading name="circle notch" />}
-				{children || <Trans id="core.dblink.loading">Loading...</Trans>}
+				{showName && (children || <Trans id="core.dblink.loading">Loading...</Trans>)}
 			</span>
 		}
 
 		const link = <span>
 			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image}/>}
-			<span className={styles.link}>{children || data.name}</span>
+			{showName && <span className={styles.link}>{children || data.name}</span>}
 		</span>
 
 		if (!showTooltip) {

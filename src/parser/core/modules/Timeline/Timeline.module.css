@@ -1,3 +1,5 @@
+@value gutter from "theme.module.css";
+
 .helpText {
 	font-style: italic;
 }
@@ -5,8 +7,8 @@
 @media (min-width: 992px) {
 	.helpText {
 		position: absolute;
-		top: 1em;
-		right: 0;
+		top: gutter;
+		right: gutter;
 	}
 }
 
