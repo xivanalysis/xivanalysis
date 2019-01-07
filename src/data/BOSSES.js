@@ -1,7 +1,7 @@
 import {addExtraIndex} from 'utilities'
 import ZONES from './ZONES'
 
-// I'm not including xivdb IDs for now, there's nothing meanigful to referenced on that end
+// I'm not including xivapi IDs for now, there's nothing meanigful to referenced on that end
 const BOSSES = {
 	// 4.1
 	BAHAMUT_PRIME: {

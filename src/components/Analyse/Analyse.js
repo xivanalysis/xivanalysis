@@ -258,7 +258,7 @@ class Analyse extends Component {
 				{job && <Header
 					className={[styles.header].join(' ')}
 				>
-					<JobIcon job={job} set={1}/>
+					<JobIcon job={job}/>
 					<Header.Content>
 						<Trans id={job.i18n_id} defaults={job.name} />
 						<Header.Subheader>

@@ -275,7 +275,7 @@ export default class GreasedLightning extends Module {
 
 		if (this._droppedStacks) {
 			this.suggestions.add(new Suggestion({
-				icon: 'https://secure.xivdb.com/img/game/001000/001775.png', // Name of Lightning
+				icon: 'https://xivapi.com/i/001000/001775.png', // Name of Lightning
 				content: <Trans id="mnk.gl.suggestions.dropped.content">
 					Avoid dropping stacks except when using <ActionLink {...ACTIONS.TORNADO_KICK} />.
 				</Trans>,
