@@ -231,7 +231,7 @@
   "mch.heat.suggestions.downtime.content": "Make sure to use <0/> as soon as it's available after overheat/cooldown windows, as you can't build up heat without it.",
   "mch.heat.suggestions.downtime.why": "Gauss Barrel was down for {0}.",
   "mch.heat.title": "mch.heat.title",
-  "mch.hotshot.checklist.description": "<0/> provides an 8% boost to your personal damage and should always be kept up.",
+  "mch.hotshot.checklist.description": "",
   "mch.hotshot.checklist.name": "Keep Hot Shot up",
   "mch.hotshot.checklist.requirement.name": "<0/> uptime",
   "mch.hotshot.suggestions.refresh.content": "Avoid refreshing <0/> outside of your post-overheat cooling windows unless absolutely necessary. It's your lowest potency GCD, so it suffers the least from the loss of <1/> during those windows.",
