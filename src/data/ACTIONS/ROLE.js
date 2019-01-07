@@ -315,6 +315,6 @@ export default {
 		id: 7546,
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
-		cooldown: 150,
+		cooldown: 90,
 	},
 }
