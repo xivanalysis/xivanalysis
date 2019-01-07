@@ -231,7 +231,7 @@
   "mch.heat.suggestions.downtime.content": "",
   "mch.heat.suggestions.downtime.why": "ガウスバレルのダウン率：{0}",
   "mch.heat.title": "",
-  "mch.hotshot.checklist.description": "<0/> は与ダメージ8％アップで常に維持すべきです。",
+  "mch.hotshot.checklist.description": "",
   "mch.hotshot.checklist.name": "ホットショットを常に維持してください",
   "mch.hotshot.checklist.requirement.name": "アクティブ率: <0/>",
   "mch.hotshot.suggestions.refresh.content": "",
