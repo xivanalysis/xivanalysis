@@ -21,7 +21,7 @@ export default {
 	</Fragment>,
 	supportedPatches: {
 		from: '4.2',
-		to: '4.4',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},

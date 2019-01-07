@@ -52,6 +52,9 @@ const PATCHES = {
 	'4.4': {
 		date: 1537268400,
 	},
+	'4.5': {
+		date: 1546857979,
+	},
 }
 
 export type PatchNumber = keyof typeof PATCHES

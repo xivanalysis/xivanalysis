@@ -21,7 +21,7 @@ export default {
 	</>,
 	supportedPatches: {
 		from: '4.1',
-		to: '4.4',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
