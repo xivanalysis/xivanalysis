@@ -17,6 +17,10 @@ import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
 import styles from './ArcanaSuggestions.module.css'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+// const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
+// const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
+// const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
+
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
 	static title = 'Arcana Logs'
@@ -234,6 +238,8 @@ export default class ArcanaSuggestions extends Module {
 		const draw = artifact.state.draw || null
 		const rrAbility = artifact.state.rrAbility || null
 		const minorArcana = artifact.state.minorArcana
+
+		console.log(minorArcana)
 
 		return <Table.Cell>
 			{rrAbility && <img
