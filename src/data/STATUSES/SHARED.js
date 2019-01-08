@@ -34,4 +34,10 @@ export default {
 		name: 'Well Fed',
 		icon: 'https://xivapi.com/i/016000/016202.png',
 	},
+
+	SQUADRON_RATIONING_MANUAL: {
+		id: 1084,
+		name: 'Squadron Rationing Manual',
+		icon: 'https://xivapi.com/i/016000/016508.png',
+	},
 }
