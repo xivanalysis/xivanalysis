@@ -20,6 +20,13 @@ const ZONES = {
 	RIDORANA_LIGHTHOUSE: {
 		logId: 776,
 		dbId: 30068,
+		banner: 'https://xivapi.com/i/112000/112286.png',
+	},
+
+	ORBONNE_MONASTARY: {
+		// logId: TODO,
+		dbId: 30077,
+		banner: 'https://xivapi.com/i/112000/112334.png',
 	},
 
 	// Primal EX
@@ -50,6 +57,19 @@ const ZONES = {
 	TSUKUYOMI_EX: {
 		logId: 779,
 		dbId: 20055,
+		banner: 'https://xivapi.com/i/112000/112291.png',
+	},
+
+	SUZAKU_EX: {
+		logId: 811,
+		dbId: 20058,
+		banner: 'https://xivapi.com/i/112000/112322.png',
+	},
+
+	SEIRYU_EX: {
+		// logId: TODO,
+		dbId: 20061,
+		banner: 'https://xivapi.com/i/112000/112340.png',
 	},
 
 	// Omega Savage
