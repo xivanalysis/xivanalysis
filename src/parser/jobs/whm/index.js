@@ -41,4 +41,11 @@ export default {
 		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
+	changelog: [
+		{
+			date: new Date('2019-01-09'),
+			changes: 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
+			contributors: [CONTRIBUTORS.VULCWEN, CONTRIBUTORS.SUSHIROU],
+		},
+	],
 }
