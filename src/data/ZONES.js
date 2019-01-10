@@ -24,7 +24,7 @@ const ZONES = {
 	},
 
 	ORBONNE_MONASTARY: {
-		// logId: TODO,
+		logId: 826,
 		dbId: 30077,
 		banner: 'https://xivapi.com/i/112000/112334.png',
 	},
@@ -67,7 +67,7 @@ const ZONES = {
 	},
 
 	SEIRYU_EX: {
-		// logId: TODO,
+		logId: 825,
 		dbId: 20061,
 		banner: 'https://xivapi.com/i/112000/112340.png',
 	},
