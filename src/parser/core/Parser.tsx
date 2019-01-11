@@ -15,7 +15,7 @@ interface Player extends Actor {
 }
 
 interface LoadedMeta extends Meta {
-	loadedModules: Array<typeof Module>
+	loadedModules: ReadonlyArray<typeof Module>
 }
 
 // TODO: This should probably be in the store, once the store gets ported
@@ -33,14 +33,11 @@ export interface Result {
 
 import ResultSegment from 'components/Analyse/ResultSegment'
 
-/**
- * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
- */
-
 class Parser {
 	// -----
 	// Properties
 	// -----
+	readonly player: Player
 
 	meta: Partial<LoadedMeta> = {}
 	_timestamp = 0
@@ -84,13 +81,17 @@ class Parser {
 	constructor(
 		readonly report: Report,
 		readonly fight: Fight,
-		readonly player: Player,
+		actor: Actor,
 	) {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
-		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
+		const pets = report.friendlyPets.filter(pet => pet.petOwner === actor.id)
+		this.player = {
+			...actor,
+			pets,
+		}
 	}
 
 	// -----
@@ -110,7 +111,7 @@ class Parser {
 		delete this.meta.modules
 	}
 
-	addModules(modules: Array<typeof Module>) {
+	addModules(modules: ReadonlyArray<typeof Module>) {
 		const keyed: Record<string, typeof Module> = {}
 
 		modules.forEach(mod => {

@@ -47,11 +47,10 @@ export class NotFoundError extends GlobalError {
 	constructor(options) {
 		super(Object.assign({
 			type: '[Not Specified]',
-			id: 0,
 		}, options))
 	}
 	get detail() {
-		return `No ${this.type} was found with ID ${this.id}.`
+		return `No ${this.type} was found with the specified ID.`
 	}
 }
 
