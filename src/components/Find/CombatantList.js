@@ -70,7 +70,6 @@ class CombatantList extends Component {
 		if (grouped.length === 0) {
 			store.dispatch(setGlobalError(new Errors.NotFoundError({
 				type: 'fight',
-				id: currentFight,
 			})))
 			return null
 		}
