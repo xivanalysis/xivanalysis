@@ -44,7 +44,7 @@ export default class Ammo extends Module {
 	_onBuilderCast(event) {
 		this._ammoCount += AMMO_BUILDERS[event.ability.guid]
 		if (this._ammoCount > MAX_AMMO) {
-			if (!this.invuln.isUntargetable('all', event.timestamp) || (event.timestamp - this.parser.fight.start_time) < OVERWRITE_FORGIVENESS_WINDOW) {
+			if (!this.invuln.isUntargetable('all', event.timestamp) && (event.timestamp - this.parser.fight.start_time) >= OVERWRITE_FORGIVENESS_WINDOW) {
 				// Only count waste against the player if it happens during uptime and isn't right at the start
 				this._wastedAmmo += (this._ammoCount - MAX_AMMO)
 			}
