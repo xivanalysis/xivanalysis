@@ -119,7 +119,7 @@ export default class DualCast extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: STATUSES.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.wasted.content">
-					Spells used while <StatusLink {...STATUSES.DUALCAST}/> is up should be limited to <ActionLink {...ACTIONS.VERAREO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
+					Spells used while <StatusLink {...STATUSES.DUALCAST}/> is up should be limited to <ActionLink {...ACTIONS.VERAERO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
 				</Trans>,
 				tiers: this._severityWastedDualcast,
 				value: this._wastedDualCasts,

@@ -14,7 +14,7 @@ export const CAST_TYPE = {
  * Actions that are good for DualCast usage
  */
 export const CORRECT_GCDS = [
-	ACTIONS.VERAREO.id,
+	ACTIONS.VERAERO.id,
 	ACTIONS.VERTHUNDER.id,
 	ACTIONS.VERRAISE.id,
 	//Allowing globally for now, however I need to do some extra logic in relation to Scatter
