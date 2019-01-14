@@ -23,7 +23,7 @@ const KAITEN_GCDS = {
 
 	[ACTIONS.HIGANBANA.id]: 0, //ALWAYS WITH KAITEN
 	[ACTIONS.TENKA_GOKEN.id]: 0,
-	[ACTIONS.MIDARE_SETSUGEKKA.id]: 0,
+	[ACTIONS.MIDARE_SETSUGEKKA.id]: 0, //ALWAYS WITH KAITEN
 
 }
 
@@ -35,6 +35,7 @@ export default class Kaiten extends Module {
 	]
 
 	_badKaitenCasts = 0
+	_missedKaitenCasts = 0
 
 	constructor(...args) {
 		super(...args)
@@ -47,6 +48,10 @@ export default class Kaiten extends Module {
 
 		if (this.combatants.selected.hasStatus(STATUSES.KAITEN.id) && KAITEN_GCDS.hasOwnProperty(abilityId)) {
 			this._badKaitenCasts += KAITEN_GCDS[abilityId] // Sen moves won't increment this, everything else will
+		}
+
+		if ((abilityId === ACTIONS.MIDARE_SETSUGEKKA.id || abilityId === ACTIONS.HIGANBANA.id) && !this.combatants.selected.hasStatus(STATUSES.KAITEN.id)) {
+			this._missedKaitenCasts += 1 //Everytime Midare or Higan is used without kaiten, this will go up by 1.
 		}
 	}
 
@@ -63,5 +68,19 @@ export default class Kaiten extends Module {
 				</Fragment>,
 			}))
 		}
+
+		if (this._missedKaitenCasts > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.HISSATSU_KAITEN.icon,
+				content: <Fragment>
+                                Always use <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> and <ActionLink {...ACTIONS.HIGANBANA}/>. The gain on these actions from kaiten is too great to miss.
+				</Fragment>,
+				severity: SEVERITY.MAJOR,
+				why: <Fragment>
+                                        You failed to Kaiten {this._missedKaitenCasts} time{this._missedKaitenCasts !== 1 && 's'} on either  on <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> and/or <ActionLink {...ACTIONS.HIGANBANA}/>
+				</Fragment>,
+			}))
+		}
+
 	}
 }
