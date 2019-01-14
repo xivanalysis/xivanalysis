@@ -18,8 +18,18 @@ export default class CooldownDowntime extends Module {
 		super(...args)
 		//tracking the important™ CDs
 		this.trackedCds = []
-		//Default alloted time before a spell is held too long.
+		//Default alloted time in ms before a OGCD is held for too long.
+		//This value is used for all OGCDs, if not overwritten by allowedDowntimePerOgcd.
 		this.allowedDowntime = 0
+		//Default time in ms until a OGCD is held for too long at the beginning of a fight.
+		//This value is used for all OGCDs, if not overwritten by firstUseOffsetPerOgcd.
+		this.firstUseOffset = 0
+		//This can be overwritten by each job to give each OGCD its own allowed time that the OGCD is held.
+		//If no value for an ability id is provided the default value of allowedDowntime is used.
+		this.allowedDowntimePerOgcd = {}
+		//This can be overwritten by each job to give each OGCD its own allowed time before the OGCD is used for the first time.
+		//If no value for an ability id is provided the default value of firstUseOffset is used.
+		this.firstUseOffsetPerOgcd = {}
 		//Default Target to hit
 		this.target = 95
 		this.description = <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them.  {this.allowedDowntime === 0 ? '' : <Trans id="core.cooldowndowntime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.parser.formatDuration(this.allowedDowntime)} seconds per instance to hold your cooldowns.</Trans>}</Trans>
@@ -40,7 +50,12 @@ export default class CooldownDowntime extends Module {
 			OGCDRequirements.push(
 				new Requirement({
 					name: <ActionLink {...getAction(id)} />,
-					percent: this._percentFunction(id, encounterLength - this.cooldowns.getTimeOnCooldown(id, true, this.allowedDowntime), encounterLength),
+					percent: this._percentFunction(
+						id,
+						encounterLength - this.cooldowns.getTimeOnCooldown(id, true, this.allowedDowntimePerOgcd[id] ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime) + (this.allowedDowntimePerOgcd[id] ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime),
+						this.firstUseOffsetPerOgcd[id] ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset,
+						encounterLength
+					),
 				})
 			)
 		})
@@ -54,8 +69,9 @@ export default class CooldownDowntime extends Module {
 		}))
 	}
 	//Furst's revised percent Calculation function
-	_percentFunction(actionId, downtime, fightlength) {
+	_percentFunction(actionId, downtime, offset, fightlength) {
 		const cooldown = getAction(actionId).cooldown
+		downtime -= offset
 		if (downtime < 0) {
 			downtime = 0
 		}
