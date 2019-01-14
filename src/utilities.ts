@@ -29,7 +29,7 @@ export function getPathMatch(pathname: string) {
 	let path = '/'
 	switch (page !== null && page.params.page) {
 	case 'find':    path = '/find/:code/:fight?'; break
-	case 'analyse':	path = '/analyse/:code/:fight/:combatant'; break
+	case 'analyse': path = '/analyse/:code/:fight/:combatant'; break
 	default:        // Do nothing
 	}
 

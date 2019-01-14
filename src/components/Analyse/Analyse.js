@@ -8,13 +8,10 @@ import {
 	Loader,
 } from 'semantic-ui-react'
 
-import {getFflogsEvents} from 'api'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
-import * as Errors from 'errors'
-import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
-import Parser from 'parser/core/Parser'
+import {Conductor} from 'parser/Conductor'
 import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
 import {compose} from 'utilities'
 
@@ -25,20 +22,8 @@ import {SegmentPositionProvider} from './SegmentPositionContext'
 import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
 
-/**
- * @template T
- * @typedef {Object} UnloadedModuleMeta
- * @prop {() => Promise<T>} modules
- * @prop {React.ReactNode|null} description
- * @prop {TODO} supportedPatches
- * @prop {ReadonlyArray<TODO>} contributors
- * @prop {ReadonlyArray<TODO>} changelog
- */
-
 class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
-	// TODO: maybe flow?
-	// Also like all the functionality
 	static propTypes = {
 		dispatch: PropTypes.func.isRequired,
 		match: PropTypes.shape({
@@ -53,15 +38,19 @@ class Analyse extends Component {
 		}),
 	}
 
-	/** @type {ReadonlyArray<import('parser/core/Parser').ParserResult>|null} */
-	resultCache = null
+	get fightId() {
+		return parseInt(this.props.match.params.fight, 10)
+	}
+
+	get combatantId() {
+		return parseInt(this.props.match.params.combatant, 10)
+	}
 
 	constructor(props) {
 		super(props)
 
 		this.state = {
-			/** @type {import('parser/core/Parser').default|null} */
-			parser: null,
+			conductor: null,
 			complete: false,
 		}
 	}
@@ -75,10 +64,6 @@ class Analyse extends Component {
 		this.fetchData(prevProps)
 	}
 
-	reset() {
-		console.log('TODO: reset?')
-	}
-
 	fetchData(prevProps) {
 		const {dispatch, match} = this.props
 
@@ -87,7 +72,7 @@ class Analyse extends Component {
 		this.fetchEventsAndParseIfNeeded(prevProps)
 	}
 
-	fetchEventsAndParseIfNeeded(prevProps) {
+	async fetchEventsAndParseIfNeeded(prevProps) {
 		const {
 			dispatch,
 			report,
@@ -98,128 +83,37 @@ class Analyse extends Component {
 		const changed = !prevProps
 			|| report !== prevProps.report
 			|| !_.isEqual(params, prevProps.match.params)
-		if (changed) {
-			// TODO: does it really need to reset here?
-			this.reset()
+		if (!changed) {
+			return
+		}
 
-			// If we don't have everything we need, stop before we hit the api
-			// TODO: more checks
-			const valid = report
+		// If we don't have everything we need, stop before we hit the api
+		// TODO: more checks
+		const valid = report
 				&& !report.loading
 				&& report.code === params.code
 				&& params.fight
 				&& params.combatant
-			if (!valid) { return }
+		if (!valid) { return }
 
-			// --- Sanity checks ---
-			// Fight exists
-			const fightId = parseInt(params.fight, 10)
-			const fight = report.fights.find(fight => fight.id === fightId)
-			if (!fight) {
-				dispatch(setGlobalError(new Errors.NotFoundError({
-					type: 'fight',
-					id: fightId,
-				})))
-				return
-			}
+		// We've got this far, boot up the conductor
+		const fight = report.fights.find(fight => fight.id === this.fightId)
+		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
+		const conductor = new Conductor(report, fight, combatant)
 
-			// Combatant exists
-			const combatantId = parseInt(params.combatant, 10)
-			const combatant = report.friendlies.find(friend => friend.id === combatantId)
-			if (!combatant) {
-				dispatch(setGlobalError(new Errors.NotFoundError({
-					type: 'friendly combatant',
-					id: combatantId,
-				})))
-				return
-			}
-
-			// Combatant took part in fight
-			if (!combatant.fights.find(fight => fight.id === fightId)) {
-				dispatch(setGlobalError(new Errors.DidNotParticipateError({
-					combatant: combatant.name,
-					fight: fightId,
-				})))
-				return
-			}
-
-			// Maybe sanity check we have a parser for job? maybe a bit deeper? dunno ey
-			this.fetchEventsAndParse(report, fight, combatant)
-		}
-	}
-
-	async fetchEventsAndParse(report, fight, combatant) {
-		// TODO: handle pets?
-		// Build the base parser instance
-		const parser = new Parser(report, fight, combatant)
-
-		const modules = [
-			this.normaliseModuleMeta(AVAILABLE_MODULES.CORE),
-			this.normaliseModuleMeta(AVAILABLE_MODULES.BOSSES[fight.boss]),
-			this.normaliseModuleMeta(AVAILABLE_MODULES.JOBS[combatant.type]),
-		]
-
-		// If this throws, then there was a deploy between page load and this call. Tell them to refresh.
 		try {
-			(await Promise.all(modules.map(meta => meta.modules())))
-				.forEach(({default: loadedModules = []}, index) => {
-					parser.addMeta({
-						...modules[index],
-						loadedModules,
-					})
-				})
+			conductor.sanityCheck()
+			await conductor.configure()
 		} catch (error) {
-			if (process.env.NODE_ENV === 'development') {
-				throw error
-			}
-			this.props.dispatch(setGlobalError(new Errors.ModulesNotFoundError()))
+			dispatch(setGlobalError(error))
 			return
 		}
 
-		// Finalise the module structure & push all that into state
-		parser.buildModules()
-		this.setState({parser})
+		this.setState({conductor})
 
-		// Grab the events
-		let events = await getFflogsEvents(report.code, fight, {actorid: combatant.id})
-
-		// Normalise the events before we parse them
-		events = await parser.normalise(events)
-
-		// TODO: Batch
-		await parser.parseEvents(events)
-
-		this.resultCache = null
+		// Run the parse and signal completion
+		await conductor.parse()
 		this.setState({complete: true})
-	}
-
-	// Normalise module metadata - old modules are just an async to load the module group, new ones have proper metadata
-	/**
-	 * @template T extends (typeof import('../Module').default)[]
-	 * @param {UnloadedModuleMeta<T>|(() => Promise<T>)} meta
-	 * @returns {UnloadedModuleMeta<T>}
-	 */
-	normaliseModuleMeta(meta) {
-		// If meta is an object, it probably doesn't need adjusting
-		if (typeof meta === 'object') {
-			return meta
-		}
-
-		return {
-			modules: meta || (() => []),
-			description: null,
-			supportedPatches: null,
-			contributors: [],
-			changelog: [],
-		}
-	}
-
-	getParserResults() {
-		if (!this.resultCache) {
-			this.resultCache = this.state.parser.generateResults()
-		}
-
-		return this.resultCache
 	}
 
 	getReportUrl() {
@@ -232,14 +126,15 @@ class Analyse extends Component {
 	}
 
 	render() {
+		const {report} = this.props
 		const {
-			parser,
+			conductor,
 			complete,
 		} = this.state
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
-		if (!parser || !complete) {
+		if (!conductor || !complete) {
 			return (
 				<Loader active>
 					<Trans id="core.analyse.load-analysis">
@@ -250,8 +145,9 @@ class Analyse extends Component {
 		}
 
 		// Report's done, build output
-		const job = JOBS[parser.player.type]
-		const results = this.getParserResults()
+		const player = report.friendlies.find(friend => friend.id === this.combatantId)
+		const job = JOBS[player.type]
+		const results = conductor.getResults()
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
