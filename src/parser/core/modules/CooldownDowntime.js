@@ -52,8 +52,8 @@ export default class CooldownDowntime extends Module {
 					name: <ActionLink {...getAction(id)} />,
 					percent: this._percentFunction(
 						id,
-						encounterLength - this.cooldowns.getTimeOnCooldown(id, true, this.allowedDowntimePerOgcd[id] ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime) + (this.allowedDowntimePerOgcd[id] ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime),
-						this.firstUseOffsetPerOgcd[id] ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset,
+						encounterLength - this.cooldowns.getTimeOnCooldown(id, true, Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime) + (Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime),
+						Number.isInteger(this.firstUseOffsetPerOgcd[id]) ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset,
 						encounterLength
 					),
 				})
