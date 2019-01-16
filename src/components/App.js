@@ -102,7 +102,7 @@ class App extends Component {
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/" component={Home}/>
-							<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
+							<Route path="/:section/:code/last/:combatant*" component={LastFightRedirect}/>
 							<Route path="/find/:code/:fight?" component={Find}/>
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 						</Switch>
