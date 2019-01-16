@@ -53,6 +53,10 @@ export default class MeleeCombos extends Module {
 	constructor(...args) {
 		super(...args)
 
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.ACCELERATION.id,
+		}, this._onCast)
 		this.addHook('rdmCast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
@@ -80,6 +84,7 @@ export default class MeleeCombos extends Module {
 				acceleration: this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id),
 			},
 			events: [event],
+			lastAction: event,
 		}
 	}
 
@@ -117,7 +122,7 @@ export default class MeleeCombos extends Module {
 		if (recommendedFinisher instanceof Array) {
 			if (recommendedFinisher === FINISHERS) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
-				combo.finisher.recommendedActions.push(finisherUsed)
+				combo.finisher.recommendedActions.push(getAction(finisherUsed.guid))
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.finisher.recommendedActions, recommendedFinisher)
@@ -187,7 +192,6 @@ export default class MeleeCombos extends Module {
 
 	_inBalanceFinisher(firstMana, firstManaProc, firstManaActions, secondMana, secondManaProc, secondManaActions) {
 		const isAccelerationUp = this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id)
-
 		if (isAccelerationUp) {
 			// Acceleration is up - return finisher that will guarantee a proc
 			if (!firstManaProc && !secondManaProc) {
@@ -210,6 +214,10 @@ export default class MeleeCombos extends Module {
 			return comboDelayResults.finisher
 		}
 		// Delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
+		if (!firstManaProc && !secondManaProc) {
+			// Neither proc is up - return both finishers (finisher doesn't matter)
+			return FINISHERS
+		}
 		if (!firstManaProc) {
 			return firstManaActions.finisher
 		}
@@ -314,10 +322,12 @@ export default class MeleeCombos extends Module {
 			} else {
 				// Neither proc is up, check with using Jolt or Impact + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
 				let newLowerMana = lowerMana + MANA_GAIN[ACTIONS.JOLT_II.id].white
-				let newHigherMana = higherMana + MANA_GAIN[ACTIONS.JOLT_II.id].black + MANA_GAIN[ACTIONS.VERTHUNDER.id].black
+				let newHigherMana = higherMana + MANA_GAIN[ACTIONS.JOLT_II.id].black + (MANA_GAIN[higherManaActions.dualcast.id].white || MANA_GAIN[higherManaActions.dualcast.id].black)
+				let firstDelaySkill = ACTIONS.JOLT_II
 				if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
 					newLowerMana = lowerMana + MANA_GAIN[ACTIONS.IMPACT.id].white
-					newHigherMana = higherMana + MANA_GAIN[ACTIONS.IMPACT.id].black + MANA_GAIN[ACTIONS.VERTHUNDER.id].black
+					newHigherMana = higherMana + MANA_GAIN[ACTIONS.IMPACT.id].black + (MANA_GAIN[higherManaActions.dualcast.id].white || MANA_GAIN[higherManaActions.dualcast.id].black)
+					firstDelaySkill = ACTIONS.IMPACT
 				}
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
@@ -327,14 +337,33 @@ export default class MeleeCombos extends Module {
 				if (newLowerMana < newHigherMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 					possibleDelays.push({
-						finisher: [higherManaActions.proc, lowerManaActions.dualcast, higherManaActions.finisher],
+						finisher: [firstDelaySkill, lowerManaActions.dualcast, higherManaActions.finisher],
 						manaLoss: manaLoss,
 					})
+				} else {
+					// Check if using Jolt or Impact + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
+					let newLowerMana = lowerMana + MANA_GAIN[ACTIONS.JOLT_II.id].white + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
+					let newHigherMana = higherMana + MANA_GAIN[ACTIONS.JOLT_II.id].black
+					let firstDelaySkill = ACTIONS.JOLT_II
+					if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
+						newLowerMana = lowerMana + MANA_GAIN[ACTIONS.IMPACT.id].white + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
+						newHigherMana = higherMana + MANA_GAIN[ACTIONS.IMPACT.id].black
+						firstDelaySkill = ACTIONS.IMPACT
+					}
+
+					// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
+					const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
+					newLowerMana = Math.min(newLowerMana, MANA_CAP)
+					newHigherMana = Math.min(newHigherMana, MANA_CAP)
+					if (newHigherMana < newLowerMana) {
+						// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
+						possibleDelays.push({
+							finisher: [firstDelaySkill, lowerManaActions.dualcast, higherManaActions.finisher],
+							manaLoss: manaLoss,
+						})
+					}
 				}
-				// Disregard case when newHigherMana remains even or higher than newLowerMana - error in calling the delay module
-				console.log(`Delay module called with ${lowerMana}|${higherMana} starting mana, and no procs.`)
-				console.log(`Attempting to imbalance mana with Jolt/Impact and the higherManaDualcast in a delayed combo mana of ${newLowerMana}|${newHigherMana}, with the original lowerMana becoming greater than or equal.`)
-				console.log('This is an error, recommendation should have been to cast the higherManaActions.finisher in the original combo')
+				// End cases for delaying combo to clear procs
 			}
 		}
 
@@ -368,14 +397,15 @@ export default class MeleeCombos extends Module {
 			} else {
 				if (!this._currentCombo) {
 					console.log(`Uncomboed ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
+					return
 				}
 
-				const lastAction = this._currentCombo.events[this._currentCombo.events.length-1]
-				if (action.combo.from !== lastAction.ability.guid) {
+				if (action.combo.from !== this._currentCombo.lastAction.ability.guid) {
 					this._currentCombo.broken = true
 					this._endCombo()
 				} else {
 					this._currentCombo.events.push(event)
+					this._currentCombo.lastAction = event
 					if (action.combo.end) {
 						this._currentCombo.finisher = action.id
 						this._handleFinisher()
@@ -386,8 +416,8 @@ export default class MeleeCombos extends Module {
 		}
 
 		if (action.id === ACTIONS.ACCELERATION.id) {
-			// Add Acceleration events to the melee combo rotation to show usage and for determining recommended finisher
-			this._currentCombo.events.push(event)
+			// Add Acceleration events to the current melee combo (if any) to show usage and for determining recommended finisher
+			if (this._currentCombo) { this._currentCombo.events.push(event) }
 		}
 
 		if (action.breaksCombo) {
@@ -477,6 +507,10 @@ export default class MeleeCombos extends Module {
 							const start = timestamp - this.parser.fight.start_time
 							const end = rotation[rotation.length-1].timestamp - this.parser.fight.start_time
 
+							// Prevent null reference errors with broken combos - start with empty values and load with finisher data if exists
+							const recommendedActions = (combo.finisher) ? combo.finisher.recommendedActions : []
+							const recommendation = (combo.finisher) ? combo.finisher.recommendation : ''
+
 							return (<Table.Row key={timestamp}>
 								<Table.Cell textAlign="center">
 									<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
@@ -512,11 +546,11 @@ export default class MeleeCombos extends Module {
 								</Table.Cell>
 								<Table.Cell>
 									{
-										combo.finisher.recommendedActions.map((action) => {
+										recommendedActions.map((action) => {
 											return (<ActionLink key={action.id} showName={false} {...action}/>)
 										})
 									}
-									<br />{combo.finisher.recommendation}
+									<br />{recommendation}
 								</Table.Cell>
 							</Table.Row>)
 						})

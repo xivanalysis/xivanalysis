@@ -188,7 +188,7 @@ export default class Gauge extends Module {
 				by: 'player',
 				abilityId: ACTIONS.MANAFICATION.id,
 			}, this._onCast)
-			this.addHook('damage', {by: 'player'}, this._onCast)
+			this.addHook('aoedamage', {by: 'player'}, this._onCast)
 			this.addHook('death', {to: 'player'}, this._onDeath)
 			this.addHook('complete', this._onComplete)
 		}
