@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import {Segment} from 'akkd'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -6,7 +7,6 @@ import {
 	Header,
 } from 'semantic-ui-react'
 import {gutter} from 'theme'
-import styles from './ResultSegment.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 
 interface Props {
@@ -76,10 +76,12 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		const {result} = this.props
 		return <Consumer>{value => {
 			this.positionContext = value
-			return <div id={result.name} className={styles.segment}>
-				<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
-				{result.markup}
-			</div>
+			return (
+				<Segment>
+					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
+					{result.markup}
+				</Segment>
+			)
 		}}</Consumer>
 	}
 
