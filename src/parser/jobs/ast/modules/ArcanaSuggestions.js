@@ -63,8 +63,6 @@ export default class ArcanaSuggestions extends Module {
 			const targetName = target ? target.name : null
 			const targetJob = target ? target.type : null
 
-			console.log(artifact.minorState)
-
 			return {
 				timestamp: artifact.lastEvent ? artifact.lastEvent.timestamp : this.parser.fight.start_time,
 				lastAction: artifact.lastEvent ? {
@@ -155,7 +153,6 @@ export default class ArcanaSuggestions extends Module {
 							<Table.HeaderCell width={2}>
 								<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
 							</Table.HeaderCell>
-							<Table.HeaderCell width={1}>Timeline Link</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
