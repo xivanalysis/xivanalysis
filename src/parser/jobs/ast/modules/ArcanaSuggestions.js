@@ -207,10 +207,7 @@ export default class ArcanaSuggestions extends Module {
 					alt={status.name}
 				/> }<br/>
 				{artifact.lastAction.targetJob &&
-					<JobIcon
-						job={JOBS[artifact.lastAction.targetJob]}
-						className={styles.jobIcon}
-					/>
+					<JobIcon job={JOBS[artifact.lastAction.targetJob]}/>
 				}
 
 				{artifact.lastAction.targetName}

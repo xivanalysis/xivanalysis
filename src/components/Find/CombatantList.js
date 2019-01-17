@@ -121,10 +121,7 @@ class CombatantList extends Component {
 								className={styles.combatantLink}
 								to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
 							>
-								{job && <JobIcon
-									job={job}
-									className={styles.jobIcon}
-								/>}
+								{job && <JobIcon job={job}/>}
 								{friend.name}
 								{supportedPatches && <span className={styles.supportedPatches}>
 									{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}
