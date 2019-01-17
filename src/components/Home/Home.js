@@ -1,8 +1,9 @@
 import {Trans, i18nMark} from '@lingui/react'
 import React, {Component} from 'react'
-import {Container, Modal} from 'semantic-ui-react'
+import {Modal} from 'semantic-ui-react'
 
 import ReportSearch from './ReportSearch'
+import {Options} from 'components/GlobalSidebar'
 import TransMarkdown from 'components/ui/TransMarkdown'
 
 import styles from './Home.module.css'
@@ -14,14 +15,22 @@ To do all this, we process data in the form of fight logs, taken from [FF Logs](
 
 Just paste your log URL in, and check it out!
 
-If you have any questions, suggestions, or would just like to have a chat - drop by our discord server, linked in the header.
+If you have any questions, suggestions, or would just like to have a chat - drop by our discord server, linked in the sidebar.
 `
 
 class Home extends Component {
 	render() {
 		return <>
-			<div className={styles.background}></div>
-			<Container className={styles.search}>
+			<div className={styles.background}/>
+			<div className={styles.logo}>
+				<img
+					src={process.env.PUBLIC_URL + '/logo.png'}
+					alt="logo"
+					className={styles.logoImage}
+				/>
+				xivanalysis
+			</div>
+			<div className={styles.search}>
 				<ReportSearch />
 
 				<Modal trigger={<span className={styles.about}>
@@ -34,7 +43,10 @@ class Home extends Component {
 						<TransMarkdown id={i18nMark('core.home.about.content')} source={about}/>
 					</Modal.Content>
 				</Modal>
-			</Container>
+			</div>
+			<div className={styles.options}>
+				<Options view="horizontal"/>
+			</div>
 		</>
 	}
 }

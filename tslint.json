@@ -18,6 +18,7 @@
 			"options": ["log"]
 		},
 		"no-empty": {"options": ["allow-empty-functions"]},
+		"max-classes-per-file": false,
 		"max-line-length": false,
 		"member-access": false,
 		"member-ordering": {

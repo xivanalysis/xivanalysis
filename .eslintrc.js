@@ -1,9 +1,3 @@
-module.exports = {
-	extends: [
-		'plugin:xivanalysis/recommended',
-		'plugin:xivanalysis/client',
-	],
-	env: {
-		browser: true,
-	}
-}
+const neutrino = require('neutrino')
+
+module.exports = neutrino().eslintrc()

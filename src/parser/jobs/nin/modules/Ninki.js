@@ -80,8 +80,8 @@ export default class Ninki extends Module {
 				Avoid using <ActionLink {...ACTIONS.MUG}/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.
 			</Trans>,
 			tiers: {
-				24: SEVERITY.MINOR,
-				80: SEVERITY.MEDIUM,
+				30: SEVERITY.MINOR,
+				80: SEVERITY.MAJOR,
 			},
 			value: totalWaste,
 			why: <Trans id="nin.ninki.suggestions.waste.why">

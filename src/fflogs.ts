@@ -67,11 +67,14 @@ export interface ActorFightInstance {
 	instances?: number,
 }
 
-export interface Actor {
+interface BaseActor {
 	guid: number
 	id: number
 	name: string
 	type: ActorType
+}
+
+export interface Actor extends BaseActor {
 	fights: ActorFightInstance[]
 }
 
@@ -111,14 +114,22 @@ export interface Ability {
 	type: AbilityType
 }
 
+// Hell if I know. Seems to be used for 'Environment', and that's about it.
+interface EventActor extends BaseActor {
+	icon: string,
+}
+
 export interface Event {
 	timestamp: number
 	type: string | symbol
 
-	sourceID: number
+	source?: EventActor
+	sourceID?: number
+	sourceInstance?: number
 	sourceIsFriendly: boolean
-	targetID: number
-	targetInstance: number
+	target?: EventActor
+	targetID?: number
+	targetInstance?: number
 	targetIsFriendly: boolean
 }
 
@@ -153,6 +164,7 @@ export interface DamageEvent extends EffectEvent {
 	type: 'damage'
 	absorbed: number
 	multistrike?: boolean
+	blocked?: number
 }
 export interface HealEvent extends EffectEvent {
 	type: 'heal'

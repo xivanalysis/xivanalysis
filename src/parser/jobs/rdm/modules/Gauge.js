@@ -9,7 +9,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {i18nMark, Trans, Plural} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
@@ -265,7 +265,7 @@ export default class Gauge extends Module {
 			//I have a different idea for how to represent this logic, I'll implement it when I factor this out to its own module
 			const white = this._whiteMana + MELEE_COMBO_COST
 			const black = this._blackMana + MELEE_COMBO_COST
-			const isAccelerationUp = this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0
+			const isAccelerationUp = ( this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0 )
 			let useVerHoly = false
 			let useVerFlare = false
 			let doesntMatter = false
@@ -313,12 +313,12 @@ export default class Gauge extends Module {
 
 			if (useVerFlare && abilityId === ACTIONS.VERHOLY.id) {
 				this._incorrectFinishers.verholy++
-			} else if (useVerHoly && useOnBadProc) {
+			} else if (abilityId === ACTIONS.VERHOLY.id && useOnBadProc) {
 				this._incorrectFinishers.verholy++
 			}
 			if (useVerHoly && abilityId === ACTIONS.VERFLARE.id) {
 				this._incorrectFinishers.verflare++
-			} else if (useVerFlare && useOnBadProc) {
+			} else if (abilityId === ACTIONS.VERFLARE.id && useOnBadProc) {
 				this._incorrectFinishers.verflare++
 			}
 		}
@@ -397,7 +397,12 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
 				content: <Trans id="rdm.gauge.suggestions.wastedverholy.content">
-					When white mana is lower, mana is even and Verfire is up, or Acceleration is available with Verfire available you should use <ActionLink {...ACTIONS.VERHOLY}/> instead <ActionLink {...ACTIONS.VERFLARE}/>
+					You should use <ActionLink {...ACTIONS.VERHOLY} /> over <ActionLink {...ACTIONS.VERFLARE} /> in the following situations in order of importance
+					<ol>
+						<li>When your white mana is lower</li>
+						<li>Your mana is even and you have <StatusLink {...STATUSES.VERFIRE_READY} /> (Use <ActionLink {...ACTIONS.ACCELERATION} /> if available!)</li>
+						<li>White mana is higher by 9 or less and <ActionLink {...ACTIONS.ACCELERATION} /> is available with <StatusLink {...STATUSES.VERFIRE_READY} /></li>
+					</ol>
 				</Trans>,
 				why: <Plural id="rdm.gauge.suggestions.wastedverholy.why" value={this._incorrectFinishers.verflare} one="# Verstone cast was lost due to using Verflare incorrectly" other="# Verstone casts were lost due to using Verflare incorrectly" />,
 				tiers: SEVERITY_WASTED_FINISHER,
@@ -407,7 +412,12 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERFLARE.icon,
 				content: <Trans id="rdm.gauge.suggestions.wastedverflare.content">
-					When black mana is lower, mana is even and Verstone is up, or Acceleration is available with Verstone available you should use <ActionLink {...ACTIONS.VERFLARE}/> instead of <ActionLink {...ACTIONS.VERHOLY}/>
+					You should use <ActionLink {...ACTIONS.VERFLARE} /> over <ActionLink {...ACTIONS.VERHOLY}/> in the following situations in order of importance
+					<ol>
+						<li>When your black mana is lower</li>
+						<li>Your mana is even and you have <StatusLink {...STATUSES.VERSTONE_READY} /> (Use <ActionLink {...ACTIONS.ACCELERATION} /> if available!)</li>
+						<li>Black mana is higher by 9 or less and <ActionLink {...ACTIONS.ACCELERATION} /> is available with <StatusLink {...STATUSES.VERSTONE_READY} /></li>
+					</ol>
 				</Trans>,
 				why: <Plural id="rdm.gauge.suggestions.wastedverflare.why" value={this._incorrectFinishers.verholy} one="# Verfire cast was lost due to using Verholy incorrectly" other="# Verfire casts were lost due to using Verholy incorrectly" />,
 				tiers: SEVERITY_WASTED_FINISHER,

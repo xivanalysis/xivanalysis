@@ -23,7 +23,7 @@ export default {
 	</>,
 	supportedPatches: {
 		from: '4.2',
-		to: '4.4',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SAYAKA, role: ROLES.MAINTAINER},

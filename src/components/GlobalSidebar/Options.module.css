@@ -1,0 +1,48 @@
+@value gutter, themeText from "theme.module.css";
+
+.horizontal {
+	display: flex;
+}
+
+.horizontal > * {
+	flex-grow: 1;
+}
+
+.row {
+	padding: 0 gutter;
+	line-height: 40px;
+}
+
+.row + .row {
+	border-style: solid;
+	border-color: rgba(0, 0, 0, .1);
+	border-width: 1px 0 0;
+}
+
+.horizontal .row + .row {
+	border-width: 0 0 0 1px;
+}
+
+.icon {
+	color: themeText;
+	font-size: 20px;
+	vertical-align: middle;
+}
+
+.icon:hover {
+	color: themeText;
+	opacity: .75;
+}
+
+.version {
+	opacity: .5;
+	float: right;
+}
+
+.versionInfo, .versionInfo dd {
+	margin: 0;
+}
+
+.versionInfo dt {
+	font-weight: bold;
+}

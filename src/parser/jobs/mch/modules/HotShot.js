@@ -73,7 +73,7 @@ export default class HotShot extends Module {
 		this.checklist.add(new Rule({
 			name: <Trans id="mch.hotshot.checklist.name">Keep Hot Shot up</Trans>,
 			description: <Trans id="mch.hotshot.checklist.description">
-				<ActionLink {...ACTIONS.HOT_SHOT}/> provides an 8% boost to your personal damage and should always be kept up.
+				<ActionLink {...ACTIONS.HOT_SHOT}/> provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
 			requirements: [
 				new Requirement({

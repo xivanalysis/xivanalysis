@@ -3,18 +3,14 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
 import {Trans} from '@lingui/react'
-import withSizes from 'react-sizes'
 import {
-	Container,
-	Grid,
 	Header,
 	Loader,
-	Menu,
 } from 'semantic-ui-react'
 
 import {getFflogsEvents} from 'api'
+import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
-import {MOBILE_BREAKPOINT}  from 'components/STYLE_CONSTS'
 import JOBS, {ROLES} from 'data/JOBS'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
@@ -55,7 +51,6 @@ class Analyse extends Component {
 		report: PropTypes.shape({
 			loading: PropTypes.bool.isRequired,
 		}),
-		showMenu: PropTypes.bool.isRequired,
 	}
 
 	/** @type {ReadonlyArray<import('parser/core/Parser').ParserResult>|null} */
@@ -245,13 +240,13 @@ class Analyse extends Component {
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
 		if (!parser || !complete) {
-			return <Container>
+			return (
 				<Loader active>
 					<Trans id="core.analyse.load-analysis">
 						Loading analysis
 					</Trans>
 				</Loader>
-			</Container>
+			)
 		}
 
 		// Report's done, build output
@@ -259,68 +254,49 @@ class Analyse extends Component {
 		const results = this.getParserResults()
 
 		return <SegmentPositionProvider>
-			<Container>
-				<Grid>
-					<Grid.Column mobile={16} computer={4}>
-						{job && <Header
-							className={[styles.header].join(' ')}
-							attached="top"
-						>
-							<JobIcon job={job} set={1}/>
-							<Header.Content>
-								<Trans id={job.i18n_id} defaults={job.name} />
-								<Header.Subheader>
-									<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
-								</Header.Subheader>
-							</Header.Content>
-						</Header>}
-						<Header className={styles.header} attached={job? true : 'top'}>
-							<img src="https://secure.xivdb.com/img/ui/enemy.png" alt="Generic enemy icon"/>
-							<Header.Content>
-								{parser.fight.name}
-								<Header.Subheader>
-									{parser.fight.zoneName}
-								</Header.Subheader>
-							</Header.Content>
-						</Header>
-						<Menu vertical attached="bottom">
-							<Menu.Item as="a" href={this.getReportUrl()} target="_blank">
-								<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
-								<Trans id="core.analyse.view-on-fflogs">
-									View report on FF Logs
-								</Trans>
-							</Menu.Item>
-						</Menu>
+			<SidebarContent>
+				{job && <Header
+					className={[styles.header].join(' ')}
+				>
+					<JobIcon job={job}/>
+					<Header.Content>
+						<Trans id={job.i18n_id} defaults={job.name} />
+						<Header.Subheader>
+							<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
+						</Header.Subheader>
+					</Header.Content>
+				</Header>}
 
-						{this.props.showMenu &&
-							<Menu className={styles.sticky} vertical pointing secondary fluid>
-								{results.map((result, index) => <SegmentLinkItem
-									key={index}
-									index={index}
-									result={result}
-								/>)}
-							</Menu>
-						}
-					</Grid.Column>
+				{results.map(
+					(result, index) => <SegmentLinkItem
+						key={index}
+						index={index}
+						result={result}
+					/>
+				)}
 
-					<Grid.Column className={styles.resultsContainer} mobile={16} computer={12}>
-						{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}
-					</Grid.Column>
-				</Grid>
-			</Container>
+				<a
+					href={this.getReportUrl()}
+					target="_blank"
+					rel="noopener noreferrer"
+					className={styles.reportLink}
+				>
+					<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
+					<Trans id="core.analyse.view-on-fflogs">
+						View report on FF Logs
+					</Trans>
+				</a>
+			</SidebarContent>
+
+			{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}
 		</SegmentPositionProvider>
 	}
 }
-
-const mapSizesToProps = ({width}) => ({
-	showMenu: width >= MOBILE_BREAKPOINT,
-})
 
 const mapStateToProps = state => ({
 	report: state.report,
 })
 
 export default compose(
-	withSizes(mapSizesToProps),
 	connect(mapStateToProps),
 )(Analyse)

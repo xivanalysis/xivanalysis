@@ -99,7 +99,7 @@ const ITEMS = {
 	},
 }
 
-// Items have an ID 1m higher than the xivdb ID
+// Items have an ID 1m higher than the xivapi ID
 Object.values(ITEMS).forEach(item => {
 	item.id += 1000000
 })

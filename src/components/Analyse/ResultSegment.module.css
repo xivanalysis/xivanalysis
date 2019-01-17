@@ -1,0 +1,11 @@
+@value gutter, themeBackground from "theme.module.css";
+
+.segment {
+	position: relative;
+	padding: gutter;
+	background: themeBackground;
+}
+
+.segment + .segment {
+	margin-top: gutter;
+}

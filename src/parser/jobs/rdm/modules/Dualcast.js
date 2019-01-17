@@ -5,8 +5,9 @@ import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/modules/DualCastEnums'
+import {i18nMark, Trans, Plural} from '@lingui/react'
 
 //const util = require('util')
 
@@ -18,6 +19,7 @@ export default class DualCast extends Module {
 		'suggestions',
 	]
 	static title = 'Dualcast'
+	static i18n_id = i18nMark('rdm.dualcast.title')
 	//Default CastState
 	_castType = CAST_TYPE.HardCast
 	//Used to 0 out CastTimes
@@ -32,6 +34,16 @@ export default class DualCast extends Module {
 	_wastedDualCasts = 0
 	//The last timestamp for a change in CastType
 	_castTypeLastChanged = null
+	_severityMissedDualcast = {
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		3: SEVERITY.MAJOR,
+	}
+	_severityWastedDualcast = {
+		1: SEVERITY.MINOR,
+		3: SEVERITY.MEDIUM,
+		5: SEVERITY.MAJOR,
+	}
 
 	constructor(...args) {
 		super(...args)
@@ -104,25 +116,27 @@ export default class DualCast extends Module {
 
 		//Process Wasted DualCasts
 		if (this._wastedDualCasts) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: STATUSES.DUALCAST.icon,
-				why: `${this._wastedDualCasts} DualCasts were wasted on low cast-time spells.`,
-				severity: this._wastedDualCasts > 5 ? SEVERITY.MAJOR : this._wastedDualCasts > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				content: <Fragment>
+				content: <Trans id="rdm.dualcast.suggestions.wasted.content">
 					Spells used while <StatusLink {...STATUSES.DUALCAST}/> is up should be limited to <ActionLink {...ACTIONS.VERAREO}/>, <ActionLink {...ACTIONS.VERTHUNDER}/>, or <ActionLink {...ACTIONS.VERRAISE}/>
-				</Fragment>,
+				</Trans>,
+				tiers: this._severityWastedDualcast,
+				value: this._wastedDualCasts,
+				why: <Trans id="rdm.dualcast.suggestions.wasted.why">{this._wastedDualCasts} <Plural value={this._wastedDualCasts} one="Dualcast was" other="Dualcasts were" /> wasted on low cast-time spells.</Trans>,
 			}))
 		}
 
 		//Process Missed DualCasts
 		if (this._missedDualCasts) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: STATUSES.DUALCAST.icon,
-				why: `${this._missedDualCasts} DualCasts were Lost due to not casting.`,
-				severity: this._missedDualCasts > 5 ? SEVERITY.MAJOR : this._missedDualCasts > 1? SEVERITY.MEDIUM : SEVERITY.MINOR,
-				content: <Fragment>
+				content: <Trans id="rdm.dualcast.suggestions.missed.content">
 					You should avoid wasting DualCast procs entirely as it is lost potency overtime.
-				</Fragment>,
+				</Trans>,
+				tiers: this._severityMissedDualcast,
+				value: this._missedDualCasts,
+				why: <Trans id="rdm.dualcast.suggestions.missed.why">{this._missedDualCasts} <Plural value={this._missedDualCasts} one="Dualcast was" other="Dualcasts were" /> lost due to not casting.</Trans>,
 			}))
 		}
 	}

@@ -36,6 +36,11 @@ export default class Gauge extends Module {
 	_astralUmbralStackTimer = 0
 	_hasEnochian = false
 	_enochianTimer = 0
+	_enochianDownTimer = {
+		start: 0,
+		stop: 0,
+		time: 0,
+	}
 	_hasPolyglot = false
 
 	_droppedEno = 0
@@ -126,18 +131,19 @@ export default class Gauge extends Module {
 		return events
 	}
 
-	onAstralUmbralTimeout() {
+	onAstralUmbralTimeout(event) {
 		this._astralFireStacks = 0
 		this._umbralIceStacks = 0
 		this._astralUmbralStackTimer = 0
-		this.onEnoDropped()
+		this.onEnoDropped(event)
 	}
 
-	onEnoDropped() {
+	onEnoDropped(event) {
 		if (this._hasEnochian) {
-			if (!this._hasPolyglot) {
-				this._lostFoul++
-			}
+			this._enochianDownTimer.start = event.timestamp
+			const enoRunTime = event.timestamp - this._enochianTimer
+			//add the time remaining on the eno timer to total downtime
+			this._enochianDownTimer.time += enoRunTime
 			this._droppedEno++
 		}
 		this._hasEnochian = false
@@ -165,7 +171,7 @@ export default class Gauge extends Module {
 
 	onGainAstralFireStacks(event, stackCount, dropsElementOnSwap = true) {
 		if (this._umbralIceStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		} else {
 			this._umbralIceStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
@@ -176,7 +182,7 @@ export default class Gauge extends Module {
 
 	onGainUmbralIceStacks(event, stackCount, dropsElementOnSwap = true) {
 		if (this._astralFireStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		} else {
 			this._astralFireStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
@@ -210,7 +216,7 @@ export default class Gauge extends Module {
 		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
 			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
 		) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		}
 
 		if (this._hasEnochian) {
@@ -222,6 +228,18 @@ export default class Gauge extends Module {
 		}
 	}
 
+	_enoDownTimerStop(event) {
+		this._enochianDownTimer.stop = event.timestamp
+		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start, 0)
+		//reset the timer again to prevent weirdness/errors
+		this._enochianDownTimer.start = 0
+		this._enochianDownTimer.stop = 0
+	}
+
+	_renderLostFouls(time) {
+		return Math.floor(time/ENOCHIAN_DURATION_REQUIRED)
+	}
+
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
@@ -230,6 +248,9 @@ export default class Gauge extends Module {
 			if (!this._hasEnochian) {
 				this._hasEnochian = true
 				this._enochianTimer = event.timestamp
+				if (this._enochianDownTimer.start) {
+					this._enoDownTimerStop(event)
+				}
 				this.addEvent()
 			}
 			break
@@ -282,7 +303,12 @@ export default class Gauge extends Module {
 		this.addEvent()
 	}
 
-	_onComplete() {
+	_onComplete(event) {
+		if (this._enochianDownTimer.start) {
+			this._enoDownTimerStop(event)
+		}
+		this._lostFoul = this._renderLostFouls(this._enochianDownTimer.time)
+
 		// Suggestions for lost eno
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({

@@ -1,14 +1,12 @@
+import {Trans} from '@lingui/react'
+import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
-import {Trans} from '@lingui/react'
 import {
 	Header,
-	Segment,
 } from 'semantic-ui-react'
-
-import {Result} from 'parser/core/Parser'
-
+import {gutter} from 'theme'
+import styles from './ResultSegment.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 
 interface Props {
@@ -16,7 +14,7 @@ interface Props {
 	result: Result
 }
 
-export const OFFSET_FROM_VIEWPORT_TOP = 50
+export const OFFSET_FROM_VIEWPORT_TOP = gutter
 
 export default class ResultSegment extends React.PureComponent<Props> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
@@ -78,10 +76,10 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		const {result} = this.props
 		return <Consumer>{value => {
 			this.positionContext = value
-			return <Segment vertical id={result.name}>
-				<Header><Trans id={result.i18n_id} defaults={result.name} /></Header>
+			return <div id={result.name} className={styles.segment}>
+				<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
 				{result.markup}
-			</Segment>
+			</div>
 		}}</Consumer>
 	}
 

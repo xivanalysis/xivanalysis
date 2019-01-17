@@ -2,7 +2,7 @@ import {Trans} from '@lingui/react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {connect} from 'react-redux'
-import {Dropdown, Image} from 'semantic-ui-react'
+import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
 import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
 import {setLanguage, toggleI18nOverlay} from 'store/actions'
@@ -69,7 +69,10 @@ export class I18nMenu extends Component {
 
 		return <Dropdown
 			className="link item"
-			text={lang ? lang.menu.text : 'Language'}
+			text={<>
+				<Icon name="globe"/>
+				{lang ? lang.menu.text : 'Language'}
+			</>}
 		>
 			<Dropdown.Menu>
 				{languages.map(option => <Dropdown.Item
