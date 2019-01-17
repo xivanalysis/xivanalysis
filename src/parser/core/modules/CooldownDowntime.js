@@ -43,6 +43,10 @@ export default class CooldownDowntime extends Module {
 		const OGCDRequirements = []
 
 		this.trackedCds.map(id => {
+			const allowedDowntime = Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime
+			const firstUseOffset = Number.isInteger(this.firstUseOffsetPerOgcd[id]) ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset
+			const timeOnCooldown = this.cooldowns.getTimeOnCooldown(id, true, allowedDowntime)
+
 			//calculate the downtime based on the start and stop values and sum the array
 			//Adjust for the classes defined alloted time to allow a CD to be held
 			//this supports classes like RDMs who routinely hold CDs due to procs
@@ -52,8 +56,8 @@ export default class CooldownDowntime extends Module {
 					name: <ActionLink {...getAction(id)} />,
 					percent: this._percentFunction(
 						id,
-						encounterLength - this.cooldowns.getTimeOnCooldown(id, true, Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime) + (Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime),
-						Number.isInteger(this.firstUseOffsetPerOgcd[id]) ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset,
+						encounterLength - timeOnCooldown + allowedDowntime,
+						firstUseOffset,
 						encounterLength
 					),
 				})
