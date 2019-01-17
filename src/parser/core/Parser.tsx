@@ -1,11 +1,11 @@
+import ResultSegment from 'components/Analyse/ResultSegment'
+import ErrorMessage from 'components/ui/ErrorMessage'
+import {DependencyCascadeError} from 'errors'
+import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
 import toposort from 'toposort'
-
-import ErrorMessage from 'components/ui/ErrorMessage'
-import {DependencyCascadeError} from 'errors'
-import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
 import Module, {MappedDependency} from './Module'
@@ -30,8 +30,6 @@ export interface Result {
 	name: string
 	markup: React.ReactNode
 }
-
-import ResultSegment from 'components/Analyse/ResultSegment'
 
 class Parser {
 	// -----
