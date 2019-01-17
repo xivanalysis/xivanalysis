@@ -17,9 +17,12 @@ import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
 import styles from './ArcanaSuggestions.module.css'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
-// const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
-// const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
+const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
+const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
+const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
+
+const timelineLinkLowerMod = 0 // in ms
+const timelineLinkUpperMod = 30000 // in ms
 
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
@@ -30,6 +33,7 @@ export default class ArcanaSuggestions extends Module {
 		'suggestions',
 		'combatants',
 		'arcanaTracking',
+		'timeline',
 	]
 
 	cardLogs = []
@@ -58,6 +62,8 @@ export default class ArcanaSuggestions extends Module {
 			const target = isArcana ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
 			const targetName = target ? target.name : null
 			const targetJob = target ? target.type : null
+
+			console.log(artifact.minorState)
 
 			return {
 				timestamp: artifact.lastEvent ? artifact.lastEvent.timestamp : this.parser.fight.start_time,
@@ -149,6 +155,7 @@ export default class ArcanaSuggestions extends Module {
 							<Table.HeaderCell width={2}>
 								<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
 							</Table.HeaderCell>
+							<Table.HeaderCell width={1}>Timeline Link</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
 					<Table.Body>
@@ -164,7 +171,11 @@ export default class ArcanaSuggestions extends Module {
 
 						{this.cardLogs.map(artifact => {
 							return <Table.Row key={artifact.timestamp} className={styles.cardActionRow}>
-								<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
+								<Table.Cell>
+									<a onClick={() =>
+										this.timeline.show((artifact.timestamp-timelineLinkLowerMod) - this.parser.fight.start_time, (artifact.timestamp+timelineLinkUpperMod) - this.parser.fight.start_time)}>
+										{this.parser.formatTimestamp(artifact.timestamp)}</a>
+								</Table.Cell>
 								{this.RenderAction(artifact)}
 								{this.RenderSpreadState(artifact)}
 							</Table.Row>
@@ -239,8 +250,6 @@ export default class ArcanaSuggestions extends Module {
 		const rrAbility = artifact.state.rrAbility || null
 		const minorArcana = artifact.state.minorArcana
 
-		console.log(minorArcana)
-
 		return <Table.Cell>
 			{rrAbility && <img
 				src={rrAbility.icon}
@@ -262,15 +271,28 @@ export default class ArcanaSuggestions extends Module {
 			/>}
 			{!draw && <span className={styles.buffDummy} />}
 			{minorArcana && minorArcana.name === 'Unknown' &&
-				<span className={styles.buffUnknown}><span>?</span></span>
-			}
+				<img
+					src={UNKNOWN_CARD_STATUS_ICON}
+					className={styles.buffIcon}
+					alt={minorArcana.name}
+				/>}
 			{minorArcana && minorArcana.name !== 'Unknown' && <img
-				src={minorArcana.icon}
-				className={styles.spreadSlot3}
+				src={this.GetMinorArcanaIcon(minorArcana)}
+				className={styles.buffIcon}
 				alt={minorArcana.name}
 			/>}
 			{!minorArcana && <span className={styles.buffDummy} />}
 		</Table.Cell>
+	}
+
+	GetMinorArcanaIcon(action) {
+		if (action.id === ACTIONS.LORD_OF_CROWNS.id) {
+			return LORD_OF_CROWNS_STATUS_ICON
+		} if (action.id === ACTIONS.LADY_OF_CROWNS.id) {
+			return LADY_OF_CROWNS_STATUS_ICON
+		}
+		return UNKNOWN_CARD_STATUS_ICON
+
 	}
 
 	// Helper for output()
