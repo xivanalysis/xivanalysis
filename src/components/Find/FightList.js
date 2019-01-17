@@ -1,35 +1,38 @@
+import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {connect} from 'react-redux'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
-import {refreshReport, updateSettings} from 'store/actions'
+import {updateSettings} from 'store/actions'
+import {ReportStore} from 'storenew/report'
 
 import styles from './FightList.module.css'
 
+@inject('reportStore')
+@observer
 class FightList extends Component {
 	static propTypes = {
-		report: PropTypes.shape({
-			fights: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired,
-			})).isRequired,
-		}).isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore),
 		dispatch: PropTypes.func.isRequired,
 		killsOnly: PropTypes.bool,
 	}
 
 	refreshFights = () => {
-		this.props.dispatch(refreshReport())
+		const {reportStore} = this.props
+		reportStore.refreshReport()
 	}
 
 	render() {
 		const {
+			reportStore,
 			dispatch,
-			report,
 		} = this.props
+
+		const report = reportStore.report
 
 		let killsOnly = this.props.killsOnly
 		if (killsOnly === undefined) {

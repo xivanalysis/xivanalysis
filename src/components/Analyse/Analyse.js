@@ -1,19 +1,19 @@
-import _ from 'lodash'
+import {Trans} from '@lingui/react'
+import {inject, observer, disposeOnUnmount} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Trans} from '@lingui/react'
 import {
 	Header,
 	Loader,
 } from 'semantic-ui-react'
+import store from 'store'
 
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import {Conductor} from 'parser/Conductor'
-import {fetchReportIfNeeded, setGlobalError} from 'store/actions'
-import {compose} from 'utilities'
+import {setGlobalError} from 'store/actions'
+import {ReportStore} from 'storenew/report'
 
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
@@ -21,11 +21,17 @@ import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
+import {observable, runInAction, reaction} from 'mobx'
 
+@inject('reportStore')
+@observer
 class Analyse extends Component {
+	@observable conductor;
+	@observable complete = false;
+
 	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
-		dispatch: PropTypes.func.isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
@@ -33,9 +39,6 @@ class Analyse extends Component {
 				combatant: PropTypes.string.isRequired,
 			}).isRequired,
 		}).isRequired,
-		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired,
-		}),
 	}
 
 	get fightId() {
@@ -46,47 +49,21 @@ class Analyse extends Component {
 		return parseInt(this.props.match.params.combatant, 10)
 	}
 
-	constructor(props) {
-		super(props)
-
-		this.state = {
-			conductor: null,
-			complete: false,
-		}
-	}
-
 	componentDidMount() {
-		this.fetchData()
+		const {reportStore, match} = this.props
+		reportStore.fetchReportIfNeeded(match.params.code)
+
+		disposeOnUnmount(this, reaction(
+			() => ({
+				report: reportStore.report,
+				params: match.params,
+			}),
+			this.fetchEventsAndParseIfNeeded,
+			{fireImmediately: true}
+		))
 	}
 
-	componentDidUpdate(prevProps/* , prevState */) {
-		// TODO: do i need this? mostly url updates
-		this.fetchData(prevProps)
-	}
-
-	fetchData(prevProps) {
-		const {dispatch, match} = this.props
-
-		// Make sure we've got a report, then run the parse
-		dispatch(fetchReportIfNeeded(match.params.code))
-		this.fetchEventsAndParseIfNeeded(prevProps)
-	}
-
-	async fetchEventsAndParseIfNeeded(prevProps) {
-		const {
-			dispatch,
-			report,
-			match: {params},
-		} = this.props
-
-		// TODO: actually check if needed
-		const changed = !prevProps
-			|| report !== prevProps.report
-			|| !_.isEqual(params, prevProps.match.params)
-		if (!changed) {
-			return
-		}
-
+	fetchEventsAndParseIfNeeded = async ({report, params}) => {
 		// If we don't have everything we need, stop before we hit the api
 		// TODO: more checks
 		const valid = report
@@ -105,36 +82,29 @@ class Analyse extends Component {
 			conductor.sanityCheck()
 			await conductor.configure()
 		} catch (error) {
-			dispatch(setGlobalError(error))
+			store.dispatch(setGlobalError(error))
 			return
 		}
 
-		this.setState({conductor})
+		runInAction(() => this.conductor = conductor)
 
 		// Run the parse and signal completion
 		await conductor.parse()
-		this.setState({complete: true})
+		runInAction(() => this.complete = true)
 	}
 
 	getReportUrl() {
-		const {
-			report,
-			match: {params},
-		} = this.props
-
-		return `https://www.fflogs.com/reports/${report.code}#fight=${params.fight}&source=${params.combatant}`
+		const {match: {params}} = this.props
+		return `https://www.fflogs.com/reports/${params.code}#fight=${params.fight}&source=${params.combatant}`
 	}
 
 	render() {
-		const {report} = this.props
-		const {
-			conductor,
-			complete,
-		} = this.state
+		const {reportStore} = this.props
+		const report = reportStore.report
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
-		if (!conductor || !complete) {
+		if (!this.conductor || !this.complete) {
 			return (
 				<Loader active>
 					<Trans id="core.analyse.load-analysis">
@@ -147,7 +117,7 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = JOBS[player.type]
-		const results = conductor.getResults()
+		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
@@ -189,10 +159,4 @@ class Analyse extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	report: state.report,
-})
-
-export default compose(
-	connect(mapStateToProps),
-)(Analyse)
+export default Analyse

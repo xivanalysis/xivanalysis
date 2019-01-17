@@ -1,8 +1,9 @@
+import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {Header, Menu, Message, Segment, Icon} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
@@ -11,29 +12,21 @@ import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import store from 'store'
 import {setGlobalError} from 'store/actions'
+import {ReportStore} from 'storenew/report'
 
 import styles from './CombatantList.module.css'
 
+@inject('reportStore')
+@observer
 class CombatantList extends Component {
 	static propTypes = {
-		report: PropTypes.shape({
-			code: PropTypes.string.isRequired,
-			start: PropTypes.number.isRequired,
-			friendlies: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired,
-				name: PropTypes.string.isRequired,
-				type: PropTypes.string.isRequired,
-				fights: PropTypes.arrayOf(PropTypes.shape({
-					id: PropTypes.number.isRequired,
-				})).isRequired,
-			})).isRequired,
-		}).isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore),
 		currentFight: PropTypes.number.isRequired,
 	}
 
 	render() {
-		const {friendlies, start} = this.props.report
-		const currentFight = this.props.currentFight
+		const {reportStore, currentFight} = this.props
+		const {code, friendlies, start} = reportStore.report
 
 		const jobMeta = AVAILABLE_MODULES.JOBS
 
@@ -119,7 +112,7 @@ class CombatantList extends Component {
 								key={friend.id}
 								as={Link}
 								className={styles.combatantLink}
-								to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
+								to={`/analyse/${code}/${currentFight}/${friend.id}/`}
 							>
 								{job && <JobIcon job={job}/>}
 								{friend.name}

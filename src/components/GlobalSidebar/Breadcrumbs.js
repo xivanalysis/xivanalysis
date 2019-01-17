@@ -1,31 +1,32 @@
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Helmet} from 'react-helmet'
-import {connect} from 'react-redux'
 import {withRouter, Link} from 'react-router-dom'
 
 import ZONES from 'data/ZONES'
-import {compose, formatDuration, getPathMatch} from 'utilities'
+import {ReportStore} from 'storenew/report'
+import {formatDuration, getPathMatch} from 'utilities'
 
 import styles from './Breadcrumbs.module.css'
 
+@inject('reportStore')
+@observer
 class Breadcrumbs extends React.Component {
 	static propTypes = {
+		reportStore: PropTypes.instanceOf(ReportStore),
 		location: PropTypes.shape({
 			pathname: PropTypes.string.isRequired,
 		}).isRequired,
-		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired,
-			title: PropTypes.string,
-			code: PropTypes.string,
-		}),
 	}
 
 	render() {
 		const {
+			reportStore,
 			location: {pathname},
-			report,
 		} = this.props
+
+		const report = reportStore.report
 
 		// Need to do this janky shit to get the router path match
 		const pathMatch = getPathMatch(pathname)
@@ -123,9 +124,4 @@ class Breadcrumbs extends React.Component {
 	}
 }
 
-export default compose(
-	withRouter,
-	connect(state => ({
-		report: state.report,
-	})),
-)(Breadcrumbs)
+export default withRouter(Breadcrumbs)

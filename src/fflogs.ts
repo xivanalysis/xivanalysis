@@ -197,6 +197,8 @@ export interface BuffStackEvent extends AbilityEvent {
 export interface ReportFightsQuery extends AxiosRequestConfig {
 	params?: {
 		translate?: boolean,
+		// This is only a thing when hitting an instance of @xivanalysis/server
+		bypassCache?: boolean,
 	}
 }
 
