@@ -1,12 +1,3 @@
-export const SET_GLOBAL_ERROR = 'SET_GLOBAL_ERROR'
-export const setGlobalError = (error) => ({
-	type: SET_GLOBAL_ERROR,
-	error,
-})
-
-export const CLEAR_GLOBAL_ERROR = 'CLEAR_GLOBAL_ERROR'
-export const clearGlobalError = () => ({type: CLEAR_GLOBAL_ERROR})
-
 export const SET_LANGUAGE = 'SET_LANGUAGE'
 export const setLanguage = language => ({
 	type: SET_LANGUAGE,

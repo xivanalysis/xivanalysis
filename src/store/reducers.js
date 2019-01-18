@@ -4,17 +4,6 @@ import * as ActionTypes from './actions'
 
 import {getUserLanguage} from 'utilities'
 
-const globalError = (state=null, action) => {
-	switch (action.type) {
-	case ActionTypes.SET_GLOBAL_ERROR:
-		return action.error
-	case ActionTypes.CLEAR_GLOBAL_ERROR:
-		return null
-	default:
-		return state
-	}
-}
-
 const language = (state=null, action) => {
 	if (!state || typeof state !== 'object') {
 		state = {
@@ -70,7 +59,6 @@ const settings = (state={}, action) => {
 }
 
 const rootReducer = combineReducers({
-	globalError,
 	language,
 	i18nOverlay,
 	settings,

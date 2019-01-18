@@ -6,14 +6,13 @@ import {
 	Header,
 	Loader,
 } from 'semantic-ui-react'
-import store from 'store'
 
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import {Conductor} from 'parser/Conductor'
-import {setGlobalError} from 'store/actions'
 import {ReportStore} from 'storenew/report'
+import {GlobalErrorStore} from 'storenew/globalError'
 
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
@@ -23,7 +22,7 @@ import styles from './Analyse.module.css'
 import fflogsLogo from './fflogs.png'
 import {observable, runInAction, reaction} from 'mobx'
 
-@inject('reportStore')
+@inject('reportStore', 'globalErrorStore')
 @observer
 class Analyse extends Component {
 	@observable conductor;
@@ -32,6 +31,7 @@ class Analyse extends Component {
 	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
 		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
@@ -82,7 +82,7 @@ class Analyse extends Component {
 			conductor.sanityCheck()
 			await conductor.configure()
 		} catch (error) {
-			store.dispatch(setGlobalError(error))
+			this.props.globalErrorStore.setGlobalError(error)
 			return
 		}
 

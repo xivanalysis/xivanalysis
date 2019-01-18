@@ -1,34 +1,31 @@
+import {observable, action} from 'mobx'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import Raven from 'raven-js'
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {Container} from 'semantic-ui-react'
 
-import {GlobalError} from 'errors'
+import {GlobalErrorStore} from 'storenew/globalError'
 import ErrorMessage from './ui/ErrorMessage'
 
-// Main component
+@inject('globalErrorStore')
+@observer
 class ErrorBoundary extends Component {
 	static propTypes = {
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		children: PropTypes.node,
-		globalError: PropTypes.instanceOf(GlobalError),
 	}
 
-	constructor(props) {
-		super(props)
+	@observable componentError
 
-		this.state = {
-			componentError: null,
-		}
-	}
-
+	@action
 	componentDidCatch(error, errorInfo) {
-		this.setState({componentError: error})
+		this.componentError = error
 		Raven.captureException(error, {extra: errorInfo})
 	}
 
 	render() {
-		const error = this.props.globalError || this.state.componentError
+		const error = this.props.globalErrorStore.error || this.componentError
 
 		if (!error) {
 			return this.props.children
@@ -40,8 +37,4 @@ class ErrorBoundary extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	globalError: state.globalError,
-})
-
-export default connect(mapStateToProps)(ErrorBoundary)
+export default ErrorBoundary

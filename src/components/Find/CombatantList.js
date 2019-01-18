@@ -10,22 +10,22 @@ import JOBS, {ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
-import store from 'store'
-import {setGlobalError} from 'store/actions'
+import {GlobalErrorStore} from 'storenew/globalError'
 import {ReportStore} from 'storenew/report'
 
 import styles from './CombatantList.module.css'
 
-@inject('reportStore')
+@inject('reportStore', 'globalErrorStore')
 @observer
 class CombatantList extends Component {
 	static propTypes = {
 		reportStore: PropTypes.instanceOf(ReportStore),
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		currentFight: PropTypes.number.isRequired,
 	}
 
 	render() {
-		const {reportStore, currentFight} = this.props
+		const {reportStore, globalErrorStore, currentFight} = this.props
 		const {code, friendlies, start} = reportStore.report
 
 		const jobMeta = AVAILABLE_MODULES.JOBS
@@ -61,9 +61,9 @@ class CombatantList extends Component {
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
 		if (grouped.length === 0) {
-			store.dispatch(setGlobalError(new Errors.NotFoundError({
+			globalErrorStore.setGlobalError(new Errors.NotFoundError({
 				type: 'fight',
-			})))
+			}))
 			return null
 		}
 

@@ -3,8 +3,7 @@ import {AxiosResponse} from 'axios'
 import * as Errors from 'errors'
 import {ReportFightsQuery, ReportFightsResponse} from 'fflogs'
 import {action, observable, runInAction} from 'mobx'
-import store from 'store'
-import {setGlobalError} from 'store/actions'
+import {globalErrorStore} from 'storenew/globalError'
 
 interface UnloadedReport {
 	loading: true
@@ -38,9 +37,9 @@ export class ReportStore {
 
 			// TODO: Probably need more handling than this...
 			if (e.response && e.response.data.error === 'This report does not exist or is private.') {
-				store.dispatch(setGlobalError(new Errors.ReportNotFoundError()))
+				globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
 			} else {
-				store.dispatch(setGlobalError(new Errors.UnknownApiError()))
+				globalErrorStore.setGlobalError(new Errors.UnknownApiError())
 			}
 			return
 		}
@@ -65,3 +64,5 @@ export class ReportStore {
 		this.fetchReport(this.report.code, {bypassCache: true})
 	}
 }
+
+export const reportStore = new ReportStore()
