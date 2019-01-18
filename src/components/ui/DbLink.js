@@ -3,26 +3,24 @@ import {
 	Provider as TooltipProvider,
 	tooltipHOC,
 } from '@xivanalysis/tooltips'
+import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {connect} from 'react-redux'
 import {Popup, Icon} from 'semantic-ui-react'
 
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 
 import styles from './DbLink.module.css'
 
-// Wrapping the provider w/ connect to pick up lang changes
-export const Provider = connect(state => ({
-	language: state.language.site,
-}))(({language, children}) => (
+// Wrapping the provider w/ the store to pick up lang changes
+export const Provider = inject('i18nStore')(observer(({i18nStore, children}) => (
 	<TooltipProvider
-		language={language}
+		language={i18nStore.language}
 		apiKey={process.env.REACT_APP_XIVAPI_API_KEY}
 	>
 		{children}
 	</TooltipProvider>
-))
+)))
 
 class TooltipBase extends React.PureComponent {
 	static propTypes = {
