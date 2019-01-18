@@ -170,7 +170,7 @@
   "drg.buffs.accordion.message": "Chacune de vos fenêtres <0/> et <1/> devraient idéalement contenir {BUFF_GCD_TARGET} GCDs au minimum. Dans une situation optimale, vous devriez être en mesure d’incorporer {0}, mais selon votre  ping et vivacité, Vous pourriez avoir besoin de l’aide des buffs de vitesse de groupe tel que <2/> ou <3/>. Chaque fenêtre de buff ci-dessous indique combien GC. Ouvrir l'onglet affichera toutes les actions effectuées pour chaque fenêtre individuelle.",
   "drg.buffs.checklist.description": "<0/> vous octroie 10% de dégâts en plus et devrait être actif à tout moment.",
   "drg.buffs.checklist.name": "Gardez {0} actif",
-  "drg.buffs.checklist.requirement.name": "<0/> temps d'activité",
+  "drg.buffs.checklist.requirement.name": "Temps d'activité total de <0/>",
   "drg.buffs.panel-count": "",
   "drg.buffs.suggestions.bad-bfbs.content": "Evitez d'utiliser <0/> immédiatement avant n'importe quel GCD à l'exception de <1/>, <2/> et <3/> afin d'obtenir le plus de dégâts possible de chaque fenêtre.",
   "drg.buffs.suggestions.bad-bfbs.why": "",
