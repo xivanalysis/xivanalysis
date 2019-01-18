@@ -1,6 +1,7 @@
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
 import {Actor, Fight} from 'fflogs'
+import {LoadedReport} from 'store/report'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {Meta} from './core'
 import Module from './core/Module'
@@ -10,9 +11,8 @@ export class Conductor {
 	private parser?: Parser
 	private resultsCache?: ReadonlyArray<Result>
 
-	// TODO: Update report type once store is typed
 	constructor(
-		private readonly report: TODO,
+		private readonly report: LoadedReport,
 		private readonly fight: Fight,
 		private readonly combatant: Actor,
 	) {}
