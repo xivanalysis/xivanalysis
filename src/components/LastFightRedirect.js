@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
 import {Container, Loader} from 'semantic-ui-react'
 
-import {ReportStore} from 'storenew/report'
+import {ReportStore} from 'store/report'
 
 @inject('reportStore')
 @observer

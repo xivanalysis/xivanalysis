@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {Container, Loader} from 'semantic-ui-react'
 
-import {I18nStore} from 'storenew/i18n'
+import {I18nStore} from 'store/i18n'
 import I18nOverlay from './I18nOverlay'
 
 const DEBUG = process.env.NODE_ENV === 'development'

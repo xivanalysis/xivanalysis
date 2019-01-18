@@ -6,7 +6,7 @@ import React, {Component} from 'react'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
 import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
-import {I18nStore} from 'storenew/i18n'
+import {I18nStore} from 'store/i18n'
 
 import crowdinLogo from './crowdin-dark-symbol.png'
 import styles from './I18nMenu.module.css'

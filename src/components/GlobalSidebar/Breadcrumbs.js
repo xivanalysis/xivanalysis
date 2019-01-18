@@ -5,7 +5,7 @@ import {Helmet} from 'react-helmet'
 import {withRouter, Link} from 'react-router-dom'
 
 import ZONES from 'data/ZONES'
-import {ReportStore} from 'storenew/report'
+import {ReportStore} from 'store/report'
 import {formatDuration, getPathMatch} from 'utilities'
 
 import styles from './Breadcrumbs.module.css'

@@ -5,6 +5,11 @@ interface Stores {
 }
 
 export function configureStorage(stores: Stores) {
+	// Remove the old state key from the redux storage
+	// We're not storing enough stuff in LS at this point for it to
+	// be worth trying to port the details across.
+	localStorage.removeItem('state')
+
 	for (const key in stores) {
 		if (!stores[key]) { continue }
 		const store = stores[key]

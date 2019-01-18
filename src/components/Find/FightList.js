@@ -6,8 +6,8 @@ import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
-import {ReportStore} from 'storenew/report'
-import {SettingsStore} from 'storenew/settings'
+import {ReportStore} from 'store/report'
+import {SettingsStore} from 'store/settings'
 
 import styles from './FightList.module.css'
 

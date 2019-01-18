@@ -5,7 +5,7 @@ import React, {Component} from 'react'
 import {Route, Switch, withRouter, Link} from 'react-router-dom'
 import {Icon} from  'semantic-ui-react'
 
-import {GlobalErrorStore} from 'storenew/globalError'
+import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'

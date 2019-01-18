@@ -6,7 +6,7 @@ import {Loader} from 'semantic-ui-react'
 
 import FightList from './FightList'
 import CombatantList from './CombatantList'
-import {ReportStore} from 'storenew/report'
+import {ReportStore} from 'store/report'
 
 import styles from './Find.module.css'
 

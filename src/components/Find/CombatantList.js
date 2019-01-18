@@ -10,8 +10,8 @@ import JOBS, {ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
-import {GlobalErrorStore} from 'storenew/globalError'
-import {ReportStore} from 'storenew/report'
+import {GlobalErrorStore} from 'store/globalError'
+import {ReportStore} from 'store/report'
 
 import styles from './CombatantList.module.css'
 

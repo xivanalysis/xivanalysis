@@ -5,7 +5,7 @@ import Raven from 'raven-js'
 import React, {Component} from 'react'
 import {Container} from 'semantic-ui-react'
 
-import {GlobalErrorStore} from 'storenew/globalError'
+import {GlobalErrorStore} from 'store/globalError'
 import ErrorMessage from './ui/ErrorMessage'
 
 @inject('globalErrorStore')

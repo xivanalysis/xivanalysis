@@ -6,7 +6,7 @@ import {Checkbox, Label} from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import {SettingsStore} from 'storenew/settings'
+import {SettingsStore} from 'store/settings'
 
 import styles from './Suggestions.module.css'
 

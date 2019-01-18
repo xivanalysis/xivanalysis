@@ -3,7 +3,7 @@ import {AxiosResponse} from 'axios'
 import * as Errors from 'errors'
 import {ReportFightsQuery, ReportFightsResponse} from 'fflogs'
 import {action, observable, runInAction} from 'mobx'
-import {globalErrorStore} from 'storenew/globalError'
+import {globalErrorStore} from 'store/globalError'
 
 interface UnloadedReport {
 	loading: true
