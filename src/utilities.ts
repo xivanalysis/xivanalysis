@@ -5,7 +5,7 @@ import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
 
 export {compose}
 
-function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}
