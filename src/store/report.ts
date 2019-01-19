@@ -8,14 +8,14 @@ import {globalErrorStore} from 'store/globalError'
 interface UnloadedReport {
 	loading: true
 }
-export interface LoadedReport extends ReportFightsResponse {
+export interface Report extends ReportFightsResponse {
 	code: string
 	loading: false
 }
-export type Report = UnloadedReport | LoadedReport
+export type PossiblyLoadedReport = UnloadedReport | Report
 
 export class ReportStore {
-	@observable report?: Report
+	@observable report?: PossiblyLoadedReport
 
 	@action
 	private async fetchReport(code: string, params?: ReportFightsQuery['params']) {

@@ -5,7 +5,7 @@ import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
-import {LoadedReport} from 'store/report'
+import {Report} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
@@ -72,7 +72,7 @@ class Parser {
 	// -----
 
 	constructor(
-		readonly report: LoadedReport,
+		readonly report: Report,
 		readonly fight: Fight,
 		actor: Actor,
 	) {

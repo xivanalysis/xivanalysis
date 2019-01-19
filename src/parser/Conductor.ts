@@ -1,7 +1,7 @@
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
 import {Actor, Fight} from 'fflogs'
-import {LoadedReport} from 'store/report'
+import {Report} from 'store/report'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {Meta} from './core'
 import Module from './core/Module'
@@ -12,7 +12,7 @@ export class Conductor {
 	private resultsCache?: ReadonlyArray<Result>
 
 	constructor(
-		private readonly report: LoadedReport,
+		private readonly report: Report,
 		private readonly fight: Fight,
 		private readonly combatant: Actor,
 	) {}
