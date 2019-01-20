@@ -1,9 +1,11 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {I18nProvider} from '@lingui/react'
+import {observable, runInAction, reaction} from 'mobx'
+import {observer, inject, disposeOnUnmount} from 'mobx-react'
+import PropTypes from 'prop-types'
+import React from 'react'
 import {Container, Loader} from 'semantic-ui-react'
 
+import {I18nStore} from 'store/i18n'
 import I18nOverlay from './I18nOverlay'
 
 const DEBUG = process.env.NODE_ENV === 'development'
@@ -18,17 +20,16 @@ const cleanMessages = messages => {
 	return messages
 }
 
-export class I18nLoader extends Component {
+@inject('i18nStore')
+@observer
+class I18nLoader extends React.Component {
 	static propTypes = {
+		i18nStore: PropTypes.instanceOf(I18nStore),
 		children: PropTypes.node.isRequired,
-		language: PropTypes.string.isRequired,
-		overlay: PropTypes.bool.isRequired,
 	}
 
-	state = {
-		oldLanguage: null,
-		catalogs: {},
-	}
+	@observable oldLanguage = null
+	@observable catalogs = {}
 
 	async loadCatalog(language) {
 		const promises = [import(
@@ -75,48 +76,43 @@ export class I18nLoader extends Component {
 			cleanMessages(catalog.default.messages)
 		}
 
-		this.setState(state => ({
-			catalogs: {
-				...state.catalogs,
+		runInAction(() => {
+			this.catalogs = {
+				...this.catalogs,
 				[language]: catalog,
-			},
-		}))
+			}
+		})
 	}
 
 	componentDidMount() {
-		this.loadCatalog(this.props.language)
-	}
+		this.loadCatalog(this.props.i18nStore.language)
 
-	shouldComponentUpdate(nextProps, nextState) {
-		const {language} = nextProps
-		const {catalogs} = nextState
+		disposeOnUnmount(this, reaction(
+			() => this.props.i18nStore.language,
+			language => {
+				if (
+					language === this.oldLanguage ||
+					this.catalogs[language]
+				) {
+					return
+				}
 
-		if (language !== this.props.language) {
-			this.setState({
-				oldLanguage: this.props.language,
-			})
-
-			if (!catalogs[language]) {
 				this.loadCatalog(language)
-				return false
-			}
-		}
-
-		return true
+			},
+		))
 	}
 
 	render() {
-		const {overlay} = this.props
-		const {oldLanguage, catalogs} = this.state
+		const {i18nStore} = this.props
 
-		let {language} = this.props
+		let language = i18nStore.language
 		let loading = false
 
-		if (! catalogs[language]) {
-			if (! catalogs[oldLanguage]) {
+		if (!this.catalogs[language]) {
+			if (!this.catalogs[this.oldLanguage]) {
 				loading = true
 			} else {
-				language = oldLanguage
+				language = this.oldLanguage
 			}
 		}
 
@@ -128,14 +124,11 @@ export class I18nLoader extends Component {
 			</Container>
 		}
 
-		return <I18nProvider language={language} catalogs={catalogs}>
-			{DEBUG && <I18nOverlay enabled={overlay} language={language} />}
+		return <I18nProvider language={language} catalogs={this.catalogs}>
+			{DEBUG && <I18nOverlay enabled={i18nStore.overlay} language={language} />}
 			{this.props.children}
 		</I18nProvider>
 	}
 }
 
-export default connect(state => ({
-	language: state.language.site,
-	overlay: state.i18nOverlay,
-}))(I18nLoader)
+export default I18nLoader

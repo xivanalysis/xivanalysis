@@ -1,40 +1,41 @@
+import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
-import {connect} from 'react-redux'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
 
 import FightItem from './FightItem'
 import ZONES from 'data/ZONES'
-import {refreshReport, updateSettings} from 'store/actions'
+import {ReportStore} from 'store/report'
+import {SettingsStore} from 'store/settings'
 
 import styles from './FightList.module.css'
 
+@inject('reportStore', 'settingsStore')
+@observer
 class FightList extends Component {
 	static propTypes = {
-		report: PropTypes.shape({
-			fights: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired,
-			})).isRequired,
-		}).isRequired,
-		dispatch: PropTypes.func.isRequired,
-		killsOnly: PropTypes.bool,
+		reportStore: PropTypes.instanceOf(ReportStore),
+		settingsStore: PropTypes.instanceOf(SettingsStore),
 	}
 
 	refreshFights = () => {
-		this.props.dispatch(refreshReport())
+		const {reportStore} = this.props
+		reportStore.refreshReport()
+	}
+
+	onToggleKillsOnly = (_, data) => {
+		const {settingsStore} = this.props
+		settingsStore.setViewKillsOnly(data.checked)
 	}
 
 	render() {
 		const {
-			dispatch,
-			report,
+			reportStore,
+			settingsStore,
 		} = this.props
 
-		let killsOnly = this.props.killsOnly
-		if (killsOnly === undefined) {
-			killsOnly = true
-		}
+		const report = reportStore.report
 
 		// Build a 2d array, grouping fights by the zone they take place in
 		const fights = []
@@ -50,7 +51,7 @@ class FightList extends Component {
 			}
 
 			// Filter out wipes if we're filtering
-			if (killsOnly && !fight.kill) {
+			if (settingsStore.killsOnly && !fight.kill) {
 				return
 			}
 
@@ -90,11 +91,8 @@ class FightList extends Component {
 					<Checkbox
 						toggle
 						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
-						defaultChecked={killsOnly}
-						onChange={(_, data) => dispatch(updateSettings({
-							fightListKillsOnly: data.checked,
-						}))}
-						// className="pull-right"
+						defaultChecked={settingsStore.killsOnly}
+						onChange={this.onToggleKillsOnly}
 					/>
 					<span className={styles.refresh} onClick={this.refreshFights}>
 						<Icon name="refresh"/>
@@ -125,6 +123,4 @@ class FightList extends Component {
 	}
 }
 
-export default connect(state => ({
-	killsOnly: state.settings.fightListKillsOnly,
-}))(FightList)
+export default FightList

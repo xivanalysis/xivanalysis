@@ -5,6 +5,7 @@ import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
 import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
+import {Report} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
@@ -16,12 +17,6 @@ interface Player extends Actor {
 
 interface LoadedMeta extends Meta {
 	loadedModules: ReadonlyArray<typeof Module>
-}
-
-// TODO: This should probably be in the store, once the store gets ported
-interface Report extends ReportFightsResponse {
-	code: string
-	loading: boolean
 }
 
 export interface Result {
