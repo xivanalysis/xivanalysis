@@ -4,12 +4,18 @@ import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 import {i18nMark, Trans} from '@lingui/react'
 
 const TARGETPERCENT = 95
+const FIRSTUSEOFFSETALL = 15000
+const FIRSTUSEOFFSETCONV = 25000
 
 export default class OGCDDowntime extends CooldownDowntime {
 
 	static i18n_id = i18nMark('blm.ogcd-downtime.title')
 	//Time in ms that Laqi deems ok for a OGCD to be down : ^)
 	allowedDowntime = 0
+	firstUseOffset = FIRSTUSEOFFSETALL
+	firstUseffsetPerOgcd = {
+		[ACTIONS.CONVERT.id]: FIRSTUSEOFFSETCONV,
+	}
 	trackedCds = [
 		ACTIONS.LEY_LINES.id,
 		ACTIONS.SHARPCAST.id,
