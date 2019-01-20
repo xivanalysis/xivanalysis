@@ -55,6 +55,11 @@
 			]
 		},
 		"semicolon": {"options": "never"},
+		"trailing-comma": {"options": {
+			"multiline":"always",
+			"singleline": "never",
+			"esSpecCompliant": true
+		}},
 		"variable-name": {
 			"options": [
 				"ban-keywords",

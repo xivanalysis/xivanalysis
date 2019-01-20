@@ -1,0 +1,12 @@
+@value gutter from "theme.module.css";
+
+/* Consolidated handling for vertical spacing between content blocks */
+.verticalSpacing {
+	margin: gutter 0;
+}
+.verticalSpacing:first-child {
+	margin-top: 0;
+}
+.verticalSpacing:last-child {
+	margin-bottom: 0;
+}

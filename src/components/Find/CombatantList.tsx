@@ -1,4 +1,6 @@
 import {Trans} from '@lingui/react'
+import {List, Segment} from 'akkd'
+import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS, {Role, ROLES} from 'data/JOBS'
@@ -8,9 +10,9 @@ import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
 import {inject, observer} from 'mobx-react'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Link} from 'react-router-dom'
-import {Header, Icon, Menu, Message, Segment} from 'semantic-ui-react'
+import {Header, Icon, Message} from 'semantic-ui-react'
 import {GlobalErrorStore} from 'store/globalError'
 import {Report} from 'store/report'
 import styles from './CombatantList.module.css'
@@ -29,7 +31,6 @@ class CombatantList extends React.Component<Props> {
 		const {
 			report: {
 				friendlies = [],
-				start,
 			},
 			currentFight,
 		} = this.props
@@ -51,6 +52,7 @@ class CombatantList extends React.Component<Props> {
 			if (!groups[role]) {
 				groups[role] = []
 			}
+
 			groups[role].push(friendly)
 
 			return groups
@@ -82,7 +84,6 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	render() {
-		const {report, currentFight} = this.props
 		const globalErrorStore = this.props.globalErrorStore!
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
@@ -95,62 +96,86 @@ class CombatantList extends React.Component<Props> {
 
 		let warningDisplayed = false
 
-		return <>
-			<Header>
-				<Trans id="core.find.select-combatant">
-					Select a combatant
-				</Trans>
-			</Header>
+		return (
+			<Segment>
+				<Header>
+					<Trans id="core.find.select-combatant">
+						Select a combatant
+					</Trans>
+				</Header>
 
-			{this.groupedActors.map((friends, index) => {
-				const role = ROLES[index]
-				const showWarning = !warningDisplayed && [
-					ROLES.OUTDATED.id,
-					ROLES.UNSUPPORTED.id,
-				].includes(index)
-				if (showWarning) {
-					warningDisplayed = true
-				}
+				{this.groupedActors.map((friends, index) => {
+					const role = ROLES[index]
+					const showWarning = !warningDisplayed && [
+						ROLES.OUTDATED.id,
+						ROLES.UNSUPPORTED.id,
+					].includes(index)
+					if (showWarning) {
+						warningDisplayed = true
+					}
 
-				return <Fragment key={index}>
-					{showWarning && <Message info icon>
-						<Icon name="code" />
-						<Message.Content>
-							<Message.Header>
-								<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>
-							</Message.Header>
-							<p>
-								<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
-							</p>
-						</Message.Content>
-					</Message>}
+					return <React.Fragment key={index}>
+						{showWarning && this.renderWarning()}
+						{this.renderGroup(role, friends)}
+					</React.Fragment>
+				})}
+			</Segment>
+		)
+	}
 
-					<Segment color={role.colour} attached="top">
-						<Trans id={role.i18n_id} defaults={role.name} />
-					</Segment>
-					<Menu fluid vertical attached="bottom">
-						{friends.map(friend => {
-							const job = getDataBy(JOBS, 'logType', friend.type)
-							const meta = AVAILABLE_MODULES.JOBS[friend.type]
-							const supportedPatches = (meta || {}).supportedPatches
+	private renderWarning = () => (
+		<Message info icon>
+			<Icon name="code" />
+			<Message.Content>
+				<Message.Header>
+					<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>
+				</Message.Header>
+				<p>
+					<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
+				</p>
+			</Message.Content>
+		</Message>
+	)
 
-							return <Menu.Item
-								key={friend.id}
-								as={Link}
-								className={styles.combatantLink}
-								to={`/analyse/${report.code}/${currentFight}/${friend.id}/`}
-							>
-								{job && <JobIcon job={job}/>}
-								{friend.name}
-								{supportedPatches && <span className={styles.supportedPatches}>
-									{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}
-								</span>}
-							</Menu.Item>
-						})}
-					</Menu>
-				</Fragment>
-			})}
-		</>
+	private renderGroup = (role: Role, friends: Actor[]) => {
+		// tslint:disable:no-magic-numbers
+		const background = Color(role.colour).fade(0.8).toString()
+		const color = Color(role.colour).darken(0.5).toString()
+		// tslint:enable:no-magic-numbers
+		return (
+			<List color={role.colour}>
+				<List.Item background={background} color={color}>
+					<Trans id={role.i18n_id} defaults={role.name} render="strong"/>
+				</List.Item>
+
+				{friends.map(friend => <React.Fragment key={friend.id}>
+					{this.renderFriend(friend)}
+				</React.Fragment>)}
+			</List>
+		)
+	}
+
+	private renderFriend = (friend: Actor) => {
+		const {report, currentFight} = this.props
+		const job = getDataBy(JOBS, 'logType', friend.type)
+		const supportedPatches = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+
+		return (
+			<List.Item
+				as={Link}
+				to={`/analyse/${report.code}/${currentFight}/${friend.id}/`}
+				className={styles.friendLink}
+			>
+				{job && <JobIcon job={job}/>}
+				{friend.name}
+				{supportedPatches && <span className={styles.supportedPatches}>
+					<Trans id="core.find.supported-patches">
+						Patch
+						{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}
+					</Trans>
+				</span>}
+			</List.Item>
+		)
 	}
 }
 
