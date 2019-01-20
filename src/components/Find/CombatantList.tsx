@@ -96,31 +96,29 @@ class CombatantList extends React.Component<Props> {
 
 		let warningDisplayed = false
 
-		return (
-			<Segment>
-				<Header>
-					<Trans id="core.find.select-combatant">
-						Select a combatant
-					</Trans>
-				</Header>
+		return <>
+			<Header>
+				<Trans id="core.find.select-combatant">
+					Select a combatant
+				</Trans>
+			</Header>
 
-				{this.groupedActors.map((friends, index) => {
-					const role = ROLES[index]
-					const showWarning = !warningDisplayed && [
-						ROLES.OUTDATED.id,
-						ROLES.UNSUPPORTED.id,
-					].includes(index)
-					if (showWarning) {
-						warningDisplayed = true
-					}
+			{this.groupedActors.map((friends, index) => {
+				const role = ROLES[index]
+				const showWarning = !warningDisplayed && [
+					ROLES.OUTDATED.id,
+					ROLES.UNSUPPORTED.id,
+				].includes(index)
+				if (showWarning) {
+					warningDisplayed = true
+				}
 
-					return <React.Fragment key={index}>
-						{showWarning && this.renderWarning()}
-						{this.renderGroup(role, friends)}
-					</React.Fragment>
-				})}
-			</Segment>
-		)
+				return <React.Fragment key={index}>
+					{showWarning && this.renderWarning()}
+					{this.renderGroup(role, friends)}
+				</React.Fragment>
+			})}
+		</>
 	}
 
 	private renderWarning = () => (

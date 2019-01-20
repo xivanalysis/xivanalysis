@@ -1,8 +1,8 @@
 @value gutter, themeBackground from "theme.module.css";
-@value verticalSpacing from "../shared.module.css";
+@value block from "../shared.module.css";
 
 .segment {
-	composes: verticalSpacing;
+	composes: block;
 	position: relative;
 	padding: gutter;
 	background: themeBackground;

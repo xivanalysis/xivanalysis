@@ -5,7 +5,7 @@ export const themeBlue: string;
 export const themeGreen: string;
 export const themeYellow: string;
 export const themeRed: string;
-export const verticalSpacing: string;
+export const block: string;
 export const backgroundLightness: string;
 export const colorLightness: string;
 export const message: string;

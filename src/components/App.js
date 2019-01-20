@@ -5,6 +5,7 @@ import React, {Component} from 'react'
 import {Route, Switch, withRouter, Link} from 'react-router-dom'
 import {Icon} from  'semantic-ui-react'
 
+import {Container} from 'akkd'
 import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
@@ -102,7 +103,7 @@ class App extends Component {
 					/>
 				</div>
 
-				<div className={styles.content}>
+				<Container className={styles.content}>
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/" component={Home}/>
@@ -112,7 +113,7 @@ class App extends Component {
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 						</Switch>
 					</ErrorBoundary>
-				</div>
+				</Container>
 			</div>
 		</>
 	}
