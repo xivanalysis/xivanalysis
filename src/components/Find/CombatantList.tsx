@@ -144,7 +144,7 @@ class CombatantList extends React.Component<Props> {
 		// tslint:enable:no-magic-numbers
 		return (
 			<List color={role.colour}>
-				<List.Item background={background} color={color}>
+				<List.Item style={{background, color}}>
 					<Trans id={role.i18n_id} defaults={role.name} render="strong"/>
 				</List.Item>
 

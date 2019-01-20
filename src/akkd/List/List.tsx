@@ -5,8 +5,6 @@ import styles from './List.module.css'
 // If someone can work out magic to generic this w/ React.ReactType that'd be awesome
 // Semantic doesn't so I gave up.
 interface ListItemProps {
-	background?: string
-	color?: string
 	as?: React.ReactType
 	[key: string]: any
 }
@@ -14,8 +12,6 @@ interface ListItemProps {
 class ListItem extends React.PureComponent<ListItemProps> {
 	render() {
 		const {
-			background,
-			color,
 			as: Component = 'div',
 			children,
 			...props
@@ -28,11 +24,6 @@ class ListItem extends React.PureComponent<ListItemProps> {
 					styles.listItem,
 					props.className,
 				)}
-				style={{
-					background,
-					color,
-					...props.style,
-				}}
 			>
 				{children}
 			</Component>
