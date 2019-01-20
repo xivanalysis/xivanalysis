@@ -118,6 +118,7 @@ module.exports = {
 							extensions: ['.css'],
 						},
 					}),
+					require('postcss-color-function')(),
 					require('postcss-calc'),
 					require('cssnano')({
 						preset: ['default', {

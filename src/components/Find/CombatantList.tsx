@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import {List, Segment} from 'akkd'
+import {List, Message, Segment} from 'akkd'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
@@ -12,7 +12,7 @@ import {inject, observer} from 'mobx-react'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import React from 'react'
 import {Link} from 'react-router-dom'
-import {Header, Icon, Message} from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 import {GlobalErrorStore} from 'store/globalError'
 import {Report} from 'store/report'
 import styles from './CombatantList.module.css'
@@ -124,16 +124,9 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	private renderWarning = () => (
-		<Message info icon>
-			<Icon name="code" />
-			<Message.Content>
-				<Message.Header>
-					<Trans id="core.find.job-unsupported.title">Favourite job unsupported?</Trans>
-				</Message.Header>
-				<p>
-					<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
-				</p>
-			</Message.Content>
+		<Message info icon="code">
+			<p><Trans id="core.find.job-unsupported.title" render="strong">Favourite job unsupported?</Trans></p>
+			<p><Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans></p>
 		</Message>
 	)
 
