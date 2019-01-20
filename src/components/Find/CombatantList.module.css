@@ -3,13 +3,6 @@
 	align-items: center;
 }
 
-.jobIcon {
-	display: inline-block !important;
-	width: auto !important;
-	height: 2em;
-	margin-right: 1em !important;
-}
-
 .supportedPatches {
 	margin-left: auto;
 	opacity: .5;

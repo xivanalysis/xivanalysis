@@ -1,39 +1,32 @@
+import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component, Fragment} from 'react'
 import {Link} from 'react-router-dom'
 import {Header, Menu, Message, Segment, Icon} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
 
 import JobIcon from 'components/ui/JobIcon'
 import JOBS, {ROLES} from 'data/JOBS'
 import {patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
-import store from 'store'
-import {setGlobalError} from 'store/actions'
+import {GlobalErrorStore} from 'store/globalError'
+import {ReportStore} from 'store/report'
 
 import styles from './CombatantList.module.css'
 
+@inject('reportStore', 'globalErrorStore')
+@observer
 class CombatantList extends Component {
 	static propTypes = {
-		report: PropTypes.shape({
-			code: PropTypes.string.isRequired,
-			start: PropTypes.number.isRequired,
-			friendlies: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired,
-				name: PropTypes.string.isRequired,
-				type: PropTypes.string.isRequired,
-				fights: PropTypes.arrayOf(PropTypes.shape({
-					id: PropTypes.number.isRequired,
-				})).isRequired,
-			})).isRequired,
-		}).isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore),
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		currentFight: PropTypes.number.isRequired,
 	}
 
 	render() {
-		const {friendlies, start} = this.props.report
-		const currentFight = this.props.currentFight
+		const {reportStore, globalErrorStore, currentFight} = this.props
+		const {code, friendlies, start} = reportStore.report
 
 		const jobMeta = AVAILABLE_MODULES.JOBS
 
@@ -68,9 +61,9 @@ class CombatantList extends Component {
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
 		if (grouped.length === 0) {
-			store.dispatch(setGlobalError(new Errors.NotFoundError({
+			globalErrorStore.setGlobalError(new Errors.NotFoundError({
 				type: 'fight',
-			})))
+			}))
 			return null
 		}
 
@@ -119,12 +112,9 @@ class CombatantList extends Component {
 								key={friend.id}
 								as={Link}
 								className={styles.combatantLink}
-								to={`/analyse/${this.props.report.code}/${currentFight}/${friend.id}/`}
+								to={`/analyse/${code}/${currentFight}/${friend.id}/`}
 							>
-								{job && <JobIcon
-									job={job}
-									className={styles.jobIcon}
-								/>}
+								{job && <JobIcon job={job}/>}
 								{friend.name}
 								{supportedPatches && <span className={styles.supportedPatches}>
 									{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}

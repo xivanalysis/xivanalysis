@@ -34,17 +34,18 @@ export default {
 		</Message>
 	</Fragment>,
 	supportedPatches: {
-		from: '4.5',
+		from: '4.05',
 		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		{
 			date: new Date('2019-01-09'),
-			changes: 'Update Assize cooldown to 45. Pre 4.5 logs may report missed Assize uses because of this.',
-			contributors: [CONTRIBUTORS.VULCWEN],
+			changes: 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
+			contributors: [CONTRIBUTORS.VULCWEN, CONTRIBUTORS.SUSHIROU],
 		},
 	],
 }

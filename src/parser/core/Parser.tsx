@@ -1,11 +1,12 @@
-import {mergeWith, sortBy} from 'lodash'
-import Raven from 'raven-js'
-import React from 'react'
-import toposort from 'toposort'
-
+import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
+import {mergeWith, sortBy} from 'lodash'
+import Raven from 'raven-js'
+import React from 'react'
+import {Report} from 'store/report'
+import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
 import Module, {MappedDependency} from './Module'
@@ -18,20 +19,12 @@ interface LoadedMeta extends Meta {
 	loadedModules: ReadonlyArray<typeof Module>
 }
 
-// TODO: This should probably be in the store, once the store gets ported
-interface Report extends ReportFightsResponse {
-	code: string
-	loading: boolean
-}
-
 export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string
 	markup: React.ReactNode
 }
-
-import ResultSegment from 'components/Analyse/ResultSegment'
 
 class Parser {
 	// -----

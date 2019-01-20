@@ -1,5 +1,4 @@
 import {i18nMark} from '@lingui/react'
-
 import JOBS, {Job} from './JOBS'
 
 export interface Contributor {
