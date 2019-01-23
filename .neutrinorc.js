@@ -83,6 +83,20 @@ module.exports = {
 			},
 		}],
 
+		// Add decorators. Have to do this manually as it needs to be before the stuff the react preset sets up
+		neutrino => {
+			neutrino.config.module
+				.rule('compile')
+					.use('babel')
+						.tap(options => ({
+							...options,
+							plugins: [
+								['@babel/plugin-proposal-decorators', {legacy: true}],
+								...options.plugins,
+							]
+						}))
+		},
+
 		// Load env vars. Not using the `env` option for react 'cus it doesn't expand the way I'd like it to
 		envConfig,
 
