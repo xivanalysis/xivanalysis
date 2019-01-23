@@ -47,7 +47,6 @@ const MANA_LOST_DIVISOR = 2
 export const MANA_CAP = 100
 const ENHANCED_SCATTER_GAIN = 8
 const ENHANCED_SCATTER_44_GAIN = 10
-//const MISSING_HARDCAST_MANA_VALUE = 11  //removed with refactor to GaugeAction, change to damage type events prevents need for guessing at missing casts
 const MANAFICATION_MULTIPLIER = 2
 
 class GaugeAction {
@@ -77,8 +76,6 @@ class GaugeAction {
 	}
 
 	calculateManaFicationManaGained() {
-		//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-		//console.log('manafication')
 		this.mana.white.aftercast = this.mana.white.beforecast * MANAFICATION_MULTIPLIER
 		this.mana.black.aftercast = this.mana.black.beforecast * MANAFICATION_MULTIPLIER
 
@@ -187,8 +184,8 @@ export default class Gauge extends Module {
 			this.addHook('cast', {
 				by: 'player',
 				abilityId: ACTIONS.MANAFICATION.id,
-			}, this._onCast)
-			this.addHook('aoedamage', {by: 'player'}, this._onCast)
+			}, this._gaugeEvent)
+			this.addHook('aoedamage', {by: 'player'}, this._gaugeEvent)
 			this.addHook('death', {to: 'player'}, this._onDeath)
 			this.addHook('complete', this._onComplete)
 		}
@@ -199,7 +196,7 @@ export default class Gauge extends Module {
 			this._history.black.push({t: timestamp, y: this._blackMana})
 		}
 
-		_onCast(event) {
+		_gaugeEvent(event) {
 			const gaugeAction = new GaugeAction(this._whiteMana, this._blackMana)
 
 			const abilityId = event.ability.guid
@@ -229,7 +226,7 @@ export default class Gauge extends Module {
 
 			const fabricatedEvent = {
 				...event,
-				type: 'rdmCast',
+				type: 'rdmcast',
 				mana: gaugeAction.mana,
 				missOrInvlun: gaugeAction.missOrInvuln,
 			}
@@ -271,7 +268,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
 				content: <Fragment>
-					<Trans id="rdm.gauge.suggestions.white-mana-invuln-content">Ensure you don't target a boss that you cannot damage (e.g. due to the Packet Filter debuffs in Omega M/F) with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
+					<Trans id="rdm.gauge.suggestions.white-mana-invuln-content">Ensure you don't target a boss that you cannot damage with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
 				</Fragment>,
 				tiers: SEVERITY_LOST_MANA,
 				value: this._whiteManaLostToInvulnerable,
@@ -307,7 +304,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERFLARE.icon,
 				content: <Fragment>
-					<Trans id="rdm.gauge.suggestions.black-mana-invuln-content">Ensure you don't target a boss that you cannot damage (e.g. due to the Packet Filter debuffs in Omega M/F) with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
+					<Trans id="rdm.gauge.suggestions.black-mana-invuln-content">Ensure you don't target a boss that you cannot damage with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
 				</Fragment>,
 				tiers: SEVERITY_LOST_MANA,
 				value: this._blackManaLostToInvulnerable,

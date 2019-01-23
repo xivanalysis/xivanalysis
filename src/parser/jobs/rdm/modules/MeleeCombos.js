@@ -34,20 +34,18 @@ const BLACK_MANA_ACTIONS = {
 	dualcast: ACTIONS.VERTHUNDER,
 	finisher: ACTIONS.VERFLARE,
 }
-const DELAY_ACCELERATION_AVIALABLE_THRESHOLD = 4 // 4 seconds for 2 GCDs minus a 1 second window to activate before finisher
+
+// 4 seconds for 2 GCDs minus a 1 second window to activate before finisher
+const DELAY_ACCELERATION_AVIALABLE_THRESHOLD = 4
 
 export default class MeleeCombos extends Module {
 	static handle = 'meleecombos'
-	// Disable unused dependency detection because module requires gauge for the fabricated event but no other data that triggers the used dependency check
-	/* eslint-disable xivanalysis/no-unused-dependencies */
 	static dependencies = [
 		'combatants',
 		'suggestions',
-		'gauge',
 		'cooldowns',
 		'timeline',
 	]
-	/* eslint-enable xivanalysis/no-unused-dependencies */
 	static title = 'Melee Combos'
 
 	constructor(...args) {
@@ -57,7 +55,7 @@ export default class MeleeCombos extends Module {
 			by: 'player',
 			abilityId: ACTIONS.ACCELERATION.id,
 		}, this._onCast)
-		this.addHook('rdmCast', {by: 'player'}, this._onCast)
+		this.addHook('rdmcast', {by: 'player'}, this._onCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
@@ -101,28 +99,34 @@ export default class MeleeCombos extends Module {
 	}
 
 	_handleFinisher() {
-		const isFireReady = this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id)
-		const isStoneReady = this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id)
 		const combo = this._currentCombo
-		combo.finisher = {
-			recommendedActions: [],
-			recommendation: '',
+		combo.finisher.recommendedActions = []
+		combo.finisher.recommendation = ''
+
+		const whiteState = {
+			amount: combo.startmana.white,
+			procReady: this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id),
+			actions: WHITE_MANA_ACTIONS,
 		}
-		const finisherUsed = combo.events[combo.events.length-1].ability
+		const blackState = {
+			amount: combo.startmana.black,
+			procReady: this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id),
+			actions: BLACK_MANA_ACTIONS,
+		}
 
 		let recommendedFinisher = null
 		if (combo.startmana.white < combo.startmana.black) {
-			recommendedFinisher = this._outOfBalanceFinisher(combo.startmana.white, isStoneReady, WHITE_MANA_ACTIONS, combo.startmana.black, isFireReady, BLACK_MANA_ACTIONS)
+			recommendedFinisher = this._outOfBalanceFinisher(whiteState, blackState)
 		} else if (combo.startmana.black < combo.startmana.white) {
-			recommendedFinisher = this._outOfBalanceFinisher(combo.startmana.black, isFireReady, BLACK_MANA_ACTIONS, combo.startmana.white, isStoneReady, WHITE_MANA_ACTIONS)
+			recommendedFinisher = this._outOfBalanceFinisher(blackState, whiteState)
 		} else {
-			recommendedFinisher = this._inBalanceFinisher(combo.startmana.black, isFireReady, BLACK_MANA_ACTIONS, combo.startmana.white, isStoneReady, WHITE_MANA_ACTIONS)
+			recommendedFinisher = this._inBalanceFinisher(blackState, whiteState)
 		}
 
 		if (recommendedFinisher instanceof Array) {
 			if (recommendedFinisher === FINISHERS) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
-				combo.finisher.recommendedActions.push(getAction(finisherUsed.guid))
+				combo.finisher.recommendedActions.push(getAction(combo.finisher.used.guid))
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.finisher.recommendedActions, recommendedFinisher)
@@ -132,12 +136,12 @@ export default class MeleeCombos extends Module {
 		} else {
 			// A specific finisher was recommended
 			combo.finisher.recommendedActions.push(recommendedFinisher)
-			if (finisherUsed.guid !== recommendedFinisher.id) {
+			if (combo.finisher.used.guid !== recommendedFinisher.id) {
 				// wrong finisher was used, add an incorrect finisher tally
-				if (finisherUsed.guid === ACTIONS.VERHOLY.id) {
+				if (combo.finisher.used.guid === ACTIONS.VERHOLY.id) {
 					this._incorrectFinishers.verholy++
 				}
-				if (finisherUsed.guid === ACTIONS.VERFLARE.id) {
+				if (combo.finisher.used.guid === ACTIONS.VERFLARE.id) {
 					this._incorrectFinishers.verflare++
 				}
 				combo.finisher.recommendation = <Trans id="rdm.meleecombos.recommendation.incorrect">See the suggestions section for finisher guidelines.</Trans>
@@ -145,32 +149,32 @@ export default class MeleeCombos extends Module {
 		}
 	}
 
-	_outOfBalanceFinisher(lowerMana, lowerManaProc, lowerManaActions, higherMana, higherManaProc, higherManaActions) {
+	_outOfBalanceFinisher(lowerManaState, higherManaState) {
 		const isAccelerationUp = this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id)
 
-		if (!lowerManaProc) {
+		if (!lowerManaState.procReady) {
 			// no proc of the lower mana spell, use that finisher
-			return lowerManaActions.finisher
+			return lowerManaState.actions.finisher
 		}
 
-		const comboDelayResults = this._manaLossToDelayCombo(lowerMana, lowerManaProc, lowerManaActions, higherMana, higherManaProc, higherManaActions)
-		if (!higherManaProc) {
+		const comboDelayResults = this._manaLossToDelayCombo(lowerManaState, higherManaState)
+		if (!higherManaState.procReady) {
 			// no proc of the higher mana spell, check accleration and potential out of balance to make recommendation
-			const finisherManaGain = MANA_GAIN[higherManaActions.finisher.id].white || MANA_GAIN[higherManaActions.finisher.id].black
-			if (higherMana - lowerMana + finisherManaGain > MANA_DIFFERENCE_THRESHOLD) {
+			const finisherManaGain = MANA_GAIN[higherManaState.actions.finisher.id].white || MANA_GAIN[higherManaState.actions.finisher.id].black
+			if (higherManaState.amount - lowerManaState.amount + finisherManaGain > MANA_DIFFERENCE_THRESHOLD) {
 				// We will go out of balance if we use the finisher of the higher mana, check to see if delaying combo would have been better
 				if (comboDelayResults !== null && comboDelayResults.manaLoss <= IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD) {
 					// return null (delay combo) if below threshold
 					return comboDelayResults.finisher
 				}
 				// Going out of balance is worse than overwriting the lowerManaProc - recommend using the lowerMana finisher to stay in balance
-				return lowerManaActions.finisher
+				return lowerManaState.actions.finisher
 			}
 
 			// We won't go out of balance if we use the finisher of the higher mana, check to see if acceleration is up
 			if (isAccelerationUp) {
 				// Acceleration is up, use higherManaFinisher
-				return higherManaActions.finisher
+				return higherManaState.actions.finisher
 			}
 			// Acceleration not on, check to see if delaying combo would have been better
 			if (comboDelayResults !== null && comboDelayResults.manaLoss <= IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD) {
@@ -178,7 +182,7 @@ export default class MeleeCombos extends Module {
 				return comboDelayResults.finisher
 			}
 			// If delaying finisher isn't worthwhile, but we won't go out of balance by using the higherManaFinisher, fishing for a 20% proc is better than overwriting the existing proc
-			return higherManaActions.finisher
+			return higherManaState.actions.finisher
 		}
 
 		// Both procs are up, check to see if delaying combo would have been better
@@ -190,54 +194,44 @@ export default class MeleeCombos extends Module {
 		return FINISHERS
 	}
 
-	_inBalanceFinisher(firstMana, firstManaProc, firstManaActions, secondMana, secondManaProc, secondManaActions) {
+	_inBalanceFinisher(firstManaState, secondManaState) {
 		const isAccelerationUp = this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id)
-		if (isAccelerationUp) {
-			// Acceleration is up - return finisher that will guarantee a proc
-			if (!firstManaProc && !secondManaProc) {
-				// Neither proc is up - return both finishers (finisher doesn't matter)
-				return FINISHERS
-			}
-			if (!firstManaProc) {
-				return firstManaActions.finisher
-			}
-			if (!secondManaProc) {
-				return secondManaActions.finisher
+
+		if (!isAccelerationUp || (firstManaState.procReady && secondManaState.procReady)) {
+			// Acceleration is not up or both procs are up, check to see if delaying combo would have been better
+			const comboDelayResults = this._manaLossToDelayCombo(firstManaState, secondManaState)
+			// Safeguard against null return if no valid delays were found
+			if (comboDelayResults !== null && comboDelayResults.manaLoss <= IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD) {
+				// return null (delay combo) if below threshold
+				return comboDelayResults.finisher
 			}
 		}
 
-		// Acceleration is not up or both procs are up, check to see if delaying combo would have been better
-		const comboDelayResults = this._manaLossToDelayCombo(firstMana, firstManaProc, firstManaActions, secondMana, secondManaProc, secondManaActions)
-		// Safeguard against null return if no valid delays were found
-		if (comboDelayResults !== null && comboDelayResults.manaLoss <= IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD) {
-			// return null (delay combo) if below threshold
-			return comboDelayResults.finisher
-		}
-		// Delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
-		if (!firstManaProc && !secondManaProc) {
+		// Acceleration is up or delaying combo is not better, return finisher of proc that isn't available (fishing for 20% is better than overwriting a proc or delaying)
+		if (!firstManaState.procReady && !secondManaState.procReady) {
 			// Neither proc is up - return both finishers (finisher doesn't matter)
 			return FINISHERS
 		}
-		if (!firstManaProc) {
-			return firstManaActions.finisher
+		if (!firstManaState.procReady) {
+			return firstManaState.actions.finisher
 		}
-		if (!secondManaProc) {
-			return secondManaActions.finisher
+		if (!secondManaState.procReady) {
+			return secondManaState.actions.finisher
 		}
 		// Both procs are up and it's not worthwhile to delay combo, return both finishers (finisher doesn't matter)
 		return FINISHERS
 	}
 
-	_manaLossToDelayCombo(lowerMana, lowerManaProc, lowerManaActions, higherMana, higherManaProc, higherManaActions) {
+	_manaLossToDelayCombo(lowerManaState, higherManaState) {
 		const possibleDelays = []
 
-		if (lowerManaProc) {
+		if (lowerManaState.procReady) {
 			/* Case: lowerManaProc is available, "clear" the proc by casting Lower Proc + Higher Dualcast
 				This case is valid whether or not the higherManaProc exists
 				Overwriting the higherManaProc with the 50% chance while dumping is no net loss of procs compared to not delaying */
 			// Net benefit: +1 proc gained (lowerMana) for effective potency of +34.8 (8 Mana)
-			let newLowerMana = lowerMana + (MANA_GAIN[lowerManaActions.proc.id].white || MANA_GAIN[lowerManaActions.proc.id].black)
-			let newHigherMana = higherMana + (MANA_GAIN[higherManaActions.dualcast.id].white || MANA_GAIN[higherManaActions.dualcast.id].black)
+			let newLowerMana = lowerManaState.amount + (MANA_GAIN[lowerManaState.actions.proc.id].white || MANA_GAIN[lowerManaState.actions.proc.id].black)
+			let newHigherMana = higherManaState.amount + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
 
 			// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 			const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -247,31 +241,31 @@ export default class MeleeCombos extends Module {
 			if (newLowerMana < newHigherMana) {
 				// The proc we just cleared is still the lower mana, valid clear option, push onto stack
 				possibleDelays.push({
-					finisher: [lowerManaActions.proc, higherManaActions.dualcast, lowerManaActions.finisher],
+					finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, lowerManaState.actions.finisher],
 					manaLoss: manaLoss,
 				})
 			} else {
 				// Verify that using the finisher of the proc we just cleared won't put us out of balance at the end
-				const finisherManaGain = MANA_GAIN[lowerManaActions.finisher.id].white || MANA_GAIN[lowerManaActions.finisher.id].black
+				const finisherManaGain = MANA_GAIN[lowerManaState.actions.finisher.id].white || MANA_GAIN[lowerManaState.actions.finisher.id].black
 				if (!(newLowerMana + finisherManaGain - newHigherMana) > MANA_DIFFERENCE_THRESHOLD) {
 					// The proc we just cleared will result in equal mana or the cleared proc being higher but without putting us out of balance, check to see if acceleration would be available
 					const accelerationAvailable = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) <= DELAY_ACCELERATION_AVIALABLE_THRESHOLD)
 					if (accelerationAvailable) {
 						possibleDelays.push({
-							finisher: [lowerManaActions.proc, higherManaActions.dualcast, ACTIONS.ACCELERATION, lowerManaActions.finisher],
+							finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, ACTIONS.ACCELERATION, lowerManaState.actions.finisher],
 							manaLoss: manaLoss,
 						})
 					}
 				}
 			}
 
-			if (!higherManaProc) {
+			if (!higherManaState.procReady) {
 				/* Case: lowerManaProc is available and higherManaProc is not, attempt to "rebalance" mana by casting lowerManaProc + lowerManaDualcast
 					This is an additional and separate case to just clearing and "wasting" the higherManaProc in the case of both procs being up
 					and can result in less mana loss than the lowerProc -> higherDualcast dump of the above case (e.g. when starting at 80|100) */
 				// Net benefit: +1 proc gained (higherMana) for effective potency of +34.8 (8 Mana)
-				let newLowerMana = lowerMana + (MANA_GAIN[lowerManaActions.proc.id].white || MANA_GAIN[lowerManaActions.proc.id].black) + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
-				let newHigherMana = higherMana
+				let newLowerMana = lowerManaState.amount + (MANA_GAIN[lowerManaState.actions.proc.id].white || MANA_GAIN[lowerManaState.actions.proc.id].black) + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
+				let newHigherMana = higherManaState.amount
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -281,16 +275,16 @@ export default class MeleeCombos extends Module {
 				if (newHigherMana < newLowerMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 					possibleDelays.push({
-						finisher: [lowerManaActions.proc, lowerManaActions.dualcast, higherManaActions.finisher],
+						finisher: [lowerManaState.actions.proc, lowerManaState.actions.dualcast, higherManaState.actions.finisher],
 						manaLoss: manaLoss,
 					})
 				} else {
 					// Verify that using the finisher of higherMana won't put us out of balance at the end
-					const finisherManaGain = MANA_GAIN[higherManaActions.finisher.id].white || MANA_GAIN[higherManaActions.finisher.id].black
+					const finisherManaGain = MANA_GAIN[higherManaState.actions.finisher.id].white || MANA_GAIN[higherManaState.actions.finisher.id].black
 					if (!((newHigherMana + finisherManaGain - newLowerMana) > MANA_DIFFERENCE_THRESHOLD)) {
 						// This is a net gain whether or not acceleration would be available - we can now fish for an additional proc of higherMana, push onto stack
 						possibleDelays.push({
-							finisher: [lowerManaActions.proc, lowerManaActions.dualcast, ACTIONS.ACCELERATION, higherManaActions.finisher],
+							finisher: [lowerManaState.actions.proc, lowerManaState.actions.dualcast, ACTIONS.ACCELERATION, higherManaState.actions.finisher],
 							manaLoss: manaLoss,
 						})
 					}
@@ -299,9 +293,9 @@ export default class MeleeCombos extends Module {
 		} else {
 			// These cases should only be hit if lowerMana == higherMana (we were in balance at start of combo), to test benefits of delaying combo to imbalance mana
 			// If lowerManaProc isn't available and lowerMana < higherMana, recommendation will always be the lowerManaActions.finisher
-			if (higherManaProc) { // eslint-disable-line no-lonely-if
-				let newLowerMana = lowerMana + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
-				let newHigherMana = higherMana + (MANA_GAIN[higherManaActions.proc.id].white || MANA_GAIN[higherManaActions.proc.id].black)
+			if (higherManaState.procReady) { // eslint-disable-line no-lonely-if
+				let newLowerMana = lowerManaState.amount + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
+				let newHigherMana = higherManaState.amount + (MANA_GAIN[higherManaState.actions.proc.id].white || MANA_GAIN[higherManaState.actions.proc.id].black)
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -311,22 +305,18 @@ export default class MeleeCombos extends Module {
 				if (newHigherMana < newLowerMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 					possibleDelays.push({
-						finisher: [higherManaActions.proc, lowerManaActions.dualcast, higherManaActions.finisher],
+						finisher: [higherManaState.actions.proc, lowerManaState.actions.dualcast, higherManaState.actions.finisher],
 						manaLoss: manaLoss,
 					})
 				}
-				// Disregard case when newHigherMana remains even or higher than newLowerMana - error in calling the delay module
-				console.log(`Delay module called with ${lowerMana}|${higherMana} starting mana, no lowerManaProc, and a higherManaProc.`)
-				console.log(`Attempting to clear the higherManaProc resulted in a delayed combo mana of ${newLowerMana}|${newHigherMana}, with the original lowerMana remaining less than or equal.`)
-				console.log('This is an error, recommendation should have been to cast the lowerManaActions.finisher in the original combo')
 			} else {
 				// Neither proc is up, check with using Jolt or Impact + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
-				let newLowerMana = lowerMana + MANA_GAIN[ACTIONS.JOLT_II.id].white
-				let newHigherMana = higherMana + MANA_GAIN[ACTIONS.JOLT_II.id].black + (MANA_GAIN[higherManaActions.dualcast.id].white || MANA_GAIN[higherManaActions.dualcast.id].black)
+				let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white
+				let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
 				let firstDelaySkill = ACTIONS.JOLT_II
 				if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-					newLowerMana = lowerMana + MANA_GAIN[ACTIONS.IMPACT.id].white
-					newHigherMana = higherMana + MANA_GAIN[ACTIONS.IMPACT.id].black + (MANA_GAIN[higherManaActions.dualcast.id].white || MANA_GAIN[higherManaActions.dualcast.id].black)
+					newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white
+					newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
 					firstDelaySkill = ACTIONS.IMPACT
 				}
 
@@ -337,17 +327,17 @@ export default class MeleeCombos extends Module {
 				if (newLowerMana < newHigherMana) {
 					// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 					possibleDelays.push({
-						finisher: [firstDelaySkill, lowerManaActions.dualcast, higherManaActions.finisher],
+						finisher: [firstDelaySkill, lowerManaState.actions.dualcast, higherManaState.actions.finisher],
 						manaLoss: manaLoss,
 					})
 				} else {
 					// Check if using Jolt or Impact + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
-					let newLowerMana = lowerMana + MANA_GAIN[ACTIONS.JOLT_II.id].white + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
-					let newHigherMana = higherMana + MANA_GAIN[ACTIONS.JOLT_II.id].black
+					let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
+					let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black
 					let firstDelaySkill = ACTIONS.JOLT_II
 					if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-						newLowerMana = lowerMana + MANA_GAIN[ACTIONS.IMPACT.id].white + (MANA_GAIN[lowerManaActions.dualcast.id].white || MANA_GAIN[lowerManaActions.dualcast.id].black)
-						newHigherMana = higherMana + MANA_GAIN[ACTIONS.IMPACT.id].black
+						newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
+						newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black
 						firstDelaySkill = ACTIONS.IMPACT
 					}
 
@@ -358,7 +348,7 @@ export default class MeleeCombos extends Module {
 					if (newHigherMana < newLowerMana) {
 						// Mana rebalancing resulted in the original higherMana becoming the lower total (guaranteed proc), valid option, push onto stack
 						possibleDelays.push({
-							finisher: [firstDelaySkill, lowerManaActions.dualcast, higherManaActions.finisher],
+							finisher: [firstDelaySkill, lowerManaState.actions.dualcast, higherManaState.actions.finisher],
 							manaLoss: manaLoss,
 						})
 					}
@@ -396,7 +386,6 @@ export default class MeleeCombos extends Module {
 				this._startCombo(event)
 			} else {
 				if (!this._currentCombo) {
-					console.log(`Uncomboed ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 					return
 				}
 
@@ -407,7 +396,9 @@ export default class MeleeCombos extends Module {
 					this._currentCombo.events.push(event)
 					this._currentCombo.lastAction = event
 					if (action.combo.end) {
-						this._currentCombo.finisher = action.id
+						this._currentCombo.finisher = {
+							used: event.ability,
+						}
 						this._handleFinisher()
 						this._endCombo()
 					}
@@ -528,15 +519,15 @@ export default class MeleeCombos extends Module {
 								<Table.Cell textAlign="center">
 									<span>{
 										Object.keys(combo.startprocs).map((key) => {
-											if (combo.startprocs[key]) {
-												switch (key) {
-												case 'verstone':
-													return (<StatusLink key="verstone" showName={false} {...STATUSES.VERSTONE_READY}/>)
-												case 'verfire':
-													return (<StatusLink key="verfire" showName={false} {...STATUSES.VERFIRE_READY}/>)
-												case 'acceleration':
-													return (<StatusLink key="acceleration" showName={false} {...STATUSES.ACCELERATION}/>)
-												}
+											if (!combo.startprocs[key]) { return }
+
+											switch (key) {
+											case 'verstone':
+												return (<StatusLink key="verstone" showName={false} {...STATUSES.VERSTONE_READY}/>)
+											case 'verfire':
+												return (<StatusLink key="verfire" showName={false} {...STATUSES.VERFIRE_READY}/>)
+											case 'acceleration':
+												return (<StatusLink key="acceleration" showName={false} {...STATUSES.ACCELERATION}/>)
 											}
 										})
 									}</span>
