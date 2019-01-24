@@ -36,7 +36,7 @@ const BLACK_MANA_ACTIONS = {
 }
 
 // 4 seconds for 2 GCDs minus a 1 second window to activate before finisher
-const DELAY_ACCELERATION_AVIALABLE_THRESHOLD = 4
+const DELAY_ACCELERATION_AVAILABLE_THRESHOLD = 4
 
 export default class MeleeCombos extends Module {
 	static handle = 'meleecombos'
@@ -72,11 +72,11 @@ export default class MeleeCombos extends Module {
 	_startCombo(event) {
 		this._currentCombo = {
 			start: event.timestamp,
-			startmana: {
-				white: event.mana.white.beforecast,
-				black: event.mana.black.beforecast,
+			startMana: {
+				white: event.mana.white.beforeCast,
+				black: event.mana.black.beforeCast,
 			},
-			startprocs: {
+			startProcs: {
 				verstone: this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id),
 				verfire: this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id),
 				acceleration: this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id),
@@ -104,20 +104,20 @@ export default class MeleeCombos extends Module {
 		combo.finisher.recommendation = ''
 
 		const whiteState = {
-			amount: combo.startmana.white,
-			procReady: this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id),
+			amount: combo.startMana.white,
+			procReady: combo.startProcs.verstone,
 			actions: WHITE_MANA_ACTIONS,
 		}
 		const blackState = {
-			amount: combo.startmana.black,
-			procReady: this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id),
+			amount: combo.startMana.black,
+			procReady: combo.startProcs.verfire,
 			actions: BLACK_MANA_ACTIONS,
 		}
 
 		let recommendedFinisher = null
-		if (combo.startmana.white < combo.startmana.black) {
+		if (combo.startMana.white < combo.startMana.black) {
 			recommendedFinisher = this._outOfBalanceFinisher(whiteState, blackState)
-		} else if (combo.startmana.black < combo.startmana.white) {
+		} else if (combo.startMana.black < combo.startMana.white) {
 			recommendedFinisher = this._outOfBalanceFinisher(blackState, whiteState)
 		} else {
 			recommendedFinisher = this._inBalanceFinisher(blackState, whiteState)
@@ -249,7 +249,7 @@ export default class MeleeCombos extends Module {
 				const finisherManaGain = MANA_GAIN[lowerManaState.actions.finisher.id].white || MANA_GAIN[lowerManaState.actions.finisher.id].black
 				if (!(newLowerMana + finisherManaGain - newHigherMana) > MANA_DIFFERENCE_THRESHOLD) {
 					// The proc we just cleared will result in equal mana or the cleared proc being higher but without putting us out of balance, check to see if acceleration would be available
-					const accelerationAvailable = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) <= DELAY_ACCELERATION_AVIALABLE_THRESHOLD)
+					const accelerationAvailable = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) <= DELAY_ACCELERATION_AVAILABLE_THRESHOLD)
 					if (accelerationAvailable) {
 						possibleDelays.push({
 							finisher: [lowerManaState.actions.proc, higherManaState.actions.dualcast, ACTIONS.ACCELERATION, lowerManaState.actions.finisher],
@@ -492,8 +492,8 @@ export default class MeleeCombos extends Module {
 					{
 						Object.keys(this._meleeCombos).map(timestamp => {
 							const combo = this._meleeCombos[timestamp]
-							const white = combo.startmana.white
-							const black = combo.startmana.black
+							const white = combo.startMana.white
+							const black = combo.startMana.black
 							const rotation = combo.events
 							const start = timestamp - this.parser.fight.start_time
 							const end = rotation[rotation.length-1].timestamp - this.parser.fight.start_time
@@ -518,8 +518,8 @@ export default class MeleeCombos extends Module {
 								</Table.Cell>
 								<Table.Cell textAlign="center">
 									<span>{
-										Object.keys(combo.startprocs).map((key) => {
-											if (!combo.startprocs[key]) { return }
+										Object.keys(combo.startProcs).map((key) => {
+											if (!combo.startProcs[key]) { return }
 
 											switch (key) {
 											case 'verstone':

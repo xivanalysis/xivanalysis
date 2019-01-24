@@ -52,32 +52,32 @@ const MANAFICATION_MULTIPLIER = 2
 class GaugeAction {
 	mana = {
 		white: {
-			beforecast: 0,
-			aftercast: 0,
-			overcaploss: 0,
-			imbalanceloss: 0,
-			invulnloss: 0,
+			beforeCast: 0,
+			afterCast: 0,
+			overCapLoss: 0,
+			imbalanceLoss: 0,
+			invulnLoss: 0,
 		},
 		black: {
-			beforecast: 0,
-			aftercast: 0,
-			overcaploss: 0,
-			imbalanceloss: 0,
-			invulnloss: 0,
+			beforeCast: 0,
+			afterCast: 0,
+			overCapLoss: 0,
+			imbalanceLoss: 0,
+			invulnLoss: 0,
 		},
 	}
 
 	constructor(startingWhite, startingBlack) {
-		this.mana.white.beforecast = startingWhite
-		this.mana.black.beforecast = startingBlack
+		this.mana.white.beforeCast = startingWhite
+		this.mana.black.beforeCast = startingBlack
 
-		this.mana.white.aftercast = startingWhite
-		this.mana.black.aftercast = startingBlack
+		this.mana.white.afterCast = startingWhite
+		this.mana.black.afterCast = startingBlack
 	}
 
 	calculateManaFicationManaGained() {
-		this.mana.white.aftercast = this.mana.white.beforecast * MANAFICATION_MULTIPLIER
-		this.mana.black.aftercast = this.mana.black.beforecast * MANAFICATION_MULTIPLIER
+		this.mana.white.afterCast = this.mana.white.beforeCast * MANAFICATION_MULTIPLIER
+		this.mana.black.afterCast = this.mana.black.beforeCast * MANAFICATION_MULTIPLIER
 
 		this.calculateManaOvercap()
 	}
@@ -109,13 +109,13 @@ class GaugeAction {
 
 				if (white > 0 || black > 0) {
 					// No mana gained from spells that do no damage due to missing or targeting an invulnerable boss (e.g. Omega M/F firewall)
-					this.mana.white.invulnloss = white
-					this.mana.black.invulnloss = black
+					this.mana.white.invulnLoss = white
+					this.mana.black.invulnLoss = black
 					return
 				}
 			}
-			this.mana.white.aftercast = this.mana.white.beforecast + white
-			this.mana.black.aftercast = this.mana.black.beforecast + black
+			this.mana.white.afterCast = this.mana.white.beforeCast + white
+			this.mana.black.afterCast = this.mana.black.beforeCast + black
 
 			this.calculateManaImbalance(white, black)
 			this.calculateManaOvercap()
@@ -123,30 +123,30 @@ class GaugeAction {
 	}
 
 	calculateManaImbalance(white, black) {
-		if (white && this.mana.black.beforecast - this.mana.white.beforecast > MANA_DIFFERENCE_THRESHOLD) {
+		if (white && this.mana.black.beforeCast - this.mana.white.beforeCast > MANA_DIFFERENCE_THRESHOLD) {
 			//console.log(`Imbalance White Lost, Current White: ${this._mana.white.beforecast} Current Black: ${this._mana.black.beforecast}`)
 			//If we have more than 30 Black mana over White, our White gains are halved
-			this.mana.white.imbalanceloss = Math.ceil(white / MANA_LOST_DIVISOR)
-			this.mana.white.aftercast -= this.mana.white.imbalanceloss
+			this.mana.white.imbalanceLoss = Math.ceil(white / MANA_LOST_DIVISOR)
+			this.mana.white.afterCast -= this.mana.white.imbalanceLoss
 		}
 
-		if (black && this.mana.white.beforecast - this.mana.black.beforecast > MANA_DIFFERENCE_THRESHOLD) {
+		if (black && this.mana.white.beforeCast - this.mana.black.beforeCast > MANA_DIFFERENCE_THRESHOLD) {
 			//console.log(`Imbalance Black Lost, Current Black: ${this._mana.black.beforecast} Current White: ${this._mana.white.beforecast}`)
 			//If we have more than 30 White mana over Black, our Black gains are halved
-			this.mana.black.imbalanceloss = Math.ceil(black / MANA_LOST_DIVISOR)
-			this.mana.black.aftercast -= this.mana.black.imbalanceloss
+			this.mana.black.imbalanceLoss = Math.ceil(black / MANA_LOST_DIVISOR)
+			this.mana.black.afterCast -= this.mana.black.imbalanceLoss
 		}
 	}
 
 	calculateManaOvercap() {
-		if (this.mana.white.aftercast > MANA_CAP) {
-			this.mana.white.overcaploss = this.mana.white.aftercast - MANA_CAP
-			this.mana.white.aftercast = MANA_CAP
+		if (this.mana.white.afterCast > MANA_CAP) {
+			this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
+			this.mana.white.afterCast = MANA_CAP
 		}
 
-		if (this.mana.black.aftercast > MANA_CAP) {
-			this.mana.black.overcaploss = this.mana.black.aftercast - MANA_CAP
-			this.mana.black.aftercast = MANA_CAP
+		if (this.mana.black.afterCast > MANA_CAP) {
+			this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
+			this.mana.black.afterCast = MANA_CAP
 		}
 	}
 }
@@ -208,17 +208,17 @@ export default class Gauge extends Module {
 				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this._getIsPre44)
 			}
 
-			this._whiteMana = gaugeAction.mana.white.aftercast
-			this._blackMana = gaugeAction.mana.black.aftercast
+			this._whiteMana = gaugeAction.mana.white.afterCast
+			this._blackMana = gaugeAction.mana.black.afterCast
 
-			this._whiteManaWasted += gaugeAction.mana.white.overcaploss
-			this._blackManaWasted += gaugeAction.mana.black.overcaploss
+			this._whiteManaWasted += gaugeAction.mana.white.overCapLoss
+			this._blackManaWasted += gaugeAction.mana.black.overCapLoss
 
-			this._whiteManaLostToImbalance += gaugeAction.mana.white.imbalanceloss
-			this._blackManaLostToImbalance += gaugeAction.mana.black.imbalanceloss
+			this._whiteManaLostToImbalance += gaugeAction.mana.white.imbalanceLoss
+			this._blackManaLostToImbalance += gaugeAction.mana.black.imbalanceLoss
 
-			this._whiteManaLostToInvulnerable += gaugeAction.mana.white.invulnloss
-			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnloss
+			this._whiteManaLostToInvulnerable += gaugeAction.mana.white.invulnLoss
+			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnLoss
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()
