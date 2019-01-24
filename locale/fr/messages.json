@@ -366,7 +366,7 @@
   "nin.ninjutsu.suggestions.st-doton.why": "Vous avez utilisé Doton sur une cible unique {badStds, plural,one {# fois}other {# fois}}.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "Évitez d'utiliser <0/> sous l'effet de <1/> à moins qu'il y aura {TCJ_DOTON_TICK_TARGET} ticks assurés ou si vous avez plusieurs cibles. Sur une cible unique qui est sur le point de sauter ou bouger, utiliser le combo de <2/> fera plus de dégâts, même si <3/> est en cooldown.",
   "nin.ninjutsu.suggestions.tcj-doton.why": "",
-  "nin.ninki.suggestions.frog.content": "Évitez d'utiliser <0/> quand vous avez d'autres habiletés de disponibles (à mois qu'il y ait plusieurs cibles), car c'est elle qui possède le moins de puissance des trois de manière significative lorsque utilisé sur une seule cible.",
+  "nin.ninki.suggestions.frog.content": "Évitez d'utiliser <0/> si vos autres techniques utilisant de la jauge Ninki sont disponibles (à moins qu'il y ait plusieurs cibles), car c'est la plus faible des trois lorsqu'elle est lancée sur une seule cible.",
   "nin.ninki.suggestions.frog.why": "",
   "nin.ninki.suggestions.waste.content": "Évitez d'utiliser <0/> quand vous avez au-dessus de 60 Ninki et de retenir vos habiletés utilisant du Ninki quand vous êtes proches ou à ce niveau (avec quelques petites exceptions) pour maximiser le nombre d'utilisations de ces habiletés que vous pouvez utiliser pendant le combat.",
   "nin.ninki.suggestions.waste.why": "",
