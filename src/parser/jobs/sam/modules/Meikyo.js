@@ -64,7 +64,7 @@ export default class Meikyo extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
 				content: <Fragment>
-				While under the effects of  <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> you should only use <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/> and <ActionLink {...ACTIONS.YUKIKAZE}/> becuase these actions allow you to gather Sens faster.
+				While under the effects of  <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> you should only use <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/>, and <ActionLink {...ACTIONS.YUKIKAZE}/> - these actions allow you to gather Sens faster.
 				</Fragment>,
 				severity: SEVERITY.MAJOR,
 				why: <Fragment>
