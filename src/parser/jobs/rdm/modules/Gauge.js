@@ -1,24 +1,22 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 import PATCHES, {getPatch} from 'data/PATCHES'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {i18nMark, Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {i18nMark, Trans} from '@lingui/react'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
 
 //Mana Gains and Expenditures
-const MANA_GAIN = {
+export const MANA_GAIN = {
 	[ACTIONS.VERSTONE.id]: {white: 9, black: 0},
 	[ACTIONS.VERFIRE.id]: {white: 0, black: 9},
-	[ACTIONS.VERAREO.id]: {white: 11, black: 0},
+	[ACTIONS.VERAERO.id]: {white: 11, black: 0},
 	[ACTIONS.VERTHUNDER.id]: {white: 0, black: 11},
 	[ACTIONS.VERHOLY.id]: {white: 21, black: 0},
 	[ACTIONS.VERFLARE.id]: {white: 0, black: 21},
@@ -44,22 +42,114 @@ export const SEVERITY_LOST_MANA = {
 	80: SEVERITY.MAJOR,
 }
 
-export const SEVERITY_WASTED_FINISHER = {
-	1: SEVERITY.MINOR,
-	2: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
-}
-
-const MANA_DIFFERENCE_THRESHOLD = 30
+export const MANA_DIFFERENCE_THRESHOLD = 30
 const MANA_LOST_DIVISOR = 2
-const MANA_CAP = 100
+export const MANA_CAP = 100
 const ENHANCED_SCATTER_GAIN = 8
 const ENHANCED_SCATTER_44_GAIN = 10
-const MISSING_HARDCAST_MANA_VALUE = 11
-const MANAIFCATION_MULTIPLIER = 2
-const MANA_DONT_CAST_THRESHOLD = 96
-const FINISHER_GAIN = 21
-const MELEE_COMBO_COST = 80
+const MANAFICATION_MULTIPLIER = 2
+
+class GaugeAction {
+	mana = {
+		white: {
+			beforeCast: 0,
+			afterCast: 0,
+			overCapLoss: 0,
+			imbalanceLoss: 0,
+			invulnLoss: 0,
+		},
+		black: {
+			beforeCast: 0,
+			afterCast: 0,
+			overCapLoss: 0,
+			imbalanceLoss: 0,
+			invulnLoss: 0,
+		},
+	}
+
+	constructor(startingWhite, startingBlack) {
+		this.mana.white.beforeCast = startingWhite
+		this.mana.black.beforeCast = startingBlack
+
+		this.mana.white.afterCast = startingWhite
+		this.mana.black.afterCast = startingBlack
+	}
+
+	calculateManaFicationManaGained() {
+		this.mana.white.afterCast = this.mana.white.beforeCast * MANAFICATION_MULTIPLIER
+		this.mana.black.afterCast = this.mana.black.beforeCast * MANAFICATION_MULTIPLIER
+
+		this.calculateManaOvercap()
+	}
+
+	calculateCastManaGained(event, actor, isPre44) {
+		//Determine if the ability we used should yield any mana gain.
+		//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
+		//console.log(`Ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
+		const abilityId = event.ability.guid
+		let {white, black} = MANA_GAIN[abilityId] || {}
+		if (white || black) {
+			if (abilityId === ACTIONS.SCATTER.id) {
+				//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
+				if (actor.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
+					//console.log('Enhanced Scatter On')
+					if (isPre44) {
+						white = ENHANCED_SCATTER_GAIN
+						black = ENHANCED_SCATTER_GAIN
+					} else {
+						white = ENHANCED_SCATTER_44_GAIN
+						black = ENHANCED_SCATTER_44_GAIN
+					}
+				}
+			}
+
+			if (event.amount === 0) {
+				// Melee combo skills will still consume mana but will not continue the combo, set an invuln/missed flag for downstream consumers
+				this.missOrInvuln = true
+
+				if (white > 0 || black > 0) {
+					// No mana gained from spells that do no damage due to missing or targeting an invulnerable boss (e.g. Omega M/F firewall)
+					this.mana.white.invulnLoss = white
+					this.mana.black.invulnLoss = black
+					return
+				}
+			}
+			this.mana.white.afterCast = this.mana.white.beforeCast + white
+			this.mana.black.afterCast = this.mana.black.beforeCast + black
+
+			this.calculateManaImbalance(white, black)
+			this.calculateManaOvercap()
+		}
+	}
+
+	calculateManaImbalance(white, black) {
+		if (white && this.mana.black.beforeCast - this.mana.white.beforeCast > MANA_DIFFERENCE_THRESHOLD) {
+			//console.log(`Imbalance White Lost, Current White: ${this._mana.white.beforecast} Current Black: ${this._mana.black.beforecast}`)
+			//If we have more than 30 Black mana over White, our White gains are halved
+			this.mana.white.imbalanceLoss = Math.ceil(white / MANA_LOST_DIVISOR)
+			this.mana.white.afterCast -= this.mana.white.imbalanceLoss
+		}
+
+		if (black && this.mana.white.beforeCast - this.mana.black.beforeCast > MANA_DIFFERENCE_THRESHOLD) {
+			//console.log(`Imbalance Black Lost, Current Black: ${this._mana.black.beforecast} Current White: ${this._mana.white.beforecast}`)
+			//If we have more than 30 White mana over Black, our Black gains are halved
+			this.mana.black.imbalanceLoss = Math.ceil(black / MANA_LOST_DIVISOR)
+			this.mana.black.afterCast -= this.mana.black.imbalanceLoss
+		}
+	}
+
+	calculateManaOvercap() {
+		if (this.mana.white.afterCast > MANA_CAP) {
+			this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
+			this.mana.white.afterCast = MANA_CAP
+		}
+
+		if (this.mana.black.afterCast > MANA_CAP) {
+			this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
+			this.mana.black.afterCast = MANA_CAP
+		}
+	}
+}
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
@@ -67,7 +157,6 @@ export default class Gauge extends Module {
 		static dependencies = [
 			'combatants',
 			'suggestions',
-			'cooldowns',
 		]
 
 		//Keeps track of our current mana gauge.
@@ -80,12 +169,8 @@ export default class Gauge extends Module {
 		_whiteManaLostToImbalance = 0
 		_blackManaLostToImbalance = 0
 
-		_whiteOverallManaGained = 0
-		_blackOverallManaGained = 0
-
-		_missingAreo = false
-		_missingThunder = false
-		_manaficationUsed = false
+		_whiteManaLostToInvulnerable = 0
+		_blackManaLostToInvulnerable = 0
 
 		// Chart handling
 		_history = {
@@ -93,103 +178,16 @@ export default class Gauge extends Module {
 			black: [],
 		}
 
-		//Finisher Handling
-		_incorrectFinishers = {
-			verholy: 0,
-			verflare: 0,
-			bothprocsup: 0,
-		}
-
 		constructor(...args) {
 			super(...args)
 
-			this.addHook('cast', {by: 'player'}, this._onCast)
+			this.addHook('cast', {
+				by: 'player',
+				abilityId: ACTIONS.MANAFICATION.id,
+			}, this._gaugeEvent)
+			this.addHook('aoedamage', {by: 'player'}, this._gaugeEvent)
 			this.addHook('death', {to: 'player'}, this._onDeath)
 			this.addHook('complete', this._onComplete)
-		}
-
-		_calculateManaImbalance(white, black) {
-			if (white && this._blackMana - this._whiteMana > MANA_DIFFERENCE_THRESHOLD) {
-				//console.log(`Imbalance White Lost, Current White: ${this._whiteMana} Current Black: ${this._blackMana}`)
-				//If we have more than 30 black mana over White, our White gains are halved
-				this._whiteManaLostToImbalance += Math.ceil(white/MANA_LOST_DIVISOR)
-				white = Math.floor(white/MANA_LOST_DIVISOR)
-			}
-
-			if (black && this._whiteMana - this._blackMana > MANA_DIFFERENCE_THRESHOLD) {
-				//console.log('Imbalance Black Lost')
-				//If we have more than 30 white mana over black, our black gains are halved
-				this._blackManaLostToImbalance += Math.ceil(black/MANA_LOST_DIVISOR)
-				black = Math.floor(black/MANA_LOST_DIVISOR)
-			}
-		}
-
-		_calculateManaWasted(white, black) {
-			if (this._whiteMana > MANA_CAP) {
-				this._whiteManaWasted += this._whiteMana - MANA_CAP
-				if (white || black) {
-					this._whiteOverallManaGained += (white - (this._whiteMana - MANA_CAP))
-				}
-				this._whiteMana = MANA_CAP
-			} else if (white || black) {
-				this._whiteOverallManaGained += white||0
-			}
-
-			if (this._blackMana > MANA_CAP) {
-				//console.log(`Wasted: ${this._blackMana - MANA_CAP}`)
-				this._blackManaWasted += this._blackMana - MANA_CAP
-				if (white || black) {
-					this._blackOverallManaGained += (black - (this._blackMana - MANA_CAP))
-				}
-				this._blackMana = MANA_CAP
-			} else if (white || black) {
-				this._blackOverallManaGained += black||0
-			}
-		}
-
-		_calculateOverallManaGained(white, black) {
-			if (this._whiteMana > MANA_CAP) {
-				this._whiteManaWasted += this._whiteMana - MANA_CAP
-				if (white || black) {
-					this._whiteOverallManaGained += (white - (this._whiteMana - MANA_CAP))
-				}
-				this._whiteMana = MANA_CAP
-			} else if (white || black) {
-				this._whiteOverallManaGained += white||0
-			}
-
-			if (this._blackMana > MANA_CAP) {
-				//console.log(`Wasted: ${this._blackMana - 100}`)
-				this._blackManaWasted += this._blackMana - MANA_CAP
-				if (white || black) {
-					this._blackOverallManaGained += (black - (this._blackMana - MANA_CAP))
-				}
-				this._blackMana = MANA_CAP
-			} else if (white || black) {
-				this._blackOverallManaGained += black||0
-			}
-		}
-
-		_calculateManaFicationManaGained() {
-			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-			//console.log('manafication')
-			this._whiteMana = this._whiteMana * MANAIFCATION_MULTIPLIER
-			this._blackMana = this._blackMana * MANAIFCATION_MULTIPLIER
-			this._manaficationUsed = true
-
-			//TODO: Fix Handling for Manafication!!!!
-			//For now I'm excluding it from waste calculations
-			if (this._whiteMana > MANA_CAP) {
-				this._whiteMana = MANA_CAP
-			}
-			if (this._blackMana > MANA_CAP) {
-				this._blackMana = MANA_CAP
-			}
-
-			//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-			this._calculateOverallManaGained(this._whiteMana, this._blackMana)
-			this._calculateManaWasted(this._whiteMana, this._blackMana)
-			this._calculateManaImbalance(this._whiteMana, this._blackMana)
 		}
 
 		_pushToGraph() {
@@ -198,129 +196,42 @@ export default class Gauge extends Module {
 			this._history.black.push({t: timestamp, y: this._blackMana})
 		}
 
-		_onCast(event) {
-			const abilityId = event.ability.guid
-			//Handle Finisher BEFORE adjusting mana
-			if (abilityId === ACTIONS.VERFLARE.id || abilityId === ACTIONS.VERHOLY.id) {
-				this._handleFinisher(abilityId)
-			}
+		_gaugeEvent(event) {
+			const gaugeAction = new GaugeAction(this._whiteMana, this._blackMana)
 
+			const abilityId = event.ability.guid
 			//console.log(`White: ${this._whiteMana} Black: ${this._blackMana}`)
 			if (abilityId === ACTIONS.MANAFICATION.id) {
 				//console.log('Manafication')
-				this._calculateManaFicationManaGained()
+				gaugeAction.calculateManaFicationManaGained()
 			} else {
-				//Determine if the ability we used should yield any mana gain.
-				//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-				//console.log(`Ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
-				let {white, black} = MANA_GAIN[abilityId] || {}
-				if (white || black) {
-					if (abilityId === ACTIONS.SCATTER.id) {
-						//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
-						if (this.combatants.selected.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
-							//console.log('Enhanced Scatter On')
-							if (this._getIsPre44) {
-								white = ENHANCED_SCATTER_GAIN
-								black = ENHANCED_SCATTER_GAIN
-							} else {
-								white = ENHANCED_SCATTER_44_GAIN
-								black = ENHANCED_SCATTER_44_GAIN
-							}
-						}
-					}
-
-					//console.log(`Gain ${white||0} White, Gain ${black||0} Black`)
-
-					if (white || black) {
-						this._whiteMana += white
-						this._blackMana += black
-
-						//We might be missing events from ACT's capture, so do not allow negatives!
-						if (this._whiteMana < 0) {
-							this._missingAreo = true
-							this._whiteMana = this._manaficationUsed ? MISSING_HARDCAST_MANA_VALUE * MANAIFCATION_MULTIPLIER : MISSING_HARDCAST_MANA_VALUE
-						}
-						if (this._blackMana < 0) {
-							this._missingThunder = true
-							this._blackMana = this._manaficationUsed ? MISSING_HARDCAST_MANA_VALUE * MANAIFCATION_MULTIPLIER : MISSING_HARDCAST_MANA_VALUE
-							//this._blackMana = 0
-						}
-					}
-					//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
-					this._calculateOverallManaGained(white, black)
-					this._calculateManaWasted(white, black)
-					this._calculateManaImbalance(white, black)
-				}
+				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this._getIsPre44)
 			}
+
+			this._whiteMana = gaugeAction.mana.white.afterCast
+			this._blackMana = gaugeAction.mana.black.afterCast
+
+			this._whiteManaWasted += gaugeAction.mana.white.overCapLoss
+			this._blackManaWasted += gaugeAction.mana.black.overCapLoss
+
+			this._whiteManaLostToImbalance += gaugeAction.mana.white.imbalanceLoss
+			this._blackManaLostToImbalance += gaugeAction.mana.black.imbalanceLoss
+
+			this._whiteManaLostToInvulnerable += gaugeAction.mana.white.invulnLoss
+			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnLoss
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()
 			}
-		}
 
-		_handleFinisher(abilityId) {
-			const isFireReady = this.combatants.selected.hasStatus(STATUSES.VERFIRE_READY.id)
-			const isStoneReady = this.combatants.selected.hasStatus(STATUSES.VERSTONE_READY.id)
-			//All the logic is calculated as a decision to be made before entering the melee combo because of how RDM Works
-			//I have a different idea for how to represent this logic, I'll implement it when I factor this out to its own module
-			const white = this._whiteMana + MELEE_COMBO_COST
-			const black = this._blackMana + MELEE_COMBO_COST
-			const isAccelerationUp = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0)
-			let useVerHoly = false
-			let useVerFlare = false
-			let doesntMatter = false
-			let useOnBadProc = false
-
-			//TODO in refactor recompare it against Jump's guide - especially if he updates due to potency changes.
-			//Its possible the current threshold rules are no longer valid with the increase to thunder/aero and finisher
-			//potency with patch 4.4
-			if (isStoneReady &&
-				isFireReady &&
-				white >= MANA_DONT_CAST_THRESHOLD &&
-				black >= MANA_DONT_CAST_THRESHOLD) {
-				doesntMatter = true
-			} else if (isAccelerationUp &&
-				isFireReady &&
-				!isStoneReady &&
-				black < white &&
-				white + FINISHER_GAIN - black <= MANA_DIFFERENCE_THRESHOLD) {
-				useVerHoly = true
-			} else if (isAccelerationUp &&
-					!isFireReady &&
-					isStoneReady &&
-					white < black &&
-					black + FINISHER_GAIN - white <= MANA_DIFFERENCE_THRESHOLD) {
-				useVerFlare = true
-			} else if (white < black && white < MANA_DONT_CAST_THRESHOLD) {
-				useVerHoly = true
-				if (isStoneReady) {
-					useOnBadProc = true
-				}
-			} else if (black < white && black < MANA_DONT_CAST_THRESHOLD) {
-				useVerFlare = true
-				if (isFireReady) {
-					useOnBadProc = true
-				}
-			} else if (isStoneReady && isFireReady && (white <= MANA_DONT_CAST_THRESHOLD || black < MANA_DONT_CAST_THRESHOLD)) {
-				this._incorrectFinishers.bothprocsup++
-				return
+			const fabricatedEvent = {
+				...event,
+				type: 'rdmcast',
+				mana: gaugeAction.mana,
+				missOrInvlun: gaugeAction.missOrInvuln,
 			}
-
-			if (doesntMatter || (!useVerFlare && !useVerHoly)) {
-				//Doesn't matter, so return
-				return
-			}
-
-			if (useVerFlare && abilityId === ACTIONS.VERHOLY.id) {
-				this._incorrectFinishers.verholy++
-			} else if (abilityId === ACTIONS.VERHOLY.id && useOnBadProc) {
-				this._incorrectFinishers.verholy++
-			}
-			if (useVerHoly && abilityId === ACTIONS.VERFLARE.id) {
-				this._incorrectFinishers.verflare++
-			} else if (abilityId === ACTIONS.VERFLARE.id && useOnBadProc) {
-				this._incorrectFinishers.verflare++
-			}
+			//console.log(`${JSON.stringify(fabricatedEvent, null, 4)}`)
+			this.parser.fabricateEvent(fabricatedEvent)
 		}
 
 		_onDeath() {
@@ -330,22 +241,6 @@ export default class Gauge extends Module {
 		}
 
 		_onComplete() {
-			if (this._missingAreo || this._missingThunder) {
-				this.suggestions.add(new Suggestion({
-					content: <Fragment>
-						<Message warning icon>
-							<Icon name="warning sign"/>
-							<Trans id="rdm.gauge.suggestions.missing-cast-warning-content">Due to a missing cast at the start of the log, mana calculations might be off.
-								Additionally 1 or more finishers might have been incorrectly flagged as wrongly used.</Trans>
-						</Message>
-					</Fragment>,
-					severity: SEVERITY.MAJOR,
-					why: <Fragment>
-						<Trans id="rdm.gauge.suggetsions.missing-cast-warning-why">You were the first damage event, so it doesn&apos;t log your first cast as cast by you</Trans>
-					</Fragment>,
-				}))
-			}
-
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERHOLY.icon,
 				content: <Fragment>
@@ -359,7 +254,7 @@ export default class Gauge extends Module {
 			}))
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERFLARE.icon,
+				icon: ACTIONS.VERHOLY.icon,
 				content: <Fragment>
 					<Trans id="rdm.gauge.suggestions.white-mana-lost-content">Ensure you don't allow a difference of more than 30 betwen mana types, you lost white Mana due to Imbalance which reduces your overall mana gain and potentially costs you one or more Enchanted Combos</Trans>
 				</Fragment>,
@@ -367,6 +262,18 @@ export default class Gauge extends Module {
 				value: this._whiteManaLostToImbalance,
 				why: <Fragment>
 					<Trans id="rdm.gauge.suggestions.white-mana-lost-why">You lost {this._whiteManaLostToImbalance} White Mana due to overage of black Mana</Trans>
+				</Fragment>,
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.VERHOLY.icon,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-invuln-content">Ensure you don't target a boss that you cannot damage with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
+				</Fragment>,
+				tiers: SEVERITY_LOST_MANA,
+				value: this._whiteManaLostToInvulnerable,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.white-mana-invuln-why">You lost {this._whiteManaLostToInvulnerable} White Mana due to misses or spells that targeted an invulnerable target</Trans>
 				</Fragment>,
 			}))
 
@@ -395,43 +302,15 @@ export default class Gauge extends Module {
 			}))
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERHOLY.icon,
-				content: <Trans id="rdm.gauge.suggestions.wastedverholy.content">
-					You should use <ActionLink {...ACTIONS.VERHOLY} /> over <ActionLink {...ACTIONS.VERFLARE} /> in the following situations in order of importance
-					<ol>
-						<li>When your white mana is lower</li>
-						<li>Your mana is even and you have <StatusLink {...STATUSES.VERFIRE_READY} /> (Use <ActionLink {...ACTIONS.ACCELERATION} /> if available!)</li>
-						<li>White mana is higher by 9 or less and <ActionLink {...ACTIONS.ACCELERATION} /> is available with <StatusLink {...STATUSES.VERFIRE_READY} /></li>
-					</ol>
-				</Trans>,
-				why: <Plural id="rdm.gauge.suggestions.wastedverholy.why" value={this._incorrectFinishers.verflare} one="# Verstone cast was lost due to using Verflare incorrectly" other="# Verstone casts were lost due to using Verflare incorrectly" />,
-				tiers: SEVERITY_WASTED_FINISHER,
-				value: this._incorrectFinishers.verflare,
-			}))
-
-			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.VERFLARE.icon,
-				content: <Trans id="rdm.gauge.suggestions.wastedverflare.content">
-					You should use <ActionLink {...ACTIONS.VERFLARE} /> over <ActionLink {...ACTIONS.VERHOLY}/> in the following situations in order of importance
-					<ol>
-						<li>When your black mana is lower</li>
-						<li>Your mana is even and you have <StatusLink {...STATUSES.VERSTONE_READY} /> (Use <ActionLink {...ACTIONS.ACCELERATION} /> if available!)</li>
-						<li>Black mana is higher by 9 or less and <ActionLink {...ACTIONS.ACCELERATION} /> is available with <StatusLink {...STATUSES.VERSTONE_READY} /></li>
-					</ol>
-				</Trans>,
-				why: <Plural id="rdm.gauge.suggestions.wastedverflare.why" value={this._incorrectFinishers.verholy} one="# Verfire cast was lost due to using Verholy incorrectly" other="# Verfire casts were lost due to using Verholy incorrectly" />,
-				tiers: SEVERITY_WASTED_FINISHER,
-				value: this._incorrectFinishers.verholy,
-			}))
-
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERSTONE.icon,
-				content: <Trans id="rdm.gauge.suggestions.wastedprocs.content">
-					Do not enter your combo with both procs up when <ActionLink {...ACTIONS.ACCELERATION}/> is down, consider dumping one of the procs before entering the melee combo as long as you gain at least 4 mana
-				</Trans>,
-				why: <Plural id="rdm.gauge.suggestions.wastedprocs.why" value={this._incorrectFinishers.bothprocsup} one="# Proc cast was lost due to entering the melee combo with both procs up." other="# Procs casts were lost due to entering the melee combo with both procs up." />,
-				tiers: SEVERITY_WASTED_FINISHER,
-				value: this._incorrectFinishers.bothprocsup,
+				content: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-invuln-content">Ensure you don't target a boss that you cannot damage with your damaging spells.  Spells that do no damage due to an invulnerable target or due to missing result in no mana gained, which potentially costs you one or more Enchanted Combos.</Trans>
+				</Fragment>,
+				tiers: SEVERITY_LOST_MANA,
+				value: this._blackManaLostToInvulnerable,
+				why: <Fragment>
+					<Trans id="rdm.gauge.suggestions.black-mana-invuln-why">You lost {this._blackManaLostToInvulnerable} Black Mana due to misses or spells that targeted an invulnerable target</Trans>
+				</Fragment>,
 			}))
 		}
 
