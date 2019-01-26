@@ -265,7 +265,7 @@ export default class Gauge extends Module {
 			//I have a different idea for how to represent this logic, I'll implement it when I factor this out to its own module
 			const white = this._whiteMana + MELEE_COMBO_COST
 			const black = this._blackMana + MELEE_COMBO_COST
-			const isAccelerationUp = ( this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0 )
+			const isAccelerationUp = (this.combatants.selected.hasStatus(STATUSES.ACCELERATION.id) || this.cooldowns.getCooldownRemaining(ACTIONS.ACCELERATION.id) === 0)
 			let useVerHoly = false
 			let useVerFlare = false
 			let doesntMatter = false
