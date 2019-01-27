@@ -27,6 +27,7 @@ export default {
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.AZARIAH, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -99,6 +100,11 @@ export default {
 			date: new Date('2018-11-14'),
 			changes: 'Adjusted some of the wording on suggestions based on user feedback.',
 			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2019-01-23'),
+			changes: 'Added rotation tables showing melee combo usages and finisher recommendations',
+			contributors: [CONTRIBUTORS.AZARIAH],
 		},
 	],
 }

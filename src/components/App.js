@@ -48,7 +48,7 @@ class App extends Component {
 		this._unlisten()
 	}
 
-	_locationDidChange(/* location */) {
+	_locationDidChange = (/* location */) => {
 		// User's browsed - clear the global error state. Page can always re-throw one.
 		const {globalErrorStore} = this.props
 		globalErrorStore.clearGlobalError()

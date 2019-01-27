@@ -21,9 +21,17 @@ export default {
 	</Fragment>,
 	supportedPatches: {
 		from: '4.3',
-		to: '4.36',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.AZARIAH, role: ROLES.DEVELOPER},
+	],
+	changelog: [
+		{
+			date: new Date('2019-01-25'),
+			changes: 'Update analyzer for 4.5 patch, remove inaccurate recommendation for DA usage during enmity combo.',
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 	],
 }

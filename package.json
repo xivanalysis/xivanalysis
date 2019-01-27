@@ -82,6 +82,7 @@
     "vis": "^4.21.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.2.3",
     "@lingui/babel-plugin-transform-js": "^2.5.0",
     "@lingui/babel-plugin-transform-react": "^2.5.0",
     "@lingui/cli": "^2.5.0",
