@@ -3,3 +3,7 @@
 
 # Maybe this'll help with those horrid diffs on GH
 *.js linguist-language=JSX
+
+# Generated files
+locale/**/messages.json linguist-generated=true
+**/*.module.css.d.ts linguist-generated=true
