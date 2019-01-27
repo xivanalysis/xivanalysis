@@ -125,8 +125,8 @@ class CombatantList extends React.Component<Props> {
 
 	private renderWarning = () => (
 		<Message info icon="code">
-			<p><Trans id="core.find.job-unsupported.title" render="strong">Favourite job unsupported?</Trans></p>
-			<p><Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans></p>
+			<Message.Header><Trans id="core.find.job-unsupported.title" render="strong">Favourite job unsupported?</Trans></Message.Header>
+			<Trans id="core.find.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
 		</Message>
 	)
 

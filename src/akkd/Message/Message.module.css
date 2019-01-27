@@ -20,6 +20,7 @@
 	margin-bottom: calc(-1 * gutter);
 }
 
+/* Message type colours */
 .info {
 	background: color(themeBlue l(backgroundLightness));
 	color: color(themeBlue l(colorLightness));
@@ -42,4 +43,9 @@
 	margin-right: gutter !important;
 	height: auto !important;
 	font-size: 3em !important;
+}
+
+.header {
+	font-weight: bold;
+	font-size: 1.1em;
 }

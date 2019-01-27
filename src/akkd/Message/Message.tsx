@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import React from 'react'
 import {Icon, SemanticICONS} from 'semantic-ui-react'
 import styles from './Message.module.css'
+import {MessageHeader} from './MessageHeader'
 
 interface MessageTypes {
 	error?: boolean
@@ -23,6 +24,8 @@ interface Props extends MessageTypes {
 }
 
 export class Message extends React.PureComponent<Props> {
+	static Header = MessageHeader
+
 	render() {
 		const {icon, children} = this.props
 

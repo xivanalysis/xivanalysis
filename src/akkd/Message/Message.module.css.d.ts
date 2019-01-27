@@ -14,3 +14,4 @@ export const success: string;
 export const warning: string;
 export const error: string;
 export const icon: string;
+export const header: string;
