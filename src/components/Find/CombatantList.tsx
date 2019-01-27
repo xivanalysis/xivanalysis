@@ -150,6 +150,8 @@ class CombatantList extends React.Component<Props> {
 		const {report, currentFight} = this.props
 		const job = getDataBy(JOBS, 'logType', friend.type)
 		const supportedPatches = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+		const from = supportedPatches.from
+		const to = supportedPatches.to || from
 
 		return (
 			<List.Item
@@ -161,8 +163,7 @@ class CombatantList extends React.Component<Props> {
 				{friend.name}
 				{supportedPatches && <span className={styles.supportedPatches}>
 					<Trans id="core.find.supported-patches">
-						Patch
-						{supportedPatches.from}{supportedPatches.from !== supportedPatches.to && `–${supportedPatches.to}`}
+						Patch {from}{from !== to? `–${to}` : ''}
 					</Trans>
 				</span>}
 			</List.Item>
