@@ -4,7 +4,7 @@ import styles from './JobIcon.module.css'
 
 interface Props {
 	job: Job,
-	scale: number,
+	scale?: number,
 }
 
 export default class JobIcon extends React.PureComponent<Props> {

@@ -1,3 +1,14 @@
+@value gutter, md from 'theme.module.css';
+
+.fightList {
+	margin: 0 gutter;
+}
+@media md {
+	.fightList {
+		margin: 0;
+	}
+}
+
 .refresh {
 	font-size: 1rem;
 	cursor: pointer;

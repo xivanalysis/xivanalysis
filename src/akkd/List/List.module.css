@@ -1,0 +1,15 @@
+@value gutter, highlight, themeHover from "theme.module.css";
+@value block from "../shared.module.css";
+
+.list {
+	composes: block;
+	border-left: highlight solid transparent;
+}
+
+.listItem {
+	display: flex;
+	align-items: center;
+	padding-left: calc(gutter - highlight);
+	padding-right: gutter;
+	min-height: calc(1.5 * gutter);
+}

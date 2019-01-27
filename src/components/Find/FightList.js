@@ -82,7 +82,7 @@ class FightList extends Component {
 			})
 		}
 
-		return <>
+		return <div className={styles.fightList}>
 			<Header>
 				<Trans id="core.find.select-pull">
 					Select a pull
@@ -119,7 +119,7 @@ class FightList extends Component {
 					{group.fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</Menu>
 			</Fragment>)}
-		</>
+		</div>
 	}
 }
 

@@ -1,6 +1,11 @@
-.combatantLink {
-	display: flex !important;
-	align-items: center;
+@value themeText from 'theme.module.css';
+
+.friendLink,
+.friendLink:hover {
+	color: themeText
+}
+.friendLink:hover {
+	font-weight: bold;
 }
 
 .supportedPatches {

@@ -1,0 +1,11 @@
+@value gutter, md from 'theme.module.css';
+
+.container {
+	position: relative;
+}
+
+@media md {
+	.container {
+		margin: gutter;
+	}
+}
