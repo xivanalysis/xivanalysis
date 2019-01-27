@@ -33,7 +33,7 @@ const BOSSES = {
 
 	// UwU
 	THE_ULTIMA_WEAPON: {
-		logId: 0,
+		logId: 1042,
 		zoneId: ZONES.UWU.logId,
 	},
 }
