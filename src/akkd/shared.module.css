@@ -1,4 +1,4 @@
-@value gutter, md, themeBackground from "theme.module.css";
+@value gutter, themeBackground from "theme.module.css";
 
 /* Consolidated handling for vertical spacing between content blocks */
 .verticalSpacing {
@@ -15,10 +15,4 @@
 .block {
 	composes: verticalSpacing;
 	background: themeBackground;
-}
-@media md {
-	.block {
-		margin-left: calc(-1 * gutter);
-		margin-right: calc(-1 * gutter);
-	}
 }

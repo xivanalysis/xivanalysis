@@ -6,10 +6,6 @@
 
 @media md {
 	.container {
-		/*
-		All content blocks have negative margins to allow nested blocks to collapse.
-		Double the margin for the primary container so we still get the nice gutter
-		*/
-		margin: gutter calc(2 * gutter);
+		margin: gutter;
 	}
 }

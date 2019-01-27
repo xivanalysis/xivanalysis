@@ -8,8 +8,6 @@ import FightList from './FightList'
 import CombatantList from './CombatantList'
 import {ReportStore} from 'store/report'
 
-import styles from './Find.module.css'
-
 @inject('reportStore')
 @observer
 class Find extends React.Component {
@@ -47,10 +45,9 @@ class Find extends React.Component {
 			)
 		}
 
-		const content = params.fight
+		return params.fight
 			? <CombatantList report={report} currentFight={parseInt(params.fight, 10)}/>
 			: <FightList/>
-		return <div className={styles.find}>{content}</div>
 	}
 }
 

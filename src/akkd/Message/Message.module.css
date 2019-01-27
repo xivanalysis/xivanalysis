@@ -8,6 +8,7 @@
 	composes: block;
 	display: flex;
 	align-items: center;
+	margin: 0 calc(-1 * gutter);
 	padding: gutter;
 	background: color(themeGrey l(backgroundLightness));
 	color: color(themeGrey l(colorLightness));
