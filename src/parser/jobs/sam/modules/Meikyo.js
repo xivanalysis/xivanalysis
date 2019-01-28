@@ -5,7 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const MEIKYO_GCDS = {
 
@@ -56,17 +56,22 @@ export default class Meikyo extends Module {
 	}
 
 	_onRemoveMS() {
-		this._missedMeikyoCasts = this._missedMeikyoCasts + (3 - this._currentMeikyoCasts)
+		this._missedMeikyoCasts += (3 - this._currentMeikyoCasts)
 	}
 
 	_onComplete() {
+
 		if (this._badMeikyoCasts > 0) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
 				content: <Fragment>
 				While under the effects of  <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> you should only use <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/>, and <ActionLink {...ACTIONS.YUKIKAZE}/> - these actions allow you to gather Sens faster.
 				</Fragment>,
-				severity: SEVERITY.MAJOR,
+				tiers: {
+					1: SEVERITY.MEDIUM,
+					2: SEVERITY.MAJOR,
+				},
+				value: this._badMeikyoCasts,
 				why: <Fragment>
 					You did not use sen moves {this._badMeikyoCasts} time{this._badMeikyoCasts !== 1 && 's'} under the effect of Meikyo Shisui.
 				</Fragment>,
@@ -74,12 +79,16 @@ export default class Meikyo extends Module {
 		}
 
 		if (this._missedMeikyoCasts > 0) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
 				content: <Fragment>
                                 Always make sure to get 3 GCDs under the effect of Meikyo Shisui.
 				</Fragment>,
-				severity: SEVERITY.MAJOR,
+				tiers: {
+					1: SEVERITY.MEDIUM,
+					2: SEVERITY.MAJOR,
+				},
+				value: this._missedMeikyoCasts,
 				why: <Fragment>
                                         You missed {this._missedMeikyoCasts} GCD{this._missedMeikyoCasts !== 1 && 's'} under the effect of Meikyo Shisui.
 				</Fragment>,
