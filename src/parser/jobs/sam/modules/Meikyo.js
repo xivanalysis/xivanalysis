@@ -1,28 +1,13 @@
 import React, {Fragment} from 'react'
-//import {Icon, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
-const MEIKYO_GCDS = {
-
-	//These actions are bad to use under meikyo
-	[ACTIONS.HAKAZE.id]: 1,
-	[ACTIONS.JINPU.id]: 1,
-	[ACTIONS.ENPI.id]: 1,
-	[ACTIONS.SHIFU.id]: 1,
-	[ACTIONS.FUGA.id]: 1,
-	[ACTIONS.GEKKO.id]: 1,
-	[ACTIONS.MANGETSU.id]: 1,
-	[ACTIONS.OKA.id]: 1,
-
-	[ACTIONS.GEKKO.id]: 0,
-	[ACTIONS.YUKIKAZE.id]: 0,
-	[ACTIONS.KASHA.id]: 0,
-}
+//All Gcds that consume the buff and are bad are in Bad Meikyo Casts, Duh. Does not check sen spending moves
+const BAD_MEIKYO_GCDS = new Set([ACTIONS.HAKAZE.id, ACTIONS.JINPU.id, ACTIONS.ENPI.id, ACTIONS.SHIFU.id, ACTIONS.FUGA.id, ACTIONS.MANGETSU.id, ACTIONS.OKA.id])
+const GOOD_MEIKYO_GCDS = new Set([ACTIONS.GEKKO.id, ACTIONS.KASHA.id, ACTIONS.YUKIKAZE.id])
 
 export default class Meikyo extends Module {
 	static handle = 'meikyo'
@@ -49,10 +34,16 @@ export default class Meikyo extends Module {
 			this._currentMeikyoCasts = 0
 		}
 
-		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id) && MEIKYO_GCDS.hasOwnProperty(abilityId)) {
-			this._badMeikyoCasts += MEIKYO_GCDS[abilityId] // Sen generator moves won't increment this, everything else will
-			this._currentMeikyoCasts++
+		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id)) {
+			if (BAD_MEIKYO_GCDS.has(abilityId)) {
+				this._badMeikyoCasts++
+				this._currentMeikyoCasts++
+			}
+			if (GOOD_MEIKYO_GCDS.has(abilityId)) {
+				this._currentMeikyoCasts++
+			}
 		}
+
 	}
 
 	_onRemoveMS() {
