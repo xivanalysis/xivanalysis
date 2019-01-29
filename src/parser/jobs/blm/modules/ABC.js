@@ -96,28 +96,30 @@ export default class AlwaysBeCasting extends Module {
 	}
 
 	output() {
-		return <Table collapsing unstackable compact="very">
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell><Trans id="blm.abc.timestamp-header">Timestamp</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="blm.abc.duration-header">Duration</Trans></Table.HeaderCell>
-					<Table.HeaderCell></Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{this._noCastWindows.history.map(notCasting => {
-					return <Table.Row key={notCasting.start}>
-						<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
-						<Table.Cell>&ge;{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
-						<Table.Cell>
-							<Button onClick={() =>
-								this.timeline.show(notCasting.start - this.parser.fight.start_time, notCasting.stop - this.parser.fight.start_time)}>
-								<Trans id="blm.abc.timelinelink-button">Jump to Timeline</Trans>
-							</Button>
-						</Table.Cell>
+		if (this._noCastWindows.history.length > 0) {
+			return <Table collapsing unstackable compact="very">
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell><Trans id="blm.abc.timestamp-header">Timestamp</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="blm.abc.duration-header">Duration</Trans></Table.HeaderCell>
+						<Table.HeaderCell></Table.HeaderCell>
 					</Table.Row>
-				})}
-			</Table.Body>
-		</Table>
+				</Table.Header>
+				<Table.Body>
+					{this._noCastWindows.history.map(notCasting => {
+						return <Table.Row key={notCasting.start}>
+							<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
+							<Table.Cell>&ge;{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
+							<Table.Cell>
+								<Button onClick={() =>
+									this.timeline.show(notCasting.start - this.parser.fight.start_time, notCasting.stop - this.parser.fight.start_time)}>
+									<Trans id="blm.abc.timelinelink-button">Jump to Timeline</Trans>
+								</Button>
+							</Table.Cell>
+						</Table.Row>
+					})}
+				</Table.Body>
+			</Table>
+		}
 	}
 }
