@@ -91,7 +91,8 @@ export default class AlwaysBeCasting extends Module {
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
 			return this.invuln.getInvulns('all', windows.start, windows.stop).length === 0
 		})
-
+		//filter out negative durations
+		this._noCastWindows.history = this._noCastWindows.history.filter(windows => windows.stop - windows.start > DURATION_ERROR_OFFSET)
 	}
 
 	output() {
@@ -107,7 +108,7 @@ export default class AlwaysBeCasting extends Module {
 				{this._noCastWindows.history.map(notCasting => {
 					return <Table.Row key={notCasting.start}>
 						<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
-						<Table.Cell>{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
+						<Table.Cell>&ge;{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
 								this.timeline.show(notCasting.start - this.parser.fight.start_time, notCasting.stop - this.parser.fight.start_time)}>
