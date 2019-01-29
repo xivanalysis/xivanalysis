@@ -6,6 +6,7 @@ import RotationWatchdog from './RotationWatchdog'
 import OGCDDowntime from './OGCDDowntime'
 import Speedmod from './Speedmod'
 import Leylines from './Leylines'
+import ABC from './ABC'
 
 export default [
 	Gauge,
@@ -16,4 +17,5 @@ export default [
 	OGCDDowntime,
 	Speedmod,
 	Leylines,
+	ABC,
 ]

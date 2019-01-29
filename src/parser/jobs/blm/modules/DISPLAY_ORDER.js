@@ -1,6 +1,7 @@
 export default {
 	ROTATION: 1,
-	LEY_LINES: 2,
-	TRIPLE: 3,
-	WEAVING: 4,
+	ABC: 2,
+	LEY_LINES: 3,
+	TRIPLE: 4,
+	WEAVING: 5,
 }
