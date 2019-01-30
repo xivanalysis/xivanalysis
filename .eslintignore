@@ -3,3 +3,4 @@ config
 scripts
 locale
 preset-react-app-custom
+build
