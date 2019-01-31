@@ -25,7 +25,7 @@ export default class InternalRelease extends Module {
 
 	_active = false
 	_history = []
-	_release = {}
+	_release = {casts: []}
 	_rushing = false
 
 	_badElixirs = 0
