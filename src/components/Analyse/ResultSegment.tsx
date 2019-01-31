@@ -93,10 +93,12 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 	}
 
 	scrollIntoView() {
-		// there actually is a this.ref!.scrollIntoView method, but it doesn't support offsets
-		scrollBy({
-			top: this.ref!.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP,
-			behavior: 'smooth',
-		})
+		// Try to use the smooth scrolling, fall back to the old method
+		const scrollAmount = this.ref!.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP
+		try {
+			scrollBy({top: scrollAmount, behavior: 'smooth'})
+		} catch {
+			scrollBy(0, scrollAmount)
+		}
 	}
 }
