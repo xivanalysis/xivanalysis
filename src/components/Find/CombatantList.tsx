@@ -43,7 +43,11 @@ class CombatantList extends React.Component<Props> {
 			// Ignore LB and players not in the current fight
 			const inFight = friendly.fights.some(fight => fight.id === currentFight)
 			const type = friendly.type
-			if (type === ActorType.LIMIT_BREAK || !inFight) {
+			if (
+				type === ActorType.LIMIT_BREAK ||
+				type === ActorType.NPC ||
+				!inFight
+			) {
 				return groups
 			}
 
@@ -151,9 +155,19 @@ class CombatantList extends React.Component<Props> {
 	private renderFriend = (friend: Actor) => {
 		const {report, currentFight} = this.props
 		const job = getDataBy(JOBS, 'logType', friend.type)
-		const supportedPatches = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
-		const from = supportedPatches.from
-		const to = supportedPatches.to || from
+		const supportedPatchesData = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+
+		let supportedPatches: React.ReactNode
+		if (supportedPatchesData) {
+			const from = supportedPatchesData.from
+			const to = supportedPatchesData.to || from
+
+			supportedPatches = (
+				<Trans id="core.find.supported-patches">
+					Patch {from}{from !== to? `–${to}` : ''}
+				</Trans>
+			)
+		}
 
 		return (
 			<List.Item
@@ -163,11 +177,11 @@ class CombatantList extends React.Component<Props> {
 			>
 				{job && <JobIcon job={job}/>}
 				{friend.name}
-				{supportedPatches && <span className={styles.supportedPatches}>
-					<Trans id="core.find.supported-patches">
-						Patch {from}{from !== to? `–${to}` : ''}
-					</Trans>
-				</span>}
+				{supportedPatches && (
+					<span className={styles.supportedPatches}>
+						{supportedPatches}
+					</span>
+				)}
 			</List.Item>
 		)
 	}
