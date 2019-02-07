@@ -11,11 +11,11 @@ const GCD_ERROR_OFFSET = 100
 can literally not cast in that period. 1s is too much, but better than substracting not enough*/
 const DURATION_ERROR_OFFSET = 1000
 
-export default class AlwaysBeCasting extends Module {
-	static handle = 'blackmage_abc'
-	static i18n_id = i18nMark('blm.abc.title')
+export default class NotCasting extends Module {
+	static handle = 'notcasting'
+	static i18n_id = i18nMark('blm.notcasting.title')
 	static title = 'Times you did literally nothing'
-	static displayOrder = DISPLAY_ORDER.ABC
+	static displayOrder = DISPLAY_ORDER.NOTCASTING
 
 	static dependencies = [
 		'timeline',
@@ -96,30 +96,31 @@ export default class AlwaysBeCasting extends Module {
 	}
 
 	output() {
-		if (this._noCastWindows.history.length > 0) {
-			return <Table collapsing unstackable compact="very">
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell><Trans id="blm.abc.timestamp-header">Timestamp</Trans></Table.HeaderCell>
-						<Table.HeaderCell><Trans id="blm.abc.duration-header">Duration</Trans></Table.HeaderCell>
-						<Table.HeaderCell></Table.HeaderCell>
+		//if (!this._noCastWindows.history.length) { return } *dab*
+		if (this._noCastWindows.history.length === 0) { return }
+		return <Table collapsing unstackable compact="very">
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell><Trans id="blm.notcasting.timestamp-header">Timestamp</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="blm.notcasting.duration-header">Duration</Trans></Table.HeaderCell>
+					<Table.HeaderCell></Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{this._noCastWindows.history.map(notCasting => {
+					return <Table.Row key={notCasting.start}>
+						<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
+						<Table.Cell>&ge;{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
+						<Table.Cell>
+							<Button onClick={() =>
+								this.timeline.show(notCasting.start - this.parser.fight.start_time, notCasting.stop - this.parser.fight.start_time)}>
+								<Trans id="blm.notcasting.timelinelink-button">Jump to Timeline</Trans>
+							</Button>
+						</Table.Cell>
 					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{this._noCastWindows.history.map(notCasting => {
-						return <Table.Row key={notCasting.start}>
-							<Table.Cell>{this.parser.formatTimestamp(notCasting.start)}</Table.Cell>
-							<Table.Cell>&ge;{this.parser.formatDuration(notCasting.stop-notCasting.start-DURATION_ERROR_OFFSET)}</Table.Cell>
-							<Table.Cell>
-								<Button onClick={() =>
-									this.timeline.show(notCasting.start - this.parser.fight.start_time, notCasting.stop - this.parser.fight.start_time)}>
-									<Trans id="blm.abc.timelinelink-button">Jump to Timeline</Trans>
-								</Button>
-							</Table.Cell>
-						</Table.Row>
-					})}
-				</Table.Body>
-			</Table>
-		}
+				})}
+			</Table.Body>
+		</Table>
+
 	}
 }
