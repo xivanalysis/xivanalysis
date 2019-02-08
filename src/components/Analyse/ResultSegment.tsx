@@ -15,6 +15,7 @@ interface Props {
 }
 
 export const OFFSET_FROM_VIEWPORT_TOP = gutter
+const MAX_MODULE_HEIGHT = 500
 
 export default class ResultSegment extends React.PureComponent<Props> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
@@ -77,10 +78,10 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		return <Consumer>{value => {
 			this.positionContext = value
 			return (
-				<Segment>
+				<Segment.Expandable maxHeight={MAX_MODULE_HEIGHT}>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
 					{result.markup}
-				</Segment>
+				</Segment.Expandable>
 			)
 		}}</Consumer>
 	}
