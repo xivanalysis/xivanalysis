@@ -96,7 +96,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 					seeMore={<Trans id="core.analyse.see-more">See more</Trans>}
 				>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
-					{result.markup}
+					<div>{result.markup}</div>
 				</Segment.Expandable>
 			)
 		}}</Consumer>
