@@ -101,6 +101,7 @@
   "core.always-cast.title": "Always be casting",
   "core.analyse.load-analysis": "Loading analysis",
   "core.analyse.load-report": "Loading report",
+  "core.analyse.see-more": "See more",
   "core.analyse.view-on-fflogs": "View report on FF Logs",
   "core.broken-log.broken-log.description": "One or more modules have reported that this log contains inconsistencies that would suggest data is missing or incorrect. While the system does try to maintain sane results in this situation, some statistics may be inaccurate.",
   "core.broken-log.broken-log.title": "This log is broken.",

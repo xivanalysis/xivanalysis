@@ -89,6 +89,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 				<Segment.Expandable
 					collapsed={collapsed}
 					maxHeight={MAX_MODULE_HEIGHT}
+					seeMore={<Trans id="core.analyse.see-more">See more</Trans>}
 				>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
 					{result.markup}

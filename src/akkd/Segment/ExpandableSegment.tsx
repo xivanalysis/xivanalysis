@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './Segment.module.css'
 
 interface Props {
+	seeMore?: React.ReactNode
 	collapsed?: boolean
 	maxHeight?: number
 }
@@ -75,6 +76,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 
 	render() {
 		const {
+			seeMore,
 			maxHeight: propHeight,
 			children,
 		} = this.props
@@ -103,7 +105,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 				{children}
 				{overflowing && collapsed && (
 					<div className={styles.expand} onClick={this.expand}>
-						<span className={styles.expandMarker}>See more</span>
+						<span className={styles.expandMarker}>{seeMore || 'See more'}</span>
 					</div>
 				)}
 			</div>
