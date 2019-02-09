@@ -41,7 +41,11 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 
 		this.scrollIntoView.bind(this)
 
-		this.state = {}
+		const state: State = {}
+		if (props.result.collapsible === false) {
+			state.collapsed = false
+		}
+		this.state = state
 	}
 
 	componentDidMount() {

@@ -12,6 +12,7 @@ import styles from './About.module.css'
 export default class About extends Module {
 	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
+	static collapsible = false
 	static i18n_id = i18nMark('core.about.title')
 
 	description = null
