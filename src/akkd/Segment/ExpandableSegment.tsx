@@ -3,6 +3,7 @@ import React from 'react'
 import styles from './Segment.module.css'
 
 interface Props {
+	collapsed?: boolean
 	maxHeight?: number
 }
 
@@ -22,7 +23,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 
 		this.state = {
 			overflowing: false,
-			collapsed: true,
+			collapsed: props.collapsed !== undefined? props.collapsed : true,
 		}
 	}
 
@@ -35,6 +36,17 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		// scrollHeight includes overflown content
 		if (current.scrollHeight > maxHeight) {
 			this.setState({overflowing: true})
+		}
+	}
+
+	componentDidUpdate(prevProps: Props, prevState: State) {
+		// Animate the expand the first time it's requested
+		if (
+			prevProps.collapsed !== false &&
+			this.props.collapsed === false &&
+			this.state.collapsed !== false
+		) {
+			this.expand()
 		}
 	}
 
@@ -62,8 +74,15 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 	}
 
 	render() {
-		const {maxHeight: propHeight, children} = this.props
-		const {overflowing, collapsed, maxHeight: stateHeight} = this.state
+		const {
+			maxHeight: propHeight,
+			children,
+		} = this.props
+		const {
+			overflowing,
+			collapsed,
+			maxHeight: stateHeight,
+		} = this.state
 
 		const maxHeight = collapsed? propHeight : stateHeight
 

@@ -14,10 +14,14 @@ interface Props {
 	result: Result
 }
 
+interface State {
+	collapsed?: boolean
+}
+
 export const OFFSET_FROM_VIEWPORT_TOP = gutter
 const MAX_MODULE_HEIGHT = 500
 
-export default class ResultSegment extends React.PureComponent<Props> implements Scrollable {
+export default class ResultSegment extends React.PureComponent<Props, State> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
 	public static scrollIntoView(handle: string) {
 		const instance = this.instances.get(handle)
@@ -36,6 +40,8 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		super(props)
 
 		this.scrollIntoView.bind(this)
+
+		this.state = {}
 	}
 
 	componentDidMount() {
@@ -75,10 +81,15 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 
 	render() {
 		const {result} = this.props
+		const {collapsed} = this.state
+
 		return <Consumer>{value => {
 			this.positionContext = value
 			return (
-				<Segment.Expandable maxHeight={MAX_MODULE_HEIGHT}>
+				<Segment.Expandable
+					collapsed={collapsed}
+					maxHeight={MAX_MODULE_HEIGHT}
+				>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
 					{result.markup}
 				</Segment.Expandable>
@@ -101,5 +112,8 @@ export default class ResultSegment extends React.PureComponent<Props> implements
 		} catch {
 			scrollBy(0, scrollAmount)
 		}
+
+		// Make sure the segment is expanded
+		this.setState({collapsed: false})
 	}
 }
