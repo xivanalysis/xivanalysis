@@ -1228,10 +1228,10 @@
     "@webassemblyjs/wast-parser" "1.7.11"
     "@xtuc/long" "4.2.1"
 
-"@xivanalysis/tooltips@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.2.tgz#1a3c8cb57eb5c53208324a85244522acf15fb544"
-  integrity sha512-tybiazqjH2YRjvZNPeQ0OnBt1YEnq2FbCNftzm788xmKRXwmnUJ6raej8kKOlA0wTHdxJ8CX/o0Z0UYlo2RYNQ==
+"@xivanalysis/tooltips@^0.0.3":
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.3.tgz#0417981060ef3867e7c9e59f0e69a2d1cd3290f7"
+  integrity sha512-3tTs79lSbnUkDLDcizmUxsq9WL9udqL2acRClm7v1XLeL980lVIcg57Gs6DriaiHZ48SGpZmHlzjoMPS0s787A==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"

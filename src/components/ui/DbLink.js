@@ -27,7 +27,7 @@ class TooltipBase extends React.PureComponent {
 		// Props from the HOC
 		baseUrl: PropTypes.string,
 		loading: PropTypes.bool.isRequired,
-		data: PropTypes.object,
+		data: PropTypes.oneOfType(PropTypes.object, PropTypes.symbol),
 		Content: PropTypes.any,
 
 		// Other props we accept
@@ -35,6 +35,7 @@ class TooltipBase extends React.PureComponent {
 		showIcon: PropTypes.bool.isRequired,
 		showTooltip: PropTypes.bool.isRequired,
 		showName: PropTypes.bool.isRequired,
+		name: PropTypes.string,
 	}
 
 	static defaultProps = {
@@ -55,12 +56,17 @@ class TooltipBase extends React.PureComponent {
 			showIcon,
 			showTooltip,
 			showName,
+			name,
 		} = this.props
 
 		if (loading) {
 			return <span>
 				{showIcon && <Icon loading name="circle notch" />}
-				{showName && (children || <Trans id="core.dblink.loading">Loading...</Trans>)}
+				{showName && (
+					children ||
+					name ||
+					<Trans id="core.dblink.loading">Loading...</Trans>
+				)}
 			</span>
 		}
 
