@@ -33,7 +33,6 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		if (!current || !maxHeight) { return }
 
 		// scrollHeight includes overflown content
-		// If we're > the max height, we've overflowing
 		if (current.scrollHeight > maxHeight) {
 			this.setState({overflowing: true})
 		}
@@ -69,7 +68,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		const maxHeight = collapsed? propHeight : stateHeight
 
 		const style: React.CSSProperties = {}
-		if (maxHeight) {
+		if (maxHeight && overflowing) {
 			style.maxHeight = maxHeight
 		}
 
@@ -85,7 +84,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 				{children}
 				{overflowing && collapsed && (
 					<div className={styles.expand} onClick={this.expand}>
-						<span className={styles.expandMarker}>Expand</span>
+						<span className={styles.expandMarker}>See more</span>
 					</div>
 				)}
 			</div>

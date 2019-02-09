@@ -2,7 +2,6 @@
 @value block from "../shared.module.css";
 
 @value transitionDuration: .2s;
-@value expandMarkerHeight: calc(2 * gutter);
 
 .segment {
 	composes: block;
@@ -18,20 +17,20 @@
 
 .expand {
 	position: absolute;
-	bottom: 0;
+	bottom: calc(-1 * gutter);
 	left: 0;
 	z-index: 1;
 	width: 100%;
-	height: expandMarkerHeight;
+	height: calc(3 * gutter);
 	background:
 		linear-gradient(
 			to top,
-			themeBackground 50%,
+			themeBackground 66%,
 			transparent 100%
 		)
 		0 0
 		no-repeat;
-	line-height: expandMarkerHeight;
+	line-height: calc(2 * gutter);
 	text-align: center;
 	cursor: pointer;
 	transition: background-position transitionDuration ease-in-out;
