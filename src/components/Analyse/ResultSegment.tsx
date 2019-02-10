@@ -3,10 +3,9 @@ import {Segment} from 'akkd'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {
-	Header,
-} from 'semantic-ui-react'
+import {Header, Icon} from 'semantic-ui-react'
 import {gutter} from 'theme'
+import styles from './Analyse.module.css'
 import {Consumer, Context, Scrollable} from './SegmentPositionContext'
 
 interface Props {
@@ -88,6 +87,14 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		const {result} = this.props
 		const {collapsed} = this.state
 
+		const seeMore = <>
+			<Icon name="chevron down"/>
+			<strong className={styles.seeMore}>
+				<Trans id="core.analyse.see-more">See more</Trans>
+			</strong>
+			<Icon name="chevron down"/>
+		</>
+
 		return <Consumer>{value => {
 			this.positionContext = value
 			return (
@@ -95,7 +102,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 					collapsed={collapsed}
 					maxHeight={MODULE_HEIGHT_MAX}
 					leeway={MODULE_HEIGHT_LEEWAY}
-					seeMore={<Trans id="core.analyse.see-more">See more</Trans>}
+					seeMore={seeMore}
 				>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
 					<div>{result.markup}</div>
