@@ -23,6 +23,7 @@ export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string
+	collapsible: boolean
 	markup: React.ReactNode
 }
 
@@ -345,6 +346,7 @@ class Parser {
 			const resultMeta = {
 				name: constructor.title,
 				handle: constructor.handle,
+				collapsible: constructor.collapsible,
 				i18n_id: constructor.i18n_id,
 			}
 

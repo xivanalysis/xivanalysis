@@ -9,6 +9,7 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 export default class Checklist extends Module {
 	static handle = 'checklist'
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
+	static collapsible = false
 	static i18n_id = i18nMark('core.checklist.title')
 	static title = 'Checklist'
 

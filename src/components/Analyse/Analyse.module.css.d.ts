@@ -5,3 +5,4 @@ export const header: string;
 export const resultsContainer: string;
 export const reportLink: string;
 export const menuLogo: string;
+export const seeMore: string;

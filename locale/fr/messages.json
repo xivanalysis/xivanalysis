@@ -101,6 +101,7 @@
   "core.always-cast.title": "Soyez toujours en train de lançer vos sorts",
   "core.analyse.load-analysis": "Chargement de l'analyse",
   "core.analyse.load-report": "Chargement du rapport",
+  "core.analyse.see-more": "",
   "core.analyse.view-on-fflogs": "Afficher le rapport sur FF Logs",
   "core.broken-log.broken-log.description": "",
   "core.broken-log.broken-log.title": "",

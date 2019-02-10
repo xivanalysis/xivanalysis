@@ -154,7 +154,11 @@ class Analyse extends Component {
 				</a>
 			</SidebarContent>
 
-			{results.map((result, index) => <ResultSegment index={index} result={result} key={index}/>)}
+			<div className={styles.resultsContainer}>
+				{results.map((result, index) => (
+					<ResultSegment index={index} result={result} key={index}/>
+				))}
+			</div>
 		</SegmentPositionProvider>
 	}
 }
