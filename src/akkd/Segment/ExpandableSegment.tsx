@@ -6,6 +6,7 @@ interface Props {
 	seeMore?: React.ReactNode
 	collapsed?: boolean
 	maxHeight?: number
+	leeway?: number
 }
 
 interface State {
@@ -30,12 +31,15 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 
 	componentDidMount() {
 		const {current} = this.ref
-		const {maxHeight} = this.props
+		const {
+			maxHeight,
+			leeway = 0,
+		} = this.props
 
 		if (!current || !maxHeight) { return }
 
 		// scrollHeight includes overflown content
-		if (current.scrollHeight > maxHeight) {
+		if (current.scrollHeight > maxHeight + leeway) {
 			this.setState({overflowing: true})
 		}
 	}

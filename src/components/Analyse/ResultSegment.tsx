@@ -19,7 +19,8 @@ interface State {
 }
 
 export const OFFSET_FROM_VIEWPORT_TOP = gutter
-const MAX_MODULE_HEIGHT = 500
+const MODULE_HEIGHT_MAX = 400
+const MODULE_HEIGHT_LEEWAY = 200
 
 export default class ResultSegment extends React.PureComponent<Props, State> implements Scrollable {
 	private static instances = new Map<string, ResultSegment>()
@@ -92,7 +93,8 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 			return (
 				<Segment.Expandable
 					collapsed={collapsed}
-					maxHeight={MAX_MODULE_HEIGHT}
+					maxHeight={MODULE_HEIGHT_MAX}
+					leeway={MODULE_HEIGHT_LEEWAY}
 					seeMore={<Trans id="core.analyse.see-more">See more</Trans>}
 				>
 					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
