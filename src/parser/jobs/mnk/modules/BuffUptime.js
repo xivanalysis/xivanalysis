@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -6,6 +7,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GCD_CYCLE_LENGTH = 6
 
@@ -101,27 +103,27 @@ export default class BuffUptime extends Module {
 	}
 
 	_onComplete() {
+		const lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
+
 		this.checklist.add(new Rule({
-			name: 'Keep Dragon Kick up',
-			description: <Fragment>
-				Dragon Kick's blunt resistance debuff should always be applied to your primary target.
-			</Fragment>,
+			name: <Trans id="mnk.buffs.checklist.dragonkick.name">Keep Dragon Kick up</Trans>,
+			description: <Trans id="mnk.buffs.checklist.dragonkick.description">Dragon Kick's blunt resistance debuff should always be applied to your primary target.</Trans>,
+			displayOrder: DISPLAY_ORDER.DRAGON_KICK,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.DRAGON_KICK} /> uptime</Fragment>,
+					name: <Trans id="mnk.buffs.checklist.dragonkick.requirement.name"><ActionLink {...ACTIONS.DRAGON_KICK} /> uptime</Trans>,
 					percent: () => this.getDebuffUptimePercent(STATUSES.BLUNT_RESISTANCE_DOWN.id),
 				}),
 			],
 		}))
 
 		this.checklist.add(new Rule({
-			name: 'Keep Twin Snakes up',
-			description: <Fragment>
-				Twin Snakes is an easy 10% buff to your DPS across the board.
-			</Fragment>,
+			name: <Trans id="mnk.buffs.checklist.twinsnakes.name">Keep Twin Snakes up</Trans>,
+			description: <Trans id="mnk.buffs.checklist.twinsnakes.description">Twin Snakes is an easy 10% buff to your DPS across the board.</Trans>,
+			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.TWIN_SNAKES} /> uptime</Fragment>,
+					name: <Trans id="mnk.buffs.checklist.twinsnakes.requirement.name"><ActionLink {...ACTIONS.TWIN_SNAKES} /> uptime</Trans>,
 					percent: () => this.getBuffUptimePercent(STATUSES.TWIN_SNAKES.id),
 				}),
 			],
@@ -130,34 +132,30 @@ export default class BuffUptime extends Module {
 		if (this._earlyDragonKicks) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DRAGON_KICK.icon,
-				content: <Fragment>
+				content: <Trans id="mnk.buffs.suggestions.dragonkick.early.content">
 					Avoid refreshing <ActionLink {...ACTIONS.DRAGON_KICK} /> signficantly before its expiration as you're trading it for the higher damage <ActionLink {...ACTIONS.BOOTSHINE} />.
-				</Fragment>,
+				</Trans>,
 				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					{this._earlyDragonKicks} rotation cycles were interrupted by early refreshes.
-				</Fragment>,
+				why: <Trans id="mnk.buffs.suggestions.dragonkick.early.why">
+					<Plural value={this._earlyDragonKicks} one="# rotation cycle was" other="# rotation cycles were" /> interrupted by an early refresh.
+				</Trans>,
 			}))
 		}
 
-		if (this._earlyTwinSnakes) {
-			const lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
-
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.TWIN_SNAKES.icon,
-				content: <Fragment>
-					Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
-				</Fragment>,
-				tiers: {
-					1: SEVERITY.MEDIUM,
-					4: SEVERITY.MAJOR,
-				},
-				value: this._earlyTwinSnakes,
-				why: <Fragment>
-					{lostTruePotency} potency lost to {this._earlyTwinSnakes} early refreshes.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.TWIN_SNAKES.icon,
+			content: <Trans id="mnk.buffs.suggestions.twinsnakes.early.content">
+				Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				4: SEVERITY.MAJOR,
+			},
+			value: this._earlyTwinSnakes,
+			why: <Trans id="mnk.buffs.suggestions.twinsnakes.early.why">
+				{lostTruePotency} potency lost to <Plural value={this._earlyTwinSnakes} one="# early refresh" other="# early refreshes" />.
+			</Trans>,
+		}))
 	}
 
 	getDebuffUptimePercent(statusId) {

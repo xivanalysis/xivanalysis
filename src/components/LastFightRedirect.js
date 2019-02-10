@@ -1,16 +1,17 @@
+import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {Redirect} from 'react-router-dom'
 import {Container, Loader} from 'semantic-ui-react'
 
-import {Trans} from '@lingui/react'
+import {ReportStore} from 'store/report'
 
-import {fetchReportIfNeeded} from 'store/actions'
-
+@inject('reportStore')
+@observer
 class LastFightRedirect extends Component {
 	static propTypes = {
-		dispatch: PropTypes.func.isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				section: PropTypes.string.isRequired,
@@ -18,25 +19,21 @@ class LastFightRedirect extends Component {
 				combatant: PropTypes.string,
 			}).isRequired,
 		}).isRequired,
-		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired,
-			fights: PropTypes.arrayOf(PropTypes.shape({
-				id: PropTypes.number.isRequired,
-			})),
-		}),
 	}
 
 	componentDidMount() {
 		// Make sure we've got report data
-		const {dispatch, match} = this.props
-		dispatch(fetchReportIfNeeded(match.params.code))
+		const {reportStore, match} = this.props
+		reportStore.fetchReportIfNeeded(match.params.code)
 	}
 
 	render() {
 		const {
-			report,
+			reportStore,
 			match: {params},
 		} = this.props
+
+		const report = reportStore.report
 
 		// Show a loader if we're still loading the main report
 		if (!report || report.code !== params.code || report.loading) {
@@ -62,8 +59,4 @@ class LastFightRedirect extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	report: state.report,
-})
-
-export default connect(mapStateToProps)(LastFightRedirect)
+export default LastFightRedirect

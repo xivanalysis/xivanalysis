@@ -1,0 +1,51 @@
+@value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme.module.css';
+@value block from '../shared.module.css';
+
+@value backgroundLightness: 95%;
+@value colorLightness: 30%;
+
+.message {
+	composes: block;
+	display: flex;
+	align-items: center;
+	margin: 0 calc(-1 * gutter);
+	padding: gutter;
+	background: color(themeGrey l(backgroundLightness));
+	color: color(themeGrey l(colorLightness));
+}
+.message:first-child {
+	margin-top: calc(-1 * gutter);
+}
+.message:last-child {
+	margin-bottom: calc(-1 * gutter);
+}
+
+/* Message type colours */
+.info {
+	background: color(themeBlue l(backgroundLightness));
+	color: color(themeBlue l(colorLightness));
+}
+.success {
+	background: color(themeGreen l(backgroundLightness));
+	color: color(themeGreen l(colorLightness));
+}
+.warning {
+	background: color(themeYellow l(backgroundLightness));
+	color: color(themeYellow l(colorLightness));
+}
+.error {
+	background: color(themeRed l(backgroundLightness));
+	color: color(themeRed l(colorLightness));
+}
+
+.icon {
+	/* Blame SUI */
+	margin-right: gutter !important;
+	height: auto !important;
+	font-size: 3em !important;
+}
+
+.header {
+	font-weight: bold;
+	font-size: 1.1em;
+}

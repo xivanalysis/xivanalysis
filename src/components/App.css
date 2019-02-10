@@ -1,35 +1,30 @@
+@value themeBackdrop from "theme.module.css";
+
 body {
-	/* Semantic's menu (being generic) doesn't de-bugger things under it, so I'll grab that. */
-	padding-top: 40px;
+	background: themeBackdrop;
 
 	/* Colours 'cus SUI doesn't for w/e reason */
-	--red: #db2828;
-	--orange: #f2711c;
-	--yellow: #fbbd08;
-	--olive: #b5cc18;
-	--green: #21ba45;
-	--teal: #00b5ad;
-	--blue: #2185d0;
-	--purple: #a333c8;
-	--violet: #6435c9;
-	--pink: #e03997;
-	--brown: #a5673f;
-	--grey: #767676;
-
 	--info: var(--blue, blue);
 	--success: var(--green, green);
 	--warning: var(--yellow, yellow);
 	--error: var(--red, red);
 }
 
-/* Forcing no wrapping on xivdb links so the icons don't get split off */
-[data-xivdb-key] {
-	white-space: nowrap;
-}
-
 /* Apparently !important and calc() are SUI's favourite dish. Why the fuck am I using this thing again? */
 .ui.attached {
 	width: 100% !important;
+}
+
+/*
+Dimmer sits at 1000, which _also_ happens to be the where the loaders sit. Sidebar needs to be in-between :blobrage:
+Resulting stack:
+ - 1000: loaders
+ - 1001: sidebar
+ - 1002: header
+ - 1003: dimmer
+*/
+.ui.dimmer {
+	z-index: 1003 !important;
 }
 
 /* Utility shit */

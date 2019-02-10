@@ -5,7 +5,7 @@ import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
 
 export {compose}
 
-function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}
@@ -150,11 +150,20 @@ export const matchClosestLower = _matchClosestHoF((value, baseValue) => baseValu
  */
 export const matchClosestHigher = _matchClosestHoF((value, baseValue) => value - baseValue)
 
-// Renders a time given in seconds into the format mm:ss
-export function formatDuration(duration: number) {
+/**
+ * Renders a time given into the format `mm:ss`
+ * @param duration {number} Seconds
+ * @return {string} Formatted duration
+ */
+export function formatDuration(duration: number): string {
 	/* tslint:disable:no-magic-numbers */
+	const formatter = new Intl.NumberFormat(
+		undefined,
+		{minimumIntegerDigits: 2, maximumFractionDigits: 0, useGrouping: false},
+	)
 	const seconds = Math.floor(duration % 60)
-	return `${Math.floor(duration / 60)}:${seconds < 10? '0' : ''}${seconds}`
+	const minutes = Math.floor(duration / 60)
+	return `${formatter.format(minutes)}:${formatter.format(seconds)}`
 	/* tslint:enable:no-magic-numbers */
 }
 
@@ -179,7 +188,7 @@ function getNavigatorLanguages(): ReadonlyArray<string> {
 /**
  * Iterate over a list of languages and return the first matching, enabled language.
  * Returns the default language if none match.
- * @param {String[]} [languages] An array of languages to check, defaults to `navigator.languages`
+ * @param {String[]} [languagesInput] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
 export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): string {

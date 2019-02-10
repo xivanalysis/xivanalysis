@@ -26,7 +26,7 @@ export default {
 		id: 3571,
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
-		cooldown: 60,
+		cooldown: 45,
 		//affected by lilies
 	},
 

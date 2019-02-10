@@ -24,6 +24,7 @@ export default class ArcanaSuggestions extends Module {
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
 		'suggestions',
+		'combatants',
 		'arcanaTracking',
 	]
 
@@ -38,7 +39,7 @@ export default class ArcanaSuggestions extends Module {
 	}
 
 	_onComplete() {
-		const combatants = this.parser.modules.combatants.getEntities()
+		const combatants = this.combatants.getEntities()
 		for (const key in combatants) {
 
 			if (combatants[key].type === 'LimitBreak') {
@@ -50,7 +51,7 @@ export default class ArcanaSuggestions extends Module {
 		this.cardLogs = this.arcanaTracking.getCardLogs.map(artifact => {
 
 			const isArcana = artifact.lastEvent && [...DRAWN_ARCANA_USE, ...HELD_ARCANA_USE].includes(artifact.lastEvent.ability.guid)
-			const target = isArcana ? this.parser.modules.combatants.getEntity(artifact.lastEvent.targetID) : null
+			const target = isArcana ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
 			const targetName = target ? target.name : null
 			const targetJob = target ? target.type : null
 
@@ -206,10 +207,7 @@ export default class ArcanaSuggestions extends Module {
 					alt={status.name}
 				/> }<br/>
 				{artifact.lastAction.targetJob &&
-					<JobIcon
-						job={JOBS[artifact.lastAction.targetJob]}
-						className={styles.jobIcon}
-					/>
+					<JobIcon job={JOBS[artifact.lastAction.targetJob]}/>
 				}
 
 				{artifact.lastAction.targetName}
@@ -259,7 +257,7 @@ export default class ArcanaSuggestions extends Module {
 			}
 			{minorArcana && minorArcana.name !== 'Unknown' && <img
 				src={minorArcana.icon}
-				className={styles.spread_slot3}
+				className={styles.spreadSlot3}
 				alt={minorArcana.name}
 			/>}
 			{!minorArcana && <span className={styles.buffDummy} />}

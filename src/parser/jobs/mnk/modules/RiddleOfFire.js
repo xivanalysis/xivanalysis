@@ -1,5 +1,6 @@
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+import React from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -15,6 +16,12 @@ const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
 
 const POSSIBLE_GCDS = 9
 
+const ROF_GCD = {
+	TARGET: 9,
+	WARNING: 8,
+	ERROR: 7,
+}
+
 export default class RiddleOfFire extends Module {
 	static handle = 'riddleoffire'
 	static dependencies = [
@@ -22,11 +29,12 @@ export default class RiddleOfFire extends Module {
 	]
 
 	static title = 'Riddle of Fire'
+	static i18n_id = i18nMark('mnk.rof.title')
 	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	_active = false
 	_history = []
-	_riddle = {}
+	_riddle = {casts: []}
 	_rushing = false
 
 	_missedGcds = 0
@@ -81,16 +89,17 @@ export default class RiddleOfFire extends Module {
 		if (this._missedGcds) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.RIDDLE_OF_FIRE.icon,
-				content: <Fragment>
+				content: <Trans id="mnk.rof.suggestions.gcd.content">
 					Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
-				</Fragment>,
+				</Trans>,
 				matcher: matchClosestHigher,
 				tiers: {
 					7: SEVERITY.MAJOR,
 					8: SEVERITY.MEDIUM,
 				},
 				value: Math.min(...rofs),
-				why: `${this._missedGcds} GCDs missed during RoF.`,
+				why: <Trans id="mnk.rof.suggestions.gcd.why">
+					<Plural value={this._missedGcds} one="# GCD was" other="# GCDs were" /> missed during RoF.</Trans>,
 			}))
 		}
 
@@ -98,12 +107,12 @@ export default class RiddleOfFire extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TORNADO_KICK.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="mnk.rof.suggestions.tk.content">
 					Try to fit a <ActionLink {...ACTIONS.TORNADO_KICK} /> at the end of every <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
-				</Fragment>,
-				why: <Fragment>
-					{this._missedTks} Tornado Kick{this._missedTks !== 1 ? 's were' : ' was'} missed during RoF.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="mnk.rof.suggestions.tk.why">
+					<Plural value={this._missedTks} one="# Tornado Kick was" other="# Tornado Kicks were" /> missed during RoF.
+				</Trans>,
 			}))
 		}
 	}
@@ -129,6 +138,18 @@ export default class RiddleOfFire extends Module {
 		this._missedTks += 1 - tks.length
 	}
 
+	_formatGcdCount(count) {
+		if (count <= ROF_GCD.ERROR) {
+			return <span className="text-error">{count}</span>
+		}
+
+		if (count === ROF_GCD.WARNING) {
+			return <span className="text-warning">{count}</span>
+		}
+
+		return count
+	}
+
 	output() {
 		const panels = this._history.map(riddle => {
 			const numGcds = riddle.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
@@ -137,14 +158,20 @@ export default class RiddleOfFire extends Module {
 			return {
 				key: riddle.start,
 				title: {
-					content: <Fragment>
+					content: <>
 						{this.parser.formatTimestamp(riddle.start)}
 						<span> - </span>
-						<span>{numGcds} GCDs</span>
+						<Trans id="mnk.rof.table.gcd" render="span">
+							{this._formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
+						</Trans>
 						<span> - </span>
-						<span>{numTKs}/1 Tornado Kick</span>
-						{riddle.rushing && <span className="text-info">&nbsp;(rushing)</span>}
-					</Fragment>,
+						<Trans id="mnk.rof.table.tk" render="span">
+							{numTKs}/1 Tornado Kick
+						</Trans>
+						{riddle.rushing && <>
+							&nbsp;<Trans id="mnk.rof.table.rushing" render="span" className="text-info">(rushing)</Trans>
+						</>}
+					</>,
 				},
 				content: {
 					content: <Rotation events={riddle.casts}/>,
@@ -152,11 +179,18 @@ export default class RiddleOfFire extends Module {
 			}
 		})
 
-		return <Accordion
-			exclusive={false}
-			panels={panels}
-			styled
-			fluid
-		/>
+		return <>
+			<Message>
+				<Trans id="mnk.rof.accordion.message">
+					Every <StatusLink {...STATUSES.RIDDLE_OF_FIRE}/> window should ideally contain {ROF_GCD.TARGET} GCDs as your skill speed allows and as many OGCDs as you can weave.
+				</Trans>
+			</Message>
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		</>
 	}
 }

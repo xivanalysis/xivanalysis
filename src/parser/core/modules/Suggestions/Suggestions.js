@@ -9,6 +9,7 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 export default class Suggestions extends Module {
 	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
+	static collapsible = false
 	static i18n_id = i18nMark('core.suggestions.title')
 	static title = 'Suggestions'
 

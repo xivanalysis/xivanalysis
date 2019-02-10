@@ -1,13 +1,11 @@
-.combatantLink {
-	display: flex !important;
-	align-items: center;
-}
+@value themeText from 'theme.module.css';
 
-.jobIcon {
-	display: inline-block !important;
-	width: auto !important;
-	height: 2em;
-	margin-right: 1em !important;
+.friendLink,
+.friendLink:hover {
+	color: themeText
+}
+.friendLink:hover {
+	font-weight: bold;
 }
 
 .supportedPatches {

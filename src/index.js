@@ -1,4 +1,5 @@
 import '@babel/polyfill'
+import 'intersection-observer'
 
 import Raven from 'raven-js'
 import React from 'react'
@@ -14,16 +15,14 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 		release: REACT_APP_VERSION,
 
 		whitelistUrls: [
-			// All our project's JavaScript should be loaded from /static/
-			/xivanalysis\.com\/static/,
+			// All our project's JavaScript should be loaded from /assets/
+			/xivanalysis\.com\/assets/,
 		],
 
 		ignoreUrls: [
 			// Browser Extensions
 			/extensions\//i,
 			/^chrome:\/\//i,
-			// XIVDB's tooltips fail to load jQuery quite frequently
-			/xivdb.com\/tooltips/i,
 			// Translate sites break a fair few things
 			/translate\.google/i,
 			/naver\.net/i,

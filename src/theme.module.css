@@ -1,0 +1,53 @@
+/* Sizing */
+@value gutter: 20px;
+@value highlight: 4px;
+
+/* Breakpoints */
+@value sm: (min-width: 576px);
+@value md: (min-width: 768px);
+@value lg: (min-width: 992px);
+@value xl: (min-width: 1340px);
+
+/* Colours */
+@value themeBlack: black;
+@value themeLight: #f5f8fa;
+@value themeWhite: white;
+
+@value themeRed: #db2828;
+@value themeOrange: #f2711c;
+@value themeYellow: #fbbd08;
+@value themeOlive: #b5cc18;
+@value themeGreen: #21ba45;
+@value themeTeal: #00b5ad;
+@value themeBlue: #2185d0;
+@value themePurple: #a333c8;
+@value themeViolet: #6435c9;
+@value themePink: #e03997;
+@value themeBrown: #a5673f;
+@value themeGrey: #767676;
+
+/* Theming passthroughs */
+/* NOTE: Yes, I'm aware how redundant this all is. I've left it like this as prep for the Soon:tm: dark mode. CSS vars have pretty good broswer support, but there's some noticeable missing chunks - can gauge if the implementation is going to work based on how many people complain :blobmorning: */
+:root {
+	--red: themeRed;
+	--orange: themeOrange;
+	--yellow: themeYellow;
+	--olive: themeOlive;
+	--green: themeGreen;
+	--teal: themeTeal;
+	--blue: themeBlue;
+	--purple: themePurple;
+	--violet: themeViolet;
+	--pink: themePink;
+	--brown: themeBrown;
+	--grey: themeGrey;
+
+	--theme-text: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
+	--theme-background: themeWhite;
+	--theme-backdrop: themeLight;
+	--theme-inverse: themeBlack;
+}
+@value themeText: var(--theme-text);
+@value themeBackground: var(--theme-background);
+@value themeBackdrop: var(--theme-backdrop);
+@value themeInverse: var(--theme-inverse);

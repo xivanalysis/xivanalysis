@@ -61,13 +61,14 @@ const DEVIATION_PRECISION = 3
 
 const BASE_SUBSTAT_70 = 364
 const LEVEL_MOD_70 = 2170
+const BASE_CRIT_PROBABILITY = 50 //5%
 
 export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
 	static dependencies = [
 		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'combatants',
-		// Relying on the normaliser from this for the hit type fields
 		'hitType', // eslint-disable-line xivanalysis/no-unused-dependencies
 	]
 
@@ -90,7 +91,7 @@ export default class AdditionalStats extends Module {
 	criticalHitProbability
 	criticalHitRate
 	critMod
-	k
+	potencyDamageRatio
 
 	normalise(events) {
 
@@ -98,34 +99,50 @@ export default class AdditionalStats extends Module {
 
 			// Registers buffs/debuffs statuses on the respective entity (either player or enemies)
 			if (event.type.match(/^(apply|remove|refresh)(de)?buff(stack)?$/)) {
-				// In case it's a status on the selected player
+				let actor
+
+				// Determines if it's a status on the selected player or on an enemy
 				if (event.targetID === this.combatants.selected.id && event.ability) {
-					this._player.statuses[event.ability.guid] = event.type.startsWith('apply') || event.type.startsWith('refresh')
-
-				// In case it's a status on an enemy, we attribute it to that specific enemy by the ID
+					actor = this._player
 				} else if (!event.targetIsFriendly) {
-					const enemy = this._getEnemy(event.targetID)
-					enemy.statuses[event.ability.guid] = event.type.startsWith('apply') || event.type.startsWith('refresh')
+					actor = this._getEnemy(event.targetID)
 
-					// Separately checks for dot application, too
+					// Separately checks for dot application on enemies, too
 					if (
 						DOTS.includes(event.ability.guid)
 						&& (event.type.startsWith('apply') || event.type.startsWith('refresh'))
 					) {
-						// We fetch only the snapshotters that affect the current dot
-						const snapshotters = Object.keys(SNAPSHOTTERS)
+						// We fetch only the most recent snapshotter that affects the current dot
+						const snapshotter = Object.keys(SNAPSHOTTERS)
 							.filter(action => SNAPSHOTTERS[action].includes(event.ability.guid))
 							.map(action => this._getSnapshotter(action))
-
-						// We snapshot statuses from the most recent snapshotter that affects this dot
-						const snapshotter = snapshotters.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
+							.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
 
 						// We get the dot component from the enemy
-						const dot = this._getDot(enemy, event.ability.guid)
+						const dot = this._getDot(actor, event.ability.guid)
 
 						this._snapshotStatuses(dot, snapshotter)
 					}
+				}
 
+				// If it's a status on either the selected player or on an enemy
+				if (actor) {
+					actor.statuses[event.ability.guid] = {
+						isActive: event.type.startsWith('apply') || event.type.startsWith('refresh'),
+					}
+
+					// If the current status is a crit modifier, we add the strength onto it to use later
+					const critModifier = CRIT_MODIFIERS.find(cm => cm.id === event.ability.guid)
+					if (critModifier) {
+
+						actor.statuses[event.ability.guid].strength = critModifier.strength
+
+						// If it's a spear card, we get the modifier from the event, thanks to arcanum
+						if (critModifier.id === STATUSES.THE_SPEAR.id && event.strengthModifier) {
+							actor.statuses[event.ability.guid].strength *= event.strengthModifier
+						}
+
+					}
 				}
 
 			// For every damage event that:
@@ -147,18 +164,18 @@ export default class AdditionalStats extends Module {
 						&& event.ability.guid !== ACTIONS.ARMYS_PAEON.id
 					) {
 						// Band-aid fix for disembowel (why, oh, why)
-						if (this._hasStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
+						if (this._getStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
 							fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
 						}
 						// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 					}
 
-					// Collects the damage instances, to be used for calculating crit and 'K'
+					// Collects the damage instances, to be used for calculating crit and 'potencyDamageRatio'
 					// TODO: Have a filtered array with skills
 
 					// ...let's not count Spears for now
-					if (!this._hasStatus(this._player, STATUSES.THE_SPEAR.id)) {
+					if (!this._getStatus(this._player, STATUSES.THE_SPEAR.id)) {
 
 						const critTier = this._parseCritBuffs(event)
 
@@ -174,9 +191,19 @@ export default class AdditionalStats extends Module {
 				} else {
 					const enemy = this._getEnemy(event.targetID)
 					const dot = this._getDot(enemy, event.ability.guid)
+					const accumulatedCritBuffs = this._parseDotCritBuffs(event)
+
+					// First of all, let's fix cases of broken crit
+					event.expectedCritRate -= accumulatedCritBuffs * 1000
+
+					while (event.expectedCritRate < BASE_CRIT_PROBABILITY) {
+						event.expectedCritRate += 256
+					}
+
+					event.expectedCritRate += accumulatedCritBuffs * 1000
 
 					// Not comfortable with counting Spears just yet
-					if (!this._hasStatus(dot, STATUSES.THE_SPEAR.id)) {
+					if (!this._getStatus(dot, STATUSES.THE_SPEAR.id)) {
 
 						const accumulatedCritBuffs = this._parseDotCritBuffs(event)
 						const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
@@ -205,7 +232,7 @@ export default class AdditionalStats extends Module {
 		this.criticalHitProbability = this._getCriticalHitProbability()
 		this.criticalHitRate = this._getCriticalHitRate()
 		this.critMod = this._getCritMod()
-		this.k = this._getK()
+		this.potencyDamageRatio = this._getPotencyDamageRatio()
 
 		// Return all this shit
 		return events
@@ -247,7 +274,7 @@ export default class AdditionalStats extends Module {
 		return this._snapshotters[skillId]
 	}
 
-	_hasStatus(entity, status) {
+	_getStatus(entity, status) {
 		return entity.statuses[status] || false
 	}
 
@@ -272,15 +299,13 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			let hasStatus = false
+			const enemyStatus = this._getStatus(enemy, modifier.id)
+			const playerStatus = this._getStatus(player, modifier.id)
 
-			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id) {
-				hasStatus = this._hasStatus(enemy, modifier.id)
-			} else {
-				hasStatus = this._hasStatus(player, modifier.id)
-			}
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
+			if (modifier.id === STATUSES.CHAIN_STRATAGEM.id && enemyStatus && enemyStatus.isActive) {
+				accumulatedCritBuffs += enemyStatus.strength
+			} else if (playerStatus && playerStatus.isActive) {
+				accumulatedCritBuffs += playerStatus.strength
 			}
 
 		}
@@ -298,9 +323,10 @@ export default class AdditionalStats extends Module {
 
 		for (const modifier of CRIT_MODIFIERS) {
 
-			const hasStatus = this._hasStatus(dot, modifier.id)
-			if (hasStatus) {
-				accumulatedCritBuffs += modifier.strength
+			const dotStatus = this._getStatus(dot, modifier.id)
+
+			if (dotStatus && dotStatus.isActive) {
+				accumulatedCritBuffs += dotStatus.strength
 			}
 
 		}
@@ -318,7 +344,6 @@ export default class AdditionalStats extends Module {
 		// If we have crit rate information from dots, we use that instead
 		if (this._critFromDots.length) {
 			return this._getEmpiricalRuleSubsetMean(this._critFromDots, DEVIATION_PRECISION)
-
 		}
 		// Otherwise, some mathmagic takes place to approximate the crit rate
 
@@ -353,9 +378,9 @@ export default class AdditionalStats extends Module {
 	}
 	/* eslint-enable no-magic-numbers */
 
-	// We use the damage events to determine 'K'
-	// tl;dr: 'K' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision
-	_getK() {
+	// We use the damage events to determine 'potencyDamageRatio'
+	// tl;dr: 'potencyDamageRatio' is an approximation to damage to potency ratio, ignoring the natural 5% spread because we don't need this kind of precision
+	_getPotencyDamageRatio() {
 		const values = []
 		const critMod = this.critMod || this._getCritMod()
 
@@ -387,6 +412,10 @@ export default class AdditionalStats extends Module {
 				}
 			}
 		}
+		// If there are no damage instances, we can't really calculate the ratio. Let's return 1. Will be broken as fuck, but there are no damage events anyway, so lol
+		if (!values || !values.length) {
+			return 1
+		}
 
 		return this._getEmpiricalRuleSubsetMean(values, DEVIATION_PRECISION)
 
@@ -397,7 +426,7 @@ export default class AdditionalStats extends Module {
 		const mean = math.mean(dataset)
 		const standardDeviation = math.std(dataset)
 
-		return math.mean(dataset.filter(v => v > mean - n * standardDeviation && v < mean + n * standardDeviation))
+		return math.mean(dataset.filter(v => v >= mean - n * standardDeviation && v <= mean + n * standardDeviation))
 	}
 
 }

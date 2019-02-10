@@ -1,14 +1,14 @@
-import Color from 'color'
 import {i18nMark, Trans} from '@lingui/react'
-import React from 'react'
-import TimeLineChart from 'components/ui/TimeLineChart'
-
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import JOBS from 'data/JOBS'
+import STATUSES from 'data/STATUSES'
+import _ from 'lodash'
 import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 // General actions that generate Rage
 const RAGE_GENERATORS = {
@@ -30,6 +30,16 @@ const RAGE_SPENDERS = {
 	[ACTIONS.ONSLAUGHT.id]: 20,
 }
 
+// Actions that reduce Infuriate
+const INFURIATE_REDUCERS = [
+	ACTIONS.FELL_CLEAVE.id,
+	ACTIONS.INNER_BEAST.id,
+	ACTIONS.STEEL_CYCLONE.id,
+	ACTIONS.DECIMATE.id,
+]
+
+const INFURIATE_REDUCTION = 5
+
 const RAGE_USAGE_SEVERITY = {
 	20: SEVERITY.MINOR,
 	50: SEVERITY.MAJOR,
@@ -45,6 +55,7 @@ export default class Gauge extends Module {
 	static dependencies = [
 		'combatants',
 		'suggestions',
+		'cooldowns',
 	]
 
 	// -----
@@ -89,6 +100,11 @@ export default class Gauge extends Module {
 		if (!this.combatants.selected.hasStatus(STATUSES.INNER_RELEASE.id)) {
 			this._rage = Math.max(this._rage - RAGE_SPENDERS[event.ability.guid], 0)
 		}
+
+		if (_.includes(INFURIATE_REDUCERS, event.ability.guid)) {
+			this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, INFURIATE_REDUCTION)
+		}
+
 		// This pushes everytime a spender is used -- Even if under Inner Release. That makes the graph have multiple dots, meaning a spender was used each dot.
 		// The whole point of this is to show when IR is being used. Might try using different colors for the dots depending on which ability
 		// They were used on.

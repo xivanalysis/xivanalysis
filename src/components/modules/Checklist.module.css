@@ -1,3 +1,5 @@
+@value lg from "theme.module.css";
+
 .title {
 	position: relative;
 }
@@ -10,7 +12,7 @@
 }
 
 .progress {
-	display: inline-block !important;
+	display: none !important;
 	width: 200px;
 	margin: 0 0 0 1em !important;
 	text-align: right;
@@ -24,4 +26,10 @@
 
 .description p {
 	margin-left: 1em;
+}
+
+@media lg {
+	.progress {
+		display: inline-block !important;
+	}
 }

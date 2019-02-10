@@ -1,0 +1,51 @@
+@value gutter, md, themeText from "theme.module.css";
+
+.sidebar {
+	display: flex;
+	flex-direction: column;
+	padding: gutter gutter 0;
+	height: 100%;
+}
+
+.sidebar > * {
+	flex-shrink: 0;
+}
+
+.logo {
+	display: none;
+	color: themeText;
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.logo:hover {
+	color: themeText;
+}
+
+.logo.center {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+.logoImage {
+	/* Adjust for the off-center-ness of the logo */
+	margin: -10px .5em 0 0;
+	height: 50px;
+	vertical-align: middle;
+}
+
+.content {
+	position: relative;
+	flex-grow: 1;
+}
+
+.options {
+	margin: 0 calc(-1 * gutter);
+}
+
+@media md {
+ .logo {
+	 display: block;
+ }
+}

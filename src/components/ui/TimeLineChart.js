@@ -4,6 +4,7 @@ import React, {PureComponent} from 'react'
 import {Line} from 'react-chartjs-2'
 
 const DEFAULT_OPTIONS = {
+	aspectRatio: 3,
 	scales: {
 		xAxes: [{
 			type: 'time',
@@ -26,6 +27,12 @@ export default class TimeLineChart extends PureComponent {
 
 	render() {
 		const options = _.merge({}, DEFAULT_OPTIONS, this.props.options || {})
-		return <Line data={this.props.data} options={options}/>
+		return <Line
+			data={this.props.data}
+			options={options}
+			// Using this trash 'cus aspectRatio doesn't work with the react wrapper
+			width={options.aspectRatio}
+			height={1}
+		/>
 	}
 }

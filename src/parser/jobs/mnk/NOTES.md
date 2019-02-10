@@ -3,14 +3,14 @@
 ### Uptime
 - [?] Don't clip or drop Demolish by more than 2 seconds, unless reapplying would be on GL0
 - [ ] Avoid GL0 Demolish applications, if opener or downtime ignore this
-- [ ] Migrate Demo to core DoTs module
 - [x] GL3 uptime
 - [ ] GL3 efficient recovery
 - [x] GL3 holding with RoE
 - [ ] Advise when downtime was short enough and damage taken for RoE, or if Tackle is off cooldown for RoW
-- [x] Wasted RoE
-- [x] Wasted RoW
-- [ ] Earth Tackle, not even once
+- [x] Wasted RoE (no trigger RoE, or no save stacks)
+- [x] Wasted RoW (TODO: deal with WT without using RoW)
+- [x] Earth Tackle, not even once
+- [x] One-Ilm Punch is Officially Undesirable
 - [x] Fists, make sure at least one is up
 - [x] Dragon Kick uptime and clipping
 - [x] Twin Snakes uptime and clipping
@@ -38,6 +38,7 @@ ACT doesn't track this, the best we can do is simulate from damage but it's pret
 - [x] IR always includes a Howling and Elixir
 - [ ] IR-RoF drift, every second RoF should include an IR
 - [ ] Howling and Elixir drift, they should ideally be weaved in the same GCD, or no more than 1 GCD apart
+- [ ] Death-flagging during buffs
 
 ### Forms
 - [x] Reset forms by using Opo-Opo form skills in a different form

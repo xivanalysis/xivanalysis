@@ -36,7 +36,7 @@ export default {
 	</Fragment>,
 	supportedPatches: {
 		from: '4.3',
-		to: '4.4',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: 'Maintainer'},

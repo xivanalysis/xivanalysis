@@ -22,12 +22,89 @@ export default {
 </>,
 	supportedPatches: {
 		from: '4.2',
-		to: '4.4',
+		to: '4.5',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.AZARIAH, role: ROLES.DEVELOPER},
 	],
 
-	changelog: [],
+	changelog: [
+		{
+			date: new Date('2018-07-21'),
+			changes: 'Initial release of the Red Mage module.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-22'),
+			changes: 'Fixed issues with Manafication overage being lost, issues Scatter in Dualcast, as well as some Invulnerability handling for Dualcast.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-29'),
+			changes: 'Added tracking of Cooldown Downtime for oGCDs',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-07-30'),
+			changes: 'Added Swiftcast to the list of tracked oGCDs for Cooldown Downtime',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-08'),
+			changes: 'Initial support for Procs - Impactful, Verfire, Verstone',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-09'),
+			changes: 'Resolved an issue with the Impactful force cast override not being reset',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-16'),
+			changes: 'Added localization to Gauge suggestions, resolved some wording with chart, backend cleanup',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-08-18'),
+			changes: 'Fixed a bug related to all 3 procs when a boss is invulnerable',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-09-20'),
+			changes: 'Initial support for Melee combo and Finishers, added support to Mana changes for Enhanced Scatter for 4.4.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-10-16'),
+			changes: 'Fixed a few text errors, but mostly backend changes',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-10-29'),
+			changes: 'Condensed Proc Suggestions, clarified wording, added Trans/Plural support for Localization and added a Listing of what Targets the RDM hit with Proc spells',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-11-05'),
+			changes: 'Modified Severity for Wasted/Missed Dualcasts based on feedback',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-11-06'),
+			changes: 'Resolved a number of issues with logs that do not contain one or more procs, and issues with Omega(story) invuln target being unavailable',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2018-11-14'),
+			changes: 'Adjusted some of the wording on suggestions based on user feedback.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2019-01-23'),
+			changes: 'Added rotation tables showing melee combo usages and finisher recommendations',
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+	],
 }

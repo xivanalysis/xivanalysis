@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import {Trans, Plural} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -115,12 +116,12 @@ export default class Forms extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.PERFECT_BALANCE.icon,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="mnk.forms.suggestions.perfectbalance.content">
 					Avoid using <ActionLink {...ACTIONS.FORM_SHIFT}/> during <ActionLink {...STATUSES.PERFECT_BALANCE}/>. It does nothing and takes up a GCD you could better use for doing damage.
-				</Fragment>,
-				why: <Fragment>
-					{this._poorForms} <StatusLink {...STATUSES.PERFECT_BALANCE}/> GCDs were wasted by <ActionLink {...ACTIONS.FORM_SHIFT}/>.
-				</Fragment>,
+				</Trans>,
+				why: <Trans id="mnk.forms.suggestions.perfectbalance.why">
+					<Plural value={this._poorForms} one="GCD was" other="GCDs were" /> wasted under <StatusLink {...STATUSES.PERFECT_BALANCE}/> by <ActionLink {...ACTIONS.FORM_SHIFT}/>.
+				</Trans>,
 			}))
 		}
 
@@ -129,10 +130,12 @@ export default class Forms extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="mnk.forms.suggestions.formless.content">
 					Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> and <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. Their special effects only activate when in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has equal or higher potency depending on crits.
-				</Fragment>,
-				why: `${this._formless} combo-starters were used Formlessly, cancelling this special effects.`,
+				</Trans>,
+				why: <Trans id="mnk.forms.suggestions.formless.why">
+					<Plural value={this._formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling this special effects.
+				</Trans>,
 			}))
 		}
 
@@ -141,10 +144,12 @@ export default class Forms extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MINOR,
-				content: <Fragment>
+				content: <Trans id="mnk.forms.suggestions.reset.content">
 					Try not to cancel combos by using <ActionLink {...ACTIONS.BOOTSHINE}/>, <ActionLink {...ACTIONS.DRAGON_KICK}/>, or <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/>.
-				</Fragment>,
-				why: `${this._resetForms} combos were reset by an Opo-Opo form skill.`,
+				</Trans>,
+				why: <Trans id="mnk.forms.suggestions.reset.why">
+					<Plural value={this._resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
+				</Trans>,
 			}))
 		}
 
@@ -153,10 +158,12 @@ export default class Forms extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
-				content: <Fragment>
+				content: <Trans id="mnk.forms.suggestions.skipped.content">
 					Avoid skipping Forms. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING_III}/> by skipping.
-				</Fragment>,
-				why: `${this._skippedForms} forms were skipped by Form Shift unnecessarily.`,
+				</Trans>,
+				why: <Trans id="mnk.forms.suggestions.skipped.why">
+					<Plural value={this._skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
+				</Trans>,
 			}))
 		}
 
@@ -165,10 +172,12 @@ export default class Forms extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
-				content: <Fragment>
+				content: <Trans id="mnk.forms.suggestions.dropped.content">
 					Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.
-				</Fragment>,
-				why: `Forms were broken ${this._droppedForms} times.`,
+				</Trans>,
+				why: <Trans id="mnk.forms.suggestions.dropped.why">
+					Form was broken <Plural value={this._droppedForms} one="# time." other="# times." />
+				</Trans>,
 			}))
 		}
 	}

@@ -18,6 +18,7 @@
 			"options": ["log"]
 		},
 		"no-empty": {"options": ["allow-empty-functions"]},
+		"max-classes-per-file": false,
 		"max-line-length": false,
 		"member-access": false,
 		"member-ordering": {
@@ -54,6 +55,11 @@
 			]
 		},
 		"semicolon": {"options": "never"},
+		"trailing-comma": {"options": {
+			"multiline":"always",
+			"singleline": "never",
+			"esSpecCompliant": true
+		}},
 		"variable-name": {
 			"options": [
 				"ban-keywords",

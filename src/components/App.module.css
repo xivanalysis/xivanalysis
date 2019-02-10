@@ -1,0 +1,162 @@
+@value gutter, md, lg, themeText, themeBackground, themeInverse from "theme.module.css";
+
+@value headerHeight: 40px;
+
+.mobileHeader {
+	position: fixed;
+	z-index: 1002;
+	width: 100%;
+	height: headerHeight;
+	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
+	background: themeBackground;
+	font-size: 18px;
+	line-height: headerHeight;
+}
+
+/* Don't show the header on the home page */
+.mobileHeader.home {
+	display: none;
+}
+
+.hamburger {
+	margin: 0 !important;
+	padding: 0 gutter 0 10px;
+	width: auto !important;
+	height: headerHeight !important;
+	cursor: pointer;
+}
+
+.logo {
+	color: themeText;
+}
+
+.logo:hover {
+	color: themeText;
+}
+
+.logoImage {
+	margin: 0 5px 5px 0;
+	max-height: 25px;
+	vertical-align: middle;
+}
+
+.container {
+	display: flex;
+	margin: 0 auto;
+	width: 100%;
+	max-width: 1340px;
+	min-height: 100vh;
+}
+
+.container:not(.home) {
+	padding-top: calc(gutter + headerHeight);
+}
+
+.sidebar {
+	position: absolute;
+	top: 0;
+	left: -250px;
+	/* Semantic's loaders are @ 1000 */
+	z-index: 1001;
+	flex-shrink: 0;
+	padding-top: headerHeight;
+	width: 250px;
+	height: 100%;
+	transition: left .2s ease-in-out;
+}
+
+.sidebar.open {
+	left: 0;
+}
+
+.sidebarBackdrop {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: -1;
+	width: 100vw;
+	height: 100%;
+	background: themeInverse;
+	opacity: 0;
+	transition: opacity .2s ease-in-out;
+	pointer-events: none;
+}
+
+.sidebar.open .sidebarBackdrop {
+	opacity: .5;
+	pointer-events: initial;
+}
+
+.sidebarWrapper {
+	position: fixed;
+	width: inherit;
+	height: calc(100% - headerHeight);
+	overflow-y: auto;
+	background: themeBackground;
+}
+
+.content {
+	flex-grow: 1;
+	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
+	width: 0;
+	transition: filter .2s ease-in-out;
+}
+
+.sidebar.open + .content {
+	filter: blur(5px);
+}
+
+@media md {
+	.mobileHeader {
+		display: none;
+	}
+
+	.container:not(.home) {
+		padding-top: 0;
+	}
+
+	.sidebar {
+		position: relative;
+		top: 0;
+		left: 0;
+		padding-top: 0;
+		height: auto;
+	}
+
+	.sidebar::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		right: 0;
+		z-index: -1;
+		display: block;
+		width: 50vw;
+		height: 100%;
+		background: themeBackground;
+	}
+
+	.home .sidebar::before {
+		opacity: .5;
+	}
+
+	/* This should only be visible on mobile, but let's be super sure */
+	.sidebar.open .sidebarBackdrop {
+		opacity: 0;
+		transition: none;
+		pointer-events: none;
+	}
+
+	.sidebar.open + .content {
+		filter: none;
+	}
+
+	.sidebarWrapper {
+		height: 100%;
+		background: none;
+	}
+}
+
+@media lg {
+	.sidebar { width: 300px; }
+}

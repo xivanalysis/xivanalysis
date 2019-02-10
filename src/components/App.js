@@ -1,22 +1,29 @@
+import classnames from 'classnames'
+import {inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Switch, Route, withRouter} from 'react-router-dom'
+import {Route, Switch, withRouter, Link} from 'react-router-dom'
+import {Icon} from  'semantic-ui-react'
 
-import store from 'store'
-import {clearGlobalError} from 'store/actions'
+import {Container} from 'akkd'
+import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
+import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
-import Header from './Header'
+import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
+import styles from './App.module.css'
 
+@inject('globalErrorStore')
 class App extends Component {
 	static propTypes = {
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		history: PropTypes.shape({
 			location: PropTypes.object.isRequired,
 			listen: PropTypes.func.isRequired,
@@ -24,6 +31,10 @@ class App extends Component {
 	}
 
 	_unlisten = null
+
+	state = {
+		sidebarOpen: false,
+	}
 
 	componentDidMount() {
 		// Set up a history listener
@@ -37,23 +48,73 @@ class App extends Component {
 		this._unlisten()
 	}
 
-	_locationDidChange(/* location */) {
+	_locationDidChange = (/* location */) => {
 		// User's browsed - clear the global error state. Page can always re-throw one.
-		store.dispatch(clearGlobalError())
+		const {globalErrorStore} = this.props
+		globalErrorStore.clearGlobalError()
+	}
+
+	_toggleSidebar = () => {
+		console.log('a')
+		this.setState(state => ({sidebarOpen: !state.sidebarOpen}))
 	}
 
 	render() {
-		return <>
-			<Header/>
+		const {history: {location: {pathname}}} = this.props
+		const {sidebarOpen} = this.state
 
-			<ErrorBoundary>
-				<Switch>
-					<Route exact path="/" component={Home}/>
-					<Route path="/:section/:code/last/:combatant?" component={LastFightRedirect}/>
-					<Route path="/find/:code/:fight?" component={Find}/>
-					<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
-				</Switch>
-			</ErrorBoundary>
+		const onHome = pathname === '/'
+
+		return <>
+			<div className={classnames(
+				styles.mobileHeader,
+				onHome && styles.home,
+			)}>
+				<Icon
+					name="bars"
+					className={styles.hamburger}
+					onClick={this._toggleSidebar}
+				/>
+				<Link to="/" className={styles.logo}>
+					<img
+						src={process.env.PUBLIC_URL + '/logo.png'}
+						alt="logo"
+						className={styles.logoImage}
+					/>
+					xivanalysis
+				</Link>
+			</div>
+
+			<div className={classnames(
+				styles.container,
+				onHome && styles.home,
+			)}>
+				<div className={classnames(
+					styles.sidebar,
+					sidebarOpen && styles.open,
+				)}>
+					<div className={styles.sidebarWrapper}>
+						<GlobalSidebar centerLogo={onHome}/>
+					</div>
+
+					<div
+						className={styles.sidebarBackdrop}
+						onClick={this._toggleSidebar}
+					/>
+				</div>
+
+				<Container className={styles.content}>
+					<ErrorBoundary>
+						<Switch>
+							<Route exact path="/" component={Home}/>
+							<Route path="/:section/:code/last/:combatant*" component={LastFightRedirect}/>
+							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
+							<Route path="/find/:code/:fight?" component={Find}/>
+							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+						</Switch>
+					</ErrorBoundary>
+				</Container>
+			</div>
 		</>
 	}
 }

@@ -28,6 +28,7 @@ export default class Gauge extends Module {
 	static dependencies = [
 		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
+		'brokenLog',
 	]
 
 	_astralFireStacks = 0
@@ -36,6 +37,11 @@ export default class Gauge extends Module {
 	_astralUmbralStackTimer = 0
 	_hasEnochian = false
 	_enochianTimer = 0
+	_enochianDownTimer = {
+		start: 0,
+		stop: 0,
+		time: 0,
+	}
 	_hasPolyglot = false
 
 	_droppedEno = 0
@@ -126,18 +132,19 @@ export default class Gauge extends Module {
 		return events
 	}
 
-	onAstralUmbralTimeout() {
+	onAstralUmbralTimeout(event) {
 		this._astralFireStacks = 0
 		this._umbralIceStacks = 0
 		this._astralUmbralStackTimer = 0
-		this.onEnoDropped()
+		this.onEnoDropped(event)
 	}
 
-	onEnoDropped() {
+	onEnoDropped(event) {
 		if (this._hasEnochian) {
-			if (!this._hasPolyglot) {
-				this._lostFoul++
-			}
+			this._enochianDownTimer.start = event.timestamp
+			const enoRunTime = event.timestamp - this._enochianTimer
+			//add the time remaining on the eno timer to total downtime
+			this._enochianDownTimer.time += enoRunTime
 			this._droppedEno++
 		}
 		this._hasEnochian = false
@@ -165,7 +172,7 @@ export default class Gauge extends Module {
 
 	onGainAstralFireStacks(event, stackCount, dropsElementOnSwap = true) {
 		if (this._umbralIceStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		} else {
 			this._umbralIceStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
@@ -176,7 +183,7 @@ export default class Gauge extends Module {
 
 	onGainUmbralIceStacks(event, stackCount, dropsElementOnSwap = true) {
 		if (this._astralFireStacks > 0 && dropsElementOnSwap) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		} else {
 			this._astralFireStacks = 0
 			this._astralUmbralStackTimer = event.timestamp
@@ -210,7 +217,7 @@ export default class Gauge extends Module {
 		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
 			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
 		) {
-			this.onAstralUmbralTimeout()
+			this.onAstralUmbralTimeout(event)
 		}
 
 		if (this._hasEnochian) {
@@ -222,14 +229,33 @@ export default class Gauge extends Module {
 		}
 	}
 
+	_startEnoTimer(event) {
+		this._hasEnochian = true
+		this._enochianTimer = event.timestamp
+		if (this._enochianDownTimer.start) {
+			this._enoDownTimerStop(event)
+		}
+	}
+
+	_enoDownTimerStop(event) {
+		this._enochianDownTimer.stop = event.timestamp
+		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start, 0)
+		//reset the timer again to prevent weirdness/errors
+		this._enochianDownTimer.start = 0
+		this._enochianDownTimer.stop = 0
+	}
+
+	_renderLostFouls(time) {
+		return Math.floor(time/ENOCHIAN_DURATION_REQUIRED)
+	}
+
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
 			if (!this._hasEnochian) {
-				this._hasEnochian = true
-				this._enochianTimer = event.timestamp
+				this._startEnoTimer(event)
 				this.addEvent()
 			}
 			break
@@ -242,6 +268,10 @@ export default class Gauge extends Module {
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
+			if (!this._hasEnochian) {
+				this.brokenLog.trigger()
+				this._startEnoTimer(event)
+			}
 			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
 			break
@@ -255,6 +285,10 @@ export default class Gauge extends Module {
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FIRE_IV.id:
+			if (!this._hasEnochian) {
+				this.brokenLog.trigger()
+				this._startEnoTimer(event)
+			}
 			this.tryConsumeUmbralHearts(event, 1)
 			break
 		case ACTIONS.FLARE.id:
@@ -282,7 +316,12 @@ export default class Gauge extends Module {
 		this.addEvent()
 	}
 
-	_onComplete() {
+	_onComplete(event) {
+		if (this._enochianDownTimer.start) {
+			this._enoDownTimerStop(event)
+		}
+		this._lostFoul = this._renderLostFouls(this._enochianDownTimer.time)
+
 		// Suggestions for lost eno
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
