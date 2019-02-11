@@ -4,7 +4,7 @@ import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 import {getPatch, patchSupported} from 'data/PATCHES'
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 import styles from './About.module.css'
@@ -12,7 +12,7 @@ import styles from './About.module.css'
 export default class About extends Module {
 	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
-	static collapsible = false
+	static displayMode = DISPLAY_MODE.FULL
 	static i18n_id = i18nMark('core.about.title')
 
 	description = null

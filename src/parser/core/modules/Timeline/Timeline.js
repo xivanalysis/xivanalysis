@@ -3,7 +3,7 @@ import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
 
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 import styles from './Timeline.module.css'
@@ -14,7 +14,7 @@ const ONE_MINUTE = 60000
 export default class Timeline extends Module {
 	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.TIMELINE
-	static collapsible = false
+	static displayMode = DISPLAY_MODE.FULL
 
 	static i18n_id = i18nMark('core.timeline.title')
 	static title = 'Timeline'
