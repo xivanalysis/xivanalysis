@@ -63,6 +63,7 @@ export interface Hook<T extends Event> {
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
+	static collapsible: boolean = true
 	// TODO: Refactor this var
 	static i18n_id?: string // tslint:disable-line
 
