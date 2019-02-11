@@ -1,0 +1,30 @@
+@value gutter, themeBackground from "theme.module.css";
+
+.statistics {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	grid-auto-rows: 100px;
+	grid-auto-flow: dense;
+	grid-gap: gutter;
+}
+
+.statistic {
+	padding: gutter;
+	background: themeBackground;
+}
+
+/* TODO: Responsive shit */
+.span2 { grid-column-end: span 2; }
+.span3 { grid-column-end: span 3; }
+.span4 { grid-column-end: span 4; }
+
+/* TODO: Per-type? */
+.icon {
+	height: 1.5em;
+	vertical-align: middle;
+	margin-right: 4px;
+}
+.bigNumberThing {
+	font-size: 3em;
+	line-height: 1em;
+}
