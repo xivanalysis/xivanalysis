@@ -14,6 +14,7 @@ const ONE_MINUTE = 60000
 export default class Timeline extends Module {
 	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.TIMELINE
+	static collapsible = false
 
 	static i18n_id = i18nMark('core.timeline.title')
 	static title = 'Timeline'

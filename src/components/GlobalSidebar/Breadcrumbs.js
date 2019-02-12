@@ -4,7 +4,7 @@ import React from 'react'
 import {Helmet} from 'react-helmet'
 import {withRouter, Link} from 'react-router-dom'
 
-import ZONES from 'data/ZONES'
+import {getZoneBanner, getCorrectedFight} from 'data/BOSSES'
 import {ReportStore} from 'store/report'
 import {formatDuration, getPathMatch} from 'utilities'
 
@@ -59,16 +59,16 @@ class Breadcrumbs extends React.Component {
 			let title = fightId
 			let subtitle = null
 			if (reportLoaded && report.fights && fightId !== 'last') {
-				const fight = report.fights.find(fight => fight.id === fightId)
-				if (fight) {
+				const rawFight = report.fights.find(fight => fight.id === fightId)
+				if (rawFight) {
+					const fight = getCorrectedFight(rawFight)
 					const start_time = parseInt(fight.start_time, 10)
 					const end_time = parseInt(fight.end_time, 10)
 					subtitle = `(${formatDuration(Math.floor(end_time - start_time) / 1000)})`
 
-					const zone = ZONES[fight.zoneID]
-					crumbsBackground = zone && zone.banner
+					crumbsBackground = getZoneBanner(fight.zoneID)
+					title = fight.name
 				}
-				title = `${fight ? fight.name : fightId} `
 			}
 			crumbs.push({
 				title,

@@ -1,6 +1,4 @@
 import {i18nMark} from '@lingui/react'
-import {SemanticCOLORS} from 'semantic-ui-react'
-
 import {ActorType} from 'fflogs'
 import {addExtraIndex} from 'utilities'
 
@@ -8,7 +6,14 @@ export interface Role {
 	id: number
 	i18n_id: string
 	name: string
-	colour: SemanticCOLORS
+	colour: string
+}
+
+const colors = {
+	tank: '#2185d0',
+	healer: '#21ba45',
+	dps: '#db2828',
+	misc: '#767676',
 }
 
 const roleData = {
@@ -16,34 +21,35 @@ const roleData = {
 		id: 1,
 		i18n_id: i18nMark('game.roles.tank'),
 		name: 'Tank',
-		colour: 'blue',
+		colour: colors.tank,
 	},
+
 	HEALER: {
 		id: 2,
 		i18n_id: i18nMark('game.roles.healer'),
 		name: 'Healer',
-		colour: 'green',
+		colour: colors.healer,
 	},
 
 	MELEE: {
 		id: 3,
 		i18n_id: i18nMark('game.roles.melee-dps'),
 		name: 'Melee DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	PHYSICAL_RANGED: {
 		id: 4,
 		i18n_id: i18nMark('game.roles.physical-ranged-dps'),
 		name: 'Physical Ranged DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	MAGICAL_RANGED: {
 		id: 5,
 		i18n_id: i18nMark('game.roles.magical-ranged-dps'),
 		name: 'Magical Ranged DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	// Not really roles but w/e
@@ -51,14 +57,14 @@ const roleData = {
 		id: 99,
 		i18n_id: i18nMark('game.roles.outdated'),
 		name: 'Outdated',
-		colour: 'grey',
+		colour: colors.misc,
 	},
 
 	UNSUPPORTED: {
 		id: 100,
 		i18n_id: i18nMark('game.roles.unsupported'),
 		name: 'Unsupported',
-		colour: 'grey',
+		colour: colors.misc,
 	},
 }
 

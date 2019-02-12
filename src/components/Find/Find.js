@@ -1,18 +1,16 @@
 import {Trans} from '@lingui/react'
 import {observer, inject} from 'mobx-react'
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
+import React from 'react'
 import {Loader} from 'semantic-ui-react'
 
 import FightList from './FightList'
 import CombatantList from './CombatantList'
 import {ReportStore} from 'store/report'
 
-import styles from './Find.module.css'
-
 @inject('reportStore')
 @observer
-class Find extends Component {
+class Find extends React.Component {
 	static propTypes = {
 		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
 		match: PropTypes.shape({
@@ -21,10 +19,6 @@ class Find extends Component {
 				fight: PropTypes.string,
 			}).isRequired,
 		}).isRequired,
-		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired,
-			title: PropTypes.string,
-		}),
 	}
 
 	componentDidMount() {
@@ -51,10 +45,9 @@ class Find extends Component {
 			)
 		}
 
-		const content = params.fight
+		return params.fight
 			? <CombatantList report={report} currentFight={parseInt(params.fight, 10)}/>
 			: <FightList/>
-		return <div className={styles.find}>{content}</div>
 	}
 }
 

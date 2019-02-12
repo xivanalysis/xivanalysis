@@ -8,6 +8,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 export default class ChangeLog extends Module {
 	static handle = 'changelog'
 	static displayOrder = DISPLAY_ORDER.CHANGELOG
+	static collapsible = false
 
 	static title = 'Changelog'
 	static i18n_id = i18nMark('core.changelog.title')

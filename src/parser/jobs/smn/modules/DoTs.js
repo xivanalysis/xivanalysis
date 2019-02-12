@@ -1,4 +1,4 @@
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
 
@@ -27,6 +27,8 @@ const CLIPPING_SEVERITY = {
 
 export default class DoTs extends Module {
 	static handle = 'dots'
+	static title = 'DoTs'
+	static i18n_id = i18nMark('smn.dots.title')
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -180,9 +182,9 @@ export default class DoTs extends Module {
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
-									<Table.HeaderCell><ActionLink {...ACTIONS.MIASMA_III} /> <Trans id={'smn.dots.applied'}>Applied</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id={'smn.dots.clip'}>Clip</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id={'smn.dots.total-clip'}>Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><ActionLink {...ACTIONS.MIASMA_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
@@ -202,9 +204,9 @@ export default class DoTs extends Module {
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
-									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id={'smn.dots.applied'}>Applied</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id={'smn.dots.clip'}>Clip</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id={'smn.dots.total-clip'}>Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
