@@ -22,7 +22,7 @@ const SEVERITY_WASTED_FINISHER = {
 	2: SEVERITY.MEDIUM,
 	3: SEVERITY.MAJOR,
 }
-const IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD = 7
+const IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD = 4
 
 const WHITE_MANA_ACTIONS = {
 	proc: ACTIONS.VERSTONE,
@@ -131,7 +131,7 @@ export default class MeleeCombos extends Module {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.finisher.recommendedActions, recommendedFinisher)
 				this._incorrectFinishers.delay++
-				combo.finisher.recommendation = <Trans id="rdm.meleecombos.recommendation.delay">Delay your melee combo to guarantee a proc from your finisher, if you will lose 7 or less mana to overcapping.</Trans>
+				combo.finisher.recommendation = <Trans id="rdm.meleecombos.recommendation.delay">Delay your melee combo to guarantee a proc from your finisher, if you will lose {IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD} or less mana to overcapping.</Trans>
 			}
 		} else {
 			// A specific finisher was recommended
