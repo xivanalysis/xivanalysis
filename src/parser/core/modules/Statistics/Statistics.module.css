@@ -11,7 +11,23 @@
 .statistic {
 	padding: gutter;
 	background: themeBackground;
+	/* TEMP? */
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	justify-content: space-between;
 }
+
+.title {
+	display: flex;
+}
+.title div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
 
 /* TODO: Responsive shit */
 .span2 { grid-column-end: span 2; }
@@ -21,10 +37,32 @@
 /* TODO: Per-type? */
 .icon {
 	height: 1.5em;
-	vertical-align: middle;
 	margin-right: 4px;
 }
 .bigNumberThing {
-	font-size: 3em;
+	font-size: 2em;
 	line-height: 1em;
+}
+@value themeBlue from "theme.module.css";
+.info {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	width: gutter;
+	background: color(themeBlue l(90%));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color .1s ease-in-out;
+	color: color(themeBlue l(40%));
+}
+.statistic:hover .info {
+	background: color(themeBlue l(85%));
+}
+.statistic {
+	cursor: pointer;
+}
+.fuckSemantic {
+	margin: 0 !important;
 }
