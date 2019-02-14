@@ -19,7 +19,7 @@ const testStatistics: Statistic[] = [{
 	Content: () => <>
 		<div className={styles.title}>
 			<img src="https://xivapi.com/i/000000/000101.png" className={styles.icon}/>
-			<div>Estimated GCD words words words words words words words words words words words words words words words words words words words</div>
+			<div>Estimated GCD</div>
 		</div>
 		<div className={styles.bigNumberThing}>2.46s</div>
 	</>,

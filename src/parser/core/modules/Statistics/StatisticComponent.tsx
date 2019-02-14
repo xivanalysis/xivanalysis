@@ -1,6 +1,6 @@
 import classNames from 'classnames'
 import React from 'react'
-import {Icon} from 'semantic-ui-react'
+import {Icon, Popup} from 'semantic-ui-react'
 import {ColumnSpan, Statistic} from './Statistics'
 import styles from './Statistics.module.css'
 
@@ -20,7 +20,7 @@ export class StatisticComponent extends React.PureComponent<Props> {
 		const {statistic} = this.props
 		const colSpanClass = spanClassMap[statistic.width || 1]
 
-		return (
+		const content = (
 			<div
 				className={classNames(
 					styles.statistic,
@@ -40,5 +40,16 @@ export class StatisticComponent extends React.PureComponent<Props> {
 				)}
 			</div>
 		)
+
+		if (!statistic.Info) {
+			return content
+		}
+
+		return <Popup
+			trigger={content}
+			content={<statistic.Info/>}
+			on={['click', 'hover']}
+			position="bottom center"
+		/>
 	}
 }
