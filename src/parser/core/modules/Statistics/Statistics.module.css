@@ -1,8 +1,9 @@
-@value gutter, themeBackground from "theme.module.css";
+@value gutter from "theme.module.css";
+@value sm, lg, xl from "theme.module.css";
+@value themeBackground from "theme.module.css";
 
 .statistics {
 	display: grid;
-	grid-template-columns: repeat(4, 1fr);
 	grid-auto-rows: 100px;
 	grid-auto-flow: dense;
 	grid-gap: gutter;
@@ -37,10 +38,29 @@
 }
 
 
-/* TODO: Responsive shit */
-.span2 { grid-column-end: span 2; }
-.span3 { grid-column-end: span 3; }
-.span4 { grid-column-end: span 4; }
+.statistics { grid-template-columns: none; }
+.span1 { grid-column-end: span 1; }
+.span2 { grid-column-end: span 1; }
+.span3 { grid-column-end: span 1; }
+.span4 { grid-column-end: span 1; }
+
+@media sm {
+	.statistics { grid-template-columns: repeat(2, 1fr); }
+	.span2 { grid-column-end: span 2; }
+	.span3 { grid-column-end: span 2; }
+	.span4 { grid-column-end: span 2; }
+}
+
+@media lg {
+	.statistics { grid-template-columns: repeat(3, 1fr); }
+	.span3 { grid-column-end: span 3; }
+	.span4 { grid-column-end: span 3; }
+}
+
+@media xl {
+	.statistics { grid-template-columns: repeat(4, 1fr); }
+	.span4 { grid-column-end: span 4; }
+}
 
 /* TODO: Per-type? */
 .icon {
