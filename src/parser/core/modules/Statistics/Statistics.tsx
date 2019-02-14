@@ -1,6 +1,7 @@
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {SimpleStatistic} from './SimpleStatistic'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
 
@@ -15,16 +16,12 @@ export interface Statistic {
 }
 
 // TODO: This shit
-const testStatistics: Statistic[] = [{
-	Content: () => <>
-		<div className={styles.title}>
-			<img src="https://xivapi.com/i/000000/000101.png" className={styles.icon}/>
-			<div>Estimated GCD</div>
-		</div>
-		<div className={styles.bigNumberThing}>2.46s</div>
-	</>,
-	Info: () => <>welp</>,
-}]
+const testStatistics: Statistic[] = [new SimpleStatistic({
+	title: 'Estimated GCD',
+	icon: 'https://xivapi.com/i/000000/000101.png',
+	value: 2.46,
+	info: <>welp</>,
+})]
 
 export class Statistics extends Module {
 	static handle = 'statistics'

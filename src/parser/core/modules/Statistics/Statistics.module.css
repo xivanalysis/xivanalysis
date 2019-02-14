@@ -77,21 +77,23 @@
 	margin: 0 !important;
 }
 
-/* per-type? */
-.title {
+/* SimpleStatistic*/
+.titleWrapper{
 	display: flex;
 }
+
 .icon {
 	height: 1.5em;
 	margin-right: calc(gutter / 4);
 }
-.title div {
+
+.title {
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
-.bigNumberThing {
+.value {
 	font-size: 2em;
 	line-height: 1em;
 }
