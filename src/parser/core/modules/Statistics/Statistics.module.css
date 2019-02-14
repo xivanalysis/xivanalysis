@@ -1,6 +1,6 @@
 @value gutter from "theme.module.css";
 @value sm, lg, xl from "theme.module.css";
-@value themeBackground from "theme.module.css";
+@value themeBackground, themeBlue from "theme.module.css";
 
 .statistics {
 	display: grid;
@@ -10,35 +10,17 @@
 }
 
 .statistic {
-	padding: gutter;
-	background: themeBackground;
-	/* TEMP? */
 	position: relative;
+	padding: gutter;
 	min-width: 0;
+	background: themeBackground;
 }
 
-.content {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	justify-content: space-between;
+.hasInfo {
+	cursor: pointer;
 }
 
-.content > :only-child {
-	margin: auto 0;
-}
-
-.title {
-	display: flex;
-}
-.title div {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-
-.statistics { grid-template-columns: none; }
+/* Cruddy responsive handling for grid spans */
 .span1 { grid-column-end: span 1; }
 .span2 { grid-column-end: span 1; }
 .span3 { grid-column-end: span 1; }
@@ -62,35 +44,54 @@
 	.span4 { grid-column-end: span 4; }
 }
 
-/* TODO: Per-type? */
-.icon {
-	height: 1.5em;
-	margin-right: 4px;
+/* Content wrapper 'cus it's technically arbitrary */
+.content {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
 }
-.bigNumberThing {
-	font-size: 2em;
-	line-height: 1em;
+
+.content > :only-child {
+	margin: auto 0;
 }
-@value themeBlue from "theme.module.css";
+
 .info {
 	position: absolute;
 	top: 0;
 	right: 0;
-	height: 100%;
-	width: gutter;
-	background: color(themeBlue l(90%));
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	transition: background-color .1s ease-in-out;
+	width: gutter;
+	height: 100%;
+	background: color(themeBlue l(90%));
 	color: color(themeBlue l(40%));
+	transition: background-color .1s ease-in-out;
 }
 .statistic:hover .info {
 	background: color(themeBlue l(85%));
 }
-.statistic {
-	cursor: pointer;
-}
-.fuckSemantic {
+.infoIcon {
 	margin: 0 !important;
+}
+
+/* per-type? */
+.title {
+	display: flex;
+}
+.icon {
+	height: 1.5em;
+	margin-right: calc(gutter / 4);
+}
+.title div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.bigNumberThing {
+	font-size: 2em;
+	line-height: 1em;
 }
