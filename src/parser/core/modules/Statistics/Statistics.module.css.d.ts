@@ -4,6 +4,7 @@ export const themeBackground: string;
 export const themeBlue: string;
 export const statistics: string;
 export const statistic: string;
+export const content: string;
 export const title: string;
 export const span2: string;
 export const span3: string;

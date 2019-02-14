@@ -14,12 +14,13 @@ export class Statistics extends Module {
 		return (
 			<div className={styles.statistics}>
 				<div className={styles.statistic}>
-					<div className={styles.title}>
-						<img src="https://xivapi.com/i/000000/000101.png" className={styles.icon}/>
-						<div>Estimated GCD words words words words words words words words words words words words words words words words words words words</div>
+					<div className={styles.content}>
+						{/* <div className={styles.title}>
+							<img src="https://xivapi.com/i/000000/000101.png" className={styles.icon}/>
+							<div>Estimated GCD words words words words words words words words words words words words words words words words words words words</div>
+						</div> */}
+						<div className={styles.bigNumberThing}>2.46s</div>
 					</div>
-
-					<div className={styles.bigNumberThing}>2.46s</div>
 
 					<div className={styles.info}>
 						<Icon name="info" className={styles.fuckSemantic}/>
