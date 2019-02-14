@@ -25,7 +25,6 @@ export class StatisticComponent extends React.PureComponent<Props> {
 				className={classNames(
 					styles.statistic,
 					styles[colSpanClass],
-					statistic.Info && styles.hasInfo,
 				)}
 				style={{gridRowEnd: `span ${statistic.height || 1}`}}
 			>
@@ -48,7 +47,6 @@ export class StatisticComponent extends React.PureComponent<Props> {
 		return <Popup
 			trigger={content}
 			content={<statistic.Info/>}
-			on={['click', 'hover']}
 			position="bottom center"
 			wide="very"
 		/>

@@ -16,10 +16,6 @@
 	background: themeBackground;
 }
 
-.hasInfo {
-	cursor: pointer;
-}
-
 /* Cruddy responsive handling for grid spans */
 .span1 { grid-column-end: span 1; }
 .span2 { grid-column-end: span 1; }
