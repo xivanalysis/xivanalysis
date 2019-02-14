@@ -50,6 +50,7 @@ export class StatisticComponent extends React.PureComponent<Props> {
 			content={<statistic.Info/>}
 			on={['click', 'hover']}
 			position="bottom center"
+			wide="very"
 		/>
 	}
 }
