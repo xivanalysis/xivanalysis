@@ -156,6 +156,7 @@ export default class Gauge extends Module {
 		static i18n_id = i18nMark('rdm.gauge.title')
 		static dependencies = [
 			'combatants',
+			'cooldowns',
 			'suggestions',
 		]
 
@@ -204,6 +205,10 @@ export default class Gauge extends Module {
 			if (abilityId === ACTIONS.MANAFICATION.id) {
 				//console.log('Manafication')
 				gaugeAction.calculateManaFicationManaGained()
+
+				// Manafication resets movement abilities
+				this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
+				this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
 			} else {
 				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this._getIsPre44)
 			}
