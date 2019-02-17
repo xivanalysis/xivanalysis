@@ -1,11 +1,11 @@
+import {i18nMark, Trans} from '@lingui/react'
 import math from 'mathjsCustom'
 import React from 'react'
-import {Message, Icon} from 'semantic-ui-react'
-import {i18nMark, Trans} from '@lingui/react'
 
-import {getAction} from 'data/ACTIONS'
+import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
+import {SimpleStatistic} from './Statistics'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -28,6 +28,7 @@ export default class GlobalCooldown extends Module {
 		'castTime', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'downtime',
 		'speedmod',
+		'statistics',
 		'timeline',
 	]
 
@@ -109,6 +110,7 @@ export default class GlobalCooldown extends Module {
 	_onComplete() {
 		const startTime = this.parser.fight.start_time
 
+		// Timeline output
 		// TODO: Look into adding items to groups? Maybe?
 		this.timeline.addGroup(new Group({
 			id: 'gcd',
@@ -126,6 +128,20 @@ export default class GlobalCooldown extends Module {
 				content: <img src={action.icon} alt={action.name}/>,
 			}))
 		})
+
+		// Statistic box
+		const estimate = this.getEstimate(false)
+
+		this.statistics.add(new SimpleStatistic({
+			title: <Trans id="core.gcd.estimated-gcd">Estimated GCD</Trans>,
+			icon: ACTIONS.ATTACK.icon,
+			value: this.parser.formatDuration(estimate),
+			info: (
+				<Trans id="core.gcd.no-statistics">
+					Unfortunately, player statistics are not available from FF Logs. As such, the calculated GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
+				</Trans>
+			),
+		}))
 	}
 
 	//saveGcd(event, isInstant) {
@@ -221,29 +237,5 @@ export default class GlobalCooldown extends Module {
 		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX : 0))
 
 		return duration
-	}
-
-	output() {
-		const estimate = this.getEstimate(false)
-
-		return <>
-			<Message info icon>
-				<Icon name="info"/>
-				<Message.Content>
-					<Trans id="core.gcd.no-statistics">
-						Unfortunately, player statistics are not available from FF Logs. As such, the following GCD length is an <em>estimate</em>, and may well be incorrect. If it is reporting a GCD length <em>longer</em> than reality, you likely need to focus on keeping your GCD rolling.
-					</Trans>
-				</Message.Content>
-			</Message>
-			{estimate !== this.getEstimate(true) && <Message warning>
-				<Icon name="warning sign"/>
-				<Trans id="core.gcd.invalid-gcd">
-					The estimated GCD falls outside possible GCD values, and has been bounded to {this.parser.formatDuration(this.getEstimate(true))} for calculations.
-				</Trans>
-			</Message>}
-			<Trans id="core.gcd.estimate">
-				Estimated GCD: <strong>{this.parser.formatDuration(estimate)}</strong>
-			</Trans>
-		</>
 	}
 }

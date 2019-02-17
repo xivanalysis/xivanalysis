@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
+import {DISPLAY_MODE} from 'parser/core/Module'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
@@ -42,7 +43,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		this.scrollIntoView.bind(this)
 
 		const state: State = {}
-		if (props.result.collapsible === false) {
+		if (props.result.mode === DISPLAY_MODE.FULL) {
 			state.collapsed = false
 		}
 		this.state = state
@@ -84,9 +85,29 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 	}
 
 	render() {
-		const {result} = this.props
-		const {collapsed} = this.state
+		return <Consumer>{value => {
+			this.positionContext = value
+			return this.renderContent()
+		}}</Consumer>
+	}
 
+	private renderContent = () => {
+		const {result} = this.props
+
+		if (result.mode === DISPLAY_MODE.RAW) {
+			return <div>{result.markup}</div>
+		}
+
+		const contents = <>
+			<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
+			<div>{result.markup}</div>
+		</>
+
+		if (result.mode === DISPLAY_MODE.FULL) {
+			return <Segment>{contents}</Segment>
+		}
+
+		const {collapsed} = this.state
 		const seeMore = <>
 			<Icon name="chevron down"/>
 			<strong className={styles.seeMore}>
@@ -95,20 +116,16 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 			<Icon name="chevron down"/>
 		</>
 
-		return <Consumer>{value => {
-			this.positionContext = value
-			return (
-				<Segment.Expandable
-					collapsed={collapsed}
-					maxHeight={MODULE_HEIGHT_MAX}
-					leeway={MODULE_HEIGHT_LEEWAY}
-					seeMore={seeMore}
-				>
-					<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
-					<div>{result.markup}</div>
-				</Segment.Expandable>
-			)
-		}}</Consumer>
+		return (
+			<Segment.Expandable
+				collapsed={collapsed}
+				maxHeight={MODULE_HEIGHT_MAX}
+				leeway={MODULE_HEIGHT_LEEWAY}
+				seeMore={seeMore}
+			>
+				{contents}
+			</Segment.Expandable>
+		)
 	}
 
 	private handleIntersection(entries: IntersectionObserverEntry[]) {
