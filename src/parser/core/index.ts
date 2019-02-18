@@ -21,7 +21,7 @@ interface ChangelogEntry {
 }
 
 export interface Meta {
-	modules: () => Promise<Array<typeof Module>>
+	modules: () => Promise<{default: Array<typeof Module>}>
 	description?: ReactNode
 	supportedPatches?: SupportedPatches
 	contributors?: ContributorRole[]

@@ -29,7 +29,7 @@ export default class Procs extends Module {
 		[STATUSES.ENHANCED_SCATTER.id]: ACTIONS.SCATTER,
 	}
 	_doNotCastMap = {
-		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERAREO,
+		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERAERO,
 		[STATUSES.VERFIRE_READY.id]: ACTIONS.VERTHUNDER,
 		[STATUSES.IMPACTFUL.id]: ACTIONS.JOLT_II,
 	}
@@ -226,7 +226,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: overWrittenFire > overWrittenStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
 			content: <Trans id="rdm.procs.suggestions.overwritten.content">
-				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERAREO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />
+				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERAERO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />
 			</Trans>,
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overWrittenFire + overWrittenStone,

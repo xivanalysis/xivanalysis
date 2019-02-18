@@ -1,6 +1,4 @@
 import {i18nMark} from '@lingui/react'
-import {SemanticCOLORS} from 'semantic-ui-react'
-
 import {ActorType} from 'fflogs'
 import {addExtraIndex} from 'utilities'
 
@@ -8,7 +6,14 @@ export interface Role {
 	id: number
 	i18n_id: string
 	name: string
-	colour: SemanticCOLORS
+	colour: string
+}
+
+const colors = {
+	tank: '#2185d0',
+	healer: '#21ba45',
+	dps: '#db2828',
+	misc: '#767676',
 }
 
 const roleData = {
@@ -16,34 +21,35 @@ const roleData = {
 		id: 1,
 		i18n_id: i18nMark('game.roles.tank'),
 		name: 'Tank',
-		colour: 'blue',
+		colour: colors.tank,
 	},
+
 	HEALER: {
 		id: 2,
 		i18n_id: i18nMark('game.roles.healer'),
 		name: 'Healer',
-		colour: 'green',
+		colour: colors.healer,
 	},
 
 	MELEE: {
 		id: 3,
 		i18n_id: i18nMark('game.roles.melee-dps'),
 		name: 'Melee DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	PHYSICAL_RANGED: {
 		id: 4,
 		i18n_id: i18nMark('game.roles.physical-ranged-dps'),
 		name: 'Physical Ranged DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	MAGICAL_RANGED: {
 		id: 5,
 		i18n_id: i18nMark('game.roles.magical-ranged-dps'),
 		name: 'Magical Ranged DPS',
-		colour: 'red',
+		colour: colors.dps,
 	},
 
 	// Not really roles but w/e
@@ -51,14 +57,14 @@ const roleData = {
 		id: 99,
 		i18n_id: i18nMark('game.roles.outdated'),
 		name: 'Outdated',
-		colour: 'grey',
+		colour: colors.misc,
 	},
 
 	UNSUPPORTED: {
 		id: 100,
 		i18n_id: i18nMark('game.roles.unsupported'),
 		name: 'Unsupported',
-		colour: 'grey',
+		colour: colors.misc,
 	},
 }
 
@@ -80,7 +86,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.paladin'),
 		name: 'Paladin',
 		logType: ActorType.PALADIN,
-		icon: 'PLD',
+		icon: 'pld',
 		colour: '#a8d2e6',
 		role: ROLES.TANK.id,
 	},
@@ -88,7 +94,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.warrior'),
 		name: 'Warrior',
 		logType: ActorType.WARRIOR,
-		icon: 'WAR',
+		icon: 'war',
 		colour: '#cf2621',
 		role: ROLES.TANK.id,
 	},
@@ -96,7 +102,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.dark-knight'),
 		name: 'Dark Knight',
 		logType: ActorType.DARK_KNIGHT,
-		icon: 'DRK',
+		icon: 'drk',
 		colour: '#d126cc',
 		role: ROLES.TANK.id,
 	},
@@ -106,7 +112,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.white-mage'),
 		name: 'White Mage',
 		logType: ActorType.WHITE_MAGE,
-		icon: 'WHM',
+		icon: 'whm',
 		colour: '#fff0dc',
 		role: ROLES.HEALER.id,
 	},
@@ -114,7 +120,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.scholar'),
 		name: 'Scholar',
 		logType: ActorType.SCHOLAR,
-		icon: 'SCH',
+		icon: 'sch',
 		colour: '#8657ff',
 		role: ROLES.HEALER.id,
 	},
@@ -122,7 +128,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.astrologian'),
 		name: 'Astrologian',
 		logType: ActorType.ASTROLOGIAN,
-		icon: 'AST',
+		icon: 'ast',
 		colour: '#ffe74a',
 		role: ROLES.HEALER.id,
 	},
@@ -132,7 +138,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.monk'),
 		name: 'Monk',
 		logType: ActorType.MONK,
-		icon: 'MNK',
+		icon: 'mnk',
 		colour: '#d69c00',
 		role: ROLES.MELEE.id,
 	},
@@ -140,7 +146,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.dragoon'),
 		name: 'Dragoon',
 		logType: ActorType.DRAGOON,
-		icon: 'DRG',
+		icon: 'drg',
 		colour: '#4164cd',
 		role: ROLES.MELEE.id,
 	},
@@ -148,7 +154,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.ninja'),
 		name: 'Ninja',
 		logType: ActorType.NINJA,
-		icon: 'NIN',
+		icon: 'nin',
 		colour: '#af1964',
 		role: ROLES.MELEE.id,
 	},
@@ -156,7 +162,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.samurai'),
 		name: 'Samurai',
 		logType: ActorType.SAMURAI,
-		icon: 'SAM',
+		icon: 'sam',
 		colour: '#e46d04',
 		role: ROLES.MELEE.id,
 	},
@@ -166,7 +172,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.bard'),
 		name: 'Bard',
 		logType: ActorType.BARD,
-		icon: 'BRD',
+		icon: 'brd',
 		colour: '#91ba5e',
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
@@ -174,7 +180,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.machinist'),
 		name: 'Machinist',
 		logType: ActorType.MACHINIST,
-		icon: 'MCH',
+		icon: 'mch',
 		colour: '#6ee1d6',
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
@@ -184,7 +190,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.black-mage'),
 		name: 'Black Mage',
 		logType: ActorType.BLACK_MAGE,
-		icon: 'BLM',
+		icon: 'blm',
 		colour: '#a579d6',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
@@ -192,7 +198,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.summoner'),
 		name: 'Summoner',
 		logType: ActorType.SUMMONER,
-		icon: 'SMN',
+		icon: 'smn',
 		colour: '#2d9b78',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
@@ -200,7 +206,7 @@ const JOBS = {
 		i18n_id: i18nMark('game.job.red-mage'),
 		name: 'Red Mage',
 		logType: ActorType.RED_MAGE,
-		icon: 'RDM',
+		icon: 'rdm',
 		colour: '#e87b7b',
 		role: ROLES.MAGICAL_RANGED.id,
 	},

@@ -10,6 +10,13 @@ export enum DISPLAY_ORDER {
 	BOTTOM = 100,
 }
 
+export enum DISPLAY_MODE {
+	COLLAPSIBLE,
+	FULL,
+	/** Don't use this unless you know what you're doing, and you've run it past me. */
+	RAW,
+}
+
 export function dependency(target: Module, prop: string) {
 	const dependency = Reflect.getMetadata('design:type', target, prop)
 	const constructor = target.constructor as typeof Module
@@ -63,6 +70,7 @@ export interface Hook<T extends Event> {
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
+	static displayMode: DISPLAY_MODE
 	// TODO: Refactor this var
 	static i18n_id?: string // tslint:disable-line
 

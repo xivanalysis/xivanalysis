@@ -34,7 +34,7 @@ export default class RiddleOfFire extends Module {
 
 	_active = false
 	_history = []
-	_riddle = {}
+	_riddle = {casts: []}
 	_rushing = false
 
 	_missedGcds = 0

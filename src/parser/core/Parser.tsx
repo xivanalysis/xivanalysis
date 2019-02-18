@@ -1,46 +1,37 @@
-import {mergeWith, sortBy} from 'lodash'
-import Raven from 'raven-js'
-import React from 'react'
-import toposort from 'toposort'
-
+import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {Actor, Event, Fight, Pet, ReportFightsResponse} from 'fflogs'
+import {mergeWith, sortBy} from 'lodash'
+import Raven from 'raven-js'
+import React from 'react'
+import {Report} from 'store/report'
+import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
-import Module, {MappedDependency} from './Module'
+import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 
 interface Player extends Actor {
 	pets: Pet[]
 }
 
 interface LoadedMeta extends Meta {
-	loadedModules: Array<typeof Module>
-}
-
-// TODO: This should probably be in the store, once the store gets ported
-interface Report extends ReportFightsResponse {
-	code: string
-	loading: boolean
+	loadedModules: ReadonlyArray<typeof Module>
 }
 
 export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string
+	mode: DISPLAY_MODE
 	markup: React.ReactNode
 }
-
-import ResultSegment from 'components/Analyse/ResultSegment'
-
-/**
- * @typedef {{ i18n_id?: string; name: string; markup: React.ReactChild }} ParserResult
- */
 
 class Parser {
 	// -----
 	// Properties
 	// -----
+	readonly player: Player
 
 	meta: Partial<LoadedMeta> = {}
 	_timestamp = 0
@@ -84,13 +75,17 @@ class Parser {
 	constructor(
 		readonly report: Report,
 		readonly fight: Fight,
-		readonly player: Player,
+		actor: Actor,
 	) {
 		// Set initial timestamp
 		this._timestamp = fight.start_time
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
-		player.pets = report.friendlyPets.filter(pet => pet.petOwner === player.id)
+		const pets = report.friendlyPets.filter(pet => pet.petOwner === actor.id)
+		this.player = {
+			...actor,
+			pets,
+		}
 	}
 
 	// -----
@@ -110,7 +105,7 @@ class Parser {
 		delete this.meta.modules
 	}
 
-	addModules(modules: Array<typeof Module>) {
+	addModules(modules: ReadonlyArray<typeof Module>) {
 		const keyed: Record<string, typeof Module> = {}
 
 		modules.forEach(mod => {
@@ -351,6 +346,7 @@ class Parser {
 			const resultMeta = {
 				name: constructor.title,
 				handle: constructor.handle,
+				mode: constructor.displayMode,
 				i18n_id: constructor.i18n_id,
 			}
 

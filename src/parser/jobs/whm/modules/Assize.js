@@ -5,9 +5,13 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
+import PATCHES, {getPatch} from 'data/PATCHES'
 
 const EXCUSED_HOLD_DEFAULT = 1500 //time allowed to hold it every time it's off cd
 const WARN_TARGET_PERCENT = 0.9 //percentage as a decimal for warning tier on checklist
+
+// 4.5: Assize CD changed from 60s to 45s
+const PRE45_ASSIZE_COOLDOWN = 60
 
 export default class Assize extends Module {
 	static handle = 'assize'
@@ -20,6 +24,10 @@ export default class Assize extends Module {
 	_uses = 0
 	_totalHeld = 0
 	_excusedHeld = 0
+
+	currentPatch = getPatch(this.parser.parseDate)
+	pre45 = PATCHES[this.currentPatch].date < PATCHES['4.5'].date
+	ASSIZE_COOLDOWN = this.pre45 ? PRE45_ASSIZE_COOLDOWN : ACTIONS.ASSIZE.cooldown
 
 	constructor(...args) {
 		super(...args)
@@ -36,7 +44,7 @@ export default class Assize extends Module {
 		this._uses++
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
-		const firstOpportunity = (this._lastUse + ACTIONS.ASSIZE.cooldown * 1000)
+		const firstOpportunity = (this._lastUse + this.ASSIZE_COOLDOWN * 1000)
 		const _held = event.timestamp - firstOpportunity
 		if (_held > 0) {
 			//get downtimes in the period we're holding the cooldown
@@ -52,7 +60,7 @@ export default class Assize extends Module {
 	_onComplete() {
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration: this._totalHeld
-		const _usesMissed = Math.floor((holdDuration - this._excusedHeld)/ (ACTIONS.ASSIZE.cooldown * 1000))
+		const _usesMissed = Math.floor((holdDuration - this._excusedHeld)/ (this.ASSIZE_COOLDOWN * 1000))
 		const maxUsesInt = this._uses + _usesMissed
 		const warnTarget = 100 * Math.floor(WARN_TARGET_PERCENT * maxUsesInt) / maxUsesInt
 		this.checklist.add(new TieredRule({

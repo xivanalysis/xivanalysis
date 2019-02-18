@@ -14,7 +14,6 @@ const DARK_ARTS_MANA_POTENCY = 140
 const DARK_ARTS_CONSUMERS = [
 	ACTIONS.SYPHON_STRIKE.id,
 	ACTIONS.SOULEATER.id,
-	ACTIONS.SPINNING_SLASH.id,
 	ACTIONS.POWER_SLASH.id,
 	ACTIONS.DARK_PASSENGER.id,
 	ACTIONS.PLUNGE.id,
@@ -36,8 +35,6 @@ export default class DarkArts extends Module {
 	_countDA = 0 // Dark Arts
 	_countOverwrittenDA = 0 //DAing when DA is up doesn't give you a double DA
 	_countDroppedDA = 0 //dropped dark arts
-	_countDAPS = 0  // Dark Arts Power Slash    (3 in hate chain, better hate mod than 2).
-	_countDASS = 0  // Dark Arts Spinning Slash (2 in hate chain)
 	_countDADP = 0  // Dark Arts Dark Passenger (no slashing bonus, slightly worse than DA other abilities)
 	// dark arts
 	_darkArtsApplicationTime = undefined
@@ -56,12 +53,6 @@ export default class DarkArts extends Module {
 			// DA will be consumed and resolved, manually increment targeted counters
 			if (abilityId === ACTIONS.DARK_PASSENGER.id) {
 				this._countDADP += 1
-			}
-			if (abilityId === ACTIONS.SPINNING_SLASH.id) {
-				this._countDASS += 1
-			}
-			if (abilityId === ACTIONS.POWER_SLASH.id) {
-				this._countDAPS += 1
 			}
 			//mark the DA as consumed by resetting the timer
 			this._darkArtsApplicationTime = undefined
@@ -135,18 +126,6 @@ export default class DarkArts extends Module {
 				severity: SEVERITY.MINOR,
 				why: <Fragment>
 					You missed out on {this._countDADP * DADPPotencyLossBecauseDPDoesntGetSlashing} potency due to {this._countDADP} DADPs.
-				</Fragment>,
-			}))
-		}
-		if (this._countDASS > this._countDAPS) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SPINNING_SLASH.icon,
-				content: <Fragment>
-					<ActionLink {...ACTIONS.DARK_ARTS}/> has a greater impact on total enmity when used with <ActionLink {...ACTIONS.POWER_SLASH}/> than <ActionLink {...ACTIONS.SPINNING_SLASH}/>.  Prioritize boosting either both or just Power Slash, otherwise you may be using too many enmity GCDs.
-				</Fragment>,
-				severity: SEVERITY.MINOR,
-				why: <Fragment>
-					You used <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.SPINNING_SLASH}/> {this._countDASS} times, but <ActionLink {...ACTIONS.DARK_ARTS}/> <ActionLink {...ACTIONS.POWER_SLASH}/> only {this._countDAPS} times.
 				</Fragment>,
 			}))
 		}

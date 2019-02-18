@@ -5,7 +5,7 @@ import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
 
 export {compose}
 
-function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}
@@ -29,7 +29,7 @@ export function getPathMatch(pathname: string) {
 	let path = '/'
 	switch (page !== null && page.params.page) {
 	case 'find':    path = '/find/:code/:fight?'; break
-	case 'analyse':	path = '/analyse/:code/:fight/:combatant'; break
+	case 'analyse': path = '/analyse/:code/:fight/:combatant'; break
 	default:        // Do nothing
 	}
 

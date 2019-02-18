@@ -66,9 +66,9 @@ describe('Parser', () => {
 
 	it('exposes metadata', () => {
 		// Just making sure that modules will have access to it
-		expect(parser.report).toEqual(report)
-		expect(parser.fight).toEqual(fight)
-		expect(parser.player).toEqual(friendlyInFight)
+		expect(parser.report).toMatchObject(report)
+		expect(parser.fight).toMatchObject(fight)
+		expect(parser.player).toMatchObject(friendlyInFight)
 	})
 
 	it('starts at beginning of fight', () => {

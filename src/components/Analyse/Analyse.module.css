@@ -13,7 +13,7 @@
 }
 
 .resultsContainer {
-	margin-bottom: 25vh;
+	margin-bottom: 50vh;
 }
 
 .reportLink {
@@ -39,4 +39,8 @@
 	margin-right: 13px;
 	height: 30px;
 	vertical-align: middle;
+}
+
+.seeMore {
+	margin: 0 5px;
 }

@@ -28,6 +28,7 @@ export default class Gauge extends Module {
 	static dependencies = [
 		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
+		'brokenLog',
 	]
 
 	_astralFireStacks = 0
@@ -228,6 +229,14 @@ export default class Gauge extends Module {
 		}
 	}
 
+	_startEnoTimer(event) {
+		this._hasEnochian = true
+		this._enochianTimer = event.timestamp
+		if (this._enochianDownTimer.start) {
+			this._enoDownTimerStop(event)
+		}
+	}
+
 	_enoDownTimerStop(event) {
 		this._enochianDownTimer.stop = event.timestamp
 		this._enochianDownTimer.time += Math.max(this._enochianDownTimer.stop - this._enochianDownTimer.start, 0)
@@ -246,11 +255,7 @@ export default class Gauge extends Module {
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
 			if (!this._hasEnochian) {
-				this._hasEnochian = true
-				this._enochianTimer = event.timestamp
-				if (this._enochianDownTimer.start) {
-					this._enoDownTimerStop(event)
-				}
+				this._startEnoTimer(event)
 				this.addEvent()
 			}
 			break
@@ -263,6 +268,10 @@ export default class Gauge extends Module {
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
+			if (!this._hasEnochian) {
+				this.brokenLog.trigger()
+				this._startEnoTimer(event)
+			}
 			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
 			break
@@ -276,6 +285,10 @@ export default class Gauge extends Module {
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.FIRE_IV.id:
+			if (!this._hasEnochian) {
+				this.brokenLog.trigger()
+				this._startEnoTimer(event)
+			}
 			this.tryConsumeUmbralHearts(event, 1)
 			break
 		case ACTIONS.FLARE.id:

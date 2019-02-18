@@ -248,10 +248,7 @@ export default class BuffExtensions extends Module {
 			targetRows = dilation.targets.map(target => {
 				return <tr key={target.id}>
 					<td>
-						<JobIcon
-							job={JOBS[target.job]}
-							className={styles.jobIcon}
-						/>
+						<JobIcon job={JOBS[target.job]}/>
 					</td>
 					<td>{target.name}</td>
 					<td>

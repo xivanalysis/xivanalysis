@@ -20,9 +20,10 @@ import Potions from './Potions'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
+import Speedmod from './Speedmod'
+import {Statistics} from './Statistics'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
-import Speedmod from './Speedmod'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
 
@@ -49,9 +50,10 @@ export default [
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,
+	Speedmod,
+	Statistics,
 	Suggestions,
 	Timeline,
-	Speedmod,
 	UnableToAct,
 	Weaving,
 ]
