@@ -18,6 +18,11 @@ const AETHERFLOW_CD_ACTIONS = [
 	ACTIONS.BANE.id,
 ]
 
+const EXTRA_AETHERFLOWS = 3
+
+const AETHERFLOW_COOLDOWN = 45000
+const AETHERFLOW_REDUCTION = 5
+
 // Flow needs to be burnt before first use - estimate at 10s for now
 const FIRST_FLOW_TIMESTAMP = 10000
 
@@ -30,7 +35,7 @@ export default class Aetherflow extends Module {
 	]
 
 	_totalAetherflowCasts = 0
-	_extraAetherflows = 3 // pre-pull
+	_extraAetherflows = EXTRA_AETHERFLOWS // pre-pull
 
 	constructor(...args) {
 		super(...args)
@@ -43,19 +48,19 @@ export default class Aetherflow extends Module {
 	}
 
 	_possibleAetherflowCasts() {
-		return this._extraAetherflows + Math.floor(this._durationWithAetherflowOnCooldown() / 45000) * 3
+		return this._extraAetherflows + Math.floor(this._durationWithAetherflowOnCooldown() / AETHERFLOW_COOLDOWN) * EXTRA_AETHERFLOWS
 	}
 
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
 		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
-			this.cooldowns.reduceCooldown(ACTIONS.AETHERFLOW.id, 5)
+			this.cooldowns.reduceCooldown(ACTIONS.AETHERFLOW.id, AETHERFLOW_REDUCTION)
 			this._totalAetherflowCasts++
 		}
 
 		if (abilityId === ACTIONS.DISSIPATION.id) {
-			this._extraAetherflows += 3
+			this._extraAetherflows += EXTRA_AETHERFLOWS
 		}
 	}
 
@@ -141,8 +146,8 @@ export default class Aetherflow extends Module {
 								nextUptime = nextCredit.timestamp[0]
 							} else if (nextNextCredit && nextNextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
 								nextUptime = nextNextCredit.timestamp[0]
-								// dissipate turns the ideal downtime into 15s shorter
-								drift += 15000
+								// dissipate turns the ideal downtime into 15s shorter since you get 3 extra reductions
+								drift += AETHERFLOW_REDUCTION * EXTRA_AETHERFLOWS * 1000
 							} else {
 								nextUptime = this.parser.currentTimestamp
 							}
@@ -150,13 +155,13 @@ export default class Aetherflow extends Module {
 							downtime = nextUptime - timestamp[0]
 						}
 						drift += downtime
-						drift -= 45000
+						drift -= AETHERFLOW_COOLDOWN
 						if (drift > 0) {
 							totalDrift += drift
 						}
 						let wasted = 0
-						if (downtime > 45000) {
-							wasted = 3 - debit || 0
+						if (downtime > AETHERFLOW_COOLDOWN) {
+							wasted = EXTRA_AETHERFLOWS - debit || 0
 							totalWasted += wasted
 						}
 						return <Table.Row key={timestamp}>
