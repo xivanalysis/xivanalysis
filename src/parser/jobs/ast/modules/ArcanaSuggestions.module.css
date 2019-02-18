@@ -2,7 +2,14 @@
 	height: 1.4285em;
 	margin: 0 5px 1px 0;
 }
-
+.cardActionRow a {
+	cursor: pointer;
+	text-decoration: underline;
+	color: rgba(0,0,0,.87);
+}
+.cardActionRow a:hover {
+	color: #4183c4;
+}
 .cardActionTable .cardActionRow td {
 	padding-top: 5px;
 	padding-bottom: 5px;
