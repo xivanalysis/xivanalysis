@@ -5,6 +5,8 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import CoreWeaving from 'parser/core/modules/Weaving'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const WEAVING_SEVERITY = {
 	1: SEVERITY.MINOR,
 	5: SEVERITY.MEDIUM,
@@ -18,7 +20,7 @@ export default class Weaving extends CoreWeaving {
 		'suggestions',
 	]
 	static title = 'Weaving Issues'
-	static displayOrder = 53
+	static displayOrder = DISPLAY_ORDER.WEAVING
 
 	constructor(...args) {
 		super(...args)

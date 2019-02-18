@@ -6,6 +6,8 @@ import ACTIONS, {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // Actions that reduce Aetherflow's cooldown.
 const AETHERFLOW_CD_ACTIONS = [
 	ACTIONS.LUSTRATE.id,
@@ -20,7 +22,7 @@ const AETHERFLOW_CD_ACTIONS = [
 const FIRST_FLOW_TIMESTAMP = 10000
 
 export default class Aetherflow extends Module {
-	static displayOrder = 51
+	static displayOrder = DISPLAY_ORDER.AETHERFLOW
 	static handle = 'aetherflow'
 	static dependencies = [
 		'checklist',
