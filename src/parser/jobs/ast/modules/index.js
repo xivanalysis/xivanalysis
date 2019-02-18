@@ -4,14 +4,14 @@ import ArcanaTracking from './ArcanaTracking'
 import ArcanaSuggestions from './ArcanaSuggestions'
 import BuffExtensions from './BuffExtensions'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import DoTs from './DoTs'
+import Combust from './Combust'
 import LucidDreaming from './LucidDreaming'
 import SleeveDraw from './SleeveDraw'
 import Draw from './Draw'
 
 export default [
 	ArcanaUndrawUsage,
-	DoTs,
+	Combust,
 	BuffExtensions,
 	Lightspeed,
 	EarthlyStar,

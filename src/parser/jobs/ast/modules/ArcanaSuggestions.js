@@ -12,7 +12,7 @@ import JobIcon from 'components/ui/JobIcon'
 import JOBS from 'data/JOBS'
 import {ActionLink} from 'components/ui/DbLink'
 import {Trans, i18nMark} from '@lingui/react'
-import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
+import {Table, Icon, Message, Label, Accordion, Button} from 'semantic-ui-react'
 
 import styles from './ArcanaSuggestions.module.css'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -139,7 +139,7 @@ export default class ArcanaSuggestions extends Module {
 				content: <Trans id="ast.arcana-suggestions.messages.accordion-title">Full Arcana Logs</Trans>,
 			},
 			content: {
-				content: <Table collapsing unstackable className={styles.cardActionTable}>
+				content: <><Table collapsing unstackable className={styles.cardActionTable}>
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell width={1}>
@@ -178,7 +178,12 @@ export default class ArcanaSuggestions extends Module {
 							</Table.Row>
 						})}
 					</Table.Body>
-				</Table>,
+				</Table>
+				<Button onClick={() => this.parser.scrollTo(this.constructor.handle)}>
+					<Trans id="ast.arcana-suggestions.scroll-to-top-button">Jump to start of Arcana Logs</Trans>
+				</Button>
+				</>
+				,
 			},
 		}]
 
