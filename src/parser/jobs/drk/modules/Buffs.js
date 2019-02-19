@@ -5,6 +5,8 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Plural} from '@lingui/react'
 
 /* CURRENTLY UNUSED. FUTURE IMPROVEMENT
 // Things that should eventually get flagged if they show up under grit and darkside
@@ -36,10 +38,11 @@ export default class Buffs extends Module {
 	static handle = 'buffs'
 	static title = 'Buffs and Stances'
 	static dependencies = [
-		'downtime',
 		'combatants',
 		'downtime',
 		'checklist',
+		'brokenLog',
+		'suggestions',
 	]
 	// -----
 	// Accessors
@@ -65,124 +68,147 @@ export default class Buffs extends Module {
 	// -----
 	// Evaluation Metrics
 	// -----
-	// stack object: {timestamp: int, overwrite: boolean, duration: int}
-	// trigger implies a refreshbuff is relevant, toggle does not
-	_gritToggleStack = []
-	_darksideToggleStack = []
-	_bloodWeaponTriggerStack = []
-	_bloodPriceTriggerStack = []
+	_gritWindows = []
+	_darksideWindows = []
+	_lastDarksideCast = null
+	_wastedDelirium = 0
+
+	_severityWastedDelirium = {
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		3: SEVERITY.MAJOR,
+	}
 
 	constructor(...args) {
 		super(...args)
-		this.addHook(['applybuff', 'refreshbuff', 'removebuff'], {by: 'player', abilityId: STATUSES.BLOOD_WEAPON.id}, this._modifyBloodWeapon)
-		this.addHook(['applybuff', 'refreshbuff', 'removebuff'], {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._modifyBloodPrice)
-		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.GRIT.id}, this._modifyGrit)
-		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._modifyDarkside)
+		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.GRIT.id}, this._updateGritWindow)
+		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._updateDarksideWindow)
+		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DARKSIDE.id}, this._trackDarksideCasts)
+		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DELIRIUM.id}, this._checkDeliriumCast)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_modifyBloodWeapon(event) {
+	_updateGritWindow(event) {
 		if (event.type === 'applybuff') {
-			this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: true})
+			if (this._gritWindows.length > 0) {
+				const lastWindow = this._gritWindows[this._gritWindows.length - 1]
+				if (lastWindow.end === null) {
+					this.brokenLog.trigger()
+				}
+			}
+
+			this._gritWindows.push({start: event.timestamp, end: null})
 		} else if (event.type === 'removebuff') {
-			this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: false})
-		}
-	}
-	_modifyBloodPrice(event) {
-		if (event.type === 'applybuff') {
-			this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: true})
-		} else if (event.type === 'removebuff') {
-			this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: false})
-		}
-	}
-	_modifyDarkside(event) {
-		if (event.type === 'applybuff') {
-			this._darksideToggleStack.push({timestamp: event.timestamp, active: true})
-		} else if (event.type === 'removebuff') {
-			this._darksideToggleStack.push({timestamp: event.timestamp, active: false})
-		}
-	}
-	_modifyGrit(event) {
-		if (event.type === 'applybuff') {
-			this._gritToggleStack.push({timestamp: event.timestamp, active: true})
-		} else if (event.type === 'removebuff') {
-			this._gritToggleStack.push({timestamp: event.timestamp, overwrite: true, duration: 0})
+			const currentWindow = this._gritWindows[this._gritWindows.length - 1]
+			if (currentWindow.end !== null) {
+				this.brokenLog.trigger()
+			}
+
+			currentWindow.end = event.timestamp
 		}
 	}
 
-	static _parseEventStack(stack) {
-		let out = 0
-		let previous_entry = undefined
-		while (stack.length !== 0) {
-			const entry = stack.shift()
-			if (!entry.active && previous_entry !== undefined && previous_entry.active) {
-				out += entry.timestamp - previous_entry.timestamp
+	_updateDarksideWindow(event) {
+		if (event.type === 'applybuff') {
+			if (this._darksideWindows.length > 0) {
+				const lastWindow = this._darksideWindows[this._darksideWindows.length - 1]
+				if (lastWindow.end === null) {
+					this.brokenLog.trigger()
+				}
 			}
-			previous_entry = entry
+
+			let windowStart = event.timestamp
+			if (this._lastDarksideCast === null) {
+				// No cast, this is being re-applied from before fight, normalize start time to beginning of fight
+				windowStart = this.parser.fight.start_time
+			}
+			this._darksideWindows.push({start: windowStart, end: null})
+		} else if (event.type === 'removebuff') {
+			const currentWindow = this._darksideWindows[this._darksideWindows.length - 1]
+			if (currentWindow.end !== null) {
+				this.brokenLog.trigger()
+			}
+
+			currentWindow.end = event.timestamp
 		}
-		return out
+	}
+
+	_trackDarksideCasts(event) {
+		this._lastDarksideCast = event.timeStamp
+	}
+
+	_checkDeliriumCast() {
+		if (!(this.bloodPriceActive() || this.bloodWeaponActive())) {
+			this._wastedDelirium++
+		}
+	}
+
+	// noinspection JSMethodCanBeStatic
+	_endActiveBuffWindows(event, buffWindowArray) {
+		const lastWindow = buffWindowArray[buffWindowArray.length - 1]
+		if (lastWindow.end === null) {
+			lastWindow.end = event.timestamp
+		}
+	}
+
+	_calculateActiveTime(buffWindowArray) {
+		let activeTime = 0
+		buffWindowArray.forEach((buffWindow) => {
+			activeTime += (buffWindow.end - buffWindow.start)
+		})
+		return activeTime
 	}
 
 	_onComplete(event) {
 		// cleanup
-		this._gritToggleStack.push({timestamp: event.timestamp, active: false})
-		this._darksideToggleStack.push({timestamp: event.timestamp, active: false})
-		this._bloodWeaponTriggerStack.push({timestamp: event.timestamp, active: false})
-		this._bloodPriceTriggerStack.push({timestamp: event.timestamp, active: false})
+		if (this._darksideWindows.length > 0) { this._endActiveBuffWindows(event, this._darksideWindows) }
+		if (this._gritWindows.length > 0) { this._endActiveBuffWindows(event, this._gritWindows) }
 		// -----
 		// UI Component
 		// -----
-		// Math Constants
-		const BLOOD_WEAPON_COOLDOWN = 40000
-		const BLOOD_WEAPON_DURATION = 15000
-		const DELIRIUM_COOLDOWN = 80000
-		const DELIRIUM_BLOOD_WEAPON_EXTENSION = 8000
-		//using only duration or fightduration ends up with weird results.  mixture of both has worked really well in near-matching fflogs
+		// fight durations
 		const rawFightDuration = this.parser.fightDuration
-		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
-		//15 seconds every 40 seconds (BW), 8 seconds every 80 seconds (del).
-		//the +20 seconds for the downtime buffer (half blood wep CD) seems to make this pretty accurate for some reason.  Find a better fix in the future once fight downtime detection segmenting is super accurate.
-		// or at least when it doesn't consider a DRK running off to LD second wind in o6s as downtime.
-		const optimalFightBloodWeaponDuration =
-			(Math.floor(rawFightDuration / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) + //raw blood wep
-			(Math.floor(rawFightDuration / DELIRIUM_COOLDOWN) * DELIRIUM_BLOOD_WEAPON_EXTENSION) + //raw delirium
-			(Math.floor(((rawFightDuration - fightDuration) + (BLOOD_WEAPON_COOLDOWN / 1.5)) / BLOOD_WEAPON_COOLDOWN) * BLOOD_WEAPON_DURATION) //corrective factor
-		const fightBloodWeaponDuration = Buffs._parseEventStack(this._bloodWeaponTriggerStack)
-		const fightDarksideDuration = Buffs._parseEventStack(this._darksideToggleStack)
-		const fightGritDuration = Buffs._parseEventStack(this._gritToggleStack)
-		//later, use the blood price application times to check if blood weapon windows were missed, but not really needed for core functionality
+		const fightDuration = rawFightDuration - this.downtime.getDowntime()
+		//calculate actual buff durations
+		const fightDarksideDuration = this._calculateActiveTime(this._darksideWindows)
+		const fightDarksidePercent = Math.min(((fightDarksideDuration / rawFightDuration) * 100), 100)
 		this.checklist.add(new Rule({
 			name: <Fragment><ActionLink {...ACTIONS.DARKSIDE}/></Fragment>,
 			description: 'Darkside should only be removed during downtime natural mana regeneration.',
 			requirements: [
 				new Requirement({
 					name: 'Darkside Total Uptime',
-					//up to 3% of the fight's darkside gets lost by fflogs because of it being a buff that gets refreshed instead of a stance. :)
-					percent: Math.min(((fightDarksideDuration / rawFightDuration) * 100) + 3, 100),
+					percent: fightDarksidePercent,
 				}),
 			],
 		}))
-		this.checklist.add(new Rule({
-			name: <Fragment><ActionLink {...ACTIONS.BLOOD_WEAPON}/></Fragment>,
-			description: <Fragment>As your primary blood generation and damage tool, keeping blood weapon up as much as possible is a fundamental part of your damage.  <ActionLink {...ACTIONS.DELIRIUM}/>
-				and a 15s natural cooldown allow for striking dummy uptime of 47.5%, with changes per fight based on downtime and length.  This value is pre-corrected, aim for at least 95%.</Fragment>,
-			requirements: [
-				new Requirement({
-					name: 'Blood Weapon Normalized Uptime',
-					percent: Math.min((fightBloodWeaponDuration / optimalFightBloodWeaponDuration) * 100, 100),
-				}),
-			],
-		}))
+
+		const fightGritDuration = this._calculateActiveTime(this._gritWindows)
+		const fightNoGritPercent = Math.min((100 - ((fightGritDuration / fightDuration) * 100)), 100)
 		this.checklist.add(new Rule({
 			name: <Fragment>No <ActionLink {...ACTIONS.GRIT}/></Fragment>,
 			description: <Fragment>Grit is required for enmity openers and some points of excessive damage, but drastically reduces damage output.</Fragment>,
 			requirements: [
 				new Requirement({
 					name: 'Fight Spent without Grit',
-					percent:  Math.min((100 - ((fightGritDuration / fightDuration) * 100)), 100),
+					percent: fightNoGritPercent,
 				}),
 			],
 		}))
+
+		if (this._wastedDelirium > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.DELIRIUM.icon,
+				content: <Fragment>
+					You used Delirium without Blood Price or Blood Weapon active, spending blood for no effect
+				</Fragment>,
+				tiers: this._severityWastedDelirium,
+				value: this._wastedDelirium,
+				why: <Fragment>
+					You cast Delirium {this._wastedDelirium} <Plural value={this._wastedDelirium} one="time" other="times" /> without extending a buff.
+				</Fragment>,
+			}))
+		}
 	}
 
 	output() {
