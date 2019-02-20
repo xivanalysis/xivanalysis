@@ -41,6 +41,12 @@ const GCD_COMBO_ACTIONS = {
 		next: [undefined],
 	},
 }
+// Recommendation severities
+const _severityDroppedGCDCombo = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	7: SEVERITY.MAJOR,
+}
 
 export default class GCDs extends Module {
 	static handle = 'gcds'
@@ -55,13 +61,6 @@ export default class GCDs extends Module {
 	_last3eventsAndCurrent = []
 	_lastComboGCDTimeStamp = undefined
 	_GCDChainDrops = []
-
-	// Recommendation severities
-	_severityDroppedGCDCombo = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		6: SEVERITY.MAJOR,
-	}
 
 	inGCDCombo() {
 		return this._GCDComboActive
@@ -105,19 +104,17 @@ export default class GCDs extends Module {
 
 	_onComplete() {
 		//dropped combo chain
-		if (this._GCDChainDrops.length > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SPINNING_SLASH.icon,
-				content: <Fragment>
-					You dropped your GCD combo, loosing out on potency and/or mana.
-				</Fragment>,
-				tiers: this._severityDroppedGCDCombo,
-				value: this._GCDChainDrops.length,
-				why: <Fragment>
-					You wasted {this._GCDChainDrops.length} GCD chain actions.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SPINNING_SLASH.icon,
+			content: <Fragment>
+				You dropped your GCD combo, loosing out on potency and/or mana.
+			</Fragment>,
+			tiers: _severityDroppedGCDCombo,
+			value: this._GCDChainDrops.length,
+			why: <Fragment>
+				You wasted {this._GCDChainDrops.length} GCD chain actions.
+			</Fragment>,
+		}))
 	}
 
 	output() {

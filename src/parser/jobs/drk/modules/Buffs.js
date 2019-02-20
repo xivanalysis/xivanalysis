@@ -74,9 +74,8 @@ export default class Buffs extends Module {
 	_wastedDelirium = 0
 
 	_severityWastedDelirium = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
 	}
 
 	constructor(...args) {
@@ -196,19 +195,17 @@ export default class Buffs extends Module {
 			],
 		}))
 
-		if (this._wastedDelirium > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.DELIRIUM.icon,
-				content: <Fragment>
-					You used Delirium without Blood Price or Blood Weapon active, spending blood for no effect
-				</Fragment>,
-				tiers: this._severityWastedDelirium,
-				value: this._wastedDelirium,
-				why: <Fragment>
-					You cast Delirium {this._wastedDelirium} <Plural value={this._wastedDelirium} one="time" other="times" /> without extending a buff.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.DELIRIUM.icon,
+			content: <Fragment>
+				You used Delirium without Blood Price or Blood Weapon active, spending blood for no effect
+			</Fragment>,
+			tiers: this._severityWastedDelirium,
+			value: this._wastedDelirium,
+			why: <Fragment>
+				You cast Delirium {this._wastedDelirium} <Plural value={this._wastedDelirium} one="time" other="times" /> without extending a buff.
+			</Fragment>,
+		}))
 	}
 
 	output() {

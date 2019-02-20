@@ -37,8 +37,6 @@ const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
 const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
 const BLOOD_PRICE_MAX_DURATION = 15000
 
-const CARVE_AND_SPIT_NO_DA_MANA_GAIN = 1200
-
 //using this as a lookup table instead of a collector
 const RESOURCE_STATUS_EFFECTS = {
 	[STATUSES.ANOTHER_VICTIM.id]: {
@@ -64,6 +62,7 @@ const RESOURCE_STATUS_EFFECTS = {
 const MANA_MODIFIERS = {
 	// generators
 	[ACTIONS.DELIRIUM.id]: {value: 2400},
+	[ACTIONS.CARVE_AND_SPIT.id]: {value: 1200}, // if no DA active
 	// spenders
 	[ACTIONS.DARKSIDE.id]: {value: -600},
 	[ACTIONS.DARK_ARTS.id]: {value: -2400},
@@ -258,7 +257,7 @@ export default class Resources extends Module {
 		if (ACTIONS.CARVE_AND_SPIT.id === abilityId && !this.buffs.darkArtsActive()) {
 			//great why are we here
 			this._noDACarve += 1
-			this.modifyMana(event.ability, CARVE_AND_SPIT_NO_DA_MANA_GAIN)
+			this.modifyMana(event.ability, MANA_MODIFIERS[abilityId].value)
 		}
 	}
 
