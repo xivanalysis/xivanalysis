@@ -132,7 +132,6 @@ export default class Gauge extends Module {
 	}
 
 	onAstralUmbralTimeout(event) {
-		console.log('timeout', this.parser.formatTimestamp(event.timestamp))
 		this._astralFireStacks = 0
 		this._umbralIceStacks = 0
 		this._astralUmbralStackTimer = 0
@@ -147,7 +146,6 @@ export default class Gauge extends Module {
 			this._enochianDownTimer.time += enoRunTime
 			this._droppedEno++
 		}
-		console.log('eno dropped', this.parser.formatTimestamp(event.timestamp))
 		this._hasEnochian = false
 		this._enochianTimer = 0
 		this._umbralHeartStacks = 0
@@ -218,7 +216,6 @@ export default class Gauge extends Module {
 		if ((this._astralFireStacks > 0 || this._umbralIceStacks > 0) &&
 			(event.timestamp - this._astralUmbralStackTimer > ASTRAL_UMBRAL_DURATION)
 		) {
-			console.log('afui timeout', this.parser.formatTimestamp(event.timestamp))
 			this.onAstralUmbralTimeout(event)
 		}
 
@@ -257,7 +254,6 @@ export default class Gauge extends Module {
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
 			if (!this._hasEnochian) {
-				console.log('eno gained', this.parser.formatTimestamp(event.timestamp))
 				this._startEnoTimer(event)
 				this.addEvent()
 			}
@@ -268,12 +264,10 @@ export default class Gauge extends Module {
 			this.onGainUmbralIceStacks(event, 1)
 			break
 		case ACTIONS.BLIZZARD_III.id:
-			console.log('B3', this._hasEnochian, this._astralUmbralStackTimer, this.parser.formatTimestamp(event.timestamp))
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
 		case ACTIONS.BLIZZARD_IV.id:
 			if (!this._hasEnochian) {
-				console.log('B4', this.parser.formatTimestamp(event.timestamp))
 				this.brokenLog.trigger()
 				this._startEnoTimer(event)
 			}
@@ -291,7 +285,6 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.FIRE_IV.id:
 			if (!this._hasEnochian) {
-				console.log('F4', this.parser.formatTimestamp(event.timestamp))
 				this.brokenLog.trigger()
 				this._startEnoTimer(event)
 			}
@@ -311,7 +304,6 @@ export default class Gauge extends Module {
 	}
 
 	_onDeath() {
-		console.log('death')
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this._astralFireStacks = 0
 		this._umbralIceStacks = 0
