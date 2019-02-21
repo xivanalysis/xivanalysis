@@ -48,6 +48,7 @@ export const MANA_CAP = 100
 const ENHANCED_SCATTER_GAIN = 8
 const ENHANCED_SCATTER_44_GAIN = 10
 const MANAFICATION_MULTIPLIER = 2
+const MANA_FLOOR = 0
 
 class GaugeAction {
 	mana = {
@@ -198,6 +199,17 @@ export default class Gauge extends Module {
 		}
 
 		_gaugeEvent(event) {
+			//If the RDM had resources going into the fight eventually we'll hit a negative number.
+			//This is very bad, so what we'll do is before we initialize the Action or any calculations we'll insure the base
+			//Inputs are at the Floor of 0.
+			if (this._whiteMana && this._whiteMana < MANA_FLOOR) {
+				this._whiteMana = MANA_FLOOR
+			}
+
+			if (this._blackMana && this._blackMana < MANA_FLOOR) {
+				this._blackMana = MANA_FLOOR
+			}
+
 			const gaugeAction = new GaugeAction(this._whiteMana, this._blackMana)
 
 			const abilityId = event.ability.guid
