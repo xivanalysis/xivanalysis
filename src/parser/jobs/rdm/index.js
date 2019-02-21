@@ -106,5 +106,10 @@ export default {
 			changes: 'Added rotation tables showing melee combo usages and finisher recommendations',
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
+		{
+			date: new Date('2019-02-21'),
+			changes: 'Fixed an issue with RDM Mana tracking that allowed for negative numbers when starting with resources such as in 24 mans.',
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 	],
 }
