@@ -88,8 +88,8 @@ export function extractErrorContext(object: any): object {
 function _matchClosestHoF(difference: (a: number, b: number) => number) {
 	return matcher
 
-	function matcher(values: ReadonlyArray<number>, value: number): number
-	function matcher<T>(values: Record<number, T>, value: number): T
+	function matcher(values: ReadonlyArray<number>, value: number): number | undefined
+	function matcher<T>(values: Record<number, T>, value: number): T | undefined
 	function matcher(values: ReadonlyArray<number>|Record<number, any>, value: any) {
 		const isArray = Array.isArray(values)
 		const isObject = typeof values === typeof {}
@@ -116,12 +116,16 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 				}
 			})
 
+		if (closestIndex === undefined) {
+			return
+		}
+
 		if (isArray) {
-			return workingValues[closestIndex!]
+			return workingValues[closestIndex]
 		}
 
 		if (isObject) {
-			return values[+workingValues[closestIndex!]]
+			return values[+workingValues[closestIndex]]
 		}
 	}
 }
