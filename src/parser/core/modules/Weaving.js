@@ -16,6 +16,7 @@ const MAX_WEAVES = {
 	1.5: 1,
 	2: 1,
 	2.5: 0,
+	3.5: 0,
 	default: 0,
 }
 
@@ -145,6 +146,7 @@ export default class Weaving extends Module {
 
 	// Basic weave check. For job-specific weave concerns, subclass Weaving and override this method. Make sure it's included under the same module key to override the base implementation.
 	isBadWeave(weave, maxWeaves) {
+
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
 		const weaveCount = weave.weaves.filter(
 			event => !this.invuln.isUntargetable('all', event.timestamp)
