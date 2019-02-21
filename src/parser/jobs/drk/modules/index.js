@@ -4,6 +4,7 @@ import Buffs from './Buffs'
 import DarkArts from './DarkArts'
 import Speedmod from './Speedmod'
 import Cooldowns from './Cooldowns'
+import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	ResourceSimulator,
@@ -12,4 +13,5 @@ export default [
 	Buffs,
 	DarkArts,
 	Cooldowns,
+	OGCDDowntime,
 ]

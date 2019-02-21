@@ -2,7 +2,7 @@ import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import {ActionLink} from 'components/ui/DbLink'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
@@ -41,6 +41,12 @@ const GCD_COMBO_ACTIONS = {
 		next: [undefined],
 	},
 }
+// Recommendation severities
+const _severityDroppedGCDCombo = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	7: SEVERITY.MAJOR,
+}
 
 export default class GCDs extends Module {
 	static handle = 'gcds'
@@ -63,6 +69,7 @@ export default class GCDs extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
@@ -95,20 +102,19 @@ export default class GCDs extends Module {
 		}
 	}
 
-	onComplete() {
+	_onComplete() {
 		//dropped combo chain
-		if (this._GCDChainDrops.length > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SPINNING_SLASH.icon,
-				content: <Fragment>
-					You dropped your GCD combo, loosing out on potency and/or mana.
-				</Fragment>,
-				severity: this._GCDChainDrops.length <= (1) ? SEVERITY.MINOR : this._GCDChainDrops.length <= (6) ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Fragment>
-					You wasted {this._GCDChainDrops} GCD chain actions.
-				</Fragment>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SPINNING_SLASH.icon,
+			content: <Fragment>
+				You dropped your GCD combo, loosing out on potency and/or mana.
+			</Fragment>,
+			tiers: _severityDroppedGCDCombo,
+			value: this._GCDChainDrops.length,
+			why: <Fragment>
+				You wasted {this._GCDChainDrops.length} GCD chain actions.
+			</Fragment>,
+		}))
 	}
 
 	output() {
