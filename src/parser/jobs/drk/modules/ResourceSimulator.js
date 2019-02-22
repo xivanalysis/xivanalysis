@@ -27,6 +27,8 @@ const MAX_MANA = 9480
 const MANA_REGEN_PERCENT_PER_TICK = 0.02
 const TICK_RATE = 3000
 
+const CARVE_AND_SPIT_NO_DA_MANA_GAIN = 1200
+
 const MAX_BLOOD = 100
 //const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
 //const DARKSIDE_MANA_COST = 600
@@ -62,7 +64,6 @@ const RESOURCE_STATUS_EFFECTS = {
 const MANA_MODIFIERS = {
 	// generators
 	[ACTIONS.DELIRIUM.id]: {value: 2400},
-	[ACTIONS.CARVE_AND_SPIT.id]: {value: 1200}, // if no DA active
 	// spenders
 	[ACTIONS.DARKSIDE.id]: {value: -600},
 	[ACTIONS.DARK_ARTS.id]: {value: -2400},
@@ -83,7 +84,7 @@ const BLOOD_MODIFIERS = {
 
 //aoe abilities that generate resource on hits
 const AOE_GENERATORS = {
-	[ACTIONS.SALTED_EARTH.id]: {mana: 0, blood: 1},
+	[STATUSES.SALTED_EARTH.id]: {mana: 0, blood: 1},
 	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 0},
 }
 
@@ -255,9 +256,8 @@ export default class Resources extends Module {
 		}
 		//one off case for checking for DA-less carve n spit, which we can then make a suggestion for because this is really bad
 		if (ACTIONS.CARVE_AND_SPIT.id === abilityId && !this.buffs.darkArtsActive()) {
-			//great why are we here
 			this._noDACarve += 1
-			this.modifyMana(event.ability, MANA_MODIFIERS[abilityId].value)
+			this.modifyMana(event.ability,  CARVE_AND_SPIT_NO_DA_MANA_GAIN)
 		}
 	}
 
