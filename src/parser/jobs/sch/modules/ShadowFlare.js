@@ -8,6 +8,8 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosestLower} from 'utilities'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // In a single target scenario, SF should always tick 5 times + 1 time on the cast (4.4 patch)
 const MIN_HITS = {
 	[PATCHES['4.0'].date]: 5,
@@ -19,7 +21,7 @@ const TICK_SPEED = 3000
 
 // TODO: Consolidate this between SMN and SCH
 export default class ShadowFlare extends Module {
-	static displayOrder = 52;
+	static displayOrder = DISPLAY_ORDER.SHADOW_FLARE
 	static handle = 'shadowFlare'
 	static title = 'Shadow Flare'
 	static dependencies = [
