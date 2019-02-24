@@ -3,7 +3,7 @@ import React from 'react'
 
 import {default as ChangeLogModule} from './Component'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 export default class ChangeLog extends Module {
 	static handle = 'changelog'
