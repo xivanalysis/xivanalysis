@@ -2,7 +2,7 @@ import React from 'react'
 import {i18nMark} from '@lingui/react'
 
 import Suggestion, {SEVERITY} from './Suggestion'
-import SuggestionsComponent from 'components/modules/Suggestions'
+import SuggestionsComponent from './Component'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
