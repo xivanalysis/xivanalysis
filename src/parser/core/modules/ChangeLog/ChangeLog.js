@@ -1,7 +1,7 @@
 import {i18nMark} from '@lingui/react'
 import React from 'react'
 
-import {default as ChangeLogModule} from 'components/modules/ChangeLog'
+import {default as ChangeLogModule} from './Component'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
