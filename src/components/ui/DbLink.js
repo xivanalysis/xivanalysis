@@ -15,7 +15,7 @@ import styles from './DbLink.module.css'
 // Wrapping the provider w/ the store to pick up lang changes
 export const Provider = inject('i18nStore')(observer(({i18nStore, children}) => (
 	<TooltipProvider
-		language={i18nStore.language}
+		language={i18nStore.siteLanguage}
 		apiKey={process.env.REACT_APP_XIVAPI_API_KEY}
 	>
 		{children}

@@ -2,19 +2,20 @@ import {action, observable} from 'mobx'
 import {getUserLanguage} from 'utilities'
 
 export class I18nStore {
-	@observable language: string = getUserLanguage()
+	@observable siteLanguage: string = getUserLanguage()
 	@observable siteSet: boolean = false
 	@observable overlay: boolean = false
 
 	@action
-	setLanguage(language: string) {
-		this.language = language
+	setSiteLanguage(language: string) {
+		this.siteLanguage = language
 		this.siteSet = true
 	}
 
 	@action
-	updateLanguage() {
-		this.language = getUserLanguage()
+	resetSiteLanguage() {
+		this.siteLanguage = getUserLanguage()
+		this.siteSet = false
 	}
 
 	@action

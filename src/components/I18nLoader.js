@@ -85,10 +85,10 @@ class I18nLoader extends React.Component {
 	}
 
 	componentDidMount() {
-		this.loadCatalog(this.props.i18nStore.language)
+		this.loadCatalog(this.props.i18nStore.siteLanguage)
 
 		disposeOnUnmount(this, reaction(
-			() => this.props.i18nStore.language,
+			() => this.props.i18nStore.siteLanguage,
 			language => {
 				if (
 					language === this.oldLanguage ||
@@ -105,7 +105,7 @@ class I18nLoader extends React.Component {
 	render() {
 		const {i18nStore} = this.props
 
-		let language = i18nStore.language
+		let language = i18nStore.siteLanguage
 		let loading = false
 
 		if (!this.catalogs[language]) {

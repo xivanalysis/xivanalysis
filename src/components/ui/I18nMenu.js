@@ -24,7 +24,7 @@ class I18nMenu extends Component {
 	get availableLanguages() {
 		let languages = LANGUAGE_ARRAY
 		if (!DEBUG) {
-			const currentLanguage = this.props.i18nStore.language
+			const currentLanguage = this.props.i18nStore.siteLanguage
 			languages = languages
 				.filter(lang => lang.enable || currentLanguage === lang.value)
 		}
@@ -33,7 +33,7 @@ class I18nMenu extends Component {
 
 	handleChange = (event, data) => {
 		const {i18nStore} = this.props
-		i18nStore.setLanguage(data.value)
+		i18nStore.setSiteLanguage(data.value)
 	}
 
 	toggleOverlay = () => {
@@ -43,7 +43,7 @@ class I18nMenu extends Component {
 
 	render() {
 		const {i18nStore} = this.props
-		const lang = LANGUAGES[i18nStore.language]
+		const lang = LANGUAGES[i18nStore.siteLanguage]
 
 		if (this.availableLanguages.length < 2) {
 			return null
@@ -59,7 +59,7 @@ class I18nMenu extends Component {
 			<Dropdown.Menu>
 				{this.availableLanguages.map(option => <Dropdown.Item
 					key={option.value}
-					active={i18nStore.language === option.value}
+					active={i18nStore.siteLanguage === option.value}
 					onClick={this.handleChange}
 					{...option}
 					className={styles.menuItem}
