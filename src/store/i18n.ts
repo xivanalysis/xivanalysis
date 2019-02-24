@@ -1,24 +1,24 @@
-import {GAME_LANGUAGES} from 'data/LANGUAGES'
+import {GameEdition, Language, LANGUAGES} from 'data/LANGUAGES'
 import {action, observable} from 'mobx'
 import {getUserLanguage} from 'utilities'
 
-function getGameLanguage(language: string): string {
+function getGameLanguage(language: Language): Language {
 	// Check if the language is a game language, fall back to EN
-	if (GAME_LANGUAGES.includes(language)) {
+	if (LANGUAGES[language].gameEdition === GameEdition.GLOBAL) {
 		return language
 	}
-	return 'en'
+	return Language.ENGLISH
 }
 
 export class I18nStore {
-	@observable siteLanguage: string = getUserLanguage()
+	@observable siteLanguage: Language = getUserLanguage()
 	@observable siteSet: boolean = false
-	@observable gameLanguage: string = getGameLanguage(this.siteLanguage)
+	@observable gameLanguage: Language = getGameLanguage(this.siteLanguage)
 	@observable gameSet: boolean = false
 	@observable overlay: boolean = false
 
 	@action
-	setSiteLanguage(language: string) {
+	setSiteLanguage(language: Language) {
 		this.siteLanguage = language
 		this.siteSet = true
 
@@ -40,7 +40,7 @@ export class I18nStore {
 	}
 
 	@action
-	setGameLanguage(language: string) {
+	setGameLanguage(language: Language) {
 		this.gameLanguage = language
 
 		// If they've split the langs, track it

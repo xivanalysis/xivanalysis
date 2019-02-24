@@ -1,7 +1,7 @@
 import compose from 'lodash/fp/compose'
 import {matchPath} from 'react-router-dom'
 
-import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
+import {DEFAULT_LANGUAGE, Language, LANGUAGES, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
 
 export {compose}
 
@@ -195,8 +195,8 @@ function getNavigatorLanguages(): ReadonlyArray<string> {
  * @param {String[]} [languagesInput] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): string {
-	const languages = languagesInput.filter((lang): lang is keyof typeof LANGUAGES => lang in LANGUAGES)
+export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): Language {
+	const languages = languagesInput.filter((lang): lang is Language => lang in LANGUAGES)
 	for (const lang of languages) {
 		if (LANGUAGES[lang].enable) {
 			return lang

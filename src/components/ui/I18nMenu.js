@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
-import LANGUAGES, {LANGUAGE_ARRAY, GAME_LANGUAGES} from 'data/LANGUAGES'
+import {LANGUAGES, GameEdition} from 'data/LANGUAGES'
 import {I18nStore} from 'store/i18n'
 
 import crowdinLogo from './crowdin-dark-symbol.png'
@@ -22,21 +22,24 @@ class I18nMenu extends Component {
 
 	@computed
 	get availableLanguages() {
-		let languages = LANGUAGE_ARRAY
-		if (!DEBUG) {
-			const currentLanguage = this.props.i18nStore.siteLanguage
-			languages = languages
-				.filter(lang => lang.enable || currentLanguage === lang.value)
-		}
-		return languages.map(lang => lang.menu)
+		const currentLanguage = this.props.i18nStore.siteLanguage
+		return Object.entries(LANGUAGES)
+			.filter(([lang, data]) => DEBUG || data.enable || currentLanguage === lang)
+			.map(([lang, data]) => ({
+				...data.menu,
+				value: lang,
+				description: ((process.env.LOCALE_COMPLETION || {})[lang] || '0') + '%',
+			}))
 	}
 
 	@computed
 	get gameLanguageOptions() {
-		return GAME_LANGUAGES.map(lang => ({
-			...LANGUAGES[lang].menu,
-			value: lang,
-		}))
+		return Object.entries(LANGUAGES)
+			.filter(([, data]) => data.gameEdition === GameEdition.GLOBAL)
+			.map(([lang, data]) => ({
+				...data.menu,
+				value: lang,
+			}))
 	}
 
 	handleChangeSite = (event, data) => {
