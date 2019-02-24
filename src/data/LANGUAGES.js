@@ -1,4 +1,5 @@
 import {stringBefore} from 'utilities'
+import {cloneDeep} from 'lodash'
 
 const LANGUAGES = {
 	en: {
@@ -6,37 +7,38 @@ const LANGUAGES = {
 			text: 'English',
 			flag: 'gb',
 		},
-		tooltip: 'en',
 		enable: true,
+		gameVersion: 'global',
 	},
 	ja: {
 		menu: {
 			text: '日本語',
 			flag: 'jp',
 		},
-		tooltip: 'ja',
 		enable: true,
+		gameVersion: 'global',
 	},
 	fr: {
 		menu: {
 			text: 'Français',
 			flag: 'fr',
 		},
-		tooltip: 'fr',
 		enable: true,
+		gameVersion: 'global',
 	},
 	de: {
 		menu: {
 			text: 'Deutsch',
 			flag: 'de',
 		},
-		tooltip: 'de',
 		enable: true,
+		gameVersion: 'global',
 	},
 }
 
 export const LANGUAGE_ARRAY = Object.entries(LANGUAGES)
-	.map(([key, val]) => {
+	.map(([key, obj]) => {
+		const val = cloneDeep(obj)
 		val.value = key
 		if (val.menu) {
 			val.menu.value = key
@@ -54,5 +56,12 @@ export const SHORT_LANGUAGE_MAP = Object.keys(LANGUAGES).reduce(
 )
 
 export default LANGUAGES
+
+export const GAME_LANGUAGES = Object.entries(LANGUAGES)
+	.map(([key, val]) => val.enable && val.gameVersion === 'global'
+		? key
+		: false,
+	)
+	.filter(Boolean)
 
 export const DEFAULT_LANGUAGE = 'en'

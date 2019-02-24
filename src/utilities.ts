@@ -204,7 +204,7 @@ export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavig
 	}
 
 	// In case we didn't get a match, try matching just the first part of each
-	// language. It's better than falling  back to nothing. This may be overkill.
+	// language. It's better than falling back to nothing. This may be overkill.
 	for (const lang of languages.map(l => stringBefore(l, '-'))) {
 		const match = SHORT_LANGUAGE_MAP[lang]
 		if (match && LANGUAGES[match].enable) {

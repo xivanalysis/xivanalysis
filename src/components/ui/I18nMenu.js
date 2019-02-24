@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
-import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
+import LANGUAGES, {LANGUAGE_ARRAY, GAME_LANGUAGES} from 'data/LANGUAGES'
 import {I18nStore} from 'store/i18n'
 
 import crowdinLogo from './crowdin-dark-symbol.png'
@@ -31,9 +31,22 @@ class I18nMenu extends Component {
 		return languages.map(lang => lang.menu)
 	}
 
-	handleChange = (event, data) => {
+	@computed
+	get gameLanguageOptions() {
+		return GAME_LANGUAGES.map(lang => ({
+			...LANGUAGES[lang].menu,
+			value: lang,
+		}))
+	}
+
+	handleChangeSite = (event, data) => {
 		const {i18nStore} = this.props
 		i18nStore.setSiteLanguage(data.value)
+	}
+
+	handleChangeGame = (event, data) => {
+		const {i18nStore} = this.props
+		i18nStore.setGameLanguage(data.value)
 	}
 
 	toggleOverlay = () => {
@@ -43,47 +56,69 @@ class I18nMenu extends Component {
 
 	render() {
 		const {i18nStore} = this.props
-		const lang = LANGUAGES[i18nStore.siteLanguage]
+		const siteLang = LANGUAGES[i18nStore.siteLanguage]
+		const gameLang = LANGUAGES[i18nStore.gameLanguage]
 
-		if (this.availableLanguages.length < 2) {
-			return null
-		}
+		return <div className={styles.container}>
+			{/* Site language */}
+			<Dropdown
+				className={styles.dropdown}
+				text={<>
+					<Icon name="globe"/>
+					{siteLang ? siteLang.menu.text : 'Language'}
+				</>}
+			>
+				<Dropdown.Menu>
+					{this.availableLanguages.map(option => <Dropdown.Item
+						key={option.value}
+						active={i18nStore.siteLanguage === option.value}
+						onClick={this.handleChangeSite}
+						{...option}
+						className={styles.menuItem}
+					/>)}
+					<Dropdown.Divider />
+					{DEBUG?
+						<Dropdown.Item
+							onClick={this.toggleOverlay}
+							icon={i18nStore.overlay? 'eye slash' : 'eye'}
+							text={i18nStore.overlay? 'Hide Overlay' : 'Show Overlay'}
+						/> :
+						<Dropdown.Item
+							as="a"
+							href="https://crowdin.com/project/xivanalysis"
+							target="_blank"
+						>
+							<Image src={crowdinLogo} className={styles.crowdinLogo}/>
+							<Trans id="core.i18n.help-translate">
+								Help translate!
+							</Trans>
+						</Dropdown.Item>
+					}
+				</Dropdown.Menu>
+			</Dropdown>
 
-		return <Dropdown
-			className="link item"
-			text={<>
-				<Icon name="globe"/>
-				{lang ? lang.menu.text : 'Language'}
-			</>}
-		>
-			<Dropdown.Menu>
-				{this.availableLanguages.map(option => <Dropdown.Item
-					key={option.value}
-					active={i18nStore.siteLanguage === option.value}
-					onClick={this.handleChange}
-					{...option}
-					className={styles.menuItem}
-				/>)}
-				<Dropdown.Divider />
-				{DEBUG?
-					<Dropdown.Item
-						onClick={this.toggleOverlay}
-						icon={i18nStore.overlay? 'eye slash' : 'eye'}
-						text={i18nStore.overlay? 'Hide Overlay' : 'Show Overlay'}
-					/> :
-					<Dropdown.Item
-						as="a"
-						href="https://crowdin.com/project/xivanalysis"
-						target="_blank"
-					>
-						<Image src={crowdinLogo} className={styles.crowdinLogo}/>
-						<Trans id="core.i18n.help-translate">
-							Help translate!
-						</Trans>
-					</Dropdown.Item>
-				}
-			</Dropdown.Menu>
-		</Dropdown>
+			{/* Game Language */}
+			<Dropdown
+				className={styles.dropdown}
+				direction="left"
+				text={<>
+					<Icon name="gamepad"/>
+					{gameLang ? gameLang.menu.text : 'Language'}
+				</>}
+			>
+				<Dropdown.Menu>
+					{this.gameLanguageOptions.map(options => (
+						<Dropdown.Item
+							key={options.value}
+							active={i18nStore.gameLanguage === options.value}
+							onClick={this.handleChangeGame}
+							{...options}
+							className={styles.menuItem}
+						/>
+					))}
+				</Dropdown.Menu>
+			</Dropdown>
+		</div>
 	}
 }
 
