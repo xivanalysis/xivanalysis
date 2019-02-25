@@ -7,3 +7,12 @@
 	width: 24px !important;
 	vertical-align: middle !important;
 }
+
+.container {
+	display: flex;
+}
+
+.dropdown {
+	flex-basis: 0;
+	flex-grow: 1;
+}
