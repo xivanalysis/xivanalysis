@@ -1,0 +1,33 @@
+@value gutter from "theme.module.css";
+
+.simpleStatistic {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.simpleStatistic > :only-child {
+	margin: auto 0;
+}
+
+.titleWrapper{
+	display: flex;
+}
+
+.icon {
+	height: 1.5em;
+	margin-right: calc(gutter / 4);
+}
+
+.title {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.value {
+	font-size: 2em;
+	line-height: 1em;
+}

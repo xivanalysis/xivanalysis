@@ -40,19 +40,6 @@
 	.span4 { grid-column-end: span 4; }
 }
 
-/* Content wrapper 'cus it's technically arbitrary */
-.content {
-	position: relative;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
-	height: 100%;
-}
-
-.content > :only-child {
-	margin: auto 0;
-}
-
 .info {
 	position: absolute;
 	top: 0;
@@ -71,25 +58,4 @@
 }
 .infoIcon {
 	margin: 0 !important;
-}
-
-/* SimpleStatistic*/
-.titleWrapper{
-	display: flex;
-}
-
-.icon {
-	height: 1.5em;
-	margin-right: calc(gutter / 4);
-}
-
-.title {
-	white-space: nowrap;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-
-.value {
-	font-size: 2em;
-	line-height: 1em;
 }

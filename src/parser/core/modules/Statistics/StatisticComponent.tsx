@@ -28,9 +28,7 @@ export class StatisticComponent extends React.PureComponent<Props> {
 				)}
 				style={{gridRowEnd: `span ${statistic.height || 1}`}}
 			>
-				<div className={styles.content}>
-					<statistic.Content/>
-				</div>
+				<statistic.Content/>
 
 				{statistic.Info && (
 					<div className={styles.info}>
