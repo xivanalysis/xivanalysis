@@ -1081,6 +1081,11 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.5.tgz#870a1434208b60603745bfd214fc3fc675142364"
   integrity sha512-3LI+vUC3Wju28vbjIjsTKakhMB8HC4l+tMz+Z8WRzVK+kmvezE5jcOvKtBpznWSI5KDLFo+FouUhpTKoekadCA==
 
+"@types/lingui__core@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@types/lingui__core/-/lingui__core-2.2.1.tgz#fd0fff6e6f45ec5e4135bfde48cd8112a13e90e2"
+  integrity sha512-BBghjsfK9v/wyKD/Po0PNCYoBtcyC36jwjdd4blPc1Rqslf60ceHTsSZLwc/lAEvu5e3rQv38NhEN76ORGWz3w==
+
 "@types/lingui__react@^2.5.0":
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/@types/lingui__react/-/lingui__react-2.5.0.tgz#3a8a1ac0aee94ea504abe9c693cca61983c84356"
