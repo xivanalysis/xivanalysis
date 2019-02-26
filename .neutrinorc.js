@@ -152,13 +152,17 @@ module.exports = {
 
 		// Set up TypeScript
 		neutrino => {
+			// Use babel's typescript handling. Type checking can be done off the main build line.
 			neutrino.config.module
 				.rule('compile')
-					.use('ts')
-						.loader('ts-loader')
-						.options({
-							onlyCompileBundledFiles: true,
-						})
+					.use('babel')
+						.tap(options => ({
+							...options,
+							presets: [
+								...options.presets,
+								['@babel/preset-typescript']
+							]
+						}))
 
 			neutrino.config.module
 				.rule('tslint')
