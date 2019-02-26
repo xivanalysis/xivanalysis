@@ -459,7 +459,7 @@
   "rdm.gauge.title": "Jauge de Mana",
   "rdm.meleecombos.recommendation.delay": "",
   "rdm.meleecombos.recommendation.incorrect": "",
-  "rdm.meleecombos.table.header.recommended": "",
+  "rdm.meleecombos.table.header.recommended": "Recommandé",
   "rdm.meleecombos.table.header.rotation": "",
   "rdm.meleecombos.table.header.starting-mana": "",
   "rdm.meleecombos.table.header.starting-procs": "",
