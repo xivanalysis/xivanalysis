@@ -1,15 +1,11 @@
 import {Trans} from '@lingui/react'
-import {
-	Provider as TooltipProvider,
-	tooltipHOC,
-} from '@xivanalysis/tooltips'
-import {observer, inject} from 'mobx-react'
+import {Provider as TooltipProvider, tooltipHOC} from '@xivanalysis/tooltips'
+import {STATUS_ID_OFFSET} from 'data/STATUSES'
+import _ from 'lodash'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Popup, Icon} from 'semantic-ui-react'
-
-import {STATUS_ID_OFFSET} from 'data/STATUSES'
-
+import {Icon, Popup} from 'semantic-ui-react'
 import styles from './DbLink.module.css'
 
 // Wrapping the provider w/ the store to pick up lang changes
@@ -36,6 +32,11 @@ class TooltipBase extends React.PureComponent {
 		showTooltip: PropTypes.bool.isRequired,
 		showName: PropTypes.bool.isRequired,
 		name: PropTypes.string,
+
+		// Class Name Passthrough
+		className: PropTypes.string,
+		iconClassName: PropTypes.string,
+		nameClassName: PropTypes.string,
 	}
 
 	static defaultProps = {
@@ -57,10 +58,14 @@ class TooltipBase extends React.PureComponent {
 			showTooltip,
 			showName,
 			name,
+
+			className,
+			iconClassName,
+			nameClassName,
 		} = this.props
 
 		if (loading) {
-			return <span>
+			return <span className={className}>
 				{showIcon && <Icon loading name="circle notch" />}
 				{showName && (
 					children ||
@@ -70,9 +75,9 @@ class TooltipBase extends React.PureComponent {
 			</span>
 		}
 
-		const link = <span>
-			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image}/>}
-			{showName && <span className={styles.link}>{children || data.name}</span>}
+		const link = <span className={className}>
+			{showIcon && <img src={baseUrl + data.icon} alt="" className={_.compact([styles.image, iconClassName]).join(' ')}/>}
+			{showName && <span className={_.compact([styles.link, nameClassName]).join(' ')}>{children || data.name}</span>}
 		</span>
 
 		if (!showTooltip) {

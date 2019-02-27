@@ -1,7 +1,25 @@
-.action {
-	height: 40px;
+.container {
+	--ogcd-size: 30px;
+	--gcd-size: 40px;
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
 }
 
-.ogcd {
-	margin-bottom: 20px;
+.container .link {
+	margin-top: calc(var(--ogcd-size) * 0.5);
+}
+
+.container .link.ogcd {
+	margin-top: 0;
+}
+
+.link .icon {
+	height: var(--gcd-size);
+	filter: drop-shadow(0px 0px 1px rgba(0, 0, 0, 0.5));
+}
+
+.link.ogcd .icon {
+	height: var(--ogcd-size);
 }

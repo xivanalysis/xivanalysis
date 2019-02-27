@@ -1,11 +1,15 @@
+import {ActionLink} from 'components/ui/DbLink'
+import {getAction} from 'data/ACTIONS'
+import {CastEvent} from 'fflogs'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-
-import {getAction} from 'data/ACTIONS'
-
 import styles from './Rotation.module.css'
 
-export default class Rotation extends Component {
+interface RotationProps {
+	events: CastEvent[]
+}
+
+export default class Rotation extends Component<RotationProps> {
 	static propTypes = {
 		events: PropTypes.arrayOf(PropTypes.shape({
 			ability: PropTypes.shape({
@@ -15,9 +19,11 @@ export default class Rotation extends Component {
 	}
 
 	render() {
-		return <div>
-			{this.props.events.map(event => {
-				const action = event.ability.overrideAction ? event.ability.overrideAction : getAction(event.ability.guid)
+		const {events} = this.props
+
+		return <div className={styles.container}>
+			{events.map(event => {
+				const action = getAction(event.ability.guid) as TODO
 
 				// Don't bother showing the icon for autos
 				if (action.autoAttack) {
@@ -31,19 +37,18 @@ export default class Rotation extends Component {
 					return false
 				}
 
-				const className = [styles.action]
+				const linkClassName = [styles.link]
 				if (!action.onGcd) {
-					className.push(styles.ogcd)
+					linkClassName.push(styles.ogcd)
 				}
 
-				return <img
-					key={event.timestamp}
-					src={action.icon}
-					className={className.join(' ')}
-					alt={action.name}
+				return <ActionLink
+					showName={false}
+					className={linkClassName.join(' ')}
+					iconClassName={styles.icon}
+					{...action}
 				/>
-			}
-			)}
+			})}
 		</div>
 	}
 }
