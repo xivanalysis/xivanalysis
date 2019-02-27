@@ -6,6 +6,7 @@ import {getAction} from 'data/ACTIONS'
 import {AbilityEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -29,8 +30,9 @@ export interface ComboIssue {
 
 export default class Combos extends Module {
 	static handle = 'combos'
-	static title = 'Broken Combos'
+	static title = 'Combo Issues'
 	static i18n_id = i18nMark('core.combos.title') // tslint:disable-line:variable-name
+	static displayOrder = DISPLAY_ORDER.COMBOS
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
@@ -62,7 +64,11 @@ export default class Combos extends Module {
 	}
 
 	private get brokenComboCount() {
-		return this.issues.reduce((total, issue) => issue.type === 'combobreak' ? total + 1 : total, 0)
+		return this.issues
+			.reduce(
+				(total, issue) => issue.type === 'combobreak' ? total + 1 : total,
+				0,
+			)
 	}
 
 	private get uncomboedGcdCount() {
@@ -182,7 +188,7 @@ export default class Combos extends Module {
 		if (this.addJobSpecificSuggestions(this.comboBreakers, this.uncomboedGcds)) {
 			return
 		}
-		if (this.brokenComboCount > 0 || this.uncomboedGcdCount > 0) {
+		if (this.issues.length > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: this.constructor.suggestionIcon,
 				content: <Trans id="core.combos.content">
@@ -192,7 +198,7 @@ export default class Combos extends Module {
 				severity: SEVERITY.MEDIUM, // TODO
 				why: <Plural
 					id="core.combos.why"
-					value={this.brokenComboCount + this.uncomboedGcdCount}
+					value={this.issues.length}
 					one="You misused # combo action."
 					other="You misused # combo actions."
 				/>,
@@ -209,7 +215,7 @@ export default class Combos extends Module {
 	}
 
 	output(): React.ReactNode {
-		if (this.brokenComboCount > 0 || this.uncomboedGcdCount > 0) {
+		if (this.issues.length > 0) {
 			return <RotationTable
 				notes={[
 					{
