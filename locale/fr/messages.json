@@ -113,6 +113,10 @@
   "core.changelog.title": "",
   "core.checklist.title": "Checklist",
   "core.combos.content": "Évitez d'utiliser vos combos GCDs à la mauvaise étape de votre combo ou de briser un combo existant avec des GCDs non-combo. Briser des combos peut vous coûter une partie importante de votre DPS et de vos effets secondaires importants.",
+  "core.combos.issuetypenames.combobreak": "",
+  "core.combos.issuetypenames.uncomboed": "",
+  "core.combos.rotationtable.header.reason": "",
+  "core.combos.title": "",
   "core.combos.why": "{0, plural,one {Vous avez mal utilisé # action de combo.} other {Vous avez mal utilisé # actions de combo.}}",
   "core.cooldowndowntime.ogcd-cd-buffer": "Pour prendre en compte les facteurs aléatoires, vous disposez d'une marge de manœuvre de {0} secondes par instance pour conserver vos cooldowns.",
   "core.cooldowndowntime.ogcd-cd-metric": "Assurez-vous de toujours utiliser vos oGCD lorsqu'ils sont disponibles mais prenez garde à ne pas les faire clipper. {0}",
@@ -584,5 +588,6 @@
   "whm.overheal.requirement.hot": "Soins en surplus (HoT)",
   "whm.overheal.requirement.nonhot": "Soins en surplus (non-HoT)",
   "whm.overheal.rule.description": "Évitez de gaspiller des heals qui rempliront plus que la barre de vie du joueur ciblé. Bien que de l'overheal est inévitable, l'overheal ne fait que générer plus d'inimité , pour aucun gain. De plus, être efficace en soignant vous aide dans la gestion de votre MP.",
-  "whm.overheal.rule.name": "Éviter l'overheal"
+  "whm.overheal.rule.name": "Éviter l'overheal",
+  "{0, plural, one {time} other {times}}": ""
 }
