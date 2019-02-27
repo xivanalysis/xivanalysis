@@ -27,7 +27,7 @@ class TooltipBase extends React.PureComponent {
 		// Props from the HOC
 		baseUrl: PropTypes.string,
 		loading: PropTypes.bool.isRequired,
-		data: PropTypes.oneOfType(PropTypes.object, PropTypes.symbol),
+		data: PropTypes.oneOfType([PropTypes.object, PropTypes.symbol]),
 		Content: PropTypes.any,
 
 		// Other props we accept
