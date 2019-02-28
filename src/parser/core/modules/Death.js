@@ -49,7 +49,6 @@ export default class Death extends Module {
 	}
 
 	_onRaise(event) {
-		console.log('raise')
 		this.addDeathToTimeline(event.timestamp)
 		this.parser.fabricateEvent({
 			type: 'raise',
@@ -65,7 +64,6 @@ export default class Death extends Module {
 			!this.parser.fight.kill &&
 			this._timestamp
 		) {
-			console.log(this._timestamp)
 			this._count = Math.max(this._count - 1, 0)
 		}
 

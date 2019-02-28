@@ -76,7 +76,10 @@ export default class DWT extends Module {
 		this.addHook('applybuff', dwtBuffFilter, this._onApplyDwt)
 		this.addHook('removebuff', dwtBuffFilter, this._onRemoveDwt)
 
-		this.addHook('death', {to: 'player'}, () => this._dwt.died = true)
+		this.addHook('death', {to: 'player'}, () => {
+			if (!this._active) { return }
+			this._dwt.died = true
+		})
 
 		this.addHook('complete', this._onComplete)
 	}
