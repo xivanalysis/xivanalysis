@@ -1,6 +1,7 @@
+@value gcdSize: 40px;
+@value ogcdSize: 30px;
+
 .container {
-	--ogcd-size: 30px;
-	--gcd-size: 40px;
 	display: flex;
 	justify-content: flex-start;
 	align-items: flex-start;
@@ -8,17 +9,9 @@
 }
 
 .container .link {
-	margin-top: calc(var(--ogcd-size) * 0.5);
+	margin-top: calc(ogcdSize * 0.5);
 }
 
 .container .link.ogcd {
 	margin-top: 0;
-}
-
-.link .icon {
-	height: var(--gcd-size);
-}
-
-.link.ogcd .icon {
-	height: var(--ogcd-size);
 }

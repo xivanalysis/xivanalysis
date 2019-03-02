@@ -1,3 +1,4 @@
+import cn from 'classnames'
 import {ActionLink} from 'components/ui/DbLink'
 import {getAction} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
@@ -37,17 +38,20 @@ export default class Rotation extends Component<RotationProps> {
 					return false
 				}
 
-				const linkClassName = [styles.link]
-				if (!action.onGcd) {
-					linkClassName.push(styles.ogcd)
-				}
+				const linkClassName = [
+					styles.link,
+					{[styles.ogcd]: !action.onGcd},
+				]
 
-				return <ActionLink
-					showName={false}
-					className={linkClassName.join(' ')}
-					iconClassName={styles.icon}
-					{...action}
-				/>
+				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize
+
+				return <div className={cn(...linkClassName)}>
+					<ActionLink
+						showName={false}
+						iconSize={iconSize}
+						{...action}
+					/>
+				</div>
 			})}
 		</div>
 	}
