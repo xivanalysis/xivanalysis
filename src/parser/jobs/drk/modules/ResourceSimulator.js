@@ -3,7 +3,7 @@ import React, {Fragment} from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Accordion, Message} from 'semantic-ui-react'
@@ -124,7 +124,7 @@ const COMBO_GRIT_GENERATORS = {
 export default class Resources extends Module {
 	static handle = 'resourcesim'
 	static title = 'Resource Analyzer'
-	static collapsible = false
+	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
 		'buffs',
 		'gcds',
