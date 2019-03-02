@@ -113,6 +113,10 @@
   "core.changelog.title": "core.changelog.title",
   "core.checklist.title": "core.checklist.title",
   "core.combos.content": "Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.",
+  "core.combos.issuetypenames.combobreak": "Broken Combo",
+  "core.combos.issuetypenames.uncomboed": "Uncomboed",
+  "core.combos.rotationtable.header.reason": "Reason",
+  "core.combos.title": "core.combos.title",
   "core.combos.why": "{0, plural, one {You misused # combo action.} other {You misused # combo actions.}}",
   "core.cooldowndowntime.ogcd-cd-buffer": "To account for random factors you are given a buffer of {0} seconds per instance to hold your cooldowns.",
   "core.cooldowndowntime.ogcd-cd-metric": "Always make sure to use your OGCDs when they are up but don't clip them.  {0}",
@@ -457,7 +461,7 @@
   "rdm.gauge.suggestions.white-mana-wasted-content": "Ensure you don't overcap your White Mana before a combo, overcapping White Mana indicates your balance was off; and you potentially lost out on Enchanted Combo damage.  You should look to execute at 80/80 or as close to it as possible.",
   "rdm.gauge.suggestions.white-mana-wasted-why": "You lost {0} White Mana due to capped Gauge resources",
   "rdm.gauge.title": "rdm.gauge.title",
-  "rdm.meleecombos.recommendation.delay": "Delay your melee combo to guarantee a proc from your finisher, if you will lose 7 or less mana to overcapping.",
+  "rdm.meleecombos.recommendation.delay": "Delay your melee combo to guarantee a proc from your finisher, if you will lose {IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD} or less mana to overcapping.",
   "rdm.meleecombos.recommendation.incorrect": "See the suggestions section for finisher guidelines.",
   "rdm.meleecombos.table.header.recommended": "Recommended",
   "rdm.meleecombos.table.header.rotation": "Rotation",
@@ -584,5 +588,6 @@
   "whm.overheal.requirement.hot": "Overheal (HoT)",
   "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
   "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
-  "whm.overheal.rule.name": "Avoid overheal"
+  "whm.overheal.rule.name": "Avoid overheal",
+  "{0, plural, one {time} other {times}}": "{0, plural, one {time} other {times}}"
 }

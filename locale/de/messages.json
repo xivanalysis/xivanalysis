@@ -113,6 +113,10 @@
   "core.changelog.title": "",
   "core.checklist.title": "Checkliste",
   "core.combos.content": "",
+  "core.combos.issuetypenames.combobreak": "",
+  "core.combos.issuetypenames.uncomboed": "",
+  "core.combos.rotationtable.header.reason": "",
+  "core.combos.title": "",
   "core.combos.why": "{0, plural, one {Du hast # Kombo Aktion fehlerhaft benutzt.} other {Du hast # Kombo Aktionen fehlerhaft benutzt.}}",
   "core.cooldowndowntime.ogcd-cd-buffer": "Um zufällige Störfaktoren zu berücksichtigen wird ein Puffer von {0} Sekunden pro Instanz für deine Abklingzeiten gegeben.",
   "core.cooldowndowntime.ogcd-cd-metric": "Stelle sicher, deine Fähigkeiten außerhalb der globalen Abklingzeit sobald wie möglich einzusetzen, ohne dabei in der Animation gefangen zu sein. {0}",
@@ -584,5 +588,6 @@
   "whm.overheal.requirement.hot": "",
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
-  "whm.overheal.rule.name": ""
+  "whm.overheal.rule.name": "",
+  "{0, plural, one {time} other {times}}": ""
 }

@@ -113,6 +113,10 @@
   "core.changelog.title": "更新履歴",
   "core.checklist.title": "チェックリスト",
   "core.combos.content": "スキルコンボの順番からずれないように頑張ってください。コンボを破ると火力は非常に下がることです。さらに、コンボの追加効果やコンボボーナスも受けられません。",
+  "core.combos.issuetypenames.combobreak": "",
+  "core.combos.issuetypenames.uncomboed": "",
+  "core.combos.rotationtable.header.reason": "",
+  "core.combos.title": "",
   "core.combos.why": "{0, plural, one {スキルコンボを # 回破ってしまいました。} other {スキルコンボを # 回破ってしまいました。}}",
   "core.cooldowndowntime.ogcd-cd-buffer": "ランダム要素は分析の範囲内に計算を含めてあるため、アクションやアビリティの抱えられる可能な時間を一回につき{0}です。",
   "core.cooldowndowntime.ogcd-cd-metric": "アビリティがリキャスト完了直後すぐに使ってください。但し、無駄な挟みだけは注意です。{0}",
@@ -584,5 +588,6 @@
   "whm.overheal.requirement.hot": "オーバーヒール (HoT)",
   "whm.overheal.requirement.nonhot": "オーバーヒール (非HoT)",
   "whm.overheal.rule.description": "",
-  "whm.overheal.rule.name": "オーバーヒールを避けてください。"
+  "whm.overheal.rule.name": "オーバーヒールを避けてください。",
+  "{0, plural, one {time} other {times}}": ""
 }
