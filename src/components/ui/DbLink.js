@@ -1,15 +1,10 @@
 import {Trans} from '@lingui/react'
-import {
-	Provider as TooltipProvider,
-	tooltipHOC,
-} from '@xivanalysis/tooltips'
-import {observer, inject} from 'mobx-react'
+import {Provider as TooltipProvider, tooltipHOC} from '@xivanalysis/tooltips'
+import {STATUS_ID_OFFSET} from 'data/STATUSES'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Popup, Icon} from 'semantic-ui-react'
-
-import {STATUS_ID_OFFSET} from 'data/STATUSES'
-
+import {Icon, Popup} from 'semantic-ui-react'
 import styles from './DbLink.module.css'
 
 // Wrapping the provider w/ the store to pick up lang changes
@@ -36,6 +31,7 @@ class TooltipBase extends React.PureComponent {
 		showTooltip: PropTypes.bool.isRequired,
 		showName: PropTypes.bool.isRequired,
 		name: PropTypes.string,
+		iconSize: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
 	}
 
 	static defaultProps = {
@@ -57,6 +53,7 @@ class TooltipBase extends React.PureComponent {
 			showTooltip,
 			showName,
 			name,
+			iconSize,
 		} = this.props
 
 		if (loading) {
@@ -71,7 +68,7 @@ class TooltipBase extends React.PureComponent {
 		}
 
 		const link = <span>
-			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image}/>}
+			{showIcon && <img src={baseUrl + data.icon} alt="" className={styles.image} style={{height: iconSize}}/>}
 			{showName && <span className={styles.link}>{children || data.name}</span>}
 		</span>
 
