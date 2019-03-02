@@ -2,12 +2,13 @@
 
 import {i18nMark, Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import {AbilityEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
 
@@ -23,7 +24,7 @@ export interface ComboEvent extends AbilityEvent {
 }
 
 export interface ComboIssue {
-	type: 'uncomboed' | 'combobreak'
+	type: keyof typeof ISSUE_TYPENAMES
 	context: CastEvent[]
 	event: CastEvent
 }
@@ -60,23 +61,7 @@ export default class Combos extends Module {
 			return null
 		}
 
-		return getAction(lastComboEvent.ability.guid).id
-	}
-
-	private get brokenComboCount() {
-		return this.issues
-			.reduce(
-				(total, issue) => issue.type === 'combobreak' ? total + 1 : total,
-				0,
-			)
-	}
-
-	private get uncomboedGcdCount() {
-		return this.issues
-			.reduce(
-				(total, issue) => issue.type === 'uncomboed' ? total + 1 : total,
-				0,
-			)
+		return lastComboEvent.ability.guid
 	}
 
 	private get comboBreakers() {
@@ -153,7 +138,7 @@ export default class Combos extends Module {
 	}
 
 	private onCast(event: CastEvent) {
-		const action = getAction(event.ability.guid) as TODO // Should be an Action type
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // Should be an Action type
 
 		if (!action) {
 			return
@@ -188,22 +173,26 @@ export default class Combos extends Module {
 		if (this.addJobSpecificSuggestions(this.comboBreakers, this.uncomboedGcds)) {
 			return
 		}
-		if (this.issues.length > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: this.constructor.suggestionIcon,
-				content: <Trans id="core.combos.content">
-					Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo
-					GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.
-				</Trans>,
-				severity: SEVERITY.MEDIUM, // TODO
-				why: <Plural
-					id="core.combos.why"
-					value={this.issues.length}
-					one="You misused # combo action."
-					other="You misused # combo actions."
-				/>,
-			}))
-		}
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.constructor.suggestionIcon,
+			content: <Trans id="core.combos.content">
+				Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo
+				GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				4: SEVERITY.MAJOR,
+			},
+			value: this.issues.length,
+			why: <Plural
+				id="core.combos.why"
+				value={this.issues.length}
+				one="You misused # combo action."
+				other="You misused # combo actions."
+			/>,
+		}))
 	}
 
 	addJobSpecificSuggestions(comboBreakers: CastEvent[], uncomboedGcds: CastEvent[]) {
@@ -215,38 +204,42 @@ export default class Combos extends Module {
 	}
 
 	output(): React.ReactNode {
-		if (this.issues.length > 0) {
-			return <RotationTable
-				notes={[
-					{
-						header: <Trans id="core.combos.rotationtable.header.reason">Reason</Trans>,
-						accessor: 'reason',
-					},
-				]}
-				data={this.issues
-					.sort((a, b) => a.event.timestamp - b.event.timestamp)
-					.map(issue => {
-						const startTime = this.parser.fight.start_time
-						const completeContext = [...(issue.context || []), issue.event]
-
-						const startEvent = _.first(completeContext)
-						const endEvent = _.last(completeContext)
-						const startAction = getAction(startEvent!.ability.guid) as TODO
-						const endAction = getAction(endEvent!.ability.guid) as TODO
-
-						return ({
-							start: startEvent!.timestamp - startTime + (startAction.cooldown || DEFAULT_GCD),
-							end: endEvent!.timestamp - startTime + (endAction.cooldown || DEFAULT_GCD),
-							rotation: completeContext,
-							notesMap: {
-								reason: <span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>,
-							},
-						})
-					})}
-				onGoto={this.timeline.show}
-			/>
+		if (this.issues.length <= 0) {
+			return false
 		}
 
-		return false
+		// Access Alias
+		const startTime = this.parser.fight.start_time
+
+		const data = this.issues
+			.sort((a, b) => a.event.timestamp - b.event.timestamp)
+			.map(issue => {
+				const completeContext = [...(issue.context || []), issue.event]
+
+				const startEvent = _.first(completeContext)
+				const endEvent = _.last(completeContext)
+				const startAction = getDataBy(ACTIONS, 'id', startEvent!.ability.guid) as TODO // Should be an Action type
+				const endAction = getDataBy(ACTIONS, 'id', endEvent!.ability.guid) as TODO // Should be an Action type
+
+				return ({
+					start: startEvent!.timestamp - startTime + (startAction.cooldown || DEFAULT_GCD),
+					end: endEvent!.timestamp - startTime + (endAction.cooldown || DEFAULT_GCD),
+					rotation: completeContext,
+					notesMap: {
+						reason: <span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>,
+					},
+				})
+			})
+
+		return <RotationTable
+			notes={[
+				{
+					header: <Trans id="core.combos.rotationtable.header.reason">Reason</Trans>,
+					accessor: 'reason',
+				},
+			]}
+			data={data}
+			onGoto={this.timeline.show}
+		/>
 	}
 }
