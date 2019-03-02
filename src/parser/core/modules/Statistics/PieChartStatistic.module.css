@@ -1,0 +1,25 @@
+.chartWrapper {
+	/* Break the pie out of the statistic's padding a little, it's too small otherwise. */
+	margin: -10px 0 -10px -10px;
+	display: inline-block;
+}
+
+.legend {
+	display: inline-block;
+	vertical-align: top;
+	text-align: left;
+	border-collapse: collapse;
+}
+
+.legend td,
+.legend th {
+	padding: 0 5px;
+}
+
+.swatch {
+	display: inline-block;
+	width: 1em;
+	height: 1em;
+	border: 1px solid grey;
+	vertical-align: middle;
+}

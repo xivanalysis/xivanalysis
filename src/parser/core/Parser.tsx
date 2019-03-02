@@ -9,7 +9,7 @@ import {Report} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Meta} from '.'
-import Module, {MappedDependency} from './Module'
+import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 
 interface Player extends Actor {
 	pets: Pet[]
@@ -23,7 +23,7 @@ export interface Result {
 	i18n_id?: string
 	handle: string
 	name: string
-	collapsible: boolean
+	mode: DISPLAY_MODE
 	markup: React.ReactNode
 }
 
@@ -346,7 +346,7 @@ class Parser {
 			const resultMeta = {
 				name: constructor.title,
 				handle: constructor.handle,
-				collapsible: constructor.collapsible,
+				mode: constructor.displayMode,
 				i18n_id: constructor.i18n_id,
 			}
 

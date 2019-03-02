@@ -6,17 +6,14 @@ import Rotation from 'components/ui/Rotation'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {matchClosestLower} from 'utilities'
 
 // BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides
-const MAX_WEAVES = {
-	[undefined]: 2, // Default castTime is 0
+const DEFAULT_MAX_WEAVES = 2 // Default castTime is 0
+const MAX_WEAVE_TIERS = {
 	0: 2,
-	0.5: 2,
 	1: 1,
-	1.5: 1,
-	2: 1,
 	2.5: 0,
-	default: 0,
 }
 
 const WEAVING_SEVERITY = {
@@ -150,16 +147,15 @@ export default class Weaving extends Module {
 			event => !this.invuln.isUntargetable('all', event.timestamp)
 		).length
 
-		maxWeaves = undefined
-
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max
 		if (!maxWeaves) {
 			// If there's no leading ability, it's the first GCD. Allow the 'default' cast time's amount
 			if (!weave.leadingGcdEvent.ability) {
-				maxWeaves = MAX_WEAVES[undefined]
+				maxWeaves = DEFAULT_MAX_WEAVES
 			} else {
 				const castTime = this.castTime.forEvent(weave.leadingGcdEvent)
-				maxWeaves = MAX_WEAVES[castTime] || MAX_WEAVES.default
+				const closest = matchClosestLower(MAX_WEAVE_TIERS, castTime)
+				maxWeaves = closest !== undefined? closest : DEFAULT_MAX_WEAVES
 			}
 		}
 

@@ -8,6 +8,8 @@ import {Accordion, Message, Icon} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import STATUSES from 'data/STATUSES'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // all these suggestions for CS are ultimately trivial :notlikeblob:
 const defaultSeverityTiers = {
 	1: SEVERITY.MINOR,
@@ -39,8 +41,8 @@ const EXPECTED_CASTS = [
 ]
 
 export default class ClericStance extends Module {
-	static displayOrder = 99;
-	static handle = 'clericstance';
+	static displayOrder = DISPLAY_ORDER.CLERIC_STANCE
+	static handle = 'clericstance'
 	static dependencies = [
 		'suggestions',
 		'cooldowns',

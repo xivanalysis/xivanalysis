@@ -1,0 +1,61 @@
+@value gutter from "theme.module.css";
+@value sm, lg, xl from "theme.module.css";
+@value themeBackground, themeBlue from "theme.module.css";
+
+.statistics {
+	display: grid;
+	grid-auto-rows: 100px;
+	grid-auto-flow: dense;
+	grid-gap: gutter;
+}
+
+.statistic {
+	position: relative;
+	padding: gutter;
+	min-width: 0;
+	background: themeBackground;
+}
+
+/* Cruddy responsive handling for grid spans */
+.span1 { grid-column-end: span 1; }
+.span2 { grid-column-end: span 1; }
+.span3 { grid-column-end: span 1; }
+.span4 { grid-column-end: span 1; }
+
+@media sm {
+	.statistics { grid-template-columns: repeat(2, 1fr); }
+	.span2 { grid-column-end: span 2; }
+	.span3 { grid-column-end: span 2; }
+	.span4 { grid-column-end: span 2; }
+}
+
+@media lg {
+	.statistics { grid-template-columns: repeat(3, 1fr); }
+	.span3 { grid-column-end: span 3; }
+	.span4 { grid-column-end: span 3; }
+}
+
+@media xl {
+	.statistics { grid-template-columns: repeat(4, 1fr); }
+	.span4 { grid-column-end: span 4; }
+}
+
+.info {
+	position: absolute;
+	top: 0;
+	right: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: gutter;
+	height: 100%;
+	background: color(themeBlue l(90%));
+	color: color(themeBlue l(40%));
+	transition: background-color .1s ease-in-out;
+}
+.statistic:hover .info {
+	background: color(themeBlue l(85%));
+}
+.infoIcon {
+	margin: 0 !important;
+}

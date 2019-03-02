@@ -2,13 +2,13 @@ import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import PATCHES, {getPatch} from 'data/PATCHES'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import {PieChartStatistic} from 'parser/core/modules/Statistics'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -45,6 +45,7 @@ export default class Pets extends Module {
 	static handle = 'pets'
 	static i18n_id = i18nMark('smn.pets.title')
 	static dependencies = [
+		'statistics',
 		'suggestions',
 	]
 	static displayOrder = DISPLAY_ORDER.PETS
@@ -256,6 +257,26 @@ export default class Pets extends Module {
 				No pet summoned for {noPetUptimePercent}% of the fight (&lt;1% is recommended).
 			</Trans>,
 		}))
+
+		// Statistic
+		const uptimeKeys = Array.from(this._petUptime.keys())
+		const data = uptimeKeys.map(id => {
+			const value = this._petUptime.get(id)
+			return {
+				value,
+				color: CHART_COLOURS[id],
+				columns: [
+					this.getPetName(id),
+					this.parser.formatDuration(value),
+					this.getPetUptimePercent(id) + '%',
+				],
+			}
+		})
+
+		this.statistics.add(new PieChartStatistic({
+			headings: ['Pet', 'Uptime', '%'],
+			data,
+		}))
 	}
 
 	getPetUptimePercent(petId) {
@@ -285,33 +306,5 @@ export default class Pets extends Module {
 		}
 
 		return PETS[petId].name
-	}
-
-	output() {
-		const uptimeKeys = Array.from(this._petUptime.keys())
-
-		const data = uptimeKeys.map(id => {
-			const value = this._petUptime.get(id)
-			return {
-				value,
-				label: this.getPetName(id),
-				backgroundColor: CHART_COLOURS[id],
-				additional: [
-					this.parser.formatDuration(value),
-					this.getPetUptimePercent(id) + '%',
-				],
-			}
-		})
-
-		return <PieChartWithLegend
-			headers={{
-				label: 'Pet',
-				additional: [
-					'Uptime',
-					'%',
-				],
-			}}
-			data={data}
-		/>
 	}
 }

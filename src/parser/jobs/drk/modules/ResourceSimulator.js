@@ -24,12 +24,17 @@ const BLOODSPILLER_BLOOD_COST = 50
 // Meters
 // ------
 const MAX_MANA = 9480
+const MANA_REGEN_PERCENT_PER_TICK = 0.02
+const TICK_RATE = 3000
+
+const CARVE_AND_SPIT_NO_DA_MANA_GAIN = 1200
+
 const MAX_BLOOD = 100
 //const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
 //const DARKSIDE_MANA_COST = 600
 
-const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT = 1
-const BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT = 120
+const BLOOD_PRICE_DAMAGE_TAKEN_BLOOD_AMOUNT = 1
+const BLOOD_PRICE_DAMAGE_TAKEN_MANA_AMOUNT = 120
 const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
 const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
 const BLOOD_PRICE_MAX_DURATION = 15000
@@ -39,8 +44,10 @@ const RESOURCE_STATUS_EFFECTS = {
 	[STATUSES.ANOTHER_VICTIM.id]: {
 		duration: 15000,
 		type: 'debuff',
+		// eslint-disable-next-line no-magic-numbers
 		expire_mana: MAX_MANA * 0.2,
 		expire_blood: 0,
+		// eslint-disable-next-line no-magic-numbers
 		activate_mana: MAX_MANA * 0.3,
 		activate_blood: 0,
 	},
@@ -77,7 +84,7 @@ const BLOOD_MODIFIERS = {
 
 //aoe abilities that generate resource on hits
 const AOE_GENERATORS = {
-	[ACTIONS.SALTED_EARTH.id]: {mana: 0, blood: 1},
+	[STATUSES.SALTED_EARTH.id]: {mana: 0, blood: 1},
 	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 0},
 }
 
@@ -249,9 +256,8 @@ export default class Resources extends Module {
 		}
 		//one off case for checking for DA-less carve n spit, which we can then make a suggestion for because this is really bad
 		if (ACTIONS.CARVE_AND_SPIT.id === abilityId && !this.buffs.darkArtsActive()) {
-			//great why are we here
 			this._noDACarve += 1
-			this.modifyMana(event.ability, 1200)
+			this.modifyMana(event.ability,  CARVE_AND_SPIT_NO_DA_MANA_GAIN)
 		}
 	}
 
@@ -306,8 +312,8 @@ export default class Resources extends Module {
 		if (this._darksideRemoveTimestamp !== undefined) {
 			//give mana ticks for how long they had it down for
 			//using 2% of max mana per tick
-			const ticks = Math.floor((event.timestamp - this._darksideRemoveTimestamp) / 3000)
-			this.modifyMana(undefined, ticks * Math.floor(MAX_MANA * 0.02))
+			const ticks = Math.floor((event.timestamp - this._darksideRemoveTimestamp) / TICK_RATE)
+			this.modifyMana(undefined, ticks * Math.floor(MAX_MANA * MANA_REGEN_PERCENT_PER_TICK))
 			//reset darkside in case something breaks
 			this._darksideRemoveTimestamp = undefined
 		}
@@ -357,8 +363,8 @@ export default class Resources extends Module {
 	_onDamageTaken() { //event) {
 		// blood price incoming damage
 		if (this.buffs.bloodPriceActive()) {
-			this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_BLOOD_AMOUNT)
-			this.modifyMana(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_BLOOD_DAMAGE_TRIGGERED_MANA_AMOUNT)
+			this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_DAMAGE_TAKEN_BLOOD_AMOUNT)
+			this.modifyMana(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_DAMAGE_TAKEN_MANA_AMOUNT)
 		}
 	}
 
@@ -547,6 +553,10 @@ export default class Resources extends Module {
 		// also include spenders and generators
 		const panels = []
 		const lists = this._filterResourceTrackingLists()
+
+		const bloodSpentPercentage = (((this._totalSpentBlood * -1)/(this._totalGainedBlood)) * 100).toFixed(2)
+		const manaSpentPercentage = (((this._totalSpentMana * -1)/(this._totalGainedMana)) * 100).toFixed(2)
+
 		panels.push({
 			key: 'key-bloodSpenders',
 			title: {
@@ -593,8 +603,8 @@ export default class Resources extends Module {
 		})
 		return <Fragment>
 			<Message>
-				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood + (this._wastedBlood * -1)} - {Math.floor(((this._totalSpentBlood * -1)/(this._totalGainedBlood + (this._wastedBlood * -1))) * 10000) / 100}%</p>
-				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana + (this._wastedMana * -1)} - {Math.floor(((this._totalSpentMana * -1)/(this._totalGainedMana + (this._wastedMana * -1))) * 10000) / 100}%</p>
+				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood} - {bloodSpentPercentage}%</p>
+				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana} - {manaSpentPercentage}%</p>
 			</Message>
 			<Accordion
 				exclusive={false}

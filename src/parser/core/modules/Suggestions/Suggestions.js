@@ -2,14 +2,14 @@ import React from 'react'
 import {i18nMark} from '@lingui/react'
 
 import Suggestion, {SEVERITY} from './Suggestion'
-import SuggestionsComponent from 'components/modules/Suggestions'
-import Module from 'parser/core/Module'
+import SuggestionsComponent from './Component'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 export default class Suggestions extends Module {
 	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
-	static collapsible = false
+	static displayMode = DISPLAY_MODE.FULL
 	static i18n_id = i18nMark('core.suggestions.title')
 	static title = 'Suggestions'
 

@@ -8,6 +8,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 //All Gcds that consume the buff and are bad are in Bad Meikyo Casts, Duh. Does not check sen spending moves
 const BAD_MEIKYO_GCDS = new Set([ACTIONS.HAKAZE.id, ACTIONS.JINPU.id, ACTIONS.ENPI.id, ACTIONS.SHIFU.id, ACTIONS.FUGA.id, ACTIONS.MANGETSU.id, ACTIONS.OKA.id])
 const GOOD_MEIKYO_GCDS = new Set([ACTIONS.GEKKO.id, ACTIONS.KASHA.id, ACTIONS.YUKIKAZE.id])
+const MAX_MEIKYO_GCDS = 3
 
 export default class Meikyo extends Module {
 	static handle = 'meikyo'
@@ -47,7 +48,7 @@ export default class Meikyo extends Module {
 	}
 
 	_onRemoveMS() {
-		this._missedMeikyoCasts += (3 - this._currentMeikyoCasts)
+		this._missedMeikyoCasts += (MAX_MEIKYO_GCDS - this._currentMeikyoCasts)
 	}
 
 	_onComplete() {
@@ -73,7 +74,7 @@ export default class Meikyo extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
 				content: <Fragment>
-                                Always make sure to get 3 GCDs under the effect of Meikyo Shisui.
+                                Always make sure to get {MAX_MEIKYO_GCDS} GCDs under the effect of Meikyo Shisui.
 				</Fragment>,
 				tiers: {
 					1: SEVERITY.MEDIUM,

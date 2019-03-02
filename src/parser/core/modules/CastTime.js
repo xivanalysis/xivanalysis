@@ -11,7 +11,7 @@ export default class CastTime extends Module {
 	constructor(...args) {
 		super(...args)
 
-		// Only going do deal with SC here, job-specific can do it themselves
+		// Only going to deal with SC here, job-specific can do it themselves
 		const filter = {
 			to: 'player',
 			abilityId: STATUSES.SWIFTCAST.id,

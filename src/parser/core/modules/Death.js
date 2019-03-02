@@ -57,14 +57,18 @@ export default class Death extends Module {
 	}
 
 	_onComplete() {
-		if (this._timestamp) {
-			this.addDeathToTimeline(this.parser.fight.end_time)
+		// If the parse was a wipe, and they didn't res after their last death, refund the death - the wipe itself is
+		// pretty meaningless to complain about.
+		// Max at 0 because dummy parses aren't counted as kills, though.
+		if (
+			!this.parser.fight.kill &&
+			this._timestamp
+		) {
+			this._count = Math.max(this._count - 1, 0)
 		}
 
-		if (!this.parser.fight.kill) {
-			// If the parse was a wipe, refund one death since the last one is pretty meaningless to ding them on.
-			// ...But max at 0 because apparently dummy parses don't get flagged as kills and -1 deaths makes very little sense.
-			this._count = Math.max(this._count - 1, 0)
+		if (this._timestamp) {
+			this.addDeathToTimeline(this.parser.fight.end_time)
 		}
 
 		if (!this._count) {

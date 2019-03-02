@@ -1,7 +1,7 @@
 import compose from 'lodash/fp/compose'
 import {matchPath} from 'react-router-dom'
 
-import LANGUAGES, {DEFAULT_LANGUAGE, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
+import {DEFAULT_LANGUAGE, Language, LANGUAGES, SHORT_LANGUAGE_MAP} from 'data/LANGUAGES'
 
 export {compose}
 
@@ -88,8 +88,8 @@ export function extractErrorContext(object: any): object {
 function _matchClosestHoF(difference: (a: number, b: number) => number) {
 	return matcher
 
-	function matcher(values: ReadonlyArray<number>, value: number): number
-	function matcher<T>(values: Record<number, T>, value: number): T
+	function matcher(values: ReadonlyArray<number>, value: number): number | undefined
+	function matcher<T>(values: Record<number, T>, value: number): T | undefined
 	function matcher(values: ReadonlyArray<number>|Record<number, any>, value: any) {
 		const isArray = Array.isArray(values)
 		const isObject = typeof values === typeof {}
@@ -116,12 +116,16 @@ function _matchClosestHoF(difference: (a: number, b: number) => number) {
 				}
 			})
 
+		if (closestIndex === undefined) {
+			return
+		}
+
 		if (isArray) {
-			return workingValues[closestIndex!]
+			return workingValues[closestIndex]
 		}
 
 		if (isObject) {
-			return values[+workingValues[closestIndex!]]
+			return values[+workingValues[closestIndex]]
 		}
 	}
 }
@@ -191,8 +195,8 @@ function getNavigatorLanguages(): ReadonlyArray<string> {
  * @param {String[]} [languagesInput] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): string {
-	const languages = languagesInput.filter((lang): lang is keyof typeof LANGUAGES => lang in LANGUAGES)
+export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): Language {
+	const languages = languagesInput.filter((lang): lang is Language => lang in LANGUAGES)
 	for (const lang of languages) {
 		if (LANGUAGES[lang].enable) {
 			return lang
@@ -200,7 +204,7 @@ export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavig
 	}
 
 	// In case we didn't get a match, try matching just the first part of each
-	// language. It's better than falling  back to nothing. This may be overkill.
+	// language. It's better than falling back to nothing. This may be overkill.
 	for (const lang of languages.map(l => stringBefore(l, '-'))) {
 		const match = SHORT_LANGUAGE_MAP[lang]
 		if (match && LANGUAGES[match].enable) {

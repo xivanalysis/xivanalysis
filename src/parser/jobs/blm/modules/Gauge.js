@@ -104,21 +104,20 @@ export default class Gauge extends Module {
 
 			this.updateStackTimers(event)
 
-			if (!this.parser.byPlayer(event) || !GAUGE_EVENTS.includes(event.type)) {
-				continue
+			if (!GAUGE_EVENTS.includes(event.type)) { continue }
+			if (this.parser.byPlayer(event)) {
+				switch (event.type) {
+				case 'begincast':
+					break
+				case 'cast':
+					this._onCast(event)
+					break
+				case 'damage':
+					break
+				}
 			}
-
-			switch (event.type) {
-			case 'begincast':
-				break
-			case 'cast':
-				this._onCast(event)
-				break
-			case 'damage':
-				break
-			case 'death':
+			if (event.type === 'death' && this.parser.toPlayer(event)) {
 				this._onDeath(event)
-				break
 			}
 		}
 
