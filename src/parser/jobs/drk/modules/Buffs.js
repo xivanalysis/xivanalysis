@@ -112,7 +112,10 @@ export default class Buffs extends Module {
 			if (this._darksideWindows.length > 0) {
 				const lastWindow = this._darksideWindows[this._darksideWindows.length - 1]
 				if (lastWindow.end === null) {
+					// Seeing two applybuff events without a removebuff in between, note log is broken and assume continuous uptime of previous Darkside buff
+					//   return without adding a new buff window
 					this.brokenLog.trigger()
+					return
 				}
 			}
 
