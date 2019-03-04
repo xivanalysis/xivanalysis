@@ -154,7 +154,7 @@
   "core.suggestion.nothing-but-minor": "Du kannst die kleineren Verbesserungsvorschläge sehen, indem du den Button \"Zeige kleinere\" oben rechts drückst.",
   "core.suggestion.show-minor": "Zeige leichte Fehler",
   "core.suggestions.title": "Verbesserungsvorschläge",
-  "core.timeline.help-text": "Scrolle oder klicke+ziehe zum Verschieben, strg+scrollen oder kneife zum Zoomen.",
+  "core.timeline.help-text": "Zum Verschieben: Maustaste gedrückt halten oder scrollen; Zum Zoomen: Strg+Scrollen.",
   "core.timeline.title": "Zeitachse",
   "core.ui.rotation-table.header.rotation": "Rotation",
   "core.ui.rotation-table.header.time": "Zeit",
