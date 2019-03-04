@@ -69,7 +69,7 @@
   "blm.leylines.uptime-header": "Uptime",
   "blm.notcasting.duration-header": "",
   "blm.notcasting.timelinelink-button": "",
-  "blm.notcasting.timestamp-header": "",
+  "blm.notcasting.timestamp-header": "Zeitstempel",
   "blm.notcasting.title": "",
   "blm.ogcd-downtime.ogcd-cd-buffer": "Um zufällige Störfaktoren zu berücksichtigen wird ein Puffer von {0} Sekunden pro Instanz für deine Abklingzeiten gegeben.",
   "blm.ogcd-downtime.ogcd-cd-metric": "Stelle immer sicher, dass du deine OGCDs verwendest, wenn sie bereit sind, aber clippe sie nicht. Verwende deine Procs oder schnelle Feuga oder Eisga um sie zu weaven. {0}",
