@@ -16,6 +16,7 @@ const BLOOD_EXTENSION_MILLIS = 10000
 const MAX_EYES = 3
 
 export default class BloodOfTheDragon extends Module {
+	static handle = 'bloodOfTheDragon'
 	static i18n_id = i18nMark('drg.blood.title')
 	static title = 'Life of the Dragon'
 	static dependencies = [
