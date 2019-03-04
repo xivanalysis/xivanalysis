@@ -464,7 +464,7 @@
   "rdm.meleecombos.recommendation.delay": "",
   "rdm.meleecombos.recommendation.incorrect": "",
   "rdm.meleecombos.table.header.recommended": "Empfohlen",
-  "rdm.meleecombos.table.header.rotation": "",
+  "rdm.meleecombos.table.header.rotation": "Rotation",
   "rdm.meleecombos.table.header.starting-mana": "",
   "rdm.meleecombos.table.header.starting-procs": "",
   "rdm.meleecombos.table.header.time": "",
