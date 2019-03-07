@@ -2,6 +2,7 @@ import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -12,6 +13,12 @@ export default class BrokenLog extends Module {
 	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
 
 	_triggered = false
+
+	constructor(...args) {
+		super(...args)
+		// Unknown actions are unparseable
+		this.addHook('all', {abilityId: ACTIONS.UNKNOWN.id}, () => this.trigger())
+	}
 
 	/**
 	 * Trigger the module to display the broken log error. Subsequent calls will

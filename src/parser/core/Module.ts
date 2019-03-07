@@ -162,7 +162,7 @@ export default class Module {
 		// QoL filter transforms
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
 		filter = this.mapFilterEntity(filter, 'by', 'sourceID')
-		if (filter.abilityId) {
+		if (filter.abilityId !== undefined) {
 			const abilityFilter = filter as Filter<AbilityEvent>
 			if (!abilityFilter.ability) {
 				abilityFilter.ability = {}
