@@ -1,7 +1,7 @@
 {
   "ast.arcana-suggestions.messages.accordion-title": "全てのアルカナログ",
-  "ast.arcana-suggestions.messages.disclaimer": "カード管理についての評価はまだ作業中です。おすすめはまだ作成されていないです。<0/>このセクションの目的はベストプラクティスを通じたアドバイスを与える事であります。パーティーメンバーのプレイ状態やバーストタイミングは考慮しません。",
-  "ast.arcana-suggestions.messages.explanation": "",
+  "ast.arcana-suggestions.messages.disclaimer": "カード管理についての評価はまだ作業中です。おすすめはまだ作成されていません。<0/>このセクションの目的はベストプラクティスを通じたアドバイスを与える事であります。パーティーメンバーのプレイ状態やバーストタイミングは考慮しません。",
+  "ast.arcana-suggestions.messages.explanation": "このセクションでは戦闘中の全てのカードアクションと分配を追跡します。",
   "ast.arcana-suggestions.messages.latest-action": "最後のアクション",
   "ast.arcana-suggestions.messages.pull": "引く",
   "ast.arcana-suggestions.messages.spread-state": "拡散状態",
