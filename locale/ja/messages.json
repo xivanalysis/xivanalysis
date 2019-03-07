@@ -10,7 +10,7 @@
   "ast.arcana-suggestions.suggestions.bardnospear.why": "{count} スピア・オブ・ハルオーネがバードに与えなかった。",
   "ast.arcana-suggestions.title": "",
   "ast.arcana-tracking.messages.death": "死亡",
-  "ast.arcana-tracking.suggestions.sleeve-draw.content": "",
+  "ast.arcana-tracking.suggestions.sleeve-draw.content": "<1/> スロットを空ける前に<0/> を使ってはいけません。更に<2/> や<3/> を得る機会を失います。",
   "ast.arcana-tracking.suggestions.sleeve-draw.why": "",
   "ast.arcana-tracking.title": "ast.arcana-tracking.title",
   "ast.arcana-undraw-usage.macros.emptyroad": "",
