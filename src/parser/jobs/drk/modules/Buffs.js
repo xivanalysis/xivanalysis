@@ -1,12 +1,12 @@
+import {Plural, Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Plural} from '@lingui/react'
 
 /* CURRENTLY UNUSED. FUTURE IMPROVEMENT
 // Things that should eventually get flagged if they show up under grit and darkside
@@ -92,7 +92,11 @@ export default class Buffs extends Module {
 			if (this._gritWindows.length > 0) {
 				const lastWindow = this._gritWindows[this._gritWindows.length - 1]
 				if (lastWindow.end === null) {
-					this.brokenLog.trigger()
+					this.brokenLog.trigger(this, 'grit reapply', (
+						<Trans id="drk.buffs.trigger.grit-reapply">
+							<StatusLink {...STATUSES.GRIT}/> was applied while still active.
+						</Trans>
+					))
 				}
 			}
 
@@ -100,7 +104,11 @@ export default class Buffs extends Module {
 		} else if (event.type === 'removebuff') {
 			const currentWindow = this._gritWindows[this._gritWindows.length - 1]
 			if (currentWindow.end !== null) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'grit multiple removals', (
+					<Trans id="drk.buffs.trigger.grit-multiple-removals">
+						<StatusLink {...STATUSES.GRIT}/> was removed multiple times in a single window.
+					</Trans>
+				))
 			}
 
 			currentWindow.end = event.timestamp
@@ -114,7 +122,11 @@ export default class Buffs extends Module {
 				if (lastWindow.end === null) {
 					// Seeing two applybuff events without a removebuff in between, note log is broken and assume continuous uptime of previous Darkside buff
 					//   return without adding a new buff window
-					this.brokenLog.trigger()
+					this.brokenLog.trigger(this, 'darkside reapply', (
+						<Trans id="drk.buffs.trigger.darkside-reapply">
+							<StatusLink {...STATUSES.DARKSIDE}/> was applied while still active.
+						</Trans>
+					))
 					return
 				}
 			}
@@ -128,7 +140,11 @@ export default class Buffs extends Module {
 		} else if (event.type === 'removebuff') {
 			const currentWindow = this._darksideWindows[this._darksideWindows.length - 1]
 			if (currentWindow.end !== null) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'darkside multiple removals', (
+					<Trans id="drk.buffs.trigger.darkside-multiple-removals">
+						<StatusLink {...STATUSES.DARKSIDE}/> was removed multiple times in a single window.
+					</Trans>
+				))
 			}
 
 			currentWindow.end = event.timestamp

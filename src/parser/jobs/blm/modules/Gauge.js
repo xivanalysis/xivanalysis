@@ -268,7 +268,11 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.BLIZZARD_IV.id:
 			if (!this._hasEnochian) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'no eno b4', (
+					<Trans id="blm.gauge.trigger.no-eno-b4">
+						<ActionLink {...ACTIONS.BLIZZARD_IV}/> was cast while <ActionLink {...ACTIONS.ENOCHIAN}/> was deemed inactive.
+					</Trans>
+				))
 				this._startEnoTimer(event)
 			}
 			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
@@ -285,7 +289,11 @@ export default class Gauge extends Module {
 			break
 		case ACTIONS.FIRE_IV.id:
 			if (!this._hasEnochian) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'no eno f4', (
+					<Trans id="blm.gauge.trigger.no-eno-f4">
+						<ActionLink {...ACTIONS.FIRE_IV}/> was cast while <ActionLink {...ACTIONS.ENOCHIAN}/> was deemed inactive.
+					</Trans>
+				))
 				this._startEnoTimer(event)
 			}
 			this.tryConsumeUmbralHearts(event, 1)
