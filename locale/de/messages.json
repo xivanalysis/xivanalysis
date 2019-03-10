@@ -25,7 +25,7 @@
   "ast.buff-extensions.messages.targets-affected": "",
   "ast.buff-extensions.title": "",
   "ast.dots.requirement.uptime.name": "Uptime von <0/>",
-  "ast.dots.rule.description": "Obwohl Astrologen nur einen DoT besitzen, bewirkt dieser einen guten Anteil deines Schadens. Die Wirkdauer von 30 Sekunden passt zu der Abklingzeit von (<0/>), womit du Zeit hast deine Karten zu managen. Er ermöglicht es dir außerdem, dich frei bewegen zu können, ohne deine Gesamtanwendungszeit deiner GCDs zu verringern. Versuche diesen DoT permanent aufrecht zu erhalten.",
+  "ast.dots.rule.description": "Obwohl Astrologen nur einen DoT besitzen, bewirkt dieser einen guten Anteil deines Schadens. Die Wirkdauer von 30 Sekunden passt zu der Abklingzeit von (<0/>), womit du Zeit hast deine Karten zu managen. Er ermöglicht es dir außerdem, dich frei bewegen zu können, ohne die Uptime deiner GCDs zu verringern. Versuche diesen DoT permanent aufrecht zu erhalten.",
   "ast.dots.rule.name": "Halte deinen DoT aufrecht",
   "ast.dots.suggestion.clip.content": "Vermeide es <0/> zu erneuern, bevor der vorherige abgelaufen ist.",
   "ast.dots.suggestion.clip.why": "{0} von {1} durch zu frühes Reaktivieren verloren.",
