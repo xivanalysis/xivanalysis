@@ -5,7 +5,6 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
-import PATCHES, {getPatch} from 'data/PATCHES'
 
 const EXCUSED_HOLD_DEFAULT = 1500 //time allowed to hold it every time it's off cd
 const WARN_TARGET_PERCENT = 0.9 //percentage as a decimal for warning tier on checklist
@@ -25,9 +24,9 @@ export default class Assize extends Module {
 	_totalHeld = 0
 	_excusedHeld = 0
 
-	currentPatch = getPatch(this.parser.parseDate)
-	pre45 = PATCHES[this.currentPatch].date < PATCHES['4.5'].date
-	ASSIZE_COOLDOWN = this.pre45 ? PRE45_ASSIZE_COOLDOWN : ACTIONS.ASSIZE.cooldown
+	ASSIZE_COOLDOWN = this.parser.patch.before('4.5')
+		? PRE45_ASSIZE_COOLDOWN
+		: ACTIONS.ASSIZE.cooldown
 
 	constructor(...args) {
 		super(...args)

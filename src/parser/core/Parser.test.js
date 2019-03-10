@@ -46,6 +46,8 @@ const friendlyNotInFight = {
 	fights: [{id: 9000}],
 }
 const report = {
+	lang: 'en',
+	start: 0,
 	friendlies: [friendlyInFight, friendlyNotInFight],
 	friendlyPets: [],
 }

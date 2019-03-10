@@ -3,7 +3,7 @@ import React from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
-import {getPatch, patchSupported} from 'data/PATCHES'
+import {patchSupported, languageToEdition} from 'data/PATCHES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -61,7 +61,12 @@ export default class About extends Module {
 
 		// Work out the supported patch range (and if we're in it)
 		const {from, to = from} = this.supportedPatches
-		const supported = patchSupported(from, to, this.parser.parseDate)
+		const supported = patchSupported(
+			languageToEdition(this.parser.report.lang),
+			from,
+			to,
+			this.parser.parseDate,
+		)
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
@@ -73,7 +78,7 @@ export default class About extends Module {
 							<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
 						</Message.Header>
 						<Trans id="core.about.patch-unsupported.description">
-							This report was logged during patch {getPatch(this.parser.parseDate)}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+							This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
 						</Trans>
 					</Message.Content>
 				</Message>}

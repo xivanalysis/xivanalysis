@@ -1,5 +1,6 @@
 import {StrictDropdownItemProps} from 'semantic-ui-react'
 import {stringBefore} from 'utilities'
+import {GameEdition} from './PATCHES'
 
 interface LanguageData {
 	enable: boolean
@@ -12,10 +13,6 @@ export enum Language {
 	JAPANESE = 'ja',
 	FRENCH = 'fr',
 	GERMAN = 'de',
-}
-
-export enum GameEdition {
-	GLOBAL,
 }
 
 export const LANGUAGES: Record<Language, LanguageData> = {

@@ -191,6 +191,19 @@ export interface BuffStackEvent extends AbilityEvent {
 }
 
 // -----
+// Misc
+// -----
+
+export enum ReportLanguage {
+	JAPANESE = 'ja',
+	ENGLISH = 'en',
+	GERMAN = 'de',
+	FRENCH = 'fr',
+	KOREAN = 'kr',
+	CHINESE = 'cn',
+}
+
+// -----
 // Direct API
 // -----
 
@@ -209,7 +222,7 @@ export interface ReportFightsResponse {
 	fights: Fight[]
 	friendlies: Actor[]
 	friendlyPets: Pet[]
-	lang: string
+	lang: ReportLanguage
 	owner: string
 	phases: Phase[]
 	start: number
