@@ -31,13 +31,13 @@ export interface Patch {
 }
 
 // This is all right from /PatchList - should be easy to sync Eventually™
+const FALLBACK_KEY = '✖'
 const PATCHES = {
 	// Not going to support pre-4.0 at all
-	'2.0 - 3.57': {
+	[FALLBACK_KEY]: {
 		date: {
 			[GameEdition.GLOBAL]: 0,
-			[GameEdition.KOREAN]: 0,
-			[GameEdition.CHINESE]: 0,
+			// NOTE: Don't fill in other editions here - it's left blank so they fall back to `Infinity`
 		},
 	},
 	'4.0': {
@@ -130,7 +130,7 @@ const sortedPatches = (Object.keys(patchData) as PatchNumber[]).sort(
 
 export function getPatch(edition: GameEdition, timestamp: number): PatchNumber {
 	const key = sortedPatches.find(key => (patchData[key].date[edition] || Infinity) < timestamp)
-	return key || '2.0 - 3.57'
+	return key || FALLBACK_KEY
 }
 
 export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
@@ -138,7 +138,7 @@ export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
 	const key = sortedPatches
 		.filter(key => patchData[key].date[GameEdition.GLOBAL] <= globalPatchTime)
 		.find(key => patchData[key].date[edition] !== undefined)
-	return patchData[key || '2.0 - 3.57'].date[edition] || 0
+	return patchData[key || FALLBACK_KEY].date[edition] || Infinity
 }
 
 export function patchSupported(
