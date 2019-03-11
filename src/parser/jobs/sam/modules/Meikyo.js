@@ -65,7 +65,7 @@ export default class Meikyo extends Module {
 				},
 				value: this._badMeikyoCasts,
 				why: <Fragment>
-					You did not use sen moves {this._badMeikyoCasts} time{this._badMeikyoCasts !== 1 && 's'} under the effect of Meikyo Shisui.
+					You did not use sen moves {this._badMeikyoCasts} time{this._badMeikyoCasts !== 1 && 's'} under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
 				</Fragment>,
 			}))
 		}
@@ -74,7 +74,7 @@ export default class Meikyo extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
 				content: <Fragment>
-                                Always make sure to get {MAX_MEIKYO_GCDS} GCDs under the effect of Meikyo Shisui.
+                                Always make sure to get {MAX_MEIKYO_GCDS} GCDs under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
 				</Fragment>,
 				tiers: {
 					1: SEVERITY.MEDIUM,
@@ -82,7 +82,7 @@ export default class Meikyo extends Module {
 				},
 				value: this._missedMeikyoCasts,
 				why: <Fragment>
-                                        You missed {this._missedMeikyoCasts} GCD{this._missedMeikyoCasts !== 1 && 's'} under the effect of Meikyo Shisui.
+                                        You missed {this._missedMeikyoCasts} GCD{this._missedMeikyoCasts !== 1 && 's'} under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
 				</Fragment>,
 			}))
 		}

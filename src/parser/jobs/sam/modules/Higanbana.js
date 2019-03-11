@@ -75,7 +75,7 @@ export default class Higanbana extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep Higanbana up',
+			name: 'Keep <ActionLink {...ACTIONS.HIGANBANA} /> up',
 			description: <Fragment>
 			As a Samurai, <ActionLink {...ACTIONS.HIGANBANA} /> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.
 			</Fragment>,
