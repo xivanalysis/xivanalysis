@@ -37,7 +37,8 @@ const PATCHES = {
 	[FALLBACK_KEY]: {
 		date: {
 			[GameEdition.GLOBAL]: 0,
-			// NOTE: Don't fill in other editions here - it's left blank so they fall back to `Infinity`
+			[GameEdition.KOREAN]: 0,
+			[GameEdition.CHINESE]: 0,
 		},
 	},
 	'4.0': {
@@ -134,11 +135,12 @@ export function getPatch(edition: GameEdition, timestamp: number): PatchNumber {
 }
 
 export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
-	const globalPatchTime = patchData[patch].date[GameEdition.GLOBAL]
-	const key = sortedPatches
-		.filter(key => patchData[key].date[GameEdition.GLOBAL] <= globalPatchTime)
-		.find(key => patchData[key].date[edition] !== undefined)
-	return patchData[key || FALLBACK_KEY].date[edition] || Infinity
+	let date: number | undefined
+	for (const key of sortedPatches) {
+		date = patchData[key].date[edition]
+		if (key === patch) { break }
+	}
+	return date || Infinity
 }
 
 export function patchSupported(
