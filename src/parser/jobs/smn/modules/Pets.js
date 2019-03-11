@@ -4,7 +4,6 @@ import React from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
-import PATCHES, {getPatch} from 'data/PATCHES'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -213,10 +212,10 @@ export default class Pets extends Module {
 		}
 
 		// Disabling ifrit check post-4.4 due to changes made to RS
-		const currentPatch = getPatch(this.parser.parseDate)
-		const pre44 = PATCHES[currentPatch].date < PATCHES['4.4'].date
-
-		if (pre44 && numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id) {
+		if (
+			this.parser.patch.before('4.4') &&
+			numCasters === 1 && mostUsedPet !== PETS.IFRIT_EGI.id
+		) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_III.icon,
 				severity: SEVERITY.MEDIUM,

@@ -5,7 +5,8 @@ import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
-import {LANGUAGES, GameEdition} from 'data/LANGUAGES'
+import {LANGUAGES} from 'data/LANGUAGES'
+import {GameEdition} from 'data/PATCHES'
 import {I18nStore} from 'store/i18n'
 
 import crowdinLogo from './crowdin-dark-symbol.png'

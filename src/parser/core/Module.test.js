@@ -17,6 +17,8 @@ const pet = {
 	petOwner: player.id,
 }
 const report = {
+	lang: 'en',
+	start: 0,
 	friendlies: [player],
 	friendlyPets: [pet],
 }

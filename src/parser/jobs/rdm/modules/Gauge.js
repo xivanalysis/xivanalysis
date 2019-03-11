@@ -1,6 +1,5 @@
 import Color from 'color'
 import React, {Fragment} from 'react'
-import PATCHES, {getPatch} from 'data/PATCHES'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
@@ -222,7 +221,7 @@ export default class Gauge extends Module {
 				this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
 				this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
 			} else {
-				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this._getIsPre44)
+				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this.parser.patch.before('4.4'))
 			}
 
 			this._whiteMana = gaugeAction.mana.white.afterCast
@@ -370,11 +369,5 @@ export default class Gauge extends Module {
 		*/
 		get blackMana() {
 			return this._blackMana
-		}
-
-		get _getIsPre44() {
-			const currentParseDate = getPatch(this.parser.parseDate)
-			// The report timestamp is relative to the report timestamp, and in ms. Convert.
-			return PATCHES[currentParseDate].date < PATCHES['4.4'].date
 		}
 }

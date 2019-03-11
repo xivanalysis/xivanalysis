@@ -4,7 +4,7 @@ import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
 import JOBS, {Role, ROLES} from 'data/JOBS'
-import {PatchNumber, patchSupported} from 'data/PATCHES'
+import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
@@ -76,9 +76,10 @@ class CombatantList extends React.Component<Props> {
 
 			const supportedPatches = jobMeta[type].supportedPatches
 			if (supportedPatches) {
+				const {lang, start} = this.props.report
 				const from = supportedPatches.from as PatchNumber
 				const to = (supportedPatches.to as PatchNumber) || from
-				if (!patchSupported(from, to, this.props.report.start)) {
+				if (!patchSupported(languageToEdition(lang), from, to, start)) {
 					role = ROLES.OUTDATED.id
 				}
 			}

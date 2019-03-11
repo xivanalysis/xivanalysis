@@ -1,59 +1,120 @@
+import {ReportLanguage} from 'fflogs'
 import _ from 'lodash'
-// This is all right from /PatchList - should be easy to sync Eventually™
 
-export interface Patch {
-	date: number
+export enum GameEdition {
+	GLOBAL,
+	KOREAN,
+	CHINESE,
 }
 
+export function languageToEdition(lang: ReportLanguage): GameEdition {
+	switch (lang) {
+		case ReportLanguage.JAPANESE:
+		case ReportLanguage.ENGLISH:
+		case ReportLanguage.GERMAN:
+		case ReportLanguage.FRENCH:
+			return GameEdition.GLOBAL
+
+		case ReportLanguage.KOREAN:
+			return GameEdition.KOREAN
+
+		case ReportLanguage.CHINESE:
+			return GameEdition.CHINESE
+	}
+
+	throw new Error()
+}
+
+export interface Patch {
+	// Using global as a source of truth on the order of patch keys
+	date: Partial<Record<GameEdition, number>> & {[GameEdition.GLOBAL]: number}
+}
+
+// This is all right from /PatchList - should be easy to sync Eventually™
+const FALLBACK_KEY = '✖'
 const PATCHES = {
 	// Not going to support pre-4.0 at all
-	'2.0 - 3.57': {
-		date: 0,
+	[FALLBACK_KEY]: {
+		date: {
+			[GameEdition.GLOBAL]: 0,
+			[GameEdition.KOREAN]: 0,
+			[GameEdition.CHINESE]: 0,
+		},
 	},
 	'4.0': {
-		date: 1497517200,
+		date: {
+			[GameEdition.GLOBAL]: 1497517200,
+		},
 	},
 	'4.01': {
-		date: 1499162101,
+		date: {
+			[GameEdition.GLOBAL]: 1499162101,
+		},
 	},
 	'4.05': {
-		date: 1500368961,
+		date: {
+			[GameEdition.GLOBAL]: 1500368961,
+		},
 	},
 	'4.06': {
-		date: 1501747200,
+		date: {
+			[GameEdition.GLOBAL]: 1501747200,
+		},
 	},
 	'4.1': {
-		date: 1507622400,
+		date: {
+			[GameEdition.GLOBAL]: 1507622400,
+		},
 	},
 	'4.11': {
-		date: 1508839200,
+		date: {
+			[GameEdition.GLOBAL]: 1508839200,
+		},
 	},
 	'4.15': {
-		date: 1511258400,
+		date: {
+			[GameEdition.GLOBAL]: 1511258400,
+		},
 	},
 	'4.2': {
-		date: 1517227200,
+		date: {
+			[GameEdition.GLOBAL]: 1517227200,
+		},
 	},
 	'4.25': {
-		date: 1520935200,
+		date: {
+			[GameEdition.GLOBAL]: 1520935200,
+		},
 	},
 	'4.3': {
-		date: 1526976000,
+		date: {
+			[GameEdition.GLOBAL]: 1526976000,
+		},
 	},
 	'4.31': {
-		date: 1528223134,
+		date: {
+			[GameEdition.GLOBAL]: 1528223134,
+		},
 	},
 	'4.35': {
-		date: 1530617875,
+		date: {
+			[GameEdition.GLOBAL]: 1530617875,
+		},
 	},
 	'4.36': {
-		date: 1533635005,
+		date: {
+			[GameEdition.GLOBAL]: 1533635005,
+		},
 	},
 	'4.4': {
-		date: 1537268400,
+		date: {
+			[GameEdition.GLOBAL]: 1537268400,
+		},
 	},
 	'4.5': {
-		date: 1546857979,
+		date: {
+			[GameEdition.GLOBAL]: 1546857979,
+		},
 	},
 }
 
@@ -65,15 +126,25 @@ const patchData: PatchData = PATCHES
 
 // This is intentionally in newest->oldest order
 const sortedPatches = (Object.keys(patchData) as PatchNumber[]).sort(
-	(a, b) => patchData[b].date - patchData[a].date,
+	(a, b) => patchData[b].date[GameEdition.GLOBAL] - patchData[a].date[GameEdition.GLOBAL],
 )
 
-export function getPatch(timestamp = (new Date()).getTime()): PatchNumber {
-	const key = sortedPatches.find(key => patchData[key].date < timestamp)
-	return key!
+export function getPatch(edition: GameEdition, timestamp: number): PatchNumber {
+	const key = sortedPatches.find(key => (patchData[key].date[edition] || Infinity) < timestamp)
+	return key || FALLBACK_KEY
+}
+
+export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
+	let date: number | undefined
+	for (const key of sortedPatches) {
+		date = patchData[key].date[edition]
+		if (key === patch) { break }
+	}
+	return date || Infinity
 }
 
 export function patchSupported(
+	edition: GameEdition,
 	from: PatchNumber,
 	to: PatchNumber,
 	at = (new Date()).getTime(),
@@ -81,10 +152,12 @@ export function patchSupported(
 	if (!from) { return false }
 
 	const nextPatchKey = sortedPatches[sortedPatches.indexOf(to) - 1]
-	const nextPatch = patchData[nextPatchKey] || {date: Infinity}
+	const nextPatch = patchData[nextPatchKey]
 
-	const fromDate = patchData[from].date
-	const toDate = nextPatch.date
+	const fromDate = getPatchDate(edition, from)
+	const toDate = nextPatch
+		? getPatchDate(edition, nextPatchKey)
+		: Infinity
 
 	return _.inRange(at, fromDate, toDate)
 }

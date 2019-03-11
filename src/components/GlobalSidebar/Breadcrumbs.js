@@ -3,12 +3,20 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {Helmet} from 'react-helmet'
 import {withRouter, Link} from 'react-router-dom'
+import {Icon} from 'semantic-ui-react'
 
 import {getZoneBanner, getCorrectedFight} from 'data/BOSSES'
+import {GameEdition, languageToEdition, getPatch} from 'data/PATCHES'
 import {ReportStore} from 'store/report'
 import {formatDuration, getPathMatch} from 'utilities'
 
 import styles from './Breadcrumbs.module.css'
+
+const editionName = {
+	[GameEdition.GLOBAL]: <Icon name="globe"/>,
+	[GameEdition.KOREAN]: 'KR',
+	[GameEdition.CHINESE]: 'CN',
+}
 
 @inject('reportStore')
 @observer
@@ -45,11 +53,19 @@ class Breadcrumbs extends React.Component {
 		// Report
 		if (code) {
 			let title = code
+			let subtitle = null
+
 			if (reportLoaded) {
 				title = report.title
+
+				const edition = languageToEdition(report.lang)
+				const patch = getPatch(edition, report.start / 1000)
+				subtitle = <>({editionName[edition]} {patch})</>
 			}
+
 			crumbs.push({
 				title,
+				subtitle,
 				url: `/find/${code}/`,
 			})
 		}
