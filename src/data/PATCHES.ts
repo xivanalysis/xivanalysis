@@ -136,7 +136,7 @@ export function getPatch(edition: GameEdition, timestamp: number): PatchNumber {
 export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
 	const globalPatchTime = patchData[patch].date[GameEdition.GLOBAL]
 	const key = sortedPatches
-		.filter(key => patchData[key].date[GameEdition.GLOBAL] > globalPatchTime)
+		.filter(key => patchData[key].date[GameEdition.GLOBAL] <= globalPatchTime)
 		.find(key => patchData[key].date[edition] !== undefined)
 	return patchData[key || '2.0 - 3.57'].date[edition] || 0
 }
