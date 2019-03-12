@@ -192,7 +192,7 @@
   "drg.buffs.suggestions.life-surge.content": "",
   "drg.buffs.suggestions.life-surge.why": "",
   "drg.buffs.title": "",
-  "drg.debuffs.checklist.description": "",
+  "drg.debuffs.checklist.description": "<0/>与<1/>分别提供重要的突刺耐性降低效果与可观的持续伤害，应保持这两者始终存在。",
   "drg.debuffs.checklist.name": "确保你技能的减益状态始终存在",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> 覆盖率",
   "drg.debuffs.checklist.requirement.disembowel.name": "<0/> 覆盖率",
@@ -599,7 +599,7 @@
   "whm.overheal.requirement.all": "过量治疗（所有来源）",
   "whm.overheal.requirement.hot": "过量治疗（HoT）",
   "whm.overheal.requirement.nonhot": "过量治疗（非HoT）",
-  "whm.overheal.rule.description": "",
+  "whm.overheal.rule.description": "尽量避免用多余的治疗填满目标的体力槽。虽然过量治疗有些时候是必须的，但大多数时候过量治疗只会造成多余的仇恨而没有什么好处。用尽可能高效率的方式治疗也可以使你的蓝量更加健康。",
   "whm.overheal.rule.name": "控制过量治疗",
   "{0, plural, one {time} other {times}}": "{0, plural, other {次}}"
 }
