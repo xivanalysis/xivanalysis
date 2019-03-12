@@ -374,7 +374,7 @@
   "nin.kassatsu.suggestions.rabbit.content": "",
   "nin.kassatsu.suggestions.rabbit.why": "토깽이가 생사여탈에 {0, plural,one {#회}other {#회}} 튀어나왔습니다.",
   "nin.kassatsu.suggestions.suiton.content": "",
-  "nin.kassatsu.suggestions.suiton.why": "",
+  "nin.kassatsu.suggestions.suiton.why": "수둔술을 생사여탈에 {0, plural,one {#회}other {#회}} 사용하였습니다.",
   "nin.kassatsu.suggestions.waste.content": "",
   "nin.kassatsu.suggestions.waste.why": "",
   "nin.ninjutsu.suggestions.aoe-doton.content": "",
