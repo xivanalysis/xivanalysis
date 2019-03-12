@@ -1,11 +1,11 @@
 {
   "ast.arcana-suggestions.messages.accordion-title": "",
-  "ast.arcana-suggestions.messages.disclaimer": "",
+  "ast.arcana-suggestions.messages.disclaimer": "卡片管理评价仍在制作中，目前仍不能给出任何建议。<0/>本段主要是就最佳做法给出一般性建议。这些建议不会考虑队员的临场表现，或对方是否处于爆发阶段。",
   "ast.arcana-suggestions.messages.explanation": "",
   "ast.arcana-suggestions.messages.latest-action": "",
   "ast.arcana-suggestions.messages.pull": "",
   "ast.arcana-suggestions.messages.spread-state": "",
-  "ast.arcana-suggestions.messages.time": "",
+  "ast.arcana-suggestions.messages.time": "时间",
   "ast.arcana-suggestions.suggestions.bardnospear.content": "",
   "ast.arcana-suggestions.suggestions.bardnospear.why": "",
   "ast.arcana-suggestions.title": "",
