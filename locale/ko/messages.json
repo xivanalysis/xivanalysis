@@ -594,12 +594,12 @@
   "whm.dots.rule.name": "항상 DoT가 유지되도록 하십시오",
   "whm.dots.suggestion.clip-a2.content": "",
   "whm.dots.suggestion.clip-a2.why": "",
-  "whm.dots.suggestion.clip-a3.content": "",
-  "whm.dots.suggestion.clip-a3.why": "",
-  "whm.overheal.requirement.all": "",
-  "whm.overheal.requirement.hot": "",
-  "whm.overheal.requirement.nonhot": "",
-  "whm.overheal.rule.description": "",
+  "whm.dots.suggestion.clip-a3.content": "DoT의 빠른 갱신은 피해주세요. 지속시간이 줄지 않았는데 갱신하면 스톤쟈의 사용 횟수가 줄어들게 됩니다.",
+  "whm.dots.suggestion.clip-a3.why": "너무 빨리 버프를 갱신하여 {1} 잃은 횟수가 {0} 회입니다.",
+  "whm.overheal.requirement.all": "오버 힐 (전체)",
+  "whm.overheal.requirement.hot": "오버 힐 (대상 지정 힐)",
+  "whm.overheal.requirement.nonhot": "오버 힐 (대상 미지정 힐)",
+  "whm.overheal.rule.description": "대상의 HP 바를 채우는 데 필요이상으로 치유하는 것은 피합니다. 일부 오버힐은 불가피하지만, 오버힐은 아무런 이득도 없이 더 많은 적개심을 높입니다. 치유스킬을 효율적으로 사용하는 것은 MP 관리에 도움이 됩니다.",
   "whm.overheal.rule.name": "오버힐을 피하세요",
   "{0, plural, one {time} other {times}}": "{0, plural, one {# 회} other {# 회}}"
 }
