@@ -536,7 +536,7 @@
   "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "",
   "smn.gauge.suggestions.lost-dreadwyrm-aether.why": "",
   "smn.pets.suggestions.no-pet.content": "",
-  "smn.pets.suggestions.no-pet.why": "",
+  "smn.pets.suggestions.no-pet.why": "전투동안 {noPetUptimePercent}%만큼 소환수가 소환해제 상태였습니다(<1%를 권장합니다).",
   "smn.pets.suggestions.prefer-garuda.content": "주로 본인 이외에 다른 캐스터 딜러가 파티에 있다면 가루다 에기를 사용해야합니다 - 마법 데미지 증가 효과를 받을 수 있습니다.",
   "smn.pets.suggestions.prefer-garuda.why": "",
   "smn.pets.suggestions.prefer-ifrit.content": "주로 본인 이외에 다른 캐스터 딜러가 파티에 없다면 이프리트 에기를 사용해야합니다 - 이프리트의 순수데미지는 대부분의 경우에 가루다보다 더 나은 결과를 제공합니다.",
