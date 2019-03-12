@@ -96,7 +96,7 @@
   "blm.rotation-watchdog.title": "循环问题",
   "blm.triple.title": "三连咏唱",
   "core.about.contributors": "贡献者：",
-  "core.about.patch-unsupported.description": "",
+  "core.about.patch-unsupported.description": "这个报告是在{0} 版本记录的，分析器不支持此报告。计算和建议可能会因版本间更改而受到影响。",
   "core.about.patch-unsupported.title": "不支持报告的版本。",
   "core.about.supported-patches": "支持的版本：",
   "core.about.title": "关于",
