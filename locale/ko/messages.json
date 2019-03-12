@@ -127,7 +127,7 @@
   "core.cooldowndowntime.ogcd-cd-metric": "",
   "core.cooldowndowntime.title": "",
   "core.cooldowndowntime.use-ogcd-cds": "",
-  "core.dblink.loading": "",
+  "core.dblink.loading": "로딩중...",
   "core.deaths.content": "죽지마세요. 전투 도중 사망하면 게이지의 손실, 쇠약디버프, 쿨타임 낭비가 되며, 전체 데미지에 <0>좋지않은</0> 영향을 줍니다.",
   "core.deaths.why": "{0, plural, other {사망횟수: #}}",
   "core.error.generic": "무언가 잘못되었습니다. 개발자들은 이미 통지를 받았습니다.",
