@@ -244,7 +244,7 @@
   "mch.heat.accordion.message": "",
   "mch.heat.panel-count": "",
   "mch.heat.suggestions.cooldown-lockout.content": "",
-  "mch.heat.suggestions.cooldown-lockout.why": "",
+  "mch.heat.suggestions.cooldown-lockout.why": "你在枪管惩罚时打了 {0, plural, one {# 次} other {# 次}}冷却",
   "mch.heat.suggestions.cooldown.content": "",
   "mch.heat.suggestions.cooldown.why": "",
   "mch.heat.suggestions.downtime.content": "",
