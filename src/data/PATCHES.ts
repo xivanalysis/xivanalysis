@@ -138,7 +138,8 @@ export function getPatch(edition: GameEdition, timestamp: number): PatchNumber {
 export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
 	let date: number | undefined
 	for (const key of sortedPatches) {
-		date = patchData[key].date[edition]
+		const editionDate = patchData[key].date[edition]
+		if (editionDate) { date = editionDate }
 		if (key === patch) { break }
 	}
 	return date || Infinity
