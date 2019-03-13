@@ -13,18 +13,18 @@ export class Patch {
 
 	/**
 	 * Compare the stored patch with the one specified. A negative, zero, or
-	 * postive number will be returned if the patch is before, equal to, or
-	 * after the stored patch, respectively.
-	 * @param patch The patch to compare to
+	 * postive number will be returned if the current patch is before, equal to, or
+	 * after the specified patch, respectively.
+	 * @param patch Patch to compare to
 	 */
 	compare(patch: PatchNumber) {
-		const a = getPatchDate(this.edition, this.key)
-		const b = getPatchDate(this.edition, patch)
-		return b - a
+		const current = getPatchDate(this.edition, this.key)
+		const specified = getPatchDate(this.edition, patch)
+		return current - specified
 	}
 
 	/**
-	 * Check if the specified patch is before the currently stored patch
+	 * Check if the current patch is before the specified patch
 	 * @param patch Patch to compare to
 	 */
 	before(patch: PatchNumber) {
@@ -32,7 +32,7 @@ export class Patch {
 	}
 
 	/**
-	 * Check if the specified patch is equal to the currently stored patch
+	 * Check if the current patch is equal to the specified patch
 	 * @param patch Patch to compare to
 	 */
 	is(patch: PatchNumber) {
@@ -40,7 +40,7 @@ export class Patch {
 	}
 
 	/**
-	 * Check if the specified patch is after the currently stored patch
+	 * Check if the current patch is after the specified patch
 	 * @param patch Patch to compare to
 	 */
 	after(patch: PatchNumber) {
