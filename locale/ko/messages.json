@@ -261,7 +261,7 @@
   "mch.procs.suggestions.missing.why": "프록 없는 무기 기술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "mch.procs.suggestions.overwritten.content": "프록이 이미 있는데 <0/>와 <1/>를 사용해 프록을 덧쓰지 마세요. 특수탄을 소비한다면 더욱 더 피하세요. 프록을 먼저 소비하는 것이 항상 더 낫습니다.",
   "mch.procs.suggestions.overwritten.why": "프록을 {0, plural, one {#회} other {#회}} 덧썼습니다.",
-  "mch.turrets.suggestions.no-turret.content": "포탑은 기공사의 패시브 딜량에 큰 기여를 하며, <0/>를 사용하기 위한 전제조건 입니다. <1/>이 떨어지거나 광역으로 인해서 포탑이 죽는다면 바로 포탑을 다시 설치해야 합니다.",
+  "mch.turrets.suggestions.no-turret.content": "포탑은 기공사의 패시브 딜량에 큰 기여를 하며, <0/>을 사용하기 위한 전제조건 입니다. <1/>이 떨어지거나 광역으로 인해서 포탑이 죽는다면 바로 포탑을 다시 설치해야 합니다.",
   "mch.turrets.suggestions.no-turret.why": "포탑이 {turretDowntime}% 활성화 되지 않았습니다.",
   "mch.turrets.title": "자동포탑",
   "mch.wildfire.accordion.message": "모든 <0/>구간은 적어도 {WILDFIRE_GCD_TARGET} 개의 글쿨과 최대한 많은 논글쿨기를 포함하여야 합니다. 아래의 창에는 각 소이탄 구간에서 사용된 글쿨과 총 데미지를 표시하며, 창을 확장하면 구간에서 사용된 모든 기술을 표시합니다.",
