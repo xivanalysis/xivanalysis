@@ -502,7 +502,7 @@
   "smn.aetherflow.drift": "推移",
   "smn.aetherflow.suggestions.fester.content": "为了让<0/>打出最大威力，确保目标已经被施放了<1/>和<2/>。避免在DoT刚施放时立即使用溃烂爆发，因为DoT需要一点时间才能生效。",
   "smn.aetherflow.suggestions.fester.why": "{numBadFesters, plural, other {# 次}}溃烂爆发的目标缺少DoT，损失 {totalFesterPotencyLost} 威力。",
-  "smn.aetherflow.suggestions.painflare.content": "除非需要速败<1/>，否则应避免对单体目标使用<0/>，因为其威力低于<2/>。",
+  "smn.aetherflow.suggestions.painflare.content": "除非速攻<1/>，否则应避免对单体目标使用<0/>，因为其威力低于<2/>。",
   "smn.aetherflow.suggestions.painflare.why": "对单体目标使用了 {numBadPainflares} {numBadPainflares, plural, one {次} other {次}}痛苦核爆。",
   "smn.aetherflow.title": "以太超流",
   "smn.aetherflow.total-drift": "总推移时间",
