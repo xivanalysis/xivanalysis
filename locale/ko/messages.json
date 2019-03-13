@@ -468,7 +468,7 @@
   "rdm.gauge.suggestions.wastedverholy.why": "",
   "rdm.gauge.suggestions.white-mana-invuln-content": "",
   "rdm.gauge.suggestions.white-mana-invuln-why": "무적인 대상을 노려 빗나간 스킬사용으로 백마나 {0} 를 손해봄",
-  "rdm.gauge.suggestions.white-mana-lost-content": "",
+  "rdm.gauge.suggestions.white-mana-lost-content": "흑마나와 백마나의 차이가 30을 초과하지 않도록 하십시오. 마나 불균형은 마나 획득량을 감소시키며, 잠재적으로 하나 이상의 근접 콤보 공격을 사용하지 못하게 될 수 있습니다. 당신은 마나 불균형으로 인해 백마나를 적게 획득하였습니다.",
   "rdm.gauge.suggestions.white-mana-lost-why": "",
   "rdm.gauge.suggestions.white-mana-wasted-content": "",
   "rdm.gauge.suggestions.white-mana-wasted-why": "백마나가 최대치에 도달하여 {0} 만큼의 마나를 잃었습니다",
