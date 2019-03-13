@@ -1,8 +1,8 @@
 {
   "ast.arcana-suggestions.messages.accordion-title": "奥秘卡抽取记录",
-  "ast.arcana-suggestions.messages.disclaimer": "卡片管理评价系统仍在开发中，目前尚无法给出任何建议。<0/>本段将就最优做法给出泛用建议。这些建议并未考虑队员的临场表现，或对方是否处于爆发阶段。",
-  "ast.arcana-suggestions.messages.explanation": "本部分中会跟踪战斗中的所有卡片技能，以及每次使用技能时的暂留状态。",
-  "ast.arcana-suggestions.messages.latest-action": "上一个技能",
+  "ast.arcana-suggestions.messages.disclaimer": "卡片管理评价仍在制作中，目前仍不能给出任何建议。<0/>本段主要是就最佳做法给出一般性建议。这些建议不会考虑队员的临场表现，或对方是否处于爆发阶段。",
+  "ast.arcana-suggestions.messages.explanation": "本段跟踪战斗中所有卡片技能，以及每次使用技能时的奥秘卡状态。",
+  "ast.arcana-suggestions.messages.latest-action": "最后使用的技能",
   "ast.arcana-suggestions.messages.pull": "开怪",
   "ast.arcana-suggestions.messages.spread-state": "暂留状态",
   "ast.arcana-suggestions.messages.time": "时间",
