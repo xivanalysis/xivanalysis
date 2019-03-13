@@ -44,66 +44,79 @@ const PATCHES = {
 	'4.0': {
 		date: {
 			[GameEdition.GLOBAL]: 1497517200,
+			[GameEdition.CHINESE]: 1506412800,
 		},
 	},
 	'4.01': {
 		date: {
 			[GameEdition.GLOBAL]: 1499162101,
+			[GameEdition.CHINESE]: 1508832000,
 		},
 	},
 	'4.05': {
 		date: {
 			[GameEdition.GLOBAL]: 1500368961,
+			[GameEdition.CHINESE]: 1511251200,
 		},
 	},
 	'4.06': {
 		date: {
 			[GameEdition.GLOBAL]: 1501747200,
+			[GameEdition.CHINESE]: 1511251200,
 		},
 	},
 	'4.1': {
 		date: {
 			[GameEdition.GLOBAL]: 1507622400,
+			[GameEdition.CHINESE]: 1516694400,
 		},
 	},
 	'4.11': {
 		date: {
 			[GameEdition.GLOBAL]: 1508839200,
+			[GameEdition.CHINESE]: 1518508800,
 		},
 	},
 	'4.15': {
 		date: {
 			[GameEdition.GLOBAL]: 1511258400,
+			[GameEdition.CHINESE]: 1520841600,
 		},
 	},
 	'4.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1517227200,
+			[GameEdition.CHINESE]: 1526371200,
 		},
 	},
 	'4.25': {
 		date: {
 			[GameEdition.GLOBAL]: 1520935200,
+			[GameEdition.CHINESE]: 1531814400,
 		},
 	},
 	'4.3': {
 		date: {
 			[GameEdition.GLOBAL]: 1526976000,
+			[GameEdition.CHINESE]: 1536048000,
 		},
 	},
 	'4.31': {
 		date: {
 			[GameEdition.GLOBAL]: 1528223134,
+			[GameEdition.CHINESE]: 1537862400,
 		},
 	},
 	'4.35': {
 		date: {
 			[GameEdition.GLOBAL]: 1530617875,
+			[GameEdition.CHINESE]: 1540886400,
 		},
 	},
 	'4.36': {
 		date: {
 			[GameEdition.GLOBAL]: 1533635005,
+			[GameEdition.CHINESE]: 1543910400,
 		},
 	},
 	'4.4': {
