@@ -11,6 +11,23 @@ interface Trigger {
 	reason?: React.ReactNode
 }
 
+const EXPECTED_ABILITY_EVENTS = [
+	'begincast',
+	'cast',
+	'damage',
+	'heal',
+	'applybuff',
+	'applydebuff',
+	'refreshbuff',
+	'refreshdebuff',
+	'removebuff',
+	'removedebuff',
+	'applybuffstack',
+	'applydebuffstack',
+	'removebuffstack',
+	'removedebuffstack',
+]
+
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'
 	static title = 'Broken Log'
@@ -23,13 +40,17 @@ export default class BrokenLog extends Module {
 
 	init() {
 		// Unknown actions are unparseable
-		this.addHook('all', {by: 'player', abilityId: ACTIONS.UNKNOWN.id}, () => {
-			this.trigger(this, 'unknown action', (
-				<Trans id="core.broken-log.trigger.unknown-action">
-					One or more actions were recorded incorrectly, and could not be parsed.
-				</Trans>
-			))
-		})
+		this.addHook(
+			EXPECTED_ABILITY_EVENTS,
+			{by: 'player', abilityId: ACTIONS.UNKNOWN.id},
+			() => {
+				this.trigger(this, 'unknown action', (
+					<Trans id="core.broken-log.trigger.unknown-action">
+						One or more actions were recorded incorrectly, and could not be parsed.
+					</Trans>
+				))
+			},
+		)
 	}
 
 	/**
