@@ -59,7 +59,7 @@ class I18nLoader extends React.Component {
 			await import(
 				/* webpackMode: 'lazy' */
 				/* webpackChunkName: 'nv-intl-polyfill-[index]' */
-				/* webpackInclude: /(?:de|en|fr|ja).js/ */
+				/* webpackInclude: /(?:de|en|fr|ja|ko|zh).js/ */
 				`intl/locale-data/jsonp/${language}.js`
 			)
 		}
