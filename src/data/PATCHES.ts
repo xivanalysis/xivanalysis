@@ -44,84 +44,98 @@ const PATCHES = {
 	'4.0': {
 		date: {
 			[GameEdition.GLOBAL]: 1497517200,
+			[GameEdition.KOREAN]: 1513670400,
 			[GameEdition.CHINESE]: 1506412800,
 		},
 	},
 	'4.01': {
 		date: {
 			[GameEdition.GLOBAL]: 1499162101,
+			[GameEdition.KOREAN]: 1515484800,
 			[GameEdition.CHINESE]: 1508832000,
 		},
 	},
 	'4.05': {
 		date: {
 			[GameEdition.GLOBAL]: 1500368961,
+			[GameEdition.KOREAN]: 1517299200,
 			[GameEdition.CHINESE]: 1511251200,
 		},
 	},
 	'4.06': {
 		date: {
 			[GameEdition.GLOBAL]: 1501747200,
+			[GameEdition.KOREAN]: 1519113600,
 			[GameEdition.CHINESE]: 1511251200,
 		},
 	},
 	'4.1': {
 		date: {
 			[GameEdition.GLOBAL]: 1507622400,
+			[GameEdition.KOREAN]: 1522137600,
 			[GameEdition.CHINESE]: 1516694400,
 		},
 	},
 	'4.11': {
 		date: {
 			[GameEdition.GLOBAL]: 1508839200,
+			[GameEdition.KOREAN]: 1523952000,
 			[GameEdition.CHINESE]: 1518508800,
 		},
 	},
 	'4.15': {
 		date: {
 			[GameEdition.GLOBAL]: 1511258400,
+			[GameEdition.KOREAN]: 1526976000,
 			[GameEdition.CHINESE]: 1520841600,
 		},
 	},
 	'4.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1517227200,
+			[GameEdition.KOREAN]: 1531209600,
 			[GameEdition.CHINESE]: 1526371200,
 		},
 	},
 	'4.25': {
 		date: {
 			[GameEdition.GLOBAL]: 1520935200,
+			[GameEdition.KOREAN]: 1537257600,
 			[GameEdition.CHINESE]: 1531814400,
 		},
 	},
 	'4.3': {
 		date: {
 			[GameEdition.GLOBAL]: 1526976000,
+			[GameEdition.KOREAN]: 1540886400,
 			[GameEdition.CHINESE]: 1536048000,
 		},
 	},
 	'4.31': {
 		date: {
 			[GameEdition.GLOBAL]: 1528223134,
+			[GameEdition.KOREAN]: 1542700800,
 			[GameEdition.CHINESE]: 1537862400,
 		},
 	},
 	'4.35': {
 		date: {
 			[GameEdition.GLOBAL]: 1530617875,
+			[GameEdition.KOREAN]: 1545120000,
 			[GameEdition.CHINESE]: 1540886400,
 		},
 	},
 	'4.36': {
 		date: {
 			[GameEdition.GLOBAL]: 1533635005,
+			[GameEdition.KOREAN]: 1548144000,
 			[GameEdition.CHINESE]: 1543910400,
 		},
 	},
 	'4.4': {
 		date: {
 			[GameEdition.GLOBAL]: 1537268400,
+			[GameEdition.KOREAN]: 1551168000,
 			[GameEdition.CHINESE]: 1547539200,
 		},
 	},
