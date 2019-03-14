@@ -489,7 +489,7 @@
   "rdm.procs.suggestions.invuln.content": "보스가 무적상태 일때는 <0/>, <1/>, <2/>을 사용하지 않도록 합니다.",
   "rdm.procs.suggestions.invuln.why": "무적 상태의 적에게 임팩트를 {invulnImpact, number} 회, 버파이어를 {invulnFire, number} 회, 버스톤을 {invulnStone, number} 회 사용하였습니다.",
   "rdm.procs.suggestions.missed.content": "<1/> 가 있을 때마다 <0/> 를 시전하고, <3/> 가 있을 때마다 <2/> 를 시전하여 마나 획득량을 손해보지 않도록 해 보세요.",
-  "rdm.procs.suggestions.missed.why": "{missedFire, number}개의 버파이어 프록과 {missedStone, number}개의 버스톤 프록을 사용하지 않았습니다.",
+  "rdm.procs.suggestions.missed.why": "버파이어 프록 {missedFire, number} 개, 버스톤 프록 {missedStone, number} 개가 사용되지 않고 사라졌습니다.",
   "rdm.procs.suggestions.overwritten.content": "<1/> 가 있을 때에는 <0/> 를 시전하지 마세요. <3/> 가 있을 때에는 <2/> 를 시전하지 마세요.",
   "rdm.procs.suggestions.overwritten.why": "획득한 버파이어 프록 중 {overWrittenFire, number} 개, 획득한 버스톤 프록 중 {overWrittenStone, number} 개가 사용되지 않은 채 덮어씌워졌습니다. <0/> 강제 사용으로 인하여 덮어씌워진 프록은 제외한 수치입니다.",
   "rdm.procs.title": "프록",
