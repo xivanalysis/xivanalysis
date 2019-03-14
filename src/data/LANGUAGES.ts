@@ -13,6 +13,8 @@ export enum Language {
 	JAPANESE = 'ja',
 	FRENCH = 'fr',
 	GERMAN = 'de',
+	KOREAN = 'ko',
+	CHINESE = 'zh',
 }
 
 export const LANGUAGES: Record<Language, LanguageData> = {
@@ -47,6 +49,22 @@ export const LANGUAGES: Record<Language, LanguageData> = {
 		},
 		enable: true,
 		gameEdition: GameEdition.GLOBAL,
+	},
+	[Language.KOREAN]: {
+		menu: {
+			text: '한국어',
+			flag: 'kr',
+		},
+		enable: true,
+		gameEdition: GameEdition.KOREAN,
+	},
+	[Language.CHINESE]: {
+		menu: {
+			text: '简体中文',
+			flag: 'cn',
+		},
+		enable: true,
+		gameEdition: GameEdition.CHINESE,
 	},
 }
 
