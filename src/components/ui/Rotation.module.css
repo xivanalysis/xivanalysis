@@ -1,7 +1,17 @@
-.action {
-	height: 40px;
+@value gcdSize: 40px;
+@value ogcdSize: 30px;
+
+.container {
+	display: flex;
+	justify-content: flex-start;
+	align-items: flex-start;
+	flex-wrap: wrap;
 }
 
-.ogcd {
-	margin-bottom: 20px;
+.container .link {
+	margin-top: calc(ogcdSize * 0.5);
+}
+
+.container .link.ogcd {
+	margin-top: 0;
 }

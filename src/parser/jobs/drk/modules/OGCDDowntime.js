@@ -10,5 +10,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 		ACTIONS.SOLE_SURVIVOR.id,
 		ACTIONS.PLUNGE.id,
 		ACTIONS.SALTED_EARTH.id,
+		ACTIONS.CARVE_AND_SPIT.id,
 	]
 }

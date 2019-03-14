@@ -1,12 +1,12 @@
+import {Plural, Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Plural} from '@lingui/react'
 
 /* CURRENTLY UNUSED. FUTURE IMPROVEMENT
 // Things that should eventually get flagged if they show up under grit and darkside
@@ -39,7 +39,6 @@ export default class Buffs extends Module {
 	static title = 'Buffs and Stances'
 	static dependencies = [
 		'combatants',
-		'downtime',
 		'checklist',
 		'brokenLog',
 		'suggestions',
@@ -81,6 +80,7 @@ export default class Buffs extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.GRIT.id}, this._updateGritWindow)
+		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.BLOOD_PRICE.id}, this._updateGritWindow)
 		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._updateDarksideWindow)
 		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DARKSIDE.id}, this._trackDarksideCasts)
 		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DELIRIUM.id}, this._checkDeliriumCast)
@@ -92,7 +92,11 @@ export default class Buffs extends Module {
 			if (this._gritWindows.length > 0) {
 				const lastWindow = this._gritWindows[this._gritWindows.length - 1]
 				if (lastWindow.end === null) {
-					this.brokenLog.trigger()
+					this.brokenLog.trigger(this, 'grit reapply', (
+						<Trans id="drk.buffs.trigger.grit-reapply">
+							<StatusLink {...STATUSES.GRIT}/> was applied while still active.
+						</Trans>
+					))
 				}
 			}
 
@@ -100,10 +104,21 @@ export default class Buffs extends Module {
 		} else if (event.type === 'removebuff') {
 			const currentWindow = this._gritWindows[this._gritWindows.length - 1]
 			if (currentWindow.end !== null) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'grit multiple removals', (
+					<Trans id="drk.buffs.trigger.grit-multiple-removals">
+						<StatusLink {...STATUSES.GRIT}/> was removed multiple times in a single window.
+					</Trans>
+				))
 			}
 
 			currentWindow.end = event.timestamp
+		} else if (event.type === 'cast' && event.ability.guid === ACTIONS.BLOOD_PRICE.id) {
+			// Blood price is cast - check to see if Grit has already been marked as active
+			if (this._gritWindows.length === 0) {
+				// Grit not tracked as active, normalize start time to beginning of fight
+				const windowStart = this.parser.fight.start_time
+				this._gritWindows.push({start: windowStart, end: null})
+			}
 		}
 	}
 
@@ -112,7 +127,14 @@ export default class Buffs extends Module {
 			if (this._darksideWindows.length > 0) {
 				const lastWindow = this._darksideWindows[this._darksideWindows.length - 1]
 				if (lastWindow.end === null) {
-					this.brokenLog.trigger()
+					// Seeing two applybuff events without a removebuff in between, note log is broken and assume continuous uptime of previous Darkside buff
+					//   return without adding a new buff window
+					this.brokenLog.trigger(this, 'darkside reapply', (
+						<Trans id="drk.buffs.trigger.darkside-reapply">
+							<StatusLink {...STATUSES.DARKSIDE}/> was applied while still active.
+						</Trans>
+					))
+					return
 				}
 			}
 
@@ -125,7 +147,11 @@ export default class Buffs extends Module {
 		} else if (event.type === 'removebuff') {
 			const currentWindow = this._darksideWindows[this._darksideWindows.length - 1]
 			if (currentWindow.end !== null) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'darkside multiple removals', (
+					<Trans id="drk.buffs.trigger.darkside-multiple-removals">
+						<StatusLink {...STATUSES.DARKSIDE}/> was removed multiple times in a single window.
+					</Trans>
+				))
 			}
 
 			currentWindow.end = event.timestamp
@@ -167,7 +193,6 @@ export default class Buffs extends Module {
 		// -----
 		// fight durations
 		const rawFightDuration = this.parser.fightDuration
-		const fightDuration = rawFightDuration - this.downtime.getDowntime()
 		//calculate actual buff durations
 		const fightDarksideDuration = this._calculateActiveTime(this._darksideWindows)
 		const fightDarksidePercent = Math.min(((fightDarksideDuration / rawFightDuration) * 100), 100)
@@ -183,7 +208,7 @@ export default class Buffs extends Module {
 		}))
 
 		const fightGritDuration = this._calculateActiveTime(this._gritWindows)
-		const fightNoGritPercent = Math.min((100 - ((fightGritDuration / fightDuration) * 100)), 100)
+		const fightNoGritPercent = Math.min((100 - ((fightGritDuration / rawFightDuration) * 100)), 100)
 		this.checklist.add(new Rule({
 			name: <Fragment>No <ActionLink {...ACTIONS.GRIT}/></Fragment>,
 			description: <Fragment>Grit is required for enmity openers and some points of excessive damage, but drastically reduces damage output.</Fragment>,

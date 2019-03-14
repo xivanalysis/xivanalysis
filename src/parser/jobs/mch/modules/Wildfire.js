@@ -2,7 +2,7 @@ import {Trans, Plural, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -76,7 +76,11 @@ export default class Wildfire extends Module {
 		} else {
 			// Something fucky this way comes - we got a WF damage event without a corresponding applydebuff, which means the log is probably jank.
 			// Create a fake window so we still display time/damage and notify the "broken log" module.
-			this.brokenLog.trigger()
+			this.brokenLog.trigger(this, 'no buff wf', (
+				<Trans id="mch.wildfire.trigger.no-buff-wf">
+					<ActionLink {...ACTIONS.WILDFIRE}/> damage was recorded without a corresponding <StatusLink {...STATUSES.WILDFIRE}/> debuff.
+				</Trans>
+			))
 			this._wildfireWindows.history.push({
 				spoofed: true,
 				start: event.timestamp - (STATUSES.WILDFIRE.duration * 1000),

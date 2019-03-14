@@ -244,7 +244,11 @@ export default class GreasedLightning extends Module {
 		this._stacks.forEach((value, index) => {
 			const last = this._stacks[index-1] || {}
 			if ([1, 2].includes(value.stack) && last.stack === GL_MAX_STACKS) {
-				this.brokenLog.trigger()
+				this.brokenLog.trigger(this, 'broken transition', (
+					<Trans id="mnk.gl.trigger.broken-transition">
+						<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> stacks were observed performing an impossible transition.
+					</Trans>
+				))
 			}
 		})
 

@@ -2,18 +2,16 @@ import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import PATCHES from 'data/PATCHES'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {matchClosestLower} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // In a single target scenario, SF should always tick 5 times + 1 time on the cast (4.4 patch)
 const MIN_HITS = {
-	[PATCHES['4.0'].date]: 5,
-	[PATCHES['4.4'].date]: 6,
+	'4.0': 5,
+	'4.4': 6,
 }
 
 // Ticks every 3s
@@ -51,7 +49,7 @@ export default class ShadowFlare extends Module {
 
 	_onComplete() {
 		// Work out the appropriate number of hits based on patch
-		const minHits = matchClosestLower(MIN_HITS, this.parser.parseDate)
+		const minHits = this.parser.patch.match(MIN_HITS)
 
 		const missedTicks = this._casts.reduce((carry, cast) => {
 			const hits = cast.hits.reduce((carry, value) => carry + value.hits.length, 0)

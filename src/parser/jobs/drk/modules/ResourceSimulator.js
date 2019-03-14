@@ -3,10 +3,13 @@ import React, {Fragment} from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Accordion, Message} from 'semantic-ui-react'
+import Color from 'color'
+import JOBS from 'data/JOBS'
+import TimeLineChart from 'components/ui/TimeLineChart'
 
 // -----
 // UI stuff
@@ -121,6 +124,7 @@ const COMBO_GRIT_GENERATORS = {
 export default class Resources extends Module {
 	static handle = 'resourcesim'
 	static title = 'Resource Analyzer'
+	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
 		'buffs',
 		'gcds',
@@ -144,6 +148,9 @@ export default class Resources extends Module {
 	// tracker stacks
 	_mana_total_modifiers = []
 	_blood_total_modifiers = []
+	_history = {
+		blood: [],
+	}
 	// -----
 	// Parser Stats
 	// -----
@@ -197,17 +204,32 @@ export default class Resources extends Module {
 
 	modifyBlood(ability, value) {
 		if (value !== 0) {
+			this._currentBlood += value
 			if (value > 0) {
 				this._totalGainedBlood += value
 			} else {
 				this._totalSpentBlood += value
 			}
-			const currentBloodSnapshot = this._currentBlood
-			const vals = this._bindToCeiling(currentBloodSnapshot, value, MAX_BLOOD)
-			this._wastedBlood += vals.waste
-			this._currentBlood = vals.result
+
+			if (this._currentBlood > MAX_BLOOD) {
+				// Check to determine if blood was overcapped by gain, mark as wasted if so
+				this._wastedBlood += this._currentBlood - MAX_BLOOD
+				this._currentBlood = MAX_BLOOD
+			}
+			if (this._currentBlood < 0) {
+				// Sanity check - if blood drops below 0 from a spender, floor blood count at 0, and add blood gained (presumed initial blood)
+				this._totalGainedBlood += -1 * this._currentBlood
+				this._currentBlood = 0
+			}
+
 			this._blood_total_modifiers.push({ability: ability, value: value})
+			this._pushToGraph()
 		}
+	}
+
+	_pushToGraph() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this._history.blood.push({t: timestamp, y: this._currentBlood})
 	}
 
 	dumpResources() {
@@ -217,6 +239,7 @@ export default class Resources extends Module {
 		this._totalDroppedBlood += this._currentBlood
 		this._currentMana = 0
 		this._currentBlood = 0
+		this._pushToGraph()
 	}
 
 	// noinspection JSMethodCanBeStatic
@@ -601,7 +624,27 @@ export default class Resources extends Module {
 				content: this._convertKVListToTable(lists.manaGenerators),
 			},
 		})
+
+		const _bloodColor = Color(JOBS.DARK_KNIGHT.colour)
+
+		/* eslint-disable no-magic-numbers */
+		const chartdata = {
+			datasets: [
+				{
+					label: 'Blood',
+					steppedLine: true,
+					data: this._history.blood,
+					backgroundColor: _bloodColor.fade(0.8),
+					borderColor: _bloodColor.fade(0.5),
+				},
+			],
+		}
+		/* eslint-enable no-magic-numbers */
+
 		return <Fragment>
+			<TimeLineChart
+				data={chartdata}
+			/>
 			<Message>
 				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood} - {bloodSpentPercentage}%</p>
 				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana} - {manaSpentPercentage}%</p>

@@ -154,7 +154,7 @@ export default class Module {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		const cb = typeof filterArg === 'function'? filterArg : cbArg
-		let filter = typeof filterArg === 'function'? {} : filterArg
+		let filter: Filter<T> = typeof filterArg === 'function'? {} : filterArg
 
 		// If there's no callback just... stop
 		if (!cb) { return }
@@ -162,7 +162,7 @@ export default class Module {
 		// QoL filter transforms
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
 		filter = this.mapFilterEntity(filter, 'by', 'sourceID')
-		if (filter.abilityId) {
+		if (filter.abilityId !== undefined) {
 			const abilityFilter = filter as Filter<AbilityEvent>
 			if (!abilityFilter.ability) {
 				abilityFilter.ability = {}
@@ -219,7 +219,7 @@ export default class Module {
 				filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
 				break
 			default:
-				filter[raw] = filter[qol]
+				filter[raw] = filter[qol] as any
 		}
 
 		delete filter[qol]

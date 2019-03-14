@@ -16,6 +16,7 @@ const BLOOD_EXTENSION_MILLIS = 10000
 const MAX_EYES = 3
 
 export default class BloodOfTheDragon extends Module {
+	static handle = 'bloodOfTheDragon'
 	static i18n_id = i18nMark('drg.blood.title')
 	static title = 'Life of the Dragon'
 	static dependencies = [
@@ -125,7 +126,11 @@ export default class BloodOfTheDragon extends Module {
 	_onNastrondCast(event) {
 		if (this._lifeWindows.current === null) {
 			// Nastrond outside of LotD - gentlemen, we have us a broken log
-			this.brokenLog.trigger()
+			this.brokenLog.trigger(this, 'no lotd nastrond', (
+				<Trans id="drg.blood.trigger.no-lotd-nastrond">
+					<ActionLink {...ACTIONS.NASTROND}/> was cast while Life of the Dragon was deemed inactive.
+				</Trans>
+			))
 			return
 		}
 
