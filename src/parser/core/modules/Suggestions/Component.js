@@ -11,10 +11,10 @@ import {SettingsStore} from 'store/settings'
 import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {
-	[SEVERITY.MORBID]: {content: 'Morbid', color: 'black', icon: 'times'},
-	[SEVERITY.MAJOR]: {content: 'Major', color: 'red', icon: 'arrow up'},
-	[SEVERITY.MEDIUM]: {content: 'Medium', color: 'orange'},
-	[SEVERITY.MINOR]: {content: 'Minor', color: 'blue', icon: 'arrow down'},
+	[SEVERITY.MORBID]: {content: <Trans id="core.suggestions.severity.morbid">Morbid</Trans>, color: 'black', icon: 'times'},
+	[SEVERITY.MAJOR]: {content: <Trans id="core.suggestions.severity.major">Major</Trans>, color: 'red', icon: 'arrow up'},
+	[SEVERITY.MEDIUM]: {content: <Trans id="core.suggestions.severity.medium">Medium</Trans>, color: 'orange'},
+	[SEVERITY.MINOR]: {content: <Trans id="core.suggestions.severity.minor">Minor</Trans>, color: 'blue', icon: 'arrow down'},
 }
 
 @inject('settingsStore')
