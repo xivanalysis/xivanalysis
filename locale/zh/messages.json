@@ -497,7 +497,7 @@
   "rdm.procs.suggestions.overwritten.content": "当你有<1/>的时候，不要咏唱<0/>；当你有<3/>的时候，不要咏唱<2/>",
   "rdm.procs.suggestions.overwritten.why": "你因为触发覆盖而浪费了 {overWrittenFire, plural, one {# Verfire proc} other {# 次赤火炎}}，和 {overWrittenStone, plural, one {# Verstone proc} other {# 次赤飞石}}。已排除强制使用<0/>而产生的触发覆盖。",
   "rdm.procs.title": "触发",
-  "smn.about.description": "这个分析器的作用是找出一些手法错误，从而提高你召唤师的游戏水平，并且帮助你清晰的了解循环的过程中发生了什么。\n\n由于召唤师的性质，下面可能会出现大量的建议。不要烦恼，一次只关注一两个问题的改进即可。\n\n如果你想要了解更多有关召唤师的信息，欢迎到The Balance查看指南，或者是到discord的 #smn_questions.",
+  "smn.about.description": "这个分析器的作用是找出一些手法错误，从而提高你召唤师的游戏水平，并且帮助你清晰深入的了解循环的过程中发生了什么。\n\n由于召唤师的性质，下面可能会出现大量的建议。不要烦恼，一次只关注一两个问题的改进即可。\n\n如果你想要了解更多有关召唤师的信息，欢迎到The Balance查看指南，或者是到discord的 #smn_questions.",
   "smn.about.description.warning": "虽然下面的分析在一定程度上应该是准确的，但这个系统还在开发中，有时可能会有含糊不清的问题存在。如果您发现了什么问题，或有什么疑问的话，请通过我们的Discord频道联系我们吧！",
   "smn.aetherflow.cast-time": "咏唱时间",
   "smn.aetherflow.checklist.description": "以太是召唤的核心机制。在战斗中应当使用尽可能多的以太。",
