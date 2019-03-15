@@ -394,7 +394,7 @@
   "nin.ninjutsu.suggestions.st-doton.content": "<1/>이 없을 때 <0/>를 단일 대상에 사용하지 마세요. 1틱 이상 손실이 발생하는 경우 <2/>보다 위력이 적으며, 인술로 인해 발생하는 글쿨 밀림 현상이 더 심합니다.",
   "nin.ninjutsu.suggestions.st-doton.why": "잘못된 토둔술을 {badStds,  plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "<1/>이 있을때 <0/>을 사용하는 것은 {TCJ_DOTON_TICK_TARGET} 틱 이상 적용될 수 있거나, 다수의 대상일 경우로 한정하세요. 곧 움직일 단일 대상의 경우 <3/>이 쿨이 돌지 않았더라도 <2/>의 위력이 더 높습니다.",
-  "nin.ninjutsu.suggestions.tcj-doton.why": "천지인 사용 중 잘못된 토둔술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
+  "nin.ninjutsu.suggestions.tcj-doton.why": "천지인 사용 중 잘못된 토둔술을 {badTcjs, plural,one {#회} other {#회}}사용했습니다.",
   "nin.ninki.suggestions.frog.content": "다른 기술을 사용할 수 있다면 <0/>을 사용하는 것은 피하세요. (단일 대상일 경우) 인법 소모 스킬 중 가장 낮은 위력을 가지고 있습니다.",
   "nin.ninki.suggestions.frog.why": "다른 기술을 사용할 수 있을 때 두꺼비 소환술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninki.suggestions.waste.content": "인법이 60 이상일 때 <0/>을 쓰거나, 인법이 거의 찼을 때 소모 기술을 사용하지 않는 것은 (몇 가지 예외를 제외하고) 피해야 합니다.",
