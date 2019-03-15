@@ -17,6 +17,14 @@ const INPUT_EXPRESSIONS = [
 	 * 1234567890abcdef#fight=1&source=1
 	 */
 	/^(?:.*fflogs\.com\/reports\/)?(?<code>[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<player>[^&]*))?).*)$/,
+
+	/**
+	 * xivanalysis
+	 * /find/1234567890abcdef/
+	 * /find/1234567890abcdef/1/
+	 * /analyse/1234567890abcdef/1/1/
+	 */
+	/\/(?:analyse|find)\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
 ]
 
 @observer
