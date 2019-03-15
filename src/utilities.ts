@@ -5,6 +5,8 @@ import {DEFAULT_LANGUAGE, Language, LANGUAGES, SHORT_LANGUAGE_MAP} from 'data/LA
 
 export {compose}
 
+export const isDefined = <T>(val?: T | null): val is T => val != null
+
 export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
 	if (!Array.isArray(val)) {
 		return [val as T]
