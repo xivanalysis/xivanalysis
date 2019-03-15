@@ -1,10 +1,5 @@
-/*.segment {
-	background-color: rgba(127,127,127,0.15);
-	border: 1px dashed rgba(127,127,127,0.3);
-}*/
-
 .segment:hover {
-	background-color: gold
+	background-color: gold;
 }
 
 .missing-id {
@@ -12,7 +7,7 @@
 }
 
 .missing-id:hover {
-	background-color: rgb(255,127,127)
+	background-color: rgb(255,127,127);
 }
 
 .not-translated {
@@ -20,5 +15,9 @@
 }
 
 .not-translated:hover {
-	background-color: rgb(127,127,255)
+	background-color: rgb(127,127,255);
+}
+
+.error {
+	background-color: rgb(255,127,127);
 }
