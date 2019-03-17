@@ -32,7 +32,7 @@
   "ast.draw.checklist.description": "",
   "ast.draw.checklist.name": "常にドローを使ってください",
   "ast.draw.checklist.requirement.name": "使用回数：<0/>",
-  "ast.draw.suggestions.cards.content": "",
+  "ast.draw.suggestions.cards.content": "殆どの場合アルカナを使わずに、長い間放置するのは無意味です。そうすれば次のドローするまで時間が遅延され、戦闘でドローする機会が少なくなります。他のアルカナに被れるなどの影響がない場合、ドローしてからなるべく早く使用して下さい。",
   "ast.draw.suggestions.cards.why": "",
   "ast.draw.title": "ドロー",
   "ast.earthly-star.suggestion.uncooked.content": "",
