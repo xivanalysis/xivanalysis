@@ -25,7 +25,7 @@
   "ast.buff-extensions.messages.targets-affected": "{numTargets, plural, one {# ターゲット} other {# ターゲット}} に効果が適用された",
   "ast.buff-extensions.title": "バフの延長",
   "ast.dots.requirement.uptime.name": "アクティブ率: <0/>",
-  "ast.dots.rule.description": "",
+  "ast.dots.rule.description": "占星術師は1つのDoTだけ持っているが、貴方のDPSから高い効率が持たれます。このDoTは30秒の持続時間を持っているので (<0/>) の再使用の待機時間と一致するので、貴方がアルカナを運用する上で、無駄遣いされる時間がないようにチェックする手段になります。また、このスキルはアビリティなので、貴方がGCDによる損がないように動かせます。貴方のDoTの残り時間を常にご確認下さい。",
   "ast.dots.rule.name": "常にDoTを切らさないようにしてください。",
   "ast.dots.suggestion.clip.content": "",
   "ast.dots.suggestion.clip.why": "早すぎた更新により{1}が失った回数が{0}回です。",
