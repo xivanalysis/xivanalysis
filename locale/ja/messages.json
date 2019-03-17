@@ -19,7 +19,7 @@
   "ast.arcana-undraw-usage.suggestions.content": "<0>アルカナ破棄、キープ破棄、ロイヤルロードスキルを使わないで下さい。</0> (<1/>) (<2/>) (<3/>) <4/>このスキルは能力使用に関連して不要なモーションと時間を消耗します。このスキル代わりに、バフ/デバフをマウスの右クリックで直接操作して消したり、マクロを使った方がいいです。",
   "ast.arcana-undraw-usage.suggestions.why": "{0} 回のアルカナ破棄が使用されました。",
   "ast.buff-extensions.messages.buffs-extended": "{numBuffs, number}個のバフが延長された",
-  "ast.buff-extensions.messages.explanation": "",
+  "ast.buff-extensions.messages.explanation": "このセクションは <0/>と <1/>によって延長されたバフが表示されます。<2/>*次は含まれません: <3/>",
   "ast.buff-extensions.messages.no-buffs": "バフ効果延長なし。",
   "ast.buff-extensions.messages.no-casts": "",
   "ast.buff-extensions.messages.targets-affected": "",
