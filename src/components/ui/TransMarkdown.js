@@ -88,8 +88,6 @@ class TransMarkdown extends PureComponent {
 			? i18n._(source).replace(/\\`/g, '`')
 			: typeof source === 'string'? source : (source.defaults || '')
 
-		console.log(source, finalSource)
-
 		return <ReactMarkdown
 			source={finalSource}
 			renderers={{
