@@ -4,6 +4,7 @@ import React from 'react'
 import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported, languageToEdition} from 'data/PATCHES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -103,7 +104,7 @@ export default class About extends Module {
 								>
 									<ContributorLabel
 										contributor={user}
-										detail={role && role.i18n_id ? <Trans id={role.i18n_id} defaults={role.text} /> : role}
+										detail={role && <NormalisedMessage message={role.text}/>}
 									/>
 								</div>
 							})}

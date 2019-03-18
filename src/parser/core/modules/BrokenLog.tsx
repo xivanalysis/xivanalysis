@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {i18nMark, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
