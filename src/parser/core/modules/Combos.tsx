@@ -1,6 +1,7 @@
 // If you can make it through this entire file without hitting semantic saturation of the word "combo", hats off to you. IT DOESN'T LOOK REAL ANYMORE.
 
-import {i18nMark, Plural, Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
@@ -31,8 +32,7 @@ export interface ComboIssue {
 
 export default class Combos extends Module {
 	static handle = 'combos'
-	static title = 'Combo Issues'
-	static i18n_id = i18nMark('core.combos.title') // tslint:disable-line:variable-name
+	static title = t('core.combos.title')`Combo Issues`
 	static displayOrder = DISPLAY_ORDER.COMBOS
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon

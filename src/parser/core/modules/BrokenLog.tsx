@@ -1,3 +1,4 @@
+import {t} from '@lingui/macro'
 import {i18nMark, Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -31,9 +32,7 @@ const EXPECTED_ABILITY_EVENTS = [
 
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'
-	static title = 'Broken Log'
-	// tslint:disable-next-line:variable-name
-	static i18n_id = i18nMark('core.broken-log.title')
+	static title = t('core.broken-log.title')`Broken Log`
 	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
 	static displayMode = DISPLAY_MODE.RAW
 
