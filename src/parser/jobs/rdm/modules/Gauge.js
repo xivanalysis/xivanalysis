@@ -1,3 +1,5 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import React, {Fragment} from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -6,7 +8,6 @@ import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {i18nMark, Trans} from '@lingui/react'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
@@ -153,7 +154,7 @@ class GaugeAction {
 
 export default class Gauge extends Module {
 		static handle = 'gauge'
-		static i18n_id = i18nMark('rdm.gauge.title')
+		static title = t('rdm.gauge.title')`Gauge`
 		static dependencies = [
 			'combatants',
 			'cooldowns',
