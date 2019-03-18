@@ -83,9 +83,12 @@ class TransMarkdown extends PureComponent {
 		const {i18n, source, renderers} = this.props
 
 		// i18n might not be ready yet, load the default as a fallback
+		// ridiculous .replace because lingui is pants on head and escaped the escape characters.
 		const finalSource = i18n
-			? i18n._(source)
+			? i18n._(source).replace(/\\`/g, '`')
 			: typeof source === 'string'? source : (source.defaults || '')
+
+		console.log(source, finalSource)
 
 		return <ReactMarkdown
 			source={finalSource}
