@@ -1,12 +1,14 @@
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {Trans, i18nMark, Plural} from '@lingui/react'
 
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {ActionLink} from 'components/ui/DbLink'
-import {DRAWN_ARCANA_USE} from './ArcanaGroups'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+import {DRAWN_ARCANA_USE} from './ArcanaGroups'
 
 // Time allowed to hold every time action occures (not sure if we want to implement this/what times to put)
 const EXCUSED_CARD_HOLD_DEFAULT = 1500
@@ -23,7 +25,7 @@ const CARD_LOSS_SEVERITY = {
 // TODO: Check that there is not already an aoe card in effect before casting another AOE card
 export default class Draw extends Module {
 	static handle = 'draw'
-	static i18n_id = i18nMark('ast.draw.title')
+	static title = t('ast.draw.title')`Draw`
 	static dependencies = [
 		'cooldowns',
 		'unableToAct',

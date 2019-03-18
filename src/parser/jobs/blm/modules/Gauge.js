@@ -1,6 +1,7 @@
 //I've heard it's cool to build your own job gauge.
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -24,7 +25,7 @@ const FLARE_MAX_HEART_CONSUMPTION = 3
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
-	static i18n_id = i18nMark('blm.gauge.title')
+	static title = t('blm.gauge.title')`Gauge`
 	static dependencies = [
 		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
