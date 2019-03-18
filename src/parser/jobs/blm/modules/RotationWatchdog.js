@@ -1,8 +1,9 @@
 // Handle parsing each rotation. Confirm rotations have at least 8 F4 per Convert cycle and 6 F4 per normal cycle (or 5 F4 for non-Heart cycle)
 // Flag rotations that do not and list those as warnings
 
+import {t} from '@lingui/macro'
 import React, {Fragment} from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -25,8 +26,7 @@ const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
-	static i18n_id = i18nMark('blm.rotation-watchdog.title')
-	static title = 'Rotation Issues'
+	static title = t('blm.rotation-watchdog.title')`Rotation Issues`
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
 	static dependencies = [
