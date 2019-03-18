@@ -49,11 +49,17 @@ const LINK_TYPES = {
 
 class TransMarkdown extends PureComponent {
 	static propTypes = {
-		id: PropTypes.string.isRequired,
 		i18n: PropTypes.shape({
 			_: PropTypes.func.isRequired,
 		}),
-		source: PropTypes.string.isRequired,
+		source: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.shape({
+				id: PropTypes.string.isRequired,
+				defaults: PropTypes.string,
+				values: PropTypes.object,
+			}),
+		]).isRequired,
 		renderers: PropTypes.object,
 		linkTarget: PropTypes.string,
 	}
@@ -74,13 +80,12 @@ class TransMarkdown extends PureComponent {
 	}
 
 	render() {
-		const {id, i18n, source, renderers} = this.props
+		const {i18n, source, renderers} = this.props
 
 		// i18n might not be ready yet, load the default as a fallback
-		let finalSource = source
-		if (i18n) {
-			finalSource = i18n._(id, {}, {defaults: source})
-		}
+		const finalSource = i18n
+			? i18n._(source)
+			: typeof source === 'string'? source : (source.defaults || '')
 
 		return <ReactMarkdown
 			source={finalSource}

@@ -501,7 +501,7 @@
   "rdm.procs.suggestions.overwritten.content": "Don't cast <0/> when you have <1/> or <2/> when you have <3/>",
   "rdm.procs.suggestions.overwritten.why": "{overWrittenFire, plural, one {# Verfire proc} other {# Verfire procs}}, and {overWrittenStone, plural, one {# Verstone proc} other {# Verstone procs}} were lost due to being overwritten.  This excludes procs overwritten from a forced use of <0/>",
   "rdm.procs.title": "rdm.procs.title",
-  "smn.about.description": "smn.about.description",
+  "smn.about.description": "\nThis analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.\n\nDue to the nature of how SMN plays, there may be a near _overwhelming_ number of suggestions showing up below. Don't fret it, just focus on one or two improvements at a time.\n\nIf you would like to learn more about SMN, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the \\`#smn_questions\\` channel.\n",
   "smn.about.description.warning": "While the analysis below should be reasonably accurate, this system is still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!",
   "smn.aetherflow.cast-time": "Cast Time",
   "smn.aetherflow.checklist.description": "SMN's entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.",
