@@ -512,7 +512,7 @@
   "smn.aetherflow.suggestions.fester.why": "{totalFesterPotencyLost} potency lost to {numBadFesters, plural, one {# cast} other {# casts}} of Fester on targets missing DoTs.",
   "smn.aetherflow.suggestions.painflare.content": "Avoid casting <0/> on a single target unless rushing a <1/>, as it deals less damage than <2/> per hit.",
   "smn.aetherflow.suggestions.painflare.why": "{numBadPainflares} single-target {numBadPainflares, plural, one {cast} other {casts}} of Painflare.",
-  "smn.aetherflow.title": "smn.aetherflow.title",
+  "smn.aetherflow.title": "Aetherflow",
   "smn.aetherflow.total-drift": "Total Drift",
   "smn.bahamut.ghost-disclaimer": "Bahamut actions can \"ghost\" - the action resolves, and appears to do damage, however no damage is actually applied to the target. <0>Yellow</0> highlighting has been applied to actions that likely ghosted, and <1>Red</1> to those that ghosted without a doubt.<2/>You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.",
   "smn.bahamut.title": "smn.bahamut.title",
