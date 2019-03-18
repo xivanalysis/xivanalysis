@@ -52,7 +52,7 @@
   "ast.sleeve-draw.suggestions.draw.content": "Using <0/> restarts the cooldown on <1/>, so you want to always use Sleeve Draw right after using Draw in order to get as many cards in as possible.",
   "ast.sleeve-draw.suggestions.draw.why": "{drawUsesMissedFromSleeveRounded, plural, one {# Draw} other {# Draws}} lost by having their cooldowns reset by Sleeve Draw.",
   "ast.sleeve-draw.title": "ast.sleeve-draw.title",
-  "blm.about.description": "This analyser aims to identify how you\\'re not actually casting [~action/FIRE_IV] as much as you think you are.",
+  "blm.about.description": "This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.",
   "blm.about.description.warning": "This isn't even remotely done.",
   "blm.gauge.suggestions.dropped-enochian.content": "Dropping <0/> may lead to lost <1/>, more clipping because of additional <2/> casts, unavailability of <3/> and <4/> or straight up missing out on the 10% damage bonus that <5/> provides.",
   "blm.gauge.suggestions.dropped-enochian.why": "{0} dropped Enochian {1, plural, one {buff} other {buffs}}.",

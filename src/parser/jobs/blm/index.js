@@ -6,7 +6,7 @@ import {Icon, Message} from 'semantic-ui-react'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import TransMarkdown from 'components/ui/TransMarkdown'
 
-const description = t('blm.about.description')`This analyser aims to identify how you\'re not actually casting [~action/FIRE_IV] as much as you think you are.`
+const description = t('blm.about.description')`This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.`
 
 export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-blm" */),
