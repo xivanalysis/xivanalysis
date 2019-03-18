@@ -550,7 +550,7 @@
   "smn.pets.suggestions.prefer-ifrit.why": "{0}% {1} uptime, Ifrit-Egi preferred.",
   "smn.pets.suggestions.titan.content": "Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.",
   "smn.pets.suggestions.titan.why": "{titanUptimePercent}% Titan-Egi uptime.",
-  "smn.pets.title": "smn.pets.title",
+  "smn.pets.title": "Pets",
   "smn.rouse.suggestions.wasted.content": "Avoid casting <0/> less than {0} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.",
   "smn.rouse.suggestions.wasted.why": "{0} of Rouse wasted.",
   "smn.ruin-ii.suggestions.issues.content": "<0/> is a DPS loss when not used to weave oGCDs or proc <1/>s. Prioritise casting <2/>.",
