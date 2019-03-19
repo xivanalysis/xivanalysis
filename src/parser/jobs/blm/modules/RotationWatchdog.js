@@ -179,13 +179,13 @@ export default class RotationWatchdog extends Module {
 		}
 
 		//Suggestions for ending UI in T3
-		if (this._UIEndingInT3) {
+		if (this._UIEndingInT3 && !this._missedF4sCauseEndingInT3) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.THUNDER_III.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.content">
 					Avoid ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
 				</Trans>,
-				severity: ((this._UIEndingInT3 > MAXALLOWEDT3FAILS || this._missedF4sCauseEndingInT3) ? SEVERITY.MEDIUM : SEVERITY.MINOR),
+				severity: (this._UIEndingInT3 > MAXALLOWEDT3FAILS ? SEVERITY.MEDIUM : SEVERITY.MINOR),
 				why: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.why">
 					{this._UIEndingInT3} Umbral Ice <Plural value={this._UIEndingInT3} one="phase" other="phases"/> ended with Thunder III.
 				</Trans>,
