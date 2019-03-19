@@ -39,7 +39,6 @@ export default class Buffs extends Module {
 	static title = 'Buffs and Stances'
 	static dependencies = [
 		'combatants',
-		'downtime',
 		'checklist',
 		'brokenLog',
 		'suggestions',
@@ -81,6 +80,7 @@ export default class Buffs extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.GRIT.id}, this._updateGritWindow)
+		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.BLOOD_PRICE.id}, this._updateGritWindow)
 		this.addHook(['applybuff', 'removebuff'], {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._updateDarksideWindow)
 		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DARKSIDE.id}, this._trackDarksideCasts)
 		this.addHook(['cast'], {by: 'player', abilityId: ACTIONS.DELIRIUM.id}, this._checkDeliriumCast)
@@ -112,6 +112,13 @@ export default class Buffs extends Module {
 			}
 
 			currentWindow.end = event.timestamp
+		} else if (event.type === 'cast' && event.ability.guid === ACTIONS.BLOOD_PRICE.id) {
+			// Blood price is cast - check to see if Grit has already been marked as active
+			if (this._gritWindows.length === 0) {
+				// Grit not tracked as active, normalize start time to beginning of fight
+				const windowStart = this.parser.fight.start_time
+				this._gritWindows.push({start: windowStart, end: null})
+			}
 		}
 	}
 
@@ -186,7 +193,6 @@ export default class Buffs extends Module {
 		// -----
 		// fight durations
 		const rawFightDuration = this.parser.fightDuration
-		const fightDuration = rawFightDuration - this.downtime.getDowntime()
 		//calculate actual buff durations
 		const fightDarksideDuration = this._calculateActiveTime(this._darksideWindows)
 		const fightDarksidePercent = Math.min(((fightDarksideDuration / rawFightDuration) * 100), 100)
@@ -202,7 +208,7 @@ export default class Buffs extends Module {
 		}))
 
 		const fightGritDuration = this._calculateActiveTime(this._gritWindows)
-		const fightNoGritPercent = Math.min((100 - ((fightGritDuration / fightDuration) * 100)), 100)
+		const fightNoGritPercent = Math.min((100 - ((fightGritDuration / rawFightDuration) * 100)), 100)
 		this.checklist.add(new Rule({
 			name: <Fragment>No <ActionLink {...ACTIONS.GRIT}/></Fragment>,
 			description: <Fragment>Grit is required for enmity openers and some points of excessive damage, but drastically reduces damage output.</Fragment>,

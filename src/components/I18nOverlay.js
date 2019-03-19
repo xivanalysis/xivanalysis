@@ -1,13 +1,46 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {Popup, List} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
-
+import classNames from 'classnames'
 import _ from 'lodash'
+import {observable, action} from 'mobx'
+import {observer} from 'mobx-react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import {Popup, List, Icon} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import styles from './I18nOverlay.module.css'
 
-export default class I18nOverlay extends Component {
+@observer
+class I18nErrorBoundary extends React.Component {
+	static propTypes = {
+		id: PropTypes.string,
+		children: PropTypes.node,
+	}
+
+	@observable.ref didError = false
+
+	@action
+	componentDidCatch() {
+		this.didError = true
+	}
+
+	render() {
+		if (this.didError) {
+			const {id} = this.props
+			return (
+				<span className={styles.error}>
+					<Icon name="warning sign"/>
+					<Trans id="core.i18n.translation-error" __bypassOverlay={true}>
+						An error occured while loading the translation of "{id}".
+					</Trans>
+				</span>
+			)
+		}
+
+		return this.props.children
+	}
+}
+
+export default class I18nOverlay extends React.Component {
 	static propTypes = {
 		enabled: PropTypes.bool.isRequired,
 		language: PropTypes.string.isRequired,
@@ -52,20 +85,10 @@ export default class I18nOverlay extends Component {
 	}
 
 	componentDidMount() {
-		const {enabled, language} = this.props
+		const {language} = this.props
 		this.loadCatalog(language)
 
-		if (enabled) {
-			this.wrapTrans()
-		}
-	}
-
-	componentDidUpdate() {
-		if (this.props.enabled) {
-			this.wrapTrans()
-		} else {
-			this.unwrapTrans()
-		}
+		this.wrapTrans()
 	}
 
 	componentWillUnmount() {
@@ -161,21 +184,40 @@ export default class I18nOverlay extends Component {
 
 		Trans._wrapped = this
 
-		const t = this
+		const self = this
 		const old_render = this.old_render = Trans.prototype.render
 
+		/* eslint-disable react/prop-types */
 		Trans.prototype.render = function() {
 			const content = old_render.call(this)
-			if (! content || !t.props.enabled) {
-				return content
+			if (!content || this.props.__bypassOverlay) { return content }
+
+			const wrappedContent = (
+				<I18nErrorBoundary id={this.props.id}>{content}</I18nErrorBoundary>
+			)
+
+			if (!self.props.enabled) {
+				return wrappedContent
 			}
 
-			const {id, translated, tooltip} = t.renderTooltip(this)
+			const {id, translated, tooltip} = self.renderTooltip(this)
 
-			return <Popup trigger={<span className={`${styles.segment} ${translated ? '' : styles.notTranslated} ${id ? '' : styles.missingId}`}>{content}</span>} inverted>{
-				tooltip
-			}</Popup>
+			return (
+				<Popup
+					trigger={(
+						<span className={classNames(
+							styles.segment,
+							!translated && styles.notTranslated,
+							!id && styles.missingId,
+						)}>{wrappedContent}</span>
+					)}
+					inverted
+				>
+					{tooltip}
+				</Popup>
+			)
 		}
+		/* eslint-enable react/prop-types */
 
 		this.tryUpdate()
 	}

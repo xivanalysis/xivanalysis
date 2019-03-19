@@ -81,23 +81,24 @@ class I18nMenu extends Component {
 						className={styles.menuItem}
 					/>)}
 					<Dropdown.Divider />
-					{DEBUG?
-						<Dropdown.Item
-							onClick={this.toggleOverlay}
-							icon={i18nStore.overlay? 'eye slash' : 'eye'}
-							text={i18nStore.overlay? 'Hide Overlay' : 'Show Overlay'}
-						/> :
-						<Dropdown.Item
-							as="a"
-							href="https://crowdin.com/project/xivanalysis"
-							target="_blank"
-						>
-							<Image src={crowdinLogo} className={styles.crowdinLogo}/>
-							<Trans id="core.i18n.help-translate">
+					<Dropdown.Item
+						onClick={this.toggleOverlay}
+						icon={i18nStore.overlay? 'eye slash' : 'eye'}
+						text={i18nStore.overlay
+							? <Trans id="core.i18n.hide-overlay">Hide i18n overlay</Trans>
+							: <Trans id="core.i18n.show-overlay">Show i18n overlay</Trans>
+						}
+					/>
+					<Dropdown.Item
+						as="a"
+						href="https://crowdin.com/project/xivanalysis"
+						target="_blank"
+					>
+						<Image src={crowdinLogo} className={styles.crowdinLogo}/>
+						<Trans id="core.i18n.help-translate">
 								Help translate!
-							</Trans>
-						</Dropdown.Item>
-					}
+						</Trans>
+					</Dropdown.Item>
 				</Dropdown.Menu>
 			</Dropdown>
 

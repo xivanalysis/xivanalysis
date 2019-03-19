@@ -8,8 +8,6 @@ import {Container, Loader} from 'semantic-ui-react'
 import {I18nStore} from 'store/i18n'
 import I18nOverlay from './I18nOverlay'
 
-const DEBUG = process.env.NODE_ENV === 'development'
-
 const cleanMessages = messages => {
 	for (const [key, val] of Object.entries(messages)) {
 		if (key === val) {
@@ -59,7 +57,7 @@ class I18nLoader extends React.Component {
 			await import(
 				/* webpackMode: 'lazy' */
 				/* webpackChunkName: 'nv-intl-polyfill-[index]' */
-				/* webpackInclude: /(?:de|en|fr|ja).js/ */
+				/* webpackInclude: /(?:de|en|fr|ja|ko|zh).js/ */
 				`intl/locale-data/jsonp/${language}.js`
 			)
 		}
@@ -125,7 +123,7 @@ class I18nLoader extends React.Component {
 		}
 
 		return <I18nProvider language={language} catalogs={this.catalogs}>
-			{DEBUG && <I18nOverlay enabled={i18nStore.overlay} language={language} />}
+			<I18nOverlay enabled={i18nStore.overlay} language={language} />
 			{this.props.children}
 		</I18nProvider>
 	}

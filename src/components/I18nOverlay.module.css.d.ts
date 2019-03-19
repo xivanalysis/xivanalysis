@@ -2,3 +2,4 @@
 export const segment: string;
 export const missingId: string;
 export const notTranslated: string;
+export const error: string;
