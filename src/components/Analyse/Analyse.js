@@ -127,7 +127,7 @@ class Analyse extends Component {
 				>
 					<JobIcon job={job}/>
 					<Header.Content>
-						<Trans id={job.i18n_id} defaults={job.name} />
+						<NormalisedMessage message={job.name}/>
 						<Header.Subheader>
 							<NormalisedMessage message={ROLES[job.role].name}/>
 						</Header.Subheader>
