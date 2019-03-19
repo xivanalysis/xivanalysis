@@ -56,7 +56,6 @@ export default class Kaiten extends Module {
 			this._missedKaitenCasts += 1 //Everytime Midare or Higan is used without kaiten, this will go up by 1.
 		}
 	}
-
 	_onComplete() {
 		if (this._badKaitenCasts > 0) {
 			this.suggestions.add(new TieredSuggestion({
