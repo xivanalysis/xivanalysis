@@ -1,3 +1,5 @@
+import {MessageDescriptor} from '@lingui/core'
+import {t} from '@lingui/macro'
 import {i18nMark} from '@lingui/react'
 import {ActorType} from 'fflogs'
 import {addExtraIndex} from 'utilities'
@@ -5,7 +7,7 @@ import {addExtraIndex} from 'utilities'
 export interface Role {
 	id: number
 	i18n_id: string
-	name: string
+	name: MessageDescriptor
 	colour: string
 }
 
@@ -19,51 +21,44 @@ const colors = {
 const roleData = {
 	TANK: {
 		id: 1,
-		i18n_id: i18nMark('game.roles.tank'),
-		name: 'Tank',
+		name: t('game.roles.tank')`Tank`,
 		colour: colors.tank,
 	},
 
 	HEALER: {
 		id: 2,
-		i18n_id: i18nMark('game.roles.healer'),
-		name: 'Healer',
+		name: t('game.roles.healer')`Healer`,
 		colour: colors.healer,
 	},
 
 	MELEE: {
 		id: 3,
-		i18n_id: i18nMark('game.roles.melee-dps'),
-		name: 'Melee DPS',
+		name: t('game.roles.melee-dps')`Melee DPS`,
 		colour: colors.dps,
 	},
 
 	PHYSICAL_RANGED: {
 		id: 4,
-		i18n_id: i18nMark('game.roles.physical-ranged-dps'),
-		name: 'Physical Ranged DPS',
+		name: t('game.roles.physical-ranged-dps')`Physical Ranged DPS`,
 		colour: colors.dps,
 	},
 
 	MAGICAL_RANGED: {
 		id: 5,
-		i18n_id: i18nMark('game.roles.magical-ranged-dps'),
-		name: 'Magical Ranged DPS',
+		name: t('game.roles.magical-ranged-dps')`Magical Ranged DPS`,
 		colour: colors.dps,
 	},
 
 	// Not really roles but w/e
 	OUTDATED: {
 		id: 99,
-		i18n_id: i18nMark('game.roles.outdated'),
-		name: 'Outdated',
+		name: t('game.roles.outdated')`Outdated`,
 		colour: colors.misc,
 	},
 
 	UNSUPPORTED: {
 		id: 100,
-		i18n_id: i18nMark('game.roles.unsupported'),
-		name: 'Unsupported',
+		name: t('game.roles.unsupported')`Unsupported`,
 		colour: colors.misc,
 	},
 }

@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import {List, Message, Segment} from 'akkd'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getDataBy} from 'data'
 import JOBS, {Role, ROLES} from 'data/JOBS'
 import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
@@ -143,7 +144,7 @@ class CombatantList extends React.Component<Props> {
 		return (
 			<List color={role.colour}>
 				<List.Item style={{background, color}}>
-					<Trans id={role.i18n_id} defaults={role.name} render="strong"/>
+					<strong><NormalisedMessage message={role.name}/></strong>
 				</List.Item>
 
 				{friends.map(friend => <React.Fragment key={friend.id}>
