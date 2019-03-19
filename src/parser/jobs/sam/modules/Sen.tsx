@@ -35,7 +35,6 @@ const KENKI_PER_SEN = 20
 
 export default class Sen extends Module {
 	static handle = 'sen'
-	static i18n_id = i18nMark('sam.sen.title')
 
 	@dependency private kenki!: Kenki
 	@dependency private suggestions!: Suggestions
