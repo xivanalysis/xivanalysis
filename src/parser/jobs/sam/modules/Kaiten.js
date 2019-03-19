@@ -1,4 +1,5 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -28,6 +29,8 @@ const KAITEN_GCDS = {
 
 export default class Kaiten extends Module {
 	static handle = 'kaiten'
+	static title = 'Kaiten'
+	static i18n_id = i18nMark('sam.kaiten.title')
 	static dependencies = [
 		'combatants',
 		'suggestions',
@@ -58,34 +61,36 @@ export default class Kaiten extends Module {
 		if (this._badKaitenCasts > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.HISSATSU_KAITEN.icon,
-				content: <Fragment>
-				Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.IAIJUTSU}/>s moves. These actions are worth it because of the potency gain per kenki spent.
-				</Fragment>,
+				content: <Trans id = "sam.kaiten.suggestion.badkaiten.content">
+				Avoid using <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on any GCDs besides <ActionLink {...ACTIONS.IAIJUTSU}/> moves. These actions are worth it because of the potency gain per kenki spent.
+				</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					3: SEVERITY.MEDIUM,
 					5: SEVERITY.MAJOR,
 				},
-				why: <Fragment>
-					You used Kaiten {this._badKaitenCasts} time{this._badKaitenCasts !== 1 && 's'} on non-optimal GCDs.
-				</Fragment>,
+				why: <Trans id ="sam.suggestion.badkaiten.why">
+					You used Kaiten  <Plural value={this._badKaitenCasts} one="# time" other="# times"/> on non-optimal GCDs.
+				</Trans>,
+				value: this._badKaitenCasts,
 			}))
 		}
 
 		if (this._missedKaitenCasts > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.HISSATSU_KAITEN.icon,
-				content: <Fragment>
+				content: <Trans id = "sam.kaiten.suggestion.missedkaiten.content">
                                 Always use <ActionLink {...ACTIONS.HISSATSU_KAITEN}/> on <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> and <ActionLink {...ACTIONS.HIGANBANA}/>. The gain on these actions from kaiten is too great to miss.
-				</Fragment>,
+				</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					3: SEVERITY.MEDIUM,
 					5: SEVERITY.MAJOR,
 				},
-				why: <Fragment>
-                                        You failed to Kaiten {this._missedKaitenCasts} time{this._missedKaitenCasts !== 1 && 's'} on either  on <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> and/or <ActionLink {...ACTIONS.HIGANBANA}/>
-				</Fragment>,
+				why: <Trans id = "sam.kaiten.suggestion.missedkaiten.why">
+                                        You failed to Kaiten <Plural value={this._missedKaitenCasts} one="# time" other="# times"/> on either  on <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> and/or <ActionLink {...ACTIONS.HIGANBANA}/>
+				</Trans>,
+				value: this._missedKaitenCasts,
 			}))
 		}
 

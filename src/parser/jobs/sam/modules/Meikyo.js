@@ -1,4 +1,6 @@
-import React, {Fragment} from 'react'
+import React from 'react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
+
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -12,6 +14,7 @@ const MAX_MEIKYO_GCDS = 3
 
 export default class Meikyo extends Module {
 	static handle = 'meikyo'
+	static i18n_id = i18nMark('sam.meikyo.title')
 	static dependencies = [
 		'combatants',
 		'suggestions',
@@ -56,34 +59,34 @@ export default class Meikyo extends Module {
 		if (this._badMeikyoCasts > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
-				content: <Fragment>
+				content: <Trans id= "sam.meikyo.suggestions.badmeikyo.content">
 				While under the effects of  <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> you should only use <ActionLink {...ACTIONS.GEKKO}/>, <ActionLink {...ACTIONS.KASHA}/>, and <ActionLink {...ACTIONS.YUKIKAZE}/> - these actions allow you to gather Sens faster.
-				</Fragment>,
+				</Trans>,
 				tiers: {
 					1: SEVERITY.MEDIUM,
 					2: SEVERITY.MAJOR,
 				},
 				value: this._badMeikyoCasts,
-				why: <Fragment>
-					You did not use sen moves {this._badMeikyoCasts} time{this._badMeikyoCasts !== 1 && 's'} under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
-				</Fragment>,
+				why: <Trans id = "sam.meikyo.suggestions.badmeikyo.why">
+					You did not use sen moves <Plural value ={this._badMeikyoCasts} one="# time" other="# times" /> under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
+				</Trans>,
 			}))
 		}
 
 		if (this._missedMeikyoCasts > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MEIKYO_SHISUI.icon,
-				content: <Fragment>
+				content: <Trans id="sam.meikyo.suggestions.missedmeikyo.content">
                                 Always make sure to get {MAX_MEIKYO_GCDS} GCDs under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
-				</Fragment>,
+				</Trans>,
 				tiers: {
 					1: SEVERITY.MEDIUM,
 					2: SEVERITY.MAJOR,
 				},
 				value: this._missedMeikyoCasts,
-				why: <Fragment>
-                                        You missed {this._missedMeikyoCasts} GCD{this._missedMeikyoCasts !== 1 && 's'} under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
-				</Fragment>,
+				why: <Trans id= "sam.meikyo.suggestions.missedmeikyo.why">
+                                        You missed <Plural value={this._missedMeikyoCasts} one="# GCD" other= "# GCDs" /> under the effect of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/>.
+				</Trans>,
 			}))
 		}
 
