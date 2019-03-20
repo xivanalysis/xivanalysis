@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 import vis from 'vis/dist/vis-timeline-graph2d.min'
@@ -17,7 +16,8 @@ export default class Timeline extends Module {
 	static displayOrder = DISPLAY_ORDER.TIMELINE
 	static displayMode = DISPLAY_MODE.FULL
 
-	static title = t('core.timeline.title')`Timeline`
+	static i18n_id = i18nMark('core.timeline.title')
+	static title = 'Timeline'
 
 	// Data to be displayed on the timeline
 	_groups = []

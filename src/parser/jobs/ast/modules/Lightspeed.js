@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -17,11 +16,12 @@ const LIGHTSPEED_CAST_TIME_MOD = -2.5
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
+	static i18n_id = i18nMark('ast.lightspeed.title')
 	static dependencies = [
 		'castTime',
 		// 'suggestions',
 	]
-	static title = t('ast.lightspeed.title')`Lightspeed`
+	static title = 'Lightspeed'
 	static displayOrder = DISPLAY_ORDER.LIGHTSPEED
 
 	_active = false

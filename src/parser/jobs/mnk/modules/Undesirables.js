@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -21,7 +20,8 @@ export default class Undesirables extends Module {
 		'suggestions',
 	]
 
-	static title = t('mnk.undesirables.title')`Undesirable Skills`
+	static title = 'Undesirable Skills'
+	static i18n_id = i18nMark('mnk.undesirables.title')
 	static displayOrder = DISPLAY_ORDER.UNDESIRABLES
 
 	_undesirables = []

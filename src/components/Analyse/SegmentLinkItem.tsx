@@ -1,10 +1,13 @@
+import {Trans} from '@lingui/react'
 import classnames from 'classnames'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
 import _ from 'lodash'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
+import {
+	Menu,
+} from 'semantic-ui-react'
 import styles from './SegmentLinkItem.module.css'
-import {Consumer} from './SegmentPositionContext'
+import {Consumer, Context} from './SegmentPositionContext'
 
 interface Props {
 	index: number
@@ -20,7 +23,7 @@ export default function SegmentLinkItem({result, index}: Props) {
 			)}
 			onClick={() => scrollToId(index)}
 		>
-			<NormalisedMessage message={result.name} id={result.i18n_id}/>
+			<Trans id={result.i18n_id} defaults={result.name}/>
 		</div>
 	)}</Consumer>
 }

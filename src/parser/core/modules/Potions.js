@@ -1,6 +1,5 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
+import {i18nMark, Trans} from '@lingui/react'
 
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -16,7 +15,7 @@ export default class Potions extends Module {
 		'suggestions',
 	]
 
-	static title = t('core.potions.title')`Potions`
+	static i18n_id = i18nMark('core.potions.title')
 
 	_start = null
 	_usingShortPotion = false

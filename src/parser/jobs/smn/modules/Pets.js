@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -43,7 +42,7 @@ const NO_PET_SEVERITY = {
 
 export default class Pets extends Module {
 	static handle = 'pets'
-	static title = t('smn.pets.title')`Pets`
+	static i18n_id = i18nMark('smn.pets.title')
 	static dependencies = [
 		'statistics',
 		'suggestions',

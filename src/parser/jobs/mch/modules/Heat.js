@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -46,7 +45,8 @@ const OVERHEAT_GCD_ERROR = 0
 
 export default class Heat extends Module {
 	static handle = 'heat'
-	static title = t('mch.heat.title')`Overheat Windows`
+	static i18n_id = i18nMark('mch.heat.title')
+	static title = 'Overheat Windows'
 	static dependencies = [
 		'ammo',
 		'suggestions',

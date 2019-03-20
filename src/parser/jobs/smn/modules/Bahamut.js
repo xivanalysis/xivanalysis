@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -28,7 +27,7 @@ const GHOST_CLASSNAME = {
 
 export default class Bahamut extends Module {
 	static handle = 'bahamut'
-	static title = t('smn.bahamut.title')`Bahamut`
+	static i18n_id = i18nMark('smn.bahamut.title')
 	static dependencies = [
 		'gauge',
 	]

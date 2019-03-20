@@ -1,9 +1,12 @@
-import {t} from '@lingui/macro'
+import {i18nMark} from '@lingui/react'
 
 const TERMS = {
 	PROC: {
-		text: t('glossary.proc.title')`proc`,
-		description: t('glossary.proc.description')`Proc is a term used in gaming to refer to an event (a "procedure") that is triggered under certain circumstances.
+		i18n_id: i18nMark('glossary.proc.title'),
+		text: 'proc',
+
+		i18n_description: i18nMark('glossary.proc.description'),
+		description: `Proc is a term used in gaming to refer to an event (a "procedure") that is triggered under certain circumstances.
 
 For example, [~action/VERTHUNDER] has a 50% chance of triggering the status [~status/VERFIRE_READY] when cast.`,
 	},

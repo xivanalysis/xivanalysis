@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -29,7 +28,8 @@ export default class RiddleOfFire extends Module {
 		'suggestions',
 	]
 
-	static title = t('mnk.rof.title')`Riddle of Fire`
+	static title = 'Riddle of Fire'
+	static i18n_id = i18nMark('mnk.rof.title')
 	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
 	_active = false

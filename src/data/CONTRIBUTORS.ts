@@ -1,5 +1,4 @@
-import {MessageDescriptor} from '@lingui/core'
-import {t} from '@lingui/macro'
+import {i18nMark} from '@lingui/react'
 import JOBS, {Job} from './JOBS'
 
 export interface Contributor {
@@ -120,18 +119,22 @@ const CONTRIBUTORS = {
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 
 export interface Role {
-	text: MessageDescriptor
+	i18n_id: string
+	text: string
 }
 
 const roleData = {
 	MAINTAINER: {
-		text: t('core.role.maintainer')`Maintainer`,
+		i18n_id: i18nMark('core.role.maintainer'),
+		text: 'Maintainer',
 	},
 	THEORYCRAFT: {
-		text: t('core.role.theorycraft')`Theorycraft`,
+		i18n_id: i18nMark('core.role.theorycraft'),
+		text: 'Theorycraft',
 	},
 	DEVELOPER: {
-		text: t('core.role.developer')`Developer`,
+		i18n_id: i18nMark('core.role.developer'),
+		text: 'Developer',
 	},
 }
 

@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Header, Message} from 'semantic-ui-react'
 
@@ -43,7 +42,8 @@ const BUFF_GCD_ERROR = 0
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
-	static title = t('drg.buffs.title')`Blood for Blood & Dragon Sight`
+	static i18n_id = i18nMark('drg.buffs.title')
+	static title = 'Blood for Blood & Dragon Sight'
 	static dependencies = [
 		'checklist',
 		'combatants',

@@ -1,10 +1,11 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
+// import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // Tiny module to count the number of early detonations on Earthly Star.
@@ -17,7 +18,8 @@ const UNCOOKED_SEVERITY = {
 
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
-	static title = t('ast.earthly-star.title')`'Earthly Star'`
+	static title = 'Earthly Star'
+	static i18n_id = i18nMark('ast.earthly-star.title')
 	static dependencies = [
 		'suggestions',
 	]

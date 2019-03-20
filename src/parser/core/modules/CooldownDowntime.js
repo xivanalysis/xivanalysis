@@ -1,18 +1,18 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
+import {i18nMark, Trans} from '@lingui/react'
 
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
-	static title = t('core.cooldowndowntime.title')`Cooldown Downtime`
+	static title = 'CooldownDownTime'
 	static dependencies = [
 		'cooldowns',
 		'checklist',
 	]
+	static i18n_id = i18nMark('core.cooldowndowntime.title')
 
 	constructor(...args) {
 		super(...args)

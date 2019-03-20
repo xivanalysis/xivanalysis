@@ -1,7 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
-import {Table, Button} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -9,6 +6,8 @@ import STATUSES, {getStatus} from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import Module from 'parser/core/Module'
+import {i18nMark, Trans} from '@lingui/react'
+import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LL_BUFFS = [
@@ -18,7 +17,8 @@ const LL_BUFFS = [
 
 export default class Leylines extends Module {
 	static handle = 'leylines'
-	static title = t('blm.leylines.title')`Ley Lines`
+	static i18n_id = i18nMark('blm.leylines.title')
+	static title = 'Ley Lines'
 	static displayOrder = DISPLAY_ORDER.LEY_LINES
 
 	static dependencies = [

@@ -1,7 +1,7 @@
-import {MessageDescriptor} from '@lingui/core'
-import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
+
+import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
 import Parser from './Parser'
 
 export enum DISPLAY_ORDER {
@@ -87,7 +87,7 @@ export default class Module {
 		this._handle = value
 	}
 
-	private static _title: string | MessageDescriptor
+	private static _title: string
 	static get title() {
 		if (!this._title) {
 			this._title = this.handle.charAt(0).toUpperCase() + this.handle.slice(1)

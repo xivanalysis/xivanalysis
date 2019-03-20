@@ -1,6 +1,5 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
 import React from 'react'
+import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
@@ -32,7 +31,8 @@ export default class Weaving extends Module {
 		'suggestions',
 	]
 
-	static title = t('core.weaving.title')`Weaving Issues`
+	static i18n_id = i18nMark('core.weaving.title')
+	static title = 'Weaving Issues'
 
 	_weaves = []
 	_ongoingCastEvent = null

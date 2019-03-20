@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, i18nMark, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -18,11 +17,12 @@ const CORRECT_GCDS = [
 const possibleGcds = 5
 
 export default class InnerRelease extends Module {
+	static i18n_id = i18nMark('war.ir.title')
 	static handle = 'ir'
 	static dependencies = [
 		'suggestions',
 	]
-	static title = t('war.ir.title')`Inner Release Usage`
+	static title = 'Inner Release Usage'
 
 	_active = false
 	_ir = {}

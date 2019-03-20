@@ -1,5 +1,5 @@
-import {t} from '@lingui/macro'
 import React from 'react'
+import {i18nMark} from '@lingui/react'
 
 import Rule from './Rule'
 import ChecklistComponent from './Component'
@@ -8,9 +8,10 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 export default class Checklist extends Module {
 	static handle = 'checklist'
-	static title = t('core.checklist.title')`Checklist`
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
 	static displayMode = DISPLAY_MODE.FULL
+	static i18n_id = i18nMark('core.checklist.title')
+	static title = 'Checklist'
 
 	_rules = []
 

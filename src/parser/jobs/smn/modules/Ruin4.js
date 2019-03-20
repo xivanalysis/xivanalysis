@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -38,12 +37,13 @@ const OVERAGE_SEVERITY = {
 
 export default class Ruin4 extends Module {
 	static handle = 'ruin4'
+	static i18n_id = i18nMark('smn.ruin-iv.title')
 	static dependencies = [
 		'cooldowns',
 		'downtime',
 		'suggestions',
 	]
-	static title = t('smn.ruin-iv.title')`Ruin IV`
+	static title = 'Ruin IV'
 	static displayOrder = DISPLAY_ORDER.RUIN_IV
 
 	_procChances = 0

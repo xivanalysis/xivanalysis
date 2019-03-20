@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -22,7 +21,8 @@ const NON_OVERHEATED_GCD_THRESHOLD = 2
 
 export default class Wildfire extends Module {
 	static handle = 'wildfire'
-	static title = t('mch.wildfire.title')`Wildfire`
+	static i18n_id = i18nMark('mch.wildfire.title')
+	static title = 'Wildfire'
 	static dependencies = [
 		'brokenLog',
 		'enemies',

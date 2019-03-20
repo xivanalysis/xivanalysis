@@ -9,7 +9,6 @@ import {
 
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
 import JOBS, {ROLES} from 'data/JOBS'
 import {Conductor} from 'parser/Conductor'
 import {ReportStore} from 'store/report'
@@ -127,9 +126,9 @@ class Analyse extends Component {
 				>
 					<JobIcon job={job}/>
 					<Header.Content>
-						<NormalisedMessage message={job.name}/>
+						<Trans id={job.i18n_id} defaults={job.name} />
 						<Header.Subheader>
-							<NormalisedMessage message={ROLES[job.role].name}/>
+							<Trans id={ROLES[job.role].i18n_id} defaults={ROLES[job.role].name} />
 						</Header.Subheader>
 					</Header.Content>
 				</Header>}

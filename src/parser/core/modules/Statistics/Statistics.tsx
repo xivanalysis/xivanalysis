@@ -1,4 +1,4 @@
-import {t} from '@lingui/macro'
+import {i18nMark} from '@lingui/core'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
@@ -18,7 +18,7 @@ export interface Statistic {
 export class Statistics extends Module {
 	static handle = 'statistics'
 	// tslint:disable-next-line:variable-name
-	static title = t('core.statistics.title')`Statistics`
+	static i18n_id = i18nMark('core.statistics.title')
 	static displayOrder = DISPLAY_ORDER.STATISTICS
 	static displayMode = DISPLAY_MODE.RAW
 

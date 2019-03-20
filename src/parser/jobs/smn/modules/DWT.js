@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -38,6 +37,7 @@ const MISSED_GCD_SEVERITY = {
 
 export default class DWT extends Module {
 	static handle = 'dwt'
+	static i18n_id = i18nMark('smn.dwt.title')
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
 		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
@@ -47,7 +47,7 @@ export default class DWT extends Module {
 		'gcd',
 		'suggestions',
 	]
-	static title = t('smn.dwt.title')`Dreadwyrm Trance`
+	static title = 'Dreadwyrm Trance'
 	static displayOrder = DISPLAY_ORDER.DWT
 
 	_active = false

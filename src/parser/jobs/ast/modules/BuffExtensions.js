@@ -1,20 +1,19 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
-
-import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
+import {Trans, i18nMark, Plural} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
+// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
 import ACTIONS from 'data/ACTIONS'
-import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
+import JOBS from 'data/JOBS'
+import {ROYAL_ROAD_STATES, HELD_ARCANA, DRAWN_ARCANA} from './ArcanaGroups'
 import Module from 'parser/core/Module'
 
-import {ROYAL_ROAD_STATES, HELD_ARCANA, DRAWN_ARCANA} from './ArcanaGroups'
 import BuffList from './BuffList'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-
 import styles from './BuffExtensions.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const IGNORE_STATUSES = [
 	STATUSES.PROTECT.id,
@@ -33,7 +32,8 @@ const STATUS_MIN_ACTIVE_TIME = 0
 // TODO: Make some inference on their CO and TD usage for the suggestions panel - Sushi
 export default class BuffExtensions extends Module {
 	static handle = 'buffextensions'
-	static title = t('ast.buff-extensions.title')`Buff Extensions`
+	static title = 'Buff Extensions'
+	static i18n_id = i18nMark('ast.buff-extensions.title')
 	static displayOrder = DISPLAY_ORDER.BUFF_EXTENSIONS
 	static dependencies = [
 		'combatants',

@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -60,7 +59,8 @@ const GCD_LENGTH = 2500
 
 export default class RotationWatchdog extends Module {
 	static handle = 'rotation'
-	static title = t('drg.rotation.title')`Rotational Issues`
+	static i18n_id = i18nMark('drg.rotation.title')
+	static title = 'Rotational Issues'
 	static dependencies = [
 		'downtime',
 	]

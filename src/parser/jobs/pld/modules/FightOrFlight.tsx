@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {i18nMark, Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -79,7 +78,8 @@ class FightOrFlightErrorResult {
 
 export default class FightOrFlight extends Module {
 	static handle = 'fightorflight'
-	static title = t('pld.fightorflight.title')`Fight Or Flight Usage`
+	static title = 'Fight Or Flight Usage'
+	static i18n_id = i18nMark('pld.fightorflight.title') // tslint:disable-line:variable-name
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline

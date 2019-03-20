@@ -1,15 +1,16 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 import _ from 'lodash'
 
-import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import STATUSES, {getStatus} from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
 import {ARCANA_USE, EXPANDED_ARCANA_USE, DRAWN_ARCANA_USE, HELD_ARCANA_USE, ROYAL_ROAD_STATES, DRAWN_ARCANA, HELD_ARCANA} from './ArcanaGroups'
+
+import Module from 'parser/core/Module'
+
+import {ActionLink} from 'components/ui/DbLink'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Trans, i18nMark, Plural} from '@lingui/react'
+
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
@@ -57,7 +58,8 @@ export default class ArcanaTracking extends Module {
 		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'suggestions',
 	]
-	static title = t('ast.arcana-tracking.title')`Arcana Tracking`
+	static title = 'Arcana Tracking'
+	static i18n_id = i18nMark('ast.arcana-tracking.title')
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	_cardStateLog = [{

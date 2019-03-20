@@ -75,6 +75,7 @@
   "blm.notcasting.title": "",
   "blm.ogcd-downtime.ogcd-cd-buffer": "ランダム要素は分析の範囲内に計算を含めてあるため、アクションやアビリティの抱えられる可能な時間を一回につき{0}です。",
   "blm.ogcd-downtime.ogcd-cd-metric": "",
+  "blm.ogcd-downtime.title": "アビリティ・リキャスト",
   "blm.procs.suggestions.dropped-f3ps.content": "",
   "blm.procs.suggestions.dropped-f3ps.why": "",
   "blm.procs.suggestions.dropped-t3ps.content": "",

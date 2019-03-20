@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Trans, Plural, i18nMark} from '@lingui/react'
 import React from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -20,7 +19,8 @@ export default class InternalRelease extends Module {
 		'suggestions',
 	]
 
-	static title = t('mnk.ir.title')`Internal Release`
+	static title = 'Internal Release'
+	static i18n_id = i18nMark('mnk.ir.title')
 	static displayOrder = DISPLAY_ORDER.INTERNAL_RELEASE
 
 	_active = false

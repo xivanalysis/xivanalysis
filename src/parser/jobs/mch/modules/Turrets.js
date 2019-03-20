@@ -1,5 +1,4 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
@@ -38,7 +37,7 @@ const CHART_COLORS = {
 
 export default class Turrets extends Module {
 	static handle = 'turrets'
-	static title = t('mch.turrets.title')`Turrets`
+	static i18n_id = i18nMark('mch.turrets.title')
 	static dependencies = [
 		'suggestions',
 	]

@@ -1,12 +1,11 @@
-import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+import {Trans, i18nMark} from '@lingui/react'
 import TransMarkdown from 'components/ui/TransMarkdown'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 
-const description = t('whm.about.description')`
+const description = `
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your WHM gameplay, as well as give a deeper insight into what happened during an encounter.
 
 Note that since healing is a very fight-dependent process, it might be that some suggestions do not apply to you, but they may they help to inform you about things you have missed.
@@ -18,7 +17,7 @@ export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-whm" */),
 
 	description: <Fragment>
-		<TransMarkdown source={description}/>
+		<TransMarkdown id={i18nMark('whm.about.description')} source={description}/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>

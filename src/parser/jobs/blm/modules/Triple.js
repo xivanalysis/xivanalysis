@@ -1,5 +1,5 @@
-import {t} from '@lingui/macro'
 import React, {Fragment} from 'react'
+import {i18nMark} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
@@ -10,7 +10,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class Triple extends Module {
 	static handle = 'triple'
-	static title = t('blm.triple.title')`Triplecast Usage`
+	static i18n_id = i18nMark('blm.triple.title')
+	static title = 'Triplecast Usage'
 	static displayOrder = DISPLAY_ORDER.TRIPLE
 
 	static dependencies = [

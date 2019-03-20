@@ -1,5 +1,3 @@
-import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -7,18 +5,20 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {PROCS, SEVERITY_MISSED_PROCS, SEVERITY_OVERWRITTEN_PROCS, SEVERITY_INVULN_PROCS} from 'parser/jobs/rdm/modules/ProcsEnum'
+import {i18nMark, Trans, Plural} from '@lingui/react'
 
 const IMPACT_OVERRIDE_THRESHOLD = 8000
 
 export default class Procs extends Module {
 	static handle = 'procs'
-	static title = t('rdm.procs.title')`Proc Issues`
+	static title = 'Proc Issues'
 	static dependencies = [
 		'downtime',
 		'invuln',
 		'suggestions',
 		'enemies',
 	]
+	static i18n_id = i18nMark('rdm.procs.title')
 
 	_history = {}
 	_invulnCasts = []
