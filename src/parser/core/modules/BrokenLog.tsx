@@ -1,5 +1,7 @@
-import {i18nMark, Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import {Message, Segment} from 'akkd'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
@@ -30,9 +32,7 @@ const EXPECTED_ABILITY_EVENTS = [
 
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'
-	static title = 'Broken Log'
-	// tslint:disable-next-line:variable-name
-	static i18n_id = i18nMark('core.broken-log.title')
+	static title = t('core.broken-log.title')`Broken Log`
 	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
 	static displayMode = DISPLAY_MODE.RAW
 
@@ -92,11 +92,7 @@ export default class BrokenLog extends Module {
 				<Table.Body>
 					{Array.from(this.triggers.values()).map(({module, reason}) => (
 						<Table.Row>
-							<Trans
-								id={module.i18n_id}
-								defaults={module.title}
-								render={<Table.Cell/>}
-							/>
+							<NormalisedMessage message={module.title} id={module.i18n_id}/>
 							<Table.Cell>{reason}</Table.Cell>
 						</Table.Row>
 					))}

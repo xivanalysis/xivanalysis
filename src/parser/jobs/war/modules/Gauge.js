@@ -1,4 +1,5 @@
-import {i18nMark, Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -50,8 +51,7 @@ const MAX_RAGE = 100
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
-	static title = 'Gauge Usage'
-	static i18n_id = i18nMark('war.gauge.title')
+	static title = t('war.gauge.title')`Gauge Usage`
 	static dependencies = [
 		'combatants',
 		'suggestions',

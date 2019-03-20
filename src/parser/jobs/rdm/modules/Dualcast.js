@@ -1,3 +1,5 @@
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -7,7 +9,6 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {CAST_TYPE, CORRECT_GCDS} from 'parser/jobs/rdm/modules/DualCastEnums'
-import {i18nMark, Trans, Plural} from '@lingui/react'
 
 //const util = require('util')
 
@@ -18,8 +19,7 @@ export default class DualCast extends Module {
 		'downtime',
 		'suggestions',
 	]
-	static title = 'Dualcast'
-	static i18n_id = i18nMark('rdm.dualcast.title')
+	static title = t('rdm.dualcast.title')`Dualcast`
 	//Default CastState
 	_castType = CAST_TYPE.HardCast
 	//Used to 0 out CastTimes

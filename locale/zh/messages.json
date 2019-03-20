@@ -75,7 +75,6 @@
   "blm.notcasting.title": "未在咏唱",
   "blm.ogcd-downtime.ogcd-cd-buffer": "考虑到随机因素，你每个副本有着{0} 秒的缓冲时间来延后你的技能",
   "blm.ogcd-downtime.ogcd-cd-metric": "及时使用你的能力技能，但是注意不要卡GCD。利用触发技能或是半咏唱的冰封和爆炎来插入它们。{0}",
-  "blm.ogcd-downtime.title": "能力技能",
   "blm.procs.suggestions.dropped-f3ps.content": "至少有一个<0/>触发的<1/>因未被使用而损失掉。",
   "blm.procs.suggestions.dropped-f3ps.why": "损失了 {0, plural, one {# 次} other {# 次}}火苗效果。",
   "blm.procs.suggestions.dropped-t3ps.content": "至少有一个<0/>触发的<1/>未被使用而损失掉。",

@@ -1,3 +1,4 @@
+import {MessageDescriptor} from '@lingui/core'
 import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {languageToEdition} from 'data/PATCHES'
@@ -24,7 +25,7 @@ interface LoadedMeta extends Meta {
 export interface Result {
 	i18n_id?: string
 	handle: string
-	name: string
+	name: string | MessageDescriptor
 	mode: DISPLAY_MODE
 	markup: React.ReactNode
 }

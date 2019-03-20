@@ -1,4 +1,5 @@
-import {Trans, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
 
@@ -27,8 +28,7 @@ const CLIPPING_SEVERITY = {
 
 export default class DoTs extends Module {
 	static handle = 'dots'
-	static title = 'DoTs'
-	static i18n_id = i18nMark('smn.dots.title')
+	static title = t('smn.dots.title')`DoTs`
 	static dependencies = [
 		'checklist',
 		'combatants',
