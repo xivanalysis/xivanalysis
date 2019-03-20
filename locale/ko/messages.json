@@ -75,7 +75,6 @@
   "blm.notcasting.title": "",
   "blm.ogcd-downtime.ogcd-cd-buffer": "랜덤 요소를 고려하여 쿨다운을 유지하기 위해 인스턴스 당 {0} 초의 여유를 두고 있습니다.",
   "blm.ogcd-downtime.ogcd-cd-metric": "당신의 능력 스킬들로 인하여 마법이나 기술의 재사용 대기시간이 밀리지 않도록 하십시오. 이 문제를 해결하기 위하여 당신의 프록을 활용하거나 빠르게 시전되는 파이가 혹은 블리자가를 이용하십시오. {0}",
-  "blm.ogcd-downtime.title": "",
   "blm.procs.suggestions.dropped-f3ps.content": "당신은 <1/>이 만료될때까지 사용하지 않아 <0/> 효과 향상을 사용할 기회를 1회 이상 놓쳤습니다.",
   "blm.procs.suggestions.dropped-f3ps.why": "{0, plural, one {#개의 파이가 효과 향상} other {#개의 파이가 효과 향상}}을 잃었습니다.",
   "blm.procs.suggestions.dropped-t3ps.content": "당신은 <1/>이 만료될때까지 사용하지 않아 <0/> 효과 향상을 사용할 기회를 1회 이상 놓쳤습니다.",
