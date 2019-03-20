@@ -1,4 +1,5 @@
-import {i18nMark, Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
 import React from 'react'
 
@@ -32,8 +33,7 @@ export default class GlobalCooldown extends Module {
 		'timeline',
 	]
 
-	static i18n_id = i18nMark('core.gcd.title')
-	static title = 'Global Cooldown'
+	static title = t('core.gcd.title')`Global Cooldown`
 
 	_castingEvent = null
 

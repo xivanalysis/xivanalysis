@@ -1,26 +1,24 @@
-import React, {Fragment} from 'react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import _ from 'lodash'
-
-import Module from 'parser/core/Module'
-import ACTIONS, {getAction} from 'data/ACTIONS'
-// import STATUSES, {getStatus} from 'data/STATUSES'
-
-import {DRAWN_ARCANA_USE, HELD_ARCANA_USE, SPEAR_USED} from './ArcanaGroups'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-import JobIcon from 'components/ui/JobIcon'
-import JOBS from 'data/JOBS'
-import {ActionLink} from 'components/ui/DbLink'
-import {Trans, i18nMark} from '@lingui/react'
+import React, {Fragment} from 'react'
 import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
 
-import styles from './ArcanaSuggestions.module.css'
+import {ActionLink} from 'components/ui/DbLink'
+import JobIcon from 'components/ui/JobIcon'
+import ACTIONS, {getAction} from 'data/ACTIONS'
+import JOBS from 'data/JOBS'
+import Module from 'parser/core/Module'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+import {DRAWN_ARCANA_USE, HELD_ARCANA_USE, SPEAR_USED} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+
+import styles from './ArcanaSuggestions.module.css'
 
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
-	static title = 'Arcana Logs'
-	static i18n_id = i18nMark('ast.arcana-suggestions.title')
+	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
 		'suggestions',

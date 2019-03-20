@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {DISPLAY_MODE} from 'parser/core/Module'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
@@ -99,7 +100,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		}
 
 		const contents = <>
-			<Trans id={result.i18n_id} defaults={result.name} render={<Header/>}/>
+			<Header><NormalisedMessage message={result.name} id={result.i18n_id}/></Header>
 			<div>{result.markup}</div>
 		</>
 
