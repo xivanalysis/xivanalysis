@@ -75,7 +75,6 @@
   "blm.notcasting.title": "",
   "blm.ogcd-downtime.ogcd-cd-buffer": "Um zufällige Störfaktoren zu berücksichtigen wird ein Puffer von {0} Sekunden pro Instanz für deine Abklingzeiten gegeben.",
   "blm.ogcd-downtime.ogcd-cd-metric": "Stelle immer sicher, dass du deine OGCDs verwendest, wenn sie bereit sind, aber clippe sie nicht. Verwende deine Procs oder schnelle Feuga oder Eisga um sie zu weaven. {0}",
-  "blm.ogcd-downtime.title": "",
   "blm.procs.suggestions.dropped-f3ps.content": "Du hast mindestens ein <0/> Proc verloren, da du <1/> auslaufen gelassen hast, ohne es zu verwenden.",
   "blm.procs.suggestions.dropped-f3ps.why": "{0, plural, one {# Verbessertes Feuer Proc} other {# Verbessertes Feuer Procs}} ausgelaufen.",
   "blm.procs.suggestions.dropped-t3ps.content": "Du hast mindestens ein <0/> Proc verloren, da du <1/> auslaufen gelassen hast, ohne es zu verwenden.",
