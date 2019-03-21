@@ -1,4 +1,5 @@
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
 
@@ -36,7 +37,7 @@ const PAINFLARE_SEVERITY = {
 
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
-	static i18n_id = i18nMark('smn.aetherflow.title')
+	static title = t('smn.aetherflow.title')`Aetherflow`
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
 		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies

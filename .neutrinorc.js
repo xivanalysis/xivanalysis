@@ -73,6 +73,7 @@ module.exports = {
 			// Tweaks for babel
 			babel: {
 				plugins: [
+					'macros',
 					'lodash',
 					'@lingui/babel-plugin-transform-js',
 					'./locale/babel-plugin-transform-react',

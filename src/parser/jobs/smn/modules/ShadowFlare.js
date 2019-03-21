@@ -1,4 +1,5 @@
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -20,8 +21,7 @@ const TICK_SPEED = 3000
 
 export default class ShadowFlare extends Module {
 	static handle = 'shadowFlare'
-	static i18n_id = i18nMark('smn.shadow-flare.title')
-	static title = 'Shadow Flare'
+	static title = t('smn.shadow-flare.title')`Shadow Flare`
 	static dependencies = [
 		'suggestions',
 	]
