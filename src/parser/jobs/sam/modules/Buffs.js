@@ -1,4 +1,5 @@
-import {Trans, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -8,8 +9,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
-	static i18n_id = i18nMark('sam.buffs.title')
-	static title = 'Buffs'
+	static title = t('sam.buffs.title')`Buffs`
 	static dependencies = [
 		'checklist',
 		'combatants',

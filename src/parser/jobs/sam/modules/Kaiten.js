@@ -1,5 +1,6 @@
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -29,8 +30,7 @@ const KAITEN_GCDS = {
 
 export default class Kaiten extends Module {
 	static handle = 'kaiten'
-	static title = 'Kaiten'
-	static i18n_id = i18nMark('sam.kaiten.title')
+	static title = t('sam.kaiten.title')`Kaiten`
 	static dependencies = [
 		'combatants',
 		'suggestions',
