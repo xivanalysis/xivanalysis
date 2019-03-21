@@ -14,7 +14,7 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
-- [Internationalization](#internationalization)
+- [Internationalization](#https://github.com/xivanalysis/xivanalysis#internationalization-i18n)
 - [API Reference](#api-reference)
 	- [Module](#module)
 	- [Parser](#parser)
@@ -181,7 +181,7 @@ All modules should extend this class at some point in their hierarchy. It provid
 
 The name that should be shown above any output the module generates. If not set, it will default to the module's `handle`, with the first letter capitalised.
 
-Should be wrapped in the `t(id)` template from `@lingui/macro`, see above for details.
+Should be wrapped in the `t(id)` template from `@lingui/macro`, [see above for details](#module-titles).
 
 ##### `static dependencies`
 
