@@ -280,7 +280,7 @@
   "mch.wildfire.suggestions.fizzle.why": "{fizzledWildfires} 개의 소이탄이 0데미지를 입혔습니다.",
   "mch.wildfire.title": "소이탄",
   "mch.wildfire.trigger.no-buff-wf": "<0/> 피해가 대응되는 <1/> 버프 없이 기록되었습니다.",
-  "mnk.about.description": "",
+  "mnk.about.description": "\n안녕 몽림사 여러분! 혹시 연격 극대화가 뜨지 않나요? 투혼선풍각의 꿈은 그저 밈으로 남아 있나요?\n\n이 몽크 분석기는 당신의 진정한 잠재력을 일깨우고, 성가신 사무라이들에게 본때를 보여주도록 도와줄 것입니다!\n",
   "mnk.about.description.warning": "<0>이 모듈은 아직 개발 중이며</0> 틀린 피드백을 줄 수 있습니다. 문제가 발견되거나 질문 혹은 피드백이 있는 경우 디스코드 채널로 건의해주세요.",
   "mnk.aoe.suggestions.aotd.content": "<0/>는 {AOTD_MIN_TARGETS} 개 이상의 대상에 효율적입니다.",
   "mnk.aoe.suggestions.aotd.why": "<0/>가 너무 적은 수의 대상에 {0, plural, one {#회} other {#회}} 사용되었습니다.",
