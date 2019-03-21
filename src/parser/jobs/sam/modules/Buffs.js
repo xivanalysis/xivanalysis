@@ -1,5 +1,5 @@
-import React, {Fragment} from 'react'
-
+import {Trans, i18nMark} from '@lingui/react'
+import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -8,6 +8,8 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
+	static i18n_id = i18nMark('sam.buffs.title')
+	static title = 'Buffs'
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -22,17 +24,17 @@ export default class Buffs extends Module {
 
 	_onComplete() {
 		this.checklist.add(new Rule({
-			name: 'Keep Shifu and Jinpu up',
-			description: 'Jinpu increases your damage by 10% and Shifu increases your speed by 10%. Both buffs are key part of Samurai\'s damage.',
+			name: <Trans id="sam.buffs.checklist.name"> Keep Shifu and Jinpu up </Trans>,
+			description: <Trans id= "sam.buffs.description"> <ActionLink {...ACTIONS.JINPU} /> increases your damage by 10% and <ActionLink {...ACTIONS.SHIFU} /> increases your speed by 10%. Both buffs are key part of Samurai's damage.</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.JINPU} /> uptime</Fragment>,
+					name: <Trans id = "sam.buffs.checklist.requirement.jinpu.name"> <ActionLink {...ACTIONS.JINPU} /> uptime </Trans>,
 					percent: () => this.getUptimePercent(STATUSES.JINPU.id),
 				}),
 
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SHIFU} /> uptime</Fragment>,
+					name: <Trans id= "sam.buffs.checklist.requirement.shifu.name"> <ActionLink {...ACTIONS.SHIFU} /> uptime </Trans>,
 					percent: () => this.getUptimePercent(STATUSES.SHIFU.id),
 				}),
 
