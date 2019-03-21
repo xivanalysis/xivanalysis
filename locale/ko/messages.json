@@ -562,7 +562,7 @@
   "smn.ruin-iv.expected-procs": "추정되는 프록횟수: {0}",
   "smn.ruin-iv.suggestions.overage.content": "추가적인 <1/> 프록을 놓치는 경우를 방지하기 위해, <0/>는 바로 사용합시다.",
   "smn.ruin-iv.suggestions.overage.why": "전체 전투시간동안 루인라 강화를 권고사항보다 {0} 오래 유지했습니다.",
-  "smn.ruin-iv.title": "",
+  "smn.ruin-iv.title": "루인쟈",
   "smn.shadow-flare.hits": "{0, plural, one {실제 적중횟수: #} other {실제 적중횟수: #}}",
   "smn.shadow-flare.suggestions.missed-ticks.content": "반드시 <0/>을 전체 지속시간동안 피해를 입히거나, 혹은 다수의 적에게 피해를 입힐 수 있도록 배치해 주세요.",
   "smn.shadow-flare.suggestions.missed-ticks.why": "섀도우 플레어의 빗나간 횟수: {missedTicks, plural, one{#회}other{#회}}",
