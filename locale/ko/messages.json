@@ -98,7 +98,7 @@
   "core.about.patch-unsupported.description": "이 리포트는 분석기의 지원을 받을 수 없는 {0} 버전에서 작성되었습니다. 계산 결과와 조언들은 이후 패치의 영향을 받을 수 있습니다.",
   "core.about.patch-unsupported.title": "지원되지 않는 패치",
   "core.about.supported-patches": "지원하는 패치:",
-  "core.about.title": "",
+  "core.about.title": "직업에 대하여",
   "core.about.unsupported.description": "표시된 결과들은 직업별 분석이 포함되지 않았으며, 정확한 결과를 내는데 필요한 중요 데이터가 누락될 수 있습니다.",
   "core.about.unsupported.title": "이 직업은 현재 지원하지 않습니다.",
   "core.always-cast.description": "항상 무언가를 해야합니다. 재사용 대기시간이 돌아가는 동안 작은 실수를 하는 것이 정확한 딜 사이클을 천천히 사용하는 것보다 낫습니다.",
