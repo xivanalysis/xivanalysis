@@ -93,7 +93,7 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "천상의 화염 상태에서 절대로 <0/>을 직접 캐스팅하지 마십시오. MP가 많이 들기 때문에 더 많은 <1/>을 사용할 기회를 잃게 됩니다.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "천상의 화염 상태에서 총 {0, plural, one {# 회} other {# 회}}의 선더가를 사용하였습니다.",
   "blm.rotation-watchdog.title": "딜사이클 문제점",
-  "blm.triple.title": "삼연속 마법 사용기록",
+  "blm.triple.title": "삼연속 마법",
   "core.about.contributors": "기여자:",
   "core.about.patch-unsupported.description": "이 리포트는 분석기의 지원을 받을 수 없는 {0} 버전에서 작성되었습니다. 계산 결과와 조언들은 이후 패치의 영향을 받을 수 있습니다.",
   "core.about.patch-unsupported.title": "지원되지 않는 패치",
