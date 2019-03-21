@@ -982,19 +982,20 @@
   resolved "https://registry.yarnpkg.com/@types/jest/-/jest-23.3.14.tgz#37daaf78069e7948520474c87b80092ea912520a"
   integrity sha512-Q5hTcfdudEL2yOmluA1zaSyPbzWPmJ3XfSWeP3RyoYvS9hnje1ZyagrZOuQ6+1nQC1Gw+7gap3pLNL3xL6UBug==
 
-"@types/lingui__core@*":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@types/lingui__core/-/lingui__core-2.2.1.tgz#fd0fff6e6f45ec5e4135bfde48cd8112a13e90e2"
-  integrity sha512-BBghjsfK9v/wyKD/Po0PNCYoBtcyC36jwjdd4blPc1Rqslf60ceHTsSZLwc/lAEvu5e3rQv38NhEN76ORGWz3w==
+"@types/lingui__core@*", "@types/lingui__core@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@types/lingui__core/-/lingui__core-2.7.0.tgz#a93e53338a5a7ae5aa8cdb22ef0111d2053c6ef0"
+  integrity sha512-4gx/msI4cVlx1/RI1g6bDREZqflWh4HflMX3A5mMnvM6ymohg5SOzWk+R18N6/44ONPqOI+pcP8xjKLrI2tQhQ==
 
-"@types/lingui__macro@^2.7.2":
-  version "2.7.2"
-  resolved "https://registry.yarnpkg.com/@types/lingui__macro/-/lingui__macro-2.7.2.tgz#da50fa4610160b7a4658cf2e50f76ecbb1b4fe1e"
-  integrity sha512-yW5PynZRjk/nY+vJg28IMPswBIYyK8qQwmIip89LMG7Kj7+ATPA94F3IiVZc5mf+aEwWRCkZREWWz3+h3+eo9Q==
+"@types/lingui__macro@^2.7.3":
+  version "2.7.3"
+  resolved "https://registry.yarnpkg.com/@types/lingui__macro/-/lingui__macro-2.7.3.tgz#7671abf5c816b79028e320053a53d13ca6cf7c8e"
+  integrity sha512-/kU4T6F7qNYwao0G2NV2LBt0AZuGcLM2w37pf70QcZDky1TAJIGxB76m4L1jlTW4GZXbvPZbQlws8i8Uctqg3A==
   dependencies:
+    "@types/lingui__core" "*"
     "@types/react" "*"
 
-"@types/lingui__react@^2.5.0":
+"@types/lingui__react@^2.5.2":
   version "2.5.2"
   resolved "https://registry.yarnpkg.com/@types/lingui__react/-/lingui__react-2.5.2.tgz#17cb71a720605de41e826418cee7b24e0e5808c3"
   integrity sha512-Z20EOeaeNUrMDooCliFsgjOk+QLyjq3LAz6wlQnraRxsk7+pkq7h/cvMSBX8WXz1VXH+hiq/G0Db4m6X8Ei39w==
