@@ -521,7 +521,7 @@
   "sam.kenki.suggestion.content": "",
   "sam.kenki.suggestion.why": "{min}~{max} 사이에 검기를 낭비했습니다.",
   "sam.kenki.title": "검기",
-  "sam.meikyo.suggestions.badmeikyo.content": "",
+  "sam.meikyo.suggestions.badmeikyo.content": "<0/>를 사용할 시 <1/>, <2/>, <3/>만을 사용하면 빠르게 섬을 쌓을 수 있습니다.",
   "sam.meikyo.suggestions.badmeikyo.why": "",
   "sam.meikyo.suggestions.missedmeikyo.content": "",
   "sam.meikyo.suggestions.missedmeikyo.why": "",
