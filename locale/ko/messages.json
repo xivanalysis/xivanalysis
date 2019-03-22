@@ -144,7 +144,7 @@
   "core.gcd.estimated-gcd": "예상되는 글로벌 쿨타임",
   "core.gcd.no-statistics": "불행히도, 플레이어 통계는 FF Logs에서 이용할 수 없습니다. 그러므로 계산된 GCD 길이는 <0> 추정되는 수치 </0>이며, 정확하지 않을 수 있습니다. GCD 길이가 <1>실제보다 길게</1> 보고되고 있다면, GCD를 계속 사용하는데에 집중할 필요가 있습니다.",
   "core.gcd.title": "글로벌 쿨타임",
-  "core.home.about.content": "",
+  "core.home.about.content": "\nxvanalysis는 자동 제안과 수집한 정보를 통해 당신의 실력을 향상시키는 것을 목적으로 합니다. 일부 수집한 정보들은 모든 직업에서 공유되고 사용되지만 -절대 죽지마세요 라든가- 대부분은 정확하게 유용할 수 있도록 각 작업에 맞게 특별하게 조정됩니다.\n\n이러한 것들을 위해, 우리는 [FF Logs](https://www.fflogs.com/)에서 가져온 데이터를 전투 로그의 형태로 처리합니다. 만약 FF Logs를 아직 사용하지 않으셨다면, [here](https://old.reddit.com/r/ACTOverlayPlugin/comments/3b7ogz/)와 [here](https://www.fflogs.com/client/download)에 FFLogs와 ACT(게임 자체데이터를 읽는 프로그램)의 설명이 있습니다.\n\n로그 URL을 붙여넣고 확인해보세요!\n\n질문이나, 제안이 있거나, 또는 대화를 하고싶다면 사이드바에 링크된 저희 디스코드 채널을 방문해주세요.\n",
   "core.home.about.link": "이 사이트에 대해서",
   "core.home.about.title": "xivanalysis에 대하여",
   "core.home.analyse": "분석",
