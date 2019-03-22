@@ -526,7 +526,7 @@
   "sam.meikyo.suggestions.badmeikyo.content": "<0/>를 사용할 시 <1/>, <2/>, <3/>만을 사용하면 빠르게 섬을 쌓을 수 있습니다.",
   "sam.meikyo.suggestions.badmeikyo.why": "",
   "sam.meikyo.suggestions.missedmeikyo.content": "",
-  "sam.meikyo.suggestions.missedmeikyo.why": "<0/>동안 잘못된 스킬 사용으로 {0, plural, one {# 개} other {# 개}} 의 섬을 낭비하였습니다.",
+  "sam.meikyo.suggestions.missedmeikyo.why": "",
   "sam.meikyo.title": "명경지수",
   "sam.sen.suggestion.content": "이미 섬이 있는 상태에서 <0/>,<1/>,<2/> 를 사용하여 섬이 쌓이지않아 콤보가 낭비되었습니다.",
   "sam.sen.suggestion.why": "{0} 개의 섬을 낭비하셨습니다.",
