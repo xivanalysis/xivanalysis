@@ -519,7 +519,7 @@
   "sam.kaiten.suggestion.missedkaiten.why": "",
   "sam.kaiten.title": "필살검: 회천",
   "sam.kenki.suggestion.content": "",
-  "sam.kenki.suggestion.why": "",
+  "sam.kenki.suggestion.why": "{min}~{max} 사이에 검기를 낭비했습니다.",
   "sam.kenki.title": "검기",
   "sam.meikyo.suggestions.badmeikyo.content": "",
   "sam.meikyo.suggestions.badmeikyo.why": "",
