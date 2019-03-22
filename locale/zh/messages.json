@@ -94,6 +94,8 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "在星极火阶段下读条释放了 {0, plural, one {# 次} other {# 次}}暴雷。",
   "blm.rotation-watchdog.title": "循环检查",
   "blm.triple.title": "三连咏唱",
+  "brd.barrage.title": "",
+  "brd.pitch-perfect.title": "",
   "core.about.contributors": "贡献者：",
   "core.about.patch-unsupported.description": "这个报告是在{0} 版本记录的，分析器不支持此报告。计算和建议可能会因版本间更改而受到影响。",
   "core.about.patch-unsupported.title": "不支持报告的版本。",

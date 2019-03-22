@@ -94,6 +94,8 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "{0, plural, one {# Méga-Foudre a été lancé} other {# Méga-Foudre ont été lancés}} manuellement sous Feu Astral.",
   "blm.rotation-watchdog.title": "Problèmes de Rotation",
   "blm.triple.title": "Triple Sort",
+  "brd.barrage.title": "",
+  "brd.pitch-perfect.title": "",
   "core.about.contributors": "Contributeurs:",
   "core.about.patch-unsupported.description": "Ce rapport a été généré durant la patch {0}, qui n'est pas supportée par l'analyseur. Les calculs et suggestions peuvent être impactés par les changements depuis ce temps.",
   "core.about.patch-unsupported.title": "Patch de ce rapport non-supportée",
