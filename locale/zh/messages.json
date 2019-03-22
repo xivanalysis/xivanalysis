@@ -258,7 +258,7 @@
   "mch.heat.suggestions.cooldown.why": "你存在 {0} 次错误使用冷却的情况。",
   "mch.heat.suggestions.downtime.content": "确保在过热冷却后尽快使用<0/>，以快速积累热量。",
   "mch.heat.suggestions.downtime.why": "存在 {0} 秒无枪管状态。",
-  "mch.heat.title": "过热窗口期",
+  "mch.heat.title": "过热",
   "mch.hotshot.checklist.description": "<0/>为你提供了10%的角色伤害加成，需要一直保持。",
   "mch.hotshot.checklist.name": "保持热弹 Buff",
   "mch.hotshot.checklist.requirement.name": "<0/> 覆盖率",
