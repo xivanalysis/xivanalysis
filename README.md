@@ -14,7 +14,7 @@ Automated performance analysis and suggestion platform for Final Fantasy XIV: St
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
-- [Internationalization](#https://github.com/xivanalysis/xivanalysis#internationalization-i18n)
+- [Internationalization](#internationalization-i18n)
 - [API Reference](#api-reference)
 	- [Module](#module)
 	- [Parser](#parser)
