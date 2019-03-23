@@ -58,7 +58,7 @@
   "blm.gauge.suggestions.dropped-enochian.why": "천사의 언어가 끊긴 횟수: {0}{1, plural, other {회}}",
   "blm.gauge.suggestions.lost-foul.content": "당신은 <1/>가 끊겨 <0/>를 사용할 기회를 잃었습니다. <2/>는 당신의 가장 강력한 마법이기 때문에 가능한 많이 사용해야 합니다.",
   "blm.gauge.suggestions.lost-foul.why": "{0, plural, other {# 회}}의 금지된 언어 사용 기회를 잃었습니다.",
-  "blm.gauge.suggestions.overwritten-foul.content": "<0/>을 30초 안에 사용하지 않으면 다음 금지된 언어에 덮어씌워지게 됩니다. <1/>은 당신의 가장 강력한 마법이기 때문에 가능한 많이 사용해야 합니다.",
+  "blm.gauge.suggestions.overwritten-foul.content": "<0/>을 30초 마다 사용하지 않으면 다음 금지된 언어에 덮어씌워지게 됩니다. <1/>은 흑마의 가장 강력한 마법이기 때문에 가능한 많이 사용해야 합니다.",
   "blm.gauge.suggestions.overwritten-foul.why": "{0, plural, other {#회}}의 금지된 언어 사용 기회를 잃었습니다.",
   "blm.gauge.title": "극성과 언어",
   "blm.gauge.trigger.no-eno-b4": "<1/>이 비활성화 되었을 때 <0/>을 사용했습니다.",
