@@ -44,7 +44,7 @@
   "ast.lucid-dreaming.checklist.content": "점성술사는 치유 스킬의 마나가 많이 소모되기 때문에 MP가 부족하게 됩니다. 그렇기 때문에 \"항상 캐스팅\"을 할 경우 더욱 더 자주, 그리고 많은 MP회복 수단을 강구하게 됩니다. 당신의 MP효율을 최대화하기 위해서 <0/>과 자각몽을 함께 사용하는 것이 매우 중요합니다.",
   "ast.lucid-dreaming.checklist.name": "연장된 자각몽",
   "ast.lucid-dreaming.checklist.requirement.name": "<0/> 연장",
-  "ast.lucid-dreaming.suggestion.content": "전투의 특정 상황에서 급하게 어그로를 낮추어야 할 경우가 아니라면 MP의 효율적 관리를 위해서 <0/>의 재사용 대기시간을 주시하십시오.",
+  "ast.lucid-dreaming.suggestion.content": "전투 동안 급하게 어그로를 낮추어야 할 구간이 없다면 효율적인 마나 관리를 위해 <0/>을 쿨이 돌 때마다 사용하십시오.",
   "ast.lucid-dreaming.suggestion.why": "총 {0} 회의 자각몽 중 {_usesMissed, plural, one {# 회} other {# 회}}가 사용되지 않았습니다.",
   "ast.sleeve-draw.checklist.description": "묘수를 더 많이 사용할 수록 더 많은 카드를 사용한다는 것이고, 더 많은 사람에게 버프를 부여한다는 것을 의미합니다.",
   "ast.sleeve-draw.checklist.name": "묘수를 자주 사용하십시오.",
