@@ -14,7 +14,7 @@
   "ast.arcana-tracking.suggestions.sleeve-draw.why": "{sleeveUses, plural, one {# 묘수} other {# 묘수}} 중 {0} 번이 소 아르카나를 사용하지 않은 채로 사용되었습니다.",
   "ast.arcana-tracking.title": "카드 사용내역",
   "ast.arcana-undraw-usage.macros.emptyroad": "/statusoff \"왕도: 범위화\"<0/>/statusoff \"왕도: 효과 향상\"<1/>/statusoff \"왕도: 지속시간 증가\"<2/>/micon \"왕도 취소\"",
-  "ast.arcana-undraw-usage.macros.undraw": "/statusoff \"점지: 세계수의 줄기\"<0/>/statusoff \"점지: 아제마의 균형\"<1/>/statusoff \"점지: 오쉬온의 화살\"<2/>/statusoff \"점지: 할로네의 창\"<3/>/statusoff \"점지: 비레고의 탑\"<4/>/statusoff \"살리아크의 물병\"<5/>/micon \"점지 취소\"",
+  "ast.arcana-undraw-usage.macros.undraw": "/statusoff \"점지: 세계수의 줄기\"<0/>/statusoff \"점지: 아제마의 균형\"<1/>/statusoff \"점지: 오쉬온의 화살\"<2/>/statusoff \"점지: 할로네의 창\"<3/>/statusoff \"점지: 비레고의 탑\"<4/>/statusoff \"점지: 살리아크의 물병\"<5/>/micon \"점지 취소\"",
   "ast.arcana-undraw-usage.macros.undrawspread": "/statusoff \"보류: 오쉬온의 화살\"<0/>/statusoff \"보류: 아제마의 균형\"<1/>/statusoff \"보류: 비레고의 탑\"<2/>/statusoff \"보류: 세계수의 줄기\"<3/>/statusoff \"보류: 살리아크의 물병\"<4/>/statusoff \"보류: 할로네의 창\"<5/>/micon \"보류 취소\"",
   "ast.arcana-undraw-usage.suggestions.content": "<0>점지 취소, 보류 취소, 왕도 취소 스킬을 사용하지 마십시오.</0> (<1/>) (<2/>) (<3/>) <4/>이 스킬들은 능력 사용에 관련하여 불필요한 모션과 시간을 소모합니다. 이 스킬들 대신에 \n버프/디버프 창에서 직접 마우스 오른쪽 버튼을 사용하여 지우시거나 매크로를 사용하시는 것이 좋습니다.",
   "ast.arcana-undraw-usage.suggestions.why": "{0} 회의 카드 취소 스킬이 사용되었습니다.",
