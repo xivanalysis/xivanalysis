@@ -1208,10 +1208,10 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@xivanalysis/tooltips@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.3.tgz#0417981060ef3867e7c9e59f0e69a2d1cd3290f7"
-  integrity sha512-3tTs79lSbnUkDLDcizmUxsq9WL9udqL2acRClm7v1XLeL980lVIcg57Gs6DriaiHZ48SGpZmHlzjoMPS0s787A==
+"@xivanalysis/tooltips@^0.0.4":
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.4.tgz#f45814c2260c0841b19eb239ba2c8292dd0cd1de"
+  integrity sha512-CBGi69pXGunzOvhKl9yyoZEytD5ifFhZjXx+WFjP7gEvBleN8qqLw8Z1NDvWlQvOT/K6z5LBmykDXLop62aHhw==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
@@ -8098,9 +8098,9 @@ react-intersection-observer@^6.2.3:
     invariant "^2.2.4"
 
 react-is@^16.3.2, react-is@^16.7.0, react-is@^16.8.1:
-  version "16.8.3"
-  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.3.tgz#4ad8b029c2a718fc0cfc746c8d4e1b7221e5387d"
-  integrity sha512-Y4rC1ZJmsxxkkPuMLwvKvlL1Zfpbcu+Bf4ZigkHup3v9EfdYhAlWAaVyA19olXq2o2mGn0w+dFKvk3pVVlYcIA==
+  version "16.8.5"
+  resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.8.5.tgz#c54ac229dd66b5afe0de5acbe47647c3da692ff8"
+  integrity sha512-sudt2uq5P/2TznPV4Wtdi+Lnq3yaYW8LfvPKLM9BKD8jJNBkxMVyB0C9/GmVhLw7Jbdmndk/73n7XQGeN9A3QQ==
 
 react-lifecycles-compat@^3.0.2:
   version "3.0.4"
