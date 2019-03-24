@@ -166,7 +166,7 @@
   "core.suggestions.severity.major": "필수적인 요소",
   "core.suggestions.severity.medium": "개선이 요구됨",
   "core.suggestions.severity.minor": "사소한 실수",
-  "core.suggestions.severity.morbid": "절대적인 요소",
+  "core.suggestions.severity.morbid": "형편없음",
   "core.suggestions.title": "제안",
   "core.timeline.help-text": "스크롤 또는 클릭+드래그로 이동, ctrl+스크롤로 확대",
   "core.timeline.title": "타임라인",
