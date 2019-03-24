@@ -14,7 +14,7 @@
   "ast.arcana-tracking.suggestions.sleeve-draw.why": "{0} von {sleeveUses, plural, one {# Legeschema wurde} other {# Legeschemata wurden}} benutzt, obwohl der Kleine Arkana Slot noch belegt war.",
   "ast.arcana-tracking.title": "",
   "ast.arcana-undraw-usage.macros.emptyroad": "/statusoff \"Expanded Royal Road\"<0/>/statusoff \"Enhanced Royal Road\"<1/>/statusoff \"Extended Royal Road\"<2/>/micon \"Empty Road\"",
-  "ast.arcana-undraw-usage.macros.undraw": "/statusoff \"Bole Drawn\"<0/>/statusoff \"Balance Drawn\"<1/>/statusoff \"Arrow Drawn\"<2/>/statusoff \"Spear Drawn\"<3/>/statusoff \"Spire Drawn\"<4/>/statusoff \"Ewer Drawn\"<5/>/micon \"Undraw\"",
+  "ast.arcana-undraw-usage.macros.undraw": "/statusoff \"Eiche gezogen\"<0/>/statusoff \"Waage gezogen\"<1/>/statusoff \"Pfeil gezogen\"<2/>/statusoff \"Speer gezogen\"<3/>/statusoff \"Turm gezogen\"<4/>/statusoff \"Krug gezogen\"<5/>/micon \"Verwerfen\"",
   "ast.arcana-undraw-usage.macros.undrawspread": "/statusoff \"Arrow Held\"<0/>/statusoff \"Balance Held\"<1/>/statusoff \"Spire Held\"<2/>/statusoff \"Bole Held\"<3/>/statusoff \"Ewer Held\"<4/>/statusoff \"Spear Held\"<5/>/micon \"Undraw Spread\"",
   "ast.arcana-undraw-usage.suggestions.content": "",
   "ast.arcana-undraw-usage.suggestions.why": "",
