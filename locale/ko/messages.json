@@ -89,7 +89,7 @@
   "blm.rotation-watchdog.suggestions.missed-f4s.content": "전투 종료 전에 저승의 냉기 단계에 <1/>을 건너뛰지 않았으므로 적어도 하나 이상의 <0/>을 잃었습니다.",
   "blm.rotation-watchdog.suggestions.missed-f4s.why": "{0, plural, other {# 회}}의 파이쟈 사용 기회를 잃었습니다.",
   "blm.rotation-watchdog.suggestions.ui-ending-in-t3.content": "저승의 냉기 상태에서 효과 향상이 적용되지 않은 <0/>을 마지막으로 사용하지 마십시오. 이것은 천상의 화염 상태에서 MP 부족 문제를 발생시켜 <1/>사용 횟수에 영향을 끼칠 수 있습니다.",
-  "blm.rotation-watchdog.suggestions.ui-ending-in-t3.why": "{0}회의 저승의 냉기 상태에서  {1, plural, one {phase} other {phases}}선더가를 마지막에 사용하였습니다.",
+  "blm.rotation-watchdog.suggestions.ui-ending-in-t3.why": "{0}{1, plural, one {회} other {회}}의 저승의 냉기 상태에서 선더가를 마지막에 사용하였습니다.",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "천상의 화염 상태에서 절대로 <0/>을 직접 캐스팅하지 마십시오. MP가 많이 들기 때문에 더 많은 <1/>을 사용할 기회를 잃게 됩니다.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "천상의 화염 상태에서 총 {0, plural, one {# 회} other {# 회}}의 선더가를 사용하였습니다.",
   "blm.rotation-watchdog.title": "딜사이클 문제점",
