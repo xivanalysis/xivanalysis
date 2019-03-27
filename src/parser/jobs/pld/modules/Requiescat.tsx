@@ -1,4 +1,5 @@
-import {i18nMark, Plural, Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
@@ -44,8 +45,7 @@ class RequiescatState {
 
 export default class Requiescat extends Module {
 	static handle = 'requiescat'
-	static title = 'Requiescat Usage'
-	static i18n_id = i18nMark('pld.requiescat.title') // tslint:disable-line:variable-name
+	static title = t('pld.requiescat.title')`Requiescat Usage`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private combatants!: Combatants

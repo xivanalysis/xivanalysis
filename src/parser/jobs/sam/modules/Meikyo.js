@@ -1,5 +1,6 @@
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -14,7 +15,7 @@ const MAX_MEIKYO_GCDS = 3
 
 export default class Meikyo extends Module {
 	static handle = 'meikyo'
-	static i18n_id = i18nMark('sam.meikyo.title')
+	static title = t('sam.meikyo.title')`Meikyo`
 	static dependencies = [
 		'combatants',
 		'suggestions',

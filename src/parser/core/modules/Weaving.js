@@ -1,8 +1,10 @@
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {i18nMark, Trans, Plural} from '@lingui/react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getAction} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -31,8 +33,7 @@ export default class Weaving extends Module {
 		'suggestions',
 	]
 
-	static i18n_id = i18nMark('core.weaving.title')
-	static title = 'Weaving Issues'
+	static title = t('core.weaving.title')`Weaving Issues`
 
 	_weaves = []
 	_ongoingCastEvent = null
@@ -100,7 +101,7 @@ export default class Weaving extends Module {
 			// WVR Focused synth lmao
 			icon: 'https://xivapi.com/i/001000/001785.png',
 			content: <Trans id="core.weaving.content">
-				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below for more detailed analysis.
+				Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
 				id="core.weaving.why"

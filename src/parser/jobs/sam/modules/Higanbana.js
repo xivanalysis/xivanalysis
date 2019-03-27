@@ -1,11 +1,11 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
-import {Trans, i18nMark} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
@@ -19,8 +19,7 @@ const CLIPPING_SEVERITY = {
 }
 export default class Higanbana extends Module {
 	static handle = 'higanbana'
-	static title = 'Higanbana'
-	static i18n_id= i18nMark('sam.higanbana.title')
+	static title = t('sam.higanbana.title')`Higanbana`
 	static dependencies = [
 		'checklist',
 		'enemies',

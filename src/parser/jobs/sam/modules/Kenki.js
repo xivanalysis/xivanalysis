@@ -1,7 +1,8 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
-import {Trans, i18nMark} from '@lingui/react'
 
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
@@ -49,7 +50,7 @@ const MAX_MEDITATE_TICKS = 5
 
 export default class Kenki extends Module {
 	static handle = 'kenki'
-	static i18n_id = i18nMark('sam.kenki.title')
+	static title = t('sam.kenki.title')`Kenki`
 	static dependencies = [
 		'suggestions',
 	]

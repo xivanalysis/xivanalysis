@@ -1,4 +1,5 @@
-import {Trans, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -8,19 +9,19 @@ import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import STATUSES from 'data/STATUSES'
 
-const description = `
+const description = t('smn.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.
 
 Due to the nature of how SMN plays, there may be a near _overwhelming_ number of suggestions showing up below. Don't fret it, just focus on one or two improvements at a time.
 
-If you would like to learn more about SMN, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the \`#smn_questions\` channel.
+If you would like to learn more about SMN, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #smn_questions channel.
 `
 
 export default {
 	modules: () => import('./modules' /* webpackChunkName: "jobs-smn" */),
 
 	description: <>
-		<TransMarkdown id={i18nMark('smn.about.description')} source={description} key="smn.about.description"/>
+		<TransMarkdown source={description} key="smn.about.description"/>
 		<Message warning icon key="smn.about.description.warning">
 			<Icon name="warning sign" key="smn.about.description.warning.icon"/>
 			<Message.Content key="smn.about.description.warning.content">

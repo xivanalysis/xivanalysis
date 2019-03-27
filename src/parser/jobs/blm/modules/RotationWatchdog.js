@@ -1,8 +1,9 @@
 // Handle parsing each rotation. Confirm rotations have at least 8 F4 per Convert cycle and 6 F4 per normal cycle (or 5 F4 for non-Heart cycle)
 // Flag rotations that do not and list those as warnings
 
+import {t} from '@lingui/macro'
 import React, {Fragment} from 'react'
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -18,6 +19,10 @@ const FIRE4_FROM_CONVERT = 2
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 const AFUIBUFFMAXSTACK = 3
+const T3ENDINGINUI_SEVERITY = {
+	1: SEVERITY.MINOR,
+	5: SEVERITY.MEDIUM,
+}
 
 // This is feelycraft at the moment. Rotations longer than that get put into the history array to sort out transpose shenanigans.
 // TODO: consider downtime and do something with it. Like throwing out the rotation or godknows.
@@ -25,8 +30,7 @@ const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
-	static i18n_id = i18nMark('blm.rotation-watchdog.title')
-	static title = 'Rotation Issues'
+	static title = t('blm.rotation-watchdog.title')`Rotation Issues`
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
 	static dependencies = [
@@ -178,13 +182,14 @@ export default class RotationWatchdog extends Module {
 		}
 
 		//Suggestions for ending UI in T3
-		if (this._UIEndingInT3) {
-			this.suggestions.add(new Suggestion({
+		if (this._UIEndingInT3 && !this._missedF4sCauseEndingInT3) {
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.THUNDER_III.icon,
+				tiers: T3ENDINGINUI_SEVERITY,
+				value: this._UIEndingInT3,
 				content: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.content">
 					Avoid ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
 				</Trans>,
-				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.why">
 					{this._UIEndingInT3} Umbral Ice <Plural value={this._UIEndingInT3} one="phase" other="phases"/> ended with Thunder III.
 				</Trans>,

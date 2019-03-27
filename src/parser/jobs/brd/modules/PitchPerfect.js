@@ -1,12 +1,14 @@
 /**
  * @author Yumiya
  */
+import {t} from '@lingui/macro'
 import React from 'react'
 import Module from 'parser/core/Module'
 import {Accordion, Icon, Message, List} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosest} from 'utilities'
 
@@ -38,7 +40,7 @@ const PP1_NOT_AT_END = 2
 
 export default class PitchPerfect extends Module {
 	static handle = 'pitchPerfect'
-	static title = 'Pitch Perfect'
+	static title = t('brd.pitch-perfect.title')`Pitch Perfect`
 	static dependencies = [
 		'additionalStats',
 		'downtime',
@@ -202,7 +204,7 @@ export default class PitchPerfect extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.PITCH_PERFECT.icon,
 			content: <>
-				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
+				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
 			</>,
 			tiers: {
 				8: SEVERITY.MAJOR,
