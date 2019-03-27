@@ -1,4 +1,4 @@
-import {i18nMark, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
