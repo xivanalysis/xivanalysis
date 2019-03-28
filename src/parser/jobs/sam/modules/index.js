@@ -6,6 +6,7 @@ import Kenki from './Kenki'
 import Sen from './Sen'
 import Speedmod from './Speedmod'
 import Meikyo from './Meikyo'
+import ThirdEye from './ThirdEye'
 
 export default [
 	Buffs,
@@ -16,4 +17,5 @@ export default [
 	Sen,
 	Speedmod,
 	Meikyo,
+	ThirdEye,
 ]
