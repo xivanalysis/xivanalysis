@@ -162,6 +162,7 @@ export interface DeathEvent extends Event { type: 'death' }
 export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
 export interface DamageEvent extends EffectEvent {
 	type: 'damage'
+	overkill?: number
 	absorbed: number
 	multistrike?: boolean
 	blocked?: number
