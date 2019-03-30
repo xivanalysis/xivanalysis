@@ -8,7 +8,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class ThirdEye extends Module {
 	static handle = 'Third Eye'
-	static i18n_id = i18nMark('sam.thirdeye.title')
+	static title = t('sam.thirdeye.title')`Third Eye`
 	static dependencies = [
 		'suggestions',
 	]
