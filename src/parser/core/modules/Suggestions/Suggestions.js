@@ -1,5 +1,5 @@
+import {t} from '@lingui/macro'
 import React from 'react'
-import {i18nMark} from '@lingui/react'
 
 import Suggestion, {SEVERITY} from './Suggestion'
 import SuggestionsComponent from './Component'
@@ -10,8 +10,7 @@ export default class Suggestions extends Module {
 	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
 	static displayMode = DISPLAY_MODE.FULL
-	static i18n_id = i18nMark('core.suggestions.title')
-	static title = 'Suggestions'
+	static title = t('core.suggestions.title')`Suggestions`
 
 	_suggestions = []
 

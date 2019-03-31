@@ -1,4 +1,4 @@
-import {i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
 import React from 'react'
 
 import {default as ChangeLogModule} from './Component'
@@ -10,8 +10,7 @@ export default class ChangeLog extends Module {
 	static displayOrder = DISPLAY_ORDER.CHANGELOG
 	static displayMode = DISPLAY_MODE.FULL
 
-	static title = 'Changelog'
-	static i18n_id = i18nMark('core.changelog.title')
+	static title = t('core.changelog.title')`Changelog`
 
 	output() {
 		const {changelog} = this.parser.meta

@@ -1,11 +1,11 @@
-import React, {Fragment} from 'react'
-
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-//import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const STATUS_DURATION = {
@@ -19,6 +19,7 @@ const CLIPPING_SEVERITY = {
 }
 export default class Higanbana extends Module {
 	static handle = 'higanbana'
+	static title = t('sam.higanbana.title')`Higanbana`
 	static dependencies = [
 		'checklist',
 		'enemies',
@@ -75,14 +76,14 @@ export default class Higanbana extends Module {
 	_onComplete() {
 		// Checklist rule for dot uptime
 		this.checklist.add(new Rule({
-			name: 'Keep Higanbana up',
-			description: <Fragment>
+			name: <Trans id= "sam.higanbana.checklist.name"> Keep <ActionLink {...ACTIONS.HIGANBANA} /> up </Trans>,
+			description: <Trans id="sam.higanbana.checklist.description">
 			As a Samurai, <ActionLink {...ACTIONS.HIGANBANA} /> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.
-			</Fragment>,
+			</Trans>,
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.HIGANBANA} /> uptime</Fragment>,
+					name: <Trans id = "sam.higanbana.checklist.requirement"><ActionLink {...ACTIONS.HIGANBANA} /> uptime </Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.HIGANBANA.id),
 				}),
 			],
@@ -92,12 +93,12 @@ export default class Higanbana extends Module {
 		const maxClip = Math.max(...Object.values(this._clip))
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HIGANBANA.icon,
-			content: <Fragment>
+			content: <Trans id="sam.higanbana.suggestion.content">
 				Avoid refreshing <ActionLink {...ACTIONS.HIGANBANA} /> significantly before it expires.
-			</Fragment>,
-			why: <Fragment>
+			</Trans>,
+			why: <Trans id="sam.higanbana.suggestion.why">
 				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES[STATUSES.HIGANBANA.id].name} lost to early refreshes.
-			</Fragment>,
+			</Trans>,
 			tiers: CLIPPING_SEVERITY,
 			value: maxClip,
 		}))

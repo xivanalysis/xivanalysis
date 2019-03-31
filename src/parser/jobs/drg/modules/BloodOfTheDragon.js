@@ -1,4 +1,5 @@
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -17,8 +18,7 @@ const MAX_EYES = 3
 
 export default class BloodOfTheDragon extends Module {
 	static handle = 'bloodOfTheDragon'
-	static i18n_id = i18nMark('drg.blood.title')
-	static title = 'Life of the Dragon'
+	static title = t('drg.blood.title')`Life of the Dragon`
 	static dependencies = [
 		'brokenLog',
 		'checklist',

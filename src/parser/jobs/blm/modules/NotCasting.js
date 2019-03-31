@@ -1,8 +1,9 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
+import {Table, Button} from 'semantic-ui-react'
 
 import Module from 'parser/core/Module'
-import {i18nMark, Trans} from '@lingui/react'
-import {Table, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 //value to be added to the gcd to avoid false positives
@@ -13,8 +14,7 @@ const DURATION_ERROR_OFFSET = 1000
 
 export default class NotCasting extends Module {
 	static handle = 'notcasting'
-	static i18n_id = i18nMark('blm.notcasting.title')
-	static title = 'Times you did literally nothing'
+	static title = t('blm.notcasting.title')`Times you did literally nothing`
 	static displayOrder = DISPLAY_ORDER.NOTCASTING
 
 	static dependencies = [

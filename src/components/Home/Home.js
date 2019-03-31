@@ -1,4 +1,5 @@
-import {Trans, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React, {Component} from 'react'
 import {Modal} from 'semantic-ui-react'
 
@@ -8,7 +9,7 @@ import TransMarkdown from 'components/ui/TransMarkdown'
 
 import styles from './Home.module.css'
 
-const about = `
+const about = t('core.home.about.content')`
 xivanalysis is a tool aimed at helping _you_ improve your performance, through both automatic suggestions and metrics. While some metrics are shared across all jobs - seriously, don't die - most are tailored specifically to each job to ensure they are as accurate and useful as possible.
 
 To do all this, we process data in the form of fight logs, taken from [FF Logs](https://www.fflogs.com/). If you're not already using FF Logs, there are instructions on setting it and ACT (the program that reads data from the game itself) up [here](https://old.reddit.com/r/ACTOverlayPlugin/comments/3b7ogz/) and [here](https://www.fflogs.com/client/download).
@@ -40,7 +41,7 @@ class Home extends Component {
 						About xivanalysis
 					</Trans></Modal.Header>
 					<Modal.Content>
-						<TransMarkdown id={i18nMark('core.home.about.content')} source={about}/>
+						<TransMarkdown source={about}/>
 					</Modal.Content>
 				</Modal>
 			</div>

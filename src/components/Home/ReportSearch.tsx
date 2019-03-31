@@ -25,6 +25,12 @@ const INPUT_EXPRESSIONS = [
 	 * /analyse/1234567890abcdef/1/1/
 	 */
 	/\/(?:analyse|find)\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
+
+	/**
+	 * xivrdps
+	 * http://www.xivrdps.com/encounters/1234567890abcdef/1
+	 */
+	/xivrdps(?:\.herokuapp)?\.com\/encounters\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+))?/,
 ]
 
 @observer

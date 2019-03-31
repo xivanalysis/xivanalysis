@@ -1,11 +1,11 @@
-import _ from 'lodash'
-import React from 'react'
-
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 import Kenki from './Kenki'
 
@@ -93,16 +93,16 @@ export default class Sen extends Module {
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MEIKYO_SHISUI.icon,
-			content: <>
+			content: <Trans id ="sam.sen.suggestion.content">
 				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, or <ActionLink {...ACTIONS.YUKIKAZE} /> at a time when you already had that sen, thus wasting a combo because it did not give you sen.
-			</>,
+			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
 			value: this.wasted,
-			why: <>You wasted {this.wasted} sen.</>,
+			why: <Trans id = "sam.sen.suggestion.why">You wasted {this.wasted} sen.</Trans>,
 		}))
 	}
 }

@@ -1,3 +1,5 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
@@ -48,6 +50,7 @@ const MAX_MEDITATE_TICKS = 5
 
 export default class Kenki extends Module {
 	static handle = 'kenki'
+	static title = t('sam.kenki.title')`Kenki`
 	static dependencies = [
 		'suggestions',
 	]
@@ -156,8 +159,8 @@ export default class Kenki extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: kenkiIcon,
-			content: <>Kenki is your primary resource, and a significant source of damage. Avoid wasting potential kenki by using it before you hit the maximum of {MAX_KENKI}.</>,
-			why: <>You wasted between {min} and {max} kenki.</>,
+			content: <Trans id = "sam.kenki.suggestion.content">Kenki is your primary resource, and a significant source of damage. Avoid wasting potential kenki by using it before you hit the maximum of {MAX_KENKI}.</Trans>,
+			why: <Trans id= "sam.kenki.suggestion.why">You wasted between {min} and {max} kenki.</Trans>,
 			value: (min + max) / 2,
 			tiers: {
 				5: SEVERITY.MINOR,

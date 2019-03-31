@@ -1,6 +1,7 @@
 /**
  * @author Yumiya
  */
+import {t} from '@lingui/macro'
 import React, {Fragment} from 'react'
 import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
@@ -8,6 +9,7 @@ import STATUSES from 'data/STATUSES'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 
 import styles from './Barrage.module.css'
 
@@ -57,6 +59,7 @@ const WEAPONSKILLS = [
 
 export default class Barrage extends Module {
 	static handle = 'barrage'
+	static title = t('brd.barrage.title')`Barrage`
 	static dependencies = [
 		'checklist',
 		'util',
@@ -126,7 +129,7 @@ export default class Barrage extends Module {
 			this.checklist.add(new WeightedTieredRule({
 				name: 'Barrage usage',
 				description: <Fragment>
-					An analysis of your {ACTIONS.BARRAGE.name} casts. More details in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}>{this.constructor.title}</a> module below.
+					An analysis of your {ACTIONS.BARRAGE.name} casts. More details in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
 				</Fragment>,
 				tiers: {0: ERROR, 90: WARNING, 100: SUCCESS},
 				requirements: [

@@ -1,4 +1,5 @@
-import {Trans, Plural, i18nMark} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import React from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -34,8 +35,7 @@ export default class GreasedLightning extends Module {
 		'suggestions',
 	]
 
-	static title = 'Greased Lightning'
-	static i18n_id = i18nMark('mnk.gl.title')
+	static title = t('mnk.gl.title')`Greased Lightning`
 	static displayOrder = DISPLAY_ORDER.GREASED_LIGHTNING
 
 	_currentStacks = null
