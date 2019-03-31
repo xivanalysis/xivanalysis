@@ -88,7 +88,7 @@ export interface ActorResources {
 	mp: number
 	maxMP: number
 	tp: number
-	maxTp: number
+	maxTP: number
 	x: number
 	y: number
 }
