@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class ThirdEye extends Module {
-	static handle = 'Third Eye'
+	static handle = 'thirdEye'
 	static title = t('sam.thirdeye.title')`Third Eye`
 	static dependencies = [
 		'suggestions',
