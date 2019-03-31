@@ -532,7 +532,7 @@
   "sam.sen.suggestion.why": "你浪费了 {0} 个闪。",
   "sam.suggestion.badkaiten.why": "你在错误的GCD技能上使用了 {0, plural, one {# 次} other {# 次}} 必杀剑·回天。",
   "sam.thirdeye.suggestion.unopenedeyes.content": "",
-  "sam.thirdeye.suggestion.unopenedeyes.why": "",
+  "sam.thirdeye.suggestion.unopenedeyes.why": "你的心眼没有触发导致浪费。",
   "sam.thirdeye.suggestion.unspenteyes.content": "",
   "sam.thirdeye.suggestion.unspenteyes.why": "",
   "sam.thirdeye.suggestion.useyourdamnthirdeye.content": "<0/> 会使你受到的攻击减少 10%，并且会让接下来的15秒内可以使用 <1/> 和 <2/>。你应该尽量在自己一定会受到的伤害来临前开启<0/>，以减少你所受的伤害并且用<1/>和<2/>为你创造优势。",
