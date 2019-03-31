@@ -1,3 +1,4 @@
+import {t} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import React from 'react'
 import {Trans, i18nMark} from '@lingui/react'
@@ -27,7 +28,6 @@ export default class ThirdEye extends Module {
 	}
 	_onCast(event) {
 		const abilityId = event.ability.guid
-		console.log(abilityId)
 
 		if (abilityId === ACTIONS.THIRD_EYE.id) {
 			this._thirdEyes += 1
