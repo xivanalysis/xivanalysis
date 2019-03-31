@@ -20,22 +20,20 @@ export default class ThirdEye extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.MERCIFUL_EYES.id, ACTIONS.HISSATU_SEIGAN.id]}, this._onSpend)
+		this.addhook('cast', {by: 'player', abilityId: [ACTIONS.THIRD_EYE.id]}, this._onEye)
 		this.addHook('applybuff', {
 			to: 'player',
 			abilityId: [STATUSES.EYES_OPEN.id]}, this._onGain)
 		this.addHook('complete', this._onComplete)
 	}
-	_onCast(event) {
-		const abilityId = event.ability.guid
 
-		if (abilityId === ACTIONS.THIRD_EYE.id) {
-			this._thirdEyes += 1
-		}
+	_onEye() {
+		this._thirdEyes += 1
+	}
 
-		if (abilityId === ACTIONS.MERCIFUL_EYES.id || abilityId === ACTIONS.HISSATSU_SEIGAN.id) {
-			this._spentEyes += 1 // increase usage by 1, ATM the gain is so small between these actions that I'm not bothering spilting them
-		}
+	_onSpend() {
+		this._spentEyes += 1 // increase usage by 1, ATM the gain is so small between these actions that I'm not bothering spilting them
 	}
 
 	_onGain() {
