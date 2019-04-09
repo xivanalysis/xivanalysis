@@ -1,0 +1,47 @@
+@value gutter, themeBackground from "theme.module.css";
+@value block from "../shared.module.css";
+
+@value transitionDuration: .2s;
+
+.segment {
+	composes: block;
+	position: relative;
+	padding: gutter;
+	background: themeBackground;
+}
+
+.expandable {
+	overflow: hidden;
+	transition: max-height transitionDuration ease-in-out;
+}
+
+.expand {
+	position: absolute;
+	bottom: calc(-1 * gutter);
+	left: 0;
+	z-index: 1;
+	width: 100%;
+	height: calc(3 * gutter);
+	background:
+		linear-gradient(
+			to top,
+			themeBackground 66%,
+			transparent 100%
+		)
+		0 0
+		no-repeat;
+	line-height: calc(2 * gutter);
+	text-align: center;
+	cursor: pointer;
+	transition: background-position transitionDuration ease-in-out;
+}
+
+.expand:hover {
+	background-position-y: calc(0.5 * gutter);
+}
+
+.expandMarker {
+	border-radius: 100px;
+	padding: 2px 10px;
+	background: themeBackground;
+}

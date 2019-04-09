@@ -1,12 +1,12 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Checkbox, Label} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
+import {inject, observer} from 'mobx-react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import {Checkbox, Label} from 'semantic-ui-react'
 
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import {updateSettings} from 'store/actions'
+import {SettingsStore} from 'store/settings'
 
 import styles from './Suggestions.module.css'
 
@@ -17,20 +17,25 @@ const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MINOR]: {content: 'Minor', color: 'blue', icon: 'arrow down'},
 }
 
-class Suggestions extends Component {
+@inject('settingsStore')
+@observer
+class Suggestions extends React.Component {
 	static propTypes = {
+		settingsStore: PropTypes.instanceOf(SettingsStore),
 		suggestions: PropTypes.arrayOf(PropTypes.shape({
 			icon: PropTypes.string.isRequired,
 			content: PropTypes.node.isRequired,
 			why: PropTypes.node.isRequired,
 			severity: PropTypes.number.isRequired,
 		})).isRequired,
-		dispatch: PropTypes.func.isRequired,
-		showMinor: PropTypes.bool,
+	}
+
+	onToggleShowMinor = (_, data) => {
+		this.props.settingsStore.setShowMinorSuggestions(data.checked)
 	}
 
 	render() {
-		const {dispatch, showMinor} = this.props
+		const showMinor = this.props.settingsStore.showMinorSuggestions
 
 		const suggestions = this.props.suggestions.filter(
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR
@@ -43,9 +48,7 @@ class Suggestions extends Component {
 				toggle
 				label={<label><Trans id="core.suggestion.show-minor">Show minor</Trans></label>}
 				defaultChecked={showMinor}
-				onChange={(_, data) => dispatch(updateSettings({
-					suggestionsShowMinor: data.checked,
-				}))}
+				onChange={this.onToggleShowMinor}
 				className={styles.checkbox}
 			/>}
 			<div className={styles.items}>
@@ -70,6 +73,4 @@ class Suggestions extends Component {
 	}
 }
 
-export default connect(state => ({
-	showMinor: state.settings.suggestionsShowMinor,
-}))(Suggestions)
+export default Suggestions

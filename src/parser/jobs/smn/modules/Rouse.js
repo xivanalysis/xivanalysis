@@ -8,6 +8,9 @@ import {ActionLink} from 'components/ui/DbLink'
 
 // Should this be in the actions data?
 const ROUSE_DURATION = 20000
+// Theory suggests it's better to use rouse before brohamut as long as you don't clip it too bad -
+// Delaying it until after messes with raid buffs and usually costs you a cast
+const CLIP_LEEWAY = 5000
 
 // Severity in ms
 const WASTED_ROUSE_SEVERITY = {
@@ -46,7 +49,7 @@ export default class Rouse extends Module {
 		if (this._lastRouse === null || diff > ROUSE_DURATION || this.gauge.isRushing()) {
 			return
 		}
-		this._wasted += ROUSE_DURATION - diff
+		this._wasted += Math.max(ROUSE_DURATION - diff - CLIP_LEEWAY, 0)
 	}
 
 	_onComplete() {
@@ -56,7 +59,7 @@ export default class Rouse extends Module {
 				tiers: WASTED_ROUSE_SEVERITY,
 				value: this._wasted,
 				content: <Trans id="smn.rouse.suggestions.wasted.content">
-					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
+					Avoid casting <ActionLink {...ACTIONS.ROUSE}/> less than {this.parser.formatDuration(ROUSE_DURATION - CLIP_LEEWAY)} before you swap pets or summon bahamut. Rouse is lost the moment your current pet despawns.
 				</Trans>,
 				why: <Trans id="smn.rouse.suggestions.wasted.why">
 					{this.parser.formatDuration(this._wasted)} of Rouse wasted.

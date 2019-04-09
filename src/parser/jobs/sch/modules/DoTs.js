@@ -6,6 +6,7 @@ import STATUSES from 'data/STATUSES'
 import CoreDoTs from 'parser/core/modules/DoTs'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SHADOW_FLARE_DURATION = 15000
 
@@ -18,7 +19,7 @@ const CLIPPING_SEVERITY = {
 
 export default class DoTs extends CoreDoTs {
 	static handle = 'dots'
-
+	static displayOrder = DISPLAY_ORDER.DOTS
 	static dependencies = [
 		...DoTs.dependencies,
 		'checklist',
@@ -88,3 +89,4 @@ export default class DoTs extends CoreDoTs {
 		return Math.min(100, (this.combatants.getStatusUptime(STATUSES.SHADOW_FLARE.id) / maxTotalDuration) * 100)
 	}
 }
+

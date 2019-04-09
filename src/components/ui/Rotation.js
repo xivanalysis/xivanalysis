@@ -19,6 +19,11 @@ export default class Rotation extends Component {
 			{this.props.events.map(event => {
 				const action = event.ability.overrideAction ? event.ability.overrideAction : getAction(event.ability.guid)
 
+				// Don't bother showing the icon for autos
+				if (action.autoAttack) {
+					return
+				}
+
 				// Stuff like the duty action doesn't have an icon mapping yet.
 				// TODO: Sort this out if it's a problem
 				if (!action.icon) {

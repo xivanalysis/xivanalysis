@@ -1,11 +1,12 @@
 import classnames from 'classnames'
+import {inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Route, Switch, withRouter, Link} from 'react-router-dom'
 import {Icon} from  'semantic-ui-react'
 
-import store from 'store'
-import {clearGlobalError} from 'store/actions'
+import {Container} from 'akkd'
+import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
@@ -19,8 +20,10 @@ import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
 
+@inject('globalErrorStore')
 class App extends Component {
 	static propTypes = {
+		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		history: PropTypes.shape({
 			location: PropTypes.object.isRequired,
 			listen: PropTypes.func.isRequired,
@@ -45,9 +48,10 @@ class App extends Component {
 		this._unlisten()
 	}
 
-	_locationDidChange(/* location */) {
+	_locationDidChange = (/* location */) => {
 		// User's browsed - clear the global error state. Page can always re-throw one.
-		store.dispatch(clearGlobalError())
+		const {globalErrorStore} = this.props
+		globalErrorStore.clearGlobalError()
 	}
 
 	_toggleSidebar = () => {
@@ -99,7 +103,7 @@ class App extends Component {
 					/>
 				</div>
 
-				<div className={styles.content}>
+				<Container className={styles.content}>
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/" component={Home}/>
@@ -109,7 +113,7 @@ class App extends Component {
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 						</Switch>
 					</ErrorBoundary>
-				</div>
+				</Container>
 			</div>
 		</>
 	}

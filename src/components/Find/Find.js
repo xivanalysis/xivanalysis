@@ -1,40 +1,38 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Loader} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
+import {observer, inject} from 'mobx-react'
+import PropTypes from 'prop-types'
+import React from 'react'
+import {Loader} from 'semantic-ui-react'
 
 import FightList from './FightList'
 import CombatantList from './CombatantList'
-import {fetchReportIfNeeded} from 'store/actions'
+import {ReportStore} from 'store/report'
 
-import styles from './Find.module.css'
-
-class Find extends Component {
+@inject('reportStore')
+@observer
+class Find extends React.Component {
 	static propTypes = {
-		dispatch: PropTypes.func.isRequired,
+		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
 				fight: PropTypes.string,
 			}).isRequired,
 		}).isRequired,
-		report: PropTypes.shape({
-			loading: PropTypes.bool.isRequired,
-			title: PropTypes.string,
-		}),
 	}
 
 	componentDidMount() {
-		const {dispatch, match} = this.props
-		dispatch(fetchReportIfNeeded(match.params.code))
+		const {reportStore, match} = this.props
+		reportStore.fetchReportIfNeeded(match.params.code)
 	}
 
 	render() {
 		const {
-			report,
+			reportStore,
 			match: {params},
 		} = this.props
+
+		const report = reportStore.report
 
 		// If report is null, we're probably waiting for an api call to complete
 		if (!report || report.code !== params.code || report.loading) {
@@ -47,15 +45,10 @@ class Find extends Component {
 			)
 		}
 
-		const content = params.fight
+		return params.fight
 			? <CombatantList report={report} currentFight={parseInt(params.fight, 10)}/>
-			: <FightList report={report}/>
-		return <div className={styles.find}>{content}</div>
+			: <FightList/>
 	}
 }
 
-const mapStateToProps = state => ({
-	report: state.report,
-})
-
-export default connect(mapStateToProps)(Find)
+export default Find

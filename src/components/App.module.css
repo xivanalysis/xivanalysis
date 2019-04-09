@@ -97,7 +97,6 @@
 }
 
 .content {
-	position: relative;
 	flex-grow: 1;
 	/* This is nasty, but forces the flex to resize it smaller than it thinks it should */
 	width: 0;
@@ -155,10 +154,6 @@
 	.sidebarWrapper {
 		height: 100%;
 		background: none;
-	}
-
-	.content {
-		margin: gutter;
 	}
 }
 

@@ -1,69 +1,51 @@
 import {Trans} from '@lingui/react'
+import {computed} from 'mobx'
+import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {connect} from 'react-redux'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 
 import LANGUAGES, {LANGUAGE_ARRAY} from 'data/LANGUAGES'
-import {setLanguage, toggleI18nOverlay} from 'store/actions'
+import {I18nStore} from 'store/i18n'
 
 import crowdinLogo from './crowdin-dark-symbol.png'
 import styles from './I18nMenu.module.css'
 
 const DEBUG = process.env.NODE_ENV === 'development'
 
-export class I18nMenu extends Component {
+@inject('i18nStore')
+@observer
+class I18nMenu extends Component {
 	static propTypes = {
-		dispatch: PropTypes.func.isRequired,
-		language: PropTypes.string.isRequired,
-		overlay: PropTypes.bool.isRequired,
+		i18nStore: PropTypes.instanceOf(I18nStore),
 	}
 
-	constructor(props) {
-		super(props)
-
-		this.toggleOverlay = this.toggleOverlay.bind(this)
-		this.handleChange = this.handleChange.bind(this)
-
-		this.state = {
-			currentLanguage: props.language,
-			languages: this.filterLanguages(),
-		}
-	}
-
-	filterLanguages() {
-		const currentLanguage = this.props.language
+	@computed
+	get availableLanguages() {
 		let languages = LANGUAGE_ARRAY
-		if (! DEBUG) {
-			languages = languages.filter(lang => lang.enable || currentLanguage === lang.value)
+		if (!DEBUG) {
+			const currentLanguage = this.props.i18nStore.language
+			languages = languages
+				.filter(lang => lang.enable || currentLanguage === lang.value)
 		}
-
 		return languages.map(lang => lang.menu)
 	}
 
-	componentDidUpdate() {
-		if (this.props.language !== this.state.currentLanguage) {
-			this.setState({
-				currentLanguage: this.props.language,
-				languages: this.filterLanguages(),
-			})
-		}
+	handleChange = (event, data) => {
+		const {i18nStore} = this.props
+		i18nStore.setLanguage(data.value)
 	}
 
-	handleChange(event, data) {
-		this.props.dispatch(setLanguage(data.value))
-	}
-
-	toggleOverlay() {
-		this.props.dispatch(toggleI18nOverlay())
+	toggleOverlay = () => {
+		const {i18nStore} = this.props
+		i18nStore.toggleOverlay()
 	}
 
 	render() {
-		const {overlay} = this.props
-		const {currentLanguage, languages} = this.state
-		const lang = LANGUAGES[currentLanguage]
+		const {i18nStore} = this.props
+		const lang = LANGUAGES[i18nStore.language]
 
-		if (languages.length < 2) {
+		if (this.availableLanguages.length < 2) {
 			return null
 		}
 
@@ -75,9 +57,9 @@ export class I18nMenu extends Component {
 			</>}
 		>
 			<Dropdown.Menu>
-				{languages.map(option => <Dropdown.Item
+				{this.availableLanguages.map(option => <Dropdown.Item
 					key={option.value}
-					active={currentLanguage === option.value}
+					active={i18nStore.language === option.value}
 					onClick={this.handleChange}
 					{...option}
 					className={styles.menuItem}
@@ -86,8 +68,8 @@ export class I18nMenu extends Component {
 				{DEBUG?
 					<Dropdown.Item
 						onClick={this.toggleOverlay}
-						icon={overlay? 'eye slash' : 'eye'}
-						text={overlay ? 'Hide Overlay' : 'Show Overlay'}
+						icon={i18nStore.overlay? 'eye slash' : 'eye'}
+						text={i18nStore.overlay? 'Hide Overlay' : 'Show Overlay'}
 					/> :
 					<Dropdown.Item
 						as="a"
@@ -105,7 +87,4 @@ export class I18nMenu extends Component {
 	}
 }
 
-export default connect(state => ({
-	language: state.language.site,
-	overlay: state.i18nOverlay,
-}))(I18nMenu)
+export default I18nMenu

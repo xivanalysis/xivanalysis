@@ -1,5 +1,6 @@
-import {Trans} from '@lingui/react'
+import {Trans, i18nMark} from '@lingui/react'
 import React from 'react'
+import {Table} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -26,6 +27,8 @@ const CLIPPING_SEVERITY = {
 
 export default class DoTs extends Module {
 	static handle = 'dots'
+	static title = 'DoTs'
+	static i18n_id = i18nMark('smn.dots.title')
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -39,6 +42,10 @@ export default class DoTs extends Module {
 	_clip = {
 		[STATUSES.BIO_III.id]: 0,
 		[STATUSES.MIASMA_III.id]: 0,
+	}
+	_application = {
+		[STATUSES.BIO_III.id]: [],
+		[STATUSES.MIASMA_III.id]: [],
 	}
 
 	constructor(...args) {
@@ -62,6 +69,8 @@ export default class DoTs extends Module {
 		// If it's not been applied yet, or we're rushing, set it and skip out
 		if (!lastApplication[statusId] || this.gauge.isRushing()) {
 			lastApplication[statusId] = event.timestamp
+			//save the application for later use in the output
+			this._application[statusId].push({event: event, clip: null})
 			return
 		}
 
@@ -74,9 +83,13 @@ export default class DoTs extends Module {
 		// Also remove invuln time in the future that casting later would just push dots into
 		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
 		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId] + clip)
+		clip = Math.max(0, clip)
 
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] += Math.max(0, clip)
+		this._clip[statusId] += clip
+
+		//save the application for later use in the output
+		this._application[statusId].push({event: event, clip: clip})
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -157,5 +170,60 @@ export default class DoTs extends Module {
 
 		// Get as %. Capping to 100%.
 		return Math.min(100, (this.combatants.getStatusUptime(STATUSES.SHADOW_FLARE.id) / maxTotalDuration) * 100)
+	}
+
+	output() {
+		let totalBioClip = 0
+		let totalMiasmaClip = 0
+		return <Table collapsing unstackable style={{border: 'none'}}>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell style={{padding: '0 1em 0 0'}}>
+						<Table collapsing unstackable>
+							<Table.Header>
+								<Table.Row>
+									<Table.HeaderCell><ActionLink {...ACTIONS.MIASMA_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{this._application[STATUSES.MIASMA_III.id].map(
+									(event) => {
+										totalMiasmaClip += event.clip
+										return <Table.Row key={event.event.timestamp}>
+											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
+											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
+											<Table.Cell>{totalMiasmaClip ? this.parser.formatDuration(totalMiasmaClip) : '-'}</Table.Cell>
+										</Table.Row>
+									})}
+							</Table.Body>
+						</Table>
+					</Table.Cell>
+					<Table.Cell style={{padding: '0 0 0 1em'}}>
+						<Table collapsing unstackable>
+							<Table.Header>
+								<Table.Row>
+									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{this._application[STATUSES.BIO_III.id].map(
+									(event) => {
+										totalBioClip += event.clip
+										return <Table.Row key={event.event.timestamp}>
+											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
+											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
+											<Table.Cell>{totalBioClip ? this.parser.formatDuration(totalBioClip) : '-'}</Table.Cell>
+										</Table.Row>
+									})}
+							</Table.Body>
+						</Table>
+					</Table.Cell>
+				</Table.Row>
+			</Table.Body>
+		</Table>
 	}
 }

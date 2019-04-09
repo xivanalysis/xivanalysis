@@ -200,7 +200,7 @@ export default {
 		potency: 270, //Increase Black by 9
 		breaksCombo: true,
 	},
-	VERAREO: {
+	VERAERO: {
 		id: 7507,
 		name: 'Verareo',
 		icon: 'https://xivapi.com/i/003000/003205.png',

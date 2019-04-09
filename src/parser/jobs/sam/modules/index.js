@@ -5,6 +5,7 @@ import Kaiten from './Kaiten'
 import Kenki from './Kenki'
 import Sen from './Sen'
 import Speedmod from './Speedmod'
+import Meikyo from './Meikyo'
 
 export default [
 	Buffs,
@@ -14,4 +15,5 @@ export default [
 	Kenki,
 	Sen,
 	Speedmod,
+	Meikyo,
 ]
