@@ -1,6 +1,7 @@
 export default {
 	AETHERFLOW: 51,
 	SHADOW_FLARE: 52,
-	WEAVING: 53,
+	DOTS: 53,
+	WEAVING: 54,
 	CLERIC_STANCE: 99,
 }
