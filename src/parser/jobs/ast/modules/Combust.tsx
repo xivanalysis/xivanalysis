@@ -44,7 +44,7 @@ export default class Combust extends DoTs {
 	}
 
 	addClippingSuggestions(clip: any) {
-		// Suggestion for Goring Blade DoT clipping
+		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.COMBUST_II.icon,
 			content: <Trans id="ast.dots.suggestion.clip.content">
