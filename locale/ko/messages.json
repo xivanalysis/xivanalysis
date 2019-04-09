@@ -29,7 +29,7 @@
   "ast.dots.rule.name": "항상 도트 데미지가 유지되도록 하십시오.",
   "ast.dots.suggestion.clip.content": "이전에 부여한 <0/>의 지속 시간이 충분할 경우 갱신을 피하십시오.",
   "ast.dots.suggestion.clip.why": "너무 빨리 도트를 갱신하여 {0}의 {1}를 잃었습니다.",
-  "ast.draw.checklist.description": "점지는 점성술사의 핵심기술이기 떄문에, 최대한 많이 사용할 수 있도록 합니다.",
+  "ast.draw.checklist.description": "점지는 점성술사의 핵심 기술이며 최대한 많이 사용해야 합니다.",
   "ast.draw.checklist.name": "점지를 자주 사용하십시오.",
   "ast.draw.checklist.requirement.name": "사용횟수: <0/>",
   "ast.draw.suggestions.cards.content": "대부분의 경우 카드를 사용하지 않고 장시간 방치하는 것은 가치가 없습니다. 그렇게 하면 다음 점지까지의 시간이 길어지고 전투에서 카드를 뽑을 총 기회가 줄어듭니다. 다른 카드에 덮어씌워지는 등의 영향이 없는 경우 카드를 뽑은 후 가능한 빨리 사용하십시오.",
