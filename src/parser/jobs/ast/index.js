@@ -42,7 +42,7 @@ export default {
 		{user: CONTRIBUTORS.SUSHIROU, role: 'Maintainer'},
 	],
 	changelog: [{
-		date: new Date('2019-02-18'),
+		date: new Date('2019-04-09'),
 		changes: <>
 			Added a link in Arcana Logs that will jump to timeline, and a button that jumps back to top. Also made the Minor Arcana icons consistent.
 		</>,
