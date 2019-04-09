@@ -1,6 +1,6 @@
 {
   "ast.arcana-suggestions.messages.accordion-title": "전체 아르카나 로그",
-  "ast.arcana-suggestions.messages.disclaimer": "카드 관리에 대한 평가 기능은 아직 작업중입니다. 현재 완성되지는 않았습니다. <0/> 이 섹션의 목적은 최선의 결과를 내는 일반적인 추천 사항을 제시하는 것에 있습니다. 이 기능은 어떤 파티원이 플레이를 더 잘 하였는지 혹은 그들이 어느 타이밍에 버스트 딜을 내었는지에 대해서는 고려하지 않습니다.",
+  "ast.arcana-suggestions.messages.disclaimer": "카드 관리 평가 기능은 아직 개발중이며 분석 결과를 제시하지 않습니다. <0/> 이 섹션은 일반적인 추천 사항만 제시하며 파티원들의 개별 폭딜 구간 혹은 어느 파티원의 딜이 더 나은지 고려하지않습니다.",
   "ast.arcana-suggestions.messages.explanation": "이 섹션은 전투중 생성된 모든 카드들과 각 액션 이후의 카드 적용 상태를 추적합니다",
   "ast.arcana-suggestions.messages.latest-action": "마지막 액션",
   "ast.arcana-suggestions.messages.pull": "초기 상태",
@@ -56,7 +56,7 @@
   "blm.about.description.warning": "이 기능은 아직 완전하게 지원되지 않습니다.",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/>가 끊기는 것으로 인하여 <1/>을 사용할 기회가 줄어들게 되고, <2/>를 다시 사용함으로 인하여 글로벌 쿨다운에 밀림이 발생하게 되고, <3/>과 <4/>를 사용할 수 없게 되며 <5/>가 없는 것으로 인하여 10%의 데미지 보너스를 잃게 됩니다.",
   "blm.gauge.suggestions.dropped-enochian.why": "천사의 언어가 끊긴 횟수: {0}{1, plural, other {회}}",
-  "blm.gauge.suggestions.lost-foul.content": "당신은 <1/>가 끊겨 <0/>를 사용할 기회를 잃었습니다. <2/>는 당신의 가장 강력한 마법이기 때문에 가능한 많이 사용해야 합니다.",
+  "blm.gauge.suggestions.lost-foul.content": "<1/>가 끊겨 <0/>을 사용할 기회를 잃었습니다. <2/>는 가장 강한 글쿨기이기에 최대한 많이 사용해야 합니다.",
   "blm.gauge.suggestions.lost-foul.why": "{0, plural, other {# 회}}의 금지된 언어 사용 기회를 잃었습니다.",
   "blm.gauge.suggestions.overwritten-foul.content": "<0/>을 30초 마다 사용하지 않으면 다음 금지된 언어에 덮어씌워지게 됩니다. <1/>은 흑마의 가장 강력한 글쿨기이기 때문에 가능한 많이 사용해야 합니다.",
   "blm.gauge.suggestions.overwritten-foul.why": "{0, plural, other {#회}}의 금지된 언어 사용 기회를 잃었습니다.",
