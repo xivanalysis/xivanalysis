@@ -43,7 +43,7 @@ export default class Combust extends DoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: any) {
+	addClippingSuggestions(clip: TODO) {
 		// Suggestion for DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.COMBUST_II.icon,

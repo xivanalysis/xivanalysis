@@ -168,8 +168,7 @@ export default class ArcanaSuggestions extends Module {
 							return <Table.Row key={artifact.timestamp} className={styles.cardActionRow}>
 
 								<Table.Cell>
-									<a onClick={() =>
-										this.timeline.show((artifact.timestamp-timelineLinkLowerMod) - this.parser.fight.start_time, (artifact.timestamp+timelineLinkUpperMod) - this.parser.fight.start_time)}>
+									<a onClick={() => this.jumpToTimeline(artifact.timestamp)}>
 										{this.parser.formatTimestamp(artifact.timestamp)}</a>
 								</Table.Cell>
 								{this.RenderAction(artifact)}
@@ -294,6 +293,13 @@ export default class ArcanaSuggestions extends Module {
 		}
 		return UNKNOWN_CARD_STATUS_ICON
 
+	}
+
+	jumpToTimeline(timestamp) {
+		this.timeline.show(
+			(timestamp - timelineLinkLowerMod) - this.parser.fight.start_time,
+			(timestamp + timelineLinkUpperMod) - this.parser.fight.start_time
+		)
 	}
 
 	// Helper for output()
