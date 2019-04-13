@@ -23,7 +23,7 @@ export default class Options extends React.Component {
 	render() {
 		const {view = 'vertical'} = this.props
 
-		return <div className={view === 'horizontal' && styles.horizontal}>
+		return <div className={view === 'horizontal' ? styles.horizontal : undefined}>
 			<div className={styles.row}>
 				<ReportLink/>
 			</div>
