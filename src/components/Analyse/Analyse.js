@@ -20,7 +20,6 @@ import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
-import fflogsLogo from './fflogs.png'
 import {observable, runInAction, reaction} from 'mobx'
 
 @inject('reportStore', 'globalErrorStore')
@@ -141,18 +140,6 @@ class Analyse extends Component {
 						result={result}
 					/>
 				)}
-
-				<a
-					href={this.getReportUrl()}
-					target="_blank"
-					rel="noopener noreferrer"
-					className={styles.reportLink}
-				>
-					<img src={fflogsLogo} alt="FF Logs logo" className={styles.menuLogo}/>
-					<Trans id="core.analyse.view-on-fflogs">
-						View report on FF Logs
-					</Trans>
-				</a>
 			</SidebarContent>
 
 			<div className={styles.resultsContainer}>
