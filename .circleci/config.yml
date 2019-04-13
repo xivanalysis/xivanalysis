@@ -122,7 +122,9 @@ workflows:
             - test
           filters:
             branches:
-              only: master
+              only:
+                - master
+                - shadowbringers
       - deploy:
           requires:
             - build
