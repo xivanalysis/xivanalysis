@@ -1208,6 +1208,18 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
+"@xivanalysis/parser-core@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-core/-/parser-core-0.0.1.tgz#03fd5406c8b522dc8d1723df2042bc79950683c1"
+  integrity sha512-PaVPUhBJcNAx0lsI0AcjL2TFqufN8f3fPgiNjLlPZzvAus3IyF10A+Pcxs4DhWAG4+CPXbKJ/xC7cDi5pwqC0w==
+
+"@xivanalysis/parser-reader-fflogs@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-reader-fflogs/-/parser-reader-fflogs-0.0.1.tgz#c09e3ffd315a89ecf8198c9bbf40d725ab7d4c0e"
+  integrity sha512-hHHY4soCTkegl5NZiUmf5Be4fC3/SCA8DElaaO+6LKTQ1qiAJYEyYqWq9IjBOX/VwWOSfQo2jdnFR3hkSeAC0g==
+  dependencies:
+    lodash "^4.17.11"
+
 "@xivanalysis/tooltips@^0.0.4":
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.4.tgz#f45814c2260c0841b19eb239ba2c8292dd0cd1de"

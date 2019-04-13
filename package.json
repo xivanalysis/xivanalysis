@@ -47,6 +47,8 @@
     "@babel/polyfill": "^7.0.0",
     "@lingui/react": "^2.5.0",
     "@types/color": "^3.0.0",
+    "@xivanalysis/parser-core": "^0.0.1",
+    "@xivanalysis/parser-reader-fflogs": "^0.0.1",
     "@xivanalysis/tooltips": "^0.0.4",
     "axios": "^0.18.0",
     "chart.js": "^2.7.2",
