@@ -14,7 +14,6 @@ class LastFightRedirect extends Component {
 		reportStore: PropTypes.instanceOf(ReportStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
-				section: PropTypes.string.isRequired,
 				code: PropTypes.string.isRequired,
 				combatant: PropTypes.string,
 			}).isRequired,
@@ -49,7 +48,7 @@ class LastFightRedirect extends Component {
 		// Get the fight ID and build the correct URL
 		const fightId = report.fights[report.fights.length - 1].id
 		const url = [
-			params.section,
+			'fflogs',
 			params.code,
 			fightId,
 			params.combatant || '',

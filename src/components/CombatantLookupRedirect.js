@@ -58,7 +58,7 @@ class CombatantLookupRedirect extends React.Component {
 		// If we didn't find the combatant, take them to the report page as a fallback
 		if (!combatant) {
 			return <Redirect to={'/' + [
-				'find',
+				'fflogs',
 				params.code,
 				params.fight,
 			].join('/')}/>
@@ -66,7 +66,7 @@ class CombatantLookupRedirect extends React.Component {
 
 		// We've got the combatant, redirect to the analyse page
 		return <Redirect to={'/' + [
-			'analyse',
+			'fflogs',
 			params.code,
 			params.fight,
 			combatant.id,

@@ -26,16 +26,7 @@ export function addExtraIndex<T extends Record<string, object>, K extends keyof 
 
 // This is pretty damn nasty, but it'll do for now
 export function getPathMatch(pathname: string) {
-	const page = matchPath<{ page: string }>(pathname, {path: '/:page?'})
-
-	let path = '/'
-	switch (page !== null && page.params.page) {
-	case 'find':    path = '/find/:code/:fight?'; break
-	case 'analyse': path = '/analyse/:code/:fight/:combatant'; break
-	default:        // Do nothing
-	}
-
-	return matchPath(pathname, {path})
+	return matchPath(pathname, {path: '/fflogs/:code/:fight?/:combatant?'})
 }
 
 /**

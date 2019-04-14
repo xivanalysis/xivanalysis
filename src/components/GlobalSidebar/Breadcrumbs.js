@@ -66,7 +66,7 @@ class Breadcrumbs extends React.Component {
 			crumbs.push({
 				title,
 				subtitle,
-				url: `/find/${code}/`,
+				url: `/fflogs/${code}/`,
 			})
 		}
 
@@ -89,7 +89,7 @@ class Breadcrumbs extends React.Component {
 			crumbs.push({
 				title,
 				subtitle,
-				url: `/find/${code}/${fightId}/`,
+				url: `/fflogs/${code}/${fightId}/`,
 			})
 		}
 
@@ -102,7 +102,7 @@ class Breadcrumbs extends React.Component {
 			}
 			crumbs.push({
 				title,
-				url: `/analyse/${code}/${fightId}/${combatantId}/`,
+				url: `/fflogs/${code}/${fightId}/${combatantId}/`,
 			})
 		}
 

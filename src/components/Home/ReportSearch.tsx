@@ -66,16 +66,15 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 			return
 		}
 
-		let url = `/${code}/`
+		let url = `${code}/`
 		if (fight) {
 			url += `${fight}/`
 			if (player) {
 				url += `${player}/`
 			}
 		}
-		url = ((fight && player)? 'analyse' : 'find') + url
 
-		this.props.history.push(url)
+		this.props.history.push(`fflogs/${url}`)
 	}
 
 	render() {

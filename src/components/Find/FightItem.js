@@ -29,7 +29,7 @@ class FightItem extends Component {
 
 		const code = this.props.code
 
-		const url = `/find/${code}/${id}/`
+		const url = `/fflogs/${code}/${id}/`
 		const colour = kill? 'green' : 'red'
 		const progress = Math.round(100 - (fightPercentage/100))
 		const duration = Math.round((end_time - start_time)/1000)
