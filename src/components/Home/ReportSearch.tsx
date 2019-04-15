@@ -23,8 +23,9 @@ const INPUT_EXPRESSIONS = [
 	 * /find/1234567890abcdef/
 	 * /find/1234567890abcdef/1/
 	 * /analyse/1234567890abcdef/1/1/
+	 * /fflogs/1234567890abcdef/1/1/
 	 */
-	/\/(?:analyse|find)\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
+	/\/(?:analyse|find|fflogs)\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
 
 	/**
 	 * xivrdps
