@@ -1,4 +1,7 @@
 import {Actor, Events} from '@xivanalysis/parser-core'
+import {isDefined} from 'utilities'
+import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
+import {Module} from './Module'
 
 /*
 👏    NO    👏
@@ -37,8 +40,28 @@ export class Analyser {
 			throw new Error('Could not find actor matching the ID specified.')
 		}
 		this.actor = event.actor
+	}
 
-		// TODO: HOW DO I SIGNAL WHAT BOSS IT IS?
-		//       Should I split "boss" modules by zone instead?
+	async loadModules() {
+		// TODO: Job & zone
+		// NOTE: Order of groups here is the order they will be loaded in. Later groups
+		//       override earlier groups.
+		const metas = [
+			AVAILABLE_MODULES.CORE,
+		].filter(isDefined)
+
+		// Load in the modules
+		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
+		let modules: ReadonlyArray<ReadonlyArray<typeof Module>>
+		try {
+			modules = await Promise.all(metas.map(meta => meta.loadModules()))
+		} catch (error) {
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
+			throw new Error('TODO: Use the proper error for this')
+		}
+
+		// TODO: Load the modules
 	}
 }
