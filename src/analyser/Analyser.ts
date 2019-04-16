@@ -19,12 +19,15 @@ const generateActorFinder = (id: Actor['id']) =>
 export class Analyser {
 	private readonly events: Events.Base[]
 	private readonly actor: Actor
+	private readonly zoneId: number
 
 	constructor(opts: {
 		events: Events.Base[],
 		actorId: Actor['id'],
+		zoneId: number,
 	}) {
 		this.events = opts.events
+		this.zoneId = opts.zoneId
 
 		// Find the AddActor event for the provided actor
 		// If they aren't added, we can't analyse them, so throw
