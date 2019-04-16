@@ -1,5 +1,13 @@
 import {Actor, Events} from '@xivanalysis/parser-core'
 
+/*
+👏    NO    👏
+👏  FFLOGS  👏
+👏    IN    👏
+👏   THE    👏
+👏 ANALYSER 👏
+*/
+
 // TODO: should this be in the parser?
 const isAddActor = (event: Events.Base): event is Events.AddActor =>
 	event.type === Events.Type.ADD_ACTOR
