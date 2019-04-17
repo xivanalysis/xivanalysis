@@ -63,5 +63,6 @@ export class Analyser {
 		}
 
 		// TODO: Load the modules
+		console.log('we loaded the modules fam', modules)
 	}
 }

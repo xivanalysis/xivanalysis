@@ -1,4 +1,6 @@
 import {Trans} from '@lingui/react'
+import {getActorId} from '@xivanalysis/parser-reader-fflogs'
+import {observable, runInAction, reaction} from 'mobx'
 import {inject, observer, disposeOnUnmount} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
@@ -7,25 +9,25 @@ import {
 	Loader,
 } from 'semantic-ui-react'
 
+import {Analyser} from 'analyser/Analyser'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import JOBS, {ROLES} from 'data/JOBS'
-import {Conductor} from 'parser/Conductor'
 import {ReportStore} from 'store/report'
 import {GlobalErrorStore} from 'store/globalError'
 
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
+import {fflogsPipeline} from './FflogsPipeline'
 
 import styles from './Analyse.module.css'
-import {observable, runInAction, reaction} from 'mobx'
 
 @inject('reportStore', 'globalErrorStore')
 @observer
 class Analyse extends Component {
-	@observable conductor;
+	@observable analyser;
 	@observable complete = false;
 
 	// TODO: I should really make a definitions file for this shit
@@ -73,23 +75,28 @@ class Analyse extends Component {
 				&& params.combatant
 		if (!valid) { return }
 
-		// We've got this far, boot up the conductor
+		// We've got this far, try to retrieve & parse the events
 		const fight = report.fights.find(fight => fight.id === this.fightId)
 		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
-		const conductor = new Conductor(report, fight, combatant)
 
+		let analyser
 		try {
-			conductor.sanityCheck()
-			await conductor.configure()
+			const events = await fflogsPipeline({report, fight, combatant})
+			analyser = new Analyser({
+				events,
+				actorId: getActorId({actor: combatant}),
+				zoneId: fight.zoneID,
+			})
+			analyser.loadModules()
 		} catch (error) {
 			this.props.globalErrorStore.setGlobalError(error)
 			return
 		}
 
-		runInAction(() => this.conductor = conductor)
+		runInAction(() => this.analyser = analyser)
 
-		// Run the parse and signal completion
-		await conductor.parse()
+		// Run the analysis and signal completion
+		// TODO: Run the analyser
 		runInAction(() => this.complete = true)
 	}
 
@@ -104,7 +111,7 @@ class Analyse extends Component {
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
-		if (!this.conductor || !this.complete) {
+		if (!this.analyser || !this.complete) {
 			return (
 				<Loader active>
 					<Trans id="core.analyse.load-analysis">
@@ -117,7 +124,8 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = JOBS[player.type]
-		const results = this.conductor.getResults()
+		// TODO: Get output kek
+		const results = []
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
