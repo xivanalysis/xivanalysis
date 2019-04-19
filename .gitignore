@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+.yalc
+yalc.lock
 
 # testing
 /coverage
