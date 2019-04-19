@@ -1,1 +1,3 @@
-export default []
+import {EventView} from './EventView'
+
+export default [EventView]

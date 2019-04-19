@@ -1,7 +1,9 @@
 import {Actor, Events} from '@xivanalysis/parser-core'
+import {MappedDependency} from 'parser/core/Module'
+import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
-import {Module} from './Module'
+import {Handle, Module} from './Module'
 
 /*
 👏    NO    👏
@@ -10,6 +12,13 @@ import {Module} from './Module'
 👏   THE    👏
 👏 ANALYSER 👏
 */
+
+export interface Hook<T extends Events.Base> {
+	module: Handle,
+	event: T['type'],
+	filter: Partial<T>,
+	callback: (event: T) => void,
+}
 
 // TODO: should this be in the parser?
 const isAddActor = (event: Events.Base): event is Events.AddActor =>
@@ -23,6 +32,20 @@ export class Analyser {
 	private readonly events: Events.Base[]
 	private readonly actor: Actor
 	private readonly zoneId: number
+
+	/** Map of available modules. */
+	private readonly modules = new Map<Handle, Module>()
+	/** Module handles sorted per module loading order. */
+	private moduleOrder: Handle[] = []
+
+	/**
+	 * Mapping of event types to an array of hooks for them, ordered per the
+	 * module loading order.
+	 */
+	private readonly hooks = new Map<
+		Events.Base['type'] | symbol,
+		Array<Hook<Events.Base>>
+	>()
 
 	constructor(opts: {
 		events: Events.Base[],
@@ -42,7 +65,12 @@ export class Analyser {
 		this.actor = event.actor
 	}
 
-	async loadModules() {
+	async init() {
+		const constructors = await this.loadModules()
+		this.buildModules(constructors)
+	}
+
+	private async loadModules() {
 		// TODO: Job & zone
 		// NOTE: Order of groups here is the order they will be loaded in. Later groups
 		//       override earlier groups.
@@ -52,9 +80,9 @@ export class Analyser {
 
 		// Load in the modules
 		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
-		let modules: ReadonlyArray<ReadonlyArray<typeof Module>>
+		let groupedConstructors: ReadonlyArray<ReadonlyArray<typeof Module>>
 		try {
-			modules = await Promise.all(metas.map(meta => meta.loadModules()))
+			groupedConstructors = await Promise.all(metas.map(meta => meta.loadModules()))
 		} catch (error) {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
@@ -62,7 +90,38 @@ export class Analyser {
 			throw new Error('TODO: Use the proper error for this')
 		}
 
-		// TODO: Load the modules
-		console.log('we loaded the modules fam', modules)
+		const constructors: Record<string, typeof Module> = {}
+		groupedConstructors.flat().forEach(constructor => {
+			constructors[constructor.handle] = constructor
+		})
+
+		return constructors
+	}
+
+	private buildModules(constructors: Record<string, typeof Module>) {
+		// Build the values we need for the toposort
+		const nodes = Object.keys(constructors)
+		const edges: Array<[string, string]> = []
+		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
+			edges.push([mod, this.getDepHandle(dep)])
+		}))
+
+		// Sort modules to load dependencies first
+		// Reverse is required to switch it into depencency order instead of sequence
+		// This will naturally throw an error on cyclic deps
+		this.moduleOrder = toposort.array(nodes, edges).reverse()
+
+		// Initialise the modules
+		this.moduleOrder.forEach(mod => {
+			this.modules.set(mod, new constructors[mod]())
+		})
+	}
+
+	private getDepHandle(dep: string | MappedDependency) {
+		if (typeof dep === 'string') {
+			return dep
+		}
+
+		return dep.handle
 	}
 }

@@ -87,7 +87,7 @@ class Analyse extends Component {
 				actorId: getActorId({actor: combatant}),
 				zoneId: fight.zoneID,
 			})
-			analyser.loadModules()
+			await analyser.init()
 		} catch (error) {
 			this.props.globalErrorStore.setGlobalError(error)
 			return
@@ -97,6 +97,7 @@ class Analyse extends Component {
 
 		// Run the analysis and signal completion
 		// TODO: Run the analyser
+
 		runInAction(() => this.complete = true)
 	}
 
