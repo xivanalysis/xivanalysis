@@ -1,4 +1,5 @@
 import {Actor, Events} from '@xivanalysis/parser-core'
+import {DependencyCascadeError} from 'errors'
 import {MappedDependency} from 'parser/core/Module'
 import toposort from 'toposort'
 import {isDefined} from 'utilities'
@@ -12,13 +13,6 @@ import {Handle, Module} from './Module'
 👏   THE    👏
 👏 ANALYSER 👏
 */
-
-export interface Hook<T extends Events.Base> {
-	module: Handle,
-	event: T['type'],
-	filter: Partial<T>,
-	callback: (event: T) => void,
-}
 
 // TODO: should this be in the parser?
 const isAddActor = (event: Events.Base): event is Events.AddActor =>
@@ -35,17 +29,12 @@ export class Analyser {
 
 	/** Map of available modules. */
 	private readonly modules = new Map<Handle, Module>()
+
 	/** Module handles sorted per module loading order. */
 	private moduleOrder: Handle[] = []
 
-	/**
-	 * Mapping of event types to an array of hooks for them, ordered per the
-	 * module loading order.
-	 */
-	private readonly hooks = new Map<
-		Events.Base['type'] | symbol,
-		Array<Hook<Events.Base>>
-	>()
+	private triggerModules: Handle[] = []
+	private moduleErrors = new Map<Handle, Error>()
 
 	constructor(opts: {
 		events: Events.Base[],
@@ -65,6 +54,11 @@ export class Analyser {
 		this.actor = event.actor
 	}
 
+	// -----
+	// #region Module loading / initialisation
+	// -----
+
+	/** Initialise the analyser. */
 	async init() {
 		const constructors = await this.loadModules()
 		this.buildModules(constructors)
@@ -113,7 +107,7 @@ export class Analyser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			this.modules.set(mod, new constructors[mod]())
+			this.modules.set(mod, new constructors[mod]({}))
 		})
 	}
 
@@ -124,4 +118,92 @@ export class Analyser {
 
 		return dep.handle
 	}
+
+	// -----
+	// #endregion
+	// -----
+
+	// -----
+	// #region Event handling
+	// -----
+
+	// TODO: Normalisation? idek
+
+	analyse() {
+		// Copy of the module order we'll modify while analysing
+		this.triggerModules = this.moduleOrder.slice()
+
+		// Iterate over every event, inc. fabs, for each module
+		for (const event of this.iterateEvents()) {
+			this.triggerModules.forEach(handle => this.triggerEvent({
+				handle,
+				event,
+			}))
+		}
+	}
+
+	private *iterateEvents() {
+		// Start the parse with an 'init' fab
+		// TODO
+
+		for (const event of this.events) {
+			// Iterate over the actual event first
+			yield event
+
+			// Iterate over any fabrications arising from the event and clear the queue
+			// TODO
+		}
+
+		// Finish with 'complete' fab
+		// TODO
+	}
+
+	private triggerEvent({handle, event}: {
+		handle: Handle,
+		event: Events.Base,
+	}) {
+		try {
+			const module = this.modules.get(handle)
+			if (!module) {
+				throw new Error(`Tried to access undefined module ${handle}`)
+			}
+			module.triggerEvent(event)
+		} catch (error) {
+			// If we're in dev, throw the error back up
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
+
+			// TODO: Sentry
+
+			this.setModuleError({handle, error})
+		}
+	}
+
+	private setModuleError({handle, error}: {
+		handle: Handle,
+		error: Error,
+	}) {
+		// Set the error for the module
+		this.triggerModules.splice(this.triggerModules.indexOf(handle), 1)
+		this.moduleErrors.set(handle, error)
+
+		// Cascade the module through dependants
+		this.triggerModules.slice().forEach(trigHandle => {
+			const m = this.modules.get(trigHandle)
+			if (!m) { return }
+
+			const dependencies = (m.constructor as typeof Module).dependencies
+			if (dependencies.some(dep => this.getDepHandle(dep) === handle)) {
+				this.setModuleError({
+					handle: trigHandle,
+					error: new DependencyCascadeError({depencency: handle}),
+				})
+			}
+		})
+	}
+
+	// -----
+	// #endregion
+	// -----
 }
