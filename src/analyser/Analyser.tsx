@@ -162,7 +162,7 @@ export class Analyser {
 	private *iterateEvents(): IterableIterator<Events.Base> {
 		// Start the parse with an 'init' fab
 		yield {
-			timestamp: 0,
+			timestamp: this.events[0].timestamp,
 			type: EventTypes.INIT,
 		}
 
@@ -179,7 +179,7 @@ export class Analyser {
 
 		// Finish with 'complete' fab
 		yield {
-			timestamp: Infinity,
+			timestamp: this.events[this.events.length - 1].timestamp,
 			type: EventTypes.COMPLETE,
 		}
 	}
