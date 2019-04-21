@@ -4,6 +4,7 @@ import {MappedDependency} from 'parser/core/Module'
 import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
+import {registerEvent} from './Events'
 import {Handle, Module} from './Module'
 
 /*
@@ -13,6 +14,11 @@ import {Handle, Module} from './Module'
 👏   THE    👏
 👏 ANALYSER 👏
 */
+
+export const EventTypes = {
+	INIT: registerEvent({name: 'init'}),
+	COMPLETE: registerEvent({name: 'complete'}),
+}
 
 // TODO: should this be in the parser?
 const isAddActor = (event: Events.Base): event is Events.AddActor =>
@@ -35,6 +41,8 @@ export class Analyser {
 
 	private triggerModules: Handle[] = []
 	private moduleErrors = new Map<Handle, Error>()
+
+	private fabricationQueue: Events.Base[] = []
 
 	constructor(opts: {
 		events: Events.Base[],
@@ -142,20 +150,29 @@ export class Analyser {
 		}
 	}
 
-	private *iterateEvents() {
+	private *iterateEvents(): IterableIterator<Events.Base> {
 		// Start the parse with an 'init' fab
-		// TODO
+		yield {
+			timestamp: 0,
+			type: EventTypes.INIT,
+		}
 
 		for (const event of this.events) {
 			// Iterate over the actual event first
 			yield event
 
 			// Iterate over any fabrications arising from the event and clear the queue
-			// TODO
+			if (this.fabricationQueue.length > 0) {
+				yield* this.fabricationQueue
+				this.fabricationQueue = []
+			}
 		}
 
 		// Finish with 'complete' fab
-		// TODO
+		yield {
+			timestamp: Infinity,
+			type: EventTypes.COMPLETE,
+		}
 	}
 
 	private triggerEvent({handle, event}: {
