@@ -2,6 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import {Actor, Events} from '@xivanalysis/parser-core'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
+import {ModulesNotFoundError} from 'errors'
 import {MappedDependency} from 'parser/core/Module'
 import React from 'react'
 import toposort from 'toposort'
@@ -65,7 +66,6 @@ export class Analyser {
 		// If they aren't added, we can't analyse them, so throw
 		const event = opts.events.find(generateActorFinder(opts.actorId))
 		if (!event) {
-			// TODO: Proper error
 			throw new Error('Could not find actor matching the ID specified.')
 		}
 		this.actor = event.actor
@@ -98,7 +98,7 @@ export class Analyser {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
 			}
-			throw new Error('TODO: Use the proper error for this')
+			throw new ModulesNotFoundError()
 		}
 
 		const constructors: Record<string, typeof Module> = {}
