@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Events} from '@xivanalysis/parser-core'
+import {eventMeta} from 'analyser/Events'
 import {ALL_EVENTS, DISPLAY_MODE, Module} from 'analyser/Module'
 import React from 'react'
 import {EventViewComponent} from './Component'
@@ -31,7 +32,12 @@ export class EventView extends Module {
 	}
 
 	private formatEvent(event: Events.Base): string {
-		return JSON.stringify(event)
+		const meta = eventMeta.get(event.type)
+		if (!meta || !meta.formatter) {
+			return JSON.stringify(event)
+		}
+
+		return meta.formatter(event)
 	}
 
 	output() {

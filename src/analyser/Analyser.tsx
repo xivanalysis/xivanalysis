@@ -26,8 +26,14 @@ export interface Result {
 }
 
 export const EventTypes = {
-	INIT: registerEvent({name: 'init'}),
-	COMPLETE: registerEvent({name: 'complete'}),
+	INIT: registerEvent({
+		name: 'Analyser/INIT',
+		formatter: () => 'Analysis has begun.',
+	}),
+	COMPLETE: registerEvent({
+		name: 'Analyser/COMPLETE',
+		formatter: () => 'Analysis has concluded.',
+	}),
 }
 
 // TODO: should this be in the parser?
