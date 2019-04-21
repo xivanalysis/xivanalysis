@@ -124,7 +124,9 @@ export class Analyser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			this.modules.set(mod, new constructors[mod]({}))
+			this.modules.set(mod, new constructors[mod]({
+				analyser: this,
+			}))
 		})
 	}
 
@@ -307,6 +309,34 @@ export class Analyser {
 				markup: output,
 			}
 		}
+	}
+
+	// -----
+	// #endregion
+	// -----
+
+	// -----
+	// #region Utilities
+	// -----
+
+	relativeTimestamp(timestamp: number) {
+		return timestamp - this.events[0].timestamp
+	}
+
+	formatTimestamp(timestamp: number, secondPrecision?: number) {
+		return this.formatDuration(this.relativeTimestamp(timestamp), secondPrecision)
+	}
+
+	formatDuration(duration: number, secondPrecision: number = 2) {
+		const floatSeconds = duration / 1000
+
+		/* tslint:disable:no-magic-numbers */
+		const m = Math.floor(floatSeconds / 60)
+		const s = Math.floor(floatSeconds % 60).toString().padStart(2, '0')
+		const ms = Math.round((floatSeconds % 1) * 10**secondPrecision).toString().padStart(secondPrecision, '0')
+		/* tslint:enable:no-magic-numbers */
+
+		return `${m}:${s}${secondPrecision > 0 && '.' + ms}`
 	}
 
 	// -----

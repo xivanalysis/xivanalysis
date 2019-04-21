@@ -1,6 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {Events} from '@xivanalysis/parser-core'
 import _ from 'lodash'
+import {Analyser} from './Analyser'
 
 export type Handle = string
 
@@ -67,8 +68,13 @@ export class Module {
 
 	private hooks = new Map<HookEventType<Events.Base>, Set<Hook<Events.Base>>>()
 
+	protected analyser: Analyser
+
 	constructor(opts: {
+		analyser: Analyser,
 	}) {
+		this.analyser = opts.analyser
+
 		this.init()
 	}
 

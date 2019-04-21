@@ -3,3 +3,7 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
+
+.row.even {
+	background: rgba(0, 0, 0, 0.1);
+}

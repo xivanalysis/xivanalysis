@@ -1,1 +1,1 @@
-export * from './EventView'
+export {EventView} from './EventView'
