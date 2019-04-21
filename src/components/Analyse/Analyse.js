@@ -124,8 +124,8 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = JOBS[player.type]
-		// TODO: Get output kek
-		const results = []
+
+		const results = this.analyser.generateResults()
 
 		return <SegmentPositionProvider>
 			<SidebarContent>

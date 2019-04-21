@@ -1,3 +1,4 @@
+import {MessageDescriptor} from '@lingui/core'
 import {Events} from '@xivanalysis/parser-core'
 import _ from 'lodash'
 
@@ -8,18 +9,33 @@ interface MappedDependency {
 	prop: string
 }
 
-export const ALL_EVENTS = Symbol('ALL_EVENTS')
-
 type HookEventType<T extends Events.Base> = T['type'] | typeof ALL_EVENTS
 export type HookCallback<T extends Events.Base> = (event: T) => void
 export interface Hook<T extends Events.Base> {
-	event: HookEventType<T>,
-	filter: Partial<T>,
-	callback: HookCallback<T>,
+	event: HookEventType<T>
+	filter: Partial<T>
+	callback: HookCallback<T>
+}
+
+export const ALL_EVENTS = Symbol('ALL_EVENTS')
+
+export enum DISPLAY_ORDER {
+	TOP = 0,
+	DEFAULT = 50,
+	BOTTOM = 100,
+}
+
+export enum DISPLAY_MODE {
+	COLLAPSIBLE,
+	FULL,
+	/** Don't use this unless you know what you're doing, and you've run it past me. */
+	RAW,
 }
 
 export class Module {
 	static dependencies: Array<Handle | MappedDependency> = []
+	static displayOrder: number = DISPLAY_ORDER.DEFAULT
+	static displayMode: DISPLAY_MODE
 
 	private static _handle: Handle
 	static get handle() {
@@ -35,6 +51,20 @@ export class Module {
 		return (this.constructor as typeof Module).handle
 	}
 
+	private static _title: string | MessageDescriptor
+	static get title() {
+		if (!this._title) {
+			this._title = this.handle.charAt(0).toUpperCase() + this.handle.slice(1)
+		}
+		return this._title
+	}
+	static set title(value) {
+		this._title = value
+	}
+	get title() {
+		return (this.constructor as typeof Module).title
+	}
+
 	private hooks = new Map<HookEventType<Events.Base>, Set<Hook<Events.Base>>>()
 
 	constructor(opts: {
@@ -48,6 +78,11 @@ export class Module {
 	 */
 	protected init() {}
 
+	/**
+	 * Register an event hook. The callback provided will be called for each instance
+	 * of the specified event in the set of analysed events. A filter can be provided
+	 * to reduce the scope of events recieved to only those matching it.
+	 */
 	protected addHook<T extends Events.Base>(
 		event: HookEventType<T>,
 		callback: HookCallback<T>,
@@ -92,12 +127,14 @@ export class Module {
 		return hook
 	}
 
+	/** Remove a previously added hook. */
 	protected removeHook<T extends Events.Base>(hook: Hook<T>) {
 		const hooks = this.hooks.get(hook.event)
 		if (!hooks) { return }
 		hooks.delete(hook as any)
 	}
 
+	/** @internal */
 	triggerEvent<T extends Events.Base>(event: T) {
 		this.runHooks(event, this.hooks.get(ALL_EVENTS))
 		this.runHooks(event, this.hooks.get(event.type))
@@ -111,5 +148,9 @@ export class Module {
 
 			hook.callback(event)
 		})
+	}
+
+	output(): React.ReactNode {
+		return null
 	}
 }

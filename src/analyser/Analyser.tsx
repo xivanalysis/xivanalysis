@@ -1,19 +1,28 @@
+import {MessageDescriptor} from '@lingui/core'
 import {Actor, Events} from '@xivanalysis/parser-core'
+import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {MappedDependency} from 'parser/core/Module'
+import React from 'react'
 import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
-import {Handle, Module} from './Module'
+import {DISPLAY_MODE, Handle, Module} from './Module'
 
 /*
 👏    NO    👏
 👏  FFLOGS  👏
-👏    IN    👏
-👏   THE    👏
+👏  IN THE  👏
 👏 ANALYSER 👏
 */
+
+export interface Result {
+	handle: string
+	name: string | MessageDescriptor
+	mode: DISPLAY_MODE
+	markup: React.ReactNode
+}
 
 export const EventTypes = {
 	INIT: registerEvent({name: 'init'}),
@@ -218,6 +227,86 @@ export class Analyser {
 				})
 			}
 		})
+	}
+
+	// -----
+	// #endregion
+	// -----
+
+	// -----
+	// #region Results handling
+	// -----
+
+	generateResults() {
+		const displayOrder = this.moduleOrder.slice()
+
+		const results = displayOrder
+			.sort(this.moduleDisplaySortFn)
+			.map(this.buildResult)
+			.filter(isDefined)
+
+		// TODO: Cache results
+
+		return results
+	}
+
+	private moduleDisplaySortFn = (a: Handle, b: Handle) => {
+		const aMod = this.modules.get(a)
+		const bMod = this.modules.get(b)
+
+		if (!aMod || !bMod) {
+			return 0
+		}
+
+		const aCtor = (aMod.constructor as typeof Module)
+		const bCtor = (bMod.constructor as typeof Module)
+
+		return aCtor.displayOrder - bCtor.displayOrder
+	}
+
+	private buildResult = (handle: Handle): Result | undefined => {
+		const module = this.modules.get(handle)
+		if (!module) { return }
+
+		const ctor = module.constructor as typeof Module
+
+		const resultMeta = {
+			name: ctor.title,
+			handle,
+			mode: ctor.displayMode,
+		}
+
+		// If the module errored, shortcut out with a render of the error
+		const error = this.moduleErrors.get(handle)
+		if (error) {
+			return {
+				...resultMeta,
+				markup: <ErrorMessage error={error}/>,
+			}
+		}
+
+		let output: React.ReactNode
+		try {
+			output = module.output()
+		} catch (error) {
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
+
+			// TODO: Sentry
+
+			return {
+				...resultMeta,
+				markup: <ErrorMessage error={error}/>,
+			}
+		}
+
+		if (output !== null) {
+			return {
+				...resultMeta,
+				markup: output,
+			}
+		}
 	}
 
 	// -----
