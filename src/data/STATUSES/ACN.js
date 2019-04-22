@@ -16,4 +16,10 @@ export default {
 		name: 'Shadow Flare',
 		icon: 'https://xivapi.com/i/010000/010514.png',
 	},
+
+	AETHERFLOW: {
+		id: 304,
+		name: 'Aetherflow',
+		icon: 'https://xivapi.com/i/010000/010501.png',
+	},
 }

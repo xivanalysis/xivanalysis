@@ -40,4 +40,17 @@ export default {
 		name: 'Squadron Rationing Manual',
 		icon: 'https://xivapi.com/i/016000/016508.png',
 	},
+
+	// FFLogs bullshit
+	// TODO: Delete this once pipeline has splitting
+	COMBINED_DOTS: {
+		id: 500000,
+		name: 'Combined DoTs',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+	},
+	COMBINED_HOTS: {
+		id: 500001,
+		name: 'Combined HoTs',
+		icon: 'https://xivapi.com/i/000000/000405.png',
+	},
 }
