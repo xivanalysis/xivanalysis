@@ -1,5 +1,6 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 
+import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -35,21 +36,21 @@ export default class DoTs extends CoreDoTs {
 
 	addChecklistRules() {
 		this.checklist.add(new Rule({
-			name: 'Keep your DoTs up',
-			description: <Fragment>
+			name: <Trans id="sch.dots.checklist.name">Keep your DoTs up</Trans>,
+			description: <Trans id="sch.dots.checklist.description">
 				As a Scholar, DoTs are a significant portion of your sustained damage. Aim to keep them up at all times.
-			</Fragment>,
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.BIO_II} /> uptime</Fragment>,
+					name: <Trans id="sch.dots.checklist.requirement.bio-ii.name"><ActionLink {...ACTIONS.BIO_II} /> uptime</Trans>,
 					percent: () => this.getUptimePercent(STATUSES.BIO_II.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.MIASMA} /> uptime</Fragment>,
+					name: <Trans id="sch.dots.checklist.requirement.miasma.name"><ActionLink {...ACTIONS.MIASMA} /> uptime</Trans>,
 					percent: () => this.getUptimePercent(STATUSES.MIASMA.id),
 				}),
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime</Fragment>,
+					name: <Trans id="sch.dots.checklist.requirement.shadow-flare.name"><ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime</Trans>,
 					percent: () => this.getShadowFlareUptimePercent(),
 				}),
 			],
@@ -61,14 +62,14 @@ export default class DoTs extends CoreDoTs {
 		const maxClip = Math.max([this.getClippingAmount(STATUSES.BIO_II.id), this.getClippingAmount(STATUSES.MIASMA.id)])
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BIO.icon,
-			content: <Fragment>
+			content: <Trans id="sch.dots.suggestions.clipping.content">
 				Avoid refreshing DoTs significantly before their expiration, except when at the end of the fight. Unnecessary refreshes use up your mana more than necessary, and may cause you to go out of mana.
-			</Fragment>,
+			</Trans>,
 			tiers: CLIPPING_SEVERITY,
 			value: maxClip,
-			why: <Fragment>
+			why: <Trans id="sch.dots.suggestions.clipping.why">
 				{this.parser.formatDuration(clip[STATUSES.BIO_II.id])} of <StatusLink {...STATUSES.BIO_II}/> and {this.parser.formatDuration(clip[STATUSES.MIASMA.id])} of <StatusLink {...STATUSES.MIASMA}/> lost to early refreshes.
-			</Fragment>,
+			</Trans>,
 		}))
 	}
 
