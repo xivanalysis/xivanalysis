@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import {Table, Grid} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -67,19 +68,19 @@ export default class Aetherflow extends Module {
 	_onComplete() {
 		// Checklist rule for aetherflow cooldown
 		this.checklist.add(new Rule({
-			name: <Fragment>Use <ActionLink {...ACTIONS.AETHERFLOW} /> on cooldown.</Fragment>,
+			name: <Fragment><Trans id="sch.aetherflow.checklist.name">Use <ActionLink {...ACTIONS.AETHERFLOW} /> on cooldown.</Trans></Fragment>,
 			description: <ul>
-				<li>Using aetherflow on cooldown lets you regain mana faster.</li>
-				<li>With <ActionLink {...ACTIONS.QUICKENED_AETHERFLOW} />, using all your stacks before the cooldown is up would effectively reduce it to 45s.</li>
-				<li>Using <ActionLink {...ACTIONS.DISSIPATION} /> can even bring it down to a further 30s.</li>
+				<li><Trans id="sch.aetherflow.checklist.description-1">Using aetherflow on cooldown lets you regain mana faster.</Trans></li>
+				<li><Trans id="sch.aetherflow.checklist.description-2">With <ActionLink {...ACTIONS.QUICKENED_AETHERFLOW} />, using all your stacks before the cooldown is up would effectively reduce it to 45s.</Trans></li>
+				<li><Trans id="sch.aetherflow.checklist.description-3">Using <ActionLink {...ACTIONS.DISSIPATION} /> can even bring it down to a further 30s.</Trans></li>
 			</ul>,
 			requirements: [
 				new Requirement({
-					name: <Fragment><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Fragment>,
+					name: <Fragment><Trans id="sch.aetherflow.checklist.requirement.uptime.name"><ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime</Trans></Fragment>,
 					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / this._durationWithAetherflowOnCooldown()) * 100,
 				}),
 				new Requirement({
-					name: <Fragment>Total <ActionLink {...ACTIONS.AETHERFLOW} /> casts: {this._totalAetherflowCasts} out of {this._possibleAetherflowCasts()} possible</Fragment>,
+					name: <Fragment><Trans id="sch.aetherflow.checklist.requirement.uses.name">Total <ActionLink {...ACTIONS.AETHERFLOW} /> casts: {this._totalAetherflowCasts} out of {this._possibleAetherflowCasts()} possible</Trans></Fragment>,
 					percent: this._totalAetherflowCasts / this._possibleAetherflowCasts() * 100,
 				}),
 			],
@@ -102,11 +103,11 @@ export default class Aetherflow extends Module {
 		return <Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell>Cast Times</Table.HeaderCell>
-					<Table.HeaderCell>CD</Table.HeaderCell>
-					<Table.HeaderCell>Drift</Table.HeaderCell>
-					<Table.HeaderCell>Abilities Used</Table.HeaderCell>
-					<Table.HeaderCell>Stacks Wasted</Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Times</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.cooldown">CD</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.drift">Drift</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.abilities-used">Abilities Used</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="sch.aetherflow.stacks-wasted">Stacks Wasted</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>

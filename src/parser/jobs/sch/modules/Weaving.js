@@ -1,4 +1,6 @@
-import React, {Fragment} from 'react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -19,7 +21,7 @@ export default class Weaving extends CoreWeaving {
 		'combatants',
 		'suggestions',
 	]
-	static title = 'Weaving Issues'
+	static title = t('sch.weaving.title')`Weaving Issues`
 	static displayOrder = DISPLAY_ORDER.WEAVING
 
 	constructor(...args) {
@@ -41,13 +43,15 @@ export default class Weaving extends CoreWeaving {
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RUIN_II.icon,
-			content: <Fragment>
+			content: <Trans id="sch.weaving.suggestion.content">
 				<ActionLink {...ACTIONS.RUIN_II} /> may seem like a great choice for weaving,
 				but because its potency is <i>absurdly</i> low compared to <ActionLink {...ACTIONS.BROIL} />,
 				it is actually better to just clip your GCD with Broil than to waste your mana.
 				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
-			</Fragment>,
-			why: `${this._badWeaves.length} instances of weaving with Ruin II while not moving.`,
+			</Trans>,
+			why:  <Trans id="sch.weaving.suggestion.why">
+				<Plural value={this._badWeaves.length} one="# instance" other="# instances"/> instances of weaving with Ruin II while not moving.
+			</Trans>,
 			tiers: WEAVING_SEVERITY,
 			value: this._badWeaves.length,
 		}))
