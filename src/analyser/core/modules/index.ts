@@ -1,3 +1,7 @@
+import {Actors} from './Actors'
 import {EventView} from './EventView'
 
-export default [EventView]
+export default [
+	Actors,
+	EventView,
+]
