@@ -1,0 +1,18 @@
+@value themeText from "theme.module.css";
+
+.reportLink {
+	display: block;
+	color: themeText;
+	height: 40px;
+}
+.reportLink:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.menuLogo {
+	display: inline-block;
+	margin-right: 13px;
+	height: 30px;
+	vertical-align: middle;
+}

@@ -1,4 +1,6 @@
 import React, {Fragment} from 'react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import _ from 'lodash'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {getAction} from 'data/ACTIONS'
@@ -35,8 +37,8 @@ const EXPECTED_CASTS = [
 		...getAction(ACTIONS.SHADOW_FLARE.id),
 		count: 1,
 		content: <Fragment>
-			Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
-			Avoid casting <ActionLink {...ACTIONS.SHADOW_FLARE} /> right before  <ActionLink {...ACTIONS.CLERIC_STANCE} />
+			<Trans id="sch.clericstance.suggestion.content.shadow-flare">Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
+			Avoid casting <ActionLink {...ACTIONS.SHADOW_FLARE} /> right before  <ActionLink {...ACTIONS.CLERIC_STANCE} /></Trans>
 		</Fragment>},
 ]
 
@@ -49,7 +51,7 @@ export default class ClericStance extends Module {
 		'gcd',
 	];
 
-	static title = 'Cleric Stance Usage'
+	static title = t('sch.clericstance.title')`Cleric Stance Usage`
 
 	constructor(...args) {
 		super(...args)
@@ -126,10 +128,10 @@ export default class ClericStance extends Module {
 
 			this.suggestions.add(new TieredSuggestion({
 				icon,
-				why: why || `${diff} cast${diff !== 1 ? 's' : ''} missed during ${ACTIONS.CLERIC_STANCE.name} windows.`,
-				content: content || <Fragment>
-					Try to land {count} {name}{count !== 1 ? 's' : ''} during every <ActionLink {...ACTIONS.CLERIC_STANCE} /> window.
-				</Fragment>,
+				why: why || <Trans id="sch.clericstance.suggestion.why"><Plural value={diff} one="# cast" other="# casts"/> missed during Cleric Stance windows.</Trans>,
+				content: content || <Trans id="sch.clericstance.suggestion.content.default">
+					Try to land <Plural value={count} one={`# ${name}`} other={`# ${name}s`} /> during every <ActionLink {...ACTIONS.CLERIC_STANCE} /> window.
+				</Trans>,
 				tiers: tiers || defaultSeverityTiers,
 				value: diff,
 			}))
@@ -191,8 +193,8 @@ export default class ClericStance extends Module {
 				<Message info icon>
 					<Icon name="info"/>
 					<Message.Content>
-						Cleric Stance is about a 1% increase in DPS, which is lost if you end up clipping a GCD for it.
-						Focus on using it pre-pull or whenever you can freely weave it, especially when Shadow Flare is up.
+						<Trans id="sch.clericstance.info">Cleric Stance is about a 1% increase in DPS, which is lost if you end up clipping a GCD for it.
+						Focus on using it pre-pull or whenever you can freely weave it, especially when Shadow Flare is up.</Trans>
 					</Message.Content>
 				</Message>
 				<Accordion

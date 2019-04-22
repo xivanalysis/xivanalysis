@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
@@ -143,9 +143,9 @@ export default class LIGHTSPEED extends Module {
 				title: {
 					content: <>
 						{this.parser.formatTimestamp(lightspeed.start)}
-						&nbsp;-&nbsp;{numGcds} GCDs
-						&nbsp;-&nbsp;{mpSavings} MP saved
-						{lightspeed.extended && <span className="text-info">&nbsp;(extended)</span>}
+						&nbsp;-&nbsp;<Trans id="ast.lightspeed.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs"/></Trans>
+						&nbsp;-&nbsp;{mpSavings} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans>
+						{lightspeed.extended && <span className="text-info">&nbsp;<Trans id="ast.lightspeed.rotation.extended">(extended)</Trans></span>}
 					</>,
 				},
 				content: {

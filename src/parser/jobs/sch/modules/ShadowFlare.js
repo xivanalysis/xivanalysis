@@ -1,10 +1,12 @@
-import React, {Fragment} from 'react'
+import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -21,7 +23,7 @@ const TICK_SPEED = 3000
 export default class ShadowFlare extends Module {
 	static displayOrder = DISPLAY_ORDER.SHADOW_FLARE
 	static handle = 'shadowFlare'
-	static title = 'Shadow Flare'
+	static title = t('sch.shadow-flare.title')`Shadow Flare`
 	static dependencies = [
 		'suggestions',
 	]
@@ -61,13 +63,21 @@ export default class ShadowFlare extends Module {
 		}, 0)
 
 		if (missedTicks) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SHADOW_FLARE.icon,
-				content: <Fragment>
-					Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
-				</Fragment>,
-				why: missedTicks + ' missed ticks of Shadow Flare.',
-				severity: missedTicks < minHits? SEVERITY.MINOR : missedTicks < minHits*2? SEVERITY.MEDIUM : SEVERITY.MAJOR,
+				tiers: {
+					1: SEVERITY.MINOR,
+					[minHits]: SEVERITY.MEDIUM,
+					[minHits * 2]: SEVERITY.MAJOR,
+				},
+				value: missedTicks,
+				content: <Trans id="sch.shadow-flare.suggestions.missed-ticks.content">
+				Ensure you place <ActionLink {...ACTIONS.SHADOW_FLARE} /> such that it can deal damage for its entire duration, or can hit multiple targets per tick.
+				</Trans>,
+				why: <Trans id="sch.shadow-flare.suggestions.missed-ticks.why">
+					<Plural value={missedTicks} one="# missed tick" other="# missed ticks"/>
+				of Shadow Flare.
+				</Trans>,
 			}))
 		}
 	}

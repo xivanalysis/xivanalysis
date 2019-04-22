@@ -2,28 +2,35 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Table, Icon, Message, Label, Accordion} from 'semantic-ui-react'
-
-import {ActionLink} from 'components/ui/DbLink'
-import JobIcon from 'components/ui/JobIcon'
-import ACTIONS, {getAction} from 'data/ACTIONS'
-import JOBS from 'data/JOBS'
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Table, Icon, Message, Label, Accordion, Button} from 'semantic-ui-react'
 
 import {DRAWN_ARCANA_USE, HELD_ARCANA_USE, SPEAR_USED} from './ArcanaGroups'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-
+import Module from 'parser/core/Module'
+import ACTIONS, {getAction} from 'data/ACTIONS'
+import JobIcon from 'components/ui/JobIcon'
+import JOBS from 'data/JOBS'
+import {ActionLink} from 'components/ui/DbLink'
 import styles from './ArcanaSuggestions.module.css'
+
+const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
+const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
+const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
+
+const timelineLinkLowerMod = 0 // in ms
+const timelineLinkUpperMod = 30000 // in ms
 
 export default class ArcanaSuggestions extends Module {
 	static handle = 'arcanaSuggestions'
+
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
 		'suggestions',
 		'combatants',
 		'arcanaTracking',
+		'timeline',
 	]
 
 	cardLogs = []
@@ -129,7 +136,8 @@ export default class ArcanaSuggestions extends Module {
 				content: <Trans id="ast.arcana-suggestions.messages.accordion-title">Full Arcana Logs</Trans>,
 			},
 			content: {
-				content: <Table collapsing unstackable className={styles.cardActionTable}>
+
+				content: <><Table collapsing unstackable className={styles.cardActionTable}>
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell width={1}>
@@ -158,13 +166,23 @@ export default class ArcanaSuggestions extends Module {
 
 						{this.cardLogs.map(artifact => {
 							return <Table.Row key={artifact.timestamp} className={styles.cardActionRow}>
-								<Table.Cell>{this.parser.formatTimestamp(artifact.timestamp)}</Table.Cell>
+
+								<Table.Cell>
+									<a onClick={() => this.jumpToTimeline(artifact.timestamp)}>
+										{this.parser.formatTimestamp(artifact.timestamp)}</a>
+								</Table.Cell>
 								{this.RenderAction(artifact)}
 								{this.RenderSpreadState(artifact)}
 							</Table.Row>
 						})}
 					</Table.Body>
-				</Table>,
+
+				</Table>
+				<Button onClick={() => this.parser.scrollTo(this.constructor.handle)}>
+					<Trans id="ast.arcana-suggestions.scroll-to-top-button">Jump to start of Arcana Logs</Trans>
+				</Button>
+				</>
+				,
 			},
 		}]
 
@@ -251,15 +269,37 @@ export default class ArcanaSuggestions extends Module {
 			/>}
 			{!draw && <span className={styles.buffDummy} />}
 			{minorArcana && minorArcana.name === 'Unknown' &&
-				<span className={styles.buffUnknown}><span>?</span></span>
-			}
+
+				<img
+					src={UNKNOWN_CARD_STATUS_ICON}
+					className={styles.buffIcon}
+					alt={minorArcana.name}
+				/>}
 			{minorArcana && minorArcana.name !== 'Unknown' && <img
-				src={minorArcana.icon}
-				className={styles.spreadSlot3}
+
+				src={this.GetMinorArcanaIcon(minorArcana)}
+				className={styles.buffIcon}
 				alt={minorArcana.name}
 			/>}
 			{!minorArcana && <span className={styles.buffDummy} />}
 		</Table.Cell>
+	}
+
+	GetMinorArcanaIcon(action) {
+		if (action.id === ACTIONS.LORD_OF_CROWNS.id) {
+			return LORD_OF_CROWNS_STATUS_ICON
+		} if (action.id === ACTIONS.LADY_OF_CROWNS.id) {
+			return LADY_OF_CROWNS_STATUS_ICON
+		}
+		return UNKNOWN_CARD_STATUS_ICON
+
+	}
+
+	jumpToTimeline(timestamp) {
+		this.timeline.show(
+			(timestamp - timelineLinkLowerMod) - this.parser.fight.start_time,
+			(timestamp + timelineLinkUpperMod) - this.parser.fight.start_time
+		)
 	}
 
 	// Helper for output()

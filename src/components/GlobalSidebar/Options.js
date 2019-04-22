@@ -3,6 +3,7 @@ import React from 'react'
 import {Icon, Popup} from 'semantic-ui-react'
 
 import I18nMenu from 'components/ui/I18nMenu'
+import ReportLink from './ReportLink'
 
 import styles from './Options.module.css'
 
@@ -11,7 +12,7 @@ const version = process.env.REACT_APP_VERSION || 'DEV'
 const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
 const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
 
-export default class Options extends React.PureComponent {
+export default class Options extends React.Component {
 	static propTypes = {
 		view: PropTypes.oneOf([
 			'vertial',
@@ -22,9 +23,13 @@ export default class Options extends React.PureComponent {
 	render() {
 		const {view = 'vertical'} = this.props
 
-		return <div className={view === 'horizontal' && styles.horizontal}>
+		return <div className={view === 'horizontal' ? styles.horizontal : undefined}>
 			<div className={styles.row}>
-				<I18nMenu />
+				<ReportLink/>
+			</div>
+
+			<div className={styles.row}>
+				<I18nMenu/>
 			</div>
 
 			<div className={styles.row}>
@@ -34,7 +39,7 @@ export default class Options extends React.PureComponent {
 					rel="noopener noreferrer"
 					className={styles.icon}
 				>
-					<Icon name="discord" />
+					<Icon name="discord"/>
 				</a>
 				<a
 					href="https://github.com/xivanalysis/xivanalysis"
@@ -42,7 +47,7 @@ export default class Options extends React.PureComponent {
 					rel="noopener noreferrer"
 					className={styles.icon}
 				>
-					<Icon name="github" />
+					<Icon name="github"/>
 				</a>
 
 				<Popup

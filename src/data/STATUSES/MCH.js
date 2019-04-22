@@ -28,7 +28,7 @@ export default {
 
 	DISMANTLED: {
 		id: 860,
-		name: 'Flamethrower',
+		name: 'Dismantled',
 		icon: 'https://xivapi.com/i/013000/013009.png',
 		duration: 5,
 	},
