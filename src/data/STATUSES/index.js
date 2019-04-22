@@ -20,9 +20,7 @@ import PLD from './PLD'
 import SAM from './SAM'
 import DRK from './DRK'
 
-export const STATUS_ID_OFFSET = 1000000
-
-const STATUSES = addExtraIndex(correctIdsToMatchLogs({
+const STATUSES = addExtraIndex({
 	...ENEMY,
 	...ROLE,
 	...SHARED,
@@ -47,27 +45,7 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...SMN,
 	...BLM,
 	...RDM,
-}), 'id')
-
-/**
- * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.
- * I'm not gonna get everyone to do that in here, so just automating it.
- *
- * @template T extends object
- * @param {T} obj
- * @returns {T}
- */
-function correctIdsToMatchLogs (obj) {
-	Object.keys(obj).forEach(key => {
-		const status = obj[key]
-		if (Array.isArray(status.id)) {
-			status.id = status.id.map(id => id + STATUS_ID_OFFSET)
-		} else {
-			status.id = status.id + STATUS_ID_OFFSET
-		}
-	})
-	return obj
-}
+}, 'id')
 
 export default STATUSES
 
