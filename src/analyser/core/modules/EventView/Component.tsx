@@ -2,6 +2,7 @@ import classnames from 'classnames'
 import React from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import {FixedSizeList as List, ListChildComponentProps} from 'react-window'
+import {Popup} from 'semantic-ui-react'
 import {EventMeta} from './EventView'
 import styles from './EventView.module.css'
 
@@ -32,7 +33,7 @@ export const EventViewComponent = React.memo(({meta}: Props) => (
 
 const Row = React.memo(({index, data, style}: ListChildComponentProps) => {
 	const meta = data[index] as EventMeta
-	return (
+	const trigger = (
 		<div
 			style={style}
 			className={classnames(
@@ -40,7 +41,18 @@ const Row = React.memo(({index, data, style}: ListChildComponentProps) => {
 				index % 2 === 1 && styles.even,
 			)}
 		>
-			{meta.timestamp} - {meta.description}
+			{meta.timestamp} - {meta.name} - {meta.description}
 		</div>
+	)
+
+	return (
+		<Popup
+			trigger={trigger}
+			position="left center"
+			inverted
+			hoverable
+		>
+			<pre>{JSON.stringify(meta.event, undefined, '  ')}</pre>
+		</Popup>
 	)
 })
