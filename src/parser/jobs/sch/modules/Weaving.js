@@ -49,7 +49,7 @@ export default class Weaving extends CoreWeaving {
 				it is actually better to just clip your GCD with Broil than to waste your mana.
 				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
 			</Trans>,
-			why:  <Trans id="sch.weaving.suggestion.content">
+			why:  <Trans id="sch.weaving.suggestion.why">
 				<Plural value={this._badWeaves.length} one="# instance" other="# instances"/> instances of weaving with Ruin II while not moving.
 			</Trans>,
 			tiers: WEAVING_SEVERITY,
