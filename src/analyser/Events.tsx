@@ -78,11 +78,12 @@ eventMeta.set(Events.Type.ACTION, {
 eventMeta.set(Events.Type.DAMAGE, {
 	name: 'Core/DAMAGE',
 	formatter: (event: Events.Damage, {action, actor, status}: Formatters) => <>
-		{actor(event.sourceId)}'s&nbsp;
 		{event.hitType === HitType.HIT
-			? <>{action(event.actionId)} hits</>
-			: <>{status(event.statusId)} ticks on</>
+			? <>{action(event.actionId)}</>
+			: <>{status(event.statusId)}</>
 		}&nbsp;
+		from {actor(event.sourceId)}&nbsp;
+		{event.hitType === HitType.HIT ? 'hits' : 'ticks on'}&nbsp;
 		{actor(event.targetId)}&nbsp;
 		for {event.amount} damage.&nbsp;
 		({SourceModifier[event.sourceModifier]}, {TargetModifier[event.targetModifier]})
@@ -92,11 +93,11 @@ eventMeta.set(Events.Type.DAMAGE, {
 eventMeta.set(Events.Type.HEAL, {
 	name: 'Core/HEAL',
 	formatter: (event: Events.Heal, {action, actor, status}: Formatters) => <>
-		{actor(event.sourceId)}'s&nbsp;
 		{event.hitType === HitType.HIT
 			? <>{action(event.actionId)}</>
 			: <>{status(event.statusId)}</>
 		}&nbsp;
+		from {actor(event.sourceId)}&nbsp;
 		heals {actor(event.targetId)}&nbsp;
 		for {event.amount} HP.&nbsp;
 		({SourceModifier[event.sourceModifier]})
@@ -116,5 +117,5 @@ eventMeta.set(Events.Type.ADD_STATUS, {
 eventMeta.set(Events.Type.REMOVE_STATUS, {
 	name: 'Core/REMOVE_STATUS',
 	formatter: (event: Events.RemoveStatus, {actor, status}: Formatters) =>
-		<>{actor(event.sourceId)}'s {status(event.statusId)} is removed from {actor(event.targetId)}</>,
+		<>The {status(event.statusId)} applied by {actor(event.sourceId)} is removed from {actor(event.targetId)}</>,
 })
