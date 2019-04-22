@@ -132,6 +132,7 @@ export class Analyser {
 		this.moduleOrder.forEach(mod => {
 			this.modules.set(mod, new constructors[mod]({
 				analyser: this,
+				modules: this.modules,
 			}))
 		})
 	}

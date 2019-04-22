@@ -72,8 +72,21 @@ export class Module {
 
 	constructor(opts: {
 		analyser: Analyser,
+		modules: Map<string, Module>,
 	}) {
 		this.analyser = opts.analyser
+
+		// Set up the dependencies
+		const module = this.constructor as typeof Module
+		module.dependencies.forEach(dep => {
+			const mappedDep = typeof dep === 'string'
+				? {handle: dep, prop: dep}
+				: dep
+
+			// believe in the me that believes in typescript
+			const lmao = this as any
+			lmao[mappedDep.prop] = opts.modules.get(mappedDep.handle)
+		})
 
 		this.init()
 	}
