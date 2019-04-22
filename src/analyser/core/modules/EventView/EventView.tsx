@@ -52,8 +52,14 @@ export class EventView extends Module {
 		})
 	}
 
-	private formatActor(actorId: number) {
-		return `Actor:${actorId}`
+	private formatActor(actorId: number): React.ReactNode {
+		const actor = this.actors.getActor(actorId)
+		if (!actor) { return `Actor:${actorId}` }
+
+		return <>
+			{actor.name}
+			{actor.ownerId && <>&nbsp;({this.formatActor(actor.ownerId)})</>}
+		</>
 	}
 
 	private formatAction(actionId: number) {

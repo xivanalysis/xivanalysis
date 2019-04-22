@@ -8,6 +8,7 @@ import styles from './EventView.module.css'
 
 const VIEW_HEIGHT = 500
 const ITEM_HEIGHT = 20
+const OVERSCAN_COUNT = 10
 
 export interface Props {
 	meta: EventMeta[]
@@ -23,6 +24,7 @@ export const EventViewComponent = React.memo(({meta}: Props) => (
 					itemSize={ITEM_HEIGHT}
 					itemCount={meta.length}
 					itemData={meta}
+					overscanCount={OVERSCAN_COUNT}
 				>
 					{Row}
 				</List>

@@ -36,4 +36,12 @@ export class Actors extends Module {
 		actorMeta.actor = _.merge(actorMeta.actor, event.changes)
 		actorMeta.history.push(event.changes)
 	}
+
+	/** Get a representation of the specified actor at the time of the call */
+	getActor(actorId: number) {
+		const actorMeta = this.actors.get(actorId)
+		if (!actorMeta) { return }
+
+		return actorMeta.actor
+	}
 }
