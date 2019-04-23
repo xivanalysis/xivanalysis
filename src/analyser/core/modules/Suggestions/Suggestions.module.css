@@ -1,0 +1,37 @@
+@value gutter from "theme.module.css";
+
+.checkbox {
+	position: absolute !important;
+	top: gutter;
+	right: gutter;
+}
+
+.items {
+	margin-top: 1.5em;
+}
+
+.item {
+	display: flex;
+	margin: 1em 0;
+	width: 100%;
+}
+
+.item:first-child {
+	margin-top: 0;
+}
+
+.item:last-child {
+	margin-bottom: 0;
+}
+
+.item > img {
+	align-self: flex-start;
+	margin-right: 1.5em;
+	width: 40px;
+	flex-shrink: 0;
+}
+
+.extra {
+	margin-top: .5em;
+	color: rgba(0, 0, 0, .4);
+}
