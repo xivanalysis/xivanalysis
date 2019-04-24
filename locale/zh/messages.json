@@ -45,7 +45,7 @@
   "ast.earthly-star.title": "'地星'",
   "ast.lightspeed.messages.explanation": "<0/>有多种用法，例如在治疗压力大时节省 MP、进行移动治疗、以及穿插oGCD能力等。不仅如此，光速的持续时间还可以被<2/>延长，复唱时间也可以被<1/>减少，这使得对光速的安排更加复杂化。<3/><4/>目前很难找到光速用法的最优解，需要根据实战具体情况，灵活处理。",
   "ast.lightspeed.messages.no-casts": "没有<0/>的使用记录",
-  "ast.lightspeed.rotation.extended": "",
+  "ast.lightspeed.rotation.extended": "(延长)",
   "ast.lightspeed.rotation.gcd": "{numGcds, plural, one {# 个GCD} other {# 个GCD}}",
   "ast.lightspeed.rotation.mp-saved": "储存MP",
   "ast.lightspeed.title": "光速",
