@@ -45,8 +45,10 @@ const generateActorFinder = (id: Actor['id']) =>
 		isAddActor(event) && event.actor.id === id
 
 export class Analyser {
+	/** The actor currently being analysed. */
+	readonly actor: Actor
+
 	private readonly events: Events.Base[]
-	private readonly actor: Actor
 	private readonly zoneId: number
 
 	/** Map of available modules. */
