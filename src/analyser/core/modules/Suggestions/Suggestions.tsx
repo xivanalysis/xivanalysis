@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {DisplayOrder} from 'analyser/core/DisplayOrder'
 import {DisplayMode, Module} from 'analyser/Module'
+import React from 'react'
 import {SuggestionsComponent} from './Component'
 import {Suggestion} from './Suggestion'
 
@@ -12,7 +13,7 @@ export class Suggestions extends Module {
 
 	private suggestions: Suggestion[] = []
 
-	addEventListener(suggestion: Suggestion) {
+	add(suggestion: Suggestion) {
 		this.suggestions.push(suggestion)
 	}
 
@@ -22,12 +23,7 @@ export class Suggestions extends Module {
 			return null
 		}
 
-		// Sort suggestions with most important at the top, and remove ignored
-		const suggestions = this.suggestions
-			.filter(suggestion => suggestion.severity !== undefined)
-			.sort((a, b) => a.severity! - b.severity!)
-
 		// Rendering is in a specialised component so it's got some state to work with
-		return <SuggestionsComponent suggestions={suggestions}/>
+		return <SuggestionsComponent suggestions={this.suggestions}/>
 	}
 }

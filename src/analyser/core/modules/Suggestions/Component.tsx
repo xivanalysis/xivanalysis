@@ -43,8 +43,13 @@ export class SuggestionsComponent extends React.Component<Props> {
 	render() {
 		const showMinor = this.props.settingsStore!.showMinorSuggestions
 
+		// Sort suggestions with most important at the top, and remove ignored + minor (if requested)
 		const suggestions = this.props.suggestions
-			.filter(suggestion => showMinor || suggestion.severity !== Severity.MINOR)
+			.filter(suggestion =>
+				suggestion.severity !== undefined &&
+				(showMinor || suggestion.severity !== Severity.MINOR),
+			)
+			.sort((a, b) => a.severity! - b.severity!)
 
 		const hasMinor = this.props.suggestions
 			.some(suggestion => suggestion.severity === Severity.MINOR)
@@ -69,7 +74,7 @@ export class SuggestionsComponent extends React.Component<Props> {
 							<div className={styles.extra}>
 								<Label
 									horizontal
-									{...SEVERITY_LABEL_PROPS[suggestion.severity || Severity.MEDIUM]}
+									{...SEVERITY_LABEL_PROPS[suggestion.severity!]}
 								/>
 								{suggestion.why}
 							</div>
