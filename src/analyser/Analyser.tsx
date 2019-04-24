@@ -9,7 +9,7 @@ import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
-import {DISPLAY_MODE, Handle, Module} from './Module'
+import {DisplayMode, Handle, Module} from './Module'
 
 /*
 👏    NO    👏
@@ -21,7 +21,7 @@ import {DISPLAY_MODE, Handle, Module} from './Module'
 export interface Result {
 	handle: string
 	name: string | MessageDescriptor
-	mode: DISPLAY_MODE
+	mode: DisplayMode
 	markup: React.ReactNode
 }
 

@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Events} from '@xivanalysis/parser-core'
 import {dependency} from 'analyser/dependency'
 import {eventMeta} from 'analyser/Events'
-import {ALL_EVENTS, DISPLAY_MODE, Module} from 'analyser/Module'
+import {ALL_EVENTS, DisplayMode, Module} from 'analyser/Module'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
@@ -22,7 +22,7 @@ export class EventView extends Module {
 	static handle = 'eventView'
 	static title = t('core.event-view.title')`Event View`
 
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DisplayMode.FULL
 
 	// Dependencies
 	@dependency private actors!: Actors

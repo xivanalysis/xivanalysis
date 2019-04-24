@@ -20,13 +20,13 @@ export interface Hook<T extends Events.Base> {
 
 export const ALL_EVENTS = Symbol('ALL_EVENTS')
 
-export enum DISPLAY_ORDER {
+export enum DisplayOrder {
 	TOP = 0,
 	DEFAULT = 50,
 	BOTTOM = 100,
 }
 
-export enum DISPLAY_MODE {
+export enum DisplayMode {
 	COLLAPSIBLE,
 	FULL,
 	/** Don't use this unless you know what you're doing, and you've run it past me. */
@@ -35,8 +35,8 @@ export enum DISPLAY_MODE {
 
 export class Module {
 	static dependencies: Array<Handle | MappedDependency> = []
-	static displayOrder: number = DISPLAY_ORDER.DEFAULT
-	static displayMode: DISPLAY_MODE
+	static displayOrder: number = DisplayOrder.DEFAULT
+	static displayMode: DisplayMode
 
 	private static _handle: Handle
 	static get handle() {

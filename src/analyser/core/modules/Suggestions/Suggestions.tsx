@@ -1,13 +1,14 @@
 import {t} from '@lingui/macro'
-import {DISPLAY_MODE, Module} from 'analyser/Module'
+import {DisplayOrder} from 'analyser/core/DisplayOrder'
+import {DisplayMode, Module} from 'analyser/Module'
 import {SuggestionsComponent} from './Component'
 import {Suggestion} from './Suggestion'
 
 export class Suggestions extends Module {
 	static handle = 'suggestions'
 	static title = t('core.suggestions.title')`Suggestions`
-	// static displayOrder
-	static displayMode = DISPLAY_MODE.FULL
+	static displayOrder = DisplayOrder.SUGGESTIONS
+	static displayMode = DisplayMode.FULL
 
 	private suggestions: Suggestion[] = []
 
