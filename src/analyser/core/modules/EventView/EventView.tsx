@@ -43,7 +43,8 @@ export class EventView extends Module {
 		const meta = eventMeta.get(event.type)
 
 		this.meta.push({
-			timestamp: this.analyser.formatTimestamp(event.timestamp),
+			// tslint:disable-next-line:no-magic-numbers
+			timestamp: this.analyser.formatTimestamp(event.timestamp, 3),
 			name: meta && meta.name ? meta.name : event.type,
 			description: meta && meta.formatter
 				? meta.formatter(event, this.formatters)
