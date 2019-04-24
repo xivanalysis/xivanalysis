@@ -546,7 +546,7 @@
   "sam.thirdeye.suggestion.useyourdamnthirdeye.content": "<0/>은 프록시 10% 데미지 감소 및 <1/>과 <2/>을 사용 가능하게 합니다. 심안 프록 횟수를 최대한 늘리십시오.",
   "sam.thirdeye.suggestion.useyourdamnthirdeye.why": "전투중 심안을 전혀 사용하지 않았습니다. 피할수 없는 레이드 광역 데미지마다 심안을 사용하십시오.",
   "sam.thirdeye.title": "심안",
-  "sch.about.description": "\n이 분석기는 요정느님을 갈굴필요없는 손쉬운 개선 사항들 및 전투내에서 일어난 각종 상황들을 자세하게 알 수 있도록 분석합니다. \n\n소환사의 운용 특징상 부담스러울 정도로 많은 정보 및 조언이 한꺼번에 표기될 수 있지만 겁먹지 마시고 차근 차근 개선해봅시다.\n\n학자의 운용법에 대해서 자세하게 알고싶으시다면 [The Balance](https://thebalanceffxiv.com/)에 접속하시거나 #sch_questions 채널에서 대화를 해보십시오.\n",
+  "sch.about.description": "",
   "sch.about.description.warning.development": "분석 결과가 대체로 정확합니다만, 이 시스템은 <0>아직</0> 개발중입니다. 따라서 분석에 조금 혼란을 줄 수 있기 때문에, 만약 문제가 있거나 우려되는 부분이 있다면 저희 디스코드 채널로 와서 제보해주세요!",
   "sch.about.description.warning.healer": "현재 힐러들의 보스 무적시간 확인 기능은 제대로 작동 하지 않습니다. 이는 캐스팅 체크리스트 및 도트 지속시간과 관련된 기능들의 정확성이 떨어지는 원인이 됩니다.",
   "sch.aetherflow.abilities-used": "순환계 기술 사용 목록",
