@@ -1,7 +1,7 @@
 {
   "ast.about.description-1": "",
   "ast.about.description-2": "\n使用任何治疗职业都需要你认真管理你的MP和技能冷却情况，以有效地保证队伍的生存。如果你能提前规划你的治疗技能，并积极和你的搭档交流，你自然就能够节省更多的GCD，并打出更高的DPS。\n\n这个工具将会给出常规的持续时间和GCD建议。它也能对被你延长的buff，以及你的卡牌操作给出一个简单的展示。\n",
-  "ast.about.description.warning.development": "",
+  "ast.about.description.warning.development": "要让这个工具更为全面，还要很多的工作需要完成！如果你有任何值得关注的建议，请加入我们的Discord频道！",
   "ast.about.description.warning.healer": "对于所有治疗职业来说，检测 Boss 无敌时间的机制目前都无法正常工作。这会使得很多时间相关的检测失效，例如“总在读条”和“DoT 覆盖率”检测项。",
   "ast.arcana-suggestions.messages.accordion-title": "奥秘卡抽取记录",
   "ast.arcana-suggestions.messages.disclaimer": "卡片管理评价仍在制作中，目前仍不能给出任何建议。<0/>本段主要是就最佳做法给出一般性建议。这些建议不会考虑队员的临场表现，或对方是否处于爆发阶段。",
