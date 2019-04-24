@@ -560,7 +560,7 @@
   "sch.aetherflow.cooldown": "CD",
   "sch.aetherflow.drift": "推移",
   "sch.aetherflow.stacks-wasted": "",
-  "sch.clericstance.info": "",
+  "sch.clericstance.info": "战姿大约能提高1%的DPS，但如果你卡GCD使用，那就没有任何收益了。注意提前规划这个技能，或者在你不读条的时候使用它，特别是在暗影核爆转好的时候。",
   "sch.clericstance.suggestion.content.default": "",
   "sch.clericstance.suggestion.content.shadow-flare": "",
   "sch.clericstance.suggestion.why": "",
