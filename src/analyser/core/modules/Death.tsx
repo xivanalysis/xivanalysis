@@ -9,7 +9,7 @@ import {Severity, Suggestion, Suggestions} from './Suggestions'
 
 export class Death extends Module {
 	static handle = 'death'
-	@dependency suggestions!: Suggestions
+	@dependency private suggestions!: Suggestions
 
 	private count = 0
 	// private deadTime = 0

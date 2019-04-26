@@ -8,4 +8,5 @@ export enum DisplayOrder {
 	COMBOS = 110,
 	TIMELINE = 120,
 	CHANGELOG = 130,
+	EVENT_VIEW = 140,
 }
