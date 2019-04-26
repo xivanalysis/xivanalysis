@@ -46,7 +46,6 @@
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
     "@lingui/react": "^2.5.0",
-    "@types/color": "^3.0.0",
     "@xivanalysis/parser-core": "^0.0.1",
     "@xivanalysis/parser-reader-fflogs": "^0.0.1",
     "@xivanalysis/tooltips": "^0.0.4",
@@ -97,6 +96,7 @@
     "@neutrinojs/react": "^9.0.0-beta.1",
     "@types/chart.js": "^2.7.37",
     "@types/classnames": "^2.2.6",
+    "@types/color": "^3.0.0",
     "@types/jest": "^23.3.3",
     "@types/lingui__core": "^2.7.0",
     "@types/lingui__macro": "^2.7.3",
@@ -108,6 +108,7 @@
     "@types/react-scroll": "^1.5.4",
     "@types/react-virtualized-auto-sizer": "^1.0.0",
     "@types/react-window": "^1.8.0",
+    "@types/vis": "^4.21.14",
     "@types/webpack-env": "^1.13.6",
     "autoprefixer": "^9.3.1",
     "babel-plugin-lodash": "^3.3.4",
