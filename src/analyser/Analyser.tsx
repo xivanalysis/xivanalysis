@@ -328,8 +328,20 @@ export class Analyser {
 	// #region Utilities
 	// -----
 
+	get startTime() {
+		return this.events[0].timestamp
+	}
+
+	get endTime() {
+		return this.events[this.events.length - 1].timestamp
+	}
+
 	relativeTimestamp(timestamp: number) {
-		return timestamp - this.events[0].timestamp
+		return timestamp - this.startTime
+	}
+
+	get fightDuration() {
+		return this.relativeTimestamp(this.endTime)
 	}
 
 	formatTimestamp(timestamp: number, secondPrecision?: number) {
