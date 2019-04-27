@@ -51,6 +51,8 @@ export class Analyser {
 	private readonly events: Events.Base[]
 	private readonly zoneId: number
 
+	private currentEventTimestamp: number
+
 	/** Map of available modules. */
 	private readonly modules = new Map<Handle, Module>()
 
@@ -77,6 +79,8 @@ export class Analyser {
 			throw new Error('Could not find actor matching the ID specified.')
 		}
 		this.actor = event.actor
+
+		this.currentEventTimestamp = this.startTime
 	}
 
 	// -----
@@ -163,6 +167,8 @@ export class Analyser {
 
 		// Iterate over every event, inc. fabs, for each module
 		for (const event of this.iterateEvents()) {
+			this.currentEventTimestamp = event.timestamp
+
 			this.triggerModules.forEach(handle => this.triggerEvent({
 				handle,
 				event,
@@ -328,26 +334,37 @@ export class Analyser {
 	// #region Utilities
 	// -----
 
+	/** The timestamp of the start of the fight */
 	get startTime() {
 		return this.events[0].timestamp
 	}
 
+	/** The timestamp of the event currently being analysed */
+	get currentTime() {
+		return Math.min(this.endTime, this.currentEventTimestamp)
+	}
+
+	/** The timestamp of the end of the fight */
 	get endTime() {
 		return this.events[this.events.length - 1].timestamp
 	}
 
+	/** Translate a timestamp into ms relative to the start of the fight */
 	relativeTimestamp(timestamp: number) {
 		return timestamp - this.startTime
 	}
 
+	/** The duration of the entire fight */
 	get fightDuration() {
 		return this.relativeTimestamp(this.endTime)
 	}
 
+	/** Format the timestamp of an event, relative to the start of the fight */
 	formatTimestamp(timestamp: number, secondPrecision?: number) {
 		return this.formatDuration(this.relativeTimestamp(timestamp), secondPrecision)
 	}
 
+	/** Format a duration specified in ms as a human readable string */
 	formatDuration(duration: number, secondPrecision: number = 2) {
 		const floatSeconds = duration / 1000
 
