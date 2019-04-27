@@ -96,13 +96,13 @@ export default {
 		id: 83,
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
-		cooldown: 50,
+		cooldown: 50000,
 	},
 
 	BLOOD_FOR_BLOOD: {
 		id: 85,
 		name: 'Blood for Blood',
 		icon: 'https://xivapi.com/i/000000/000309.png',
-		cooldown: 80,
+		cooldown: 80000,
 	},
 }

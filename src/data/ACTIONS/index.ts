@@ -75,7 +75,7 @@ export interface Action {
 }
 
 const DEFAULT_GCD_CASTTIME = 0
-const DEFAULT_GCD_COOLDOWN = 2.5
+const DEFAULT_GCD_COOLDOWN = 2500
 
 const ACTIONS = {
 	...SHARED,

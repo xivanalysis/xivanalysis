@@ -10,7 +10,7 @@ export default {
 		name: 'Ruin',
 		icon: 'https://xivapi.com/i/000000/000501.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	BIO: {
@@ -25,21 +25,21 @@ export default {
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	AETHERFLOW: {
 		id: 166,
 		name: 'Aetherflow',
 		icon: 'https://xivapi.com/i/000000/000510.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	ENERGY_DRAIN: {
 		id: 167,
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	MIASMA: {
@@ -47,7 +47,7 @@ export default {
 		name: 'Miasma',
 		icon: 'https://xivapi.com/i/000000/000505.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	SUMMON_II: {
@@ -55,7 +55,7 @@ export default {
 		name: 'Summon II',
 		icon: 'https://xivapi.com/i/000000/000517.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	SUSTAIN: {
@@ -63,7 +63,7 @@ export default {
 		name: 'Sustain',
 		icon: 'https://xivapi.com/i/000000/000508.png',
 		onGcd: true,
-		castTime: 1,
+		castTime: 1000,
 	},
 
 	RUIN_II: {
@@ -78,21 +78,21 @@ export default {
 		name: 'Resurrection',
 		icon: 'https://xivapi.com/i/000000/000511.png',
 		onGcd: true,
-		castTime: 8,
+		castTime: 8000,
 	},
 
 	BANE: {
 		id: 174,
 		name: 'Bane',
 		icon: 'https://xivapi.com/i/000000/000507.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	ROUSE: {
 		id: 176,
 		name: 'Rouse',
 		icon: 'https://xivapi.com/i/000000/000509.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	BIO_II: {
@@ -106,7 +106,7 @@ export default {
 		id: 179,
 		name: 'Shadow Flare',
 		icon: 'https://xivapi.com/i/000000/000515.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	PHYSICK: {
@@ -114,7 +114,7 @@ export default {
 		name: 'Physick',
 		icon: 'https://xivapi.com/i/000000/000518.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	// -----
@@ -132,7 +132,7 @@ export default {
 		id: 638,
 		name: 'Backdraft',
 		icon: 'https://xivapi.com/i/000000/000563.png',
-		cooldown: 90,
+		cooldown: 90000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -140,7 +140,7 @@ export default {
 		id: 639,
 		name: 'Downburst',
 		icon: 'https://xivapi.com/i/000000/000562.png',
-		cooldown: 30,
+		cooldown: 30000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -148,7 +148,7 @@ export default {
 		id: 640,
 		name: 'Shining Emerald',
 		icon: 'https://xivapi.com/i/000000/000564.png',
-		cooldown: 60,
+		cooldown: 60000,
 		pet: PETS.EMERALD_CARBUNCLE.id,
 	},
 
@@ -164,7 +164,7 @@ export default {
 		id: 634,
 		name: 'Shining Topaz',
 		icon: 'https://xivapi.com/i/000000/000552.png',
-		cooldown: 15,
+		cooldown: 15000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
@@ -172,7 +172,7 @@ export default {
 		id: 635,
 		name: 'Curl',
 		icon: 'https://xivapi.com/i/000000/000553.png',
-		cooldown: 120,
+		cooldown: 120000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 
@@ -180,7 +180,7 @@ export default {
 		id: 636,
 		name: 'Storm',
 		icon: 'https://xivapi.com/i/000000/000554.png',
-		cooldown: 40,
+		cooldown: 40000,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
 }

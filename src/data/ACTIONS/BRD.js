@@ -4,7 +4,7 @@ export default {
 		name: 'Mage\'s Ballad',
 		icon: 'https://xivapi.com/i/002000/002602.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	FOE_REQUIEM: {
@@ -12,14 +12,14 @@ export default {
 		name: 'Foe Requiem',
 		icon: 'https://xivapi.com/i/002000/002604.png',
 		onGcd: true,
-		castTime: 1.5,
+		castTime: 1500,
 	},
 	ARMYS_PAEON: {
 		id: 116,
 		name: 'Army\'s Paeon',
 		icon: 'https://xivapi.com/i/002000/002603.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	RAIN_OF_DEATH: {
@@ -27,7 +27,7 @@ export default {
 		name: 'Rain Of Death',
 		icon: 'https://xivapi.com/i/002000/002605.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 100,
 	},
 	BATTLE_VOICE: {
@@ -35,14 +35,14 @@ export default {
 		name: 'Battle Voice',
 		icon: 'https://xivapi.com/i/002000/002601.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 180000,
 	},
 	EMPYREAL_ARROW: {
 		id: 3558,
 		name: 'Empyreal Arrow',
 		icon: 'https://xivapi.com/i/002000/002606.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 230,
 	},
 	THE_WANDERERS_MINUET: {
@@ -50,7 +50,7 @@ export default {
 		name: 'The Wanderer\'s Minuet',
 		icon: 'https://xivapi.com/i/002000/002607.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 		potency: 100,
 	},
 	IRON_JAWS: {
@@ -65,14 +65,14 @@ export default {
 		name: 'The Warden\'s Paean',
 		icon: 'https://xivapi.com/i/002000/002609.png',
 		onGcd: false,
-		cooldown: 45,
+		cooldown: 45000,
 	},
 	SIDEWINDER: {
 		id: 3562,
 		name: 'Sidewinder',
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 		potency: [100, 175, 260],
 	},
 	PITCH_PERFECT: {
@@ -80,7 +80,7 @@ export default {
 		name: 'Pitch Perfect',
 		icon: 'https://xivapi.com/i/002000/002611.png',
 		onGcd: false,
-		cooldown: 3,
+		cooldown: 3000,
 		potency: [100, 240, 420],
 	},
 	TROUBADOUR: {
@@ -88,7 +88,7 @@ export default {
 		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/002000/002612.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 180000,
 	},
 	CAUSTIC_BITE: {
 		id: 7406,
@@ -109,7 +109,7 @@ export default {
 		name: 'Nature\'s Minne',
 		icon: 'https://xivapi.com/i/002000/002615.png',
 		onGcd: false,
-		cooldown: 45,
+		cooldown: 45000,
 	},
 	REFULGENT_ARROW: {
 		id: 7409,

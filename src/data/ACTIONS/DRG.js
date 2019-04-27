@@ -47,28 +47,28 @@ export default {
 		id: 92,
 		name: 'Jump',
 		icon: 'https://xivapi.com/i/002000/002576.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	ELUSIVE_JUMP: {
 		id: 94,
 		name: 'Elusive Jump',
 		icon: 'https://xivapi.com/i/002000/002577.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	SPINESHATTER_DIVE: {
 		id: 95,
 		name: 'Spineshatter Dive',
 		icon: 'https://xivapi.com/i/002000/002580.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	DRAGONFIRE_DIVE: {
 		id: 96,
 		name: 'Dragonfire Dive',
 		icon: 'https://xivapi.com/i/002000/002578.png',
-		cooldown: 120,
+		cooldown: 120000,
 
 	},
 
@@ -76,35 +76,35 @@ export default {
 		id: 3557,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/002000/002585.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	BLOOD_OF_THE_DRAGON: {
 		id: 3553,
 		name: 'Blood Of The Dragon',
 		icon: 'https://xivapi.com/i/002000/002581.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	GEIRSKOGUL: {
 		id: 3555,
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	DRAGON_SIGHT: {
 		id: 7398,
 		name: 'Dragon Sight',
 		icon: 'https://xivapi.com/i/002000/002587.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	MIRAGE_DIVE: {
 		id: 7399,
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
-		cooldown: 1,
+		cooldown: 1000,
 		potency: 210,
 	},
 
@@ -112,6 +112,6 @@ export default {
 		id: 7400,
 		name: 'Nastrond',
 		icon: 'https://xivapi.com/i/002000/002589.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 }

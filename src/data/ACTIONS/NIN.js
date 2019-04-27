@@ -25,7 +25,7 @@ export default {
 		name: 'Ten',
 		icon: 'https://xivapi.com/i/002000/002901.png',
 		onGcd: false,
-		cooldown: 0.5,
+		cooldown: 500,
 	},
 
 	CHI: {
@@ -33,7 +33,7 @@ export default {
 		name: 'Chi',
 		icon: 'https://xivapi.com/i/002000/002902.png',
 		onGcd: false,
-		cooldown: 0.5,
+		cooldown: 500,
 	},
 
 	JIN: {
@@ -41,7 +41,7 @@ export default {
 		name: 'Jin',
 		icon: 'https://xivapi.com/i/002000/002903.png',
 		onGcd: false,
-		cooldown: 0.5,
+		cooldown: 500,
 	},
 
 	NINJUTSU: {
@@ -49,7 +49,7 @@ export default {
 		name: 'Ninjutsu',
 		icon: 'https://xivapi.com/i/002000/002904.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	FUMA_SHURIKEN: {
@@ -57,7 +57,7 @@ export default {
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	KATON: {
@@ -65,7 +65,7 @@ export default {
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	RAITON: {
@@ -73,7 +73,7 @@ export default {
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	HYOTON: {
@@ -81,7 +81,7 @@ export default {
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	HUTON: {
@@ -89,7 +89,7 @@ export default {
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	DOTON: {
@@ -97,7 +97,7 @@ export default {
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	SUITON: {
@@ -105,7 +105,7 @@ export default {
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	RABBIT_MEDIUM: {
@@ -113,7 +113,7 @@ export default {
 		name: 'Rabbit Medium',
 		icon: 'https://xivapi.com/i/002000/002914.png',
 		onGcd: false,
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	KASSATSU: {
@@ -121,7 +121,7 @@ export default {
 		name: 'Kassatsu',
 		icon: 'https://xivapi.com/i/002000/002906.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	DUALITY: {
@@ -129,7 +129,7 @@ export default {
 		name: 'Duality',
 		icon: 'https://xivapi.com/i/002000/002919.png',
 		onGcd: false,
-		cooldown: 90,
+		cooldown: 90000,
 	},
 
 	DREAM_WITHIN_A_DREAM: {
@@ -137,7 +137,7 @@ export default {
 		name: 'Dream Within A Dream',
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	HELLFROG_MEDIUM: {
@@ -153,7 +153,7 @@ export default {
 		name: 'Bhavacakra',
 		icon: 'https://xivapi.com/i/002000/002921.png',
 		onGcd: false,
-		cooldown: 50,
+		cooldown: 50000,
 	},
 
 	TEN_CHI_JIN: {
@@ -161,7 +161,7 @@ export default {
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
-		cooldown: 100,
+		cooldown: 100000,
 	},
 
 	SMOKE_SCREEN: {
@@ -169,7 +169,7 @@ export default {
 		name: 'Smoke Screen',
 		icon: 'https://xivapi.com/i/002000/002917.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	SHADEWALKER: {
@@ -177,7 +177,7 @@ export default {
 		name: 'Shadewalker',
 		icon: 'https://xivapi.com/i/002000/002916.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	SHUKUCHI: {
@@ -185,6 +185,6 @@ export default {
 		name: 'Shukuchi',
 		icon: 'https://xivapi.com/i/002000/002905.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 }

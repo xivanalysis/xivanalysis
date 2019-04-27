@@ -25,7 +25,7 @@ export default {
 		name: 'Bloodletter',
 		icon: 'https://xivapi.com/i/000000/000361.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 		potency: 130,
 	},
 	STRAIGHT_SHOT: {
@@ -40,14 +40,14 @@ export default {
 		name: 'Barrage',
 		icon: 'https://xivapi.com/i/000000/000353.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 	},
 	MISERYS_END: {
 		id: 103,
 		name: 'Misery\'s End',
 		icon: 'https://xivapi.com/i/000000/000364.png',
 		onGcd: false,
-		cooldown: 12,
+		cooldown: 12000,
 		potency: 190,
 	},
 	WINDBITE: {
@@ -62,13 +62,13 @@ export default {
 		name: 'Raging Strikes',
 		icon: 'https://xivapi.com/i/000000/000352.png',
 		onGcd: false,
-		cooldown: 80,
+		cooldown: 80000,
 	},
 	REPELLING_SHOT: {
 		id: 112,
 		name: 'Repelling Shot',
 		icon: 'https://xivapi.com/i/000000/000366.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 }

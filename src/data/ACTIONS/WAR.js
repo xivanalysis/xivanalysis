@@ -43,7 +43,7 @@ export default {
 		id: 3551,
 		name: 'Raw Intuition',
 		icon: 'https://xivapi.com/i/002000/002559.png',
-		cooldown: 90,
+		cooldown: 90000,
 		onGcd: false,
 	},
 
@@ -51,7 +51,7 @@ export default {
 		id: 7388,
 		name: 'Shake It Off',
 		icon: 'https://xivapi.com/i/002000/002563.png',
-		cooldown: 90,
+		cooldown: 90000,
 		onGcd: false,
 	},
 
@@ -59,7 +59,7 @@ export default {
 		id: 7386,
 		name: 'Onslaught',
 		icon: 'https://xivapi.com/i/002000/002561.png',
-		cooldown: 15,
+		cooldown: 15000,
 		onGcd: false,
 	},
 
@@ -67,7 +67,7 @@ export default {
 		id: 7387,
 		name: 'Upheaval',
 		icon: 'https://xivapi.com/i/002000/002562.png',
-		cooldown: 30,
+		cooldown: 30000,
 		onGcd: false,
 	},
 
@@ -75,7 +75,7 @@ export default {
 		id: 3552,
 		name: 'Equilibrium',
 		icon: 'https://xivapi.com/i/002000/002560.png',
-		cooldown: 60,
+		cooldown: 60000,
 		onGcd: false,
 	},
 
@@ -83,7 +83,7 @@ export default {
 		id: 50,
 		name: 'Unchained',
 		icon: 'https://xivapi.com/i/002000/002554.png',
-		cooldown: 90,
+		cooldown: 90000,
 		onGcd: false,
 	},
 
@@ -91,7 +91,7 @@ export default {
 		id: 48,
 		name: 'Defiance',
 		icon: 'https://xivapi.com/i/002000/002551.png',
-		cooldown: 10,
+		cooldown: 10000,
 		cooldownGroup: 1,
 		onGcd: false,
 	},
@@ -100,7 +100,7 @@ export default {
 		id: 3548,
 		name: 'Deliverance',
 		icon: 'https://xivapi.com/i/002000/002556.png',
-		cooldown: 10,
+		cooldown: 10000,
 		cooldownGroup: 1,
 		onGcd: false,
 	},
@@ -109,7 +109,7 @@ export default {
 		id: 7389,
 		name: 'Inner Release',
 		icon: 'https://xivapi.com/i/002000/002564.png',
-		cooldown: 90,
+		cooldown: 90000,
 		onGcd: false,
 	},
 
@@ -117,7 +117,7 @@ export default {
 		id: 52,
 		name: 'Infuriate',
 		icon: 'https://xivapi.com/i/002000/002555.png',
-		cooldown: 60,
+		cooldown: 60000,
 		onGcd: false,
 	},
 }

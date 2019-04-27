@@ -3,7 +3,7 @@ export default {
 		id: 7433,
 		name: 'Plenary Indulgence',
 		icon: 'https://xivapi.com/i/002000/002639.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	STONE_IV: {
@@ -11,14 +11,14 @@ export default {
 		name: 'Stone IV',
 		icon: 'https://xivapi.com/i/002000/002637.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 25000,
 	},
 
 	TETRAGRAMMATON: {
 		id: 3570,
 		name: 'Tetragrammaton',
 		icon: 'https://xivapi.com/i/002000/002633.png',
-		cooldown: 60,
+		cooldown: 60000,
 		//affected by lilies
 	},
 
@@ -26,7 +26,7 @@ export default {
 		id: 3571,
 		name: 'Assize',
 		icon: 'https://xivapi.com/i/002000/002634.png',
-		cooldown: 45,
+		cooldown: 45000,
 		//affected by lilies
 	},
 
@@ -34,7 +34,7 @@ export default {
 		id: 3569,
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/002000/002632.png',
-		cooldown: 60,
+		cooldown: 60000,
 		//affected by lilies
 	},
 
@@ -42,7 +42,7 @@ export default {
 		id: 140,
 		name: 'Benediction',
 		icon: 'https://xivapi.com/i/002000/002627.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	HOLY: {
@@ -50,14 +50,14 @@ export default {
 		name: 'Holy',
 		icon: 'https://xivapi.com/i/002000/002629.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	PRESENCE_OF_MIND: {
 		id: 136,
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/002000/002626.png',
-		cooldown: 150,
+		cooldown: 150000,
 	},
 
 	STONE_III: {
@@ -65,21 +65,21 @@ export default {
 		name: 'Stone III',
 		icon: 'https://xivapi.com/i/002000/002631.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 25000,
 	},
 
 	DIVINE_BENISON: {
 		id: 7432,
 		name: 'Divine Benison',
 		icon: 'https://xivapi.com/i/002000/002638.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	THIN_AIR: {
 		id: 7430,
 		name: 'Thin Air',
 		icon: 'https://xivapi.com/i/002000/002636.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	AERO_III: {
@@ -87,7 +87,7 @@ export default {
 		name: 'Aero III',
 		icon: 'https://xivapi.com/i/002000/002635.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	MEDICA_II: {
@@ -95,7 +95,7 @@ export default {
 		name: 'Medica II',
 		icon: 'https://xivapi.com/i/000000/000409.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	//the following abilities are to be moved to CNJ.js
@@ -104,7 +104,7 @@ export default {
 		name: 'Raise',
 		icon: 'https://xivapi.com/i/000000/000411.png',
 		onGcd: true,
-		castTime: 8,
+		castTime: 8000,
 	},
 
 	CURE_II: {
@@ -112,7 +112,7 @@ export default {
 		name: 'Cure II',
 		icon: 'https://xivapi.com/i/000000/000406.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	CURE_III: {
@@ -120,7 +120,7 @@ export default {
 		name: 'Cure III',
 		icon: 'https://xivapi.com/i/000000/000407.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	REGEN: {
@@ -134,7 +134,7 @@ export default {
 		id: 134,
 		name: 'Fluid Aura',
 		icon: 'https://xivapi.com/i/000000/000416.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	MEDICA: {
@@ -142,7 +142,7 @@ export default {
 		name: 'Medica',
 		icon: 'https://xivapi.com/i/000000/000408.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	STONE: {
@@ -150,7 +150,7 @@ export default {
 		name: 'Stone',
 		icon: 'https://xivapi.com/i/000000/000403.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	AERO_II: {
@@ -172,7 +172,7 @@ export default {
 		name: 'Repose',
 		icon: 'https://xivapi.com/i/000000/000414.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	STONE_II: {
@@ -180,7 +180,7 @@ export default {
 		name: 'Stone II',
 		icon: 'https://xivapi.com/i/000000/000404.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	CURE: {
@@ -188,6 +188,6 @@ export default {
 		name: 'Cure',
 		icon: 'https://xivapi.com/i/000000/000405.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 }

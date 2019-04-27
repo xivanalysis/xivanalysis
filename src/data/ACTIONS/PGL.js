@@ -56,48 +56,48 @@ export default {
 		id: 59,
 		name: 'Internal Release',
 		icon: 'https://xivapi.com/i/000000/000212.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	FISTS_OF_EARTH: {
 		id: 60,
 		name: 'Fists of Earth',
 		icon: 'https://xivapi.com/i/000000/000206.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	FISTS_OF_WIND: {
 		id: 73,
 		name: 'Fists of Wind',
 		icon: 'https://xivapi.com/i/002000/002527.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	STEEL_PEAK: {
 		id: 64,
 		name: 'Steel Peak',
 		icon: 'https://xivapi.com/i/002000/002530.png',
-		cooldown: 40,
+		cooldown: 40000,
 	},
 
 	MANTRA: {
 		id: 65,
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
-		cooldown: 90,
+		cooldown: 90000,
 	},
 
 	HOWLING_FIST: {
 		id: 67,
 		name: 'Howling Fist',
 		icon: 'https://xivapi.com/i/000000/000207.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	PERFECT_BALANCE: {
 		id: 69,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 }

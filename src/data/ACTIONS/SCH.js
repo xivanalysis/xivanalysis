@@ -16,7 +16,7 @@ export default {
 		name: 'Adloquium',
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
-		castTime: 2,
+		castTime: 2000,
 	},
 
 	SUCCOR: {
@@ -24,28 +24,28 @@ export default {
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	SACRED_SOIL: {
 		id: 188,
 		name: 'Sacred Soil',
 		icon: 'https://xivapi.com/i/002000/002804.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	LUSTRATE: {
 		id: 189,
 		name: 'Lustrate',
 		icon: 'https://xivapi.com/i/002000/002805.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	INDOMITABILITY: {
 		id: 3583,
 		name: 'Indomitability',
 		icon: 'https://xivapi.com/i/002000/002806.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	BROIL: {
@@ -53,35 +53,35 @@ export default {
 		name: 'Broil',
 		icon: 'https://xivapi.com/i/002000/002807.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	DEPLOYMENT_TACTICS: {
 		id: 3585,
 		name: 'Deployment Tactics',
 		icon: 'https://xivapi.com/i/002000/002808.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	EMERGENCY_TACTICS: {
 		id: 3586,
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	DISSIPATION: {
 		id: 3587,
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	EXCOGITATION: {
 		id: 7434,
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
-		cooldown: 45,
+		cooldown: 45000,
 	},
 
 	BROIL_II: {
@@ -89,28 +89,28 @@ export default {
 		name: 'Broil II',
 		icon: 'https://xivapi.com/i/002000/002814.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	CHAIN_STRATAGEM: {
 		id: 7436,
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	SCH_AETHERPACT: {
 		id: 7437,
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002816.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	DISSOLVE_UNION: {
 		id: 7869,
 		name: 'Dissolve Union',
 		icon: 'https://xivapi.com/i/002000/002817.png',
-		cooldown: 1,
+		cooldown: 1000,
 	},
 
 	// -----

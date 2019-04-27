@@ -79,7 +79,7 @@ export default {
 		name: 'Jugulate',
 		icon: 'https://xivapi.com/i/000000/000616.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	MUG: {
@@ -87,7 +87,7 @@ export default {
 		name: 'Mug',
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
-		cooldown: 90,
+		cooldown: 90000,
 	},
 
 	ASSASSINATE: {
@@ -95,7 +95,7 @@ export default {
 		name: 'Assassinate',
 		icon: 'https://xivapi.com/i/000000/000612.png',
 		onGcd: false,
-		cooldown: 40,
+		cooldown: 40000,
 	},
 
 	TRICK_ATTACK: {
@@ -103,7 +103,7 @@ export default {
 		name: 'Trick Attack',
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	SHADE_SHIFT: {
@@ -111,6 +111,6 @@ export default {
 		name: 'Shade Shift',
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 }

@@ -103,7 +103,7 @@ export default {
 		id: 40,
 		name: 'Thrill of Battle',
 		icon: 'https://xivapi.com/i/000000/000263.png',
-		cooldown: 120,
+		cooldown: 120000,
 		onGcd: false,
 	},
 
@@ -111,7 +111,7 @@ export default {
 		id: 43,
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
-		cooldown: 180,
+		cooldown: 180000,
 		onGcd: false,
 	},
 
@@ -119,7 +119,7 @@ export default {
 		id: 44,
 		name: 'Vengeance',
 		icon: 'https://xivapi.com/i/000000/000267.png',
-		cooldown: 120,
+		cooldown: 120000,
 		onGcd: false,
 	},
 }

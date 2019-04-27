@@ -9,14 +9,14 @@ export default {
 		name: 'Summon III',
 		icon: 'https://xivapi.com/i/002000/002680.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 3000,
 	},
 
 	FESTER: {
 		id: 181,
 		name: 'Fester',
 		icon: 'https://xivapi.com/i/002000/002676.png',
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	TRI_BIND: {
@@ -24,21 +24,21 @@ export default {
 		name: 'Tri-bind',
 		icon: 'https://xivapi.com/i/002000/002678.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	ENKINDLE: {
 		id: 184,
 		name: 'Enkindle',
 		icon: 'https://xivapi.com/i/002000/002677.png',
-		cooldown: 180,
+		cooldown: 180000,
 	},
 
 	PAINFLARE: {
 		id: 3578,
 		name: 'Painflare',
 		icon: 'https://xivapi.com/i/002000/002681.png',
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	RUIN_III: {
@@ -46,28 +46,28 @@ export default {
 		name: 'Ruin III',
 		icon: 'https://xivapi.com/i/002000/002682.png',
 		onGcd: true,
-		castTime: 2.5, // This is reduced to instant during DWT
+		castTime: 2500, // This is reduced to instant during DWT
 	},
 
 	TRI_DISASTER: {
 		id: 3580,
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	DREADWYRM_TRANCE: {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 20,
+		cooldown: 20000,
 	},
 
 	DEATHFLARE: {
 		id: 3582,
 		name: 'Deathflare',
 		icon: 'https://xivapi.com/i/002000/002685.png',
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	// Both SMN and SCH have Aetherpact, but they're different skills
@@ -75,7 +75,7 @@ export default {
 		id: 7423,
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	BIO_III: {
@@ -90,7 +90,7 @@ export default {
 		name: 'Miasma III',
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2500,
 	},
 
 	RUIN_IV: {
@@ -104,14 +104,14 @@ export default {
 		id: 7427,
 		name: 'Summon Bahamut',
 		icon: 'https://xivapi.com/i/002000/002691.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	ENKINDLE_BAHAMUT: {
 		id: 7429,
 		name: 'Enkindle Bahamut',
 		icon: 'https://xivapi.com/i/002000/002693.png',
-		cooldown: 13,
+		cooldown: 13000,
 	},
 
 	// -----
@@ -129,7 +129,7 @@ export default {
 		id: 793,
 		name: 'Shockwave',
 		icon: 'https://xivapi.com/i/002000/002713.png',
-		cooldown: 90,
+		cooldown: 90000,
 		pet: PETS.GARUDA_EGI.id,
 	},
 
@@ -137,7 +137,7 @@ export default {
 		id: 794,
 		name: 'Aerial Slash',
 		icon: 'https://xivapi.com/i/002000/002712.png',
-		cooldown: 30,
+		cooldown: 30000,
 		pet: PETS.GARUDA_EGI.id,
 	},
 
@@ -145,7 +145,7 @@ export default {
 		id: 795,
 		name: 'Contagion',
 		icon: 'https://xivapi.com/i/002000/002714.png',
-		cooldown: 60,
+		cooldown: 60000,
 		pet: PETS.GARUDA_EGI.id,
 	},
 
@@ -175,7 +175,7 @@ export default {
 		id: 788,
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002702.png',
-		cooldown: 15,
+		cooldown: 15000,
 		pet: PETS.TITAN_EGI.id,
 	},
 
@@ -183,7 +183,7 @@ export default {
 		id: 789,
 		name: 'Earthen Ward',
 		icon: 'https://xivapi.com/i/002000/002703.png',
-		cooldown: 120,
+		cooldown: 120000,
 		pet: PETS.TITAN_EGI.id,
 	},
 
@@ -191,7 +191,7 @@ export default {
 		id: 790,
 		name: 'Landslide',
 		icon: 'https://xivapi.com/i/002000/002704.png',
-		cooldown: 40,
+		cooldown: 40000,
 		pet: PETS.TITAN_EGI.id,
 	},
 
@@ -214,7 +214,7 @@ export default {
 		id: 797,
 		name: 'Crimson Cyclone',
 		icon: 'https://xivapi.com/i/002000/002721.png',
-		cooldown: 40,
+		cooldown: 40000,
 		pet: PETS.IFRIT_EGI.id,
 	},
 
@@ -229,7 +229,7 @@ export default {
 		id: 799,
 		name: 'Radiant Shield',
 		icon: 'https://xivapi.com/i/002000/002723.png',
-		cooldown: 60,
+		cooldown: 60000,
 		pet: PETS.IFRIT_EGI.id,
 	},
 
@@ -237,7 +237,7 @@ export default {
 		id: 800,
 		name: 'Flaming Crush',
 		icon: 'https://xivapi.com/i/002000/002724.png',
-		cooldown: 30,
+		cooldown: 30000,
 		pet: PETS.IFRIT_EGI.id,
 	},
 

@@ -75,7 +75,7 @@ export default {
 		name: 'Reload',
 		icon: 'https://xivapi.com/i/003000/003019.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	HEARTBREAK: {
@@ -83,7 +83,7 @@ export default {
 		name: 'Heartbreak',
 		icon: 'https://xivapi.com/i/003000/003007.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	REASSEMBLE: {
@@ -91,7 +91,7 @@ export default {
 		name: 'Reassemble',
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	BLANK: {
@@ -99,7 +99,7 @@ export default {
 		name: 'Blank',
 		icon: 'https://xivapi.com/i/003000/003016.png',
 		onGcd: false,
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	QUICK_RELOAD: {
@@ -107,7 +107,7 @@ export default {
 		name: 'Quick Reload',
 		icon: 'https://xivapi.com/i/003000/003020.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	RAPID_FIRE: {
@@ -115,7 +115,7 @@ export default {
 		name: 'Rapid Fire',
 		icon: 'https://xivapi.com/i/003000/003023.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	WILDFIRE: {
@@ -123,7 +123,7 @@ export default {
 		name: 'Wildfire',
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	ROOK_AUTOTURRET: {
@@ -131,7 +131,7 @@ export default {
 		name: 'Rook Autoturret',
 		icon: 'https://xivapi.com/i/003000/003026.png',
 		onGcd: false,
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	TURRET_RETRIEVAL: {
@@ -139,7 +139,7 @@ export default {
 		name: 'Turret Retrieval',
 		icon: 'https://xivapi.com/i/003000/003028.png',
 		onGcd: false,
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	BISHOP_AUTOTURRET: {
@@ -147,7 +147,7 @@ export default {
 		name: 'Bishop Autoturret',
 		icon: 'https://xivapi.com/i/003000/003027.png',
 		onGcd: false,
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	GAUSS_BARREL: {
@@ -155,7 +155,7 @@ export default {
 		name: 'Gauss Barrel',
 		icon: 'https://xivapi.com/i/003000/003021.png',
 		onGcd: false,
-		cooldown: 2,
+		cooldown: 2000,
 	},
 
 	REMOVE_BARREL: {
@@ -163,7 +163,7 @@ export default {
 		name: 'Remove Barrel',
 		icon: 'https://xivapi.com/i/003000/003029.png',
 		onGcd: false,
-		cooldown: 2,
+		cooldown: 2000,
 	},
 
 	GAUSS_ROUND: {
@@ -171,7 +171,7 @@ export default {
 		name: 'Gauss Round',
 		icon: 'https://xivapi.com/i/003000/003005.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 15000,
 	},
 
 	DISMANTLE: {
@@ -179,7 +179,7 @@ export default {
 		name: 'Dismantle',
 		icon: 'https://xivapi.com/i/003000/003011.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	HYPERCHARGE: {
@@ -187,7 +187,7 @@ export default {
 		name: 'Hypercharge',
 		icon: 'https://xivapi.com/i/003000/003024.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	RICOCHET: {
@@ -195,7 +195,7 @@ export default {
 		name: 'Ricochet',
 		icon: 'https://xivapi.com/i/003000/003017.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	BARREL_STABILIZER: {
@@ -203,7 +203,7 @@ export default {
 		name: 'Barrel Stabilizer',
 		icon: 'https://xivapi.com/i/003000/003034.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	ROOK_OVERDRIVE: {
@@ -211,7 +211,7 @@ export default {
 		name: 'Rook Overdrive',
 		icon: 'https://xivapi.com/i/003000/003035.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	BISHOP_OVERDRIVE: {
@@ -219,7 +219,7 @@ export default {
 		name: 'Bishop Overdrive',
 		icon: 'https://xivapi.com/i/003000/003035.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	FLAMETHROWER: {
@@ -227,7 +227,7 @@ export default {
 		name: 'Flamethrower',
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	// -----

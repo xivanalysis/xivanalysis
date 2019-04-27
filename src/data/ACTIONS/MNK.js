@@ -36,7 +36,7 @@ export default {
 		name: 'Meditation',
 		icon: 'https://xivapi.com/i/002000/002534.png',
 		onGcd: true,
-		cooldown: 1.2,
+		cooldown: 12000,
 	},
 
 	// -----
@@ -47,56 +47,56 @@ export default {
 		id: 71,
 		name: 'Shoulder Tackle',
 		icon: 'https://xivapi.com/i/002000/002526.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	FISTS_OF_FIRE: {
 		id: 63,
 		name: 'Fists of Fire',
 		icon: 'https://xivapi.com/i/000000/000205.png',
-		cooldown: 3,
+		cooldown: 3000,
 	},
 
 	THE_FORBIDDEN_CHAKRA: {
 		id: 3547,
 		name: 'The Forbidden Chakra',
 		icon: 'https://xivapi.com/i/002000/002535.png',
-		cooldown: 5,
+		cooldown: 5000,
 	},
 
 	ELIXIR_FIELD: {
 		id: 3545,
 		name: 'Elixir Field',
 		icon: 'https://xivapi.com/i/002000/002533.png',
-		cooldown: 30,
+		cooldown: 30000,
 	},
 
 	PURIFICATION: {
 		id: 3544,
 		name: 'Purification',
 		icon: 'https://xivapi.com/i/002000/002532.png',
-		cooldown: 120,
+		cooldown: 120000,
 	},
 
 	TORNADO_KICK: {
 		id: 3543,
 		name: 'Tornado Kick',
 		icon: 'https://xivapi.com/i/002000/002531.png',
-		cooldown: 10,
+		cooldown: 10000,
 	},
 
 	RIDDLE_OF_EARTH: {
 		id: 7394,
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
-		cooldown: 60,
+		cooldown: 60000,
 	},
 
 	EARTH_TACKLE: {
 		id: 7864,
 		name: 'Earth Tackle',
 		icon: 'https://xivapi.com/i/002000/002538.png',
-		cooldown: 30,
+		cooldown: 30000,
 		potency: 100,
 	},
 
@@ -112,7 +112,7 @@ export default {
 		id: 7865,
 		name: 'Wind Tackle',
 		icon: 'https://xivapi.com/i/002000/002539.png',
-		cooldown: 30,
+		cooldown: 30000,
 		potency: 65,
 	},
 
@@ -120,14 +120,14 @@ export default {
 		id: 7395,
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/002000/002541.png',
-		cooldown: 90,
+		cooldown: 90000,
 	},
 
 	FIRE_TACKLE: {
 		id: 7866,
 		name: 'Fire Tackle',
 		icon: 'https://xivapi.com/i/002000/002540.png',
-		cooldown: 30,
+		cooldown: 30000,
 		potency: 130,
 	},
 
@@ -135,6 +135,6 @@ export default {
 		id: 7396,
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
-		cooldown: 90,
+		cooldown: 90000,
 	},
 }
