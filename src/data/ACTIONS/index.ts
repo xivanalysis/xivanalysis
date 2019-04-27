@@ -60,6 +60,7 @@ export interface Action {
 	onGcd?: boolean
 	castTime?: number
 	cooldown?: number
+	cooldownGroup?: number
 
 	pet?: number
 
@@ -127,12 +128,9 @@ function addDefaultValues<T extends Record<string, Action>>(obj: T) {
 	return obj
 }
 
-export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
-
-export default addExtraIndex(
-	addDefaultValues(ACTIONS as Record<keyof typeof ACTIONS, Action>),
-	'id',
-)
+const internalActions = ACTIONS as Record<keyof typeof ACTIONS, Action>
+export const COOLDOWN_GROUPS = _.groupBy(internalActions, 'cooldownGroup')
+export default addExtraIndex(addDefaultValues(internalActions), 'id')
 
 // TODO: warn when falling back?
 // TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?
