@@ -171,28 +171,4 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002663.png',
 		cooldown: 60,
 	},
-	FIRE_III_PROC: {
-		id: '152PROC',
-		name: 'Fire III',
-		icon: process.env.PUBLIC_URL + '/icon/action/f3p.png',
-		onGcd: true,
-	},
-	THUNDER_III_PROC: {
-		id: '153PROC',
-		name: 'Thunder III',
-		icon: process.env.PUBLIC_URL + '/icon/action/t3p.png',
-		onGcd: true,
-	},
-	THUNDER_III_FALSE: {
-		id: '153FALSE',
-		name: 'Thunder III',
-		icon: process.env.PUBLIC_URL + '/icon/action/t3f.png',
-		onGcd: true,
-	},
-	THUNDER_IV_PROC: {
-		id: '742PROC',
-		name: 'Thunder IV',
-		icon: process.env.PUBLIC_URL + '/icon/action/t4p.png',
-		onGcd: true,
-	},
 }

@@ -86,10 +86,6 @@ function addDefaultValues (obj) {
 
 export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 
-export const HIT_TYPES = {
-	CRIT: 2,
-}
-
 export default ACTIONS
 
 // TODO: warn when falling back?

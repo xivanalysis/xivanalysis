@@ -1,3 +1,4 @@
+import ACTIONS from 'data/ACTIONS'
 import React from 'react'
 import {matchClosestLower} from 'utilities'
 
@@ -10,8 +11,8 @@ export enum Severity {
 }
 
 export class Suggestion {
-	// default "cure" icon
-	icon: string = 'https://xivapi.com/i/000000/000405.png'
+	// Game uses cure as a fallback icon for most stuff
+	icon: string = ACTIONS.CURE.icon
 	content: React.ReactNode
 	why: React.ReactNode
 	severity?: Severity
