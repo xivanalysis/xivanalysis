@@ -78,9 +78,7 @@ export class Cooldowns extends Module {
 				cd.current = undefined
 			}
 
-			// TODO: Skip GCD here?
-			// Or should this entire module skip over GCDs at the bud?
-
+			// Add 'em all to the timeline
 			this.addToTimeline(action, cd)
 		})
 	}
@@ -137,6 +135,11 @@ export class Cooldowns extends Module {
 		// If there's no cooldown, something's gone haywire
 		if (!action.cooldown) {
 			throw new Error(`Tried to start cooldown for ${action.name}, which has no cooldown.`)
+		}
+
+		// If the action is a GCD, we don't want to track it - that's another module's job
+		if (action.onGcd) {
+			return
 		}
 
 		// Build the cooldown info
