@@ -94,11 +94,12 @@ export class Analyser {
 	}
 
 	private async loadModules() {
-		// TODO: Job & zone
 		// NOTE: Order of groups here is the order they will be loaded in. Later groups
 		//       override earlier groups.
 		const metas = [
 			AVAILABLE_MODULES.CORE,
+			AVAILABLE_MODULES.ZONES[this.zoneId],
+			AVAILABLE_MODULES.JOBS[this.actor.job],
 		].filter(isDefined)
 
 		// Load in the modules
