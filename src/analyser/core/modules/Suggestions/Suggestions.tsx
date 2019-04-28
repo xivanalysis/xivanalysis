@@ -13,7 +13,12 @@ export class Suggestions extends Module {
 
 	private suggestions: Suggestion[] = []
 
+	/** Add a suggestion to display */
 	add(suggestion: Suggestion) {
+		if (!(suggestion instanceof Suggestion)) {
+			throw new Error('All suggestions should extend from the Suggestion class.')
+		}
+
 		this.suggestions.push(suggestion)
 	}
 

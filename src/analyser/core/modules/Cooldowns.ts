@@ -1,8 +1,10 @@
 import {Events} from '@xivanalysis/parser-core'
 import {EventTypes} from 'analyser/Analyser'
+import {dependency} from 'analyser/dependency'
 import {Module} from 'analyser/Module'
 import {getDataBy} from 'data'
 import ACTIONS, {Action, COOLDOWN_GROUPS} from 'data/ACTIONS'
+import {Group, Item, Timeline} from './Timeline'
 
 export interface Cooldown {
 	/** Timestamp that the cooldown began */
@@ -20,14 +22,17 @@ export interface CooldownState {
 
 export class Cooldowns extends Module {
 	static handle = 'cooldowns'
-	// @dependency private timeline!: Timeline
+	@dependency private timeline!: Timeline
 	// @dependency private downtime!: Downtime
 
 	/** Current action being cast */
 	private currentAction?: Action
 
 	/** State of all tracked cooldowns */
-	private cooldowns = new Map<Action['id'], CooldownState>()
+	private cooldowns = new Map<Action, CooldownState>()
+
+	/** Mapping of actions to the timeline groups they should be added to */
+	private groups = new Map<Action, Group>()
 
 	protected init() {
 		const byPlayer = {sourceId: this.analyser.actor.id}
@@ -66,18 +71,49 @@ export class Cooldowns extends Module {
 	}
 
 	private onComplete() {
-		// TODO: Cleanup & add to timeline
-		// console.log(this.cooldowns)
+		this.cooldowns.forEach((cd, action) => {
+			// Fight's over, move current cooldowns into the history
+			if (cd.current) {
+				cd.history.push(cd.current)
+				cd.current = undefined
+			}
+
+			// TODO: Skip GCD here?
+			// Or should this entire module skip over GCDs at the bud?
+
+			this.addToTimeline(action, cd)
+		})
+	}
+
+	private addToTimeline(action: Action, cd: CooldownState) {
+		// Get the group for the specified action
+		const maybeGroup = this.groups.get(action)
+		const group = maybeGroup || new Group({name: action.name})
+		if (!maybeGroup) {
+			this.groups.set(action, group)
+			this.timeline.add(group)
+		}
+
+		// Add an item for each use of the CD in the history
+		cd.history.forEach(use => {
+			// TODO: Old one excluded shared CDs here. Do we want to do that?
+			// - alternatively, it's likely that shared CDs will be on the same group from config. should i just automate that?
+			group.items.push(new Item({
+				icon: action.icon,
+				timestamp: use.timestamp,
+				duration: use.length,
+			}))
+		})
 	}
 
 	/** Get the cooldown status for the provided action */
 	getCooldown(action: Action): CooldownState {
-		const cd = this.cooldowns.get(action.id)
+		const cd = this.cooldowns.get(action)
 
 		// If we don't have a record of it yet, create a new one and save it out
 		if (!cd) {
 			const newCd = {history: []}
-			this.cooldowns.set(action.id, newCd)
+			this.cooldowns.set(action, newCd)
 			return newCd
 		}
 
