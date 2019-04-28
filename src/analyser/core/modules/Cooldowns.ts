@@ -72,9 +72,25 @@ export class Cooldowns extends Module {
 
 	/** Get the cooldown status for the provided action */
 	getCooldown(action: Action): CooldownState {
-		return this.cooldowns.get(action.id) || {
-			history: [],
+		const cd = this.cooldowns.get(action.id)
+
+		// If we don't have a record of it yet, create a new one and save it out
+		if (!cd) {
+			const newCd = {history: []}
+			this.cooldowns.set(action.id, newCd)
+			return newCd
 		}
+
+		// Check if current should be moved into the history
+		if (
+			cd.current &&
+			cd.current.timestamp + cd.current.length < this.analyser.currentTime
+		) {
+			cd.history.push(cd.current)
+			cd.current = undefined
+		}
+
+		return cd
 	}
 
 	/**
@@ -113,9 +129,6 @@ export class Cooldowns extends Module {
 			// action - and all actions within a group share their cooldown state.
 			// This can be seen when switching jobs with stuff on CD.
 			cd.current = cooldown
-
-			// Save out the info in case it's a new status object
-			this.cooldowns.set(action.id, cd)
 		})
 	}
 
@@ -126,44 +139,24 @@ export class Cooldowns extends Module {
 	 */
 	reduceCooldown(action: Action, reduction: number) {
 		const cd = this.getCooldown(action)
-		const {currentTime} = this.analyser
-
-		// Check if the current action needs to be moved across
-		if (cd.current && cd.current.timestamp + cd.current.length < currentTime) {
-			cd.history.push(cd.current)
-			cd.current = undefined
-		}
 
 		// If there's no current CD, we have nothing to reduce
 		if (!cd.current) {
 			return
 		}
 
-		// Reduce the CD duration
-		cd.current.length = Math.max(cd.current.length - reduction, 0)
-
-		// If the reduction would have made it come off CD earlier than now, reset it:
-		// the extra time reduction should be lost.
-		if (cd.current.timestamp + cd.current.length < currentTime) {
-			this.resetCooldown(action)
-		}
+		// Reduce the CD length
+		// Bounded by 0 to prevent negative lengths, and the current timestamp, to
+		// prevent reductions causing rifts in the time space continuum
+		cd.current.length = Math.min(
+			Math.max(cd.current.length - reduction, 0),
+			this.analyser.currentTime - cd.current.timestamp,
+		)
 	}
 
 	/** Reset the cooldown on the specified action */
 	resetCooldown(action: Action) {
-		const cd = this.getCooldown(action)
-
-		// If there isn't a current cooldown, we can just stop now
-		if (!cd.current) {
-			return
-		}
-
-		// Adjust the length to represent it finishing now
-		cd.current.length = this.analyser.currentTime - cd.current.timestamp
-
-		// The CD has now finished - move it to history
-		cd.history.push(cd.current)
-		cd.current = undefined
+		this.reduceCooldown(action, Infinity)
 	}
 
 	// todo set invuln
