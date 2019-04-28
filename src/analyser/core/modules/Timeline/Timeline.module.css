@@ -1,0 +1,26 @@
+@value gutter from "theme.module.css";
+
+.helpText {
+	font-style: italic;
+}
+
+@media (min-width: 992px) {
+	.helpText {
+		position: absolute;
+		top: gutter;
+		right: gutter;
+	}
+}
+
+.item :global .vis-item-content {
+	padding: 0;
+	height: 100%;
+}
+
+.item :global .vis-item-content img {
+	max-height: 100%;
+}
+
+.item.allowOverflow :global .vis-item-overflow {
+	overflow: visible;
+}

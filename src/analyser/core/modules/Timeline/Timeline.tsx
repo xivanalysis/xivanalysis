@@ -1,11 +1,15 @@
 import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import {DisplayOrder} from 'analyser/core/DisplayOrder'
 import {DisplayMode, Module} from 'analyser/Module'
+import classNames from 'classnames'
 import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
 import {Group} from './Group'
 import {Item} from './Item'
 import {getOptions} from './options'
+
+import styles from './Timeline.module.css'
 
 export class Timeline extends Module {
 	static handle = 'timeline'
@@ -52,6 +56,9 @@ export class Timeline extends Module {
 		})
 
 		return <>
+			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
+				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
+			</Trans>
 			<VisTimeline
 				options={options}
 				items={items}
@@ -63,6 +70,10 @@ export class Timeline extends Module {
 	private itemToVis(id: vis.IdType, item: Item): vis.TimelineItem {
 		return {
 			type: 'background',
+			className: classNames(
+				styles.item,
+				item.duration <= 0 && styles.allowOverflow,
+			),
 			content: `<img src="${item.icon}">`,
 			id,
 			start: this.analyser.relativeTimestamp(item.timestamp),
