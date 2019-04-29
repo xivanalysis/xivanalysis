@@ -185,11 +185,13 @@ export class Cooldowns extends Module {
 		}
 
 		// Reduce the CD length
-		// Bounded by 0 to prevent negative lengths, and the current timestamp, to
-		// prevent reductions causing rifts in the time space continuum
-		cd.current.length = Math.min(
-			Math.max(cd.current.length - reduction, 0),
+		// We're preventing the CD being reduced below 0 for sanity purposes, as well as
+		// the length of the CD as it is at the current time, as reductions and resets never
+		// cause it to come off CD in the past (hue)
+		cd.current.length = Math.max(
+			cd.current.length - reduction,
 			this.analyser.currentTime - cd.current.timestamp,
+			0,
 		)
 	}
 
