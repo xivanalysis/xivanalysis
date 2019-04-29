@@ -1,5 +1,7 @@
 import {Trans} from '@lingui/react'
+import {convertToJob} from '@xivanalysis/parser-reader-fflogs'
 import {List, Message, Segment} from 'akkd'
+import * as AVAILABLE_MODULES from 'analyser/AVAILABLE_MODULES'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -10,7 +12,6 @@ import * as Errors from 'errors'
 import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
 import {inject, observer} from 'mobx-react'
-import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Header} from 'semantic-ui-react'
@@ -65,28 +66,33 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	findRole(type: ActorType): Role['id'] {
-		const jobMeta = AVAILABLE_MODULES.JOBS
+		const job = convertToJob(type)
+		const jobMeta = AVAILABLE_MODULES.JOBS[job]
 
-		// Find the role for the player's job.
-		// Jobs without parses, and jobs with outdated parsers get special roles.
-		let role = ROLES.UNSUPPORTED.id
-		if (type in jobMeta) {
-			const job = getDataBy(JOBS, 'logType', type)
-			if (!job) { throw new Error(`No configured job data found for type '${type}'`) }
-			role = job.role
-
-			const supportedPatches = jobMeta[type].supportedPatches
-			if (supportedPatches) {
-				const {lang, start} = this.props.report
-				const from = supportedPatches.from as PatchNumber
-				const to = (supportedPatches.to as PatchNumber) || from
-				if (!patchSupported(languageToEdition(lang), from, to, start)) {
-					role = ROLES.OUTDATED.id
-				}
-			}
+		// If there's no meta for the job, it's unsupported
+		if (!jobMeta) {
+			return ROLES.UNSUPPORTED.id
 		}
 
-		return role
+		// Check if the job is supported, but outdated
+		const supportedPatches = jobMeta.supportedPatches
+		if (!supportedPatches) {
+			return ROLES.OUTDATED.id
+		}
+		const {lang, start} = this.props.report
+		const from = supportedPatches.from as PatchNumber
+		const to = (supportedPatches.to as PatchNumber) || from
+		if (!patchSupported(languageToEdition(lang), from, to, start)) {
+			return ROLES.OUTDATED.id
+		}
+
+		// Supported and up to date, add to the proper job role
+		// TODO: Update JOBS to use parser types
+		const jobData = getDataBy(JOBS, 'logType', type)
+		if (!jobData) {
+			throw new Error(`No configured job data found for type '${type}'`)
+		}
+		return jobData.role
 	}
 
 	render() {
@@ -157,7 +163,11 @@ class CombatantList extends React.Component<Props> {
 	private renderFriend = (friend: Actor) => {
 		const {report, currentFight} = this.props
 		const job = getDataBy(JOBS, 'logType', friend.type)
-		const supportedPatchesData = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+
+		const jobMeta = AVAILABLE_MODULES.JOBS[convertToJob(friend.type)]
+		const supportedPatchesData = jobMeta
+			? jobMeta.supportedPatches
+			: undefined
 
 		let supportedPatches: React.ReactNode
 		if (supportedPatchesData) {
