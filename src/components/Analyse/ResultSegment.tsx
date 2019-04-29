@@ -1,8 +1,8 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
+import {Result} from 'analyser/Analyser'
+import {DisplayMode} from 'analyser/Module'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {DISPLAY_MODE} from 'parser/core/Module'
-import {Result} from 'parser/core/Parser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Header, Icon} from 'semantic-ui-react'
@@ -44,7 +44,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		this.scrollIntoView.bind(this)
 
 		const state: State = {}
-		if (props.result.mode === DISPLAY_MODE.FULL) {
+		if (props.result.mode === DisplayMode.FULL) {
 			state.collapsed = false
 		}
 		this.state = state
@@ -95,16 +95,16 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 	private renderContent = () => {
 		const {result} = this.props
 
-		if (result.mode === DISPLAY_MODE.RAW) {
+		if (result.mode === DisplayMode.RAW) {
 			return <div>{result.markup}</div>
 		}
 
 		const contents = <>
-			<Header><NormalisedMessage message={result.name} id={result.i18n_id}/></Header>
+			<Header><NormalisedMessage message={result.name}/></Header>
 			<div>{result.markup}</div>
 		</>
 
-		if (result.mode === DISPLAY_MODE.FULL) {
+		if (result.mode === DisplayMode.FULL) {
 			return <Segment>{contents}</Segment>
 		}
 

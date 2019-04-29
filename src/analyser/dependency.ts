@@ -1,3 +1,4 @@
+import 'reflect-metadata'
 import {Module} from './Module'
 
 export function dependency(target: Module, prop: string) {

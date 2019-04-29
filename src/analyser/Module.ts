@@ -5,7 +5,7 @@ import {Analyser} from './Analyser'
 
 export type Handle = string
 
-interface MappedDependency {
+export interface MappedDependency {
 	handle: Handle
 	prop: string
 }

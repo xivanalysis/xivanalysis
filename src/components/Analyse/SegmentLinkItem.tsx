@@ -1,7 +1,7 @@
+import {Result} from 'analyser/Analyser'
 import classnames from 'classnames'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import _ from 'lodash'
-import {Result} from 'parser/core/Parser'
 import React from 'react'
 import styles from './SegmentLinkItem.module.css'
 import {Consumer} from './SegmentPositionContext'
@@ -20,7 +20,7 @@ export default function SegmentLinkItem({result, index}: Props) {
 			)}
 			onClick={() => scrollToId(index)}
 		>
-			<NormalisedMessage message={result.name} id={result.i18n_id}/>
+			<NormalisedMessage message={result.name}/>
 		</div>
 	)}</Consumer>
 }

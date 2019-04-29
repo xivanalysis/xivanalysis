@@ -3,13 +3,12 @@ import {Actor, Events} from '@xivanalysis/parser-core'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {DependencyCascadeError} from 'errors'
 import {ModulesNotFoundError} from 'errors'
-import {MappedDependency} from 'parser/core/Module'
 import React from 'react'
 import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
-import {DisplayMode, Handle, Module} from './Module'
+import {DisplayMode, Handle, MappedDependency, Module} from './Module'
 
 /*
 👏    NO    👏
