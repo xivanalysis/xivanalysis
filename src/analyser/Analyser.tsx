@@ -8,6 +8,7 @@ import toposort from 'toposort'
 import {isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
+import {Meta} from './Meta'
 import {DisplayMode, Handle, MappedDependency, Module} from './Module'
 
 /*
@@ -47,6 +48,9 @@ export class Analyser {
 	/** The actor currently being analysed. */
 	readonly actor: Actor
 
+	/** Metadata about the modules that have been loaded. */
+	readonly meta: Meta
+
 	private readonly events: Events.Base[]
 	private readonly zoneId: number
 
@@ -79,6 +83,17 @@ export class Analyser {
 		}
 		this.actor = event.actor
 
+		// NOTE: Order of groups here is the order they will be loaded in. Later groups
+		//       override earlier groups.
+		const metas = [
+			AVAILABLE_MODULES.CORE,
+			AVAILABLE_MODULES.ZONES[this.zoneId],
+			AVAILABLE_MODULES.JOBS[this.actor.job],
+		]
+		this.meta = metas
+			.filter(isDefined)
+			.reduce((acc, cur) => acc.merge(cur))
+
 		this.currentEventTimestamp = this.startTime
 	}
 
@@ -88,24 +103,16 @@ export class Analyser {
 
 	/** Initialise the analyser. */
 	async init() {
-		const constructors = await this.loadModules()
+		const constructors = await this.loadModules(this.meta)
 		this.buildModules(constructors)
 	}
 
-	private async loadModules() {
-		// NOTE: Order of groups here is the order they will be loaded in. Later groups
-		//       override earlier groups.
-		const metas = [
-			AVAILABLE_MODULES.CORE,
-			AVAILABLE_MODULES.ZONES[this.zoneId],
-			AVAILABLE_MODULES.JOBS[this.actor.job],
-		].filter(isDefined)
-
+	private async loadModules(meta: Meta) {
 		// Load in the modules
 		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
-		let groupedConstructors: ReadonlyArray<ReadonlyArray<typeof Module>>
+		let allConstructors: ReadonlyArray<typeof Module>
 		try {
-			groupedConstructors = await Promise.all(metas.map(meta => meta.loadModules()))
+			allConstructors = await meta.loadModules()
 		} catch (error) {
 			if (process.env.NODE_ENV === 'development') {
 				throw error
@@ -114,7 +121,7 @@ export class Analyser {
 		}
 
 		const constructors: Record<string, typeof Module> = {}
-		groupedConstructors.flat().forEach(constructor => {
+		allConstructors.flat().forEach(constructor => {
 			constructors[constructor.handle] = constructor
 		})
 
