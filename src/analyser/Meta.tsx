@@ -1,5 +1,6 @@
 import {PatchNumber} from 'data/PATCHES'
 import _ from 'lodash'
+import React from 'react'
 import {Module} from './Module'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Module>}>
@@ -11,6 +12,7 @@ interface SupportedPatches {
 
 export class Meta {
 	readonly supportedPatches?: SupportedPatches
+	readonly Description?: React.ComponentType
 
 	private readonly modulesLoader: ModulesLoader
 	private loadedModules?: ReadonlyArray<typeof Module>
@@ -18,9 +20,11 @@ export class Meta {
 	constructor(opts: {
 		modules: ModulesLoader,
 		supportedPatches?: SupportedPatches,
+		Description?: React.ComponentType,
 	}) {
 		this.modulesLoader = opts.modules
 		this.supportedPatches = opts.supportedPatches
+		this.Description = opts.Description
 	}
 
 	/**
@@ -45,8 +49,17 @@ export class Meta {
 			// Modules should contain all loaded modules
 			modules: () => Promise.all([this.loadModules(), meta.loadModules()])
 				.then(groupedModules => ({default: _.flatten(groupedModules)})),
+
 			// New sets of supported patches override old ones
 			supportedPatches: meta.supportedPatches,
+
+			// Descriptions are merged all lovely and jsx like. Jobs come after zones
+			// and core, so the new meta should be above the old.
+			// TODO: Headers? Somehow?
+			Description: () => <>
+				{meta.Description && <meta.Description/>}
+				{this.Description && <this.Description/>}
+			</>,
 		})
 	}
 }
