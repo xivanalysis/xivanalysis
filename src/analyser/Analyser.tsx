@@ -1,8 +1,8 @@
 import {MessageDescriptor} from '@lingui/core'
 import {Actor, Events} from '@xivanalysis/parser-core'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {DependencyCascadeError} from 'errors'
-import {ModulesNotFoundError} from 'errors'
+import {GameEdition} from 'data/PATCHES'
+import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import React from 'react'
 import toposort from 'toposort'
 import {isDefined} from 'utilities'
@@ -45,6 +45,9 @@ const generateActorFinder = (id: Actor['id']) =>
 		isAddActor(event) && event.actor.id === id
 
 export class Analyser {
+	/** The edition of the game that generated the events being analysed. */
+	readonly gameEdition: GameEdition
+
 	/** The actor currently being analysed. */
 	readonly actor: Actor
 
@@ -68,10 +71,12 @@ export class Analyser {
 	private fabricationQueue: Events.Base[] = []
 
 	constructor(opts: {
+		gameEdition: GameEdition,
 		events: Events.Base[],
 		actorId: Actor['id'],
 		zoneId: number,
 	}) {
+		this.gameEdition = opts.gameEdition
 		this.events = opts.events
 		this.zoneId = opts.zoneId
 

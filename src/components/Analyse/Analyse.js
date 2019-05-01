@@ -15,6 +15,7 @@ import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
+import {languageToEdition} from 'data/PATCHES'
 import {ReportStore} from 'store/report'
 import {GlobalErrorStore} from 'store/globalError'
 
@@ -84,6 +85,8 @@ class Analyse extends Component {
 		try {
 			const events = await fflogsPipeline({report, fight, combatant})
 			analyser = new Analyser({
+				// TODO: gameEdition should be handled by the pipeline in some manner
+				gameEdition: languageToEdition(report.lang),
 				events,
 				actorId: getActorId({actor: combatant}),
 				zoneId: fight.zoneID,
