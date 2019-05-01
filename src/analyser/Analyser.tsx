@@ -10,6 +10,7 @@ import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
 import {Meta} from './Meta'
 import {DisplayMode, Handle, MappedDependency, Module} from './Module'
+import {Patch} from './Patch'
 
 /*
 👏    NO    👏
@@ -47,6 +48,9 @@ const generateActorFinder = (id: Actor['id']) =>
 export class Analyser {
 	/** The edition of the game that generated the events being analysed. */
 	readonly gameEdition: GameEdition
+
+	/** Representation of the patch at the time of logging */
+	readonly patch: Patch
 
 	/** The actor currently being analysed. */
 	readonly actor: Actor
@@ -87,6 +91,8 @@ export class Analyser {
 			throw new Error('Could not find actor matching the ID specified.')
 		}
 		this.actor = event.actor
+
+		this.patch = new Patch(opts.gameEdition, this.startTime)
 
 		// NOTE: Order of groups here is the order they will be loaded in. Later groups
 		//       override earlier groups.
