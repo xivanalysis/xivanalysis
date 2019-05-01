@@ -59,7 +59,7 @@ class Breadcrumbs extends React.Component {
 				title = report.title
 
 				const edition = languageToEdition(report.lang)
-				const patch = getPatch(edition, report.start / 1000)
+				const patch = getPatch(edition, report.start)
 				subtitle = <>({editionName[edition]} {patch})</>
 			}
 
