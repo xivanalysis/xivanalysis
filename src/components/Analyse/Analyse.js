@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import {getActorId} from '@xivanalysis/parser-reader-fflogs'
+import {getActorId, convertToJob} from '@xivanalysis/parser-reader-fflogs'
 import {observable, runInAction, reaction} from 'mobx'
 import {inject, observer, disposeOnUnmount} from 'mobx-react'
 import PropTypes from 'prop-types'
@@ -13,6 +13,7 @@ import {Analyser} from 'analyser/Analyser'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
 import {ReportStore} from 'store/report'
 import {GlobalErrorStore} from 'store/globalError'
@@ -123,7 +124,7 @@ class Analyse extends Component {
 
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
-		const job = JOBS[player.type]
+		const job = getDataBy(JOBS, 'job', convertToJob(player.type))
 
 		const results = this.analyser.generateResults()
 
