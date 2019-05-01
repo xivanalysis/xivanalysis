@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Meta} from 'analyser/Meta'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import React from 'react'
 
 const description = t('smn.about.description')`
@@ -20,4 +21,10 @@ export default new Meta({
 	},
 
 	Description: () => <TransMarkdown source={description}/>,
+
+	contributors: [
+		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.NEMEKH, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
+	],
 })

@@ -1,3 +1,4 @@
+import {Contributor, Role} from 'data/CONTRIBUTORS'
 import {PatchNumber} from 'data/PATCHES'
 import _ from 'lodash'
 import React from 'react'
@@ -5,14 +6,20 @@ import {Module} from './Module'
 
 type ModulesLoader = () => Promise<{default: Array<typeof Module>}>
 
-interface SupportedPatches {
+export interface SupportedPatches {
 	from: PatchNumber
 	to: PatchNumber
+}
+
+export interface ContributorRole {
+	user: Contributor
+	role: Role
 }
 
 export class Meta {
 	readonly supportedPatches?: SupportedPatches
 	readonly Description?: React.ComponentType
+	readonly contributors?: ContributorRole[]
 
 	private readonly modulesLoader: ModulesLoader
 	private loadedModules?: ReadonlyArray<typeof Module>
@@ -21,10 +28,12 @@ export class Meta {
 		modules: ModulesLoader,
 		supportedPatches?: SupportedPatches,
 		Description?: React.ComponentType,
+		contributors?: ContributorRole[],
 	}) {
 		this.modulesLoader = opts.modules
 		this.supportedPatches = opts.supportedPatches
 		this.Description = opts.Description
+		this.contributors = opts.contributors
 	}
 
 	/**
@@ -60,6 +69,13 @@ export class Meta {
 				{meta.Description && <meta.Description/>}
 				{this.Description && <this.Description/>}
 			</>,
+
+			// All listed contributors should be acknowledged
+			// TODO: Merge shared users?
+			contributors: [
+				...(meta.contributors || []),
+				...(this.contributors || []),
+			],
 		})
 	}
 }
