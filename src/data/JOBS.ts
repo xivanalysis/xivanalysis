@@ -1,6 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
-import {ActorType} from 'fflogs'
+import {Job as ParserJob} from '@xivanalysis/parser-core'
 import {addExtraIndex} from 'utilities'
 
 export interface Role {
@@ -65,8 +65,8 @@ const roleData = {
 export const ROLES = addExtraIndex(roleData as Record<keyof typeof roleData, Role>, 'id')
 
 export interface Job {
+	job: ParserJob
 	name: MessageDescriptor
-	logType: ActorType
 	icon: string
 	colour: string
 	role: Role['id']
@@ -76,22 +76,22 @@ export interface Job {
 const JOBS = {
 	// Tank
 	PALADIN: {
+		job: ParserJob.PALADIN,
 		name: t('game.job.paladin')`Paladin`,
-		logType: ActorType.PALADIN,
 		icon: 'pld',
 		colour: '#a8d2e6',
 		role: ROLES.TANK.id,
 	},
 	WARRIOR: {
+		job: ParserJob.WARRIOR,
 		name: t('game.job.warrior')`Warrior`,
-		logType: ActorType.WARRIOR,
 		icon: 'war',
 		colour: '#cf2621',
 		role: ROLES.TANK.id,
 	},
 	DARK_KNIGHT: {
+		job: ParserJob.DARK_KNIGHT,
 		name: t('game.job.dark-knight')`Dark Knight`,
-		logType: ActorType.DARK_KNIGHT,
 		icon: 'drk',
 		colour: '#d126cc',
 		role: ROLES.TANK.id,
@@ -99,22 +99,22 @@ const JOBS = {
 
 	// Healer
 	WHITE_MAGE: {
+		job: ParserJob.WHITE_MAGE,
 		name: t('game.job.white-mage')`White Mage`,
-		logType: ActorType.WHITE_MAGE,
 		icon: 'whm',
 		colour: '#fff0dc',
 		role: ROLES.HEALER.id,
 	},
 	SCHOLAR: {
+		job: ParserJob.SCHOLAR,
 		name: t('game.job.scholar')`Scholar`,
-		logType: ActorType.SCHOLAR,
 		icon: 'sch',
 		colour: '#8657ff',
 		role: ROLES.HEALER.id,
 	},
 	ASTROLOGIAN: {
+		job: ParserJob.ASTROLOGIAN,
 		name: t('game.job.astrologian')`Astrologian`,
-		logType: ActorType.ASTROLOGIAN,
 		icon: 'ast',
 		colour: '#ffe74a',
 		role: ROLES.HEALER.id,
@@ -122,29 +122,29 @@ const JOBS = {
 
 	// Melee
 	MONK: {
+		job: ParserJob.MONK,
 		name: t('game.job.monk')`Monk`,
-		logType: ActorType.MONK,
 		icon: 'mnk',
 		colour: '#d69c00',
 		role: ROLES.MELEE.id,
 	},
 	DRAGOON: {
+		job: ParserJob.DRAGOON,
 		name: t('game.job.dragoon')`Dragoon`,
-		logType: ActorType.DRAGOON,
 		icon: 'drg',
 		colour: '#4164cd',
 		role: ROLES.MELEE.id,
 	},
 	NINJA: {
+		job: ParserJob.NINJA,
 		name: t('game.job.ninja')`Ninja`,
-		logType: ActorType.NINJA,
 		icon: 'nin',
 		colour: '#af1964',
 		role: ROLES.MELEE.id,
 	},
 	SAMURAI: {
+		job: ParserJob.SAMURAI,
 		name: t('game.job.samurai')`Samurai`,
-		logType: ActorType.SAMURAI,
 		icon: 'sam',
 		colour: '#e46d04',
 		role: ROLES.MELEE.id,
@@ -152,15 +152,15 @@ const JOBS = {
 
 	// Phys Ranged
 	BARD: {
+		job: ParserJob.BARD,
 		name: t('game.job.bard')`Bard`,
-		logType: ActorType.BARD,
 		icon: 'brd',
 		colour: '#91ba5e',
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
 	MACHINIST: {
+		job: ParserJob.MACHINIST,
 		name: t('game.job.machinist')`Machinist`,
-		logType: ActorType.MACHINIST,
 		icon: 'mch',
 		colour: '#6ee1d6',
 		role: ROLES.PHYSICAL_RANGED.id,
@@ -168,26 +168,26 @@ const JOBS = {
 
 	// Magic Ranged
 	BLACK_MAGE: {
+		job: ParserJob.BLACK_MAGE,
 		name: t('game.job.black-mage')`Black Mage`,
-		logType: ActorType.BLACK_MAGE,
 		icon: 'blm',
 		colour: '#a579d6',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 	SUMMONER: {
+		job: ParserJob.SUMMONER,
 		name: t('game.job.summoner')`Summoner`,
-		logType: ActorType.SUMMONER,
 		icon: 'smn',
 		colour: '#2d9b78',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 	RED_MAGE: {
+		job: ParserJob.RED_MAGE,
 		name: t('game.job.red-mage')`Red Mage`,
-		logType: ActorType.RED_MAGE,
 		icon: 'rdm',
 		colour: '#e87b7b',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
 }
 
-export default addExtraIndex(JOBS as Record<keyof typeof JOBS, Job>, 'logType')
+export default JOBS as Record<keyof typeof JOBS, Job>

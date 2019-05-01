@@ -88,7 +88,7 @@ class CombatantList extends React.Component<Props> {
 
 		// Supported and up to date, add to the proper job role
 		// TODO: Update JOBS to use parser types
-		const jobData = getDataBy(JOBS, 'logType', type)
+		const jobData = getDataBy(JOBS, 'job', job)
 		if (!jobData) {
 			throw new Error(`No configured job data found for type '${type}'`)
 		}
@@ -162,9 +162,10 @@ class CombatantList extends React.Component<Props> {
 
 	private renderFriend = (friend: Actor) => {
 		const {report, currentFight} = this.props
-		const job = getDataBy(JOBS, 'logType', friend.type)
+		const job = convertToJob(friend.type)
+		const jobData = getDataBy(JOBS, 'job', job)
 
-		const jobMeta = AVAILABLE_MODULES.JOBS[convertToJob(friend.type)]
+		const jobMeta = AVAILABLE_MODULES.JOBS[job]
 		const supportedPatchesData = jobMeta
 			? jobMeta.supportedPatches
 			: undefined
@@ -187,7 +188,7 @@ class CombatantList extends React.Component<Props> {
 				to={`/fflogs/${report.code}/${currentFight}/${friend.id}/`}
 				className={styles.friendLink}
 			>
-				{job && <JobIcon job={job}/>}
+				{jobData && <JobIcon job={jobData}/>}
 				{friend.name}
 				{supportedPatches && (
 					<span className={styles.supportedPatches}>
