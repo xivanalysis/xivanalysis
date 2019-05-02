@@ -19,10 +19,10 @@ import {languageToEdition} from 'data/PATCHES'
 import {ReportStore} from 'store/report'
 import {GlobalErrorStore} from 'store/globalError'
 
+import {fflogsPipeline} from './pipeline'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
-import {fflogsPipeline} from './FflogsPipeline'
 
 import styles from './Analyse.module.css'
 
