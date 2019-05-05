@@ -1,11 +1,12 @@
 import {MessageDescriptor} from '@lingui/core'
-import {Actor, Events} from '@xivanalysis/parser-core'
+import {Actor, Events, Job} from '@xivanalysis/parser-core'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {GameEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
+import Raven from 'raven-js'
 import React from 'react'
 import toposort from 'toposort'
-import {isDefined} from 'utilities'
+import {extractErrorContext, isDefined} from 'utilities'
 import * as AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import {registerEvent} from './Events'
 import {Meta} from './Meta'
@@ -255,7 +256,23 @@ export class Analyser {
 				throw error
 			}
 
-			// TODO: Sentry
+			const {context, errors: additionalErrors} = this.gatherErrorContext({
+				sourceHandle: handle,
+				source: 'event',
+				error,
+				event,
+			})
+			this.reportErrors({
+				error,
+				tags: {
+					type: 'event',
+					event: Events.Type[event.type] || `Custom<${event.type}>`,
+					job: Job[this.actor.job],
+					module: handle,
+				},
+				extra: {modules: context, event},
+				additionalErrors,
+			})
 
 			this.setModuleError({handle, error})
 		}
@@ -352,7 +369,17 @@ export class Analyser {
 				throw error
 			}
 
-			// TODO: Sentry
+			const {context, errors: additionalErrors} = this.gatherErrorContext({
+				sourceHandle: handle,
+				source: 'output',
+				error,
+			})
+			this.reportErrors({
+				error,
+				tags: {type: 'output', job: Job[this.actor.job], module: handle},
+				extra: {modules: context},
+				additionalErrors,
+			})
 
 			return {
 				...resultMeta,
@@ -366,6 +393,74 @@ export class Analyser {
 				markup: output,
 			}
 		}
+	}
+
+	// -----
+	// #endregion
+	// -----
+
+	// -----
+	// #region Error handling
+	// -----
+
+	private gatherErrorContext(opts: {
+		sourceHandle: string,
+		source: 'event' | 'output',
+		error: Error,
+		event?: Events.Base,
+	}) {
+		const context: Record<string, any> = {}
+		const errors: Array<[string, Error]> = []
+		const visited = new Set<string>()
+
+		const crawler = (handle: string) => {
+			visited.add(handle)
+
+			const module = this.modules.get(handle)
+			if (!module) { return }
+
+			// Try to get error context from the module
+			try {
+				context[handle] = module.getErrorContext(opts.source, opts.error, opts.event)
+			} catch (newError) {
+				errors.push([handle, newError])
+			}
+
+			// Fall back to default context extraction
+			if (context[handle] === undefined) {
+				context[handle] = extractErrorContext(module)
+			}
+
+			// Crawl dependencies for further context
+			const ctor = module.constructor as typeof Module
+			for (const dep of ctor.dependencies) {
+				const depHandle = this.getDepHandle(dep)
+				if (visited.has(depHandle)) { continue }
+				crawler(depHandle)
+			}
+		}
+
+		crawler(opts.sourceHandle)
+		return {context, errors}
+	}
+
+	private reportErrors(opts: {
+		error: Error,
+		tags: Record<string, string>,
+		extra: Record<string, any>,
+		additionalErrors: Array<[string, Error]>,
+	}) {
+		for (const [handle, error] of opts.additionalErrors) {
+			Raven.captureException(error, {
+				...opts,
+				tags: {
+					...opts.tags,
+					module: handle,
+				},
+			})
+		}
+
+		Raven.captureException(opts.error, opts)
 	}
 
 	// -----

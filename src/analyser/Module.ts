@@ -177,7 +177,20 @@ export class Module {
 		})
 	}
 
+	/**
+	 * Generate output to be shown on the page. If no output is wanted, return
+	 * `null`, or remove the overload.
+	 */
 	output(): React.ReactNode {
 		return null
+	}
+
+	/**
+	 * Generate extra context to be displayed in the error tracker if an error
+	 * occurs within the module. Return `undefined` or remove overload to use default
+	 * context extraction.
+	 */
+	getErrorContext(source: 'event' | 'output', error: Error, event?: Events.Base) {
+		return undefined
 	}
 }
