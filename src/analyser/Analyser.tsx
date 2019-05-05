@@ -179,12 +179,14 @@ export class Analyser {
 
 	// TODO: Normalisation? idek
 
-	analyse() {
+	async analyse() {
 		// Copy of the module order we'll modify while analysing
 		this.triggerModules = this.moduleOrder.slice()
 
+		const events = await this.normalise(this.events)
+
 		// Iterate over every event, inc. fabs, for each module
-		for (const event of this.iterateEvents()) {
+		for (const event of this.iterateEvents(events)) {
 			this.currentEventTimestamp = event.timestamp
 
 			this.triggerModules.forEach(handle => this.triggerEvent({
@@ -194,14 +196,26 @@ export class Analyser {
 		}
 	}
 
-	private *iterateEvents(): IterableIterator<Events.Base> {
+	private async normalise(events: Events.Base[]) {
+		// Run normalisers
+		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
+		for (const handle of this.moduleOrder) {
+			const mod = this.modules.get(handle)
+			if (!mod) { continue }
+			events = await mod.normalise(events)
+		}
+
+		return events
+	}
+
+	private *iterateEvents(events: Events.Base[]): IterableIterator<Events.Base> {
 		// Start the parse with an 'init' fab
 		yield {
-			timestamp: this.events[0].timestamp,
+			timestamp: this.startTime,
 			type: EventTypes.INIT,
 		}
 
-		for (const event of this.events) {
+		for (const event of events) {
 			// Iterate over the actual event first
 			yield event
 
@@ -214,7 +228,7 @@ export class Analyser {
 
 		// Finish with 'complete' fab
 		yield {
-			timestamp: this.events[this.events.length - 1].timestamp,
+			timestamp: this.endTime,
 			type: EventTypes.COMPLETE,
 		}
 	}

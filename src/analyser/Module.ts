@@ -98,6 +98,14 @@ export class Module {
 	protected init() {}
 
 	/**
+	 * Normalise the events prior to the primary analysis pass. This should be avoided
+	 * unless _absolutely_ required - check past akk if you're not sure.
+	 */
+	async normalise(events: Events.Base[]) {
+		return events
+	}
+
+	/**
 	 * Register an event hook. The callback provided will be called for each instance
 	 * of the specified event in the set of analysed events. A filter can be provided
 	 * to reduce the scope of events recieved to only those matching it.

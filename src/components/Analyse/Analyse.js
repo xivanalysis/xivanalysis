@@ -100,7 +100,7 @@ class Analyse extends Component {
 		runInAction(() => this.analyser = analyser)
 
 		// Run the analysis and signal completion
-		analyser.analyse()
+		await analyser.analyse()
 		runInAction(() => this.complete = true)
 	}
 
