@@ -74,6 +74,9 @@ export class Analyser {
 
 	private fabricationQueue: Events.Base[] = []
 
+	/** Cached results */
+	private results?: Result[]
+
 	constructor(opts: {
 		gameEdition: GameEdition,
 		events: Events.Base[],
@@ -180,6 +183,9 @@ export class Analyser {
 	// TODO: Normalisation? idek
 
 	async analyse() {
+		// Wipe any cached results
+		this.results = undefined
+
 		// Copy of the module order we'll modify while analysing
 		this.triggerModules = this.moduleOrder.slice()
 
@@ -287,6 +293,10 @@ export class Analyser {
 	// -----
 
 	generateResults() {
+		if (this.results) {
+			return this.results
+		}
+
 		const displayOrder = this.moduleOrder.slice()
 
 		const results = displayOrder
@@ -294,7 +304,7 @@ export class Analyser {
 			.map(this.buildResult)
 			.filter(isDefined)
 
-		// TODO: Cache results
+		this.results = results
 
 		return results
 	}
