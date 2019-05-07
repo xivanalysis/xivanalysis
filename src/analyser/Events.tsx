@@ -38,6 +38,21 @@ eventMeta.set(Events.Type.META, {
 	formatter: event => JSON.stringify(event.meta),
 })
 
+eventMeta.set(Events.Type.BEGIN_DUTY, {
+	name: 'Core/BEGIN_DUTY',
+	formatter: (event: Events.BeginDuty) => JSON.stringify(event.duty),
+})
+
+eventMeta.set(Events.Type.UPDATE_DUTY, {
+	name: 'Core/UPDATE_DUTY',
+	formatter: (event: Events.UpdateDuty) => JSON.stringify(event.changes),
+})
+
+eventMeta.set(Events.Type.END_DUTY, {
+	name: 'Core/END_DUTY',
+	formatter: (event: Events.EndDuty) => <>End of current duty.</>,
+})
+
 eventMeta.set(Events.Type.ADD_ACTOR, {
 	name: 'Core/ADD_ACTOR',
 	formatter: (event: Events.AddActor, {actor}: Formatters) =>
