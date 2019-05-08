@@ -1,4 +1,4 @@
-import {Events} from '@xivanalysis/parser-core'
+import {Event} from '@xivanalysis/parser-core'
 import {EventTypes} from 'analyser/Analyser'
 import {dependency} from 'analyser/dependency'
 import {Module} from 'analyser/Module'
@@ -36,14 +36,14 @@ export class Cooldowns extends Module {
 
 	protected init() {
 		const byPlayer = {sourceId: this.analyser.actor.id}
-		this.addHook(Events.Type.PREPARE, byPlayer, this.onPrepare)
-		this.addHook(Events.Type.ACTION, byPlayer, this.onAction)
+		this.addHook(Event.Type.PREPARE, byPlayer, this.onPrepare)
+		this.addHook(Event.Type.ACTION, byPlayer, this.onAction)
 		this.addHook(EventTypes.COMPLETE, this.onComplete)
 	}
 
 	// Cooldown should begin at the start of preparation
 	// (though few CDs have a cast time any more)
-	private onPrepare(event: Events.Prepare) {
+	private onPrepare(event: Event.Prepare) {
 		const action = getDataBy(ACTIONS, 'id', event.actionId)
 		if (!action || action.cooldown == null) { return }
 
@@ -55,7 +55,7 @@ export class Cooldowns extends Module {
 	}
 
 	// TODO: Consider pet CDs?
-	private onAction(event: Events.Action) {
+	private onAction(event: Event.Action) {
 		const action = getDataBy(ACTIONS, 'id', event.actionId)
 		if (!action || action.cooldown == null) { return }
 

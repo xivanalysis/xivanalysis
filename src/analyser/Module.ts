@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {Events} from '@xivanalysis/parser-core'
+import {Event} from '@xivanalysis/parser-core'
 import _ from 'lodash'
 import {Analyser} from './Analyser'
 
@@ -10,9 +10,9 @@ export interface MappedDependency {
 	prop: string
 }
 
-type HookEventType<T extends Events.Base> = T['type'] | typeof ALL_EVENTS
-export type HookCallback<T extends Events.Base> = (event: T) => void
-export interface Hook<T extends Events.Base> {
+type HookEventType<T extends Event.Base> = T['type'] | typeof ALL_EVENTS
+export type HookCallback<T extends Event.Base> = (event: T) => void
+export interface Hook<T extends Event.Base> {
 	event: HookEventType<T>
 	filter: Partial<T>
 	callback: HookCallback<T>
@@ -66,7 +66,7 @@ export class Module {
 		return (this.constructor as typeof Module).title
 	}
 
-	private hooks = new Map<HookEventType<Events.Base>, Set<Hook<Events.Base>>>()
+	private hooks = new Map<HookEventType<Event.Base>, Set<Hook<Event.Base>>>()
 
 	protected analyser: Analyser
 
@@ -101,7 +101,7 @@ export class Module {
 	 * Normalise the events prior to the primary analysis pass. This should be avoided
 	 * unless _absolutely_ required - check past akk if you're not sure.
 	 */
-	async normalise(events: Events.Base[]) {
+	async normalise(events: Event.Base[]) {
 		return events
 	}
 
@@ -110,16 +110,16 @@ export class Module {
 	 * of the specified event in the set of analysed events. A filter can be provided
 	 * to reduce the scope of events recieved to only those matching it.
 	 */
-	protected addHook<T extends Events.Base>(
+	protected addHook<T extends Event.Base>(
 		event: HookEventType<T>,
 		callback: HookCallback<T>,
 	): Hook<T>
-	protected addHook<T extends Events.Base>(
+	protected addHook<T extends Event.Base>(
 		event: HookEventType<T>,
 		filter: Partial<T>,
 		callback: HookCallback<T>,
 	): Hook<T>
-	protected addHook<T extends Events.Base>(
+	protected addHook<T extends Event.Base>(
 		event: HookEventType<T>,
 		filterArg: Partial<T> | HookCallback<T>,
 		cbArg?: HookCallback<T>,
@@ -155,19 +155,19 @@ export class Module {
 	}
 
 	/** Remove a previously added hook. */
-	protected removeHook<T extends Events.Base>(hook: Hook<T>) {
+	protected removeHook<T extends Event.Base>(hook: Hook<T>) {
 		const hooks = this.hooks.get(hook.event)
 		if (!hooks) { return }
 		hooks.delete(hook as any)
 	}
 
 	/** @internal */
-	triggerEvent<T extends Events.Base>(event: T) {
+	triggerEvent<T extends Event.Base>(event: T) {
 		this.runHooks(event, this.hooks.get(ALL_EVENTS))
 		this.runHooks(event, this.hooks.get(event.type))
 	}
 
-	private runHooks<T extends Events.Base>(event: T, hooks?: Set<Hook<T>>) {
+	private runHooks<T extends Event.Base>(event: T, hooks?: Set<Hook<T>>) {
 		if (!hooks) { return }
 		hooks.forEach(hook => {
 			// Check the filter
@@ -190,7 +190,7 @@ export class Module {
 	 * occurs within the module. Return `undefined` or remove overload to use default
 	 * context extraction.
 	 */
-	getErrorContext(source: 'event' | 'output', error: Error, event?: Events.Base) {
+	getErrorContext(source: 'event' | 'output', error: Error, event?: Event.Base) {
 		return undefined
 	}
 }

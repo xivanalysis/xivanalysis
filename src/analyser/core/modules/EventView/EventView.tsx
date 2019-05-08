@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Events} from '@xivanalysis/parser-core'
+import {Event} from '@xivanalysis/parser-core'
 import {DisplayOrder} from 'analyser/core/DisplayOrder'
 import {dependency} from 'analyser/dependency'
 import {eventMeta} from 'analyser/Events'
@@ -16,7 +16,7 @@ export interface EventMeta {
 	timestamp: React.ReactNode
 	name: React.ReactNode,
 	description: React.ReactNode
-	event: Events.Base
+	event: Event.Base
 }
 
 export class EventView extends Module {
@@ -40,7 +40,7 @@ export class EventView extends Module {
 		this.addHook(ALL_EVENTS, this.onEvent)
 	}
 
-	private onEvent(event: Events.Base) {
+	private onEvent(event: Event.Base) {
 		const meta = eventMeta.get(event.type)
 
 		this.meta.push({

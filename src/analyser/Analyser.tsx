@@ -1,5 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
-import {Actor, Events, Job} from '@xivanalysis/parser-core'
+import {Actor, Event, Job} from '@xivanalysis/parser-core'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {GameEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
@@ -39,11 +39,11 @@ export const EventTypes = {
 }
 
 // TODO: should this be in the parser?
-const isAddActor = (event: Events.Base): event is Events.AddActor =>
-	event.type === Events.Type.ADD_ACTOR
+const isAddActor = (event: Event.Base): event is Event.AddActor =>
+	event.type === Event.Type.ADD_ACTOR
 
 const generateActorFinder = (id: Actor['id']) =>
-	(event: Events.Base): event is Events.AddActor =>
+	(event: Event.Base): event is Event.AddActor =>
 		isAddActor(event) && event.actor.id === id
 
 export class Analyser {
@@ -59,7 +59,7 @@ export class Analyser {
 	/** Metadata about the modules that have been loaded. */
 	readonly meta: Meta
 
-	private readonly events: Events.Base[]
+	private readonly events: Event.Base[]
 	private readonly zoneId: number
 
 	private currentEventTimestamp: number
@@ -73,14 +73,14 @@ export class Analyser {
 	private triggerModules: Handle[] = []
 	private moduleErrors = new Map<Handle, Error>()
 
-	private fabricationQueue: Events.Base[] = []
+	private fabricationQueue: Event.Base[] = []
 
 	/** Cached results */
 	private results?: Result[]
 
 	constructor(opts: {
 		gameEdition: GameEdition,
-		events: Events.Base[],
+		events: Event.Base[],
 		actorId: Actor['id'],
 		zoneId: number,
 	}) {
@@ -203,7 +203,7 @@ export class Analyser {
 		}
 	}
 
-	private async normalise(events: Events.Base[]) {
+	private async normalise(events: Event.Base[]) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		for (const handle of this.moduleOrder) {
@@ -215,7 +215,7 @@ export class Analyser {
 		return events
 	}
 
-	private *iterateEvents(events: Events.Base[]): IterableIterator<Events.Base> {
+	private *iterateEvents(events: Event.Base[]): IterableIterator<Event.Base> {
 		// Start the parse with an 'init' fab
 		yield {
 			timestamp: this.startTime,
@@ -242,7 +242,7 @@ export class Analyser {
 
 	private triggerEvent({handle, event}: {
 		handle: Handle,
-		event: Events.Base,
+		event: Event.Base,
 	}) {
 		try {
 			const module = this.modules.get(handle)
@@ -266,7 +266,7 @@ export class Analyser {
 				error,
 				tags: {
 					type: 'event',
-					event: Events.Type[event.type] || `Custom<${event.type}>`,
+					event: Event.Type[event.type] || `Custom<${event.type}>`,
 					job: Job[this.actor.job],
 					module: handle,
 				},
@@ -407,7 +407,7 @@ export class Analyser {
 		sourceHandle: string,
 		source: 'event' | 'output',
 		error: Error,
-		event?: Events.Base,
+		event?: Event.Base,
 	}) {
 		const context: Record<string, any> = {}
 		const errors: Array<[string, Error]> = []

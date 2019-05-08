@@ -1,18 +1,18 @@
-import {Events, HitType} from '@xivanalysis/parser-core'
+import {Event, HitType} from '@xivanalysis/parser-core'
 import {Module} from 'analyser/Module'
 
 // TODO: These should probably be in the parser
-const isPrepare = (event: Events.Base): event is Events.Prepare =>
-	event.type === Events.Type.PREPARE
-const isAction = (event: Events.Base): event is Events.Action =>
-	event.type === Events.Type.ACTION
-const isDamage = (event: Events.Base): event is Events.Damage =>
-	event.type === Events.Type.DAMAGE
+const isPrepare = (event: Event.Base): event is Event.Prepare =>
+	event.type === Event.Type.PREPARE
+const isAction = (event: Event.Base): event is Event.Action =>
+	event.type === Event.Type.ACTION
+const isDamage = (event: Event.Base): event is Event.Damage =>
+	event.type === Event.Type.DAMAGE
 
 export class PrecastAction extends Module {
 	static handle = 'precastAction'
 
-	async normalise(events: Events.Base[]) {
+	async normalise(events: Event.Base[]) {
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 
@@ -31,13 +31,16 @@ export class PrecastAction extends Module {
 			// action event from that.
 			// Blame typescript for the magic, don't ask
 			const magicBullshit = event
-			if (!isDamage(magicBullshit) || magicBullshit.hitType !== HitType.HIT) {
+			if (!isDamage(magicBullshit) || magicBullshit.hit.type !== HitType.HIT) {
 				break
 			}
 
-			const newEvent: Events.Action = {
-				...magicBullshit,
-				type: Events.Type.ACTION,
+			const newEvent: Event.Action = {
+				type: Event.Type.ACTION,
+				timestamp: magicBullshit.timestamp,
+				actionId: magicBullshit.hit.actionId,
+				sourceId: magicBullshit.sourceId,
+				targetId: magicBullshit.targetId,
 			}
 			events.splice(i, 0, newEvent)
 			break

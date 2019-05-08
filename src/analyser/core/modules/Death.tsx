@@ -1,5 +1,5 @@
 import {Plural, Trans} from '@lingui/react'
-import {DutyState, Events} from '@xivanalysis/parser-core'
+import {DutyState, Event} from '@xivanalysis/parser-core'
 import {EventTypes} from 'analyser/Analyser'
 import {dependency} from 'analyser/dependency'
 import {Module} from 'analyser/Module'
@@ -16,24 +16,24 @@ export class Death extends Module {
 	// private timestamp?: number
 
 	protected init() {
-		this.addHook(Events.Type.DEATH, {targetId: this.analyser.actor.id}, this.onDeath)
+		this.addHook(Event.Type.DEATH, {targetId: this.analyser.actor.id}, this.onDeath)
 		// TODO: Hook end of death (raise, prepare, etc)
 		this.addHook(
-			Events.Type.UPDATE_DUTY,
+			Event.Type.UPDATE_DUTY,
 			{changes: {state: DutyState.RESETTING}},
 			this.onWipe,
 		)
 		this.addHook(EventTypes.COMPLETE, this.onComplete)
 	}
 
-	private onDeath(event: Events.Death) {
+	private onDeath(event: Event.Death) {
 		if (!this.shouldCountDeath()) { return }
 
 		this.count++
 		// this.timestamp = event.timestamp
 	}
 
-	private onWipe(event: Events.UpdateDuty) {
+	private onWipe(event: Event.UpdateDuty) {
 		// Deaths cased by a party wipe are pretty meaningless to complain about
 		this.count = Math.max(this.count - 1, 0)
 	}

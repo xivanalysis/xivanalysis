@@ -1,4 +1,4 @@
-import {Actor, Events} from '@xivanalysis/parser-core'
+import {Actor, Event} from '@xivanalysis/parser-core'
 import {Module} from 'analyser/Module'
 import _ from 'lodash'
 
@@ -13,19 +13,19 @@ export class Actors extends Module {
 	private actors = new Map<Actor['id'], ActorMeta>()
 
 	protected init() {
-		this.addHook(Events.Type.ADD_ACTOR, this.onAdd)
-		this.addHook(Events.Type.UPDATE_ACTOR, this.onUpdate)
+		this.addHook(Event.Type.ADD_ACTOR, this.onAdd)
+		this.addHook(Event.Type.UPDATE_ACTOR, this.onUpdate)
 		// TODO: onRemove
 	}
 
-	private onAdd(event: Events.AddActor) {
+	private onAdd(event: Event.AddActor) {
 		this.actors.set(event.actor.id, {
 			actor: event.actor,
 			history: [event.actor],
 		})
 	}
 
-	private onUpdate(event: Events.UpdateActor) {
+	private onUpdate(event: Event.UpdateActor) {
 		const actorMeta = this.actors.get(event.actorId)
 
 		if (!actorMeta) {

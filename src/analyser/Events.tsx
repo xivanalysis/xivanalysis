@@ -1,4 +1,4 @@
-import {Events, HitType, SourceModifier, TargetModifier} from '@xivanalysis/parser-core'
+import {Event, HitType, SourceModifier, TargetModifier} from '@xivanalysis/parser-core'
 import React from 'react'
 
 // chosen by fair dice roll.
@@ -13,14 +13,14 @@ export interface Formatters {
 	status: (statusId: number) => React.ReactNode
 }
 
-interface EventTypeMeta<T extends Events.Base> {
+interface EventTypeMeta<T extends Event.Base> {
 	name: string,
 	formatter?: (event: T, formatters: Formatters) => React.ReactNode
 }
 
-export const eventMeta = new Map<Events.Base['type'], EventTypeMeta<any>>()
+export const eventMeta = new Map<Event.Base['type'], EventTypeMeta<any>>()
 
-export function registerEvent<T extends Events.Base>(meta: EventTypeMeta<T>) {
+export function registerEvent<T extends Event.Base>(meta: EventTypeMeta<T>) {
 	const id = EVENT_PREFIX + nextOffset++
 	eventMeta.set(id, meta)
 	return id
@@ -28,89 +28,89 @@ export function registerEvent<T extends Events.Base>(meta: EventTypeMeta<T>) {
 
 // Set up meta for core events.
 // NOTE: Do _not_ add your custom events here. Use `registerEvent` in your module file.
-eventMeta.set(Events.Type.UNKNOWN, {
+eventMeta.set(Event.Type.UNKNOWN, {
 	name: 'Core/UNKNOWN',
 	formatter: event => JSON.stringify(event.meta),
 })
 
-eventMeta.set(Events.Type.META, {
+eventMeta.set(Event.Type.META, {
 	name: 'Core/META',
 	formatter: event => JSON.stringify(event.meta),
 })
 
-eventMeta.set(Events.Type.BEGIN_DUTY, {
+eventMeta.set(Event.Type.BEGIN_DUTY, {
 	name: 'Core/BEGIN_DUTY',
-	formatter: (event: Events.BeginDuty) => JSON.stringify(event.duty),
+	formatter: (event: Event.BeginDuty) => JSON.stringify(event.duty),
 })
 
-eventMeta.set(Events.Type.UPDATE_DUTY, {
+eventMeta.set(Event.Type.UPDATE_DUTY, {
 	name: 'Core/UPDATE_DUTY',
-	formatter: (event: Events.UpdateDuty) => JSON.stringify(event.changes),
+	formatter: (event: Event.UpdateDuty) => JSON.stringify(event.changes),
 })
 
-eventMeta.set(Events.Type.END_DUTY, {
+eventMeta.set(Event.Type.END_DUTY, {
 	name: 'Core/END_DUTY',
-	formatter: (event: Events.EndDuty) => <>End of current duty.</>,
+	formatter: (event: Event.EndDuty) => <>End of current duty.</>,
 })
 
-eventMeta.set(Events.Type.ADD_ACTOR, {
+eventMeta.set(Event.Type.ADD_ACTOR, {
 	name: 'Core/ADD_ACTOR',
-	formatter: (event: Events.AddActor, {actor}: Formatters) =>
+	formatter: (event: Event.AddActor, {actor}: Formatters) =>
 		<>{actor(event.actor.id)} is added to combat.</>,
 	// TODO: Do I want to show resources and such here?
 })
 
-eventMeta.set(Events.Type.UPDATE_ACTOR, {
+eventMeta.set(Event.Type.UPDATE_ACTOR, {
 	name: 'Core/UPDATE_ACTOR',
-	formatter: (event: Events.UpdateActor, {actor}: Formatters) =>
+	formatter: (event: Event.UpdateActor, {actor}: Formatters) =>
 		<>{actor(event.actorId)} is updated with {JSON.stringify(event.changes)}.</>,
 })
 
-eventMeta.set(Events.Type.REMOVE_ACTOR, {
+eventMeta.set(Event.Type.REMOVE_ACTOR, {
 	name: 'Core/REMOVE_ACTOR',
-	formatter: (event: Events.RemoveActor, {actor}: Formatters) =>
+	formatter: (event: Event.RemoveActor, {actor}: Formatters) =>
 		<>{actor(event.actorId)} is removed from combat.</>,
 })
 
-eventMeta.set(Events.Type.DEATH, {
+eventMeta.set(Event.Type.DEATH, {
 	name: 'Core/DEATH',
-	formatter: (event: Events.Death, {actor}: Formatters) =>
+	formatter: (event: Event.Death, {actor}: Formatters) =>
 		<>{actor(event.sourceId)} kills {actor(event.targetId)}.</>,
 })
 
-eventMeta.set(Events.Type.PREPARE, {
+eventMeta.set(Event.Type.PREPARE, {
 	name: 'Core/PREPARE',
-	formatter: (event: Events.Prepare, {action, actor}: Formatters) =>
+	formatter: (event: Event.Prepare, {action, actor}: Formatters) =>
 		<>{actor(event.sourceId)} prepares {action(event.actionId)} on {actor(event.targetId)}.</>,
 })
 
-eventMeta.set(Events.Type.ACTION, {
+eventMeta.set(Event.Type.ACTION, {
 	name: 'Core/ACTION',
-	formatter: (event: Events.Action, {action, actor}: Formatters) =>
+	formatter: (event: Event.Action, {action, actor}: Formatters) =>
 		<>{actor(event.sourceId)} performs {action(event.actionId)} on {actor(event.targetId)}.</>,
 })
 
-eventMeta.set(Events.Type.DAMAGE, {
+eventMeta.set(Event.Type.DAMAGE, {
 	name: 'Core/DAMAGE',
-	formatter: (event: Events.Damage, {action, actor, status}: Formatters) => <>
-		{event.hitType === HitType.HIT
-			? <>{action(event.actionId)}</>
-			: <>{status(event.statusId)}</>
+	formatter: (event: Event.Damage, {action, actor, status}: Formatters) => <>
+		{event.hit.type === HitType.HIT
+			? <>{action(event.hit.actionId)}</>
+			: <>{status(event.hit.statusId)}</>
 		}&nbsp;
 		from {actor(event.sourceId)}&nbsp;
-		{event.hitType === HitType.HIT ? 'hits' : 'ticks on'}&nbsp;
+		{event.hit.type === HitType.HIT ? 'hits' : 'ticks on'}&nbsp;
 		{actor(event.targetId)}&nbsp;
 		for {event.amount} damage.&nbsp;
 		({SourceModifier[event.sourceModifier]}, {TargetModifier[event.targetModifier]})
 	</>,
 })
 
-eventMeta.set(Events.Type.HEAL, {
+eventMeta.set(Event.Type.HEAL, {
 	name: 'Core/HEAL',
-	formatter: (event: Events.Heal, {action, actor, status}: Formatters) => <>
-		{event.hitType === HitType.HIT
-			? <>{action(event.actionId)}</>
-			: <>{status(event.statusId)}</>
+	formatter: (event: Event.Heal, {action, actor, status}: Formatters) => <>
+		{event.hit.type === HitType.HIT
+			? <>{action(event.hit.actionId)}</>
+			: <>{status(event.hit.statusId)}</>
 		}&nbsp;
 		from {actor(event.sourceId)}&nbsp;
 		heals {actor(event.targetId)}&nbsp;
@@ -119,9 +119,9 @@ eventMeta.set(Events.Type.HEAL, {
 	</>,
 })
 
-eventMeta.set(Events.Type.ADD_STATUS, {
+eventMeta.set(Event.Type.ADD_STATUS, {
 	name: 'Core/ADD_STATUS',
-	formatter: (event: Events.AddStatus, {actor, status}: Formatters) => <>
+	formatter: (event: Event.AddStatus, {actor, status}: Formatters) => <>
 		{actor(event.sourceId)} applies&nbsp;
 		{status(event.statusId)}{event.extra && ` (${event.extra})`}&nbsp;
 		to {actor(event.targetId)}
@@ -129,8 +129,8 @@ eventMeta.set(Events.Type.ADD_STATUS, {
 	</>,
 })
 
-eventMeta.set(Events.Type.REMOVE_STATUS, {
+eventMeta.set(Event.Type.REMOVE_STATUS, {
 	name: 'Core/REMOVE_STATUS',
-	formatter: (event: Events.RemoveStatus, {actor, status}: Formatters) =>
+	formatter: (event: Event.RemoveStatus, {actor, status}: Formatters) =>
 		<>The {status(event.statusId)} applied by {actor(event.sourceId)} is removed from {actor(event.targetId)}</>,
 })
