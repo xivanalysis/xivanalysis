@@ -38,13 +38,9 @@ export const EventType = {
 	}),
 }
 
-// TODO: should this be in the parser?
-const isAddActor = (event: Event.Base): event is Event.AddActor =>
-	event.type === Event.Type.ADD_ACTOR
-
 const generateActorFinder = (id: Actor['id']) =>
 	(event: Event.Base): event is Event.AddActor =>
-		isAddActor(event) && event.actor.id === id
+		Event.isAddActor(event) && event.actor.id === id
 
 export class Analyser {
 	/** The edition of the game that generated the events being analysed. */

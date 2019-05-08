@@ -1,14 +1,6 @@
 import {Event, HitType} from '@xivanalysis/parser-core'
 import {Module} from 'analyser/Module'
 
-// TODO: These should probably be in the parser
-const isPrepare = (event: Event.Base): event is Event.Prepare =>
-	event.type === Event.Type.PREPARE
-const isAction = (event: Event.Base): event is Event.Action =>
-	event.type === Event.Type.ACTION
-const isDamage = (event: Event.Base): event is Event.Damage =>
-	event.type === Event.Type.DAMAGE
-
 export class PrecastAction extends Module {
 	static handle = 'precastAction'
 
@@ -18,9 +10,9 @@ export class PrecastAction extends Module {
 
 			// Filter down to a few event types, where we're directly dealing with the player
 			if (
-				(!isPrepare(event) &&
-				!isAction(event) &&
-				!isDamage(event)) ||
+				(!Event.isPrepare(event) &&
+					!Event.isAction(event) &&
+					!Event.isDamage(event)) ||
 				event.sourceId !== this.analyser.actor.id
 			) {
 				continue
@@ -29,7 +21,7 @@ export class PrecastAction extends Module {
 			// Only need to run fixes if we get to a damage before an action
 			// Also stopping if it's a status damage hit, as we can't easily derive an
 			// action event from that.
-			if (!isDamage(event) || event.hit.type !== HitType.HIT) {
+			if (!Event.isDamage(event) || event.hit.type !== HitType.HIT) {
 				break
 			}
 
