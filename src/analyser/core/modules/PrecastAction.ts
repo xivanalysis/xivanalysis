@@ -29,18 +29,16 @@ export class PrecastAction extends Module {
 			// Only need to run fixes if we get to a damage before an action
 			// Also stopping if it's a status damage hit, as we can't easily derive an
 			// action event from that.
-			// Blame typescript for the magic, don't ask
-			const magicBullshit = event
-			if (!isDamage(magicBullshit) || magicBullshit.hit.type !== HitType.HIT) {
+			if (!isDamage(event) || event.hit.type !== HitType.HIT) {
 				break
 			}
 
 			const newEvent: Event.Action = {
 				type: Event.Type.ACTION,
-				timestamp: magicBullshit.timestamp,
-				actionId: magicBullshit.hit.actionId,
-				sourceId: magicBullshit.sourceId,
-				targetId: magicBullshit.targetId,
+				timestamp: event.timestamp,
+				actionId: event.hit.actionId,
+				sourceId: event.sourceId,
+				targetId: event.targetId,
 			}
 			events.splice(i, 0, newEvent)
 			break
