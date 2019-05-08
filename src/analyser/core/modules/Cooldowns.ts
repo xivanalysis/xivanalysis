@@ -1,5 +1,5 @@
 import {Event} from '@xivanalysis/parser-core'
-import {EventTypes} from 'analyser/Analyser'
+import {EventType} from 'analyser/Analyser'
 import {dependency} from 'analyser/dependency'
 import {Module} from 'analyser/Module'
 import {getDataBy} from 'data'
@@ -38,7 +38,7 @@ export class Cooldowns extends Module {
 		const byPlayer = {sourceId: this.analyser.actor.id}
 		this.addHook(Event.Type.PREPARE, byPlayer, this.onPrepare)
 		this.addHook(Event.Type.ACTION, byPlayer, this.onAction)
-		this.addHook(EventTypes.COMPLETE, this.onComplete)
+		this.addHook(EventType.COMPLETE, this.onComplete)
 	}
 
 	// Cooldown should begin at the start of preparation

@@ -27,7 +27,7 @@ export interface Result {
 	markup: React.ReactNode
 }
 
-export const EventTypes = {
+export const EventType = {
 	INIT: registerEvent({
 		name: 'Analyser/INIT',
 		formatter: () => 'Analysis has begun.',
@@ -219,7 +219,7 @@ export class Analyser {
 		// Start the parse with an 'init' fab
 		yield {
 			timestamp: this.startTime,
-			type: EventTypes.INIT,
+			type: EventType.INIT,
 		}
 
 		for (const event of events) {
@@ -236,7 +236,7 @@ export class Analyser {
 		// Finish with 'complete' fab
 		yield {
 			timestamp: this.endTime,
-			type: EventTypes.COMPLETE,
+			type: EventType.COMPLETE,
 		}
 	}
 
