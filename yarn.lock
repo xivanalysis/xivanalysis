@@ -1229,17 +1229,18 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@xivanalysis/parser-core@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-core/-/parser-core-0.0.1.tgz#03fd5406c8b522dc8d1723df2042bc79950683c1"
-  integrity sha512-PaVPUhBJcNAx0lsI0AcjL2TFqufN8f3fPgiNjLlPZzvAus3IyF10A+Pcxs4DhWAG4+CPXbKJ/xC7cDi5pwqC0w==
+"@xivanalysis/parser-core@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-core/-/parser-core-0.1.0.tgz#aaa54664bd81f17e050d471867b0b3bceff6ae60"
+  integrity sha512-MSSYmcm1TEzX3sQ5SXAUVIyLMX6PEH/aGAKf5aWe5YknzHADJ3DquxEByu0JibeJht0jhh8SKKJo2DS5arN1rQ==
 
-"@xivanalysis/parser-reader-fflogs@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-reader-fflogs/-/parser-reader-fflogs-0.0.1.tgz#c09e3ffd315a89ecf8198c9bbf40d725ab7d4c0e"
-  integrity sha512-hHHY4soCTkegl5NZiUmf5Be4fC3/SCA8DElaaO+6LKTQ1qiAJYEyYqWq9IjBOX/VwWOSfQo2jdnFR3hkSeAC0g==
+"@xivanalysis/parser-reader-fflogs@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/parser-reader-fflogs/-/parser-reader-fflogs-0.1.0.tgz#319b964cecd305f08962159b62db3be98ac2d85c"
+  integrity sha512-pgvoGffqUo+Tg+ElWS1ttHBL086RCo2VPGtaAZCf4zNnL/5B2Y+ehJ56xJnczNNzy/SIF1d4M5xI57qLxPPWKQ==
   dependencies:
     lodash "^4.17.11"
+    toposort "^2.0.2"
 
 "@xivanalysis/tooltips@^0.0.4":
   version "0.0.4"
@@ -9541,7 +9542,7 @@ to-regex@^3.0.1, to-regex@^3.0.2:
     regex-not "^1.0.2"
     safe-regex "^1.1.0"
 
-toposort@^2:
+toposort@^2, toposort@^2.0.2:
   version "2.0.2"
   resolved "https://registry.yarnpkg.com/toposort/-/toposort-2.0.2.tgz#ae21768175d1559d48bef35420b2f4962f09c330"
   integrity sha1-riF2gXXRVZ1IvvNUILL0li8JwzA=
