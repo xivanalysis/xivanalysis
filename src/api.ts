@@ -1,6 +1,6 @@
+import {Fflogs} from '@xivanalysis/parser-reader-fflogs'
 import axios, {AxiosRequestConfig} from 'axios'
-
-import {Fight, ReportEventsQuery, ReportEventsResponse} from './fflogs'
+import {ReportEventsQuery, ReportEventsResponse} from './fflogs'
 
 const options: AxiosRequestConfig = {
 	baseURL: process.env.REACT_APP_LOGS_BASE_URL,
@@ -26,7 +26,7 @@ async function requestEvents(code: string, options: ReportEventsQuery) {
 // Helper for pagination and suchforth
 export async function getFflogsEvents(
 	code: string,
-	fight: Fight,
+	fight: Fflogs.Fight,
 	extra: ReportEventsQuery['params'],
 ) {
 	// Base parameters

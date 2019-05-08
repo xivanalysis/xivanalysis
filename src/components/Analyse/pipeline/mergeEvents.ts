@@ -1,4 +1,4 @@
-import * as Fflogs from 'fflogs'
+import {Fflogs} from '@xivanalysis/parser-reader-fflogs'
 import stable from 'stable'
 
 const EVENT_TYPE_ORDER: Record<string, number> = {

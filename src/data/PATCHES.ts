@@ -1,4 +1,4 @@
-import {ReportLanguage} from 'fflogs'
+import {Fflogs} from '@xivanalysis/parser-reader-fflogs'
 import _ from 'lodash'
 
 export enum GameEdition {
@@ -7,18 +7,18 @@ export enum GameEdition {
 	CHINESE,
 }
 
-export function languageToEdition(lang: ReportLanguage): GameEdition {
+export function languageToEdition(lang: Fflogs.ReportLanguage): GameEdition {
 	switch (lang) {
-		case ReportLanguage.JAPANESE:
-		case ReportLanguage.ENGLISH:
-		case ReportLanguage.GERMAN:
-		case ReportLanguage.FRENCH:
+		case Fflogs.ReportLanguage.JAPANESE:
+		case Fflogs.ReportLanguage.ENGLISH:
+		case Fflogs.ReportLanguage.GERMAN:
+		case Fflogs.ReportLanguage.FRENCH:
 			return GameEdition.GLOBAL
 
-		case ReportLanguage.KOREAN:
+		case Fflogs.ReportLanguage.KOREAN:
 			return GameEdition.KOREAN
 
-		case ReportLanguage.CHINESE:
+		case Fflogs.ReportLanguage.CHINESE:
 			return GameEdition.CHINESE
 	}
 

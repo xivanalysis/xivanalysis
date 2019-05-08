@@ -1,4 +1,4 @@
-import * as Fflogs from 'fflogs'
+import {Fflogs} from '@xivanalysis/parser-reader-fflogs'
 
 // XIV seems to use a lot of copies of the boss to handle certain mechanics... which wouldn't be an issue if it wasn't for debuffs being mirrored to them to generate tonnes of crap events.
 
@@ -10,9 +10,8 @@ export function findActiveTargets(events: Fflogs.Event[], combatantId: number) {
 
 	for (const event of events) {
 		// We only care about events by the player, directly onto another actor
-		// TODO: Swap out for parser fflogs defs
 		if (
-			!TARGET_CHECK_EVENT_TYPES.has(event.type as TODO) ||
+			!TARGET_CHECK_EVENT_TYPES.has(event.type) ||
 			event.sourceID !== combatantId ||
 			!event.targetID
 		) {

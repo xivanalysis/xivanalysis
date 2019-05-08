@@ -1,7 +1,6 @@
-import {readFflogs} from '@xivanalysis/parser-reader-fflogs'
+import {Fflogs, readFflogs} from '@xivanalysis/parser-reader-fflogs'
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
-import * as Fflogs from 'fflogs'
 import {Report} from 'store/report'
 import {findActiveTargets} from './findActiveTargets'
 import {getAdditionalEventsQuery} from './getAdditionalEventsQuery'
@@ -20,7 +19,7 @@ import {mergeEvents} from './mergeEvents'
 interface PipelineOptions {
 	report: Report,
 	fight?: Fflogs.Fight,
-	combatant?: Fflogs.Actor,
+	combatant?: Fflogs.ReportActor,
 }
 
 export async function fflogsPipeline({report, fight, combatant}: PipelineOptions) {
@@ -66,11 +65,7 @@ export async function fflogsPipeline({report, fight, combatant}: PipelineOptions
 	const finalEvents = mergeEvents(logEvents, additionalEvents)
 
 	// --- Parse into common representation ---
-
-	// TODO: Incompat between parser and local fflogs typedefs. Same damn data source
-	// so whatever. Resolve when I remove the top-level fflogs local defs and just use
-	// the ones from the parser.
-	const parserEvents = readFflogs(report, finalEvents as TODO)
+	const parserEvents = readFflogs(report, finalEvents)
 
 	return parserEvents
 }

@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import {convertToJob} from '@xivanalysis/parser-reader-fflogs'
+import {convertToJob, Fflogs} from '@xivanalysis/parser-reader-fflogs'
 import {List, Message, Segment} from 'akkd'
 import * as AVAILABLE_MODULES from 'analyser/AVAILABLE_MODULES'
 import Color from 'color'
@@ -9,7 +9,6 @@ import {getDataBy} from 'data'
 import JOBS, {Role, ROLES} from 'data/JOBS'
 import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
-import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
 import {inject, observer} from 'mobx-react'
 import React from 'react'
@@ -46,8 +45,8 @@ class CombatantList extends React.Component<Props> {
 			const inFight = friendly.fights.some(fight => fight.id === currentFight)
 			const type = friendly.type
 			if (
-				type === ActorType.LIMIT_BREAK ||
-				type === ActorType.NPC ||
+				type === Fflogs.ActorType.LIMIT_BREAK ||
+				type === Fflogs.ActorType.NPC ||
 				!inFight
 			) {
 				return groups
@@ -62,10 +61,10 @@ class CombatantList extends React.Component<Props> {
 			groups[role].push(friendly)
 
 			return groups
-		}, [] as Actor[][])
+		}, [] as Fflogs.ReportActor[][])
 	}
 
-	findRole(type: ActorType): Role['id'] {
+	findRole(type: Fflogs.ActorType): Role['id'] {
 		const job = convertToJob(type)
 		const jobMeta = AVAILABLE_MODULES.JOBS[job]
 
@@ -142,7 +141,7 @@ class CombatantList extends React.Component<Props> {
 		</Message>
 	)
 
-	private renderGroup = (role: Role, friends: Actor[]) => {
+	private renderGroup = (role: Role, friends: Fflogs.ReportActor[]) => {
 		// tslint:disable:no-magic-numbers
 		const background = Color(role.colour).fade(0.8).toString()
 		const color = Color(role.colour).darken(0.5).toString()
@@ -160,7 +159,7 @@ class CombatantList extends React.Component<Props> {
 		)
 	}
 
-	private renderFriend = (friend: Actor) => {
+	private renderFriend = (friend: Fflogs.ReportActor) => {
 		const {report, currentFight} = this.props
 		const job = convertToJob(friend.type)
 		const jobData = getDataBy(JOBS, 'job', job)
