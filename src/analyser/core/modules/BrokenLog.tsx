@@ -1,56 +1,58 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Event, HitType} from '@xivanalysis/parser-core'
 import {Message, Segment} from 'akkd'
+import {DisplayMode, Module} from 'analyser/Module'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {DisplayOrder} from '../DisplayOrder'
 
 interface Trigger {
 	module: typeof Module
 	reason?: React.ReactNode
 }
 
-const EXPECTED_ABILITY_EVENTS = [
-	'begincast',
-	'cast',
-	'damage',
-	'heal',
-	'applybuff',
-	'applydebuff',
-	'refreshbuff',
-	'refreshdebuff',
-	'removebuff',
-	'removedebuff',
-	'applybuffstack',
-	'applydebuffstack',
-	'removebuffstack',
-	'removedebuffstack',
-]
+type UnknownActionEvent =
+	| Event.Prepare
+	| Event.Action
+	| Event.Damage
+	| Event.Heal
 
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'
 	static title = t('core.broken-log.title')`Broken Log`
-	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
-	static displayMode = DISPLAY_MODE.RAW
+	static displayOrder = DisplayOrder.BROKEN_LOG
+	static displayMode = DisplayMode.RAW
 
 	private triggers = new Map<string, Trigger>()
 
 	init() {
-		// Unknown actions are unparseable
-		this.addHook(
-			EXPECTED_ABILITY_EVENTS,
-			{by: 'player', abilityId: ACTIONS.UNKNOWN.id},
-			() => {
-				this.trigger(this, 'unknown action', (
-					<Trans id="core.broken-log.trigger.unknown-action">
-						One or more actions were recorded incorrectly, and could not be parsed.
-					</Trans>
-				))
+		const unknownActionFilter = {
+			sourceId: this.analyser.actor.id,
+			actionId: ACTIONS.UNKNOWN.id,
+		}
+		this.addHook(Event.Type.PREPARE, unknownActionFilter, this.onUnknownAction)
+		this.addHook(Event.Type.ACTION, unknownActionFilter, this.onUnknownAction)
+
+		const actionHitFilter = {
+			sourceId: this.analyser.actor.id,
+			hit: {
+				type: HitType.HIT,
+				actionId: ACTIONS.UNKNOWN.id,
 			},
-		)
+		} as const
+		this.addHook(Event.Type.DAMAGE, actionHitFilter, this.onUnknownAction)
+		this.addHook(Event.Type.HEAL, actionHitFilter, this.onUnknownAction)
+	}
+
+	private onUnknownAction(event: UnknownActionEvent) {
+		this.trigger(this, 'unknown action', (
+			<Trans id="core.broken-log.trigger.unknown-action">
+				One or more actions were recorded incorrectly, and could not be parsed.
+			</Trans>
+		))
 	}
 
 	/**
@@ -92,7 +94,7 @@ export default class BrokenLog extends Module {
 				<Table.Body>
 					{Array.from(this.triggers.values()).map(({module, reason}) => (
 						<Table.Row>
-							<NormalisedMessage message={module.title} id={module.i18n_id}/>
+							<NormalisedMessage message={module.title}/>
 							<Table.Cell>{reason}</Table.Cell>
 						</Table.Row>
 					))}
