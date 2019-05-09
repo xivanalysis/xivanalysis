@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {DisplayOrder} from 'analyser/core/DisplayOrder'
+import {DisplayMode, Module} from 'analyser/Module'
 import React from 'react'
-import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
 
@@ -17,10 +17,9 @@ export interface Statistic {
 
 export class Statistics extends Module {
 	static handle = 'statistics'
-	// tslint:disable-next-line:variable-name
 	static title = t('core.statistics.title')`Statistics`
-	static displayOrder = DISPLAY_ORDER.STATISTICS
-	static displayMode = DISPLAY_MODE.RAW
+	static displayOrder = DisplayOrder.STATISTICS
+	static displayMode = DisplayMode.RAW
 
 	private statistics: Statistic[] = []
 
