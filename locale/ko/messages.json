@@ -573,7 +573,7 @@
   "sch.dots.suggestions.clipping.content": "도트 데미지의 지속 시간을 너무 이르게 갱신하지 마십시오. 불필요한 지속 시간 갱신은 마나 소모 낭비를 의미하며 전투 도중 마나 고갈 상태에 이를 수 있습니다.",
   "sch.dots.suggestions.clipping.why": "도트 데미지를 너무 이르게 갱신하여 <0/>은 {0} 만큼 그리고 <1/>은 {1} 만큼의 지속시간을 낭비하엿습니다.",
   "sch.shadow-flare.suggestions.missed-ticks.content": "<0/>시전시 반드시 지속 시간동안 모든 도트 데미지가 적용될 수 있을 수 있는 때 혹은 다수에게 데미지를 입힐 수 있게 배치하십시오.",
-  "sch.shadow-flare.suggestions.missed-ticks.why": "손해 본 새도우 플레어 틱 {missedTicks, plural, other {#회}}",
+  "sch.shadow-flare.suggestions.missed-ticks.why": "섀도우 플레어가 빗나간 횟수: {missedTicks, plural, one{#회}other{#회}}",
   "sch.shadow-flare.title": "섀도우 플레어",
   "sch.weaving.suggestion.content": "논글쿨기를 끼워넣을 떄 <0/>가 우수할것 같아도 <2/>의 딜 계수에 비하면 <1>심각하게</1> 낮습니다. 마나 낭비를 할바에야 차라리 글쿨이 밀리더라도 기염법이 낫습니다. 단 이동중일땐 루인가를 사용하는것이 낫습니다. 아래 모듈을 확인하여 이동중이 아닌 상태에서 사용한 루인가 횟수를 확인하십시오.",
   "sch.weaving.suggestion.why": "이동중이 아닌 상태에서 사용한 루인가 횟수 {0, plural, other {#회}}",
