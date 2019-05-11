@@ -2,6 +2,7 @@ import Module from './Module'
 import Parser from './Parser'
 
 /* eslint-disable xivanalysis/no-unused-dependencies, no-magic-numbers */
+/* global jest,describe,beforeEach,it,expect */
 
 // Testing modules
 class BasicModule extends Module {

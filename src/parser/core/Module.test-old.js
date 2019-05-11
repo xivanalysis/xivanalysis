@@ -32,6 +32,7 @@ const event = {
 	filterKey: 'example',
 }
 
+/* global jest,describe,beforeEach,it,expect */
 describe('Module', () => {
 	beforeEach(() => {
 		const parser = new Parser(report, fight, player)
