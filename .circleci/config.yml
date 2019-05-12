@@ -124,6 +124,7 @@ workflows:
             branches:
               only:
                 - master
+                - shadowbringers
       - deploy:
           requires:
             - build
