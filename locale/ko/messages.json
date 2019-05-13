@@ -575,7 +575,7 @@
   "sch.shadow-flare.suggestions.missed-ticks.content": "<0/>시전시 반드시 지속 시간동안 모든 도트 데미지가 적용될 수 있을 수 있는 때 혹은 다수에게 데미지를 입힐 수 있게 배치하십시오.",
   "sch.shadow-flare.suggestions.missed-ticks.why": "섀도우 플레어가 빗나간 횟수: {missedTicks, plural, one{#회}other{#회}}",
   "sch.shadow-flare.title": "섀도우 플레어",
-  "sch.weaving.suggestion.content": "논글쿨기를 끼워넣을 떄 <0/>가 우수할것 같아도 <2/>의 딜 계수에 비하면 <1>심각하게</1> 낮습니다. 마나 낭비를 할바에야 차라리 글쿨이 밀리더라도 기염법이 낫습니다. 단 이동중일땐 루인가를 사용하는것이 낫습니다. 아래 모듈을 확인하여 이동중이 아닌 상태에서 사용한 루인가 횟수를 확인하십시오.",
+  "sch.weaving.suggestion.content": "논글쿨기를 끼워넣을 떄 <0/>가 우수할것 같아도 <2/>의 딜 계수에 비하면 <1>심각하게</1> 낮습니다. 마나 낭비를 할바에야 차라리 글쿨이 밀리더라도 마염법이 낫습니다. 단 이동중일땐 루인라를 사용하는것이 낫습니다. 아래 모듈을 확인하여 이동중이 아닌 상태에서 사용한 루인라 횟수를 확인하십시오.",
   "sch.weaving.suggestion.why": "이동중이 아닌 상태에서 사용한 루인가 횟수 {0, plural, other {#회}}",
   "sch.weaving.title": "논글쿨기 초과 문제",
   "smn.about.description": "\n이 분석기는 가장 가까운 목표를 확인하고 소환사의 게임플레이를 개선하며, 또한 갑작스러운 상황에 대처할 수 있는 판단력을 높이는 것을 목표로 하고 있습니다.\n\n소환사의 플레이 특성상 많은 제안사항들이 아래 보일 수 있습니다. 하지만 조바심을 갖지말고, 차근차근 하나 둘씩 개선하는 걸 목표로 삼으세요.\n\n만약 소환사에 대해 자세히 알고싶다면, [The Balance](https://thebalanceffxiv.com/)에서 가이드를 확인해보시고 #smn_questions channel에서 대화를 해보세요.\n",
