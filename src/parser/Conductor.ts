@@ -2,9 +2,9 @@ import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
 import {Actor, Fight} from 'fflogs'
 import {Report} from 'store/report'
+import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
-import {Meta} from './core'
-import Module from './core/Module'
+import {Meta} from './core/Meta'
 import Parser, {Result} from './core/Parser'
 
 export class Conductor {
@@ -38,49 +38,27 @@ export class Conductor {
 	}
 
 	async configure() {
-		// Build the base parser instance
-		const parser = new Parser(
-			this.report,
-			this.fight,
-			this.combatant,
-		)
-
+		// Build the final meta representation
 		// The any cast is required due to some job modules remaining in JS.
-		const metas = [
+		const rawMetas = [
 			AVAILABLE_MODULES.CORE,
 			AVAILABLE_MODULES.BOSSES[this.fight.boss],
 			AVAILABLE_MODULES.JOBS[this.combatant.type],
 		] as any as ReadonlyArray<Meta|undefined>
+		const meta = rawMetas
+			.filter(isDefined)
+			.reduce((acc, cur) => acc.merge(cur))
 
-		const normalisedMetas: Meta[] = metas.map(meta => {
-			if (meta) { return meta }
-			return {
-				modules: () => Promise.resolve({default: []}),
-			}
-		})
-
-		// Load all the module data
-		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
-		let modules: ReadonlyArray<{default: ReadonlyArray<typeof Module>}>
-		try {
-			modules = await Promise.all(normalisedMetas.map(meta => meta.modules()))
-		} catch (error) {
-			if (process.env.NODE_ENV === 'development') {
-				throw error
-			}
-			throw new Errors.ModulesNotFoundError()
-		}
-
-		// Add all the meta + modules to the parser
-		modules.forEach(({default: loadedModules = []}, index) => {
-			parser.addMeta({
-				...normalisedMetas[index],
-				loadedModules,
-			})
+		// Build the base parser instance
+		const parser = new Parser({
+			meta,
+			report: this.report,
+			fight: this.fight,
+			actor: this.combatant,
 		})
 
 		// Get the parser all built up and stuff
-		parser.buildModules()
+		await parser.configure()
 
 		this.parser = parser
 	}

@@ -1,5 +1,6 @@
 import Module from './Module'
 import Parser from './Parser'
+import {Meta} from './Meta'
 
 /* eslint-disable xivanalysis/no-unused-dependencies, no-magic-numbers */
 
@@ -31,9 +32,6 @@ class DependentModule extends Module {
 	triggerEvent = jest.fn()
 }
 
-// Ref to the parser instance that gets built for each test
-let parser
-
 // Bunch of basic testing data
 const friendlyInFight = {
 	id: 1,
@@ -61,9 +59,18 @@ const event = {
 	timestamp: 50,
 }
 
+const buildParser = (modules = []) => new Parser({
+	meta: new Meta({modules: () => Promise.resolve({default: modules})}),
+	report,
+	fight,
+	actor: friendlyInFight,
+})
+
 describe('Parser', () => {
+	let parser
+
 	beforeEach(() => {
-		parser = new Parser(report, fight, friendlyInFight)
+		parser = buildParser()
 	})
 
 	it('exposes metadata', () => {
@@ -98,17 +105,17 @@ describe('Parser', () => {
 			.not.toContain(friendlyNotInFight)
 	})
 
-	it('loads modules', () => {
-		parser.addModules([BasicModule])
-		parser.buildModules()
+	it('loads modules', async () => {
+		parser = buildParser([BasicModule])
+		await parser.configure()
 
 		expect(parser.modules).toHaveProperty('test_basic')
 		expect(parser.modules.test_basic).toBeInstanceOf(BasicModule)
 	})
 
-	it('runs normalisers', () => {
-		parser.addModules([BasicModule])
-		parser.buildModules()
+	it('runs normalisers', async () => {
+		parser = buildParser([BasicModule])
+		await parser.configure()
 		parser.normalise([event])
 
 		const mock = parser.modules.test_basic.normalise.mock
@@ -116,9 +123,9 @@ describe('Parser', () => {
 		expect(mock.calls[0][0]).toEqual([event])
 	})
 
-	it('triggers events on modules', () => {
-		parser.addModules([BasicModule])
-		parser.buildModules()
+	it('triggers events on modules', async () => {
+		parser = buildParser([BasicModule])
+		await parser.configure()
 		parser.parseEvents([event])
 
 		const mock = parser.modules.test_basic.triggerEvent.mock
@@ -128,18 +135,18 @@ describe('Parser', () => {
 		expect(mock.calls[2][0]).toContainEntry(['type', 'complete'])
 	})
 
-	it('stops processing modules that error', () => {
-		parser.addModules([BasicThrowingModule])
-		parser.buildModules()
+	it('stops processing modules that error', async () => {
+		parser = buildParser([BasicThrowingModule])
+		await parser.configure()
 		parser.parseEvents([event])
 
 		const mock = parser.modules.test_basic.triggerEvent.mock
 		expect(mock.calls).toHaveLength(1)
 	})
 
-	it('links dependencies', () => {
-		parser.addModules([BasicModule, DependentModule, RenamedModule])
-		parser.buildModules()
+	it('links dependencies', async () => {
+		parser = buildParser([BasicModule, DependentModule, RenamedModule])
+		await parser.configure()
 
 		const module = parser.modules.test_dependent
 		expect(module.test_basic)
@@ -150,9 +157,9 @@ describe('Parser', () => {
 			.toBe(parser.modules.test_renamed)
 	})
 
-	it('cascades errors to dependents', () => {
-		parser.addModules([BasicThrowingModule, RenamedModule, DependentModule])
-		parser.buildModules()
+	it('cascades errors to dependents', async () => {
+		parser = buildParser([BasicThrowingModule, RenamedModule, DependentModule])
+		await parser.configure()
 		parser.parseEvents([event])
 
 		const mock = parser.modules.test_dependent.triggerEvent.mock
@@ -160,9 +167,9 @@ describe('Parser', () => {
 		expect(mock.calls.length).toBeLessThanOrEqual(1)
 	})
 
-	it('cascades errors to dependents while renamed', () => {
-		parser.addModules([BasicModule, RenamedThrowingModule, DependentModule])
-		parser.buildModules()
+	it('cascades errors to dependents while renamed', async () => {
+		parser = buildParser([BasicModule, RenamedThrowingModule, DependentModule])
+		await parser.configure()
 		parser.parseEvents([event])
 
 		const mock = parser.modules.test_dependent.triggerEvent.mock

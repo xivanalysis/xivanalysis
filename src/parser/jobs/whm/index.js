@@ -1,10 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import TransMarkdown from 'components/ui/TransMarkdown'
 
+import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 
 const description = t('whm.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your WHM gameplay, as well as give a deeper insight into what happened during an encounter.
@@ -14,10 +15,10 @@ Note that since healing is a very fight-dependent process, it might be that some
 If you would like to learn more about WHM, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #whm_questions channel.
 `
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-whm" */),
 
-	description: <Fragment>
+	Description: () => <>
 		<TransMarkdown source={description}/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -33,7 +34,7 @@ export default {
 				<Trans id="whm.about.description.invulnwarning">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
 			</Message.Content>
 		</Message>
-	</Fragment>,
+	</>,
 	supportedPatches: {
 		from: '4.05',
 		to: '4.5',
@@ -45,8 +46,8 @@ export default {
 	changelog: [
 		{
 			date: new Date('2019-01-09'),
-			changes: 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
+			Changes: () => 'Update Assize cooldown to 45. Pre 4.5 logs are not affected.',
 			contributors: [CONTRIBUTORS.VULCWEN, CONTRIBUTORS.SUSHIROU],
 		},
 	],
-}
+})

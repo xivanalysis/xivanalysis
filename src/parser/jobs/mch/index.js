@@ -3,10 +3,11 @@ import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mch" */),
-	description: <>
+	Description: () => <>
 		<Trans id="mch.about.description"><p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to tighten up your rotation, better manage procs, and get the most out of your Wildfire burst windows.</p></Trans>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -23,4 +24,4 @@ export default {
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [],
-}
+})

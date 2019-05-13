@@ -3,6 +3,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -21,10 +22,10 @@ Make sure to take the advice still with a grain of Salt.
 If you notice any issues, have concerns or suggestions, please drop by our Discord channel!
 `
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-pld" */),
 
-	description: <>
+	Description: () => <>
 		<TransMarkdown source={description} key="pld.about.description"/>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -44,7 +45,7 @@ export default {
 	changelog: [
 		{
 			date: new Date('2018-12-09'),
-			changes: <>
+			Changes: () => <>
 				<strong>Support for patch 4.4.</strong> Includes:
 				<ul>
 					<li>Uptime checks for <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> and <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/>,</li>
@@ -58,4 +59,4 @@ export default {
 			contributors: [CONTRIBUTORS.MIKEMATRIX],
 		},
 	],
-}
+})

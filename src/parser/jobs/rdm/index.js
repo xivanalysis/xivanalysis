@@ -4,11 +4,12 @@ import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import {Trans} from '@lingui/react'
+import {Meta} from 'parser/core/Meta'
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-rdm" */),
 
-	description: <>
+	Description: () => <>
 		<Trans id="rdm.about.description">
 			<p>This analyzer aims to give you the information you need to turn your <span className="text-success">parses</span> into <span className="text-orange">parses</span></p>
 			<p>If you would like to learn more about RDM, check the guides over at <a href="https://thebalanceffxiv.com/">The Balance</a>, and have a chat in the <code>#rdm_questions</code> channel.</p>
@@ -33,83 +34,83 @@ export default {
 	changelog: [
 		{
 			date: new Date('2018-07-21'),
-			changes: 'Initial release of the Red Mage module.',
+			Changes: () => 'Initial release of the Red Mage module.',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-07-22'),
-			changes: 'Fixed issues with Manafication overage being lost, issues Scatter in Dualcast, as well as some Invulnerability handling for Dualcast.',
+			Changes: () => 'Fixed issues with Manafication overage being lost, issues Scatter in Dualcast, as well as some Invulnerability handling for Dualcast.',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-07-29'),
-			changes: 'Added tracking of Cooldown Downtime for oGCDs',
+			Changes: () => 'Added tracking of Cooldown Downtime for oGCDs',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-07-30'),
-			changes: 'Added Swiftcast to the list of tracked oGCDs for Cooldown Downtime',
+			Changes: () => 'Added Swiftcast to the list of tracked oGCDs for Cooldown Downtime',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-08-08'),
-			changes: 'Initial support for Procs - Impactful, Verfire, Verstone',
+			Changes: () => 'Initial support for Procs - Impactful, Verfire, Verstone',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-08-09'),
-			changes: 'Resolved an issue with the Impactful force cast override not being reset',
+			Changes: () => 'Resolved an issue with the Impactful force cast override not being reset',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-08-16'),
-			changes: 'Added localization to Gauge suggestions, resolved some wording with chart, backend cleanup',
+			Changes: () => 'Added localization to Gauge suggestions, resolved some wording with chart, backend cleanup',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-08-18'),
-			changes: 'Fixed a bug related to all 3 procs when a boss is invulnerable',
+			Changes: () => 'Fixed a bug related to all 3 procs when a boss is invulnerable',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-09-20'),
-			changes: 'Initial support for Melee combo and Finishers, added support to Mana changes for Enhanced Scatter for 4.4.',
+			Changes: () => 'Initial support for Melee combo and Finishers, added support to Mana changes for Enhanced Scatter for 4.4.',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-10-16'),
-			changes: 'Fixed a few text errors, but mostly backend changes',
+			Changes: () => 'Fixed a few text errors, but mostly backend changes',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-10-29'),
-			changes: 'Condensed Proc Suggestions, clarified wording, added Trans/Plural support for Localization and added a Listing of what Targets the RDM hit with Proc spells',
+			Changes: () => 'Condensed Proc Suggestions, clarified wording, added Trans/Plural support for Localization and added a Listing of what Targets the RDM hit with Proc spells',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-11-05'),
-			changes: 'Modified Severity for Wasted/Missed Dualcasts based on feedback',
+			Changes: () => 'Modified Severity for Wasted/Missed Dualcasts based on feedback',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-11-06'),
-			changes: 'Resolved a number of issues with logs that do not contain one or more procs, and issues with Omega(story) invuln target being unavailable',
+			Changes: () => 'Resolved a number of issues with logs that do not contain one or more procs, and issues with Omega(story) invuln target being unavailable',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2018-11-14'),
-			changes: 'Adjusted some of the wording on suggestions based on user feedback.',
+			Changes: () => 'Adjusted some of the wording on suggestions based on user feedback.',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
 			date: new Date('2019-01-23'),
-			changes: 'Added rotation tables showing melee combo usages and finisher recommendations',
+			Changes: () => 'Added rotation tables showing melee combo usages and finisher recommendations',
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
 		{
 			date: new Date('2019-02-21'),
-			changes: 'Fixed an issue with RDM Mana tracking that allowed for negative numbers when starting with resources such as in 24 mans.',
+			Changes: () => 'Fixed an issue with RDM Mana tracking that allowed for negative numbers when starting with resources such as in 24 mans.',
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 	],
-}
+})

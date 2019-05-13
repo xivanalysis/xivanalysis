@@ -49,13 +49,18 @@ export default class ChangeLog extends React.PureComponent {
 						className={styles.change}
 					>
 						<strong className={styles.date}>{dateString}</strong>
-						{!active && <span className={styles.message}>{item.changes}</span>}
+
+						{!active && <span className={styles.message}><item.Changes/></span>}
+
 						<div className={styles.contributors}>
-							{item.contributors.map(contributor => <ContributorLabel key={contributor.name} contributor={contributor} />)}
+							{item.contributors.map(contributor => (
+								<ContributorLabel key={contributor.name} contributor={contributor} />
+							))}
 						</div>
 					</Accordion.Title>
+
 					<Accordion.Content active={active}>
-						{item.changes}
+						<item.Changes/>
 					</Accordion.Content>
 				</React.Fragment>
 			})}

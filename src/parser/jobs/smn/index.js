@@ -8,6 +8,7 @@ import TransMarkdown from 'components/ui/TransMarkdown'
 import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import STATUSES from 'data/STATUSES'
+import {Meta} from 'parser/core/Meta'
 
 const description = t('smn.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.
@@ -17,10 +18,10 @@ Due to the nature of how SMN plays, there may be a near _overwhelming_ number of
 If you would like to learn more about SMN, check the guides over at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #smn_questions channel.
 `
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-smn" */),
 
-	description: <>
+	Description: () => <>
 		<TransMarkdown source={description} key="smn.about.description"/>
 		<Message warning icon key="smn.about.description.warning">
 			<Icon name="warning sign" key="smn.about.description.warning.icon"/>
@@ -41,7 +42,7 @@ export default {
 
 	changelog: [{
 		date: new Date('2018-11-21'),
-		changes: <>
+		Changes: () => <>
 			A few small tweaks and adjustments:&nbsp;
 			<ul>
 				<li>Prevented <ActionLink {...ACTIONS.DEATHFLARE}/>s lost due to death from counting towards lost-deathflare suggestion.</li>
@@ -50,4 +51,4 @@ export default {
 		</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
 	}],
-}
+})
