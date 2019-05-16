@@ -8,9 +8,11 @@ import Combust from './Combust'
 import LucidDreaming from './LucidDreaming'
 import SleeveDraw from './SleeveDraw'
 import Draw from './Draw'
+import HealingBreakdown from './HealingBreakdown'
 
 export default [
 	ArcanaUndrawUsage,
+	HealingBreakdown,
 	Combust,
 	BuffExtensions,
 	Lightspeed,
