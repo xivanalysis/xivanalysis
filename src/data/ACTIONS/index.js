@@ -26,6 +26,8 @@ import DRK from './DRK'
 import MCH from './MCH'
 import LNC from './LNC'
 import DRG from './DRG'
+import GNB from './GNB'
+import DNC from './DNC'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
@@ -46,6 +48,7 @@ const ACTIONS = addExtraIndex(addDefaultValues({
 	...PLD,
 	...WAR,
 	...DRK,
+	...GNB,
 
 	...WHM,
 	...SCH,
@@ -58,6 +61,7 @@ const ACTIONS = addExtraIndex(addDefaultValues({
 
 	...BRD,
 	...MCH,
+	...DNC,
 
 	...BLM,
 	...SMN,

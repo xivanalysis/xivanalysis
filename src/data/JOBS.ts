@@ -96,6 +96,13 @@ const JOBS = {
 		colour: '#d126cc',
 		role: ROLES.TANK.id,
 	},
+	GUNBREAKER: {
+		name: t('game.job.gunbreaker')`Gunbreaker`,
+		logType: ActorType.GUNBREAKER,
+		icon: 'gnb',
+		colour: '#ff0000', // TODO
+		role: ROLES.TANK.id,
+	},
 
 	// Healer
 	WHITE_MAGE: {
@@ -163,6 +170,13 @@ const JOBS = {
 		logType: ActorType.MACHINIST,
 		icon: 'mch',
 		colour: '#6ee1d6',
+		role: ROLES.PHYSICAL_RANGED.id,
+	},
+	DANCER: {
+		name: t('game.job.dancer')`Dancer`,
+		logType: ActorType.DANCER,
+		icon: 'dnc',
+		colour: '#ff0000', // TODO
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
 

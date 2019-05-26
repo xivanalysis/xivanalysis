@@ -19,6 +19,8 @@ import WHM from './WHM'
 import PLD from './PLD'
 import SAM from './SAM'
 import DRK from './DRK'
+import GNB from './GNB'
+import DNC from './DNC'
 
 export const STATUS_ID_OFFSET = 1000000
 
@@ -31,6 +33,7 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...PLD,
 	...WAR,
 	...DRK,
+	...GNB,
 
 	...SCH,
 	...AST,
@@ -43,6 +46,7 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 
 	...BRD,
 	...MCH,
+	...DNC,
 
 	...SMN,
 	...BLM,

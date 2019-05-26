@@ -6,8 +6,10 @@ import CORE from './core'
 import AST from './jobs/ast'
 import BLM from './jobs/blm'
 import BRD from './jobs/brd'
+import DNC from './jobs/dnc'
 import DRG from './jobs/drg'
 import DRK from './jobs/drk'
+import GNB from './jobs/gnb'
 import MCH from './jobs/mch'
 import MNK from './jobs/mnk'
 import NIN from './jobs/nin'
@@ -29,6 +31,7 @@ export default {
 		[JOBS.PALADIN.logType]: PLD,
 		[JOBS.WARRIOR.logType]: WAR,
 		[JOBS.DARK_KNIGHT.logType]: DRK,
+		[JOBS.GUNBREAKER.logType]: GNB,
 
 		[JOBS.WHITE_MAGE.logType]: WHM,
 		[JOBS.SCHOLAR.logType]: SCH,
@@ -41,6 +44,7 @@ export default {
 
 		[JOBS.BARD.logType]: BRD,
 		[JOBS.MACHINIST.logType]: MCH,
+		[JOBS.DANCER.logType]: DNC,
 
 		[JOBS.BLACK_MAGE.logType]: BLM,
 		[JOBS.SUMMONER.logType]: SMN,
