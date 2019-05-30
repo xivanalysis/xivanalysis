@@ -143,16 +143,10 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000466.png',
 		cooldown: 8,
 	},
-	CONVERT: { // This looks to be going away in ShB, unsure if it's just a name update to Manafont or a completely new action
+	MANAFONT: { // For now, I'm going to assume SE just re-named the action. Updatable if wrong.
 		id: 158,
-		name: 'Convert',
-		icon: 'https://xivapi.com/i/002000/002651.png',
-		cooldown: 180,
-	},
-	MANAFONT: {
-		id: 999999999158, // Needs updated ID
 		name: 'Manafont',
-		icon: 'https://xivapi.com/i/002000/002651.png', // May updated Icon, this is the old Convert Icon, unless it gets re-used
+		icon: 'https://xivapi.com/i/002000/002651.png',
 		cooldown: 180,
 	},
 	MANAWARD: {
@@ -177,7 +171,7 @@ export default {
 		id: 3574,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/002000/002657.png',
-		cooldown: 60,
+		cooldown: 30,
 	},
 	ENOCHIAN: {
 		id: 3575,
