@@ -1,4 +1,4 @@
-import {getDataBy} from 'data'
+import {getDataBy} from './getDataBy'
 
 const ExampleData = {
 	ONE: {value: 'one'},
