@@ -1,5 +1,4 @@
 import {StrictDropdownItemProps} from 'semantic-ui-react'
-import {stringBefore} from 'utilities'
 import {GameEdition} from './PATCHES'
 
 interface LanguageData {
@@ -67,13 +66,5 @@ export const LANGUAGES: Record<Language, LanguageData> = {
 		gameEdition: GameEdition.CHINESE,
 	},
 }
-
-export const SHORT_LANGUAGE_MAP = Object.keys(LANGUAGES).reduce(
-	(carry, key) => {
-		carry[stringBefore(key, '-')] = key as Language
-		return carry
-	},
-	{} as Record<string, Language>,
-)
 
 export const DEFAULT_LANGUAGE = Language.ENGLISH
