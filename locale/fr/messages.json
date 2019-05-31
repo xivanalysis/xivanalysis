@@ -28,7 +28,7 @@
   "ast.buff-extensions.messages.no-buffs": "Aucun buff étendu.",
   "ast.buff-extensions.messages.no-casts": "Aucun cast enregistré pour <0/> et <1/>.",
   "ast.buff-extensions.messages.targets-affected": "{numTargets, plural, one {# cible touchée} other {# cibles touchées}}",
-  "ast.buff-extensions.title": "",
+  "ast.buff-extensions.title": "Extensions de buffs",
   "ast.dots.requirement.uptime.name": "",
   "ast.dots.rule.description": "",
   "ast.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
