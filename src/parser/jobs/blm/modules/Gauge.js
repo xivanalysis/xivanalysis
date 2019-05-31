@@ -3,8 +3,9 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -160,7 +161,7 @@ export default class Gauge extends Module {
 		if (this._polyglotStacks > MAX_POLYGLOT_STACKS) {
 			this._overwrittenPolyglot++
 		}
-		this._polyglotStacks = Math.max(this._polyglotStacks, MAX_POLYGLOT_STACKS)
+		this._polyglotStacks = Math.min(this._polyglotStacks, MAX_POLYGLOT_STACKS)
 		this.addEvent()
 	}
 
@@ -169,8 +170,7 @@ export default class Gauge extends Module {
 			// Safety to catch ordering issues where Foul is used late enough to trigger our overwrite check but happens before Poly actually overwrites
 			this._overwrittenPolyglot--
 		}
-		this._polyglotStacks--
-		this._polyglotStacks = Math.max(this._polyglotStacks, 0)
+		this._polyglotStacks = Math.max(this._polyglotStacks - 1, 0)
 		this.addEvent()
 	}
 
@@ -256,7 +256,7 @@ export default class Gauge extends Module {
 		this._enochianDownTimer.stop = 0
 	}
 
-	_renderLostPolyglots(time) {
+	_countLostPolyglots(time) {
 		return Math.floor(time/ENOCHIAN_DURATION_REQUIRED)
 	}
 
@@ -346,14 +346,14 @@ export default class Gauge extends Module {
 		if (this._enochianDownTimer.start) {
 			this._enoDownTimerStop(event)
 		}
-		this._lostPolyglot = this._renderLostPolyglots(this._enochianDownTimer.time)
+		this._lostPolyglot = this._countLostPolyglots(this._enochianDownTimer.time)
 
 		// Suggestions for lost eno
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
-					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.XENOGLOSSY}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
+					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.XENOGLOSSY}/> or <ActionLink {...ACTIONS.FOUL}/> casts, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 15% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
@@ -366,7 +366,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost <ActionLink {...ACTIONS.XENOGLOSSY}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.XENOGLOSSY}/> is your strongest GCD, so always maximize its casts.
+					You lost <StatusLink {...STATUSES.POLYGLOT}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
@@ -379,7 +379,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
-					You overwrote <ActionLink {...ACTIONS.XENOGLOSSY}/> due to not casting it for 30s after gaining a second Polyglot. <ActionLink {...ACTIONS.XENOGLOSSY}/> is your strongest GCD, so always maximize its casts.
+					You overwrote <StatusLink {...STATUSES.POLYGLOT}/> due to not casting <ActionLink {...ACTIONS.XENOGLOSSY} /> or <ActionLink {...ACTIONS.FOUL}/> for 30s after gaining a second stack. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">

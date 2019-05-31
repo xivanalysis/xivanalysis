@@ -39,7 +39,6 @@ export default {
 		name: 'Umbral Soul',
 		icon: 'https://xivapi.com/i/002000/002653.png', // Needs updating once known, still Freeze's icon
 		onGcd: true,
-		castTime: 2.0,
 	},
 	FIRE_I: {
 		id: 141,
