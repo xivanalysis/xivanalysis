@@ -4,6 +4,7 @@ import React, {Fragment} from 'react'
 import {Pie as PieChart} from 'react-chartjs-2'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
@@ -152,7 +153,7 @@ export default class Turrets extends Module {
 			return 'Turret reset'
 		}
 
-		return PETS[turretId].name
+		return getDataBy(PETS, 'id', turretId).name
 	}
 
 	output() {

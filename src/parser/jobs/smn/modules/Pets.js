@@ -12,6 +12,7 @@ import {PieChartStatistic} from 'parser/core/modules/Statistics'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {getDataBy} from 'data'
 
 const NO_PET_ID = -1
 
@@ -297,7 +298,7 @@ export default class Pets extends Module {
 			return null
 		}
 
-		return PETS[this._currentPet.id]
+		return getDataBy(PETS, 'id', this._currentPet.id)
 	}
 
 	getPetName(petId) {
@@ -305,6 +306,6 @@ export default class Pets extends Module {
 			return 'No pet'
 		}
 
-		return PETS[petId].name
+		return getDataBy(PETS, 'id', petId).name
 	}
 }
