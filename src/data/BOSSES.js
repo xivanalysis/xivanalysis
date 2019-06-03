@@ -1,5 +1,4 @@
 import {getDataBy} from 'data'
-import {addExtraIndex} from 'utilities'
 
 // Correct fight info with manual overrides
 export const getCorrectedFight = fight => {
@@ -54,4 +53,4 @@ const BOSSES = {
 	DEMON_CHADARNOOK: {logId: 52},
 }
 
-export default addExtraIndex(BOSSES, 'logId')
+export default BOSSES
