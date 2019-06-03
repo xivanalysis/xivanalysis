@@ -1,10 +1,13 @@
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
+import React, {Fragment} from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Color from 'color'
+import JOBS from 'data/JOBS'
+import TimeLineChart from 'components/ui/TimeLineChart'
 
 // Constants
 const MAX_NINKI = 100
@@ -22,12 +25,17 @@ const NINKI_SPENDERS = {
 
 export default class Ninki extends Module {
 	static handle = 'ninki'
+	static title = 'Ninki Timeline'
+	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
 		'cooldowns',
 		'suggestions',
 	]
 
 	_ninki = 0
+	_history = {
+		ninki: [],
+	}
 	_wasteBySource = {
 		[ACTIONS.MUG.id]: 0,
 		[ACTIONS.ATTACK.id]: 0,
@@ -52,10 +60,13 @@ export default class Ninki extends Module {
 			this._wasteBySource[abilityId] += waste
 			this._ninki = MAX_NINKI
 		}
+
+		this._pushToHistory()
 	}
 
 	_onSpenderCast(event) {
 		this._ninki = Math.max(this._ninki - NINKI_SPENDERS[event.ability.guid], 0)
+		this._pushToHistory()
 	}
 
 	_onHellfrogAoe(event) {
@@ -70,6 +81,12 @@ export default class Ninki extends Module {
 	_onDeath() {
 		// YOU DONE FUCKED UP NOW
 		this._ninki = 0
+		this._pushToHistory()
+	}
+
+	_pushToHistory() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this._history.ninki.push({t: timestamp, y: this._ninki})
 	}
 
 	_onComplete() {
@@ -103,5 +120,27 @@ export default class Ninki extends Module {
 				You used Hellfrog Medium <Plural value={this._erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
 			</Trans>,
 		}))
+	}
+
+	output() {
+		const _ninkiColor = Color(JOBS.NINJA.colour)
+
+		/* eslint-disable no-magic-numbers */
+		const chartdata = {
+			datasets: [
+				{
+					label: 'Ninki',
+					steppedLine: true,
+					data: this._history.ninki,
+					backgroundColor: _ninkiColor.fade(0.8),
+					borderColor: _ninkiColor.fade(0.5),
+				},
+			],
+		}
+		/* eslint-enable no-magic-numbers */
+
+		return <Fragment>
+			<TimeLineChart data={chartdata} />
+		</Fragment>
 	}
 }
