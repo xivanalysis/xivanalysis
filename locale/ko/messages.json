@@ -408,6 +408,7 @@
   "nin.ninki.suggestions.frog.why": "다른 기술을 사용할 수 있을 때 두꺼비 소환술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninki.suggestions.waste.content": "인법이 60 이상일 때 <0/>을 쓰거나 인법이 거의 찼을 때 소모 기술을 사용하지 않는 것은 특수한 경우가 아니면 피해야 합니다.",
   "nin.ninki.suggestions.waste.why": "총 {totalWaste} 의 인법을 낭비했습니다.",
+  "nin.ninki.title": "",
   "nin.shadowfang.checklist.description": "<0/>은 최소 4틱 이상 적용되었을 때 가장 위력이 높은 콤보입니다. 또한 베기 저항력 감소 디버프를 부여하므로 반드시 상시 유지해야합니다.",
   "nin.shadowfang.checklist.name": "항상 그림자 송곳니가 유지되도록 하십시오",
   "nin.shadowfang.checklist.requirement.name": "적용시간 <0/>",

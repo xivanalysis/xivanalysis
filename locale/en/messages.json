@@ -408,6 +408,7 @@
   "nin.ninki.suggestions.frog.why": "You used Hellfrog Medium {0, plural, one {# time} other {# times}} when other spenders were available.",
   "nin.ninki.suggestions.waste.content": "Avoid using <0/> when above 60 Ninki and holding your Ninki spenders when near or at cap (with a few small exceptions) in order to maximize the number of spenders you can use over the course of a fight.",
   "nin.ninki.suggestions.waste.why": "Overcapping caused you to lose {totalWaste} Ninki over the fight.",
+  "nin.ninki.title": "Ninki Timeline",
   "nin.shadowfang.checklist.description": "<0/> is your strongest combo finisher (assuming at least 4 DoT ticks hit). In addition, it provides a slashing debuff which you, WARs, and SAMs are responsible for maintaining and should ideally never let lapse.",
   "nin.shadowfang.checklist.name": "Keep Shadow Fang up",
   "nin.shadowfang.checklist.requirement.name": "<0/> uptime",
