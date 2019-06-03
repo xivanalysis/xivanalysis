@@ -1,4 +1,3 @@
-export * from './addExtraIndex'
 export * from './extractErrorContext'
 export * from './getPathMatch'
 export * from './languages'
