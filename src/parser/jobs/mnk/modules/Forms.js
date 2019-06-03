@@ -2,7 +2,8 @@ import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
 import Module from 'parser/core/Module'
@@ -48,7 +49,7 @@ export default class Forms extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 
 		if (!action) {
 			return

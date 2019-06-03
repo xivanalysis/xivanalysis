@@ -3,7 +3,8 @@ import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
-import {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -39,9 +40,9 @@ export default class Triple extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		//check if Triple window is active
-		if (!this._active || action.autoAttack) { return }
+		if (!this._active || !action || action.autoAttack) { return }
 		//stop tracking on next GCD after triple is gone
 		if (action.onGcd && this._tripleFlag) {
 			this._stopRecording()
@@ -81,7 +82,10 @@ export default class Triple extends Module {
 
 	output() {
 		const panels = this._history.map(triple => {
-			const numGcds = triple.casts.filter(cast => !getAction(cast.ability.guid).onGcd).length
+			const numGcds = triple.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && !action.onGcd
+			}).length
 			return {
 				key: 'title-' + triple.start,
 				title: {

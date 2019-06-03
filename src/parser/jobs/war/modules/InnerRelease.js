@@ -5,10 +5,11 @@ import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 
 const CORRECT_GCDS = [
 	ACTIONS.FELL_CLEAVE.id,
@@ -62,7 +63,8 @@ export default class InnerRelease extends Module {
 		}
 
 		// Only going to save casts during IR
-		if (!this._active || getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (!this._active || !action || action.autoAttack) {
 			return
 		}
 
@@ -88,10 +90,10 @@ export default class InnerRelease extends Module {
 		let badGcds = 0
 		this._history.forEach(ir => {
 			badGcds += ir.casts
-				.filter(cast =>
-					getAction(cast.ability.guid).onGcd &&
-					!CORRECT_GCDS.includes(cast.ability.guid)
-				)
+				.filter(cast => {
+					const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+					return action && action.onGcd && !CORRECT_GCDS.includes(action.id)
+				})
 				.length
 		})
 
@@ -159,7 +161,10 @@ export default class InnerRelease extends Module {
 		this._history.push(this._ir)
 
 		// Check for which gcds they hit, and for upheaval and onslaught :blobwizard:
-		const gcds = this._ir.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		const gcds = this._ir.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			return action && action.onGcd
+		})
 		const upheaval = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id)
 		const onslaught = this._ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id)
 
@@ -176,7 +181,10 @@ export default class InnerRelease extends Module {
 
 	output() {
 		const panels = this._history.map(ir => {
-			const numGcds = ir.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const numGcds = ir.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && action.onGcd
+			}).length
 			const numUpheavals = ir.casts.filter(cast => cast.ability.guid === ACTIONS.UPHEAVAL.id).length
 			const numOnslaughts = ir.casts.filter(cast => cast.ability.guid === ACTIONS.ONSLAUGHT.id).length
 

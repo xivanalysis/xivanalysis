@@ -2,7 +2,8 @@ import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -29,8 +30,8 @@ export default class TrickAttackUsage extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
-		if (action.onGcd) {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (action && action.onGcd) {
 			this._gcdCount++
 		}
 	}

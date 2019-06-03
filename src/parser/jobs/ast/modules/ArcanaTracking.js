@@ -5,7 +5,7 @@ import _ from 'lodash'
 
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -381,7 +381,9 @@ export default class ArcanaTracking extends Module {
 			// Modify log, they were holding onto this card since index
 			_.forEachRight(this._cardStateLog,
 				(stateItem, index) => {
-					if (index >= lastMinorIndex) { stateItem.minorState = getAction(actionId) }
+					if (index >= lastMinorIndex) {
+						stateItem.minorState = getDataBy(ACTIONS, 'id', actionId)
+					}
 				})
 		}
 
@@ -451,7 +453,7 @@ export default class ArcanaTracking extends Module {
 
 		if (MINOR_ARCANA_USE.includes(actionId)) {
 			// They had a minor arcana
-			this._cardStateLog[0].minorState = getAction(actionId)
+			this._cardStateLog[0].minorState = getDataBy(ACTIONS, 'id', actionId)
 		}
 	}
 

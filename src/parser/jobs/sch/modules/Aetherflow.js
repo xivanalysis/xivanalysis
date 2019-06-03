@@ -3,7 +3,8 @@ import {Table, Grid} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 
@@ -172,7 +173,7 @@ export default class Aetherflow extends Module {
 							<Table.Cell>
 								<Grid>
 									{id.map((id, i) => <Grid.Column key={i} width={4}>
-										<ActionLink {...getAction(id)} />
+										<ActionLink {...getDataBy(ACTIONS, 'id', id)} />
 									</Grid.Column>)}
 								</Grid>
 							</Table.Cell>

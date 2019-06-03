@@ -1,9 +1,10 @@
 import React from 'react'
 import _ from 'lodash'
 
-import {COOLDOWN_GROUPS, getAction} from 'data/ACTIONS'
+import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
+import {getDataBy} from 'data'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -43,9 +44,10 @@ export default class Cooldowns extends Module {
 
 			// If it's just an action id, build a group for it and stop
 			if (typeof data === 'number') {
+				const action = getDataBy(ACTIONS, 'id', data)
 				this._buildGroup({
 					id: data,
-					content: getAction(data).name,
+					content: action && action.name,
 					order,
 				})
 				return data
@@ -85,8 +87,8 @@ export default class Cooldowns extends Module {
 	// (though 99% of CD based abilities have no cast time)
 	// TODO: Should I be tracking pet CDs too? I mean, contagion/radiant are a thing.
 	_onBeginCast(event) {
-		const action = getAction(event.ability.guid)
-		if (action.cooldown == null) { return }
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action || action.cooldown == null) { return }
 
 		this._currentAction = action
 
@@ -97,8 +99,8 @@ export default class Cooldowns extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
-		if (action.cooldown == null) { return }
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action || action.cooldown == null) { return }
 
 		const finishingCast = this._currentAction && this._currentAction.id === action.id
 		this._currentAction = null
@@ -129,10 +131,10 @@ export default class Cooldowns extends Module {
 			cd.current = null
 		}
 
-		const action = getAction(actionId)
+		const action = getDataBy(ACTIONS, 'id', actionId)
 
 		// If the action is on the GCD, GlobalCooldown will be managing its own group
-		if (action.onGcd) {
+		if (!action || action.onGcd) {
 			return false
 		}
 
@@ -177,6 +179,8 @@ export default class Cooldowns extends Module {
 
 	startCooldown(actionId, sharedCooldown = false) {
 		// TODO: handle shared CDs
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (!action) { return }
 
 		// Get the current cooldown status, falling back to a new cooldown
 		const cd = this.getCooldown(actionId)
@@ -187,7 +191,6 @@ export default class Cooldowns extends Module {
 			cd.history.push(cd.current)
 		}
 
-		const action = getAction(actionId)
 		cd.current = {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS

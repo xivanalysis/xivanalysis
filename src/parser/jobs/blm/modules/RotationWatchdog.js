@@ -8,11 +8,12 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {getDataBy} from 'data'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_CONVERT = 2
@@ -139,7 +140,8 @@ export default class RotationWatchdog extends Module {
 			this._startRecording(event)
 		}
 		if (this._first) { this._first = false }
-		if (this._inRotation && !getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (this._inRotation && action && !action.autoAttack) {
 			this._rotation.casts.push(event)
 		}
 	}
@@ -276,9 +278,9 @@ export default class RotationWatchdog extends Module {
 			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
-			const fire4Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
-			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
-			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
+			const fire4Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_IV.id).length
+			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
+			const hasConvert = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.CONVERT.id).length > 0
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
@@ -297,7 +299,7 @@ export default class RotationWatchdog extends Module {
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				//Also throw out rotations with no Fire spells
-				const fire3Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_III.id).length
+				const fire3Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_III.id).length
 				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 				if (fireCount === 0) {
 					this._rotationsWithoutFire++

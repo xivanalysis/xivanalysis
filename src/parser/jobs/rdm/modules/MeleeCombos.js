@@ -2,8 +2,9 @@ import React from 'react'
 
 //import CoreCombos from 'parser/core/modules/Combos'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 //import {matchClosestLower} from 'utilities'
@@ -126,7 +127,7 @@ export default class MeleeCombos extends Module {
 		if (recommendedFinisher instanceof Array) {
 			if (recommendedFinisher === FINISHERS) {
 				// a recommendation of both finishers means ignore the finisher, either one is valid
-				combo.finisher.recommendedActions.push(getAction(combo.finisher.used.guid))
+				combo.finisher.recommendedActions.push(getDataBy(ACTIONS, 'id', combo.finisher.used.guid) || {})
 			} else {
 				// a recommendation of an array of actions is to delay the combo
 				Array.prototype.push.apply(combo.finisher.recommendedActions, recommendedFinisher)
@@ -379,7 +380,9 @@ export default class MeleeCombos extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action) { return }
+
 		if (action.combo) {
 			if (action.combo.start) {
 				this._breakComboIfExists()

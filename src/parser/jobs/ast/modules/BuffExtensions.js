@@ -272,7 +272,7 @@ export default class BuffExtensions extends Module {
 						</div>
 						<div className={styles.headerItem}><img
 							key={dilation.event.timestamp}
-							src={ACTIONS[dilation.event.ability.guid].icon}
+							src={getDataBy(ACTIONS, 'id', dilation.event.ability.guid).icon}
 							className={styles.dilationEventIcon}
 							alt={dilation.event.ability.name}
 						/>

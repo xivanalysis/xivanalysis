@@ -1,4 +1,3 @@
-import {addExtraIndex} from 'utilities'
 import _ from 'lodash'
 
 import SHARED from './SHARED'
@@ -32,7 +31,7 @@ import DNC from './DNC'
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
 
-const ACTIONS = addExtraIndex(addDefaultValues({
+const ACTIONS = addDefaultValues({
 	...SHARED,
 	...ROLE,
 	...DUTY,
@@ -66,7 +65,7 @@ const ACTIONS = addExtraIndex(addDefaultValues({
 	...BLM,
 	...SMN,
 	...RDM,
-}), 'id')
+})
 
 // NOTE: this is not 100% sound because if something had `onGcd: false` this would also add
 // castTime and cooldown to their types; but it's not possible to getting something perfect here without
@@ -95,14 +94,3 @@ export const HIT_TYPES = {
 }
 
 export default ACTIONS
-
-// TODO: warn when falling back?
-// TODO: Return object (w/ caching?) with utility functions a-la wowa's Ability?
-// this actually should have 2 overloads: one for when `id` is `T extends keyof STATUSES`, and one for when `id` is numeric
-// this, and getStatuses, should just be allowed to return undefined for additional safety.
-// TODO: remove the '|| {}' once call sites are type-checked, or at least audited
-/**
- * @param {number} id
- * @returns {ACTIONS[number] | { id?: never }}
- */
-export const getAction = id => ACTIONS[id] || {}

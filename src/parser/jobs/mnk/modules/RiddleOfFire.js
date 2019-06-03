@@ -5,7 +5,8 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -63,7 +64,8 @@ export default class RiddleOfFire extends Module {
 		}
 
 		// we only care about actual skills
-		if (!this._active || getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (!this._active || !action || action.autoAttack) {
 			return
 		}
 
@@ -83,7 +85,10 @@ export default class RiddleOfFire extends Module {
 		// Aggregate GCDs under each RoF
 		const rofs = []
 		this._history.forEach(riddle => {
-			rofs.push(riddle.casts.filter(cast => getAction(cast.ability.guid).onGcd).length)
+			rofs.push(riddle.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && action.onGcd
+			}).length)
 		})
 
 		if (this._missedGcds) {
@@ -127,7 +132,10 @@ export default class RiddleOfFire extends Module {
 		this._riddle.rushing = this._rushing
 		this._history.push(this._riddle)
 
-		const gcds = this._riddle.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		const gcds = this._riddle.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			return action && action.onGcd
+		})
 		const tks = this._riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id)
 
 		if (this._rushing || gcds.length > 1) {
@@ -152,7 +160,10 @@ export default class RiddleOfFire extends Module {
 
 	output() {
 		const panels = this._history.map(riddle => {
-			const numGcds = riddle.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const numGcds = riddle.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && action.onGcd
+			}).length
 			const numTKs = riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id).length
 
 			return {

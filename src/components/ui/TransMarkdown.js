@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
 
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
@@ -21,21 +20,22 @@ const LINK_TYPES = {
 		term,
 	}, children),
 
-	action: (actionID, children) => {
-		if (ACTIONS[actionID]) {
-			actionID = ACTIONS[actionID].id
+	action: (actionId, children) => {
+		const action = ACTIONS[actionId]
+		if (action) {
+			actionId = action.id
 		} else {
-			actionID = parseInt(actionID, 10)
+			actionId = parseInt(actionId, 10)
 		}
 
 		return React.createElement(ActionLink, {
-			id: actionID,
+			id: actionId,
 			name: children,
 		})
 	},
 
 	status: (statusId, children) => {
-		const status = getDataBy(STATUSES, 'id', statusId)
+		const status = STATUSES[statusId]
 		if (status) {
 			statusId = status.id
 		} else {

@@ -6,7 +6,7 @@ import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 
@@ -151,7 +151,7 @@ export default class Fists extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 
 		// If we don't have a valid action or it's not a GCD, skip
 		if (!action || !action.onGcd) {
