@@ -1,3 +1,4 @@
+import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 
@@ -25,7 +26,7 @@ const NINKI_SPENDERS = {
 
 export default class Ninki extends Module {
 	static handle = 'ninki'
-	static title = 'Ninki Timeline'
+	static title = t('nin.ninki.title')`Ninki Timeline`
 	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
 		'cooldowns',
@@ -33,9 +34,7 @@ export default class Ninki extends Module {
 	]
 
 	_ninki = 0
-	_history = {
-		ninki: [],
-	}
+	_ninkiHistory = []
 	_wasteBySource = {
 		[ACTIONS.MUG.id]: 0,
 		[ACTIONS.ATTACK.id]: 0,
@@ -86,7 +85,7 @@ export default class Ninki extends Module {
 
 	_pushToHistory() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this._history.ninki.push({t: timestamp, y: this._ninki})
+		this._ninkiHistory.push({t: timestamp, y: this._ninki})
 	}
 
 	_onComplete() {
@@ -123,7 +122,7 @@ export default class Ninki extends Module {
 	}
 
 	output() {
-		const _ninkiColor = Color(JOBS.NINJA.colour)
+		const ninkiColor = Color(JOBS.NINJA.colour)
 
 		/* eslint-disable no-magic-numbers */
 		const chartdata = {
@@ -131,9 +130,9 @@ export default class Ninki extends Module {
 				{
 					label: 'Ninki',
 					steppedLine: true,
-					data: this._history.ninki,
-					backgroundColor: _ninkiColor.fade(0.8),
-					borderColor: _ninkiColor.fade(0.5),
+					data: this._ninkiHistory,
+					backgroundColor: ninkiColor.fade(0.8),
+					borderColor: ninkiColor.fade(0.5),
 				},
 			],
 		}
