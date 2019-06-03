@@ -21,6 +21,7 @@ import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
 import {observable, runInAction, reaction} from 'mobx'
+import {getDataBy} from 'data'
 
 @inject('reportStore', 'globalErrorStore')
 @observer
@@ -117,29 +118,32 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = JOBS[player.type]
+		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
 		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
-				{job && <Header
-					className={[styles.header].join(' ')}
-				>
-					<JobIcon job={job}/>
-					<Header.Content>
-						<NormalisedMessage message={job.name}/>
-						<Header.Subheader>
-							<NormalisedMessage message={ROLES[job.role].name}/>
-						</Header.Subheader>
-					</Header.Content>
-				</Header>}
+				{job && (
+					<Header className={styles.header}>
+						<JobIcon job={job}/>
+						<Header.Content>
+							<NormalisedMessage message={job.name}/>
+							{role && (
+								<Header.Subheader>
+									<NormalisedMessage message={role.name}/>
+								</Header.Subheader>
+							)}
+						</Header.Content>
+					</Header>
+				)}
 
-				{results.map(
-					(result, index) => <SegmentLinkItem
+				{results.map((result, index) => (
+					<SegmentLinkItem
 						key={index}
 						index={index}
 						result={result}
 					/>
-				)}
+				))}
 			</SidebarContent>
 
 			<div className={styles.resultsContainer}>

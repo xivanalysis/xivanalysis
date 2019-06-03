@@ -62,7 +62,7 @@ const roleData = {
 	},
 }
 
-export const ROLES = addExtraIndex(roleData as Record<keyof typeof roleData, Role>, 'id')
+export const ROLES = roleData as Record<keyof typeof roleData, Role>
 
 export interface Job {
 	name: MessageDescriptor
