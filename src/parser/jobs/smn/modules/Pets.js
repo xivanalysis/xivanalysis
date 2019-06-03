@@ -3,6 +3,7 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
@@ -12,7 +13,6 @@ import {PieChartStatistic} from 'parser/core/modules/Statistics'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {getDataBy} from 'data'
 
 const NO_PET_ID = -1
 
@@ -186,7 +186,7 @@ export default class Pets extends Module {
 		// Work out the party comp
 		// TODO: Should this be in the parser?
 		const roles = this.parser.fightFriendlies.reduce((roles, friendly) => {
-			const job = JOBS[friendly.type]
+			const job = getDataBy(JOBS, 'logType', friendly.type)
 			if (!job) { return roles }
 
 			roles[job.role] = (roles[job.role] || 0) + 1

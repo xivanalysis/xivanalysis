@@ -1,7 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {ActorType} from 'fflogs'
-import {addExtraIndex} from 'utilities'
 
 export interface Role {
 	id: number
@@ -204,4 +203,4 @@ const JOBS = {
 	},
 }
 
-export default addExtraIndex(JOBS as Record<keyof typeof JOBS, Job>, 'logType')
+export default JOBS as Record<keyof typeof JOBS, Job>

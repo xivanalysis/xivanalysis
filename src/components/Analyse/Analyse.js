@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import {observable, runInAction, reaction} from 'mobx'
 import {inject, observer, disposeOnUnmount} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
@@ -10,6 +11,7 @@ import {
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
 import {Conductor} from 'parser/Conductor'
 import {ReportStore} from 'store/report'
@@ -20,8 +22,6 @@ import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
 
 import styles from './Analyse.module.css'
-import {observable, runInAction, reaction} from 'mobx'
-import {getDataBy} from 'data'
 
 @inject('reportStore', 'globalErrorStore')
 @observer
@@ -117,7 +117,7 @@ class Analyse extends Component {
 
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
-		const job = JOBS[player.type]
+		const job = getDataBy(JOBS, 'logType', player.type)
 		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
 		const results = this.conductor.getResults()
 
