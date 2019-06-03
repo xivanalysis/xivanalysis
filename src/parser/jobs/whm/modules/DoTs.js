@@ -111,7 +111,7 @@ export default class DoTs extends Module {
 				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Trans id="whm.dots.suggestion.clip-a2.why">
-					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES[STATUSES.AERO_II.id].name} lost to early refreshes.
+					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES.AERO_II.name} lost to early refreshes.
 				</Trans>,
 			}))
 		}
@@ -125,7 +125,7 @@ export default class DoTs extends Module {
 				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
 				why: <Trans id="whm.dots.suggestion.clip-a3.why">
-					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES[STATUSES.AERO_III.id].name} lost to early refreshes.
+					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES.AERO_III.name} lost to early refreshes.
 				</Trans>,
 			}))
 		}

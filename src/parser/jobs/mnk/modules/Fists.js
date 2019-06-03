@@ -5,9 +5,10 @@ import React from 'react'
 import PieChartWithLegend from 'components/ui/PieChartWithLegend'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS, {getAction} from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import STATUSES, {getStatus} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -105,7 +106,7 @@ export default class Fists extends Module {
 
 				// It was a legit Tackle, we know what's up
 				if (Object.keys(STANCE_MAP).map(Number).includes(event.ability.guid)) {
-					const status = getStatus(STANCE_MAP[event.ability.guid])
+					const status = getDataBy(STATUSES, 'id', STANCE_MAP[event.ability.guid])
 
 					events.splice(0, 0, {
 						...event,
@@ -237,7 +238,7 @@ export default class Fists extends Module {
 		}
 
 		// If this fucking errors...
-		return getStatus(stanceId).name
+		return getDataBy(STATUSES, 'id', stanceId).name
 	}
 
 	output() {

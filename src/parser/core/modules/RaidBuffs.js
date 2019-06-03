@@ -1,5 +1,6 @@
 import React from 'react'
 
+import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
@@ -84,7 +85,8 @@ export default class RaidBuffs extends Module {
 		// Generate an item for the buff
 		// TODO: startTime should probably be automated inside timeline
 		const startTime = this.parser.fight.start_time
-		const status = STATUSES[statusId]
+		const status = getDataBy(STATUSES, 'id', statusId)
+		if (!status) { return }
 		buffs[statusId] = new Item({
 			type: 'background',
 			start: event.timestamp - startTime,

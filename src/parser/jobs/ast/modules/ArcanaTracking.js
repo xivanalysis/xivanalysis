@@ -4,8 +4,9 @@ import React from 'react'
 import _ from 'lodash'
 
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS, {getAction} from 'data/ACTIONS'
-import STATUSES, {getStatus} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -120,7 +121,7 @@ export default class ArcanaTracking extends Module {
 			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent
 					&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD)) {
-					stateItem.rrAbility = getStatus(event.ability.guid)
+					stateItem.rrAbility = getDataBy(STATUSES, 'id', event.ability.guid)
 				}
 			})
 		}
@@ -129,7 +130,7 @@ export default class ArcanaTracking extends Module {
 			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent
 					&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD)) {
-					stateItem.drawState = getStatus(event.ability.guid)
+					stateItem.drawState = getDataBy(STATUSES, 'id', event.ability.guid)
 				}
 			})
 		}
@@ -138,7 +139,7 @@ export default class ArcanaTracking extends Module {
 			this._cardStateLog.forEach((stateItem) => {
 				if (stateItem.lastEvent
 					&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD)) {
-					stateItem.spreadState = getStatus(event.ability.guid)
+					stateItem.spreadState = getDataBy(STATUSES, 'id', event.ability.guid)
 				}
 			})
 		}
@@ -253,8 +254,12 @@ export default class ArcanaTracking extends Module {
 				// Modify log, they were holding onto this rrAbility since index
 				_.forEachRight(this._cardStateLog,
 					(stateItem, index) => {
-						if (index >= lastRoyalRoadIndex && index !== this._cardStateLog.length - 1) { stateItem.rrAbility = getStatus(event.rrAbility.guid) }
-						if (index === this._cardStateLog.length - 1) { stateItem.lastEvent.rrAbility = getStatus(event.rrAbility.guid) }
+						if (index >= lastRoyalRoadIndex && index !== this._cardStateLog.length - 1) {
+							stateItem.rrAbility = getDataBy(STATUSES, 'id', event.rrAbility.guid)
+						}
+						if (index === this._cardStateLog.length - 1) {
+							stateItem.lastEvent.rrAbility = getDataBy(STATUSES, 'id', event.rrAbility.guid)
+						}
 					})
 			}
 
@@ -432,7 +437,7 @@ export default class ArcanaTracking extends Module {
 
 		if (DRAWN_ARCANA_USE.includes(actionId)) {
 			// They had something in the draw slot
-			this._cardStateLog[0].drawState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].drawState = getDataBy(STATUSES, 'id', this.arcanaActionToStatus(actionId))
 		}
 
 		// if(actionId === ACTIONS.MINOR_ARCANA.id || actionId === ACTIONS.ROYAL_ROAD.id) {
@@ -441,7 +446,7 @@ export default class ArcanaTracking extends Module {
 
 		if (HELD_ARCANA_USE.includes(actionId)) {
 			// They had something in spread
-			this._cardStateLog[0].spreadState = getStatus(this.arcanaActionToStatus(actionId))
+			this._cardStateLog[0].spreadState = getDataBy(STATUSES, 'id', this.arcanaActionToStatus(actionId))
 		}
 
 		if (MINOR_ARCANA_USE.includes(actionId)) {
@@ -514,10 +519,16 @@ export default class ArcanaTracking extends Module {
 			_.forEachRight(this._cardStateLog,
 				(stateItem, index) => {
 					if (searchLatest) {
-						if (index >= lastIndex) { stateItem[slot] = getStatus(this.arcanaActionToStatus(cardId)) }
+						if (index >= lastIndex) {
+							stateItem[slot] = getDataBy(STATUSES, 'id', this.arcanaActionToStatus(cardId))
+						}
 					} else {
-						if (index >= lastIndex && index !== this._cardStateLog.length - 1) { stateItem[slot] = getStatus(this.arcanaActionToStatus(cardId)) }
-						if (index === this._cardStateLog.length - 1 && slot === 'rrAbility') { stateItem.lastEvent[slot] = getStatus(this.arcanaActionToStatus(cardId)) }
+						if (index >= lastIndex && index !== this._cardStateLog.length - 1) {
+							stateItem[slot] = getDataBy(STATUSES, 'id', this.arcanaActionToStatus(cardId))
+						}
+						if (index === this._cardStateLog.length - 1 && slot === 'rrAbility') {
+							stateItem.lastEvent[slot] = getDataBy(STATUSES, 'id', this.arcanaActionToStatus(cardId))
+						}
 					}
 				})
 		}

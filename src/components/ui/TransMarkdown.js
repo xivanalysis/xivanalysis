@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
 
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
@@ -33,15 +34,16 @@ const LINK_TYPES = {
 		})
 	},
 
-	status: (statusID, children) => {
-		if (STATUSES[statusID]) {
-			statusID = STATUSES[statusID].id
+	status: (statusId, children) => {
+		const status = getDataBy(STATUSES, 'id', statusId)
+		if (status) {
+			statusId = status.id
 		} else {
-			statusID = parseInt(statusID, 10)
+			statusId = parseInt(statusId, 10)
 		}
 
 		return React.createElement(StatusLink, {
-			id: statusID,
+			id: statusId,
 			name: children,
 		})
 	},

@@ -1,5 +1,6 @@
+import {getDataBy} from 'data'
 import ACTIONS, {getAction} from 'data/ACTIONS'
-import STATUSES, {getStatus} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {Group, Item} from 'parser/core/modules/Timeline'
@@ -169,7 +170,7 @@ export default class Procs extends Module {
 
 	_onComplete() {
 		PROC_BUFFS.forEach(buff => {
-			const status = getStatus(buff)
+			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = 'procbuffs-' + status.id
 			const fightStart = this.parser.fight.start_time
 
