@@ -14,6 +14,9 @@ const DEFAULT_OPTIONS = {
 					second: 'm:ss',
 					millisecond: 'm:ss.SS',
 				},
+				// This tooltip format displays similar to a "relative" timestamp,
+				// since react assumes UNIX epoch timestamps for the data.
+				tooltipFormat: 'mm:ss.SSS',
 			},
 		}],
 	},
