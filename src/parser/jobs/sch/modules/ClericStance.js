@@ -22,20 +22,20 @@ const defaultSeverityTiers = {
 // can override the suggestions from the default template here
 const EXPECTED_CASTS = [
 	{
-		...ACTIONS.CLERIC_STANCE.id, // track GCDs via the CS id
+		...ACTIONS.CLERIC_STANCE, // track GCDs via the CS id
 		name: 'GCD',
 		count: 6,
 	},
 	{
-		...ACTIONS.BIO_II.id,
+		...ACTIONS.BIO_II,
 		count: 1,
 	},
 	{
-		...ACTIONS.MIASMA.id,
+		...ACTIONS.MIASMA,
 		count: 1,
 	},
 	{
-		...ACTIONS.SHADOW_FLARE.id,
+		...ACTIONS.SHADOW_FLARE,
 		count: 1,
 		content: <Fragment>
 			<Trans id="sch.clericstance.suggestion.content.shadow-flare">Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
@@ -89,7 +89,7 @@ export default class ClericStance extends Module {
 	}
 
 	_canShadowFlareBeUsed() {
-		const {id, cooldown} = ACTIONS.SHADOW_FLARE.id
+		const {id, cooldown} = ACTIONS.SHADOW_FLARE
 
 		const cooldownRemaining = this.cooldowns.getCooldownRemaining(id)
 		if (cooldownRemaining - (STATUSES.CLERIC_STANCE.duration * 1000) < this.gcd.getEstimate()) {
