@@ -48,7 +48,7 @@
     "@lingui/react": "^2.5.0",
     "@types/color": "^3.0.0",
     "@xivanalysis/tooltips": "^0.0.4",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "chart.js": "^2.7.2",
     "classnames": "^2.2.6",
     "color": "^3.0.0",
