@@ -142,6 +142,7 @@ const PATCHES = {
 	'4.5': {
 		date: {
 			[GameEdition.GLOBAL]: 1546857979,
+			[GameEdition.KOREAN]: 1560844800,
 		},
 	},
 }
