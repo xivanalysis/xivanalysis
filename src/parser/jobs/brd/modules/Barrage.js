@@ -5,8 +5,9 @@ import {t} from '@lingui/macro'
 import React, {Fragment} from 'react'
 import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
+import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -340,7 +341,7 @@ export default class Barrage extends Module {
 	_setLastWeaponskill(event) {
 
 		this._lastWeaponskill = {
-			action: getAction(event.ability.guid),
+			action: getDataBy(ACTIONS, 'id', event.ability.guid),
 			damageEvents: [event],
 			get id() { return this.action && this.action.id },
 			get timestamp() { return this.damageEvents && this.damageEvents[0] && this.damageEvents[0].timestamp },

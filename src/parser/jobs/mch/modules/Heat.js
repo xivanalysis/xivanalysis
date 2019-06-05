@@ -5,7 +5,8 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -154,7 +155,10 @@ export default class Heat extends Module {
 					this.ammo.negateBadAmmoUse(abilityId)
 				}
 			} else {
-				this._overheatWindows.current.gcdCount = this._overheatWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+				this._overheatWindows.current.gcdCount = this._overheatWindows.current.casts.filter(cast => {
+					const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+					return action && action.onGcd
+				}).length
 				this._overheatWindows.history.push(this._overheatWindows.current)
 				this._heat = 0
 				this._setBarrelState(BARREL_STATE.COOLING, OVERHEAT_DURATION_MILLIS)

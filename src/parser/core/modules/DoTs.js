@@ -1,3 +1,4 @@
+import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
@@ -22,11 +23,13 @@ export default class DoTs extends Module {
 		super(...args)
 		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
 		this.constructor.statusesToTrack.forEach(statusId => {
-			if (!STATUSES[statusId].hasOwnProperty('duration')) {
+			const status = getDataBy(STATUSES, 'id', statusId)
+			if (!status) { return }
+			if (!status.hasOwnProperty('duration')) {
 				console.warn(`statusId ${statusId} is missing a duration property`)
 				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
 			} else {
-				this._statusDuration[statusId] = STATUSES[statusId].duration * 1000
+				this._statusDuration[statusId] = status.duration * 1000
 			}
 		})
 		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)

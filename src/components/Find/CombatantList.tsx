@@ -111,7 +111,9 @@ class CombatantList extends React.Component<Props> {
 				</Header>
 
 				{this.groupedActors.map((friends, index) => {
-					const role = ROLES[index]
+					const role = getDataBy(ROLES, 'id', index)
+					if (!role) { return }
+
 					const showWarning = !warningDisplayed && [
 						ROLES.OUTDATED.id,
 						ROLES.UNSUPPORTED.id,

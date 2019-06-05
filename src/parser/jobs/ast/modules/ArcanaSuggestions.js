@@ -8,8 +8,9 @@ import {DRAWN_ARCANA_USE, HELD_ARCANA_USE, SPEAR_USED} from './ArcanaGroups'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Module from 'parser/core/Module'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import JobIcon from 'components/ui/JobIcon'
+import {getDataBy} from 'data'
 import JOBS from 'data/JOBS'
 import {ActionLink} from 'components/ui/DbLink'
 import styles from './ArcanaSuggestions.module.css'
@@ -215,16 +216,16 @@ export default class ArcanaSuggestions extends Module {
 	RenderAction(artifact) {
 		if (artifact.lastAction.isArcana) {
 			const status = artifact.lastAction.rrAbility || null
+			const targetJob = getDataBy(JOBS, 'logType', artifact.lastAction.targetJob)
+
 			return <Table.Cell>
-				<ActionLink {...getAction(artifact.lastAction.id)} />
+				<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastAction.id)} />
 				{status && <img
 					src={status.icon}
 					className={styles.buffIcon}
 					alt={status.name}
 				/> }<br/>
-				{artifact.lastAction.targetJob &&
-					<JobIcon job={JOBS[artifact.lastAction.targetJob]}/>
-				}
+				{targetJob && <JobIcon job={targetJob}/>}
 
 				{artifact.lastAction.targetName}
 			</Table.Cell>
@@ -234,7 +235,7 @@ export default class ArcanaSuggestions extends Module {
 				<Fragment>{artifact.lastAction.actionName}</Fragment>
 			}
 			{!artifact.lastAction.overrideDBlink &&
-				<ActionLink {...getAction(artifact.lastAction.id)} />
+				<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastAction.id)} />
 			}
 		</Table.Cell>
 

@@ -20,28 +20,30 @@ const LINK_TYPES = {
 		term,
 	}, children),
 
-	action: (actionID, children) => {
-		if (ACTIONS[actionID]) {
-			actionID = ACTIONS[actionID].id
+	action: (actionId, children) => {
+		const action = ACTIONS[actionId]
+		if (action) {
+			actionId = action.id
 		} else {
-			actionID = parseInt(actionID, 10)
+			actionId = parseInt(actionId, 10)
 		}
 
 		return React.createElement(ActionLink, {
-			id: actionID,
+			id: actionId,
 			name: children,
 		})
 	},
 
-	status: (statusID, children) => {
-		if (STATUSES[statusID]) {
-			statusID = STATUSES[statusID].id
+	status: (statusId, children) => {
+		const status = STATUSES[statusId]
+		if (status) {
+			statusId = status.id
 		} else {
-			statusID = parseInt(statusID, 10)
+			statusId = parseInt(statusId, 10)
 		}
 
 		return React.createElement(StatusLink, {
-			id: statusID,
+			id: statusId,
 			name: children,
 		})
 	},

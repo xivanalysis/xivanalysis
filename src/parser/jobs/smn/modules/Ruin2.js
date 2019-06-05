@@ -1,7 +1,8 @@
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -49,8 +50,12 @@ export default class Ruin2 extends Module {
 
 	// Limiting to player, not worried about pets for this check
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
-		const lastGcdAction = this._lastGcd? getAction(this._lastGcd.ability.guid) : {}
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action) { return }
+
+		const lastGcdActionId = this._lastGcd
+			? this._lastGcd.ability.guid
+			: undefined
 
 		if (!action.onGcd) {
 			this._ogcdUsed = true
@@ -68,7 +73,7 @@ export default class Ruin2 extends Module {
 		// If there was no oGCD cast between the R2 and now, mark an issue
 		if (
 			action.onGcd &&
-			lastGcdAction.id === ACTIONS.RUIN_II.id &&
+			lastGcdActionId === ACTIONS.RUIN_II.id &&
 			!this._ogcdUsed &&
 			invulnTime === 0
 		) {

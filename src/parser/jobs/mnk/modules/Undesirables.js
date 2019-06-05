@@ -3,7 +3,8 @@ import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Table} from 'semantic-ui-react'
@@ -94,7 +95,7 @@ export default class Undesirables extends Module {
 			<Table.Body>
 				{this._undesirables.map(bad => {
 					return <Table.Row key={bad.timestamp}>
-						<Table.Cell><ActionLink {...getAction(bad.id)} /></Table.Cell>
+						<Table.Cell><ActionLink {...getDataBy(ACTIONS, 'id', bad.id)} /></Table.Cell>
 						<Table.Cell>{this.parser.formatTimestamp(bad.timestamp)}</Table.Cell>
 					</Table.Row>
 				})}

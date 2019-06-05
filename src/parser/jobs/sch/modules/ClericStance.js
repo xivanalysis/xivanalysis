@@ -3,7 +3,8 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import _ from 'lodash'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Accordion, Message, Icon} from 'semantic-ui-react'
@@ -21,20 +22,20 @@ const defaultSeverityTiers = {
 // can override the suggestions from the default template here
 const EXPECTED_CASTS = [
 	{
-		...getAction(ACTIONS.CLERIC_STANCE.id), // track GCDs via the CS id
+		...ACTIONS.CLERIC_STANCE, // track GCDs via the CS id
 		name: 'GCD',
 		count: 6,
 	},
 	{
-		...getAction(ACTIONS.BIO_II.id),
+		...ACTIONS.BIO_II,
 		count: 1,
 	},
 	{
-		...getAction(ACTIONS.MIASMA.id),
+		...ACTIONS.MIASMA,
 		count: 1,
 	},
 	{
-		...getAction(ACTIONS.SHADOW_FLARE.id),
+		...ACTIONS.SHADOW_FLARE,
 		count: 1,
 		content: <Fragment>
 			<Trans id="sch.clericstance.suggestion.content.shadow-flare">Try to land a <ActionLink {...ACTIONS.SHADOW_FLARE} /> during <ActionLink {...ACTIONS.CLERIC_STANCE} /> if both will be available at the same time.
@@ -88,7 +89,7 @@ export default class ClericStance extends Module {
 	}
 
 	_canShadowFlareBeUsed() {
-		const {id, cooldown} = getAction(ACTIONS.SHADOW_FLARE.id)
+		const {id, cooldown} = ACTIONS.SHADOW_FLARE
 
 		const cooldownRemaining = this.cooldowns.getCooldownRemaining(id)
 		if (cooldownRemaining - (STATUSES.CLERIC_STANCE.duration * 1000) < this.gcd.getEstimate()) {
@@ -150,7 +151,10 @@ export default class ClericStance extends Module {
 	_getActualCastsPerRotation(rotation, id) {
 		switch (id) {
 		case ACTIONS.CLERIC_STANCE.id: // sneaky way to check if GCD
-			return rotation.filter(event => getAction(event.ability.guid).onGcd).length
+			return rotation.filter(event => {
+				const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+				return action && action.onGcd
+			}).length
 		default:
 			return rotation.filter(event => event.ability.guid === +id).length
 		}
