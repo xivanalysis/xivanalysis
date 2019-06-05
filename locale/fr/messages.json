@@ -408,7 +408,7 @@
   "nin.ninki.suggestions.frog.why": "",
   "nin.ninki.suggestions.waste.content": "Évitez d'utiliser <0/> quand vous avez plus de 60 points à votre jauge ou de retenir vos techniques utilisant du Ninki quand elle est remplie au max ou presque. Il y a des petites exceptions à cette règle mais la suivre vous aidera à maximiser le nombre de ces techniques que vous pourrez lancer au cours d'un combat.",
   "nin.ninki.suggestions.waste.why": "",
-  "nin.ninki.title": "",
+  "nin.ninki.title": "Évolution de la jauge de Ninki",
   "nin.shadowfang.checklist.description": "<0/> est votre finisseur de combo le plus fort (supposant que le DoT marque au moins 4 ticks). De plus, il applique un malus de résistance aux dégâts tranchants dont vous, les Guerriers et les Samouraïs êtes responsables de ré-appliquer sans jamais le laisser disparaître.",
   "nin.shadowfang.checklist.name": "Maintenir l'effet Croc d'ombre en permanence",
   "nin.shadowfang.checklist.requirement.name": "Temps d'activité total de/d' <0/>",
