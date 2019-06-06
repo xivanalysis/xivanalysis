@@ -63,6 +63,7 @@ export default class RotationWatchdog extends Module {
 	_extraF1s = 0
 	_UIEndingInT3 = 0
 	_missedF4sCauseEndingInT3 = 0
+	_extraT3s = 0
 	_rotationsWithoutFire = 0
 	_umbralIceBeforeFire = 0
 	_atypicalAFStartId = false
@@ -227,11 +228,25 @@ export default class RotationWatchdog extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DESPAIR.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
-					Casting <ActionLink {...ACTIONS.BLIZZARD_III} /> to enter Umbral Ice costs no MP, so you should always end Astral Fire with a <ActionLink {...ACTIONS.DESPAIR} /> to make full use of your MP.
+					Casting <ActionLink {...ACTIONS.BLIZZARD_III} /> to enter Umbral Ice costs no MP. Always end Astral Fire with a <ActionLink {...ACTIONS.DESPAIR} /> to make full use of your MP.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-					You ended <Plural value={this._astralFiresNotEndedWithDespair} one="# Astral Fire cycles" other="# Astral Fire cycles"/> with a spell other than <ActionLink {...ACTIONS.DESPAIR} />.
+					<Plural value={this._astralFiresNotEndedWithDespair} one="# Astral Fire phase" other="# Astral Fire phases"/> ended with a spell other than <ActionLink {...ACTIONS.DESPAIR} />.
+				</Trans>,
+			}))
+		}
+
+		//Suggestion for hard T3s under AF. Should only have one per cycle
+		if (this._extraT3s) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.THUNDER_III_FALSE.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
+					Don't hard cast more than one <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
+					<Plural value={this._extraT3s} one="# extra Thunder III" other="# extra Thunder IIIs"/> were hard casted under Astral Fire.
 				</Trans>,
 			}))
 		}
@@ -308,12 +323,15 @@ export default class RotationWatchdog extends Module {
 			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.MANAFONT.id).length > 0
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+			if (hardT3Count > 1) {
+				this._extraT3s++
+			}
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasManafont)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			if (this._rotation.missingCount.missing > 0 || hardT3Count > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._rotation.missingCount.missing > 0 || hardT3Count > 1 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
 
 				//Check if you actually lost an F4 due to ending UI in T3
