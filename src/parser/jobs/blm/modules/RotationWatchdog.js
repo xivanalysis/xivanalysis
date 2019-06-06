@@ -37,6 +37,7 @@ export default class RotationWatchdog extends Module {
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
 	static dependencies = [
+		'checklist',
 		'suggestions',
 		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
 		'invuln',
@@ -62,7 +63,6 @@ export default class RotationWatchdog extends Module {
 	_extraF1s = 0
 	_UIEndingInT3 = 0
 	_missedF4sCauseEndingInT3 = 0
-	_wrongT3 = 0
 	_rotationsWithoutFire = 0
 	_umbralIceBeforeFire = 0
 	_atypicalAFStartId = false
@@ -123,12 +123,6 @@ export default class RotationWatchdog extends Module {
 					this._atypicalAFStartId = ACTIONS.FIRE_III.id
 				}
 			}
-		}
-
-		//If my T3 isn't a proc already and cast under AF, it's straight up wrong.
-		if (!event.ability.overrideAction && actionId === ACTIONS.THUNDER_III.id && this._AF > 0) {
-			event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
-			this._wrongT3 ++
 		}
 
 		//start and stop trigger for our rotations is B3
@@ -221,20 +215,6 @@ export default class RotationWatchdog extends Module {
 			}))
 		}
 
-		//Suggestion for hard T3s under AF. Will be enabled as soon as T3Ps stop being dumb
-		if (this._wrongT3) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
-					Never hard cast a <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-					<Plural value={this._wrongT3} one="# Thunder III" other="# Thunder IIIs"/> were hard casted under Astral Fire.
-				</Trans>,
-			}))
-		}
-
 		// Suggestion not to icemage... :(
 		if (this._rotationsWithoutFire > 0) {
 			this.suggestions.add(new TieredSuggestion({
@@ -303,6 +283,7 @@ export default class RotationWatchdog extends Module {
 			// TODO: Handle Flare?
 			const fire4Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_IV.id).length
 			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_I.id).length
+			const despairCount = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.DESPAIR.id).length
 			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.MANAFONT.id).length > 0
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
@@ -323,7 +304,7 @@ export default class RotationWatchdog extends Module {
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				//Also throw out rotations with no Fire spells
 				const fire3Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_III.id).length
-				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+				const fireCount = [fire3Count, fire1Count, fire4Count, despairCount].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 				if (fireCount === 0) {
 					this._rotationsWithoutFire++
 				}
