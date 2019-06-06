@@ -66,6 +66,7 @@ export default class RotationWatchdog extends Module {
 	_rotationsWithoutFire = 0
 	_umbralIceBeforeFire = 0
 	_atypicalAFStartId = false
+	_astralFiresNotEndedWithDespair = 0
 
 	_gaugeState = {}
 
@@ -128,6 +129,12 @@ export default class RotationWatchdog extends Module {
 		//start and stop trigger for our rotations is B3
 		if (actionId === ACTIONS.BLIZZARD_III.id) {
 			if (!this._first) { this._stopRecording() }
+			if (this._inRotation) {
+				const previousEvent = this._rotation.casts[this.rotation.casts.length-1]
+				if (previousEvent.ability.guid !== ACTIONS.DESPAIR.id) {
+					this._astralFiresNotEndedWithDespair++
+				}
+			}
 			this._startRecording(event)
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
@@ -211,6 +218,20 @@ export default class RotationWatchdog extends Module {
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.rotation-watchdog.suggestions.f4-lost-to-t3-finisher.why">
 					Ending Umbral Ice with a Thunder III costed you <Plural value={this._missedF4sCauseEndingInT3} one="# Fire IV" other="# Fire IVs"/>.
+				</Trans>,
+			}))
+		}
+
+		// Suggestion to end Astral Fires with Despair
+		if (this._astralFiresNotEndedWithDespair) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DESPAIR.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
+					Casting <ActionLink {...ACTIONS.BLIZZARD_III} /> to enter Umbral Ice costs no MP, so you should always end Astral Fire with a <ActionLink {...ACTIONS.DESPAIR} /> to make full use of your MP.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
+					You ended <Plural value={this._astralFiresNotEndedWithDespair} one="# Astral Fire cycles" other="# Astral Fire cycles"/> with a spell other than <ActionLink {...ACTIONS.DESPAIR} />.
 				</Trans>,
 			}))
 		}
