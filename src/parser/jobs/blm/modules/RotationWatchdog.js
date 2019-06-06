@@ -6,9 +6,11 @@ import React, {Fragment} from 'react'
 import {Trans, Plural} from '@lingui/react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
@@ -151,6 +153,13 @@ export default class RotationWatchdog extends Module {
 		this._startRecording(event)
 	}
 
+	_getThunderUptime() {
+		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
+		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+
+		return (statusTime / uptime) * 100
+	}
+
 	_onComplete() {
 		this._lastStop = true
 		this._stopRecording()
@@ -244,6 +253,20 @@ export default class RotationWatchdog extends Module {
 				</Trans>,
 			}))
 		}
+
+		this.checklist.add(new Rule({
+			name: <Trans id="blm.rotation-watchdog.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
+			description: <Trans id="blm.rotation-watchdog.checklist.dots.description">
+				Your <StatusLink {...STATUSES.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...STATUSES.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Fragment><StatusLink {...STATUSES.THUNDER_III} /> uptime</Fragment>,
+					percent: () => this._getThunderUptime(),
+				}),
+			],
+		}))
 	}
 
 	//if transpose is used under Encounter invul the recording gets resetted
