@@ -8,6 +8,7 @@ import {Icon} from  'semantic-ui-react'
 import {Container} from 'akkd'
 import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
+import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
@@ -104,6 +105,8 @@ class App extends Component {
 				</div>
 
 				<Container className={styles.content}>
+					<BranchBanner/>
+
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/" component={Home}/>
