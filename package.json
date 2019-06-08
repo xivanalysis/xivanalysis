@@ -39,11 +39,11 @@
     "format": "minimal"
   },
   "resolutions": {
-    "@babel/core": "^7.1.0",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^9.0.0"
   },
   "dependencies": {
+    "@babel/core": "^7.1.0",
     "@babel/polyfill": "^7.0.0",
     "@lingui/react": "^2.5.0",
     "@types/color": "^3.0.0",
