@@ -38,11 +38,13 @@ export function getPathMatch(pathname: string) {
 	return matchPath(pathname, {path})
 }
 
+type SortaEnum = Record<string|number, string|number>
 /**
  * Create reverse key<->value mappings for an object and then freeze it to prevent further modifications.
  * @param {*KeyValue object to reverse map} obj
+ * @deprecated Use typescript if you want real enums plsthank
  */
-export function enumify<T extends Record<string|number, string|number>>(obj: T): Readonly<T> {
+export function enumify(obj: SortaEnum): Readonly<SortaEnum> {
 	for (const [key, val] of Object.entries(obj)) {
 		obj[val] = key
 	}
