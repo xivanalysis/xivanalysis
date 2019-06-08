@@ -822,7 +822,7 @@
     "@babel/core" "^7.1.6"
     babel-loader "^8.0.4"
 
-"@neutrinojs/copy@^9.0.0-beta.1":
+"@neutrinojs/copy@9.0.0-rc.0":
   version "9.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/@neutrinojs/copy/-/copy-9.0.0-rc.0.tgz#9463e6557338a8433afff58fbaba206d38f2039b"
   integrity sha512-/Ucrl+jHi1lCbVtQ9tVPijLgP/vEjxWSORjTE9DF22BsyVv0HUPcWiWBj+Ahv3ZFS7B2gmMx6CK056OK+uqMmg==
@@ -834,7 +834,7 @@
   resolved "https://registry.yarnpkg.com/@neutrinojs/dev-server/-/dev-server-9.0.0-rc.0.tgz#398033327fe7ec8d16a43ab7d3659ccb791a0acc"
   integrity sha512-m6xTvCYfCdxZSvIP+Tm1vMiXH0q11y3rMwnk6i7dGkzmA6mc76tNOPLy4jJkuXNdjMdjo1ZcT4oi0cw8IZNF/Q==
 
-"@neutrinojs/eslint@^9.0.0-beta.1":
+"@neutrinojs/eslint@9.0.0-rc.0":
   version "9.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/@neutrinojs/eslint/-/eslint-9.0.0-rc.0.tgz#dce10e2fb788b64d00d93267d1d1253eeb7a8450"
   integrity sha512-OBMDWhXMOPkd/OABruTHjhEf6THyIkHOR69giOFjYnBWZesFjKiZiWHGB6USEQ/DNzfLyS8S7iq1sMggQHSD+w==
@@ -873,7 +873,7 @@
     file-loader "^2.0.0"
     url-loader "^1.1.2"
 
-"@neutrinojs/jest@^9.0.0-beta.1":
+"@neutrinojs/jest@9.0.0-rc.0":
   version "9.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/@neutrinojs/jest/-/jest-9.0.0-rc.0.tgz#3c74fc53fe3f032beb53c9846e2ce1291aac4bc3"
   integrity sha512-oFN8MirxxE4wfLW4snA//3+iCwXEVGzWjkjat47LLOUXDhTQR+RDqeFladcoin7tiYFGSVO7HkHSTfZnW9elkw==
@@ -884,7 +884,7 @@
     deepmerge "^1.5.2"
     eslint-plugin-jest "^22.0.1"
 
-"@neutrinojs/react@^9.0.0-beta.1":
+"@neutrinojs/react@9.0.0-rc.0":
   version "9.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/@neutrinojs/react/-/react-9.0.0-rc.0.tgz#5c73369794066b0f1b6910ce0faa7a839acf1c49"
   integrity sha512-6Q8U2UwPWVRqlqVv90pa8OT0Al9Fyqx5SIM+UAF2ZIOWTTsR1sBOnruZlauBSwL8qvf7BWGivvK55PErqkP0Jg==
@@ -6702,7 +6702,7 @@ neo-async@^2.5.0:
   resolved "https://registry.yarnpkg.com/neo-async/-/neo-async-2.6.0.tgz#b9d15e4d71c6762908654b5183ed38b753340835"
   integrity sha512-MFh0d/Wa7vkKO3Y3LlacqAEeHK0mckVqzDieUKTT+KGxi+zIpeVsFxymkIiRpbpDziHc290Xr9A1O4Om7otoRA==
 
-neutrino@^9.0.0-beta.1:
+neutrino@9.0.0-rc.0:
   version "9.0.0-rc.0"
   resolved "https://registry.yarnpkg.com/neutrino/-/neutrino-9.0.0-rc.0.tgz#7fc5d1c55779778f2f9e46ee4c7fd9fa356fc789"
   integrity sha512-2CvArWrHLgmLTPVY4GIjWpmzPXqb/YWyDISwJ7uwA9X38zzaIRuSxtdPSMLJWk6CskiLM2qGBXUY5L1NKGBzdg==
