@@ -7,7 +7,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-import Kenki from './Kenki'
 
 enum SEN {
 	SETSU = 'Setsu',
@@ -31,12 +30,9 @@ const IAIJUTSU = [
 	ACTIONS.MIDARE_SETSUGEKKA.id,
 ]
 
-const KENKI_PER_SEN = 20
-
 export default class Sen extends Module {
 	static handle = 'sen'
 
-	@dependency private kenki!: Kenki
 	@dependency private suggestions!: Suggestions
 
 	private sen: {[S in SEN]?: boolean} = {}
@@ -54,12 +50,12 @@ export default class Sen extends Module {
 		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
 		this.addHook('death', {to: 'player'}, this.remove)
 
-		// Hagakure because he's a speshul boi
-		this.addHook(
-			'cast',
-			{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
-			this.onHagakure,
-		)
+		// Hagakure because he's was a speshul boi, but now he's dead jim. He's DEAD!
+		// this.addHook(
+		//	'cast',
+		//	{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
+		//	this.onHagakure,
+		// )
 
 		// Suggestion time~
 		this.addHook('complete', this.onComplete)
@@ -77,17 +73,6 @@ export default class Sen extends Module {
 
 	private remove() {
 		this.sen = _.mapValues(this.sen, () => false)
-	}
-
-	private onHagakure() {
-		// Work out how many sen are currently active
-		const activeSen = Object.values(this.sen)
-			.filter(active => active)
-			.length
-
-		// Add the new kenki, wipe the sen
-		this.kenki.modify(activeSen * KENKI_PER_SEN)
-		this.remove()
 	}
 
 	private onComplete() {
