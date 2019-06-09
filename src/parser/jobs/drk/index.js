@@ -17,10 +17,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.3',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.3',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},

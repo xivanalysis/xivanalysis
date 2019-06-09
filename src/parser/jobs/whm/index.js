@@ -35,10 +35,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.05',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.05',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},

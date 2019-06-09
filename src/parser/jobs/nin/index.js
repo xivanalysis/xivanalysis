@@ -20,10 +20,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.1',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.1',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],

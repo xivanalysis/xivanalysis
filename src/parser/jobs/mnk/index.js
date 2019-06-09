@@ -25,10 +25,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.2',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.2',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
 	],
