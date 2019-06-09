@@ -118,6 +118,8 @@
   "core.analyse.load-report": "Loading report",
   "core.analyse.see-more": "See more",
   "core.analyse.view-on-fflogs": "View report on FF Logs",
+  "core.branch-banner.description": "This version of xivanalysis cannot provide meaningful analysis for reports that were logged during {patchKey}. Please click here to analyse this log using the {patchKey} version of the site.",
+  "core.branch-banner.header": "This report is from a different expansion!",
   "core.broken-log.broken-log.description": "One or more modules have reported that this log contains inconsistencies that would suggest data is missing or incorrect. While the system does try to maintain sane results in this situation, some statistics may be inaccurate.",
   "core.broken-log.broken-log.title": "This log is broken.",
   "core.broken-log.list.module": "Module",
