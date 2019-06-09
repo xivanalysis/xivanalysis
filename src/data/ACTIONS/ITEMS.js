@@ -1,6 +1,8 @@
 // Items need to be cast, so they appear (and are used as) actions
 // TODO: Should I keep items in a seperate data/ import and just translate to actions here, or keep as-is?
 
+export const ITEM_ID_OFFSET = 1000000
+
 const ITEMS = {
 	INFUSION_STR: {
 		id: 19886,
@@ -101,6 +103,6 @@ const ITEMS = {
 
 // Items have an ID 1m higher than the xivapi ID
 Object.values(ITEMS).forEach(item => {
-	item.id += 1000000
+	item.id += ITEM_ID_OFFSET
 })
 export default ITEMS

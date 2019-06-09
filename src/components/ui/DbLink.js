@@ -1,5 +1,6 @@
 import {Trans} from '@lingui/react'
 import {Provider as TooltipProvider, tooltipHOC} from '@xivanalysis/tooltips'
+import {ITEM_ID_OFFSET} from 'data/ACTIONS/ITEMS'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {inject, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
@@ -96,7 +97,16 @@ export const StatusLink = props => <Tooltip
 	{...props}
 	id={props.id - STATUS_ID_OFFSET}
 />
+export const ItemLink = props => <Tooltip
+	type="Item"
+	{...props}
+	id={props.id - ITEM_ID_OFFSET}
+/>
 
 StatusLink.propTypes = {
+	id: PropTypes.number.isRequired,
+}
+
+ItemLink.propTypes = {
 	id: PropTypes.number.isRequired,
 }
