@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import {ActionLink} from 'components/ui/DbLink'
@@ -106,14 +106,14 @@ export default class GCDs extends Module {
 		//dropped combo chain
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SPINNING_SLASH.icon,
-			content: <Fragment>
-				You dropped your GCD combo, loosing out on potency and/or mana.
-			</Fragment>,
+			content: <>
+				You dropped your GCD combo, losing out on potency and/or mana.
+			</>,
 			tiers: _severityDroppedGCDCombo,
 			value: this._GCDChainDrops.length,
-			why: <Fragment>
+			why: <>
 				You wasted {this._GCDChainDrops.length} GCD chain actions.
-			</Fragment>,
+			</>,
 		}))
 	}
 
@@ -124,16 +124,16 @@ export default class GCDs extends Module {
 				return {
 					key: 'panel-' + entry.timestamp,
 					title: {
-						content: <Fragment>
+						content: <>
 							{this.parser.formatTimestamp(entry.timestamp)}
-						</Fragment>,
+						</>,
 					},
 					content: {
 						content: <Rotation events={entry.events}/>,
 					},
 				}
 			})
-			return <Fragment>
+			return <>
 				<Message>
 					Dropping GCD combo prevents mana generation from <ActionLink {...ACTIONS.SYPHON_STRIKE}/> and blood generation from <ActionLink {...ACTIONS.SOULEATER}/>, as well as lowering action potency.
 				</Message>
@@ -143,7 +143,7 @@ export default class GCDs extends Module {
 					styled
 					fluid
 				/>
-			</Fragment>
+			</>
 		}
 		return false
 	}

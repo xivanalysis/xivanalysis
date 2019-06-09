@@ -80,7 +80,7 @@ class CombatantList extends React.Component<Props> {
 				const {lang, start} = this.props.report
 				const from = supportedPatches.from as PatchNumber
 				const to = (supportedPatches.to as PatchNumber) || from
-				if (!patchSupported(languageToEdition(lang), from, to, start)) {
+				if (!patchSupported(languageToEdition(lang), from, to, start / 1000)) {
 					role = ROLES.OUTDATED.id
 				}
 			}

@@ -18,6 +18,11 @@ export class ReportStore {
 	@observable report?: PossiblyLoadedReport
 
 	@action
+	clearReport() {
+		this.report = undefined
+	}
+
+	@action
 	private async fetchReport(code: string, params?: ReportFightsQuery['params']) {
 		this.report = {loading: true}
 

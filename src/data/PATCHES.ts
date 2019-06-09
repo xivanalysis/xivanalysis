@@ -25,9 +25,18 @@ export function languageToEdition(lang: ReportLanguage): GameEdition {
 	throw new Error()
 }
 
+// Using global as a source of truth on the order of patch keys
+type PatchDates =
+	& Partial<Record<GameEdition, number>>
+	& {[GameEdition.GLOBAL]: number}
+
+interface PatchBranch {
+	baseUrl: string
+}
+
 export interface Patch {
-	// Using global as a source of truth on the order of patch keys
-	date: Partial<Record<GameEdition, number>> & {[GameEdition.GLOBAL]: number}
+	date: PatchDates
+	branch?: PatchBranch
 }
 
 // This is all right from /PatchList - should be easy to sync Eventually™
@@ -142,6 +151,15 @@ const PATCHES = {
 	'4.5': {
 		date: {
 			[GameEdition.GLOBAL]: 1546857979,
+			[GameEdition.KOREAN]: 1560844800,
+		},
+	},
+	'Shadowbringers': {
+		date: {
+			[GameEdition.GLOBAL]: 1561712400, // 28/06/19 09:00:00 GMT
+		},
+		branch: {
+			baseUrl: 'https://shadowbringers.xivanalysis.com',
 		},
 	},
 }
