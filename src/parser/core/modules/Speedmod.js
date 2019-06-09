@@ -10,8 +10,8 @@ export default class Speedmod extends Module {
 	static handle = 'speedmod'
 	static dependencies = [
 		// We rely on these modules for normaliser logic
-		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'arcanum', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	// List of statuses we natively handle (See SpeedmodConsts)

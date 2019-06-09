@@ -1,7 +1,7 @@
 import Module from './Module'
 import Parser from './Parser'
 
-/* eslint-disable xivanalysis/no-unused-dependencies, no-magic-numbers */
+/* eslint-disable @xivanalysis/no-unused-dependencies, no-magic-numbers */
 
 // Testing modules
 class BasicModule extends Module {

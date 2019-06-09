@@ -40,7 +40,7 @@ export default class DWT extends Module {
 	static handle = 'dwt'
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
-		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'aoe', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
 		'gauge',

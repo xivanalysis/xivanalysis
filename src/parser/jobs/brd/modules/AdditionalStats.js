@@ -66,10 +66,10 @@ const BASE_CRIT_PROBABILITY = 50 //5%
 export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
 	static dependencies = [
-		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'additionalEvents', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'arcanum', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'combatants',
-		'hitType', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'hitType', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	// Represents a map of IDs and statuses for each enemy in this parse

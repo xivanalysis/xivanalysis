@@ -40,7 +40,7 @@ export default class Aetherflow extends Module {
 	static title = t('smn.aetherflow.title')`Aetherflow`
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
-		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'aoe', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'checklist',
 		'cooldowns',
 		'enemies',

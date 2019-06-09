@@ -1266,10 +1266,20 @@
     "@webassemblyjs/wast-parser" "1.8.5"
     "@xtuc/long" "4.2.2"
 
-"@xivanalysis/tooltips@^0.0.4":
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.4.tgz#f45814c2260c0841b19eb239ba2c8292dd0cd1de"
-  integrity sha512-CBGi69pXGunzOvhKl9yyoZEytD5ifFhZjXx+WFjP7gEvBleN8qqLw8Z1NDvWlQvOT/K6z5LBmykDXLop62aHhw==
+"@xivanalysis/eslint-plugin@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/eslint-plugin/-/eslint-plugin-0.0.2.tgz#21104af1025aca7ee2a4d0ecae05d4a59ca606bc"
+  integrity sha512-g9ixF09DaWWC+EWdPT9kk1+h5n6D6eofVGin144TkZ+4bliKLaAnys8RvNLS14IccxyS/PpAaTSJM0R9wcuF4A==
+  dependencies:
+    eslint-plugin-babel "^5.2.0"
+    eslint-plugin-jest "^21.22.0"
+    eslint-plugin-react "^7.11.1"
+    requireindex "^1.1.0"
+
+"@xivanalysis/tooltips@^0.0.5":
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.5.tgz#172b565051425923aed09d05a879fa2163d8e80d"
+  integrity sha512-fl1iKQhbC602HOYjwz/jvAJqD4+vOdno/fk9vGWt/muxs/U2pNhEStaq6BiUJB/iM4sgxrHM4MHXHoZAVgnhvQ==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
@@ -3594,15 +3604,6 @@ eslint-plugin-react@^7.11.1:
     object.fromentries "^2.0.0"
     prop-types "^15.6.2"
     resolve "^1.9.0"
-
-eslint-plugin-xivanalysis@xivanalysis/linter:
-  version "0.0.1"
-  resolved "https://codeload.github.com/xivanalysis/linter/tar.gz/541826be28fd2751297850f26297e633dafaa8ad"
-  dependencies:
-    eslint-plugin-babel "^5.2.0"
-    eslint-plugin-jest "^21.22.0"
-    eslint-plugin-react "^7.11.1"
-    requireindex "^1.1.0"
 
 eslint-rule-composer@^0.3.0:
   version "0.3.0"

@@ -15,7 +15,7 @@ export default class Speedmod extends CoreSpeedmod {
 	// Force modules to run before Speedmod. ie: normalise to Greased Lightning events so Speedmod can pick them up natively
 	static dependencies = [
 		...CoreSpeedmod.dependencies,
-		'greasedlightning', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'greasedlightning', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	_isRofActive = false

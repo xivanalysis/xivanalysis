@@ -53,8 +53,8 @@ const HELD_ACTION_TO_STATUS_LOOKUP = _.zipObject(HELD_ARCANA_USE, [...HELD_ARCAN
 export default class ArcanaTracking extends Module {
 	static handle = 'arcanaTracking'
 	static dependencies = [
-		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'arcanum', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'arcanum', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'suggestions',
 	]
 	static title = t('ast.arcana-tracking.title')`Arcana Tracking`
