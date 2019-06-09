@@ -67,26 +67,30 @@ class CombatantList extends React.Component<Props> {
 	findRole(type: ActorType): Role['id'] {
 		const jobMeta = AVAILABLE_MODULES.JOBS
 
-		// Find the role for the player's job.
-		// Jobs without parses, and jobs with outdated parsers get special roles.
-		let role = ROLES.UNSUPPORTED.id
-		if (type in jobMeta) {
-			const job = getDataBy(JOBS, 'logType', type)
-			if (!job) { throw new Error(`No configured job data found for type '${type}'`) }
-			role = job.role
-
-			const supportedPatches = jobMeta[type].supportedPatches
-			if (supportedPatches) {
-				const {lang, start} = this.props.report
-				const from = supportedPatches.from as PatchNumber
-				const to = (supportedPatches.to as PatchNumber) || from
-				if (!patchSupported(languageToEdition(lang), from, to, start / 1000)) {
-					role = ROLES.OUTDATED.id
-				}
-			}
+		// If we don't have any meta for the job, shortcut with UNSUPPORTED
+		if (!(type in jobMeta)) {
+			return ROLES.UNSUPPORTED.id
 		}
 
-		return role
+		const {supportedPatches} = jobMeta[type]
+
+		// If there's no supported patches, shortcut with UNSUPPORTED
+		if (!supportedPatches) {
+			return ROLES.UNSUPPORTED.id
+		}
+
+		// Get patch suport data, and check if it's outdated
+		const {lang, start} = this.props.report
+		const from = supportedPatches.from as PatchNumber
+		const to = (supportedPatches.to as PatchNumber) || from
+		if (!patchSupported(languageToEdition(lang), from, to, start / 1000)) {
+			return ROLES.OUTDATED.id
+		}
+
+		// We got this far - must support it. Return the job's in-game role.
+		const job = getDataBy(JOBS, 'logType', type)
+		if (!job) { throw new Error(`No configured job data found for type '${type}'`) }
+		return job.role
 	}
 
 	render() {
