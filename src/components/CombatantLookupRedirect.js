@@ -1,17 +1,14 @@
 import {Trans} from '@lingui/react'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Redirect} from 'react-router'
 import {Container, Loader} from 'semantic-ui-react'
+import {StoreContext} from 'store'
 
-import {ReportStore} from 'store/report'
-
-@inject('reportStore')
 @observer
 class CombatantLookupRedirect extends React.Component {
 	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
@@ -22,14 +19,17 @@ class CombatantLookupRedirect extends React.Component {
 		}).isRequired,
 	}
 
+	static contextType = StoreContext
+
 	componentDidMount() {
-		const {reportStore, match} = this.props
+		const {reportStore} = this.context
+		const {match} = this.props
 		reportStore.fetchReportIfNeeded(match.params.code)
 	}
 
 	render() {
+		const {reportStore} = this.context
 		const {
-			reportStore,
 			match: {params},
 		} = this.props
 

@@ -1,22 +1,21 @@
 import {Trans} from '@lingui/react'
 import {Segment} from 'akkd'
 import PATCHES, {getPatch, languageToEdition} from 'data/PATCHES'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import React from 'react'
 import {RouteComponentProps, withRouter} from 'react-router'
 import {Header} from 'semantic-ui-react'
-import {ReportStore} from 'store/report'
+import {StoreContext} from 'store'
 import styles from './BranchBanner.module.css'
 
-interface Props extends RouteComponentProps {
-	reportStore?: ReportStore
-}
-
-@inject('reportStore')
 @observer
-class BranchBannerComponent extends React.Component<Props> {
+class BranchBannerComponent extends React.Component<RouteComponentProps> {
+	static contextType = StoreContext
+	context!: React.ContextType<typeof StoreContext>
+
 	render() {
-		const {location, reportStore} = this.props
+		const {reportStore} = this.context
+		const {location} = this.props
 		const {report} = reportStore!
 
 		// If there's no report, or it's still loading, there's not much we can display

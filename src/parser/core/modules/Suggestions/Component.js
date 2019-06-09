@@ -1,14 +1,14 @@
 import {Trans} from '@lingui/react'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
-
 // Direct path import 'cus it'll be a dep loop otherwise
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
 import {SettingsStore} from 'store/settings'
 
 import styles from './Suggestions.module.css'
+import {StoreContext} from 'store'
 
 const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MORBID]: {content: <Trans id="core.suggestions.severity.morbid">Morbid</Trans>, color: 'black', icon: 'times'},
@@ -17,7 +17,6 @@ const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MINOR]: {content: <Trans id="core.suggestions.severity.minor">Minor</Trans>, color: 'blue', icon: 'arrow down'},
 }
 
-@inject('settingsStore')
 @observer
 class Suggestions extends React.Component {
 	static propTypes = {
@@ -30,12 +29,15 @@ class Suggestions extends React.Component {
 		})).isRequired,
 	}
 
+	static contextType = StoreContext
+
 	onToggleShowMinor = (_, data) => {
-		this.props.settingsStore.setShowMinorSuggestions(data.checked)
+		const {settingsStore} = this.context
+		settingsStore.setShowMinorSuggestions(data.checked)
 	}
 
 	render() {
-		const showMinor = this.props.settingsStore.showMinorSuggestions
+		const showMinor = this.context.settingsStore.showMinorSuggestions
 
 		const suggestions = this.props.suggestions.filter(
 			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR

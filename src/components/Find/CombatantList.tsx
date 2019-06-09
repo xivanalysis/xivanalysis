@@ -9,24 +9,25 @@ import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Header} from 'semantic-ui-react'
-import {GlobalErrorStore} from 'store/globalError'
+import {StoreContext} from 'store'
 import {Report} from 'store/report'
 import styles from './CombatantList.module.css'
 
 interface Props {
-	globalErrorStore?: GlobalErrorStore
 	report: Report,
 	currentFight: number
 }
 
-@inject('globalErrorStore')
 @observer
 class CombatantList extends React.Component<Props> {
+	static contextType = StoreContext
+	context!: React.ContextType<typeof StoreContext>
+
 	@computed
 	get groupedActors() {
 		const {
@@ -94,7 +95,7 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	render() {
-		const globalErrorStore = this.props.globalErrorStore!
+		const globalErrorStore = this.context.globalErrorStore
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
 		if (this.groupedActors.length === 0) {
