@@ -26,8 +26,8 @@ export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
 		// We need this to normalise before us
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'castTime', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'castTime', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'downtime',
 		'speedmod',
 		'statistics',

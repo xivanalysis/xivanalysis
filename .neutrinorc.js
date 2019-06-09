@@ -16,8 +16,8 @@ module.exports = {
 			eslint: {
 				baseConfig: {
 					extends: [
-						'plugin:xivanalysis/recommended',
-						'plugin:xivanalysis/client',
+						'plugin:@xivanalysis/recommended',
+						'plugin:@xivanalysis/client',
 					],
 					rules: {
 						'react/display-name': 'off',

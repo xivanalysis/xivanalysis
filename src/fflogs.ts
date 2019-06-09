@@ -1,5 +1,3 @@
-import {AxiosRequestConfig} from 'axios'
-
 // -----
 // Fight
 // -----
@@ -210,12 +208,10 @@ export enum ReportLanguage {
 // Direct API
 // -----
 
-export interface ReportFightsQuery extends AxiosRequestConfig {
-	params?: {
-		translate?: boolean,
-		// This is only a thing when hitting an instance of @xivanalysis/server
-		bypassCache?: boolean,
-	}
+export interface ReportFightsQuery {
+	translate?: boolean,
+	// This is only a thing when hitting an instance of @xivanalysis/server
+	bypassCache?: boolean,
 }
 
 export interface ReportFightsResponse {
@@ -233,20 +229,18 @@ export interface ReportFightsResponse {
 	zone: number
 }
 
-export interface ReportEventsQuery extends AxiosRequestConfig {
-	params?: {
-		start?: number,
-		end?: number,
-		actorid?: Actor['id'],
-		actorinstance?: number,
-		actorclass?: ActorType,
-		cutoff?: number,
-		encounter?: Fight['boss'],
-		wipes?: number,
-		difficulty?: number,
-		filter?: string,
-		translate?: boolean,
-	}
+export interface ReportEventsQuery {
+	start?: number,
+	end?: number,
+	actorid?: Actor['id'],
+	actorinstance?: number,
+	actorclass?: ActorType,
+	cutoff?: number,
+	encounter?: Fight['boss'],
+	wipes?: number,
+	difficulty?: number,
+	filter?: string,
+	translate?: boolean,
 }
 
 export interface ReportEventsResponse {

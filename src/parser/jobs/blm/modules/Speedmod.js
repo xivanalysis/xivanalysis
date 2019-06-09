@@ -10,7 +10,7 @@ const FAST_CAST_SCALAR = 0.5
 export default class Speedmod extends CoreSpeedmod {
 	static dependencies = [
 		...CoreSpeedmod.dependencies,
-		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	_astralFireStacks = 0

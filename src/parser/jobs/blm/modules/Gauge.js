@@ -29,7 +29,7 @@ export default class Gauge extends Module {
 	static handle = 'gauge'
 	static title = t('blm.gauge.title')`Gauge`
 	static dependencies = [
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'suggestions',
 		'brokenLog',
 	]

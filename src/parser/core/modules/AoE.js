@@ -20,8 +20,8 @@ export default class AoE extends Module {
 	static handle = 'aoe'
 	static dependencies = [
 		// Need the precasts to fire first so we've got full info for the aoe calcs
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'precastStatus', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'enemies',
 	]
 

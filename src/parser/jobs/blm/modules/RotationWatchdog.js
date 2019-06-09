@@ -36,7 +36,7 @@ export default class RotationWatchdog extends Module {
 
 	static dependencies = [
 		'suggestions',
-		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'invuln',
 		'combatants',
 	]

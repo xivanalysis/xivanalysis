@@ -1,7 +1,7 @@
 import {fflogsApi} from 'api'
-import {AxiosResponse} from 'axios'
 import * as Errors from 'errors'
 import {ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
 
@@ -23,17 +23,17 @@ export class ReportStore {
 	}
 
 	@action
-	private async fetchReport(code: string, params?: ReportFightsQuery['params']) {
+	private async fetchReport(code: string, params?: ReportFightsQuery) {
 		this.report = {loading: true}
 
-		let response: AxiosResponse<ReportFightsResponse>
+		let response: ReportFightsResponse
 		try {
-			response = await fflogsApi.get<ReportFightsResponse>(`/report/fights/${code}`, {
-				params: {
-					translate: true,
-					...params,
+			response = await fflogsApi.get(`report/fights/${code}`, {
+				searchParams: {
+					translate: 'true',
+					..._.omitBy(params, _.isNil),
 				},
-			})
+			}).json<ReportFightsResponse>()
 		} catch (e) {
 			// Something's gone wrong, clear report status then dispatch an error
 			runInAction(() => {
@@ -52,7 +52,7 @@ export class ReportStore {
 		// Save out the report
 		runInAction(() => {
 			this.report = {
-				...response.data,
+				...response,
 				code,
 				loading: false,
 			}
