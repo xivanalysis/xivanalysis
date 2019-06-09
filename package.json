@@ -59,6 +59,7 @@
     "mathjs": "^5.1.1",
     "mobx": "^5.10.1",
     "mobx-react": "^6.0.3",
+    "mobx-react-lite": "^1.4.0",
     "prop-types": "^15.6.1",
     "raven-js": "^3.26.4",
     "raw-loader": "^3.0.0",
