@@ -1,29 +1,24 @@
 import {Trans} from '@lingui/react'
-import {computed} from 'mobx'
-import {inject, observer} from 'mobx-react'
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {Dropdown, Icon, Image} from 'semantic-ui-react'
-
 import {LANGUAGES} from 'data/LANGUAGES'
 import {GameEdition} from 'data/PATCHES'
-import {I18nStore} from 'store/i18n'
-
+import {computed} from 'mobx'
+import {observer} from 'mobx-react'
+import React, {Component} from 'react'
+import {Dropdown, Icon, Image} from 'semantic-ui-react'
+import {StoreContext} from 'store'
 import crowdinLogo from './crowdin-dark-symbol.png'
 import styles from './I18nMenu.module.css'
 
 const DEBUG = process.env.NODE_ENV === 'development'
 
-@inject('i18nStore')
 @observer
 class I18nMenu extends Component {
-	static propTypes = {
-		i18nStore: PropTypes.instanceOf(I18nStore),
-	}
+	static contextType = StoreContext
 
 	@computed
 	get availableLanguages() {
-		const currentLanguage = this.props.i18nStore.siteLanguage
+		const {i18nStore} = this.context
+		const currentLanguage = i18nStore.siteLanguage
 		return Object.entries(LANGUAGES)
 			.filter(([lang, data]) => DEBUG || data.enable || currentLanguage === lang)
 			.map(([lang, data]) => ({
@@ -44,22 +39,22 @@ class I18nMenu extends Component {
 	}
 
 	handleChangeSite = (event, data) => {
-		const {i18nStore} = this.props
+		const {i18nStore} = this.context
 		i18nStore.setSiteLanguage(data.value)
 	}
 
 	handleChangeGame = (event, data) => {
-		const {i18nStore} = this.props
+		const {i18nStore} = this.context
 		i18nStore.setGameLanguage(data.value)
 	}
 
 	toggleOverlay = () => {
-		const {i18nStore} = this.props
+		const {i18nStore} = this.context
 		i18nStore.toggleOverlay()
 	}
 
 	render() {
-		const {i18nStore} = this.props
+		const {i18nStore} = this.context
 		const siteLang = LANGUAGES[i18nStore.siteLanguage]
 		const gameLang = LANGUAGES[i18nStore.gameLanguage]
 

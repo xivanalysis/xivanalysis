@@ -23,8 +23,12 @@ configureStorage({
 	settingsStore,
 })
 
+export const StoreContext = React.createContext(stores)
+
 export const StoreProvider: React.FunctionComponent = ({children}) => (
 	<Provider {...stores}>
-		{children}
+		<StoreContext.Provider value={stores}>
+			{children}
+		</StoreContext.Provider>
 	</Provider>
 )

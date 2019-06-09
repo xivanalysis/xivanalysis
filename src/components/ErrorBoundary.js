@@ -1,20 +1,19 @@
-import {observable, action} from 'mobx'
-import {inject, observer} from 'mobx-react'
+import {action, observable} from 'mobx'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import Raven from 'raven-js'
 import React, {Component} from 'react'
 import {Container} from 'semantic-ui-react'
-
-import {GlobalErrorStore} from 'store/globalError'
+import {StoreContext} from 'store'
 import ErrorMessage from './ui/ErrorMessage'
 
-@inject('globalErrorStore')
 @observer
 class ErrorBoundary extends Component {
 	static propTypes = {
-		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		children: PropTypes.node,
 	}
+
+	static contextType = StoreContext
 
 	@observable componentError
 
@@ -25,7 +24,7 @@ class ErrorBoundary extends Component {
 	}
 
 	render() {
-		const error = this.props.globalErrorStore.error || this.componentError
+		const error = this.context.globalErrorStore.error || this.componentError
 
 		if (!error) {
 			return this.props.children
