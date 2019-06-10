@@ -1,3 +1,8 @@
+export interface Pet {
+	id: number
+	name: string
+}
+
 // IDs aren't real IDs per se. Just fudging with summon action IDs and stuff
 const PETS = {
 	// SCH
@@ -54,4 +59,4 @@ const PETS = {
 	},
 }
 
-export default PETS
+export default PETS as Record<keyof typeof PETS, Pet>
