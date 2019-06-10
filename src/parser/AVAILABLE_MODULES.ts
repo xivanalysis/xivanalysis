@@ -1,6 +1,8 @@
 import JOBS from 'data/JOBS'
+import {ActorType} from 'fflogs'
 
 import CORE from './core'
+import {Meta} from './core/Meta'
 
 import AST from './jobs/ast'
 import BLM from './jobs/blm'
@@ -19,6 +21,13 @@ import SCH from './jobs/sch'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
+
+// TODO: Tighten boss record a bit
+interface AvailableModules {
+	CORE: Meta
+	JOBS: Partial<Record<ActorType, Meta>>
+	BOSSES: Record<number, Meta>
+}
 
 export default {
 	CORE,
@@ -50,4 +59,4 @@ export default {
 	BOSSES: {
 		// [BOSSES.SOME_BOSS.logId]: IMPORTED_BOSS_MODULES,
 	},
-}
+} as AvailableModules

@@ -39,12 +39,11 @@ export class Conductor {
 
 	async configure() {
 		// Build the final meta representation
-		// The any cast is required due to some job modules remaining in JS.
 		const rawMetas = [
 			AVAILABLE_MODULES.CORE,
 			AVAILABLE_MODULES.BOSSES[this.fight.boss],
 			AVAILABLE_MODULES.JOBS[this.combatant.type],
-		] as any as ReadonlyArray<Meta|undefined>
+		]
 		const meta = rawMetas
 			.filter(isDefined)
 			.reduce((acc, cur) => acc.merge(cur))

@@ -66,14 +66,14 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	findRole(type: ActorType): Role['id'] {
-		const jobMeta = AVAILABLE_MODULES.JOBS
+		const jobMeta = AVAILABLE_MODULES.JOBS[type]
 
 		// If we don't have any meta for the job, shortcut with UNSUPPORTED
-		if (!(type in jobMeta)) {
+		if (!jobMeta) {
 			return ROLES.UNSUPPORTED.id
 		}
 
-		const {supportedPatches} = jobMeta[type]
+		const {supportedPatches} = jobMeta
 
 		// If there's no supported patches, shortcut with UNSUPPORTED
 		if (!supportedPatches) {
@@ -164,7 +164,8 @@ class CombatantList extends React.Component<Props> {
 	private renderFriend = (friend: Actor) => {
 		const {report, currentFight} = this.props
 		const job = getDataBy(JOBS, 'logType', friend.type)
-		const supportedPatchesData = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+		const jobMeta = AVAILABLE_MODULES.JOBS[friend.type]
+		const supportedPatchesData = jobMeta ? jobMeta.supportedPatches : undefined
 
 		let supportedPatches: React.ReactNode
 		if (supportedPatchesData) {
