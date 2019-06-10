@@ -1,5 +1,6 @@
 import '@babel/polyfill'
 import 'intersection-observer'
+import 'whatwg-fetch'
 
 import Raven from 'raven-js'
 import React from 'react'
