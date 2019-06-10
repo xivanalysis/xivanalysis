@@ -3,11 +3,8 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import STATUSES from 'data/STATUSES'
 import {Meta} from 'parser/core/Meta'
 
 const description = t('smn.about.description')`
@@ -40,15 +37,6 @@ export default new Meta({
 		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
 	],
 
-	changelog: [{
-		date: new Date('2018-11-21'),
-		Changes: () => <>
-			A few small tweaks and adjustments:&nbsp;
-			<ul>
-				<li>Prevented <ActionLink {...ACTIONS.DEATHFLARE}/>s lost due to death from counting towards lost-deathflare suggestion.</li>
-				<li>Adjusted <StatusLink {...STATUSES.SHADOW_FLARE}/> uptime calculation to  exclude time before the first cast.</li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.ACKWELL],
-	}],
+	changelog: [
+	],
 })

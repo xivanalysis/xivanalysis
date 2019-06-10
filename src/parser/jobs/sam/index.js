@@ -31,10 +31,5 @@ export default new Meta({
 	],
 
 	changelog: [
-		{
-			date: new Date('2018-11-04'),
-			Changes: () => <>Added tracking and suggestions for combos, sen, and emulated kenki. Also a kenki graph. I like graphs.</>,
-			contributors: [CONTRIBUTORS.ACKWELL],
-		},
 	],
 })

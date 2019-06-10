@@ -26,15 +26,5 @@ export default new Meta({
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
-		{
-			date: new Date('2019-01-25'),
-			Changes: () => 'Update analyzer for 4.5 patch, remove inaccurate recommendation for DA usage during enmity combo.',
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
-		{
-			date: new Date('2019-02-18'),
-			Changes: () => 'Change to tracking Blood Weapon & Delirium as oGCDs instead of normalized uptime.  Add suggestions for dropped GCDs and wasted Deliriums.',
-			contributors: [CONTRIBUTORS.AZARIAH],
-		},
 	],
 })
