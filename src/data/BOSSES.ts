@@ -1,17 +1,24 @@
 import {getDataBy} from 'data'
+import {Fight} from 'fflogs'
+
+export interface Boss {
+	logId: number
+	overrides: Partial<Fight>
+}
 
 // Correct fight info with manual overrides
-export const getCorrectedFight = fight => {
+export const getCorrectedFight = (fight: Fight): Fight => {
 	const boss = getDataBy(BOSSES, 'logId', fight.boss)
-	const result = {...fight}
-	if (boss) {
-		Object.assign(result, boss.overrides)
+
+	return {
+		...fight,
+		...(boss? boss.overrides : {}),
 	}
-	return result
 }
 
 // Helper to calculate the URL to a zone banner (using my proxy)
-export const getZoneBanner = zoneId => zoneId >= 0 && `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
+export const getZoneBanner = (zoneId: number) =>
+	zoneId >= 0 && `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
 
 const BOSSES = {
 	// Special case - FF Logs reports trash fights with a boss ID of 0
@@ -25,4 +32,4 @@ const BOSSES = {
 	// SOME_BOSS: { logId, overrides... },
 }
 
-export default BOSSES
+export default BOSSES as Record<keyof typeof BOSSES, Boss>

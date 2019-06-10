@@ -1,5 +1,5 @@
-import JOBS from 'data/JOBS'
-import {ActorType} from 'fflogs'
+import {Boss} from 'data/BOSSES'
+import JOBS, {Job} from 'data/JOBS'
 
 import CORE from './core'
 import {Meta} from './core/Meta'
@@ -22,11 +22,10 @@ import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
 
-// TODO: Tighten boss record a bit
 interface AvailableModules {
 	CORE: Meta
-	JOBS: Partial<Record<ActorType, Meta>>
-	BOSSES: Record<number, Meta>
+	JOBS: Partial<Record<Job['logType'], Meta>>
+	BOSSES: Partial<Record<Boss['logId'], Meta>>
 }
 
 export default {
