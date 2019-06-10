@@ -20,37 +20,9 @@ const BOSSES = {
 		overrides: {zoneID: -1, zoneName: 'Trash'},
 	},
 
-	// 4.0
-	// FF Logs uses the wrong zone data for Deltascape, feex.
-	ALTE_ROITE: {
-		logId: 42,
-		overrides: {zoneID: 695, zoneName: 'Deltascape V1.0 (Savage)'},
-	},
-	CATASTROPHE: {
-		logId: 43,
-		overrides: {zoneID: 696, zoneName: 'Deltascape V2.0 (Savage)'},
-	},
-	HALICARNASSUS: {
-		logId: 44,
-		overrides: {zoneID: 697, zoneName: 'Deltascape V3.0 (Savage)'},
-	},
-	EXDEATH: {
-		logId: 45,
-		overrides: {zoneID: 698, zoneName: 'Deltascape V4.0 (Savage)'},
-	},
-	NEO_EXDEATH: {
-		logId: 45,
-		overrides: {zoneID: 698, zoneName: 'Deltascape V4.0 (Savage)'},
-	},
-
-	// 4.1
-	// Bahamut prime requires custom modules to permit the scripted death
-	BAHAMUT_PRIME: {logId: 1039},
-
-	// 4.2
-	// Demon chadarnook has targetable adds that should not be counted, as well as
-	// a janky as fuck pull timer which changes some job openers.
-	DEMON_CHADARNOOK: {logId: 52},
+	// 5.0
+	// Reason you need to add override info
+	// SOME_BOSS: { logId, overrides... },
 }
 
 export default BOSSES

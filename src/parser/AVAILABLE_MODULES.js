@@ -1,4 +1,3 @@
-import BOSSES from 'data/BOSSES'
 import JOBS from 'data/JOBS'
 
 import CORE from './core'
@@ -20,9 +19,6 @@ import SCH from './jobs/sch'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
-
-import BAHAMUT_PRIME from './bosses/bahamutPrime'
-import DEMON_CHADARNOOK from './bosses/chadarnook'
 
 export default {
 	CORE,
@@ -52,7 +48,6 @@ export default {
 	},
 
 	BOSSES: {
-		[BOSSES.BAHAMUT_PRIME.logId]: BAHAMUT_PRIME,
-		[BOSSES.DEMON_CHADARNOOK.logId]: DEMON_CHADARNOOK,
+		// [BOSSES.SOME_BOSS.logId]: IMPORTED_BOSS_MODULES,
 	},
 }

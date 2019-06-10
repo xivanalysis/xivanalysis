@@ -4,7 +4,6 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import BOSSES from 'data/BOSSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -21,7 +20,7 @@ const DOWNTIME_DIFFERENCE_TOLERANCE = 10000 // If the downtime estimates are off
 
 // Some bosses *coughChadarnookcough* require fucky pulls that result in your Huton timer being lower than normal when the fight starts
 const BOSS_ADJUSTMENTS = {
-	[BOSSES.DEMON_CHADARNOOK.logId]: 15000,
+	// [BOSSES.DEMON_CHADARNOOK.logId]: 15000,
 }
 
 export default class Huton extends Module {
