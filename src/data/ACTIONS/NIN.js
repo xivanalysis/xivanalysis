@@ -17,7 +17,7 @@ export default {
 	},
 
 	HAKKE_MUJINSATSU: {
-		id: 0, // TODO
+		id: 10000, // TODO
 		name: 'Hakke Mujinsatsu',
 		icon: 'https://xivapi.com/i/000000/000615.png', // TODO
 		onGcd: true,
@@ -82,7 +82,7 @@ export default {
 	},
 
 	GOKA_MEKKYAKU: {
-		id: 0, // TODO
+		id: 10001, // TODO
 		name: 'Goka Mekkyaku',
 		icon: 'https://xivapi.com/i/002000/002908.png', // TODO
 		onGcd: false,
@@ -106,7 +106,7 @@ export default {
 	},
 
 	HYOSHO_RANRYU: {
-		id: 0, // TODO
+		id: 10002, // TODO
 		name: 'Hyosho Ranryu',
 		icon: 'https://xivapi.com/i/002000/002909.png', // TODO
 		onGcd: false,
@@ -194,7 +194,7 @@ export default {
 	},
 
 	MEISUI: {
-		id: 0, // TODO
+		id: 10003, // TODO
 		name: 'Meisui',
 		icon: 'https://xivapi.com/i/002000/002905.png', // TODO
 		onGcd: false,
@@ -202,7 +202,7 @@ export default {
 	},
 
 	BUNSHIN: {
-		id: 0, // TODO
+		id: 10004, // TODO
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/002000/002905.png', // TODO
 		onGcd: false,
