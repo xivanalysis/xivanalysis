@@ -54,7 +54,7 @@
   "ast.lucid-dreaming.checklist.requirement.name": "<0/> 个醒梦被延长",
   "ast.lucid-dreaming.suggestion.content": "保持<0/>处于冷却状态以进行更好地控制MP，除非接下来的战斗有一个明确的时间点需要快速降低仇恨",
   "ast.lucid-dreaming.suggestion.why": "由于 CD 空转至少 {0}，你大约损失了 {_usesMissed} 次醒梦。",
-  "ast.sleeve-draw.checklist.description": "更多地使用袖内抽卡可以得到更多卡片；多抽卡才能变欧。",
+  "ast.sleeve-draw.checklist.description": "更多袖内抽卡次数意味着更多卡牌，对我们而言卡牌是多多益善的",
   "ast.sleeve-draw.checklist.name": "多使用袖内抽卡",
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> 的使用情况",
   "ast.sleeve-draw.suggestions.draw.content": "<0/>会导致<1/>重新开始 CD 计时。为了尽可能多地抽卡，你应在使用抽卡之后再使用袖内抽卡。",
