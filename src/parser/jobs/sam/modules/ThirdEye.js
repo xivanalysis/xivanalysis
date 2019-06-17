@@ -16,11 +16,13 @@ export default class ThirdEye extends Module {
 
 	_thirdEyes = 0 //this is the amount of times third eye is used
 	_openEyes = 0 //this is the amount of times third eye was proc'ed
-	_spentEyes = 0 //this is the amount of times they used a proc
+	_seiganEyes = 0 //this is the amount of times they used seigan
+	_badEyes = 0 //this is the amount of merciful eyes
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.MERCIFUL_EYES.id, ACTIONS.HISSATSU_SEIGAN.id]}, this._onSpend)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.MERCIFUL_EYES.id]}, this._onBadSpend)
+		this.addHook('cast', {by: 'palyer', abilityId: [ACTIONS.HISSATSU_SEIGAN.id]}, this._onSpend)
 		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.THIRD_EYE.id]}, this._onEye)
 		this.addHook('applybuff', {
 			to: 'player',
@@ -33,16 +35,19 @@ export default class ThirdEye extends Module {
 	}
 
 	_onSpend() {
-		this._spentEyes += 1 // increase usage by 1, ATM the gain is so small between these actions that I'm not bothering spilting them
+		this._seiganEyes += 1 // increase usage by 1
 	}
 
+	_onBadSpend() {
+		this._badEyes += 1
+	}
 	_onGain() {
 		this._openEyes += 1 //enter the iris, increase by 1 per time a player gains the status
 	}
 
 	_onComplete() {
 		const unopenedEyes = this._thirdEyes - this._openEyes
-		const unspentEyes = this._openEyes - this._spentEyes
+		const unspentEyes = this._openEyes - (this._badEyes + this._seiganEyes)
 
 		if (this._thirdEyes === 0) {
 			this.suggestions.add(new TieredSuggestion({
@@ -71,8 +76,8 @@ export default class ThirdEye extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.MERCIFUL_EYES.icon,
-			content: <Trans id="sam.thirdeye.suggestion.unspenteyes.content"> Never let a proc go to waste, spend your procs from <ActionLink {...ACTIONS.THIRD_EYE}/> on either <ActionLink {...ACTIONS.HISSATSU_SEIGAN}/> for a small dps gain or using <ActionLink {...ACTIONS.MERCIFUL_EYES}/> for a tiny amount of healing and a 20% emnity reduction  </Trans>,
+			icon: ACTIONS.HISSATSU_SEIGAN.icon,
+			content: <Trans id="sam.thirdeye.suggestion.unspenteyes.content"> Never let a proc go to waste, spend your procs from <ActionLink {...ACTIONS.THIRD_EYE}/> on <ActionLink {...ACTIONS.HISSATSU_SEIGAN}/> for a small dps gain.  </Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				10: SEVERITY.MEDIUM,
@@ -80,5 +85,17 @@ export default class ThirdEye extends Module {
 			value: unspentEyes,
 			why: <Trans id ="sam.thirdeye.suggestion.unspenteyes.why"> {unspentEyes} of your procs were not spent. </Trans>,
 		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.MERCIFUL_EYES.icon,
+			content: <Trans id= "sam.thirdeye.suggestion.badeyes.content"> As of 5.0, <ActionLink {...ACTIONS.MERCIFUL_EYES}/> no longer reduces enmity, you should never use it now. </Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				10: SEVERITY.MEDIUM,
+			},
+			value: this._badEyes,
+			why: <Trans id = "sam.thirdeye.suggestion.badeyes.why"> Total amount of Mericful Eyes casts: {this._badEyes} </Trans>,
+		}))
 	}
 }
+

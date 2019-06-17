@@ -7,7 +7,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-
 enum SEN {
 	SETSU = 'Setsu',
 	GETSU = 'Getsu',
@@ -52,9 +51,9 @@ export default class Sen extends Module {
 
 		// Hagakure because he's was a speshul boi, but now he's dead jim. He's DEAD!
 		// this.addHook(
-		//	'cast',
-		//	{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
-		//	this.onHagakure,
+		// 	'cast',
+		// 	{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
+		// 	this.onHagakure,
 		// )
 
 		// Suggestion time~

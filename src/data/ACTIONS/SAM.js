@@ -61,7 +61,7 @@ export default {
 		name: 'Iaijutsu',
 		icon: 'https://xivapi.com/i/003000/003159.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	HIGANBANA: {
@@ -69,7 +69,7 @@ export default {
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	GEKKO: {
@@ -103,7 +103,7 @@ export default {
 		name: 'Tenka Goken',
 		icon: 'https://xivapi.com/i/003000/003161.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	KASHA: {
@@ -137,7 +137,7 @@ export default {
 		name: 'Midare Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003162.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	YUKIKAZE: {
@@ -151,6 +151,30 @@ export default {
 			potency: 380,
 			end: true,
 		},
+	},
+
+	KAESHI_HIGANBANA: {
+		id: 9999,
+		name: 'Kaeshi: Higanbana',
+		icon: '?',
+		onGcd: true,
+		castTime: 1.3,
+	},
+
+	KAESHI_GOKEN: {
+		id: 9999,
+		name: 'Kaeshi: Goken',
+		icon: ' ?',
+		onGcd: true,
+		castTime: 1.3,
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 9999,
+		name: 'Kaeshi: Setsugekka',
+		icon: '?',
+		onGcd: true,
+		castTime: 1.3,
 	},
 
 	//-----
@@ -243,11 +267,34 @@ export default {
 		cooldown: 40,
 	},
 
+	IKISHOTEN: {
+		id: 9999,
+		name: 'Ikishoten',
+		icon: '?',
+		cooldown: 60,
+	},
+
 	HISSATSU_GUREN: {
 		id: 7496,
 		name: 'Hissatsu: Guren',
 		icon: 'https://xivapi.com/i/003000/003177.png',
 		cooldown: 120,
+		cooldownGroup: 10,
 	},
 
+	HISSATSU_SENEI: {
+		id: 9999,
+		name: 'Hissatsu: Senei',
+		icon: ' ?',
+		cooldown: 120,
+		cooldownGroup: 10,
+	},
+
+	SHOHA: {
+		id: 9999,
+		name: 'Shoha',
+		icon: '?',
+		cooldown: 1,
+	},
 }
+
