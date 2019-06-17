@@ -369,7 +369,7 @@
   "mnk.undesirables.suggestions.oneilm.why": "浪费了 {oneIlmPunchCount} 个GCD在<0/>上。",
   "mnk.undesirables.table.header.skill": "技能",
   "mnk.undesirables.table.header.time": "时间",
-  "mnk.undesirables.title": "不好的技能",
+  "mnk.undesirables.title": "不理想的技能",
   "nin.about.description": "<0>嗨，各位忍者朋友们！你是否因为被同行的武僧和黑魔瞧不起而烦恼？希望团队不是将你当成背刺机而打从心底感谢你的付出？那么不用再等待了！我们会帮助你从<1>灰色</1>提升到<2>橙色</2>*！</0><3>忍者的循环更为灵活，这里的模板包含了许多能让你提高游戏水平的建议，而不是一条条需要完成的任务清单。如果你看到很多建议，别慌张——逐步解决它们就好了。</3><4>* 本分析结果仅供参考，不保证100%正确性。请不要对本警察出警，Thank You~</4>",
   "nin.about.description.warning": "虽然下面的分析在一定程度上应该是准确的，但这个系统还在开发中并不完善，还是存在些许问题。如果您有任何问题或着请求，可以到我们的Discord频道联系我们或者在github页面向我们反映Bug。",
   "nin.duality.suggestions.misuse.content": "避免<0/>用在除了<1/>外的GCD上。<0/>仅复制GCD的威力，不会继承其额外效果，所以应将其用在你最强的GCD技能上。",
