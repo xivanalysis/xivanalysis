@@ -436,7 +436,7 @@
   "nin.utility.suggestions.no-shade.why": "你没有在战斗开始前或者开始后的前{0} 内使用影渡",
   "nin.utility.suggestions.no-smoke.content": "对于团队来说，<0/>是个很实用的功能性技能，它能压制高爆发DPS/治疗所造成的仇恨。",
   "nin.utility.suggestions.no-smoke.why": "你没有在战斗开始前或者开始后的前{0} 内使用烟雾弹",
-  "pld.about.description": "作为黑魔与白魔的私生子，你选择了一条举起盾牌，挥剑咏唱魔法，试图保护所有人的光荣之路。\n\n这个分析器帮助你找到成为令人畏惧的T的正确之道，对你的敌人不存在 [~action/CLEMENCY]，你将会成为团队真正的[~action/HOLY_SPIRIT]。\n",
+  "pld.about.description": "作为黑魔与白魔不被承认的后代，你成为了一名举着盾牌，挥舞宝剑的法师，试图保护所有人的同时杀出一条“沥血”之路。\n\n这个分析器会帮助你成为一名令人畏惧的坦克，也就是说面对敌人时你没有丝毫的“深恩厚泽”，同时作为真正的“圣灵”激励着你的团队。\n",
   "pld.about.description.warning": "\n**这里是龙骑士**\n\n本分析器**仍在制作中**，有很多缺失的特性，另外很多地方做了简化。\n\n下方的建议不可全信。\n\n如果你发现有任何问题，或者有任何疑问、建议，请来我们的Discord频道！\n",
   "pld.fightorflight.suggestions.circle-of-scorn.content": "尝试在<1/>的持续时间内使用1个<0/>。",
   "pld.fightorflight.suggestions.circle-of-scorn.why": "在<0/>的持续时间内未打出{0, plural, one {#次厄运流转} other {#次厄运流转}}。",
