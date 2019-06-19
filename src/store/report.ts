@@ -1,14 +1,15 @@
 import {fflogsApi} from 'api'
 import * as Errors from 'errors'
-import {ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
+import {settingsStore} from './settings'
 
 interface UnloadedReport {
 	loading: true
 }
-export interface Report extends ReportFightsResponse {
+export interface Report extends ProcessedReportFightsResponse {
 	code: string
 	loading: false
 }
@@ -26,12 +27,17 @@ export class ReportStore {
 	private async fetchReport(code: string, params?: ReportFightsQuery) {
 		this.report = {loading: true}
 
+		const bypassCache =
+			(params && params.bypassCache) || settingsStore.bypassCacheNextRequest
+		settingsStore.setBypassCacheNextRequest(false)
+
 		let response: ReportFightsResponse
 		try {
 			response = await fflogsApi.get(`report/fights/${code}`, {
 				searchParams: {
 					translate: 'true',
 					..._.omitBy(params, _.isNil),
+					...(bypassCache? {bypassCache: 'true'} : {}),
 				},
 			}).json<ReportFightsResponse>()
 		} catch (e) {
@@ -49,10 +55,19 @@ export class ReportStore {
 			return
 		}
 
-		// Save out the report
+		// Report is still processing - clear the state and error
+		if (response.processing) {
+			runInAction(() => this.report = undefined)
+			globalErrorStore.setGlobalError(new Errors.ReportProcessingError())
+			settingsStore.setBypassCacheNextRequest(true)
+			return
+		}
+
+		// Save out the report. Assignment because >ts
+		const processedResponse = response
 		runInAction(() => {
 			this.report = {
-				...response,
+				...processedResponse,
 				code,
 				loading: false,
 			}

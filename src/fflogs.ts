@@ -212,20 +212,33 @@ export interface ReportFightsQuery {
 	bypassCache?: boolean,
 }
 
-export interface ReportFightsResponse {
+interface SharedReportFightsResponse {
 	end: number
+	owner: string
+	start: number
+	title: string
+	zone: number
+}
+
+interface ProcessingReportFightsResponse extends SharedReportFightsResponse {
+	exportedCharacters: unknown[]
+	processing: true
+}
+
+export interface ProcessedReportFightsResponse extends SharedReportFightsResponse {
 	enemies: Actor[]
 	enemyPets: Pet[]
 	fights: Fight[]
 	friendlies: Actor[]
 	friendlyPets: Pet[]
 	lang: ReportLanguage
-	owner: string
 	phases: Phase[]
-	start: number
-	title: string
-	zone: number
+	processing?: false
 }
+
+export type ReportFightsResponse =
+	| ProcessingReportFightsResponse
+	| ProcessedReportFightsResponse
 
 export interface ReportEventsQuery {
 	start?: number,
