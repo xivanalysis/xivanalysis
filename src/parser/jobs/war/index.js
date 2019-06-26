@@ -66,5 +66,10 @@ export default {
 			changes: 'Gauge module rewritten (mostly back-end changes -- Should be more accurate now), and missed combos suggestion is now supported and working.',
 			contributors: [CONTRIBUTORS.SAYAKA],
 		},
+		{
+			date: new Date('2019-06-21'),
+			changes: 'Rewrite of the Inner Release module. Now displays a nice rotation table instead of the former accordion style.',
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 }
