@@ -31,7 +31,7 @@ export default {
 
 	RAIDEN_THRUST: {
 		id: 10001, // TODO
-		name: 'Wheeling Thrust',
+		name: 'Raiden Thrust',
 		icon: 'https://xivapi.com/i/000000/000310.png', // TODO
 		onGcd: true,
 		potency: 330,
