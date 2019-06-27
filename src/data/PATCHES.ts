@@ -159,7 +159,7 @@ const PATCHES = {
 			[GameEdition.GLOBAL]: 1561712400, // 28/06/19 09:00:00 GMT
 		},
 		branch: {
-			baseUrl: 'https://shadowbringers.xivanalysis.com',
+			baseUrl: 'https://xivanalysis.com',
 		},
 	},
 }
