@@ -2,7 +2,8 @@
  * @author Yumiya
  */
 import Module from 'parser/core/Module'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
 
@@ -393,7 +394,8 @@ export default class AdditionalStats extends Module {
 					continue
 				}
 
-				const skill = getAction(instance.event.ability.guid)
+				const skill = getDataBy(ACTIONS, 'id', instance.event.ability.guid)
+				if (!skill) { continue }
 
 				// We have already calculated the unbuffed damage, now we need to strip crit/dhit modifiers
 				let rawDamage = instance.rawDamage

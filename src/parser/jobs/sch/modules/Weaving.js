@@ -3,7 +3,8 @@ import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import CoreWeaving from 'parser/core/modules/Weaving'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -32,7 +33,8 @@ export default class Weaving extends CoreWeaving {
 	// Renamed so as not to overwrite parent module
 	// Just for tracking pos
 	_onScholarCast(event) {
-		if (!getAction(event.ability.guid).onGcd) {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action || !action.onGcd) {
 			return
 		}
 

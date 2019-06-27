@@ -19,6 +19,9 @@ module.exports = {
 						'plugin:@xivanalysis/recommended',
 						'plugin:@xivanalysis/client',
 					],
+					rules: {
+						'react/display-name': 'off',
+					}
 				},
 			},
 		}],

@@ -1,15 +1,13 @@
-import {inject, observer} from 'mobx-react'
+import {getCorrectedFight, getZoneBanner} from 'data/BOSSES'
+import {GameEdition, getPatch, languageToEdition} from 'data/PATCHES'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Helmet} from 'react-helmet'
-import {withRouter, Link} from 'react-router-dom'
+import {Link, withRouter} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
-
-import {getZoneBanner, getCorrectedFight} from 'data/BOSSES'
-import {GameEdition, languageToEdition, getPatch} from 'data/PATCHES'
-import {ReportStore} from 'store/report'
+import {StoreContext} from 'store'
 import {formatDuration, getPathMatch} from 'utilities'
-
 import styles from './Breadcrumbs.module.css'
 
 const editionName = {
@@ -18,19 +16,19 @@ const editionName = {
 	[GameEdition.CHINESE]: 'CN',
 }
 
-@inject('reportStore')
 @observer
 class Breadcrumbs extends React.Component {
 	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore),
 		location: PropTypes.shape({
 			pathname: PropTypes.string.isRequired,
 		}).isRequired,
 	}
 
+	static contextType = StoreContext
+
 	render() {
+		const {reportStore} = this.context
 		const {
-			reportStore,
 			location: {pathname},
 		} = this.props
 

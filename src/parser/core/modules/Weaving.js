@@ -5,7 +5,8 @@ import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosestLower} from 'utilities'
@@ -53,10 +54,10 @@ export default class Weaving extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 
 		// If the action is an auto, just ignore it
-		if (action.autoAttack) {
+		if (!action || action.autoAttack) {
 			return
 		}
 

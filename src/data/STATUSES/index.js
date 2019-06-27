@@ -1,5 +1,3 @@
-import {addExtraIndex} from 'utilities'
-
 import ENEMY from './ENEMY'
 import ROLE from './ROLE'
 import SHARED from './SHARED'
@@ -19,10 +17,12 @@ import WHM from './WHM'
 import PLD from './PLD'
 import SAM from './SAM'
 import DRK from './DRK'
+import GNB from './GNB'
+import DNC from './DNC'
 
 export const STATUS_ID_OFFSET = 1000000
 
-const STATUSES = addExtraIndex(correctIdsToMatchLogs({
+const STATUSES = correctIdsToMatchLogs({
 	...ENEMY,
 	...ROLE,
 	...SHARED,
@@ -31,6 +31,7 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 	...PLD,
 	...WAR,
 	...DRK,
+	...GNB,
 
 	...SCH,
 	...AST,
@@ -43,11 +44,12 @@ const STATUSES = addExtraIndex(correctIdsToMatchLogs({
 
 	...BRD,
 	...MCH,
+	...DNC,
 
 	...SMN,
 	...BLM,
 	...RDM,
-}), 'id')
+})
 
 /**
  * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.
@@ -70,10 +72,3 @@ function correctIdsToMatchLogs (obj) {
 }
 
 export default STATUSES
-
-// this actually should have 2 overloads: one for when `id` is `T extends keyof STATUSES`, and one for when `id` is numeric
-/**
- * @param {number} id
- * @returns {STATUSES[number] | { id?: never }}
- */
-export const getStatus = id => STATUSES[id] || {}

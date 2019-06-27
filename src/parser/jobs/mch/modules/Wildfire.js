@@ -5,7 +5,8 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -61,7 +62,10 @@ export default class Wildfire extends Module {
 		if (damage > 0) {
 			this._wildfireWindows.current.casts = this._wildfireWindows.current.casts.filter(cast => cast.compoundDamage <= damage) // Pop any extraneous events off the end
 		}
-		const gcds = this._wildfireWindows.current.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		const gcds = this._wildfireWindows.current.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			return action && action.onGcd
+		})
 		this._wildfireWindows.current.gcdCount = gcds.length
 		this._wildfireWindows.current.overheatedGcdCount = gcds.filter(cast => cast.overheated).length
 		this._wildfireWindows.current.damage = damage

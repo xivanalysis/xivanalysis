@@ -8,7 +8,7 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 150,
+		potency: 150, // TODO - Subject to change
 		combo: {
 			start: true,
 		},
@@ -22,7 +22,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 200,
+			potency: 200, // TODO - Subject to change
 		},
 	},
 
@@ -34,7 +34,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 340, // TODO - *Cries in positionals*
+			potency: 440, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -46,8 +46,8 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2242,
-			potency: 200,
+			from: 2240,
+			potency: 260,
 			end: true,
 		},
 	},
@@ -58,7 +58,9 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
 		potency: 110,
-		breaksCombo: true,
+		combo: {
+			start: true,
+		},
 	},
 
 	THROWING_DAGGER: {
@@ -74,14 +76,6 @@ export default {
 	// Player OGCDs
 	// -----
 
-	JUGULATE: {
-		id: 2256,
-		name: 'Jugulate',
-		icon: 'https://xivapi.com/i/000000/000616.png',
-		onGcd: false,
-		cooldown: 30,
-	},
-
 	MUG: {
 		id: 2248,
 		name: 'Mug',
@@ -95,7 +89,7 @@ export default {
 		name: 'Assassinate',
 		icon: 'https://xivapi.com/i/000000/000612.png',
 		onGcd: false,
-		cooldown: 40,
+		cooldown: 60,
 	},
 
 	TRICK_ATTACK: {

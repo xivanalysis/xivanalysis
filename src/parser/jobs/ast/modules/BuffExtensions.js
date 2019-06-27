@@ -5,6 +5,7 @@ import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
@@ -246,9 +247,10 @@ export default class BuffExtensions extends Module {
 
 			// Either output the list of targets or the empty message
 			targetRows = dilation.targets.map(target => {
+				const job = getDataBy(JOBS, 'logType', target.job)
 				return <tr key={target.id}>
 					<td>
-						<JobIcon job={JOBS[target.job]}/>
+						{job && <JobIcon job={job}/>}
 					</td>
 					<td>{target.name}</td>
 					<td>
@@ -270,7 +272,7 @@ export default class BuffExtensions extends Module {
 						</div>
 						<div className={styles.headerItem}><img
 							key={dilation.event.timestamp}
-							src={ACTIONS[dilation.event.ability.guid].icon}
+							src={getDataBy(ACTIONS, 'id', dilation.event.ability.guid).icon}
 							className={styles.dilationEventIcon}
 							alt={dilation.event.ability.name}
 						/>

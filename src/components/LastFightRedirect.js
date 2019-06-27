@@ -1,17 +1,14 @@
 import {Trans} from '@lingui/react'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Redirect} from 'react-router-dom'
 import {Container, Loader} from 'semantic-ui-react'
+import {StoreContext} from 'store'
 
-import {ReportStore} from 'store/report'
-
-@inject('reportStore')
 @observer
 class LastFightRedirect extends Component {
 	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				section: PropTypes.string.isRequired,
@@ -21,15 +18,18 @@ class LastFightRedirect extends Component {
 		}).isRequired,
 	}
 
+	static contextType = StoreContext
+
 	componentDidMount() {
 		// Make sure we've got report data
-		const {reportStore, match} = this.props
+		const {reportStore} = this.context
+		const {match} = this.props
 		reportStore.fetchReportIfNeeded(match.params.code)
 	}
 
 	render() {
+		const {reportStore} = this.context
 		const {
-			reportStore,
 			match: {params},
 		} = this.props
 

@@ -3,7 +3,8 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
@@ -80,7 +81,8 @@ export default class Pets extends Module {
 				continue
 			}
 
-			const action = getAction(event.ability.guid)
+			const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+			if (!action) { continue }
 
 			// I mean this shouldn't happen but people are stupid.
 			// If there's a summon cast before any pet action, they didn't start with a pet.
@@ -139,7 +141,8 @@ export default class Pets extends Module {
 			if (this._lastPet) {
 				petId = this._lastPet.id
 			} else {
-				petId = getAction(event.ability.guid).pet
+				const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+				petId = action ? action.pet : undefined
 			}
 
 			this.setPet(petId, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
@@ -185,7 +188,7 @@ export default class Pets extends Module {
 		// Work out the party comp
 		// TODO: Should this be in the parser?
 		const roles = this.parser.fightFriendlies.reduce((roles, friendly) => {
-			const job = JOBS[friendly.type]
+			const job = getDataBy(JOBS, 'logType', friendly.type)
 			if (!job) { return roles }
 
 			roles[job.role] = (roles[job.role] || 0) + 1
@@ -297,7 +300,7 @@ export default class Pets extends Module {
 			return null
 		}
 
-		return PETS[this._currentPet.id]
+		return getDataBy(PETS, 'id', this._currentPet.id)
 	}
 
 	getPetName(petId) {
@@ -305,6 +308,6 @@ export default class Pets extends Module {
 			return 'No pet'
 		}
 
-		return PETS[petId].name
+		return getDataBy(PETS, 'id', petId).name
 	}
 }

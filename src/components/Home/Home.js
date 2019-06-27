@@ -1,16 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {observer, inject} from 'mobx-react'
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {Modal} from 'semantic-ui-react'
-
-import ReportSearch from './ReportSearch'
 import {Options} from 'components/GlobalSidebar'
 import TransMarkdown from 'components/ui/TransMarkdown'
-import {ReportStore} from 'store/report'
-
+import {observer} from 'mobx-react'
+import React, {Component} from 'react'
+import {Modal} from 'semantic-ui-react'
+import {StoreContext} from 'store'
 import styles from './Home.module.css'
+import ReportSearch from './ReportSearch'
 
 const about = t('core.home.about.content')`
 xivanalysis is a tool aimed at helping _you_ improve your performance, through both automatic suggestions and metrics. While some metrics are shared across all jobs - seriously, don't die - most are tailored specifically to each job to ensure they are as accurate and useful as possible.
@@ -22,16 +19,13 @@ Just paste your log URL in, and check it out!
 If you have any questions, suggestions, or would just like to have a chat - drop by our discord server, linked in the sidebar.
 `
 
-@inject('reportStore')
 @observer
 class Home extends Component {
-	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore),
-	}
+	static contextType = StoreContext
 
 	componentDidMount() {
 		// Clean out the report state when the user returns to the home page
-		this.props.reportStore.clearReport()
+		this.context.reportStore.clearReport()
 	}
 
 	render() {
