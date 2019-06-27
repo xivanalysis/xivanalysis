@@ -206,6 +206,6 @@ export default {
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/002000/002905.png', // TODO
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 110,
 	},
 }
