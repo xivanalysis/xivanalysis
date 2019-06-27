@@ -6,13 +6,6 @@ export default {
 		duration: 20,
 	},
 
-	PIERCING_RESISTANCE_DOWN: {
-		id: 820,
-		name: 'Piercing Resistance Down',
-		icon: 'https://xivapi.com/i/015000/015065.png',
-		duration: 30,
-	},
-
 	RIGHT_EYE: {
 		id: 1453,
 		name: 'Right Eye',
@@ -27,11 +20,11 @@ export default {
 		duration: 20,
 	},
 
-	HEAVY_THRUST: {
-		id: 115,
-		name: 'Heavy Thrust',
-		icon: 'https://xivapi.com/i/010000/010306.png',
-		duration: 30,
+	DISEMBOWEL: {
+		id: 20000, // TODO
+		name: 'Disembowel',
+		icon: 'https://xivapi.com/i/010000/010306.png', // TODO
+		duration: 24,
 	},
 
 	SHARPER_FANG_AND_CLAW: {
@@ -48,10 +41,10 @@ export default {
 		duration: 10,
 	},
 
-	BLOOD_FOR_BLOOD: {
-		id: 117,
-		name: 'Blood For Blood',
-		icon: 'https://xivapi.com/i/010000/010304.png',
+	LANCE_CHARGE: {
+		id: 20001, // TODO
+		name: 'Lance Charge',
+		icon: 'https://xivapi.com/i/010000/010304.png', // TODO?
 		duration: 20,
 	},
 
@@ -59,7 +52,7 @@ export default {
 		id: 118,
 		name: 'Chaos Thrust',
 		icon: 'https://xivapi.com/i/010000/010307.png',
-		duration: 30,
+		duration: 24,
 	},
 
 	DIVE_READY: {
@@ -73,6 +66,6 @@ export default {
 		id: 116,
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/010000/010302.png',
-		duration: 10,
+		duration: 5,
 	},
 }

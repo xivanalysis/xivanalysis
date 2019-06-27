@@ -7,7 +7,7 @@ export default {
 		name: 'Doom Spike',
 		icon: 'https://xivapi.com/i/000000/000306.png',
 		onGcd: true,
-		potency: 140,
+		potency: 170,
 		combo: {
 			start: true,
 		},
@@ -18,6 +18,7 @@ export default {
 		name: 'Fang and Claw',
 		icon: 'https://xivapi.com/i/002000/002582.png',
 		onGcd: true,
+		potency: 360,
 	},
 
 	WHEELING_THRUST: {
@@ -25,6 +26,18 @@ export default {
 		name: 'Wheeling Thrust',
 		icon: 'https://xivapi.com/i/002000/002584.png',
 		onGcd: true,
+		potency: 360,
+	},
+
+	RAIDEN_THRUST: {
+		id: 10001, // TODO
+		name: 'Wheeling Thrust',
+		icon: 'https://xivapi.com/i/000000/000310.png', // TODO
+		onGcd: true,
+		potency: 330,
+		combo: {
+			start: true,
+		},
 	},
 
 	SONIC_THRUST: {
@@ -35,8 +48,19 @@ export default {
 		potency: 100,
 		combo: {
 			from: 86,
-			potency: 180,
-			end: true,
+			potency: 200,
+		},
+	},
+
+	COERTHAN_TORMENT: {
+		id: 10002, // TODO
+		name: 'Coerthan Torment',
+		icon: 'https://xivapi.com/i/002000/002586.png', // TODO
+		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7397,
+			potency: 230,
 		},
 	},
 
@@ -47,6 +71,13 @@ export default {
 		id: 92,
 		name: 'Jump',
 		icon: 'https://xivapi.com/i/002000/002576.png',
+		cooldown: 30,
+	},
+
+	HIGH_JUMP: {
+		id: 10003, // TODO
+		name: 'High Jump',
+		icon: 'https://xivapi.com/i/002000/002576.png', // TODO
 		cooldown: 30,
 	},
 
@@ -105,7 +136,7 @@ export default {
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
 		cooldown: 1,
-		potency: 210,
+		potency: 250,
 	},
 
 	NASTROND: {
@@ -113,5 +144,12 @@ export default {
 		name: 'Nastrond',
 		icon: 'https://xivapi.com/i/002000/002589.png',
 		cooldown: 10,
+	},
+
+	STARDIVER: {
+		id: 10004, // TODO
+		name: 'Stardiver',
+		icon: 'https://xivapi.com/i/002000/002576.png', // TODO
+		cooldown: 30,
 	},
 }
