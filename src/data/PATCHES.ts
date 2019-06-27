@@ -57,7 +57,7 @@ const PATCHES = {
 			[GameEdition.CHINESE]: 1506412800,
 		},
 		branch: {
-			baseUrl: 'https://xivanalysis.com',
+			baseUrl: 'https://stormblood.xivanalysis.com',
 		},
 	},
 	'5.0': {
