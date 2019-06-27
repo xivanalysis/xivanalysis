@@ -119,7 +119,7 @@
   "core.analyse.see-more": "もっと見る",
   "core.analyse.view-on-fflogs": "FFLOGSのレポートを見る",
   "core.branch-banner.description": "",
-  "core.branch-banner.header": "",
+  "core.branch-banner.header": "このログは別の拡張ディスクの時に報告された。",
   "core.broken-log.broken-log.description": "このログのデータには問題があるらしいです。なので、計算や提案は間違う可能性がありますので、ご理解ください。",
   "core.broken-log.broken-log.title": "ログが壊れているため、読み取ることができません。",
   "core.broken-log.list.module": "モジュール",
