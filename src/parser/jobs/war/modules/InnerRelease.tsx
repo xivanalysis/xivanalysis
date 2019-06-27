@@ -1,21 +1,16 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-
-import {BuffEvent, CastEvent} from 'fflogs'
-
-interface TimestampRotationMap {
-	[timestamp: number]: CastEvent[]
-}
+import React from 'react'
 
 const IR_DURATION = 10000
 
@@ -49,8 +44,8 @@ class InnerReleaseState {
 
 	get gcds(): number {
 		return this.rotation
-			.map(e => getAction(e.ability.guid) as TODO)
-			.filter(a => a.onGcd)
+			.map(e => getDataBy(ACTIONS, 'id', e.ability.guid) as TODO)
+			.filter(a => a && a.onGcd)
 			.length
 	}
 
@@ -65,13 +60,6 @@ class InnerReleaseState {
 			.filter(e => e.ability.guid === ACTIONS.ONSLAUGHT.id)
 			.length
 	}
-}
-
-class InnerReleaseErrorResult {
-	missedGcds: number = 0
-	incorrectGcds: number = 0
-	missedUpheavals: number = 0
-	missedOnslaughts: number = 0
 }
 
 export default class InnerRelease extends Module {
