@@ -1,4 +1,5 @@
-import {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
@@ -58,7 +59,9 @@ export default class CastTime extends Module {
 			(ct.end === null || ct.end >= timestamp)
 		)
 
-		const defaultCastTime = getAction(actionId).castTime
+		// Mimicking old logic w/ the undefined. Don't ask.
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		const defaultCastTime = action? action.castTime : undefined
 
 		// If there were no modifiers, just use the default
 		if (!matchingTimes.length) {

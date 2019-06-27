@@ -37,7 +37,6 @@ export default class Combos extends Module {
 
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
-	'constructor': typeof Combos // Allow for `this.constructor` to be accessed
 
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -175,7 +174,7 @@ export default class Combos extends Module {
 		}
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.constructor.suggestionIcon,
+			icon: (this.constructor as typeof Combos).suggestionIcon,
 			content: <Trans id="core.combos.content">
 				Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo
 				GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.

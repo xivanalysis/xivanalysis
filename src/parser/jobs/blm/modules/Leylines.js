@@ -4,8 +4,9 @@ import React from 'react'
 import {Table, Button} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES, {getStatus} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import Module from 'parser/core/Module'
@@ -59,7 +60,7 @@ export default class Leylines extends Module {
 
 	// Manage buff windows
 	_onGain(event) {
-		const status = getStatus(event.ability.guid)
+		const status = getDataBy(STATUSES, 'id', event.ability.guid)
 
 		// Something is not right
 		if (!status) {
@@ -125,7 +126,7 @@ export default class Leylines extends Module {
 
 		// For each buff, add it to timeline
 		LL_BUFFS.forEach(buff => {
-			const status = getStatus(buff)
+			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = 'leybuffs-' + status.id
 			const fightStart = this.parser.fight.start_time
 

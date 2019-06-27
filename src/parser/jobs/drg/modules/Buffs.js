@@ -5,7 +5,8 @@ import {Accordion, Header, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
@@ -75,7 +76,7 @@ export default class Buffs extends Module {
 	_pushToWindow(event, statusId) {
 		const tracker = this._buffWindows[statusId]
 		if (this.combatants.selected.hasStatus(statusId)) {
-			const action = getAction(event.ability.guid)
+			const action = getDataBy(ACTIONS, 'id', event.ability.guid) || {}
 			if (tracker.current === null) {
 				// This can potentially happen if either B4B or DS are used pre-pull
 				tracker.current = {
@@ -93,8 +94,8 @@ export default class Buffs extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
-		if (action.onGcd) {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (action && action.onGcd) {
 			if (BAD_LIFE_SURGE_CONSUMERS.includes(action.id)) {
 				this._fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
 				if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id)) {
@@ -118,7 +119,10 @@ export default class Buffs extends Module {
 	_onBuffCast(event) {
 		const tracker = this._buffWindows[STATUS_MAP[event.ability.guid]]
 		if (tracker.current !== null) {
-			tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			tracker.current.gcdCount = tracker.current.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && action.onGcd
+			}).length
 			tracker.history.push(tracker.current)
 		}
 
@@ -148,7 +152,10 @@ export default class Buffs extends Module {
 			return
 		}
 
-		tracker.current.gcdCount = tracker.current.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+		tracker.current.gcdCount = tracker.current.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			return action && action.onGcd
+		}).length
 		tracker.history.push(tracker.current)
 	}
 

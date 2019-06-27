@@ -4,7 +4,8 @@ import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -64,7 +65,8 @@ export default class DualCast extends Module {
 		//TODO: Handle HardCast opener for thunder/areo properly
 		//TODO: Scatter and target counts?
 		const abilityID = event.ability.guid
-		const castTime = getAction(abilityID).castTime
+		const action = getDataBy(ACTIONS, 'id', abilityID)
+		const castTime = action? action.castTime : 0
 		const invuln = this.downtime.getDowntime(this._castTypeLastChanged||0, event.timestamp)
 		//console.log('Invuln:' + invuln)
 		//console.log(`Cast: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)

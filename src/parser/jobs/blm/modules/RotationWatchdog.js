@@ -8,14 +8,15 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {getDataBy} from 'data'
 
 const EXPECTED_FIRE4 = 6
-const FIRE4_FROM_CONVERT = 2
+const FIRE4_FROM_MANAFONT = 2
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 const AFUIBUFFMAXSTACK = 3
@@ -35,7 +36,7 @@ export default class RotationWatchdog extends Module {
 
 	static dependencies = [
 		'suggestions',
-		'gauge', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'invuln',
 		'combatants',
 	]
@@ -139,7 +140,8 @@ export default class RotationWatchdog extends Module {
 			this._startRecording(event)
 		}
 		if (this._first) { this._first = false }
-		if (this._inRotation && !getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (this._inRotation && action && !action.autoAttack) {
 			this._rotation.casts.push(event)
 		}
 	}
@@ -276,12 +278,12 @@ export default class RotationWatchdog extends Module {
 			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
-			const fire4Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_IV.id).length
-			const fire1Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_I.id).length
-			const hasConvert = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.CONVERT.id).length > 0
+			const fire4Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_IV.id).length
+			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_I.id).length
+			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.MANAFONT.id).length > 0
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
-			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasConvert)
+			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasManafont)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
@@ -297,7 +299,7 @@ export default class RotationWatchdog extends Module {
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				//Also throw out rotations with no Fire spells
-				const fire3Count = this._rotation.casts.filter(cast => getAction(cast.ability.guid).id === ACTIONS.FIRE_III.id).length
+				const fire3Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_III.id).length
 				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
 				if (fireCount === 0) {
 					this._rotationsWithoutFire++
@@ -321,8 +323,8 @@ export default class RotationWatchdog extends Module {
 		this._startRecording(event) // Make sure we start a new recording to catch actions when the boss returns
 	}
 
-	_getMissingFire4Count(count, hasConvert) {
-		let expected = EXPECTED_FIRE4 + (hasConvert ? FIRE4_FROM_CONVERT : 0)
+	_getMissingFire4Count(count, hasManafont) {
+		let expected = EXPECTED_FIRE4 + (hasManafont ? FIRE4_FROM_MANAFONT : 0)
 
 		if (this._atypicalAFStartId === ACTIONS.FIRE_III_PROC.id || (this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && this._atypicalAFStartId !== ACTIONS.FIRE_III.id)) {
 			// If we arrived in Astral Fire from UI3 normally or via F3P, but didn't have 2 or 3 hearts, we lose a F4
@@ -331,8 +333,8 @@ export default class RotationWatchdog extends Module {
 			}
 			// If you Convert when you have an even number of UH stacks going into this fire phase from UI3, the extra MP
 			// from converting is only enough to grant one additional Fire 4 as compared to not converting
-			// So remove one of the expected casts granted by FIRE4_FROM_CONVERT
-			if (hasConvert && this._umbralHeartStacks % 2 === 0 && this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && !this._astralFireBeganWithF3P) {
+			// So remove one of the expected casts granted by FIRE4_FROM_MANAFONT
+			if (hasManafont && this._umbralHeartStacks % 2 === 0 && this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && !this._astralFireBeganWithF3P) {
 				expected--
 			}
 		} else if (this._umbralIceBeforeFire > 0 || this._atypicalAFStartId) { // If we came from Ice other than UI3, we're probably losing Fire 4s
@@ -391,7 +393,7 @@ export default class RotationWatchdog extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.accordion.message">
-						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.CONVERT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
+						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.MANAFONT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>

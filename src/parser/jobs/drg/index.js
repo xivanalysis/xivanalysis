@@ -3,10 +3,11 @@ import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 
-export default {
+export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-drg" */),
-	description: <>
+	Description: () => <>
 		<Trans id="drg.about.description"><p>This analyzer aims to help you beat the sterotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows.</p></Trans>
 		<Message warning icon>
 			<Icon name="warning sign"/>
@@ -15,13 +16,13 @@ export default {
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '4.05',
-		to: '4.5',
-	},
+	// supportedPatches: {
+	// 	from: '4.05',
+	// 	to: '4.5',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 	],
 	changelog: [],
-}
+})

@@ -9,24 +9,25 @@ import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import {Actor, ActorType} from 'fflogs'
 import {computed} from 'mobx'
-import {inject, observer} from 'mobx-react'
+import {observer} from 'mobx-react'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import React from 'react'
 import {Link} from 'react-router-dom'
 import {Header} from 'semantic-ui-react'
-import {GlobalErrorStore} from 'store/globalError'
+import {StoreContext} from 'store'
 import {Report} from 'store/report'
 import styles from './CombatantList.module.css'
 
 interface Props {
-	globalErrorStore?: GlobalErrorStore
 	report: Report,
 	currentFight: number
 }
 
-@inject('globalErrorStore')
 @observer
 class CombatantList extends React.Component<Props> {
+	static contextType = StoreContext
+	context!: React.ContextType<typeof StoreContext>
+
 	@computed
 	get groupedActors() {
 		const {
@@ -65,32 +66,36 @@ class CombatantList extends React.Component<Props> {
 	}
 
 	findRole(type: ActorType): Role['id'] {
-		const jobMeta = AVAILABLE_MODULES.JOBS
+		const jobMeta = AVAILABLE_MODULES.JOBS[type]
 
-		// Find the role for the player's job.
-		// Jobs without parses, and jobs with outdated parsers get special roles.
-		let role = ROLES.UNSUPPORTED.id
-		if (type in jobMeta) {
-			const job = getDataBy(JOBS, 'logType', type)
-			if (!job) { throw new Error(`No configured job data found for type '${type}'`) }
-			role = job.role
-
-			const supportedPatches = jobMeta[type].supportedPatches
-			if (supportedPatches) {
-				const {lang, start} = this.props.report
-				const from = supportedPatches.from as PatchNumber
-				const to = (supportedPatches.to as PatchNumber) || from
-				if (!patchSupported(languageToEdition(lang), from, to, start)) {
-					role = ROLES.OUTDATED.id
-				}
-			}
+		// If we don't have any meta for the job, shortcut with UNSUPPORTED
+		if (!jobMeta) {
+			return ROLES.UNSUPPORTED.id
 		}
 
-		return role
+		const {supportedPatches} = jobMeta
+
+		// If there's no supported patches, shortcut with UNSUPPORTED
+		if (!supportedPatches) {
+			return ROLES.UNSUPPORTED.id
+		}
+
+		// Get patch suport data, and check if it's outdated
+		const {lang, start} = this.props.report
+		const from = supportedPatches.from as PatchNumber
+		const to = (supportedPatches.to as PatchNumber) || from
+		if (!patchSupported(languageToEdition(lang), from, to, start / 1000)) {
+			return ROLES.OUTDATED.id
+		}
+
+		// We got this far - must support it. Return the job's in-game role.
+		const job = getDataBy(JOBS, 'logType', type)
+		if (!job) { throw new Error(`No configured job data found for type '${type}'`) }
+		return job.role
 	}
 
 	render() {
-		const globalErrorStore = this.props.globalErrorStore!
+		const globalErrorStore = this.context.globalErrorStore
 
 		// If there's no groups at all, the fight probably doesn't exist - show an error
 		if (this.groupedActors.length === 0) {
@@ -111,7 +116,9 @@ class CombatantList extends React.Component<Props> {
 				</Header>
 
 				{this.groupedActors.map((friends, index) => {
-					const role = ROLES[index]
+					const role = getDataBy(ROLES, 'id', index)
+					if (!role) { return }
+
 					const showWarning = !warningDisplayed && [
 						ROLES.OUTDATED.id,
 						ROLES.UNSUPPORTED.id,
@@ -157,7 +164,8 @@ class CombatantList extends React.Component<Props> {
 	private renderFriend = (friend: Actor) => {
 		const {report, currentFight} = this.props
 		const job = getDataBy(JOBS, 'logType', friend.type)
-		const supportedPatchesData = (AVAILABLE_MODULES.JOBS[friend.type] || {}).supportedPatches
+		const jobMeta = AVAILABLE_MODULES.JOBS[friend.type]
+		const supportedPatchesData = jobMeta ? jobMeta.supportedPatches : undefined
 
 		let supportedPatches: React.ReactNode
 		if (supportedPatchesData) {

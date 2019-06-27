@@ -3,8 +3,9 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -18,16 +19,17 @@ const GAUGE_EVENTS = [
 export const BLM_GAUGE_EVENT = Symbol('blmgauge')
 
 const ENOCHIAN_DURATION_REQUIRED = 30000
-const ASTRAL_UMBRAL_DURATION = 13000
+const ASTRAL_UMBRAL_DURATION = 15000
 const MAX_ASTRAL_UMBRAL_STACKS = 3
 const MAX_UMBRAL_HEART_STACKS = 3
 const FLARE_MAX_HEART_CONSUMPTION = 3
+const MAX_POLYGLOT_STACKS = 2
 
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static title = t('blm.gauge.title')`Gauge`
 	static dependencies = [
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'suggestions',
 		'brokenLog',
 	]
@@ -43,11 +45,12 @@ export default class Gauge extends Module {
 		stop: 0,
 		time: 0,
 	}
-	_hasPolyglot = false
+	//_hasPolyglot = false
+	_polyglotStacks = 0
 
 	_droppedEno = 0
-	_lostFoul = 0
-	_overwrittenFoul = 0
+	_lostPolyglot = 0
+	_overwrittenPolyglot = 0
 
 	_normalizeIndex = 0
 	_currentTimestamp = 0
@@ -63,7 +66,7 @@ export default class Gauge extends Module {
 			lastGaugeEvent.umbralIce !== this._umbralIceStacks ||
 			lastGaugeEvent.umbralHearts !== this._umbralHeartStacks ||
 			lastGaugeEvent.enochian !== this._hasEnochian ||
-			lastGaugeEvent.polyglot !== this._hasPolyglot
+			lastGaugeEvent.polyglot !== this._polyglotStacks
 		) {
 			return true
 		}
@@ -82,7 +85,7 @@ export default class Gauge extends Module {
 				umbralIce: this._umbralIceStacks,
 				umbralHearts: this._umbralHeartStacks,
 				enochian: this._hasEnochian,
-				polyglot: this._hasPolyglot,
+				polyglot: this._polyglotStacks,
 				lastGaugeEvent: this._lastAdded,
 			})
 			this._lastAdded = this._toAdd[this._toAdd.length - 1]
@@ -154,19 +157,20 @@ export default class Gauge extends Module {
 	}
 
 	onGainPolyglot() {
-		if (this._hasPolyglot) {
-			this._overwrittenFoul++
+		this._polyglotStacks++
+		if (this._polyglotStacks > MAX_POLYGLOT_STACKS) {
+			this._overwrittenPolyglot++
 		}
-		this._hasPolyglot = true
+		this._polyglotStacks = Math.min(this._polyglotStacks, MAX_POLYGLOT_STACKS)
 		this.addEvent()
 	}
 
 	onConsumePolyglot() {
-		if (!this._hasPolyglot && this._overwrittenFoul > 0) {
+		if (!this._polyglotStacks > 0 && this._overwrittenPolyglot > 0) {
 			// Safety to catch ordering issues where Foul is used late enough to trigger our overwrite check but happens before Poly actually overwrites
-			this._overwrittenFoul--
+			this._overwrittenPolyglot--
 		}
-		this._hasPolyglot = false
+		this._polyglotStacks = Math.max(this._polyglotStacks - 1, 0)
 		this.addEvent()
 	}
 
@@ -202,6 +206,13 @@ export default class Gauge extends Module {
 				this._astralFireStacks = 1
 				this._umbralIceStacks = 0
 			}
+			this.addEvent()
+		}
+	}
+
+	tryGainUmbralHearts(event, count) {
+		if (this._umbralIceStacks > 0) {
+			this._umbralHeartStacks = Math.min(this._umbralHeartStacks + count, MAX_UMBRAL_HEART_STACKS)
 			this.addEvent()
 		}
 	}
@@ -245,7 +256,7 @@ export default class Gauge extends Module {
 		this._enochianDownTimer.stop = 0
 	}
 
-	_renderLostFouls(time) {
+	_countLostPolyglots(time) {
 		return Math.floor(time/ENOCHIAN_DURATION_REQUIRED)
 	}
 
@@ -262,7 +273,8 @@ export default class Gauge extends Module {
 		case ACTIONS.BLIZZARD_I.id:
 		case ACTIONS.BLIZZARD_II.id:
 		case ACTIONS.FREEZE.id:
-			this.onGainUmbralIceStacks(event, 1)
+			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
+			this.tryGainUmbralHearts(event, 1)
 			break
 		case ACTIONS.BLIZZARD_III.id:
 			this.onGainUmbralIceStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
@@ -278,6 +290,10 @@ export default class Gauge extends Module {
 			}
 			this._umbralHeartStacks = MAX_UMBRAL_HEART_STACKS
 			this.addEvent()
+			break
+		case ACTIONS.UMBRAL_SOUL.id:
+			this.onGainUmbralIceStacks(event, 1)
+			this.tryGainUmbralHearts(event, 1)
 			break
 		case ACTIONS.FIRE_I.id:
 		case ACTIONS.FIRE_II.id:
@@ -299,10 +315,12 @@ export default class Gauge extends Module {
 			}
 			this.tryConsumeUmbralHearts(event, 1)
 			break
+		case ACTIONS.DESPAIR.id:
 		case ACTIONS.FLARE.id:
 			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
 			break
+		case ACTIONS.XENOGLOSSY.id:
 		case ACTIONS.FOUL.id:
 			this.onConsumePolyglot()
 			break
@@ -319,7 +337,7 @@ export default class Gauge extends Module {
 		this._umbralHeartStacks = 0
 		this._astralUmbralStackTimer = 0
 		this._hasEnochian = false
-		this._hasPolyglot = false
+		this._polyglotStacks = 0
 		this._enochianTimer = 0
 		this.addEvent()
 	}
@@ -328,14 +346,14 @@ export default class Gauge extends Module {
 		if (this._enochianDownTimer.start) {
 			this._enoDownTimerStop(event)
 		}
-		this._lostFoul = this._renderLostFouls(this._enochianDownTimer.time)
+		this._lostPolyglot = this._countLostPolyglots(this._enochianDownTimer.time)
 
 		// Suggestions for lost eno
 		if (this._droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
-					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.FOUL}/>, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 10% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
+					Dropping <ActionLink {...ACTIONS.ENOCHIAN}/> may lead to lost <ActionLink {...ACTIONS.XENOGLOSSY}/> or <ActionLink {...ACTIONS.FOUL}/> casts, more clipping because of additional <ActionLink {...ACTIONS.ENOCHIAN}/> casts, unavailability of <ActionLink {...ACTIONS.FIRE_IV}/> and <ActionLink {...ACTIONS.BLIZZARD_IV}/> or straight up missing out on the 15% damage bonus that <ActionLink {...ACTIONS.ENOCHIAN}/> provides.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
@@ -344,28 +362,28 @@ export default class Gauge extends Module {
 			}))
 		}
 
-		if (this._lostFoul) {
+		if (this._lostPolyglot) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.lost-foul.content">
-					You lost <ActionLink {...ACTIONS.FOUL}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
+				icon: ACTIONS.XENOGLOSSY.icon,
+				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
+					You lost <StatusLink {...STATUSES.POLYGLOT}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.lost-foul.why">
-					<Plural value={this._lostFoul} one="# Foul was" other="# Fouls were"/> lost.
+				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
+					<Plural value={this._lostPolyglot} one="# Polyglot stack was" other="# Polyglot stacks were"/> lost.
 				</Trans>,
 			}))
 		}
 
-		if (this._overwrittenFoul) {
+		if (this._overwrittenPolyglot) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FOUL.icon,
-				content: <Trans id="blm.gauge.suggestions.overwritten-foul.content">
-					You overwrote <ActionLink {...ACTIONS.FOUL}/> due to not casting it every 30s. <ActionLink {...ACTIONS.FOUL}/> is your strongest GCD, so always maximize its casts.
+				icon: ACTIONS.XENOGLOSSY.icon,
+				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
+					You overwrote <StatusLink {...STATUSES.POLYGLOT}/> due to not casting <ActionLink {...ACTIONS.XENOGLOSSY} /> or <ActionLink {...ACTIONS.FOUL}/> for 30s after gaining a second stack. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.gauge.suggestions.overwritten-foul.why">
-					Foul got overwritten <Plural value={this._overwrittenFoul} one="# time" other="# times"/>.
+				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
+					Xenoglossy got overwritten <Plural value={this._overwrittenPolyglot} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}

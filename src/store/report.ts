@@ -1,14 +1,15 @@
 import {fflogsApi} from 'api'
-import {AxiosResponse} from 'axios'
 import * as Errors from 'errors'
-import {ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
+import {settingsStore} from './settings'
 
 interface UnloadedReport {
 	loading: true
 }
-export interface Report extends ReportFightsResponse {
+export interface Report extends ProcessedReportFightsResponse {
 	code: string
 	loading: false
 }
@@ -23,17 +24,22 @@ export class ReportStore {
 	}
 
 	@action
-	private async fetchReport(code: string, params?: ReportFightsQuery['params']) {
+	private async fetchReport(code: string, params?: ReportFightsQuery) {
 		this.report = {loading: true}
 
-		let response: AxiosResponse<ReportFightsResponse>
+		const bypassCache =
+			(params && params.bypassCache) || settingsStore.bypassCacheNextRequest
+		settingsStore.setBypassCacheNextRequest(false)
+
+		let response: ReportFightsResponse
 		try {
-			response = await fflogsApi.get<ReportFightsResponse>(`/report/fights/${code}`, {
-				params: {
-					translate: true,
-					...params,
+			response = await fflogsApi.get(`report/fights/${code}`, {
+				searchParams: {
+					translate: 'true',
+					..._.omitBy(params, _.isNil),
+					...(bypassCache? {bypassCache: 'true'} : {}),
 				},
-			})
+			}).json<ReportFightsResponse>()
 		} catch (e) {
 			// Something's gone wrong, clear report status then dispatch an error
 			runInAction(() => {
@@ -49,10 +55,19 @@ export class ReportStore {
 			return
 		}
 
-		// Save out the report
+		// Report is still processing - clear the state and error
+		if (response.processing) {
+			runInAction(() => this.report = undefined)
+			globalErrorStore.setGlobalError(new Errors.ReportProcessingError())
+			settingsStore.setBypassCacheNextRequest(true)
+			return
+		}
+
+		// Save out the report. Assignment because >ts
+		const processedResponse = response
 		runInAction(() => {
 			this.report = {
-				...response.data,
+				...processedResponse,
 				code,
 				loading: false,
 			}

@@ -1,18 +1,15 @@
 import {Trans} from '@lingui/react'
-import {observer, inject} from 'mobx-react'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Loader} from 'semantic-ui-react'
-
-import FightList from './FightList'
+import {StoreContext} from 'store'
 import CombatantList from './CombatantList'
-import {ReportStore} from 'store/report'
+import FightList from './FightList'
 
-@inject('reportStore')
 @observer
 class Find extends React.Component {
 	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
@@ -21,14 +18,17 @@ class Find extends React.Component {
 		}).isRequired,
 	}
 
+	static contextType = StoreContext
+
 	componentDidMount() {
-		const {reportStore, match} = this.props
+		const {reportStore} = this.context
+		const {match} = this.props
 		reportStore.fetchReportIfNeeded(match.params.code)
 	}
 
 	render() {
+		const {reportStore} = this.context
 		const {
-			reportStore,
 			match: {params},
 		} = this.props
 

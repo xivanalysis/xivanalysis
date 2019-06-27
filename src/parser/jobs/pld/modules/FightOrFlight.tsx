@@ -2,7 +2,8 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableEntry} from 'components/ui/RotationTable'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
@@ -116,7 +117,8 @@ export default class FightOrFlight extends Module {
 		}
 
 		if (this.fofState.start) {
-			const action = getAction(actionId) as TODO // Should be an Action type
+			const action = getDataBy(ACTIONS, 'id', actionId) as TODO // Should be an Action type
+			if (!action) { return }
 
 			if (action.onGcd) {
 				this.fofState.gcdCounter++
@@ -231,7 +233,10 @@ export default class FightOrFlight extends Module {
 	}
 
 	private countGCDs(rotation: CastEvent[]) {
-		return rotation.reduce((sum, event) => sum + ((getAction(event.ability.guid) as any).onGcd ? 1 : 0), 0)
+		return rotation.reduce((sum, event) => {
+			const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+			return sum + (action && action.onGcd ? 1 : 0)
+		}, 0)
 	}
 
 	output() {

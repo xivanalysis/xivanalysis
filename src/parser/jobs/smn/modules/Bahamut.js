@@ -3,7 +3,8 @@ import {Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {SUMMON_BAHAMUT_LENGTH} from './Pets'
@@ -50,8 +51,8 @@ export default class Bahamut extends Module {
 
 	_onPlayerCast(event) {
 		// Ignore autos
-		const action = getAction(event.ability.guid)
-		if (action.autoAttack) { return }
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action || action.autoAttack) { return }
 
 		// Track player actions during SB
 		if (this.gauge.bahamutSummoned()) {

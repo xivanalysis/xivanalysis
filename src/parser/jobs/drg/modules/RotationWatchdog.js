@@ -5,7 +5,8 @@ import {Accordion, Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 
 const VALID_ROTATIONS = [
@@ -76,8 +77,8 @@ export default class RotationWatchdog extends Module {
 	}
 
 	_onCast(event) {
-		const action = getAction(event.ability.guid)
-		if (!action.onGcd) {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (!action || !action.onGcd) {
 			return
 		}
 

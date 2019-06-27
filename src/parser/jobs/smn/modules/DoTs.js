@@ -131,7 +131,7 @@ export default class DoTs extends Module {
 				Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you'll need to hardcast your DoTs.
 			</Trans>,
 			why: <Trans id="smn.dots.suggestions.clipping.why">
-				{this.parser.formatDuration(this._clip[STATUSES.BIO_III.id])} of {STATUSES[STATUSES.BIO_III.id].name} and {this.parser.formatDuration(this._clip[STATUSES.MIASMA_III.id])} of {STATUSES[STATUSES.MIASMA_III.id].name} lost to early refreshes.
+				{this.parser.formatDuration(this._clip[STATUSES.BIO_III.id])} of {STATUSES.BIO_III.name} and {this.parser.formatDuration(this._clip[STATUSES.MIASMA_III.id])} of {STATUSES.MIASMA_III.name} lost to early refreshes.
 			</Trans>,
 			tiers: CLIPPING_SEVERITY,
 			value: maxClip,

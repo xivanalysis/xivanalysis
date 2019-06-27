@@ -1,5 +1,6 @@
-import ACTIONS, {getAction} from 'data/ACTIONS'
-import STATUSES, {getStatus} from 'data/STATUSES'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {Group, Item} from 'parser/core/modules/Timeline'
@@ -108,7 +109,8 @@ export default class Procs extends Module {
 		const actionId = event.ability.guid
 
 		// Skip proc checking if we had a corresponding begincast event or the begincast we recorded isn't the same as this spell (ie. cancelled a cast, used a proc)
-		if (getAction(actionId).onGcd && (!this._castingSpellId || this._castingSpellId !== actionId)) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (action && action.onGcd && (!this._castingSpellId || this._castingSpellId !== actionId)) {
 			this._tryConsumeProc(event)
 		}
 
@@ -169,7 +171,7 @@ export default class Procs extends Module {
 
 	_onComplete() {
 		PROC_BUFFS.forEach(buff => {
-			const status = getStatus(buff)
+			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = 'procbuffs-' + status.id
 			const fightStart = this.parser.fight.start_time
 
