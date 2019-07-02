@@ -154,25 +154,25 @@ export default {
 	},
 
 	KAESHI_HIGANBANA: {
-		id: 9999,
+		id: 16484,
 		name: 'Kaeshi: Higanbana',
-		icon: '?',
+		icon: 'https://xivapi.com/i/003000/003181.png',
 		onGcd: true,
 		castTime: 1.3,
 	},
 
 	KAESHI_GOKEN: {
-		id: 9999,
+		id: 16485,
 		name: 'Kaeshi: Goken',
-		icon: ' ?',
+		icon: 'https://xivapi.com/i/003000/003182.png',
 		onGcd: true,
 		castTime: 1.3,
 	},
 
 	KAESHI_SETSUGEKKA: {
-		id: 9999,
+		id: 16486,
 		name: 'Kaeshi: Setsugekka',
-		icon: '?',
+		icon: 'https://xivapi.com/i/003000/003183.png',
 		onGcd: true,
 		castTime: 1.3,
 	},
@@ -270,7 +270,7 @@ export default {
 	IKISHOTEN: {
 		id: 9999,
 		name: 'Ikishoten',
-		icon: '?',
+		icon: 'https://xivapi.com/i/003000/003179.png',
 		cooldown: 60,
 	},
 
@@ -283,17 +283,24 @@ export default {
 	},
 
 	HISSATSU_SENEI: {
-		id: 9999,
+		id: 16481,
 		name: 'Hissatsu: Senei',
-		icon: ' ?',
+		icon: 'https://xivapi.com/i/003000/003177.png',
 		cooldown: 120,
 		cooldownGroup: 10,
 	},
 
+	TSUBAME_GAESHI: {
+		id: 7496,
+		name: 'Tsubame Gaeshi',
+		icon: 'https://xivapi.com/i/003000/003180.png',
+		cooldown: 60,
+	},
+
 	SHOHA: {
-		id: 9999,
+		id: 16487,
 		name: 'Shoha',
-		icon: '?',
+		icon: 'https://xivapi.com/i/003000/003177.png',
 		cooldown: 1,
 	},
 }
