@@ -43,7 +43,7 @@ export default {
 	BUNSHIN: {
 		id: 16493,
 		name: 'Bunshin',
-		icon: 'https://xivapi.com/i/012000/012911.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002927.png',
 		duration: 15,
 	},
 }
