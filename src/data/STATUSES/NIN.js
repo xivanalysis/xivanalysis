@@ -41,7 +41,7 @@ export default {
 	},
 
 	BUNSHIN: {
-		id: 20000, // TODO
+		id: 16493,
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/012000/012911.png', // TODO
 		duration: 15,
