@@ -41,9 +41,16 @@ export default {
 	},
 
 	BUNSHIN: {
-		id: 16493,
+		id: 1954, // TODO - This is -probably- the right one, but we'll have to check real data to confirm
 		name: 'Bunshin',
-		icon: 'https://xivapi.com/i/002000/002927.png',
+		icon: 'https://xivapi.com/i/012000/012912.png',
 		duration: 15,
+	},
+
+	ASSASSINATE_READY: {
+		id: 1955,
+		name: 'Assassinate Ready',
+		icon: 'https://xivapi.com/i/012000/012913.png',
+		duration: 10,
 	},
 }
