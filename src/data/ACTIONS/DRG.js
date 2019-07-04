@@ -30,9 +30,9 @@ export default {
 	},
 
 	RAIDEN_THRUST: {
-		id: 10001, // TODO
+		id: 16479,
 		name: 'Raiden Thrust',
-		icon: 'https://xivapi.com/i/000000/000310.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002592.png',
 		onGcd: true,
 		potency: 330,
 		combo: {
@@ -53,9 +53,9 @@ export default {
 	},
 
 	COERTHAN_TORMENT: {
-		id: 10002, // TODO
+		id: 16477,
 		name: 'Coerthan Torment',
-		icon: 'https://xivapi.com/i/002000/002586.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002590.png',
 		onGcd: true,
 		potency: 100,
 		combo: {
@@ -75,9 +75,9 @@ export default {
 	},
 
 	HIGH_JUMP: {
-		id: 10003, // TODO
+		id: 16478,
 		name: 'High Jump',
-		icon: 'https://xivapi.com/i/002000/002576.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002591.png',
 		cooldown: 30,
 	},
 
@@ -147,9 +147,9 @@ export default {
 	},
 
 	STARDIVER: {
-		id: 10004, // TODO
+		id: 16480,
 		name: 'Stardiver',
-		icon: 'https://xivapi.com/i/002000/002576.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30,
 	},
 }

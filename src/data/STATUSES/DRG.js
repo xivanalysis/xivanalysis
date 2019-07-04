@@ -21,9 +21,9 @@ export default {
 	},
 
 	DISEMBOWEL: {
-		id: 20000, // TODO
+		id: 121,
 		name: 'Disembowel',
-		icon: 'https://xivapi.com/i/010000/010306.png', // TODO
+		icon: 'https://xivapi.com/i/012000/012576.png',
 		duration: 24,
 	},
 
@@ -42,9 +42,9 @@ export default {
 	},
 
 	LANCE_CHARGE: {
-		id: 20001, // TODO
+		id: 1864,
 		name: 'Lance Charge',
-		icon: 'https://xivapi.com/i/010000/010304.png', // TODO?
+		icon: 'https://xivapi.com/i/010000/010304.png',
 		duration: 20,
 	},
 
@@ -67,5 +67,12 @@ export default {
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/010000/010302.png',
 		duration: 5,
+	},
+
+	RAIDEN_THRUST_READY: {
+		id: 116,
+		name: 'Raiden Thrust Ready',
+		icon: 'https://xivapi.com/i/012000/012584.png',
+		duration: 10,
 	},
 }

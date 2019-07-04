@@ -82,7 +82,7 @@ export default {
 	},
 
 	LANCE_CHARGE: {
-		id: 10000, // TODO
+		id: 85,
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
 		cooldown: 90,
