@@ -165,12 +165,16 @@ export default class AoE extends Module {
 				return carry
 			}, {})
 
-			this.parser.fabricateEvent({
+			const fabricatedEvent = {
 				type: 'aoe' + eventType,
 				ability: event.events[eventType][0].ability,
 				hits: Object.values(hitsByTarget),
 				sourceID: event.events[eventType][0].sourceID,
-			})
+			}
+			if (event.events[eventType][0].hasOwnProperty('sourceResources')) {
+				fabricatedEvent.sourceResources = event.events[eventType][0].sourceResources
+			}
+			this.parser.fabricateEvent(fabricatedEvent)
 		}
 	}
 

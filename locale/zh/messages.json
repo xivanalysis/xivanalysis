@@ -227,10 +227,14 @@
   "drg.rotation.accordion.message": "龙骑士有非常严格的11-GCD循环，只有在你提前刷新<0/>，或者给两个目标上DoT的时候才可能有少许变化。下面列出的都是循环中的错误。",
   "drg.rotation.panel-count": "{0, plural, other {# 个GCD}}",
   "drg.rotation.title": "循环问题",
-  "drk.buffs.trigger.darkside-multiple-removals": "在一场战斗中，<0/>多次处于关闭状态。",
-  "drk.buffs.trigger.darkside-reapply": "当你可以输出时，应当保证<0/>是开启的。",
-  "drk.buffs.trigger.grit-multiple-removals": "在一场战斗中，<0/>多次处于关闭状态。",
-  "drk.buffs.trigger.grit-reapply": "当你可以输出时，应当保证<0/>是开启的。",
+  "drk.delirium.suggestions.badgcd.content": "",
+  "drk.delirium.suggestions.badgcd.why": "",
+  "drk.delirium.suggestions.missedgcd.content": "",
+  "drk.delirium.suggestions.missedgcd.why": "",
+  "drk.delirium.table.header.gcds": "",
+  "drk.delirium.title": "",
+  "drk.multihit.suggestions.content": "",
+  "drk.multihit.suggestions.why": "",
   "game.job.astrologian": "占星术士",
   "game.job.bard": "吟游诗人",
   "game.job.black-mage": "黑魔法师",
@@ -683,6 +687,5 @@
   "whm.overheal.requirement.hot": "过量治疗（HoT）",
   "whm.overheal.requirement.nonhot": "过量治疗（非HoT）",
   "whm.overheal.rule.description": "尽量避免在非必要的情况下进行抬血。虽然过量治疗有些时候不可避免，但它往往只会白白制造仇恨。此外，尽可能高效地进行治疗也有助于 MP 管理。",
-  "whm.overheal.rule.name": "避免过量治疗",
-  "{0, plural, one {time} other {times}}": "{0, plural, other {次}}"
+  "whm.overheal.rule.name": "避免过量治疗"
 }

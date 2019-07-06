@@ -227,10 +227,14 @@
   "drg.rotation.accordion.message": "DRG a une rotation stricte de 11 GDC avec quelques variations mineures possibles, si vous actualisez <0/> trop tôt ou que vous maintenez un DoT sur deux cibles à la fois par exemple. Toutes les entrées ci-dessous représentent des rotations incorrectes.",
   "drg.rotation.panel-count": "",
   "drg.rotation.title": "",
-  "drk.buffs.trigger.darkside-multiple-removals": "",
-  "drk.buffs.trigger.darkside-reapply": "",
-  "drk.buffs.trigger.grit-multiple-removals": "",
-  "drk.buffs.trigger.grit-reapply": "",
+  "drk.delirium.suggestions.badgcd.content": "",
+  "drk.delirium.suggestions.badgcd.why": "",
+  "drk.delirium.suggestions.missedgcd.content": "",
+  "drk.delirium.suggestions.missedgcd.why": "",
+  "drk.delirium.table.header.gcds": "",
+  "drk.delirium.title": "",
+  "drk.multihit.suggestions.content": "",
+  "drk.multihit.suggestions.why": "",
   "game.job.astrologian": "Astromancien",
   "game.job.bard": "Barde",
   "game.job.black-mage": "Mage noir",
@@ -683,6 +687,5 @@
   "whm.overheal.requirement.hot": "Soins en surplus (HoT)",
   "whm.overheal.requirement.nonhot": "Soins en surplus (non-HoT)",
   "whm.overheal.rule.description": "Évitez de gaspiller des heals qui rempliront plus que la barre de vie du joueur ciblé. Bien que de l'overheal est inévitable, l'overheal ne fait que générer plus d'inimité, pour aucun autre gain. De plus, être efficace en soignant vous aide dans la gestion de votre Magie prompte.",
-  "whm.overheal.rule.name": "Éviter l'overheal",
-  "{0, plural, one {time} other {times}}": "{0, plural, one {# tick} other {# ticks}}"
+  "whm.overheal.rule.name": "Éviter l'overheal"
 }
