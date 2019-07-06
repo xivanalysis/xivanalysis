@@ -26,6 +26,11 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2019-07-05'),
+		Changes: () => <>Updated combos to proper account for Raiden Thrust, fixed the Disembowel checklist item.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
+		date: new Date('2019-07-05'),
 		Changes: () => <>
 			Initial changes for Shadowbringers:&nbsp;
 			<ul>
