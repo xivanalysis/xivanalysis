@@ -119,6 +119,7 @@ export default class BloodOfTheDragon extends Module {
 				start: this.parser.currentTimestamp,
 				duration: this._lifeDuration,
 				nastronds: [],
+				stardivers: [],
 			}
 			this._eyes = 0
 		}
