@@ -29,7 +29,7 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2019-07-07'),
-		Changes: () => <>Double weaving is no longer frowned upon, plus a small bugfix for the Hellfrog suggestion.</>,
+		Changes: () => <>Double weaving is no longer frowned upon, plus small bugfixes for the Hellfrog and Kassatsu suggestions.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	}],
 })
