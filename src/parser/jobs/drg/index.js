@@ -24,5 +24,16 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 	],
-	changelog: [],
+	changelog: [{
+		date: new Date('2019-07-05'),
+		Changes: () => <>
+			Initial changes for Shadowbringers:&nbsp;
+			<ul>
+				<li>Updated the Blood of the Dragon simulation to account for trait changes</li>
+				<li>Temporarily disabled the Rotation Watchdog module until it's updated</li>
+				<li>Removed outdated modules</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	}],
 })

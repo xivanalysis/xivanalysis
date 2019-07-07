@@ -16,10 +16,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const BAD_LIFE_SURGE_CONSUMERS = [
 	ACTIONS.TRUE_THRUST.id,
 	ACTIONS.VORPAL_THRUST.id,
-	ACTIONS.IMPULSE_DRIVE.id,
 	ACTIONS.DISEMBOWEL.id,
 	ACTIONS.CHAOS_THRUST.id,
-	ACTIONS.HEAVY_THRUST.id,
 	ACTIONS.PIERCING_TALON.id,
 	ACTIONS.DOOM_SPIKE.id,
 	ACTIONS.SONIC_THRUST.id,
@@ -28,13 +26,13 @@ const FINAL_COMBO_HITS = [
 	ACTIONS.FANG_AND_CLAW.id,
 	ACTIONS.WHEELING_THRUST.id,
 ]
-const BFB_FIRST_ACTIONS = [
+const LC_FIRST_ACTIONS = [
 	ACTIONS.DISEMBOWEL.id,
 	ACTIONS.CHAOS_THRUST.id,
 	ACTIONS.FULL_THRUST.id,
 ]
 const STATUS_MAP = {
-	[ACTIONS.BLOOD_FOR_BLOOD.id]: STATUSES.BLOOD_FOR_BLOOD.id,
+	[ACTIONS.LANCE_CHARGE.id]: STATUSES.LANCE_CHARGE.id,
 	[ACTIONS.DRAGON_SIGHT.id]: STATUSES.RIGHT_EYE.id,
 }
 
@@ -44,7 +42,7 @@ const BUFF_GCD_ERROR = 0
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
-	static title = t('drg.buffs.title')`Blood for Blood & Dragon Sight`
+	static title = t('drg.buffs.title')`Lance Charge & Dragon Sight`
 	static dependencies = [
 		'checklist',
 		'combatants',
@@ -56,7 +54,7 @@ export default class Buffs extends Module {
 	_fifthGcd = false
 
 	_buffWindows = {
-		[STATUSES.BLOOD_FOR_BLOOD.id]: {
+		[STATUSES.LANCE_CHARGE.id]: {
 			current: null,
 			history: [],
 		},
@@ -69,7 +67,7 @@ export default class Buffs extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.BLOOD_FOR_BLOOD.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -112,7 +110,7 @@ export default class Buffs extends Module {
 			}
 		}
 
-		this._pushToWindow(event, STATUSES.BLOOD_FOR_BLOOD.id)
+		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id)
 		this._pushToWindow(event, STATUSES.RIGHT_EYE.id)
 	}
 
@@ -133,8 +131,8 @@ export default class Buffs extends Module {
 		}
 	}
 
-	_getHeavyThrustUptimePercent() {
-		const statusUptime = this.combatants.getStatusUptime(STATUSES.HEAVY_THRUST.id)
+	_getDisembowelUptimePercent() {
+		const statusUptime = this.combatants.getStatusUptime(STATUSES.DISEMBOWEL.id)
 		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightUptime) * 100
 	}
@@ -160,18 +158,18 @@ export default class Buffs extends Module {
 	}
 
 	_onComplete() {
-		this._closeLastWindow(STATUSES.BLOOD_FOR_BLOOD.id)
+		this._closeLastWindow(STATUSES.LANCE_CHARGE.id)
 		this._closeLastWindow(STATUSES.RIGHT_EYE.id)
 		this.checklist.add(new Rule({
-			name: <Trans id="drg.buffs.checklist.name">Keep {ACTIONS.HEAVY_THRUST.name} up</Trans>,
+			name: <Trans id="drg.buffs.checklist.name">Keep {ACTIONS.DISEMBOWEL.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
-				<ActionLink {...ACTIONS.HEAVY_THRUST}/> provides a 10% boost to your personal damage and should always be kept up.
+				<ActionLink {...ACTIONS.DISEMBOWEL}/> provides a 10% boost to your personal damage and should always be kept up.
 			</Trans>,
-			displayOrder: DISPLAY_ORDER.HEAVY_THRUST,
+			displayOrder: DISPLAY_ORDER.DISEMBOWEL,
 			requirements: [
 				new Requirement({
-					name: <Trans id="drg.buffs.checklist.requirement.name"><ActionLink {...ACTIONS.HEAVY_THRUST}/> uptime</Trans>,
-					percent: () => this._getHeavyThrustUptimePercent(),
+					name: <Trans id="drg.buffs.checklist.requirement.name"><ActionLink {...ACTIONS.DISEMBOWEL}/> uptime</Trans>,
+					percent: () => this._getDisembowelUptimePercent(),
 				}),
 			],
 		}))
@@ -192,19 +190,19 @@ export default class Buffs extends Module {
 			</Trans>,
 		}))
 
-		const badlyTimedBfbs = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.filter(window => window.casts.length > 0 && !BFB_FIRST_ACTIONS.includes(window.firstGcd)).length
+		const badlyTimedLcs = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.filter(window => window.casts.length > 0 && !LC_FIRST_ACTIONS.includes(window.firstGcd)).length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.BLOOD_FOR_BLOOD.icon,
-			content: <Trans id="drg.buffs.suggestions.bad-bfbs.content">
-				Avoid using <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> immediately before any GCD other than <ActionLink {...ACTIONS.DISEMBOWEL}/>, <ActionLink {...ACTIONS.CHAOS_THRUST}/>, and <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
+			icon: ACTIONS.LANCE_CHARGE.icon,
+			content: <Trans id="drg.buffs.suggestions.bad-lcs.content">
+				Avoid using <ActionLink {...ACTIONS.LANCE_CHARGE}/> immediately before any GCD other than <ActionLink {...ACTIONS.DISEMBOWEL}/>, <ActionLink {...ACTIONS.CHAOS_THRUST}/>, and <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
 			},
-			value: badlyTimedBfbs,
-			why: <Trans id="drg.buffs.suggestions.bad-bfbs.why">
-				{badlyTimedBfbs} of your Blood for Blood windows started on a non-optimal GCD.
+			value: badlyTimedLcs,
+			why: <Trans id="drg.buffs.suggestions.bad-lcs.why">
+				{badlyTimedLcs} of your Lance Charge windows started on a non-optimal GCD.
 			</Trans>,
 		}))
 	}
@@ -222,7 +220,7 @@ export default class Buffs extends Module {
 	}
 
 	output() {
-		const bfbPanels = this._buffWindows[STATUSES.BLOOD_FOR_BLOOD.id].history.map(window => {
+		const lcPanels = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map(window => {
 			return {
 				title: {
 					key: 'title-' + window.start,
@@ -261,15 +259,15 @@ export default class Buffs extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.BLOOD_FOR_BLOOD}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/> or <StatusLink {...STATUSES.THE_ARROW}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
-			{bfbPanels.length > 0 && <>
+			{lcPanels.length > 0 && <>
 				<Header size="small">
-					<Trans id="drg.buffs.accordion.bfb-header">Blood for Blood</Trans>
+					<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
 				</Header>
 				<Accordion
 					exclusive={false}
-					panels={bfbPanels}
+					panels={lcPanels}
 					styled
 					fluid
 				/>
