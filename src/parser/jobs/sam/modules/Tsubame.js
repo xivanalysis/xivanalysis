@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import Trans from '@lingui/react'
+import {Trans} from '@lingui/react'
 import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -14,7 +14,6 @@ export default class Tsubame  extends Module {
 		'suggestions',
 	]
 
-
 	_kaeshiFailures = 0 //amount of bad kaeshi moves
 	_kaeshiMidare = 0 //amount of times kaeshi was a double midare
 
@@ -26,11 +25,11 @@ export default class Tsubame  extends Module {
 	}
 
 	_onBadTsubame() {
-		this.kaeshiFailures +=1
+		this._kaeshiFailures += 1
 	}
 
 	_onDoubleMidare() {
-		this.kaeshiMidare +=1
+		this._kaeshiMidare += 1
 	}
 
 	_onComplete() {
@@ -45,7 +44,7 @@ export default class Tsubame  extends Module {
 					0: SEVERITY.MAJOR,
 				},
 				why: <Trans id= "sam.tsubame.suggestion.notsubame.why"> You did not use <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> at all. </Trans>,
-				value: totalUses,
+				value: this._totalUses,
 			}))
 		}
 
@@ -58,7 +57,7 @@ export default class Tsubame  extends Module {
 					2: SEVERITY.MAJOR,
 				},
 				why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> Amount of misused <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>: {badUses} </Trans>,
-				value: badUses,
+				value: this._badUses,
 			}))
 		}
 
