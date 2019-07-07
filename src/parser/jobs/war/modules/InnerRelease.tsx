@@ -120,7 +120,7 @@ export default class InnerRelease extends Module {
 		const missedGcds = this.innerReleaseWindows
 			.reduce((sum, irWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.GCD - irWindow.gcds), 0)
 		const missedGaugeDumps = this.innerReleaseWindows
-			.reduce((sum, irWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.GAUGE_DUMP - irWindow.gaugeDumps), 0)
+			.reduce((sum, irWindow) => sum + Math.max(0, irWindow.gcds - irWindow.gaugeDumps), 0)
 		const missedUpheavals = this.innerReleaseWindows
 			.reduce((sum, irWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.UPHEAVAL - irWindow.upheavals), 0)
 		const missedOnslaughts = this.innerReleaseWindows
@@ -141,13 +141,11 @@ export default class InnerRelease extends Module {
 		}
 
 		// incorrect GCDs (not Fell Cleave or Decimate)
-		// only show this if the number of missed GCDs isn't the same value, otherwise there are bigger issues
-		// note that this is technically incorrect for Memeheaval - no, I'm not fixing it right before 5.0 when it dies
-		if (missedGaugeDumps > 0 && missedGcds !== missedGaugeDumps) {
+		if (missedGaugeDumps > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FELL_CLEAVE.icon,
 				content: <Trans id="war.ir.suggestions.badgcd.content">
-					GCDs used during <ActionLink {...ACTIONS.INNER_RELEASE}/> should be limited to <ActionLink {...ACTIONS.FELL_CLEAVE}/> for optimal damage (or <ActionLink {...ACTIONS.DECIMATE}/> if more than one target is present).
+					GCDs used during <ActionLink {...ACTIONS.INNER_RELEASE}/> should be limited to <ActionLink {...ACTIONS.FELL_CLEAVE}/> for optimal damage (or <ActionLink {...ACTIONS.DECIMATE}/> if three or more targets are present).
 				</Trans>,
 				why: <Trans id="war.ir.suggestions.badgcd.why">
 					{missedGaugeDumps} incorrect <Plural value={missedGaugeDumps} one="GCD was" other="GCDs were"/> used during <ActionLink {...ACTIONS.INNER_RELEASE}/> windows.

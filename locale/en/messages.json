@@ -648,7 +648,7 @@
   "war.gauge.suggestions.lost-rage.content": "You used <0/>, <1/>, <2/>, or any gauge generators in a way that overcapped you.",
   "war.gauge.suggestions.lost-rage.why": "{0} rage wasted by using abilities that sent you over the cap.",
   "war.gauge.title": "Gauge Usage",
-  "war.ir.suggestions.badgcd.content": "GCDs used during <0/> should be limited to <1/> for optimal damage (or <2/> if more than one target is present).",
+  "war.ir.suggestions.badgcd.content": "GCDs used during <0/> should be limited to <1/> for optimal damage (or <2/> if three or more targets are present).",
   "war.ir.suggestions.badgcd.why": "{missedGaugeDumps} incorrect {missedGaugeDumps, plural, one {GCD was} other {GCDs were}} used during <0/> windows.",
   "war.ir.suggestions.missedgcd.content": "Try to land 5 GCDs during every <0/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "war.ir.suggestions.missedgcd.why": "{missedGcds} {missedGcds, plural, one {GCD was} other {GCDs were}} missed inside of <0/> windows.",
