@@ -29,7 +29,6 @@ class AmmoState {
 	y?: number
 }
 
-// TODO: Check for bad Burst Strikes (i.e. when at 1 ammo + Bloodfest is on CD + Gnashing is off CD)
 export default class Ammo extends Module {
 	static handle = 'ammo'
 	static title = t('gnb.ammo.title')`Cartridge Timeline`
@@ -114,9 +113,9 @@ export default class Ammo extends Module {
 		this.checklist.add(new Rule({
 			name: 'Cartridge Usage',
 			description: <Trans id="gnb.ammo.waste.content">
-				Wasted cartridges or dying with cartridges loaded is a potency loss of about X per cartridge wasted.
-				Use <ActionLink {...ACTIONS.BURST_STRIKE}/> (or <ActionLink {...ACTIONS.FATED_CIRCLE}/> if there is more
-				than one target) to avoid wasting cartridges.
+				Wasted cartridge generation, ending the fight with cartridges loaded, or dying with cartridges loaded is
+				a direct potency loss. Use <ActionLink {...ACTIONS.BURST_STRIKE}/> (or <ActionLink {...ACTIONS.FATED_CIRCLE}/>
+				if there is more than one target) to avoid wasting cartridges.
 			</Trans>,
 			requirements: [
 				new Requirement({
