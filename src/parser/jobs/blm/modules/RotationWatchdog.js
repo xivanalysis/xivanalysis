@@ -16,7 +16,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {getDataBy} from 'data'
 
 const EXPECTED_FIRE4 = 6
-const FIRE4_FROM_MANAFONT = 2
+const FIRE4_FROM_MANAFONT = 1
 const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 const AFUIBUFFMAXSTACK = 3

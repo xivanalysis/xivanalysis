@@ -35,9 +35,9 @@ export default {
 		castTime: 3.0,
 	},
 	UMBRAL_SOUL: {
-		id: 999999999159, // ID once known
+		id: 16506,
 		name: 'Umbral Soul',
-		icon: 'https://xivapi.com/i/002000/002653.png', // Needs updating once known, still Freeze's icon
+		icon: 'https://xivapi.com/i/002000/002666.png',
 		onGcd: true,
 	},
 	FIRE_I: {
@@ -76,9 +76,9 @@ export default {
 		castTime: 4.0,
 	},
 	DESPAIR: {
-		id: 999999999162, // ID once known
+		id: 16505,
 		name: 'Flare',
-		icon: 'https://xivapi.com/i/002000/002652.png', // Update once this is known, still Flare's icon.
+		icon: 'https://xivapi.com/i/002000/002665.png',
 		onGcd: true,
 		castTime: 3.0,
 	},
@@ -124,9 +124,9 @@ export default {
 		castTime: 2.5,
 	},
 	XENOGLOSSY: {
-		id: 9999999997422, // ID once known
+		id: 16507,
 		name: 'Xenoglossy',
-		icon: 'https://xivapi.com/i/002000/002664.png', // Needs update once known, still Foul's icon
+		icon: 'https://xivapi.com/i/002000/002667.png',
 		onGcd: true,
 	},
 	SLEEP: {
@@ -142,7 +142,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000466.png',
 		cooldown: 8,
 	},
-	MANAFONT: { // For now, I'm going to assume SE just re-named the action. Updatable if wrong.
+	MANAFONT: {
 		id: 158,
 		name: 'Manafont',
 		icon: 'https://xivapi.com/i/002000/002651.png',
