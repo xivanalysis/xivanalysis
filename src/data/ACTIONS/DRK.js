@@ -107,18 +107,28 @@ export default {
 		name: 'Hard Slash',
 		icon: 'https://xivapi.com/i/003000/003051.png',
 		onGcd: true,
+		combo: {
+			start: true,
+		},
 	},
 	SYPHON_STRIKE: {
 		id: 3623,
 		name: 'Syphon Strike',
 		icon: 'https://xivapi.com/i/003000/003054.png',
 		onGcd: true,
+		combo: {
+			from: 3617,
+		},
 	},
 	SOULEATER: {
 		id: 3632,
 		name: 'Souleater',
 		icon: 'https://xivapi.com/i/003000/003055.png',
 		onGcd: true,
+		combo: {
+			from: 3623,
+			end: true,
+		},
 	},
 	// AOE Combo
 	UNLEASH: {
@@ -126,12 +136,19 @@ export default {
 		name: 'Unleash',
 		icon: 'https://xivapi.com/i/003000/003063.png',
 		onGcd: true,
+		combo: {
+			start: true,
+		},
 	},
 	STALWART_SOUL: {
 		id: 16468,
 		name: 'Stalwart Soul',
 		icon: 'https://xivapi.com/i/003000/003084.png',
 		onGcd: true,
+		combo: {
+			from: 3621,
+			end: true,
+		},
 	},
 	// Other
 	UNMEND: {
@@ -139,6 +156,7 @@ export default {
 		name: 'Unmend',
 		icon: 'https://xivapi.com/i/003000/003062.png',
 		onGcd: true,
+		breaksCombo: true,
 	},
 	// Blood Consumers
 	BLOODSPILLER: {
@@ -146,11 +164,13 @@ export default {
 		name: 'Bloodspiller',
 		icon: 'https://xivapi.com/i/003000/003080.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 	QUIETUS: {
 		id: 7391,
 		name: 'Quietus',
 		icon: 'https://xivapi.com/i/003000/003079.png',
 		onGcd: true,
+		breaksCombo: false,
 	},
 }

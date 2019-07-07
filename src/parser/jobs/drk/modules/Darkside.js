@@ -24,13 +24,13 @@ export default class Darkside extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('aoedamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._applyDarkside)
+		this.addHook('aoedamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_applyDarkside(event) {
+	_updateDarkside(event) {
 		if (this._lastEventTime === null) {
 			// First application - allow up to 1 GCD to apply before counting downtime
 			const elapsedTime = event.timestamp - this.parser.fight.start_time
@@ -44,12 +44,15 @@ export default class Darkside extends Module {
 			}
 		}
 
-		const abilityId = event.ability.guid
-		this._currentDuration = Math.max(this._currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
-		this._lastEventTime = event.timestamp
+		if (event.hasOwnProperty('ability')) {
+			const abilityId = event.ability.guid
+			this._currentDuration = Math.min(this._currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
+			this._lastEventTime = event.timestamp
+		}
 	}
 
-	_onDeath() {
+	_onDeath(event) {
+		this._updateDarkside(event)
 		this._currentDuration = 0
 	}
 
@@ -58,7 +61,8 @@ export default class Darkside extends Module {
 		this._lastEventTime = event.timestamp
 	}
 
-	_onComplete() {
+	_onComplete(event) {
+		this._updateDarkside(event)
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._downtime) / duration) * 100
 		this.checklist.add(new Rule({

@@ -115,7 +115,6 @@ export default class Resources extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('combo', {by: 'player'}, this._onEvent)
 		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
 		this.addHook('death', {by: 'player'}, this._onDeath)
@@ -213,6 +212,10 @@ export default class Resources extends Module {
 	}
 
 	_onEvent(event) {
+		if (event.amount === 0) {
+			// Misses or attacks against invuln targets do not trigger resource gain
+			return
+		}
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
@@ -220,17 +223,18 @@ export default class Resources extends Module {
 			actionBloodGain += RESOURCE_SPENDERS[abilityId].mp
 			actionMPGain += RESOURCE_SPENDERS[abilityId].mp
 		}
-		if (this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
+		if (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
+			// Don't double count blood weapon gains on comboed events
 			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
 		if (RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
-			//const actionInfo = RESOURCE_GENERATORS[abilityId]
-			//if (!actionInfo.requiresCombo || event.type === 'combo') {
+			const actionInfo = RESOURCE_GENERATORS[abilityId]
+			if (!actionInfo.requiresCombo || event.type === 'combo') {
 			// Only gain resources if the action does not require a combo or is in a valid combo
-			actionBloodGain += RESOURCE_GENERATORS[abilityId].blood
-			actionMPGain += RESOURCE_GENERATORS[abilityId].mp
-			//}
+				actionBloodGain += RESOURCE_GENERATORS[abilityId].blood
+				actionMPGain += RESOURCE_GENERATORS[abilityId].mp
+			}
 		}
 
 		this.checkBloodOvercap(actionBloodGain)
@@ -238,7 +242,10 @@ export default class Resources extends Module {
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
 
-		this._pushToGraph()
+		if (event.type !== 'combo') {
+			// Don't push two entries to graph for comboed actions
+			this._pushToGraph()
+		}
 	}
 
 	_onRemoveBlackestNight(event) {
@@ -333,12 +340,37 @@ export default class Resources extends Module {
 		}
 		/* eslint-enable no-magic-numbers */
 
+		const mpChartOptions = {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						min: 0,
+						max: 10000,
+					},
+				}],
+			},
+		}
+		const bloodChartOptions = {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						min: 0,
+						max: 100,
+					},
+				}],
+			},
+		}
+
 		return <Fragment>
 			<TimeLineChart
 				data={bloodchartdata}
+				options={bloodChartOptions}
 			/>
 			<TimeLineChart
 				data={mpchartdata}
+				options={mpChartOptions}
 			/>
 		</Fragment>
 	}

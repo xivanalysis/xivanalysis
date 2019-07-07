@@ -37,7 +37,7 @@ export default class MultiHit extends Module {
 	}
 
 	_checkMultiHitSkill(event) {
-		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.hits < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
+		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.hits.length < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
 			this._incorrectMultihitSkills[event.ability.guid]++
 		}
 	}
