@@ -43,7 +43,7 @@ const NO_MERCY_BUFF_DURATION = 20000 // in milliseconds
 
 class NoMercyState {
 	start: number
-	end: number | null = null
+	end?: number
 	rotation: CastEvent[] = []
 	isRushing: boolean = false
 

@@ -25,8 +25,8 @@ const AMMO_SPENDERS = {
 const MAX_AMMO = 2
 
 class AmmoState {
-	t: number | null = null
-	y: number | null = null
+	t?: number
+	y?: number
 }
 
 // TODO: Check for bad Burst Strikes (i.e. when at 1 ammo + Bloodfest is on CD + Gnashing is off CD)
