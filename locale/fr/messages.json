@@ -214,7 +214,7 @@
   "drg.debuffs.checklist.description": "<0/> et <1/> octroient une forte vulnérabilité aux dégâts perçants ainsi qu'un puissant DoT. Ces deux effets doivent être appliqués en permanence.",
   "drg.debuffs.checklist.name": "Maintenez vos débuffs actifs",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "Temps d'activité total de <0/>",
-  "drg.debuffs.checklist.requirement.disembowel.name": "Temps d'activité total de <0/>",
+  "drg.debuffs.checklist.requirement.disembowel.name": "Temps total d'application de <0/>",
   "drg.debuffs.suggestions.clipping.content": "Évitez de rafraîchir <0/> trop tôt avant son expiration. En règle générale, cela indique une erreur dans votre rotation. Sachant que la rotation du DRG comporte 11 GCDs, vous devriez ré-appliquer l'effet de Percée Chaotique que lorsqu'il ne reste 1 ou 2 secondes avant son expiration (selon votre vivacité).",
   "drg.debuffs.suggestions.clipping.why": "Vous avez perdu {0} utilisations de Percée Chaotique à cause de ré-applications précipitées.",
   "drg.procs.suggestions.extenders.content": "",
