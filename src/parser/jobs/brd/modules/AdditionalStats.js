@@ -26,10 +26,7 @@ const CRIT_MODIFIERS = [
 		//fuck royal road
 		strength: 0.10,
 	},
-	{
-		id: STATUSES.STRAIGHT_SHOT.id,
-		strength: 0.10,
-	},
+
 ]
 
 // Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
