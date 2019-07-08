@@ -18,10 +18,6 @@ const CRIT_MODIFIERS = [
 		strength: 0.15,
 	},
 	{
-		id: STATUSES.CRITICAL_UP.id,
-		strength: 0.02,
-	},
-	{
 		id: STATUSES.THE_SPEAR.id,
 		//fuck royal road
 		strength: 0.10,
