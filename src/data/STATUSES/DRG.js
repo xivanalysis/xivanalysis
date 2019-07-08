@@ -21,7 +21,7 @@ export default {
 	},
 
 	DISEMBOWEL: {
-		id: 121,
+		id: 1914,
 		name: 'Disembowel',
 		icon: 'https://xivapi.com/i/012000/012576.png',
 		duration: 24,
@@ -70,7 +70,7 @@ export default {
 	},
 
 	RAIDEN_THRUST_READY: {
-		id: 116,
+		id: 1863,
 		name: 'Raiden Thrust Ready',
 		icon: 'https://xivapi.com/i/012000/012584.png',
 		duration: 10,
