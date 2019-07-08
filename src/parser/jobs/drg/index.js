@@ -26,7 +26,7 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2019-07-07'),
-		Changes: () => <>Updated combos to proper account for Raiden Thrust, fixed the Disembowel checklist item.</>,
+		Changes: () => <>Updated combos to properly account for Raiden Thrust, fixed the Disembowel checklist item.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
 	{
