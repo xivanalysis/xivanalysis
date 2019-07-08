@@ -8,22 +8,15 @@ import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans} from '@lingui/react'
 
-//powerful copy paste code from SMN that ended up being changed quite a bit
-
 const STATUS_DURATION = {
-	[STATUSES.AERO_II.id]: 18000,
-	[STATUSES.AERO_III.id]: 24000,
+	[STATUSES.DIA.id]: 30000,
 }
-
-//aero 2 clips are less severe as it may be used for the initial damage when moving
 
 const CLIP_MAX_MINOR = {
-	[STATUSES.AERO_II.id]: 30000,
-	[STATUSES.AERO_III.id]: 9000, //less than 3 gcds wasted
+	[STATUSES.DIA.id]: 9000, // less than 3 gcds wasted
 }
 const CLIP_MAX_MEDIUM = {
-	[STATUSES.AERO_II.id]: 60000,
-	[STATUSES.AERO_III.id]: 24000,
+	[STATUSES.DIA.id]: 30000,
 }
 
 const DOT_CLIPPING_THRESHOLD = 500 // ms of dot clipping to warrant a suggestion
@@ -39,8 +32,7 @@ export default class DoTs extends Module {
 
 	_lastApplication = {}
 	_clip = {
-		[STATUSES.AERO_II.id]: 0,
-		[STATUSES.AERO_III.id]: 0,
+		[STATUSES.DIA.id]: 0,
 	}
 
 	constructor(...args) {
@@ -48,7 +40,7 @@ export default class DoTs extends Module {
 
 		const filter = {
 			by: 'player',
-			abilityId: [STATUSES.AERO_II.id, STATUSES.AERO_III.id],
+			abilityId: [STATUSES.DIA.id],
 		}
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
@@ -85,47 +77,29 @@ export default class DoTs extends Module {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="whm.dots.rule.name"> Keep your DoTs up </Trans>,
 			description: <Trans id="whm.dots.rule.description">
-				As a White Mage, DoTs are significant portion of your sustained damage. Aim to keep them up at all times.
+				As a White Mage, Dia is significant portion of your sustained damage. Aim to keep them it at all times.
 			</Trans>,
 			tiers: {90: TARGET.WARN, 95: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
-					name: <Trans id="whm.dots.requirement.uptime-a2.name"><ActionLink {...ACTIONS.AERO_II} /> uptime</Trans>,
-					percent: () => this.getDotUptimePercent(STATUSES.AERO_II.id),
-				}),
-				new Requirement({
-					name: <Trans id="whm.dots.requirement.uptime-a3.name"><ActionLink {...ACTIONS.AERO_III} /> uptime</Trans>,
-					percent: () => this.getDotUptimePercent(STATUSES.AERO_III.id),
+					name: <Trans id="whm.dots.requirement.uptime-dia.name"><ActionLink {...ACTIONS.DIA} /> uptime</Trans>,
+					percent: () => this.getDotUptimePercent(STATUSES.DIA.id),
 				}),
 			],
 		}))
 
 		//Suggestion for DoT clipping
-		if (this._clip[STATUSES.AERO_II.id] > DOT_CLIPPING_THRESHOLD) {
-			const isMinor = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MINOR[STATUSES.AERO_II.id]
-			const isMedium = this._clip[STATUSES.AERO_II.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_II.id]
+		if (this._clip[STATUSES.DIA.id] > DOT_CLIPPING_THRESHOLD) {
+			const isMinor = this._clip[STATUSES.DIA.id] <= CLIP_MAX_MINOR[STATUSES.DIA.id]
+			const isMedium = this._clip[STATUSES.DIA.id] <= CLIP_MAX_MEDIUM[STATUSES.DIA.id]
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.AERO_II.icon,
-				content: <Trans id="whm.dots.suggestion.clip-a2.content">
-					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV. (Note: We do not yet consider using Aero II for initial damage on the move)
+				icon: ACTIONS.DIA.icon,
+				content: <Trans id="whm.dots.suggestion.clip-dia.content">
+					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Glare. (Note: We do not yet consider using Dia for initial damage on the move)
 				</Trans>,
 				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Trans id="whm.dots.suggestion.clip-a2.why">
-					{this.parser.formatDuration(this._clip[STATUSES.AERO_II.id])} of {STATUSES.AERO_II.name} lost to early refreshes.
-				</Trans>,
-			}))
-		}
-		if (this._clip[STATUSES.AERO_III.id] > DOT_CLIPPING_THRESHOLD) {
-			const isMinor = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MINOR[STATUSES.AERO_III.id]
-			const isMedium = this._clip[STATUSES.AERO_III.id] <= CLIP_MAX_MEDIUM[STATUSES.AERO_III.id]
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.AERO_III.icon,
-				content: <Trans id="whm.dots.suggestion.clip-a3.content">
-					Avoid refreshing DoTs significantly before their expiration, this will allow you to cast more Stone IV.
-				</Trans>,
-				severity: isMinor ? SEVERITY.MINOR : isMedium ? SEVERITY.MEDIUM : SEVERITY.MAJOR,
-				why: <Trans id="whm.dots.suggestion.clip-a3.why">
-					{this.parser.formatDuration(this._clip[STATUSES.AERO_III.id])} of {STATUSES.AERO_III.name} lost to early refreshes.
+				why: <Trans id="whm.dots.suggestion.clip-dia.why">
+					{this.parser.formatDuration(this._clip[STATUSES.DIA.id])} of {STATUSES.DIA.name} lost to early refreshes.
 				</Trans>,
 			}))
 		}
