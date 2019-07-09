@@ -176,16 +176,15 @@ export default class Lilies extends Module {
 	 */
 	_calculateLilies(event) {
 		if (this._lastGained === 0) { this._lastGained = this.parser.fight.start_time }
-		while (event.timestamp > this._lastGained + LILY_INTERVAL) {
-			this._lastGained = this._lastGained + LILY_INTERVAL
-			if (this._lilies < MAX_LILIES) {
-				// gain a lily
-				this._lilies++
-				this._totalLilies++
-			} else {
-				// a lily was wasted
-				this._unusedLilies++
-			}
+
+		const delta = event.timestamp - this._lastGained
+		const newLilies = Math.floor(delta / LILY_INTERVAL)
+		this._lastGained += newLilies * LILY_INTERVAL
+
+		this._lilies = Math.min(MAX_LILIES, this._lilies + newLilies)
+		this._totalLilies += newLilies
+		if (this._lilies + newLilies > MAX_LILIES) {
+			this._unusedLilies += this._lilies + newLilies - MAX_LILIES
 		}
 	}
 }
