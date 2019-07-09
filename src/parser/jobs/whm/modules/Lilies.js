@@ -164,16 +164,8 @@ export default class Lilies extends Module {
 		}
 	}
 
-	/**
-	 * Calculates the number of lilies the user should currently have.
-	 *
-	 * Because lilies are generated every 30 seconds, and we don't want to
-	 * be constantly checking, we run a while loop every time the event is
-	 * more recent than when we should have gained a lily to catch up on our
-	 * lily generation.
-	 *
-	 * @param {*} event
-	 */
+	// Calculates the number of lilies the user should currently have.
+	// Lilies are generated every 30 seconds you are in combat, and cap out at 3.
 	_calculateLilies(event) {
 		if (this._lastGained === 0) { this._lastGained = this.parser.fight.start_time }
 
