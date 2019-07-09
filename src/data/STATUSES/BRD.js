@@ -20,16 +20,17 @@ export default {
 		duration: 10,
 		amount: 3,
 	},
-	STRAIGHT_SHOT: {
-		id: 130,
-		name: 'Straight Shot',
-		icon: 'https://xivapi.com/i/010000/010361.png',
-		duration: 30,
+	ARMYS_MUSE: {
+		id: 1932,
+		name: 'Army\'s Muse',
+		icon: 'https://xivapi.com/i/012000/012619.png',
+		duration: 10,
 	},
-	FOE_REQUIEM: {
-		id: 139,
-		name: 'Foe Requiem',
-		icon: 'https://xivapi.com/i/012000/012606.png',
+	ARMYS_ETHOS: {
+		id: 1933,
+		name: 'Army\'s Ethos',
+		icon: 'https://xivapi.com/i/012000/012620.png',
+		duration: 30,
 	},
 
 	//Enemy statuses
@@ -46,11 +47,6 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010360.png',
 		// Duration depends on trait
 		duration: 18,
-	},
-	FOE_REQUIEM_DEBUFF: {
-		id: 140,
-		name: 'Foe Requiem',
-		icon: 'https://xivapi.com/i/012000/012608.png',
 	},
 	CAUSTIC_BITE: {
 		id: 1200,
@@ -78,28 +74,11 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012611.png',
 		duration: 30,
 	},
-	TROUBADOURS_BALLAD: {
-		id: 1187,
-		name: 'Troubadour\'s Ballad',
-		icon: 'https://xivapi.com/i/012000/012612.png',
-		duration: 30,
-	},
-	CRITICAL_UP: {
-		id: 1188,
-		name: 'Critical Up',
-		icon: 'https://xivapi.com/i/012000/012613.png',
-	},
-	TROUBADOURS_PAEON: {
-		id: 1189,
-		name: 'Troubadour\'s Paeon',
-		icon: 'https://xivapi.com/i/012000/012614.png',
-		duration: 30,
-	},
-	TROUBADOURS_MINUET: {
-		id: 1190,
-		name: 'Troubadour\'s Minuet',
+	TROUBADOUR: {
+		id: 1934,
+		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/012000/012615.png',
-		duration: 30,
+		duration: 15,
 	},
 	NATURES_MINNE: {
 		id: 1202,
