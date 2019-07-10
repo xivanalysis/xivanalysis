@@ -10,7 +10,7 @@ import JOBS from 'data/JOBS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import {ComboEvent} from 'parser/core/modules/Combos';
+import {ComboEvent} from 'parser/core/modules/Combos'
 
 const ON_CAST_GENERATORS = {
 	[ACTIONS.BLOODFEST.id]: 2,
@@ -197,7 +197,7 @@ export default class Ammo extends Module {
 
 		const ammoColor = Color(JOBS.GUNBREAKER.colour)
 		/* tslint:disable:no-magic-numbers */
-		const chartdata = {
+		const chartData = {
 			datasets: [
 				{
 					label: 'Cartridges',
@@ -208,10 +208,29 @@ export default class Ammo extends Module {
 				},
 			],
 		}
+
+		const chartOptions = {
+			scales : {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						min: 0,
+						max: 2,
+						callback: ((value: number) => {
+							if (value % 1 === 0) {
+								return value
+							}
+						}),
+					},
+				}],
+			},
+		}
 		/* tslint:enable:no-magic-numbers */
 
 		return <Fragment>
-			<TimeLineChart data={chartdata} />
+			<TimeLineChart
+				data={chartData}
+				options={chartOptions} />
 			<Accordion
 				exclusive={false}
 				panels={cartridgeWastePanels}
