@@ -159,7 +159,7 @@ interface EffectEvent extends AbilityEvent {
 }
 
 export interface DeathEvent extends Event { type: 'death' }
-export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' | 'combo' }
+export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
 export interface DamageEvent extends EffectEvent {
 	type: 'damage'
 	overkill?: number

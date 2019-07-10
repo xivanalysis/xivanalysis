@@ -10,13 +10,15 @@ import JOBS from 'data/JOBS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import {ComboEvent} from 'parser/core/modules/Combos';
 
-const AMMO_GENERATORS = {
-	// I'm specifying all the event types here because Typescript is a moron
-	// and yells at us later if we don't.
-	[ACTIONS.SOLID_BARREL.id]: {begincast: 0, cast: 0, combo: 1},
-	[ACTIONS.DEMON_SLAUGHTER.id]: {begincast: 0, cast: 0, combo: 1},
-	[ACTIONS.BLOODFEST.id]: {begincast: 0, cast: 2, combo: 0},
+const ON_CAST_GENERATORS = {
+	[ACTIONS.BLOODFEST.id]: 2,
+}
+
+const ON_COMBO_GENERATORS = {
+	[ACTIONS.SOLID_BARREL.id]: 1,
+	[ACTIONS.DEMON_SLAUGHTER.id]: 1,
 }
 
 const AMMO_SPENDERS = {
@@ -53,12 +55,20 @@ export default class Ammo extends Module {
 	protected init() {
 		this.addHook('init', this.pushToHistory)
 		this.addHook(
-			['cast', 'combo'],
+			'cast',
 			{
 				by: 'player',
-				abilityId: Object.keys(AMMO_GENERATORS).map(Number),
+				abilityId: Object.keys(ON_CAST_GENERATORS).map(Number),
 			},
-			this.onGenerator,
+			this.onCastGenerator,
+		)
+		this.addHook(
+			'combo',
+			{
+				by: 'player',
+				abilityId: Object.keys(ON_COMBO_GENERATORS).map(Number),
+			},
+			this.onComboGenerator,
 		)
 		this.addHook(
 			'cast',
@@ -72,15 +82,23 @@ export default class Ammo extends Module {
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onGenerator(event: CastEvent) {
+	private onCastGenerator(event: CastEvent) {
 		const abilityId = event.ability.guid
-		const action = AMMO_GENERATORS[abilityId]
-		if (!action || !action[event.type]) {
-			return
-		}
+		const generatedAmmo = ON_CAST_GENERATORS[abilityId]
 
-		this.ammo += action[event.type] // This line is why we have to define all the event types up above
-		this.totalGeneratedAmmo += action[event.type]
+		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
+	}
+
+	private onComboGenerator(event: ComboEvent) {
+		const abilityId = event.ability.guid
+		const generatedAmmo = ON_COMBO_GENERATORS[abilityId]
+
+		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
+	}
+
+	private addGeneratedAmmoAndPush(generatedAmmo: number, abilityId: number) {
+		this.ammo += generatedAmmo
+		this.totalGeneratedAmmo += generatedAmmo
 		if (this.ammo > MAX_AMMO) {
 			const waste = this.ammo - MAX_AMMO
 			this.wasteBySource[abilityId] += waste
