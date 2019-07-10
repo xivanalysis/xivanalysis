@@ -676,8 +676,6 @@
   "whm.dots.rule.name": "常にDoTを切らさないようにしてください",
   "whm.dots.suggestion.clip-dia.content": "DoTの早すぎる更新は避けてください。不要な更新はグレアの使用回数を減らすことになります。 (詠唱時間のないエアロラを移動中に使用してダメージを出すことはまだ考慮していません。)",
   "whm.dots.suggestion.clip-dia.why": "早すぎる更新により{0}の{1}を失いました。",
-  "whm.lily-cap.checklist.name": "",
-  "whm.lily-cap.checklist.content": "",
   "whm.lily-cap.requirement.name": "",
   "whm.lily-cap.suggestion.content": "",
   "whm.lily-cap.suggestion.why": "",

@@ -9,11 +9,11 @@ import {ActionLink} from 'components/ui/DbLink'
 
 const LILY_CONSUMERS = [ACTIONS.AFFLATUS_SOLACE.id, ACTIONS.AFFLATUS_RAPTURE.id]
 const BLOOD_LILY_CONSUMERS = [ACTIONS.AFFLATUS_MISERY.id]
-const MAX_LILIES = 3
 const LILY_INTERVAL = 30000 // 1 lily every 30 seconds
-const BLOOD_LILY_GENERATION = 3 // 1 blood lily for every 3 lilies spent
-const UNUSED_LILIES_MAX_MINOR = 3
-const WASTED_LILIES_MAX_MEDIUM = 2
+const BLOOD_LILY_BLOOM = 3 // 1 blood lily for every 3 lilies spent
+const UNUSED_BLOOD_LILIES_FAIL = 2
+const UNUSED_BLOOD_LILIES_WARN = 1
+const WASTED_BLOOD_LILIES_MAX_MEDIUM = 2
 
 export default class Lilies extends Module {
 	static handle = 'lilies'
@@ -22,15 +22,13 @@ export default class Lilies extends Module {
 		'suggestions',
 	]
 
-	_lastGained = 0
-	_bloodLilyTracker = 0
-	_lilies = 0
-	_unusedLilies = 0
-	_wastedLilies = 0
-	_bloodLily = 0
-	_totalLilies = 0
-	_totalBloodLilies = 0
-	_missedBloodLilies = 0
+	_blooming = 0
+	_bloodLiliesGenerated = 0
+	_bloodLiliesConsumed = 0
+	_bloodLiliesWasted = 0
+	_liliesConsumed = 0
+	_liliesWasted = 0
+	_unused = 0
 
 	constructor(...args) {
 		super(...args)
@@ -41,29 +39,24 @@ export default class Lilies extends Module {
 	}
 
 	_onCast(event) {
-		this._calculateLilies(event)
+		// this._calculateLilies(event)
 		const abilityId = event.ability.guid
 
 		if (LILY_CONSUMERS.includes(abilityId)) {
-			this._lilies--
-			this._bloodLilyTracker++
+			this._liliesConsumed++
 
-			if (this._bloodLily === 1) {
+			if (this._blooming === BLOOD_LILY_BLOOM) {
 				// if we already have a blood lily, we are wasting this lily
-				this._wastedLilies++
-			}
-
-			if (this._bloodLilyTracker === BLOOD_LILY_GENERATION) {
-				// we have generated a blood lily
-				this._bloodLily = 1
-				this._totalBloodLilies++
+				this._liliesWasted++
+			} else if (++this._blooming === BLOOD_LILY_BLOOM) {
+				this._bloodLiliesGenerated++
 			}
 		}
 
 		if (BLOOD_LILY_CONSUMERS.includes(abilityId)) {
 			// reset our blood lilies
-			this._bloodLily = 0
-			this._bloodLilyTracker = 0
+			this._blooming = 0
+			this._bloodLiliesConsumed++
 		}
 	}
 
@@ -74,35 +67,15 @@ export default class Lilies extends Module {
 
 	_onDeath() {
 		// death is bad, because it also resets your lilies
-		this._lilies = 0
-		this._bloodLily = 0
-		this._bloodLilyTracker = 0
+		this._blooming = 0
 	}
 
 	checkLilyCapping() {
-		// todo: Check whether moving dropped a GCD while you had a lily available.
-		const capWarnTarget = (this._totalLilies - 1) / this._totalLilies * 100
-		const capFailTarget = (this._totalLilies - UNUSED_LILIES_MAX_MINOR) / this._totalLilies * 100
-		this.checklist.add(new TieredRule({
-			name: <Trans id="whm.lily-cap.checklist.name">
-				Avoid capping your Lilies
-			</Trans>,
-			description: <Trans id="whm.lily-cap.checklist.content">
-				White Mages add a lily to their Healing Gauge for every 30 seconds they are engaged in combat, up to a maximum of 3. Cast <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> or <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> before you would add a lily to an already full gauge.  You may be able to ignore this if there was nothing to heal and you chose to DPS, instead.
-			</Trans>,
-			tiers: {[capWarnTarget]: TARGET.WARN, [capFailTarget]: TARGET.FAIL, 100: TARGET.SUCCESS},
-			requirements: [
-				new Requirement({
-					name: <Trans id="whm.lily-cap.checklist.requirement.name">
-						Lilies Used
-					</Trans>,
-					value: this._totalLilies - this._unusedLilies,
-					target: this._totalLilies,
-				}),
-			],
-		}))
+		const fightLength = (this.parser.fight.end_time - this.parser.fight.start_time)
+		const possible = Math.floor(fightLength / LILY_INTERVAL)
+		this._unused = possible - this._liliesConsumed
 
-		if (this._unusedLilies > 0) {
+		if (this._unused > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AFFLATUS_SOLACE.icon,
 				content: <Fragment>
@@ -110,10 +83,10 @@ export default class Lilies extends Module {
 						Use <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> or <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> regularly to avoid capping your lilies.
 					</Trans>
 				</Fragment>,
-				severity: this._unusedLilies >= UNUSED_LILIES_MAX_MINOR ? SEVERITY.MEDIUM : SEVERITY.MINOR,
+				severity: SEVERITY.MINOR,
 				why: <Fragment>
 					<Trans id="whm.lily-cap.suggestion.why">
-						{<Plural value={this._unusedLilies} one="# lily" other="# lilies" />} lost to lily cap.
+						{<Plural value={this._unused} one="# lily" other="# lilies" />} went unused.
 					</Trans>
 				</Fragment>,
 			}))
@@ -121,32 +94,34 @@ export default class Lilies extends Module {
 	}
 
 	checkBloodLilies() {
-		const possibleBloodLilies = (this._totalLilies / BLOOD_LILY_GENERATION)
-		console.log('possible = ', possibleBloodLilies, this._totalLilies)
-		this._missedBloodLilies = possibleBloodLilies - this._totalBloodLilies
-		const bloodWarnTarget = (possibleBloodLilies - 1) / possibleBloodLilies * 100
-		const bloodFailTarget = (possibleBloodLilies - WASTED_LILIES_MAX_MEDIUM) / possibleBloodLilies * 100
+		this._bloodLiliesWasted = Math.floor(this._liliesWasted / BLOOD_LILY_BLOOM)
+		const bloodWarnTarget = (this._bloodLiliesGenerated - UNUSED_BLOOD_LILIES_WARN) / this._bloodLiliesGenerated * 100
+		const bloodFailTarget = (this._bloodLiliesGenerated - UNUSED_BLOOD_LILIES_FAIL) / this._bloodLiliesGenerated * 100
 
 		this.checklist.add(new TieredRule({
 			name: <Trans id="whm.lily-blood.checklist.name">
 				Spend your Blood Lily
 			</Trans>,
 			description: <Trans id="whm.lily-blood.checklist.content">
-				Never use <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> or <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> when <ActionLink {...ACTIONS.AFFLATUS_MISERY} /> is available.  You lose DPS, and may miss the generation of additional Blood Lilies.
+				Use <ActionLink {...ACTIONS.AFFLATUS_MISERY} /> when it is available. It is a major source of your DPS.
 			</Trans>,
-			tiers: {[bloodWarnTarget]: TARGET.WARN, [bloodFailTarget]: TARGET.FAIL, 100: TARGET.SUCCESS},
+			tiers: {
+				[bloodWarnTarget]: TARGET.WARN,
+				[bloodFailTarget]: TARGET.FAIL,
+				100: TARGET.SUCCESS,
+			},
 			requirements: [
 				new Requirement({
 					name: <Trans id="whm.lily-blood.checklist.requirement.name">
-						Blood Lilies Generated
+						Blood Lilies Spent
 					</Trans>,
-					value: this._totalBloodLilies,
-					target: Math.floor(possibleBloodLilies),
+					value: this._bloodLiliesConsumed,
+					target: this._bloodLiliesGenerated,
 				}),
 			],
 		}))
 
-		if (this._missedBloodLilies >= 1) {
+		if (this._bloodLiliesWasted >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.AFFLATUS_MISERY.icon,
 				content: <Fragment>
@@ -154,29 +129,13 @@ export default class Lilies extends Module {
 						Use <ActionLink {...ACTIONS.AFFLATUS_MISERY} /> to avoid wasting blood lily growth.
 					</Trans>
 				</Fragment>,
-				severity: this._missedBloodLilies >= WASTED_LILIES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
+				severity: this._bloodLiliesWasted > WASTED_BLOOD_LILIES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Fragment>
 					<Trans id="whm.lily-blood.suggestion.why">
-						<Plural value={this._missedBloodLilies} one="# blood lily" other="# blood lilies" /> did not bloom due to early lily use.
+						<Plural value={this._bloodLiliesWasted} one="# blood lily" other="# blood lilies" /> did not bloom due to early lily use.
 					</Trans>
 				</Fragment>,
 			}))
-		}
-	}
-
-	// Calculates the number of lilies the user should currently have.
-	// Lilies are generated every 30 seconds you are in combat, and cap out at 3.
-	_calculateLilies(event) {
-		if (this._lastGained === 0) { this._lastGained = this.parser.fight.start_time }
-
-		const delta = event.timestamp - this._lastGained
-		const newLilies = Math.floor(delta / LILY_INTERVAL)
-		this._lastGained += newLilies * LILY_INTERVAL
-
-		this._lilies = Math.min(MAX_LILIES, this._lilies + newLilies)
-		this._totalLilies += newLilies
-		if (this._lilies + newLilies > MAX_LILIES) {
-			this._unusedLilies += this._lilies + newLilies - MAX_LILIES
 		}
 	}
 }
