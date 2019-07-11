@@ -123,9 +123,9 @@ export default class Gauge extends Module {
 				30: SEVERITY.MEDIUM,
 				75: SEVERITY.MAJOR,
 			},
-			value: this._wastedHeat,
+			value: this._gauge.heat.waste,
 			why: <Trans id="mch.gauge.suggestions.heat-waste.why">
-				You lost {this._wastedHeat} Heat to an overcapped gauge.
+				You lost {this._gauge.heat.waste} Heat to an overcapped gauge.
 			</Trans>,
 		}))
 
@@ -140,9 +140,9 @@ export default class Gauge extends Module {
 				30: SEVERITY.MEDIUM,
 				50: SEVERITY.MAJOR,
 			},
-			value: this._wastedBattery,
+			value: this._gauge.battery.waste,
 			why: <Trans id="mch.gauge.suggestions.battery-waste.why">
-				You lost {this._wastedBattery} Battery to an overcapped gauge.
+				You lost {this._gauge.battery.waste} Battery to an overcapped gauge.
 			</Trans>,
 		}))
 	}
