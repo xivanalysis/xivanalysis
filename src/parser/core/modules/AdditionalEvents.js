@@ -5,15 +5,6 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 const QUERY_FILTER = [
-	// Need to get RR info to determine card strength
-	{
-		types: ['removebuff'],
-		abilities: [
-			STATUSES.ENHANCED_ROYAL_ROAD.id,
-			STATUSES.EXPANDED_ROYAL_ROAD.id,
-			STATUSES.EXTENDED_ROYAL_ROAD.id,
-		],
-	},
 
 	// Player-applied debuffs that don't get pulled when checking by actor
 	{

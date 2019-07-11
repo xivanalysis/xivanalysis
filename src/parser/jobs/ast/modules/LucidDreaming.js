@@ -6,19 +6,16 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 import {Plural, Trans} from '@lingui/react'
-import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
+// import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 
 const WASTED_USES_MAX_MEDIUM = 2
 // const MP_NEEDS_REFRESH_THRESHOLD = 0.80
 // const LUCID_DRIFT_ALLOWANCE = 1.1
 // const GCDS_HOLDING_LUCID_THRESHOLD = 5
 
-// Lucid seems to recover about 5% of the user's max MP per tick?
-// TODO: Find Math supporting the above observation, apply to calculations
 export default class LucidDreaming extends Module {
 	static handle = 'lucid'
 	static dependencies = [
-		'checklist',
 		// 'combatants',
 		'suggestions',
 	]
@@ -115,41 +112,19 @@ export default class LucidDreaming extends Module {
 		// console.log(this.parser.formatDuration(holdDuration))
 		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
 		// console.log('no mp: ' + this._gcdCountHoldingLucid)
-		const warnTarget = (this._uses - 1) / this._uses * 100
-		const failTarget = (this._uses - 2) / this._uses * 100
-
-		this.checklist.add(new TieredRule({
-			name: <Trans id="ast.lucid-dreaming.checklist.name">
-				Extend Lucid Dreaming
-			</Trans>,
-			description: <Trans id="ast.lucid-dreaming.checklist.content">
-				Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to "Always be casting" they frequently
-				find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> to maximize MP benefits.
-			</Trans>,
-			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, 100: TARGET.SUCCESS},
-			requirements: [
-				new Requirement({
-					name: <Trans id="ast.lucid-dreaming.checklist.requirement.name">
-						<ActionLink {...ACTIONS.LUCID_DREAMING} /> extensions
-					</Trans>,
-					value: this._extensions,
-					target: this._uses,
-				}),
-			],
-		}))
 
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.LUCID_DREAMING.icon,
 				content: <Fragment>
 					<Trans id="ast.lucid-dreaming.suggestion.content">
-					Keep <ActionLink {...ACTIONS.LUCID_DREAMING} /> on cooldown for better MP management, unless there's a specific part of the fight you need to drop aggro quick.
+					Keep <ActionLink {...ACTIONS.LUCID_DREAMING} /> on cooldown for better MP management.
 					</Trans>
 				</Fragment>,
 				severity: this._uses === 0 || _usesMissed > WASTED_USES_MAX_MEDIUM ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Fragment>
 					<Trans id="ast.lucid-dreaming.suggestion.why">
-					About <Plural value={_usesMissed} one="# use" other="# uses" /> of Lucid Dreaming were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+						<Plural value={_usesMissed} one="# use" other="# uses" /> of Lucid Dreaming were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 					</Trans>
 				</Fragment>,
 			}))
@@ -169,23 +144,6 @@ export default class LucidDreaming extends Module {
 		// 		</Fragment>,
 		// 	}))
 		// }
-
-		// Checklist that they extended all their lucids
-		// this.checklist.add(new Rule({
-		// 	name: 'Extend Lucid Dreaming',
-		// 	description: <Fragment>
-		// 		<Trans id="ast.lucid-dreaming.checklist.content">
-		// 		Astrologians have a very low MP pool, due to the high cost of their healing spells. If they adhere to "Always be casting" they frequently
-		// 		find themselves desiring more MP. It's important to extend all casts of Lucid Dreaming with <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> to maximize MP benefits.
-		// 		</Trans>
-		// 	</Fragment>,
-		// 	requirements: [
-		// 		new Requirement({
-		// 			name: <Fragment><ActionLink {...ACTIONS.LUCID_DREAMING} /> extensions</Fragment>,
-		// 			percent: () => this._uses > 0 ? (this._extensions/this._uses) * 100 : 0,
-		// 		}),
-		// 	],
-		// }))
 
 	}
 

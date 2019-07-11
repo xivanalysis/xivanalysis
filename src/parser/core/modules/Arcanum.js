@@ -17,8 +17,11 @@ const ARCANA = [
 	STATUSES.THE_SPEAR.id,
 	STATUSES.THE_EWER.id,
 	STATUSES.THE_SPIRE.id,
+	STATUSES.LORD_OF_CROWNS.id,
+	STATUSES.LADY_OF_CROWNS.id,
 ]
 
+/** THIS MODULE IS OBSOLETE DUE TO REMOVAL OF AST ROYAL ROAD **/
 // Handling AST cards in core as they can technically effect anyone
 export default class Arcanum extends Module {
 	static handle = 'arcanum'

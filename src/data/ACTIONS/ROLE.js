@@ -115,7 +115,7 @@ export default {
 		id: 7562,
 		name: 'Lucid Dreaming',
 		icon: 'https://xivapi.com/i/000000/000865.png',
-		cooldown: 120,
+		cooldown: 60,
 	},
 
 	SWIFTCAST: {
@@ -143,7 +143,7 @@ export default {
 		id: 7559,
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/000000/000869.png',
-		cooldown: 30,
+		cooldown: 120,
 	},
 
 	RESCUE: {

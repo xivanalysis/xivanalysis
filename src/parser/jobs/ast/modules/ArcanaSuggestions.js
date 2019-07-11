@@ -1,23 +1,21 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
-import {Table, Icon, Message, Label, Accordion, Button} from 'semantic-ui-react'
-
-import {DRAWN_ARCANA_USE, HELD_ARCANA_USE, SPEAR_USED} from './ArcanaGroups'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Module from 'parser/core/Module'
-import ACTIONS from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {ActionLink} from 'components/ui/DbLink'
+import Module from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import {Accordion, Button, Table} from 'semantic-ui-react'
+import {PLAY} from './ArcanaGroups'
 import styles from './ArcanaSuggestions.module.css'
+// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
-const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
-const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
+// const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
+// const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
+// const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
 
 const timelineLinkLowerMod = 0 // in ms
 const timelineLinkUpperMod = 30000 // in ms
@@ -28,7 +26,7 @@ export default class ArcanaSuggestions extends Module {
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
-		'suggestions',
+		// 'suggestions',
 		'combatants',
 		'arcanaTracking',
 		'timeline',
@@ -56,7 +54,7 @@ export default class ArcanaSuggestions extends Module {
 
 		this.cardLogs = this.arcanaTracking.getCardLogs.map(artifact => {
 
-			const isArcana = artifact.lastEvent && [...DRAWN_ARCANA_USE, ...HELD_ARCANA_USE].includes(artifact.lastEvent.ability.guid)
+			const isArcana = artifact.lastEvent && [...PLAY].includes(artifact.lastEvent.ability.guid)
 			const target = isArcana ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
 			const targetName = target ? target.name : null
 			const targetJob = target ? target.type : null
@@ -70,13 +68,12 @@ export default class ArcanaSuggestions extends Module {
 					targetJob: targetJob,
 					isArcana: isArcana,
 					overrideDBlink: artifact.lastEvent.overrideDBlink,
-					rrAbility: artifact.lastEvent.rrAbility,
 				} : null,
 				state: {
-					rrAbility: artifact.rrAbility,
-					spread: artifact.spreadState,
 					draw: artifact.drawState,
-					minorArcana: artifact.minorState,
+					slot1: artifact.slot1State,
+					slot2: artifact.slot2State,
+					slot3: artifact.slot3State,
 				},
 			}
 		})
@@ -85,45 +82,45 @@ export default class ArcanaSuggestions extends Module {
 
 	// Card management critique follows
 
-	_watchDropBalance() {
-		//
-	}
+	// _watchDropBalance() {
+	// 	//
+	// }
 
-	_watchBardNoSpear() {
-		if (!this.partyComp.includes('Bard')) {
-			return
-		}
+	// _watchBardNoSpear() {
+	// 	if (!this.partyComp.includes('Bard')) {
+	// 		return
+	// 	}
 
-		let count = 0
+	// 	let count = 0
 
-		_.each(this.cardLogs, (artifact) => {
-			if (artifact.lastAction
-				&& artifact.lastAction.targetJob !== 'Bard'
-				&& SPEAR_USED.includes(artifact.lastAction.id)
-			) {
-				count++
-				artifact.message = <Fragment>
-					<Icon name="warning sign"/> <Label horizontal content="Medium" color="orange" /> Suggestion logged for this action
-				</Fragment>
-			}
-		})
+	// 	_.each(this.cardLogs, (artifact) => {
+	// 		if (artifact.lastAction
+	// 			&& artifact.lastAction.targetJob !== 'Bard'
+	// 		) {
+	// 			count++
+	// 			artifact.message = <Fragment>
+	// 				<Icon name="warning sign"/> <Label horizontal content="Medium" color="orange" /> Suggestion logged for this action
+	// 			</Fragment>
+	// 		}
+	// 	})
 
-		if (count > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THE_SPEAR.icon,
-				content: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.content">
-					Bards gain bonuses when they make criticals, so they should be the recipient of single-target Spears instead.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.why">
-					{count} Spear arcanas not given to bard.
-				</Trans>,
-			}))
-		}
+	// 	if (count > 0) {
+	// 		this.suggestions.add(new Suggestion({
+	// 			icon: ACTIONS.THE_SPEAR.icon,
+	// 			content: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.content">
+	// 				Bards gain bonuses when they make criticals, so they should be the recipient of single-target Spears instead.
+	// 			</Trans>,
+	// 			severity: SEVERITY.MEDIUM,
+	// 			why: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.why">
+	// 				{count} Spear arcanas not given to bard.
+	// 			</Trans>,
+	// 		}))
+	// 	}
 
-	}
+	// }
 
 	output() {
+
 		const pullState = this.cardLogs.shift()
 
 		// The header cell for when we do get suggestions
@@ -146,8 +143,11 @@ export default class ArcanaSuggestions extends Module {
 											Time
 								</Trans>
 							</Table.HeaderCell>
-							<Table.HeaderCell width={4}>
+							<Table.HeaderCell width={1}>
 								<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell width={2}>
+								<Trans id="ast.arcana-suggestions.messages.target">Target</Trans>
 							</Table.HeaderCell>
 							<Table.HeaderCell width={2}>
 								<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
@@ -161,6 +161,8 @@ export default class ArcanaSuggestions extends Module {
 								<Trans id="ast.arcana-suggestions.messages.pull">
 											Pull
 								</Trans>
+							</Table.Cell>
+							<Table.Cell>
 							</Table.Cell>
 							{this.RenderSpreadState(pullState)}
 						</Table.Row>
@@ -193,15 +195,14 @@ export default class ArcanaSuggestions extends Module {
 					This section keeps track of every card action made during the fight, and the state of the spread after each action.
 				</Trans>
 			</p>
-			<Message warning icon>
+			{/* <Message warning icon>
 				<Icon name="warning sign"/>
 				<Message.Content>
 					<Trans id="ast.arcana-suggestions.messages.disclaimer">
-							Card management critique is still a work in progress. No recommendations are being made yet. <br/>
 							The intention of this section is to give a general recommendation of best practices. It will not take into consideration which party member was playing better, or whether they were in burst phase.
 					</Trans>
 				</Message.Content>
-			</Message>
+			</Message> */}
 			<Accordion
 				exclusive={false}
 				panels={cardDisplayPanel}
@@ -218,19 +219,22 @@ export default class ArcanaSuggestions extends Module {
 			const status = artifact.lastAction.rrAbility || null
 			const targetJob = getDataBy(JOBS, 'logType', artifact.lastAction.targetJob)
 
-			return <Table.Cell>
+			return <>
+			<Table.Cell>
 				<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastAction.id)} />
 				{status && <img
 					src={status.icon}
 					className={styles.buffIcon}
 					alt={status.name}
-				/> }<br/>
+				/> }
+			</Table.Cell>
+			<Table.Cell>
 				{targetJob && <JobIcon job={targetJob}/>}
-
 				{artifact.lastAction.targetName}
 			</Table.Cell>
+			</>
 		}
-		return <Table.Cell>
+		return <><Table.Cell>
 			{artifact.lastAction.overrideDBlink &&
 				<Fragment>{artifact.lastAction.actionName}</Fragment>
 			}
@@ -238,63 +242,57 @@ export default class ArcanaSuggestions extends Module {
 				<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastAction.id)} />
 			}
 		</Table.Cell>
+		<Table.Cell>
+		</Table.Cell>
+		</>
 
 	}
 
 	// Helper for output()
 	RenderSpreadState(artifact) {
 
-		const spread = artifact.state.spread || null
 		const draw = artifact.state.draw || null
-		const rrAbility = artifact.state.rrAbility || null
-		const minorArcana = artifact.state.minorArcana
+		const slot1 = artifact.state.slot1 || null
+		const slot2 = artifact.state.slot2 || null
+		const slot3 = artifact.state.slot3 || null
 
 		return <Table.Cell>
-			{rrAbility && <img
-				src={rrAbility.icon}
-				className={styles.buffIcon}
-				alt={rrAbility.name}
-			/>}
-			{!rrAbility && <span className={styles.buffDummy} />}
-			<br/>
-			{spread && <img
-				src={spread.icon}
-				className={styles.buffIcon}
-				alt={spread.name}
-			/>}
-			{!spread && <span className={styles.buffDummy} />}
 			{draw && <img
 				src={draw.icon}
 				className={styles.buffIcon}
 				alt={draw.name}
 			/>}
-			{!draw && <span className={styles.buffDummy} />}
-			{minorArcana && minorArcana.name === 'Unknown' &&
-
-				<img
-					src={UNKNOWN_CARD_STATUS_ICON}
-					className={styles.buffIcon}
-					alt={minorArcana.name}
-				/>}
-			{minorArcana && minorArcana.name !== 'Unknown' && <img
-
-				src={this.GetMinorArcanaIcon(minorArcana)}
+			{!draw && <span className={styles.buffDummy} />}&nbsp;&nbsp;&nbsp;&nbsp;
+			{slot1 && <img
+				src={slot1.icon}
 				className={styles.buffIcon}
-				alt={minorArcana.name}
+				alt={slot1.name}
 			/>}
-			{!minorArcana && <span className={styles.buffDummy} />}
+			{!slot1 && <span className={styles.buffDummy} />}
+			{slot2 && <img
+				src={slot2.icon}
+				className={styles.buffIcon}
+				alt={slot2.name}
+			/>}
+			{!slot2 && <span className={styles.buffDummy} />}
+			{slot3 && <img
+				src={slot3.icon}
+				className={styles.buffIcon}
+				alt={slot3.name}
+			/>}
+			{!slot3 && <span className={styles.buffDummy} />}
 		</Table.Cell>
 	}
 
-	GetMinorArcanaIcon(action) {
-		if (action.id === ACTIONS.LORD_OF_CROWNS.id) {
-			return LORD_OF_CROWNS_STATUS_ICON
-		} if (action.id === ACTIONS.LADY_OF_CROWNS.id) {
-			return LADY_OF_CROWNS_STATUS_ICON
-		}
-		return UNKNOWN_CARD_STATUS_ICON
+	// GetMinorArcanaIcon(action) {
+	// 	if (action.id === ACTIONS.LORD_OF_CROWNS.id) {
+	// 		return LORD_OF_CROWNS_STATUS_ICON
+	// 	} if (action.id === ACTIONS.LADY_OF_CROWNS.id) {
+	// 		return LADY_OF_CROWNS_STATUS_ICON
+	// 	}
+	// 	return UNKNOWN_CARD_STATUS_ICON
 
-	}
+	// }
 
 	jumpToTimeline(timestamp) {
 		this.timeline.show(
