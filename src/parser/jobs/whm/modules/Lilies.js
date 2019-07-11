@@ -3,7 +3,6 @@ import React, {Fragment} from 'react'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Trans, Plural} from '@lingui/react'
-import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 
@@ -11,14 +10,11 @@ const LILY_CONSUMERS = [ACTIONS.AFFLATUS_SOLACE.id, ACTIONS.AFFLATUS_RAPTURE.id]
 const BLOOD_LILY_CONSUMERS = [ACTIONS.AFFLATUS_MISERY.id]
 const LILY_INTERVAL = 30000 // 1 lily every 30 seconds
 const BLOOD_LILY_BLOOM = 3 // 1 blood lily for every 3 lilies spent
-const UNUSED_BLOOD_LILIES_FAIL = 2
-const UNUSED_BLOOD_LILIES_WARN = 1
 const WASTED_BLOOD_LILIES_MAX_MEDIUM = 2
 
 export default class Lilies extends Module {
 	static handle = 'lilies'
 	static dependencies = [
-		'checklist',
 		'suggestions',
 	]
 
@@ -94,32 +90,7 @@ export default class Lilies extends Module {
 	}
 
 	checkBloodLilies() {
-		this._bloodLiliesWasted = Math.floor(this._liliesWasted / BLOOD_LILY_BLOOM)
-		const bloodWarnTarget = (this._bloodLiliesGenerated - UNUSED_BLOOD_LILIES_WARN) / this._bloodLiliesGenerated * 100
-		const bloodFailTarget = (this._bloodLiliesGenerated - UNUSED_BLOOD_LILIES_FAIL) / this._bloodLiliesGenerated * 100
-
-		this.checklist.add(new TieredRule({
-			name: <Trans id="whm.lily-blood.checklist.name">
-				Spend your Blood Lily
-			</Trans>,
-			description: <Trans id="whm.lily-blood.checklist.content">
-				Use <ActionLink {...ACTIONS.AFFLATUS_MISERY} /> when it is available. It is a major source of your DPS.
-			</Trans>,
-			tiers: {
-				[bloodWarnTarget]: TARGET.WARN,
-				[bloodFailTarget]: TARGET.FAIL,
-				100: TARGET.SUCCESS,
-			},
-			requirements: [
-				new Requirement({
-					name: <Trans id="whm.lily-blood.checklist.requirement.name">
-						Blood Lilies Spent
-					</Trans>,
-					value: this._bloodLiliesConsumed,
-					target: this._bloodLiliesGenerated,
-				}),
-			],
-		}))
+		this._bloodLiliesWasted = Math.floor(this._liliesWasted / BLOOD_LILY_BLOOM) + (this._blooming === BLOOD_LILY_BLOOM)
 
 		if (this._bloodLiliesWasted >= 1) {
 			this.suggestions.add(new Suggestion({
