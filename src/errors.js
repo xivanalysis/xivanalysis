@@ -77,3 +77,8 @@ export class ModulesNotFoundError extends GlobalError {
 	message = 'Modules not found.'
 	detail = 'A new version has probably been deployed. If refreshing the page does not fix this error, please let us know on Discord!'
 }
+
+export class ReportProcessingError extends GlobalError {
+	message = 'Report is still processing.'
+	detail = 'FF Logs takes a brief period to process reports before xivanalysis is able to analayse them. Try again shortly!'
+}

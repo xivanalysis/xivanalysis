@@ -17,7 +17,6 @@ export default class Debuffs extends DoTs {
 	]
 
 	static statusesToTrack = [
-		STATUSES.PIERCING_RESISTANCE_DOWN.id,
 		STATUSES.CHAOS_THRUST.id,
 	]
 
@@ -25,14 +24,10 @@ export default class Debuffs extends DoTs {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.debuffs.checklist.name">Keep your debuffs up</Trans>,
 			description: <Trans id="drg.debuffs.checklist.description">
-				<ActionLink {...ACTIONS.DISEMBOWEL}/> and <ActionLink {...ACTIONS.CHAOS_THRUST}/> provide an important piercing vulnerability debuff and a potent DoT respectively, both of which should be maintained at all times.
+				<ActionLink {...ACTIONS.CHAOS_THRUST}/> provides a potent DoT which should be maintained at all times.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEBUFFS,
 			requirements: [
-				new Requirement({
-					name: <Trans id="drg.debuffs.checklist.requirement.disembowel.name"><ActionLink {...ACTIONS.DISEMBOWEL}/> uptime</Trans>,
-					percent: () => this.getUptimePercent(STATUSES.PIERCING_RESISTANCE_DOWN.id),
-				}),
 				new Requirement({
 					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...ACTIONS.CHAOS_THRUST}/> uptime</Trans>,
 					percent: () => this.getUptimePercent(STATUSES.CHAOS_THRUST.id),
@@ -42,6 +37,7 @@ export default class Debuffs extends DoTs {
 	}
 
 	addClippingSuggestions(clip) {
+		// TODO - This text will probably need to be updated with the removal of HT
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.CHAOS_THRUST.icon,
 			content: <Trans id="drg.debuffs.suggestions.clipping.content">

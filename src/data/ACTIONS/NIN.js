@@ -11,7 +11,20 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 300,
+			potency: 390,
+			end: true,
+		},
+	},
+
+	HAKKE_MUJINSATSU: {
+		id: 16488,
+		name: 'Hakke Mujinsatsu',
+		icon: 'https://xivapi.com/i/002000/002923.png',
+		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2254,
+			potency: 140,
 			end: true,
 		},
 	},
@@ -68,6 +81,14 @@ export default {
 		cooldown: 20,
 	},
 
+	GOKA_MEKKYAKU: {
+		id: 16491,
+		name: 'Goka Mekkyaku',
+		icon: 'https://xivapi.com/i/002000/002925.png',
+		onGcd: false,
+		cooldown: 20,
+	},
+
 	RAITON: {
 		id: 2267,
 		name: 'Raiton',
@@ -80,6 +101,14 @@ export default {
 		id: 2268,
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
+		onGcd: false,
+		cooldown: 20,
+	},
+
+	HYOSHO_RANRYU: {
+		id: 16492,
+		name: 'Hyosho Ranryu',
+		icon: 'https://xivapi.com/i/002000/002926.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -121,15 +150,7 @@ export default {
 		name: 'Kassatsu',
 		icon: 'https://xivapi.com/i/002000/002906.png',
 		onGcd: false,
-		cooldown: 120,
-	},
-
-	DUALITY: {
-		id: 3567,
-		name: 'Duality',
-		icon: 'https://xivapi.com/i/002000/002919.png',
-		onGcd: false,
-		cooldown: 90,
+		cooldown: 60,
 	},
 
 	DREAM_WITHIN_A_DREAM: {
@@ -145,7 +166,7 @@ export default {
 		name: 'Hellfrog Medium',
 		icon: 'https://xivapi.com/i/002000/002920.png',
 		onGcd: false,
-		cooldown: 0,
+		cooldown: 1,
 	},
 
 	BHAVACAKRA: {
@@ -153,7 +174,7 @@ export default {
 		name: 'Bhavacakra',
 		icon: 'https://xivapi.com/i/002000/002921.png',
 		onGcd: false,
-		cooldown: 50,
+		cooldown: 1,
 	},
 
 	TEN_CHI_JIN: {
@@ -164,27 +185,27 @@ export default {
 		cooldown: 100,
 	},
 
-	SMOKE_SCREEN: {
-		id: 3565,
-		name: 'Smoke Screen',
-		icon: 'https://xivapi.com/i/002000/002917.png',
-		onGcd: false,
-		cooldown: 180,
-	},
-
-	SHADEWALKER: {
-		id: 3564,
-		name: 'Shadewalker',
-		icon: 'https://xivapi.com/i/002000/002916.png',
-		onGcd: false,
-		cooldown: 120,
-	},
-
 	SHUKUCHI: {
 		id: 2262,
 		name: 'Shukuchi',
 		icon: 'https://xivapi.com/i/002000/002905.png',
 		onGcd: false,
 		cooldown: 60,
+	},
+
+	MEISUI: {
+		id: 16489,
+		name: 'Meisui',
+		icon: 'https://xivapi.com/i/002000/002924.png',
+		onGcd: false,
+		cooldown: 60,
+	},
+
+	BUNSHIN: {
+		id: 16493,
+		name: 'Bunshin',
+		icon: 'https://xivapi.com/i/002000/002927.png',
+		onGcd: false,
+		cooldown: 110,
 	},
 }

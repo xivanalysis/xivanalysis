@@ -1,7 +1,10 @@
-import {addExtraIndex} from 'utilities'
+export interface Pet {
+	id: number
+	name: string
+}
 
 // IDs aren't real IDs per se. Just fudging with summon action IDs and stuff
-const PETS = addExtraIndex({
+const PETS = {
 	// SCH
 	EOS: {
 		id: 1652,
@@ -54,6 +57,6 @@ const PETS = addExtraIndex({
 		id: 2865,
 		name: 'Bishop Autoturret',
 	},
-}, 'id')
+}
 
-export default PETS
+export default PETS as Record<keyof typeof PETS, Pet>

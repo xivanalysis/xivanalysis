@@ -5,7 +5,8 @@ import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -40,7 +41,7 @@ export default class DWT extends Module {
 	static handle = 'dwt'
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
-		'aoe', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'aoe', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'castTime',
 		'downtime',
 		'gauge',
@@ -93,7 +94,8 @@ export default class DWT extends Module {
 		}
 
 		// Only going to save casts during DWT
-		if (!this._active || getAction(actionId).autoAttack) {
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		if (!this._active || !action || action.autoAttack) {
 			return
 		}
 
@@ -128,10 +130,10 @@ export default class DWT extends Module {
 		let badGcds = 0
 		this._history.forEach(dwt => {
 			badGcds += dwt.casts
-				.filter(cast =>
-					getAction(cast.ability.guid).onGcd &&
-					!CORRECT_GCDS.includes(cast.ability.guid)
-				)
+				.filter(cast => {
+					const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+					return action && action.onGcd && !CORRECT_GCDS.includes(action.id)
+				})
 				.length
 		})
 
@@ -225,7 +227,10 @@ export default class DWT extends Module {
 		const possibleGcds = Math.floor((USABLE_LENGTH - invulnTime) / this.gcd.getEstimate()) + 1
 
 		// Check the no. GCDs actually cast
-		const gcds = this._dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd)
+		const gcds = this._dwt.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			return action && action.onGcd
+		})
 
 		// Eyy, got there. Save out the details for now.
 		this._missedGcds += Math.max(0, possibleGcds - gcds.length)
@@ -242,7 +247,10 @@ export default class DWT extends Module {
 
 	output() {
 		const panels = this._history.map(dwt => {
-			const numGcds = dwt.casts.filter(cast => getAction(cast.ability.guid).onGcd).length
+			const numGcds = dwt.casts.filter(cast => {
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				return action && action.onGcd
+			}).length
 			const noDeathflare = dwt.casts.filter(cast => cast.ability.guid === ACTIONS.DEATHFLARE.id).length === 0
 			return {
 				key: dwt.start,

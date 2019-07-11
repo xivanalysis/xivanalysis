@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 
+import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
 
 // import styles from './BuffList.module.css'
@@ -19,10 +20,10 @@ export default class BuffList extends Component {
 	render() {
 		return <div>
 			{this.props.events.map(event => {
-				const status = STATUSES[event.ability.guid] || {}
+				const status = getDataBy(STATUSES, 'id', event.ability.guid)
 
 				// TODO: Sort this out if it's a problem
-				if (!status.icon) {
+				if (!status || !status.icon) {
 					console.error(event, 'event ability has no icon')
 					return false
 				}
@@ -35,8 +36,7 @@ export default class BuffList extends Component {
 					// className={className.join(' ')}
 					alt={status.name}
 				/>
-			}
-			)}
+			})}
 		</div>
 	}
 }

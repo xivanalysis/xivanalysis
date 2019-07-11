@@ -1,0 +1,42 @@
+@value gutter, lg from "theme.module.css";
+@value themeBackground from "theme.module.css";
+
+.container {
+	display: flex;
+
+	/* bloody semantic */
+	color: inherit;
+}
+.container:hover {
+	color: inherit;
+}
+
+.text {
+	flex-grow: 1;
+	padding-right: gutter;
+}
+
+.background {
+	position: relative;
+	flex-shrink: 0;
+	margin: calc(-1 * gutter);
+	margin-left: 0;
+	width: 35%;
+	background: url(./Home/background.jpg) center/cover;
+}
+
+@media lg {
+	.background {
+		width: 50%;
+	}
+}
+
+.background:after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 25%;
+	height: 100%;
+	background: linear-gradient(to right, themeBackground 0%, transparent 100%);
+}

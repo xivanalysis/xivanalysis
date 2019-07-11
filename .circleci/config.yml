@@ -109,7 +109,9 @@ workflows:
       - setup:
           filters:
             branches:
-              ignore: i18n-master
+              ignore:
+                - i18n-master
+                - i18n-stormblood
       - lint:
           requires:
             - setup
@@ -124,6 +126,7 @@ workflows:
             branches:
               only:
                 - master
+                - stormblood
       - deploy:
           requires:
             - build

@@ -34,6 +34,12 @@ export default {
 		onGcd: true,
 		castTime: 3.0,
 	},
+	UMBRAL_SOUL: {
+		id: 16506,
+		name: 'Umbral Soul',
+		icon: 'https://xivapi.com/i/002000/002666.png',
+		onGcd: true,
+	},
 	FIRE_I: {
 		id: 141,
 		name: 'Fire',
@@ -68,6 +74,13 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002652.png',
 		onGcd: true,
 		castTime: 4.0,
+	},
+	DESPAIR: {
+		id: 16505,
+		name: 'Flare',
+		icon: 'https://xivapi.com/i/002000/002665.png',
+		onGcd: true,
+		castTime: 3.0,
 	},
 	THUNDER: {
 		id: 144,
@@ -110,6 +123,12 @@ export default {
 		onGcd: true,
 		castTime: 2.5,
 	},
+	XENOGLOSSY: {
+		id: 16507,
+		name: 'Xenoglossy',
+		icon: 'https://xivapi.com/i/002000/002667.png',
+		onGcd: true,
+	},
 	SLEEP: {
 		id: 145,
 		name: 'Sleep',
@@ -123,9 +142,9 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000466.png',
 		cooldown: 8,
 	},
-	CONVERT: {
+	MANAFONT: {
 		id: 158,
-		name: 'Convert',
+		name: 'Manafont',
 		icon: 'https://xivapi.com/i/002000/002651.png',
 		cooldown: 180,
 	},
@@ -151,7 +170,7 @@ export default {
 		id: 3574,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/002000/002657.png',
-		cooldown: 60,
+		cooldown: 30,
 	},
 	ENOCHIAN: {
 		id: 3575,

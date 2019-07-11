@@ -2,7 +2,8 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -55,8 +56,8 @@ export default class Ammo extends Module {
 	_onCast(event) {
 		this._ammoSpent = false // Reset the flag on every cast
 
-		const action = getAction(event.ability.guid)
-		if (action.onGcd) {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		if (action && action.onGcd) {
 			if (this._ammoCount > 0) {
 				this._ammoSpent = true // If it's a GCD and we have ammo, flag it as as a spender
 				if (this._badAmmoUses.hasOwnProperty(action.id)) {

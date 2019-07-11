@@ -1,6 +1,8 @@
 import cn from 'classnames'
-import {ActionLink} from 'components/ui/DbLink'
-import {getAction} from 'data/ACTIONS'
+import {ActionLink, ItemLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
+import {ITEM_ID_OFFSET} from 'data/ACTIONS/ITEMS'
 import {CastEvent} from 'fflogs'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
@@ -24,10 +26,10 @@ export default class Rotation extends Component<RotationProps> {
 
 		return <div className={styles.container}>
 			{events.map(event => {
-				const action = getAction(event.ability.guid) as TODO
+				const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
 				// Don't bother showing the icon for autos
-				if (action.autoAttack) {
+				if (!action || action.autoAttack) {
 					return
 				}
 
@@ -45,8 +47,12 @@ export default class Rotation extends Component<RotationProps> {
 
 				const iconSize = action.onGcd ? styles.gcdSize : styles.ogcdSize
 
+				const isItem = action.id >= ITEM_ID_OFFSET
+
+				const Link = isItem ? ItemLink : ActionLink
+
 				return <div className={cn(...linkClassName)}>
-					<ActionLink
+					<Link
 						showName={false}
 						iconSize={iconSize}
 						{...action}

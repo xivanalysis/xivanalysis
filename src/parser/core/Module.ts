@@ -256,7 +256,7 @@ export default class Module {
 		})
 	}
 
-	private _filterMatches<T, F extends FilterPartial<T>>(event: T, filter: F) {
+	private _filterMatches<T extends object, F extends FilterPartial<T>>(event: T, filter: F) {
 		const match = Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
 			if (!event.hasOwnProperty(key)) {

@@ -3,7 +3,8 @@ import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
 import React from 'react'
 
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
@@ -25,8 +26,8 @@ export default class GlobalCooldown extends Module {
 	static handle = 'gcd'
 	static dependencies = [
 		// We need this to normalise before us
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
-		'castTime', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'castTime', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'downtime',
 		'speedmod',
 		'statistics',
@@ -59,8 +60,8 @@ export default class GlobalCooldown extends Module {
 
 			// Only care about player GCDs
 			if (!this.parser.byPlayer(event) || !event.ability) { continue }
-			const action = getAction(event.ability.guid)
-			if (!action.onGcd) { continue }
+			const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+			if (!action || !action.onGcd) { continue }
 
 			// eslint-disable-next-line default-case
 			switch (event.type) {
@@ -101,7 +102,7 @@ export default class GlobalCooldown extends Module {
 		// - Sub-0.5s speedmod for BLM fast-casts and correct Instant/CasterTaxed flagging
 		// - Correct timestamp for last event before long gaps (ie: Kefka normal)
 		this.gcds.forEach((gcd) => {
-			console.log(this.parser.formatTimestamp(gcd.timestamp) + ' ' + getAction(gcd.actionId).name + '[' + gcd.length +
+			console.log(this.parser.formatTimestamp(gcd.timestamp) + ' ' + getDataBy(ACTIONS, 'id', gcd.actionId).name + '[' + gcd.length +
 						'|' + gcd.normalizedLength + '] Speedmod[' + gcd.speedMod + ']' +
 						(gcd.isInstant ? ' Instant' : '') + (gcd.casterTaxed ? ' CasterTaxed' : ''))
 		})
@@ -119,7 +120,8 @@ export default class GlobalCooldown extends Module {
 		}))
 
 		this.gcds.forEach(gcd => {
-			const action = getAction(gcd.actionId)
+			const action = getDataBy(ACTIONS, 'id', gcd.actionId)
+			if (!action) { return }
 			this.timeline.addItem(new Item({
 				type: 'background',
 				start: gcd.timestamp - startTime,
@@ -150,7 +152,8 @@ export default class GlobalCooldown extends Module {
 			return
 		}
 
-		const action = getAction(gcdInfo.event.ability.guid)
+		const action = getDataBy(ACTIONS, 'id', gcdInfo.event.ability.guid)
+		if (!action) { return }
 		let speedMod = this.speedmod.get(gcdInfo.event.timestamp)
 		let castTime = action.castTime
 

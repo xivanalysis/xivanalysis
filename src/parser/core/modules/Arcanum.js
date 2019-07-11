@@ -24,7 +24,7 @@ export default class Arcanum extends Module {
 	static handle = 'arcanum'
 	static dependencies = [
 		// AE needs to run its normaliser first
-		'additionalEvents', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'additionalEvents', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	normalise(events) {

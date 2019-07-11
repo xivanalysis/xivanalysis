@@ -97,7 +97,7 @@ export default class Higanbana extends Module {
 				Avoid refreshing <ActionLink {...ACTIONS.HIGANBANA} /> significantly before it expires.
 			</Trans>,
 			why: <Trans id="sam.higanbana.suggestion.why">
-				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES[STATUSES.HIGANBANA.id].name} lost to early refreshes.
+				{this.parser.formatDuration(this._clip[STATUSES.HIGANBANA.id])} of {STATUSES.HIGANBANA.name} lost to early refreshes.
 			</Trans>,
 			tiers: CLIPPING_SEVERITY,
 			value: maxClip,

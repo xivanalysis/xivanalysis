@@ -1,7 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {ActorType} from 'fflogs'
-import {addExtraIndex} from 'utilities'
 
 export interface Role {
 	id: number
@@ -62,7 +61,7 @@ const roleData = {
 	},
 }
 
-export const ROLES = addExtraIndex(roleData as Record<keyof typeof roleData, Role>, 'id')
+export const ROLES = roleData as Record<keyof typeof roleData, Role>
 
 export interface Job {
 	name: MessageDescriptor
@@ -94,6 +93,13 @@ const JOBS = {
 		logType: ActorType.DARK_KNIGHT,
 		icon: 'drk',
 		colour: '#d126cc',
+		role: ROLES.TANK.id,
+	},
+	GUNBREAKER: {
+		name: t('game.job.gunbreaker')`Gunbreaker`,
+		logType: ActorType.GUNBREAKER,
+		icon: 'gnb',
+		colour: '#ff0000', // TODO
 		role: ROLES.TANK.id,
 	},
 
@@ -165,6 +171,13 @@ const JOBS = {
 		colour: '#6ee1d6',
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
+	DANCER: {
+		name: t('game.job.dancer')`Dancer`,
+		logType: ActorType.DANCER,
+		icon: 'dnc',
+		colour: '#ff0000', // TODO
+		role: ROLES.PHYSICAL_RANGED.id,
+	},
 
 	// Magic Ranged
 	BLACK_MAGE: {
@@ -190,4 +203,4 @@ const JOBS = {
 	},
 }
 
-export default addExtraIndex(JOBS as Record<keyof typeof JOBS, Job>, 'logType')
+export default JOBS as Record<keyof typeof JOBS, Job>

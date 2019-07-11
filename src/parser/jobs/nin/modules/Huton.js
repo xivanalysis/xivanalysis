@@ -1,10 +1,10 @@
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+import {getDataBy} from 'data'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import BOSSES from 'data/BOSSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -12,16 +12,20 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const HUTON_MAX_DURATION_MILLIS = 70000 // Not in STATUSES/NIN.js because lolgauges
 const HUTON_START_DURATION_MILLIS = {
+	// TODO - Revisit how this sim works in the first place because it's fucky
 	high: 65000,
 	low: 59000,
 }
-const ARMOR_CRUSH_EXTENSION_MILLIS = 30000
+const HUTON_EXTENSION_MILLIS = {
+	[ACTIONS.ARMOR_CRUSH.id]: 30000,
+	[ACTIONS.HAKKE_MUJINSATSU.id]: 10000,
+}
 
 const DOWNTIME_DIFFERENCE_TOLERANCE = 10000 // If the downtime estimates are off by more than this, we can probably toss the low estimate
 
 // Some bosses *coughChadarnookcough* require fucky pulls that result in your Huton timer being lower than normal when the fight starts
 const BOSS_ADJUSTMENTS = {
-	[BOSSES.DEMON_CHADARNOOK.logId]: 15000,
+	// [BOSSES.DEMON_CHADARNOOK.logId]: 15000,
 }
 
 export default class Huton extends Module {
@@ -53,7 +57,7 @@ export default class Huton extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HUTON.id}, this._onHutonCast)
-		this.addHook('combo', {by: 'player', abilityId: ACTIONS.ARMOR_CRUSH.id}, this._onArmorCrush)
+		this.addHook('combo', {by: 'player', abilityId: Object.keys(HUTON_EXTENSION_MILLIS).map(Number)}, this._onHutonExtension)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
@@ -74,23 +78,24 @@ export default class Huton extends Module {
 		this._lastEventTime = event.timestamp
 	}
 
-	_handleArmorCrush(key, elapsedTime) {
+	_handleHutonExtension(key, amount, elapsedTime) {
 		let newDuration = this._currentDuration[key] - elapsedTime
 		if (newDuration <= 0) {
 			this._currentDuration[key] = 0
 			this._downtime[key] -= newDuration // Since it's negative, this is basically addition
 			this._futileArmorCrushes[key]++
 		} else {
-			newDuration += ARMOR_CRUSH_EXTENSION_MILLIS
+			newDuration += amount
 			this._clippedDuration[key] += Math.max(newDuration - HUTON_MAX_DURATION_MILLIS, 0)
 			this._currentDuration[key] = Math.min(newDuration, HUTON_MAX_DURATION_MILLIS)
 		}
 	}
 
-	_onArmorCrush(event) {
+	_onHutonExtension(event) {
 		const elapsedTime = (event.timestamp - this._lastEventTime)
-		this._handleArmorCrush('high', elapsedTime)
-		this._handleArmorCrush('low', elapsedTime)
+		const extension = HUTON_EXTENSION_MILLIS[getDataBy(ACTIONS, 'id', event.ability.guid)]
+		this._handleHutonExtension('high', extension, elapsedTime)
+		this._handleHutonExtension('low', extension, elapsedTime)
 		this._lastEventTime = event.timestamp
 	}
 

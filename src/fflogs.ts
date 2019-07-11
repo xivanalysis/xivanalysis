@@ -1,5 +1,3 @@
-import {AxiosRequestConfig} from 'axios'
-
 // -----
 // Fight
 // -----
@@ -43,6 +41,7 @@ export enum ActorType {
 	PALADIN = 'Paladin',
 	WARRIOR = 'Warrior',
 	DARK_KNIGHT = 'DarkKnight',
+	GUNBREAKER = 'Gunbreaker', // TODO: CONFIRM
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
@@ -52,6 +51,7 @@ export enum ActorType {
 	SAMURAI = 'Samurai',
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
+	DANCER = 'Dancer', // TODO: CONFIRM
 	BLACK_MAGE = 'BlackMage',
 	SUMMONER = 'Summoner',
 	RED_MAGE = 'RedMage',
@@ -208,43 +208,52 @@ export enum ReportLanguage {
 // Direct API
 // -----
 
-export interface ReportFightsQuery extends AxiosRequestConfig {
-	params?: {
-		translate?: boolean,
-		// This is only a thing when hitting an instance of @xivanalysis/server
-		bypassCache?: boolean,
-	}
+export interface ReportFightsQuery {
+	translate?: boolean,
+	// This is only a thing when hitting an instance of @xivanalysis/server
+	bypassCache?: boolean,
 }
 
-export interface ReportFightsResponse {
+interface SharedReportFightsResponse {
 	end: number
+	owner: string
+	start: number
+	title: string
+	zone: number
+}
+
+interface ProcessingReportFightsResponse extends SharedReportFightsResponse {
+	exportedCharacters: unknown[]
+	processing: true
+}
+
+export interface ProcessedReportFightsResponse extends SharedReportFightsResponse {
 	enemies: Actor[]
 	enemyPets: Pet[]
 	fights: Fight[]
 	friendlies: Actor[]
 	friendlyPets: Pet[]
 	lang: ReportLanguage
-	owner: string
 	phases: Phase[]
-	start: number
-	title: string
-	zone: number
+	processing?: false
 }
 
-export interface ReportEventsQuery extends AxiosRequestConfig {
-	params?: {
-		start?: number,
-		end?: number,
-		actorid?: Actor['id'],
-		actorinstance?: number,
-		actorclass?: ActorType,
-		cutoff?: number,
-		encounter?: Fight['boss'],
-		wipes?: number,
-		difficulty?: number,
-		filter?: string,
-		translate?: boolean,
-	}
+export type ReportFightsResponse =
+	| ProcessingReportFightsResponse
+	| ProcessedReportFightsResponse
+
+export interface ReportEventsQuery {
+	start?: number,
+	end?: number,
+	actorid?: Actor['id'],
+	actorinstance?: number,
+	actorclass?: ActorType,
+	cutoff?: number,
+	encounter?: Fight['boss'],
+	wipes?: number,
+	difficulty?: number,
+	filter?: string,
+	translate?: boolean,
 }
 
 export interface ReportEventsResponse {

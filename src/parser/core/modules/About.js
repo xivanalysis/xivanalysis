@@ -17,7 +17,7 @@ export default class About extends Module {
 	static displayMode = DISPLAY_MODE.FULL
 	static title = t('core.about.title')`About`
 
-	description = null
+	Description = null
 	contributors = []
 
 	supportedPatches = null
@@ -39,7 +39,7 @@ export default class About extends Module {
 		super(...args)
 
 		// Merge the parser's metadata in
-		const fields = ['description', 'contributors', 'supportedPatches']
+		const fields = ['Description', 'contributors', 'supportedPatches']
 		fields.forEach(field => {
 			this[field] = this.parser.meta[field]
 		})
@@ -72,7 +72,7 @@ export default class About extends Module {
 
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
-				{this.description}
+				<this.Description/>
 				{!supported && <Message error icon>
 					<Icon name="times circle outline"/>
 					<Message.Content>

@@ -1,31 +1,23 @@
 import {Trans} from '@lingui/react'
-import {inject, observer} from 'mobx-react'
-import PropTypes from 'prop-types'
+import {getCorrectedFight, getZoneBanner} from 'data/BOSSES'
+import {observer} from 'mobx-react'
 import React, {Component, Fragment} from 'react'
 import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
-
-import {getZoneBanner, getCorrectedFight} from 'data/BOSSES'
-import {ReportStore} from 'store/report'
-import {SettingsStore} from 'store/settings'
+import {StoreContext} from 'store'
 import FightItem from './FightItem'
-
 import styles from './FightList.module.css'
 
-@inject('reportStore', 'settingsStore')
 @observer
 class FightList extends Component {
-	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore),
-		settingsStore: PropTypes.instanceOf(SettingsStore),
-	}
+	static contextType = StoreContext
 
 	refreshFights = () => {
-		const {reportStore} = this.props
+		const {reportStore} = this.context
 		reportStore.refreshReport()
 	}
 
 	onToggleKillsOnly = (_, data) => {
-		const {settingsStore} = this.props
+		const {settingsStore} = this.context
 		settingsStore.setViewKillsOnly(data.checked)
 	}
 
@@ -33,7 +25,7 @@ class FightList extends Component {
 		const {
 			reportStore,
 			settingsStore,
-		} = this.props
+		} = this.context
 
 		const report = reportStore.report
 

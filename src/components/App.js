@@ -1,13 +1,12 @@
 import classnames from 'classnames'
-import {inject} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Route, Switch, withRouter, Link} from 'react-router-dom'
-import {Icon} from  'semantic-ui-react'
+import {Link, Route, Switch, withRouter} from 'react-router-dom'
+import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
-import {GlobalErrorStore} from 'store/globalError'
 import Analyse from './Analyse'
+import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
@@ -19,16 +18,17 @@ import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
+import {StoreContext} from 'store'
 
-@inject('globalErrorStore')
 class App extends Component {
 	static propTypes = {
-		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		history: PropTypes.shape({
 			location: PropTypes.object.isRequired,
 			listen: PropTypes.func.isRequired,
 		}).isRequired,
 	}
+
+	static contextType = StoreContext
 
 	_unlisten = null
 
@@ -50,7 +50,7 @@ class App extends Component {
 
 	_locationDidChange = (/* location */) => {
 		// User's browsed - clear the global error state. Page can always re-throw one.
-		const {globalErrorStore} = this.props
+		const {globalErrorStore} = this.context
 		globalErrorStore.clearGlobalError()
 	}
 
@@ -104,6 +104,8 @@ class App extends Component {
 				</div>
 
 				<Container className={styles.content}>
+					<BranchBanner/>
+
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/" component={Home}/>

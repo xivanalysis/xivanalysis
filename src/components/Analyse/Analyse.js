@@ -1,37 +1,30 @@
 import {Trans} from '@lingui/react'
-import {inject, observer, disposeOnUnmount} from 'mobx-react'
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {
-	Header,
-	Loader,
-} from 'semantic-ui-react'
-
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
+import {observable, reaction, runInAction} from 'mobx'
+import {disposeOnUnmount, observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
-import {ReportStore} from 'store/report'
-import {GlobalErrorStore} from 'store/globalError'
-
+import PropTypes from 'prop-types'
+import React, {Component} from 'react'
+import {Header, Loader} from 'semantic-ui-react'
+import {StoreContext} from 'store'
+import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
 
-import styles from './Analyse.module.css'
-import {observable, runInAction, reaction} from 'mobx'
-
-@inject('reportStore', 'globalErrorStore')
 @observer
 class Analyse extends Component {
+	static contextType = StoreContext
+
 	@observable conductor;
 	@observable complete = false;
 
 	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
-		reportStore: PropTypes.instanceOf(ReportStore).isRequired,
-		globalErrorStore: PropTypes.instanceOf(GlobalErrorStore),
 		match: PropTypes.shape({
 			params: PropTypes.shape({
 				code: PropTypes.string.isRequired,
@@ -50,7 +43,8 @@ class Analyse extends Component {
 	}
 
 	componentDidMount() {
-		const {reportStore, match} = this.props
+		const {reportStore} = this.context
+		const {match} = this.props
 		reportStore.fetchReportIfNeeded(match.params.code)
 
 		disposeOnUnmount(this, reaction(
@@ -82,7 +76,7 @@ class Analyse extends Component {
 			conductor.sanityCheck()
 			await conductor.configure()
 		} catch (error) {
-			this.props.globalErrorStore.setGlobalError(error)
+			this.context.globalErrorStore.setGlobalError(error)
 			return
 		}
 
@@ -99,7 +93,7 @@ class Analyse extends Component {
 	}
 
 	render() {
-		const {reportStore} = this.props
+		const {reportStore} = this.context
 		const report = reportStore.report
 
 		// Still loading the parser or running the parse
@@ -116,30 +110,33 @@ class Analyse extends Component {
 
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
-		const job = JOBS[player.type]
+		const job = getDataBy(JOBS, 'logType', player.type)
+		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
 		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
-				{job && <Header
-					className={[styles.header].join(' ')}
-				>
-					<JobIcon job={job}/>
-					<Header.Content>
-						<NormalisedMessage message={job.name}/>
-						<Header.Subheader>
-							<NormalisedMessage message={ROLES[job.role].name}/>
-						</Header.Subheader>
-					</Header.Content>
-				</Header>}
+				{job && (
+					<Header className={styles.header}>
+						<JobIcon job={job}/>
+						<Header.Content>
+							<NormalisedMessage message={job.name}/>
+							{role && (
+								<Header.Subheader>
+									<NormalisedMessage message={role.name}/>
+								</Header.Subheader>
+							)}
+						</Header.Content>
+					</Header>
+				)}
 
-				{results.map(
-					(result, index) => <SegmentLinkItem
+				{results.map((result, index) => (
+					<SegmentLinkItem
 						key={index}
 						index={index}
 						result={result}
 					/>
-				)}
+				))}
 			</SidebarContent>
 
 			<div className={styles.resultsContainer}>

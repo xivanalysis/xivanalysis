@@ -2,24 +2,19 @@ import {MessageDescriptor} from '@lingui/core'
 import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {languageToEdition} from 'data/PATCHES'
-import {DependencyCascadeError} from 'errors'
+import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Actor, Event, Fight, Pet} from 'fflogs'
-import {mergeWith, sortBy} from 'lodash'
 import Raven from 'raven-js'
 import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
-import {Meta} from '.'
+import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
 
 interface Player extends Actor {
 	pets: Pet[]
-}
-
-interface LoadedMeta extends Meta {
-	loadedModules: ReadonlyArray<typeof Module>
 }
 
 export interface Result {
@@ -34,10 +29,12 @@ class Parser {
 	// -----
 	// Properties
 	// -----
+	readonly report: Report
+	readonly fight: Fight
 	readonly player: Player
 	readonly patch: Patch
 
-	meta: Partial<LoadedMeta> = {}
+	meta: Meta
 	_timestamp = 0
 
 	modules: Record<string, Module> = {}
@@ -76,23 +73,30 @@ class Parser {
 	// Constructor
 	// -----
 
-	constructor(
-		readonly report: Report,
-		readonly fight: Fight,
+	constructor(opts: {
+		meta: Meta,
+		report: Report,
+		fight: Fight,
 		actor: Actor,
-	) {
+	}) {
+		this.meta = opts.meta
+		this.report = opts.report
+		this.fight = opts.fight
+
 		// Set initial timestamp
-		this._timestamp = fight.start_time
+		this._timestamp = opts.fight.start_time
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
-		const pets = report.friendlyPets.filter(pet => pet.petOwner === actor.id)
+		const pets = opts.report.friendlyPets
+			.filter(pet => pet.petOwner === opts.actor.id)
+
 		this.player = {
-			...actor,
+			...opts.actor,
 			pets,
 		}
 
 		this.patch = new Patch(
-			languageToEdition(report.lang),
+			languageToEdition(opts.report.lang),
 			this.parseDate,
 		)
 	}
@@ -101,39 +105,14 @@ class Parser {
 	// Module handling
 	// -----
 
-	addMeta(meta: LoadedMeta) {
-		// Add the modules to the main system
-		this.addModules(meta.loadedModules)
-
-		// Merge the meta in
-		mergeWith(this.meta, meta, (obj, src) => {
-			if (Array.isArray(obj)) { return obj.concat(src) }
-		})
-
-		// Remove the modules key. I'm sure this could be done more nicely but I'm tired and on a bus rn.
-		delete this.meta.modules
-	}
-
-	addModules(modules: ReadonlyArray<typeof Module>) {
-		const keyed: Record<string, typeof Module> = {}
-
-		modules.forEach(mod => {
-			keyed[mod.handle] = mod
-		})
-
-		// Merge the modules into our constructor object
-		Object.assign(this._constructors, keyed)
-	}
-
-	buildModules() {
-		// Sort the changelog by the date
-		this.meta.changelog = sortBy(this.meta.changelog, 'date')
+	async configure() {
+		const ctors = await this.loadModuleConstructors()
 
 		// Build the values we need for the toposort
-		const nodes = Object.keys(this._constructors)
+		const nodes = Object.keys(ctors)
 		const edges: Array<[string, string]> = []
-		nodes.forEach(mod => this._constructors[mod].dependencies.forEach(dep => {
-			edges.push([mod, this._getDepHandle(dep)])
+		nodes.forEach(mod => ctors[mod].dependencies.forEach(dep => {
+			edges.push([mod, this.getDepHandle(dep)])
 		}))
 
 		// Sort modules to load dependencies first
@@ -143,11 +122,37 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			this.modules[mod] = new this._constructors[mod](this)
+			this.modules[mod] = new ctors[mod](this)
 		})
 	}
 
-	_getDepHandle = (dep: string | MappedDependency) => typeof dep === 'string'? dep : dep.handle
+	private async loadModuleConstructors() {
+		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
+		let allCtors: ReadonlyArray<typeof Module>
+		try {
+			allCtors = await this.meta.getModules()
+		} catch (error) {
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
+			throw new ModulesNotFoundError()
+		}
+
+		// Build a final contructor mapping. Modules later in the list with
+		// the same handle with override earlier ones.
+		const ctors: Record<string, typeof Module> = {}
+		allCtors.forEach(ctor => {
+			ctors[ctor.handle] = ctor
+		})
+
+		this._constructors = ctors
+		return ctors
+	}
+
+	private getDepHandle = (dep: string | MappedDependency) =>
+		typeof dep === 'string'
+			? dep
+			: dep.handle
 
 	// -----
 	// Event handling
@@ -279,7 +284,7 @@ class Parser {
 		// Cascade via dependencies
 		Object.keys(this._constructors).forEach(key => {
 			const constructor = this._constructors[key]
-			if (constructor.dependencies.some(dep => this._getDepHandle(dep) === mod)) {
+			if (constructor.dependencies.some(dep => this.getDepHandle(dep) === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
 		})
@@ -323,7 +328,7 @@ class Parser {
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
 				for (const dep of constructor.dependencies) {
-					const handle = this._getDepHandle(dep)
+					const handle = this.getDepHandle(dep)
 					if (!visited.has(handle)) {
 						crawler(handle)
 					}

@@ -6,7 +6,7 @@ export default class PrecastStatus extends Module {
 	static handle = 'precastStatus'
 	static dependencies = [
 		// Forcing action to run first, cus we want to always splice in before it.
-		'precastAction', // eslint-disable-line xivanalysis/no-unused-dependencies
+		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	_combatantStatuses = {}

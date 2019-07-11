@@ -6,6 +6,7 @@ export const FIRE_SPELLS = [
 	ACTIONS.FIRE_III.id,
 	ACTIONS.FIRE_IV.id,
 	ACTIONS.FLARE.id,
+	ACTIONS.DESPAIR.id,
 ]
 
 export const ICE_SPELLS = [
@@ -14,4 +15,5 @@ export const ICE_SPELLS = [
 	ACTIONS.BLIZZARD_III.id,
 	ACTIONS.BLIZZARD_IV.id,
 	ACTIONS.FREEZE.id,
+	ACTIONS.UMBRAL_SOUL.id,
 ]

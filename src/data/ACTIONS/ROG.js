@@ -8,7 +8,7 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 150,
+		potency: 200,
 		combo: {
 			start: true,
 		},
@@ -22,7 +22,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 200,
+			potency: 250,
 		},
 	},
 
@@ -34,7 +34,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 340, // TODO - *Cries in positionals*
+			potency: 420, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -46,7 +46,7 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2242,
+			from: 2240,
 			potency: 200,
 			end: true,
 		},
@@ -57,8 +57,10 @@ export default {
 		name: 'Death Blossom',
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
-		potency: 110,
-		breaksCombo: true,
+		potency: 120,
+		combo: {
+			start: true,
+		},
 	},
 
 	THROWING_DAGGER: {
@@ -74,20 +76,12 @@ export default {
 	// Player OGCDs
 	// -----
 
-	JUGULATE: {
-		id: 2256,
-		name: 'Jugulate',
-		icon: 'https://xivapi.com/i/000000/000616.png',
-		onGcd: false,
-		cooldown: 30,
-	},
-
 	MUG: {
 		id: 2248,
 		name: 'Mug',
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
-		cooldown: 90,
+		cooldown: 110,
 	},
 
 	ASSASSINATE: {
@@ -95,7 +89,7 @@ export default {
 		name: 'Assassinate',
 		icon: 'https://xivapi.com/i/000000/000612.png',
 		onGcd: false,
-		cooldown: 40,
+		cooldown: 60,
 	},
 
 	TRICK_ATTACK: {

@@ -1,10 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {getAction} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
@@ -53,7 +54,7 @@ export default class CooldownDowntime extends Module {
 			//write the results as a new Requirement to show up later
 			OGCDRequirements.push(
 				new Requirement({
-					name: <ActionLink {...getAction(id)} />,
+					name: <ActionLink {...getDataBy(ACTIONS, 'id', id)} />,
 					percent: this._percentFunction(
 						id,
 						encounterLength - timeOnCooldown + allowedDowntime,
@@ -74,7 +75,8 @@ export default class CooldownDowntime extends Module {
 	}
 	//Furst's revised percent Calculation function
 	_percentFunction(actionId, downtime, offset, fightlength) {
-		const cooldown = getAction(actionId).cooldown
+		const action = getDataBy(ACTIONS, 'id', actionId)
+		const cooldown = action && action.cooldown
 		downtime -= offset
 		if (downtime < 0) {
 			downtime = 0

@@ -2,6 +2,17 @@
 ## List of BLM things to handle, with notes below completed or in-progress features
 ## Please try to keep this up to date, so there's a quick summary of what's in and what still needs work
 
+Shadowbringers Updates:
+Done:
+- Added Action definitions for new actions
+- Updated Gauge events to handle new actions
+- Updated RotationWatchdog due to Convert becoming Manafont (assumed)
+Needed:
+- Review RotationWatchdog for new rotations (incl Despair usage)
+- Double-check oGCDs after Xenoglossy aren't penalized
+- Review of updates developed prior to expac to ensure they're working once post-expac logs are available
+- Actual Action IDS/Icons for the new stuff in BLM.js
+
 Letting procs drop
 - Suggestions added, done.
 

@@ -1,5 +1,6 @@
 import Module from './Module'
 import Parser from './Parser'
+import {Meta} from './Meta'
 
 class TestModule extends Module {
 	static handle = 'test'
@@ -34,7 +35,8 @@ const event = {
 
 describe('Module', () => {
 	beforeEach(() => {
-		const parser = new Parser(report, fight, player)
+		const meta = new Meta({modules: () => Promise.resolve([])})
+		const parser = new Parser({meta, report, fight, actor: player})
 		module = new TestModule(parser)
 
 		hook = jest.fn()

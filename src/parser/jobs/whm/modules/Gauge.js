@@ -1,4 +1,5 @@
-import ACTIONS, {getAction} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 
 const LILY_CONSUMERS = [ACTIONS.ASSIZE.id, ACTIONS.DIVINE_BENISON.id, ACTIONS.ASYLUM.id, ACTIONS.TETRAGRAMMATON.id]
@@ -41,7 +42,7 @@ export default class Gauge extends Module {
 			//it depends on cooldowns, so it should be put on cooldown before this is handled here
 			//not sure if cdr is floor or ceiling
 			if (this.lilies > 0) {
-				const reduction = Math.floor(getAction(abilityId).cooldown * COOLDOWN_REDUCTION[this.lilies])
+				const reduction = Math.floor(getDataBy(ACTIONS, 'id', abilityId).cooldown * COOLDOWN_REDUCTION[this.lilies])
 				this.cooldowns.reduceCooldown(abilityId, reduction)
 				this.parser.fabricateEvent({type: 'consumelilies', abilityId: abilityId, consumed: this.lilies, cooldownReduction: reduction})
 			}

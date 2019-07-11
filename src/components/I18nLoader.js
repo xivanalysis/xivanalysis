@@ -1,11 +1,10 @@
 import {I18nProvider} from '@lingui/react'
-import {observable, runInAction, reaction} from 'mobx'
-import {observer, inject, disposeOnUnmount} from 'mobx-react'
+import {observable, reaction, runInAction} from 'mobx'
+import {disposeOnUnmount, observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Container, Loader} from 'semantic-ui-react'
-
-import {I18nStore} from 'store/i18n'
+import {StoreContext} from 'store'
 import I18nOverlay from './I18nOverlay'
 
 const cleanMessages = messages => {
@@ -18,13 +17,13 @@ const cleanMessages = messages => {
 	return messages
 }
 
-@inject('i18nStore')
 @observer
 class I18nLoader extends React.Component {
 	static propTypes = {
-		i18nStore: PropTypes.instanceOf(I18nStore),
 		children: PropTypes.node.isRequired,
 	}
+
+	static contextType = StoreContext
 
 	@observable oldLanguage = null
 	@observable catalogs = {}
@@ -83,10 +82,11 @@ class I18nLoader extends React.Component {
 	}
 
 	componentDidMount() {
-		this.loadCatalog(this.props.i18nStore.siteLanguage)
+		const {i18nStore} = this.context
+		this.loadCatalog(i18nStore.siteLanguage)
 
 		disposeOnUnmount(this, reaction(
-			() => this.props.i18nStore.siteLanguage,
+			() => i18nStore.siteLanguage,
 			language => {
 				if (
 					language === this.oldLanguage ||
@@ -101,7 +101,7 @@ class I18nLoader extends React.Component {
 	}
 
 	render() {
-		const {i18nStore} = this.props
+		const {i18nStore} = this.context
 
 		let language = i18nStore.siteLanguage
 		let loading = false
