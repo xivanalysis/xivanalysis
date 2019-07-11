@@ -15,10 +15,10 @@ import React from 'react'
 
 const SEVERETIES = {
 	ACTIVATES_MISSED: {
-		1: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
 	},
 	NO_HOROSCOPE_HELIOS: {
-		1: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
 	},
 }
 

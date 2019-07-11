@@ -30,7 +30,7 @@ export default class ArcanaUndrawUsage extends Module {
 		const actionId = event.ability.guid
 
 		// It's a OGCD Arcana Undraw. GET IT.
-		if (actionId === ACTIONS.UNDRAW_SPREAD.id) {
+		if (actionId === ACTIONS.UNDRAW.id) {
 			this._badUndraws.push(event)
 		}
 	}
