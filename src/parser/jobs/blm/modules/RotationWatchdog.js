@@ -343,7 +343,7 @@ export default class RotationWatchdog extends Module {
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				//Also throw out rotations with no Fire spells
 				const fire3Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_III.id).length
-				const fireCount = [fire3Count, fire1Count, fire4Count, despairCount].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
+				const fireCount = fire3Count + fire1Count + fire4Count + despairCount
 				if (fireCount === 0) {
 					this._rotationsWithoutFire++
 				}
