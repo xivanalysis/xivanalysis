@@ -691,7 +691,7 @@
   "whm.lily-cap.suggestion.content": "Utilisez <0/> ou <1/> dès que possible pour éviter de surcharger vos Lys",
   "whm.lily-cap.suggestion.why": "{0, plural, one {# lys a été inutilisé} other {# lys ont été inutilisés}}.",
   "whm.lily-blood.suggestion.content": "Uitlisez <0/> pour éviter de perdre des Lys de sang.",
-  "whm.lily-blood.suggestion.why": "",
+  "whm.lily-blood.suggestion.why": "{0, plural, one {# Lys de sang a été perdu} other {# Lys de sang ont été perdu}} du à une utilisation précoce de Lys.",
   "whm.overheal.requirement.all": "Soins en surplus (toutes les sources)",
   "whm.overheal.requirement.hot": "Soins en surplus (HoT)",
   "whm.overheal.requirement.nonhot": "Soins en surplus (non-HoT)",
