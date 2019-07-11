@@ -1,35 +1,8 @@
 export default {
-	HYPERCHARGE_VULNERABILITY_UP: {
-		id: 1208,
-		name: 'Vulnerability Up',
-		icon: 'https://xivapi.com/i/015000/015020.png',
-	},
-
-	HOT_SHOT: {
-		id: 855,
-		name: 'Hot Shot',
-		icon: 'https://xivapi.com/i/013000/013005.png',
-		duration: 60,
-	},
-
-	ENHANCED_SLUG_SHOT: {
-		id: 856,
-		name: 'Enhanced Slug Shot',
-		icon: 'https://xivapi.com/i/013000/013004.png',
-		duration: 30,
-	},
-
-	CLEANER_SHOT: {
-		id: 857,
-		name: 'Cleaner Shot',
-		icon: 'https://xivapi.com/i/013000/013006.png',
-		duration: 30,
-	},
-
-	DISMANTLED: {
-		id: 860,
-		name: 'Dismantled',
-		icon: 'https://xivapi.com/i/013000/013009.png',
+	REASSEMBLED: {
+		id: 851,
+		name: 'Reassembled',
+		icon: 'https://xivapi.com/i/013000/013001.png',
 		duration: 5,
 	},
 
@@ -47,10 +20,17 @@ export default {
 		duration: 10,
 	},
 
-	TURRET_RESET: {
-		id: 1251,
-		name: 'Turret Reset',
-		icon: 'https://xivapi.com/i/013000/013018.png',
-		duration: 30,
+	BIOBLASTER: {
+		id: 1866,
+		name: 'Bioblaster',
+		icon: 'https://xivapi.com/i/013000/013020.png',
+		duration: 15,
+	},
+
+	TACTICIAN: {
+		id: 1951,
+		name: 'Tactician',
+		icon: 'https://xivapi.com/i/013000/013021.png',
+		duration: 15,
 	},
 }
