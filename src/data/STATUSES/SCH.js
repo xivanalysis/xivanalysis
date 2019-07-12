@@ -1,8 +1,8 @@
 export default {
-	FEY_WIND: {
-		id: 799,
-		name: 'Fey Wind',
-		icon: 'https://xivapi.com/i/012000/012807.png',
+	BIOLYSIS: {
+		id: 1895,
+		name: 'Biolysis',
+		icon: 'https://xivapi.com/i/012000/012812.png',
 	},
 
 	CHAIN_STRATAGEM: {
