@@ -1,9 +1,27 @@
 import ACTIONS from 'data/ACTIONS'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
+import {PLAY} from './ArcanaGroups'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
-		ACTIONS.DRAW.id,
+		// Arcanum
+		{
+			name: 'Draw',
+			merge: true,
+			actions: [
+				ACTIONS.DRAW.id,
+				ACTIONS.REDRAW.id,
+				ACTIONS.UNDRAW.id,
+				ACTIONS.MINOR_ARCANA.id,
+			],
+		},
+		ACTIONS.SLEEVE_DRAW.id,
+		{
+			name: 'Play',
+			merge: true,
+			actions: [...PLAY],
+		},
+		ACTIONS.DIVINATION.id,
 		// oGCD ST heals
 		ACTIONS.ESSENTIAL_DIGNITY.id,
 		ACTIONS.CELESTIAL_INTERSECTION.id,
