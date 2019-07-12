@@ -459,8 +459,6 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "<0/>覆盖率",
   "pld.goring.suggestions.goringblade.content": "避免在<0/>消失前过早地刷新持续时间。",
   "pld.goring.suggestions.goringblade.why": "由于提前刷新，浪费了{0} <0/>。",
-  "pld.oath.checklist.swordoath.description": "作为一名骑士，<0/>是你输出的重要组成部分之一。它应当被尽可能多地被触发，以达到最佳的输出效果。",
-  "pld.requiescat.checklist.swordoath.requirement.uptime": "<0/>覆盖率",
   "pld.requiescat.suggestions.nobuff.content": "<0/>应该只在蓝量高于80%的时候使用。尝试尽可能去触发由<1/>提供的20%魔法伤害提高buff。",
   "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
   "pld.requiescat.suggestions.wrong-gcd.content": "在<0/>中使用的圣灵应该稳定在<1/>个, 以达到最佳输出效果。",
