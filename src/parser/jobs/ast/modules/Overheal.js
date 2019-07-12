@@ -4,7 +4,7 @@ import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
 import {Trans} from '@lingui/react'
 import React from 'react'
 
-// Adapted from ast Overheal
+// Adapted from whm Overheal
 
 export default class Overheal extends Module {
 	static handle = 'overheal'
