@@ -5,7 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 //import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class Tsubame  extends Module {
         static handle = 'tsubame'
@@ -37,14 +37,11 @@ export default class Tsubame  extends Module {
 		const badUses = this._kaeshiFailures
 
 		if (totalUses === 0) {
-			this.suggestions.add(new TieredSuggestion({
+			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TSUBAME_GAESHI.icon,
 				content: <Trans id="sam.tsubame.suggestion.notsubame.content"> <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> allows you to repeat your Iaijustu skills right after you use them. To not use this skill is to deny yourself 2 <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/> for the price of one. </Trans>,
-				tiers: {
-					0: SEVERITY.MAJOR,
-				},
+				severity: SEVERITY.MAJOR,
 				why: <Trans id= "sam.tsubame.suggestion.notsubame.why"> You did not use <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> at all. </Trans>,
-				value: this._totalUses,
 			}))
 		}
 
