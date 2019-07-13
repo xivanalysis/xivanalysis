@@ -29,6 +29,12 @@ const IAIJUTSU = [
 	ACTIONS.MIDARE_SETSUGEKKA.id,
 ]
 
+const TSUBAME = [
+	ACTIONS.KAESHI_HIGANBANA.id,
+	ACTIONS.KAESHI_GOKEN.id,
+	ACTIONS.KAESHI_SETSUGEKKA.id,
+]
+
 export default class Sen extends Module {
 	static handle = 'sen'
 
@@ -47,6 +53,7 @@ export default class Sen extends Module {
 
 		// Death, as well as all Iaijutsu, remove all available sen
 		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
+		this.addHook('cast', {by: 'player', abilityId: TSUBAME}, this.overwrite)
 		this.addHook('death', {to: 'player'}, this.remove)
 
 		// Hagakure because he's was a speshul boi, but now he's dead jim. He's DEAD!
@@ -68,6 +75,15 @@ export default class Sen extends Module {
 		}
 
 		this.sen[sen] = true
+	}
+
+	private overwrite() {
+		
+		this.wasted = this.wasted - 1
+		
+		if(this.wasted < 0){
+			this.wasted = 0
+			}
 	}
 
 	private remove() {
