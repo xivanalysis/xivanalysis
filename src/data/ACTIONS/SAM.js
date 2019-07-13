@@ -260,15 +260,8 @@ export default {
 		cooldownGroup: 24,
 	},
 
-	HAGAKURE: {
-		id: 7495,
-		name: 'Hagakure',
-		icon: 'https://xivapi.com/i/003000/003176.png',
-		cooldown: 40,
-	},
-
 	IKISHOTEN: {
-		id: 9999,
+		id: 16482,
 		name: 'Ikishoten',
 		icon: 'https://xivapi.com/i/003000/003179.png',
 		cooldown: 60,
@@ -291,7 +284,7 @@ export default {
 	},
 
 	TSUBAME_GAESHI: {
-		id: 7496,
+		id: 7495, //This thing can't ever be cast so Idk what to put for it, currently Haga's ID
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		cooldown: 60,
