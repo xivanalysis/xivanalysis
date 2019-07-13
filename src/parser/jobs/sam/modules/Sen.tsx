@@ -78,10 +78,10 @@ export default class Sen extends Module {
 	}
 
 	private overwrite() {
-		
+
 		this.wasted = this.wasted - 1
-		
-		if(this.wasted < 0){
+
+		if (this.wasted < 0) {
 			this.wasted = 0
 			}
 	}
