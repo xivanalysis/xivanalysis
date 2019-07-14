@@ -269,7 +269,7 @@
   "mch.heat.suggestions.downtime.content": "<0/>없이는 열기를 쌓을 수 없으므로 과열/냉각 구간이 끝난 이후 바로 사용하도록 합니다.",
   "mch.heat.suggestions.downtime.why": "가우스 총열이 {0} 초 동안 해제되었습니다.",
   "mch.heat.title": "과열 구간",
-  "mch.hotshot.checklist.description": "<0/>는 딜량을 10% 증가시키며 항상 켜져 있어야 합니다.",
+  "mch.hotshot.checklist.description": "<0/>는 피해량을 10% 증가시키며 항상 켜져 있어야 합니다.",
   "mch.hotshot.checklist.name": "강렬한 사격 유지",
   "mch.hotshot.checklist.requirement.name": "적용시간 <0/>",
   "mch.hotshot.suggestions.refresh.content": "<0/>를 과열 이후 냉각 구간 이외에서 사용하는 것은 최대한 피하세요. 기공사의 무기 기술 중 가장 위력이 낮기 때문에 <1/>이 없을 때 가장 적은 손해를 봅니다.",
