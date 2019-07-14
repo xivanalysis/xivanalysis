@@ -313,15 +313,10 @@ export default class MeleeCombos extends Module {
 					})
 				}
 			} else {
-				// Neither proc is up, check with using Jolt or Impact + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
+				// Neither proc is up, check with using Jolt  + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
 				let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white
 				let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
-				let firstDelaySkill = ACTIONS.JOLT_II
-				if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-					newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white
-					newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
-					firstDelaySkill = ACTIONS.IMPACT
-				}
+				const firstDelaySkill = ACTIONS.JOLT_II
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -334,15 +329,10 @@ export default class MeleeCombos extends Module {
 						manaLoss: manaLoss,
 					})
 				} else {
-					// Check if using Jolt or Impact + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
+					// Check if using Jolt  + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
 					let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
 					let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black
-					let firstDelaySkill = ACTIONS.JOLT_II
-					if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-						newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
-						newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black
-						firstDelaySkill = ACTIONS.IMPACT
-					}
+					const firstDelaySkill = ACTIONS.JOLT_II
 
 					// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 					const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
