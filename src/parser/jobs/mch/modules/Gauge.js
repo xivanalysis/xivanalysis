@@ -42,9 +42,9 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.HEATED_SLUG_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, this._onHeatGcd)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HEATED_SPLIT_SHOT.id, ACTIONS.SPREAD_SHOT.id]}, this._onHeatGcd)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.BARREL_STABILIZER.id}, this._onStabilizer)
+		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.HEATED_SLUG_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HEATED_SPLIT_SHOT.id, ACTIONS.SPREAD_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.BARREL_STABILIZER.id}, () => this._addGauge('heat', BARREL_STABILIZER_HEAT_GAIN))
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HYPERCHARGE.id}, this._onOverheat)
 
 		this.addHook('combo', {by: 'player', abilityId: ACTIONS.HEATED_CLEAN_SHOT.id}, this._onCleanShot)
@@ -69,14 +69,6 @@ export default class Gauge extends Module {
 		}
 
 		this._pushToHistory(type)
-	}
-
-	_onHeatGcd() {
-		this._addGauge('heat', GCD_HEAT_GAIN)
-	}
-
-	_onStabilizer() {
-		this._addGauge('heat', BARREL_STABILIZER_HEAT_GAIN)
 	}
 
 	_onOverheat() {
@@ -108,7 +100,6 @@ export default class Gauge extends Module {
 	_onDeath() {
 		this._gauge.heat.current = 0
 		this._gauge.battery.current = 0
-		// TODO - Include this in the waste calculation?
 	}
 
 	_onComplete() {
@@ -148,7 +139,6 @@ export default class Gauge extends Module {
 	}
 
 	output() {
-		// TODO
 		const heatColor = Color('#D35A10')
 		const batteryColor = Color('#2C9FCB')
 
