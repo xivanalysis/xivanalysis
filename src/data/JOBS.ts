@@ -99,7 +99,7 @@ const JOBS = {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
 		logType: ActorType.GUNBREAKER,
 		icon: 'gnb',
-		colour: '#ff0000', // TODO
+		colour: '#796d30', // TODO
 		role: ROLES.TANK.id,
 	},
 
