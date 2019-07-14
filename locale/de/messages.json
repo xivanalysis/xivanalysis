@@ -687,5 +687,8 @@
   "whm.overheal.requirement.hot": "",
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
-  "whm.overheal.rule.name": "Vermeide Overheal"
+  "whm.overheal.rule.name": "Vermeide Overheal",
+  "{0, plural, one {# Dark Arts use} other {# Dark Arts uses}}": "",
+  "{wastedBloodActions, plural, one {# blood spending skill} other {# blood spending skills}}": "",
+  "{wastedMPActions, plural, one {# MP spending skill} other {# MP spending skills}}": ""
 }

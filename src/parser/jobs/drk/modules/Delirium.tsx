@@ -36,7 +36,7 @@ const SEVERITY_MISSED_BLOOD_SKILLS = {
 
 class DeliriumState {
 	start: number
-	end: number | null = null
+	end?: number
 	rotation: CastEvent[] = []
 	isRushing: boolean = false // TODO: Actually use this, and display it appropriately in the output table
 
@@ -128,7 +128,7 @@ export default class Delirium extends Module {
 				tiers: SEVERITY_MISSED_GCDS,
 				value: missedGcds,
 				why: <Trans id="drk.delirium.suggestions.missedgcd.why">
-					{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed inside of <ActionLink {...ACTIONS.DELIRIUM}/> windows.
+					{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed during Delirium windows.
 				</Trans>,
 			}))
 		}
@@ -143,7 +143,7 @@ export default class Delirium extends Module {
 				tiers: SEVERITY_MISSED_BLOOD_SKILLS,
 				value: missedBloodSkills,
 				why: <Trans id="drk.delirium.suggestions.badgcd.why">
-					{missedBloodSkills} incorrect <Plural value={missedBloodSkills} one="GCD was" other="GCDs were"/> used during <ActionLink {...ACTIONS.DELIRIUM}/> windows.
+					{missedBloodSkills} incorrect <Plural value={missedBloodSkills} one="GCD was" other="GCDs were"/> used during Delirium windows.
 				</Trans>,
 			}))
 		}

@@ -687,5 +687,8 @@
   "whm.overheal.requirement.hot": "过量治疗（HoT）",
   "whm.overheal.requirement.nonhot": "过量治疗（非HoT）",
   "whm.overheal.rule.description": "尽量避免在非必要的情况下进行抬血。虽然过量治疗有些时候不可避免，但它往往只会白白制造仇恨。此外，尽可能高效地进行治疗也有助于 MP 管理。",
-  "whm.overheal.rule.name": "避免过量治疗"
+  "whm.overheal.rule.name": "避免过量治疗",
+  "{0, plural, one {# Dark Arts use} other {# Dark Arts uses}}": "",
+  "{wastedBloodActions, plural, one {# blood spending skill} other {# blood spending skills}}": "",
+  "{wastedMPActions, plural, one {# MP spending skill} other {# MP spending skills}}": ""
 }
