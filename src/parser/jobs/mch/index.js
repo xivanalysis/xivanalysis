@@ -23,5 +23,9 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
-	changelog: [],
+	changelog: [{
+		date: new Date('2019-07-11'),
+		Changes: () => <>Removed obsolete modules, updated gauge simulation, updated Wildfire and Overheat suggestions, added combo support.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	}],
 })
