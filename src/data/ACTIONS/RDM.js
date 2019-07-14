@@ -173,7 +173,7 @@ export default {
 	},
 	SCORCH: {
 		id: 16530,
-		name: 'Verholy',
+		name: 'Scorch',
 		icon: 'https://xivapi.com/i/003000/003234.png',
 		onGcd: true,
 		cooldown: 2.5,
