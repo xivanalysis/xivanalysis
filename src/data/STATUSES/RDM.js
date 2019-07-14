@@ -31,4 +31,9 @@ export default {
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018921.png',
 	},
+	MANAFICATION: {
+		id: 1971,
+		name: 'Manafication',
+		icon: 'https://xivapi.com/i/013000/013407.png',
+	},
 }
