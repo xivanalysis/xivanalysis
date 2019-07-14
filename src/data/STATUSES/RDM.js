@@ -4,12 +4,6 @@ export default {
 		name: 'Dualcast',
 		icon: 'https://xivapi.com/i/013000/013406.png',
 	},
-	IMPACTFUL: {
-		id: 1367,
-		name: 'Impactful',
-		icon: 'https://xivapi.com/i/013000/013401.png',
-		duration: 30,
-	},
 	VERSTONE_READY: {
 		id: 1235,
 		name: 'Verstone Ready',
@@ -36,11 +30,5 @@ export default {
 		id: 1239,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018921.png',
-	},
-	ENHANCED_SCATTER: {
-		id: 1237,
-		name: 'Enhanced Scatter',
-		icon: 'https://xivapi.com/i/013000/013404.png', //Yields 8 white/Black Mana instead of 3
-		duration: 10,
 	},
 }

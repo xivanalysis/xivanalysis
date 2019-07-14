@@ -14,6 +14,8 @@ import {Plural, Trans} from '@lingui/react'
 import {formatDuration} from 'utilities'
 import {MANA_GAIN, MANA_CAP, MANA_DIFFERENCE_THRESHOLD} from './Gauge'
 
+//const util = require('util')
+
 const FINISHERS = [
 	ACTIONS.VERHOLY,
 	ACTIONS.VERFLARE,
@@ -392,18 +394,23 @@ export default class MeleeCombos extends Module {
 					return
 				}
 
-				if (action.combo.from !== this._currentCombo.lastAction.ability.guid) {
-					this._currentCombo.broken = true
-					this._endCombo()
-				} else {
-					this._currentCombo.events.push(event)
-					this._currentCombo.lastAction = event
-					if (action.combo.end) {
-						this._currentCombo.finisher = {
-							used: event.ability,
-						}
-						this._handleFinisher()
+				//console.log(util.inspect(action, {showHidden: true, depth: null}))
+
+				if (action.combo.from) {
+					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
+					if (!fromOptions.includes(this._currentCombo.lastAction.ability.guid)) {
+						this._currentCombo.broken = true
 						this._endCombo()
+					} else {
+						this._currentCombo.events.push(event)
+						this._currentCombo.lastAction = event
+						if (action.combo.end) {
+							this._currentCombo.finisher = {
+								used: event.ability,
+							}
+							this._handleFinisher()
+							this._endCombo()
+						}
 					}
 				}
 			}
@@ -494,6 +501,7 @@ export default class MeleeCombos extends Module {
 				<Table.Body>
 					{
 						Object.keys(this._meleeCombos).map(timestamp => {
+							//console.log(util.inspect(timestamp, {showHidden: true, depth: null}))
 							const combo = this._meleeCombos[timestamp]
 							const white = combo.startMana.white
 							const black = combo.startMana.black
@@ -504,6 +512,8 @@ export default class MeleeCombos extends Module {
 							// Prevent null reference errors with broken combos - start with empty values and load with finisher data if exists
 							const recommendedActions = (combo.finisher) ? combo.finisher.recommendedActions : []
 							const recommendation = (combo.finisher) ? combo.finisher.recommendation : ''
+
+							//console.log(util.inspect(rotation, {showHidden: true, depth: null}))
 
 							return (<Table.Row key={timestamp}>
 								<Table.Cell textAlign="center">
