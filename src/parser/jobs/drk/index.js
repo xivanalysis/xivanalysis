@@ -19,10 +19,10 @@ export default new Meta({
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
-		// {
-		// 	date: new Date('2019-07-06'),
-		// 	changes: 'Initial release of 5.0 support for Dark Knight',
-		// 	contributors: [CONTRIBUTORS.AZARIAH],
-		// },
+		{
+			date: new Date('2019-07-06'),
+			Changes: () => <>Initial release of 5.0 support for Dark Knight</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 	],
 })
