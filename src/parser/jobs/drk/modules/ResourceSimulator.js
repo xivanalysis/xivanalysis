@@ -1,4 +1,5 @@
 import React, {Fragment} from 'react'
+import {Plural} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -111,7 +112,12 @@ export default class Resources extends Module {
 	// -----
 	_droppedTBNs = 0
 
-	_resourceEvents = Object.keys(RESOURCE_SPENDERS).concat(Object.keys(RESOURCE_GENERATORS), Object.keys(BLOOD_WEAPON_GENERATORS), Object.keys(DELIRIUM_GENERATORS)).map(Number)
+	_resourceEvents = [
+		...Object.keys(RESOURCE_SPENDERS),
+		...Object.keys(RESOURCE_GENERATORS),
+		...Object.keys(BLOOD_WEAPON_GENERATORS),
+		...Object.keys(DELIRIUM_GENERATORS),
+	].map(Number)
 
 	constructor(...args) {
 		super(...args)
@@ -274,38 +280,37 @@ export default class Resources extends Module {
 				tiers: SEVERITY_THE_BLACKEST_NIGHT,
 				value: this._droppedTBNs,
 				why: <Fragment>
-					You missed out on {this._droppedTBNs} uses of <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> or <ActionLink {...ACTIONS.FLOOD_OF_SHADOW}/> due to using <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> without the shield being fully consumed.
+					You missed out on <Plural value={this._droppedTBNs} one="# Dark Arts use" other="# Dark Arts uses" /> due to Blackest Night applications that did not consume the shield.
 				</Fragment>,
 			}))
 		}
-		if (this._wastedBlood >= BLOODSPILLER_BLOOD_COST) {
-			const wastedBloodActions = Math.floor(this._wastedBlood / BLOODSPILLER_BLOOD_COST)
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.BLOODSPILLER.icon,
-				content: <Fragment>
-					You wasted blood, and could have gotten more uses of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
-				</Fragment>,
-				tiers: SEVERITY_WASTED_BLOOD_ACTIONS,
-				value: wastedBloodActions,
-				why: <Fragment>
-					You lost a total of {wastedBloodActions} uses of <ActionLink {...ACTIONS.BLOODSPILLER}/> from gaining blood over the cap or death.
-				</Fragment>,
-			}))
-		}
-		if (this._wastedMP >= FLOOD_EDGE_MP_COST) {
-			const wastedMPActions = Math.floor(this._wastedMP / FLOOD_EDGE_MP_COST)
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.EDGE_OF_SHADOW.icon,
-				content: <Fragment>
-					You wasted mana, and could have gotten more uses of <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> or other spenders during the fight
-				</Fragment>,
-				tiers: SEVERITY_WASTED_MP_ACTIONS,
-				value: wastedMPActions,
-				why: <Fragment>
-					You lost a total of {wastedMPActions} uses of <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> from gaining MP over the cap or death.
-				</Fragment>,
-			}))
-		}
+
+		const wastedBloodActions = Math.floor(this._wastedBlood / BLOODSPILLER_BLOOD_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOODSPILLER.icon,
+			content: <Fragment>
+				Your blood gauge allows you to use <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders, which are among your strongest attacks.  Be sure to spend your blood before exceeding the cap of 100.
+			</Fragment>,
+			tiers: SEVERITY_WASTED_BLOOD_ACTIONS,
+			value: wastedBloodActions,
+			why: <Fragment>
+				You lost a total of <Plural value={wastedBloodActions} one="# blood spending skill" other="# blood spending skills" /> from gaining blood over the cap or from death.
+			</Fragment>,
+		}))
+
+		const wastedMPActions = Math.floor(this._wastedMP / FLOOD_EDGE_MP_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.EDGE_OF_SHADOW.icon,
+			content: <Fragment>
+				Your MP allows you to use <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/>, a strong attack that gives you a persistent damage up buff, as well as the strong mitigation of <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/>.
+				Be sure to consistently use your MP so you can benefit from natural regeneration and MP gain from your main combo skills.
+			</Fragment>,
+			tiers: SEVERITY_WASTED_MP_ACTIONS,
+			value: wastedMPActions,
+			why: <Fragment>
+				You lost a total of <Plural value={wastedMPActions} one="# MP spending skill" other="# MP spending skills" /> from gaining MP over the cap or death.
+			</Fragment>,
+		}))
 	}
 
 	output() {
@@ -313,7 +318,7 @@ export default class Resources extends Module {
 		// make this into a pretty table
 		// also include spenders and generators
 		const _bloodColor = Color(JOBS.DARK_KNIGHT.colour)
-		const _mpColor = Color('#000066')
+		const _mpColor = Color('#f266a2')
 
 		/* eslint-disable no-magic-numbers */
 		const bloodchartdata = {
