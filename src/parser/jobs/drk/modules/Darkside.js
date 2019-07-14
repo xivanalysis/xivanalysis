@@ -9,7 +9,7 @@ const DARKSIDE_EXTENSION = {
 	[ACTIONS.FLOOD_OF_SHADOW.id]: 30000,
 	[ACTIONS.EDGE_OF_SHADOW.id]: 30000,
 }
-const GCD_LENGTH = 2500
+const INITIAL_APPLICATION_FORGIVENESS = 2500
 
 export default class Darkside extends Module {
 	static handle = 'Darkside'
@@ -34,7 +34,7 @@ export default class Darkside extends Module {
 		if (this._lastEventTime === null) {
 			// First application - allow up to 1 GCD to apply before counting downtime
 			const elapsedTime = event.timestamp - this.parser.fight.start_time
-			this._downtime = Math.min(elapsedTime - GCD_LENGTH, 0)
+			this._downtime = Math.min(elapsedTime - INITIAL_APPLICATION_FORGIVENESS, 0)
 		} else {
 			const elapsedTime = event.timestamp - this._lastEventTime
 			this._currentDuration -= elapsedTime

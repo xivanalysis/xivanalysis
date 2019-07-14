@@ -13,8 +13,9 @@ const REQUIRED_MULTI_HIT_TARGETS = {
 }
 
 const SEVERITY_LOW_TARGET_ATTACKS = {
-	1: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
+	1: SEVERITY.LOW,
+	2: SEVERITY.MEDIUM,
+	4: SEVERITY.MAJOR,
 }
 
 export default class MultiHit extends Module {
