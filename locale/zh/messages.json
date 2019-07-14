@@ -269,7 +269,7 @@
   "mch.heat.suggestions.downtime.content": "确保在过热/冷却阶段后第一时间使用<0/>，因为它对积攒热量是必要的。",
   "mch.heat.suggestions.downtime.why": "存在 {0} 秒无枪管状态。",
   "mch.heat.title": "过热阶段",
-  "mch.hotshot.checklist.description": "<0/>为你提供了10%的角色伤害加成，需要一直保持。",
+  "mch.hotshot.checklist.description": "<0/>可以提高自身伤害10%，应该始终保持。",
   "mch.hotshot.checklist.name": "保持热弹 Buff",
   "mch.hotshot.checklist.requirement.name": "<0/> 覆盖率",
   "mch.hotshot.suggestions.refresh.content": "除非必要情况，不要在过热后的冷枪管时间外刷新<0/>。它是你威力最低的GCD战技，因而它在这段时间内受<1/>影响产生的损失最少。",
