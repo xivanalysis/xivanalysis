@@ -1,4 +1,16 @@
 export default {
+	DIA: {
+		id: 1871,
+		name: 'Dia',
+		icon: 'https://xivapi.com/i/012000/012635.png',
+	},
+
+	TEMPERANCE: {
+		id: 1872,
+		name: 'Temperance',
+		icon: 'https://xivapi.com/i/012000/012634.png',
+	},
+
 	CONFESSION: {
 		id: 1219,
 		name: 'Confession',

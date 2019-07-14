@@ -316,6 +316,8 @@ export default class Gauge extends Module {
 			this.tryConsumeUmbralHearts(event, 1)
 			break
 		case ACTIONS.DESPAIR.id:
+			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)
+			break
 		case ACTIONS.FLARE.id:
 			this.tryConsumeUmbralHearts(event, FLARE_MAX_HEART_CONSUMPTION, true)
 			this.onGainAstralFireStacks(event, MAX_ASTRAL_UMBRAL_STACKS, false)

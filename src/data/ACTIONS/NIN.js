@@ -17,9 +17,9 @@ export default {
 	},
 
 	HAKKE_MUJINSATSU: {
-		id: 10000, // TODO
+		id: 16488,
 		name: 'Hakke Mujinsatsu',
-		icon: 'https://xivapi.com/i/000000/000615.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002923.png',
 		onGcd: true,
 		potency: 100,
 		combo: {
@@ -82,9 +82,9 @@ export default {
 	},
 
 	GOKA_MEKKYAKU: {
-		id: 10001, // TODO
+		id: 16491,
 		name: 'Goka Mekkyaku',
-		icon: 'https://xivapi.com/i/002000/002908.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002925.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -106,9 +106,9 @@ export default {
 	},
 
 	HYOSHO_RANRYU: {
-		id: 10002, // TODO
+		id: 16492,
 		name: 'Hyosho Ranryu',
-		icon: 'https://xivapi.com/i/002000/002909.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002926.png',
 		onGcd: false,
 		cooldown: 20,
 	},
@@ -194,18 +194,18 @@ export default {
 	},
 
 	MEISUI: {
-		id: 10003, // TODO
+		id: 16489,
 		name: 'Meisui',
-		icon: 'https://xivapi.com/i/002000/002905.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002924.png',
 		onGcd: false,
 		cooldown: 60,
 	},
 
 	BUNSHIN: {
-		id: 10004, // TODO
+		id: 16493,
 		name: 'Bunshin',
-		icon: 'https://xivapi.com/i/002000/002905.png', // TODO
+		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 110,
 	},
 }

@@ -8,7 +8,7 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 150, // TODO - Subject to change
+		potency: 200,
 		combo: {
 			start: true,
 		},
@@ -22,7 +22,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 200, // TODO - Subject to change
+			potency: 250,
 		},
 	},
 
@@ -34,7 +34,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 440, // TODO - *Cries in positionals*
+			potency: 420, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -47,7 +47,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 260,
+			potency: 200,
 			end: true,
 		},
 	},
@@ -57,7 +57,7 @@ export default {
 		name: 'Death Blossom',
 		icon: 'https://xivapi.com/i/000000/000615.png',
 		onGcd: true,
-		potency: 110,
+		potency: 120,
 		combo: {
 			start: true,
 		},
@@ -81,7 +81,7 @@ export default {
 		name: 'Mug',
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
-		cooldown: 90,
+		cooldown: 110,
 	},
 
 	ASSASSINATE: {

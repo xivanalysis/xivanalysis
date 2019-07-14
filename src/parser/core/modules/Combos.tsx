@@ -125,9 +125,12 @@ export default class Combos extends Module {
 		}
 
 		// Incorrect combo action, that's a paddlin'
-		if (combo.from !== this.lastAction) {
-			this.recordBrokenCombo(event, this.currentComboChain)
-			return combo.start // It's a combo if the action is the start of one
+		if (combo.from) {
+			const fromOptions = Array.isArray(combo.from) ? combo.from : [combo.from]
+			if (!fromOptions.includes(this.lastAction)) {
+				this.recordBrokenCombo(event, this.currentComboChain)
+				return combo.start // It's a combo if the action is the start of one
+			}
 		}
 
 		// Combo continued correctly
