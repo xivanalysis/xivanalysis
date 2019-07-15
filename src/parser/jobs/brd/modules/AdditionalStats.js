@@ -18,18 +18,11 @@ const CRIT_MODIFIERS = [
 		strength: 0.15,
 	},
 	{
-		id: STATUSES.CRITICAL_UP.id,
-		strength: 0.02,
-	},
-	{
 		id: STATUSES.THE_SPEAR.id,
 		//fuck royal road
 		strength: 0.10,
 	},
-	{
-		id: STATUSES.STRAIGHT_SHOT.id,
-		strength: 0.10,
-	},
+
 ]
 
 // Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
@@ -55,7 +48,6 @@ const DOTS = [
 
 const DHIT_MOD = 1.25
 
-const DISEMBOWEL_STRENGTH = 0.05
 const TRAIT_STRENGTH = 0.20
 
 const DEVIATION_PRECISION = 3
@@ -164,10 +156,6 @@ export default class AdditionalStats extends Module {
 						&& event.ability.guid !== ACTIONS.MAGES_BALLAD.id
 						&& event.ability.guid !== ACTIONS.ARMYS_PAEON.id
 					) {
-						// Band-aid fix for disembowel (why, oh, why)
-						if (this._getStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
-							fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
-						}
 						// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 					}
