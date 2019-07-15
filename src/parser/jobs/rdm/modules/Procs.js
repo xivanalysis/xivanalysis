@@ -8,8 +8,6 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {PROCS, SEVERITY_MISSED_PROCS, SEVERITY_OVERWRITTEN_PROCS, SEVERITY_INVULN_PROCS} from 'parser/jobs/rdm/modules/ProcsEnum'
 
-const IMPACT_OVERRIDE_THRESHOLD = 8000
-
 export default class Procs extends Module {
 	static handle = 'procs'
 	static title = t('rdm.procs.title')`Proc Issues`
@@ -25,18 +23,14 @@ export default class Procs extends Module {
 	_castStateMap = {
 		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERSTONE,
 		[STATUSES.VERFIRE_READY.id]: ACTIONS.VERFIRE,
-		[STATUSES.IMPACTFUL.id]: ACTIONS.IMPACT,
-		[STATUSES.ENHANCED_SCATTER.id]: ACTIONS.SCATTER,
 	}
 	_doNotCastMap = {
 		[STATUSES.VERSTONE_READY.id]: ACTIONS.VERAERO,
 		[STATUSES.VERFIRE_READY.id]: ACTIONS.VERTHUNDER,
-		[STATUSES.IMPACTFUL.id]: ACTIONS.JOLT_II,
 	}
 	//Global timestamp tracking per Proc
 	_currentProcs = {}
 	_castState = null
-	_impactfulProcOverride = false
 	_previousCast = null
 	_targetWasInvuln = false
 	_playerWasInDowntime = false
@@ -69,15 +63,6 @@ export default class Procs extends Module {
 		this._playerWasInDowntime = downtime > 0
 		this._targetWasInvuln = this.invuln.isInvulnerable(event.targetID, event.timestamp)
 		this._lastTargetID = event.targetID
-
-		if (abilityID === ACTIONS.IMPACT.id && this._currentProcs[STATUSES.IMPACTFUL.id]) {
-			const impactRemainingDuration = event.timestamp - (this._currentProcs[STATUSES.IMPACTFUL.id] || 0)
-			if (impactRemainingDuration <= IMPACT_OVERRIDE_THRESHOLD) {
-				//Use Impactful at 8 or less seconds remaining, regardless of all other procs
-				this._impactfulProcOverride = true
-			}
-		}
-
 		this._castState = abilityID
 	}
 
@@ -93,15 +78,6 @@ export default class Procs extends Module {
 
 		if (!(STATUSES.VERSTONE_READY in this._history)) {
 			this._history[STATUSES.VERSTONE_READY.id] = {
-				overWritten: 0,
-				invuln: 0,
-				missed: 0,
-				wasted: 0,
-			}
-		}
-
-		if (!(STATUSES.IMPACTFUL in this._history)) {
-			this._history[STATUSES.IMPACTFUL.id] = {
 				overWritten: 0,
 				invuln: 0,
 				missed: 0,
@@ -136,7 +112,7 @@ export default class Procs extends Module {
 		// Debug
 		// console.log(`Refresh Status: ${STATUSES[statusID].name} Timestamp: ${event.timestamp}`)
 
-		if (this._currentProcs[statusID] > 0 && !this._impactfulProcOverride && statusID !== STATUSES.ENHANCED_SCATTER.id) {
+		if (this._currentProcs[statusID] > 0) {
 			this._history[statusID].overWritten++
 		}
 
@@ -174,10 +150,6 @@ export default class Procs extends Module {
 			this._history[statusID].missed++
 		}
 
-		if (statusID === STATUSES.IMPACTFUL.id) {
-			this._impactfulProcOverride = false
-		}
-
 		if (this._castState === this._castStateMap[statusID].id) {
 		//Reset this statusID!
 			this._currentProcs[statusID] = 0
@@ -191,14 +163,11 @@ export default class Procs extends Module {
 		const missedStone = this._history[STATUSES.VERSTONE_READY.id].missed||0
 		const invulnStone = this._history[STATUSES.VERSTONE_READY.id].invuln||0
 		const overWrittenStone = this._history[STATUSES.VERSTONE_READY.id].overWritten||0
-		const missedImpact = this._history[STATUSES.IMPACTFUL.id].missed||0
-		const invulnImpact = this._history[STATUSES.IMPACTFUL.id].invuln||0
-		const overWrittenImpact = this._history[STATUSES.IMPACTFUL.id].overWritten||0
 
 		//Icons always default to the White Mana spell if black/jolt spells don't have more bad items.
 		//TODO I need to figure out a good way of excluding items that evaluated to 0 in the condensed groups.
 		//TODO Maybe I should just build a function to return the properly setup Content and Why.
-		//Fire/Stone are identical but Impact has some extra rules, so for Missed and overwrite it has its own suggestion generation
+		//Fire/Stone are identical
 		this.suggestions.add(new TieredSuggestion({
 			icon: missedFire > missedStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
 			content: <Trans id="rdm.procs.suggestions.missed.content">
@@ -212,18 +181,6 @@ export default class Procs extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.IMPACT.icon,
-			content: <Trans id="rdm.procs.suggestions.impact.missed.content">
-					Try to use <ActionLink {...ACTIONS.IMPACT} /> whenever you have <StatusLink {...STATUSES.IMPACTFUL} /> to avoid losing out on mana gains, even if you will overwrite <StatusLink {...STATUSES.VERFIRE_READY} /> or <StatusLink {...STATUSES.VERSTONE_READY} /> with your Dualcast
-			</Trans>,
-			tiers: SEVERITY_MISSED_PROCS,
-			value: missedImpact,
-			why: <Trans id="rdm.procs.suggestions.impact.missed.why">
-					You missed <Plural value={missedImpact} one="# Impact proc" other="# Impact procs" />.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
 			icon: overWrittenFire > overWrittenStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
 			content: <Trans id="rdm.procs.suggestions.overwritten.content">
 				Don't cast <ActionLink {...ACTIONS.VERTHUNDER} /> when you have <StatusLink {...STATUSES.VERFIRE_READY} /> or <ActionLink {...ACTIONS.VERAERO} /> when you have <StatusLink {...STATUSES.VERSTONE_READY} />
@@ -231,32 +188,19 @@ export default class Procs extends Module {
 			tiers: SEVERITY_OVERWRITTEN_PROCS,
 			value: overWrittenFire + overWrittenStone,
 			why: <Trans id="rdm.procs.suggestions.overwritten.why">
-				<Plural value={overWrittenFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={overWrittenStone} one="# Verstone proc" other="# Verstone procs" /> were lost due to being overwritten.  This excludes procs overwritten from a forced use of <ActionLink {...ACTIONS.IMPACT} />
+				<Plural value={overWrittenFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={overWrittenStone} one="# Verstone proc" other="# Verstone procs" /> were lost due to being overwritten.
 			</Trans>,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.IMPACT.icon,
-			content: <Trans id="rdm.procs.suggestions.impact.overwritten.content">
-				Don't cast <ActionLink {...ACTIONS.JOLT_II} /> when you have <StatusLink {...STATUSES.IMPACTFUL} />
-			</Trans>,
-			tiers: SEVERITY_OVERWRITTEN_PROCS,
-			value: overWrittenImpact,
-			why: <Trans id="rdm.procs.suggestions.impact.overwritten.why">
-				<Plural value={overWrittenImpact} one="# Impact proc" other="# Impact procs" /> were lost due to being overwritten.
-			</Trans>,
-		}))
-
-		//Invuln is the same for all 3, so condense Impact in with Fire and Stone
-		this.suggestions.add(new TieredSuggestion({
-			icon: invulnImpact > invulnFire + invulnStone ? ACTIONS.IMPACT.icon : invulnFire > invulnStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
+			icon: invulnFire > invulnStone ? ACTIONS.VERFIRE.icon : ACTIONS.VERSTONE.icon,
 			content: <Trans id="rdm.procs.suggestions.invuln.content">
-					Try not to use <ActionLink {...ACTIONS.IMPACT}/>, <ActionLink {...ACTIONS.VERFIRE}/>, and <ActionLink {...ACTIONS.VERSTONE} /> while the boss is invulnerable
+					Try not to use <ActionLink {...ACTIONS.VERFIRE}/>, and <ActionLink {...ACTIONS.VERSTONE} /> while the boss is invulnerable
 			</Trans>,
 			tiers: SEVERITY_INVULN_PROCS,
-			value: invulnFire + invulnStone + invulnImpact,
+			value: invulnFire + invulnStone,
 			why: <Trans id="rdm.procs.suggestions.invuln.why">
-					You used <Plural value={invulnImpact} one="# Impact proc" other="# Impact procs" />, <Plural value={invulnFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={invulnStone} one="# Verstone proc" other="# Verstone procs" /> on an invulnerable boss.
+					You used <Plural value={invulnFire} one="# Verfire proc" other="# Verfire procs" />, and <Plural value={invulnStone} one="# Verstone proc" other="# Verstone procs" /> on an invulnerable boss.
 			</Trans>,
 		}))
 	}

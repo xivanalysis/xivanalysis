@@ -121,6 +121,11 @@ const CONTRIBUTORS = {
 		avatar: process.env.PUBLIC_URL + '/avatar/lhea.png',
 		jobs: [JOBS.PALADIN, JOBS.WARRIOR, JOBS.DARK_KNIGHT],
 	},
+	NIV: {
+		name: 'Niv',
+		avatar: process.env.PUBLIC_URL + '/avatar/niv.png',
+		jobs: [JOBS.WHITE_MAGE],
+	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 
