@@ -12,10 +12,6 @@ If you're looking to learn about how exactly the job plays and functions from th
 * [General tanking guide by Aletin](https://goo.gl/nYzAnq)
 * [Gunbreaker guide by Aletin](https://docs.google.com/document/d/1gfsMbHP55N5e0UKyc9zfpAdL_uVco40YdBlVNGvyJ0k/edit?usp=sharing)
 
-Known issues:
-
-* Uncomboed Solid Barrel will count as loading an additional Cartridge.
-
 If you have any suggestions about the module, feel free to ping me on Discord at Lhea#7581.
 `
 
@@ -24,10 +20,10 @@ export default new Meta({
 
 	Description: () => <TransMarkdown source={description}/>,
 
-	// supportedPatches: {
-	// 	from: '5.0',
-	// 	to: '5.0',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.0',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
