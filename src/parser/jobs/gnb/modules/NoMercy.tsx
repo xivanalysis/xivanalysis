@@ -148,8 +148,12 @@ export default class NoMercy extends Module {
 	}
 
 	private onComplete() {
+		// Exclude any window at the end of a fight which could not possibly have gotten all of its GCDs
 		const missedGcds = this.noMercyWindows
+			.filter(window => !window.isRushing)
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.GCD - window.numGcds), 0)
+
+		// Sum up all the missing expected casts
 		const missedBlastingZones = this.noMercyWindows
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.BLASTING_ZONE - window.numBlastingZones), 0)
 		const missedSonicBreaks = this.noMercyWindows
@@ -160,7 +164,6 @@ export default class NoMercy extends Module {
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.GNASHING_FANG - window.numGnashingFangs), 0)
 		const missedBowShocks = this.noMercyWindows
 			.reduce((sum, window) => sum + Math.max(0, EXPECTED_USES.BOW_SHOCK - window.numBowShocks), 0)
-
 		const sumMissingExpectedUses = missedBlastingZones + missedSonicBreaks + missedRoughDivides + missedGnashingFangs + missedBowShocks
 
 		this.suggestions.add(new TieredSuggestion({

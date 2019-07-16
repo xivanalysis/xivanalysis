@@ -22,10 +22,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.06',
-	// 	to: '4.5',
-	// },
+	//supportedPatches: {
+	//	from: '5.0',
+	//	to: '5.0',
+	//},
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 	],

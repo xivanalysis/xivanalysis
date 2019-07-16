@@ -17,7 +17,6 @@ If you would like to learn more about WHM, check the guides over at [The Balance
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-whm" */),
-
 	Description: () => <>
 		<TransMarkdown source={description}/>
 		<Message warning icon>
@@ -26,8 +25,7 @@ export default new Meta({
 				<Trans id="whm.about.description.devwarning">The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
-		<Trans id="whm.about.description.support">Currently this module can track DoT uptime, detect clipping and report about missed Divine Benison and Assize casts.</Trans>
-
+		<Trans id="whm.about.description.support">Currently this module can track DoT uptime, Lily and Blood Lily Usage, and detect clipping and report about missed Divine Benison and Assize casts.</Trans>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
@@ -35,14 +33,27 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.05',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.0',
+	},
 	contributors: [
-		{user: CONTRIBUTORS.VULCWEN, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.NIV, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.VULCWEN, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
-	changelog: [
-	],
+	changelog: [{
+		date: new Date('2019-07-08'),
+		Changes: () => <>
+			Initial changes for Shadowbringers:&nbsp;
+			<ul>
+				<li>Updated cast time for Cure and Medica II</li>
+				<li>Added new actions: Dia, Glare, Afflatus Solace, Afflatus Rapture, Afflatus Misery, and Temperance</li>
+				<li>Updated DoT module to check Dia uptime, and removed Aero II and Aero III checks</li>
+				<li>Removed outdated modules</li>
+				<li>Added new Lilies module</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.NIV],
+	}],
 })
