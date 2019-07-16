@@ -56,13 +56,6 @@ export default class Sen extends Module {
 		this.addHook('cast', {by: 'player', abilityId: TSUBAME}, this.overwrite)
 		this.addHook('death', {to: 'player'}, this.remove)
 
-		// Hagakure because he's was a speshul boi, but now he's dead jim. He's DEAD!
-		// this.addHook(
-		// 	'cast',
-		// 	{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
-		// 	this.onHagakure,
-		// )
-
 		// Suggestion time~
 		this.addHook('complete', this.onComplete)
 	}

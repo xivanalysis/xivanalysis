@@ -81,7 +81,7 @@ export default class Kenki extends Module {
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
 		)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.IKISHOTEN.id}, this.onIkishoten,)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.IKISHOTEN.id}, this.modify(50),)
 
 		// Meditate
 		const filter = {by: 'player', abilityId: STATUSES.MEDITATE.id}
@@ -141,10 +141,6 @@ export default class Kenki extends Module {
 
 		// We can't track positionals, so passing the positional kenki values through as a potential gain
 		this.modify(action[event.type], action.positional)
-	}
-
-	_onIkishoten() {
-		this.modify(50)
 	}
 
 	_onApplyMeditate(event) {

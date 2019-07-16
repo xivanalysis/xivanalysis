@@ -45,19 +45,16 @@ export default class Tsubame  extends Module {
 			}))
 		}
 
-		if (badUses > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.TSUBAME_GAESHI.icon,
-				content: <Trans id="sam.tsubame.suggestion.badtsubame.content"> You used <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> incorrectly. The skill should only be used to get more <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/>. </Trans>,
-				tiers: {
-					1: SEVERITY.MEDIUM,
-					2: SEVERITY.MAJOR,
-				},
-				why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> Amount of misused <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>: {badUses} </Trans>,
-				value: this._badUses,
-			}))
-		}
-
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.TSUBAME_GAESHI.icon,
+			content: <Trans id="sam.tsubame.suggestion.badtsubame.content"> You used <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> incorrectly. The skill should only be used to get more <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/>. </Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> Amount of misused <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>: {badUses} </Trans>,
+			value: this._badUses,
+		}))
 	}
-}
 
+}
