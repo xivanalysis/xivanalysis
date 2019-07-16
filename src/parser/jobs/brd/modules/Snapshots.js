@@ -2,6 +2,7 @@
  * @author Ririan
  */
 import React from 'react'
+import {Trans} from '@lingui/react'
 import {Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
@@ -12,7 +13,6 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static dependencies = [
-		'util',
 		//AdditionalStats module is needed because it handles adding snapshots to events.
 		'additionalStats', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
@@ -25,12 +25,8 @@ export default class Snapshots extends Module {
 		this.addHook('cast', {
 			by: 'player',
 			abilityId: [ACTIONS.CAUSTIC_BITE.id, ACTIONS.STORMBITE.id, ACTIONS.IRON_JAWS.id],
-		}, this._onSnapshot)
+		}, event => this._snapshotEvents.push(event))
 
-	}
-
-	_onSnapshot(event) {
-		this._snapshotEvents.push(event)
 	}
 
 	output() {
@@ -56,7 +52,7 @@ export default class Snapshots extends Module {
 
 			return <Table.Row key={snapshotEvent.timestamp}>
 				<Table.Cell>
-					{this.util.formatTimestamp(snapshotEvent.timestamp)}
+					{this.parser.formatTimestamp(snapshotEvent.timestamp)}
 				</Table.Cell>
 				<Table.Cell>
 					<ActionLink {...getDataBy(ACTIONS, 'id', snapshotEvent.ability.guid)}/>
@@ -69,9 +65,9 @@ export default class Snapshots extends Module {
 		return <Table>
 			<Table.Header>
 				<Table.Row key="header">
-					<Table.HeaderCell>Time</Table.HeaderCell>
-					<Table.HeaderCell>Snapshotter</Table.HeaderCell>
-					<Table.HeaderCell>Statuses</Table.HeaderCell>
+					<Table.HeaderCell><Trans id="brd.snapshots.time">Time</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="brd.snapshots.snapshotter">Snapshotter</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="brd.snapshots.statuses">Statuses</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
