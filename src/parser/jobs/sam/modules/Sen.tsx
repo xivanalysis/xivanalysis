@@ -76,7 +76,7 @@ export default class Sen extends Module {
 
 		if (this.wasted < 0) {
 			this.wasted = 0
-			}
+		}
 	}
 
 	private remove() {
