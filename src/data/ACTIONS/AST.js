@@ -1,4 +1,16 @@
 export default {
+	DIURNAL_SECT: {
+		id: 3604,
+		name: 'Diurnal Sect',
+		icon: 'https://xivapi.com/i/003000/003133.png',
+	},
+
+	NOCTURNAL_SECT: {
+		id: 3605,
+		name: 'Nocturnal Sect',
+		icon: 'https://xivapi.com/i/003000/003134.png',
+	},
+
 	BENEFIC: {
 		id: 3594,
 		name: 'Benefic',
@@ -126,13 +138,6 @@ export default {
 		cooldown: 90,
 	},
 
-	MINOR_ARCANA: {
-		id: 7443,
-		name: 'Minor Arcana',
-		icon: 'https://xivapi.com/i/003000/003106.png',
-		cooldown: 5,
-	},
-
 	CELESTIAL_OPPOSITION: {
 		id: 16553,
 		name: 'Celestial Opposition',
@@ -151,6 +156,7 @@ export default {
 		id: 8324,
 		name: 'Stellar Detonation',
 		icon: 'https://xivapi.com/i/003000/003144.png',
+		cooldown: 0,
 	},
 
 	STELLAR_BURST: {
@@ -176,6 +182,7 @@ export default {
 		id: 17055,
 		name: 'Play',
 		icon: 'https://xivapi.com/i/003000/003102.png',
+		cooldown: 0,
 	},
 
 	REDRAW: {
@@ -196,7 +203,14 @@ export default {
 		id: 9629,
 		name: 'Undraw',
 		icon: 'https://xivapi.com/i/003000/003108.png',
-		cooldown: 3,
+		cooldown: 1,
+	},
+
+	MINOR_ARCANA: {
+		id: 7443,
+		name: 'Minor Arcana',
+		icon: 'https://xivapi.com/i/003000/003106.png',
+		cooldown: 1,
 	},
 
 	// ----
@@ -214,6 +228,7 @@ export default {
 		id: 16558,
 		name: 'Horoscope Activation',
 		icon: 'https://xivapi.com/i/003000/003551.png',
+		cooldown: 0,
 	},
 
 	NEUTRAL_SECT: {
@@ -234,6 +249,7 @@ export default {
 		id: 16556,
 		name: 'Celestial Intersection',
 		icon: 'https://xivapi.com/i/003000/003556.png',
+		cooldown: 30,
 	},
 
 	// -----
@@ -244,56 +260,56 @@ export default {
 		id: 4401,
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	THE_BOLE: {
 		id: 4402,
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	THE_ARROW: {
 		id: 4403,
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	THE_SPEAR: {
 		id: 4404,
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	THE_EWER: {
 		id: 4405,
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	THE_SPIRE: {
 		id: 4406,
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
+		cooldown: 0,
 	},
 
 	LADY_OF_CROWNS: {
 		id: 7445,
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
-		cooldown: 5,
+		cooldown: 0,
 	},
 
 	LORD_OF_CROWNS: {
 		id: 7444,
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
-		cooldown: 5,
+		cooldown: 0,
 	},
 
 }
