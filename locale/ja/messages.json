@@ -445,8 +445,6 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "アクティブ率: <0/>",
   "pld.goring.suggestions.goringblade.content": "",
   "pld.goring.suggestions.goringblade.why": "早すぎる更新により{0}回の<0/>を失いました。",
-  "pld.oath.checklist.swordoath.description": "",
-  "pld.requiescat.checklist.swordoath.requirement.uptime": "アクティブ率: <0/>",
   "pld.requiescat.suggestions.nobuff.content": "",
   "pld.requiescat.suggestions.nobuff.why": "",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
