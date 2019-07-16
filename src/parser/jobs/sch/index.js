@@ -39,7 +39,18 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
-	changelog: [
-	],
+	changelog: [{
+		date: new Date('2019-07-12'),
+		Changes: () => <>
+			Initial changes for Shadowbringers:&nbsp;
+			<ul>
+				<li>Updated 5.0 action list</li>
+				<li>Updated DoT module to check Biolysis</li>
+				<li>Removed outdated modules and actions</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.NIV],
+	}],
 })

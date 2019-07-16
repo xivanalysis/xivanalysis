@@ -14,6 +14,8 @@ import {Plural, Trans} from '@lingui/react'
 import {formatDuration} from 'utilities'
 import {MANA_GAIN, MANA_CAP, MANA_DIFFERENCE_THRESHOLD} from './Gauge'
 
+//const util = require('util')
+
 const FINISHERS = [
 	ACTIONS.VERHOLY,
 	ACTIONS.VERFLARE,
@@ -311,15 +313,10 @@ export default class MeleeCombos extends Module {
 					})
 				}
 			} else {
-				// Neither proc is up, check with using Jolt or Impact + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
+				// Neither proc is up, check with using Jolt  + higherMana's dualcast spell to delay so that lowerMana will get guaranteed proc
 				let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white
 				let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
-				let firstDelaySkill = ACTIONS.JOLT_II
-				if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-					newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white
-					newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black + (MANA_GAIN[higherManaState.actions.dualcast.id].white || MANA_GAIN[higherManaState.actions.dualcast.id].black)
-					firstDelaySkill = ACTIONS.IMPACT
-				}
+				const firstDelaySkill = ACTIONS.JOLT_II
 
 				// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 				const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -332,15 +329,10 @@ export default class MeleeCombos extends Module {
 						manaLoss: manaLoss,
 					})
 				} else {
-					// Check if using Jolt or Impact + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
+					// Check if using Jolt  + lowerMana's dualcast spell to delay so that higherMana will get guaranteed proc
 					let newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
 					let newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.JOLT_II.id].black
-					let firstDelaySkill = ACTIONS.JOLT_II
-					if (this.combatants.selected.hasStatus(STATUSES.IMPACTFUL.id)) {
-						newLowerMana = lowerManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].white + (MANA_GAIN[lowerManaState.actions.dualcast.id].white || MANA_GAIN[lowerManaState.actions.dualcast.id].black)
-						newHigherMana = higherManaState.amount + MANA_GAIN[ACTIONS.IMPACT.id].black
-						firstDelaySkill = ACTIONS.IMPACT
-					}
+					const firstDelaySkill = ACTIONS.JOLT_II
 
 					// Determine how much mana would be wasted to cap with this delay, then adjust post-delay mana totals to cap before further comparisons
 					const manaLoss = Math.max(newLowerMana - MANA_CAP, 0) + Math.max(newHigherMana - MANA_CAP, 0)
@@ -392,18 +384,23 @@ export default class MeleeCombos extends Module {
 					return
 				}
 
-				if (action.combo.from !== this._currentCombo.lastAction.ability.guid) {
-					this._currentCombo.broken = true
-					this._endCombo()
-				} else {
-					this._currentCombo.events.push(event)
-					this._currentCombo.lastAction = event
-					if (action.combo.end) {
-						this._currentCombo.finisher = {
-							used: event.ability,
-						}
-						this._handleFinisher()
+				//console.log(util.inspect(action, {showHidden: true, depth: null}))
+
+				if (action.combo.from) {
+					const fromOptions = Array.isArray(action.combo.from) ? action.combo.from : [action.combo.from]
+					if (!fromOptions.includes(this._currentCombo.lastAction.ability.guid)) {
+						this._currentCombo.broken = true
 						this._endCombo()
+					} else {
+						this._currentCombo.events.push(event)
+						this._currentCombo.lastAction = event
+						if (action.combo.end) {
+							this._currentCombo.finisher = {
+								used: event.ability,
+							}
+							this._handleFinisher()
+							this._endCombo()
+						}
 					}
 				}
 			}
@@ -494,6 +491,7 @@ export default class MeleeCombos extends Module {
 				<Table.Body>
 					{
 						Object.keys(this._meleeCombos).map(timestamp => {
+							//console.log(util.inspect(timestamp, {showHidden: true, depth: null}))
 							const combo = this._meleeCombos[timestamp]
 							const white = combo.startMana.white
 							const black = combo.startMana.black
@@ -504,6 +502,8 @@ export default class MeleeCombos extends Module {
 							// Prevent null reference errors with broken combos - start with empty values and load with finisher data if exists
 							const recommendedActions = (combo.finisher) ? combo.finisher.recommendedActions : []
 							const recommendation = (combo.finisher) ? combo.finisher.recommendation : ''
+
+							//console.log(util.inspect(rotation, {showHidden: true, depth: null}))
 
 							return (<Table.Row key={timestamp}>
 								<Table.Cell textAlign="center">

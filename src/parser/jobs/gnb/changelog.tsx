@@ -1,6 +1,15 @@
+import React from 'react'
+
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 
 export const changelog = [
+	{
+		date: new Date('2019-07-02'),
+		Changes: () => <>
+			Initial pass through support for Gunbreaker.
+		</>,
+		contributors: [CONTRIBUTORS.LHEA],
+	},
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,

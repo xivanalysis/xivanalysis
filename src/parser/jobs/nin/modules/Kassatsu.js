@@ -19,8 +19,10 @@ export default class Kassatsu extends Module {
 	_kassatsuUses = {
 		[ACTIONS.FUMA_SHURIKEN.id]: 0,
 		[ACTIONS.KATON.id]: 0,
+		[ACTIONS.GOKA_MEKKYAKU.id]: 0,
 		[ACTIONS.RAITON.id]: 0,
 		[ACTIONS.HYOTON.id]: 0,
+		[ACTIONS.HYOSHO_RANRYU.id]: 0,
 		[ACTIONS.HUTON.id]: 0,
 		[ACTIONS.DOTON.id]: 0,
 		[ACTIONS.SUITON.id]: 0,

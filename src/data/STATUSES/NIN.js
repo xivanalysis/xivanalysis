@@ -5,38 +5,11 @@ export default {
 		icon: 'https://xivapi.com/i/015000/015020.png',
 	},
 
-	DUALITY: {
-		id: 790,
-		name: 'Duality',
-		icon: 'https://xivapi.com/i/012000/012910.png',
-	},
-
 	SHADOW_FANG: {
 		id: 508,
 		name: 'Shadow Fang',
 		icon: 'https://xivapi.com/i/010000/010612.png',
-		duration: 21,
-	},
-
-	SILHOUETTE: {
-		id: 787,
-		name: 'Silhouette',
-		icon: 'https://xivapi.com/i/012000/012907.png',
-		duration: 15,
-	},
-
-	SHADEWALKER: {
-		id: 788,
-		name: 'Shadewalker',
-		icon: 'https://xivapi.com/i/012000/012908.png',
-		duration: 15,
-	},
-
-	SMOKE_SCREEN: {
-		id: 789,
-		name: 'Smoke Screen',
-		icon: 'https://xivapi.com/i/012000/012909.png',
-		duration: 20,
+		duration: 24,
 	},
 
 	KASSATSU: {
@@ -53,10 +26,31 @@ export default {
 		duration: 24,
 	},
 
+	SUITON: {
+		id: 507,
+		name: 'Suiton',
+		icon: 'https://xivapi.com/i/012000/012906.png',
+		duration: 20,
+	},
+
 	TEN_CHI_JIN: {
 		id: 1186,
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/012000/012911.png',
+		duration: 10,
+	},
+
+	BUNSHIN: {
+		id: 1954, // TODO - This is -probably- the right one, but we'll have to check real data to confirm
+		name: 'Bunshin',
+		icon: 'https://xivapi.com/i/012000/012912.png',
+		duration: 15,
+	},
+
+	ASSASSINATE_READY: {
+		id: 1955,
+		name: 'Assassinate Ready',
+		icon: 'https://xivapi.com/i/012000/012913.png',
 		duration: 10,
 	},
 }

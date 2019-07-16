@@ -118,16 +118,18 @@ export default class Ninki extends Module {
 			</Trans>,
 		}))
 
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.HELLFROG_MEDIUM.icon,
-			content: <Trans id="nin.ninki.suggestions.frog.content">
-				Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you only have one target, as <ActionLink {...ACTIONS.BHAVACAKRA}/> has higher potency and can be used freely.
-			</Trans>,
-			severity: SEVERITY.MEDIUM,
-			why: <Trans id="nin.ninki.suggestions.frog.why">
-				You used Hellfrog Medium <Plural value={this._erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
-			</Trans>,
-		}))
+		if (this._erroneousFrogs > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.HELLFROG_MEDIUM.icon,
+				content: <Trans id="nin.ninki.suggestions.frog.content">
+					Avoid using <ActionLink {...ACTIONS.HELLFROG_MEDIUM}/> when you only have one target, as <ActionLink {...ACTIONS.BHAVACAKRA}/> has higher potency and can be used freely.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="nin.ninki.suggestions.frog.why">
+					You used Hellfrog Medium <Plural value={this._erroneousFrogs} one="# time" other="# times"/> when other spenders were available.
+				</Trans>,
+			}))
+		}
 	}
 
 	output() {

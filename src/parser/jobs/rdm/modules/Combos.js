@@ -81,7 +81,7 @@ export default class Combos extends CoreCombos {
 		//Process Not Enough Mana Combos
 		if (notEnoughManaCount > 0) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.VERHOLY.icon,
+				icon: ACTIONS.SCORCH.icon,
 				why: <Plural id="rdm.combos.suggestions.notenoughmanacombos.why" value={notEnoughManaCount} one="# enchanted combo was lost due to entering the combo before having enough mana" other= "# enchanted combos were lost due to entering the combo before having enough mana" />,
 				content: <Trans id="rdm.combos.suggestions.notenoughmanacombos.content">
 					Be sure not to enter your combo before having 80|80 mana

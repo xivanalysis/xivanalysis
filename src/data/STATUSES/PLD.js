@@ -23,14 +23,9 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010155.png',
 		duration: 25,
 	},
-	SWORD_OATH: {
-		id: 381,
-		name: 'Sword Oath',
-		icon: 'https://xivapi.com/i/012000/012505.png',
-	},
-	SHIELD_OATH: {
+	IRON_WILL: {
 		id: 79,
-		name: 'Shield Oath',
+		name: 'Iron Will',
 		icon: 'https://xivapi.com/i/012000/012506.png',
 	},
 }
