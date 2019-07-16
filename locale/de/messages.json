@@ -455,7 +455,7 @@
   "pld.goring.suggestions.goringblade.content": "",
   "pld.goring.suggestions.goringblade.why": "",
   "pld.oath.checklist.swordoath.description": "",
-  "pld.requiescat.checklist.swordoath.requirement.uptime": "",
+  "pld.requiescat.checklist.swordoath.requirement.uptime": "Gesamtanwendungszeit von <0/>",
   "pld.requiescat.suggestions.nobuff.content": "",
   "pld.requiescat.suggestions.nobuff.why": "",
   "pld.requiescat.suggestions.wrong-gcd.content": "",
