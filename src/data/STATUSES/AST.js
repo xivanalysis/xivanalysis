@@ -117,7 +117,7 @@ export default {
 
 	HOROSCOPE_HELIOS: {
 		id: 1891,
-		name: 'Horoscope Heleios',
+		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
 	},
 
@@ -242,99 +242,5 @@ export default {
 		name: 'Lady of Crowns Drawn',
 		icon: 'https://xivapi.com/i/013000/013257.png',
 	},
-
-	// ----
-	// Obsolete bin
-	// ----
-
-	// ENHANCED_ROYAL_ROAD: {
-	// 	id: 816,
-	// 	name: 'Enhanced Royal Road',
-	// 	icon: 'https://xivapi.com/i/013000/013210.png',
-	// },
-
-	// EXPANDED_ROYAL_ROAD: {
-	// 	id: 817,
-	// 	name: 'Expanded Royal Road',
-	// 	icon: 'https://xivapi.com/i/013000/013211.png',
-	// },
-
-	// EXTENDED_ROYAL_ROAD: {
-	// 	id: 818,
-	// 	name: 'Extended Royal Road',
-	// 	icon: 'https://xivapi.com/i/013000/013212.png',
-	// },
-
-	// THE_BALANCE: {
-	// 	id: 829,
-	// 	name: 'The Balance',
-	// 	icon: 'https://xivapi.com/i/013000/013204.png',
-	// },
-
-	// THE_BOLE: {
-	// 	id: 830,
-	// 	name: 'The Bole',
-	// 	icon: 'https://xivapi.com/i/013000/013205.png',
-	// },
-
-	// THE_ARROW: {
-	// 	id: 831,
-	// 	name: 'The Arrow',
-	// 	icon: 'https://xivapi.com/i/013000/013206.png',
-	// },
-
-	// THE_SPEAR: {
-	// 	id: 832,
-	// 	name: 'The Spear',
-	// 	icon: 'https://xivapi.com/i/013000/013207.png',
-	// },
-
-	// THE_EWER: {
-	// 	id: 833,
-	// 	name: 'The Ewer',
-	// 	icon: 'https://xivapi.com/i/013000/013208.png',
-	// },
-
-	// THE_SPIRE: {
-	// 	id: 834,
-	// 	name: 'The Spire',
-	// 	icon: 'https://xivapi.com/i/013000/013209.png',
-	// },
-
-	// BALANCE_HELD: {
-	// 	id: 920,
-	// 	name: 'Balance Held',
-	// 	icon: 'https://xivapi.com/i/013000/013235.png',
-	// },
-
-	// BOLE_HELD: {
-	// 	id: 921,
-	// 	name: 'Bole Held',
-	// 	icon: 'https://xivapi.com/i/013000/013236.png',
-	// },
-
-	// ARROW_HELD: {
-	// 	id: 922,
-	// 	name: 'Arrow Held',
-	// 	icon: 'https://xivapi.com/i/013000/013237.png',
-	// },
-
-	// SPEAR_HELD: {
-	// 	id: 923,
-	// 	name: 'Spear Held',
-	// 	icon: 'https://xivapi.com/i/013000/013238.png',
-	// },
-
-	// EWER_HELD: {
-	// 	id: 924,
-	// 	name: 'Ewer Held',
-	// 	icon: 'https://xivapi.com/i/013000/013239.png',
-	// },
-
-	// SPIRE_HELD: {
-	// 	id: 925,
-	// 	name: 'Spire Held',
-	// 	icon: 'https://xivapi.com/i/013000/013240.png',
-	// },
 
 }
