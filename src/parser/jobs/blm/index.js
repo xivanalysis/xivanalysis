@@ -34,5 +34,10 @@ export default new Meta({
 		date: new Date('2019-07-17'),
 		Changes: () => <>Initial Black Mage support for Shadowbringers expansion</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-07-18'),
+		Changes: () => <>New suggestion for Manafont and cleaned up F4 counts</>,
+		contributors: [CONTRIBUTORS.FURST],
 	}],
 })
