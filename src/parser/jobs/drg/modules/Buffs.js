@@ -15,12 +15,14 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS = [
 	ACTIONS.TRUE_THRUST.id,
+	ACTIONS.RAIDEN_THRUST.id,
 	ACTIONS.VORPAL_THRUST.id,
 	ACTIONS.DISEMBOWEL.id,
 	ACTIONS.CHAOS_THRUST.id,
 	ACTIONS.PIERCING_TALON.id,
 	ACTIONS.DOOM_SPIKE.id,
 	ACTIONS.SONIC_THRUST.id,
+	ACTIONS.COERTHAN_TORMENT.id,
 ]
 const FINAL_COMBO_HITS = [
 	ACTIONS.FANG_AND_CLAW.id,
@@ -76,7 +78,7 @@ export default class Buffs extends Module {
 		if (this.combatants.selected.hasStatus(statusId)) {
 			const action = getDataBy(ACTIONS, 'id', event.ability.guid) || {}
 			if (tracker.current === null) {
-				// This can potentially happen if either B4B or DS are used pre-pull
+				// This can potentially happen if either LC or DS are used pre-pull
 				tracker.current = {
 					start: this.parser.fight.start_time,
 					casts: [],
