@@ -18,7 +18,7 @@ export default new Meta({
 	// 	to: '✖',
 	// }
 	contributors: [
-		// {user: CONTRIBUTORS.YOU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
