@@ -87,7 +87,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
 		castTime: 3,
-		mpCost: 700,
+		mpCost: 600,
 	},
 
 	ESSENTIAL_DIGNITY: {
