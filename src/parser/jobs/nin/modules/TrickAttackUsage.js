@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
-const OPTIMAL_GCD_COUNT = 5 // Number of GCDs prior to the first TA in the opener
+const OPTIMAL_GCD_COUNT = 4 // Number of GCDs prior to the first TA in the opener
 
 export default class TrickAttackUsage extends Module {
 	static handle = 'taUsage'
