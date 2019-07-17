@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {
 	PARTYWIDE_SPEED_BUFF_FLAGS,
