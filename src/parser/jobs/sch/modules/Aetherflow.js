@@ -16,14 +16,11 @@ const AETHERFLOW_CD_ACTIONS = [
 	ACTIONS.EXCOGITATION.id,
 	ACTIONS.INDOMITABILITY.id,
 	ACTIONS.SACRED_SOIL.id,
-	ACTIONS.ENERGY_DRAIN.id,
-	ACTIONS.BANE.id,
 ]
 
 const EXTRA_AETHERFLOWS = 3
 
-const AETHERFLOW_COOLDOWN = 45000
-const AETHERFLOW_REDUCTION = 5
+const AETHERFLOW_COOLDOWN = 60000
 
 // Flow needs to be burnt before first use - estimate at 10s for now
 const FIRST_FLOW_TIMESTAMP = 10000
@@ -57,7 +54,6 @@ export default class Aetherflow extends Module {
 		const abilityId = event.ability.guid
 
 		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
-			this.cooldowns.reduceCooldown(ACTIONS.AETHERFLOW.id, AETHERFLOW_REDUCTION)
 			this._totalAetherflowCasts++
 		}
 
@@ -72,8 +68,6 @@ export default class Aetherflow extends Module {
 			name: <Fragment><Trans id="sch.aetherflow.checklist.name">Use <ActionLink {...ACTIONS.AETHERFLOW} /> on cooldown.</Trans></Fragment>,
 			description: <ul>
 				<li><Trans id="sch.aetherflow.checklist.description-1">Using aetherflow on cooldown lets you regain mana faster.</Trans></li>
-				<li><Trans id="sch.aetherflow.checklist.description-2">With <ActionLink {...ACTIONS.QUICKENED_AETHERFLOW} />, using all your stacks before the cooldown is up would effectively reduce it to 45s.</Trans></li>
-				<li><Trans id="sch.aetherflow.checklist.description-3">Using <ActionLink {...ACTIONS.DISSIPATION} /> can even bring it down to a further 30s.</Trans></li>
 			</ul>,
 			requirements: [
 				new Requirement({
@@ -148,8 +142,7 @@ export default class Aetherflow extends Module {
 								nextUptime = nextCredit.timestamp[0]
 							} else if (nextNextCredit && nextNextCredit.id[0] === ACTIONS.AETHERFLOW.id) {
 								nextUptime = nextNextCredit.timestamp[0]
-								// dissipate turns the ideal downtime into 15s shorter since you get 3 extra reductions
-								drift += AETHERFLOW_REDUCTION * EXTRA_AETHERFLOWS * 1000
+								drift += EXTRA_AETHERFLOWS * 1000
 							} else {
 								nextUptime = this.parser.currentTimestamp
 							}

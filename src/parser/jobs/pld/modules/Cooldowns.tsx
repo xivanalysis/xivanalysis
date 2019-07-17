@@ -9,7 +9,7 @@ export default class Cooldowns extends CoreCooldowns {
 		// oGCD Damage
 		ACTIONS.SPIRITS_WITHIN.id,
 		ACTIONS.CIRCLE_OF_SCORN.id,
-		ACTIONS.SHIELD_SWIPE.id,
+		ACTIONS.INTERVENE.id,
 		// Gauge Mitigation
 		ACTIONS.SHELTRON.id,
 		ACTIONS.INTERVENTION.id,
@@ -17,12 +17,11 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.HALLOWED_GROUND.id,
 		ACTIONS.SENTINEL.id,
 		ACTIONS.RAMPART.id,
-		ACTIONS.BULWARK.id,
 		ACTIONS.CONVALESCENCE.id,
 		ACTIONS.AWARENESS.id,
 		ACTIONS.ANTICIPATION.id,
 		// Personal Utility
-		ACTIONS.TEMPERED_WILL.id,
+		ACTIONS.ARMS_LENGTH.id,
 		// Party Mitigation
 		ACTIONS.PASSAGE_OF_ARMS.id,
 		ACTIONS.DIVINE_VEIL.id,
@@ -30,7 +29,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.COVER.id,
 		// Tank Utility
 		ACTIONS.PROVOKE.id,
-		ACTIONS.ULTIMATUM.id,
 		ACTIONS.SHIRK.id,
 		// Disrupt Utility
 		ACTIONS.INTERJECT.id,

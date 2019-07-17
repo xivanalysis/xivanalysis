@@ -445,8 +445,6 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "Temps total d'application de <0/>",
   "pld.goring.suggestions.goringblade.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
   "pld.goring.suggestions.goringblade.why": "{0} de <0/> perdu car rafraîchit trop tôt.",
-  "pld.oath.checklist.swordoath.description": "En tant que Paladin, <0/> est une partie importante de vos dégâts infligés, et devrait être toujours actif pour générer un maximum de dommages.",
-  "pld.requiescat.checklist.swordoath.requirement.uptime": "Temps total d'application de <0/>",
   "pld.requiescat.suggestions.nobuff.content": "<0/> devrait seulement être utilisé à plus de 80% de vos PM. Essayez de ne pas rater les 20% de bonus de dommages magiques que <1/> vous donne.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} en dessous de 80% de vos PM.",
   "pld.requiescat.suggestions.wrong-gcd.content": "GCDs utilisés durant <0/> devraient être limités à <1/> pour des dégâts optimaux.",
