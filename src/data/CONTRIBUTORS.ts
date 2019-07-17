@@ -99,7 +99,7 @@ const CONTRIBUTORS = {
 	AKAIRYU: {
 		name: 'Akairyu',
 		avatar: process.env.PUBLIC_URL + '/avatar/Akairyu.png',
-		jobs: [JOBS.BLACK_MAGE],
+		jobs: [JOBS.BLACK_MAGE, JOBS.DANCER],
 	},
 	ASTRALEAH: {
 		name: 'Astraleah',
