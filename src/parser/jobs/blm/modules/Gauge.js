@@ -3,9 +3,8 @@ import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -368,7 +367,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.lost-polyglot.content">
-					You lost <StatusLink {...STATUSES.POLYGLOT}/> due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You lost Polyglot due to dropped <ActionLink {...ACTIONS.ENOCHIAN}/>. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.lost-polyglot.why">
@@ -381,7 +380,7 @@ export default class Gauge extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.XENOGLOSSY.icon,
 				content: <Trans id="blm.gauge.suggestions.overwritten-polyglot.content">
-					You overwrote <StatusLink {...STATUSES.POLYGLOT}/> due to not casting <ActionLink {...ACTIONS.XENOGLOSSY} /> or <ActionLink {...ACTIONS.FOUL}/> for 30s after gaining a second stack. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
+					You overwrote Polyglot due to not casting <ActionLink {...ACTIONS.XENOGLOSSY} /> or <ActionLink {...ACTIONS.FOUL}/> for 30s after gaining a second stack. <ActionLink {...ACTIONS.XENOGLOSSY}/> and <ActionLink {...ACTIONS.FOUL}/> are your strongest GCDs, so always maximize their casts.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="blm.gauge.suggestions.overwritten-polyglot.why">
