@@ -9,9 +9,7 @@ export const PARTYWIDE_SPEED_BUFF_FLAGS = {
 }
 const FLAGS = PARTYWIDE_SPEED_BUFF_FLAGS
 
-export const PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP = {
-	[STATUSES.FEY_WIND.id]: FLAGS.FEY_WIND,
-}
+export const PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP = {}
 
 // Map combinations of {jobSpeedBuff} and arrow/feyWind, based on https://docs.google.com/spreadsheets/d/1JZE94VgMhXrPeoxJOrL8z6LTcxcpYS8so5wLBnhPeLw/
 // Uncomment entries when buff statuses are added or generated

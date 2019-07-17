@@ -14,9 +14,7 @@ export default class Speedmod extends Module {
 	]
 
 	// List of statuses we natively handle (See SpeedmodConsts)
-	SPEED_BUFF_STATUS_IDS = [
-		STATUSES.FEY_WIND.id,
-	]
+	SPEED_BUFF_STATUS_IDS = []
 
 	// Track history of speedmods
 	_history = [{speedmod: 1, start: 0, end: Infinity}]
