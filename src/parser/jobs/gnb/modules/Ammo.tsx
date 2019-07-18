@@ -1,4 +1,5 @@
-import {t, Trans} from '@lingui/macro'
+import {t} from '@lingui/macro'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
@@ -7,10 +8,11 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {CastEvent} from 'fflogs'
+import {CastEvent, Event} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {ComboEvent} from 'parser/core/modules/Combos'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const ON_CAST_GENERATORS = {
 	[ACTIONS.BLOODFEST.id]: 2,
@@ -25,6 +27,12 @@ const AMMO_SPENDERS = {
 	[ACTIONS.GNASHING_FANG.id]: 1,
 	[ACTIONS.BURST_STRIKE.id]: 1,
 	[ACTIONS.FATED_CIRCLE.id]: 1,
+}
+
+const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	4: SEVERITY.MAJOR,
 }
 
 const MAX_AMMO = 2
@@ -49,8 +57,10 @@ export default class Ammo extends Module {
 	}
 	private leftoverAmmo = 0
 	private totalGeneratedAmmo = 0 // Keep track of the total amount of generated ammo over the fight
+	private erroneousCircles = 0 // This is my new NEW band name.
 
 	@dependency private checklist!: Checklist
+	@dependency private suggestions!: Suggestions
 
 	protected init() {
 		this.addHook('init', this.pushToHistory)
@@ -78,8 +88,16 @@ export default class Ammo extends Module {
 			},
 			this.onSpender,
 		)
+		this.addHook('aoedamage', {abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
+	}
+
+	private onFatedCircle(event: Event) {
+		if (event.hasOwnProperty('hits') &&
+			(event as any).hits.length < 2) {
+			this.erroneousCircles++
+		}
 	}
 
 	private onCastGenerator(event: CastEvent) {
@@ -135,8 +153,22 @@ export default class Ammo extends Module {
 
 		const totalWaste = Object.keys(this.wasteBySource)
 			.map(Number)
+			.filter(source => source !== ACTIONS.RAISE.id) // don't include death for suggestions
 			.reduce((sum, source) => sum + this.wasteBySource[source], 0)
 			+ this.leftoverAmmo
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FATED_CIRCLE.icon,
+			content: <Trans id="gnb.ammo.single-target-circle.content">
+				Avoid using <ActionLink {...ACTIONS.FATED_CIRCLE}/> when it would deal damage to only a single target.
+			</Trans>,
+			why: <Trans id="gnb.ammo.single-target-circle.why">
+				<Plural value={this.erroneousCircles} one="# use" other="# uses"/> of <ActionLink {...ACTIONS.FATED_CIRCLE}/> dealt
+				damage to only one target.
+			</Trans>,
+			tiers: SINGLE_TARGET_CIRCLE_SEVERITY_TIERS,
+			value: this.erroneousCircles,
+		}))
 
 		this.checklist.add(new Rule({
 			name: 'Cartridge Usage',
@@ -175,8 +207,13 @@ export default class Ammo extends Module {
 	}
 
 	private convertWasteEntryToRow(action: TODO) {
+		let actionName = action.name
+		if (action === ACTIONS.RAISE) {
+			actionName = 'Death'
+		}
+
 		return <tr key={action.id + '-row'} style={{margin: 0, padding: 0}}>
-			<td key={action.id + '-name'}><ActionLink {...action}/></td>
+			<td key={action.id + '-name'}><ActionLink name={actionName} {...action}/></td>
 			<td key={action.id + '-value'}>{this.wasteBySource[action.id]}</td>
 		</tr>
 	}
