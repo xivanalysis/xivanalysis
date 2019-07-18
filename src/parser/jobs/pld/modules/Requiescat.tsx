@@ -7,13 +7,12 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
 
 const SEVERITIES = {
-	MISSED_HOLY_SPIRITS: {
+	MISSED_CASTS: {
 		1: SEVERITY.MEDIUM,
 		5: SEVERITY.MAJOR,
 	},
@@ -24,9 +23,17 @@ const SEVERITIES = {
 
 const CONSTANTS = {
 	HOLY_SPIRIT: {
-		EXPECTED: 5,
+		EXPECTED: 4,
+	},
+	CONFITEOR: {
+		EXPECTED: 1,
 	},
 }
+
+const HOLY_SPIRIT_AND_CIRCLE_IDS = [
+	ACTIONS.HOLY_SPIRIT.id,
+	ACTIONS.HOLY_CIRCLE.id,
+]
 
 class RequiescatState {
 	start: number
@@ -39,7 +46,11 @@ class RequiescatState {
 	}
 
 	get holySpirits(): number {
-		return this.rotation.filter(event => event.ability.guid === ACTIONS.HOLY_SPIRIT.id).length
+		return this.rotation.filter(event => HOLY_SPIRIT_AND_CIRCLE_IDS.includes(event.ability.guid)).length
+	}
+
+	get confiteors(): number {
+		return this.rotation.filter(event => event.ability.guid === ACTIONS.CONFITEOR.id).length
 	}
 }
 
@@ -48,7 +59,6 @@ export default class Requiescat extends Module {
 	static title = t('pld.requiescat.title')`Requiescat Usage`
 
 	@dependency private suggestions!: Suggestions
-	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
 
 	// Requiescat Casts
@@ -110,21 +120,25 @@ export default class Requiescat extends Module {
 	}
 
 	private onComplete() {
-		const missedHolySpirits = this.requiescats
+		// The difference between Holy Spirit and Confiteor is massive (450 potency). For this reason, it condenses suggestions to just log
+		// any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
+		const missedCasts = this.requiescats
 			.filter(requiescat => requiescat.hasAscociatedBuff)
-			.reduce((sum, requiescat) => sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits), 0)
+			.reduce((sum, requiescat) =>
+				sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits) + Math.max(0, CONSTANTS.CONFITEOR.EXPECTED - requiescat.confiteors), 0)
 		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAscociatedBuff).length
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.REQUIESCAT.icon,
+			icon: ACTIONS.HOLY_SPIRIT.icon,
 			why: <Trans id="pld.requiescat.suggestions.wrong-gcd.why">
-				<Plural value={missedHolySpirits} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
+				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should be limited to <ActionLink {...ACTIONS.HOLY_SPIRIT}/> for optimal damage.
+				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or
+				multi-hit <ActionLink {...ACTIONS.HOLY_CIRCLE}/>) and 1 use of <ActionLink {...ACTIONS.CONFITEOR}/> for optimal damage.
 			</Trans>,
-			tiers: SEVERITIES.MISSED_HOLY_SPIRITS,
-			value: missedHolySpirits,
+			tiers: SEVERITIES.MISSED_CASTS,
+			value: missedCasts,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -151,6 +165,10 @@ export default class Requiescat extends Module {
 					header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
 					accessor: 'holySpirit',
 				},
+				{
+					header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
+					accessor: 'confiteor',
+				},
 			]}
 			data={this.requiescats
 				.filter(requiescat => requiescat.hasAscociatedBuff)
@@ -161,8 +179,12 @@ export default class Requiescat extends Module {
 						: requiescat.start - this.parser.fight.start_time,
 					targetsData: {
 						holySpirit: {
-							actual: this.countAbility(requiescat.rotation, ACTIONS.HOLY_SPIRIT.id),
+							actual: requiescat.holySpirits,
 							expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
+						},
+						confiteor: {
+							actual: requiescat.confiteors,
+							expected: CONSTANTS.CONFITEOR.EXPECTED,
 						},
 					},
 					rotation: requiescat.rotation,
