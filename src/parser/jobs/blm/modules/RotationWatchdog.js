@@ -161,7 +161,7 @@ export default class RotationWatchdog extends Module {
 		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
-		return (statusTime / uptime) * 100
+		return Math.min((statusTime / uptime) * 100, 100)
 	}
 
 	_onComplete() {
