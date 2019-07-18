@@ -132,12 +132,6 @@ export default class RotationWatchdog extends Module {
 		//start and stop trigger for our rotations is B3
 		if (actionId === ACTIONS.BLIZZARD_III.id || actionId === ACTIONS.FREEZE.id || actionId === ACTIONS.UMBRAL_SOUL.id) {
 			if (!this._first) { this._stopRecording() }
-			if (this._inRotation) {
-				const previousEvent = this._rotation.casts[this._rotation.casts.length-1]
-				if (previousEvent && previousEvent.ability.guid !== ACTIONS.DESPAIR.id) {
-					this._astralFiresNotEndedWithDespair++
-				}
-			}
 			this._startRecording(event)
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
 			this._handleTranspose(event)
@@ -161,7 +155,7 @@ export default class RotationWatchdog extends Module {
 		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
-		return Math.min((statusTime / uptime) * 100, 100)
+		return (statusTime / uptime) * 100
 	}
 
 	_onComplete() {
@@ -306,6 +300,7 @@ export default class RotationWatchdog extends Module {
 			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
 			const despairCount = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.DESPAIR.id).length
 			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.MANAFONT.id).length > 0
+			const lastEvent = this._rotation.casts[this._rotation.casts.length-1]
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 			if (hardT3Count > 1) {
@@ -334,7 +329,13 @@ export default class RotationWatchdog extends Module {
 				if (fireCount === 0 && this._rotation.casts.length > 1) {
 					this._rotationsWithoutFire++
 				}
-				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) { this._history.push(this._rotation) }
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) {
+					//check if the rotation ended with despair
+					if (lastEvent && lastEvent.ability.guid !== ACTIONS.DESPAIR.id) {
+						this._astralFiresNotEndedWithDespair++
+					}
+					this._history.push(this._rotation)
+				}
 				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
