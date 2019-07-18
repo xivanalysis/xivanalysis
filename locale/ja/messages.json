@@ -227,10 +227,14 @@
   "drg.rotation.accordion.message": "竜騎士は11-GCDのスキル回しが非常に厳しく、そこにはわずかな許容変動しかありません。<0 />を早期にリフレッシュするか、DoTを2つのターゲット上で維持している場合。以下のすべてのエントリは、間違ったスキル回しです。",
   "drg.rotation.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
   "drg.rotation.title": "",
-  "drk.buffs.trigger.darkside-multiple-removals": "",
-  "drk.buffs.trigger.darkside-reapply": "",
-  "drk.buffs.trigger.grit-multiple-removals": "",
-  "drk.buffs.trigger.grit-reapply": "",
+  "drk.delirium.suggestions.badgcd.content": "",
+  "drk.delirium.suggestions.badgcd.why": "",
+  "drk.delirium.suggestions.missedgcd.content": "",
+  "drk.delirium.suggestions.missedgcd.why": "",
+  "drk.delirium.table.header.gcds": "",
+  "drk.delirium.title": "",
+  "drk.multihit.suggestions.content": "",
+  "drk.multihit.suggestions.why": "",
   "game.job.astrologian": "占星術師",
   "game.job.bard": "吟遊詩人",
   "game.job.black-mage": "黒魔導士",
@@ -676,5 +680,7 @@
   "whm.overheal.requirement.nonhot": "オーバーヒール (非HoT)",
   "whm.overheal.rule.description": "",
   "whm.overheal.rule.name": "オーバーヒールを避けてください。",
-  "{0, plural, one {time} other {times}}": "{0, plural, other {# 回}}"
+  "{0, plural, one {# Dark Arts use} other {# Dark Arts uses}}": "",
+  "{wastedBloodActions, plural, one {# blood spending skill} other {# blood spending skills}}": "",
+  "{wastedMPActions, plural, one {# MP spending skill} other {# MP spending skills}}": ""
 }
