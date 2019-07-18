@@ -72,11 +72,16 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
+		// init this, Sharpcast.js will use it, but we want it to be grouped with the rest.
+		this.timeline.addGroup(new Group({
+			id: 'procbuffs-' + STATUSES.SHARPCAST.id,
+			content: STATUSES.SHARPCAST.name,
+		}))
 		this._group = new Group({
 			id: 'procbuffs',
 			content: 'Procs',
 			order: 0,
-			nestedGroups: [],
+			nestedGroups: ['procbuffs-' + STATUSES.SHARPCAST.id],
 		})
 		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
 	}
