@@ -42,7 +42,7 @@ export default class Sharpcast extends Module {
 	}
 
 	_onRemoveSharpcast(event) {
-		this._stopAndSave(event.ability.guid, event.timestamp)
+		this._stopAndSave(event.timestamp)
 	}
 
 	_onGainSharpcast(event) {
