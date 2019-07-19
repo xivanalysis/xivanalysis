@@ -28,6 +28,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2019-07-19'),
+		Changes: () => <>Updated a number of modules with small correctness tweaks for Shadowbringers action changes.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-07-07'),
 		Changes: () => <>Double weaving is no longer frowned upon, plus small bugfixes for the Hellfrog and Kassatsu suggestions.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

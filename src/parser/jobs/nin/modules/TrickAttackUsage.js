@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
-const OPTIMAL_GCD_COUNT = 4 // Number of GCDs prior to the first TA in the opener
+const OPTIMAL_GCD_COUNT = 3 // Number of GCDs prior to the first TA in the opener
 
 export default class TrickAttackUsage extends Module {
 	static handle = 'taUsage'
@@ -78,7 +78,7 @@ export default class TrickAttackUsage extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.opener.content">
-					Avoid unconventional timings for your first <ActionLink {...ACTIONS.TRICK_ATTACK}/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in after {OPTIMAL_GCD_COUNT} GCDs.
+					Avoid unconventional timings for your first <ActionLink {...ACTIONS.TRICK_ATTACK}/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 10 seconds into the fight.
 				</Trans>,
 				value: distanceFromOptimal,
 				tiers: {
