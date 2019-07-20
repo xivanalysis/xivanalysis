@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
+import {Accordion, Message, Icon} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -14,6 +14,8 @@ import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Timeline from 'parser/core/modules/Timeline'
+import { RotationTable } from 'components/ui/RotationTable';
 
 const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -66,23 +68,24 @@ class Dance {
 
 	dirty: boolean = false
 	missed: boolean = false
-	extraSteps: boolean = false
+	extraMoves: boolean = false
 
 	public get error(): boolean {
-		return this.dirty || this.missed || this.extraSteps
+		return this.dirty || this.missed || this.extraMoves
 	}
 
-	public get expectedFinisherId(): number {
-		const actualFinisher = _.last(this.rotation)
-		if (actualFinisher) {
-			if (TECHNICAL_FINISHES.includes(actualFinisher.ability.guid)) {
-				return ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id
+	public get expectedFinishId(): number {
+		const actualFinish = _.last(this.rotation)
+		let expectedFinish = -1
+		if (actualFinish) {
+			if (TECHNICAL_FINISHES.includes(actualFinish.ability.guid)) {
+				expectedFinish =  ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id
 			}
-			if (STANDARD_FINISHES.includes(actualFinisher.ability.guid)) {
-				return ACTIONS.DOUBLE_STANDARD_FINISH.id
+			else if (STANDARD_FINISHES.includes(actualFinish.ability.guid)) {
+				expectedFinish = ACTIONS.DOUBLE_STANDARD_FINISH.id
 			}
 		}
-		return -1
+		return expectedFinish
 	}
 
 	constructor(start: number) {
@@ -100,11 +103,12 @@ export default class DirtyDancing extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private invuln!: Invulnerability
 	@dependency private combatants!: Combatants
+	@dependency private timeline!: Timeline
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
 	private dirtyDances = 0
-	private extraSteps = 0
+	private extraMoves = 0
 
 	protected init() {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
@@ -157,7 +161,7 @@ export default class DirtyDancing extends Module {
 			dance.end = finisher.timestamp
 
 			// Count dance as dirty if we didn't get the expected finisher
-			if (finisher.ability.guid !== dance.expectedFinisherId) {
+			if (finisher.ability.guid !== dance.expectedFinishId) {
 				dance.dirty = true
 			}
 			// If the finisher didn't hit anything, and something could've been, ding it.
@@ -166,12 +170,12 @@ export default class DirtyDancing extends Module {
 				dance.missed = true
 			}
 			// Dancer messed up if more step actions were recorded than we expected
-			const stepCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
+			const actualCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
 			let expectedCount = 0
-			expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinisherId]
+			expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinishId]
 			// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
-			if (stepCount > expectedCount) {
-				dance.extraSteps = true
+			if (actualCount > expectedCount) {
+				dance.extraMoves = true
 			}
 
 			dance.resolved = true
@@ -188,7 +192,7 @@ export default class DirtyDancing extends Module {
 	private onComplete() {
 		this.missedDances = this.danceHistory.filter(dance => dance.missed).length
 		this.dirtyDances = this.danceHistory.filter(dance => dance.dirty).length
-		this.extraSteps = this.danceHistory.filter(dance => dance.extraSteps).length
+		this.extraMoves = this.danceHistory.filter(dance => dance.extraMoves).length
 
 		// Suggest to move closer for finishers.
 		this.suggestions.add(new TieredSuggestion({
@@ -219,13 +223,13 @@ export default class DirtyDancing extends Module {
 		// Suggestion to not faff about with steps
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EMBOITE.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.extra-steps.content">
+			content: <Trans id="dnc.dirty-dancing.suggestions.extra-moves.content">
 				Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.extraSteps,
-			why: <Trans id="dnc.dirty-dancing.suggestions.extra-steps.why">
-				<Plural value={this.extraSteps} one="# dance" other="# dances"/> finished with extra steps.
+			value: this.extraMoves,
+			why: <Trans id="dnc.dirty-dancing.suggestions.extra-moves.why">
+				<Plural value={this.extraMoves} one="# dance" other="# dances"/> finished with extra steps.
 			</Trans>,
 		}))
 
@@ -245,35 +249,53 @@ export default class DirtyDancing extends Module {
 	}
 
 	output() {
-		const panels = this.danceHistory.filter(dance => dance.error).map(dance => {
-			return {
-				key: 'title-' + dance.end,
-				title: {
-					content: <Fragment>
-						{this.parser.formatTimestamp(dance.end || 0)}
-					</Fragment>,
-				},
-				content: {
-					content: <Rotation events={dance.rotation}/>,
-				},
-			}
-		})
-
-		if (panels.length > 0) {
+		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
 				<Message>
-					<Trans id="dnc.dirty-dancing.accordion.message">
+					<Trans id="dnc.dirty-dancing.rotationtable.message">
 						One of Dancer's primary responsibilities is buffing the party's damage via dances.<br />
 						Each dance also contributes to the Dancer's own damage and should be performed correctly.
 					</Trans>
 				</Message>
-				<Accordion
-					exclusive={false}
-					panels={panels}
-					styled
-					fluid
+				<RotationTable
+					notes={[
+						{
+							header: <Trans id="dnc.dirty-dancing.table.header.missed">Hit Target</Trans>,
+							accessor: 'missed',
+						},
+						{
+							header: <Trans id="dnc.dirty-dancing.table.header.dirty">Correct Finish</Trans>,
+							accessor: 'dirty',
+						},
+						{
+							header: <Trans id="dnc.dirty-dancing.table.header.extraMoves">Correct Moves</Trans>,
+							accessor: 'extraMoves',
+						},
+					]}
+					data={this.danceHistory.filter(dance => dance.error).map(dance => {
+						return ({
+							start: dance.start - this.parser.fight.start_time,
+							end: dance.end != null ?
+								dance.end - this.parser.fight.start_time :
+								dance.start - this.parser.fight.start_time,
+							notesMap: {
+								missed: <>{this.getNotesIcon(dance.missed)}</>,
+								dirty: <>{this.getNotesIcon(dance.dirty)}</>,
+								extraMoves: <>{this.getNotesIcon(dance.extraMoves)}</>,
+							},
+							rotation: dance.rotation,
+						})
+					})}
+					onGoto={this.timeline.show}
 				/>
 			</Fragment>
 		}
+	}
+
+	private getNotesIcon(ruleFailed: boolean) : any {
+		return <Icon
+			name={ruleFailed ? 'remove' : 'checkmark'}
+			className={ruleFailed ? 'text-error' : 'text-success'}
+		/>
 	}
 }
