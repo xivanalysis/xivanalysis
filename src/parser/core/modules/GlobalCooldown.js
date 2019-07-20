@@ -153,7 +153,7 @@ export default class GlobalCooldown extends Module {
 		}
 
 		const action = getDataBy(ACTIONS, 'id', gcdInfo.event.ability.guid)
-		if (!action) { return }
+		if (!action || !action.id) { return }
 		let speedMod = this.speedmod.get(gcdInfo.event.timestamp)
 		let castTime = action.castTime
 
@@ -184,19 +184,19 @@ export default class GlobalCooldown extends Module {
 		normalizedGcd *= (1 / speedMod)
 		normalizedGcd = Math.round(normalizedGcd)
 
-		if (action.id) {
-			this.gcds.push({
-				timestamp: gcdInfo.event.timestamp,
-				length: gcdLength,
-				normalizedLength: normalizedGcd,
-				speedMod: speedMod,
-				castTime: castTime,
-				cooldown: action.cooldown,
-				casterTaxed: isCasterTaxed,
-				actionId: action.id,
-				isInstant: gcdInfo.isInstant,
-			})
-		}
+		this.gcds.push({
+			timestamp: gcdInfo.event.timestamp,
+			length: gcdLength,
+			normalizedLength: normalizedGcd,
+			speedMod,
+			castTime,
+			cooldown: action.gcdRecast != null
+				? action.gcdRecast
+				: action.cooldown,
+			casterTaxed: isCasterTaxed,
+			actionId: action.id,
+			isInstant: gcdInfo.isInstant,
+		})
 	}
 
 	getEstimate(bound = true) {
@@ -232,12 +232,18 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_getGcdLength(gcd) {
-		const cooldownRatio = this.getEstimate() / MAX_GCD
+		let cooldown = (gcd.isInstant || gcd.castTime <= gcd.cooldown)
+			? gcd.cooldown
+			: Math.max(gcd.castTime, gcd.cooldown)
+		cooldown *= 1000
 
-		let cd = (gcd.isInstant || gcd.castTime <= gcd.cooldown) ? gcd.cooldown : Math.max(gcd.castTime, gcd.cooldown)
-		cd *= 1000
+		// Some actions are lower than or equal to min gcd, only adjust with ratios when they are not
+		if (cooldown > MIN_GCD) {
+			const cooldownRatio = this.getEstimate() / MAX_GCD
+			cooldown = Math.max(MIN_GCD, cooldown * cooldownRatio * gcd.speedMod)
+		}
 
-		const duration = Math.round((cd * cooldownRatio * gcd.speedMod) + (gcd.casterTaxed ? CASTER_TAX : 0))
+		const duration = Math.round(cooldown + (gcd.casterTaxed ? CASTER_TAX : 0))
 
 		return duration
 	}
