@@ -38,6 +38,11 @@ export default new Meta({
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 	{
+		date: new Date('2019-07-18'),
+		Changes: () => <>New suggestion for Manafont and cleaned up F4 counts</>,
+		contributors: [CONTRIBUTORS.FURST],
+	},
+	{
 		date: new Date('2019-07-20'),
 		Changes: () => <>Keep track of, and warn against dropping, <StatusLink {...STATUSES.SHARPCAST} /> buffs.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
