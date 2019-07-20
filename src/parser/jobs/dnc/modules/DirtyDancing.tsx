@@ -2,10 +2,11 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Accordion, Message, Icon} from 'semantic-ui-react'
+import {Accordion, Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
+import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent, DamageEvent} from 'fflogs'
@@ -15,7 +16,6 @@ import Combatants from 'parser/core/modules/Combatants'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-import { RotationTable } from 'components/ui/RotationTable';
 
 const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -80,8 +80,7 @@ class Dance {
 		if (actualFinish) {
 			if (TECHNICAL_FINISHES.includes(actualFinish.ability.guid)) {
 				expectedFinish =  ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id
-			}
-			else if (STANDARD_FINISHES.includes(actualFinish.ability.guid)) {
+			} else if (STANDARD_FINISHES.includes(actualFinish.ability.guid)) {
 				expectedFinish = ACTIONS.DOUBLE_STANDARD_FINISH.id
 			}
 		}
@@ -292,7 +291,7 @@ export default class DirtyDancing extends Module {
 		}
 	}
 
-	private getNotesIcon(ruleFailed: boolean) : any {
+	private getNotesIcon(ruleFailed: boolean): any {
 		return <Icon
 			name={ruleFailed ? 'remove' : 'checkmark'}
 			className={ruleFailed ? 'text-error' : 'text-success'}
