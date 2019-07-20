@@ -21,7 +21,7 @@ export default class Sharpcast extends Module {
 	static handle = 'sharpcast'
 	static dependencies = [
 		'timeline',
-		'procs', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'procs',
 		'suggestions',
 	]
 
@@ -99,10 +99,9 @@ export default class Sharpcast extends Module {
 			this._stopAndSave()
 		}
 
-		const groupId = 'procbuffs-' + STATUSES.SHARPCAST.id
+		const groupId = this.procs.getGroupIdForStatus(STATUSES.SHARPCAST)
 		const fightStart = this.parser.fight.start_time
 
-		// Make sure a timeline group exists for this buff
 		// Add buff windows to the timeline
 		this._buffWindows.history.forEach(window => {
 			this.timeline.addItem(new Item({
