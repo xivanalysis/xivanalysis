@@ -99,7 +99,7 @@ const CONTRIBUTORS = {
 	AKAIRYU: {
 		name: 'Akairyu',
 		avatar: process.env.PUBLIC_URL + '/avatar/Akairyu.png',
-		jobs: [JOBS.BLACK_MAGE],
+		jobs: [JOBS.BLACK_MAGE, JOBS.DANCER],
 	},
 	ASTRALEAH: {
 		name: 'Astraleah',
@@ -125,6 +125,11 @@ const CONTRIBUTORS = {
 		name: 'Niv',
 		avatar: process.env.PUBLIC_URL + '/avatar/niv.png',
 		jobs: [JOBS.WHITE_MAGE],
+	},
+	RIRIAN: {
+		name: 'Ririan',
+		avatar: process.env.PUBLIC_URL + '/avatar/ririan.png',
+		jobs: [JOBS.BARD, JOBS.MACHINIST],
 	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
