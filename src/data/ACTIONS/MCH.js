@@ -39,6 +39,8 @@ export default {
 		name: 'Hot Shot',
 		icon: 'https://xivapi.com/i/003000/003003.png',
 		onGcd: true,
+		cooldown: 40,
+		gcdRecast: 2.5,
 	},
 
 	CLEAN_SHOT: {
@@ -95,6 +97,7 @@ export default {
 		name: 'Heat Blast',
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 
 	AUTO_CROSSBOW: {
@@ -109,6 +112,8 @@ export default {
 		name: 'Drill',
 		icon: 'https://xivapi.com/i/003000/003043.png',
 		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 2.5,
 	},
 
 	BIOBLASTER: {
@@ -116,6 +121,8 @@ export default {
 		name: 'Bioblaster',
 		icon: 'https://xivapi.com/i/003000/003044.png',
 		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 2.5,
 	},
 
 	AIR_ANCHOR: {
@@ -123,6 +130,8 @@ export default {
 		name: 'Air Anchor',
 		icon: 'https://xivapi.com/i/003000/003045.png',
 		onGcd: true,
+		cooldown: 40,
+		gcdRecast: 2.5,
 	},
 
 	// -----
