@@ -9,6 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import {ActionLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import kenkiIcon from './kenki.png'
@@ -72,16 +73,20 @@ export default class Kenki extends Module {
 		transfer: 0,
 	}
 
+	//Aoe flags
+
+	_badGuren = 0
+
 	constructor(...args) {
 		super(...args)
 
 		// Kenki actions
 		this.addHook(
-			['cast', 'combo'],
+			['cast', 'combo', 'aoedamage'],
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
 		)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.IKISHOTEN.id}, this.modify(50),)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.IKISHOTEN.id}, () => this.modify(50))
 
 		// Meditate
 		const filter = {by: 'player', abilityId: STATUSES.MEDITATE.id}
@@ -139,6 +144,14 @@ export default class Kenki extends Module {
 			return
 		}
 
+		//Check if Aoe moves were done properly.
+		if (action === ACTIONS.HISSATSU_GUREN.id) {
+
+			if (event.hits.length === 1) {
+				this._badGuren++
+			}
+		}
+
 		// We can't track positionals, so passing the positional kenki values through as a potential gain
 		this.modify(action[event.type], action.positional)
 	}
@@ -168,6 +181,17 @@ export default class Kenki extends Module {
 				5: SEVERITY.MINOR,
 				20: SEVERITY.MEDIUM,
 				35: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HISSATSU_GUREN.icon,
+			content: <Trans id = "sam.kenki.suggestion.badguren.content"> Avoid using <ActionLink {...ACTIONS.HISSATSU_GUREN}/> when you only have one target, as <ActionLink {...ACTIONS.HISSATSU_SENEI}/> has higher potency and can be used for the same cost. </Trans>,
+			why: <Trans id = "sam.kenki.suggestion.badguren.why"> Amount of single-target gurens: this._badGurens </Trans>,
+			value: this._badGurens,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 		}))
 	}

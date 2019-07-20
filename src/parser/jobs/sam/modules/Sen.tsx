@@ -41,6 +41,7 @@ export default class Sen extends Module {
 	@dependency private suggestions!: Suggestions
 
 	private sen: {[S in SEN]?: boolean} = {}
+	private allowoverwrite: boolean = false
 	private wasted = 0
 
 	protected init() {
@@ -64,19 +65,22 @@ export default class Sen extends Module {
 		const sen = SEN_ACTIONS[event.ability.guid]
 
 		if (this.sen[sen]) {
+
+			if (event.ability.guid === ACTIONS.YUKIKAZE.id && this.allowoverwrite === true) {
+				// Nothing happens, reset overwrite to false
+				this.allowoverwrite = false
+			} else {
 			this.wasted++
+			}
 		}
 
 		this.sen[sen] = true
 	}
 
 	private overwrite() {
+		// Because of how sen alignment works, every 60 seconds (or 1 tsubame window) a samurai will overwrite one of their sens so they can stay at 3 sen for the exact moment Tsubame is back
+		this.allowoverwrite = true
 
-		this.wasted = this.wasted - 1
-
-		if (this.wasted < 0) {
-			this.wasted = 0
-		}
 	}
 
 	private remove() {

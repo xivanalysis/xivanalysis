@@ -52,7 +52,7 @@ export default class Tsubame  extends Module {
 				1: SEVERITY.MEDIUM,
 				2: SEVERITY.MAJOR,
 			},
-			why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> Amount of misused <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>: {badUses} </Trans>,
+			why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> You used <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on the wrong sen skills {badUses} times over the course of the fight </Trans>,
 			value: this._badUses,
 		}))
 	}
