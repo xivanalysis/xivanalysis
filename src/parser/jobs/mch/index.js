@@ -24,6 +24,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2019-07-16'),
+		Changes: () => <>Added a module for tracking Reassemble use.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-07-11'),
 		Changes: () => <>Removed obsolete modules, updated gauge simulation, updated Wildfire and Overheat suggestions, added combo support.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

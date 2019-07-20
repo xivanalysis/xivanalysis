@@ -22,6 +22,8 @@ const RAID_BUFFS = {
 	[STATUSES.RADIANT_SHIELD.id]: {},
 	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
 	[STATUSES.DEVOTION.id]: {},
+	[STATUSES.TECHNICAL_FINISH.id]: {},
+	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
 }
 
 export default class RaidBuffs extends Module {
