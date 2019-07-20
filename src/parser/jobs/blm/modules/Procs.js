@@ -72,18 +72,28 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
-		// init this, Sharpcast.js will use it, but we want it to be grouped with the rest.
-		this.timeline.addGroup(new Group({
-			id: 'procbuffs-' + STATUSES.SHARPCAST.id,
-			content: STATUSES.SHARPCAST.name,
-		}))
 		this._group = new Group({
 			id: 'procbuffs',
 			content: 'Procs',
 			order: 0,
-			nestedGroups: ['procbuffs-' + STATUSES.SHARPCAST.id],
+			nestedGroups: [],
 		})
 		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
+	}
+
+	getGroupIdForStatus(status) {
+		const groupId = 'procbuffs-' + status.id
+
+		// Make sure a timeline group exists for this buff
+		if (!this._group.nestedGroups.includes(groupId)) {
+			this.timeline.addGroup(new Group({
+				id: groupId,
+				content: status.name,
+			}))
+			this._group.nestedGroups.push(groupId)
+		}
+
+		return groupId
 	}
 
 	_onLoseProc(event) {
@@ -177,7 +187,7 @@ export default class Procs extends Module {
 	_onComplete() {
 		PROC_BUFFS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = 'procbuffs-' + status.id
+			const groupId = this.getGroupIdForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
 			// Finalise the buff if it was still active
@@ -185,14 +195,6 @@ export default class Procs extends Module {
 				this._stopAndSave(buff)
 			}
 
-			// Make sure a timeline group exists for this buff
-			if (!this._group.nestedGroups.includes(groupId)) {
-				this.timeline.addGroup(new Group({
-					id: groupId,
-					content: status.name,
-				}))
-				this._group.nestedGroups.push(groupId)
-			}
 			// Add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
 				this.timeline.addItem(new Item({
