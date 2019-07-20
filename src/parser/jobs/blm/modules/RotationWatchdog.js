@@ -209,7 +209,7 @@ export default class RotationWatchdog extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.MANAFONT.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-					Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to less <ActionLink {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
+					Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
 				</Trans>,
 				tiers: ISSUE_SEVERITY_TIERS,
 				value: this._mfBeforeDespair,
