@@ -115,22 +115,20 @@ export default class Sharpcast extends Module {
 		})
 
 		// Suggestions to use sharpcasts that wore off.
-		if (this._droppedSharpcasts > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: STATUSES.SHARPCAST.icon,
-				content: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.content">
-					You lost at least one guaranteed <StatusLink {...STATUSES.THUNDERCLOUD}/> or <StatusLink {...STATUSES.FIRESTARTER}/> proc by allowing <StatusLink {...STATUSES.SHARPCAST}/> to fall off.
-				</Trans>,
-				tiers: {
-					1: SEVERITY.MINOR,
-					3: SEVERITY.MEDIUM,
-					5: SEVERITY.MAJOR,
-				},
-				value: this._droppedSharpcasts,
-				why: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.why">
-					<Plural value={this._droppedSharpcasts} one="# Sharpcast" other="# Sharpcasts"/> expired.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: STATUSES.SHARPCAST.icon,
+			content: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.content">
+				You lost at least one guaranteed <StatusLink {...STATUSES.THUNDERCLOUD}/> or <StatusLink {...STATUSES.FIRESTARTER}/> proc by allowing <StatusLink {...STATUSES.SHARPCAST}/> to fall off.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+				5: SEVERITY.MAJOR,
+			},
+			value: this._droppedSharpcasts,
+			why: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.why">
+				<Plural value={this._droppedSharpcasts} one="# Sharpcast" other="# Sharpcasts"/> expired.
+			</Trans>,
+		}))
 	}
 }
