@@ -32,14 +32,22 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.2',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LHEA, role: ROLES.MAINTAINER},
 	],
 
 	changelog: [
+		{
+			date: new Date('2019-07-18'),
+			Changes: () => <>
+				Basic 5.0 support for Paladin.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 })
