@@ -22,11 +22,12 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	//supportedPatches: {
-	//	from: '5.0',
-	//	to: '5.0',
-	//},
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.RIRIAN, role: ROLES.DEVELOPER},
 	],
 })
