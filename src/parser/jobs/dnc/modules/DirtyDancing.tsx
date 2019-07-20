@@ -52,7 +52,7 @@ const FINISHES = [
 	...TECHNICAL_FINISHES,
 ]
 
-const EXPECTED_STEP_COUNT = {
+const EXPECTED_DANCE_MOVE_COUNT = {
 	[ACTIONS.DOUBLE_STANDARD_FINISH.id]: 2,
 	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 4,
 }
@@ -168,7 +168,7 @@ export default class DirtyDancing extends Module {
 			// Dancer messed up if more step actions were recorded than we expected
 			const stepCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
 			let expectedCount = 0
-			expectedCount = EXPECTED_STEP_COUNT[dance.expectedFinisherId]
+			expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinisherId]
 			// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
 			if (stepCount > expectedCount) {
 				dance.extraSteps = true
