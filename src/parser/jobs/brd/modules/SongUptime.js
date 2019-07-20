@@ -3,9 +3,7 @@
  */
 
 import React, {Fragment} from 'react'
-import {StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -66,7 +64,7 @@ export default class SongUptime extends Module {
 					You were songless for {songlessTime} seconds.
 				</Fragment>,
 				content: <Fragment>
-					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring. Your songs also apply a <StatusLink {...STATUSES.CRITICAL_UP}/> buff to your party.
+					Try not to be songless during uptime. Bard's core mechanics revolve around its songs and the added effects they bring.
 				</Fragment>,
 			}))
 		}

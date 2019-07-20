@@ -6,5 +6,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		ACTIONS.SPIRITS_WITHIN.id,
 		ACTIONS.CIRCLE_OF_SCORN.id,
+		ACTIONS.INTERVENE.id,
 	]
 }

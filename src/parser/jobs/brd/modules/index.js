@@ -3,8 +3,8 @@ import Barrage from './Barrage'
 import DoTs from './DoTs'
 import OGCDDowntime from './OGCDDowntime'
 import PitchPerfect from './PitchPerfect'
+import Snapshots from './Snapshots'
 import SongUptime from './SongUptime'
-import StraightShot from './StraightShot'
 import Util from './Util'
 import Weaving from './Weaving'
 
@@ -14,8 +14,8 @@ export default [
 	DoTs,
 	OGCDDowntime,
 	PitchPerfect,
+	Snapshots,
 	SongUptime,
-	StraightShot,
 	Util,
 	Weaving,
 ]

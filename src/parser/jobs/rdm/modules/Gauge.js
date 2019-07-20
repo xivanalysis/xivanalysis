@@ -5,7 +5,6 @@ import React, {Fragment} from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
@@ -22,12 +21,13 @@ export const MANA_GAIN = {
 	[ACTIONS.VERFLARE.id]: {white: 0, black: 21},
 	[ACTIONS.JOLT.id]: {white: 3, black: 3},
 	[ACTIONS.JOLT_II.id]: {white: 3, black: 3},
-	[ACTIONS.IMPACT.id]: {white: 4, black: 4},
-	[ACTIONS.SCATTER.id]: {white: 3, black: 3},
+	[ACTIONS.IMPACT.id]: {white: 3, black: 3},
 	[ACTIONS.ENCHANTED_RIPOSTE.id]: {white: -30, black: -30},
 	[ACTIONS.ENCHANTED_ZWERCHHAU.id]: {white: -25, black: -25},
 	[ACTIONS.ENCHANTED_REDOUBLEMENT.id]: {white: -25, black: -25},
 	[ACTIONS.ENCHANTED_MOULINET.id]: {white: -30, black: -30},
+	[ACTIONS.ENCHANTED_REPRISE.id]: {white: -10, black: -10},
+	[ACTIONS.SCORCH.id]: {white: 7, black: 7},
 }
 
 export const SEVERITY_WASTED_MANA = {
@@ -45,8 +45,6 @@ export const SEVERITY_LOST_MANA = {
 export const MANA_DIFFERENCE_THRESHOLD = 30
 const MANA_LOST_DIVISOR = 2
 export const MANA_CAP = 100
-const ENHANCED_SCATTER_GAIN = 8
-const ENHANCED_SCATTER_44_GAIN = 10
 const MANAFICATION_MULTIPLIER = 2
 const MANA_FLOOR = 0
 
@@ -83,27 +81,13 @@ class GaugeAction {
 		this.calculateManaOvercap()
 	}
 
-	calculateCastManaGained(event, actor, isPre44) {
+	calculateCastManaGained(event) {
 		//Determine if the ability we used should yield any mana gain.
 		//console.log(`White: ${this._whiteMana}, Black: ${this._blackMana}`)
 		//console.log(`Ability: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
 		const abilityId = event.ability.guid
-		let {white, black} = MANA_GAIN[abilityId] || {}
+		const {white, black} = MANA_GAIN[abilityId] || {}
 		if (white || black) {
-			if (abilityId === ACTIONS.SCATTER.id) {
-				//Check the Buffs on the player for Enhanced scatter, if so gain goes from 3 to 8
-				if (actor.hasStatus(STATUSES.ENHANCED_SCATTER.id)) {
-					//console.log('Enhanced Scatter On')
-					if (isPre44) {
-						white = ENHANCED_SCATTER_GAIN
-						black = ENHANCED_SCATTER_GAIN
-					} else {
-						white = ENHANCED_SCATTER_44_GAIN
-						black = ENHANCED_SCATTER_44_GAIN
-					}
-				}
-			}
-
 			if (event.amount === 0) {
 				// Melee combo skills will still consume mana but will not continue the combo, set an invuln/missed flag for downstream consumers
 				this.missOrInvuln = true
@@ -156,7 +140,6 @@ export default class Gauge extends Module {
 		static handle = 'gauge'
 		static title = t('rdm.gauge.title')`Gauge`
 		static dependencies = [
-			'combatants',
 			'cooldowns',
 			'suggestions',
 		]
@@ -222,7 +205,7 @@ export default class Gauge extends Module {
 				this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
 				this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
 			} else {
-				gaugeAction.calculateCastManaGained(event, this.combatants.selected, this.parser.patch.before('4.4'))
+				gaugeAction.calculateCastManaGained(event)
 			}
 
 			this._whiteMana = gaugeAction.mana.white.afterCast

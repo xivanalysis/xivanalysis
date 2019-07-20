@@ -25,7 +25,7 @@ export default class Rotation extends Component<RotationProps> {
 		const {events} = this.props
 
 		return <div className={styles.container}>
-			{events.map(event => {
+			{events.map((event, index) => {
 				const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
 				// Don't bother showing the icon for autos
@@ -51,7 +51,10 @@ export default class Rotation extends Component<RotationProps> {
 
 				const Link = isItem ? ItemLink : ActionLink
 
-				return <div className={cn(...linkClassName)}>
+				return <div
+					key={index}
+					className={cn(...linkClassName)}
+				>
 					<Link
 						showName={false}
 						iconSize={iconSize}

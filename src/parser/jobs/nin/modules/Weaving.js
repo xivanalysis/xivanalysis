@@ -10,8 +10,10 @@ const MUDRA = [
 const NINJUTSU = [
 	ACTIONS.FUMA_SHURIKEN.id,
 	ACTIONS.KATON.id,
+	ACTIONS.GOKA_MEKKYAKU.id,
 	ACTIONS.RAITON.id,
 	ACTIONS.HYOTON.id,
+	ACTIONS.HYOSHO_RANRYU.id,
 	ACTIONS.HUTON.id,
 	ACTIONS.DOTON.id,
 	ACTIONS.SUITON.id,
@@ -33,7 +35,7 @@ export default class Weaving extends CoreWeaving {
 		let checkState = STATE.NORMAL
 		let tcjCount = 0
 		let ninjutsuCounted = false
-		let dwadDupe = false
+		let dreams = 0
 
 		for (let i = 0; i < weave.weaves.length; i++) {
 			const abilityId = weave.weaves[i].ability.guid
@@ -62,15 +64,7 @@ export default class Weaving extends CoreWeaving {
 				}
 			} else {
 				if (abilityId === ACTIONS.DREAM_WITHIN_A_DREAM.id) {
-					// Extra special DWaD sauce because ACT and/or fflogs are dumb, not sure which
-					if (this._lastDwadTimestamp !== weave.weaves[i].timestamp) {
-						// First DWaD in the weave, so update the timestamp we're tracking and count it
-						this._lastDwadTimestamp = weave.weaves[i].timestamp
-					} else {
-						// A duplicate DWaD, don't even process this event as it shouldn't exist
-						dwadDupe = true
-						continue
-					}
+					dreams++
 				}
 
 				// Switch to normal mode and reset the TCJ count in case it was manually interrupted
@@ -80,10 +74,16 @@ export default class Weaving extends CoreWeaving {
 			}
 		}
 
-		if ((ninjutsuCounted || dwadDupe) && weaveCount === 1) {
-			return false
+		if (ninjutsuCounted) {
+			// If a Ninjutsu was used, we only permit single weaves; otherwise, double is fine
+			return weaveCount > 1
 		}
 
-		return super.isBadWeave(weave, 1)
+		if (dreams > 1) {
+			// We had duplicate DWaD events; only one is actually valid, so remove dreams - 1 from the count to dedupe and test that
+			return (weaveCount - (dreams - 1)) > 2
+		}
+
+		return super.isBadWeave(weave, 2)
 	}
 }

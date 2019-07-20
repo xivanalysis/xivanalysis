@@ -23,7 +23,6 @@ const CONVERSION_FACTOR = 0.1
 
 const DHIT_MOD = 1.25
 
-const DISEMBOWEL_STRENGTH = 0.05
 const TRAIT_STRENGTH = 0.20
 
 // Where's the lazy scale again?
@@ -44,7 +43,6 @@ export default class PitchPerfect extends Module {
 	static dependencies = [
 		'additionalStats',
 		'downtime',
-		'enemies',
 		'suggestions',
 		'util',
 	]
@@ -96,10 +94,6 @@ export default class PitchPerfect extends Module {
 
 		let fixedMultiplier = event.debugMultiplier
 
-		// Band-aid fix for disembowel (why, oh, why)
-		if (this.enemies.getEntity(event.targetID).hasStatus(STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
-			fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
-		}
 		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 
@@ -204,7 +198,7 @@ export default class PitchPerfect extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.PITCH_PERFECT.icon,
 			content: <>
-				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>, unless the critical hit rate on your DoTs is greater than <strong>{PP2_THRESHOLD}%</strong>. Only use it at <strong>1 stack</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
+				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>. Only use it at <strong>2 or less stacks</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
 			</>,
 			tiers: {
 				8: SEVERITY.MAJOR,

@@ -21,13 +21,18 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.2',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.LAQI, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
+	changelog: [{
+		date: new Date('2019-07-17'),
+		Changes: () => <>Initial Black Mage support for Shadowbringers expansion</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	}],
 })
