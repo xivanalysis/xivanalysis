@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
