@@ -6,7 +6,7 @@ import React from 'react'
 import {Item} from 'parser/core/modules/Timeline'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
-import {StatusLink} from 'components/ui/DbLink'
+import {StatusLink, ActionLink} from 'components/ui/DbLink'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 
@@ -31,6 +31,7 @@ export default class Sharpcast extends Module {
 	}
 
 	_droppedSharpcasts = 0
+	_sharpedScathes = 0
 
 	constructor(...args) {
 		super(...args)
@@ -73,6 +74,10 @@ export default class Sharpcast extends Module {
 		if (this._buffWindows.current) {
 			// Stop the buff window, and ensure it's not marked as a drop
 			this._stopAndSave(event.timestamp, false)
+
+			if (actionId === ACTIONS.SCATHE.id) {
+				this._sharpedScathes++
+			}
 		}
 	}
 
@@ -127,6 +132,23 @@ export default class Sharpcast extends Module {
 			value: this._droppedSharpcasts,
 			why: <Trans id="blm.sharpcast.suggestions.dropped-sharpcasts.why">
 				<Plural value={this._droppedSharpcasts} one="# Sharpcast" other="# Sharpcasts"/> expired.
+			</Trans>,
+		}))
+
+		// Suggestion not to overuse sharp-scathe
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SCATHE.icon,
+			content: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.content">
+				You consumed at least one <StatusLink {...STATUSES.SHARPCAST} /> by using <ActionLink {...ACTIONS.SCATHE} />. While it's better than letting the buff expire, you should try to avoid doing so.
+			</Trans>,
+			tiers: { // Giving one extra usage before we start dinging med/major since there's kind of a reasonable use-case
+				1: SEVERITY.MINOR,
+				4: SEVERITY.MEDIUM,
+				6: SEVERITY.MAJOR,
+			},
+			value: this._sharpedScathes,
+			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
+				<Plural value={this._sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <ActionLink {...ACTIONS.SCATHE} />.
 			</Trans>,
 		}))
 	}
