@@ -38,7 +38,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.0',
+		to: '5.01',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
@@ -54,6 +54,7 @@ export default new Meta({
 					<li>(<ActionLink {...ACTIONS.LUCID_DREAMING} />, <ActionLink {...ACTIONS.LIGHTSPEED} />) Message update</li>
 					<li>(<ActionLink {...ACTIONS.HOROSCOPE} />) Failing to read the cards again triggers suggestion</li>
 					<li>(<ActionLink {...ACTIONS.PLAY} />) Coming soon™</li>
+					<li>Made improvements to timeline CD display - merged draw actions, displaying horoscope and earthly detonations</li>
 				</ul>
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU],

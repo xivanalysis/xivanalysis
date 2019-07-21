@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {
 	PARTYWIDE_SPEED_BUFF_FLAGS,
@@ -14,9 +13,7 @@ export default class Speedmod extends Module {
 	]
 
 	// List of statuses we natively handle (See SpeedmodConsts)
-	SPEED_BUFF_STATUS_IDS = [
-		STATUSES.THE_ARROW.id,
-	]
+	SPEED_BUFF_STATUS_IDS = []
 
 	// Track history of speedmods
 	_history = [{speedmod: 1, start: 0, end: Infinity}]
@@ -75,17 +72,9 @@ export default class Speedmod extends Module {
 			const partywideSpeedBuffFlag = PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP[event.ability.guid]
 			if (partywideSpeedBuffFlag != null) {
 				if (event.type === 'applybuff') {
-					if (event.ability.guid === STATUSES.THE_ARROW.id) {
-						this._activePartywideSpeedBuffFlags |= partywideSpeedBuffFlag[event.strengthModifier]
-					} else {
-						this._activePartywideSpeedBuffFlags |= partywideSpeedBuffFlag
-					}
+					this._activePartywideSpeedBuffFlags |= partywideSpeedBuffFlag
 				} else if (event.type === 'removebuff') {
-					if (event.ability.guid === STATUSES.THE_ARROW.id) {
-						this._activePartywideSpeedBuffFlags &= ~PARTYWIDE_SPEED_BUFF_FLAGS.ARROW_ALL
-					} else {
-						this._activePartywideSpeedBuffFlags &= ~partywideSpeedBuffFlag
-					}
+					this._activePartywideSpeedBuffFlags &= ~partywideSpeedBuffFlag
 				}
 			}
 

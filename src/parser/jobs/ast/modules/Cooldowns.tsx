@@ -22,11 +22,20 @@ export default class Cooldowns extends CoreCooldowns {
 			actions: [...PLAY],
 		},
 		ACTIONS.DIVINATION.id,
+		ACTIONS.LIGHTSPEED.id,
 		// oGCD ST heals
 		ACTIONS.ESSENTIAL_DIGNITY.id,
 		ACTIONS.CELESTIAL_INTERSECTION.id,
+		ACTIONS.SYNASTRY.id,
 		// oGCD AoE heals
-		ACTIONS.EARTHLY_STAR.id,
+		{
+			name: 'Earthly Star',
+			merge: true,
+			actions: [
+				ACTIONS.EARTHLY_STAR.id,
+				ACTIONS.STELLAR_DETONATION.id,
+			],
+		},
 		ACTIONS.CELESTIAL_OPPOSITION.id,
 		// Horoscope
 		{
