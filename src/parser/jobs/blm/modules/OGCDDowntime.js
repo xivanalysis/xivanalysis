@@ -12,13 +12,13 @@ export default class OGCDDowntime extends CooldownDowntime {
 	allowedDowntime = 0
 	firstUseOffset = FIRSTUSEOFFSETALL
 	firstUseffsetPerOgcd = {
-		[ACTIONS.CONVERT.id]: FIRSTUSEOFFSETCONV,
+		[ACTIONS.MANAFONT.id]: FIRSTUSEOFFSETCONV,
 	}
 	trackedCds = [
 		ACTIONS.LEY_LINES.id,
 		ACTIONS.SHARPCAST.id,
 		ACTIONS.TRIPLECAST.id,
-		ACTIONS.CONVERT.id,
+		ACTIONS.MANAFONT.id,
 	]
 	target = TARGETPERCENT
 	description = <Trans id="blm.ogcd-downtime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them. Utilize your procs or fast Blizzard IIIs or Fire IIIs to weave them. {this.allowedDowntime === 0 ? '' : <Trans id="blm.ogcd-downtime.ogcd-cd-buffer">To account for random factors you are given a buffer of {this.parser.formatDuration(this.allowedDowntime)} seconds per instance to hold your cooldowns.</Trans>}</Trans>

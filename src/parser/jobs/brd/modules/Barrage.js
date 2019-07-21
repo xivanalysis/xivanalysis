@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
-import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
+import {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 
@@ -39,13 +39,14 @@ const TRIPLE_HIT_BUFFER = 500
 // Weights for each possible bad barrage, for calculating the percent
 const BAD_BARRAGE_WEIGHT = 4
 const UNALIGNED_BARRAGE_WEIGHT = 1
+const PROC_WASTED_WEIGHT = 2
 const DROPPED_BARRAGE_WEIGHT = 5
 
 // List of ARC/BRD single-target weaponskills that can be Barrage'd, but shouldn't
 const BAD_ST_WEAPONSKILLS = [
 	ACTIONS.HEAVY_SHOT.id,
+	ACTIONS.BURST_SHOT.id,
 	ACTIONS.VENOMOUS_BITE.id,
-	ACTIONS.STRAIGHT_SHOT.id,
 	ACTIONS.WINDBITE.id,
 	ACTIONS.IRON_JAWS.id,
 	ACTIONS.CAUSTIC_BITE.id,
@@ -54,8 +55,8 @@ const BAD_ST_WEAPONSKILLS = [
 
 // List of all ARC/BRD single-target weaponskills
 const WEAPONSKILLS = [
+	ACTIONS.STRAIGHT_SHOT.id,
 	ACTIONS.REFULGENT_ARROW.id,
-	ACTIONS.EMPYREAL_ARROW.id,
 ].concat(BAD_ST_WEAPONSKILLS)
 
 export default class Barrage extends Module {
@@ -82,6 +83,16 @@ export default class Barrage extends Module {
 			by: 'player',
 			abilityId: WEAPONSKILLS,
 		}, this._onStWeaponskillDamage)
+
+		this.addHook('applybuff', {
+			by: 'player',
+			abilityId: STATUSES.STRAIGHTER_SHOT.id,
+		}, this._onSSApply)
+
+		this.addHook('removebuff', {
+			by: 'player',
+			abilityId: STATUSES.STRAIGHTER_SHOT.id,
+		}, this._onSSRemove)
 
 		this.addHook('complete', this._onComplete)
 
@@ -118,11 +129,22 @@ export default class Barrage extends Module {
 		}
 	}
 
+	_onSSApply() {
+		// This so that we can check to see if barrage was used while a Straighter Shot proc was already avaliable
+		this._hasSS = true
+	}
+
+	_onSSRemove() {
+		// This so that we can check to see if barrage was used while a Straighter Shot proc was already avaliable
+		this._hasSS = false
+	}
+
 	_onComplete() {
 		// - badBarrage: Barrage that was used in a skill from BAD_ST_WEAPONSKILLS list
 		// - unalignedBarrage: Barrage that was not aligned with Raging Strikes
 		const badBarrages = this._barrageEvents.filter(x => x.isBad)
 		const unalignedBarrages = this._barrageEvents.filter(x => !x.aligned)
+		const wastedProcs = this._barrageEvents.filter(x => x.wastedProc)
 		const droppedBarrages = this._barrageEvents.filter(x => x.isDropped)
 
 		// Barrage usage Rule added to the checklist
@@ -135,7 +157,7 @@ export default class Barrage extends Module {
 				tiers: {0: ERROR, 90: WARNING, 100: SUCCESS},
 				requirements: [
 					new WeightedRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s used on the right skills</Fragment>,
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s used on <ActionLink {...ACTIONS.REFULGENT_ARROW}/></Fragment>,
 						percent: () => { return 100 - ((badBarrages.length)* 100 / this._barrageEvents.length) },
 						weight: BAD_BARRAGE_WEIGHT,
 					}),
@@ -145,14 +167,30 @@ export default class Barrage extends Module {
 						weight: UNALIGNED_BARRAGE_WEIGHT,
 					}),
 					new WeightedRequirement({
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s that granted <StatusLink {...STATUSES.STRAIGHTER_SHOT} /></Fragment>,
+						percent: () => { return  100 - ((wastedProcs.length) * 100 / this._barrageEvents.length) },
+						weight: PROC_WASTED_WEIGHT,
+					}),
+					new WeightedRequirement({
 						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s that dealt damage</Fragment>,
 						percent: () => { return  100 - ((droppedBarrages.length) * 100 / this._barrageEvents.length) },
 						weight: DROPPED_BARRAGE_WEIGHT,
 					}),
 				],
 			}))
+		} else {
+			this.checklist.add(new Rule({
+				name: 'No Barrage usage',
+				description: <> <ActionLink {...ACTIONS.BARRAGE} /> into <ActionLink {...ACTIONS.REFULGENT_ARROW} /> is Bard's highest single-target attack, make sure to use it during a fight.</>,
+				target: 95,
+				requirements: [
+					new Requirement({
+						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} /> cast</Fragment>,
+						percent: () => 0,
+					}),
+				],
+			}))
 		}
-		//TODO: if there are no barrage casts at all, yell at the user
 	}
 
 	output() {
@@ -171,8 +209,20 @@ export default class Barrage extends Module {
 				tuples: [],
 				contents: [],
 			}
-
 			// If it's any kind of bad barrages:
+			//Any bad barrage could have also wasted a straighter shot proc, so do this first
+			if (barrage.wastedProc) {
+				// Adds the {issue, severity, reason} tuple corresponding a wastedProc to the panel
+				panelProperties.tuples.push({
+					issue: <>
+						There was a <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc that went <strong>unused</strong>.
+					</>,
+					severity: WARNING,
+					reason: <>
+						{ACTIONS.BARRAGE.name} gives you a guaranteed <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc.  If you already have a proc avaliable, use it before using {ACTIONS.BARRAGE.name}.
+					</>,
+				})
+			}
 			if (barrage.isDropped) {
 				panelProperties.tuples.push({
 					issue: <>
@@ -190,14 +240,12 @@ export default class Barrage extends Module {
 				const totalDPS = this.util.formatDecimal(totalDamage * 1000 / this.parser.fightDuration)
 
 				let potentialDamage = totalDamage
-				let potentialEmpyrealDamage = Math.trunc(ACTIONS.EMPYREAL_ARROW.potency * totalDamage / barrage.skillBarraged.potency)
 				let potentialRefulgentDamage = Math.trunc(ACTIONS.REFULGENT_ARROW.potency * totalDamage / barrage.skillBarraged.potency)
 
 				// If this barrage is not aligned, multiplies the potential damage with Raging Strikes damage modifier (10%)
 				if (!barrage.aligned) {
 
 					// Applies RS modifier
-					potentialEmpyrealDamage = Math.trunc(potentialEmpyrealDamage * (1 +STATUSES.RAGING_STRIKES.amount))
 					potentialRefulgentDamage = Math.trunc(potentialRefulgentDamage * (1 +STATUSES.RAGING_STRIKES.amount))
 					potentialDamage = Math.trunc(potentialDamage * (1 + STATUSES.RAGING_STRIKES.amount))
 
@@ -211,14 +259,12 @@ export default class Barrage extends Module {
 							Both {ACTIONS.BARRAGE.name} and <ActionLink {...ACTIONS.RAGING_STRIKES} /> have a cooldown of {ACTIONS.BARRAGE.cooldown} seconds. Keeping them aligned is often better than holding onto {ACTIONS.BARRAGE.name}.
 						</>,
 					})
-
 				}
 
 				// Now that it's gone through the Raging Strikes check, can actually calculate the potential DPS
 				// Calculating it beforehand could potentially give rounding errors
 				// (It's still not the best way of doing it, but gives me some peace of mind)
 				const potentialDPS = this.util.formatDecimal(potentialDamage * 1000 / this.parser.fightDuration)
-				const potentialEmpyrealDPS = this.util.formatDecimal(potentialEmpyrealDamage * 1000 / this.parser.fightDuration)
 				const potentialRefulgentDPS = this.util.formatDecimal(potentialRefulgentDamage * 1000 / this.parser.fightDuration)
 
 				// DPS loss is the difference between potential DPS and total DPS (duh)
@@ -227,18 +273,16 @@ export default class Barrage extends Module {
 				// If this was a badBarrage
 				if (barrage.isBad) {
 
-					// Potential damage and DPS loss then become an interval, because a badBarrage could've been either Empyreal Arrow or Refulgent Arrow
-					potentialDamage = `${potentialEmpyrealDamage} - ${potentialRefulgentDamage}`
-					dpsLoss = `${this.util.formatDecimal(potentialEmpyrealDPS - totalDPS)} - ${this.util.formatDecimal(potentialRefulgentDPS- totalDPS)}`
+					dpsLoss = `${this.util.formatDecimal(potentialRefulgentDPS - totalDPS)}`
 
 					// Adds the {issue, severity, reason} tuple corresponding a badBarrage to the panel
 					panelProperties.tuples.push({
 						issue: <>
-							This barrage was <strong>not</strong> used on <ActionLink {...ACTIONS.EMPYREAL_ARROW}/> or <ActionLink {...ACTIONS.REFULGENT_ARROW}/>.
+							This barrage was <strong>not</strong> used on <ActionLink {...ACTIONS.REFULGENT_ARROW}/>.
 						</>,
 						severity: ERROR,
 						reason: <>
-							Your two strongest weaponskills are <ActionLink {...ACTIONS.EMPYREAL_ARROW} /> and <ActionLink {...ACTIONS.REFULGENT_ARROW} />. Make sure you only use your {ACTIONS.BARRAGE.name} on these two skills.
+							Your strongest weaponskill is <ActionLink {...ACTIONS.REFULGENT_ARROW} />. Make sure you only use your {ACTIONS.BARRAGE.name} on that skill.
 						</>,
 					})
 				}
@@ -303,6 +347,7 @@ export default class Barrage extends Module {
 		this._barrageEvents.push({
 			castEvent: event,
 			aligned: aligned,
+			wastedProc: this._hasSS,
 			get timestamp() { return this.castEvent ? this.castEvent.timestamp : 0 },
 			get isBad() { return this.skillBarraged && this.skillBarraged.id && BAD_ST_WEAPONSKILLS.includes(this.skillBarraged.id) || undefined },
 			get isDropped() { return !this.damageEvents || !this.damageEvents.length },

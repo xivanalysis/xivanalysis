@@ -115,7 +115,7 @@ export default class Cooldowns extends Module {
 
 	_onComplete() {
 		Object.keys(this._cooldowns).forEach(actionId => {
-			this._addToTimeline(actionId)
+			this._addToTimeline(parseInt(actionId, 10))
 		})
 	}
 

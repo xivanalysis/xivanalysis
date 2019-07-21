@@ -7,29 +7,10 @@ export default {
 		name: 'Fast Blade',
 		icon: 'https://xivapi.com/i/000000/000158.png',
 		onGcd: true,
-		potency: 160,
+		potency: 200,
 		combo: {
 			start: true,
 		},
-	},
-	SAVAGE_BLADE: {
-		id: 11,
-		name: 'Savage Blade',
-		icon: 'https://xivapi.com/i/000000/000157.png',
-		onGcd: true,
-		potency: 100,
-		combo: {
-			from: 9,
-			potency: 210,
-		},
-	},
-	FLASH: {
-		id: 14,
-		name: 'Flash',
-		icon: 'https://xivapi.com/i/000000/000159.png',
-		onGcd: true,
-		potency: 0,
-		breaksCombo: false,
 	},
 	RIOT_BLADE: {
 		id: 15,
@@ -39,7 +20,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 9,
-			potency: 240,
+			potency: 300,
 		},
 	},
 	SHIELD_LOB: {
@@ -65,24 +46,10 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 11,
-			potency: 270,
+			from: 15,
+			potency: 350,
 			end: true,
 		},
-	},
-	SHIELD_OATH: {
-		id: 28,
-		name: 'Shield Oath',
-		icon: 'https://xivapi.com/i/002000/002505.png',
-		onGcd: true,
-		breaksCombo: false,
-	},
-	SWORD_OATH: {
-		id: 26,
-		name: 'Sword Oath',
-		icon: 'https://xivapi.com/i/002000/002504.png',
-		onGcd: true,
-		breaksCombo: false,
 	},
 	TOTAL_ECLIPSE: {
 		id: 7381,
@@ -92,6 +59,18 @@ export default {
 		breaksCombo: true,
 		potency: 110,
 	},
+	PROMINENCE: {
+		id: 16457,
+		name: 'Prominence',
+		icon: 'https://xivapi.com/i/002000/002516.png',
+		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7381,
+			potency: 220,
+			end: true,
+		},
+	},
 	GORING_BLADE: {
 		id: 3538,
 		name: 'Goring Blade',
@@ -100,7 +79,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 15,
-			potency: 250,
+			potency: 390,
 			end: true,
 		},
 	},
@@ -120,7 +99,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 15,
-			potency: 360,
+			potency: 550,
 			end: true,
 		},
 	},
@@ -131,7 +110,32 @@ export default {
 		onGcd: true,
 		castTime: 1.5,
 		breaksCombo: true,
-		potency: 380,
+		potency: 350,
+	},
+	HOLY_CIRCLE: {
+		id: 16458,
+		name: 'Holy Circle',
+		icon: 'https://xivapi.com/i/002000/002517.png',
+		onGcd: true,
+		castTime: 1.5,
+		breaksCombo: true,
+		potency: 250,
+	},
+	ATONEMENT: {
+		id: 16460,
+		name: 'Atonement',
+		icon: 'https://xivapi.com/i/002000/002519.png',
+		onGcd: true,
+		breaksCombo: true,
+		potency: 550,
+	},
+	CONFITEOR: {
+		id: 16459,
+		name: 'Confiteor',
+		icon: 'https://xivapi.com/i/002000/002518.png',
+		onGcd: true,
+		breaksCombo: true,
+		potency: 800,
 	},
 
 	// -----
@@ -144,31 +148,17 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 	},
-	SHIELD_SWIPE: {
-		id: 25,
-		name: 'Shield Swipe',
-		icon: 'https://xivapi.com/i/000000/000160.png',
+	IRON_WILL: {
+		id: 28,
+		name: 'Iron Will',
+		icon: 'https://xivapi.com/i/002000/002505.png',
 		onGcd: false,
-		cooldown: 15,
+		cooldown: 10,
 	},
 	SENTINEL: {
 		id: 17,
 		name: 'Sentinel',
 		icon: 'https://xivapi.com/i/000000/000151.png',
-		onGcd: false,
-		cooldown: 180,
-	},
-	TEMPERED_WILL: {
-		id: 19,
-		name: 'Tempered Will',
-		icon: 'https://xivapi.com/i/000000/000153.png',
-		onGcd: false,
-		cooldown: 180,
-	},
-	BULWARK: {
-		id: 22,
-		name: 'Bulwark',
-		icon: 'https://xivapi.com/i/000000/000167.png',
 		onGcd: false,
 		cooldown: 180,
 	},
@@ -234,5 +224,12 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
+	},
+	INTERVENE: {
+		id: 16461,
+		name: 'Intervene',
+		icon: 'https://xivapi.com/i/002000/002520.png',
+		onGcd: false,
+		cooldown: 30,
 	},
 }

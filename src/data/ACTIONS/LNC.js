@@ -7,7 +7,7 @@ export default {
 		name: 'True Thrust',
 		icon: 'https://xivapi.com/i/000000/000310.png',
 		onGcd: true,
-		potency: 160,
+		potency: 290,
 		combo: {
 			start: true,
 		},
@@ -18,30 +18,11 @@ export default {
 		name: 'Vorpal Thrust',
 		icon: 'https://xivapi.com/i/000000/000312.png',
 		onGcd: true,
-		potency: 100,
+		potency: 140,
 		combo: {
-			from: 75,
-			potency: 250,
+			from: [75, 16479],
+			potency: 350,
 		},
-	},
-
-	IMPULSE_DRIVE: {
-		id: 81,
-		name: 'Impulse Drive',
-		icon: 'https://xivapi.com/i/000000/000313.png',
-		onGcd: true,
-		potency: 200,
-		combo: {
-			start: true,
-		},
-	},
-
-	HEAVY_THRUST: {
-		id: 79,
-		name: 'Heavy Thrust',
-		icon: 'https://xivapi.com/i/000000/000311.png',
-		onGcd: true,
-		potency: 150,
 	},
 
 	PIERCING_TALON: {
@@ -49,6 +30,7 @@ export default {
 		name: 'Piercing Talon',
 		icon: 'https://xivapi.com/i/000000/000315.png',
 		onGcd: true,
+		potency: 150,
 	},
 
 	FULL_THRUST: {
@@ -59,7 +41,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 78,
-			potency: 450,
+			potency: 530,
 			end: true,
 		},
 	},
@@ -69,10 +51,10 @@ export default {
 		name: 'Disembowel',
 		icon: 'https://xivapi.com/i/000000/000317.png',
 		onGcd: true,
-		potency: 100,
+		potency: 150,
 		combo: {
-			from: 81,
-			potency: 240,
+			from: [75, 16479],
+			potency: 320,
 		},
 	},
 
@@ -84,7 +66,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 87,
-			potency: 280,
+			potency: 330,
 			end: true,
 		},
 	},
@@ -96,13 +78,13 @@ export default {
 		id: 83,
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
-		cooldown: 50,
+		cooldown: 45,
 	},
 
-	BLOOD_FOR_BLOOD: {
+	LANCE_CHARGE: {
 		id: 85,
-		name: 'Blood for Blood',
+		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
-		cooldown: 80,
+		cooldown: 90,
 	},
 }

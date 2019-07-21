@@ -1,16 +1,14 @@
-import Ammo from './Ammo'
+import Combos from './Combos'
 import Cooldowns from './Cooldowns'
+import Gauge from './Gauge'
 import Heat from './Heat'
-import HotShot from './HotShot'
-import Procs from './Procs'
-import Turrets from './Turrets'
+import Reassemble from './Reassemble'
 import Wildfire from './Wildfire'
 export default [
-	Ammo,
+	Combos,
 	Cooldowns,
+	Gauge,
 	Heat,
-	HotShot,
-	Procs,
-	Turrets,
+	Reassemble,
 	Wildfire,
 ]
