@@ -41,7 +41,6 @@ export default class RotationWatchdog extends Module {
 		'suggestions',
 		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'invuln',
-		'combatants',
 		'enemies',
 	]
 
@@ -55,10 +54,7 @@ export default class RotationWatchdog extends Module {
 	_lockedBuffs = false
 	_lastStop = false
 	_first = true
-	//check for UI ending with T3 things
 	_umbralIceStacks = 0
-	_T3 = false
-	_T3inUIFlag = false
 	//counter for suggestions
 	_inRotation = false
 	_missedF4s = 0
@@ -102,30 +98,18 @@ export default class RotationWatchdog extends Module {
 		this._astralFireStacks = this._gaugeState.astralFire
 		if (actionId === ACTIONS.FIRE_III.id) {
 			this._lockingBuffs()
-		} else { this._T3 = false }
-
-		//Check to see if we get a T3 > F3
-		if (actionId === ACTIONS.THUNDER_III.id) { this._T3 = true }
+		}
 	}
 
 	_onCast(event) {
 		const actionId = event.ability.guid
 
-		//check if T3 > F3 happend and if we are in UI and get the MP value at the beginning of your AF
-		if (actionId === ACTIONS.FIRE_III.id) {
-			if (this._umbralIceStacks === AFUIBUFFMAXSTACK) {
-				if (this._T3) {
-					this._T3inUIFlag = true
-				}
-				this._MP = this.combatants.selected.resources.mp
-			}
-			// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
-			if (this._astralFireStacks !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
-				if (event.ability.overrideAction) {
-					this._atypicalAFStartId = event.ability.overrideAction
-				} else {
-					this._atypicalAFStartId = ACTIONS.FIRE_III.id
-				}
+		// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
+		if (actionId === ACTIONS.FIRE_III.id && this._astralFireStacks !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
+			if (event.ability.overrideAction) {
+				this._atypicalAFStartId = event.ability.overrideAction
+			} else {
+				this._atypicalAFStartId = ACTIONS.FIRE_III.id
 			}
 		}
 
