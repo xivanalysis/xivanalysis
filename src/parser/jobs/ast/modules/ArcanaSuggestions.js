@@ -10,12 +10,7 @@ import React, {Fragment} from 'react'
 import {Accordion, Button, Table} from 'semantic-ui-react'
 import {PLAY} from './ArcanaGroups'
 import styles from './ArcanaSuggestions.module.css'
-// import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-
-// const LADY_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014840.png'
-// const LORD_OF_CROWNS_STATUS_ICON = 'https://xivapi.com/i/014000/014841.png'
-// const UNKNOWN_CARD_STATUS_ICON = 'https://xivapi.com/i/010000/010205.png'
 
 const timelineLinkLowerMod = 0 // in ms
 const timelineLinkUpperMod = 30000 // in ms
@@ -26,7 +21,6 @@ export default class ArcanaSuggestions extends Module {
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 	static dependencies = [
-		// 'suggestions',
 		'combatants',
 		'arcanaTracking',
 		'timeline',
@@ -80,53 +74,9 @@ export default class ArcanaSuggestions extends Module {
 
 	}
 
-	// Card management critique follows
-
-	// _watchDropBalance() {
-	// 	//
-	// }
-
-	// _watchBardNoSpear() {
-	// 	if (!this.partyComp.includes('Bard')) {
-	// 		return
-	// 	}
-
-	// 	let count = 0
-
-	// 	_.each(this.cardLogs, (artifact) => {
-	// 		if (artifact.lastAction
-	// 			&& artifact.lastAction.targetJob !== 'Bard'
-	// 		) {
-	// 			count++
-	// 			artifact.message = <Fragment>
-	// 				<Icon name="warning sign"/> <Label horizontal content="Medium" color="orange" /> Suggestion logged for this action
-	// 			</Fragment>
-	// 		}
-	// 	})
-
-	// 	if (count > 0) {
-	// 		this.suggestions.add(new Suggestion({
-	// 			icon: ACTIONS.THE_SPEAR.icon,
-	// 			content: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.content">
-	// 				Bards gain bonuses when they make criticals, so they should be the recipient of single-target Spears instead.
-	// 			</Trans>,
-	// 			severity: SEVERITY.MEDIUM,
-	// 			why: <Trans id="ast.arcana-suggestions.suggestions.bardnospear.why">
-	// 				{count} Spear arcanas not given to bard.
-	// 			</Trans>,
-	// 		}))
-	// 	}
-
-	// }
-
 	output() {
 
 		const pullState = this.cardLogs.shift()
-
-		// The header cell for when we do get suggestions
-		// <Table.HeaderCell width={4}>
-		//					<Trans id="ast.arcana-suggestions.messages.header4">Remarks</Trans></Table.HeaderCell>
-		// {this.RenderRemark(artifact)}
 
 		const cardDisplayPanel = [{
 			key: 'arcana-logs',
@@ -195,14 +145,6 @@ export default class ArcanaSuggestions extends Module {
 					This section keeps track of every card action made during the fight, and the state of the spread after each action.
 				</Trans>
 			</p>
-			{/* <Message warning icon>
-				<Icon name="warning sign"/>
-				<Message.Content>
-					<Trans id="ast.arcana-suggestions.messages.disclaimer">
-							The intention of this section is to give a general recommendation of best practices. It will not take into consideration which party member was playing better, or whether they were in burst phase.
-					</Trans>
-				</Message.Content>
-			</Message> */}
 			<Accordion
 				exclusive={false}
 				panels={cardDisplayPanel}
@@ -283,16 +225,6 @@ export default class ArcanaSuggestions extends Module {
 			{!slot3 && <span className={styles.buffDummy} />}
 		</Table.Cell>
 	}
-
-	// GetMinorArcanaIcon(action) {
-	// 	if (action.id === ACTIONS.LORD_OF_CROWNS.id) {
-	// 		return LORD_OF_CROWNS_STATUS_ICON
-	// 	} if (action.id === ACTIONS.LADY_OF_CROWNS.id) {
-	// 		return LADY_OF_CROWNS_STATUS_ICON
-	// 	}
-	// 	return UNKNOWN_CARD_STATUS_ICON
-
-	// }
 
 	jumpToTimeline(timestamp) {
 		this.timeline.show(

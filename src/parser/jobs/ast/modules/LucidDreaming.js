@@ -9,7 +9,6 @@ import {Plural, Trans} from '@lingui/react'
 
 const WASTED_USES_MAX_MEDIUM = 2
 
-
 export default class LucidDreaming extends Module {
 	static handle = 'lucid'
 	static dependencies = [
