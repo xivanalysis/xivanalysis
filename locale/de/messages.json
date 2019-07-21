@@ -102,7 +102,7 @@
   "blm.rotation-watchdog.suggestions.missed-f4s.why": "{0, plural, one {# Feuka} other {# Feuka}} nicht gemacht.",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
-  "blm.rotation-watchdog.title": "Probleme mit der Rotation",
+  "blm.rotation-watchdog.title": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "",
