@@ -94,7 +94,7 @@ export default class ThirdEye extends Module {
 				4: SEVERITY.MEDIUM,
 			},
 			value: this._badEyes,
-			why: <Trans id = "sam.thirdeye.suggestion.badeyes.why"> You used <ActionLink {...ACTIONS.MERCIFUL_EYES}/> <Plural value ={this._badEyes} one = "time" other="times" /> during the fight. </Trans>,
+			why: <Trans id = "sam.thirdeye.suggestion.badeyes.why"> You used <ActionLink {...ACTIONS.MERCIFUL_EYES}/> <Plural value ={this._badEyes} one="# time" other="# times" /> during the fight. </Trans>,
 		}))
 	}
 }
