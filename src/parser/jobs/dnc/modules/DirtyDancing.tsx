@@ -2,10 +2,9 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Accordion, Icon, Message} from 'semantic-ui-react'
+import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -68,10 +67,10 @@ class Dance {
 
 	dirty: boolean = false
 	missed: boolean = false
-	extraMoves: boolean = false
+	footloose: boolean = false
 
 	public get error(): boolean {
-		return this.dirty || this.missed || this.extraMoves
+		return this.dirty || this.missed || this.footloose
 	}
 
 	public get expectedFinishId(): number {
@@ -96,7 +95,6 @@ class Dance {
 export default class DirtyDancing extends Module {
 	static handle = 'dirtydancing'
 	static title = t('dnc.dirty-dancing.title')`Dance Issues`
-	// static displayOrder = DISPLAY_ORDER.ROTATION
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
@@ -107,7 +105,7 @@ export default class DirtyDancing extends Module {
 	private danceHistory: Dance[] = []
 	private missedDances = 0
 	private dirtyDances = 0
-	private extraMoves = 0
+	private footlooseDances = 0
 
 	protected init() {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
@@ -174,7 +172,7 @@ export default class DirtyDancing extends Module {
 			expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinishId]
 			// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
 			if (actualCount > expectedCount) {
-				dance.extraMoves = true
+				dance.footloose = true
 			}
 
 			dance.resolved = true
@@ -191,7 +189,7 @@ export default class DirtyDancing extends Module {
 	private onComplete() {
 		this.missedDances = this.danceHistory.filter(dance => dance.missed).length
 		this.dirtyDances = this.danceHistory.filter(dance => dance.dirty).length
-		this.extraMoves = this.danceHistory.filter(dance => dance.extraMoves).length
+		this.footlooseDances = this.danceHistory.filter(dance => dance.footloose).length
 
 		// Suggest to move closer for finishers.
 		this.suggestions.add(new TieredSuggestion({
@@ -222,13 +220,13 @@ export default class DirtyDancing extends Module {
 		// Suggestion to not faff about with steps
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EMBOITE.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.extra-moves.content">
+			content: <Trans id="dnc.dirty-dancing.suggestions.footloose.content">
 				Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
-			value: this.extraMoves,
-			why: <Trans id="dnc.dirty-dancing.suggestions.extra-moves.why">
-				<Plural value={this.extraMoves} one="# dance" other="# dances"/> finished with extra steps.
+			value: this.footlooseDances,
+			why: <Trans id="dnc.dirty-dancing.suggestions.footloose.why">
+				<Plural value={this.footlooseDances} one="# dance" other="# dances"/> finished with extra steps.
 			</Trans>,
 		}))
 
@@ -267,8 +265,8 @@ export default class DirtyDancing extends Module {
 							accessor: 'dirty',
 						},
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.extraMoves">Correct Moves</Trans>,
-							accessor: 'extraMoves',
+							header: <Trans id="dnc.dirty-dancing.table.header.footloose">No Extra Moves</Trans>,
+							accessor: 'footloose',
 						},
 					]}
 					data={this.danceHistory.filter(dance => dance.error).map(dance => {
@@ -280,7 +278,7 @@ export default class DirtyDancing extends Module {
 							notesMap: {
 								missed: <>{this.getNotesIcon(dance.missed)}</>,
 								dirty: <>{this.getNotesIcon(dance.dirty)}</>,
-								extraMoves: <>{this.getNotesIcon(dance.extraMoves)}</>,
+								footloose: <>{this.getNotesIcon(dance.footloose)}</>,
 							},
 							rotation: dance.rotation,
 						})
