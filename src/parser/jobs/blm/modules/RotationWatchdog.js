@@ -107,7 +107,7 @@ export default class RotationWatchdog extends Module {
 		// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
 		if (actionId === ACTIONS.FIRE_III.id && this._astralFireStacks !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
 			if (event.ability.overrideAction) {
-				this._atypicalAFStartId = event.ability.overrideAction
+				this._atypicalAFStartId = event.ability.overrideAction.id
 			} else {
 				this._atypicalAFStartId = ACTIONS.FIRE_III.id
 			}
@@ -169,7 +169,7 @@ export default class RotationWatchdog extends Module {
 				</Trans>,
 				severity: (this._extraF1s > 1 ? SEVERITY.MEDIUM : SEVERITY.MINOR),
 				why: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.why">
-					<Plural value={this._extraF1s} one="# Fire I" other="# Fire Is"/> have been casted.
+					<Plural value={this._extraF1s} one="# extra Fire I was" other="# extra Fire Is were"/> cast.
 				</Trans>,
 			}))
 		}
@@ -195,10 +195,14 @@ export default class RotationWatchdog extends Module {
 				content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
 					Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
 				</Trans>,
-				tiers: ISSUE_SEVERITY_TIERS,
+				tiers: { // Special severity tiers, since there's only so many times manafont can be used in a fight
+					1: SEVERITY.MINOR,
+					2: SEVERITY.MEDIUM,
+					3: SEVERITY.MAJOR,
+				},
 				value: this._mfBeforeDespair,
 				why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
-					<Plural value={this._mfBeforeDespair} one="# Manafont" other="# Manafonts"/> were casted before <ActionLink {...ACTIONS.DESPAIR} />.
+					<Plural value={this._mfBeforeDespair} one="# Manafont was" other="# Manafonts were"/> used before <ActionLink {...ACTIONS.DESPAIR} />.
 				</Trans>,
 			}))
 		}
@@ -213,7 +217,7 @@ export default class RotationWatchdog extends Module {
 				tiers: ISSUE_SEVERITY_TIERS,
 				value: this._extraT3s,
 				why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-					<Plural value={this._extraT3s} one="# extra Thunder III" other="# extra Thunder IIIs"/> were hard casted under Astral Fire.
+					<Plural value={this._extraT3s} one="# extra Thunder III was" other="# extra Thunder IIIs were"/> hard casted under Astral Fire.
 				</Trans>,
 			}))
 		}
@@ -228,7 +232,7 @@ export default class RotationWatchdog extends Module {
 				tiers: ISSUE_SEVERITY_TIERS,
 				value: this._rotationsWithoutFire,
 				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
-					<Plural value={this._rotationsWithoutFire} one="# rotations" other="# rotations"/> were performed with no fire spells.
+					<Plural value={this._rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
 				</Trans>,
 			}))
 		}
