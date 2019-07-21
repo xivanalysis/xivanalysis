@@ -7,6 +7,7 @@ import OGCDDowntime from './OGCDDowntime'
 import Speedmod from './Speedmod'
 import Leylines from './Leylines'
 import NotCasting from './NotCasting'
+import Sharpcast from './Sharpcast'
 
 export default [
 	Gauge,
@@ -18,4 +19,5 @@ export default [
 	Speedmod,
 	Leylines,
 	NotCasting,
+	Sharpcast,
 ]

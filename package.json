@@ -55,7 +55,7 @@
     "intersection-observer": "^0.7.0",
     "intl": "^1.2.5",
     "ky": "^0.11.1",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.13",
     "mathjs": "^5.1.1",
     "mobx": "^5.10.1",
     "mobx-react": "^6.0.3",

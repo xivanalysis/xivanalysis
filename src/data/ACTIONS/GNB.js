@@ -59,6 +59,7 @@ export default {
 		breaksCombo: false,
 		potency: 450,
 		cooldown: 30,
+		gcdRecast: 2.5,
 	},
 	SAVAGE_CLAW: { // Technically combos from Gnashing Fang, but breaks combo functionality if we record it as such.
 		id: 16147,
@@ -83,7 +84,8 @@ export default {
 		onGcd: true,
 		breaksCombo: false,
 		potency: 300,
-		cooldown: 30,
+		cooldown: 60,
+		gcdRecast: 2.5,
 	},
 	DEMON_SLICE: {
 		id: 16141,
