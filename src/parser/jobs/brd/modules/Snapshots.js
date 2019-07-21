@@ -3,6 +3,7 @@
  */
 import React from 'react'
 import {Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
 import {Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
@@ -12,6 +13,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
+	static title = t('brd.snapshots.title')`Snapshots`
 	static dependencies = [
 		//AdditionalStats module is needed because it handles adding snapshots to events.
 		'additionalStats', // eslint-disable-line @xivanalysis/no-unused-dependencies
@@ -42,7 +44,8 @@ export default class Snapshots extends Module {
 			const snapshotCell = <Table.Cell>
 				{
 					Object.keys(snapshot.statuses).map(id => {
-						if (snapshot.statuses[id].isActive) {
+						//To avoid showing statuses we do not currently know of, as that will cause an infinite loading circle
+						if (snapshot.statuses[id].isActive && getDataBy(STATUSES, 'id', Number(id))) {
 							//35px is a purely arbitrary value that I think looks nice.  The default icon size for statuses are too small.
 							return <StatusLink  key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', Number(id))}/>
 						}
