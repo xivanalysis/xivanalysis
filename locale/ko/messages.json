@@ -102,7 +102,7 @@
   "blm.rotation-watchdog.suggestions.missed-f4s.why": "{0, plural, other {# 회}}의 파이쟈 사용 기회를 잃었습니다.",
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
-  "blm.rotation-watchdog.title": "딜사이클 문제점",
+  "blm.rotation-watchdog.title": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "",
