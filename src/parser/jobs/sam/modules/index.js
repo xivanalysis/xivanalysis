@@ -7,6 +7,7 @@ import Sen from './Sen'
 import Speedmod from './Speedmod'
 import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
+import Tsubame from './Tsubame'
 
 export default [
 	Buffs,
@@ -18,4 +19,5 @@ export default [
 	Speedmod,
 	Meikyo,
 	ThirdEye,
+	Tsubame,
 ]
