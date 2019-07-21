@@ -1,3 +1,5 @@
+import DirtyDancing from './DirtyDancing'
+
 export default [
-	// TODO: Put your modules here
+	DirtyDancing,
 ]
