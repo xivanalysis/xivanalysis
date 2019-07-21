@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import React from 'react'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -88,13 +88,13 @@ export default class ThirdEye extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MERCIFUL_EYES.icon,
-			content: <Trans id= "sam.thirdeye.suggestion.badeyes.content"> As of 5.0, <ActionLink {...ACTIONS.MERCIFUL_EYES}/> no longer reduces enmity, you should never use it now. </Trans>,
+			content: <Trans id= "sam.thirdeye.suggestion.badeyes.content"> <ActionLink {...ACTIONS.MERCIFUL_EYES}/>'s heal is not worth the damage loss of not using <ActionLink {...ACTIONS.HISSATSU_SEIGAN}/>. </Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
-				10: SEVERITY.MEDIUM,
+				4: SEVERITY.MEDIUM,
 			},
 			value: this._badEyes,
-			why: <Trans id = "sam.thirdeye.suggestion.badeyes.why"> Total amount of Mericful Eyes casts: {this._badEyes} </Trans>,
+			why: <Trans id = "sam.thirdeye.suggestion.badeyes.why"> You used <ActionLink {...ACTIONS.MERCIFUL_EYES}/> <Plural value ={this._badEyes} one = "time" other="times" /> during the fight. </Trans>,
 		}))
 	}
 }
