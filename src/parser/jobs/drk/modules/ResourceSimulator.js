@@ -225,7 +225,7 @@ export default class Resources extends Module {
 	}
 
 	_onEvent(event) {
-		const _actionHit = (event.HitType !== HitType.MISS && event.HitType !== HitType.IMMUNE)
+		const _actionHit = (event.hitType !== HitType.MISS && event.hitType !== HitType.IMMUNE)
 
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
