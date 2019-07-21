@@ -61,7 +61,7 @@ export default {
 		name: 'Iaijutsu',
 		icon: 'https://xivapi.com/i/003000/003159.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	HIGANBANA: {
@@ -69,7 +69,7 @@ export default {
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	GEKKO: {
@@ -103,7 +103,7 @@ export default {
 		name: 'Tenka Goken',
 		icon: 'https://xivapi.com/i/003000/003161.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	KASHA: {
@@ -137,7 +137,7 @@ export default {
 		name: 'Midare Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003162.png',
 		onGcd: true,
-		castTime: 1.8,
+		castTime: 1.3,
 	},
 
 	YUKIKAZE: {
@@ -151,6 +151,30 @@ export default {
 			potency: 380,
 			end: true,
 		},
+	},
+
+	KAESHI_HIGANBANA: {
+		id: 16484,
+		name: 'Kaeshi: Higanbana',
+		icon: 'https://xivapi.com/i/003000/003181.png',
+		onGcd: true,
+		castTime: 1.3,
+	},
+
+	KAESHI_GOKEN: {
+		id: 16485,
+		name: 'Kaeshi: Goken',
+		icon: 'https://xivapi.com/i/003000/003182.png',
+		onGcd: true,
+		castTime: 1.3,
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 16486,
+		name: 'Kaeshi: Setsugekka',
+		icon: 'https://xivapi.com/i/003000/003183.png',
+		onGcd: true,
+		castTime: 1.3,
 	},
 
 	//-----
@@ -236,11 +260,11 @@ export default {
 		cooldownGroup: 24,
 	},
 
-	HAGAKURE: {
-		id: 7495,
-		name: 'Hagakure',
-		icon: 'https://xivapi.com/i/003000/003176.png',
-		cooldown: 40,
+	IKISHOTEN: {
+		id: 16482,
+		name: 'Ikishoten',
+		icon: 'https://xivapi.com/i/003000/003179.png',
+		cooldown: 60,
 	},
 
 	HISSATSU_GUREN: {
@@ -248,6 +272,29 @@ export default {
 		name: 'Hissatsu: Guren',
 		icon: 'https://xivapi.com/i/003000/003177.png',
 		cooldown: 120,
+		cooldownGroup: 10,
 	},
 
+	HISSATSU_SENEI: {
+		id: 16481,
+		name: 'Hissatsu: Senei',
+		icon: 'https://xivapi.com/i/003000/003177.png',
+		cooldown: 120,
+		cooldownGroup: 10,
+	},
+
+	TSUBAME_GAESHI: {
+		id: 7495, //This thing can't ever be cast so Idk what to put for it, currently Haga's ID
+		name: 'Tsubame Gaeshi',
+		icon: 'https://xivapi.com/i/003000/003180.png',
+		cooldown: 60,
+	},
+
+	SHOHA: {
+		id: 16487,
+		name: 'Shoha',
+		icon: 'https://xivapi.com/i/003000/003177.png',
+		cooldown: 1,
+	},
 }
+
