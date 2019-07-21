@@ -230,6 +230,8 @@
   "drg.buffs.checklist.name": "保持 {0} 不断",
   "drg.buffs.checklist.requirement.name": "<0/> 覆盖率",
   "drg.buffs.panel-count": "{0} {1, plural, other {个GCD}}",
+  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "为了使每次<0/>内的伤害最大化，确保只在<1/>，<2/>或<3/>的GCD之前开启舍身。",
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "不要在<1/>与龙5以外的GCD使用<0/>。用在其他任何连击技能上，都会显著降低威力，损失大量必定暴击带来的收益。",

@@ -206,7 +206,7 @@ export default class Buffs extends Module {
 		}))
 
 		// I'm not going to say how close I came to naming this variable badDragons
-		const badDragonSights = this._buffWindows[STATUSES.DRAGON_SIGHT.id].history.filter(window => window.casts.length > 0 && window.isBad).length
+		const badDragonSights = this._buffWindows[STATUSES.RIGHT_EYE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.LANCE_CHARGE.icon,
 			content: <Trans id="drg.buffs.suggestions.bad-dss.content">

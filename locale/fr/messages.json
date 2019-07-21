@@ -230,6 +230,8 @@
   "drg.buffs.checklist.name": "Gardez {0} actif",
   "drg.buffs.checklist.requirement.name": "Temps d'activité total de <0/>",
   "drg.buffs.panel-count": "",
+  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "Evitez d'utiliser <0/> immédiatement avant n'importe quel GCD à l'exception de <1/>, <2/> et <3/> afin d'obtenir le plus de dégâts possible de chaque fenêtre.",
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "Évitez d'utiliser <0/> sur un GCD qui n'est ni <1/> ni la 5ème action de votre combo. Toute autre action de combo aura une puissance significativement inférieure, vous faisant perdre une grande partie du bénéfice d'un coup critique garanti.",
