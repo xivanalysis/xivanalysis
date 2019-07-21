@@ -20,15 +20,15 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.1',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
-		date: new Date('2019-07-19'),
+		date: new Date('2019-07-21'),
 		Changes: () => <>Updated a number of modules with small correctness tweaks for Shadowbringers action changes.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
 	},
