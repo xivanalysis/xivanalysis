@@ -179,12 +179,11 @@ export default class Resources extends Module {
 	}
 
 	checkBloodOvercap(actionBloodChange) {
-		if (actionBloodChange < 0) {
-			// Spender
-			if (this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
-				actionBloodChange = 0
-			}
+		if (actionBloodChange < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
+			// Spender within Delirium - no blood spent
+			return
 		}
+
 		if (actionBloodChange !== 0) {
 			this._currentBlood += actionBloodChange
 
@@ -252,9 +251,6 @@ export default class Resources extends Module {
 				actionMPGain += RESOURCE_GENERATORS[abilityId].mp
 			}
 		}
-
-		console.log(`Net Blood Change: ${actionBloodGain}`)
-		console.log(`Net MP Change: ${actionMPGain}`)
 
 		this.checkBloodOvercap(actionBloodGain)
 
