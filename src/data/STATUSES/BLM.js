@@ -51,5 +51,6 @@ export default {
 		id: 867,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/012000/012655.png',
+		duration: 15,
 	},
 }

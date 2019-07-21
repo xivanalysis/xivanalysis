@@ -266,12 +266,13 @@ export default class AdditionalStats extends Module {
 
 	// Copies all the statuses from multiple sources to a target entity
 	_snapshotStatuses(target, ...sources) {
-
 		sources.forEach(source => {
 			Object.keys(source.statuses).forEach(status => {
 				//To avoid having it be a reference.
-				target.statuses[status] = {isActive: source.statuses[status].isActive}
-
+				target.statuses[status] = {
+					isActive: source.statuses[status].isActive,
+					strength: source.statuses[status].strength,
+				}
 			})
 		})
 	}

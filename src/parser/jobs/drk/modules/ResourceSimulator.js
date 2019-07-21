@@ -179,6 +179,11 @@ export default class Resources extends Module {
 	}
 
 	checkBloodOvercap(actionBloodChange) {
+		if (actionBloodChange < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
+			// Spender within Delirium - no blood spent
+			return
+		}
+
 		if (actionBloodChange !== 0) {
 			this._currentBlood += actionBloodChange
 
@@ -222,21 +227,25 @@ export default class Resources extends Module {
 			// Misses or attacks against invuln targets do not trigger resource gain
 			return
 		}
+
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
+
 		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
-			actionBloodGain += RESOURCE_SPENDERS[abilityId].mp
+			actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
 			actionMPGain += RESOURCE_SPENDERS[abilityId].mp
 		}
+
 		if (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
 			// Don't double count blood weapon gains on comboed events
 			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
+
 		if (RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
 			const actionInfo = RESOURCE_GENERATORS[abilityId]
-			if (!actionInfo.requiresCombo || event.type === 'combo') {
+			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {
 			// Only gain resources if the action does not require a combo or is in a valid combo
 				actionBloodGain += RESOURCE_GENERATORS[abilityId].blood
 				actionMPGain += RESOURCE_GENERATORS[abilityId].mp
