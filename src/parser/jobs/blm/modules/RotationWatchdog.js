@@ -120,7 +120,7 @@ export default class RotationWatchdog extends Module {
 				this._MP = this.combatants.selected.resources.mp
 			}
 			// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
-			if (this._astralFire !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
+			if (this._astralFireStacks !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
 				if (event.ability.overrideAction) {
 					this._atypicalAFStartId = event.ability.overrideAction
 				} else {
