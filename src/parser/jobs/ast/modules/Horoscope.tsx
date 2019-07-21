@@ -149,20 +149,6 @@ export default class Horoscope extends Module {
 			value: this._missedActivations,
 		}))
 
-		/*
-			SUGGESTION: Helios without Horoscope
-		*/
-		// this.suggestions.add(new TieredSuggestion({
-		// 	icon: ACTIONS.HOROSCOPE.icon,
-		// 	content: <Trans id="ast.horoscope.suggestion.no-horoscope-helios.content">
-		// 		Use <ActionLink {...ACTIONS.HOROSCOPE} /> more frequently. It may save a healing GCD and results in more damage output.
-		// 	</Trans>,
-		// 	tiers: SEVERETIES.USES_MISSED,
-		// 	value: 1,
-		// 	why: <Trans id="ast.horoscope.suggestion.no-horoscope-helios.why">
-		// 		{1} Helios or Aspected Helios was cast without Horoscope despite {this.parser.formatDuration(holdDuration)}.
-		// 	</Trans>,
-		// }))
 	}
 
 }

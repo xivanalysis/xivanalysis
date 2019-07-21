@@ -8,17 +8,14 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
-// import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LIGHTSPEED_CAST_TIME_MOD = -2.5
-// const LIGHTSPEED_LENGTH = 15000
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
 	static dependencies = [
 		'castTime',
-		// 'suggestions',
 	]
 	static title = t('ast.lightspeed.title')`Lightspeed`
 	static displayOrder = DISPLAY_ORDER.LIGHTSPEED

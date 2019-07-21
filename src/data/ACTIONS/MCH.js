@@ -8,6 +8,10 @@ export default {
 		name: 'Split Shot',
 		icon: 'https://xivapi.com/i/003000/003001.png',
 		onGcd: true,
+		potency: 160,
+		combo: {
+			start: true,
+		},
 	},
 
 	SLUG_SHOT: {
@@ -15,6 +19,11 @@ export default {
 		name: 'Slug Shot',
 		icon: 'https://xivapi.com/i/003000/003002.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2866,
+			potency: 240,
+		},
 	},
 
 	SPREAD_SHOT: {
@@ -22,6 +31,7 @@ export default {
 		name: 'Spread Shot',
 		icon: 'https://xivapi.com/i/003000/003014.png',
 		onGcd: true,
+		breaksCombo: true,
 	},
 
 	HOT_SHOT: {
@@ -29,6 +39,8 @@ export default {
 		name: 'Hot Shot',
 		icon: 'https://xivapi.com/i/003000/003003.png',
 		onGcd: true,
+		cooldown: 40,
+		gcdRecast: 2.5,
 	},
 
 	CLEAN_SHOT: {
@@ -36,13 +48,12 @@ export default {
 		name: 'Clean Shot',
 		icon: 'https://xivapi.com/i/003000/003004.png',
 		onGcd: true,
-	},
-
-	COOLDOWN: {
-		id: 7410,
-		name: 'Cooldown',
-		icon: 'https://xivapi.com/i/003000/003030.png',
-		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 2868,
+			potency: 320,
+			end: true,
+		},
 	},
 
 	HEATED_SPLIT_SHOT: {
@@ -50,6 +61,10 @@ export default {
 		name: 'Heated Split Shot',
 		icon: 'https://xivapi.com/i/003000/003031.png',
 		onGcd: true,
+		potency: 200,
+		combo: {
+			start: true,
+		},
 	},
 
 	HEATED_SLUG_SHOT: {
@@ -57,6 +72,11 @@ export default {
 		name: 'Heated Slug Shot',
 		icon: 'https://xivapi.com/i/003000/003032.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7411,
+			potency: 300,
+		},
 	},
 
 	HEATED_CLEAN_SHOT: {
@@ -64,27 +84,59 @@ export default {
 		name: 'Heated Clean Shot',
 		icon: 'https://xivapi.com/i/003000/003033.png',
 		onGcd: true,
+		potency: 100,
+		combo: {
+			from: 7412,
+			potency: 400,
+			end: true,
+		},
+	},
+
+	HEAT_BLAST: {
+		id: 7410,
+		name: 'Heat Blast',
+		icon: 'https://xivapi.com/i/003000/003030.png',
+		onGcd: true,
+		cooldown: 1.5,
+	},
+
+	AUTO_CROSSBOW: {
+		id: 16497,
+		name: 'Auto Crossbow',
+		icon: 'https://xivapi.com/i/003000/003042.png',
+		onGcd: true,
+	},
+
+	DRILL: {
+		id: 16498,
+		name: 'Drill',
+		icon: 'https://xivapi.com/i/003000/003043.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 2.5,
+	},
+
+	BIOBLASTER: {
+		id: 16499,
+		name: 'Bioblaster',
+		icon: 'https://xivapi.com/i/003000/003044.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 2.5,
+	},
+
+	AIR_ANCHOR: {
+		id: 16500,
+		name: 'Air Anchor',
+		icon: 'https://xivapi.com/i/003000/003045.png',
+		onGcd: true,
+		cooldown: 40,
+		gcdRecast: 2.5,
 	},
 
 	// -----
 	// Player OGCDs
 	// -----
-
-	RELOAD: {
-		id: 2867,
-		name: 'Reload',
-		icon: 'https://xivapi.com/i/003000/003019.png',
-		onGcd: false,
-		cooldown: 30,
-	},
-
-	HEARTBREAK: {
-		id: 2875,
-		name: 'Heartbreak',
-		icon: 'https://xivapi.com/i/003000/003007.png',
-		onGcd: false,
-		cooldown: 30,
-	},
 
 	REASSEMBLE: {
 		id: 2876,
@@ -94,36 +146,12 @@ export default {
 		cooldown: 60,
 	},
 
-	BLANK: {
-		id: 2888,
-		name: 'Blank',
-		icon: 'https://xivapi.com/i/003000/003016.png',
-		onGcd: false,
-		cooldown: 30,
-	},
-
-	QUICK_RELOAD: {
-		id: 2879,
-		name: 'Quick Reload',
-		icon: 'https://xivapi.com/i/003000/003020.png',
-		onGcd: false,
-		cooldown: 15,
-	},
-
-	RAPID_FIRE: {
-		id: 2881,
-		name: 'Rapid Fire',
-		icon: 'https://xivapi.com/i/003000/003023.png',
-		onGcd: false,
-		cooldown: 60,
-	},
-
 	WILDFIRE: {
 		id: 2878,
 		name: 'Wildfire',
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 120,
 	},
 
 	ROOK_AUTOTURRET: {
@@ -131,39 +159,7 @@ export default {
 		name: 'Rook Autoturret',
 		icon: 'https://xivapi.com/i/003000/003026.png',
 		onGcd: false,
-		cooldown: 10,
-	},
-
-	TURRET_RETRIEVAL: {
-		id: 3487,
-		name: 'Turret Retrieval',
-		icon: 'https://xivapi.com/i/003000/003028.png',
-		onGcd: false,
-		cooldown: 5,
-	},
-
-	BISHOP_AUTOTURRET: {
-		id: 2865,
-		name: 'Bishop Autoturret',
-		icon: 'https://xivapi.com/i/003000/003027.png',
-		onGcd: false,
-		cooldown: 10,
-	},
-
-	GAUSS_BARREL: {
-		id: 2880,
-		name: 'Gauss Barrel',
-		icon: 'https://xivapi.com/i/003000/003021.png',
-		onGcd: false,
-		cooldown: 2,
-	},
-
-	REMOVE_BARREL: {
-		id: 9015,
-		name: 'Remove Barrel',
-		icon: 'https://xivapi.com/i/003000/003029.png',
-		onGcd: false,
-		cooldown: 2,
+		cooldown: 6,
 	},
 
 	GAUSS_ROUND: {
@@ -171,23 +167,15 @@ export default {
 		name: 'Gauss Round',
 		icon: 'https://xivapi.com/i/003000/003005.png',
 		onGcd: false,
-		cooldown: 15,
-	},
-
-	DISMANTLE: {
-		id: 2887,
-		name: 'Dismantle',
-		icon: 'https://xivapi.com/i/003000/003011.png',
-		onGcd: false,
-		cooldown: 60,
+		cooldown: 30,
 	},
 
 	HYPERCHARGE: {
-		id: 2885,
+		id: 17209,
 		name: 'Hypercharge',
-		icon: 'https://xivapi.com/i/003000/003024.png',
+		icon: 'https://xivapi.com/i/003000/003041.png',
 		onGcd: false,
-		cooldown: 120,
+		cooldown: 10,
 	},
 
 	RICOCHET: {
@@ -195,7 +183,7 @@ export default {
 		name: 'Ricochet',
 		icon: 'https://xivapi.com/i/003000/003017.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 30,
 	},
 
 	BARREL_STABILIZER: {
@@ -203,7 +191,7 @@ export default {
 		name: 'Barrel Stabilizer',
 		icon: 'https://xivapi.com/i/003000/003034.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 120,
 	},
 
 	ROOK_OVERDRIVE: {
@@ -211,15 +199,7 @@ export default {
 		name: 'Rook Overdrive',
 		icon: 'https://xivapi.com/i/003000/003035.png',
 		onGcd: false,
-		cooldown: 120,
-	},
-
-	BISHOP_OVERDRIVE: {
-		id: 9372,
-		name: 'Bishop Overdrive',
-		icon: 'https://xivapi.com/i/003000/003035.png',
-		onGcd: false,
-		cooldown: 120,
+		cooldown: 15,
 	},
 
 	FLAMETHROWER: {
@@ -228,6 +208,30 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
 		cooldown: 60,
+	},
+
+	TACTICIAN: {
+		id: 16889,
+		name: 'Tactician',
+		icon: 'https://xivapi.com/i/003000/003040.png',
+		onGcd: false,
+		cooldown: 180,
+	},
+
+	AUTOMATON_QUEEN: {
+		id: 16501,
+		name: 'Automaton Queen',
+		icon: 'https://xivapi.com/i/003000/003501.png',
+		onGcd: false,
+		cooldown: 6,
+	},
+
+	QUEEN_OVERDRIVE: {
+		id: 16502,
+		name: 'Queen Overdrive',
+		icon: 'https://xivapi.com/i/003000/003502.png',
+		onGcd: false,
+		cooldown: 15,
 	},
 
 	// -----
@@ -246,15 +250,21 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000405.png',
 	},
 
-	AETHER_MORTAR: { // Bishop auto attacks
-		id: 2892,
-		name: 'Aether Mortar',
-		icon: 'https://xivapi.com/i/000000/000405.png',
+	ROLLER_DASH: {
+		id: 17206,
+		name: 'Roller Dash',
+		icon: 'https://xivapi.com/i/003000/003505.png',
 	},
 
-	CHARGED_AETHER_MORTAR: {
-		id: 3589,
-		name: 'Charged Aether Mortar',
-		icon: 'https://xivapi.com/i/000000/000405.png',
+	ARM_PUNCH: {
+		id: 16504,
+		name: 'Arm Punch',
+		icon: 'https://xivapi.com/i/003000/003504.png',
+	},
+
+	PILE_BUNKER: {
+		id: 16503,
+		name: 'Pile Bunker',
+		icon: 'https://xivapi.com/i/003000/003503.png',
 	},
 }

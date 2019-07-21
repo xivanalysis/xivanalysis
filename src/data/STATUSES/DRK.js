@@ -1,9 +1,4 @@
 export default {
-	DARKSIDE: {
-		id: 751,
-		name: 'Darkside',
-		icon: 'https://xivapi.com/i/013000/013106.png',
-	},
 	GRIT: {
 		id: 743,
 		name: 'Grit',
@@ -13,16 +8,6 @@ export default {
 		id: 742,
 		name: 'Blood Weapon',
 		icon: 'https://xivapi.com/i/013000/013109.png',
-	},
-	BLOOD_PRICE: {
-		id: 745,
-		name: 'Blood Price',
-		icon: 'https://xivapi.com/i/013000/013110.png',
-	},
-	DARK_ARTS: {
-		id: 752,
-		name: 'Dark Arts',
-		icon: 'https://xivapi.com/i/013000/013107.png',
 	},
 	BLACKEST_NIGHT: {
 		id: 1178,
@@ -54,9 +39,9 @@ export default {
 		name: 'Shadow Wall',
 		icon: 'https://xivapi.com/i/013000/013113.png',
 	},
-	ANOTHER_VICTIM: {
-		id: 750,
-		name: 'Another Victim',
-		icon: 'https://xivapi.com/i/013000/013105.png',
+	DELIRIUM: {
+		id: 1972,
+		name: 'Delirium',
+		icon: 'https://xivapi.com/i/013000/013121.png',
 	},
 }

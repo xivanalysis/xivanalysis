@@ -21,16 +21,15 @@ const RAID_BUFFS = {
 	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
 	[STATUSES.MEDITATIVE_BROTHERHOOD.id]: {},
 	[STATUSES.CHAIN_STRATAGEM.id]: {},
-	// [STATUSES.CRITICAL_UP.id]: {} // this should be up 100% - worth putting in here?
 	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
-	[STATUSES.FOE_REQUIEM_DEBUFF.id]: {},
-	[STATUSES.HYPERCHARGE_VULNERABILITY_UP.id]: {name: 'Hypercharge'},
 	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
 	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
 	// [STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id]: {},
 	[STATUSES.RADIANT_SHIELD.id]: {},
 	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
 	[STATUSES.DEVOTION.id]: {},
+	[STATUSES.TECHNICAL_FINISH.id]: {},
+	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
 }
 
 export default class RaidBuffs extends Module {

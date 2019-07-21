@@ -8,28 +8,17 @@ import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
 
 // Relevant crit buffs
+// TODO: Add DNC crit buffs when the statues gets added
 const CRIT_MODIFIERS = [
 	{
 		id: STATUSES.BATTLE_LITANY.id,
-		strength: 0.15,
+		strength: 0.1,
 	},
 	{
 		id: STATUSES.CHAIN_STRATAGEM.id,
-		strength: 0.15,
+		strength: 0.1,
 	},
-	{
-		id: STATUSES.CRITICAL_UP.id,
-		strength: 0.02,
-	},
-	{
-		id: STATUSES.THE_SPEAR.id,
-		//fuck royal road
-		strength: 0.10,
-	},
-	{
-		id: STATUSES.STRAIGHT_SHOT.id,
-		strength: 0.10,
-	},
+
 ]
 
 // Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
@@ -55,20 +44,18 @@ const DOTS = [
 
 const DHIT_MOD = 1.25
 
-const DISEMBOWEL_STRENGTH = 0.05
 const TRAIT_STRENGTH = 0.20
 
 const DEVIATION_PRECISION = 3
 
-const BASE_SUBSTAT_70 = 364
-const LEVEL_MOD_70 = 2170
+const BASE_SUBSTAT_80 = 380
+const LEVEL_MOD_80 = 3300
 const BASE_CRIT_PROBABILITY = 50 //5%
 
 export default class AdditionalStats extends Module {
 	static handle = 'additionalStats'
 	static dependencies = [
 		'additionalEvents', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'arcanum', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'combatants',
 		'hitType', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
@@ -138,11 +125,6 @@ export default class AdditionalStats extends Module {
 
 						actor.statuses[event.ability.guid].strength = critModifier.strength
 
-						// If it's a spear card, we get the modifier from the event, thanks to arcanum
-						if (critModifier.id === STATUSES.THE_SPEAR.id && event.strengthModifier) {
-							actor.statuses[event.ability.guid].strength *= event.strengthModifier
-						}
-
 					}
 				}
 
@@ -164,10 +146,6 @@ export default class AdditionalStats extends Module {
 						&& event.ability.guid !== ACTIONS.MAGES_BALLAD.id
 						&& event.ability.guid !== ACTIONS.ARMYS_PAEON.id
 					) {
-						// Band-aid fix for disembowel (why, oh, why)
-						if (this._getStatus(this._getEnemy(event.targetID), STATUSES.PIERCING_RESISTANCE_DOWN.id)) {
-							fixedMultiplier = Math.trunc((fixedMultiplier + DISEMBOWEL_STRENGTH) * 100) / 100
-						}
 						// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
 						fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
 					}
@@ -220,12 +198,19 @@ export default class AdditionalStats extends Module {
 				&& event.ability
 				&& Object.keys(SNAPSHOTTERS).includes(event.ability.guid.toString()) // Why do I have to use toString() here? This is dumb
 			) {
-				const snapshotter = this._getSnapshotter(event.ability.guid)
+				//We make a new one here to avoid issues caused by it being a reference that can be updated after the fact.
+				const newSnapshotter = {
+					statuses: {},
+					timestamp: 0,
+				}
 				const player = this._player
 				const enemy = this._getEnemy(event.targetID)
 
-				this._snapshotStatuses(snapshotter, player, enemy)
-				snapshotter.timestamp = event.timestamp
+				this._snapshotStatuses(newSnapshotter, player, enemy)
+
+				newSnapshotter.timestamp = event.timestamp
+				this._snapshotters[event.ability.guid] = newSnapshotter
+				event.snapshot = newSnapshotter
 			}
 		}
 
@@ -284,7 +269,8 @@ export default class AdditionalStats extends Module {
 
 		sources.forEach(source => {
 			Object.keys(source.statuses).forEach(status => {
-				target.statuses[status] = source.statuses[status]
+				//To avoid having it be a reference.
+				target.statuses[status] = {isActive: source.statuses[status].isActive}
 
 			})
 		})
@@ -367,14 +353,14 @@ export default class AdditionalStats extends Module {
 		const critRate = this.criticalHitProbability || this._getCriticalHitProbability()
 
 		// Time to guesstimate the critical hit rate attribute
-		return (((critRate * 1000) - 50) * LEVEL_MOD_70 / 200) + BASE_SUBSTAT_70
+		return (((critRate * 1000) - 50) * LEVEL_MOD_80 / 200) + BASE_SUBSTAT_80
 	}
 
 	_getCritMod() {
 		const chr = this.criticalHitRate || this._getCriticalHitRate()
 
 		// Time to guesstimate the critMod:
-		return Math.floor((200 * (chr - BASE_SUBSTAT_70) / LEVEL_MOD_70) + 1400) / 1000
+		return Math.floor((200 * (chr - BASE_SUBSTAT_80) / LEVEL_MOD_80) + 1400) / 1000
 
 	}
 	/* eslint-enable no-magic-numbers */

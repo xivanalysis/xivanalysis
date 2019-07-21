@@ -155,22 +155,29 @@ export default class AoE extends Module {
 				const key = `${event.targetID}-${event.targetInstance}`
 				if (carry[key]) {
 					carry[key].times++
+					carry[key].amount += event.amount
 				} else {
 					carry[key] = {
 						id: event.targetID,
 						instance: event.targetInstance,
 						times: 1,
+						amount: event.amount,
 					}
 				}
 				return carry
 			}, {})
 
-			this.parser.fabricateEvent({
+			const fabricatedEvent = {
 				type: 'aoe' + eventType,
 				ability: event.events[eventType][0].ability,
 				hits: Object.values(hitsByTarget),
 				sourceID: event.events[eventType][0].sourceID,
-			})
+				amount: Object.values(hitsByTarget).reduce((total, hit) => total + hit.amount, 0),
+			}
+			if (event.events[eventType][0].hasOwnProperty('sourceResources')) {
+				fabricatedEvent.sourceResources = event.events[eventType][0].sourceResources
+			}
+			this.parser.fabricateEvent(fabricatedEvent)
 		}
 	}
 

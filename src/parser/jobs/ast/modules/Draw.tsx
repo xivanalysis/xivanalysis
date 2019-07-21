@@ -132,7 +132,7 @@ export default class Draw extends Module {
 		console.log(theoreticalMaxPlays)
 		// TODO: Need to account for resetting draw CD everytime sleeve plays
 		// TODO: Include downtime calculation for each fight??
-		// TODO: Calcultae more accurately baed on Redraw uses
+		// TODO: Calcultae more accurately based on Redraw uses
 		// TODO: Suggest how to redraw effectively (maybe in ArcanaSuggestions)
 
 		/*
@@ -161,24 +161,6 @@ export default class Draw extends Module {
 		}))
 
 		/*
-			SUGGESTION: Didn't keep draw on cooldown
-			TODO: Displays a lot of extra due to Sleeve and redraw resetting CD - need to account for this
-		*/
-		// const drawUsesMissed = Math.floor((this._drawTotalDrift) / (ACTIONS.DRAW.cooldown * 1000))
-		// this.suggestions.add(new TieredSuggestion({
-		// 	icon: ACTIONS.DRAW.icon,
-		// 	content: <Trans id="ast.draw.suggestions.draws-missed.content">
-		// 		Keep <ActionLink {...ACTIONS.DRAW} /> on cooldown
-		// 	</Trans>,
-		// 	why: <Trans id="ast.draw.suggestions.draws-missed.why">
-		// 		<Plural value={drawUsesMissed} one="# Draw" other="# Draws" />
-		// 			lost from holding it for {this.parser.formatDuration(this._drawTotalDrift)}
-		// 	</Trans>,
-		// 	tiers: SEVERITIES.CARD_HOLDING,
-		// 	value: this._drawTotalDrift,
-		// }))
-
-		/*
 			SUGGESTION: Didn't use sleeve draw at all
 		*/
 		if (this._sleeveUses === 0) {
@@ -192,25 +174,6 @@ export default class Draw extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
-		} else {
-			/*
-				SUGGESTION: Sleevedraw overwrote draw (or not used right after draw?)
-				TODO: Not calculating missed draws properly. Maybe should be checking within x seconds of using draw
-			*/
-			// const drawOverwrites = (this._sleeveOverwriteTime) / (ACTIONS.DRAW.cooldown * 1000)
-			// this.suggestions.add(new TieredSuggestion({
-			// 	icon: ACTIONS.SLEEVE_DRAW.icon,
-			// 	content: <Trans id="ast.draw.suggestions.sleeve-overwrite.content">
-			// 			<ActionLink {...ACTIONS.SLEEVE_DRAW} /> restarts the cooldown on <ActionLink {...ACTIONS.DRAW} />,
-			// 			so it is better to use it right after a Draw.
-			// 	</Trans>,
-			// 	why: <Trans id="ast.draw.suggestions.sleeve-overwrite.why">
-			// 		<Plural value={drawOverwrites} one="# Draw" other="# Draws" />
-			// 			lost by having their cooldowns reset by Sleeve Draw. A total of {this.parser.formatDuration(this._sleeveOverwriteTime)} of Draw cooldown time was overwritten by Sleeve Draw.
-			// 	</Trans>,
-			// 	tiers: SEVERITIES.SLEEVE_DRAW_OVERWRITE,
-			// 	value: this._sleeveOverwriteTime,
-			// }))
 		}
 
 	}

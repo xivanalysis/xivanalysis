@@ -6,17 +6,13 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 import {Plural, Trans} from '@lingui/react'
-// import {TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 
 const WASTED_USES_MAX_MEDIUM = 2
-// const MP_NEEDS_REFRESH_THRESHOLD = 0.80
-// const LUCID_DRIFT_ALLOWANCE = 1.1
-// const GCDS_HOLDING_LUCID_THRESHOLD = 5
+
 
 export default class LucidDreaming extends Module {
 	static handle = 'lucid'
 	static dependencies = [
-		// 'combatants',
 		'suggestions',
 	]
 
@@ -37,44 +33,10 @@ export default class LucidDreaming extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.LUCID_DREAMING.id],
 		}
-		// this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('cast', _filter, this._onCastLucid)
 		this.addHook('refreshbuff', {by: 'player', to: 'player'}, this._onRefreshLucid)
 		this.addHook('complete', this._onComplete)
 	}
-
-	//*** Commented out until mp tracking relevance is determined ***//
-	// _onCast(event) {
-	// 	const action = getAction(event.ability.guid)
-
-	// 	if (!action.onGcd) {
-	// 		return
-	// 	}
-
-	// 	// keep track of how long they've been below MP threshold to warrant a Lucid usage
-	// 	this._maxMP = this.combatants.selected.resources.maxMP
-	// 	this._MP = this.combatants.selected.resources.mp
-	// 	console.log(this.parser.formatTimestamp(event.timestamp) + ': ' + this._MP + '/' + this._maxMP)
-
-	// 	if (this._MP < this._maxMP * MP_NEEDS_REFRESH_THRESHOLD) {
-	// 		this._MPthresholdTime = this._MPthresholdTime || event.timestamp
-	// 	} else {
-	// 		this._MPthresholdTime = null
-	// 	}
-
-	// 	const isLucidReady = event.timestamp > (this._lastUse === 0 ? this.parser.fight.start_time : this._lastUse) + (ACTIONS.LUCID_DREAMING.cooldown * LUCID_DRIFT_ALLOWANCE * 1000)
-
-	// 	// Looks for a GCD where they held Lucid, even though they had MP below threshold
-	// 	// TODO: Could this possibly be made more accurate or relevant?
-	// 	// TODO: Flip this around and check if they're wasting ticks on lucid (not relevant for AST)
-	// 	if (this._MPthresholdTime
-	// 		&& (this._uses === 0 || isLucidReady)) {
-	// 		this._gcdCountHoldingLucid++
-	// 		console.log('No lucid being used. lastUse: ' + this.parser.formatTimestamp(this._lastUse) + ' Uses: ' + this._uses)
-	// 		console.log('time for next Lucid: ' + this.parser.formatTimestamp(this._lastUse + (ACTIONS.LUCID_DREAMING.cooldown * 1000)))
-	// 		console.log('time now: ' + this.parser.formatTimestamp(event.timestamp))
-	// 	}
-	// }
 
 	_onCastLucid(event) {
 		this._uses++
@@ -105,13 +67,9 @@ export default class LucidDreaming extends Module {
 	}
 
 	_onComplete() {
-		// console.log(this)
 		//uses missed reported in 1 decimal
 		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
-		// console.log(holdDuration)
-		// console.log(this.parser.formatDuration(holdDuration))
 		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
-		// console.log('no mp: ' + this._gcdCountHoldingLucid)
 
 		if (_usesMissed > 1 || this._uses === 0) {
 			this.suggestions.add(new Suggestion({
@@ -129,21 +87,6 @@ export default class LucidDreaming extends Module {
 				</Fragment>,
 			}))
 		}
-
-		// Specifically look for times where they held it despite having a non-full MP bar.
-		// Threshold: LUCID_DRIFT_ALLOWANCE multiplied by cooldown of LUCID_DREAMING (120s)
-		// if (this._gcdCountHoldingLucid > GCDS_HOLDING_LUCID_THRESHOLD) {
-		// 	this.suggestions.add(new Suggestion({
-		// 		icon: ACTIONS.LUCID_DREAMING.icon,
-		// 		content: <Fragment>
-		// 			GCDs detected where MP could be topped off but <ActionLink {...ACTIONS.LUCID_DREAMING} /> was not used despite it being ready.
-		// 		</Fragment>,
-		// 		severity: SEVERITY.MAJOR,
-		// 		why: <Fragment>
-		// 			{this._gcdCountHoldingLucid} GCDs total spent holding Lucid Dreaming with MP below 80%
-		// 		</Fragment>,
-		// 	}))
-		// }
 
 	}
 

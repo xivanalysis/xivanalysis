@@ -77,7 +77,7 @@ export default {
 	},
 	DESPAIR: {
 		id: 16505,
-		name: 'Flare',
+		name: 'Despair',
 		icon: 'https://xivapi.com/i/002000/002665.png',
 		onGcd: true,
 		castTime: 3.0,

@@ -47,7 +47,7 @@ export default class Weaving extends CoreWeaving {
 			icon: ACTIONS.RUIN_II.icon,
 			content: <Trans id="sch.weaving.suggestion.content">
 				<ActionLink {...ACTIONS.RUIN_II} /> may seem like a great choice for weaving,
-				but because its potency is <i>absurdly</i> low compared to <ActionLink {...ACTIONS.BROIL} />,
+				but because its potency is <i>absurdly</i> low compared to <ActionLink {...ACTIONS.BROIL_III} />,
 				it is actually better to just clip your GCD with Broil than to waste your mana.
 				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
 			</Trans>,

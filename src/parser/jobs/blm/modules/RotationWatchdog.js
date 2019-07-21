@@ -6,9 +6,11 @@ import React, {Fragment} from 'react'
 import {Trans, Plural} from '@lingui/react'
 import {Accordion, Message} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Rotation from 'components/ui/Rotation'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {BLM_GAUGE_EVENT} from './Gauge'
@@ -17,12 +19,12 @@ import {getDataBy} from 'data'
 
 const EXPECTED_FIRE4 = 6
 const FIRE4_FROM_MANAFONT = 1
-const MIN_MP_LEAVING_UI_NORMALLY = 12960
 const DEBUG_LOG_ALL_FIRE_COUNTS = false && process.env.NODE_ENV !== 'production'
 const AFUIBUFFMAXSTACK = 3
-const T3ENDINGINUI_SEVERITY = {
+const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
-	5: SEVERITY.MEDIUM,
+	3: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
 }
 
 // This is feelycraft at the moment. Rotations longer than that get put into the history array to sort out transpose shenanigans.
@@ -31,14 +33,16 @@ const MIN_ROTATION_LENGTH = 3
 
 export default class RotationWatchdog extends Module {
 	static handle = 'RotationWatchdog'
-	static title = t('blm.rotation-watchdog.title')`Rotation Issues`
+	static title = t('blm.rotation-watchdog.title')`Rotation Outliers`
 	static displayOrder = DISPLAY_ORDER.ROTATION
 
 	static dependencies = [
+		'checklist',
 		'suggestions',
 		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'invuln',
 		'combatants',
+		'enemies',
 	]
 
 	_rotation = {}
@@ -56,14 +60,17 @@ export default class RotationWatchdog extends Module {
 	_T3 = false
 	_T3inUIFlag = false
 	//counter for suggestions
+	_inRotation = false
 	_missedF4s = 0
 	_extraF1s = 0
 	_UIEndingInT3 = 0
 	_missedF4sCauseEndingInT3 = 0
-	_wrongT3 = 0
+	_extraT3s = 0
 	_rotationsWithoutFire = 0
 	_umbralIceBeforeFire = 0
+	_mfBeforeDespair = 0
 	_atypicalAFStartId = false
+	_astralFiresNotEndedWithDespair = 0
 
 	_gaugeState = {}
 
@@ -108,13 +115,12 @@ export default class RotationWatchdog extends Module {
 		if (actionId === ACTIONS.FIRE_III.id) {
 			if (this._umbralIceStacks === AFUIBUFFMAXSTACK) {
 				if (this._T3) {
-					this._UIEndingInT3 ++
 					this._T3inUIFlag = true
 				}
 				this._MP = this.combatants.selected.resources.mp
 			}
 			// If we're gaining AF3 from an F3P, count it as the beginning of the phase for F4 count purposes
-			if (this._astralFire !== AFUIBUFFMAXSTACK) {
+			if (this._astralFire !== AFUIBUFFMAXSTACK && this._umbralIceStacks < AFUIBUFFMAXSTACK) {
 				if (event.ability.overrideAction) {
 					this._atypicalAFStartId = event.ability.overrideAction
 				} else {
@@ -123,14 +129,8 @@ export default class RotationWatchdog extends Module {
 			}
 		}
 
-		//If my T3 isn't a proc already and cast under AF, it's straight up wrong.
-		if (!event.ability.overrideAction && actionId === ACTIONS.THUNDER_III.id && this._AF > 0) {
-			event.ability.overrideAction = ACTIONS.THUNDER_III_FALSE
-			this._wrongT3 ++
-		}
-
 		//start and stop trigger for our rotations is B3
-		if (actionId === ACTIONS.BLIZZARD_III.id) {
+		if (actionId === ACTIONS.BLIZZARD_III.id || actionId === ACTIONS.FREEZE.id || actionId === ACTIONS.UMBRAL_SOUL.id) {
 			if (!this._first) { this._stopRecording() }
 			this._startRecording(event)
 		} else if (actionId === ACTIONS.TRANSPOSE.id) {
@@ -149,6 +149,13 @@ export default class RotationWatchdog extends Module {
 	//start recording at the first cast
 	_onFirst(event) {
 		this._startRecording(event)
+	}
+
+	_getThunderUptime() {
+		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
+		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+
+		return (statusTime / uptime) * 100
 	}
 
 	_onComplete() {
@@ -183,45 +190,46 @@ export default class RotationWatchdog extends Module {
 			}))
 		}
 
-		//Suggestions for ending UI in T3
-		if (this._UIEndingInT3 && !this._missedF4sCauseEndingInT3) {
+		// Suggestion to end Astral Fires with Despair
+		if (this._astralFiresNotEndedWithDespair) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.THUNDER_III.icon,
-				tiers: T3ENDINGINUI_SEVERITY,
-				value: this._UIEndingInT3,
-				content: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.content">
-					Avoid ending your Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/>. This can lead to MP issues and fewer <ActionLink {...ACTIONS.FIRE_IV}/> casts under Astral Fire.
+				icon: ACTIONS.DESPAIR.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
+					Casting <ActionLink {...ACTIONS.BLIZZARD_III} /> to enter Umbral Ice costs no MP. Always end Astral Fire with a <ActionLink {...ACTIONS.DESPAIR} /> to make full use of your MP.
 				</Trans>,
-				why: <Trans id="blm.rotation-watchdog.suggestions.ui-ending-in-t3.why">
-					{this._UIEndingInT3} Umbral Ice <Plural value={this._UIEndingInT3} one="phase" other="phases"/> ended with Thunder III.
+				tiers: ISSUE_SEVERITY_TIERS,
+				value: this._astralFiresNotEndedWithDespair,
+				why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
+					<Plural value={this._astralFiresNotEndedWithDespair} one="# Astral Fire phase" other="# Astral Fire phases"/> ended with a spell other than <ActionLink {...ACTIONS.DESPAIR} />.
+				</Trans>,
+			}))
+		}
+		// Suggestion to not use manafont before Despair
+		if (this._mfBeforeDespair) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.MANAFONT.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
+					Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
+				</Trans>,
+				tiers: ISSUE_SEVERITY_TIERS,
+				value: this._mfBeforeDespair,
+				why: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.why">
+					<Plural value={this._mfBeforeDespair} one="# Manafont" other="# Manafonts"/> were casted before <ActionLink {...ACTIONS.DESPAIR} />.
 				</Trans>,
 			}))
 		}
 
-		//Suggestions if you actually lost F4s due to ending UI with a hardcast T3
-		if (this._missedF4sCauseEndingInT3) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THUNDER_III_FALSE.icon,
-				content: <Trans id="blm.rotation-watchdog.suggestions.f4-lost-to-t3-finisher.content">
-					Ending Umbral Ice with a non-proc <ActionLink {...ACTIONS.THUNDER_III}/> actually costed you at least one <ActionLink {...ACTIONS.FIRE_IV}/>.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="blm.rotation-watchdog.suggestions.f4-lost-to-t3-finisher.why">
-					Ending Umbral Ice with a Thunder III costed you <Plural value={this._missedF4sCauseEndingInT3} one="# Fire IV" other="# Fire IVs"/>.
-				</Trans>,
-			}))
-		}
-
-		//Suggestion for hard T3s under AF. Will be enabled as soon as T3Ps stop being dumb
-		if (this._wrongT3) {
-			this.suggestions.add(new Suggestion({
+		//Suggestion for hard T3s under AF. Should only have one per cycle
+		if (this._extraT3s) {
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.THUNDER_III_FALSE.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.content">
-					Never hard cast a <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
+					Don't hard cast more than one <ActionLink {...ACTIONS.THUNDER_III}/> in your Astral Fire phase, since that costs MP which could be used for more <ActionLink {...ACTIONS.FIRE_IV}/>s.
 				</Trans>,
-				severity: SEVERITY.MAJOR,
+				tiers: ISSUE_SEVERITY_TIERS,
+				value: this._extraT3s,
 				why: <Trans id="blm.rotation-watchdog.suggestions.wrong-t3.why">
-					<Plural value={this._wrongT3} one="# Thunder III" other="# Thunder IIIs"/> were hard casted under Astral Fire.
+					<Plural value={this._extraT3s} one="# extra Thunder III" other="# extra Thunder IIIs"/> were hard casted under Astral Fire.
 				</Trans>,
 			}))
 		}
@@ -233,17 +241,27 @@ export default class RotationWatchdog extends Module {
 				content: <Trans id="blm.rotation-watchdog.suggestions.icemage.content">
 					Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <ActionLink {...ACTIONS.FIRE_IV}/>s cast during the fight.
 				</Trans>,
-				tiers: {
-					1: SEVERITY.MINOR,
-					3: SEVERITY.MEDIUM,
-					5: SEVERITY.MAJOR,
-				},
+				tiers: ISSUE_SEVERITY_TIERS,
 				value: this._rotationsWithoutFire,
 				why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
 					<Plural value={this._rotationsWithoutFire} one="# rotations" other="# rotations"/> were performed with no fire spells.
 				</Trans>,
 			}))
 		}
+
+		this.checklist.add(new Rule({
+			name: <Trans id="blm.rotation-watchdog.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
+			description: <Trans id="blm.rotation-watchdog.checklist.dots.description">
+				Your <StatusLink {...STATUSES.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...STATUSES.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
+			</Trans>,
+			target: 95,
+			requirements: [
+				new Requirement({
+					name: <Fragment><StatusLink {...STATUSES.THUNDER_III} /> uptime</Fragment>,
+					percent: () => this._getThunderUptime(),
+				}),
+			],
+		}))
 	}
 
 	//if transpose is used under Encounter invul the recording gets resetted
@@ -278,40 +296,52 @@ export default class RotationWatchdog extends Module {
 			// TODO: Use a better trigger for downtime than transpose
 			// TODO: Handle aoe things
 			// TODO: Handle Flare?
-			const fire4Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_IV.id).length
-			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.FIRE_I.id).length
-			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid.id === ACTIONS.MANAFONT.id).length > 0
+			const fire4Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_IV.id).length
+			const fire1Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
+			const despairCount = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.DESPAIR.id).length
+			const hasManafont = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.MANAFONT.id).length > 0
+			const lastEvent = this._rotation.casts[this._rotation.casts.length-1]
 
 			const hardT3Count = this._rotation.casts.filter(cast => cast.ability.overrideAction).filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
+			if (hardT3Count > 1) {
+				this._extraT3s++
+			}
+			//check whether manafont was used before despair
+			if (hasManafont) {
+				if (despairCount > 0) {
+					if (this._rotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) < this._rotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)) {
+						this._mfBeforeDespair++
+					}
+				}
+			}
 			this._rotation.missingCount = this._getMissingFire4Count(fire4Count, hasManafont)
 			if (fire1Count > 1) {
 				this._extraF1s += fire1Count
 				this._extraF1s--
 			}
-			if (this._rotation.missingCount.missing > 0 || hardT3Count > 0 || DEBUG_LOG_ALL_FIRE_COUNTS) {
+			if (this._rotation.missingCount.missing !== 0 || hardT3Count > 1 || DEBUG_LOG_ALL_FIRE_COUNTS) {
 				this._rotation.fire4Count = fire4Count
-
-				//Check if you actually lost an F4 due to ending UI in T3
-				if (this._MP < MIN_MP_LEAVING_UI_NORMALLY && this._T3inUIFlag && (fire4Count + fire1Count - 1) !== this._rotation.missingCount.expected) {
-					this._missedF4sCauseEndingInT3 ++
-					this._T3inUIFlag = false
-				}
 
 				//Only display rotations with more than 3 casts since less is normally weird shit with Transpose
 				//Also throw out rotations with no Fire spells
 				const fire3Count = this._rotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_III.id).length
-				const fireCount = [fire3Count, fire1Count, fire4Count].reduce((accumulator, currentValue) => accumulator + currentValue, 0)
-				if (fireCount === 0) {
+				const fireCount = fire3Count + fire1Count + fire4Count + despairCount
+				if (fireCount === 0 && this._rotation.casts.length > 1) {
 					this._rotationsWithoutFire++
 				}
-				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) { this._history.push(this._rotation) }
+				if (this._rotation.casts.length > MIN_ROTATION_LENGTH && fireCount >= 1) {
+					//check if the rotation ended with despair
+					if (lastEvent && lastEvent.ability.guid !== ACTIONS.DESPAIR.id) {
+						this._astralFiresNotEndedWithDespair++
+					}
+					this._history.push(this._rotation)
+				}
 				if (this._lastStop && this._umbralHeartStacks > 0 && this._rotation.missingCount === 2) {
 					const missedF4s = this._rotation.missingCount --
 					this._missedF4s = missedF4s
 				}
 			}
 			//reset the flag
-			this._T3inUIFlag = false
 			this._atypicalAFStartId = null
 		}
 	}
@@ -325,16 +355,12 @@ export default class RotationWatchdog extends Module {
 
 	_getMissingFire4Count(count, hasManafont) {
 		let expected = EXPECTED_FIRE4 + (hasManafont ? FIRE4_FROM_MANAFONT : 0)
-
-		if (this._atypicalAFStartId === ACTIONS.FIRE_III_PROC.id || (this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && this._atypicalAFStartId !== ACTIONS.FIRE_III.id)) {
+		if (this._atypicalAFStartId === ACTIONS.FIRE_III_PROC.id || (this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && this._atypicalAFStartId === ACTIONS.FIRE_III.id)) {
 			// If we arrived in Astral Fire from UI3 normally or via F3P, but didn't have 2 or 3 hearts, we lose a F4
-			if (this._umbralHeartStacks < 2) {
+			if (this._umbralHeartStacks < AFUIBUFFMAXSTACK) {
 				expected--
 			}
-			// If you Convert when you have an even number of UH stacks going into this fire phase from UI3, the extra MP
-			// from converting is only enough to grant one additional Fire 4 as compared to not converting
-			// So remove one of the expected casts granted by FIRE4_FROM_MANAFONT
-			if (hasManafont && this._umbralHeartStacks % 2 === 0 && this._umbralIceBeforeFire === AFUIBUFFMAXSTACK && !this._astralFireBeganWithF3P) {
+			if (this._umbralHeartStacks === 0) {
 				expected--
 			}
 		} else if (this._umbralIceBeforeFire > 0 || this._atypicalAFStartId) { // If we came from Ice other than UI3, we're probably losing Fire 4s
@@ -361,8 +387,12 @@ export default class RotationWatchdog extends Module {
 	_renderCount(count, missing) {
 		if (missing > 1) {
 			return <span className="text-error">{count}</span>
-		} if (missing > 0) {
+		}
+		if (missing > 0) {
 			return <span className="text-warning">{count}</span>
+		}
+		if (missing < 0) {
+			return <span className="text-success">{count+'!'}</span>
 		}
 		return count
 	}
@@ -393,7 +423,7 @@ export default class RotationWatchdog extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.accordion.message">
-						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s per rotation (8 with <ActionLink {...ACTIONS.MANAFONT} />, 5 if skipping <ActionLink {...ACTIONS.BLIZZARD_IV} />).<br/>
+						The core of BLM consists of 6 <ActionLink {...ACTIONS.FIRE_IV} />s and one <ActionLink {...ACTIONS.DESPAIR} /> per rotation (7 <ActionLink {...ACTIONS.FIRE_IV} />s and two <ActionLink {...ACTIONS.DESPAIR} />s with <ActionLink {...ACTIONS.MANAFONT} />).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
