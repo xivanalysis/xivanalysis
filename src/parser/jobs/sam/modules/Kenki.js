@@ -187,7 +187,7 @@ export default class Kenki extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HISSATSU_GUREN.icon,
 			content: <Trans id = "sam.kenki.suggestion.badguren.content"> Avoid using <ActionLink {...ACTIONS.HISSATSU_GUREN}/> when you only have one target, as <ActionLink {...ACTIONS.HISSATSU_SENEI}/> has higher potency and can be used for the same cost. </Trans>,
-			why: <Trans id = "sam.kenki.suggestion.badguren.why"> Amount of single-target gurens: this._badGurens </Trans>,
+			why: <Trans id = "sam.kenki.suggestion.badguren.why"><Plural value={this._badGurens} one="# use" other="# uses"/> of Guren hit a single target</Trans>,
 			value: this._badGurens,
 			tiers: {
 				1: SEVERITY.MEDIUM,
