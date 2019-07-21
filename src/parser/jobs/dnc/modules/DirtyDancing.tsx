@@ -56,6 +56,7 @@ const FINISHES = [
 const EXPECTED_DANCE_MOVE_COUNT = {
 	[ACTIONS.DOUBLE_STANDARD_FINISH.id]: 2,
 	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 4,
+	[-1]: 0,
 }
 
 class Dance {
@@ -132,11 +133,14 @@ export default class DirtyDancing extends Module {
 	}
 
 	private continueDance(event: CastEvent) {
-		if (!STEPS.includes(event.ability.guid) && !FINISHES.includes(event.ability.guid)) {
-			const dance = this.lastDance
-			if (dance && dance.dancing) {
-				dance.rotation.push(event)
-			}
+		// Bail if beginDance or finishDance should be handling this event
+		if (!(STEPS.includes(event.ability.guid) || FINISHES.includes(event.ability.guid))) {
+			return
+		}
+
+		const dance = this.lastDance
+		if (dance && dance.dancing) {
+			dance.rotation.push(event)
 		}
 	}
 
@@ -152,31 +156,32 @@ export default class DirtyDancing extends Module {
 
 	private resolveDance(event: DamageEvent) {
 		const dance = this.lastDance
-		if (dance && !dance.resolved) {
 
-			const finisher = dance.rotation[dance.rotation.length-1]
-			dance.end = finisher.timestamp
-
-			// Count dance as dirty if we didn't get the expected finisher
-			if (finisher.ability.guid !== dance.expectedFinishId) {
-				dance.dirty = true
-			}
-			// If the finisher didn't hit anything, and something could've been, ding it.
-			// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
-			if (event.amount === 0 && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
-				dance.missed = true
-			}
-			// Dancer messed up if more step actions were recorded than we expected
-			const actualCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
-			let expectedCount = 0
-			expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinishId]
-			// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
-			if (actualCount > expectedCount) {
-				dance.footloose = true
-			}
-
-			dance.resolved = true
+		if (!dance || dance.resolved) {
+			return
 		}
+
+		const finisher = dance.rotation[dance.rotation.length-1]
+		dance.end = finisher.timestamp
+
+		// Count dance as dirty if we didn't get the expected finisher
+		if (finisher.ability.guid !== dance.expectedFinishId) {
+			dance.dirty = true
+		}
+		// If the finisher didn't hit anything, and something could've been, ding it.
+		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
+		if (event.amount === 0 && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
+			dance.missed = true
+		}
+		// Dancer messed up if more step actions were recorded than we expected
+		const actualCount = dance.rotation.filter(step => DANCE_MOVES.includes(step.ability.guid)).length
+		const expectedCount = EXPECTED_DANCE_MOVE_COUNT[dance.expectedFinishId]
+		// Only ding if the step count is greater than expected, we're not going to catch the steps in the opener dance
+		if (actualCount > expectedCount) {
+			dance.footloose = true
+		}
+
+		dance.resolved = true
 	}
 
 	private getStandardFinishUptimePercent() {
