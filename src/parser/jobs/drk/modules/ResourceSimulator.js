@@ -123,6 +123,7 @@ export default class Resources extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.THE_BLACKEST_NIGHT.id}, this._onCastBlackestNight)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
 		this.addHook('death', {by: 'player'}, this._onDeath)
 		this.addHook('raise', {by: 'player'}, this._onRaise)
@@ -150,12 +151,7 @@ export default class Resources extends Module {
 
 		let manaTicks = Math.floor(timeSinceLastSpendAction / TICK_RATE)
 
-		if (actionMPChange < 0) {
-			// Spender
-			if (this._darkArtsProc) {
-				actionMPChange = 0
-				this._darkArtsProc = false
-			}
+		if (actionMPChange <= 0) {
 			if (beforeActionMP === MAX_MP) {
 				// MP was at cap before using spender, check for waste
 				if (firstSpendAction) {
@@ -180,24 +176,16 @@ export default class Resources extends Module {
 	}
 
 	checkBloodOvercap(actionBloodChange) {
-		if (actionBloodChange < 0) {
-			// Spender
-			if (this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
-				actionBloodChange = 0
-			}
-		}
-		if (actionBloodChange !== 0) {
-			this._currentBlood += actionBloodChange
+		this._currentBlood += actionBloodChange
 
-			if (this._currentBlood > MAX_BLOOD) {
-				// Check to determine if blood was overcapped by gain, mark as wasted if so
-				this._wastedBlood += this._currentBlood - MAX_BLOOD
-				this._currentBlood = MAX_BLOOD
-			}
-			if (this._currentBlood < 0) {
-				// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
-				this._currentBlood = 0
-			}
+		if (this._currentBlood > MAX_BLOOD) {
+			// Check to determine if blood was overcapped by gain, mark as wasted if so
+			this._wastedBlood += this._currentBlood - MAX_BLOOD
+			this._currentBlood = MAX_BLOOD
+		}
+		if (this._currentBlood < 0) {
+			// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
+			this._currentBlood = 0
 		}
 	}
 
@@ -232,8 +220,21 @@ export default class Resources extends Module {
 		let actionMPGain = 0
 
 		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
-			actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
-			actionMPGain += RESOURCE_SPENDERS[abilityId].mp
+			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
+				// Blood spender under delirium - no change
+				actionBloodGain += 0
+			} else {
+				actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
+			}
+
+
+			if (RESOURCE_SPENDERS[abilityId].mp < 0 && this._darkArtsProc) {
+				// MP Spending attack (Edge/Flood of Shadow) - free with Dark Arts proc
+				actionMPGain += 0
+				this._darkArtsProc = false
+			} else {
+				actionMPGain += RESOURCE_SPENDERS[abilityId].mp
+			}
 		}
 
 		if (_actionHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
@@ -253,9 +254,6 @@ export default class Resources extends Module {
 			}
 		}
 
-		console.log(`Net Blood Change: ${actionBloodGain}`)
-		console.log(`Net MP Change: ${actionMPGain}`)
-
 		this.checkBloodOvercap(actionBloodGain)
 
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
@@ -265,6 +263,14 @@ export default class Resources extends Module {
 			// Don't push two entries to graph for comboed actions
 			this._pushToGraph()
 		}
+	}
+
+	_onCastBlackestNight(event) {
+		const abilityId = event.ability.guid
+		const actionMPGain = RESOURCE_SPENDERS[abilityId].mp
+		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
+		this.checkMPOvercap(event, afterActionMP, actionMPGain)
+		this._pushToGraph()
 	}
 
 	_onRemoveBlackestNight(event) {
