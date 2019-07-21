@@ -7,7 +7,7 @@ import React from 'react'
 
 const REQUIRED_MULTI_HIT_TARGETS = {
 	[ACTIONS.FLOOD_OF_SHADOW.id]: 2,
-	[ACTIONS.UNMEND.id]: 2,
+	[ACTIONS.UNLEASH.id]: 2,
 	[ACTIONS.STALWART_SOUL.id]: 2,
 	[ACTIONS.QUIETUS.id]: 3,
 }
@@ -27,7 +27,7 @@ export default class MultiHit extends Module {
 	_incorrectMultihitSkills = {
 		[ACTIONS.FLOOD_OF_SHADOW.id]: 0,
 		[ACTIONS.QUIETUS.id]: 0,
-		[ACTIONS.UNMEND.id]: 0,
+		[ACTIONS.UNLEASH.id]: 0,
 		[ACTIONS.STALWART_SOUL.id]: 0,
 	}
 
