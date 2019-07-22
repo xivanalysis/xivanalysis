@@ -77,7 +77,7 @@ const NOCTURNAL_SECT_BUFF_ABILITY = {
 	abilityIcon: _.replace(_.replace(STATUSES.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-'),
 }
 
-// Just in case they go through a whole fight with no sect, we're not going to babysit the whole log
+// Just in case they go through "THIS MUCH" of the fight with no sect, we're NOT going to babysit the whole log
 // tslint:disable-next-line: no-magic-numbers
 const GIVE_UP_THRESHOLD = 60000
 
@@ -93,44 +93,40 @@ export default class Sect extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private combatants!: Combatants
 
-	_castEvent: CastEvent | null = null
-	_statusEvent: BuffEvent | null = null
 
-	_pullWithoutSect = false
-	_sectId: string | number | undefined = undefined
+	private pullWithoutSect = false
+	private activeSectId: string | number | undefined = undefined
 
-	_partyComp: string[] = []
+	private partyComp: string[] = []
 
 	protected init() {
-		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this._onCast)
-		this.addHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this._onApplySect)
-		this.addHook('complete', this._onComplete)
+		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
+		this.addHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
+		this.addHook('complete', this.onComplete)
 	}
 
 	normalise(events: any) {
 		const startTime = this.parser.fight.start_time
+		let aspectedCast: CastEvent | null = null
+
+
 
 		for (const event of events) {
-			const targetId = event.targetID
-
-			if (event.type === 'applybuff' && this._isBuffEvent(event)
-				&& SECT_STATUSES.includes(event.ability.guid)) {
+			if (event.type === 'applybuff' && SECT_STATUSES.includes(event.ability.guid)) {
 				// They started the fight without a sect and switched it on mid-fight :blobsweat: we gud here
 				break
 			}
 
-			if (!this._castEvent && event.type === 'cast'
-			&& this._isCastEvent(event) && ASPECTED_ACTIONS.includes(event.ability.guid)) {
+			if (!aspectedCast && event.type === 'cast' && ASPECTED_ACTIONS.includes(event.ability.guid)) {
 				// Detecting a cast of an aspected action, so now we examine what comes out of it
-				this._castEvent = event
+				aspectedCast = event
 
-			} else if (this._castEvent
-				&& event.type === 'applybuff' && this._isBuffEvent(event)
-				&& (DIURNAL_SECT_STATUSES.includes(event.ability.guid)
+			} else if (aspectedCast
+				&& event.type === 'applybuff' && (DIURNAL_SECT_STATUSES.includes(event.ability.guid)
 					|| NOCTURNAL_SECT_STATUSES.includes(event.ability.guid))) {
 				// This is an applybuff event of a sect buff that came after an aspected action
 
-				if (this._mapCastToBuff(this._castEvent.ability.guid).includes(event.ability.guid)
+				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
 					&& [...DIURNAL_SECT_STATUSES, ...NOCTURNAL_SECT_STATUSES].includes(event.ability.guid)) {
 
 					const SECT_ABILITY = DIURNAL_SECT_STATUSES.includes(event.ability.guid) ? DIURNAL_SECT_BUFF_ABILITY : NOCTURNAL_SECT_BUFF_ABILITY
@@ -147,7 +143,7 @@ export default class Sect extends Module {
 					break
 				}
 
-			} else if (event.timestamp - this.parser.fight.start_time >= GIVE_UP_THRESHOLD) {
+			} else if (event.timestamp - startTime >= GIVE_UP_THRESHOLD) {
 				// Just give up after GIVE_UP_THRESHOLD
 				break
 			} else {
@@ -159,33 +155,33 @@ export default class Sect extends Module {
 		return events
 	}
 
-	private _onCast(event: CastEvent) {
+	private onCast(event: CastEvent) {
 		// If they casted a sect at anytime it means they pulled without one on
-		this._pullWithoutSect = true
+		this.pullWithoutSect = true
 		const sect = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (sect) {
-			this._sectId = sect.id
+			this.activeSectId = sect.id
 		}
 	}
 
 	// Looking for the sect buff that we fabricated, but if they switched it on mid-fight that'll get picked up too
-	private _onApplySect(event: BuffEvent) {
-		if (!this._sectId) {
-			const sect = getDataBy(ACTIONS, 'id', this._mapBuffToCast(event.ability.guid))
+	private onApplySect(event: BuffEvent) {
+		if (!this.activeSectId) {
+			const sect = getDataBy(ACTIONS, 'id', this.mapBuffToCast(event.ability.guid))
 			if (sect) {
-				this._sectId = sect.id
+				this.activeSectId = sect.id
 			}
 		}
 	}
 
-	private _onComplete() {
+	private onComplete() {
 
 		/*
 			SUGGESTION: Pulled without Sect
 		*/
-		if (this._pullWithoutSect || !this._sectId) {
+		if (this.pullWithoutSect || !this.activeSectId) {
 			this.suggestions.add(new Suggestion({
-				icon: !this._sectId || ACTIONS.DIURNAL_SECT.id === this._sectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon,
+				icon: !this.activeSectId || ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.no-sect.content">
 					Don't start without <ActionLink {...ACTIONS.DIURNAL_SECT} /> or <ActionLink {...ACTIONS.NOCTURNAL_SECT} />. There are several abilities that can't be used without one of these stances.
 				</Trans>,
@@ -205,11 +201,10 @@ export default class Sect extends Module {
 			if (combatant.type === 'LimitBreak') {
 				continue
 			}
-			this._partyComp.push(combatant.type)
+			this.partyComp.push(combatant.type)
 		}
 
-		// TODO: Localize this reference
-		if (this._sectId === ACTIONS.NOCTURNAL_SECT.id && this._partyComp.includes('Scholar')) {
+		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && this.partyComp.includes('Scholar')) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">
@@ -222,9 +217,9 @@ export default class Sect extends Module {
 			}))
 		}
 
-		if (this._sectId) {
-			const icon = ACTIONS.DIURNAL_SECT.id === this._sectId || !this._sectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon
-			const value = ACTIONS.DIURNAL_SECT.id === this._sectId || !this._sectId ? ACTIONS.DIURNAL_SECT.name : ACTIONS.NOCTURNAL_SECT.name
+		if (this.activeSectId) {
+			const icon = ACTIONS.DIURNAL_SECT.id === this.activeSectId || !this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon
+			const value = ACTIONS.DIURNAL_SECT.id === this.activeSectId || !this.activeSectId ? ACTIONS.DIURNAL_SECT.name : ACTIONS.NOCTURNAL_SECT.name
 			// Statistic box
 			this.statistics.add(new SectStatistic({
 				icon,
@@ -240,28 +235,14 @@ export default class Sect extends Module {
 	}
 
 	// Helpers
-	private _isCastEvent(event: Event): event is CastEvent {
-		if ((event as CastEvent).type) {
-			return true
-		}
-		return false
-	}
-
-	private _isBuffEvent(event: Event): event is BuffEvent {
-		if ((event as BuffEvent).type) {
-			return true
-		}
-		return false
-	}
-
-	private _mapCastToBuff(actionId: number) {
+	public mapCastToBuff(actionId: number) {
 		if (ASPECTED_ACTIONS.includes(actionId)) {
 			return ACTION_STATUS_MAP[actionId]
 		}
 		return []
 	}
 
-	private _mapBuffToCast(statusId: number) {
+	public mapBuffToCast(statusId: number) {
 		switch (statusId) {
 			case STATUSES.NOCTURNAL_SECT.id:
 				return ACTIONS.NOCTURNAL_SECT.id
