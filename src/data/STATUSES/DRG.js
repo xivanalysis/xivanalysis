@@ -13,6 +13,14 @@ export default {
 		duration: 20,
 	},
 
+	// Because apparently Right Eye has a different status ID if you don't have a tether partner. Thanks, SE.
+	RIGHT_EYE_SOLO: {
+		id: 1910,
+		name: 'Right Eye',
+		icon: 'https://xivapi.com/i/012000/012581.png',
+		duration: 20,
+	},
+
 	LEFT_EYE: {
 		id: 1454,
 		name: 'Left Eye',

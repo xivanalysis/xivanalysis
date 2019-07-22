@@ -224,6 +224,8 @@
   "drg.buffs.suggestions.bad-lcs.why": "{badlyTimedLcs} 회의 랜스 돌격이 올바르지 않은 글쿨 순서에 사용되었습니다.",
   "drg.buffs.suggestions.life-surge.content": "<0/>를 <1/>나 5번째 콤보가 아닌 글쿨에 사용하는 것을 피하세요. 다른 무기 기술은 현저하게 낮은 위력으로 인해 그 효과가 떨어집니다.",
   "drg.buffs.suggestions.life-surge.why": "{0} 를 적절하지 못한 무기 기술에 {0, plural, one {#회} other {#회}} 사용했습니다.",
+  "drg.buffs.suggestions.solo-ds.content": "",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "랜스 돌격 & 용의 눈",
   "drg.debuffs.checklist.description": "<0/>는 상당한 지속 데미지를 주며 상시 유지시켜야 합니다.",
   "drg.debuffs.checklist.name": "항상 디버프가 유지되도록 하십시오",
