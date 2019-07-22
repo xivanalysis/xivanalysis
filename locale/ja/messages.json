@@ -230,6 +230,8 @@
   "drg.buffs.checklist.name": "{0} の維持率",
   "drg.buffs.checklist.requirement.name": "アクティブ率: <0/>",
   "drg.buffs.panel-count": "{0, plural, other {GCD使用数: #}}",
+  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "<0/>は<1/>,<2/>,<3/>の直前以外では使用せずに、最もダメージを与えられるように使用します。",
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "<0/> は<1/>かコンボの5段目に使用するようにしましょう。他の箇所では確定クリティカルの恩恵が小さくなります。",

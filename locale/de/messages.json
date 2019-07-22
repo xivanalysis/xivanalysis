@@ -230,6 +230,8 @@
   "drg.buffs.checklist.name": "Halte {0} aufrecht",
   "drg.buffs.checklist.requirement.name": "<0/> Gesamtanwendungszeit",
   "drg.buffs.panel-count": "{0} {1, plural, one {GCD} other {GCDs}}",
+  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "",
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "",

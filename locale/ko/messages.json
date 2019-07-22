@@ -230,6 +230,8 @@
   "drg.buffs.checklist.name": "항상 {0}가 유지되도록 하십시오.",
   "drg.buffs.checklist.requirement.name": "적용시간 <0/>",
   "drg.buffs.panel-count": "{0, plural, one {#글쿨} other {#글쿨}}",
+  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "최대효율을 위해 <0/>를 <1/>, <2/>, 혹은 <3/> 이외의 무기 기술에 사용하는 것을 피하세요.",
   "drg.buffs.suggestions.bad-lcs.why": "{badlyTimedLcs} 회의 랜스 돌격이 올바르지 않은 글쿨 순서에 사용되었습니다.",
   "drg.buffs.suggestions.life-surge.content": "<0/>를 <1/>나 5번째 콤보가 아닌 글쿨에 사용하는 것을 피하세요. 다른 무기 기술은 현저하게 낮은 위력으로 인해 그 효과가 떨어집니다.",
