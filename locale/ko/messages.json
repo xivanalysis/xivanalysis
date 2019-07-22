@@ -104,7 +104,7 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "",
   "blm.rotation-watchdog.title": "이상점 딜사이클",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "<2/> 효과를 만료시켜 <0/> 혹은 <1/> 프록을 놓쳤습니다.",
-  "blm.sharpcast.suggestions.dropped-sharpcasts.why": "",
+  "blm.sharpcast.suggestions.dropped-sharpcasts.why": "신속마 시전후 스킬 미사용 {0, plural, other {#회}} ",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "",
   "blm.sharpcast.suggestions.sharpcasted-scathes.why": "",
   "blm.triple.title": "삼연속 마법 사용 구간",
