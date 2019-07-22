@@ -93,7 +93,6 @@ export default class Sect extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private combatants!: Combatants
 
-
 	private pullWithoutSect = false
 	private activeSectId: string | number | undefined = undefined
 
@@ -108,8 +107,6 @@ export default class Sect extends Module {
 	normalise(events: any) {
 		const startTime = this.parser.fight.start_time
 		let aspectedCast: CastEvent | null = null
-
-
 
 		for (const event of events) {
 			if (event.type === 'applybuff' && SECT_STATUSES.includes(event.ability.guid)) {
@@ -211,7 +208,7 @@ export default class Sect extends Module {
 					It is counter-productive to use this Sect with this composition. The main shields <StatusLink {...STATUSES.NOCTURNAL_FIELD} /> from <ActionLink {...ACTIONS.NOCTURNAL_SECT}/> do not stack with Scholar's main shield <StatusLink {...STATUSES.GALVANIZE} />.
 				</Trans>,
 				why: <Trans id="ast.sect.suggestions.noct-with-sch.why">
-					Nocturnal Sect was used with a scholar in the party.
+					Nocturnal Sect was used with a Scholar in the party.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
