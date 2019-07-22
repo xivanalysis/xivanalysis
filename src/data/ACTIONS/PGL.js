@@ -73,13 +73,6 @@ export default {
 		cooldown: 3,
 	},
 
-	STEEL_PEAK: {
-		id: 64,
-		name: 'Steel Peak',
-		icon: 'https://xivapi.com/i/002000/002530.png',
-		cooldown: 40,
-	},
-
 	MANTRA: {
 		id: 65,
 		name: 'Mantra',

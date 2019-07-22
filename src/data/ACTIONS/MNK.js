@@ -92,14 +92,6 @@ export default {
 		cooldown: 60,
 	},
 
-	EARTH_TACKLE: {
-		id: 7864,
-		name: 'Earth Tackle',
-		icon: 'https://xivapi.com/i/002000/002538.png',
-		cooldown: 30,
-		potency: 100,
-	},
-
 	RIDDLE_OF_WIND: {
 		id: 7868,
 		name: 'Riddle of Wind',
