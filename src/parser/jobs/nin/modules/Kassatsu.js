@@ -18,10 +18,8 @@ export default class Kassatsu extends Module {
 	_kassatsuWastes = 0
 	_kassatsuUses = {
 		[ACTIONS.FUMA_SHURIKEN.id]: 0,
-		[ACTIONS.KATON.id]: 0,
 		[ACTIONS.GOKA_MEKKYAKU.id]: 0,
 		[ACTIONS.RAITON.id]: 0,
-		[ACTIONS.HYOTON.id]: 0,
 		[ACTIONS.HYOSHO_RANRYU.id]: 0,
 		[ACTIONS.HUTON.id]: 0,
 		[ACTIONS.DOTON.id]: 0,
@@ -58,7 +56,7 @@ export default class Kassatsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.KASSATSU.icon,
 				content: <Trans id="nin.kassatsu.suggestions.waste.content">
-					Be careful not to let <ActionLink {...ACTIONS.KASSATSU}/> fall off, as it wastes a guaranteed crit and means that you're delaying your Ninjutsu casts significantly.
+					Be careful not to let <ActionLink {...ACTIONS.KASSATSU}/> fall off, as it wastes a 30% potency buff and means that you're delaying your Ninjutsu casts significantly.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.waste.why">
@@ -67,37 +65,11 @@ export default class Kassatsu extends Module {
 			}))
 		}
 
-		if (this._kassatsuUses[ACTIONS.KATON.id] > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.KATON.icon,
-				content: <Trans id="nin.kassatsu.suggestions.katon.content">
-					Avoid using <ActionLink {...ACTIONS.KATON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it against multiple targets. On single targets, it's better to use <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> or <ActionLink {...ACTIONS.RAITON}/>.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="nin.kassatsu.suggestions.katon.why">
-					You cast Katon <Plural value={this._kassatsuUses[ACTIONS.KATON.id]} one="# time" other="# times"/> under Kassatsu.
-				</Trans>,
-			}))
-		}
-
-		if (this._kassatsuUses[ACTIONS.HYOTON.id] > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.HYOTON.icon,
-				content: <Trans id="nin.kassatsu.suggestions.hyoton.content">
-					Avoid using <ActionLink {...ACTIONS.HYOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>. Both <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> and <ActionLink {...ACTIONS.RAITON}/> do significantly more damage.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.kassatsu.suggestions.hyoton.why">
-					You cast Hyoton <Plural value={this._kassatsuUses[ACTIONS.HYOTON.id]} one="# time" other="# times"/> under Kassatsu.
-				</Trans>,
-			}))
-		}
-
 		if (this._kassatsuUses[ACTIONS.HUTON.id] > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.HUTON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.huton.content">
-					Avoid using <ActionLink {...ACTIONS.HUTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>, as it does no damage and completely wastes the guaranteed crit Kassatsu provides.
+					Avoid using <ActionLink {...ACTIONS.HUTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>, as it does no damage and completely wastes the 30% potency buff Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.huton.why">
@@ -110,9 +82,9 @@ export default class Kassatsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DOTON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.doton.content">
-					Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it against multiple targets that you expect to die slowly. If the targets will die in under 15 seconds, <ActionLink {...ACTIONS.KATON}/> is the better AoE option.
+					Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/> even in AoE situations, as it has a lower potency than <ActionLink {...ACTIONS.GOKA_MEKKYAKU}/> even if every tick hits.
 				</Trans>,
-				severity: SEVERITY.MINOR,
+				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.doton.why">
 					You cast Doton <Plural value={this._kassatsuUses[ACTIONS.DOTON.id]} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
@@ -123,7 +95,7 @@ export default class Kassatsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUITON.icon,
 				content: <Trans id="nin.kassatsu.suggestions.suiton.content">
-					Avoid using <ActionLink {...ACTIONS.SUITON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...ACTIONS.TRICK_ATTACK}/>. It's generally best to use it on <ActionLink {...ACTIONS.FUMA_SHURIKEN}/> while Trick Attack is up, as its cooldown should align it with every other window.
+					Avoid using <ActionLink {...ACTIONS.SUITON}/> under <ActionLink {...ACTIONS.KASSATSU}/> unless using it to set up for a critically important <ActionLink {...ACTIONS.TRICK_ATTACK}/>. It's generally best to use it on <ActionLink {...ACTIONS.HYOSHO_RANRYU}/> while Trick Attack is up, as its cooldown should align it with every window.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.kassatsu.suggestions.suiton.why">
@@ -136,7 +108,7 @@ export default class Kassatsu extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.RABBIT_MEDIUM.icon,
 				content: <Trans id="nin.kassatsu.suggestions.rabbit.content">
-					Be especially careful not to flub your mudras under <ActionLink {...ACTIONS.KASSATSU}/>, as <ActionLink {...ACTIONS.RABBIT_MEDIUM}/> does no damage and completely wastes the guaranteed crit Kassatsu provides.
+					Be especially careful not to flub your mudras under <ActionLink {...ACTIONS.KASSATSU}/>, as <ActionLink {...ACTIONS.RABBIT_MEDIUM}/> does no damage and completely wastes the 30% potency buff Kassatsu provides.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="nin.kassatsu.suggestions.rabbit.why">

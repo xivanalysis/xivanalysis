@@ -13,24 +13,35 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 // Constants
 const MAX_NINKI = 100
 
-const NINKI_BUILDERS = {
-	[ACTIONS.MUG.id]: 40,
-	[ACTIONS.MEISUI.id]: 40,
-	[ACTIONS.SPINNING_EDGE.id]: 8,
-	[ACTIONS.GUST_SLASH.id]: 8,
-	[ACTIONS.AEOLIAN_EDGE.id]: 8,
-	[ACTIONS.SHADOW_FANG.id]: 8,
-	[ACTIONS.ARMOR_CRUSH.id]: 8,
-	[ACTIONS.DEATH_BLOSSOM.id]: 8, // TODO - Confirm whether AoE weaponskills count
-	[ACTIONS.HAKKE_MUJINSATSU.id]: 8,
-	[ACTIONS.THROWING_DAGGER.id]: 8,
-}
+const GCD_NINKI_GAIN = 8
+const OGCD_NINKI_GAIN = 40
+const BUNSHIN_NINKI_GAIN = 4
+const SPENDER_COST = 80
 
-const NINKI_SPENDERS = {
-	[ACTIONS.HELLFROG_MEDIUM.id]: 80,
-	[ACTIONS.BHAVACAKRA.id]: 80,
-	[ACTIONS.BUNSHIN.id]: 80,
-}
+const NINKI_GCDS = [
+	ACTIONS.SPINNING_EDGE.id,
+	ACTIONS.DEATH_BLOSSOM.id,
+	ACTIONS.THROWING_DAGGER.id,
+]
+
+const NINKI_COMBOS = [
+	ACTIONS.GUST_SLASH.id,
+	ACTIONS.AEOLIAN_EDGE.id,
+	ACTIONS.SHADOW_FANG.id,
+	ACTIONS.ARMOR_CRUSH.id,
+	ACTIONS.HAKKE_MUJINSATSU.id,
+]
+
+const NINKI_OGCDS = [
+	ACTIONS.MUG.id,
+	ACTIONS.MEISUI.id,
+]
+
+const NINKI_SPENDERS = [
+	ACTIONS.HELLFROG_MEDIUM.id,
+	ACTIONS.BHAVACAKRA.id,
+	ACTIONS.BUNSHIN.id,
+]
 
 export default class Ninki extends Module {
 	static handle = 'ninki'
@@ -50,7 +61,7 @@ export default class Ninki extends Module {
 		[ACTIONS.AEOLIAN_EDGE.id]: 0,
 		[ACTIONS.SHADOW_FANG.id]: 0,
 		[ACTIONS.ARMOR_CRUSH.id]: 0,
-		[ACTIONS.DEATH_BLOSSOM.id]: 0, // TODO - Confirm whether AoE weaponskills count
+		[ACTIONS.DEATH_BLOSSOM.id]: 0,
 		[ACTIONS.HAKKE_MUJINSATSU.id]: 0,
 		[ACTIONS.THROWING_DAGGER.id]: 0,
 	}
@@ -58,17 +69,21 @@ export default class Ninki extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(NINKI_BUILDERS).map(Number)}, this._onBuilderCast)
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(NINKI_SPENDERS).map(Number)}, this._onSpenderCast)
+		this.addHook('cast', {by: 'player', abilityId: NINKI_GCDS}, event => this._addNinki(event, GCD_NINKI_GAIN))
+		this.addHook('combo', {by: 'player', abilityId: NINKI_COMBOS}, event => this._addNinki(event, GCD_NINKI_GAIN))
+		this.addHook('cast', {by: 'player', abilityId: NINKI_OGCDS}, event => this._addNinki(event, OGCD_NINKI_GAIN))
+		this.addHook('cast', {by: 'pet'}, event => this._addNinki(event, BUNSHIN_NINKI_GAIN))
+		this.addHook('cast', {by: 'player', abilityId: NINKI_SPENDERS}, this._onSpenderCast)
 		this.addHook('aoedamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this._onHellfrogAoe)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
+
 	}
 
-	_onBuilderCast(event) {
+	_addNinki(event, amount) {
 		const abilityId = event.ability.guid
 
-		this._ninki += NINKI_BUILDERS[abilityId]
+		this._ninki += amount
 		if (this._ninki > MAX_NINKI) {
 			const waste = this._ninki - MAX_NINKI
 			this._wasteBySource[abilityId] += waste
@@ -78,8 +93,8 @@ export default class Ninki extends Module {
 		this._pushToHistory()
 	}
 
-	_onSpenderCast(event) {
-		this._ninki = Math.max(this._ninki - NINKI_SPENDERS[event.ability.guid], 0)
+	_onSpenderCast() {
+		this._ninki = Math.max(this._ninki - SPENDER_COST, 0)
 		this._pushToHistory()
 	}
 
