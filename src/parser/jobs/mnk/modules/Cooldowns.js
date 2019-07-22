@@ -22,7 +22,6 @@ export default class Cooldowns extends CoreCooldowns {
 		},
 		ACTIONS.RIDDLE_OF_FIRE.id,
 		ACTIONS.BROTHERHOOD.id,
-		ACTIONS.INTERNAL_RELEASE.id,
 		ACTIONS.THE_FORBIDDEN_CHAKRA.id,
 		ACTIONS.ELIXIR_FIELD.id,
 		ACTIONS.HOWLING_FIST.id,

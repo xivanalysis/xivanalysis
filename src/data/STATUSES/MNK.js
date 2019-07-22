@@ -32,13 +32,6 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010206.png',
 	},
 
-	INTERNAL_RELEASE: {
-		id: 100,
-		name: 'Internal Release',
-		icon: 'https://xivapi.com/i/010000/010204.png',
-		duration: 15,
-	},
-
 	TWIN_SNAKES: {
 		id: 101,
 		name: 'Twin Snakes',

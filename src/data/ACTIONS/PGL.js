@@ -52,13 +52,6 @@ export default {
 	// Player OGCDs
 	// -----
 
-	INTERNAL_RELEASE: {
-		id: 59,
-		name: 'Internal Release',
-		icon: 'https://xivapi.com/i/000000/000212.png',
-		cooldown: 60,
-	},
-
 	FISTS_OF_EARTH: {
 		id: 60,
 		name: 'Fists of Earth',
