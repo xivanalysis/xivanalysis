@@ -4,7 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import DoTs from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -14,6 +14,12 @@ const SEVERITIES = {
 		2500: SEVERITY.MINOR,
 		5000: SEVERITY.MEDIUM,
 		10000: SEVERITY.MAJOR,
+	},
+	UPTIME: {
+		// tslint:disable-next-line: no-magic-numbers
+		[84]: TARGET.WARN,
+		// tslint:disable-next-line: no-magic-numbers
+		[91]: TARGET.SUCCESS,
 	},
 }
 
@@ -28,12 +34,12 @@ export default class Combust extends DoTs {
 	@dependency private suggestions!: Suggestions
 
 	addChecklistRules() {
-		this.checklist.add(new Rule({
+		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
 				While Astrologians only have one DoT, it still makes up a good portion of your damage. Use it to weave (<ActionLink {...ACTIONS.DRAW} />) and manage cards, or to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
 				</Trans>,
-			target: 90,
+			tiers: SEVERITIES.UPTIME,
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.dots.requirement.uptime.name"><ActionLink {...ACTIONS.COMBUST_III} /> uptime</Trans>,

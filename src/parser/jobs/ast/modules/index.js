@@ -8,6 +8,7 @@ import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
 // import ArcanaTracking from './ArcanaTracking'
 // import ArcanaSuggestions from './ArcanaSuggestions'
+import Sect from './Sect'
 
 export default [
 	Cooldowns,
@@ -20,4 +21,5 @@ export default [
 	Horoscope,
 	// ArcanaTracking,
 	// ArcanaSuggestions,
+	Sect,
 ]
