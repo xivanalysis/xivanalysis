@@ -203,7 +203,7 @@ export default class ArcanaSuggestions extends Module {
 			</>
 		} else if (artifact.lastEvent.type === 'death') {
 			return <><Table.Cell>
-				Death
+				<Trans id="ast.arcana-tracking.messages.death">Death</Trans>
 			</Table.Cell>
 			<Table.Cell>
 			</Table.Cell>
