@@ -4,7 +4,7 @@
 import React from 'react'
 import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
-import {List} from 'semantic-ui-react'
+import {List, Button} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -25,6 +25,7 @@ export default class Sidewinder extends Module {
 	static title = t('brd.sidewinder.title')`Sidewinders and Shadowbites`
 	static dependencies = [
 		'suggestions',
+		'timeline',
 	]
 
 	_amountOfBadSidewinders = 0
@@ -123,6 +124,17 @@ export default class Sidewinder extends Module {
 		}))
 	}
 
+	_createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+
 	output() {
 		if (!this._badCasts.length) {
 			return
@@ -133,13 +145,17 @@ export default class Sidewinder extends Module {
 			if (cast.appliedDot) {
 				return <List.Item key={cast.timestamp}>
 					<List.Content>
-						<Trans id="brd.sidewinder.list.one-dot">{this.parser.formatTimestamp(cast.timestamp)} - <ActionLink {...ability}/> was cast with only <StatusLink {...getDataBy(STATUSES, 'id', cast.appliedDot)}/> applied.</Trans>
+						<Trans id="brd.sidewinder.list.one-dot">
+							{this._createTimelineButton(cast.timestamp)} <ActionLink {...ability}/> was cast with only <StatusLink {...getDataBy(STATUSES, 'id', cast.appliedDot)}/> applied.
+						</Trans>
 					</List.Content>
 				</List.Item>
 			}
 			return <List.Item key={cast.timestamp}>
 				<List.Content>
-					<Trans id="brd.sidewinder.list.no-dots">{this.parser.formatTimestamp(cast.timestamp)} - <ActionLink {...ability}/> was cast with no DoTs applied.</Trans>
+					<Trans id="brd.sidewinder.list.no-dots">
+						{this._createTimelineButton(cast.timestamp)} <ActionLink {...ability}/> was cast with no DoTs applied.
+					</Trans>
 				</List.Content>
 			</List.Item>
 		})
