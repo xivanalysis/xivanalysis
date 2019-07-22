@@ -26,14 +26,13 @@ export default class Sidewinder extends Module {
 	static dependencies = [
 		'suggestions',
 		'timeline',
+		'enemies',
 	]
 
 	_amountOfBadSidewinders = 0
 	_amountOfBadShadowbites = 0
 
 	_badCasts = []
-
-	_enemies = {}
 
 	constructor(...args) {
 		super(...args)
@@ -42,64 +41,34 @@ export default class Sidewinder extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.SIDEWINDER.id, ACTIONS.SHADOWBITE.id],
 		}, this._onSidewinderCast)
+	}
 
-		this.addHook('applydebuff', {
-			by: 'player',
-			abilityId: DOTS,
-		}, this._onApplyDot)
-
-		this.addHook('removedebuff', {
-			by: 'player',
-			abilityId: DOTS,
-		}, this._onRemoveDot)
-		this.addHook('complete', this._onComplete)
+	_getDotsOnEnemy(enemy) {
+		const dotsApplied = []
+		if (enemy) {
+			for (const dotId of DOTS) {
+				if (enemy.hasStatus(dotId)) {
+					dotsApplied.push(dotId)
+				}
+			}
+		}
+		return dotsApplied
 	}
 
 	_onSidewinderCast(event) {
-		const enemyDots = this._getEnemyDots(event.targetID)
+		const target = this.enemies.getEntity(event.targetID)
 		const abilityId = event.ability.guid
-		if (enemyDots.length < 2) {
+		const dotsApplied = this._getDotsOnEnemy(target)
+
+		if (dotsApplied.length < 2) {
 			if (abilityId === ACTIONS.SIDEWINDER.id) {
 				this._amountOfBadSidewinders++
 			} else {
 				this._amountOfBadShadowbites++
 			}
 
-			this._badCasts.push({abilityId: abilityId, dotsApplied: enemyDots.length, appliedDot: enemyDots[0], timestamp: event.timestamp})
+			this._badCasts.push({abilityId, dotsApplied, timestamp: event.timestamp})
 		}
-	}
-
-	_onApplyDot(event) {
-		const enemyDots = this._getEnemyDots(event.targetID)
-		enemyDots.push(event.ability.guid)
-	}
-
-	_onRemoveDot(event) {
-		const enemyDots = this._getEnemyDots(event.targetID)
-		const dotIndex = this._findDot(enemyDots)
-		if (dotIndex !== -1) {
-			enemyDots.splice(dotIndex, 1)
-		}
-	}
-
-	// Returns the enemy statuses state
-	_getEnemyDots(targetId) {
-		if (!this._enemies[targetId]) {
-			this._enemies[targetId] = []
-		}
-
-		return this._enemies[targetId]
-	}
-
-	_findDot(array) {
-		return array.findIndex(element => {
-			for (const dot of DOTS) {
-				if (element === dot) {
-					return true
-				}
-			}
-			return false
-		})
 	}
 
 	_onComplete() {
@@ -142,11 +111,11 @@ export default class Sidewinder extends Module {
 		// Builds a list item for each incorrect cast
 		const items = this._badCasts.map(cast => {
 			const ability = getDataBy(ACTIONS, 'id', cast.abilityId)
-			if (cast.appliedDot) {
+			if (cast.dotsApplied.length) {
 				return <List.Item key={cast.timestamp}>
 					<List.Content>
 						<Trans id="brd.sidewinder.list.one-dot">
-							{this._createTimelineButton(cast.timestamp)} <ActionLink {...ability}/> was cast with only <StatusLink {...getDataBy(STATUSES, 'id', cast.appliedDot)}/> applied.
+							{this._createTimelineButton(cast.timestamp)} <ActionLink {...ability}/> was cast with only <StatusLink {...getDataBy(STATUSES, 'id', cast.dotsApplied[0])}/> applied.
 						</Trans>
 					</List.Content>
 				</List.Item>
