@@ -7,6 +7,7 @@ const GREASED_LIGHTNING_STATUSES = [
 	STATUSES.GREASED_LIGHTNING_I.id,
 	STATUSES.GREASED_LIGHTNING_II.id,
 	STATUSES.GREASED_LIGHTNING_III.id,
+	STATUSES.GREASED_LIGHTNING_IV.id,
 ]
 
 const ROF_SPEEDMOD = 1.15
@@ -44,7 +45,7 @@ export default class Speedmod extends CoreSpeedmod {
 			}
 			break
 		case 'applybuffstack':
-			if (event.ability.guid === STATUSES.GREASED_LIGHTNING_I.id) {
+			if (event.ability.guid === STATUSES.GREASED_LIGHTNING.id) {
 				// applybuffstack only shows for stacks 2 and 3 of GL
 				// removebuffstack doesn't show for GL. This is handled by removebuff in parent
 				this._activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[GREASED_LIGHTNING_STATUSES[event.stack - 1]]

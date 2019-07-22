@@ -73,13 +73,6 @@ export default {
 		cooldown: 90,
 	},
 
-	HOWLING_FIST: {
-		id: 67,
-		name: 'Howling Fist',
-		icon: 'https://xivapi.com/i/000000/000207.png',
-		cooldown: 60,
-	},
-
 	PERFECT_BALANCE: {
 		id: 69,
 		name: 'Perfect Balance',

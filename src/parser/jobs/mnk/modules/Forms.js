@@ -160,7 +160,7 @@ export default class Forms extends Module {
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.skipped.content">
-					Avoid skipping Forms. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING_III}/> by skipping.
+					Avoid skipping Forms. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING}/> by skipping.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.skipped.why">
 					<Plural value={this._skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.

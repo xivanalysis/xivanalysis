@@ -12,22 +12,12 @@ export default class Cooldowns extends CoreCooldowns {
 				ACTIONS.FISTS_OF_EARTH.id,
 			],
 		},
-		{
-			name: 'Tackles',
-			actions: [
-				ACTIONS.FIRE_TACKLE.id,
-				ACTIONS.WIND_TACKLE.id,
-				ACTIONS.RIDDLE_OF_WIND.id,
-			],
-		},
 		ACTIONS.RIDDLE_OF_FIRE.id,
 		ACTIONS.BROTHERHOOD.id,
 		ACTIONS.THE_FORBIDDEN_CHAKRA.id,
 		ACTIONS.ELIXIR_FIELD.id,
-		ACTIONS.HOWLING_FIST.id,
 		ACTIONS.TORNADO_KICK.id,
 		ACTIONS.PERFECT_BALANCE.id,
-		ACTIONS.PURIFICATION.id,
 		ACTIONS.RIDDLE_OF_EARTH.id,
 		ACTIONS.MANTRA.id,
 	]

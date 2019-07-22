@@ -52,13 +52,6 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012526.png',
 	},
 
-	RIDDLE_OF_WIND: {
-		id: 1244,
-		name: 'Riddle of Wind',
-		icon: 'https://xivapi.com/i/012000/012530.png',
-		duration: 10,
-	},
-
 	FISTS_OF_EARTH: {
 		id: 104,
 		name: 'Fists of Earth',
@@ -105,9 +98,9 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012529.png',
 	},
 
-	GREASED_LIGHTNING_I: {
+	GREASED_LIGHTNING: {
 		id: 111,
-		name: 'Greased Lightning I',
+		name: 'Greased Lightning',
 		icon: 'https://xivapi.com/i/010000/010207.png',
 		duration: 16,
 	},
@@ -123,6 +116,13 @@ export default {
 		id: 113,
 		name: 'Greased Lightning III',
 		icon: 'https://xivapi.com/i/010000/010209.png',
+		duration: 16,
+	},
+
+	GREASED_LIGHTNING_IV: {
+		id: 30000,
+		name: 'Greased Lightning IV',
+		icon: 'https://xivapi.com/i/010000/010207.png',
 		duration: 16,
 	},
 }
