@@ -62,7 +62,7 @@ export default class Draw extends Module {
 	protected init() {
 		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this._onDraw)
 		this.addHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this._onSleeveDraw)
-		this.addHook('cast', {abilityId: [...PLAY], by: 'player'}, this._onPlay)
+		this.addHook('cast', {abilityId: PLAY, by: 'player'}, this._onPlay)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -73,18 +73,15 @@ export default class Draw extends Module {
 			// The first use, take holding as from the start of the fight
 			this._drawDrift = event.timestamp - this.parser.fight.start_time
 
-			console.log(this.parser.formatDuration(this._drawDrift))
 		} else if (this._sleeveResets > 0) {
 			this._sleeveResets--
 			this.cooldowns.reduceCooldown(ACTIONS.DRAW.id, SLEEVE_DRAW_CD_REDUCTION)
 			// Take holding as from the time it comes off cooldown, but it was a 3s cd
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - ((ACTIONS.DRAW.cooldown - SLEEVE_DRAW_CD_REDUCTION) * 1000)
-			console.log(this.parser.formatDuration(this._drawDrift))
 
 		} else {
 			// Take holding as from the time it comes off cooldown
 			this._drawDrift = event.timestamp - this._lastDrawTimestamp - (ACTIONS.DRAW.cooldown * 1000)
-			console.log(this.parser.formatDuration(this._drawDrift))
 		}
 
 		// Keep track of total drift time not using Draw
@@ -110,7 +107,6 @@ export default class Draw extends Module {
 	}
 
 	private _onComplete() {
-		console.log(this._plays)
 		// Max plays:
 		// [(fight time / 30s draw time) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
 		// eg 7:00: 14 -1 = 13  draws by default. 7:17 fight time would mean 14 draws, since they can play the last card at least.
@@ -124,12 +120,10 @@ export default class Draw extends Module {
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
 		const sleeveCounts = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000)) + 1
 		const playsFromSleeveDraw = sleeveCounts * SLEEVE_DRAW_PLAYS_GIVEN
-		console.log(playsFromSleeveDraw)
 
 		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION - (sleeveCounts * DRAW_CD_REFUND_PER_SLEEVE_PLAY)) / (ACTIONS.DRAW.cooldown * 1000))
 
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw
-		console.log(theoreticalMaxPlays)
 		// TODO: Need to account for resetting draw CD everytime sleeve plays
 		// TODO: Include downtime calculation for each fight??
 		// TODO: Calcultae more accurately based on Redraw uses

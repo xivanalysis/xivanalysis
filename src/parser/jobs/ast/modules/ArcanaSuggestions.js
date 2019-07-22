@@ -48,7 +48,7 @@ export default class ArcanaSuggestions extends Module {
 
 		this.cardLogs = this.arcanaTracking.getCardLogs.map(artifact => {
 
-			const isArcana = artifact.lastEvent && [...PLAY].includes(artifact.lastEvent.ability.guid)
+			const isArcana = artifact.lastEvent && PLAY.includes(artifact.lastEvent.ability.guid)
 			const target = isArcana ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
 			const targetName = target ? target.name : null
 			const targetJob = target ? target.type : null
