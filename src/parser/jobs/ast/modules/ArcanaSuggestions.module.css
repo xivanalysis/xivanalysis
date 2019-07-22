@@ -18,20 +18,13 @@
 .buffIcon {
 	width: 1.4285em;
 	margin-left: .25em;
-	vertical-align: baseline;
+	vertical-align: bottom;
 }
 
-.spreadSlot3 {
+.buffPlaceholder, .buffUnknown {
 	width: 1.4285em;
-	margin-left: .25em;
-	vertical-align: baseline;
-	margin-bottom: 3px;
-}
-
-.buffDummy, .buffUnknown {
-	width: 1.4285em;
-	margin: 0 0 0 0.25em;
-	vertical-align: baseline;
+    margin: 0 0 0 0.25em;
+    vertical-align: bottom;
 	height: 26px;
 	background-color: #efefef;
 	border: 1px solid #9f9f9f;
@@ -39,7 +32,26 @@
 	position: relative;
 }
 
-.buffUnknown span {
-	position: absolute;
-	left: 5px;
+.sealIconContainer {
+    display: inline-block;
+	position: relative;
+	width: 65px;
+	height: 26px;
+	vertical-align: bottom;
+}
+
+.sealIcon {
+    position: absolute;
+    top: 5px;
+    width: 18px;
+}
+
+.sealIcon:first-child {
+	left: 6px;
+}
+.sealIcon:nth-child(2) {
+	left: 24px;
+}
+.sealIcon:nth-child(3) {
+	left: 42px;
 }

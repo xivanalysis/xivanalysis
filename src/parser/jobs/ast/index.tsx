@@ -45,6 +45,17 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2019-07-23'),
+			Changes: () => <>
+				<strong>Round 2 support and improvements for Shadowbringers</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) Added warn tier at 85-90%</li>
+					<li>(<ActionLink {...ACTIONS.PLAY} />) Arcana Logs are back up, now includes prepull Plays</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2019-07-11'),
 			Changes: () => <>
 				<strong>Basic support for Shadowbringers</strong>:
