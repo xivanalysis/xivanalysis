@@ -30,7 +30,6 @@ export default class GreasedLightning extends Module {
 	static dependencies = [
 		'brokenLog',
 		'checklist',
-		'combatants',
 		'invuln',
 		'suggestions',
 	]
@@ -49,9 +48,6 @@ export default class GreasedLightning extends Module {
 	_earthSaves = []
 	_wastedEarth = 0
 
-	_windSaves = []
-	_wastedWind = 0
-
 	constructor(...args) {
 		super(...args)
 
@@ -62,11 +58,6 @@ export default class GreasedLightning extends Module {
 
 		// Cast will drop TK
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this._onTornadoKick)
-
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_WIND.id}, this._onRoWGain)
-
-		// Weirdly, stacks refresh when RoW does damage, not on cast. Only SE knows why.
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.RIDDLE_OF_WIND.id}, this._onRoWUse)
 
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this._onRoE)
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this._onReply)
@@ -192,31 +183,6 @@ export default class GreasedLightning extends Module {
 		this._earthSaves[0].clean = true
 	}
 
-	_onRoWGain(event) {
-		this._windSaves.unshift({clean: false, timestamp: event.timestamp})
-	}
-
-	_onRoWUse(event) {
-		// Ignore if we're building stacks
-		if (!this._currentStacks || this._currentStacks.stack < GL_MAX_STACKS) {
-			this._windSaves.shift()
-			return
-		}
-
-		// This is kinda derpy since it really depends on GCD length but,
-		// if we're in Coeurl and it's still live, there was no point to RoW.
-		// If we're not in Coeurl we'll assume stacks were gonna drop.
-		if (this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
-			if (event.timestamp - this._lastRefresh < GL_TIMEOUT_MILLIS) {
-				this._wastedWind++
-			}
-		} else {
-			this._lastRefresh = event.timestamp
-		}
-
-		this._windSaves[0].clean = true
-	}
-
 	_onTornadoKick() {
 		this._usedTornadoKick = true
 	}
@@ -254,11 +220,6 @@ export default class GreasedLightning extends Module {
 
 		// Count missed saves
 		const missedEarth = this._earthSaves.filter(earth => !earth.clean).length
-		this._windSaves.forEach(wind => {
-			if (!wind.clean) {
-				this._wastedWind++
-			}
-		})
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.gl.checklist.name">Keep Greased Lightning running</Trans>,
@@ -314,19 +275,6 @@ export default class GreasedLightning extends Module {
 				severity: SEVERITY.MINOR,
 				why: <Trans id="mnk.gl.suggestions.roe.wasted.why">
 					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
-				</Trans>,
-			}))
-		}
-
-		if (this._wastedWind) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.RIDDLE_OF_WIND.icon,
-				content: <Trans id="mnk.gl.suggestions.row.wasted.content">
-					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> without saving stacks is a potency loss since you lose the damage buff from <StatusLink {...STATUSES.FISTS_OF_FIRE} />.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="mnk.gl.suggestions.row.wasted.why">
-					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used <Plural value={this._wastedWind} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
 				</Trans>,
 			}))
 		}
