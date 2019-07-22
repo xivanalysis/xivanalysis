@@ -24,7 +24,7 @@ export default class OGCDDowntime extends CooldownDowntime {
 		let firstRagingStrikesCast = 0
 		let firstRagingStrikesApply = 0
 
-		// Used to capture a Raging Strike cast to fabricate a new one easily
+		// Used to capture a Raging Strike cast to splice a new one easily
 		let ragingStrikesCast = {}
 
 		for (const event of events) {
@@ -45,7 +45,10 @@ export default class OGCDDowntime extends CooldownDowntime {
 		}
 
 		if (firstRagingStrikesCast > firstRagingStrikesApply) {
-			this.parser.fabricateEvent({
+			const insertionIndex = events.findIndex(event => {
+				return event.timestamp >= firstRagingStrikesApply
+			})
+			events.splice(insertionIndex, 0, {
 				...ragingStrikesCast,
 				timestamp: firstRagingStrikesApply,
 			})
