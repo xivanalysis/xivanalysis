@@ -105,49 +105,22 @@ export default class Sidewinder extends Module {
 		if (!this._badCasts.length) {
 			return
 		}
-		if (this._amountOfBadSidewinders) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SIDEWINDER.icon,
-				content: <>
-					<Trans id="brd.sidewinder.suggestion.bad-sidewinder">
-				Only use <ActionLink {...ACTIONS.SIDEWINDER}/> when you have both <ActionLink {...ACTIONS.CAUSTIC_BITE}/> and <ActionLink {...ACTIONS.STORMBITE}/> active on the target. Remember that a DoT doesn't apply as soon as you cast it, so you have to wait for it to apply before casting <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/>.
-					</Trans>
-				</>,
-				tiers: {
-					5: SEVERITY.MAJOR,
-					3: SEVERITY.MEDIUM,
-					1: SEVERITY.MINOR,
-				},
-				value: this._amountOfBadSidewinders,
-				why: <>
-					<Trans id="brd.sidewinder.suggestion.bad-shadowbite.reason">
-						{this._amountOfBadSidewinders} casts of <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> without both DoTs applied.
-					</Trans>
-				</>,
-			}))
-		}
 
-		if (this._amountOfBadShadowbites) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SHADOWBITE.icon,
-				content: <>
-					<Trans id="brd.sidewinder.suggestion.bad-shadowbite">
-				Only use <ActionLink {...ACTIONS.SHADOWBITE}/> when you have both <ActionLink {...ACTIONS.CAUSTIC_BITE}/> and <ActionLink {...ACTIONS.STORMBITE}/> active on the target. Remember that a DoT doesn't apply as soon as you cast it, so you have to wait for it to apply before casting <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/>.
-					</Trans>
-				</>,
-				tiers: {
-					5: SEVERITY.MAJOR,
-					3: SEVERITY.MEDIUM,
-					1: SEVERITY.MINOR,
-				},
-				value: this._amountOfBadShadowbites,
-				why: <>
-					<Trans id="brd.sidewinder.suggestion.bad-shadowbite.reason">
-						{this._amountOfBadShadowbites} casts of <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/> without both DoTs applied.
-					</Trans>
-				</>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SIDEWINDER.icon,
+			content: <Trans id="brd.sidewinder.suggestion">
+			Only use <ActionLink {...ACTIONS.SIDEWINDER}/> and <ActionLink {...ACTIONS.SHADOWBITE}/> when you have both <ActionLink {...ACTIONS.CAUSTIC_BITE}/> and <ActionLink {...ACTIONS.STORMBITE}/> active on the target. Remember that a DoT doesn't apply as soon as you cast it, so you have to wait for it to apply before casting <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> or <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/>.
+			</Trans>,
+			tiers: {
+				5: SEVERITY.MAJOR,
+				3: SEVERITY.MEDIUM,
+				1: SEVERITY.MINOR,
+			},
+			value: this._amountOfBadSidewinders + this._amountOfBadShadowbites,
+			why: <Trans id="brd.sidewinder.suggestion.reason">
+				{this._amountOfBadSidewinders} casts of <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> and {this._amountOfBadShadowbites} casts of <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/> without both DoTs applied.
+			</Trans>,
+		}))
 	}
 
 	output() {
