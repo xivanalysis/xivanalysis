@@ -1,6 +1,7 @@
 import {fflogsApi} from 'api'
 import * as Errors from 'errors'
 import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import {HTTPError} from 'ky'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
@@ -14,6 +15,11 @@ export interface Report extends ProcessedReportFightsResponse {
 	loading: false
 }
 export type PossiblyLoadedReport = UnloadedReport | Report
+
+interface ErrorResponse {
+	status: number
+	error: string
+}
 
 export class ReportStore {
 	@observable report?: PossiblyLoadedReport
@@ -46,12 +52,16 @@ export class ReportStore {
 				this.report = undefined
 			})
 
-			// TODO: Probably need more handling than this...
-			if (e.response && e.response.data.error === 'This report does not exist or is private.') {
-				globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
-			} else {
-				globalErrorStore.setGlobalError(new Errors.UnknownApiError())
+			// TODO: Add more error handling to this if they start cropping up more
+			if (e instanceof HTTPError) {
+				const json: ErrorResponse | undefined = await e.response.json()
+				if (json && json.error === 'This report does not exist or is private.') {
+					globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
+					return
+				}
 			}
+
+			globalErrorStore.setGlobalError(new Errors.UnknownApiError())
 			return
 		}
 
