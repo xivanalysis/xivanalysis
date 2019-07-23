@@ -37,7 +37,7 @@ export default class Combust extends DoTs {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.dots.rule.name">Keep your DoT up</Trans>,
 			description: <Trans id="ast.dots.rule.description">
-				While Astrologians only have one DoT, it still makes up a good portion of your damage. Use it to weave (<ActionLink {...ACTIONS.DRAW} />) and manage cards, or to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.
+				Combust III makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<ActionLink {...ACTIONS.DRAW} />) and manage cards, or maneuver around without dropping GCD uptime.
 				</Trans>,
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
