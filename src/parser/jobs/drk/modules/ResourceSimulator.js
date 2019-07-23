@@ -123,6 +123,9 @@ export default class Resources extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
+		// Hook cast for Living Shadow, as it doesn't directly deal damage so doesn't have an aoedamage event
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.LIVING_SHADOW.id}, this._onEvent)
+		// Hook cast for TBN application
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.THE_BLACKEST_NIGHT.id}, this._onCastBlackestNight)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
 		this.addHook('death', {by: 'player'}, this._onDeath)
@@ -226,7 +229,6 @@ export default class Resources extends Module {
 			} else {
 				actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
 			}
-
 
 			if (RESOURCE_SPENDERS[abilityId].mp < 0 && this._darkArtsProc) {
 				// MP Spending attack (Edge/Flood of Shadow) - free with Dark Arts proc
