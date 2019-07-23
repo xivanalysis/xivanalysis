@@ -15,25 +15,23 @@ export default class TrickAttackWindow extends Module {
 	]
 
 	_dwadOutsideTa = 0
+	_assassinateOutsideTa = 0
 	_armorCrushInTa = 0
 
 	_dwadCast = false
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, () => this._dwadCast = true)
 		this.addHook('combo', {by: 'player', abilityId: ACTIONS.ARMOR_CRUSH.id}, this._onArmorCrush)
 		this.addHook('damage', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
+		this.addHook('damage', {by: 'player', abilityId: ACTIONS.ASSASSINATE.id}, this._onAssassinate)
 		this.addHook('complete', this._onComplete)
 	}
 
 	_targetHasVuln(targetId) {
 		const target = this.enemies.getEntity(targetId)
 		return target && target.hasStatus(STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id)
-	}
-
-	_onDwadCast() {
-		this._dwadCast = true // DWaD casts don't have a target, so just flag it and check the target in the damage event
 	}
 
 	_onArmorCrush(event) {
@@ -52,6 +50,12 @@ export default class TrickAttackWindow extends Module {
 		}
 	}
 
+	_onAssassinate(event) {
+		if (!this._targetHasVuln(event.targetID)) {
+			this._assassinateOutsideTa++
+		}
+	}
+
 	_onComplete() {
 		if (this._dwadOutsideTa > 0) {
 			this.suggestions.add(new Suggestion({
@@ -62,6 +66,19 @@ export default class TrickAttackWindow extends Module {
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="nin.ta-window.suggestions.dream.why">
 					You used Dream Within A Dream <Plural value={this._dwadOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
+				</Trans>,
+			}))
+		}
+
+		if (this._assassinateOutsideTa > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.ASSASSINATE.icon,
+				content: <Trans id="nin.ta-window.suggestions.assassinate.content">
+					Try to fit your <ActionLink {...ACTIONS.ASSASSINATE}/> casts inside your Trick Attack windows. Since it chains off of <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/>, you should be able to use them both in every window.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+				why: <Trans id="nin.ta-window.suggestions.assassinate.why">
+					You used Assassinate <Plural value={this._assassinateOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
 				</Trans>,
 			}))
 		}
