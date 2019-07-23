@@ -8,7 +8,10 @@ import {Meta} from 'parser/core/Meta'
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mch" */),
 	Description: () => <>
-		<Trans id="mch.about.description"><p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to tighten up your rotation, better manage procs, and get the most out of your Wildfire burst windows.</p></Trans>
+		<Trans id="mch.about.description">
+			<p>BOB! <strong>DO SOMETHING!</strong></p>
+			<p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to keep your rotation tight, keep your tools on cooldown, make your Wildfire windows as strong as possible, and get the most out of the best pet any job has right now.</p>
+		</Trans>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
