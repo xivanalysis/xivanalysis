@@ -19,7 +19,7 @@
   "ast.arcana-undraw-usage.suggestions.content": "Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <0/> instead of playing it or converting it with <1/>",
   "ast.arcana-undraw-usage.suggestions.why": "{0} instances of using undraw.",
   "ast.dots.requirement.uptime.name": "<0/> uptime",
-  "ast.dots.rule.description": "While Astrologians only have one DoT, it still makes up a good portion of your damage. Use it to weave (<0/>) and manage cards, or to maneuver around without dropping GCD uptime. Aim to keep this DoT up at all times.",
+  "ast.dots.rule.description": "Combust III makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<0/>) and manage cards, or maneuver around without dropping GCD uptime.",
   "ast.dots.rule.name": "Keep your DoT up",
   "ast.dots.suggestion.clip.content": "Avoid refreshing <0/> significantly before it expires.",
   "ast.dots.suggestion.clip.why": "{0} of <0/> lost to early refreshes.",
