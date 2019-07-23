@@ -82,13 +82,7 @@ export default class ArcanaSuggestions extends Module {
 	}
 
 	output() {
-		const cardDisplayPanel = [{
-			key: 'arcana-logs',
-			title: {
-				content: <Trans id="ast.arcana-suggestions.messages.accordion-title">Full Arcana Logs</Trans>,
-			},
-			content: {
-				content: <><Table collapsing unstackable className={styles.cardActionTable}>
+		const cardDisplayTable = <><Table collapsing unstackable className={styles.cardActionTable}>
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell width={1}>
@@ -155,28 +149,20 @@ export default class ArcanaSuggestions extends Module {
 					<Trans id="ast.arcana-suggestions.scroll-to-top-button">Jump to start of Arcana Logs</Trans>
 				</Button>
 				</>
-				,
-			},
-		}]
 
-		return <>
-			<p>
-				<Trans id="ast.arcana-suggestions.messages.explanation">
-					This section keeps track of every card action made during the fight, and the state of the spread after each action.
-				</Trans>
-			</p>
-			<p>
-				<Trans id="ast.arcana-suggestions.messages.footnote">
-					* No pre-pull actions are being represented aside from <ActionLink {...ACTIONS.PLAY} />, and this is only an approximation based on the buff duration.
-				</Trans>
-			</p>
-			<Accordion
-				exclusive={false}
-				panels={cardDisplayPanel}
-				styled
-				fluid
-			/>
-		</>
+			return <>
+				<p>
+					<Trans id="ast.arcana-suggestions.messages.explanation">
+						This section keeps track of every card action made during the fight, and the state of the spread after each action.
+					</Trans>
+				</p>
+				<p>
+					<Trans id="ast.arcana-suggestions.messages.footnote">
+						* No pre-pull actions are being represented aside from <ActionLink {...ACTIONS.PLAY} />, and this is only an approximation based on the buff duration.
+					</Trans>
+				</p>
+				{cardDisplayTable}
+			</>
 	}
 
 	// Helper for output()

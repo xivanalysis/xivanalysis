@@ -5,11 +5,11 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Suggestions from 'parser/core/modules/Suggestions'
 import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from './ArcanaGroups'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
+const DEATH_EVENT_STATUS_DROP_DELAY = 2000
 
 const CARD_GRANTING_ABILITIES = [ACTIONS.DRAW.id, ACTIONS.REDRAW.id, ACTIONS.MINOR_ARCANA.id]
 
@@ -37,6 +37,7 @@ const ARCANA_STATUSES = [
 const PLAY_TO_STATUS_LOOKUP = _.zipObject(PLAY, DRAWN_ARCANA)
 const STATUS_TO_DRAWN_LOOKUP = _.zipObject(ARCANA_STATUSES, DRAWN_ARCANA)
 const STATUS_TO_PLAY_LOOKUP = _.zipObject(ARCANA_STATUSES, PLAY)
+const DRAWN_TO_PLAY_LOOKUP = _.zipObject(DRAWN_ARCANA, PLAY)
 
 export enum SealType {
 	NOTHING = 0,
@@ -84,8 +85,6 @@ export default class ArcanaTracking extends Module {
 	]
 	static title = t('ast.arcana-tracking.title')`Arcana Tracking`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
-
-	@dependency private suggestions!: Suggestions
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
@@ -180,6 +179,7 @@ export default class ArcanaTracking extends Module {
 		if (event.timestamp >= this.parser.fight.start_time + (STATUSES.THE_BALANCE.duration * 1000)) {
 			return
 		}
+
 		this.prepullArcanas.forEach(arcanaBuff => {
 			if (arcanaBuff.ability.guid === event.ability.guid
 				&& arcanaBuff.targetID === event.targetID) {
@@ -219,17 +219,19 @@ export default class ArcanaTracking extends Module {
 
 	/**
 	 * This will run on removebuff. It will look for the loss of Arcanas Drawn statuses
+	 * 5.0: This was a lot more meaningful from 
 	 *
-	 * a) If it can't find any clear reason why the player had lost the buff, it will assume they had it from prepull
-	 *    (As an example: expanded balance 2 sec into pull before anything else should trigger this to fill in slots with Expanded RR and Balance)
+	 * a) If it can't find any clear reason why the player had lost the buff, let's do a retconsearch to figure out since when they had it
+	 * 
 	 * b) If they lost the buff with no link to any timestamp, it could be a /statusoff macro.
 	 *    Creates a new entry as this is technically also a card action.
 	 *
 	 */
 	private offDrawnStatus(event: BuffEvent) {
+
 		if (DRAWN_ARCANA.includes(event.ability.guid)) {
 			// a) check if this card was obtained legally, if not, retcon the logs
-			this.retconSearch(event.ability.guid)
+			this.retconSearch(this.arcanaDrawnToPlay(event.ability.guid))
 
 			// b) check if this was a standalone statusoff/undraw, if so, fab undraw event and add to logs
 			const isPaired = this.cardStateLog.findIndex(stateItem => stateItem.lastEvent
@@ -263,6 +265,7 @@ export default class ArcanaTracking extends Module {
 	 *
 	 */
 	private onCast(event: CastEvent) {
+
 		const actionId = event.ability.guid
 
 		// Piecing together what they have on prepull
@@ -277,7 +280,6 @@ export default class ArcanaTracking extends Module {
 		if (PLAY.includes(actionId)) {
 
 			cardStateItem.drawState = DrawnType.NOTHING
-
 			// Make sure they have been holding onto this from the last instance of a DRAW/REDRAW/MINOR_ARCANA
 			this.retconSearch(actionId)
 
@@ -318,6 +320,14 @@ export default class ArcanaTracking extends Module {
 	 * Inserts a new event into _cardStateLogs
 	 */
 	private onDeath(event: DeathEvent) {
+
+		// TODO: Duct tape fix. Check on the previous event - it may be an erroneous drawnArcana flagged by offDrawnArcana. Statuses SEEM to drop 2s + 20ms earlier than the Death event.
+		const lastCardState = {..._.last(this.cardStateLog)} as CardState
+		if (lastCardState.lastEvent.type === 'cast' && lastCardState.lastEvent.ability.guid === ACTIONS.UNDRAW.id
+		&& (event.timestamp - lastCardState.lastEvent.timestamp <= DEATH_EVENT_STATUS_DROP_DELAY + LINKED_EVENT_THRESHOLD)) {
+			this.cardStateLog.pop()
+		}
+		// Fab a death event
 		this.cardStateLog.push({
 			lastEvent: {
 				...event,
@@ -339,7 +349,7 @@ export default class ArcanaTracking extends Module {
 		// First check that there's no DRAW between this and pullIndex
 		const lookupLog = this.cardStateLog.slice(this.pullIndex + 1)
 		if (lookupLog.length > 0) {
-			lookupLog.forEach(cardState => {
+				lookupLog.forEach(cardState => {
 				if (cardState.lastEvent.type === 'cast' && cardState.lastEvent.ability.guid === ACTIONS.DRAW.id) {
 					// We're done since they had a DRAW
 					return this.pullStateInitialized = true
@@ -347,7 +357,7 @@ export default class ArcanaTracking extends Module {
 			})
 		}
 
-		if (PLAY.includes(actionId)) {
+		if (!this.pullStateInitialized && PLAY.includes(actionId)) {
 			// They had something in the draw slot
 			const drawnStatus = this.arcanaActionToStatus(actionId)
 			this.cardStateLog.forEach((cardState, index) => {
@@ -366,10 +376,10 @@ export default class ArcanaTracking extends Module {
 	/**
 	 * Loops back to see if the specified card was in possession without the possiblity of it being obtained via legal abilities.
 	 * This is presumed to mean they had it prepull, or since that latest ability. This function will then retcon the history since we know they had it.
+	 * The reason why this is necessary is because some logs come with draw/buff/play out of order.
 	 * Would be done in normaliser except we won't
 	 *
 	 * 5.0: Haha we only have one card slot now.
-	 * TODO: Is this possibly not necessary anymore, given we only need to track one slot?
 	 *
 	 * @param actionId{array} The specified card drawn id
 	 * @return {void} null
@@ -474,9 +484,23 @@ export default class ArcanaTracking extends Module {
 	 * @param arcanaId{int} The ID of an arcana status.
 	 * @return {int} the ID of the arcana in play, or the same id received if it didn't match the flip lookup.
 	 */
-	arcanaStatusToPlay(arcanaId: number) {
+	public arcanaStatusToPlay(arcanaId: number) {
 		if (ARCANA_STATUSES.includes(arcanaId)) {
 			arcanaId = STATUS_TO_PLAY_LOOKUP[arcanaId]
+		}
+
+		return arcanaId
+	}
+
+	/**
+	 * Flips a drawn arcana status id to the matching arcana action id
+	 *
+	 * @param arcanaId{int} The ID of an arcana drawn status.
+	 * @return {int} the ID of the arcana in play, or the same id received if it didn't match the flip lookup.
+	 */
+	public arcanaDrawnToPlay(arcanaId: number) {
+		if (DRAWN_ARCANA.includes(arcanaId)) {
+			arcanaId = DRAWN_TO_PLAY_LOOKUP[arcanaId]
 		}
 
 		return arcanaId
