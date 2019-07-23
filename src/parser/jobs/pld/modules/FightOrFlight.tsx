@@ -18,15 +18,10 @@ interface TimestampRotationMap {
 }
 
 const SEVERETIES = {
-	MISSED_CIRCLE_OF_SCORN: {
+	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		4: SEVERITY.MAJOR,
-	},
-	MISSED_SPIRIT_WITHIN: {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		4: SEVERITY.MAJOR,
+		4: SEVERITY.MEDIUM,
+		8: SEVERITY.MAJOR,
 	},
 	MISSED_GORING: {
 		1: SEVERITY.MINOR,
@@ -56,6 +51,9 @@ const CONSTANTS = {
 	CIRCLE_OF_SCORN: {
 		EXPECTED: 1,
 	},
+	INTERVENE: {
+		EXPECTED: 1,
+	},
 	GCD: {
 		EXPECTED: 10,
 	},
@@ -68,6 +66,7 @@ class FightOrFlightState {
 	goringCounter: number = 0
 	circleOfScornCounter: number = 0
 	spiritsWithinCounter: number = 0
+	interveneCounter: number = 0
 }
 
 class FightOrFlightErrorResult {
@@ -75,6 +74,7 @@ class FightOrFlightErrorResult {
 	missedGorings: number = 0
 	missedSpiritWithins: number = 0
 	missedCircleOfScorns: number = 0
+	missedIntervenes: number = 0
 	goringTooCloseCounter: number = 0
 }
 
@@ -141,6 +141,9 @@ export default class FightOrFlight extends Module {
 				case ACTIONS.SPIRITS_WITHIN.id:
 					this.fofState.spiritsWithinCounter++
 					break
+				case ACTIONS.INTERVENE.id:
+					this.fofState.interveneCounter++
+					break
 			}
 
 			if (!Array.isArray(this.fofRotations[this.fofState.start])) {
@@ -156,11 +159,14 @@ export default class FightOrFlight extends Module {
 		this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
 		this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
 		this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
+		this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.interveneCounter)
 
 		this.fofState = new FightOrFlightState()
 	}
 
 	private onComplete() {
+		const missedOgcds = this.fofErrorResult.missedSpiritWithins + this.fofErrorResult.missedCircleOfScorns + this.fofErrorResult.missedIntervenes
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
 			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
@@ -176,8 +182,8 @@ export default class FightOrFlight extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade.content">
-				Try to land 2 <ActionLink {...ACTIONS.GORING_BLADE}/> during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window. One at the beginning and one at the end.
+				Try to land 2 <ActionLink {...ACTIONS.GORING_BLADE}/> applications during
+				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window: one at the beginning and one at the end.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
 				<Plural value={this.fofErrorResult.missedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
@@ -188,28 +194,15 @@ export default class FightOrFlight extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SPIRITS_WITHIN.icon,
-			content: <Trans id="pld.fightorflight.suggestions.spirits-within.content">
-				Try to land one <ActionLink {...ACTIONS.SPIRITS_WITHIN}/> during
+			content: <Trans id="pld.fightorflight.suggestions.ogcds.content">
+				Try to land at least one cast of each of your off-GCD skills during
 				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.spirits-within.why">
-				<Plural value={this.fofErrorResult.missedSpiritWithins} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+			why: <Trans id="pld.fightorflight.suggestions.ogcds.why">
+				<Plural value={missedOgcds} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_SPIRIT_WITHIN,
-			value: this.fofErrorResult.missedSpiritWithins,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.CIRCLE_OF_SCORN.icon,
-			content: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.content">
-				Try to land one <ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/> during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
-			</Trans>,
-			why: <Trans id="pld.fightorflight.suggestions.circle-of-scorn.why">
-				<Plural value={this.fofErrorResult.missedCircleOfScorns} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
-			</Trans>,
-			tiers: SEVERETIES.MISSED_CIRCLE_OF_SCORN,
-			value: this.fofErrorResult.missedCircleOfScorns,
+			tiers: SEVERETIES.MISSED_OGCDS,
+			value: missedOgcds,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
@@ -255,6 +248,10 @@ export default class FightOrFlight extends Module {
 					accessor: 'circleOfScorn',
 				},
 				{
+					header: <ActionLink showName={false} {...ACTIONS.INTERVENE}/>,
+					accessor: 'intervene',
+				},
+				{
 					header: <ActionLink showName={false} {...ACTIONS.GORING_BLADE}/>,
 					accessor: 'goring',
 				},
@@ -277,6 +274,10 @@ export default class FightOrFlight extends Module {
 						circleOfScorn: {
 							actual: this.countAbility(rotation, ACTIONS.CIRCLE_OF_SCORN.id),
 							expected: CONSTANTS.CIRCLE_OF_SCORN.EXPECTED,
+						},
+						intervene: {
+							actual: this.countAbility(rotation, ACTIONS.INTERVENE.id),
+							expected: CONSTANTS.INTERVENE.EXPECTED,
 						},
 						goring: {
 							actual: this.countAbility(rotation, ACTIONS.GORING_BLADE.id),
