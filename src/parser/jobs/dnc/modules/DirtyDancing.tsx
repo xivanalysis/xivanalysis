@@ -13,6 +13,7 @@ import Module, {dependency} from 'parser/core/Module'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Invulnerability from 'parser/core/modules/Invulnerability'
+import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
@@ -59,6 +60,11 @@ const EXPECTED_DANCE_MOVE_COUNT = {
 	[-1]: 0,
 }
 
+const STEP_COOLDOWN_MILLIS = {
+	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown * 1000,
+	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown * 1000,
+}
+
 class Dance {
 	start: number
 	end?: number
@@ -102,11 +108,21 @@ export default class DirtyDancing extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
+	@dependency private statistics!: Statistics
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
 	private dirtyDances = 0
 	private footlooseDances = 0
+
+	private previousUseTimestamp = {
+		[ACTIONS.STANDARD_STEP.id]: this.parser.fight.start_time,
+		[ACTIONS.TECHNICAL_STEP.id]: this.parser.fight.start_time,
+	}
+	private totalDrift = {
+		[ACTIONS.STANDARD_STEP.id]: 0,
+		[ACTIONS.TECHNICAL_STEP.id]: 0,
+	}
 
 	protected init() {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
@@ -120,6 +136,13 @@ export default class DirtyDancing extends Module {
 		const newDance = new Dance(event.timestamp)
 		newDance.rotation.push(event)
 		this.danceHistory.push(newDance)
+		const stepId = event.ability.guid
+		if (this.previousUseTimestamp[stepId]) {
+			const lastUse = this.previousUseTimestamp[stepId]
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.invuln.getInvulnerableUptime('any', lastUse, event.timestamp))
+			this.totalDrift[stepId] += drift
+			this.previousUseTimestamp[stepId] = event.timestamp
+		}
 
 		return newDance
 	}
@@ -248,6 +271,32 @@ export default class DirtyDancing extends Module {
 				}),
 			],
 		}))
+
+		if (this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id] > 1) {
+			this.statistics.add(new SimpleStatistic({
+				title: <Trans id="dnc.dirty-dancing.standard-drift.title">Approximate Drift</Trans>,
+				icon: ACTIONS.STANDARD_STEP.icon,
+				value: this.parser.formatDuration(this.totalDrift[ACTIONS.STANDARD_STEP.id]),
+				info: (
+					<Trans id="dnc.dirty-dancing.standard-drift.info">
+						You may have lost a use of <ActionLink {...ACTIONS.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+					</Trans>
+				),
+			}))
+		}
+
+		if (this.totalDrift[ACTIONS.TECHNICAL_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.TECHNICAL_STEP.id] > 1) {
+			this.statistics.add(new SimpleStatistic({
+				title: <Trans id="dnc.dirty-dancing.technical-drift.title">Approximate Drift</Trans>,
+				icon: ACTIONS.TECHNICAL_STEP.icon,
+				value: this.parser.formatDuration(this.totalDrift[ACTIONS.TECHNICAL_STEP.id]),
+				info: (
+					<Trans id="dnc.dirty-dancing.technical-drift.info">
+						You may have lost a use of <ActionLink {...ACTIONS.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+					</Trans>
+				),
+			}))
+		}
 	}
 
 	output() {
