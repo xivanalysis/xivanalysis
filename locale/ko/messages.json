@@ -3,7 +3,6 @@
   "ast.about.description-2": "\n힐러로서 파티의 생존을 보장과 동시에 최대한 마나 및 사용 가능한 기술들을 효율적으로 사용하는 것을 목표로 하십시오. 이를 위해서 파트너 힐러와의 조율할시 자연적으로 글쿨여유가 생겨 파티에게 딜 기여를 더 높일 수 있습니다. \n\n이 툴은 단순한 적용 시간과 글쿨기 사용 조언 뿐만 아니라 각종 카드 강화 버프들을 어떻게 사용했는지 정리하여 보여줍니다.\n",
   "ast.about.description.warning.development": "모두가 손쉽게 분석자료를 이해할 수 있게하기 위해선 여러분들의 도움이 필요합니다! 저희의 디스코드는 여러분들의 제안을 받기 위해 언제나 열려있습니다.",
   "ast.about.description.warning.healer": "현재 보스의 무적 상태를 정확하게 판단할 수 없는 상태입니다. 이에 따라 힐러들의 상시 캐스팅 및 도트 데미지 적용 시간같은 중요한 항목들을 정확하게 판단할 수 없습니다.",
-  "ast.arcana-suggestions.messages.accordion-title": "전체 아르카나 로그",
   "ast.arcana-suggestions.messages.explanation": "이 섹션은 전투 중 사용된 카드들과 각 카드의 강화 상태를 추적합니다.",
   "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "마지막 액션",
