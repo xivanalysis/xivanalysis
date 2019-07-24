@@ -219,10 +219,10 @@ export default class ArcanaTracking extends Module {
 
 	/**
 	 * This will run on removebuff. It will look for the loss of Arcanas Drawn statuses
-	 * 5.0: This was a lot more meaningful from 
+	 * 5.0: This was a lot more meaningful from
 	 *
 	 * a) If it can't find any clear reason why the player had lost the buff, let's do a retconsearch to figure out since when they had it
-	 * 
+	 *
 	 * b) If they lost the buff with no link to any timestamp, it could be a /statusoff macro.
 	 *    Creates a new entry as this is technically also a card action.
 	 *
