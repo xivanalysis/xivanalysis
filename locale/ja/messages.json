@@ -224,6 +224,8 @@
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "<0/> は<1/>かコンボの5段目に使用するようにしましょう。他の箇所では確定クリティカルの恩恵が小さくなります。",
   "drg.buffs.suggestions.life-surge.why": "あなたは最適でないGCD上で {0} を使っている {1, plural, one {# time} other {# times}}.",
+  "drg.buffs.suggestions.solo-ds.content": "",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "",
   "drg.debuffs.checklist.description": "",
   "drg.debuffs.checklist.name": "デバフの維持率",
