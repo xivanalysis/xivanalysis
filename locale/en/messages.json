@@ -224,6 +224,8 @@
   "drg.buffs.suggestions.bad-lcs.why": "{badLanceCharges} of your Lance Charge windows started right after a standard combo finisher.",
   "drg.buffs.suggestions.life-surge.content": "Avoid using <0/> on any GCD that isn't <1/> or a 5th combo hit. Any other combo action will have significantly less potency, losing a lot of the benefit of the guaranteed crit.",
   "drg.buffs.suggestions.life-surge.why": "You used {0} on a non-optimal GCD {1, plural, one {# time} other {# times}}.",
+  "drg.buffs.suggestions.solo-ds.content": "Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.",
+  "drg.buffs.suggestions.solo-ds.why": "At least 1 of your Dragon Sight casts didn't have a tether partner.",
   "drg.buffs.title": "Lance Charge & Dragon Sight",
   "drg.debuffs.checklist.description": "<0/> provides a potent DoT which should be maintained at all times.",
   "drg.debuffs.checklist.name": "Keep your debuffs up",

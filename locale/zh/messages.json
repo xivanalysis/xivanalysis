@@ -224,6 +224,8 @@
   "drg.buffs.suggestions.bad-lcs.why": "",
   "drg.buffs.suggestions.life-surge.content": "不要在<1/>与龙5以外的GCD使用<0/>。用在其他任何连击技能上，都会显著降低威力，损失大量必定暴击带来的收益。",
   "drg.buffs.suggestions.life-surge.why": "你在非最优GCD使用了 {1, plural, other {# 次}}{0}",
+  "drg.buffs.suggestions.solo-ds.content": "",
+  "drg.buffs.suggestions.solo-ds.why": "",
   "drg.buffs.title": "",
   "drg.debuffs.checklist.description": "",
   "drg.debuffs.checklist.name": "维持你的Debuff覆盖",
