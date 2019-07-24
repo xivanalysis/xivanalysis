@@ -6,8 +6,8 @@ import {Table, Button} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-//value to be added to the gcd to avoid false positives
-const GCD_ERROR_OFFSET = 100
+//value to be added to the gcd to avoid false positives. 100ms for caster tax, 50ms for gcd jitter.
+const GCD_ERROR_OFFSET = 150
 
 //slide cast period is 500 ms.
 const SLIDECAST_OFFSET = 500
@@ -40,7 +40,7 @@ export default class NotCasting extends Module {
 
 	_onCast(event) {
 		//better than using 2.5s I guess
-		const gcdLength = this.gcd.getEstimate(false)
+		const gcdLength = this.gcd.getEstimate(true)
 		let timeStamp = event.timestamp
 
 		//coming from a hard cast, adjust for slidecasting
@@ -68,7 +68,7 @@ export default class NotCasting extends Module {
 	}
 
 	_onBegin(event) {
-		const gcdLength = this.gcd.getEstimate(false)
+		const gcdLength = this.gcd.getEstimate(true)
 		if (this._noCastWindows.current) {
 			if (event.timestamp - this._noCastWindows.current.start > gcdLength + GCD_ERROR_OFFSET) {
 				this._stopAndSave(event.timestamp)
@@ -96,7 +96,7 @@ export default class NotCasting extends Module {
 	}
 
 	_onComplete(event) {
-		const gcdLength = this.gcd.getEstimate(false)
+		const gcdLength = this.gcd.getEstimate(true)
 		//finish up
 		this._stopAndSave(event.timestamp)
 		//filter out invuln periods
@@ -108,7 +108,7 @@ export default class NotCasting extends Module {
 	}
 
 	output() {
-		const gcdLength = this.gcd.getEstimate(false)
+		const gcdLength = this.gcd.getEstimate(true)
 		if (this._noCastWindows.history.length === 0) { return }
 		return <Table collapsing unstackable compact="very">
 			<Table.Header>
