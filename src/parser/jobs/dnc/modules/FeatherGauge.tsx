@@ -10,7 +10,7 @@ import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
 import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 
-import styles from './FeatherGauge.module.css'
+import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
 	ACTIONS.REVERSE_CASCADE.id,
@@ -72,7 +72,7 @@ export default class FeatherGauge extends Module {
 	output() {
 		const dncColor = Color(JOBS.DANCER.colour)
 
-		/* tslint-disable no-magic-numbers */
+		// tslint:disable:no-magic-numbers
 		const data = {
 			datasets: [{
 				label: 'Feathers',
@@ -82,6 +82,7 @@ export default class FeatherGauge extends Module {
 				borderColor: dncColor.fade(0.5),
 			}],
 		}
+		// tslint:enable:no-magic-numbers
 
 		return <Fragment>
 		<span className={styles.helpText}>
