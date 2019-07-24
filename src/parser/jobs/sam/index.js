@@ -31,6 +31,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-7-24'),
+		Changes: () => <>Added Drift check to Meikyo Shisui along with use check. </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},{
 		date: new Date('2019-07-22'),
 		Changes: () => <>Fixed speed buff provided by Shifu. GCD estimations should be improved.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],
