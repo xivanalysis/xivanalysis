@@ -303,7 +303,7 @@
   "mch.heat.title": "과열 구간",
   "mch.queen.accordion.message": "",
   "mch.queen.suggestions.missing-bunker.content": "",
-  "mch.queen.suggestions.missing-bunker.why": "",
+  "mch.queen.suggestions.missing-bunker.why": "오토마톤 퀸 소환 구간에서 파일 벙커로 마무리 하지 않은 실수를 {missingBunkers} 회 하였습니다.",
   "mch.queen.title": "오토마톤 퀸 사용",
   "mch.queen.trigger.queenless-queen-attack": "오토마톤 퀸이 존재하지 않는 상태에서 <0/>을 사용하였습니다.",
   "mch.reassemble.suggestions.bad-gcds.content": "단일 대상에겐 반드시 <0/>을 글쿨기중 위력이 가장 높은<1/>과 <2/>으로 사용해야합니다.",
