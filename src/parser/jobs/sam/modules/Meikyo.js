@@ -85,19 +85,17 @@ export default class Meikyo extends Module {
 
 	_onComplete() {
 
-
 		//invuln check time for drift
 
 		const INVULN = (this.invuln.getInvulnerableUptime()/1000)
-		//const FORGIVEN_DRIFT = Math.floor(INVULN / MEIKYO_COOLDOWN)
-		const FIGHT_DURATION = (this.parser.fightDuration - INVULN)/1000
+		//const FORGIVEN_DRIFT = Math.floor(INVULN / MEIKYO_COOLDOWN) //this will calculate the amount of full recasts during a fight where a person could not use the skill.
+		const FIGHT_DURATION = ((this.parser.fightDuration/1000) - INVULN)
 		const EXPECTED_MEIKYO = Math.floor(FIGHT_DURATION/ MEIKYO_COOLDOWN)
 		const missedMeikyo = Math.floor(EXPECTED_MEIKYO - this._totalMeikyoBuffs)
 
 		//if (FORGIVEN_DRIFT > 0) {
 		//	this._totalDrift = this._totalDrift - (FORGIVEN_DRIFT * MEIKYO_COOLDOWN)
 		//}
-
 
 		//SUGGESTION TIME!
 
