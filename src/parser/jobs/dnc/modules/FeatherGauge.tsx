@@ -50,6 +50,12 @@ export default class FeatherGauge extends Module {
 	}
 	private onConsumeFeather() {
 		this.feathersConsumed++
+		// If we consumed a feather when we think we don't have one, clearly we do, so update the history to reflect that
+		if (this.currentFeathers < 1) {
+			const prevHistory = this.history.pop()
+			prevHistory.y = 1
+			this.history.push(prevHistory)
+		}
 		this.setFeather(this.currentFeathers - 1)
 	}
 	private onDeath() {
