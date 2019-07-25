@@ -3,14 +3,17 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import PrecastAction from 'parser/core/modules/PrecastAction'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import SectStatistic from './SectStatistic'
+
+const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
 
 const ASPECTED_ACTIONS = [
 	ACTIONS.ASPECTED_BENEFIC.id,
@@ -78,25 +81,18 @@ const NOCTURNAL_SECT_BUFF_ABILITY = {
 }
 
 // Just in case they go through "THIS MUCH" of the fight with no sect, we're NOT going to babysit the whole log
-// tslint:disable-next-line: no-magic-numbers
 const GIVE_UP_THRESHOLD = 60000
 
 // Determine sect by checking the result of an aspected spell/ability
 export default class Sect extends Module {
 	static handle = 'sect'
-	static dependencies = [
-		// Forcing action to run first, cus we want to always splice in before it.
-		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
-	]
 
 	@dependency private statistics!: Statistics
+	@dependency private precastAction!: PrecastAction
 	@dependency private suggestions!: Suggestions
-	@dependency private combatants!: Combatants
 
 	private pullWithoutSect = false
 	private activeSectId: string | number | undefined = undefined
-
-	private partyComp: string[] = []
 
 	protected init() {
 		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
@@ -192,16 +188,8 @@ export default class Sect extends Module {
 		/*
 			SUGGESTION: Noct with Scholar
 		*/
-		const combatants = this.combatants.getEntities()
-		for (const [key, combatant] of Object.entries(combatants)) {
-
-			if (combatant.type === 'LimitBreak') {
-				continue
-			}
-			this.partyComp.push(combatant.type)
-		}
-
-		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && this.partyComp.includes('Scholar')) {
+		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
+		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && withScholar ) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">
@@ -214,20 +202,23 @@ export default class Sect extends Module {
 			}))
 		}
 
-		if (this.activeSectId) {
-			const icon = ACTIONS.DIURNAL_SECT.id === this.activeSectId || !this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon
-			const value = ACTIONS.DIURNAL_SECT.id === this.activeSectId || !this.activeSectId ? ACTIONS.DIURNAL_SECT.name : ACTIONS.NOCTURNAL_SECT.name
-			// Statistic box
-			this.statistics.add(new SectStatistic({
-				icon,
-				value,
-				info: (<Trans id="ast.sect.info">
-					The choice of Sect boils down to the content being played, group composition and player preference.<br/>
-					<ActionLink {...ACTIONS.DIURNAL_SECT}/> provides more potency per heal from regens, and is most effective in dungeons and 8-man content if damage taken does not exceed maximum HP.<br/>
-					<ActionLink {...ACTIONS.NOCTURNAL_SECT}/> is essential if shields are necessary for survival that <ActionLink {...ACTIONS.NEUTRAL_SECT}/> cannot cover. Noct shields cannot be stacked with Scholar's and is not recommended when healing alongside one.
-				</Trans>),
-			}))
-		}
+		// Statistic box
+		const icon = !this.activeSectId ? NO_SECT_ICON
+						: ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon
+							: ACTIONS.NOCTURNAL_SECT.icon
+		const noSectValue = <Trans id="ast.sect.info.no-sect-detected">No sect detected</Trans>
+		const value = !this.activeSectId ? noSectValue :
+						ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.name
+							: ACTIONS.NOCTURNAL_SECT.name
+		this.statistics.add(new SectStatistic({
+			icon,
+			value,
+			info: (<Trans id="ast.sect.info">
+				The choice of Sect boils down to the content being played, group composition and player preference.<br/>
+				<ActionLink {...ACTIONS.DIURNAL_SECT}/> provides more potency per heal from regens, and is most effective in dungeons and 8-man content if damage taken does not exceed maximum HP.<br/>
+				<ActionLink {...ACTIONS.NOCTURNAL_SECT}/> is essential if shields are necessary for survival that <ActionLink {...ACTIONS.NEUTRAL_SECT}/> cannot cover. Noct shields cannot be stacked with Scholar's and is not recommended when healing alongside one.
+			</Trans>),
+		}))
 
 	}
 

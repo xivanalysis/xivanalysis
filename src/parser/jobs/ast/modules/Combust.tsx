@@ -17,9 +17,9 @@ const SEVERITIES = {
 	},
 	UPTIME: {
 		// tslint:disable-next-line: no-magic-numbers
-		[84]: TARGET.WARN,
+		84: TARGET.WARN,
 		// tslint:disable-next-line: no-magic-numbers
-		[91]: TARGET.SUCCESS,
+		91: TARGET.SUCCESS,
 	},
 }
 
