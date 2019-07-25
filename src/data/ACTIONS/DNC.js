@@ -5,36 +5,42 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Single Standard Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	DOUBLE_STANDARD_FINISH: {
 		id: 16192,
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Double Standard Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	SINGLE_TECHNICAL_FINISH: {
 		id: 16193,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Single Technical Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	DOUBLE_TECHNICAL_FINISH: {
 		id: 16194,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Double Technical Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	TRIPLE_TECHNICAL_FINISH: {
 		id: 16195,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Triple Technical Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	QUADRUPLE_TECHNICAL_FINISH: {
 		id: 16196,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Quadruple Technical Finish',
 		onGcd: true,
+		cooldown: 1.5,
 	},
 	CASCADE: {
 		id: 15989,
@@ -102,15 +108,17 @@ export default {
 		id: 15997,
 		icon: 'https://xivapi.com/i/003000/003454.png',
 		name: 'Standard Step',
-		onGcd: false, // it is but it isn't...
+		onGcd: true,
 		cooldown: 30,
+		gcdRecast: 1.5,
 	},
 	TECHNICAL_STEP: {
 		id: 15998,
 		icon: 'https://xivapi.com/i/003000/003473.png',
 		name: 'Technical Step',
-		onGcd: false, // it is but it isn't...
+		onGcd: true,
 		cooldown: 120,
+		gcdRecast: 1.5,
 	},
 	EMBOITE: {
 		id: 15999,
@@ -144,11 +152,15 @@ export default {
 		id: 16003,
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Standard Finish',
+		onGcd: true,
+		cooldown: 1.5,
 	},
 	TECHNICAL_FINISH: {
 		id: 16004,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Technical Finish',
+		onGcd: true,
+		cooldown: 1.5,
 	},
 	SABER_DANCE: {
 		id: 16005,

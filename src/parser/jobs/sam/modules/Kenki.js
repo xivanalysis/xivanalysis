@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
@@ -9,6 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import {ActionLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import kenkiIcon from './kenki.png'
@@ -34,6 +35,9 @@ const KENKI_ACTIONS = {
 	// ranged
 	[ACTIONS.ENPI.id]: {cast: 10},
 
+	// oGCD
+	[ACTIONS.IKISHOTEN.id]: {cast: 50},
+
 	// spenders
 	[ACTIONS.HISSATSU_GYOTEN.id]: {cast: -10},
 	[ACTIONS.HISSATSU_YATEN.id]: {cast: -10},
@@ -41,7 +45,8 @@ const KENKI_ACTIONS = {
 	[ACTIONS.HISSATSU_KAITEN.id]: {cast: -20},
 	[ACTIONS.HISSATSU_SHINTEN.id]: {cast: -25},
 	[ACTIONS.HISSATSU_KYUTEN.id]: {cast: -25},
-	[ACTIONS.HISSATSU_GUREN.id]: {cast: -50},
+	[ACTIONS.HISSATSU_GUREN.id]: {cast: -50}, //AOE
+	[ACTIONS.HISSATSU_SENEI.id]: {cast: -50}, //Single Target
 }
 
 const KENKI_PER_MEDITATE_TICK = 10
@@ -71,12 +76,16 @@ export default class Kenki extends Module {
 		transfer: 0,
 	}
 
+	//Aoe flags
+
+	_badGuren = 0
+
 	constructor(...args) {
 		super(...args)
 
 		// Kenki actions
 		this.addHook(
-			['cast', 'combo'],
+			['cast', 'combo', 'aoedamage'],
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
 		)
@@ -137,6 +146,14 @@ export default class Kenki extends Module {
 			return
 		}
 
+		//Check if Aoe moves were done properly.
+		if (action === ACTIONS.HISSATSU_GUREN.id) {
+
+			if (event.hits.length === 1) {
+				this._badGuren++
+			}
+		}
+
 		// We can't track positionals, so passing the positional kenki values through as a potential gain
 		this.modify(action[event.type], action.positional)
 	}
@@ -166,6 +183,17 @@ export default class Kenki extends Module {
 				5: SEVERITY.MINOR,
 				20: SEVERITY.MEDIUM,
 				35: SEVERITY.MAJOR,
+			},
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.HISSATSU_GUREN.icon,
+			content: <Trans id = "sam.kenki.suggestion.badguren.content"> Avoid using <ActionLink {...ACTIONS.HISSATSU_GUREN}/> when you only have one target, as <ActionLink {...ACTIONS.HISSATSU_SENEI}/> has higher potency and can be used for the same cost. </Trans>,
+			why: <Trans id = "sam.kenki.suggestion.badguren.why"><Plural value={this._badGurens} one="# use" other="# uses"/> of Guren hit a single target</Trans>,
+			value: this._badGurens,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 		}))
 	}

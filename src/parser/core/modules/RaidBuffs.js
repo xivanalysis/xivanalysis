@@ -11,6 +11,12 @@ const RAID_BUFFS = {
 	[STATUSES.THE_BALANCE.id]: {group: 'arcanum', name: 'Arcanum'},
 	[STATUSES.THE_ARROW.id]: {group: 'arcanum', name: 'Arcanum'},
 	[STATUSES.THE_SPEAR.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.THE_BOLE.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.THE_EWER.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.THE_SPIRE.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.LORD_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.LADY_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
+	[STATUSES.DIVINATION.id]: {},
 	[STATUSES.BATTLE_LITANY.id]: {},
 	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
 	[STATUSES.MEDITATIVE_BROTHERHOOD.id]: {},
@@ -22,6 +28,8 @@ const RAID_BUFFS = {
 	[STATUSES.RADIANT_SHIELD.id]: {},
 	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
 	[STATUSES.DEVOTION.id]: {},
+	[STATUSES.TECHNICAL_FINISH.id]: {},
+	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
 }
 
 export default class RaidBuffs extends Module {

@@ -4,5 +4,6 @@
 	"eslint.autoFixOnSave": true,
 	"eslint.packageManager": "yarn",
 	"tslint.autoFixOnSave": true,
-	"tslint.configFile": "tslint.json"
+	"tslint.configFile": "tslint.json",
+	"typescript.tsdk": "node_modules\\typescript\\lib"
 }

@@ -24,7 +24,7 @@ export default {
 		id: 1914,
 		name: 'Disembowel',
 		icon: 'https://xivapi.com/i/012000/012576.png',
-		duration: 24,
+		duration: 30,
 	},
 
 	SHARPER_FANG_AND_CLAW: {

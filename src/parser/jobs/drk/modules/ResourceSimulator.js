@@ -1,12 +1,11 @@
 import React, {Fragment} from 'react'
+import {Plural} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Accordion, Message} from 'semantic-ui-react'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Color from 'color'
 import JOBS from 'data/JOBS'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -14,11 +13,8 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 // -----
 // UI stuff
 // -----
-const DARK_ARTS_MANA_POTENCY = 140
-const DARK_ARTS_CARVE_BOOST_POTENCY = 350
-const DARK_ARTS_MANA_COST = 2400
-const BLOODSPILLER_BLOOD_POTENCY = 135
 const BLOODSPILLER_BLOOD_COST = 50
+const FLOOD_EDGE_MP_COST = 3000
 
 // -----
 // Simulator fun time
@@ -26,99 +22,62 @@ const BLOODSPILLER_BLOOD_COST = 50
 // -----
 // Meters
 // ------
-const MAX_MANA = 9480
-const MANA_REGEN_PERCENT_PER_TICK = 0.02
+const MAX_MP = 10000
+const MP_AFTER_RAISE = 2000
+const MP_REGEN_PER_TICK = 200
 const TICK_RATE = 3000
 
-const CARVE_AND_SPIT_NO_DA_MANA_GAIN = 1200
-
 const MAX_BLOOD = 100
-//const MANA_PER_OUT_OF_COMBAT_TICK = 568 // DA should be used at least 2 ticks pre pull
-//const DARKSIDE_MANA_COST = 600
 
-const BLOOD_PRICE_DAMAGE_TAKEN_BLOOD_AMOUNT = 1
-const BLOOD_PRICE_DAMAGE_TAKEN_MANA_AMOUNT = 120
-const BLOOD_PRICE_BLOOD_PASSIVE_RATE = 3000
-const BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT = 4
-const BLOOD_PRICE_MAX_DURATION = 15000
-
-//using this as a lookup table instead of a collector
-const RESOURCE_STATUS_EFFECTS = {
-	[STATUSES.ANOTHER_VICTIM.id]: {
-		duration: 15000,
-		type: 'debuff',
-		// eslint-disable-next-line no-magic-numbers
-		expire_mana: MAX_MANA * 0.2,
-		expire_blood: 0,
-		// eslint-disable-next-line no-magic-numbers
-		activate_mana: MAX_MANA * 0.3,
-		activate_blood: 0,
-	},
-	[STATUSES.BLACKEST_NIGHT.id]: {
-		duration: 7000,
-		type: 'buff',
-		expire_mana: 0,
-		expire_blood: 0,
-		activate_mana: 0,
-		activate_blood: 50,
-	},
+const RESOURCE_SPENDERS = {
+	[ACTIONS.THE_BLACKEST_NIGHT.id]: {mp: -3000, blood: 0},
+	[ACTIONS.FLOOD_OF_SHADOW.id]: {mp: -3000, blood: 0},
+	[ACTIONS.EDGE_OF_SHADOW.id]: {mp: -3000, blood: 0},
+	[ACTIONS.BLOODSPILLER.id]: {mp: 0, blood: -50},
+	[ACTIONS.QUIETUS.id]: {mp: 0, blood: -50},
+	[ACTIONS.LIVING_SHADOW.id]: {mp: 0, blood: -50},
 }
-
-const MANA_MODIFIERS = {
-	// generators
-	[ACTIONS.DELIRIUM.id]: {value: 2400},
-	// spenders
-	[ACTIONS.DARKSIDE.id]: {value: -600},
-	[ACTIONS.DARK_ARTS.id]: {value: -2400},
-	[ACTIONS.DARK_PASSENGER.id]: {value: -2400},
-	[ACTIONS.THE_BLACKEST_NIGHT.id]: {value: -2400},
-	[ACTIONS.ABYSSAL_DRAIN.id]: {value: -1320},
-	[ACTIONS.UNLEASH.id]: {value: -1080},
-	[ACTIONS.UNMEND.id]: {value: -480},
-	[ACTIONS.GRIT.id]: {value: -1200},
-}
-
-const BLOOD_MODIFIERS = {
-	// spenders
-	[ACTIONS.BLOODSPILLER.id]: {value: -50},
-	[ACTIONS.QUIETUS.id]: {value: -50},
-	[ACTIONS.DELIRIUM.id]: {value: -50},
-}
-
-//aoe abilities that generate resource on hits
-const AOE_GENERATORS = {
-	[STATUSES.SALTED_EARTH.id]: {mana: 0, blood: 1},
-	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 0},
+const RESOURCE_GENERATORS = {
+	[ACTIONS.CARVE_AND_SPIT.id]: {mp: 600, blood: 0, requiresCombo: false},
+	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, blood: 0, requiresCombo: true},
+	[ACTIONS.SOULEATER.id]: {mp: 0, blood: 20, requiresCombo: true},
+	[ACTIONS.STALWART_SOUL.id]: {mp: 600, blood: 20, requiresCombo: true},
 }
 
 // Actions that generate blood and mana under blood weapon (Physical Damage actions - 3 blood, 480mp).
 // redundant, but this keeps consistency with the other mappings
 const BLOOD_WEAPON_GENERATORS = {
-	// Auto
-	[ACTIONS.ATTACK.id]: {mana: 480, blood: 3},
-	// Combo GCDs
-	[ACTIONS.HARD_SLASH.id]: {mana: 480, blood: 3},
-	[ACTIONS.SYPHON_STRIKE.id]: {mana: 480, blood: 3},
-	[ACTIONS.SOULEATER.id]: {mana: 480, blood: 3},
-	[ACTIONS.SPINNING_SLASH.id]: {mana: 480, blood: 3},
-	[ACTIONS.POWER_SLASH.id]: {mana: 480, blood: 3},
-	// other GCDs
-	[ACTIONS.BLOODSPILLER.id]: {mana: 480, blood: 3},
-	[ACTIONS.QUIETUS.id]: {mana: 480, blood: 3},
-	// oGCDs
-	[ACTIONS.PLUNGE.id]: {mana: 480, blood: 3},
-	[ACTIONS.CARVE_AND_SPIT.id]: {mana: 480, blood: 3},
-	//[ACTIONS.SALTED_EARTH.id]: {mana: 480, blood: 3},
+	[ACTIONS.HARD_SLASH.id]: {mp: 600, blood: 10},
+	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, blood: 10},
+	[ACTIONS.SOULEATER.id]: {mp: 600, blood: 10},
+	[ACTIONS.BLOODSPILLER.id]: {mp: 600, blood: 10},
+	[ACTIONS.QUIETUS.id]: {mp: 600, blood: 10},
+	[ACTIONS.UNMEND.id]: {mp: 600, blood: 10},
+	[ACTIONS.UNLEASH.id]: {mp: 600, blood: 10},
+	[ACTIONS.STALWART_SOUL.id]: {mp: 600, blood: 10},
 }
 
-// Actions that generate resources in GCD combo
-const COMBO_GENERATORS = {
-	[ACTIONS.SOULEATER.id]: {mana: 0, blood: 10},
-	[ACTIONS.SYPHON_STRIKE.id]: {mana: 1200, blood: 0},
+const DELIRIUM_GENERATORS = {
+	[ACTIONS.BLOODSPILLER.id]: {mp: 200, blood: 0},
+	[ACTIONS.QUIETUS.id]: {mp: 500, blood: 0},
 }
-// Combo actions that generate bonus resource if grit is active
-const COMBO_GRIT_GENERATORS = {
-	[ACTIONS.SYPHON_STRIKE.id]: {mana: 1200, blood: 0},
+
+// Tiered suggestion severities
+const SEVERITY_THE_BLACKEST_NIGHT = {
+	1: SEVERITY.MEDIUM,
+	2: SEVERITY.MAJOR,
+}
+
+const SEVERITY_WASTED_BLOOD_ACTIONS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	4: SEVERITY.MAJOR,
+}
+
+const SEVERITY_WASTED_MP_ACTIONS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
 }
 
 export default class Resources extends Module {
@@ -126,60 +85,46 @@ export default class Resources extends Module {
 	static title = 'Resource Analyzer'
 	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
-		'buffs',
-		'gcds',
+		'combatants',
 		'suggestions',
-		'checklist',
 	]
 
 	// -----
 	// Resource utilities
 	// -----
-	_totalGainedMana = 0
-	_totalSpentMana = 0
-	_totalDroppedMana = 0
-	_currentMana = 0
-	_wastedMana = 0
-	_totalGainedBlood = 0
-	_totalSpentBlood = 0
-	_totalDroppedBlood = 0
 	_currentBlood = 0
 	_wastedBlood = 0
+	_currentMP = 0
+	_wastedMP = 0
 	// tracker stacks
-	_mana_total_modifiers = []
-	_blood_total_modifiers = []
 	_history = {
+		mp: [],
 		blood: [],
 	}
 	// -----
-	// Parser Stats
+	// Internal tracking of generator events for MP overcap calculations
 	// -----
-	_firstDamageEvent = true
-	_bloodPriceStartTime = undefined
-	_darksideRemoveTimestamp = undefined
+	_lastManaSpendEvent = null
+	_gainedSinceLastSpend = 0
+	_darkArtsProc = false
 	// -----
 	// Evaluation units
 	// -----
-	_darkArtsOpener = undefined
 	_droppedTBNs = 0
-	_noDACarve = 0
-	//timestamps for TBN and sole
-	_resourceBuffTimestamps = {}
+
+	_resourceEvents = [
+		...Object.keys(RESOURCE_SPENDERS),
+		...Object.keys(RESOURCE_GENERATORS),
+		...Object.keys(BLOOD_WEAPON_GENERATORS),
+		...Object.keys(DELIRIUM_GENERATORS),
+	].map(Number)
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		//if aoe damage events ever replace the single damage events, blood weapon gain will have to be tracked here
-		//this.addHook('aoedamage', {by: 'player', abilityId: [ACTIONS.QUIETUS, ACTIONS.SALTED_EARTH]}, this._onAoEDamageDealt)
-		this.addHook('damage', {by: 'player'}, this._onDamageDealt)
-		this.addHook('damage', {to: 'player'}, this._onDamageTaken)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._darksideApply)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DARKSIDE.id}, this._darksideRemove)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceStart)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLOOD_PRICE.id}, this._bloodPriceEnd)
-		this.addHook(['applybuff', 'applydebuff'], {by: 'player', abilityId: Object.keys(RESOURCE_STATUS_EFFECTS).map(Number)}, this._onApplyResourceStatuses)
-		this.addHook(['removebuff', 'removedebuff'], {by: 'player', abilityId: Object.keys(RESOURCE_STATUS_EFFECTS).map(Number)}, this._onRemoveResourceStatuses)
+		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
 		this.addHook('death', {by: 'player'}, this._onDeath)
+		this.addHook('raise', {by: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -187,29 +132,60 @@ export default class Resources extends Module {
 	// Resource Utility Methods
 	// -----
 
-	modifyMana(ability, value) {
-		if (value !== 0) {
-			if (value > 0) {
-				this._totalGainedMana += value
-			} else {
-				this._totalSpentMana += value
-			}
-			const currentManaSnapshot = this._currentMana
-			const vals = this._bindToCeiling(currentManaSnapshot, value, MAX_MANA)
-			this._wastedMana += vals.waste
-			this._currentMana = vals.result
-			this._mana_total_modifiers.push({ability: ability, value: value})
+	checkMPOvercap(event, beforeActionMP, actionMPChange) {
+		let lastSpendActionMP = 0
+		let timeSinceLastSpendAction = 0
+		let firstSpendAction = false
+
+		if (this._lastManaSpendEvent !== null) {
+			lastSpendActionMP = this._lastManaSpendEvent.afterActionMP
+			timeSinceLastSpendAction = event.timestamp - this._lastManaSpendEvent.timestamp
+		} else {
+			// First spender in the fight, assume we start with max MP
+			lastSpendActionMP = MAX_MP
+			firstSpendAction = true
+			timeSinceLastSpendAction = event.timestamp - this.parser.fight.start_time
 		}
+
+		let manaTicks = Math.floor(timeSinceLastSpendAction / TICK_RATE)
+
+		if (actionMPChange < 0) {
+			// Spender
+			if (this._darkArtsProc) {
+				actionMPChange = 0
+				this._darkArtsProc = false
+			}
+			if (beforeActionMP === MAX_MP) {
+				// MP was at cap before using spender, check for waste
+				if (firstSpendAction) {
+					// First spender in the fight, allow one tick before penalizing overflow from passive regeneration before first spender
+					manaTicks = Math.floor(manaTicks - 1, 0)
+				}
+				// Add MP wasted due to ticks at cap (simulated).  MP waste due to generators will be calculated with the generator events
+				this._wastedMP += Math.max(lastSpendActionMP + this._gainedSinceLastSpend + manaTicks * MP_REGEN_PER_TICK - MAX_MP, 0)
+			}
+			this._gainedSinceLastSpend = 0
+			event.afterActionMP = beforeActionMP + actionMPChange
+			this._lastManaSpendEvent = event
+		} else {
+			if (beforeActionMP + actionMPChange > MAX_MP) {
+				// Generator, MP capped out with this action, check for waste
+				this._wastedMP += beforeActionMP + actionMPChange - MAX_MP
+				actionMPChange = MAX_MP - beforeActionMP
+			}
+			this._gainedSinceLastSpend += actionMPChange
+		}
+		this._currentMP = beforeActionMP + actionMPChange
 	}
 
-	modifyBlood(ability, value) {
-		if (value !== 0) {
-			this._currentBlood += value
-			if (value > 0) {
-				this._totalGainedBlood += value
-			} else {
-				this._totalSpentBlood += value
-			}
+	checkBloodOvercap(actionBloodChange) {
+		if (actionBloodChange < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
+			// Spender within Delirium - no blood spent
+			return
+		}
+
+		if (actionBloodChange !== 0) {
+			this._currentBlood += actionBloodChange
 
 			if (this._currentBlood > MAX_BLOOD) {
 				// Check to determine if blood was overcapped by gain, mark as wasted if so
@@ -217,34 +193,16 @@ export default class Resources extends Module {
 				this._currentBlood = MAX_BLOOD
 			}
 			if (this._currentBlood < 0) {
-				// Sanity check - if blood drops below 0 from a spender, floor blood count at 0, and add blood gained (presumed initial blood)
-				this._totalGainedBlood += -1 * this._currentBlood
+				// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
 				this._currentBlood = 0
 			}
-
-			this._blood_total_modifiers.push({ability: ability, value: value})
-			this._pushToGraph()
 		}
 	}
 
 	_pushToGraph() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.blood.push({t: timestamp, y: this._currentBlood})
-	}
-
-	dumpResources() {
-		this._wastedMana += this._currentMana
-		this._wastedBlood += this._currentBlood
-		this._totalDroppedMana += this._currentMana
-		this._totalDroppedBlood += this._currentBlood
-		this._currentMana = 0
-		this._currentBlood = 0
-		this._pushToGraph()
-	}
-
-	// noinspection JSMethodCanBeStatic
-	_bindToCeiling(op1, op2, ceiling) {
-		return {waste: op1 + op2 > ceiling ? (op1 + op2 - ceiling) : 0, result: op1 + op2 > ceiling ? ceiling : (op1 + op2)}
+		this._history.mp.push({t: timestamp, y: this._currentMP})
 	}
 
 	// -----
@@ -252,142 +210,67 @@ export default class Resources extends Module {
 	// ------
 
 	_onDeath() {
-		this.dumpResources()
+		this._wastedMP += this._currentMP
+		this._wastedBlood += this._currentBlood
+		this._currentMP = 0
+		this._currentBlood = 0
+		this._pushToGraph()
 	}
 
-	_onCast(event) {
-		const abilityId = event.ability.guid
-		if (MANA_MODIFIERS.hasOwnProperty(abilityId)) {
-			this.modifyMana(event.ability, MANA_MODIFIERS[abilityId].value)
-		}
-		if (BLOOD_MODIFIERS.hasOwnProperty(abilityId)) {
-			this.modifyBlood(event.ability, BLOOD_MODIFIERS[abilityId].value)
-		}
-		if (this.gcds.inGCDCombo()) {
-			if (COMBO_GENERATORS.hasOwnProperty(abilityId)) {
-				const entry = COMBO_GENERATORS[abilityId]
-				this.modifyMana(event.ability, entry.mana)
-				this.modifyBlood(event.ability, entry.blood)
-			}
-			if (this.buffs.gritActive()) {
-				if (COMBO_GRIT_GENERATORS.hasOwnProperty(abilityId)) {
-					const entry = COMBO_GRIT_GENERATORS[abilityId]
-					this.modifyMana(event.ability, entry.mana)
-					this.modifyBlood(event.ability, entry.blood)
-				}
-			}
-		}
-		//one off case for checking for DA-less carve n spit, which we can then make a suggestion for because this is really bad
-		if (ACTIONS.CARVE_AND_SPIT.id === abilityId && !this.buffs.darkArtsActive()) {
-			this._noDACarve += 1
-			this.modifyMana(event.ability,  CARVE_AND_SPIT_NO_DA_MANA_GAIN)
-		}
+	_onRaise() {
+		this._currentMP = MP_AFTER_RAISE
+		this._pushToGraph()
 	}
 
-	_onApplyResourceStatuses(event) {
-		const abilityId = event.ability.guid
-		if (abilityId === STATUSES.ANOTHER_VICTIM.id) {
-			this._resourceBuffTimestamps[abilityId] = event.timestamp
+	_onEvent(event) {
+		if (event.amount === 0) {
+			// Misses or attacks against invuln targets do not trigger resource gain
+			return
 		}
-		// no need to check for TBN, since we can resolve it with part of the event return
-	}
 
-	_onRemoveResourceStatuses(event) {
-		//safety net, since we're getting buffs and debuffs
 		const abilityId = event.ability.guid
-		const entry = RESOURCE_STATUS_EFFECTS[abilityId]
-		if (abilityId === STATUSES.ANOTHER_VICTIM.id) {
-			const applicationTime = this._resourceBuffTimestamps[abilityId]
-			//+/-100ms demonstrated wiggle room for the pop to show up.
-			if (event.timestamp - applicationTime <= (entry.duration - 100)) {
-				//popped
-				this.modifyBlood(event.ability, entry.activate_blood)
-				this.modifyMana(event.ability, entry.activate_mana)
-			} else {
-				//expired
-				this.modifyBlood(event.ability, entry.expire_blood)
-				this.modifyMana(event.ability, entry.expire_mana)
-			}
+		let actionBloodGain = 0
+		let actionMPGain = 0
+
+		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
+			actionBloodGain += RESOURCE_SPENDERS[abilityId].blood
+			actionMPGain += RESOURCE_SPENDERS[abilityId].mp
 		}
-		if (abilityId === STATUSES.BLACKEST_NIGHT.id) {
-			//absorbed := total damage absorbed
-			//absorb := damage left in the shield
-			const poppedTBN = event.absorb === 0
-			if (poppedTBN) {
-				//popped
-				this.modifyBlood(event.ability, entry.activate_blood)
-				this.modifyMana(event.ability, entry.activate_mana)
-			} else {
-				//expired
-				this.modifyBlood(event.ability, entry.expire_blood)
-				this.modifyMana(event.ability, entry.expire_mana)
-				if (abilityId === STATUSES.BLACKEST_NIGHT) {
-					this._droppedTBNs += 1
-				}
+
+		if (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
+			// Don't double count blood weapon gains on comboed events
+			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
+			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
+		}
+
+		if (RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
+			const actionInfo = RESOURCE_GENERATORS[abilityId]
+			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {
+			// Only gain resources if the action does not require a combo or is in a valid combo
+				actionBloodGain += RESOURCE_GENERATORS[abilityId].blood
+				actionMPGain += RESOURCE_GENERATORS[abilityId].mp
 			}
 		}
 
-	}
+		this.checkBloodOvercap(actionBloodGain)
 
-	// ----
+		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
+		this.checkMPOvercap(event, afterActionMP, actionMPGain)
 
-	_darksideApply(event) {
-		if (this._darksideRemoveTimestamp !== undefined) {
-			//give mana ticks for how long they had it down for
-			//using 2% of max mana per tick
-			const ticks = Math.floor((event.timestamp - this._darksideRemoveTimestamp) / TICK_RATE)
-			this.modifyMana(undefined, ticks * Math.floor(MAX_MANA * MANA_REGEN_PERCENT_PER_TICK))
-			//reset darkside in case something breaks
-			this._darksideRemoveTimestamp = undefined
+		if (event.type !== 'combo') {
+			// Don't push two entries to graph for comboed actions
+			this._pushToGraph()
 		}
 	}
 
-	_darksideRemove(event) {
-		this._darksideRemoveTimestamp = event.timestamp
-	}
-
-	_bloodPriceStart(event) {
-		this._bloodPriceStartTime = event.timestamp
-	}
-
-	_bloodPriceEnd(event) {
-		//if we didn't see the start event, we just have to assume a full duration gain
-		let ticks = (BLOOD_PRICE_MAX_DURATION / BLOOD_PRICE_BLOOD_PASSIVE_RATE) * BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT
-		if (this._bloodPriceStartTime !== undefined) {
-			ticks = Math.round((event.timestamp - this._bloodPriceStartTime) / BLOOD_PRICE_BLOOD_PASSIVE_RATE) * BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT
-		}
-		this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_BLOOD_PASSIVE_AMOUNT * ticks)
-	}
-
-	//this.correctMana(event.sourceResources.mp)
-	_onDamageDealt(event) {
-		// check if it's the first damage event
-		if (this._firstDamageEvent && event.sourceResources) {
-			// check if mana is missing or not, if so then DA opener was used
-			this._darkArtsOpener = (event.sourceResources.mp !== event.sourceResources.maxMP)
-			// set mana to the value found here
-			this.modifyMana(undefined, event.sourceResources.mp)
-		}
-		this._firstDamageEvent = false
-		// blood weapon outgoing damage
-		const abilityId = event.ability.guid
-		if (this.buffs.bloodWeaponActive() && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId)) {
-			const entry = BLOOD_WEAPON_GENERATORS[abilityId]
-			this.modifyMana(ACTIONS.BLOOD_WEAPON, entry.mana)
-			this.modifyBlood(ACTIONS.BLOOD_WEAPON, entry.blood)
-		}
-		if (AOE_GENERATORS.hasOwnProperty(abilityId)) {
-			const entry = AOE_GENERATORS[abilityId]
-			this.modifyMana(event.ability, entry.mana)
-			this.modifyBlood(event.ability, entry.blood)
-		}
-	}
-
-	_onDamageTaken() { //event) {
-		// blood price incoming damage
-		if (this.buffs.bloodPriceActive()) {
-			this.modifyBlood(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_DAMAGE_TAKEN_BLOOD_AMOUNT)
-			this.modifyMana(ACTIONS.BLOOD_PRICE, BLOOD_PRICE_DAMAGE_TAKEN_MANA_AMOUNT)
+	_onRemoveBlackestNight(event) {
+		const poppedTBN = event.absorb === 0
+		if (poppedTBN) {
+			//popped
+			this._darkArtsProc = true
+		} else {
+			//expired
+			this._droppedTBNs += 1
 		}
 	}
 
@@ -396,239 +279,58 @@ export default class Resources extends Module {
 	// -----
 
 	_onComplete() {
-		//dump unused resources
-		this.dumpResources()
 		// UI
-		this.checklist.add(new Rule({
-			name: 'Mana Utilization',
-			description: <Fragment>Capping on mana or dying is a potency loss of about {DARK_ARTS_MANA_POTENCY} per {DARK_ARTS_MANA_COST
-			} mana for each wasted <ActionLink {...ACTIONS.DARK_ARTS}/>.  It's better to clip and use the mana than to cap.</Fragment>,
-			requirements: [
-				new Requirement({
-					name: 'Mana Utilization',
-					percent: ((Math.abs(this._totalSpentMana) / (this._totalGainedMana)) * 100),
-				}),
-			],
-		}))
-		this.checklist.add(new Rule({
-			name: 'Blood Utilization',
-			description: <Fragment>Capping on blood is a potency loss of about {BLOODSPILLER_BLOOD_POTENCY
-			} per {BLOODSPILLER_BLOOD_COST} blood.  Some cases of blood cap loss are unavoidable due to <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> usage.  Remember that <ActionLink {...ACTIONS.BLOODSPILLER}
-			/> does not reset your <ActionLink {...ACTIONS.SOULEATER}/>combo, consumes <ActionLink {...ACTIONS.DARK_ARTS}/>, and bypasses the major potency penalty from <ActionLink {...ACTIONS.GRIT}/>.</Fragment>,
-			requirements: [
-				new Requirement({
-					name: 'Blood Utilization',
-					percent: ((Math.abs(this._totalSpentBlood) / (this._totalGainedBlood)) * 100),
-				}),
-			],
-		}))
-		if (!this._darkArtsOpener) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DARK_ARTS.icon,
-				content: <Fragment>
-					Missing a <ActionLink {...ACTIONS.DARK_ARTS}/> pre-pull for use during the opener is a large potency and enmity loss.  Using DA at around 6-7 seconds before pull gives ample time to use it as well as gain two pre-fight mana ticks.
-				</Fragment>,
-				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					Mana was logged at 100% when the fight started, which implies that a <ActionLink {...ACTIONS.DARK_ARTS}/> was not used pre-pull.  Ignore this if mana was at 100% for some other reason.
-				</Fragment>,
-			}))
-		}
 		if (this._droppedTBNs > 0) {
-			this.suggestions.add(new Suggestion({
+			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.THE_BLACKEST_NIGHT.icon,
 				content: <Fragment>
-					One or more <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> applications did not pop, and thus did not generate blood.  This equates to throwing away the mana you could have spent on a <ActionLink {...ACTIONS.DARK_ARTS}/>.
+					One or more <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> applications did not fully use the shield, and thus did not generate a Dark Arts proc to allow free use of <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> or <ActionLink {...ACTIONS.FLOOD_OF_SHADOW}/>.
 				</Fragment>,
-				severity: SEVERITY.MAJOR,
+				tiers: SEVERITY_THE_BLACKEST_NIGHT,
+				value: this._droppedTBNs,
 				why: <Fragment>
-					You missed out on {this._droppedTBNs * BLOODSPILLER_BLOOD_COST} blood ({BLOODSPILLER_BLOOD_POTENCY} potency) or {this._droppedTBNs * DARK_ARTS_MANA_POTENCY} potency of Dark Arts buffs.
+					You missed out on <Plural value={this._droppedTBNs} one="# Dark Arts use" other="# Dark Arts uses" /> due to Blackest Night applications that did not consume the shield.
 				</Fragment>,
 			}))
 		}
-		if (this._noDACarve > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.CARVE_AND_SPIT.icon,
-				content: <Fragment>
-					One or more <ActionLink {...ACTIONS.CARVE_AND_SPIT}/> was used without <ActionLink {...ACTIONS.DARK_ARTS}/>
-					.  Even though this generates the same amount of mana as <ActionLink {...ACTIONS.SYPHON_STRIKE}/>, it loses out on {DARK_ARTS_CARVE_BOOST_POTENCY} potency, a massive part of your damage as a DRK.
-				</Fragment>,
-				severity: SEVERITY.MAJOR,
-				why: <Fragment>
-					You missed out on {this._noDACarve * DARK_ARTS_CARVE_BOOST_POTENCY} potency due to {this._noDACarve} unbuffed carves.
-				</Fragment>,
-			}))
-		}
-		if (this._wastedBlood > BLOODSPILLER_BLOOD_COST) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.BLOODSPILLER.icon,
-				content: <Fragment>
-					You wasted blood, and could have gotten more uses
-					of <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders during the fight
-					(minimum {BLOODSPILLER_BLOOD_POTENCY} gained average combo potency increase each.)
-				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					You wasted a total of {this._wastedBlood} from capping, deaths, end of fight leftovers.
-				</Fragment>,
-			}))
-		}
-		if (this._wastedMana > DARK_ARTS_MANA_COST) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DARK_ARTS.icon,
-				content: <Fragment>
-					You wasted mana, and could have gotten more uses
-					of <ActionLink {...ACTIONS.DARK_ARTS}/> or other spenders during the fight
-					(minimum {DARK_ARTS_MANA_POTENCY} for {DARK_ARTS_MANA_COST} mana gained average combo potency increase each.)
-				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-				why: <Fragment>
-					You wasted a total of {this._wastedMana} from capping, deaths, end of fight leftovers.
-				</Fragment>,
-			}))
-		}
-	}
 
-	static _aggregateSignedEntries(arr) {
-		const positiveAggregator = {}
-		const positiveEventAggregator = {}
-		const negativeAggregator = {}
-		const negativeEventAggregator = {}
-		const positiveOut = []
-		const negativeOut = []
-		let envNet = 0
-		while (arr.length > 0) {
-			const entry = arr.pop()
-			let name = 'Unknown'
-			if (entry.ability !== undefined) {
-				name = entry.ability.name
-			} else {
-				// non ability gains need to be aggregated and applied at the end
-				envNet += entry.value
-				continue
-			}
-			if (entry.value > 0) {
-				if (positiveAggregator.hasOwnProperty(name)) {
-					positiveAggregator[name] += entry.value
-				} else {
-					positiveAggregator[name] = entry.value
-					positiveEventAggregator[name] = entry.ability
-				}
-			} else if (negativeAggregator.hasOwnProperty(name)) {
-				negativeAggregator[name] += entry.value
-			} else {
-				negativeAggregator[name] = entry.value
-				negativeEventAggregator[name] = entry.ability
-			}
-		}
-		if (envNet !== 0) {
-			//pushed the combined environmental set into the appropriate box
-			if (envNet > 0) {
-				positiveOut.push({name: 'Initial Mana and Regen', ability: undefined, value: envNet})
-			} else {
-				negativeOut.push({name: 'Initial Mana and Regen', ability: undefined, value: envNet})
-			}
-		}
-		for (const property in positiveAggregator) {
-			positiveOut.push({name: property, ability: positiveEventAggregator[property], value: positiveAggregator[property]})
-		}
-		for (const property in negativeAggregator) {
-			negativeOut.push({name: property, ability: negativeEventAggregator[property], value: (negativeAggregator[property] * -1)})
-		}
-		return {positiveOut: positiveOut, negativeOut: negativeOut}
-	}
+		const wastedBloodActions = Math.floor(this._wastedBlood / BLOODSPILLER_BLOOD_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOODSPILLER.icon,
+			content: <Fragment>
+				Your blood gauge allows you to use <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders, which are among your strongest attacks.  Be sure to spend your blood before exceeding the cap of 100.
+			</Fragment>,
+			tiers: SEVERITY_WASTED_BLOOD_ACTIONS,
+			value: wastedBloodActions,
+			why: <Fragment>
+				You lost a total of <Plural value={wastedBloodActions} one="# blood spending skill" other="# blood spending skills" /> from gaining blood over the cap or from death.
+			</Fragment>,
+		}))
 
-	_filterResourceTrackingLists() {
-		const bloodDump = Resources._aggregateSignedEntries(this._blood_total_modifiers)
-		const manaDump = Resources._aggregateSignedEntries(this._mana_total_modifiers)
-		return {manaGenerators: manaDump.positiveOut, manaSpenders: manaDump.negativeOut, bloodGenerators: bloodDump.positiveOut, bloodSpenders: bloodDump.negativeOut}
-	}
-
-	_keyScumCounter = 0
-
-	_convertKVListToTable(list) {
-		const rows = []
-		while (list.length > 0) {
-			const entry = list.pop()
-			this._keyScumCounter += 1
-			const key = entry.name + '-' + this._keyScumCounter.toString()
-			rows.push(
-				<tr key={key.toString() + '-row'} style={{margin: 0, padding: 0}}>
-					<td key={{key} + '-name'}>{entry.name}</td>
-					<td key={{key} + '-value'}>{entry.value}</td>
-				</tr>
-			)
-		}
-		this._keyScumCounter += 1
-		const key = this._keyScumCounter.toString()
-		return <Fragment key={key + '-fragment'}>
-			<table key={key + '-table'}>
-				<tbody key={key + '-tbody'}>
-					{rows}
-				</tbody>
-			</table>
-		</Fragment>
+		const wastedMPActions = Math.floor(this._wastedMP / FLOOD_EDGE_MP_COST)
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.EDGE_OF_SHADOW.icon,
+			content: <Fragment>
+				Your MP allows you to use <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/>, a strong attack that gives you a persistent damage up buff, as well as the strong mitigation of <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/>.
+				Be sure to consistently use your MP so you can benefit from natural regeneration and MP gain from your main combo skills.
+			</Fragment>,
+			tiers: SEVERITY_WASTED_MP_ACTIONS,
+			value: wastedMPActions,
+			why: <Fragment>
+				You lost a total of <Plural value={wastedMPActions} one="# MP spending skill" other="# MP spending skills" /> from gaining MP over the cap or death.
+			</Fragment>,
+		}))
 	}
 
 	output() {
 		// Mana usage and blood usage modules
 		// make this into a pretty table
 		// also include spenders and generators
-		const panels = []
-		const lists = this._filterResourceTrackingLists()
-
-		const bloodSpentPercentage = (((this._totalSpentBlood * -1)/(this._totalGainedBlood)) * 100).toFixed(2)
-		const manaSpentPercentage = (((this._totalSpentMana * -1)/(this._totalGainedMana)) * 100).toFixed(2)
-
-		panels.push({
-			key: 'key-bloodSpenders',
-			title: {
-				key: 'title-bloodSpenders',
-				content: <Fragment>Blood Spenders</Fragment>,
-			},
-			content: {
-				key: 'content-bloodSpenders',
-				content: this._convertKVListToTable(lists.bloodSpenders),
-			},
-		})
-		panels.push({
-			key: 'key-bloodGenerators',
-			title: {
-				key: 'title-bloodGenerators',
-				content: <Fragment>Blood Generators</Fragment>,
-			},
-			content: {
-				key: 'content-bloodGenerators',
-				content: this._convertKVListToTable(lists.bloodGenerators),
-			},
-		})
-		panels.push({
-			key: 'key-manaSpenders',
-			title: {
-				key: 'title-manaSpenders',
-				content: <Fragment>Mana Spenders</Fragment>,
-			},
-			content: {
-				key: 'content-manaSpenders',
-				content: this._convertKVListToTable(lists.manaSpenders),
-			},
-		})
-		panels.push({
-			key: 'key-manaGenerators',
-			title: {
-				key: 'title-manaGenerators',
-				content: <Fragment>Mana Generators</Fragment>,
-			},
-			content: {
-				key: 'content-manaGenerators',
-				content: this._convertKVListToTable(lists.manaGenerators),
-			},
-		})
-
 		const _bloodColor = Color(JOBS.DARK_KNIGHT.colour)
+		const _mpColor = Color('#f266a2')
 
 		/* eslint-disable no-magic-numbers */
-		const chartdata = {
+		const bloodchartdata = {
 			datasets: [
 				{
 					label: 'Blood',
@@ -639,21 +341,50 @@ export default class Resources extends Module {
 				},
 			],
 		}
+		const mpchartdata = {
+			datasets: [
+				{
+					label: 'MP',
+					steppedLine: true,
+					data: this._history.mp,
+					backgroundColor: _mpColor.fade(0.8),
+					borderColor: _mpColor.fade(0.5),
+				},
+			],
+		}
 		/* eslint-enable no-magic-numbers */
+
+		const mpChartOptions = {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						min: 0,
+						max: 10000,
+					},
+				}],
+			},
+		}
+		const bloodChartOptions = {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true,
+						min: 0,
+						max: 100,
+					},
+				}],
+			},
+		}
 
 		return <Fragment>
 			<TimeLineChart
-				data={chartdata}
+				data={bloodchartdata}
+				options={bloodChartOptions}
 			/>
-			<Message>
-				<p>Blood Used vs Blood Gained: {this._totalSpentBlood * -1} / {this._totalGainedBlood} - {bloodSpentPercentage}%</p>
-				<p>Mana Used vs Mana Gained: {this._totalSpentMana * -1} / {this._totalGainedMana} - {manaSpentPercentage}%</p>
-			</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
+			<TimeLineChart
+				data={mpchartdata}
+				options={mpChartOptions}
 			/>
 		</Fragment>
 	}

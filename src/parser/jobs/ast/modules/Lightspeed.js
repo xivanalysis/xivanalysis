@@ -1,26 +1,21 @@
 import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-// import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LIGHTSPEED_CAST_TIME_MOD = -2.5
-// const LIGHTSPEED_LENGTH = 10000
 
 export default class LIGHTSPEED extends Module {
 	static handle = 'lightspeed'
 	static dependencies = [
 		'castTime',
-		// 'suggestions',
 	]
 	static title = t('ast.lightspeed.title')`Lightspeed`
 	static displayOrder = DISPLAY_ORDER.LIGHTSPEED
@@ -43,9 +38,7 @@ export default class LIGHTSPEED extends Module {
 			abilityId: STATUSES.LIGHTSPEED.id,
 		}
 		this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
-		this.addHook('refreshbuff', lsBuffFilter, this._onRefreshLightspeed)
 		this.addHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
-
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -73,11 +66,6 @@ export default class LIGHTSPEED extends Module {
 		this._startLightspeed(event.timestamp)
 	}
 
-	_onRefreshLightspeed() {
-		if (!this._active) { return }
-		this._lightspeed.extended = true
-	}
-
 	_onRemoveLightspeed() {
 		this._stopAndSave()
 	}
@@ -95,7 +83,6 @@ export default class LIGHTSPEED extends Module {
 		this._lightspeed = {
 			start,
 			end: null,
-			extended: false,
 			casts: [],
 		}
 
@@ -129,7 +116,7 @@ export default class LIGHTSPEED extends Module {
 	output() {
 		const noCastsMessage = <Fragment>
 			<p>
-				<span className="text-error"><Trans id="ast.lightspeed.messages.no-casts">Zero casts recorded for <ActionLink {...ACTIONS.LIGHTSPEED} /></Trans></span>
+				<span className="text-error"><Trans id="ast.lightspeed.messages.no-casts">There were no casts recorded for <ActionLink {...ACTIONS.LIGHTSPEED} /></Trans></span>
 			</p>
 		</Fragment>
 
@@ -149,7 +136,6 @@ export default class LIGHTSPEED extends Module {
 						{this.parser.formatTimestamp(lightspeed.start)}
 						&nbsp;-&nbsp;<Trans id="ast.lightspeed.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs"/></Trans>
 						&nbsp;-&nbsp;{mpSavings} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans>
-						{lightspeed.extended && <span className="text-info">&nbsp;<Trans id="ast.lightspeed.rotation.extended">(extended)</Trans></span>}
 					</>,
 				},
 				content: {
@@ -168,9 +154,10 @@ export default class LIGHTSPEED extends Module {
 		return <Fragment>
 			<p>
 				<Trans id="ast.lightspeed.messages.explanation">
-				Some of the applications of <ActionLink {...ACTIONS.LIGHTSPEED} /> include MP savings on heavy healing segments, keeping casts up while on the move and for weaving OGCDs.
-				To further complicate usage, <ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown, and the buff can be extended by <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} />.<br/><br/>
-				At this point of time it's difficult to identify what is optimal, since each fight calls for a different strategy.
+				The main use of <ActionLink {...ACTIONS.LIGHTSPEED} /> should be for weaving card actions during <ActionLink {...ACTIONS.DIVINATION} /> and <ActionLink {...ACTIONS.SLEEVE_DRAW} /> windows.<br/>
+                It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<br/>
+					<ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown. Each fight calls for a different strategy, but try to utilize it as much as possible.<br/><br/>
+				Unless it's being used for <ActionLink {...ACTIONS.ASCEND} />, lightspeed should fit at least 6 GCDs.
 				</Trans>
 			</p>
 			{panels.length === 0 && noCastsMessage}

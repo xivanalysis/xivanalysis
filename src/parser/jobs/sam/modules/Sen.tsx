@@ -7,8 +7,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
-import Kenki from './Kenki'
-
 enum SEN {
 	SETSU = 'Setsu',
 	GETSU = 'Getsu',
@@ -31,15 +29,19 @@ const IAIJUTSU = [
 	ACTIONS.MIDARE_SETSUGEKKA.id,
 ]
 
-const KENKI_PER_SEN = 20
+const TSUBAME = [
+	ACTIONS.KAESHI_HIGANBANA.id,
+	ACTIONS.KAESHI_GOKEN.id,
+	ACTIONS.KAESHI_SETSUGEKKA.id,
+]
 
 export default class Sen extends Module {
 	static handle = 'sen'
 
-	@dependency private kenki!: Kenki
 	@dependency private suggestions!: Suggestions
 
 	private sen: {[S in SEN]?: boolean} = {}
+	private allowoverwrite: boolean = false
 	private wasted = 0
 
 	protected init() {
@@ -52,14 +54,8 @@ export default class Sen extends Module {
 
 		// Death, as well as all Iaijutsu, remove all available sen
 		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
+		this.addHook('cast', {by: 'player', abilityId: TSUBAME}, this.overwrite)
 		this.addHook('death', {to: 'player'}, this.remove)
-
-		// Hagakure because he's a speshul boi
-		this.addHook(
-			'cast',
-			{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
-			this.onHagakure,
-		)
 
 		// Suggestion time~
 		this.addHook('complete', this.onComplete)
@@ -69,25 +65,26 @@ export default class Sen extends Module {
 		const sen = SEN_ACTIONS[event.ability.guid]
 
 		if (this.sen[sen]) {
+
+			if (event.ability.guid === ACTIONS.YUKIKAZE.id && this.allowoverwrite === true) {
+				// Nothing happens, reset overwrite to false
+				this.allowoverwrite = false
+			} else {
 			this.wasted++
+			}
 		}
 
 		this.sen[sen] = true
 	}
 
-	private remove() {
-		this.sen = _.mapValues(this.sen, () => false)
+	private overwrite() {
+		// Because of how sen alignment works, every 60 seconds (or 1 tsubame window) a samurai will overwrite one of their sens so they can stay at 3 sen for the exact moment Tsubame is back
+		this.allowoverwrite = true
+
 	}
 
-	private onHagakure() {
-		// Work out how many sen are currently active
-		const activeSen = Object.values(this.sen)
-			.filter(active => active)
-			.length
-
-		// Add the new kenki, wipe the sen
-		this.kenki.modify(activeSen * KENKI_PER_SEN)
-		this.remove()
+	private remove() {
+		this.sen = _.mapValues(this.sen, () => false)
 	}
 
 	private onComplete() {

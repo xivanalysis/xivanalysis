@@ -2,7 +2,6 @@ import About from './About'
 import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import AoE from './AoE'
-import Arcanum from './Arcanum'
 import BrokenLog from './BrokenLog'
 import ChangeLog from './ChangeLog'
 import CastTime from './CastTime'
@@ -32,7 +31,6 @@ export default [
 	AdditionalEvents,
 	AlwaysBeCasting,
 	AoE,
-	Arcanum,
 	BrokenLog,
 	ChangeLog,
 	CastTime,

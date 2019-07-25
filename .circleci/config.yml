@@ -36,6 +36,14 @@ jobs:
             yarn lint:js --format junit -o reports/eslint/results.xml
             mkdir -p reports/tslint
             yarn lint:ts --format junit -o reports/tslint/results.xml
+      - run:
+          name: Ensure extract
+          command: |
+            yarn extract
+            if [[ $(git diff --stat locale) != '' ]]; then
+              echo "Changes to locale files detected. Please run \`yarn extract\` and commit the changes to ensure translations remain in sync."
+              exit 1
+            fi
       - store_test_results:
           path: reports
 
