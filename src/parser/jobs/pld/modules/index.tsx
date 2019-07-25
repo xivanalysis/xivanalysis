@@ -4,6 +4,7 @@ import FightOrFlight from './FightOrFlight'
 import Goring from './Goring'
 import OGCDDowntime from './OGCDDowntime'
 import Requiescat from './Requiescat'
+import Weaving from './Weaving'
 
 export default [
 	Combos,
@@ -12,4 +13,5 @@ export default [
 	Goring,
 	OGCDDowntime,
 	Requiescat,
+	Weaving,
 ]
