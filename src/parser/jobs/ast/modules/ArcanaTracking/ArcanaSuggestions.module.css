@@ -37,7 +37,8 @@
 	position: relative;
 	width: 65px;
 	height: 26px;
-	vertical-align: bottom;
+    vertical-align: bottom;
+    background-image: url('./seals_jobhud_simple.png')
 }
 
 .sealIcon {

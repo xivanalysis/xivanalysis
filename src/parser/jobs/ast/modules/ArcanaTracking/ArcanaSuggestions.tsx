@@ -11,11 +11,14 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Accordion, Button, Table} from 'semantic-ui-react'
-import {PLAY} from './ArcanaGroups'
+import {Button, Table} from 'semantic-ui-react'
+import {PLAY} from '../ArcanaGroups'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './ArcanaSuggestions.module.css'
 import ArcanaTracking, {CardState, SealType, SleeveType} from './ArcanaTracking'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import sealCelestial from './seal_celestial.png'
+import sealLunar from './seal_lunar.png'
+import sealSolar from './seal_solar.png'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
 
@@ -27,9 +30,9 @@ const SLEEVE_ICON = {
 
 const SEAL_ICON = {
 	[SealType.NOTHING]: '',
-	[SealType.SOLAR]: process.env.PUBLIC_URL + '/icon/jobhud/ast/solar.png',
-	[SealType.LUNAR]: process.env.PUBLIC_URL + '/icon/jobhud/ast/lunar.png',
-	[SealType.CELESTIAL]: process.env.PUBLIC_URL + '/icon/jobhud/ast/celestial.png',
+	[SealType.SOLAR]: sealSolar,
+	[SealType.LUNAR]: sealLunar,
+	[SealType.CELESTIAL]: sealCelestial,
 }
 
 interface CardLog extends CardState {
@@ -42,11 +45,6 @@ export default class ArcanaSuggestions extends Module {
 
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
-	static dependencies = [
-		'combatants',
-		'arcanaTracking',
-		'timeline',
-	]
 
 	@dependency private combatants!: Combatants
 	@dependency private arcanaTracking!: ArcanaTracking
@@ -62,14 +60,13 @@ export default class ArcanaSuggestions extends Module {
 	private _onComplete() {
 		const combatants = this.combatants.getEntities()
 		for (const [key, combatant] of Object.entries(combatants)) {
-
 			if (combatant.type === 'LimitBreak') {
 				continue
 			}
 			this.partyComp.push(combatant.type)
 		}
 
-		this.cardLogs = this.arcanaTracking.getCardLogs.map(artifact => {
+		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
 			const target = artifact.lastEvent.targetID !== this.parser.player.id ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
 
 			const cardLog: CardLog = {
@@ -214,7 +211,7 @@ export default class ArcanaSuggestions extends Module {
 			/>}
 			{!drawnArcana && <span className={styles.buffPlaceholder} />}
 			</span>
-			<span className={styles.sealIconContainer} style={{backgroundImage: `url(${process.env.PUBLIC_URL}/icon/jobhud/ast/jobhudastseals_simple.png)`}}>
+			<span className={styles.sealIconContainer}>
 			{artifact.sealState.map(sealType => {
 				if (sealType > 0) {
 					return <img src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />

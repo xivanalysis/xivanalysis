@@ -6,8 +6,7 @@ import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
-import ArcanaTracking from './ArcanaTracking'
-import ArcanaSuggestions from './ArcanaSuggestions'
+import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
 
 export default [
 	Cooldowns,

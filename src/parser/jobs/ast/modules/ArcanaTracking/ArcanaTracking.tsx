@@ -5,8 +5,8 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from './ArcanaGroups'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
@@ -110,27 +110,25 @@ export default class ArcanaTracking extends Module {
 
 		this.addHook('removebuff', {abilityId: DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
 		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
 	}
 
-	normalise(events: any) {
+	normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
 		let prepullSleeve = false
 		const sleeveDrawLog: CastEvent[] = []
-
 		for (const event of events) {
 			if ((event.timestamp > startTime && !prepullSleeve)
 				|| event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
 				) {
-				// End loop if: 1. Max duration of sleeve draw status passed 2. No prepull sleeve detected
-				break
+					// End loop if: 1. Max duration of sleeve draw status passed 2. No prepull sleeve detected
+					break
 
-				} else if (!prepullSleeve && event.type === 'applybuff' && STATUSES.SLEEVE_DRAW.id === event.ability.guid
+				} else if (!prepullSleeve && event.type === 'applybuff' && this.isBuffEvent(event) && STATUSES.SLEEVE_DRAW.id === event.ability.guid
 				&& event.timestamp <= startTime) {
 					prepullSleeve = true
-				} else if (prepullSleeve && event.type === 'cast' && ACTIONS.DRAW.id === event.ability.guid) {
+				} else if (prepullSleeve && event.type === 'cast' && this.isCastEvent(event) && ACTIONS.DRAW.id === event.ability.guid) {
 					sleeveDrawLog.push(event)
-				} else if (prepullSleeve && event.type === 'removebuff' && STATUSES.SLEEVE_DRAW.id === event.ability.guid) {
+				} else if (prepullSleeve && event.type === 'removebuff' && this.isBuffEvent(event) && STATUSES.SLEEVE_DRAW.id === event.ability.guid) {
 					prepullSleeve = false
 			} else {
 				continue
@@ -145,10 +143,7 @@ export default class ArcanaTracking extends Module {
 
 	}
 
-	public get getCardLogs() {
-		if (this.cardStateLog.length === 0) {
-			return []
-		}
+	public get cardLogs() {
 		return this.cardStateLog
 	}
 
@@ -165,7 +160,7 @@ export default class ArcanaTracking extends Module {
 	 * Adds the Arcana Buff to _prepullArcanas if it was a precast status
 	 */
 	private onPrepullArcana(event: BuffEvent) {
-		if (event.timestamp !== this.parser.fight.start_time -1) {
+		if (event.timestamp > this.parser.fight.start_time) {
 			return
 		}
 		this.prepullArcanas.push(event)
@@ -181,37 +176,34 @@ export default class ArcanaTracking extends Module {
 		}
 
 		this.prepullArcanas.forEach(arcanaBuff => {
-			if (arcanaBuff.ability.guid === event.ability.guid
-				&& arcanaBuff.targetID === event.targetID) {
+			if (!(arcanaBuff.ability.guid === event.ability.guid
+				&& arcanaBuff.targetID === event.targetID)) { return }
 
-				const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
-				const arcanaAction = getDataBy(ACTIONS, 'id', this.arcanaStatusToPlay(event.ability.guid))
+			const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
+			const arcanaAction = getDataBy(ACTIONS, 'id', this.arcanaStatusToPlay(event.ability.guid))
 
-				if (arcanaAction) {
-					const arcanaCastEvent: CastEvent = {
-						ability: {
-							name: arcanaAction.name,
-							guid: arcanaAction.id as number,
-							type: 1,
-							abilityIcon: _.replace(_.replace(arcanaAction.icon, 'https://xivapi.com/i/', ''), '/', '-'),
-						},
-						timestamp: event.timestamp - (STATUSES.THE_BALANCE.duration * 1000),
-						type: 'cast',
-						sourceIsFriendly: true,
-						targetIsFriendly: true,
-						sourceID: event.sourceID,
-						targetID: event.targetID,
-					}
-					cardStateItem.lastEvent = {...arcanaCastEvent}
-					cardStateItem.drawState = DrawnType.NOTHING
-					cardStateItem.sealState = CLEAN_SEAL_STATE
+			if (!arcanaAction) { return }
 
-					this.cardStateLog.unshift(cardStateItem)
-					this.pullIndex++
-				}
-
-				return
+			const arcanaCastEvent: CastEvent = {
+				ability: {
+					name: arcanaAction.name,
+					guid: arcanaAction.id as number,
+					type: 1,
+					abilityIcon: _.replace(_.replace(arcanaAction.icon, 'https://xivapi.com/i/', ''), '/', '-'),
+				},
+				timestamp: event.timestamp - (STATUSES.THE_BALANCE.duration * 1000),
+				type: 'cast',
+				sourceIsFriendly: true,
+				targetIsFriendly: true,
+				sourceID: event.sourceID,
+				targetID: event.targetID,
 			}
+			cardStateItem.lastEvent = {...arcanaCastEvent}
+			cardStateItem.drawState = DrawnType.NOTHING
+			cardStateItem.sealState = CLEAN_SEAL_STATE
+
+			this.cardStateLog.unshift(cardStateItem)
+			this.pullIndex++
 
 		})
 
@@ -219,7 +211,8 @@ export default class ArcanaTracking extends Module {
 
 	/**
 	 * This will run on removebuff. It will look for the loss of Arcanas Drawn statuses
-	 * 5.0: This was a lot more meaningful from
+	 * 5.0: This was a lot more meaningful when we had multiple statuses to track like royal road, held, drawn, etc.
+	 * it's still useful now as it helps mitigate out-of-order log events (if that's still a thing anyway..)
 	 *
 	 * a) If it can't find any clear reason why the player had lost the buff, let's do a retconsearch to figure out since when they had it
 	 *
@@ -229,39 +222,41 @@ export default class ArcanaTracking extends Module {
 	 */
 	private offDrawnStatus(event: BuffEvent) {
 
-		if (DRAWN_ARCANA.includes(event.ability.guid)) {
-			// a) check if this card was obtained legally, if not, retcon the logs
-			this.retconSearch(this.arcanaDrawnToPlay(event.ability.guid))
+		if (!DRAWN_ARCANA.includes(event.ability.guid)) {
+			return
+		}
 
-			// b) check if this was a standalone statusoff/undraw, if so, fab undraw event and add to logs
-			const isPaired = this.cardStateLog.findIndex(stateItem => stateItem.lastEvent
-				&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD))
+		// a) check if this card was obtained legally, if not, retcon the logs
+		this.retconSearch(this.arcanaDrawnToPlay(event.ability.guid))
 
-			if (isPaired < 0) {
-				const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
-				// fabbing an undraw cast event
-				const lastEvent: CastEvent = {
-					ability: {name: ACTIONS.UNDRAW.name, guid: ACTIONS.UNDRAW.id, type: 1, abilityIcon: _.replace(_.replace(STATUSES.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-')},
-					timestamp: event.timestamp,
-					type: 'cast',
-					sourceIsFriendly: true,
-					targetIsFriendly: true,
-					sourceID: event.sourceID,
-					targetID: event.sourceID,
-				}
+		// b) check if this was a standalone statusoff/undraw, if so, fab undraw event and add to logs
+		const isPaired = this.cardStateLog.some(stateItem => stateItem.lastEvent
+			&& _.inRange(event.timestamp, stateItem.lastEvent.timestamp - LINKED_EVENT_THRESHOLD, stateItem.lastEvent.timestamp + LINKED_EVENT_THRESHOLD))
 
-				cardStateItem.lastEvent = lastEvent
-				cardStateItem.drawState = DrawnType.NOTHING
-
-				this.cardStateLog.push(cardStateItem)
+		if (!isPaired) {
+			const cardStateItem: CardState = {..._.last(this.cardStateLog)} as CardState
+			// fabbing an undraw cast event
+			const lastEvent: CastEvent = {
+				ability: {name: ACTIONS.UNDRAW.name, guid: ACTIONS.UNDRAW.id, type: 1, abilityIcon: _.replace(_.replace(STATUSES.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-')},
+				timestamp: event.timestamp,
+				type: 'cast',
+				sourceIsFriendly: true,
+				targetIsFriendly: true,
+				sourceID: event.sourceID,
+				targetID: event.sourceID,
 			}
+
+			cardStateItem.lastEvent = lastEvent
+			cardStateItem.drawState = DrawnType.NOTHING
+
+			this.cardStateLog.push(cardStateItem)
 		}
 	}
 
 	/**
 	 * MAIN DATA GATHERING LOOP
 	 * Creates a CardState duplicated from the previous known state of the Astrologian's spread, then modifies it based on the current action.
-	 * Adds the CardState to _cardStateLog
+	 * Adds the CardState to cardStateLog
 	 *
 	 */
 	private onCast(event: CastEvent) {
@@ -321,7 +316,8 @@ export default class ArcanaTracking extends Module {
 	 */
 	private onDeath(event: DeathEvent) {
 
-		// TODO: Duct tape fix. Check on the previous event - it may be an erroneous drawnArcana flagged by offDrawnArcana. Statuses SEEM to drop 2s + 20ms earlier than the Death event.
+		// TODO: This is a duct tape fix
+		// Checks on the previous event - it may be an erroneous drawnArcana flagged by offDrawnArcana. Statuses SEEM to drop 2s + 20ms earlier than the Death event.
 		const lastCardState = {..._.last(this.cardStateLog)} as CardState
 		if (lastCardState.lastEvent.type === 'cast' && lastCardState.lastEvent.ability.guid === ACTIONS.UNDRAW.id
 		&& (event.timestamp - lastCardState.lastEvent.timestamp <= DEATH_EVENT_STATUS_DROP_DELAY + LINKED_EVENT_THRESHOLD)) {
@@ -367,10 +363,6 @@ export default class ArcanaTracking extends Module {
 				}
 			})
 		}
-	}
-
-	private onComplete() {
-		// Nothing to suggest yet
 	}
 
 	/**
@@ -505,5 +497,8 @@ export default class ArcanaTracking extends Module {
 
 		return arcanaId
 	}
+
+	public isCastEvent = (event: Event): event is CastEvent => event.type === 'cast'
+	public isBuffEvent = (event: Event): event is BuffEvent => event.type === 'buff'
 
 }
