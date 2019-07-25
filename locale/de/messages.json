@@ -75,7 +75,7 @@
   "blm.procs.suggestions.dropped-f3ps.why": "{0, plural, one {# Verbessertes Feuer Proc} other {# Verbessertes Feuer Procs}} ausgelaufen.",
   "blm.procs.suggestions.dropped-t3ps.content": "Du hast mindestens ein <0/> Proc verloren, da du <1/> auslaufen gelassen hast, ohne es zu verwenden.",
   "blm.procs.suggestions.dropped-t3ps.why": "",
-  "blm.rotation-watchdog.accordion.message": "",
+  "blm.rotation-watchdog.accordion.message": "Der Schwarzmagier besteht hauptsächlich aus 6x <0/> und 1x <1/> pro Rotation (bei aktiviertem <4/> sind es 7x <2/> und 2x <3/>).<5/>Versuche Feuga so oft wie möglich einzusetzen.",
   "blm.rotation-watchdog.checklist.dots.description": "",
   "blm.rotation-watchdog.checklist.dots.name": "Halte deinen <0/> DoT aufrecht",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "",
