@@ -56,5 +56,12 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
+		{
+			date: new Date('2019-07-25'),
+			Changes: () => <>
+				Minor fix for weaving case where player leads on oGCDs.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 })
