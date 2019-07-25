@@ -24,5 +24,10 @@ export default new Meta({
 			Changes: () => <>Initial release of 5.0 support for Dark Knight</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
+		{
+			date: new Date('2019-07-20'),
+			Changes: () => <>Fix issues with gauge calculation and AOE skill tracking</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
 	],
 })
