@@ -107,6 +107,23 @@ export enum AbilityType {
 	MAGICAL_DIRECT = 1024,
 }
 
+export enum HitType {
+	MISS = 0,
+	NORMAL = 1,
+	CRITICAL = 2,
+	BLOCK = 4,
+	DODGE = 7,
+	// PARRY = 8, // Seems to be used for other games where parry is a missType?
+	DEFLECT = 9,
+	IMMUNE = 10,
+	MISFIRE = 11,
+	REFLECT = 12,
+	EVADE = 13,
+	RESIST = 14,
+	// TODO: Tentative:
+	PARRY = 20,
+}
+
 export interface Ability {
 	abilityIcon: string
 	guid: number
@@ -138,8 +155,7 @@ export interface AbilityEvent extends Event {
 }
 
 interface EffectEvent extends AbilityEvent {
-	// TODO: HitType enum would be nice
-	hitType: number
+	hitType: HitType
 	tick?: boolean
 
 	guessAmount?: number

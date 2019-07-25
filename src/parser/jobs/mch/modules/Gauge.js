@@ -40,6 +40,8 @@ export default class Gauge extends Module {
 		},
 	}
 
+	_lastQueenCost = 0
+
 	constructor(...args) {
 		super(...args)
 		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.HEATED_SLUG_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
@@ -93,6 +95,7 @@ export default class Gauge extends Module {
 	}
 
 	_onQueen() {
+		this._lastQueenCost = this._gauge.battery.current
 		this._gauge.battery.current = 0
 		this._pushToHistory('battery')
 	}
@@ -182,4 +185,6 @@ export default class Gauge extends Module {
 			/>
 		</Fragment>
 	}
+
+	lastQueenCost() { return this._lastQueenCost }
 }

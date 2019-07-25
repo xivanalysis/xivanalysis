@@ -1,5 +1,14 @@
 ## Things the AST page might want to track
 
+## 5.0 edition
+
+### Draw
+* [ ] Checklist: Number of cards played over theoretical max (with leeway and downtime?)
+* [ ] Suggestion: Draw is kept on CD
+* [ ] Checklist: Divination use over theoretical max given the cards tracked
+* [ ] Card tracking
+
+========================================================================
 DoTs
 * [?] combust uptime
 
@@ -9,11 +18,6 @@ Earthly Star
 * [ ] Did not precook Earthly before pull (Subjected to fight?)
 
 
-Buff Extensions
-* [x] What did they extend with CO?
-* [x] What did they extend with Dilation?
-* Lucid combo
-* BUG: buffs from pre-pull are not captured properly when extended (see https://discordapp.com/channels/441414116914233364/441424599310270464/474063057094574080)
 
 * Lightspeed usage?
 

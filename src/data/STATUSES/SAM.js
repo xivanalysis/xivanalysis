@@ -47,6 +47,4 @@ export default {
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/004000/004206.png',
 	},
-
-
 }
