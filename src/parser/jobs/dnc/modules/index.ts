@@ -1,3 +1,5 @@
+import Procs from './Procs'
+
 export default [
-	// TODO: Put your modules here
+	Procs,
 ]
