@@ -40,7 +40,12 @@ export default class Snapshots extends Module {
 
 		// Builds a row for each snapshot event
 		const rows = snapshotEvents.map(snapshotEvent => {
-			const snapshot = snapshotEvent.snapshot
+			let snapshot = snapshotEvent.snapshot
+			if (!snapshot) {
+				// I currently have no idea how this happens, this means that AdditonalStats didn't recieve a cast event for it, but it got added in after or something
+				// So we can show they did cast it, I'm going to generate an empty snapshot
+				snapshot = {statuses: []}
+			}
 			const snapshotCell = <Table.Cell>
 				{
 					Object.keys(snapshot.statuses).map(id => {
