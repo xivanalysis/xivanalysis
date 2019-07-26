@@ -47,6 +47,7 @@
   "ast.lucid-dreaming.suggestion.content": "전투 동안 급하게 적개심을 낮추어야 할 구간이 없다면 효율적인 마나 관리를 위해 <0/>을 쿨이 돌 때마다 사용하십시오.",
   "ast.lucid-dreaming.suggestion.why": "총 {0} 회의 자각몽 중 {_usesMissed, plural, one {# 회} other {# 회}}가 사용되지 않았습니다.",
   "ast.overheal.requirement.all": "",
+  "ast.overheal.requirement.earthly-star": "",
   "ast.overheal.requirement.hot": "",
   "ast.overheal.requirement.nonhot": "",
   "ast.overheal.rule.description": "",

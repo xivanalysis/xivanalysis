@@ -47,6 +47,7 @@
   "ast.lucid-dreaming.suggestion.content": "Utiliser <0/> directement pour une meilleure gestion des PM, sauf si vous avez besoin de la réduction d'aggro pour une partie spécifique du combat.",
   "ast.lucid-dreaming.suggestion.why": "Environ {_usesMissed, plural, one {# utilisation} other {# utilisations}} de Rêve Lucide on été perdue en le gardant pour un total de {0}.",
   "ast.overheal.requirement.all": "",
+  "ast.overheal.requirement.earthly-star": "",
   "ast.overheal.requirement.hot": "",
   "ast.overheal.requirement.nonhot": "",
   "ast.overheal.rule.description": "",

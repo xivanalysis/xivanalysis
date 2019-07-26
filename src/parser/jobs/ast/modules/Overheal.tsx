@@ -33,13 +33,16 @@ export default class Overheal extends Module {
 	private overhealDirect = 0
 	private healingOverTime = 0
 	private overhealOverTime = 0
+	private healingPet = 0
+	private overhealPet = 0
 
 	protected init() {
 		this.addHook('heal', {by: 'player'}, this.onHeal)
-		this.addHook('complete', this._onComplete)
+		this.addHook('heal', {by: 'pet'}, this.onPetHeal)
+		this.addHook('complete', this.onComplete)
 	}
 
-	onHeal(event: HealEvent) {
+	private onHeal(event: HealEvent) {
 		const guid = event.ability.guid
 		if (HOT_STATUSES.includes(guid)) {
 			this.healingOverTime += event.amount
@@ -50,7 +53,12 @@ export default class Overheal extends Module {
 		}
 	}
 
-	_onComplete() {
+	private onPetHeal(event: HealEvent) {
+		this.healingPet += event.amount
+		this.overhealPet += event.overheal || 0
+	}
+
+	private onComplete() {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.overheal.rule.name">Avoid overheal</Trans>,
 			description: <Trans id="ast.overheal.rule.description"> Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management. </Trans>,
@@ -59,6 +67,10 @@ export default class Overheal extends Module {
 				new InvertedRequirement({
 					name: <Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT) </Trans>,
 					percent: 100 * this.healingDirect / (this.healingDirect + this.overhealDirect), // put in inverted data
+				}),
+				new InvertedRequirement({
+					name: <Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star) </Trans>,
+					percent: 100 * this.healingPet / (this.healingPet + this.overhealPet), // put in inverted data
 				}),
 				new InvertedRequirement({
 					name: <Trans id="ast.overheal.requirement.hot"> Overheal (HoT) </Trans>,
