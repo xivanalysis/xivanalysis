@@ -41,7 +41,7 @@ export default class Demolish extends DoTs {
 	addClippingSuggestions(clip) {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DEMOLISH.icon,
-			content: <Trans id="mnk.demolish.suggestion.content">Avoid refreshing <ActionLink {...ACTIONS.DEMOLISH}/> significantly before its expiration, unless it would result in a bad refresh due to <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> recovery. Unnecessary refreshes risk overwriting buff snapshots.</Trans>,
+			content: <Trans id="mnk.demolish.suggestion.content">Avoid refreshing <ActionLink {...ACTIONS.DEMOLISH}/> significantly before its expiration, unless it would result in a bad refresh due to <StatusLink {...STATUSES.GREASED_LIGHTNING} /> recovery. Unnecessary refreshes risk overwriting buff snapshots.</Trans>,
 			tiers: {
 				7: SEVERITY.MINOR,
 				10: SEVERITY.MEDIUM,

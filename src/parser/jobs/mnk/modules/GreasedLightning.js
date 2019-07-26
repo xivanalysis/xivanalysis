@@ -17,10 +17,10 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GL_MAX_STACKS = 3
 
-const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING_I.duration * 1000
+const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING.duration * 1000
 
 const GL_REFRESHERS = [
-	STATUSES.GREASED_LIGHTNING_I.id,
+	STATUSES.GREASED_LIGHTNING.id,
 	STATUSES.EARTHS_REPLY.id,
 	ACTIONS.TORNADO_KICK.id,
 ]
@@ -51,7 +51,7 @@ export default class GreasedLightning extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const GL_FILTER = {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING_I.id}
+		const GL_FILTER = {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}
 		this.addHook('applybuff', GL_FILTER, this._onGlGain)
 		this.addHook('applybuffstack', GL_FILTER, this._onGlRefresh)
 		this.addHook('removebuff', GL_FILTER, this._onDrop)
@@ -212,7 +212,7 @@ export default class GreasedLightning extends Module {
 			if ([1, 2].includes(value.stack) && last.stack === GL_MAX_STACKS) {
 				this.brokenLog.trigger(this, 'broken transition', (
 					<Trans id="mnk.gl.trigger.broken-transition">
-						<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> stacks were observed performing an impossible transition.
+						<StatusLink {...STATUSES.GREASED_LIGHTNING}/> stacks were observed performing an impossible transition.
 					</Trans>
 				))
 			}
@@ -224,12 +224,12 @@ export default class GreasedLightning extends Module {
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.gl.checklist.name">Keep Greased Lightning running</Trans>,
 			description: <Trans id="mnk.gl.checklist.description">
-				<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
+				<StatusLink {...STATUSES.GREASED_LIGHTNING}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.GREASED_LIGHTNING,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.gl.checklist.requirement.name"><StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> uptime</Trans>,
+					name: <Trans id="mnk.gl.checklist.requirement.name"><StatusLink {...STATUSES.GREASED_LIGHTNING}/> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
@@ -246,7 +246,7 @@ export default class GreasedLightning extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="mnk.gl.suggestions.dropped.why">
-					<StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> dropped <Plural value={this._droppedStacks} one="# time" other="# times"/>.
+					<StatusLink {...STATUSES.GREASED_LIGHTNING} /> dropped <Plural value={this._droppedStacks} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -274,7 +274,7 @@ export default class GreasedLightning extends Module {
 				</Trans>,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="mnk.gl.suggestions.roe.wasted.why">
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING} />.
 				</Trans>,
 			}))
 		}
