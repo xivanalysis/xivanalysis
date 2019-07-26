@@ -5,6 +5,7 @@ import {Trans} from '@lingui/react'
 
 const TARGETPERCENT = 95
 const FIRSTUSEOFFSETALL = 15000
+const ALLOWEDDOWNTIMEALL = 2500
 //earliest paint sharp is used for double sharp is like 18s in. Every other openers uses it way later.
 const FIRSTUSEOFFSETSHARP = 25000
 //allow sharp to be down for 1 GCD since it's kinda hard and unrealistic to use off CD.
@@ -13,7 +14,7 @@ const FIRSTUSEOFFSETCONV = 25000
 
 export default class OGCDDowntime extends CooldownDowntime {
 	//Time in ms that Laqi deems ok for a OGCD to be down : ^)
-	allowedDowntime = 0
+	allowedDowntime = ALLOWEDDOWNTIMEALL
 	allowedDowntimePerOgcd = {
 		[ACTIONS.SHARPCAST.id]: ALLOWEDDOWNTIMESHARP,
 	}
