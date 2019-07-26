@@ -79,7 +79,7 @@ export default class YassQueen extends Module {
 
 	_onComplete() {
 		this._finishQueenWindow()
-		const missingBunkers = this._queens.history.filter(queen => queen.casts[queen.casts.length - 1].ability.guid !== ACTIONS.PILE_BUNKER.id).length
+		const missingBunkers = this._queens.history.filter(queen => queen.casts.length && queen.casts[queen.casts.length - 1].ability.guid !== ACTIONS.PILE_BUNKER.id).length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.AUTOMATON_QUEEN.icon,
