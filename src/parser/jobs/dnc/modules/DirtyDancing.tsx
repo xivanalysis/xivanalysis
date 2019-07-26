@@ -13,7 +13,6 @@ import Module, {dependency} from 'parser/core/Module'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Invulnerability from 'parser/core/modules/Invulnerability'
-import {SimpleStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
@@ -21,6 +20,14 @@ const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	3: SEVERITY.MEDIUM,
 	5: SEVERITY.MAJOR,
+}
+
+// Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
+// Severity with every additional calculated drift since it's a more important issue than others
+const DRIFT_SEVERITY_TIERS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
 }
 
 const STEPS = [
@@ -108,7 +115,6 @@ export default class DirtyDancing extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
-	@dependency private statistics!: Statistics
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
@@ -272,38 +278,36 @@ export default class DirtyDancing extends Module {
 			],
 		}))
 
-		if (this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id] > 1) {
-			this.statistics.add(new SimpleStatistic({
-				title: <Trans id="dnc.dirty-dancing.standard-drift.title">Approximate Drift</Trans>,
-				icon: ACTIONS.STANDARD_STEP.icon,
-				value: this.parser.formatDuration(this.totalDrift[ACTIONS.STANDARD_STEP.id]),
-				info: (
-					<Trans id="dnc.dirty-dancing.standard-drift.info">
-						You may have lost a use of <ActionLink {...ACTIONS.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
-					</Trans>
-				),
-			}))
-		}
+		const driftedStandards = Math.floor(this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id])
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.STANDARD_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.content">You may have lost a use of <ActionLink {...ACTIONS.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			</Trans>,
+			tiers: DRIFT_SEVERITY_TIERS,
+			value: driftedStandards,
+			why: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.why">
+				<Plural value={driftedStandards} one="# Stanard Step was" other="# Standard Steps were"/> lost due to drift.
+			</Trans>,
+		}))
 
-		if (this.totalDrift[ACTIONS.TECHNICAL_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.TECHNICAL_STEP.id] > 1) {
-			this.statistics.add(new SimpleStatistic({
-				title: <Trans id="dnc.dirty-dancing.technical-drift.title">Approximate Drift</Trans>,
-				icon: ACTIONS.TECHNICAL_STEP.icon,
-				value: this.parser.formatDuration(this.totalDrift[ACTIONS.TECHNICAL_STEP.id]),
-				info: (
-					<Trans id="dnc.dirty-dancing.technical-drift.info">
-						You may have lost a use of <ActionLink {...ACTIONS.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
-					</Trans>
-				),
-			}))
-		}
+		const driftedTechnicals = Math.floor(this.totalDrift[ACTIONS.TECHNICAL_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.TECHNICAL_STEP.id])
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.TECHNICAL_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.content">You may have lost a use of <ActionLink {...ACTIONS.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			</Trans>,
+			tiers: DRIFT_SEVERITY_TIERS,
+			value: driftedTechnicals,
+			why: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.why">
+				<Plural value={driftedTechnicals} one="# Technical Step was" other="# Technical Steps were"/> lost due to drift.
+			</Trans>,
+		}))
 	}
 
 	output() {
 		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
 				<Message>
-					<Trans id="dnc.dirty-dancing.rotationtable.message">
+					<Trans id="dnc.dirty-dancing.rotation-table.message">
 						One of Dancer's primary responsibilities is buffing the party's damage via dances.<br />
 						Each dance also contributes to the Dancer's own damage and should be performed correctly.
 					</Trans>
@@ -311,15 +315,15 @@ export default class DirtyDancing extends Module {
 				<RotationTable
 					notes={[
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.missed">Hit Target</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.missed">Hit Target</Trans>,
 							accessor: 'missed',
 						},
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.dirty">Correct Finish</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.dirty">Correct Finish</Trans>,
 							accessor: 'dirty',
 						},
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.footloose">No Extra Moves</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.footloose">No Extra Moves</Trans>,
 							accessor: 'footloose',
 						},
 					]}
