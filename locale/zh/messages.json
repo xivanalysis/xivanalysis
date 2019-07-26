@@ -189,6 +189,7 @@
   "core.weaving.title": "能力技穿插问题",
   "core.weaving.why": "{0, plural, other {# 次错误插入}}",
   "dnc.about.description": "",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "",
   "dnc.dirty-dancing.rotationtable.message": "",

@@ -189,6 +189,7 @@
   "core.weaving.title": "논글쿨기 초과 문제",
   "core.weaving.why": "{0, plural, other {부적절하게 끼워넣은 스킬횟수：#회}}",
   "dnc.about.description": "",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "",
   "dnc.dirty-dancing.rotationtable.message": "",
