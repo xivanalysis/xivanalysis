@@ -21,6 +21,8 @@ export const MANA_GAIN = {
 	[ACTIONS.VERFLARE.id]: {white: 0, black: 21},
 	[ACTIONS.JOLT.id]: {white: 3, black: 3},
 	[ACTIONS.JOLT_II.id]: {white: 3, black: 3},
+	[ACTIONS.VERAERO_II.id]: {white: 7, black: 0},
+	[ACTIONS.VERTHUNDER_II.id]: {white: 0, black: 7},
 	[ACTIONS.IMPACT.id]: {white: 3, black: 3},
 	[ACTIONS.ENCHANTED_RIPOSTE.id]: {white: -30, black: -30},
 	[ACTIONS.ENCHANTED_ZWERCHHAU.id]: {white: -25, black: -25},
