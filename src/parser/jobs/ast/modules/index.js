@@ -7,6 +7,7 @@ import LucidDreaming from './LucidDreaming'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
 import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
+import Sect from './Sect'
 
 export default [
 	Cooldowns,
@@ -19,4 +20,5 @@ export default [
 	Horoscope,
 	ArcanaTracking,
 	ArcanaSuggestions,
+	Sect,
 ]
