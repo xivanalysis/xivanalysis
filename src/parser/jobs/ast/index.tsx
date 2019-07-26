@@ -57,6 +57,16 @@ export default new Meta({
 			contributors: [CONTRIBUTORS.SUSHIROU],
 		},
 		{
+			date: new Date('2019-07-23'),
+			Changes: () => <>
+				<strong>Arcana play logs support for Shadowbringers</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.PLAY} />) Arcana Logs are back up, now includes prepull Plays</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2019-07-11'),
 			Changes: () => <>
 				<strong>Basic support for Shadowbringers</strong>:
