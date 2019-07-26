@@ -190,14 +190,12 @@ export default class DirtyDancing extends Module {
 	// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
 	// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
 	private onDevilment(event: CastEvent) {
-		if (!this.firstDevilment)
-		{
+		if (!this.firstDevilment) {
 			this.firstDevilment = true
 			return
 		}
 
-		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id))
-		{
+		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
 			this.badDevilments++
 		}
 	}
