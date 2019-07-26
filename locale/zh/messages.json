@@ -43,7 +43,7 @@
   "ast.lucid-dreaming.suggestion.content": "",
   "ast.lucid-dreaming.suggestion.why": "由于 CD 空转了 {0}，你大约损失了 {_usesMissed} 次醒梦。",
   "ast.sect.info": "",
-  "ast.sect.info.no-sect-detected": "",
+  "ast.sect.info.no-sect-detected": "没有检测到学派。",
   "ast.sect.suggestions.no-sect.content": "",
   "ast.sect.suggestions.no-sect.why": "",
   "ast.sect.suggestions.noct-with-sch.content": "",
