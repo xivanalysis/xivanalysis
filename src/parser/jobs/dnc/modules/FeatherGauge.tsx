@@ -108,7 +108,7 @@ export default class FeatherGauge extends Module {
 
 		return <Fragment>
 			<span className={styles.helpText}>
-				<Trans id="dnc.feather-gauge.graph.help-text">This graph is a rough estimate of your feather gauge, as best. Take it with a hefty grain of salt.</Trans>
+				<Trans id="dnc.feather-gauge.graph.help-text">This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.</Trans>
 			</span>
 				<TimeLineChart data={data} />
 		</Fragment>

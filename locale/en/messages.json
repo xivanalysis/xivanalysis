@@ -210,7 +210,7 @@
   "dnc.dirty-dancing.table.header.footloose": "No Extra Moves",
   "dnc.dirty-dancing.table.header.missed": "Hit Target",
   "dnc.dirty-dancing.title": "Dance Issues",
-  "dnc.feather-gauge.graph.help-text": "This graph is a rough estimate of your feather gauge, as best. Take it with a hefty grain of salt.",
+  "dnc.feather-gauge.graph.help-text": "This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.content": "You may have lost feathers due to using one of your procs while already holding four feathers. Make sure to use a feather before using a proc.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.why": "{0, plural, one {# feather} other {# feathers}} may have been lost.",
   "dnc.feather-gauge.title": "Feather Gauge",
