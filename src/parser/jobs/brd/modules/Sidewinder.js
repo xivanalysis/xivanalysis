@@ -240,7 +240,7 @@ export default class Sidewinder extends Module {
 			return <List.Item key={cast.timestamp}>
 				{this._createTimelineButton(cast.timestamp)}
 				<List.Content verticalAlign="middle">
-					{notBothDotsItem}{singleTargetItem}. <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this._formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
+					{notBothDotsItem} {singleTargetItem}. <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this._formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
 				</List.Content>
 			</List.Item>
 		})
