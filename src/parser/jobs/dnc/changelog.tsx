@@ -10,4 +10,9 @@ export const changelog = [
 		Changes: () => <>Suggestions for dance performances and checklist rule for <StatusLink {...STATUSES.STANDARD_FINISH} /> uptime.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-07-26'),
+		Changes: () => <>Suggestion for not using Devilment outside Technical Finish windows other than the opener.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
