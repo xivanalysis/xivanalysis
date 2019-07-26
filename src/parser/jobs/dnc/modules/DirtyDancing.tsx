@@ -134,7 +134,7 @@ export default class DirtyDancing extends Module {
 
 	private continueDance(event: CastEvent) {
 		// Bail if beginDance or finishDance should be handling this event
-		if (!(STEPS.includes(event.ability.guid) || FINISHES.includes(event.ability.guid))) {
+		if (STEPS.includes(event.ability.guid) || FINISHES.includes(event.ability.guid)) {
 			return
 		}
 
