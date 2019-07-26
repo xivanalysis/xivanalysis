@@ -5,6 +5,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
@@ -79,12 +80,10 @@ export interface CardState {
 // TODO: Try to track for when a seal was not given on pull due to latency?
 export default class ArcanaTracking extends Module {
 	static handle = 'arcanaTracking'
-	static dependencies = [
-		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
-	]
 	static title = t('ast.arcana-tracking.title')`Arcana Tracking`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
+
+	@dependency private precastStatus!: PrecastStatus
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
@@ -114,29 +113,26 @@ export default class ArcanaTracking extends Module {
 
 	normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
-		let prepullSleeve = false
+		let prepullSleeve = true
 		const sleeveDrawLog: CastEvent[] = []
 		for (const event of events) {
-			if ((event.timestamp > startTime && !prepullSleeve)
-				|| event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
+			if (event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
 				) {
-					// End loop if: 1. Max duration of sleeve draw status passed 2. No prepull sleeve detected
+					// End loop if: 1. Max duration of sleeve draw status passed
 					break
-
-				} else if (!prepullSleeve && event.type === 'applybuff' && this.isBuffEvent(event) && STATUSES.SLEEVE_DRAW.id === event.ability.guid
-				&& event.timestamp <= startTime) {
-					prepullSleeve = true
-				} else if (prepullSleeve && event.type === 'cast' && this.isCastEvent(event) && ACTIONS.DRAW.id === event.ability.guid) {
-					sleeveDrawLog.push(event)
-				} else if (prepullSleeve && event.type === 'removebuff' && this.isBuffEvent(event) && STATUSES.SLEEVE_DRAW.id === event.ability.guid) {
+				} else if ( event.type === 'cast' && this.isCastEvent(event) && ACTIONS.SLEEVE_DRAW.id === event.ability.guid) {
+					// they used sleeve so it can't have been prepull
 					prepullSleeve = false
-			} else {
+				} else if (event.type === 'cast' && this.isCastEvent(event) && ACTIONS.DRAW.id === event.ability.guid) {
+					sleeveDrawLog.push(event)
+			}  else {
 				continue
 			}
 		}
 
-		if (sleeveDrawLog.length > 0 && sleeveDrawLog.length <= 2) {
-			this.cardStateLog[0].sleeveState = sleeveDrawLog.length
+		// if they drew 2-3 cards in the first 30 sec, we can assume they had a sleeve draw
+		if (prepullSleeve && _.inRange(sleeveDrawLog.length, SleeveType.TWO_STACK, SleeveType.TWO_STACK + 2)) {
+			this.cardStateLog[0].sleeveState = sleeveDrawLog.length - 1
 		}
 
 		return events
