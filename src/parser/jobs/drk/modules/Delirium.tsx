@@ -8,6 +8,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -38,7 +39,8 @@ class DeliriumState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
-	isRushing: boolean = false // TODO: Actually use this, and display it appropriately in the output table
+	expectedGCDs: number = EXPECTED_CONSTANTS.GCD
+	expectedBloodSkills: number = EXPECTED_CONSTANTS.BLOOD_SKILLS
 
 	constructor(start: number) {
 		this.start = start
@@ -64,6 +66,7 @@ export default class Delirium extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private globalcooldown!: GlobalCooldown
 
 	// Inner Release Windows
 	private deliriumWindows: DeliriumState[] = []
@@ -92,7 +95,13 @@ export default class Delirium extends Module {
 		if (actionId === ACTIONS.DELIRIUM.id) {
 			const delirium = new DeliriumState(event.timestamp)
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			delirium.isRushing = DELIRIUM_DURATION >= fightTimeRemaining
+			if ( DELIRIUM_DURATION >= fightTimeRemaining ) {
+				// Rushing - end of fight, reduce expected number of skills
+				const gcdEstimate = this.globalcooldown.getEstimate(true)
+				const reducedWindow = Math.ceil((DELIRIUM_DURATION - fightTimeRemaining) / gcdEstimate)
+				delirium.expectedGCDs -= reducedWindow
+				delirium.expectedBloodSkills = reducedWindow
+			}
 
 			this.deliriumWindows.push(delirium)
 		}
@@ -166,11 +175,11 @@ export default class Delirium extends Module {
 					targetsData: {
 						gcd: {
 							actual: deliriumWindow.gcds,
-							expected: EXPECTED_CONSTANTS.GCD,
+							expected: deliriumWindow.expectedGCDs,
 						},
 						bloodSkills: {
 							actual: deliriumWindow.bloodSkills,
-							expected: EXPECTED_CONSTANTS.BLOOD_SKILLS,
+							expected: deliriumWindow.expectedBloodSkills,
 						},
 					},
 					rotation: deliriumWindow.rotation,
