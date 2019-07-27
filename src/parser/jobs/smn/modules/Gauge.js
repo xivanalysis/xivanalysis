@@ -9,13 +9,11 @@ import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const AETHER_ACTIONS = [
-	ACTIONS.ENERGY_DRAIN.id,
-	ACTIONS.BANE.id,
 	ACTIONS.FESTER.id,
 	ACTIONS.PAINFLARE.id,
 ]
 
-const MAX_AETHERFLOW = 3
+const MAX_AETHERFLOW = 2
 const DREADWYRM_TRANCE_DURATION = 16000
 const MIN_DWT_BUILD = DREADWYRM_TRANCE_DURATION + (ACTIONS.FESTER.cooldown * 1000) * 2
 const SUMMON_BAHAMUT_DURATION = 20000
@@ -32,10 +30,7 @@ export default class Gauge extends Module {
 	// -----
 	// Properties
 	// -----
-	// I'm assuming they're starting with max.
-	// TODO: Check this in some manner maybeeeeee?
-	_aetherflow = MAX_AETHERFLOW
-	_aethertrailAttunement = 0
+	_aetherflow = 0
 	_dreadwyrmAether = 0
 
 	// Track lost stacks
@@ -79,11 +74,11 @@ export default class Gauge extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
-		if (abilityId === ACTIONS.AETHERFLOW.id) {
-			// Flow restores up to 3 flow stacks
-			// flow + trail can never be >3
-			this._aetherflow = MAX_AETHERFLOW - this._aethertrailAttunement
-			this._lostAetherflow += this._aethertrailAttunement
+		if (abilityId === ACTIONS.ENERGY_DRAIN.id || abilityId === ACTIONS.ENERGY_SIPHON.id) {
+			// Energy Drain/Siphon restores up to 2 flow stacks
+			// flow can never be > 2, so any remaining on cast is lost
+			this._lostAetherflow += this._aetherflow
+			this._aetherflow = MAX_AETHERFLOW
 
 			// (Should be) rushing if it's the last flow of the fight, and there won't be enough time for a full rotation.
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
@@ -97,19 +92,14 @@ export default class Gauge extends Module {
 		}
 
 		if (AETHER_ACTIONS.includes(abilityId)) {
-			// Aether actions convert flow into trail
-			// TODO: Check for using flow when none (logic issue)
-			this._aetherflow --
-			this._aethertrailAttunement ++
+			if (this._aetherflow > 0) {
+				this._aetherflow --
+			}
 		}
 
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
 			// DWT resets 3D
 			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
-
-			// DWT spends 3 trail
-			// TODO: Check for DWT when <3 trail (logic issue)
-			this._aethertrailAttunement = 0
 		}
 
 		if (abilityId === ACTIONS.SUMMON_BAHAMUT.id) {
@@ -139,7 +129,6 @@ export default class Gauge extends Module {
 		// Death just flat out resets everything. Rip.
 		// Not counting the loss towards the rest of the gauge loss, that'll just double up on the suggestions
 		this._aetherflow = 0
-		this._aethertrailAttunement = 0
 		this._dreadwyrmAether = 0
 	}
 
@@ -147,9 +136,9 @@ export default class Gauge extends Module {
 		// Suggestions for lost stacks
 		if (this._lostAetherflow) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.AETHERFLOW.icon,
+				icon: ACTIONS.ENERGY_DRAIN.icon,
 				content: <Trans id="smn.gauge.suggestions.lost-aetherflow.content">
-					Ensure you gain a full 3 stacks of <ActionLink {...ACTIONS.AETHERFLOW}/> per cast. Every lost stack is a significant potency loss, and can push your next <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> (and hence Bahamut) out by up to a minute.
+					Ensure you gain a full 2 stacks of Aetherflow per cast. Every lost stack is a significant potency loss.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="smn.gauge.suggestions.lost-aetherflow.why">

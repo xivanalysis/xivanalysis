@@ -596,6 +596,8 @@
   "sch.weaving.title": "挟み込みの問題",
   "smn.about.description": "",
   "smn.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
+  "smn.aetherflow.suggestions.energysiphon.content": "",
+  "smn.aetherflow.suggestions.energysiphon.why": "",
   "smn.aetherflow.suggestions.fester.content": "<0/>の最大威力を引き出す為には必ず<1/>と<2/>を付けてからにしてください。両DoTをしっかり着弾するには少々時間掛かりますのでタイミングを把握した上でDoTの着弾後にミアズマバーストを撃ってください。",
   "smn.aetherflow.suggestions.fester.why": "DoT無し状態でミアズマバーストを使用したケースが{numBadFesters, plural, one {#個} other {#個}}で、総計失った威力が{totalFesterPotencyLost}になります。",
   "smn.aetherflow.suggestions.painflare.content": " <0/>を単体対象に使うのは避けてください（但し、急いで<1/>状態に入ることが例外ケースとして扱います）。原因は威力自体が<2/>より低いからです。",

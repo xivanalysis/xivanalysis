@@ -30,6 +30,11 @@ const PAINFLARE_SEVERITY = {
 	5: SEVERITY.MAJOR,
 }
 
+const ENERGY_SIPHON_SEVERITY = {
+	1: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 export default class Aetherflow extends Module {
 	static handle = 'aetherflow'
 	static title = t('smn.aetherflow.title')`Aetherflow`
@@ -47,6 +52,7 @@ export default class Aetherflow extends Module {
 	// _badFesters = []       // 1 DoT Fester. Oh no, it gets worse!
 	// _reallyBadFesters = [] // 0 DoT Fester. :r333333:
 	_badPainflares = []
+	_badEnergySiphons = []
 
 	_badDotReqCasts = {}
 
@@ -60,8 +66,8 @@ export default class Aetherflow extends Module {
 
 		this.addHook('aoedamage', {
 			by: 'player',
-			abilityId: ACTIONS.PAINFLARE.id,
-		}, this._onPainflareDamage)
+			abilityId: [ACTIONS.PAINFLARE.id, ACTIONS.ENERGY_SIPHON.id],
+		}, this._onAoeDamage)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -88,10 +94,16 @@ export default class Aetherflow extends Module {
 		this._badDotReqCasts[actionId][statusesMissing]++
 	}
 
-	_onPainflareDamage(event) {
-		// Only fault single target PFs _outside_ rushes.
-		if (event.hits.length <= 1 && !this.gauge.isRushing()) {
-			this._badPainflares.push(event)
+	_onAoeDamage(event) {
+		if (event.ability.guid === ACTIONS.PAINFLARE.id) {
+			// Only fault single target PFs _outside_ rushes.
+			if (event.hits.length <= 1 && !this.gauge.isRushing) {
+				this._badPainflares.push(event)
+			}
+		} else if (event.ability.guid === ACTIONS.ENERGY_SIPHON.id) {
+			if (event.hits.length <= 2) {
+				this._badEnergySiphons.push(event)
+			}
 		}
 	}
 
@@ -134,6 +146,22 @@ export default class Aetherflow extends Module {
 			</Trans>,
 			tiers: PAINFLARE_SEVERITY,
 			value: numBadPainflares,
+		}))
+
+		// Energy Siphon suggestion, I want to say < 3 is medium because 3 on two targets is greater than a full Energy Drain (or 2 casts on 1 target)
+		const numBadEnergySiphons = this._badEnergySiphons.length
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.ENERGY_SIPHON.icon,
+			content: <Trans id="smn.aetherflow.suggestions.energysiphon.content">
+				Avoid casting <ActionLink {...ACTIONS.ENERGY_SIPHON}/> on less than three targets, as it deals less damage than <ActionLink {...ACTIONS.ENERGY_DRAIN}/> per hit.
+			</Trans>,
+			why: <Trans id="smn.aetherflow.suggestions.energysiphon.why">
+				{numBadEnergySiphons} single- or two-target
+				<Plural value={numBadEnergySiphons} one="cast" other="casts"/>
+				of Painflare.
+			</Trans>,
+			tiers: ENERGY_SIPHON_SEVERITY,
+			value: numBadEnergySiphons,
 		}))
 	}
 
