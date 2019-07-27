@@ -1,5 +1,4 @@
 import Gauge from './Gauge'
-import Triple from './Triple'
 import Procs from './Procs'
 import BlmWeaving from './Weaving'
 import RotationWatchdog from './RotationWatchdog'
@@ -11,7 +10,6 @@ import Sharpcast from './Sharpcast'
 
 export default [
 	Gauge,
-	Triple,
 	Procs,
 	BlmWeaving,
 	RotationWatchdog,

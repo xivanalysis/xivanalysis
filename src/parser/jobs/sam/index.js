@@ -30,6 +30,24 @@ export default new Meta({
 		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
 	],
 
-	changelog: [
-	],
+	changelog: [{
+		date: new Date('2019-7-24'),
+		Changes: () => <>Added Drift check to Meikyo Shisui along with use check. </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},{
+		date: new Date('2019-07-22'),
+		Changes: () => <>Fixed speed buff provided by Shifu. GCD estimations should be improved.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}, {
+		date: new Date('2019-07-21'),
+		Changes: () => <>
+			Initial support for 5.0 SAM, including:&nbsp;
+			<ul>
+				<li>Checks for overwritten sen, with allowance for forced wastage due to Tsubame.</li>
+				<li>Stricter checks for Third Eye.</li>
+				<li>Removing Hagakure logic.</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}],
 })

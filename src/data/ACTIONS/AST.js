@@ -1,12 +1,23 @@
 export default {
+	DIURNAL_SECT: {
+		id: 3604,
+		name: 'Diurnal Sect',
+		icon: 'https://xivapi.com/i/003000/003133.png',
+	},
+
+	NOCTURNAL_SECT: {
+		id: 3605,
+		name: 'Nocturnal Sect',
+		icon: 'https://xivapi.com/i/003000/003134.png',
+	},
+
 	BENEFIC: {
 		id: 3594,
 		name: 'Benefic',
 		icon: 'https://xivapi.com/i/003000/003126.png',
 		onGcd: true,
 		castTime: 2,
-		mpCostFactor: 4,
-		mpCost: 480,
+		mpCost: 400,
 	},
 
 	BENEFIC_II: {
@@ -15,8 +26,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003128.png',
 		onGcd: true,
 		castTime: 2,
-		mpCostFactor: 9,
-		mpCost: 1080,
+		mpCost: 900,
 	},
 
 	ASCEND: {
@@ -25,8 +35,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003132.png',
 		onGcd: true,
 		castTime: 8,
-		mpCostFactor: 30,
-		mpCost: 3600,
+		mpCost: 2400,
 	},
 
 	LIGHTSPEED: {
@@ -42,8 +51,16 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003145.png',
 		onGcd: true,
 		castTime: 1.5,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 400,
+	},
+
+	MALEFIC_IV: {
+		id: 16555,
+		name: 'Malefic IV',
+		icon: 'https://xivapi.com/i/003000/003555.png',
+		onGcd: true,
+		castTime: 1.5,
+		mpCost: 400,
 	},
 
 	COMBUST_II: {
@@ -52,8 +69,16 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003125.png',
 		onGcd: true,
 		castTime: 0,
-		mpCostFactor: 5,
-		mpCost: 600,
+		mpCost: 500,
+	},
+
+	COMBUST_III: {
+		id: 16554,
+		name: 'Combust II',
+		icon: 'https://xivapi.com/i/003000/003554.png',
+		onGcd: true,
+		castTime: 0,
+		mpCost: 400,
 	},
 
 	GRAVITY: {
@@ -62,8 +87,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
 		castTime: 3,
-		mpCostFactor: 16,
-		mpCost: 1920,
+		mpCost: 600,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -79,8 +103,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		castTime: 2.5,
-		mpCostFactor: 15,
-		mpCost: 1800,
+		mpCost: 1200,
 	},
 
 	ASPECTED_BENEFIC: {
@@ -89,8 +112,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,
 		castTime: 0,
-		mpCostFactor: 12,
-		mpCost: 1440,
+		mpCost: 500,
 	},
 
 	HELIOS: {
@@ -99,15 +121,14 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003129.png',
 		onGcd: true,
 		castTime: 2.5,
-		mpCostFactor: 12,
-		mpCost: 1440,
+		mpCost: 900,
 	},
 
 	SYNASTRY: {
 		id: 3612,
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/003000/003139.png',
-		cooldown: 90,
+		cooldown: 120,
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
@@ -117,39 +138,11 @@ export default {
 		cooldown: 90,
 	},
 
-	MINOR_ARCANA: {
-		id: 7443,
-		name: 'Minor Arcana',
-		icon: 'https://xivapi.com/i/003000/003106.png',
-		cooldown: 5,
-	},
-
-	LADY_OF_CROWNS: {
-		id: 7445,
-		name: 'Lady Of Crowns',
-		icon: 'https://xivapi.com/i/003000/003146.png',
-		cooldown: 5,
-	},
-
-	LORD_OF_CROWNS: {
-		id: 7444,
-		name: 'Lord Of Crowns',
-		icon: 'https://xivapi.com/i/003000/003147.png',
-		cooldown: 5,
-	},
-
 	CELESTIAL_OPPOSITION: {
-		id: 3616,
+		id: 16553,
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
 		cooldown: 120,
-	},
-
-	TIME_DILATION: {
-		id: 3611,
-		name: 'Time Dilation',
-		icon: 'https://xivapi.com/i/003000/003138.png',
-		cooldown: 90,
 	},
 
 	EARTHLY_STAR: {
@@ -163,6 +156,7 @@ export default {
 		id: 8324,
 		name: 'Stellar Detonation',
 		icon: 'https://xivapi.com/i/003000/003144.png',
+		cooldown: 0,
 	},
 
 	STELLAR_BURST: {
@@ -184,18 +178,11 @@ export default {
 		cooldown: 30,
 	},
 
-	ROYAL_ROAD: {
-		id: 3591,
-		name: 'Royal Road',
-		icon: 'https://xivapi.com/i/003000/003103.png',
-		cooldown: 15,
-	},
-
-	SPREAD: {
-		id: 3592,
-		name: 'Spread',
-		icon: 'https://xivapi.com/i/003000/003104.png',
-		cooldown: 30,
+	PLAY: {
+		id: 17055,
+		name: 'Play',
+		icon: 'https://xivapi.com/i/003000/003102.png',
+		cooldown: 0,
 	},
 
 	REDRAW: {
@@ -209,215 +196,120 @@ export default {
 		id: 7448,
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/003000/003107.png',
-		cooldown: 120,
-	},
-
-	// -----
-	// Arcana cast from draw slot
-	// -----
-
-	THE_BALANCE: {
-		id: 4401,
-		name: 'The Balance',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
-
-	THE_BOLE: {
-		id: 4402,
-		name: 'The Bole',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
-
-	THE_ARROW: {
-		id: 4403,
-		name: 'The Arrow',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
-
-	THE_SPEAR: {
-		id: 4404,
-		name: 'The Spear',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
-
-	THE_EWER: {
-		id: 4405,
-		name: 'The Ewer',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
-
-	THE_SPIRE: {
-		id: 4406,
-		name: 'The Spire',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
-
-	// -----
-	// Expanded arcana cast from draw slot
-	// -----
-
-	THE_BALANCE_EXPANDED: {
-		id: 4407,
-		name: 'Expanded Balance',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
-
-	THE_BOLE_EXPANDED: {
-		id: 4408,
-		name: 'Expanded Bole',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
-
-	THE_ARROW_EXPANDED: {
-		id: 4409,
-		name: 'Expanded Arrow',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
-
-	THE_SPEAR_EXPANDED: {
-		id: 4410,
-		name: 'Expanded Spear',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
-
-	THE_EWER_EXPANDED: {
-		id: 4411,
-		name: 'Expanded Ewer',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
-
-	THE_SPIRE_EXPANDED: {
-		id: 4412,
-		name: 'Expanded Spire',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
-
-	// -----
-	// Arcana cast from held slot
-	// -----
-
-	THE_BALANCE_FROM_SPREAD: {
-		id: 4413,
-		name: 'The Balance (held)',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
-
-	THE_BOLE_FROM_SPREAD: {
-		id: 4414,
-		name: 'The Bole (held)',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
-
-	THE_ARROW_FROM_SPREAD: {
-		id: 4415,
-		name: 'The Arrow (held)',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
-
-	THE_SPEAR_FROM_SPREAD: {
-		id: 4416,
-		name: 'The Spear (held)',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
-
-	THE_EWER_FROM_SPREAD: {
-		id: 4417,
-		name: 'The Ewer (held)',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
-
-	THE_SPIRE_FROM_SPREAD: {
-		id: 4418,
-		name: 'The Spire (held)',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
-
-	// -----
-	// Expanded arcana cast from held slot
-	// -----
-
-	THE_BALANCE_EXPANDED_FROM_SPREAD: {
-		id: 4419,
-		name: 'Expanded Balance (held)',
-		icon: 'https://xivapi.com/i/003000/003110.png',
-		cooldown: 30,
-	},
-
-	THE_BOLE_EXPANDED_FROM_SPREAD: {
-		id: 4420,
-		name: 'Expanded Bole (held)',
-		icon: 'https://xivapi.com/i/003000/003111.png',
-		cooldown: 30,
-	},
-
-	THE_ARROW_EXPANDED_FROM_SPREAD: {
-		id: 4421,
-		name: 'Expanded Arrow (held)',
-		icon: 'https://xivapi.com/i/003000/003112.png',
-		cooldown: 30,
-	},
-
-	THE_SPEAR_EXPANDED_FROM_SPREAD: {
-		id: 4422,
-		name: 'Expanded Spear (held)',
-		icon: 'https://xivapi.com/i/003000/003113.png',
-		cooldown: 30,
-	},
-
-	THE_EWER_EXPANDED_FROM_SPREAD: {
-		id: 4423,
-		name: 'Expanded Ewer (held)',
-		icon: 'https://xivapi.com/i/003000/003114.png',
-		cooldown: 30,
-	},
-
-	THE_SPIRE_EXPANDED_FROM_SPREAD: {
-		id: 4424,
-		name: 'Expanded Spire (held)',
-		icon: 'https://xivapi.com/i/003000/003115.png',
-		cooldown: 30,
-	},
-
-	// -----
-	// OGCD Arcana removal
-	// -----
-
-	UNDRAW_SPREAD: {
-		id: 4646,
-		name: 'Undraw Spread',
-		icon: 'https://xivapi.com/i/003000/003149.png',
-		cooldown: 3,
-	},
-
-	EMPTY_ROAD: {
-		id: 4645,
-		name: 'Empty Road',
-		icon: 'https://xivapi.com/i/003000/003148.png',
-		cooldown: 3,
+		cooldown: 180,
 	},
 
 	UNDRAW: {
 		id: 9629,
 		name: 'Undraw',
 		icon: 'https://xivapi.com/i/003000/003108.png',
-		cooldown: 3,
+		cooldown: 1,
 	},
+
+	MINOR_ARCANA: {
+		id: 7443,
+		name: 'Minor Arcana',
+		icon: 'https://xivapi.com/i/003000/003106.png',
+		cooldown: 1,
+	},
+
+	// ----
+	// 70-80
+	// ----
+
+	HOROSCOPE: {
+		id: 16557,
+		name: 'Horoscope',
+		icon: 'https://xivapi.com/i/003000/003550.png',
+		cooldown: 60,
+	},
+
+	HOROSCOPE_ACTIVATION: {
+		id: 16558,
+		name: 'Horoscope Activation',
+		icon: 'https://xivapi.com/i/003000/003551.png',
+		cooldown: 0,
+	},
+
+	NEUTRAL_SECT: {
+		id: 16559,
+		name: 'Neutral Sect',
+		icon: 'https://xivapi.com/i/003000/003552.png',
+		cooldown: 120,
+	},
+
+	DIVINATION: {
+		id: 16552,
+		name: 'Divination',
+		icon: 'https://xivapi.com/i/003000/003553.png',
+		cooldown: 180,
+	},
+
+	CELESTIAL_INTERSECTION: {
+		id: 16556,
+		name: 'Celestial Intersection',
+		icon: 'https://xivapi.com/i/003000/003556.png',
+		cooldown: 30,
+	},
+
+	// -----
+	// Arcana cast
+	// -----
+
+	THE_BALANCE: {
+		id: 4401,
+		name: 'The Balance',
+		icon: 'https://xivapi.com/i/003000/003110.png',
+		cooldown: 0,
+	},
+
+	THE_BOLE: {
+		id: 4404,
+		name: 'The Bole',
+		icon: 'https://xivapi.com/i/003000/003111.png',
+		cooldown: 0,
+	},
+
+	THE_ARROW: {
+		id: 4402,
+		name: 'The Arrow',
+		icon: 'https://xivapi.com/i/003000/003112.png',
+		cooldown: 0,
+	},
+
+	THE_SPEAR: {
+		id: 4403,
+		name: 'The Spear',
+		icon: 'https://xivapi.com/i/003000/003113.png',
+		cooldown: 0,
+	},
+
+	THE_EWER: {
+		id: 4405,
+		name: 'The Ewer',
+		icon: 'https://xivapi.com/i/003000/003114.png',
+		cooldown: 0,
+	},
+
+	THE_SPIRE: {
+		id: 4406,
+		name: 'The Spire',
+		icon: 'https://xivapi.com/i/003000/003115.png',
+		cooldown: 0,
+	},
+
+	LADY_OF_CROWNS: {
+		id: 7445,
+		name: 'Lady Of Crowns',
+		icon: 'https://xivapi.com/i/003000/003146.png',
+		cooldown: 0,
+	},
+
+	LORD_OF_CROWNS: {
+		id: 7444,
+		name: 'Lord Of Crowns',
+		icon: 'https://xivapi.com/i/003000/003147.png',
+		cooldown: 0,
+	},
+
 }

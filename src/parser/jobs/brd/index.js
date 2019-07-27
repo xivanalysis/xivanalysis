@@ -5,6 +5,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import ACTIONS from 'data/ACTIONS'
 import {Meta} from 'parser/core/Meta'
+import {changelog} from './changelog'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-brd" */),
@@ -30,4 +31,5 @@ export default new Meta({
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.RIRIAN, role: ROLES.DEVELOPER},
 	],
+	changelog,
 })

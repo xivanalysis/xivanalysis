@@ -152,11 +152,15 @@ export default {
 		id: 16003,
 		icon: 'https://xivapi.com/i/003000/003459.png',
 		name: 'Standard Finish',
+		onGcd: true,
+		cooldown: 1.5,
 	},
 	TECHNICAL_FINISH: {
 		id: 16004,
 		icon: 'https://xivapi.com/i/003000/003474.png',
 		name: 'Technical Finish',
+		onGcd: true,
+		cooldown: 1.5,
 	},
 	SABER_DANCE: {
 		id: 16005,

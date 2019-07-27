@@ -3,31 +3,32 @@ import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Accordion, Header, Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS = [
 	ACTIONS.TRUE_THRUST.id,
+	ACTIONS.RAIDEN_THRUST.id,
 	ACTIONS.VORPAL_THRUST.id,
 	ACTIONS.DISEMBOWEL.id,
 	ACTIONS.CHAOS_THRUST.id,
 	ACTIONS.PIERCING_TALON.id,
 	ACTIONS.DOOM_SPIKE.id,
 	ACTIONS.SONIC_THRUST.id,
+	ACTIONS.COERTHAN_TORMENT.id,
 ]
 const FINAL_COMBO_HITS = [
 	ACTIONS.FANG_AND_CLAW.id,
 	ACTIONS.WHEELING_THRUST.id,
 ]
-const LC_FIRST_ACTIONS = [
-	ACTIONS.DISEMBOWEL.id,
+const BAD_BUFF_ACTIONS = [
 	ACTIONS.CHAOS_THRUST.id,
 	ACTIONS.FULL_THRUST.id,
 ]
@@ -50,8 +51,10 @@ export default class Buffs extends Module {
 		'suggestions',
 	]
 
+	_lastGcd = 0
 	_badLifeSurges = 0
 	_fifthGcd = false
+	_soloDragonSight = false
 
 	_buffWindows = {
 		[STATUSES.LANCE_CHARGE.id]: {
@@ -68,32 +71,29 @@ export default class Buffs extends Module {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this._soloDragonSight = true)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_pushToWindow(event, statusId) {
-		const tracker = this._buffWindows[statusId]
+	_pushToWindow(event, statusId, tracker) {
 		if (this.combatants.selected.hasStatus(statusId)) {
-			const action = getDataBy(ACTIONS, 'id', event.ability.guid) || {}
 			if (tracker.current === null) {
-				// This can potentially happen if either B4B or DS are used pre-pull
+				// This can potentially happen if either LC or DS are used pre-pull
 				tracker.current = {
 					start: this.parser.fight.start_time,
 					casts: [],
-					firstGcd: -1,
+					isBad: false, // May want to flip this to true if prepull uses are actually a mistake
 				}
 			}
 
 			tracker.current.casts.push(event)
-			if (tracker.current.firstGcd === -1 && action.onGcd) {
-				tracker.current.firstGcd = action.id
-			}
 		}
 	}
 
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (action && action.onGcd) {
+			this._lastGcd = action.id
 			if (BAD_LIFE_SURGE_CONSUMERS.includes(action.id)) {
 				this._fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
 				if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id)) {
@@ -110,8 +110,9 @@ export default class Buffs extends Module {
 			}
 		}
 
-		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id)
-		this._pushToWindow(event, STATUSES.RIGHT_EYE.id)
+		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id, this._buffWindows[STATUSES.LANCE_CHARGE.id])
+		this._pushToWindow(event, STATUSES.RIGHT_EYE.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
+		this._pushToWindow(event, STATUSES.RIGHT_EYE_SOLO.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
 	}
 
 	_onBuffCast(event) {
@@ -127,7 +128,7 @@ export default class Buffs extends Module {
 		tracker.current = {
 			start: event.timestamp,
 			casts: [],
-			firstGcd: -1,
+			isBad: BAD_BUFF_ACTIONS.includes(this._lastGcd),
 		}
 	}
 
@@ -190,21 +191,51 @@ export default class Buffs extends Module {
 			</Trans>,
 		}))
 
-		const badlyTimedLcs = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.filter(window => window.casts.length > 0 && !LC_FIRST_ACTIONS.includes(window.firstGcd)).length
+		const badLanceCharges = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.LANCE_CHARGE.icon,
 			content: <Trans id="drg.buffs.suggestions.bad-lcs.content">
-				Avoid using <ActionLink {...ACTIONS.LANCE_CHARGE}/> immediately before any GCD other than <ActionLink {...ACTIONS.DISEMBOWEL}/>, <ActionLink {...ACTIONS.CHAOS_THRUST}/>, and <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
+				Avoid using <ActionLink {...ACTIONS.LANCE_CHARGE}/> immediately after <ActionLink {...ACTIONS.CHAOS_THRUST}/> or <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
 				3: SEVERITY.MEDIUM,
 			},
-			value: badlyTimedLcs,
+			value: badLanceCharges,
 			why: <Trans id="drg.buffs.suggestions.bad-lcs.why">
-				{badlyTimedLcs} of your Lance Charge windows started on a non-optimal GCD.
+				{badLanceCharges} of your Lance Charge windows started right after a standard combo finisher.
 			</Trans>,
 		}))
+
+		// I'm not going to say how close I came to naming this variable badDragons
+		const badDragonSights = this._buffWindows[STATUSES.RIGHT_EYE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.LANCE_CHARGE.icon,
+			content: <Trans id="drg.buffs.suggestions.bad-dss.content">
+				Avoid using <ActionLink {...ACTIONS.DRAGON_SIGHT}/> immediately after <ActionLink {...ACTIONS.CHAOS_THRUST}/> or <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				3: SEVERITY.MEDIUM,
+			},
+			value: badDragonSights,
+			why: <Trans id="drg.buffs.suggestions.bad-dss.why">
+				{badDragonSights} of your Dragon Sight windows started right after a standard combo finisher.
+			</Trans>,
+		}))
+
+		if (this._soloDragonSight) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DRAGON_SIGHT.icon,
+				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
+					Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.
+				</Trans>,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
+					At least 1 of your Dragon Sight casts didn't have a tether partner.
+				</Trans>,
+			}))
+		}
 	}
 
 	_formatGcdCount(count) {
@@ -259,7 +290,7 @@ export default class Buffs extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but depending on ping and skill speed, it may require the aid of party speed buffs like <StatusLink {...STATUSES.FEY_WIND}/>. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
 			{lcPanels.length > 0 && <>
 				<Header size="small">

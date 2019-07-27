@@ -1,67 +1,10 @@
-import React, {Fragment} from 'react'
-
+import {Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 // import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
-import {Trans} from '@lingui/react'
-import {Accordion} from 'semantic-ui-react'
-
-const OGCD_ARCANA_REMOVAL = [
-	ACTIONS.UNDRAW_SPREAD.id,
-	ACTIONS.EMPTY_ROAD.id,
-	ACTIONS.UNDRAW.id,
-]
-// Is there a cleaner way to do this
-const AstUndrawMacros = [
-	{
-		action: 'Undraw',
-		content: <Fragment>
-			<code>
-				<Trans id="ast.arcana-undraw-usage.macros.undraw">
-					/statusoff "Bole Drawn"<br/>
-					/statusoff "Balance Drawn"<br/>
-					/statusoff "Arrow Drawn"<br/>
-					/statusoff "Spear Drawn"<br/>
-					/statusoff "Spire Drawn"<br/>
-					/statusoff "Ewer Drawn"<br/>
-					/micon "Undraw"
-				</Trans>
-			</code>
-		</Fragment>,
-	},
-	{
-		action: 'Undraw Spread',
-		content: <Fragment>
-			<code>
-				<Trans id="ast.arcana-undraw-usage.macros.undrawspread">
-					/statusoff "Arrow Held"<br/>
-					/statusoff "Balance Held"<br/>
-					/statusoff "Spire Held"<br/>
-					/statusoff "Bole Held"<br/>
-					/statusoff "Ewer Held"<br/>
-					/statusoff "Spear Held"<br/>
-					/micon "Undraw Spread"
-				</Trans>
-			</code>
-		</Fragment>,
-	},
-	{
-		action: 'Empty Road',
-		content: <Fragment>
-			<code>
-				<Trans id="ast.arcana-undraw-usage.macros.emptyroad">
-					/statusoff "Expanded Royal Road"<br/>
-					/statusoff "Enhanced Royal Road"<br/>
-					/statusoff "Extended Royal Road"<br/>
-					/micon "Empty Road"
-				</Trans>
-			</code>
-		</Fragment>,
-	},
-]
+import {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
 
 export default class ArcanaUndrawUsage extends Module {
 	static handle = 'arcanaundraws'
@@ -87,7 +30,7 @@ export default class ArcanaUndrawUsage extends Module {
 		const actionId = event.ability.guid
 
 		// It's a OGCD Arcana Undraw. GET IT.
-		if (OGCD_ARCANA_REMOVAL.includes(actionId)) {
+		if (actionId === ACTIONS.UNDRAW.id) {
 			this._badUndraws.push(event)
 		}
 	}
@@ -96,41 +39,16 @@ export default class ArcanaUndrawUsage extends Module {
 
 		const badUndraws = this._badUndraws
 
-		if (badUndraws.length) {
-			const panels = AstUndrawMacros.map(macro => {
-				return {
-					key: 'container-' + macro.action,
-					title: {
-						key: 'title-' + macro.action,
-						content: <Fragment>
-							{macro.action}
-						</Fragment>,
-					},
-					content: {
-						key: 'content-' + macro.action,
-						content: macro.content,
-					},
-				}
-			})
-
+		if (badUndraws > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: 'https://xivapi.com/i/003000/003108.png', // Undraw action
 				content: <Fragment>
 					<Trans id="ast.arcana-undraw-usage.suggestions.content">
-						<strong>Avoid using the Arcana Removal actions.</strong> (<ActionLink {...ACTIONS.UNDRAW} />) (<ActionLink {...ACTIONS.UNDRAW_SPREAD} />) (<ActionLink {...ACTIONS.EMPTY_ROAD} />) <br/>
-					They take up an unnecessary oGCD slot. Instead, try clicking off the relevant buffs or try using macros.</Trans>
-					<br/><br/>
-					<Accordion
-						exclusive={false}
-						panels={panels}
-						styled
-						fluid
-					/>
+                    Due to Draw starting its cooldown the moment it's used, there is no longer any reason to <ActionLink {...ACTIONS.UNDRAW} /> instead of playing it or converting it with <ActionLink {...ACTIONS.MINOR_ARCANA} /></Trans>
 				</Fragment>,
-				severity: SEVERITY.MEDIUM,
-
+				severity: SEVERITY.MAJOR,
 				why: <Trans id="ast.arcana-undraw-usage.suggestions.why">
-					{badUndraws.length} instances of using an ogcd Arcana undraw action.</Trans>,
+					{badUndraws.length} instances of using undraw.</Trans>,
 			}))
 		}
 
