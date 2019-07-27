@@ -78,7 +78,7 @@ export default class EspritGauge extends Module {
 	private potentialOvercap = 0
 	private espritConsumed = 0
 	private avgGenerated = 0
-	private history: any[] = []
+	private history: Array<{t: number, y: number}> = []
 	private currentEsprit = 0
 	private improvisationStart = 0
 
@@ -116,8 +116,10 @@ export default class EspritGauge extends Module {
 		this.espritConsumed++
 		if (this.currentEsprit < SABER_DANCE_COST) {
 			const prevHistory = this.history.pop()
-			prevHistory.y = SABER_DANCE_COST
-			this.history.push(prevHistory)
+			if (prevHistory) {
+				prevHistory.y = SABER_DANCE_COST
+				this.history.push(prevHistory)
+			}
 		}
 		this.setEsprit(this.currentEsprit - SABER_DANCE_COST)
 	}
