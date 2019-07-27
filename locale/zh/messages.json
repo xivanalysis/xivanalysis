@@ -194,6 +194,8 @@
   "dnc.dirty-dancing.rotation-table.header.footloose": "",
   "dnc.dirty-dancing.rotation-table.header.missed": "",
   "dnc.dirty-dancing.rotation-table.message": "",
+  "dnc.dirty-dancing.suggestions.bad-devilments.content": "",
+  "dnc.dirty-dancing.suggestions.bad-devilments.why": "",
   "dnc.dirty-dancing.suggestions.dirty-dances.content": "用了少于规定的舞步数完成一次舞蹈时，会导致这次的舞蹈伤害降低，请注意不要跳少了。",
   "dnc.dirty-dancing.suggestions.dirty-dances.why": "{0, plural, one {# 次舞} other {# 次舞}} 少了舞步。",
   "dnc.dirty-dancing.suggestions.footloose.content": "用了错误的舞步会导致你的一次舞要跳更长的时间，结果就是损失输出，所以请不要跳错了。",
