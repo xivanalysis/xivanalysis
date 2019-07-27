@@ -5,6 +5,7 @@ import DoTs from './DoTs'
 import DWT from './DWT'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
+import MissingDoTs from './MissingDoTs'
 import Pets from './Pets'
 import Phoenix from './Phoenix'
 import Ruin2 from './Ruin2'
@@ -18,6 +19,7 @@ export default [
 	DWT,
 	Gauge,
 	GeneralCDDowntime,
+	MissingDoTs,
 	Pets,
 	Phoenix,
 	Ruin2,
