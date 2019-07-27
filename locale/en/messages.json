@@ -642,6 +642,8 @@
   "smn.pets.suggestions.titan.content": "Titan-Egi generally should not be used in party content. Switch to Ifrit-Egi, or Garuda-Egi if you have multiple casters.",
   "smn.pets.suggestions.titan.why": "{titanUptimePercent}% Titan-Egi uptime.",
   "smn.pets.title": "Pets",
+  "smn.phoenix.ghost-disclaimer": "Phoenix actions can \"ghost\" - the action resolves, and appears to do damage, however no damage is actually applied to the target. <0>Yellow</0> highlighting has been applied to actions that likely ghosted, and <1>Red</1> to those that ghosted without a doubt.<2/>You should be aiming for 4 Fountain Of Fire, 4 Brand of Purgatory, 8 Scarlet Flame, and 2 Revelation in each Firebird Trance window unless rushing.",
+  "smn.phoenix.title": "Phoenix",
   "smn.ruin-ii.suggestions.issues.content": "<0/> is a DPS loss when not used to weave oGCDs or proc <1/>s. Prioritise casting <2/>.",
   "smn.ruin-ii.suggestions.issues.why": "{0} potency lost to {issues} unnecessary Ruin II {issues, plural, one {cast} other {casts}}.",
   "smn.ruin-ii.suggestions.warnings.content": "Unless significant movement is required, avoid using <0/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <1/>.",

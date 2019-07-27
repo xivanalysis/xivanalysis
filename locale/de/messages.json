@@ -642,6 +642,8 @@
   "smn.pets.suggestions.titan.content": "Titan-Egi sollte nicht in einer Gruppe verwendet werden. Wechsel zu Ifrit-Egi oder zu Garuda-Egi wenn es mehrere magische Fernkämfer sind.",
   "smn.pets.suggestions.titan.why": "Zeit in der Titan-Egi verwendet wurde: {titanUptimePercent}%",
   "smn.pets.title": "",
+  "smn.phoenix.ghost-disclaimer": "",
+  "smn.phoenix.title": "",
   "smn.ruin-ii.suggestions.issues.content": "<0/> ist ein Schadensverlust wenn es nicht genutzt wird um oGCDs oder PROCs zu weben <1/>. Priorisiere <2/>.",
   "smn.ruin-ii.suggestions.issues.why": "{0} Attacke-Wert durch {issues} {issues, plural, one {unnötiges} other {unnötig}} Ruinra {issues, plural, one {Aktivierung} other {Aktivierungen}} verloren.",
   "smn.ruin-ii.suggestions.warnings.content": "Benutze <0/> nicht um dich anders zu positionieren, sonder nur, wenn es wegen einer Mechanik nicht anders geht. Die meisten Umpositionierungen können durch \"Slidecasting\" und durch die erhöhte Mobilität von <1/> gemacht werden.",

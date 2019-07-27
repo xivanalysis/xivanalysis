@@ -642,6 +642,8 @@
   "smn.pets.suggestions.titan.content": "PTにおいてタイタン・エギの使用はお勧めしません。普通のPT構成でイフリート・エギを使うか、複数のキャスターが居る場合ガルーダ・エギを使用することにお勧めします。",
   "smn.pets.suggestions.titan.why": "タイタン・エギの稼働時間：{titanUptimePercent}%",
   "smn.pets.title": "ペット",
+  "smn.phoenix.ghost-disclaimer": "",
+  "smn.phoenix.title": "",
   "smn.ruin-ii.suggestions.issues.content": "<0/>は他のアビリティを挟みこむや<1/>を発生させるような行動をしない場合で使うのが火力ロストの原因になります。成るべく<2/>のキャストを優先しましょう.",
   "smn.ruin-ii.suggestions.issues.why": "合計{0}威力がルインラを{issues}{issues, plural, one {回} other {回}}無駄撃ちにしたことよってロストしました。",
   "smn.ruin-ii.suggestions.warnings.content": "移動すると同時に<0/>を使う場面はギミックの処理が必要時に大きく動き出さなければいけないだけです。殆どの位置調整は床AoEから安置に滑り込む時と<1/>に入った状態で動きながらルインガ・ルインジャを撃つだけです。",

@@ -64,6 +64,11 @@ export default class Gauge extends Module {
 		return pet && pet.id === PETS.DEMI_BAHAMUT.id
 	}
 
+	phoenixSummoned() {
+		const pet = this.pets.getCurrentPet()
+		return pet && pet.id === PETS.DEMI_PHOENIX.id
+	}
+
 	isRushing() {
 		return this._rushing
 	}
