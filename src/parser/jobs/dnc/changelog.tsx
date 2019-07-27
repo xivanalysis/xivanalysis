@@ -7,6 +7,11 @@ import STATUSES from 'data/STATUSES'
 export const changelog = [
 	{
 		date: new Date('2019-07-26'),
+		Changes: () => <>Baseline <StatusLink {...STATUSES.ESPRIT} /> gauge implementation.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-07-26'),
 		Changes: () => <>Suggestion for not using Devilment outside Technical Finish windows other than the opener.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
