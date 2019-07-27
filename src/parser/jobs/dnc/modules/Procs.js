@@ -27,16 +27,13 @@ export default class Procs extends Module {
 		[STATUSES.FLOURISHING_SHOWER.id]: 0,
 		[STATUSES.FLOURISHING_WINDMILL.id]: 0,
 	}
+
 	_overwrittenProcs = 0
 	constructor(...args) {
 		super(...args)
 
 		this.addHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.FLOURISHING_FAN_DANCE.id}, this._procOverwritten)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.FLOURISHING_CASCADE.id}, this._procOverwritten)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.FLOURISHING_FOUNTAIN.id}, this._procOverwritten)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.FLOURISHING_SHOWER.id}, this._procOverwritten)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.FLOURISHING_WINDMILL.id}, this._procOverwritten)
+		this.addHook('refreshbuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._procOverwritten)
 		this.addHook('removebuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._onProcRemoved)
 		this.addHook('complete', this._onComplete)
 	}
@@ -54,7 +51,7 @@ export default class Procs extends Module {
 			this._removedProcs[event.ability.guid]++
 		}
 	}
-	//TODO: finish editing dnc section of the messages.json file to match the suggestions here
+
 	_onComplete() { // tracking dropped procs
 		const droppedFan_Dance = this._removedProcs[STATUSES.FLOURISHING_FAN_DANCE.id] - this._casts[ACTIONS.FAN_DANCE_III.id]
 		const droppedCascade = this._removedProcs[STATUSES.FLOURISHING_CASCADE.id] - this._casts[ACTIONS.REVERSE_CASCADE.id]
