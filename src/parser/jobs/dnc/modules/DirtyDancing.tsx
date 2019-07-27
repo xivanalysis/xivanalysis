@@ -16,6 +16,8 @@ import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
+import {FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from './CommonData'
+
 const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	3: SEVERITY.MEDIUM,
@@ -40,25 +42,6 @@ const DANCE_MOVES = [
 	ACTIONS.EMBOITE.id,
 	ACTIONS.JETE.id,
 	ACTIONS.PIROUETTE.id,
-]
-
-const STANDARD_FINISHES = [
-	ACTIONS.STANDARD_FINISH.id,
-	ACTIONS.SINGLE_STANDARD_FINISH.id,
-	ACTIONS.DOUBLE_STANDARD_FINISH.id,
-]
-
-const TECHNICAL_FINISHES = [
-	ACTIONS.TECHNICAL_FINISH.id,
-	ACTIONS.SINGLE_TECHNICAL_FINISH.id,
-	ACTIONS.DOUBLE_TECHNICAL_FINISH.id,
-	ACTIONS.TRIPLE_TECHNICAL_FINISH.id,
-	ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id,
-]
-
-const FINISHES = [
-	...STANDARD_FINISHES,
-	...TECHNICAL_FINISHES,
 ]
 
 const EXPECTED_DANCE_MOVE_COUNT = {

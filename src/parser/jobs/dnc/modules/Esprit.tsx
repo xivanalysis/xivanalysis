@@ -14,6 +14,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
+import {FINISHES} from './CommonData'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -37,25 +38,6 @@ const ESPRIT_GENERATION_MULTIPLIERS = {
 	[ACTIONS.TRIPLE_TECHNICAL_FINISH.id]: 3,
 	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 3,
 }
-
-const STANDARD_FINISHES = [
-	ACTIONS.STANDARD_FINISH.id,
-	ACTIONS.SINGLE_STANDARD_FINISH.id,
-	ACTIONS.DOUBLE_STANDARD_FINISH.id,
-]
-
-const TECHNICAL_FINISHES = [
-	ACTIONS.TECHNICAL_FINISH.id,
-	ACTIONS.SINGLE_TECHNICAL_FINISH.id,
-	ACTIONS.DOUBLE_TECHNICAL_FINISH.id,
-	ACTIONS.TRIPLE_TECHNICAL_FINISH.id,
-	ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id,
-]
-
-const FINISHES = [
-	...STANDARD_FINISHES,
-	...TECHNICAL_FINISHES,
-]
 
 const ESPRIT_GENERATION_AMOUNT = 10
 
