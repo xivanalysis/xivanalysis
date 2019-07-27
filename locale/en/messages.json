@@ -194,6 +194,8 @@
   "dnc.dirty-dancing.rotation-table.header.footloose": "No Extra Moves",
   "dnc.dirty-dancing.rotation-table.header.missed": "Hit Target",
   "dnc.dirty-dancing.rotation-table.message": "One of Dancer's primary responsibilities is buffing the party's damage via dances.<0/>Each dance also contributes to the Dancer's own damage and should be performed correctly.",
+  "dnc.dirty-dancing.suggestions.bad-devilments.content": "Using <0/> outside your <1/> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <2/> at the beginning of your <3/> windows.",
+  "dnc.dirty-dancing.suggestions.bad-devilments.why": "{0, plural, one {# Devilment} other {# Devilments}} used outside <0/>.",
   "dnc.dirty-dancing.suggestions.dirty-dances.content": "Performing fewer steps than expected reduces the damage of your finishes. Make sure you perform the expected number of steps.",
   "dnc.dirty-dancing.suggestions.dirty-dances.why": "{0, plural, one {# dance} other {# dances}} finished with missing steps.",
   "dnc.dirty-dancing.suggestions.footloose.content": "Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.",
