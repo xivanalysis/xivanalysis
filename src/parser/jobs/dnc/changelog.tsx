@@ -1,9 +1,9 @@
 import React from 'react'
 
-import {StatusLink, ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
 
 export const changelog = [
 	{
