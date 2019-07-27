@@ -20,7 +20,6 @@ export default class Meikyo extends Module {
 	static dependencies = [
 		'combatants',
 		'suggestions',
-		'downtime',
 	]
 
 	_currentMeikyoCasts = 0 //keep track of total casts under current buff window
@@ -83,17 +82,10 @@ export default class Meikyo extends Module {
 
 	_onComplete() {
 
-		//invuln check time for drift
-
-		const invuln = (this.downtime.getDowntime()/1000)
-		const forgivenDrift = Math.floor(invuln / MEIKYO_COOLDOWN) //this will calculate the amount of full recasts during a fight where a person could not use the skill.
-		const fightDuration = ((this.parser.fightDuration/1000))
+		//meikyo use check calcs
+		const fightDuration = (this.parser.fightDuration/1000)
 		const expectedMeikyo = (Math.floor(fightDuration/ MEIKYO_COOLDOWN) + 1)
 		const missedMeikyo = Math.floor(expectedMeikyo - this._totalMeikyoBuffs)
-
-		if (forgivenDrift > 0) {
-			this._totalDrift = this._totalDrift - (forgivenDrift * MEIKYO_COOLDOWN)
-		}
 
 		//SUGGESTION TIME!
 
