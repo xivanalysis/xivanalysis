@@ -1,4 +1,4 @@
-import ACTIONS from 'data/ACTIONS';
+import ACTIONS from 'data/ACTIONS'
 
 export const STANDARD_FINISHES = [
 	ACTIONS.STANDARD_FINISH.id,
