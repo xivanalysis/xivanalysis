@@ -10,4 +10,10 @@ export default {
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/012000/012809.png',
 	},
+
+	GALVANIZE: {
+		id: 297,
+		name: 'Galvanize',
+		icon: 'https://xivapi.com/i/012000/012801.png',
+	},
 }

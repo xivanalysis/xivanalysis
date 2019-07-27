@@ -22,6 +22,14 @@ const ISSUE_SEVERITY_TIERS = {
 	5: SEVERITY.MAJOR,
 }
 
+// Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
+// Severity with every additional calculated drift since it's a more important issue than others
+const DRIFT_SEVERITY_TIERS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 const STEPS = [
 	ACTIONS.STANDARD_STEP.id,
 	ACTIONS.TECHNICAL_STEP.id,
@@ -57,6 +65,11 @@ const EXPECTED_DANCE_MOVE_COUNT = {
 	[ACTIONS.DOUBLE_STANDARD_FINISH.id]: 2,
 	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 4,
 	[-1]: 0,
+}
+
+const STEP_COOLDOWN_MILLIS = {
+	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown * 1000,
+	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown * 1000,
 }
 
 class Dance {
@@ -108,6 +121,15 @@ export default class DirtyDancing extends Module {
 	private dirtyDances = 0
 	private footlooseDances = 0
 
+	private previousUseTimestamp = {
+		[ACTIONS.STANDARD_STEP.id]: this.parser.fight.start_time,
+		[ACTIONS.TECHNICAL_STEP.id]: this.parser.fight.start_time,
+	}
+	private totalDrift = {
+		[ACTIONS.STANDARD_STEP.id]: 0,
+		[ACTIONS.TECHNICAL_STEP.id]: 0,
+	}
+
 	protected init() {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
 		this.addHook('cast', {by: 'player'}, this.continueDance)
@@ -120,6 +142,13 @@ export default class DirtyDancing extends Module {
 		const newDance = new Dance(event.timestamp)
 		newDance.rotation.push(event)
 		this.danceHistory.push(newDance)
+		const stepId = event.ability.guid
+		if (this.previousUseTimestamp[stepId]) {
+			const lastUse = this.previousUseTimestamp[stepId]
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.invuln.getInvulnerableUptime('any', lastUse, event.timestamp))
+			this.totalDrift[stepId] += drift
+			this.previousUseTimestamp[stepId] = event.timestamp
+		}
 
 		return newDance
 	}
@@ -248,13 +277,37 @@ export default class DirtyDancing extends Module {
 				}),
 			],
 		}))
+
+		const driftedStandards = Math.floor(this.totalDrift[ACTIONS.STANDARD_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.STANDARD_STEP.id])
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.STANDARD_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.content">You may have lost a use of <ActionLink {...ACTIONS.STANDARD_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			</Trans>,
+			tiers: DRIFT_SEVERITY_TIERS,
+			value: driftedStandards,
+			why: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.why">
+				<Plural value={driftedStandards} one="# Stanard Step was" other="# Standard Steps were"/> lost due to drift.
+			</Trans>,
+		}))
+
+		const driftedTechnicals = Math.floor(this.totalDrift[ACTIONS.TECHNICAL_STEP.id]/STEP_COOLDOWN_MILLIS[ACTIONS.TECHNICAL_STEP.id])
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.TECHNICAL_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.content">You may have lost a use of <ActionLink {...ACTIONS.TECHNICAL_STEP} /> by letting the cooldown drift. Try to keep it on cooldown, even if it means letting your GCD sit for a second.
+			</Trans>,
+			tiers: DRIFT_SEVERITY_TIERS,
+			value: driftedTechnicals,
+			why: <Trans id="dnc.dirty-dancing.suggestions.technical-drift.why">
+				<Plural value={driftedTechnicals} one="# Technical Step was" other="# Technical Steps were"/> lost due to drift.
+			</Trans>,
+		}))
 	}
 
 	output() {
 		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
 				<Message>
-					<Trans id="dnc.dirty-dancing.rotationtable.message">
+					<Trans id="dnc.dirty-dancing.rotation-table.message">
 						One of Dancer's primary responsibilities is buffing the party's damage via dances.<br />
 						Each dance also contributes to the Dancer's own damage and should be performed correctly.
 					</Trans>
@@ -262,15 +315,15 @@ export default class DirtyDancing extends Module {
 				<RotationTable
 					notes={[
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.missed">Hit Target</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.missed">Hit Target</Trans>,
 							accessor: 'missed',
 						},
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.dirty">Correct Finish</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.dirty">Correct Finish</Trans>,
 							accessor: 'dirty',
 						},
 						{
-							header: <Trans id="dnc.dirty-dancing.table.header.footloose">No Extra Moves</Trans>,
+							header: <Trans id="dnc.dirty-dancing.rotation-table.header.footloose">No Extra Moves</Trans>,
 							accessor: 'footloose',
 						},
 					]}

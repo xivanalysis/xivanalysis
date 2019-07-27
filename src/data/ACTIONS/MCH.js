@@ -254,17 +254,20 @@ export default {
 		id: 17206,
 		name: 'Roller Dash',
 		icon: 'https://xivapi.com/i/003000/003505.png',
+		onGcd: true, // These aren't technically on -our- GCD but it makes them look nicer in the rotation display
 	},
 
 	ARM_PUNCH: {
 		id: 16504,
 		name: 'Arm Punch',
 		icon: 'https://xivapi.com/i/003000/003504.png',
+		onGcd: true,
 	},
 
 	PILE_BUNKER: {
 		id: 16503,
 		name: 'Pile Bunker',
 		icon: 'https://xivapi.com/i/003000/003503.png',
+		onGcd: true,
 	},
 }

@@ -7,7 +7,7 @@ import STATUSES from 'data/STATUSES'
 // import styles from './BuffList.module.css'
 
 // Simple component to spit out a list of buff icons
-// Should this component be a common component like Rotation? It's very simple. - Sushi
+// Obsolete now that there's no need to track buff extensions, but could still come in handy for displaying card buffs on people! - Sushi
 export default class BuffList extends Component {
 	static propTypes = {
 		events: PropTypes.arrayOf(PropTypes.shape({

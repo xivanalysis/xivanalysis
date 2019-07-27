@@ -1,23 +1,24 @@
+import Combust from './Combust'
+import Cooldowns from './Cooldowns'
+// import Draw from './Draw'
 import EarthlyStar from './EarthlyStar'
 import Lightspeed from './Lightspeed'
-import ArcanaTracking from './ArcanaTracking'
-import ArcanaSuggestions from './ArcanaSuggestions'
-import BuffExtensions from './BuffExtensions'
-import ArcanaUndrawUsage from './ArcanaUndrawUsage'
-import Combust from './Combust'
 import LucidDreaming from './LucidDreaming'
-import SleeveDraw from './SleeveDraw'
-import Draw from './Draw'
+import ArcanaUndrawUsage from './ArcanaUndrawUsage'
+import Horoscope from './Horoscope'
+import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
+import Sect from './Sect'
 
 export default [
-	ArcanaUndrawUsage,
+	Cooldowns,
 	Combust,
-	BuffExtensions,
 	Lightspeed,
 	EarthlyStar,
 	LucidDreaming,
-	SleeveDraw,
-	Draw,
+	// Draw,
+	ArcanaUndrawUsage,
+	Horoscope,
 	ArcanaTracking,
 	ArcanaSuggestions,
+	Sect,
 ]
