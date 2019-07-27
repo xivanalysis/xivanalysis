@@ -350,7 +350,7 @@
   "mnk.ir.suggestions.howling.content": "모든 <0/>를 <1/>의 지속시간 중에 사용합니다.",
   "mnk.ir.suggestions.howling.why": "공명권을 발경이 없을 때 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "mnk.ir.table.ef": "{numElixirs}/1 창기포",
-  "mnk.ir.table.gcd": "{numGcds, plural, one {#GCD} other {#GCD}}",
+  "mnk.ir.table.gcd": "글쿨기 {numGcds, plural, other {#회}}",
   "mnk.ir.table.hf": "{numHowlings}/1 공명권",
   "mnk.ir.table.rushing": "(끊김)",
   "mnk.ir.title": "발경",
