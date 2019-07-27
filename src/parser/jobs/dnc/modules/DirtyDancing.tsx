@@ -16,13 +16,7 @@ import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
-import {FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from './CommonData'
-
-const ISSUE_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	3: SEVERITY.MEDIUM,
-	5: SEVERITY.MAJOR,
-}
+import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from './CommonData'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
@@ -230,7 +224,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.missed-finishers.content">
 				<ActionLink {...ACTIONS.TECHNICAL_FINISH} /> and <ActionLink {...ACTIONS.STANDARD_FINISH} /> are a significant source of damage. Make sure you're in range when finishing a dance.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.missedDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.missed-finishers.why">
 				<Plural value={this.missedDances} one="# finish" other="# finishes"/> missed.
@@ -243,7 +237,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.dirty-dances.content">
 				Performing fewer steps than expected reduces the damage of your finishes. Make sure you perform the expected number of steps.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.dirtyDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.dirty-dances.why">
 				<Plural value={this.dirtyDances} one="# dance" other="# dances"/> finished with missing steps.
@@ -256,7 +250,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.footloose.content">
 				Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.footlooseDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.footloose.why">
 				<Plural value={this.footlooseDances} one="# dance" other="# dances"/> finished with extra steps.
@@ -269,7 +263,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.content">
 				Using <ActionLink {...ACTIONS.DEVILMENT} /> outside your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...ACTIONS.DEVILMENT} /> at the beginning of your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.badDevilments,
 			why: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.why">
 				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...STATUSES.TECHNICAL_FINISH} />.

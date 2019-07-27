@@ -8,8 +8,9 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
+import {GAUGE_SEVERITY_TIERS} from './CommonData'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
@@ -81,11 +82,7 @@ export default class FeatherGauge extends Module {
 			content: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.content">
 				You may have lost feathers due to using one of your procs while already holding four feathers. Make sure to use a feather before using a proc.
 			</Trans>,
-			tiers: { // More lenient than usual due to the probable unreliability of the data.
-				1: SEVERITY.MINOR,
-				5: SEVERITY.MEDIUM,
-				10: SEVERITY.MAJOR,
-			},
+			tiers: GAUGE_SEVERITY_TIERS,
 			value: this.featherOvercap,
 			why: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.why">
 				<Plural value={this.featherOvercap} one="# feather" other="# feathers"/> may have been lost.

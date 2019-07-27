@@ -14,7 +14,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-import {FINISHES} from './CommonData'
+import {FINISHES, GAUGE_SEVERITY_TIERS} from './CommonData'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -136,11 +136,7 @@ export default class EspritGauge extends Module {
 			content: <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
 				You may have lost uses of <ActionLink {...ACTIONS.SABER_DANCE} /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
 			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				5: SEVERITY.MEDIUM,
-				10: SEVERITY.MAJOR,
-			},
+			tiers: GAUGE_SEVERITY_TIERS,
 			value: missedSaberDances,
 			why: <Trans id="dnc.esprit.suggestions.overcapped-esprit.why">
 				<Plural value={missedSaberDances} one="# Saber Dance" other="# Saber Dances"/> may have been missed.
