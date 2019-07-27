@@ -380,7 +380,7 @@ export default class RotationWatchdog extends Module {
 			return <span className="text-warning">{count}</span>
 		}
 		if (missing < 0) {
-			return <span className="text-success">{count+'!'}</span>
+			return <span className="text-success">{count}</span>
 		}
 		return count
 	}
