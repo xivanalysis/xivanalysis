@@ -10,7 +10,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS = [
@@ -54,6 +54,7 @@ export default class Buffs extends Module {
 	_lastGcd = 0
 	_badLifeSurges = 0
 	_fifthGcd = false
+	_soloDragonSight = false
 
 	_buffWindows = {
 		[STATUSES.LANCE_CHARGE.id]: {
@@ -70,11 +71,11 @@ export default class Buffs extends Module {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this._soloDragonSight = true)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_pushToWindow(event, statusId) {
-		const tracker = this._buffWindows[statusId]
+	_pushToWindow(event, statusId, tracker) {
 		if (this.combatants.selected.hasStatus(statusId)) {
 			if (tracker.current === null) {
 				// This can potentially happen if either LC or DS are used pre-pull
@@ -109,8 +110,9 @@ export default class Buffs extends Module {
 			}
 		}
 
-		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id)
-		this._pushToWindow(event, STATUSES.RIGHT_EYE.id)
+		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id, this._buffWindows[STATUSES.LANCE_CHARGE.id])
+		this._pushToWindow(event, STATUSES.RIGHT_EYE.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
+		this._pushToWindow(event, STATUSES.RIGHT_EYE_SOLO.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
 	}
 
 	_onBuffCast(event) {
@@ -221,6 +223,19 @@ export default class Buffs extends Module {
 				{badDragonSights} of your Dragon Sight windows started right after a standard combo finisher.
 			</Trans>,
 		}))
+
+		if (this._soloDragonSight) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DRAGON_SIGHT.icon,
+				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
+					Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.
+				</Trans>,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
+					At least 1 of your Dragon Sight casts didn't have a tether partner.
+				</Trans>,
+			}))
+		}
 	}
 
 	_formatGcdCount(count) {

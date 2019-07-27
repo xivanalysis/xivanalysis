@@ -45,6 +45,28 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2019-07-22'),
+			Changes: () => <>
+				<strong>Sect detection and Combust improvements</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.COMBUST_III} />) Added warn tier at 85-90%</li>
+					<li>(<ActionLink {...ACTIONS.DIURNAL_SECT} /><ActionLink {...ACTIONS.NOCTURNAL_SECT} />) Added support for modules to make Sect specific suggestions. <br/>
+					Triggers a suggestion if player pulled without a sect on, and if they used Noct while healing with a Scholar</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+			date: new Date('2019-07-23'),
+			Changes: () => <>
+				<strong>Arcana play logs support for Shadowbringers</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.PLAY} />) Arcana Logs are back up, now includes prepull Plays</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2019-07-11'),
 			Changes: () => <>
 				<strong>Basic support for Shadowbringers</strong>:

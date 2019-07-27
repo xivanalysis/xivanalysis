@@ -128,7 +128,7 @@ const CONTRIBUTORS = {
 	},
 	RIRIAN: {
 		name: 'Ririan',
-		avatar: process.env.PUBLIC_URL + '/avatar/ririan.png',
+		avatar: process.env.PUBLIC_URL + '/avatar/Ririan.png',
 		jobs: [JOBS.BARD, JOBS.MACHINIST],
 	},
 	TWO_BROKEN: {
