@@ -35,7 +35,7 @@ export default class FeatherGauge extends Module {
 
 	private feathersConsumed = 0
 	private avgGenerated = 0
-	private history: {t: number, y: number}[] = []
+	private history: Array<{t: number, y: number}> = []
 	private currentFeathers = 0
 	private featherOvercap = 0
 
