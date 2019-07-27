@@ -1,13 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-import {Table} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -17,9 +15,6 @@ const SMN_DOT_STATUSES = [
 	STATUSES.BIO_III.id,
 	STATUSES.MIASMA_III.id,
 ]
-
-// Flow needs to be burnt before first use - 15s is optimal for first cast
-const FIRST_FLOW_TIMESTAMP = 15000
 
 const FESTER_POT_PER_DOT = 150
 
@@ -41,8 +36,6 @@ export default class Aetherflow extends Module {
 	static dependencies = [
 		// Ensure AoE runs cleanup before us
 		'aoe', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'checklist',
-		'cooldowns',
 		'enemies',
 		'gauge',
 		'suggestions',
@@ -103,24 +96,6 @@ export default class Aetherflow extends Module {
 	}
 
 	_onComplete() {
-		// Checklist rule for aetherflow cooldown
-		this.checklist.add(new Rule({
-			name: <Trans id="smn.aetherflow.checklist.name">
-				Use <ActionLink {...ACTIONS.AETHERFLOW} /> effectively
-			</Trans>,
-			description: <Trans id="smn.aetherflow.checklist.description">
-				SMN's entire kit revolves around the Aetherflow cooldown. Make sure you squeeze every possible use out of it that you can.
-			</Trans>,
-			requirements: [
-				new Requirement({
-					name: <Trans id="smn.aetherflow.checklist.requirement.aetherflow.name">
-						<ActionLink {...ACTIONS.AETHERFLOW} /> cooldown uptime
-					</Trans>,
-					percent: (this.cooldowns.getTimeOnCooldown(ACTIONS.AETHERFLOW.id) / (this.parser.fightDuration - FIRST_FLOW_TIMESTAMP)) * 100,
-				}),
-			],
-		}))
-
 		// Suggestion for fester
 		const badFesters = this._badDotReqCasts[ACTIONS.FESTER.id] || {}
 		const festerKeys = Object.keys(badFesters).map(num => parseInt(num, 10))
@@ -165,37 +140,4 @@ export default class Aetherflow extends Module {
 	// Suggestion section for Bane for later. Tricky to deal with, but there's bane seeds for spreads
 	// However one good one to evaluate is single target banes (with the above included?)
 
-	output() {
-		// Really not happy with this output, but nem wanted it. (Nem: I appreciate a ton for now, we'll work it out)
-		// Look into a better display somehow, hopefully integrate into timeline in some fashion.
-		const casts = this.cooldowns.getCooldown(ACTIONS.AETHERFLOW.id).history
-		let totalDrift = 0
-		return <Table collapsing unstackable>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell><Trans id="smn.aetherflow.cast-time">Cast Time</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="smn.aetherflow.drift">Drift</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="smn.aetherflow.total-drift">Total Drift</Trans></Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{casts.map((cast, i) => {
-					let drift = null
-					if (i > 0) {
-						const prevCast = casts[i - 1]
-						drift = cast.timestamp - (prevCast.timestamp + prevCast.length)
-						if (process.env.NODE_ENV === 'production') {
-							drift = Math.max(drift, 0)
-						}
-					}
-					totalDrift += drift
-					return <Table.Row key={cast.timestamp}>
-						<Table.Cell>{this.parser.formatTimestamp(cast.timestamp)}</Table.Cell>
-						<Table.Cell>{drift !== null ? this.parser.formatDuration(drift) : '-'}</Table.Cell>
-						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
-					</Table.Row>
-				})}
-			</Table.Body>
-		</Table>
-	}
 }
