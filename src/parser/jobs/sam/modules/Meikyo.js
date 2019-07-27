@@ -20,7 +20,7 @@ export default class Meikyo extends Module {
 	static dependencies = [
 		'combatants',
 		'suggestions',
-		'invuln',
+		'downtime',
 	]
 
 	_currentMeikyoCasts = 0 //keep track of total casts under current buff window
@@ -31,7 +31,6 @@ export default class Meikyo extends Module {
 
 	//Stuff for caveman level drift checking
 
-	_currentMeikyo = 0 //this holds the start time of the current meikyo
 	_previousMeikyo = 0 //this holds the start time of the last meikyo, if first meikyo this will be 0
 	_totalDrift = 0 //this will track the total drift over time of meikyo
 
@@ -52,18 +51,17 @@ export default class Meikyo extends Module {
 			//Drift check!
 			//Step 1: save the current timestamp for the current meikyo
 
-			this._currentMeikyo = event.timestamp
+			const currentMeikyo = event.timestamp
 
 			//Step 2: compare to old timestamp for the difference between the 2.
 
 			if (this._previousMeikyo !== 0) {
-				this._totalDrift = ((this._currentMeikyo - this._previousMeikyo)/1000) - MEIKYO_COOLDOWN
+				this._totalDrift += ((currentMeikyo - this._previousMeikyo)/1000) - MEIKYO_COOLDOWN
 			}
 
 			//step 3: move current timestamp to old Meikyo and reset current timestamp just to be safe
 
 			this._previousMeikyo = event.timestamp
-			this._currentMeikyo = 0
 
 		}
 
@@ -87,15 +85,15 @@ export default class Meikyo extends Module {
 
 		//invuln check time for drift
 
-		const INVULN = (this.invuln.getInvulnerableUptime()/1000)
-		//const FORGIVEN_DRIFT = Math.floor(INVULN / MEIKYO_COOLDOWN) //this will calculate the amount of full recasts during a fight where a person could not use the skill.
-		const FIGHT_DURATION = ((this.parser.fightDuration/1000) - INVULN)
-		const EXPECTED_MEIKYO = Math.floor(FIGHT_DURATION/ MEIKYO_COOLDOWN)
-		const missedMeikyo = Math.floor(EXPECTED_MEIKYO - this._totalMeikyoBuffs)
+		const invuln = (this.downtime.getDowntime()/1000)
+		const forgivenDrift = Math.floor(invuln / MEIKYO_COOLDOWN) //this will calculate the amount of full recasts during a fight where a person could not use the skill.
+		const fightDuration = ((this.parser.fightDuration/1000))
+		const expectedMeikyo = (Math.floor(fightDuration/ MEIKYO_COOLDOWN) + 1)
+		const missedMeikyo = Math.floor(expectedMeikyo - this._totalMeikyoBuffs)
 
-		//if (FORGIVEN_DRIFT > 0) {
-		//	this._totalDrift = this._totalDrift - (FORGIVEN_DRIFT * MEIKYO_COOLDOWN)
-		//}
+		if (forgivenDrift > 0) {
+			this._totalDrift = this._totalDrift - (forgivenDrift * MEIKYO_COOLDOWN)
+		}
 
 		//SUGGESTION TIME!
 
