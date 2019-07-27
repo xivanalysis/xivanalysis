@@ -350,7 +350,7 @@
   "mnk.ir.suggestions.howling.content": "尽可能将每一个<0/>打进<1/>。",
   "mnk.ir.suggestions.howling.why": "存在 {0} 次于发劲 Buff 外使用空鸣拳。",
   "mnk.ir.table.ef": "{numElixirs}/1 苍气炮",
-  "mnk.ir.table.gcd": "{numGcds} 个GCD",
+  "mnk.ir.table.gcd": "{numGcds, plural, one {# 个GCD} other {# 个GCD}}",
   "mnk.ir.table.hf": "{numHowlings}/1 空鸣拳",
   "mnk.ir.table.rushing": "(速攻)",
   "mnk.ir.title": "发劲",
