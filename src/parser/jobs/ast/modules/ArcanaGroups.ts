@@ -15,6 +15,21 @@ export const PLAY = [
 	ACTIONS.LADY_OF_CROWNS.id,
 ]
 
+export const SOLAR_SEAL_ARCANA = [
+	ACTIONS.THE_BALANCE.id,
+	ACTIONS.THE_BOLE.id,
+]
+
+export const LUNAR_SEAL_ARCANA = [
+	ACTIONS.THE_ARROW.id,
+	ACTIONS.THE_EWER.id,
+]
+
+export const CELESTIAL_SEAL_ARCANA = [
+	ACTIONS.THE_SPEAR.id,
+	ACTIONS.THE_SPIRE.id,
+]
+
 /* Arcana spread states */
 
 export const DRAWN_ARCANA = [
@@ -27,4 +42,3 @@ export const DRAWN_ARCANA = [
 	STATUSES.LORD_OF_CROWNS_DRAWN.id,
 	STATUSES.LADY_OF_CROWNS_DRAWN.id,
 ]
-
