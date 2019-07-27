@@ -35,7 +35,7 @@ export default class FeatherGauge extends Module {
 
 	private feathersConsumed = 0
 	private avgGenerated = 0
-	private history: any[] = []
+	private history: {t: number, y: number}[] = []
 	private currentFeathers = 0
 	private featherOvercap = 0
 
@@ -56,8 +56,10 @@ export default class FeatherGauge extends Module {
 		// those n events is correct.
 		if (this.currentFeathers < 1) {
 			const prevHistory = this.history.pop()
-			prevHistory.y = 1
-			this.history.push(prevHistory)
+			if (prevHistory) {
+				prevHistory.y = 1
+				this.history.push(prevHistory)
+			}
 		}
 		this.setFeather(this.currentFeathers - 1)
 	}
