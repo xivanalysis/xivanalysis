@@ -99,7 +99,6 @@
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, one {# Sharpcast} other {# Sharpcasts}} expired.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "You consumed at least one <0/> by using <1/>. While it's better than letting the buff expire, you should try to avoid doing so.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.why": "{0, plural, one {# Sharpcast was} other {# Sharpcasts were}} consumed by <0/>.",
-  "blm.triple.title": "Triplecast Usage",
   "brd.barrage.title": "Barrage",
   "brd.pitch-perfect.title": "Pitch Perfect",
   "brd.snapshots.snapshotter": "Snapshotter",
