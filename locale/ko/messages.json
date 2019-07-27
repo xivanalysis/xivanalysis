@@ -276,8 +276,6 @@
   "drk.multihit.suggestions.why": "타겟이 적은 상태에서 사용한 일대다 스킬 {lowTargetAttacks} {lowTargetAttacks, plural, other {회}}",
   "drk.resourceanalyzer.blackestnight.content": "",
   "drk.resourceanalyzer.blackestnight.why": "",
-  "drk.resourceanalyzer.bloodgraph.label": "",
-  "drk.resourceanalyzer.mpgraph.label": "",
   "drk.resourceanalyzer.title": "",
   "drk.resourceanalyzer.wastedblood.content": "",
   "drk.resourceanalyzer.wastedblood.why": "",

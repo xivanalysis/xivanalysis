@@ -276,8 +276,6 @@
   "drk.multihit.suggestions.why": "{lowTargetAttacks} {lowTargetAttacks, plural, one {multi-target attack was} other {multi-target attacks were}} used against too few targets.",
   "drk.resourceanalyzer.blackestnight.content": "One or more <0/> applications did not fully use the shield, and thus did not generate a Dark Arts proc to allow free use of <1/> or <2/>.",
   "drk.resourceanalyzer.blackestnight.why": "You missed out on {0, plural, one {# Dark Arts use} other {# Dark Arts uses}} due to Blackest Night applications that did not consume the shield.",
-  "drk.resourceanalyzer.bloodgraph.label": "Blood",
-  "drk.resourceanalyzer.mpgraph.label": "MP",
   "drk.resourceanalyzer.title": "Resource Analyzer",
   "drk.resourceanalyzer.wastedblood.content": "Your blood gauge allows you to use <0/> or other spenders, which are among your strongest attacks.  Be sure to spend your blood before exceeding the cap of 100.",
   "drk.resourceanalyzer.wastedblood.why": "You lost a total of {wastedBloodActions, plural, one {# blood spending skill} other {# blood spending skills}} from gaining blood over the cap or from death.",
