@@ -17,10 +17,10 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GL_MAX_STACKS = 3
 
-const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING_I.duration * 1000
+const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING.duration * 1000
 
 const GL_REFRESHERS = [
-	STATUSES.GREASED_LIGHTNING_I.id,
+	STATUSES.GREASED_LIGHTNING.id,
 	STATUSES.EARTHS_REPLY.id,
 	ACTIONS.TORNADO_KICK.id,
 ]
@@ -30,7 +30,6 @@ export default class GreasedLightning extends Module {
 	static dependencies = [
 		'brokenLog',
 		'checklist',
-		'combatants',
 		'invuln',
 		'suggestions',
 	]
@@ -49,24 +48,16 @@ export default class GreasedLightning extends Module {
 	_earthSaves = []
 	_wastedEarth = 0
 
-	_windSaves = []
-	_wastedWind = 0
-
 	constructor(...args) {
 		super(...args)
 
-		const GL_FILTER = {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING_I.id}
+		const GL_FILTER = {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}
 		this.addHook('applybuff', GL_FILTER, this._onGlGain)
 		this.addHook('applybuffstack', GL_FILTER, this._onGlRefresh)
 		this.addHook('removebuff', GL_FILTER, this._onDrop)
 
 		// Cast will drop TK
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this._onTornadoKick)
-
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_WIND.id}, this._onRoWGain)
-
-		// Weirdly, stacks refresh when RoW does damage, not on cast. Only SE knows why.
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.RIDDLE_OF_WIND.id}, this._onRoWUse)
 
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this._onRoE)
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this._onReply)
@@ -192,31 +183,6 @@ export default class GreasedLightning extends Module {
 		this._earthSaves[0].clean = true
 	}
 
-	_onRoWGain(event) {
-		this._windSaves.unshift({clean: false, timestamp: event.timestamp})
-	}
-
-	_onRoWUse(event) {
-		// Ignore if we're building stacks
-		if (!this._currentStacks || this._currentStacks.stack < GL_MAX_STACKS) {
-			this._windSaves.shift()
-			return
-		}
-
-		// This is kinda derpy since it really depends on GCD length but,
-		// if we're in Coeurl and it's still live, there was no point to RoW.
-		// If we're not in Coeurl we'll assume stacks were gonna drop.
-		if (this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
-			if (event.timestamp - this._lastRefresh < GL_TIMEOUT_MILLIS) {
-				this._wastedWind++
-			}
-		} else {
-			this._lastRefresh = event.timestamp
-		}
-
-		this._windSaves[0].clean = true
-	}
-
 	_onTornadoKick() {
 		this._usedTornadoKick = true
 	}
@@ -246,7 +212,7 @@ export default class GreasedLightning extends Module {
 			if ([1, 2].includes(value.stack) && last.stack === GL_MAX_STACKS) {
 				this.brokenLog.trigger(this, 'broken transition', (
 					<Trans id="mnk.gl.trigger.broken-transition">
-						<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> stacks were observed performing an impossible transition.
+						<StatusLink {...STATUSES.GREASED_LIGHTNING}/> stacks were observed performing an impossible transition.
 					</Trans>
 				))
 			}
@@ -254,21 +220,16 @@ export default class GreasedLightning extends Module {
 
 		// Count missed saves
 		const missedEarth = this._earthSaves.filter(earth => !earth.clean).length
-		this._windSaves.forEach(wind => {
-			if (!wind.clean) {
-				this._wastedWind++
-			}
-		})
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.gl.checklist.name">Keep Greased Lightning running</Trans>,
 			description: <Trans id="mnk.gl.checklist.description">
-				<StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
+				<StatusLink {...STATUSES.GREASED_LIGHTNING}/> is a huge chunk of MNK's damage, increasing your damage by 30% and attack speed by 15%.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.GREASED_LIGHTNING,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.gl.checklist.requirement.name"><StatusLink {...STATUSES.GREASED_LIGHTNING_I}/> uptime</Trans>,
+					name: <Trans id="mnk.gl.checklist.requirement.name"><StatusLink {...STATUSES.GREASED_LIGHTNING}/> uptime</Trans>,
 					percent: () => this.getUptimePercent(),
 				}),
 			],
@@ -285,7 +246,7 @@ export default class GreasedLightning extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="mnk.gl.suggestions.dropped.why">
-					<StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> dropped <Plural value={this._droppedStacks} one="# time" other="# times"/>.
+					<StatusLink {...STATUSES.GREASED_LIGHTNING} /> dropped <Plural value={this._droppedStacks} one="# time" other="# times"/>.
 				</Trans>,
 			}))
 		}
@@ -313,20 +274,7 @@ export default class GreasedLightning extends Module {
 				</Trans>,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="mnk.gl.suggestions.roe.wasted.why">
-					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
-				</Trans>,
-			}))
-		}
-
-		if (this._wastedWind) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.RIDDLE_OF_WIND.icon,
-				content: <Trans id="mnk.gl.suggestions.row.wasted.content">
-					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> without saving stacks is a potency loss since you lose the damage buff from <StatusLink {...STATUSES.FISTS_OF_FIRE} />.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="mnk.gl.suggestions.row.wasted.why">
-					<ActionLink {...ACTIONS.RIDDLE_OF_WIND} /> was used <Plural value={this._wastedWind} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING_I} />.
+					<ActionLink {...ACTIONS.RIDDLE_OF_EARTH} /> was used <Plural value={this._wastedEarth} one="# time" other="# times" /> without preserving <StatusLink {...STATUSES.GREASED_LIGHTNING} />.
 				</Trans>,
 			}))
 		}
