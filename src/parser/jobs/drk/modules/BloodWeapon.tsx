@@ -21,7 +21,7 @@ const EXPECTED_CONSTANTS = {
 const SEVERITY_MISSED_GCDS = {
 	1: SEVERITY.MINOR,
 	3: SEVERITY.MEDIUM,
-	6: SEVERITY.MAJOR,
+	5: SEVERITY.MAJOR,
 }
 
 class BloodWeaponState {
@@ -101,19 +101,17 @@ export default class BloodWeapon extends Module {
 			.reduce((sum, bloodWeaponWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.GCD - bloodWeaponWindow.gcds), 0)
 
 		// missed GCDs
-		if (missedGcds > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.BLOOD_WEAPON.icon,
-				content: <Trans id="drk.bloodweapon.suggestions.missedgcd.content">
-					Try to land 5 GCDs during every <ActionLink {...ACTIONS.BLOOD_WEAPON}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-				</Trans>,
-				tiers: SEVERITY_MISSED_GCDS,
-				value: missedGcds,
-				why: <Trans id="drk.bloodweapon.suggestions.missedgcd.why">
-					{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed during Blood Weapon windows.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOOD_WEAPON.icon,
+			content: <Trans id="drk.bloodweapon.suggestions.missedgcd.content">
+				Try to land 5 GCDs during every <ActionLink {...ACTIONS.BLOOD_WEAPON}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			</Trans>,
+			tiers: SEVERITY_MISSED_GCDS,
+			value: missedGcds,
+			why: <Trans id="drk.bloodweapon.suggestions.missedgcd.why">
+				{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed during Blood Weapon windows.
+			</Trans>,
+		}))
 	}
 
 	output() {
