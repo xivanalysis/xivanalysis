@@ -20,13 +20,18 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2019-07-06'),
-			Changes: () => <>Initial release of 5.0 support for Dark Knight</>,
+			date: new Date('2019-07-27'),
+			Changes: () => <>Add tracking for Blood Weapon windows</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
 		{
 			date: new Date('2019-07-20'),
 			Changes: () => <>Fix issues with gauge calculation and AOE skill tracking</>,
+			contributors: [CONTRIBUTORS.AZARIAH],
+		},
+		{
+			date: new Date('2019-07-06'),
+			Changes: () => <>Initial release of 5.0 support for Dark Knight</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
 		},
 	],
