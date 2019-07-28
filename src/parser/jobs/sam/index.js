@@ -22,15 +22,25 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.3',
-	// 	to: '4.5',
-	// },
+
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
+
 	contributors: [
 		{user: CONTRIBUTORS.RYAN, role: ROLES.MAINTAINER},
 	],
 
 	changelog: [{
+		date: new Date('2019-7-27'),
+		Changes: () => <> Added Drift check and use check to Tsubame, cleaned up some displays, offical Sam support enabled </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
+		date: new Date('2019-7-24'),
+		Changes: () => <>Added Drift check to Meikyo Shisui along with use check. </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2019-07-22'),
 		Changes: () => <>Fixed speed buff provided by Shifu. GCD estimations should be improved.</>,
 		contributors: [CONTRIBUTORS.ACKWELL],

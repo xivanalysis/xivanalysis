@@ -39,7 +39,7 @@ interface HoroscopeWindow {
 }
 
 export default class Horoscope extends Module {
-	static handle = 'earthlystar'
+	static handle = 'horoscope'
 	static title = t('ast.horoscope.title')`Horoscope`
 
 	@dependency private suggestions!: Suggestions
@@ -56,10 +56,7 @@ export default class Horoscope extends Module {
 
 	protected init() {
 		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE.id, by: 'player'}, this._onHoroscope)
-		const horoscopeBuffFilter = {
-			by: 'player',
-			abilityId: [],
-		}
+
 		this.addHook('applybuff', {abilityId: HOROSCOPE_STATUSES, by: 'player', to: 'player'}, this._onApplyBuff)
 		this.addHook('removebuff', {abilityId: HOROSCOPE_STATUSES, by: 'player', to: 'player'}, this._onRemoveBuff)
 		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE_ACTIVATION.id, by: 'player'}, this._onActivate)
@@ -83,11 +80,8 @@ export default class Horoscope extends Module {
 	_onRemoveBuff(event: BuffEvent) {
 		if (event.ability.guid === STATUSES.HOROSCOPE_HELIOS.id && this._active) {
 			// Dropped Horoscope without activating
-			// if(this._horoscope.casts.length > 1
-				// && ACTIONS.HOROSCOPE_ACTIVATION.id !== this._horoscope.casts[1].ability.guid) {
-				this._missedActivations++
-				this._stopAndSave(event.timestamp)
-			// }
+			this._missedActivations++
+			this._stopAndSave(event.timestamp)
 		}
 		if (event.ability.guid === STATUSES.HOROSCOPE.id && this._active) {
 			// Dropped Horoscope without activating

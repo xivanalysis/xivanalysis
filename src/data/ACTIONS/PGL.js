@@ -52,13 +52,6 @@ export default {
 	// Player OGCDs
 	// -----
 
-	INTERNAL_RELEASE: {
-		id: 59,
-		name: 'Internal Release',
-		icon: 'https://xivapi.com/i/000000/000212.png',
-		cooldown: 60,
-	},
-
 	FISTS_OF_EARTH: {
 		id: 60,
 		name: 'Fists of Earth',
@@ -73,25 +66,11 @@ export default {
 		cooldown: 3,
 	},
 
-	STEEL_PEAK: {
-		id: 64,
-		name: 'Steel Peak',
-		icon: 'https://xivapi.com/i/002000/002530.png',
-		cooldown: 40,
-	},
-
 	MANTRA: {
 		id: 65,
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
 		cooldown: 90,
-	},
-
-	HOWLING_FIST: {
-		id: 67,
-		name: 'Howling Fist',
-		icon: 'https://xivapi.com/i/000000/000207.png',
-		cooldown: 60,
 	},
 
 	PERFECT_BALANCE: {

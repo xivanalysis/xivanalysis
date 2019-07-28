@@ -32,5 +32,3 @@ test.html
 *.swp
 .vscode/taskmarks.json
 .idea/
-
-.vscode/ipch/aac57bbcfe5f904f/mmap_address.bin
