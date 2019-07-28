@@ -718,5 +718,6 @@
   "whm.overheal.requirement.hot": "Overheal (HoT)",
   "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
   "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
+  "please.dont.translate.this": "This message is a test for some processes being added to the deploy process. Please don't bother translating it.",
   "whm.overheal.rule.name": "Avoid overheal"
 }
