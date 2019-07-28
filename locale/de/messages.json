@@ -53,6 +53,7 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> Nutzungen",
   "ast.sleeve-draw.title": "Legeschema",
   "blm.about.description": "Dieser Analysator zeigt dir, warum du weniger [~action/FIRE_IV] castest, als du denkst.",
+  "blm.about.description.disclaimer": "",
   "blm.about.description.warning": "Das hier ist nicht mal ansatzweise fertig.",
   "blm.gauge.suggestions.dropped-enochian.content": "Den <0/> Buff fallen zu lassen führt zu verlorenen <1/>, mehr clipping durch weitere Verwendungen von <2/>, nicht verfügbar sein von <3/> und <4/>, oder einfach das Fehlen des 10% Schadensbonus, den <5/> gibt.",
   "blm.gauge.suggestions.dropped-enochian.why": "{0} {1, plural, one {versäumter Henochisch Cast} other {versäumte Henochisch Casts}}.",

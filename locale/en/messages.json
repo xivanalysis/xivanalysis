@@ -53,6 +53,7 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> uses",
   "ast.sleeve-draw.title": "Sleeve Draw",
   "blm.about.description": "This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.",
+  "blm.about.description.disclaimer": "This module assumes you are following the standard BLM playstyle. If you are following the [Megumin playstyle](https://docs.google.com/document/d/1SBU4HpqBenHAXFr6V-gwAKggkfBgJ2IR9FEbMtT3YRw/edit), this report and many of the suggestions may not be applicable",
   "blm.about.description.warning": "This isn't even remotely done.",
   "blm.gauge.suggestions.dropped-enochian.content": "Dropping <0/> may lead to lost <1/> or <2/> casts, more clipping because of additional <3/> casts, unavailability of <4/> and <5/> or straight up missing out on the 15% damage bonus that <6/> provides.",
   "blm.gauge.suggestions.dropped-enochian.why": "{0} dropped Enochian {1, plural, one {buff} other {buffs}}.",

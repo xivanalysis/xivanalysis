@@ -53,6 +53,7 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> 的使用情况",
   "ast.sleeve-draw.title": "袖内抽卡",
   "blm.about.description": "本分析器会告诉你，你并非如你以为的那样咏唱了那么多[~action/FIRE_IV]。",
+  "blm.about.description.disclaimer": "",
   "blm.about.description.warning": "本部分尚未完成。",
   "blm.gauge.suggestions.dropped-enochian.content": "断<0/>容易造成<1/>和<2/>的损失，额外开<3/>卡GCD，无法使用<4/>和<5/>，或者直接损失<5/>提供的15%伤害加成。",
   "blm.gauge.suggestions.dropped-enochian.why": "断了 {0} {1, plural, other {次}}天语。",

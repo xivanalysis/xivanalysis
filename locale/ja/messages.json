@@ -53,6 +53,7 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "使用回数：<0/>",
   "ast.sleeve-draw.title": "スリーヴドロー",
   "blm.about.description": "",
+  "blm.about.description.disclaimer": "",
   "blm.about.description.warning": "このジョブのサポートはまだ対応していません。",
   "blm.gauge.suggestions.dropped-enochian.content": "",
   "blm.gauge.suggestions.dropped-enochian.why": "落としたエノキアン回数：{0}{1, plural, other {回}}。",
