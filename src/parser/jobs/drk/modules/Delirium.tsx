@@ -8,6 +8,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -38,7 +39,8 @@ class DeliriumState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
-	isRushing: boolean = false // TODO: Actually use this, and display it appropriately in the output table
+	expectedGCDs: number = EXPECTED_CONSTANTS.GCD
+	expectedBloodSkills: number = EXPECTED_CONSTANTS.BLOOD_SKILLS
 
 	constructor(start: number) {
 		this.start = start
@@ -64,6 +66,7 @@ export default class Delirium extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private globalcooldown!: GlobalCooldown
 
 	// Inner Release Windows
 	private deliriumWindows: DeliriumState[] = []
@@ -92,7 +95,13 @@ export default class Delirium extends Module {
 		if (actionId === ACTIONS.DELIRIUM.id) {
 			const delirium = new DeliriumState(event.timestamp)
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			delirium.isRushing = DELIRIUM_DURATION >= fightTimeRemaining
+			if ( DELIRIUM_DURATION >= fightTimeRemaining ) {
+				// Rushing - end of fight, reduce expected number of skills
+				const gcdEstimate = this.globalcooldown.getEstimate(true)
+				const reducedWindow = Math.ceil((DELIRIUM_DURATION - fightTimeRemaining) / gcdEstimate)
+				delirium.expectedGCDs -= reducedWindow
+				delirium.expectedBloodSkills = reducedWindow
+			}
 
 			this.deliriumWindows.push(delirium)
 		}
@@ -119,34 +128,30 @@ export default class Delirium extends Module {
 			.reduce((sum, deliriumWindow) => sum + Math.max(0, deliriumWindow.gcds - deliriumWindow.bloodSkills), 0)
 
 		// missed GCDs
-		if (missedGcds > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.DELIRIUM.icon,
-				content: <Trans id="drk.delirium.suggestions.missedgcd.content">
-					Try to land 5 GCDs during every <ActionLink {...ACTIONS.DELIRIUM}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-				</Trans>,
-				tiers: SEVERITY_MISSED_GCDS,
-				value: missedGcds,
-				why: <Trans id="drk.delirium.suggestions.missedgcd.why">
-					{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed during Delirium windows.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.DELIRIUM.icon,
+			content: <Trans id="drk.delirium.suggestions.missedgcd.content">
+				Try to land 5 GCDs during every <ActionLink {...ACTIONS.DELIRIUM}/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			</Trans>,
+			tiers: SEVERITY_MISSED_GCDS,
+			value: missedGcds,
+			why: <Trans id="drk.delirium.suggestions.missedgcd.why">
+				{missedGcds} <Plural value={missedGcds} one="GCD was" other="GCDs were"/> missed during Delirium windows.
+			</Trans>,
+		}))
 
 		// incorrect GCDs (not Blood skills)
-		if (missedBloodSkills > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.BLOODSPILLER.icon,
-				content: <Trans id="drk.delirium.suggestions.badgcd.content">
-					GCDs used during <ActionLink {...ACTIONS.DELIRIUM}/> should be limited to <ActionLink {...ACTIONS.BLOODSPILLER}/> for optimal damage (or <ActionLink {...ACTIONS.QUIETUS}/> if three or more targets are present).
-				</Trans>,
-				tiers: SEVERITY_MISSED_BLOOD_SKILLS,
-				value: missedBloodSkills,
-				why: <Trans id="drk.delirium.suggestions.badgcd.why">
-					{missedBloodSkills} incorrect <Plural value={missedBloodSkills} one="GCD was" other="GCDs were"/> used during Delirium windows.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOODSPILLER.icon,
+			content: <Trans id="drk.delirium.suggestions.badgcd.content">
+				GCDs used during <ActionLink {...ACTIONS.DELIRIUM}/> should be limited to <ActionLink {...ACTIONS.BLOODSPILLER}/> for optimal damage (or <ActionLink {...ACTIONS.QUIETUS}/> if three or more targets are present).
+			</Trans>,
+			tiers: SEVERITY_MISSED_BLOOD_SKILLS,
+			value: missedBloodSkills,
+			why: <Trans id="drk.delirium.suggestions.badgcd.why">
+				{missedBloodSkills} incorrect <Plural value={missedBloodSkills} one="GCD was" other="GCDs were"/> used during Delirium windows.
+			</Trans>,
+		}))
 	}
 
 	output() {
@@ -170,11 +175,11 @@ export default class Delirium extends Module {
 					targetsData: {
 						gcd: {
 							actual: deliriumWindow.gcds,
-							expected: EXPECTED_CONSTANTS.GCD,
+							expected: deliriumWindow.expectedGCDs,
 						},
 						bloodSkills: {
 							actual: deliriumWindow.bloodSkills,
-							expected: EXPECTED_CONSTANTS.BLOOD_SKILLS,
+							expected: deliriumWindow.expectedBloodSkills,
 						},
 					},
 					rotation: deliriumWindow.rotation,
