@@ -49,5 +49,12 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
+		{
+			date: new Date('2019-07-23'),
+			Changes: () => <>
+				Fix penalties for double-weaving during an active Requiescat window.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 })

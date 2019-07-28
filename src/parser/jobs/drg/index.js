@@ -16,15 +16,20 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.05',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.01',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 	],
 	changelog: [{
+		date: new Date('2019-07-21'),
+		Changes: () => <>Updated Lance Charge/Dragon Sight window analysis logic, made some small text and data corrections.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-07-07'),
 		Changes: () => <>Updated combos to properly account for Raiden Thrust, fixed the Disembowel checklist item.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

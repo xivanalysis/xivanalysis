@@ -35,6 +35,9 @@ const KENKI_ACTIONS = {
 	// ranged
 	[ACTIONS.ENPI.id]: {cast: 10},
 
+	// oGCD
+	[ACTIONS.IKISHOTEN.id]: {cast: 50},
+
 	// spenders
 	[ACTIONS.HISSATSU_GYOTEN.id]: {cast: -10},
 	[ACTIONS.HISSATSU_YATEN.id]: {cast: -10},
@@ -86,7 +89,6 @@ export default class Kenki extends Module {
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
 		)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.IKISHOTEN.id}, () => this.modify(50))
 
 		// Meditate
 		const filter = {by: 'player', abilityId: STATUSES.MEDITATE.id}
