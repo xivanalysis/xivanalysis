@@ -14,8 +14,14 @@ export default class Tsubame  extends Module {
 		'suggestions',
 	]
 
+	const TSUBAME_COOLDOWN = 60 
 	_kaeshiFailures = 0 //amount of bad kaeshi moves
 	_kaeshiMidare = 0 //amount of times kaeshi was a double midare
+
+	//Stuff for caveman level drift checking
+
+	_previousTsubame = 0 //this holds the start time of the last Tsubame, if first Tsubame this will be 0
+	_totalDrift = 0 //this will track the total drift over time of Tsubame
 
 	constructor(...args) {
 		super(...args)
@@ -24,18 +30,44 @@ export default class Tsubame  extends Module {
 		this.addHook('complete', this._onComplete,)
 	}
 
+	_tsubameDrift()
+	{
+		//Drift check!
+			//Step 1: save the current timestamp for the current Tsubame
+
+			const currentTsubame = event.timestamp
+
+			//Step 2: compare to old timestamp for the difference between the 2.
+
+			if (this._previousTsubame !== 0) {
+				this._totalDrift += ((currentTsubame - this._previousTsubame)/1000) - TSUBAME_COOLDOWN
+			}
+
+			//step 3: move current timestamp to old Tsubame
+
+			this._previousTsubame = event.timestamp
+	}
+
 	_onBadTsubame() {
 		this._kaeshiFailures += 1
+		this._tsubameDrift()
 	}
 
 	_onDoubleMidare() {
 		this._kaeshiMidare += 1
+		this._tsubameDrift()
 	}
 
 	_onComplete() {
 		const totalUses = this._kaeshiFailures + this._kaeshiMidare
 		const badUses = this._kaeshiFailures
+		
+		//Tsubame use check calcs
+		const fightDuration = (this.parser.fightDuration/1000)
+		const expectedTsubame = (Math.floor(fightDuration/ TSUBAME_COOLDOWN) + 1)
+		const missedTsubame = Math.floor(expectedTsubame - totalUses)
 
+		
 		if (totalUses === 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TSUBAME_GAESHI.icon,
@@ -54,6 +86,29 @@ export default class Tsubame  extends Module {
 			},
 			why: <Trans id="sam.tsubame.suggestion.badtsubame.why"> You used <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on the wrong sen skills {badUses} times over the course of the fight </Trans>,
 			value: this._badUses,
+		}))
+		
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.TSUBAME_GAESHI.icon,
+			content: <Trans id="sam.tsubame.suggestions.uses.content"> Make sure you use as many <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> over the course of the fight as possible, this skill allows you to speed up the sen build required to use <ActionLink {...ACTIONS.MIDARE_SETSUGEKKA}/>. </Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			value: missedTsubame,
+			why: <Trans id="sam.tsubame.suggestions.uses.why"> You missed <Plural value ={missedTsubame} one = "# use" other= "# uses" /> of <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>. </Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.LIVING_DEAD.icon,
+			content: <Trans id="sam.tsubame.suggestions.drift.content"> You should aim to minimize the amount of drift between uses of  <ActionLink {...ACTIONS.TSUBAME_GAESHI}/>, this skill should be used on cooldown as much as possible. </Trans>,
+			tiers: {
+				10: SEVERITY.MINOR,
+				30: SEVERITY.MEDIUM,
+				60: SEVERITY.MAJOR,
+			},
+			value: this._totalDrift,
+			why: <Trans id="sam.tsubame.suggestions.drift.why"> You had {this._totalDrift} extra seconds between uses of <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> over the course of the fight. </Trans>,
 		}))
 	}
 
