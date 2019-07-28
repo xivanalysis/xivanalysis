@@ -1,7 +1,7 @@
 /**
  * @author Yumiya
  */
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import React from 'react'
 import Module from 'parser/core/Module'
@@ -202,7 +202,7 @@ export default class PitchPerfect extends Module {
 			},
 			value: this._lostPotencyFromStacks,
 			why: <Trans id="brd.pitch-perfect.cast-without-stacks.suggestion.reason">
-				{badPPs} cast{badPPs ? 's' : ''} of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
+				<Plural value={badPPs} one="# cast" other="# casts"/> of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
 			</Trans>,
 		}))
 
@@ -218,7 +218,7 @@ export default class PitchPerfect extends Module {
 			},
 			value: missedPPs,
 			why: <Trans id="brd.pitch-perfect.no-cast-at-end.suggestion.reason">
-				You might have missed up to {missedPPs} cast{missedPPs ? 's' : ''} of {ACTIONS.PITCH_PERFECT.name}.
+				You might have missed up to <Plural value={missedPPs} one="# cast" other="# casts"/> of {ACTIONS.PITCH_PERFECT.name}.
 			</Trans>,
 		}))
 	}
@@ -244,7 +244,7 @@ export default class PitchPerfect extends Module {
 						<ActionLink {...ACTIONS.PITCH_PERFECT}/> should only below 3 stacks when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
 					</Trans>,
 					reason: <Trans id="brd.pitch-perfect.cast-without-max-stacks.reason">
-						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {PP_POTENCY[0]} at the first stack, {PP_POTENCY[1]} at the second, and {PP_POTENCY[2]} at the third and final stack, so you don't want to use it before the last one.
+						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {this._formatPotency(PP_POTENCY[0])} at the first stack, {this._formatPotency(PP_POTENCY[1])} at the second, and {this._formatPotency(PP_POTENCY[2])} at the third and final stack, so you don't want to use it before the last one.
 					</Trans>,
 				})
 			} else if (pp.issue === PP_NOT_CAST_AT_END) {
@@ -284,14 +284,14 @@ export default class PitchPerfect extends Module {
 					{this._lostPotencyFromStacks ?
 						<List.Item>
 							<Trans id="brd.pitch-perfect.without-max-stacks.total-potency-lost">
-								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._lostPotencyFromStacks}</strong> potency
+								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._formatPotency(this._lostPotencyFromStacks)}</strong> potency
 							</Trans>
 						</List.Item> : null
 					}
 					{ this._lostPotencyFromMissedCast[0] ?
 						<List.Item>
 							<Trans id="brd.pitch-perfect.no-cast-at-end.total-potency-lost">
-								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._lostPotencyFromMissedCast[0]} to {this._lostPotencyFromMissedCast[1]}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
+								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._formatPotency(this._lostPotencyFromMissedCast[0])} to {this._formatPotency(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
 							</Trans>
 						</List.Item> : null
 					}
@@ -313,77 +313,50 @@ export default class PitchPerfect extends Module {
 	// - A message block, containing:
 	//    - information about critical hit rate and time left on song
 	_buildPanel({pp, tuples}) {
-
+		let titleIconName = ''
+		let titleIconClass = ''
 		let titleElement = <></>
-		let informationElements = <></>
-		let issueElements = <></>
+		let timeLeftElement = <></>
+		let potencyLostElement = <></>
+		let timestamp = 0
 
 		if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
 			// Without Max Stacks Title
-			titleElement = <>
-			<Icon name={'remove'} className={'text-error'}/> {this._createTimelineButton(pp.timestamp)}
-			<Trans id="brd.pitch-perfect.cast-without-max-stacks.title">
-				{ACTIONS.PITCH_PERFECT.name} used at {pp.stacks} stack{pp.stacks > 1 ? 's' : ''}.
+			titleElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.title">
+				{ACTIONS.PITCH_PERFECT.name} used at <Plural value={pp.stacks} one="# cast" other="# stacks"/>.
 			</Trans>
-			</>
+			titleIconName = 'remove'
+			titleIconClass = 'text-error'
 
-			// Without Max Stacks Information
-			informationElements = <Message info>
-				<List>
-					<List.Content>
-						<List.Item>
-							<Icon name={'hourglass'}/>
-							<Trans id="brd.pitch-perfect.cast-without-max-stacks.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /></Trans>
-						</List.Item>
-						<List.Item>
-							<Icon name={'arrow down'}/>
-							<Trans id="brd.pitch-perfect.cast-without-max-stacks.potency-lost"><strong>{PP_MAX_POTENCY - PP_POTENCY[pp.stacks - 1]}</strong> potency lost versus casting at max stacks</Trans>
-						</List.Item>
-					</List.Content>
-				</List>
-			</Message> || undefined
+			// Witout Max Stacks timestamp for button
+			timestamp = pp.timestamp
 
-			// List of issues
-			issueElements = tuples && tuples.length && tuples.map(t => {
-				return t.issue && <Message key={tuples.indexOf(t)} error>
-					<Icon name={'remove'}/>
-					<span>{t.issue}</span>
-				</Message>
-			}) || undefined
+			// Without Max Stacks Information Elements
+			timeLeftElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /></Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.potency-lost"><strong>{this._formatPotency(PP_MAX_POTENCY - PP_POTENCY[pp.stacks - 1])}</strong> potency lost versus casting at max stacks</Trans>
 
 		} else if (pp.issue === PP_NOT_CAST_AT_END) {
 			// Not Cast At End Title
-			titleElement = <>
-			<Icon name={'question'} className={'text-warning'}/> {this._createTimelineButton(pp.timestamp + pp.timeLeftOnSong)}
-			<Trans id="brd.pitch-perfect.not-cast-at-end.title">
+			titleElement = <Trans id="brd.pitch-perfect.not-cast-at-end.title">
 				{ACTIONS.PITCH_PERFECT.name} might have been usable before the end of {ACTIONS.THE_WANDERERS_MINUET.name}.
 			</Trans>
-			</>
+			titleIconName = 'question'
+			titleIconClass = 'text-warning'
 
-			// Not Cast At End Information
-			informationElements = <Message info>
-				<List>
-					<List.Content>
-						<List.Item>
-							<Icon name={'hourglass'}/>
-							<Trans id="brd.pitch-perfect.not-cast-at-end.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> after the last cast of <ActionLink {...ACTIONS.PITCH_PERFECT}/></Trans>
-						</List.Item>
-						<List.Item>
-							<Icon name={'arrow down'}/>
-							<Trans id="brd.pitch-perfect.not-cast-at-end.potency-lost"><strong>{PP_POTENCY[0]} - {PP_MAX_POTENCY}</strong> potency potentially lost</Trans>
-						</List.Item>
-					</List.Content>
-				</List>
-			</Message> || undefined
+			// Witout Max Stacks timestamp for button
+			timestamp = pp.timestamp + pp.timeLeftOnSong
 
-			// List of issues
-			issueElements = tuples && tuples.length && tuples.map(t => {
-				return t.issue && <Message key={tuples.indexOf(t)} warning>
-					<Icon name={'remove'}/>
-					<span>{t.issue}</span>
-				</Message>
-			}) || undefined
+			// Not Cast At End Information Elements
+			timeLeftElement = <Trans id="brd.pitch-perfect.not-cast-at-end.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> after the last cast of <ActionLink {...ACTIONS.PITCH_PERFECT}/></Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.not-cast-at-end.potency-lost"><strong>{this._formatPotency(PP_POTENCY[0])} to {this._formatPotency(PP_MAX_POTENCY)}</strong> potency potentially lost</Trans>
 		}
+
+		const issueElements = tuples && tuples.length && tuples.map(t => {
+			return t.issue && <Message key={tuples.indexOf(t)} error={pp.issue === PP_CAST_WIHTOUT_MAX_STACKS} warning={pp.issue === PP_NOT_CAST_AT_END}>
+				<Icon name={'remove'}/>
+				<span>{t.issue}</span>
+			</Message>
+		}) || null
 
 		// List of reasons
 		const reasonElements = tuples && tuples.length && <div className={styles.description}>
@@ -393,21 +366,35 @@ export default class PitchPerfect extends Module {
 				})
 				}
 			</List>
-		</div> || undefined
+		</div> || null
 
 		// Builds the full panel
 		return {
 			key: pp.timestamp,
 			title: {
 				content: <>
-					{titleElement}
-				</>,
+			<Icon name={titleIconName} className={titleIconClass}/> {this._createTimelineButton(timestamp)}
+			{titleElement}
+			</>,
 			},
 			content: {
 				content: <>
 					{issueElements}
 					{reasonElements}
-					{informationElements}
+					<Message info>
+						<List>
+							<List.Content>
+								<List.Item>
+									<Icon name={'hourglass'}/>
+									{timeLeftElement}
+								</List.Item>
+								<List.Item>
+									<Icon name={'arrow down'}/>
+									{potencyLostElement}
+								</List.Item>
+							</List.Content>
+						</List>
+					</Message>
 				</>,
 			},
 		}
@@ -509,6 +496,11 @@ export default class PitchPerfect extends Module {
 			const maxPotencyInWM =  potencyFromMax + potencyFromLast
 			this._lostPotencyFromStacks += maxPotencyInWM - totalPotencyInWM
 		}
+	}
+
+	// Allows for proper localization of potency numbers, aka proper thousands separators and things like that.
+	_formatPotency(potency) {
+		return potency.toLocaleString()
 	}
 
 	_createTimelineButton(timestamp) {
