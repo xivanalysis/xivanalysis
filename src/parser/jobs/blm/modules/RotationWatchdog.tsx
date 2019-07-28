@@ -147,13 +147,7 @@ class Cycle {
 	}
 }
 
-class GaugeState {
-	astralFire: number = 0
-	umbralIce: number = 0
-	umbralHearts: number = 0
-	enochian: boolean = false
-}
-
+// TS typedef for BLM Gauge events so it doesn't choke
 interface BLMGaugeEvent extends Event {
 	type: symbol,
 	timestamp: number,
@@ -164,6 +158,14 @@ interface BLMGaugeEvent extends Event {
 	enochian: boolean,
 	polyglot: number,
 	lastGaugeEvent: BLMGaugeEvent,
+}
+
+// typedef for the subset of the data contained in BLMGaugeEvent that we're going to keep track of for suggestions
+class GaugeState {
+	astralFire: number = 0
+	umbralIce: number = 0
+	umbralHearts: number = 0
+	enochian: boolean = false
 }
 
 export default class RotationWatchdog extends Module {
@@ -197,7 +199,9 @@ export default class RotationWatchdog extends Module {
 		this.addHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
 	}
 
+	// Handle events coming from BLM's Gauge module
 	private onGaugeEvent(event: BLMGaugeEvent) {
+		// If we're beginning the fire phase of this cycle, note it and save some data
 		if (this.currentGaugeState.astralFire === 0 && event.astralFire > 0) {
 			this.currentRotation.inFirePhase = true
 			this.currentRotation.firePhaseStartMP = this.combatants.selected.resources.mp
@@ -209,24 +213,28 @@ export default class RotationWatchdog extends Module {
 			}
 		}
 
+		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !event.enochian) {
 			this.currentRotation.errorCode = ERROR_CODES.DROPPED_ENOCHIAN
 		}
 
+		// Retrieve the GaugeState from the event
 		this.currentGaugeState.astralFire = event.astralFire
 		this.currentGaugeState.umbralIce = event.umbralIce
 		this.currentGaugeState.umbralHearts = event.umbralHearts
 		this.currentGaugeState.enochian = event.enochian
 
-		// Keep track of how many UI stacks we had upon entering AF, affects expected F4 counts for the cycle
-		if (this.currentRotation.inFirePhase || event.astralFire > 0) {
+		// If we're in fire phase, stop processing
+		if (this.currentRotation.inFirePhase) {
 			return
 		}
 
+		// If we're in ice phase, set the current gauge state into the pre-fire cache for later recording
 		// Still need by-value assignment here
 		this.currentRotation.gaugeStateBeforeFire = Object.assign(this.currentRotation.gaugeStateBeforeFire, this.currentGaugeState)
 	}
 
+	// Handle cast events and updated recording data accordingly
 	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
@@ -237,18 +245,22 @@ export default class RotationWatchdog extends Module {
 			!(actionId === ACTIONS.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
+		// Note that we've recorded our first cast now
 		if (this.firstEvent) { this.firstEvent = false }
 
 		// Add actions other than auto-attacks to the rotation cast list
-		const action = getDataBy(ACTIONS, 'id', actionId) as any
+		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
 		if (action && !action.autoAttack) {
 			this.currentRotation.casts.push(event)
+
+			// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
 			if (actionId === ACTIONS.MANAFONT.id) {
 				this.currentRotation.hasManafont = true
 			}
 		}
 	}
 
+	// Get the uptime percentage for the Thunder status defbuff
 	private getThunderUptime() {
 		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
@@ -256,9 +268,10 @@ export default class RotationWatchdog extends Module {
 		return (statusTime / uptime) * 100
 	}
 
+	// Finish this parse and add the suggestions and checklist items
 	private onComplete() {
 		this.stopRecording(undefined)
-		// writing a suggestion to skip B4 end of fight.
+		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
 		if (this.missedF4s) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_IV.icon,
@@ -272,7 +285,7 @@ export default class RotationWatchdog extends Module {
 			}))
 		}
 
-		// suggestion for unneccessary extra F1s.
+		// Suggestion for unneccessary extra F1s
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIRE_I.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.extra-f1s.content">
@@ -298,7 +311,7 @@ export default class RotationWatchdog extends Module {
 			</Trans>,
 		}))
 
-		// Suggestion to not use manafont before Despair
+		// Suggestion to not use Manafont before Despair
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MANAFONT.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
@@ -341,6 +354,7 @@ export default class RotationWatchdog extends Module {
 			</Trans>,
 		}))
 
+		// Checklist item for keeping Thunder 3 DoT rolling
 		this.checklist.add(new Rule({
 			name: <Trans id="blm.rotation-watchdog.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
 			description: <Trans id="blm.rotation-watchdog.checklist.dots.description">
@@ -356,24 +370,29 @@ export default class RotationWatchdog extends Module {
 		}))
 	}
 
+	// Complete the previous cycle and start a new one
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
 		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
 	}
 
+	// End the current cycle, send it off to error processing, and add it to the history list
 	private stopRecording(event: CastEvent | undefined) {
 		this.currentRotation.endTime = this.parser.currentTimestamp
+
 		// If an event object wasn't passed, or the event was a transpose that occurred during downtime,
 		// treat this as a rotation that ended with some kind of downtime
 		if (!event || (event && event.ability.guid === ACTIONS.TRANSPOSE.id &&
 			this.invuln.isUntargetable('all', event.timestamp))) {
 			this.currentRotation.finalOrDowntime = true
 		}
+
 		this.processCycle(this.currentRotation)
 		this.history.push(this.currentRotation)
 	}
 
-	// TODO: Handle aoe things
+	// Process errors for this cycle
+	// TODO: Handle aoe things?
 	// TODO: Handle Flare?
 	private processCycle(currentRotation: Cycle) {
 		// Only process errors for rotations with more than the minimum number of casts,
@@ -385,20 +404,19 @@ export default class RotationWatchdog extends Module {
 
 		// Check for errors that apply for all cycles
 
-		// check if the rotation included the expected number of Despair casts
+		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
 			this.astralFiresMissingDespairs++
 			currentRotation.errorCode = ERROR_CODES.MISSING_DESPAIRS
 		}
 
-		// check whether manafont was used before despair
-		if (currentRotation.hasManafont && currentRotation.actualDespairs > 0) {
-			if (currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
+		// Check whether manafont was used before despair
+		if (currentRotation.hasManafont && currentRotation.actualDespairs > 0 &&
+			currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
 				currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)) {
 				this.manafontBeforeDespair++
 				currentRotation.errorCode = ERROR_CODES.MANAFONT_BEFORE_DESPAIR
 			}
-		}
 
 		// Check if the rotation included more than one Fire 1
 		const fire1Count = currentRotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
@@ -443,9 +461,9 @@ export default class RotationWatchdog extends Module {
 	private processDowntimeCycle(currentRotation: Cycle) {
 		currentRotation.errorCode = ERROR_CODES.FINAL_OR_DOWNTIME
 
-		if (this.currentGaugeState.umbralHearts > 0 && currentRotation.missingFire4s === 2) {
-			const missedF4s = currentRotation.missingFire4s-1
-			this.missedF4s = missedF4s
+		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
+		if (currentRotation.gaugeStateBeforeFire.umbralHearts > 0 && currentRotation.missingFire4s === 2) {
+			this.missedF4s++
 		}
 
 		// TODO: Check for hardcast T3s, if this cycle ends in downtime, that cast time should've been a fire spell
