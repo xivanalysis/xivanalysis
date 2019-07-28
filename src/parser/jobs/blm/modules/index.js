@@ -3,7 +3,6 @@ import Triple from './Triple'
 import Procs from './Procs'
 import BlmWeaving from './Weaving'
 import RotationWatchdog from './RotationWatchdog'
-import RotationWatchdoggier from './RotationWatchdoggier'
 import OGCDDowntime from './OGCDDowntime'
 import Speedmod from './Speedmod'
 import Leylines from './Leylines'
@@ -16,7 +15,6 @@ export default [
 	Procs,
 	BlmWeaving,
 	RotationWatchdog,
-	RotationWatchdoggier,
 	OGCDDowntime,
 	Speedmod,
 	Leylines,
