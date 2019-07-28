@@ -114,6 +114,7 @@
   "brd.snapshots.snapshotter": "",
   "brd.snapshots.statuses": "",
   "brd.snapshots.time": "时间",
+  "brd.snapshots.title": "",
   "core.about.contributors": "贡献者：",
   "core.about.patch-unsupported.description": "这个报告是在{0} 版本记录的，分析器不支持此报告。计算和建议可能会因版本间更改而受到影响。",
   "core.about.patch-unsupported.title": "不支持该报告的版本。",
