@@ -9,7 +9,6 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Color from 'color'
 import JOBS from 'data/JOBS'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import {HitType} from 'fflogs'
 
 // -----
 // UI stuff
@@ -216,8 +215,6 @@ export default class Resources extends Module {
 	}
 
 	_onEvent(event) {
-		const _actionHit = (event.hitType !== HitType.MISS && event.hitType !== HitType.IMMUNE)
-
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
@@ -239,14 +236,14 @@ export default class Resources extends Module {
 			}
 		}
 
-		if (_actionHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
+		if (event.successfulHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
 			// Actions that did not hit do not generate resources
 			// Don't double count blood weapon gains on comboed events
 			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
 
-		if (_actionHit && RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
+		if (event.successfulHit && RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
 			// Actions that did not hit do not generate resources
 			const actionInfo = RESOURCE_GENERATORS[abilityId]
 			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {

@@ -130,6 +130,7 @@
   "core.checklist.title": "清单",
   "core.combos.content": "避免打错GCD技能的连击或是用非连击技能中断连击。连击中断会让你丢失大量DPS和重要的连击效果",
   "core.combos.issuetypenames.combobreak": "中断的连击",
+  "core.combos.issuetypenames.failed": "",
   "core.combos.issuetypenames.uncomboed": "未形成连击",
   "core.combos.rotationtable.header.reason": "原因",
   "core.combos.title": "连击问题",

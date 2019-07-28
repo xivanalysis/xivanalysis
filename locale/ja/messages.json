@@ -130,6 +130,7 @@
   "core.checklist.title": "チェックリスト",
   "core.combos.content": "スキルコンボの順番からずれないように頑張ってください。コンボを破ると火力は非常に下がることです。さらに、コンボの追加効果やコンボボーナスも受けられません。",
   "core.combos.issuetypenames.combobreak": "破ったコンボ",
+  "core.combos.issuetypenames.failed": "",
   "core.combos.issuetypenames.uncomboed": "使わなかったコンボ",
   "core.combos.rotationtable.header.reason": "理由",
   "core.combos.title": "コンボの問題",

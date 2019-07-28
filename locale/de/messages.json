@@ -130,6 +130,7 @@
   "core.checklist.title": "Checkliste",
   "core.combos.content": "Vermeide es, deine GCDs in der falschen Kombo-Reihenfolge zu verwenden oder die bestehende Kombo mit nicht-Kombo GCDs zu unterbrechen. Unterbrochene Kombos können deine Gesamt-DPS um ein vielfaches reduzieren und auch wichtige sekundäre Effekte verschlechtern.",
   "core.combos.issuetypenames.combobreak": "Unterbrochene Kombos",
+  "core.combos.issuetypenames.failed": "",
   "core.combos.issuetypenames.uncomboed": "",
   "core.combos.rotationtable.header.reason": "Ursache",
   "core.combos.title": "Kombo-Probleme",
