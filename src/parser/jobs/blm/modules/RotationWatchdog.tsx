@@ -73,7 +73,7 @@ const ERROR_CODES = {
 const ERROR_MESSAGES = {
 	[ERROR_CODES.NONE]: <Trans id="blm.rotation-watchdog.error-messages.none">No errors</Trans>,
 	[ERROR_CODES.FINAL_OR_DOWNTIME]: <Trans id="blm.rotation-watchdog.error-messages.final-or-downtime">Ended with downtime, or last cycle</Trans>,
-	[ERROR_CODES.SHORT]: <Trans id="blm.rotation-watchdog.error-messages.final-or-downtime">Too short, won't process</Trans>,
+	[ERROR_CODES.SHORT]: <Trans id="blm.rotation-watchdog.error-messages.short-rotation">Too short, won't process</Trans>,
 	[ERROR_CODES.DROPPED_ENOCHIAN]: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>,
 	[ERROR_CODES.MISSING_FIRE4S]: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>,
 	[ERROR_CODES.EXTRA_T3]: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>,
@@ -475,7 +475,7 @@ export default class RotationWatchdog extends Module {
 		if (outliers.length > 0 ) {
 			return <Fragment>
 				<Message>
-					<Trans id="blm.rotation-watchdog.accordion.message">
+					<Trans id="blm.rotation-watchdog.rotation-table.message">
 						The core of BLM consists of six <ActionLink {...ACTIONS.FIRE_IV} />s and one <ActionLink {...ACTIONS.DESPAIR} /> per rotation (seven <ActionLink {...ACTIONS.FIRE_IV} />s and two <ActionLink {...ACTIONS.DESPAIR} />s with <ActionLink {...ACTIONS.MANAFONT} />).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
@@ -493,7 +493,7 @@ export default class RotationWatchdog extends Module {
 					]}
 					notes={[
 						{
-							header: <Trans id="blm.rotation-watchdog.rotation-table.header.reason">Reason</Trans>,
+							header: <Trans id="blm.rotation-watchdog.rotation-table.header.reason">Why Outlier</Trans>,
 							accessor: 'reason',
 						},
 					]}
