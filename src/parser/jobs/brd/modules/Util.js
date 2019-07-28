@@ -79,4 +79,8 @@ export default class Util extends Module {
 	timeUntilFinish(timestamp) {
 		return this.parser.fight.end_time - timestamp
 	}
+
+	formatDamageNumber(damageNumber) {
+		return damageNumber.toLocaleString({maximumFractionDigits: 2})
+	}
 }
