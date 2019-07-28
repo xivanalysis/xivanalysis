@@ -6,7 +6,6 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import TransMarkdown from 'components/ui/TransMarkdown'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -83,8 +82,6 @@ const ERROR_MESSAGES = {
 	[ERROR_CODES.NO_FIRE_SPELLS]: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>,
 	[ERROR_CODES.EXTRA_F1]: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>,
 }
-
-const MEGUMIN_DISCLAIMER = t('blm.about.description.disclaimer')`This module assumes you are following the standard BLM playstyle. If you are following the [Megumin playstyle](https://docs.google.com/document/d/1SBU4HpqBenHAXFr6V-gwAKggkfBgJ2IR9FEbMtT3YRw/edit), this report and many of the suggestions may not be applicable`
 
 class Cycle {
 	casts: any[] = []
@@ -486,7 +483,9 @@ export default class RotationWatchdog extends Module {
 			<Message warning icon>
 				<Icon name="warning sign"/>
 				<Message.Content>
-					<TransMarkdown source={MEGUMIN_DISCLAIMER} />
+					<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
+						If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
+					</Trans>
 				</Message.Content>
 			</Message>
 				<RotationTable
