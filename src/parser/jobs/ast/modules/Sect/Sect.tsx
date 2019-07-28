@@ -93,6 +93,7 @@ export default class Sect extends Module {
 
 	private pullWithoutSect = false
 	private activeSectId: string | number | undefined = undefined
+	private gaveup = false
 
 	protected init() {
 		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
@@ -138,6 +139,7 @@ export default class Sect extends Module {
 
 			} else if (event.timestamp - startTime >= GIVE_UP_THRESHOLD) {
 				// Just give up after GIVE_UP_THRESHOLD
+				this.gaveup = true
 				break
 			} else {
 				continue
@@ -172,7 +174,7 @@ export default class Sect extends Module {
 		/*
 			SUGGESTION: Pulled without Sect
 		*/
-		if (this.pullWithoutSect || !this.activeSectId) {
+		if (!this.gaveup && (this.pullWithoutSect || !this.activeSectId)) {
 			this.suggestions.add(new Suggestion({
 				icon: !this.activeSectId || ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.no-sect.content">
