@@ -6,10 +6,10 @@ import Lightspeed from './Lightspeed'
 import LucidDreaming from './LucidDreaming'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
+import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
+import Sect from './Sect'
 import CelestialIntersection from './CelestialIntersection'
 import Overheal from './Overheal'
-// import ArcanaTracking from './ArcanaTracking'
-// import ArcanaSuggestions from './ArcanaSuggestions'
 
 export default [
 	Cooldowns,
@@ -20,8 +20,9 @@ export default [
 	// Draw,
 	ArcanaUndrawUsage,
 	Horoscope,
-	// ArcanaTracking,
-	// ArcanaSuggestions,
+	ArcanaTracking,
+	ArcanaSuggestions,
+	Sect,
 	CelestialIntersection,
 	Overheal,
 ]
