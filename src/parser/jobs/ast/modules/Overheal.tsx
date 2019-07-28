@@ -59,29 +59,34 @@ export default class Overheal extends Module {
 	}
 
 	private onComplete() {
+		const nonHotOverhealPercent = 100 * this.healingDirect / (this.healingDirect + this.overhealDirect)
+		const petOverhealPercent = 100 * this.healingPet / (this.healingPet + this.overhealPet)
+		const hotOverhealPercent = 100 * this.healingOverTime / (this.healingOverTime + this.overhealOverTime)
+		const sourcesSum = this.healingOverTime + this.healingDirect + this.healingPet
+		const sourcesSumOverheal =  this.overhealOverTime + this.overhealPet + this.healingOverTime
+
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.overheal.rule.name">Avoid overheal</Trans>,
-			description: <Trans id="ast.overheal.rule.description"> Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management. </Trans>,
+			description: <><Trans id="ast.overheal.rule.description">
+				Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.
+			</Trans>
+			<ul>
+				<li><Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT): </Trans>{this.invertPercent(nonHotOverhealPercent)}%{}</li>
+				{petOverhealPercent > 0 && <li><Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star): </Trans>{this.invertPercent(petOverhealPercent)}%</li>}
+				<li><Trans id="ast.overheal.requirement.hot"> Overheal (HoT): </Trans>{this.invertPercent(hotOverhealPercent)}%</li>
+			</ul></>,
 			tiers: SEVERITY_TIERS,
 			requirements: [
 				new InvertedRequirement({
-					name: <Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT) </Trans>,
-					percent: 100 * this.healingDirect / (this.healingDirect + this.overhealDirect), // put in inverted data
-				}),
-				new InvertedRequirement({
-					name: <Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star) </Trans>,
-					percent: 100 * this.healingPet / (this.healingPet + this.overhealPet), // put in inverted data
-				}),
-				new InvertedRequirement({
-					name: <Trans id="ast.overheal.requirement.hot"> Overheal (HoT) </Trans>,
-					percent: 100 * this.healingOverTime / (this.healingOverTime + this.overhealOverTime), // put in inverted data
-				}),
-				new InvertedRequirement({
 					name: <Trans id="ast.overheal.requirement.all"> Overheal (all sources)</Trans>,
-					percent: 100 * (this.healingOverTime + this.healingDirect) / (this.healingDirect + this.overhealDirect + this.healingOverTime + this.overhealOverTime), // put in inverted data
+					percent: (100 * sourcesSum / (sourcesSum + sourcesSumOverheal)), // put in inverted data
 				}),
 			],
 		}))
+	}
+	private invertPercent(value: number) {
+		const invertedValue = 100 - value
+		return invertedValue.toFixed(2)
 	}
 }
 
