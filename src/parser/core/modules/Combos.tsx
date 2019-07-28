@@ -21,7 +21,7 @@ const ISSUE_TYPENAMES = {
 	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export interface ComboEvent extends AbilityEvent {
+export interface ComboEvent extends AoeEvent {
 	type: 'combo'
 }
 
