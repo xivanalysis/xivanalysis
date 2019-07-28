@@ -2,7 +2,7 @@
  * @author Ririan
  */
 import React from 'react'
-import {Trans} from '@lingui/react'
+import {Trans, Plural, NumberFormat} from '@lingui/react'
 import {t} from '@lingui/macro'
 import {List, Button, Label, Icon, Message} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
@@ -141,8 +141,7 @@ export default class Sidewinder extends Module {
 	}
 
 	_onComplete() {
-		const singleTargetShadowbites = this._checkForSingleTargetShadowbites()
-		this._amountOfSingleTargetShadowbites = singleTargetShadowbites
+		this._amountOfSingleTargetShadowbites = this._addInSingleTargetShadowbites()
 
 		if (!this._badCasts.length) {
 			return
@@ -153,8 +152,6 @@ export default class Sidewinder extends Module {
 
 		if (badSidewinders || badShadowbites) {
 
-			const badSidewinderCastElem = badSidewinders ? <>{badSidewinders} cast{badSidewinders !== 1 ? 's' : ''} of <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/></> : null
-			const badShadowbiteCastElem = badShadowbites ? <>{badShadowbites} cast{badShadowbites !== 1 ? 's' : ''} of <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/></> : null
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SIDEWINDER.icon,
 				content: <Trans id="brd.sidewinder.suggestion.not-both-dots">
@@ -167,16 +164,16 @@ export default class Sidewinder extends Module {
 				},
 				value: this._notBothDotsPotencyLoss,
 				why: <Trans id="brd.sidewinder.suggestion.not-both-dots.reason">
-					{badSidewinderCastElem}{badSidewinders && badShadowbites ? ' and ' : ''}{badShadowbiteCastElem} without both DoTs applied lost a total of {this._formatDamageNumber(this._notBothDotsPotencyLoss)} potency over the course of the fight.
+					{this._notBothDotsPotencyLoss} potency lost to casts on targets missing DoTs
 				</Trans>,
 			}))
 		}
 
-		if (singleTargetShadowbites) {
+		if (this._amountOfSingleTargetShadowbites) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.SIDEWINDER.icon,
 				content: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite">
-				Only cast <ActionLink {...ACTIONS.SHADOWBITE}/> when it will hit multiple targets.  Otherwise use <ActionLink {...ACTIONS.SIDEWINDER}/> instead.
+				Only cast <ActionLink {...ACTIONS.SHADOWBITE}/> when it will hit multiple targets. Otherwise you lose potency compared to casting <ActionLink {...ACTIONS.SIDEWINDER}/> instead.
 				</Trans>,
 				tiers: {
 					200: SEVERITY.MAJOR,
@@ -184,8 +181,8 @@ export default class Sidewinder extends Module {
 					40: SEVERITY.MINOR,
 				},
 				value: this._singleTargetShadowbitesPotencyLoss,
-				why: <Trans id="brd.sidewinder.suggestion..single-target-shadowbit.reason">
-					<ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/> cast {singleTargetShadowbites} time{singleTargetShadowbites !== 1 ? 's' : ''} on a single target lost a total of {this._formatDamageNumber(this._singleTargetShadowbitesPotencyLoss)} potency compared to using <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> instead.
+				why: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite.reason">
+					{this._singleTargetShadowbitesPotencyLoss} potency lost on single target casts of <ActionLink {...ACTIONS.SHADOWBITE}/>
 				</Trans>,
 			}))
 		}
@@ -211,36 +208,12 @@ export default class Sidewinder extends Module {
 		let totalPotencyLost = 0
 		// Builds a list item for each incorrect cast
 		const items = this._badCasts.map(cast => {
-			const ability = getDataBy(ACTIONS, 'id', cast.abilityId)
-			let singleTargetItem
-			let notBothDotsItem
-
-			if (!cast.hasBothDots) {
-				if (cast.dotsApplied) {
-					notBothDotsItem =
-							<Trans id="brd.sidewinder.list.one-dot">
-								<ActionLink {...ability}/> was cast with only one DoT applied to the target {cast.targetsHit > 1 ? 'and hit ' + cast.targetsHit + ' enemies' : ''}
-							</Trans>
-
-				} else {
-					notBothDotsItem = <Trans id="brd.sidewinder.list.no-dots">
-						<ActionLink {...ability}/> was cast with no DoTs applied to the target {cast.targetsHit > 1 ? 'and hit ' + cast.targetsHit + ' enemies' : ''}
-					</Trans>
-
-				}
-			}
-			if (cast.isSingleTargetShadowbite) {
-				singleTargetItem = <Trans id="brd.sidewinder.list.single-target-shadowbite">
-					{!cast.hasBothDots ? ' and' : <ActionLink {...ability}/>}  only hit a single enemy
-				</Trans>
-			}
-
 			totalPotencyLost += cast.missedPotency
 
 			return <List.Item key={cast.timestamp}>
 				{this._createTimelineButton(cast.timestamp)}
 				<List.Content verticalAlign="middle">
-					{notBothDotsItem} {singleTargetItem}. <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this._formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
+					{this._createIssueTag(cast)} <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this._formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
 				</List.Content>
 			</List.Item>
 		})
@@ -249,13 +222,36 @@ export default class Sidewinder extends Module {
 		<List divided relaxed>
 			{items}
 		</List>
-		<Message warning attached="bottom"><Trans id="brd.sidewinder.total-mistakes">{this._badCasts.length} mistake{this._badCasts.length !== 1 ? 's' : ''} lost a total of {this._formatDamageNumber(totalPotencyLost)} potency over the course of the fight</Trans></Message>
+		<Message info attached="bottom"><Trans id="brd.sidewinder.total-mistakes"><Plural value={this._badCasts.length} one="# mistake" other="# mistakes"/> lost a total of <strong>{this._formatDamageNumber(totalPotencyLost)}</strong> potency</Trans></Message>
 		</>
+	}
+
+	_createIssueTag(cast) {
+		const ability = getDataBy(ACTIONS, 'id', cast.abilityId)
+		let issue = <></>
+		if (cast.dotsApplied < 2) {
+			if (ability === ACTIONS.SIDEWINDER) {
+				issue = <Trans id="brd.sidewinder.list.sidewinder.missing-dots">
+					<ActionLink {...ability}/> was cast with <Plural value={cast.dotsApplied} one="only one DoT" other="no DoTs"/> applied to the target.
+				</Trans>
+
+			} else {
+				issue = <Trans id="brd.sidewinder.list.shadowbite.missing-dots">
+					<ActionLink {...ability}/> was cast with <Plural value={cast.dotsApplied} one="only one DoT" other="no DoTs"/> applied to the target and <Plural value={cast.targetsHit} one="only hit a single enemy" other ="hit # enemies"/>.
+				</Trans>
+			}
+
+		} else if (cast.isSingleTargetShadowbite) {
+			issue = <Trans id="brd.sidewinder.list.shadowbite.one-target">
+				<ActionLink {...ability}/> only hit a single enemy.
+			</Trans>
+		}
+		return issue
 	}
 
 	_formatDamageNumber(damage) {
 		const truncDamage = Math.trunc(damage)
-		return truncDamage.toLocaleString()
+		return <NumberFormat value={truncDamage} />
 	}
 
 	_getRawDamage(event) {
@@ -278,7 +274,7 @@ export default class Sidewinder extends Module {
 		return rawDamage
 	}
 
-	_checkForSingleTargetShadowbites() {
+	_addInSingleTargetShadowbites() {
 		let singleTargetAmount = 0
 		let needsSort = false
 
