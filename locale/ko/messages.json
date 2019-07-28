@@ -117,6 +117,8 @@
   "brd.pitch-perfect.not-cast-at-end.time-left": "",
   "brd.pitch-perfect.not-cast-at-end.title": "",
   "brd.pitch-perfect.title": "절대음감",
+  "brd.pitch-perfect.trigger.no-wm-cast": "",
+  "brd.pitch-perfect.without-max-stacks.total-potency-lost": "",
   "brd.snapshots.snapshotter": "스냅삿",
   "brd.snapshots.statuses": "상태이상들",
   "brd.snapshots.time": "시간",
