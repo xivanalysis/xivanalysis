@@ -25,7 +25,7 @@ export default class BlmWeaving extends Weaving {
 	static dependencies = [
 		...Weaving.dependencies,
 		'invuln',
-		'gauge',// eslint-disable-line @xivanalysis/no-unused-dependencies
+		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'castTime',
 	]
 
