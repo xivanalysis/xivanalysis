@@ -59,9 +59,9 @@ const ERROR_CODES = {
 	SHORT: 2,
 	MISSING_FIRE4S: 10, // These two errors are lower priority since they can be determined by looking at the
 	MISSING_DESPAIRS: 15, // target columns in the table, so we want to tell players about other errors first
-	EXTRA_F1: 20,
-	EXTRA_T3: 30,
-	MANAFONT_BEFORE_DESPAIR: 40,
+	MANAFONT_BEFORE_DESPAIR: 30,
+	EXTRA_T3: 49, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
+	EXTRA_F1: 50, // These two codes should stay close to each other
 	NO_FIRE_SPELLS: 75,
 	DROPPED_ENOCHIAN: 100,
 }
