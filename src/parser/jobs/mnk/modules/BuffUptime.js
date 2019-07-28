@@ -44,7 +44,7 @@ export default class BuffUptime extends Module {
 		this.addHook('cast', {by: 'player'}, this._onCast)
 
 		// Apparently DK is a bit busted but let's use the debuff for now
-		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.BLUNT_RESISTANCE_DOWN.id}, this._onDragonKick)
+		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.UNKNOWN.id}, this._onDragonKick)
 		this.addHook(['applybuff', 'refreshbuff'], {by: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this._onTwinSnakes)
 
 		this.addHook('complete', this._onComplete)
@@ -113,7 +113,7 @@ export default class BuffUptime extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="mnk.buffs.checklist.dragonkick.requirement.name"><ActionLink {...ACTIONS.DRAGON_KICK} /> uptime</Trans>,
-					percent: () => this.getDebuffUptimePercent(STATUSES.BLUNT_RESISTANCE_DOWN.id),
+					percent: () => this.getDebuffUptimePercent(STATUSES.UNKNOWN.id),
 				}),
 			],
 		}))

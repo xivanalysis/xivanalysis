@@ -1,0 +1,30 @@
+@value gutter from "theme.module.css";
+
+.simpleStatistic {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.simpleStatistic > :only-child {
+	margin: auto 0;
+}
+
+.wrapper{
+	display: flex;
+}
+
+.icon {
+    align-self: flex-start;
+	margin-right: 1.5em;
+	width: 40px;
+	flex-shrink: 0;
+}
+
+.value {
+    font-weight: bold;
+    font-size: 1.2em;
+    line-height: 40px;
+}

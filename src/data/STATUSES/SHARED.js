@@ -1,4 +1,11 @@
 export default {
+	UNKNOWN: {
+		id: 0,
+		name: 'Unknown',
+		// System action - red background, gold cross
+		icon: 'https://xivapi.com/i/000000/000026.png',
+	},
+
 	WEAKNESS: {
 		id: 43,
 		name: 'Weakness',
@@ -21,12 +28,6 @@ export default {
 		id: 819,
 		name: 'Slashing Resistance Down',
 		icon: 'https://xivapi.com/i/015000/015786.png',
-	},
-
-	BLUNT_RESISTANCE_DOWN: {
-		id: 821,
-		name: 'Blunt Resistance Down',
-		icon: 'https://xivapi.com/i/015000/015064.png',
 	},
 
 	WELL_FED: {

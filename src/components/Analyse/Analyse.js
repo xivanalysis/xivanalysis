@@ -77,6 +77,9 @@ class Analyse extends Component {
 			await conductor.configure()
 		} catch (error) {
 			this.context.globalErrorStore.setGlobalError(error)
+			if (process.env.NODE_ENV === 'development') {
+				throw error
+			}
 			return
 		}
 

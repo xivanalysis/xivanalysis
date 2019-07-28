@@ -128,7 +128,7 @@ export default {
 		id: 3612,
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/003000/003139.png',
-		cooldown: 90,
+		cooldown: 120,
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
@@ -264,21 +264,21 @@ export default {
 	},
 
 	THE_BOLE: {
-		id: 4402,
+		id: 4404,
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
 		cooldown: 0,
 	},
 
 	THE_ARROW: {
-		id: 4403,
+		id: 4402,
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
 		cooldown: 0,
 	},
 
 	THE_SPEAR: {
-		id: 4404,
+		id: 4403,
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
 		cooldown: 0,
