@@ -23,16 +23,6 @@ const STANCES = [
 	STATUSES.FISTS_OF_WIND.id,
 ]
 
-// Stance mapping for event splicing
-// We don't need Riddle of Wind because a tackle triggers it
-const STANCE_MAP = {
-	[ACTIONS.EARTH_TACKLE.id]: STATUSES.FISTS_OF_EARTH.id,
-	[ACTIONS.FIRE_TACKLE.id]: STATUSES.FISTS_OF_FIRE.id,
-	[ACTIONS.WIND_TACKLE.id]: STATUSES.FISTS_OF_WIND.id,
-	[ACTIONS.RIDDLE_OF_EARTH.id]: STATUSES.FISTS_OF_EARTH.id,
-	[ACTIONS.RIDDLE_OF_FIRE.id]: STATUSES.FISTS_OF_FIRE.id,
-}
-
 const CHART_COLOURS = {
 	[STANCELESS]: '#888',
 	[STATUSES.FISTS_OF_EARTH.id]: Color(JOBS.MONK.colour),   // idk it matches
@@ -81,53 +71,6 @@ export default class Fists extends Module {
 		this.addHook('applybuff', {to: 'player', abilityId: STANCES}, this._onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: STANCES}, this._onRemove)
 		this.addHook('complete', this._onComplete)
-	}
-
-	normalise(events) {
-		for (let i = 0; i < events.length; i++) {
-			const event = events[i]
-
-			// Ignore any non-ability events
-			if (!event.ability) {
-				continue
-			}
-
-			// We got a remove (PrecastStatus will handle this), or an initial apply
-			if (['removebuff', 'applybuff'].includes(event.type) && STANCES.includes(event.ability.guid)) {
-				break
-			}
-
-			// Check for any specific casts that imply stance
-			if (event.type === 'cast') {
-				// They dun goofed
-				if (event.ability.guid === ACTIONS.SHOULDER_TACKLE.id) {
-					break
-				}
-
-				// It was a legit Tackle, we know what's up
-				if (Object.keys(STANCE_MAP).map(Number).includes(event.ability.guid)) {
-					const status = getDataBy(STATUSES, 'id', STANCE_MAP[event.ability.guid])
-
-					events.splice(0, 0, {
-						...event,
-						ability: {
-							abilityIcon: status.abilityIcon,
-							guid: status.id,
-							name: status.name,
-							type: 1,
-						},
-						targetID: event.sourceID,
-						targetIsFriendly: true,
-						timestamp: this.parser.fight.start_time - 1,
-						type: 'applybuff',
-					})
-
-					break
-				}
-			}
-		}
-
-		return events
 	}
 
 	_handleFistChange(stanceId) {
@@ -189,7 +132,7 @@ export default class Fists extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
 			content: <Trans id="mnk.fists.suggestions.stanceless.content">
-				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING_I} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} /> or <StatusLink {...STATUSES.GREASED_LIGHTNING} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} /> and <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
 			</Trans>,
 			why: <Trans id="mnk.fists.suggestions.stanceless.why">
 				<Plural value={this._fistGCDs[STANCELESS]} one="# GCD" other="# GCDs"	/> had no Fists buff active.
@@ -214,7 +157,7 @@ export default class Fists extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_WIND.icon,
 			content: <Trans id="mnk.fists.suggestions.fow.content">
-				When using <ActionLink {...ACTIONS.RIDDLE_OF_WIND} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
+				When using <ActionLink {...ACTIONS.UNKNOWN} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_FIRE} /> as soon as possible.
 			</Trans>,
 			tiers: WIND_SEVERITY,
 			why: <Trans id="mnk.fists.suggestions.fow.why">

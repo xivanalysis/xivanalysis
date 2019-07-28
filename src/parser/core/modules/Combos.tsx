@@ -14,7 +14,7 @@ import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
 
 const DEFAULT_GCD = 2.5
-const GCD_TIMEOUT_MILLIS = 12000
+const GCD_TIMEOUT_MILLIS = 15000
 const ISSUE_TYPENAMES = {
 	uncomboed: <Trans id="core.combos.issuetypenames.uncomboed">Uncomboed</Trans>,
 	combobreak: <Trans id="core.combos.issuetypenames.combobreak">Broken Combo</Trans>,
