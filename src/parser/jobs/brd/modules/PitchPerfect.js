@@ -420,6 +420,10 @@ export default class PitchPerfect extends Module {
 		return this._enemies[targetId]
 	}
 
+	_isAMissedPP(lastPPInWM, missedPPGracePeriod) {
+		return lastPPInWM.timeLeftOnSong > missedPPGracePeriod && !this.downtime.getDowntime(lastPPInWM.timestamp, lastPPInWM.timestamp + missedPPGracePeriod)
+	}
+
 	_cleanUpPPs() {
 		let lastPP = this._ppEvents[0]
 
@@ -429,12 +433,14 @@ export default class PitchPerfect extends Module {
 		const castsInWM = []
 		let castsInCurrentWM = []
 
-		// TODO: Add in checking for EA use after last PP cast
+		// It's the length of two dot ticks to have a better chance of being right.
+		const missedPPGracePeriod = DOT_TICK_FREQUENCY * 2
+
+		// TODO: Add in checking for EA use after last PP cast for better accuracy
 		for (const pp of this._ppEvents) {
 			//This means a new Wanderers Minuet was cast since the last one
-			// Check for the length of two dot ticks to have a better chance of being right
 			if (pp.timeLeftOnSong > lastPP.timeLeftOnSong) {
-				if (lastPP.timeLeftOnSong > DOT_TICK_FREQUENCY * 2) {
+				if (this._isAMissedPP(lastPP, missedPPGracePeriod)) {
 					this._ppEvents.splice(this._ppEvents.indexOf(pp), 0, {
 						...lastPP,
 						issue: PP_NOT_CAST_AT_END,
@@ -469,8 +475,8 @@ export default class PitchPerfect extends Module {
 			castsInWM.push(castsInCurrentWM)
 		}
 
-		//To catch if the missed PP was after the last use of PP
-		if (lastPP.timeLeftOnSong > DOT_TICK_FREQUENCY) {
+		//To catch if the missed PP was after the last use of PP in the log
+		if (this._isAMissedPP(lastPP, missedPPGracePeriod)) {
 			this._ppEvents.push({
 				...lastPP,
 				issue: PP_NOT_CAST_AT_END,
