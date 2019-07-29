@@ -20,7 +20,7 @@
   "ast.dots.rule.description": "Konjunktion III macht einen Großteil deines Schadens aus. Versuche diesen DoT wann immer möglich aufrecht zu halten. Zusätzlich kann er zwischen anderen Cooldowns (weaven / <0/>), um Karten zu verwalten oder während du dich bewegst benutzt werden, ohne dabei GCD-Uptime zu verlieren.",
   "ast.dots.rule.name": "Halte deinen DoT aufrecht",
   "ast.dots.suggestion.clip.content": "Vermeide es <0/> zu erneuern, wenn er noch über eine lange Restlaufzeit verfügt.",
-  "ast.dots.suggestion.clip.why": "{0} von <0/> durch zu frühes Reaktivieren verloren.",
+  "ast.dots.suggestion.clip.why": "",
   "ast.draw.checklist.description": "Durch das Ausspielen von Karten, sammelst du Symbole für <0/> und erhöhst den ausgeteilten Schaden deiner Gruppe.<1/>* Der angezeigte Höchstwert berücksichtigt <2/> und geht davon aus, dass vor dem Pull eine Karte gezogen wurde.",
   "ast.draw.checklist.name": "Spiele so viele Karten wie möglich",
   "ast.draw.checklist.requirement.name": "<0/> Nutzungen",
