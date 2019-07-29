@@ -13,7 +13,7 @@ export default class Combos extends CoreCombos {
 	// TODO: Type for the combo data once ACTIONS is typed
 	checkCombo(combo: TODO, event: CastEvent) {
 		// If they've got Meikyo Shisui up, all combos are correct, and nothing combos together
-		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id)) {
+		if (this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id) && (event.ability.guid !== ACTIONS.HAKAZE.id)) {
 			this.fabricateComboEvent(event)
 			return false
 		}
