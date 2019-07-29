@@ -11,14 +11,12 @@ import React from 'react'
 
 const SEVERITIES = {
 	CLIPPING: {
-		2500: SEVERITY.MINOR,
-		5000: SEVERITY.MEDIUM,
-		10000: SEVERITY.MAJOR,
+		2: SEVERITY.MINOR,
+		4: SEVERITY.MEDIUM,
+		6: SEVERITY.MAJOR,
 	},
 	UPTIME: {
-		// tslint:disable-next-line: no-magic-numbers
 		84: TARGET.WARN,
-		// tslint:disable-next-line: no-magic-numbers
 		91: TARGET.SUCCESS,
 	},
 }
@@ -57,7 +55,7 @@ export default class Combust extends DoTs {
 					Avoid refreshing <ActionLink {...ACTIONS.COMBUST_III} /> significantly before it expires.
 				</Trans>,
 			why: <Trans id="ast.dots.suggestion.clip.why">
-						{this.parser.formatDuration(clip[STATUSES.COMBUST_III.id])} of <StatusLink {...STATUSES.COMBUST_III}/> lost to early refreshes.
+						An average of {this.parser.formatDuration(this.getClippingAmount(STATUSES.COMBUST_III.id) * 1000)} of Combust clipped every minute, for a total of {this.parser.formatDuration(clip[STATUSES.COMBUST_III.id])} lost to early refreshes.
 					</Trans>,
 			tiers: SEVERITIES.CLIPPING,
 			value: this.getClippingAmount(STATUSES.COMBUST_III.id),
