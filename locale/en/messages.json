@@ -213,7 +213,7 @@
   "dnc.esprit.suggestions.overcapped-esprit.content": "You may have lost uses of <0/> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.",
   "dnc.esprit.suggestions.overcapped-esprit.why": "{missedSaberDances, plural, one {# Saber Dance} other {# Saber Dances}} may have been missed.",
   "dnc.feather-gauge.graph.help-text": "This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.",
-  "dnc.feather-gauge.suggestions.overcapped-feathers.content": "You may have lost feathers due to using one of your procs while already holding four feathers. Make sure to use a feather before using a proc.",
+  "dnc.feather-gauge.suggestions.overcapped-feathers.content": "You may have lost uses of your <0/>s due to using one of your procs while already holding four feathers. Make sure to use a feather with <1/> or <2/> before using a proc to prevent overcapping.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.why": "{0, plural, one {# feather} other {# feathers}} may have been lost.",
   "dnc.feather-gauge.title": "Feather Gauge",
   "drg.about.description": "<0>This analyzer aims to help you beat the sterotypes, stay off the floor, and dish out some big juicy numbers. As the DRG rotation is pretty strict, the suggestions you see will focus mostly on keeping that rotation flowing smoothly, as well as picking out issues related to your Life of the Dragon windows.</0>",

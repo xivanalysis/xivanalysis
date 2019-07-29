@@ -78,9 +78,9 @@ export default class FeatherGauge extends Module {
 	private onComplete() {
 		this.featherOvercap = Math.floor(this.featherOvercap)
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.TECHNICAL_FINISH.icon,
+			icon: ACTIONS.FAN_DANCE_III.icon,
 			content: <Trans id="dnc.feather-gauge.suggestions.overcapped-feathers.content">
-				You may have lost feathers due to using one of your procs while already holding four feathers. Make sure to use a feather before using a proc.
+				You may have lost uses of your <ActionLink {...ACTIONS.FAN_DANCE} />s due to using one of your procs while already holding four feathers. Make sure to use a feather with <ActionLink showIcon={false} {...ACTIONS.FAN_DANCE} /> or <ActionLink showIcon={false} {...ACTIONS.FAN_DANCE_II} /> before using a proc to prevent overcapping.
 			</Trans>,
 			tiers: GAUGE_SEVERITY_TIERS,
 			value: this.featherOvercap,
