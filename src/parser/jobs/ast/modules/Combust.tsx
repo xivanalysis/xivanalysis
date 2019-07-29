@@ -11,14 +11,12 @@ import React from 'react'
 
 const SEVERITIES = {
 	CLIPPING: {
-		2500: SEVERITY.MINOR,
-		5000: SEVERITY.MEDIUM,
-		10000: SEVERITY.MAJOR,
+		0: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
+		4: SEVERITY.MAJOR,
 	},
 	UPTIME: {
-		// tslint:disable-next-line: no-magic-numbers
 		84: TARGET.WARN,
-		// tslint:disable-next-line: no-magic-numbers
 		91: TARGET.SUCCESS,
 	},
 }
