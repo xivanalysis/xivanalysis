@@ -19,6 +19,14 @@ export default {
 		breaksCombo: false,
 	},
 
+	MYTHRIL_TEMPEST: {
+		id: 1560,
+		name: 'Mythril Tempest',
+		icon: 'https://xivapi.com/i/000000/000784.png',
+		onGcd: true,
+		breaksCombo: false,
+	},
+
 	FELL_CLEAVE: {
 		id: 3549,
 		name: 'Fell Cleave',
@@ -31,6 +39,22 @@ export default {
 		id: 49,
 		name: 'Inner Beast',
 		icon: 'https://xivapi.com/i/002000/002553.png',
+		onGcd: true,
+		breaksCombo: false,
+	},
+
+	INNER_CHAOS: {
+		id: 16465,
+		name: 'Inner Chaos',
+		icon: 'https://xivapi.com/i/002000/002568.png',
+		onGcd: true,
+		breaksCombo: false,
+	},
+
+	CHAOTIC_CYCLONE: {
+		id: 16463,
+		name: 'Chaotic Cyclone',
+		icon: 'https://xivapi.com/i/002000/002566.png',
 		onGcd: true,
 		breaksCombo: false,
 	},
@@ -96,15 +120,6 @@ export default {
 		onGcd: false,
 	},
 
-	DELIVERANCE: {
-		id: 3548,
-		name: 'Deliverance',
-		icon: 'https://xivapi.com/i/002000/002556.png',
-		cooldown: 10,
-		cooldownGroup: 1,
-		onGcd: false,
-	},
-
 	INNER_RELEASE: {
 		id: 7389,
 		name: 'Inner Release',
@@ -119,5 +134,13 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
 		onGcd: false,
+	},
+
+	NASCENT_FLASH: {
+		id: 16464,
+		name: 'Nascent Flash',
+		icon: 'https://https://xivapi.com/i/002000/002567.png',
+		cooldown: 25,
+		cooldownGroup: 9,
 	},
 }
