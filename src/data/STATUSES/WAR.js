@@ -23,12 +23,6 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010256.png',
 	},
 
-	INNER_BEAST: {
-		id: 1398,
-		name: 'Inner Beast',
-		icon: 'https://xivapi.com/i/012000/012553.png',
-	},
-
 	UNCHAINED: {
 		id: 92,
 		name: 'Unchained',
@@ -41,15 +35,15 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012551.png',
 	},
 
-	DELIVERANCE: {
-		id: 729,
-		name: 'Deliverance',
-		icon: 'https://xivapi.com/i/012000/012554.png',
-	},
-
 	STORMS_EYE: {
 		id: 90,
 		name: 'Storm\'s Eye',
 		icon: 'https://xivapi.com/i/010000/010263.png',
+	},
+
+	NASCENT_FLASH: {
+		id: 1857,
+		name: 'Nascent Flash',
+		icon: 'https://xivapi.com/i/012000/012558.png',
 	},
 }
