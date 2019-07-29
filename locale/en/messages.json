@@ -548,7 +548,7 @@
   "sam.buffs.checklist.name": "Keep Shifu and Jinpu up",
   "sam.buffs.checklist.requirement.jinpu.name": "<0/> uptime",
   "sam.buffs.checklist.requirement.shifu.name": "<0/> uptime",
-  "sam.buffs.description": "<0/> and <1/> increases your damage and speed by 12%. Both buffs are key part of Samurai's damage.",
+  "sam.buffs.description": "<0/> and <1/> increases your damage and speed by 13%. Both buffs are key part of Samurai's damage.",
   "sam.buffs.title": "Buffs",
   "sam.higanbana.checklist.description": "As a Samurai, <0/> is a significant portion of your sustained damage, and is required to kept up for as much as possible, for the best damage output.",
   "sam.higanbana.checklist.name": "Keep <0/> up",
