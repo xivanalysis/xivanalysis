@@ -42,6 +42,7 @@
   "ast.lightspeed.title": "光速",
   "ast.lucid-dreaming.suggestion.content": "为了你的魔力，请不要让<0/>空转。",
   "ast.lucid-dreaming.suggestion.why": "由于 CD 空转了 {0}，你大约损失了 {_usesMissed} 次醒梦。",
+  "ast.piecharts.title": "",
   "ast.sect.info": "",
   "ast.sect.info.no-sect-detected": "没有检测到学派使用。",
   "ast.sect.suggestions.no-sect.content": "开场前请记得选用<0/>或<1/>学派，因为在没有学派时，一些技能会无法使用。",

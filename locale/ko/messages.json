@@ -42,6 +42,7 @@
   "ast.lightspeed.title": "광속 시전",
   "ast.lucid-dreaming.suggestion.content": "효율적인 마나 관리를 위해 <0/>를 상시 사용하십시오.",
   "ast.lucid-dreaming.suggestion.why": "자각몽을 최소 {0} 이상 보류 하여 {_usesMissed, plural, other {# 회}}의 사용기회를 잃어버렸습니다.",
+  "ast.piecharts.title": "",
   "ast.sect.info": "",
   "ast.sect.info.no-sect-detected": "낮별 혹은 밤별읽기가 사용되지 않음",
   "ast.sect.suggestions.no-sect.content": "<0/>이나 <1/>이 발동되지 않은 상태에서 전투를 하지 마십시오. 점성술사의 몇몇 스킬들은 발동이 안된 상태에서는 사용이 불가능합니다.",

@@ -20,7 +20,7 @@
   "ast.dots.rule.description": "Combust III makes up a good portion of your damage. Aim to keep this DoT up at all times. It also can be used to weave (<0/>) and manage cards, or maneuver around without dropping GCD uptime.",
   "ast.dots.rule.name": "Keep your DoT up",
   "ast.dots.suggestion.clip.content": "Avoid refreshing <0/> significantly before it expires.",
-  "ast.dots.suggestion.clip.why": "{0} of <0/> lost to early refreshes.",
+  "ast.dots.suggestion.clip.why": "An average of {0} of Combust clipped every minute, for a total of {1} lost to early refreshes.",
   "ast.draw.checklist.description": "Playing cards will let you collect seals for <0/> and raise the party damage. <1/>* The maximum here accounts for <2/> and assumes a card was prepared pre-pull.",
   "ast.draw.checklist.name": "Play as many cards as possible",
   "ast.draw.checklist.requirement.name": "<0/> uses",
