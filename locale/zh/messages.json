@@ -20,7 +20,7 @@
   "ast.dots.rule.description": "灼烧III的总威力很大，请尽量保持此DoT的常驻。另外，它产生的GCD空档的时间也可以用来管理卡牌，或者插入能力技（<0/>）。",
   "ast.dots.rule.name": "保持你的 DoT 常驻",
   "ast.dots.suggestion.clip.content": "请避免过早地刷新目标身上的<0/>",
-  "ast.dots.suggestion.clip.why": "由于提前刷新，浪费了{0} 跳的 <0/>。",
+  "ast.dots.suggestion.clip.why": "",
   "ast.draw.checklist.description": "",
   "ast.draw.checklist.name": "尽量多发卡",
   "ast.draw.checklist.requirement.name": "<0/> 的使用次数",
