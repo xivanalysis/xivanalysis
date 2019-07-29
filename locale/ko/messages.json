@@ -548,7 +548,7 @@
   "sam.buffs.checklist.name": "사풍과 진풍을 유지하십시오",
   "sam.buffs.checklist.requirement.jinpu.name": "적용시간 <0/>",
   "sam.buffs.checklist.requirement.shifu.name": "적용시간 <0/>",
-  "sam.buffs.description": "<0/>과 <1/>은 각각 데미지와 속도를 12% 상승시키며 이 둘을 유지하는것이 사무라이 딜의 핵심입니다.",
+  "sam.buffs.description": "",
   "sam.buffs.title": "버프",
   "sam.higanbana.checklist.description": "사무라이의 <0/>은 지속 피해의 큰 비중을 차지하므로 최대한 오래 유지할 수 있도록 합니다.",
   "sam.higanbana.checklist.name": "항상 <0/>가 유지되도록 하십시오.",
