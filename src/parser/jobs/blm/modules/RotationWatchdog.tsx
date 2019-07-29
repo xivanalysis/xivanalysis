@@ -114,9 +114,9 @@ class Cycle {
 	 * entering fire phase. We're still tracking the data necessary to do this again in the future if there is
 	 * value in doing so.
 	 */
-	public get expectedFire4s(): number {
+	public get expectedFire4s(): number | undefined {
 		if (this.finalOrDowntime) {
-			return 0
+			return
 		}
 		// Account for the no-UH opener when determining the expected count of Fire 4s
 		return (this.firstCycle && this.gaugeStateBeforeFire.umbralHearts === 0 ?
@@ -125,7 +125,8 @@ class Cycle {
 	public get actualFire4s(): number {
 		return this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_IV.id).length
 	}
-	public get missingFire4s(): number {
+	public get missingFire4s(): number | undefined {
+		if (!this.expectedFire4s) { return }
 		return this.expectedFire4s - this.actualFire4s
 	}
 
