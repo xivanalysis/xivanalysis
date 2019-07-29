@@ -146,8 +146,8 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static TargetCell = ({actual, expected}: RotationTargetData) =>
 		<Table.Cell
 			textAlign="center"
-			positive={expected === undefined ? true : actual >= expected}
-			negative={expected === undefined ? false: actual < expected}
+			positive={expected === undefined ? false : actual >= expected}
+			negative={expected === undefined ? false : actual < expected}
 		>
 			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>
