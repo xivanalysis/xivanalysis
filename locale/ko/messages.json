@@ -20,7 +20,7 @@
   "ast.dots.rule.description": "컴버가의 지속 데미지는 딜 기여도에 상당한 지분을 차지합니다. 지속 시간을 상시 유지하는 것을 목표로 하십시오. 또 한 (<0/>) 나 카드를 밀림없이 끼워넣기 위해 사용하거나 이동이 강제될 경우 글쿨 손해 없이 이동할 수 잇도록 사용 할수있습니다.",
   "ast.dots.rule.name": "항상 도트 데미지가 유지되도록 하십시오.",
   "ast.dots.suggestion.clip.content": "이전에 부여한 <0/>의 지속 시간이 충분할 경우 갱신을 피하십시오.",
-  "ast.dots.suggestion.clip.why": "<0/>를 너무 이르게 갱신하여 {0} 만큼의 지속시간을 낭비하였습니다.",
+  "ast.dots.suggestion.clip.why": "",
   "ast.draw.checklist.description": "카드를 사용할때마다 획득할 수 있는 문양을 모아 파티 전체 기여도를 올리는 <0/>을 사용할 수 있습니다. <1/> 전투 시작전에 카드 하나가 미리 준비되었다는 전제하에 최대 카드 횟수는 <2/>로 계산합니다.",
   "ast.draw.checklist.name": "카드 사용 횟수를 최대한 늘리십시오.",
   "ast.draw.checklist.requirement.name": "사용횟수: <0/>",
