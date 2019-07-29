@@ -25,6 +25,7 @@ export interface ComboEvent extends AoeEvent {
 	type: 'combo'
 }
 
+/* The Hit and AoeEvent interfaces belong in the AoE module if/when that is converted to TypeScript */
 interface Hit {
 	id: number
 	instance: number
