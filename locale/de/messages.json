@@ -96,6 +96,8 @@
   "blm.rotation-watchdog.rotation-table.message": "Der Schwarzmagier besteht hauptsächlich aus 6x <0/> und 1x <1/> pro Rotation (bei aktiviertem <4/> sind es 7x <2/> und 2x <3/>).<5/>Versuche Feuga so oft wie möglich einzusetzen.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "<0/> casten um Schatteneis zu erhalten kostet keine MP. Beende Lichtfeuer immer mit <1/> um das meiste aus verbleibenden MP zu machen.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{0, plural, one {# Lichtfeuer-Phase} other {# Lichtfeuer-Phasen}} mit einem anderen Zauber als <0/> beendet.",
+  "blm.rotation-watchdog.suggestions.excess-thunder.content": "",
+  "blm.rotation-watchdog.suggestions.excess-thunder.why": "",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Das benutzen von mehr als einem <0/> pro Lichtfeuer Zyklus ist eine Hilfestellung die durch besseres Vorrausplanen des Kampfes vermieden werden sollte.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "{0} Feuer nicht eingesetzt.",
   "blm.rotation-watchdog.suggestions.icemage.content": "Vermeide langen Zeit Schatteneis aktiv zu haben. Der Großteil deines Schadens entsteht während deiner Lichtfeuer-Phasen, daher versuche <0/> so oft wie im Kampf möglich zu casten.",

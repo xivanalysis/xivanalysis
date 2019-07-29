@@ -29,6 +29,7 @@ const NO_UH_OPENER_FIRE4 = 5
 const FIRE4_FROM_MANAFONT = 1
 
 const MIN_MP_FOR_FULL_ROTATION = 9600
+const THUNDERCLOUD_MILLIS = 18000
 
 const AFUIBUFFMAXSTACK = 3
 
@@ -193,6 +194,8 @@ export default class RotationWatchdog extends Module {
 	private rotationsWithoutFire = 0
 	private manafontBeforeDespair = 0
 	private astralFiresMissingDespairs = 0
+	private thunder3Casts = 0
+	private primaryTargetId: number | null = null
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
@@ -239,6 +242,10 @@ export default class RotationWatchdog extends Module {
 	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
+		if (!this.primaryTargetId && event.targetID) {
+			this.primaryTargetId = event.targetID
+		}
+
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
@@ -257,6 +264,10 @@ export default class RotationWatchdog extends Module {
 			// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
 			if (actionId === ACTIONS.MANAFONT.id) {
 				this.currentRotation.hasManafont = true
+			}
+			// Keep track of total thunder casts so we can include that in the thunder uptime checklist item
+			if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
+				this.thunder3Casts++
 			}
 		}
 	}
@@ -354,6 +365,22 @@ export default class RotationWatchdog extends Module {
 				<Plural value={this.rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
 			</Trans>,
 		}))
+
+		// Suggestions to not spam T3 too much
+		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const maxThunders = Math.floor(uptime / THUNDERCLOUD_MILLIS)
+		if (this.thunder3Casts > maxThunders) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.THUNDER_III.icon,
+				content: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.content">
+					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too many times can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
+				</Trans>,
+				severity: this.thunder3Casts > 2 * maxThunders ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
+				why: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.why">
+					At least <Plural value={this.thunder3Casts - maxThunders} one="# extra Thunder III was" other="# extra Thunder III were"/> cast.
+				</Trans>,
+			}))
+		}
 
 		// Checklist item for keeping Thunder 3 DoT rolling
 		this.checklist.add(new Rule({

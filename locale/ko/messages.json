@@ -96,6 +96,8 @@
   "blm.rotation-watchdog.rotation-table.message": "흑마도사의 핵심은 6회의 <0/> 그리고 1회의 <1/>를 딜사이클마다 사용하는 것에 있습니다. (7회의 <2/> 그리고 <4/>와 함께 2회 <3/>) <5/>파이쟈 시전 기회를 놓치면 안됩니다.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "<0/>은 저승의 냉기 구간 진입할 떄 마나 소모를 하지 않습니다. 천상의 화염 구간을 마무리할 떄 항상 <1/>를 사용해 마나 사용 효율을 최대한 끌어 올리십시오.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": " {0, plural, other {#개}}의 천상의 화염 구간이 <0/>이 아닌 스킬로 마무리 되었습니다.",
+  "blm.rotation-watchdog.suggestions.excess-thunder.content": "",
+  "blm.rotation-watchdog.suggestions.excess-thunder.why": "",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "천상의 화염 상태에서 2회 이상의 <0/>을 사용하는 것은 사전에 계획하여 되도록 피해야 합니다.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "{0, plural, other {# 회}}의 파이쟈 사용 기회를 잃었습니다.",
   "blm.rotation-watchdog.suggestions.icemage.content": "저승의 냉기를 장시간 유지하지 마십시오. <0/>를 최대한 많이 시전하는것이 중요합니다.",

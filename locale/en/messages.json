@@ -96,6 +96,8 @@
   "blm.rotation-watchdog.rotation-table.message": "The core of BLM consists of six <0/>s and one <1/> per rotation (seven <2/>s and two <3/>s with <4/>).<5/>Avoid missing Fire IV casts where possible.",
   "blm.rotation-watchdog.suggestions.end-with-despair.content": "Casting <0/> to enter Umbral Ice costs no MP. Always end Astral Fire with a <1/> to make full use of your MP.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{0, plural, one {# Astral Fire phase was} other {# Astral Fire phases were}} missing at least one <0/>.",
+  "blm.rotation-watchdog.suggestions.excess-thunder.content": "Casting <0/> too many times can cause you to lose DPS by casting fewer <1/>. Try not to cast <2/> unless your <3/> DoT or <4/> proc are about to wear off.",
+  "blm.rotation-watchdog.suggestions.excess-thunder.why": "At least {0, plural, one {# extra Thunder III was} other {# extra Thunder III were}} cast.",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "Casting more than one <0/> per Astral Fire cycle is a crutch that should be avoided by better pre-planning of the encounter.",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "{0, plural, one {# extra Fire I was} other {# extra Fire Is were}} cast.",
   "blm.rotation-watchdog.suggestions.icemage.content": "Avoid spending significant amounts of time in Umbral Ice. The majority of your damage comes from your Astral Fire phase, so you should maximize the number of <0/>s cast during the fight.",
