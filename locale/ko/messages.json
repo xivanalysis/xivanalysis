@@ -138,6 +138,7 @@
   "core.checklist.title": "체크리스트",
   "core.combos.content": "잘못된 콤보 순서 혹은 콤보가 끊기는 스킬을 사용하여 콤보가 끊어지는 것을 피하세요. 콤보가 끊어지면 중요한 효과 뿐 아니라 상당한 데미지 손실이 발생할 수 있습니다.",
   "core.combos.issuetypenames.combobreak": "잘못된 콤보",
+  "core.combos.issuetypenames.failed": "",
   "core.combos.issuetypenames.uncomboed": "콤보 미성립",
   "core.combos.rotationtable.header.reason": "원인",
   "core.combos.title": "콤보 문제점",
