@@ -94,7 +94,7 @@
   "blm.rotation-watchdog.rotation-table.disclaimer": "This module assumes you are following the standard BLM playstyle.<0/>If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.",
   "blm.rotation-watchdog.rotation-table.header.reason": "Why Outlier",
   "blm.rotation-watchdog.rotation-table.message": "The core of BLM consists of six <0/>s and one <1/> per rotation (seven <2/>s and two <3/>s with <4/>).<5/>Avoid missing Fire IV casts where possible.",
-  "blm.rotation-watchdog.suggestions.end-with-despair.content": "Casting <0/> to enter Umbral Ice costs no MP. Always end Astral Fire with a <1/> to make full use of your MP.",
+  "blm.rotation-watchdog.suggestions.end-with-despair.content": "Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <0/>.",
   "blm.rotation-watchdog.suggestions.end-with-despair.why": "{0, plural, one {# Astral Fire phase was} other {# Astral Fire phases were}} missing at least one <0/>.",
   "blm.rotation-watchdog.suggestions.excess-thunder.content": "Casting <0/> too many times can cause you to lose DPS by casting fewer <1/>. Try not to cast <2/> unless your <3/> DoT or <4/> proc are about to wear off.",
   "blm.rotation-watchdog.suggestions.excess-thunder.why": "At least {0, plural, one {# extra Thunder III was} other {# extra Thunder III were}} cast.",

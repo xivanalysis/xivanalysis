@@ -314,12 +314,12 @@ export default class RotationWatchdog extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DESPAIR.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.content">
-				Casting <ActionLink {...ACTIONS.BLIZZARD_III} /> to enter Umbral Ice costs no MP. Always end Astral Fire with a <ActionLink {...ACTIONS.DESPAIR} /> to make full use of your MP.
+				Once you can no longer cast another spell in Astral Fire and remain above 800 MP, you should use your remaining MP by casting <ActionLink {...ACTIONS.DESPAIR} />.
 			</Trans>,
 			tiers: ISSUE_SEVERITY_TIERS,
 			value: this.astralFiresMissingDespairs,
 			why: <Trans id="blm.rotation-watchdog.suggestions.end-with-despair.why">
-				<Plural value={this.astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink {...ACTIONS.DESPAIR} />.
+				<Plural value={this.astralFiresMissingDespairs} one="# Astral Fire phase was" other="# Astral Fire phases were"/> missing at least one <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />.
 			</Trans>,
 		}))
 
@@ -327,7 +327,7 @@ export default class RotationWatchdog extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MANAFONT.icon,
 			content: <Trans id="blm.rotation-watchdog.suggestions.mf-before-despair.content">
-				Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
+				Using <ActionLink {...ACTIONS.MANAFONT} /> before <ActionLink {...ACTIONS.DESPAIR} /> leads to fewer <ActionLink showIcon={false} {...ACTIONS.DESPAIR} />s than possible being cast. Try to avoid that since <ActionLink showIcon={false} {...ACTIONS.DESPAIR} /> is stronger than <ActionLink {...ACTIONS.FIRE_IV} />.
 			</Trans>,
 			tiers: { // Special severity tiers, since there's only so many times manafont can be used in a fight
 				1: SEVERITY.MINOR,
