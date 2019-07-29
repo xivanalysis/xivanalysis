@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
-import {Plural} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
+import {t} from '@lingui/macro'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -17,9 +18,6 @@ import {HitType} from 'fflogs'
 const BLOODSPILLER_BLOOD_COST = 50
 const FLOOD_EDGE_MP_COST = 3000
 
-// -----
-// Simulator fun time
-// ------
 // -----
 // Meters
 // ------
@@ -45,8 +43,7 @@ const RESOURCE_GENERATORS = {
 	[ACTIONS.STALWART_SOUL.id]: {mp: 600, blood: 20, requiresCombo: true},
 }
 
-// Actions that generate blood and mana under blood weapon (Physical Damage actions - 3 blood, 480mp).
-// redundant, but this keeps consistency with the other mappings
+// Actions that generate blood and mana under blood weapon
 const BLOOD_WEAPON_GENERATORS = {
 	[ACTIONS.HARD_SLASH.id]: {mp: 600, blood: 10},
 	[ACTIONS.SYPHON_STRIKE.id]: {mp: 600, blood: 10},
@@ -82,8 +79,8 @@ const SEVERITY_WASTED_MP_ACTIONS = {
 }
 
 export default class Resources extends Module {
-	static handle = 'resourcesim'
-	static title = 'Resource Analyzer'
+	static handle = 'resourceanalyzer'
+	static title = t('drk.resourceanalyzer.title')`Resource Analyzer`
 	static displayMode = DISPLAY_MODE.FULL
 	static dependencies = [
 		'combatants',
@@ -295,42 +292,42 @@ export default class Resources extends Module {
 		if (this._droppedTBNs > 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.THE_BLACKEST_NIGHT.icon,
-				content: <Fragment>
+				content: <Trans id="drk.resourceanalyzer.blackestnight.content">
 					One or more <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> applications did not fully use the shield, and thus did not generate a Dark Arts proc to allow free use of <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> or <ActionLink {...ACTIONS.FLOOD_OF_SHADOW}/>.
-				</Fragment>,
+				</Trans>,
 				tiers: SEVERITY_THE_BLACKEST_NIGHT,
 				value: this._droppedTBNs,
-				why: <Fragment>
+				why: <Trans id="drk.resourceanalyzer.blackestnight.why">
 					You missed out on <Plural value={this._droppedTBNs} one="# Dark Arts use" other="# Dark Arts uses" /> due to Blackest Night applications that did not consume the shield.
-				</Fragment>,
+				</Trans>,
 			}))
 		}
 
 		const wastedBloodActions = Math.floor(this._wastedBlood / BLOODSPILLER_BLOOD_COST)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLOODSPILLER.icon,
-			content: <Fragment>
+			content: <Trans id="drk.resourceanalyzer.wastedblood.content">
 				Your blood gauge allows you to use <ActionLink {...ACTIONS.BLOODSPILLER}/> or other spenders, which are among your strongest attacks.  Be sure to spend your blood before exceeding the cap of 100.
-			</Fragment>,
+			</Trans>,
 			tiers: SEVERITY_WASTED_BLOOD_ACTIONS,
 			value: wastedBloodActions,
-			why: <Fragment>
+			why: <Trans id="drk.resourceanalyzer.wastedblood.why">
 				You lost a total of <Plural value={wastedBloodActions} one="# blood spending skill" other="# blood spending skills" /> from gaining blood over the cap or from death.
-			</Fragment>,
+			</Trans>,
 		}))
 
 		const wastedMPActions = Math.floor(this._wastedMP / FLOOD_EDGE_MP_COST)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.EDGE_OF_SHADOW.icon,
-			content: <Fragment>
+			content: <Trans id="drk.resourceanalyzer.wastedmp.content">
 				Your MP allows you to use <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/>, a strong attack that gives you a persistent damage up buff, as well as the strong mitigation of <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/>.
 				Be sure to consistently use your MP so you can benefit from natural regeneration and MP gain from your main combo skills.
-			</Fragment>,
+			</Trans>,
 			tiers: SEVERITY_WASTED_MP_ACTIONS,
 			value: wastedMPActions,
-			why: <Fragment>
+			why: <Trans id="drk.resourceanalyzer.wastedmp.why">
 				You lost a total of <Plural value={wastedMPActions} one="# MP spending skill" other="# MP spending skills" /> from gaining MP over the cap or death.
-			</Fragment>,
+			</Trans>,
 		}))
 	}
 

@@ -20,6 +20,11 @@ export function languageToEdition(lang: ReportLanguage): GameEdition {
 
 		case ReportLanguage.CHINESE:
 			return GameEdition.CHINESE
+
+		// Fallback case for when fflogs borks
+		// TODO: This probably will crop up in other places. Look into solving it higher up the chain.
+		case undefined:
+			return GameEdition.GLOBAL
 	}
 
 	throw new Error(`Unknown report language "${lang}" received.`)

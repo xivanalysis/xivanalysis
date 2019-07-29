@@ -284,7 +284,7 @@ export default {
 	},
 
 	TSUBAME_GAESHI: {
-		id: 7495, //This thing can't ever be cast so Idk what to put for it, currently Haga's ID
+		id: 16483,
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		cooldown: 60,
