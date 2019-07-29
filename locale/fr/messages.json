@@ -1,5 +1,5 @@
 {
-  "ast.about.description-1": "",
+  "ast.about.description-1": "Le plus grand <0/> pour un Astromancien est sa capacité à buff son équipe de DPS avec ses Arcanes. Cet analyseur vous montrera comment les étoiles travaillent pour vous et non l'inverse",
   "ast.about.description-2": "\nJouer un soigneur nécéssite de gérer précautionneusement vos MP et aptitudes pour garder efficacement votre équipe en vie. Si vous plannifier bien vos soins et communiquer avec votre co-soigneur, vous allez naturellement gagner plus de dégat grâce au GCD gagnés.\n\nCet outil vous montre le temps d'activiter habituel et une commandations sur vos GCD. Ca vous montre aussi quels buffs vous avez étendu et quelles cartes vous avez joué.\n",
   "ast.about.description.warning.development": "Il y a toujours beaucoup de travail à faire pour rendre cet outil compréhensible. Si vous avez des suggestions sur ce qui vaut la peine d'être analyser, n'hésitez pas a venir en parler avec nous sur Discord!",
   "ast.about.description.warning.healer": "Actuellement, pour tous les soigneurs, la vérification de l'état d'invulnérabilité des boss ne fonctionne pas convenablement. Cela se traduit par le manque de précision de certains pans de l'analyse comme le fait de toujours caster vos sorts, ou encore le temps d'application de vos DoTs.",
@@ -29,7 +29,7 @@
   "ast.buff-extensions.messages.no-casts": "Aucun cast enregistré pour <0/> et <1/>.",
   "ast.buff-extensions.messages.targets-affected": "{numTargets, plural, one {# cible touchée} other {# cibles touchées}}",
   "ast.buff-extensions.title": "Extensions de buffs",
-  "ast.dots.requirement.uptime.name": "",
+  "ast.dots.requirement.uptime.name": "<0/> temps d'activité",
   "ast.dots.rule.description": "Malgré que les Astromanciens n'aie qu'un seul DoT, il fait toujours une bonne partie de vos dommages. Sa durée de 30s correspond au cooldown de (<0/>), vous donnant plus de marges pour gerer vos cartes. Ca vous permet aussi de bouger sans perdre de GCD. Essayez de garder ce DoT constamment.",
   "ast.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
   "ast.dots.suggestion.clip.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
