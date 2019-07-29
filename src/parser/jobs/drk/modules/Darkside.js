@@ -1,7 +1,9 @@
+import {Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 
 const DARKSIDE_MAX_DURATION = 60000
@@ -17,6 +19,8 @@ export default class Darkside extends Module {
 		'checklist',
 		'death',
 	]
+
+	static title = t('drk.darkside.title')`Darkside`
 
 	_currentDuration = 0
 	_downtime = 0
@@ -67,12 +71,12 @@ export default class Darkside extends Module {
 		const uptime = ((duration - this._downtime) / duration) * 100
 		this.checklist.add(new Rule({
 			name: 'Keep Darkside up',
-			description: <Fragment>
+			description: <Trans id="drk.darkside.uptime.why">
 				Darkside is gained by using <ActionLink {...ACTIONS.EDGE_OF_SHADOW}/> or <ActionLink {...ACTIONS.FLOOD_OF_SHADOW}/> and provides you with a 10% damage increase.  As such, it is a significant part of a DRK's personal DPS.  Do your best not to let it drop, and recover it as quickly as possible if it does.
-			</Fragment>,
+			</Trans>,
 			requirements: [
 				new Requirement({
-					name: 'Darkside Uptime',
+					name: <Trans id="drk.darkside.uptime">Darkside Uptime</Trans>,
 					percent: () => uptime,
 				}),
 			],
