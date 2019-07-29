@@ -33,7 +33,7 @@
   "ast.dots.rule.description": "占星術師は1つのDoTだけ持っていますが、貴方のDPSから高い効率が持たれます。このDoTは30秒の持続時間を持っているので (<0/>) の再使用の待機時間と一致するので、貴方がアルカナを運用する上で、無駄遣いされる時間がないようにチェックする手段となります。また、このスキルはアビリティなので、貴方がGCDによる損がないように動かせます。貴方のDoTの残り時間を常にご確認下さい。",
   "ast.dots.rule.name": "常にDoTを切らさないようにしてください。",
   "ast.dots.suggestion.clip.content": "以前に付与した <0/> の時間が十分な場合、更新を控えて下さい。",
-  "ast.dots.suggestion.clip.why": "",
+  "ast.dots.suggestion.clip.why": "早すぎる更新により{0}回の<0/>を失いました。",
   "ast.draw.checklist.description": "ドローは占星術師の中心的なスキルなので、最大限多く使用するようにしています。",
   "ast.draw.checklist.name": "常にドローを使ってください",
   "ast.draw.checklist.requirement.name": "使用回数：<0/>",
