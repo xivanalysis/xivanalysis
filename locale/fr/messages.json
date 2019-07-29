@@ -20,7 +20,7 @@
   "ast.dots.rule.description": "",
   "ast.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
   "ast.dots.suggestion.clip.content": "Évitez de rafraîchir <0/> avant qu'il expire.",
-  "ast.dots.suggestion.clip.why": "{0} de <0/> perdu car rafraîchit trop tôt.",
+  "ast.dots.suggestion.clip.why": "",
   "ast.draw.checklist.description": "",
   "ast.draw.checklist.name": "",
   "ast.draw.checklist.requirement.name": "<0/> utilisations",
