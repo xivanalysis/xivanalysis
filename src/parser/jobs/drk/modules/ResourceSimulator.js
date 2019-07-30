@@ -212,7 +212,6 @@ export default class Resources extends Module {
 	}
 
 	_onEvent(event) {
-		console.log(`${JSON.stringify(event, null, 4)}`)
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
