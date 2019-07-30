@@ -7,13 +7,49 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
+import {DEMIS} from './Gauge'
 import {DEMI_SUMMON_LENGTH} from './Pets'
 
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-
-const DEMI_BAHAMUT_ACTIONS = Object.values(ACTIONS)
-	.filter(action => action.pet && action.pet === PETS.DEMI_BAHAMUT.id)
+const DEMI_ACTIONS = Object.values(ACTIONS)
+	.filter(action => action.pet && DEMIS.includes(action.pet))
 	.map(action => action.id)
+
+const PLAYER_DEMI_ACTIONS = [
+	ACTIONS.ENKINDLE_BAHAMUT.id,
+	ACTIONS.ENKINDLE_PHOENIX.id,
+]
+
+const DEMI_CHECKED_ACTIONS = {
+	[PETS.DEMI_BAHAMUT.id]: {
+		[ACTIONS.WYRMWAVE.id]: {
+			name: 'WW',
+			order: 0,
+		},
+		[ACTIONS.AKH_MORN.id]: {
+			name: 'AM',
+			order: 1,
+		},
+	},
+	[PETS.DEMI_PHOENIX.id]: {
+		[ACTIONS.SCARLET_FLAME.id]: {
+			name: 'SF',
+			order: 0,
+		},
+		[ACTIONS.REVELATION.id]: {
+			name: 'R',
+			order: 1,
+		},
+		[ACTIONS.FOUNTAIN_OF_FIRE.id]: {
+			name: 'FoF',
+			order: 2,
+		},
+		[ACTIONS.BRAND_OF_PURGATORY.id]: {
+			name: 'BoP',
+			order: 3,
+		},
+	},
+}
+
 const GHOST_TIMEFRAME = 500
 
 const GHOST_CHANCE = {
@@ -27,13 +63,13 @@ const GHOST_CLASSNAME = {
 	[GHOST_CHANCE.ABSOLUTE]: 'text-error',
 }
 
-export default class Bahamut extends Module {
-	static handle = 'bahamut'
-	static title = t('smn.bahamut.title')`Bahamut`
+export default class Demis extends Module {
+	static handle = 'demis'
+	static title = t('smn.demis.title')`Demi-summons`
 	static dependencies = [
 		'gauge',
+		'pets',
 	]
-	static displayOrder = DISPLAY_ORDER.BAHAMUT
 
 	_current = null
 	_history = []
@@ -43,9 +79,9 @@ export default class Bahamut extends Module {
 		this.addHook('cast', {by: 'player'}, this._onPlayerCast)
 		this.addHook('cast', {
 			by: 'pet',
-			abilityId: DEMI_BAHAMUT_ACTIONS,
-		}, this._onBahamutCast)
-		this.addHook('summonpet', {petId: PETS.DEMI_BAHAMUT.id}, this._onSummonBahamut)
+			abilityId: DEMI_ACTIONS,
+		}, this._onPetCast)
+		this.addHook('summonpet', this._onSummonPet)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -54,25 +90,25 @@ export default class Bahamut extends Module {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (!action || action.autoAttack) { return }
 
-		// Track player actions during SB
-		if (this.gauge.bahamutSummoned() &&
-			(action.onGcd || event.ability.guid === ACTIONS.ENKINDLE_BAHAMUT.id)
+		// Track player actions during demi
+		if (this.gauge.demiSummoned() &&
+			(action.onGcd || PLAYER_DEMI_ACTIONS.includes(event.ability.guid))
 		) {
 			this._current.casts.push(event)
 		}
 	}
 
-	_onBahamutCast(event) {
+	_onPetCast(event) {
 		// If we've _somehow_ not got a _current, fake one
 		if (!this._current) {
 			this._current = {
+				pet: this.pets.getCurrentPet(),
 				timestamp: event.timestamp,
 				rushing: this.gauge.isRushing(),
 				casts: [],
 			}
 		}
 
-		// Track Big B's casts, and mark potential ghosts
 		const timeSinceSummon = event.timestamp - this._current.timestamp
 		const ghostChance = timeSinceSummon >= DEMI_SUMMON_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < DEMI_SUMMON_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
 		this._current.casts.push({
@@ -81,7 +117,9 @@ export default class Bahamut extends Module {
 		})
 	}
 
-	_onSummonBahamut(event) {
+	_onSummonPet(event) {
+		if (!DEMIS.includes(event.petId)) { return }
+
 		// Save any existing tracking to history
 		if (this._current) {
 			this._history.push(this._current)
@@ -89,6 +127,7 @@ export default class Bahamut extends Module {
 
 		// Set up fresh tracking
 		this._current = {
+			pet: getDataBy(PETS, 'id', event.petId),
 			timestamp: event.timestamp,
 			rushing: this.gauge.isRushing(),
 			casts: [],
@@ -103,33 +142,41 @@ export default class Bahamut extends Module {
 	}
 
 	output() {
-		const panels = this._history.map(sb => {
+		const panels = this._history.map(s => {
+			const checked = DEMI_CHECKED_ACTIONS[s.pet.id]
 			const counts = {}
-			sb.casts.forEach(cast => {
+			s.casts.forEach(cast => {
 				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
-				obj[cast.ghostChance] = (obj[cast.ghostChance] || 0) + 1
+				const ghostIndex = cast.ghostChance || GHOST_CHANCE.NONE
+				obj[ghostIndex] = (obj[ghostIndex] || 0) + 1
 			})
 
-			const lastPetAction = sb.casts.reduce((carry, cast, i) => this.parser.byPlayerPet(cast)? i : carry, null)
-
+			const lastPetAction = s.casts.reduce((carry, cast, i) => this.parser.byPlayerPet(cast)? i : carry, null)
 			return {
-				key: sb.timestamp,
+				key: s.timestamp,
 				title: {
 					content: <>
-						{this.parser.formatTimestamp(sb.timestamp)}
+						{this.parser.formatTimestamp(s.timestamp)}
 						&nbsp;-&nbsp;
-						{this.renderHeaderCount(counts[ACTIONS.WYRMWAVE.id])} WWs,&nbsp;
-						{this.renderHeaderCount(counts[ACTIONS.AKH_MORN.id])} AMs
-						{sb.rushing && <span className="text-info">&nbsp;(rushing)</span>}
+						{Object.keys(checked)
+							.sort((a, b) => checked[a].order - checked[b].order)
+							.map((id, index) => {
+								return <>
+									{index > 0 && ', '}
+									{this.renderHeaderCount(counts[Number(id)])}
+									{' ' + checked[id].name}
+								</>
+							})}
+						{s.rushing && <span className="text-info">&nbsp;(rushing)</span>}
 					</>,
 				},
 				content: {
 					content: <ul>
-						{sb.casts.map((cast, i) => i <= lastPetAction && <li
+						{s.casts.map((cast, i) => i <= lastPetAction && <li
 							key={cast.timestamp + '-' + cast.ability.guid}
 							className={GHOST_CLASSNAME[cast.ghostChance]}
 						>
-							<strong>{this.parser.formatDuration(cast.timestamp - sb.timestamp, 2)}:</strong>&nbsp;
+							<strong>{this.parser.formatDuration(cast.timestamp - s.timestamp, 2)}:</strong>&nbsp;
 							{cast.ability.name}
 						</li>)}
 					</ul>,
@@ -139,8 +186,10 @@ export default class Bahamut extends Module {
 
 		return <>
 			<Message>
-				<Trans id="smn.bahamut.ghost-disclaimer">Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
-				You should be aiming for 8 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
+				<Trans id="smn.demi.ghost-disclaimer">Demi-summon actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
+				You should be aiming for:<br />
+				8 Wyrmwave and 2 Akh Morn in each Summon Bahamut<br />
+				8 Scarlet Flame, 2 Revelation, 4 Fountain Of Fire, and 4 Brand of Purgatory in each Firebird Trance.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}
