@@ -60,6 +60,18 @@ class InnerReleaseState {
 			.filter(e => e.ability.guid === ACTIONS.ONSLAUGHT.id)
 			.length
 	}
+
+	get innerChaos(): number {
+		return this.rotation
+			.filter(e => e.ability.guid === ACTIONS.INNER_CHAOS.id)
+			.length
+	}
+
+	get chaoticCyclones(): number {
+		return this.rotation
+			.filter(e => e.ability.guid === ACTIONS.CHAOTIC_CYCLONE.id)
+			.length
+	}
 }
 
 export default class InnerRelease extends Module {
@@ -125,6 +137,10 @@ export default class InnerRelease extends Module {
 			.reduce((sum, irWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.UPHEAVAL - irWindow.upheavals), 0)
 		const missedOnslaughts = this.innerReleaseWindows
 			.reduce((sum, irWindow) => sum + Math.max(0, EXPECTED_CONSTANTS.ONSLAUGHT - irWindow.onslaughts), 0)
+		const innerChaosUsed = this.innerReleaseWindows
+			.reduce((sum, irWindow) => sum + Math.max(0, irWindow.innerChaos), 0)
+		const chaoticCyclonesUsed = this.innerReleaseWindows
+			.reduce((sum, irWindow) => sum + Math.max(0, irWindow.chaoticCyclones), 0)
 
 		// missed GCDs
 		if (missedGcds > 0) {
@@ -165,7 +181,7 @@ export default class InnerRelease extends Module {
 				why: <Trans id="war.ir.suggestions.upheaval.why">
 					{missedUpheavals} <Plural value={missedUpheavals} one="use of" other="uses of"/> <ActionLink {...ACTIONS.UPHEAVAL}/> <Plural value={missedUpheavals} one="was" other="were"/> missed during <ActionLink {...ACTIONS.INNER_RELEASE}/> windows.
 				</Trans>,
-				severity: SEVERITY.MAJOR,
+				severity: SEVERITY.MEDIUM,
 			}))
 		}
 
@@ -180,6 +196,32 @@ export default class InnerRelease extends Module {
 					{missedOnslaughts} <Plural value={missedOnslaughts} one="use of" other="uses of"/> <ActionLink {...ACTIONS.ONSLAUGHT}/> <Plural value={missedOnslaughts} one="was" other="were"/> missed during <ActionLink {...ACTIONS.INNER_RELEASE}/> windows.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
+			}))
+		}
+
+		if(innerChaosUsed > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.INNER_CHAOS.icon,
+				content: <Trans id="war.ir.suggestions.innerchaos.content">
+					Using <ActionLink {...ACTIONS.INNER_CHAOS} />  inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. The ability is guaranteed to be a critical direct hit, and makes no use of <ActionLink {...ACTIONS.INNER_RELEASE}/>'s benefits.
+				</Trans>,
+				why: <Trans id="war.ir.suggestions.innerchaos.why">
+					{innerChaosUsed} <Plural value={innerChaosUsed} one="use of" other="uses of" /> <ActionLink {...ACTIONS.INNER_CHAOS} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} />.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+			}))
+		}
+
+		if(chaoticCyclonesUsed > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.CHAOTIC_CYCLONE.icon,
+				content: <Trans id="war.ir.suggestions.chaoticcyclone.content">
+					Using <ActionLink {...ACTIONS.CHAOTIC_CYCLONE} />  inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. The ability is guaranteed to be a critical direct hit, and makes no use of <ActionLink {...ACTIONS.INNER_RELEASE}/>'s benefits.
+				</Trans>,
+				why: <Trans id="war.ir.suggestions.chaoticcyclone.why">
+					{chaoticCyclonesUsed} <Plural value={chaoticCyclonesUsed} one="use of" other="uses of" /> <ActionLink {...ACTIONS.CHAOTIC_CYCLONE} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} />.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
 			}))
 		}
 	}
