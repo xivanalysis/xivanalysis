@@ -303,6 +303,7 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
+			this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
 			cardStateItem.sleeveState = this.startSleeve()
 		}
 
