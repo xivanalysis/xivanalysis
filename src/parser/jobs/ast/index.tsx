@@ -45,6 +45,18 @@ export default new Meta({
 	],
 	changelog: [
 		{
+
+			date: new Date('2019-07-27'),
+			Changes: () => <>
+				<strong>Overheal and Celestial Intersection modules</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.CELESTIAL_INTERSECTION} />) Throws a suggestion for infrequent usage</li>
+					<li>Added an overheal checklist, which counts both heals and HoT percentage overheals for better clarity into the matter.</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2019-07-22'),
 			Changes: () => <>
 				<strong>Sect detection and Combust improvements</strong>:
