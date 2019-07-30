@@ -8,6 +8,8 @@ import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import Horoscope from './Horoscope'
 import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
 import Sect from './Sect'
+import CelestialIntersection from './CelestialIntersection'
+import Overheal from './Overheal'
 
 export default [
 	Cooldowns,
@@ -21,4 +23,6 @@ export default [
 	ArcanaTracking,
 	ArcanaSuggestions,
 	Sect,
+	CelestialIntersection,
+	Overheal,
 ]

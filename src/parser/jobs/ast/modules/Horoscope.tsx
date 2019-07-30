@@ -39,7 +39,7 @@ interface HoroscopeWindow {
 }
 
 export default class Horoscope extends Module {
-	static handle = 'earthlystar'
+	static handle = 'horoscope'
 	static title = t('ast.horoscope.title')`Horoscope`
 
 	@dependency private suggestions!: Suggestions
