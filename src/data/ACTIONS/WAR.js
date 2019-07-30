@@ -20,11 +20,15 @@ export default {
 	},
 
 	MYTHRIL_TEMPEST: {
-		id: 1560,
+		id: 16462,
 		name: 'Mythril Tempest',
-		icon: 'https://xivapi.com/i/000000/000784.png',
+		icon: 'https://xivapi.com/i/002000/002565.png',
 		onGcd: true,
-		breaksCombo: false,
+		potency: 100,
+		combo: {
+			from: 41,
+			potency: 200,
+		},
 	},
 
 	FELL_CLEAVE: {
