@@ -5,8 +5,8 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import Cooldowns from 'parser/core/modules/Cooldowns'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
-import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
 import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
@@ -289,7 +289,7 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 
 			if (cardStateItem.sleeveState > SleeveType.NOTHING) {
-				this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
+				this.cooldowns.startCooldown(ACTIONS.DRAW.id)
 				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
 			}
 		}
@@ -303,7 +303,7 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
-			this.cooldowns.resetCooldown(ACTIONS.DRAW.id)
+			this.cooldowns.startCooldown(ACTIONS.DRAW.id)
 			cardStateItem.sleeveState = this.startSleeve()
 		}
 
