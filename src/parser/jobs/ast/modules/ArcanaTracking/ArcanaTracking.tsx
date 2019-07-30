@@ -289,7 +289,6 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 
 			if (cardStateItem.sleeveState > SleeveType.NOTHING) {
-				this.cooldowns.startCooldown(ACTIONS.DRAW.id)
 				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
 			}
 		}
@@ -303,7 +302,6 @@ export default class ArcanaTracking extends Module {
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
-			this.cooldowns.startCooldown(ACTIONS.DRAW.id)
 			cardStateItem.sleeveState = this.startSleeve()
 		}
 
