@@ -41,6 +41,12 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010263.png',
 	},
 
+	NASCENT_CHAOS: {
+		id: 1897,
+		name: 'Nascent Chaos',
+		icon: 'https://xivapi.com/i/012000/012560.png',
+	},
+
 	NASCENT_FLASH: {
 		id: 1857,
 		name: 'Nascent Flash',
