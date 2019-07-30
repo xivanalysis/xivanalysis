@@ -31,6 +31,16 @@ export default new Meta({
 		{user: CONTRIBUTORS.SKYE, role: ROLES.MAINTAINER},
 	],
 
-	changelog: [
+	changelog: [{
+		date: new Date('2019-07-30'),
+		Changes: () => <>
+			Initial changes for Shadowbringers:
+			<ul>
+				<li>Updated the Inner Release module to account for Inner Chaos and Chaotic Cyclone</li>
+				<li>Changed the Storms Eye Module buffer to 7 seconds instead of the old 10 seconds</li>
+				<li>Changed the Gauge module to track the Infuriate reduction through Inner Chaos and Chaotic Cyclone instead of Fell Cleave and Decimate</li>
+			</ul>
+		</>,
+	},
 	],
 })
