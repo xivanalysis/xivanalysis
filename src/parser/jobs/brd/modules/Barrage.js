@@ -2,6 +2,8 @@
  * @author Yumiya
  */
 import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+
 import React, {Fragment} from 'react'
 import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
@@ -150,29 +152,29 @@ export default class Barrage extends Module {
 		// Barrage usage Rule added to the checklist
 		if (this._getBarrage()) {
 			this.checklist.add(new WeightedTieredRule({
-				name: 'Barrage usage',
-				description: <Fragment>
+				name: <Trans id="brd.barrage.checklist.default-name">Barrage usage</Trans>,
+				description: <Trans id="brd.barrage.checklist.description">
 					An analysis of your {ACTIONS.BARRAGE.name} casts. More details in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
-				</Fragment>,
+				</Trans>,
 				tiers: {0: ERROR, 90: WARNING, 100: SUCCESS},
 				requirements: [
 					new WeightedRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s used on <ActionLink {...ACTIONS.REFULGENT_ARROW}/></Fragment>,
+						name: <Trans id="brd.barrage.checklist.used-on-refulgent"><ActionLink {...ACTIONS.BARRAGE} />s used on <ActionLink {...ACTIONS.REFULGENT_ARROW}/></Trans>,
 						percent: () => { return 100 - ((badBarrages.length)* 100 / this._barrageEvents.length) },
 						weight: BAD_BARRAGE_WEIGHT,
 					}),
 					new WeightedRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} /></Fragment>,
+						name: <Trans id="brd.barrage.checklist.aligned-barrage"><ActionLink {...ACTIONS.BARRAGE} />s aligned with <ActionLink {...ACTIONS.RAGING_STRIKES} /></Trans>,
 						percent: () => { return  100 - ((unalignedBarrages.length) * 100 / this._barrageEvents.length) },
 						weight: UNALIGNED_BARRAGE_WEIGHT,
 					}),
 					new WeightedRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s that granted <StatusLink {...STATUSES.STRAIGHTER_SHOT} /></Fragment>,
+						name: <Trans id="brd.barrage.checklist.granted-refulgent"><ActionLink {...ACTIONS.BARRAGE} />s that granted <StatusLink {...STATUSES.STRAIGHTER_SHOT} /></Trans>,
 						percent: () => { return  100 - ((wastedProcs.length) * 100 / this._barrageEvents.length) },
 						weight: PROC_WASTED_WEIGHT,
 					}),
 					new WeightedRequirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} />s that dealt damage</Fragment>,
+						name: <Trans id="brd.barrage.checklist.dealt-damage"><ActionLink {...ACTIONS.BARRAGE} />s that dealt damage</Trans>,
 						percent: () => { return  100 - ((droppedBarrages.length) * 100 / this._barrageEvents.length) },
 						weight: DROPPED_BARRAGE_WEIGHT,
 					}),
@@ -180,12 +182,12 @@ export default class Barrage extends Module {
 			}))
 		} else {
 			this.checklist.add(new Rule({
-				name: 'No Barrage usage',
-				description: <> <ActionLink {...ACTIONS.BARRAGE} /> into <ActionLink {...ACTIONS.REFULGENT_ARROW} /> is Bard's highest single-target attack, make sure to use it during a fight.</>,
+				name: <Trans id="brd.barrage.no-barrage-checklist.name">No Barrage usage</Trans>,
+				description: <Trans id="brd.barrage.no-barrage-checklist.description"> <ActionLink {...ACTIONS.BARRAGE} /> into <ActionLink {...ACTIONS.REFULGENT_ARROW} /> is Bard's highest single-target attack, make sure to use it during a fight.</Trans>,
 				target: 95,
 				requirements: [
 					new Requirement({
-						name: <Fragment><ActionLink {...ACTIONS.BARRAGE} /> cast</Fragment>,
+						name: <Trans id="brd.barrage.no-barrage-checklist.no-barrage-cast"><ActionLink {...ACTIONS.BARRAGE} /> cast</Trans>,
 						percent: () => 0,
 					}),
 				],
@@ -214,24 +216,24 @@ export default class Barrage extends Module {
 			if (barrage.wastedProc) {
 				// Adds the {issue, severity, reason} tuple corresponding a wastedProc to the panel
 				panelProperties.tuples.push({
-					issue: <>
+					issue: <Trans id="brd.barrage.issue.wasted-proc">
 						There was a <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc that went <strong>unused</strong>.
-					</>,
+					</Trans>,
 					severity: WARNING,
-					reason: <>
+					reason: <Trans id="brd.barrage.issue.wasted-proc.reason">
 						{ACTIONS.BARRAGE.name} gives you a guaranteed <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc.  If you already have a proc avaliable, use it before using {ACTIONS.BARRAGE.name}.
-					</>,
+					</Trans>,
 				})
 			}
 			if (barrage.isDropped) {
 				panelProperties.tuples.push({
-					issue: <>
+					issue: <Trans id="brd.barrage.issue.dropped">
 						This barrage did <strong>not</strong> deal any damage.
-					</>,
+					</Trans>,
 					severity: ERROR,
-					reason: <>
+					reason: <Trans id="brd.barrage.issue.dropped.reason">
 						Using <StatusLink {...STATUSES.BARRAGE} /> on <strong>anything</strong> is better than letting it drop. Be mindful of transitions and invulnerability periods.
-					</>,
+					</Trans>,
 				})
 			} else if (barrage.isBad || !barrage.aligned) {
 
@@ -251,13 +253,13 @@ export default class Barrage extends Module {
 
 					// Adds the {issue, severity, reason} tuple corresponding an unalignedBarrage to the panel
 					panelProperties.tuples.push({
-						issue: <>
+						issue: <Trans id="brd.barrage.issue.unaligned-barrage">
 							This barrage did <strong>not</strong> receive the effects of <StatusLink {...STATUSES.RAGING_STRIKES}/>.
-						</>,
+						</Trans>,
 						severity: WARNING,
-						reason: <>
+						reason: <Trans id="brd.barrage.issue.unaligned-barrage.reason">
 							Both {ACTIONS.BARRAGE.name} and <ActionLink {...ACTIONS.RAGING_STRIKES} /> have a cooldown of {ACTIONS.BARRAGE.cooldown} seconds. Keeping them aligned is often better than holding onto {ACTIONS.BARRAGE.name}.
-						</>,
+						</Trans>,
 					})
 				}
 
@@ -277,13 +279,13 @@ export default class Barrage extends Module {
 
 					// Adds the {issue, severity, reason} tuple corresponding a badBarrage to the panel
 					panelProperties.tuples.push({
-						issue: <>
+						issue: <Trans id="brd.barrage.issue.bad-barrage">
 							This barrage was <strong>not</strong> used on <ActionLink {...ACTIONS.REFULGENT_ARROW}/>.
-						</>,
+						</Trans>,
 						severity: ERROR,
-						reason: <>
+						reason: <Trans id="brd.barrage.issue.bad-barrage.reason">
 							Your strongest weaponskill is <ActionLink {...ACTIONS.REFULGENT_ARROW} />. Make sure you only use your {ACTIONS.BARRAGE.name} on that skill.
-						</>,
+						</Trans>,
 					})
 				}
 
@@ -294,21 +296,21 @@ export default class Barrage extends Module {
 						<Table.Header>
 							<Table.Row>
 								<Table.HeaderCell width={2}>
-									<strong>Total damage</strong>
+									<Trans id="brd.barrage.panel.table-header.total-damage"><strong>Total damage</strong></Trans>
 								</Table.HeaderCell>
 								<Table.HeaderCell width={2}>
-									<strong>Potential damage</strong>
+									<Trans id="brd.barrage.panel.table-header.potential-damage"><strong>Potential damage</strong></Trans>
 								</Table.HeaderCell>
 								<Table.HeaderCell width={2} negative>
-									<strong>DPS loss</strong>
+									<Trans id="brd.barrage.panel.table-header.dps-loss"><strong>DPS loss</strong></Trans>
 								</Table.HeaderCell>
 							</Table.Row>
 						</Table.Header>
 						<Table.Body>
 							<Table.Row>
-								<Table.Cell>{totalDamage}</Table.Cell>
-								<Table.Cell>{potentialDamage}</Table.Cell>
-								<Table.Cell negative>{dpsLoss}</Table.Cell>
+								<Table.Cell>{this.util.formatDamageNumber(totalDamage)}</Table.Cell>
+								<Table.Cell>{this.util.formatDamageNumber(potentialDamage)}</Table.Cell>
+								<Table.Cell negative>{this.util.formatDamageNumber(dpsLoss)}</Table.Cell>
 							</Table.Row>
 						</Table.Body>
 					</Table>
@@ -419,10 +421,17 @@ export default class Barrage extends Module {
 		// Severity of a panel is determined by the highest severity of the issues in it described
 		const severity = tuples.length ? this._severitySelector(tuples.map(t => t.severity)) : SUCCESS
 
-		// Default panel title
-		const defaultTitle = <>
-			{this.util.formatTimestamp(barrage.timestamp)} - {ACTIONS.BARRAGE.name} used{!barrage.isDropped && <> on <ActionLink {...barrage.skillBarraged} /></>}
-		</>
+		// Panel title
+		let defaultTitle = <></>
+		if (barrage.isDropped) {
+			defaultTitle = <Trans id="brd.barrage.panel.title.barrage-dropped">
+				{this.parser.formatTimestamp(barrage.timestamp)} {ACTIONS.BARRAGE.name} used
+			</Trans>
+		} else {
+			defaultTitle = <Trans id="brd.barrage.panel.title.barrage-not-dropped">
+				{this.parser.formatTimestamp(barrage.timestamp)} {ACTIONS.BARRAGE.name} used on <ActionLink {...barrage.skillBarraged}/>
+			</Trans>
+		}
 
 		// List of issues
 		const issueElements = tuples && tuples.length && tuples.map(t => {
@@ -453,7 +462,7 @@ export default class Barrage extends Module {
 		const damageElements = barrage.damageEvents && barrage.damageEvents.length && <Message info>
 			<List>
 				<List.Header>
-					Damage:
+					<Trans id="brd.barrage.panel.damage-elements.header">Damage:</Trans>
 				</List.Header>
 				<List.Content>
 					<List.Item>
@@ -482,7 +491,7 @@ export default class Barrage extends Module {
 						className={SEVERITY[severity].text}
 					/>
 					{defaultTitle}
-					{title}.
+					{title}
 				</>,
 			},
 			content: {
