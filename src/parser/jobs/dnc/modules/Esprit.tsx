@@ -12,6 +12,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {FINISHES, GAUGE_SEVERITY_TIERS} from './CommonData'
@@ -65,15 +66,15 @@ export default class EspritGauge extends Module {
 	private improvisationStart = 0
 
 	protected init() {
-		this.addHook('damage', {by: 'player'}, this.onDamage)
+		this.addHook('aoedamage', {by: 'player'}, this.onDamage)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SABER_DANCE.id}, this.onConsumeEsprit)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.IMPROVISATION.id}, this.startImprov)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.IMPROVISATION.id}, this.endImprov)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
-	private onDamage(event: DamageEvent) {
-		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || event.amount === 0) {
+	private onDamage(event: AoeEvent) {
+		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.successfulHit) {
 			return
 		}
 		let generatedAmt = 0

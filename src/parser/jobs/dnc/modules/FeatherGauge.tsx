@@ -9,6 +9,7 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS} from './CommonData'
@@ -42,12 +43,15 @@ export default class FeatherGauge extends Module {
 	private featherOvercap = 0
 
 	protected init() {
-		this.addHook('cast', {by: 'player', abilityId: FEATHER_GENERATORS}, this.onCastGenerator)
+		this.addHook('aoedamage', {by: 'player', abilityId: FEATHER_GENERATORS}, this.onCastGenerator)
 		this.addHook('cast', {by: 'player', abilityId: FEATHER_CONSUMERS}, this.onConsumeFeather)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
-	private onCastGenerator() {
+	private onCastGenerator(event: AoeEvent) {
+		if (!event.successfulHit) {
+			return
+		}
 		this.avgGenerated += FEATHER_GENERATION_CHANCE
 		this.setFeather(this.currentFeathers + FEATHER_GENERATION_CHANCE, true)
 	}

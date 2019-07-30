@@ -12,6 +12,7 @@ import {CastEvent, DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
+import {AoeEvent} from 'parser/core/modules/Combos'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
@@ -114,7 +115,7 @@ export default class DirtyDancing extends Module {
 		this.addHook('cast', {by: 'player'}, this.continueDance)
 		this.addHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DEVILMENT.id}, this.onDevilment)
-		this.addHook('damage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
+		this.addHook('aoedamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -163,7 +164,7 @@ export default class DirtyDancing extends Module {
 		dance.dancing = false
 	}
 
-	private resolveDance(event: DamageEvent) {
+	private resolveDance(event: AoeEvent) {
 		const dance = this.lastDance
 
 		if (!dance || dance.resolved) {
@@ -179,7 +180,7 @@ export default class DirtyDancing extends Module {
 		}
 		// If the finisher didn't hit anything, and something could've been, ding it.
 		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
-		if (event.amount === 0 && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
+		if (!event.successfulHit && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected
