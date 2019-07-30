@@ -625,6 +625,7 @@
   "smn.dwt.suggestions.missed-gcds.content": "Du kannst <0>{possibleGcds}</0> GCDs während jeder Aktivierung von <1/> mit deinem GCD durchführen. In der Regel solltest du Bahamut-Trance nicht vorzeitig beenden mit folgenden Ausnahmen: Der Boss wird unverwundbar, stirbt, die Abklingzeit von <2/> ist beendet oder <3/> trifft mehrere Ziele.",
   "smn.dwt.suggestions.missed-gcds.why": "{0} zusätzliche GCDs hätten während Bahamut-Trance benutzt werden können.",
   "smn.dwt.title": "",
+  "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "Stelle sicher, dass du volle 3 Stacks von <0/> pro Aktivierung hast. Jeder verlorene Stack ist ein starker Schadensverlust und kann deine nächste <1/> (dadurch auch Bahamut) um bis zu einer Minute nach hinten verschieben.",
   "smn.gauge.suggestions.lost-aetherflow.why": "{0, plural, one {# Stapel} other {# Stapel}} von Ätherfluss verloren.",
   "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "Stelle sicher, dass du immer <0/> vor deinem nächsten <1/>. Andernfalls wird Bahamut in deiner verschoben und du verlierst möglicherweise eine Beschwörung über die Dauer des Kampfes.",

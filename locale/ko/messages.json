@@ -625,6 +625,7 @@
   "smn.dwt.suggestions.missed-gcds.content": "<1/> 동안 스킬을 <0>{possibleGcds}</0>회 사용할 수 있습니다. 보스가 무적상태 혹은 죽기 직전이나 <2/> 가 준비되었거나, <3/>가 복수 타겟을 제거해야하는 상황 이외에는 바하무트 빙의를 빨리 끝내는 것은 추천하지 않습니다.",
   "smn.dwt.suggestions.missed-gcds.why": "바하무트 빙의상태에 추가스킬 사용이 가능한 횟수:{0}",
   "smn.dwt.title": "바하무트 빙의",
+  "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "<0/>를 매회 사용할 때 얻는 스택 수를 3개로 해주세요. 스택수가 부족하면 전체적으로 상당한 손실을 입게되고, <1/>의 사용이 가능한 시간도 1분 정도 늦추게 됩니다.",
   "smn.gauge.suggestions.lost-aetherflow.why": "손해 본 에테르 스택수 : {0, plural, one {#개} other {#개}}",
   "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "다음 <1/> 전 <0/>를 항상 사용하도록 합니다. 사용하지 못한다면 바하무트 정렬이 흐트러져 소환을 한 번 놓칠 수 있습니다.",

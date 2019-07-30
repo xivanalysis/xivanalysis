@@ -625,6 +625,7 @@
   "smn.dwt.suggestions.missed-gcds.content": "根据你的GCD时间，每一个<1/>阶段中可以打 <0>{possibleGcds}</0> 个 GCD。正常循环中不要提前结束龙神，以下情况除外：Boss马上要飞天/击杀，<2/> CD完毕，或者 <3/> 能打到多个目标。",
   "smn.dwt.suggestions.missed-gcds.why": "应当在龙神附体中多使用{0} 个GCD技能。",
   "smn.dwt.title": "龙神附体",
+  "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "确保每次使用<0/>都能获得3层以太。每丢失一层以太都会损失大量威力，同时会使下一个<1/>（以及巴哈）延后至多1分钟。",
   "smn.gauge.suggestions.lost-aetherflow.why": "损失了 {0, plural, other {# 层}}以太.",
   "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "确保每次<1/>之前都使用了<0/>. 否则会导致巴哈循环混乱，在整场战斗中可能会少召唤一次巴哈。",

@@ -7,6 +7,7 @@ import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 
 const AETHER_ACTIONS = [
 	ACTIONS.FESTER.id,
@@ -22,6 +23,7 @@ const SUMMON_BAHAMUT_DURATION = 20000
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
+		'brokenLog',
 		'cooldowns',
 		'pets',
 		'suggestions',
@@ -94,6 +96,13 @@ export default class Gauge extends Module {
 		if (AETHER_ACTIONS.includes(abilityId)) {
 			if (this._aetherflow > 0) {
 				this._aetherflow --
+			} else {
+				const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+				this.brokenLog.trigger(this, 'aetherflow action at 0', (
+					<Trans id="smn.gauge.aetherflow-action-at-0">
+						A cast of <ActionLink {...action}/> was recorded with an expected 0 Aetherflow stacks available.
+					</Trans>
+				))
 			}
 		}
 
