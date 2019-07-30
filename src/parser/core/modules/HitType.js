@@ -1,8 +1,14 @@
 import Module from 'parser/core/Module'
+import {HitType as EventHitType} from 'fflogs'
 
 const ACTION_EVENT_TYPES = [
 	'damage',
 	'heal',
+]
+
+const FAILED_HITS = [
+	EventHitType.MISS,
+	EventHitType.IMMUNE,
 ]
 
 export default class HitType extends Module {
@@ -15,8 +21,9 @@ export default class HitType extends Module {
 			// Prune to only damage and heals since nothing else can crit/direct hit
 			if (!ACTION_EVENT_TYPES.includes(event.type)) { continue }
 
-			event.criticalHit = event.hitType === 2
+			event.criticalHit = event.hitType === EventHitType.CRITICAL
 			event.directHit = event.multistrike === true
+			event.successfulHit = !FAILED_HITS.includes(event.hitType)
 		}
 
 		return events

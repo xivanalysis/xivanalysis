@@ -86,6 +86,7 @@ export default class Meikyo extends Module {
 		const fightDuration = (this.parser.fightDuration/1000)
 		const expectedMeikyo = (Math.floor(fightDuration/ MEIKYO_COOLDOWN) + 1)
 		const missedMeikyo = Math.floor(expectedMeikyo - this._totalMeikyoBuffs)
+		const drift = this._totalDrift.toFixed(0)
 
 		//SUGGESTION TIME!
 
@@ -147,8 +148,8 @@ export default class Meikyo extends Module {
 				30: SEVERITY.MEDIUM,
 				60: SEVERITY.MAJOR,
 			},
-			value: this._totalDrift,
-			why: <Trans id="sam.meikyo.suggestions.drift.why"> You had {this._totalDrift} extra seconds between uses of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> over the course of the fight. </Trans>,
+			value: drift,
+			why: <Trans id="sam.meikyo.suggestions.drift.why"> You had {drift} extra seconds between uses of <ActionLink {...ACTIONS.MEIKYO_SHISUI}/> over the course of the fight. </Trans>,
 		}))
 
 	}
