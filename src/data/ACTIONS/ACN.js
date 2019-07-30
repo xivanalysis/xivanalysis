@@ -1,4 +1,5 @@
 import PETS from '../PETS'
+import SMN_COOLDOWN_GROUP from './SMN'
 
 // Splitting ACN spells out of SMN/SCH so they aren't duped
 export default {
@@ -25,7 +26,7 @@ export default {
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
 		cooldown: 10,
-		cooldownGroup: 180, //SMN_COOLDOWN_GROUP.SUMMON
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
 	AETHERFLOW: {

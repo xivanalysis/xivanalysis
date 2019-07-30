@@ -45,14 +45,6 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
-	ENKINDLE: {
-		id: 184,
-		name: 'Enkindle',
-		icon: 'https://xivapi.com/i/002000/002677.png',
-		cooldown: 120,
-		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE, //this skill isn't techically usable anymore, but would be part of this group
-	},
-
 	PAINFLARE: {
 		id: 3578,
 		name: 'Painflare',

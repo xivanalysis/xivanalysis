@@ -7,6 +7,8 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 
+const UNGROUPED_COOLDOWN_ID = 'ungrouped'
+
 export default class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
 	static title = t('core.cooldowndowntime.title')`Cooldown Downtime`
@@ -45,24 +47,23 @@ export default class CooldownDowntime extends Module {
 
 		const groups = {}
 		this.trackedCds.forEach(id  => {
-			const groupId = getDataBy(ACTIONS, 'id', id).cooldownGroup || 0
+			const groupId = getDataBy(ACTIONS, 'id', id).cooldownGroup || UNGROUPED_COOLDOWN_ID
 			const obj = groups[groupId] = groups[groupId] || []
 			obj.push(id)
 		})
 		for (const key in groups) {
-			if (key === '0') {
+			if (key === UNGROUPED_COOLDOWN_ID) {
 				//handle non-grouped cooldowns
 				groups[key].map(id => {
 					OGCDRequirements.push(this.checkCooldown(id, <ActionLink {...getDataBy(ACTIONS, 'id', id)} />, encounterLength))
 				})
 			} else {
 				//handle cooldown group
-				const displayName = []
-				groups[key].forEach(id => {
-					if (displayName.length > 0) {
-						displayName.push(', ')
-					}
-					displayName.push(<ActionLink {...getDataBy(ACTIONS, 'id', id)} />)
+				const displayName = groups[key].map((id, index) => {
+					return <>
+						{(index > 0) && ', '}
+						<ActionLink {...getDataBy(ACTIONS, 'id', id)} />
+					</>
 				})
 				OGCDRequirements.push(this.checkCooldown(groups[key][0], displayName, encounterLength))
 			}
