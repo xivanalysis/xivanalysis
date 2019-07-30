@@ -94,7 +94,7 @@ export default class Util extends Module {
 			content={this.parser.formatTimestamp(timestamp)}
 		/>
 	}
-      
+
 	formatDamageNumber(damageNumber) {
 		return damageNumber.toLocaleString({maximumFractionDigits: 2})
 	}
