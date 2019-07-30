@@ -199,7 +199,7 @@ export default class InnerRelease extends Module {
 			}))
 		}
 
-		if(innerChaosUsed > 0) {
+		if (innerChaosUsed > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.INNER_CHAOS.icon,
 				content: <Trans id="war.ir.suggestions.innerchaos.content">
@@ -212,7 +212,7 @@ export default class InnerRelease extends Module {
 			}))
 		}
 
-		if(chaoticCyclonesUsed > 0) {
+		if (chaoticCyclonesUsed > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.CHAOTIC_CYCLONE.icon,
 				content: <Trans id="war.ir.suggestions.chaoticcyclone.content">
