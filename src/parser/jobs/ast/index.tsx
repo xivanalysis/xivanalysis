@@ -46,6 +46,18 @@ export default new Meta({
 	changelog: [
 		{
 
+			date: new Date('2019-07-30'),
+			Changes: () => <>
+				<strong>5.05 Support</strong>:
+				<ul>
+					<li>Ability cast times and cooldowns updated for 5.05</li>
+					<li>(<ActionLink {...ACTIONS.SLEEVE_DRAW} />) Arcana logs updated for 5.05</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
 			date: new Date('2019-07-27'),
 			Changes: () => <>
 				<strong>Overheal and Celestial Intersection modules</strong>:
