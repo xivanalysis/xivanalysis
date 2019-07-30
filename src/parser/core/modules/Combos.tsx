@@ -5,7 +5,7 @@ import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityEvent, CastEvent} from 'fflogs'
+import {AbilityEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
@@ -18,16 +18,31 @@ const GCD_TIMEOUT_MILLIS = 15000
 const ISSUE_TYPENAMES = {
 	uncomboed: <Trans id="core.combos.issuetypenames.uncomboed">Uncomboed</Trans>,
 	combobreak: <Trans id="core.combos.issuetypenames.combobreak">Broken Combo</Trans>,
+	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export interface ComboEvent extends AbilityEvent {
+export interface ComboEvent extends AoeEvent {
 	type: 'combo'
+}
+
+/* The Hit and AoeEvent interfaces belong in the AoE module if/when that is converted to TypeScript */
+interface Hit {
+	id: number
+	instance: number
+	times: number
+	amount: number
+}
+
+export interface AoeEvent extends AbilityEvent {
+	hits: Hit[]
+	sourceID: number
+	successfulHit: boolean
 }
 
 export interface ComboIssue {
 	type: keyof typeof ISSUE_TYPENAMES
-	context: CastEvent[]
-	event: CastEvent
+	context: AoeEvent[]
+	event: AoeEvent
 }
 
 export default class Combos extends Module {
@@ -42,15 +57,15 @@ export default class Combos extends Module {
 	@dependency private timeline!: Timeline
 
 	private lastGcdTime = this.parser.fight.start_time
-	private currentComboChain: CastEvent[] = []
+	private currentComboChain: AoeEvent[] = []
 	private issues: ComboIssue[] = []
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('aoedamage', {by: 'player'}, this.onCast)
 		this.addHook('complete', this.onComplete)
 	}
 
-	private get lastComboEvent(): CastEvent | null {
+	private get lastComboEvent(): AoeEvent | null {
 		return _.last(this.currentComboChain) || null
 	}
 
@@ -75,7 +90,7 @@ export default class Combos extends Module {
 			.map(issue => issue.event)
 	}
 
-	protected fabricateComboEvent(event: CastEvent) {
+	protected fabricateComboEvent(event: AoeEvent) {
 		const combo: ComboEvent = {
 			...event,
 			type: 'combo',
@@ -84,7 +99,7 @@ export default class Combos extends Module {
 		this.parser.fabricateEvent(combo)
 	}
 
-	protected recordBrokenCombo(event: CastEvent, context: CastEvent[]) {
+	protected recordBrokenCombo(event: AoeEvent, context: AoeEvent[]) {
 		this.issues.push({
 			type: 'combobreak',
 			event,
@@ -93,11 +108,20 @@ export default class Combos extends Module {
 		this.currentComboChain = []
 	}
 
-	protected recordUncomboedGcd(event: CastEvent) {
+	protected recordUncomboedGcd(event: AoeEvent) {
 		this.issues.push({
 			type: 'uncomboed',
 			event,
 			context: [],
+		})
+		this.currentComboChain = []
+	}
+
+	protected recordFailedCombo(event: AoeEvent, context: AoeEvent[]) {
+		this.issues.push({
+			type: 'failedcombo',
+			event,
+			context,
 		})
 		this.currentComboChain = []
 	}
@@ -108,7 +132,7 @@ export default class Combos extends Module {
 	 * @param event
 	 * @return true if combo, false otherwise
 	 */
-	protected checkCombo(combo: TODO /* Should be an Action type */, event: CastEvent): boolean {
+	protected checkCombo(combo: TODO /* Should be an Action type */, event: AoeEvent): boolean {
 		// Not in a combo
 		if (this.lastAction == null) {
 			// Combo starter, we good
@@ -139,7 +163,7 @@ export default class Combos extends Module {
 		return !combo.end
 	}
 
-	private onCast(event: CastEvent) {
+	private onCast(event: AoeEvent) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // Should be an Action type
 
 		if (!action) {
@@ -157,6 +181,12 @@ export default class Combos extends Module {
 
 		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
+			if (!event.successfulHit) {
+				// Failed attacks break combo
+				this.recordFailedCombo(event, this.currentComboChain)
+				return
+			}
+
 			const continueCombo = this.checkCombo(action.combo, event)
 			if (continueCombo) {
 				this.currentComboChain.push(event)
@@ -179,8 +209,8 @@ export default class Combos extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: (this.constructor as typeof Combos).suggestionIcon,
 			content: <Trans id="core.combos.content">
-				Avoid misusing your combo GCDs at the wrong combo step or breaking existing combos with non-combo
-				GCDs. Breaking combos can cost you significant amounts DPS as well as important secondary effects.
+				<p>Avoid breaking combos, as failing to complete combos costs you a significant amount of DPS and important secondary effects.</p>
+				<p>Using a combo GCD at the wrong combo step, using non-combo GCDs while inside a combo, missing, or attacking a target that is invulnerable will cause your combo to break.</p>
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -197,7 +227,7 @@ export default class Combos extends Module {
 		}))
 	}
 
-	addJobSpecificSuggestions(comboBreakers: CastEvent[], uncomboedGcds: CastEvent[]) {
+	addJobSpecificSuggestions(comboBreakers: AoeEvent[], uncomboedGcds: AoeEvent[]) {
 		// To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
 		// broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
 		// what particular actions were misused and when in the fight.
