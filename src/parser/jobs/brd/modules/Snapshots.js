@@ -17,6 +17,7 @@ export default class Snapshots extends Module {
 	static dependencies = [
 		//AdditionalStats module is needed because it handles adding snapshots to events.
 		'additionalStats', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'util',
 	]
 
 	_snapshotEvents = []
@@ -60,7 +61,7 @@ export default class Snapshots extends Module {
 
 			return <Table.Row key={snapshotEvent.timestamp}>
 				<Table.Cell>
-					{this.parser.formatTimestamp(snapshotEvent.timestamp)}
+					{this.util.createTimelineButton(snapshotEvent.timestamp)}
 				</Table.Cell>
 				<Table.Cell>
 					<ActionLink {...getDataBy(ACTIONS, 'id', snapshotEvent.ability.guid)}/>
