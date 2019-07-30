@@ -118,7 +118,7 @@ export default class Resources extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
+		this.addHook(['damage', 'aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
 		// Hook cast for Living Shadow, as it doesn't directly deal damage so doesn't have an aoedamage event
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.LIVING_SHADOW.id}, this._onEvent)
 		// Hook cast for TBN application
@@ -212,6 +212,7 @@ export default class Resources extends Module {
 	}
 
 	_onEvent(event) {
+		console.log(`${JSON.stringify(event, null, 4)}`)
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
