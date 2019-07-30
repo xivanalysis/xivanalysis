@@ -5,7 +5,6 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Cooldowns from 'parser/core/modules/Cooldowns'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
@@ -85,7 +84,6 @@ export default class ArcanaTracking extends Module {
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
 	@dependency private precastStatus!: PrecastStatus
-	@dependency private cooldowns!: Cooldowns
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
