@@ -37,8 +37,8 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.01',
+		from: '5.05',
+		to: '5.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
