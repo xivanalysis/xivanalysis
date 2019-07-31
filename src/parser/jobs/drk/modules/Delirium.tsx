@@ -66,7 +66,7 @@ export default class Delirium extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private globalcooldown!: GlobalCooldown
+	@dependency private globalCooldown!: GlobalCooldown
 
 	// Inner Release Windows
 	private deliriumWindows: DeliriumState[] = []
@@ -97,7 +97,7 @@ export default class Delirium extends Module {
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 			if ( DELIRIUM_DURATION >= fightTimeRemaining ) {
 				// Rushing - end of fight, reduce expected number of skills
-				const gcdEstimate = this.globalcooldown.getEstimate(true)
+				const gcdEstimate = this.globalCooldown.getEstimate()
 				const reducedWindow = Math.ceil((DELIRIUM_DURATION - fightTimeRemaining) / gcdEstimate)
 				delirium.expectedGCDs -= reducedWindow
 				delirium.expectedBloodSkills = reducedWindow
