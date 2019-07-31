@@ -47,6 +47,11 @@ const PETS = {
 		name: 'Demi-Bahamut',
 	},
 
+	DEMI_PHOENIX: {
+		id: 16549,
+		name: 'Demi-Phoenix',
+	},
+
 	// MCH
 	ROOK_AUTOTURRET: {
 		id: 2864,

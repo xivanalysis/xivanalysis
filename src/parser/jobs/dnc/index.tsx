@@ -36,6 +36,7 @@ export default new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.TWO_BROKEN, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
