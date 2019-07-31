@@ -16,7 +16,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
 	ACTIONS.RUIN_IV.id,
-	ACTIONS.TRI_BIND.id,
+	ACTIONS.OUTBURST.id,
 ]
 
 const DWT_LENGTH = 16000
@@ -142,7 +142,7 @@ export default class DWT extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				content: <Trans id="smn.dwt.suggestions.bad-gcds.content">
-					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.TRI_BIND}/> in AoE situations.
+					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.OUTBURST}/> in AoE situations.
 				</Trans>,
 				why: <Trans id="smn.dwt.suggestions.bad-gcds.why">
 					{badGcds} incorrect GCDs used during DWT.

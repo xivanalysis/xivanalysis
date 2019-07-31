@@ -90,7 +90,7 @@ class GaugeAction {
 		const abilityId = event.ability.guid
 		const {white, black} = MANA_GAIN[abilityId] || {}
 		if (white || black) {
-			if (!event.successfulHit.successfulHit) {
+			if (!event.successfulHit) {
 				// Melee combo skills will still consume mana but will not continue the combo, set an invuln/missed flag for downstream consumers
 				this.missOrInvuln = true
 
