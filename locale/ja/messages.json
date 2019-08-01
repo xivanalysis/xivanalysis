@@ -231,6 +231,7 @@
   "core.weaving.title": "挟み込みの問題",
   "core.weaving.why": "{0, plural, other {不適切な挟み込み回数：#回}}",
   "dnc.about.description": "",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "<0/> のバフを維持してください",
   "dnc.dirty-dancing.rotation-table.header.dirty": "",

@@ -231,6 +231,7 @@
   "core.weaving.title": "",
   "core.weaving.why": "{0, plural, =1 {# Beispiel für falsches Weaving} other {# Beispiele für falsches Weaving}}",
   "dnc.about.description": "",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "",
   "dnc.dirty-dancing.rotation-table.header.dirty": "Richtig ausgeführte Finale",

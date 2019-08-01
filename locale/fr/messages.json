@@ -231,6 +231,7 @@
   "core.weaving.title": "",
   "core.weaving.why": "{0, plural, =1 {# exemple de mauvais weaving} other {# exemples de mauvais weaving}}",
   "dnc.about.description": "",
+  "dnc.about.description.warning": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "",
   "dnc.dirty-dancing.rotation-table.header.dirty": "",

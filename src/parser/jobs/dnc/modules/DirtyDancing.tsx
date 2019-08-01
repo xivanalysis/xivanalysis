@@ -8,19 +8,16 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent, DamageEvent} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
+import {AoeEvent} from 'parser/core/modules/Combos'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
-const ISSUE_SEVERITY_TIERS = {
-	1: SEVERITY.MINOR,
-	3: SEVERITY.MEDIUM,
-	5: SEVERITY.MAJOR,
-}
+import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
@@ -40,25 +37,6 @@ const DANCE_MOVES = [
 	ACTIONS.EMBOITE.id,
 	ACTIONS.JETE.id,
 	ACTIONS.PIROUETTE.id,
-]
-
-const STANDARD_FINISHES = [
-	ACTIONS.STANDARD_FINISH.id,
-	ACTIONS.SINGLE_STANDARD_FINISH.id,
-	ACTIONS.DOUBLE_STANDARD_FINISH.id,
-]
-
-const TECHNICAL_FINISHES = [
-	ACTIONS.TECHNICAL_FINISH.id,
-	ACTIONS.SINGLE_TECHNICAL_FINISH.id,
-	ACTIONS.DOUBLE_TECHNICAL_FINISH.id,
-	ACTIONS.TRIPLE_TECHNICAL_FINISH.id,
-	ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id,
-]
-
-const FINISHES = [
-	...STANDARD_FINISHES,
-	...TECHNICAL_FINISHES,
 ]
 
 const EXPECTED_DANCE_MOVE_COUNT = {
@@ -137,7 +115,7 @@ export default class DirtyDancing extends Module {
 		this.addHook('cast', {by: 'player'}, this.continueDance)
 		this.addHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DEVILMENT.id}, this.onDevilment)
-		this.addHook('damage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
+		this.addHook('aoedamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -186,7 +164,7 @@ export default class DirtyDancing extends Module {
 		dance.dancing = false
 	}
 
-	private resolveDance(event: DamageEvent) {
+	private resolveDance(event: AoeEvent) {
 		const dance = this.lastDance
 
 		if (!dance || dance.resolved) {
@@ -202,7 +180,7 @@ export default class DirtyDancing extends Module {
 		}
 		// If the finisher didn't hit anything, and something could've been, ding it.
 		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
-		if (event.amount === 0 && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
+		if (!event.successfulHit && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected
@@ -247,7 +225,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.missed-finishers.content">
 				<ActionLink {...ACTIONS.TECHNICAL_FINISH} /> and <ActionLink {...ACTIONS.STANDARD_FINISH} /> are a significant source of damage. Make sure you're in range when finishing a dance.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.missedDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.missed-finishers.why">
 				<Plural value={this.missedDances} one="# finish" other="# finishes"/> missed.
@@ -260,7 +238,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.dirty-dances.content">
 				Performing fewer steps than expected reduces the damage of your finishes. Make sure you perform the expected number of steps.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.dirtyDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.dirty-dances.why">
 				<Plural value={this.dirtyDances} one="# dance" other="# dances"/> finished with missing steps.
@@ -273,7 +251,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.footloose.content">
 				Performing the wrong steps makes your dance take longer and leads to a loss of DPS uptime. Make sure to perform your dances correctly.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.footlooseDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.footloose.why">
 				<Plural value={this.footlooseDances} one="# dance" other="# dances"/> finished with extra steps.
@@ -286,7 +264,7 @@ export default class DirtyDancing extends Module {
 			content: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.content">
 				Using <ActionLink {...ACTIONS.DEVILMENT} /> outside your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...ACTIONS.DEVILMENT} /> at the beginning of your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows.
 			</Trans>,
-			tiers: ISSUE_SEVERITY_TIERS,
+			tiers: DEFAULT_SEVERITY_TIERS,
 			value: this.badDevilments,
 			why: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.why">
 				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...STATUSES.TECHNICAL_FINISH} />.
