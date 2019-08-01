@@ -38,7 +38,6 @@
 - [x] B3 uptime
 - [ ] # of hardcasts
 - [ ] Clipping
-- [x] Shadowflare use (ticks had/expected total, alignment?)
 
 ## DWT
 - [x] R3s/R4s in DWT (generally 6 minimum, check if any R2s are present? Mistaaaaake)
@@ -47,7 +46,7 @@
 - [ ] Deathflare cancels
 - [ ] Ruin spells under Ruination in DWT
 - [ ] Tri-Disaster timings (vs alignment where applicable?)
-- [ ] Tri Bind use for cleave/adds (consider targets with/without ruination, r3 vs r4 procs with the debuff)
+- [ ] Outburst use for cleave/adds (consider targets with/without ruination, r3 vs r4 procs with the debuff)
 
 ## Bahamut
 - [x] WW cast count
@@ -64,9 +63,7 @@
 
 ## Egi Stuff
 - [ ] Pet actions #s
-- [ ] Better pet action use (Contagion, RS, aerial/crush for aoe)
-- [x] Rouse durations (any clipped due to S. Bahamut etc)
-- [ ] Enkindles w/ & w/o Rouse
+- [ ] Better pet action use (ifrit for st, garuda for aoe)
 - [ ] Pet auto (burning crush etc) uptime
 
 adding more will have to be done with subtracting things, 2k limit is hard
