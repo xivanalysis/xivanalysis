@@ -12,7 +12,7 @@ import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-import {GAUGE_SEVERITY_TIERS} from './CommonData'
+import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
@@ -38,7 +38,7 @@ export default class FeatherGauge extends Module {
 
 	private feathersConsumed = 0
 	private avgGenerated = 0
-	private history: Array<{t: number, y: number, isGenerator: boolean}> = [{t: 0, y: 0, isGenerator: false}]
+	private history: GaugeGraphEntry[] = [{t: 0, y: 0, isGenerator: false}]
 	private currentFeathers = 0
 	private featherOvercap = 0
 

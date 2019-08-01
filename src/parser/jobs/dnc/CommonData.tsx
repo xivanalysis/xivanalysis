@@ -32,3 +32,9 @@ export const GAUGE_SEVERITY_TIERS = {
 	5: SEVERITY.MEDIUM,
 	10: SEVERITY.MAJOR,
 }
+
+export interface GaugeGraphEntry {
+	t: number,
+	y: number,
+	isGenerator: boolean,
+}

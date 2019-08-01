@@ -9,13 +9,13 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, DamageEvent} from 'fflogs'
+import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {AoeEvent} from 'parser/core/modules/Combos'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-import {FINISHES, GAUGE_SEVERITY_TIERS} from './CommonData'
+import {FINISHES, GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -61,7 +61,7 @@ export default class EspritGauge extends Module {
 	private potentialOvercap = 0
 	private espritConsumed = 0
 	private avgGenerated = 0
-	private history: Array<{t: number, y: number, isGenerator: boolean}> = [{t: 0, y: 0, isGenerator: false}]
+	private history: GaugeGraphEntry[] = [{t: 0, y: 0, isGenerator: false}]
 	private currentEsprit = 0
 	private improvisationStart = 0
 
