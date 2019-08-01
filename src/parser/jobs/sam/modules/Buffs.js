@@ -25,7 +25,7 @@ export default class Buffs extends Module {
 	_onComplete() {
 		this.checklist.add(new Rule({
 			name: <Trans id="sam.buffs.checklist.name"> Keep Shifu and Jinpu up </Trans>,
-			description: <Trans id= "sam.buffs.description"> <ActionLink {...ACTIONS.JINPU} /> and <ActionLink {...ACTIONS.SHIFU} /> increases your damage and speed by 12%. Both buffs are key part of Samurai's damage.</Trans>,
+			description: <Trans id= "sam.buffs.description"> <ActionLink {...ACTIONS.JINPU} /> and <ActionLink {...ACTIONS.SHIFU} /> increases your damage and speed by 13%. Both buffs are key part of Samurai's damage.</Trans>,
 			target: 95,
 			requirements: [
 				new Requirement({

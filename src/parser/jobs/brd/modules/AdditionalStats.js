@@ -8,7 +8,6 @@ import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
 
 // Relevant crit buffs
-// TODO: Add DNC crit buffs when the statues gets added
 const CRIT_MODIFIERS = [
 	{
 		id: STATUSES.BATTLE_LITANY.id,
@@ -18,7 +17,10 @@ const CRIT_MODIFIERS = [
 		id: STATUSES.CHAIN_STRATAGEM.id,
 		strength: 0.1,
 	},
-
+	{
+		id: STATUSES.DEVILMENT.id,
+		strength: 0.2,
+	},
 ]
 
 // Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
@@ -34,12 +36,20 @@ const SNAPSHOTTERS = {
 	[ACTIONS.STORMBITE.id]: [
 		STATUSES.STORMBITE.id,
 	],
+	[ACTIONS.VENOMOUS_BITE.id]: [
+		STATUSES.VENOMOUS_BITE.id,
+	],
+	[ACTIONS.WINDBITE.id]: [
+		STATUSES.WINDBITE.id,
+	],
 }
 
 // Relevant dot statuses (let's do it BRD only for now)
 const DOTS = [
 	STATUSES.CAUSTIC_BITE.id,
 	STATUSES.STORMBITE.id,
+	STATUSES.VENOMOUS_BITE.id,
+	STATUSES.WINDBITE.id,
 ]
 
 const DHIT_MOD = 1.25
