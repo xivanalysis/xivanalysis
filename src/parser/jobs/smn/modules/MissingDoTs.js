@@ -21,6 +21,34 @@ const SMN_DOT_STATUSES = [
 	STATUSES.MIASMA_III.id,
 ]
 
+class MissingDotTracker {
+	potPerDot = 0
+	badCastCounts = [0, 0]
+
+	constructor(potency) {
+		this.potPerDot = potency
+	}
+
+	addBadCast(missing) {
+		this.badCastCounts[missing - 1]++
+	}
+
+	totalPotencyLost() {
+		return this.potPerDot * (this.badCastCounts[0] + 2 * this.badCastCounts[1])
+	}
+
+	totalBadCasts() {
+		return (this.badCastCounts[0] + this.badCastCounts[1])
+	}
+}
+
+const POTENCY_PER_DOT = {
+	[ACTIONS.FESTER.id]: 100,
+	[ACTIONS.RUIN_II.id]: 40,
+	[ACTIONS.RUIN_III.id]: 50,
+	[ACTIONS.RUIN_IV.id]: 70,
+}
+
 export default class MissingDoTs extends Module {
 	static handle = 'missingdots'
 	static title = t('smn.missingdots.title')`Missing DoTs`
@@ -30,24 +58,8 @@ export default class MissingDoTs extends Module {
 		'timeline',
 	]
 
-	_badDotReqCasts = {
-		[ACTIONS.FESTER.id]: {
-			potPerDot: 100,
-			badCastCounts: [0, 0],
-		},
-		[ACTIONS.RUIN_II.id]: {
-			potPerDot: 40,
-			badCastCounts: [0, 0],
-		},
-		[ACTIONS.RUIN_III.id]: {
-			potPerDot: 50,
-			badCastCounts: [0, 0],
-		},
-		[ACTIONS.RUIN_IV.id]: {
-			potPerDot: 70,
-			badCastCounts: [0, 0],
-		},
-	}
+	_badDotReqCasts = {}
+
 	_missingDotWindows = []
 	_currentMissingDotWindow = {
 		timestamp: 0, //placeholder
@@ -60,16 +72,18 @@ export default class MissingDoTs extends Module {
 		this.addHook('complete', this._onComplete)
 		this.addHook('cast', {
 			by: 'player',
-			abilityId: [ACTIONS.FESTER.id, ACTIONS.RUIN_II.id, ACTIONS.RUIN_III.id, ACTIONS.RUIN_IV.id],
+			abilityId: Object.keys(POTENCY_PER_DOT).map(Number),
 		}, this._onDotReqCast)
+
+		Object.keys(POTENCY_PER_DOT).forEach(id => this._badDotReqCasts[id] = new MissingDotTracker(POTENCY_PER_DOT[id]))
 	}
 
 	_onComplete() {
 		// Suggestion for fester/ruin casts without both dots
 		// TODO: add exception for initial cast (and possibly first cast after return) where Ruins are being cast before Tri-D
 		const badCasts = Object.values(this._badDotReqCasts)
-		const totalPotencyLost = badCasts.reduce((acc, skill) => acc + skill.potPerDot * (1 * skill.badCastCounts[0] + 2 * skill.badCastCounts[1]), 0)
-		const numBadCasts = badCasts.reduce((acc, skill) => acc + skill.badCastCounts[0] + skill.badCastCounts[1], 0)
+		const totalPotencyLost = badCasts.reduce((acc, skill) => acc + skill.totalPotencyLost(), 0)
+		const numBadCasts = badCasts.reduce((acc, skill) => acc + skill.totalBadCasts(), 0)
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FESTER.icon,
@@ -116,7 +130,7 @@ export default class MissingDoTs extends Module {
 
 		// Add to the appropriate key
 		// Just tracking flat count for now. Expand to events if need info (for the timeline, yes pls)
-		this._badDotReqCasts[actionId].badCastCounts[statusesMissing - 1]++
+		this._badDotReqCasts[actionId].addBadCast(statusesMissing)
 	}
 
 	output() {
