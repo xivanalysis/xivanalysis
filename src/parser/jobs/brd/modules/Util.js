@@ -1,7 +1,10 @@
 /**
  * @author Yumiya
  */
+import React from 'react'
 import Module from 'parser/core/Module'
+
+import {Button} from 'semantic-ui-react'
 
 export default class Util extends Module {
 	static handle = 'util'
@@ -10,6 +13,7 @@ export default class Util extends Module {
 		'downtime',
 		'enemies',
 		'invuln',
+		'timeline',
 	]
 
 	hasBuff(status) {
@@ -78,5 +82,20 @@ export default class Util extends Module {
 
 	timeUntilFinish(timestamp) {
 		return this.parser.fight.end_time - timestamp
+	}
+
+	createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+
+	formatDamageNumber(damageNumber) {
+		return damageNumber.toLocaleString({maximumFractionDigits: 2})
 	}
 }

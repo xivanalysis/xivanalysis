@@ -20,6 +20,11 @@ export function languageToEdition(lang: ReportLanguage): GameEdition {
 
 		case ReportLanguage.CHINESE:
 			return GameEdition.CHINESE
+
+		// Fallback case for when fflogs borks
+		// TODO: This probably will crop up in other places. Look into solving it higher up the chain.
+		case undefined:
+			return GameEdition.GLOBAL
 	}
 
 	throw new Error(`Unknown report language "${lang}" received.`)
@@ -68,6 +73,11 @@ const PATCHES = {
 	'5.01': {
 		date: {
 			[GameEdition.GLOBAL]: 1563267600, // 16/07/19 09:00:00 GMT
+		},
+	},
+	'5.05': {
+		date: {
+			[GameEdition.GLOBAL]: 1564477200, // 30/07/19 09:00:00 GMT
 		},
 	},
 }

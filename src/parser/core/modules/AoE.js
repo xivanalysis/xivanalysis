@@ -1,3 +1,5 @@
+/* When converting this module to TypeScript, bring the Hit and AoeEvent interfaces from parser/core/modules/Combos into this file */
+
 import Module from 'parser/core/Module'
 
 // Blame Meishu. No touchy.
@@ -156,12 +158,14 @@ export default class AoE extends Module {
 				if (carry[key]) {
 					carry[key].times++
 					carry[key].amount += event.amount
+					carry[key].successfulHit = carry[key].successfulHit || event.successfulHit
 				} else {
 					carry[key] = {
 						id: event.targetID,
 						instance: event.targetInstance,
 						times: 1,
 						amount: event.amount,
+						successfulHit: event.successfulHit,
 					}
 				}
 				return carry
@@ -169,10 +173,12 @@ export default class AoE extends Module {
 
 			const fabricatedEvent = {
 				type: 'aoe' + eventType,
+				timestamp: event.events[eventType][0].timestamp,
 				ability: event.events[eventType][0].ability,
 				hits: Object.values(hitsByTarget),
 				sourceID: event.events[eventType][0].sourceID,
 				amount: Object.values(hitsByTarget).reduce((total, hit) => total + hit.amount, 0),
+				successfulHit: Object.values(hitsByTarget).reduce((successfulHit, hit) => successfulHit || hit.successfulHit, false),
 			}
 			if (event.events[eventType][0].hasOwnProperty('sourceResources')) {
 				fabricatedEvent.sourceResources = event.events[eventType][0].sourceResources
