@@ -31,7 +31,7 @@ const FIRE4_FROM_MANAFONT = 1
 const MIN_MP_FOR_FULL_ROTATION = 9600
 const THUNDERCLOUD_MILLIS = 18000
 
-const AFUIBUFFMAXSTACK = 3
+const AF_UI_BUFF_MAX_STACK = 3
 
 const ISSUE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -54,38 +54,23 @@ const MIN_ROTATION_LENGTH = 3
  * NOTE: Cycles with values below ERROR_CODES.SHORT will be filtered out of the RotationTable display
  * unless the DEBUG_SHOW_ALL_CYCLES variable is set to true
  */
-const ERROR_CODES = {
-	NONE: 0,
-	FINAL_OR_DOWNTIME: 1,
-	SHORT: 2,
-	MISSING_FIRE4S: 10, // These two errors are lower priority since they can be determined by looking at the
-	MISSING_DESPAIRS: 15, // target columns in the table, so we want to tell players about other errors first
-	MANAFONT_BEFORE_DESPAIR: 30,
-	EXTRA_T3: 49, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
-	EXTRA_F1: 50, // These two codes should stay close to each other
-	NO_FIRE_SPELLS: 75,
-	DROPPED_ENOCHIAN: 100,
-}
-
-/**
- * If you add an error code above, give it a message here too, even ones filtered out normally
- * so they show something in debug mode.
- */
-const ERROR_MESSAGES = {
-	[ERROR_CODES.NONE]: <Trans id="blm.rotation-watchdog.error-messages.none">No errors</Trans>,
-	[ERROR_CODES.FINAL_OR_DOWNTIME]: <Trans id="blm.rotation-watchdog.error-messages.final-or-downtime">Ended with downtime, or last cycle</Trans>,
-	[ERROR_CODES.SHORT]: <Trans id="blm.rotation-watchdog.error-messages.short-rotation">Too short, won't process</Trans>,
-	[ERROR_CODES.DROPPED_ENOCHIAN]: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>,
-	[ERROR_CODES.MISSING_FIRE4S]: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>,
-	[ERROR_CODES.EXTRA_T3]: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>,
-	[ERROR_CODES.MANAFONT_BEFORE_DESPAIR]: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>,
-	[ERROR_CODES.MISSING_DESPAIRS]: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Rotation didn't include <ActionLink {...ACTIONS.DESPAIR}/></Trans>,
-	[ERROR_CODES.NO_FIRE_SPELLS]: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>,
-	[ERROR_CODES.EXTRA_F1]: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>,
+const CYCLE_ERRORS = {
+	NONE: {priority: 0, message: 'No errors'},
+	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
+	SHORT: {priority: 2, message: 'Too short, won\'t process'},
+	// Messages below should be Trans objects since they'll be displayed to end users
+	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>}, // These two errors are lower priority since they can be determined by looking at the
+	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>},
+	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
+	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Rotation didn't include <ActionLink {...ACTIONS.DESPAIR}/></Trans>}, // These two codes should stay close to each other
+	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
+	DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>},
 }
 
 class Cycle {
-	casts: any[] = []
+	// TS CastEvent Ability interface doesn't include the overrideAbility property that BLM Procs sets to denote T3P/F3P
+	casts: TODO[] = []
 	startTime: number
 	endTime?: number
 
@@ -100,9 +85,11 @@ class Cycle {
 
 	gaugeStateBeforeFire: GaugeState = new GaugeState()
 
-	_errorCode: number = 0
-	public set errorCode(code: number) {
-		this._errorCode = Math.max(this._errorCode, code)
+	_errorCode: {priority: number, message: TODO} = CYCLE_ERRORS.NONE
+	public set errorCode(code) {
+		if (code.priority > this._errorCode.priority) {
+			this._errorCode = code
+		}
 	}
 	public get errorCode() {
 		return this._errorCode
@@ -119,9 +106,14 @@ class Cycle {
 		if (this.finalOrDowntime) {
 			return
 		}
+
 		// Account for the no-UH opener when determining the expected count of Fire 4s
-		return (this.firstCycle && this.gaugeStateBeforeFire.umbralHearts === 0 ?
-			NO_UH_OPENER_FIRE4 : EXPECTED_FIRE4) + (this.hasManafont ? FIRE4_FROM_MANAFONT : 0)
+		let expectedCount = this.firstCycle && this.gaugeStateBeforeFire.umbralHearts === 0 ? NO_UH_OPENER_FIRE4 : EXPECTED_FIRE4
+
+		// Adjust expected count if the cycle included manafont
+		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
+
+		return expectedCount
 	}
 	public get actualFire4s(): number {
 		return this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_IV.id).length
@@ -150,6 +142,7 @@ class Cycle {
 }
 
 // TS typedef for BLM Gauge events so it doesn't choke
+// TODO: Move to Gauge if that gets converted to TS
 interface BLMGaugeEvent extends Event {
 	type: symbol,
 	timestamp: number,
@@ -195,7 +188,7 @@ export default class RotationWatchdog extends Module {
 	private manafontBeforeDespair = 0
 	private astralFiresMissingDespairs = 0
 	private thunder3Casts = 0
-	private primaryTargetId: number | null = null
+	private primaryTargetId?: number
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
@@ -211,15 +204,15 @@ export default class RotationWatchdog extends Module {
 			this.currentRotation.firePhaseStartMP = this.combatants.selected.resources.mp
 
 			// If we didn't enter fire phase with a normal gauge state of 3 UI/UH stacks, note it
-			if (this.currentRotation.gaugeStateBeforeFire.umbralIce !== AFUIBUFFMAXSTACK ||
-				this.currentRotation.gaugeStateBeforeFire.umbralHearts !== AFUIBUFFMAXSTACK) {
+			if (this.currentRotation.gaugeStateBeforeFire.umbralIce !== AF_UI_BUFF_MAX_STACK ||
+				this.currentRotation.gaugeStateBeforeFire.umbralHearts !== AF_UI_BUFF_MAX_STACK) {
 				this.currentRotation.atypicalAFStart = true
 			}
 		}
 
 		// If we no longer have enochian, flag it for display
 		if (this.currentGaugeState.enochian && !event.enochian) {
-			this.currentRotation.errorCode = ERROR_CODES.DROPPED_ENOCHIAN
+			this.currentRotation.errorCode = CYCLE_ERRORS.DROPPED_ENOCHIAN
 		}
 
 		// Retrieve the GaugeState from the event
@@ -242,6 +235,8 @@ export default class RotationWatchdog extends Module {
 	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
+		// For right now, we're assuming the main boss of an encounter is the first thing you hit. This isn't the case for Ultimates
+		// but we'll deal with that in the future (TODO)
 		if (!this.primaryTargetId && event.targetID) {
 			this.primaryTargetId = event.targetID
 		}
@@ -258,17 +253,19 @@ export default class RotationWatchdog extends Module {
 
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
-		if (action && !action.autoAttack) {
-			this.currentRotation.casts.push(event)
+		if (!action  || action.autoAttack) {
+			return
+		}
 
-			// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
-			if (actionId === ACTIONS.MANAFONT.id) {
-				this.currentRotation.hasManafont = true
-			}
-			// Keep track of total thunder casts so we can include that in the thunder uptime checklist item
-			if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
-				this.thunder3Casts++
-			}
+		this.currentRotation.casts.push(event)
+
+		// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
+		if (actionId === ACTIONS.MANAFONT.id) {
+			this.currentRotation.hasManafont = true
+		}
+		// Keep track of total thunder casts so we can include that in the thunder uptime checklist item
+		if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
+			this.thunder3Casts++
 		}
 	}
 
@@ -288,7 +285,7 @@ export default class RotationWatchdog extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FIRE_IV.icon,
 				content: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.content">
-					You lost at least  one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
+					You lost at least one <ActionLink {...ACTIONS.FIRE_IV}/> by not skipping <ActionLink {...ACTIONS.BLIZZARD_IV}/> in the Umbral Ice phase before the fight finished.
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.rotation-watchdog.suggestions.missed-f4s.why">
@@ -391,7 +388,7 @@ export default class RotationWatchdog extends Module {
 			target: 95,
 			requirements: [
 				new Requirement({
-					name: <Fragment><StatusLink {...STATUSES.THUNDER_III} /> uptime</Fragment>,
+					name: <Trans id="blm.rotation-watchdog.checklist.dots.requirement.name"><StatusLink {...STATUSES.THUNDER_III} /> uptime</Trans>,
 					percent: () => this.getThunderUptime(),
 				}),
 			],
@@ -426,7 +423,7 @@ export default class RotationWatchdog extends Module {
 		// Only process errors for rotations with more than the minimum number of casts,
 		// since fewer than that usually indicates something weird happening
 		if (currentRotation.casts.length <= MIN_ROTATION_LENGTH) {
-			currentRotation.errorCode = ERROR_CODES.SHORT
+			currentRotation.errorCode = CYCLE_ERRORS.SHORT
 			return
 		}
 
@@ -435,21 +432,21 @@ export default class RotationWatchdog extends Module {
 		// Check if the rotation included the expected number of Despair casts
 		if (currentRotation.missingDespairs) {
 			this.astralFiresMissingDespairs++
-			currentRotation.errorCode = ERROR_CODES.MISSING_DESPAIRS
+			currentRotation.errorCode = CYCLE_ERRORS.MISSING_DESPAIRS
 		}
 
 		// Check whether manafont was used before despair
 		if (currentRotation.hasManafont && currentRotation.actualDespairs > 0 &&
 			currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.MANAFONT.id) <
-				currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)) {
-				this.manafontBeforeDespair++
-				currentRotation.errorCode = ERROR_CODES.MANAFONT_BEFORE_DESPAIR
-			}
+			currentRotation.casts.findIndex(cast => cast.ability.guid === ACTIONS.DESPAIR.id)) {
+			this.manafontBeforeDespair++
+			currentRotation.errorCode = CYCLE_ERRORS.MANAFONT_BEFORE_DESPAIR
+		}
 
 		// Check if the rotation included more than one Fire 1
 		const fire1Count = currentRotation.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length
 		if (fire1Count > 1) {
-			currentRotation.errorCode = ERROR_CODES.EXTRA_F1
+			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_F1
 			this.extraF1s += Math.max(0, fire1Count-1)
 		}
 
@@ -470,24 +467,24 @@ export default class RotationWatchdog extends Module {
 			.filter(cast => cast.ability.overrideAction.id === ACTIONS.THUNDER_III_FALSE.id).length
 		if (hardT3Count > 1 || (hardT3Count > 0 && currentRotation.firePhaseStartMP < MIN_MP_FOR_FULL_ROTATION)) {
 			this.extraT3s++
-			currentRotation.errorCode = ERROR_CODES.EXTRA_T3
+			currentRotation.errorCode = CYCLE_ERRORS.EXTRA_T3
 		}
 
 		// Why so icemage?
 		if (!currentRotation.casts.filter(cast => FIRE_SPELLS.includes(cast.ability.guid)).length) {
 			this.rotationsWithoutFire++
-			currentRotation.errorCode = ERROR_CODES.NO_FIRE_SPELLS
+			currentRotation.errorCode = CYCLE_ERRORS.NO_FIRE_SPELLS
 		}
 
 		// If they're just missing Fire 4 because derp, note it
 		if (currentRotation.missingFire4s) {
-			currentRotation.errorCode = ERROR_CODES.MISSING_FIRE4S
+			currentRotation.errorCode = CYCLE_ERRORS.MISSING_FIRE4S
 		}
 	}
 
 	// Process errors for a cycle that was cut short by downtime or by the fight ending
 	private processDowntimeCycle(currentRotation: Cycle) {
-		currentRotation.errorCode = ERROR_CODES.FINAL_OR_DOWNTIME
+		currentRotation.errorCode = CYCLE_ERRORS.FINAL_OR_DOWNTIME
 
 		// Check if more Fire 4s could've been cast by skipping Blizzard 4 before this downtime
 		if (currentRotation.gaugeStateBeforeFire.umbralHearts > 0 && currentRotation.missingFire4s === 2) {
@@ -498,8 +495,8 @@ export default class RotationWatchdog extends Module {
 	}
 
 	output() {
-		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode >
-			ERROR_CODES.SHORT || DEBUG_SHOW_ALL_CYCLES)
+		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
+			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
 		if (outliers.length > 0 ) {
 			return <Fragment>
 				<Message>
@@ -508,14 +505,14 @@ export default class RotationWatchdog extends Module {
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
-			<Message warning icon>
-				<Icon name="warning sign"/>
-				<Message.Content>
-					<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-						If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
-					</Trans>
-				</Message.Content>
-			</Message>
+				<Message warning icon>
+					<Icon name="warning sign"/>
+					<Message.Content>
+						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
+							If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
+						</Trans>
+					</Message.Content>
+				</Message>
 				<RotationTable
 					targets={[
 						{
@@ -550,7 +547,7 @@ export default class RotationWatchdog extends Module {
 								},
 							},
 							notesMap: {
-								reason: <>{ERROR_MESSAGES[cycle.errorCode]}</>,
+								reason: <>{cycle.errorCode.message}</>,
 							},
 							rotation: cycle.casts,
 						})
