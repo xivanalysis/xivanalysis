@@ -10,7 +10,7 @@ import {Meta} from 'parser/core/Meta'
 const description = t('mnk.about.description')`
 Hello friendly monk! Do you not Crit the Boot? Does your Tornado Kick dream remain a meme?
 
-This monk analyser should help you realise your true potential and show those pesky Samurai true power!
+This monk analyser should help you realise your true potential and ensure no party will let a Samurai steal your loot ever again!
 `
 
 export default new Meta({
