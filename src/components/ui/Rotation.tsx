@@ -3,13 +3,13 @@ import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {ITEM_ID_OFFSET} from 'data/ACTIONS/ITEMS'
-import {CastEvent} from 'fflogs'
+import {AbilityEvent} from 'fflogs'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import styles from './Rotation.module.css'
 
 interface RotationProps {
-	events: CastEvent[]
+	events: AbilityEvent[]
 }
 
 export default class Rotation extends Component<RotationProps> {

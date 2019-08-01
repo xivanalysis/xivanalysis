@@ -7,6 +7,8 @@ import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
+import {DEMI_SUMMON_LENGTH} from './Pets'
 
 const AETHER_ACTIONS = [
 	ACTIONS.FESTER.id,
@@ -16,12 +18,17 @@ const AETHER_ACTIONS = [
 const MAX_AETHERFLOW = 2
 const DREADWYRM_TRANCE_DURATION = 16000
 const MIN_DWT_BUILD = DREADWYRM_TRANCE_DURATION + (ACTIONS.FESTER.cooldown * 1000) * 2
-const SUMMON_BAHAMUT_DURATION = 20000
+
+export const DEMIS = [
+	PETS.DEMI_BAHAMUT.id,
+	PETS.DEMI_PHOENIX.id,
+]
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
+		'brokenLog',
 		'cooldowns',
 		'pets',
 		'suggestions',
@@ -54,14 +61,9 @@ export default class Gauge extends Module {
 	// -----
 	// API
 	// -----
-	bahamutSummoned() {
+	demiSummoned() {
 		const pet = this.pets.getCurrentPet()
-		return pet && pet.id === PETS.DEMI_BAHAMUT.id
-	}
-
-	phoenixSummoned() {
-		const pet = this.pets.getCurrentPet()
-		return pet && pet.id === PETS.DEMI_PHOENIX.id
+		return pet && DEMIS.includes(pet.id)
 	}
 
 	isRushing() {
@@ -84,7 +86,7 @@ export default class Gauge extends Module {
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
 			let reqRotationTime = MIN_DWT_BUILD
 			if (this._dreadwyrmAether >= 1) {
-				reqRotationTime += SUMMON_BAHAMUT_DURATION
+				reqRotationTime += DEMI_SUMMON_LENGTH
 			}
 
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
@@ -94,6 +96,13 @@ export default class Gauge extends Module {
 		if (AETHER_ACTIONS.includes(abilityId)) {
 			if (this._aetherflow > 0) {
 				this._aetherflow --
+			} else {
+				const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+				this.brokenLog.trigger(this, 'aetherflow action at 0', (
+					<Trans id="smn.gauge.aetherflow-action-at-0">
+						A cast of <ActionLink {...action}/> was recorded with an expected 0 Aetherflow stacks available.
+					</Trans>
+				))
 			}
 		}
 
@@ -120,7 +129,7 @@ export default class Gauge extends Module {
 		// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
 		const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
 		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + SUMMON_BAHAMUT_DURATION) {
+		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + DEMI_SUMMON_LENGTH) {
 			this._rushing = true
 		}
 	}

@@ -1,5 +1,6 @@
 import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import {BLM_GAUGE_EVENT} from './Gauge'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -25,6 +26,7 @@ export default class BlmWeaving extends Weaving {
 		...Weaving.dependencies,
 		'invuln',
 		'gauge', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'castTime',
 	]
 
 	_astralFireStacks = 0
@@ -33,11 +35,15 @@ export default class BlmWeaving extends Weaving {
 	_lastF3FastCast = false
 	_lastB3FastCast = false
 
+	_ctIndex = null
+
 	constructor(...args) {
 		super(...args)
 		this.addHook(BLM_GAUGE_EVENT, this._onGaugeChange)
 		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.FIRE_III.id}, this._beginFire3)
 		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.BLIZZARD_III.id}, this._beginBlizzard3)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onApplyTriple)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onRemoveTriple)
 	}
 
 	_beginFire3() {
@@ -50,6 +56,14 @@ export default class BlmWeaving extends Weaving {
 	_onGaugeChange(event) {
 		this._astralFireStacks = event.astralFire
 		this._umbralIceStacks = event.umbralIce
+	}
+
+	_onApplyTriple() {
+		this._ctIndex = this.castTime.set('all', 0)
+	}
+
+	_onRemoveTriple() {
+		this.castTime.reset(this._ctIndex)
 	}
 
 	//check for fast casted F3/B3 and allow 1 weave if you get one
