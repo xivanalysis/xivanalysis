@@ -6,6 +6,7 @@ import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import PETS from 'data/PETS'
 
 // Constants
 // Unlike HW, don't need to worry about mana drain too much. It's just flat pot.
@@ -25,9 +26,9 @@ export default class Ruin2 extends Module {
 	static handle = 'ruin2'
 	static dependencies = [
 		'combatants',
-		'gauge',
 		'gcd',
 		'invuln',
+		'pets',
 		'suggestions',
 	]
 
@@ -94,7 +95,7 @@ export default class Ruin2 extends Module {
 			this._all.push(event)
 			// Explicitly setting the ogcd tracker to true while bahamut is out,
 			// we don't want to fault people for using R2 for WWs during bahamut.
-			this._ogcdUsed = this.gauge.bahamutSummoned()
+			this._ogcdUsed = (this.pets.getCurrentPet() === PETS.DEMI_BAHAMUT.id)
 		}
 	}
 

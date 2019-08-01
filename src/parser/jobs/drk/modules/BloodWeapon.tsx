@@ -49,7 +49,7 @@ export default class BloodWeapon extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private globalcooldown!: GlobalCooldown
+	@dependency private globalCooldown!: GlobalCooldown
 
 	// Windows
 	private bloodWeaponWindows: BloodWeaponState[] = []
@@ -80,7 +80,7 @@ export default class BloodWeapon extends Module {
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 			if ( BLOOD_WEAPON_DURATION >= fightTimeRemaining ) {
 				// Rushing - end of fight, reduce expected number of skills
-				const gcdEstimate = this.globalcooldown.getEstimate(true)
+				const gcdEstimate = this.globalCooldown.getEstimate()
 				const reducedWindow = Math.ceil((BLOOD_WEAPON_DURATION- fightTimeRemaining) / gcdEstimate)
 				bloodWeapon.expectedGCDs -= reducedWindow
 			}
