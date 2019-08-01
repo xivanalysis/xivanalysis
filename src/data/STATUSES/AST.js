@@ -142,7 +142,7 @@ export default {
 		id: 1891,
 		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
-		duration: 10,
+		duration: 30,
 	},
 
 	NEUTRAL_SECT: {
