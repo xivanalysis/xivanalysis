@@ -8,8 +8,7 @@ export default {
 		id: 180,
 		name: 'Summon III',
 		icon: 'https://xivapi.com/i/002000/002680.png',
-		onGcd: true,
-		castTime: 3,
+		cooldown: 10,
 	},
 
 	FESTER: {
@@ -19,19 +18,26 @@ export default {
 		cooldown: 5,
 	},
 
-	TRI_BIND: {
-		id: 182,
-		name: 'Tri-bind',
-		icon: 'https://xivapi.com/i/002000/002678.png',
+	OUTBURST: {
+		id: 16511,
+		name: 'Outburst',
+		icon: 'https://xivapi.com/i/002000/002698.png',
 		onGcd: true,
 		castTime: 2.5,
+	},
+
+	ENERGY_SIPHON: {
+		id: 16510,
+		name: 'Energy Siphon',
+		icon: 'https://xivapi.com/i/002000/002697.png',
+		cooldown: 30,
 	},
 
 	ENKINDLE: {
 		id: 184,
 		name: 'Enkindle',
 		icon: 'https://xivapi.com/i/002000/002677.png',
-		cooldown: 180,
+		cooldown: 120,
 	},
 
 	PAINFLARE: {
@@ -53,14 +59,14 @@ export default {
 		id: 3580,
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
-		cooldown: 60,
+		cooldown: 50,
 	},
 
 	DREADWYRM_TRANCE: {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 20,
+		cooldown: 60,
 	},
 
 	DEATHFLARE: {
@@ -75,7 +81,7 @@ export default {
 		id: 7423,
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
-		cooldown: 120,
+		cooldown: 180,
 	},
 
 	BIO_III: {
@@ -111,7 +117,99 @@ export default {
 		id: 7429,
 		name: 'Enkindle Bahamut',
 		icon: 'https://xivapi.com/i/002000/002693.png',
-		cooldown: 13,
+		cooldown: 10,
+	},
+
+	FIREBIRD_TRANCE: {
+		id: 16549,
+		name: 'Firebird Trance',
+		icon: 'https://xivapi.com/i/002000/002734.png',
+		cooldown: 60,
+	},
+
+	FOUNTAIN_OF_FIRE: {
+		id: 16514,
+		name: 'Fountain Of Fire',
+		icon: 'https://xivapi.com/i/002000/002735.png',
+		onGcd: true,
+	},
+
+	BRAND_OF_PURGATORY: {
+		id: 16515,
+		name: 'Brand Of Purgatory',
+		icon: 'https://xivapi.com/i/002000/002736.png',
+		onGcd: true,
+	},
+
+	ENKINDLE_PHOENIX: {
+		id: 16516,
+		name: 'Enkindle Phoenix',
+		icon: 'https://xivapi.com/i/002000/002737.png',
+		cooldown: 10,
+	},
+
+	//Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
+	ASSAULT_I_AERIAL_SLASH: {
+		id: 16797,
+		name: 'Assault I: Aerial Slash',
+		icon: 'https://xivapi.com/i/002000/002717.png',
+		cooldown: 30,
+	},
+
+	ASSAULT_I_EARTHEN_ARMOR: {
+		id: 16795,
+		name: 'Assault I: Earthen Armor',
+		icon: 'https://xivapi.com/i/002000/002707.png',
+		cooldown: 30,
+	},
+
+	ASSAULT_I_CRIMSON_CYCLONE: {
+		id: 16799,
+		name: 'Assault I: Crimson Cyclone',
+		icon: 'https://xivapi.com/i/002000/002726.png',
+		cooldown: 30,
+	},
+
+	ASSAULT_II_SLIIPSTREAM: {
+		id: 16798,
+		name: 'Assault II: Slipstream',
+		icon: 'https://xivapi.com/i/002000/002718.png',
+		cooldown: 30,
+	},
+
+	ASSAULT_II_MOUNTAIN_BUSTER: {
+		id: 16796,
+		name: 'Assault II: Mountain Buster',
+		icon: 'https://xivapi.com/i/002000/002708.png',
+		cooldown: 30,
+	},
+
+	ASSAULT_II_FLAMING_CRUSH: {
+		id: 16800,
+		name: 'Assault II: Flaming Crush',
+		icon: 'https://xivapi.com/i/002000/002727.png',
+		cooldown: 30,
+	},
+
+	ENKINDLE_AERIAL_BLAST: {
+		id: 16802,
+		name: 'Enkindle: Aerial Blast',
+		icon: 'https://xivapi.com/i/002000/002719.png',
+		cooldown: 120,
+	},
+
+	ENKINDLE_EARTHEN_FURY: {
+		id: 16801,
+		name: 'Enkindle: Earthen Fury',
+		icon: 'https://xivapi.com/i/002000/002709.png',
+		cooldown: 120,
+	},
+
+	ENKINDLE_INFERNO: {
+		id: 16803,
+		name: 'Enkindle: Inferno',
+		icon: 'https://xivapi.com/i/002000/002728.png',
+		cooldown: 120,
 	},
 
 	// -----
@@ -125,27 +223,17 @@ export default {
 		pet: PETS.GARUDA_EGI.id,
 	},
 
-	SHOCKWAVE: {
-		id: 793,
-		name: 'Shockwave',
-		icon: 'https://xivapi.com/i/002000/002713.png',
-		cooldown: 90,
-		pet: PETS.GARUDA_EGI.id,
-	},
-
 	AERIAL_SLASH: {
 		id: 794,
 		name: 'Aerial Slash',
 		icon: 'https://xivapi.com/i/002000/002712.png',
-		cooldown: 30,
 		pet: PETS.GARUDA_EGI.id,
 	},
 
-	CONTAGION: {
-		id: 795,
-		name: 'Contagion',
-		icon: 'https://xivapi.com/i/002000/002714.png',
-		cooldown: 60,
+	SLIPSTREAM: {
+		id: 16523,
+		name: 'Slipstream',
+		icon: 'https://xivapi.com/i/002000/002716.png',
 		pet: PETS.GARUDA_EGI.id,
 	},
 
@@ -175,23 +263,13 @@ export default {
 		id: 788,
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002702.png',
-		cooldown: 15,
 		pet: PETS.TITAN_EGI.id,
 	},
 
-	EARTHEN_WARD: {
-		id: 789,
-		name: 'Earthen Ward',
-		icon: 'https://xivapi.com/i/002000/002703.png',
-		cooldown: 120,
-		pet: PETS.TITAN_EGI.id,
-	},
-
-	LANDSLIDE: {
-		id: 790,
-		name: 'Landslide',
-		icon: 'https://xivapi.com/i/002000/002704.png',
-		cooldown: 40,
+	EARTHEN_ARMOR: {
+		id: 16522,
+		name: 'Earthen Armor',
+		icon: 'https://xivapi.com/i/002000/002706.png',
 		pet: PETS.TITAN_EGI.id,
 	},
 
@@ -214,7 +292,6 @@ export default {
 		id: 797,
 		name: 'Crimson Cyclone',
 		icon: 'https://xivapi.com/i/002000/002721.png',
-		cooldown: 40,
 		pet: PETS.IFRIT_EGI.id,
 	},
 
@@ -225,19 +302,10 @@ export default {
 		pet: PETS.IFRIT_EGI.id,
 	},
 
-	RADIANT_SHIELD: {
-		id: 799,
-		name: 'Radiant Shield',
-		icon: 'https://xivapi.com/i/002000/002723.png',
-		cooldown: 60,
-		pet: PETS.IFRIT_EGI.id,
-	},
-
 	FLAMING_CRUSH: {
 		id: 800,
 		name: 'Flaming Crush',
 		icon: 'https://xivapi.com/i/002000/002724.png',
-		cooldown: 30,
 		pet: PETS.IFRIT_EGI.id,
 	},
 
@@ -269,5 +337,20 @@ export default {
 		name: 'Akh Morn',
 		icon: 'https://xivapi.com/i/002000/002694.png',
 		pet: PETS.DEMI_BAHAMUT.id,
+	},
+
+	// Demi-Phoenix
+	SCARLET_FLAME: {
+		id: 16519,
+		name: 'Scarlet Flame',
+		icon: 'https://xivapi.com/i/002000/002733.png',
+		pet: PETS.DEMI_PHOENIX.id,
+	},
+
+	REVELATION: {
+		id: 16518,
+		name: 'Revelation',
+		icon: 'https://xivapi.com/i/002000/002732.png',
+		pet: PETS.DEMI_PHOENIX.id,
 	},
 }

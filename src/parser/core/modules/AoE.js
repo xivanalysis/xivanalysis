@@ -178,7 +178,7 @@ export default class AoE extends Module {
 				hits: Object.values(hitsByTarget),
 				sourceID: event.events[eventType][0].sourceID,
 				amount: Object.values(hitsByTarget).reduce((total, hit) => total + hit.amount, 0),
-				successfulHit: Object.values(hitsByTarget).reduce((successfulHit, hit) => successfulHit || hit, false),
+				successfulHit: Object.values(hitsByTarget).reduce((successfulHit, hit) => successfulHit || hit.successfulHit, false),
 			}
 			if (event.events[eventType][0].hasOwnProperty('sourceResources')) {
 				fabricatedEvent.sourceResources = event.events[eventType][0].sourceResources
