@@ -14,31 +14,6 @@ export default {
 		},
 	},
 
-	SKULL_SUNDER: {
-		id: 35,
-		name: 'Skull Sunder',
-		icon: 'https://xivapi.com/i/000000/000257.png',
-		onGcd: true,
-		potency: 100,
-		combo: {
-			from: 31,
-			potency: 210,
-		},
-	},
-
-	BUTCHERS_BLOCK: {
-		id: 47,
-		name: 'Butcher\'s Block',
-		icon: 'https://xivapi.com/i/000000/000262.png',
-		onGcd: true,
-		potency: 100,
-		combo: {
-			from: 35,
-			potency: 300,
-			end: true,
-		},
-	},
-
 	OVERPOWER: {
 		id: 41,
 		name: 'Overpower',
