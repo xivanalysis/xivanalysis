@@ -41,8 +41,8 @@ const CONTRIBUTORS = {
 		avatar: process.env.PUBLIC_URL + '/avatar/Lima.png',
 		jobs: [JOBS.SCHOLAR],
 	},
-	SAYAKA: {
-		name: 'Sayaka',
+	SKYE: {
+		name: 'Skye',
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},

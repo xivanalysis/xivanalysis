@@ -9,11 +9,13 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, DamageEvent} from 'fflogs'
+import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {AoeEvent} from 'parser/core/modules/Combos'
+import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
+import {FINISHES, GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -38,25 +40,6 @@ const ESPRIT_GENERATION_MULTIPLIERS = {
 	[ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id]: 3,
 }
 
-const STANDARD_FINISHES = [
-	ACTIONS.STANDARD_FINISH.id,
-	ACTIONS.SINGLE_STANDARD_FINISH.id,
-	ACTIONS.DOUBLE_STANDARD_FINISH.id,
-]
-
-const TECHNICAL_FINISHES = [
-	ACTIONS.TECHNICAL_FINISH.id,
-	ACTIONS.SINGLE_TECHNICAL_FINISH.id,
-	ACTIONS.DOUBLE_TECHNICAL_FINISH.id,
-	ACTIONS.TRIPLE_TECHNICAL_FINISH.id,
-	ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id,
-]
-
-const FINISHES = [
-	...STANDARD_FINISHES,
-	...TECHNICAL_FINISHES,
-]
-
 const ESPRIT_GENERATION_AMOUNT = 10
 
 const TICK_FREQUENCY = 3000
@@ -78,20 +61,20 @@ export default class EspritGauge extends Module {
 	private potentialOvercap = 0
 	private espritConsumed = 0
 	private avgGenerated = 0
-	private history: any[] = []
+	private history: GaugeGraphEntry[] = [{t: 0, y: 0, isGenerator: false}]
 	private currentEsprit = 0
 	private improvisationStart = 0
 
 	protected init() {
-		this.addHook('damage', {by: 'player'}, this.onDamage)
+		this.addHook('aoedamage', {by: 'player'}, this.onDamage)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SABER_DANCE.id}, this.onConsumeEsprit)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.IMPROVISATION.id}, this.startImprov)
 		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.IMPROVISATION.id}, this.endImprov)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
-	private onDamage(event: DamageEvent) {
-		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || event.amount === 0) {
+	private onDamage(event: AoeEvent) {
+		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.successfulHit) {
 			return
 		}
 		let generatedAmt = 0
@@ -109,26 +92,33 @@ export default class EspritGauge extends Module {
 		}
 		this.avgGenerated += generatedAmt
 		if (generatedAmt > 0) {
-			this.setEsprit(this.currentEsprit + generatedAmt)
+			this.setEsprit(this.currentEsprit + generatedAmt, true)
 		}
 	}
 	private onConsumeEsprit() {
 		this.espritConsumed++
+
+		// If we're using more esprit than we think we have, go back to the previous spender event and add some
+		// more esprit to the intervening generation events so the graph looks more correct
 		if (this.currentEsprit < SABER_DANCE_COST) {
-			const prevHistory = this.history.pop()
-			prevHistory.y = SABER_DANCE_COST
-			this.history.push(prevHistory)
+			const totalUnderRun = Math.abs(this.currentEsprit - SABER_DANCE_COST)
+			const lastSpendIndex = _.findLastIndex(this.history, event => !event.isGenerator)
+			const adjustmentPerEvent = totalUnderRun / (this.history.length - (lastSpendIndex + 1))
+			for (let i = lastSpendIndex + 1; i < this.history.length; i ++) {
+				this.history[i].y = this.history[i].y + adjustmentPerEvent * (i - lastSpendIndex)
+			}
 		}
+
 		this.setEsprit(this.currentEsprit - SABER_DANCE_COST)
 	}
 	private onDeath() {
 		this.setEsprit(0)
 	}
-	private setEsprit(value: number) {
+	private setEsprit(value: number, generatorEvent: boolean = false) {
 		this.currentEsprit = _.clamp(value, 0, MAX_ESPRIT)
 		this.potentialOvercap += Math.max(0, value - this.currentEsprit)
 		const t = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.history.push({t, y: this.currentEsprit})
+		this.history.push({t, y: this.currentEsprit, isGenerator: generatorEvent})
 	}
 
 	private startImprov(event: BuffEvent) {
@@ -142,7 +132,7 @@ export default class EspritGauge extends Module {
 		const ticks = Math.min(Math.max(1, Math.floor(diff / TICK_FREQUENCY)), MAX_IMPROV_TICKS)
 
 		// Choosing to assume in this case that everyone is in range so you get the maximum amount of Esprit per tic
-		this.setEsprit(this.currentEsprit + ticks * ESPRIT_GENERATION_AMOUNT)
+		this.setEsprit(this.currentEsprit + ticks * ESPRIT_GENERATION_AMOUNT, true)
 	}
 
 	private onComplete() {
@@ -152,11 +142,7 @@ export default class EspritGauge extends Module {
 			content: <Trans id="dnc.esprit.suggestions.overcapped-esprit.content">
 				You may have lost uses of <ActionLink {...ACTIONS.SABER_DANCE} /> due to overcapping your Esprit gauge. Make sure you use it, especially if your gauge is above 80.
 			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				5: SEVERITY.MEDIUM,
-				10: SEVERITY.MAJOR,
-			},
+			tiers: GAUGE_SEVERITY_TIERS,
 			value: missedSaberDances,
 			why: <Trans id="dnc.esprit.suggestions.overcapped-esprit.why">
 				<Plural value={missedSaberDances} one="# Saber Dance" other="# Saber Dances"/> may have been missed.
