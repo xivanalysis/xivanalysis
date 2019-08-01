@@ -171,6 +171,13 @@ export default {
 		cooldown: 120,
 	},
 
+	SCH_ENERGY_DRAIN: {
+		id: 167,
+		name: 'Energy Drain',
+		icon: 'https://xivapi.com/i/000000/000514.png',
+		cooldown: 3,
+	},
+
 	// -----
 	// PET
 	// -----
