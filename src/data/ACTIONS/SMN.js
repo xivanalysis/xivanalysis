@@ -149,63 +149,63 @@ export default {
 	},
 
 	//Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
-	EGI_ASSAULT_GARUDA: {
+	ASSAULT_I_AERIAL_SLASH: {
 		id: 16797,
 		name: 'Assault I: Aerial Slash',
 		icon: 'https://xivapi.com/i/002000/002717.png',
 		cooldown: 30,
 	},
 
-	EGI_ASSAULT_TITAN: {
+	ASSAULT_I_EARTHEN_ARMOR: {
 		id: 16795,
 		name: 'Assault I: Earthen Armor',
 		icon: 'https://xivapi.com/i/002000/002707.png',
 		cooldown: 30,
 	},
 
-	EGI_ASSAULT_IFRIT: {
+	ASSAULT_I_CRIMSON_CYCLONE: {
 		id: 16799,
 		name: 'Assault I: Crimson Cyclone',
 		icon: 'https://xivapi.com/i/002000/002726.png',
 		cooldown: 30,
 	},
 
-	EGI_ASSAULT_II_GARUDA: {
+	ASSAULT_II_SLIIPSTREAM: {
 		id: 16798,
 		name: 'Assault II: Slipstream',
 		icon: 'https://xivapi.com/i/002000/002718.png',
 		cooldown: 30,
 	},
 
-	EGI_ASSAULT_II_TITAN: {
+	ASSAULT_II_MOUNTAIN_BUSTER: {
 		id: 16796,
 		name: 'Assault II: Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002708.png',
 		cooldown: 30,
 	},
 
-	EGI_ASSAULT_II_IFRIT: {
+	ASSAULT_II_FLAMING_CRUSH: {
 		id: 16800,
 		name: 'Assault II: Flaming Crush',
 		icon: 'https://xivapi.com/i/002000/002727.png',
 		cooldown: 30,
 	},
 
-	ENKINDLE_GARUDA: {
+	ENKINDLE_AERIAL_BLAST: {
 		id: 16802,
 		name: 'Enkindle: Aerial Blast',
 		icon: 'https://xivapi.com/i/002000/002719.png',
 		cooldown: 120,
 	},
 
-	ENKINDLE_TITAN: {
+	ENKINDLE_EARTHEN_FURY: {
 		id: 16801,
 		name: 'Enkindle: Earthen Fury',
 		icon: 'https://xivapi.com/i/002000/002709.png',
 		cooldown: 120,
 	},
 
-	ENKINDLE_IFRIT: {
+	ENKINDLE_INFERNO: {
 		id: 16803,
 		name: 'Enkindle: Inferno',
 		icon: 'https://xivapi.com/i/002000/002728.png',
