@@ -116,7 +116,6 @@ export default class ArcanaTracking extends Module {
 		let prepullSleeve = true
 		const sleeveDrawLog: CastEvent[] = []
 		for (const event of events) {
-		console.log(event)
 		if (event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
 				) {
 					// End loop if: 1. Max duration of sleeve draw status passed
