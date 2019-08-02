@@ -37,7 +37,7 @@
   "ast.horoscope.suggestion.expired.content": "<0/> does not activate by itself, so don't forget to use it again or it will expire for no potency.",
   "ast.horoscope.suggestion.expired.why": "{0, plural, one {# expiration} other {# expirations}}  of Horoscope without reading fortunes again.",
   "ast.horoscope.title": "Horoscope",
-  "ast.lightspeed.messages.explanation": "The main use of <0/> should be for weaving card actions during <1/> and <2/> windows.<3/>It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<4/><5/> can reduce the cooldown. Each fight calls for a different strategy, but try to utilize it as much as possible.<6/><7/>Unless it's being used for <8/>, lightspeed should fit at least 6 GCDs.",
+  "ast.lightspeed.messages.explanation": "The main use of <0/> should be for weaving card actions during <1/> and <2/> windows.<3/>It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<4/>Each fight calls for a different strategy, but try to utilize it as much as possible.<5/><6/>Unless it's being used for <7/>, lightspeed should fit at least 6 GCDs.",
   "ast.lightspeed.messages.no-casts": "There were no casts recorded for <0/>",
   "ast.lightspeed.rotation.gcd": "{numGcds, plural, one {# GCD} other {# GCDs}}",
   "ast.lightspeed.rotation.mp-saved": "MP saved",

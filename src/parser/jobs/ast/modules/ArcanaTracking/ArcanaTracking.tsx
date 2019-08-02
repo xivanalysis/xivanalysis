@@ -340,8 +340,9 @@ export default class ArcanaTracking extends Module {
 		// First check that there's no DRAW between this and pullIndex
 		const lookupLog = this.cardStateLog.slice(this.pullIndex + 1)
 		if (lookupLog.length > 0) {
-				lookupLog.forEach(cardState => {
-				if (cardState.lastEvent.type === 'cast' && cardState.lastEvent.ability.guid === ACTIONS.DRAW.id) {
+			lookupLog.forEach(cardState => {
+				if (cardState.lastEvent.type === 'cast'
+				&& CARD_GRANTING_ABILITIES.includes(cardState.lastEvent.ability.guid) ) {
 					// We're done since they had a DRAW
 					return this.pullStateInitialized = true
 				}
