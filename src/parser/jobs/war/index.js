@@ -33,6 +33,7 @@ export default new Meta({
 
 	changelog: [{
 		date: new Date('2019-07-30'),
+		contributors: [CONTRIBUTORS.SKYE],
 		Changes: () => <>
 			Initial changes for Shadowbringers:
 			<ul>
@@ -41,6 +42,5 @@ export default new Meta({
 				<li>Changed the Gauge module to track the Infuriate reduction through Inner Chaos and Chaotic Cyclone instead of Fell Cleave and Decimate</li>
 			</ul>
 		</>,
-	},
-	],
+	}],
 })
