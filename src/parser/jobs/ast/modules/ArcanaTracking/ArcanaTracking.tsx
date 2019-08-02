@@ -116,7 +116,8 @@ export default class ArcanaTracking extends Module {
 		let prepullSleeve = true
 		const sleeveDrawLog: CastEvent[] = []
 		for (const event of events) {
-			if (event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
+		console.log(event)
+		if (event.timestamp - startTime >= (STATUSES.SLEEVE_DRAW.duration * 1000)
 				) {
 					// End loop if: 1. Max duration of sleeve draw status passed
 					break
@@ -341,7 +342,8 @@ export default class ArcanaTracking extends Module {
 		const lookupLog = this.cardStateLog.slice(this.pullIndex + 1)
 		if (lookupLog.length > 0) {
 				lookupLog.forEach(cardState => {
-				if (cardState.lastEvent.type === 'cast' && cardState.lastEvent.ability.guid === ACTIONS.DRAW.id) {
+				if (cardState.lastEvent.type === 'cast'
+				&& CARD_GRANTING_ABILITIES.includes(cardState.lastEvent.ability.guid) ) {
 					// We're done since they had a DRAW
 					return this.pullStateInitialized = true
 				}
