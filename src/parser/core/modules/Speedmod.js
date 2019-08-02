@@ -22,7 +22,9 @@ export default class Speedmod extends Module {
 	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
 
 	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
-	jobSpecificNormaliseLogic(/* event */) {
+	// TODO: disabled due to TS typing
+	// eslint-disable-next-line no-unused-vars
+	jobSpecificNormaliseLogic(event) {
 	}
 
 	// Override for scalars that function outside of speedmod
