@@ -116,8 +116,7 @@ export default class Sect extends Module {
 				aspectedCast = event
 
 			} else if (aspectedCast
-				&& event.type === 'applybuff' && (DIURNAL_SECT_STATUSES.includes(event.ability.guid)
-					|| NOCTURNAL_SECT_STATUSES.includes(event.ability.guid))) {
+				&& event.type === 'applybuff' && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
 				// This is an applybuff event of a sect buff that came after an aspected action
 
 				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
