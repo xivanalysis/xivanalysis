@@ -95,7 +95,6 @@ export default class Sect extends Module {
 	protected init() {
 		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
 		this.addHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
-		this.addHook('refreshbuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -114,7 +113,7 @@ export default class Sect extends Module {
 				aspectedCast = event
 
 			} else if (aspectedCast
-				&& (event.type === 'applybuff') && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
+				&& (event.type === 'applybuff' || event.type === 'refreshbuff') && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
 				// This is an applybuff event of a sect buff that came after an aspected action
 
 				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
