@@ -1,7 +1,7 @@
 import PETS from '../PETS'
 
 //use action id of a skill id in the group to avoid potential duplications
-const SMN_COOLDOWN_GROUP = {
+export const SMN_COOLDOWN_GROUP = {
 	SUMMON: 180,
 	ENERGY: 16510,
 	TRANCE: 3581,
