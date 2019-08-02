@@ -37,7 +37,7 @@
   "ast.horoscope.suggestion.expired.content": "<0/> aktiviert sich nicht automatisch, denke daher daran, es immer so bald wie möglich erneut einzusetzen, um keine Aufladung zu verschwenden.",
   "ast.horoscope.suggestion.expired.why": "{0, plural, one {# mal} other {# mal}} versäumt, Horoskop (ohne Karten gelesen zu haben) einzusetzen.",
   "ast.horoscope.title": "Horoskop",
-  "ast.lightspeed.messages.explanation": "Die Hauptaufgabe von <0/> sollte sein, Karten-Actionen zwischen Cooldowns von <1/> und <2/> zu ermöglichen.<3/>Zusätzlich kann es während MP-intensiven Phasen eingesetzt werden, erlaubt - trotz Bewegung - Casts auszuführen und viele weitere spezifische Szenarios. <4/><5/>reduzieren den Cooldown. Jeder Kampf verlangt andere Strategien, versuche es dennoch so oft wie möglich einzusetzen. <6/><7/>Wird Lichtgeschwindigkeit nicht für <8/> ersetzt, solltest du damit 6 GCD-Aktionen unterbringen können.",
+  "ast.lightspeed.messages.explanation": "",
   "ast.lightspeed.messages.no-casts": "Es wurden keine Ausführungen von <0/> verzeichnet",
   "ast.lightspeed.rotation.gcd": "{numGcds, plural, one {# GCD} other {# GCDs}}",
   "ast.lightspeed.rotation.mp-saved": "Gesparte MP",
