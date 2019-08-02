@@ -12,7 +12,7 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
 
-const CARD_GRANTING_ABILITIES = [ACTIONS.DRAW.id, ACTIONS.REDRAW.id, ACTIONS.MINOR_ARCANA.id]
+const CARD_GRANTING_ABILITIES = [ACTIONS.DRAW.id, ACTIONS.REDRAW.id, ACTIONS.MINOR_ARCANA.id, ...PLAY, ACTIONS.SLEEVE_DRAW.id]
 
 const CARD_ACTIONS = [
 	ACTIONS.DRAW.id,
@@ -269,7 +269,6 @@ export default class ArcanaTracking extends Module {
 		cardStateItem.lastEvent = event
 
 		if (PLAY.includes(actionId)) {
-
 			cardStateItem.drawState = DrawnType.NOTHING
 			// Make sure they have been holding onto this from the last instance of a DRAW/REDRAW/MINOR_ARCANA
 			this.retconSearch(actionId)
@@ -285,6 +284,10 @@ export default class ArcanaTracking extends Module {
 			}
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
+
+			if (cardStateItem.sleeveState > SleeveType.NOTHING) {
+				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
+			}
 		}
 
 		if (actionId === ACTIONS.DIVINATION.id) {
@@ -293,10 +296,6 @@ export default class ArcanaTracking extends Module {
 
 		if (actionId === ACTIONS.UNDRAW.id) {
 			cardStateItem.drawState = DrawnType.NOTHING
-		}
-
-		if (actionId === ACTIONS.DRAW.id) {
-			cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
 		}
 
 		if (actionId === ACTIONS.SLEEVE_DRAW.id) {
@@ -396,8 +395,7 @@ export default class ArcanaTracking extends Module {
 		// Looking for those abilities in CARD_GRANTING_ABILITIES that could possibly get us this card
 		let lastIndex = _.findLastIndex(searchLog,
 			stateItem =>
-				stateItem.lastEvent && stateItem.lastEvent.type === 'cast' &&
-				CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
+				this.isCastEvent(stateItem.lastEvent) && CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
 		)
 
 		// There were no finds of specified abilities, OR it wasn't logged.
