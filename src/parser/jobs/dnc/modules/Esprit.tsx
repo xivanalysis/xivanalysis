@@ -73,6 +73,7 @@ export default class EspritGauge extends Module {
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
+
 	private onDamage(event: AoeEvent) {
 		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.successfulHit) {
 			return
@@ -95,6 +96,7 @@ export default class EspritGauge extends Module {
 			this.setEsprit(this.currentEsprit + generatedAmt, true)
 		}
 	}
+
 	private onConsumeEsprit() {
 		this.espritConsumed++
 
@@ -111,9 +113,11 @@ export default class EspritGauge extends Module {
 
 		this.setEsprit(this.currentEsprit - SABER_DANCE_COST)
 	}
+
 	private onDeath() {
 		this.setEsprit(0)
 	}
+
 	private setEsprit(value: number, generatorEvent: boolean = false) {
 		this.currentEsprit = _.clamp(value, 0, MAX_ESPRIT)
 		this.potentialOvercap += Math.max(0, value - this.currentEsprit)
