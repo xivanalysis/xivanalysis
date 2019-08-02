@@ -55,7 +55,9 @@ export default class Bahamut extends Module {
 		if (!action || action.autoAttack) { return }
 
 		// Track player actions during SB
-		if (this.gauge.bahamutSummoned()) {
+		if (this.gauge.bahamutSummoned() &&
+			(action.onGcd || event.ability.guid === ACTIONS.ENKINDLE_BAHAMUT.id)
+		) {
 			this._current.casts.push(event)
 		}
 	}
@@ -138,7 +140,7 @@ export default class Bahamut extends Module {
 		return <>
 			<Message>
 				<Trans id="smn.bahamut.ghost-disclaimer">Bahamut actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
-				You should be aiming for 11 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
+				You should be aiming for 8 Wyrmwaves and 2 Akh Morns in each Summon Bahamut window unless rushing or cleaving multiple targets.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}
