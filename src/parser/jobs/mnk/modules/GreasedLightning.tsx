@@ -1,21 +1,24 @@
 import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import React from 'react'
 import TimeLineChart from 'components/ui/TimeLineChart'
+import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import {BuffEvent, BuffStackEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import BrokenLog from 'parser/core/modules/BrokenLog'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Invulnerability from 'parser/core/modules/Invulnerability'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const GL_MAX_STACKS = 3
+const GL_MAX_STACKS = 4
 
 const GL_TIMEOUT_MILLIS = STATUSES.GREASED_LIGHTNING.duration * 1000
 
@@ -25,47 +28,52 @@ const GL_REFRESHERS = [
 	ACTIONS.TORNADO_KICK.id,
 ]
 
+interface CurrentStacks {
+	stack: number
+	timestamp: number
+}
+
+interface RoE {
+	clean: boolean
+	timestamp: number
+}
+
 export default class GreasedLightning extends Module {
 	static handle = 'greasedlightning'
-	static dependencies = [
-		'brokenLog',
-		'checklist',
-		'invuln',
-		'suggestions',
-	]
-
 	static title = t('mnk.gl.title')`Greased Lightning`
 	static displayOrder = DISPLAY_ORDER.GREASED_LIGHTNING
 
-	_currentStacks = null
-	_droppedStacks = 0
-	_lastRefresh = 0
+	@dependency private brokenLog!: BrokenLog
+	@dependency private checklist!: Checklist
+	@dependency private invuln!: Invulnerability
+	@dependency private suggestions!: Suggestions
 
-	_usedTornadoKick = false
+	_currentStacks!: CurrentStacks
+	_droppedStacks: number = 0
+	_lastRefresh: number | null = null
 
-	_stacks = []
+	_usedTornadoKick: boolean = false
 
-	_earthSaves = []
+	_stacks: CurrentStacks[] = []
+
+	_earthSaves: RoE[] = []
 	_wastedEarth = 0
 
-	constructor(...args) {
-		super(...args)
-
-		const GL_FILTER = {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}
-		this.addHook('applybuff', GL_FILTER, this._onGlGain)
-		this.addHook('applybuffstack', GL_FILTER, this._onGlRefresh)
-		this.addHook('removebuff', GL_FILTER, this._onDrop)
+	protected init(): void {
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}, this.onGain)
+		this.addHook('applybuffstack', {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}, this.onRefresh)
+		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.GREASED_LIGHTNING.id}, this.onDrop)
 
 		// Cast will drop TK
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this._onTornadoKick)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this.onTornadoKick)
 
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this._onRoE)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this._onReply)
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this.onRoE)
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this.onReply)
 
-		this.addHook('complete', this._onComplete)
+		this.addHook('complete', this.onComplete)
 	}
 
-	normalise(events) {
+	normalise(events: TODO[]) {
 		let currentStacks = 0
 		let lastStackEvent = {timestamp: this.parser.fight.start_time}
 		let usedTornadoKick = false
@@ -125,7 +133,7 @@ export default class GreasedLightning extends Module {
 
 				// If it's still an applybuff, make sure we're recording the correct current stack count
 				if (event.type === 'applybuff') {
-					currentStacks = event.stack || 1
+					currentStacks = 1
 				}
 
 				// Fall through to reapply
@@ -146,9 +154,10 @@ export default class GreasedLightning extends Module {
 		return events
 	}
 
-	_onGlGain(event) {
+	// This is fucked, idk why fflogs has a stack field in BuffEvent, our types don't
+	private onGain(event: BuffEvent): void {
 		this._currentStacks = {
-			stack: event.stack || 1,
+			stack: 1,
 			timestamp: event.timestamp,
 		}
 
@@ -156,7 +165,7 @@ export default class GreasedLightning extends Module {
 		this._stacks.push(this._currentStacks)
 	}
 
-	_onGlRefresh(event) {
+	private onRefresh(event: BuffStackEvent): void {
 		if (event.stack > this._currentStacks.stack) {
 			this._currentStacks = {
 				stack: event.stack,
@@ -169,12 +178,12 @@ export default class GreasedLightning extends Module {
 		this._lastRefresh = event.timestamp
 	}
 
-	_onRoE(event) {
+	private onRoE(event: BuffEvent): void {
 		this._earthSaves.unshift({clean: false, timestamp: event.timestamp})
 	}
 
-	_onReply(event) {
-		if (event.timestamp - this._lastRefresh > GL_TIMEOUT_MILLIS) {
+	private onReply(event: BuffEvent): void {
+		if (this._lastRefresh === null || event.timestamp - this._lastRefresh > GL_TIMEOUT_MILLIS) {
 			this._wastedEarth++
 		} else {
 			this._lastRefresh = event.timestamp
@@ -183,11 +192,11 @@ export default class GreasedLightning extends Module {
 		this._earthSaves[0].clean = true
 	}
 
-	_onTornadoKick() {
+	private onTornadoKick(): void {
 		this._usedTornadoKick = true
 	}
 
-	_onDrop(event) {
+	private onDrop(event: BuffEvent): void {
 		this._currentStacks = {
 			stack: 0,
 			timestamp: event.timestamp,
@@ -202,7 +211,7 @@ export default class GreasedLightning extends Module {
 		this._stacks.push(this._currentStacks)
 	}
 
-	_onComplete() {
+	private onComplete(): void {
 		// Push the final GL count so that it lasts to the end of the fight
 		this._stacks.push({...this._currentStacks, timestamp: this.parser.fight.end_time})
 
@@ -299,7 +308,7 @@ export default class GreasedLightning extends Module {
 		// TODO: figure out how to make this graph at least 3x shorter in height
 
 		// Disabling magic numbers for the chart, 'cus it's a chart
-		/* eslint-disable no-magic-numbers */
+		/* tslint:disable no-magic-numbers */
 		const data = {
 			datasets: [{
 				label: 'GL Stacks',
@@ -328,6 +337,6 @@ export default class GreasedLightning extends Module {
 			options={options}
 			height={50}
 		/>
-		/* eslint-enable no-magic-numbers */
+		/* tslint:enable no-magic-numbers */
 	}
 }

@@ -1,15 +1,18 @@
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
 
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
+import Downtime from 'parser/core/modules/Downtime'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
-const FORM_TIMEOUT_MILLIS = 10000
+const FORM_TIMEOUT_MILLIS = 15000
 
 const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
@@ -25,31 +28,29 @@ const OPO_OPO_SKILLS = [
 
 export default class Forms extends Module {
 	static handle = 'forms'
-	static dependencies = [
-		'downtime',
-		'combatants',
-		'suggestions',
-	]
 
-	_formless = 0
-	_poorForms = 0
-	_resetForms = 0
-	_skippedForms = 0
-	_droppedForms = 0
+	@dependency private combatants!: Combatants
+	@dependency private downtime!: Downtime
+	@dependency private suggestions!: Suggestions
 
-	_lastFormChanged = null
-	_lastFormDropped = null
+	_formless: number = 0
+	_poorForms: number = 0
+	_resetForms: number = 0
+	_skippedForms: number = 0
+	_droppedForms: number = 0
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this._onGain)
-		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this._onRemove)
-		this.addHook('complete', this._onComplete)
+	_lastFormChanged: number | null = null
+	_lastFormDropped: number | null = null
+
+	protected init(): void {
+		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
+		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onCast(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+	private onCast(event: CastEvent): void {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
 		if (!action) {
 			return
@@ -57,13 +58,13 @@ export default class Forms extends Module {
 
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
-			const current_form = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
+			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
 			const untargetable = this.downtime.getDowntime(this._lastFormChanged || 0, event.timestamp)
 
 			// If PB is active, we can ignore form unless someone is really derpy
 			if (this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)) {
 				if (action === ACTIONS.FORM_SHIFT.id) {
-					this._poorForm++
+					this._poorForms++
 				}
 				return
 			}
@@ -78,7 +79,7 @@ export default class Forms extends Module {
 			}
 
 			// Handle relevant actions per form
-			switch (current_form) {
+			switch (currentForm) {
 			case STATUSES.OPO_OPO_FORM.id:
 				break
 			// Using Opo-Opo skills resets form
@@ -92,7 +93,7 @@ export default class Forms extends Module {
 				}
 
 				// Check if we timed out
-				if (untargetable === 0) {
+				if (untargetable === 0 && this._lastFormDropped !== null && this._lastFormChanged !== null) {
 					if ((this._lastFormDropped - this._lastFormChanged) > FORM_TIMEOUT_MILLIS) {
 						this._droppedForms++
 					}
@@ -103,15 +104,15 @@ export default class Forms extends Module {
 		}
 	}
 
-	_onGain(event) {
+	private onGain(event: BuffEvent): void {
 		this._lastFormChanged = event.timestamp
 	}
 
-	_onRemove(event) {
+	private onRemove(event: BuffEvent): void {
 		this._lastFormDropped = event.timestamp
 	}
 
-	_onComplete() {
+	private onComplete(): void {
 		// Wasting PB
 		if (this._poorForms >= 1) {
 			this.suggestions.add(new Suggestion({
@@ -183,4 +184,3 @@ export default class Forms extends Module {
 		}
 	}
 }
-

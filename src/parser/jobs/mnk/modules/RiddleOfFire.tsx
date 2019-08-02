@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
 
@@ -8,8 +8,10 @@ import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+import {BuffEvent, CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {matchClosestHigher} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -24,47 +26,51 @@ const ROF_GCD = {
 	ERROR: 7,
 }
 
+class Riddle {
+	casts: CastEvent[]
+	start: number
+	end?: number | null = null
+	rushing: boolean = false
+
+	constructor(start: number) {
+		this.start = start
+		this.casts = []
+	}
+}
+
 export default class RiddleOfFire extends Module {
 	static handle = 'riddleoffire'
-	static dependencies = [
-		'suggestions',
-	]
-
 	static title = t('mnk.rof.title')`Riddle of Fire`
 	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
-	_active = false
-	_history = []
-	_riddle = {casts: []}
-	_rushing = false
+	@dependency private suggestions!: Suggestions
 
-	_missedGcds = 0
-	_missedTks = 0
+	_active: boolean = false
+	_history: Riddle[] = []
+	_riddle!: Riddle
+	_rushing: boolean = false
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this._onDrop)
-		this.addHook('complete', this._onComplete)
+	_missedGcds: number = 0
+	_missedTks: number = 0
+
+	protected init(): void {
+		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this.onDrop)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onCast(event) {
-		const actionId = event.ability.guid
+	onCast(event: CastEvent): void {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // should be Action type
 
-		if (actionId === ACTIONS.RIDDLE_OF_FIRE.id) {
+		if (action.id === ACTIONS.RIDDLE_OF_FIRE.id) {
 			this._active = true
-			this._riddle = {
-				start: event.timestamp,
-				end: null,
-				casts: [],
-			}
+			this._riddle = new Riddle(event.timestamp)
 
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 			this._rushing = ROF_DURATION >= fightTimeRemaining
 		}
 
 		// we only care about actual skills
-		const action = getDataBy(ACTIONS, 'id', actionId)
 		if (!this._active || !action || action.autoAttack) {
 			return
 		}
@@ -72,21 +78,21 @@ export default class RiddleOfFire extends Module {
 		this._riddle.casts.push(event)
 	}
 
-	_onDrop(event) {
-		this._stopAndSave(event.timestamp)
+	private onDrop(event: BuffEvent): void {
+		this.stopAndSave(event.timestamp)
 	}
 
-	_onComplete() {
+	private onComplete(): void {
 		// Close up if RoF was active at the end of the fight
 		if (this._active) {
-			this._stopAndSave()
+			this.stopAndSave()
 		}
 
 		// Aggregate GCDs under each RoF
-		const rofs = []
+		const rofs: number[] = []
 		this._history.forEach(riddle => {
 			rofs.push(riddle.casts.filter(cast => {
-				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
 				return action && action.onGcd
 			}).length)
 		})
@@ -122,7 +128,7 @@ export default class RiddleOfFire extends Module {
 		}
 	}
 
-	_stopAndSave(endTime = this.parser.currentTimestamp) {
+	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
 		if (!this._active) {
 			return
 		}
@@ -133,7 +139,7 @@ export default class RiddleOfFire extends Module {
 		this._history.push(this._riddle)
 
 		const gcds = this._riddle.casts.filter(cast => {
-			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
 			return action && action.onGcd
 		})
 		const tks = this._riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id)
@@ -146,7 +152,7 @@ export default class RiddleOfFire extends Module {
 		this._missedTks += 1 - tks.length
 	}
 
-	_formatGcdCount(count) {
+	private formatGcdCount(count: number): TODO {
 		if (count <= ROF_GCD.ERROR) {
 			return <span className="text-error">{count}</span>
 		}
@@ -161,7 +167,7 @@ export default class RiddleOfFire extends Module {
 	output() {
 		const panels = this._history.map(riddle => {
 			const numGcds = riddle.casts.filter(cast => {
-				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
+				const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
 				return action && action.onGcd
 			}).length
 			const numTKs = riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id).length
@@ -173,7 +179,7 @@ export default class RiddleOfFire extends Module {
 						{this.parser.formatTimestamp(riddle.start)}
 						<span> - </span>
 						<Trans id="mnk.rof.table.gcd" render="span">
-							{this._formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
+							{this.formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
 						</Trans>
 						<span> - </span>
 						<Trans id="mnk.rof.table.tk" render="span">

@@ -1,55 +1,54 @@
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Event} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
 const ROCKBREAKER_MIN_TARGETS = 2
 const AOTD_MIN_TARGETS = 5
 
 export default class MnkAoE extends Module {
 	static handle = 'mnkaoe'
-	static dependencies = [
-		'suggestions',
-	]
 
-	_badAotDs = []
-	_badRocks = []
+	@dependency private suggestions!: Suggestions
 
-	constructor(...args) {
-		super(...args)
+	_badAotDs: Event[] = []
+	_badRocks: Event[] = []
 
+	protected init(): void {
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.ARM_OF_THE_DESTROYER.id,
-		}, this._onAotDDamage)
+		}, this.onAotDDamage)
 
 		this.addHook('aoedamage', {
 			by: 'player',
 			abilityId: ACTIONS.ROCKBREAKER.id,
-		}, this._onRockbreakerDamage)
+		}, this.onRockbreakerDamage)
 
-		this.addHook('complete', this._onComplete)
+		this.addHook('complete', this.onComplete)
 	}
 
 	// TODO: figure out when player uses this for Silence effect, need to calculate interrupts on target
-	_onAotDDamage(event) {
-		if (event.hits.length < AOTD_MIN_TARGETS) {
+	private onAotDDamage(event: Event): void {
+		if (event.hasOwnProperty('hits') &&
+			(event as any).hits.length < AOTD_MIN_TARGETS) {
 			this._badAotDs.push(event)
 		}
 	}
 
 	// TODO: if player is out of melee range and doing a single target RB, note it as minor
-	_onRockbreakerDamage(event) {
-		if (event.hits.length < ROCKBREAKER_MIN_TARGETS) {
+	private onRockbreakerDamage(event: Event): void {
+		if (event.hasOwnProperty('hits') &&
+			(event as any).hits.length < ROCKBREAKER_MIN_TARGETS) {
 			this._badRocks.push(event)
 		}
 	}
 
-	_onComplete() {
+	private onComplete(): void {
 		if (this._badAotDs.length >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ARM_OF_THE_DESTROYER.icon,
