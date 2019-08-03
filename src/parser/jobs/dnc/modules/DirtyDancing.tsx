@@ -98,8 +98,6 @@ export default class DirtyDancing extends Module {
 	private missedDances = 0
 	private dirtyDances = 0
 	private footlooseDances = 0
-	private firstDevilment = false
-	private badDevilments = 0
 
 	private previousUseTimestamp = {
 		[ACTIONS.STANDARD_STEP.id]: this.parser.fight.start_time,
@@ -114,7 +112,6 @@ export default class DirtyDancing extends Module {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
 		this.addHook('cast', {by: 'player'}, this.continueDance)
 		this.addHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DEVILMENT.id}, this.onDevilment)
 		this.addHook('aoedamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
 		this.addHook('complete', this.onComplete)
 	}
@@ -194,19 +191,6 @@ export default class DirtyDancing extends Module {
 		dance.resolved = true
 	}
 
-	// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
-	// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-	private onDevilment(event: CastEvent) {
-		if (!this.firstDevilment) {
-			this.firstDevilment = true
-			return
-		}
-
-		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
-			this.badDevilments++
-		}
-	}
-
 	private getStandardFinishUptimePercent() {
 		const statusTime = this.combatants.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.parser.player.id)
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
@@ -255,19 +239,6 @@ export default class DirtyDancing extends Module {
 			value: this.footlooseDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.footloose.why">
 				<Plural value={this.footlooseDances} one="# dance" other="# dances"/> finished with extra steps.
-			</Trans>,
-		}))
-
-		// Suggestion to use Devilment under Technical
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DEVILMENT.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.content">
-				Using <ActionLink {...ACTIONS.DEVILMENT} /> outside your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...ACTIONS.DEVILMENT} /> at the beginning of your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: this.badDevilments,
-			why: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.why">
-				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...STATUSES.TECHNICAL_FINISH} />.
 			</Trans>,
 		}))
 
