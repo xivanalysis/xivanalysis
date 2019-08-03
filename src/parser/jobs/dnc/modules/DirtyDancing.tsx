@@ -18,6 +18,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import Timeline from 'parser/core/modules/Timeline'
 
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
@@ -87,6 +88,7 @@ class Dance {
 export default class DirtyDancing extends Module {
 	static handle = 'dirtydancing'
 	static title = t('dnc.dirty-dancing.title')`Dance Issues`
+	static displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
@@ -325,7 +327,7 @@ export default class DirtyDancing extends Module {
 		}
 	}
 
-	private getNotesIcon(ruleFailed: boolean): any {
+	private getNotesIcon(ruleFailed: boolean): TODO {
 		return <Icon
 			name={ruleFailed ? 'remove' : 'checkmark'}
 			className={ruleFailed ? 'text-error' : 'text-success'}

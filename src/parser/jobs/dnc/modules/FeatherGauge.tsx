@@ -13,6 +13,7 @@ import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
@@ -33,6 +34,7 @@ const MAX_FEATHERS = 4
 export default class FeatherGauge extends Module {
 	static handle = 'feathergauge'
 	static title = t('dnc.feather-gauge.title')`Feather Gauge`
+	static displayOrder = DISPLAY_ORDER.FEATHERS
 
 	@dependency private suggestions!: Suggestions
 

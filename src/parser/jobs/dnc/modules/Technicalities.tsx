@@ -16,7 +16,7 @@ import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
-import {DEFAULT_SEVERITY_TIERS} from '../CommonData'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
@@ -44,6 +44,7 @@ class TechnicalWindow {
 export default class Technicalities extends Module {
 	static handle = 'technicalities'
 	static title = t('dnc.technicalities.title')`Technical Windows`
+	static displayOrder = DISPLAY_ORDER.TECHNICALITIES
 
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
@@ -107,8 +108,8 @@ export default class Technicalities extends Module {
 		if (!lastWindow.end) {
 			lastWindow.rotation.push(event)
 			if (action.onGcd) {
-			lastWindow.gcdCount++
-		}
+				lastWindow.gcdCount++
+			}
 			return
 		}
 
@@ -119,8 +120,8 @@ export default class Technicalities extends Module {
 	}
 
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
-	// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
-	// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
+		// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
+		// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
 		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id) && this.firstDevilment) {
 			this.badDevilments++
 		}
