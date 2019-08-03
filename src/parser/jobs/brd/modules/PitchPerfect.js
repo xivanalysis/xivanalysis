@@ -1,14 +1,14 @@
 /**
  * @author Yumiya
  */
+import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import React from 'react'
 import Module from 'parser/core/Module'
-import {Accordion, Icon, Message, List} from 'semantic-ui-react'
+import {Accordion, Icon, Message, List, Button, Label} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {ActionLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosest} from 'utilities'
 
@@ -18,7 +18,6 @@ const DOT_TICK_FREQUENCY = 3000 // 3s
 const SONG_DURATION = 30000 // 30s
 const ANIMATION_LOCK = 700 // 700ms (arbitrary, fite me)
 
-const PP2_THRESHOLD = 61 // 61% crit rate
 const CONVERSION_FACTOR = 0.1
 
 const DHIT_MOD = 1.25
@@ -32,10 +31,13 @@ const PP = {
 	3: 3,
 }
 
+const PP_POTENCY = ACTIONS.PITCH_PERFECT.potency
+const PP_MAX_POTENCY = PP_POTENCY[2]
+
 // Issues
 const NONE = 0
-const PP2_ON_LOW_CRIT = 1
-const PP1_NOT_AT_END = 2
+const PP_CAST_WIHTOUT_MAX_STACKS = 1
+const PP_NOT_CAST_AT_END = 2
 
 export default class PitchPerfect extends Module {
 	static handle = 'pitchPerfect'
@@ -44,12 +46,15 @@ export default class PitchPerfect extends Module {
 		'additionalStats',
 		'downtime',
 		'suggestions',
-		'util',
+		'brokenLog',
+		'timeline',
 	]
 
 	_enemies = {}
 	_lastWMCast = undefined
 
+	_lostPotencyFromStacks = 0
+	_lostPotencyFromMissedCast = [0, 0]
 	_ppEvents = []
 
 	constructor(...args) {
@@ -111,10 +116,10 @@ export default class PitchPerfect extends Module {
 
 		// We get the approximated potency and then match to the closest real potency
 		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
-		const potency = matchClosest(ACTIONS.PITCH_PERFECT.potency, approximatedPotency)
+		const potency = matchClosest(PP_POTENCY, approximatedPotency)
 
 		// We then infer the amount of stacks
-		const stacks = ACTIONS.PITCH_PERFECT.potency.indexOf(potency) + 1
+		const stacks = PP_POTENCY.indexOf(potency) + 1
 
 		// And finally we fabricate the event
 		this.parser.fabricateEvent({
@@ -134,6 +139,16 @@ export default class PitchPerfect extends Module {
 			return
 		}
 
+		if (wm === undefined) {
+			//The only time I have encounted this is from broken logs
+			this.brokenLog.trigger(this, 'no previous wm cast', (
+				<Trans id="brd.pitch-perfect.trigger.no-wm-cast">
+					<ActionLink {...ACTIONS.PITCH_PERFECT}/> was used when there was no cast of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/> before hand.
+				</Trans>
+			))
+			return
+		}
+
 		const ppEvent = {
 			damageEvent: event,
 			issue: NONE,
@@ -150,7 +165,6 @@ export default class PitchPerfect extends Module {
 		this._ppEvents.push(ppEvent)
 
 		// Only an issue if there are dot ticks left on the song and sufficient time to use PP (animation lock)
-		// TODO: Consider pre-downtime case
 		if (ppEvent.lastTickOnEnemy + DOT_TICK_FREQUENCY >= wm.timestamp + SONG_DURATION - 2 * ANIMATION_LOCK) {
 			return
 		}
@@ -158,29 +172,9 @@ export default class PitchPerfect extends Module {
 		// We write down the crit on each dot, to provide the information later
 		ppEvent.critOnDot[STATUSES.CAUSTIC_BITE.id] = enemy.tick[STATUSES.CAUSTIC_BITE.id] && enemy.tick[STATUSES.CAUSTIC_BITE.id].expectedCritRate * CONVERSION_FACTOR
 		ppEvent.critOnDot[STATUSES.STORMBITE.id] = enemy.tick[STATUSES.STORMBITE.id] && enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR
-
-		// If crit is above threshold for PP2
-		// Using PP1 when not at the end of the song is not ideal
-		if (
-			enemy.tick[STATUSES.CAUSTIC_BITE.id]
-			&& enemy.tick[STATUSES.STORMBITE.id]
-			&& enemy.tick[STATUSES.CAUSTIC_BITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
-			&& enemy.tick[STATUSES.STORMBITE.id].expectedCritRate * CONVERSION_FACTOR > PP2_THRESHOLD
-		) {
-			// Using PP1 when not at the end of the song is not ideal
-			if (event.stacks === PP[1]) {
-				ppEvent.issue = PP1_NOT_AT_END
-			}
-		// Using PP2 when crit is below the threshold is not ideal
-		} else if (event.stacks === PP[2]) {
-
-			ppEvent.issue = PP2_ON_LOW_CRIT
-
-		// Using PP1 when not at the end of the song is not ideal
-		} else if (event.stacks === PP[1]) {
-
-			ppEvent.issue = PP1_NOT_AT_END
-
+		if (event.stacks !== PP[3]) {
+			ppEvent.lostPotency = PP_MAX_POTENCY - PP_POTENCY[event.stacks - 1]
+			ppEvent.issue = PP_CAST_WIHTOUT_MAX_STACKS
 		}
 	}
 
@@ -188,27 +182,44 @@ export default class PitchPerfect extends Module {
 		// We remove bad PPs that were used because of downtime
 		this._cleanUpPPs()
 
-		const badPPs = this._ppEvents.filter(pp => pp.issue !== NONE).length
+		const badPPs = this._ppEvents.filter(pp => pp.issue === PP_CAST_WIHTOUT_MAX_STACKS).length
+		const missedPPs = this._ppEvents.filter(pp => pp.issue === PP_NOT_CAST_AT_END).length
 
-		if (badPPs === 0) {
+		if (badPPs === 0 && missedPPs === 0) {
 			// Good job!
 			return
 		}
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.PITCH_PERFECT.icon,
-			content: <>
-				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>. Only use it at <strong>2 or less stacks</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends. More information in the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below.
-			</>,
+			content: <Trans id="brd.pitch-perfect.cast-without-stacks.suggestion">
+				Use {ACTIONS.PITCH_PERFECT.name} at <strong>3 stacks</strong>. Only use it at <strong>2 or less stacks</strong> when there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/> ends.
+			</Trans>,
+			tiers: {
+				900: SEVERITY.MAJOR,
+				400: SEVERITY.MEDIUM,
+				150: SEVERITY.MINOR,
+			},
+			value: this._lostPotencyFromStacks,
+			why: <Trans id="brd.pitch-perfect.cast-without-stacks.suggestion.reason">
+				<Plural value={badPPs} one="# cast" other="# casts"/> of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.PITCH_PERFECT.icon,
+			content: <Trans id="brd.pitch-perfect.no-cast-at-end.suggestion">
+				Use any stacks you have of {ACTIONS.PITCH_PERFECT.name} after there are no more DoT ticks before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends.
+			</Trans>,
 			tiers: {
 				8: SEVERITY.MAJOR,
 				5: SEVERITY.MEDIUM,
 				2: SEVERITY.MINOR,
 			},
-			value: badPPs,
-			why: <>
-				{badPPs} casts of {ACTIONS.PITCH_PERFECT.name} with the wrong amount of stacks.
-			</>,
+			value: missedPPs,
+			why: <Trans id="brd.pitch-perfect.no-cast-at-end.suggestion.reason">
+				You might have missed up to <Plural value={missedPPs} one="# cast" other="# casts"/> of {ACTIONS.PITCH_PERFECT.name}.
+			</Trans>,
 		}))
 	}
 
@@ -227,29 +238,23 @@ export default class PitchPerfect extends Module {
 				tuples: [],
 			}
 
-			// For each PP issue
-			if (pp.issue === PP2_ON_LOW_CRIT) {
+			if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
 				panelProperties.tuples.push({
-					issue: <>
-						When your critical hit rate is lower than or equal to <strong>{PP2_THRESHOLD}%</strong> on both your DoTs, {ACTIONS.PITCH_PERFECT.name} should be used at <strong>3 stacks</strong>.
-					</>,
-					reason: <>
-						A {ACTIONS.PITCH_PERFECT.name} at 3 stacks has the highest <strong>potency per stack</strong> value, with 140 potency per stack.
-						<br/>
-						Using {ACTIONS.PITCH_PERFECT.name} at 2 stacks is only optimal when your critical hit rate is greater than <strong>{PP2_THRESHOLD}%</strong> on both your DoTs.
-						<br/>
-						This happens because both your DoTs can give you Repertoire procs at the same time. If you already have 2 stacks on your bank, getting a double proc wastes one stack.
-						At <strong>{PP2_THRESHOLD}%</strong> critical hit rate or higher, you are more likely to get a double proc and waste a stack than not.
-					</>,
+					issue: <Trans id="brd.pitch-perfect.cast-without-max-stacks">
+						<ActionLink {...ACTIONS.PITCH_PERFECT}/> should only below 3 stacks when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
+					</Trans>,
+					reason: <Trans id="brd.pitch-perfect.cast-without-max-stacks.reason">
+						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {this._formatPotency(PP_POTENCY[0])} at the first stack, {this._formatPotency(PP_POTENCY[1])} at the second, and {this._formatPotency(PP_POTENCY[2])} at the third and final stack, so you don't want to use it before the last one.
+					</Trans>,
 				})
-			} else if (pp.issue === PP1_NOT_AT_END) {
+			} else if (pp.issue === PP_NOT_CAST_AT_END) {
 				panelProperties.tuples.push({
-					issue: <>
-						{ACTIONS.PITCH_PERFECT.name} should only be used at 1 stack when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
-					</>,
-					reason: <>
+					issue: <Trans id="brd.pitch-perfect.cast-without-stacks">
+						Before <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> ends, you should make sure to use <ActionLink {...ACTIONS.PITCH_PERFECT}/> regardless of the amount of stacks you have.
+					</Trans>,
+					reason: <Trans id="brd.pitch-perfect.cast-without-stacks.reason">
 						Any left over stack is lost when your song ends, so using whatever stacks you have before it ends is always a gain.
-					</>,
+					</Trans>,
 				})
 			}
 
@@ -259,12 +264,41 @@ export default class PitchPerfect extends Module {
 		})
 
 		// Output is an Accordion made with panels, one for each wrong PP event
-		return <Accordion
+		return <>
+		{ this._lostPotencyFromMissedCast[0] ?
+			<Message attached="top">
+				<Trans id="brd.pitch-perfect.estimate-note">
+					<Label color="orange" size="tiny" pointing="right">NOTE:</Label> We do not have access to how many unused stacks you had at the end of {ACTIONS.THE_WANDERERS_MINUET.name}, these are times you might have had some.
+				</Trans>
+			</Message>: null
+		}
+		<Accordion
 			exclusive={false}
 			panels={panels}
 			styled
 			fluid
 		/>
+		<Message attached="bottom" info>
+			<List bulleted>
+				<List.Content>
+					{this._lostPotencyFromStacks ?
+						<List.Item>
+							<Trans id="brd.pitch-perfect.without-max-stacks.total-potency-lost">
+								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._formatPotency(this._lostPotencyFromStacks)}</strong> potency
+							</Trans>
+						</List.Item> : null
+					}
+					{ this._lostPotencyFromMissedCast[0] ?
+						<List.Item>
+							<Trans id="brd.pitch-perfect.no-cast-at-end.total-potency-lost">
+								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._formatPotency(this._lostPotencyFromMissedCast[0])} to {this._formatPotency(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
+							</Trans>
+						</List.Item> : null
+					}
+				</List.Content>
+			</List>
+		</Message>
+		</>
 	}
 
 	// Builds a panel for each cast of Pitch Perfect and its respectives issues, to be provided to the final Accordion
@@ -279,19 +313,50 @@ export default class PitchPerfect extends Module {
 	// - A message block, containing:
 	//    - information about critical hit rate and time left on song
 	_buildPanel({pp, tuples}) {
+		let titleIconName = ''
+		let titleIconClass = ''
+		let titleElement = <></>
+		let timeLeftElement = <></>
+		let potencyLostElement = <></>
+		let timestamp = 0
 
-		// Default panel title
-		const defaultTitle = <>
-			{this.util.formatTimestamp(pp.timestamp)} - {ACTIONS.PITCH_PERFECT.name} used at {pp.stacks} stack{pp.stacks > 1 && 's'}
-		</>
+		if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
+			// Without Max Stacks Title
+			titleElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.title">
+				{ACTIONS.PITCH_PERFECT.name} used at <Plural value={pp.stacks} one="# cast" other="# stacks"/>.
+			</Trans>
+			titleIconName = 'remove'
+			titleIconClass = 'text-error'
 
-		// List of issues
+			// Witout Max Stacks timestamp for button
+			timestamp = pp.timestamp
+
+			// Without Max Stacks Information Elements
+			timeLeftElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /></Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.potency-lost"><strong>{this._formatPotency(PP_MAX_POTENCY - PP_POTENCY[pp.stacks - 1])}</strong> potency lost versus casting at max stacks</Trans>
+
+		} else if (pp.issue === PP_NOT_CAST_AT_END) {
+			// Not Cast At End Title
+			titleElement = <Trans id="brd.pitch-perfect.not-cast-at-end.title">
+				{ACTIONS.PITCH_PERFECT.name} might have been usable before the end of {ACTIONS.THE_WANDERERS_MINUET.name}.
+			</Trans>
+			titleIconName = 'question'
+			titleIconClass = 'text-warning'
+
+			// Witout Max Stacks timestamp for button
+			timestamp = pp.timestamp + pp.timeLeftOnSong
+
+			// Not Cast At End Information Elements
+			timeLeftElement = <Trans id="brd.pitch-perfect.not-cast-at-end.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> after the last cast of <ActionLink {...ACTIONS.PITCH_PERFECT}/></Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.not-cast-at-end.potency-lost"><strong>{this._formatPotency(PP_POTENCY[0])} to {this._formatPotency(PP_MAX_POTENCY)}</strong> potency potentially lost</Trans>
+		}
+
 		const issueElements = tuples && tuples.length && tuples.map(t => {
-			return t.issue && <Message key={tuples.indexOf(t)} error>
+			return t.issue && <Message key={tuples.indexOf(t)} error={pp.issue === PP_CAST_WIHTOUT_MAX_STACKS} warning={pp.issue === PP_NOT_CAST_AT_END}>
 				<Icon name={'remove'}/>
 				<span>{t.issue}</span>
 			</Message>
-		}) || undefined
+		}) || null
 
 		// List of reasons
 		const reasonElements = tuples && tuples.length && <div className={styles.description}>
@@ -301,45 +366,35 @@ export default class PitchPerfect extends Module {
 				})
 				}
 			</List>
-		</div> || undefined
-
-		// Information
-		const informationElements = <Message info>
-			<List>
-				<List.Content>
-					<List.Item>
-						<Icon name={'exclamation circle'}/>
-						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.CAUSTIC_BITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.CAUSTIC_BITE} />
-					</List.Item>
-					<List.Item>
-						<Icon name={'exclamation circle'}/>
-						<strong>{this.util.formatDecimal(pp.critOnDot[STATUSES.STORMBITE.id], 1)}%</strong> critical hit rate on <StatusLink {...STATUSES.STORMBITE} />
-					</List.Item>
-					<List.Item>
-						<Icon name={'hourglass'}/>
-						<strong>{this.util.milliToSeconds(pp.timeLeftOnSong)}</strong> second{pp.timeLeftOnSong !== 1000 && 's'} left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />
-					</List.Item>
-				</List.Content>
-			</List>
-		</Message> || undefined
+		</div> || null
 
 		// Builds the full panel
 		return {
 			key: pp.timestamp,
 			title: {
 				content: <>
-					<Icon
-						name={'remove'}
-						className={'text-error'}
-					/>
-					{defaultTitle}
-				</>,
+			<Icon name={titleIconName} className={titleIconClass}/> {this._createTimelineButton(timestamp)}
+			{titleElement}
+			</>,
 			},
 			content: {
 				content: <>
 					{issueElements}
 					{reasonElements}
-					{informationElements}
+					<Message info>
+						<List>
+							<List.Content>
+								<List.Item>
+									<Icon name={'hourglass'}/>
+									{timeLeftElement}
+								</List.Item>
+								<List.Item>
+									<Icon name={'arrow down'}/>
+									{potencyLostElement}
+								</List.Item>
+							</List.Content>
+						</List>
+					</Message>
 				</>,
 			},
 		}
@@ -365,13 +420,104 @@ export default class PitchPerfect extends Module {
 		return this._enemies[targetId]
 	}
 
-	_cleanUpPPs() {
+	_isAMissedPP(lastPPInWM, missedPPGracePeriod) {
+		return lastPPInWM.timeLeftOnSong > missedPPGracePeriod && !this.downtime.getDowntime(lastPPInWM.timestamp, lastPPInWM.timestamp + missedPPGracePeriod)
+	}
 
+	_cleanUpPPs() {
+		let lastPP = this._ppEvents[0]
+
+		let badCastInCurrentWM = false
+		let stacksUsedInCurrentWM = 0
+		const stacksUsedInWM = []
+		const castsInWM = []
+		let castsInCurrentWM = []
+
+		// It's the length of two dot ticks to have a better chance of being right.
+		const missedPPGracePeriod = DOT_TICK_FREQUENCY * 2
+
+		// TODO: Add in checking for EA use after last PP cast for better accuracy
 		for (const pp of this._ppEvents) {
+			//This means a new Wanderers Minuet was cast since the last one
+			if (pp.timeLeftOnSong > lastPP.timeLeftOnSong) {
+				if (this._isAMissedPP(lastPP, missedPPGracePeriod)) {
+					this._ppEvents.splice(this._ppEvents.indexOf(pp), 0, {
+						...lastPP,
+						issue: PP_NOT_CAST_AT_END,
+					})
+					this._lostPotencyFromMissedCast[0] += PP_POTENCY[0]
+					this._lostPotencyFromMissedCast[1] += PP_MAX_POTENCY
+				}
+				// If they don't have a bad cast in this WM window, then we don't care about it
+				// Also, Prevents including a pp cast because of downtime improperly.
+				if (badCastInCurrentWM) {
+					stacksUsedInWM.push(stacksUsedInCurrentWM)
+					castsInWM.push(castsInCurrentWM)
+					badCastInCurrentWM = false
+				}
+				stacksUsedInCurrentWM = 0
+				castsInCurrentWM = []
+			}
 			if (this.downtime.isDowntime(pp.lastTickOnEnemy + DOT_TICK_FREQUENCY + ANIMATION_LOCK)) {
 				this._ppEvents.splice(this._ppEvents.indexOf(pp), 1)
 			}
+
+			if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
+				badCastInCurrentWM = true
+			}
+
+			stacksUsedInCurrentWM += pp.stacks
+			castsInCurrentWM.push(pp)
+			lastPP = pp
 		}
+		if (badCastInCurrentWM) {
+			stacksUsedInWM.push(stacksUsedInCurrentWM)
+			castsInWM.push(castsInCurrentWM)
+		}
+
+		//To catch if the missed PP was after the last use of PP in the log
+		if (this._isAMissedPP(lastPP, missedPPGracePeriod)) {
+			this._ppEvents.push({
+				...lastPP,
+				issue: PP_NOT_CAST_AT_END,
+			})
+			this._lostPotencyFromMissedCast[0] += PP_POTENCY[0]
+			this._lostPotencyFromMissedCast[1] += PP_MAX_POTENCY
+		}
+
+		//To properly find how much potency was lost due to missed stacks
+		for (const wmIndex in stacksUsedInWM) {
+			const casts = castsInWM[wmIndex]
+			let totalPotencyInWM = 0
+			for (const cast of casts) {
+				totalPotencyInWM += PP_POTENCY[cast.stacks - 1]
+			}
+			const totalStacks = stacksUsedInWM[wmIndex]
+			const potencyFromMax = Math.floor(totalStacks / PP[3]) * PP_MAX_POTENCY
+			let potencyFromLast = 0
+			//Sometimes, you don't get enough stacks for a full pitch perfect, so we include that possiblity in here as well
+			if	(totalStacks % PP[3]) {
+				potencyFromLast = PP_POTENCY[totalStacks % PP[3] - 1]
+			}
+			const maxPotencyInWM =  potencyFromMax + potencyFromLast
+			this._lostPotencyFromStacks += maxPotencyInWM - totalPotencyInWM
+		}
+	}
+
+	// Allows for proper localization of potency numbers, aka proper thousands separators and things like that.
+	_formatPotency(potency) {
+		return potency.toLocaleString()
+	}
+
+	_createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
 	}
 
 }

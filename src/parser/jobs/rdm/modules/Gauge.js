@@ -28,7 +28,7 @@ export const MANA_GAIN = {
 	[ACTIONS.ENCHANTED_ZWERCHHAU.id]: {white: -25, black: -25},
 	[ACTIONS.ENCHANTED_REDOUBLEMENT.id]: {white: -25, black: -25},
 	[ACTIONS.ENCHANTED_MOULINET.id]: {white: -20, black: -20},
-	[ACTIONS.ENCHANTED_REPRISE.id]: {white: -10, black: -10},
+	[ACTIONS.ENCHANTED_REPRISE.id]: {white: -5, black: -5},
 	[ACTIONS.SCORCH.id]: {white: 7, black: 7},
 }
 

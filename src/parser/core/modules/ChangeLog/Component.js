@@ -52,11 +52,13 @@ export default class ChangeLog extends React.PureComponent {
 
 						{!active && <span className={styles.message}><item.Changes/></span>}
 
-						<div className={styles.contributors}>
-							{item.contributors.map(contributor => (
-								<ContributorLabel key={contributor.name} contributor={contributor} />
-							))}
-						</div>
+						{item.contributors && item.contributors.length > 0 && (
+							<div className={styles.contributors}>
+								{item.contributors.map(contributor => (
+									<ContributorLabel key={contributor.name} contributor={contributor} />
+								))}
+							</div>
+						)}
 					</Accordion.Title>
 
 					<Accordion.Content active={active}>
