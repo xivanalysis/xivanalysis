@@ -33,7 +33,7 @@
   "ast.dots.rule.description": "虽然占星只有一个 DoT，但它仍然在你的伤害构成中占据了不小的份额。其 30 秒的持续时间和（<0/>）的冷却时间正好对齐，能为你提供管理卡牌的时机。它还会在不影响 GCD 覆盖率的前提下，为你提供足够的机动性。请尝试将这个 DoT 保持常驻。",
   "ast.dots.rule.name": "保持你的 DoT 常驻",
   "ast.dots.suggestion.clip.content": "请避免过早地刷新目标身上的<0/>",
-  "ast.dots.suggestion.clip.why": "由于提前刷新，浪费了{0} 跳的 <0/>。",
+  "ast.dots.suggestion.clip.why": "由于提前刷新，浪费了{0} <0/>。",
   "ast.draw.checklist.description": "抽卡是占星术士的主要机制，因此请尽可能多地使用它。",
   "ast.draw.checklist.name": "多抽卡",
   "ast.draw.checklist.requirement.name": "<0/> 的使用次数",
