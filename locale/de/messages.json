@@ -261,7 +261,7 @@
   "core.weaving.title": "",
   "core.weaving.why": "{0, plural, =1 {# Beispiel für falsches Weaving} other {# Beispiele für falsches Weaving}}",
   "dnc.about.description": "",
-  "dnc.about.description.warning": "",
+  "dnc.about.description.warning": "<0>Dieses Modul ist noch in Arbeit.</0><1/>Wegen den vielen Details einer korrekten TÄN Spielweise und durch die Zufälligkeit des Tanzfieberbalkens, ist es schwierig eindeutige Empfehlungen zu geben. Wenn du irgendwelche Probleme bemerkst oder andere Bedenken hast, dann schaue bitte in unserem Discord Channel vorbei oder melde einen Bug auf unseren Github Repository!",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "Dein <0/>-Buff macht einen Großteil deines allgemeinen und <1/>-Schadens aus. Versuche diesen DoT wann immer möglich aufrecht zu halten.",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "Halte <0/> aufrecht",
   "dnc.dirty-dancing.rotation-table.header.dirty": "Richtig ausgeführte Finale",
