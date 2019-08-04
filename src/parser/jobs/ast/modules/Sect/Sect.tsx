@@ -80,9 +80,6 @@ const NOCTURNAL_SECT_BUFF_ABILITY = {
 	abilityIcon: _.replace(_.replace(STATUSES.NOCTURNAL_SECT.icon, 'https://xivapi.com/i/', ''), '/', '-'),
 }
 
-// Just in case they go through "THIS MUCH" of the fight with no sect, we're NOT going to babysit the whole log
-const GIVE_UP_THRESHOLD = 60000
-
 // Determine sect by checking the result of an aspected spell/ability
 export default class Sect extends Module {
 	static handle = 'sect'
@@ -93,6 +90,7 @@ export default class Sect extends Module {
 
 	private pullWithoutSect = false
 	private activeSectId: string | number | undefined = undefined
+	private gaveup = false
 
 	protected init() {
 		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
@@ -115,8 +113,7 @@ export default class Sect extends Module {
 				aspectedCast = event
 
 			} else if (aspectedCast
-				&& event.type === 'applybuff' && (DIURNAL_SECT_STATUSES.includes(event.ability.guid)
-					|| NOCTURNAL_SECT_STATUSES.includes(event.ability.guid))) {
+				&& (event.type === 'applybuff' || event.type === 'refreshbuff') && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
 				// This is an applybuff event of a sect buff that came after an aspected action
 
 				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
@@ -135,10 +132,6 @@ export default class Sect extends Module {
 						})
 					break
 				}
-
-			} else if (event.timestamp - startTime >= GIVE_UP_THRESHOLD) {
-				// Just give up after GIVE_UP_THRESHOLD
-				break
 			} else {
 				continue
 			}
@@ -172,7 +165,7 @@ export default class Sect extends Module {
 		/*
 			SUGGESTION: Pulled without Sect
 		*/
-		if (this.pullWithoutSect || !this.activeSectId) {
+		if (!this.gaveup && (this.pullWithoutSect || !this.activeSectId)) {
 			this.suggestions.add(new Suggestion({
 				icon: !this.activeSectId || ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon : ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.no-sect.content">

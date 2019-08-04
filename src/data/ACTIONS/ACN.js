@@ -1,4 +1,5 @@
 import PETS from '../PETS'
+import {SMN_COOLDOWN_GROUP} from './SMN'
 
 // Splitting ACN spells out of SMN/SCH so they aren't duped
 export default {
@@ -24,8 +25,8 @@ export default {
 		id: 165,
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
-		onGcd: true,
-		castTime: 3,
+		cooldown: 10,
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
 	AETHERFLOW: {
@@ -36,10 +37,11 @@ export default {
 	},
 
 	ENERGY_DRAIN: {
-		id: 167,
+		id: 16508,
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
-		cooldown: 3,
+		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
 	MIASMA: {
@@ -54,16 +56,8 @@ export default {
 		id: 170,
 		name: 'Summon II',
 		icon: 'https://xivapi.com/i/000000/000517.png',
-		onGcd: true,
-		castTime: 3,
-	},
-
-	SUSTAIN: {
-		id: 171,
-		name: 'Sustain',
-		icon: 'https://xivapi.com/i/000000/000508.png',
-		onGcd: true,
-		castTime: 1,
+		cooldown: 10,
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
 	RUIN_II: {
@@ -88,25 +82,11 @@ export default {
 		cooldown: 10,
 	},
 
-	ROUSE: {
-		id: 176,
-		name: 'Rouse',
-		icon: 'https://xivapi.com/i/000000/000509.png',
-		cooldown: 60,
-	},
-
 	BIO_II: {
 		id: 178,
 		name: 'Bio II',
 		icon: 'https://xivapi.com/i/000000/000504.png',
 		onGcd: true,
-	},
-
-	SHADOW_FLARE: {
-		id: 179,
-		name: 'Shadow Flare',
-		icon: 'https://xivapi.com/i/000000/000515.png',
-		cooldown: 60,
 	},
 
 	PHYSICK: {

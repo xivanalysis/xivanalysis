@@ -24,12 +24,6 @@ export default {
 		icon: 'https://xivapi.com/i/016000/016203.png',
 	},
 
-	SLASHING_RESISTANCE_DOWN: {
-		id: 819,
-		name: 'Slashing Resistance Down',
-		icon: 'https://xivapi.com/i/015000/015786.png',
-	},
-
 	WELL_FED: {
 		id: 48,
 		name: 'Well Fed',

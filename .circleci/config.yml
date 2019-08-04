@@ -39,11 +39,8 @@ jobs:
       - run:
           name: Ensure extract
           command: |
-            yarn extract
-            if [[ $(git diff --stat locale) != '' ]]; then
-              echo "Changes to locale files detected. Please run \`yarn extract\` and commit the changes to ensure translations remain in sync."
-              exit 1
-            fi
+            chmod +x .circleci/check-extract.sh
+            ./.circleci/check-extract.sh
       - store_test_results:
           path: reports
 

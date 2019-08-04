@@ -143,7 +143,7 @@ export default {
 		name: 'Reassemble',
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 55,
 	},
 
 	WILDFIRE: {
