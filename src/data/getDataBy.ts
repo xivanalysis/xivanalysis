@@ -1,5 +1,30 @@
 import {ensureArray} from 'utilities'
 
+interface ActionComboData {
+	start?: boolean
+	from?: number
+	end?: boolean
+}
+
+export interface ActionData {
+	id: number
+	name: string
+	icon: string
+	onGcd?: boolean
+	breaksCombo?: boolean
+	combo?: ActionComboData
+	castTime?: number
+	cooldown?: number
+	autoAttack?: boolean
+}
+
+export interface StatusData {
+	id: number
+	name: string
+	icon: string
+	duration?: number
+}
+
 /*
 WeakMap<
 	DATA object,
