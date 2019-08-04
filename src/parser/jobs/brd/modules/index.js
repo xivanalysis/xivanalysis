@@ -3,6 +3,7 @@ import Barrage from './Barrage'
 import DoTs from './DoTs'
 import OGCDDowntime from './OGCDDowntime'
 import PitchPerfect from './PitchPerfect'
+import Sidewinder from './Sidewinder'
 import Snapshots from './Snapshots'
 import SongUptime from './SongUptime'
 import Util from './Util'
@@ -14,6 +15,7 @@ export default [
 	DoTs,
 	OGCDDowntime,
 	PitchPerfect,
+	Sidewinder,
 	Snapshots,
 	SongUptime,
 	Util,

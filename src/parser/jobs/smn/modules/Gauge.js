@@ -7,6 +7,7 @@ import PETS from 'data/PETS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {DEMI_SUMMON_LENGTH} from './Pets'
 
 const AETHER_ACTIONS = [
 	ACTIONS.ENERGY_DRAIN.id,
@@ -18,7 +19,11 @@ const AETHER_ACTIONS = [
 const MAX_AETHERFLOW = 3
 const DREADWYRM_TRANCE_DURATION = 16000
 const MIN_DWT_BUILD = DREADWYRM_TRANCE_DURATION + (ACTIONS.FESTER.cooldown * 1000) * 2
-const SUMMON_BAHAMUT_DURATION = 20000
+
+export const DEMIS = [
+	PETS.DEMI_BAHAMUT.id,
+	PETS.DEMI_PHOENIX.id,
+]
 
 // Neither act nor fflogs track gauge very well, so let's do it ourselves
 export default class Gauge extends Module {
@@ -59,9 +64,9 @@ export default class Gauge extends Module {
 	// -----
 	// API
 	// -----
-	bahamutSummoned() {
+	demiSummoned() {
 		const pet = this.pets.getCurrentPet()
-		return pet && pet.id === PETS.DEMI_BAHAMUT.id
+		return pet && DEMIS.includes(pet.id)
 	}
 
 	isRushing() {
@@ -84,7 +89,7 @@ export default class Gauge extends Module {
 			// Need ~26s for a proper DWT, plus at least another 20 if SB would be up.
 			let reqRotationTime = MIN_DWT_BUILD
 			if (this._dreadwyrmAether >= 1) {
-				reqRotationTime += SUMMON_BAHAMUT_DURATION
+				reqRotationTime += DEMI_SUMMON_LENGTH
 			}
 
 			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
@@ -125,7 +130,7 @@ export default class Gauge extends Module {
 		// If they've got bahamut ready, but won't have enough time in the fight to effectively use him, they're rushing.
 		const cdRemaining = this.cooldowns.getCooldownRemaining(ACTIONS.AETHERFLOW.id)
 		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + SUMMON_BAHAMUT_DURATION) {
+		if (this._dreadwyrmAether === 2 && fightTimeRemaining < cdRemaining + DEMI_SUMMON_LENGTH) {
 			this._rushing = true
 		}
 	}

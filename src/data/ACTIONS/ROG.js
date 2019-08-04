@@ -22,7 +22,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 250,
+			potency: 300,
 		},
 	},
 

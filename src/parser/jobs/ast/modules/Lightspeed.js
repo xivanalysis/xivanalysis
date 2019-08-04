@@ -156,7 +156,7 @@ export default class LIGHTSPEED extends Module {
 				<Trans id="ast.lightspeed.messages.explanation">
 				The main use of <ActionLink {...ACTIONS.LIGHTSPEED} /> should be for weaving card actions during <ActionLink {...ACTIONS.DIVINATION} /> and <ActionLink {...ACTIONS.SLEEVE_DRAW} /> windows.<br/>
                 It can also be used for MP savings on heavy healing segments, keeping casts up while on the move and other specific scenarios.<br/>
-					<ActionLink {...ACTIONS.ESSENTIAL_DIGNITY} /> can reduce the cooldown. Each fight calls for a different strategy, but try to utilize it as much as possible.<br/><br/>
+				Each fight calls for a different strategy, but try to utilize it as much as possible.<br/><br/>
 				Unless it's being used for <ActionLink {...ACTIONS.ASCEND} />, lightspeed should fit at least 6 GCDs.
 				</Trans>
 			</p>

@@ -16,9 +16,6 @@ const STATUS_DURATION = {
 	[STATUSES.MIASMA_III.id]: 30000,
 }
 
-const SHADOW_FLARE_DURATION = 15000
-const SHADOW_FLARE_MAX_FUZZ = 30000
-
 // In ms
 const CLIPPING_SEVERITY = {
 	1000: SEVERITY.MINOR,
@@ -31,7 +28,6 @@ export default class DoTs extends Module {
 	static title = t('smn.dots.title')`DoTs`
 	static dependencies = [
 		'checklist',
-		'combatants',
 		'enemies',
 		'gauge',
 		'invuln',
@@ -99,7 +95,7 @@ export default class DoTs extends Module {
 		this.checklist.add(new Rule({
 			name: <Trans id="smn.dots.checklist.name">Keep your DoTs up</Trans>,
 			description: <Trans id="smn.dots.checklist.description">
-				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
+				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from your Ruin spells and <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
 			</Trans>,
 			requirements: [
 				new Requirement({
@@ -113,12 +109,6 @@ export default class DoTs extends Module {
 						<ActionLink {...ACTIONS.MIASMA_III} /> uptime
 					</Trans>,
 					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
-				}),
-				new Requirement({
-					name: <Trans id="smn.dots.checklist.requirement.shadow-flare.name">
-						<ActionLink {...ACTIONS.SHADOW_FLARE}/> uptime
-					</Trans>,
-					percent: () => this.getShadowFlareUptimePercent(),
 				}),
 			],
 		}))
@@ -143,33 +133,6 @@ export default class DoTs extends Module {
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
-	}
-
-	getShadowFlareUptimePercent() {
-		// Get the first usage of SF - we'll use it to allow a bit of wiggle room around how many SFs they could have cast.
-		const sfBuffs = this.combatants.selected.buffs
-			.filter(buff => buff.ability.guid === STATUSES.SHADOW_FLARE.id)
-			.sort((a, b) => a.start - b.start)
-		const firstCast = sfBuffs[0] || {start: 0}
-		const wiggleRoom = Math.min(firstCast.start, SHADOW_FLARE_MAX_FUZZ)
-
-		// Possible duration that SF should have been rolled within
-		// TODO: Look into more accurate duration - a short downtime betwen SFs should _not_ be subtracted.
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime() - wiggleRoom
-
-		// Calc the total number of SF casts you coulda got off (minus the last 'cus floor)
-		const maxFullCasts = Math.floor(fightDuration / (ACTIONS.SHADOW_FLARE.cooldown * 1000))
-
-		// Calc the possible time for the last one
-		const lastCastMaxDuration = Math.min(
-			SHADOW_FLARE_DURATION,
-			fightDuration - (maxFullCasts * ACTIONS.SHADOW_FLARE.cooldown)
-		)
-
-		const maxTotalDuration = (maxFullCasts * SHADOW_FLARE_DURATION) + lastCastMaxDuration
-
-		// Get as %. Capping to 100%.
-		return Math.min(100, (this.combatants.getStatusUptime(STATUSES.SHADOW_FLARE.id) / maxTotalDuration) * 100)
 	}
 
 	output() {

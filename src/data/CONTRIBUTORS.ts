@@ -41,8 +41,8 @@ const CONTRIBUTORS = {
 		avatar: process.env.PUBLIC_URL + '/avatar/Lima.png',
 		jobs: [JOBS.SCHOLAR],
 	},
-	SAYAKA: {
-		name: 'Sayaka',
+	SKYE: {
+		name: 'Skye',
 		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
 		jobs: [JOBS.WARRIOR],
 	},
@@ -130,6 +130,11 @@ const CONTRIBUTORS = {
 		name: 'Ririan',
 		avatar: process.env.PUBLIC_URL + '/avatar/Ririan.png',
 		jobs: [JOBS.BARD, JOBS.MACHINIST],
+	},
+	TWO_BROKEN: {
+		name: '2Broken',
+		avatar: process.env.PUBLIC_URL + '/avatar/2Broken.png',
+		jobs: [JOBS.DANCER],
 	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
