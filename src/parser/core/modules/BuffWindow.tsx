@@ -17,11 +17,9 @@ class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
-	expectedGCDs: number
 
-	constructor(start: number, expectedGCDs: number) {
+	constructor(start: number) {
 		this.start = start
-		this.expectedGCDs = expectedGCDs
 	}
 
 	get gcds(): number {
@@ -38,24 +36,28 @@ class BuffWindowState {
 	}
 }
 
+interface SeverityTiers {
+	[key: number]: number
+}
+
 interface BuffWindowExpectedGCDs {
-	expectedPerWindow: number,
-	suggestionContent: TODO,
-	severityTiers: object,
+	expectedPerWindow: number
+	suggestionContent: JSX.Element | string
+	severityTiers: SeverityTiers
 }
 
 interface BuffWindowRequiredGCDs {
 	iconAction: ActionData
 	actions: ActionData[]
-	suggestionContent: TODO
-	severityTiers: object
+	suggestionContent: JSX.Element | string
+	severityTiers: SeverityTiers
 }
 
 interface BuffWindowTrackedCooldown {
 	action: ActionData
 	expectedPerWindow: number,
-	suggestionContent: TODO
-	severityTiers: object
+	suggestionContent: JSX.Element | string
+	severityTiers: SeverityTiers
 }
 
 export default class BuffWindowModule extends Module {
@@ -97,6 +99,7 @@ export default class BuffWindowModule extends Module {
 		const action: ActionData | undefined = getDataBy(ACTIONS, 'id', event.ability.guid)
 
 		if (!action || action.autoAttack) {
+			// Disregard auto attacks for tracking rotations / events during buff windows
 			return
 		}
 
@@ -110,21 +113,52 @@ export default class BuffWindowModule extends Module {
 	}
 
 	private startNewBuffWindow(startTime: number) {
-		if ( !this.expectedGCDs ) {
-			return
-		}
+		this.buffWindows.push(new BuffWindowState(startTime))
+	}
 
-		let expectedGCDs = this.expectedGCDs.expectedPerWindow
-		const fightTimeRemaining = this.parser.fight.end_time - startTime
+	// For consumers that have the same number of expected GCDs per window, this will use the expectedPerWindow property
+	//   on expectedGCDs as the baseline.  This method can be overridden if the logic of expected GCDs per window is variable
+	protected getBaselineExpectedGCDs(buffWindow: BuffWindowState): number {
+		if ( this.expectedGCDs ) {
+			return this.expectedGCDs.expectedPerWindow
+		}
+		return 0
+	}
+
+	// Override point for class-specific rushing logic per BuffWindow - default no effect
+	// Return a positive number to increase expected GCDs for this window, and a negative number to decrease
+	protected changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
+		return 0
+	}
+
+	// Rushing handling for end of fight rushing.  Can be overridden if class rules for end of fight rushing vary
+	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
 		if ( this.buffStatus && this.buffStatus.duration ) {
+			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const windowDurationMillis = this.buffStatus.duration * 1000
-			if ( windowDurationMillis >= fightTimeRemaining ) {
+			const fightTimeRemaining = this.parser.fight.end_time - buffWindow.start
+
+			if (windowDurationMillis >= fightTimeRemaining) {
 				const gcdEstimate = this.globalCooldown.getEstimate()
-				const reducedWindow = Math.ceil((windowDurationMillis - fightTimeRemaining) / gcdEstimate)
-				expectedGCDs -= reducedWindow
+				return Math.ceil((windowDurationMillis - fightTimeRemaining) / gcdEstimate)
 			}
 		}
-		this.buffWindows.push(new BuffWindowState(startTime, expectedGCDs))
+
+		// Default: no rushing reduction
+		return 0
+	}
+
+	// For consumers that have tracked cooldowns that expect the same number of that cooldown per window, this will use the
+	//   expectedPerWindow property on that cooldown as the baseline.  This method can be overridden if the logic of
+	//   expected tracked cooldowns per window is variable
+	protected getBaselineExpectedTrackedCooldown(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
+		return cooldown.expectedPerWindow || 0
+	}
+
+	// Override point for class-specific logic to change expected uses of a tracked cooldown per BuffWindow - default no effect
+	// Return a positive number to increase expected GCDs for this window, and a negative number to decrease
+	protected changeExpectedTrackedCooldownClassLogic(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
+		return 0
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
@@ -137,10 +171,21 @@ export default class BuffWindowModule extends Module {
 		}
 	}
 
+	private getBuffWindowExpectedGCDs(buffWindow: BuffWindowState): number {
+		return this.getBaselineExpectedGCDs(buffWindow) + this.changeExpectedGCDsClassLogic(buffWindow) - this.reduceExpectedGCDsEndOfFight(buffWindow)
+	}
+
+	private getBuffWindowExpectedTrackedCooldowns(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
+		return this.getBaselineExpectedTrackedCooldown(buffWindow, cooldown) + this.changeExpectedTrackedCooldownClassLogic(buffWindow, cooldown)
+	}
+
 	private onComplete() {
 		if ( this.buffAction && this.expectedGCDs ) {
 			const missedGCDs = this.buffWindows
-				.reduce((sum, curWindow) => sum + Math.max(0, curWindow.expectedGCDs - curWindow.gcds), 0)
+				.reduce((sum, curWindow) => {
+					const expectedGCDs = this.getBuffWindowExpectedGCDs(curWindow)
+					return sum + Math.max(0, expectedGCDs - curWindow.gcds)
+				}, 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.buffAction.icon,
@@ -241,7 +286,7 @@ export default class BuffWindowModule extends Module {
 				if ( this.expectedGCDs ) {
 					targetsData.missedgcd = {
 						actual: buffWindow.gcds,
-						expected: buffWindow.expectedGCDs,
+						expected: this.getBuffWindowExpectedGCDs(buffWindow),
 					}
 				}
 
@@ -249,7 +294,7 @@ export default class BuffWindowModule extends Module {
 					const allowedGCDsById = this.requiredGCDs.actions.map(a => a.id)
 					targetsData.badgcd = {
 						actual: buffWindow.getActionCountByIds(allowedGCDsById),
-						expected: buffWindow.expectedGCDs,
+						expected: this.getBuffWindowExpectedGCDs(buffWindow),
 					}
 				}
 
@@ -257,7 +302,7 @@ export default class BuffWindowModule extends Module {
 					this.trackedCooldowns.forEach((cooldown) => {
 						targetsData[cooldown.action.name] = {
 							actual: buffWindow.getActionCountByIds([cooldown.action.id]),
-							expected: cooldown.expectedPerWindow,
+							expected: this.getBuffWindowExpectedTrackedCooldowns(buffWindow, cooldown),
 						}
 					})
 				}
