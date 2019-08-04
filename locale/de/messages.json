@@ -283,7 +283,7 @@
   "dnc.dirty-dancing.title": "Tanz Problem",
   "dnc.esprit-gauge.graph.help-text": "Dieses Diagramm ist, im besten Fall, eine ungefähre Schätzung deines Tanzfieberbalken. Deswegen nur mit Vorsicht beachten.",
   "dnc.esprit-gauge.title": "Tanzfieberbalken",
-  "dnc.esprit.suggestions.overcapped-esprit.content": "",
+  "dnc.esprit.suggestions.overcapped-esprit.content": "Du hast eventuell Nutzungen von <0/> verloren, da du dein Tanzfieberbalken voll laufen gelassen hast. Verbrauche ihn, insbesondere wenn er auf oder über 80 ist.",
   "dnc.esprit.suggestions.overcapped-esprit.why": "",
   "dnc.feather-gauge.graph.help-text": "Dieser Graph ist - im besten Fall - eine grobe Schätzung deines Tanzfächer-Balkens. Nimm ihn also nicht ganz so genau.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.content": "",
