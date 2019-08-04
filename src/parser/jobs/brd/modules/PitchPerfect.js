@@ -436,6 +436,11 @@ export default class PitchPerfect extends Module {
 		// It's the length of two dot ticks to have a better chance of being right.
 		const missedPPGracePeriod = DOT_TICK_FREQUENCY * 2
 
+		// They didn't use their PP
+		if (!this._ppEvents.length) {
+			return
+		}
+
 		// TODO: Add in checking for EA use after last PP cast for better accuracy
 		for (const pp of this._ppEvents) {
 			//This means a new Wanderers Minuet was cast since the last one
