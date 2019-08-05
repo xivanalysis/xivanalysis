@@ -7,6 +7,17 @@ interface CounterHistory {
 	maximum: number
 }
 
+export interface CounterGaugeOptions {
+	/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
+	initialValue?: number,
+	/** Minimum value of the gauge. Defaults to 0. */
+	minimum?: number,
+	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
+	maximum?: number,
+	/** Whether or not to track values over cap for use in suggestions and similar. Disable if over-capping is expected. */
+	trackOverCap?: boolean,
+}
+
 export class CounterGauge extends AbstractGauge {
 	private value: number
 	private minimum: number
@@ -17,16 +28,7 @@ export class CounterGauge extends AbstractGauge {
 
 	private history: CounterHistory[] = []
 
-	constructor(opts: {
-		/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
-		initialValue?: number,
-		/** Minimum value of the gauge. Defaults to 0. */
-		minimum?: number,
-		/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
-		maximum?: number,
-		/** Whether or not to track values over cap for use in suggestions and similar. Disable if over-capping is expected. */
-		trackOverCap?: boolean,
-	} & AbstractGaugeOptions = {}) {
+	constructor(opts: CounterGaugeOptions & AbstractGaugeOptions = {}) {
 		super(opts)
 
 		this.minimum = opts.minimum || 0
