@@ -52,13 +52,34 @@ export class CounterGauge extends AbstractGauge {
 		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
 		const diff = value - this.value
 
-		// Only track if we need to - some stack-based gauges just need to stay up, overcapping is expected on a regular basis.
 		if (this.trackOverCap && diff > 0) {
 			this.overCap += diff
 		}
 
-		// TODO: This might be better off in a seperate fn?
-		// TODO: If the above, probably should make it check if it needs to merge with previous timestamp if equal?
+		this.pushHistory()
+	}
+
+	/** Set a new minimum value for the gauge. Equivalent to `setBounds(newMin, currentMax)`. */
+	setMinimum(minimum: number) {
+		this.setBounds(minimum, this.maximum)
+	}
+
+	/** Set a new maximum value for the gauge. Equivalent to `setBounds(currentMin, newMax)`. */
+	setMaximum(maximum: number) {
+		this.setBounds(this.minimum, maximum)
+	}
+
+	/** Set new bounds for the gauge. If required, the current value will be updated to remain within bounds. */
+	setBounds(minimum: number, maximum: number) {
+		this.minimum = minimum
+		this.maximum = maximum
+
+		// Ensure the value remains within bounds by re-setting it
+		this.setValue(this.value)
+	}
+
+	private pushHistory() {
+		// TODO: Need to make it check if it needs to merge with previous timestamp if equal
 		this.history.push({
 			timestamp: this.timestamp,
 			value: this.value,
