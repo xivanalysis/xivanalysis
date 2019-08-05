@@ -697,7 +697,7 @@
   "smn.demi.ghost-disclaimer": "",
   "smn.demis.title": "",
   "smn.dots.applied": "Appliqué",
-  "smn.dots.checklist.description": "",
+  "smn.dots.checklist.description": "En tant qu'Invocateur, vos DoTs représentent une part importante de vos dégâts en continu, ils sont également requis pour optimiser vos dégâts venant de vos sort de Ruines et de <0/>, votre aptitude principale consommant un Flux d'Ether. Essayez de toujours les avoir appliqués sur votre cible.",
   "smn.dots.checklist.name": "Vérifiez bien que vos DoTs sont bien appliqués à votre cible",
   "smn.dots.checklist.requirement.bio-iii.name": "Temps total d'application de <0/>",
   "smn.dots.checklist.requirement.miasma-iii.name": "Temps total d'application de <0/>",
