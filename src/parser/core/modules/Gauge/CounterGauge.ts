@@ -12,19 +12,29 @@ export class CounterGauge extends AbstractGauge {
 	private value: number
 	private minimum: number
 	private maximum: number
+
+	private trackOverCap: boolean
 	private overCap: number = 0
+
 	private history: CounterHistory[] = []
 
 	constructor(opts: {
-		value?: number,
+		/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
+		initialValue?: number,
+		/** Minimum value of the gauge. Defaults to 0. */
 		minimum?: number,
+		/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 		maximum?: number,
-	}) {
+		/** Whether or not to track values over cap for use in suggestions and similar. Disable if over-capping is expected. */
+		trackOverCap?: boolean,
+	} = {}) {
 		super()
 
 		this.minimum = opts.minimum || 0
-		this.value = opts.value || this.minimum
+		this.value = opts.initialValue || this.minimum
 		this.maximum = opts.maximum || 100
+
+		this.trackOverCap = opts.trackOverCap != null? opts.trackOverCap : true
 	}
 
 	/** @inheritdoc */
@@ -41,8 +51,8 @@ export class CounterGauge extends AbstractGauge {
 		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
 		const diff = value - this.value
 
-		// TODO: should I have something like `trackOvercap: boolean`? stuff like MNK GL and such will constantly overcap, and it's a bit of a non-issue.
-		if (diff > 0) {
+		// Only track if we need to - some stack-based gauges just need to stay up, overcapping is expected on a regular basis.
+		if (this.trackOverCap && diff > 0) {
 			this.overCap += diff
 		}
 
