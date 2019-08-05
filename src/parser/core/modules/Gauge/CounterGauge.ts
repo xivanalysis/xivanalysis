@@ -79,9 +79,18 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private pushHistory() {
-		// TODO: Need to make it check if it needs to merge with previous timestamp if equal
+		const {timestamp} = this
+
+		// Ensure we're not generating multiple entries at the samt timestamp
+		const prevTimestamp = this.history.length
+			? this.history[this.history.length - 1].timestamp
+			: NaN
+		if (timestamp === prevTimestamp) {
+			this.history.pop()
+		}
+
 		this.history.push({
-			timestamp: this.timestamp,
+			timestamp,
 			value: this.value,
 			minimum: this.minimum,
 			maximum: this.maximum,
