@@ -1,4 +1,4 @@
-import {AbstractGauge} from './AbstractGauge'
+import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 interface CounterHistory {
 	timestamp: number
@@ -7,7 +7,6 @@ interface CounterHistory {
 	maximum: number
 }
 
-// TODO: need to work out how to get the timestamp in here sanely for history
 export class CounterGauge extends AbstractGauge {
 	private value: number
 	private minimum: number
@@ -27,8 +26,8 @@ export class CounterGauge extends AbstractGauge {
 		maximum?: number,
 		/** Whether or not to track values over cap for use in suggestions and similar. Disable if over-capping is expected. */
 		trackOverCap?: boolean,
-	} = {}) {
-		super()
+	} & AbstractGaugeOptions = {}) {
+		super(opts)
 
 		this.minimum = opts.minimum || 0
 		this.value = opts.initialValue || this.minimum
@@ -59,7 +58,7 @@ export class CounterGauge extends AbstractGauge {
 		// TODO: This might be better off in a seperate fn?
 		// TODO: If the above, probably should make it check if it needs to merge with previous timestamp if equal?
 		this.history.push({
-			timestamp: 0, // TODO
+			timestamp: this.timestamp,
 			value: this.value,
 			minimum: this.minimum,
 			maximum: this.maximum,
