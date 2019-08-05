@@ -91,6 +91,7 @@ export default class BuffWindowModule extends Module {
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('applybuff', {by: 'player'}, this.onApplyBuff)
 		this.addHook('removebuff', {by: 'player'}, this.onRemoveBuff)
 		this.addHook('complete', this.onComplete)
 	}
@@ -103,17 +104,31 @@ export default class BuffWindowModule extends Module {
 			return
 		}
 
-		if (action === this.buffAction) {
-			this.startNewBuffWindow(event.timestamp)
-		}
-
 		if (this.activeBuffWindow) {
 			this.activeBuffWindow.rotation.push(event)
 		}
 	}
 
+	private onApplyBuff(event: BuffEvent) {
+		if (!this.buffStatus || event.ability.guid !== this.buffStatus.id) {
+			return
+		}
+
+		this.startNewBuffWindow(event.timestamp)
+	}
+
 	private startNewBuffWindow(startTime: number) {
 		this.buffWindows.push(new BuffWindowState(startTime))
+	}
+
+	private onRemoveBuff(event: BuffEvent) {
+		if (!this.buffStatus || event.ability.guid !== this.buffStatus.id) {
+			return
+		}
+
+		if (this.activeBuffWindow) {
+			this.activeBuffWindow.end = event.timestamp
+		}
 	}
 
 	// For consumers that have the same number of expected GCDs per window, this will use the expectedPerWindow property
@@ -159,16 +174,6 @@ export default class BuffWindowModule extends Module {
 	// Return a positive number to increase expected GCDs for this window, and a negative number to decrease
 	protected changeExpectedTrackedCooldownClassLogic(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
 		return 0
-	}
-
-	private onRemoveBuff(event: BuffEvent) {
-		if (!this.buffStatus || event.ability.guid !== this.buffStatus.id) {
-			return
-		}
-
-		if (this.activeBuffWindow) {
-			this.activeBuffWindow.end = event.timestamp
-		}
 	}
 
 	private getBuffWindowExpectedGCDs(buffWindow: BuffWindowState): number {
