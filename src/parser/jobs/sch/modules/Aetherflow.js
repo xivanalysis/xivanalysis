@@ -136,7 +136,7 @@ export default class Aetherflow extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{[].concat(aetherflows, dissipations, ...uses)
+				{[].concat(aetherflows, dissipations, uses)
 					.sort((a, b) => a.timestamp - b.timestamp)
 					.reduce((prev, curr) => {
 						if (prev.length === 0) {
@@ -189,6 +189,13 @@ export default class Aetherflow extends Module {
 							wasted = EXTRA_AETHERFLOWS - debit || 0
 							totalWasted += wasted
 						}
+
+						if (!Array.isArray(timestamp)) {
+							// I mean, they should be doing more than one AF cast per stack
+							// but who am I to judge?
+							timestamp = [timestamp]
+						}
+
 						return <Table.Row key={timestamp}>
 							<Table.Cell>{timestamp.map(t => this.parser.formatTimestamp(t)).join(', ')}</Table.Cell>
 							<Table.Cell>{downtime > 0 && this.parser.formatDuration(downtime)}</Table.Cell>
