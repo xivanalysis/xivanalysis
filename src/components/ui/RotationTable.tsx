@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
-import {CastEvent} from 'fflogs'
+import {AbilityEvent} from 'fflogs'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -33,7 +33,7 @@ export interface RotationTargetData {
 	/**
 	 * Expected target number
 	 */
-	expected: number
+	expected?: number
 	/**
 	 * Recorded number
 	 */
@@ -74,7 +74,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: CastEvent[]
+	rotation: AbilityEvent[]
 }
 
 interface RotationTableProps {
@@ -146,10 +146,10 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static TargetCell = ({actual, expected}: RotationTargetData) =>
 		<Table.Cell
 			textAlign="center"
-			positive={actual >= expected}
-			negative={actual < expected}
+			positive={expected === undefined ? false : actual >= expected}
+			negative={expected === undefined ? false : actual < expected}
 		>
-			{actual}/{expected}
+			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>
 
 	static Row = ({onGoto, targets, notes, notesMap, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) =>

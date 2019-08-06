@@ -37,13 +37,37 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.01',
+		from: '5.05',
+		to: '5.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+
+			date: new Date('2019-07-30'),
+			Changes: () => <>
+				<strong>5.05 Support</strong>:
+				<ul>
+					<li>Ability cast times and cooldowns updated for 5.05</li>
+					<li>(<ActionLink {...ACTIONS.SLEEVE_DRAW} />) Arcana logs updated for 5.05</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
+			date: new Date('2019-07-27'),
+			Changes: () => <>
+				<strong>Overheal and Celestial Intersection modules</strong>:
+				<ul>
+					<li>(<ActionLink {...ACTIONS.CELESTIAL_INTERSECTION} />) Throws a suggestion for infrequent usage</li>
+					<li>Added an overheal checklist, which counts both heals and HoT percentage overheals for better clarity into the matter.</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 			date: new Date('2019-07-22'),
 			Changes: () => <>

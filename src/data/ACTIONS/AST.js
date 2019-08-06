@@ -42,7 +42,7 @@ export default {
 		id: 3606,
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/003000/003135.png',
-		cooldown: 120,
+		cooldown: 90,
 	},
 
 	MALEFIC_III: {
@@ -86,7 +86,7 @@ export default {
 		name: 'Gravity',
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
-		castTime: 3,
+		castTime: 1.5,
 		mpCost: 600,
 	},
 
@@ -102,7 +102,7 @@ export default {
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2,
 		mpCost: 1200,
 	},
 
@@ -120,7 +120,7 @@ export default {
 		name: 'Helios',
 		icon: 'https://xivapi.com/i/003000/003129.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2,
 		mpCost: 900,
 	},
 
@@ -142,7 +142,7 @@ export default {
 		id: 16553,
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
-		cooldown: 120,
+		cooldown: 60,
 	},
 
 	EARTHLY_STAR: {
@@ -242,7 +242,7 @@ export default {
 		id: 16552,
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/003000/003553.png',
-		cooldown: 180,
+		cooldown: 120,
 	},
 
 	CELESTIAL_INTERSECTION: {

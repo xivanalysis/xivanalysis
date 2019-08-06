@@ -33,6 +33,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-7-29'),
+		Changes: () => <> Fixed bugs with combos and a few typos </>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2019-7-27'),
 		Changes: () => <> Added Drift check and use check to Tsubame, cleaned up some displays, offical Sam support enabled </>,
 		contributors: [CONTRIBUTORS.RYAN],

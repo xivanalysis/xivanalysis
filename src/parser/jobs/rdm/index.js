@@ -33,8 +33,18 @@ export default new Meta({
 
 	changelog: [
 		{
-			date: new Date('2019-07-26'),
-			Changes: () => <>Fix an issue with Moulinet Mana costs</>,
+			date: new Date('2019-08-05'),
+			Changes: () => <>Removed Lucid Dream from oGCD checklist, Displacement now takes Engagement into consideration in the oGCD checklist</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2019-07-30'),
+			Changes: () => <>Reprise Cost updated, resolved negative mana issue in Gauge tracking</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
+			date: new Date('2019-07-14'),
+			Changes: () => <>Initial update of existing logic for 5.0 (no new stuff)</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{

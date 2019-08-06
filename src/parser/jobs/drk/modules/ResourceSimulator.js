@@ -10,7 +10,6 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Color from 'color'
 import JOBS from 'data/JOBS'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import {HitType} from 'fflogs'
 
 // -----
 // UI stuff
@@ -173,6 +172,8 @@ export default class Resources extends Module {
 			this._gainedSinceLastSpend += actionMPChange
 		}
 		this._currentMP = beforeActionMP + actionMPChange
+
+		this._pushToMPGraph()
 	}
 
 	checkBloodOvercap(actionBloodChange) {
@@ -187,11 +188,17 @@ export default class Resources extends Module {
 			// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
 			this._currentBlood = 0
 		}
+
+		this._pushToBloodGraph()
 	}
 
-	_pushToGraph() {
+	_pushToBloodGraph() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.blood.push({t: timestamp, y: this._currentBlood})
+	}
+
+	_pushToMPGraph() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.mp.push({t: timestamp, y: this._currentMP})
 	}
 
@@ -204,17 +211,16 @@ export default class Resources extends Module {
 		this._wastedBlood += this._currentBlood
 		this._currentMP = 0
 		this._currentBlood = 0
-		this._pushToGraph()
+		this._pushToBloodGraph()
+		this._pushToMPGraph()
 	}
 
 	_onRaise() {
 		this._currentMP = MP_AFTER_RAISE
-		this._pushToGraph()
+		this._pushToMPGraph()
 	}
 
 	_onEvent(event) {
-		const _actionHit = (event.hitType !== HitType.MISS && event.hitType !== HitType.IMMUNE)
-
 		const abilityId = event.ability.guid
 		let actionBloodGain = 0
 		let actionMPGain = 0
@@ -236,14 +242,14 @@ export default class Resources extends Module {
 			}
 		}
 
-		if (_actionHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
+		if (event.successfulHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
 			// Actions that did not hit do not generate resources
 			// Don't double count blood weapon gains on comboed events
 			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
 
-		if (_actionHit && RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
+		if (event.successfulHit && RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
 			// Actions that did not hit do not generate resources
 			const actionInfo = RESOURCE_GENERATORS[abilityId]
 			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {
@@ -257,11 +263,6 @@ export default class Resources extends Module {
 
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
-
-		if (event.type !== 'combo') {
-			// Don't push two entries to graph for comboed actions
-			this._pushToGraph()
-		}
 	}
 
 	_onCastBlackestNight(event) {
@@ -269,7 +270,7 @@ export default class Resources extends Module {
 		const actionMPGain = RESOURCE_SPENDERS[abilityId].mp
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
-		this._pushToGraph()
+		this._pushToMPGraph()
 	}
 
 	_onRemoveBlackestNight(event) {

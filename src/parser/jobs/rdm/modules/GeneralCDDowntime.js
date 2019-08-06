@@ -19,6 +19,5 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		ACTIONS.CONTRE_SIXTE.id,
 		ACTIONS.ACCELERATION.id,
 		ACTIONS.SWIFTCAST.id,
-		ACTIONS.LUCID_DREAMING.id,
 	]
 }

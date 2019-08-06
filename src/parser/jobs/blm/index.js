@@ -25,7 +25,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.01',
+		to: '5.05',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
@@ -45,6 +45,11 @@ export default new Meta({
 	{
 		date: new Date('2019-07-20'),
 		Changes: () => <>Keep track of, and warn against dropping, <StatusLink {...STATUSES.SHARPCAST} /> buffs.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-07-28'),
+		Changes: () => <>Significant rework of Rotation Outliers display and related suggestions.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })
