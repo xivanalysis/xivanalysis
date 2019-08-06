@@ -27,8 +27,6 @@ const PROC_RATE = 0.15
 
 const MAX_PROC_HOLD = 5000
 
-const ENKINDLE_CDR = 10
-
 // Severity in ms
 const OVERAGE_SEVERITY = {
 	1000: SEVERITY.MINOR,
@@ -39,7 +37,6 @@ const OVERAGE_SEVERITY = {
 export default class Ruin4 extends Module {
 	static handle = 'ruin4'
 	static dependencies = [
-		'cooldowns',
 		'downtime',
 		'suggestions',
 	]
@@ -74,10 +71,6 @@ export default class Ruin4 extends Module {
 	}
 
 	_onApplyFurtherRuin(event) {
-		// Further Ruin (R4 proc) also reduces the CD on Enkindle by 10 seconds
-		// TODO: Procs while buff is up don't refresh the buff... so I can't actually track reductions accurately. Should be OK as long as they're using their damn procs though.
-		this.cooldowns.reduceCooldown(ACTIONS.ENKINDLE.id, ENKINDLE_CDR)
-
 		// TODO: Probably need to do more than this, but it'll do for now
 		this._procs ++
 

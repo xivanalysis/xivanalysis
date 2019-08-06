@@ -92,8 +92,10 @@ export default {
 		name: 'Demon Slice',
 		icon: 'https://xivapi.com/i/003000/003405.png',
 		onGcd: true,
-		breaksCombo: true,
 		potency: 150,
+		combo: {
+			start: true,
+		},
 	},
 	DEMON_SLAUGHTER: {
 		id: 16149,

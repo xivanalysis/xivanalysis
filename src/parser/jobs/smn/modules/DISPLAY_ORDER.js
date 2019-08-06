@@ -4,5 +4,6 @@ export default {
 	RUIN_IV: 51,
 	DWT: 52,
 	BAHAMUT: 53,
-	PETS: 54,
+	PHOENIX: 54,
+	PETS: 55,
 }

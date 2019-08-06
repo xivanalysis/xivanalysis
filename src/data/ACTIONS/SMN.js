@@ -1,5 +1,15 @@
 import PETS from '../PETS'
 
+//use action id of a skill id in the group to avoid potential duplications
+export const SMN_COOLDOWN_GROUP = {
+	SUMMON: 180,
+	ENERGY: 16510,
+	TRANCE: 3581,
+	EGI_ASSAULT: 16797,
+	EGI_ASSAULT_II: 16798,
+	ENKINDLE: 16802,
+}
+
 export default {
 	// -----
 	// Player
@@ -9,6 +19,7 @@ export default {
 		name: 'Summon III',
 		icon: 'https://xivapi.com/i/002000/002680.png',
 		cooldown: 10,
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
 	FESTER: {
@@ -31,13 +42,7 @@ export default {
 		name: 'Energy Siphon',
 		icon: 'https://xivapi.com/i/002000/002697.png',
 		cooldown: 30,
-	},
-
-	ENKINDLE: {
-		id: 184,
-		name: 'Enkindle',
-		icon: 'https://xivapi.com/i/002000/002677.png',
-		cooldown: 120,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
 	PAINFLARE: {
@@ -67,6 +72,7 @@ export default {
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
 		cooldown: 60,
+		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
 	DEATHFLARE: {
@@ -125,6 +131,7 @@ export default {
 		name: 'Firebird Trance',
 		icon: 'https://xivapi.com/i/002000/002734.png',
 		cooldown: 60,
+		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
 	FOUNTAIN_OF_FIRE: {
@@ -154,6 +161,7 @@ export default {
 		name: 'Assault I: Aerial Slash',
 		icon: 'https://xivapi.com/i/002000/002717.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 	},
 
 	ASSAULT_I_EARTHEN_ARMOR: {
@@ -161,6 +169,7 @@ export default {
 		name: 'Assault I: Earthen Armor',
 		icon: 'https://xivapi.com/i/002000/002707.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 	},
 
 	ASSAULT_I_CRIMSON_CYCLONE: {
@@ -168,6 +177,7 @@ export default {
 		name: 'Assault I: Crimson Cyclone',
 		icon: 'https://xivapi.com/i/002000/002726.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 	},
 
 	ASSAULT_II_SLIIPSTREAM: {
@@ -175,6 +185,7 @@ export default {
 		name: 'Assault II: Slipstream',
 		icon: 'https://xivapi.com/i/002000/002718.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 	},
 
 	ASSAULT_II_MOUNTAIN_BUSTER: {
@@ -182,6 +193,7 @@ export default {
 		name: 'Assault II: Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002708.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 	},
 
 	ASSAULT_II_FLAMING_CRUSH: {
@@ -189,6 +201,7 @@ export default {
 		name: 'Assault II: Flaming Crush',
 		icon: 'https://xivapi.com/i/002000/002727.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {
@@ -196,6 +209,7 @@ export default {
 		name: 'Enkindle: Aerial Blast',
 		icon: 'https://xivapi.com/i/002000/002719.png',
 		cooldown: 120,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
 	ENKINDLE_EARTHEN_FURY: {
@@ -203,6 +217,7 @@ export default {
 		name: 'Enkindle: Earthen Fury',
 		icon: 'https://xivapi.com/i/002000/002709.png',
 		cooldown: 120,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
 	ENKINDLE_INFERNO: {
@@ -210,6 +225,7 @@ export default {
 		name: 'Enkindle: Inferno',
 		icon: 'https://xivapi.com/i/002000/002728.png',
 		cooldown: 120,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENKINDLE,
 	},
 
 	// -----
