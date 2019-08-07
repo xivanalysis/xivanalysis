@@ -679,6 +679,7 @@
   "sch.aetherflow.cooldown": "CD",
   "sch.aetherflow.drift": "推移",
   "sch.aetherflow.stacks-wasted": "浪费的以太数量",
+  "sch.chainstrat.cooldown.description": "",
   "sch.dots.checklist.description": "作为一名学者, Dot 是你伤害的重要部分。必须在任何时候都保持着。",
   "sch.dots.checklist.name": "保持你的 Dot",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 的覆盖率",

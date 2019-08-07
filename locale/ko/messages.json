@@ -679,6 +679,7 @@
   "sch.aetherflow.cooldown": "쿨다운",
   "sch.aetherflow.drift": "갱신지연",
   "sch.aetherflow.stacks-wasted": "에테르 스택 낭비 횟수",
+  "sch.chainstrat.cooldown.description": "",
   "sch.dots.checklist.description": "학자의 지속 데미지는 딜링의 상당량을 차지합니다. 상시 유지하는 것을 목표하십시오.",
   "sch.dots.checklist.name": "도트 데미지 기술들이 항상 지속 되도록 하십시오.",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 적용 시간",

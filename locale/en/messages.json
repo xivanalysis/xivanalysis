@@ -679,6 +679,7 @@
   "sch.aetherflow.cooldown": "CD",
   "sch.aetherflow.drift": "Drift",
   "sch.aetherflow.stacks-wasted": "Stacks Wasted",
+  "sch.chainstrat.cooldown.description": "Try to use <0/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.\\",
   "sch.dots.checklist.description": "As a Scholar, DoTs are a significant portion of your sustained damage. Aim to keep them up at all times.",
   "sch.dots.checklist.name": "Keep your DoTs up",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> uptime",
