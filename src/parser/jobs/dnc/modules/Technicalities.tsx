@@ -25,6 +25,11 @@ const TECHNICAL_SEVERITY_TIERS = {
 	3: SEVERITY.MAJOR,
 }
 
+const WINDOW_STATUSES = [
+	STATUSES.DEVILMENT.id,
+	STATUSES.TECHNICAL_FINISH.id,
+]
+
 class TechnicalWindow {
 	start: number
 	end?: number
@@ -55,34 +60,52 @@ export default class Technicalities extends Module {
 	private badDevilments: number = 0
 
 	protected init() {
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.onGainTechnical)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.onRemoveTechnical)
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
+		this.addHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
 		this.addHook('cast', {by: 'player'}, this.onCast)
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onGainTechnical(event: BuffEvent) {
+	private tryOpenWindow(event: BuffEvent) {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
-		if (lastWindow && lastWindow.end === event.timestamp) {
-			lastWindow.end = undefined
-			return
+		if (lastWindow) {
+			if (!lastWindow.end) {
+				return
+			}
+			if (lastWindow.end === event.timestamp) {
+				lastWindow.end = undefined
+				return
+			}
 		}
 
 		const newWindow = new TechnicalWindow(event.timestamp)
 		this.history.push(newWindow)
 	}
 
-	private onRemoveTechnical(event: BuffEvent) {
+	private tryCloseWindow(event: BuffEvent) {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		if (!lastWindow) {
 			return
 		}
 
-		lastWindow.end = event.timestamp
+		if (this.isWindowOkToClose(lastWindow, event)) {
+			lastWindow.end = event.timestamp
+		}
+	}
+
+	// Make sure all applicable statuses have fallen off before the window closes
+	private isWindowOkToClose(window: TechnicalWindow, event: BuffEvent): boolean {
+		if (event.ability.guid !== STATUSES.DEVILMENT.id && window.hasDevilment && this.combatants.selected.hasStatus(STATUSES.DEVILMENT.id)) {
+			return false
+		}
+		if (event.ability.guid !== STATUSES.TECHNICAL_FINISH.id && this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
+			return false
+		}
+		return true
 	}
 
 	private onCast(event: CastEvent) {
