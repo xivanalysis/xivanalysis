@@ -27,6 +27,13 @@ export default {
 		castTime: 2.5,
 	},
 
+	SCH_RUIN_II: {
+		id: 17870,
+		name: 'Ruin II',
+		icon: 'https://xivapi.com/i/000000/000502.png',
+		onGcd: true,
+	},
+
 	RECITATION: {
 		id: 16542,
 		name: 'Recitation',
