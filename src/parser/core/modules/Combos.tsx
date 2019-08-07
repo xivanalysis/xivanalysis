@@ -5,9 +5,9 @@ import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
@@ -23,20 +23,6 @@ const ISSUE_TYPENAMES = {
 
 export interface ComboEvent extends AoeEvent {
 	type: 'combo'
-}
-
-/* The Hit and AoeEvent interfaces belong in the AoE module if/when that is converted to TypeScript */
-interface Hit {
-	id: number
-	instance: number
-	times: number
-	amount: number
-}
-
-export interface AoeEvent extends AbilityEvent {
-	hits: Hit[]
-	sourceID: number
-	successfulHit: boolean
 }
 
 export interface ComboIssue {

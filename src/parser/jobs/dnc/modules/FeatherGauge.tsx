@@ -9,7 +9,7 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/Combos'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
