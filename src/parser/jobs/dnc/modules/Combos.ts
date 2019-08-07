@@ -1,7 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
 import CoreCombos, {AoeEvent} from 'parser/core/modules/Combos'
 import DirtyDancing from './DirtyDancing'
 
