@@ -333,6 +333,8 @@
   "drg.procs.suggestions.mirage-dropped.why": "",
   "drg.procs.suggestions.mirage-overwritten.content": "",
   "drg.procs.suggestions.mirage-overwritten.why": "",
+  "drg.raiden.suggestions.true-thrust.content": "",
+  "drg.raiden.suggestions.true-thrust.why": "",
   "drg.rotation.accordion.message": "DRG a une rotation stricte de 11 GDC avec quelques variations mineures possibles, si vous actualisez <0/> trop tôt ou que vous maintenez un DoT sur deux cibles à la fois par exemple. Toutes les entrées ci-dessous représentent des rotations incorrectes.",
   "drg.rotation.panel-count": "",
   "drg.rotation.title": "",

@@ -333,6 +333,8 @@
   "drg.procs.suggestions.mirage-dropped.why": "You dropped {droppedMirage, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}.",
   "drg.procs.suggestions.mirage-overwritten.content": "Avoid casting <0/> and <1/> when you already have a <2/> procs, as it overwrites them and can delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.procs.suggestions.mirage-overwritten.why": "You overwrote {0, plural, one {# Mirage Dive proc} other {# Mirage Dive procs}}.",
+  "drg.raiden.suggestions.true-thrust.content": "Try to minimize your number of <0/> casts over the course of the fight that could have been <1/> casts instead. Using it at the start of a fight or after a prolonged downtime is unavoidable, but every mid-rotation cast is a significant potency loss from the lost proc and either the broken combo or the missed positional that caused it.",
+  "drg.raiden.suggestions.true-thrust.why": "You used True Thrust {0, plural, one {# time} other {# times}} in your regular rotations.",
   "drg.rotation.accordion.message": "DRG has a very strict 11-GCD rotation with only minor permissable variations if you refresh <0/> early or are maintaining your DoT on two targets. All the entries below are instances of incorrect rotations.",
   "drg.rotation.panel-count": "{0, plural, one {# GCD} other {# GCDs}}",
   "drg.rotation.title": "Rotational Issues",
