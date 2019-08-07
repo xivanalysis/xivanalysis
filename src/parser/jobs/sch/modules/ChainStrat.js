@@ -13,6 +13,6 @@ export default class ChainStrat extends CooldownDowntime {
 	allowedDowntime = CHAIN_STRAT_OFFSET
 	firstUseOffset = CHAIN_STRAT_START_OFFSET
 	description = <Trans id="sch.chainstrat.cooldown.description">
-		Try to use <ActionLink {...ACTIONS.CHAIN_STRATAGEM}/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.\
+		Try to use <ActionLink {...ACTIONS.CHAIN_STRATAGEM}/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.
 	</Trans>
 }
