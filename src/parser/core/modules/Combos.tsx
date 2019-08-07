@@ -236,19 +236,23 @@ export default class Combos extends Module {
 		}))
 	}
 
+	/**
+	 * To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
+	 * broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
+	 * what particular actions were misused and when in the fight.
+	 * The overriding module should return true if the default suggestion is not wanted
+	 */
 	addJobSpecificSuggestions(comboBreakers: AoeEvent[], uncomboedGcds: AoeEvent[]) {
-		// To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
-		// broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
-		// what particular actions were misused and when in the fight.
-		// The overriding module should return true if the default suggestion is not wanted
 		return false
 	}
 
+	/**
+	 * To be overridden by subclasses. This is called in recordBrokenCombo, and receives the event triggering the broken combo,
+	 * and the context information for that break. Jobs can override this to indicate whether this broken combo is allowed. If so,
+	 * the event and context will not be recorded, and the current combo will be cleared with no other side effects.
+	 * Returning false will allow the break to be recorded, and displayed to the user
+	 */
 	isAllowableComboBreak(event: AoeEvent, context: AoeEvent[]): boolean {
-		// To be overridden by subclasses. This is called in recordBrokenCombo, and receives the event triggering the broken combo,
-		// and the context information for that break. Jobs can override this to indicate whether this broken combo is allowed. If so,
-		// the event and context will not be recorded, and the current combo will be cleared with no other side effects.
-		// Returning false will allow the break to be recorded, and displayed to the user
 		return false
 	}
 
