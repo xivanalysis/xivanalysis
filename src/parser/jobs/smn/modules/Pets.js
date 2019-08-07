@@ -65,9 +65,10 @@ export default class Pets extends Module {
 		super(...args)
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('all', this._onEvent)
+		this.addHook('all', {by: 'pet'}, this._onEvent)
 		this.addHook('summonpet', this._onChangePet)
 		this.addHook('death', {to: 'pet'}, this._onPetDeath)
+		this.addHook('death', {to: 'player'}, this._onPetDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -134,7 +135,6 @@ export default class Pets extends Module {
 
 	_onEvent(event) {
 		if (
-			(this._lastPet || this.parser.byPlayerPet(event)) &&
 			this._currentPet &&
 			this.isDemiPet(this._currentPet.id) &&
 			this._lastSummonDemi + DEMI_SUMMON_LENGTH <= event.timestamp
