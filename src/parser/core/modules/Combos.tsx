@@ -134,19 +134,26 @@ export default class Combos extends Module {
 			}
 		}
 
-		// Incorrect combo action, that's a paddlin'
+		if (combo.start) {
+			// Broken combo - starting a new combo while in a current combo
+			this.recordBrokenCombo(event, this.currentComboChain)
+			return true // Start a new combo
+		}
+
+		// Check if action continues existing combo
 		if (combo.from) {
 			const fromOptions = Array.isArray(combo.from) ? combo.from : [combo.from]
-			if (!fromOptions.includes(this.lastAction)) {
-				this.recordBrokenCombo(event, this.currentComboChain)
-				return combo.start // It's a combo if the action is the start of one
+			if (fromOptions.includes(this.lastAction)) {
+				// Combo continued correctly
+				this.fabricateComboEvent(event)
+				// If it's a finisher, reset the combo
+				return !combo.end
 			}
 		}
 
-		// Combo continued correctly
-		this.fabricateComboEvent(event)
-		// If it's a finisher, reset the combo
-		return !combo.end
+		// Action did not continue combo correctly and is not a new combo starter
+		this.recordBrokenCombo(event, this.currentComboChain)
+		return false
 	}
 
 	private onCast(event: AoeEvent) {
