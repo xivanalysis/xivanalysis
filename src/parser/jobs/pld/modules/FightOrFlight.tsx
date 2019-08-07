@@ -159,7 +159,7 @@ export default class FightOrFlight extends Module {
 		this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
 		this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
 		this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
-		this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.interveneCounter)
+		this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
 
 		this.fofState = new FightOrFlightState()
 	}

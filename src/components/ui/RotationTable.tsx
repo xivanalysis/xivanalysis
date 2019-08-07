@@ -33,7 +33,7 @@ export interface RotationTargetData {
 	/**
 	 * Expected target number
 	 */
-	expected: number
+	expected?: number
 	/**
 	 * Recorded number
 	 */
@@ -146,10 +146,10 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static TargetCell = ({actual, expected}: RotationTargetData) =>
 		<Table.Cell
 			textAlign="center"
-			positive={actual >= expected}
-			negative={actual < expected}
+			positive={expected === undefined ? false : actual >= expected}
+			negative={expected === undefined ? false : actual < expected}
 		>
-			{actual}/{expected}
+			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>
 
 	static Row = ({onGoto, targets, notes, notesMap, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) =>
