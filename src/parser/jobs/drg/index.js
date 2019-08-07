@@ -25,6 +25,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 	],
 	changelog: [{
+		date: new Date('2019-08-06'),
+		Changes: () => <>Added a module for tracking bad True Thrust uses.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-07-21'),
 		Changes: () => <>Updated Lance Charge/Dragon Sight window analysis logic, made some small text and data corrections.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
