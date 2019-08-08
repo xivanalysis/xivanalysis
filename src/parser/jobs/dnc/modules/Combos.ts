@@ -1,6 +1,7 @@
 import ACTIONS from 'data/ACTIONS'
 import {dependency} from 'parser/core/Module'
-import CoreCombos, {AoeEvent} from 'parser/core/modules/Combos'
+import {AoeEvent} from 'parser/core/modules/AoE'
+import CoreCombos from 'parser/core/modules/Combos'
 import DirtyDancing from './DirtyDancing'
 
 const GCD_TIMEOUT_MILLIS = 15000
