@@ -44,7 +44,7 @@ class MissingDotTracker {
 
 const POTENCY_PER_DOT = {
 	[ACTIONS.FESTER.id]: 100,
-	[ACTIONS.RUIN_II.id]: 40,
+	[ACTIONS.SMN_RUIN_II.id]: 40,
 	[ACTIONS.RUIN_III.id]: 50,
 	[ACTIONS.RUIN_IV.id]: 70,
 }
