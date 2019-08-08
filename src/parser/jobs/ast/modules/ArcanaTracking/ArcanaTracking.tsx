@@ -6,7 +6,7 @@ import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
-import {CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
+import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 const LINKED_EVENT_THRESHOLD = 20
@@ -22,17 +22,6 @@ const CARD_ACTIONS = [
 	ACTIONS.UNDRAW.id,
 	ACTIONS.DIVINATION.id,
 	...PLAY,
-]
-
-const ARCANA_STATUSES = [
-	STATUSES.THE_BALANCE.id,
-	STATUSES.THE_BOLE.id,
-	STATUSES.THE_ARROW.id,
-	STATUSES.THE_SPEAR.id,
-	STATUSES.THE_EWER.id,
-	STATUSES.THE_SPIRE.id,
-	STATUSES.LORD_OF_CROWNS.id,
-	STATUSES.LADY_OF_CROWNS.id,
 ]
 
 const PLAY_TO_STATUS_LOOKUP = _.zipObject(PLAY, DRAWN_ARCANA)
@@ -149,6 +138,14 @@ export default class ArcanaTracking extends Module {
 	 */
 	public getCardState(timestamp = this.parser.fight.start_time): CardState | undefined {
 		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && timestamp > artifact.lastEvent.timestamp)
+		return stateItem
+	}
+
+	/**
+	 * @returns {CardState} - object containing the card state of the pull
+	 */
+	public getPullState(): CardState {
+		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && artifact.lastEvent.type === 'pull') as CardState
 		return stateItem
 	}
 
