@@ -16,4 +16,11 @@ export default {
 		name: 'Galvanize',
 		icon: 'https://xivapi.com/i/012000/012801.png',
 	},
+
+	RECITATION: {
+		id: 1896,
+		name: 'Recitation',
+		icon: 'https://xivapi.com/i/012000/012813.png',
+		duration: 15,
+	},
 }

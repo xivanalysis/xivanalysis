@@ -5,9 +5,9 @@ import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
@@ -23,20 +23,6 @@ const ISSUE_TYPENAMES = {
 
 export interface ComboEvent extends AoeEvent {
 	type: 'combo'
-}
-
-/* The Hit and AoeEvent interfaces belong in the AoE module if/when that is converted to TypeScript */
-interface Hit {
-	id: number
-	instance: number
-	times: number
-	amount: number
-}
-
-export interface AoeEvent extends AbilityEvent {
-	hits: Hit[]
-	sourceID: number
-	successfulHit: boolean
 }
 
 export interface ComboIssue {
@@ -148,19 +134,26 @@ export default class Combos extends Module {
 			}
 		}
 
-		// Incorrect combo action, that's a paddlin'
+		if (combo.start) {
+			// Broken combo - starting a new combo while in a current combo
+			this.recordBrokenCombo(event, this.currentComboChain)
+			return true // Start a new combo
+		}
+
+		// Check if action continues existing combo
 		if (combo.from) {
 			const fromOptions = Array.isArray(combo.from) ? combo.from : [combo.from]
-			if (!fromOptions.includes(this.lastAction)) {
-				this.recordBrokenCombo(event, this.currentComboChain)
-				return combo.start // It's a combo if the action is the start of one
+			if (fromOptions.includes(this.lastAction)) {
+				// Combo continued correctly
+				this.fabricateComboEvent(event)
+				// If it's a finisher, reset the combo
+				return !combo.end
 			}
 		}
 
-		// Combo continued correctly
-		this.fabricateComboEvent(event)
-		// If it's a finisher, reset the combo
-		return !combo.end
+		// Action did not continue combo correctly and is not a new combo starter
+		this.recordBrokenCombo(event, this.currentComboChain)
+		return false
 	}
 
 	private onCast(event: AoeEvent) {

@@ -44,9 +44,9 @@ export default class Weaving extends CoreWeaving {
 	// Now this, we want to overwrite
 	_onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.RUIN_II.icon,
+			icon: ACTIONS.SCH_RUIN_II.icon,
 			content: <Trans id="sch.weaving.suggestion.content">
-				<ActionLink {...ACTIONS.RUIN_II} /> may seem like a great choice for weaving,
+				<ActionLink {...ACTIONS.SCH_RUIN_II} /> may seem like a great choice for weaving,
 				but because its potency is <i>absurdly</i> low compared to <ActionLink {...ACTIONS.BROIL_III} />,
 				it is actually better to just clip your GCD with Broil than to waste your mana.
 				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
@@ -68,7 +68,7 @@ export default class Weaving extends CoreWeaving {
 		}
 
 		// Ruin 2 is just bad for weaving
-		if (weave.leadingGcdEvent.ability.guid === ACTIONS.RUIN_II.id &&
+		if (weave.leadingGcdEvent.ability.guid === ACTIONS.SCH_RUIN_II.id &&
 			weave.weaves.length > 0
 		) {
 			// ...unless you were using it for movement
