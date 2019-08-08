@@ -12,8 +12,10 @@ import PETS from 'data/PETS'
 // Unlike HW, don't need to worry about mana drain too much. It's just flat pot.
 // TODO: Ok where is this gcd metadata gonna be stored at the end of the day?
 //       ACTIONS is looking more and more tasty
-const RUIN2_POT = 100
-const RUIN3_POT = 120
+// TODO: For full accuracy, each bad Ruin 2 needs to check for applied dots to
+//       determine actual potency lost.  For simplicity, assume both dots are active
+const RUIN2_POT = 160  //80 with no dots
+const RUIN3_POT = 200  //100 with no dots
 
 // Severity, in no. casts
 const BAD_CAST_SEVERITY = {
