@@ -36,48 +36,43 @@ export default class InnerRelease extends BuffWindowModule {
 			1: SEVERITY.MAJOR,
 		},
 	}
-	trackedCooldowns = [
-		{
-			action: ACTIONS.UPHEAVAL,
-			expectedPerWindow: 1,
-			suggestionContent: <Trans id="war.ir.suggestions.upheaval.content">
-				One use of <ActionLink {...ACTIONS.UPHEAVAL}/> should occur during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window.
-			</Trans>,
-			severityTiers: {
-				1: SEVERITY.MEDIUM,
+	trackedActions = {
+		iconAction: ACTIONS.UPHEAVAL,
+		actions: [
+			{
+				action: ACTIONS.UPHEAVAL,
+				expectedPerWindow: 1,
 			},
-		},
-		{
-			action: ACTIONS.ONSLAUGHT,
-			expectedPerWindow: 1,
-			suggestionContent: <Trans id="war.ir.suggestions.onslaught.content">
-				One use of <ActionLink {...ACTIONS.ONSLAUGHT}/> should occur during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window.
-			</Trans>,
-			severityTiers: {
-				1: SEVERITY.MEDIUM,
+			{
+				action: ACTIONS.ONSLAUGHT,
+				expectedPerWindow: 1,
 			},
+		],
+		suggestionContent: <Trans id="war.ir.suggestions.trackedActions.content">
+			One use of <ActionLink {...ACTIONS.UPHEAVAL}/> and one use of <ActionLink {...ACTIONS.ONSLAUGHT}/> should occur during every <ActionLink {...ACTIONS.INNER_RELEASE}/> window.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MEDIUM,
 		},
-	]
-	trackedBadCooldowns = [
-		{
-			action: ACTIONS.INNER_CHAOS,
-			expectedPerWindow: 0,
-			suggestionContent: <Trans id="war.ir.suggestions.innerchaos.content">
-				Using <ActionLink {...ACTIONS.INNER_CHAOS} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. The ability is guaranteed to be a critical direct hit, and makes no use of <ActionLink {...ACTIONS.INNER_RELEASE}/>'s benefits.
-			</Trans>,
-			severityTiers: {
-				1: SEVERITY.MAJOR,
+	}
+
+	trackedBadActions = {
+		iconAction: ACTIONS.INNER_CHAOS,
+		actions: [
+			{
+				action: ACTIONS.INNER_CHAOS,
+				expectedPerWindow: 0,
 			},
-		},
-		{
-			action: ACTIONS.CHAOTIC_CYCLONE,
-			expectedPerWindow: 0,
-			suggestionContent: <Trans id="war.ir.suggestions.chaoticcyclone.content">
-				Using <ActionLink {...ACTIONS.CHAOTIC_CYCLONE} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. The ability is guaranteed to be a critical direct hit, and makes no use of <ActionLink {...ACTIONS.INNER_RELEASE}/>'s benefits.
-			</Trans>,
-			severityTiers: {
-				1: SEVERITY.MAJOR,
+			{
+				action: ACTIONS.CHAOTIC_CYCLONE,
+				expectedPerWindow: 0,
 			},
+		],
+		suggestionContent: <Trans id="war.ir.suggestions.trackedBadActions.content">
+			Using <ActionLink {...ACTIONS.INNER_CHAOS} /> or <ActionLink {...ACTIONS.CHAOTIC_CYCLONE} /> inside of <ActionLink {...ACTIONS.INNER_RELEASE} /> should be avoided at all costs. These abilities are guaranteed to be a critical direct hit, and make no use of <ActionLink showIcon={false} {...ACTIONS.INNER_RELEASE}/>'s benefits.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MAJOR,
 		},
-	]
+	}
 }

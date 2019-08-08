@@ -55,11 +55,16 @@ interface BuffWindowRequiredGCDs {
 	severityTiers: SeverityTiers
 }
 
-interface BuffWindowTrackedCooldown {
-	action: Action
-	expectedPerWindow: number,
+interface BuffWindowTrackedActions {
+	actions: BuffWindowTrackedAction[]
+	iconAction: Action
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers
+}
+
+interface BuffWindowTrackedAction {
+	action: Action
+	expectedPerWindow: number
 }
 
 export abstract class BuffWindowModule extends Module {
@@ -90,13 +95,13 @@ export abstract class BuffWindowModule extends Module {
 	 * - trackedCooldowns will require a MINIMUM of trackedCooldown.expectedPerWindow uses of the specified action in each window
 	 *     and will provide data in the RotationTable about the number used as well as a suggestion based on missed uses
 	 */
-	protected trackedCooldowns: BuffWindowTrackedCooldown[] = []
+	protected trackedActions?: BuffWindowTrackedActions
 	/**
 	 * Optionally, you can also specify additional cooldowns to track usage of, indicating the number of expected usages per window.
 	 *  - trackedBadCooldowns will require NO MORE THAN trackedBadCooldown.expectedPerWindow uses of the specified action in each window
 	 *     (usually, this number should be 0), and will provide a suggestion if the BadCooldown is being used more than the expected threshold
 	 */
-	protected trackedBadCooldowns: BuffWindowTrackedCooldown[] = []
+	protected trackedBadActions?: BuffWindowTrackedActions
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -198,23 +203,23 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	/**
-	 * For consumers that have tracked cooldowns that expect the same number of usages per window, this will use the
-	 *   expectedPerWindow property on that cooldown as the baseline
-	 * This method MAY be overridden if the logic of expected tracked cooldowns per window is variable
+	 * For consumers that have tracked actions that expect the same number of usages per window, this will use the
+	 *   expectedPerWindow property on that action as the baseline
+	 * This method MAY be overridden if the logic of expected tracked actions per window is variable
 	 * @param buffWindow
-	 * @param cooldown
+	 * @param action
 	 */
-	protected getBaselineExpectedTrackedCooldown(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
-		return cooldown.expectedPerWindow || 0
+	protected getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		return action.expectedPerWindow || 0
 	}
 
 	/**
-	 * This method MAY be overridden to provide class-specific logic to change expected uses of a tracked cooldown per BuffWindow - default no effect
-	 * Return a positive number to INCREASE expected tracked cooldown usages for this window, or a negative number to DECREASE
+	 * This method MAY be overridden to provide class-specific logic to change expected uses of a tracked action per BuffWindow - default no effect
+	 * Return a positive number to INCREASE expected tracked action usages for this window, or a negative number to DECREASE
 	 * @param buffWindow
-	 * @param cooldown
+	 * @param action
 	 */
-	protected changeExpectedTrackedCooldownClassLogic(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
+	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		return 0
 	}
 
@@ -222,16 +227,31 @@ export abstract class BuffWindowModule extends Module {
 		return this.getBaselineExpectedGCDs(buffWindow) + this.changeExpectedGCDsClassLogic(buffWindow) - this.reduceExpectedGCDsEndOfFight(buffWindow)
 	}
 
-	private getBuffWindowExpectedTrackedCooldowns(buffWindow: BuffWindowState, cooldown: BuffWindowTrackedCooldown): number {
-		return this.getBaselineExpectedTrackedCooldown(buffWindow, cooldown) + this.changeExpectedTrackedCooldownClassLogic(buffWindow, cooldown)
+	/**
+	 * This method MAY be overridden to provide class-specific logic to determine if the required GCD(s) were used during a given BuffWindow
+	 * Classes whose required GCD list vary per window should override this function.
+	 * Function MUST return a number of CORRECT GCDs used within the window
+	 * @param buffWindow
+	 */
+	protected getBuffWindowRequiredGCDsUsed(buffWindow: BuffWindowState): number {
+		if ( !this.requiredGCDs ) {
+			return 0
+		}
+
+		const allowedGCDsById = this.requiredGCDs.actions.map(a => a.id)
+		return buffWindow.getActionCountByIds(allowedGCDsById)
+	}
+
+	private getBuffWindowExpectedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action)
 	}
 
 	private onComplete() {
 		if ( this.expectedGCDs ) {
 			const missedGCDs = this.buffWindows
-				.reduce((sum, curWindow) => {
-					const expectedGCDs = this.getBuffWindowExpectedGCDs(curWindow)
-					return sum + Math.max(0, expectedGCDs - curWindow.gcds)
+				.reduce((sum, buffWindow) => {
+					const expectedGCDs = this.getBuffWindowExpectedGCDs(buffWindow)
+					return sum + Math.max(0, expectedGCDs - buffWindow.gcds)
 				}, 0)
 
 			this.suggestions.add(new TieredSuggestion({
@@ -246,9 +266,8 @@ export abstract class BuffWindowModule extends Module {
 		}
 
 		if ( this.requiredGCDs ) {
-			const allowedGCDsById = this.requiredGCDs.actions.map(a => a.id)
 			const invalidGCDs = this.buffWindows
-				.reduce((sum, curWindow) => sum + Math.max(0, curWindow.gcds - curWindow.getActionCountByIds(allowedGCDsById)), 0)
+				.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.gcds - this.getBuffWindowRequiredGCDsUsed(buffWindow)), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.requiredGCDs.iconAction.icon,
@@ -261,35 +280,37 @@ export abstract class BuffWindowModule extends Module {
 			}))
 		}
 
-		this.trackedCooldowns.forEach(cooldown => {
-			const missedCooldowns = this.buffWindows
-				.reduce((sum, curWindow) => sum + Math.max(0, cooldown.expectedPerWindow - curWindow.getActionCountByIds([cooldown.action.id])), 0)
+		if ( this.trackedActions ) {
+			const missedActions = this.trackedActions.actions
+				.reduce((sum, trackedAction) => sum + this.buffWindows
+						.reduce((sum, buffWindow) => sum + Math.max(0, trackedAction.expectedPerWindow - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: cooldown.action.icon,
-				content: cooldown.suggestionContent,
-				tiers: cooldown.severityTiers,
-				value: missedCooldowns,
-				why: <Trans id="core.buffwindow.suggestions.trackedcooldown.why">
-					{missedCooldowns} <Plural value={missedCooldowns} one="use of" other="uses of"/> <ActionLink showIcon={false} {...cooldown.action}/> <Plural value={missedCooldowns} one="was" other="were"/> missed during {this.buffAction.name} windows.
+				icon: this.trackedActions.iconAction.icon,
+				content: this.trackedActions.suggestionContent,
+				tiers: this.trackedActions.severityTiers,
+				value: missedActions,
+				why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
+					<Plural value={missedActions} one="# use of a recommended cooldown was" other="# uses of recommended cooldowns were"/> missed during {this.buffAction.name} windows.
 				</Trans>,
 			}))
-		})
+		}
 
-		this.trackedBadCooldowns.forEach(badCooldown => {
-			const badCooldowns = this.buffWindows
-				.reduce((sum, curWindow) => sum + Math.max(0, curWindow.getActionCountByIds([badCooldown.action.id])), 0)
+		if ( this.trackedBadActions ) {
+			const badActions = this.trackedBadActions.actions
+				.reduce((sum, trackedAction) => sum + this.buffWindows
+						.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: badCooldown.action.icon,
-				content: badCooldown.suggestionContent,
-				tiers: badCooldown.severityTiers,
-				value: badCooldowns,
-				why: <Trans id="core.buffwindow.suggestions.badcooldown.why">
-					{badCooldowns} <Plural value={badCooldowns} one="use of" other="uses of"/> <ActionLink showIcon={false} {...badCooldown.action}/> during {this.buffAction.name} windows.
+				icon: this.trackedBadActions.iconAction.icon,
+				content: this.trackedBadActions.suggestionContent,
+				tiers: this.trackedBadActions.severityTiers,
+				value: badActions,
+				why: <Trans id="core.buffwindow.suggestions.trackedbadaction.why">
+					<Plural value={badActions} one="# use of" other="# uses of"/> cooldowns that should be avoided during {this.buffAction.name} windows.
 				</Trans>,
 			}))
-		})
+		}
 	}
 
 	output() {
@@ -307,12 +328,14 @@ export abstract class BuffWindowModule extends Module {
 				accessor: 'badgcd',
 			})
 		}
-		this.trackedCooldowns.forEach((cooldown) => {
-			rotationTargets.push({
-				header: <ActionLink showName={false} {...cooldown.action}/>,
-				accessor: cooldown.action.name,
+		if ( this.trackedActions ) {
+			this.trackedActions.actions.forEach((trackedAction) => {
+				rotationTargets.push({
+					header: <ActionLink showName={false} {...trackedAction.action}/>,
+					accessor: trackedAction.action.name,
+				})
 			})
-		})
+		}
 
 		const rotationData = this.buffWindows
 			.map(buffWindow => {
@@ -328,18 +351,17 @@ export abstract class BuffWindowModule extends Module {
 				}
 
 				if ( this.requiredGCDs ) {
-					const allowedGCDsById = this.requiredGCDs.actions.map(a => a.id)
 					targetsData.badgcd = {
-						actual: buffWindow.getActionCountByIds(allowedGCDsById),
+						actual: this.getBuffWindowRequiredGCDsUsed(buffWindow),
 						expected: this.getBuffWindowExpectedGCDs(buffWindow),
 					}
 				}
 
-				if ( this.trackedCooldowns ) {
-					this.trackedCooldowns.forEach((cooldown) => {
-						targetsData[cooldown.action.name] = {
-							actual: buffWindow.getActionCountByIds([cooldown.action.id]),
-							expected: this.getBuffWindowExpectedTrackedCooldowns(buffWindow, cooldown),
+				if ( this.trackedActions ) {
+					this.trackedActions.actions.forEach((trackedAction) => {
+						targetsData[trackedAction.action.name] = {
+							actual: buffWindow.getActionCountByIds([trackedAction.action.id]),
+							expected: this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction),
 						}
 					})
 				}
