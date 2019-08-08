@@ -27,8 +27,8 @@ export default class OGCDDowntime extends CooldownDowntime {
 	}
 
 	trackedCds = [
-		ACTIONS.CELESTIAL_INTERSECTION.id,
 		ACTIONS.DIVINATION.id,
+		ACTIONS.CELESTIAL_INTERSECTION.id,
 		ACTIONS.CELESTIAL_OPPOSITION.id,
 	]
 	target = TARGETPERCENT
