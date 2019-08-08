@@ -13,6 +13,7 @@ import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
+import Downtime from 'parser/core/modules/Downtime'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
@@ -93,6 +94,7 @@ export default class DirtyDancing extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
+	@dependency private downtime!: Downtime
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
@@ -130,7 +132,7 @@ export default class DirtyDancing extends Module {
 		const stepId = event.ability.guid
 		if (this.previousUseTimestamp[stepId]) {
 			const lastUse = this.previousUseTimestamp[stepId]
-			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.invuln.getInvulnerableUptime('any', lastUse, event.timestamp))
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.downtime.getDowntime(lastUse, event.timestamp))
 			this.totalDrift[stepId] += drift
 			this.previousUseTimestamp[stepId] = event.timestamp
 		}
