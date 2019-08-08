@@ -51,6 +51,13 @@ export default class FeatherGauge extends Module {
 		this.addHook('complete', this.onComplete)
 	}
 
+	public feathersSpentInRange(start: number, end: number): number {
+		if (start > end) {
+			return -1
+		}
+		return this.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
+	}
+
 	private onCastGenerator(event: AoeEvent) {
 		if (!event.successfulHit) {
 			return
@@ -138,7 +145,7 @@ export default class FeatherGauge extends Module {
 			<span className={styles.helpText}>
 				<Trans id="dnc.feather-gauge.graph.help-text">This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.</Trans>
 			</span>
-				<TimeLineChart data={data} />
+			<TimeLineChart data={data} />
 		</Fragment>
 	}
 }

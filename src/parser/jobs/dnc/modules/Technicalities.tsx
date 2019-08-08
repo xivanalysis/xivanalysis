@@ -17,6 +17,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import Timeline from 'parser/core/modules/Timeline'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import FeatherGauge from './FeatherGauge'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
@@ -30,6 +31,9 @@ const WINDOW_STATUSES = [
 	STATUSES.TECHNICAL_FINISH.id,
 ]
 
+const FEATHER_THRESHHOLD = 3
+const POST_WINDOW_GRACE_PERIOD_MILLIS = 500
+
 class TechnicalWindow {
 	start: number
 	end?: number
@@ -40,6 +44,7 @@ class TechnicalWindow {
 
 	hasDevilment: boolean = false
 	timelyDevilment: boolean = true
+	poolingProblem: boolean = false
 
 	constructor(start: number) {
 		this.start = start
@@ -54,6 +59,7 @@ export default class Technicalities extends Module {
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private feathers!: FeatherGauge
 
 	private history: TechnicalWindow[] = []
 	private firstDevilment: boolean = false
@@ -94,6 +100,14 @@ export default class Technicalities extends Module {
 
 		if (this.isWindowOkToClose(lastWindow, event)) {
 			lastWindow.end = event.timestamp
+
+			// Check to see if this window could've had more feathers due to possible pooling problems
+			if (this.feathers.feathersSpentInRange(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
+				const previousWindow = this.history[this.history.length-2]
+				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow ? previousWindow.start : this.parser.fight.start_time)
+					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
+				lastWindow.poolingProblem = feathersBeforeWindow > 0
+			}
 		}
 	}
 
@@ -193,6 +207,20 @@ export default class Technicalities extends Module {
 				<Plural value={lateDevilments} one="# Devilment was" other="# Devilments were"/> used later than optimal.
 			</Trans>,
 		}))
+
+		// Suggestion to pool feathers for Technical Windows
+		const unpooledWindows = this.history.filter(window => window.poolingProblem).length
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FAN_DANCE.icon,
+			content: <Trans id="dnc.technicalities.suggestions.unpooled.content">
+				Pooling your Feathers before going into a <StatusLink {...STATUSES.TECHNICAL_FINISH} /> window allows you to use more <ActionLink {...ACTIONS.FAN_DANCE} />s with the multiplicative bonuses active, increasing their effectiveness. Try to build and hold on to at least three feathers between windows.
+			</Trans>,
+			tiers: TECHNICAL_SEVERITY_TIERS,
+			value: unpooledWindows,
+			why: <Trans id="dnc.technicalities.suggestions.unpooled.why">
+				<Plural value={unpooledWindows} one="# window" other="# windows"/> were missing potential <ActionLink {...ACTIONS.FAN_DANCE} />s.
+			</Trans>,
+		}))
 	}
 
 	output() {
@@ -203,6 +231,10 @@ export default class Technicalities extends Module {
 						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...ACTIONS.DEVILMENT}/> On Time?</Trans>,
 						accessor: 'timely',
 					},
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
+						accessor: 'pooled',
+					},
 				]}
 				data={this.history.map(window => {
 					return ({
@@ -212,6 +244,7 @@ export default class Technicalities extends Module {
 							window.start - this.parser.fight.start_time,
 							notesMap: {
 								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
+								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
 							},
 						rotation: window.rotation,
 					})
