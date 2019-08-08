@@ -7,10 +7,10 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Cooldowns from 'parser/jobs/mch/modules/Cooldowns'
+import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
 import {ARCANA_STATUSES, PLAY} from './ArcanaGroups'
-import ArcanaTracking, {CardState} from './ArcanaTracking/ArcanaTracking'
+import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 
 // TODO THINGS TO TRACK:
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
@@ -37,7 +37,6 @@ export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
 
-	@dependency private cooldowns!: Cooldowns
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 	@dependency private arcanaTracking!: ArcanaTracking
@@ -175,6 +174,7 @@ export default class Draw extends Module {
 		const warnTarget = Math.floor(((theoreticalMaxPlays - WARN_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
 		const failTarget = Math.floor(((theoreticalMaxPlays - FAIL_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
 		this.checklist.add(new TieredRule({
+			displayOrder: DISPLAY_ORDER.DRAW_CHECKLIST,
 			name: <Trans id="ast.draw.checklist.name">
 				Play as many cards as possible
 			</Trans>,
