@@ -732,8 +732,6 @@
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "Stelle sicher, dass du volle 3 Stacks von <0/> pro Aktivierung hast. Jeder verlorene Stack ist ein starker Schadensverlust und kann deine nächste <1/> (dadurch auch Bahamut) um bis zu einer Minute nach hinten verschieben.",
   "smn.gauge.suggestions.lost-aetherflow.why": "{0, plural, one {# Stapel} other {# Stapel}} von Ätherfluss verloren.",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "Stelle sicher, dass du immer <0/> vor deinem nächsten <1/>. Andernfalls wird Bahamut in deiner verschoben und du verlierst möglicherweise eine Beschwörung über die Dauer des Kampfes.",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.why": "{0, plural, one {# Stapel} other {# Stapel}} von Bahamut-Äther verloren.",
   "smn.missingdots.title": "",
   "smn.pets.suggestions.no-pet.content": "Egi verursachen <0> eine menge </0> des passiven Schadens eines Beschwörers und sind wesentlich für <1/> \"Proc\" und <2/>. Stelle sicher, dass du immer einen Egi beschworen hast und halte sie aus Boss AoEs raus.",
   "smn.pets.suggestions.no-pet.why": "Kein Egi für {noPetUptimePercent}% vom Kampf beschworen (<1% wird empfohlen).",

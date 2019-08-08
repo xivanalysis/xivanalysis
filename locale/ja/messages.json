@@ -732,8 +732,6 @@
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "<0/>を毎回使うごとに必ずスタック数が3個にしてください。スタック数が一個足りなくなると全体のスキル回しが崩れる事態となり、<1/>の使用可能時間も一分ほど遅らせることになります。",
   "smn.gauge.suggestions.lost-aetherflow.why": "エーテルフローの失ったスタック数：{0, plural, one {#個} other {#個}}",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "次の<1/>ができる前に<0/>を先に使ってください。そうしないとバハムードフェーズまでの回しが同期できなくなる恐れがあり、次のバハムード召喚が大変遅らせることになります。",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.why": "バハムート・エーテルの失ったスタック数：{0, plural, one {#個} other {#個}}",
   "smn.missingdots.title": "",
   "smn.pets.suggestions.no-pet.content": "エギは言わば召喚士の次にダメージを<0>多く</0>貢献しているペットであり、<2/>や<1/>をprocする為に不可欠な存在です。 常にエギが戦場にいるということを忘れず、上手く操ってボスの攻撃範囲内に入れないでください。",
   "smn.pets.suggestions.no-pet.why": "エギが召喚されていない時間が戦闘全体の{noPetUptimePercent}%を占めています (<1%以下はお勧めです)。",

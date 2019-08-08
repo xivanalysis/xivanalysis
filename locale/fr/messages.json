@@ -732,8 +732,6 @@
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "Assurez-vous d'obtenir 3 stacks de <0/> par utilisation. Chaque stack perdu est une perte de DPS importante, vous êtes donc susceptible de décaler votre prochaine <1/> (et par conséquent votre Invocation Bahamut) d'une minute.",
   "smn.gauge.suggestions.lost-aetherflow.why": "{0, plural, one {# stack} other {# stacks}} de Flux d'Éther {0, plural, one {perdu} other {perdus}}.",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "Assurez-vous de toujours utiliser <0/> avant votre prochaine <1/>. Dans le cas contraire, vous pourrez désynchroniser Bahamut dans votre rotation et donc potentiellement perdre une occasion de l'invoquer selon la durée du combat.",
-  "smn.gauge.suggestions.lost-dreadwyrm-aether.why": "{0, plural, one {# stack} other {# stacks}} de Jauge de Transe perdue.",
   "smn.missingdots.title": "",
   "smn.pets.suggestions.no-pet.content": "Les Egis apportent à l'Invocateur d'<0>importants</0> dégâts en continu, ils sont essentiels pour les procs de <1/> et de <2/>. Assurez-vous de bien avoir votre Egi d'invoqué continuellement et de les éloigner des AoEs des boss.",
   "smn.pets.suggestions.no-pet.why": "Aucun Egi invoqué pendant {noPetUptimePercent}% du combat (<1% recommandé).",
