@@ -10,6 +10,7 @@ import {ArcanaTracking, ArcanaSuggestions} from './ArcanaTracking'
 import Sect from './Sect'
 import CelestialIntersection from './CelestialIntersection'
 import Overheal from './Overheal'
+import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	Cooldowns,
@@ -25,4 +26,5 @@ export default [
 	Sect,
 	CelestialIntersection,
 	Overheal,
+	OGCDDowntime,
 ]
