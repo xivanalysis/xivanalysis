@@ -13,7 +13,7 @@ import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [

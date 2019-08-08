@@ -16,7 +16,7 @@ import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways

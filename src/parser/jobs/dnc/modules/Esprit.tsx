@@ -16,7 +16,7 @@ import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {FINISHES, GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you

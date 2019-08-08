@@ -18,7 +18,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import Timeline from 'parser/core/modules/Timeline'
 
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
