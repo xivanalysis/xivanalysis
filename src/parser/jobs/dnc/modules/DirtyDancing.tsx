@@ -119,6 +119,10 @@ export default class DirtyDancing extends Module {
 		this.addHook('complete', this.onComplete)
 	}
 
+	dancesInRange(startTime: number, endTime: number) {
+		return this.danceHistory.filter(dance => dance.start >= startTime && dance.start <= endTime).length
+	}
+
 	private addDanceToHistory(event: CastEvent): Dance {
 		const newDance = new Dance(event.timestamp)
 		newDance.rotation.push(event)
