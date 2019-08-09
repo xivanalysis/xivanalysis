@@ -271,7 +271,7 @@
   "core.weaving.title": "",
   "core.weaving.why": "{0, plural, =1 {# exemple de mauvais weaving} other {# exemples de mauvais weaving}}",
   "dnc.about.description": "Ainsi, vous êtes devenu danseur, mais vous ne savez pas différencier vos jetés de vos pirouettes? Ce module va vous aider à améliorer vos chance d'être acclamé!\n\nLes principales parties du danseur sont de réaliser vos danses, d'empecher vos jauge de se surcharger, and d'utiliser vos activations. Nous allons vous fournir quelques suggestions pour vous aider à améliorer leurs effets.\n\nPour plus d'infos, regarder ces guides (en anglais):\n* [FAQ by Tsuki](https://docs.google.com/document/d/1eNAxyjxvG4u8jEBARCD3FXWUfkK2RgCjEvKSPOUCSOQ/edit?usp=sharing)\n* [Write up by Ellunavi](https://docs.google.com/document/d/1iktjQ-kW7Vp-iWy_xEWh6t62FaXqjfGELGmcWOtPQfM/edit?usp=sharing)\n",
-  "dnc.about.description.warning": "",
+  "dnc.about.description.warning": "<0>Ce module est toujours en cours d'amélioration</0><1/> Les détails propres à la façon de jouer du Danseur, et la nature aléatoire des jauges, la rende difficile à finaliser. Si vous avez le moindre problème ou recommendation, n'hésitez pas à passer sur notre channel Discord ou à signaler un bug sur notre dépot Github!",
   "dnc.dirty-dancing.checklist.standard-finish-buff.description": "",
   "dnc.dirty-dancing.checklist.standard-finish-buff.name": "",
   "dnc.dirty-dancing.rotation-table.header.dirty": "",
