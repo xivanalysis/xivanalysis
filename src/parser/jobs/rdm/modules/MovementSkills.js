@@ -103,10 +103,10 @@ export default class MovementSkills extends Module {
 
 		const cacTarget = manafics * CACS_PER_MANAFICATION
 		requirements.push(this._checkCac(cacs, cacTarget, ACTIONS.CORPS_A_CORPS.id))
-		console.log(`${JSON.stringify(requirements, null, 4)}`)
+		//console.log(`${JSON.stringify(requirements, null, 4)}`)
 
 		requirements.push(...this._checkDisp(disp, engagement, ACTIONS.DISPLACEMENT.id, ACTIONS.ENGAGEMENT.id, manafics))
-		console.log(`${JSON.stringify(requirements, null, 4)}`)
+		//console.log(`${JSON.stringify(requirements, null, 4)}`)
 
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
@@ -137,19 +137,25 @@ export default class MovementSkills extends Module {
 		let noFail = 0
 		let engagementValue = 0
 		const requirements = []
+		if (!disps) {
+			disps = 0
+		}
+
 		if ((disps / DISPS_PER_MANAFICATION) === manafics || (engagements / ENGAGEMENTS_PER_MANAFICATION) === manafics) {
 			noFail = 100
 		} else {
 			//Figure out how many Disps DONT fit into Displacement per manafication
 			//This means that we need to deal with combinations of disp and engagement
-			const leftoverDisps = disps > 0 ? disps % DISPS_PER_MANAFICATION : 0
+			const leftoverDisps = disps % DISPS_PER_MANAFICATION
 			//Now we need to figure out the Engagement threshold
 			//We want the manafication count to be reduced by number of manafications we fully Disped for, then multiply
 			//By how many engagement we need per minus the number of disps we had left over
-			const engagementThreshold = ((manafics - disps > 0 ? ((disps - leftoverDisps) / DISPS_PER_MANAFICATION) : 0) * ENGAGEMENTS_PER_MANAFICATION) - leftoverDisps
+			const engagementThreshold = ((manafics - ((disps - leftoverDisps) / DISPS_PER_MANAFICATION)) * ENGAGEMENTS_PER_MANAFICATION) - leftoverDisps
+			console.log('engagementThreshold: ' + engagementThreshold)
 			//For now, we'll just assume you screwed the engagement usage until TC's tell me otherwise
 			dispValue = 100
-			engagementValue = engagements/engagementThreshold * 100
+			engagementValue = engagements / engagementThreshold * 100
+			console.log('engagementValue: ' + engagementValue)
 		}
 
 		console.log('disps: ' + disps)
@@ -176,7 +182,7 @@ export default class MovementSkills extends Module {
 			}))
 		}
 
-		console.log(`${JSON.stringify(requirements, null, 4)}`)
+		//console.log(`${JSON.stringify(requirements, null, 4)}`)
 
 		return requirements
 	}
