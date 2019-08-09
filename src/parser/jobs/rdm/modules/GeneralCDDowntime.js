@@ -11,7 +11,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 	//We don't bother with Fleche/C6 because they should be used on the second GCD of the fight, opening combo + potion second combo + fleche/c6
 	firstUseOffsetPerOgcd = {
 		[ACTIONS.ACCELERATION.id]: 25000,
-		[ACTIONS.LUCID_DREAMING.id]: 20000,
 		[ACTIONS.SWIFTCAST.id]: 15000,
 	}
 	trackedCds = [
