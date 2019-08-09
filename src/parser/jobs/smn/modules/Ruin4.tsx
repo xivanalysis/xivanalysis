@@ -1,123 +1,124 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
-import React from 'react'
-
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Invulnerability from 'parser/core/modules/Invulnerability'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-
-// there's also the case where if you have further ruin and an egi is about to do gcd + ogcd and they held, that can be considered a no no
-// also if they are holding further ruin during Bahamut what are they even doing
-// that one is major as hell
-// if we consider one pet gcd cycle, that's generally going to be 1-2 player gcds
-// which is an acceptable tolerance
-// ....................->...........PetAction procs FurtherRuin ->...........PetAction procs FurtherRuin ->
-// 	previousGCD -> (further ruin procs) Ruin 4 -> R2 + weave(+ weave) -> GCD
-// Even if the player used r4 early hoping to get another for the r2 weave, it was impossible because the pet's cycle couldn't allow it, the next proc window was after the r2 cast(edited)
-
-const ACTIONS_NO_PROC = [
-	ACTIONS.TITAN_EGI_ATTACK.id,
-	ACTIONS.IFRIT_EGI_ATTACK.id,
-]
-const PROC_RATE = 0.15
-
-const MAX_PROC_HOLD = 5000
-
-// Severity in ms
-const OVERAGE_SEVERITY = {
-	1000: SEVERITY.MINOR,
-	10000: SEVERITY.MEDIUM,
-	30000: SEVERITY.MAJOR,
+const SEVERITY_STACK_COUNT = {
+	1: SEVERITY.MEDIUM,
+	5: SEVERITY.MAJOR,
 }
+
+const FURTHER_RUIN_PLAYER_ACTIONS = [
+	ACTIONS.ASSAULT_I_AERIAL_SLASH.id,
+	ACTIONS.ASSAULT_II_SLIIPSTREAM.id,
+	ACTIONS.ASSAULT_I_CRIMSON_CYCLONE.id,
+	ACTIONS.ASSAULT_II_FLAMING_CRUSH.id,
+	// NOTE: Titan Egi Assualt I Earthen Armor does not generate a Further Ruin stack
+	ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER.id,
+]
+
+const FURTHER_RUIN_PET_ACTIONS = [
+	ACTIONS.AERIAL_SLASH.id,
+	ACTIONS.SLIPSTREAM.id,
+	ACTIONS.CRIMSON_CYCLONE.id,
+	ACTIONS.FLAMING_CRUSH.id,
+	// NOTE: Titan Egi Assualt I does not generate a Further Ruin stack
+	ACTIONS.MOUNTAIN_BUSTER.id,
+]
+
+const MAX_FURTHER_RUIN_COUNT = 4
+const END_OF_FIGHT_LEEWAY = 5000
 
 export default class Ruin4 extends Module {
 	static handle = 'ruin4'
-	static dependencies = [
-		'downtime',
-		'suggestions',
-	]
 	static title = t('smn.ruin-iv.title')`Ruin IV`
-	static displayOrder = DISPLAY_ORDER.RUIN_IV
 
-	_procChances = 0
-	_procs = 0
+	@dependency private suggestions!: Suggestions
+	@dependency private invuln!: Invulnerability
 
-	_lastProc = null
-	_overage = 0
+	private currentStackCount = 0
+	private earthenArmorCount = 0
+	private overage = 0
+	private playerSkillCount = 0
+	private petSkillCount = 0
 
-	constructor(...args) {
-		super(...args)
+	protected init() {
+		this.addHook('cast', {by: 'player'}, this.onPlayerCast)
+		this.addHook('cast', {by: 'pet'}, this.onPetCast)
+		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addHook('complete', this.onComplete)
+	}
 
-		this.addHook('cast', {by: 'pet'}, this._onPetCast)
-
-		const frFilter = {
-			to: 'player',
-			abilityId: STATUSES.FURTHER_RUIN.id,
+	private onPlayerCast(event: CastEvent) {
+		if (event.ability.guid === ACTIONS.RUIN_IV.id) {
+			if (this.currentStackCount > 0) { this.currentStackCount-- }
+		} else if (FURTHER_RUIN_PLAYER_ACTIONS.includes(event.ability.guid)) {
+			// Do not flag for player skills used right at the end of the fight when the
+			// pet may not have time to use the skill.
+			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+			if (fightTimeRemaining > END_OF_FIGHT_LEEWAY) {
+				this.playerSkillCount++
+			}
+		} else if (event.ability.guid === ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id) {
+			this.earthenArmorCount++
 		}
-		this.addHook('applybuff', frFilter, this._onApplyFurtherRuin)
-		this.addHook('removebuff', frFilter, this._onRemoveFurtherRuin)
-
-		this.addHook('complete', this._onComplete)
 	}
 
-	_onPetCast(event) {
-		if (!ACTIONS_NO_PROC.includes(event.ability.guid)) {
-			this._procChances ++
+	private onPetCast(event: CastEvent) {
+		if (FURTHER_RUIN_PET_ACTIONS.includes(event.ability.guid) &&
+			!this.invuln.getInvulnerableUptime('all', event.timestamp)) {
+			this.petSkillCount++
+			if (this.currentStackCount >= MAX_FURTHER_RUIN_COUNT) {
+				this.overage++
+			} else {
+				this.currentStackCount++
+			}
 		}
 	}
 
-	_onApplyFurtherRuin(event) {
-		// TODO: Probably need to do more than this, but it'll do for now
-		this._procs ++
-
-		this._lastProc = event.timestamp
+	private onDeath() {
+		this.currentStackCount = 0
 	}
 
-	_onRemoveFurtherRuin(event) {
-		this._endProcHold(event.timestamp)
-	}
-
-	_onComplete() {
-		if (this._lastProc !== null) {
-			this._endProcHold(this.parser.fight.end_time)
-		}
-
-		if (this._overage > 1000) {
+	private onComplete() {
+		if (this.overage > 0) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.RUIN_IV.icon,
-				tiers: OVERAGE_SEVERITY,
-				value: this._overage,
-				content: <Trans id="smn.ruin-iv.suggestions.overage.content">
-					Use <ActionLink {...ACTIONS.RUIN_IV}/> as soon as possible to avoid missing additional <StatusLink {...STATUSES.FURTHER_RUIN}/> procs.
+				icon: STATUSES.FURTHER_RUIN.icon,
+				content: <Trans id="smn.ruin-iv.overage.content">
+					You used Egi Assault skills in a way that overcapped your stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
 				</Trans>,
-				why: <Trans id="smn.ruin-iv.suggestions.overage.why">
-					Further Ruin held for {this.parser.formatDuration(this._overage)} longer than recommended over the course of the fight.
+				tiers: SEVERITY_STACK_COUNT,
+				value: this.overage,
+				why: <Trans id="smn.ruin-iv.overage.why">
+					{this.overage} Further Ruin <Plural value={this.overage} one="stack was" other="stacks were"/> lost.
 				</Trans>,
 			}))
 		}
-	}
 
-	_endProcHold(end) {
-		const start = this._lastProc
-		const untargetable = this.downtime.getDowntime(start, end)
-		const holdTime = end - start - untargetable
-
-		if (holdTime > MAX_PROC_HOLD) {
-			this._overage += holdTime - MAX_PROC_HOLD
+		let numberLost = this.earthenArmorCount
+		if (this.playerSkillCount > this.petSkillCount) {
+			numberLost += this.playerSkillCount - this.petSkillCount
 		}
-
-		this._lastProc = null
-	}
-
-	output() {
-		return <p>
-			<Trans id="smn.ruin-iv.chances">Chances: {this._procChances}</Trans><br/>
-			<Trans id="smn.ruin-iv.expected-procs">Expected procs: {Math.floor(this._procChances * PROC_RATE)}</Trans><br/>
-			<Trans id="smn.ruin-iv.actual-procs">Actual procs: {this._procs}</Trans>
-		</p>
+		if (numberLost > 0) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: STATUSES.FURTHER_RUIN.icon,
+				content: <Trans id="smn.ruin-iv.lost.content">
+					You used Egi Assault skills in a way that did not generate stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
+					This is typically due to the target dying or becoming invincible, a new pet being summoned before the action could be executed,
+					or using <ActionLink {...ACTIONS.ASSAULT_I_EARTHEN_ARMOR}/>, which does not generate a Further Ruin stack.
+				</Trans>,
+				tiers: SEVERITY_STACK_COUNT,
+				value: numberLost,
+				why: <Trans id="smn.ruin-iv.lost.why">
+					{numberLost} Further Ruin <Plural value={numberLost} one="stack was" other="stacks were"/> not generated.
+				</Trans>,
+			}))
+		}
 	}
 }
