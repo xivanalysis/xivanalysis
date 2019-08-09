@@ -130,19 +130,21 @@ class GaugeAction {
 
 	calculateManaOvercap(isManafication) {
 		if (this.mana.white.afterCast > MANA_CAP) {
-			this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
-			this.mana.white.afterCast = MANA_CAP
 			if (isManafication) {
-				this.mana.white.manaficationLoss = this.mana.white.overCapLoss
+				this.mana.white.manaficationLoss = this.mana.white.afterCast - MANA_CAP
+			} else {
+				this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
 			}
+			this.mana.white.afterCast = MANA_CAP
 		}
 
 		if (this.mana.black.afterCast > MANA_CAP) {
-			this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
-			this.mana.black.afterCast = MANA_CAP
 			if (isManafication) {
-				this.mana.black.manaficationLoss = this.mana.black.overCapLoss
+				this.mana.black.manaficationLoss = this.mana.black.afterCast - MANA_CAP
+			} else {
+				this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
 			}
+			this.mana.black.afterCast = MANA_CAP
 		}
 	}
 }
