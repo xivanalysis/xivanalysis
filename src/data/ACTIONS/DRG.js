@@ -61,6 +61,7 @@ export default {
 		combo: {
 			from: 7397,
 			potency: 230,
+			end: true,
 		},
 	},
 
