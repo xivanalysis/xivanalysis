@@ -22,7 +22,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.0',
-		to: '5.01',
+		to: '5.05',
 	},
 
 	contributors: [

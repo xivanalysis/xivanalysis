@@ -67,6 +67,7 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 		potency: [100, 175, 260],
+		cooldownGroup: 3562, //Sidewinder Group
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -118,6 +119,7 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 		potency: [100, 160, 220],
+		cooldownGroup: 3562, //Sidewinder Group
 	},
 	BURST_SHOT: {
 		id: 16495,

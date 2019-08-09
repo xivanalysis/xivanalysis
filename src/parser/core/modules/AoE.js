@@ -1,5 +1,3 @@
-/* When converting this module to TypeScript, bring the Hit and AoeEvent interfaces from parser/core/modules/Combos into this file */
-
 import Module from 'parser/core/Module'
 
 // Blame Meishu. No touchy.
