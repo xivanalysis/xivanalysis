@@ -104,7 +104,8 @@ export default class Technicalities extends Module {
 			// Check to see if this window could've had more feathers due to possible pooling problems
 			if (this.feathers.feathersSpentInRange(lastWindow.start, lastWindow.end) < FEATHER_THRESHHOLD) {
 				const previousWindow = this.history[this.history.length-2]
-				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow ? previousWindow.start : this.parser.fight.start_time)
+				// Gotta be a better way to do this since both previousWindow and previousWindow.end could be null...
+				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.fight.start_time)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			}
@@ -253,7 +254,7 @@ export default class Technicalities extends Module {
 			/>
 		</Fragment>
 	}
-	private getNotesIcon(ruleFailed: boolean): TODO {
+	private getNotesIcon(ruleFailed: boolean) {
 		return <Icon
 			name={ruleFailed ? 'remove' : 'checkmark'}
 			className={ruleFailed ? 'text-error' : 'text-success'}
