@@ -212,7 +212,7 @@ export default {
 	FEY_BLESSING: {
 		id: 16544,
 		name: 'Fey Blessing',
-		icon: 'https://xivapi.com/i/002000/002822.png',
+		icon: 'https://xivapi.com/i/002000/002855.png',
 		cooldown: 60,
 		pet: true,
 	},

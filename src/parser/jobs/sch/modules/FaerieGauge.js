@@ -8,7 +8,7 @@ import JOBS from 'data/JOBS'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 
@@ -32,6 +32,12 @@ const GAUGE_GAIN_AMOUNT = 10
 const GRAPH_COLOR = Color(JOBS.SCHOLAR.colour)
 const BG_COLOR_FADE = 0.8
 const BORDER_COLOR_FADE = 0.5
+// Severity markers for overcap
+// Start at 30 because you can overcap when seraph is out and you can't drain the gauge
+const GAUGE_WASTE_SEVERITY = {
+	30: SEVERITY.MINOR,
+	50: SEVERITY.MEDIUM,
+}
 
 export default class FaerieGauge extends Module {
 	static handle = 'fairieGauge'
@@ -132,8 +138,8 @@ export default class FaerieGauge extends Module {
 		this._history.push({t: ts, y: this._gauge})
 	}
 
-	// Warn on fairy not being out at the start
 	_onComplete() {
+		// Warn on fairy not being out at the start
 		if (this._noFairyAtStart) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.SUMMON_SERAPH.icon,
@@ -144,6 +150,15 @@ export default class FaerieGauge extends Module {
 				why: <Trans id="sch.gauge.nofairyatstart.why">Your fairy was not summoned at the start of combat.</Trans>,
 			}))
 		}
+
+		// Suggest that they use their gauge consumers at certain overcap points
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FEY_BLESSING.icon,
+			tiers: GAUGE_WASTE_SEVERITY,
+			value: this._waste,
+			content: <Trans id="sch.gauge.waste.suggestion.content">Try to make use of your Faerie Gauge abilities <ActionLink {...ACTIONS.FEY_UNION}/> and <ActionLink {...ACTIONS.FEY_BLESSING}/>, since they are free oGCD heals that come naturally from using Aetherflow abilities.</Trans>,
+			why: <Trans id="sch.gauge.waste.suggestion.why">A total of {this._waste} gauge was lost due to exceeding the cap.</Trans>,
+		}))
 	}
 
 	// Generate the gauge graph

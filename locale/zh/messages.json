@@ -689,6 +689,8 @@
   "sch.gauge.nofairyatstart.why": "",
   "sch.gauge.title": "",
   "sch.gauge.waste": "",
+  "sch.gauge.waste.suggestion.content": "",
+  "sch.gauge.waste.suggestion.why": "",
   "sch.weaving.suggestion.content": "<0/>似乎是避免卡GCD的一个很好的选择，但它的威力和<2/>相比实在是<1>太低</1>了，所以更好的选择实际上是直接在魔炎法之间卡GCD插入能力，而不是浪费你的MP。唯一例外的情况是你在移动的时候。所以，下面的模型只分析不移动时毁坏的使用情况。",
   "sch.weaving.suggestion.why": "在不移动时使用了 {0, plural, one {# 次} other {#次}} 毁坏。",
   "sch.weaving.title": "循环问题",
