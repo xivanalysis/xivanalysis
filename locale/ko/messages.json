@@ -45,7 +45,7 @@
   "ast.earthyl-star.suggestion.missed-use.content": "<0/>를 최대한 자주 사용하십시오. 글쿨 치유기를 아낄 뿐만 아니라 개인 딜 기여도를 높일 수 있습니다.",
   "ast.earthyl-star.suggestion.missed-use.why": "지상의 별을 최소 {0} 이상 보류하여 {_usesMissed} 회의 사용 기회를 잃었습니다.",
   "ast.horoscope.suggestion.expired.content": "<0/>는 지속 시간 만료시 효과가 발동되지 않습니다. 시전 후 만료되기에 잊지 말고 반드시 사용하십시오.",
-  "ast.horoscope.suggestion.expired.why": "천궁도 사용후 발동하는 것을 잊어 총 {0, plural, other {# 회를}} 놓쳤습니다. ",
+  "ast.horoscope.suggestion.expired.why": "",
   "ast.horoscope.title": "천궁도",
   "ast.lightspeed.messages.explanation": "",
   "ast.lightspeed.messages.no-casts": "<0/>이 한 번도 사용되지 않았습니다.",
