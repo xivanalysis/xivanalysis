@@ -1,7 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
+
 import ACTIONS from 'data/ACTIONS'
+import Rotation from 'components/ui/Rotation'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {ActionLink} from 'components/ui/DbLink'
@@ -21,6 +24,7 @@ export default class MovementSkills extends Module {
 	]
 
 	_history = []
+	_overallCastHistory = []
 	_repriseHistory = []
 	_last_manafic = {
 		timestamp: 0,
@@ -43,6 +47,7 @@ export default class MovementSkills extends Module {
 		this.target = 95
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this._history.push(this._last_manafic)
+		this.description = <Trans id="rdm.movementskills.description">Make sure you get 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.CORPS_A_CORPS.id)} /> and either 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.DISPLACEMENT.id)} /> or 4 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.ENGAGEMENT.id)} /> per <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /> </Trans>
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -55,6 +60,7 @@ export default class MovementSkills extends Module {
 		case ACTIONS.MANAFICATION.id:
 			//push the previous manafication instance
 			this._history.push(this._last_manafic)
+			this._overallCastHistory.push(event)
 			//setup the new instance, since we're unlikely to end the fight on manafication
 			this._last_manafic = {
 				timestamp: event.timestamp,
@@ -64,16 +70,19 @@ export default class MovementSkills extends Module {
 			}
 			break
 		case ACTIONS.DISPLACEMENT.id:
+			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.disp++
 			}
 			break
 		case ACTIONS.ENGAGEMENT.id:
+			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.engagement++
 			}
 			break
 		case ACTIONS.CORPS_A_CORPS.id:
+			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.cac++
 			}
@@ -103,10 +112,7 @@ export default class MovementSkills extends Module {
 
 		const cacTarget = manafics * CACS_PER_MANAFICATION
 		requirements.push(this._checkCac(cacs, cacTarget, ACTIONS.CORPS_A_CORPS.id))
-		//console.log(`${JSON.stringify(requirements, null, 4)}`)
-
-		requirements.push(...this._checkDisp(disp, engagement, ACTIONS.DISPLACEMENT.id, ACTIONS.ENGAGEMENT.id, manafics))
-		//console.log(`${JSON.stringify(requirements, null, 4)}`)
+		requirements.push(...this._checkDisp(disp, engagement, ACTIONS.DISPLACEMENT.id, manafics))
 
 		//new Rule and adds the array of Requirements that just got generated
 		this.checklist.add(new Rule({
@@ -125,17 +131,16 @@ export default class MovementSkills extends Module {
 		} else {
 			finalValue = cacs / threshold * 100
 		}
-		console.log(finalValue)
+
 		return new Requirement({
 			name: <ActionLink {...getDataBy(ACTIONS, 'id', id)} />,
 			percent: finalValue,
 		})
 	}
 
-	_checkDisp(disps, engagements, dispID, engagementID, manafics) {
-		let dispValue = 0
+	_checkDisp(disps, engagements, dispID, manafics) {
 		let noFail = 0
-		let engagementValue = 0
+		let finalValue = 0
 		const requirements = []
 		if (!disps) {
 			disps = 0
@@ -151,39 +156,50 @@ export default class MovementSkills extends Module {
 			//We want the manafication count to be reduced by number of manafications we fully Disped for, then multiply
 			//By how many engagement we need per minus the number of disps we had left over
 			const engagementThreshold = ((manafics - ((disps - leftoverDisps) / DISPS_PER_MANAFICATION)) * ENGAGEMENTS_PER_MANAFICATION) - leftoverDisps
-			console.log('engagementThreshold: ' + engagementThreshold)
+			const totalThreshold = engagementThreshold + disps
 			//For now, we'll just assume you screwed the engagement usage until TC's tell me otherwise
-			dispValue = 100
-			engagementValue = engagements / engagementThreshold * 100
-			console.log('engagementValue: ' + engagementValue)
+			finalValue = ((disps + engagements) / totalThreshold) * 100
 		}
-
-		console.log('disps: ' + disps)
-		console.log('engagements: ' + engagements)
-		console.log('manafics: ' + manafics)
 
 		if (noFail > 0) {
 			requirements.push(new Requirement({
 				name: <ActionLink {...getDataBy(ACTIONS, 'id', dispID)} />,
 				percent: noFail,
 			}))
-			requirements.push(new Requirement({
-				name: <ActionLink {...getDataBy(ACTIONS, 'id', engagementID)} />,
-				percent: noFail,
-			}))
 		} else {
 			requirements.push(new Requirement({
 				name: <ActionLink {...getDataBy(ACTIONS, 'id', dispID)} />,
-				percent: dispValue,
-			}))
-			requirements.push(new Requirement({
-				name: <ActionLink {...getDataBy(ACTIONS, 'id', engagementID)} />,
-				percent: engagementValue,
+				percent: finalValue,
 			}))
 		}
 
-		//console.log(`${JSON.stringify(requirements, null, 4)}`)
-
 		return requirements
+	}
+
+	output() {
+		const panels = [{
+			title: {
+				key: 'title-movementskills',
+				content: <Fragment>
+						Movement Skills
+				</Fragment>,
+			},
+			content: {
+				key: 'content-movemetskills',
+				content: <Rotation events={this._overallCastHistory}/>,
+			},
+		}]
+
+		return <Fragment>
+			<Message>
+				<Trans id="rdm.movementskills.accordion.message">The list below contains every Movement Skills and Manafications used and in what order for easy visibility</Trans>
+			</Message>
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		</Fragment>
 	}
 }
