@@ -746,6 +746,8 @@
   "smn.ruin-ii.suggestions.issues.why": "合計{0}威力がルインラを{issues}{issues, plural, one {回} other {回}}無駄撃ちにしたことよってロストしました。",
   "smn.ruin-ii.suggestions.warnings.content": "移動すると同時に<0/>を使う場面はギミックの処理が必要時に大きく動き出さなければいけないだけです。殆どの位置調整は床AoEから安置に滑り込む時と<1/>に入った状態で動きながらルインガ・ルインジャを撃つだけです。",
   "smn.ruin-ii.suggestions.warnings.why": "無駄に移動しながらルインラを{warnings}{warnings, plural, one {回} other {回}}撃ったことによって合計{0}威力をロストしました。",
+  "smn.ruin-iv.leftover.content": "",
+  "smn.ruin-iv.leftover.why": "",
   "smn.ruin-iv.lost.content": "",
   "smn.ruin-iv.lost.why": "",
   "smn.ruin-iv.overage.content": "",

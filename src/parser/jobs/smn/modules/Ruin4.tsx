@@ -6,7 +6,7 @@ import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Invulnerability from 'parser/core/modules/Invulnerability'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 const SEVERITY_STACK_COUNT = {
@@ -117,6 +117,19 @@ export default class Ruin4 extends Module {
 				value: numberLost,
 				why: <Trans id="smn.ruin-iv.lost.why">
 					{numberLost} Further Ruin <Plural value={numberLost} one="stack was" other="stacks were"/> not generated.
+				</Trans>,
+			}))
+		}
+
+		if (this.currentStackCount > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: STATUSES.FURTHER_RUIN.icon,
+				severity: SEVERITY.MINOR,
+				content: <Trans id="smn.ruin-iv.leftover.content">
+					You should use all stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/> before the end of the fight.
+				</Trans>,
+				why: <Trans id="smn.ruin-iv.leftover.why">
+					{this.currentStackCount} Further Ruin <Plural value={this.currentStackCount} one="stack was" other="stacks were"/> left unused at the end of the fight.
 				</Trans>,
 			}))
 		}
