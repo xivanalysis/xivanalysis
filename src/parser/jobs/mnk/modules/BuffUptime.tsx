@@ -31,9 +31,9 @@ export default class BuffUptime extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
 
-	_lastTwinSnakesUse: number | null = null
-	_earlyTwinSnakes: number = 0
-	_gcdsSinceTS: number = 0
+	private lastTwinSnakesUse?: number
+	private earlyTwinSnakes: number = 0
+	private gcdsSinceTS: number = 0
 
 	protected init() {
 		// Hook all GCDs so we can count GCDs in buff windows
@@ -54,31 +54,36 @@ export default class BuffUptime extends Module {
 
 		// Only include GCDs, but don't double increment either
 		if (action.onGcd && !REFRESHERS.includes(action)) {
-			if (this._lastTwinSnakesUse !== null) {
-				this._gcdsSinceTS++
+			if (this.lastTwinSnakesUse) {
+				this.gcdsSinceTS++
 			}
 		}
 	}
 
 	private onGain(event: BuffEvent): void {
 		// If it's not been applied yet set it and skip out
-		if (!this._lastTwinSnakesUse) {
-			this._lastTwinSnakesUse = event.timestamp
+		if (this.lastTwinSnakesUse) {
+			this.lastTwinSnakesUse = event.timestamp
 			return
 		}
 
-		if (this._gcdsSinceTS < GCD_CYCLE_LENGTH) {
-			this._earlyTwinSnakes++
+		// Only on Gain since we expect AoE to extend
+		// Needs a rework for duration rather than GCDs since it's stricter now
+		if (this.gcdsSinceTS < GCD_CYCLE_LENGTH) {
+			this.earlyTwinSnakes++
 		}
 
-		this._lastTwinSnakesUse = event.timestamp
-		this._gcdsSinceTS = 0
+		this.lastTwinSnakesUse = event.timestamp
+		this.gcdsSinceTS = 0
 	}
 
-	private onRefresh(event: BuffEvent): void {}
+	private onRefresh(event: BuffEvent): void {
+		this.lastTwinSnakesUse = event.timestamp
+		this.gcdsSinceTS = 0
+	}
 
 	private onComplete() {
-		const lostTruePotency = this._earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
+		const lostTruePotency = this.earlyTwinSnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.buffs.checklist.twinsnakes.name">Keep Twin Snakes up</Trans>,
@@ -101,9 +106,9 @@ export default class BuffUptime extends Module {
 				1: SEVERITY.MEDIUM,
 				4: SEVERITY.MAJOR,
 			},
-			value: this._earlyTwinSnakes,
+			value: this.earlyTwinSnakes,
 			why: <Trans id="mnk.buffs.suggestions.twinsnakes.early.why">
-				{lostTruePotency} potency lost to <Plural value={this._earlyTwinSnakes} one="# early refresh" other="# early refreshes" />.
+				{lostTruePotency} potency lost to <Plural value={this.earlyTwinSnakes} one="# early refresh" other="# early refreshes" />.
 			</Trans>,
 		}))
 	}

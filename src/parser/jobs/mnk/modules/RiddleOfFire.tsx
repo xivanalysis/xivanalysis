@@ -29,7 +29,8 @@ const ROF_GCD = {
 class Riddle {
 	casts: CastEvent[]
 	start: number
-	end?: number | null = null
+	end?: number
+	active: boolean = false
 	rushing: boolean = false
 
 	constructor(start: number) {
@@ -45,13 +46,8 @@ export default class RiddleOfFire extends Module {
 
 	@dependency private suggestions!: Suggestions
 
-	_active: boolean = false
-	_history: Riddle[] = []
-	_riddle!: Riddle
-	_rushing: boolean = false
-
-	_missedGcds: number = 0
-	_missedTks: number = 0
+	private history: Riddle[] = []
+	private riddle?: Riddle
 
 	protected init(): void {
 		this.addHook('cast', {by: 'player'}, this.onCast)
@@ -62,20 +58,22 @@ export default class RiddleOfFire extends Module {
 	onCast(event: CastEvent): void {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // should be Action type
 
-		if (action.id === ACTIONS.RIDDLE_OF_FIRE.id) {
-			this._active = true
-			this._riddle = new Riddle(event.timestamp)
-
-			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			this._rushing = ROF_DURATION >= fightTimeRemaining
-		}
-
-		// we only care about actual skills
-		if (!this._active || !action || action.autoAttack) {
+		if (!action) {
 			return
 		}
 
-		this._riddle.casts.push(event)
+		if (action.id === ACTIONS.RIDDLE_OF_FIRE.id) {
+			this.riddle = new Riddle(event.timestamp)
+
+			this.riddle.active = true
+			this.riddle.rushing = ROF_DURATION >= this.parser.fight.end_time - event.timestamp
+			return
+		}
+
+		// we only care about actual skills
+		if (this.riddle && this.riddle.active && action.onGcd) {
+			this.riddle.casts.push(event)
+		}
 	}
 
 	private onDrop(event: BuffEvent): void {
@@ -84,75 +82,46 @@ export default class RiddleOfFire extends Module {
 
 	private onComplete(): void {
 		// Close up if RoF was active at the end of the fight
-		if (this._active) {
+		if (this.riddle && this.riddle.active) {
 			this.stopAndSave()
 		}
 
 		// Aggregate GCDs under each RoF
-		const rofs: number[] = []
-		this._history.forEach(riddle => {
-			rofs.push(riddle.casts.filter(cast => {
-				const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
-				return action && action.onGcd
-			}).length)
-		})
+		const missedGcds = this.history
+			.filter(riddle => !riddle.rushing)
+			.map(riddle => POSSIBLE_GCDS - this.getGcdCount(riddle))
+			.reduce((total, current) => total + current, 0)
 
-		if (this._missedGcds) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.RIDDLE_OF_FIRE.icon,
-				content: <Trans id="mnk.rof.suggestions.gcd.content">
-					Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
-				</Trans>,
-				matcher: matchClosestHigher,
-				tiers: {
-					7: SEVERITY.MAJOR,
-					8: SEVERITY.MEDIUM,
-				},
-				value: Math.min(...rofs),
-				why: <Trans id="mnk.rof.suggestions.gcd.why">
-					<Plural value={this._missedGcds} one="# GCD was" other="# GCDs were" /> missed during RoF.</Trans>,
-			}))
-		}
-
-		if (this._missedTks) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.TORNADO_KICK.icon,
-				severity: SEVERITY.MEDIUM,
-				content: <Trans id="mnk.rof.suggestions.tk.content">
-					Try to fit a <ActionLink {...ACTIONS.TORNADO_KICK} /> at the end of every <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
-				</Trans>,
-				why: <Trans id="mnk.rof.suggestions.tk.why">
-					<Plural value={this._missedTks} one="# Tornado Kick was" other="# Tornado Kicks were" /> missed during RoF.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.RIDDLE_OF_FIRE.icon,
+			content: <Trans id="mnk.rof.suggestions.gcd.content">
+				Aim to hit {POSSIBLE_GCDS} GCDs into each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
+			</Trans>,
+			matcher: matchClosestHigher,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			value: missedGcds,
+			why: <Trans id="mnk.rof.suggestions.gcd.why">
+				<Plural value={missedGcds} one="# GCD was" other="# GCDs were" /> missed during RoF.</Trans>,
+		}))
 	}
 
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
-		if (!this._active) {
-			return
+		if (this.riddle && this.riddle.active) {
+			this.history.push({...this.riddle, active: false, end: endTime})
 		}
-
-		this._active = false
-		this._riddle.end = endTime
-		this._riddle.rushing = this._rushing
-		this._history.push(this._riddle)
-
-		const gcds = this._riddle.casts.filter(cast => {
-			const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
-			return action && action.onGcd
-		})
-		const tks = this._riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id)
-
-		if (this._rushing || gcds.length > 1) {
-			return
-		}
-
-		this._missedGcds += POSSIBLE_GCDS - gcds.length
-		this._missedTks += 1 - tks.length
 	}
 
-	private formatGcdCount(count: number): TODO {
+	private getGcdCount(riddle: Riddle): number {
+		return riddle.casts.filter(cast => {
+			const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
+			return action && action.onGcd
+		}).length
+	}
+
+	private formatGcdCount(count: number): JSX.Element {
 		if (count <= ROF_GCD.ERROR) {
 			return <span className="text-error">{count}</span>
 		}
@@ -161,16 +130,12 @@ export default class RiddleOfFire extends Module {
 			return <span className="text-warning">{count}</span>
 		}
 
-		return count
+		return <span className="text-success">{count}</span>
 	}
 
 	output() {
-		const panels = this._history.map(riddle => {
-			const numGcds = riddle.casts.filter(cast => {
-				const action = getDataBy(ACTIONS, 'id', cast.ability.guid) as TODO
-				return action && action.onGcd
-			}).length
-			const numTKs = riddle.casts.filter(cast => cast.ability.guid === ACTIONS.TORNADO_KICK.id).length
+		const panels = this.history.map(riddle => {
+			const numGcds = this.getGcdCount(riddle)
 
 			return {
 				key: riddle.start,
@@ -182,9 +147,6 @@ export default class RiddleOfFire extends Module {
 							{this.formatGcdCount(numGcds)} <Plural value={numGcds} one="GCD" other="GCDs" />
 						</Trans>
 						<span> - </span>
-						<Trans id="mnk.rof.table.tk" render="span">
-							{numTKs}/1 Tornado Kick
-						</Trans>
 						{riddle.rushing && <>
 							&nbsp;<Trans id="mnk.rof.table.rushing" render="span" className="text-info">(rushing)</Trans>
 						</>}

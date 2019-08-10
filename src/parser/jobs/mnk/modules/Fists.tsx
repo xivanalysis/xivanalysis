@@ -34,12 +34,12 @@ const CHART_COLOURS = {
 }
 
 const FIST_SEVERITY = {
-	[FISTLESS]: {
+	FISTLESS: {
 		1: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	},
 	// Forced disengaging is rarely more than 2 GCDs
-	[STATUSES.FISTS_OF_EARTH.id]: {
+	FISTS_OF_EARTH: {
 		2: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	},
@@ -47,7 +47,7 @@ const FIST_SEVERITY = {
 	// but if they can hit 9 there, they can probably hit 10 in GL4 anyway since they're getting
 	// a full RoF window. 10+ is always going to be a mistake. This is kinda weird tho since it's
 	// severity per window rather than a whole fight unlike FoE or no fist.
-	[STATUSES.FISTS_OF_FIRE.id]: {
+	FISTS_OF_FIRE: {
 		8: SEVERITY.MINOR,
 		9: SEVERITY.MEDIUM,
 		10: SEVERITY.MAJOR,
@@ -57,7 +57,7 @@ const FIST_SEVERITY = {
 class Fist {
 	id: number = FISTLESS
 	start: number = 0
-	end!: number
+	end?: number
 	gcdCounter: number = 0
 
 	constructor(fistId: number, start: number) {
@@ -132,7 +132,7 @@ export default class Fists extends Module {
 
 	private onComplete(): void {
 		// Flush the last stance
-		this.handleFistChange(FISTLESS)
+		this.fistory.push({...this.activeFist, end: this.parser.fight.end_time})
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
@@ -142,7 +142,7 @@ export default class Fists extends Module {
 			why: <Trans id="mnk.fists.suggestions.stanceless.why">
 				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
 			</Trans>,
-			tiers: FIST_SEVERITY[FISTLESS],
+			tiers: FIST_SEVERITY.FISTLESS,
 			value: this.getFistGCDCount(FISTLESS),
 		}))
 
@@ -152,7 +152,7 @@ export default class Fists extends Module {
 			content: <Trans id="mnk.fists.suggestions.foe.content">
 				When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_WIND} /> as soon as possible.
 			</Trans>,
-			tiers: FIST_SEVERITY[STATUSES.FISTS_OF_EARTH.id],
+			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
 			why: <Trans id="mnk.fists.suggestions.foe.why">
 				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
 			</Trans>,
@@ -165,7 +165,9 @@ export default class Fists extends Module {
 		const uptimeKeys = _.uniq(this.fistory.map(fist => fist.id))
 
 		const data = uptimeKeys.map(id => {
-			const value = this.fistory.filter(fist => fist.id === id).reduce((total, current) => total += current.end - current.start, 0)
+			const value = this.fistory
+				.filter(fist => fist.id === id)
+				.reduce((total, current) => total + (current.end || this.parser.fight.end_time) - current.start, 0)
 			return {
 				value,
 				color: CHART_COLOURS[id] as string,
@@ -184,7 +186,9 @@ export default class Fists extends Module {
 	}
 
 	getFistGCDCount(fistId: number): number {
-		return this.fistory.filter(fist => fist.id = fistId).reduce((total, current) => total += current.gcdCounter, 0)
+		return this.fistory
+			.filter(fist => fist.id === fistId)
+			.reduce((total, current) => total + current.gcdCounter, 0)
 	}
 
 	getFistUptimePercent(fistId: number): string {
