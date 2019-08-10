@@ -53,10 +53,8 @@ export default class BuffUptime extends Module {
 		}
 
 		// Only include GCDs, but don't double increment either
-		if (action.onGcd && !REFRESHERS.includes(action)) {
-			if (this.lastTwinSnakesUse) {
-				this.gcdsSinceTS++
-			}
+		if (action.onGcd && this.lastTwinSnakesUse && !REFRESHERS.includes(action)) {
+			this.gcdsSinceTS++
 		}
 	}
 
