@@ -18,9 +18,6 @@ const SEVERETIES = {
 		1: SEVERITY.MINOR,
 		2: SEVERITY.MEDIUM,
 	},
-	NOHOROSCOPE_HELIOS: {
-		1: SEVERITY.MEDIUM,
-	},
 }
 
 const HELIOS_CASTS = [
@@ -55,11 +52,9 @@ export default class Horoscope extends Module {
 	}
 
 	private onHoroscope(event: CastEvent) {
-		console.log(event)
 		this.uses++
 	}
 	private onActivate(event: CastEvent) {
-		console.log(event)
 		this.activations++
 	}
 
