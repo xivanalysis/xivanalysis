@@ -122,7 +122,9 @@ class Parser {
 
 		// Initialise the modules
 		this.moduleOrder.forEach(mod => {
-			this.modules[mod] = new ctors[mod](this)
+			const ctdMod = new ctors[mod](this)
+			this.modules[mod] = ctdMod
+			ctdMod.doTheMagicInitDance()
 		})
 	}
 
