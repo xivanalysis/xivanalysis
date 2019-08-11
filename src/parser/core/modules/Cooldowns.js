@@ -188,7 +188,12 @@ export default class Cooldowns extends Module {
 		// If there's a current object, move it into the history
 		// TODO: handle errors on CD overlap
 		if (cd.current) {
-			cd.history.push(cd.current)
+			if (cd.current.timestamp < this.parser.fight.start_time) {
+				// Pre-pull usage, reset the cooldown to prevent overlap on timeline since we don't know exactly when cooldown was used pre-pull
+				this.resetCooldown(actionId)
+			} else {
+				cd.history.push(cd.current)
+			}
 		}
 
 		cd.current = {
