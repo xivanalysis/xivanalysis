@@ -1,3 +1,5 @@
+import {ChartDataSets} from 'chart.js'
+import Color from 'color'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 interface CounterHistory {
@@ -14,17 +16,24 @@ export interface CounterGaugeOptions {
 	minimum?: number,
 	/** Maximum value of the gauge. Defaults to 100. Value over the maximum will be considered over cap, and tracked if enabled. */
 	maximum?: number,
-	/** Whether or not to track values over cap for use in suggestions and similar. Disable if over-capping is expected. */
-	trackOverCap?: boolean,
+	/** Chart options. Omit to disable charting for this gauge. */
+	chart?: CounterChartOptions,
+}
+
+export interface CounterChartOptions {
+	/** Label to display on the data set */
+	label: string
+	/** Color to draw the data set in. Defaults to grey. */
+	color?: string | Color
 }
 
 export class CounterGauge extends AbstractGauge {
 	private value: number
 	private minimum: number
 	private maximum: number
-
-	private trackOverCap: boolean
 	private overCap: number = 0
+
+	private chartOptions?: CounterChartOptions
 
 	private history: CounterHistory[] = []
 
@@ -35,7 +44,7 @@ export class CounterGauge extends AbstractGauge {
 		this.value = opts.initialValue || this.minimum
 		this.maximum = opts.maximum || 100
 
-		this.trackOverCap = opts.trackOverCap != null? opts.trackOverCap : true
+		this.chartOptions = opts.chart
 	}
 
 	/** @inheritdoc */
@@ -56,8 +65,7 @@ export class CounterGauge extends AbstractGauge {
 
 		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
 		const diff = value - this.value
-
-		if (this.trackOverCap && diff > 0) {
+		if (diff > 0) {
 			this.overCap += diff
 		}
 
@@ -100,5 +108,37 @@ export class CounterGauge extends AbstractGauge {
 			minimum: this.minimum,
 			maximum: this.maximum,
 		})
+	}
+
+	/** @inheritdoc */
+	generateDataset() {
+		// If there's no chart options, provide nothing
+		if (!this.chartOptions) {
+			return
+		}
+
+		// Map the data into something the chart will understand
+		const data = this.history.map(entry => ({
+			t: entry.timestamp - this.parser.fight.start_time,
+			y: entry.value,
+		}))
+
+		// Build the final data set
+		const {label, color} = this.chartOptions
+		const dataSet: ChartDataSets = {
+			label,
+			data,
+			steppedLine: true,
+		}
+
+		if (color) {
+			/* tslint:disable:no-magic-numbers */
+			const chartColor = Color(color)
+			dataSet.backgroundColor = chartColor.fade(0.8).toString()
+			dataSet.borderColor = chartColor.fade(0.5).toString()
+			/* tslint:enable:no-magic-numbers */
+		}
+
+		return dataSet
 	}
 }
