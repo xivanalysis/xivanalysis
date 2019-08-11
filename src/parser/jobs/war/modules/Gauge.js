@@ -27,6 +27,8 @@ const RAGE_SPENDERS = {
 	[ACTIONS.DECIMATE.id]: 50,
 	[ACTIONS.UPHEAVAL.id]: 20,
 	[ACTIONS.ONSLAUGHT.id]: 20,
+	[ACTIONS.CHAOTIC_CYCLONE.id]:50,
+	[ACTIONS.INNER_CHAOS.id]:50,
 }
 
 // Actions that reduce Infuriate
