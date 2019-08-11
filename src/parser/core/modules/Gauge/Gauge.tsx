@@ -1,6 +1,9 @@
 import {t} from '@lingui/macro'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import {DeathEvent} from 'fflogs'
 import Module from 'parser/core/Module'
+import React from 'react'
+import {isDefined} from 'utilities'
 import {AbstractGauge} from './AbstractGauge'
 
 export class Gauge extends Module {
@@ -14,9 +17,10 @@ export class Gauge extends Module {
 	}
 
 	/** Add & initialise a gauge implementation to be tracked as part of the core gauge handling. */
-	add(gauge: AbstractGauge) {
+	add<T extends AbstractGauge>(gauge: T) {
 		gauge.setGetTimestamp(this.getTimestamp)
 		this.gauges.push(gauge)
+		return gauge
 	}
 
 	private onDeath(event: DeathEvent) {
@@ -24,4 +28,18 @@ export class Gauge extends Module {
 	}
 
 	private getTimestamp = () => this.parser.currentTimestamp
+
+	output() {
+		// Generate a dataset from each registered gauge
+		const datasets = this.gauges
+			.map(gauge => gauge.generateDataset())
+			.filter(isDefined)
+
+		if (datasets.length < 1) {
+			return false
+		}
+
+		const data = {datasets}
+		return <TimeLineChart data={data}/>
+	}
 }
