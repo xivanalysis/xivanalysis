@@ -42,11 +42,16 @@ export class CounterGauge extends AbstractGauge {
 	reset() {
 		// NOTE: This assumes counters always reset to their minimum value.
 		// Should that not be the case, probbaly needs a `resetTo` value.
-		this.setValue(this.minimum)
+		this.set(this.minimum)
+	}
+
+	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
+	modify(amount: number) {
+		this.set(this.value + amount)
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
-	setValue(value: number) {
+	set(value: number) {
 		this.value = Math.min(Math.max(value, this.minimum), this.maximum)
 
 		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
@@ -75,7 +80,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = maximum
 
 		// Ensure the value remains within bounds by re-setting it
-		this.setValue(this.value)
+		this.set(this.value)
 	}
 
 	private pushHistory() {
