@@ -104,22 +104,7 @@ export default class Procs extends Module {
 		this._overwrittenProcs++
 	}
 	_onProcRemoved(event) {
-		const statusId = event.ability.guid
-
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			this._removedProcs[event.ability.guid]++
-		}
-
-		// If this proc is active, stop the buff window
-		const tracker = this._buffWindows[statusId]
-
-		if (!tracker.current) {
-			return
-		}
-
-		tracker.current.stop = event.timestamp
-		tracker.history.push(tracker.current)
-		tracker.current = null
+		this._stopAndSave(event.ability.guid, event.timestamp)
 	}
 
 	_onComplete() { // tracking dropped procs
@@ -168,7 +153,7 @@ export default class Procs extends Module {
 
 			// Finalise the buff if it was still active
 			if (this._buffWindows[buff].current) {
-				this._stopAndSave(buff)
+				this._stopAndSave(buff, this.parser.fight.end_time)
 			}
 
 			// Add buff windows to the timeline
@@ -182,6 +167,23 @@ export default class Procs extends Module {
 				}))
 			})
 		})
+	}
+
+	_stopAndSave(statusId, timestamp) {
+		if (!this.downtime.isDowntime(timestamp)) {
+			this._removedProcs[statusId]++
+		}
+
+		// If this proc is active, stop the buff window
+		const tracker = this._buffWindows[statusId]
+
+		if (!tracker.current) {
+			return
+		}
+
+		tracker.current.stop = timestamp
+		tracker.history.push(tracker.current)
+		tracker.current = null
 	}
 
 	getGroupIdForStatus(status) {
