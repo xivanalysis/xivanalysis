@@ -662,7 +662,7 @@
   "war.ir.suggestions.onslaught.why": "<1/> 구간내에서 {missedOnslaughts}{missedOnslaughts, plural, one {회} other {회}}의 <0/>가 사용되지 않았습니다.",
   "war.ir.suggestions.upheaval.content": "<1/> 구간마다 <0/>를 1회 사용하여야 합니다.",
   "war.ir.suggestions.upheaval.why": "<1/> 구간내에서 {missedUpheavals}{missedUpheavals, plural, one {회} other {회}}의 <0/>가 사용되지 않았습니다.",
-  "war.ir.table.header.gcds": "글쿨기",
+  "war.ir.table.header.gcds": "GCDs",
   "war.ir.title": "원초의 해방 사용기록",
   "war.stormseye.checklist.description": "폭풍의 눈은 피해량을 10% 높여주며, 전사의 데미지에 많은 부분을 차지합니다.",
   "war.stormseye.checklist.name": "폭풍의 눈 유지",
