@@ -20,6 +20,7 @@ export default {
 		id: 1238,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/013000/013405.png',
+		actionId: 7518,
 	},
 	EMBOLDEN_PHYSICAL: {//Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
 		id: 1297,
