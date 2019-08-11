@@ -12,7 +12,7 @@ export abstract class AbstractGauge {
 	/** The main parser instance. */
 	protected get parser() {
 		if (!this._parser) {
-			throw new Error('No parser found. Ensure this gauge is being passed to the core gauge module, or initialised with a `getTimestamp` method.')
+			throw new Error('No parser found. Ensure this gauge is being passed to the core gauge module, or initialised with a reference to the parser.')
 		}
 
 		return this._parser
