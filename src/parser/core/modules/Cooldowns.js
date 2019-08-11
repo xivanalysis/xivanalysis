@@ -6,6 +6,13 @@ import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import {getDataBy} from 'data'
 
+// Default value for allowableDrift on the getCooldownUsageDetails method
+// CooldownDowntime will override this, but to prevent existence check problems or allow other consumers to call method, define a default
+const DEFAULT_ALLOWABLE_DRIFT_TIMES = {
+	firstUse: 0,
+	afterFullyRecharged: 0,
+}
+
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
 	static handle = 'cooldowns'
@@ -234,20 +241,12 @@ export default class Cooldowns extends Module {
 	setInvulnTime(actionId) {
 		const cd = this.getCooldown(actionId)
 		let previousEndTimestamp = this.parser.fight.start_time
-		let previousCooldown = {}
-		let isFirst = true
 
 		for (const cooldown of cd.history) {
-			if (isFirst) {
-				previousEndTimestamp = (cooldown.timestamp + cooldown.length)
-				isFirst = false
-				previousCooldown = cooldown
-			}
+			//Invuln time is any time the boss was invuln between the time the previous cooldown ended and the current execution occurred
+			cooldown.invulnTime = this.downtime.getDowntime(previousEndTimestamp, cooldown.timestamp)
 
-			//We invuln time is the time the boss was invuln from when the CD came off CD and when it was next executed
-			previousCooldown.invulnTime = this.downtime.getDowntime(previousEndTimestamp, cooldown.timestamp)
 			previousEndTimestamp = (cooldown.timestamp + cooldown.length)
-			previousCooldown = cooldown
 		}
 	}
 
@@ -307,5 +306,77 @@ export default class Cooldowns extends Module {
 
 	get used() {
 		return Object.keys(this._cooldowns)
+	}
+
+	getCooldownUsageDetails(actionId, considerInvulnTime = false, allowableDrift = DEFAULT_ALLOWABLE_DRIFT_TIMES) {
+		const actionInfo = getDataBy(ACTIONS, 'id', actionId)
+		const cd = this.getCooldown(actionId)
+		let _lastUsageWhenFullyCharged = null
+		let _cooldownSinceLastFullyCharged = 0
+		let _timeGainedFromCooldownReductions = 0
+
+		if (considerInvulnTime) {
+			this.setInvulnTime(actionId)
+		}
+
+		cd.history.forEach((usage, index) => {
+			// Track how much time was gained from cooldown reductions or resets, if usage.cooldown is lower than defined base action cooldown
+			// Clamp to 0 for safety - should never have usage.cooldown longer than actionInfo.cooldown
+			_timeGainedFromCooldownReductions += Math.max(actionInfo.cooldown - usage.length, 0)
+
+			if (index === 0) {
+				// First use of cooldown - calculate drift based on fight start and allowable firstUse drift
+				// Clamp to 0 for pre-pull casts (will have a synthesized timestamp of -2ms)
+				const drift = Math.max(usage.timestamp - this.parser.fight.start_time, 0)
+				usage.driftInfo = Cooldowns.getDriftInfo(drift, 'firstUse', usage.invulnTime, allowableDrift.firstUse)
+
+				_lastUsageWhenFullyCharged = usage
+				_cooldownSinceLastFullyCharged = usage.length
+			} else {
+				// Subsequent use of cooldown - calculate drift based on distance between two usages
+				const timeSinceFullyCharged = usage.timestamp - _lastUsageWhenFullyCharged.timestamp
+				if (timeSinceFullyCharged >= _cooldownSinceLastFullyCharged) {
+					const drift = timeSinceFullyCharged - _cooldownSinceLastFullyCharged
+					usage.driftInfo = Cooldowns.getDriftInfo(drift, 'afterFullyRecharged', usage.invulnTime, allowableDrift.afterFullyRecharged)
+
+					_lastUsageWhenFullyCharged = usage
+					_cooldownSinceLastFullyCharged = usage.length
+				} else {
+					// No drift occurred on this cast - used another charge
+					// TODO: check to see if skill is actually defined as having charges and trigger BrokenLog?
+					usage.driftInfo = Cooldowns.getDriftInfo(0, 'afterFullyRecharged', 0, 0)
+					_cooldownSinceLastFullyCharged += usage.length
+				}
+			}
+		})
+
+		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
+		const validDrift = cd.history.reduce((valid, usage) => valid + usage.driftInfo.allowable + usage.driftInfo.invulnerable, 0)
+		return {
+			actualUses: cd.history.length,
+			expectedUses: Cooldowns.getExpectedUses(fightDuration, actionInfo.cooldown * 1000, _timeGainedFromCooldownReductions, validDrift),
+			history: cd.history,
+			resetTimeGained: _timeGainedFromCooldownReductions,
+			totalValidDrift: validDrift,
+		}
+	}
+
+	static getDriftInfo(drift, driftReason, invulnTime, allowableDrift) {
+		// Adjust drift for time the boss was invulnerable at the end of the cooldown.
+		drift = Math.max(drift - invulnTime, 0)
+
+		// Apportion remaining drift between allowable (as defined by allowableDrift) and bad
+		const _allowable = Math.min(drift, allowableDrift)
+
+		return {
+			driftReason: driftReason,
+			allowable: _allowable,
+			invulnerable: invulnTime,
+			bad: drift - _allowable,
+		}
+	}
+
+	static getExpectedUses(fightDuration, actionCooldownMS, timeGainedFromCooldownReductions, validDrift) {
+		return Math.ceil((fightDuration + timeGainedFromCooldownReductions - validDrift) / actionCooldownMS)
 	}
 }

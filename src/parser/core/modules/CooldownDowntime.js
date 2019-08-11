@@ -39,10 +39,7 @@ export default class CooldownDowntime extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onComplete(event) {
-		const endTime = event.timestamp
-		const startTime = this.parser.fight.start_time
-		const encounterLength = endTime - startTime
+	_onComplete() {
 		const OGCDRequirements = []
 
 		const groups = {}
@@ -55,7 +52,7 @@ export default class CooldownDowntime extends Module {
 			if (key === UNGROUPED_COOLDOWN_ID) {
 				//handle non-grouped cooldowns
 				groups[key].map(id => {
-					OGCDRequirements.push(this.checkCooldown(id, <ActionLink {...getDataBy(ACTIONS, 'id', id)} />, encounterLength))
+					OGCDRequirements.push(this.checkCooldown(id, <ActionLink {...getDataBy(ACTIONS, 'id', id)} />))
 				})
 			} else {
 				//handle cooldown group
@@ -65,7 +62,7 @@ export default class CooldownDowntime extends Module {
 						<ActionLink {...getDataBy(ACTIONS, 'id', id)} />
 					</>
 				})
-				OGCDRequirements.push(this.checkCooldown(groups[key][0], displayName, encounterLength))
+				OGCDRequirements.push(this.checkCooldown(groups[key][0], displayName))
 			}
 		}
 
@@ -77,37 +74,15 @@ export default class CooldownDowntime extends Module {
 			target: this.target,
 		}))
 	}
-	//Furst's revised percent Calculation function
-	_percentFunction(actionId, downtime, offset, fightlength) {
-		const action = getDataBy(ACTIONS, 'id', actionId)
-		const cooldown = action && action.cooldown
-		downtime -= offset
-		if (downtime < 0) {
-			downtime = 0
-		}
-		//Code below takes remainder time into account. Imagine a 2 min encounter and a 90s OGCD. If you have a downtime of 30+s you will lose a usage due to encounter length constraints.
-		const fightLengthRemainder = fightlength % (cooldown*1000)
-		const possibleNumberOfUses = Math.ceil(fightlength/(cooldown*1000))
-		return ((possibleNumberOfUses - (Math.floor(downtime/(cooldown*1000) + (downtime > fightLengthRemainder ? 1 : 0))))/possibleNumberOfUses)*100
-	}
 
-	checkCooldown(id, displayName, encounterLength) {
+	checkCooldown(id, displayName) {
 		const allowedDowntime = Number.isInteger(this.allowedDowntimePerOgcd[id]) ? this.allowedDowntimePerOgcd[id] : this.allowedDowntime
 		const firstUseOffset = Number.isInteger(this.firstUseOffsetPerOgcd[id]) ? this.firstUseOffsetPerOgcd[id] : this.firstUseOffset
-		const timeOnCooldown = this.cooldowns.getTimeOnCooldown(id, true, allowedDowntime)
+		const cooldownUsage = this.cooldowns.getCooldownUsageDetails(id, true, {firstUse: firstUseOffset, afterFullyRecharged: allowedDowntime})
 
-		//calculate the downtime based on the start and stop values and sum the array
-		//Adjust for the classes defined alloted time to allow a CD to be held
-		//this supports classes like RDMs who routinely hold CDs due to procs
-		//write the results as a new Requirement to show up later
 		return new Requirement({
 			name: displayName,
-			percent: this._percentFunction(
-				id,
-				encounterLength - timeOnCooldown + allowedDowntime,
-				firstUseOffset,
-				encounterLength
-			),
+			percent: (cooldownUsage.actualUses / cooldownUsage.expectedUses) * 100,
 		})
 	}
 }
