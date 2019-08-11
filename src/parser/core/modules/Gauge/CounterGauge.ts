@@ -31,7 +31,7 @@ export class CounterGauge extends AbstractGauge {
 	private value: number
 	private minimum: number
 	private maximum: number
-	private overCap: number = 0
+	overCap: number = 0
 
 	private chartOptions?: CounterChartOptions
 
