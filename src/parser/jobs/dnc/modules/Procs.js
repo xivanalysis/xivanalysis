@@ -1,6 +1,7 @@
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
 
+import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -131,7 +132,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({ //dropped procs
 			icon: ACTIONS.FOUNTAINFALL.icon,
 			content: <Trans id="dnc.procs.suggestions.drops.content">
-				Avoid dropping your procs unless absolutely necessary, as doing so leads to a dps loss unless under very specific circumstances.
+				Avoid dropping your procs unless absolutely necessary, as doing so leads to a DPS loss unless under very specific circumstances. If you have to drop one to keep your Esprit from overcapping, <ActionLink {...ACTIONS.RISING_WINDMILL} /> will lose the least DPS overall.
 			</Trans>,
 			why: <Trans id="dnc.procs.suggestions.drops.why">
 				You dropped <Plural value={droppedProcs} one="# proc" other="# procs"/>
@@ -147,7 +148,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({ //overriding
 			icon: ACTIONS.REVERSE_CASCADE.icon,
 			content: <Trans id="dnc.procs.suggestions.overwrite.content">
-				Avoid overwriting your procs, as doing so is a major dps loss.
+				Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.
 			</Trans>,
 			why: <Trans id="dnc.procs.suggestions.overwrite.why">
 							You overwrote <Plural value={this._overwrittenProcs} one="# proc" other="# procs"/>
