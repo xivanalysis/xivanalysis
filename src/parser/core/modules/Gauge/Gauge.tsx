@@ -18,7 +18,7 @@ export class Gauge extends Module {
 
 	/** Add & initialise a gauge implementation to be tracked as part of the core gauge handling. */
 	add<T extends AbstractGauge>(gauge: T) {
-		gauge.setGetTimestamp(this.getTimestamp)
+		gauge.setParser(this.parser)
 		this.gauges.push(gauge)
 		return gauge
 	}
@@ -26,8 +26,6 @@ export class Gauge extends Module {
 	private onDeath(event: DeathEvent) {
 		this.gauges.forEach(gauge => gauge.reset())
 	}
-
-	private getTimestamp = () => this.parser.currentTimestamp
 
 	output() {
 		// Generate a dataset from each registered gauge

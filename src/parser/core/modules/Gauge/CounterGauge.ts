@@ -84,7 +84,7 @@ export class CounterGauge extends AbstractGauge {
 	}
 
 	private pushHistory() {
-		const {timestamp} = this
+		const timestamp = this.parser.currentTimestamp
 
 		// Ensure we're not generating multiple entries at the samt timestamp
 		const prevTimestamp = this.history.length
