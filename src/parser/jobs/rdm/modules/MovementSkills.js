@@ -13,7 +13,7 @@ import {getDataBy} from 'data'
 const CACS_PER_MANAFICATION = 3
 const DISPS_PER_MANAFICATION = 3
 const ENGAGEMENTS_PER_MANAFICATION = 4
-//const TIME_NOT_CASTING_SHOULD_USE_REPRISE = 2.5
+//This is due to the fact that manafication happens after your first cac/disp
 const GRACE_FOR_PULL = 2
 
 export default class MovementSkills extends Module {
@@ -24,39 +24,30 @@ export default class MovementSkills extends Module {
 	]
 
 	_history = []
+	//Used to generate the list of skills for visibility later
 	_overallCastHistory = []
-	_repriseHistory = []
 	_last_manafic = {
 		timestamp: 0,
 		cac: 0,
 		disp: 0,
 		engagement: 0,
+		events: [],
 	}
-
-	_trackedCooldowns = [
-		ACTIONS.ENCHANTED_REPRISE.id,
-		ACTIONS.MANAFICATION.id,
-		ACTIONS.DISPLACEMENT.id,
-		ACTIONS.ENGAGEMENT.id,
-		ACTIONS.CORPS_A_CORPS.id,
-	]
 
 	constructor(...args) {
 		super(...args)
 		//Default Target to hit
 		this.target = 95
 		this.addHook('cast', {by: 'player'}, this._onCast)
-		this._history.push(this._last_manafic)
-		this.description = <Trans id="rdm.movementskills.description">Make sure you get 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.CORPS_A_CORPS.id)} /> and either 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.DISPLACEMENT.id)} /> or 4 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.ENGAGEMENT.id)} /> per <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /> </Trans>
+		//this._history.push(this._last_manafic)
+		this.description = <Trans id="rdm.movementskills.description">Your movement skills are primarily used for damage, make sure you get 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.CORPS_A_CORPS.id)} /> and either 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.DISPLACEMENT.id)} /> or 4 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.ENGAGEMENT.id)} /> per <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /> </Trans>
 		this.addHook('complete', this._onComplete)
+		this._last_manafic.timestamp = this.parser.fight.start_time
 	}
 
 	_onCast(event) {
 		const abilityID = event.ability.guid
 		switch (abilityID) {
-		case ACTIONS.ENCHANTED_REPRISE.id:
-			this._repriseHistory.push(event.timestamp)
-			break
 		case ACTIONS.MANAFICATION.id:
 			//push the previous manafication instance
 			this._history.push(this._last_manafic)
@@ -67,24 +58,28 @@ export default class MovementSkills extends Module {
 				cac: 0,
 				disp: 0,
 				engagement: 0,
+				events: [],
 			}
 			break
 		case ACTIONS.DISPLACEMENT.id:
 			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.disp++
+				this._last_manafic.events.push(event)
 			}
 			break
 		case ACTIONS.ENGAGEMENT.id:
 			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.engagement++
+				this._last_manafic.events.push(event)
 			}
 			break
 		case ACTIONS.CORPS_A_CORPS.id:
 			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.cac++
+				this._last_manafic.events.push(event)
 			}
 			break
 		}
@@ -177,22 +172,41 @@ export default class MovementSkills extends Module {
 	}
 
 	output() {
-		const panels = [{
-			title: {
-				key: 'title-movementskills',
-				content: <Fragment>
-						Movement Skills
-				</Fragment>,
-			},
-			content: {
-				key: 'content-movemetskills',
-				content: <Rotation events={this._overallCastHistory}/>,
-			},
-		}]
+		// const panels = [{
+		// 	title: {
+		// 		key: 'title-movementskills',
+		// 		content: <Fragment>
+		// 				Movement Skills
+		// 		</Fragment>,
+		// 	},
+		// 	content: {
+		// 		key: 'content-movemetskills',
+		// 		content: <Rotation events={this._overallCastHistory}/>,
+		// 	},
+		// }]
+		//console.log(`${JSON.stringify(this._history, null, 4)}`)
+
+		const panels = this._history.map(manafic => {
+			return {
+				key: manafic.timestamp,
+				title: {
+					key: 'title-' + manafic.timestamp,
+					content: <Fragment>
+						{this.parser.formatTimestamp(manafic.timestamp)}
+						<span> - </span>
+						{manafic.events.length} <Trans id="rdm.movementskills.panels.content">Movement Skills used</Trans>
+					</Fragment>,
+				},
+				content: {
+					key: 'content-' + manafic.timestamp,
+					content: <Rotation events={manafic.events}/>,
+				},
+			}
+		})
 
 		return <Fragment>
 			<Message>
-				<Trans id="rdm.movementskills.accordion.message">The list below contains every Movement Skills and Manafications used and in what order for easy visibility</Trans>
+				<Trans id="rdm.movementskills.accordion.message">The list below contains every Movement Skill used in your opener and after each <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /></Trans>
 			</Message>
 			<Accordion
 				exclusive={false}
