@@ -3,6 +3,7 @@ export default {
 		id: 1177,
 		name: 'Inner Release',
 		icon: 'https://xivapi.com/i/012000/012556.png',
+		duration: 10,
 	},
 
 	THRILL_OF_BATTLE: {

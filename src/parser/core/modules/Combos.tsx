@@ -5,9 +5,9 @@ import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
@@ -23,20 +23,6 @@ const ISSUE_TYPENAMES = {
 
 export interface ComboEvent extends AoeEvent {
 	type: 'combo'
-}
-
-/* The Hit and AoeEvent interfaces belong in the AoE module if/when that is converted to TypeScript */
-interface Hit {
-	id: number
-	instance: number
-	times: number
-	amount: number
-}
-
-export interface AoeEvent extends AbilityEvent {
-	hits: Hit[]
-	sourceID: number
-	successfulHit: boolean
 }
 
 export interface ComboIssue {
@@ -100,11 +86,13 @@ export default class Combos extends Module {
 	}
 
 	protected recordBrokenCombo(event: AoeEvent, context: AoeEvent[]) {
-		this.issues.push({
-			type: 'combobreak',
-			event,
-			context,
-		})
+		if (!this.isAllowableComboBreak(event, context)) {
+			this.issues.push({
+				type: 'combobreak',
+				event,
+				context,
+			})
+		}
 		this.currentComboChain = []
 	}
 
@@ -148,19 +136,26 @@ export default class Combos extends Module {
 			}
 		}
 
-		// Incorrect combo action, that's a paddlin'
+		if (combo.start) {
+			// Broken combo - starting a new combo while in a current combo
+			this.recordBrokenCombo(event, this.currentComboChain)
+			return true // Start a new combo
+		}
+
+		// Check if action continues existing combo
 		if (combo.from) {
 			const fromOptions = Array.isArray(combo.from) ? combo.from : [combo.from]
-			if (!fromOptions.includes(this.lastAction)) {
-				this.recordBrokenCombo(event, this.currentComboChain)
-				return combo.start // It's a combo if the action is the start of one
+			if (fromOptions.includes(this.lastAction)) {
+				// Combo continued correctly
+				this.fabricateComboEvent(event)
+				// If it's a finisher, reset the combo
+				return !combo.end
 			}
 		}
 
-		// Combo continued correctly
-		this.fabricateComboEvent(event)
-		// If it's a finisher, reset the combo
-		return !combo.end
+		// Action did not continue combo correctly and is not a new combo starter
+		this.recordBrokenCombo(event, this.currentComboChain)
+		return false
 	}
 
 	private onCast(event: AoeEvent) {
@@ -227,11 +222,23 @@ export default class Combos extends Module {
 		}))
 	}
 
+	/**
+	 * To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
+	 * broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
+	 * what particular actions were misused and when in the fight.
+	 * The overriding module should return true if the default suggestion is not wanted
+	 */
 	addJobSpecificSuggestions(comboBreakers: AoeEvent[], uncomboedGcds: AoeEvent[]) {
-		// To be overridden by subclasses. This is called in _onComplete() and passed two arrays of event objects - one for events that
-		// broke combos, and one for combo GCDs used outside of combos. Subclassing modules can add job-specific suggestions based on
-		// what particular actions were misused and when in the fight.
-		// The overriding module should return true if the default suggestion is not wanted
+		return false
+	}
+
+	/**
+	 * To be overridden by subclasses. This is called in recordBrokenCombo, and receives the event triggering the broken combo,
+	 * and the context information for that break. Jobs can override this to indicate whether this broken combo is allowed. If so,
+	 * the event and context will not be recorded, and the current combo will be cleared with no other side effects.
+	 * Returning false will allow the break to be recorded, and displayed to the user
+	 */
+	isAllowableComboBreak(event: AoeEvent, context: AoeEvent[]): boolean {
 		return false
 	}
 

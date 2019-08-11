@@ -218,6 +218,9 @@ export enum ReportLanguage {
 	FRENCH = 'fr',
 	KOREAN = 'kr',
 	CHINESE = 'cn',
+
+	// ???
+	UNKNOWN = 'unknown',
 }
 
 // -----

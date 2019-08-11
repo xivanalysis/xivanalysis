@@ -65,9 +65,12 @@ export default class Pets extends Module {
 		super(...args)
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		// TODO: This event hook needs to be revisited once we have the ability to hook arbitrary timestamps.
 		this.addHook('all', this._onEvent)
 		this.addHook('summonpet', this._onChangePet)
-		this.addHook('death', {to: 'pet'}, this._onPetDeath)
+		// Hook changed from on pet death to on player death due to pet changes in Shadowbringers
+		// Pets now won't die unless their caster dies, so FFLogs API no longer emitting pet death events
+		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -169,7 +172,7 @@ export default class Pets extends Module {
 		}
 	}
 
-	_onPetDeath() {
+	_onDeath() {
 		this.setPet(NO_PET_ID)
 	}
 
