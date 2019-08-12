@@ -6,6 +6,8 @@ const jestConfig = require('./config/jest')
 const nodeEnv = process.env.NODE_ENV || 'development'
 const isDevelopment = nodeEnv === 'development'
 
+const descriptionContent = 'Automated performance analysis and suggestion platform for Final Fantasy XIV: Shadowbringers.'
+
 module.exports = {
 	options: {
 		root: __dirname,
@@ -54,11 +56,9 @@ module.exports = {
 						content: 'width=device-width, initial-scale=1, shrink-to-fit=no',
 					},
 					{ name: 'theme-color', content: '#000000' },
+					{ property: 'description', content: descriptionContent },
 					{ property: 'og:title', content: 'xivanalysis' },
-					{
-						property: 'og:description',
-						content: 'Automated performance analysis and suggestion platform for Final Fantasy XIV: Stormblood.',
-					},
+					{ property: 'og:description', content: descriptionContent },
 					{ property: 'og:type', content: 'website' },
 					{ property: 'og:image', content: '/og.jpg' },
 					{ property: 'og:url', content: 'https://xivanalysis.com' },

@@ -16,6 +16,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {FINISHES, GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -54,6 +55,7 @@ const SABER_DANCE_COST = 50
 export default class EspritGauge extends Module {
 	static handle = 'espritgauge'
 	static title = t('dnc.esprit-gauge.title')`Esprit Gauge`
+	static displayOrder = DISPLAY_ORDER.ESPRIT
 
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions

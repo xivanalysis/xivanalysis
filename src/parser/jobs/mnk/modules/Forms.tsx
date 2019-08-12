@@ -1,15 +1,18 @@
-import {Trans, Plural} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
 
-import Module from 'parser/core/Module'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
+import Downtime from 'parser/core/modules/Downtime'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
-const FORM_TIMEOUT_MILLIS = 10000
+const FORM_TIMEOUT_MILLIS = 15000
 
 const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
@@ -25,31 +28,29 @@ const OPO_OPO_SKILLS = [
 
 export default class Forms extends Module {
 	static handle = 'forms'
-	static dependencies = [
-		'downtime',
-		'combatants',
-		'suggestions',
-	]
 
-	_formless = 0
-	_poorForms = 0
-	_resetForms = 0
-	_skippedForms = 0
-	_droppedForms = 0
+	@dependency private combatants!: Combatants
+	@dependency private downtime!: Downtime
+	@dependency private suggestions!: Suggestions
 
-	_lastFormChanged = null
-	_lastFormDropped = null
+	private formless: number = 0
+	private poorForms: number = 0
+	private resetForms: number = 0
+	private skippedForms: number = 0
+	private droppedForms: number = 0
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this._onGain)
-		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this._onRemove)
-		this.addHook('complete', this._onComplete)
+	private lastFormChanged?: number
+	private lastFormDropped?: number
+
+	protected init(): void {
+		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
+		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onCast(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+	private onCast(event: CastEvent): void {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
 		if (!action) {
 			return
@@ -57,13 +58,15 @@ export default class Forms extends Module {
 
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
-			const current_form = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
-			const untargetable = this.downtime.getDowntime(this._lastFormChanged || 0, event.timestamp)
+			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
+			const untargetable = this.lastFormChanged !== undefined ?
+				this.downtime.getDowntime(this.lastFormChanged, event.timestamp) :
+				0
 
 			// If PB is active, we can ignore form unless someone is really derpy
 			if (this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)) {
 				if (action === ACTIONS.FORM_SHIFT.id) {
-					this._poorForm++
+					this.poorForms++
 				}
 				return
 			}
@@ -71,30 +74,30 @@ export default class Forms extends Module {
 			if (action === ACTIONS.FORM_SHIFT.id) {
 				// Only ignore Form Shift if we're in downtime
 				if (untargetable === 0) {
-					this._skippedForms++
+					this.skippedForms++
 				}
 
 				return
 			}
 
 			// Handle relevant actions per form
-			switch (current_form) {
+			switch (currentForm) {
 			case STATUSES.OPO_OPO_FORM.id:
 				break
 			// Using Opo-Opo skills resets form
 			case STATUSES.RAPTOR_FORM.id:
 			case STATUSES.COEURL_FORM.id:
-				if (OPO_OPO_SKILLS.includes(action)) { this._resetForms++ }
+				if (OPO_OPO_SKILLS.includes(action)) { this.resetForms++ }
 				break
 			default:
 				if (OPO_OPO_SKILLS.includes(action)) {
-					this._formless++
+					this.formless++
 				}
 
 				// Check if we timed out
-				if (untargetable === 0) {
-					if ((this._lastFormDropped - this._lastFormChanged) > FORM_TIMEOUT_MILLIS) {
-						this._droppedForms++
+				if (untargetable === 0 && this.lastFormDropped && this.lastFormChanged) {
+					if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
+						this.droppedForms++
 					}
 				}
 
@@ -103,17 +106,17 @@ export default class Forms extends Module {
 		}
 	}
 
-	_onGain(event) {
-		this._lastFormChanged = event.timestamp
+	private onGain(event: BuffEvent): void {
+		this.lastFormChanged = event.timestamp
 	}
 
-	_onRemove(event) {
-		this._lastFormDropped = event.timestamp
+	private onRemove(event: BuffEvent): void {
+		this.lastFormDropped = event.timestamp
 	}
 
-	_onComplete() {
+	private onComplete(): void {
 		// Wasting PB
-		if (this._poorForms >= 1) {
+		if (this.poorForms >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.PERFECT_BALANCE.icon,
 				severity: SEVERITY.MAJOR,
@@ -121,13 +124,13 @@ export default class Forms extends Module {
 					Avoid using <ActionLink {...ACTIONS.FORM_SHIFT}/> during <ActionLink {...STATUSES.PERFECT_BALANCE}/>. It does nothing and takes up a GCD you could better use for doing damage.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.perfectbalance.why">
-					<Plural value={this._poorForms} one="GCD was" other="GCDs were" /> wasted under <StatusLink {...STATUSES.PERFECT_BALANCE}/> by <ActionLink {...ACTIONS.FORM_SHIFT}/>.
+					<Plural value={this.poorForms} one="GCD was" other="GCDs were" /> wasted under <StatusLink {...STATUSES.PERFECT_BALANCE}/> by <ActionLink {...ACTIONS.FORM_SHIFT}/>.
 				</Trans>,
 			}))
 		}
 
 		// Using the wrong form
-		if (this._formless >= 1) {
+		if (this.formless >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
@@ -135,13 +138,13 @@ export default class Forms extends Module {
 					Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> and <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. Their special effects only activate when in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has equal or higher potency depending on crits.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.formless.why">
-					<Plural value={this._formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling this special effects.
+					<Plural value={this.formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling this special effects.
 				</Trans>,
 			}))
 		}
 
 		// Cancelling forms
-		if (this._resetForms >= 1) {
+		if (this.resetForms >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MINOR,
@@ -149,13 +152,13 @@ export default class Forms extends Module {
 					Try not to cancel combos by using <ActionLink {...ACTIONS.BOOTSHINE}/>, <ActionLink {...ACTIONS.DRAGON_KICK}/>, or <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/>.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
-					<Plural value={this._resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
+					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
 				</Trans>,
 			}))
 		}
 
 		// Skipping a form
-		if (this._skippedForms >= 1) {
+		if (this.skippedForms >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
@@ -163,13 +166,13 @@ export default class Forms extends Module {
 					Avoid skipping Forms. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING}/> by skipping.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.skipped.why">
-					<Plural value={this._skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
+					<Plural value={this.skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
 				</Trans>,
 			}))
 		}
 
 		// Form timeout
-		if (this._droppedForms >= 1) {
+		if (this.droppedForms >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
@@ -177,10 +180,9 @@ export default class Forms extends Module {
 					Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.dropped.why">
-					Form was broken <Plural value={this._droppedForms} one="# time." other="# times." />
+					Form was broken <Plural value={this.droppedForms} one="# time." other="# times." />
 				</Trans>,
 			}))
 		}
 	}
 }
-
