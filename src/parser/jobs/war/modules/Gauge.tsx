@@ -53,14 +53,12 @@ export class Gauge extends CoreGauge {
 	@dependency private cooldowns!: Cooldowns
 	@dependency private suggestions!: Suggestions
 
-	private beastGauge!: CounterGauge
+	private beastGauge = this.add(new CounterGauge({
+		chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
+	}))
 
 	protected init() {
 		super.init()
-
-		this.beastGauge = this.add(new CounterGauge({
-			chart: {label: 'Beast Gauge', color: JOBS.WARRIOR.colour},
-		}))
 
 		this.addHook(
 			['combo', 'cast'],
