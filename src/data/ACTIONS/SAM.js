@@ -182,7 +182,7 @@ export default {
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
-		cooldown: 80,
+		cooldown: 50,
 	},
 
 	HISSATSU_KAITEN: {
