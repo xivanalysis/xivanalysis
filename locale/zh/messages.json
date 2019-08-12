@@ -317,7 +317,7 @@
   "mnk.fists.chart.header.uptime": "覆盖率",
   "mnk.fists.suggestions.foe.content": "在使用<0/>时，不要忘记尽快转回<1/>。",
   "mnk.fists.suggestions.foe.why": "<0/> 状态持续了{0} 个GCD。",
-  "mnk.fists.suggestions.fow.content": "使用<0/>时，记住要尽快转回<1/>",
+  "mnk.fists.suggestions.fow.content": "在使用<0/>时，不要忘记尽快转回<1/>。",
   "mnk.fists.suggestions.fow.why": "<0/> 状态持续了{0} 个GCD。",
   "mnk.fists.suggestions.stanceless.content": "体势 Buff 是你输出最大的来源之一，可以直接使用<0/>，或在<2/>和<3/> Buff 下使用<1/>。",
   "mnk.fists.suggestions.stanceless.why": "存在 {0} 个GCD无体势加成。",
