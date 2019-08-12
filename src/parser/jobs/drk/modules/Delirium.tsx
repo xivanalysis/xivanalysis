@@ -25,7 +25,7 @@ export default class Delirium extends BuffWindowModule {
 		},
 	}
 	requiredGCDs = {
-		iconAction: ACTIONS.BLOODSPILLER,
+		icon: ACTIONS.BLOODSPILLER.icon,
 		actions: [
 			ACTIONS.BLOODSPILLER,
 			ACTIONS.QUIETUS,
