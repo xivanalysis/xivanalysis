@@ -300,7 +300,7 @@
   "mnk.aoe.suggestions.rockbreaker.why": "",
   "mnk.buffs.checklist.dragonkick.description": "",
   "mnk.buffs.checklist.dragonkick.name": "Garder Tacle du Dragon actif",
-  "mnk.buffs.checklist.dragonkick.requirement.name": "Temps d'activité total de <0/>",
+  "mnk.buffs.checklist.dragonkick.requirement.name": "Temps total d'application de <0/>",
   "mnk.buffs.checklist.twinsnakes.description": "Utiliser Serpents Jumeaux permet d'augmenter facilement vos dégâts de 10%.",
   "mnk.buffs.checklist.twinsnakes.name": "Garder Serpent Jumeaux actif",
   "mnk.buffs.checklist.twinsnakes.requirement.name": "Temps d'activité total de <0/>",
