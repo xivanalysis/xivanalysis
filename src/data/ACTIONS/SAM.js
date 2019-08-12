@@ -1,4 +1,11 @@
 // Samurai Actions
+
+//Merge all 3 Tsubames into 1
+
+export const SAM_COOLDOWN_GROUP = {
+	TSUBAME: 16483,
+}
+
 export default {
 	//-----
 	//Player GCDs
@@ -153,30 +160,6 @@ export default {
 		},
 	},
 
-	KAESHI_HIGANBANA: {
-		id: 16484,
-		name: 'Kaeshi: Higanbana',
-		icon: 'https://xivapi.com/i/003000/003181.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
-	KAESHI_GOKEN: {
-		id: 16485,
-		name: 'Kaeshi: Goken',
-		icon: 'https://xivapi.com/i/003000/003182.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
-	KAESHI_SETSUGEKKA: {
-		id: 16486,
-		name: 'Kaeshi: Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003183.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
 	//-----
 	//Player OGCDs
 	//-----
@@ -260,6 +243,13 @@ export default {
 		cooldownGroup: 24,
 	},
 
+	HAGAKURE: {
+		id: 7495,
+		name: 'Hagakure',
+		icon: 'https://xivapi.com/i/003000/003176.png',
+		cooldown: 40,
+	},
+
 	IKISHOTEN: {
 		id: 16482,
 		name: 'Ikishoten',
@@ -288,6 +278,35 @@ export default {
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		cooldown: 60,
+	},
+
+	KAESHI_HIGANBANA: {
+		id: 16484,
+		name: 'Kaeshi: Higanbana',
+		icon: 'https://xivapi.com/i/003000/003181.png',
+		onGcd: true,
+		cooldown: 60,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+	},
+
+	KAESHI_GOKEN: {
+		id: 16485,
+		name: 'Kaeshi: Goken',
+		icon: 'https://xivapi.com/i/003000/003182.png',
+		onGcd: true,
+		cooldown: 60,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 16486,
+		name: 'Kaeshi: Setsugekka',
+		icon: 'https://xivapi.com/i/003000/003183.png',
+		onGcd: true,
+		cooldown: 60,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+
 	},
 
 	SHOHA: {
