@@ -16,7 +16,7 @@ export default class Speedmod extends Module {
 	SPEED_BUFF_STATUS_IDS = []
 
 	// Track history of speedmods
-	_history = [{speedmod: 1, start: 0, end: Infinity}]
+	_history = [{speedmod: 1, start: -Infinity, end: Infinity}]
 
 	_activePartywideSpeedBuffFlags = 0
 	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
