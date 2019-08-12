@@ -41,10 +41,11 @@ export default {
 		cooldown: 90,
 	},
 
-	FEY_BLESSING: {
-		id: 0,
+	// This is the action cast by the SCH
+	SCH_FEY_BLESSING: {
+		id: 16543,
 		name: 'Fey Blessing',
-		icon: 'https://xivapi.com/i/002000/002822.png',
+		icon: 'https://xivapi.com/i/002000/002854.png',
 		cooldown: 60,
 	},
 
@@ -55,7 +56,7 @@ export default {
 		cooldown: 120,
 	},
 
-	CONSOLATION: {
+	SCH_CONSOLATION: {
 		id: 16546,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002851.png',
@@ -185,14 +186,70 @@ export default {
 		cooldown: 3,
 	},
 
+	SUMMON_EOS: {
+		id: 17215,
+		name: 'Summon Eos',
+		icon: 'https://xivapi.com/i/002000/002823.png',
+	},
+
+	SUMMON_SELENE: {
+		id: 17216,
+		name: 'Summon Selene',
+		icon: 'https://xivapi.com/i/002000/002824.png',
+	},
+
 	// -----
-	// PET
+	// PET ACTIONS
 	// -----
 	EMBRACE: {
 		id: 802,
 		name: 'Embrace',
 		icon: 'https://xivapi.com/i/002000/002826.png',
 		cooldown: 3,
+		pet: true,
 	},
 
+	FEY_BLESSING: {
+		id: 16544,
+		name: 'Fey Blessing',
+		icon: 'https://xivapi.com/i/002000/002855.png',
+		cooldown: 60,
+		pet: true,
+	},
+
+	SERAPHIC_VEIL: {
+		id: 16548,
+		name: 'Seraphic Veil',
+		icon: 'https://xivapi.com/i/0020000/002847.png',
+		pet: true,
+	},
+
+	CONSOLATION: {
+		id: 16547,
+		name: 'Consolation',
+		icon: 'https://xivapi.com/i/002000/002846.png',
+		cooldown: 20,
+		pet: true,
+	},
+
+	ANGELS_WHISPER: {
+		id: 16550,
+		name: 'Angel\'s Whisper',
+		icon: 'https://xivapi.com/i/002000/002848.png',
+		pet: true,
+	},
+
+	FEY_UNION: {
+		id: 7438,
+		name: 'Fey Union',
+		icon: 'https://xivapi.com/i/002000/002818.png',
+		pet: true,
+	},
+
+	SERAPHIC_ILLUMINATION: {
+		id: 16551,
+		name: 'Seraphic Illumination',
+		icon: 'https://xivapi.com/i/002000/002849.png',
+		pet: true,
+	},
 }

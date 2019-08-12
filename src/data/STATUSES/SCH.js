@@ -33,4 +33,27 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012813.png',
 		duration: 15,
 	},
+
+	DISSIPATION: {
+		id: 791,
+		name: 'Dissipation',
+		icon: 'https://xivapi.com/i/012000/012805.png',
+		duration: 30,
+	},
+
+	// -----
+	// PET
+	// -----
+
+	FEY_UNION: {
+		id: 1223,
+		name: 'Fey Union',
+		icon: 'https://xivapi.com/i/012000/012811.png',
+	},
+
+	WHISPERING_DAWN: {
+		id: 315,
+		name: 'Whispering Dawn',
+		icon: 'https://xivapi.com/i/012000/012826.png',
+	},
 }
