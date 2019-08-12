@@ -23,6 +23,7 @@ export function languageToEdition(lang: ReportLanguage): GameEdition {
 
 		// Fallback case for when fflogs borks
 		// TODO: This probably will crop up in other places. Look into solving it higher up the chain.
+		case ReportLanguage.UNKNOWN:
 		case undefined:
 			return GameEdition.GLOBAL
 	}

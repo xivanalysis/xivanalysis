@@ -9,10 +9,11 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/Combos'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
@@ -33,6 +34,7 @@ const MAX_FEATHERS = 4
 export default class FeatherGauge extends Module {
 	static handle = 'feathergauge'
 	static title = t('dnc.feather-gauge.title')`Feather Gauge`
+	static displayOrder = DISPLAY_ORDER.FEATHERS
 
 	@dependency private suggestions!: Suggestions
 
@@ -48,6 +50,14 @@ export default class FeatherGauge extends Module {
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
+
+	public feathersSpentInRange(start: number, end: number): number {
+		if (start > end) {
+			return -1
+		}
+		return this.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
+	}
+
 	private onCastGenerator(event: AoeEvent) {
 		if (!event.successfulHit) {
 			return
@@ -55,31 +65,44 @@ export default class FeatherGauge extends Module {
 		this.avgGenerated += FEATHER_GENERATION_CHANCE
 		this.setFeather(this.currentFeathers + FEATHER_GENERATION_CHANCE, true)
 	}
+
 	private onConsumeFeather() {
 		this.feathersConsumed++
 
 		// If we consumed a feather when we think we don't have one, clearly we do, so update the history to reflect that
 		if (this.currentFeathers < 1) {
-			// Add the underrun amount to all events back to the previous spender so the graph shows we had enough to spend
-			const lastGeneratorIndex = _.findLastIndex(this.history, event => event.isGenerator)
-			const underrun = 1 - this.currentFeathers
-			for (let i = lastGeneratorIndex; i < this.history.length; i++) {
-				this.history[i].y += underrun
-			}
-
-			// Find the last spender event prior to the generator event found above and linearly smooth the graph between the two events
-			const prevSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event => !event.isGenerator)
-			const adjustmentPerEvent = underrun / (lastGeneratorIndex - prevSpenderIndex)
-			for (let j = prevSpenderIndex + 1; j < lastGeneratorIndex; j ++) {
-				this.history[j].y = this.history[j].y + adjustmentPerEvent * (j - prevSpenderIndex)
-			}
+			this.correctFeatherHistory()
 		}
 
 		this.setFeather(this.currentFeathers - 1)
 	}
+
+	private correctFeatherHistory() {
+		// Add the underrun amount to all events back to the previous spender so the graph shows we had enough to spend
+		let lastGeneratorIndex = _.findLastIndex(this.history, event => event.isGenerator)
+		lastGeneratorIndex = lastGeneratorIndex === -1 ? 0 : lastGeneratorIndex
+		const underrun = 1 - this.currentFeathers
+		for (let i = lastGeneratorIndex; i < this.history.length; i++) {
+			this.history[i].y += underrun
+		}
+
+		// If there's nothing before the last generator, we don't need to smooth anything
+		if (lastGeneratorIndex === 0) {
+			return
+		}
+
+		// Find the last spender event prior to the generator event found above and linearly smooth the graph between the two events
+		const prevSpenderIndex = _.findLastIndex(this.history.slice(0, lastGeneratorIndex), event => !event.isGenerator)
+		const adjustmentPerEvent = underrun / (lastGeneratorIndex - prevSpenderIndex)
+		for (let j = prevSpenderIndex + 1; j < lastGeneratorIndex; j ++) {
+			this.history[j].y = this.history[j].y + adjustmentPerEvent * (j - prevSpenderIndex)
+		}
+	}
+
 	private onDeath() {
 		this.setFeather(0)
 	}
+
 	private setFeather(value: number, generationEvent: boolean = false) {
 		this.currentFeathers = _.clamp(value, 0, MAX_FEATHERS)
 		const t = this.parser.currentTimestamp - this.parser.fight.start_time
@@ -122,7 +145,7 @@ export default class FeatherGauge extends Module {
 			<span className={styles.helpText}>
 				<Trans id="dnc.feather-gauge.graph.help-text">This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.</Trans>
 			</span>
-				<TimeLineChart data={data} />
+			<TimeLineChart data={data} />
 		</Fragment>
 	}
 }

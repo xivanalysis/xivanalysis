@@ -12,7 +12,7 @@ export interface Contributor {
 const CONTRIBUTORS = {
 	ACKWELL: {
 		name: 'ackwell',
-		avatar: process.env.PUBLIC_URL + '/avatar/ackwell.png',
+		avatar: require('./avatar/ackwell.png'),
 		jobs: [
 			JOBS.SUMMONER,
 			JOBS.RED_MAGE,
@@ -21,120 +21,125 @@ const CONTRIBUTORS = {
 	},
 	NEMEKH: {
 		name: 'Nemekh',
-		avatar: process.env.PUBLIC_URL + '/avatar/nemekh.png',
+		avatar: require('./avatar/nemekh.png'),
 		jobs: [JOBS.SUMMONER],
 	},
 	FRYTE: {
 		name: 'Fryte',
-		avatar: process.env.PUBLIC_URL + '/avatar/fryte.png',
+		avatar: require('./avatar/fryte.png'),
 		jobs: [JOBS.SUMMONER],
 	},
 	LEYLIA: {
 		name: 'Leylia',
-		avatar: process.env.PUBLIC_URL + '/avatar/Leylia.png',
+		avatar: require('./avatar/Leylia.png'),
 		jobs: [
 			JOBS.RED_MAGE,
 		],
 	},
 	LIMA: {
 		name: 'Lima',
-		avatar: process.env.PUBLIC_URL + '/avatar/Lima.png',
+		avatar: require('./avatar/Lima.png'),
 		jobs: [JOBS.SCHOLAR],
 	},
 	SKYE: {
 		name: 'Skye',
-		avatar: process.env.PUBLIC_URL + '/avatar/sayaka.png',
+		avatar: require('./avatar/sayaka.png'),
 		jobs: [JOBS.WARRIOR],
 	},
 	VULCWEN: {
 		name: 'Vulcwen',
-		avatar: process.env.PUBLIC_URL + '/avatar/vulcwen.png',
+		avatar: require('./avatar/vulcwen.png'),
 		jobs: [JOBS.WHITE_MAGE, JOBS.SUMMONER],
 	},
 	LAQI: {
 		name: 'Laqi',
-		avatar: process.env.PUBLIC_URL + '/avatar/laqi.png',
+		avatar: require('./avatar/laqi.png'),
 		jobs: [JOBS.BLACK_MAGE],
 	},
 	JUMP: {
 		name: 'Jump',
-		avatar: process.env.PUBLIC_URL + '/avatar/jump.png',
+		avatar: require('./avatar/jump.png'),
 		jobs: [JOBS.RED_MAGE],
 	},
 	FURST: {
 		name: 'Fürst',
-		avatar: process.env.PUBLIC_URL + '/avatar/furst.png',
+		avatar: require('./avatar/furst.png'),
 		jobs: [JOBS.BLACK_MAGE],
 	},
 	TOASTDEIB: {
 		name: 'Toastdeib',
-		avatar: process.env.PUBLIC_URL + '/avatar/toastdeib.png',
+		avatar: require('./avatar/toastdeib.png'),
 		jobs: [JOBS.NINJA, JOBS.MACHINIST],
 	},
 	MIKEMATRIX: {
 		name: 'MikeMatrix',
-		avatar: process.env.PUBLIC_URL + '/avatar/mikematrix.png',
+		avatar: require('./avatar/mikematrix.png'),
 		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
 	},
 	YUMIYA: {
 		name: 'Yumiya',
-		avatar: process.env.PUBLIC_URL + '/avatar/yumiya.png',
+		avatar: require('./avatar/yumiya.png'),
 		jobs: [JOBS.BARD],
 	},
 	RYAN: {
 		name: 'Ryan',
-		avatar: process.env.PUBLIC_URL + '/avatar/Rjb99.png',
+		avatar: require('./avatar/Rjb99.png'),
 		jobs: [JOBS.SAMURAI],
 	},
 	SUSHIROU: {
 		name: 'suShirou',
-		avatar: process.env.PUBLIC_URL + '/avatar/sushirou.png',
+		avatar: require('./avatar/sushirou.png'),
 		jobs: [JOBS.ASTROLOGIAN],
 	},
 	ACRI: {
 		name: 'Acri',
-		avatar: process.env.PUBLIC_URL + '/avatar/acri.png',
+		avatar: require('./avatar/acri.png'),
 		jobs: [JOBS.DARK_KNIGHT],
 	},
 	AKAIRYU: {
 		name: 'Akairyu',
-		avatar: process.env.PUBLIC_URL + '/avatar/Akairyu.png',
+		avatar: require('./avatar/Akairyu.png'),
 		jobs: [JOBS.BLACK_MAGE, JOBS.DANCER],
 	},
 	ASTRALEAH: {
 		name: 'Astraleah',
-		avatar: process.env.PUBLIC_URL + '/avatar/astraleah.png',
+		avatar: require('./avatar/astraleah.png'),
 		jobs: [JOBS.DRAGOON],
 	},
 	ACCHAN: {
 		name: 'acchan',
-		avatar: process.env.PUBLIC_URL + '/avatar/acchan.png',
+		avatar: require('./avatar/acchan.png'),
 		jobs: [JOBS.MONK],
 	},
 	AZARIAH: {
 		name: 'Azariah',
-		avatar: process.env.PUBLIC_URL + '/avatar/azariah.png',
+		avatar: require('./avatar/azariah.png'),
 		jobs: [JOBS.RED_MAGE],
 	},
 	LHEA: {
 		name: 'Lhea',
-		avatar: process.env.PUBLIC_URL + '/avatar/lhea.png',
+		avatar: require('./avatar/lhea.png'),
 		jobs: [JOBS.PALADIN, JOBS.WARRIOR, JOBS.DARK_KNIGHT],
 	},
 	NIV: {
 		name: 'Niv',
-		avatar: process.env.PUBLIC_URL + '/avatar/niv.png',
+		avatar: require('./avatar/niv.png'),
 		jobs: [JOBS.WHITE_MAGE],
 	},
 	RIRIAN: {
 		name: 'Ririan',
-		avatar: process.env.PUBLIC_URL + '/avatar/Ririan.png',
+		avatar: require('./avatar/Ririan.png'),
 		jobs: [JOBS.BARD, JOBS.MACHINIST],
 	},
 	TWO_BROKEN: {
 		name: '2Broken',
-		avatar: process.env.PUBLIC_URL + '/avatar/2Broken.png',
+		avatar: require('./avatar/2Broken.png'),
 		jobs: [JOBS.DANCER],
+	},
+	NONO: {
+		name: 'Nonowazu',
+		avatar: require('./avatar/nono.png'),
+		jobs: [JOBS.SCHOLAR],
 	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>

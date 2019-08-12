@@ -32,16 +32,30 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.3',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.05',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2019-08-09'),
+		Changes: () => <>
+			Initial support for Shadowbringers:&nbsp;
+			<ul>
+				<li>Add gauge tracking</li>
+				<li>Track Chain Strategem use</li>
+				<li>Fix issue with Recitation creating negative Aetherflow counts</li>
+				<li>Add Energy Drain back as a valid Aetherflow consumer</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2019-07-12'),
 		Changes: () => <>
 			Initial changes for Shadowbringers:&nbsp;

@@ -34,6 +34,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003211.png',
 		cooldown: 35,
 		potency: 200,
+		cooldownGroup: 10,
 	},
 	ENGAGEMENT: {
 		id: 16527,
@@ -41,6 +42,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003231.png',
 		cooldown: 35,
 		potency: 150,
+		cooldownGroup: 10,
 	},
 	CORPS_A_CORPS: {
 		id: 7506,

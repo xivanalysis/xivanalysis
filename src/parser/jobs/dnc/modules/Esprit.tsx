@@ -11,11 +11,12 @@ import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import Combatants from 'parser/core/modules/Combatants'
-import {AoeEvent} from 'parser/core/modules/Combos'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {FINISHES, GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 // Dances take more than a GCD to apply, during which time party members will be generating esprit for you
@@ -54,6 +55,7 @@ const SABER_DANCE_COST = 50
 export default class EspritGauge extends Module {
 	static handle = 'espritgauge'
 	static title = t('dnc.esprit-gauge.title')`Esprit Gauge`
+	static displayOrder = DISPLAY_ORDER.ESPRIT
 
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
@@ -73,6 +75,7 @@ export default class EspritGauge extends Module {
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
+
 	private onDamage(event: AoeEvent) {
 		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.successfulHit) {
 			return
@@ -95,6 +98,7 @@ export default class EspritGauge extends Module {
 			this.setEsprit(this.currentEsprit + generatedAmt, true)
 		}
 	}
+
 	private onConsumeEsprit() {
 		this.espritConsumed++
 
@@ -111,9 +115,11 @@ export default class EspritGauge extends Module {
 
 		this.setEsprit(this.currentEsprit - SABER_DANCE_COST)
 	}
+
 	private onDeath() {
 		this.setEsprit(0)
 	}
+
 	private setEsprit(value: number, generatorEvent: boolean = false) {
 		this.currentEsprit = _.clamp(value, 0, MAX_ESPRIT)
 		this.potentialOvercap += Math.max(0, value - this.currentEsprit)

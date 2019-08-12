@@ -172,6 +172,8 @@ export default class Resources extends Module {
 			this._gainedSinceLastSpend += actionMPChange
 		}
 		this._currentMP = beforeActionMP + actionMPChange
+
+		this._pushToMPGraph()
 	}
 
 	checkBloodOvercap(actionBloodChange) {
@@ -186,11 +188,17 @@ export default class Resources extends Module {
 			// Sanity check - if blood drops below 0 from a spender, floor blood count at 0
 			this._currentBlood = 0
 		}
+
+		this._pushToBloodGraph()
 	}
 
-	_pushToGraph() {
+	_pushToBloodGraph() {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.blood.push({t: timestamp, y: this._currentBlood})
+	}
+
+	_pushToMPGraph() {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this._history.mp.push({t: timestamp, y: this._currentMP})
 	}
 
@@ -203,12 +211,13 @@ export default class Resources extends Module {
 		this._wastedBlood += this._currentBlood
 		this._currentMP = 0
 		this._currentBlood = 0
-		this._pushToGraph()
+		this._pushToBloodGraph()
+		this._pushToMPGraph()
 	}
 
 	_onRaise() {
 		this._currentMP = MP_AFTER_RAISE
-		this._pushToGraph()
+		this._pushToMPGraph()
 	}
 
 	_onEvent(event) {
@@ -254,11 +263,6 @@ export default class Resources extends Module {
 
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
-
-		if (event.type !== 'combo') {
-			// Don't push two entries to graph for comboed actions
-			this._pushToGraph()
-		}
 	}
 
 	_onCastBlackestNight(event) {
@@ -266,7 +270,7 @@ export default class Resources extends Module {
 		const actionMPGain = RESOURCE_SPENDERS[abilityId].mp
 		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
-		this._pushToGraph()
+		this._pushToMPGraph()
 	}
 
 	_onRemoveBlackestNight(event) {

@@ -111,7 +111,7 @@ export default {
 	},
 
 	NOCTURNAL_OPPOSITION: {
-		id: 1879,
+		id: 1880,
 		name: 'Nocturnal Opposition',
 		icon: 'https://xivapi.com/i/013000/013247.png',
 		duration: 30,

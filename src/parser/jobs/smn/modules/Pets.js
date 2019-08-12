@@ -21,6 +21,7 @@ const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
 	[ACTIONS.SUMMON_III.id]: PETS.IFRIT_EGI.id,
 	[ACTIONS.SUMMON_BAHAMUT.id]: PETS.DEMI_BAHAMUT.id,
+	[ACTIONS.FIREBIRD_TRANCE.id]: PETS.DEMI_PHOENIX.id,
 }
 
 const CHART_COLOURS = {
@@ -29,12 +30,13 @@ const CHART_COLOURS = {
 	[PETS.TITAN_EGI.id]: '#ffbf23',
 	[PETS.IFRIT_EGI.id]: '#d60808',
 	[PETS.DEMI_BAHAMUT.id]: '#218cd6',
+	[PETS.DEMI_PHOENIX.id]: '#ff6a00',
 }
 
 const TITAN_WARN_PERCENT = 5
 
 // Durations should probably be ACTIONS data
-export const SUMMON_BAHAMUT_LENGTH = 20000
+export const DEMI_SUMMON_LENGTH = 20000
 
 // noPetUptime severity, in %
 const NO_PET_SEVERITY = {
@@ -55,7 +57,7 @@ export default class Pets extends Module {
 	_currentPet = null
 	_history = []
 
-	_lastSummonBahamut = -1
+	_lastSummonDemi = -1
 
 	_petUptime = new Map()
 
@@ -63,9 +65,12 @@ export default class Pets extends Module {
 		super(...args)
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
+		// TODO: This event hook needs to be revisited once we have the ability to hook arbitrary timestamps.
 		this.addHook('all', this._onEvent)
 		this.addHook('summonpet', this._onChangePet)
-		this.addHook('death', {to: 'pet'}, this._onPetDeath)
+		// Hook changed from on pet death to on player death due to pet changes in Shadowbringers
+		// Pets now won't die unless their caster dies, so FFLogs API no longer emitting pet death events
+		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -122,9 +127,9 @@ export default class Pets extends Module {
 			return
 		}
 
-		// If it's bahamut, we need to handle the timer
-		if (petId === PETS.DEMI_BAHAMUT.id) {
-			this._lastSummonBahamut = event.timestamp
+		// If it's a demi, we need to handle the timer
+		if (this.isDemiPet(petId)) {
+			this._lastSummonDemi = event.timestamp
 		}
 
 		this.setPet(petId)
@@ -134,8 +139,8 @@ export default class Pets extends Module {
 		if (
 			(this._lastPet || this.parser.byPlayerPet(event)) &&
 			this._currentPet &&
-			this._currentPet.id === PETS.DEMI_BAHAMUT.id &&
-			this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH <= event.timestamp
+			this.isDemiPet(this._currentPet.id) &&
+			this._lastSummonDemi + DEMI_SUMMON_LENGTH <= event.timestamp
 		) {
 			let petId = null
 			if (this._lastPet) {
@@ -145,7 +150,7 @@ export default class Pets extends Module {
 				petId = action ? action.pet : undefined
 			}
 
-			this.setPet(petId, this._lastSummonBahamut + SUMMON_BAHAMUT_LENGTH)
+			this.setPet(petId, this._lastSummonDemi + DEMI_SUMMON_LENGTH)
 		}
 	}
 
@@ -167,7 +172,7 @@ export default class Pets extends Module {
 		}
 	}
 
-	_onPetDeath() {
+	_onDeath() {
 		this.setPet(NO_PET_ID)
 	}
 
@@ -310,4 +315,9 @@ export default class Pets extends Module {
 
 		return getDataBy(PETS, 'id', petId).name
 	}
+
+	isDemiPet(petId) {
+		return petId === PETS.DEMI_BAHAMUT.id || petId === PETS.DEMI_PHOENIX.id
+	}
+
 }

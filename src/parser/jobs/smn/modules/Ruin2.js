@@ -6,6 +6,7 @@ import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import PETS from 'data/PETS'
 
 // Constants
 // Unlike HW, don't need to worry about mana drain too much. It's just flat pot.
@@ -25,9 +26,9 @@ export default class Ruin2 extends Module {
 	static handle = 'ruin2'
 	static dependencies = [
 		'combatants',
-		'gauge',
 		'gcd',
 		'invuln',
+		'pets',
 		'suggestions',
 	]
 
@@ -73,7 +74,7 @@ export default class Ruin2 extends Module {
 		// If there was no oGCD cast between the R2 and now, mark an issue
 		if (
 			action.onGcd &&
-			lastGcdActionId === ACTIONS.RUIN_II.id &&
+			lastGcdActionId === ACTIONS.SMN_RUIN_II.id &&
 			!this._ogcdUsed &&
 			invulnTime === 0
 		) {
@@ -90,11 +91,11 @@ export default class Ruin2 extends Module {
 		this._pos = this.combatants.selected.resources
 
 		// If this is an R2 cast, track it
-		if (action.id === ACTIONS.RUIN_II.id) {
+		if (action.id === ACTIONS.SMN_RUIN_II.id) {
 			this._all.push(event)
 			// Explicitly setting the ogcd tracker to true while bahamut is out,
 			// we don't want to fault people for using R2 for WWs during bahamut.
-			this._ogcdUsed = this.gauge.bahamutSummoned()
+			this._ogcdUsed = (this.pets.getCurrentPet() === PETS.DEMI_BAHAMUT.id)
 		}
 	}
 
@@ -116,7 +117,7 @@ export default class Ruin2 extends Module {
 			tiers: BAD_CAST_SEVERITY,
 			value: issues,
 			content: <Trans id="smn.ruin-ii.suggestions.issues.content">
-				<ActionLink {...ACTIONS.RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
+				<ActionLink {...ACTIONS.SMN_RUIN_II}/> is a DPS loss when not used to weave oGCDs or proc <ActionLink {...ACTIONS.WYRMWAVE}/>s. Prioritise casting <ActionLink {...ACTIONS.RUIN_III}/>.
 			</Trans>,
 			why: <Trans id="smn.ruin-ii.suggestions.issues.why">
 				{issues * potLossPerR2} potency lost to {issues} unnecessary Ruin II
@@ -125,9 +126,9 @@ export default class Ruin2 extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.RUIN_II.icon,
+			icon: ACTIONS.SMN_RUIN_II.icon,
 			content: <Trans id="smn.ruin-ii.suggestions.warnings.content">
-				Unless significant movement is required, avoid using <ActionLink {...ACTIONS.RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
+				Unless significant movement is required, avoid using <ActionLink {...ACTIONS.SMN_RUIN_II}/> for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/>.
 			</Trans>,
 			why: <Trans id="smn.ruin-ii.suggestions.warnings.why">
 				{warnings * potLossPerR2} potency lost to {warnings} Ruin II

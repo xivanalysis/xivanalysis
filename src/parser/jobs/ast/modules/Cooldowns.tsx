@@ -6,12 +6,18 @@ export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		// Arcanum
 		{
-			name: 'Draw',
+			name: 'Draw/Undraw',
 			merge: true,
 			actions: [
 				ACTIONS.DRAW.id,
-				ACTIONS.REDRAW.id,
 				ACTIONS.UNDRAW.id,
+			],
+		},
+		{
+			name: 'Redraw/Minor Arcana',
+			merge: true,
+			actions: [
+				ACTIONS.REDRAW.id,
 				ACTIONS.MINOR_ARCANA.id,
 			],
 		},

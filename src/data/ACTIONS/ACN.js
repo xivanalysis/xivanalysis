@@ -1,4 +1,5 @@
 import PETS from '../PETS'
+import {SMN_COOLDOWN_GROUP} from './SMN'
 
 // Splitting ACN spells out of SMN/SCH so they aren't duped
 export default {
@@ -25,6 +26,7 @@ export default {
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
 		cooldown: 10,
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
 	AETHERFLOW: {
@@ -39,6 +41,7 @@ export default {
 		name: 'Energy Drain',
 		icon: 'https://xivapi.com/i/000000/000514.png',
 		cooldown: 30,
+		cooldownGroup: SMN_COOLDOWN_GROUP.ENERGY,
 	},
 
 	MIASMA: {
@@ -54,9 +57,10 @@ export default {
 		name: 'Summon II',
 		icon: 'https://xivapi.com/i/000000/000517.png',
 		cooldown: 10,
+		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
-	RUIN_II: {
+	SMN_RUIN_II: {
 		id: 172,
 		name: 'Ruin II',
 		icon: 'https://xivapi.com/i/000000/000502.png',
