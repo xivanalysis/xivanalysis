@@ -80,18 +80,17 @@ export default class Sen extends Module {
 		this.sen[sen] = true
 	}
 
-
 	private remove() {
 		this.sen = _.mapValues(this.sen, () => false)
 	}
 
 	private onHagakure() {
-	//work out how many sen are currently active
+	// work out how many sen are currently active
 	const activeSen = Object.values(this.sen)
 		.filter(active => active)
 		.length
 
-	//add new kenki, wipe the sen
+	// add new kenki, wipe the sen
 	this.kenki.modify(activeSen * KENKI_PER_SEN)
 	this.remove()
 	}
