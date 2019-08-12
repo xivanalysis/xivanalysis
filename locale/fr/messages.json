@@ -30,7 +30,7 @@
   "ast.draw.checklist.description.total": "Total de cartes obtenues :",
   "ast.draw.checklist.name": "Jouez le plus de cartes possible",
   "ast.draw.checklist.requirement.name": "<0/> utilisations",
-  "ast.draw.suggestions.draw-no-usage.content": "",
+  "ast.draw.suggestions.draw-no-usage.content": "Aucune utilisation de <0/>.",
   "ast.draw.suggestions.draw-no-usage.why": "Aucun tirage utilisé.",
   "ast.draw.suggestions.draw-uses.content": "Utilisez <0/> dès que possible pour maximiser le nombre de cartes jouées.",
   "ast.draw.suggestions.draw-uses.why": "Environ {drawsMissed, plural, one { # utilisation} other {# utilisations}} of <0/> ont été perdues en le gardant pour un total de {0}.",
