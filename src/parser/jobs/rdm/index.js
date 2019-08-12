@@ -21,10 +21,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 </>,
-	// supportedPatches: {
-	// 	from: '4.2',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.05',
+		to: '5.05',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.JUMP, role: ROLES.THEORYCRAFT},
