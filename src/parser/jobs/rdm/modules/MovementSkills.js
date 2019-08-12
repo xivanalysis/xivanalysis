@@ -24,8 +24,6 @@ export default class MovementSkills extends Module {
 	]
 
 	_history = []
-	//Used to generate the list of skills for visibility later
-	_overallCastHistory = []
 	_last_manafic = {
 		timestamp: 0,
 		cac: 0,
@@ -42,6 +40,7 @@ export default class MovementSkills extends Module {
 		//this._history.push(this._last_manafic)
 		this.description = <Trans id="rdm.movementskills.description">Your movement skills are primarily used for damage, make sure you get 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.CORPS_A_CORPS.id)} /> and either 3 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.DISPLACEMENT.id)} /> or 4 <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.ENGAGEMENT.id)} /> per <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /> </Trans>
 		this.addHook('complete', this._onComplete)
+		//So we don't get negative numbers on the final panel display
 		this._last_manafic.timestamp = this.parser.fight.start_time
 	}
 
@@ -51,8 +50,7 @@ export default class MovementSkills extends Module {
 		case ACTIONS.MANAFICATION.id:
 			//push the previous manafication instance
 			this._history.push(this._last_manafic)
-			this._overallCastHistory.push(event)
-			//setup the new instance, since we're unlikely to end the fight on manafication
+			//setup the new instance, since we're unlikely to end the fight on manafication push
 			this._last_manafic = {
 				timestamp: event.timestamp,
 				cac: 0,
@@ -62,21 +60,18 @@ export default class MovementSkills extends Module {
 			}
 			break
 		case ACTIONS.DISPLACEMENT.id:
-			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.disp++
 				this._last_manafic.events.push(event)
 			}
 			break
 		case ACTIONS.ENGAGEMENT.id:
-			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.engagement++
 				this._last_manafic.events.push(event)
 			}
 			break
 		case ACTIONS.CORPS_A_CORPS.id:
-			this._overallCastHistory.push(event)
 			if (this._last_manafic) {
 				this._last_manafic.cac++
 				this._last_manafic.events.push(event)
@@ -91,6 +86,7 @@ export default class MovementSkills extends Module {
 		let engagement = 0
 		let manafics = 0
 		const requirements = []
+		this._history.push(this._last_manafic)
 
 		//Parse out the final numbers
 		this._history.map(manafic => {
@@ -100,13 +96,13 @@ export default class MovementSkills extends Module {
 			engagement += manafic.engagement
 		})
 
-		//Credit for what you did since there was no final Manafication as boss died
-		cacs += this._last_manafic.cac
-		disp += this._last_manafic.disp
-		engagement + this._last_manafic.engagement
+		//Credit for what you did since there was no final Manafication as boss died in nearly every instance
+		//Also need to credit for there being no manafic on the opener, so you aren't dinged
+		//Over the opening cac/disp
+		//TODO: Consider coming up with Logic to detect if we came off CD right at the end or not, if we did -1 else -2
+		manafics = manafics -2
 
-		const cacTarget = manafics * CACS_PER_MANAFICATION
-		requirements.push(this._checkCac(cacs, cacTarget, ACTIONS.CORPS_A_CORPS.id))
+		requirements.push(this._checkCac(cacs, manafics, ACTIONS.CORPS_A_CORPS.id))
 		requirements.push(...this._checkDisp(disp, engagement, ACTIONS.DISPLACEMENT.id, manafics))
 
 		//new Rule and adds the array of Requirements that just got generated
@@ -118,7 +114,8 @@ export default class MovementSkills extends Module {
 		}))
 	}
 
-	_checkCac(cacs, threshold, id) {
+	_checkCac(cacs, manafics, id) {
+		let threshold = manafics * CACS_PER_MANAFICATION
 		let finalValue = 0
 		threshold -= GRACE_FOR_PULL
 		if (cacs > threshold) {
@@ -142,6 +139,7 @@ export default class MovementSkills extends Module {
 		}
 
 		if ((disps / DISPS_PER_MANAFICATION) === manafics || (engagements / ENGAGEMENTS_PER_MANAFICATION) === manafics) {
+			//100%, no fail skip the rest
 			noFail = 100
 		} else {
 			//Figure out how many Disps DONT fit into Displacement per manafication
@@ -151,9 +149,11 @@ export default class MovementSkills extends Module {
 			//We want the manafication count to be reduced by number of manafications we fully Disped for, then multiply
 			//By how many engagement we need per minus the number of disps we had left over
 			const engagementThreshold = ((manafics - ((disps - leftoverDisps) / DISPS_PER_MANAFICATION)) * ENGAGEMENTS_PER_MANAFICATION) - leftoverDisps
+			//This will yield us the correct amount of total casts that needed to happen weighting properly disp v engagement
 			const totalThreshold = engagementThreshold + disps
-			//For now, we'll just assume you screwed the engagement usage until TC's tell me otherwise
-			finalValue = ((disps + engagements) / totalThreshold) * 100
+			//After discussing we're going to assume engagements were messed up if anything
+			//Min it so we don't get over 100% due to graces for those who manage perfect play
+			finalValue = Math.min((((disps + engagements) / totalThreshold) * 100), 100)
 		}
 
 		if (noFail > 0) {
@@ -172,20 +172,6 @@ export default class MovementSkills extends Module {
 	}
 
 	output() {
-		// const panels = [{
-		// 	title: {
-		// 		key: 'title-movementskills',
-		// 		content: <Fragment>
-		// 				Movement Skills
-		// 		</Fragment>,
-		// 	},
-		// 	content: {
-		// 		key: 'content-movemetskills',
-		// 		content: <Rotation events={this._overallCastHistory}/>,
-		// 	},
-		// }]
-		//console.log(`${JSON.stringify(this._history, null, 4)}`)
-
 		const panels = this._history.map(manafic => {
 			return {
 				key: manafic.timestamp,

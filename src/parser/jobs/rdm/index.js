@@ -33,6 +33,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2019-08-12'),
+			Changes: () => <>Added handling for Displacement/engagement and Corps-a-corps related to manafication.  Removed manafication from overcap suggestion, added it as 2 small statistics.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2019-08-05'),
 			Changes: () => <>Removed Lucid Dream from oGCD checklist, Displacement now takes Engagement into consideration in the oGCD checklist</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
