@@ -240,6 +240,7 @@
   "core.find.select-pull": "Choisissez un pull",
   "core.find.supported-patches": "Patch {from}{0}",
   "core.find.trash": "Poubelle",
+  "core.gauge.title": "",
   "core.gcd.estimated-gcd": "GCD estimé",
   "core.gcd.no-statistics": "Malheureusement, les statistiques du jour ne sont pas disponibles depuis FF Logs. Ainsi, le temps de GCD calculé est une <0>estimation</0>, et peut être incorrect. Si la valeur affichée est plus <1>élevée</1> que la réalité, vous devriez peut-être faire plus attention au maintien de votre GCD.",
   "core.gcd.title": "Temps de rechargement global",
