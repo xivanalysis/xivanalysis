@@ -33,6 +33,7 @@ const WINDOW_STATUSES = [
 
 const FEATHER_THRESHHOLD = 3
 const POST_WINDOW_GRACE_PERIOD_MILLIS = 500
+const DEVILMENT_COOLDOWN_MILLIS = ACTIONS.DEVILMENT.cooldown * 1000
 
 class TechnicalWindow {
 	start: number
@@ -42,8 +43,9 @@ class TechnicalWindow {
 	gcdCount: number = 0
 	trailingGcdEvent?: CastEvent
 
+	usedDevilment: boolean = false
 	hasDevilment: boolean = false
-	timelyDevilment: boolean = true
+	timelyDevilment: boolean = false
 	poolingProblem: boolean = false
 
 	constructor(start: number) {
@@ -62,8 +64,8 @@ export default class Technicalities extends Module {
 	@dependency private feathers!: FeatherGauge
 
 	private history: TechnicalWindow[] = []
-	private firstDevilment: boolean = false
 	private badDevilments: number = 0
+	private lastDevilmentTimestamp: number = -1
 
 	protected init() {
 		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
@@ -108,6 +110,12 @@ export default class Technicalities extends Module {
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			}
+
+			// If this is the first window, and we didn't catch a devilment use in the window, but we *have* used it,
+			// treat it as a timely usage due to party composition
+			if (this.history.length === 1 && !lastWindow.usedDevilment && this.lastDevilmentTimestamp > 0) {
+				lastWindow.timelyDevilment = true
+			}
 		}
 	}
 
@@ -144,6 +152,10 @@ export default class Technicalities extends Module {
 		// If this window isn't done yet add the action to the list
 		if (!lastWindow.end) {
 			lastWindow.rotation.push(event)
+			// Check whether this window has a devilment status from before the window began
+			if (!lastWindow.hasDevilment && this.combatants.selected.hasStatus(STATUSES.DEVILMENT.id)) {
+				lastWindow.hasDevilment = true
+			}
 			if (action.onGcd) {
 				lastWindow.gcdCount++
 			}
@@ -159,24 +171,25 @@ export default class Technicalities extends Module {
 	private handleDevilment(lastWindow: TechnicalWindow | undefined) {
 		// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
 		// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id) && this.firstDevilment) {
+		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id) && (this.lastDevilmentTimestamp < 0 ||
+			// If the first use we detect is after the cooldown, assume they popped it pre-pull and this 'first'
+			// Use is actually also bad
+			this.parser.currentTimestamp >= DEVILMENT_COOLDOWN_MILLIS)) {
 			this.badDevilments++
 		}
 
-		if (!this.firstDevilment) {
-			this.firstDevilment = true
-		}
+		this.lastDevilmentTimestamp = this.parser.currentTimestamp
 
 		// If we don't have a window for some reason, bail
-		if (!lastWindow) {
+		if (!lastWindow || lastWindow.end) {
 			return
 		}
 
-		lastWindow.hasDevilment = true
+		lastWindow.usedDevilment = true
 
 		// Note if the Devilment was used after the second GCD
-		if (lastWindow.gcdCount > 1) {
-			lastWindow.timelyDevilment = false
+		if (lastWindow.gcdCount <= 1) {
+			lastWindow.timelyDevilment = true
 		}
 	}
 
@@ -195,7 +208,7 @@ export default class Technicalities extends Module {
 		}))
 
 		// Suggestion to use Devilment ASAP in Technical
-		const lateDevilments = this.history.filter(window => window.hasDevilment && !window.timelyDevilment).length
+		const lateDevilments = this.history.filter(window => window.usedDevilment && !window.timelyDevilment).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DEVILMENT.icon,
 			content: <Trans id="dnc.technicalities.suggestions.late-devilments.content">
