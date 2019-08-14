@@ -12,12 +12,20 @@ export default class Cooldowns extends CoreCooldowns {
 				ACTIONS.FISTS_OF_EARTH.id,
 			],
 		},
+		{
+			name: 'Chakras',
+			merge: false,
+			actions: [
+				ACTIONS.THE_FORBIDDEN_CHAKRA.id,
+				ACTIONS.ENLIGHTENMENT.id,
+			],
+		},
+		ACTIONS.PERFECT_BALANCE.id,
 		ACTIONS.RIDDLE_OF_FIRE.id,
 		ACTIONS.BROTHERHOOD.id,
-		ACTIONS.THE_FORBIDDEN_CHAKRA.id,
 		ACTIONS.ELIXIR_FIELD.id,
 		ACTIONS.TORNADO_KICK.id,
-		ACTIONS.PERFECT_BALANCE.id,
+		ACTIONS.ANATMAN.id,
 		ACTIONS.RIDDLE_OF_EARTH.id,
 		ACTIONS.MANTRA.id,
 	]

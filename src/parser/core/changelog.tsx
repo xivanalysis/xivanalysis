@@ -4,7 +4,13 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [{
 	date: new Date('2019-08-14'),
-	Changes: () => <>Fix actor filters for secondary event query. Raid buffs applied by other players should be visible again.</>,
+	Changes: () => <>
+		A few changes to improve the accuracy of core metrics and displays:
+		<ul>
+			<li>Improve GCD calculations for actions with a recast less than 2.5 seconds. Jobs such as DNC should no longer occasionally recieve incredibly short GCD estimates.</li>
+			<li>Fix actor filters for secondary event query. Raid buffs applied by other players should be visible again.</li>
+		</ul>
+	</>,
 	contributors: [CONTRIBUTORS.ACKWELL],
 }, {
 	date: new Date('2019-07-20'),
