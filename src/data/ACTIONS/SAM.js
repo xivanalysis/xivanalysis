@@ -182,7 +182,7 @@ export default {
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
-		cooldown: 50,
+		cooldown: 55,
 	},
 
 	HISSATSU_KAITEN: {
@@ -277,6 +277,7 @@ export default {
 		id: 16483,
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
+		onGcd: true,
 		cooldown: 60,
 	},
 
