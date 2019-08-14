@@ -4,7 +4,7 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [{
 	date: new Date('2019-08-14'),
-	Changes: () => <>Improve GCD calculations for actions with an artificially shortened cooldown. Jobs such as DNC should no longer recieve incredibly short GCDs estimates.</>,
+	Changes: () => <>Improve GCD calculations for actions with a recast less than 2.5 seconds. Jobs such as DNC should no longer occasionally recieve incredibly short GCD estimates.</>,
 	contributors: [CONTRIBUTORS.ACKWELL],
 }, {
 	date: new Date('2019-07-20'),
