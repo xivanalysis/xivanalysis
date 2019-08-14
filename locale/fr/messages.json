@@ -47,7 +47,7 @@
   "ast.horoscope.suggestion.expired.content": "<0/> ne s'active pas tout seul, donc ne pas oublier de l'utiliser encore ou il expirera sans dégâts supplémentaire.",
   "ast.horoscope.suggestion.expired.why": "",
   "ast.horoscope.title": "Horoscope",
-  "ast.lightspeed.messages.explanation": "",
+  "ast.lightspeed.messages.explanation": "L'utilisation principale de <0/> devrait être pour weaver les actions de carte pendant les fenêtres de <1/> et <2/>. <3/>Il peut être aussi utilisé pour conserver du mana durant les phase de heal lourdes, continuer de caster en se déplaçant et d'autre scenarii spécifiques.<4/>Chaque combat requière une différente stratégie, mais il faut essayer de l'utiliser un maximum. <5/><6/>À moins qu'il soit utilisé pour <7/>, </> devrait tenir pendant au moins 6 GCDs.",
   "ast.lightspeed.messages.no-casts": "Il n'y a aucun sort d'enregistré pour <0/>",
   "ast.lightspeed.rotation.gcd": "{numGcds, plural, one {# GCD} other {# GCDs}}",
   "ast.lightspeed.rotation.mp-saved": "PM sauvés",
