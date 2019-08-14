@@ -24,7 +24,7 @@ export default class InnerRelease extends BuffWindowModule {
 		},
 	}
 	requiredGCDs = {
-		iconAction: ACTIONS.FELL_CLEAVE,
+		icon: ACTIONS.FELL_CLEAVE.icon,
 		actions: [
 			ACTIONS.FELL_CLEAVE,
 			ACTIONS.DECIMATE,
@@ -37,7 +37,7 @@ export default class InnerRelease extends BuffWindowModule {
 		},
 	}
 	trackedActions = {
-		iconAction: ACTIONS.UPHEAVAL,
+		icon: ACTIONS.UPHEAVAL.icon,
 		actions: [
 			{
 				action: ACTIONS.UPHEAVAL,
@@ -57,7 +57,7 @@ export default class InnerRelease extends BuffWindowModule {
 	}
 
 	trackedBadActions = {
-		iconAction: ACTIONS.INNER_CHAOS,
+		icon: ACTIONS.INNER_CHAOS.icon,
 		actions: [
 			{
 				action: ACTIONS.INNER_CHAOS,

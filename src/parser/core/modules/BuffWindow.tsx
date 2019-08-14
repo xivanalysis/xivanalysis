@@ -49,7 +49,7 @@ interface BuffWindowExpectedGCDs {
 }
 
 interface BuffWindowRequiredGCDs {
-	iconAction: Action
+	icon: string
 	actions: Action[]
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers
@@ -57,7 +57,7 @@ interface BuffWindowRequiredGCDs {
 
 interface BuffWindowTrackedActions {
 	actions: BuffWindowTrackedAction[]
-	iconAction: Action
+	icon: string
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers
 }
@@ -270,7 +270,7 @@ export abstract class BuffWindowModule extends Module {
 				.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.gcds - this.getBuffWindowRequiredGCDsUsed(buffWindow)), 0)
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: this.requiredGCDs.iconAction.icon,
+				icon: this.requiredGCDs.icon,
 				content: this.requiredGCDs.suggestionContent,
 				tiers: this.requiredGCDs.severityTiers,
 				value: invalidGCDs,
@@ -286,7 +286,7 @@ export abstract class BuffWindowModule extends Module {
 						.reduce((sum, buffWindow) => sum + Math.max(0, trackedAction.expectedPerWindow - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: this.trackedActions.iconAction.icon,
+				icon: this.trackedActions.icon,
 				content: this.trackedActions.suggestionContent,
 				tiers: this.trackedActions.severityTiers,
 				value: missedActions,
@@ -302,7 +302,7 @@ export abstract class BuffWindowModule extends Module {
 						.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
-				icon: this.trackedBadActions.iconAction.icon,
+				icon: this.trackedBadActions.icon,
 				content: this.trackedBadActions.suggestionContent,
 				tiers: this.trackedBadActions.severityTiers,
 				value: badActions,
@@ -324,7 +324,7 @@ export abstract class BuffWindowModule extends Module {
 		}
 		if ( this.requiredGCDs ) {
 			rotationTargets.push({
-				header: <ActionLink showName={false} {...this.requiredGCDs.iconAction}/>,
+				header: <img src={this.requiredGCDs.icon} alt="" style={{height: '20px'}}/>,
 				accessor: 'badgcd',
 			})
 		}
