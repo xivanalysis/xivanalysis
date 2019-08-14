@@ -44,7 +44,7 @@
   "ast.earthly-star.title": "Étoile Terrestre",
   "ast.earthyl-star.suggestion.missed-use.content": "Utilisez <0/> plus fréquemment. Cela peut vous permettre de conserver un GCD de soin et vous permettre d'infliger plus de dégâts.",
   "ast.earthyl-star.suggestion.missed-use.why": "",
-  "ast.horoscope.suggestion.expired.content": "",
+  "ast.horoscope.suggestion.expired.content": "<0/> ne s'active pas tout seul, donc ne pas oublier de l'utiliser encore ou il expirera sans dégâts supplémentaire.",
   "ast.horoscope.suggestion.expired.why": "",
   "ast.horoscope.title": "Horoscope",
   "ast.lightspeed.messages.explanation": "",
