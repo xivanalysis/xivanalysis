@@ -32,6 +32,21 @@ export default {
 		cooldown: 1.2,
 	},
 
+	FOUR_POINT_FURY: {
+		id: 16473,
+		name: 'Four-Point Fury',
+		icon: 'https://xivapi.com/i/002000/002544.png',
+		onGcd: true,
+	},
+
+	SIX_SIDED_STAR: {
+		id: 16476,
+		name: 'Six-Sided Star',
+		icon: 'https://xivapi.com/i/002000/002547.png',
+		onGcd: true,
+		cooldown: 5,
+	},
+
 	// -----
 	// Player OGCDs
 	// -----
@@ -54,7 +69,7 @@ export default {
 		id: 3547,
 		name: 'The Forbidden Chakra',
 		icon: 'https://xivapi.com/i/002000/002535.png',
-		cooldown: 5,
+		cooldown: 1,
 	},
 
 	ELIXIR_FIELD: {
@@ -78,14 +93,6 @@ export default {
 		cooldown: 60,
 	},
 
-	RIDDLE_OF_WIND: {
-		id: 7868,
-		name: 'Riddle of Wind',
-		icon: 'https://xivapi.com/i/002000/002543.png',
-		cooldown: 0,
-		potency: 65,
-	},
-
 	RIDDLE_OF_FIRE: {
 		id: 7395,
 		name: 'Riddle of Fire',
@@ -98,5 +105,19 @@ export default {
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
 		cooldown: 90,
+	},
+
+	ENLIGHTENMENT: {
+		id: 16474,
+		name: 'Enlightenment',
+		icon: 'https://xivapi.com/i/002000/002545.png',
+		cooldown: 1,
+	},
+
+	ANATMAN: {
+		id: 16475,
+		name: 'Anatman',
+		icon: 'https://xivapi.com/i/002000/002546.png',
+		cooldown: 60,
 	},
 }
