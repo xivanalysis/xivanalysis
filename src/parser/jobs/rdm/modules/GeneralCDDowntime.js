@@ -11,9 +11,11 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		[ACTIONS.ACCELERATION.id]: 25000,
 		[ACTIONS.SWIFTCAST.id]: 15000,
 		[ACTIONS.MANAFICATION.id]: 25000,
+		[ACTIONS.EMBOLDEN.id]: 15000,
 	}
 	trackedCds = [
 		ACTIONS.MANAFICATION.id,
+		ACTIONS.EMBOLDEN.id,
 		ACTIONS.FLECHE.id,
 		ACTIONS.CONTRE_SIXTE.id,
 		ACTIONS.ACCELERATION.id,
