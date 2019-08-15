@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {SimpleStatistic} from 'parser/core/modules/Statistics'
+import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
@@ -171,8 +171,8 @@ export default class Gauge extends Module {
 		_whiteManaLostToInvulnerable = 0
 		_blackManaLostToInvulnerable = 0
 
-		_whiteManaWastedToManafication = 0
-		_blackManaLosttoManafication = 0
+		_whiteManaLostToManafication = 0
+		_blackManaLostToManafication = 0
 
 		// Chart handling
 		_history = {
@@ -246,7 +246,7 @@ export default class Gauge extends Module {
 			this._whiteManaLostToInvulnerable += gaugeAction.mana.white.invulnLoss
 			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnLoss
 
-			this._whiteManaWastedToManafication += gaugeAction.mana.white.manaficationLoss
+			this._whiteManaLostToManafication += gaugeAction.mana.white.manaficationLoss
 			this._blackManaWastedToManafication += gaugeAction.mana.black.manaficationLoss
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
@@ -342,10 +342,14 @@ export default class Gauge extends Module {
 				</Fragment>,
 			}))
 
-			this.statistics.add(new SimpleStatistic({
-				title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">Manafication Loss: White</Trans>,
-				icon: ACTIONS.MANAFICATION.icon,
-				value: this._whiteManaWastedToManafication,
+			this.statistics.add(new DualStatistic({
+				label: <Trans id="rdm.gauge.title-mana-lost-to-manafication">Manafication Loss:</Trans>,
+				title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">White</Trans>,
+				title2: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Black</Trans>,
+				icon: ACTIONS.VERHOLY.icon,
+				icon2: ACTIONS.VERFLARE.icon,
+				value: this._whiteManaLostToManafication,
+				value2: this._blackManaLostToManafication,
 				info: (
 					<Trans id="rdm.gauge.white-mana-lost-to-manafication-statistics">
 						It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
@@ -353,16 +357,27 @@ export default class Gauge extends Module {
 				),
 			}))
 
-			this.statistics.add(new SimpleStatistic({
-				title: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Manafication Loss: Black</Trans>,
-				icon: ACTIONS.MANAFICATION.icon,
-				value: this._blackManaLosttoManafication,
-				info: (
-					<Trans id="rdm.gauge.black-mana-lost-to-manafication-statistics">
-						It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
-					</Trans>
-				),
-			}))
+			// this.statistics.add(new SimpleStatistic({
+			// 	title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">Manafication Loss: White</Trans>,
+			// 	icon: ACTIONS.MANAFICATION.icon,
+			// 	value: this._whiteManaLostToManafication,
+			// 	info: (
+			// 		<Trans id="rdm.gauge.white-mana-lost-to-manafication-statistics">
+			// 			It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
+			// 		</Trans>
+			// 	),
+			// }))
+
+			// this.statistics.add(new SimpleStatistic({
+			// 	title: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Manafication Loss: Black</Trans>,
+			// 	icon: ACTIONS.MANAFICATION.icon,
+			// 	value: this._blackManaLostToManafication,
+			// 	info: (
+			// 		<Trans id="rdm.gauge.black-mana-lost-to-manafication-statistics">
+			// 			It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
+			// 		</Trans>
+			// 	),
+			// }))
 		}
 
 		output() {

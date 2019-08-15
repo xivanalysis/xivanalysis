@@ -1,0 +1,46 @@
+@value gutter from "theme.module.css";
+
+.dualStatistic {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.dualStatistic > :only-child {
+	margin: auto 0;
+}
+
+.titleWrapper{
+	display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	width: 50%;
+	justify-content: space-between;
+	white-space: pre;
+}
+
+.icon {
+	height: 1.5em;
+	margin-right: calc(gutter / 4);
+	margin-top: 5%;
+}
+
+.title {
+	margin-top: 5%;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	justify-content: space-between;
+	flex-grow: 10;
+	font-size: 1em;
+}
+
+.value {
+	margin-top: 5%;
+	font-size: 1.5em;
+	line-height: 1em;
+	margin: auto;
+	justify-content: space-between;
+}

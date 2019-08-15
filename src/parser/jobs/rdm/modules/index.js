@@ -5,6 +5,7 @@ import Procs from './Procs'
 import Combos from './Combos'
 import MeleeCombos from './MeleeCombos'
 import MovementSkills from './MovementSkills'
+export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
 export default [
 	Gauge,
