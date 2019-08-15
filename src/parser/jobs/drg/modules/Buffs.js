@@ -210,7 +210,7 @@ export default class Buffs extends Module {
 		// I'm not going to say how close I came to naming this variable badDragons
 		const badDragonSights = this._buffWindows[STATUSES.RIGHT_EYE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.LANCE_CHARGE.icon,
+			icon: ACTIONS.DRAGON_SIGHT.icon,
 			content: <Trans id="drg.buffs.suggestions.bad-dss.content">
 				Avoid using <ActionLink {...ACTIONS.DRAGON_SIGHT}/> immediately after <ActionLink {...ACTIONS.CHAOS_THRUST}/> or <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
 			</Trans>,
