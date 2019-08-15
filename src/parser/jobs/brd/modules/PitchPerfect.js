@@ -5,7 +5,7 @@ import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import React from 'react'
 import Module from 'parser/core/Module'
-import {Accordion, Icon, Message, List, Button, Label} from 'semantic-ui-react'
+import {Accordion, Icon, Message, List, Label} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
@@ -19,10 +19,6 @@ const SONG_DURATION = 30000 // 30s
 const ANIMATION_LOCK = 700 // 700ms (arbitrary, fite me)
 
 const CONVERSION_FACTOR = 0.1
-
-const DHIT_MOD = 1.25
-
-const TRAIT_STRENGTH = 0.20
 
 // Where's the lazy scale again?
 const PP = {
@@ -43,11 +39,12 @@ export default class PitchPerfect extends Module {
 	static handle = 'pitchPerfect'
 	static title = t('brd.pitch-perfect.title')`Pitch Perfect`
 	static dependencies = [
-		'additionalStats',
+		//AdditionalStats module is needed because it handles adding snapshots to events.
+		'additionalStats', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'downtime',
 		'suggestions',
 		'brokenLog',
-		'timeline',
+		'util',
 	]
 
 	_enemies = {}
@@ -95,27 +92,7 @@ export default class PitchPerfect extends Module {
 	}
 
 	_onPPDamage(event) {
-		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
-
-		let fixedMultiplier = event.debugMultiplier
-
-		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
-		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
-
-		// We get the unbuffed damage
-		let rawDamage = event.amount / fixedMultiplier
-
-		// And then strip off critical hit and direct hit mods
-		if (event.criticalHit) {
-			rawDamage = Math.trunc(rawDamage / this.additionalStats.critMod)
-		}
-
-		if (event.directHit) {
-			rawDamage = Math.trunc(rawDamage / DHIT_MOD)
-		}
-
-		// We get the approximated potency and then match to the closest real potency
-		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
+		const approximatedPotency = this.util.getApproximatePotency(event)
 		const potency = matchClosest(PP_POTENCY, approximatedPotency)
 
 		// We then infer the amount of stacks
@@ -126,7 +103,6 @@ export default class PitchPerfect extends Module {
 			...event,
 			type: 'pitchPerfect',
 			stacks: stacks,
-			rawDamage: rawDamage,
 		})
 	}
 
@@ -244,7 +220,7 @@ export default class PitchPerfect extends Module {
 						<ActionLink {...ACTIONS.PITCH_PERFECT}/> should only be used below 3 stacks when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
 					</Trans>,
 					reason: <Trans id="brd.pitch-perfect.cast-without-max-stacks.reason">
-						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {this._formatPotency(PP_POTENCY[0])} at the first stack, {this._formatPotency(PP_POTENCY[1])} at the second, and {this._formatPotency(PP_POTENCY[2])} at the third and final stack, so you don't want to use it before the last one.
+						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {this.util.formatDamageNumber(PP_POTENCY[0])} at the first stack, {this.util.formatDamageNumber(PP_POTENCY[1])} at the second, and {this.util.formatDamageNumber(PP_POTENCY[2])} at the third and final stack, so you don't want to use it before the last one.
 					</Trans>,
 				})
 			} else if (pp.issue === PP_NOT_CAST_AT_END) {
@@ -284,14 +260,14 @@ export default class PitchPerfect extends Module {
 					{this._lostPotencyFromStacks ?
 						<List.Item>
 							<Trans id="brd.pitch-perfect.without-max-stacks.total-potency-lost">
-								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._formatPotency(this._lostPotencyFromStacks)}</strong> potency
+								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this.util.formatDamageNumber(this._lostPotencyFromStacks)}</strong> potency
 							</Trans>
 						</List.Item> : null
 					}
 					{ this._lostPotencyFromMissedCast[0] ?
 						<List.Item>
 							<Trans id="brd.pitch-perfect.no-cast-at-end.total-potency-lost">
-								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._formatPotency(this._lostPotencyFromMissedCast[0])} to {this._formatPotency(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
+								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this.util.formatDamageNumber(this._lostPotencyFromMissedCast[0])} to {this.util.formatDamageNumber(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
 							</Trans>
 						</List.Item> : null
 					}
@@ -333,7 +309,7 @@ export default class PitchPerfect extends Module {
 
 			// Without Max Stacks Information Elements
 			timeLeftElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /></Trans>
-			potencyLostElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.potency-lost"><strong>{this._formatPotency(PP_MAX_POTENCY - PP_POTENCY[pp.stacks - 1])}</strong> potency lost versus casting at max stacks</Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.potency-lost"><strong>{this.util.formatDamageNumber(PP_MAX_POTENCY - PP_POTENCY[pp.stacks - 1])}</strong> potency lost versus casting at max stacks</Trans>
 
 		} else if (pp.issue === PP_NOT_CAST_AT_END) {
 			// Not Cast At End Title
@@ -348,7 +324,7 @@ export default class PitchPerfect extends Module {
 
 			// Not Cast At End Information Elements
 			timeLeftElement = <Trans id="brd.pitch-perfect.not-cast-at-end.time-left"><strong>{this.parser.formatDuration(pp.timeLeftOnSong)}</strong> left on <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} /> after the last cast of <ActionLink {...ACTIONS.PITCH_PERFECT}/></Trans>
-			potencyLostElement = <Trans id="brd.pitch-perfect.not-cast-at-end.potency-lost"><strong>{this._formatPotency(PP_POTENCY[0])} to {this._formatPotency(PP_MAX_POTENCY)}</strong> potency potentially lost</Trans>
+			potencyLostElement = <Trans id="brd.pitch-perfect.not-cast-at-end.potency-lost"><strong>{this.util.formatDamageNumber(PP_POTENCY[0])} to {this.util.formatDamageNumber(PP_MAX_POTENCY)}</strong> potency potentially lost</Trans>
 		}
 
 		const issueElements = tuples && tuples.length && tuples.map(t => {
@@ -373,7 +349,7 @@ export default class PitchPerfect extends Module {
 			key: pp.timestamp,
 			title: {
 				content: <>
-			<Icon name={titleIconName} className={titleIconClass}/> {this._createTimelineButton(timestamp)}
+			<Icon name={titleIconName} className={titleIconClass}/> {this.util.createTimelineButton(timestamp)}
 			{titleElement}
 			</>,
 			},
@@ -508,21 +484,4 @@ export default class PitchPerfect extends Module {
 			this._lostPotencyFromStacks += maxPotencyInWM - totalPotencyInWM
 		}
 	}
-
-	// Allows for proper localization of potency numbers, aka proper thousands separators and things like that.
-	_formatPotency(potency) {
-		return potency.toLocaleString()
-	}
-
-	_createTimelineButton(timestamp) {
-		return <Button
-			circular
-			compact
-			icon="time"
-			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
-			content={this.parser.formatTimestamp(timestamp)}
-		/>
-	}
-
 }

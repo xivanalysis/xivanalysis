@@ -2,9 +2,9 @@
  * @author Ririan
  */
 import React from 'react'
-import {Trans, Plural, NumberFormat} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
-import {List, Button, Label, Icon, Message} from 'semantic-ui-react'
+import {List, Label, Icon, Message} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -21,10 +21,6 @@ const DOTS = [
 	STATUSES.WINDBITE.id,
 ]
 
-const DHIT_MOD = 1.25
-
-const TRAIT_STRENGTH = 0.20
-
 const MAX_SHADOWBITE_POTENCY = ACTIONS.SHADOWBITE.potency[2]
 const MAX_SIDEWINDER_POTENCY = ACTIONS.SIDEWINDER.potency[2]
 
@@ -33,9 +29,9 @@ export default class Sidewinder extends Module {
 	static title = t('brd.sidewinder.title')`Sidewinders and Shadowbites`
 	static dependencies = [
 		'suggestions',
-		'timeline',
 		'enemies',
-		'additionalStats',
+		'additionalStats', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'util',
 	]
 
 	_amountOfBadSidewinders = 0
@@ -78,11 +74,8 @@ export default class Sidewinder extends Module {
 
 	//For some reason, shadowbite's cast target doesn't work properly in dungeon trash pulls so we gotta do it the hard way
 	_onShadowbiteDamage(event) {
-		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
-		const rawDamage = this._getRawDamage(event)
-
 		// We get the approximated potency and then match to the closest real potency
-		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
+		const approximatedPotency = this.util.getApproximatePotency(event)
 		const potency = matchClosest(ACTIONS.SHADOWBITE.potency, approximatedPotency)
 
 		// We then infer the amount of stacks
@@ -96,14 +89,12 @@ export default class Sidewinder extends Module {
 			abilityId: event.ability.guid,
 			isSingleTargetShadowbite: false,
 			hasBothDots: dotsApplied > 1,
-			// Due to varience, a guess can be less then the actual raw damage, so we have to check to make sure they are actually losing damage first
-			missedDamage: dotsApplied < 2 ? (MAX_SHADOWBITE_POTENCY * potencyDamageRatio / 100) : 0,
 			missedPotency: MAX_SHADOWBITE_POTENCY - ACTIONS.SHADOWBITE.potency[dotsApplied],
 			targetsHit: 0,
 			dotsApplied,
 		}
 
-		this._notBothDotsPotencyLoss += MAX_SHADOWBITE_POTENCY - matchClosest(ACTIONS.SHADOWBITE.potency, rawDamage * 100 / potencyDamageRatio)
+		this._notBothDotsPotencyLoss += MAX_SHADOWBITE_POTENCY - potency
 
 		if (!shadowbiteTimestampArray) {
 			if (!shadowbiteDamageEvent.hasBothDots) {
@@ -123,7 +114,6 @@ export default class Sidewinder extends Module {
 		if (dotsApplied.length < 2) {
 			this._amountOfBadSidewinders++
 
-			const potencyDamageRatio = this.additionalStats.potencyDamageRatio
 			const thisPotency = ACTIONS.SIDEWINDER.potency[dotsApplied.length]
 			this._notBothDotsPotencyLoss += MAX_SIDEWINDER_POTENCY - thisPotency
 
@@ -133,7 +123,6 @@ export default class Sidewinder extends Module {
 				dotsApplied: dotsApplied.length,
 				isSingleTargetShadowbite: false,
 				hasBothDots: false,
-				missedDamage:  (MAX_SIDEWINDER_POTENCY * potencyDamageRatio / 100) - (thisPotency * potencyDamageRatio / 100),
 				missedPotency: MAX_SIDEWINDER_POTENCY - thisPotency,
 				targetsHit: 1,
 			})
@@ -188,18 +177,6 @@ export default class Sidewinder extends Module {
 		}
 	}
 
-	_createTimelineButton(timestamp) {
-		return <Button
-			circular
-			compact
-			icon="time"
-			size="small"
-			floated="left"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
-			content={this.parser.formatTimestamp(timestamp)}
-		/>
-	}
-
 	output() {
 		if (!this._badCasts.length) {
 			return
@@ -211,9 +188,9 @@ export default class Sidewinder extends Module {
 			totalPotencyLost += cast.missedPotency
 
 			return <List.Item key={cast.timestamp}>
-				{this._createTimelineButton(cast.timestamp)}
+				{this.util.createTimelineButton(cast.timestamp)}
 				<List.Content verticalAlign="middle">
-					{this._createIssueTag(cast)} <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this._formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
+					{this._createIssueTag(cast)} <Label horizontal size="small" color="red" pointing="left"><Trans id="brd.sidewinder.list.missed-potency"><Icon name="arrow down"/>Lost {this.util.formatDamageNumber(cast.missedPotency)} potency</Trans></Label>
 				</List.Content>
 			</List.Item>
 		})
@@ -222,7 +199,7 @@ export default class Sidewinder extends Module {
 		<List divided relaxed>
 			{items}
 		</List>
-		<Message info attached="bottom"><Trans id="brd.sidewinder.total-mistakes"><Plural value={this._badCasts.length} one="# mistake" other="# mistakes"/> lost a total of <strong>{this._formatDamageNumber(totalPotencyLost)}</strong> potency</Trans></Message>
+		<Message info attached="bottom"><Trans id="brd.sidewinder.total-mistakes"><Plural value={this._badCasts.length} one="# mistake" other="# mistakes"/> lost a total of <strong>{this.util.formatDamageNumber(totalPotencyLost)}</strong> potency</Trans></Message>
 		</>
 	}
 
@@ -249,31 +226,6 @@ export default class Sidewinder extends Module {
 		return issue
 	}
 
-	_formatDamageNumber(damage) {
-		const truncDamage = Math.trunc(damage)
-		return <NumberFormat value={truncDamage} />
-	}
-
-	_getRawDamage(event) {
-		let fixedMultiplier = event.debugMultiplier
-
-		// AND ALSO FOR RANGED TRAIT, BECAUSE APPARENTLY IT'S PHYSICAL DAMAGE ONLY REEEEEEEEEE
-		fixedMultiplier = Math.trunc((fixedMultiplier + TRAIT_STRENGTH) * 100) / 100
-
-		// We get the unbuffed damage
-		let rawDamage = event.amount / fixedMultiplier
-
-		// And then strip off critical hit and direct hit mods
-		if (event.criticalHit) {
-			rawDamage = Math.trunc(rawDamage / this.additionalStats.critMod)
-		}
-
-		if (event.directHit) {
-			rawDamage = Math.trunc(rawDamage / DHIT_MOD)
-		}
-		return rawDamage
-	}
-
 	_addInSingleTargetShadowbites() {
 		let singleTargetAmount = 0
 		let needsSort = false
@@ -287,7 +239,6 @@ export default class Sidewinder extends Module {
 				damageEvent.isSingleTargetShadowbite = true
 
 				const missedPotency = ACTIONS.SIDEWINDER.potency[dotsApplied] - ACTIONS.SHADOWBITE.potency[dotsApplied]
-				damageEvent.missedDamage += missedPotency * this.additionalStats.potencyDamageRatio / 100
 				damageEvent.missedPotency += missedPotency
 
 				this._singleTargetShadowbitesPotencyLoss += missedPotency
@@ -296,11 +247,6 @@ export default class Sidewinder extends Module {
 					this._badCasts.push(damageEvent)
 				}
 			} else if (!damageEvent.hasBothDots) {
-				let lostDamage = 0
-				for (const damageEvent of eventArray) {
-					lostDamage += damageEvent.missedDamage
-				}
-				damageEvent.missedDamage = lostDamage
 				damageEvent.missedPotency *= eventArray.length
 			}
 			damageEvent.targetsHit = eventArray.length
