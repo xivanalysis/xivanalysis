@@ -173,7 +173,7 @@ export default class MovementSkills extends Module {
 		const totalThreshold = engagementThreshold + disps
 		//After discussing we're going to assume engagements were messed up if anything
 		//Min it so we don't get over 100% due to graces for those who manage perfect play
-		finalValue = Math.min((((disps + engagements) / totalThreshold) * 100), 100)
+		finalValue = Math.max(Math.min((((disps + engagements) / totalThreshold) * 100), 100), 0)
 
 		return new Requirement({
 			name: <ActionLink {...getDataBy(ACTIONS, 'id', dispID)} />,
