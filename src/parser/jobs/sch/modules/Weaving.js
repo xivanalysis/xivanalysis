@@ -44,6 +44,4 @@ export default class Weaving extends CoreWeaving {
 			value: badWeaves.length,
 		}))
 	}
-
-	// Might still need to override bad weaves logic in the base of biolysis, but further testing is required
 }
