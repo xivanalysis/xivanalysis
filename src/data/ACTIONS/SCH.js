@@ -8,7 +8,6 @@ export default {
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
-		castTime: 2.5,
 	},
 
 	ADLOQUIUM: {
@@ -68,7 +67,7 @@ export default {
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2,
 	},
 
 	SACRED_SOIL: {
@@ -90,7 +89,6 @@ export default {
 		name: 'Art of War',
 		icon: 'https://xivapi.com/i/002000/002819.png',
 		onGcd: true,
-		castTime: 2.5,
 	},
 
 	INDOMITABILITY: {
@@ -190,12 +188,16 @@ export default {
 		id: 17215,
 		name: 'Summon Eos',
 		icon: 'https://xivapi.com/i/002000/002823.png',
+		onGcd: true,
+		castTime: 2.5,
 	},
 
 	SUMMON_SELENE: {
 		id: 17216,
 		name: 'Summon Selene',
 		icon: 'https://xivapi.com/i/002000/002824.png',
+		onGcd: true,
+		castTime: 2.5,
 	},
 
 	// -----
@@ -227,7 +229,6 @@ export default {
 		id: 16544,
 		name: 'Fey Blessing',
 		icon: 'https://xivapi.com/i/002000/002855.png',
-		cooldown: 60,
 		pet: true,
 	},
 
@@ -242,7 +243,6 @@ export default {
 		id: 16547,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002846.png',
-		cooldown: 20,
 		pet: true,
 	},
 
