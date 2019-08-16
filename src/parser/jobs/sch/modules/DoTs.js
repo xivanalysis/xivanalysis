@@ -9,11 +9,11 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// In ms
+// In seconds
 const CLIPPING_SEVERITY = {
-	1000: SEVERITY.MINOR,
-	10000: SEVERITY.MEDIUM,
-	30000: SEVERITY.MAJOR,
+	6: SEVERITY.MINOR,
+	9: SEVERITY.MEDIUM,
+	12: SEVERITY.MAJOR,
 }
 
 export default class DoTs extends CoreDoTs {
@@ -45,15 +45,14 @@ export default class DoTs extends CoreDoTs {
 	}
 
 	addClippingSuggestions(clip) {
-
-		const maxClip = this.getClippingAmount(STATUSES.BIOLYSIS.id)
+		const clipPerMinute = this.getClippingAmount(STATUSES.BIOLYSIS.id)
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BIOLYSIS.icon,
 			content: <Trans id="sch.dots.suggestions.clipping.content">
 				Avoid refreshing Biolysis significantly before its expiration, except when at the end of the fight. Unnecessary refreshes use up your mana more than necessary, and may cause you to go out of mana.
 			</Trans>,
 			tiers: CLIPPING_SEVERITY,
-			value: maxClip,
+			value: clipPerMinute,
 			why: <Trans id="sch.dots.suggestions.clipping.why">
 				{this.parser.formatDuration(clip[STATUSES.BIOLYSIS.id])} of <StatusLink {...STATUSES.BIOLYSIS}/> lost to early refreshes.
 			</Trans>,
