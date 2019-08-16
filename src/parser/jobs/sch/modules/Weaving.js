@@ -37,7 +37,7 @@ export default class Weaving extends CoreWeaving {
 			why: <Plural
 				id="core.weaving.why"
 				value={badWeaves.length}
-				_1="# instance of incorrect weaving"
+				one="# instance of incorrect weaving"
 				other="# instances of incorrect weaving"
 			/>,
 			tiers: WEAVING_SEVERITY,
