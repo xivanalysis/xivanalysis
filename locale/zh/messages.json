@@ -569,7 +569,7 @@
   "sch.clericstance.suggestion.why": "在战姿持续时间内少用了{diff, plural, one {# 个技能} other {# 个技能}}。",
   "sch.clericstance.title": "战姿的使用",
   "sch.dots.checklist.description": "作为一名学者, Dot 是你伤害的重要部分。必须在任何时候都保持着。",
-  "sch.dots.checklist.name": "保持你的 Dot",
+  "sch.dots.checklist.name": "保持DoT不断",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> 的覆盖率",
   "sch.dots.checklist.requirement.miasma.name": "<0/> 覆盖率",
   "sch.dots.checklist.requirement.shadow-flare.name": "<0/> 覆盖率",
