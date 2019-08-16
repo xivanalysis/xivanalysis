@@ -35,7 +35,7 @@ export default class Weaving extends CoreWeaving {
 				Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
-				id="core.weaving.why"
+				id="sch.weaving.why"
 				value={badWeaves.length}
 				one="# instance of incorrect weaving"
 				other="# instances of incorrect weaving"
