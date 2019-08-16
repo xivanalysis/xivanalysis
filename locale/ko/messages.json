@@ -766,6 +766,7 @@
   "war.ir.suggestions.missedgcd.content": "<0/>구간마다 5회의 글쿨기를 포함하는것을 목표하십시오. 글쿨이 밀리거나 공격이 밀리지 않는데도 불구하고 5회를 맞추지 못한다면 기술 시전 속도를 높여보십시오.",
   "war.ir.suggestions.trackedActions.content": "<2/> 구간마다 <0/> 1회 그리고 <1/> 1회를 사용해야 합니다.",
   "war.ir.suggestions.trackedBadActions.content": "<2/> 구간내에서 <0/> 및 <1/> 사용을 반드시 피하십시오. 이 두 기술은 반드시 극직 데미지가 뜨므로 <3/> 버프의 효과가 필요 없습니다.",
+  "war.ir.title": "원초의 해방 사용기록",
   "war.stormseye.checklist.description": "폭풍의 눈은 피해량을 10% 높여주며, 전사의 데미지에 많은 부분을 차지합니다.",
   "war.stormseye.checklist.name": "폭풍의 눈 유지",
   "war.stormseye.checklist.uptime": "적용시간 <0/>",
