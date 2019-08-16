@@ -60,11 +60,16 @@ type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
 }>
 
 type HookCallback<T extends Event> = (event: T) => void
-
 export interface Hook<T extends Event> {
 	events: Array<T['type']>
 	filter: Filter<T>
 	callback: HookCallback<T>
+}
+
+type TimestampHookCallback = (opts: {timestamp: number}) => void
+interface TimestampHook {
+	timestamp: number
+	callback: TimestampHookCallback
 }
 
 export default class Module {
@@ -100,6 +105,9 @@ export default class Module {
 
 	// Bite me.
 	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
+
+	// Stored nearest-last so we can use the significantly-faster pop
+	private _timestampHookQueue: TimestampHook[] = []
 
 	constructor(
 		protected readonly parser: Parser,
@@ -244,7 +252,32 @@ export default class Module {
 		})
 	}
 
+	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. */
+	protected addTimestampHook(timestamp: number, cb: TimestampHookCallback) {
+		// Find the index we'll need to add this to keep things in order
+		const idx = this._timestampHookQueue.findIndex(h => h.timestamp < timestamp)
+
+		// Add the hook & return it so it can be removed
+		const hook: TimestampHook = {timestamp, callback: cb.bind(this)}
+		this._timestampHookQueue.splice(idx, 0, hook)
+
+		return hook
+	}
+
+	/** Remove a previously added timestamp hook */
+	protected removeTimestampHook(hook: TimestampHook) {
+		const idx = this._timestampHookQueue.indexOf(hook)
+		this._timestampHookQueue.splice(idx, 1)
+	}
+
 	triggerEvent(event: Event) {
+		// Fire off any timestamp hooks that are ready
+		const thq = this._timestampHookQueue
+		while (thq.length > 0 && thq[thq.length - 1].timestamp <= event.timestamp) {
+			const hook = thq.pop()!
+			hook.callback({timestamp: hook.timestamp})
+		}
+
 		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
 		if (typeof event.type !== 'symbol') {
 			this._runHooks(event, this._hooks.get('all'))

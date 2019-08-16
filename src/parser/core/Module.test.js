@@ -2,6 +2,8 @@ import Module from './Module'
 import Parser from './Parser'
 import {Meta} from './Meta'
 
+/* eslint-disable no-magic-numbers */
+
 class TestModule extends Module {
 	static handle = 'test'
 }
@@ -126,5 +128,33 @@ describe('Module', () => {
 		module.removeHook(hookRef)
 		module.triggerEvent(event)
 		expect(hook).toHaveBeenCalledTimes(1)
+	})
+
+	it('can hook a timestamp', () => {
+		module.addTimestampHook(50, hook)
+
+		module.triggerEvent({...event, timestamp: 1})
+		expect(hook).not.toHaveBeenCalled()
+
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook).toHaveBeenCalledTimes(1)
+	})
+
+	it('will catch up on multiple timestamp hooks in a single event', () => {
+		module.addTimestampHook(40, hook)
+		module.addTimestampHook(50, hook)
+		module.addTimestampHook(60, hook)
+
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook)
+			.toHaveBeenCalledTimes(3)
+			.toHaveBeenNthCalledWith(3, {timestamp: 60})
+	})
+
+	it('can remove timestamp hooks', () => {
+		const hookRef = module.addTimestampHook(50, hook)
+		module.removeTimestampHook(hookRef)
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook).not.toHaveBeenCalled()
 	})
 })
