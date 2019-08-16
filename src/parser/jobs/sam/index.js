@@ -25,7 +25,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.0',
-		to: '5.01',
+		to: '5.05',
 	},
 
 	contributors: [
@@ -33,6 +33,17 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-8-12'),
+		Changes: () => <>
+			5.05 SAM support plus some logic changes, including:&nbsp;
+			<ul>
+				<li>OGCD drift checks moved to core instead of SAM-only logic</li>
+				<li>Removal of Sen overwritten allowance and returning of Hagakure</li>
+				<li>Removal of Missed/Drift seconds suggestions</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2019-7-29'),
 		Changes: () => <> Fixed bugs with combos and a few typos </>,
 		contributors: [CONTRIBUTORS.RYAN],
