@@ -165,15 +165,15 @@ export default {
 		cooldown: 1,
 	},
 
-	WHISPERING_DAWN: {
-		id: 803,
+	SCH_WHISPERING_DAWN: {
+		id: 16537,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
 	},
 
-	FEY_ILLUMINATION: {
-		id: 805,
+	SCH_FEY_ILLUMINATION: {
+		id: 16538,
 		name: 'Fey Illumination',
 		icon: 'https://xivapi.com/i/002000/002829.png',
 		cooldown: 120,
@@ -206,6 +206,20 @@ export default {
 		name: 'Embrace',
 		icon: 'https://xivapi.com/i/002000/002826.png',
 		cooldown: 3,
+		pet: true,
+	},
+
+	WHISPERING_DAWN: {
+		id: 803,
+		name: 'Whispering Dawn',
+		icon: 'https://xivapi.com/i/002000/002827.png',
+		pet: true,
+	},
+
+	FEY_ILLUMINATION: {
+		id: 805,
+		name: 'Fey Illumination',
+		icon: 'https://xivapi.com/i/002000/002829.png',
 		pet: true,
 	},
 
