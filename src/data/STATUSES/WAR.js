@@ -34,14 +34,14 @@ export default {
 	},
 
 	SHAKE_IT_OFF: {
-		id: 7388,
+		id: 1457,
 		name: 'Shake It Off',
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		duration: 15,
 	},
 
 	HOLMGANG: {
-		id: 43,
+		id: 409,
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		duration: 6,
