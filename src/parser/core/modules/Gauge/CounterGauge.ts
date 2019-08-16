@@ -9,7 +9,7 @@ interface CounterHistory {
 	maximum: number
 }
 
-export interface CounterGaugeOptions {
+export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
 	initialValue?: number,
 	/** Minimum value of the gauge. Defaults to 0. */
@@ -37,7 +37,7 @@ export class CounterGauge extends AbstractGauge {
 
 	private history: CounterHistory[] = []
 
-	constructor(opts: CounterGaugeOptions & AbstractGaugeOptions = {}) {
+	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
 		this.minimum = opts.minimum || 0
