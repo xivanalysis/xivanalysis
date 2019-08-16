@@ -59,11 +59,11 @@ type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
 	by: 'player' | 'pet' | T['sourceID'],
 }>
 
-type HookCallback<T extends Event> = (event: T) => void
-export interface Hook<T extends Event> {
+type EventHookCallback<T extends Event> = (event: T) => void
+export interface EventHook<T extends Event> {
 	events: Array<T['type']>
 	filter: Filter<T>
-	callback: HookCallback<T>
+	callback: EventHookCallback<T>
 }
 
 type TimestampHookCallback = (opts: {timestamp: number}) => void
@@ -104,7 +104,7 @@ export default class Module {
 	}
 
 	// Bite me.
-	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
+	private _eventHooks = new Map<Event['type'], Set<EventHook<any>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
 	private _timestampHookQueue: TimestampHook[] = []
@@ -153,20 +153,27 @@ export default class Module {
 		return
 	}
 
-	protected addHook<T extends Event>(
+	/**
+	 * Deprecated pass-through for `addEventHook`, maintained for backwards compatibility.
+	 * @deprecated
+	 */
+	// tslint:disable-next-line:member-ordering
+	protected readonly addHook = this.addEventHook
+
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		cb: HookCallback<T>,
-	): Hook<T>
-	protected addHook<T extends Event>(
+		cb: EventHookCallback<T>,
+	): EventHook<T>
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
 		filter: Filter<T>,
-		cb: HookCallback<T>,
-	): Hook<T>
-	protected addHook<T extends Event>(
+		cb: EventHookCallback<T>,
+	): EventHook<T>
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		filterArg: Filter<T> | HookCallback<T>,
-		cbArg?: HookCallback<T>,
-	): Hook<T> | undefined {
+		filterArg: Filter<T> | EventHookCallback<T>,
+		cbArg?: EventHookCallback<T>,
+	): EventHook<T> | undefined {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		const cb = typeof filterArg === 'function'? filterArg : cbArg
@@ -201,12 +208,12 @@ export default class Module {
 
 		// Hook for each of the events
 		events.forEach(event => {
-			let hooks = this._hooks.get(event)
+			let hooks = this._eventHooks.get(event)
 
 			// Make sure the map has a key for us
 			if (!hooks) {
 				hooks = new Set()
-				this._hooks.set(event, hooks)
+				this._eventHooks.set(event, hooks)
 			}
 
 			// Set the hook
@@ -243,10 +250,17 @@ export default class Module {
 		return filter
 	}
 
-	// TODO: Test
-	protected removeHook(hook: Hook<any>) {
+	/**
+	 * Deprecated pass-through for `removeEventHook`, maintained for backwards compatibility.
+	 * @deprecated
+	 */
+	// tslint:disable-next-line:member-ordering
+	protected readonly removeHook = this.removeEventHook
+
+	/** Remove a previously added event hook. */
+	protected removeEventHook(hook: EventHook<any>) {
 		hook.events.forEach(event => {
-			const hooks = this._hooks.get(event)
+			const hooks = this._eventHooks.get(event)
 			if (!hooks) { return }
 			hooks.delete(hook)
 		})
@@ -280,12 +294,12 @@ export default class Module {
 
 		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
 		if (typeof event.type !== 'symbol') {
-			this._runHooks(event, this._hooks.get('all'))
+			this._runEventHooks(event, this._eventHooks.get('all'))
 		}
-		this._runHooks(event, this._hooks.get(event.type))
+		this._runEventHooks(event, this._eventHooks.get(event.type))
 	}
 
-	private _runHooks(event: Event, hooks?: Set<Hook<Event>>) {
+	private _runEventHooks(event: Event, hooks?: Set<EventHook<Event>>) {
 		if (!hooks) { return }
 		hooks.forEach(hook => {
 			// Check the filter
