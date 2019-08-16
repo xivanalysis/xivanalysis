@@ -8,8 +8,8 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
 export default class InnerRelease extends BuffWindowModule {
-	static handle = 'delirium'
-	static title = t('drk.delirium.title')`Delirium Usage`
+	static handle = 'ir'
+	static title = t('war.ir.title')`Inner Release Usage`
 
 	buffAction = ACTIONS.INNER_RELEASE
 	buffStatus = STATUSES.INNER_RELEASE

@@ -766,6 +766,7 @@
   "war.ir.suggestions.missedgcd.content": "Try to land 5 GCDs during every <0/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "war.ir.suggestions.trackedActions.content": "One use of <0/> and one use of <1/> should occur during every <2/> window.",
   "war.ir.suggestions.trackedBadActions.content": "Using <0/> or <1/> inside of <2/> should be avoided at all costs. These abilities are guaranteed to be a critical direct hit, and make no use of <3/>'s benefits.",
+  "war.ir.title": "Inner Release Usage",
   "war.stormseye.checklist.description": "Storm's Eye increases your damage by 10%, it is a substantial part of a Warrior's damage.",
   "war.stormseye.checklist.name": "Keep Storm's Eye Up",
   "war.stormseye.checklist.uptime": "<0/> uptime",
