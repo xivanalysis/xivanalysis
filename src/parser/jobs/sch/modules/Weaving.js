@@ -31,8 +31,8 @@ export default class Weaving extends CoreWeaving {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SCH_RUIN_II.icon,
 			content: <Trans id="sch.weaving.content">
-				Try to use <ActionLink {...ACTIONS.SCH_RUIN_II}/> or <ActionLink {...ACTIONS.BIOLYSIS}/> to weave between actions and keep your GCD rolling.
-				Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
+				Try to use <ActionLink {...ACTIONS.SCH_RUIN_II}/> and <ActionLink {...ACTIONS.BIOLYSIS}/> to weave your actions, and avoid weaving more actions than you have time for in a single GCD window.
+				Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
 			</Trans>,
 			why: <Plural
 				id="core.weaving.why"
