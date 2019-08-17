@@ -7,6 +7,7 @@ import GreasedLightning from './GreasedLightning'
 import MnkAoE from './MnkAoE'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
+import Steppies from './Steppies'
 
 export default [
 	BuffUptime,
@@ -18,4 +19,5 @@ export default [
 	MnkAoE,
 	RiddleOfFire,
 	Speedmod,
+	Steppies,
 ]
