@@ -427,7 +427,7 @@
   "mch.gauge.suggestions.heat-waste.why": "열기가 {0} 만큼 초과하였습니다.",
   "mch.gauge.title": "열기 및 전력 사용",
   "mch.gauge.trigger.negative-heat": "추측 열기 수치가 {0} 인 상태에서 <0/>가 사용되었습니다",
-  "mch.heat.accordion.message": "모든 과열 구간은 {OVERHEAT_GCD_TARGET} 회의 <0/> (핑이 높다면 {0}) 그리고 최대한 <1/>과 <2/>를 많이 끼워넣어야합니다. 아래에 과열 구간마다 사용된 글쿨기를 표시하며 클릭할시 넓게 보여줍니다.",
+  "mch.heat.accordion.message": "",
   "mch.heat.panel-count": "{0, plural, one {#글쿨} other {#글쿨}}",
   "mch.heat.title": "과열 구간",
   "mch.queen.accordion.message": "아래는 전투 동안 사용된 <0/> 구간들입니다. 진입한 시간, 배터리 유지시간 및 사용 그리고 구간마다 적에게 입힌 데미지를 표시하며 각 구간마다 클릭할 시 오토마톤 퀸의 사용된 스킬들을 표시할 수 있습니다.",
