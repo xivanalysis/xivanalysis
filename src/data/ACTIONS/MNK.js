@@ -44,7 +44,7 @@ export default {
 		name: 'Six-Sided Star',
 		icon: 'https://xivapi.com/i/002000/002547.png',
 		onGcd: true,
-		cooldown: 5,
+		gcdRecast: 5,
 	},
 
 	// -----
