@@ -278,6 +278,7 @@ export default {
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		onGcd: true,
+		gcdRecast: 2.5,
 		cooldown: 60,
 	},
 
@@ -287,6 +288,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003181.png',
 		onGcd: true,
 		cooldown: 60,
+		gcdRecast: 2.5,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 	},
 
@@ -295,6 +297,7 @@ export default {
 		name: 'Kaeshi: Goken',
 		icon: 'https://xivapi.com/i/003000/003182.png',
 		onGcd: true,
+		gcdRecast: 2.5,
 		cooldown: 60,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 
@@ -305,6 +308,7 @@ export default {
 		name: 'Kaeshi: Setsugekka',
 		icon: 'https://xivapi.com/i/003000/003183.png',
 		onGcd: true,
+		gcdRecast: 2.5,
 		cooldown: 60,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
 
