@@ -42,19 +42,17 @@ export default class MultiHit extends Module {
 	_onComplete() {
 		const  lowTargetAttacks = Object.values(this._incorrectMultihitSkills).reduce((acc, cur) => acc + cur, 0)
 
-		if (lowTargetAttacks > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.OUTBURST.icon,
-				content: <Trans id="smn.multihit.suggestions.content">
-					Do not use <ActionLink {...ACTIONS.PAINFLARE}/> on a single target, or <ActionLink {...ACTIONS.ENERGY_SIPHON}/> or <ActionLink {...ACTIONS.OUTBURST}/> on less than 3 targets.
-					Instead use <ActionLink {...ACTIONS.FESTER}/>, <ActionLink {...ACTIONS.ENERGY_DRAIN}/>, or <ActionLink {...ACTIONS.RUIN_III}/> respectively, as they will deal more total damage.
-				</Trans>,
-				tiers: SEVERITY_LOW_TARGET_ATTACKS,
-				value: lowTargetAttacks,
-				why: <Trans id="smn.multihit.suggestions.why">
-					{lowTargetAttacks} <Plural value={lowTargetAttacks} one="multi-target attack was" other="multi-target attacks were"/> used against too few targets.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.OUTBURST.icon,
+			content: <Trans id="smn.multihit.suggestions.content">
+				Do not use <ActionLink {...ACTIONS.PAINFLARE}/> on a single target, or <ActionLink {...ACTIONS.ENERGY_SIPHON}/> or <ActionLink {...ACTIONS.OUTBURST}/> on less than 3 targets.
+				Instead use <ActionLink {...ACTIONS.FESTER}/>, <ActionLink {...ACTIONS.ENERGY_DRAIN}/>, or <ActionLink {...ACTIONS.RUIN_III}/> respectively, as they will deal more total damage.
+			</Trans>,
+			tiers: SEVERITY_LOW_TARGET_ATTACKS,
+			value: lowTargetAttacks,
+			why: <Trans id="smn.multihit.suggestions.why">
+				{lowTargetAttacks} <Plural value={lowTargetAttacks} one="multi-target attack was" other="multi-target attacks were"/> used against too few targets.
+			</Trans>,
+		}))
 	}
 }
