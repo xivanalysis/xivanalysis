@@ -20,7 +20,7 @@ const SEVERITY_LOW_TARGET_ATTACKS = {
 
 export default class MultiHit extends Module {
 	static handle = 'multihit'
-	static title = t('smn.multihit.title')`Mutli-Hit`
+	static title = t('smn.multihit.title')`Multi-Hit`
 	static dependencies = [
 		'suggestions',
 	]

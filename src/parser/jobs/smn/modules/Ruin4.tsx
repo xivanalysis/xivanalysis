@@ -50,7 +50,7 @@ export default class Ruin4 extends Module {
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onPlayerCast)
-		this.addHook('cast', {by: 'pet'}, this.onPetCast)
+		this.addHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
@@ -71,14 +71,13 @@ export default class Ruin4 extends Module {
 	}
 
 	private onPetCast(event: CastEvent) {
-		if (FURTHER_RUIN_PET_ACTIONS.includes(event.ability.guid) &&
-			!this.invuln.getInvulnerableUptime('all', event.timestamp)) {
-			this.petSkillCount++
-			if (this.currentStackCount >= MAX_FURTHER_RUIN_COUNT) {
-				this.overage++
-			} else {
-				this.currentStackCount++
-			}
+		if (this.invuln.getInvulnerableUptime('all', event.timestamp)) { return }
+
+		this.petSkillCount++
+		if (this.currentStackCount >= MAX_FURTHER_RUIN_COUNT) {
+			this.overage++
+		} else {
+			this.currentStackCount++
 		}
 	}
 
@@ -87,39 +86,36 @@ export default class Ruin4 extends Module {
 	}
 
 	private onComplete() {
-		if (this.overage > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: STATUSES.FURTHER_RUIN.icon,
-				content: <Trans id="smn.ruin-iv.overage.content">
-					You used Egi Assault skills in a way that overcapped your stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
-				</Trans>,
-				tiers: SEVERITY_STACK_COUNT,
-				value: this.overage,
-				why: <Trans id="smn.ruin-iv.overage.why">
-					{this.overage} Further Ruin <Plural value={this.overage} one="stack was" other="stacks were"/> lost.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: STATUSES.FURTHER_RUIN.icon,
+			content: <Trans id="smn.ruin-iv.overage.content">
+				Do not use Egi Assault skills when already at the maximum number of <ActionLink {...STATUSES.FURTHER_RUIN}/> stacks.
+			</Trans>,
+			tiers: SEVERITY_STACK_COUNT,
+			value: this.overage,
+			why: <Trans id="smn.ruin-iv.overage.why">
+				{this.overage} Further Ruin <Plural value={this.overage} one="stack was" other="stacks were"/> lost.
+			</Trans>,
+		}))
 
 		let numberLost = this.earthenArmorCount
 		if (this.playerSkillCount > this.petSkillCount) {
 			numberLost += this.playerSkillCount - this.petSkillCount
 		}
-		if (numberLost > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: STATUSES.FURTHER_RUIN.icon,
-				content: <Trans id="smn.ruin-iv.lost.content">
-					You used Egi Assault skills in a way that did not generate stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
-					This is typically due to the target dying or becoming invincible, a new pet being summoned before the action could be executed,
-					or using <ActionLink {...ACTIONS.ASSAULT_I_EARTHEN_ARMOR}/>, which does not generate a Further Ruin stack.
-				</Trans>,
-				tiers: SEVERITY_STACK_COUNT,
-				value: numberLost,
-				why: <Trans id="smn.ruin-iv.lost.why">
-					{numberLost} Further Ruin <Plural value={numberLost} one="stack was" other="stacks were"/> not generated.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: STATUSES.FURTHER_RUIN.icon,
+			content: <Trans id="smn.ruin-iv.lost.content">
+				Use Egi Assault skills in a way that will generate stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
+				Egi Assaults will not generate a stack if used against targets that die or become invincible or if a new
+				pet is summoned before the assault is executed.  Titan-Egi's <ActionLink {...ACTIONS.ASSAULT_I_EARTHEN_ARMOR}/>
+				does not generate a Further Ruin stack.
+			</Trans>,
+			tiers: SEVERITY_STACK_COUNT,
+			value: numberLost,
+			why: <Trans id="smn.ruin-iv.lost.why">
+				{numberLost} Further Ruin <Plural value={numberLost} one="stack was" other="stacks were"/> not generated.
+			</Trans>,
+		}))
 
 		if (this.currentStackCount > 0) {
 			this.suggestions.add(new Suggestion({

@@ -39,8 +39,8 @@ export default new Meta({
 	],
 
 	changelog: [{
-		date: new Date('2019-08-10'),
-		Changes: () => <>Implemented Shandowbringers changes.</>,
+		date: new Date('2019-08-16'),
+		Changes: () => <>Implemented Shadowbringers changes.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	}],
 })

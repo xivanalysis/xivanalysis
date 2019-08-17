@@ -42,7 +42,6 @@ const TITAN_WARN_PERCENT = 5
 const WIND_BLADE_RECAST = 3000
 const SLIPSTREAM_TICKS = 6 //5 from duration + 1 on cast
 const SLIPSTREAM_TICK_SPEED = 3000
-const GALE_ENFORCER_ID = 1001869
 
 const SLIPSTREAM_SEVERITY = {
 	1: SEVERITY.MINOR,
@@ -164,8 +163,6 @@ export default class Pets extends Module {
 	}
 
 	_onPetDamage(event) {
-		if (!this.parser.byPlayerPet(event)) { return }
-
 		const abilityId = event.ability.guid
 
 		if (abilityId === ACTIONS.WIND_BLADE.id &&
@@ -176,7 +173,7 @@ export default class Pets extends Module {
 				cast: event,
 				ticks: [],
 			})
-		} else if (abilityId === GALE_ENFORCER_ID) {
+		} else if (abilityId === STATUSES.GALE_ENFORCER.id) {
 			// if a Gale Enforcer tick happens without a recorded Slipstream, synthesize one here
 			if (!this._slipstreams.length) {
 				this._slipstreams.push({
@@ -185,8 +182,10 @@ export default class Pets extends Module {
 				})
 			}
 			this._slipstreams[this._slipstreams.length - 1].ticks.push(event)
-		} else if (IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
-					event.hits.length > 1) {
+		} else if (
+			IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
+			event.hits.length > 1
+		) {
 			this._ifritMultiHits++
 		}
 	}
@@ -254,37 +253,33 @@ export default class Pets extends Module {
 
 			return acc + (possibleTicks - Math.min(possibleTicks, tickCount))
 		}, 0)
-		if (missedTicks > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SLIPSTREAM.icon,
-				tiers: SLIPSTREAM_SEVERITY,
-				value: missedTicks,
-				content: <Trans id="smn.pets.suggestions.slipstream-ticks.content">
-					Ensure you use <ActionLink {...ACTIONS.SLIPSTREAM} /> such that it can deal damage for its entire duration.
-					Summoning another pet or recasting Slipstream will prevent any remaining ticks of a cast.
-				</Trans>,
-				why: <Trans id="smn.pets.suggestions.slipstream-ticks.why">
-					<Plural value={missedTicks} one="# missed tick" other="# missed ticks" /> of Slipstream.
-				</Trans>,
-			}))
-		}
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SLIPSTREAM.icon,
+			tiers: SLIPSTREAM_SEVERITY,
+			value: missedTicks,
+			content: <Trans id="smn.pets.suggestions.slipstream-ticks.content">
+				Ensure you use <ActionLink {...ACTIONS.SLIPSTREAM} /> such that it can deal damage for its entire duration.
+				Summoning another pet or recasting Slipstream will prevent any remaining ticks of a cast.
+			</Trans>,
+			why: <Trans id="smn.pets.suggestions.slipstream-ticks.why">
+				<Plural value={missedTicks} one="# missed tick" other="# missed ticks" /> of Slipstream.
+			</Trans>,
+		}))
 
 		// Ensure Garuda is being used in AoE
-		if (this._badWindBlades > 0) {
-			const garudaStPercent = (((this._badWindBlades * WIND_BLADE_RECAST) / this._petUptime.get(PETS.GARUDA_EGI.id)) * 100)
-
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SUMMON.icon,
-				tiers: GARUDA_ST_SEVERITY,
-				value: garudaStPercent,
-				content: <Trans id="smn.pets.suggestions.garuda-st.content">
-					Garuda-Egi should only be used for AoE.
-				</Trans>,
-				why: <Trans id="smn.pets.suggestions.garuda-st.why">
-					Garuda-Egi was attacking a single target {garudaStPercent.toFixed(0)}% of the time it was active.
-				</Trans>,
-			}))
-		}
+		const garudaStPercent = Math.min(100, (((this._badWindBlades * WIND_BLADE_RECAST) / this._petUptime.get(PETS.GARUDA_EGI.id)) * 100))
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SUMMON.icon,
+			tiers: GARUDA_ST_SEVERITY,
+			value: garudaStPercent,
+			content: <Trans id="smn.pets.suggestions.garuda-st.content">
+				Garuda-Egi should only be used for AoE.  Use Ifrit-Egi instead when only a single target is available, as it will deal more damage.
+			</Trans>,
+			why: <Trans id="smn.pets.suggestions.garuda-st.why">
+				Garuda-Egi was attacking a single target {garudaStPercent.toFixed(0)}% of the time it was active.
+			</Trans>,
+		}))
 
 		// Since Ifrit's EA2 and Enkindle hit AoE, we can sometimes tell that
 		// it was used in an AoE situation, but we can't tell any more often than
@@ -295,10 +290,10 @@ export default class Pets extends Module {
 				icon: ACTIONS.SUMMON_III.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="smn.pets.suggestions.ifrit-aoe.content">
-					Ifrit-Egi should only be used for single target.
+					Ifrit-Egi should only be used for single target.  Use Garuda-Egi instead when multiple targets are available, as it will deal more damage.
 				</Trans>,
 				why: <Trans id="smn.pets.suggestions.ifrit-aoe.why">
-					Ifrit-Egi hit multiple targets with {this._ifritMultiHits} uses of <ActionLink {...ACTIONS.FLAMING_CRUSH} /> or <ActionLink {...ACTIONS.INFERNO} />.
+					Ifrit-Egi hit multiple targets with <Plural value={this._ifritMultiHits} one="# use" other="# uses" /> of <ActionLink {...ACTIONS.FLAMING_CRUSH} /> or <ActionLink {...ACTIONS.INFERNO} />.
 				</Trans>,
 			}))
 		}
