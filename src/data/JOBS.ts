@@ -16,6 +16,14 @@ const colors = {
 	misc: '#767676',
 }
 
+export enum Attribute {
+	STRENGTH,
+	DEXTERITY,
+	VITALITY,
+	INTELLIGENCE,
+	MIND,
+}
+
 const roleData = {
 	TANK: {
 		id: 1,
@@ -69,6 +77,7 @@ export interface Job {
 	icon: string
 	colour: string
 	role: Role['id']
+	attribute: Attribute
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
@@ -80,6 +89,7 @@ const JOBS = {
 		icon: 'pld',
 		colour: '#a8d2e6',
 		role: ROLES.TANK.id,
+		attribute: Attribute.STRENGTH,
 	},
 	WARRIOR: {
 		name: t('game.job.warrior')`Warrior`,
@@ -87,6 +97,7 @@ const JOBS = {
 		icon: 'war',
 		colour: '#cf2621',
 		role: ROLES.TANK.id,
+		attribute: Attribute.STRENGTH,
 	},
 	DARK_KNIGHT: {
 		name: t('game.job.dark-knight')`Dark Knight`,
@@ -94,6 +105,7 @@ const JOBS = {
 		icon: 'drk',
 		colour: '#d126cc',
 		role: ROLES.TANK.id,
+		attribute: Attribute.STRENGTH,
 	},
 	GUNBREAKER: {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
@@ -101,6 +113,7 @@ const JOBS = {
 		icon: 'gnb',
 		colour: '#796d30', // TODO
 		role: ROLES.TANK.id,
+		attribute: Attribute.STRENGTH,
 	},
 
 	// Healer
@@ -110,6 +123,7 @@ const JOBS = {
 		icon: 'whm',
 		colour: '#fff0dc',
 		role: ROLES.HEALER.id,
+		attribute: Attribute.MIND,
 	},
 	SCHOLAR: {
 		name: t('game.job.scholar')`Scholar`,
@@ -117,6 +131,7 @@ const JOBS = {
 		icon: 'sch',
 		colour: '#8657ff',
 		role: ROLES.HEALER.id,
+		attribute: Attribute.MIND,
 	},
 	ASTROLOGIAN: {
 		name: t('game.job.astrologian')`Astrologian`,
@@ -124,6 +139,7 @@ const JOBS = {
 		icon: 'ast',
 		colour: '#ffe74a',
 		role: ROLES.HEALER.id,
+		attribute: Attribute.MIND,
 	},
 
 	// Melee
@@ -133,6 +149,7 @@ const JOBS = {
 		icon: 'mnk',
 		colour: '#d69c00',
 		role: ROLES.MELEE.id,
+		attribute: Attribute.STRENGTH,
 	},
 	DRAGOON: {
 		name: t('game.job.dragoon')`Dragoon`,
@@ -140,6 +157,7 @@ const JOBS = {
 		icon: 'drg',
 		colour: '#4164cd',
 		role: ROLES.MELEE.id,
+		attribute: Attribute.STRENGTH,
 	},
 	NINJA: {
 		name: t('game.job.ninja')`Ninja`,
@@ -147,6 +165,7 @@ const JOBS = {
 		icon: 'nin',
 		colour: '#af1964',
 		role: ROLES.MELEE.id,
+		attribute: Attribute.DEXTERITY,
 	},
 	SAMURAI: {
 		name: t('game.job.samurai')`Samurai`,
@@ -154,6 +173,7 @@ const JOBS = {
 		icon: 'sam',
 		colour: '#e46d04',
 		role: ROLES.MELEE.id,
+		attribute: Attribute.STRENGTH,
 	},
 
 	// Phys Ranged
@@ -163,6 +183,7 @@ const JOBS = {
 		icon: 'brd',
 		colour: '#91ba5e',
 		role: ROLES.PHYSICAL_RANGED.id,
+		attribute: Attribute.DEXTERITY,
 	},
 	MACHINIST: {
 		name: t('game.job.machinist')`Machinist`,
@@ -170,6 +191,7 @@ const JOBS = {
 		icon: 'mch',
 		colour: '#6ee1d6',
 		role: ROLES.PHYSICAL_RANGED.id,
+		attribute: Attribute.DEXTERITY,
 	},
 	DANCER: {
 		name: t('game.job.dancer')`Dancer`,
@@ -177,6 +199,7 @@ const JOBS = {
 		icon: 'dnc',
 		colour: '#ff0000', // TODO
 		role: ROLES.PHYSICAL_RANGED.id,
+		attribute: Attribute.DEXTERITY,
 	},
 
 	// Magic Ranged
@@ -186,6 +209,7 @@ const JOBS = {
 		icon: 'blm',
 		colour: '#a579d6',
 		role: ROLES.MAGICAL_RANGED.id,
+		attribute: Attribute.INTELLIGENCE,
 	},
 	SUMMONER: {
 		name: t('game.job.summoner')`Summoner`,
@@ -193,6 +217,7 @@ const JOBS = {
 		icon: 'smn',
 		colour: '#2d9b78',
 		role: ROLES.MAGICAL_RANGED.id,
+		attribute: Attribute.INTELLIGENCE,
 	},
 	RED_MAGE: {
 		name: t('game.job.red-mage')`Red Mage`,
@@ -200,6 +225,7 @@ const JOBS = {
 		icon: 'rdm',
 		colour: '#e87b7b',
 		role: ROLES.MAGICAL_RANGED.id,
+		attribute: Attribute.INTELLIGENCE,
 	},
 }
 
