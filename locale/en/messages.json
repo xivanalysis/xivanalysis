@@ -427,7 +427,7 @@
   "mch.gauge.suggestions.heat-waste.why": "You lost {0} Heat to an overcapped gauge.",
   "mch.gauge.title": "Heat & Battery Gauge",
   "mch.gauge.trigger.negative-heat": "<0/> was used when the simulated Heat gauge was at {0}.",
-  "mch.heat.accordion.message": "Every overheat window should ideally include {OVERHEAT_GCD_TARGET} casts of <0/> ({0} is also okay if you play with high ping) and as many casts of <1/> and <2/> as you can squeeze in between them. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.",
+  "mch.heat.accordion.message": "Every overheat window should ideally include {OVERHEAT_GCD_TARGET} casts of <0/> and enough casts of <1/> and <2/> to avoid overcapping their charges. If you clip a lot while weaving, overcapping is still preferable to dropping a Heat Blast. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.",
   "mch.heat.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.heat.title": "Overheat Windows",
   "mch.queen.accordion.message": "The list below contains every <0/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.",
