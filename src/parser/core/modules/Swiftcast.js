@@ -1,7 +1,6 @@
 import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {RotationTable} from 'components/ui/RotationTable'
 import {ActionLink} from 'components/ui/DbLink'
 
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
@@ -40,49 +39,7 @@ export default class Swiftcast extends BuffWindowModule {
 		}
 	}
 
-	// sooper hacky...
-	output() {
-		const rotationData = this.buffWindows
-			.map(buffWindow => {
-				const windowStart = buffWindow.start - this.parser.fight.start_time
-				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.fight.start_time
-				const targetsData = {}
-
-				if (this.expectedGCDs) {
-					targetsData.missedgcd = {
-						actual: buffWindow.gcds,
-						expected: this.getBuffWindowExpectedGCDs(buffWindow),
-					}
-				}
-
-				if (this.requiredGCDs) {
-					targetsData.badgcd = {
-						actual: this.getBuffWindowRequiredGCDsUsed(buffWindow),
-						expected: this.getBuffWindowExpectedGCDs(buffWindow),
-					}
-				}
-
-				if (this.trackedActions) {
-					this.trackedActions.actions.forEach((trackedAction) => {
-						targetsData[trackedAction.action.name] = {
-							actual: buffWindow.getActionCountByIds([trackedAction.action.id]),
-							expected: this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction),
-						}
-					})
-				}
-
-				return {
-					start: windowStart,
-					end: windowEnd,
-					targetsData,
-					rotation: buffWindow.rotation,
-				}
-			})
-
-		return <RotationTable
-			data={rotationData}
-			onGoto={this.timeline.show}
-		/>
+	reduceExpectedGCDsEndOfFight() {
+		return 0
 	}
-
 }
