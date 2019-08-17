@@ -7,7 +7,7 @@ import STATUSES from 'data/STATUSES'
 
 import {CastEvent, DamageEvent, HitType} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist';
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
