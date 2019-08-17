@@ -427,7 +427,7 @@
   "mch.gauge.suggestions.heat-waste.why": "",
   "mch.gauge.title": "",
   "mch.gauge.trigger.negative-heat": "",
-  "mch.heat.accordion.message": "",
+  "mch.heat.accordion.message": "Während Hyperladung aktiv ist, solltest du <0/> mindestens {OVERHEAT_GCD_TARGET}-mal ausführen und <1/> und <2/> oft genug benutzen, sodass keine generierten Aufladungen verschwendet werden. Solltest du jedoch zwischen Angriffen oft in der Animation gefangen sein, ist es ratsam, lieber Aufladungen verschwenden, anstatt eine Hitzeschuss-Aktivierung zu verpassen. Jedes Zeitfenster unten zeigt an, wie viele Fähigkeiten mit globaler Abklingzeit darin enthalten waren. (Um alle benutzten Fähigkeiten zusehen, klappe das Fenster aus.)",
   "mch.heat.panel-count": "{0, plural, one {GCD} other {GCDs}}",
   "mch.heat.title": "",
   "mch.queen.accordion.message": "",
