@@ -1,7 +1,7 @@
 import ACTIONS from 'data/ACTIONS'
 import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 //meikyo is used after the 7th gcd
-const FIRSTUSEOFFSETMEIKYO = 1750
+const FIRSTUSEOFFSETMEIKYO = 17500
 //tsubame is used after the first midare, on the 11th GCD
 const FIRSTUSEOFFSETTSUBAME = 27500
 export default class OGCDDowntime extends CooldownDowntime {
