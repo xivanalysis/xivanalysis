@@ -114,6 +114,14 @@ export default class Module {
 			// but this is still required for JS modules (and internal handling)
 			(this as any)[dep.prop] = parser.modules[dep.handle]
 		})
+	}
+
+	/**
+	 * Because JS construct order is jank and nobody can fix it. Don't call this.
+	 * Please. I'm begging you.
+	 * @todo refactor `init` to public so this shit isn't needed.
+	 */
+	doTheMagicInitDance() {
 		this.init()
 	}
 

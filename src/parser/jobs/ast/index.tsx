@@ -46,6 +46,14 @@ export default new Meta({
 	changelog: [
 		{
 
+			date: new Date('2019-08-10'),
+			Changes: () => <>
+				<ActionLink {...ACTIONS.HOROSCOPE} /> reworked tracking for accuracy
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
 			date: new Date('2019-08-08'),
 			Changes: () => <>
 				<strong>Get more of those cards</strong>:

@@ -16,7 +16,7 @@ export default {
 		name: 'True Strike',
 		icon: 'https://xivapi.com/i/000000/000209.png',
 		onGcd: true,
-		potency: 180,
+		potency: 240,
 	},
 
 	SNAP_PUNCH: {
@@ -31,7 +31,7 @@ export default {
 		name: 'Twin Snakes',
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
-		potency: 130,
+		potency: 170,
 	},
 
 	ARM_OF_THE_DESTROYER: {
@@ -77,6 +77,6 @@ export default {
 		id: 69,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
-		cooldown: 60,
+		cooldown: 120,
 	},
 }

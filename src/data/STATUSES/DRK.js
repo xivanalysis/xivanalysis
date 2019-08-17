@@ -8,6 +8,7 @@ export default {
 		id: 742,
 		name: 'Blood Weapon',
 		icon: 'https://xivapi.com/i/013000/013109.png',
+		duration: 10,
 	},
 	BLACKEST_NIGHT: {
 		id: 1178,
@@ -43,5 +44,6 @@ export default {
 		id: 1972,
 		name: 'Delirium',
 		icon: 'https://xivapi.com/i/013000/013121.png',
+		duration: 10,
 	},
 }

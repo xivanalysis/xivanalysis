@@ -8,7 +8,6 @@ export default {
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
-		castTime: 2.5,
 	},
 
 	ADLOQUIUM: {
@@ -41,10 +40,11 @@ export default {
 		cooldown: 90,
 	},
 
-	FEY_BLESSING: {
-		id: 0,
+	// This is the action cast by the SCH
+	SCH_FEY_BLESSING: {
+		id: 16543,
 		name: 'Fey Blessing',
-		icon: 'https://xivapi.com/i/002000/002822.png',
+		icon: 'https://xivapi.com/i/002000/002854.png',
 		cooldown: 60,
 	},
 
@@ -55,7 +55,7 @@ export default {
 		cooldown: 120,
 	},
 
-	CONSOLATION: {
+	SCH_CONSOLATION: {
 		id: 16546,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002851.png',
@@ -67,7 +67,7 @@ export default {
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2,
 	},
 
 	SACRED_SOIL: {
@@ -89,7 +89,6 @@ export default {
 		name: 'Art of War',
 		icon: 'https://xivapi.com/i/002000/002819.png',
 		onGcd: true,
-		castTime: 2.5,
 	},
 
 	INDOMITABILITY: {
@@ -164,15 +163,15 @@ export default {
 		cooldown: 1,
 	},
 
-	WHISPERING_DAWN: {
-		id: 803,
+	SCH_WHISPERING_DAWN: {
+		id: 16537,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
 	},
 
-	FEY_ILLUMINATION: {
-		id: 805,
+	SCH_FEY_ILLUMINATION: {
+		id: 16538,
 		name: 'Fey Illumination',
 		icon: 'https://xivapi.com/i/002000/002829.png',
 		cooldown: 120,
@@ -185,14 +184,86 @@ export default {
 		cooldown: 3,
 	},
 
+	SUMMON_EOS: {
+		id: 17215,
+		name: 'Summon Eos',
+		icon: 'https://xivapi.com/i/002000/002823.png',
+		onGcd: true,
+		castTime: 2.5,
+	},
+
+	SUMMON_SELENE: {
+		id: 17216,
+		name: 'Summon Selene',
+		icon: 'https://xivapi.com/i/002000/002824.png',
+		onGcd: true,
+		castTime: 2.5,
+	},
+
 	// -----
-	// PET
+	// PET ACTIONS
 	// -----
 	EMBRACE: {
 		id: 802,
 		name: 'Embrace',
 		icon: 'https://xivapi.com/i/002000/002826.png',
 		cooldown: 3,
+		pet: true,
 	},
 
+	WHISPERING_DAWN: {
+		id: 803,
+		name: 'Whispering Dawn',
+		icon: 'https://xivapi.com/i/002000/002827.png',
+		pet: true,
+	},
+
+	FEY_ILLUMINATION: {
+		id: 805,
+		name: 'Fey Illumination',
+		icon: 'https://xivapi.com/i/002000/002829.png',
+		pet: true,
+	},
+
+	FEY_BLESSING: {
+		id: 16544,
+		name: 'Fey Blessing',
+		icon: 'https://xivapi.com/i/002000/002855.png',
+		pet: true,
+	},
+
+	SERAPHIC_VEIL: {
+		id: 16548,
+		name: 'Seraphic Veil',
+		icon: 'https://xivapi.com/i/0020000/002847.png',
+		pet: true,
+	},
+
+	CONSOLATION: {
+		id: 16547,
+		name: 'Consolation',
+		icon: 'https://xivapi.com/i/002000/002846.png',
+		pet: true,
+	},
+
+	ANGELS_WHISPER: {
+		id: 16550,
+		name: 'Angel\'s Whisper',
+		icon: 'https://xivapi.com/i/002000/002848.png',
+		pet: true,
+	},
+
+	FEY_UNION: {
+		id: 7438,
+		name: 'Fey Union',
+		icon: 'https://xivapi.com/i/002000/002818.png',
+		pet: true,
+	},
+
+	SERAPHIC_ILLUMINATION: {
+		id: 16551,
+		name: 'Seraphic Illumination',
+		icon: 'https://xivapi.com/i/002000/002849.png',
+		pet: true,
+	},
 }
