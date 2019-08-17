@@ -118,8 +118,8 @@ export default class Ruin2 extends Module {
 		const potLossPerR2 = RUIN3_POT - RUIN2_POT
 		// It would be a waste to not use any stacks of Further Ruin left after the
 		// last weave of the fight, so do not warn about them.
-		const issues = this._issues.filter(this.isNotEndOfFightRuin4).length
-		const warnings = this._warnings.filter(this.isNotEndOfFightRuin4).length
+		const issues = this._issues.filter(cast => { return this.isNotEndOfFightRuin4(cast) }).length
+		const warnings = this._warnings.filter(cast => { return this.isNotEndOfFightRuin4(cast) }).length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RUIN_III.icon,
