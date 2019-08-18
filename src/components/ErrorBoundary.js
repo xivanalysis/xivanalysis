@@ -1,4 +1,5 @@
 import {Trans} from '@lingui/react'
+import classNames from 'classnames'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
@@ -24,19 +25,20 @@ class ErrorBoundary extends Component {
 	}
 
 	renderRefreshButton = (error) => {
-		if (error instanceof NotFoundError) {
-			return <Header>
-				<div className={styles.refreshheader + ' pull-right'}>
-					<span className={styles.refresh} onClick={this.refreshFights}>
-						<Icon name="refresh"/>
-						<Trans id="core.find.refresh">
-						Refresh
-						</Trans>
-					</span>
-				</div>
-			</Header>
+		if (!(error instanceof NotFoundError)) {
+			return ''
 		}
-		return ''
+
+		return <Header>
+			<div className={classNames(styles.refreshHeader, 'pull-right')}>
+				<span className={styles.refresh} onClick={this.refreshFights}>
+					<Icon name="refresh"/>
+					<Trans id="core.find.refresh">
+					Refresh
+					</Trans>
+				</span>
+			</div>
+		</Header>
 	}
 
 	@observable componentError
