@@ -27,7 +27,7 @@ export default class Weaving extends CoreWeaving {
 		}
 
 		// Few triples is medium, any more is major
-		const badWeaves = this._badWeaves
+		const badWeavesCount = this._badWeaves.length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SCH_RUIN_II.icon,
 			content: <Trans id="sch.weaving.content">
@@ -36,12 +36,12 @@ export default class Weaving extends CoreWeaving {
 			</Trans>,
 			why: <Plural
 				id="sch.weaving.why"
-				value={badWeaves.length}
+				value={badWeavesCount}
 				one="# instance of incorrect weaving"
 				other="# instances of incorrect weaving"
 			/>,
 			tiers: WEAVING_SEVERITY,
-			value: badWeaves.length,
+			value: badWeavesCount,
 		}))
 	}
 }
