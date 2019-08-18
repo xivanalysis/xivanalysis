@@ -2,5 +2,6 @@
 # for more info about CODEOWNERS file
 
 # Just locking core to require a check by me for now. This can be expanded as required.
-/src/components/ @ackwell
-/src/parser/core/ @ackwell
+# NOTE: Disabled while I'm on holiday and generally uncontactable. Will be re-enabled when back.
+#/src/components/ @ackwell
+#/src/parser/core/ @ackwell
