@@ -37,7 +37,7 @@ export class CounterGauge extends AbstractGauge {
 
 	private history: CounterHistory[] = []
 
-	public get value(): number {
+	get value(): number {
 		return this._value
 	}
 
