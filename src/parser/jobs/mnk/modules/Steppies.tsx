@@ -5,7 +5,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
-import {CastEvent, DamageEvent, HitType} from 'fflogs'
+import {CastEvent, DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -61,8 +61,7 @@ export default class Steppies extends Module {
 
 	private onStep(event: DamageEvent): void {
 		if (this.currentBoot && this.currentBoot.timestamp === event.timestamp) {
-			// TODO: This should use the HitType normaliser but it's not actually connected to DamageEvent properly
-			this.currentBoot.crit = event.hitType === HitType.CRITICAL
+			this.currentBoot.crit = event.criticalHit
 
 			this.steppies.push(this.currentBoot)
 		}
@@ -110,11 +109,11 @@ export default class Steppies extends Module {
 	}
 
 	getUnbuffedCount(boots: Boot[]): number {
-		return boots.reduce((total, current) => current.weak ? total+1 : total, 0)
+		return boots.reduce((total, current) => current.weak ? total : total+1, 0)
 	}
 
 	getUncritCount(boots: Boot[]): number {
-		return boots.reduce((total, current) => current.crit ? total+1 : total, 0)
+		return boots.reduce((total, current) => current.crit ? total : total+1, 0)
 	}
 
 	getLeadenPercent(boots: Boot[]): number {
