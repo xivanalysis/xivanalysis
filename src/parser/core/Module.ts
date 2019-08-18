@@ -22,8 +22,8 @@ export function dependency(target: Module, prop: string) {
 	const constructor = target.constructor as typeof Module
 
 	// Make sure we're not modifying every single module
-	if (constructor.dependencies === Module.dependencies) {
-		constructor.dependencies = []
+	if (!constructor.hasOwnProperty('dependencies')) {
+		constructor.dependencies = [...constructor.dependencies]
 	}
 
 	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
@@ -114,6 +114,14 @@ export default class Module {
 			// but this is still required for JS modules (and internal handling)
 			(this as any)[dep.prop] = parser.modules[dep.handle]
 		})
+	}
+
+	/**
+	 * Because JS construct order is jank and nobody can fix it. Don't call this.
+	 * Please. I'm begging you.
+	 * @todo refactor `init` to public so this shit isn't needed.
+	 */
+	doTheMagicInitDance() {
 		this.init()
 	}
 

@@ -36,4 +36,14 @@ export const changelog = [
 		Changes: () => <>Dancer supported for Shadowbringers.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-08-05'),
+		Changes: () => <>Updated combo logic to allow Fountain to drop if Cascade was used directly before Technical Step.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-08-09'),
+		Changes: () => <>Added proc buff display to timeline.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

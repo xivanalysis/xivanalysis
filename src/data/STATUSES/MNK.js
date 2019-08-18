@@ -9,21 +9,21 @@ export default {
 		id: 107,
 		name: 'Opo-Opo Form',
 		icon: 'https://xivapi.com/i/010000/010212.png',
-		duration: 10000,
+		duration: 15,
 	},
 
 	RAPTOR_FORM: {
 		id: 108,
 		name: 'Raptor Form',
 		icon: 'https://xivapi.com/i/010000/010213.png',
-		duration: 10000,
+		duration: 15,
 	},
 
 	COEURL_FORM: {
 		id: 109,
 		name: 'Coeurl Form',
 		icon: 'https://xivapi.com/i/010000/010214.png',
-		duration: 10000,
+		duration: 15,
 	},
 
 	MANTRA: {
@@ -65,6 +65,13 @@ export default {
 		duration: 30,
 	},
 
+	EARTHS_REPLY: {
+		id: 1180,
+		name: 'Earth\'s Reply',
+		icon: 'https://xivapi.com/i/012000/012531.png',
+		duration: 30,
+	},
+
 	FISTS_OF_FIRE: {
 		id: 103,
 		name: 'Fists of Fire',
@@ -76,13 +83,6 @@ export default {
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/012000/012528.png',
 		duration: 20,
-	},
-
-	EARTHS_REPLY: {
-		id: 1180,
-		name: 'Earth\'s Reply',
-		icon: 'https://xivapi.com/i/012000/012531.png',
-		duration: 30,
 	},
 
 	BROTHERHOOD: {
@@ -124,5 +124,19 @@ export default {
 		name: 'Greased Lightning IV',
 		icon: 'https://xivapi.com/i/010000/010207.png',
 		duration: 16,
+	},
+
+	LEADEN_FIST: {
+		id: 1861,
+		name: 'Leaden Fist',
+		icon: 'https://xivapi.com/i/012000/012533.png',
+		duration: 30,
+	},
+
+	ANATMAN: {
+		id: 1862,
+		name: 'Anatman',
+		icon: 'https://xivapi.com/i/012000/012534.png',
+		duration: 30,
 	},
 }

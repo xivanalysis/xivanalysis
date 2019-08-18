@@ -1,9 +1,8 @@
-import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import CoreWeaving from 'parser/core/modules/Weaving'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -17,75 +16,32 @@ const WEAVING_SEVERITY = {
 }
 
 export default class Weaving extends CoreWeaving {
-	static dependencies = [
-		...CoreWeaving.dependencies,
-		'combatants',
-		'suggestions',
-	]
-	static title = t('sch.weaving.title')`Weaving Issues`
 	static displayOrder = DISPLAY_ORDER.WEAVING
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onScholarCast)
-	}
-
-	// Renamed so as not to overwrite parent module
-	// Just for tracking pos
-	_onScholarCast(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (!action || !action.onGcd) {
-			return
-		}
-
-		this._pos = this.combatants.selected.resources
-	}
-
-	// Now this, we want to overwrite
+	// override to give SCH-relevant weave suggestions
+	// Pretty much copy-pasted from the CoreWeaving Module otherwise
 	_onComplete() {
+		// If there's been at least one gcd, run a cleanup on any remnant data
+		if (this._leadingGcdEvent) {
+			this._saveIfBad()
+		}
+
+		// Few triples is medium, any more is major
+		const badWeavesCount = this._badWeaves.length
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.RUIN_II.icon,
-			content: <Trans id="sch.weaving.suggestion.content">
-				<ActionLink {...ACTIONS.RUIN_II} /> may seem like a great choice for weaving,
-				but because its potency is <i>absurdly</i> low compared to <ActionLink {...ACTIONS.BROIL_III} />,
-				it is actually better to just clip your GCD with Broil than to waste your mana.
-				An exception is if you are moving - so the module below only tracks instances of Ruin 2 while not moving.
+			icon: ACTIONS.SCH_RUIN_II.icon,
+			content: <Trans id="sch.weaving.content">
+				Try to use <ActionLink {...ACTIONS.SCH_RUIN_II}/> and <ActionLink {...ACTIONS.BIOLYSIS}/> to weave your actions, and avoid weaving more actions than you have time for in a single GCD window.
+				Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
 			</Trans>,
-			why:  <Trans id="sch.weaving.suggestion.why">
-				<Plural value={this._badWeaves.length} one="# instance" other="# instances"/> instances of weaving with Ruin II while not moving.
-			</Trans>,
+			why: <Plural
+				id="sch.weaving.why"
+				value={badWeavesCount}
+				one="# instance of incorrect weaving"
+				other="# instances of incorrect weaving"
+			/>,
 			tiers: WEAVING_SEVERITY,
-			value: this._badWeaves.length,
+			value: badWeavesCount,
 		}))
-	}
-
-	isBadWeave(weave) {
-		// The first weave won't have an ability (faked event)
-		// They... really shouldn't be weaving before the first GCD... I think
-		// TODO: ^?
-		if (!weave.leadingGcdEvent.ability) {
-			return weave.weaves.length
-		}
-
-		// Ruin 2 is just bad for weaving
-		if (weave.leadingGcdEvent.ability.guid === ACTIONS.RUIN_II.id &&
-			weave.weaves.length > 0
-		) {
-			// ...unless you were using it for movement
-			// Maybe you moved a pixel just to silence this warning.
-			if (!this.movedSinceLastGcd()) {
-				return true
-			}
-		}
-
-		return false
-	}
-
-	// Copied over from SMN Ruin 2
-	movedSinceLastGcd() {
-		return (
-			Math.abs(this.combatants.selected.resources.x - this._pos.x) > 1 &&
-			Math.abs(this.combatants.selected.resources.y - this._pos.y) > 1
-		)
 	}
 }

@@ -3,9 +3,9 @@ import stable from 'stable'
 import {getFflogsEvents} from 'api'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import {isDefined} from 'utilities'
 
 const QUERY_FILTER = [
-
 	// Player-applied debuffs that don't get pulled when checking by actor
 	{
 		types: ['applydebuff', 'removedebuff'],
@@ -47,14 +47,22 @@ export default class AdditionalEvents extends Module {
 
 	async normalise(events) {
 		// Build a query from the active targets
-		const targetQuery = Object.keys(this.enemies.activeTargets).map(key => {
-			const instances = this.enemies.activeTargets[key]
-			let query = '(target.id=' + key
-			if (instances.size > 0) {
-				query += ` and target.instance in (${Array.from(instances).join(',')})`
-			}
-			return query + ')'
-		}).join(' or ')
+		const targetQuery = Object.keys(this.enemies.activeTargets)
+			.map(actorId => {
+				const actor = this.enemies.getEntity(Number(actorId))
+				if (!actor) {
+					return
+				}
+
+				const instances = this.enemies.activeTargets[actorId]
+				let query = '(target.id=' + actor.guid
+				if (instances.size > 0) {
+					query += ` and target.instance in (${Array.from(instances).join(',')})`
+				}
+				return query + ')'
+			})
+			.filter(isDefined)
+			.join(' or ')
 
 		// Build the filter string
 		let filter = QUERY_FILTER.map(section => {
@@ -71,8 +79,8 @@ export default class AdditionalEvents extends Module {
 
 		// Exclude events by the current player and their pets, as we already have them from the main event lookup
 		const playerIds = [
-			this.parser.player.id,
-			...this.parser.player.pets.map(pet => pet.id),
+			this.parser.player.guid,
+			...this.parser.player.pets.map(pet => pet.guid),
 		].join(',')
 		filter =  `(${filter}) and source.id not in (${playerIds})`
 

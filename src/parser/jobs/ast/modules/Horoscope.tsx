@@ -15,10 +15,8 @@ import React from 'react'
 
 const SEVERETIES = {
 	ACTIVATES_MISSED: {
-		1: SEVERITY.MEDIUM,
-	},
-	NO_HOROSCOPE_HELIOS: {
-		1: SEVERITY.MEDIUM,
+		1: SEVERITY.MINOR,
+		2: SEVERITY.MEDIUM,
 	},
 }
 
@@ -44,103 +42,37 @@ export default class Horoscope extends Module {
 
 	@dependency private suggestions!: Suggestions
 
-	_active = false
-	_uses = 0
-	_missedActivations = 0
-	_horoscope: HoroscopeWindow = {
-		start: 0,
-		end: null,
-		casts: [],
-	}
-	_history: HoroscopeWindow[] = []
+	private uses = 0
+	private activations = 0
 
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE.id, by: 'player'}, this._onHoroscope)
-
-		this.addHook('applybuff', {abilityId: HOROSCOPE_STATUSES, by: 'player', to: 'player'}, this._onApplyBuff)
-		this.addHook('removebuff', {abilityId: HOROSCOPE_STATUSES, by: 'player', to: 'player'}, this._onRemoveBuff)
-		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE_ACTIVATION.id, by: 'player'}, this._onActivate)
-		this.addHook('cast', {abilityId: HELIOS_CASTS, by: 'player'}, this._onHelios)
-
-		this.addHook('complete', this._onComplete)
+		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
+		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
+		this.addHook('complete', this.onComplete)
 	}
 
-	_onHoroscope(event: CastEvent) {
-		this._uses++
-		// If it's a LIGHTSPEED cast, start tracking
-		this._startHoroscope(event.timestamp)
+	private onHoroscope(event: CastEvent) {
+		this.uses++
+	}
+	private onActivate(event: CastEvent) {
+		this.activations++
 	}
 
-	_onApplyBuff(event: BuffEvent) {
-		if (event.ability.guid === STATUSES.HOROSCOPE.id) {
-			if (this._active) { return }
-			this._startHoroscope(event.timestamp)
-		}
-	}
-	_onRemoveBuff(event: BuffEvent) {
-		if (event.ability.guid === STATUSES.HOROSCOPE_HELIOS.id && this._active) {
-			// Dropped Horoscope without activating
-			this._missedActivations++
-			this._stopAndSave(event.timestamp)
-		}
-		if (event.ability.guid === STATUSES.HOROSCOPE.id && this._active) {
-			// Dropped Horoscope without activating
-		if (this._horoscope.casts.length === 0) {
-				this._missedActivations++
-				this._stopAndSave(event.timestamp)
-			}
-		}
-	}
-	_onHelios(event: CastEvent) {
-		if (!this._active) {
-			return
-		}
-		this._horoscope.casts.push(event)
-	}
-	_onActivate(event: CastEvent) {
-		this._horoscope.casts.push(event)
-		this._stopAndSave(event.timestamp)
-	}
-
-	_startHoroscope(start: number) {
-		this._active = true
-		this._horoscope = {
-			start,
-			end: null,
-			casts: [],
-		}
-	}
-
-	_stopAndSave(endTime = this.parser.currentTimestamp) {
-		// Make sure we've not already stopped this one
-		if (!this._active) {
-			return
-		}
-		this._active = false
-		this._horoscope.end = endTime
-
-		this._history.push(this._horoscope)
-	}
-
-	_onComplete() {
-		// Clean up any existing casts
-		if (this._active) {
-			this._stopAndSave()
-		}
-
+	onComplete() {
 		/*
 			SUGGESTION: Didn't activate
 		*/
+		const missedActivations = this.uses - this.activations
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HOROSCOPE_ACTIVATION.icon,
 			content: <Trans id="ast.horoscope.suggestion.expired.content">
 				<ActionLink {...ACTIONS.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
 			</Trans>,
 			why: <Trans id="ast.horoscope.suggestion.expired.why">
-				<Plural value={this._missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
+				<Plural value={missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
 			</Trans>,
 			tiers: SEVERETIES.ACTIVATES_MISSED,
-			value: this._missedActivations,
+			value: missedActivations,
 		}))
 
 	}
