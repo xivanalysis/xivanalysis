@@ -24,7 +24,7 @@ export default new Meta({
 	</>,
 
 	supportedPatches: {
-		from: '5.0',
+		from: '5.05',
 		to: '5.05',
 	},
 
@@ -33,7 +33,7 @@ export default new Meta({
 	],
 
 	changelog: [{
-		date: new Date('2019-8-12'),
+		date: new Date('2019-8-19'),
 		Changes: () => <>
 			5.05 SAM support plus some logic changes, including:&nbsp;
 			<ul>
