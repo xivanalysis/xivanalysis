@@ -356,28 +356,6 @@ export default class Gauge extends Module {
 					</Trans>
 				),
 			}))
-
-			// this.statistics.add(new SimpleStatistic({
-			// 	title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">Manafication Loss: White</Trans>,
-			// 	icon: ACTIONS.MANAFICATION.icon,
-			// 	value: this._whiteManaLostToManafication,
-			// 	info: (
-			// 		<Trans id="rdm.gauge.white-mana-lost-to-manafication-statistics">
-			// 			It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
-			// 		</Trans>
-			// 	),
-			// }))
-
-			// this.statistics.add(new SimpleStatistic({
-			// 	title: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Manafication Loss: Black</Trans>,
-			// 	icon: ACTIONS.MANAFICATION.icon,
-			// 	value: this._blackManaLostToManafication,
-			// 	info: (
-			// 		<Trans id="rdm.gauge.black-mana-lost-to-manafication-statistics">
-			// 			It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
-			// 		</Trans>
-			// 	),
-			// }))
 		}
 
 		output() {

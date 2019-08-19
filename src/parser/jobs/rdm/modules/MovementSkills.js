@@ -34,25 +34,18 @@ export default class MovementSkills extends Module {
 
 	constructor(...args) {
 		super(...args)
-		//this.addHook('cast', {by: 'player'}, this._onCast)
+
 		this.addHook('cast', {
 			by: 'player',
-			abilityId: ACTIONS.MANAFICATION.id,
+			abilityId: [
+				ACTIONS.MANAFICATION.id,
+				ACTIONS.CORPS_A_CORPS.id,
+				ACTIONS.DISPLACEMENT.id,
+				ACTIONS.ENGAGEMENT.id,
+			],
 		}, this._onCast)
-		this.addHook('cast', {
-			by: 'player',
-			abilityId: ACTIONS.CORPS_A_CORPS.id,
-		}, this._onCast)
-		this.addHook('cast', {
-			by: 'player',
-			abilityId: ACTIONS.DISPLACEMENT.id,
-		}, this._onCast)
-		this.addHook('cast', {
-			by: 'player',
-			abilityId: ACTIONS.ENGAGEMENT.id,
-		}, this._onCast)
-		//this._history.push(this._lastManafic)
 		this.addHook('complete', this._onComplete)
+
 		//So we don't get negative numbers on the final panel display
 		this._lastManafic.timestamp = this.parser.fight.start_time
 	}
