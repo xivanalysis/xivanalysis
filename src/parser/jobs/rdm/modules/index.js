@@ -4,6 +4,8 @@ import GeneralCDDowntime from './GeneralCDDowntime'
 import Procs from './Procs'
 import Combos from './Combos'
 import MeleeCombos from './MeleeCombos'
+import MovementSkills from './MovementSkills'
+export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 
 export default [
 	Gauge,
@@ -12,4 +14,5 @@ export default [
 	Procs,
 	Combos,
 	MeleeCombos,
+	MovementSkills,
 ]
