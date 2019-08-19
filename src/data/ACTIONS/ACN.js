@@ -60,7 +60,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
-	RUIN_II: {
+	SMN_RUIN_II: {
 		id: 172,
 		name: 'Ruin II',
 		icon: 'https://xivapi.com/i/000000/000502.png',

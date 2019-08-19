@@ -176,13 +176,19 @@ export default class GlobalCooldown extends Module {
 			isCasterTaxed = true
 		}
 
-		let normalizedGcd = gcdLength
-		if (!gcdInfo.isInstant) {
-			normalizedGcd = normalizedGcd * ((BASE_GCD / 1000) / castTime)
-		}
+		const correctedCooldown = action.gcdRecast != null
+			? action.gcdRecast
+			: action.cooldown
 
-		normalizedGcd *= (1 / speedMod)
-		normalizedGcd = Math.round(normalizedGcd)
+		const normaliseWith = gcdInfo.isInstant
+			? correctedCooldown
+			: castTime
+
+		const normalizedGcd = Math.round(
+			gcdLength
+			* ((BASE_GCD / 1000) / normaliseWith)
+			* (1 / speedMod)
+		)
 
 		this.gcds.push({
 			timestamp: gcdInfo.event.timestamp,
@@ -190,9 +196,7 @@ export default class GlobalCooldown extends Module {
 			normalizedLength: normalizedGcd,
 			speedMod,
 			castTime,
-			cooldown: action.gcdRecast != null
-				? action.gcdRecast
-				: action.cooldown,
+			cooldown: correctedCooldown,
 			casterTaxed: isCasterTaxed,
 			actionId: action.id,
 			isInstant: gcdInfo.isInstant,

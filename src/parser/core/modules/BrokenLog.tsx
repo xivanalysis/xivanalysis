@@ -92,7 +92,7 @@ export default class BrokenLog extends Module {
 				<Table.Body>
 					{Array.from(this.triggers.values()).map(({module, reason}) => (
 						<Table.Row>
-							<NormalisedMessage message={module.title} id={module.i18n_id}/>
+							<Table.Cell><NormalisedMessage message={module.title} id={module.i18n_id}/></Table.Cell>
 							<Table.Cell>{reason}</Table.Cell>
 						</Table.Row>
 					))}

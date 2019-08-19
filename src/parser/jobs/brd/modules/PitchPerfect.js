@@ -241,7 +241,7 @@ export default class PitchPerfect extends Module {
 			if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
 				panelProperties.tuples.push({
 					issue: <Trans id="brd.pitch-perfect.cast-without-max-stacks">
-						<ActionLink {...ACTIONS.PITCH_PERFECT}/> should only below 3 stacks when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
+						<ActionLink {...ACTIONS.PITCH_PERFECT}/> should only be used below 3 stacks when you know there are no more DoT ticks left until the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET} />.
 					</Trans>,
 					reason: <Trans id="brd.pitch-perfect.cast-without-max-stacks.reason">
 						<ActionLink {...ACTIONS.PITCH_PERFECT}/> potency is {this._formatPotency(PP_POTENCY[0])} at the first stack, {this._formatPotency(PP_POTENCY[1])} at the second, and {this._formatPotency(PP_POTENCY[2])} at the third and final stack, so you don't want to use it before the last one.
@@ -323,7 +323,7 @@ export default class PitchPerfect extends Module {
 		if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
 			// Without Max Stacks Title
 			titleElement = <Trans id="brd.pitch-perfect.cast-without-max-stacks.title">
-				{ACTIONS.PITCH_PERFECT.name} used at <Plural value={pp.stacks} one="# cast" other="# stacks"/>.
+				{ACTIONS.PITCH_PERFECT.name} used at <Plural value={pp.stacks} one="# stack" other="# stacks"/>.
 			</Trans>
 			titleIconName = 'remove'
 			titleIconClass = 'text-error'

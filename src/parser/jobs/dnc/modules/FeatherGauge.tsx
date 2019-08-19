@@ -9,10 +9,11 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/Combos'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
 
 const FEATHER_GENERATORS = [
@@ -33,6 +34,7 @@ const MAX_FEATHERS = 4
 export default class FeatherGauge extends Module {
 	static handle = 'feathergauge'
 	static title = t('dnc.feather-gauge.title')`Feather Gauge`
+	static displayOrder = DISPLAY_ORDER.FEATHERS
 
 	@dependency private suggestions!: Suggestions
 
@@ -47,6 +49,13 @@ export default class FeatherGauge extends Module {
 		this.addHook('cast', {by: 'player', abilityId: FEATHER_CONSUMERS}, this.onConsumeFeather)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
+	}
+
+	public feathersSpentInRange(start: number, end: number): number {
+		if (start > end) {
+			return -1
+		}
+		return this.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
 	}
 
 	private onCastGenerator(event: AoeEvent) {
@@ -136,7 +145,7 @@ export default class FeatherGauge extends Module {
 			<span className={styles.helpText}>
 				<Trans id="dnc.feather-gauge.graph.help-text">This graph is a rough estimate of your feather gauge, at best. Take it with a hefty grain of salt.</Trans>
 			</span>
-				<TimeLineChart data={data} />
+			<TimeLineChart data={data} />
 		</Fragment>
 	}
 }

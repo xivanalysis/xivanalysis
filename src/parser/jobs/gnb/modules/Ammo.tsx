@@ -88,7 +88,7 @@ export default class Ammo extends Module {
 			},
 			this.onSpender,
 		)
-		this.addHook('aoedamage', {abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
+		this.addHook('aoedamage', {by: 'player', abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}

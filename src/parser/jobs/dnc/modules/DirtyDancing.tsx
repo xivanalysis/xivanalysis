@@ -10,14 +10,16 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {AoeEvent} from 'parser/core/modules/AoE'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import {AoeEvent} from 'parser/core/modules/Combos'
+import Downtime from 'parser/core/modules/Downtime'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
@@ -87,19 +89,19 @@ class Dance {
 export default class DirtyDancing extends Module {
 	static handle = 'dirtydancing'
 	static title = t('dnc.dirty-dancing.title')`Dance Issues`
+	static displayOrder = DISPLAY_ORDER.DIRTY_DANCING
 
 	@dependency private checklist!: CheckList
 	@dependency private suggestions!: Suggestions
 	@dependency private invuln!: Invulnerability
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
+	@dependency private downtime!: Downtime
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
 	private dirtyDances = 0
 	private footlooseDances = 0
-	private firstDevilment = false
-	private badDevilments = 0
 
 	private previousUseTimestamp = {
 		[ACTIONS.STANDARD_STEP.id]: this.parser.fight.start_time,
@@ -114,9 +116,12 @@ export default class DirtyDancing extends Module {
 		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
 		this.addHook('cast', {by: 'player'}, this.continueDance)
 		this.addHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DEVILMENT.id}, this.onDevilment)
 		this.addHook('aoedamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
 		this.addHook('complete', this.onComplete)
+	}
+
+	dancesInRange(startTime: number, endTime: number) {
+		return this.danceHistory.filter(dance => dance.start >= startTime && dance.start <= endTime).length
 	}
 
 	private addDanceToHistory(event: CastEvent): Dance {
@@ -126,7 +131,7 @@ export default class DirtyDancing extends Module {
 		const stepId = event.ability.guid
 		if (this.previousUseTimestamp[stepId]) {
 			const lastUse = this.previousUseTimestamp[stepId]
-			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.invuln.getInvulnerableUptime('any', lastUse, event.timestamp))
+			const drift = Math.max(0, event.timestamp - lastUse - STEP_COOLDOWN_MILLIS[stepId] - this.downtime.getDowntime(lastUse, event.timestamp))
 			this.totalDrift[stepId] += drift
 			this.previousUseTimestamp[stepId] = event.timestamp
 		}
@@ -194,22 +199,10 @@ export default class DirtyDancing extends Module {
 		dance.resolved = true
 	}
 
-	// Don't ding if this is the first Devilment, depending on which job the Dancer is partnered with, it may
-	// be appropriate to use Devilment early. In all other cases, Devilment should be used during Technical Finish
-	private onDevilment(event: CastEvent) {
-		if (!this.firstDevilment) {
-			this.firstDevilment = true
-			return
-		}
-
-		if (!this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
-			this.badDevilments++
-		}
-	}
-
 	private getStandardFinishUptimePercent() {
-		const statusTime = this.combatants.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.parser.player.id)
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		// Exclude downtime from both the status time and expected uptime
+		const statusTime = this.combatants.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.parser.player.id) - this.downtime.getDowntime()
+		const uptime = this.parser.fightDuration - this.downtime.getDowntime()
 
 		return (statusTime / uptime) * 100
 	}
@@ -255,19 +248,6 @@ export default class DirtyDancing extends Module {
 			value: this.footlooseDances,
 			why: <Trans id="dnc.dirty-dancing.suggestions.footloose.why">
 				<Plural value={this.footlooseDances} one="# dance" other="# dances"/> finished with extra steps.
-			</Trans>,
-		}))
-
-		// Suggestion to use Devilment under Technical
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DEVILMENT.icon,
-			content: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.content">
-				Using <ActionLink {...ACTIONS.DEVILMENT} /> outside your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <ActionLink {...ACTIONS.DEVILMENT} /> at the beginning of your <StatusLink {...STATUSES.TECHNICAL_FINISH} /> windows.
-			</Trans>,
-			tiers: DEFAULT_SEVERITY_TIERS,
-			value: this.badDevilments,
-			why: <Trans id="dnc.dirty-dancing.suggestions.bad-devilments.why">
-				<Plural value={this.badDevilments} one="# Devilment" other="# Devilments"/> used outside <StatusLink {...STATUSES.TECHNICAL_FINISH} />.
 			</Trans>,
 		}))
 
@@ -354,7 +334,7 @@ export default class DirtyDancing extends Module {
 		}
 	}
 
-	private getNotesIcon(ruleFailed: boolean): any {
+	private getNotesIcon(ruleFailed: boolean): TODO {
 		return <Icon
 			name={ruleFailed ? 'remove' : 'checkmark'}
 			className={ruleFailed ? 'text-error' : 'text-success'}

@@ -46,6 +46,26 @@ export default new Meta({
 	changelog: [
 		{
 
+			date: new Date('2019-08-10'),
+			Changes: () => <>
+				<ActionLink {...ACTIONS.HOROSCOPE} /> reworked tracking for accuracy
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
+			date: new Date('2019-08-08'),
+			Changes: () => <>
+				<strong>Get more of those cards</strong>:
+				<ul>
+					<li>Calculation for number of <ActionLink {...ACTIONS.PLAY} /> in a fight</li>
+					<li>Suggestions for not keeping (<ActionLink {...ACTIONS.DRAW} /><ActionLink {...ACTIONS.SLEEVE_DRAW} />) on cooldown</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
 			date: new Date('2019-07-30'),
 			Changes: () => <>
 				<strong>5.05 Support</strong>:
