@@ -28,7 +28,7 @@ export interface CounterChartOptions {
 }
 
 export class CounterGauge extends AbstractGauge {
-	private value: number
+	private _value: number
 	private minimum: number
 	private maximum: number
 	overCap: number = 0
@@ -37,11 +37,15 @@ export class CounterGauge extends AbstractGauge {
 
 	private history: CounterHistory[] = []
 
+	get value(): number {
+		return this._value
+	}
+
 	constructor(opts: CounterGaugeOptions & AbstractGaugeOptions = {}) {
 		super(opts)
 
 		this.minimum = opts.minimum || 0
-		this.value = opts.initialValue || this.minimum
+		this._value = opts.initialValue || this.minimum
 		this.maximum = opts.maximum || 100
 
 		this.chartOptions = opts.chart
@@ -56,15 +60,15 @@ export class CounterGauge extends AbstractGauge {
 
 	/** Modify the current value by the provided amount. Equivalent to `set(currentValue + amount)` */
 	modify(amount: number) {
-		this.set(this.value + amount)
+		this.set(this._value + amount)
 	}
 
 	/** Set the current value of the gauge. Value will automatically be bounded to valid values. Value over the maximum will be tracked as overcap. */
 	set(value: number) {
-		this.value = Math.min(Math.max(value, this.minimum), this.maximum)
+		this._value = Math.min(Math.max(value, this.minimum), this.maximum)
 
 		// TODO: underflow means tracking was out of sync - look into backtracking to adjust history?
-		const diff = value - this.value
+		const diff = value - this._value
 		if (diff > 0) {
 			this.overCap += diff
 		}
@@ -88,7 +92,7 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = maximum
 
 		// Ensure the value remains within bounds by re-setting it
-		this.set(this.value)
+		this.set(this._value)
 	}
 
 	private pushHistory() {
@@ -104,7 +108,7 @@ export class CounterGauge extends AbstractGauge {
 
 		this.history.push({
 			timestamp,
-			value: this.value,
+			value: this._value,
 			minimum: this.minimum,
 			maximum: this.maximum,
 		})

@@ -77,7 +77,7 @@ export default class Reassemble extends Module {
 			},
 			value: this._droppedReassembles,
 			why: <Trans id="mch.reassemble.suggestions.dropped.why">
-				You allowed Reassemble to fall off unused <Plural value={this._badReassembles} one="# time" other="# times"/>.
+				You allowed Reassemble to fall off unused <Plural value={this._droppedReassembles} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 	}
