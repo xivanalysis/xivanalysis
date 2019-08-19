@@ -49,24 +49,28 @@ export default class Ruin4 extends Module {
 	private petSkillCount = 0
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onPlayerCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RUIN_IV.id}, this.onRuin4)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id}, this.onPlayerEarthenArmor)
+		this.addHook('cast', {by: 'player', abilityId: FURTHER_RUIN_PLAYER_ACTIONS}, this.onPlayerOtherEgiAssault)
 		this.addHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onPlayerCast(event: CastEvent) {
-		if (event.ability.guid === ACTIONS.RUIN_IV.id) {
-			if (this.currentStackCount > 0) { this.currentStackCount-- }
-		} else if (FURTHER_RUIN_PLAYER_ACTIONS.includes(event.ability.guid)) {
-			// Do not flag for player skills used right at the end of the fight when the
-			// pet may not have time to use the skill.
-			const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
-			if (fightTimeRemaining > END_OF_FIGHT_LEEWAY) {
-				this.playerSkillCount++
-			}
-		} else if (event.ability.guid === ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id) {
-			this.earthenArmorCount++
+	private onRuin4(event: CastEvent) {
+		if (this.currentStackCount > 0) { this.currentStackCount-- }
+	}
+
+	private onPlayerEarthenArmor(event: CastEvent) {
+		this.earthenArmorCount++
+	}
+
+	private onPlayerOtherEgiAssault(event: CastEvent) {
+		// Do not flag for player skills used right at the end of the fight when the
+		// pet may not have time to use the skill.
+		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
+		if (fightTimeRemaining > END_OF_FIGHT_LEEWAY) {
+			this.playerSkillCount++
 		}
 	}
 
