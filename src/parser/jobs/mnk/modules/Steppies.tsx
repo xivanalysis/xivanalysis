@@ -16,15 +16,17 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const LEAD_BOOT_POTENCY = 300
 
 // Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
+// With 60s CD on RoE for a 30s no positionals buff, and True North every 45s tho, this shouldn't be
+// an issue even if the player is lagging worse than the author of this comment.
 const CRIT_BOOT_SEVERITY = {
 	1: SEVERITY.MEDIUM,
-	2: SEVERITY.MAJOR,
+	3: SEVERITY.MAJOR,
 }
 
 // 3 is pretty much "you ruined a Perfect Balance you turkey".
 const WEAK_BOOT_SEVERITY = {
 	1: SEVERITY.MEDIUM,
-	3: SEVERITY.MAJOR,
+	4: SEVERITY.MAJOR,
 }
 
 class Boot {
