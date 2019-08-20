@@ -6,16 +6,22 @@ import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
  * have later No Mercy.
  */
 const FIRST_USE_OFFSET_NO_MERCY = 10000
+/* This offset is large to account for the (mostly) single-weave opener, in
+ * which Bloodfest is used after nine weaponskills.
+ */
+const FIRST_USE_OFFSET_BLOODFEST = 22000
 
 export default class AbilityDowntime extends CooldownDowntime {
 	allowedDowntime = 2500
 
 	firstUseOffsetPerOgcd = {
 		[ACTIONS.NO_MERCY.id]: FIRST_USE_OFFSET_NO_MERCY,
+		[ACTIONS.BLOODFEST.id]: FIRST_USE_OFFSET_BLOODFEST,
 	}
 
 	trackedCds = [
 		ACTIONS.NO_MERCY.id,
+		ACTIONS.BLOODFEST.id,
 		ACTIONS.BLASTING_ZONE.id, // Only track this one for now, assume level 80
 		ACTIONS.ROUGH_DIVIDE.id,
 		ACTIONS.BOW_SHOCK.id,
