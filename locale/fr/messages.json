@@ -358,7 +358,7 @@
   "mnk.rof.suggestions.gcd.content": "",
   "mnk.rof.suggestions.gcd.why": "",
   "mnk.rof.suggestions.tk.content": "",
-  "mnk.rof.suggestions.tk.why": "",
+  "mnk.rof.suggestions.tk.why": "{0, plural, one {# Coup de pied tornade à été} other {# Coup de pied tornade ont été}} oublié durant Enigme du Feu.",
   "mnk.rof.table.gcd": "",
   "mnk.rof.table.rushing": "",
   "mnk.rof.table.tk": "{numTKs}/1 Coup de pied tornade",
