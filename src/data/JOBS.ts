@@ -99,7 +99,7 @@ const JOBS = {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
 		logType: ActorType.GUNBREAKER,
 		icon: 'gnb',
-		colour: '#796d30', // TODO
+		colour: '#796d30',
 		role: ROLES.TANK.id,
 	},
 
@@ -175,7 +175,7 @@ const JOBS = {
 		name: t('game.job.dancer')`Dancer`,
 		logType: ActorType.DANCER,
 		icon: 'dnc',
-		colour: '#ff0000', // TODO
+		colour: '#e2b0af',
 		role: ROLES.PHYSICAL_RANGED.id,
 	},
 
