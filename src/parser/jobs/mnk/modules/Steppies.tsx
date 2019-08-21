@@ -31,11 +31,11 @@ const WEAK_BOOT_SEVERITY = {
 
 class Boot {
 	crit: boolean
-	timestamp: number
 	weak: boolean
+	timestamp: number
 
-	constructor(weak: boolean, timestamp: number) {
-		this.crit = false
+	constructor(crit: boolean, weak: boolean, timestamp: number) {
+		this.crit = crit
 		this.weak = weak
 		this.timestamp = timestamp
 	}
@@ -48,25 +48,16 @@ export default class Steppies extends Module {
 	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
 
-	private currentBoot?: Boot
 	private steppies: Boot[] = []
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onCast)
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onStep)
+		this.addHook('damage', {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onCast(event: CastEvent): void {
-		this.currentBoot = new Boot(this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
-	}
-
-	private onStep(event: DamageEvent): void {
-		if (this.currentBoot && this.currentBoot.timestamp === event.timestamp) {
-			this.currentBoot.crit = event.criticalHit
-
-			this.steppies.push(this.currentBoot)
-		}
+	private onDamage(event: DamageEvent): void {
+		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
+		this.steppies.push(boot)
 	}
 
 	private onComplete(): void {
@@ -110,15 +101,15 @@ export default class Steppies extends Module {
 		}))
 	}
 
-	getUnbuffedCount(boots: Boot[]): number {
+getUnbuffedCount(boots: Boot[]): number {
 		return boots.reduce((total, current) => current.weak ? total : total+1, 0)
 	}
 
-	getUncritCount(boots: Boot[]): number {
+getUncritCount(boots: Boot[]): number {
 		return boots.reduce((total, current) => current.crit ? total : total+1, 0)
 	}
 
-	getLeadenPercent(boots: Boot[]): number {
+getLeadenPercent(boots: Boot[]): number {
 		return 100 - (this.getUnbuffedCount(boots) / boots.length) * 100
 	}
 }
