@@ -101,15 +101,15 @@ export default class Steppies extends Module {
 		}))
 	}
 
-getUnbuffedCount(boots: Boot[]): number {
+	getUnbuffedCount(boots: Boot[]): number {
 		return boots.reduce((total, current) => current.weak ? total : total+1, 0)
 	}
 
-getUncritCount(boots: Boot[]): number {
+	getUncritCount(boots: Boot[]): number {
 		return boots.reduce((total, current) => current.crit ? total : total+1, 0)
 	}
 
-getLeadenPercent(boots: Boot[]): number {
+	getLeadenPercent(boots: Boot[]): number {
 		return 100 - (this.getUnbuffedCount(boots) / boots.length) * 100
 	}
 }
