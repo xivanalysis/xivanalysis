@@ -309,7 +309,7 @@
   "dnc.procs.suggestions.overwrite.content": "",
   "dnc.procs.suggestions.overwrite.why": "",
   "dnc.technicalities.rotation-table.header.missed": "",
-  "dnc.technicalities.rotation-table.header.pooled": "",
+  "dnc.technicalities.rotation-table.header.pooled": "<0/> Pris l'aggro avant le tank ?",
   "dnc.technicalities.suggestions.bad-devilments.content": "",
   "dnc.technicalities.suggestions.bad-devilments.why": "",
   "dnc.technicalities.suggestions.late-devilments.content": "",
