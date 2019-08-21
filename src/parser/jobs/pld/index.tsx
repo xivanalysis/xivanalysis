@@ -71,6 +71,12 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.QAPHLA],
 		},
-
+		{
+			date: new Date('2019-08-21'),
+			Changes: () => <>
+				Don't penalize for rushed Requiescat windows due to expected downtime or end-of-fight.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 })
