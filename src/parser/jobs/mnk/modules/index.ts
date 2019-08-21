@@ -8,6 +8,7 @@ import MnkAoE from './MnkAoE'
 import OGCDDowntime from './OGCDDowntime'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
+import Steppies from './Steppies'
 
 export default [
 	BuffUptime,
@@ -20,4 +21,5 @@ export default [
 	OGCDDowntime,
 	RiddleOfFire,
 	Speedmod,
+	Steppies,
 ]
