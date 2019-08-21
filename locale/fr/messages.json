@@ -361,7 +361,7 @@
   "mnk.rof.suggestions.tk.why": "",
   "mnk.rof.table.gcd": "",
   "mnk.rof.table.rushing": "",
-  "mnk.rof.table.tk": "",
+  "mnk.rof.table.tk": "{numTKs}/1 Coup de pied tornade",
   "mnk.rof.title": "",
   "mnk.undesirables.suggestions.earthtackle.content": "Évitez d’utiliser <0/> qui vous fait perdre des utilisations de l’action <1/>, plus puissante.",
   "mnk.undesirables.suggestions.earthtackle.why": "",
