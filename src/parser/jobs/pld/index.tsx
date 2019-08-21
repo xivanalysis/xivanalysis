@@ -39,6 +39,7 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.LHEA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.QAPHLA, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -63,5 +64,13 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
+		{
+			date: new Date('2019-08-20'),
+			Changes: () => <>
+				Added usage tracking for Fight or Flight and Requiescat.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
+		},
+
 	],
 })

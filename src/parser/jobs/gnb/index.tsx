@@ -27,6 +27,7 @@ export default new Meta({
 
 	contributors: [
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.QAPHLA, role: ROLES.DEVELOPER},
 	],
 
 	changelog,
