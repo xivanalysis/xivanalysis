@@ -30,6 +30,7 @@ const RAID_BUFFS = {
 	[STATUSES.DEVOTION.id]: {},
 	[STATUSES.TECHNICAL_FINISH.id]: {},
 	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
+	[STATUSES.DEVILMENT.id]: {},
 }
 
 export default class RaidBuffs extends Module {
