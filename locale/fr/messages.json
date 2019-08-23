@@ -41,7 +41,7 @@
   "ast.draw.suggestions.cards.why": "{drawUsesMissedFromCardsRounded, plural, one {# Tirage perdu} other {# Tirages perdus}}.",
   "ast.draw.title": "Tirage",
   "ast.earthly-star.suggestion.uncooked.content": "Préparer le placement de <0/> de sorte qu'il soit toujours utilisé avec le maximum de puissance quand vous en avez besoin.",
-  "ast.earthly-star.suggestion.uncooked.why": "",
+  "ast.earthly-star.suggestion.uncooked.why": "{earlyBurstCount, plural, one {# détonation} other {# detonations}} d'une Etoile Terrestre déclenchée trop rapidement.",
   "ast.earthly-star.title": "Étoile terrestre",
   "ast.lightspeed.messages.explanation": "",
   "ast.lightspeed.messages.no-casts": "",
