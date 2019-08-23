@@ -27,10 +27,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	supportedPatches: {
-		from: '5.0',
-		to: '5.05',
-	},
+	// supportedPatches: {
+	// 	from: '5.0',
+	// 	to: '5.05',
+	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NEMEKH, role: ROLES.THEORYCRAFT},
