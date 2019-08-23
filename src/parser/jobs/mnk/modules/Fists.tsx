@@ -18,7 +18,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const FISTLESS = 0
+export const FISTLESS = 0
 
 const FISTS = [
 	STATUSES.FISTS_OF_EARTH.id,
@@ -54,7 +54,7 @@ const FIST_SEVERITY = {
 	},
 }
 
-class Fist {
+export class Fist {
 	id: number = FISTLESS
 	start: number = 0
 	end?: number
@@ -85,6 +85,17 @@ export default class Fists extends Module {
 		this.addHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
 		this.addHook('complete', this.onComplete)
+	}
+
+	// Public API to get the Fist in use at a given time.
+	public getFist(timestamp: number): Fist {
+		return this.fistory.filter(fist => fist.start <= timestamp
+			&& (typeof fist.end === 'undefined' // sanity check
+				|| fist.end >= timestamp))[0]
+	}
+
+	public getActiveFist(): Fist {
+		return this.activeFist
 	}
 
 	private handleFistChange(fistId: number): void {
