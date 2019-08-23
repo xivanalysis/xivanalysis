@@ -30,6 +30,8 @@ export default class OGCDDowntime extends CooldownDowntime {
 		ACTIONS.DIVINATION.id,
 		ACTIONS.CELESTIAL_INTERSECTION.id,
 		ACTIONS.CELESTIAL_OPPOSITION.id,
+		ACTIONS.NEUTRAL_SECT.id,
+		ACTIONS.COLLECTIVE_UNCONSCIOUS.id,
 	]
 	target = TARGETPERCENT
 	description = <Trans id="ast.ogcd-downtime.ogcd-cd-metric">Maximize usage of OGCDs to contribute to raid damage and reduce your need to GCD heal.</Trans>

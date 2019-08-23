@@ -11,6 +11,8 @@ import Sect from './Sect'
 import CelestialIntersection from './CelestialIntersection'
 import Overheal from './Overheal'
 import Draw from './Draw'
+import CelestialOpposition from './CelestialOpposition'
+import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	Cooldowns,
@@ -26,4 +28,6 @@ export default [
 	Sect,
 	CelestialIntersection,
 	Overheal,
+	OGCDDowntime,
+	CelestialOpposition,
 ]
