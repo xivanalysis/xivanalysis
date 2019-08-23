@@ -8,6 +8,7 @@ import Speedmod from './Speedmod'
 import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
+import OGCDDowntime from './OGCDDowntime'
 
 export default [
 	Buffs,
@@ -20,4 +21,5 @@ export default [
 	Meikyo,
 	ThirdEye,
 	Tsubame,
+	OGCDDowntime,
 ]
