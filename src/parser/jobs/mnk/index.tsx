@@ -31,6 +31,15 @@ export default new Meta({
 	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
-	changelog: [],
+	changelog: [
+		{
+			date: new Date('2019-08-23'),
+			Changes: () => <>
+				Added support for Riddle of Fire window analysis.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
+	],
 })
