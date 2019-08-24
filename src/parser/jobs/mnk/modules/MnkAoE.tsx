@@ -2,77 +2,89 @@ import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {Event} from 'fflogs'
+import STATUSES from 'data/STATUSES'
+
 import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import Combatants from 'parser/core/modules/Combatants'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 // Assuming in correct forms
-const AOTD_MIN_TARGETS = 3 // this is kinda also 4 but only under Leaden Fist
-const ROCKBREAKER_MIN_TARGETS = 2
+const AOE_ACTION_TARGETS = new Map<number, number>([
+	// tslint:disable-next-line: no-magic-numbers
+	[ACTIONS.ARM_OF_THE_DESTROYER.id, 3], // this is kinda also 4 but only under Leaden Fist
+	[ACTIONS.FOUR_POINT_FURY.id, 2],
+	[ACTIONS.ROCKBREAKER.id, 2],
+	[ACTIONS.ENLIGHTENMENT.id, 2],
+])
+
+interface HundredPunchMeme extends AoeEvent {
+	expectedHits: number
+}
 
 export default class MnkAoE extends Module {
 	static handle = 'mnkaoe'
 
+	@dependency private combatants!: Combatants
 	@dependency private suggestions!: Suggestions
 
-	private badAotDs: Event[] = []
-	private badRocks: Event[] = []
+	private historyOfPunching: {[key: number]: HundredPunchMeme[]} = {
+		[ACTIONS.ARM_OF_THE_DESTROYER.id]: [],
+		[ACTIONS.FOUR_POINT_FURY.id]: [],
+		[ACTIONS.ROCKBREAKER.id]: [],
+		[ACTIONS.ENLIGHTENMENT.id]: [],
+	}
 
 	protected init(): void {
-		this.addHook('aoedamage', {
-			by: 'player',
-			abilityId: ACTIONS.ARM_OF_THE_DESTROYER.id,
-		}, this.onAotDDamage)
-
-		this.addHook('aoedamage', {
-			by: 'player',
-			abilityId: ACTIONS.ROCKBREAKER.id,
-		}, this.onRockbreakerDamage)
-
+		this.addHook('aoedamage', {by: 'player', abilityId: Array.from(AOE_ACTION_TARGETS.keys())}, this.onDamage)
 		this.addHook('complete', this.onComplete)
 	}
 
-	// TODO: figure out when player uses this for Silence effect, need to calculate interrupts on target
-	private onAotDDamage(event: AoeEvent): void {
-		if (event.hits.length < AOTD_MIN_TARGETS) {
-			this.badAotDs.push(event)
-		}
-	}
+	private onDamage(event: AoeEvent): void {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
-	// TODO: if player is out of melee range and doing a single target RB, note it as minor
-	private onRockbreakerDamage(event: AoeEvent): void {
-		if (event.hits.length < ROCKBREAKER_MIN_TARGETS) {
-			this.badRocks.push(event)
+		if (!action) {
+			return
+		}
+
+		const target = AOE_ACTION_TARGETS.get(action.id)
+
+		if (target) {
+			const aoeDamage = {...event, expectedHits: target}
+			if (action.id === ACTIONS.ARM_OF_THE_DESTROYER.id && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
+				aoeDamage.expectedHits++
+			}
+
+			this.historyOfPunching[action.id].push(aoeDamage)
 		}
 	}
 
 	private onComplete(): void {
-		if (this.badAotDs.length >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ARM_OF_THE_DESTROYER.icon,
-				severity: SEVERITY.MEDIUM,
-				content: <Trans id="mnk.aoe.suggestions.aotd.content">
-					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only efficient when there are {AOTD_MIN_TARGETS} or more targets.
-				</Trans>,
-				why: <Trans id="mnk.aoe.suggestions.aotd.why">
-					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> used on too few targets <Plural value={this.badAotDs.length} one="# time" other="# times" />.
-				</Trans>,
-			}))
-		}
+		Object.keys(this.historyOfPunching).forEach(key => {
+			const action = getDataBy(ACTIONS, 'id', key) as TODO
 
-		if (this.badRocks.length >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ROCKBREAKER.icon,
-				severity: SEVERITY.MEDIUM,
-				content: <Trans id="mnk.aoe.suggestions.rockbreaker.content">
-					<ActionLink {...ACTIONS.ROCKBREAKER}/> is only efficient when there are {ROCKBREAKER_MIN_TARGETS} or more targets.
-				</Trans>,
-				why: <Trans id="mnk.aoe.suggestions.rockbreaker.why">
-					<ActionLink {...ACTIONS.ROCKBREAKER}/> used on too few targets <Plural value={this.badRocks.length} one="# time" other="# times" />.
-				</Trans>,
-			}))
-		}
+			if (action) {
+				this.suggestions.add(new TieredSuggestion({
+					icon: action.icon,
+					severity: SEVERITY.MEDIUM,
+					content: <Trans id="mnk.aoe.suggestions.content">
+						<ActionLink {...action}/> is only efficient when there are {AOE_ACTION_TARGETS.get(action.id)} or more targets.
+					</Trans>,
+					why: <Trans id="mnk.aoe.suggestions.rockbreaker.why">
+						<ActionLink {...action}/> used on too few targets <Plural value={this.cleanPunchCount(action.id)} one="# time" other="# times" />.
+					</Trans>,
+				}))
+			}
+		})
+	}
+
+	private isCleanHit(event: HundredPunchMeme): boolean {
+		return event.hits.length < event.expectedHits ? false : true
+	}
+
+	private cleanPunchCount(id: number): number {
+		return this.historyOfPunching[id].filter(aoe => this.isCleanHit(aoe)).length
 	}
 }
