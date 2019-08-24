@@ -7,7 +7,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -59,13 +58,6 @@ export default class DWT extends Module {
 			abilityId: ACTIONS.DEATHFLARE.id,
 		}, this._onDeathflareDamage)
 
-		const dwtBuffFilter = {
-			by: 'player',
-			abilityId: STATUSES.DREADWYRM_TRANCE.id,
-		}
-		this.addHook('applybuff', dwtBuffFilter, this._onApplyDwt)
-		this.addHook('removebuff', dwtBuffFilter, this._onRemoveDwt)
-
 		this.addHook('death', {to: 'player'}, () => {
 			if (!this._active) { return }
 			this._dwt.died = true
@@ -88,8 +80,12 @@ export default class DWT extends Module {
 			return
 		}
 
-		// Save the event to the DWT casts
-		this._dwt.casts.push(event)
+		if (event.timestamp - this._dwt.start > DWT_LENGTH)	{
+			this._stopAndSave(0)
+		} else {
+			// Save the event to the DWT casts
+			this._dwt.casts.push(event)
+		}
 	}
 
 	_onDeathflareDamage(event) {
