@@ -102,6 +102,11 @@ export abstract class BuffWindowModule extends Module {
 	 *     (usually, this number should be 0), and will provide a suggestion if the BadCooldown is being used more than the expected threshold
 	 */
 	protected trackedBadActions?: BuffWindowTrackedActions
+	/**
+	 * Implementing modules MAY provide a value to override the "Rotation" title in the header of the rotation section
+	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
+	 */
+	protected rotationTableHeader?: JSX.Element
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -378,6 +383,7 @@ export abstract class BuffWindowModule extends Module {
 			targets={rotationTargets}
 			data={rotationData}
 			onGoto={this.timeline.show}
+			headerTitle={this.rotationTableHeader}
 		/>
 	}
 }
