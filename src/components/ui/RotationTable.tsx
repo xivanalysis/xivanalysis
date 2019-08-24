@@ -98,6 +98,11 @@ interface RotationTableProps {
 	 * @param scrollTo
 	 */
 	onGoto?: (start: number, end: number, scrollTo?: boolean) => void
+	/**
+	 * Optional property to provide a JSX.Element (translation tag) for the header value.
+	 * Defaults to "Rotation"
+	 */
+	headerTitle?: JSX.Element
 }
 
 interface RotationTableRowProps {
@@ -192,6 +197,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 			notes,
 			data,
 			onGoto,
+			headerTitle,
 		} = this.props
 
 		return <Table compact unstackable celled>
@@ -208,7 +214,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 						)
 					}
 					<Table.HeaderCell>
-						<strong><Trans id="core.ui.rotation-table.header.rotation">Rotation</Trans></strong>
+						<strong>{(headerTitle)? headerTitle : <Trans id="core.ui.rotation-table.header.rotation">Rotation</Trans>}</strong>
 					</Table.HeaderCell>
 					{
 						(notes || []).map((note, i) =>
