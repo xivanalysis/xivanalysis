@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "龙神阶段打错了 {badGcds} 个GCD。",
   "smn.dwt.suggestions.missed-deathflares.content": "确保每次以<1/>结束<0/> ，不这样做会有巨大的伤害损失。",
   "smn.dwt.suggestions.missed-deathflares.why": "龙神附体中，{0} 次未使用死星核爆。",
-  "smn.dwt.suggestions.missed-gcds.content": "根据你的GCD时间，每一个<1/>阶段中可以打 <0>{possibleGcds}</0> 个 GCD。正常循环中不要提前结束龙神，以下情况除外：Boss马上要飞天/击杀，<2/> CD完毕，或者 <3/> 能打到多个目标。",
-  "smn.dwt.suggestions.missed-gcds.why": "应当在龙神附体中多使用{0} 个GCD技能。",
   "smn.dwt.title": "龙神附体",
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "",
