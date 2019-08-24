@@ -17,26 +17,27 @@ export default class PerfectBalance extends BuffWindowModule {
 	buffStatus: Status = STATUSES.PERFECT_BALANCE
 
 	expectedGCDs = {
-		expectedPerWindow: 6,
+		expectedPerWindow: 5,
 		suggestionContent: <Trans id="mnk.pb.suggestions.missedgcd.content">
-			Try to land 6 GCDs during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			Try to land 5 GCDs during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
 		</Trans>,
 		severityTiers: {
-			1: SEVERITY.MEDIUM,
+			1: SEVERITY.MINOR,
+			2: SEVERITY.MEDIUM,
 			3: SEVERITY.MAJOR,
 		},
 	}
 
 	trackedBadActions = {
-		icon: ACTIONS.TWIN_SNAKES.icon,
+		icon: ACTIONS.FORM_SHIFT.icon,
 		actions: [
 			{
-				action: ACTIONS.TWIN_SNAKES,
+				action: ACTIONS.FORM_SHIFT,
 				expectedPerWindow: 0,
 			},
 		],
 		suggestionContent: <Trans id="mnk.pb.suggestions.trackedBadActions.content">
-			Using <ActionLink {...ACTIONS.TWIN_SNAKES} /> or inside of <ActionLink {...ACTIONS.PERFECT_BALANCE} /> should be avoided under most circumstances. Try to refresh it before entering the window.
+			Using <ActionLink {...ACTIONS.FORM_SHIFT} /> inside of <ActionLink {...ACTIONS.PERFECT_BALANCE} /> does no damage and does not change your form.
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MEDIUM,
