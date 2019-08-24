@@ -7,24 +7,28 @@ export default {
 		name: 'Flourishing Cascade',
 		icon: 'https://xivapi.com/i/013000/013701.png',
 		duration: 20,
+		action: ACTIONS.FLOURISH,
 	},
 	FLOURISHING_FOUNTAIN: {
 		id: 1815,
 		name: 'Flourishing Fountain',
 		icon: 'https://xivapi.com/i/013000/013702.png',
 		duration: 20,
+		// Do not associate with Flourish so that PrepullStatus does not duplicate synthetic cast events for Flourish pre-pull
 	},
 	FLOURISHING_WINDMILL: {
 		id: 1816,
 		name: 'Flourishing Windmill',
 		icon: 'https://xivapi.com/i/013000/013703.png',
 		duration: 20,
+		// Do not associate with Flourish so that PrepullStatus does not duplicate synthetic cast events for Flourish pre-pull
 	},
 	FLOURISHING_SHOWER: {
 		id: 1817,
 		name: 'Flourishing Shower',
 		icon: 'https://xivapi.com/i/013000/013704.png',
 		duration: 20,
+		// Do not associate with Flourish so that PrepullStatus does not duplicate synthetic cast events for Flourish pre-pull
 	},
 	STANDARD_STEP: {
 		id: 1818,
@@ -45,6 +49,7 @@ export default {
 		name: 'Flourishing Fan Dance',
 		icon: 'https://xivapi.com/i/013000/013707.png',
 		duration: 20,
+		// Do not associate with Flourish so that PrepullStatus does not duplicate synthetic cast events for Flourish pre-pull
 	},
 	STANDARD_FINISH: {
 		id: 1821,
