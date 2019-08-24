@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 export default {
 	DUALCAST: {
 		id: 1249,
@@ -20,7 +22,7 @@ export default {
 		id: 1238,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/013000/013405.png',
-		actionId: 7518,
+		action: ACTIONS.ACCELERATION,
 	},
 	EMBOLDEN_PHYSICAL: {//Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
 		id: 1297,
@@ -31,10 +33,12 @@ export default {
 		id: 1239,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018921.png',
+		action: ACTIONS.EMBOLDEN,
 	},
 	MANAFICATION: {
 		id: 1971,
 		name: 'Manafication',
 		icon: 'https://xivapi.com/i/013000/013407.png',
+		action: ACTIONS.MANAFICATION,
 	},
 }

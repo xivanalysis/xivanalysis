@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 export default {
 	SONIC_BREAK: {
 		id: 1837,
@@ -16,6 +18,7 @@ export default {
 		name: 'No Mercy',
 		icon: 'https://xivapi.com/i/013000/013601.png',
 		duration: 20,
+		action: ACTIONS.NO_MERCY,
 	},
 	READY_TO_RIP: {
 		id: 1842,

@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 export default {
 
 	FLOURISHING_CASCADE: {
@@ -29,12 +31,14 @@ export default {
 		name: 'Standard Step',
 		icon: 'https://xivapi.com/i/013000/013705.png',
 		duration: 15,
+		action: ACTIONS.STANDARD_STEP,
 	},
 	TECHNICAL_STEP: {
 		id: 1819,
 		name: 'Technical Step',
 		icon: 'https://xivapi.com/i/013000/013706.png',
 		duration: 15,
+		action: ACTIONS.TECHNICAL_STEP,
 	},
 	FLOURISHING_FAN_DANCE: {
 		id: 1820,
@@ -69,18 +73,21 @@ export default {
 		name: 'Devilment',
 		icon: 'https://xivapi.com/i/013000/013714.png',
 		duration: 20,
+		action: ACTIONS.DEVILMENT,
 	},
 	SHIELD_SAMBA: {
 		id: 1826,
 		name: 'Shield Samba',
 		icon: 'https://xivapi.com/i/013000/013715.png',
 		duration: 15,
+		action: ACTIONS.SHIELD_SAMBA,
 	},
 	IMPROVISATION: {
 		id: 1827,
 		name: 'Improvisation',
 		icon: 'https://xivapi.com/i/013000/013716.png',
 		duration: 15,
+		action: ACTIONS.IMPROVISATION,
 	},
 	ESPRIT: {
 		id: 1847,

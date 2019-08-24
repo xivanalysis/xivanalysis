@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 export default {
 	TRICK_ATTACK_VULNERABILITY_UP: {
 		id: 638,
@@ -17,6 +19,7 @@ export default {
 		name: 'Kassatsu',
 		icon: 'https://xivapi.com/i/012000/012902.png',
 		duration: 15,
+		action: ACTIONS.KASSATSU,
 	},
 
 	DOTON: {
@@ -38,6 +41,7 @@ export default {
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/012000/012911.png',
 		duration: 10,
+		action: ACTIONS.TEN_CHI_JIN,
 	},
 
 	BUNSHIN: {

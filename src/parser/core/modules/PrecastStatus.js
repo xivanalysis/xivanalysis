@@ -1,6 +1,5 @@
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
@@ -46,16 +45,13 @@ export default class PrecastStatus extends Module {
 
 				// Determine if this buff comes from a known action, fab a cast event
 				const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
-				if (statusInfo && statusInfo.actionId) {
-					const castAbility = getDataBy(ACTIONS, 'id', statusInfo.actionId)
-					if (castAbility) {
-						const castEvent = event
-						castEvent.timestamp = startTime - 2
-						castEvent.type = 'cast'
-						castEvent.ability.guid = castAbility.id
+				if (statusInfo && statusInfo.action) {
+					const castEvent = event
+					castEvent.timestamp = startTime - 2
+					castEvent.type = 'cast'
+					castEvent.ability.guid = statusInfo.action.id
 
-						events.splice(0, 0, castEvent)
-					}
+					events.splice(0, 0, castEvent)
 				}
 
 				this._combatantStatuses[targetId].push(statusId)

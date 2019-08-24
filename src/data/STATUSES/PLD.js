@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 export default {
 	GORING_BLADE: {
 		id: 725,
@@ -22,6 +24,7 @@ export default {
 		name: 'Fight Or Flight',
 		icon: 'https://xivapi.com/i/010000/010155.png',
 		duration: 25,
+		action: ACTIONS.FIGHT_OR_FLIGHT,
 	},
 	IRON_WILL: {
 		id: 79,

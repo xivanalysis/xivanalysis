@@ -1,3 +1,5 @@
+import ACTIONS from 'data/ACTIONS'
+
 // TODO: Fill in the rest of this
 export default {
 	GALE_ENFORCER: {
@@ -22,6 +24,7 @@ export default {
 		id: 1213,
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/012000/012681.png',
+		action: ACTIONS.DEVOTION,
 	},
 
 	BIO_III: {
