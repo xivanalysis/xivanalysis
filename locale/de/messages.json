@@ -755,7 +755,7 @@
   "smn.pets.suggestions.titan.content": "Allgemein gesprochen, sollte Titan-Egi in Gruppeninhalten nicht verwendet werden. Wechsele stattdessen zu Ifrit-Egi oder Garuda-Egi.",
   "smn.pets.suggestions.titan.why": "Zeit in der Titan-Egi verwendet wurde: {titanUptimePercent}%",
   "smn.pets.title": "",
-  "smn.ruin-ii.suggestions.issues.content": "",
+  "smn.ruin-ii.suggestions.issues.content": "Bevorzuge <0/>. Durch die Benutzung von <1/> und <2/> verlierst du Schaden, außer du nutzt es zwischen anderen Angriffen mit globaler Abklingzeit (weaving) oder um <3/> zu procen. Überschüssige Ruinka-Anwendungen benötigen zusätzliche Ruinra-Anwendungen, um es außerhalb der globalen Abklingzeit einsetzen zu können.",
   "smn.ruin-ii.suggestions.issues.why": "",
   "smn.ruin-ii.suggestions.warnings.content": "",
   "smn.ruin-ii.suggestions.warnings.why": "",
