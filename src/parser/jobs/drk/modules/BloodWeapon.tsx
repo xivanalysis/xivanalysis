@@ -6,10 +6,12 @@ import STATUSES from 'data/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export default class BloodWeapon extends BuffWindowModule {
 	static handle = 'bloodweapon'
 	static title = t('drk.bloodweapon.title')`Blood Weapon Usage`
+	static displayOrder = DISPLAY_ORDER.BLOOD_WEAPON
 
 	buffAction = ACTIONS.BLOOD_WEAPON
 	buffStatus = STATUSES.BLOOD_WEAPON
