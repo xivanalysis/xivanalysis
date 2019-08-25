@@ -496,7 +496,7 @@
   "mnk.rof.table.gcd": "{0} {numGcds, plural, one {GCD} other {GCDs}}",
   "mnk.rof.table.rushing": "(끊김)",
   "mnk.rof.title": "홍련의 극의",
-  "mnk.steppies.checklist.description": "",
+  "mnk.steppies.checklist.description": "<1/> 버프가 적용된 <0/>은 가장 강력한 위력을 가진 글쿨기 입니다.",
   "mnk.steppies.checklist.name": "강화 연격",
   "mnk.steppies.checklist.requirement.name": "<0/> 버프 비율",
   "mnk.steppies.suggestions.bootshine.content": "<0/>은 반드시 후방에서 사용하십시오. <1/>을 통해 받드시 받는 극대화 효과와 <2/>를 통해 받는 데미지 효과를 통해 가장 강력한 위력을 낼 수 있습니다.",
