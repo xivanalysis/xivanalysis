@@ -802,5 +802,8 @@
   "whm.overheal.requirement.hot": "Overheal (HoT)",
   "whm.overheal.requirement.nonhot": "Overheal (non-HoT)",
   "whm.overheal.rule.description": "Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.",
-  "whm.overheal.rule.name": "Avoid overheal"
+  "whm.overheal.rule.name": "Avoid overheal",
+  "whm.swiftcast.missed.suggestion.content": "Cast a spell with <0/> before it expires. This allows you to instantly cast spells with a cast time, such as <1/> for a quick revive, or <2/> for weaving.",
+  "whm.swiftcast.missed.suggestion.why": "{missedSwifts} {missedSwifts, plural, one {Swiftcast was} other {Swiftcasts were}} wasted because you did not cast a spell before the buff expired.",
+  "whm.swiftcast.title": "Swiftcast Actions"
 }

@@ -802,5 +802,8 @@
   "whm.overheal.requirement.hot": "",
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
-  "whm.overheal.rule.name": "Vermeide Overheal"
+  "whm.overheal.rule.name": "Vermeide Overheal",
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.swiftcast.missed.suggestion.why": "",
+  "whm.swiftcast.title": ""
 }
