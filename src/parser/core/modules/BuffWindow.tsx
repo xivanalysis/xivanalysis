@@ -144,9 +144,18 @@ export abstract class BuffWindowModule extends Module {
 			return
 		}
 
-		if (this.activeBuffWindow) {
+		if (this.activeBuffWindow && this.considerAction(action)) {
 			this.activeBuffWindow.rotation.push(event)
 		}
+	}
+
+	/**
+	 * This method MAY be overridden to return true or false, indicating whether or not this action should be considered within the buff window
+	 * If false is returned, the action will not be tracked AT ALL within the buff window, and will NOT appear within the Rotation column
+	 * @param action
+	 */
+	protected considerAction(action: Action) {
+		return true
 	}
 
 	private onApplyBuff(event: BuffEvent) {
