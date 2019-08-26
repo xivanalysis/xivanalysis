@@ -106,7 +106,7 @@ export default class Heat extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="mch.heat.accordion.message">Every overheat window should ideally include {OVERHEAT_GCD_TARGET} casts of <ActionLink {...ACTIONS.HEAT_BLAST}/> ({OVERHEAT_GCD_TARGET - 1} is also okay if you play with high ping) and as many casts of <ActionLink {...ACTIONS.GAUSS_ROUND}/> and <ActionLink {...ACTIONS.RICOCHET}/> as you can squeeze in between them. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="mch.heat.accordion.message">Every overheat window should ideally include {OVERHEAT_GCD_TARGET} casts of <ActionLink {...ACTIONS.HEAT_BLAST}/> and enough casts of <ActionLink {...ACTIONS.GAUSS_ROUND}/> and <ActionLink {...ACTIONS.RICOCHET}/> to avoid overcapping their charges. If you clip a lot while weaving, overcapping is still preferable to dropping a Heat Blast. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
 			<Accordion
 				exclusive={false}

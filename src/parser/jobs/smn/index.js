@@ -28,15 +28,19 @@ export default new Meta({
 		</Message>
 	</>,
 	// supportedPatches: {
-	// 	from: '4.2',
-	// 	to: '4.5',
+	// 	from: '5.0',
+	// 	to: '5.05',
 	// },
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NEMEKH, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.FRYTE, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.KELOS, role: ROLES.DEVELOPER},
 	],
 
-	changelog: [
-	],
+	changelog: [{
+		date: new Date('2019-08-16'),
+		Changes: () => <>Implemented Shadowbringers changes.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}],
 })

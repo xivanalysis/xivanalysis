@@ -15,11 +15,12 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const CORRECT_GCDS = [
 	ACTIONS.RUIN_III.id,
-	ACTIONS.RUIN_IV.id,
 	ACTIONS.OUTBURST.id,
 ]
 
-const DWT_LENGTH = 16000
+const DWT_CAST_TIME_MOD = -2.5
+
+export const DWT_LENGTH = 15000
 const OGCD_LENGTH = 750
 // Taking off three ogcd lengths - DWT to open, the final R3, and DF to close
 // eslint-disable-next-line no-magic-numbers
@@ -142,7 +143,7 @@ export default class DWT extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				content: <Trans id="smn.dwt.suggestions.bad-gcds.content">
-					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> and <ActionLink {...ACTIONS.RUIN_IV}/>, or <ActionLink {...ACTIONS.OUTBURST}/> in AoE situations.
+					GCDs used during Dreadwyrm Trance should be limited to <ActionLink {...ACTIONS.RUIN_III}/> in single target or <ActionLink {...ACTIONS.OUTBURST}/> in AoE situations.
 				</Trans>,
 				why: <Trans id="smn.dwt.suggestions.bad-gcds.why">
 					{badGcds} incorrect GCDs used during DWT.
@@ -159,7 +160,7 @@ export default class DWT extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.DREADWYRM_TRANCE.icon,
 				content: <Trans id="smn.dwt.suggestions.missed-gcds.content">
-					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don't end DWT early. Exceptions include: the boss is about to become invulnerable/die, <ActionLink {...ACTIONS.AETHERFLOW}/> is ready, or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
+					You can fit <strong>{possibleGcds}</strong> GCDs in each <ActionLink {...ACTIONS.DREADWYRM_TRANCE}/> at your GCD. In general, don't end DWT early. Exceptions include: the boss is about to become invulnerable/die or <ActionLink {...ACTIONS.DEATHFLARE}/> will cleave multiple targets.
 				</Trans>,
 				why: <Trans id="smn.dwt.suggestions.missed-gcds.why">
 					{this._missedGcds} additional GCDs could have been used during DWT.
@@ -193,7 +194,7 @@ export default class DWT extends Module {
 			casts: [],
 		}
 
-		this._ctIndex = this.castTime.set([ACTIONS.RUIN_III.id], 0)
+		this._ctIndex = this.castTime.set('all', DWT_CAST_TIME_MOD)
 	}
 
 	_stopAndSave(dfHits, endTime = this.parser.currentTimestamp) {

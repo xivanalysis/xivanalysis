@@ -7,7 +7,7 @@ export default {
 		id: 31,
 		name: 'Heavy Swing',
 		icon: 'https://xivapi.com/i/000000/000260.png',
-		potency: 160,
+		potency: 200,
 		onGcd: true,
 		combo: {
 			start: true,
@@ -40,7 +40,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 31,
-			potency: 200,
+			potency: 300,
 		},
 	},
 
@@ -52,7 +52,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 37,
-			potency: 280,
+			potency: 380,
 			end: true,
 		},
 	},
@@ -65,7 +65,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 37,
-			potency: 280,
+			potency: 380,
 			end: true,
 		},
 	},
@@ -78,7 +78,7 @@ export default {
 		id: 40,
 		name: 'Thrill of Battle',
 		icon: 'https://xivapi.com/i/000000/000263.png',
-		cooldown: 120,
+		cooldown: 90,
 		onGcd: false,
 	},
 
@@ -86,7 +86,7 @@ export default {
 		id: 43,
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
-		cooldown: 180,
+		cooldown: 240,
 		onGcd: false,
 	},
 

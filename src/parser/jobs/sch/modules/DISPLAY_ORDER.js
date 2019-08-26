@@ -2,5 +2,5 @@ export default {
 	AETHERFLOW: 51,
 	DOTS: 52,
 	WEAVING: 54,
-	CLERIC_STANCE: 99,
+	SWIFTCAST: 99,
 }

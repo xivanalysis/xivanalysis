@@ -7,6 +7,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -35,11 +36,14 @@ const HOLY_SPIRIT_AND_CIRCLE_IDS = [
 	ACTIONS.HOLY_CIRCLE.id,
 ]
 
+const REQUIESCAT_DURATION_MILLIS = STATUSES.REQUIESCAT.duration * 1000
+
 class RequiescatState {
 	start: number
 	end: number | null = null
 	rotation: CastEvent[] = []
 	hasAscociatedBuff: boolean = false
+	isRushing: boolean = false
 
 	constructor(start: number) {
 		this.start = start
@@ -60,6 +64,7 @@ export default class Requiescat extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private invuln!: Invulnerability
 
 	// Requiescat Casts
 	private requiescats: RequiescatState[] = []
@@ -92,7 +97,15 @@ export default class Requiescat extends Module {
 
 		if (actionId === ACTIONS.REQUIESCAT.id) {
 			// Add new cast to the list
-			this.requiescats.push(new RequiescatState(event.timestamp))
+			const reqState = new RequiescatState(event.timestamp)
+			const reqEnd = event.timestamp + REQUIESCAT_DURATION_MILLIS
+
+			const isBossInvulnBeforeEnd = this.invuln.isUntargetable('all', reqEnd)
+				|| this.invuln.isInvulnerable('all', reqEnd)
+
+			reqState.isRushing = (reqEnd >= this.parser.fight.end_time)
+				|| isBossInvulnBeforeEnd
+			this.requiescats.push(reqState)
 		}
 
 		const lastRequiescat = this.lastRequiescat
@@ -120,10 +133,10 @@ export default class Requiescat extends Module {
 	}
 
 	private onComplete() {
-		// The difference between Holy Spirit and Confiteor is massive (450 potency). For this reason, it condenses suggestions to just log
-		// any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
+		// The difference between Holy Spirit and Confiteor is massive (450 potency before multipliers). For this reason, it condenses suggestions
+		// to just log any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
 		const missedCasts = this.requiescats
-			.filter(requiescat => requiescat.hasAscociatedBuff)
+			.filter(requiescat => requiescat.hasAscociatedBuff && !requiescat.isRushing)
 			.reduce((sum, requiescat) =>
 				sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits) + Math.max(0, CONSTANTS.CONFITEOR.EXPECTED - requiescat.confiteors), 0)
 		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAscociatedBuff).length
