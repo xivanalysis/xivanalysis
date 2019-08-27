@@ -42,18 +42,27 @@ export default new Meta({
 		{user: CONTRIBUTORS.VULCWEN, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
-	changelog: [{
-		date: new Date('2019-07-08'),
-		Changes: () => <>
-			Initial changes for Shadowbringers:&nbsp;
-			<ul>
-				<li>Updated cast time for Cure and Medica II</li>
-				<li>Added new actions: Dia, Glare, Afflatus Solace, Afflatus Rapture, Afflatus Misery, and Temperance</li>
-				<li>Updated DoT module to check Dia uptime, and removed Aero II and Aero III checks</li>
-				<li>Removed outdated modules</li>
-				<li>Added new Lilies module</li>
-			</ul>
-		</>,
-		contributors: [CONTRIBUTORS.NIV],
-	}],
+	changelog: [
+		{
+			date: new Date('2019-08-24'),
+			Changes: () => <>
+				Added Swiftcast module.
+			</>,
+			contributors: [CONTRIBUTORS.NIV],
+		},
+		{
+			date: new Date('2019-07-08'),
+			Changes: () => <>
+				Initial changes for Shadowbringers:&nbsp;
+				<ul>
+					<li>Updated cast time for Cure and Medica II</li>
+					<li>Added new actions: Dia, Glare, Afflatus Solace, Afflatus Rapture, Afflatus Misery, and Temperance</li>
+					<li>Updated DoT module to check Dia uptime, and removed Aero II and Aero III checks</li>
+					<li>Removed outdated modules</li>
+					<li>Added new Lilies module</li>
+				</ul>
+			</>,
+			contributors: [CONTRIBUTORS.NIV],
+		},
+	],
 })

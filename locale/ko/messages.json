@@ -802,5 +802,8 @@
   "whm.overheal.requirement.hot": "오버 힐 (지속 힐)",
   "whm.overheal.requirement.nonhot": "오버 힐 (단일 힐)",
   "whm.overheal.rule.description": "대상의 최대 체력 이상의 힐을 하는것을 피하십시오. 일부 오버힐은 불가피하지만 오버힐 자체는 이득이 없을뿐더러 적개심만 올립니다. 효율적 마나관리를 위해 효율적으로 힐을 하십시오.",
-  "whm.overheal.rule.name": "오버힐을 피하세요"
+  "whm.overheal.rule.name": "오버힐을 피하세요",
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.swiftcast.missed.suggestion.why": "",
+  "whm.swiftcast.title": ""
 }

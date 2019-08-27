@@ -802,5 +802,8 @@
   "whm.overheal.requirement.hot": "Soins en surplus (HoT)",
   "whm.overheal.requirement.nonhot": "Soins en surplus (non-HoT)",
   "whm.overheal.rule.description": "Évitez de gaspiller des heals qui rempliront plus que la barre de vie du joueur ciblé. Bien que de l'overheal est inévitable, l'overheal ne fait que générer plus d'inimité, pour aucun autre gain. De plus, être efficace en soignant vous aide dans la gestion de votre Magie prompte.",
-  "whm.overheal.rule.name": "Éviter l'overheal"
+  "whm.overheal.rule.name": "Éviter l'overheal",
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.swiftcast.missed.suggestion.why": "",
+  "whm.swiftcast.title": ""
 }
