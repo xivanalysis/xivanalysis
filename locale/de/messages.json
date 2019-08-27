@@ -803,7 +803,7 @@
   "whm.overheal.requirement.nonhot": "",
   "whm.overheal.rule.description": "",
   "whm.overheal.rule.name": "Vermeide Overheal",
-  "whm.swiftcast.missed.suggestion.content": "",
-  "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": ""
+  "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwenungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",
+  "whm.swiftcast.missed.suggestion.why": "{missedSwifts}x Spontanität-Aktivierungen verschwendet, da kein Zauber eingesetzt wurde, bevor Spontanität ablief.",
+  "whm.swiftcast.title": "Spontanität-Anwendungen"
 }
