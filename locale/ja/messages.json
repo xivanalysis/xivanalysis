@@ -802,5 +802,8 @@
   "whm.overheal.requirement.hot": "オーバーヒール (HoT)",
   "whm.overheal.requirement.nonhot": "オーバーヒール (非HoT)",
   "whm.overheal.rule.description": "対象のHP減少を補うために過大な回復をしないでください。避けられないオーバーヒールはありますが、オーバーヒールは回復をしない上に敵視が上昇します。さらに、効率的に回復を行うことはMP管理にも役立ちます。",
-  "whm.overheal.rule.name": "オーバーヒールを避けてください。"
+  "whm.overheal.rule.name": "オーバーヒールを避けてください。",
+  "whm.swiftcast.missed.suggestion.content": "",
+  "whm.swiftcast.missed.suggestion.why": "",
+  "whm.swiftcast.title": ""
 }
