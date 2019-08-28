@@ -22,6 +22,10 @@
 	display: none;
 }
 
+:global .vis-item.vis-range {
+	opacity: 1;
+}
+
 :global .vis-range .vis-item-content {
 	padding: 0;
 }
@@ -41,7 +45,6 @@
 	position: relative;
 	overflow: hidden;
 	display: flex;
-	opacity: 0.8;
 }
 
 :global .progress-fl {

@@ -147,19 +147,21 @@ export default class Cooldowns extends Module {
 		}
 
 		// Add CD info to the timeline
-		cd.history.forEach(use => {
-			if (!use.shared) {
-				this._groups[actionId].addItem(new Item({
-					type: 'range',
-					start: use.timestamp - this.parser.fight.start_time,
-					length: use.length,
-					durationPercent: use.durationPercent,
-					actionIcon: action.icon,
-					actionName: action.name,
-					content: '',
-				}))
-			}
-		})
+		cd.history
+			.sort((a, b) => a.timestamp - b.timestamp)
+			.forEach(use => {
+				if (!use.shared) {
+					this._groups[actionId].addItem(new Item({
+						type: 'range',
+						start: use.timestamp - this.parser.fight.start_time,
+						length: use.length,
+						durationPercent: use.durationPercent,
+						actionIcon: action.icon,
+						actionName: action.name,
+						content: '',
+					}))
+				}
+			})
 
 		return true
 	}
@@ -197,7 +199,7 @@ export default class Cooldowns extends Module {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 			shared: sharedCooldown,
-			durationPercent: action.cooldown > 0 && !action.onGcd ? action.duration / action.cooldown * 100 : 0,
+			durationPercent: action.cooldown > 0 && action.duration > 0 && !action.onGcd ? action.duration / action.cooldown * 100 : 0,
 			invulnTime: 0,
 		}
 
