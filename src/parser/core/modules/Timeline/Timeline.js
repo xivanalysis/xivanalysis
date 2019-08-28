@@ -62,6 +62,10 @@ export default class Timeline extends Module {
 		}
 	}
 
+	_visibleFrameTemplate(item) {
+		return `<div class="progress-wrapper-fl"><div class="progress-fl" style = "width:${item.durationPercent}%"><img src="${item.actionIcon}" alt="${item.actionName}"/> </div></div>`
+	}
+
 	output() {
 		const options = {
 			// General styling
@@ -87,7 +91,7 @@ export default class Timeline extends Module {
 			min: 0,
 			max: this.parser.fightDuration,
 			zoomMin: 10000,
-
+			selectable: false,
 			// View defaults
 			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,
@@ -96,6 +100,8 @@ export default class Timeline extends Module {
 			// Zoom key handling
 			zoomKey: 'ctrlKey',
 			horizontalScroll: true,
+
+			visibleFrameTemplate: (item) => this._visibleFrameTemplate(item),
 		}
 
 		let items = this._items

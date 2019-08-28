@@ -98,6 +98,7 @@ export default {
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/002000/002626.png',
 		cooldown: 150,
+		duration: 15,
 	},
 
 	STONE_III: {

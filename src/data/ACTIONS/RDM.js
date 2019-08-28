@@ -7,6 +7,7 @@ export default {
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/003000/003218.png',
 		cooldown: 120,
+		duration: 20,
 	},
 	ACCELERATION: {
 		id: 7518,
@@ -20,6 +21,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003219.png',
 		cooldown: 110,
 		breaksCombo: true,
+		duration: 10,
 	},
 	CONTRE_SIXTE: {
 		id: 7519,

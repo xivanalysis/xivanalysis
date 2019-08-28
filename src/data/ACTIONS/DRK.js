@@ -16,18 +16,21 @@ export default {
 		name: 'Dark Mind',
 		icon: 'https://xivapi.com/i/003000/003076.png',
 		cooldown: 60,
+		duration: 10,
 	},
 	SHADOW_WALL: {
 		id: 3636,
 		name: 'Shadow Wall',
 		icon: 'https://xivapi.com/i/003000/003075.png',
 		cooldown: 120,
+		duration: 10,
 	},
 	LIVING_DEAD: {
 		id: 3638,
 		name: 'Living Dead',
 		icon: 'https://xivapi.com/i/003000/003077.png',
 		cooldown: 300,
+		duration: 10,
 	},
 	// Party Defensive
 	DARK_MISSIONARY: {
@@ -35,6 +38,7 @@ export default {
 		name: 'Dark Missionary',
 		icon: 'https://xivapi.com/i/003000/003087.png',
 		cooldown: 90,
+		duration: 15,
 	},
 	// Resource Buffs
 	BLOOD_WEAPON: {
@@ -42,18 +46,21 @@ export default {
 		name: 'Blood Weapon',
 		icon: 'https://xivapi.com/i/003000/003071.png',
 		cooldown: 60,
+		duration: 10,
 	},
 	THE_BLACKEST_NIGHT: {
 		id: 7393,
 		name: 'The Blackest Night',
 		icon: 'https://xivapi.com/i/003000/003081.png',
 		cooldown: 15,
+		duration: 7,
 	},
 	DELIRIUM: {
 		id: 7390,
 		name: 'Delirium',
 		icon: 'https://xivapi.com/i/003000/003078.png',
 		cooldown: 90,
+		duration: 10,
 	},
 	// Damage
 	PLUNGE: {
@@ -73,6 +80,7 @@ export default {
 		name: 'Salted Earth',
 		icon: 'https://xivapi.com/i/003000/003066.png',
 		cooldown: 90,
+		duration: 15,
 	},
 	ABYSSAL_DRAIN: {
 		id: 3641,
@@ -85,6 +93,7 @@ export default {
 		name: 'Living Shadow',
 		icon: 'https://xivapi.com/i/003000/003088.png',
 		cooldown: 120,
+		duration: 24,
 	},
 	FLOOD_OF_SHADOW: {
 		id: 16469,

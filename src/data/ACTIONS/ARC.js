@@ -41,6 +41,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000353.png',
 		onGcd: false,
 		cooldown: 80,
+		duration: 10,
 	},
 	WINDBITE: {
 		id: 113,
@@ -55,6 +56,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000352.png',
 		onGcd: false,
 		cooldown: 80,
+		duration: 20,
 	},
 	REPELLING_SHOT: {
 		id: 112,

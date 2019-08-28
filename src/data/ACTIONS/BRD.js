@@ -29,6 +29,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002601.png',
 		onGcd: false,
 		cooldown: 180,
+		duration: 20,
 	},
 	EMPYREAL_ARROW: {
 		id: 3558,
@@ -83,6 +84,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002612.png',
 		onGcd: false,
 		cooldown: 180,
+		duration: 15,
 	},
 	CAUSTIC_BITE: {
 		id: 7406,
@@ -104,6 +106,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002615.png',
 		onGcd: false,
 		cooldown: 90,
+		duration: 15,
 	},
 	REFULGENT_ARROW: {
 		id: 7409,

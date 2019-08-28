@@ -125,6 +125,7 @@ export default {
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
+		duration: 30,
 	},
 
 	EXCOGITATION: {
@@ -147,6 +148,7 @@ export default {
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
 		cooldown: 120,
+		duration: 15,
 	},
 
 	SCH_AETHERPACT: {

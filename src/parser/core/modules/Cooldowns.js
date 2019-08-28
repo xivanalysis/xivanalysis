@@ -1,4 +1,3 @@
-import React from 'react'
 import _ from 'lodash'
 
 import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
@@ -151,10 +150,13 @@ export default class Cooldowns extends Module {
 		cd.history.forEach(use => {
 			if (!use.shared) {
 				this._groups[actionId].addItem(new Item({
-					type: 'background',
+					type: 'range',
 					start: use.timestamp - this.parser.fight.start_time,
 					length: use.length,
-					content: <img src={action.icon} alt={action.name} />,
+					durationPercent: use.durationPercent,
+					actionIcon: action.icon,
+					actionName: action.name,
+					content: '',
 				}))
 			}
 		})
@@ -195,6 +197,7 @@ export default class Cooldowns extends Module {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 			shared: sharedCooldown,
+			durationPercent: action.cooldown > 0 && !action.onGcd ? action.duration / action.cooldown * 100 : 0,
 			invulnTime: 0,
 		}
 
@@ -287,7 +290,7 @@ export default class Cooldowns extends Module {
 
 		return cd.history.reduce(
 			(time, status) => time + this.getAdjustedTimeOnCooldown(status, currentTimestamp, extension),
-			cd.current? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
+			cd.current ? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
 		)
 	}
 

@@ -80,6 +80,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000263.png',
 		cooldown: 90,
 		onGcd: false,
+		duration: 10,
 	},
 
 	HOLMGANG: {
@@ -88,6 +89,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		cooldown: 240,
 		onGcd: false,
+		duration: 6,
 	},
 
 	VENGEANCE: {
@@ -96,5 +98,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000267.png',
 		cooldown: 120,
 		onGcd: false,
+		duration: 10,
 	},
 }

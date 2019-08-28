@@ -153,6 +153,7 @@ export default {
 		name: 'Manaward',
 		icon: 'https://xivapi.com/i/000000/000463.png',
 		cooldown: 120,
+		duration: 20,
 	},
 	AETHERIAL_MANIPULATION: {
 		id: 155,
@@ -165,18 +166,21 @@ export default {
 		name: 'Ley Lines',
 		icon: 'https://xivapi.com/i/002000/002656.png',
 		cooldown: 90,
+		duration: 30,
 	},
 	SHARPCAST: {
 		id: 3574,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/002000/002657.png',
 		cooldown: 30,
+		duration: 15,
 	},
 	ENOCHIAN: {
 		id: 3575,
 		name: 'Enochian',
 		icon: 'https://xivapi.com/i/002000/002658.png',
 		cooldown: 30,
+		duration: 30,
 	},
 	BETWEEN_THE_LINES: {
 		id: 7419,

@@ -105,6 +105,7 @@ export default {
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
 		cooldown: 90,
+		duration: 15,
 	},
 
 	ENLIGHTENMENT: {

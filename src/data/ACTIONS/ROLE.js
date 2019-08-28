@@ -6,6 +6,7 @@ export default {
 		name: 'Rampart',
 		icon: 'https://xivapi.com/i/000000/000801.png',
 		cooldown: 90,
+		duration: 20,
 	},
 
 	LOW_BLOW: {
@@ -41,6 +42,7 @@ export default {
 		name: 'Reprisal',
 		icon: 'https://xivapi.com/i/000000/000806.png',
 		cooldown: 60,
+		duration: 5,
 	},
 
 	AWARENESS: {
@@ -116,6 +118,7 @@ export default {
 		name: 'Lucid Dreaming',
 		icon: 'https://xivapi.com/i/000000/000865.png',
 		cooldown: 60,
+		duration: 21,
 	},
 
 	SWIFTCAST: {
@@ -123,6 +126,7 @@ export default {
 		name: 'Swiftcast',
 		icon: 'https://xivapi.com/i/000000/000866.png',
 		cooldown: 60,
+		duration: 10,
 	},
 
 	EYE_FOR_AN_EYE: {
@@ -144,6 +148,7 @@ export default {
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/000000/000869.png',
 		cooldown: 120,
+		duration: 6,
 	},
 
 	RESCUE: {
@@ -194,6 +199,7 @@ export default {
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/000000/000846.png',
 		cooldown: 180,
+		duration: 15,
 	},
 
 	REFRESH: {
@@ -222,6 +228,7 @@ export default {
 		name: 'Palisade',
 		icon: 'https://xivapi.com/i/000000/000850.png',
 		cooldown: 150,
+		duration: 15,
 	},
 
 	// Magical Ranged DPS
@@ -230,6 +237,7 @@ export default {
 		name: 'Addle',
 		icon: 'https://xivapi.com/i/000000/000861.png',
 		cooldown: 90,
+		duration: 10,
 	},
 
 	DRAIN: {
@@ -302,6 +310,7 @@ export default {
 		name: 'Feint',
 		icon: 'https://xivapi.com/i/000000/000828.png',
 		cooldown: 120,
+		duration: 10,
 	},
 
 	CRUTCH: {
@@ -316,5 +325,6 @@ export default {
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
 		cooldown: 90,
+		duration: 10,
 	},
 }

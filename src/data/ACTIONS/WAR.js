@@ -79,6 +79,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002559.png',
 		cooldown: 25,
 		onGcd: false,
+		duration: 5,
 	},
 
 	SHAKE_IT_OFF: {
@@ -87,6 +88,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90,
 		onGcd: false,
+		duration: 15,
 	},
 
 	ONSLAUGHT: {
@@ -146,5 +148,6 @@ export default {
 		icon: 'https://https://xivapi.com/i/002000/002567.png',
 		cooldown: 25,
 		cooldownGroup: 9,
+		duration: 6,
 	},
 }

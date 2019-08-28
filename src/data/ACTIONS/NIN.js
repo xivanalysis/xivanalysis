@@ -159,6 +159,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60,
+		duration: 10,
 	},
 
 	HELLFROG_MEDIUM: {
@@ -207,5 +208,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
 		cooldown: 110,
+		duration: 15,
 	},
 }

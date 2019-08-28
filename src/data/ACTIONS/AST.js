@@ -43,6 +43,7 @@ export default {
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/003000/003135.png',
 		cooldown: 90,
+		duration: 15,
 	},
 
 	MALEFIC_III: {
@@ -129,6 +130,7 @@ export default {
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/003000/003139.png',
 		cooldown: 120,
+		duration: 20,
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
@@ -136,6 +138,7 @@ export default {
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 90,
+		duration: 18,
 	},
 
 	CELESTIAL_OPPOSITION: {
@@ -150,6 +153,7 @@ export default {
 		name: 'Earthly Star',
 		icon: 'https://xivapi.com/i/003000/003143.png',
 		cooldown: 60,
+		duration: 30,
 	},
 
 	STELLAR_DETONATION: {
@@ -222,6 +226,7 @@ export default {
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/003000/003550.png',
 		cooldown: 60,
+		duration: 30,
 	},
 
 	HOROSCOPE_ACTIVATION: {
@@ -236,6 +241,7 @@ export default {
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/003000/003552.png',
 		cooldown: 120,
+		duration: 20,
 	},
 
 	DIVINATION: {
@@ -243,6 +249,7 @@ export default {
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/003000/003553.png',
 		cooldown: 120,
+		duration: 15,
 	},
 
 	CELESTIAL_INTERSECTION: {

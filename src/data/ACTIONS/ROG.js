@@ -98,6 +98,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
 		cooldown: 60,
+		duration: 10,
 	},
 
 	SHADE_SHIFT: {
@@ -106,5 +107,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
 		cooldown: 120,
+		duration: 20,
 	},
 }

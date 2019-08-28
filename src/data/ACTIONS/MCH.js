@@ -144,6 +144,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
+		duration: 5,
 	},
 
 	WILDFIRE: {
@@ -152,6 +153,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
 		cooldown: 120,
+		duration: 10,
 	},
 
 	ROOK_AUTOTURRET: {
@@ -176,6 +178,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003041.png',
 		onGcd: false,
 		cooldown: 10,
+		duration: 8,
 	},
 
 	RICOCHET: {
@@ -216,6 +219,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
 		cooldown: 180,
+		duration: 15,
 	},
 
 	AUTOMATON_QUEEN: {
@@ -224,6 +228,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003501.png',
 		onGcd: false,
 		cooldown: 6,
+		duration: 20,
 	},
 
 	QUEEN_OVERDRIVE: {

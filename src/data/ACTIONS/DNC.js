@@ -216,6 +216,7 @@ export default {
 		name: 'Shield Samba',
 		onGcd: false,
 		cooldown: 180,
+		duration: 15,
 	},
 	FLOURISH: {
 		id: 16013,

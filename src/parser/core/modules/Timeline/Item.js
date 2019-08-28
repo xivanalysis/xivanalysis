@@ -55,6 +55,9 @@ export default class Item {
 			type: this.type,
 			limitSize: this.limitSize,
 			editable: this.editable,
+			durationPercent: this.durationPercent,
+			actionIcon: this.actionIcon,
+			actionName: this.actionName,
 		}
 	}
 }

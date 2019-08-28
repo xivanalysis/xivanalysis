@@ -127,6 +127,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003402.png',
 		onGcd: false,
 		cooldown: 60,
+		duration: 20,
 	},
 	BLOODFEST: {
 		id: 16164,
@@ -198,6 +199,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003415.png',
 		onGcd: false,
 		cooldown: 60,
+		duration: 18,
 	},
 	SUPERBOLIDE: {
 		id: 16152,
@@ -205,6 +207,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003416.png',
 		onGcd: false,
 		cooldown: 360,
+		duration: 8,
 	},
 	CAMOUFLAGE: {
 		id: 16140,
@@ -212,6 +215,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003404.png',
 		onGcd: false,
 		cooldown: 90,
+		duration: 20,
 	},
 	NEBULA: {
 		id: 16148,
@@ -219,6 +223,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003412.png',
 		onGcd: false,
 		cooldown: 120,
+		duration: 10,
 	},
 	HEART_OF_STONE: {
 		id: 16161,
@@ -226,6 +231,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003425.png',
 		onGcd: false,
 		cooldown: 25,
+		duration: 7,
 	},
 	HEART_OF_LIGHT: {
 		id: 16160,
@@ -233,6 +239,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003424.png',
 		onGcd: false,
 		cooldown: 90,
+		duration: 15,
 	},
 	CONTINUATION: {
 		id: 16155,
