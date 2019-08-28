@@ -33,7 +33,7 @@ export default {
 	DARK_MISSIONARY: {
 		id: 16471,
 		name: 'Dark Missionary',
-		icon: 'https://xivapi.com/i/026000/026040.png',
+		icon: 'https://xivapi.com/i/003000/003087.png',
 		cooldown: 90,
 	},
 	// Resource Buffs
