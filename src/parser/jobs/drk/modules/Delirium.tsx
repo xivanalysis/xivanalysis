@@ -6,10 +6,12 @@ import STATUSES from 'data/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 export default class Delirium extends BuffWindowModule {
 	static handle = 'delirium'
 	static title = t('drk.delirium.title')`Delirium Usage`
+	static displayOrder = DISPLAY_ORDER.DELIRIUM
 
 	buffAction = ACTIONS.DELIRIUM
 	buffStatus = STATUSES.DELIRIUM
