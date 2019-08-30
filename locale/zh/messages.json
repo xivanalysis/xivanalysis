@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "龙神阶段打错了 {badGcds} 个GCD。",
   "smn.dwt.suggestions.missed-deathflares.content": "确保每次以<1/>结束<0/> ，不这样做会有巨大的伤害损失。",
   "smn.dwt.suggestions.missed-deathflares.why": "龙神附体中，{0} 次未使用死星核爆。",
-  "smn.dwt.suggestions.missed-gcds.content": "",
-  "smn.dwt.suggestions.missed-gcds.why": "应当在龙神附体中多使用{0} 个GCD技能。",
   "smn.dwt.title": "龙神附体",
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "",
