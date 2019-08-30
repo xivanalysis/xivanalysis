@@ -38,7 +38,7 @@ class BuffWindowState {
 	}
 }
 
-interface SeverityTiers {
+export interface SeverityTiers {
 	[key: number]: number
 }
 
