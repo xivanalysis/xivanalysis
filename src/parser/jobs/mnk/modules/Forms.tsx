@@ -10,9 +10,10 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Downtime from 'parser/core/modules/Downtime'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-const FORM_TIMEOUT_MILLIS = 15000
+const FORM_TIMEOUT_MILLIS_200 = 10000
+const FORM_TIMEOUT_MILLIS_505 = 15000
 
 const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
@@ -34,7 +35,6 @@ export default class Forms extends Module {
 	@dependency private suggestions!: Suggestions
 
 	private formless: number = 0
-	private poorForms: number = 0
 	private resetForms: number = 0
 	private skippedForms: number = 0
 	private droppedForms: number = 0
@@ -56,20 +56,16 @@ export default class Forms extends Module {
 			return
 		}
 
+		const FORM_TIMEOUT_MILLIS = this.parser.patch.before('5.05')
+			? FORM_TIMEOUT_MILLIS_200
+			: FORM_TIMEOUT_MILLIS_505
+
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
 			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
 			const untargetable = this.lastFormChanged !== undefined ?
 				this.downtime.getDowntime(this.lastFormChanged, event.timestamp) :
 				0
-
-			// If PB is active, we can ignore form unless someone is really derpy
-			if (this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)) {
-				if (action === ACTIONS.FORM_SHIFT.id) {
-					this.poorForms++
-				}
-				return
-			}
 
 			if (action === ACTIONS.FORM_SHIFT.id) {
 				// Only ignore Form Shift if we're in downtime
@@ -84,12 +80,15 @@ export default class Forms extends Module {
 			switch (currentForm) {
 			case STATUSES.OPO_OPO_FORM.id:
 				break
+
 			// Using Opo-Opo skills resets form
 			case STATUSES.RAPTOR_FORM.id:
 			case STATUSES.COEURL_FORM.id:
 				if (OPO_OPO_SKILLS.includes(action)) { this.resetForms++ }
 				break
+
 			default:
+				// No form used
 				if (OPO_OPO_SKILLS.includes(action)) {
 					this.formless++
 				}
@@ -100,8 +99,6 @@ export default class Forms extends Module {
 						this.droppedForms++
 					}
 				}
-
-				break
 			}
 		}
 	}
@@ -115,41 +112,30 @@ export default class Forms extends Module {
 	}
 
 	private onComplete(): void {
-		// Wasting PB
-		if (this.poorForms >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.PERFECT_BALANCE.icon,
-				severity: SEVERITY.MAJOR,
-				content: <Trans id="mnk.forms.suggestions.perfectbalance.content">
-					Avoid using <ActionLink {...ACTIONS.FORM_SHIFT}/> during <ActionLink {...STATUSES.PERFECT_BALANCE}/>. It does nothing and takes up a GCD you could better use for doing damage.
-				</Trans>,
-				why: <Trans id="mnk.forms.suggestions.perfectbalance.why">
-					<Plural value={this.poorForms} one="GCD was" other="GCDs were" /> wasted under <StatusLink {...STATUSES.PERFECT_BALANCE}/> by <ActionLink {...ACTIONS.FORM_SHIFT}/>.
-				</Trans>,
-			}))
-		}
-
 		// Using the wrong form
-		if (this.formless >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FORM_SHIFT.icon,
-				severity: SEVERITY.MAJOR,
-				content: <Trans id="mnk.forms.suggestions.formless.content">
-					Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> and <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. Their special effects only activate when in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has equal or higher potency depending on crits.
-				</Trans>,
-				why: <Trans id="mnk.forms.suggestions.formless.why">
-					<Plural value={this.formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling this special effects.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FORM_SHIFT.icon,
+			severity: SEVERITY.MEDIUM,
+			content: <Trans id="mnk.forms.suggestions.formless.content">
+				Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. The form bonus is only activated in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has higher potency when buffed.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+			},
+			value: this.formless,
+			why: <Trans id="mnk.forms.suggestions.formless.why">
+				<Plural value={this.formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling form bonus effects.
+			</Trans>,
+		}))
 
 		// Cancelling forms
 		if (this.resetForms >= 1) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.FORM_SHIFT.icon,
-				severity: SEVERITY.MINOR,
+				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.reset.content">
-					Try not to cancel combos by using <ActionLink {...ACTIONS.BOOTSHINE}/>, <ActionLink {...ACTIONS.DRAGON_KICK}/>, or <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/>.
+					Try not to cancel combos by using <ActionLink {...ACTIONS.BOOTSHINE}/>, <ActionLink {...ACTIONS.DRAGON_KICK}/>, or <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> mid-rotation.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
 					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
@@ -163,7 +149,7 @@ export default class Forms extends Module {
 				icon: ACTIONS.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.skipped.content">
-					Avoid skipping Forms. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING}/> by skipping.
+					Avoid skipping Forms outside of downtime. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING}/> by skipping.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.skipped.why">
 					<Plural value={this.skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
