@@ -38,7 +38,7 @@ class TwinState {
 	}
 }
 
-export default class BuffUptime extends Module {
+export default class TwinSnakes extends Module {
 	static handle = 'twinsnakes'
 
 	@dependency private checklist!: Checklist
@@ -116,7 +116,7 @@ export default class BuffUptime extends Module {
 		if (this.twinSnake && this.twinSnake.end) {
 			const unbuffedGcds = this.gcdsSinceTS - this.twinSnake.gcds
 			const unbuffedTime = event.timestamp - this.twinSnake.end
-			// TODO: some kind of downtime check
+			// TODO: some kind of downtime check, maybe a warning for non-GL4
 			if (unbuffedGcds > 1 || unbuffedTime > TWIN_SNAKES_CYCLE_BUFFER) {
 				this.lateSnakes++
 			}
