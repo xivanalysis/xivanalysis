@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "{badGcds} GCD non nécessaires utilisés pendant la Transe-Bahamut.",
   "smn.dwt.suggestions.missed-deathflares.content": "Assurez-vous de toujours finir votre <0/> avec un <1/>. C'est une grosse perte de DPS si vous ne le faites pas.",
   "smn.dwt.suggestions.missed-deathflares.why": "{0} Transe-Bahamut sans Brasier de Mort.",
-  "smn.dwt.suggestions.missed-gcds.content": "",
-  "smn.dwt.suggestions.missed-gcds.why": "{0} GCD additionnels auraient pu être utilisés pendant Transe-Bahamut.",
   "smn.dwt.title": "",
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "",
