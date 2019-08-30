@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "{badGcds} falsche GCDs während Bahamut-Trance benutzt.",
   "smn.dwt.suggestions.missed-deathflares.content": "Stelle sicher, dass du <0/> immer mit mit einer <1/> beendest. Andernfalls ist das ein riesiger Schadensverlust.",
   "smn.dwt.suggestions.missed-deathflares.why": "{0} Bahamut-Trance ohne Aktivierung von Todesflamme.",
-  "smn.dwt.suggestions.missed-gcds.content": "Du kannst zeitlich <0>{possibleGcds}</0> Angriffe mit globaler Abklingzeit während jeder Aktivierung von <1/> wirken. Allgemein gesprochen, solltest du Bahamut-Trance nicht vorzeitig beenden - mit Ausnahme folgender Situationen: Der Boss wird unverwundbar, stirbt oder <3/> wird mehrere Ziele treffen.",
-  "smn.dwt.suggestions.missed-gcds.why": "{0} zusätzliche GCDs hätten während Bahamut-Trance benutzt werden können.",
   "smn.dwt.title": "",
   "smn.gauge.aetherflow-action-at-0": "Die Aufzeichnung enthält eine Anwendung von <0/> mit 0 verfügbaren Aufladungen von Ätherfluss.",
   "smn.gauge.suggestions.lost-aetherflow.content": "Stelle sicher, dass du immer 2 volle Aufladungen von Ätherfluss pro Zauberanwendung erhältst. Jede Aufladung weniger, resultiert in beachtlich weniger Schaden.",
