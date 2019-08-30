@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "바하무트 빙의 중 다른 스킬로 글쿨을 사용한 횟수: {badGcds}",
   "smn.dwt.suggestions.missed-deathflares.content": "항상 <0/>의 마지막에 <1/>를 사용하세요. 사용하지 못한 경우 Dps에 큰 손실를 입습니다.",
   "smn.dwt.suggestions.missed-deathflares.why": "바하무트 빙의 중 데스플레어를 사용하지 않은 횟수: {0}",
-  "smn.dwt.suggestions.missed-gcds.content": "",
-  "smn.dwt.suggestions.missed-gcds.why": "바하무트 빙의상태에 추가스킬 사용이 가능한 횟수:{0}",
   "smn.dwt.title": "바하무트 빙의",
   "smn.gauge.aetherflow-action-at-0": "에테르 순환이 준비되지 않는 상태에서 <0/>사용이 확인되었습니다.",
   "smn.gauge.suggestions.lost-aetherflow.content": "에테르 순환이 사용 할때마다 2스택이 충전되도록 하십시오. 무의미하게 잃은 스택은 곧 위력 손해를 의미합니다.",
