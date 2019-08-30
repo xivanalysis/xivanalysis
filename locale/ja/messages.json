@@ -731,8 +731,6 @@
   "smn.dwt.suggestions.bad-gcds.why": "トランス・バハムート状態にて不正なGCDの使用数は{badGcds}個あります。",
   "smn.dwt.suggestions.missed-deathflares.content": "必ず<0/>の終わり直前に<1/>を使ってください。使わないと総火力が全体的にに下がることになります。",
   "smn.dwt.suggestions.missed-deathflares.why": "デスフレア無しのトランス・バハムート使用数：{0}",
-  "smn.dwt.suggestions.missed-gcds.content": "",
-  "smn.dwt.suggestions.missed-gcds.why": "トランス・バハムートの状態で追加GCDが回せる回数：{0}",
   "smn.dwt.title": "",
   "smn.gauge.aetherflow-action-at-0": "",
   "smn.gauge.suggestions.lost-aetherflow.content": "",
