@@ -12,6 +12,5 @@ export default class Weaving extends CoreWeaving {
 			}
 
 		return super.isBadWeave(weave)
-		}
 	}
 }
