@@ -3,10 +3,10 @@ import Cooldowns from './Cooldowns'
 import Demolish from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
-import GreasedLightning from './GreasedLightning'
 import MnkAoE from './MnkAoE'
 import OGCDDowntime from './OGCDDowntime'
 import RiddleOfFire from './RiddleOfFire'
+import RiddleOfEarth from './RiddleOfEarth'
 import Speedmod from './Speedmod'
 import Steppies from './Steppies'
 import Weaving from './Weaving'
@@ -17,10 +17,10 @@ export default [
 	Demolish,
 	Fists,
 	Forms,
-	GreasedLightning,
 	MnkAoE,
 	OGCDDowntime,
 	RiddleOfFire,
+	RiddleOfEarth,
 	Speedmod,
 	Steppies,
 	Weaving,
