@@ -190,7 +190,7 @@ export default class TwinSnakes extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FOUR_POINT_FURY.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.toocalm.content">
-				Try to get <StatusLink {...STATUSES.TWIN_SNAKES} /> up before using <ActionLink {...ACTIONS.FOUR_POINT_FURY} /> to take advantage of it's free refresh.
+				Try to get <StatusLink {...STATUSES.TWIN_SNAKES} /> up before using <ActionLink {...ACTIONS.FOUR_POINT_FURY} /> to take advantage of its free refresh.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
