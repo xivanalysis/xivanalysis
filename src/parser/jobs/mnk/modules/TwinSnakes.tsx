@@ -20,13 +20,12 @@ const TWIN_SNAKES_CYCLE_BUFFER = 3000
 const TWIN_SNAKES_CYCLE_LENGTH = 6
 
 class TwinState {
-	casts: CastEvent[]
+	casts: CastEvent[] = []
 	start: number
 	end?: number
 
 	constructor(timestamp: number) {
 		this.start = timestamp
-		this.casts = []
 	}
 
 	// Mainly here in case we care about oGCDs being unbuffed later

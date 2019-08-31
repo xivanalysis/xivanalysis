@@ -465,6 +465,8 @@
   "mnk.forms.suggestions.dropped.why": "失去 {0} 次身形。",
   "mnk.forms.suggestions.formless.content": "避免在<2/>的持续时间之外使用<0/>和<1/>。它们的特殊效果仅在正确的身形内才会生效，而<3/>则拥有同等或更高的威力（取决于暴击）。",
   "mnk.forms.suggestions.formless.why": "存在 {0} 次无身形加成的战技，未能产生对应的追加效果。",
+  "mnk.forms.suggestions.perfectbalance.content": "",
+  "mnk.forms.suggestions.perfectbalance.why": "",
   "mnk.forms.suggestions.reset.content": "尽可能不要因使用<0/>，<1/>或<2/>而中断连击。",
   "mnk.forms.suggestions.reset.why": "存在 {0} 次因错误使用魔猿身形技能导致的连击重置。",
   "mnk.forms.suggestions.skipped.content": "避免跳过身形。你会因为跳过身形而损失重要的 Buff 或刷新<0/>的机会。",
