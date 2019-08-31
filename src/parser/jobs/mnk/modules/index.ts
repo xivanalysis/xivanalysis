@@ -9,6 +9,7 @@ import OGCDDowntime from './OGCDDowntime'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
 import Steppies from './Steppies'
+import Weaving from './Weaving'
 
 export default [
 	BuffUptime,
@@ -22,4 +23,5 @@ export default [
 	RiddleOfFire,
 	Speedmod,
 	Steppies,
+	Weaving,
 ]
