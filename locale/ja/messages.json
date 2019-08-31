@@ -481,6 +481,8 @@
   "mnk.gl.suggestions.dropped.why": "",
   "mnk.gl.suggestions.roe.missed.content": "<0/> はダメージを受ける時に使用するようにしましょう。",
   "mnk.gl.suggestions.roe.missed.why": "",
+  "mnk.gl.suggestions.roe.wasted.content": "",
+  "mnk.gl.suggestions.roe.wasted.why": "",
   "mnk.gl.title": "",
   "mnk.gl.trigger.broken-transition": "",
   "mnk.rof.accordion.message": "<0/>の効果時間にはスキルスピードやGCDを食い込ませないかぎり{0} 回GCDを入れるようにすべきです。",
