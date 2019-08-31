@@ -15,10 +15,10 @@ export interface AoeAbility {
 	 */
 	aoeAbility: Action
 	/**
-	 * The single target ability that should be used in place of the AoE
+	 * The single target abilities that should be used in place of the AoE
 	 * ability when there are not enough targets present.
 	 */
-	stAbility: Action
+	stAbilities: Action[]
 	/**
 	 * The minimum number of targets the AoE ability should hit per cast.
 	 */
@@ -124,7 +124,7 @@ export abstract class AoEUsages extends Module {
 				.map(a => {
 					return <Table.Row key={a.aoeAbility.id}>
 						<Table.Cell><ActionLink {...a.aoeAbility} /></Table.Cell>
-						<Table.Cell><ActionLink {...a.stAbility} /></Table.Cell>
+						<Table.Cell>{a.stAbilities.map(s => <ActionLink {...s} />)}</Table.Cell>
 						<Table.Cell>{this.badUsages.get(a.aoeAbility.id)}</Table.Cell>
 					</Table.Row>
 				})}
