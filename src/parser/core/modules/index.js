@@ -15,7 +15,6 @@ import Enemies from './Enemies'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
-import Potions from './Potions'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
@@ -44,7 +43,6 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
-	Potions,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,

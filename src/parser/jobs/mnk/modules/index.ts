@@ -9,6 +9,7 @@ import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
 import Steppies from './Steppies'
 import TwinSnakes from './TwinSnakes'
+import Weaving from './Weaving'
 
 export default [
 	Cooldowns,
@@ -22,4 +23,5 @@ export default [
 	Speedmod,
 	Steppies,
 	TwinSnakes,
+	Weaving,
 ]

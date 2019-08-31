@@ -24,12 +24,10 @@ const RAID_BUFFS = {
 	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
 	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
 	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
-	// [STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id]: {},
-	[STATUSES.RADIANT_SHIELD.id]: {},
-	[STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id]: {name: 'Contagion'},
 	[STATUSES.DEVOTION.id]: {},
 	[STATUSES.TECHNICAL_FINISH.id]: {},
 	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
+	[STATUSES.DEVILMENT.id]: {},
 }
 
 export default class RaidBuffs extends Module {

@@ -18,7 +18,7 @@ export default {
 		id: 180,
 		name: 'Summon III',
 		icon: 'https://xivapi.com/i/002000/002680.png',
-		cooldown: 10,
+		cooldown: 3,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 

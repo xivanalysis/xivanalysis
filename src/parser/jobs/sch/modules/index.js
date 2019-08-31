@@ -3,6 +3,7 @@ import DoTs from './DoTs'
 import Weaving from './Weaving'
 import ChainStrat from './ChainStrat'
 import FaerieGauge from './FaerieGauge'
+import Swiftcast from './Swiftcast'
 
 export default [
 	Weaving,
@@ -10,4 +11,5 @@ export default [
 	DoTs,
 	ChainStrat,
 	FaerieGauge,
+	Swiftcast,
 ]

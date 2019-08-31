@@ -10,6 +10,11 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+// At the start of the fight, the standard opener currently clips
+// the first tri-disaster so that the second one can benefit from
+// raid buffs.  Assume that it must happen before 20s in.
+const ALLOWED_CLIP_END_TIME = 20000
+
 // Can never be too careful :blobsweat:
 const STATUS_DURATION = {
 	[STATUSES.BIO_III.id]: 30000,
@@ -63,7 +68,11 @@ export default class DoTs extends Module {
 		const lastApplication = this._lastApplication[applicationKey] = this._lastApplication[applicationKey] || {}
 
 		// If it's not been applied yet, or we're rushing, set it and skip out
-		if (!lastApplication[statusId] || this.gauge.isRushing()) {
+		if (
+			!lastApplication[statusId] ||
+			this.gauge.isRushing() ||
+			(event.timestamp - this.parser.fight.start_time) < ALLOWED_CLIP_END_TIME
+		) {
 			lastApplication[statusId] = event.timestamp
 			//save the application for later use in the output
 			this._application[statusId].push({event: event, clip: null})
