@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-
 // TODO: Fill in the rest of this
 export default {
 	THUNDER_I: {
@@ -26,7 +24,6 @@ export default {
 		id: 1211,
 		name: 'Triplecast',
 		icon: 'https://xivapi.com/i/012000/012658.png',
-		action: ACTIONS.TRIPLECAST.id,
 	},
 	FIRESTARTER: {
 		id: 165,
@@ -44,7 +41,6 @@ export default {
 		id: 737,
 		name: 'Ley Lines',
 		icon: 'https://xivapi.com/i/012000/012653.png',
-		action: ACTIONS.LEY_LINES,
 	},
 	CIRCLE_OF_POWER: {
 		id: 738,
@@ -56,6 +52,5 @@ export default {
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/012000/012655.png',
 		duration: 15,
-		action: ACTIONS.SHARPCAST,
 	},
 }

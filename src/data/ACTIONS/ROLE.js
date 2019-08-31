@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 // Putting all role actions in one file 'cus a lot of them are shared between multiple roles
 export default {
 	// Tank Actions
@@ -60,6 +62,7 @@ export default {
 		name: 'Lucid Dreaming',
 		icon: 'https://xivapi.com/i/000000/000865.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.LUCID_DREAMING],
 	},
 
 	SWIFTCAST: {
@@ -67,6 +70,7 @@ export default {
 		name: 'Swiftcast',
 		icon: 'https://xivapi.com/i/000000/000866.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.SWIFTCAST],
 	},
 
 	SURECAST: {
@@ -74,6 +78,7 @@ export default {
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/000000/000869.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.SURECAST],
 	},
 
 	RESCUE: {

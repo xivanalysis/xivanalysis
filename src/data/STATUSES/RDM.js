@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	DUALCAST: {
 		id: 1249,
@@ -22,23 +20,24 @@ export default {
 		id: 1238,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/013000/013405.png',
-		action: ACTIONS.ACCELERATION,
+		duration: 10,
 	},
 	EMBOLDEN_PHYSICAL: {//Note that this is the Embolden that boosts Physical Damage - what other people receive from RDM
 		id: 1297,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018941.png',
+		duration: 20,
 	},
 	EMBOLDEN_MAGIC: {//Note that this is the Embolden that boosts Magic Damage - what the RDM casting receives
 		id: 1239,
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/018000/018921.png',
-		action: ACTIONS.EMBOLDEN,
+		duration: 20,
 	},
 	MANAFICATION: {
 		id: 1971,
 		name: 'Manafication',
 		icon: 'https://xivapi.com/i/013000/013407.png',
-		action: ACTIONS.MANAFICATION,
+		duration: 10,
 	},
 }

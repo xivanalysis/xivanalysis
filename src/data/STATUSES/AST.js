@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	DIURNAL_SECT: {
 		id: 839,
@@ -59,7 +57,6 @@ export default {
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/013000/013220.png',
 		duration: 15,
-		action: ACTIONS.LIGHTSPEED,
 	},
 
 	SYNASTRY_SELF: {
@@ -67,7 +64,6 @@ export default {
 		name: 'Synastry (self)',
 		icon: 'https://xivapi.com/i/013000/013223.png',
 		duration: 20,
-		action: ACTIONS.SYNASTRY,
 	},
 
 	SYNASTRY: {
@@ -99,14 +95,12 @@ export default {
 		id: 1224,
 		name: 'Earthly Dominance',
 		icon: 'https://xivapi.com/i/013000/013241.png',
-		action: ACTIONS.EARTHLY_STAR,
 	},
 
 	GIANT_DOMINANCE: {
 		id: 1248,
 		name: 'Giant Dominance',
 		icon: 'https://xivapi.com/i/013000/013242.png',
-		action: ACTIONS.EARTHLY_STAR,
 	},
 
 	DIURNAL_OPPOSITION: {
@@ -114,7 +108,6 @@ export default {
 		name: 'Diurnal Opposition',
 		icon: 'https://xivapi.com/i/013000/013246.png',
 		duration: 15,
-		action: ACTIONS.CELESTIAL_OPPOSITION,
 	},
 
 	NOCTURNAL_OPPOSITION: {
@@ -122,7 +115,6 @@ export default {
 		name: 'Nocturnal Opposition',
 		icon: 'https://xivapi.com/i/013000/013247.png',
 		duration: 30,
-		action: ACTIONS.CELESTIAL_OPPOSITION,
 	},
 
 	DIURNAL_INTERSECTION: {
@@ -130,7 +122,6 @@ export default {
 		name: 'Diurnal Intersection',
 		icon: 'https://xivapi.com/i/013000/013249.png',
 		duration: 15,
-		action: ACTIONS.CELESTIAL_INTERSECTION,
 	},
 
 	NOCTURNAL_INTERSECTION: {
@@ -138,7 +129,6 @@ export default {
 		name: 'Nocturnal Intersection',
 		icon: 'https://xivapi.com/i/013000/013250.png',
 		duration: 30,
-		action: ACTIONS.CELESTIAL_INTERSECTION,
 	},
 
 	HOROSCOPE: {
@@ -146,7 +136,6 @@ export default {
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/013000/013251.png',
 		duration: 10,
-		action: ACTIONS.HOROSCOPE,
 	},
 
 	HOROSCOPE_HELIOS: {
@@ -154,7 +143,6 @@ export default {
 		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
 		duration: 30,
-		action: ACTIONS.HOROSCOPE,
 	},
 
 	NEUTRAL_SECT: {
@@ -162,7 +150,6 @@ export default {
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/013000/013253.png',
 		duration: 20,
-		action: ACTIONS.NEUTRAL_SECT,
 	},
 
 	DIURNAL_BALANCE: {
@@ -261,56 +248,47 @@ export default {
 		id: 913,
 		name: 'Balance Drawn',
 		icon: 'https://xivapi.com/i/013000/013229.png',
-		action: ACTIONS.DRAW,
 	},
 
 	BOLE_DRAWN: {
 		id: 914,
 		name: 'Bole Drawn',
 		icon: 'https://xivapi.com/i/013000/013230.png',
-		action: ACTIONS.DRAW,
 	},
 
 	ARROW_DRAWN: {
 		id: 915,
 		name: 'Arrow Drawn',
 		icon: 'https://xivapi.com/i/013000/013231.png',
-		action: ACTIONS.DRAW,
 	},
 
 	SPEAR_DRAWN: {
 		id: 916,
 		name: 'Spear Drawn',
 		icon: 'https://xivapi.com/i/013000/013232.png',
-		action: ACTIONS.DRAW,
 	},
 
 	EWER_DRAWN: {
 		id: 917,
 		name: 'Ewer Drawn',
 		icon: 'https://xivapi.com/i/013000/013233.png',
-		action: ACTIONS.DRAW,
 	},
 
 	SPIRE_DRAWN: {
 		id: 918,
 		name: 'Spire Drawn',
 		icon: 'https://xivapi.com/i/013000/013234.png',
-		action: ACTIONS.DRAW,
 	},
 
 	LORD_OF_CROWNS_DRAWN: {
 		id: 2054,
 		name: 'Lord of Crowns Drawn',
 		icon: 'https://xivapi.com/i/013000/013256.png',
-		action: ACTIONS.DRAW,
 	},
 
 	LADY_OF_CROWNS_DRAWN: {
 		id: 2055,
 		name: 'Lady of Crowns Drawn',
 		icon: 'https://xivapi.com/i/013000/013257.png',
-		action: ACTIONS.DRAW,
 	},
-
 }

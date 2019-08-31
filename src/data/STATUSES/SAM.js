@@ -1,12 +1,9 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 
 	THIRD_EYE: {
 		id: 1232,
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
-		action: ACTIONS.THIRD_EYE,
 	},
 
 	EYES_OPEN: {
@@ -48,6 +45,5 @@ export default {
 		id: 1233,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/004000/004206.png',
-		action: ACTIONS.MEIKYO_SHISUI,
 	},
 }

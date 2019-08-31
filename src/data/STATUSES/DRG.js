@@ -1,12 +1,9 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	BATTLE_LITANY: {
 		id: 786,
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/012000/012578.png',
 		duration: 20,
-		action: ACTIONS.BATTLE_LITANY,
 	},
 
 	RIGHT_EYE: {
@@ -14,7 +11,6 @@ export default {
 		name: 'Right Eye',
 		icon: 'https://xivapi.com/i/012000/012581.png',
 		duration: 20,
-		action: ACTIONS.DRAGON_SIGHT,
 	},
 
 	// Because apparently Right Eye has a different status ID if you don't have a tether partner. Thanks, SE.
@@ -23,7 +19,6 @@ export default {
 		name: 'Right Eye',
 		icon: 'https://xivapi.com/i/012000/012581.png',
 		duration: 20,
-		action: ACTIONS.DRAGON_SIGHT,
 	},
 
 	LEFT_EYE: {
@@ -80,7 +75,6 @@ export default {
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/010000/010302.png',
 		duration: 5,
-		action: ACTIONS.LIFE_SURGE,
 	},
 
 	RAIDEN_THRUST_READY: {

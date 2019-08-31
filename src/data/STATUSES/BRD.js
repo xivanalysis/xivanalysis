@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	//Self statuses
 	STRAIGHTER_SHOT: {
@@ -14,7 +12,6 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010354.png',
 		duration: 20,
 		amount: 0.1,
-		action: ACTIONS.RAGING_STRIKES,
 	},
 	BARRAGE: {
 		id: 128,
@@ -22,7 +19,6 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010356.png',
 		duration: 10,
 		amount: 3,
-		action: ACTIONS.BARRAGE,
 	},
 	ARMYS_MUSE: {
 		id: 1932,
@@ -71,7 +67,6 @@ export default {
 		name: 'Battle Voice',
 		icon: 'https://xivapi.com/i/012000/012601.png',
 		duration: 20,
-		action: ACTIONS.BATTLE_VOICE,
 	},
 	THE_WARDENS_PAEAN: {
 		id: 866,
@@ -84,7 +79,6 @@ export default {
 		name: 'Troubadour',
 		icon: 'https://xivapi.com/i/012000/012615.png',
 		duration: 15,
-		action: ACTIONS.TROUBADOUR,
 	},
 	NATURES_MINNE: {
 		id: 1202,

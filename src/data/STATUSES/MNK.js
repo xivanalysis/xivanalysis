@@ -1,11 +1,8 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	PERFECT_BALANCE: {
 		id: 110,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/010000/010217.png',
-		action: ACTIONS.PERFECT_BALANCE,
 	},
 
 	OPO_OPO_FORM: {
@@ -33,7 +30,6 @@ export default {
 		id: 102,
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/010000/010206.png',
-		action: ACTIONS.MANTRA,
 	},
 
 	TWIN_SNAKES: {
@@ -67,7 +63,6 @@ export default {
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/012000/012527.png',
 		duration: 30,
-		action: ACTIONS.RIDDLE_OF_EARTH,
 	},
 
 	EARTHS_REPLY: {
@@ -88,7 +83,6 @@ export default {
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/012000/012528.png',
 		duration: 20,
-		action: ACTIONS.RIDDLE_OF_FIRE,
 	},
 
 	BROTHERHOOD: {
@@ -96,14 +90,12 @@ export default {
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/012000/012532.png',
 		duration: 15,
-		action: ACTIONS.BROTHERHOOD,
 	},
 
 	MEDITATIVE_BROTHERHOOD: {
 		id: 1182,
 		name: 'Meditative Brotherhood',
 		icon: 'https://xivapi.com/i/012000/012529.png',
-		// Do not link to the BROTHERHOOD action to keep PrecastStatus from synthesizing two Brotherhood casts if used prepull
 	},
 
 	GREASED_LIGHTNING: {

@@ -1,12 +1,9 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	INNER_RELEASE: {
 		id: 1177,
 		name: 'Inner Release',
 		icon: 'https://xivapi.com/i/012000/012556.png',
 		duration: 10,
-		action: ACTIONS.INNER_RELEASE,
 	},
 
 	THRILL_OF_BATTLE: {
@@ -14,7 +11,6 @@ export default {
 		name: 'Thrill Of Battle',
 		icon: 'https://xivapi.com/i/010000/010254.png',
 		duration: 10,
-		action: ACTIONS.THRILL_OF_BATTLE,
 	},
 
 	RAW_INTUITION: {
@@ -22,7 +18,6 @@ export default {
 		name: 'Raw Intuition',
 		icon: 'https://xivapi.com/i/012000/012555.png',
 		duration: 5,
-		action: ACTIONS.RAW_INTUITION,
 	},
 
 	VENGEANCE: {
@@ -30,7 +25,6 @@ export default {
 		name: 'Vengeance',
 		icon: 'https://xivapi.com/i/010000/010256.png',
 		duration: 10,
-		action: ACTIONS.VENGEANCE,
 	},
 
 	DEFIANCE: {
@@ -44,7 +38,6 @@ export default {
 		name: 'Shake It Off',
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		duration: 15,
-		action: ACTIONS.SHAKE_IT_OFF,
 	},
 
 	HOLMGANG: {
@@ -52,7 +45,6 @@ export default {
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		duration: 6,
-		action: ACTIONS.HOLMGANG,
 	},
 
 	STORMS_EYE: {
@@ -74,6 +66,5 @@ export default {
 		name: 'Nascent Flash',
 		icon: 'https://xivapi.com/i/012000/012558.png',
 		duration: 6,
-		action: ACTIONS.NASCENT_FLASH,
 	},
 }

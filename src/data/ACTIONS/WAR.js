@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -79,6 +81,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002559.png',
 		cooldown: 25,
 		onGcd: false,
+		statusesApplied: [STATUSES.RAW_INTUITION],
 	},
 
 	SHAKE_IT_OFF: {
@@ -87,6 +90,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90,
 		onGcd: false,
+		statusesApplied: [STATUSES.SHAKE_IT_OFF],
 	},
 
 	ONSLAUGHT: {
@@ -130,6 +134,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002564.png',
 		cooldown: 90,
 		onGcd: false,
+		statusesApplied: [STATUSES.INNER_RELEASE],
 	},
 
 	INFURIATE: {
@@ -146,5 +151,6 @@ export default {
 		icon: 'https://https://xivapi.com/i/002000/002567.png',
 		cooldown: 25,
 		cooldownGroup: 9,
+		statusesApplied: [STATUSES.NASCENT_FLASH],
 	},
 }

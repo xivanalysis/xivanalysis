@@ -1,12 +1,9 @@
-import ACTIONS from 'data/ACTIONS'
-
 export default {
 	REASSEMBLED: {
 		id: 851,
 		name: 'Reassembled',
 		icon: 'https://xivapi.com/i/013000/013001.png',
 		duration: 5,
-		action: ACTIONS.REASSEMBLE,
 	},
 
 	WILDFIRE: {
@@ -14,7 +11,6 @@ export default {
 		name: 'Wildfire',
 		icon: 'https://xivapi.com/i/013000/013011.png',
 		duration: 10,
-		action: ACTIONS.WILDFIRE,
 	},
 
 	FLAMETHROWER: {
@@ -22,7 +18,6 @@ export default {
 		name: 'Flamethrower',
 		icon: 'https://xivapi.com/i/013000/013017.png',
 		duration: 10,
-		action: ACTIONS.FLAMETHROWER,
 	},
 
 	BIOBLASTER: {
@@ -37,6 +32,5 @@ export default {
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/013000/013021.png',
 		duration: 15,
-		action: ACTIONS.TACTICIAN,
 	},
 }
