@@ -146,7 +146,7 @@ export default class TwinSnakes extends Module {
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.twinsnakes.checklist.name">Keep Twin Snakes up</Trans>,
-			description: <Trans id="mnk.twinsnakes.checklist.description">Twin Snakes is an easy 10% buff to your DPS across the board.</Trans>,
+			description: <Trans id="mnk.twinsnakes.checklist.description">Twin Snakes is an easy 10% buff to your DPS.</Trans>,
 			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
