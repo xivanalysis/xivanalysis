@@ -22,11 +22,12 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.0',
-		to: '5.05',
+		to: '5.08',
 	},
 
 	contributors: [
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.QAPHLA, role: ROLES.DEVELOPER},
 	],
 
 	changelog,

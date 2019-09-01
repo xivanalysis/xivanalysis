@@ -1,21 +1,9 @@
 // TODO: Fill in the rest of this
 export default {
-	RADIANT_SHIELD: {
-		id: 313,
-		name: 'Radiant Shield',
-		icon: 'https://xivapi.com/i/012000/012711.png',
-	},
-
-	RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP: {
-		id: 493,
-		name: 'Physical Vulnerability Up',
-		icon: 'https://xivapi.com/i/015000/015053.png',
-	},
-
-	CONTAGION_MAGIC_VULNERABILITY_UP: {
-		id: 494,
-		name: 'Magical Vulnerability Up',
-		icon: 'https://xivapi.com/i/015000/015057.png',
+	GALE_ENFORCER: {
+		id: 1869,
+		name: 'Gale Enforcer',
+		icon: 'https://xivapi.com/i/012000/012721.png',
 	},
 
 	DREADWYRM_TRANCE: {

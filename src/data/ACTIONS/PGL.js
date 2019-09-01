@@ -9,6 +9,7 @@ export default {
 		name: 'Bootshine',
 		icon: 'https://xivapi.com/i/000000/000208.png',
 		onGcd: true,
+		potency: 150,
 	},
 
 	TRUE_STRIKE: {

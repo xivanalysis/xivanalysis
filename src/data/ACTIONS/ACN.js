@@ -25,7 +25,7 @@ export default {
 		id: 165,
 		name: 'Summon',
 		icon: 'https://xivapi.com/i/000000/000516.png',
-		cooldown: 10,
+		cooldown: 3,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
@@ -56,7 +56,7 @@ export default {
 		id: 170,
 		name: 'Summon II',
 		icon: 'https://xivapi.com/i/000000/000517.png',
-		cooldown: 10,
+		cooldown: 3,
 		cooldownGroup: SMN_COOLDOWN_GROUP.SUMMON,
 	},
 
