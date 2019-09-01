@@ -8,6 +8,7 @@ import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -59,6 +60,8 @@ const CONSTANTS = {
 	},
 }
 
+const FOF_DURATION_MILLIS = STATUSES.FIGHT_OR_FLIGHT.duration * 1000
+
 class FightOrFlightState {
 	start: number | null = null
 	lastGoringGcd: number | null = null
@@ -67,6 +70,7 @@ class FightOrFlightState {
 	circleOfScornCounter: number = 0
 	spiritsWithinCounter: number = 0
 	interveneCounter: number = 0
+	isRushed: boolean = false
 }
 
 class FightOrFlightErrorResult {
@@ -84,12 +88,14 @@ export default class FightOrFlight extends Module {
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
+	@dependency private invuln!: Invulnerability
 
 	// Internal State Counters
 	// ToDo: Merge some of these, so instead of saving rotations, make the rotation part of FoFState, so we can reduce the error result out of the saved rotations
 	private fofState = new FightOrFlightState()
 	private fofRotations: TimestampRotationMap = {}
 	private fofErrorResult = new FightOrFlightErrorResult()
+	private fofIsRushed: boolean = false
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
@@ -114,6 +120,11 @@ export default class FightOrFlight extends Module {
 
 		if (actionId === ACTIONS.FIGHT_OR_FLIGHT.id) {
 			this.fofState.start = event.timestamp
+
+			const endOfWindow = event.timestamp + FOF_DURATION_MILLIS
+			this.fofState.isRushed = endOfWindow >= this.parser.fight.end_time
+				|| this.invuln.isInvulnerable('all', endOfWindow)
+				|| this.invuln.isUntargetable('all', endOfWindow)
 		}
 
 		if (this.fofState.start) {
@@ -129,7 +140,8 @@ export default class FightOrFlight extends Module {
 					this.fofState.goringCounter++
 
 					if (this.fofState.lastGoringGcd !== null) {
-						if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE) {
+						if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE
+							&& !this.fofState.isRushed) {
 							this.fofErrorResult.goringTooCloseCounter++
 						}
 					}
@@ -155,11 +167,13 @@ export default class FightOrFlight extends Module {
 	}
 
 	private onRemoveFightOrFlight() {
-		this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
-		this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
-		this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
-		this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
-		this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
+		if (!this.fofState.isRushed) {
+			this.fofErrorResult.missedGcds += Math.max(0, CONSTANTS.GCD.EXPECTED - this.fofState.gcdCounter)
+			this.fofErrorResult.missedGorings += Math.max(0, CONSTANTS.GORING.EXPECTED - this.fofState.goringCounter)
+			this.fofErrorResult.missedSpiritWithins += Math.max(0, CONSTANTS.SPIRITS_WITHIN.EXPECTED - this.fofState.spiritsWithinCounter)
+			this.fofErrorResult.missedCircleOfScorns += Math.max(0, CONSTANTS.CIRCLE_OF_SCORN.EXPECTED - this.fofState.circleOfScornCounter)
+			this.fofErrorResult.missedIntervenes += Math.max(0, CONSTANTS.INTERVENE.EXPECTED - this.fofState.interveneCounter)
+		}
 
 		this.fofState = new FightOrFlightState()
 	}
