@@ -46,6 +46,15 @@ export default new Meta({
 	changelog: [
 		{
 
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				<ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> now triggers a suggestion for dropping uses.
+				<ActionLink {...ACTIONS.DIVINATION} /> gets its own checklist tracker.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+
 			date: new Date('2019-08-10'),
 			Changes: () => <>
 				<ActionLink {...ACTIONS.HOROSCOPE} /> reworked tracking for accuracy

@@ -11,9 +11,9 @@ import React from 'react'
 import Sect from './Sect'
 
 const SEVERITY_MOD = {
-	MINOR: 0.15,
-	MEDIUM: 0.5,
-	MAJOR: 0.8,
+	MINOR: 0.1,
+	MEDIUM: 0.3,
+	MAJOR: 0.5,
 }
 
 // Lifted from WHM benison and adapted to AST and TSX
@@ -67,8 +67,8 @@ export default class CelestialOpposition extends Module {
 				Trusting the regens to top off the party HP will save MP and GCDs on healing.
 			</Trans>
 		const suggestContentNoct = <Trans id="ast.celestial-opposition.suggestion.content.noct">
-				Use <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> more frequently. In <StatusLink {...STATUSES.NOCTURNAL_SECT} />, the shield is the same potency as those from <ActionLink {...ACTIONS.ASPECTED_HELIOS} />,
-				so it can save MP and GCDs on casting it. Additionally, the shields last 30 seconds so it can be casted much earlier than the damage to be shielded and the cooldown can be ready again earlier.
+				Use <ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> more frequently. In <StatusLink {...STATUSES.NOCTURNAL_SECT} />, the shield is the same potency as from <ActionLink {...ACTIONS.ASPECTED_HELIOS} />,
+				so it can save MP and GCDs casting it. Since shields last 30 seconds it can be cast much earlier than incoming damage and allow the cooldown to refresh sooner.
 			</Trans>
 
 		const content = this.activeSect && this.activeSect.id === STATUSES.NOCTURNAL_SECT.id ? suggestContentNoct : suggestContentDiurnal
