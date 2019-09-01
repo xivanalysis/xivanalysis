@@ -95,7 +95,6 @@ export default class FightOrFlight extends Module {
 	private fofState = new FightOrFlightState()
 	private fofRotations: TimestampRotationMap = {}
 	private fofErrorResult = new FightOrFlightErrorResult()
-	private fofIsRushed: boolean = false
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
