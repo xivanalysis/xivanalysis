@@ -74,38 +74,36 @@ export default class TwinSnakes extends Module {
 	private onCast(event: CastEvent): void {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
-		if (!action) {
+		// Only include GCDs
+		if (!action || !action.onGcd) {
 			return
 		}
 
-		// Only include GCDs
-		if (action.onGcd) {
-			switch (action.id) {
-			// Ignore TS itself, plus Form Shift and maybe 6SS?
-			// We use gcdsSinceTS because we don't want to double count FPF
-			case (ACTIONS.TWIN_SNAKES.id):
-				if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
-					this.earlySnakes++
-				}
-
-			// Ignore Form Shift, theres probably forced downtime so we expect TS to get weird anyway
-			case (ACTIONS.FORM_SHIFT):
-				break
-
-			// Count FPF, but check if it's a bad one
-			case (ACTIONS.FOUR_POINT_FURY.id):
-				if (!this.combatants.selected.hasStatus(STATUSES.TWIN_SNAKES.id)) {
-					this.failedFury++
-				}
-
-			// Verify the window isn't closed, and count the GCDs
-			default:
-				if (this.twinSnake && !this.twinSnake.end) {
-					this.twinSnake.casts.push(event)
-				}
-
-				this.gcdsSinceTS++
+		switch (action.id) {
+		// Ignore TS itself, plus Form Shift and maybe 6SS?
+		// We use gcdsSinceTS because we don't want to double count FPF
+		case (ACTIONS.TWIN_SNAKES.id):
+			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
+				this.earlySnakes++
 			}
+
+		// Ignore Form Shift, theres probably forced downtime so we expect TS to get weird anyway
+		case (ACTIONS.FORM_SHIFT):
+			break
+
+		// Count FPF, but check if it's a bad one
+		case (ACTIONS.FOUR_POINT_FURY.id):
+			if (!this.combatants.selected.hasStatus(STATUSES.TWIN_SNAKES.id)) {
+				this.failedFury++
+			}
+
+		// Verify the window isn't closed, and count the GCDs
+		default:
+			if (this.twinSnake && !this.twinSnake.end) {
+				this.twinSnake.casts.push(event)
+			}
+
+			this.gcdsSinceTS++
 		}
 	}
 
@@ -173,7 +171,7 @@ export default class TwinSnakes extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.TWIN_SNAKES.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.late.content">
-				Refresh <ActionLink {...ACTIONS.TWIN_SNAKES} /> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it.
+				Refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it.
 				This only works under 4 stacks of <StatusLink {...STATUSES.GREASED_LIGHTNING} />.
 			</Trans>,
 			tiers: {
