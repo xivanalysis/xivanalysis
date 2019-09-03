@@ -303,7 +303,7 @@
   "mnk.buffs.checklist.dragonkick.requirement.name": "Temps total d'application de <0/>",
   "mnk.buffs.checklist.twinsnakes.description": "Utiliser Serpents Jumeaux permet d'augmenter facilement vos dégâts de 10%.",
   "mnk.buffs.checklist.twinsnakes.name": "Garder Serpent Jumeaux actif",
-  "mnk.buffs.checklist.twinsnakes.requirement.name": "Temps d'activité total de <0/>",
+  "mnk.buffs.checklist.twinsnakes.requirement.name": "Temps total d'application de <0/>",
   "mnk.buffs.suggestions.dragonkick.early.content": "Éviter de rafraichir <0/> trop tôt avant sa fin car vous pourriez utiliser un autre sort qui fait plus de dégats <1/>.",
   "mnk.buffs.suggestions.dragonkick.early.why": "{0, plural, one {# cycle de rotation a été} other {# cycles de rotation ont été}} interrompu par un rafraichissement trop tôt.",
   "mnk.buffs.suggestions.twinsnakes.early.content": "Éviter de rafraichir <0/> trop tôt avant sa fin car vous pourriez utiliser un autre sort qui fait plus de dégats <1/>.",
