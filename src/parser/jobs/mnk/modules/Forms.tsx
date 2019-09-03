@@ -115,7 +115,6 @@ export default class Forms extends Module {
 		// Using the wrong form
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FORM_SHIFT.icon,
-			severity: SEVERITY.MEDIUM,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
 				Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. The form bonus is only activated in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has higher potency when buffed.
 			</Trans>,
