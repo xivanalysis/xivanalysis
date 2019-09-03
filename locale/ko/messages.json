@@ -303,7 +303,7 @@
   "mnk.buffs.checklist.dragonkick.requirement.name": "적용시간 <0/>",
   "mnk.buffs.checklist.twinsnakes.description": "쌍장타는 DPS를 위해 간단하게 추가할 수 있는 10% 버프입니다.",
   "mnk.buffs.checklist.twinsnakes.name": "항상 쌍장타가 유지되도록 하십시오",
-  "mnk.buffs.checklist.twinsnakes.requirement.name": "<0/> 지속시간",
+  "mnk.buffs.checklist.twinsnakes.requirement.name": "적용시간 <0/>",
   "mnk.buffs.suggestions.dragonkick.early.content": "더 높은 위력의 <1/> 대신 <0/>를 너무 일찍 갱신하는 것을 피하세요.",
   "mnk.buffs.suggestions.dragonkick.early.why": "{0, plural, one {#번} other {#번}}의 타격 저항 감소가 너무 일찍 갱신되었습니다.",
   "mnk.buffs.suggestions.twinsnakes.early.content": "더 높은 위력의 <1/> 대신 <0/>를 너무 일찍 갱신하는 것을 피하세요.",
