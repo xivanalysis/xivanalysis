@@ -506,7 +506,7 @@
   "mnk.twinsnakes.suggestions.late.content": "<0/> während jeder dritten Kombo aufzufrischen, erhöht deine Schadenspotenz nur, wenn der Buff nicht abläuft, bevor du den Angriff mit globaler Abklingzeit einsetzt. Dies funktioniert nur mit weniger als 4 Aufladungen von <1/>.",
   "mnk.twinsnakes.suggestions.late.why": "{0, plural, one {Ein Angriff mit globaler Abklingzeit wurde} other {# Angriffe mit globaler Abklingzeit wurden}} durch zu späte Auffrischungen nicht verstärkt.",
   "mnk.twinsnakes.suggestions.toocalm.content": "Versuche <0/> vor <1/> zu aktivieren, um von der gratis Auffrischung zu profitieren.",
-  "mnk.twinsnakes.suggestions.toocalm.why": "",
+  "mnk.twinsnakes.suggestions.toocalm.why": "<0/> konnte <1/> {0}x nicht auffrischen.",
   "nin.about.description": "",
   "nin.about.description.warning": "Während die unten angegebene Analyse ziemlich akkurat ist, ist dieses Sytem immer noch in Entwicklung und wird gelegentlich Fehler machen. Wenn Sie irgendwelche Probleme oder Fehler finden oder Bedenken haben, besuchen sie bitte unseren Discord Kanal!",
   "nin.huton.checklist.description": "",
