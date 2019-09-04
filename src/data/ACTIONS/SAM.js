@@ -15,7 +15,7 @@ export default {
 		name: 'Hakazae',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
-		potency:  150,
+		potency:  200,
 		combo: {
 			start: true,
 		},
@@ -29,7 +29,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
 	},
 
@@ -49,7 +49,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
 	},
 
@@ -87,7 +87,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7478,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -121,7 +121,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7479,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -189,7 +189,7 @@ export default {
 		id: 7494,
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
-		cooldown: 5,
+		cooldown: 1,
 	},
 
 	HISSATSU_GYOTEN: {
