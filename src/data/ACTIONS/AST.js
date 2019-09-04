@@ -142,7 +142,7 @@ export default {
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.COLLECTIVE_UNCONSCIOUS_SHIELD, STATUSES.COLLECTIVE_UNCONSCIOUS],
+		statusesApplied: [STATUSES.COLLECTIVE_UNCONSCIOUS_SHIELD, STATUSES.COLLECTIVE_UNCONSCIOUS, STATUSES.WHEEL_OF_FORTUNE],
 	},
 
 	CELESTIAL_OPPOSITION: {
