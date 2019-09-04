@@ -2,7 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {RotationTable, RotationTableTargetData} from 'components/ui/RotationTable'
+import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import {Action} from 'data/ACTIONS/ACTIONS'
 import {getDataBy} from 'data/getDataBy'
@@ -15,7 +15,7 @@ import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
 
-class BuffWindowState {
+export class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
@@ -107,6 +107,13 @@ export abstract class BuffWindowModule extends Module {
 	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
 	 */
 	protected rotationTableHeader?: JSX.Element
+	/**
+	 * Implementing modules MAY provide a value to set the "Notes" title in the header of the notes section
+	 * The notes section will be output in the rotation table to the right of the Rotation column
+	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
+	 * If you implement a Notes column header, you MUST also override the getBuffWindowNotes function to provide the note to display per window
+	 */
+	protected rotationTableNotesColumnHeader?: JSX.Element
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -137,9 +144,18 @@ export abstract class BuffWindowModule extends Module {
 			return
 		}
 
-		if (this.activeBuffWindow) {
+		if (this.activeBuffWindow && this.considerAction(action)) {
 			this.activeBuffWindow.rotation.push(event)
 		}
+	}
+
+	/**
+	 * This method MAY be overridden to return true or false, indicating whether or not this action should be considered within the buff window
+	 * If false is returned, the action will not be tracked AT ALL within the buff window, and will NOT appear within the Rotation column
+	 * @param action
+	 */
+	protected considerAction(action: Action) {
+		return true
 	}
 
 	private onApplyBuff(event: BuffEvent) {
@@ -251,6 +267,15 @@ export abstract class BuffWindowModule extends Module {
 		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action)
 	}
 
+	/**
+	 * This method will be called if and only if the rotationTableNotesColumnHeader property is set, to add a notes field for each buff window
+	 * Implementing classes MUST define their logic to determine what note to display for each buff window within this method
+	 * @param buffWindow
+	 */
+	protected getBuffWindowNotes(buffWindow: BuffWindowState): JSX.Element | undefined {
+		return undefined
+	}
+
 	private onComplete() {
 		if ( this.expectedGCDs ) {
 			const missedGCDs = this.buffWindows
@@ -320,6 +345,7 @@ export abstract class BuffWindowModule extends Module {
 
 	output() {
 		const rotationTargets = []
+		const notesData = []
 
 		if ( this.expectedGCDs ) {
 			rotationTargets.push({
@@ -341,12 +367,19 @@ export abstract class BuffWindowModule extends Module {
 				})
 			})
 		}
+		if ( this.rotationTableNotesColumnHeader ) {
+			notesData.push({
+				header: this.rotationTableNotesColumnHeader,
+				accessor: 'notes',
+			})
+		}
 
 		const rotationData = this.buffWindows
 			.map(buffWindow => {
 				const windowStart = buffWindow.start - this.parser.fight.start_time
 				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.fight.start_time
 				const targetsData: RotationTableTargetData = {}
+				const notesMap: RotationTableNotesMap = {}
 
 				if ( this.expectedGCDs ) {
 					targetsData.missedgcd = {
@@ -371,17 +404,23 @@ export abstract class BuffWindowModule extends Module {
 					})
 				}
 
+				if ( this.rotationTableNotesColumnHeader ) {
+					notesMap.notes = this.getBuffWindowNotes(buffWindow)
+				}
+
 				return {
 					start: windowStart,
 					end: windowEnd,
 					targetsData,
 					rotation: buffWindow.rotation,
+					notesMap,
 				}
 			})
 
 		return <RotationTable
 			targets={rotationTargets}
 			data={rotationData}
+			notes={notesData}
 			onGoto={this.timeline.show}
 			headerTitle={this.rotationTableHeader}
 		/>
