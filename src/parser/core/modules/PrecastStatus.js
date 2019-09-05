@@ -1,4 +1,7 @@
 import Module from 'parser/core/Module'
+import {getDataBy} from 'data'
+import STATUSES from 'data/STATUSES'
+import ACTIONS from 'data/ACTIONS'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
 // Fake buff applications so modules don't need to take it into account
@@ -10,6 +13,7 @@ export default class PrecastStatus extends Module {
 	]
 
 	_combatantStatuses = {}
+	_combatantActions = []
 
 	normalise(events) {
 		const startTime = this.parser.fight.start_time
@@ -40,6 +44,23 @@ export default class PrecastStatus extends Module {
 					timestamp: startTime - 1,
 					type: 'applybuff',
 				})
+
+				// Determine if this buff comes from a known action, fab a cast event
+				const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
+				if (statusInfo) {
+					const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusInfo)
+					// Action found - push it into _combatantActions array if not already there and synthesize a cast event
+					// If action has already been synthesized (and pushed into _combatantActions array), do nothing
+					if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
+						this._combatantActions.push(actionInfo.id)
+						const castEvent = event
+						castEvent.timestamp = startTime - 2
+						castEvent.type = 'cast'
+						castEvent.ability.guid = actionInfo.id
+
+						events.splice(0, 0, castEvent)
+					}
+				}
 
 				this._combatantStatuses[targetId].push(statusId)
 			}
