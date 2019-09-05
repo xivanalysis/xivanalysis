@@ -193,7 +193,6 @@ export default {
 		name: 'Play',
 		icon: 'https://xivapi.com/i/003000/003102.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_BALANCE, STATUSES.THE_BOLE, STATUSES.THE_ARROW, STATUSES.THE_SPEAR, STATUSES.THE_EWER, STATUSES.SPIRE, STATUSES.LORD_OF_CROWNS, STATUSES.LADY_OF_CROWNS],
 	},
 
 	REDRAW: {
@@ -278,6 +277,7 @@ export default {
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/003000/003110.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_BALANCE],
 	},
 
 	THE_BOLE: {
@@ -285,6 +285,7 @@ export default {
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_BOLE],
 	},
 
 	THE_ARROW: {
@@ -292,6 +293,7 @@ export default {
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_ARROW],
 	},
 
 	THE_SPEAR: {
@@ -299,6 +301,7 @@ export default {
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_SPEAR],
 	},
 
 	THE_EWER: {
@@ -306,6 +309,7 @@ export default {
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/003000/003114.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_EWER],
 	},
 
 	THE_SPIRE: {
@@ -313,6 +317,7 @@ export default {
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/003000/003115.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_SPIRE],
 	},
 
 	LADY_OF_CROWNS: {
@@ -320,6 +325,7 @@ export default {
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.LADY_OF_CROWNS],
 	},
 
 	LORD_OF_CROWNS: {
@@ -327,6 +333,7 @@ export default {
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.LORD_OF_CROWNS],
 	},
 
 }
