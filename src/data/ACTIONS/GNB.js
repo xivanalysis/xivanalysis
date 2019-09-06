@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -127,6 +129,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003402.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.NO_MERCY],
 	},
 	BLOODFEST: {
 		id: 16164,
