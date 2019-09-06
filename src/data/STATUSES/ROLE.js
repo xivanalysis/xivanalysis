@@ -19,4 +19,18 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010452.png',
 		duration: 6,
 	},
+
+	RAMPART: {
+		id: 1191,
+		name: 'Rampart',
+		icon: 'https://xivapi.com/i/010000/010152.png',
+		duration: 20,
+	},
+
+	REPRISAL: {
+		id: 1193,
+		name: 'Reprisal',
+		icon: 'https://xivapi.com/i/013000/013901.png',
+		duration: 5,
+	},
 }

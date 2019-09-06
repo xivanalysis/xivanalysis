@@ -8,7 +8,7 @@ export default {
 		name: 'Rampart',
 		icon: 'https://xivapi.com/i/000000/000801.png',
 		cooldown: 90,
-		duration: 20,
+		statusesApplied: [STATUSES.RAMPART],
 	},
 
 	LOW_BLOW: {
@@ -30,6 +30,7 @@ export default {
 		name: 'Reprisal',
 		icon: 'https://xivapi.com/i/000000/000806.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.REPRISAL],
 	},
 
 	INTERJECT: {

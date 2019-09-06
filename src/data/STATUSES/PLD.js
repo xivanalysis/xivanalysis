@@ -28,4 +28,9 @@ export default {
 		name: 'Iron Will',
 		icon: 'https://xivapi.com/i/012000/012506.png',
 	},
+	SENTINEL: {
+		id: 74,
+		name: 'Sentinel',
+		icon: 'https://xivapi.com/i/010000/010151.png',
+	},
 }

@@ -146,7 +146,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
-		statusesApplied: [STATUSES.REASSEMBLE],
+		statusesApplied: [STATUSES.REASSEMBLED],
 	},
 
 	WILDFIRE: {

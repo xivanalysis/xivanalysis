@@ -46,6 +46,7 @@ export default class GlobalCooldown extends Module {
 		event: null,
 	}
 	gcds = []
+	gcdStatuses = []
 
 	constructor(...args) {
 		super(...args)
@@ -113,11 +114,15 @@ export default class GlobalCooldown extends Module {
 
 		// Timeline output
 		// TODO: Look into adding items to groups? Maybe?
-		this.timeline.addGroup(new Group({
+
+		const gcdGroup = new Group({
 			id: 'gcd',
 			content: 'GCD',
 			order: -99,
-		}))
+			nestedGroups: [],
+		})
+
+		this.timeline.addGroup(gcdGroup)
 
 		this.gcds.forEach(gcd => {
 			const action = getDataBy(ACTIONS, 'id', gcd.actionId)
@@ -126,6 +131,7 @@ export default class GlobalCooldown extends Module {
 				type: 'background',
 				start: gcd.timestamp - startTime,
 				length: this._getGcdLength(gcd),
+				title: action.name,
 				group: 'gcd',
 				content: <img src={action.icon} alt={action.name}/>,
 			}))

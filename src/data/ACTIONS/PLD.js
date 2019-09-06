@@ -84,6 +84,7 @@ export default {
 			potency: 390,
 			end: true,
 		},
+		statusesApplied: [STATUSES.GORING_BLADE],
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -164,6 +165,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.SENTINEL],
 	},
 	CIRCLE_OF_SCORN: {
 		id: 23,
@@ -171,6 +173,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
 		cooldown: 25,
+		statusesApplied: [STATUSES.CIRLCE_OF_SCORN],
 	},
 	COVER: {
 		id: 27,
@@ -220,6 +223,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.REQUIESCAT],
 	},
 	PASSAGE_OF_ARMS: {
 		id: 7385,

@@ -94,6 +94,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002613.png',
 		onGcd: true,
 		potency: 150,
+		statusesApplied: [STATUSES.CAUSTIC_BITE],
 	},
 	STORMBITE: {
 		id: 7407,
@@ -101,6 +102,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002614.png',
 		onGcd: true,
 		potency: 100,
+		statusesApplied: [STATUSES.STORMBITE],
 	},
 	NATURES_MINNE: {
 		id: 7408,

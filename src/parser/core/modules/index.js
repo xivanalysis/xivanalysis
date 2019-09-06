@@ -24,6 +24,7 @@ import Suggestions from './Suggestions'
 import Timeline from './Timeline'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
+import Statuses from './Statuses'
 
 export default [
 	About,
@@ -52,4 +53,5 @@ export default [
 	Timeline,
 	UnableToAct,
 	Weaving,
+	Statuses,
 ]

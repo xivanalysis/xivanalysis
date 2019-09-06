@@ -45,13 +45,22 @@ export default class Timeline extends Module {
 		this._items.push(item)
 	}
 
+	attachToGroup(id, group) {
+		const parent = this._groups.find(it => it.id === id)
+		if (parent) {
+			this.addGroup(group)
+			parent.nestedGroups = parent.nestedGroups || []
+			parent.nestedGroups.push(group.id)
+		}
+	}
+
 	/**
 	 * Move & zoom the viewport to show the specified range
 	 * @param {number} start - Timestamp of the start of the range
 	 * @param {number} end - Timestamp of the end of the range
 	 * @param {boolean} [scrollTo=true] - If true, the page will scroll to reveal the timeline on call.
 	 */
-	show(start, end, scrollTo=true) {
+	show(start, end, scrollTo = true) {
 		// Grab the vis instance. This is a bit hacky but so is vis so /shrug
 		const vis = this._ref.current.$el
 		vis.setWindow(start, end)
@@ -60,10 +69,6 @@ export default class Timeline extends Module {
 		if (scrollTo) {
 			this.parser.scrollTo(this.constructor.handle)
 		}
-	}
-
-	_visibleFrameTemplate(item) {
-		return `<div class="progress-wrapper-fl"><div class="progress-fl" style = "width:${item.durationPercent}%"><img src="${item.actionIcon}" alt="${item.actionName}"/> </div></div>`
 	}
 
 	output() {
@@ -100,8 +105,6 @@ export default class Timeline extends Module {
 			// Zoom key handling
 			zoomKey: 'ctrlKey',
 			horizontalScroll: true,
-
-			visibleFrameTemplate: (item) => this._visibleFrameTemplate(item),
 		}
 
 		let items = this._items

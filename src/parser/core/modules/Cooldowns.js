@@ -1,5 +1,4 @@
 import _ from 'lodash'
-
 import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
@@ -18,7 +17,6 @@ export default class Cooldowns extends Module {
 	// nested groups. Actions not specified here will be sorted by their ID below.
 	// Check the NIN and SMN modules for examples.
 	static cooldownOrder = []
-
 	_currentAction = null
 	_cooldowns = {}
 	_groups = {}
@@ -76,7 +74,7 @@ export default class Cooldowns extends Module {
 	}
 
 	_buildGroup(opts) {
-		const group = new ItemGroup(opts)
+		const group = new ItemGroup({...opts, showNested: false})
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
 		return group
@@ -152,13 +150,11 @@ export default class Cooldowns extends Module {
 			.forEach(use => {
 				if (!use.shared) {
 					this._groups[actionId].addItem(new Item({
-						type: 'range',
+						type: 'background',
 						start: use.timestamp - this.parser.fight.start_time,
 						length: use.length,
-						durationPercent: use.durationPercent,
-						actionIcon: action.icon,
-						actionName: action.name,
-						content: '',
+						content: `<div class="progress-wrapper-fl"><div class="progress-fl" style = "width:${0}%"><img src="${action.icon}" alt="${action.name}"/> </div></div>`,
+						limitSize: false,
 					}))
 				}
 			})
@@ -205,7 +201,6 @@ export default class Cooldowns extends Module {
 			timestamp: this.parser.currentTimestamp,
 			length: action.cooldown * 1000, // CDs are in S, timestamps are in MS
 			shared: sharedCooldown,
-			durationPercent: action.cooldown > 0 && action.duration > 0 && !action.onGcd ? action.duration / action.cooldown * 100 : 0,
 			invulnTime: 0,
 		}
 
