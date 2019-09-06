@@ -230,7 +230,6 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003501.png',
 		onGcd: false,
 		cooldown: 6,
-		duration: 20,
 	},
 
 	QUEEN_OVERDRIVE: {

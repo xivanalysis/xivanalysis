@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -98,7 +100,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
 		cooldown: 60,
-		duration: 10,
+		statusesApplied: [STATUSES.TRICK_ATTACK_VULNERABILITY_UP],
 	},
 
 	SHADE_SHIFT: {
@@ -107,6 +109,5 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
 		cooldown: 120,
-		duration: 20,
 	},
 }

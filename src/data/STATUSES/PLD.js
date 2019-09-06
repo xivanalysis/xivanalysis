@@ -5,7 +5,7 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012507.png',
 		duration: 21,
 	},
-	CIRLCE_OF_SCORN: {
+	CIRCLE_OF_SCORN: {
 		id: 248,
 		name: 'Circle Of Scorn',
 		icon: 'https://xivapi.com/i/010000/010158.png',

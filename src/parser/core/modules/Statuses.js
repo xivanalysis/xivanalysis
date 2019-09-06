@@ -12,6 +12,7 @@ export default class Statuses extends Module {
 	static dependencies = [
 		'timeline',
 		// need this module to be executed after gcd to have gcd group created in timeline
+		'cooldowns', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'gcd', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
@@ -34,24 +35,13 @@ export default class Statuses extends Module {
 		if (this.parser.report.friendlyPets.some(p => p.id === event.targetID)) {
 			return
 		}
-		console.log(event.ability.guid + ' : ' + event.ability.name)
 		const status = getDataBy(STATUSES, 'id', event.ability.guid)
 
 		if (!status) {
 			return
 		}
 
-		if (this._statuses.some(it => {
-			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
-			return it.status.id === status.id && diff <= 2 * 1000
-		})) {
-			return
-		}
-
-		this._statuses.push({
-			start: event.timestamp - this.parser.fight.start_time,
-			status: status,
-		})
+		this._addStatus(event, status)
 	}
 
 	_onRefresh(event) {
@@ -65,23 +55,9 @@ export default class Statuses extends Module {
 			return
 		}
 
-		const prev = _.findLast(this._statuses, it => it.status.id === status.id)
+		this._updatePrevStatus(event, status)
 
-		if (prev) {
-			prev.end = event.timestamp - this.parser.fight.start_time
-		}
-
-		if (this._statuses.some(it => {
-			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
-			return it.status.id === status.id && diff <= 2 * 1000
-		})) {
-			return
-		}
-
-		this._statuses.push({
-			start: event.timestamp - this.parser.fight.start_time,
-			status: status,
-		})
+		this._addStatus(event, status)
 	}
 
 	_onRemove(event) {
@@ -95,11 +71,29 @@ export default class Statuses extends Module {
 			return
 		}
 
+		this._updatePrevStatus(event, status)
+	}
+
+	_updatePrevStatus(event, status) {
 		const prev = _.findLast(this._statuses, it => it.status.id === status.id)
 
-		if (prev && !prev.end) {
+		if (prev) {
 			prev.end = event.timestamp - this.parser.fight.start_time
 		}
+	}
+
+	_addStatus(event, status) {
+		if (this._statuses.some(it => {
+			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
+			return it.status.id === status.id && diff <= 2 * 1000
+		})) {
+			return
+		}
+
+		this._statuses.push({
+			start: event.timestamp - this.parser.fight.start_time,
+			status: status,
+		})
 	}
 
 	_onComplete() {
@@ -110,7 +104,7 @@ export default class Statuses extends Module {
 
 				// find action for status
 				const action = Object.values(ACTIONS).find(it => {
-					return it.statusesApplied && it.statusesApplied.some(s => s.id === st.status.id)
+					return it.statusesApplied && it.statusesApplied.some(s => s && s.id === st.status.id)
 				})
 
 				if (!action) {

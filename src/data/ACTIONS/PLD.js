@@ -173,7 +173,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
 		cooldown: 25,
-		statusesApplied: [STATUSES.CIRLCE_OF_SCORN],
+		statusesApplied: [STATUSES.CIRCLE_OF_SCORN],
 	},
 	COVER: {
 		id: 27,

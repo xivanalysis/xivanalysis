@@ -162,7 +162,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60,
-		duration: 10,
+		statusesApplied: [STATUSES.ASSASSINATE_READY],
 	},
 
 	HELLFROG_MEDIUM: {
@@ -212,6 +212,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
 		cooldown: 110,
-		duration: 15,
+		statusesApplied: [STATUSES.BUNSHIN],
 	},
 }

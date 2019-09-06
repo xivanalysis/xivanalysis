@@ -155,7 +155,6 @@ export default {
 		name: 'Manaward',
 		icon: 'https://xivapi.com/i/000000/000463.png',
 		cooldown: 120,
-		duration: 20,
 	},
 	AETHERIAL_MANIPULATION: {
 		id: 155,
