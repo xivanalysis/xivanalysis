@@ -38,12 +38,21 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				<ActionLink {...ACTIONS.CELESTIAL_OPPOSITION} /> now triggers a suggestion for dropping uses.
+				<ActionLink {...ACTIONS.DIVINATION} /> gets its own checklist tracker.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 
 			date: new Date('2019-08-10'),

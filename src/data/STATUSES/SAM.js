@@ -33,7 +33,6 @@ export default {
 		id: 1228,
 		name: 'Higanbana',
 		icon: 'https://xivapi.com/i/013000/013304.png',
-
 	},
 
 	KAITEN: {

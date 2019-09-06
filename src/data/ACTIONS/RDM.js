@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Cooldowns
@@ -7,13 +9,14 @@ export default {
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/003000/003218.png',
 		cooldown: 120,
-		duration: 20,
+		statusesApplied: [STATUSES.EMBOLDEN_MAGIC, STATUSES.EMBOLDEN_PHYSICAL],
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/003000/003214.png',
 		cooldown: 35,
+		statusesApplied: [STATUSES.ACCELERATION],
 	},
 	MANAFICATION: {
 		id: 7521,
@@ -21,7 +24,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003219.png',
 		cooldown: 110,
 		breaksCombo: true,
-		duration: 10,
+		statusesApplied: [STATUSES.MANAFICATION],
 	},
 	CONTRE_SIXTE: {
 		id: 7519,

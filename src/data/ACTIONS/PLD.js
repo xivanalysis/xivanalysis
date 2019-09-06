@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -147,7 +149,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000166.png',
 		onGcd: false,
 		cooldown: 60,
-		duration: 25,
+		statusesApplied: [STATUSES.FIGHT_OR_FLIGHT],
 	},
 	IRON_WILL: {
 		id: 28,
@@ -162,7 +164,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
 		cooldown: 180,
-		duration: 10,
 	},
 	CIRCLE_OF_SCORN: {
 		id: 23,
@@ -170,7 +171,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
 		cooldown: 25,
-		duration: 15,
 	},
 	COVER: {
 		id: 27,
@@ -192,7 +192,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002502.png',
 		onGcd: false,
 		cooldown: 420,
-		duration: 10,
 	},
 	SHELTRON: {
 		id: 3542,
@@ -200,7 +199,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002510.png',
 		onGcd: false,
 		cooldown: 5,
-		duration: 6,
 	},
 	DIVINE_VEIL: {
 		id: 3540,
@@ -208,7 +206,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
-		duration: 20,
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -216,7 +213,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
 		cooldown: 10,
-		duration: 6,
 	},
 	REQUIESCAT: {
 		id: 7383,
@@ -224,7 +220,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
 		cooldown: 60,
-		duration: 12,
 	},
 	PASSAGE_OF_ARMS: {
 		id: 7385,
@@ -232,7 +227,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
-		duration: 18,
 	},
 	INTERVENE: {
 		id: 16461,

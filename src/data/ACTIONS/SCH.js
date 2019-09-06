@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player
@@ -125,7 +127,7 @@ export default {
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
-		duration: 30,
+		statusesApplied: [STATUSES.DISSIPATION],
 	},
 
 	EXCOGITATION: {
@@ -148,7 +150,7 @@ export default {
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
 		cooldown: 120,
-		duration: 15,
+		statusesApplied: [STATUSES.CHAIN_STRATAGEM],
 	},
 
 	SCH_AETHERPACT: {
@@ -170,6 +172,7 @@ export default {
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.WHISPERING_DAWN],
 	},
 
 	SCH_FEY_ILLUMINATION: {

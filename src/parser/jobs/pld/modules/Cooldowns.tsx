@@ -17,9 +17,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.HALLOWED_GROUND.id,
 		ACTIONS.SENTINEL.id,
 		ACTIONS.RAMPART.id,
-		ACTIONS.CONVALESCENCE.id,
-		ACTIONS.AWARENESS.id,
-		ACTIONS.ANTICIPATION.id,
 		// Personal Utility
 		ACTIONS.ARMS_LENGTH.id,
 		// Party Mitigation

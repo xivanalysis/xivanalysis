@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 // Split between PGL and MNK
 export default {
 	// -----
@@ -72,7 +74,7 @@ export default {
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
 		cooldown: 90,
-		duration: 15,
+		statusesApplied: [STATUSES.MANTRA],
 	},
 
 	PERFECT_BALANCE: {
@@ -80,6 +82,6 @@ export default {
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
 		cooldown: 120,
-		duration: 10,
+		statusesApplied: [STATUSES.PERFECT_BALANCE],
 	},
 }

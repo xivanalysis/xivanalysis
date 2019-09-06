@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 // Split between MRD and WAR
 export default {
 	// -----
@@ -80,7 +82,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000263.png',
 		cooldown: 90,
 		onGcd: false,
-		duration: 10,
+		statusesApplied: [STATUSES.THRILL_OF_BATTLE],
 	},
 
 	HOLMGANG: {
@@ -89,7 +91,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		cooldown: 240,
 		onGcd: false,
-		duration: 6,
+		statusesApplied: [STATUSES.HOLMGANG],
 	},
 
 	VENGEANCE: {
@@ -98,6 +100,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000267.png',
 		cooldown: 120,
 		onGcd: false,
-		duration: 10,
+		statusesApplied: [STATUSES.VENGEANCE],
 	},
 }
