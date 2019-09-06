@@ -53,12 +53,18 @@ export default class PrecastStatus extends Module {
 					// If action has already been synthesized (and pushed into _combatantActions array), do nothing
 					if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
 						this._combatantActions.push(actionInfo.id)
-						const castEvent = event
-						castEvent.timestamp = startTime - 2
-						castEvent.type = 'cast'
-						castEvent.ability.guid = actionInfo.id
 
-						events.splice(0, 0, castEvent)
+						events.splice(0, 0, {
+							...event,
+							ability: {
+								...event.ability,
+								name: actionInfo.name,
+								abilityIcon: actionInfo.icon.replace('https://xivapi.com/i', '').replace('/', '-'),
+								guid: actionInfo.id,
+							},
+							timestamp: startTime - 2,
+							type: 'cast',
+						})
 					}
 				}
 
