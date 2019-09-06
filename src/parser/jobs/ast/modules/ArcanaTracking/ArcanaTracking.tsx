@@ -253,7 +253,10 @@ export default class ArcanaTracking extends Module {
 	 *
 	 */
 	private onCast(event: CastEvent) {
-
+		// For now, we're not looking at any other precast action other than Plays, which is handled by offPrepullArcana() to check removebuff instead of cast for better estimation
+		if (event.timestamp < this.parser.fight.start_time) {
+			return
+		}
 		const actionId = event.ability.guid
 
 		// Piecing together what they have on prepull
