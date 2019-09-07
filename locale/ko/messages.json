@@ -58,7 +58,7 @@
   "ast.lucid-dreaming.suggestion.content": "효율적인 마나 관리를 위해 <0/>를 상시 사용하십시오.",
   "ast.lucid-dreaming.suggestion.why": "자각몽을 최소 {0} 이상 보류 하여 {_usesMissed, plural, other {# 회}}의 사용기회를 잃어버렸습니다.",
   "ast.ogcd-downtime.divination.description": "",
-  "ast.ogcd-downtime.divination.name": "",
+  "ast.ogcd-downtime.divination.name": "디비네이션 사용",
   "ast.overheal.requirement.all": "오버 힐 (전체)",
   "ast.overheal.requirement.earthly-star": "오버힐 (지상의 별):",
   "ast.overheal.requirement.hot": "오버 힐 (지속 힐):",
@@ -809,5 +809,5 @@
   "whm.overheal.rule.name": "오버힐을 피하세요",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": ""
+  "whm.swiftcast.title": "신속마가 사용된 스킬들"
 }
