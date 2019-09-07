@@ -115,8 +115,8 @@ export default class Entities extends Module {
 		this.addHook('removedebuff', event => this.removeBuff(event, true))
 
 		// Resources
-		this.addHook('damage', this.updateResources)
-		this.addHook('heal', this.updateResources)
+		this.addHook('calculateddamage', this.updateResources)
+		this.addHook('calculatedheal', this.updateResources)
 	}
 
 	// -----
