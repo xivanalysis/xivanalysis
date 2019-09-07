@@ -117,6 +117,8 @@ export default class Entities extends Module {
 		// Resources
 		this.addHook('calculateddamage', this.updateResources)
 		this.addHook('calculatedheal', this.updateResources)
+		this._damageListener = this.addHook('damage', this.updateResources)
+		this._healListener = this.addHook('heal', this.updateResources)
 	}
 
 	// -----
@@ -229,6 +231,10 @@ export default class Entities extends Module {
 	}
 
 	updateResources(event) {
+		if (event.type.includes('calculated')) {
+			this.removeHook(this._damageListener)
+			this.removeHook(this._healListener)
+		}
 		// Try to update both source and target
 		const source = this.getEntity(event.sourceID)
 		if (source && event.sourceResources) {

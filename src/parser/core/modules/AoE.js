@@ -12,6 +12,8 @@ const STATUS_AOE_THRESHOLD = 200
 const SUPPORTED_EVENTS = [
 	'calculateddamage',
 	'calculatedheal',
+	'damage',
+	'heal',
 	'refreshbuff',
 	'applybuff',
 ]
@@ -24,6 +26,8 @@ export default class AoE extends Module {
 		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'enemies',
 	]
+
+	_calculatedEventsExist = false;
 
 	constructor(...args) {
 		super(...args)
@@ -74,6 +78,14 @@ export default class AoE extends Module {
 			const event = events[i]
 
 			if (!SUPPORTED_EVENTS.includes(event.type)) {
+				continue
+			}
+
+			if (event.type.includes('calculated')) {
+				this._calculatedEventsExist = true
+			}
+
+			if (this._calculatedEventsExist && (event.type === 'damage' || event.type ==='heal')) {
 				continue
 			}
 
