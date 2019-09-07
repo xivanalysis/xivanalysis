@@ -29,6 +29,13 @@ export default class Statuses extends Module {
 		this.addHook('refreshbuff', {by: 'player'}, this._onRefresh)
 		this.addHook('removebuff', {by: 'player'}, this._onRemove)
 		this.addHook('removedebuff', {by: 'player'}, this._onRemove)
+
+		this.addHook('applybuff', {by: 'pet'}, this._onApply)
+		this.addHook('applydebuff', {by: 'pet'}, this._onApply)
+		this.addHook('refreshdebuff', {by: 'pet'}, this._onRefresh)
+		this.addHook('refreshbuff', {by: 'pet'}, this._onRefresh)
+		this.addHook('removebuff', {by: 'pet'}, this._onRemove)
+		this.addHook('removedebuff', {by: 'pet'}, this._onRemove)
 	}
 
 	_onApply(event) {
