@@ -41,4 +41,10 @@ export default {
 		name: 'Ruination',
 		icon: 'https://xivapi.com/i/012000/012684.png',
 	},
+
+	EVERLASTING_FLIGHT: {
+		id: 1868,
+		name: 'Everlasting Flight',
+		icon: 'https://xivapi.com/i/012000/012732.png',
+	},
 }

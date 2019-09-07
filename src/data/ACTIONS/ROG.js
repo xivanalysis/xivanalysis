@@ -52,6 +52,7 @@ export default {
 			potency: 220,
 			end: true,
 		},
+		statusesApplied: [STATUSES.SHADOW_FANG],
 	},
 
 	DEATH_BLOSSOM: {
@@ -109,5 +110,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.SHADE_SHIFT],
 	},
 }

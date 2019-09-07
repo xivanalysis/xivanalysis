@@ -35,6 +35,7 @@ export default {
 		name: 'Dia',
 		icon: 'https://xivapi.com/i/002000/002641.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.DIA],
 	},
 
 	GLARE: {

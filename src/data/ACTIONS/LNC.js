@@ -91,5 +91,6 @@ export default {
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.LANCE_CHARGE],
 	},
 }

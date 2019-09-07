@@ -100,6 +100,7 @@ export default class Death extends Module {
 		const startTime = this.parser.fight.start_time
 		this.timeline.addItem(new Item({
 			type: 'background',
+			className: 'death',
 			start: this._timestamp - startTime,
 			end: end - startTime,
 		}))

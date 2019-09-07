@@ -33,4 +33,39 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013901.png',
 		duration: 5,
 	},
+
+	ARMS_LENGTH: {
+		id: 1209,
+		name: 'Arm&apos;s Length',
+		icon: 'https://xivapi.com/i/013000/013915.png',
+		duration: 6,
+	},
+
+	ADDLE: {
+		id: 1203,
+		name: 'Addle',
+		icon: 'https://xivapi.com/i/013000/013917.png',
+		duration: 10,
+	},
+
+	BLOODBATH: {
+		id: 84,
+		name: 'Bloodbath',
+		icon: 'https://xivapi.com/i/013000/013913.png',
+		duration: 20,
+	},
+
+	FEINT: {
+		id: 1195,
+		name: 'Feint',
+		icon: 'https://xivapi.com/i/013000/013904.png',
+		duration: 20,
+	},
+
+	TRUE_NORTH: {
+		id: 1250,
+		name: 'True North',
+		icon: 'https://xivapi.com/i/013000/013903.png',
+		duration: 20,
+	},
 }

@@ -53,4 +53,11 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012913.png',
 		duration: 10,
 	},
+
+	SHADE_SHIFT: {
+		id: 488,
+		name: 'Shade Shift',
+		icon: 'https://xivapi.com/i/010000/010605.png',
+		duration: 20,
+	},
 }

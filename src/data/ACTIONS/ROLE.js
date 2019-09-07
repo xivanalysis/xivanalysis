@@ -132,6 +132,7 @@ export default {
 		name: 'Addle',
 		icon: 'https://xivapi.com/i/000000/000861.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.ADDLE],
 	},
 
 	// Melee DPS
@@ -140,6 +141,7 @@ export default {
 		name: 'Arm&apos;s Length',
 		icon: 'https://xivapi.com/i/000000/000822.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.ARMS_LENGTH],
 	},
 
 	LEG_SWEEP: {
@@ -154,6 +156,7 @@ export default {
 		name: 'Bloodbath',
 		icon: 'https://xivapi.com/i/000000/000823.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.BLOODBATH],
 	},
 
 	FEINT: {
@@ -161,6 +164,7 @@ export default {
 		name: 'Feint',
 		icon: 'https://xivapi.com/i/000000/000828.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.FEINT],
 	},
 
 	TRUE_NORTH: {
@@ -168,5 +172,6 @@ export default {
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.TRUE_NORTH],
 	},
 }

@@ -1,7 +1,7 @@
 import _ from 'lodash'
 
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import STATUSES, {STATUS_EFFECT_TYPES} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import {getDataBy} from 'data'
@@ -93,7 +93,26 @@ export default class Statuses extends Module {
 		this._statuses.push({
 			start: event.timestamp - this.parser.fight.start_time,
 			status: status,
+			target: this._getTargetName(event),
 		})
+	}
+
+	_getTargetName(event) {
+		if (event.targetIsFriendly) {
+			if (event.targetID === this.parser.player.id) {
+				return 'Self'
+			}
+			const target = this.parser.report.friendlies.find(it => it.id === event.targetID)
+			if (target) {
+				return target.name + '(' + target.type + ')'
+			}
+		}
+		const target = this.parser.report.enemies.find(it => it.id === event.targetID)
+		if (target) {
+			return target.name
+		}
+
+		return 'Unknown'
 	}
 
 	_onComplete() {
@@ -123,15 +142,26 @@ export default class Statuses extends Module {
 				this._groups[stid] = group
 			}
 
+			const color = this._lookForColor(st.status)
+
 			this._groups[stid].addItem(new Item({
 				type: 'background',
+				style: color && `background-color:${color};`,
 				className: this._groups[stid].className,
 				start: st.start,
 				end: st.end || st.start + st.status.duration * 1000,
-				content: `<img src="${st.status.icon}" alt="${st.status.name}"/>`,
+				content: `<img src="${st.status.icon}" alt="${st.status.name}" title="Used on: ${st.target}"/>`,
 				limitSize: false,
 			}))
 
 		})
+	}
+
+	_lookForColor(status) {
+		const setting = Object.values(STATUS_EFFECT_TYPES)
+			.find(value => {
+				return value.ids.some(v => v.id === status.id)
+			})
+		return setting && setting.settings && setting.settings.color || ''
 	}
 }

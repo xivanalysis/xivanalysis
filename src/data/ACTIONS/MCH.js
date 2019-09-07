@@ -125,6 +125,7 @@ export default {
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 2.5,
+		statusesApplied: [STATUSES.BIOBLASTER],
 	},
 
 	AIR_ANCHOR: {

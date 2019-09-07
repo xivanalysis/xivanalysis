@@ -57,13 +57,17 @@
 	position: absolute;
 	left: 0;
 	top: 0;
-	background-color: #63ed63;
+	/* background-color: #63ed63; */
 	margin-bottom: 0px;
 	/* margin-top: -16px; */
 }
 
+:global .vis-item.vis-background.death {
+	background-color: #ce909085;
+}
+
 :global .vis-background.highlight .vis-item-content {
-	background-color: #63ed63;
+	/* background-color: #63ed63; */
 }
 
 :global .vis-background .vis-item-content img {

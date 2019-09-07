@@ -71,4 +71,22 @@ function correctIdsToMatchLogs (obj) {
 	return obj
 }
 
+export const STATUS_EFFECT_TYPES = {
+	SelfDamageBuff: {
+		ids: [
+		],
+		settings: {
+			color: '#00FF00',
+		},
+	},
+
+	SelfMitigation: {
+		ids: [
+		],
+		settings: {
+			color: '#FF0000',
+		},
+	},
+}
+
 export default STATUSES

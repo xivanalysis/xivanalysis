@@ -119,7 +119,6 @@ export default class GlobalCooldown extends Module {
 			id: 'gcd',
 			content: 'GCD',
 			order: -99,
-			nestedGroups: [],
 		})
 
 		this.timeline.addGroup(gcdGroup)
@@ -133,7 +132,7 @@ export default class GlobalCooldown extends Module {
 				length: this._getGcdLength(gcd),
 				title: action.name,
 				group: 'gcd',
-				content: <img src={action.icon} alt={action.name}/>,
+				content: <img src={action.icon} alt={action.name} title={action.name}/>,
 			}))
 		})
 

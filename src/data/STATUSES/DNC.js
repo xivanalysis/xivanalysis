@@ -82,6 +82,12 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013716.png',
 		duration: 15,
 	},
+	IMPROVISATION_HEALING: {
+		id: 1828,
+		name: 'Improvisation',
+		icon: 'https://xivapi.com/i/013000/013717.png',
+		duration: 15,
+	},
 	ESPRIT: {
 		id: 1847,
 		name: 'Esprit',

@@ -10,6 +10,7 @@ export default {
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.BIOLYSIS],
 	},
 
 	ADLOQUIUM: {
@@ -18,6 +19,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
 		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE],
 	},
 
 	BROIL_III: {
@@ -120,6 +122,7 @@ export default {
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
 		cooldown: 15,
+		statusesApplied: [STATUSES.EMERGENCY_TACTICS],
 	},
 
 	DISSIPATION: {
@@ -135,6 +138,7 @@ export default {
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
 		cooldown: 45,
+		statusesApplied: [STATUSES.EXCOGITATION],
 	},
 
 	BROIL_II: {

@@ -66,6 +66,7 @@ export default {
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
 		cooldown: 50,
+		statusesApplied: [STATUSES.RUINATION],
 	},
 
 	DREADWYRM_TRANCE: {
@@ -89,6 +90,7 @@ export default {
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.DEVOTION],
 	},
 
 	BIO_III: {
@@ -96,6 +98,7 @@ export default {
 		name: 'Bio III',
 		icon: 'https://xivapi.com/i/002000/002689.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.BIO_III],
 	},
 
 	MIASMA_III: {
@@ -104,6 +107,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
 		castTime: 2.5,
+		statusesApplied: [STATUSES.MIASMA_III],
 	},
 
 	RUIN_IV: {
@@ -154,6 +158,7 @@ export default {
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
 		cooldown: 10,
+		statusesApplied: [STATUSES.EVERLASTING_FLIGHT],
 	},
 
 	//Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.

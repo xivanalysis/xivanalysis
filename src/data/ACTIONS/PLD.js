@@ -105,6 +105,7 @@ export default {
 			potency: 550,
 			end: true,
 		},
+		statusesApplied: [STATUSES.SWORD_OATH],
 	},
 	HOLY_SPIRIT: {
 		id: 7384,
@@ -181,6 +182,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002501.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.COVER, STATUSES.COVERED],
 	},
 	SPIRITS_WITHIN: {
 		id: 29,
@@ -195,6 +197,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002502.png',
 		onGcd: false,
 		cooldown: 420,
+		statusesApplied: [STATUSES.HALLOWED_GROUND],
 	},
 	SHELTRON: {
 		id: 3542,
@@ -202,6 +205,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002510.png',
 		onGcd: false,
 		cooldown: 5,
+		statusesApplied: [STATUSES.SHELTRON],
 	},
 	DIVINE_VEIL: {
 		id: 3540,
@@ -209,6 +213,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_AFTER_HEAL],
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -216,6 +221,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
 		cooldown: 10,
+		statusesApplied: [STATUSES.INTERVENTION],
 	},
 	REQUIESCAT: {
 		id: 7383,
@@ -231,6 +237,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.PASSAGE_OF_ARMS],
 	},
 	INTERVENE: {
 		id: 16461,
