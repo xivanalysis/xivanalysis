@@ -10,10 +10,6 @@ const DEFAULT_AOE_THRESHOLD = 20
 const STATUS_AOE_THRESHOLD = 200
 
 const SUPPORTED_EVENTS = [
-	'calculateddamage',
-	'calculatedheal',
-	'damage',
-	'heal',
 	'refreshbuff',
 	'applybuff',
 ]
@@ -25,6 +21,7 @@ export default class AoE extends Module {
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'enemies',
+		'fflogsEvents',
 	]
 
 	_calculatedEventsExist = false;
@@ -37,6 +34,9 @@ export default class AoE extends Module {
 
 	// Need to normalise so the final events can go out at the right time
 	normalise(events) {
+		// Determine which name to use for damage and heal events (calculated vs normal)
+		SUPPORTED_EVENTS.push(this.fflogsEvents.damageEventName, this.fflogsEvents.healEventName)
+
 		// Track hits by source
 		const trackers = {}
 		function getTracker(event) {
@@ -78,14 +78,6 @@ export default class AoE extends Module {
 			const event = events[i]
 
 			if (!SUPPORTED_EVENTS.includes(event.type)) {
-				continue
-			}
-
-			if (event.type.includes('calculated')) {
-				this._calculatedEventsExist = true
-			}
-
-			if (this._calculatedEventsExist && (event.type === 'damage' || event.type ==='heal')) {
 				continue
 			}
 
