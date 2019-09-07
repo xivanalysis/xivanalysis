@@ -24,8 +24,6 @@ export default class AoE extends Module {
 		'fflogsEvents',
 	]
 
-	_calculatedEventsExist = false;
-
 	constructor(...args) {
 		super(...args)
 		// Listen to our own event from normalisation

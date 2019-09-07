@@ -25,7 +25,7 @@ export class FFLogsEventNormaliser extends Module {
 	}
 
 	get healEventName() {
-		return (this._hasCalculatedEvents ? 'heal': 'heal')
+		return (this._hasCalculatedEvents ? 'calculatedheal': 'heal')
 	}
 
 	normalise(events: Event[]): Event[] {
