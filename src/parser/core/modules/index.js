@@ -12,6 +12,7 @@ import Cooldowns from './Cooldowns'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
+import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
@@ -40,6 +41,7 @@ export default [
 	Death,
 	Downtime,
 	Enemies,
+	FFLogsEventNormaliser,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
