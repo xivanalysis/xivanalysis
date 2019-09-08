@@ -20,7 +20,7 @@
   "ast.celestial-intersection.suggestion.why": "Environ {usesMissed} utilisations de <0/> ont été manquées en le conservant pendant {0}.",
   "ast.celestial-opposition.suggestion.content.diurnal": "",
   "ast.celestial-opposition.suggestion.content.noct": "",
-  "ast.celestial-opposition.suggestion.why": "",
+  "ast.celestial-opposition.suggestion.why": "Environ {usesMissed} utilisations de <0/> ont été manquées en le conservant pendant {0}.",
   "ast.dots.requirement.uptime.name": "Temps d'activité de/d' <0/>",
   "ast.dots.rule.description": "Conjonction supérieure III produit une bonne partie de vos dégâts. Veillez à ce que le DoT soit en permanence appliqué. Il peut aussi être utilisé pour weave (<0/>) et gérer les cartes, ou se déplacer sans perdre l'uptime de vos GCDs.",
   "ast.dots.rule.name": "Vérifiez que vos DoTs soient bien appliqués à votre cible en permanence",
