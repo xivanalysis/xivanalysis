@@ -35,7 +35,7 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2019-08-23'),
+			date: new Date('2019-09-08'),
 			Changes: () => <>
 				Added support for Perfect Balance windows.
 			</>,
