@@ -339,7 +339,7 @@
   "drg.buffs.checklist.name": "Gardez {0} actif",
   "drg.buffs.checklist.requirement.name": "Temps d'activité total de <0/>",
   "drg.buffs.panel-count": "",
-  "drg.buffs.suggestions.bad-dss.content": "",
+  "drg.buffs.suggestions.bad-dss.content": "Evitez d'utiliser <0/> immédiatement après <1/> ou <2/> afin d'optimiser vos dégâts durant chaque fenêtre de buff.",
   "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "",
   "drg.buffs.suggestions.bad-lcs.why": "",
