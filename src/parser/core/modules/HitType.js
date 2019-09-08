@@ -4,6 +4,8 @@ import {HitType as EventHitType} from 'fflogs'
 const ACTION_EVENT_TYPES = [
 	'damage',
 	'heal',
+	'calculateddamage',
+	'calculatedheal',
 ]
 
 const FAILED_HITS = [

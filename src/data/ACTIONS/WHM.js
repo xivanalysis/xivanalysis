@@ -80,7 +80,7 @@ export default {
 		id: 3569,
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/002000/002632.png',
-		cooldown: 60,
+		cooldown: 90,
 		statusesApplied: [STATUSES.ASYLUM],
 	},
 
