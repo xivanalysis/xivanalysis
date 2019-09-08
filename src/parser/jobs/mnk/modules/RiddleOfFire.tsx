@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -12,16 +11,19 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-import {matchClosestHigher} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Fists, {Fist, FISTLESS} from './Fists'
+import Fists, {FISTLESS} from './Fists'
 
 const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
 
-const EXPECTED_GCDS = 11 // Expected under Fists of Wind with optimal play
+// Expected under Fists of Wind with optimal play
+const EXPECTED_GCDS = 10
+
 const EXPECTED_ELIXIR_FIELDS = 1
-const EXPECTED_SHOULDER_TACKLES = 1 // technically they can get 2 and should as much as possible, but don't ding for it in case it's for mechanics
+
+// technically they can get 2 and should as much as possible, but don't ding for it in case it's for mechanics
+const EXPECTED_SHOULDER_TACKLES = 1
 
 const SUGGESTION_TIERS = {
 	1: SEVERITY.MINOR,
@@ -41,6 +43,7 @@ class Riddle {
 		[STATUSES.FISTS_OF_FIRE.id]: 0,
 		[STATUSES.FISTS_OF_WIND.id]: 0,
 	}
+	expectedGcds: number = EXPECTED_GCDS // Baseline GL4 RoFs are 10 GCDs, higher sks allows 11
 
 	constructor(start: number) {
 		this.start = start
@@ -54,7 +57,7 @@ class Riddle {
 		}).length
 	}
 
-	get elixirField() {
+	get elixirFields() {
 		return this.casts.filter(event => event.ability.guid === ACTIONS.ELIXIR_FIELD.id).length
 	}
 
@@ -62,7 +65,7 @@ class Riddle {
 		return this.casts.filter(event => event.ability.guid === ACTIONS.SHOULDER_TACKLE.id).length
 	}
 
-	public gcdsInFist(fistId: number) {
+	public gcdsByFist(fistId: number) {
 		return this.gcdsInEachFist[fistId]
 	}
 }
@@ -72,8 +75,8 @@ export default class RiddleOfFire extends Module {
 	static title = t('mnk.rof.title')`Riddle of Fire`
 	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
-	@dependency private suggestions!: Suggestions
 	@dependency private fists!: Fists
+	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	private history: Riddle[] = []
@@ -121,27 +124,16 @@ export default class RiddleOfFire extends Module {
 			this.stopAndSave()
 		}
 
-		// The opener Riddle is special (10 GCDs with some FoF uptime), so keep track of it.
-		const openerRiddle = this.history[0]
-
 		const nonRushedRiddles = this.history
 			.filter(riddle => !riddle.rushing)
 
-		const gcdsNotInWind = nonRushedRiddles
-			.reduce((sum, riddle) =>
-				sum + riddle.gcdsInFist(STATUSES.FISTS_OF_FIRE.id)
-					+ riddle.gcdsInFist(STATUSES.FISTS_OF_EARTH.id)
-					+ riddle.gcdsInFist(FISTLESS),
-				0)
-			- openerRiddle.gcdsInFist(STATUSES.FISTS_OF_FIRE.id) // there's some expected FoF uptime in the opening Riddle, so ignore it
-
 		// This could be redundant with GCDs spent not under Wind, but according to Tiff you should only
 		// be in FoF during a rushed Riddle, so I'm not too worried about it.
-		const droppedGcds = (nonRushedRiddles.length * EXPECTED_GCDS - 1) // opener Riddle has 10 GCDs
+		const droppedGcds = (nonRushedRiddles.length * EXPECTED_GCDS) // opener Riddle has 10 GCDs
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds, 0)
 
 		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
-			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirField, 0)
+			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirFields, 0)
 
 		// Keep these seperate for different suggestions; our baseline is 1 charge, but the MNK mentors
 		// want a minor suggestion to track Riddles that only had 1 Tackle
@@ -176,20 +168,6 @@ export default class RiddleOfFire extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FISTS_OF_WIND.icon,
-			content: <Trans id="mnk.rof.suggestions.fists.content">
-				Aim to be in <StatusLink {...STATUSES.FISTS_OF_WIND} /> during <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />,
-				unless you would not lose a GCD due to downtime or end-of-fight.
-			</Trans>,
-			tiers: SUGGESTION_TIERS,
-			value: gcdsNotInWind,
-			why: <Trans id="mnk.rof.suggestions.fists.why">
-				<Plural value={gcdsNotInWind} one="# GCD was" other="# GCDs were" /> used while not under
-				<StatusLink {...STATUSES.FISTS_OF_WIND} /> during <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SHOULDER_TACKLE.icon,
 			content: <Trans id="mnk.rof.suggestions.tackle.content">
 				Try to use both charges of <ActionLink {...ACTIONS.SHOULDER_TACKLE} /> during <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />,
@@ -208,6 +186,13 @@ export default class RiddleOfFire extends Module {
 
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
 		if (this.riddle && this.riddle.active) {
+			// Check for any GCDs spent outside of Fists of Wind, which means the expected GCDs will be 9
+			if (this.riddle.gcdsByFist(FISTLESS)
+				+ this.riddle.gcdsByFist(STATUSES.FISTS_OF_EARTH.id)
+				+ this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id) > 0) {
+				this.riddle.expectedGcds = EXPECTED_GCDS - 1
+			}
+
 			this.riddle.active = false
 			this.riddle.end = endTime
 
@@ -240,10 +225,10 @@ export default class RiddleOfFire extends Module {
 					targetsData: {
 						gcds: {
 							actual: riddle.gcds,
-							expected: EXPECTED_GCDS,
+							expected: riddle.expectedGcds,
 						},
 						elixirField: {
-							actual: riddle.elixirField,
+							actual: riddle.elixirFields,
 							expected: EXPECTED_ELIXIR_FIELDS,
 						},
 						shoulderTackle: {
