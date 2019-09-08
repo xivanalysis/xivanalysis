@@ -327,7 +327,7 @@
   "drg.blood.checklist.requirement.name": "Temps d'activité total de <0/>",
   "drg.blood.suggestions.eyes.content": "Éviter d'utiliser <0/> quand vous avez déjà {MAX_EYES} yeux. Gâcher des yeux retarde votre fenêtre de Vie du Dragon et peut potentiellement vous faire perdre beaucoup de DPS.",
   "drg.blood.suggestions.eyes.why": "",
-  "drg.blood.title": "",
+  "drg.blood.title": "Vie du Dragon",
   "drg.blood.trigger.no-lotd-nastrond": "",
   "drg.blood.trigger.no-lotd-stardiver": "",
   "drg.blood.windows.hits": "",
