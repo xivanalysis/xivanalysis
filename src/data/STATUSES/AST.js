@@ -95,12 +95,14 @@ export default {
 		id: 1224,
 		name: 'Earthly Dominance',
 		icon: 'https://xivapi.com/i/013000/013241.png',
+		duration: 10,
 	},
 
 	GIANT_DOMINANCE: {
 		id: 1248,
 		name: 'Giant Dominance',
 		icon: 'https://xivapi.com/i/013000/013242.png',
+		duration: 10,
 	},
 
 	DIURNAL_OPPOSITION: {

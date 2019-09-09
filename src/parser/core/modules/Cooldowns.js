@@ -52,7 +52,7 @@ export default class Cooldowns extends Module {
 
 			// Build the base group
 			const group = this._buildGroup({
-				id: data.name,
+				id: data.actions[0],
 				content: data.name,
 				order,
 			})
