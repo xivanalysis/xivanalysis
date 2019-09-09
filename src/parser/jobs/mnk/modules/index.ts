@@ -1,4 +1,3 @@
-import BuffUptime from './BuffUptime'
 import Cooldowns from './Cooldowns'
 import Demolish from './Demolish'
 import Fists from './Fists'
@@ -9,9 +8,10 @@ import OGCDDowntime from './OGCDDowntime'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
 import Steppies from './Steppies'
+import TwinSnakes from './TwinSnakes'
+import Weaving from './Weaving'
 
 export default [
-	BuffUptime,
 	Cooldowns,
 	Demolish,
 	Fists,
@@ -22,4 +22,6 @@ export default [
 	RiddleOfFire,
 	Speedmod,
 	Steppies,
+	TwinSnakes,
+	Weaving,
 ]

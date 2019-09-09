@@ -8,7 +8,7 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 200,
+		potency: 220,
 		combo: {
 			start: true,
 		},
@@ -22,7 +22,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 300,
+			potency: 330,
 		},
 	},
 
@@ -34,7 +34,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 420, // TODO - *Cries in positionals*
+			potency: 460, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -47,7 +47,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 200,
+			potency: 220,
 			end: true,
 		},
 	},

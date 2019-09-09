@@ -1,4 +1,5 @@
 import PETS from '../PETS'
+import STATUSES from 'data/STATUSES'
 
 //use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
@@ -338,6 +339,7 @@ export default {
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/002000/002688.png',
 		// No pet reference, can't actually determine anything from it
+		statusesApplied: [STATUSES.DEVOTION],
 	},
 
 	// Demi-bahamut
