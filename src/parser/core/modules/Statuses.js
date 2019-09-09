@@ -129,7 +129,7 @@ export default class Statuses extends Module {
 
 	_onComplete() {
 		this._statuses.forEach(st => {
-			const stid = 'status-' + this._lookForStatusMapping(st.status.id)
+			const stid = 'status-' + (this.STATUSES_STACK_MAPPING[st.status.id] || st.status.id)
 			if (!this._groups[stid]) {
 				// register new group
 
@@ -167,16 +167,6 @@ export default class Statuses extends Module {
 			}))
 
 		})
-	}
-
-	_lookForStatusMapping(id) {
-		const stringId = id.toString();
-		const keys = Object.keys(this.STATUSES_STACK_MAPPING)
-		const found = keys.find(it => it === stringId)
-		if (found) {
-			return this.STATUSES_STACK_MAPPING[found]
-		}
-		return id
 	}
 
 	_lookForColor(status) {
