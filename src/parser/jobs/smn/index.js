@@ -6,6 +6,8 @@ import {Icon, Message} from 'semantic-ui-react'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 
 const description = t('smn.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.
@@ -39,6 +41,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-08-23'),
+		Changes: () => <>Prevent raising weaving issues for triple weaving with <ActionLink {...ACTIONS.FIREBIRD_TRANCE}/></>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}, {
 		date: new Date('2019-08-16'),
 		Changes: () => <>Implemented Shadowbringers changes.</>,
 		contributors: [CONTRIBUTORS.KELOS],
