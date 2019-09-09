@@ -25,7 +25,7 @@ export default new Meta({
 				<Trans id="whm.about.description.devwarning">The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
-		<Trans id="whm.about.description.support">Currently this module can track DoT uptime, Lily and Blood Lily Usage, and detect clipping and report about missed Divine Benison and Assize casts.</Trans>
+		<Trans id="whm.about.description.support">Currently this module can track DoT uptime, Lily and Blood Lily Usage, detect clipping, and report about missed oGCD casts.</Trans>
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
@@ -43,6 +43,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2019-09-04'),
+			Changes: () => <>Track oGCDs with more clarity.</>,
+			contributors: [CONTRIBUTORS.NIV],
+		},
 		{
 			date: new Date('2019-08-24'),
 			Changes: () => <>
