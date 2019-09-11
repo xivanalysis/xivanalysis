@@ -9,7 +9,7 @@ import {CastEvent, DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import FFLogsEventNormaliser from 'parser/core/modules/FFLogsEventNormaliser'
+import {FFLogsEventNormaliser} from 'parser/core/modules/FFLogsEventNormaliser'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
