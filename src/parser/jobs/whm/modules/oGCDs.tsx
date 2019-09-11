@@ -47,7 +47,7 @@ const OTHER_ALLOWED_MISSES = {
 		major: 0,
 		showHeld: false,
 		content: <Fragment>
-			<Trans id="whm.ogcds.suggestions.temperance.content">Use <ActionLink {...ACTIONS.ASYLUM}/> often to mitigate incoming raid damage and boost GCD healing potency. Avoid clipping to apply it.</Trans>
+			<Trans id="whm.ogcds.suggestions.temperance.content">Use <ActionLink {...ACTIONS.TEMPERANCE}/> often to mitigate incoming raid damage and boost GCD healing potency. Avoid clipping to apply it.</Trans>
 		</Fragment>,
 	},
 }
