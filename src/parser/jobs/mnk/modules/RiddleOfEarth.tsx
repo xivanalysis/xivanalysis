@@ -23,7 +23,6 @@ class Riddle {
 
 export default class RiddleOfEarth extends Module {
 	static handle = 'riddleofearth'
-	static title = t('mnk.roe.title')`Riddle of Earth`
 
 	@dependency private suggestions!: Suggestions
 
