@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	HEAVY_SHOT: {
 		id: 97,
@@ -41,6 +43,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000353.png',
 		onGcd: false,
 		cooldown: 80,
+		statusesApplied: [STATUSES.BARRAGE],
 	},
 	WINDBITE: {
 		id: 113,
@@ -55,6 +58,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000352.png',
 		onGcd: false,
 		cooldown: 80,
+		statusesApplied: [STATUSES.RAGING_STRIKES],
 	},
 	REPELLING_SHOT: {
 		id: 112,

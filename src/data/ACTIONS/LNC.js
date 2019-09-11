@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -79,6 +81,7 @@ export default {
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
 		cooldown: 45,
+		statusesApplied: [STATUSES.LIFE_SURGE],
 	},
 
 	LANCE_CHARGE: {

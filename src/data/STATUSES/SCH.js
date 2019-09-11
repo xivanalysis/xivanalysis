@@ -55,5 +55,6 @@ export default {
 		id: 315,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/012000/012826.png',
+		duration: 21,
 	},
 }

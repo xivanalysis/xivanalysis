@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	MAGES_BALLAD: {
 		id: 114,
@@ -29,6 +31,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002601.png',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.BATTLE_VOICE],
 	},
 	EMPYREAL_ARROW: {
 		id: 3558,
@@ -83,6 +86,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002612.png',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.TROUBADOUR],
 	},
 	CAUSTIC_BITE: {
 		id: 7406,
@@ -104,6 +108,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002615.png',
 		onGcd: false,
 		cooldown: 90,
+		statusesApplied: [STATUSES.NATURES_MINNE],
 	},
 	REFULGENT_ARROW: {
 		id: 7409,

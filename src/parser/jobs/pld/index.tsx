@@ -78,5 +78,12 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
+		{
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
 	],
 })
