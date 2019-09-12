@@ -3,6 +3,7 @@ export default {
 		id: 110,
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/010000/010217.png',
+		duration: 10,
 	},
 
 	OPO_OPO_FORM: {
@@ -30,6 +31,7 @@ export default {
 		id: 102,
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/010000/010206.png',
+		duration: 15,
 	},
 
 	TWIN_SNAKES: {

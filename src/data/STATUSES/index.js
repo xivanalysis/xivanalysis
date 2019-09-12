@@ -75,16 +75,63 @@ function correctIdsToMatchLogs (obj) {
 }
 
 export const STATUS_EFFECT_TYPES = {
-	SelfDamageBuff: {
+	selfDamageBuff: {
 		ids: [
+			//			STATUSES.RAGING_STRIKES.id,
+			//			STATUSES.BARRAGE.id,
+			//			STATUSES.DEVILMENT.id,
 		],
 		settings: {
 			color: '#00FF00',
 		},
 	},
 
-	SelfMitigation: {
+	partyDamageBuff: {
 		ids: [
+			//			STATUSES.BATTLE_VOICE.id,
+			//			STATUSES.TECHNICAL_FINISH.id,
+			//			STATUSES.BATTLE_LITANY.id,
+			//			STATUSES.BROTHERHOOD.id,
+			//			STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
+			//			STATUSES.EMBOLDEN_PHYSICAL.id,
+			//			STATUSES.CHAIN_STRATAGEM.id,
+			//			STATUSES.DEVOTION.id,
+		],
+		settings: {
+			color: '#00FF00',
+		},
+	},
+
+	partyDamageMitigation: {
+		ids: [
+			//			STATUSES.SHIELD_SAMBA.id,
+			//			STATUSES.DARK_MISSIONARY.id,
+			//			STATUSES.HEART_OF_LIGHT.id,
+			//			STATUSES.TACTICIAN.id,
+			//			STATUSES.PASSAGE_OF_ARMS.id,
+		],
+		settings: {
+			color: '#00FF00',
+		},
+	},
+
+	partyShield: {
+		ids: [
+			//			STATUSES.DIVINE_VEIL_AFTER_HEAL.id,
+			//			STATUSES.SHAKE_IT_OFF.id,
+		],
+		settings: {
+			color: '#00FF00',
+		},
+	},
+
+	selfMitigation: {
+		ids: [
+			//			STATUSES.RAMPART.id,
+			//			STATUSES.DARK_MIND.id,
+			//			STATUSES.SHADOW_WALL.id,
+			//			STATUSES.SENTINEL.id,
+			//			STATUSES.SHELTRON.id,
 		],
 		settings: {
 			color: '#FF0000',

@@ -46,7 +46,6 @@ export default class GlobalCooldown extends Module {
 		event: null,
 	}
 	gcds = []
-	gcdStatuses = []
 
 	constructor(...args) {
 		super(...args)

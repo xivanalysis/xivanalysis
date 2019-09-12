@@ -3,6 +3,7 @@ export default {
 		id: 638,
 		name: 'Vulnerability Up',
 		icon: 'https://xivapi.com/i/015000/015020.png',
+		duration: 10,
 	},
 
 	SHADOW_FANG: {

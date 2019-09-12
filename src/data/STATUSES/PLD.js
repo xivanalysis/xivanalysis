@@ -32,51 +32,61 @@ export default {
 		id: 74,
 		name: 'Sentinel',
 		icon: 'https://xivapi.com/i/010000/010151.png',
+		duration: 10,
 	},
 	SWORD_OATH: {
 		id: 1902,
 		name: 'Sword Auth',
 		icon: 'https://xivapi.com/i/019000/019461.png',
+		duration: 15,
 	},
 	SHELTRON: {
 		id: 1856,
 		name: 'Sheltron',
 		icon: 'https://xivapi.com/i/012000/012510.png',
+		duration: 6,
 	},
 	INTERVENTION: {
 		id: 1174,
 		name: 'Intervention',
 		icon: 'https://xivapi.com/i/012000/012511.png',
+		duration: 6,
 	},
 	PASSAGE_OF_ARMS: {
 		id: 1175,
 		name: 'Passage Of Arms',
 		icon: 'https://xivapi.com/i/012000/012512.png',
+		duration: 18,
 	},
 	DIVINE_VEIL: {
 		id: 726,
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/012000/012508.png',
+		duration: 30,
 	},
 	DIVINE_VEIL_AFTER_HEAL: {
 		id: 727,
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/012000/012509.png',
+		duration: 30,
 	},
 	COVER: {
 		id: 80,
 		name: 'Cover',
 		icon: 'https://xivapi.com/i/012000/012501.png',
+		duration: 12,
 	},
 	COVERED: {
 		id: 81,
 		name: 'Covered',
 		icon: 'https://xivapi.com/i/012000/012502.png',
+		duration: 12,
 	},
 	HALLOWED_GROUND: {
 		id: 82,
 		name: 'Hallowed Ground',
 		icon: 'https://xivapi.com/i/012000/012504.png',
+		duration: 10,
 	},
 
 }

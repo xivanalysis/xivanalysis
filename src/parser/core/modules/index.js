@@ -21,11 +21,11 @@ import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
+import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
-import Statuses from './Statuses'
 
 export default [
 	About,
@@ -51,9 +51,9 @@ export default [
 	RaidBuffs,
 	Speedmod,
 	Statistics,
+	Statuses,
 	Suggestions,
 	Timeline,
 	UnableToAct,
 	Weaving,
-	Statuses,
 ]

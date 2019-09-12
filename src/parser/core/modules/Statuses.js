@@ -19,6 +19,7 @@ export default class Statuses extends Module {
 	STATUSES_STACK_MAPPING = {
 		[STATUSES.WALKING_DEAD.id]: STATUSES.LIVING_DEAD.id,
 		[STATUSES.GIANT_DOMINANCE.id]: STATUSES.EARTHLY_DOMINANCE.id,
+		[STATUSES.DIVINE_VEIL_AFTER_HEAL.id]: STATUSES.DIVINE_VEIL.id,
 	}
 
 	_statuses = [];
@@ -116,7 +117,7 @@ export default class Statuses extends Module {
 			}
 			const target = this.parser.report.friendlies.find(it => it.id === event.targetID)
 			if (target) {
-				return target.name + '(' + target.type + ')'
+				return target.name + ' (' + target.type + ')'
 			}
 		}
 		const target = this.parser.report.enemies.find(it => it.id === event.targetID)
@@ -172,7 +173,7 @@ export default class Statuses extends Module {
 	_lookForColor(status) {
 		const setting = Object.values(STATUS_EFFECT_TYPES)
 			.find(value => {
-				return value.ids.some(v => v.id === status.id)
+				return value.ids.some(id => id === status.id)
 			})
 		return setting && setting.settings && setting.settings.color || ''
 	}
