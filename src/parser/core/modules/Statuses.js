@@ -4,9 +4,11 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES, {STATUS_EFFECT_TYPES} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
-import {getDataBy} from 'data'
+import { getDataBy } from 'data'
 
-// Track the cooldowns on actions and shit
+const STATUS_APPLY_ON_PARTY_THREASHOLD_MILLISECONDS = 2 * 1000
+
+// Track statuses applied by actions
 export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
@@ -98,7 +100,7 @@ export default class Statuses extends Module {
 	_addStatus(event, status) {
 		if (this._statuses.some(it => {
 			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
-			return it.status.id === status.id && diff <= 2 * 1000
+			return it.status.id === status.id && diff <= STATUS_APPLY_ON_PARTY_THREASHOLD_MILLISECONDS
 		})) {
 			return
 		}
