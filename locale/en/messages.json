@@ -490,8 +490,6 @@
   "mnk.gl.suggestions.roe.wasted.why": "<0/> was used {0, plural, one {# time} other {# times}} without preserving <1/>.",
   "mnk.gl.title": "Greased Lightning",
   "mnk.gl.trigger.broken-transition": "<0/> stacks were observed performing an impossible transition.",
-  "mnk.rof.suggestions.fists.content": "Aim to be in <0/> during <1/>, unless you would not lose a GCD due to downtime or end-of-fight.",
-  "mnk.rof.suggestions.fists.why": "{gcdsNotInWind, plural, one {# GCD was} other {# GCDs were}} used while not under<0/> during <1/>.",
   "mnk.rof.suggestions.gcd.content": "Aim to hit {EXPECTED_GCDS} GCDs during each <0/>.",
   "mnk.rof.suggestions.gcd.why": "{droppedGcds, plural, one {# possible GCD was} other {# possible GCDs were}} missed during <0/>.",
   "mnk.rof.suggestions.ogcd.content": "Aim to use 1 <0/> and at least 1 <1/>during each <2/>.",

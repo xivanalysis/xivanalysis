@@ -490,8 +490,6 @@
   "mnk.gl.suggestions.roe.wasted.why": "存在 {0} 次在未保持<1/>时使用<0/>。",
   "mnk.gl.title": "疾风迅雷",
   "mnk.gl.trigger.broken-transition": "<0/>疾风迅雷层数被FFLogs检测出了不正确的转换规律。",
-  "mnk.rof.suggestions.fists.content": "",
-  "mnk.rof.suggestions.fists.why": "",
   "mnk.rof.suggestions.gcd.content": "尽量在每个 <0/> 中都打入 {POSSIBLE_GCDS} 个GCD。",
   "mnk.rof.suggestions.gcd.why": "",
   "mnk.rof.suggestions.ogcd.content": "",

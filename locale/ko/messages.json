@@ -490,8 +490,6 @@
   "mnk.gl.suggestions.roe.wasted.why": "<0/>가 <1/>를 유지하지 않고 {0, plural, one {#번} other {#번}} 사용되었습니다.",
   "mnk.gl.title": "질풍번개",
   "mnk.gl.trigger.broken-transition": "<0/> 스택 변동 중 불가능한 패턴이 관찰되었습니다.",
-  "mnk.rof.suggestions.fists.content": "",
-  "mnk.rof.suggestions.fists.why": "",
   "mnk.rof.suggestions.gcd.content": "<0/> 구간 안에 {POSSIBLE_GCDS} 개의 글쿨을 사용할 수 있도록 합니다.",
   "mnk.rof.suggestions.gcd.why": "홍련의 극의 지속시간 중 {missedGcds, plural, one {#개} other {#개}}의 글쿨을 놓쳤습니다.",
   "mnk.rof.suggestions.ogcd.content": "",

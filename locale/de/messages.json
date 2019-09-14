@@ -490,8 +490,6 @@
   "mnk.gl.suggestions.roe.wasted.why": "",
   "mnk.gl.title": "",
   "mnk.gl.trigger.broken-transition": "",
-  "mnk.rof.suggestions.fists.content": "",
-  "mnk.rof.suggestions.fists.why": "",
   "mnk.rof.suggestions.gcd.content": "",
   "mnk.rof.suggestions.gcd.why": "Während aktivem Flammendes Enigma {missedGcds, plural, one {wurde # GCD} other {wurden # GCDs}} verpasst.",
   "mnk.rof.suggestions.ogcd.content": "",
