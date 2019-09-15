@@ -3,5 +3,4 @@ export interface Status {
 	name: string
 	icon: string
 	duration?: number
-	stackWith?: number
 }

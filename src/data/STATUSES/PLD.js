@@ -64,7 +64,7 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012508.png',
 		duration: 30,
 	},
-	DIVINE_VEIL_AFTER_HEAL: {
+	DIVINE_VEIL_PROC: {
 		id: 727,
 		name: 'Divine Veil',
 		icon: 'https://xivapi.com/i/012000/012509.png',

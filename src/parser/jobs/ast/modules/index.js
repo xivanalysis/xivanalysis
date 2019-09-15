@@ -13,6 +13,7 @@ import Overheal from './Overheal'
 import Draw from './Draw'
 import CelestialOpposition from './CelestialOpposition'
 import DivinationDowntime from './DivinationDowntime'
+import Statuses from './Statuses'
 
 export default [
 	Cooldowns,
@@ -30,4 +31,5 @@ export default [
 	Overheal,
 	DivinationDowntime,
 	CelestialOpposition,
+	Statuses,
 ]

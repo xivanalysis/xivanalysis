@@ -5,6 +5,7 @@ import Darkside from './Darkside'
 import BloodWeapon from './BloodWeapon'
 import Delirium from './Delirium'
 import MultiHitSkills from './MultiHitSkills'
+import Statuses from './Statuses'
 
 export default [
 	Darkside,
@@ -14,4 +15,5 @@ export default [
 	Cooldowns,
 	OGCDDowntime,
 	MultiHitSkills,
+	Statuses,
 ]

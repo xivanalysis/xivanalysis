@@ -3,6 +3,7 @@ import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import {getDataBy} from 'data'
+import React from 'react'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -17,6 +18,7 @@ export default class Cooldowns extends Module {
 	// nested groups. Actions not specified here will be sorted by their ID below.
 	// Check the NIN and SMN modules for examples.
 	static cooldownOrder = []
+
 	_currentAction = null
 	_cooldowns = {}
 	_groups = {}
@@ -52,7 +54,7 @@ export default class Cooldowns extends Module {
 
 			// Build the base group
 			const group = this._buildGroup({
-				id: data.actions[0],
+				id: data.name,
 				content: data.name,
 				order,
 			})
@@ -74,7 +76,7 @@ export default class Cooldowns extends Module {
 	}
 
 	_buildGroup(opts) {
-		const group = new ItemGroup({...opts, showNested: false})
+		const group = new ItemGroup({showNested: false, ...opts})
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
 		return group
@@ -146,15 +148,13 @@ export default class Cooldowns extends Module {
 
 		// Add CD info to the timeline
 		cd.history
-			.sort((a, b) => a.timestamp - b.timestamp)
 			.forEach(use => {
 				if (!use.shared) {
 					this._groups[actionId].addItem(new Item({
 						type: 'background',
 						start: use.timestamp - this.parser.fight.start_time,
 						length: use.length,
-						content: `<div class="progress-wrapper-fl"><div class="progress-fl" style = "width:${0}%"><img src="${action.icon}" alt="${action.name}"/> </div></div>`,
-						limitSize: false,
+						content: <img src={action.icon} alt={action.name} />,
 					}))
 				}
 			})

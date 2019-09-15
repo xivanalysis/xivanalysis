@@ -96,7 +96,7 @@ export default class Timeline extends Module {
 			min: 0,
 			max: this.parser.fightDuration,
 			zoomMin: 10000,
-			selectable: false,
+
 			// View defaults
 			// Show first minute by default, full fight view is a bit hard to grok.
 			start: 0,

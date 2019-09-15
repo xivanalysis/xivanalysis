@@ -19,7 +19,6 @@
 
 :global .vis-range .vis-item-overflow {
 	padding: 0;
-	/* display: none; */
 }
 
 :global .vis-item.vis-background .vis-item-content {
@@ -37,37 +36,6 @@
 
 :global .vis-group {
 	height: 28px;
-}
-
-:global .progress-wrapper-fl {
-	width: 100%;
-	height: 28px;
-	position: relative;
-	overflow: hidden;
-	min-width: 28px;
-}
-
-:global .progress-wrapper-fl:hover .progress-fl.affected img {
-	display: none;
-}
-
-:global .progress-fl {
-	/* width: 60%; */
-	height: 100%;
-	position: absolute;
-	left: 0;
-	top: 0;
-	/* background-color: #63ed63; */
-	margin-bottom: 0px;
-	/* margin-top: -16px; */
-}
-
-:global .vis-item.vis-background.death {
-	background-color: #ce909085;
-}
-
-:global .vis-background.highlight .vis-item-content {
-	/* background-color: #63ed63; */
 }
 
 :global .vis-background .vis-item-content img {

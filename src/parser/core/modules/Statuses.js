@@ -1,12 +1,11 @@
-import _ from 'lodash'
-
 import ACTIONS from 'data/ACTIONS'
-import STATUSES, {STATUS_EFFECT_TYPES} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
-import { getDataBy } from 'data'
+import {getDataBy} from 'data'
+import React from 'react'
 
-const STATUS_APPLY_ON_PARTY_THREASHOLD_MILLISECONDS = 2 * 1000
+const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 
 // Track statuses applied by actions
 export default class Statuses extends Module {
@@ -18,165 +17,163 @@ export default class Statuses extends Module {
 		'gcd', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
-	STATUSES_STACK_MAPPING = {
-		[STATUSES.WALKING_DEAD.id]: STATUSES.LIVING_DEAD.id,
-		[STATUSES.GIANT_DOMINANCE.id]: STATUSES.EARTHLY_DOMINANCE.id,
-		[STATUSES.DIVINE_VEIL_AFTER_HEAL.id]: STATUSES.DIVINE_VEIL.id,
-	}
+	static statusesStackMapping = {}
 
-	_statuses = [];
+	// STATUSES_STACK_MAPPING = {
+	//
+	// [STATUSES.GIANT_DOMINANCE.id]: STATUSES.EARTHLY_DOMINANCE.id,
+	// [STATUSES.DIVINE_VEIL_PROC.id]: STATUSES.DIVINE_VEIL.id,
+	// }
+
+	_statuses = {}
 	_groups = {}
+	_statusToActionMap = {}
+	_actionToMergeNameMap = {}
 
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('complete', this._onComplete)
-		this.addHook('applybuff', {by: 'player'}, this._onApply)
-		this.addHook('applydebuff', {by: 'player'}, this._onApply)
-		this.addHook('refreshdebuff', {by: 'player'}, this._onRefresh)
-		this.addHook('refreshbuff', {by: 'player'}, this._onRefresh)
-		this.addHook('removebuff', {by: 'player'}, this._onRemove)
-		this.addHook('removedebuff', {by: 'player'}, this._onRemove)
+		const ids = [this.parser.player.id, ...this.parser.player.pets]
+		const byFilter = {by: ids}
 
-		this.addHook('applybuff', {by: 'pet'}, this._onApply)
-		this.addHook('applydebuff', {by: 'pet'}, this._onApply)
-		this.addHook('refreshdebuff', {by: 'pet'}, this._onRefresh)
-		this.addHook('refreshbuff', {by: 'pet'}, this._onRefresh)
-		this.addHook('removebuff', {by: 'pet'}, this._onRemove)
-		this.addHook('removedebuff', {by: 'pet'}, this._onRemove)
+		this.addHook('complete', this._onComplete)
+		this.addHook(['applybuff', 'applydebuff'], byFilter, this._onApply)
+		this.addHook(['refreshdebuff', 'refreshbuff'], byFilter, this._onRefresh)
+		this.addHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
+
+		this.cooldowns.constructor.cooldownOrder.forEach(it => {
+			if (typeof it === 'object') {
+				it.actions.forEach(ac => {
+					this._actionToMergeNameMap[ac] = it.name
+				})
+			}
+		})
+
+		// Map statuses to actions
+		Object.values(ACTIONS).forEach(ac => {
+			if (ac.statusesApplied) {
+				ac.statusesApplied.forEach(st => {
+					if (st) {
+						this._statusToActionMap[st.id] = ac.id
+					}
+				})
+			}
+		})
 	}
 
 	_onApply(event) {
-		if (this.parser.report.friendlyPets.some(p => p.id === event.targetID)) {
-			return
-		}
-		const status = getDataBy(STATUSES, 'id', event.ability.guid)
-
-		if (!status) {
+		if (this._isStatusAppliedToPet(event)) {
 			return
 		}
 
-		this._addStatus(event, status)
+		this._addStatus(event)
 	}
 
 	_onRefresh(event) {
-		if (this.parser.report.friendlyPets.some(p => p.id === event.targetID)) {
+		if (this._isStatusAppliedToPet(event)) {
 			return
 		}
 
-		const status = getDataBy(STATUSES, 'id', event.ability.guid)
+		this._endPrevStatus(event)
 
-		if (!status) {
-			return
-		}
-
-		this._updatePrevStatus(event, status)
-
-		this._addStatus(event, status)
+		this._addStatus(event)
 	}
 
 	_onRemove(event) {
-		if (this.parser.report.friendlyPets.some(p => p.id === event.targetID)) {
+		if (this._isStatusAppliedToPet(event)) {
 			return
 		}
 
+		this._endPrevStatus(event)
+	}
+
+	_endPrevStatus(event) {
 		const status = getDataBy(STATUSES, 'id', event.ability.guid)
 
 		if (!status) {
 			return
 		}
 
-		this._updatePrevStatus(event, status)
-	}
-
-	_updatePrevStatus(event, status) {
-		const prev = _.findLast(this._statuses, it => it.status.id === status.id)
-
-		if (prev) {
+		const statuses = this._statuses[status.id]
+		if (statuses) {
+			const prev = statuses.usages[statuses.usages.length - 1]
 			prev.end = event.timestamp - this.parser.fight.start_time
 		}
 	}
 
-	_addStatus(event, status) {
-		if (this._statuses.some(it => {
+	_addStatus(event) {
+		const status = getDataBy(STATUSES, 'id', event.ability.guid)
+
+		if (!status) {
+			return
+		}
+
+		let statuses = this._statuses[status.id]
+		if (!statuses) {
+			statuses = this._statuses[status.id] = {
+				status: status,
+				usages: [],
+			}
+		}
+		if (statuses.usages.some(it => {
 			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
-			return it.status.id === status.id && diff <= STATUS_APPLY_ON_PARTY_THREASHOLD_MILLISECONDS
+			return diff <= STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS
 		})) {
 			return
 		}
 
-		this._statuses.push({
+		statuses.usages.push({
 			start: event.timestamp - this.parser.fight.start_time,
-			status: status,
-			target: this._getTargetName(event),
 		})
-	}
-
-	_getTargetName(event) {
-		if (event.targetIsFriendly) {
-			if (event.targetID === this.parser.player.id) {
-				return 'Self'
-			}
-			const target = this.parser.report.friendlies.find(it => it.id === event.targetID)
-			if (target) {
-				return target.name + ' (' + target.type + ')'
-			}
-		}
-		const target = this.parser.report.enemies.find(it => it.id === event.targetID)
-		if (target) {
-			return target.name
-		}
-
-		return 'Unknown'
 	}
 
 	_onComplete() {
-		this._statuses.forEach(st => {
-			const stid = 'status-' + (this.STATUSES_STACK_MAPPING[st.status.id] || st.status.id)
-			if (!this._groups[stid]) {
-				// register new group
+		Object.values(this._statuses).forEach(entry => {
+			const group = this._createGroupForStatus(entry.status)
 
-				// find action for status
-				const action = Object.values(ACTIONS).find(it => {
-					return it.statusesApplied && it.statusesApplied.some(s => s && s.id === st.status.id)
-				})
-
-				if (!action) {
-					return
-				}
-
-				const group = new ItemGroup({
-					id: stid,
-					content: st.status.name,
-					showNested: false,
-					className: action.onGcd ? '' : 'highlight',
-				})
-
-				this.timeline.attachToGroup(action.onGcd ? 'gcd' : action.id, group)
-
-				this._groups[stid] = group
+			if (!group) {
+				return
 			}
 
-			const color = this._lookForColor(st.status)
-
-			this._groups[stid].addItem(new Item({
-				type: 'background',
-				style: color && `background-color:${color};`,
-				className: this._groups[stid].className,
-				start: st.start,
-				end: st.end || st.start + st.status.duration * 1000,
-				content: `<img src="${st.status.icon}" alt="${st.status.name}" title="Used on: ${st.target}"/>`,
-				limitSize: false,
-			}))
-
+			entry.usages.forEach(st => {
+				group.addItem(new Item({
+					type: 'background',
+					start: st.start,
+					end: st.end || st.start + entry.status.duration * 1000,
+					content: <img src={entry.status.icon} alt={entry.status.name}/>,
+				}))
+			})
 		})
 	}
 
-	_lookForColor(status) {
-		const setting = Object.values(STATUS_EFFECT_TYPES)
-			.find(value => {
-				return value.ids.some(id => id === status.id)
-			})
-		return setting && setting.settings && setting.settings.color || ''
+	_createGroupForStatus(status) {
+		const stid = 'status-' + (this.constructor.statusesStackMapping[status.id] || status.id)
+
+		if (this._groups[stid]) {
+			return this._groups[stid]
+		}
+
+		// find action for status
+		const action = getDataBy(ACTIONS, 'id', this._statusToActionMap[status.id])
+
+		if (!action) {
+			return undefined
+		}
+
+		const group = new ItemGroup({
+			id: stid,
+			content: status.name,
+			showNested: false,
+		})
+
+		this._groups[stid] = group
+
+		this.timeline.attachToGroup(action.onGcd ? 'gcd' : (this._actionToMergeNameMap[action.id] || action.id), group)
+
+		return group
+	}
+
+	_isStatusAppliedToPet(event) {
+		return (this.parser.report.friendlyPets.some(p => p.id === event.targetID))
 	}
 }

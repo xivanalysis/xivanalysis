@@ -114,13 +114,11 @@ export default class GlobalCooldown extends Module {
 		// Timeline output
 		// TODO: Look into adding items to groups? Maybe?
 
-		const gcdGroup = new Group({
+		this.timeline.addGroup(new Group({
 			id: 'gcd',
 			content: 'GCD',
 			order: -99,
-		})
-
-		this.timeline.addGroup(gcdGroup)
+		}))
 
 		this.gcds.forEach(gcd => {
 			const action = getDataBy(ACTIONS, 'id', gcd.actionId)
