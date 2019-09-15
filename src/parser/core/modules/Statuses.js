@@ -12,9 +12,8 @@ export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
 		'timeline',
-		// need this module to be executed after gcd to have gcd group created in timeline
-		'cooldowns', // eslint-disable-line @xivanalysis/no-unused-dependencies
-		'gcd', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'cooldowns',
+		'gcd',
 	]
 
 	static statusesStackMapping = {}
@@ -164,7 +163,7 @@ export default class Statuses extends Module {
 
 		this._groups[stid] = group
 
-		this.timeline.attachToGroup(action.onGcd ? 'gcd' : (this._actionToMergeNameMap[action.id] || action.id), group)
+		this.timeline.attachToGroup(action.onGcd ? this.gcd.gcdGroupId : (this._actionToMergeNameMap[action.id] || action.id), group)
 
 		return group
 	}
