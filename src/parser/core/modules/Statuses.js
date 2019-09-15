@@ -19,12 +19,6 @@ export default class Statuses extends Module {
 
 	static statusesStackMapping = {}
 
-	// STATUSES_STACK_MAPPING = {
-	//
-	// [STATUSES.GIANT_DOMINANCE.id]: STATUSES.EARTHLY_DOMINANCE.id,
-	// [STATUSES.DIVINE_VEIL_PROC.id]: STATUSES.DIVINE_VEIL.id,
-	// }
-
 	_statuses = {}
 	_groups = {}
 	_statusToActionMap = {}
@@ -42,7 +36,7 @@ export default class Statuses extends Module {
 		this.addHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
 
 		this.cooldowns.constructor.cooldownOrder.forEach(it => {
-			if (typeof it === 'object') {
+			if (typeof it === 'object' && it.merge) {
 				it.actions.forEach(ac => {
 					this._actionToMergeNameMap[ac] = it.name
 				})
@@ -94,10 +88,12 @@ export default class Statuses extends Module {
 			return
 		}
 
-		const statuses = this._statuses[status.id]
-		if (statuses) {
-			const prev = statuses.usages[statuses.usages.length - 1]
-			prev.end = event.timestamp - this.parser.fight.start_time
+		const statusEntry = this._statuses[status.id]
+		if (statusEntry) {
+			const prev = statusEntry.usages[statusEntry.usages.length - 1]
+			if (!prev.end) {
+				prev.end = event.timestamp - this.parser.fight.start_time
+			}
 		}
 	}
 
@@ -108,21 +104,21 @@ export default class Statuses extends Module {
 			return
 		}
 
-		let statuses = this._statuses[status.id]
-		if (!statuses) {
-			statuses = this._statuses[status.id] = {
+		let statusEntry = this._statuses[status.id]
+		if (!statusEntry) {
+			statusEntry = this._statuses[status.id] = {
 				status: status,
 				usages: [],
 			}
 		}
-		if (statuses.usages.some(it => {
+		if (statusEntry.usages.some(it => {
 			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
 			return diff <= STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS
 		})) {
 			return
 		}
 
-		statuses.usages.push({
+		statusEntry.usages.push({
 			start: event.timestamp - this.parser.fight.start_time,
 		})
 	}
