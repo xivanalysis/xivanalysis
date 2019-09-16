@@ -19,19 +19,6 @@ export default class MeikyoShisui extends BuffWindowModule {
 	buffAction = ACTIONS.MEIKYO_SHISUI
 	buffStatus = STATUSES.MEIKYO_SHISUI
 
-//I have NO clue what I'm doing, I just hope this works for overriding considerAction
-
-considerAction(action: Action) {
-
-			if(IGNORE_THIS.has(action)) {
-				return false
-			}
-
-			else {
-			return true
-			}
-	}
-
 expectedGCDs = {
 		expectedPerWindow: 3,
 		suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
@@ -60,6 +47,17 @@ requiredGCDs = {
 			1: SEVERITY.MAJOR,
 		},
 
+	}
+
+// I have NO clue what I'm doing, I just hope this works for overriding considerAction
+
+considerAction(action: Action) {
+
+			if (IGNORE_THIS.has(action.id)) {
+				return false
+			} else {
+			return true
+			}
 	}
 
 }
