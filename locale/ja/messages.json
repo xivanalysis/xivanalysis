@@ -674,7 +674,7 @@
   "whm.about.description.invulnwarning": "",
   "whm.about.description.support": "",
   "whm.assize.checklist.description": "<0/>を頻繁に使用するとDPSが向上し、MP管理にも役立ちます。",
-  "whm.assize.checklist.requirement.assize.name": "使用回数: <0/>",
+  "whm.assize.checklist.requirement.assize.name": "使用回数：<0/>",
   "whm.benison.suggestion.content": "もっと頻繁に<0/>を使用してください。 使用すると戦闘中のダメージを大幅に軽減できるため、ヒールに使うGCDを減らすことができます。",
   "whm.benison.suggestion.why": "",
   "whm.dots.requirement.uptime-a2.name": "アクティブ率: <0/>",

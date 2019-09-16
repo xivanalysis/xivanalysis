@@ -674,7 +674,7 @@
   "whm.about.description.invulnwarning": "对于所有治疗职业来说，检测 Boss 无敌时间的机制目前都无法正常工作。这会使得很多时间相关的检测失效，例如“总在读条”和“DoT 覆盖率”检测项。",
   "whm.about.description.support": "现在这一分析模块可以检测 DoT 的覆盖率，检查 GCD 空转情况，并且报告全大赦和法令的空转问题。",
   "whm.assize.checklist.description": "频繁地使用<0/>有助于提高输出及 MP 管理。",
-  "whm.assize.checklist.requirement.assize.name": "<0/> 的使用记录",
+  "whm.assize.checklist.requirement.assize.name": "<0/> 的使用次数",
   "whm.benison.suggestion.content": "你需要更频繁地使用<0/>。<0/>可以在整场战斗中吸收很多伤害，节省下用于治疗的 GCD。",
   "whm.benison.suggestion.why": "因为<0/>的 CD 空转了至少 {0}，你大约损失了 {_usesMissed} 次 <0/> 的使用机会。",
   "whm.dots.requirement.uptime-a2.name": "<0/> 覆盖率",
