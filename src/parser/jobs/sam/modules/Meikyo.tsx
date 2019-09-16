@@ -9,8 +9,7 @@ import {Status} from 'data/STATUSES/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 
-// Sets for stuff to ignore
-
+// Set for stuff to ignore
 const IGNORE_THIS = new Set([ACTIONS.MIDARE_SETSUGEKKA.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.HIGANBANA.id, ACTIONS.KAESHI_SETSUGEKKA.id, ACTIONS.KAESHI_GOKEN.id, ACTIONS.KAESHI_HIGANBANA])
 
 export default class MeikyoShisui extends BuffWindowModule {
@@ -18,7 +17,20 @@ export default class MeikyoShisui extends BuffWindowModule {
 	static title = t('sam.ms.title')`Meikyo Shisui Windows`
 
 	buffAction = ACTIONS.MEIKYO_SHISUI
-	buffStatus = STATUSES.MEIKYO_SHISUI 
+	buffStatus = STATUSES.MEIKYO_SHISUI
+
+//I have NO clue what I'm doing, I just hope this works for overriding considerAction
+
+considerAction(action: Action) {
+
+			if(IGNORE_THIS.has(action)) {
+				return false
+			}
+
+			else {
+			return true
+			}
+	}
 
 expectedGCDs = {
 		expectedPerWindow: 3,
