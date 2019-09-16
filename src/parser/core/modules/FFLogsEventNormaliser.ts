@@ -36,10 +36,6 @@ export class FFLogsEventNormaliser extends Module {
 				this._hasCalculatedEvents = true
 				return events
 			}
-			// If we see a standard damage/heal event before a calculated event, the log doesn't have any calculated events, return early
-			if (BASELINE_EVENTS.includes(event.type)) {
-				return events
-			}
 		}
 
 		return events
