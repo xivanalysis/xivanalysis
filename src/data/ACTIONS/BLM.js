@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	BLIZZARD_I: {
 		id: 142,
@@ -165,12 +167,14 @@ export default {
 		name: 'Ley Lines',
 		icon: 'https://xivapi.com/i/002000/002656.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.LEY_LINES],
 	},
 	SHARPCAST: {
 		id: 3574,
 		name: 'Sharpcast',
 		icon: 'https://xivapi.com/i/002000/002657.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.SHARPCAST],
 	},
 	ENOCHIAN: {
 		id: 3575,
@@ -189,6 +193,7 @@ export default {
 		name: 'Triplecast',
 		icon: 'https://xivapi.com/i/002000/002663.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.TRIPLECAST],
 	},
 	FIRE_III_PROC: {
 		id: '152PROC',

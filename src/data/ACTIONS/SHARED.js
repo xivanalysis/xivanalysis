@@ -7,6 +7,7 @@ export default {
 		// Using a 2.5s "cooldown" so it sort-of-fits as a GCD and cooldown.
 		// We don't actually know what it was.
 		cooldown: 2.5,
+		statusesApplied: [],
 	},
 	SPRINT: {
 		id: 3,

@@ -177,14 +177,14 @@ interface EffectEvent extends AbilityEvent {
 export interface DeathEvent extends Event { type: 'death' }
 export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
 export interface DamageEvent extends EffectEvent {
-	type: 'damage'
+	type: 'calculateddamage' | 'damage'
 	overkill?: number
 	absorbed: number
 	multistrike?: boolean
 	blocked?: number
 }
 export interface HealEvent extends EffectEvent {
-	type: 'heal'
+	type: 'calculatedheal' | 'heal'
 	overheal: number
 }
 export interface BuffEvent extends AbilityEvent {

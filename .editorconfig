@@ -10,9 +10,15 @@ trim_trailing_whitespace = true
 indent_style = space
 indent_size = 2
 
+# Blame yarn
 [package.json]
 indent_style = space
 indent_size = 2
 
+# Lockfile is CRLF for _reasons_
 [yarn.lock]
 end_of_line = crlf
+
+# Locale files are generated without a final newline, and will fail lint if there's a diff.
+[locale/**.json]
+insert_final_newline = false

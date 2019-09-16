@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
+import * as Sentry from '@sentry/browser'
 import classNames from 'classnames'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
-import Raven from 'raven-js'
 import React, {Component} from 'react'
 import {Container, Header, Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
@@ -46,7 +46,10 @@ class ErrorBoundary extends Component {
 	@action
 	componentDidCatch(error, errorInfo) {
 		this.componentError = error
-		Raven.captureException(error, {extra: errorInfo})
+		Sentry.withScope(scope => {
+			scope.setExtras(errorInfo)
+			Sentry.captureException(error)
+		})
 	}
 
 	render() {
