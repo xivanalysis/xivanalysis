@@ -88,6 +88,13 @@ module.exports = {
 				port: 3000,
 				overlay: true,
 			},
+
+			// Source map generation config
+			devtool: {
+				development: 'cheap-module-eval-source-map',
+				production: 'source-map',
+				test: 'source-map'
+			}
 		}],
 
 		// Add decorators. Have to do this manually as it needs to be before the stuff the react preset sets up
