@@ -1,3 +1,4 @@
+import AoeChecker from './AoeChecker'
 import Buffs from './Buffs'
 import Combos from './Combos'
 import Higanbana from './Higanbana'
@@ -11,6 +12,7 @@ import Tsubame from './Tsubame'
 import OGCDDowntime from './OGCDDowntime'
 
 export default [
+	AoeChecker,
 	Buffs,
 	Combos,
 	Higanbana,
