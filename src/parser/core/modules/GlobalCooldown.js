@@ -180,7 +180,7 @@ export default class GlobalCooldown extends Module {
 			? action.gcdRecast
 			: action.cooldown
 
-		const normaliseWith = gcdInfo.isInstant
+		const normaliseWith = gcdInfo.isInstant || castTime < correctedCooldown
 			? correctedCooldown
 			: castTime
 

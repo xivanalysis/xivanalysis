@@ -72,9 +72,11 @@ class Analyse extends Component {
 		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
 		const conductor = new Conductor(report, fight, combatant)
 
+		// Run checks, then the parse. Throw any errors up to the error store.
 		try {
 			conductor.sanityCheck()
 			await conductor.configure()
+			await conductor.parse()
 		} catch (error) {
 			this.context.globalErrorStore.setGlobalError(error)
 			if (process.env.NODE_ENV === 'development') {
@@ -83,11 +85,11 @@ class Analyse extends Component {
 			return
 		}
 
-		runInAction(() => this.conductor = conductor)
-
-		// Run the parse and signal completion
-		await conductor.parse()
-		runInAction(() => this.complete = true)
+		// Signal completion
+		runInAction(() => {
+			this.conductor = conductor
+			this.complete = true
+		})
 	}
 
 	getReportUrl() {
