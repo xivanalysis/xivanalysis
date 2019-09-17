@@ -33,7 +33,7 @@ export default class AoeChecker extends Module {
 		this.addHook('complete', this._onComplete)
 	}
 
-	_onCast(event) {
+	_onAoe(event) {
 
 		const action = event.ability.guid
 
