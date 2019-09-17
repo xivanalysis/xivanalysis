@@ -249,7 +249,7 @@ export default class RotationWatchdog extends Module {
 			this.startRecording(event)
 		}
 		// Note that we've recorded our first cast now
-		if (this.firstEvent) { this.firstEvent = false }
+		if (this.firstEvent && CYCLE_ENDPOINTS.includes(actionId)) { this.firstEvent = false }
 
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
@@ -398,7 +398,7 @@ export default class RotationWatchdog extends Module {
 	// Complete the previous cycle and start a new one
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.firstEvent)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list
