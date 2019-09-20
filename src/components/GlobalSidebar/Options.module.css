@@ -9,11 +9,14 @@
 }
 
 .row {
+	height: 40px;
 	padding: 0 gutter;
 	line-height: 40px;
+	overflow: hidden;
 }
 
 .row + .row {
+	height: 41px;
 	border-style: solid;
 	border-color: rgba(0, 0, 0, .1);
 	border-width: 1px 0 0;
