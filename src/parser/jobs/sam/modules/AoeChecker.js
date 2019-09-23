@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React from 'react'
-
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
@@ -15,6 +14,11 @@ const AOE_KENKI = new Set([ACTIONS.HISSATSU_KYUTEN.id, ACTIONS.HISSATSU_GUREN.id
 
 const GAIN_AT_3 = new Set([ACTIONS.FUGA.id, ACTIONS.OKA.id, ACTIONS.MANGETSU.id, ACTIONS.HISSATSU_KYUTEN.id])
 const GAIN_AT_2 = new Set([ACTIONS.HISSATSU_GUREN.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.KAESHI_GOKEN.id])
+
+//saying const # don't work so screw it
+
+const GAIN3 = 3
+const GAIN2 = 2
 
 export default class AoeChecker extends Module {
 	static handle = 'aoechecker'
@@ -43,7 +47,7 @@ export default class AoeChecker extends Module {
 
 			//Step 2: Check break point
 
-			if (event.hits.length < 2) {
+			if (event.hits.length < GAIN2) {
 				//Step 3: Check type of resource used and increment
 
 				if (AOE_GCDS.has(action)) {
@@ -62,7 +66,7 @@ export default class AoeChecker extends Module {
 
 			//Step 2: Check break point
 
-			if (event.hits.length < 3) {
+			if (event.hits.length < GAIN3) {
 				//Step 3: Check type of resource used and increment
 
 				if (AOE_GCDS.has(action)) {
@@ -116,7 +120,7 @@ export default class AoeChecker extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HISSATSU_GUREN.icon,
+			icon: ACTIONS.FUGA.icon,
 			content: <Trans id= "sam.aoechecker.suggestions.badgcd.content">
                         Using aoe moves when you don't reach the target threshold for it to be a gain is a loss.
 			</Trans>,
@@ -127,7 +131,7 @@ export default class AoeChecker extends Module {
 			},
 			value: this._badAoeGCDs,
 			why: <Trans id = "sam.aoechecker.suggestions.badgcd.why">
-                                        You misused kenki moves <Plural value ={this._badAoeGCDs} one="# time" other="# times" /> during the fight.
+                                        You misused aoe GCDs <Plural value ={this._badAoeGCDs} one="# time" other="# times" /> during the fight.
 			</Trans>,
 		}))
 
