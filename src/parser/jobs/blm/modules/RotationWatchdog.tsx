@@ -248,8 +248,8 @@ export default class RotationWatchdog extends Module {
 			!(actionId === ACTIONS.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
-		// Note that we've recorded our first cast now
-		if (this.firstEvent) { this.firstEvent = false }
+		// Note that we've recorded our first cycle-bookending cast once we have one
+		if (this.firstEvent && CYCLE_ENDPOINTS.includes(actionId)) { this.firstEvent = false }
 
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
@@ -398,7 +398,8 @@ export default class RotationWatchdog extends Module {
 	// Complete the previous cycle and start a new one
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
+		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.firstEvent)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list

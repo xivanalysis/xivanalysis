@@ -11,6 +11,7 @@ export default class TrickAttackWindow extends Module {
 	static handle = 'taWindow'
 	static dependencies = [
 		'enemies',
+		'fflogsEvents',
 		'suggestions',
 	]
 
@@ -24,9 +25,12 @@ export default class TrickAttackWindow extends Module {
 		super(...args)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, () => this._dwadCast = true)
 		this.addHook('combo', {by: 'player', abilityId: ACTIONS.ARMOR_CRUSH.id}, this._onArmorCrush)
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.ASSASSINATE.id}, this._onAssassinate)
 		this.addHook('complete', this._onComplete)
+
+		this.addHook('init', () => {
+			this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
+			this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.ASSASSINATE.id}, this._onAssassinate)
+		})
 	}
 
 	_targetHasVuln(targetId) {
