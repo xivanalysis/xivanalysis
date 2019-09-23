@@ -26,7 +26,7 @@ export default class Statuses extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const ids = [this.parser.player.id, ...this.parser.player.pets]
+		const ids = [this.parser.player.id, ...this.parser.player.pets.map(p => p.id)]
 		const byFilter = {by: ids}
 
 		this.addHook('complete', this._onComplete)
@@ -34,10 +34,10 @@ export default class Statuses extends Module {
 		this.addHook(['refreshdebuff', 'refreshbuff'], byFilter, this._onRefresh)
 		this.addHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
 
-		this.cooldowns.constructor.cooldownOrder.forEach(it => {
-			if (typeof it === 'object' && it.merge) {
-				it.actions.forEach(ac => {
-					this._actionToMergeNameMap[ac] = it.name
+		this.cooldowns.constructor.cooldownOrder.forEach(cd => {
+			if (cd && typeof cd === 'object' && cd.merge) {
+				cd.actions.forEach(ac => {
+					this._actionToMergeNameMap[ac] = cd.name
 				})
 			}
 		})
@@ -47,7 +47,7 @@ export default class Statuses extends Module {
 			if (ac.statusesApplied) {
 				ac.statusesApplied.forEach(st => {
 					if (st) {
-						this._statusToActionMap[st.id] = ac.id
+						this._statusToActionMap[st.id] = getDataBy(ACTIONS, 'id', ac.id)
 					}
 				})
 			}
@@ -149,7 +149,7 @@ export default class Statuses extends Module {
 		}
 
 		// find action for status
-		const action = getDataBy(ACTIONS, 'id', this._statusToActionMap[status.id])
+		const action = this._statusToActionMap[status.id]
 
 		if (!action) {
 			return undefined

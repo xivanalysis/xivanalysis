@@ -67,9 +67,6 @@ function correctIdsToMatchLogs (obj) {
 		} else {
 			status.id = status.id + STATUS_ID_OFFSET
 		}
-		if (status.stackWith) {
-			status.stackWith += STATUS_ID_OFFSET
-		}
 	})
 	return obj
 }

@@ -17,21 +17,8 @@
 	height: 100%;
 }
 
-:global .vis-range .vis-item-overflow {
-	padding: 0;
-}
-
 :global .vis-item.vis-background .vis-item-content {
 	width: 100% !important;
-}
-
-:global .vis-range .vis-item-content {
-	padding: 0;
-}
-
-:global .vis-range .progress-fl img {
-	height: 28px;
-	width: 28px;
 }
 
 :global .vis-group {
