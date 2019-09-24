@@ -56,5 +56,10 @@ export default new Meta({
 		date: new Date('2019-09-16'),
 		Changes: () => <>Fix expected Fire IV count for openers.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-09-23'),
+		Changes: () => <>Improved gauge state error handling.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })
