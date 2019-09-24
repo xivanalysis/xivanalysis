@@ -58,6 +58,7 @@ export default {
 			from: [75, 16479],
 			potency: 320,
 		},
+		statusesApplied: [STATUSES.DISEMBOWEL],
 	},
 
 	CHAOS_THRUST: {
@@ -71,6 +72,7 @@ export default {
 			potency: 330,
 			end: true,
 		},
+		statusesApplied: [STATUSES.CHAOS_THRUST],
 	},
 
 	// -----
@@ -89,5 +91,6 @@ export default {
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.LANCE_CHARGE],
 	},
 }
