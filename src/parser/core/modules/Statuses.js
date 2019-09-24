@@ -47,7 +47,7 @@ export default class Statuses extends Module {
 			if (ac.statusesApplied) {
 				ac.statusesApplied.forEach(st => {
 					if (st) {
-						this._statusToActionMap[st.id] = getDataBy(ACTIONS, 'id', ac.id)
+						this._statusToActionMap[st.id] = ac
 					}
 				})
 			}
