@@ -12,10 +12,10 @@ import Cooldowns from './Cooldowns'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
+import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
-import Potions from './Potions'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
@@ -41,10 +41,10 @@ export default [
 	Death,
 	Downtime,
 	Enemies,
+	FFLogsEventNormaliser,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
-	Potions,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,

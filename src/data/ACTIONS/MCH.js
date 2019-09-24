@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -21,7 +23,7 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2866,
+			from: [2866, 7411],
 			potency: 240,
 		},
 	},
@@ -50,7 +52,7 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2868,
+			from: [2868, 7412],
 			potency: 320,
 			end: true,
 		},
@@ -144,6 +146,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
+		statusesApplied: [STATUSES.REASSEMBLE],
 	},
 
 	WILDFIRE: {
@@ -152,6 +155,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.WILDFIRE],
 	},
 
 	ROOK_AUTOTURRET: {
@@ -208,6 +212,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.FLAMETHROWER],
 	},
 
 	TACTICIAN: {
@@ -216,6 +221,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.TACTICIAN],
 	},
 
 	AUTOMATON_QUEEN: {

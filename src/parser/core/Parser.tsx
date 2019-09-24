@@ -1,10 +1,10 @@
 import {MessageDescriptor} from '@lingui/core'
+import * as Sentry from '@sentry/browser'
 import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Actor, Event, Fight, Pet} from 'fflogs'
-import Raven from 'raven-js'
 import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
@@ -256,20 +256,19 @@ class Parser {
 				extra.modules = data
 
 				for (const [m, err] of errors) {
-					Raven.captureException(err, {
-						tags: {
-							...tags,
-							module: m,
-						},
-						extra,
+					Sentry.withScope(scope => {
+						scope.setTags({...tags, module: m})
+						scope.setExtras(extra)
+						Sentry.captureException(err)
 					})
 				}
 
 				// Now that we have all the possible context, submit the
-				// error to Raven.
-				Raven.captureException(error, {
-					tags,
-					extra,
+				// error to Sentry.
+				Sentry.withScope(scope => {
+					scope.setTags(tags)
+					scope.setExtras(extra)
+					Sentry.captureException(extra)
 				})
 
 				// Also cascade the error through the dependency tree
@@ -406,20 +405,19 @@ class Parser {
 				extra.modules = data
 
 				for (const [m, err] of errors) {
-					Raven.captureException(err, {
-						tags: {
-							...tags,
-							module: m,
-						},
-						extra,
+					Sentry.withScope(scope => {
+						scope.setTags({...tags, module: m})
+						scope.setExtras(extra)
+						Sentry.captureException(err)
 					})
 				}
 
 				// Now that we have all the possible context, submit the
-				// error to Raven.
-				Raven.captureException(error, {
-					tags,
-					extra,
+				// error to Sentry.
+				Sentry.withScope(scope => {
+					scope.setTags(tags)
+					scope.setExtras(extra)
+					Sentry.captureException(error)
 				})
 
 				// Also add the error to the results to be displayed.

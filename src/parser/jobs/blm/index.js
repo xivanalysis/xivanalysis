@@ -25,7 +25,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
@@ -50,6 +50,16 @@ export default new Meta({
 	{
 		date: new Date('2019-07-28'),
 		Changes: () => <>Significant rework of Rotation Outliers display and related suggestions.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-09-16'),
+		Changes: () => <>Fix expected Fire IV count for openers.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-09-23'),
+		Changes: () => <>Improved gauge state error handling.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })

@@ -39,7 +39,6 @@ export default {
 		id: 144,
 		name: 'Aero II',
 		icon: 'https://xivapi.com/i/010000/010409.png',
-
 	},
 
 	AERO_III: {
@@ -71,5 +70,4 @@ export default {
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/012000/012627.png',
 	},
-
 }

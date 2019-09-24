@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -147,6 +149,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000166.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.FIGHT_OR_FLIGHT],
 	},
 	IRON_WILL: {
 		id: 28,

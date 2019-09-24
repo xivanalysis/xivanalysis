@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 // Samurai Actions
 
 //Merge all 3 Tsubames into 1
@@ -15,7 +17,7 @@ export default {
 		name: 'Hakazae',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
-		potency:  150,
+		potency:  200,
 		combo: {
 			start: true,
 		},
@@ -29,7 +31,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
 	},
 
@@ -49,7 +51,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
 	},
 
@@ -87,7 +89,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7478,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -121,7 +123,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7479,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -169,6 +171,7 @@ export default {
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15,
+		statusesApplied: [STATUSES.THIRD_EYE],
 	},
 
 	AGEHA: {
@@ -183,13 +186,14 @@ export default {
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
 		cooldown: 55,
+		statusesApplied: [STATUSES.MEIKYO_SHISUI],
 	},
 
 	HISSATSU_KAITEN: {
 		id: 7494,
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
-		cooldown: 5,
+		cooldown: 1,
 	},
 
 	HISSATSU_GYOTEN: {
