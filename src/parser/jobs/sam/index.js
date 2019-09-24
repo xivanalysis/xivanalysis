@@ -33,6 +33,17 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-9-16'),
+		Changes: () => <>
+			Updated SAM support based on feedback/feature requests.
+			<ul>
+				<li> AOE checker has been added. </li>
+				<li> Meikyo now works off core so there's a nice visual </li>
+				<li> Updated suggestion feedback to all minor for third eye proc spending due to small impact in the grand scheme of things </li>
+			</ul>
+		</>,
+		contributos: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2019-8-19'),
 		Changes: () => <>
 			5.05 SAM support plus some logic changes, including:&nbsp;

@@ -1,0 +1,2 @@
+ yarn eslint --fix ~/xivanalysis/src/parser/jobs/sam
+
