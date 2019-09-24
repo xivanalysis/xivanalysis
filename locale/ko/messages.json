@@ -75,6 +75,8 @@
   "ast.sleeve-draw.checklist.name": "묘수를 자주 사용하십시오.",
   "ast.sleeve-draw.checklist.requirement.uses.name": "사용횟수: <0/>",
   "ast.sleeve-draw.title": "묘수",
+  "ast.synastry.suggestion.content": "",
+  "ast.synastry.suggestion.why": "",
   "blm.about.description": "이 분석기는 본인이 생각하는것보다 얼마나 [~action/FIRE_IV] 시전 횟수에 손해를 보고 있는지에 초첨을 맞춥니다.",
   "blm.about.description.warning": "이 직업은 아직 구현되지 않았습니다.",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/>이 끊기면 <1/> 시전 가능 횟수에 손해를 보며 <3/> 혹은 <4/>을 사용을 못하게 되며 <5/>의 10% 데미지 버프 또한 끊기기에 <2/>를 다시 갱신함으로 인해 글쿨이 밀리는 손해를 볼 수 있습니다.",
