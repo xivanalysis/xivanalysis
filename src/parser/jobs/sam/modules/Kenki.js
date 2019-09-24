@@ -85,7 +85,7 @@ export default class Kenki extends Module {
 
 		// Kenki actions
 		this.addHook(
-			['cast', 'combo', 'aoedamage'],
+			['cast', 'combo'],
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
 		)
@@ -144,14 +144,6 @@ export default class Kenki extends Module {
 
 		if (!action | !action[event.type]) {
 			return
-		}
-
-		//Check if Aoe moves were done properly.
-		if (action === ACTIONS.HISSATSU_GUREN.id) {
-
-			if (event.hits.length === 1) {
-				this._badGuren++
-			}
 		}
 
 		// We can't track positionals, so passing the positional kenki values through as a potential gain
