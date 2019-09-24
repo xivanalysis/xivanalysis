@@ -268,7 +268,7 @@ class Parser {
 				Sentry.withScope(scope => {
 					scope.setTags(tags)
 					scope.setExtras(extra)
-					Sentry.captureException(extra)
+					Sentry.captureException(error)
 				})
 
 				// Also cascade the error through the dependency tree
