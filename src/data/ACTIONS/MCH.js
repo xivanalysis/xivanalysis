@@ -23,7 +23,7 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2866,
+			from: [2866, 7411],
 			potency: 240,
 		},
 	},
@@ -52,7 +52,7 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2868,
+			from: [2868, 7412],
 			potency: 320,
 			end: true,
 		},
