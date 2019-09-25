@@ -69,9 +69,11 @@ export default class BrokenLog extends Module {
 
 		// If this is the first time this issue has been triggered, try and report it to Sentry
 		if (!this.triggers.has(triggerKey)) {
+			const job = this.parser.player.type
+
 			Sentry.withScope(scope => {
 				scope.setTags({
-					job: this.parser.player.type,
+					job,
 					module: handle,
 				})
 				scope.setExtras({
@@ -79,7 +81,7 @@ export default class BrokenLog extends Module {
 					fight: this.parser.fight.id,
 					player: this.parser.player.id,
 				})
-				Sentry.captureMessage(triggerKey)
+				Sentry.captureMessage(`${job}.${triggerKey}`)
 			})
 		}
 
