@@ -19,7 +19,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
 		castTime: 2,
-		statusesApplied: [STATUSES.GALVANIZE],
+		statusesApplied: [STATUSES.GALVANIZE, STATUSES.CATALYZE],
 	},
 
 	BROIL_III: {
@@ -72,6 +72,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
 		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE],
 	},
 
 	SACRED_SOIL: {
