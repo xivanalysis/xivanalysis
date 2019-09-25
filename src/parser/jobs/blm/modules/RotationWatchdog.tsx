@@ -254,12 +254,12 @@ export default class RotationWatchdog extends Module {
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
 
-		// Note that we've recorded our first damage event once we have one
-		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
-
 		if (!action  || action.autoAttack) {
 			return
 		}
+
+		// Note that we've recorded our first damage event once we have one
+		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
 		this.currentRotation.casts.push(event)
 
