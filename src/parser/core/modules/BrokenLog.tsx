@@ -4,6 +4,7 @@ import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
+import {getReportPatch} from 'data/PATCHES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
@@ -68,7 +69,10 @@ export default class BrokenLog extends Module {
 		const triggerKey = `${handle}.${key}`
 
 		// If this is the first time this issue has been triggered, try and report it to Sentry
-		if (!this.triggers.has(triggerKey)) {
+		if (
+			!this.triggers.has(triggerKey) &&
+			!getReportPatch(this.parser.report).branch
+		) {
 			const job = this.parser.player.type
 
 			Sentry.withScope(scope => {
