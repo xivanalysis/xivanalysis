@@ -2,7 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
 import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {languageToEdition} from 'data/PATCHES'
+import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Actor, Event, Fight, Pet} from 'fflogs'
 import React from 'react'
@@ -385,6 +385,11 @@ class Parser {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {
 			throw opts.error
+		}
+
+		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
+		if (getReportPatch(this.report).branch) {
+			return
 		}
 
 		// Gather info for Sentry
