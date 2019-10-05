@@ -46,6 +46,7 @@ export default class Sidewinder extends Module {
 	_singleTargetShadowbitesPotencyLoss = 0
 
 	_badCasts = []
+	_lastShadowbiteCast = 0
 	_shadowbiteDamageTimestamps = new Map()
 
 	constructor(...args) {
@@ -55,6 +56,11 @@ export default class Sidewinder extends Module {
 			by: 'player',
 			abilityId: ACTIONS.SIDEWINDER.id,
 		}, this._onSidewinderCast)
+
+		this.addHook('cast', {
+			by: 'player',
+			abilityId: ACTIONS.SHADOWBITE.id,
+		}, this._onShadowbiteCast)
 
 		this.addHook('damage', {
 			by: 'player',
@@ -76,6 +82,10 @@ export default class Sidewinder extends Module {
 		return dotsApplied
 	}
 
+	_onShadowbiteCast(event) {
+		this._lastShadowbiteCast = event.timestamp
+	}
+
 	//For some reason, shadowbite's cast target doesn't work properly in dungeon trash pulls so we gotta do it the hard way
 	_onShadowbiteDamage(event) {
 		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
@@ -88,7 +98,7 @@ export default class Sidewinder extends Module {
 		// We then infer the amount of stacks
 		const dotsApplied = ACTIONS.SHADOWBITE.potency.indexOf(potency)
 
-		const timestamp = event.timestamp
+		const timestamp = this._lastShadowbiteCast
 		const shadowbiteTimestampArray = this._shadowbiteDamageTimestamps.get(timestamp)
 
 		const shadowbiteDamageEvent = {
