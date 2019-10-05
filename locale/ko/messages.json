@@ -815,7 +815,7 @@
   "whm.ogcds.content": "다음 논글쿨기들을 활용하여 최대한 딜 이득을 보십시오. 단 사용시 글쿨이 밀리지 않도록 주의해야합니다. 심판은 힐효율 및 데미지 둘다 이득을 보기위해서 사용을 미루려 한다면 전투내 총 시전 횟수에 피해가 끼치지 않는 선에서 주의하여 정렬하십시오.",
   "whm.ogcds.suggestions.asylum.content": "파티원들이 모여서 있는 동안마다 <0/>을 사용하십시오. 파티원이 자주 모여있지 못할경우엔 탱커 위치에 대신 사용할 수 있습니다.",
   "whm.ogcds.suggestions.divine_benison.content": "단일 대상 힐이 필요한 순간들을 최소하기 위해 글쿨이 밀리지않는 선에서 <0/>을 최대한 활용하십시오. 탱크버스터를 노려 신성한 축복을 사용하는것은 오히려 손해이며 디아의 지속시간 (30초)에 맞춰 끼워넣는것이 더 좋습니다.",
-  "whm.ogcds.suggestions.plenary_indulgence.content": "",
+  "whm.ogcds.suggestions.plenary_indulgence.content": "광역 글쿨힐을 사용할때마다 <0/>를 같이 병행하십시오. 이는 추가로 힐을 할 필요를 줄일 수 있습니다. 광역 글쿨힐 시전 횟수를 줄이는 기회가 아니면 글쿨이 밀리지 않도록 사용하십시오.",
   "whm.ogcds.suggestions.temperance.content": "",
   "whm.ogcds.suggestions.why": "",
   "whm.ogcds.suggestions.whyHeld": "",
