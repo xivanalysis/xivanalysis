@@ -8,6 +8,7 @@ class TestModule extends Module {
 	static handle = 'test'
 }
 
+let parser
 let module
 let hook
 
@@ -27,6 +28,7 @@ const report = {
 }
 const fight = {
 	start_time: 0,
+	end_time: 100,
 }
 
 const event = {
@@ -36,10 +38,13 @@ const event = {
 }
 
 describe('Module', () => {
-	beforeEach(() => {
-		const meta = new Meta({modules: () => Promise.resolve([])})
-		const parser = new Parser({meta, report, fight, actor: player})
-		module = new TestModule(parser)
+	beforeEach(async () => {
+		const meta = new Meta({
+			modules: () => Promise.resolve({default: [TestModule]}),
+		})
+		parser = new Parser({meta, report, fight, actor: player})
+		await parser.configure()
+		module = parser.modules.test
 
 		hook = jest.fn()
 	})
@@ -156,5 +161,15 @@ describe('Module', () => {
 		module.removeTimestampHook(hookRef)
 		module.triggerEvent({...event, timestamp: 100})
 		expect(hook).not.toHaveBeenCalled()
+	})
+
+	it('reports the correct timestamp while executing timestamp hooks', () => {
+		let hookTimestamp = -1
+		const testHook = () => hookTimestamp = parser.currentTimestamp
+		module.addTimestampHook(50, testHook)
+
+		parser.parseEvents([{...event, timestamp: 100}])
+
+		expect(hookTimestamp).toBe(50)
 	})
 })
