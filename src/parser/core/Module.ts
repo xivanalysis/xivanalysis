@@ -67,7 +67,7 @@ export interface EventHook<T extends Event> {
 }
 
 type TimestampHookCallback = (opts: {timestamp: number}) => void
-interface TimestampHook {
+export interface TimestampHook {
 	timestamp: number
 	callback: TimestampHookCallback
 }
@@ -273,7 +273,11 @@ export default class Module {
 
 		// Add the hook & return it so it can be removed
 		const hook: TimestampHook = {timestamp, callback: cb.bind(this)}
-		this._timestampHookQueue.splice(idx, 0, hook)
+		if (idx === -1) {
+			this._timestampHookQueue.push(hook)
+		} else {
+			this._timestampHookQueue.splice(idx, 0, hook)
+		}
 
 		return hook
 	}
@@ -281,7 +285,9 @@ export default class Module {
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
 		const idx = this._timestampHookQueue.indexOf(hook)
-		this._timestampHookQueue.splice(idx, 1)
+		if (idx !== -1) {
+			this._timestampHookQueue.splice(idx, 1)
+		}
 	}
 
 	triggerEvent(event: Event) {
