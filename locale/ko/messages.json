@@ -758,7 +758,7 @@
   "smn.gauge.suggestions.lost-aetherflow.content": "에테르 순환이 사용 할때마다 2스택이 충전되도록 하십시오. 무의미하게 잃은 스택은 곧 위력 손해를 의미합니다.",
   "smn.gauge.suggestions.lost-aetherflow.why": "손해 본 에테르 스택수 : {0, plural, one {#개} other {#개}}",
   "smn.missingdots.title": "도트기가 적용되지 않음",
-  "smn.multihit.suggestions.content": "",
+  "smn.multihit.suggestions.content": "단일대상에게 <0/> 사용 혹은 대상이 3기 이하인 경우 <1/> 이나 <2/>를 사용하지 마십시오. 차라리 총데미지를 더 기여할 수 있는 <3/>, <4/> 혹은 <5/>을 사용하십시오.",
   "smn.multihit.suggestions.why": "타겟이 적은 상태에서 사용한 일대다 스킬 {lowTargetAttacks} {lowTargetAttacks, plural, other {회}}",
   "smn.multihit.title": "다중 타격",
   "smn.pets.suggestions.garuda-st.content": "가루다-에기는 광역 데미지에 유효하지만 개인 대상에겐 더 강력한 이프리트-에기를 사용하십시오.",
@@ -825,7 +825,7 @@
   "whm.overheal.requirement.nonhot": "오버 힐 (단일 힐)",
   "whm.overheal.rule.description": "대상의 최대 체력 이상의 힐을 하는것을 피하십시오. 일부 오버힐은 불가피하지만 오버힐 자체는 이득이 없을뿐더러 적개심만 올립니다. 효율적 마나관리를 위해 효율적으로 힐을 하십시오.",
   "whm.overheal.rule.name": "오버힐을 피하세요",
-  "whm.swiftcast.missed.suggestion.content": "",
-  "whm.swiftcast.missed.suggestion.why": "",
+  "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 신속마는 즉시 시전을 해주며 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
+  "whm.swiftcast.missed.suggestion.why": "신속마 효과를 사용하지 않아 총 {missedSwifts} {missedSwifts, plural, other {회가}} 낭비 되었습니다.",
   "whm.swiftcast.title": "신속마가 사용된 스킬들"
 }
