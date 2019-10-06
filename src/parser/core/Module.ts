@@ -285,12 +285,22 @@ export default class Module {
 	}
 
 	triggerEvent(event: Event) {
+		// Back up the current timestamp.
+		// NOTE: DO NOT DO THIS IN USER MODULES _EVER_.
+		// TODO: Move event handling above module level so this isn't required.
+		// tslint:disable-next-line:variable-name
+		const HACK_timestampBackup = this.parser._timestamp
+
 		// Fire off any timestamp hooks that are ready
 		const thq = this._timestampHookQueue
 		while (thq.length > 0 && thq[thq.length - 1].timestamp <= event.timestamp) {
 			const hook = thq.pop()!
+			this.parser._timestamp = hook.timestamp
 			hook.callback({timestamp: hook.timestamp})
 		}
+
+		// Restore the timestamp. Pretend nothing happened. Silence the unbelievers.
+		this.parser._timestamp = HACK_timestampBackup
 
 		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
 		if (typeof event.type !== 'symbol') {
