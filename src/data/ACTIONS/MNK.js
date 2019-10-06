@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -91,6 +93,7 @@ export default {
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.RIDDLE_OF_EARTH, STATUSES.EARTHS_REPLY],
 	},
 
 	RIDDLE_OF_FIRE: {
@@ -98,6 +101,7 @@ export default {
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/002000/002541.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.RIDDLE_OF_FIRE],
 	},
 
 	BROTHERHOOD: {
@@ -105,6 +109,7 @@ export default {
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.BROTHERHOOD, STATUSES.MEDITATIVE_BROTHERHOOD],
 	},
 
 	ENLIGHTENMENT: {
@@ -119,5 +124,6 @@ export default {
 		name: 'Anatman',
 		icon: 'https://xivapi.com/i/002000/002546.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.ANATMAN],
 	},
 }

@@ -34,11 +34,12 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.LHEA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.QAPHLA, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
@@ -60,6 +61,27 @@ export default new Meta({
 			date: new Date('2019-07-25'),
 			Changes: () => <>
 				Minor fix for weaving case where player leads on oGCDs.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
+		{
+			date: new Date('2019-08-20'),
+			Changes: () => <>
+				Added usage tracking for Fight or Flight and Requiescat.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
+		},
+		{
+			date: new Date('2019-08-21'),
+			Changes: () => <>
+				Don't penalize for rushed Requiescat windows due to expected downtime or end-of-fight.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
+		{
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},

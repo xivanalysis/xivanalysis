@@ -3,6 +3,7 @@ export const gutter: string;
 export const themeText: string;
 export const horizontal: string;
 export const row: string;
+export const meta: string;
 export const icon: string;
 export const version: string;
 export const versionInfo: string;

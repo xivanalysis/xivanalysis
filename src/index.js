@@ -2,16 +2,17 @@ import '@babel/polyfill'
 import 'intersection-observer'
 import 'whatwg-fetch'
 
-import Raven from 'raven-js'
+import * as Sentry from '@sentry/browser'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
 import Root from './Root'
 
 // If we're in prod, boot up sentry
-const {NODE_ENV, REACT_APP_VERSION, REACT_APP_RAVEN_DSN} = process.env
-if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
-	Raven.config(REACT_APP_RAVEN_DSN, {
+const {NODE_ENV, REACT_APP_VERSION, REACT_APP_SENTRY_DSN} = process.env
+if (NODE_ENV === 'production' && REACT_APP_SENTRY_DSN) {
+	Sentry.init({
+		dsn: REACT_APP_SENTRY_DSN,
 		environment: NODE_ENV,
 		release: REACT_APP_VERSION,
 
@@ -19,8 +20,7 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 			// All our project's JavaScript should be loaded from /assets/
 			/xivanalysis\.com\/assets/,
 		],
-
-		ignoreUrls: [
+		blacklistUrls: [
 			// Browser Extensions
 			/extensions\//i,
 			/^chrome:\/\//i,
@@ -32,7 +32,7 @@ if (NODE_ENV === 'production' && REACT_APP_RAVEN_DSN) {
 			// As I was saying, translate sites...
 			'SecurityError',
 		],
-	}).install()
+	})
 }
 
 ReactDOM.render(<Root />, document.getElementById('root'))

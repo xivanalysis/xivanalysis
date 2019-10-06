@@ -12,8 +12,6 @@ const QUERY_FILTER = [
 		abilities: [
 			STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
 			STATUSES.CHAIN_STRATAGEM.id,
-			STATUSES.RADIANT_SHIELD_PHYSICAL_VULNERABILITY_UP.id,
-			STATUSES.CONTAGION_MAGIC_VULNERABILITY_UP.id,
 			STATUSES.RUINATION.id,
 		],
 		targetsOnly: true,
@@ -24,6 +22,8 @@ const EVENT_TYPE_ORDER = {
 	death: -4,
 	begincast: -3,
 	cast: -2,
+	calculateddamage: -1.5,
+	calculatedheal: -1.5,
 	damage: -1,
 	heal: -1,
 	default: 0,

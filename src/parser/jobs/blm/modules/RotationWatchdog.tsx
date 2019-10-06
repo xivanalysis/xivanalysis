@@ -66,6 +66,7 @@ const CYCLE_ERRORS = {
 	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>}, // These two codes should stay close to each other
 	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>},
+	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
 class Cycle {
@@ -194,6 +195,7 @@ export default class RotationWatchdog extends Module {
 		this.addHook('cast', {by: 'player'}, this.onCast)
 		this.addHook('complete', this.onComplete)
 		this.addHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
+		this.addHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module
@@ -248,14 +250,16 @@ export default class RotationWatchdog extends Module {
 			!(actionId === ACTIONS.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
-		// Note that we've recorded our first cast now
-		if (this.firstEvent) { this.firstEvent = false }
 
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
+
 		if (!action  || action.autoAttack) {
 			return
 		}
+
+		// Note that we've recorded our first damage event once we have one
+		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
 		this.currentRotation.casts.push(event)
 
@@ -267,6 +271,10 @@ export default class RotationWatchdog extends Module {
 		if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
 			this.thunder3Casts++
 		}
+	}
+
+	private onDeath() {
+		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
 	}
 
 	// Get the uptime percentage for the Thunder status defbuff
@@ -398,7 +406,8 @@ export default class RotationWatchdog extends Module {
 	// Complete the previous cycle and start a new one
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
+		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.firstEvent)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list

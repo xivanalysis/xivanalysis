@@ -1,11 +1,4 @@
 export default {
-	CLERIC_STANCE: {
-		id: 145,
-		name: 'Cleric Stance',
-		icon: 'https://xivapi.com/i/010000/010402.png',
-		duration: 15,
-	},
-
 	SWIFTCAST: {
 		id: 167,
 		name: 'Swiftcast',
@@ -13,32 +6,66 @@ export default {
 		duration: 10,
 	},
 
-	PROTECT: {
-		id: 146,
-		name: 'Protect',
-		icon: 'https://xivapi.com/i/010000/010405.png',
-	},
-
 	LUCID_DREAMING: {
 		id: 1204,
 		name: 'Lucid Dreaming',
 		icon: 'https://xivapi.com/i/013000/013909.png',
-	},
-
-	LARGESSE: {
-		id: 1207,
-		name: 'Largesse',
-		icon: 'https://xivapi.com/i/013000/013910.png',
+		duration: 21,
 	},
 
 	SURECAST: {
 		id: 160,
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/010000/010452.png',
+		duration: 6,
 	},
-	EYE_FOR_AN_EYE: {
-		id: 185,
-		name: 'Eye for an Eye',
-		icon: 'https://xivapi.com/i/013000/013918.png',
+
+	RAMPART: {
+		id: 1191,
+		name: 'Rampart',
+		icon: 'https://xivapi.com/i/010000/010152.png',
+		duration: 20,
+	},
+
+	REPRISAL: {
+		id: 1193,
+		name: 'Reprisal',
+		icon: 'https://xivapi.com/i/013000/013901.png',
+		duration: 5,
+	},
+
+	ARMS_LENGTH: {
+		id: 1209,
+		name: 'Arm&apos;s Length',
+		icon: 'https://xivapi.com/i/013000/013915.png',
+		duration: 6,
+	},
+
+	ADDLE: {
+		id: 1203,
+		name: 'Addle',
+		icon: 'https://xivapi.com/i/013000/013917.png',
+		duration: 10,
+	},
+
+	BLOODBATH: {
+		id: 84,
+		name: 'Bloodbath',
+		icon: 'https://xivapi.com/i/013000/013913.png',
+		duration: 20,
+	},
+
+	FEINT: {
+		id: 1195,
+		name: 'Feint',
+		icon: 'https://xivapi.com/i/013000/013904.png',
+		duration: 20,
+	},
+
+	TRUE_NORTH: {
+		id: 1250,
+		name: 'True North',
+		icon: 'https://xivapi.com/i/013000/013903.png',
+		duration: 20,
 	},
 }

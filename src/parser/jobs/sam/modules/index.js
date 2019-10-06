@@ -1,3 +1,4 @@
+import AoeChecker from './AoeChecker'
 import Buffs from './Buffs'
 import Combos from './Combos'
 import Higanbana from './Higanbana'
@@ -8,8 +9,11 @@ import Speedmod from './Speedmod'
 import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
+import OGCDDowntime from './OGCDDowntime'
+import Statuses from './Statuses'
 
 export default [
+	AoeChecker,
 	Buffs,
 	Combos,
 	Higanbana,
@@ -20,4 +24,6 @@ export default [
 	Meikyo,
 	ThirdEye,
 	Tsubame,
+	OGCDDowntime,
+	Statuses,
 ]

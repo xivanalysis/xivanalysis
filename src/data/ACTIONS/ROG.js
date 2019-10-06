@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -8,7 +10,7 @@ export default {
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 200,
+		potency: 220,
 		combo: {
 			start: true,
 		},
@@ -22,7 +24,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 300,
+			potency: 330,
 		},
 	},
 
@@ -34,7 +36,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 420, // TODO - *Cries in positionals*
+			potency: 460, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -47,9 +49,10 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 200,
+			potency: 220,
 			end: true,
 		},
+		statusesApplied: [STATUSES.SHADOW_FANG],
 	},
 
 	DEATH_BLOSSOM: {
@@ -98,6 +101,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.TRICK_ATTACK_VULNERABILITY_UP],
 	},
 
 	SHADE_SHIFT: {
@@ -106,5 +110,6 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.SHADE_SHIFT],
 	},
 }

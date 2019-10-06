@@ -22,8 +22,8 @@ export function dependency(target: Module, prop: string) {
 	const constructor = target.constructor as typeof Module
 
 	// Make sure we're not modifying every single module
-	if (constructor.dependencies === Module.dependencies) {
-		constructor.dependencies = []
+	if (!constructor.hasOwnProperty('dependencies')) {
+		constructor.dependencies = [...constructor.dependencies]
 	}
 
 	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling

@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -8,6 +10,7 @@ export default {
 		name: 'Steel Cyclone',
 		icon: 'https://xivapi.com/i/002000/002552.png',
 		onGcd: true,
+		potency: 220,
 		breaksCombo: false,
 	},
 
@@ -16,6 +19,7 @@ export default {
 		name: 'Decimate',
 		icon: 'https://xivapi.com/i/002000/002558.png',
 		onGcd: true,
+		potency: 250,
 		breaksCombo: false,
 	},
 
@@ -36,6 +40,7 @@ export default {
 		name: 'Fell Cleave',
 		icon: 'https://xivapi.com/i/002000/002557.png',
 		onGcd: true,
+		potency: 590,
 		breaksCombo: false,
 	},
 
@@ -44,6 +49,7 @@ export default {
 		name: 'Inner Beast',
 		icon: 'https://xivapi.com/i/002000/002553.png',
 		onGcd: true,
+		potency: 350,
 		breaksCombo: false,
 	},
 
@@ -52,6 +58,7 @@ export default {
 		name: 'Inner Chaos',
 		icon: 'https://xivapi.com/i/002000/002568.png',
 		onGcd: true,
+		potency: 920,
 		breaksCombo: false,
 	},
 
@@ -60,6 +67,7 @@ export default {
 		name: 'Chaotic Cyclone',
 		icon: 'https://xivapi.com/i/002000/002566.png',
 		onGcd: true,
+		potency: 400,
 		breaksCombo: false,
 	},
 
@@ -71,8 +79,9 @@ export default {
 		id: 3551,
 		name: 'Raw Intuition',
 		icon: 'https://xivapi.com/i/002000/002559.png',
-		cooldown: 90,
+		cooldown: 25,
 		onGcd: false,
+		statusesApplied: [STATUSES.RAW_INTUITION],
 	},
 
 	SHAKE_IT_OFF: {
@@ -81,13 +90,15 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90,
 		onGcd: false,
+		statusesApplied: [STATUSES.SHAKE_IT_OFF],
 	},
 
 	ONSLAUGHT: {
 		id: 7386,
 		name: 'Onslaught',
 		icon: 'https://xivapi.com/i/002000/002561.png',
-		cooldown: 15,
+		cooldown: 10,
+		potency: 100,
 		onGcd: false,
 	},
 
@@ -96,6 +107,7 @@ export default {
 		name: 'Upheaval',
 		icon: 'https://xivapi.com/i/002000/002562.png',
 		cooldown: 30,
+		potency: 450,
 		onGcd: false,
 	},
 
@@ -104,14 +116,6 @@ export default {
 		name: 'Equilibrium',
 		icon: 'https://xivapi.com/i/002000/002560.png',
 		cooldown: 60,
-		onGcd: false,
-	},
-
-	UNCHAINED: {
-		id: 50,
-		name: 'Unchained',
-		icon: 'https://xivapi.com/i/002000/002554.png',
-		cooldown: 90,
 		onGcd: false,
 	},
 
@@ -130,6 +134,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002564.png',
 		cooldown: 90,
 		onGcd: false,
+		statusesApplied: [STATUSES.INNER_RELEASE],
 	},
 
 	INFURIATE: {
@@ -138,13 +143,15 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
 		onGcd: false,
+		statusesApplied: [STATUSES.NASCENT_CHAOS],
 	},
 
 	NASCENT_FLASH: {
 		id: 16464,
 		name: 'Nascent Flash',
-		icon: 'https://https://xivapi.com/i/002000/002567.png',
+		icon: 'https://xivapi.com/i/002000/002567.png',
 		cooldown: 25,
 		cooldownGroup: 9,
+		statusesApplied: [STATUSES.NASCENT_FLASH, STATUSES.NASCENT_GLINT],
 	},
 }

@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player
@@ -8,7 +10,7 @@ export default {
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
-		castTime: 2.5,
+		statusesApplied: [STATUSES.BIOLYSIS],
 	},
 
 	ADLOQUIUM: {
@@ -17,6 +19,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
 		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE, STATUSES.CATALYZE],
 	},
 
 	BROIL_III: {
@@ -68,7 +71,8 @@ export default {
 		name: 'Succor',
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
-		castTime: 2.5,
+		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE],
 	},
 
 	SACRED_SOIL: {
@@ -90,7 +94,6 @@ export default {
 		name: 'Art of War',
 		icon: 'https://xivapi.com/i/002000/002819.png',
 		onGcd: true,
-		castTime: 2.5,
 	},
 
 	INDOMITABILITY: {
@@ -120,6 +123,7 @@ export default {
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
 		cooldown: 15,
+		statusesApplied: [STATUSES.EMERGENCY_TACTICS],
 	},
 
 	DISSIPATION: {
@@ -127,6 +131,7 @@ export default {
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.DISSIPATION],
 	},
 
 	EXCOGITATION: {
@@ -134,6 +139,7 @@ export default {
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
 		cooldown: 45,
+		statusesApplied: [STATUSES.EXCOGITATION],
 	},
 
 	BROIL_II: {
@@ -149,6 +155,7 @@ export default {
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.CHAIN_STRATAGEM],
 	},
 
 	SCH_AETHERPACT: {
@@ -165,15 +172,16 @@ export default {
 		cooldown: 1,
 	},
 
-	WHISPERING_DAWN: {
-		id: 803,
+	SCH_WHISPERING_DAWN: {
+		id: 16537,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.WHISPERING_DAWN],
 	},
 
-	FEY_ILLUMINATION: {
-		id: 805,
+	SCH_FEY_ILLUMINATION: {
+		id: 16538,
 		name: 'Fey Illumination',
 		icon: 'https://xivapi.com/i/002000/002829.png',
 		cooldown: 120,
@@ -190,12 +198,16 @@ export default {
 		id: 17215,
 		name: 'Summon Eos',
 		icon: 'https://xivapi.com/i/002000/002823.png',
+		onGcd: true,
+		castTime: 2.5,
 	},
 
 	SUMMON_SELENE: {
 		id: 17216,
 		name: 'Summon Selene',
 		icon: 'https://xivapi.com/i/002000/002824.png',
+		onGcd: true,
+		castTime: 2.5,
 	},
 
 	// -----
@@ -209,11 +221,24 @@ export default {
 		pet: true,
 	},
 
+	WHISPERING_DAWN: {
+		id: 803,
+		name: 'Whispering Dawn',
+		icon: 'https://xivapi.com/i/002000/002827.png',
+		pet: true,
+	},
+
+	FEY_ILLUMINATION: {
+		id: 805,
+		name: 'Fey Illumination',
+		icon: 'https://xivapi.com/i/002000/002829.png',
+		pet: true,
+	},
+
 	FEY_BLESSING: {
 		id: 16544,
 		name: 'Fey Blessing',
 		icon: 'https://xivapi.com/i/002000/002855.png',
-		cooldown: 60,
 		pet: true,
 	},
 
@@ -228,7 +253,6 @@ export default {
 		id: 16547,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002846.png',
-		cooldown: 20,
 		pet: true,
 	},
 

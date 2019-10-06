@@ -7,6 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
 //import {getCooldownRemaining} from 'parser/core/modules/Cooldowns'
 //import {ActionLink} from 'components/ui/DbLink'
 //TODO: Should possibly look into different Icons for things in Suggestions
@@ -58,6 +59,7 @@ class GaugeAction {
 			overCapLoss: 0,
 			imbalanceLoss: 0,
 			invulnLoss: 0,
+			manaficationLoss: 0,
 		},
 		black: {
 			beforeCast: 0,
@@ -65,6 +67,7 @@ class GaugeAction {
 			overCapLoss: 0,
 			imbalanceLoss: 0,
 			invulnLoss: 0,
+			manaficationLoss: 0,
 		},
 	}
 
@@ -80,7 +83,7 @@ class GaugeAction {
 		this.mana.white.afterCast = this.mana.white.beforeCast * MANAFICATION_MULTIPLIER
 		this.mana.black.afterCast = this.mana.black.beforeCast * MANAFICATION_MULTIPLIER
 
-		this.calculateManaOvercap()
+		this.calculateManaOvercap(true)
 	}
 
 	calculateCastManaGained(event) {
@@ -105,7 +108,7 @@ class GaugeAction {
 			this.mana.black.afterCast = this.mana.black.beforeCast + black
 
 			this.calculateManaImbalance(white, black)
-			this.calculateManaOvercap()
+			this.calculateManaOvercap(false)
 		}
 	}
 
@@ -125,14 +128,22 @@ class GaugeAction {
 		}
 	}
 
-	calculateManaOvercap() {
+	calculateManaOvercap(isManafication) {
 		if (this.mana.white.afterCast > MANA_CAP) {
-			this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
+			if (isManafication) {
+				this.mana.white.manaficationLoss = this.mana.white.afterCast - MANA_CAP
+			} else {
+				this.mana.white.overCapLoss = this.mana.white.afterCast - MANA_CAP
+			}
 			this.mana.white.afterCast = MANA_CAP
 		}
 
 		if (this.mana.black.afterCast > MANA_CAP) {
-			this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
+			if (isManafication) {
+				this.mana.black.manaficationLoss = this.mana.black.afterCast - MANA_CAP
+			} else {
+				this.mana.black.overCapLoss = this.mana.black.afterCast - MANA_CAP
+			}
 			this.mana.black.afterCast = MANA_CAP
 		}
 	}
@@ -144,6 +155,7 @@ export default class Gauge extends Module {
 		static dependencies = [
 			'cooldowns',
 			'suggestions',
+			'statistics',
 		]
 
 		//Keeps track of our current mana gauge.
@@ -158,6 +170,9 @@ export default class Gauge extends Module {
 
 		_whiteManaLostToInvulnerable = 0
 		_blackManaLostToInvulnerable = 0
+
+		_whiteManaLostToManafication = 0
+		_blackManaLostToManafication = 0
 
 		// Chart handling
 		_history = {
@@ -207,6 +222,15 @@ export default class Gauge extends Module {
 				this.cooldowns.resetCooldown(ACTIONS.CORPS_A_CORPS.id)
 				this.cooldowns.resetCooldown(ACTIONS.DISPLACEMENT.id)
 			} else {
+				//Leaving this here, we have an issue where in an overkill returns an amount of 0
+				//But the game treats it as an ability that hit, this causes a trigger of our invuln logic
+				//Sadly removing the amount check would cause even more inaccurate information to go out.
+				//This log shows the issue with verthunder overkill of mustardseed 1 (ID 21), Verholy overkill of mustardseed 2 (ID 25)
+				//And a verthunder overkill of Titania herself.  https://www.fflogs.com/reports/FkVjcbGqBhXyNtg7/#fight=6&type=summary
+				// if (event.amount === 0) {
+				// 	console.log(`${JSON.stringify(event, null, 4)}`)
+				// 	console.log(`Cast: ${event.ability.name}, timestamp: ${this.parser.formatTimestamp(event.timestamp)}`)
+				// }
 				gaugeAction.calculateCastManaGained(event)
 			}
 
@@ -221,6 +245,9 @@ export default class Gauge extends Module {
 
 			this._whiteManaLostToInvulnerable += gaugeAction.mana.white.invulnLoss
 			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnLoss
+
+			this._whiteManaLostToManafication += gaugeAction.mana.white.manaficationLoss
+			this._blackManaWastedToManafication += gaugeAction.mana.black.manaficationLoss
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()
@@ -313,6 +340,21 @@ export default class Gauge extends Module {
 				why: <Fragment>
 					<Trans id="rdm.gauge.suggestions.black-mana-invuln-why">You lost {this._blackManaLostToInvulnerable} Black Mana due to misses or spells that targeted an invulnerable target</Trans>
 				</Fragment>,
+			}))
+
+			this.statistics.add(new DualStatistic({
+				label: <Trans id="rdm.gauge.title-mana-lost-to-manafication">Manafication Loss:</Trans>,
+				title: <Trans id="rdm.gauge.white-mana-lost-to-manafication">White</Trans>,
+				title2: <Trans id="rdm.gauge.black-mana-lost-to-manafication">Black</Trans>,
+				icon: ACTIONS.VERHOLY.icon,
+				icon2: ACTIONS.VERFLARE.icon,
+				value: this._whiteManaLostToManafication,
+				value2: this._blackManaLostToManafication,
+				info: (
+					<Trans id="rdm.gauge.white-mana-lost-to-manafication-statistics">
+						It is ok to lose some mana to manafication over the course of a fight, you should however strive to keep this number as low as possible.
+					</Trans>
+				),
 			}))
 		}
 

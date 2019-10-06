@@ -36,6 +36,7 @@ export default class Sidewinder extends Module {
 		'timeline',
 		'enemies',
 		'additionalStats',
+		'fflogsEvents',
 	]
 
 	_amountOfBadSidewinders = 0
@@ -56,12 +57,14 @@ export default class Sidewinder extends Module {
 			abilityId: ACTIONS.SIDEWINDER.id,
 		}, this._onSidewinderCast)
 
-		this.addHook('damage', {
-			by: 'player',
-			abilityId: ACTIONS.SHADOWBITE.id,
-		}, this._onShadowbiteDamage)
-
 		this.addHook('complete', this._onComplete)
+
+		this.addHook('init', () => {
+			this.addHook(this.fflogsEvents.damageEventName, {
+				by: 'player',
+				abilityId: ACTIONS.SHADOWBITE.id,
+			}, this._onShadowbiteDamage)
+		})
 	}
 
 	_getDotsOnEnemy(enemy) {

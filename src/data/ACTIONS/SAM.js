@@ -1,4 +1,13 @@
+import STATUSES from 'data/STATUSES'
+
 // Samurai Actions
+
+//Merge all 3 Tsubames into 1
+
+export const SAM_COOLDOWN_GROUP = {
+	TSUBAME: 16483,
+}
+
 export default {
 	//-----
 	//Player GCDs
@@ -8,7 +17,7 @@ export default {
 		name: 'Hakazae',
 		icon: 'https://xivapi.com/i/003000/003151.png',
 		onGcd: true,
-		potency:  150,
+		potency:  200,
 		combo: {
 			start: true,
 		},
@@ -22,8 +31,9 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
+		statusesApplied: [STATUSES.JINPU],
 	},
 
 	ENPI: {
@@ -42,8 +52,9 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 300,
+			potency: 340,
 		},
+		statusesApplied: [STATUSES.SHIFU],
 	},
 
 	FUGA: {
@@ -70,6 +81,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
 		castTime: 1.3,
+		statusesApplied: [STATUSES.HIGANBANA],
 	},
 
 	GEKKO: {
@@ -80,7 +92,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7478,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -114,7 +126,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7479,
-			potency: 440,
+			potency: 480,
 			end: true,
 		},
 	},
@@ -153,30 +165,6 @@ export default {
 		},
 	},
 
-	KAESHI_HIGANBANA: {
-		id: 16484,
-		name: 'Kaeshi: Higanbana',
-		icon: 'https://xivapi.com/i/003000/003181.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
-	KAESHI_GOKEN: {
-		id: 16485,
-		name: 'Kaeshi: Goken',
-		icon: 'https://xivapi.com/i/003000/003182.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
-	KAESHI_SETSUGEKKA: {
-		id: 16486,
-		name: 'Kaeshi: Setsugekka',
-		icon: 'https://xivapi.com/i/003000/003183.png',
-		onGcd: true,
-		castTime: 1.3,
-	},
-
 	//-----
 	//Player OGCDs
 	//-----
@@ -186,6 +174,7 @@ export default {
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15,
+		statusesApplied: [STATUSES.THIRD_EYE, STATUSES.EYES_OPEN],
 	},
 
 	AGEHA: {
@@ -199,14 +188,16 @@ export default {
 		id: 7499,
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
-		cooldown: 80,
+		cooldown: 55,
+		statusesApplied: [STATUSES.MEIKYO_SHISUI],
 	},
 
 	HISSATSU_KAITEN: {
 		id: 7494,
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
-		cooldown: 5,
+		cooldown: 1,
+		statusesApplied: [STATUSES.KAITEN],
 	},
 
 	HISSATSU_GYOTEN: {
@@ -221,6 +212,7 @@ export default {
 		name: 'Hissatsu: Yaten',
 		icon: 'https://xivapi.com/i/003000/003170.png',
 		cooldown: 10,
+		statusesApplied: [STATUSES.ENHANCED_ENPI],
 	},
 
 	MERCIFUL_EYES: {
@@ -236,6 +228,7 @@ export default {
 		name: 'Meditate',
 		icon: 'https://xivapi.com/i/003000/003172.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.MEDITATE, STATUSES.MEDITATION],
 	},
 
 	HISSATSU_SHINTEN: {
@@ -258,6 +251,13 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003175.png',
 		cooldown: 1,
 		cooldownGroup: 24,
+	},
+
+	HAGAKURE: {
+		id: 7495,
+		name: 'Hagakure',
+		icon: 'https://xivapi.com/i/003000/003176.png',
+		cooldown: 40,
 	},
 
 	IKISHOTEN: {
@@ -287,7 +287,41 @@ export default {
 		id: 16483,
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
+		onGcd: true,
+		gcdRecast: 2.5,
 		cooldown: 60,
+	},
+
+	KAESHI_HIGANBANA: {
+		id: 16484,
+		name: 'Kaeshi: Higanbana',
+		icon: 'https://xivapi.com/i/003000/003181.png',
+		onGcd: true,
+		cooldown: 60,
+		gcdRecast: 2.5,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+		statusesApplied: [STATUSES.HIGANBANA],
+	},
+
+	KAESHI_GOKEN: {
+		id: 16485,
+		name: 'Kaeshi: Goken',
+		icon: 'https://xivapi.com/i/003000/003182.png',
+		onGcd: true,
+		gcdRecast: 2.5,
+		cooldown: 60,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+	},
+
+	KAESHI_SETSUGEKKA: {
+		id: 16486,
+		name: 'Kaeshi: Setsugekka',
+		icon: 'https://xivapi.com/i/003000/003183.png',
+		onGcd: true,
+		gcdRecast: 2.5,
+		cooldown: 60,
+		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+
 	},
 
 	SHOHA: {

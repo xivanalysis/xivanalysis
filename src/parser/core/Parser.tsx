@@ -1,10 +1,10 @@
 import {MessageDescriptor} from '@lingui/core'
+import * as Sentry from '@sentry/browser'
 import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
-import {languageToEdition} from 'data/PATCHES'
+import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import {Actor, Event, Fight, Pet} from 'fflogs'
-import Raven from 'raven-js'
 import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
@@ -230,46 +230,11 @@ class Parser {
 			try {
 				this.modules[mod].triggerEvent(event)
 			} catch (error) {
-				// If we're in dev, throw the error back up
-				if (process.env.NODE_ENV === 'development') {
-					throw error
-				}
-
-				// Error trying to handle an event, tell sentry
-				// But first, gather some extra context
-				const tags = {
+				this.captureError({
+					error,
 					type: 'event',
-					event: event.type.toString(),
-					job: this.player && this.player.type,
 					module: mod,
-				}
-
-				const extra: Record<string, any> = {
-					report: this.report && this.report.code,
-					fight: this.fight && this.fight.id,
-					player: this.player && this.player.id,
 					event,
-				}
-
-				// Gather extra data for the error report.
-				const [data, errors] = this._gatherErrorContext(mod, 'event', error, event)
-				extra.modules = data
-
-				for (const [m, err] of errors) {
-					Raven.captureException(err, {
-						tags: {
-							...tags,
-							module: m,
-						},
-						extra,
-					})
-				}
-
-				// Now that we have all the possible context, submit the
-				// error to Raven.
-				Raven.captureException(error, {
-					tags,
-					extra,
 				})
 
 				// Also cascade the error through the dependency tree
@@ -382,44 +347,10 @@ class Parser {
 			try {
 				output = module.output()
 			} catch (error) {
-				if (process.env.NODE_ENV === 'development') {
-					throw error
-				}
-
-				// Error generating output for a module. Tell Sentry, but first,
-				// gather some extra context
-
-				const tags = {
+				this.captureError({
+					error,
 					type: 'output',
-					job: this.player && this.player.type,
 					module: mod,
-				}
-
-				const extra: Record<string, any> = {
-					report: this.report && this.report.code,
-					fight: this.fight && this.fight.id,
-					player: this.player && this.player.id,
-				}
-
-				// Gather extra data for the error report.
-				const [data, errors] = this._gatherErrorContext(mod, 'output', error)
-				extra.modules = data
-
-				for (const [m, err] of errors) {
-					Raven.captureException(err, {
-						tags: {
-							...tags,
-							module: m,
-						},
-						extra,
-					})
-				}
-
-				// Now that we have all the possible context, submit the
-				// error to Raven.
-				Raven.captureException(error, {
-					tags,
-					extra,
 				})
 
 				// Also add the error to the results to be displayed.
@@ -439,6 +370,61 @@ class Parser {
 		})
 
 		return results
+	}
+
+	// -----
+	// Error handling
+	// -----
+
+	private captureError(opts: {
+		error: Error,
+		type: 'event' | 'output',
+		module: string,
+		event?: Event,
+	}) {
+		// Bypass error handling in dev
+		if (process.env.NODE_ENV === 'development') {
+			throw opts.error
+		}
+
+		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
+		if (getReportPatch(this.report).branch) {
+			return
+		}
+
+		// Gather info for Sentry
+		const tags = {
+			type: opts.type,
+			job: this.player && this.player.type,
+			module: opts.module,
+		}
+
+		const extra: Record<string, any> = {
+			report: this.report && this.report.code,
+			fight: this.fight && this.fight.id,
+			player: this.player && this.player.id,
+			event: opts.event,
+		}
+
+		// Gather extra data for the error report.
+		const [data, errors] = this._gatherErrorContext(opts.module, 'output', opts.error)
+		extra.modules = data
+
+		for (const [m, err] of errors) {
+			Sentry.withScope(scope => {
+				scope.setTags({...tags, module: m})
+				scope.setExtras(extra)
+				Sentry.captureException(err)
+			})
+		}
+
+		// Now that we have all the possible context, submit the
+		// error to Sentry.
+		Sentry.withScope(scope => {
+			scope.setTags(tags)
+			scope.setExtras(extra)
+			Sentry.captureException(opts.error)
+		})
 	}
 
 	// -----
