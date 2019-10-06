@@ -93,7 +93,7 @@ export default {
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.RIDDLE_OF_EARTH],
+		statusesApplied: [STATUSES.RIDDLE_OF_EARTH, STATUSES.EARTHS_REPLY],
 	},
 
 	RIDDLE_OF_FIRE: {

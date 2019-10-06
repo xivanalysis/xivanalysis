@@ -82,6 +82,7 @@ export default {
 		name: 'High Jump',
 		icon: 'https://xivapi.com/i/002000/002591.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.DIVE_READY],
 	},
 
 	ELUSIVE_JUMP: {

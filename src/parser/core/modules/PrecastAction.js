@@ -9,6 +9,9 @@ const CAST_EVENT_TYPES = [
 // Fabricate fake cast events to clean up the mess
 export default class PrecastAction extends Module {
 	static handle = 'precastAction'
+	static dependencies = [
+		'fflogsEvents',
+	]
 
 	normalise(events) {
 		const startTime = this.parser.fight.start_time
@@ -23,7 +26,7 @@ export default class PrecastAction extends Module {
 			if (CAST_EVENT_TYPES.includes(event.type)) { break }
 
 			// If we've got to here and it's a damage event, we need to fab cast events
-			if (event.type !== 'damage') { continue }
+			if (event.type !== this.fflogsEvents.damageEventName) { continue }
 
 			// TODO: Is it worth fabricating a begincast?
 			events.splice(0, 0, {

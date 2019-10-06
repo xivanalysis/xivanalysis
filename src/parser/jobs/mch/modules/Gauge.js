@@ -44,14 +44,14 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.HEATED_SLUG_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HEATED_SPLIT_SHOT.id, ACTIONS.SPREAD_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
+		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.SLUG_SHOT.id, ACTIONS.CLEAN_SHOT.id, ACTIONS.HEATED_SLUG_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.SPLIT_SHOT.id, ACTIONS.HEATED_SPLIT_SHOT.id, ACTIONS.SPREAD_SHOT.id]}, () => this._addGauge('heat', GCD_HEAT_GAIN))
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.BARREL_STABILIZER.id}, () => this._addGauge('heat', BARREL_STABILIZER_HEAT_GAIN))
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HYPERCHARGE.id}, this._onOverheat)
 
-		this.addHook('combo', {by: 'player', abilityId: ACTIONS.HEATED_CLEAN_SHOT.id}, this._onCleanShot)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.AIR_ANCHOR.id}, this._onAirAnchor)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.AUTOMATON_QUEEN.id}, this._onQueen)
+		this.addHook('combo', {by: 'player', abilityId: [ACTIONS.CLEAN_SHOT.id, ACTIONS.HEATED_CLEAN_SHOT.id]}, this._onCleanShot)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HOT_SHOT.id, ACTIONS.AIR_ANCHOR.id]}, this._onAirAnchor)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.ROOK_AUTOTURRET.id, ACTIONS.AUTOMATON_QUEEN.id]}, this._onQueen)
 
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)

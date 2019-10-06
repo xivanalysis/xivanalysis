@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Icon, Popup} from 'semantic-ui-react'
@@ -32,7 +33,7 @@ export default class Options extends React.Component {
 				<I18nMenu/>
 			</div>
 
-			<div className={styles.row}>
+			<div className={classNames(styles.row, styles.meta)}>
 				<a
 					href="https://discord.gg/jVbVe44"
 					target="_blank"

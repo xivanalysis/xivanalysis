@@ -22,6 +22,12 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013104.png',
 		duration: 15,
 	},
+	DARK_MISSIONARY: {
+		id: 1894,
+		name: 'Dark Missionary',
+		icon: 'https://xivapi.com/i/013000/013122.png',
+		duration: 15,
+	},
 	LIVING_DEAD: {
 		id: 810,
 		name: 'Living Dead',

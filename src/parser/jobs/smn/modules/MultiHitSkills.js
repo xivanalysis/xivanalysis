@@ -22,6 +22,7 @@ export default class MultiHit extends Module {
 	static handle = 'multihit'
 	static title = t('smn.multihit.title')`Multi-Hit`
 	static dependencies = [
+		'gauge',
 		'suggestions',
 	]
 
@@ -34,7 +35,13 @@ export default class MultiHit extends Module {
 	}
 
 	_checkMultiHitSkill(event) {
-		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.hits.length < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
+		if (!REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid)) { return }
+
+		let requiredTargets = REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]
+		if (event.ability.guid === ACTIONS.PAINFLARE.id && this.gauge.isRushingAetherflow()) {
+			requiredTargets = 1
+		}
+		if (event.hits.length < requiredTargets) {
 			this._incorrectMultihitSkills[event.ability.guid] = (this._incorrectMultihitSkills[event.ability.guid] || 0) + 1
 		}
 	}
