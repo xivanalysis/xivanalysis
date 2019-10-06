@@ -1,10 +1,9 @@
 import Module, {TimestampHook} from 'parser/core/Module'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
-// Blah
 function expectExist<T>(value?: T) {
 	if (!value) {
-		throw new Error('Missing thing.')
+		throw new Error('Missing something required. Check the stack trace.')
 	}
 
 	return value
