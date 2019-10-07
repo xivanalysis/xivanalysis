@@ -98,7 +98,7 @@
     "@types/lodash": "^4.14.116",
     "@types/react": "^16.7.20",
     "@types/react-dom": "^16.0.11",
-    "@types/react-router-dom": "^4.3.1",
+    "@types/react-router-dom": "^5",
     "@types/react-scroll": "^1.5.4",
     "@types/webpack-env": "^1.13.6",
     "@xivanalysis/eslint-plugin": "^0.0.2",
