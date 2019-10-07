@@ -105,7 +105,7 @@
     "autoprefixer": "^9.3.1",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-macros": "^2.5.0",
-    "cross-env": "^5.2.0",
+    "cross-env": "^6",
     "cssnano": "^4.1.7",
     "dotenv": "^8.0.0",
     "dotenv-expand": "^5.1.0",
