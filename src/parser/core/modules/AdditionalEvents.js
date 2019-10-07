@@ -16,6 +16,11 @@ const QUERY_FILTER = [
 		],
 		targetsOnly: true,
 	},
+	//Section for non-status based enemy events
+	{
+		types: ['targetabilityupdate'],
+		targetsOnly: true,
+	},
 ]
 
 const EVENT_TYPE_ORDER = {
@@ -24,8 +29,9 @@ const EVENT_TYPE_ORDER = {
 	cast: -2,
 	calculateddamage: -1.5,
 	calculatedheal: -1.5,
-	damage: -1,
-	heal: -1,
+	targetabilityupdate: -1,
+	damage: -0.5,
+	heal: -0.5,
 	default: 0,
 	removebuff: 1,
 	removebuffstack: 1,
@@ -67,16 +73,16 @@ export default class AdditionalEvents extends Module {
 		// Build the filter string
 		let filter = QUERY_FILTER.map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
-			const abilities = section.abilities.join(',')
-
-			let condition = `type in (${types}) and ability.id in (${abilities})`
+			let condition = `type in (${types})`
+			if (section.abilities) {
+				const abilities = section.abilities.join(',')
+				condition += ` and ability.id in (${abilities})`
+			}
 			if (section.targetsOnly) {
 				condition += ` and (${targetQuery})`
 			}
-
 			return `(${condition})`
 		}).join(' or ')
-
 		// Exclude events by the current player and their pets, as we already have them from the main event lookup
 		const playerIds = [
 			this.parser.player.guid,
