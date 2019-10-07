@@ -151,6 +151,6 @@ export default class Ruin2 extends Module {
 	}
 
 	isNotEndOfFightRuin4(cast) {
-		return cast.ability.guid === ACTIONS.SMN_RUIN_II.id || cast.timestamp < this._lastOgcd.timestamp
+		return cast.ability.guid === ACTIONS.SMN_RUIN_II.id || (this._lastOgcd !== null && cast.timestamp < this._lastOgcd.timestamp)
 	}
 }

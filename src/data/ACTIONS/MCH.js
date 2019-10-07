@@ -125,6 +125,7 @@ export default {
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 2.5,
+		statusesApplied: [STATUSES.BIOBLASTER],
 	},
 
 	AIR_ANCHOR: {
@@ -146,7 +147,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
-		statusesApplied: [STATUSES.REASSEMBLE],
+		statusesApplied: [STATUSES.REASSEMBLED],
 	},
 
 	WILDFIRE: {

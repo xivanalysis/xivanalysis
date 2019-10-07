@@ -70,6 +70,7 @@ export default {
 			potency: 380,
 			end: true,
 		},
+		statusesApplied: [STATUSES.STORMS_EYE],
 	},
 
 	// -----

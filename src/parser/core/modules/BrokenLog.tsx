@@ -1,8 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
+import {getReportPatch} from 'data/PATCHES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
@@ -17,7 +19,9 @@ const EXPECTED_ABILITY_EVENTS = [
 	'begincast',
 	'cast',
 	'damage',
+	'calculateddamage',
 	'heal',
+	'calculatedheal',
 	'applybuff',
 	'applydebuff',
 	'refreshbuff',
@@ -61,7 +65,31 @@ export default class BrokenLog extends Module {
 	 */
 	trigger(module: Module, key: string, reason?: React.ReactNode) {
 		const constructor = (module.constructor as typeof Module)
-		this.triggers.set(`${constructor.handle}.${key}`, {
+		const {handle} = constructor
+		const triggerKey = `${handle}.${key}`
+
+		// If this is the first time this issue has been triggered, try and report it to Sentry
+		if (
+			!this.triggers.has(triggerKey) &&
+			!getReportPatch(this.parser.report).branch
+		) {
+			const job = this.parser.player.type
+
+			Sentry.withScope(scope => {
+				scope.setTags({
+					job,
+					module: handle,
+				})
+				scope.setExtras({
+					report: this.parser.report.code,
+					fight: this.parser.fight.id,
+					player: this.parser.player.id,
+				})
+				Sentry.captureMessage(`${job}.${triggerKey}`)
+			})
+		}
+
+		this.triggers.set(triggerKey, {
 			module: constructor,
 			reason,
 		})

@@ -24,28 +24,34 @@ const DEMI_CHECKED_ACTIONS = {
 		[ACTIONS.WYRMWAVE.id]: {
 			name: 'WW',
 			order: 0,
+			expected: 8,
 		},
 		[ACTIONS.AKH_MORN.id]: {
 			name: 'AM',
 			order: 1,
+			expected: 2,
 		},
 	},
 	[PETS.DEMI_PHOENIX.id]: {
 		[ACTIONS.SCARLET_FLAME.id]: {
 			name: 'SF',
 			order: 0,
+			expected: 8,
 		},
 		[ACTIONS.REVELATION.id]: {
 			name: 'R',
 			order: 1,
+			expected: 2,
 		},
 		[ACTIONS.FOUNTAIN_OF_FIRE.id]: {
 			name: 'FoF',
 			order: 2,
+			expected: 4,
 		},
 		[ACTIONS.BRAND_OF_PURGATORY.id]: {
 			name: 'BoP',
 			order: 3,
+			expected: 4,
 		},
 	},
 }
@@ -161,9 +167,12 @@ export default class Demis extends Module {
 						{Object.keys(checked)
 							.sort((a, b) => checked[a].order - checked[b].order)
 							.map((id, index) => {
+								const curCounts = counts[Number(id)]
 								return <>
 									{index > 0 && ', '}
-									{this.renderHeaderCount(counts[Number(id)])}
+									<span className={(curCounts && curCounts[GHOST_CHANCE.NONE] >= checked[id].expected) ? 'text-success' : ''}>
+										{this.renderHeaderCount(curCounts)}
+									</span>
 									{' ' + checked[id].name}
 								</>
 							})}
