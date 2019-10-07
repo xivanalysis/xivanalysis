@@ -45,7 +45,7 @@ module.exports = neutrino => { neutrino.register('jest', neutrino => {
 		// Main config
 		rootDir: 'src',
 		preset: 'ts-jest/presets/js-with-ts',
-		setupTestFrameworkScriptFile: '<rootDir>/setupTests.js',
+		setupFilesAfterEnv : ['<rootDir>/setupTests.js'],
 		testEnvironment: neutrino.config.get('target') === 'node' ? 'node' : 'jsdom',
 		bail: true,
 
