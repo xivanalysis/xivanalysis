@@ -115,7 +115,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^24",
     "jest-chain": "^1.0.3",
-    "jest-extended": "^0.10.0",
+    "jest-extended": "^0.11",
     "jest-junit": "^8",
     "lint-staged": "^8.2.0",
     "neutrino": "9.0.0-rc.4",
