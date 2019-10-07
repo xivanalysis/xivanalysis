@@ -72,7 +72,7 @@
     "stable": "^0.1.8",
     "toposort": "^2",
     "tslib": "^1.9.3",
-    "url-search-params-polyfill": "^5.0.0",
+    "url-search-params-polyfill": "^7",
     "vis": "^4.21.0",
     "whatwg-fetch": "^3.0.0"
   },
