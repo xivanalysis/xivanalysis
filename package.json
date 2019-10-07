@@ -111,7 +111,7 @@
     "dotenv-expand": "^5.1.0",
     "eslint": "^5.8.0",
     "glob": "^7.1.3",
-    "husky": "^2.4.0",
+    "husky": "^3",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^23.6.0",
     "jest-chain": "^1.0.3",
