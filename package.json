@@ -18,14 +18,12 @@
     }
   },
   "lint-staged": {
-    "linters": {
-      "src/**/*.js{,x}": [
-        "eslint --fix"
-      ],
-      "src/**/*.ts{,x}": [
-        "tslint --fix"
-      ]
-    }
+    "src/**/*.js{,x}": [
+      "eslint --fix"
+    ],
+    "src/**/*.ts{,x}": [
+      "tslint --fix"
+    ]
   },
   "browserslist": [
     ">0.2%",
@@ -117,7 +115,7 @@
     "jest-chain": "^1.0.3",
     "jest-extended": "^0.11",
     "jest-junit": "^8",
-    "lint-staged": "^8.2.0",
+    "lint-staged": "^9",
     "neutrino": "9.0.0-rc.4",
     "postcss-calc": "^7.0.1",
     "postcss-color-function": "^4.0.1",
