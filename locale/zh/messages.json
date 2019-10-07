@@ -75,6 +75,8 @@
   "ast.sleeve-draw.checklist.name": "多使用袖内抽卡",
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> 的使用情况",
   "ast.sleeve-draw.title": "袖内抽卡",
+  "ast.synastry.suggestion.content": "",
+  "ast.synastry.suggestion.why": "",
   "blm.about.description": "本分析器会告诉你，你并非如你以为的那样咏唱了那么多[~action/FIRE_IV]。",
   "blm.about.description.warning": "本部分尚未完成。",
   "blm.gauge.suggestions.dropped-enochian.content": "断<0/>会造成<1/>和<2/>的损失，并且额外开<3/>卡GCD，无法使用<4/>和<5/>，同时直接损失<6/>提供的15%伤害加成。",
