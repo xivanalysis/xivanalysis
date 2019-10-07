@@ -23,6 +23,7 @@ module.exports = {
 					],
 					rules: {
 						'react/display-name': 'off',
+						'no-prototype-builtins': 'off',
 					}
 				},
 			},
