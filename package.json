@@ -65,7 +65,7 @@
     "react-helmet": "^5.2.0",
     "react-markdown": "^3",
     "react-router-dom": "^5.0.0",
-    "react-visjs-timeline": "^1.5.0",
+    "react-visjs-timeline": "^1.6.0",
     "reflect-metadata": "^0.1.12",
     "semantic-ui-css": "^2.4.0",
     "semantic-ui-react": "^0.88",
@@ -73,7 +73,7 @@
     "toposort": "^2",
     "tslib": "^1.9.3",
     "url-search-params-polyfill": "^7",
-    "vis": "^4.21.0",
+    "vis-timeline": "^5.1.0",
     "whatwg-fetch": "^3.0.0"
   },
   "devDependencies": {
