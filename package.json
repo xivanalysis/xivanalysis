@@ -116,7 +116,7 @@
     "jest": "^24",
     "jest-chain": "^1.0.3",
     "jest-extended": "^0.10.0",
-    "jest-junit": "^5.2.0",
+    "jest-junit": "^8",
     "lint-staged": "^8.2.0",
     "neutrino": "9.0.0-rc.4",
     "postcss-calc": "^7.0.1",
