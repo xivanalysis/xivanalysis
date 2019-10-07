@@ -75,6 +75,8 @@
   "ast.sleeve-draw.checklist.name": "Utilisez Grand Sabot régulièrement",
   "ast.sleeve-draw.checklist.requirement.uses.name": "Utilisations de <0/>",
   "ast.sleeve-draw.title": "Grand Sabot",
+  "ast.synastry.suggestion.content": "",
+  "ast.synastry.suggestion.why": "",
   "blm.about.description": "Cet analyseur a pour but d'identifier à quel point vous n'utilisez pas [~action/FIRE_IV] autant que vous le pensez.",
   "blm.about.description.warning": "Page en construction.",
   "blm.gauge.suggestions.dropped-enochian.content": "Perdre son <0/> peut conduire à gâcher le lancement de <1/>, si vous réactivez un <2/> supplémentaire, ceci résultera à des pertes de <3/> et <4/> et très certainement à la perte du bonus de dégâts de 10% apporté par <5/>.",
