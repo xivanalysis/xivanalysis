@@ -3,6 +3,7 @@ export default {
 		id: 638,
 		name: 'Vulnerability Up',
 		icon: 'https://xivapi.com/i/015000/015020.png',
+		duration: 10,
 	},
 
 	SHADOW_FANG: {
@@ -52,5 +53,12 @@ export default {
 		name: 'Assassinate Ready',
 		icon: 'https://xivapi.com/i/012000/012913.png',
 		duration: 10,
+	},
+
+	SHADE_SHIFT: {
+		id: 488,
+		name: 'Shade Shift',
+		icon: 'https://xivapi.com/i/010000/010605.png',
+		duration: 20,
 	},
 }

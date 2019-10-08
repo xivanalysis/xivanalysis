@@ -143,14 +143,15 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
 		onGcd: false,
+		statusesApplied: [STATUSES.NASCENT_CHAOS],
 	},
 
 	NASCENT_FLASH: {
 		id: 16464,
 		name: 'Nascent Flash',
-		icon: 'https://https://xivapi.com/i/002000/002567.png',
+		icon: 'https://xivapi.com/i/002000/002567.png',
 		cooldown: 25,
 		cooldownGroup: 9,
-		statusesApplied: [STATUSES.NASCENT_FLASH],
+		statusesApplied: [STATUSES.NASCENT_FLASH, STATUSES.NASCENT_GLINT],
 	},
 }

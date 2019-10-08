@@ -10,6 +10,7 @@ import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
 import OGCDDowntime from './OGCDDowntime'
+import Statuses from './Statuses'
 
 export default [
 	AoeChecker,
@@ -24,4 +25,5 @@ export default [
 	ThirdEye,
 	Tsubame,
 	OGCDDowntime,
+	Statuses,
 ]
