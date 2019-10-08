@@ -265,39 +265,39 @@ export default class PitchPerfect extends Module {
 
 		// Output is an Accordion made with panels, one for each wrong PP event
 		return <>
-		{ this._lostPotencyFromMissedCast[0] ?
-			<Message attached="top">
-				<Trans id="brd.pitch-perfect.estimate-note">
-					<Label color="orange" size="tiny" pointing="right">NOTE:</Label> We do not have access to how many unused stacks you had at the end of {ACTIONS.THE_WANDERERS_MINUET.name}, these are times you might have had some.
-				</Trans>
-			</Message>: null
-		}
-		<Accordion
-			exclusive={false}
-			panels={panels}
-			styled
-			fluid
-		/>
-		<Message attached="bottom" info>
-			<List bulleted>
-				<List.Content>
-					{this._lostPotencyFromStacks ?
-						<List.Item>
-							<Trans id="brd.pitch-perfect.without-max-stacks.total-potency-lost">
-								<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._formatPotency(this._lostPotencyFromStacks)}</strong> potency
-							</Trans>
-						</List.Item> : null
-					}
-					{ this._lostPotencyFromMissedCast[0] ?
-						<List.Item>
-							<Trans id="brd.pitch-perfect.no-cast-at-end.total-potency-lost">
-								<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._formatPotency(this._lostPotencyFromMissedCast[0])} to {this._formatPotency(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
-							</Trans>
-						</List.Item> : null
-					}
-				</List.Content>
-			</List>
-		</Message>
+			{ this._lostPotencyFromMissedCast[0] ?
+				<Message attached="top">
+					<Trans id="brd.pitch-perfect.estimate-note">
+						<Label color="orange" size="tiny" pointing="right">NOTE:</Label> We do not have access to how many unused stacks you had at the end of {ACTIONS.THE_WANDERERS_MINUET.name}, these are times you might have had some.
+					</Trans>
+				</Message>: null
+			}
+			<Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+			<Message attached="bottom" info>
+				<List bulleted>
+					<List.Content>
+						{this._lostPotencyFromStacks ?
+							<List.Item>
+								<Trans id="brd.pitch-perfect.without-max-stacks.total-potency-lost">
+									<Icon name={'remove'} className={'text-error'}/> Casting without max stacks lost you a total of <strong>{this._formatPotency(this._lostPotencyFromStacks)}</strong> potency
+								</Trans>
+							</List.Item> : null
+						}
+						{ this._lostPotencyFromMissedCast[0] ?
+							<List.Item>
+								<Trans id="brd.pitch-perfect.no-cast-at-end.total-potency-lost">
+									<Icon name={'question'} className={'text-warning'}/> You might have lost between <strong>{this._formatPotency(this._lostPotencyFromMissedCast[0])} to {this._formatPotency(this._lostPotencyFromMissedCast[1])}</strong> potency from missing casts at the end of <ActionLink {...ACTIONS.THE_WANDERERS_MINUET}/>
+								</Trans>
+							</List.Item> : null
+						}
+					</List.Content>
+				</List>
+			</Message>
 		</>
 	}
 
@@ -373,9 +373,9 @@ export default class PitchPerfect extends Module {
 			key: pp.timestamp,
 			title: {
 				content: <>
-			<Icon name={titleIconName} className={titleIconClass}/> {this._createTimelineButton(timestamp)}
-			{titleElement}
-			</>,
+					<Icon name={titleIconName} className={titleIconClass}/> {this._createTimelineButton(timestamp)}
+					{titleElement}
+				</>,
 			},
 			content: {
 				content: <>
