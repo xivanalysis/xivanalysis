@@ -1683,15 +1683,13 @@
     eslint-plugin-react "^7.11.1"
     requireindex "^1.1.0"
 
-"@xivanalysis/tooltips@^0.0.6":
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.6.tgz#93b35a27b84b91e1b5bb985503f6c48f1da356b8"
-  integrity sha512-z8yNL0CGEQAopvkJikoB9n1OAGZjWJG9naoKwkPy7P7W6tPXgzILozbrv5kyJDQ15fvwkvCEddzlmltySYDaaw==
+"@xivanalysis/tooltips@^0.0.7":
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.0.7.tgz#dac79af6249898c25d5af1558c4be3f4bca4a575"
+  integrity sha512-oUwaGy3b77M/l2aHcbsda3iNxzC1RC9JeUg4sVkLWuzCdI3FBtB4nbPoZ5ob5bM7x7mEIEN/9ntJyBUl4+Fz8Q==
   dependencies:
     lodash "^4.17.11"
     prop-types "^15.6.2"
-  optionalDependencies:
-    reactjs-popup "^1.2.0"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -8734,11 +8732,6 @@ react@^16.8.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-
-reactjs-popup@^1.2.0:
-  version "1.3.2"
-  resolved "https://registry.yarnpkg.com/reactjs-popup/-/reactjs-popup-1.3.2.tgz#7f7861443fc5edfb0184da1d01838dbd5db690cd"
-  integrity sha512-BwfaOkKpLHNHxSmiMcX/yc61twJvjGbJ/SBE+fYovJudFlaZDYXGPSp+3dTCE0UoNsEqF8oc/pNkYlGgmrnsrw==
 
 read-pkg-up@^4.0.0:
   version "4.0.0"
