@@ -63,7 +63,7 @@
     "react-chartjs-2": "^2.7.4",
     "react-dom": "^16.8.0",
     "react-helmet": "^5.2.0",
-    "react-markdown": "^3",
+    "react-markdown": "^4",
     "react-router-dom": "^5.0.0",
     "react-visjs-timeline": "^1.6.0",
     "reflect-metadata": "^0.1.12",
