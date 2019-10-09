@@ -121,7 +121,7 @@ class Cycle {
 	}
 	public get missingFire4s(): number | undefined {
 		if (!this.expectedFire4s) { return }
-		return this.expectedFire4s - this.actualFire4s
+		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
 	}
 
 	public get expectedDespairs(): number {
@@ -131,7 +131,7 @@ class Cycle {
 		return this.casts.filter(cast => cast.ability.guid === ACTIONS.DESPAIR.id).length
 	}
 	public get missingDespairs(): number {
-		return this.expectedDespairs - this.actualDespairs
+		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
 	constructor(start: number, gaugeState: GaugeState, isFirst: boolean = false) {
