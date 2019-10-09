@@ -59,8 +59,8 @@ const CYCLE_ERRORS = {
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: 2, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
-	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Rotation didn't include <ActionLink {...ACTIONS.DESPAIR}/></Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
+	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...ACTIONS.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>},
 	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
 	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>}, // These two codes should stay close to each other
