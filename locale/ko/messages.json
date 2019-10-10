@@ -75,7 +75,7 @@
   "ast.sleeve-draw.checklist.name": "묘수를 자주 사용하십시오.",
   "ast.sleeve-draw.checklist.requirement.uses.name": "사용횟수: <0/>",
   "ast.sleeve-draw.title": "묘수",
-  "ast.synastry.suggestion.content": "",
+  "ast.synastry.suggestion.content": "단일 대상에게 글쿨힐을 사용하기 전에 <0/>을 먼저 적용시킨 후 사용하십시오. 글쿨힐을 사용하는것 자체가 손해를 보는것 이기 때문에 궁합을 사용하여 치유량을 최대로 하십시오.",
   "ast.synastry.suggestion.why": "",
   "blm.about.description": "이 분석기는 본인이 생각하는것보다 얼마나 [~action/FIRE_IV] 시전 횟수에 손해를 보고 있는지에 초첨을 맞춥니다.",
   "blm.about.description.warning": "이 직업은 아직 구현되지 않았습니다.",
