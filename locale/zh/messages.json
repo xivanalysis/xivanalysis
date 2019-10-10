@@ -454,7 +454,7 @@
   "mch.wildfire.suggestions.fizzle.why": "你存在 {fizzledWildfires} 次未造成伤害的无效野火。",
   "mch.wildfire.title": "野火",
   "mch.wildfire.trigger.no-buff-wf": "<0/> 伤害是在没有相应的 <1/> Debuff时被记录的。",
-  "mnk.about.description": "",
+  "mnk.about.description": "\n哟，亲爱的武僧！你的连击是不是没暴击？你的斗魂旋风脚是不是永远成谜？\n\n这个武僧分析器应该能帮你找到你真正的潜力，让队里的武士不会再跟你抢装备！\n",
   "mnk.about.description.warning": "<0>本模块还在开发中。</0>可能偶尔会给你带来不良的使用体验。如果你发现了任何问题，或有任何错误反馈，请通过我们的Discord频道联系我们吧！",
   "mnk.aoe.suggestions.aotd.content": "<0/>只有在多于 {AOTD_MIN_TARGETS} 个目标时值得使用。",
   "mnk.aoe.suggestions.aotd.why": "有 {0} 次在目标过少时错误使用<0/>",
