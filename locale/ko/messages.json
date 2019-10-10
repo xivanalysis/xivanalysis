@@ -321,7 +321,7 @@
   "dnc.technicalities.suggestions.late-devilments.content": "<0/>을 <1/>에 맞춰 버프 중첩효과를 최대한 받도록 일찍 사용하십시오. 첫 글쿨기 2회 사이에 맞춰 사용하는것이 알맞습니다.",
   "dnc.technicalities.suggestions.late-devilments.why": "{lateDevilments, plural, other {#회}}의 데빌머트가 늦춰져 사용되었습니다.",
   "dnc.technicalities.suggestions.unpooled.content": "<0/> 구간에 진입하기 전에 페더 스택을 미리 모으면 버프로 강화된 <1/> 사용 횟수를 늘릴 수 있습니다. 버프 구간에 진입하기 전에 3 스택이 준비 되도록 목표하십시오.",
-  "dnc.technicalities.suggestions.unpooled.why": "",
+  "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, other {# 개의 구간}}에서 <0/>를 사용할 기회를 잃었습니다.",
   "dnc.technicalities.title": "테크니컬 구간",
   "drg.about.description": "<0>이 분석기는 여러분이 용기사에 대한 편견을 이겨내고, 바닥에 눕지 않으면서 미터기의 숫자를 높게 올리도록 돕는 것을 목표로 하고 있습니다. 용기사의 딜사이클은 상당히 엄격하기 때문에, 여러분이 보는 제안들은 주로 붉은 용혈과 관련된 문제들을 골라내는 것뿐만 아니라, 그 딜사이클이 원활하게 돌아갈 수 있는 것에 초점이 맞춰져있습니다.</0>",
   "drg.about.description.warning": "<0>이 모듈은 현재 작업중입니다.</0> 현재 용기사 운용의 극히 일부만을 다루고 있으며, 어느 정도 정확한 분석을 제공하고 있지만 시스템이 아직 개발중이기 때문에 조금 혼란스러우실수 있습니다. 만약 문제가 있거나 우려되는 부분이 있다면 저희 디스코드 채널로 오시거나 github에 버그를 신고해주시길 바랍니다.",
