@@ -23,8 +23,8 @@ export class Gauge extends Module {
 
 		// TODO: Work out how to remove this. Probably also the parser, too.
 		if (gauge instanceof TimerGauge) {
-			gauge.setAddTimestampHook(this.addTimestampHook)
-			gauge.setRemoveTimestampHook(this.removeTimestampHook)
+			gauge.setAddTimestampHook(this.addTimestampHook.bind(this))
+			gauge.setRemoveTimestampHook(this.removeTimestampHook.bind(this))
 		}
 
 		this.gauges.push(gauge)
