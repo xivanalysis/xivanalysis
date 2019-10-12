@@ -222,10 +222,10 @@ export default class Sidewinder extends Module {
 		})
 		// Output is a List, where every item is an incorrect cast
 		return <>
-		<List divided relaxed>
-			{items}
-		</List>
-		<Message info attached="bottom"><Trans id="brd.sidewinder.total-mistakes"><Plural value={this._badCasts.length} one="# mistake" other="# mistakes"/> lost a total of <strong>{this._formatDamageNumber(totalPotencyLost)}</strong> potency</Trans></Message>
+			<List divided relaxed>
+				{items}
+			</List>
+			<Message info attached="bottom"><Trans id="brd.sidewinder.total-mistakes"><Plural value={this._badCasts.length} one="# mistake" other="# mistakes"/> lost a total of <strong>{this._formatDamageNumber(totalPotencyLost)}</strong> potency</Trans></Message>
 		</>
 	}
 

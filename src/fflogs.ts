@@ -275,7 +275,14 @@ export interface ReportEventsQuery {
 	translate?: boolean,
 }
 
-export interface ReportEventsResponse {
+interface CorrectReportEventsResponse {
 	events: Event[]
 	nextPageTimestamp?: number
 }
+
+// Yes, really.
+type MalformedReportEventsResponse = ''
+
+export type ReportEventsResponse =
+	| CorrectReportEventsResponse
+	| MalformedReportEventsResponse

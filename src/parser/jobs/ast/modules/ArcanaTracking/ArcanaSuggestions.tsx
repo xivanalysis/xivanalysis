@@ -67,7 +67,7 @@ export default class ArcanaSuggestions extends Module {
 		}
 
 		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
-			const target = artifact.lastEvent.targetID !== this.parser.player.id ? this.combatants.getEntity(artifact.lastEvent.targetID) : null
+			const target = artifact.lastEvent.targetID !== this.parser.player.id ? this.combatants.getEntity(artifact.lastEvent.targetID) : this.combatants.selected
 
 			const cardLog: CardLog = {
 				...artifact,

@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
-import vis from 'vis/dist/vis-timeline-graph2d.min'
+import vis from 'vis-timeline/dist/vis-timeline-graph2d.min'
 
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'

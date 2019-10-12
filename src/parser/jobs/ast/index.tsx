@@ -45,6 +45,20 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2019-10-08'),
+			Changes: () => <>
+				Fixed bug where the target of the card wouldn't display if that target was yourself.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
+			date: new Date('2019-09-25'),
+			Changes: () => <>
+				<ActionLink {...ACTIONS.SYNASTRY} /> now triggers a minor suggestion for single-target heals without it despite it being available.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 
 			date: new Date('2019-09-01'),
 			Changes: () => <>

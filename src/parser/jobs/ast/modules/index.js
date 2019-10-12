@@ -14,6 +14,7 @@ import Draw from './Draw'
 import CelestialOpposition from './CelestialOpposition'
 import DivinationDowntime from './DivinationDowntime'
 import Statuses from './Statuses'
+import Synastry from './Synastry'
 
 export default [
 	Cooldowns,
@@ -32,4 +33,5 @@ export default [
 	DivinationDowntime,
 	CelestialOpposition,
 	Statuses,
+	Synastry,
 ]
