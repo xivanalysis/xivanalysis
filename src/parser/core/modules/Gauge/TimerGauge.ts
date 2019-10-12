@@ -15,7 +15,7 @@ interface State {
 }
 
 export interface TimerGaugeOptions extends AbstractGaugeOptions {
-	/** Maxiumum duration of the gauge. */
+	/** Maxiumum duration of the gauge, in milliseconds. */
 	maximum: number
 
 	/** Callback executed when the timer expires. */
@@ -48,6 +48,11 @@ export class TimerGauge extends AbstractGauge {
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
 
+	/** Whether the gauge has expired. */
+	get expired() {
+		return this.remaining <= this.minimum
+	}
+
 	constructor(opts: TimerGaugeOptions) {
 		super(opts)
 
@@ -60,13 +65,32 @@ export class TimerGauge extends AbstractGauge {
 		this.set(this.minimum)
 	}
 
-	/** Refresh the gauge to its maximum value. */
-	refresh() {
+	/**
+	 * Start the timer from its maximum value
+	 */
+	start() {
 		this.set(this.maximum)
 	}
 
-	/** Add time to the gauge. Time over the maxium will be lost. */
-	add(duration: number) {
+	/**
+	 * Refresh the gauge to its maximum value.
+	 * If the gauge has expired, this will have no effect.
+	 */
+	refresh() {
+		if (this.expired) {
+			return
+		}
+		this.start()
+	}
+
+	/**
+	 * Add time to the gauge. Time over the maxium will be lost.
+	 * If the gauge has edxpired, this will have no effect.
+	 */
+	extend(duration: number) {
+		if (this.expired) {
+			return
+		}
 		this.set(this.remaining + duration)
 	}
 
