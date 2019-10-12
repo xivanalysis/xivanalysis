@@ -12,6 +12,7 @@ function expectExist<T>(value?: T) {
 interface State {
 	timestamp: number
 	remaining: number
+	paused: boolean
 }
 
 export interface TimerGaugeOptions extends AbstractGaugeOptions {
@@ -44,6 +45,11 @@ export class TimerGauge extends AbstractGauge {
 			return this.minimum
 		}
 
+		// If we're paused, the time remaining always === specified state remaining
+		if (this.lastKnownState.paused) {
+			return this.lastKnownState.remaining
+		}
+
 		const delta = this.parser.currentTimestamp - this.lastKnownState.timestamp
 		return Math.max(this.minimum, this.lastKnownState.remaining - delta)
 	}
@@ -51,6 +57,16 @@ export class TimerGauge extends AbstractGauge {
 	/** Whether the gauge has expired. */
 	get expired() {
 		return this.remaining <= this.minimum
+	}
+
+	/** Whether the gauge is currently paused. */
+	get paused() {
+		// If there's no state, we're neither paused nor running - but safer to assume running.
+		if (!this.lastKnownState) {
+			return false
+		}
+
+		return this.lastKnownState.paused
 	}
 
 	constructor(opts: TimerGaugeOptions) {
@@ -94,14 +110,25 @@ export class TimerGauge extends AbstractGauge {
 		this.set(this.remaining + duration)
 	}
 
+	/** Pause the timer at its current state. */
+	pause() {
+		this.set(this.remaining, true)
+	}
+
+	/** Resume the timer from its paused state. */
+	resume() {
+		this.set(this.remaining, false)
+	}
+
 	/** Set the time remaining on the timer to the given duration. Value will be bounded by provided maximum. */
-	set(duration: number) {
+	set(duration: number, paused: boolean = false) {
 		const timestamp = this.parser.currentTimestamp
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
 		this.lastKnownState = {
 			timestamp,
 			remaining,
+			paused,
 		}
 
 		// Remove any existing hook
@@ -109,8 +136,8 @@ export class TimerGauge extends AbstractGauge {
 			this.removeTimestampHook(this.hook)
 		}
 
-		// If we've not yet expired, set up a hook to wait for that
-		if (remaining > 0) {
+		// If we've not yet expired, and we're not paused, set up a hook to wait for that
+		if (!paused && remaining > 0) {
 			this.hook = this.addTimestampHook(timestamp + remaining, this.onExpiration)
 		}
 	}
