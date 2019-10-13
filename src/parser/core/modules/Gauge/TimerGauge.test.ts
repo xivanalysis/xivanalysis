@@ -20,6 +20,9 @@ describe('TimerGauge', () => {
 		Object.defineProperty(parser, 'currentTimestamp', {
 			get: () => currentTimestamp,
 		})
+		Object.defineProperty(parser, 'fight', {
+			get: () => ({start_time: 0}),
+		})
 
 		addTimestampHook = jest.fn().mockImplementation(() => {
 			const hook = {timestamp: currentTimestamp}
@@ -31,6 +34,7 @@ describe('TimerGauge', () => {
 		gauge = new TimerGauge({
 			maximum: 100,
 			parser,
+			chart: {label: 'test'},
 		})
 		gauge.setAddTimestampHook(addTimestampHook)
 		gauge.setRemoveTimestampHook(removeTimestampHook)
@@ -78,5 +82,28 @@ describe('TimerGauge', () => {
 		gauge.resume()
 		currentTimestamp += 25
 		expect(gauge.remaining).toBe(25)
+	})
+
+	it('generates chart data', () => {
+		// Window with no extension
+		gauge.set(100)
+		currentTimestamp += 200
+
+		// Window with extension
+		gauge.set(100)
+		currentTimestamp += 50
+		gauge.extend(50)
+		currentTimestamp += 50
+		gauge.extend(20)
+		currentTimestamp += 100
+
+		// Window with pausing
+		gauge.set(100)
+		currentTimestamp += 50
+		gauge.pause()
+		currentTimestamp += 50
+		gauge.resume()
+
+		expect(gauge.generateDataset()).toMatchSnapshot()
 	})
 })
