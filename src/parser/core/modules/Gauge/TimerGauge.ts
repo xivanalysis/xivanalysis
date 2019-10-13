@@ -1,3 +1,5 @@
+import {ChartDataSets, ChartPoint} from 'chart.js'
+import Color from 'color'
 import Module, {TimestampHook} from 'parser/core/Module'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
@@ -21,6 +23,18 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 
 	/** Callback executed when the timer expires. */
 	onExpiration?: () => void
+
+	/** Chart options. Omit to disable charting for this gauge. */
+	chart?: TimerChartOptions,
+}
+
+// TODO: Some of this will be shared config with counter, etc. - look into sharing?
+export interface TimerChartOptions {
+	/** Label to display on the data set. */
+	label: string
+
+	/** Colour to draw the data set in. Defaults to grey. */
+	color?: string | Color
 }
 
 export class TimerGauge extends AbstractGauge {
@@ -28,6 +42,7 @@ export class TimerGauge extends AbstractGauge {
 	private readonly minimum = 0
 	private readonly maximum: number
 	private readonly expirationCallback?: () => void
+	private readonly chartOptions?: TimerChartOptions
 
 	private hook?: TimestampHook
 	private history: State[] = []
@@ -84,6 +99,7 @@ export class TimerGauge extends AbstractGauge {
 
 		this.maximum = opts.maximum
 		this.expirationCallback = opts.onExpiration
+		this.chartOptions = opts.chart
 	}
 
 	/** @inheritdoc */
@@ -157,6 +173,69 @@ export class TimerGauge extends AbstractGauge {
 		if (this.expirationCallback) {
 			this.expirationCallback()
 		}
+	}
+
+	/** @inheritdoc */
+	generateDataset() {
+		// Skip charting if they've not enabled it
+		if (!this.chartOptions) {
+			return
+		}
+
+		// Translate state history into a dataset that makes sense for the chart
+		const startTime = this.parser.fight.start_time
+		const data: Array<{t: number, y?: number}> = []
+		this.history.forEach(entry => {
+			const relativeTimestamp = entry.timestamp - startTime
+
+			// Adjust preceeding data for the start of this state's window
+			const {length} = data
+			if (length > 0 && relativeTimestamp < data[length - 1].t) {
+				// If we're updating prior to the previous entry's expiration, update the previous entry
+				// with its state at this point in time - we'll end up with two points showing the update on
+				// this timestamp.
+				const prev = data[length - 1]
+				prev.y = (prev.y || this.minimum / 1000) + ((prev.t - relativeTimestamp) / 1000)
+				prev.t = relativeTimestamp
+
+			} else {
+				// This window is starting fresh, not extending - insert a blank entry so the chart doesn't
+				// render a line from the previous.
+				data.push({t: relativeTimestamp})
+			}
+
+			// Insert the data point for the start of this window
+			data.push({
+				t: relativeTimestamp,
+				y: (this.minimum + entry.remaining) / 1000,
+			})
+
+			// If the state isn't paused, insert a data point for the time it will expire.
+			// This data point will be updated in the event of an extension.
+			if (!entry.paused && entry.remaining > 0) {
+				data.push({
+					t: relativeTimestamp + entry.remaining,
+					y: this.minimum / 1000,
+				})
+			}
+		})
+
+		const {label, color} = this.chartOptions
+		const dataSet: ChartDataSets = {
+			label,
+			data,
+			lineTension: 0,
+		}
+
+		if (color) {
+			/* tslint:disable:no-magic-numbers */
+			const chartColor = Color(color)
+			dataSet.backgroundColor = chartColor.fade(0.8).toString()
+			dataSet.borderColor = chartColor.fade(0.5).toString()
+			/* tslint:enable:no-magic-numbers */
+		}
+
+		return dataSet
 	}
 
 	// Junk I wish I didn't need
