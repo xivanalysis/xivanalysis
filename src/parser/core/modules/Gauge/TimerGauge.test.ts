@@ -64,4 +64,19 @@ describe('TimerGauge', () => {
 		expect(addTimestampHook).toHaveBeenCalledTimes(2)
 		expect(addTimestampHook.mock.calls[1][0]).toBe(250)
 	})
+
+	it('pauses and resumes', () => {
+		gauge.set(100)
+
+		currentTimestamp += 50
+		expect(gauge.remaining).toBe(50)
+
+		gauge.pause()
+		currentTimestamp += 200
+		expect(gauge.remaining).toBe(50)
+
+		gauge.resume()
+		currentTimestamp += 25
+		expect(gauge.remaining).toBe(25)
+	})
 })

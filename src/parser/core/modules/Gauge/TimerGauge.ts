@@ -26,9 +26,10 @@ export interface TimerGaugeOptions extends AbstractGaugeOptions {
 export class TimerGauge extends AbstractGauge {
 	// Just in case I ever have to change it lmao
 	private readonly minimum = 0
-	private maximum: number
+	private readonly maximum: number
+	private readonly expirationCallback?: () => void
+
 	private lastKnownState?: State
-	private expirationCallback?: () => void
 	private hook?: TimestampHook
 
 	// TODO: Work out how to remove this reliance on having it passed down
