@@ -204,11 +204,14 @@ export class TimerGauge extends AbstractGauge {
 				data.push({t: relativeTimestamp})
 			}
 
-			// Insert the data point for the start of this window
-			data.push({
-				t: relativeTimestamp,
-				y: (this.minimum + entry.remaining) / 1000,
-			})
+			// Insert the data point for the start of this window.
+			// Skip for pauses, as the updated previous point will represent the start point of the pause
+			if (!entry.paused) {
+				data.push({
+					t: relativeTimestamp,
+					y: (this.minimum + entry.remaining) / 1000,
+				})
+			}
 
 			// If the state isn't paused, insert a data point for the time it will expire.
 			// This data point will be updated in the event of an extension.
