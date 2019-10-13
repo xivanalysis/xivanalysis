@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
 import VisTimeline from 'react-visjs-timeline'
-import vis from 'vis/dist/vis-timeline-graph2d.min'
+import vis from 'vis-timeline/dist/vis-timeline-graph2d.min'
 
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
@@ -45,13 +45,22 @@ export default class Timeline extends Module {
 		this._items.push(item)
 	}
 
+	attachToGroup(id, group) {
+		const parent = this._groups.find(it => it.id === id)
+		if (parent) {
+			this.addGroup(group)
+			parent.nestedGroups = parent.nestedGroups || []
+			parent.nestedGroups.push(group.id)
+		}
+	}
+
 	/**
 	 * Move & zoom the viewport to show the specified range
 	 * @param {number} start - Timestamp of the start of the range
 	 * @param {number} end - Timestamp of the end of the range
 	 * @param {boolean} [scrollTo=true] - If true, the page will scroll to reveal the timeline on call.
 	 */
-	show(start, end, scrollTo=true) {
+	show(start, end, scrollTo = true) {
 		// Grab the vis instance. This is a bit hacky but so is vis so /shrug
 		const vis = this._ref.current.$el
 		vis.setWindow(start, end)

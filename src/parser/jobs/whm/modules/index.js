@@ -1,6 +1,6 @@
 import DoTs from './DoTs'
 import Lilies from './Lilies'
-import OGCDs from './OGCDs'
+import oGCDs from './oGCDs'
 import Overheal from './Overheal'
 import Speedmod from './Speedmod'
 import Swiftcast from './Swiftcast'
@@ -8,7 +8,7 @@ import Swiftcast from './Swiftcast'
 export default [
 	DoTs,
 	Lilies,
-	OGCDs,
+	oGCDs,
 	Overheal,
 	Speedmod,
 	Swiftcast,

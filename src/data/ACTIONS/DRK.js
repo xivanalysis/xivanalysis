@@ -32,7 +32,7 @@ export default {
 		name: 'Living Dead',
 		icon: 'https://xivapi.com/i/003000/003077.png',
 		cooldown: 300,
-		statusesApplied: [STATUSES.LIVING_DEAD],
+		statusesApplied: [STATUSES.LIVING_DEAD, STATUSES.WALKING_DEAD],
 	},
 	// Party Defensive
 	DARK_MISSIONARY: {
@@ -40,6 +40,7 @@ export default {
 		name: 'Dark Missionary',
 		icon: 'https://xivapi.com/i/003000/003087.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.DARK_MISSIONARY],
 	},
 	// Resource Buffs
 	BLOOD_WEAPON: {

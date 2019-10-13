@@ -103,7 +103,7 @@ export default {
 	},
 
 	ASPECTED_HELIOS: {
-		id: 3601,
+		id: 17152,
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
@@ -112,7 +112,7 @@ export default {
 	},
 
 	ASPECTED_BENEFIC: {
-		id: 3595,
+		id: 17151,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,

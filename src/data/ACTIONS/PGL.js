@@ -35,6 +35,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		potency: 170,
+		statusesApplied: [STATUSES.TWIN_SNAKES],
 	},
 
 	ARM_OF_THE_DESTROYER: {
@@ -49,6 +50,7 @@ export default {
 		name: 'Demolish',
 		icon: 'https://xivapi.com/i/000000/000204.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.DEMOLISH],
 	},
 
 	// -----

@@ -4,6 +4,7 @@ import Fists from './Fists'
 import Forms from './Forms'
 import MnkAoE from './MnkAoE'
 import OGCDDowntime from './OGCDDowntime'
+import PerfectBalance from './PerfectBalance'
 import RiddleOfEarth from './RiddleOfEarth'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
@@ -18,8 +19,9 @@ export default [
 	Forms,
 	MnkAoE,
 	OGCDDowntime,
-	RiddleOfFire,
+	PerfectBalance,
 	RiddleOfEarth,
+	RiddleOfFire,
 	Speedmod,
 	Steppies,
 	TwinSnakes,

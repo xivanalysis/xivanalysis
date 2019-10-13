@@ -237,7 +237,7 @@ export default {
 		name: 'Improvisation',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.IMPROVISATION],
+		statusesApplied: [STATUSES.IMPROVISATION, STATUSES.IMPROVISATION_HEALING],
 	},
 	CURING_WALTZ: {
 		id: 16015,
