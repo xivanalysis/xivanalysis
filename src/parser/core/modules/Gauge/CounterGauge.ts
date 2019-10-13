@@ -21,7 +21,7 @@ export interface CounterGaugeOptions extends AbstractGaugeOptions {
 }
 
 export interface CounterChartOptions {
-	/** Label to display on the data set */
+	/** Label to display on the data set. */
 	label: string
 	/** Color to draw the data set in. Defaults to grey. */
 	color?: string | Color

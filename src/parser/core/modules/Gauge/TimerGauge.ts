@@ -29,8 +29,8 @@ export class TimerGauge extends AbstractGauge {
 	private readonly maximum: number
 	private readonly expirationCallback?: () => void
 
-	private lastKnownState?: State
 	private hook?: TimestampHook
+	private history: State[] = []
 
 	// TODO: Work out how to remove this reliance on having it passed down
 	private _addTimestampHook?: Module['addTimestampHook']
@@ -38,6 +38,15 @@ export class TimerGauge extends AbstractGauge {
 
 	private _removeTimestampHook?: Module['removeTimestampHook']
 	private get removeTimestampHook() { return expectExist(this._removeTimestampHook) }
+
+	/** The most recent state  */
+	private get lastKnownState() {
+		const {length} = this.history
+		if (length === 0) {
+			return
+		}
+		return this.history[length - 1]
+	}
 
 	/** Time currently remaining on the timer. */
 	get remaining() {
@@ -126,11 +135,12 @@ export class TimerGauge extends AbstractGauge {
 		const timestamp = this.parser.currentTimestamp
 		const remaining = Math.max(this.minimum, Math.min(duration, this.maximum))
 
-		this.lastKnownState = {
+		// Push a new state onto the history
+		this.history.push({
 			timestamp,
 			remaining,
 			paused,
-		}
+		})
 
 		// Remove any existing hook
 		if (this.hook) {
