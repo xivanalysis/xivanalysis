@@ -184,6 +184,7 @@ export class TimerGauge extends AbstractGauge {
 
 		// Translate state history into a dataset that makes sense for the chart
 		const startTime = this.parser.fight.start_time
+		const endTime = this.parser.fight.end_time
 		const data: Array<{t: number, y?: number}> = []
 		this.history.forEach(entry => {
 			const relativeTimestamp = entry.timestamp - startTime
@@ -206,19 +207,22 @@ export class TimerGauge extends AbstractGauge {
 
 			// Insert the data point for the start of this window.
 			// Skip for pauses, as the updated previous point will represent the start point of the pause
+			const chartY = (this.minimum + entry.remaining) / 1000
 			if (!entry.paused) {
 				data.push({
 					t: relativeTimestamp,
-					y: (this.minimum + entry.remaining) / 1000,
+					y: chartY,
 				})
 			}
 
 			// If the state isn't paused, insert a data point for the time it will expire.
 			// This data point will be updated in the event of an extension.
 			if (!entry.paused && entry.remaining > 0) {
+				const time = Math.min(relativeTimestamp + entry.remaining, endTime - startTime)
+				const timeDelta = time - relativeTimestamp
 				data.push({
-					t: relativeTimestamp + entry.remaining,
-					y: this.minimum / 1000,
+					t: time,
+					y: (this.minimum + entry.remaining - timeDelta) / 1000,
 				})
 			}
 		})
