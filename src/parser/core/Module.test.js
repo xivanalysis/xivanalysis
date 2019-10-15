@@ -2,10 +2,13 @@ import Module from './Module'
 import Parser from './Parser'
 import {Meta} from './Meta'
 
+/* eslint-disable no-magic-numbers */
+
 class TestModule extends Module {
 	static handle = 'test'
 }
 
+let parser
 let module
 let hook
 
@@ -25,6 +28,7 @@ const report = {
 }
 const fight = {
 	start_time: 0,
+	end_time: 100,
 }
 
 const event = {
@@ -34,10 +38,13 @@ const event = {
 }
 
 describe('Module', () => {
-	beforeEach(() => {
-		const meta = new Meta({modules: () => Promise.resolve([])})
-		const parser = new Parser({meta, report, fight, actor: player})
-		module = new TestModule(parser)
+	beforeEach(async () => {
+		const meta = new Meta({
+			modules: () => Promise.resolve({default: [TestModule]}),
+		})
+		parser = new Parser({meta, report, fight, actor: player})
+		await parser.configure()
+		module = parser.modules.test
 
 		hook = jest.fn()
 	})
@@ -55,7 +62,7 @@ describe('Module', () => {
 	})
 
 	it('can hook all events', () => {
-		module.addHook('all', hook)
+		module.addEventHook('all', hook)
 		module.triggerEvent(event)
 		expect(hook)
 			.toHaveBeenCalledTimes(1)
@@ -63,19 +70,19 @@ describe('Module', () => {
 	})
 
 	it('can hook a single event type', () => {
-		module.addHook(event.type, hook)
+		module.addEventHook(event.type, hook)
 		module.triggerEvent(event)
 		expect(hook).toHaveBeenCalledTimes(1)
 	})
 
 	it('can hook multiple event types', () => {
-		module.addHook([event.type, '__unused'], hook)
+		module.addEventHook([event.type, '__unused'], hook)
 		module.triggerEvent(event)
 		expect(hook).toHaveBeenCalledTimes(1)
 	})
 
 	it('does not trigger non-matching hooks', () => {
-		module.addHook('__unused', hook)
+		module.addEventHook('__unused', hook)
 		module.triggerEvent(event)
 		expect(hook).not.toHaveBeenCalled()
 	})
@@ -83,16 +90,16 @@ describe('Module', () => {
 	it('does not trigger \'all\' hooks on symbols', () => {
 		const type = Symbol('test')
 		const symbolEvent = {...event, type}
-		module.addHook('all', hook)
-		module.addHook(type, hook)
+		module.addEventHook('all', hook)
+		module.addEventHook(type, hook)
 		module.triggerEvent(symbolEvent)
 		expect(hook).toHaveBeenCalledTimes(1)
 	})
 
 	it('can filter by event keys', () => {
-		module.addHook(event.type, hook)
-		module.addHook(event.type, {filterKey: event.filterKey}, hook)
-		module.addHook(event.type, {filterKey: 'incorrect'}, hook)
+		module.addEventHook(event.type, hook)
+		module.addEventHook(event.type, {filterKey: event.filterKey}, hook)
+		module.addEventHook(event.type, {filterKey: 'incorrect'}, hook)
 		module.triggerEvent(event)
 		expect(hook).toHaveBeenCalledTimes(2)
 	})
@@ -100,31 +107,69 @@ describe('Module', () => {
 	describe('QoL filter helpers', () => {
 		it('player', () => {
 			const playerEvent = {...event, sourceID: player.id}
-			module.addHook(playerEvent.type, {by: 'player'}, hook)
+			module.addEventHook(playerEvent.type, {by: 'player'}, hook)
 			module.triggerEvent(playerEvent)
 			expect(hook).toHaveBeenCalledTimes(1)
 		})
 
 		it('pet', () => {
 			const petEvent = {...event, targetID: pet.id}
-			module.addHook(petEvent.type, {to: 'pet'}, hook)
+			module.addEventHook(petEvent.type, {to: 'pet'}, hook)
 			module.triggerEvent(petEvent)
 			expect(hook).toHaveBeenCalledTimes(1)
 		})
 
 		it('abilityId', () => {
 			const abilityEvent = {...event, ability: {guid: 1}}
-			module.addHook(abilityEvent.type, {abilityId: abilityEvent.ability.guid}, hook)
+			module.addEventHook(abilityEvent.type, {abilityId: abilityEvent.ability.guid}, hook)
 			module.triggerEvent(abilityEvent)
 			expect(hook).toHaveBeenCalledTimes(1)
 		})
 	})
 
-	it('can remove hooks', () => {
-		const hookRef = module.addHook(event.type, hook)
+	it('can remove event hooks', () => {
+		const hookRef = module.addEventHook(event.type, hook)
 		module.triggerEvent(event)
-		module.removeHook(hookRef)
+		module.removeEventHook(hookRef)
 		module.triggerEvent(event)
 		expect(hook).toHaveBeenCalledTimes(1)
+	})
+
+	it('can hook a timestamp', () => {
+		module.addTimestampHook(50, hook)
+
+		module.triggerEvent({...event, timestamp: 1})
+		expect(hook).not.toHaveBeenCalled()
+
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook).toHaveBeenCalledTimes(1)
+	})
+
+	it('will catch up on multiple timestamp hooks in a single event', () => {
+		module.addTimestampHook(40, hook)
+		module.addTimestampHook(50, hook)
+		module.addTimestampHook(60, hook)
+
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook)
+			.toHaveBeenCalledTimes(3)
+			.toHaveBeenNthCalledWith(3, {timestamp: 60})
+	})
+
+	it('can remove timestamp hooks', () => {
+		const hookRef = module.addTimestampHook(50, hook)
+		module.removeTimestampHook(hookRef)
+		module.triggerEvent({...event, timestamp: 100})
+		expect(hook).not.toHaveBeenCalled()
+	})
+
+	it('reports the correct timestamp while executing timestamp hooks', () => {
+		let hookTimestamp = -1
+		const testHook = () => hookTimestamp = parser.currentTimestamp
+		module.addTimestampHook(50, testHook)
+
+		parser.parseEvents([{...event, timestamp: 100}])
+
+		expect(hookTimestamp).toBe(50)
 	})
 })
