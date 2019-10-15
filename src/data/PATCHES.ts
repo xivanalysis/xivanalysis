@@ -152,12 +152,14 @@ const PATCHES = {
 		date: {
 			[GameEdition.GLOBAL]: 1546857979,
 			[GameEdition.KOREAN]: 1560844800,
+			[GameEdition.CHINESE]: 1559030400,
 		},
 	},
 	'Shadowbringers': {
 		date: {
 			[GameEdition.GLOBAL]: 1561712400, // 28/06/19 09:00:00 GMT
 			[GameEdition.KOREAN]: 1575360000, // 03/12/19 08:00:00 GMT
+			[GameEdition.CHINESE]: 1571126400, // 15/10/19 08:00:00 GMT
 		},
 		branch: {
 			baseUrl: 'https://xivanalysis.com',
