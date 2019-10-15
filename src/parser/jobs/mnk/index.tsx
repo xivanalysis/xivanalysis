@@ -38,6 +38,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2019-10-15'),
+			Changes: () => <>
+				Added a new module to handle Riddle of Earth usage.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
 			date: new Date('2019-09-08'),
 			Changes: () => <>
 				Added support for Perfect Balance windows.
