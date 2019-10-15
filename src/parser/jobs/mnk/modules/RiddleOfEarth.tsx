@@ -11,7 +11,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 class Riddle {
-	active: boolean = false
 	clean: boolean = false
 	start: number
 	end?: number
@@ -22,7 +21,7 @@ class Riddle {
 }
 
 export default class RiddleOfEarth extends Module {
-	static handle = 'riddleofearth'
+	static handle = 'riddleOfEarth'
 
 	@dependency private suggestions!: Suggestions
 
@@ -39,11 +38,10 @@ export default class RiddleOfEarth extends Module {
 
 	private onGain(event: BuffEvent): void {
 		this.riddle = new Riddle(event.timestamp)
-		this.riddle.active = true
 	}
 
 	private onReply(event: BuffEvent): void {
-		if (this.riddle && this.riddle.active) {
+		if (this.riddle) {
 			this.riddle.clean = true
 		}
 	}
@@ -54,7 +52,7 @@ export default class RiddleOfEarth extends Module {
 
 	private onComplete(): void {
 		// Close up rushed RoE
-		if (this.riddle && this.riddle.active) {
+		if (this.riddle) {
 			this.stopAndSave()
 		}
 
@@ -77,8 +75,9 @@ export default class RiddleOfEarth extends Module {
 	}
 
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
-		if (this.riddle && this.riddle.active) {
-			this.history.push({...this.riddle, active: false, end: endTime})
+		if (this.riddle) {
+			this.history.push({...this.riddle, end: endTime})
+			this.riddle = undefined
 		}
 	}
 }
