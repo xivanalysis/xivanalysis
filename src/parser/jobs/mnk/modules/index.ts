@@ -7,7 +7,6 @@ import OGCDDowntime from './OGCDDowntime'
 import PerfectBalance from './PerfectBalance'
 import RiddleOfEarth from './RiddleOfEarth'
 import RiddleOfFire from './RiddleOfFire'
-import Speedmod from './Speedmod'
 import Steppies from './Steppies'
 import TwinSnakes from './TwinSnakes'
 import Weaving from './Weaving'
@@ -22,7 +21,6 @@ export default [
 	PerfectBalance,
 	RiddleOfEarth,
 	RiddleOfFire,
-	Speedmod,
 	Steppies,
 	TwinSnakes,
 	Weaving,
