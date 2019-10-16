@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 // Split between PGL and MNK
 export default {
 	// -----
@@ -33,6 +35,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		potency: 170,
+		statusesApplied: [STATUSES.TWIN_SNAKES],
 	},
 
 	ARM_OF_THE_DESTROYER: {
@@ -47,6 +50,7 @@ export default {
 		name: 'Demolish',
 		icon: 'https://xivapi.com/i/000000/000204.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.DEMOLISH],
 	},
 
 	// -----
@@ -72,6 +76,7 @@ export default {
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.MANTRA],
 	},
 
 	PERFECT_BALANCE: {
@@ -79,5 +84,6 @@ export default {
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.PERFECT_BALANCE],
 	},
 }

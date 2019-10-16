@@ -18,10 +18,10 @@ export default new Meta({
 				<Trans id="rdm.about.description.warning">Openers are currently not supported at this time.</Trans>
 			</Message.Content>
 		</Message>
-</>,
+	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},

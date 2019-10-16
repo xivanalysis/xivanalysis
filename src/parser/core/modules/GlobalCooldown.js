@@ -46,6 +46,7 @@ export default class GlobalCooldown extends Module {
 		event: null,
 	}
 	gcds = []
+	gcdGroupId  = 'gcd'
 
 	constructor(...args) {
 		super(...args)
@@ -113,8 +114,9 @@ export default class GlobalCooldown extends Module {
 
 		// Timeline output
 		// TODO: Look into adding items to groups? Maybe?
+
 		this.timeline.addGroup(new Group({
-			id: 'gcd',
+			id: this.gcdGroupId,
 			content: 'GCD',
 			order: -99,
 		}))
@@ -126,8 +128,9 @@ export default class GlobalCooldown extends Module {
 				type: 'background',
 				start: gcd.timestamp - startTime,
 				length: this._getGcdLength(gcd),
-				group: 'gcd',
-				content: <img src={action.icon} alt={action.name}/>,
+				title: action.name,
+				group: this.gcdGroupId,
+				content: <img src={action.icon} alt={action.name} title={action.name}/>,
 			}))
 		})
 
@@ -180,7 +183,7 @@ export default class GlobalCooldown extends Module {
 			? action.gcdRecast
 			: action.cooldown
 
-		const normaliseWith = gcdInfo.isInstant
+		const normaliseWith = gcdInfo.isInstant || castTime < correctedCooldown
 			? correctedCooldown
 			: castTime
 

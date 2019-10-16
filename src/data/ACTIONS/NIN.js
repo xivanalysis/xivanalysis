@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -11,7 +13,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 390,
+			potency: 440,
 			end: true,
 		},
 	},
@@ -151,6 +153,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002906.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.KASSATSU],
 	},
 
 	DREAM_WITHIN_A_DREAM: {
@@ -159,6 +162,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.ASSASSINATE_READY],
 	},
 
 	HELLFROG_MEDIUM: {
@@ -183,6 +187,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
 		cooldown: 100,
+		statusesApplied: [STATUSES.TEN_CHI_JIN],
 	},
 
 	SHUKUCHI: {
@@ -207,5 +212,6 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
 		cooldown: 110,
+		statusesApplied: [STATUSES.BUNSHIN],
 	},
 }

@@ -59,12 +59,17 @@ type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
 	by: 'player' | 'pet' | T['sourceID'],
 }>
 
-type HookCallback<T extends Event> = (event: T) => void
-
-export interface Hook<T extends Event> {
+type EventHookCallback<T extends Event> = (event: T) => void
+export interface EventHook<T extends Event> {
 	events: Array<T['type']>
 	filter: Filter<T>
-	callback: HookCallback<T>
+	callback: EventHookCallback<T>
+}
+
+type TimestampHookCallback = (opts: {timestamp: number}) => void
+export interface TimestampHook {
+	timestamp: number
+	callback: TimestampHookCallback
 }
 
 export default class Module {
@@ -99,7 +104,10 @@ export default class Module {
 	}
 
 	// Bite me.
-	private _hooks = new Map<Event['type'], Set<Hook<any>>>()
+	private _eventHooks = new Map<Event['type'], Set<EventHook<any>>>()
+
+	// Stored nearest-last so we can use the significantly-faster pop
+	private _timestampHookQueue: TimestampHook[] = []
 
 	constructor(
 		protected readonly parser: Parser,
@@ -145,20 +153,27 @@ export default class Module {
 		return
 	}
 
-	protected addHook<T extends Event>(
+	/**
+	 * Deprecated pass-through for `addEventHook`, maintained for backwards compatibility.
+	 * @deprecated
+	 */
+	// tslint:disable-next-line:member-ordering
+	protected readonly addHook = this.addEventHook
+
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		cb: HookCallback<T>,
-	): Hook<T>
-	protected addHook<T extends Event>(
+		cb: EventHookCallback<T>,
+	): EventHook<T>
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
 		filter: Filter<T>,
-		cb: HookCallback<T>,
-	): Hook<T>
-	protected addHook<T extends Event>(
+		cb: EventHookCallback<T>,
+	): EventHook<T>
+	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		filterArg: Filter<T> | HookCallback<T>,
-		cbArg?: HookCallback<T>,
-	): Hook<T> | undefined {
+		filterArg: Filter<T> | EventHookCallback<T>,
+		cbArg?: EventHookCallback<T>,
+	): EventHook<T> | undefined {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		const cb = typeof filterArg === 'function'? filterArg : cbArg
@@ -193,12 +208,12 @@ export default class Module {
 
 		// Hook for each of the events
 		events.forEach(event => {
-			let hooks = this._hooks.get(event)
+			let hooks = this._eventHooks.get(event)
 
 			// Make sure the map has a key for us
 			if (!hooks) {
 				hooks = new Set()
-				this._hooks.set(event, hooks)
+				this._eventHooks.set(event, hooks)
 			}
 
 			// Set the hook
@@ -235,24 +250,72 @@ export default class Module {
 		return filter
 	}
 
-	// TODO: Test
-	protected removeHook(hook: Hook<any>) {
+	/**
+	 * Deprecated pass-through for `removeEventHook`, maintained for backwards compatibility.
+	 * @deprecated
+	 */
+	// tslint:disable-next-line:member-ordering
+	protected readonly removeHook = this.removeEventHook
+
+	/** Remove a previously added event hook. */
+	protected removeEventHook(hook: EventHook<any>) {
 		hook.events.forEach(event => {
-			const hooks = this._hooks.get(event)
+			const hooks = this._eventHooks.get(event)
 			if (!hooks) { return }
 			hooks.delete(hook)
 		})
 	}
 
-	triggerEvent(event: Event) {
-		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
-		if (typeof event.type !== 'symbol') {
-			this._runHooks(event, this._hooks.get('all'))
+	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. */
+	protected addTimestampHook(timestamp: number, cb: TimestampHookCallback) {
+		// Find the index we'll need to add this to keep things in order
+		const idx = this._timestampHookQueue.findIndex(h => h.timestamp < timestamp)
+
+		// Add the hook & return it so it can be removed
+		const hook: TimestampHook = {timestamp, callback: cb.bind(this)}
+		if (idx === -1) {
+			this._timestampHookQueue.push(hook)
+		} else {
+			this._timestampHookQueue.splice(idx, 0, hook)
 		}
-		this._runHooks(event, this._hooks.get(event.type))
+
+		return hook
 	}
 
-	private _runHooks(event: Event, hooks?: Set<Hook<Event>>) {
+	/** Remove a previously added timestamp hook */
+	protected removeTimestampHook(hook: TimestampHook) {
+		const idx = this._timestampHookQueue.indexOf(hook)
+		if (idx !== -1) {
+			this._timestampHookQueue.splice(idx, 1)
+		}
+	}
+
+	triggerEvent(event: Event) {
+		// Back up the current timestamp.
+		// NOTE: DO NOT DO THIS IN USER MODULES _EVER_.
+		// TODO: Move event handling above module level so this isn't required.
+		// tslint:disable-next-line:variable-name
+		const HACK_timestampBackup = this.parser._timestamp
+
+		// Fire off any timestamp hooks that are ready
+		const thq = this._timestampHookQueue
+		while (thq.length > 0 && thq[thq.length - 1].timestamp <= event.timestamp) {
+			const hook = thq.pop()!
+			this.parser._timestamp = hook.timestamp
+			hook.callback({timestamp: hook.timestamp})
+		}
+
+		// Restore the timestamp. Pretend nothing happened. Silence the unbelievers.
+		this.parser._timestamp = HACK_timestampBackup
+
+		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
+		if (typeof event.type !== 'symbol') {
+			this._runEventHooks(event, this._eventHooks.get('all'))
+		}
+		this._runEventHooks(event, this._eventHooks.get(event.type))
+	}
+
+	private _runEventHooks(event: Event, hooks?: Set<EventHook<Event>>) {
 		if (!hooks) { return }
 		hooks.forEach(hook => {
 			// Check the filter

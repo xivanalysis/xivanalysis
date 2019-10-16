@@ -34,7 +34,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
@@ -75,6 +75,13 @@ export default new Meta({
 			date: new Date('2019-08-21'),
 			Changes: () => <>
 				Don't penalize for rushed Requiescat windows due to expected downtime or end-of-fight.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA],
+		},
+		{
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},

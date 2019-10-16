@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TimerGauge generates chart data 1`] = `
+Object {
+  "data": Array [
+    Object {
+      "t": 100,
+    },
+    Object {
+      "t": 100,
+      "y": 0.1,
+    },
+    Object {
+      "t": 200,
+      "y": 0,
+    },
+    Object {
+      "t": 300,
+    },
+    Object {
+      "t": 300,
+      "y": 0.1,
+    },
+    Object {
+      "t": 350,
+      "y": 0.05,
+    },
+    Object {
+      "t": 350,
+      "y": 0.1,
+    },
+    Object {
+      "t": 400,
+      "y": 0.05,
+    },
+    Object {
+      "t": 400,
+      "y": 0.07,
+    },
+    Object {
+      "t": 470,
+      "y": 0,
+    },
+    Object {
+      "t": 500,
+    },
+    Object {
+      "t": 500,
+      "y": 0.1,
+    },
+    Object {
+      "t": 550,
+      "y": 0.05,
+    },
+    Object {
+      "t": 600,
+    },
+    Object {
+      "t": 600,
+      "y": 0.05,
+    },
+    Object {
+      "t": 650,
+      "y": 0,
+    },
+  ],
+  "label": "test",
+  "lineTension": 0,
+}
+`;

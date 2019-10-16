@@ -67,7 +67,12 @@ class TransMarkdown extends PureComponent {
 	}
 
 	renderLink(data) {
-		const match = LINK_EXTRACTOR.exec(data.href)
+		// Don't do this at home kids
+		const href = React.isValidElement(data.href)
+			? data.href.props.children
+			: data.href
+
+		const match = LINK_EXTRACTOR.exec(href)
 		if (match) {
 			const factory = LINK_TYPES[match[1]]
 			if (factory) {

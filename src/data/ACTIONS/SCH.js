@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player
@@ -8,6 +10,7 @@ export default {
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.BIOLYSIS],
 	},
 
 	ADLOQUIUM: {
@@ -16,6 +19,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
 		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE, STATUSES.CATALYZE],
 	},
 
 	BROIL_III: {
@@ -68,6 +72,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
 		castTime: 2,
+		statusesApplied: [STATUSES.GALVANIZE],
 	},
 
 	SACRED_SOIL: {
@@ -118,6 +123,7 @@ export default {
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
 		cooldown: 15,
+		statusesApplied: [STATUSES.EMERGENCY_TACTICS],
 	},
 
 	DISSIPATION: {
@@ -125,6 +131,7 @@ export default {
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.DISSIPATION],
 	},
 
 	EXCOGITATION: {
@@ -132,6 +139,7 @@ export default {
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
 		cooldown: 45,
+		statusesApplied: [STATUSES.EXCOGITATION],
 	},
 
 	BROIL_II: {
@@ -147,6 +155,7 @@ export default {
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.CHAIN_STRATAGEM],
 	},
 
 	SCH_AETHERPACT: {
@@ -168,6 +177,7 @@ export default {
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.WHISPERING_DAWN],
 	},
 
 	SCH_FEY_ILLUMINATION: {

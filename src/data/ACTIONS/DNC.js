@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 
 	SINGLE_STANDARD_FINISH: {
@@ -111,6 +113,7 @@ export default {
 		onGcd: true,
 		cooldown: 30,
 		gcdRecast: 1.5,
+		statusesApplied: [STATUSES.STANDARD_STEP],
 	},
 	TECHNICAL_STEP: {
 		id: 15998,
@@ -119,6 +122,7 @@ export default {
 		onGcd: true,
 		cooldown: 120,
 		gcdRecast: 1.5,
+		statusesApplied: [STATUSES.TECHNICAL_STEP],
 	},
 	EMBOITE: {
 		id: 15999,
@@ -209,6 +213,7 @@ export default {
 		name: 'Devilment',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.DEVILMENT],
 	},
 	SHIELD_SAMBA: {
 		id: 16012,
@@ -216,6 +221,7 @@ export default {
 		name: 'Shield Samba',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.SHIELD_SAMBA],
 	},
 	FLOURISH: {
 		id: 16013,
@@ -223,6 +229,7 @@ export default {
 		name: 'Flourish',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.FLOURISHING_CASCADE, STATUSES.FLOURISHING_FOUNTAIN, STATUSES.FLOURISHING_WINDMILL, STATUSES.FLOURISHING_SHOWER, STATUSES.FLOURISHING_FAN_DANCE],
 	},
 	IMPROVISATION: {
 		id: 16014,
@@ -230,6 +237,7 @@ export default {
 		name: 'Improvisation',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.IMPROVISATION, STATUSES.IMPROVISATION_HEALING],
 	},
 	CURING_WALTZ: {
 		id: 16015,

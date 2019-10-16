@@ -27,6 +27,7 @@ export default class Debuffs extends DoTs {
 				<ActionLink {...ACTIONS.CHAOS_THRUST}/> provides a potent DoT which should be maintained at all times.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEBUFFS,
+			target: 90,
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...ACTIONS.CHAOS_THRUST}/> uptime</Trans>,

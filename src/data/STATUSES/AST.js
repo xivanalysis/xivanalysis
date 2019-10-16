@@ -15,6 +15,7 @@ export default {
 		id: 843,
 		name: 'Combust II',
 		icon: 'https://xivapi.com/i/013000/013214.png',
+		duration: 30,
 	},
 
 	COMBUST_III: {
@@ -77,30 +78,35 @@ export default {
 		id: 849,
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/013000/013226.png',
+		duration: 18,
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
 		id: 848,
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/013000/013227.png',
+		duration: 18,
 	},
 
 	WHEEL_OF_FORTUNE: {
 		id: 956,
 		name: 'Wheel Of Fortune',
 		icon: 'https://xivapi.com/i/013000/013225.png',
+		duration: 15,
 	},
 
 	EARTHLY_DOMINANCE: {
 		id: 1224,
 		name: 'Earthly Dominance',
 		icon: 'https://xivapi.com/i/013000/013241.png',
+		duration: 10,
 	},
 
 	GIANT_DOMINANCE: {
 		id: 1248,
 		name: 'Giant Dominance',
 		icon: 'https://xivapi.com/i/013000/013242.png',
+		duration: 10,
 	},
 
 	DIURNAL_OPPOSITION: {
@@ -291,5 +297,4 @@ export default {
 		name: 'Lady of Crowns Drawn',
 		icon: 'https://xivapi.com/i/013000/013257.png',
 	},
-
 }

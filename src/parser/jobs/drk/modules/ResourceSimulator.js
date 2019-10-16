@@ -1,7 +1,6 @@
 import React, {Fragment} from 'react'
 import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -10,6 +9,7 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Color from 'color'
 import JOBS from 'data/JOBS'
 import TimeLineChart from 'components/ui/TimeLineChart'
+import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
 // -----
 // UI stuff
@@ -81,6 +81,7 @@ export default class Resources extends Module {
 	static handle = 'resourceanalyzer'
 	static title = t('drk.resourceanalyzer.title')`Resource Analyzer`
 	static displayMode = DISPLAY_MODE.FULL
+	static displayOrder = DISPLAY_ORDER.RESOURCES
 	static dependencies = [
 		'combatants',
 		'suggestions',

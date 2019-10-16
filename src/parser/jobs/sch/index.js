@@ -34,7 +34,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.05',
+		to: '5.08',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
@@ -43,6 +43,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2019-09-19'),
+		Changes: () => <>Track interrupts; a big thanks to Tonto Draksbane and Yuni in the balance for help with this feature</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2019-08-09'),
 		Changes: () => <>
 			Initial support for Shadowbringers:&nbsp;

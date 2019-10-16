@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -80,6 +82,7 @@ export default {
 		name: 'High Jump',
 		icon: 'https://xivapi.com/i/002000/002591.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.DIVE_READY],
 	},
 
 	ELUSIVE_JUMP: {
@@ -109,6 +112,7 @@ export default {
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/002000/002585.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.BATTLE_LITANY],
 	},
 
 	BLOOD_OF_THE_DRAGON: {
@@ -130,6 +134,7 @@ export default {
 		name: 'Dragon Sight',
 		icon: 'https://xivapi.com/i/002000/002587.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.RIGHT_EYE, STATUSES.LEFT_EYE, STATUSES.RIGHT_EYE_SOLO],
 	},
 
 	MIRAGE_DIVE: {

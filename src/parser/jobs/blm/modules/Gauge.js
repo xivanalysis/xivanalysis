@@ -264,6 +264,13 @@ export default class Gauge extends Module {
 
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
+			if (!this._astralFireStacks && !this._umbralIceStacks) {
+				this.brokenLog.trigger(this, 'no stack eno', (
+					<Trans id="blm.gauge.trigger.no-stack-eno">
+						<ActionLink {...ACTIONS.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
+					</Trans>
+				))
+			}
 			if (!this._hasEnochian) {
 				this._startEnoTimer(event)
 				this.addEvent()

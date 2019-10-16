@@ -1,6 +1,6 @@
+import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
 import _ from 'lodash'
-
 import {Fight, ReportEventsQuery, ReportEventsResponse} from './fflogs'
 
 const options: Options = {
@@ -16,11 +16,26 @@ if (process.env.REACT_APP_LOGS_API_KEY) {
 // Core API via ky
 export const fflogsApi = ky.create(options)
 
-async function requestEvents(code: string, options: Options) {
-	return await fflogsApi.get(
+async function requestEvents(code: string, searchParams: Record<string, string|number>) {
+	let response = await fflogsApi.get(
 		`report/events/${code}`,
-		options,
+		{searchParams},
 	).json<ReportEventsResponse>()
+
+	// If it's blank, try again, bypassing the cache
+	if (response === '') {
+		response = await fflogsApi.get(
+			`report/events/${code}`,
+			{searchParams: {...searchParams, bypassCache: 'true'}},
+		).json<ReportEventsResponse>()
+	}
+
+	// If it's _still_ blank, bail and get them to retry
+	if (response === '') {
+		throw new ReportProcessingError()
+	}
+
+	return response
 }
 
 // Helper for pagination and suchforth
@@ -38,13 +53,13 @@ export async function getFflogsEvents(
 	}
 
 	// Initial data request
-	let data = await requestEvents(code, {searchParams})
+	let data = await requestEvents(code, searchParams)
 	const events = data.events
 
 	// Handle pagination
 	while (data.nextPageTimestamp) {
 		searchParams.start = data.nextPageTimestamp
-		data = await requestEvents(code, {searchParams})
+		data = await requestEvents(code, searchParams)
 		events.push(...data.events)
 	}
 
