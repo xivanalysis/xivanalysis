@@ -6,6 +6,8 @@ import Debuffs from './Debuffs'
 import Procs from './Procs'
 //import RotationWatchdog from './RotationWatchdog'
 import Weaving from './Weaving'
+import Jumps from './Jumps'
+
 export default [
 	BloodOfTheDragon,
 	Buffs,
@@ -15,4 +17,5 @@ export default [
 	Procs,
 	//RotationWatchdog, // TODO - Restore this module after making it actually correct for ShB
 	Weaving,
+	Jumps,
 ]
