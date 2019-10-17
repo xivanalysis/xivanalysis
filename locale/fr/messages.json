@@ -350,7 +350,7 @@
   "drg.buffs.suggestions.life-surge.content": "Évitez d'utiliser <0/> sur un GCD qui n'est ni <1/> ni la 5ème action de votre combo. Toute autre action de combo aura une puissance significativement inférieure, vous faisant perdre une grande partie du bénéfice d'un coup critique garanti.",
   "drg.buffs.suggestions.life-surge.why": "Vous avez utilisé {0} sur un GCD non optimal {1, plural, one {# fois} other {# fois}}.",
   "drg.buffs.suggestions.solo-ds.content": "",
-  "drg.buffs.suggestions.solo-ds.why": "",
+  "drg.buffs.suggestions.solo-ds.why": "Au moins un de vos vue du dragon n'avait pas de partenaire.",
   "drg.buffs.title": "Lance acérée et Vue de dragon",
   "drg.debuffs.checklist.description": "",
   "drg.debuffs.checklist.name": "Maintenez vos débuffs actifs",
