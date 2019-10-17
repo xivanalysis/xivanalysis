@@ -209,8 +209,6 @@
   "core.analyse.load-report": "Chargement du rapport",
   "core.analyse.see-more": "Voir plus",
   "core.analyse.view-on-fflogs": "Afficher le rapport sur FF Logs",
-  "core.branch-banner.description": "Cette version de xivanalysis ne peut pas fournir d'analyse significatives pour les rapports faire durant {patchKey}. Cliquez ici pour analyser ce log en utilisant le version {patchKey} du site.",
-  "core.branch-banner.header": "Ce rapport vient d'une extension différente!",
   "core.aoeusages.aoe-ability": "",
   "core.aoeusages.description": "",
   "core.aoeusages.number-bad-usages": "",
