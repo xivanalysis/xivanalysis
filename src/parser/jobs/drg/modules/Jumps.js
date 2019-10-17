@@ -234,7 +234,7 @@ export default class Jumps extends Module {
 								<Trans id="drg.jumptable.drift">Drift</Trans>
 							</Table.HeaderCell>
 							<Table.HeaderCell>
-								<Trans id="drg.jumptable.statuses">Buffs</Trans>
+								<Trans id="drg.jumptable.statuses">Personal Buffs</Trans>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
