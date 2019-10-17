@@ -369,7 +369,7 @@
   "mnk.undesirables.suggestions.oneilm.why": "",
   "mnk.undesirables.table.header.skill": "Technique",
   "mnk.undesirables.table.header.time": "Temps",
-  "mnk.undesirables.title": "",
+  "mnk.undesirables.title": "Compétences indésirables",
   "nin.about.description": "<0>Bonjour cher ami Ninja! Êtes-vous fatigué que vos pairs Moines et Mages Noirs vous prennent de haut? Vous souhaitez que votre équipe de raid cesse de vous utiliser seulement pour votre Attaque Sournoise et vous apprécie pour ce que vous êtes vraiment? N'allez pas plus loin! Nous allons vous aider à monter à monter <1>de là</1> à <2>là</2>*!</0><3> Étant donné que Ninja est plus fluide au lieu d'être concentré sur les rotations, ce module contient principalement des suggestions sur comment améliorer votre gameplay, au lieu de vous montrer une liste stricte a suivre. Si vous en voyez beaucoup, ne paniquez pas - prenez-les un à la fois.</3>\n<4>*Résultats non-garantis. L'offre est annulée dans le cas d'une interdiction. SVP ne nous poursuivez pas en justice.</4>",
   "nin.about.description.warning": "Bien que cette analyse soit un temps soit peu précise, le système est toujours en développement et peut mélanger certains éléments quelques fois. Si vous remarquez des problèmes, ou si vous avez des préoccupations ou des suggestions pour améliorer le module, merci de passer par notre chaîne Discord ou le dépôt github!",
   "nin.duality.suggestions.misuse.content": "Évitez d'utiliser <0/> sur un autre GCD que <1/>. Les effets secondaires des GCDs ne sont pas dupliqués, seuls les dégâts le sont. Utilisez-la sur l'action de combo la plus puissante.",
