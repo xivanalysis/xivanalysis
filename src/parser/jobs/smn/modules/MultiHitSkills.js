@@ -8,6 +8,8 @@ export default class MultiHit extends AoEUsages {
 		'suggestions', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
+	suggestionIcon = ACTIONS.OUTBURST.icon
+
 	trackedAbilities = [
 		{
 			aoeAbility: ACTIONS.OUTBURST,

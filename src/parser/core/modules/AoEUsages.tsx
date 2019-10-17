@@ -43,6 +43,10 @@ export abstract class AoEUsages extends Module {
 	@dependency private suggestions!: Suggestions
 
 	/**
+	 * Implementing modules MUST define the icon to be used for the suggestion.
+	 */
+	abstract suggestionIcon: string
+	/**
 	 * Implementing modules MUST define the abilities that are to be monitored.
 	 */
 	abstract trackedAbilities: AoeAbility[]
@@ -88,7 +92,7 @@ export abstract class AoEUsages extends Module {
 		const totalBadUsages = Array.from(this.badUsages.values()).reduce((acc, cur) => acc + cur, 0)
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: this.trackedAbilities[0].aoeAbility.icon,
+			icon: this.suggestionIcon,
 			content: <Trans id="core.aoeusages.suggestion.content">
 				Use single target abilities unless there are enough targets for the AoE alternatives to do more damage.
 			</Trans>,
