@@ -30,9 +30,9 @@ export default new Meta({
 		</Message>
 	</>,
 	// supportedPatches: {
-	//	from: '5.0',
-	//	to: '5.08',
-	//},
+	// 	from: '5.0',
+	// 	to: '5.08',
+	// },
 
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
