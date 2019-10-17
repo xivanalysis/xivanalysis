@@ -1,5 +1,4 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -13,6 +12,11 @@ Hello friendly monk! Do you not Crit the Boot? Does your Six-Sided Star dream re
 This monk analyser should help you realise your true potential and ensure no party will let a Samurai steal your loot ever again!
 `
 
+const warning = t('mnk.about.description.warning')`
+**The module is still a work in progress** and may occasionally give you bad feedback.
+If you notice any issues, or have any questions or feedback, please drop by our Discord channel!
+`
+
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),
 
@@ -21,9 +25,7 @@ export default new Meta({
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<Trans id="mnk.about.description.warning">
-					<b>The module is still a work in progress</b> and may occasionally give you bad feedback. Please note that module currently assumes that you get <i>at least one stack</i> when using Anatman. If you notice any issues, or have any questions or feedback, please drop by our Discord channel!
-				</Trans>
+				<TransMarkdown source={warning} key="mnk.about.description.warning" />
 			</Message.Content>
 		</Message>
 	</>,
