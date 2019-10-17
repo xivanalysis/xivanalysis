@@ -1,7 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Table, Button, Accordion, Header} from 'semantic-ui-react'
+import {
+	Table,
+	Button,
+	Accordion,
+	Header,
+	Message,
+	Icon,
+} from 'semantic-ui-react'
 
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
@@ -170,7 +177,15 @@ export default class Jumps extends Module {
 		)
 	}
 
-	_jumpTable(history) {
+	_jumpAnalysis(key) {
+		const history = this._jumpData[key].history
+
+		// this should be correct, + a bit of an epsilon. should be ok for these estimation purposes?
+		const duration = this.parser.fight.end_time - this._jumpData[key].first
+		const leeway =
+			duration - (this._jumpData[key].max - 1) * this._jumpData[key].cd
+		let totalDrift = 0
+
 		const rows = history.map((event, idx) => {
 			const buffCell = (
 				<Table.Cell>
@@ -187,37 +202,48 @@ export default class Jumps extends Module {
 				</Table.Cell>
 			)
 
-			const delay = this.parser.formatDuration(
-				idx > 0 ? event.time - history[idx - 1].time : 0
-			)
+			const delay = idx > 0 ? event.time - history[idx - 1].time : 0
+			const drift = idx > 0 ? delay - this._jumpData[key].cd : 0
+			totalDrift += drift
 
 			return (
 				<Table.Row key={event.time}>
 					<Table.Cell>{this._createTimelineButton(event.time)}</Table.Cell>
-					<Table.Cell>{delay}</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
+					<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
 					{buffCell}
 				</Table.Row>
 			)
 		})
 
-		return (
-			<Table>
-				<Table.Header>
-					<Table.Row key="header">
-						<Table.HeaderCell>
-							<Trans id="drg.jumptable.time">Time</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.jumptable.delay">Recast Delay</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.jumptable.statuses">Buffs</Trans>
-						</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>{rows}</Table.Body>
-			</Table>
-		)
+		// drift column
+		// also should display how much leeway there is to fit all possible jumps in
+
+		return {
+			table: (
+				<Table>
+					<Table.Header>
+						<Table.Row key="header">
+							<Table.HeaderCell>
+								<Trans id="drg.jumptable.time">Time</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.jumptable.delay">CD</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.jumptable.drift">Drift</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.jumptable.statuses">Buffs</Trans>
+							</Table.HeaderCell>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>{rows}</Table.Body>
+				</Table>
+			),
+			leeway,
+			totalDrift,
+		}
 	}
 
 	_onComplete() {
@@ -268,17 +294,29 @@ export default class Jumps extends Module {
 	}
 
 	output() {
-		// testing this whole thing out
+		const hjData = this._jumpAnalysis(ACTIONS.HIGH_JUMP.id)
+		const ssdData = this._jumpAnalysis(ACTIONS.SPINESHATTER_DIVE.id)
+		const dfdData = this._jumpAnalysis(ACTIONS.DRAGONFIRE_DIVE.id)
+
 		return (
 			<Fragment>
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.hj-header">High Jump</Trans>
 				</Header>
-				<p>
-					You did {this._jumpData[ACTIONS.HIGH_JUMP.id].history.length} of{' '}
-					{this._jumpData[ACTIONS.HIGH_JUMP.id].max} possible jumps in this
-					fight
-				</p>
+				<Message attached="top" info>
+					<Trans id="drg.jumps.hj-section-note">
+						<Icon name={'info'} /> You used{' '}
+						<ActionLink {...ACTIONS.HIGH_JUMP} />{' '}
+						<strong>
+							{this._jumpData[ACTIONS.HIGH_JUMP.id].history.length}
+						</strong>{' '}
+						of <strong>{this._jumpData[ACTIONS.HIGH_JUMP.id].max}</strong>{' '}
+						possible times. Your casts drifted by{' '}
+						<strong>{this.parser.formatDuration(hjData.totalDrift)}</strong>. In
+						order to get the most uses, you needed a maximum drift of{' '}
+						<strong>{this.parser.formatDuration(hjData.leeway)}</strong>.
+					</Trans>
+				</Message>
 				<Accordion
 					styled
 					fluid
@@ -289,15 +327,15 @@ export default class Jumps extends Module {
 								key: 'title-high-jump',
 								content: (
 									<Fragment>
-										<Trans id="drg.jumps.hj-panel-details">Jump Details</Trans>
+										<Trans id="drg.jumps.hj-panel-details">
+											High Jump Details
+										</Trans>
 									</Fragment>
 								),
 							},
 							content: {
 								key: 'content-high-jump',
-								content: this._jumpTable(
-									this._jumpData[ACTIONS.HIGH_JUMP.id].history
-								),
+								content: hjData.table,
 							},
 						},
 					]}
@@ -305,11 +343,21 @@ export default class Jumps extends Module {
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.ssd-header">Spineshatter Dive</Trans>
 				</Header>
-				<p>
-					You did {this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].history.length}{' '}
-					of {this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].max} possible
-					spineshatter dives in this fight
-				</p>
+				<Message attached="top" info>
+					<Trans id="drg.jumps.ssd-section-note">
+						<Icon name={'info'} /> You used{' '}
+						<ActionLink {...ACTIONS.SPINESHATTER_DIVE} />{' '}
+						<strong>
+							{this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].history.length}
+						</strong>{' '}
+						of{' '}
+						<strong>{this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].max}</strong>{' '}
+						possible times. Your casts drifted by{' '}
+						<strong>{this.parser.formatDuration(ssdData.totalDrift)}</strong>.
+						In order to get the most uses, you needed a maximum drift of{' '}
+						<strong>{this.parser.formatDuration(ssdData.leeway)}</strong>.
+					</Trans>
+				</Message>
 				<Accordion
 					styled
 					fluid
@@ -328,9 +376,7 @@ export default class Jumps extends Module {
 							},
 							content: {
 								key: 'content-ssd-jump',
-								content: this._jumpTable(
-									this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].history
-								),
+								content: ssdData.table,
 							},
 						},
 					]}
@@ -338,11 +384,20 @@ export default class Jumps extends Module {
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.dfd-header">Dragonfire Dive</Trans>
 				</Header>
-				<p>
-					You did {this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].history.length} of{' '}
-					{this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].max} possible dragonfire
-					dives in this fight
-				</p>
+				<Message attached="top" info>
+					<Trans id="drg.jumps.hj-section-note">
+						<Icon name={'info'} /> You used{' '}
+						<ActionLink {...ACTIONS.DRAGONFIRE_DIVE} />{' '}
+						<strong>
+							{this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].history.length}
+						</strong>{' '}
+						of <strong>{this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].max}</strong>{' '}
+						possible times. Your casts drifted by{' '}
+						<strong>{this.parser.formatDuration(dfdData.totalDrift)}</strong>.
+						In order to get the most uses, you needed a maximum drift of{' '}
+						<strong>{this.parser.formatDuration(dfdData.leeway)}</strong>.
+					</Trans>
+				</Message>
 				<Accordion
 					styled
 					fluid
@@ -361,9 +416,7 @@ export default class Jumps extends Module {
 							},
 							content: {
 								key: 'content-dfd',
-								content: this._jumpTable(
-									this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].history
-								),
+								content: dfdData.table,
 							},
 						},
 					]}
