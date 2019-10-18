@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {
 	Table,
@@ -17,12 +17,19 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {getDataBy} from 'data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 // import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 export default class Jumps extends Module {
 	static handle = 'jumps';
 	static title = t('drg.jump.title')`Jumps`;
-	static dependencies = ['checklist', 'invuln', 'combatants', 'timeline'];
+	static dependencies = [
+		'checklist',
+		'invuln',
+		'combatants',
+		'timeline',
+		'suggestions',
+	];
 
 	// theoretically this is different depending on if you're not 80 yet, but
 	// it's probably ok to assume this is for current endgame?
@@ -246,8 +253,43 @@ export default class Jumps extends Module {
 		}
 	}
 
+	_jumpSuggest(action, transid) {
+		const suggestID = `drg.jumps.${transid}-suggestion.content`
+		const whyID = `drg.jumps.${transid}-suggestion.why`
+		const missed =
+			this._jumpData[action.id].max - this._jumpData[action.id].history.length
+		const missJumpPct = Math.floor(100 - this._jumpPct(action.id))
+
+		this.suggestions.add(
+			new TieredSuggestion({
+				icon: action.icon,
+				content: (
+					<Trans id={suggestID}>
+						You should be using your <ActionLink {...action} /> as close to on
+						cooldown as possible.
+					</Trans>
+				),
+				tiers: {
+					1: SEVERITY.MINOR,
+					15: SEVERITY.MEDIUM,
+					30: SEVERITY.MAJOR,
+				},
+				value: missJumpPct,
+				why: (
+					<Trans id={whyID}>
+						You could have used <ActionLink {...action} /> {missed} more
+						<Plural value={missed} one="time" other="times" />.
+					</Trans>
+				),
+			})
+		)
+	}
+
 	_onComplete() {
 		this._getMaxJumpCount()
+		this._jumpSuggest(ACTIONS.HIGH_JUMP, 'hj')
+		this._jumpSuggest(ACTIONS.SPINESHATTER_DIVE, 'ssd')
+		this._jumpSuggest(ACTIONS.DRAGONFIRE_DIVE, 'dfd')
 
 		this.checklist.add(
 			new Rule({
@@ -293,134 +335,74 @@ export default class Jumps extends Module {
 		)
 	}
 
-	output() {
-		const hjData = this._jumpAnalysis(ACTIONS.HIGH_JUMP.id)
-		const ssdData = this._jumpAnalysis(ACTIONS.SPINESHATTER_DIVE.id)
-		const dfdData = this._jumpAnalysis(ACTIONS.DRAGONFIRE_DIVE.id)
+	_jumpAnalysisSection(action, transid) {
+		const data = this._jumpAnalysis(action.id)
+		const noteTransID = `drg.jumps.${transid}-section-note`
 
 		return (
 			<Fragment>
+				<Message attached="top" info>
+					<Trans id={noteTransID}>
+						<Icon name={'info'} /> You used <ActionLink {...action} />{' '}
+						<strong>{this._jumpData[action.id].history.length}</strong> of{' '}
+						<strong>{this._jumpData[action.id].max}</strong> possible times.
+					</Trans>
+				</Message>
+				<Accordion
+					styled
+					fluid
+					exclusive={false}
+					panels={[
+						{
+							title: {
+								key: `title-${transid}`,
+								content: (
+									<Fragment>
+										<Trans id="drg.jumps.jump-panel-details">Details</Trans>
+									</Fragment>
+								),
+							},
+							content: {
+								key: `content-${transid}`,
+								content: data.table,
+							},
+						},
+					]}
+				/>
+				<Message attached="bottom" info>
+					<Icon name={'clock'} /> Your casts drifted by{' '}
+					<strong>{this.parser.formatDuration(data.totalDrift)}</strong>. In
+					order to get the most uses, you needed a maximum drift of{' '}
+					<strong>{this.parser.formatDuration(data.leeway)}</strong>.
+				</Message>
+			</Fragment>
+		)
+	}
+
+	output() {
+		return (
+			<Fragment>
+				<Message>
+					<Trans id="drg.jumps.analysis.message">
+						You should be using your jumps on cooldown. The number of jumps
+						you'll be able to fit will depend on the length of the fight and
+						where the boss invulnerability windows are. This analysis estimates
+						the number of maximum possible jumps, and shows you how far your
+						casts are allowed to drift overall to meet the maximum.
+					</Trans>
+				</Message>
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.hj-header">High Jump</Trans>
 				</Header>
-				<Message attached="top" info>
-					<Trans id="drg.jumps.hj-section-note">
-						<Icon name={'info'} /> You used{' '}
-						<ActionLink {...ACTIONS.HIGH_JUMP} />{' '}
-						<strong>
-							{this._jumpData[ACTIONS.HIGH_JUMP.id].history.length}
-						</strong>{' '}
-						of <strong>{this._jumpData[ACTIONS.HIGH_JUMP.id].max}</strong>{' '}
-						possible times. Your casts drifted by{' '}
-						<strong>{this.parser.formatDuration(hjData.totalDrift)}</strong>. In
-						order to get the most uses, you needed a maximum drift of{' '}
-						<strong>{this.parser.formatDuration(hjData.leeway)}</strong>.
-					</Trans>
-				</Message>
-				<Accordion
-					styled
-					fluid
-					exclusive={false}
-					panels={[
-						{
-							title: {
-								key: 'title-high-jump',
-								content: (
-									<Fragment>
-										<Trans id="drg.jumps.hj-panel-details">
-											High Jump Details
-										</Trans>
-									</Fragment>
-								),
-							},
-							content: {
-								key: 'content-high-jump',
-								content: hjData.table,
-							},
-						},
-					]}
-				/>
+				{this._jumpAnalysisSection(ACTIONS.HIGH_JUMP, 'hj')}
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.ssd-header">Spineshatter Dive</Trans>
 				</Header>
-				<Message attached="top" info>
-					<Trans id="drg.jumps.ssd-section-note">
-						<Icon name={'info'} /> You used{' '}
-						<ActionLink {...ACTIONS.SPINESHATTER_DIVE} />{' '}
-						<strong>
-							{this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].history.length}
-						</strong>{' '}
-						of{' '}
-						<strong>{this._jumpData[ACTIONS.SPINESHATTER_DIVE.id].max}</strong>{' '}
-						possible times. Your casts drifted by{' '}
-						<strong>{this.parser.formatDuration(ssdData.totalDrift)}</strong>.
-						In order to get the most uses, you needed a maximum drift of{' '}
-						<strong>{this.parser.formatDuration(ssdData.leeway)}</strong>.
-					</Trans>
-				</Message>
-				<Accordion
-					styled
-					fluid
-					exclusive={false}
-					panels={[
-						{
-							title: {
-								key: 'title-ssd',
-								content: (
-									<Fragment>
-										<Trans id="drg.jumps.ssd-panel-details">
-											Spineshatter Dive Details
-										</Trans>
-									</Fragment>
-								),
-							},
-							content: {
-								key: 'content-ssd-jump',
-								content: ssdData.table,
-							},
-						},
-					]}
-				/>
+				{this._jumpAnalysisSection(ACTIONS.SPINESHATTER_DIVE, 'ssd')}
 				<Header size="small">
 					<Trans id="drg.jumps.accordion.dfd-header">Dragonfire Dive</Trans>
 				</Header>
-				<Message attached="top" info>
-					<Trans id="drg.jumps.hj-section-note">
-						<Icon name={'info'} /> You used{' '}
-						<ActionLink {...ACTIONS.DRAGONFIRE_DIVE} />{' '}
-						<strong>
-							{this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].history.length}
-						</strong>{' '}
-						of <strong>{this._jumpData[ACTIONS.DRAGONFIRE_DIVE.id].max}</strong>{' '}
-						possible times. Your casts drifted by{' '}
-						<strong>{this.parser.formatDuration(dfdData.totalDrift)}</strong>.
-						In order to get the most uses, you needed a maximum drift of{' '}
-						<strong>{this.parser.formatDuration(dfdData.leeway)}</strong>.
-					</Trans>
-				</Message>
-				<Accordion
-					styled
-					fluid
-					exclusive={false}
-					panels={[
-						{
-							title: {
-								key: 'title-dfd',
-								content: (
-									<Fragment>
-										<Trans id="drg.jumps.dfd-panel-details">
-											Dragonfire Dive Details
-										</Trans>
-									</Fragment>
-								),
-							},
-							content: {
-								key: 'content-dfd',
-								content: dfdData.table,
-							},
-						},
-					]}
-				/>
+				{this._jumpAnalysisSection(ACTIONS.DRAGONFIRE_DIVE, 'dfd')}
 			</Fragment>
 		)
 	}
