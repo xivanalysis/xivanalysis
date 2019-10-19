@@ -334,7 +334,7 @@
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {#개} other {#개}}의 품새가 필요 이외의 연무로 생략되었습니다.",
   "mnk.gl.checklist.description": "<0/>는 공격력을 30%, 공격 속도를 15% 증가시키며 DPS 상승에 큰 영향을 미칩니다.",
   "mnk.gl.checklist.name": "항상 질풍번개가 유지되도록 하십시오",
-  "mnk.gl.checklist.requirement.name": "<0/> 지속시간",
+  "mnk.gl.checklist.requirement.name": "적용시간 <0/>",
   "mnk.gl.suggestions.dropped.content": "<0/> 사용을 제외하고 스택을 잃지 마세요.",
   "mnk.gl.suggestions.dropped.why": "<0/>가 {0, plural, one {#번} other {#번}} 떨어졌습니다.",
   "mnk.gl.suggestions.roe.missed.content": "데미지가 들어오지 않을 때 <0/>를 사용하지 마세요.",
