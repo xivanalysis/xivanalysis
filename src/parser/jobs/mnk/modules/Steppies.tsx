@@ -60,7 +60,7 @@ export default class Steppies extends Module {
 	}
 
 	private onDamage(event: DamageEvent): void {
-		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id, event.timestamp), event.timestamp)
+		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
 		this.steppies.push(boot)
 	}
 
