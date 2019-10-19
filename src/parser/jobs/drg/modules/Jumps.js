@@ -109,7 +109,7 @@ export default class Jumps extends Module {
 		}
 	}
 
-	_getActiveDrgBuffs() {
+	getActiveDrgBuffs() {
 		const active = []
 
 		if (this.combatants.selected.hasStatus(STATUSES.LANCE_CHARGE.id)) {
@@ -138,7 +138,7 @@ export default class Jumps extends Module {
 
 		this._jumpData[action.id].history.push({
 			time: this.parser.currentTimestamp,
-			buffs: this._getActiveDrgBuffs(),
+			buffs: this.getActiveDrgBuffs(),
 		})
 	}
 
@@ -166,7 +166,7 @@ export default class Jumps extends Module {
 		return (this._jumpData[id].history.length / this._jumpData[id].max) * 100
 	}
 
-	_createTimelineButton(timestamp) {
+	createTimelineButton(timestamp) {
 		return (
 			<Button
 				circular
@@ -215,7 +215,7 @@ export default class Jumps extends Module {
 
 			return (
 				<Table.Row key={event.time}>
-					<Table.Cell>{this._createTimelineButton(event.time)}</Table.Cell>
+					<Table.Cell>{this.createTimelineButton(event.time)}</Table.Cell>
 					<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
 					<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
 					{buffCell}
