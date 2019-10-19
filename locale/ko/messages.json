@@ -455,7 +455,7 @@
   "mch.wildfire.title": "소이탄",
   "mch.wildfire.trigger.no-buff-wf": "<0/> 피해가 대응되는 <1/> 버프 없이 기록되었습니다.",
   "mnk.about.description": "",
-  "mnk.about.description.warning": "",
+  "mnk.about.description.warning": "\n**이 모듈은 아직 개발중**이며 올바르지 않은 피드백을 줄 수 있습니다.\n문제를 발견하시거나 질문 혹은 피드백을 원하시는 경우 디스코드 채널을 방문 해주십시오.\n",
   "mnk.aoe.suggestions.aotd.content": "<0/>는 {AOTD_MIN_TARGETS} 개 이상의 대상에 효율적입니다.",
   "mnk.aoe.suggestions.aotd.why": "<0/>가 너무 적은 수의 대상에 {0, plural, one {#회} other {#회}} 사용되었습니다.",
   "mnk.aoe.suggestions.rockbreaker.content": "<0/>는 {ROCKBREAKER_MIN_TARGETS} 개 이상의 대상에 효율적입니다.",
