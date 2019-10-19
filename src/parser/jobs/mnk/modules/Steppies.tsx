@@ -5,7 +5,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
-import {CastEvent, DamageEvent} from 'fflogs'
+import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -53,12 +53,14 @@ export default class Steppies extends Module {
 	private steppies: Boot[] = []
 
 	protected init(): void {
-		this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
+		this.addHook('init', () => {
+			this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
+		})
 		this.addHook('complete', this.onComplete)
 	}
 
 	private onDamage(event: DamageEvent): void {
-		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
+		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id, event.timestamp), event.timestamp)
 		this.steppies.push(boot)
 	}
 
