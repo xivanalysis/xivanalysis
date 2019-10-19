@@ -174,7 +174,7 @@ export default class BloodOfTheDragon extends Module {
 					was deemed inactive.
 				</Trans>
 			)
-			return;
+			return
 		}
 
 		if (
@@ -201,7 +201,7 @@ export default class BloodOfTheDragon extends Module {
 					Dragon was deemed inactive.
 				</Trans>
 			)
-			return;
+			return
 		}
 
 		if (
