@@ -15,6 +15,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 const DRAGON_MAX_DURATION_MILLIS = 30000
 const DRAGON_DEFAULT_DURATION_MILLIS = 30000
 const BLOOD_EXTENSION_MILLIS = 10000
+const LOTD_BUFF_DELAY_MIN = 30000
+const LOTD_BUFF_DELAY_MAX = 60000
 
 const MAX_EYES = 2
 
@@ -27,6 +29,7 @@ export default class BloodOfTheDragon extends Module {
 		'death',
 		'suggestions',
 		'jumps',
+		'cooldowns',
 	];
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
@@ -158,6 +161,18 @@ export default class BloodOfTheDragon extends Module {
 				duration: this._lifeDuration,
 				nastronds: [],
 				stardivers: [],
+				timeToNextBuff: {
+					[ACTIONS.LANCE_CHARGE.id]: this.cooldowns.getCooldownRemaining(
+						ACTIONS.LANCE_CHARGE.id
+					),
+					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns.getCooldownRemaining(
+						ACTIONS.DRAGON_SIGHT.id
+					),
+					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns.getCooldownRemaining(
+						ACTIONS.BATTLE_LITANY.id
+					),
+				},
+				activeBuffs: this.jumps.getActiveDrgBuffs(),
 			}
 			this._eyes = 0
 		}
@@ -174,7 +189,7 @@ export default class BloodOfTheDragon extends Module {
 					was deemed inactive.
 				</Trans>
 			)
-			return
+			return;
 		}
 
 		if (
@@ -186,6 +201,7 @@ export default class BloodOfTheDragon extends Module {
 			this._lifeWindows.current.nastronds.push({
 				event,
 				buffs: this.jumps.getActiveDrgBuffs(),
+				action: ACTIONS.NASTROND,
 			})
 		}
 	}
@@ -201,7 +217,7 @@ export default class BloodOfTheDragon extends Module {
 					Dragon was deemed inactive.
 				</Trans>
 			)
-			return
+			return;
 		}
 
 		if (
@@ -213,6 +229,7 @@ export default class BloodOfTheDragon extends Module {
 			this._lifeWindows.current.stardivers.push({
 				event,
 				buffs: this.jumps.getActiveDrgBuffs(),
+				action: ACTIONS.STARDIVER,
 			})
 		}
 	}
@@ -304,10 +321,22 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	_windowTable(window) {
-		const nastrondRows = window.nastronds.map(nastrond => {
+		const casts = window.nastronds.concat(window.stardivers)
+		casts.sort((a, b) => {
+			if (a.event.timestamp < b.event.timestamp) {
+				return -1
+			}
+			if (a.event.timestamp > b.event.timestamp) {
+				return 1
+			}
+
+			return 0
+		})
+
+		const rows = casts.map(cast => {
 			const buffCell = (
 				<Table.Cell>
-					{nastrond.buffs.map(id => {
+					{cast.buffs.map(id => {
 						return (
 							<StatusLink
 								key={id}
@@ -321,65 +350,70 @@ export default class BloodOfTheDragon extends Module {
 			)
 
 			return (
-				<Table.Row key={nastrond.event.time}>
+				<Table.Row key={cast.event.timestamp}>
 					<Table.Cell>
-						{this.jumps.createTimelineButton(nastrond.event.timestamp)}
+						{this.jumps.createTimelineButton(cast.event.timestamp)}
 					</Table.Cell>
 					<Table.Cell>
-						<ActionLink {...ACTIONS.NASTROND} />
+						<ActionLink {...cast.action} />
 					</Table.Cell>
 					{buffCell}
 				</Table.Row>
 			)
 		})
 
-		const stdRows = window.stardivers.map(stardiver => {
-			const buffCell = (
-				<Table.Cell>
-					{stardiver.buffs.map(id => {
-						return (
-							<StatusLink
-								key={id}
-								showName={false}
-								iconSize="35px"
-								{...getDataBy(STATUSES, 'id', id)}
-							/>
-						)
-					})}
-				</Table.Cell>
-			)
+		const buffsInDelayWindow = {}
+		let canBeDelayed = window.activeBuffs.length === 0
+		let couldBeDelayed = false
 
-			return (
-				<Table.Row key={stardiver.event.time}>
-					<Table.Cell>
-						{this.jumps.createTimelineButton(stardiver.event.timestamp)}
-					</Table.Cell>
-					<Table.Cell>
-						<ActionLink {...ACTIONS.STARDIVER} />
-					</Table.Cell>
-					{buffCell}
-				</Table.Row>
-			)
-		})
+		for (const id in window.timeToNextBuff) {
+			buffsInDelayWindow[id] =
+				window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN &&
+				window.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
+			couldBeDelayed = buffsInDelayWindow[id] || couldBeDelayed
+			canBeDelayed =
+				window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && canBeDelayed
+		}
 
 		return (
-			<Table>
-				<Table.Header>
-					<Table.Row key="header">
-						<Table.HeaderCell>
-							<Trans id="drg.blood.table.time">Time</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.blood.table.action">Action</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.blood.table.statuses">Personal Buffs</Trans>
-						</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				{nastrondRows}
-				{stdRows}
-			</Table>
+			<Fragment>
+				{canBeDelayed && couldBeDelayed && (
+					<>
+						<Message info icon="info">
+							If the fight's invlunverability windows allow it, this Life of the
+							Dragon could have been delayed to line up with{' '}
+							{Object.keys(buffsInDelayWindow).map(id => {
+								if (buffsInDelayWindow[id]) {
+									const action = getDataBy(ACTIONS, 'id', parseInt(id))
+									return (
+										<>
+											<ActionLink {...action} /> in{' '}
+											{Math.round(window.timeToNextBuff[id] / 1000)}s
+										</>
+									)
+								}
+							})}
+							.
+						</Message>
+					</>
+				)}
+				<Table>
+					<Table.Header>
+						<Table.Row key="header">
+							<Table.HeaderCell>
+								<Trans id="drg.blood.table.time">Time</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.blood.table.action">Action</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.blood.table.statuses">Personal Buffs</Trans>
+							</Table.HeaderCell>
+						</Table.Row>
+					</Table.Header>
+					{rows}
+				</Table>
+			</Fragment>
 		)
 	}
 
