@@ -9,7 +9,7 @@ interface CounterHistory {
 	maximum: number
 }
 
-export interface CounterGaugeOptions {
+export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
 	initialValue?: number,
 	/** Minimum value of the gauge. Defaults to 0. */
@@ -21,7 +21,7 @@ export interface CounterGaugeOptions {
 }
 
 export interface CounterChartOptions {
-	/** Label to display on the data set */
+	/** Label to display on the data set. */
 	label: string
 	/** Color to draw the data set in. Defaults to grey. */
 	color?: string | Color
@@ -41,7 +41,7 @@ export class CounterGauge extends AbstractGauge {
 		return this._value
 	}
 
-	constructor(opts: CounterGaugeOptions & AbstractGaugeOptions = {}) {
+	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
 		this.minimum = opts.minimum || 0

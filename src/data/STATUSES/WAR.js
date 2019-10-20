@@ -67,4 +67,11 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012558.png',
 		duration: 6,
 	},
+
+	NASCENT_GLINT: {
+		id: 1858,
+		name: 'Nascent Glint',
+		icon: 'https://xivapi.com/i/012000/012559.png',
+		duration: 6,
+	},
 }

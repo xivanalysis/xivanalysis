@@ -1,10 +1,9 @@
-import React from 'react'
 import _ from 'lodash'
-
 import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import {getDataBy} from 'data'
+import React from 'react'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -77,7 +76,7 @@ export default class Cooldowns extends Module {
 	}
 
 	_buildGroup(opts) {
-		const group = new ItemGroup(opts)
+		const group = new ItemGroup({showNested: false, ...opts})
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
 		return group
@@ -148,16 +147,17 @@ export default class Cooldowns extends Module {
 		}
 
 		// Add CD info to the timeline
-		cd.history.forEach(use => {
-			if (!use.shared) {
-				this._groups[actionId].addItem(new Item({
-					type: 'background',
-					start: use.timestamp - this.parser.fight.start_time,
-					length: use.length,
-					content: <img src={action.icon} alt={action.name} />,
-				}))
-			}
-		})
+		cd.history
+			.forEach(use => {
+				if (!use.shared) {
+					this._groups[actionId].addItem(new Item({
+						type: 'background',
+						start: use.timestamp - this.parser.fight.start_time,
+						length: use.length,
+						content: <img src={action.icon} alt={action.name} />,
+					}))
+				}
+			})
 
 		return true
 	}
@@ -293,7 +293,7 @@ export default class Cooldowns extends Module {
 
 		return cd.history.reduce(
 			(time, status) => time + this.getAdjustedTimeOnCooldown(status, currentTimestamp, extension),
-			cd.current? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
+			cd.current ? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
 		)
 	}
 

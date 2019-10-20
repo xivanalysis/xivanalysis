@@ -33,6 +33,7 @@ export default {
 			from: 7477,
 			potency: 340,
 		},
+		statusesApplied: [STATUSES.JINPU],
 	},
 
 	ENPI: {
@@ -53,6 +54,7 @@ export default {
 			from: 7477,
 			potency: 340,
 		},
+		statusesApplied: [STATUSES.SHIFU],
 	},
 
 	FUGA: {
@@ -79,6 +81,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
 		castTime: 1.3,
+		statusesApplied: [STATUSES.HIGANBANA],
 	},
 
 	GEKKO: {
@@ -171,7 +174,7 @@ export default {
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15,
-		statusesApplied: [STATUSES.THIRD_EYE],
+		statusesApplied: [STATUSES.THIRD_EYE, STATUSES.EYES_OPEN],
 	},
 
 	AGEHA: {
@@ -194,6 +197,7 @@ export default {
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
 		cooldown: 1,
+		statusesApplied: [STATUSES.KAITEN],
 	},
 
 	HISSATSU_GYOTEN: {
@@ -208,6 +212,7 @@ export default {
 		name: 'Hissatsu: Yaten',
 		icon: 'https://xivapi.com/i/003000/003170.png',
 		cooldown: 10,
+		statusesApplied: [STATUSES.ENHANCED_ENPI],
 	},
 
 	MERCIFUL_EYES: {
@@ -223,6 +228,7 @@ export default {
 		name: 'Meditate',
 		icon: 'https://xivapi.com/i/003000/003172.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.MEDITATE, STATUSES.MEDITATION],
 	},
 
 	HISSATSU_SHINTEN: {
@@ -272,7 +278,7 @@ export default {
 	HISSATSU_SENEI: {
 		id: 16481,
 		name: 'Hissatsu: Senei',
-		icon: 'https://xivapi.com/i/003000/003177.png',
+		icon: 'https://xivapi.com/i/003000/003178.png',
 		cooldown: 120,
 		cooldownGroup: 10,
 	},
@@ -294,6 +300,7 @@ export default {
 		cooldown: 60,
 		gcdRecast: 2.5,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
+		statusesApplied: [STATUSES.HIGANBANA],
 	},
 
 	KAESHI_GOKEN: {
@@ -304,7 +311,6 @@ export default {
 		gcdRecast: 2.5,
 		cooldown: 60,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-
 	},
 
 	KAESHI_SETSUGEKKA: {

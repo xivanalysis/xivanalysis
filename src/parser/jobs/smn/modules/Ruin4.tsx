@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
@@ -93,7 +93,7 @@ export default class Ruin4 extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: STATUSES.FURTHER_RUIN.icon,
 			content: <Trans id="smn.ruin-iv.overage.content">
-				Do not use Egi Assault skills when already at the maximum number of <ActionLink {...STATUSES.FURTHER_RUIN}/> stacks.
+				Do not use Egi Assault skills when already at the maximum number of <StatusLink {...STATUSES.FURTHER_RUIN}/> stacks.
 			</Trans>,
 			tiers: SEVERITY_STACK_COUNT,
 			value: this.overage,
@@ -109,7 +109,7 @@ export default class Ruin4 extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: STATUSES.FURTHER_RUIN.icon,
 			content: <Trans id="smn.ruin-iv.lost.content">
-				Use Egi Assault skills in a way that will generate stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/>.
+				Use Egi Assault skills in a way that will generate stacks of <StatusLink {...STATUSES.FURTHER_RUIN}/>.
 				Egi Assaults will not generate a stack if used against targets that die or become invincible or if a new
 				pet is summoned before the assault is executed.  Titan-Egi's <ActionLink {...ACTIONS.ASSAULT_I_EARTHEN_ARMOR}/>
 				does not generate a Further Ruin stack.
@@ -126,7 +126,7 @@ export default class Ruin4 extends Module {
 				icon: STATUSES.FURTHER_RUIN.icon,
 				severity: SEVERITY.MINOR,
 				content: <Trans id="smn.ruin-iv.leftover.content">
-					You should use all stacks of <ActionLink {...STATUSES.FURTHER_RUIN}/> before the end of the fight.
+					You should use all stacks of <StatusLink {...STATUSES.FURTHER_RUIN}/> before the end of the fight.
 				</Trans>,
 				why: <Trans id="smn.ruin-iv.leftover.why">
 					{this.currentStackCount} Further Ruin <Plural value={this.currentStackCount} one="stack was" other="stacks were"/> left unused at the end of the fight.

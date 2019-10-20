@@ -84,6 +84,7 @@ export default {
 			potency: 390,
 			end: true,
 		},
+		statusesApplied: [STATUSES.GORING_BLADE],
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -104,6 +105,7 @@ export default {
 			potency: 550,
 			end: true,
 		},
+		statusesApplied: [STATUSES.SWORD_OATH],
 	},
 	HOLY_SPIRIT: {
 		id: 7384,
@@ -164,6 +166,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
 		cooldown: 180,
+		statusesApplied: [STATUSES.SENTINEL],
 	},
 	CIRCLE_OF_SCORN: {
 		id: 23,
@@ -171,6 +174,7 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
 		cooldown: 25,
+		statusesApplied: [STATUSES.CIRCLE_OF_SCORN],
 	},
 	COVER: {
 		id: 27,
@@ -178,6 +182,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002501.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.COVER, STATUSES.COVERED],
 	},
 	SPIRITS_WITHIN: {
 		id: 29,
@@ -192,6 +197,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002502.png',
 		onGcd: false,
 		cooldown: 420,
+		statusesApplied: [STATUSES.HALLOWED_GROUND],
 	},
 	SHELTRON: {
 		id: 3542,
@@ -199,6 +205,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002510.png',
 		onGcd: false,
 		cooldown: 5,
+		statusesApplied: [STATUSES.SHELTRON],
 	},
 	DIVINE_VEIL: {
 		id: 3540,
@@ -206,6 +213,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_AFTER_HEAL],
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -213,6 +221,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
 		cooldown: 10,
+		statusesApplied: [STATUSES.INTERVENTION],
 	},
 	REQUIESCAT: {
 		id: 7383,
@@ -220,6 +229,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.REQUIESCAT],
 	},
 	PASSAGE_OF_ARMS: {
 		id: 7385,
@@ -227,6 +237,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.PASSAGE_OF_ARMS],
 	},
 	INTERVENE: {
 		id: 16461,
