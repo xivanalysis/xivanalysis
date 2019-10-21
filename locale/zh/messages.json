@@ -654,7 +654,7 @@
   "war.gauge.suggestions.lost-rage.content": "你使用了<0/>，<1/>，<2/>，或者其他增加兽魂的技能导致兽魂溢出。",
   "war.gauge.suggestions.lost-rage.why": "增加兽魂的技能使用不当导致{0}点兽魂溢出。",
   "war.gauge.title": "兽魂的使用",
-  "war.ir.suggestions.badgcd.content": "",
+  "war.ir.suggestions.badgcd.content": "为了最大化伤害，在<0/>里只应该打<1/>（或者在3个以上目标时用<2/>）。",
   "war.ir.suggestions.badgcd.why": "<0/>的时间里用了{missedGaugeDumps} {missedBloodSkills, plural, one {次错误的GCD was} other {次错误的GCDs }}。",
   "war.ir.suggestions.missedgcd.content": "每次<0/>时间里要打5个GCD技能，如果你操作正确也做不到请考虑换一些有技速的装备。",
   "war.ir.suggestions.missedgcd.why": "<0/>的时间里少了{missedGcds} {missedGcds, plural, one {次GCD} other {次GCDs}} ",
