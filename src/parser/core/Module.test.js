@@ -147,43 +147,23 @@ describe('Module', () => {
 			.toHaveBeenCalledWith(hookRefs[0])
 	})
 
-	// TODO: BENEATH HERE ---
+	it('adds timestamp hooks to the dispatcher', () => {
+		const timestamp = 50
+		module.addTimestampHook(timestamp, hook)
 
-	it('can hook a timestamp', () => {
-		module.addTimestampHook(50, hook)
-
-		module.triggerEvent({...event, timestamp: 1})
-		expect(hook).not.toHaveBeenCalled()
-
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addTimestampHook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addTimestampHook.mock.calls[0][0]).toMatchObject({
+			module: module.constructor.handle,
+			timestamp,
+		})
 	})
 
-	it('will catch up on multiple timestamp hooks in a single event', () => {
-		module.addTimestampHook(40, hook)
-		module.addTimestampHook(50, hook)
-		module.addTimestampHook(60, hook)
-
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook)
-			.toHaveBeenCalledTimes(3)
-			.toHaveBeenNthCalledWith(3, {timestamp: 60})
-	})
-
-	it('can remove timestamp hooks', () => {
+	it('removes timestamp hooks from the dispatcher', () => {
 		const hookRef = module.addTimestampHook(50, hook)
 		module.removeTimestampHook(hookRef)
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook).not.toHaveBeenCalled()
-	})
 
-	it('reports the correct timestamp while executing timestamp hooks', () => {
-		let hookTimestamp = -1
-		const testHook = () => hookTimestamp = parser.currentTimestamp
-		module.addTimestampHook(50, testHook)
-
-		parser.parseEvents([{...event, timestamp: 100}])
-
-		expect(hookTimestamp).toBe(50)
+		expect(dispatcher.removeTimestampHook)
+			.toHaveBeenCalledTimes(1)
+			.toHaveBeenCalledWith(hookRef)
 	})
 })
