@@ -30,7 +30,7 @@ class Parser {
 	// -----
 	// Properties
 	// -----
-	readonly dispatcher = new Dispatcher()
+	readonly dispatcher: Dispatcher
 
 	readonly report: Report
 	readonly fight: Fight
@@ -81,7 +81,11 @@ class Parser {
 		report: Report,
 		fight: Fight,
 		actor: Actor,
+
+		dispatcher?: Dispatcher,
 	}) {
+		this.dispatcher = opts.dispatcher || new Dispatcher()
+
 		// TODO: Pass this down?
 		this.meta = opts.meta
 		this.report = opts.report
