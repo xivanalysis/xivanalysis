@@ -251,6 +251,7 @@ class Parser {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
 		if (moduleIndex !== -1 ) {
+			this._triggerModules = this._triggerModules.slice(0)
 			this._triggerModules.splice(moduleIndex, 1)
 		}
 		this._moduleErrors[mod] = error

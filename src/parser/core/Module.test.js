@@ -11,7 +11,6 @@ class TestModule extends Module {
 	static handle = 'test'
 }
 
-let parser
 let module
 let hook
 
@@ -49,7 +48,7 @@ describe('Module', () => {
 		const meta = new Meta({
 			modules: () => Promise.resolve({default: [TestModule]}),
 		})
-		parser = new Parser({
+		const parser = new Parser({
 			meta,
 			report,
 			fight,
