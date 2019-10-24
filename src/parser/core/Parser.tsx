@@ -38,7 +38,6 @@ class Parser {
 	readonly patch: Patch
 
 	readonly meta: Meta
-	// _timestamp = 0
 
 	modules: Record<string, Module> = {}
 	_constructors: Record<string, typeof Module> = {}
@@ -86,14 +85,9 @@ class Parser {
 	}) {
 		this.dispatcher = opts.dispatcher || new Dispatcher()
 
-		// TODO: Pass this down?
 		this.meta = opts.meta
 		this.report = opts.report
 		this.fight = opts.fight
-
-		// Set initial timestamp
-		// TODO: Remove?
-		// this._timestamp = opts.fight.start_time
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
 		const pets = opts.report.friendlyPets
