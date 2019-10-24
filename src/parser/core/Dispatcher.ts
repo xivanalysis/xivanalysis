@@ -32,22 +32,6 @@ export interface TimestampHook {
 type ModuleErrors = Record<ModuleHandle, Error>
 
 export class Dispatcher {
-	/*
-	TODO: Decide on the responsibilities of this:
-	- event hooks?
-	- timestamp hooks?
-	- error handling?
-	- filtering?
-	- filtering QoL
-
-	- should filtering be here, or remain on the module?
-	- should this be hooking the callback, or firing a generic callback on module?
-	- timestamp hook kind of needs to be handled at this level - so it'd be weird if we didn't at _least_ hook callbacks here
-	- to hook callbacks, we need to filter - can't expect module to intercept that
-
-	- Dispatch probably has the best idea of the current timestamp - should parser defer to it?
-	*/
-
 	private _timestamp = 0
 
 	/** The timestamp of the last hook executed. */
@@ -66,9 +50,6 @@ export class Dispatcher {
 	 * each time a matching event is dispatched.
 	 */
 	addEventHook<T extends Event>(hook: EventHook<T>) {
-		// TODO: Intentionally only accepting single event on hook type
-		// module will need to loop if it gets an array and add one for each (ezpz)
-
 		let eventTypeHooks = this.eventHooks.get(hook.event)
 		if (!eventTypeHooks) {
 			eventTypeHooks = new Map()
@@ -86,7 +67,7 @@ export class Dispatcher {
 
 	/**
 	 * Remove an existing event hook, preventing it from executing any further.
-	 * Removal is performed via strict equality, the hookobeing removed must have
+	 * Removal is performed via strict equality, the hook being removed must have
 	 * been explicitly added prior.
 	 */
 	removeEventHook(hook: EventHook<any>) {
@@ -99,7 +80,11 @@ export class Dispatcher {
 		moduleHooks.delete(hook)
 	}
 
-	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. Hooks for a timestamp in the past will be ignored. */
+	/**
+	 * Add a hook for a timestamp. The provided callback will be fired a single
+	 * time when the parser reaches the specified timestamp. Hooks for a timestamp
+	 * in the past will be ignored.
+	 */
 	addTimestampHook(hook: TimestampHook) {
 		// If we're already past this hook's timestamp, do nothing
 		if (hook.timestamp < this._timestamp) {
@@ -154,9 +139,6 @@ export class Dispatcher {
 	}
 
 	private dispatchEvent(event: Event, triggerOrder: ModuleHandle[]) {
-		// TODO/NOTE: Let's not use 'all' - need to remove the all hook from core/pets
-		// that should be all we need, though. double check
-
 		// Update the internal timestamp to the event we're dispatching
 		this._timestamp = event.timestamp
 
