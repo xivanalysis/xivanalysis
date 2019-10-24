@@ -77,15 +77,6 @@ describe('Module', () => {
 		expect(result).toBe(events)
 	})
 
-	it('can hook all events', () => {
-		// TODO: Remove the last all hook
-		module.addEventHook('all', hook)
-		module.triggerEvent(event)
-		expect(hook)
-			.toHaveBeenCalledTimes(1)
-			.toHaveBeenCalledWith(event)
-	})
-
 	it('adds event hooks to the dispatcher', () => {
 		module.addEventHook(event.type, hook)
 
@@ -102,16 +93,6 @@ describe('Module', () => {
 
 		expect(dispatcher.addEventHook).toHaveBeenCalledTimes(2)
 		expect(dispatcher.addEventHook.mock.calls.map(params => params[0].event)).toEqual([event.type, '__unused'])
-	})
-
-	it('does not trigger \'all\' hooks on symbols', () => {
-		// TODO: Remove 'all'
-		const type = Symbol('test')
-		const symbolEvent = {...event, type}
-		module.addEventHook('all', hook)
-		module.addEventHook(type, hook)
-		module.triggerEvent(symbolEvent)
-		expect(hook).toHaveBeenCalledTimes(1)
 	})
 
 	describe('QoL filter helpers', () => {
