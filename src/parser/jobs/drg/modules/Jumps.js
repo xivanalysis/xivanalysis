@@ -388,7 +388,9 @@ export default class Jumps extends Module {
 						you'll be able to fit will depend on the length of the fight and
 						where the boss invulnerability windows are. This analysis estimates
 						the number of maximum possible jumps, and shows you how far your
-						casts are allowed to drift overall to meet the maximum.
+						casts are allowed to drift overall to meet the maximum. This
+						analysis might produce very tight maximum drifts, so if you miss one
+						jump, don't worry too much about it.
 					</Trans>
 				</Message>
 				<Header size="small">
