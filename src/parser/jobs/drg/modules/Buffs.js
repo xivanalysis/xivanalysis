@@ -152,6 +152,7 @@ export default class Buffs extends Module {
 			start: event.timestamp,
 			casts: [],
 			isBad: BAD_BUFF_ACTIONS.includes(this._lastGcd),
+			partial: false,
 		}
 	}
 
@@ -165,16 +166,20 @@ export default class Buffs extends Module {
 	}
 
 	_closeLastWindow(statusId) {
-		// So we don't include partial windows
-		if (this.combatants.selected.hasStatus(statusId)) {
-			return
-		}
-
 		const tracker = this._buffWindows[statusId]
 
 		// If there's no current cast just stop here
 		if (!tracker.current) {
 			return
+		}
+
+		// Partial windows should be included at the end of the fight,
+		// as it is optimal to use the buff there even though you don't get
+		// the full duration. They'll be marked in the table.
+		if (this.combatants.selected.hasStatus(statusId)) {
+			if (tracker.current) {
+				tracker.current.partial = true
+			}
 		}
 
 		tracker.current.gcdCount = tracker.current.casts.filter(cast => {
@@ -459,7 +464,10 @@ export default class Buffs extends Module {
 						</Table.Cell>
 						<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
 						<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
-						<Table.Cell>{this._formatGcdCount(window.gcdCount)}</Table.Cell>
+						<Table.Cell>
+							{this._formatGcdCount(window.gcdCount)}
+							{window.partial ? '*' : ''}
+						</Table.Cell>
 						<Table.Cell>
 							<Rotation events={window.casts} />
 						</Table.Cell>
@@ -482,7 +490,10 @@ export default class Buffs extends Module {
 						</Table.Cell>
 						<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
 						<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
-						<Table.Cell>{this._formatGcdCount(window.gcdCount)}</Table.Cell>
+						<Table.Cell>
+							{this._formatGcdCount(window.gcdCount)}
+							{window.partial ? '*' : ''}
+						</Table.Cell>
 						<Table.Cell>
 							<Rotation events={window.casts} />
 						</Table.Cell>
@@ -503,7 +514,7 @@ export default class Buffs extends Module {
 						used as frequently as possible at the proper spot in the GCD
 						rotation, and will ideally not clip into boss invulnerability
 						windows. Each buff window below indicates how many GCDs it contained
-						and will display all the casts in the window if expanded.
+						and what those GCDs were.
 					</Trans>
 				</Message>
 				{lcRows.length > 0 && (
