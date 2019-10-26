@@ -16,8 +16,11 @@ import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/m
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+// Expected time to drop Twin in GL4 (basically part way thru previous GCD)
 const TWIN_SNAKES_CYCLE_BUFFER = 3000
-const TWIN_SNAKES_CYCLE_LENGTH = 6
+
+// Expected GCDs between TS in GL3 or lower
+const TWIN_SNAKES_CYCLE_LENGTH = 5
 
 class TwinState {
 	casts: CastEvent[] = []
@@ -205,13 +208,6 @@ export default class TwinSnakes extends Module {
 			this.twinSnake.end = endTime
 			this.history.push(this.twinSnake)
 		}
-	}
-
-	private getDebuffUptimePercent(statusId: number): number {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusUptime / fightDuration) * 100
 	}
 
 	private getBuffUptimePercent(statusId: number): number {
