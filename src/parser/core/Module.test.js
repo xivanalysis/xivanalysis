@@ -1,6 +1,9 @@
 import Module from './Module'
 import Parser from './Parser'
 import {Meta} from './Meta'
+import {Dispatcher} from './Dispatcher'
+
+jest.mock('./Dispatcher')
 
 /* eslint-disable no-magic-numbers */
 
@@ -8,9 +11,10 @@ class TestModule extends Module {
 	static handle = 'test'
 }
 
-let parser
 let module
 let hook
+
+let dispatcher
 
 // Testing data
 const player = {
@@ -39,12 +43,23 @@ const event = {
 
 describe('Module', () => {
 	beforeEach(async () => {
+		Dispatcher.mockClear()
+
 		const meta = new Meta({
 			modules: () => Promise.resolve({default: [TestModule]}),
 		})
-		parser = new Parser({meta, report, fight, actor: player})
+		const parser = new Parser({
+			meta,
+			report,
+			fight,
+			actor: player,
+			dispatcher: new Dispatcher(),
+		})
 		await parser.configure()
 		module = parser.modules.test
+
+		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher.addEventHook.mockImplementation(x => x)
 
 		hook = jest.fn()
 	})
@@ -61,115 +76,74 @@ describe('Module', () => {
 		expect(result).toBe(events)
 	})
 
-	it('can hook all events', () => {
-		module.addEventHook('all', hook)
-		module.triggerEvent(event)
-		expect(hook)
-			.toHaveBeenCalledTimes(1)
-			.toHaveBeenCalledWith(event)
-	})
-
-	it('can hook a single event type', () => {
+	it('adds event hooks to the dispatcher', () => {
 		module.addEventHook(event.type, hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
+
+		expect(dispatcher.addEventHook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+			module: module.constructor.handle,
+			filter: {},
+			event: event.type,
+		})
 	})
 
-	it('can hook multiple event types', () => {
+	it('adds multiple event hooks to the dispatcher', () => {
 		module.addEventHook([event.type, '__unused'], hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
-	})
 
-	it('does not trigger non-matching hooks', () => {
-		module.addEventHook('__unused', hook)
-		module.triggerEvent(event)
-		expect(hook).not.toHaveBeenCalled()
-	})
-
-	it('does not trigger \'all\' hooks on symbols', () => {
-		const type = Symbol('test')
-		const symbolEvent = {...event, type}
-		module.addEventHook('all', hook)
-		module.addEventHook(type, hook)
-		module.triggerEvent(symbolEvent)
-		expect(hook).toHaveBeenCalledTimes(1)
-	})
-
-	it('can filter by event keys', () => {
-		module.addEventHook(event.type, hook)
-		module.addEventHook(event.type, {filterKey: event.filterKey}, hook)
-		module.addEventHook(event.type, {filterKey: 'incorrect'}, hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(2)
+		expect(dispatcher.addEventHook).toHaveBeenCalledTimes(2)
+		expect(dispatcher.addEventHook.mock.calls.map(params => params[0].event)).toEqual([event.type, '__unused'])
 	})
 
 	describe('QoL filter helpers', () => {
 		it('player', () => {
-			const playerEvent = {...event, sourceID: player.id}
-			module.addEventHook(playerEvent.type, {by: 'player'}, hook)
-			module.triggerEvent(playerEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			module.addEventHook(event.type, {by: 'player'}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {sourceID: player.id},
+			})
 		})
 
 		it('pet', () => {
-			const petEvent = {...event, targetID: pet.id}
-			module.addEventHook(petEvent.type, {to: 'pet'}, hook)
-			module.triggerEvent(petEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			module.addEventHook(event.type, {to: 'pet'}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {targetID: [pet.id]},
+			})
 		})
 
 		it('abilityId', () => {
-			const abilityEvent = {...event, ability: {guid: 1}}
-			module.addEventHook(abilityEvent.type, {abilityId: abilityEvent.ability.guid}, hook)
-			module.triggerEvent(abilityEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			const abilityId = 1
+			module.addEventHook(event.type, {abilityId}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {ability: {guid: abilityId}},
+			})
 		})
 	})
 
 	it('can remove event hooks', () => {
-		const hookRef = module.addEventHook(event.type, hook)
-		module.triggerEvent(event)
-		module.removeEventHook(hookRef)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
+		const hookRefs = module.addEventHook(event.type, hook)
+		module.removeEventHook(hookRefs)
+
+		expect(dispatcher.removeEventHook)
+			.toHaveBeenCalledTimes(1)
+			.toHaveBeenCalledWith(hookRefs[0])
 	})
 
-	it('can hook a timestamp', () => {
-		module.addTimestampHook(50, hook)
+	it('adds timestamp hooks to the dispatcher', () => {
+		const timestamp = 50
+		module.addTimestampHook(timestamp, hook)
 
-		module.triggerEvent({...event, timestamp: 1})
-		expect(hook).not.toHaveBeenCalled()
-
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addTimestampHook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addTimestampHook.mock.calls[0][0]).toMatchObject({
+			module: module.constructor.handle,
+			timestamp,
+		})
 	})
 
-	it('will catch up on multiple timestamp hooks in a single event', () => {
-		module.addTimestampHook(40, hook)
-		module.addTimestampHook(50, hook)
-		module.addTimestampHook(60, hook)
-
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook)
-			.toHaveBeenCalledTimes(3)
-			.toHaveBeenNthCalledWith(3, {timestamp: 60})
-	})
-
-	it('can remove timestamp hooks', () => {
+	it('removes timestamp hooks from the dispatcher', () => {
 		const hookRef = module.addTimestampHook(50, hook)
 		module.removeTimestampHook(hookRef)
-		module.triggerEvent({...event, timestamp: 100})
-		expect(hook).not.toHaveBeenCalled()
-	})
 
-	it('reports the correct timestamp while executing timestamp hooks', () => {
-		let hookTimestamp = -1
-		const testHook = () => hookTimestamp = parser.currentTimestamp
-		module.addTimestampHook(50, testHook)
-
-		parser.parseEvents([{...event, timestamp: 100}])
-
-		expect(hookTimestamp).toBe(50)
+		expect(dispatcher.removeTimestampHook)
+			.toHaveBeenCalledTimes(1)
+			.toHaveBeenCalledWith(hookRef)
 	})
 })
