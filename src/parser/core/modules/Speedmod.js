@@ -28,8 +28,9 @@ export default class Speedmod extends Module {
 	}
 
 	// Override for scalars that function outside of speedmod
-	// NOTE: Only Riddle of Fire (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
-	getJobAdditionalSpeedbuffScalar() {
+	// NOTE: Only Greased Lightning (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
+	// eslint-disable-next-line no-unused-vars
+	getJobAdditionalSpeedbuffScalar(event) {
 		return 1.0
 	}
 
