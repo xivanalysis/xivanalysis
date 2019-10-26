@@ -1,6 +1,6 @@
-import {ChartDataSets, ChartPoint} from 'chart.js'
+import {ChartDataSets} from 'chart.js'
 import Color from 'color'
-import Module, {TimestampHook} from 'parser/core/Module'
+import Module from 'parser/core/Module'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 function expectExist<T>(value?: T) {
@@ -44,7 +44,7 @@ export class TimerGauge extends AbstractGauge {
 	private readonly expirationCallback?: () => void
 	private readonly chartOptions?: TimerChartOptions
 
-	private hook?: TimestampHook
+	private hook?: ReturnType<Module['addTimestampHook']>
 	private history: State[] = []
 
 	// TODO: Work out how to remove this reliance on having it passed down
