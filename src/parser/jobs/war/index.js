@@ -44,5 +44,12 @@ export default new Meta({
 				</ul>
 			</>,
 		},
+		{
+			date: new Date('2019-08-11'),
+			contributors: [],
+			Changes: () => <>
+				Updated the Gauge module to track Infuriate reduction with all of Inner Chaos, Chaotic Cyclone, Fell Cleave, and Decimate
+			</>,
+		},
 	],
 })
