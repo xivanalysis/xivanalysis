@@ -278,7 +278,7 @@ export default {
 	HISSATSU_SENEI: {
 		id: 16481,
 		name: 'Hissatsu: Senei',
-		icon: 'https://xivapi.com/i/003000/003177.png',
+		icon: 'https://xivapi.com/i/003000/003178.png',
 		cooldown: 120,
 		cooldownGroup: 10,
 	},

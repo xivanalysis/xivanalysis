@@ -9,6 +9,7 @@ import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
+import {Dispatcher} from './Dispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
@@ -29,13 +30,14 @@ class Parser {
 	// -----
 	// Properties
 	// -----
+	readonly dispatcher: Dispatcher
+
 	readonly report: Report
 	readonly fight: Fight
 	readonly player: Player
 	readonly patch: Patch
 
-	meta: Meta
-	_timestamp = 0
+	readonly meta: Meta
 
 	modules: Record<string, Module> = {}
 	_constructors: Record<string, typeof Module> = {}
@@ -47,8 +49,8 @@ class Parser {
 	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
-		// TODO: this.finished?
-		return Math.min(this.fight.end_time, this._timestamp)
+		const {end_time, start_time} = this.fight
+		return Math.min(end_time, Math.max(start_time, this.dispatcher.timestamp))
 	}
 
 	get fightDuration() {
@@ -78,13 +80,14 @@ class Parser {
 		report: Report,
 		fight: Fight,
 		actor: Actor,
+
+		dispatcher?: Dispatcher,
 	}) {
+		this.dispatcher = opts.dispatcher || new Dispatcher()
+
 		this.meta = opts.meta
 		this.report = opts.report
 		this.fight = opts.fight
-
-		// Set initial timestamp
-		this._timestamp = opts.fight.start_time
 
 		// Get a list of the current player's pets and set it on the player instance for easy reference
 		const pets = opts.report.friendlyPets
@@ -176,8 +179,22 @@ class Parser {
 
 		// Loop & trigger all the events & fabrications
 		for (const event of this.iterateEvents(events)) {
-			this._timestamp = event.timestamp
-			this.triggerEvent(event)
+			// TODO: Do I need to keep a history?
+			const moduleErrors = this.dispatcher.dispatch(event, this._triggerModules)
+
+			for (const handle in moduleErrors) {
+				if (!moduleErrors.hasOwnProperty(handle)) { continue }
+				const error = moduleErrors[handle]
+
+				this.captureError({
+					error,
+					type: 'event',
+					module: handle,
+					event,
+				})
+
+				this._setModuleError(handle, error)
+			}
 		}
 	}
 
@@ -224,28 +241,13 @@ class Parser {
 		this._fabricationQueue.push(this.hydrateFabrication(event))
 	}
 
-	triggerEvent(event: Event) {
-		// TODO: Do I need to keep a history?
-		this._triggerModules.forEach(mod => {
-			try {
-				this.modules[mod].triggerEvent(event)
-			} catch (error) {
-				this.captureError({
-					error,
-					type: 'event',
-					module: mod,
-					event,
-				})
-
-				// Also cascade the error through the dependency tree
-				this._setModuleError(mod, error)
-			}
-		})
-	}
-
 	_setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
-		this._triggerModules.splice(this._triggerModules.indexOf(mod), 1)
+		const moduleIndex = this._triggerModules.indexOf(mod)
+		if (moduleIndex !== -1 ) {
+			this._triggerModules = this._triggerModules.slice(0)
+			this._triggerModules.splice(moduleIndex, 1)
+		}
 		this._moduleErrors[mod] = error
 
 		// Cascade via dependencies
@@ -407,7 +409,7 @@ class Parser {
 		}
 
 		// Gather extra data for the error report.
-		const [data, errors] = this._gatherErrorContext(opts.module, 'output', opts.error)
+		const [data, errors] = this._gatherErrorContext(opts.module, opts.type, opts.error)
 		extra.modules = data
 
 		for (const [m, err] of errors) {
