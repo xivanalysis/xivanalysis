@@ -6,7 +6,7 @@ import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {getDataBy} from 'data'
 import {ActionLink} from 'components/ui/DbLink'
-import {Table, Message} from 'semantic-ui-react'
+import {Table, Message, Icon} from 'semantic-ui-react'
 
 const ROTATION_IDS = [
 	ACTIONS.RAIDEN_THRUST.id,
@@ -26,7 +26,7 @@ const NEXT_COMBO = {
 export default class Positionals extends Module {
 	static handle = 'positionals';
 	static title = t('drg.positionals.title')`Positionals`;
-	static dependencies = ['jumps'];
+	static dependencies = ['jumps', 'combatants'];
 
 	// tracking raiden thrust procs
 	_rtCombos = [];
@@ -78,6 +78,10 @@ export default class Positionals extends Module {
 				success: false,
 				used: false,
 				trueNorthAvailable: false,
+				trueNorthCast1: this.combatants.selected.hasStatus(
+					STATUSES.TRUE_NORTH.id
+				),
+				time: event.timestamp,
 			}
 		} else if (this._currentCombo) {
 			// if the action isn't the next expected one, close the current window (not expecting a proc
@@ -88,6 +92,11 @@ export default class Positionals extends Module {
 			} else {
 				// add the time
 				this._currentCombo.time = event.timestamp
+
+				// check for true north still active
+				this._currentCombo.trueNorthCast2 = this.combatants.selected.hasStatus(
+					STATUSES.TRUE_NORTH.id
+				)
 			}
 		}
 	}
@@ -105,13 +114,40 @@ export default class Positionals extends Module {
 		console.log(this._rtCombos)
 	}
 
+	_checkIcon(success, size = 'large') {
+		return success ? (
+			<Icon color="green" name="check" size={size} />
+		) : (
+			<Icon color="red" name="x" size={size} />
+		)
+	}
+
 	_procTable() {
 		return this._rtCombos.map(combo => {
-			<Table.row key={combo.time}>
-				<Table.Cell>{this.jumps.createTimelineButton(combo.time)}</Table.Cell>
-				<Table.Cell></Table.Cell>
-				<Table.Cell></Table.Cell>
-			</Table.row>
+			const action = getDataBy(ACTIONS, 'id', combo.next)
+
+			return (
+				<Table.Row key={combo.time}>
+					<Table.Cell>{this.jumps.createTimelineButton(combo.time)}</Table.Cell>
+					<Table.Cell>
+						<ActionLink {...action} />
+					</Table.Cell>
+					<Table.Cell
+						textAlign="center"
+						positive={combo.success}
+						negative={!combo.success}
+					>
+						{this._checkIcon(combo.success)}
+					</Table.Cell>
+					<Table.Cell textAlign="center">
+						{combo.trueNorthCast1 ? <Icon color="green" name="check" /> : ''}
+					</Table.Cell>
+					<Table.Cell textAlign="center">
+						{combo.trueNorthCast2 ? <Icon color="green" name="check" /> : ''}
+					</Table.Cell>
+					<Table.Cell textAlign="center"></Table.Cell>
+				</Table.Row>
+			)
 		})
 	}
 
@@ -121,8 +157,8 @@ export default class Positionals extends Module {
 				<Message>
 					<Trans id="drg.positionals.analysis.message">
 						Being in the correct position when using{' '}
-						<ActionLink {...ACTIONS.WHEELING_THRUST} />
-						and <ActionLink {...ACTIONS.FANG_AND_CLAW} /> will proc{' '}
+						<ActionLink {...ACTIONS.WHEELING_THRUST} /> and{' '}
+						<ActionLink {...ACTIONS.FANG_AND_CLAW} /> will proc{' '}
 						<ActionLink {...ACTIONS.RAIDEN_THRUST} />. You should be trying to
 						proc this ability as much as possible, relying on{' '}
 						<ActionLink {...ACTIONS.TRUE_NORTH} />
@@ -134,16 +170,28 @@ export default class Positionals extends Module {
 				<Table>
 					<Table.Header>
 						<Table.Row key="pos-header">
-							<Table.HeaderCell>
+							<Table.HeaderCell rowSpan="2">
 								<Trans id="drg.positionals.table.time">Time</Trans>
 							</Table.HeaderCell>
-							<Table.HeaderCell>
+							<Table.HeaderCell rowSpan="2">
+								<Trans id="drg.positionals.table.procact">Proc Action</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell rowSpan="2">
 								<Trans id="drg.positionals.table.success">Success</Trans>
 							</Table.HeaderCell>
+							<Table.HeaderCell colSpan="3" textAlign="center">
+								<Trans id="drg.positionals.table.truenorth">True North</Trans>
+							</Table.HeaderCell>
+						</Table.Row>
+						<Table.Row>
 							<Table.HeaderCell>
-								<Trans id="drg.positionals.table.truenorth">
-									True North Available?
-								</Trans>
+								<Trans id="drg.positionals.table.tn1">Cast 1</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.positionals.table.tn2">Cast 2</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.positionals.table.tnavail">Available</Trans>
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
