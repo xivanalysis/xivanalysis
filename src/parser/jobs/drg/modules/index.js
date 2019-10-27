@@ -7,6 +7,7 @@ import Procs from './Procs'
 //import RotationWatchdog from './RotationWatchdog'
 import Weaving from './Weaving'
 import Jumps from './Jumps'
+import Positionals from './Positionals'
 
 export default [
 	BloodOfTheDragon,
@@ -18,4 +19,5 @@ export default [
 	//RotationWatchdog, // TODO - Restore this module after making it actually correct for ShB
 	Weaving,
 	Jumps,
+	Positionals,
 ]
