@@ -17,6 +17,7 @@ import Enemies from 'parser/core/modules/Enemies'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
+import UnableToAct from 'parser/core/modules/UnableToAct'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
@@ -25,11 +26,12 @@ import {BLM_GAUGE_EVENT} from './Gauge'
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
 const EXPECTED_FIRE4 = 6
-const NO_UH_OPENER_FIRE4 = 5
+const NO_UH_EXPECTED_FIRE4 = 5
 const FIRE4_FROM_MANAFONT = 1
 
 const MIN_MP_FOR_FULL_ROTATION = 9600
 const THUNDERCLOUD_MILLIS = 18000
+const ASTRAL_UMBRAL_DURATION = 15000
 
 const AF_UI_BUFF_MAX_STACK = 3
 
@@ -81,7 +83,6 @@ class Cycle {
 	atypicalAFStart: boolean = false
 	firePhaseStartMP: number = 0
 
-	firstCycle: boolean = false
 	finalOrDowntime: boolean = false
 
 	gaugeStateBeforeFire: GaugeState = new GaugeState()
@@ -108,8 +109,9 @@ class Cycle {
 			return
 		}
 
-		// Account for the no-UH opener when determining the expected count of Fire 4s
-		let expectedCount = this.firstCycle && this.gaugeStateBeforeFire.umbralHearts === 0 ? NO_UH_OPENER_FIRE4 : EXPECTED_FIRE4
+		// Account for the no-UH opener/LeyLines optimization when determining the expected count of Fire 4s
+		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length === 0)
+			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
@@ -134,11 +136,14 @@ class Cycle {
 		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
-	constructor(start: number, gaugeState: GaugeState, isFirst: boolean = false) {
+	constructor(start: number, gaugeState: GaugeState) {
 		this.startTime = start,
 		// Object.assign because this needs to be a by-value assignment, not by-reference
 		this.gaugeStateBeforeFire = Object.assign(this.gaugeStateBeforeFire, gaugeState)
-		this.firstCycle = isFirst
+	}
+
+	public overrideErrorCode(code: {priority: number, message: TODO}) {
+		this._errorCode = code
 	}
 }
 
@@ -175,9 +180,10 @@ export default class RotationWatchdog extends Module {
 	@dependency private enemies!: Enemies
 	@dependency private timeline!: Timeline
 	@dependency private combatants!: Combatants
+	@dependency private unableToAct!: UnableToAct
 
 	private currentGaugeState: GaugeState = new GaugeState()
-	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState, true)
+	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
 	private history: Cycle[] = []
 
 	private firstEvent = true
@@ -288,6 +294,15 @@ export default class RotationWatchdog extends Module {
 	// Finish this parse and add the suggestions and checklist items
 	private onComplete() {
 		this.stopRecording(undefined)
+
+		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
+		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
+		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.DROPPED_ENOCHIAN).forEach(cycle => {
+			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
+			}
+		})
+
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
 		if (this.missedF4s) {
 			this.suggestions.add(new Suggestion({
@@ -407,7 +422,7 @@ export default class RotationWatchdog extends Module {
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
 		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
-		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState, this.firstEvent)
+		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
 	}
 
 	// End the current cycle, send it off to error processing, and add it to the history list
