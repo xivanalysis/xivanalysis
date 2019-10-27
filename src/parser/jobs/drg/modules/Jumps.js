@@ -230,7 +230,7 @@ export default class Jumps extends Module {
 			table: (
 				<Table>
 					<Table.Header>
-						<Table.Row key="header">
+						<Table.Row key={key + 'header'}>
 							<Table.HeaderCell>
 								<Trans id="drg.jumptable.time">Time</Trans>
 							</Table.HeaderCell>
