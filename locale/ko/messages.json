@@ -80,7 +80,7 @@
   "blm.about.description": "이 분석기는 본인이 생각하는것보다 얼마나 [~action/FIRE_IV] 시전 횟수에 손해를 보고 있는지에 초첨을 맞춥니다.",
   "blm.about.description.warning": "이 직업은 아직 구현되지 않았습니다.",
   "blm.gauge.suggestions.dropped-enochian.content": "<0/>이 끊기면 <1/> 시전 가능 횟수에 손해를 보며 <3/> 혹은 <4/>을 사용을 못하게 되며 <5/>의 10% 데미지 버프 또한 끊기기에 <2/>를 다시 갱신함으로 인해 글쿨이 밀리는 손해를 볼 수 있습니다.",
-  "blm.gauge.suggestions.dropped-enochian.why": "",
+  "blm.gauge.suggestions.dropped-enochian.why": "천사의 언어가 끊긴 횟수 {droppedEno} {droppedEno, plural, other { 회}}.",
   "blm.gauge.suggestions.lost-polyglot.content": "<0/>이 끊겨 언어 통달을 잃어버렸습니다. 강력한 위력을 가진 <1/>과 <2/>을 사용해 언어 통달 스택을 효율적으로 사용하십시오.",
   "blm.gauge.suggestions.lost-polyglot.why": "언어 통달을 {0, plural, one {#회} other {#회}} 놓쳤습니다.",
   "blm.gauge.suggestions.overwritten-polyglot.content": "2차 언어 통달을 얻은 이후 30초 동안 <0/> 혹은 <1/>을 사용하지않아 초과하였습니다. 가장 위력이 높은 <2/>과 <3/>을 사용해 초과하여 언어 통달 스택을 잃는 손해를 피하십시오.",
