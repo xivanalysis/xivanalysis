@@ -15,6 +15,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const NO_PET_ID = -1
 
+const PET_RESYNC_BUFFER_MS = 3000
+
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
@@ -167,11 +169,13 @@ export default class Pets extends Module {
 
 		// If the action is being cast by a pet that isn't the current pet, tracking has desynced - attempt to resync
 		// This usually happens if the player somehow had a demi out before the start of the log.
+		// Explicitly _prevent_ resync if there was a switch in the last 3s - actions from the previous pet may still be applying
 		const action = getDataBy(ACTIONS, 'id', abilityId)
 		if (
 			action &&
 			action.pet &&
-			action.pet !== this._currentPet.id
+			action.pet !== this._currentPet.id &&
+			event.timestamp - this._currentPet.timestamp > PET_RESYNC_BUFFER_MS
 		) {
 			this.setPet(action.pet)
 		}
