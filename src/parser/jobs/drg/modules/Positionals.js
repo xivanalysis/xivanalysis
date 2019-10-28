@@ -42,7 +42,7 @@ export default class Positionals extends Module {
 
 	// true north tracking
 	_tnCharges = 2
-	_nextChargeIn = []
+	_nextChargeIn = null
 
 	constructor(...args) {
 		super(...args)
@@ -50,7 +50,7 @@ export default class Positionals extends Module {
 		this.addHook('cast', {by: 'player', abilityId: ROTATION_IDS}, this._onGCD)
 		this.addHook('cast', {by: 'player', abilityId: PROC_IDS}, this._onProcGCD)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RAIDEN_THRUST_READY.id}, this._procSuccess)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRUE_NORTH.id}, this._tnUsed)
+		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.TRUE_NORTH.id}, this._tnUsed)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -102,9 +102,15 @@ export default class Positionals extends Module {
 
 	_updateTnCharges(timestamp) {
 		// check to see if we're past the required cooldown time
-		for (const time of this._nextChargeIn) {
-			if (time <= timestamp) {
-				this._tnCharges += 1
+		if (this._nextChargeIn && this._nextChargeIn <= timestamp) {
+			this._tnCharges += 1
+
+			if (this._tnCharges < TRUE_NORTH_CHARGES) {
+				// if we're below the max, queue another charge since the cd will keep ticking
+				this._nextChargeIn += TRUE_NORTH_CD
+			} else {
+				// otherwise we're good, no recharge happening
+				this._nextChargeIn = null
 			}
 		}
 
@@ -112,16 +118,19 @@ export default class Positionals extends Module {
 		if (this._tnCharges > TRUE_NORTH_CHARGES) {
 			console.log('DRG Error: True north charges exceeded limit')
 		}
-
-		this._nextChargeIn = this._nextChargeIn.filter(time => time > timestamp)
 	}
 
 	_tnUsed(event) {
+		// update
+		this._updateTnCharges(event.timestamp)
+
 		// remove charge
 		this._tnCharges -= 1
 
-		// mark next recharge time
-		this._nextChargeIn.push(event.timestamp + TRUE_NORTH_CD)
+		// mark next recharge time, if we don't have one going already
+		if (!this._nextChargeIn) {
+			this._nextChargeIn = event.timestamp + TRUE_NORTH_CD
+		}
 
 		// if we're below 0, panic
 		if (this._tnCharges < 0) {

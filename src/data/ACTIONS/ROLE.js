@@ -171,7 +171,7 @@ export default {
 		id: 7546,
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
-		cooldown: 90,
+		cooldown: 45,
 		statusesApplied: [STATUSES.TRUE_NORTH],
 	},
 }
