@@ -31,7 +31,7 @@ export default class Positionals extends Module {
 	static handle = 'positionals'
 	static title = t('drg.positionals.title')`Positionals`
 	static dependencies = [
-		'jumps',
+		'buffs',
 		'combatants',
 		'suggestions',
 	]
@@ -57,8 +57,7 @@ export default class Positionals extends Module {
 	_onGCD(event) {
 		if (this._currentCombo) {
 			// did we use the proc? we might not due to invuln windows
-			const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-			if (action.id === ACTIONS.RAIDEN_THRUST.id) {
+			if (event.ability.guid === ACTIONS.RAIDEN_THRUST.id) {
 				this._rtCombos.used = true
 			}
 
@@ -70,12 +69,10 @@ export default class Positionals extends Module {
 
 	_onProcGCD(event) {
 		// get action data
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-
 		if (!this._currentCombo) {
 			// if we don't have an open combo window, open one
 			this._currentCombo = {
-				next: NEXT_COMBO[action.id],
+				next: NEXT_COMBO[event.ability.guid],
 				success: false,
 				used: false,
 				trueNorthCharges: this._tnCharges,
@@ -85,7 +82,7 @@ export default class Positionals extends Module {
 		} else if (this._currentCombo) {
 			// if the action isn't the next expected one, close the current window (not expecting a proc
 			// due to broken combo).
-			if (this._currentCombo.next !== action.id) {
+			if (this._currentCombo.next !== event.ability.guid) {
 				// discard, let the broken combo module yell about this
 				this._currentCombo = null
 			} else {
@@ -105,6 +102,11 @@ export default class Positionals extends Module {
 		if (this._nextChargeIn && this._nextChargeIn <= timestamp) {
 			this._tnCharges += 1
 
+			if (this._tnCharges > TRUE_NORTH_CHARGES) {
+				// clamp to max
+				this._tnCharges = TRUE_NORTH_CHARGES
+			}
+
 			if (this._tnCharges < TRUE_NORTH_CHARGES) {
 				// if we're below the max, queue another charge since the cd will keep ticking
 				this._nextChargeIn += TRUE_NORTH_CD
@@ -112,11 +114,6 @@ export default class Positionals extends Module {
 				// otherwise we're good, no recharge happening
 				this._nextChargeIn = null
 			}
-		}
-
-		// if we're over the max, uhhhhhhhhhh panic?
-		if (this._tnCharges > TRUE_NORTH_CHARGES) {
-			console.log('DRG Error: True north charges exceeded limit')
 		}
 	}
 
@@ -132,9 +129,9 @@ export default class Positionals extends Module {
 			this._nextChargeIn = event.timestamp + TRUE_NORTH_CD
 		}
 
-		// if we're below 0, panic
+		// if we're below 0, clamp
 		if (this._tnCharges < 0) {
-			console.log('DRG Error: True north charges went below 0')
+			this._tnCharges = 0
 		}
 	}
 
@@ -173,7 +170,7 @@ export default class Positionals extends Module {
 			const action = getDataBy(ACTIONS, 'id', combo.next)
 
 			return <Table.Row key={combo.time}>
-				<Table.Cell>{this.jumps.createTimelineButton(combo.time)}</Table.Cell>
+				<Table.Cell>{this.buffs.createTimelineButton(combo.time)}</Table.Cell>
 				<Table.Cell><ActionLink {...action} /></Table.Cell>
 				<Table.Cell	textAlign="center" positive={combo.success}	negative={!combo.success}>
 					{this._checkIcon(combo.success)}

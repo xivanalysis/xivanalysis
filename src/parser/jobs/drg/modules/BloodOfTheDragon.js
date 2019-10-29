@@ -25,11 +25,11 @@ export default class BloodOfTheDragon extends Module {
 	static title = t('drg.blood.title')`Life of the Dragon`
 	static dependencies = [
 		'brokenLog',
+		'buffs',
 		'checklist',
+		'cooldowns',
 		'death',
 		'suggestions',
-		'jumps',
-		'cooldowns',
 	]
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
@@ -131,7 +131,7 @@ export default class BloodOfTheDragon extends Module {
 					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns.getCooldownRemaining(ACTIONS.DRAGON_SIGHT.id),
 					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns.getCooldownRemaining(ACTIONS.BATTLE_LITANY.id),
 				},
-				activeBuffs: this.jumps.getActiveDrgBuffs(),
+				activeBuffs: this.buffs.getActiveDrgBuffs(),
 			}
 			this._eyes = 0
 		}
@@ -151,8 +151,8 @@ export default class BloodOfTheDragon extends Module {
 		if (!this._lifeWindows.current.nastronds.some(nastrond => nastrond.timestamp === event.timestamp)) {
 			// Dedupe Nastrond casts, since that can occasionally happen
 			this._lifeWindows.current.nastronds.push({
-				event,
-				buffs: this.jumps.getActiveDrgBuffs(),
+				...event,
+				buffs: this.buffs.getActiveDrgBuffs(),
 				action: ACTIONS.NASTROND,
 			})
 		}
@@ -172,8 +172,8 @@ export default class BloodOfTheDragon extends Module {
 		if (!this._lifeWindows.current.stardivers.some(stardiver => stardiver.timestamp === event.timestamp)) {
 			// Dedupe Stardiver casts, it's also AoE so it's probably going to happen on occasion too
 			this._lifeWindows.current.stardivers.push({
-				event,
-				buffs: this.jumps.getActiveDrgBuffs(),
+				...event,
+				buffs: this.buffs.getActiveDrgBuffs(),
 				action: ACTIONS.STARDIVER,
 			})
 		}
@@ -235,24 +235,15 @@ export default class BloodOfTheDragon extends Module {
 
 	_windowTable(window) {
 		const casts = window.nastronds.concat(window.stardivers)
-		casts.sort((a, b) => {
-			if (a.event.timestamp < b.event.timestamp) {
-				return -1
-			}
-			if (a.event.timestamp > b.event.timestamp) {
-				return 1
-			}
-
-			return 0
-		})
+		casts.sort((a, b) => { return a.timestamp - b.timestamp })
 
 		const rows = casts.map(cast => {
 			const buffs = cast.buffs.map(id => {
-				return <StatusLink key={id}	showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)}	/>
+				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)}	/>
 			})
 
-			return <Table.Row key={cast.event.timestamp}>
-				<Table.Cell>{this.jumps.createTimelineButton(cast.event.timestamp)}</Table.Cell>
+			return <Table.Row key={cast.timestamp}>
+				<Table.Cell>{this.buffs.createTimelineButton(cast.timestamp)}</Table.Cell>
 				<Table.Cell><ActionLink {...cast.action} /></Table.Cell>
 				<Table.Cell>{buffs}</Table.Cell>
 			</Table.Row>
@@ -271,9 +262,9 @@ export default class BloodOfTheDragon extends Module {
 		const delayBuffs = Object.keys(buffsInDelayWindow).map(id => {
 			if (buffsInDelayWindow[id]) {
 				const action = getDataBy(ACTIONS, 'id', parseInt(id))
-				return <Fragment>
-					<ActionLink {...action} /> in	{Math.round(window.timeToNextBuff[id] / 1000)}s
-				</Fragment>
+				return <Trans id="drg.blood.delay-possible">
+					<ActionLink {...action} /> in	{this.parser.formatDuration(window.timeToNextBuff[id])}
+				</Trans>
 			}
 		})
 
@@ -281,7 +272,7 @@ export default class BloodOfTheDragon extends Module {
 			{canBeDelayed && couldBeDelayed && (
 				<>
 					<Message info icon="info">
-						If the fight's invlunverability windows allow it, this Life of the Dragon could have been delayed to line up with	{delayBuffs}.
+						<Trans id="drg.blood.delay-explain">If the fight's invlunverability windows allow it, this Life of the Dragon could have been delayed to line up with	{delayBuffs}.</Trans>
 					</Message>
 				</>
 			)}

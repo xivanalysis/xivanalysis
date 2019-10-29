@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Table, Button, Accordion, Header,	Message, Icon} from 'semantic-ui-react'
+import {Table, Accordion, Header,	Message, Icon} from 'semantic-ui-react'
 
 import Module from 'parser/core/Module'
 import ACTIONS from 'data/ACTIONS'
@@ -16,15 +16,12 @@ export default class Jumps extends Module {
 	static handle = 'jumps'
 	static title = t('drg.jump.title')`Jumps`
 	static dependencies = [
+		'buffs',
 		'checklist',
 		'invuln',
-		'combatants',
-		'timeline',
 		'suggestions',
 	]
 
-	// theoretically this is different depending on if you're not 80 yet, but
-	// it's probably ok to assume this is for current endgame?
 	_jumpData = {
 		[ACTIONS.HIGH_JUMP.id]: {
 			first: 0,
@@ -49,7 +46,7 @@ export default class Jumps extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player',	abilityId: [ACTIONS.JUMP.id, ACTIONS.HIGH_JUMP.id, ACTIONS.SPINESHATTER_DIVE.id, ACTIONS.DRAGONFIRE_DIVE.id]}, this._onJump)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HIGH_JUMP.id, ACTIONS.SPINESHATTER_DIVE.id, ACTIONS.DRAGONFIRE_DIVE.id]}, this._onJump)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -84,33 +81,14 @@ export default class Jumps extends Module {
 		}
 	}
 
-	getActiveDrgBuffs() {
-		const active = []
-
-		if (this.combatants.selected.hasStatus(STATUSES.LANCE_CHARGE.id)) {
-			active.push(STATUSES.LANCE_CHARGE.id)
-		}
-
-		if (this.combatants.selected.hasStatus(STATUSES.BATTLE_LITANY.id)) {
-			active.push(STATUSES.BATTLE_LITANY.id)
-		}
-
-		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO)) {
-			active.push(STATUSES.RIGHT_EYE.id)
-		}
-
-		return active
-	}
-
 	_onJump(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (this._jumpData[action.id].first === 0) {
-			this._jumpData[action.id].first = this.parser.currentTimestamp
+		if (this._jumpData[event.ability.guid].first === 0) {
+			this._jumpData[event.ability.guid].first = this.parser.currentTimestamp
 		}
 
-		this._jumpData[action.id].history.push({
+		this._jumpData[event.ability.guid].history.push({
 			time: this.parser.currentTimestamp,
-			buffs: this.getActiveDrgBuffs(),
+			buffs: this.buffs.getActiveDrgBuffs(),
 		})
 	}
 
@@ -138,17 +116,6 @@ export default class Jumps extends Module {
 		return (this._jumpData[id].history.length / this._jumpData[id].max) * 100
 	}
 
-	createTimelineButton(timestamp) {
-		return <Button
-			circular
-			compact
-			icon="time"
-			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
-			content={this.parser.formatTimestamp(timestamp)}
-		/>
-	}
-
 	_jumpAnalysis(key) {
 		const history = this._jumpData[key].history
 
@@ -167,7 +134,7 @@ export default class Jumps extends Module {
 			totalDrift += drift
 
 			return <Table.Row key={event.time}>
-				<Table.Cell>{this.createTimelineButton(event.time)}</Table.Cell>
+				<Table.Cell>{this.buffs.createTimelineButton(event.time)}</Table.Cell>
 				<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
 				<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
 				<Table.Cell>{buffs}</Table.Cell>
@@ -220,7 +187,7 @@ export default class Jumps extends Module {
 
 		this.checklist.add(
 			new Rule({
-				name: <Trans id="drg.jump.checklist.name">Use Your Jumps on Cpoldown</Trans>,
+				name: <Trans id="drg.jump.checklist.name">Use Your Jumps on Cooldown</Trans>,
 				description: <Trans id="drg.jump.checklist.description">Your jumps should be used as close to on cooldown as possible.</Trans>,
 				displayOrder: DISPLAY_ORDER.HIGH_JUMP,
 				requirements: [
