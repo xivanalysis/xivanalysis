@@ -48,6 +48,8 @@ class TechnicalWindow {
 	timelyDevilment: boolean = false
 	poolingProblem: boolean = false
 
+	buffsRemoved: number[] = []
+
 	constructor(start: number) {
 		this.start = start
 	}
@@ -100,7 +102,10 @@ export default class Technicalities extends Module {
 			return
 		}
 
-		if (this.isWindowOkToClose(lastWindow, event)) {
+		// Cache whether we've seen a buff removal event for this status, just in case they happen at exactly the same timestamp
+		lastWindow.buffsRemoved.push(event.ability.guid)
+
+		if (this.isWindowOkToClose(lastWindow)) {
 			lastWindow.end = event.timestamp
 
 			// Check to see if this window could've had more feathers due to possible pooling problems
@@ -120,11 +125,11 @@ export default class Technicalities extends Module {
 	}
 
 	// Make sure all applicable statuses have fallen off before the window closes
-	private isWindowOkToClose(window: TechnicalWindow, event: BuffEvent): boolean {
-		if (event.ability.guid !== STATUSES.DEVILMENT.id && window.hasDevilment && this.combatants.selected.hasStatus(STATUSES.DEVILMENT.id)) {
+	private isWindowOkToClose(window: TechnicalWindow): boolean {
+		if (window.hasDevilment && !window.buffsRemoved.includes(STATUSES.DEVILMENT.id)) {
 			return false
 		}
-		if (event.ability.guid !== STATUSES.TECHNICAL_FINISH.id && this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
+		if (!window.buffsRemoved.includes(STATUSES.TECHNICAL_FINISH.id)) {
 			return false
 		}
 		return true
