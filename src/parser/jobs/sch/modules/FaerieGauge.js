@@ -57,14 +57,14 @@ export default class FaerieGauge extends Module {
 		super(...args)
 
 		// consumers
-		this.addHook('heal', {by: 'pet', abilityId: STATUSES.FEY_UNION.id}, this._onGaugeSpend)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SCH_FEY_BLESSING.id}, this._onGaugeSpend)
-		this.addHook('death', {to: 'player'}, this._onDeath) // I mean.. it does consume all your gauge..
+		this.addEventHook('heal', {by: 'pet', abilityId: STATUSES.FEY_UNION.id}, this._onGaugeSpend)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.SCH_FEY_BLESSING.id}, this._onGaugeSpend)
+		this.addEventHook('death', {to: 'player'}, this._onDeath) // I mean.. it does consume all your gauge..
 		// generators
-		this.addHook('cast', {by: 'player', abilityId: GAUGE_GENERATORS}, this._onGaugeGenerate)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: GAUGE_GENERATORS}, this._onGaugeGenerate)
+		this.addEventHook('complete', this._onComplete)
 		// summoning a fairy
-		this.addHook('cast', {by: 'player', abilityId: SUMMON_ACTIONS}, this._onSummon)
+		this.addEventHook('cast', {by: 'player', abilityId: SUMMON_ACTIONS}, this._onSummon)
 	}
 
 	// Search through the events to figure out if there was a fairy out before logs started
