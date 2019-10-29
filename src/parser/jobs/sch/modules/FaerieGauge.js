@@ -35,8 +35,7 @@ const BORDER_COLOR_FADE = 0.5
 // Severity markers for overcap
 // Start at 30 because you can overcap when seraph is out and you can't drain the gauge
 const GAUGE_WASTE_SEVERITY = {
-	30: SEVERITY.MINOR,
-	50: SEVERITY.MEDIUM,
+	50: SEVERITY.MINOR,
 }
 
 export default class FaerieGauge extends Module {
