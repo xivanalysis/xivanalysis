@@ -2,8 +2,6 @@ import CONTRIBUTORS from 'data/CONTRIBUTORS'
 import React from 'react'
 import {ChangelogEntry} from './Meta'
 
-// Test
-
 export const changelog: ChangelogEntry[] = [
 	{
 		date: new Date('2019-08-24'),
