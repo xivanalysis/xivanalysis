@@ -93,45 +93,35 @@ export default class Positionals extends Module {
 				this._currentCombo.trueNorthCast2 = this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id)
 			}
 		}
-
-		this._updateTnCharges(event.timestamp)
 	}
 
-	_updateTnCharges(timestamp) {
-		// check to see if we're past the required cooldown time
-		if (this._nextChargeIn && this._nextChargeIn <= timestamp) {
-			this._tnCharges += 1
+	// called exactly when the timestamp resolves
+	_updateTnCharges() {
+		this._tnCharges += 1
 
-			if (this._tnCharges > TRUE_NORTH_CHARGES) {
-				// clamp to max
-				this._tnCharges = TRUE_NORTH_CHARGES
-			}
+		if (this._tnCharges > TRUE_NORTH_CHARGES) {
+			// clamp to max
+			this._tnCharges = TRUE_NORTH_CHARGES
+		}
 
-			if (this._tnCharges < TRUE_NORTH_CHARGES) {
-				// if we're below the max, queue another charge since the cd will keep ticking
-				this._nextChargeIn += TRUE_NORTH_CD
-			} else {
-				// otherwise we're good, no recharge happening
-				this._nextChargeIn = null
-			}
+		if (this._tnCharges < TRUE_NORTH_CHARGES) {
+			// if we're below the max, queue another charge since the cd will keep ticking
+			this.addTimestampHook(this.parser.currentTimestamp + TRUE_NORTH_CD, this._updateTnCharges)
 		}
 	}
 
 	_tnUsed(event) {
-		// update
-		this._updateTnCharges(event.timestamp)
-
 		// remove charge
 		this._tnCharges -= 1
-
-		// mark next recharge time, if we don't have one going already
-		if (!this._nextChargeIn) {
-			this._nextChargeIn = event.timestamp + TRUE_NORTH_CD
-		}
 
 		// if we're below 0, clamp
 		if (this._tnCharges < 0) {
 			this._tnCharges = 0
+		}
+
+		// mark next recharge time, using the timestamp hook
+		if (!this._nextChargeIn) {
+			this.addTimestampHook(event.timestamp + TRUE_NORTH_CD, this._updateTnCharges)
 		}
 	}
 
