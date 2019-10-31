@@ -467,7 +467,7 @@
   "mnk.demolish.suggestion.why": "由于提前刷新破碎拳，你损失了 {0} 跳 Dot 伤害。",
   "mnk.fists.suggestions.foe.content": "在使用<0/>时，不要忘记尽快转回<1/>。",
   "mnk.fists.suggestions.foe.why": "<0/> 状态持续了{0} 个GCD。",
-  "mnk.fists.suggestions.stanceless.content": "",
+  "mnk.fists.suggestions.stanceless.content": "体势 Buff 是你输出最大的来源之一，可以直接使用<0/>，在<1/>3层状态下使用<2/>减少受到的伤害或者直接使用<3/>，提高<1/>到4层减少GCD的冷却时间。",
   "mnk.fists.suggestions.stanceless.why": "存在 {0} 个GCD无体势加成。",
   "mnk.fists.title": "体势",
   "mnk.forms.suggestions.dropped.content": "避免失去身形。你可能需要突进技或保持更小的距离来避免你的连击因超时而中断。这通常意味着更大的问题",
