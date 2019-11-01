@@ -51,6 +51,6 @@ export default {
 		id: 1868,
 		name: 'Everlasting Flight',
 		icon: 'https://xivapi.com/i/012000/012732.png',
-		duration: 20,
+		duration: 21,
 	},
 }
