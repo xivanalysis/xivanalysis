@@ -769,6 +769,8 @@
   "smn.ruin-ii.suggestions.issues.why": "{0} Attacke-Wert durch {issues, plural, one {eine unnötige} other {# unnötige}} Ruinra- oder Ruinka-{issues, plural, one {Aktivierung} other {Aktivierungen}} verloren.",
   "smn.ruin-ii.suggestions.warnings.content": "Benutze <0/> oder <1/> nicht, um dich anders zu positionieren, sonder nur, wenn es wegen einer Mechanik nicht anders machbar ist. Die meisten Umpositionierungen sind durch Slidecasting und die erhöhte Mobilität durch <2/> umsetzbar.",
   "smn.ruin-ii.suggestions.warnings.why": "{0} Attacke-Wert durch {warnings, plural, one {eine} other {#}} Ruinra- oder Ruinka-{warnings, plural, one {Aktivierung} other {Aktivierungen}} nur für Bewegung verloren.",
+  "smn.ruin-iv.bahamut.content": "",
+  "smn.ruin-iv.bahamut.why": "",
   "smn.ruin-iv.leftover.content": "Verbrauche vor Kampfende alle <0/>-Aufladungen.",
   "smn.ruin-iv.leftover.why": "{0, plural, one {Eine} other {#}} Verbessertes Ruinra-{1, plural, one {Aufladung war} other {Aufladungen waren}} am Ende des Kampfes ungenutzt.",
   "smn.ruin-iv.lost.content": "Benutze Egi-Attacke so, dass <0/>-Aufladungen generiert werden. Egi-Attacke generiert keine Aufladungen, wenn: es gegen Ziele eingesetzt wird, die sterben; das Ziel unverwundbar wird; oder wenn ein neues Pet beschworen wird, bevor die Attacke ausgeführt wurde. Titan-Egi's <1/> generiert keine Verbessertes Ruinra-Aufladung.",
