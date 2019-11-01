@@ -7,7 +7,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import React from 'react'
 
 const REQUIRED_MULTI_HIT_TARGETS = {
-	[ACTIONS.PAINFLARE.id]: 2,
+	[ACTIONS.PAINFLARE.id]: 3,
 	[ACTIONS.ENERGY_SIPHON.id]: 3,
 	[ACTIONS.OUTBURST.id]: 3,
 }
