@@ -310,7 +310,7 @@
   "dnc.feather-gauge.suggestions.overcapped-feathers.content": "You may have lost uses of your <0/>s due to using one of your procs while already holding four feathers. Make sure to use a feather with <1/> or <2/> before using a proc to prevent overcapping.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.why": "{0, plural, one {# feather} other {# feathers}} may have been lost.",
   "dnc.feather-gauge.title": "Feather Gauge",
-  "dnc.procs.suggestions.drops.content": "Avoid dropping your procs unless absolutely necessary, as doing so leads to a DPS loss unless under very specific circumstances. If you have to drop one to keep your Esprit from overcapping, <0/> will lose the least DPS overall.",
+  "dnc.procs.suggestions.drops.content": "Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <0/> or <1/> will lose the least DPS overall.",
   "dnc.procs.suggestions.drops.why": "You dropped {droppedProcs, plural, one {# proc} other {# procs}}",
   "dnc.procs.suggestions.overwrite.content": "Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.",
   "dnc.procs.suggestions.overwrite.why": "You overwrote {0, plural, one {# proc} other {# procs}}",

@@ -117,7 +117,7 @@ export default class Procs extends Module {
 		this.suggestions.add(new TieredSuggestion({ //dropped procs
 			icon: ACTIONS.FOUNTAINFALL.icon,
 			content: <Trans id="dnc.procs.suggestions.drops.content">
-				Avoid dropping your procs unless absolutely necessary, as doing so leads to a DPS loss unless under very specific circumstances. If you have to drop one to keep your Esprit from overcapping, <ActionLink {...ACTIONS.RISING_WINDMILL} /> will lose the least DPS overall.
+				Avoid dropping your procs unless absolutely necessary. If you have to drop one to keep your Esprit from overcapping, <ActionLink {...ACTIONS.RISING_WINDMILL} /> or <ActionLink {...ACTIONS.REVERSE_CASCADE} /> will lose the least DPS overall.
 			</Trans>,
 			why: <Trans id="dnc.procs.suggestions.drops.why">
 				You dropped <Plural value={droppedProcs} one="# proc" other="# procs"/>
