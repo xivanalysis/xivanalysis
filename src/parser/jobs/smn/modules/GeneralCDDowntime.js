@@ -23,6 +23,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		ACTIONS.ENKINDLE_AERIAL_BLAST.id,
 		ACTIONS.ENKINDLE_EARTHEN_FURY.id,
 		ACTIONS.ENKINDLE_INFERNO.id,
+		ACTIONS.SMN_AETHERPACT.id,
 	]
 
 	allowedDowntimePerOgcd = {
