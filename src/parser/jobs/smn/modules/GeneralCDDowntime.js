@@ -1,6 +1,10 @@
 import ACTIONS from 'data/ACTIONS'
 import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 
+//Although the trance cooldown is 55s, it is better in many cases
+//to hold for a 60s alignment, so some downtime per use must be allowed.
+const TRANCE_ALLOWED_DOWNTIME = 5000
+
 export default class GeneralCDDowntime extends CooldownDowntime {
 	//Time that Jump deems ok for a OGCD to be down : ^)
 	// eslint-disable-next-line no-magic-numbers
@@ -20,4 +24,9 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		ACTIONS.ENKINDLE_EARTHEN_FURY.id,
 		ACTIONS.ENKINDLE_INFERNO.id,
 	]
+
+	allowedDowntimePerOgcd = {
+		[ACTIONS.DREADWYRM_TRANCE.id]: TRANCE_ALLOWED_DOWNTIME,
+		[ACTIONS.FIREBIRD_TRANCE.id]: TRANCE_ALLOWED_DOWNTIME,
+	}
 }
