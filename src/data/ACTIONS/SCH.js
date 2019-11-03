@@ -63,7 +63,7 @@ export default {
 		id: 16546,
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002851.png',
-		cooldown: 20,
+		cooldown: 30,
 	},
 
 	SUCCOR: {

@@ -49,7 +49,7 @@ export default {
 		id: 747,
 		name: 'Shadow Wall',
 		icon: 'https://xivapi.com/i/013000/013113.png',
-		duration: 10,
+		duration: 15,
 	},
 	DELIRIUM: {
 		id: 1972,
