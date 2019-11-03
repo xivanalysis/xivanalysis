@@ -29,7 +29,7 @@ export default class PerfectBalance extends BuffWindowModule {
 	expectedGCDs = {
 		expectedPerWindow: 5,
 		suggestionContent: <Trans id="mnk.pb.suggestions.missedgcd.content">
-			Try to land at 5 GCDs in GL3, or 6 GCDs in GL4, during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+			Try to land 5 GCDs in GL3, or 6 GCDs in GL4, during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MINOR,

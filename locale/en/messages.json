@@ -481,7 +481,7 @@
   "mnk.forms.suggestions.skipped.content": "Avoid skipping Forms outside of downtime. You could be missing important buffs or refreshing <0/> by skipping.",
   "mnk.forms.suggestions.skipped.why": "{0, plural, one {# form was} other {# forms were}} skipped by Form Shift unnecessarily.",
   "mnk.gauge.title": "Greased Lightning",
-  "mnk.pb.suggestions.missedgcd.content": "Try to land at 5 GCDs in GL3, or 6 GCDs in GL4, during every <0/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
+  "mnk.pb.suggestions.missedgcd.content": "Try to land 5 GCDs in GL3, or 6 GCDs in GL4, during every <0/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "mnk.pb.suggestions.trackedBadActions.content": "Using <0/> and <1/> inside of <2/> does no damage and does not change your Form.",
   "mnk.pb.title": "Perfect Balance",
   "mnk.roe.suggestions.missed.content": "Avoid using <0/> when you won't take any damage.",
