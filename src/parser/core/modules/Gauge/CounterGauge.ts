@@ -54,8 +54,7 @@ export class CounterGauge extends AbstractGauge {
 
 	getValueAt(timestamp: number) {
 		const counter = _.findLast(this.history, gauge => gauge.timestamp <= timestamp)
-		if (counter) { return counter.value }
-		return this.minimum
+		return counter? counter.value : this.minimum
 	}
 
 	/** @inheritdoc */
