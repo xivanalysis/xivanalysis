@@ -56,7 +56,9 @@ considerAction(action: Action) {
 
 			if (ONLY_SHOW.has(action.id)) {
 				return true
-			} else {
+			} 
+			
+			else {
 			return false
 			}
 	}
