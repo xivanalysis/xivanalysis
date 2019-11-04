@@ -15,7 +15,7 @@ import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/m
 const FORM_TIMEOUT_MILLIS_200 = 10000
 const FORM_TIMEOUT_MILLIS_505 = 15000
 
-const FORMS = [
+export const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
 	STATUSES.RAPTOR_FORM.id,
 	STATUSES.COEURL_FORM.id,
@@ -45,6 +45,7 @@ export default class Forms extends Module {
 	protected init(): void {
 		this.addHook('cast', {by: 'player'}, this.onCast)
 		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
+		this.addHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
 		this.addHook('complete', this.onComplete)
 	}
@@ -103,6 +104,7 @@ export default class Forms extends Module {
 		}
 	}
 
+	// Anatman doesn't freeze, it just refreshes every tick, so it's the same as a gain
 	private onGain(event: BuffEvent): void {
 		this.lastFormChanged = event.timestamp
 	}
