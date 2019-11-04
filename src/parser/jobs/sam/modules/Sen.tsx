@@ -37,7 +37,7 @@ const TSUBAME = [
 	ACTIONS.KAESHI_SETSUGEKKA.id,
 ]
 
-const KENKI_PER_SEN = 5
+const KENKI_PER_SEN = 10
 
 export default class Sen extends Module {
 	static handle = 'sen'
