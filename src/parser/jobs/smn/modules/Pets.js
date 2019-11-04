@@ -40,9 +40,10 @@ const IFRIT_AOE_CAPABLE_ACTIONS = [
 ]
 
 const TITAN_WARN_PERCENT = 5
+const GARUDA_MIN_TARGETS = 3
 
 const WIND_BLADE_RECAST = 3000
-const SLIPSTREAM_TICKS = 6 //5 from duration + 1 on cast
+const SLIPSTREAM_TICKS = 4 //3 from duration + 1 on cast
 const SLIPSTREAM_TICK_SPEED = 3000
 
 const SLIPSTREAM_SEVERITY = {
@@ -181,7 +182,7 @@ export default class Pets extends Module {
 		}
 
 		if (abilityId === ACTIONS.WIND_BLADE.id &&
-			event.hits.length < 2) {
+			event.hits.length < GARUDA_MIN_TARGETS) {
 			this._badWindBlades++
 		} else if (abilityId === ACTIONS.SLIPSTREAM.id) {
 			this._slipstreams.push({
@@ -199,7 +200,7 @@ export default class Pets extends Module {
 			this._slipstreams[this._slipstreams.length - 1].ticks.push(event)
 		} else if (
 			IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
-			event.hits.length > 1
+			event.hits.length >= GARUDA_MIN_TARGETS
 		) {
 			this._ifritMultiHits++
 		}

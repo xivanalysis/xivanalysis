@@ -66,14 +66,13 @@ export default {
 		name: 'Tri-disaster',
 		icon: 'https://xivapi.com/i/002000/002683.png',
 		cooldown: 50,
-		statusesApplied: [STATUSES.RUINATION],
 	},
 
 	DREADWYRM_TRANCE: {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 60,
+		cooldown: 55,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
@@ -135,7 +134,7 @@ export default {
 		id: 16549,
 		name: 'Firebird Trance',
 		icon: 'https://xivapi.com/i/002000/002734.png',
-		cooldown: 60,
+		cooldown: 55,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
@@ -168,6 +167,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002717.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_I_EARTHEN_ARMOR: {
@@ -176,6 +177,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002707.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_I_CRIMSON_CYCLONE: {
@@ -184,6 +187,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002726.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_SLIIPSTREAM: {
@@ -192,6 +197,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002718.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_MOUNTAIN_BUSTER: {
@@ -200,6 +207,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002708.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_FLAMING_CRUSH: {
@@ -208,6 +217,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002727.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {
