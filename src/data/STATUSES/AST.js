@@ -76,7 +76,7 @@ export default {
 
 	COLLECTIVE_UNCONSCIOUS_SHIELD: {
 		id: 849,
-		name: 'Collective Unconscious',
+		name: 'Collective Unconscious (Mitigation)',
 		icon: 'https://xivapi.com/i/013000/013226.png',
 		duration: 18,
 	},
@@ -92,6 +92,20 @@ export default {
 		id: 956,
 		name: 'Wheel Of Fortune',
 		icon: 'https://xivapi.com/i/013000/013225.png',
+		duration: 15,
+	},
+
+	COLLECTIVE_UNCONSCIOUS_NOCTURNAL: {
+		id: 847,
+		name: 'Collective Unconscious (Nocturnal)',
+		icon: 'https://xivapi.com/i/013000/013227.png',
+		duration: 18,
+	},
+
+	WHEEL_OF_FORTUNE_NOCTURNAL: {
+		id: 1206,
+		name: 'Wheel Of Fortune (Nocturnal)',
+		icon: 'https://xivapi.com/i/013000/013226.png',
 		duration: 15,
 	},
 
