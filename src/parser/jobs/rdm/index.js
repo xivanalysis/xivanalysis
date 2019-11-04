@@ -20,7 +20,7 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.05',
+		from: '5.1',
 		to: '5.1',
 	},
 	contributors: [

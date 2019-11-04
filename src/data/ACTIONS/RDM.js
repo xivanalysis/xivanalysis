@@ -238,7 +238,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 300, //Increase Black by 11
+		potency: 350, //Increase Black by 11
 		breaksCombo: true,
 	},
 	VERTHUNDER_II: {
@@ -258,7 +258,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 350, //Increase Black by 9
+		potency: 300, //Increase Black by 9
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -268,7 +268,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 300, //Increase White by 11
+		potency: 350, //Increase White by 11
 		breaksCombo: true,
 	},
 	VERAERO_II: {
@@ -288,7 +288,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 350, //Increase White by 9
+		potency: 300, //Increase White by 9
 		breaksCombo: true,
 	},
 	TETHER: {
