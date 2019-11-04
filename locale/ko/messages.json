@@ -772,6 +772,8 @@
   "smn.ruin-ii.suggestions.issues.why": "{issues}{issues, plural, one {회} other {회}}의 불필요한 루인라 혹은 루인쟈로 인해 총 {0}위력이 손실되었습니다.",
   "smn.ruin-ii.suggestions.warnings.content": "중요하게 이동해야 하는 경우를 제외하고는 <0/>혹은 <1/> 사용을 피해야합니다. 이동이 필요한 구간엔 대부분 슬라이딩 캐스팅 혹은 <2/>를 사용하며 이동하는것만으로도 충분합니다.",
   "smn.ruin-ii.suggestions.warnings.why": "이동만을 위해 사용된 루인라 혹은 루인쟈 {warnings}{warnings, plural, one {회} other {회}}로 인해 총 {0}위력이 손실되었습니다.",
+  "smn.ruin-iv.bahamut.content": "",
+  "smn.ruin-iv.bahamut.why": "",
   "smn.ruin-iv.leftover.content": "전투 종료전에 <0/> 스택을 모두 소모시키십시오.",
   "smn.ruin-iv.leftover.why": "루인라 강화 스택 {0} {1, plural, other {개}}를 전투가 종료될동안 사용하지 않았습니다.",
   "smn.ruin-iv.lost.content": "에기 어설트 기술들을 사용할 떄 마다 <0/> 스택이 생성됩니다. 에기 어설트 대상이 죽거나 무적 상태가 될경우 스택이 생기지 않으며 어설트 시전이 끝나기 직전 새로운 펫 소환을 할 경우 에도 생기지 않습니다. 타이탄-에기의 <1/> 또한 루인라 강화 스택을 생성하지 않습니다.",

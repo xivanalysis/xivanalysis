@@ -772,6 +772,8 @@
   "smn.ruin-ii.suggestions.issues.why": "因为使用了 {issues} {issues, plural, other {次}}不必要的毁坏或毁绝而损失 {0} 威力.",
   "smn.ruin-ii.suggestions.warnings.content": "除非长距离移动，否则应避免使用<0/>或者<1/>进行走位。可以在滑步时调整位置，或者利用<2/>的额外机动性。",
   "smn.ruin-ii.suggestions.warnings.why": "因为使用了 {warnings} {warnings, plural, one {cast} other {个}}毁坏或毁绝仅用于走位而损失 {0} 威力。",
+  "smn.ruin-iv.bahamut.content": "",
+  "smn.ruin-iv.bahamut.why": "",
   "smn.ruin-iv.leftover.content": "你应该在战斗结束之前用掉所有的<0/>。",
   "smn.ruin-iv.leftover.why": "{1, plural, one {层} other {层}}的{0}毁坏效果加强在战斗结束时没有使用。",
   "smn.ruin-iv.lost.content": "",

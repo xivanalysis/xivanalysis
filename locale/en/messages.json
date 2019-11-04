@@ -772,6 +772,8 @@
   "smn.ruin-ii.suggestions.issues.why": "{0} potency lost to {issues} unnecessary Ruin II or Ruin IV {issues, plural, one {cast} other {casts}}.",
   "smn.ruin-ii.suggestions.warnings.content": "Unless significant movement is required, avoid using <0/> or <1/> only for movement. Most position adjustments can be performed with slidecasting and the additional mobility available during <2/>.",
   "smn.ruin-ii.suggestions.warnings.why": "{0} potency lost to {warnings} Ruin II or Ruin IV {warnings, plural, one {cast} other {casts}} used only to move.",
+  "smn.ruin-iv.bahamut.content": "Ensure you have 4 stacks of <0/> when summoning Bahamut. All 4 stacks will be needed to get the maximum value from Bahamut.",
+  "smn.ruin-iv.bahamut.why": "Bahamut was summoned without enough stacks {0, plural, one {# time} other {# times}}.",
   "smn.ruin-iv.leftover.content": "You should use all stacks of <0/> before the end of the fight.",
   "smn.ruin-iv.leftover.why": "{0} Further Ruin {1, plural, one {stack was} other {stacks were}} left unused at the end of the fight.",
   "smn.ruin-iv.lost.content": "Use Egi Assault skills in a way that will generate stacks of <0/>. Egi Assaults will not generate a stack if used against targets that die or become invincible or if a new pet is summoned before the assault is executed.  Titan-Egi's <1/>does not generate a Further Ruin stack.",
