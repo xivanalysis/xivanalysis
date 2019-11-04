@@ -95,6 +95,20 @@ export default {
 		duration: 15,
 	},
 
+	COLLECTIVE_UNCONSCIOUS_NOCTURNAL: {
+		id: 847,
+		name: 'Collective Unconscious',
+		icon: 'https://xivapi.com/i/013000/013227.png',
+		duration: 18,
+	},
+
+	WHEEL_OF_FORTUNE_NOCTURNAL: {
+		id: 1206,
+		name: 'Wheel Of Fortune (Nocturnal)',
+		icon: 'https://xivapi.com/i/013000/013226.png',
+		duration: 15,
+	},
+
 	EARTHLY_DOMINANCE: {
 		id: 1224,
 		name: 'Earthly Dominance',
