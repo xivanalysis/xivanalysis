@@ -260,7 +260,7 @@ export default class ArcanaTracking extends Module {
 		const actionId = event.ability.guid
 
 		// Piecing together what they have on prepull
-		if (PLAY.includes(actionId) || (actionId === ACTIONS.MINOR_ARCANA.id && !this.parser.patch.before('5.1'))) {
+		if (!this.pullStateInitialized && PLAY.includes(actionId)) {
 			this.initPullState(event)
 		}
 
@@ -273,7 +273,7 @@ export default class ArcanaTracking extends Module {
 			// Make sure they have been holding onto this from the last instance of a DRAW/REDRAW/MINOR_ARCANA
 			this.retconSearch(actionId)
 
-			// Work out what seal they got if any
+			// Work out what seal they got
 			let sealObtained: SealType = SealType.NOTHING
 			if (SOLAR_SEAL_ARCANA.includes(actionId)) {
 				sealObtained = SealType.SOLAR
@@ -285,7 +285,6 @@ export default class ArcanaTracking extends Module {
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 
-			// Consume sleeve draw if stacks available
 			if (cardStateItem.sleeveState > SleeveType.NOTHING) {
 				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
 			}

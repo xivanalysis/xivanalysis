@@ -76,7 +76,7 @@ export default {
 
 	COLLECTIVE_UNCONSCIOUS_SHIELD: {
 		id: 849,
-		name: 'Collective Unconscious',
+		name: 'Collective Unconscious (Mitigation)',
 		icon: 'https://xivapi.com/i/013000/013226.png',
 		duration: 18,
 	},
@@ -97,7 +97,7 @@ export default {
 
 	COLLECTIVE_UNCONSCIOUS_NOCTURNAL: {
 		id: 847,
-		name: 'Collective Unconscious',
+		name: 'Collective Unconscious (Nocturnal)',
 		icon: 'https://xivapi.com/i/013000/013227.png',
 		duration: 18,
 	},
