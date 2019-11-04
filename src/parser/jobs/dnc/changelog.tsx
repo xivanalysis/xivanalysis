@@ -46,4 +46,9 @@ export const changelog = [
 		Changes: () => <>Added proc buff display to timeline.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-10-29'),
+		Changes: () => <>Fix an issue where Technical Flourish windows still considered open if Devilment and Technical Finish fell off at the same instant.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

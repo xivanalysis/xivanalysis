@@ -31,7 +31,7 @@ export default {
 		id: 1193,
 		name: 'Reprisal',
 		icon: 'https://xivapi.com/i/013000/013901.png',
-		duration: 5,
+		duration: 10,
 	},
 
 	ARMS_LENGTH: {

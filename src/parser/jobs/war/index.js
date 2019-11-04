@@ -23,24 +23,33 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '4.2',
-	// 	to: '4.5',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.08',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.SKYE, role: ROLES.MAINTAINER},
 	],
 
-	changelog: [{
-		date: new Date('2019-07-30'),
-		contributors: [CONTRIBUTORS.SKYE],
-		Changes: () => <>
-			Initial changes for Shadowbringers:
-			<ul>
-				<li>Updated the Inner Release module to account for Inner Chaos and Chaotic Cyclone</li>
-				<li>Changed the Storms Eye Module buffer to 7 seconds instead of the old 10 seconds</li>
-				<li>Changed the Gauge module to track the Infuriate reduction through Inner Chaos and Chaotic Cyclone instead of Fell Cleave and Decimate</li>
-			</ul>
-		</>,
-	}],
+	changelog: [
+		{
+			date: new Date('2019-07-30'),
+			contributors: [CONTRIBUTORS.SKYE],
+			Changes: () => <>
+				Initial changes for Shadowbringers:
+				<ul>
+					<li>Updated the Inner Release module to account for Inner Chaos and Chaotic Cyclone</li>
+					<li>Changed the Storms Eye Module buffer to 7 seconds instead of the old 10 seconds</li>
+					<li>Changed the Gauge module to track the Infuriate reduction through Inner Chaos and Chaotic Cyclone instead of Fell Cleave and Decimate</li>
+				</ul>
+			</>,
+		},
+		{
+			date: new Date('2019-08-11'),
+			contributors: [],
+			Changes: () => <>
+				Updated the Gauge module to track Infuriate reduction with all of Inner Chaos, Chaotic Cyclone, Fell Cleave, and Decimate
+			</>,
+		},
+	],
 })
