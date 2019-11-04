@@ -119,7 +119,7 @@ export default {
 		id: 3553,
 		name: 'Blood Of The Dragon',
 		icon: 'https://xivapi.com/i/002000/002581.png',
-		cooldown: 30,
+		cooldown: 25,
 	},
 
 	GEIRSKOGUL: {
@@ -127,6 +127,7 @@ export default {
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
 		cooldown: 30,
+		potency: 300,
 	},
 
 	DRAGON_SIGHT: {
@@ -142,7 +143,7 @@ export default {
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
 		cooldown: 1,
-		potency: 250,
+		potency: 300,
 	},
 
 	NASTROND: {
@@ -157,5 +158,6 @@ export default {
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30,
+		potency: 600,
 	},
 }
