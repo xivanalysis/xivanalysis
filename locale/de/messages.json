@@ -310,7 +310,7 @@
   "dnc.feather-gauge.suggestions.overcapped-feathers.content": "Du hast eventuell Nutzungen von <0/> verloren, da du einer deiner Procs benutzt hast, während du bereits vier Plume Burlesque (Federn) aufgeladen hattest. Stellte sicher, dass du deine Feder mit <1/> oder <2/> verbrauchst, damit du keinen Proc verschenkst.",
   "dnc.feather-gauge.suggestions.overcapped-feathers.why": "{0, plural, one {# möglicher} other {# mögliche}} Tanzfächer verschenkt.",
   "dnc.feather-gauge.title": "Tanzfächer-Balken",
-  "dnc.procs.suggestions.drops.content": "",
+  "dnc.procs.suggestions.drops.content": "Außer es ist absolut unumgänglich, vermeide Procs zu verlieren. Wenn du einen Proc fallen lasst musst damit dein Tanzfieberbalken nicht überläuft, benutze <0/> oder <1/>, um am wenigsten Schaden zu verlieren.",
   "dnc.procs.suggestions.drops.why": "Du hast {droppedProcs, plural, one {# Proc} other {# Procs}} verloren",
   "dnc.procs.suggestions.overwrite.content": "Vermeide deine Procs zu überschreiben. Geprocte Aktionen sind stärker als deine reguläre Angriffskombo, daher büßt du beim Überschreiben hohen DPS ein.",
   "dnc.procs.suggestions.overwrite.why": "Du hast {0, plural, one {# proc} other {# procs}} überschrieben",
