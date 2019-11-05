@@ -4,7 +4,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import {Action} from 'data/ACTIONS/ACTIONS'
 import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
-import {SeverityTiers} from 'parser/core/modules/BuffWindow'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
@@ -25,6 +24,12 @@ export interface AoeAbility {
 	minTargets: number
 }
 
+// This is duplicated from BuffWindow until a
+// better sharing mechanism is in place.
+interface SeverityTiers {
+	[key: number]: number
+}
+
 /**
  * This module checks for usages of AoE skills that have single target alternatives,
  * such as BLMs Xenoglossy or NINs Hellfrog Medium, to ensure they hit the minimum
@@ -38,7 +43,7 @@ export interface AoeAbility {
  */
 export abstract class AoEUsages extends Module {
 	static handle = 'aoeusages'
-	static title = t('core.aoeusages.title')`AoE Ability Usage`
+	static title = t('core.aoeusages.title')`Incorrect AoE Ability Usage`
 
 	@dependency private suggestions!: Suggestions
 
@@ -60,7 +65,12 @@ export abstract class AoEUsages extends Module {
 		7: SEVERITY.MAJOR,
 	}
 
-	private badUsages: Map<number, number> = new Map<number, number>()
+	protected suggestionContent: JSX.Element | string = <Trans id="core.aoeusages.suggestion.content">
+		Avoid using AoE abilities when they would do less damage than an alternative single-target ability that shares a resource cost or cooldown.
+		If the AoE skill cannot hit enough targets, the single-target ability will do more total damage and should be used instead.
+	</Trans>
+
+	private badUsages = new Map<number, number>()
 
 	protected init() {
 		this.addHook('aoedamage', {by: 'player', abilityId: this.trackedAbilities.map(a => a.aoeAbility.id)}, this.onAbility)
@@ -93,9 +103,7 @@ export abstract class AoEUsages extends Module {
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.suggestionIcon,
-			content: <Trans id="core.aoeusages.suggestion.content">
-				Use single target abilities unless there are enough targets for the AoE alternatives to do more damage.
-			</Trans>,
+			content: this.suggestionContent,
 			tiers: this.severity,
 			value: totalBadUsages,
 			why: <Trans id="core.aoeusages.suggestion.why">
@@ -111,9 +119,6 @@ export abstract class AoEUsages extends Module {
 		// if any bad usages were found, tell them which ones, how many times,
 		// and tell them what they should have used instead
 		return <>
-		<Trans id="core.aoeusages.description">Skills that can hit multiple enemies should only be used when a minimum
-		number of targets can be hit.  If there are not enough targets available, use the single target alternatives
-		instead, as they will do more damage per use.</Trans>
 		<Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>

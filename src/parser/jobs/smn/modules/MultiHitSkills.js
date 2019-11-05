@@ -3,9 +3,8 @@ import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
 export default class MultiHit extends AoEUsages {
 	static dependencies = [
+		...AoEUsages.dependencies,
 		'gauge',
-		//need to include base class dependency or it will not be pulled in
-		'suggestions', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	suggestionIcon = ACTIONS.OUTBURST.icon
@@ -19,7 +18,7 @@ export default class MultiHit extends AoEUsages {
 		{
 			aoeAbility: ACTIONS.PAINFLARE,
 			stAbilities: [ACTIONS.FESTER],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAbility: ACTIONS.ENERGY_SIPHON,
