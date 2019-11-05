@@ -25,7 +25,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.08',
+		to: '5.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
@@ -60,6 +60,11 @@ export default new Meta({
 	{
 		date: new Date('2019-09-23'),
 		Changes: () => <>Improved gauge state error handling.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-10-22'),
+		Changes: () => <>Enochian buffs lost during extended cutscenes, and certain Astral Fire phase optimizations, will no longer be unintentionally penalized.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	}],
 })

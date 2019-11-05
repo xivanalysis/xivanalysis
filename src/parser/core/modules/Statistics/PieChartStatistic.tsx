@@ -79,8 +79,8 @@ export class PieChartStatistic<L extends number> extends AbstractStatistic {
 				</tr>
 			</thead>
 			<tbody>
-				{this.data.map(point => (
-					<tr>
+				{this.data.map((point, index) => (
+					<tr key={index}>
 						<td>
 							<span
 								className={styles.swatch}

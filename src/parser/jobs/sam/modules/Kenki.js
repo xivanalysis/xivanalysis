@@ -25,7 +25,6 @@ const KENKI_ACTIONS = {
 	[ACTIONS.YUKIKAZE.id]: {combo: 10},
 	[ACTIONS.GEKKO.id]: {combo: 5, positional: 5},
 	[ACTIONS.KASHA.id]: {combo: 5, positional: 5},
-	[ACTIONS.AGEHA.id]: {cast: 10}, // cast 10, kill 20
 
 	// aoe
 	[ACTIONS.FUGA.id]: {cast: 5},

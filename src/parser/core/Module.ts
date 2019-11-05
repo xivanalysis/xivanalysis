@@ -2,6 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
+import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import Parser from './Parser'
 
 export enum DISPLAY_ORDER {
@@ -48,29 +49,11 @@ export interface MappedDependency {
 	prop: string
 }
 
-type FilterPartial<T> = {
-	[K in keyof T]?: T[K] extends object
-		? FilterPartial<T[K]>
-		: FilterPartial<T[K]> | Array<FilterPartial<T[K]>>
-}
-type Filter<T extends Event> = FilterPartial<T> & FilterPartial<{
+type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	abilityId: Ability['guid'],
 	to: 'player' | 'pet' | T['targetID'],
 	by: 'player' | 'pet' | T['sourceID'],
 }>
-
-type EventHookCallback<T extends Event> = (event: T) => void
-export interface EventHook<T extends Event> {
-	events: Array<T['type']>
-	filter: Filter<T>
-	callback: EventHookCallback<T>
-}
-
-type TimestampHookCallback = (opts: {timestamp: number}) => void
-export interface TimestampHook {
-	timestamp: number
-	callback: TimestampHookCallback
-}
 
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
@@ -102,12 +85,6 @@ export default class Module {
 	static set title(value) {
 		this._title = value
 	}
-
-	// Bite me.
-	private _eventHooks = new Map<Event['type'], Set<EventHook<any>>>()
-
-	// Stored nearest-last so we can use the significantly-faster pop
-	private _timestampHookQueue: TimestampHook[] = []
 
 	constructor(
 		protected readonly parser: Parser,
@@ -163,30 +140,30 @@ export default class Module {
 	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
 		cb: EventHookCallback<T>,
-	): EventHook<T>
+	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		filter: Filter<T>,
+		filter: ModuleFilter<T>,
 		cb: EventHookCallback<T>,
-	): EventHook<T>
+	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
 		events: T['type'] | Array<T['type']>,
-		filterArg: Filter<T> | EventHookCallback<T>,
+		filterArg: ModuleFilter<T> | EventHookCallback<T>,
 		cbArg?: EventHookCallback<T>,
-	): EventHook<T> | undefined {
+	): Array<EventHook<T>> {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		const cb = typeof filterArg === 'function'? filterArg : cbArg
-		let filter: Filter<T> = typeof filterArg === 'function'? {} : filterArg
+		let filter: ModuleFilter<T> = typeof filterArg === 'function'? {} : filterArg
 
 		// If there's no callback just... stop
-		if (!cb) { return }
+		if (!cb) { return [] }
 
 		// QoL filter transforms
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
 		filter = this.mapFilterEntity(filter, 'by', 'sourceID')
 		if (filter.abilityId !== undefined) {
-			const abilityFilter = filter as Filter<AbilityEvent>
+			const abilityFilter = filter as ModuleFilter<AbilityEvent>
 			if (!abilityFilter.ability) {
 				abilityFilter.ability = {}
 			}
@@ -199,34 +176,21 @@ export default class Module {
 			events = [events]
 		}
 
-		// Final hook representation
-		const hook = {
-			events,
+		const hooks = events.map(event => ({
+			event,
 			filter,
+			module: (this.constructor as typeof Module).handle,
 			callback: cb.bind(this),
-		}
+		}))
 
-		// Hook for each of the events
-		events.forEach(event => {
-			let hooks = this._eventHooks.get(event)
+		hooks.forEach(hook => this.parser.dispatcher.addEventHook(hook))
 
-			// Make sure the map has a key for us
-			if (!hooks) {
-				hooks = new Set()
-				this._eventHooks.set(event, hooks)
-			}
-
-			// Set the hook
-			hooks.add(hook as any)
-		})
-
-		// Return the hook representation so it can be removed (later)
-		return hook
+		return hooks
 	}
 
 	private mapFilterEntity<T extends Event>(
-		filterArg: Filter<T>,
-		qol: keyof Filter<T>,
+		filterArg: ModuleFilter<T>,
+		qol: keyof ModuleFilter<T>,
 		raw: keyof T,
 	) {
 		if (!filterArg[qol]) { return filterArg }
@@ -258,104 +222,24 @@ export default class Module {
 	protected readonly removeHook = this.removeEventHook
 
 	/** Remove a previously added event hook. */
-	protected removeEventHook(hook: EventHook<any>) {
-		hook.events.forEach(event => {
-			const hooks = this._eventHooks.get(event)
-			if (!hooks) { return }
-			hooks.delete(hook)
-		})
+	protected removeEventHook(hooks: Array<EventHook<any>>) {
+		hooks.forEach(hook => this.parser.dispatcher.removeEventHook(hook))
 	}
 
 	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. */
 	protected addTimestampHook(timestamp: number, cb: TimestampHookCallback) {
-		// Find the index we'll need to add this to keep things in order
-		const idx = this._timestampHookQueue.findIndex(h => h.timestamp < timestamp)
-
-		// Add the hook & return it so it can be removed
-		const hook: TimestampHook = {timestamp, callback: cb.bind(this)}
-		if (idx === -1) {
-			this._timestampHookQueue.push(hook)
-		} else {
-			this._timestampHookQueue.splice(idx, 0, hook)
+		const hook = {
+			timestamp,
+			module: (this.constructor as typeof Module).handle,
+			callback: cb.bind(this),
 		}
-
+		this.parser.dispatcher.addTimestampHook(hook)
 		return hook
 	}
 
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
-		const idx = this._timestampHookQueue.indexOf(hook)
-		if (idx !== -1) {
-			this._timestampHookQueue.splice(idx, 1)
-		}
-	}
-
-	triggerEvent(event: Event) {
-		// Back up the current timestamp.
-		// NOTE: DO NOT DO THIS IN USER MODULES _EVER_.
-		// TODO: Move event handling above module level so this isn't required.
-		// tslint:disable-next-line:variable-name
-		const HACK_timestampBackup = this.parser._timestamp
-
-		// Fire off any timestamp hooks that are ready
-		const thq = this._timestampHookQueue
-		while (thq.length > 0 && thq[thq.length - 1].timestamp <= event.timestamp) {
-			const hook = thq.pop()!
-			this.parser._timestamp = hook.timestamp
-			hook.callback({timestamp: hook.timestamp})
-		}
-
-		// Restore the timestamp. Pretend nothing happened. Silence the unbelievers.
-		this.parser._timestamp = HACK_timestampBackup
-
-		// Run through registered hooks. Avoid calling 'all' on symbols, they're internal stuff.
-		if (typeof event.type !== 'symbol') {
-			this._runEventHooks(event, this._eventHooks.get('all'))
-		}
-		this._runEventHooks(event, this._eventHooks.get(event.type))
-	}
-
-	private _runEventHooks(event: Event, hooks?: Set<EventHook<Event>>) {
-		if (!hooks) { return }
-		hooks.forEach(hook => {
-			// Check the filter
-			if (!this._filterMatches(event, hook.filter)) {
-				return
-			}
-
-			hook.callback(event)
-		})
-	}
-
-	private _filterMatches<T extends object, F extends FilterPartial<T>>(event: T, filter: F) {
-		const match = Object.keys(filter).every(key => {
-			// If the event doesn't have the key we're looking for, just shortcut out
-			if (!event.hasOwnProperty(key)) {
-				return false
-			}
-
-			// Just trust me 'aite
-			const filterVal: any = filter[key as keyof typeof filter]
-			const eventVal: any = event[key as keyof typeof event]
-
-			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
-			if (Array.isArray(filterVal)) {
-				return filterVal.includes(eventVal)
-			}
-
-			// If it's an object, I need to dig down. Mostly for the `ability` key
-			if (typeof filterVal === 'object') {
-				return this._filterMatches(
-					eventVal,
-					filterVal,
-				)
-			}
-
-			// Basic value check
-			return filterVal === eventVal
-		})
-
-		return match
+		this.parser.dispatcher.removeTimestampHook(hook)
 	}
 
 	output(): React.ReactNode {

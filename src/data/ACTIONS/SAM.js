@@ -31,7 +31,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 340,
+			potency: 320,
 		},
 		statusesApplied: [STATUSES.JINPU],
 	},
@@ -52,7 +52,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 340,
+			potency: 320,
 		},
 		statusesApplied: [STATUSES.SHIFU],
 	},
@@ -160,7 +160,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7477,
-			potency: 380,
+			potency: 360,
 			end: true,
 		},
 	},
@@ -175,13 +175,6 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15,
 		statusesApplied: [STATUSES.THIRD_EYE, STATUSES.EYES_OPEN],
-	},
-
-	AGEHA: {
-		id: 7500,
-		name: 'Ageha',
-		icon: 'https://xivapi.com/i/003000/003154.png',
-		cooldown: 60,
 	},
 
 	MEIKYO_SHISUI: {
@@ -288,7 +281,6 @@ export default {
 		name: 'Tsubame Gaeshi',
 		icon: 'https://xivapi.com/i/003000/003180.png',
 		onGcd: true,
-		gcdRecast: 2.5,
 		cooldown: 60,
 	},
 
@@ -328,7 +320,7 @@ export default {
 		id: 16487,
 		name: 'Shoha',
 		icon: 'https://xivapi.com/i/003000/003177.png',
-		cooldown: 1,
+		cooldown: 15,
 	},
 }
 

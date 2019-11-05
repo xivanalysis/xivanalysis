@@ -88,6 +88,11 @@ const PATCHES = {
 			[GameEdition.GLOBAL]: 1567069200, // 29/08/19 09:00:00 GMT
 		},
 	},
+	'5.1': {
+		date: {
+			[GameEdition.GLOBAL]: 1572339600, // 29/10/19 09:00:00 GMT
+		},
+	},
 }
 
 export type PatchNumber = keyof typeof PATCHES
