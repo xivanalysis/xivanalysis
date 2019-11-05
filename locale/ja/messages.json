@@ -548,8 +548,6 @@
   "nin.shadowfang.checklist.requirement.name": "アクティブ率: <0/>",
   "nin.shadowfang.suggestions.clipping.content": "",
   "nin.shadowfang.suggestions.clipping.why": "早すぎる更新により影牙が失った回数： {0}回",
-  "nin.ta-positional.suggestions.missed.content": "<0/>はPTにおいてすごく貢献がでかいバフの一つであり、背面で使うか使わないかによりPTの全体DPSを大きく左右します。特にミスを一回以上するとバトル結果が悪いことになるのでご注意ください。",
-  "nin.ta-positional.suggestions.missed.why": "",
   "nin.ta-usage.suggestions.missed.content": "",
   "nin.ta-usage.suggestions.missed.why": "",
   "nin.ta-usage.suggestions.none.content": "",
