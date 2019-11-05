@@ -123,7 +123,9 @@ export default {
 		id: 16475,
 		name: 'Anatman',
 		icon: 'https://xivapi.com/i/002000/002546.png',
+		onGcd: true,
 		cooldown: 60,
+		gcdRecast: 2.5,
 		statusesApplied: [STATUSES.ANATMAN],
 	},
 }
