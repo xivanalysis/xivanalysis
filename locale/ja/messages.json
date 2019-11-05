@@ -64,7 +64,7 @@
   "ast.overheal.requirement.hot": "",
   "ast.overheal.requirement.nonhot": "",
   "ast.overheal.rule.description": "",
-  "ast.overheal.rule.name": "",
+  "ast.overheal.rule.name": "オーバーヒールを避けてください。",
   "ast.sect.info": "",
   "ast.sect.info.no-sect-detected": "",
   "ast.sect.suggestions.no-sect.content": "",
