@@ -13,7 +13,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 440,
+			potency: 460,
 			end: true,
 		},
 	},
@@ -31,121 +31,198 @@ export default {
 		},
 	},
 
-	// -----
-	// Player OGCDs
-	// -----
-
 	TEN: {
 		id: 2259,
 		name: 'Ten',
 		icon: 'https://xivapi.com/i/002000/002901.png',
-		onGcd: false,
-		cooldown: 0.5,
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
 	},
 
 	CHI: {
-		id: 2261,
+		id: 18806,
 		name: 'Chi',
 		icon: 'https://xivapi.com/i/002000/002902.png',
-		onGcd: false,
-		cooldown: 0.5,
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
 	},
 
 	JIN: {
-		id: 2263,
+		id: 18807,
 		name: 'Jin',
 		icon: 'https://xivapi.com/i/002000/002903.png',
-		onGcd: false,
-		cooldown: 0.5,
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
 	},
 
 	NINJUTSU: {
 		id: 2260,
 		name: 'Ninjutsu',
 		icon: 'https://xivapi.com/i/002000/002904.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	FUMA_SHURIKEN: {
 		id: 2265,
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	FUMA_SHURIKEN_TCJ: {
+		id: 18873,
+		name: 'Fuma Shuriken',
+		icon: 'https://xivapi.com/i/002000/002907.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	KATON: {
 		id: 2266,
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	KATON_TCJ: {
+		id: 18876,
+		name: 'Katon',
+		icon: 'https://xivapi.com/i/002000/002908.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	GOKA_MEKKYAKU: {
 		id: 16491,
 		name: 'Goka Mekkyaku',
 		icon: 'https://xivapi.com/i/002000/002925.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	RAITON: {
 		id: 2267,
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	RAITON_TCJ: {
+		id: 18877, // So duuuuuuuuuumb
+		name: 'Raiton',
+		icon: 'https://xivapi.com/i/002000/002912.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	HYOTON: {
 		id: 2268,
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	HYOTON_TCJ: {
+		id: 18878,
+		name: 'Hyoton',
+		icon: 'https://xivapi.com/i/002000/002909.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	HYOSHO_RANRYU: {
 		id: 16492,
 		name: 'Hyosho Ranryu',
 		icon: 'https://xivapi.com/i/002000/002926.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	HUTON: {
 		id: 2269,
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	HUTON_TCJ: {
+		id: 18879,
+		name: 'Huton',
+		icon: 'https://xivapi.com/i/002000/002910.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	DOTON: {
 		id: 2270,
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	DOTON_TCJ: {
+		id: 18880,
+		name: 'Doton',
+		icon: 'https://xivapi.com/i/002000/002911.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	SUITON: {
 		id: 2271,
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
+	},
+
+	SUITON_TCJ: {
+		id: 18881, // YoshiP whyyyyyyyyyyyy
+		name: 'Suiton',
+		icon: 'https://xivapi.com/i/002000/002913.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 1.5,
 	},
 
 	RABBIT_MEDIUM: {
 		id: 2272,
 		name: 'Rabbit Medium',
 		icon: 'https://xivapi.com/i/002000/002914.png',
-		onGcd: false,
+		onGcd: true,
 		cooldown: 20,
+		gcdRecast: 1.5,
 	},
+
+	// -----
+	// Player OGCDs
+	// -----
 
 	KASSATSU: {
 		id: 2264,
@@ -203,7 +280,7 @@ export default {
 		name: 'Meisui',
 		icon: 'https://xivapi.com/i/002000/002924.png',
 		onGcd: false,
-		cooldown: 60,
+		cooldown: 120,
 	},
 
 	BUNSHIN: {
@@ -211,7 +288,7 @@ export default {
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
-		cooldown: 110,
+		cooldown: 90,
 		statusesApplied: [STATUSES.BUNSHIN],
 	},
 }
