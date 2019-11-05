@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -80,6 +82,7 @@ export default {
 		name: 'High Jump',
 		icon: 'https://xivapi.com/i/002000/002591.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.DIVE_READY],
 	},
 
 	ELUSIVE_JUMP: {
@@ -109,13 +112,14 @@ export default {
 		name: 'Battle Litany',
 		icon: 'https://xivapi.com/i/002000/002585.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.BATTLE_LITANY],
 	},
 
 	BLOOD_OF_THE_DRAGON: {
 		id: 3553,
 		name: 'Blood Of The Dragon',
 		icon: 'https://xivapi.com/i/002000/002581.png',
-		cooldown: 30,
+		cooldown: 25,
 	},
 
 	GEIRSKOGUL: {
@@ -123,6 +127,7 @@ export default {
 		name: 'Geirskogul',
 		icon: 'https://xivapi.com/i/002000/002583.png',
 		cooldown: 30,
+		potency: 300,
 	},
 
 	DRAGON_SIGHT: {
@@ -130,6 +135,7 @@ export default {
 		name: 'Dragon Sight',
 		icon: 'https://xivapi.com/i/002000/002587.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.RIGHT_EYE, STATUSES.LEFT_EYE, STATUSES.RIGHT_EYE_SOLO],
 	},
 
 	MIRAGE_DIVE: {
@@ -137,7 +143,7 @@ export default {
 		name: 'Mirage Dive',
 		icon: 'https://xivapi.com/i/002000/002588.png',
 		cooldown: 1,
-		potency: 250,
+		potency: 300,
 	},
 
 	NASTROND: {
@@ -152,5 +158,6 @@ export default {
 		name: 'Stardiver',
 		icon: 'https://xivapi.com/i/002000/002593.png',
 		cooldown: 30,
+		potency: 600,
 	},
 }

@@ -6,6 +6,8 @@ import {Icon, Message} from 'semantic-ui-react'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 
 const description = t('smn.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.
@@ -27,10 +29,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '5.0',
-	// 	to: '5.05',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.08',
+	},
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NEMEKH, role: ROLES.THEORYCRAFT},
@@ -39,6 +41,18 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-10-31'),
+		Changes: () => <>Added Aetherpact to tracked cooldowns and implemented 5.1 changes.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2019-10-28'),
+		Changes: () => <>Fix duplicate demi-summon entries by adding a brief buffer to pet simulation re-sync when swapping pets and demis.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}, {
+		date: new Date('2019-08-23'),
+		Changes: () => <>Prevent raising weaving issues for triple weaving with <ActionLink {...ACTIONS.FIREBIRD_TRANCE}/></>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}, {
 		date: new Date('2019-08-16'),
 		Changes: () => <>Implemented Shadowbringers changes.</>,
 		contributors: [CONTRIBUTORS.KELOS],

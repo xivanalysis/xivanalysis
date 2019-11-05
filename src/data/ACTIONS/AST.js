@@ -1,14 +1,18 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	DIURNAL_SECT: {
 		id: 3604,
 		name: 'Diurnal Sect',
 		icon: 'https://xivapi.com/i/003000/003133.png',
+		statusesApplied: [STATUSES.DIURNAL_SECT],
 	},
 
 	NOCTURNAL_SECT: {
 		id: 3605,
 		name: 'Nocturnal Sect',
 		icon: 'https://xivapi.com/i/003000/003134.png',
+		statusesApplied: [STATUSES.NOCTURNAL_SECT],
 	},
 
 	BENEFIC: {
@@ -43,6 +47,7 @@ export default {
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/003000/003135.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.LIGHTSPEED],
 	},
 
 	MALEFIC_III: {
@@ -103,16 +108,34 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		castTime: 2,
-		mpCost: 1200,
+		mpCost: 1000,
+	},
+
+	ASPECTED_HELIOS_NOCTURNAL: {
+		id: 17152,
+		name: 'Aspected Helios (Nocturnal)',
+		icon: 'https://xivapi.com/i/003000/003130.png',
+		onGcd: true,
+		castTime: 2,
+		mpCost: 1000,
 	},
 
 	ASPECTED_BENEFIC: {
-		id: 3595,
+		id: 835,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,
 		castTime: 0,
 		mpCost: 500,
+	},
+
+	ASPECTED_BENEFIC_NOCTURNAL: {
+		id: 17151,
+		name: 'Aspected Benefic (Nocturnal)',
+		icon: 'https://xivapi.com/i/003000/003127.png',
+		onGcd: true,
+		castTime: 0,
+		mpCost: 900,
 	},
 
 	HELIOS: {
@@ -129,6 +152,7 @@ export default {
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/003000/003139.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.SYNASTRY_SELF, STATUSES.SYNASTRY],
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
@@ -136,6 +160,7 @@ export default {
 		name: 'Collective Unconscious',
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.COLLECTIVE_UNCONSCIOUS_SHIELD, STATUSES.COLLECTIVE_UNCONSCIOUS, STATUSES.WHEEL_OF_FORTUNE],
 	},
 
 	CELESTIAL_OPPOSITION: {
@@ -143,6 +168,7 @@ export default {
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.DIURNAL_OPPOSITION, STATUSES.NOCTURNAL_OPPOSITION],
 	},
 
 	EARTHLY_STAR: {
@@ -150,6 +176,7 @@ export default {
 		name: 'Earthly Star',
 		icon: 'https://xivapi.com/i/003000/003143.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.EARTHLY_DOMINANCE, STATUSES.GIANT_DOMINANCE],
 	},
 
 	STELLAR_DETONATION: {
@@ -176,6 +203,7 @@ export default {
 		name: 'Draw',
 		icon: 'https://xivapi.com/i/003000/003101.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.BALANCE_DRAWN, STATUSES.BOLE_DRAWN, STATUSES.ARROW_DRAWN, STATUSES.SPEAR_DRAWN, STATUSES.EWER_DRAWN, STATUSES.SPIRE_DRAWN],
 	},
 
 	PLAY: {
@@ -197,6 +225,7 @@ export default {
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/003000/003107.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.SLEEVE_DRAW],
 	},
 
 	UNDRAW: {
@@ -211,6 +240,7 @@ export default {
 		name: 'Minor Arcana',
 		icon: 'https://xivapi.com/i/003000/003106.png',
 		cooldown: 1,
+		statusesApplied: [STATUSES.LORD_OF_CROWNS_DRAWN, STATUSES.LADY_OF_CROWNS_DRAWN],
 	},
 
 	// ----
@@ -222,6 +252,7 @@ export default {
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/003000/003550.png',
 		cooldown: 60,
+		statusesApplied: [STATUSES.HOROSCOPE, STATUSES.HOROSCOPE_HELIOS],
 	},
 
 	HOROSCOPE_ACTIVATION: {
@@ -236,6 +267,7 @@ export default {
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/003000/003552.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.NEUTRAL_SECT],
 	},
 
 	DIVINATION: {
@@ -243,6 +275,7 @@ export default {
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/003000/003553.png',
 		cooldown: 120,
+		statusesApplied: [STATUSES.DIVINATION],
 	},
 
 	CELESTIAL_INTERSECTION: {
@@ -250,6 +283,7 @@ export default {
 		name: 'Celestial Intersection',
 		icon: 'https://xivapi.com/i/003000/003556.png',
 		cooldown: 30,
+		statusesApplied: [STATUSES.DIURNAL_INTERSECTION, STATUSES.NOCTURNAL_INTERSECTION],
 	},
 
 	// -----
@@ -261,6 +295,7 @@ export default {
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/003000/003110.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_BALANCE],
 	},
 
 	THE_BOLE: {
@@ -268,6 +303,7 @@ export default {
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_BOLE],
 	},
 
 	THE_ARROW: {
@@ -275,6 +311,7 @@ export default {
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_ARROW],
 	},
 
 	THE_SPEAR: {
@@ -282,6 +319,7 @@ export default {
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_SPEAR],
 	},
 
 	THE_EWER: {
@@ -289,6 +327,7 @@ export default {
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/003000/003114.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_EWER],
 	},
 
 	THE_SPIRE: {
@@ -296,6 +335,7 @@ export default {
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/003000/003115.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.THE_SPIRE],
 	},
 
 	LADY_OF_CROWNS: {
@@ -303,6 +343,7 @@ export default {
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.LADY_OF_CROWNS],
 	},
 
 	LORD_OF_CROWNS: {
@@ -310,6 +351,7 @@ export default {
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 0,
+		statusesApplied: [STATUSES.LORD_OF_CROWNS],
 	},
 
 }

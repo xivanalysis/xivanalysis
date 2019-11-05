@@ -17,6 +17,7 @@ import Enemies from 'parser/core/modules/Enemies'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
+import UnableToAct from 'parser/core/modules/UnableToAct'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
@@ -25,11 +26,12 @@ import {BLM_GAUGE_EVENT} from './Gauge'
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
 const EXPECTED_FIRE4 = 6
-const NO_UH_OPENER_FIRE4 = 5
+const NO_UH_EXPECTED_FIRE4 = 5
 const FIRE4_FROM_MANAFONT = 1
 
 const MIN_MP_FOR_FULL_ROTATION = 9600
 const THUNDERCLOUD_MILLIS = 18000
+const ASTRAL_UMBRAL_DURATION = 15000
 
 const AF_UI_BUFF_MAX_STACK = 3
 
@@ -59,13 +61,14 @@ const CYCLE_ERRORS = {
 	FINAL_OR_DOWNTIME: {priority: 1, message: 'Ended with downtime, or last cycle'},
 	SHORT: {priority: 2, message: 'Too short, won\'t process'},
 	// Messages below should be Trans objects since they'll be displayed to end users
-	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
-	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Rotation didn't include <ActionLink {...ACTIONS.DESPAIR}/></Trans>}, // target columns in the table, so we want to tell players about other errors first
+	MISSING_FIRE4S: {priority: 10, message: <Trans id="blm.rotation-watchdog.error-messages.missing-fire4s">Missing one or more <ActionLink {...ACTIONS.FIRE_IV}/>s</Trans>}, // These two errors are lower priority since they can be determined by looking at the
+	MISSING_DESPAIRS: {priority: 15, message: <Trans id="blm.rotation-watchdog.error-messages.missing-despair">Missing one or more <ActionLink {...ACTIONS.DESPAIR}/>s</Trans>}, // target columns in the table, so we want to tell players about other errors first
 	MANAFONT_BEFORE_DESPAIR: {priority: 30, message: <Trans id="blm.rotation-watchdog.error-messages.manafont-before-despair"><ActionLink {...ACTIONS.MANAFONT}/> used before <ActionLink {...ACTIONS.DESPAIR}/></Trans>},
 	EXTRA_T3: {priority: 49, message: <Trans id="blm.rotation-watchdog.error-messages.extra-t3">Extra <ActionLink {...ACTIONS.THUNDER_III}/>s</Trans>}, // Extra T3 and Extra F1 are *very* similar in terms of per-GCD potency loss
 	EXTRA_F1: {priority: 50, message: <Trans id="blm.rotation-watchdog.error-messages.extra-f1">Extra <ActionLink {...ACTIONS.FIRE_I}/></Trans>}, // These two codes should stay close to each other
 	NO_FIRE_SPELLS: {priority: 75, message: <Trans id="blm.rotation-watchdog.error-messages.no-fire-spells">Rotation included no Fire spells</Trans>},
 	DROPPED_ENOCHIAN: {priority: 100, message: <Trans id="blm.rotation-watchdog.error-messages.dropped-enochian">Dropped <ActionLink {...ACTIONS.ENOCHIAN}/></Trans>},
+	DIED: {priority: 101, message: <Trans id="blm.rotation-watchdog.error-messages.died"><ActionLink showName={false} {...ACTIONS.RAISE} /> Died</Trans>},
 }
 
 class Cycle {
@@ -80,7 +83,6 @@ class Cycle {
 	atypicalAFStart: boolean = false
 	firePhaseStartMP: number = 0
 
-	firstCycle: boolean = false
 	finalOrDowntime: boolean = false
 
 	gaugeStateBeforeFire: GaugeState = new GaugeState()
@@ -107,8 +109,9 @@ class Cycle {
 			return
 		}
 
-		// Account for the no-UH opener when determining the expected count of Fire 4s
-		let expectedCount = this.firstCycle && this.gaugeStateBeforeFire.umbralHearts === 0 ? NO_UH_OPENER_FIRE4 : EXPECTED_FIRE4
+		// Account for the no-UH opener/LeyLines optimization when determining the expected count of Fire 4s
+		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length === 0)
+			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
@@ -120,7 +123,7 @@ class Cycle {
 	}
 	public get missingFire4s(): number | undefined {
 		if (!this.expectedFire4s) { return }
-		return this.expectedFire4s - this.actualFire4s
+		return Math.max(this.expectedFire4s - this.actualFire4s, 0)
 	}
 
 	public get expectedDespairs(): number {
@@ -130,14 +133,17 @@ class Cycle {
 		return this.casts.filter(cast => cast.ability.guid === ACTIONS.DESPAIR.id).length
 	}
 	public get missingDespairs(): number {
-		return this.expectedDespairs - this.actualDespairs
+		return Math.max(this.expectedDespairs - this.actualDespairs, 0)
 	}
 
-	constructor(start: number, gaugeState: GaugeState, isFirst: boolean = false) {
+	constructor(start: number, gaugeState: GaugeState) {
 		this.startTime = start,
 		// Object.assign because this needs to be a by-value assignment, not by-reference
 		this.gaugeStateBeforeFire = Object.assign(this.gaugeStateBeforeFire, gaugeState)
-		this.firstCycle = isFirst
+	}
+
+	public overrideErrorCode(code: {priority: number, message: TODO}) {
+		this._errorCode = code
 	}
 }
 
@@ -174,9 +180,10 @@ export default class RotationWatchdog extends Module {
 	@dependency private enemies!: Enemies
 	@dependency private timeline!: Timeline
 	@dependency private combatants!: Combatants
+	@dependency private unableToAct!: UnableToAct
 
 	private currentGaugeState: GaugeState = new GaugeState()
-	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState, true)
+	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
 	private history: Cycle[] = []
 
 	private firstEvent = true
@@ -194,6 +201,7 @@ export default class RotationWatchdog extends Module {
 		this.addHook('cast', {by: 'player'}, this.onCast)
 		this.addHook('complete', this.onComplete)
 		this.addHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
+		this.addHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module
@@ -248,14 +256,16 @@ export default class RotationWatchdog extends Module {
 			!(actionId === ACTIONS.TRANSPOSE.id && this.currentGaugeState.umbralIce > 0)) {
 			this.startRecording(event)
 		}
-		// Note that we've recorded our first cast now
-		if (this.firstEvent) { this.firstEvent = false }
 
 		// Add actions other than auto-attacks to the rotation cast list
 		const action = getDataBy(ACTIONS, 'id', actionId) as TODO
+
 		if (!action  || action.autoAttack) {
 			return
 		}
+
+		// Note that we've recorded our first damage event once we have one
+		if (this.firstEvent && action.onGcd) { this.firstEvent = false }
 
 		this.currentRotation.casts.push(event)
 
@@ -269,6 +279,10 @@ export default class RotationWatchdog extends Module {
 		}
 	}
 
+	private onDeath() {
+		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
+	}
+
 	// Get the uptime percentage for the Thunder status defbuff
 	private getThunderUptime() {
 		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
@@ -280,6 +294,15 @@ export default class RotationWatchdog extends Module {
 	// Finish this parse and add the suggestions and checklist items
 	private onComplete() {
 		this.stopRecording(undefined)
+
+		// Override the error code for cycles that dropped enochian, when the cycle contained an unabletoact time long enough to kill it.
+		// Couldn't do this at the time of code assignment, since the downtime data wasn't fully available yet
+		this.history.filter(cycle => cycle.errorCode === CYCLE_ERRORS.DROPPED_ENOCHIAN).forEach(cycle => {
+			if (this.unableToAct.getDowntimes(cycle.startTime, cycle.endTime).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length > 0) {
+				cycle.overrideErrorCode(CYCLE_ERRORS.FINAL_OR_DOWNTIME)
+			}
+		})
+
 		// Suggestion for skipping B4 on rotations that are cut short by the end of the parse or downtime
 		if (this.missedF4s) {
 			this.suggestions.add(new Suggestion({
@@ -398,6 +421,7 @@ export default class RotationWatchdog extends Module {
 	// Complete the previous cycle and start a new one
 	private startRecording(event: CastEvent) {
 		this.stopRecording(event)
+		// Pass in whether we've seen the first cycle endpoint to account for pre-pull buff executions (mainly Sharpcast)
 		this.currentRotation = new Cycle(event.timestamp, this.currentGaugeState)
 	}
 

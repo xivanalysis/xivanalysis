@@ -1,3 +1,4 @@
+import AoeChecker from './AoeChecker'
 import Buffs from './Buffs'
 import Combos from './Combos'
 import Higanbana from './Higanbana'
@@ -9,8 +10,11 @@ import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
 import OGCDDowntime from './OGCDDowntime'
+//import Shoha from './Shoha' It is not time yet my child, we've got bugs to fix first
+import Statuses from './Statuses'
 
 export default [
+	AoeChecker,
 	Buffs,
 	Combos,
 	Higanbana,
@@ -22,4 +26,6 @@ export default [
 	ThirdEye,
 	Tsubame,
 	OGCDDowntime,
+	//Shoha,
+	Statuses,
 ]

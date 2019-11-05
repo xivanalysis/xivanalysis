@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -56,6 +58,7 @@ export default {
 			from: [75, 16479],
 			potency: 320,
 		},
+		statusesApplied: [STATUSES.DISEMBOWEL],
 	},
 
 	CHAOS_THRUST: {
@@ -69,6 +72,7 @@ export default {
 			potency: 330,
 			end: true,
 		},
+		statusesApplied: [STATUSES.CHAOS_THRUST],
 	},
 
 	// -----
@@ -79,6 +83,7 @@ export default {
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
 		cooldown: 45,
+		statusesApplied: [STATUSES.LIFE_SURGE],
 	},
 
 	LANCE_CHARGE: {
@@ -86,5 +91,6 @@ export default {
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
 		cooldown: 90,
+		statusesApplied: [STATUSES.LANCE_CHARGE],
 	},
 }

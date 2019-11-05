@@ -5,10 +5,11 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
-import {CastEvent, DamageEvent} from 'fflogs'
+import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
+import {FFLogsEventNormaliser} from 'parser/core/modules/FFLogsEventNormaliser'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -46,12 +47,15 @@ export default class Steppies extends Module {
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
+	@dependency private fflogsEvents!: FFLogsEventNormaliser
 	@dependency private suggestions!: Suggestions
 
 	private steppies: Boot[] = []
 
 	protected init(): void {
-		this.addHook('damage', {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
+		this.addHook('init', () => {
+			this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
+		})
 		this.addHook('complete', this.onComplete)
 	}
 

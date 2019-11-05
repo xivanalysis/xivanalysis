@@ -53,4 +53,10 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012655.png',
 		duration: 15,
 	},
+	MANAWARD: {
+		id: 168,
+		name: 'Manaward',
+		icon: 'https://xivapi.com/i/010000/010456.png',
+		duration: 20,
+	},
 }

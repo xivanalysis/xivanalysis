@@ -1,3 +1,5 @@
+import {Status} from 'data/STATUSES/STATUSES'
+
 interface ActionCombo {
 	start?: boolean
 	from?: number
@@ -14,5 +16,6 @@ export interface Action {
 	castTime?: number
 	cooldown?: number
 	autoAttack?: boolean
+	statusesApplied?: Status[]
 	[key: string]: unknown
 }

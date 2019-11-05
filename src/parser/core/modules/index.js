@@ -12,6 +12,7 @@ import Cooldowns from './Cooldowns'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
+import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
@@ -20,6 +21,7 @@ import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
+import Statuses from './Statuses'
 import Suggestions from './Suggestions'
 import Timeline from './Timeline'
 import UnableToAct from './UnableToAct'
@@ -40,6 +42,7 @@ export default [
 	Death,
 	Downtime,
 	Enemies,
+	FFLogsEventNormaliser,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
@@ -48,6 +51,7 @@ export default [
 	RaidBuffs,
 	Speedmod,
 	Statistics,
+	Statuses,
 	Suggestions,
 	Timeline,
 	UnableToAct,

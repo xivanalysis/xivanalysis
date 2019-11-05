@@ -1,4 +1,5 @@
 import PETS from '../PETS'
+import STATUSES from 'data/STATUSES'
 
 //use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
@@ -71,7 +72,7 @@ export default {
 		id: 3581,
 		name: 'Dreadwyrm Trance',
 		icon: 'https://xivapi.com/i/002000/002684.png',
-		cooldown: 60,
+		cooldown: 55,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
@@ -88,6 +89,7 @@ export default {
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
 		cooldown: 180,
+		statusesApplied: [STATUSES.DEVOTION],
 	},
 
 	BIO_III: {
@@ -95,6 +97,7 @@ export default {
 		name: 'Bio III',
 		icon: 'https://xivapi.com/i/002000/002689.png',
 		onGcd: true,
+		statusesApplied: [STATUSES.BIO_III],
 	},
 
 	MIASMA_III: {
@@ -103,6 +106,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
 		castTime: 2.5,
+		statusesApplied: [STATUSES.MIASMA_III],
 	},
 
 	RUIN_IV: {
@@ -130,7 +134,7 @@ export default {
 		id: 16549,
 		name: 'Firebird Trance',
 		icon: 'https://xivapi.com/i/002000/002734.png',
-		cooldown: 60,
+		cooldown: 55,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
 	},
 
@@ -153,6 +157,7 @@ export default {
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
 		cooldown: 10,
+		statusesApplied: [STATUSES.EVERLASTING_FLIGHT],
 	},
 
 	//Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
@@ -162,6 +167,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002717.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_I_EARTHEN_ARMOR: {
@@ -170,6 +177,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002707.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_I_CRIMSON_CYCLONE: {
@@ -178,6 +187,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002726.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_SLIIPSTREAM: {
@@ -186,6 +197,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002718.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_MOUNTAIN_BUSTER: {
@@ -194,6 +207,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002708.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ASSAULT_II_FLAMING_CRUSH: {
@@ -202,6 +217,8 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002727.png',
 		cooldown: 30,
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
+		onGcd: true,
+		gcdRecast: 2.5,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {
@@ -338,6 +355,7 @@ export default {
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/002000/002688.png',
 		// No pet reference, can't actually determine anything from it
+		statusesApplied: [STATUSES.DEVOTION],
 	},
 
 	// Demi-bahamut

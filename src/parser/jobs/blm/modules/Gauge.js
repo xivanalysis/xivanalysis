@@ -31,6 +31,7 @@ export default class Gauge extends Module {
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'suggestions',
 		'brokenLog',
+		'unableToAct',
 	]
 
 	_astralFireStacks = 0
@@ -47,7 +48,7 @@ export default class Gauge extends Module {
 	//_hasPolyglot = false
 	_polyglotStacks = 0
 
-	_droppedEno = 0
+	_droppedEnoTimestamps = []
 	_lostPolyglot = 0
 	_overwrittenPolyglot = 0
 
@@ -147,7 +148,7 @@ export default class Gauge extends Module {
 			const enoRunTime = event.timestamp - this._enochianTimer
 			//add the time remaining on the eno timer to total downtime
 			this._enochianDownTimer.time += enoRunTime
-			this._droppedEno++
+			this._droppedEnoTimestamps.push(event.timestamp)
 		}
 		this._hasEnochian = false
 		this._enochianTimer = 0
@@ -255,8 +256,10 @@ export default class Gauge extends Module {
 		this._enochianDownTimer.stop = 0
 	}
 
+	// Refund unable-to-act time if the downtime window was longer than the AF/UI timer
 	_countLostPolyglots(time) {
-		return Math.floor(time/ENOCHIAN_DURATION_REQUIRED)
+		const unableToActTime = this.unableToAct.getDowntimes().filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).reduce((duration, downtime) => duration + Math.max(0, downtime.end - downtime.start), 0)
+		return Math.floor((time - unableToActTime)/ENOCHIAN_DURATION_REQUIRED)
 	}
 
 	_onCast(event) {
@@ -264,6 +267,13 @@ export default class Gauge extends Module {
 
 		switch (abilityId) {
 		case ACTIONS.ENOCHIAN.id:
+			if (!this._astralFireStacks && !this._umbralIceStacks) {
+				this.brokenLog.trigger(this, 'no stack eno', (
+					<Trans id="blm.gauge.trigger.no-stack-eno">
+						<ActionLink {...ACTIONS.ENOCHIAN}/> was cast without any Astral Fire or Umbral Ice stacks detected.
+					</Trans>
+				))
+			}
 			if (!this._hasEnochian) {
 				this._startEnoTimer(event)
 				this.addEvent()
@@ -349,8 +359,9 @@ export default class Gauge extends Module {
 		}
 		this._lostPolyglot = this._countLostPolyglots(this._enochianDownTimer.time)
 
-		// Suggestions for lost eno
-		if (this._droppedEno) {
+		// Find out how many of the enochian drops ocurred during times where the player could not act for longer than the AF/UI buff timer. If they could act, they could've kept it going, so warn about those.
+		const droppedEno = this._droppedEnoTimestamps.filter(drop => this.unableToAct.getDowntimes(drop, drop).filter(downtime => Math.max(0, downtime.end - downtime.start) >= ASTRAL_UMBRAL_DURATION).length === 0).length
+		if (droppedEno) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.ENOCHIAN.icon,
 				content: <Trans id="blm.gauge.suggestions.dropped-enochian.content">
@@ -358,7 +369,7 @@ export default class Gauge extends Module {
 				</Trans>,
 				severity: SEVERITY.MEDIUM,
 				why: <Trans id="blm.gauge.suggestions.dropped-enochian.why">
-					{this._droppedEno} dropped Enochian <Plural value={this._droppedEno} one="buff" other="buffs"/>.
+					{droppedEno} dropped Enochian <Plural value={droppedEno} one="buff" other="buffs"/>.
 				</Trans>,
 			}))
 		}

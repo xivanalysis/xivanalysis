@@ -6,6 +6,7 @@ const REMOVE = 'remove'
 export default class Entities extends Module {
 	static dependencies = [
 		'invuln',
+		'fflogsEvents',
 	]
 
 	// -----
@@ -114,9 +115,11 @@ export default class Entities extends Module {
 		this.addHook('removebuff', this.removeBuff)
 		this.addHook('removedebuff', event => this.removeBuff(event, true))
 
-		// Resources
-		this.addHook('damage', this.updateResources)
-		this.addHook('heal', this.updateResources)
+		// Resources - hooked to init to make sure normaliser runs to determine damage event before hooking events
+		this.addHook('init', () => {
+			this.addHook(this.fflogsEvents.damageEventName, this.updateResources)
+			this.addHook(this.fflogsEvents.healEventName, this.updateResources)
+		})
 	}
 
 	// -----

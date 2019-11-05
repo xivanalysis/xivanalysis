@@ -41,6 +41,20 @@ export default {
 		duration: 30,
 	},
 
+	EXCOGITATION: {
+		id: 1220,
+		name: 'Excogitation',
+		icon: 'https://xivapi.com/i/012000/012808.png',
+		duration: 45,
+	},
+
+	EMERGENCY_TACTICS: {
+		id: 792,
+		name: 'Emergency Tactics',
+		icon: 'https://xivapi.com/i/012000/012806.png',
+		duration: 45,
+	},
+
 	// -----
 	// PET
 	// -----
@@ -55,5 +69,6 @@ export default {
 		id: 315,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/012000/012826.png',
+		duration: 21,
 	},
 }

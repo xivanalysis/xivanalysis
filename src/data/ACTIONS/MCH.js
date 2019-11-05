@@ -1,3 +1,5 @@
+import STATUSES from 'data/STATUSES'
+
 export default {
 	// -----
 	// Player GCDs
@@ -8,7 +10,7 @@ export default {
 		name: 'Split Shot',
 		icon: 'https://xivapi.com/i/003000/003001.png',
 		onGcd: true,
-		potency: 160,
+		potency: 180,
 		combo: {
 			start: true,
 		},
@@ -21,8 +23,8 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2866,
-			potency: 240,
+			from: [2866, 7411],
+			potency: 260,
 		},
 	},
 
@@ -50,8 +52,8 @@ export default {
 		onGcd: true,
 		potency: 100,
 		combo: {
-			from: 2868,
-			potency: 320,
+			from: [2868, 7412],
+			potency: 340,
 			end: true,
 		},
 	},
@@ -61,7 +63,7 @@ export default {
 		name: 'Heated Split Shot',
 		icon: 'https://xivapi.com/i/003000/003031.png',
 		onGcd: true,
-		potency: 200,
+		potency: 220,
 		combo: {
 			start: true,
 		},
@@ -75,7 +77,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7411,
-			potency: 300,
+			potency: 330,
 		},
 	},
 
@@ -87,7 +89,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 7412,
-			potency: 400,
+			potency: 440,
 			end: true,
 		},
 	},
@@ -98,6 +100,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003030.png',
 		onGcd: true,
 		cooldown: 1.5,
+		potency: 220,
 	},
 
 	AUTO_CROSSBOW: {
@@ -123,6 +126,7 @@ export default {
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 2.5,
+		statusesApplied: [STATUSES.BIOBLASTER],
 	},
 
 	AIR_ANCHOR: {
@@ -144,6 +148,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
+		statusesApplied: [STATUSES.REASSEMBLED],
 	},
 
 	WILDFIRE: {
@@ -152,6 +157,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
 		cooldown: 120,
+		statusesApplied: [STATUSES.WILDFIRE],
 	},
 
 	ROOK_AUTOTURRET: {
@@ -208,6 +214,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
 		cooldown: 60,
+		statusesApplied: [STATUSES.FLAMETHROWER],
 	},
 
 	TACTICIAN: {
@@ -215,7 +222,8 @@ export default {
 		name: 'Tactician',
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 120,
+		statusesApplied: [STATUSES.TACTICIAN],
 	},
 
 	AUTOMATON_QUEEN: {

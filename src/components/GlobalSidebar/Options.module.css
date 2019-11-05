@@ -9,11 +9,13 @@
 }
 
 .row {
+	height: 40px;
 	padding: 0 gutter;
 	line-height: 40px;
 }
 
 .row + .row {
+	height: 41px;
 	border-style: solid;
 	border-color: rgba(0, 0, 0, .1);
 	border-width: 1px 0 0;
@@ -23,10 +25,15 @@
 	border-width: 0 0 0 1px;
 }
 
+.meta {
+	display: flex;
+}
+
 .icon {
 	color: themeText;
 	font-size: 20px;
 	vertical-align: middle;
+	overflow: hidden;
 }
 
 .icon:hover {
@@ -35,8 +42,9 @@
 }
 
 .version {
+	flex-grow: 1;
 	opacity: .5;
-	float: right;
+	text-align: right;
 }
 
 .versionInfo, .versionInfo dd {
