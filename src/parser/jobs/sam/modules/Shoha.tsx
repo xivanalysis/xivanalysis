@@ -13,9 +13,9 @@ import JOBS from 'data/JOBS'
 import {CastEvent, Event} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Combatants from 'parser/core/modules/Combatants'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Combatants from 'parser/core/modules/Combatants'
 
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,
@@ -100,11 +100,11 @@ export default class Shoha extends Module {
 	}
 
 	private onMeditateGain() {
-		if(this.combatants.selected.hasStatus(STATUSES.MEDITATE.id)){
+		if (this.combatants.selected.hasStatus(STATUSES.MEDITATE.id)) {
 			this.stacks++
 
-			//just a safety net
-			if(this.stacks > MAX_STACKS){
+			// just a safety net
+			if (this.stacks > MAX_STACKS) {
 				this.stacks = MAX_STACKS
 			}
 		}
@@ -126,9 +126,9 @@ export default class Shoha extends Module {
 		this.stacks = this.stacks - SPENDERS[event.ability.guid]
 		this.shohaUses++
 
-		//safety net!
+		// safety net!
 
-		if(this.stacks < 0) {
+		if (this.stacks < 0) {
 			this.stacks = 0
 		}
 
@@ -162,9 +162,9 @@ export default class Shoha extends Module {
 			+ this.leftoverStacks
 
 		// final use amounts
-		
+
 		const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
-		const totalUses = this.shohaUses 
+		const totalUses = this.shohaUses
 
 		this.checklist.add(new Rule({
 			name: 'Meditation',
@@ -177,8 +177,8 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: this.totalGeneratedStacks- totalWaste,
-					target: this.totalGeneratedStacks,
+					value: totalUses,
+					target:totalPossibleUses,
 				}),
 			],
 		}))
