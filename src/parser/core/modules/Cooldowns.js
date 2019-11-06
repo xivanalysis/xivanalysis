@@ -293,7 +293,7 @@ export default class Cooldowns extends Module {
 
 		return cd.history.reduce(
 			(time, status) => time + this.getAdjustedTimeOnCooldown(status, currentTimestamp, extension),
-			cd.current ? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0
+			cd.current ? this.getAdjustedTimeOnCooldown(cd.current, currentTimestamp, extension) : 0,
 		)
 	}
 

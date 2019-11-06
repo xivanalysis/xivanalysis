@@ -55,7 +55,7 @@ export default class Entities extends Module {
 							// Invuln splits the range
 							ranges.splice(i, 1,
 								{start: range.start, end: invuln.start},
-								{start: invuln.end, end: range.end}
+								{start: invuln.end, end: range.end},
 							)
 						}
 					}
@@ -174,7 +174,7 @@ export default class Entities extends Module {
 
 		const buff = entity.buffs.find(buff =>
 			buff.ability.guid === event.ability.guid &&
-			buff.end === null
+			buff.end === null,
 		)
 
 		if (!buff) {
@@ -198,7 +198,7 @@ export default class Entities extends Module {
 
 		let buff = entity.buffs.find(buff =>
 			buff.ability.guid === event.ability.guid &&
-			buff.end === null
+			buff.end === null,
 		)
 
 		// If there's no existing buff, fake one from the start of the fight

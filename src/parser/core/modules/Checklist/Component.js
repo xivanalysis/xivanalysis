@@ -77,7 +77,7 @@ class Checklist extends Component {
 							{rule.requirements.map((requirement, index) =>
 								<li key={index}>
 									{requirement.name}: {requirement.content}
-								</li>
+								</li>,
 							)}
 						</ul>
 					</>,
