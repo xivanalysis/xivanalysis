@@ -88,7 +88,7 @@ export default class AdditionalEvents extends Module {
 		const newEvents = await getFflogsEvents(
 			this.parser.report.code,
 			this.parser.fight,
-			{filter}
+			{filter},
 		)
 
 		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.

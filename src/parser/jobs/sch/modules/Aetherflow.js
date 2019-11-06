@@ -209,7 +209,7 @@ export default class Aetherflow extends Module {
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>
-					}
+					},
 					)}
 				<Table.Row>
 					<Table.Cell colSpan="2" textAlign="right" col>Total Drift</Table.Cell>

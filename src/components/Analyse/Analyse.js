@@ -53,7 +53,7 @@ class Analyse extends Component {
 				params: match.params,
 			}),
 			this.fetchEventsAndParseIfNeeded,
-			{fireImmediately: true}
+			{fireImmediately: true},
 		))
 	}
 
