@@ -1,6 +1,5 @@
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
-import GlobalCooldown from './GlobalCooldown'
 import Huton from './Huton'
 import Kassatsu from './Kassatsu'
 import Ninjutsu from './Ninjutsu'
@@ -12,7 +11,6 @@ import Weaving from './Weaving'
 export default [
 	Combos,
 	Cooldowns,
-	GlobalCooldown,
 	Huton,
 	Kassatsu,
 	Ninjutsu,
