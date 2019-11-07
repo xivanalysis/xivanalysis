@@ -63,7 +63,6 @@ export default {
 		name: 'Ninjutsu',
 		icon: 'https://xivapi.com/i/002000/002904.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -72,7 +71,6 @@ export default {
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -81,8 +79,7 @@ export default {
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	KATON: {
@@ -90,7 +87,6 @@ export default {
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -99,8 +95,7 @@ export default {
 		name: 'Katon',
 		icon: 'https://xivapi.com/i/002000/002908.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	GOKA_MEKKYAKU: {
@@ -108,7 +103,6 @@ export default {
 		name: 'Goka Mekkyaku',
 		icon: 'https://xivapi.com/i/002000/002925.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -117,17 +111,15 @@ export default {
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
 	RAITON_TCJ: {
-		id: 18877, // So duuuuuuuuuumb
+		id: 18877,
 		name: 'Raiton',
 		icon: 'https://xivapi.com/i/002000/002912.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	HYOTON: {
@@ -135,7 +127,6 @@ export default {
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -144,8 +135,7 @@ export default {
 		name: 'Hyoton',
 		icon: 'https://xivapi.com/i/002000/002909.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	HYOSHO_RANRYU: {
@@ -153,7 +143,6 @@ export default {
 		name: 'Hyosho Ranryu',
 		icon: 'https://xivapi.com/i/002000/002926.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -162,7 +151,6 @@ export default {
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -171,8 +159,7 @@ export default {
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	DOTON: {
@@ -180,7 +167,6 @@ export default {
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
@@ -189,8 +175,7 @@ export default {
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	SUITON: {
@@ -198,17 +183,15 @@ export default {
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
 	SUITON_TCJ: {
-		id: 18881, // YoshiP whyyyyyyyyyyyy
+		id: 18881,
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
-		cooldown: 20,
-		gcdRecast: 1.5,
+		gcdRecast: 1,
 	},
 
 	RABBIT_MEDIUM: {
@@ -216,7 +199,6 @@ export default {
 		name: 'Rabbit Medium',
 		icon: 'https://xivapi.com/i/002000/002914.png',
 		onGcd: true,
-		cooldown: 20,
 		gcdRecast: 1.5,
 	},
 
