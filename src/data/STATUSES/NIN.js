@@ -3,14 +3,14 @@ export default {
 		id: 638,
 		name: 'Vulnerability Up',
 		icon: 'https://xivapi.com/i/015000/015020.png',
-		duration: 10,
+		duration: 15,
 	},
 
 	SHADOW_FANG: {
 		id: 508,
 		name: 'Shadow Fang',
 		icon: 'https://xivapi.com/i/010000/010612.png',
-		duration: 24,
+		duration: 30,
 	},
 
 	KASSATSU: {
@@ -38,21 +38,21 @@ export default {
 		id: 1186,
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/012000/012911.png',
-		duration: 10,
+		duration: 6,
 	},
 
 	BUNSHIN: {
-		id: 1954, // TODO - This is -probably- the right one, but we'll have to check real data to confirm
+		id: 1954,
 		name: 'Bunshin',
 		icon: 'https://xivapi.com/i/012000/012912.png',
-		duration: 15,
+		duration: 30,
 	},
 
 	ASSASSINATE_READY: {
 		id: 1955,
 		name: 'Assassinate Ready',
 		icon: 'https://xivapi.com/i/012000/012913.png',
-		duration: 10,
+		duration: 15,
 	},
 
 	SHADE_SHIFT: {
