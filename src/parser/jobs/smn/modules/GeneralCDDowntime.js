@@ -1,9 +1,11 @@
 import ACTIONS from 'data/ACTIONS'
 import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
 
-//Although the trance cooldown is 55s, it is better in many cases
-//to hold for a 60s alignment, so some downtime per use must be allowed.
-const TRANCE_ALLOWED_DOWNTIME = 5000
+//The trance cooldowns are both 55s.  However, in order to maintain overall
+//alignment with the 1 minute buff cycle, FBT should be held 10s per use
+//(for a 55+65 = 120s cycle).  Due to the way cooldown tracking works in
+//XIVA, both must have the same allowed downtime since they are in a cooldown group.
+const TRANCE_ALLOWED_DOWNTIME = 10000
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	//Time that Jump deems ok for a OGCD to be down : ^)
