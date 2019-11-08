@@ -159,7 +159,7 @@ export default {
 		name: 'Huton',
 		icon: 'https://xivapi.com/i/002000/002910.png',
 		onGcd: true,
-		gcdRecast: 1,
+		gcdRecast: 1.5,
 	},
 
 	DOTON: {
@@ -175,7 +175,7 @@ export default {
 		name: 'Doton',
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
-		gcdRecast: 1,
+		gcdRecast: 1.5,
 	},
 
 	SUITON: {
@@ -191,7 +191,7 @@ export default {
 		name: 'Suiton',
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
-		gcdRecast: 1,
+		gcdRecast: 1.5,
 	},
 
 	RABBIT_MEDIUM: {
