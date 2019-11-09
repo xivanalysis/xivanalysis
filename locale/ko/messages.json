@@ -534,7 +534,7 @@
   "nin.ninjutsu.suggestions.hyoton.why": "빙둔술을 {0, plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninjutsu.suggestions.rabbit.content": "인술을 잘못 사용하지 마세요. <0/>을 사용하는 것은 개인 DPS는 물론, 사용할 수 있는 <1/>의 수까지 영향을 미쳐 rDPS의 감소까지 불러올 수 있습니다.",
   "nin.ninjutsu.suggestions.rabbit.why": "토끼를 {0, plural, other {#번}} 소환하였습니다.",
-  "nin.ninjutsu.suggestions.st-doton.content": "",
+  "nin.ninjutsu.suggestions.st-doton.content": "단일 대상에게 <0/> 사용을 기피 하십시오. 단 1 틱이라도 빗나가도 <1/>보다 낮은 위력을 가지며 인술 사용 횟수가 많아 글쿨이 더 밀리는 손해를 볼 수 있습니다.",
   "nin.ninjutsu.suggestions.st-doton.why": "잘못된 토둔술을 {badStds,  plural, one {#회} other {#회}} 사용했습니다.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "",
   "nin.ninjutsu.suggestions.tcj-doton.why": "",
