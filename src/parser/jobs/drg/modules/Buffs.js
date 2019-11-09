@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Accordion, Header, Message} from 'semantic-ui-react'
+import {Header, Message, Icon, Table, Button} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -37,7 +37,7 @@ const STATUS_MAP = {
 	[ACTIONS.DRAGON_SIGHT.id]: STATUSES.RIGHT_EYE.id,
 }
 
-const BUFF_GCD_TARGET = 8
+const BUFF_GCD_TARGET = 9
 const BUFF_GCD_WARNING = 7
 const BUFF_GCD_ERROR = 0
 
@@ -90,6 +90,35 @@ export default class Buffs extends Module {
 		}
 	}
 
+	getActiveDrgBuffs() {
+		const active = []
+
+		if (this.combatants.selected.hasStatus(STATUSES.LANCE_CHARGE.id)) {
+			active.push(STATUSES.LANCE_CHARGE.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.BATTLE_LITANY.id)) {
+			active.push(STATUSES.BATTLE_LITANY.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO)) {
+			active.push(STATUSES.RIGHT_EYE.id)
+		}
+
+		return active
+	}
+
+	createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (action && action.onGcd) {
@@ -129,6 +158,7 @@ export default class Buffs extends Module {
 			start: event.timestamp,
 			casts: [],
 			isBad: BAD_BUFF_ACTIONS.includes(this._lastGcd),
+			partial: false,
 		}
 	}
 
@@ -139,11 +169,6 @@ export default class Buffs extends Module {
 	}
 
 	_closeLastWindow(statusId) {
-		// So we don't include partial windows
-		if (this.combatants.selected.hasStatus(statusId)) {
-			return
-		}
-
 		const tracker = this._buffWindows[statusId]
 
 		// If there's no current cast just stop here
@@ -151,11 +176,89 @@ export default class Buffs extends Module {
 			return
 		}
 
+		// Partial windows should be included at the end of the fight,
+		// as it is optimal to use the buff there even though you don't get
+		// the full duration. They'll be marked in the table.
+		if (this.combatants.selected.hasStatus(statusId)) {
+			tracker.current.partial = true
+		}
+
 		tracker.current.gcdCount = tracker.current.casts.filter(cast => {
 			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
 			return action && action.onGcd
 		}).length
 		tracker.history.push(tracker.current)
+	}
+
+	// returns the number of casts of a buff you can get in the fight,
+	// and also returns the amount of time that gets clipped by invulns if you do this.
+	_computeMaxBuffs(start, end, cd, duration, windows) {
+		let currentTime = start
+		let count = 0
+		let timeLost = 0
+
+		while (currentTime < end) {
+			count += 1
+			const buffStart = currentTime
+			const buffEnd = currentTime + duration
+			currentTime += cd
+
+			// check if that falls within a downtime window, if so, current time is now the
+			// end of the window
+			for (const window of windows) {
+				if (window.start <= currentTime && currentTime <= window.end) {
+					// inside window, set current to end
+					currentTime = window.end
+				}
+
+				// also for buffs, check if we lost time to an invuln window
+				// only possible case: invuln starts after buff starts,
+				if (buffStart < window.start) {
+					// buff ends in window
+					if (window.start < buffEnd && buffEnd < window.end) {
+						timeLost += buffEnd - window.start
+					} else if (buffEnd >= window.end) {
+						// buff does not end in window
+						timeLost += window.end - window.start
+					}
+				}
+			}
+		}
+
+		return {count, timeLost}
+	}
+
+	// returns the number of full duration buff casts you can get in a fight
+	// and also returns the amount of time that gets clipped by the end of the fight if applicable
+	_computeMaxFullBuffs(start, end, cd, duration, windows) {
+		let currentTime = start
+		let count = 0
+		let timeLost = 0
+
+		while (currentTime < end) {
+			const buffStart = currentTime
+			const buffEnd = currentTime + duration
+
+			// for full duration buffs, see if a window starts after a
+			// buff starts
+			for (const window of windows) {
+				// this time we skip if the duration runs into a window
+				// this should find the furthest window just in case there's some weird stuff happening
+				if (buffStart < window.start &&	((window.start < buffEnd && buffEnd < window.end) || buffEnd >= window.end)) {
+					currentTime = window.end
+				}
+			}
+
+			// check how much we lose from using it at the end
+			if (buffEnd > end) {
+				timeLost += buffEnd - end
+			}
+
+			count += 1
+			currentTime += cd
+		}
+
+		return {count, timeLost}
 	}
 
 	_onComplete() {
@@ -250,70 +353,114 @@ export default class Buffs extends Module {
 		return count
 	}
 
+	_getMaxBuffData() {
+		const windows = this.invuln.getInvulns()
+		const fightLength = this.parser.fight.end_time - this.parser.fight.start_time
+
+		for (const actionId in STATUS_MAP) {
+			const action = getDataBy(ACTIONS, 'id', parseInt(actionId))
+			const status = getDataBy(STATUSES, 'id', STATUS_MAP[actionId])
+			const buffWindows = this._buffWindows[STATUS_MAP[actionId]]
+			const first =	buffWindows.length > 0 ? buffWindows[0].start	: this.parser.fight.start_time
+
+			buffWindows.maxCasts = this._computeMaxBuffs(first, this.parser.fight.end_time,	action.cooldown * 1000,	status.duration * 1000, windows)
+			buffWindows.maxFull = this._computeMaxFullBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000,	windows)
+			buffWindows.maxDrift = fightLength - (buffWindows.maxFull.count - 1) * action.cooldown * 1000
+		}
+	}
+
 	output() {
-		const lcPanels = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.start)}
-						<span> - </span>
-						<Trans id="drg.buffs.panel-count">
-							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.casts}/>,
-				},
-			}
+		this._getMaxBuffData()
+
+		let totalLCDrift = 0
+		let totalDSDrift = 0
+		const lcRows = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map((window, idx) => {
+			const history = this._buffWindows[STATUSES.LANCE_CHARGE.id].history
+			const delay = idx > 0 ? window.start - history[idx - 1].start : 0
+			const drift =	idx > 0 ? delay - ACTIONS.LANCE_CHARGE.cooldown * 1000 : 0
+			totalLCDrift += drift
+
+			return <Table.Row key={window.start}>
+				<Table.Cell>{this.createTimelineButton(window.start)}</Table.Cell>
+				<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
+				<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
+				<Table.Cell><strong>{this._formatGcdCount(window.gcdCount)} {window.partial ? '*' : ''}</strong></Table.Cell>
+				<Table.Cell><Rotation events={window.casts} /></Table.Cell>
+			</Table.Row>
 		})
-		const dsPanels = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.start)}
-						<span> - </span>
-						<Trans id="drg.buffs.panel-count">
-							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.casts}/>,
-				},
-			}
+
+		const dsRows = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map((window, idx) => {
+			const history = this._buffWindows[STATUSES.RIGHT_EYE.id].history
+			const delay = idx > 0 ? window.start - history[idx - 1].start : 0
+			const drift =
+				idx > 0 ? delay - ACTIONS.DRAGON_SIGHT.cooldown * 1000 : 0
+			totalDSDrift += drift
+
+			return <Table.Row key={window.start}>
+				<Table.Cell>{this.createTimelineButton(window.start)}</Table.Cell>
+				<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
+				<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
+				<Table.Cell>{this._formatGcdCount(window.gcdCount)} {window.partial ? '*' : ''}</Table.Cell>
+				<Table.Cell><Rotation events={window.casts} /></Table.Cell>
+			</Table.Row>
 		})
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="drg.buffs.accordion.message">
+					Each of your <ActionLink {...ACTIONS.LANCE_CHARGE} /> and <ActionLink {...ACTIONS.DRAGON_SIGHT} /> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation,	you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. These buffs should be used as frequently as possible at the proper spot in the GCD rotation, and will ideally not clip into boss invulnerability	windows. Each buff window below indicates how many GCDs it contained and what those GCDs were.
+				</Trans>
 			</Message>
-			{lcPanels.length > 0 && <>
-				<Header size="small">
-					<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
-				</Header>
-				<Accordion
-					exclusive={false}
-					panels={lcPanels}
-					styled
-					fluid
-				/>
-			</>}
-			{dsPanels.length > 0 && <>
-				<Header size="small">
-					<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
-				</Header>
-				<Accordion
-					exclusive={false}
-					panels={dsPanels}
-					styled
-					fluid
-				/>
-			</>}
+			{lcRows.length > 0 && (
+				<>
+					<Header size="small">
+						<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
+					</Header>
+					<Message info>
+						<Trans id="drg.buffs.accordion.lc-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.LANCE_CHARGE} />	<strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].maxFull.count}</strong> full buff windows.</Trans>
+					</Message>
+					<Table>
+						<Table.Header>
+							<Table.Row key="lc-header">
+								<Table.HeaderCell><Trans id="drg.buffs.table.time">Time</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.cd">CD</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.drift">Drift</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.gcds">GCDs</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.casts">Casts</Trans></Table.HeaderCell>
+							</Table.Row>
+						</Table.Header>
+						{lcRows}
+					</Table>
+					<Message info>
+						<Trans id="drg.buffs.accordion.lc-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalLCDrift)}</strong>. In	order to fit all full duration buffs, you needed a maximum drift	of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.LANCE_CHARGE.id].maxDrift)}</strong>.</Trans>
+					</Message>
+				</>
+			)}
+			{dsRows.length > 0 && (
+				<>
+					<Header size="small">
+						<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
+					</Header>
+					<Message info>
+						<Trans id="drg.buffs.accordion.ds-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.DRAGON_SIGHT} /> <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].maxFull.count}</strong>	full buff windows.</Trans>
+					</Message>
+					<Table>
+						<Table.Header>
+							<Table.Row key="ds-header">
+								<Table.HeaderCell><Trans id="drg.buffs.table.time">Time</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.cd">CD</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.drift">Drift</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.gcds">GCDs</Trans></Table.HeaderCell>
+								<Table.HeaderCell><Trans id="drg.buffs.table.casts">Casts</Trans></Table.HeaderCell>
+							</Table.Row>
+						</Table.Header>
+						{dsRows}
+					</Table>
+					<Message info>
+						<Trans id="drg.buffs.accordion.ds-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalDSDrift)}</strong>. In	order to fit all full duration buffs, you needed a maximum drift	of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.RIGHT_EYE.id].maxDrift)}</strong>.</Trans>
+					</Message>
+				</>
+			)}
 		</Fragment>
 	}
 }
