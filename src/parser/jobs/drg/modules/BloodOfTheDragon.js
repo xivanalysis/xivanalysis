@@ -1,18 +1,22 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Icon, Message, Table, Accordion, Button} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const DRAGON_MAX_DURATION_MILLIS = 30000
 const DRAGON_DEFAULT_DURATION_MILLIS = 30000
 const BLOOD_EXTENSION_MILLIS = 10000
+const LOTD_BUFF_DELAY_MIN = 30000
+const LOTD_BUFF_DELAY_MAX = 60000
 
 const MAX_EYES = 2
 
@@ -22,6 +26,8 @@ export default class BloodOfTheDragon extends Module {
 	static dependencies = [
 		'brokenLog',
 		'checklist',
+		'combatants',
+		'cooldowns',
 		'death',
 		'suggestions',
 	]
@@ -53,6 +59,37 @@ export default class BloodOfTheDragon extends Module {
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
 	}
+
+	// duplicate code from other PRs
+	getActiveDrgBuffs() {
+		const active = []
+
+		if (this.combatants.selected.hasStatus(STATUSES.LANCE_CHARGE.id)) {
+			active.push(STATUSES.LANCE_CHARGE.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.BATTLE_LITANY.id)) {
+			active.push(STATUSES.BATTLE_LITANY.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO)) {
+			active.push(STATUSES.RIGHT_EYE.id)
+		}
+
+		return active
+	}
+
+	createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+	// end duplicate code
 
 	_finishLifeWindow() {
 		if (this._lifeWindows.current !== null) {
@@ -120,6 +157,12 @@ export default class BloodOfTheDragon extends Module {
 				duration: this._lifeDuration,
 				nastronds: [],
 				stardivers: [],
+				timeToNextBuff: {
+					[ACTIONS.LANCE_CHARGE.id]: this.cooldowns.getCooldownRemaining(ACTIONS.LANCE_CHARGE.id),
+					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns.getCooldownRemaining(ACTIONS.DRAGON_SIGHT.id),
+					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns.getCooldownRemaining(ACTIONS.BATTLE_LITANY.id),
+				},
+				activeBuffs: this.getActiveDrgBuffs(),
 			}
 			this._eyes = 0
 		}
@@ -138,7 +181,11 @@ export default class BloodOfTheDragon extends Module {
 
 		if (!this._lifeWindows.current.nastronds.some(nastrond => nastrond.timestamp === event.timestamp)) {
 			// Dedupe Nastrond casts, since that can occasionally happen
-			this._lifeWindows.current.nastronds.push(event)
+			this._lifeWindows.current.nastronds.push({
+				...event,
+				buffs: this.getActiveDrgBuffs(),
+				action: ACTIONS.NASTROND,
+			})
 		}
 	}
 
@@ -155,7 +202,11 @@ export default class BloodOfTheDragon extends Module {
 
 		if (!this._lifeWindows.current.stardivers.some(stardiver => stardiver.timestamp === event.timestamp)) {
 			// Dedupe Stardiver casts, it's also AoE so it's probably going to happen on occasion too
-			this._lifeWindows.current.stardivers.push(event)
+			this._lifeWindows.current.stardivers.push({
+				...event,
+				buffs: this.getActiveDrgBuffs(),
+				action: ACTIONS.STARDIVER,
+			})
 		}
 	}
 
@@ -213,20 +264,86 @@ export default class BloodOfTheDragon extends Module {
 		}))
 	}
 
+	_windowTable(window) {
+		const casts = window.nastronds.concat(window.stardivers)
+		casts.sort((a, b) => { return a.timestamp - b.timestamp })
+
+		const rows = casts.map(cast => {
+			const buffs = cast.buffs.map(id => {
+				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)}	/>
+			})
+
+			return <Table.Row key={cast.timestamp}>
+				<Table.Cell>{this.createTimelineButton(cast.timestamp)}</Table.Cell>
+				<Table.Cell><ActionLink {...cast.action} /></Table.Cell>
+				<Table.Cell>{buffs}</Table.Cell>
+			</Table.Row>
+		})
+
+		const buffsInDelayWindow = {}
+		let canBeDelayed = window.activeBuffs.length === 0
+		let couldBeDelayed = false
+
+		for (const id in window.timeToNextBuff) {
+			buffsInDelayWindow[id] = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && window.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
+			couldBeDelayed = buffsInDelayWindow[id] || couldBeDelayed
+			canBeDelayed = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && canBeDelayed
+		}
+
+		const delayBuffs = Object.keys(buffsInDelayWindow).filter(id => buffsInDelayWindow[id]).map((id, idx) => {
+			const action = getDataBy(ACTIONS, 'id', parseInt(id))
+			return <Message.Item key={idx}><Trans id={`drg.blood.delay-buff.${id}`}><ActionLink {...action} /> in {this.parser.formatDuration(window.timeToNextBuff[id])}</Trans></Message.Item>
+		})
+
+		return <Fragment>
+			{canBeDelayed && couldBeDelayed && (
+				<>
+					<Message>
+						<p><Trans id="drg.blood.delay-explain">Life of the Dragon windows should line up with your personal buffs if possible. This window could have been delayed to line up with:
+						</Trans></p>
+						<Message.List>
+							{delayBuffs}
+						</Message.List>
+					</Message>
+				</>
+			)}
+			<Table>
+				<Table.Header>
+					<Table.Row key="header">
+						<Table.HeaderCell><Trans id="drg.blood.table.time">Time</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="drg.blood.table.action">Action</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="drg.blood.table.statuses">Personal Buffs</Trans></Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				{rows}
+			</Table>
+		</Fragment>
+	}
+
 	output() {
 		if (this._lifeWindows.history.length > 0) {
+			const lotdPanels = this._lifeWindows.history.map(window => {
+				return {
+					title: {
+						key: `title-${window.start}`,
+						content: <Fragment>
+							{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits">{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond"	other="# Nastronds"	/>,	<Plural	value={window.stardivers.length} one="# Stardiver" other="# Stardivers"	/></Trans>
+						</Fragment>,
+					},
+					content: {
+						key: `content-${window.start}`,
+						content: this._windowTable(window),
+					},
+				}
+			})
+
 			return <Fragment>
-				<Trans id="drg.blood.windows.preface">
-					Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
-				</Trans>
-				<ul>
-					{this._lifeWindows.history.map(window => <li key={window.start}>
-						<strong>{this.parser.formatTimestamp(window.start)}</strong>:&nbsp;
-						<Trans id="drg.blood.windows.hits">
-							{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds"/>, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers"/>
-						</Trans>
-					</li>)}
-				</ul>
+				<Message>
+					<Trans id="drg.blood.windows.preface">
+						Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
+					</Trans>
+				</Message>
+				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
 			</Fragment>
 		}
 
