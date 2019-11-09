@@ -169,6 +169,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_I_EARTHEN_ARMOR: {
@@ -179,6 +180,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_I_CRIMSON_CYCLONE: {
@@ -189,6 +191,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_SLIIPSTREAM: {
@@ -199,6 +202,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_MOUNTAIN_BUSTER: {
@@ -209,6 +213,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_FLAMING_CRUSH: {
@@ -219,6 +224,7 @@ export default {
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {

@@ -17,5 +17,6 @@ export interface Action {
 	cooldown?: number
 	autoAttack?: boolean
 	statusesApplied?: Status[]
+	charges?: number
 	[key: string]: unknown
 }
