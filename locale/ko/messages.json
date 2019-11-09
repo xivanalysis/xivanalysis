@@ -552,7 +552,7 @@
   "nin.ta-usage.suggestions.missed.why": "속임수 공격을 {0} 만큼 지연시켜 {lostCasts, plural,one {#회}other {#회}}의 속임수 공격을 놓쳤습니다.",
   "nin.ta-usage.suggestions.none.content": "<0/>은 닌자의 스킬 중 가장 강력한 파티 버프이며, 레이드 진행에 따라 최대한 쿨이 돌자마자 사용해야 합니다.",
   "nin.ta-usage.suggestions.none.why": "전투 동안 속임수 공격을 단 한번도 사용하지 않았습니다.",
-  "nin.ta-usage.suggestions.opener.content": "",
+  "nin.ta-usage.suggestions.opener.content": "첫 <0/>의 타이밍은 다른 파티 버프 및 개인 버프와 정렬하기 위해 사용되어야하며 이 파티버프 구간이외에 사용하는것을 기피하십시오. 대부분 오프너는 속임수 공격이 전투 시작후 8-9초 정도 적용되는것을 전제하에 맞추어지므로 반드시 이에 맞추십시오.",
   "nin.ta-usage.suggestions.opener.why": "첫번째 속임수 공격이 {0}글쿨 이후 사용되었습니다.",
   "nin.ta-window.suggestions.armor-crush.content": "속임수 공격 구간 내에 <0/>사용을 피하십시오. 풍둔술이 떨어지는 상황이 아닌 이상 <1/>이나 <2/>를 사용하는 것이 가장 이득입니다.",
   "nin.ta-window.suggestions.armor-crush.why": "속임수 공격 지속시간 동안 갑각파황격을 {0}번 사용했습니다.",
