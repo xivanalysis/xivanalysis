@@ -357,6 +357,18 @@
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> 지속시간",
   "drg.debuffs.suggestions.clipping.content": "<0/>이 만료되기전에 갱신됬다는 것은 딜사이클이 꼬인 증거입니다. 용기사의 10글쿨 딜사이클은 매우 엄격하며 기술 시전 속도에 따라 꽃잎 폭풍이 1-2초를 남긴 상태에서 갱신됩니다.",
   "drg.debuffs.suggestions.clipping.why": "너무 이르게 갱신하여 {0} 만큼의 꽃잎 폭풍 지속시간을 잃었습니다.",
+  "drg.positionals.analysis.message": "",
+  "drg.positionals.analysis.missed": "",
+  "drg.positionals.suggestions.content": "",
+  "drg.positionals.suggestions.why": "",
+  "drg.positionals.table.procact": "",
+  "drg.positionals.table.success": "",
+  "drg.positionals.table.time": "",
+  "drg.positionals.table.tn1": "",
+  "drg.positionals.table.tn2": "",
+  "drg.positionals.table.tnavail": "",
+  "drg.positionals.table.truenorth": "",
+  "drg.positionals.title": "",
   "drg.procs.suggestions.extenders.content": "<0/>와 <1/> 단계에서 콤보를 끊는 것은 프록을 잃게되며, 그에 따르는 <2/> 연장 또한 잃게 되므로 피합니다.",
   "drg.procs.suggestions.extenders.why": "{droppedFang, plural, one {#개의 용의 발톱 프록} other {#개의 용의 발톱 프록}} 과 {droppedWheeling, plural, one {#개의 용의 꼬리 프록} other {#개의 용의 꼬리 프록}}을 잃었습니다.",
   "drg.procs.suggestions.mirage-dropped.content": "<0/> 프록을 놓치지 마세요. 붉은 용혈 구간이 미뤄지고 DPS에 큰 손실을 입힐 수 있습니다.",
@@ -823,5 +835,6 @@
   "whm.overheal.rule.name": "오버힐을 피하세요",
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 신속마는 즉시 시전을 해주며 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
   "whm.swiftcast.missed.suggestion.why": "신속마 효과를 사용하지 않아 총 {missedSwifts} {missedSwifts, plural, other {회가}} 낭비 되었습니다.",
-  "whm.swiftcast.title": "신속마가 사용된 스킬들"
+  "whm.swiftcast.title": "신속마가 사용된 스킬들",
+  "{0, plural, one {charge} other {charges}}": ""
 }

@@ -357,6 +357,18 @@
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> 覆盖率",
   "drg.debuffs.suggestions.clipping.content": "不要过早地刷新<0/>，这样通常意味着循环错误。龙骑士严格的10-GCD循环中樱花怒放应该会在还剩1~2秒的时候刷新，具体时间取决于你的技能速度。",
   "drg.debuffs.suggestions.clipping.why": "由于过早的刷新，你损失了 {0} 的樱花怒放 。",
+  "drg.positionals.analysis.message": "",
+  "drg.positionals.analysis.missed": "",
+  "drg.positionals.suggestions.content": "",
+  "drg.positionals.suggestions.why": "",
+  "drg.positionals.table.procact": "",
+  "drg.positionals.table.success": "",
+  "drg.positionals.table.time": "",
+  "drg.positionals.table.tn1": "",
+  "drg.positionals.table.tn2": "",
+  "drg.positionals.table.tnavail": "",
+  "drg.positionals.table.truenorth": "",
+  "drg.positionals.title": "",
   "drg.procs.suggestions.extenders.content": "不要在<0/>和<1/>状态下中断连击，否则你会失去允许你使用它们的触发状态，这会导致你损失掉这次技能还有附加的<2/>时间。",
   "drg.procs.suggestions.extenders.why": "你丢失了 {droppedFang, plural, one {# 次龙牙龙爪} other {# 次龙牙龙爪}}与 {droppedWheeling, plural, one {# 次龙尾大回旋} other {# 次龙尾大回旋}}。",
   "drg.procs.suggestions.mirage-dropped.content": "不要让你的<0/>触发状态消失，这样会延后你的红莲龙血，并很可能显著降低你的DPS。",
@@ -823,5 +835,6 @@
   "whm.overheal.rule.name": "避免过量治疗",
   "whm.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
   "whm.swiftcast.missed.suggestion.why": "因为没有及时释放法术而浪费 {missedSwifts} {missedSwifts, plural, one {次} other {次}} 即刻咏唱。",
-  "whm.swiftcast.title": "即刻咏唱"
+  "whm.swiftcast.title": "即刻咏唱",
+  "{0, plural, one {charge} other {charges}}": ""
 }

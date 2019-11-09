@@ -357,6 +357,18 @@
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "Temps d'activité total de <0/>",
   "drg.debuffs.suggestions.clipping.content": "",
   "drg.debuffs.suggestions.clipping.why": "Vous avez perdu {0} utilisations de Percée Chaotique à cause de ré-applications précipitées.",
+  "drg.positionals.analysis.message": "",
+  "drg.positionals.analysis.missed": "",
+  "drg.positionals.suggestions.content": "",
+  "drg.positionals.suggestions.why": "",
+  "drg.positionals.table.procact": "",
+  "drg.positionals.table.success": "",
+  "drg.positionals.table.time": "",
+  "drg.positionals.table.tn1": "",
+  "drg.positionals.table.tn2": "",
+  "drg.positionals.table.tnavail": "",
+  "drg.positionals.table.truenorth": "",
+  "drg.positionals.title": "",
   "drg.procs.suggestions.extenders.content": "",
   "drg.procs.suggestions.extenders.why": "",
   "drg.procs.suggestions.mirage-dropped.content": "",
@@ -823,5 +835,6 @@
   "whm.overheal.rule.name": "Éviter l'overheal",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": ""
+  "whm.swiftcast.title": "",
+  "{0, plural, one {charge} other {charges}}": ""
 }
