@@ -103,6 +103,7 @@ export default class Shoha extends Module {
 	private onMeditateGain() {
 		if (this.combatants.selected.hasStatus(STATUSES.MEDITATE.id)) {
 			this.stacks++
+			this.totalGeneratedStacks++
 
 			// just a safety net
 			if (this.stacks > MAX_STACKS) {
@@ -167,8 +168,8 @@ export default class Shoha extends Module {
 
 		// final use amounts
 
-		// const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
-		// const totalUses = this.shohaUses
+		 const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
+		 const totalUses = this.shohaUses
 
 		this.checklist.add(new Rule({
 			name: 'Meditation',
@@ -181,12 +182,11 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: this.totalGeneratedStacks,
-					target: (this.totalGeneratedStacks - totalWaste),
+					value: totalUses,
+					target: totalPossibleUses,
 				}),
 			],
 		}))
-	}
 
 	private convertWasteMapToTable() {
 		const rows = [
