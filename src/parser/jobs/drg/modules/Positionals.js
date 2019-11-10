@@ -176,18 +176,8 @@ export default class Positionals extends Module {
 			return <Table.Row key={combo.time}>
 				<Table.Cell>{this.createTimelineButton(combo.time)}</Table.Cell>
 				<Table.Cell><ActionLink {...action} /></Table.Cell>
-				<Table.Cell	textAlign="center" positive={combo.success}	negative={!combo.success}>
-					{this._checkIcon(combo.success)}
-				</Table.Cell>
-				<Table.Cell textAlign="center">
-					{combo.trueNorthCast1 ? <Icon color="green" name="check" /> : ''}
-				</Table.Cell>
-				<Table.Cell textAlign="center">
-					{combo.trueNorthCast2 ? <Icon color="green" name="check" /> : ''}
-				</Table.Cell>
-				<Table.Cell textAlign="center">
-					{this._checkIcon(combo.trueNorthCharges > 0, '')} ({combo.trueNorthCharges} <Plural	value={combo.trueNorthCharges} one="charge" other="charges"	/>)
-				</Table.Cell>
+				<Table.Cell	textAlign="center" positive={combo.success}	negative={!combo.success}>{this._checkIcon(combo.success)}</Table.Cell>
+				<Table.Cell textAlign="center">{this._checkIcon(combo.trueNorthCharges > 0, '')} ({combo.trueNorthCharges} <Plural	value={combo.trueNorthCharges} one="charge" other="charges"	/>)</Table.Cell>
 			</Table.Row>
 		})
 	}
@@ -205,36 +195,23 @@ export default class Positionals extends Module {
 						<>
 							Of these missed procs, <strong>{this._rtCombos.filter(combo => !combo.success && combo.trueNorthCharges > 0).length}</strong> could be handled with <ActionLink {...ACTIONS.TRUE_NORTH} />
 						</>
-					) : (
-						''
-					)}
+					) : ('')}
 				</Trans>
 			</Message>
 			<Table>
 				<Table.Header>
 					<Table.Row key="pos-header">
-						<Table.HeaderCell rowSpan="2">
+						<Table.HeaderCell>
 							<Trans id="drg.positionals.table.time">Time</Trans>
 						</Table.HeaderCell>
-						<Table.HeaderCell rowSpan="2">
+						<Table.HeaderCell>
 							<Trans id="drg.positionals.table.procact">Final Action</Trans>
 						</Table.HeaderCell>
-						<Table.HeaderCell rowSpan="2">
+						<Table.HeaderCell>
 							<Trans id="drg.positionals.table.success">Success</Trans>
 						</Table.HeaderCell>
-						<Table.HeaderCell colSpan="3" textAlign="center">
-							<Trans id="drg.positionals.table.truenorth">True North</Trans>
-						</Table.HeaderCell>
-					</Table.Row>
-					<Table.Row>
-						<Table.HeaderCell textAlign="center">
-							<Trans id="drg.positionals.table.tn1">Cast 1</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell textAlign="center">
-							<Trans id="drg.positionals.table.tn2">Cast 2</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell textAlign="center">
-							<Trans id="drg.positionals.table.tnavail">Available</Trans>
+						<Table.HeaderCell>
+							<Trans id="drg.positionals.table.truenorth">True North Available?</Trans>
 						</Table.HeaderCell>
 					</Table.Row>
 				</Table.Header>
