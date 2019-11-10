@@ -99,6 +99,7 @@ export default class Shoha extends Module {
 		this.addGeneratedStackAndPush(generatedStacks, abilityId)
 	}
 
+		// This is exclusively for stacks gained via Meditate channel. and not any stacks gained from GCD casts
 	private onMeditateGain() {
 		if (this.combatants.selected.hasStatus(STATUSES.MEDITATE.id)) {
 			this.stacks++
@@ -108,7 +109,10 @@ export default class Shoha extends Module {
 				this.stacks = MAX_STACKS
 			}
 		}
+		
+		this.pushToHistory()
 	}
+
 
 	private addGeneratedStackAndPush(generatedStacks: number, abilityId: number) {
 		this.stacks += generatedStacks
@@ -163,8 +167,8 @@ export default class Shoha extends Module {
 
 		// final use amounts
 
-		const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
-		const totalUses = this.shohaUses
+		// const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
+		// const totalUses = this.shohaUses
 
 		this.checklist.add(new Rule({
 			name: 'Meditation',
@@ -177,8 +181,8 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: totalUses,
-					target:totalPossibleUses,
+					value: this.totalGeneratedStacks,
+					target: (this.totalGeneratedStacks - totalWaste),
 				}),
 			],
 		}))
