@@ -38,10 +38,10 @@ export default class Ninjutsu extends Module {
 	_onDotonCast() {
 		this._finishDotonWindow()
 
-		this._dotonCasts.history.push({
+		this._dotonCasts.current = {
 			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
 			ticks: [],
-		})
+		}
 	}
 
 	_onDotonDamage(event) {
