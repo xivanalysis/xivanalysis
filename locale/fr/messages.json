@@ -417,7 +417,7 @@
   "nin.shadowfang.suggestions.clipping.content": "Évitez de rafraîchir <0/> de manière significative avant le temps d'expiration, à moins que cela vous coûte une partie importante de votre temps d'activité total. Des rafraîchissements non-nécessaires risquent d'écraser des buffs déjà actifs et de réduire le nombre de fois que vous pouvez utiliser <1/>.",
   "nin.shadowfang.suggestions.clipping.why": "Vous avez perdu {0} utilisations de Croc D'ombre dû à des ré-applications précipitées.",
   "nin.ta-positional.suggestions.missed.content": "<0/> octroie un énorme buff de raid à votre équipe et à vous. Manquer le positionnel peut être un handicap pour le DPS du raid, notamment si cela se produit plus d'une fois pendant un seul et même combat.",
-  "nin.ta-positional.suggestions.missed.why": "",
+  "nin.ta-positional.suggestions.missed.why": "Vous vous êtes mal positioné pour attaque sournoise {0, plural,one {#fois} other   {#fois}}.",
   "nin.ta-usage.suggestions.missed.content": "",
   "nin.ta-usage.suggestions.missed.why": "",
   "nin.ta-usage.suggestions.none.content": "",
