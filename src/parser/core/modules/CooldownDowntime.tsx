@@ -11,7 +11,7 @@ import React from 'react'
 import Checklist from './Checklist'
 import Downtime from './Downtime'
 
-const DEBUG_EXPECTED_CALCULATION = process.env.NODE_ENV !== 'production'
+const DEBUG_EXPECTED_CALCULATION = false && process.env.NODE_ENV !== 'production'
 
 interface CooldownReset {
 	/**
@@ -62,7 +62,7 @@ interface CooldownGroup {
 
 export abstract class CooldownDowntime extends Module {
 	static handle = 'cooldowndowntime'
-	static title = t('core.cooldowndowntime2.title')`Cooldown Downtime`
+	static title = t('core.cooldowndowntime.title')`Cooldown Downtime`
 
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
@@ -258,7 +258,7 @@ export abstract class CooldownDowntime extends Module {
 			if (!DEBUG_EXPECTED_CALCULATION) {
 				return
 			}
-
+			// tslint:disable-next-line:no-console
 			console.log(message)
 		}
 	}
