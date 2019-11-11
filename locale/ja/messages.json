@@ -366,6 +366,7 @@
   "drg.positionals.table.time": "",
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
+  "drg.positionals.tn-charges": "",
   "drg.procs.suggestions.extenders.content": "<0/> と<1/>の時点ではコンボを中断しないようにしましょう、Procが失われることで<2/>の維持をするために両方とも使用でするようにしましょう。",
   "drg.procs.suggestions.extenders.why": "あなたは {droppedFang, plural, one {# Fang and Claw proc} other {# Fang and Claw procs}} と {droppedWheeling, plural, one {# Wheeling Thrust proc} other {# Wheeling Thrust procs}}を落としています。",
   "drg.procs.suggestions.mirage-dropped.content": "<0/>のプロックを落とさないようにして下さい。紅の竜血になるのが遅れ、DPSのロスが大きくなりやすいです。",
@@ -832,6 +833,5 @@
   "whm.overheal.rule.name": "オーバーヒールを避けてください。",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": "",
-  "{0, plural, one {charge} other {charges}}": ""
+  "whm.swiftcast.title": ""
 }

@@ -366,6 +366,7 @@
   "drg.positionals.table.time": "",
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
+  "drg.positionals.tn-charges": "",
   "drg.procs.suggestions.extenders.content": "",
   "drg.procs.suggestions.extenders.why": "",
   "drg.procs.suggestions.mirage-dropped.content": "",
@@ -832,6 +833,5 @@
   "whm.overheal.rule.name": "Vermeide Overheal",
   "whm.swiftcast.missed.suggestion.content": "Wirke Zauber mit <0/> bevor es abläuft. Dadurch kannst du Angriffe mit Anwenungszeit sofort benutzen, wie beispielsweise <1/> für schnelle Wiederbelebungen oder <2/> zwischen Angriffen mit globaler Abklingzeit (zum weaven).",
   "whm.swiftcast.missed.suggestion.why": "{missedSwifts}x Spontanität-Aktivierungen verschwendet, da kein Zauber eingesetzt wurde, bevor Spontanität ablief.",
-  "whm.swiftcast.title": "Spontanität-Anwendungen",
-  "{0, plural, one {charge} other {charges}}": ""
+  "whm.swiftcast.title": "Spontanität-Anwendungen"
 }

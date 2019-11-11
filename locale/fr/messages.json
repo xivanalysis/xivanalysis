@@ -366,6 +366,7 @@
   "drg.positionals.table.time": "",
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
+  "drg.positionals.tn-charges": "",
   "drg.procs.suggestions.extenders.content": "",
   "drg.procs.suggestions.extenders.why": "",
   "drg.procs.suggestions.mirage-dropped.content": "",
@@ -832,6 +833,5 @@
   "whm.overheal.rule.name": "Éviter l'overheal",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": "",
-  "{0, plural, one {charge} other {charges}}": ""
+  "whm.swiftcast.title": ""
 }

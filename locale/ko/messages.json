@@ -366,6 +366,7 @@
   "drg.positionals.table.time": "",
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
+  "drg.positionals.tn-charges": "",
   "drg.procs.suggestions.extenders.content": "<0/>와 <1/> 단계에서 콤보를 끊는 것은 프록을 잃게되며, 그에 따르는 <2/> 연장 또한 잃게 되므로 피합니다.",
   "drg.procs.suggestions.extenders.why": "{droppedFang, plural, one {#개의 용의 발톱 프록} other {#개의 용의 발톱 프록}} 과 {droppedWheeling, plural, one {#개의 용의 꼬리 프록} other {#개의 용의 꼬리 프록}}을 잃었습니다.",
   "drg.procs.suggestions.mirage-dropped.content": "<0/> 프록을 놓치지 마세요. 붉은 용혈 구간이 미뤄지고 DPS에 큰 손실을 입힐 수 있습니다.",
@@ -832,6 +833,5 @@
   "whm.overheal.rule.name": "오버힐을 피하세요",
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 신속마는 즉시 시전을 해주며 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
   "whm.swiftcast.missed.suggestion.why": "신속마 효과를 사용하지 않아 총 {missedSwifts} {missedSwifts, plural, other {회가}} 낭비 되었습니다.",
-  "whm.swiftcast.title": "신속마가 사용된 스킬들",
-  "{0, plural, one {charge} other {charges}}": ""
+  "whm.swiftcast.title": "신속마가 사용된 스킬들"
 }
