@@ -46,10 +46,10 @@ export default class Positionals extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player', abilityId: ROTATION_IDS}, this._onGCD)
-		this.addHook('cast', {by: 'player', abilityId: PROC_IDS}, this._onProcGCD)
+		this.addHook('cast', {by: 'player', abilityId: ROTATION_IDS}, this._onGcd)
+		this.addHook('cast', {by: 'player', abilityId: PROC_IDS}, this._onProcGcd)
 		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RAIDEN_THRUST_READY.id}, this._procSuccess)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.TRUE_NORTH.id}, this._tnUsed)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRUE_NORTH.id}, this._tnUsed)
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -60,27 +60,28 @@ export default class Positionals extends Module {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
 			content={this.parser.formatTimestamp(timestamp)}
 		/>
 	}
 	// end duplicate code
 
-	_onGCD(event) {
-		if (this._currentCombo) {
-			// did we use the proc? we might not due to invuln windows
-			if (event.ability.guid === ACTIONS.RAIDEN_THRUST.id) {
-				this._rtCombos.used = true
-			}
-
-			// close the window
-			this._rtCombos.push(this._currentCombo)
-			this._currentCombo = null
+	_onGcd(event) {
+		if (!this._currentCombo) {
+			return
 		}
+
+		// did we use the proc? we might not due to invuln windows
+		if (event.ability.guid === ACTIONS.RAIDEN_THRUST.id) {
+			this._rtCombos.used = true
+		}
+
+		// close the window
+		this._rtCombos.push(this._currentCombo)
+		this._currentCombo = null
 	}
 
-	_onProcGCD(event) {
-		// get action data
+	_onProcGcd(event) {
 		if (!this._currentCombo) {
 			// if we don't have an open combo window, open one
 			this._currentCombo = {
@@ -92,29 +93,17 @@ export default class Positionals extends Module {
 				time: event.timestamp,
 			}
 		} else if (this._currentCombo) {
-			// if the action isn't the next expected one, close the current window (not expecting a proc
-			// due to broken combo).
-			if (this._currentCombo.next !== event.ability.guid) {
-				// discard, let the broken combo module yell about this
-				this._currentCombo = null
-			} else {
-				// add the time
-				this._currentCombo.time = event.timestamp
+			// add the time
+			this._currentCombo.time = event.timestamp
 
-				// check for true north still active
-				this._currentCombo.trueNorthCast2 = this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id)
-			}
+			// check for true north still active
+			this._currentCombo.trueNorthCast2 = this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id)
 		}
 	}
 
 	// called exactly when the timestamp resolves
 	_updateTnCharges() {
-		this._tnCharges += 1
-
-		if (this._tnCharges > TRUE_NORTH_CHARGES) {
-			// clamp to max
-			this._tnCharges = TRUE_NORTH_CHARGES
-		}
+		this._tnCharges = Math.min(this._tnCharges + 1, TRUE_NORTH_CHARGES)
 
 		if (this._tnCharges < TRUE_NORTH_CHARGES) {
 			// if we're below the max, queue another charge since the cd will keep ticking
@@ -152,14 +141,14 @@ export default class Positionals extends Module {
 		this.suggestions.add(
 			new TieredSuggestion({
 				icon: ACTIONS.RAIDEN_THRUST.icon,
-				content: <Trans id="drg.positionals.suggestions.content">Performing the proper positionals for	<ActionLink {...ACTIONS.FANG_AND_CLAW} /> and <ActionLink {...ACTIONS.WHEELING_THRUST} /> will do more damage and	let you use <ActionLink {...ACTIONS.RAIDEN_THRUST} />. Try to land these positionals, and use <ActionLink {...ACTIONS.TRUE_NORTH} /> if	it's available.	</Trans>,
+				content: <Trans id="drg.positionals.suggestions.content">Performing the proper positionals for <ActionLink {...ACTIONS.FANG_AND_CLAW} /> and <ActionLink {...ACTIONS.WHEELING_THRUST} /> will do more damage and let you use <ActionLink {...ACTIONS.RAIDEN_THRUST} />. Try to land these positionals, and use <ActionLink {...ACTIONS.TRUE_NORTH} /> if it's available.</Trans>,
 				tiers: {
 					1: SEVERITY.MINOR,
 					10: SEVERITY.MEDIUM,
 				},
 				value: missed,
-				why: <Trans id="drg.positionals.suggestions.why">You missed {missed} <Plural value={missed} one="proc" other="procs" /> of Raiden Thrust.</Trans>,
-			})
+				why: <Trans id="drg.positionals.suggestions.why">You missed <Plural value={missed} one="# proc" other="# procs" /> of Raiden Thrust.</Trans>,
+			}),
 		)
 	}
 
@@ -176,8 +165,8 @@ export default class Positionals extends Module {
 			return <Table.Row key={combo.time}>
 				<Table.Cell>{this.createTimelineButton(combo.time)}</Table.Cell>
 				<Table.Cell><ActionLink {...action} /></Table.Cell>
-				<Table.Cell	textAlign="center" positive={combo.success}	negative={!combo.success}>{this._checkIcon(combo.success)}</Table.Cell>
-				<Table.Cell textAlign="center">{this._checkIcon(combo.trueNorthCharges > 0, '')} ({combo.trueNorthCharges} <Plural	value={combo.trueNorthCharges} one="charge" other="charges"	/>)</Table.Cell>
+				<Table.Cell textAlign="center" positive={combo.success} negative={!combo.success}>{this._checkIcon(combo.success)}</Table.Cell>
+				<Table.Cell textAlign="center">{this._checkIcon(combo.trueNorthCharges > 0, '')} (<Plural id="drg.positionals.tn-charges" value={combo.trueNorthCharges} one="# charge" other="# charges" />)</Table.Cell>
 			</Table.Row>
 		})
 	}
@@ -187,7 +176,7 @@ export default class Positionals extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.positionals.analysis.message">Being in the correct position when using <ActionLink {...ACTIONS.WHEELING_THRUST} /> and	<ActionLink {...ACTIONS.FANG_AND_CLAW} /> will allow you to use <ActionLink {...ACTIONS.RAIDEN_THRUST} /> instead of <ActionLink {...ACTIONS.TRUE_THRUST} />. You should be trying to proc this ability as much as possible, relying on <ActionLink {...ACTIONS.TRUE_NORTH} /> in situations where you cannot reach the proper position. Landing every single one of these positionals boosts your damage output by ~4%. The table below	displays all positionals, and whether or not <ActionLink {...ACTIONS.TRUE_NORTH} /> was available to use.</Trans>
+				<Trans id="drg.positionals.analysis.message">Being in the correct position when using <ActionLink {...ACTIONS.WHEELING_THRUST} /> and <ActionLink {...ACTIONS.FANG_AND_CLAW} /> will allow you to use <ActionLink {...ACTIONS.RAIDEN_THRUST} /> instead of <ActionLink {...ACTIONS.TRUE_THRUST} />. You should be trying to proc this ability as much as possible, relying on <ActionLink {...ACTIONS.TRUE_NORTH} /> in situations where you cannot reach the proper position. Landing every single one of these positionals boosts your damage output by ~4%. The table below displays all positionals, and whether or not <ActionLink {...ACTIONS.TRUE_NORTH} /> was available to use.</Trans>
 			</Message>
 			<Message info>
 				<Trans id="drg.positionals.analysis.missed"><Icon name="info" /> You missed {missed} of {this._rtCombos.length} possible <ActionLink {...ACTIONS.RAIDEN_THRUST} /> procs.
