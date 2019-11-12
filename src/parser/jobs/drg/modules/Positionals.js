@@ -67,14 +67,9 @@ export default class Positionals extends Module {
 	}
 	// end duplicate code
 
-	_onGcd(event) {
+	_onGcd() {
 		if (!this._currentCombo) {
 			return
-		}
-
-		// did we use the proc? we might not due to invuln windows
-		if (event.ability.guid === ACTIONS.RAIDEN_THRUST.id) {
-			this._rtCombos.used = true
 		}
 
 		// close the window
@@ -88,7 +83,6 @@ export default class Positionals extends Module {
 			this._currentCombo = {
 				next: NEXT_COMBO[event.ability.guid],
 				success: false,
-				used: false,
 				trueNorthCharges: this._tnCharges,
 				trueNorthCast1: this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id),
 				time: event.timestamp,
