@@ -47,11 +47,11 @@ export default class Shoha extends Module {
 	private stackHistory: StackState[] = []
 	private wasteBySource = {
 		[ACTIONS.HIGANBANA.id]: 0,
-        	[ACTIONS.KAESHI_HIGANBANA.id]: 0,
-        	[ACTIONS.TENKA_GOKEN.id]: 0,
-        	[ACTIONS.KAESHI_GOKEN.id]: 0,
-        	[ACTIONS.MIDARE_SETSUGEKKA.id]: 0,
-        	[ACTIONS.KAESHI_SETSUGEKKA.id]: 0,
+		[ACTIONS.KAESHI_HIGANBANA.id]: 0,
+		[ACTIONS.TENKA_GOKEN.id]: 0,
+		[ACTIONS.KAESHI_GOKEN.id]: 0,
+		[ACTIONS.MIDARE_SETSUGEKKA.id]: 0,
+		[ACTIONS.KAESHI_SETSUGEKKA.id]: 0,
 		[ACTIONS.RAISE.id]: 0,
 	}
 	private leftoverStacks = 0
@@ -79,21 +79,19 @@ export default class Shoha extends Module {
 			},
 			this.onSpender,
 		)
-		this.addHook(
-			'applybuff',
+		this.addEventHook([
+			'applybuff', 'applybuffstack'],
 			{
-				to: 'player',
-				abilityId: STATUSES.MEDITATION.id,
-			},
-			this.onMeditateGain,
-		)
+			to: 'player',
+			abilityId: STATUSES.MEDITATION.id,
+			}, this.onMeditateGain)
 
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
 
 	private onGenerator(event: CastEvent) {
-		if(this.stacks === MAX_STACKS){
+		if (this.stacks === MAX_STACKS) {
 		const abilityId = event.ability.guid
 		const generatedStacks = GENERATORS[abilityId]
 
@@ -110,10 +108,9 @@ export default class Shoha extends Module {
 			if (this.stacks > MAX_STACKS) {
 				this.stacks = MAX_STACKS
 			}
-		
-		this.pushToHistory()
-	}
 
+			this.pushToHistory()
+	}
 
 	private addGeneratedStackAndPush(generatedStacks: number, abilityId: number) {
 		this.stacks += generatedStacks
@@ -131,7 +128,6 @@ export default class Shoha extends Module {
 		this.stacks = this.stacks - SPENDERS[event.ability.guid]
 		this.shohaUses++
 
-		console.log('SPENT! SHOHA USE AT:', this.shohaUses)
 		// safety net!
 
 		if (this.stacks < 0) {
@@ -148,7 +144,6 @@ export default class Shoha extends Module {
 	}
 
 	private dumpRemainingResources() {
-		this.leftoverStacks = this.stacks
 		this.stacks = 0
 		this.pushToHistory()
 	}
@@ -161,18 +156,10 @@ export default class Shoha extends Module {
 	private onComplete() {
 		this.dumpRemainingResources()
 
-		const totalWaste = Object.keys(this.wasteBySource)
-			.map(Number)
-			.filter(source => source !== ACTIONS.RAISE.id) // don't include death for suggestions
-			.reduce((sum, source) => sum + this.wasteBySource[source], 0)
-			+ this.leftoverStacks
-
 		// final use amounts
 
-		 const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
-		 const totalUses = this.shohaUses
-
-		 console.log('THIS IS THE LINE RIGHT BEFORE THE GODDAMN SUGGESTION', this.shohaUses)
+		const totalPossibleUses = Math.floor(this.totalGeneratedStacks/MAX_STACKS)
+		const totalUses = this.shohaUses
 
 		this.checklist.add(new Rule({
 			name: 'Meditation',
@@ -185,7 +172,7 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: this.shohaUses,
+					value: totalUses,
 					target: totalPossibleUses,
 				}),
 			],
