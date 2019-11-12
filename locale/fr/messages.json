@@ -329,6 +329,7 @@
   "drg.blood.checklist.description.warning": "Maintenant que Sang du dragon est une jauge au lieu d'un buff, gardez à l'esprit que les nombres indiqués ici et dans la fenêtre de Vie du Dragon ci-dessous sont simulés. Par conséquent, ceux-ci peuvent ne pas correspondre parfaitement aux valeurs réelles.",
   "drg.blood.checklist.name": "Gardez le buff du Sang du dragon le plus longtemps possible",
   "drg.blood.checklist.requirement.name": "Temps d'activité total de <0/>",
+  "drg.blood.delay-buff": "",
   "drg.blood.delay-explain": "",
   "drg.blood.suggestions.eyes.content": "Éviter d'utiliser <0/> quand vous avez déjà {MAX_EYES} yeux. Gâcher des yeux retarde votre fenêtre de Vie du Dragon et peut potentiellement vous faire perdre beaucoup de DPS.",
   "drg.blood.suggestions.eyes.why": "",

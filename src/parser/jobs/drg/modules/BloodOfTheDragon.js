@@ -182,7 +182,7 @@ export default class BloodOfTheDragon extends Module {
 		if (!this._lifeWindows.current.nastronds.some(nastrond => nastrond.timestamp === event.timestamp)) {
 			// Dedupe Nastrond casts, since that can occasionally happen
 			this._lifeWindows.current.nastronds.push({
-				...event,
+				timestamp: event.timestamp,
 				buffs: this.getActiveDrgBuffs(),
 				action: ACTIONS.NASTROND,
 			})
@@ -203,7 +203,7 @@ export default class BloodOfTheDragon extends Module {
 		if (!this._lifeWindows.current.stardivers.some(stardiver => stardiver.timestamp === event.timestamp)) {
 			// Dedupe Stardiver casts, it's also AoE so it's probably going to happen on occasion too
 			this._lifeWindows.current.stardivers.push({
-				...event,
+				timestamp: event.timestamp,
 				buffs: this.getActiveDrgBuffs(),
 				action: ACTIONS.STARDIVER,
 			})
@@ -292,7 +292,7 @@ export default class BloodOfTheDragon extends Module {
 
 		const delayBuffs = Object.keys(buffsInDelayWindow).filter(id => buffsInDelayWindow[id]).map((id, idx) => {
 			const action = getDataBy(ACTIONS, 'id', parseInt(id))
-			return <Message.Item key={idx}><Trans id={`drg.blood.delay-buff.${id}`}><ActionLink {...action} /> in {this.parser.formatDuration(window.timeToNextBuff[id])}</Trans></Message.Item>
+			return <Message.Item key={idx}><Trans id={'drg.blood.delay-buff'}><ActionLink {...action} /> in {this.parser.formatDuration(window.timeToNextBuff[id])}</Trans></Message.Item>
 		})
 
 		return <Fragment>
@@ -340,7 +340,7 @@ export default class BloodOfTheDragon extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="drg.blood.windows.preface">
-						Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
+						Each of the sections below represents a Life of the Dragon window, indicating when it started, how long it lasted, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while being buffed by at least one of your personal buffs.
 					</Trans>
 				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
