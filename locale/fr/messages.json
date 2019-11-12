@@ -405,7 +405,7 @@
   "nin.ninjutsu.suggestions.st-doton.content": "Évitez d'utiliser <0/> sur des cibles uniques en dehors de <1/>, car il fait moins de dommage que <2/> s'il y a des ticks de manqués et utilise plus de mudrâ, donc vous clippez davantage votre GCD pour aucun gain.",
   "nin.ninjutsu.suggestions.st-doton.why": "Vous avez utilisé Doton sur une cible unique {badStds, plural,one {# fois}other {# fois}}.",
   "nin.ninjutsu.suggestions.tcj-doton.content": "Évitez d'utiliser <0/> sous l'effet de <1/> à moins qu'il y ait {TCJ_DOTON_TICK_TARGET} ticks assurés ou si vous avez plusieurs cibles. Sur une cible unique qui est sur le point de sauter ou bouger, utiliser le combo de <2/> fera plus de dégâts, même si <3/> est en cooldown.",
-  "nin.ninjutsu.suggestions.tcj-doton.why": "",
+  "nin.ninjutsu.suggestions.tcj-doton.why": "Vous avez utilisé Doton sous Ten Chi Jin  {badTcjs, plural,one {# fois} other {# fois}} de manière non-optimale.",
   "nin.ninki.suggestions.frog.content": "Évitez d'utiliser <0/> si vos autres techniques utilisant de la jauge Ninki sont disponibles (à moins qu'il y ait plusieurs cibles), car c'est la plus faible des trois lorsqu'elle est lancée sur une seule cible.",
   "nin.ninki.suggestions.frog.why": "",
   "nin.ninki.suggestions.waste.content": "Évitez d'utiliser <0/> quand vous avez plus de 60 points à votre jauge ou de retenir vos techniques utilisant du Ninki quand elle est remplie au max ou presque. Il y a des petites exceptions à cette règle mais la suivre vous aidera à maximiser le nombre de ces techniques que vous pourrez lancer au cours d'un combat.",
