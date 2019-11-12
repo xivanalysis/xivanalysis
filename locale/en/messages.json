@@ -367,6 +367,7 @@
   "drg.positionals.table.truenorth": "True North Available?",
   "drg.positionals.title": "Positionals",
   "drg.positionals.tn-charges": "{0, plural, one {# charge} other {# charges}}",
+  "drg.positionals.trigger.negative-true-north": "<0/> was cast without any remaining charges detected.",
   "drg.procs.suggestions.extenders.content": "Avoid interrupting your combos at the <0/> and <1/> stages, as it causes you to lose the procs that allow you to cast them, costing you both the cast and the <2/> duration that comes with it.",
   "drg.procs.suggestions.extenders.why": "You dropped {droppedFang, plural, one {# Fang and Claw proc} other {# Fang and Claw procs}} and {droppedWheeling, plural, one {# Wheeling Thrust proc} other {# Wheeling Thrust procs}}.",
   "drg.procs.suggestions.mirage-dropped.content": "Avoid letting your <0/> procs fall off, as it can delay your Life of the Dragon windows and potentially cost you a lot of DPS.",

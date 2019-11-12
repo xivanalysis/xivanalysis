@@ -367,6 +367,7 @@
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
   "drg.positionals.tn-charges": "",
+  "drg.positionals.trigger.negative-true-north": "",
   "drg.procs.suggestions.extenders.content": "不要在<0/>和<1/>状态下中断连击，否则你会失去允许你使用它们的触发状态，这会导致你损失掉这次技能还有附加的<2/>时间。",
   "drg.procs.suggestions.extenders.why": "你丢失了 {droppedFang, plural, one {# 次龙牙龙爪} other {# 次龙牙龙爪}}与 {droppedWheeling, plural, one {# 次龙尾大回旋} other {# 次龙尾大回旋}}。",
   "drg.procs.suggestions.mirage-dropped.content": "不要让你的<0/>触发状态消失，这样会延后你的红莲龙血，并很可能显著降低你的DPS。",

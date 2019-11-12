@@ -367,6 +367,7 @@
   "drg.positionals.table.truenorth": "",
   "drg.positionals.title": "",
   "drg.positionals.tn-charges": "",
+  "drg.positionals.trigger.negative-true-north": "",
   "drg.procs.suggestions.extenders.content": "<0/>와 <1/> 단계에서 콤보를 끊는 것은 프록을 잃게되며, 그에 따르는 <2/> 연장 또한 잃게 되므로 피합니다.",
   "drg.procs.suggestions.extenders.why": "{droppedFang, plural, one {#개의 용의 발톱 프록} other {#개의 용의 발톱 프록}} 과 {droppedWheeling, plural, one {#개의 용의 꼬리 프록} other {#개의 용의 꼬리 프록}}을 잃었습니다.",
   "drg.procs.suggestions.mirage-dropped.content": "<0/> 프록을 놓치지 마세요. 붉은 용혈 구간이 미뤄지고 DPS에 큰 손실을 입힐 수 있습니다.",

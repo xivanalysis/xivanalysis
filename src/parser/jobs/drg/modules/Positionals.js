@@ -31,6 +31,7 @@ export default class Positionals extends Module {
 	static handle = 'positionals'
 	static title = t('drg.positionals.title')`Positionals`
 	static dependencies = [
+		'brokenLog',
 		'combatants',
 		'suggestions',
 	]
@@ -117,6 +118,13 @@ export default class Positionals extends Module {
 
 		// if we're below 0, clamp
 		if (this._tnCharges < 0) {
+			// also probably somethin busted here
+			this.brokenLog.trigger(this, 'negative true north', (
+				<Trans id="drg.positionals.trigger.negative-true-north">
+					<ActionLink {...ACTIONS.TRUE_NORTH}/> was cast without any remaining charges detected.
+				</Trans>
+			))
+
 			this._tnCharges = 0
 		}
 
