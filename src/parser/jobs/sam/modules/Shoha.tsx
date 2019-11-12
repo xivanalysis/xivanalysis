@@ -93,15 +93,16 @@ export default class Shoha extends Module {
 	}
 
 	private onGenerator(event: CastEvent) {
+		if(this.stacks === MAX_STACKS){
 		const abilityId = event.ability.guid
 		const generatedStacks = GENERATORS[abilityId]
 
 		this.addGeneratedStackAndPush(generatedStacks, abilityId)
 	}
+	}
 
 		// This is exclusively for stacks gained via Meditate channel. and not any stacks gained from GCD casts
 	private onMeditateGain() {
-		if (this.combatants.selected.hasStatus(STATUSES.MEDITATE.id)) {
 			this.stacks++
 			this.totalGeneratedStacks++
 
@@ -109,7 +110,6 @@ export default class Shoha extends Module {
 			if (this.stacks > MAX_STACKS) {
 				this.stacks = MAX_STACKS
 			}
-		}
 		
 		this.pushToHistory()
 	}
@@ -131,6 +131,7 @@ export default class Shoha extends Module {
 		this.stacks = this.stacks - SPENDERS[event.ability.guid]
 		this.shohaUses++
 
+		console.log('SPENT!')
 		// safety net!
 
 		if (this.stacks < 0) {
@@ -187,6 +188,7 @@ export default class Shoha extends Module {
 				}),
 			],
 		}))
+	}
 
 	private convertWasteMapToTable() {
 		const rows = [
