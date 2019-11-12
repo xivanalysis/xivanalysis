@@ -65,7 +65,11 @@ jobs:
           at: /tmp
       - run:
           name: DANGER
-          command: yarn danger ci
+          # Please don't make me regret this. Need to hardcode to prevent exposing _all_ my secrets.
+          # Base64 so it's not _completely_ obvious. Token is limited to public_repo scope.
+          command: |
+            export DANGER_GITHUB_API_TOKEN=$(echo NGMxYWUwOTA4YzkzNDczMjA0YzgzYWY4YjE2YjFlYmRjMjg4YmIxNw== | base64 --decode)
+            yarn danger ci
 
   build:
     <<: *defaults
