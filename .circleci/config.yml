@@ -58,6 +58,15 @@ jobs:
       - store_test_results:
           path: reports
 
+  danger:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
+      - run:
+          name: DANGER
+          command: yarn danger ci
+
   build:
     <<: *defaults
     steps:
@@ -124,6 +133,13 @@ workflows:
       - test:
           requires:
             - setup
+      - danger:
+          requires:
+            - setup
+          filters:
+            branches:
+              only:
+                - /^pull\/.*$/
       - build:
           requires:
             - lint
