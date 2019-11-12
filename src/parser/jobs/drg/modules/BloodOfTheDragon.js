@@ -85,7 +85,7 @@ export default class BloodOfTheDragon extends Module {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
 			content={this.parser.formatTimestamp(timestamp)}
 		/>
 	}
@@ -270,7 +270,7 @@ export default class BloodOfTheDragon extends Module {
 
 		const rows = casts.map(cast => {
 			const buffs = cast.buffs.map(id => {
-				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)}	/>
+				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)} />
 			})
 
 			return <Table.Row key={cast.timestamp}>
@@ -327,7 +327,7 @@ export default class BloodOfTheDragon extends Module {
 					title: {
 						key: `title-${window.start}`,
 						content: <Fragment>
-							{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits">{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond"	other="# Nastronds"	/>,	<Plural	value={window.stardivers.length} one="# Stardiver" other="# Stardivers"	/></Trans>
+							{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits">{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans>
 						</Fragment>,
 					},
 					content: {
