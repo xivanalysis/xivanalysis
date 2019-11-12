@@ -131,7 +131,7 @@ export default class Shoha extends Module {
 		this.stacks = this.stacks - SPENDERS[event.ability.guid]
 		this.shohaUses++
 
-		console.log('SPENT!')
+		console.log('SPENT! SHOHA USE AT:', this.shohaUses)
 		// safety net!
 
 		if (this.stacks < 0) {
@@ -172,6 +172,8 @@ export default class Shoha extends Module {
 		 const totalPossibleUses = Math.floor(this.totalGeneratedStacks/3)
 		 const totalUses = this.shohaUses
 
+		 console.log('THIS IS THE LINE RIGHT BEFORE THE GODDAMN SUGGESTION', this.shohaUses)
+
 		this.checklist.add(new Rule({
 			name: 'Meditation',
 			description: <Trans id="sam.shoha.waste.content">
@@ -183,7 +185,7 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: totalUses,
+					value: this.shohaUses,
 					target: totalPossibleUses,
 				}),
 			],
