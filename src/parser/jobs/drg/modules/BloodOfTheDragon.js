@@ -30,6 +30,7 @@ export default class BloodOfTheDragon extends Module {
 		'cooldowns',
 		'death',
 		'suggestions',
+		'timeline',
 	]
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
