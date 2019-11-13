@@ -33,6 +33,7 @@ const FURTHER_RUIN_PET_ACTIONS = [
 ]
 
 const MAX_FURTHER_RUIN_COUNT = 4
+const EXPECTED_BAHAMUT_SUMMON_STACKS = 4
 const END_OF_FIGHT_LEEWAY = 5000
 
 export default class Ruin4 extends Module {
@@ -43,6 +44,7 @@ export default class Ruin4 extends Module {
 	@dependency private invuln!: Invulnerability
 
 	private currentStackCount = 0
+	private bahamutMissingStackCount = 0
 	private earthenArmorCount = 0
 	private overage = 0
 	private playerSkillCount = 0
@@ -50,6 +52,7 @@ export default class Ruin4 extends Module {
 
 	protected init() {
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RUIN_IV.id}, this.onRuin4)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SUMMON_BAHAMUT.id}, this.onSummonBahamut)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id}, this.onPlayerEarthenArmor)
 		this.addHook('cast', {by: 'player', abilityId: FURTHER_RUIN_PLAYER_ACTIONS}, this.onPlayerOtherEgiAssault)
 		this.addHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
@@ -59,6 +62,10 @@ export default class Ruin4 extends Module {
 
 	private onRuin4(event: CastEvent) {
 		if (this.currentStackCount > 0) { this.currentStackCount-- }
+	}
+
+	private onSummonBahamut(event: CastEvent) {
+		if (this.currentStackCount < EXPECTED_BAHAMUT_SUMMON_STACKS) { this.bahamutMissingStackCount++ }
 	}
 
 	private onPlayerEarthenArmor(event: CastEvent) {
@@ -90,6 +97,20 @@ export default class Ruin4 extends Module {
 	}
 
 	private onComplete() {
+		if (this.bahamutMissingStackCount > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.SUMMON_BAHAMUT.icon,
+				severity: SEVERITY.MINOR,
+				content: <Trans id="smn.ruin-iv.bahamut.content">
+					Ensure you have 4 stacks of <StatusLink {...STATUSES.FURTHER_RUIN}/> when summoning Bahamut.
+					All 4 stacks will be needed to get the maximum value from Bahamut.
+				</Trans>,
+				why: <Trans id="smn.ruin-iv.bahamut.why">
+					Bahamut was summoned without enough stacks <Plural value={this.bahamutMissingStackCount} one="# time" other="# times"/>.
+				</Trans>,
+			}))
+		}
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: STATUSES.FURTHER_RUIN.icon,
 			content: <Trans id="smn.ruin-iv.overage.content">

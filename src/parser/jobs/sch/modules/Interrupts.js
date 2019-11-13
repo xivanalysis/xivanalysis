@@ -33,10 +33,10 @@ export default class Interrupts extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onBeginCast(event) {
@@ -103,7 +103,7 @@ export default class Interrupts extends Module {
 							<Table.Cell>
 								<ActionLink {...cast.action} />
 							</Table.Cell>
-						</Table.Row>
+						</Table.Row>,
 					)
 				}
 			</Table.Body>

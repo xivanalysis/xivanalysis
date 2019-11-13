@@ -40,6 +40,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2019-10-26'),
+			contributors: [CONTRIBUTORS.ACCHAN],
+			Changes: () => <>
+				Migrated to the core Gauge module.
+			</>,
+		},
+		{
 			date: new Date('2019-10-15'),
 			Changes: () => <>
 				Added a new module to handle Riddle of Earth usage.

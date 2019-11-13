@@ -22,10 +22,16 @@ export default class Combos extends CoreCombos {
 		if (context.length !== 1) {
 			return false
 		}
+
+		// If you broke the combo by restarting it when you still had one open, cut it out
+		if (event.timestamp < context[0].timestamp + GCD_TIMEOUT_MILLIS) {
+			return false
+		}
+
 		// Technical windows could also go Tech -> Saber -> Fountainfall -> Saber -> Standard -> Fountain drops,
 		// so just disable any drops that happened in a Technical window (still need the dances in range check since
 		// Cascade -> Standard -> Technical leaves the buff falling off before Technical Finish buff applies
 		return this.dancing.dancesInRange(context[0].timestamp, context[0].timestamp + GCD_TIMEOUT_MILLIS) === 2 ||
-			this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id, event.timestamp)
+			this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id, context[0].timestamp + GCD_TIMEOUT_MILLIS)
 	}
 }

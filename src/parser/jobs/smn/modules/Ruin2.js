@@ -75,7 +75,7 @@ export default class Ruin2 extends Module {
 		const invulnTime = this.invuln.getUntargetableUptime(
 			'all',
 			event.timestamp,
-			event.timestamp + this.gcd.getEstimate()
+			event.timestamp + this.gcd.getEstimate(),
 		)
 
 		// TODO: GCD metadata should be in a module?

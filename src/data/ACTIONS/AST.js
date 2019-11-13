@@ -103,21 +103,39 @@ export default {
 	},
 
 	ASPECTED_HELIOS: {
-		id: 17152,
+		id: 3601,
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/003000/003130.png',
 		onGcd: true,
 		castTime: 2,
-		mpCost: 1200,
+		mpCost: 1000,
+	},
+
+	ASPECTED_HELIOS_NOCTURNAL: {
+		id: 17152,
+		name: 'Aspected Helios (Nocturnal)',
+		icon: 'https://xivapi.com/i/003000/003130.png',
+		onGcd: true,
+		castTime: 2,
+		mpCost: 1000,
 	},
 
 	ASPECTED_BENEFIC: {
-		id: 17151,
+		id: 835,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,
 		castTime: 0,
 		mpCost: 500,
+	},
+
+	ASPECTED_BENEFIC_NOCTURNAL: {
+		id: 17151,
+		name: 'Aspected Benefic (Nocturnal)',
+		icon: 'https://xivapi.com/i/003000/003127.png',
+		onGcd: true,
+		castTime: 0,
+		mpCost: 900,
 	},
 
 	HELIOS: {
