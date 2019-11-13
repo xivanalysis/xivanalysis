@@ -299,7 +299,7 @@ export default class BloodOfTheDragon extends Module {
 			{canBeDelayed && couldBeDelayed && (
 				<>
 					<Message>
-						<p><Trans id="drg.blood.delay-explain">Life of the Dragon windows should line up with your personal buffs if possible. This window could have been delayed to line up with:
+						<p><Trans id="drg.blood.delay-explain">Life of the Dragon windows should line up with your personal buffs, if possible. You might be able to delay this window to line up with:
 						</Trans></p>
 						<Message.List>
 							{delayBuffs}
@@ -340,7 +340,7 @@ export default class BloodOfTheDragon extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="drg.blood.windows.preface">
-						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while being buffed by at least one of your personal buffs.
+						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs.
 					</Trans>
 				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
