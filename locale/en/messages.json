@@ -330,7 +330,7 @@
   "drg.blood.checklist.name": "Keep Blood of the Dragon up",
   "drg.blood.checklist.requirement.name": "<0/> uptime",
   "drg.blood.delay-buff": "<0/> in {0}",
-  "drg.blood.delay-explain": "Life of the Dragon windows should line up with your personal buffs if possible. You might be able to delay this window to line up with:",
+  "drg.blood.delay-explain": "Life of the Dragon windows should line up with your personal buffs, if possible. You might be able to delay this window to line up with:",
   "drg.blood.suggestions.eyes.content": "Avoid using <0/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.blood.suggestions.eyes.why": "You used Mirage Dive {0, plural, one {# time} other {# times}} when you already had {MAX_EYES} Eyes.",
   "drg.blood.table.action": "Action",
