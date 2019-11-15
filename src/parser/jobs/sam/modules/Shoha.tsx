@@ -69,7 +69,7 @@ export default class Shoha extends Module {
 				by: 'player',
 				abilityId: Object.keys(GENERATORS).map(Number),
 			},
-			this.onGenerator,
+			this.onGenerate,
 		)
 		this.addHook(
 			'cast',
@@ -77,29 +77,30 @@ export default class Shoha extends Module {
 				by: 'player',
 				abilityId: Object.keys(SPENDERS).map(Number),
 			},
-			this.onSpender,
+			this.onSpend,
 		)
 		this.addEventHook([
 			'applybuff', 'applybuffstack'],
 			{
-			to: 'player',
-			abilityId: STATUSES.MEDITATION.id,
-			}, this.onMeditateGain)
+				to: 'player',
+				abilityId: STATUSES.MEDITATION.id,
+			},
+			this.onMeditateGain)
 
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onGenerator(event: CastEvent) {
+	private onGenerate(event: CastEvent) {
 		if (this.stacks === MAX_STACKS) {
 		const abilityId = event.ability.guid
 		const generatedStacks = GENERATORS[abilityId]
 
 		this.addGeneratedStackAndPush(generatedStacks, abilityId)
-	}
+		}
 	}
 
-		// This is exclusively for stacks gained via Meditate channel. and not any stacks gained from GCD casts
+		// the previous comment was a lie: This is for ALL meditation gains
 	private onMeditateGain() {
 			this.stacks++
 			this.totalGeneratedStacks++
@@ -124,7 +125,7 @@ export default class Shoha extends Module {
 		this.pushToHistory()
 	}
 
-	private onSpender(event: CastEvent) {
+	private onSpend(event: CastEvent) {
 		this.stacks = this.stacks - SPENDERS[event.ability.guid]
 		this.shohaUses++
 

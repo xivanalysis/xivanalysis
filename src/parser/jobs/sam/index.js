@@ -35,11 +35,11 @@ export default new Meta({
 	changelog: [{
 		date: new Date('2019-11-12'),
 		Changes: () => <>
-			Updated SAM support for pacth 5.1 along with some user requested changes
+			Updated SAM support for patch 5.1 along with some user requested changes
 			<ul>
 				<li> Shoha tracking has been added along with visual </li>
 				<li> Meikyo visual has been changed to show just the GCDs done under it, minus iaijutsu </li>
-				<li> Changed data for patch 5,1 </li>
+				<li> Changed data for patch 5.1 </li>
 			</ul>
 		</>,
 		contributors: [CONTRIBUTORS.RYAN],
