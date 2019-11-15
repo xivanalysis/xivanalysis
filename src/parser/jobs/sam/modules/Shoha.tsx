@@ -157,11 +157,6 @@ export default class Shoha extends Module {
 	private onComplete() {
 		this.dumpRemainingResources()
 
-		// final use amounts
-
-		const totalPossibleUses = Math.floor(this.totalGeneratedStacks/MAX_STACKS)
-		const totalUses = this.shohaUses
-
 		this.checklist.add(new Rule({
 			name: 'Meditation',
 			description: <Trans id="sam.shoha.waste.content">
@@ -173,8 +168,8 @@ export default class Shoha extends Module {
 					name: <Trans id="sam.shoha.checklist.requirement.waste.name">
 						Use as many of your meditation stacks as possible.
 					</Trans>,
-					value: totalUses,
-					target: totalPossibleUses,
+					value: this.shohaUses,
+					target: Math.floor(this.totalGeneratedStacks/MAX_STACKS),
 				}),
 			],
 		}))

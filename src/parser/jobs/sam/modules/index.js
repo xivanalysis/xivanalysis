@@ -10,7 +10,7 @@ import Meikyo from './Meikyo'
 import ThirdEye from './ThirdEye'
 import Tsubame from './Tsubame'
 import OGCDDowntime from './OGCDDowntime'
-import Shoha from './Shoha' //It is not time yet my child, we've got bugs to fix first
+import Shoha from './Shoha'
 import Statuses from './Statuses'
 
 export default [
