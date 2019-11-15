@@ -769,7 +769,7 @@
   "smn.pets.suggestions.titan.why": "{titanUptimePercent}% Titan-Egi uptime.",
   "smn.pets.title": "Pets",
   "smn.ruin-ii.suggestions.avoid.content": "Avoid casting <0/> if possible. Prefer using your other instant casts for movement and weaving or Ruin III when movement and weaving are not required.",
-  "smn.ruin-ii.suggestions.avoid.why": "{totalCount} Ruin II {totalCount, plural, one {cast} other {casts}} were performed. ({weavedCount} for weaving or triggering Wyrmwave, {moveOnlyCount} for only movement, and {wastedCount} for no benefit.)",
+  "smn.ruin-ii.suggestions.avoid.why": "{totalCount} Ruin II {totalCount, plural, one {cast} other {casts}} were performed.",
   "smn.ruin-iv.bahamut.content": "Ensure you have 4 stacks of <0/> when summoning Bahamut. All 4 stacks will be needed to get the maximum value from Bahamut.",
   "smn.ruin-iv.bahamut.why": "Bahamut was summoned without enough stacks {0, plural, one {# time} other {# times}}.",
   "smn.ruin-iv.leftover.content": "You should use all stacks of <0/> before the end of the fight.",

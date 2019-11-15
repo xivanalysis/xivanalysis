@@ -117,7 +117,6 @@ export default class Ruin2 extends Module {
 			</Trans>,
 			why: <Trans id="smn.ruin-ii.suggestions.avoid.why">
 				{totalCount} Ruin II <Plural value={totalCount} one="cast" other="casts"/> were performed.
-				({weavedCount} for weaving or triggering Wyrmwave, {moveOnlyCount} for only movement, and {wastedCount} for no benefit.)
 			</Trans>,
 		}))
 	}
