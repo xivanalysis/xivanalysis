@@ -18,9 +18,9 @@ export default class Tsubame  extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.KAESHI_HIGANBANA.id, ACTIONS.KAESHI_GOKEN.id]}, this._onBadTsubame,)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.KAESHI_SETSUGEKKA.id]}, this._onDoubleMidare,)
-		this.addHook('complete', this._onComplete,)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.KAESHI_HIGANBANA.id, ACTIONS.KAESHI_GOKEN.id]}, this._onBadTsubame)
+		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.KAESHI_SETSUGEKKA.id]}, this._onDoubleMidare)
+		this.addHook('complete', this._onComplete)
 	}
 
 	_onBadTsubame() {

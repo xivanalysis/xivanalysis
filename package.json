@@ -77,6 +77,8 @@
   "devDependencies": {
     "@babel/core": "^7.1.0",
     "@babel/plugin-proposal-decorators": "^7.2.3",
+    "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
+    "@babel/plugin-proposal-optional-chaining": "^7.6.0",
     "@lingui/babel-plugin-transform-js": "^2.5.0",
     "@lingui/babel-plugin-transform-react": "^2.5.0",
     "@lingui/cli": "^2.5.0",
@@ -130,7 +132,7 @@
     "tslint": "^5.11.0",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-loader": "^3.5.4",
-    "typescript": "^3.1.1",
+    "typescript": "^3.7",
     "webpack": "^4.40.1",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.11",

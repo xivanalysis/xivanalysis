@@ -103,7 +103,7 @@ export default class Interrupts extends Module {
 							<Table.Cell>
 								<ActionLink {...cast.action} />
 							</Table.Cell>
-						</Table.Row>
+						</Table.Row>,
 					)
 				}
 			</Table.Body>
