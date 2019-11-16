@@ -144,7 +144,7 @@ export default class RiddleOfFire extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RIDDLE_OF_FIRE.icon,
 			content: <Trans id="mnk.rof.suggestions.gcd.content">
-				Aim to hit {EXPECTED_GCDS} GCDs during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
+				Aim to hit {EXPECTED_GCDS - 1} GCDs under GL3, or {EXPECTED_GCDS} GCDs under GL4, during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedGcds,
@@ -187,9 +187,11 @@ export default class RiddleOfFire extends Module {
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
 		if (this.riddle && this.riddle.active) {
 			// Check for any GCDs spent outside of Fists of Wind, which means the expected GCDs will be 9
-			if (this.riddle.gcdsByFist(FISTLESS)
-				+ this.riddle.gcdsByFist(STATUSES.FISTS_OF_EARTH.id)
-				+ this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id) > 0) {
+			if (
+				this.riddle.gcdsByFist(FISTLESS) +
+				this.riddle.gcdsByFist(STATUSES.FISTS_OF_EARTH.id) +
+				this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id) > 0
+			) {
 				this.riddle.expectedGcds = EXPECTED_GCDS - 1
 			}
 
