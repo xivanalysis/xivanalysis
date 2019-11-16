@@ -486,7 +486,6 @@
   "mnk.pb.title": "",
   "mnk.roe.suggestions.missed.content": "Évitez d'utiliser <0/> lorsque vous ne voulez pas prendre de dommages.",
   "mnk.roe.suggestions.missed.why": "<0/>a été utilisé{missedEarth, plural,one {#fois}other {#fois}}sans déclenchement <1/>.",
-  "mnk.rof.accordion.message": "",
   "mnk.rof.suggestions.gcd.content": "",
   "mnk.rof.suggestions.gcd.why": "",
   "mnk.rof.suggestions.ogcd.content": "",
