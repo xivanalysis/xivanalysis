@@ -1,90 +1,57 @@
-import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
-import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 
-import Module, {dependency} from 'parser/core/Module'
+import {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
+import {AoeAbility, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-// Assuming in correct forms
-const AOE_ACTION_TARGETS = new Map<number, number>([
-	// tslint:disable-next-line: no-magic-numbers
-	[ACTIONS.ARM_OF_THE_DESTROYER.id, 3], // this is kinda also 4 but only under Leaden Fist
-	[ACTIONS.FOUR_POINT_FURY.id, 2],
-	[ACTIONS.ROCKBREAKER.id, 2],
-	[ACTIONS.ENLIGHTENMENT.id, 2],
-])
-
-interface HundredPunchMeme extends AoeEvent {
-	expectedHits: number
-}
-
-export default class MnkAoE extends Module {
+export default class MnkAoE extends AoEUsages {
 	static handle = 'mnkaoe'
 
 	@dependency private combatants!: Combatants
-	@dependency private suggestions!: Suggestions
 
-	private historyOfPunching: {[key: number]: HundredPunchMeme[]} = {
-		[ACTIONS.ARM_OF_THE_DESTROYER.id]: [],
-		[ACTIONS.FOUR_POINT_FURY.id]: [],
-		[ACTIONS.ROCKBREAKER.id]: [],
-		[ACTIONS.ENLIGHTENMENT.id]: [],
-	}
+	// You awake to find yourself enlightened to the true power of AoE
+	suggestionIcon = ACTIONS.ENLIGHTENMENT.icon
 
-	protected init(): void {
-		this.addHook('aoedamage', {by: 'player', abilityId: Array.from(AOE_ACTION_TARGETS.keys())}, this.onDamage)
-		this.addHook('complete', this.onComplete)
-	}
+	// Assuming user is in the correct Form
+	trackedAbilities: AoeAbility[] = [
+		{
+			aoeAbility: ACTIONS.ARM_OF_THE_DESTROYER,
+			stAbilities: [ACTIONS.BOOTSHINE, ACTIONS.DRAGON_KICK],
+			minTargets: 3,
+		},
+		{
+			aoeAbility: ACTIONS.FOUR_POINT_FURY,
+			stAbilities: [ACTIONS.TRUE_STRIKE, ACTIONS.TWIN_SNAKES],
+			minTargets: 2,
+		},
+		{
+			aoeAbility: ACTIONS.ROCKBREAKER,
+			stAbilities: [ACTIONS.DEMOLISH, ACTIONS.SNAP_PUNCH],
+			minTargets: 2,
+		},
+		{
+			aoeAbility: ACTIONS.ENLIGHTENMENT,
+			stAbilities: [ACTIONS.THE_FORBIDDEN_CHAKRA],
+			minTargets: 2,
+		},
+	]
 
-	private onDamage(event: AoeEvent): void {
+	protected adjustMinTargets(event: AoeEvent, minTargets: number): number {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
+		// How in the fuck did we even get here tbh
 		if (!action) {
-			return
+			return minTargets
 		}
 
-		const target = AOE_ACTION_TARGETS.get(action.id)
-
-		if (target) {
-			const aoeDamage = {...event, expectedHits: target}
-			if (action.id === ACTIONS.ARM_OF_THE_DESTROYER.id && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
-				aoeDamage.expectedHits++
-			}
-
-			this.historyOfPunching[action.id].push(aoeDamage)
+		// If Leaden Fist is up, Boot is extra strong
+		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
+			return minTargets + 1
 		}
-	}
 
-	private onComplete(): void {
-		Object.keys(this.historyOfPunching).forEach(key => {
-			const action = getDataBy(ACTIONS, 'id', key) as TODO
-
-			if (action) {
-				this.suggestions.add(new TieredSuggestion({
-					icon: action.icon,
-					severity: SEVERITY.MEDIUM,
-					content: <Trans id="mnk.aoe.suggestions.content">
-						<ActionLink {...action}/> is only efficient when there are {AOE_ACTION_TARGETS.get(action.id)} or more targets.
-					</Trans>,
-					why: <Trans id="mnk.aoe.suggestions.rockbreaker.why">
-						<ActionLink {...action}/> used on too few targets <Plural value={this.cleanPunchCount(action.id)} one="# time" other="# times" />.
-					</Trans>,
-				}))
-			}
-		})
-	}
-
-	private isCleanHit(event: HundredPunchMeme): boolean {
-		return event.hits.length < event.expectedHits ? false : true
-	}
-
-	private cleanPunchCount(id: number): number {
-		return this.historyOfPunching[id].filter(aoe => this.isCleanHit(aoe)).length
+		return minTargets
 	}
 }
