@@ -29,16 +29,23 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '5.0',
-	// 	to: '5.08',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.1',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2019-11-20'),
+			Changes: () => <>
+				Mark MNK supported for Shadowbringers.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2019-11-16'),
 			Changes: () => <>
