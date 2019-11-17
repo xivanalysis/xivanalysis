@@ -76,7 +76,7 @@
   "ast.sleeve-draw.checklist.requirement.uses.name": "<0/> 的使用情况",
   "ast.sleeve-draw.title": "袖内抽卡",
   "ast.synastry.suggestion.content": "当需要使用单体GCD治疗时考虑搭配<0/>。使用GCD治疗本身已经损失了效率，所以如果短时间内没有需要保留星位合图的地方，就尽量用它来提高这一次的治疗量。",
-  "ast.synastry.suggestion.why": "",
+  "ast.synastry.suggestion.why": "https://cn.fflogs.com/reports/ZpRVNxtqKnAz9TkC#fight=6&type=damage-done&source=8",
   "blm.about.description": "本分析器会告诉你，你并非如你以为的那样咏唱了那么多[~action/FIRE_IV]。",
   "blm.about.description.warning": "本部分尚未完成。",
   "blm.gauge.suggestions.dropped-enochian.content": "断<0/>会造成<1/>和<2/>的损失，并且额外开<3/>卡GCD，无法使用<4/>和<5/>，同时直接损失<6/>提供的15%伤害加成。",
