@@ -36,7 +36,7 @@ export default {
 		potency: 100,
 		combo: {
 			from: 2242,
-			potency: 460, // TODO - *Cries in positionals*
+			potency: 480, // TODO - *Cries in positionals*
 			end: true,
 		},
 	},
@@ -46,12 +46,9 @@ export default {
 		name: 'Shadow Fang',
 		icon: 'https://xivapi.com/i/000000/000606.png',
 		onGcd: true,
-		potency: 100,
-		combo: {
-			from: 2240,
-			potency: 220,
-			end: true,
-		},
+		potency: 200,
+		cooldown: 70,
+		gcdRecast: 2.5,
 		statusesApplied: [STATUSES.SHADOW_FANG],
 	},
 
@@ -84,7 +81,7 @@ export default {
 		name: 'Mug',
 		icon: 'https://xivapi.com/i/000000/000613.png',
 		onGcd: false,
-		cooldown: 110,
+		cooldown: 120,
 	},
 
 	ASSASSINATE: {

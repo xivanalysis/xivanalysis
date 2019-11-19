@@ -20,7 +20,7 @@ export default class Rule {
 	get tier() {
 		return matchClosestLower(
 			{[this.target]: TARGET.SUCCESS},
-			this.percent
+			this.percent,
 		)
 	}
 

@@ -21,13 +21,18 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.08',
+		from: '5.1',
+		to: '5.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2019-11-05'),
+		Changes: () => <>Updated modules for 5.1 support.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-07-21'),
 		Changes: () => <>Updated a number of modules with small correctness tweaks for Shadowbringers action changes.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
