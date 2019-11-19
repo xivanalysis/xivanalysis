@@ -32,7 +32,7 @@ const SPENDERS = {
 
 const MAX_STACKS = 3
 
-class StackState {
+interface StackState {
 	t?: number
 	y?: number
 }
@@ -126,14 +126,8 @@ export default class Shoha extends Module {
 	}
 
 	private onSpend(event: CastEvent) {
-		this.stacks = this.stacks - SPENDERS[event.ability.guid]
+		this.stacks = 0
 		this.shohaUses++
-
-		// safety net!
-
-		if (this.stacks < 0) {
-			this.stacks = 0
-		}
 
 		this.pushToHistory()
 
