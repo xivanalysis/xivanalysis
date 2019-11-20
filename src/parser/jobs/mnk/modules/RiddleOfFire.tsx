@@ -189,14 +189,12 @@ export default class RiddleOfFire extends Module {
 			// Check for any GCDs spent outside of Fists of Wind
 			// If the first RoF GCD is out of FoW (should be Snap/Demo/RB), they'll lose 1 GCD so we set 10
 			// If more than 1 GCD is out of FoW, they'll lose 2 so we set 9
-			const windlessModifier = Math.min(2,
-				this.riddle.gcdsByFist(FISTLESS) +
+			const windlessGcds = this.riddle.gcdsByFist(FISTLESS) +
 				this.riddle.gcdsByFist(STATUSES.FISTS_OF_EARTH.id) +
 				this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id)
-			)
 
-			if (windlessModifier > 0) {
-				this.riddle.expectedGcds = EXPECTED_GCDS - windlessModifier
+			if (windlessGcds > 0) {
+				this.riddle.expectedGcds = EXPECTED_GCDS - Math.min(2, windlessGcds)
 			}
 
 			this.riddle.active = false
