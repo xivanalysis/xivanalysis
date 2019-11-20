@@ -224,7 +224,7 @@ export default class Fists extends Module {
 					this.getFistUptimePercent(id) + '%',
 				] as TODO,
 			}
-		})
+		}).filter(datum => datum.value > 0)
 
 		this.statistics.add(new PieChartStatistic({
 			headings: ['Fist', 'Uptime', '%'],
