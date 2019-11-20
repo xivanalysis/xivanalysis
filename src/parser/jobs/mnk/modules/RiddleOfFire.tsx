@@ -18,7 +18,7 @@ import Fists, {FISTLESS} from './Fists'
 const ROF_DURATION = STATUSES.RIDDLE_OF_FIRE.duration * 1000
 
 // Expected under Fists of Wind with optimal play
-const EXPECTED_GCDS = 10
+const EXPECTED_GCDS = 11
 
 const EXPECTED_ELIXIR_FIELDS = 1
 
@@ -43,7 +43,7 @@ class Riddle {
 		[STATUSES.FISTS_OF_FIRE.id]: 0,
 		[STATUSES.FISTS_OF_WIND.id]: 0,
 	}
-	expectedGcds: number = EXPECTED_GCDS // Baseline GL4 RoFs are 10 GCDs, higher sks allows 11
+	expectedGcds: number = EXPECTED_GCDS // Baseline GL4 RoFs are 11 GCDs
 
 	constructor(start: number) {
 		this.start = start
@@ -129,7 +129,7 @@ export default class RiddleOfFire extends Module {
 
 		// This could be redundant with GCDs spent not under Wind, but according to Tiff you should only
 		// be in FoF during a rushed Riddle, so I'm not too worried about it.
-		const droppedGcds = (nonRushedRiddles.length * EXPECTED_GCDS) // opener Riddle has 10 GCDs
+		const droppedGcds = (nonRushedRiddles.length * EXPECTED_GCDS) // opener Riddle has 11 GCDs
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds, 0)
 
 		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
@@ -144,7 +144,7 @@ export default class RiddleOfFire extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.RIDDLE_OF_FIRE.icon,
 			content: <Trans id="mnk.rof.suggestions.gcd.content">
-				Aim to hit {EXPECTED_GCDS - 1} GCDs under GL3, or {EXPECTED_GCDS} GCDs under GL4, during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window.
+				Aim to hit {EXPECTED_GCDS - 2} GCDs under GL3, or {EXPECTED_GCDS} GCDs under GL4, during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedGcds,
@@ -186,13 +186,17 @@ export default class RiddleOfFire extends Module {
 
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
 		if (this.riddle && this.riddle.active) {
-			// Check for any GCDs spent outside of Fists of Wind, which means the expected GCDs will be 9
-			if (
+			// Check for any GCDs spent outside of Fists of Wind
+			// If the first RoF GCD is out of FoW (should be Snap/Demo/RB), they'll lose 1 GCD so we set 10
+			// If more than 1 GCD is out of FoW, they'll lose 2 so we set 9
+			const windlessModifier = Math.min(2,
 				this.riddle.gcdsByFist(FISTLESS) +
 				this.riddle.gcdsByFist(STATUSES.FISTS_OF_EARTH.id) +
-				this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id) > 0
-			) {
-				this.riddle.expectedGcds = EXPECTED_GCDS - 1
+				this.riddle.gcdsByFist(STATUSES.FISTS_OF_FIRE.id)
+			)
+
+			if (windlessModifier > 0) {
+				this.riddle.expectedGcds = EXPECTED_GCDS - windlessModifier
 			}
 
 			this.riddle.active = false
