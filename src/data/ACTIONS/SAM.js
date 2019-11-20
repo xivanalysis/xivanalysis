@@ -220,7 +220,9 @@ export default {
 		id: 7497,
 		name: 'Meditate',
 		icon: 'https://xivapi.com/i/003000/003172.png',
+		onGcd: true,
 		cooldown: 60,
+		gcdRecast: 2.5,
 		statusesApplied: [STATUSES.MEDITATE, STATUSES.MEDITATION],
 	},
 

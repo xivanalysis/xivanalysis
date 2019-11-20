@@ -56,7 +56,7 @@ export default class CastTime extends Module {
 		const matchingTimes = this._castTimes.filter(ct =>
 			(ct.actions === 'all' || ct.actions.includes(actionId)) &&
 			ct.start <= timestamp &&
-			(ct.end === null || ct.end >= timestamp)
+			(ct.end === null || ct.end >= timestamp),
 		)
 
 		// Mimicking old logic w/ the undefined. Don't ask.
@@ -77,7 +77,7 @@ export default class CastTime extends Module {
 				const castTime = ct.castTime < 0 ? Math.max(0, min + ct.castTime) : ct.castTime
 				return castTime < min ? castTime : min
 			},
-			defaultCastTime
+			defaultCastTime,
 		)
 	}
 }

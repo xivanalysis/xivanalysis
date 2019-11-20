@@ -24,7 +24,7 @@ class GlobalSidebar extends React.Component {
 			{/* Main logo */}
 			<Link to="/" className={classnames(
 				styles.logo,
-				centerLogo && styles.center
+				centerLogo && styles.center,
 			)}>
 				<img
 					src={process.env.PUBLIC_URL + '/logo.png'}

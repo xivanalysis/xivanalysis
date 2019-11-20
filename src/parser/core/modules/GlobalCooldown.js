@@ -190,7 +190,7 @@ export default class GlobalCooldown extends Module {
 		const normalizedGcd = Math.round(
 			gcdLength
 			* ((BASE_GCD / 1000) / normaliseWith)
-			* (1 / speedMod)
+			* (1 / speedMod),
 		)
 
 		this.gcds.push({
@@ -232,7 +232,7 @@ export default class GlobalCooldown extends Module {
 			const duration = this._getGcdLength(gcd)
 			const downtime = this.downtime.getDowntime(
 				gcd.timestamp,
-				gcd.timestamp + duration
+				gcd.timestamp + duration,
 			)
 			return carry + duration - downtime
 		}, 0)

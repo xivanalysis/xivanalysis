@@ -1,14 +1,20 @@
 import {getDataBy} from './getDataBy'
 
+// tslint:disable no-magic-numbers
+
 const ExampleData = {
-	ONE: {value: 'one'},
-	TWO: {value: 'two'},
+	ONE: {value: 'one', arr: [0, 1, 2, 3, 4]},
+	TWO: {value: 'two', arr: [10, 11, 12, 13, 14]},
 }
 
 describe('DATA', () => {
 	describe('getDataBy', () => {
 		it('performs correct lookups', () => {
 			expect(getDataBy(ExampleData, 'value', 'one')).toBe(ExampleData.ONE)
+		})
+
+		it('performs lookups on array values', () => {
+			expect(getDataBy(ExampleData, 'arr', 13)).toBe(ExampleData.TWO)
 		})
 
 		it('falls back when no match is found', () => {
