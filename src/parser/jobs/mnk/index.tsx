@@ -42,6 +42,13 @@ export default new Meta({
 		{
 			date: new Date('2019-11-16'),
 			Changes: () => <>
+				Added support for Riddle of Fire window analysis.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA, CONTRIBUTORS.ACCHAN],
+		},
+		{
+			date: new Date('2019-11-16'),
+			Changes: () => <>
 				Updated AoE module to handle new skills and switch to core AoE module and lose my awesome variable names.
 			</>,
 			contributors: [CONTRIBUTORS.ACCHAN],
