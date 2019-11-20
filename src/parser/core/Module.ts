@@ -259,7 +259,7 @@ export default class Module {
 	 * Log a debug console message. Will only be printed if built in a non-production
 	 * environment, with `static debug = true` in the module it's being executed in.
 	 */
-	protected debug(...messages: string[]) {
+	protected debug(...messages: Parameters<typeof console.log>) {
 		const module = this.constructor as typeof Module
 
 		if (!module.debug || process.env.NODE_ENV === 'production') {
