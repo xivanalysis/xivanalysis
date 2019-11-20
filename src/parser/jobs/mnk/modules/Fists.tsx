@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
 
@@ -17,10 +16,11 @@ import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Gauge, {MAX_FASTER, MAX_STACKS} from './Gauge'
 
-const FISTLESS = 0
+export const FISTLESS = 0
 
-const FISTS = [
+export const FISTS = [
 	STATUSES.FISTS_OF_EARTH.id,
 	STATUSES.FISTS_OF_FIRE.id,
 	STATUSES.FISTS_OF_WIND.id,
@@ -28,9 +28,9 @@ const FISTS = [
 
 const CHART_COLOURS = {
 	[FISTLESS]: '#888',
-	[STATUSES.FISTS_OF_EARTH.id]: Color(JOBS.MONK.colour),   // idk it matches
-	[STATUSES.FISTS_OF_FIRE.id]: Color(JOBS.WARRIOR.colour), // POWER
-	[STATUSES.FISTS_OF_WIND.id]: Color(JOBS.PALADIN.colour), // only good for utility
+	[STATUSES.FISTS_OF_EARTH.id]: JOBS.MONK.colour,   // idk it matches
+	[STATUSES.FISTS_OF_FIRE.id]: JOBS.WARRIOR.colour, // POWER
+	[STATUSES.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
 }
 
 const FIST_SEVERITY = {
@@ -38,13 +38,8 @@ const FIST_SEVERITY = {
 		1: SEVERITY.MEDIUM,
 		3: SEVERITY.MAJOR,
 	},
-	// Forced disengaging is rarely more than 2 GCDs
-	FISTS_OF_EARTH: {
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
-	},
 	// Opener is 7 FoF GCDs, a user might also get forced into a GL3 burst at the end of a fight
-	// but if they can hit 9 there, they can probably hit 10 in GL4 anyway since they're getting
+	// but if they can hit 9 there, they can probably hit 10-11 in GL4 anyway since they're getting
 	// a full RoF window. 10+ is always going to be a mistake. This is kinda weird tho since it's
 	// severity per window rather than a whole fight unlike FoE or no fist.
 	FISTS_OF_FIRE: {
@@ -52,9 +47,21 @@ const FIST_SEVERITY = {
 		9: SEVERITY.MEDIUM,
 		10: SEVERITY.MAJOR,
 	},
+	// Forced disengaging is rarely more than 2 GCDs
+	FISTS_OF_EARTH: {
+		2: SEVERITY.MEDIUM,
+		3: SEVERITY.MAJOR,
+	},
+	// Allow one in case of borked openers but flag it.
+	// Yes, I know it's a fart joke. I am 12 and what is this?
+	// 6 for major mostly because it's half as bad as Fistless.
+	FISTS_OF_WIND: {
+		1: SEVERITY.MEDIUM,
+		6: SEVERITY.MAJOR,
+	},
 }
 
-class Fist {
+export class Fist {
 	id: number = FISTLESS
 	start: number = 0
 	end?: number
@@ -72,10 +79,13 @@ export default class Fists extends Module {
 	static displayOrder = DISPLAY_ORDER.FISTS
 
 	@dependency private combatants!: Combatants
+	@dependency private gauge!: Gauge
 	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
 
 	private fistory: Fist[] = []
+	private foulWinds: number = 0
+
 	// Assume stanceless by default
 	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
 	private activeFist: Fist = new Fist(FISTLESS, this.parser.fight.start_time)
@@ -85,6 +95,18 @@ export default class Fists extends Module {
 		this.addHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
 		this.addHook('complete', this.onComplete)
+	}
+
+	// Public API to get the Fist in use at a given time.
+	public getFist(timestamp: number): Fist {
+		return this.fistory.filter(fist => fist.start <= timestamp
+			&& (typeof fist.end === 'undefined' // sanity check
+			|| fist.end >= timestamp))[0]
+	}
+
+	// Public API to get the currently active Fist.
+	public getActiveFist(): Fist {
+		return this.activeFist
 	}
 
 	private handleFistChange(fistId: number): void {
@@ -115,12 +137,27 @@ export default class Fists extends Module {
 			return
 		}
 
-		// By the time we get here, _activeFist should be correct
 		this.activeFist.gcdCounter++
 	}
 
 	private onGain(event: BuffEvent): void {
+		const action = getDataBy(STATUSES, 'id', event.ability.guid) as TODO // should be Action type
+
+		if (!action) {
+			return
+		}
+
 		this.handleFistChange(event.ability.guid)
+
+		// We only care about FoW from this point on
+		if (event.ability.guid !== STATUSES.FISTS_OF_WIND.id) { return }
+
+		// If player switches to FoW but they're not about to GL4
+		const coeurl: boolean = this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)
+
+		if (this.gauge.stacks < MAX_STACKS || (this.gauge.stacks === MAX_STACKS && !coeurl)) {
+			this.foulWinds++
+		}
 	}
 
 	private onRemove(event: BuffEvent): void {
@@ -146,7 +183,6 @@ export default class Fists extends Module {
 			value: this.getFistGCDCount(FISTLESS),
 		}))
 
-		// Semi lenient trigger, this assumes RoE is only used during downtime
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_EARTH.icon,
 			content: <Trans id="mnk.fists.suggestions.foe.content">
@@ -159,7 +195,17 @@ export default class Fists extends Module {
 			value: this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id),
 		}))
 
-		// TODO: Add check for FoF GCD counts, per window, being larger than expected
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.FISTS_OF_WIND.icon,
+			content: <Trans id="mnk.fists.suggestions.fow.content">
+				Avoid swapping to <StatusLink {...STATUSES.FISTS_OF_WIND}/> while below {MAX_STACKS} stacks until you're about to execute a <StatusLink {...STATUSES.COEURL_FORM} /> skill. <StatusLink {...STATUSES.FISTS_OF_FIRE} /> offers more damage until you can get to GL{MAX_FASTER}.
+			</Trans>,
+			why: <Trans id="mnk.fists.suggestions.fow.why">
+				<StatusLink {...STATUSES.FISTS_OF_WIND}/> was activated <Plural value={this.foulWinds} one="# time" other="# times" /> below max stacks.
+			</Trans>,
+			tiers: FIST_SEVERITY.FISTS_OF_WIND,
+			value: this.foulWinds,
+		}))
 
 		// Statistics
 		const uptimeKeys = _.uniq(this.fistory.map(fist => fist.id))
@@ -170,14 +216,14 @@ export default class Fists extends Module {
 				.reduce((total, current) => total + (current.end || this.parser.fight.end_time) - current.start, 0)
 			return {
 				value,
-				color: CHART_COLOURS[id] as string,
+				color: CHART_COLOURS[id],
 				columns: [
 					this.getFistName(id),
 					this.parser.formatDuration(value),
 					this.getFistUptimePercent(id) + '%',
 				] as TODO,
 			}
-		})
+		}).filter(datum => datum.value > 0)
 
 		this.statistics.add(new PieChartStatistic({
 			headings: ['Fist', 'Uptime', '%'],

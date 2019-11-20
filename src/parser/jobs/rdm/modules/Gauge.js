@@ -247,7 +247,7 @@ export default class Gauge extends Module {
 			this._blackManaLostToInvulnerable += gaugeAction.mana.black.invulnLoss
 
 			this._whiteManaLostToManafication += gaugeAction.mana.white.manaficationLoss
-			this._blackManaWastedToManafication += gaugeAction.mana.black.manaficationLoss
+			this._blackManaLostToManafication += gaugeAction.mana.black.manaficationLoss
 
 			if (abilityId in MANA_GAIN || abilityId === ACTIONS.MANAFICATION.id) {
 				this._pushToGraph()

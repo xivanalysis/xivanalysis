@@ -15,7 +15,7 @@ export default {
 		id: 7518,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/003000/003214.png',
-		cooldown: 35,
+		cooldown: 55,
 		statusesApplied: [STATUSES.ACCELERATION],
 	},
 	MANAFICATION: {
@@ -152,7 +152,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003232.png',
 		onGcd: true,
 		cooldown: 2.2,
-		potency: 220, //consumes 10 white, 10 black
+		potency: 300, //consumes 10 white, 10 black
 	},
 	VERFLARE: {
 		id: 7525,
@@ -208,7 +208,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 250, //Increase White and Black by 3
+		potency: 280, //Increase White and Black by 3
 		breaksCombo: true,
 	},
 	// IMPACT: {
@@ -238,7 +238,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 300, //Increase Black by 11
+		potency: 350, //Increase Black by 11
 		breaksCombo: true,
 	},
 	VERTHUNDER_II: {
@@ -258,7 +258,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 270, //Increase Black by 9
+		potency: 300, //Increase Black by 9
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -268,7 +268,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 300, //Increase White by 11
+		potency: 350, //Increase White by 11
 		breaksCombo: true,
 	},
 	VERAERO_II: {
@@ -288,7 +288,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 270, //Increase White by 9
+		potency: 300, //Increase White by 9
 		breaksCombo: true,
 	},
 	TETHER: {

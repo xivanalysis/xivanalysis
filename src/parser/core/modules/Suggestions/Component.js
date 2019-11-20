@@ -40,7 +40,7 @@ class Suggestions extends React.Component {
 		const showMinor = this.context.settingsStore.showMinorSuggestions
 
 		const suggestions = this.props.suggestions.filter(
-			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR
+			suggestion => showMinor || suggestion.severity !== SEVERITY.MINOR,
 		)
 
 		const hasMinor = this.props.suggestions.some(suggestion => suggestion.severity === SEVERITY.MINOR)

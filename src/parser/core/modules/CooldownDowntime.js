@@ -107,7 +107,7 @@ export default class CooldownDowntime extends Module {
 				id,
 				encounterLength - timeOnCooldown + allowedDowntime,
 				firstUseOffset,
-				encounterLength
+				encounterLength,
 			),
 		})
 	}
