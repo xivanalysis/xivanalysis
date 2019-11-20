@@ -1,4 +1,5 @@
 import {MessageDescriptor} from '@lingui/core'
+import Color from 'color'
 import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
@@ -61,6 +62,7 @@ export default class Module {
 	static displayMode: DISPLAY_MODE
 	// TODO: Refactor this var
 	static i18n_id?: string // tslint:disable-line
+	static debug: boolean = false
 
 	private static _handle: string
 	static get handle() {
@@ -84,6 +86,17 @@ export default class Module {
 	}
 	static set title(value) {
 		this._title = value
+	}
+
+	private _debugHeaderColor?: Color
+	private get debugHeaderColor() {
+		if (!this._debugHeaderColor) {
+			const handle = (this.constructor as typeof Module).handle
+			const seed = handle.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0)
+			// tslint:disable-next-line:no-magic-numbers
+			this._debugHeaderColor = Color.hsl(seed % 255, 255, 65)
+		}
+		return this._debugHeaderColor
 	}
 
 	constructor(
@@ -240,6 +253,26 @@ export default class Module {
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
 		this.parser.dispatcher.removeTimestampHook(hook)
+	}
+
+	/**
+	 * Log a debug console message. Will only be printed if built in a non-production
+	 * environment, with `static debug = true` in the module it's being executed in.
+	 */
+	protected debug(...messages: string[]) {
+		const module = this.constructor as typeof Module
+
+		if (!module.debug || process.env.NODE_ENV === 'production') {
+			return
+		}
+
+		// tslint:disable-next-line:no-console
+		console.log(
+			`[%c${module.handle}%c]`,
+			`color: ${this.debugHeaderColor}`,
+			'color: inherit',
+			...messages,
+		)
 	}
 
 	output(): React.ReactNode {
