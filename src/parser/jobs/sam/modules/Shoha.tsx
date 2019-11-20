@@ -96,7 +96,7 @@ export default class Shoha extends Module {
 		const abilityId = event.ability.guid
 		const generatedStacks = GENERATORS[abilityId]
 
-		this.addGeneratedStackAndPush(generatedStacks, abilityId)
+		this.addWaste(generatedStacks, abilityId)
 		}
 	}
 
@@ -113,7 +113,7 @@ export default class Shoha extends Module {
 			this.pushToHistory()
 	}
 
-	private addGeneratedStackAndPush(generatedStacks: number, abilityId: number) {
+	private addWaste(generatedStacks: number, abilityId: number) {
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
 		if (this.stacks > MAX_STACKS) {
@@ -190,10 +190,7 @@ export default class Shoha extends Module {
 	}
 
 	private convertWasteEntryToRow(action: TODO) {
-		let actionName = action.name
-		if (action === ACTIONS.RAISE) {
-			actionName = 'Death'
-		}
+		const actionName = action.name
 
 		return <tr key={action.id + '-row'} style={{margin: 0, padding: 0}}>
 			<td key={action.id + '-name'}><ActionLink name={actionName} {...action}/></td>
