@@ -1,4 +1,6 @@
-export default {
+import {ensureStatus} from '../type'
+
+export const ACN = ensureStatus({
 	MIASMA: {
 		id: 180,
 		name: 'Miasma',
@@ -16,4 +18,4 @@ export default {
 		name: 'Shadow Flare',
 		icon: 'https://xivapi.com/i/010000/010514.png',
 	},
-}
+})
