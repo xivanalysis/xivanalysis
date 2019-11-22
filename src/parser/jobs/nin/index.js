@@ -28,6 +28,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2019-11-22'),
+		Changes: () => <>Updated the Kassatsu module to check for Fuma/Raiton uses.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-11-05'),
 		Changes: () => <>Updated modules for 5.1 support.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
