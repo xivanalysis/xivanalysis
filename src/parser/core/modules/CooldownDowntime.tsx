@@ -11,8 +11,6 @@ import React from 'react'
 import Checklist from './Checklist'
 import Downtime from './Downtime'
 
-const DEBUG_EXPECTED_CALCULATION = false && process.env.NODE_ENV !== 'production'
-
 interface CooldownReset {
 	/**
 	 * One or more skills that trigger a cooldown reset.
@@ -61,8 +59,9 @@ interface CooldownGroup {
 }
 
 export abstract class CooldownDowntime extends Module {
-	static handle = 'cooldowndowntime'
-	static title = t('core.cooldowndowntime.title')`Cooldown Downtime`
+	static handle = 'cooldownDowntime'
+	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
+	static debug = false
 
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
@@ -72,11 +71,12 @@ export abstract class CooldownDowntime extends Module {
 	 */
 	protected abstract trackedCds: CooldownGroup[]
 
-	private usages = new Map<number, CastEvent[]>()
-	private resets = new Map<number, CastEvent[]>()
+	private usages = new Map<CooldownGroup, CastEvent[]>()
+	private resets = new Map<CooldownGroup, CastEvent[]>()
 
 	protected checklistName = <Trans id="core.cooldowndowntime.use-ogcd-cds">Use your OGCDs</Trans>
-	protected checklistDescription = <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCDs when they are up but don't clip them.</Trans>
+	protected checklistDescription = <Trans id="core.cooldowndowntime.ogcd-cd-metric">Always make sure to use your OGCDs
+		when they are available, but do not clip your GCD to use them.</Trans>
 	protected checklistTarget = 95
 
 	protected defaultAllowedDowntime = 2500
@@ -100,44 +100,46 @@ export abstract class CooldownDowntime extends Module {
 	}
 
 	protected init() {
-		const trackedIds = this.trackedCds.map(g => g.cooldowns)
+		const trackedIds = this.trackedCds.map(group => group.cooldowns)
 			.reduce((acc, cur) => acc.concat(cur))
-			.map(a => a.id)
+			.map(action => action.id)
 
 		const resetIds = this.trackedCds
-			.map(g => (g.resetBy === undefined) ? [] : g.resetBy.actions)
+			.map(group => group.resetBy?.actions ?? [])
 			.reduce((acc, cur) => acc.concat(cur))
-			.map(a => a.id)
+			.map(action => action.id)
 
 		this.addEventHook('cast', {by: 'player', abilityId: trackedIds}, this.onTrackedCast)
 		this.addEventHook('cast', {by: 'player', abilityId: resetIds}, this.onResetCast)
 		this.addEventHook('complete', this.onComplete)
 
-		this.trackedCds.forEach(g => {
-			this.usages.set(g.cooldowns[0].id, [])
-			this.resets.set(g.cooldowns[0].id, [])
+		this.trackedCds.forEach(group => {
+			this.usages.set(group, [])
+			this.resets.set(group, [])
 		})
 	}
 
 	private onTrackedCast(event: CastEvent) {
-		if (!this.countUsage(event)) { return }
+		if (!this.countUsage(event)) {
+			return
+		}
 
-		const groupId = this.getTrackedGroupId(event.ability.guid)
-		if (groupId === undefined) { return }
+		const group = this.getTrackedGroup(event.ability.guid)
+		if (group === undefined) {
+			return
+		}
 
-		(this.usages.get(groupId) || []).push(event)
+		(this.usages.get(group) || []).push(event)
 	}
 
-	private getTrackedGroupId(abilityId: number): number | undefined {
-		const group = this.trackedCds.find(g => g.cooldowns.find(a => a.id === abilityId) !== undefined)
-		if (group === undefined) { return undefined }
-		return group.cooldowns[0].id
+	private getTrackedGroup(abilityId: number): CooldownGroup | undefined {
+		return this.trackedCds.find(group => group.cooldowns.find(action => action.id === abilityId) !== undefined)
 	}
 
 	private onResetCast(event: CastEvent) {
-		this.trackedCds.forEach(g => {
-			if (g.resetBy && g.resetBy.actions.find(a => a.id === event.ability.guid)) {
-				(this.resets.get(g.cooldowns[0].id) || [] ).push(event)
+		this.trackedCds.forEach(group => {
+			if (group.resetBy?.actions.find(action => action.id === event.ability.guid)) {
+				(this.resets.get(group) || []).push(event)
 			}
 		})
 	}
@@ -146,10 +148,10 @@ export abstract class CooldownDowntime extends Module {
 		const cdRequirements = []
 		for (const cdGroup of this.trackedCds) {
 			const expected = this.calculateMaxUsages(cdGroup)
-			const actual = (this.usages.get(cdGroup.cooldowns[0].id) || []).length || 0
+			const actual = (this.usages.get(cdGroup) || []).length || 0
 			const percent = actual / expected * 100
-			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>{( ix > 0 ? ', ' : '' )}<ActionLink {...getDataBy(ACTIONS, 'id', val.id)} /></>)
-			this.debugLog(JSON.stringify(requirementDisplay))
+			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>{(ix > 0 ? ', ' : '')}<ActionLink {...getDataBy(ACTIONS, 'id', val.id)} /></>)
+			this.debug(JSON.stringify(requirementDisplay))
 
 			cdRequirements.push(new Requirement({
 				name: requirementDisplay,
@@ -167,98 +169,88 @@ export abstract class CooldownDowntime extends Module {
 	}
 
 	private calculateMaxUsages(group: CooldownGroup): number {
-			const gRep = group.cooldowns[0]
-			if (gRep.cooldown === undefined) { return 0 }
-			const maxCharges = gRep.charges || 1
+		const gRep = group.cooldowns[0]
+		if (gRep.cooldown === undefined) {
+			return 0
+		}
+		const maxCharges = gRep.charges || 1
 
-			// Skill with charges get their allowed downtime from the charge build up time,
-			// so ignore the value on the group object
-			const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedDowntime || this.defaultAllowedDowntime))
+		// Skill with charges get their allowed downtime from the charge build up time,
+		// so ignore the value on the group object
+		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedDowntime || this.defaultAllowedDowntime))
 
-			const gResets = this.resets.get(gRep.id) || []
-			const resetTime = ( group.resetBy && group.resetBy.refundAmount ) ? group.resetBy.refundAmount : 0
-			const fullReset = ( group.resetBy ) ? group.resetBy.fullReset : false
+		const gResets = this.resets.get(group) || []
+		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
+		const fullReset = (group.resetBy) ? group.resetBy.fullReset : false
 
-			let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
+		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
 
-			this.debugLog('Checking downtime for group ' + gRep.name + ' with first use ' + group.firstUseOffset + ' and step ' + step + ' and ' + maxCharges + ' charges')
-			let charges = maxCharges
-			let count = 0
-			let currentTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
-			while (currentTime < this.parser.fight.end_time) {
-				// spend accumulated charges
-				count += charges
-				this.debugLog('Expected ' + charges + ' usages at ' + this.getDisplayTime(currentTime) + '. Count: ' + count)
-				charges = 0
+		this.debug('Checking downtime for group ' + gRep.name + ' with first use ' + group.firstUseOffset + ' and step ' + step + ' and ' + maxCharges + ' charges')
+		let charges = maxCharges
+		let count = 0
+		let currentTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
+		while (currentTime < this.parser.fight.end_time) {
+			// spend accumulated charges
+			count += charges
+			this.debug('Expected ' + charges + ' usages at ' + this.parser.formatTimestamp(currentTime) + '. Count: ' + count)
+			charges = 0
 
-				// build a new charge at the next charge time
+			// build a new charge at the next charge time
+			currentTime += step
+			charges += 1
+
+			// apply resets that are found
+			while (gResets.length > 0 && gResets[0].timestamp < currentTime) {
+				const rs = gResets[0]
+				const previousTime = currentTime
+				if (fullReset) {
+					if (charges < maxCharges) {
+						// if not at max charges, the full reset adds a charge and resets the cooldown timer
+						currentTime = rs.timestamp
+					} else {
+						// Used a reset while fully recharged - count the cooldown of the skill as lost reset time
+						timeLost += gRep.cooldown
+					}
+				} else if (currentTime - resetTime < rs.timestamp) {
+					if (charges < maxCharges) {
+						// if not at max charges, the "extra" reset time counts toward
+						// the next charge wihtout being lost
+						currentTime -= resetTime
+					} else {
+						timeLost += rs.timestamp - (currentTime - resetTime)
+						currentTime = rs.timestamp
+					}
+				} else {
+					currentTime -= resetTime
+				}
+				this.debug('Reset (' + rs.ability.name + ') used at ' + this.parser.formatTimestamp(rs.timestamp) + '. Changing next charge time from ' + this.parser.formatTimestamp(previousTime) + ' to ' + this.parser.formatTimestamp(currentTime))
+				gResets.shift()
+			}
+
+			while (charges < maxCharges && this.downtime.isDowntime(currentTime)) {
+				this.debug('Saving charge during downtime at ' + this.parser.formatTimestamp(currentTime) + '. ' + charges + ' charges  stored')
+
+				const window = this.downtime.getDowntimeWindows(currentTime)[0]
+				if (window.end < currentTime + step) {
+					count += charges
+					this.debug('Delayed charge spend at ' + this.parser.formatTimestamp(window.end) + '. ' + charges + ' charges spent. No charge time lost. Count: ' + count)
+					charges = 0
+				}
+
 				currentTime += step
 				charges += 1
-
-				// apply resets that are found
-				while (gResets.length > 0 && gResets[0].timestamp < currentTime) {
-					const rs = gResets[0]
-					const previousTime = currentTime
-					if (fullReset) {
-						if (charges < maxCharges) {
-							// if not at max charges, the full reset adds a charge and resets the cooldown timer
-							currentTime = rs.timestamp
-						} else {
-							// Used a reset while fully recharged - count the cooldown of the skill as lost reset time
-							timeLost += gRep.cooldown
-						}
-					} else if (currentTime - resetTime < rs.timestamp) {
-						if (charges < maxCharges) {
-							// if not at max charges, the "extra" reset time counts toward
-							// the next charge wihtout being lost
-							currentTime -= resetTime
-						} else {
-							timeLost += rs.timestamp - (currentTime - resetTime)
-							currentTime = rs.timestamp
-						}
-					} else {
-						currentTime -= resetTime
-					}
-					this.debugLog('Reset (' + rs.ability.name + ') used at ' + this.getDisplayTime(rs.timestamp) + '. Changing next charge time from ' + this.getDisplayTime(previousTime) + ' to ' + this.getDisplayTime(currentTime))
-					gResets.shift()
-				}
-
-				while (charges < maxCharges && this.downtime.isDowntime(currentTime)) {
-					this.debugLog('Saving charge during downtime at ' + this.getDisplayTime(currentTime) + '. ' + charges + ' charges  stored')
-
-					const window = this.downtime.getDowntimeWindows(currentTime)[0]
-					if (window.end < currentTime + step) {
-						count += charges
-						this.debugLog('Delayed charge spend at ' + this.getDisplayTime(window.end) + '. ' + charges + ' charges spent. No charge time lost. Count: ' + count)
-						charges = 0
-					}
-
-					currentTime += step
-					charges += 1
-				}
-
-				// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
-				if (this.downtime.isDowntime(currentTime)) {
-					const window = this.downtime.getDowntimeWindows(currentTime)[0]
-					this.debugLog('Downtime detected at ' + this.getDisplayTime(currentTime) + ' in window from ' + this.getDisplayTime(window.start) + ' to ' + this.getDisplayTime(window.end))
-					currentTime = window.end
-					// TODO: time after window end before usage.  should it just be first use offset? depends on what else was delayed and state in rotation
-				}
 			}
-			this.debugLog('Total count for group ' + gRep.name + ' is ' + count + '. Total reset time lost is ' + this.parser.formatDuration(timeLost) + '.')
 
-			return count
-		}
-
-	private getDisplayTime(currentTime: number): string {
-			return this.parser.formatDuration(currentTime - this.parser.fight.start_time)
-		}
-
-	private debugLog(message: string) {
-			if (!DEBUG_EXPECTED_CALCULATION) {
-				return
+			// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
+			if (this.downtime.isDowntime(currentTime)) {
+				const window = this.downtime.getDowntimeWindows(currentTime)[0]
+				this.debug('Downtime detected at ' + this.parser.formatTimestamp(currentTime) + ' in window from ' + this.parser.formatTimestamp(window.start) + ' to ' + this.parser.formatTimestamp(window.end))
+				currentTime = window.end
+				// TODO: time after window end before usage.  should it just be first use offset? depends on what else was delayed and state in rotation
 			}
-			// tslint:disable-next-line:no-console
-			console.log(message)
 		}
+		this.debug('Total count for group ' + gRep.name + ' is ' + count + '. Total reset time lost is ' + this.parser.formatDuration(timeLost) + '.')
+
+		return count
 	}
+}
