@@ -6,7 +6,7 @@ import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {getDataBy} from 'data'
 import {ActionLink} from 'components/ui/DbLink'
-import {Table, Message, Icon, Button} from 'semantic-ui-react'
+import {Table, Message, Icon, Button, Header} from 'semantic-ui-react'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const ROTATION_IDS = [
@@ -159,15 +159,12 @@ export default class Positionals extends Module {
 	}
 
 	_procTable() {
-		// replace the below with this to filter out successful combos
-		// return this._rtCombos.filter(combo => !combo.success).map(combo => {
-		return this._rtCombos.map(combo => {
+		return this._rtCombos.filter(combo => !combo.success).map(combo => {
 			const action = getDataBy(ACTIONS, 'id', combo.next)
 
 			return <Table.Row key={combo.time}>
 				<Table.Cell>{this.createTimelineButton(combo.time)}</Table.Cell>
 				<Table.Cell><ActionLink {...action} /></Table.Cell>
-				<Table.Cell textAlign="center" positive={combo.success} negative={!combo.success}>{this._checkIcon(combo.success)}</Table.Cell>
 				<Table.Cell textAlign="center">{this._checkIcon(combo.trueNorthCharges > 0, '')} (<Plural id="drg.positionals.tn-charges" value={combo.trueNorthCharges} one="# charge" other="# charges" />)</Table.Cell>
 			</Table.Row>
 		})
@@ -178,10 +175,10 @@ export default class Positionals extends Module {
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.positionals.analysis.message">Being in the correct position when using <ActionLink {...ACTIONS.WHEELING_THRUST} /> and <ActionLink {...ACTIONS.FANG_AND_CLAW} /> will allow you to use <ActionLink {...ACTIONS.RAIDEN_THRUST} /> instead of <ActionLink {...ACTIONS.TRUE_THRUST} />. You should be trying to proc this ability as much as possible, relying on <ActionLink {...ACTIONS.TRUE_NORTH} /> in situations where you cannot reach the proper position. Landing every single one of these positionals boosts your damage output by ~4%. The table below displays all positionals, and whether or not <ActionLink {...ACTIONS.TRUE_NORTH} /> was available to use.</Trans>
+				<Trans id="drg.positionals.analysis.message">Being at the rear when using <ActionLink {...ACTIONS.WHEELING_THRUST} /> or on the flank when using <ActionLink {...ACTIONS.FANG_AND_CLAW} /> will allow you to use <ActionLink {...ACTIONS.RAIDEN_THRUST} /> instead of <ActionLink {...ACTIONS.TRUE_THRUST} />. You should be trying to proc this ability as much as possible, relying on <ActionLink {...ACTIONS.TRUE_NORTH} /> in situations where you cannot reach the proper position. The table below displays missed positionals (if any), and whether or not <ActionLink {...ACTIONS.TRUE_NORTH} /> was available to use.</Trans>
 			</Message>
 			<Message info>
-				<Trans id="drg.positionals.analysis.missed"><Icon name="info" /> You missed {missed} of {this._rtCombos.length} possible <ActionLink {...ACTIONS.RAIDEN_THRUST} /> procs.
+				<Trans id="drg.positionals.analysis.missed"><Icon name="info" /> You missed <strong>{missed}</strong> of <strong>{this._rtCombos.length}</strong> possible <ActionLink {...ACTIONS.RAIDEN_THRUST} /> procs.
 					{missed > 0 ? (
 						<>
 							Of these missed procs, <strong>{this._rtCombos.filter(combo => !combo.success && combo.trueNorthCharges > 0).length}</strong> could be handled with <ActionLink {...ACTIONS.TRUE_NORTH} />
@@ -189,25 +186,25 @@ export default class Positionals extends Module {
 					) : ('')}
 				</Trans>
 			</Message>
-			<Table>
-				<Table.Header>
-					<Table.Row key="pos-header">
-						<Table.HeaderCell>
-							<Trans id="drg.positionals.table.time">Time</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.positionals.table.procact">Final Action</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.positionals.table.success">Success</Trans>
-						</Table.HeaderCell>
-						<Table.HeaderCell>
-							<Trans id="drg.positionals.table.truenorth">True North Available?</Trans>
-						</Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				{this._procTable()}
-			</Table>
+			{missed > 0 && <>
+				<Header size="small"><Trans id="drg.positionals.table.title">Missed Positionals</Trans></Header>
+				<Table>
+					<Table.Header>
+						<Table.Row key="pos-header">
+							<Table.HeaderCell>
+								<Trans id="drg.positionals.table.time">Time</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.positionals.table.procact">Action</Trans>
+							</Table.HeaderCell>
+							<Table.HeaderCell>
+								<Trans id="drg.positionals.table.truenorth">True North Status</Trans>
+							</Table.HeaderCell>
+						</Table.Row>
+					</Table.Header>
+					{this._procTable()}
+				</Table>
+			</>}
 		</Fragment>
 	}
 }
