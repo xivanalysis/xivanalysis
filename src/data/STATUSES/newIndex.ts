@@ -1,7 +1,5 @@
 import {PatchNumber} from 'data/PATCHES'
-import {root} from './root'
-
-export type NoInfer<T> = T & { [K in keyof T]: T[K] }
+import {root, StatusRoot} from './root'
 
 // This should be moved to data root?
 interface Layer<R> {
@@ -10,20 +8,17 @@ interface Layer<R> {
 }
 
 function applyLayer<R>(base: R, layer: Layer<R>): R {
+	const applied = {...base}
 	const keys = Object.keys(layer.data) as Array<keyof R>
-	return keys.reduce(
-		(acc, cur) => ({
-			...acc,
-			[cur]: {...acc[cur], ...layer.data[cur]},
-		}),
-		{...base},
-	)
+	keys.forEach(key => {
+		applied[key] = {...applied[key], ...layer.data[key]}
+	})
+	return applied
 }
 
 // guessing this will be what data module operates on
 export {root}
-export const layers: Array<Layer<typeof root>> = [
-	// {patch: '5.0', data: root},
+export const layers: Array<Layer<StatusRoot>> = [
 	{patch: '5.01', data: {
 		BIO_II: {id: 1000},
 	}},
