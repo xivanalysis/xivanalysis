@@ -80,7 +80,7 @@
   "blm.notcasting.duration-header": "効果時間",
   "blm.notcasting.timelinelink-button": "タイムラインに移動",
   "blm.notcasting.timestamp-header": "タイムスタンプ",
-  "blm.notcasting.title": "",
+  "blm.notcasting.title": "何もしなかった時間。",
   "blm.ogcd-downtime.ogcd-cd-buffer": "ランダム要素は分析の範囲内に計算を含めてあるため、アクションやアビリティの抱えられる可能な時間を一回につき{0}です。",
   "blm.ogcd-downtime.ogcd-cd-metric": "",
   "blm.procs.suggestions.dropped-f3ps.content": "",
