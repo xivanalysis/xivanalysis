@@ -3,13 +3,13 @@ import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import React from 'react'
 
-const ALLOWEDDOWNTIMEALL = 2500
+const ALLOWEDDOWNTIMEALL = 1250
 const FIRSTUSEOFFSETALL = 15000
 const TARGETPERCENT = 95
 
 export default class OGCDDowntime extends CooldownDowntime {
 	// Time in ms that Laqi deems ok for a OGCD to be down : ^)
-	defaultAllowedDowntime = ALLOWEDDOWNTIMEALL
+	defaultAllowedAverageDowntimeDowntime = ALLOWEDDOWNTIMEALL
 	defaultFirstUseOffset = FIRSTUSEOFFSETALL
 	trackedCds = [
 		{cooldowns: [ACTIONS.LEY_LINES]},

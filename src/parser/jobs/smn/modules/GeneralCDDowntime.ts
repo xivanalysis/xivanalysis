@@ -7,11 +7,11 @@ const DEFAULT_ALLOWED_DOWNTIME = 4000
 const TRANCE_ALLOWED_DOWNTIME = 5000
 
 export default class GeneralCDDowntime extends CooldownDowntime {
-	defaultAllowedDowntime = DEFAULT_ALLOWED_DOWNTIME
+	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.DREADWYRM_TRANCE, ACTIONS.FIREBIRD_TRANCE],
-			allowedDowntime: TRANCE_ALLOWED_DOWNTIME,
+			allowedAverageDowntime: TRANCE_ALLOWED_DOWNTIME,
 		},
 		{cooldowns: [
 			ACTIONS.ENERGY_DRAIN,

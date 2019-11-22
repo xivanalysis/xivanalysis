@@ -17,12 +17,12 @@ export default class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.FIGHT_OR_FLIGHT],
-			allowedDowntime: ALLOWED_DOWNTIME_FOF,
+			allowedAverageDowntime: ALLOWED_DOWNTIME_FOF,
 			firstUseOffset: FIRST_USE_OFFSET_FOF,
 		},
 		{
 			cooldowns: [ACTIONS.REQUIESCAT],
-			allowedDowntime: ALLOWED_DOWNTIME_REQ,
+			allowedAverageDowntime: ALLOWED_DOWNTIME_REQ,
 			firstUseOffset: FIRST_USE_OFFSET_REQ,
 		},
 		{cooldowns: [ACTIONS.SPIRITS_WITHIN]},

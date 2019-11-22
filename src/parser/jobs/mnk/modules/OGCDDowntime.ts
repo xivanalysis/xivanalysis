@@ -6,7 +6,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 const DEFAULT_ALLOWED_DOWNTIME = 4850
 
 export default class OGCDDowntime extends CooldownDowntime {
-	defaultAllowedDowntime = DEFAULT_ALLOWED_DOWNTIME
+	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 	trackedCds = [
 		{cooldowns: [ACTIONS.BROTHERHOOD]},
 		{cooldowns: [ACTIONS.ELIXIR_FIELD]},

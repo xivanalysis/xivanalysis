@@ -39,7 +39,7 @@ interface CooldownGroup {
 	 * multiple charges. Their 'allowed downtime' is the build up time of the
 	 * extra charges.
 	 */
-	allowedDowntime?: number,
+	allowedAverageDowntime?: number,
 	/**
 	 * Time in ms that the skill is expected to be used for the first time in
 	 * a fight.  This should be based on the opener for the class, and will also
@@ -79,7 +79,7 @@ export abstract class CooldownDowntime extends Module {
 		when they are available, but do not clip your GCD to use them.</Trans>
 	protected checklistTarget = 95
 
-	protected defaultAllowedDowntime = 2500
+	protected defaultAllowedAverageDowntime = 1250
 	protected defaultFirstUseOffset = 0
 
 	/**
@@ -177,7 +177,7 @@ export abstract class CooldownDowntime extends Module {
 
 		// Skill with charges get their allowed downtime from the charge build up time,
 		// so ignore the value on the group object
-		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedDowntime || this.defaultAllowedDowntime))
+		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime || this.defaultAllowedAverageDowntime))
 
 		const gResets = this.resets.get(group) || []
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0

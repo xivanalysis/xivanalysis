@@ -8,7 +8,7 @@ export default class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.DIVINATION],
-			allowedDowntime: 2500,
+			allowedAverageDowntime: 2500,
 			firstUseOffset: 12500,
 		},
 	]

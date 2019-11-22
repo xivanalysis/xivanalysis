@@ -6,11 +6,10 @@ const FIRSTUSEOFFSET_MEIKYO = 17500
 // tsubame is used after the first midare, on the 11th GCD
 const FIRSTUSEOFFSET_TSUBAME = 27500
 // Time that samurais have deemed ok for a OGCD to be down
-const DEFAULT_ALLOWED_DOWNTIME = 5000
+const DEFAULT_ALLOWED_DOWNTIME = 2500
 
 export default class OGCDDowntime extends CooldownDowntime {
-	// eslint-disable-next-line no-magic-numbers
-	defaultAllowedDowntime = DEFAULT_ALLOWED_DOWNTIME
+	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.MEIKYO_SHISUI],

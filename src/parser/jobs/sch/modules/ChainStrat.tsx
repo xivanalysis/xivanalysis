@@ -8,7 +8,7 @@ export default class ChainStrat extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.CHAIN_STRATAGEM],
-			allowedDowntime: 7500,
+			allowedAverageDowntime: 7500,
 			firstUseOffset: 10000,
 		},
 	]
