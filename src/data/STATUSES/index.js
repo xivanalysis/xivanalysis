@@ -59,14 +59,15 @@ const STATUSES = correctIdsToMatchLogs({
  * @param {T} obj
  * @returns {T}
  */
-function correctIdsToMatchLogs (obj) {
+function correctIdsToMatchLogs(obj) {
 	Object.keys(obj).forEach(key => {
-		const status = obj[key]
+		const status = {...obj[key]}
 		if (Array.isArray(status.id)) {
 			status.id = status.id.map(id => id + STATUS_ID_OFFSET)
 		} else {
 			status.id = status.id + STATUS_ID_OFFSET
 		}
+		obj[key] = status
 	})
 	return obj
 }
