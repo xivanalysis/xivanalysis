@@ -1,16 +1,13 @@
-import {applyLayer, Layer} from 'data/layer'
-import {root, StatusRoot} from './root'
+export {root} from './root'
+export {layers} from './layers'
 
-// guessing this will be what data module operates on
-export {root}
-export const layers: Array<Layer<StatusRoot>> = [
-	{patch: '5.01', data: {
-		BIO_II: {id: 1000},
-	}},
-]
+// Everything below here is temp back compat
+import {applyLayer} from 'data/layer'
+import {layers} from './layers'
+import {root} from './root'
 
 // need to export a collated everything-applied as default for back compat
-const collated = layers.reduce((acc, cur) => applyLayer(acc, cur), root)
+const collated = layers.reduce(applyLayer, root)
 
 // in dev, maybe proxy the collated and print warnings so we can aim towards 0?
 
