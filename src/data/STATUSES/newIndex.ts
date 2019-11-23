@@ -1,20 +1,5 @@
-import {PatchNumber} from 'data/PATCHES'
+import {applyLayer, Layer} from 'data/layer'
 import {root, StatusRoot} from './root'
-
-// This should be moved to data root?
-interface Layer<R> {
-	patch: PatchNumber
-	data: {[K in keyof R]?: Partial<R[K]>}
-}
-
-function applyLayer<R>(base: R, layer: Layer<R>): R {
-	const applied = {...base}
-	const keys = Object.keys(layer.data) as Array<keyof R>
-	keys.forEach(key => {
-		applied[key] = {...applied[key], ...layer.data[key]}
-	})
-	return applied
-}
 
 // guessing this will be what data module operates on
 export {root}
