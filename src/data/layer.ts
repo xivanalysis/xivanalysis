@@ -1,8 +1,10 @@
 import {PatchNumber} from './PATCHES'
 
+export type LayerData<R> = {[K in keyof R]?: Partial<R[K]>}
+
 export interface Layer<R> {
 	patch: PatchNumber
-	data: {[K in keyof R]?: Partial<R[K]>}
+	data: LayerData<R>
 }
 
 export function applyLayer<R>(base: R, layer: Layer<R>): R {

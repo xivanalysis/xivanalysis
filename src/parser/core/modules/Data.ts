@@ -1,5 +1,5 @@
 import {applyLayer} from 'data/layer'
-import {layers, root} from 'data/STATUSES/newIndex'
+import collated, {layers, root} from 'data/STATUSES/newIndex'
 import Module from 'parser/core/Module'
 
 export class Data extends Module {
@@ -11,5 +11,6 @@ export class Data extends Module {
 			.filter(layer => this.parser.patch.compare(layer.patch) >= 0)
 			.reduce(applyLayer, root)
 		this.debug(statuses)
+		this.debug(collated)
 	}
 }
