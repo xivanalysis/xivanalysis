@@ -1,5 +1,5 @@
-import {applyLayer, Layer, LayerData} from 'data/layer'
-import {layers as statusLayers, root as statusRoot} from 'data/STATUSES/newIndex'
+import {applyLayer, Layer} from 'data/layer'
+import {layers as statusLayers, root as statusRoot} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export class Data extends Module {
