@@ -32,6 +32,7 @@ const correctedLayers = layers.map(layer => ({
 export {
 	correctedRoot as root,
 	correctedLayers as layers,
+	Status,
 }
 
 // Everything below here is temp back compat

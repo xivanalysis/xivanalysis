@@ -1,4 +1,4 @@
-import {Status} from 'data/STATUSES/STATUSES'
+import {Status} from 'data/STATUSES'
 
 interface ActionCombo {
 	start?: boolean
