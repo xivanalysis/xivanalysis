@@ -5,4 +5,4 @@ export interface Status {
 	duration?: number
 }
 
-export const ensureStatus = <T extends Record<string, Status>>(statuses: T): Record<keyof T, Status> => statuses
+export const ensureStatus = <T extends Record<string, Status>>(statuses: T): T => statuses

@@ -8,7 +8,9 @@ export const STATUS_ID_OFFSET = 1000000
  * Presumably because WoW statuses and spells share the same ID space, FFLogs adds 1m to every status ID.
  * I'm not gonna get everyone to do that in here, so just automating it.
  */
-function correctIdsToMatchLogs(statuses: LayerData<StatusRoot>) {
+function correctIdsToMatchLogs(statuses: StatusRoot): StatusRoot
+function correctIdsToMatchLogs(statuses: LayerData<StatusRoot>): LayerData<StatusRoot>
+function correctIdsToMatchLogs(statuses: LayerData<StatusRoot> | StatusRoot) {
 	const keys = Object.keys(statuses) as Array<keyof typeof statuses>
 	return keys.reduce(
 		(acc, key) => {
