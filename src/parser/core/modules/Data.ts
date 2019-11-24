@@ -4,7 +4,6 @@ import Module from 'parser/core/Module'
 
 export class Data extends Module {
 	static handle = 'data'
-	static debug = true
 
 	private appliedCache = new Map<unknown, unknown>()
 
