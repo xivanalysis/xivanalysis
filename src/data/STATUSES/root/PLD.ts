@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const PLD = ensureStatuses({
 	GORING_BLADE: {
 		id: 725,
 		name: 'Goring Blade',
@@ -88,5 +90,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012504.png',
 		duration: 10,
 	},
-
-}
+})

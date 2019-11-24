@@ -1,5 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
 
+export const DNC = ensureStatuses({
 	FLOURISHING_CASCADE: {
 		id: 1814,
 		name: 'Flourishing Cascade',
@@ -100,4 +101,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013708.png',
 		duration: 20,
 	},
-}
+})

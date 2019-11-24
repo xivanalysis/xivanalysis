@@ -1,5 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
 
+export const SAM = ensureStatuses({
 	THIRD_EYE: {
 		id: 1232,
 		name: 'Third Eye',
@@ -68,4 +69,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013310.png',
 		duration: 15,
 	},
-}
+})

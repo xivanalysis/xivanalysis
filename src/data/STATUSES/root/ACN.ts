@@ -1,6 +1,6 @@
-import {ensureStatus} from '../type'
+import {ensureStatuses} from '../type'
 
-export const ACN = ensureStatus({
+export const ACN = ensureStatuses({
 	MIASMA: {
 		id: 180,
 		name: 'Miasma',

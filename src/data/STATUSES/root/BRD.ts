@@ -1,5 +1,7 @@
-export default {
-	//Self statuses
+import {ensureStatuses} from '../type'
+
+export const BRD = ensureStatuses({
+	// Self statuses
 	STRAIGHTER_SHOT: {
 		id: 122,
 		name: 'Straighter Shot',
@@ -33,7 +35,7 @@ export default {
 		duration: 30,
 	},
 
-	//Enemy statuses
+	// Enemy statuses
 	VENOMOUS_BITE: {
 		id: 124,
 		name: 'Venomous Bite',
@@ -61,7 +63,7 @@ export default {
 		duration: 30,
 	},
 
-	//Ally statuses
+	// Ally statuses
 	BATTLE_VOICE: {
 		id: 141,
 		name: 'Battle Voice',
@@ -86,4 +88,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012618.png',
 		duration: 15,
 	},
-}
+})

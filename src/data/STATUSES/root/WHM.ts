@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const WHM = ensureStatuses({
 	DIA: {
 		id: 1871,
 		name: 'Dia',
@@ -79,4 +81,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012627.png',
 		duration: 15,
 	},
-}
+})
