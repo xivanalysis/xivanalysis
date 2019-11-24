@@ -1,6 +1,7 @@
 import {applyLayer, LayerData} from 'data/layer'
 import {layers} from './layers'
 import {root, StatusRoot} from './root'
+import {Status} from './type'
 
 export const STATUS_ID_OFFSET = 1000000
 
@@ -11,17 +12,15 @@ export const STATUS_ID_OFFSET = 1000000
 function correctIdsToMatchLogs(statuses: StatusRoot): StatusRoot
 function correctIdsToMatchLogs(statuses: LayerData<StatusRoot>): LayerData<StatusRoot>
 function correctIdsToMatchLogs(statuses: LayerData<StatusRoot> | StatusRoot) {
-	const keys = Object.keys(statuses) as Array<keyof typeof statuses>
-	return keys.reduce(
-		(acc, key) => {
-			const status = acc[key]
-			if (!status?.id) { return acc }
-			// TODO: How am I going to handle the bloody multi-id things?
-			acc[key] = {...status, id: status.id + STATUS_ID_OFFSET}
-			return acc
-		},
-		{...statuses},
-	)
+	const applied = {...statuses}
+	const keys = Object.keys(applied) as Array<keyof typeof applied>
+	keys.forEach(key => {
+		const status = applied[key]
+		if (!status?.id) { return }
+		// Cast is required to prevent TS literally freaking out
+		(applied[key] as Partial<Status>) = {...status, id: status.id + STATUS_ID_OFFSET}
+	})
+	return applied
 }
 
 const correctedRoot = correctIdsToMatchLogs(root)
