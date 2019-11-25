@@ -1,3 +1,4 @@
+import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS/newIndex'
 import {applyLayer, Layer} from 'data/layer'
 import {layers as statusLayers, root as statusRoot} from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -9,6 +10,10 @@ export class Data extends Module {
 
 	get statuses() {
 		return this.getAppliedData(statusRoot, statusLayers)
+	}
+
+	get actions() {
+		return this.getAppliedData(actionRoot, actionLayers)
 	}
 
 	private getAppliedData<R>(root: R, layers: Array<Layer<R>>): R {
