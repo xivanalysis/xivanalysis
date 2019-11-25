@@ -1,4 +1,6 @@
-export default {
+import {ensureActions} from '../type'
+
+export const SHARED = ensureActions({
 	UNKNOWN: {
 		id: 0,
 		name: 'Unknown',
@@ -26,4 +28,4 @@ export default {
 		icon: 'https://xivapi.com/i/000000/000101.png',
 		autoAttack: true,
 	},
-}
+})
