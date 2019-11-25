@@ -2,7 +2,7 @@ import {Status} from 'data/STATUSES'
 
 interface ActionCombo {
 	start?: boolean
-	from?: number
+	from?: number | number[]
 	end?: boolean
 }
 

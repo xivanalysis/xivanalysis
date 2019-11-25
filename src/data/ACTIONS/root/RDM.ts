@@ -1,8 +1,9 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
 
-export default {
+export const RDM = ensureActions({
 	// -----
 	// Cooldowns
 	// -----
@@ -349,4 +350,4 @@ export default {
 		castTime: 10,
 		breaksCombo: true,
 	},
-}
+})
