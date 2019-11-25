@@ -1,32 +1,32 @@
 import _ from 'lodash'
 
-import SHARED from './SHARED'
-import ROLE from './ROLE'
-import DUTY from './DUTY'
-import ITEMS from './ITEMS'
-import ACN from './ACN'
-import WHM from './WHM'
-import SCH from './SCH'
-import AST from './AST'
-import ROG from './ROG'
-import NIN from './NIN'
-import PGL from './PGL'
-import MNK from './MNK'
-import SMN from './SMN'
-import BLM from './BLM'
-import RDM from './RDM'
-import MRD from './MRD'
-import WAR from './WAR'
-import PLD from './PLD'
-import ARC from './ARC'
-import BRD from './BRD'
-import SAM from './SAM'
-import DRK from './DRK'
-import MCH from './MCH'
-import LNC from './LNC'
-import DRG from './DRG'
-import GNB from './GNB'
-import DNC from './DNC'
+import SHARED from './root/SHARED'
+import ROLE from './root/ROLE'
+import DUTY from './root/DUTY'
+import ITEMS, {ITEM_ID_OFFSET} from './root/ITEMS'
+import ACN from './root/ACN'
+import WHM from './root/WHM'
+import SCH from './root/SCH'
+import AST from './root/AST'
+import ROG from './root/ROG'
+import NIN from './root/NIN'
+import PGL from './root/PGL'
+import MNK from './root/MNK'
+import SMN from './root/SMN'
+import BLM from './root/BLM'
+import RDM from './root/RDM'
+import MRD from './root/MRD'
+import WAR from './root/WAR'
+import PLD from './root/PLD'
+import ARC from './root/ARC'
+import BRD from './root/BRD'
+import SAM from './root/SAM'
+import DRK from './root/DRK'
+import MCH from './root/MCH'
+import LNC from './root/LNC'
+import DRG from './root/DRG'
+import GNB from './root/GNB'
+import DNC from './root/DNC'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
@@ -92,5 +92,7 @@ export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 export const HIT_TYPES = {
 	CRIT: 2,
 }
+
+export {ITEM_ID_OFFSET}
 
 export default ACTIONS

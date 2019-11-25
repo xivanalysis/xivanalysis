@@ -1,4 +1,4 @@
-import PETS from '../PETS'
+import PETS from '../../PETS'
 import {SMN_COOLDOWN_GROUP} from './SMN'
 
 // Splitting ACN spells out of SMN/SCH so they aren't duped

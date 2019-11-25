@@ -1,4 +1,4 @@
-import PETS from '../PETS'
+import PETS from '../../PETS'
 import STATUSES from 'data/STATUSES'
 
 //use action id of a skill id in the group to avoid potential duplications
