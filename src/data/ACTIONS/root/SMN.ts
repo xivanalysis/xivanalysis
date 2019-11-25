@@ -1,5 +1,6 @@
 import STATUSES from 'data/STATUSES'
 import PETS from '../../PETS'
+import {ensureActions} from '../type'
 
 // use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
@@ -11,7 +12,7 @@ export const SMN_COOLDOWN_GROUP = {
 	ENKINDLE: 16802,
 }
 
-export default {
+export const SMN = ensureActions({
 	// -----
 	// Player
 	// -----
@@ -387,4 +388,4 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002732.png',
 		pet: PETS.DEMI_PHOENIX.id,
 	},
-}
+})

@@ -1,8 +1,9 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
 
-export default {
+export const BRD = ensureActions({
 	MAGES_BALLAD: {
 		id: 114,
 		name: 'Mage\'s Ballad',
@@ -145,4 +146,4 @@ export default {
 		onGcd: true,
 		potency: 500,
 	},
-}
+})

@@ -1,4 +1,5 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // Samurai Actions
 
@@ -8,7 +9,7 @@ export const SAM_COOLDOWN_GROUP = {
 	TSUBAME: 16483,
 }
 
-export default {
+export const SAM = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -324,4 +325,4 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003177.png',
 		cooldown: 15,
 	},
-}
+})

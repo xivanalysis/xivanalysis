@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const WHM = ensureActions({
 	TEMPERANCE: {
 		id: 16536,
 		name: 'Temperance',
@@ -241,4 +242,4 @@ export default {
 		onGcd: true,
 		castTime: 1.5,
 	},
-}
+})

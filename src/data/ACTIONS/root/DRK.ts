@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const DRK = ensureActions({
 	// -----
 	// Stances
 	// -----
@@ -183,4 +184,4 @@ export default {
 		onGcd: true,
 		breaksCombo: false,
 	},
-}
+})

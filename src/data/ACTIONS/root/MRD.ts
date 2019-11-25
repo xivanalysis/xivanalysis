@@ -1,7 +1,8 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // Split between MRD and WAR
-export default {
+export const MRD = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -103,4 +104,4 @@ export default {
 		onGcd: false,
 		statusesApplied: [STATUSES.VENGEANCE],
 	},
-}
+})

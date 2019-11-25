@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const GNB = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -253,4 +254,4 @@ export default {
 		onGcd: false,
 		cooldown: 1,
 	},
-}
+})
