@@ -38,5 +38,6 @@ export {
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat
 // TODO: Need to consider how data can cross-reference under the layered system - what if an ID changes? (Because of course they do)
+//       Referencing via string of the root key seems like a sane option - it's guaranteed to exist, and track alongside changes from layers
 const collated = correctedLayers.reduce(applyLayer, correctedRoot)
 export default collated

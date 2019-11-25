@@ -1,5 +1,5 @@
 import {Layer} from 'data/layer'
-import {StatusRoot} from './root'
+import {StatusRoot} from '../root'
 
 export const layers: Array<Layer<StatusRoot>> = [
 	// Layers should be in their own files, and imported for use here.
