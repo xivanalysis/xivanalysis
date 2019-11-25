@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const ROLE = ensureStatuses({
 	SWIFTCAST: {
 		id: 167,
 		name: 'Swiftcast',
@@ -68,4 +70,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013903.png',
 		duration: 20,
 	},
-}
+})

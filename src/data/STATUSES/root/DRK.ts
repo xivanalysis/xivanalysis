@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const DRK = ensureStatuses({
 	GRIT: {
 		id: 743,
 		name: 'Grit',
@@ -57,4 +59,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013121.png',
 		duration: 10,
 	},
-}
+})

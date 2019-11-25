@@ -5,7 +5,6 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {Action} from 'data/ACTIONS/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {Status} from 'data/STATUSES/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 

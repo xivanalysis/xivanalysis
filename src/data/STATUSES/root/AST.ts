@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const AST = ensureStatuses({
 	DIURNAL_SECT: {
 		id: 839,
 		name: 'Diurnal Sect',
@@ -311,4 +313,4 @@ export default {
 		name: 'Lady of Crowns Drawn',
 		icon: 'https://xivapi.com/i/013000/013257.png',
 	},
-}
+})

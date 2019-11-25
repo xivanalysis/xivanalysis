@@ -6,7 +6,7 @@ import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'com
 import ACTIONS from 'data/ACTIONS'
 import {Action} from 'data/ACTIONS/ACTIONS'
 import {getDataBy} from 'data/getDataBy'
-import {Status} from 'data/STATUSES/STATUSES'
+import {Status} from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'

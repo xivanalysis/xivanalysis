@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const GNB = ensureStatuses({
 	SONIC_BREAK: {
 		id: 1837,
 		name: 'Sonic Break',
@@ -77,4 +79,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013606.png',
 		duration: 8,
 	},
-}
+})
