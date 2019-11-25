@@ -1,6 +1,8 @@
 // Items need to be cast, so they appear (and are used as) actions
 // TODO: Should I keep items in a seperate data/ import and just translate to actions here, or keep as-is?
 
+// tslint:disable:no-magic-numbers
+
 export const ITEM_ID_OFFSET = 1000000
 
 const ITEMS = {
@@ -110,7 +112,7 @@ const ITEMS = {
 	},
 
 	SUPER_ETHER: {
-		id: 23168 - 1000000, // what is consistency?
+		id: 23168 - ITEM_ID_OFFSET, // what is consistency?
 		name: 'Super-Ether',
 		icon: 'https://xivapi.com/i/020000/020627.png',
 	},

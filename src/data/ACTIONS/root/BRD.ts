@@ -1,5 +1,7 @@
 import STATUSES from 'data/STATUSES'
 
+// tslint:disable:no-magic-numbers
+
 export default {
 	MAGES_BALLAD: {
 		id: 114,
@@ -71,7 +73,7 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 		potency: [100, 175, 260],
-		cooldownGroup: 3562, //Sidewinder Group
+		cooldownGroup: 3562, // Sidewinder Group
 	},
 	PITCH_PERFECT: {
 		id: 7404,
@@ -127,7 +129,7 @@ export default {
 		onGcd: false,
 		cooldown: 60,
 		potency: [100, 160, 220],
-		cooldownGroup: 3562, //Sidewinder Group
+		cooldownGroup: 3562, // Sidewinder Group
 	},
 	BURST_SHOT: {
 		id: 16495,
@@ -144,4 +146,3 @@ export default {
 		potency: 500,
 	},
 }
-

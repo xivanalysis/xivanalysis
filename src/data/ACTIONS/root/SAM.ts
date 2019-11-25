@@ -2,16 +2,16 @@ import STATUSES from 'data/STATUSES'
 
 // Samurai Actions
 
-//Merge all 3 Tsubames into 1
+// Merge all 3 Tsubames into 1
 
 export const SAM_COOLDOWN_GROUP = {
 	TSUBAME: 16483,
 }
 
 export default {
-	//-----
-	//Player GCDs
-	//-----
+	// -----
+	// Player GCDs
+	// -----
 	HAKAZE: {
 		id: 7477,
 		name: 'Hakazae',
@@ -165,9 +165,9 @@ export default {
 		},
 	},
 
-	//-----
-	//Player OGCDs
-	//-----
+	// -----
+	// Player OGCDs
+	// -----
 
 	THIRD_EYE: {
 		id: 7498,
@@ -325,4 +325,3 @@ export default {
 		cooldown: 15,
 	},
 }
-

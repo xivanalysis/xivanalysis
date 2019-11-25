@@ -148,7 +148,7 @@ export default {
 		statusesApplied: [STATUSES.MEDICA_II],
 	},
 
-	//the following abilities are to be moved to CNJ.js
+	// the following abilities are to be moved to CNJ.js
 	RAISE: {
 		id: 125,
 		name: 'Raise',

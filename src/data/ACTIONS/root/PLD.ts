@@ -213,7 +213,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_AFTER_HEAL],
+		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_PROC],
 	},
 	INTERVENTION: {
 		id: 7382,

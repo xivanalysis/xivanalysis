@@ -1,5 +1,7 @@
 import STATUSES from 'data/STATUSES'
 
+// tslint:disable:no-magic-numbers
+
 export default {
 	// -----
 	// Player GCDs

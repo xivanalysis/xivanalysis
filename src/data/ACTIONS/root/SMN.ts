@@ -1,7 +1,7 @@
-import PETS from '../../PETS'
 import STATUSES from 'data/STATUSES'
+import PETS from '../../PETS'
 
-//use action id of a skill id in the group to avoid potential duplications
+// use action id of a skill id in the group to avoid potential duplications
 export const SMN_COOLDOWN_GROUP = {
 	SUMMON: 180,
 	ENERGY: 16510,
@@ -160,7 +160,7 @@ export default {
 		statusesApplied: [STATUSES.EVERLASTING_FLIGHT],
 	},
 
-	//Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
+	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
 	ASSAULT_I_AERIAL_SLASH: {
 		id: 16797,
 		name: 'Assault I: Aerial Slash',
