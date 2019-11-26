@@ -1,5 +1,3 @@
-import _ from 'lodash'
-
 import {SHARED} from './root/SHARED'
 import {ROLE} from './root/ROLE'
 import {DUTY} from './root/DUTY'
@@ -85,13 +83,6 @@ function addDefaultValues (obj) {
 		}
 	})
 	return obj
-}
-
-export const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
-
-// unused?
-export const HIT_TYPES = {
-	CRIT: 2,
 }
 
 export {ITEM_ID_OFFSET}
