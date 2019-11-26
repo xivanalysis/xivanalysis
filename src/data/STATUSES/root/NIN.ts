@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const NIN = ensureStatuses({
 	TRICK_ATTACK_VULNERABILITY_UP: {
 		id: 638,
 		name: 'Vulnerability Up',
@@ -61,4 +63,4 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010605.png',
 		duration: 20,
 	},
-}
+})

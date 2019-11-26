@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const WAR = ensureStatuses({
 	INNER_RELEASE: {
 		id: 1177,
 		name: 'Inner Release',
@@ -74,4 +76,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012559.png',
 		duration: 6,
 	},
-}
+})

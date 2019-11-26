@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const SCH = ensureStatuses({
 	BIOLYSIS: {
 		id: 1895,
 		name: 'Biolysis',
@@ -71,4 +73,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012826.png',
 		duration: 21,
 	},
-}
+})

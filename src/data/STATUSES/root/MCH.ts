@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const MCH = ensureStatuses({
 	REASSEMBLED: {
 		id: 851,
 		name: 'Reassembled',
@@ -33,4 +35,4 @@ export default {
 		icon: 'https://xivapi.com/i/013000/013021.png',
 		duration: 15,
 	},
-}
+})

@@ -1,31 +1,5 @@
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-
-// Yeah... there's a lot of them.
-// TODO: Need to work out how I should handle amnesia/paci/silence
-/* eslint-disable no-mixed-spaces-and-tabs */
-const STATUS_IDS = [
-	...STATUSES.STUN.id,
-	...STATUSES.SLEEP.id,
-	// ...STATUSES.AMNESIA.id,
-	// ...STATUSES.PACIFICATION.id,
-	// ...STATUSES.SILENCE.id,
-	...STATUSES.CONFUSED.id,
-	...STATUSES.TERROR.id,
-	...STATUSES.FETTERS.id,
-	STATUSES.HYSTERIA.id,
-	...STATUSES.TOAD.id,
-	STATUSES.WATERY_GRAVE.id,
-	...STATUSES.DOWN_FOR_THE_COUNT.id,
-	...STATUSES.OUT_OF_THE_ACTION.id,
-	STATUSES.OUT_OF_BODY.id,
-	...STATUSES.IMP.id,
-	STATUSES.FORCED_MARCH.id,
-	STATUSES.PIGGY.id,
-	STATUSES.AIRBOUND.id,
-	STATUSES.ODDER.id,
-]
-/* eslint-enable no-mixed-spaces-and-tabs */
+import {STATUS_IDS} from './statusIds'
 
 export default class UnableToAct extends Module {
 	static handle = 'unableToAct'

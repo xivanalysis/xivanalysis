@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const MNK = ensureStatuses({
 	PERFECT_BALANCE: {
 		id: 110,
 		name: 'Perfect Balance',
@@ -141,4 +143,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012534.png',
 		duration: 30,
 	},
-}
+})

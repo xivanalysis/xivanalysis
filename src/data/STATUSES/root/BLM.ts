@@ -1,5 +1,7 @@
+import {ensureStatuses} from '../type'
+
 // TODO: Fill in the rest of this
-export default {
+export const BLM = ensureStatuses({
 	THUNDER_I: {
 		id: 161,
 		name: 'Thunder',
@@ -59,4 +61,4 @@ export default {
 		icon: 'https://xivapi.com/i/010000/010456.png',
 		duration: 20,
 	},
-}
+})

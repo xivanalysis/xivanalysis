@@ -37,7 +37,8 @@
     "format": "minimal"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0"
+    "babel-core": "7.0.0-bridge.0",
+    "typescript": "^3.7"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",

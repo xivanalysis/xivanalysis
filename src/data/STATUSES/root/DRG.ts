@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const DRG = ensureStatuses({
 	BATTLE_LITANY: {
 		id: 786,
 		name: 'Battle Litany',
@@ -83,4 +85,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012584.png',
 		duration: 10,
 	},
-}
+})

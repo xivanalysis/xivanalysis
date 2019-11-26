@@ -1,5 +1,7 @@
+import {ensureStatuses} from '../type'
+
 // TODO: Fill in the rest of this
-export default {
+export const SMN = ensureStatuses({
 	GALE_ENFORCER: {
 		id: 1869,
 		name: 'Gale Enforcer',
@@ -53,4 +55,4 @@ export default {
 		icon: 'https://xivapi.com/i/012000/012732.png',
 		duration: 21,
 	},
-}
+})

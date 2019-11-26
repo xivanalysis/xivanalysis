@@ -1,4 +1,6 @@
-export default {
+import {ensureStatuses} from '../type'
+
+export const SHARED = ensureStatuses({
 	UNKNOWN: {
 		id: 0,
 		name: 'Unknown',
@@ -35,4 +37,4 @@ export default {
 		name: 'Squadron Rationing Manual',
 		icon: 'https://xivapi.com/i/016000/016508.png',
 	},
-}
+})
