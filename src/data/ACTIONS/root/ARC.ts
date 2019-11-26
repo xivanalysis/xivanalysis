@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const ARC = ensureActions({
 	HEAVY_SHOT: {
 		id: 97,
 		name: 'Heavy Shot',
@@ -67,4 +68,4 @@ export default {
 		onGcd: false,
 		cooldown: 30,
 	},
-}
+})

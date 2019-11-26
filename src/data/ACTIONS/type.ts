@@ -2,7 +2,7 @@ import {Status} from 'data/STATUSES'
 
 interface ActionCombo {
 	start?: boolean
-	from?: number
+	from?: number | number[]
 	end?: boolean
 }
 
@@ -16,6 +16,10 @@ export interface Action {
 	castTime?: number
 	cooldown?: number
 	autoAttack?: boolean
+	// TODO: Use key for layer compat
 	statusesApplied?: Status[]
-	[key: string]: unknown
+	// TODO: Do I need this still?
+	// [key: string]: unknown
 }
+
+export const ensureActions = <T extends Record<string, Action>>(actions: T): {[K in keyof T]: T[K] & Action} => actions

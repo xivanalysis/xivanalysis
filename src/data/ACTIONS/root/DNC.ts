@@ -1,7 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
-
+export const DNC = ensureActions({
 	SINGLE_STANDARD_FINISH: {
 		id: 16191,
 		icon: 'https://xivapi.com/i/003000/003459.png',
@@ -253,4 +253,4 @@ export default {
 		onGcd: false,
 		cooldown: 1,
 	},
-}
+})

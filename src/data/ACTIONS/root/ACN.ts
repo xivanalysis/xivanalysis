@@ -1,8 +1,9 @@
-import PETS from '../PETS'
+import PETS from '../../PETS'
+import {ensureActions} from '../type'
 import {SMN_COOLDOWN_GROUP} from './SMN'
 
 // Splitting ACN spells out of SMN/SCH so they aren't duped
-export default {
+export const ACN = ensureActions({
 	// -----
 	// Player
 	// -----
@@ -163,4 +164,4 @@ export default {
 		cooldown: 40,
 		pet: PETS.TOPAZ_CARBUNCLE.id,
 	},
-}
+})

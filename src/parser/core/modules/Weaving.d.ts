@@ -1,4 +1,4 @@
-import {Action} from 'data/ACTIONS/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module from 'parser/core/Module'
 

@@ -1,7 +1,8 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // Split between PGL and MNK
-export default {
+export const PGL = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -86,4 +87,4 @@ export default {
 		cooldown: 120,
 		statusesApplied: [STATUSES.PERFECT_BALANCE],
 	},
-}
+})

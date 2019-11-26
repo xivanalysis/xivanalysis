@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const AST = ensureActions({
 	DIURNAL_SECT: {
 		id: 3604,
 		name: 'Diurnal Sect',
@@ -353,5 +354,4 @@ export default {
 		cooldown: 0,
 		statusesApplied: [STATUSES.LORD_OF_CROWNS],
 	},
-
-}
+})
