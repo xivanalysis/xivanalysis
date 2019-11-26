@@ -34,6 +34,7 @@ export default class Positionals extends Module {
 		'brokenLog',
 		'combatants',
 		'suggestions',
+		'timeline',
 	]
 
 	// tracking raiden thrust procs
