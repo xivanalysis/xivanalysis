@@ -1,4 +1,4 @@
-import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS/newIndex'
+import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
 import {applyLayer, Layer} from 'data/layer'
 import {layers as statusLayers, root as statusRoot} from 'data/STATUSES'
 import Module from 'parser/core/Module'
