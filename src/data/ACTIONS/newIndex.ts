@@ -1,5 +1,5 @@
 import {applyLayer, Layer} from 'data/layer'
-import {ActionRoot, root} from './root'
+import {ActionRoot, ITEM_ID_OFFSET, root} from './root'
 import {Action} from './type'
 
 const DEFAULT_GCD_CASTTIME = 0
@@ -34,6 +34,7 @@ export {
 	correctedRoot as root,
 	layers,
 	Action,
+	ITEM_ID_OFFSET,
 }
 
 // Everything below here is temp back compat

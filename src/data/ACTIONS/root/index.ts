@@ -8,7 +8,7 @@ import {DRG} from 'data/ACTIONS/root/DRG'
 import {DRK} from 'data/ACTIONS/root/DRK'
 import {DUTY} from 'data/ACTIONS/root/DUTY'
 import {GNB} from 'data/ACTIONS/root/GNB'
-import {ITEMS} from 'data/ACTIONS/root/ITEMS'
+import {ITEM_ID_OFFSET, ITEMS} from 'data/ACTIONS/root/ITEMS'
 import {LNC} from 'data/ACTIONS/root/LNC'
 import {MCH} from 'data/ACTIONS/root/MCH'
 import {MNK} from 'data/ACTIONS/root/MNK'
@@ -25,6 +25,8 @@ import {WAR} from 'data/ACTIONS/root/WAR'
 import {WHM} from 'data/ACTIONS/root/WHM'
 import {ROLE} from './ROLE'
 import {SHARED} from './SHARED'
+
+export {ITEM_ID_OFFSET}
 
 export const root = {
 	...SHARED,
