@@ -18,6 +18,7 @@ export interface Action {
 	autoAttack?: boolean
 	// TODO: Use key for layer compat
 	statusesApplied?: Status[]
+	// TODO: Do I need this still?
 	// [key: string]: unknown
 }
 
