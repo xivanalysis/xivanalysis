@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const MNK = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -128,4 +129,4 @@ export default {
 		gcdRecast: 2.5,
 		statusesApplied: [STATUSES.ANATMAN],
 	},
-}
+})

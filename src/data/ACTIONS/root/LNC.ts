@@ -1,6 +1,9 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+// tslint:disable:no-magic-numbers
+
+export const LNC = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -93,4 +96,4 @@ export default {
 		cooldown: 90,
 		statusesApplied: [STATUSES.LANCE_CHARGE],
 	},
-}
+})

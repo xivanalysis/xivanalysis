@@ -1,6 +1,9 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+// tslint:disable:no-magic-numbers
+
+export const RDM = ensureActions({
 	// -----
 	// Cooldowns
 	// -----
@@ -31,7 +34,7 @@ export default {
 		name: 'Contre Sixte',
 		icon: 'https://xivapi.com/i/003000/003217.png',
 		cooldown: 35,
-		potency: 300, //Note 2nd enemy and others takes 50% less
+		potency: 300, // Note 2nd enemy and others takes 50% less
 	},
 	DISPLACEMENT: {
 		id: 7515,
@@ -84,7 +87,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003225.png',
 		onGcd: true,
 		cooldown: 1.5,
-		potency: 210, //consumes 30 white, 30 black
+		potency: 210, // consumes 30 white, 30 black
 		combo: {
 			start: true,
 		},
@@ -107,7 +110,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003226.png',
 		onGcd: true,
 		cooldown: 1.5,
-		potency: 100, //consumes 25 white, 25 black
+		potency: 100, // consumes 25 white, 25 black
 		combo: {
 			from: 7527,
 			potency: 290,
@@ -132,7 +135,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003227.png',
 		onGcd: true,
 		cooldown: 2.2,
-		potency: 100, //consumes 25 white, 25 black
+		potency: 100, // consumes 25 white, 25 black
 		combo: {
 			from: 7528,
 			potency: 470,
@@ -152,7 +155,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003232.png',
 		onGcd: true,
 		cooldown: 2.2,
-		potency: 300, //consumes 10 white, 10 black
+		potency: 300, // consumes 10 white, 10 black
 	},
 	VERFLARE: {
 		id: 7525,
@@ -160,7 +163,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003223.png',
 		onGcd: true,
 		cooldown: 2.5,
-		potency: 600, //Gains 21 Black Mana, if Black is lower 100% Verfire ready
+		potency: 600, // Gains 21 Black Mana, if Black is lower 100% Verfire ready
 		combo: {
 			from: 7529,
 			potency: 600,
@@ -172,7 +175,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003224.png',
 		onGcd: true,
 		cooldown: 2.5,
-		potency: 600, //Gains 21 white, if White is lower 100% Verstone ready
+		potency: 600, // Gains 21 white, if White is lower 100% Verstone ready
 		combo: {
 			from: 7529,
 			potency: 600,
@@ -184,7 +187,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003234.png',
 		onGcd: true,
 		cooldown: 2.5,
-		potency: 700, //Gains 7 white and black
+		potency: 700, // Gains 7 white and black
 		combo: {
 			from: [7525, 7526],
 			potency: 700,
@@ -198,7 +201,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		potency: 180,
-		castTime: 2, //Increase White and Black by 3
+		castTime: 2, // Increase White and Black by 3
 		breaksCombo: true,
 	},
 	JOLT_II: {
@@ -208,7 +211,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 280, //Increase White and Black by 3
+		potency: 280, // Increase White and Black by 3
 		breaksCombo: true,
 	},
 	// IMPACT: {
@@ -228,7 +231,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 250, //Increase White and Black by 3
+		potency: 250, // Increase White and Black by 3
 		breaksCombo: true,
 	},
 	VERTHUNDER: {
@@ -238,7 +241,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 350, //Increase Black by 11
+		potency: 350, // Increase Black by 11
 		breaksCombo: true,
 	},
 	VERTHUNDER_II: {
@@ -248,7 +251,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 120, //Increase Black by 7
+		potency: 120, // Increase Black by 7
 		breaksCombo: true,
 	},
 	VERFIRE: {
@@ -258,7 +261,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 300, //Increase Black by 9
+		potency: 300, // Increase Black by 9
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -268,7 +271,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 350, //Increase White by 11
+		potency: 350, // Increase White by 11
 		breaksCombo: true,
 	},
 	VERAERO_II: {
@@ -278,7 +281,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 120, //Increase White by 7
+		potency: 120, // Increase White by 7
 		breaksCombo: true,
 	},
 	VERSTONE: {
@@ -288,7 +291,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 300, //Increase White by 9
+		potency: 300, // Increase White by 9
 		breaksCombo: true,
 	},
 	TETHER: {
@@ -307,7 +310,7 @@ export default {
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 5,
-		potency: 200, //Increase White and black by 3
+		potency: 200, // Increase White and black by 3
 		breaksCombo: true,
 	},
 	MOULINET: {
@@ -325,7 +328,7 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003228.png',
 		onGcd: true,
 		cooldown: 1.5,
-		potency: 200, //Costs 30 White and Black
+		potency: 200, // Costs 30 White and Black
 		breaksCombo: true,
 	},
 	VERCURE: {
@@ -347,4 +350,4 @@ export default {
 		castTime: 10,
 		breaksCombo: true,
 	},
-}
+})

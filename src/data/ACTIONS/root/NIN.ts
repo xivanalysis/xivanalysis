@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const NIN = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -273,4 +274,4 @@ export default {
 		cooldown: 90,
 		statusesApplied: [STATUSES.BUNSHIN],
 	},
-}
+})

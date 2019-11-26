@@ -1,7 +1,8 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
 // Putting all role actions in one file 'cus a lot of them are shared between multiple roles
-export default {
+export const ROLE = ensureActions({
 	// Tank Actions
 	RAMPART: {
 		id: 7531,
@@ -174,4 +175,4 @@ export default {
 		cooldown: 45,
 		statusesApplied: [STATUSES.TRUE_NORTH],
 	},
-}
+})

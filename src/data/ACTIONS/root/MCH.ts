@@ -1,6 +1,9 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+// tslint:disable:no-magic-numbers
+
+export const MCH = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -278,4 +281,4 @@ export default {
 		icon: 'https://xivapi.com/i/003000/003503.png',
 		onGcd: true,
 	},
-}
+})

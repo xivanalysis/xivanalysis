@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const WAR = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -154,4 +155,4 @@ export default {
 		cooldownGroup: 9,
 		statusesApplied: [STATUSES.NASCENT_FLASH, STATUSES.NASCENT_GLINT],
 	},
-}
+})

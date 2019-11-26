@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const ROG = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -109,4 +110,4 @@ export default {
 		cooldown: 120,
 		statusesApplied: [STATUSES.SHADE_SHIFT],
 	},
-}
+})

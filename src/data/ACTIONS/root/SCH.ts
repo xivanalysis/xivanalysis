@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const SCH = ensureActions({
 	// -----
 	// Player
 	// -----
@@ -276,4 +277,4 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002849.png',
 		pet: true,
 	},
-}
+})

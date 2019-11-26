@@ -1,6 +1,7 @@
 import STATUSES from 'data/STATUSES'
+import {ensureActions} from '../type'
 
-export default {
+export const PLD = ensureActions({
 	// -----
 	// Player GCDs
 	// -----
@@ -213,7 +214,7 @@ export default {
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_AFTER_HEAL],
+		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_PROC],
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -246,4 +247,4 @@ export default {
 		onGcd: false,
 		cooldown: 30,
 	},
-}
+})
