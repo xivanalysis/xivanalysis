@@ -1,14 +1,10 @@
-import {applyLayer, Layer} from 'data/layer'
+import {applyLayer} from 'data/layer'
+import {layers} from './layers'
 import {ActionRoot, ITEM_ID_OFFSET, root} from './root'
 import {Action} from './type'
 
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
-
-// TODO: This, properly
-const layers: Array<Layer<ActionRoot>> = [
-	{patch: '5.0', data: {ATTACK: {id: 4234234243}}},
-]
 
 // jank shit
 // something about only adding to root, layers need to do themselves?
