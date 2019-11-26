@@ -1,6 +1,7 @@
+import {ensureActions} from 'data/ACTIONS/type'
 import STATUSES from 'data/STATUSES'
 
-export default {
+export const BLM = ensureActions({
 	BLIZZARD_I: {
 		id: 142,
 		name: 'Blizzard',
@@ -196,28 +197,29 @@ export default {
 		cooldown: 60,
 		statusesApplied: [STATUSES.TRIPLECAST],
 	},
+	// TODO: These shouldn't be here, really - (re)move to Procs.js or similar.
 	FIRE_III_PROC: {
-		id: '152PROC',
+		id: -152,
 		name: 'Fire III',
 		icon: process.env.PUBLIC_URL + '/icon/action/f3p.png',
 		onGcd: true,
 	},
 	THUNDER_III_PROC: {
-		id: '153PROC',
+		id: -1530,
 		name: 'Thunder III',
 		icon: process.env.PUBLIC_URL + '/icon/action/t3p.png',
 		onGcd: true,
 	},
 	THUNDER_III_FALSE: {
-		id: '153FALSE',
+		id: -1531,
 		name: 'Thunder III',
 		icon: process.env.PUBLIC_URL + '/icon/action/t3f.png',
 		onGcd: true,
 	},
 	THUNDER_IV_PROC: {
-		id: '742PROC',
+		id: -742,
 		name: 'Thunder IV',
 		icon: process.env.PUBLIC_URL + '/icon/action/t4p.png',
 		onGcd: true,
 	},
-}
+})
