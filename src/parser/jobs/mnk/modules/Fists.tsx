@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import Color from 'color'
 import _ from 'lodash'
 import React from 'react'
 
@@ -29,9 +28,9 @@ export const FISTS = [
 
 const CHART_COLOURS = {
 	[FISTLESS]: '#888',
-	[STATUSES.FISTS_OF_EARTH.id]: Color(JOBS.MONK.colour),   // idk it matches
-	[STATUSES.FISTS_OF_FIRE.id]: Color(JOBS.WARRIOR.colour), // POWER
-	[STATUSES.FISTS_OF_WIND.id]: Color(JOBS.PALADIN.colour), // only good for utility
+	[STATUSES.FISTS_OF_EARTH.id]: JOBS.MONK.colour,   // idk it matches
+	[STATUSES.FISTS_OF_FIRE.id]: JOBS.WARRIOR.colour, // POWER
+	[STATUSES.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
 }
 
 const FIST_SEVERITY = {
@@ -217,14 +216,14 @@ export default class Fists extends Module {
 				.reduce((total, current) => total + (current.end || this.parser.fight.end_time) - current.start, 0)
 			return {
 				value,
-				color: CHART_COLOURS[id] as string,
+				color: CHART_COLOURS[id],
 				columns: [
 					this.getFistName(id),
 					this.parser.formatDuration(value),
 					this.getFistUptimePercent(id) + '%',
 				] as TODO,
 			}
-		})
+		}).filter(datum => datum.value > 0)
 
 		this.statistics.add(new PieChartStatistic({
 			headings: ['Fist', 'Uptime', '%'],

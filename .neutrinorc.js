@@ -80,8 +80,10 @@ module.exports = {
 				plugins: [
 					'macros',
 					'lodash',
-					'@lingui/babel-plugin-transform-js',
+					'@lingui/transform-js',
 					'./locale/babel-plugin-transform-react',
+					'@babel/proposal-optional-chaining',
+					'@babel/proposal-nullish-coalescing-operator',
 				],
 			},
 

@@ -23,8 +23,14 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2019-11-12'),
+		Changes: () => <>Updated Life of the Dragon to display active buffs during each window. Added a window delay note to help line up buffs.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2019-07-21'),
 		Changes: () => <>Updated Lance Charge/Dragon Sight window analysis logic, made some small text and data corrections.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
