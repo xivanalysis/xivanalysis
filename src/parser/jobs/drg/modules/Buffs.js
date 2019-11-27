@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Header, Message, Icon, Table, Button} from 'semantic-ui-react'
+import {Header, Message, Table, Button} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -353,53 +353,18 @@ export default class Buffs extends Module {
 		return count
 	}
 
-	_getMaxBuffData() {
-		const windows = this.invuln.getInvulns()
-		const fightLength = this.parser.fight.end_time - this.parser.fight.start_time
-
-		for (const actionId in STATUS_MAP) {
-			const action = getDataBy(ACTIONS, 'id', parseInt(actionId))
-			const status = getDataBy(STATUSES, 'id', STATUS_MAP[actionId])
-			const buffWindows = this._buffWindows[STATUS_MAP[actionId]]
-			const first = buffWindows.length > 0 ? buffWindows[0].start : this.parser.fight.start_time
-
-			buffWindows.maxCasts = this._computeMaxBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000, windows)
-			buffWindows.maxFull = this._computeMaxFullBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000, windows)
-			buffWindows.maxDrift = fightLength - (buffWindows.maxFull.count - 1) * action.cooldown * 1000
-		}
-	}
-
 	output() {
-		this._getMaxBuffData()
-
-		let totalLCDrift = 0
-		let totalDSDrift = 0
-		const lcRows = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map((window, idx) => {
-			const history = this._buffWindows[STATUSES.LANCE_CHARGE.id].history
-			const delay = idx > 0 ? window.start - history[idx - 1].start : 0
-			const drift = idx > 0 ? delay - ACTIONS.LANCE_CHARGE.cooldown * 1000 : 0
-			totalLCDrift += drift
-
+		const lcRows = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map((window) => {
 			return <Table.Row key={window.start}>
 				<Table.Cell>{this.createTimelineButton(window.start)}</Table.Cell>
-				<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
-				<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
 				<Table.Cell><strong>{this._formatGcdCount(window.gcdCount)} {window.partial ? '*' : ''}</strong></Table.Cell>
 				<Table.Cell><Rotation events={window.casts} /></Table.Cell>
 			</Table.Row>
 		})
 
-		const dsRows = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map((window, idx) => {
-			const history = this._buffWindows[STATUSES.RIGHT_EYE.id].history
-			const delay = idx > 0 ? window.start - history[idx - 1].start : 0
-			const drift =
-				idx > 0 ? delay - ACTIONS.DRAGON_SIGHT.cooldown * 1000 : 0
-			totalDSDrift += drift
-
+		const dsRows = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map((window) => {
 			return <Table.Row key={window.start}>
 				<Table.Cell>{this.createTimelineButton(window.start)}</Table.Cell>
-				<Table.Cell>{this.parser.formatDuration(delay)}</Table.Cell>
-				<Table.Cell>{this.parser.formatDuration(drift)}</Table.Cell>
 				<Table.Cell>{this._formatGcdCount(window.gcdCount)} {window.partial ? '*' : ''}</Table.Cell>
 				<Table.Cell><Rotation events={window.casts} /></Table.Cell>
 			</Table.Row>
@@ -416,24 +381,16 @@ export default class Buffs extends Module {
 					<Header size="small">
 						<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
 					</Header>
-					<Message info>
-						<Trans id="drg.buffs.accordion.lc-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.LANCE_CHARGE} /> <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].maxFull.count}</strong> full buff windows.</Trans>
-					</Message>
 					<Table>
 						<Table.Header>
 							<Table.Row key="lc-header">
 								<Table.HeaderCell><Trans id="drg.buffs.table.time">Time</Trans></Table.HeaderCell>
-								<Table.HeaderCell><Trans id="drg.buffs.table.cd">CD</Trans></Table.HeaderCell>
-								<Table.HeaderCell><Trans id="drg.buffs.table.drift">Drift</Trans></Table.HeaderCell>
 								<Table.HeaderCell><Trans id="drg.buffs.table.gcds">GCDs</Trans></Table.HeaderCell>
 								<Table.HeaderCell><Trans id="drg.buffs.table.casts">Casts</Trans></Table.HeaderCell>
 							</Table.Row>
 						</Table.Header>
 						{lcRows}
 					</Table>
-					<Message info>
-						<Trans id="drg.buffs.accordion.lc-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalLCDrift)}</strong>. In order to fit all full duration buffs, you needed a maximum drift of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.LANCE_CHARGE.id].maxDrift)}</strong>.</Trans>
-					</Message>
 				</>
 			)}
 			{dsRows.length > 0 && (
@@ -441,24 +398,16 @@ export default class Buffs extends Module {
 					<Header size="small">
 						<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
 					</Header>
-					<Message info>
-						<Trans id="drg.buffs.accordion.ds-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.DRAGON_SIGHT} /> <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].maxFull.count}</strong> full buff windows.</Trans>
-					</Message>
 					<Table>
 						<Table.Header>
 							<Table.Row key="ds-header">
 								<Table.HeaderCell><Trans id="drg.buffs.table.time">Time</Trans></Table.HeaderCell>
-								<Table.HeaderCell><Trans id="drg.buffs.table.cd">CD</Trans></Table.HeaderCell>
-								<Table.HeaderCell><Trans id="drg.buffs.table.drift">Drift</Trans></Table.HeaderCell>
 								<Table.HeaderCell><Trans id="drg.buffs.table.gcds">GCDs</Trans></Table.HeaderCell>
 								<Table.HeaderCell><Trans id="drg.buffs.table.casts">Casts</Trans></Table.HeaderCell>
 							</Table.Row>
 						</Table.Header>
 						{dsRows}
 					</Table>
-					<Message info>
-						<Trans id="drg.buffs.accordion.ds-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalDSDrift)}</strong>. In order to fit all full duration buffs, you needed a maximum drift of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.RIGHT_EYE.id].maxDrift)}</strong>.</Trans>
-					</Message>
 				</>
 			)}
 		</Fragment>
