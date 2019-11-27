@@ -114,7 +114,7 @@ export default class Buffs extends Module {
 			compact
 			icon="time"
 			size="small"
-			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time,	timestamp - this.parser.fight.start_time)}
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
 			content={this.parser.formatTimestamp(timestamp)}
 		/>
 	}
@@ -244,7 +244,7 @@ export default class Buffs extends Module {
 			for (const window of windows) {
 				// this time we skip if the duration runs into a window
 				// this should find the furthest window just in case there's some weird stuff happening
-				if (buffStart < window.start &&	((window.start < buffEnd && buffEnd < window.end) || buffEnd >= window.end)) {
+				if (buffStart < window.start && ((window.start < buffEnd && buffEnd < window.end) || buffEnd >= window.end)) {
 					currentTime = window.end
 				}
 			}
@@ -361,10 +361,10 @@ export default class Buffs extends Module {
 			const action = getDataBy(ACTIONS, 'id', parseInt(actionId))
 			const status = getDataBy(STATUSES, 'id', STATUS_MAP[actionId])
 			const buffWindows = this._buffWindows[STATUS_MAP[actionId]]
-			const first =	buffWindows.length > 0 ? buffWindows[0].start	: this.parser.fight.start_time
+			const first = buffWindows.length > 0 ? buffWindows[0].start : this.parser.fight.start_time
 
-			buffWindows.maxCasts = this._computeMaxBuffs(first, this.parser.fight.end_time,	action.cooldown * 1000,	status.duration * 1000, windows)
-			buffWindows.maxFull = this._computeMaxFullBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000,	windows)
+			buffWindows.maxCasts = this._computeMaxBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000, windows)
+			buffWindows.maxFull = this._computeMaxFullBuffs(first, this.parser.fight.end_time, action.cooldown * 1000, status.duration * 1000, windows)
 			buffWindows.maxDrift = fightLength - (buffWindows.maxFull.count - 1) * action.cooldown * 1000
 		}
 	}
@@ -377,7 +377,7 @@ export default class Buffs extends Module {
 		const lcRows = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map((window, idx) => {
 			const history = this._buffWindows[STATUSES.LANCE_CHARGE.id].history
 			const delay = idx > 0 ? window.start - history[idx - 1].start : 0
-			const drift =	idx > 0 ? delay - ACTIONS.LANCE_CHARGE.cooldown * 1000 : 0
+			const drift = idx > 0 ? delay - ACTIONS.LANCE_CHARGE.cooldown * 1000 : 0
 			totalLCDrift += drift
 
 			return <Table.Row key={window.start}>
@@ -408,7 +408,7 @@ export default class Buffs extends Module {
 		return <Fragment>
 			<Message>
 				<Trans id="drg.buffs.accordion.message">
-					Each of your <ActionLink {...ACTIONS.LANCE_CHARGE} /> and <ActionLink {...ACTIONS.DRAGON_SIGHT} /> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation,	you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. These buffs should be used as frequently as possible at the proper spot in the GCD rotation, and will ideally not clip into boss invulnerability	windows. Each buff window below indicates how many GCDs it contained and what those GCDs were.
+					Each of your <ActionLink {...ACTIONS.LANCE_CHARGE} /> and <ActionLink {...ACTIONS.DRAGON_SIGHT} /> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. These buffs should be used as frequently as possible at the proper spot in the GCD rotation, and will ideally not clip into boss invulnerability windows. Each buff window below indicates how many GCDs it contained and what those GCDs were.
 				</Trans>
 			</Message>
 			{lcRows.length > 0 && (
@@ -417,7 +417,7 @@ export default class Buffs extends Module {
 						<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
 					</Header>
 					<Message info>
-						<Trans id="drg.buffs.accordion.lc-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.LANCE_CHARGE} />	<strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].maxFull.count}</strong> full buff windows.</Trans>
+						<Trans id="drg.buffs.accordion.lc-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.LANCE_CHARGE} /> <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.LANCE_CHARGE.id].maxFull.count}</strong> full buff windows.</Trans>
 					</Message>
 					<Table>
 						<Table.Header>
@@ -432,7 +432,7 @@ export default class Buffs extends Module {
 						{lcRows}
 					</Table>
 					<Message info>
-						<Trans id="drg.buffs.accordion.lc-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalLCDrift)}</strong>. In	order to fit all full duration buffs, you needed a maximum drift	of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.LANCE_CHARGE.id].maxDrift)}</strong>.</Trans>
+						<Trans id="drg.buffs.accordion.lc-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalLCDrift)}</strong>. In order to fit all full duration buffs, you needed a maximum drift of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.LANCE_CHARGE.id].maxDrift)}</strong>.</Trans>
 					</Message>
 				</>
 			)}
@@ -442,7 +442,7 @@ export default class Buffs extends Module {
 						<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
 					</Header>
 					<Message info>
-						<Trans id="drg.buffs.accordion.ds-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.DRAGON_SIGHT} /> <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].maxFull.count}</strong>	full buff windows.</Trans>
+						<Trans id="drg.buffs.accordion.ds-count"><Icon name={'info'} /> You used <ActionLink {...ACTIONS.DRAGON_SIGHT} /> <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].history.length}</strong> times. In this fight, you could fit <strong>{this._buffWindows[STATUSES.RIGHT_EYE.id].maxFull.count}</strong> full buff windows.</Trans>
 					</Message>
 					<Table>
 						<Table.Header>
@@ -457,7 +457,7 @@ export default class Buffs extends Module {
 						{dsRows}
 					</Table>
 					<Message info>
-						<Trans id="drg.buffs.accordion.ds-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalDSDrift)}</strong>. In	order to fit all full duration buffs, you needed a maximum drift	of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.RIGHT_EYE.id].maxDrift)}</strong>.</Trans>
+						<Trans id="drg.buffs.accordion.ds-footer"><Icon name={'clock'} /> Your casts drifted by <strong>{this.parser.formatDuration(totalDSDrift)}</strong>. In order to fit all full duration buffs, you needed a maximum drift of <strong>{this.parser.formatDuration(this._buffWindows[STATUSES.RIGHT_EYE.id].maxDrift)}</strong>.</Trans>
 					</Message>
 				</>
 			)}
