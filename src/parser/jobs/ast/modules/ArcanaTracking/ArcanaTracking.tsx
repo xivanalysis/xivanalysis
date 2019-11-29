@@ -23,6 +23,10 @@ const CARD_ACTIONS = [
 	ACTIONS.DIVINATION.id,
 	...PLAY,
 ]
+const CROWN_PLAYS = [
+	ACTIONS.LORD_OF_CROWNS.id,
+	ACTIONS.LADY_OF_CROWNS.id,
+]
 
 const PLAY_TO_STATUS_LOOKUP = _.zipObject(PLAY, DRAWN_ARCANA)
 const STATUS_TO_DRAWN_LOOKUP = _.zipObject(ARCANA_STATUSES, DRAWN_ARCANA)
@@ -85,6 +89,8 @@ export default class ArcanaTracking extends Module {
 		sealState: CLEAN_SEAL_STATE,
 		sleeveState: SleeveType.NOTHING,
 	}]
+
+	private lastDrawnBuff: BuffEvent | undefined = undefined
 	private pullStateInitialized = false
 	private pullIndex = 0
 
@@ -96,6 +102,7 @@ export default class ArcanaTracking extends Module {
 		this.addHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
 		this.addHook('removebuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
 
+		this.addHook('applybuff', {abilityId: DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
 		this.addHook('removebuff', {abilityId: DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
 		this.addHook('death', {to: 'player'}, this.onDeath)
 	}
@@ -200,6 +207,14 @@ export default class ArcanaTracking extends Module {
 
 		})
 
+	}
+
+	// Just saves a class var for the last drawn status buff event for reference, to help minor arcana plays
+	private onDrawnStatus(event: BuffEvent) {
+		if (!DRAWN_ARCANA.includes(event.ability.guid)) {
+			return
+		}
+		this.lastDrawnBuff = event
 	}
 
 	/**
@@ -386,8 +401,9 @@ export default class ArcanaTracking extends Module {
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
 		// 2. If they used Draw while holding a Minor Arcana or Draw
-		if ([ACTIONS.UNDRAW.id, ...PLAY, ACTIONS.MINOR_ARCANA.id, ACTIONS.REDRAW.id].includes(latestActionId)
-			|| (ACTIONS.DRAW.id === latestActionId && DRAWN_ARCANA.includes(lastLog.drawState))) {
+		if ([ACTIONS.UNDRAW.id, ...PLAY, ACTIONS.REDRAW.id].includes(latestActionId)
+			|| (ACTIONS.DRAW.id === latestActionId && DRAWN_ARCANA.includes(lastLog.drawState))
+			|| (this.parser.patch.before('5.1') && [ACTIONS.MINOR_ARCANA.id].includes(latestActionId))) {
 			searchLatest = false
 		}
 
@@ -407,12 +423,19 @@ export default class ArcanaTracking extends Module {
 
 			// Modify log, they were holding onto this card since index
 			// Differenciate depending on searchLatest
+			let arcanaStatus: number
+			if (!this.parser.patch.before('5.1') && this.lastDrawnBuff && CROWN_PLAYS.includes(cardActionId)) {
+				arcanaStatus = this.lastDrawnBuff.ability.guid
+			} else {
+				arcanaStatus = this.arcanaActionToStatus(cardActionId)
+			}
+
 			_.forEachRight(this.cardStateLog,
 				(stateItem, index) => {
 					if (searchLatest && index >= lastIndex) {
-							stateItem.drawState = this.arcanaActionToStatus(cardActionId)
+							stateItem.drawState = arcanaStatus
 					} else if (index >= lastIndex && index !== this.cardStateLog.length - 1) {
-							stateItem.drawState = this.arcanaActionToStatus(cardActionId)
+							stateItem.drawState = arcanaStatus
 					}
 				})
 		}

@@ -200,7 +200,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderSpreadState(artifact: CardLog) {
-		const drawnArcana = getDataBy(STATUSES, 'id', artifact.drawState)
+		const drawnArcana = artifact.drawState > 0 ? getDataBy(STATUSES, 'id', artifact.drawState) : undefined
 
 		return <Table.Cell>
 			<span style={{marginRight: 10, marginLeft: 0}}>

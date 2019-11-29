@@ -76,7 +76,7 @@ export const AST = ensureStatuses({
 		duration: 20,
 	},
 
-	COLLECTIVE_UNCONSCIOUS_SHIELD: {
+	COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION: {
 		id: 849,
 		name: 'Collective Unconscious (Mitigation)',
 		icon: 'https://xivapi.com/i/013000/013226.png',
@@ -90,9 +90,9 @@ export const AST = ensureStatuses({
 		duration: 18,
 	},
 
-	WHEEL_OF_FORTUNE: {
+	WHEEL_OF_FORTUNE_DIURNAL: {
 		id: 956,
-		name: 'Wheel Of Fortune',
+		name: 'Wheel Of Fortune (Diurnal)',
 		icon: 'https://xivapi.com/i/013000/013225.png',
 		duration: 15,
 	},
