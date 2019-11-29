@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Action} from 'data/ACTIONS/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
