@@ -78,15 +78,16 @@ export default class Kassatsu extends Module {
 			}))
 		}
 
-		if (this._kassatsuUses[ACTIONS.DOTON.id] > 0) {
+		const generalBads = this._kassatsuUses[ACTIONS.FUMA_SHURIKEN.id] + this._kassatsuUses[ACTIONS.RAITON.id] + this._kassatsuUses[ACTIONS.DOTON.id]
+		if (generalBads > 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DOTON.icon,
-				content: <Trans id="nin.kassatsu.suggestions.doton.content">
-					Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/> even in AoE situations, as it has a lower potency than <ActionLink {...ACTIONS.GOKA_MEKKYAKU}/> even if every tick hits.
+				icon: ACTIONS.FUMA_SHURIKEN.icon,
+				content: <Trans id="nin.kassatsu.suggestions.generalbads.content">
+					Avoid using <ActionLink {...ACTIONS.FUMA_SHURIKEN}/>, <ActionLink {...ACTIONS.RAITON}/>, and <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.KASSATSU}/>. For raw damage, <ActionLink {...ACTIONS.HYOSHO_RANRYU}/> and <ActionLink {...ACTIONS.GOKA_MEKKYAKU}/> should always be used in single-target and AoE situations respectively.
 				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.kassatsu.suggestions.doton.why">
-					You cast Doton <Plural value={this._kassatsuUses[ACTIONS.DOTON.id]} one="# time" other="# times"/> under Kassatsu.
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="nin.kassatsu.suggestions.generalbads.why">
+					You cast standard damaging Ninjutsu <Plural value={generalBads} one="# time" other="# times"/> under Kassatsu.
 				</Trans>,
 			}))
 		}

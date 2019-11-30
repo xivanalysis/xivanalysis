@@ -43,14 +43,12 @@ export default class Statuses extends Module {
 		})
 
 		// Map statuses to actions
-		Object.values(ACTIONS).forEach(ac => {
-			if (ac.statusesApplied) {
-				ac.statusesApplied.forEach(st => {
-					if (st) {
-						this._statusToActionMap[st.id] = ac
-					}
-				})
-			}
+		Object.values(ACTIONS).forEach(action => {
+			if (!action.statusesApplied) { return }
+			action.statusesApplied.forEach(statusKey => {
+				const status = STATUSES[statusKey]
+				this._statusToActionMap[status.id] = action
+			})
 		})
 	}
 

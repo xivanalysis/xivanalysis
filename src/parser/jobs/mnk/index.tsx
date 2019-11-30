@@ -29,10 +29,10 @@ export default new Meta({
 			</Message.Content>
 		</Message>
 	</>,
-	// supportedPatches: {
-	// 	from: '5.0',
-	// 	to: '5.08',
-	// },
+	supportedPatches: {
+		from: '5.0',
+		to: '5.1',
+	},
 
 	contributors: [
 		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
@@ -40,11 +40,32 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2019-10-26'),
+			date: new Date('2019-11-20'),
+			Changes: () => <>
+				Mark MNK supported for Shadowbringers.
+			</>,
 			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
+			date: new Date('2019-11-16'),
+			Changes: () => <>
+				Added support for Riddle of Fire window analysis.
+			</>,
+			contributors: [CONTRIBUTORS.LHEA, CONTRIBUTORS.ACCHAN],
+		},
+		{
+			date: new Date('2019-11-16'),
+			Changes: () => <>
+				Updated AoE module to handle new skills and switch to core AoE module and lose my awesome variable names.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
+			date: new Date('2019-10-26'),
 			Changes: () => <>
 				Migrated to the core Gauge module.
 			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
 		},
 		{
 			date: new Date('2019-10-15'),
