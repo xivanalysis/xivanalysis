@@ -8,6 +8,7 @@ const FIRSTUSEOFFSET_MEIKYO = 15900
 const FIRSTUSEOFFSET_TSUBAME = 24620
 // Time that samurais have deemed ok for a OGCD to be down
 const DEFAULT_ALLOWED_DOWNTIME = 2180
+const MEIKYO_ALLOWED_DOWNTIME = 4360
 
 export default class OGCDDowntime extends CooldownDowntime {
 	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
@@ -15,6 +16,7 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [ACTIONS.MEIKYO_SHISUI],
 			firstUseOffset: FIRSTUSEOFFSET_MEIKYO,
+			allowedAverageDowntime: MEIKYO_ALLOWED_DOWNTIME,
 		},
 		{
 			cooldowns: [
@@ -24,5 +26,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 			],
 			firstUseOffset: FIRSTUSEOFFSET_TSUBAME,
 		},
+
 	]
 }
