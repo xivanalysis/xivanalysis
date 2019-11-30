@@ -11,6 +11,7 @@ export default class PrecastStatus extends Module {
 		// Forcing action to run first, cus we want to always splice in before it.
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
+	static debug = false
 
 	_combatantStatuses = {}
 	_combatantActions = []
@@ -24,6 +25,10 @@ export default class PrecastStatus extends Module {
 			const targetId = event.targetID
 
 			const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
+			if (!statusInfo) {
+				// No valid status data, skip to next event
+				continue
+			}
 
 			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
 
@@ -53,11 +58,11 @@ export default class PrecastStatus extends Module {
 			}
 		}
 
-		const synthesizedEvents = this._actionsToSynth.concat(this._statusesToSynth)
-		return synthesizedEvents.concat(events)
+		return [...this._actionsToSynth, ...this._statusesToSynth, ...events]
 	}
 
 	fabricateStatusEvent(event, statusInfo) {
+		this.debug(`Fabricating applybuff event for status ${statusInfo.name}`)
 		// Fab an event and splice it in at the start of the fight
 		this._statusesToSynth.push({
 			// Can inherit most of the event data from the current one
@@ -67,6 +72,19 @@ export default class PrecastStatus extends Module {
 			type: 'applybuff',
 		})
 
+		if (statusInfo.stacksApplied > 0) {
+			this.debug(`Fabricating applybuff event for status ${statusInfo.name} with ${statusInfo.stacksApplied} stacks`)
+			// Status applies multiple stacks - fab an applybuffstack event
+			this._statusesToSynth.push({
+				// Can inherit most of the event data from the current one
+				...event,
+				// Override a few vals
+				timestamp: this._startTime - 1,
+				type: 'applybuffstack',
+				stack: statusInfo.stacksApplied,
+			})
+		}
+
 		// Determine if this buff comes from a known action, fab a cast event
 		const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusInfo)
 		if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
@@ -75,6 +93,7 @@ export default class PrecastStatus extends Module {
 	}
 
 	fabricateActionEvent(event, actionInfo) {
+		this.debug(`Fabricating cast event for action ${actionInfo.name}`)
 		this._actionsToSynth.push({
 			...event,
 			ability: {
