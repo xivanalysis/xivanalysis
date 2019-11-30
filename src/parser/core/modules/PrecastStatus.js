@@ -11,67 +11,109 @@ export default class PrecastStatus extends Module {
 		// Forcing action to run first, cus we want to always splice in before it.
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
+	static debug = false
 
 	_combatantStatuses = {}
 	_combatantActions = []
+	_statusesToSynth = []
+	_actionsToSynth = []
+	_startTime = this.parser.fight.start_time
 
 	normalise(events) {
-		const startTime = this.parser.fight.start_time
-
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 			const targetId = event.targetID
 
-			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
-
-			if (event.type === 'applybuff') {
-				this._combatantStatuses[targetId].push(event.ability.guid)
+			const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
+			if (!statusInfo) {
+				// No valid status data, skip to next event
+				continue
 			}
 
-			if (['removebuff', 'applybuffstack', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
-				const statusId = event.ability.guid
+			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
 
+			if (event.type === 'applybuff' && !statusInfo.hasOwnProperty('stacksApplied')) {
+				// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
+				this.markStatusAsTracked(statusInfo.id, targetId)
+			}
+
+			if (event.type === 'applybuffstack' && statusInfo.hasOwnProperty('stacksApplied')) {
+				// Determine if this is applying fewer than the max stacks
+				if (event.stack < statusInfo.stacksApplied) {
+					// Synth the precast status event if this applied fewer than max stacks
+					this.fabricateStatusEvent(event, statusInfo)
+				}
+
+				this.markStatusAsTracked(statusInfo.id, targetId)
+			}
+
+			if (['removebuff', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
 				// If it's already been applied, we don't have to worry about it
-				if (this._combatantStatuses[targetId].includes(statusId)) {
+				if (this._combatantStatuses[targetId].includes(statusInfo.id)) {
 					continue
 				}
 
-				// Fab an event and splice it in at the start of the fight
-				events.splice(0, 0, {
-					// Can inherit most of the event data from the current one
-					...event,
-					// Override a few vals
-					timestamp: startTime - 1,
-					type: 'applybuff',
-				})
-
-				// Determine if this buff comes from a known action, fab a cast event
-				const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
-				if (statusInfo) {
-					const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusInfo)
-					// Action found - push it into _combatantActions array if not already there and synthesize a cast event
-					// If action has already been synthesized (and pushed into _combatantActions array), do nothing
-					if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
-						this._combatantActions.push(actionInfo.id)
-
-						events.splice(0, 0, {
-							...event,
-							ability: {
-								...event.ability,
-								name: actionInfo.name,
-								abilityIcon: actionInfo.icon.replace('https://xivapi.com/i', '').replace('/', '-'),
-								guid: actionInfo.id,
-							},
-							timestamp: startTime - 2,
-							type: 'cast',
-						})
-					}
-				}
-
-				this._combatantStatuses[targetId].push(statusId)
+				this.fabricateStatusEvent(event, statusInfo)
+				this.markStatusAsTracked(statusInfo.id, targetId)
 			}
 		}
 
-		return events
+		return [...this._actionsToSynth, ...this._statusesToSynth, ...events]
+	}
+
+	fabricateStatusEvent(event, statusInfo) {
+		this.debug(`Fabricating applybuff event for status ${statusInfo.name}`)
+		// Fab an event and splice it in at the start of the fight
+		this._statusesToSynth.push({
+			// Can inherit most of the event data from the current one
+			...event,
+			// Override a few vals
+			timestamp: this._startTime - 1,
+			type: 'applybuff',
+		})
+
+		if (statusInfo.stacksApplied > 0) {
+			this.debug(`Fabricating applybuff event for status ${statusInfo.name} with ${statusInfo.stacksApplied} stacks`)
+			// Status applies multiple stacks - fab an applybuffstack event
+			this._statusesToSynth.push({
+				// Can inherit most of the event data from the current one
+				...event,
+				// Override a few vals
+				timestamp: this._startTime - 1,
+				type: 'applybuffstack',
+				stack: statusInfo.stacksApplied,
+			})
+		}
+
+		// Determine if this buff comes from a known action, fab a cast event
+		const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusInfo)
+		if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
+			this.fabricateActionEvent(event, actionInfo)
+		}
+	}
+
+	fabricateActionEvent(event, actionInfo) {
+		this.debug(`Fabricating cast event for action ${actionInfo.name}`)
+		this._actionsToSynth.push({
+			...event,
+			ability: {
+				...event.ability,
+				name: actionInfo.name,
+				abilityIcon: actionInfo.icon.replace('https://xivapi.com/i', '').replace('/', '-'),
+				guid: actionInfo.id,
+			},
+			timestamp: this._startTime - 2,
+			type: 'cast',
+		})
+
+		this.markActionAsTracked(actionInfo.id)
+	}
+
+	markStatusAsTracked(statusId, targetId) {
+		this._combatantStatuses[targetId].push(statusId)
+	}
+
+	markActionAsTracked(actionId) {
+		this._combatantActions.push(actionId)
 	}
 }
