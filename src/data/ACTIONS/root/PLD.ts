@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const PLD = ensureActions({
@@ -85,7 +84,7 @@ export const PLD = ensureActions({
 			potency: 390,
 			end: true,
 		},
-		statusesApplied: [STATUSES.GORING_BLADE],
+		statusesApplied: ['GORING_BLADE'],
 	},
 	CLEMENCY: {
 		id: 3541,
@@ -106,7 +105,7 @@ export const PLD = ensureActions({
 			potency: 550,
 			end: true,
 		},
-		statusesApplied: [STATUSES.SWORD_OATH],
+		statusesApplied: ['SWORD_OATH'],
 	},
 	HOLY_SPIRIT: {
 		id: 7384,
@@ -152,7 +151,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000166.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.FIGHT_OR_FLIGHT],
+		statusesApplied: ['FIGHT_OR_FLIGHT'],
 	},
 	IRON_WILL: {
 		id: 28,
@@ -167,7 +166,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
 		cooldown: 180,
-		statusesApplied: [STATUSES.SENTINEL],
+		statusesApplied: ['SENTINEL'],
 	},
 	CIRCLE_OF_SCORN: {
 		id: 23,
@@ -175,7 +174,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000161.png',
 		onGcd: false,
 		cooldown: 25,
-		statusesApplied: [STATUSES.CIRCLE_OF_SCORN],
+		statusesApplied: ['CIRCLE_OF_SCORN'],
 	},
 	COVER: {
 		id: 27,
@@ -183,7 +182,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002501.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.COVER, STATUSES.COVERED],
+		statusesApplied: ['COVER', 'COVERED'],
 	},
 	SPIRITS_WITHIN: {
 		id: 29,
@@ -198,7 +197,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002502.png',
 		onGcd: false,
 		cooldown: 420,
-		statusesApplied: [STATUSES.HALLOWED_GROUND],
+		statusesApplied: ['HALLOWED_GROUND'],
 	},
 	SHELTRON: {
 		id: 3542,
@@ -206,7 +205,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002510.png',
 		onGcd: false,
 		cooldown: 5,
-		statusesApplied: [STATUSES.SHELTRON],
+		statusesApplied: ['SHELTRON'],
 	},
 	DIVINE_VEIL: {
 		id: 3540,
@@ -214,7 +213,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002508.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.DIVINE_VEIL, STATUSES.DIVINE_VEIL_PROC],
+		statusesApplied: ['DIVINE_VEIL', 'DIVINE_VEIL_PROC'],
 	},
 	INTERVENTION: {
 		id: 7382,
@@ -222,7 +221,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002512.png',
 		onGcd: false,
 		cooldown: 10,
-		statusesApplied: [STATUSES.INTERVENTION],
+		statusesApplied: ['INTERVENTION'],
 	},
 	REQUIESCAT: {
 		id: 7383,
@@ -230,7 +229,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002513.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.REQUIESCAT],
+		statusesApplied: ['REQUIESCAT'],
 	},
 	PASSAGE_OF_ARMS: {
 		id: 7385,
@@ -238,7 +237,7 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002515.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.PASSAGE_OF_ARMS],
+		statusesApplied: ['PASSAGE_OF_ARMS'],
 	},
 	INTERVENE: {
 		id: 16461,

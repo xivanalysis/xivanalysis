@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // Samurai Actions
@@ -34,7 +33,7 @@ export const SAM = ensureActions({
 			from: 7477,
 			potency: 320,
 		},
-		statusesApplied: [STATUSES.JINPU],
+		statusesApplied: ['JINPU'],
 	},
 
 	ENPI: {
@@ -55,7 +54,7 @@ export const SAM = ensureActions({
 			from: 7477,
 			potency: 320,
 		},
-		statusesApplied: [STATUSES.SHIFU],
+		statusesApplied: ['SHIFU'],
 	},
 
 	FUGA: {
@@ -82,7 +81,7 @@ export const SAM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003160.png',
 		onGcd: true,
 		castTime: 1.3,
-		statusesApplied: [STATUSES.HIGANBANA],
+		statusesApplied: ['HIGANBANA'],
 	},
 
 	GEKKO: {
@@ -175,7 +174,7 @@ export const SAM = ensureActions({
 		name: 'Third Eye',
 		icon: 'https://xivapi.com/i/003000/003153.png',
 		cooldown: 15,
-		statusesApplied: [STATUSES.THIRD_EYE, STATUSES.EYES_OPEN],
+		statusesApplied: ['THIRD_EYE', 'EYES_OPEN'],
 	},
 
 	MEIKYO_SHISUI: {
@@ -183,7 +182,7 @@ export const SAM = ensureActions({
 		name: 'Meikyo Shisui',
 		icon: 'https://xivapi.com/i/003000/003167.png',
 		cooldown: 55,
-		statusesApplied: [STATUSES.MEIKYO_SHISUI],
+		statusesApplied: ['MEIKYO_SHISUI'],
 	},
 
 	HISSATSU_KAITEN: {
@@ -191,7 +190,7 @@ export const SAM = ensureActions({
 		name: 'Hissatsu: Kaiten',
 		icon: 'https://xivapi.com/i/003000/003168.png',
 		cooldown: 1,
-		statusesApplied: [STATUSES.KAITEN],
+		statusesApplied: ['KAITEN'],
 	},
 
 	HISSATSU_GYOTEN: {
@@ -206,7 +205,7 @@ export const SAM = ensureActions({
 		name: 'Hissatsu: Yaten',
 		icon: 'https://xivapi.com/i/003000/003170.png',
 		cooldown: 10,
-		statusesApplied: [STATUSES.ENHANCED_ENPI],
+		statusesApplied: ['ENHANCED_ENPI'],
 	},
 
 	MERCIFUL_EYES: {
@@ -224,7 +223,7 @@ export const SAM = ensureActions({
 		onGcd: true,
 		cooldown: 60,
 		gcdRecast: 2.5,
-		statusesApplied: [STATUSES.MEDITATE, STATUSES.MEDITATION],
+		statusesApplied: ['MEDITATE', 'MEDITATION'],
 	},
 
 	HISSATSU_SHINTEN: {
@@ -295,7 +294,7 @@ export const SAM = ensureActions({
 		cooldown: 60,
 		gcdRecast: 2.5,
 		cooldownGroup: SAM_COOLDOWN_GROUP.TSUBAME,
-		statusesApplied: [STATUSES.HIGANBANA],
+		statusesApplied: ['HIGANBANA'],
 	},
 
 	KAESHI_GOKEN: {

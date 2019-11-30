@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // Split between MRD and WAR
@@ -71,7 +70,7 @@ export const MRD = ensureActions({
 			potency: 380,
 			end: true,
 		},
-		statusesApplied: [STATUSES.STORMS_EYE],
+		statusesApplied: ['STORMS_EYE'],
 	},
 
 	// -----
@@ -84,7 +83,7 @@ export const MRD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000263.png',
 		cooldown: 90,
 		onGcd: false,
-		statusesApplied: [STATUSES.THRILL_OF_BATTLE],
+		statusesApplied: ['THRILL_OF_BATTLE'],
 	},
 
 	HOLMGANG: {
@@ -93,7 +92,7 @@ export const MRD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000266.png',
 		cooldown: 240,
 		onGcd: false,
-		statusesApplied: [STATUSES.HOLMGANG],
+		statusesApplied: ['HOLMGANG'],
 	},
 
 	VENGEANCE: {
@@ -102,6 +101,6 @@ export const MRD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000267.png',
 		cooldown: 120,
 		onGcd: false,
-		statusesApplied: [STATUSES.VENGEANCE],
+		statusesApplied: ['VENGEANCE'],
 	},
 })

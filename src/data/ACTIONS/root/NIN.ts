@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const NIN = ensureActions({
@@ -213,7 +212,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002906.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.KASSATSU],
+		statusesApplied: ['KASSATSU'],
 	},
 
 	DREAM_WITHIN_A_DREAM: {
@@ -222,7 +221,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002918.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.ASSASSINATE_READY],
+		statusesApplied: ['ASSASSINATE_READY'],
 	},
 
 	HELLFROG_MEDIUM: {
@@ -247,7 +246,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
 		cooldown: 100,
-		statusesApplied: [STATUSES.TEN_CHI_JIN],
+		statusesApplied: ['TEN_CHI_JIN'],
 	},
 
 	SHUKUCHI: {
@@ -272,6 +271,6 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002927.png',
 		onGcd: false,
 		cooldown: 90,
-		statusesApplied: [STATUSES.BUNSHIN],
+		statusesApplied: ['BUNSHIN'],
 	},
 })

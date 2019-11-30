@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import PETS from '../../PETS'
 import {ensureActions} from '../type'
 
@@ -90,7 +89,7 @@ export const SMN = ensureActions({
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
 		cooldown: 180,
-		statusesApplied: [STATUSES.DEVOTION],
+		statusesApplied: ['DEVOTION'],
 	},
 
 	BIO_III: {
@@ -98,7 +97,7 @@ export const SMN = ensureActions({
 		name: 'Bio III',
 		icon: 'https://xivapi.com/i/002000/002689.png',
 		onGcd: true,
-		statusesApplied: [STATUSES.BIO_III],
+		statusesApplied: ['BIO_III'],
 	},
 
 	MIASMA_III: {
@@ -107,7 +106,7 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002690.png',
 		onGcd: true,
 		castTime: 2.5,
-		statusesApplied: [STATUSES.MIASMA_III],
+		statusesApplied: ['MIASMA_III'],
 	},
 
 	RUIN_IV: {
@@ -158,7 +157,7 @@ export const SMN = ensureActions({
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
 		cooldown: 10,
-		statusesApplied: [STATUSES.EVERLASTING_FLIGHT],
+		statusesApplied: ['EVERLASTING_FLIGHT'],
 	},
 
 	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
@@ -362,7 +361,7 @@ export const SMN = ensureActions({
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/002000/002688.png',
 		// No pet reference, can't actually determine anything from it
-		statusesApplied: [STATUSES.DEVOTION],
+		statusesApplied: ['DEVOTION'],
 	},
 
 	// Demi-bahamut

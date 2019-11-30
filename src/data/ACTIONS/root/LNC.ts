@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
@@ -61,7 +60,7 @@ export const LNC = ensureActions({
 			from: [75, 16479],
 			potency: 320,
 		},
-		statusesApplied: [STATUSES.DISEMBOWEL],
+		statusesApplied: ['DISEMBOWEL'],
 	},
 
 	CHAOS_THRUST: {
@@ -75,7 +74,7 @@ export const LNC = ensureActions({
 			potency: 330,
 			end: true,
 		},
-		statusesApplied: [STATUSES.CHAOS_THRUST],
+		statusesApplied: ['CHAOS_THRUST'],
 	},
 
 	// -----
@@ -86,7 +85,7 @@ export const LNC = ensureActions({
 		name: 'Life Surge',
 		icon: 'https://xivapi.com/i/000000/000304.png',
 		cooldown: 45,
-		statusesApplied: [STATUSES.LIFE_SURGE],
+		statusesApplied: ['LIFE_SURGE'],
 	},
 
 	LANCE_CHARGE: {
@@ -94,6 +93,6 @@ export const LNC = ensureActions({
 		name: 'Lance Charge',
 		icon: 'https://xivapi.com/i/000000/000309.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.LANCE_CHARGE],
+		statusesApplied: ['LANCE_CHARGE'],
 	},
 })

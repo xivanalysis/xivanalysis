@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const DNC = ensureActions({
@@ -113,7 +112,7 @@ export const DNC = ensureActions({
 		onGcd: true,
 		cooldown: 30,
 		gcdRecast: 1.5,
-		statusesApplied: [STATUSES.STANDARD_STEP],
+		statusesApplied: ['STANDARD_STEP'],
 	},
 	TECHNICAL_STEP: {
 		id: 15998,
@@ -122,7 +121,7 @@ export const DNC = ensureActions({
 		onGcd: true,
 		cooldown: 120,
 		gcdRecast: 1.5,
-		statusesApplied: [STATUSES.TECHNICAL_STEP],
+		statusesApplied: ['TECHNICAL_STEP'],
 	},
 	EMBOITE: {
 		id: 15999,
@@ -213,7 +212,7 @@ export const DNC = ensureActions({
 		name: 'Devilment',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.DEVILMENT],
+		statusesApplied: ['DEVILMENT'],
 	},
 	SHIELD_SAMBA: {
 		id: 16012,
@@ -221,7 +220,7 @@ export const DNC = ensureActions({
 		name: 'Shield Samba',
 		onGcd: false,
 		cooldown: 180,
-		statusesApplied: [STATUSES.SHIELD_SAMBA],
+		statusesApplied: ['SHIELD_SAMBA'],
 	},
 	FLOURISH: {
 		id: 16013,
@@ -229,7 +228,13 @@ export const DNC = ensureActions({
 		name: 'Flourish',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.FLOURISHING_CASCADE, STATUSES.FLOURISHING_FOUNTAIN, STATUSES.FLOURISHING_WINDMILL, STATUSES.FLOURISHING_SHOWER, STATUSES.FLOURISHING_FAN_DANCE],
+		statusesApplied: [
+			'FLOURISHING_CASCADE',
+			'FLOURISHING_FOUNTAIN',
+			'FLOURISHING_WINDMILL',
+			'FLOURISHING_SHOWER',
+			'FLOURISHING_FAN_DANCE',
+		],
 	},
 	IMPROVISATION: {
 		id: 16014,
@@ -237,7 +242,7 @@ export const DNC = ensureActions({
 		name: 'Improvisation',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.IMPROVISATION, STATUSES.IMPROVISATION_HEALING],
+		statusesApplied: ['IMPROVISATION', 'IMPROVISATION_HEALING'],
 	},
 	CURING_WALTZ: {
 		id: 16015,
