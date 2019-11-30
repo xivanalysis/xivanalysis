@@ -1,12 +1,13 @@
 import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
+// GCD timing: 2.5 seconds for first two GCDs (to get Shifu up), 2.18 seconds for all others.
 // meikyo is used after the 7th gcd
-const FIRSTUSEOFFSET_MEIKYO = 17500
+const FIRSTUSEOFFSET_MEIKYO = 15900
 // tsubame is used after the first midare, on the 11th GCD
-const FIRSTUSEOFFSET_TSUBAME = 27500
+const FIRSTUSEOFFSET_TSUBAME = 24620
 // Time that samurais have deemed ok for a OGCD to be down
-const DEFAULT_ALLOWED_DOWNTIME = 2500
+const DEFAULT_ALLOWED_DOWNTIME = 2180
 
 export default class OGCDDowntime extends CooldownDowntime {
 	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME

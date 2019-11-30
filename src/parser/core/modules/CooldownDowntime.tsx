@@ -2,8 +2,7 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import {Action} from 'data/ACTIONS/ACTIONS'
+import ACTIONS, {Action} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -20,8 +19,7 @@ interface CooldownReset {
 	 * The amount of time in ms that an action deducts from the remaining
 	 * cooldown of the affected cooldowns.
 	 */
-	refundAmount?: number,
-	fullReset?: boolean
+	refundAmount: number
 }
 
 interface CooldownGroup {
@@ -61,7 +59,7 @@ interface CooldownGroup {
 export abstract class CooldownDowntime extends Module {
 	static handle = 'cooldownDowntime'
 	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
-	static debug = false
+	static debug = true
 
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
@@ -181,18 +179,26 @@ export abstract class CooldownDowntime extends Module {
 
 		const gResets = this.resets.get(group) || []
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
-		const fullReset = (group.resetBy) ? group.resetBy.fullReset : false
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
 
-		this.debug('Checking downtime for group ' + gRep.name + ' with first use ' + group.firstUseOffset + ' and step ' + step + ' and ' + maxCharges + ' charges')
+		this.debug(`Checking downtime for group ${gRep.name} with default first use ${group.firstUseOffset} and step ${step} and ${maxCharges} charges`)
 		let charges = maxCharges
 		let count = 0
-		let currentTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
+		const expectedFirstUseTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
+		const actualFirstUseTime = (this.usages.get(group) || [])[0]
+
+		let currentTime = expectedFirstUseTime
+		if (actualFirstUseTime) {
+			// Start at the earlier of the actual first use or the expected first use
+			this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualFirstUseTime.timestamp)}`)
+			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
+		}
+
 		while (currentTime < this.parser.fight.end_time) {
 			// spend accumulated charges
 			count += charges
-			this.debug('Expected ' + charges + ' usages at ' + this.parser.formatTimestamp(currentTime) + '. Count: ' + count)
+			this.debug(`Expected ${charges} usages at ${this.parser.formatTimestamp(currentTime)}. Count: ${count}`)
 			charges = 0
 
 			// build a new charge at the next charge time
@@ -203,15 +209,7 @@ export abstract class CooldownDowntime extends Module {
 			while (gResets.length > 0 && gResets[0].timestamp < currentTime) {
 				const rs = gResets[0]
 				const previousTime = currentTime
-				if (fullReset) {
-					if (charges < maxCharges) {
-						// if not at max charges, the full reset adds a charge and resets the cooldown timer
-						currentTime = rs.timestamp
-					} else {
-						// Used a reset while fully recharged - count the cooldown of the skill as lost reset time
-						timeLost += gRep.cooldown
-					}
-				} else if (currentTime - resetTime < rs.timestamp) {
+				if (currentTime - resetTime < rs.timestamp) {
 					if (charges < maxCharges) {
 						// if not at max charges, the "extra" reset time counts toward
 						// the next charge wihtout being lost
@@ -223,17 +221,17 @@ export abstract class CooldownDowntime extends Module {
 				} else {
 					currentTime -= resetTime
 				}
-				this.debug('Reset (' + rs.ability.name + ') used at ' + this.parser.formatTimestamp(rs.timestamp) + '. Changing next charge time from ' + this.parser.formatTimestamp(previousTime) + ' to ' + this.parser.formatTimestamp(currentTime))
+				this.debug(`Reset (${rs.ability.name}) used at ${this.parser.formatTimestamp(rs.timestamp)}. Changing next charge time from ${this.parser.formatTimestamp(previousTime)} to ${this.parser.formatTimestamp(currentTime)}`)
 				gResets.shift()
 			}
 
 			while (charges < maxCharges && this.downtime.isDowntime(currentTime)) {
-				this.debug('Saving charge during downtime at ' + this.parser.formatTimestamp(currentTime) + '. ' + charges + ' charges  stored')
+				this.debug(`Saving charge during downtime at ${this.parser.formatTimestamp(currentTime)}. ${charges} charges stored`)
 
 				const window = this.downtime.getDowntimeWindows(currentTime)[0]
 				if (window.end < currentTime + step) {
 					count += charges
-					this.debug('Delayed charge spend at ' + this.parser.formatTimestamp(window.end) + '. ' + charges + ' charges spent. No charge time lost. Count: ' + count)
+					this.debug(`Delayed charge spend at ${this.parser.formatTimestamp(window.end)}. ${charges} charges spent. No charge time lost. Count: ${count}`)
 					charges = 0
 				}
 
@@ -244,12 +242,12 @@ export abstract class CooldownDowntime extends Module {
 			// full charges were built up during a downtime.  Move to the end of the downtime to spend charges.
 			if (this.downtime.isDowntime(currentTime)) {
 				const window = this.downtime.getDowntimeWindows(currentTime)[0]
-				this.debug('Downtime detected at ' + this.parser.formatTimestamp(currentTime) + ' in window from ' + this.parser.formatTimestamp(window.start) + ' to ' + this.parser.formatTimestamp(window.end))
+				this.debug(`Downtime detected at ${this.parser.formatTimestamp(currentTime)} in window from ${this.parser.formatTimestamp(window.start)} to ${this.parser.formatTimestamp(window.end)}`)
 				currentTime = window.end
 				// TODO: time after window end before usage.  should it just be first use offset? depends on what else was delayed and state in rotation
 			}
 		}
-		this.debug('Total count for group ' + gRep.name + ' is ' + count + '. Total reset time lost is ' + this.parser.formatDuration(timeLost) + '.')
+		this.debug(`Total count for group ${gRep.name} is ${count}. Total reset time lost is ${this.parser.formatDuration(timeLost)}.`)
 
 		return count
 	}
