@@ -25,7 +25,7 @@ export default class PrecastStatus extends Module {
 			const event = events[i]
 			const targetId = event.targetID
 
-			const statusInfo = getDataBy(STATUSES, 'id', event.ability.guid)
+			const statusInfo = getDataBy(STATUSES, 'id', event.ability?.guid)
 			if (!statusInfo) {
 				// No valid status data, skip to next event
 				continue
