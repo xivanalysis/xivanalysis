@@ -165,7 +165,8 @@ export default class Combos extends Module {
 			return
 		}
 
-		if (action.onGcd) {
+		// Only track GCDs that either progress or break combos so actions like Drill and Shadow Fang don't falsely extend the simulated combo timer
+		if (action.onGcd && (action.combo || action.breaksCombo)) {
 			if (event.timestamp - this.lastGcdTime > GCD_TIMEOUT_MILLIS) {
 				// If we've had enough downtime between GCDs to let the combo expire, reset the state so we don't count erroneous combo breaks
 				this.currentComboChain = []

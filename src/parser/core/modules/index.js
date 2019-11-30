@@ -9,6 +9,7 @@ import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
+import {Data} from './Data'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
@@ -39,6 +40,7 @@ export default [
 	Combatants,
 	Combos,
 	Cooldowns,
+	Data,
 	Death,
 	Downtime,
 	Enemies,

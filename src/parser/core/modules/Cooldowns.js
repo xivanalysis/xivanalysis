@@ -1,9 +1,11 @@
 import _ from 'lodash'
-import ACTIONS, {COOLDOWN_GROUPS} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import {getDataBy} from 'data'
 import React from 'react'
+
+const COOLDOWN_GROUPS = _.groupBy(ACTIONS, 'cooldownGroup')
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
