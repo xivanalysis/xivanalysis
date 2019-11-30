@@ -4,6 +4,11 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	{
+		date: new Date('2019-11-22'),
+		Changes: () => <>Rework calculations for tracked cooldowns to improve methodology for tracking actual uses and calculating expected uses.</>,
+		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.KELOS],
+	},
+	{
 		date: new Date('2019-08-24'),
 		Changes: () => <>Show pre-pull skill uses on timeline when we can determine a skill was used because the player started with a buff.</>,
 		contributors: [CONTRIBUTORS.AZARIAH],

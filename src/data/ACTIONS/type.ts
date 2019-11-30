@@ -1,4 +1,4 @@
-import {Status} from 'data/STATUSES'
+import {StatusRoot} from 'data/STATUSES/root'
 
 interface ActionCombo {
 	start?: boolean
@@ -16,8 +16,8 @@ export interface Action {
 	castTime?: number
 	cooldown?: number
 	autoAttack?: boolean
-	// TODO: Use key for layer compat
-	statusesApplied?: Status[]
+	statusesApplied?: Array<keyof StatusRoot>
+	charges?: number
 	// TODO: Do I need this still?
 	// [key: string]: unknown
 }

@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const MNK = ensureActions({
@@ -94,7 +93,7 @@ export const MNK = ensureActions({
 		name: 'Riddle of Earth',
 		icon: 'https://xivapi.com/i/002000/002537.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.RIDDLE_OF_EARTH, STATUSES.EARTHS_REPLY],
+		statusesApplied: ['RIDDLE_OF_EARTH', 'EARTHS_REPLY'],
 	},
 
 	RIDDLE_OF_FIRE: {
@@ -102,7 +101,7 @@ export const MNK = ensureActions({
 		name: 'Riddle of Fire',
 		icon: 'https://xivapi.com/i/002000/002541.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.RIDDLE_OF_FIRE],
+		statusesApplied: ['RIDDLE_OF_FIRE'],
 	},
 
 	BROTHERHOOD: {
@@ -110,7 +109,7 @@ export const MNK = ensureActions({
 		name: 'Brotherhood',
 		icon: 'https://xivapi.com/i/002000/002542.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.BROTHERHOOD, STATUSES.MEDITATIVE_BROTHERHOOD],
+		statusesApplied: ['BROTHERHOOD', 'MEDITATIVE_BROTHERHOOD'],
 	},
 
 	ENLIGHTENMENT: {
@@ -127,6 +126,6 @@ export const MNK = ensureActions({
 		onGcd: true,
 		cooldown: 60,
 		gcdRecast: 2.5,
-		statusesApplied: [STATUSES.ANATMAN],
+		statusesApplied: ['ANATMAN'],
 	},
 })

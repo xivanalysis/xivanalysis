@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
@@ -12,14 +11,14 @@ export const RDM = ensureActions({
 		name: 'Embolden',
 		icon: 'https://xivapi.com/i/003000/003218.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.EMBOLDEN_MAGIC, STATUSES.EMBOLDEN_PHYSICAL],
+		statusesApplied: ['EMBOLDEN_MAGIC', 'EMBOLDEN_PHYSICAL'],
 	},
 	ACCELERATION: {
 		id: 7518,
 		name: 'Acceleration',
 		icon: 'https://xivapi.com/i/003000/003214.png',
 		cooldown: 55,
-		statusesApplied: [STATUSES.ACCELERATION],
+		statusesApplied: ['ACCELERATION'],
 	},
 	MANAFICATION: {
 		id: 7521,
@@ -27,7 +26,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003219.png',
 		cooldown: 110,
 		breaksCombo: true,
-		statusesApplied: [STATUSES.MANAFICATION],
+		statusesApplied: ['MANAFICATION'],
 	},
 	CONTRE_SIXTE: {
 		id: 7519,
