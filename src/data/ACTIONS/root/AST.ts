@@ -92,7 +92,7 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003123.png',
 		onGcd: true,
 		castTime: 1.5,
-		mpCost: 600,
+		mpCost: 700,
 	},
 
 	ESSENTIAL_DIGNITY: {
@@ -161,9 +161,11 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 90,
 		statusesApplied: [
-			'COLLECTIVE_UNCONSCIOUS_SHIELD',
+			'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
 			'COLLECTIVE_UNCONSCIOUS',
-			'WHEEL_OF_FORTUNE',
+			'WHEEL_OF_FORTUNE_DIURNAL',
+			'COLLECTIVE_UNCONSCIOUS_NOCTURNAL',
+			'WHEEL_OF_FORTUNE_NOCTURNAL',
 		],
 	},
 

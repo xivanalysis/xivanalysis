@@ -164,7 +164,7 @@ export const AST = ensureStatuses({
 		id: 1891,
 		name: 'Horoscope Helios',
 		icon: 'https://xivapi.com/i/013000/013252.png',
-		duration: 30,
+		duration: 20,
 	},
 
 	NEUTRAL_SECT: {
