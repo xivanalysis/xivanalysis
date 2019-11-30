@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // Split between PGL and MNK
@@ -36,7 +35,7 @@ export const PGL = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000213.png',
 		onGcd: true,
 		potency: 170,
-		statusesApplied: [STATUSES.TWIN_SNAKES],
+		statusesApplied: ['TWIN_SNAKES'],
 	},
 
 	ARM_OF_THE_DESTROYER: {
@@ -51,7 +50,7 @@ export const PGL = ensureActions({
 		name: 'Demolish',
 		icon: 'https://xivapi.com/i/000000/000204.png',
 		onGcd: true,
-		statusesApplied: [STATUSES.DEMOLISH],
+		statusesApplied: ['DEMOLISH'],
 	},
 
 	// -----
@@ -77,7 +76,7 @@ export const PGL = ensureActions({
 		name: 'Mantra',
 		icon: 'https://xivapi.com/i/000000/000216.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.MANTRA],
+		statusesApplied: ['MANTRA'],
 	},
 
 	PERFECT_BALANCE: {
@@ -85,6 +84,6 @@ export const PGL = ensureActions({
 		name: 'Perfect Balance',
 		icon: 'https://xivapi.com/i/000000/000217.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.PERFECT_BALANCE],
+		statusesApplied: ['PERFECT_BALANCE'],
 	},
 })

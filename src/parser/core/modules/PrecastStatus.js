@@ -2,6 +2,7 @@ import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
+import _ from 'lodash'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
 // Fake buff applications so modules don't need to take it into account
@@ -86,7 +87,8 @@ export default class PrecastStatus extends Module {
 		}
 
 		// Determine if this buff comes from a known action, fab a cast event
-		const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusInfo)
+		const statusKey = _.findKey(STATUSES, statusInfo)
+		const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusKey)
 		if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
 			this.fabricateActionEvent(event, actionInfo)
 		}

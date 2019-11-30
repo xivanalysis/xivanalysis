@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // tslint:disable:no-magic-numbers
@@ -129,7 +128,7 @@ export const MCH = ensureActions({
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 2.5,
-		statusesApplied: [STATUSES.BIOBLASTER],
+		statusesApplied: ['BIOBLASTER'],
 	},
 
 	AIR_ANCHOR: {
@@ -151,7 +150,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003022.png',
 		onGcd: false,
 		cooldown: 55,
-		statusesApplied: [STATUSES.REASSEMBLED],
+		statusesApplied: ['REASSEMBLED'],
 	},
 
 	WILDFIRE: {
@@ -160,7 +159,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003018.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.WILDFIRE],
+		statusesApplied: ['WILDFIRE'],
 	},
 
 	ROOK_AUTOTURRET: {
@@ -217,7 +216,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003038.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.FLAMETHROWER],
+		statusesApplied: ['FLAMETHROWER'],
 	},
 
 	TACTICIAN: {
@@ -226,7 +225,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003040.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.TACTICIAN],
+		statusesApplied: ['TACTICIAN'],
 	},
 
 	AUTOMATON_QUEEN: {
