@@ -3,8 +3,10 @@ export default class Requirement {
 	_percent = null
 	value = null
 	target = 100
+	overrideDisplay = null
 
 	get content() {
+		if (this.overrideDisplay !== null) { return this.overrideDisplay }
 		if (this._percent !== null || this.value === null) { return `${this.percent.toFixed(2)}%` }
 		return `${this.value.toFixed(0)}/${this.target.toFixed(0)}` //avoid weird floating point shit
 	}

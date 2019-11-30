@@ -1,12 +1,11 @@
 import ACTIONS from 'data/ACTIONS'
-import CooldownDowntime from 'parser/core/modules/CooldownDowntime'
+import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 export default class OGCDDowntime extends CooldownDowntime {
-	allowedDowntime = 2500
 	trackedCds = [
-		ACTIONS.TECHNICAL_STEP.id,
-		ACTIONS.STANDARD_STEP.id,
-		ACTIONS.DEVILMENT.id,
-		ACTIONS.FLOURISH.id,
+		{cooldowns: [ACTIONS.TECHNICAL_STEP]},
+		{cooldowns: [ACTIONS.STANDARD_STEP]},
+		{cooldowns: [ACTIONS.DEVILMENT]},
+		{cooldowns: [ACTIONS.FLOURISH]},
 	]
 }
