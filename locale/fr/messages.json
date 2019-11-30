@@ -6,7 +6,7 @@
   "ast.arcana-suggestions.messages.accordion-title": "Journal complet des Arcanes",
   "ast.arcana-suggestions.messages.disclaimer": "La critique de la gestion des cartes est encore en cours. Aucune recommandation n'a encore été faite. <0/>Le but de cette section est de donner une recommandation générale des meilleures pratiques. Il ne prendra pas en considération quel membre de l'équipe jouait le mieux, ou s'ils étaient en phase de burst.",
   "ast.arcana-suggestions.messages.explanation": "Cette partie garde une trace de toutes les actions de cartes que vous avez utilisé pendant le combat, et leur répartition après chaque action.",
-  "ast.arcana-suggestions.messages.latest-action": "Dernière action",
+  "ast.arcana-suggestions.messages.latest-action": "Dernière Action",
   "ast.arcana-suggestions.messages.pull": "Tirez",
   "ast.arcana-suggestions.messages.spread-state": "État de propagation",
   "ast.arcana-suggestions.messages.time": "Temps",
