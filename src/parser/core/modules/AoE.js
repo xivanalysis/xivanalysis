@@ -172,7 +172,7 @@ export default class AoE extends Module {
 			}, {})
 
 			const fabricatedEvent = {
-				type: 'aoe' + eventType,
+				type: 'aoe' + eventType.replace('calculated', ''),
 				timestamp: event.events[eventType][0].timestamp,
 				ability: event.events[eventType][0].ability,
 				hits: Object.values(hitsByTarget),
