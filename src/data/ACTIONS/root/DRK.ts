@@ -71,6 +71,7 @@ export const DRK = ensureActions({
 		name: 'Plunge',
 		icon: 'https://xivapi.com/i/003000/003061.png',
 		cooldown: 30,
+		charges: 2,
 	},
 	CARVE_AND_SPIT: {
 		id: 3643,

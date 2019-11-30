@@ -170,6 +170,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_I_EARTHEN_ARMOR: {
@@ -180,6 +181,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_I_CRIMSON_CYCLONE: {
@@ -190,6 +192,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_SLIIPSTREAM: {
@@ -200,6 +203,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_MOUNTAIN_BUSTER: {
@@ -210,6 +214,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ASSAULT_II_FLAMING_CRUSH: {
@@ -220,6 +225,7 @@ export const SMN = ensureActions({
 		cooldownGroup: SMN_COOLDOWN_GROUP.EGI_ASSAULT_II,
 		onGcd: true,
 		gcdRecast: 2.5,
+		charges: 2,
 	},
 
 	ENKINDLE_AERIAL_BLAST: {
