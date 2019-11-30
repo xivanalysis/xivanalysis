@@ -3,11 +3,11 @@ import {Trans} from '@lingui/react'
 import * as Sentry from '@sentry/browser'
 import {Message, Segment} from 'akkd'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import ACTIONS from 'data/ACTIONS'
 import {getReportPatch} from 'data/PATCHES'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {Table} from 'semantic-ui-react'
+import {Data} from './Data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 interface Trigger {
@@ -40,13 +40,15 @@ export default class BrokenLog extends Module {
 	static displayOrder = DISPLAY_ORDER.BROKEN_LOG
 	static displayMode = DISPLAY_MODE.RAW
 
+	@dependency private data!: Data
+
 	private triggers = new Map<string, Trigger>()
 
 	init() {
 		// Unknown actions are unparseable
 		this.addHook(
 			EXPECTED_ABILITY_EVENTS,
-			{by: 'player', abilityId: ACTIONS.UNKNOWN.id},
+			{by: 'player', abilityId: this.data.actions.UNKNOWN.id},
 			() => {
 				this.trigger(this, 'unknown action', (
 					<Trans id="core.broken-log.trigger.unknown-action">

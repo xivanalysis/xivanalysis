@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
-import ACTIONS, {Action} from 'data/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import React from 'react'
 import Checklist from './Checklist'
+import {Data} from './Data'
 import Downtime from './Downtime'
 
 interface CooldownReset {
@@ -61,6 +61,7 @@ export abstract class CooldownDowntime extends Module {
 	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
 	static debug = false
 
+	@dependency private data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
 
@@ -148,7 +149,10 @@ export abstract class CooldownDowntime extends Module {
 			const expected = this.calculateMaxUsages(cdGroup)
 			const actual = (this.usages.get(cdGroup) || []).length || 0
 			const percent = actual / expected * 100
-			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>{(ix > 0 ? ', ' : '')}<ActionLink {...getDataBy(ACTIONS, 'id', val.id)} /></>)
+			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>
+				{(ix > 0 ? ', ' : '')}
+				<ActionLink {...this.data.getAction(val.id)} />
+			</>)
 			this.debug(JSON.stringify(requirementDisplay))
 
 			cdRequirements.push(new Requirement({

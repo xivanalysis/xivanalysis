@@ -1,18 +1,17 @@
 import stable from 'stable'
 
 import {getFflogsEvents} from 'api'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {isDefined} from 'utilities'
 
-const QUERY_FILTER = [
+const buildQueryFilter = data => [
 	// Player-applied debuffs that don't get pulled when checking by actor
 	{
 		types: ['applydebuff', 'removedebuff'],
 		abilities: [
-			STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
-			STATUSES.CHAIN_STRATAGEM.id,
-			STATUSES.RUINATION.id,
+			data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
+			data.statuses.CHAIN_STRATAGEM.id,
+			data.statuses.RUINATION.id,
 		],
 		targetsOnly: true,
 	},
@@ -43,6 +42,7 @@ export default class AdditionalEvents extends Module {
 	static handle = 'additionalEvents'
 	static dependencies = [
 		'enemies',
+		'data',
 	]
 
 	async normalise(events) {
@@ -65,7 +65,7 @@ export default class AdditionalEvents extends Module {
 			.join(' or ')
 
 		// Build the filter string
-		let filter = QUERY_FILTER.map(section => {
+		let filter = buildQueryFilter(this.data).map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
 			const abilities = section.abilities.join(',')
 
