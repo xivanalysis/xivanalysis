@@ -59,7 +59,7 @@ interface CooldownGroup {
 export abstract class CooldownDowntime extends Module {
 	static handle = 'cooldownDowntime'
 	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
-	static debug = true
+	static debug = false
 
 	@dependency private downtime!: Downtime
 	@dependency private checklist!: Checklist
