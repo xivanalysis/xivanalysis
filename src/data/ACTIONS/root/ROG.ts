@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const ROG = ensureActions({
@@ -50,7 +49,7 @@ export const ROG = ensureActions({
 		potency: 200,
 		cooldown: 70,
 		gcdRecast: 2.5,
-		statusesApplied: [STATUSES.SHADOW_FANG],
+		statusesApplied: ['SHADOW_FANG'],
 	},
 
 	DEATH_BLOSSOM: {
@@ -99,7 +98,7 @@ export const ROG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000618.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.TRICK_ATTACK_VULNERABILITY_UP],
+		statusesApplied: ['TRICK_ATTACK_VULNERABILITY_UP'],
 	},
 
 	SHADE_SHIFT: {
@@ -108,6 +107,6 @@ export const ROG = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000607.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.SHADE_SHIFT],
+		statusesApplied: ['SHADE_SHIFT'],
 	},
 })

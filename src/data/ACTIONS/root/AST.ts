@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const AST = ensureActions({
@@ -6,14 +5,14 @@ export const AST = ensureActions({
 		id: 3604,
 		name: 'Diurnal Sect',
 		icon: 'https://xivapi.com/i/003000/003133.png',
-		statusesApplied: [STATUSES.DIURNAL_SECT],
+		statusesApplied: ['DIURNAL_SECT'],
 	},
 
 	NOCTURNAL_SECT: {
 		id: 3605,
 		name: 'Nocturnal Sect',
 		icon: 'https://xivapi.com/i/003000/003134.png',
-		statusesApplied: [STATUSES.NOCTURNAL_SECT],
+		statusesApplied: ['NOCTURNAL_SECT'],
 	},
 
 	BENEFIC: {
@@ -48,7 +47,7 @@ export const AST = ensureActions({
 		name: 'Lightspeed',
 		icon: 'https://xivapi.com/i/003000/003135.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.LIGHTSPEED],
+		statusesApplied: ['LIGHTSPEED'],
 	},
 
 	MALEFIC_III: {
@@ -153,7 +152,7 @@ export const AST = ensureActions({
 		name: 'Synastry',
 		icon: 'https://xivapi.com/i/003000/003139.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.SYNASTRY_SELF, STATUSES.SYNASTRY],
+		statusesApplied: ['SYNASTRY_SELF', 'SYNASTRY'],
 	},
 
 	COLLECTIVE_UNCONSCIOUS: {
@@ -162,11 +161,9 @@ export const AST = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003140.png',
 		cooldown: 90,
 		statusesApplied: [
-			STATUSES.COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION,
-			STATUSES.COLLECTIVE_UNCONSCIOUS,
-			STATUSES.WHEEL_OF_FORTUNE_DIURNAL,
-			STATUSES.COLLECTIVE_UNCONSCIOUS_NOCTURNAL,
-			STATUSES.WHEEL_OF_FORTUNE_NOCTURNAL,
+			'COLLECTIVE_UNCONSCIOUS_SHIELD',
+			'COLLECTIVE_UNCONSCIOUS',
+			'WHEEL_OF_FORTUNE',
 		],
 	},
 
@@ -175,7 +172,7 @@ export const AST = ensureActions({
 		name: 'Celestial Opposition',
 		icon: 'https://xivapi.com/i/003000/003142.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.DIURNAL_OPPOSITION, STATUSES.NOCTURNAL_OPPOSITION],
+		statusesApplied: ['DIURNAL_OPPOSITION', 'NOCTURNAL_OPPOSITION'],
 	},
 
 	EARTHLY_STAR: {
@@ -183,7 +180,7 @@ export const AST = ensureActions({
 		name: 'Earthly Star',
 		icon: 'https://xivapi.com/i/003000/003143.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.EARTHLY_DOMINANCE, STATUSES.GIANT_DOMINANCE],
+		statusesApplied: ['EARTHLY_DOMINANCE', 'GIANT_DOMINANCE'],
 	},
 
 	STELLAR_DETONATION: {
@@ -210,7 +207,14 @@ export const AST = ensureActions({
 		name: 'Draw',
 		icon: 'https://xivapi.com/i/003000/003101.png',
 		cooldown: 30,
-		statusesApplied: [STATUSES.BALANCE_DRAWN, STATUSES.BOLE_DRAWN, STATUSES.ARROW_DRAWN, STATUSES.SPEAR_DRAWN, STATUSES.EWER_DRAWN, STATUSES.SPIRE_DRAWN],
+		statusesApplied: [
+			'BALANCE_DRAWN',
+			'BOLE_DRAWN',
+			'ARROW_DRAWN',
+			'SPEAR_DRAWN',
+			'EWER_DRAWN',
+			'SPIRE_DRAWN',
+		],
 	},
 
 	PLAY: {
@@ -232,7 +236,7 @@ export const AST = ensureActions({
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/003000/003107.png',
 		cooldown: 180,
-		statusesApplied: [STATUSES.SLEEVE_DRAW],
+		statusesApplied: ['SLEEVE_DRAW'],
 	},
 
 	UNDRAW: {
@@ -247,7 +251,7 @@ export const AST = ensureActions({
 		name: 'Minor Arcana',
 		icon: 'https://xivapi.com/i/003000/003106.png',
 		cooldown: 1,
-		statusesApplied: [STATUSES.LORD_OF_CROWNS_DRAWN, STATUSES.LADY_OF_CROWNS_DRAWN],
+		statusesApplied: ['LORD_OF_CROWNS_DRAWN', 'LADY_OF_CROWNS_DRAWN'],
 	},
 
 	// ----
@@ -259,7 +263,7 @@ export const AST = ensureActions({
 		name: 'Horoscope',
 		icon: 'https://xivapi.com/i/003000/003550.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.HOROSCOPE, STATUSES.HOROSCOPE_HELIOS],
+		statusesApplied: ['HOROSCOPE', 'HOROSCOPE_HELIOS'],
 	},
 
 	HOROSCOPE_ACTIVATION: {
@@ -274,7 +278,7 @@ export const AST = ensureActions({
 		name: 'Neutral Sect',
 		icon: 'https://xivapi.com/i/003000/003552.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.NEUTRAL_SECT],
+		statusesApplied: ['NEUTRAL_SECT'],
 	},
 
 	DIVINATION: {
@@ -282,7 +286,7 @@ export const AST = ensureActions({
 		name: 'Divination',
 		icon: 'https://xivapi.com/i/003000/003553.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.DIVINATION],
+		statusesApplied: ['DIVINATION'],
 	},
 
 	CELESTIAL_INTERSECTION: {
@@ -290,7 +294,7 @@ export const AST = ensureActions({
 		name: 'Celestial Intersection',
 		icon: 'https://xivapi.com/i/003000/003556.png',
 		cooldown: 30,
-		statusesApplied: [STATUSES.DIURNAL_INTERSECTION, STATUSES.NOCTURNAL_INTERSECTION],
+		statusesApplied: ['DIURNAL_INTERSECTION', 'NOCTURNAL_INTERSECTION'],
 	},
 
 	// -----
@@ -302,7 +306,7 @@ export const AST = ensureActions({
 		name: 'The Balance',
 		icon: 'https://xivapi.com/i/003000/003110.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_BALANCE],
+		statusesApplied: ['THE_BALANCE'],
 	},
 
 	THE_BOLE: {
@@ -310,7 +314,7 @@ export const AST = ensureActions({
 		name: 'The Bole',
 		icon: 'https://xivapi.com/i/003000/003111.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_BOLE],
+		statusesApplied: ['THE_BOLE'],
 	},
 
 	THE_ARROW: {
@@ -318,7 +322,7 @@ export const AST = ensureActions({
 		name: 'The Arrow',
 		icon: 'https://xivapi.com/i/003000/003112.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_ARROW],
+		statusesApplied: ['THE_ARROW'],
 	},
 
 	THE_SPEAR: {
@@ -326,7 +330,7 @@ export const AST = ensureActions({
 		name: 'The Spear',
 		icon: 'https://xivapi.com/i/003000/003113.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_SPEAR],
+		statusesApplied: ['THE_SPEAR'],
 	},
 
 	THE_EWER: {
@@ -334,7 +338,7 @@ export const AST = ensureActions({
 		name: 'The Ewer',
 		icon: 'https://xivapi.com/i/003000/003114.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_EWER],
+		statusesApplied: ['THE_EWER'],
 	},
 
 	THE_SPIRE: {
@@ -342,7 +346,7 @@ export const AST = ensureActions({
 		name: 'The Spire',
 		icon: 'https://xivapi.com/i/003000/003115.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.THE_SPIRE],
+		statusesApplied: ['THE_SPIRE'],
 	},
 
 	LADY_OF_CROWNS: {
@@ -350,7 +354,7 @@ export const AST = ensureActions({
 		name: 'Lady Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003146.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.LADY_OF_CROWNS],
+		statusesApplied: ['LADY_OF_CROWNS'],
 	},
 
 	LORD_OF_CROWNS: {
@@ -358,6 +362,6 @@ export const AST = ensureActions({
 		name: 'Lord Of Crowns',
 		icon: 'https://xivapi.com/i/003000/003147.png',
 		cooldown: 0,
-		statusesApplied: [STATUSES.LORD_OF_CROWNS],
+		statusesApplied: ['LORD_OF_CROWNS'],
 	},
 })

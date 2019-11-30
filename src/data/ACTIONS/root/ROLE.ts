@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 // Putting all role actions in one file 'cus a lot of them are shared between multiple roles
@@ -9,7 +8,7 @@ export const ROLE = ensureActions({
 		name: 'Rampart',
 		icon: 'https://xivapi.com/i/000000/000801.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.RAMPART],
+		statusesApplied: ['RAMPART'],
 	},
 
 	LOW_BLOW: {
@@ -31,7 +30,7 @@ export const ROLE = ensureActions({
 		name: 'Reprisal',
 		icon: 'https://xivapi.com/i/000000/000806.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.REPRISAL],
+		statusesApplied: ['REPRISAL'],
 	},
 
 	INTERJECT: {
@@ -65,7 +64,7 @@ export const ROLE = ensureActions({
 		name: 'Lucid Dreaming',
 		icon: 'https://xivapi.com/i/000000/000865.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.LUCID_DREAMING],
+		statusesApplied: ['LUCID_DREAMING'],
 	},
 
 	SWIFTCAST: {
@@ -73,7 +72,7 @@ export const ROLE = ensureActions({
 		name: 'Swiftcast',
 		icon: 'https://xivapi.com/i/000000/000866.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.SWIFTCAST],
+		statusesApplied: ['SWIFTCAST'],
 	},
 
 	SURECAST: {
@@ -81,7 +80,7 @@ export const ROLE = ensureActions({
 		name: 'Surecast',
 		icon: 'https://xivapi.com/i/000000/000869.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.SURECAST],
+		statusesApplied: ['SURECAST'],
 	},
 
 	RESCUE: {
@@ -133,7 +132,7 @@ export const ROLE = ensureActions({
 		name: 'Addle',
 		icon: 'https://xivapi.com/i/000000/000861.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.ADDLE],
+		statusesApplied: ['ADDLE'],
 	},
 
 	// Melee DPS
@@ -142,7 +141,7 @@ export const ROLE = ensureActions({
 		name: 'Arm&apos;s Length',
 		icon: 'https://xivapi.com/i/000000/000822.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.ARMS_LENGTH],
+		statusesApplied: ['ARMS_LENGTH'],
 	},
 
 	LEG_SWEEP: {
@@ -157,7 +156,7 @@ export const ROLE = ensureActions({
 		name: 'Bloodbath',
 		icon: 'https://xivapi.com/i/000000/000823.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.BLOODBATH],
+		statusesApplied: ['BLOODBATH'],
 	},
 
 	FEINT: {
@@ -165,7 +164,7 @@ export const ROLE = ensureActions({
 		name: 'Feint',
 		icon: 'https://xivapi.com/i/000000/000828.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.FEINT],
+		statusesApplied: ['FEINT'],
 	},
 
 	TRUE_NORTH: {
@@ -173,6 +172,6 @@ export const ROLE = ensureActions({
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.TRUE_NORTH],
+		statusesApplied: ['TRUE_NORTH'],
 	},
 })

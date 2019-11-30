@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const GNB = ensureActions({
@@ -25,7 +24,7 @@ export const GNB = ensureActions({
 			from: 16137, // Keen Edge
 			potency: 300,
 		},
-		statusesApplied: [STATUSES.BRUTAL_SHELL],
+		statusesApplied: ['BRUTAL_SHELL'],
 	},
 	SOLID_BARREL: {
 		id: 16145,
@@ -90,7 +89,7 @@ export const GNB = ensureActions({
 		potency: 300,
 		cooldown: 60,
 		gcdRecast: 2.5,
-		statusesApplied: [STATUSES.SONIC_BREAK],
+		statusesApplied: ['SONIC_BREAK'],
 	},
 	DEMON_SLICE: {
 		id: 16141,
@@ -132,7 +131,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003402.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.NO_MERCY],
+		statusesApplied: ['NO_MERCY'],
 	},
 	BLOODFEST: {
 		id: 16164,
@@ -182,7 +181,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003423.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.BOW_SHOCK],
+		statusesApplied: ['BOW_SHOCK'],
 	},
 	ROUGH_DIVIDE: {
 		id: 16154,
@@ -205,7 +204,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003415.png',
 		onGcd: false,
 		cooldown: 60,
-		statusesApplied: [STATUSES.AURORA],
+		statusesApplied: ['AURORA'],
 	},
 	SUPERBOLIDE: {
 		id: 16152,
@@ -213,7 +212,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003416.png',
 		onGcd: false,
 		cooldown: 360,
-		statusesApplied: [STATUSES.SUPERBOLIDE],
+		statusesApplied: ['SUPERBOLIDE'],
 	},
 	CAMOUFLAGE: {
 		id: 16140,
@@ -221,7 +220,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003404.png',
 		onGcd: false,
 		cooldown: 90,
-		statusesApplied: [STATUSES.CAMOUFLAGE],
+		statusesApplied: ['CAMOUFLAGE'],
 	},
 	NEBULA: {
 		id: 16148,
@@ -229,7 +228,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003412.png',
 		onGcd: false,
 		cooldown: 120,
-		statusesApplied: [STATUSES.NEBULA],
+		statusesApplied: ['NEBULA'],
 	},
 	HEART_OF_STONE: {
 		id: 16161,
@@ -237,7 +236,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003425.png',
 		onGcd: false,
 		cooldown: 25,
-		statusesApplied: [STATUSES.HEART_OF_STONE],
+		statusesApplied: ['HEART_OF_STONE'],
 	},
 	HEART_OF_LIGHT: {
 		id: 16160,
@@ -245,7 +244,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003424.png',
 		onGcd: false,
 		cooldown: 90,
-		statusesApplied: [STATUSES.HEART_OF_LIGHT],
+		statusesApplied: ['HEART_OF_LIGHT'],
 	},
 	CONTINUATION: {
 		id: 16155,

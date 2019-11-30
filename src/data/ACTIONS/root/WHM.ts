@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const WHM = ensureActions({
@@ -7,7 +6,7 @@ export const WHM = ensureActions({
 		name: 'Temperance',
 		icon: 'https://xivapi.com/i/002000/002645.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.TEMPERANCE],
+		statusesApplied: ['TEMPERANCE'],
 	},
 
 	AFFLATUS_MISERY: {
@@ -36,7 +35,7 @@ export const WHM = ensureActions({
 		name: 'Dia',
 		icon: 'https://xivapi.com/i/002000/002641.png',
 		onGcd: true,
-		statusesApplied: [STATUSES.DIA],
+		statusesApplied: ['DIA'],
 	},
 
 	GLARE: {
@@ -52,7 +51,7 @@ export const WHM = ensureActions({
 		name: 'Plenary Indulgence',
 		icon: 'https://xivapi.com/i/002000/002639.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.CONFESSION],
+		statusesApplied: ['CONFESSION'],
 	},
 
 	STONE_IV: {
@@ -82,7 +81,7 @@ export const WHM = ensureActions({
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/002000/002632.png',
 		cooldown: 90,
-		statusesApplied: [STATUSES.ASYLUM],
+		statusesApplied: ['ASYLUM'],
 	},
 
 	BENEDICTION: {
@@ -105,7 +104,7 @@ export const WHM = ensureActions({
 		name: 'Presence of Mind',
 		icon: 'https://xivapi.com/i/002000/002626.png',
 		cooldown: 150,
-		statusesApplied: [STATUSES.PRESENCE_OF_MIND],
+		statusesApplied: ['PRESENCE_OF_MIND'],
 	},
 
 	STONE_III: {
@@ -121,7 +120,7 @@ export const WHM = ensureActions({
 		name: 'Divine Benison',
 		icon: 'https://xivapi.com/i/002000/002638.png',
 		cooldown: 30,
-		statusesApplied: [STATUSES.DIVINE_BENISON],
+		statusesApplied: ['DIVINE_BENISON'],
 	},
 
 	THIN_AIR: {
@@ -129,7 +128,7 @@ export const WHM = ensureActions({
 		name: 'Thin Air',
 		icon: 'https://xivapi.com/i/002000/002636.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.THIN_AIR],
+		statusesApplied: ['THIN_AIR'],
 	},
 
 	AERO_III: {
@@ -146,7 +145,7 @@ export const WHM = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000409.png',
 		onGcd: true,
 		castTime: 2.5,
-		statusesApplied: [STATUSES.MEDICA_II],
+		statusesApplied: ['MEDICA_II'],
 	},
 
 	// the following abilities are to be moved to CNJ.js
@@ -179,7 +178,7 @@ export const WHM = ensureActions({
 		name: 'Regen',
 		icon: 'https://xivapi.com/i/002000/002628.png',
 		onGcd: true,
-		statusesApplied: [STATUSES.REGEN],
+		statusesApplied: ['REGEN'],
 	},
 
 	FLUID_AURA: {

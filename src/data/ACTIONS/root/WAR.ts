@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const WAR = ensureActions({
@@ -82,7 +81,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002559.png',
 		cooldown: 25,
 		onGcd: false,
-		statusesApplied: [STATUSES.RAW_INTUITION],
+		statusesApplied: ['RAW_INTUITION'],
 	},
 
 	SHAKE_IT_OFF: {
@@ -91,7 +90,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002563.png',
 		cooldown: 90,
 		onGcd: false,
-		statusesApplied: [STATUSES.SHAKE_IT_OFF],
+		statusesApplied: ['SHAKE_IT_OFF'],
 	},
 
 	ONSLAUGHT: {
@@ -135,7 +134,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002564.png',
 		cooldown: 90,
 		onGcd: false,
-		statusesApplied: [STATUSES.INNER_RELEASE],
+		statusesApplied: ['INNER_RELEASE'],
 	},
 
 	INFURIATE: {
@@ -144,7 +143,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
 		onGcd: false,
-		statusesApplied: [STATUSES.NASCENT_CHAOS],
+		statusesApplied: ['NASCENT_CHAOS'],
 	},
 
 	NASCENT_FLASH: {
@@ -153,6 +152,6 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002567.png',
 		cooldown: 25,
 		cooldownGroup: 9,
-		statusesApplied: [STATUSES.NASCENT_FLASH, STATUSES.NASCENT_GLINT],
+		statusesApplied: ['NASCENT_FLASH', 'NASCENT_GLINT'],
 	},
 })

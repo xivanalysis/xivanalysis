@@ -1,4 +1,3 @@
-import STATUSES from 'data/STATUSES'
 import {ensureActions} from '../type'
 
 export const SCH = ensureActions({
@@ -11,7 +10,7 @@ export const SCH = ensureActions({
 		name: 'Biolysis',
 		icon: 'https://xivapi.com/i/002000/002820.png',
 		onGcd: true,
-		statusesApplied: [STATUSES.BIOLYSIS],
+		statusesApplied: ['BIOLYSIS'],
 	},
 
 	ADLOQUIUM: {
@@ -20,7 +19,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002801.png',
 		onGcd: true,
 		castTime: 2,
-		statusesApplied: [STATUSES.GALVANIZE, STATUSES.CATALYZE],
+		statusesApplied: ['GALVANIZE', 'CATALYZE'],
 	},
 
 	BROIL_III: {
@@ -73,7 +72,7 @@ export const SCH = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002802.png',
 		onGcd: true,
 		castTime: 2,
-		statusesApplied: [STATUSES.GALVANIZE],
+		statusesApplied: ['GALVANIZE'],
 	},
 
 	SACRED_SOIL: {
@@ -124,7 +123,7 @@ export const SCH = ensureActions({
 		name: 'Emergency Tactics',
 		icon: 'https://xivapi.com/i/002000/002809.png',
 		cooldown: 15,
-		statusesApplied: [STATUSES.EMERGENCY_TACTICS],
+		statusesApplied: ['EMERGENCY_TACTICS'],
 	},
 
 	DISSIPATION: {
@@ -132,7 +131,7 @@ export const SCH = ensureActions({
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
-		statusesApplied: [STATUSES.DISSIPATION],
+		statusesApplied: ['DISSIPATION'],
 	},
 
 	EXCOGITATION: {
@@ -140,7 +139,7 @@ export const SCH = ensureActions({
 		name: 'Excogitation',
 		icon: 'https://xivapi.com/i/002000/002813.png',
 		cooldown: 45,
-		statusesApplied: [STATUSES.EXCOGITATION],
+		statusesApplied: ['EXCOGITATION'],
 	},
 
 	BROIL_II: {
@@ -156,7 +155,7 @@ export const SCH = ensureActions({
 		name: 'Chain Stratagem',
 		icon: 'https://xivapi.com/i/002000/002815.png',
 		cooldown: 120,
-		statusesApplied: [STATUSES.CHAIN_STRATAGEM],
+		statusesApplied: ['CHAIN_STRATAGEM'],
 	},
 
 	SCH_AETHERPACT: {
@@ -178,7 +177,7 @@ export const SCH = ensureActions({
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/002000/002827.png',
 		cooldown: 60,
-		statusesApplied: [STATUSES.WHISPERING_DAWN],
+		statusesApplied: ['WHISPERING_DAWN'],
 	},
 
 	SCH_FEY_ILLUMINATION: {
