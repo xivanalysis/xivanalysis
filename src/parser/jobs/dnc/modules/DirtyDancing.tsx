@@ -18,6 +18,7 @@ import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
@@ -97,6 +98,7 @@ export default class DirtyDancing extends Module {
 	@dependency private combatants!: Combatants
 	@dependency private timeline!: Timeline
 	@dependency private downtime!: Downtime
+	@dependency private entityStatuses!: EntityStatuses
 
 	private danceHistory: Dance[] = []
 	private missedDances = 0
@@ -201,7 +203,7 @@ export default class DirtyDancing extends Module {
 
 	private getStandardFinishUptimePercent() {
 		// Exclude downtime from both the status time and expected uptime
-		const statusTime = this.combatants.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.parser.player.id) - this.downtime.getDowntime()
+		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.combatants.getEntities()) - this.downtime.getDowntime()
 		const uptime = this.parser.fightDuration - this.downtime.getDowntime()
 
 		return (statusTime / uptime) * 100

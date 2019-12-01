@@ -1,107 +1,10 @@
 import Module from 'parser/core/Module'
 
-const APPLY = 'apply'
-const REMOVE = 'remove'
-
 export default class Entities extends Module {
 	static dependencies = [
-		'invuln',
 		'fflogsEvents',
 	]
 
-	// -----
-	// API
-	// -----
-	// TODO: This implementation which I've shamelessly stolen seems to only track overall
-	//       uptime, ignoring potential gains from multidotting, etc. Should that be in here,
-	//       or is that a somewhere-else sort of thing...
-	getStatusUptime(statusId, sourceId = this.parser.player.id) {
-		const events = []
-
-		// Build up the events array
-		const entities = this.getEntities()
-		Object.values(entities).forEach(entity => {
-			const invulns = this.invuln
-				.getInvulns(entity.id)
-				.filter(invuln => invuln.type === 'invulnerable')
-
-			entity.buffs.forEach(buff => {
-				if (
-					buff.ability.guid !== statusId ||
-					(buff.sourceID !== sourceId && buff.sourceID !== null)
-				) {
-					return
-				}
-
-				// Split the buff over the invulns
-				const ranges = [buff]
-				invulns.forEach(invuln => {
-					// discard invulns outside the span of the buff
-					if (invuln.end < buff.start || invuln.start > buff.end) {
-						return
-					}
-
-					// split ranges
-					for (let i = 0; i < ranges.length; i++) {
-						const range = ranges[i]
-
-						if (invuln.start < range.start && invuln.end > range.start) {
-							// Invuln chops start of range
-							range.start = invuln.end
-						} else if (invuln.start < range.end && invuln.end > range.end) {
-							// Invuln chops end of range
-							range.end = invuln.start
-						}	else if (invuln.start > range.start && invuln.end < range.end) {
-							// Invuln splits the range
-							ranges.splice(i, 1,
-								{start: range.start, end: invuln.start},
-								{start: invuln.end, end: range.end},
-							)
-						}
-					}
-				})
-
-				// Add faked events for all the ranges the buff was up
-				ranges.forEach(range => {
-					events.push({
-						timestamp: range.start,
-						type: APPLY,
-						buff,
-					})
-					events.push({
-						timestamp: range.end || this.parser.currentTimestamp,
-						type: REMOVE,
-						buff,
-					})
-				})
-			})
-		})
-
-		// Reduce the events array into a final uptime
-		let active = 0
-		let start = null
-		return events
-			.sort((a, b) => a.timestamp - b.timestamp)
-			.reduce((uptime, event) => {
-				if (event.type === APPLY) {
-					if (active === 0) {
-						start = event.timestamp
-					}
-					active ++
-				}
-				if (event.type === REMOVE) {
-					active --
-					if (active === 0) {
-						uptime += event.timestamp - start
-					}
-				}
-				return uptime
-			}, 0)
-	}
-
-	// -----
-	// Event handlers
-	// -----
 	constructor(...args) {
 		super(...args)
 
