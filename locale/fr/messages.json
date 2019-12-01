@@ -370,7 +370,7 @@
   "drg.positionals.analysis.missed": "",
   "drg.positionals.analysis.truenorth": "",
   "drg.positionals.suggestions.content": "",
-  "drg.positionals.suggestions.why": "",
+  "drg.positionals.suggestions.why": "Vous avez manqué {missed, plural, one {# proc}other {# procs}} de Percée Raiden.",
   "drg.positionals.table.procact": "Action",
   "drg.positionals.table.time": "Temps",
   "drg.positionals.table.title": "Positionels manqués",
