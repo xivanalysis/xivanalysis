@@ -44,7 +44,7 @@ export default class Positionals extends Module {
 
 	// true north tracking
 	_tnCharges = 2
-	_nextChargeIn = null
+	_tnCharging = false
 
 	constructor(...args) {
 		super(...args)
@@ -105,6 +105,8 @@ export default class Positionals extends Module {
 		if (this._tnCharges < TRUE_NORTH_CHARGES) {
 			// if we're below the max, queue another charge since the cd will keep ticking
 			this.addTimestampHook(this.parser.currentTimestamp + TRUE_NORTH_CD, this._updateTnCharges)
+		} else {
+			this._tnCharging = false
 		}
 	}
 
@@ -125,7 +127,8 @@ export default class Positionals extends Module {
 		}
 
 		// mark next recharge time, using the timestamp hook
-		if (!this._nextChargeIn) {
+		if (!this._tnCharging) {
+			this._tnCharging = true
 			this.addTimestampHook(event.timestamp + TRUE_NORTH_CD, this._updateTnCharges)
 		}
 	}
