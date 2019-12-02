@@ -321,7 +321,7 @@ export const SAM = ensureActions({
 	SHOHA: {
 		id: 16487,
 		name: 'Shoha',
-		icon: 'https://xivapi.com/i/003000/003177.png',
+		icon: 'https://xivapi.com/i/003000/003184.png',
 		cooldown: 15,
 	},
 })
