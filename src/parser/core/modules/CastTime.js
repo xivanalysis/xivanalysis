@@ -1,10 +1,9 @@
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import Module, {dependency} from 'parser/core/Module'
 
 export default class CastTime extends Module {
 	static handle = 'castTime'
+
+	@dependency data
 
 	_castTimes = []
 	_scIndex = null
@@ -15,7 +14,7 @@ export default class CastTime extends Module {
 		// Only going to deal with SC here, job-specific can do it themselves
 		const filter = {
 			to: 'player',
-			abilityId: STATUSES.SWIFTCAST.id,
+			abilityId: this.data.statuses.SWIFTCAST.id,
 		}
 		this.addHook('applybuff', filter, this._onApplySwiftcast)
 		this.addHook('removebuff', filter, this._onRemoveSwiftcast)
@@ -60,7 +59,7 @@ export default class CastTime extends Module {
 		)
 
 		// Mimicking old logic w/ the undefined. Don't ask.
-		const action = getDataBy(ACTIONS, 'id', actionId)
+		const action = this.data.getAction(actionId)
 		const defaultCastTime = action? action.castTime : undefined
 
 		// If there were no modifiers, just use the default

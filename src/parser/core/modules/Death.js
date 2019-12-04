@@ -1,21 +1,20 @@
 import React from 'react'
 import {Plural, Trans} from '@lingui/react'
 
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
-	STATUSES.WEAKNESS.id,
-	STATUSES.BRINK_OF_DEATH.id,
+	'WEAKNESS',
+	'BRINK_OF_DEATH',
 ]
 
 export default class Death extends Module {
 	static handle = 'death'
 	static dependencies = [
+		'data',
 		'suggestions',
 		'timeline',
 	]
@@ -27,10 +26,12 @@ export default class Death extends Module {
 	constructor(...args) {
 		super(...args)
 
+		const raiseStatuses = RAISE_STATUSES.map(key => this.data.statuses[key])
+
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('applydebuff', {
 			to: 'player',
-			abilityId: RAISE_STATUSES,
+			abilityId: raiseStatuses,
 		}, this._onRaise)
 		this.addHook('complete', this._onComplete)
 
@@ -77,7 +78,7 @@ export default class Death extends Module {
 
 		// Deaths are always major
 		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.RAISE.icon,
+			icon: this.data.actions.RAISE.icon,
 			content: <Trans id="core.deaths.content">
 				Don't die. Between downtime, lost gauge resources, and resurrection debuffs, dying is absolutely <em>crippling</em> to damage output.
 			</Trans>,
