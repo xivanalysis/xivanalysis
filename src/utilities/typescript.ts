@@ -19,3 +19,17 @@ export function enumify(obj: SortaEnum): Readonly<SortaEnum> {
 	}
 	return Object.freeze(obj)
 }
+
+// Type utilities, some partially stole from ts-toolbelt. Maybe I should just add it...
+
+/**
+ * Replace in `Target` the prop types from `Source` specified in `Props`
+ */
+export type ReplaceFrom<Target, Source, Props extends keyof Source> =
+	Omit<Target, Props> & {[K in Props]: Source[K]}
+
+// tslint:disable:ban-types
+/** Force typescript to compute a type for display purposes. */
+export type Compute<A extends any> =
+	A extends Function? A : {[K in keyof A]: A[K]} & {}
+// tslint:enable:ban-types
