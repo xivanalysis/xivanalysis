@@ -40,6 +40,15 @@ export const NIN = ensureActions({
 		gcdRecast: 0.5,
 	},
 
+	TEN_KASSATSU: {
+		id: 18805,
+		name: 'Ten',
+		icon: 'https://xivapi.com/i/002000/002901.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
+	},
+
 	CHI: {
 		id: 18806,
 		name: 'Chi',
