@@ -19,8 +19,10 @@ export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type'> {
 	type: 'normaliseddamage'
 	targetsHit: number
 	hits: number
+	ghostedHits: number
+	ghostedAmount: number
 	calculatedEvents: DamageEvent[]
-	effectiveEvents: DamageEvent[]
+	confirmedEvents: DamageEvent[]
 	attachEvent(event: DamageEvent): void
 }
 
@@ -28,8 +30,10 @@ export interface NormalisedHealEvent extends Omit<HealEvent, 'type'> {
 	type: 'normalisedheal'
 	targetsHit: number
 	hits: number
+	ghostedHits: number
+	ghostedAmount: number
 	calculatedEvents: HealEvent[]
-	effectiveEvents: HealEvent[]
+	confirmedEvents: HealEvent[]
 	attachEvent(event: HealEvent): void
 }
 
@@ -42,13 +46,15 @@ export class NormalisedEvents extends Module {
 			type: 'normaliseddamage',
 			targetsHit: 0,
 			hits: 0,
+			ghostedHits: 0,
+			ghostedAmount: 0,
 			calculatedEvents: [],
-			effectiveEvents: [],
+			confirmedEvents: [],
 			attachEvent(event: DamageEvent): void {
 				if (event.type.includes('calculated')) {
 					this.calculatedEvents.push(event)
 				} else {
-					this.effectiveEvents.push(event)
+					this.confirmedEvents.push(event)
 				}
 			},
 		}
@@ -60,13 +66,15 @@ export class NormalisedEvents extends Module {
 			type: 'normalisedheal',
 			targetsHit: 0,
 			hits: 0,
+			ghostedHits: 0,
+			ghostedAmount: 0,
 			calculatedEvents: [],
-			effectiveEvents: [],
+			confirmedEvents: [],
 			attachEvent(event: HealEvent): void {
 				if (event.type.includes('calculated')) {
 					this.calculatedEvents.push(event)
 				} else {
-					this.effectiveEvents.push(event)
+					this.confirmedEvents.push(event)
 				}
 			},
 		}
@@ -153,13 +161,17 @@ export class NormalisedEvents extends Module {
 	}
 
 	private summarize(normalisedEvent: NormalisedDamageEvent | NormalisedHealEvent) {
-		const effectiveEvents: Array<DamageEvent | HealEvent> = normalisedEvent.effectiveEvents
+		const confirmedEvents: Array<DamageEvent | HealEvent> = normalisedEvent.confirmedEvents
 		const calculatedEvents: Array<DamageEvent | HealEvent> = normalisedEvent.calculatedEvents
-		const allEvents: Array<DamageEvent | HealEvent> = calculatedEvents.concat(effectiveEvents)
+		const allEvents: Array<DamageEvent | HealEvent> = calculatedEvents.concat(confirmedEvents)
 
-		normalisedEvent.hits = effectiveEvents.length
-		normalisedEvent.targetsHit = new Set(effectiveEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size
-		normalisedEvent.amount = effectiveEvents.reduce((total, evt) => total + evt.amount, 0)
+		const hitGhosted = (evt: DamageEvent | HealEvent) => evt.unpaired
+
+		normalisedEvent.hits = confirmedEvents.length
+		normalisedEvent.targetsHit = new Set(confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size
+		normalisedEvent.amount = confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
+		normalisedEvent.ghostedHits = calculatedEvents.filter(hitGhosted).length
+		normalisedEvent.ghostedAmount = calculatedEvents.filter(hitGhosted).reduce((total, evt) => total + evt.amount, 0)
 		normalisedEvent.successfulHit = true
 		// normalisedEvent.successfulHit = effectiveEvents.reduce((successfulHit, evt) => successfulHit || evt.successfulHit, false)
 		normalisedEvent.timestamp = allEvents.map(evt => evt.timestamp).reduce((min, timestamp) => Math.min(min, timestamp))
