@@ -33,12 +33,12 @@ export default class MultiHit extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('aoedamage', {by: 'player', abilityId: Object.keys(this._incorrectMultihitSkills).map(Number)}, this._checkMultiHitSkill)
+		this.addHook('normaliseddamage', {by: 'player', abilityId: Object.keys(this._incorrectMultihitSkills).map(Number)}, this._checkMultiHitSkill)
 		this.addHook('complete', this._onComplete)
 	}
 
 	_checkMultiHitSkill(event) {
-		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.hits.length < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
+		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.targetsHit < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
 			this._incorrectMultihitSkills[event.ability.guid]++
 		}
 	}

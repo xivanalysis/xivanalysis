@@ -166,6 +166,9 @@ interface EffectEvent extends AbilityEvent {
 	sourceResources?: ActorResources
 	targetResources: ActorResources
 
+	packetID?: number
+	unpaired?: boolean
+
 	simulated?: boolean
 	actorPotencyRatio?: number
 	expectedCritRate?: number

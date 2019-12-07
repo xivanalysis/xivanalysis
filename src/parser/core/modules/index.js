@@ -17,6 +17,7 @@ import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
+import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
@@ -48,6 +49,7 @@ export default [
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,
