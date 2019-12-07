@@ -128,6 +128,7 @@ export class EntityStatuses extends Module {
 					adjustedEvents.push({
 						...statusEvent,
 						start: invuln.end,
+						lastRefreshed: invuln.end,
 						end: statusEvent.end,
 						stackHistory: newStackHistory,
 					})
