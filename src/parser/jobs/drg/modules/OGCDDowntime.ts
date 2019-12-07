@@ -9,5 +9,9 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{cooldowns: [ACTIONS.HIGH_JUMP]},
 		{cooldowns: [ACTIONS.SPINESHATTER_DIVE]},
 		{cooldowns: [ACTIONS.DRAGONFIRE_DIVE]},
+		{cooldowns: [ACTIONS.LIFE_SURGE]},
+		{cooldowns: [ACTIONS.LANCE_CHARGE]},
+		{cooldowns: [ACTIONS.DRAGON_SIGHT]},
+		{cooldowns: [ACTIONS.BATTLE_LITANY]},
 	]
 }
