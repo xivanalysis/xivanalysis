@@ -172,8 +172,7 @@ export class NormalisedEvents extends Module {
 		normalisedEvent.amount = confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
 		normalisedEvent.ghostedHits = calculatedEvents.filter(hitGhosted).length
 		normalisedEvent.ghostedAmount = calculatedEvents.filter(hitGhosted).reduce((total, evt) => total + evt.amount, 0)
-		normalisedEvent.successfulHit = true
-		// normalisedEvent.successfulHit = effectiveEvents.reduce((successfulHit, evt) => successfulHit || evt.successfulHit, false)
+		normalisedEvent.successfulHit = calculatedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
 		normalisedEvent.timestamp = allEvents.map(evt => evt.timestamp).reduce((min, timestamp) => Math.min(min, timestamp))
 	}
 }
