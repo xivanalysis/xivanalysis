@@ -1,5 +1,7 @@
+import STATUSES from 'data/STATUSES'
 import {BuffEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {getDataBy} from '../../../data'
 import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import Invulnerability from './Invulnerability'
 
@@ -8,6 +10,7 @@ const REMOVE = 'remove'
 
 interface BuffTrackingEvent extends BuffEvent {
 	start: number,
+	lastRefreshed: number,
 	end: number | null,
 	stacks: number,
 	stackHistory: StackHistoryEvent[],
@@ -89,8 +92,15 @@ export class EntityStatuses extends Module {
 		const eventToAdjust = {...statusEvent}
 		const adjustedEvents = [eventToAdjust]
 		if (!statusEvent.end) {
-			console.error(`Unexpected error: Attempting to check invuln events for an incomplete status event.  Event timestamp: ${statusEvent.timestamp} | Ability name: ${statusEvent.ability.name}`)
-			return adjustedEvents
+			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
+			const statusInfo = getDataBy(STATUSES, 'id', statusEvent.ability.guid)
+			if (statusInfo?.duration) {
+				statusEvent.end = statusEvent.lastRefreshed + statusInfo.duration * 1000
+				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
+			} else {
+				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)
+				statusEvent.end = this.parser.fight.end_time
+			}
 		}
 		const target = String(statusEvent.targetID)
 		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')

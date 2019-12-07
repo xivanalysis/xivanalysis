@@ -9,19 +9,21 @@ export default class Entities extends Module {
 		super(...args)
 
 		// Buffs
-		this.addHook('applybuff', this.applyBuff)
-		this.addHook('applydebuff', event => this.applyBuff(event, true))
-		this.addHook('applybuffstack', this.updateBuffStack)
-		this.addHook('applydebuffstack', event => this.updateBuffStack(event, true))
-		this.addHook('removebuffstack', this.updateBuffStack)
-		this.addHook('removedebuffstack', event => this.updateBuffStack(event, true))
-		this.addHook('removebuff', this.removeBuff)
-		this.addHook('removedebuff', event => this.removeBuff(event, true))
+		this.addEventHook('applybuff', this.applyBuff)
+		this.addEventHook('applydebuff', event => this.applyBuff(event, true))
+		this.addEventHook('applybuffstack', this.updateBuffStack)
+		this.addEventHook('applydebuffstack', event => this.updateBuffStack(event, true))
+		this.addEventHook('removebuffstack', this.updateBuffStack)
+		this.addEventHook('removedebuffstack', event => this.updateBuffStack(event, true))
+		this.addEventHook('removebuff', this.removeBuff)
+		this.addEventHook('removedebuff', event => this.removeBuff(event, true))
+		this.addEventHook('refreshbuff', this.refreshBuff)
+		this.addEventHook('refreshdebuff', event => this.refreshBuff(event, true))
 
 		// Resources - hooked to init to make sure normaliser runs to determine damage event before hooking events
-		this.addHook('init', () => {
-			this.addHook(this.fflogsEvents.damageEventName, this.updateResources)
-			this.addHook(this.fflogsEvents.healEventName, this.updateResources)
+		this.addEventHook('init', () => {
+			this.addEventHook(this.fflogsEvents.damageEventName, this.updateResources)
+			this.addEventHook(this.fflogsEvents.healEventName, this.updateResources)
 		})
 	}
 
@@ -57,6 +59,7 @@ export default class Entities extends Module {
 		const buff = {
 			...event,
 			start: event.timestamp,
+			lastRefreshed: event.timestamp,
 			end: null,
 			stackHistory: [{stacks: 1, timestamp: event.timestamp}],
 			isDebuff,
@@ -106,14 +109,7 @@ export default class Entities extends Module {
 
 		// If there's no existing buff, fake one from the start of the fight
 		if (!buff) {
-			const startTime = this.parser.fight.start_time
-			buff = {
-				...event,
-				start: startTime,
-				end: null,
-				stackHistory: [{stacks: 1, timestamp: startTime}],
-				isDebuff,
-			}
+			buff = this.synthesizeBuff(event, isDebuff)
 			entity.buffs.push(buff)
 		}
 
@@ -121,6 +117,40 @@ export default class Entities extends Module {
 		buff.end = event.timestamp
 		buff.stackHistory.push({stacks: 0, timestamp: event.timestamp})
 		this.triggerChangeBuffStack(buff, event.timestamp, buff.stacks, 0)
+	}
+
+	refreshBuff(event, isDebuff) {
+		const entity = this.getBuffEventEntity(event)
+		if (!entity) {
+			return
+		}
+
+		let buff = entity.buffs.find(buff => buff.ability.guid === event.ability.guid && buff.end == null)
+
+		// If there's no existing buff, fake one from the start of the fight
+		if (!buff) {
+			buff = this.synthesizeBuff(event, isDebuff)
+			entity.buffs.push(buff)
+		}
+
+		// Update the buff's last refreshed time
+		const oldStacks = buff.stacks
+		buff.lastRefreshed = event.timestamp
+		buff.stacks = event.stack || 1
+		buff.stackHistory.push({stacks: event.stack || 1, timestamp: event.timestamp})
+
+		this.triggerChangeBuffStack(buff, event.timestamp, oldStacks, buff.stacks)
+	}
+
+	synthesizeBuff(event, isDebuff) {
+		const startTime = this.parser.fight.start_time
+		return {
+			...event,
+			start: startTime,
+			end: null,
+			stackHistory: [{stacks: 1, timestamp: startTime}],
+			isDebuff,
+		}
 	}
 
 	triggerChangeBuffStack(buff, timestamp, oldStacks, newStacks) {
