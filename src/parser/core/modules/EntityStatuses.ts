@@ -28,6 +28,12 @@ interface StatusRangeEndpoint {
 	stackHistory: StackHistoryEvent[],
 }
 
+interface StatusInfoTracking {
+	uptime: number,
+	activeOn: number,
+	activeWindowStart: number,
+}
+
 export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
 	static debug = true
@@ -52,15 +58,30 @@ export class EntityStatuses extends Module {
 					return statusEvents
 				}
 
-				return statusEvents.concat(
-					target.buffs.filter((statusEvent: BuffTrackingEvent) => statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)),
-				)
+				return statusEvents.concat(this.getSelectedStatusEvents(statusId, sourceId, target.buffs))
 			}, [])
 
 		return this.getUptime(statusEvents)
 	}
 
-	getStatusRangesForEvent(statusEvent: BuffTrackingEvent) {
+	getSelectedStatusEvents = (statusId: number, sourceId: number, targetBuffs: BuffTrackingEvent[]) => {
+		return targetBuffs.filter((statusEvent: BuffTrackingEvent) =>
+			statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)
+		)
+	}
+
+	getUptime = (statusEvents: BuffTrackingEvent[]) => {
+		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
+				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
+			}, [])
+
+		const statusInfo = statusRanges.sort((a, b) => a.timestamp - b.timestamp)
+			.reduce(this.totalStatusUptime, {uptime: 0, activeOn: 0, activeWindowStart: 0})
+
+		return statusInfo.uptime
+	}
+
+	getStatusRangesForEvent = (statusEvent: BuffTrackingEvent) => {
 		this.debug(`Determining active time range for status ${statusEvent.ability.name} - started at: ${this.parser.formatTimestamp(statusEvent.start, 1)} - ended at: ${(statusEvent.end)? this.parser.formatTimestamp(statusEvent.end, 1) : ''}`)
 		return this.splitStatusEventForInvulns(statusEvent).reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
 			statusRanges.push({timestamp: statusEvent.start, type: APPLY, stackHistory: statusEvent.stackHistory})
@@ -69,35 +90,26 @@ export class EntityStatuses extends Module {
 		}, [])
 	}
 
-	getUptime(statusEvents: BuffTrackingEvent[]) {
-		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
-				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
-			}, [])
-
-		const statusInfo = statusRanges.sort((a, b) => a.timestamp - b.timestamp)
-			.reduce((statusTracking, rangeEndpoint) => {
-				this.debug(`Status change ${rangeEndpoint.type} at time ${this.parser.formatTimestamp(rangeEndpoint.timestamp, 1)}`)
-				if (rangeEndpoint.type === APPLY) {
-					if (statusTracking.activeOn === 0) {
-						this.debug('Status not currently active on any targets, starting new window')
-						statusTracking.activeWindowStart = rangeEndpoint.timestamp
-					}
-					statusTracking.activeOn++
-				}
-				if (rangeEndpoint.type === REMOVE) {
-					statusTracking.activeOn--
-					if (statusTracking.activeOn === 0) {
-						statusTracking.uptime += rangeEndpoint.timestamp - (statusTracking.activeWindowStart ?? rangeEndpoint.timestamp)
-						this.debug(`Status ended on all targets.  Total uptime now ${this.parser.formatDuration(statusTracking.uptime, 1)}`)
-					}
-				}
-				return statusTracking
-			}, {uptime: 0, activeOn: 0, activeWindowStart: 0})
-
-		return statusInfo.uptime
+	totalStatusUptime = (statusTracking: StatusInfoTracking, rangeEndpoint: StatusRangeEndpoint) => {
+		this.debug(`Status change ${rangeEndpoint.type} at time ${this.parser.formatTimestamp(rangeEndpoint.timestamp, 1)}`)
+		if (rangeEndpoint.type === APPLY) {
+			if (statusTracking.activeOn === 0) {
+				this.debug('Status not currently active on any targets, starting new window')
+				statusTracking.activeWindowStart = rangeEndpoint.timestamp
+			}
+			statusTracking.activeOn++
+		}
+		if (rangeEndpoint.type === REMOVE) {
+			statusTracking.activeOn--
+			if (statusTracking.activeOn === 0) {
+				statusTracking.uptime += rangeEndpoint.timestamp - (statusTracking.activeWindowStart ?? rangeEndpoint.timestamp)
+				this.debug(`Status ended on all targets.  Total uptime now ${this.parser.formatDuration(statusTracking.uptime, 1)}`)
+			}
+		}
+		return statusTracking
 	}
 
-	splitStatusEventForInvulns(statusEvent: BuffTrackingEvent) {
+	splitStatusEventForInvulns = (statusEvent: BuffTrackingEvent) => {
 		this.setEndTimeIfUnfinished(statusEvent)
 
 		const eventToAdjust = _.cloneDeep(statusEvent)
@@ -143,7 +155,7 @@ export class EntityStatuses extends Module {
 		return adjustedEvents
 	}
 
-	private setEndTimeIfUnfinished(statusEvent: BuffTrackingEvent) {
+	private setEndTimeIfUnfinished = (statusEvent: BuffTrackingEvent) => {
 		if (!statusEvent.end) {
 			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
 			const statusInfo = this.data.getStatus(statusEvent.ability.guid)
