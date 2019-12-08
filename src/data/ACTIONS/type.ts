@@ -1,4 +1,5 @@
 import {StatusRoot} from 'data/STATUSES/root'
+import {Compute, ReplaceFrom} from 'utilities/typescript'
 
 interface ActionCombo {
 	start?: boolean
@@ -22,4 +23,15 @@ export interface Action {
 	// [key: string]: unknown
 }
 
-export const ensureActions = <T extends Record<string, Action>>(actions: T): {[K in keyof T]: T[K] & Action} => actions
+/*
+	The properties defined here get narrowed too much by the `ensureActions`
+	generic by default - we use some TS magic to forcefully widen them again.
+	Expect to add this when dealing with top-level arrays.
+*/
+type TroublesomeProperties = 'statusesApplied'
+
+type EnsuredActions<T extends Record<string, Action>> = {
+	[K in keyof T]: Compute<ReplaceFrom<T[K] & Action, Action, TroublesomeProperties>>
+}
+
+export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me

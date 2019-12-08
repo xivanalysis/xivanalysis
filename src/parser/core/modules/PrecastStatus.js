@@ -1,7 +1,5 @@
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
-import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
 import _ from 'lodash'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
@@ -11,6 +9,7 @@ export default class PrecastStatus extends Module {
 	static dependencies = [
 		// Forcing action to run first, cus we want to always splice in before it.
 		'precastAction', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'data',
 	]
 	static debug = false
 
@@ -25,7 +24,7 @@ export default class PrecastStatus extends Module {
 			const event = events[i]
 			const targetId = event.targetID
 
-			const statusInfo = getDataBy(STATUSES, 'id', event.ability?.guid)
+			const statusInfo = this.data.getStatus(event.ability?.guid)
 			if (!statusInfo) {
 				// No valid status data, skip to next event
 				continue
@@ -87,8 +86,8 @@ export default class PrecastStatus extends Module {
 		}
 
 		// Determine if this buff comes from a known action, fab a cast event
-		const statusKey = _.findKey(STATUSES, statusInfo)
-		const actionInfo = getDataBy(ACTIONS, 'statusesApplied', statusKey)
+		const statusKey = _.findKey(this.data.statuses, statusInfo)
+		const actionInfo = getDataBy(this.data.actions, 'statusesApplied', statusKey)
 		if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
 			this.fabricateActionEvent(event, actionInfo)
 		}

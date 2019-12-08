@@ -1,6 +1,7 @@
-import {layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
+import {getDataBy} from 'data'
+import {Action, layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
 import {applyLayer, Layer} from 'data/layer'
-import {layers as statusLayers, root as statusRoot} from 'data/STATUSES'
+import {layers as statusLayers, root as statusRoot, Status} from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 export class Data extends Module {
@@ -8,12 +9,20 @@ export class Data extends Module {
 
 	private appliedCache = new Map<unknown, unknown>()
 
+	get actions() {
+		return this.getAppliedData(actionRoot, actionLayers)
+	}
+
 	get statuses() {
 		return this.getAppliedData(statusRoot, statusLayers)
 	}
 
-	get actions() {
-		return this.getAppliedData(actionRoot, actionLayers)
+	getAction(id: Action['id']) {
+		return getDataBy(this.actions, 'id', id)
+	}
+
+	getStatus(id: Status['id']) {
+		return getDataBy(this.statuses, 'id', id)
 	}
 
 	private getAppliedData<R>(root: R, layers: Array<Layer<R>>): R {
