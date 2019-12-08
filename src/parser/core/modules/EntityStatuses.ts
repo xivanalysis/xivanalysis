@@ -1,9 +1,8 @@
-import STATUSES from 'data/STATUSES'
 import {BuffEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {getDataBy} from '../../../data'
-import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
-import Invulnerability from './Invulnerability'
+import {Data} from 'parser/core/modules/Data'
+import Invulnerability from 'parser/core/modules/Invulnerability'
 
 const APPLY = 'apply'
 const REMOVE = 'remove'
@@ -11,7 +10,7 @@ const REMOVE = 'remove'
 interface BuffTrackingEvent extends BuffEvent {
 	start: number,
 	lastRefreshed: number,
-	end: number | null,
+	end: number | undefined,
 	stacks: number,
 	stackHistory: StackHistoryEvent[],
 	isDebuff: boolean,
@@ -31,10 +30,10 @@ interface StatusRangeEndpoint {
 
 export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
-	static debug = false
+	static debug = true
 
 	@dependency private invuln!: Invulnerability
-	@dependency private fflogsEvents!: FFLogsEventNormaliser
+	@dependency private data!: Data
 
 	// -----
 	// API
@@ -42,41 +41,23 @@ export class EntityStatuses extends Module {
 	// TODO: This implementation which I've shamelessly stolen seems to only track overall
 	//       uptime, ignoring potential gains from multidotting, etc. Should that be in here,
 	//       or is that a somewhere-else sort of thing...
+	// TODO: Export an interface that defines an Entity (target)... the expectation is that onTargets will generally be
+	//       parser.enemies or parser.combatants, as those were mostly the classes where getStatusUptime was previously being used.
+	//       Probably add a method to parser.entities to return an array of the specified entity type (e.g. this.parser.enemies.getArray())
 	getStatusUptime(statusId: number, onTargets: TODO, sourceId = this.parser.player.id) {
 		// Search for status maps on valid targets
 		const statusEvents: BuffTrackingEvent[] = Object.values(onTargets)
 			.reduce((statusEvents: BuffTrackingEvent[], target: TODO) => {
-				const appliedStatuses = target.buffs?.filter((statusEvent: BuffTrackingEvent) => {
-					return statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)
-				})
-				return statusEvents.concat(appliedStatuses)
+				if (!(target.buffs instanceof Array)) {
+					return statusEvents
+				}
+
+				return statusEvents.concat(
+					target.buffs.filter((statusEvent: BuffTrackingEvent) => statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)),
+				)
 			}, [])
 
-		let active = 0
-		let start: number | null = null
-		return statusEvents
-			.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
-				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
-			}, [])
-			.sort((a, b) => a.timestamp - b.timestamp)
-			.reduce((uptime, rangeEndpoint) => {
-				this.debug(`Status change ${rangeEndpoint.type} at time ${this.parser.formatTimestamp(rangeEndpoint.timestamp, 1)}`)
-				if (rangeEndpoint.type === APPLY) {
-					if (active === 0) {
-						this.debug('Status not currently active on any targets, starting new window')
-						start = rangeEndpoint.timestamp
-					}
-					active++
-				}
-				if (rangeEndpoint.type === REMOVE) {
-					active--
-					if (active === 0) {
-						uptime += rangeEndpoint.timestamp - (start ?? rangeEndpoint.timestamp)
-						this.debug(`Status ended on all targets.  Total uptime now ${this.parser.formatDuration(uptime, 1)}`)
-					}
-				}
-				return uptime
-			}, 0)
+		return this.getUptime(statusEvents)
 	}
 
 	getStatusRangesForEvent(statusEvent: BuffTrackingEvent) {
@@ -88,23 +69,45 @@ export class EntityStatuses extends Module {
 		}, [])
 	}
 
+	getUptime(statusEvents: BuffTrackingEvent[]) {
+		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
+				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
+			}, [])
+
+		const statusInfo = statusRanges.sort((a, b) => a.timestamp - b.timestamp)
+			.reduce((statusTracking, rangeEndpoint) => {
+				this.debug(`Status change ${rangeEndpoint.type} at time ${this.parser.formatTimestamp(rangeEndpoint.timestamp, 1)}`)
+				if (rangeEndpoint.type === APPLY) {
+					if (statusTracking.activeOn === 0) {
+						this.debug('Status not currently active on any targets, starting new window')
+						statusTracking.activeWindowStart = rangeEndpoint.timestamp
+					}
+					statusTracking.activeOn++
+				}
+				if (rangeEndpoint.type === REMOVE) {
+					statusTracking.activeOn--
+					if (statusTracking.activeOn === 0) {
+						statusTracking.uptime += rangeEndpoint.timestamp - (statusTracking.activeWindowStart ?? rangeEndpoint.timestamp)
+						this.debug(`Status ended on all targets.  Total uptime now ${this.parser.formatDuration(statusTracking.uptime, 1)}`)
+					}
+				}
+				return statusTracking
+			}, {uptime: 0, activeOn: 0, activeWindowStart: 0})
+
+		return statusInfo.uptime
+	}
+
 	splitStatusEventForInvulns(statusEvent: BuffTrackingEvent) {
-		const eventToAdjust = {...statusEvent}
+		this.setEndTimeIfUnfinished(statusEvent)
+
+		const eventToAdjust = _.cloneDeep(statusEvent)
 		const adjustedEvents = [eventToAdjust]
-		if (!statusEvent.end) {
-			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
-			const statusInfo = getDataBy(STATUSES, 'id', statusEvent.ability.guid)
-			if (statusInfo?.duration) {
-				statusEvent.end = statusEvent.lastRefreshed + statusInfo.duration * 1000
-				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
-			} else {
-				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)
-				statusEvent.end = this.parser.fight.end_time
-			}
-		}
+
 		const target = String(statusEvent.targetID)
+		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end!, 1)}`)
 		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 
+		// TODO: Export an interface for invulnerable events from Invulnerability.js
 		invulns.forEach((invuln: TODO) => {
 			this.debug(`Target was detected as invulnerable during duration of status.  Invulnerable from ${this.parser.formatTimestamp(invuln.start, 1)} to ${this.parser.formatTimestamp(invuln.end, 1)}`)
 			if (invuln.start < statusEvent.start && invuln.end >= statusEvent.start) {
@@ -138,5 +141,19 @@ export class EntityStatuses extends Module {
 
 		adjustedEvents.forEach(event => this.debug(`Active time after adjusting for invulns - start at: ${this.parser.formatTimestamp(event.start)} - end at: ${this.parser.formatTimestamp(event.end!)}`))
 		return adjustedEvents
+	}
+
+	private setEndTimeIfUnfinished(statusEvent: BuffTrackingEvent) {
+		if (!statusEvent.end) {
+			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
+			const statusInfo = this.data.getStatus(statusEvent.ability.guid)
+			if (statusInfo?.duration) {
+				statusEvent.end = statusEvent.lastRefreshed + statusInfo.duration * 1000
+				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
+			} else {
+				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)
+				statusEvent.end = this.parser.fight.end_time
+			}
+		}
 	}
 }

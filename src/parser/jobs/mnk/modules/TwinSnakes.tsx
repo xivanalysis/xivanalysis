@@ -1,20 +1,17 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
-import {EntityStatuses} from '../../../core/modules/EntityStatuses'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Expected time to drop Twin in GL4 (basically part way thru previous GCD)

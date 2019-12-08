@@ -136,8 +136,8 @@ export default class Entities extends Module {
 		// Update the buff's last refreshed time
 		const oldStacks = buff.stacks
 		buff.lastRefreshed = event.timestamp
-		buff.stacks = event.stack || 1
-		buff.stackHistory.push({stacks: event.stack || 1, timestamp: event.timestamp})
+		buff.stacks = 1
+		buff.stackHistory.push({stacks: 1, timestamp: event.timestamp})
 
 		this.triggerChangeBuffStack(buff, event.timestamp, oldStacks, buff.stacks)
 	}
