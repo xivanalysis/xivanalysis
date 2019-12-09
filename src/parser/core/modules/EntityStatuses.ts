@@ -65,9 +65,9 @@ export class EntityStatuses extends Module {
 	}
 
 	getSelectedStatusEvents = (statusId: number, sourceId: number, targetBuffs: BuffTrackingEvent[]) => {
-		return targetBuffs.filter((statusEvent: BuffTrackingEvent) =>
-			statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)
-		)
+		return targetBuffs.filter((statusEvent: BuffTrackingEvent) => {
+			return statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)
+		})
 	}
 
 	getUptime = (statusEvents: BuffTrackingEvent[]) => {
