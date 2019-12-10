@@ -19,6 +19,7 @@ import Timeline from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
 
+
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -267,6 +268,10 @@ export default class Technicalities extends Module {
 						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
 						accessor: 'pooled',
 					},
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
+						accessor: 'buffed',
+					},
 				]}
 				data={this.history.map(window => {
 					return ({
@@ -275,8 +280,9 @@ export default class Technicalities extends Module {
 							window.end - this.parser.fight.start_time :
 							window.start - this.parser.fight.start_time,
 							notesMap: {
-								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
-								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
+								timely: <>{window.playersBuffed ? this.getNotesIcon(!window.timelyDevilment): 'N/A'}</>,
+								pooled: <>{window.playersBuffed ? this.getNotesIcon(window.poolingProblem): 'N/A'}</>,
+								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
 							},
 						rotation: window.rotation,
 					})
