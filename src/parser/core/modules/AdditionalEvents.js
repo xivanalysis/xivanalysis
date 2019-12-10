@@ -45,7 +45,6 @@ export default class AdditionalEvents extends Module {
 	static dependencies = [
 		'enemies',
 		'data',
-		'normalisedEvents', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	async normalise(events) {
