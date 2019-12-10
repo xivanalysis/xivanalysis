@@ -5,9 +5,7 @@ import {Compute} from 'utilities'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
-
 const DAMAGE_EVENT_TYPES = new Set(['damage', 'calculateddamage'])
-
 const HEAL_EVENT_TYPES = new Set(['heal', 'calculatedheal'])
 
 type BaseEvent = DamageEvent | HealEvent
@@ -16,7 +14,15 @@ type NormalisedEvent<E extends BaseEvent, T extends NormalisedEventTypes> = Omit
 	type: T,
 	targetsHit: number,
 	hits: number,
+	/**
+	 * Number of damage events that did not do confirmed damage to the target.
+	 *  Typically due to target or source despawning before damage applied.
+	 */
 	ghostedHits: number,
+	/**
+	 * Total amount of damage from damage events that did not do confirmed damage to the target.
+	 *  Typically due to target or source despawning before damage applied.
+	 */
 	ghostedAmount: number,
 	calculatedEvents: E[],
 	confirmedEvents: E[],
