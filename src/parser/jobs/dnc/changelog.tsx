@@ -58,7 +58,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2019-12-09'),
-		Changes: () => <>Technical Finish windows now display how many players were affected, and windows sourced only to other dancers in the party are hidden.</>,
+		Changes: () => <>Technical Finish windows now display how many players were affected by your buff.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
 ]

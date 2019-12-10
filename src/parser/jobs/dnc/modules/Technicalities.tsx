@@ -19,8 +19,6 @@ import Timeline from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
 
-const DEBUG_SHOW_ALL_WINDOWS = false && process.env.NODE_ENV !== 'production'
-
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
@@ -274,15 +272,15 @@ export default class Technicalities extends Module {
 						accessor: 'buffed',
 					},
 				]}
-				data={this.history.filter(window => window.playersBuffed > 0 || DEBUG_SHOW_ALL_WINDOWS).map(window => {
+				data={this.history.map(window => {
 					return ({
 						start: window.start - this.parser.fight.start_time,
 						end: window.end != null ?
 							window.end - this.parser.fight.start_time :
 							window.start - this.parser.fight.start_time,
 							notesMap: {
-								timely: <>{window.playersBuffed ? this.getNotesIcon(!window.timelyDevilment): 'N/A'}</>,
-								pooled: <>{window.playersBuffed ? this.getNotesIcon(window.poolingProblem): 'N/A'}</>,
+								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
+								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
 								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
 							},
 						rotation: window.rotation,
