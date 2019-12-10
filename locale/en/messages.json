@@ -318,6 +318,7 @@
   "dnc.procs.suggestions.drops.why": "You dropped {droppedProcs, plural, one {# proc} other {# procs}}",
   "dnc.procs.suggestions.overwrite.content": "Avoid overwriting your procs. Your proc actions are stronger than your normal combo, so overwriting them is a significant DPS loss.",
   "dnc.procs.suggestions.overwrite.why": "You overwrote {0, plural, one {# proc} other {# procs}}",
+  "dnc.technicalities.rotation-table.header.buffed": "Players Buffed",
   "dnc.technicalities.rotation-table.header.missed": "<0/> On Time?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> Pooled?",
   "dnc.technicalities.suggestions.bad-devilments.content": "Using <0/> outside of your <1/> windows leads to an avoidable loss in DPS. Aside from certain opener situations, you should be using <2/> at the beginning of your <3/> windows.",

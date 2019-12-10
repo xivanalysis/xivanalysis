@@ -318,6 +318,7 @@
   "dnc.procs.suggestions.drops.why": "{droppedProcs, plural, other {# 회}}의 프록을 잃었습니다.",
   "dnc.procs.suggestions.overwrite.content": "프록이 이미 뜬 상태에서 덮어 씌워지지 않도록 반드시 사용하십시오. 프록에서 파생되는 기술들은 기본 콤보 기술보다 더 강력하므로 덮어 씌워지는것은 당연한 딜 손해입니다.",
   "dnc.procs.suggestions.overwrite.why": "프록을 {0, plural, one {#회} other {#회}} 덧썼습니다",
+  "dnc.technicalities.rotation-table.header.buffed": "",
   "dnc.technicalities.rotation-table.header.missed": "<0/>이 제떄 사용되었습니까?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/>이 축적되었습니까?",
   "dnc.technicalities.suggestions.bad-devilments.content": "<1/> 구간외 <0/>를 사용할시 반드시 딜 손해를 받습니다. 전투에 다른 오프닝같은 특별한 상황이 아니라면 <3/> 구간에 진입할떄마다 <2/>를 사용하십시오.",
