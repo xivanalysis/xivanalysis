@@ -56,4 +56,9 @@ export const changelog = [
 		Changes: () => <>Updated dropped proc suggestion wording, and fixed a bug with broken combo allowances under Technical Finish.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-12-09'),
+		Changes: () => <>Technical Finish windows now display how many players were affected, and windows sourced only to other dancers in the party are hidden.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
