@@ -179,6 +179,8 @@ interface EffectEvent extends AbilityEvent {
 
 export interface DeathEvent extends Event { type: 'death' }
 export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
+
+export const isDamageEvent = (event: Event): event is DamageEvent => (event as DamageEvent).type.includes('damage')
 export interface DamageEvent extends EffectEvent {
 	type: 'calculateddamage' | 'damage'
 	overkill?: number
@@ -186,10 +188,15 @@ export interface DamageEvent extends EffectEvent {
 	multistrike?: boolean
 	blocked?: number
 }
+
+export const isHealEvent = (event: Event): event is HealEvent => (event as HealEvent).type.includes('heal')
 export interface HealEvent extends EffectEvent {
 	type: 'calculatedheal' | 'heal'
 	overheal: number
 }
+
+export const isApplyBuffEvent = (event: Event): event is BuffEvent => (event as BuffEvent).type ==='applybuff'
+export const isRemoveBuffEvent = (event: Event): event is BuffEvent => (event as BuffEvent).type ==='removebuff'
 export interface BuffEvent extends AbilityEvent {
 	type: (
 		'applybuff' |
