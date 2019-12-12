@@ -1,98 +1,172 @@
-import {DamageEvent, Event, HealEvent} from 'fflogs'
+import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
-import {Compute} from 'utilities'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
-const DAMAGE_EVENT_TYPES = new Set(['damage', 'calculateddamage'])
-const HEAL_EVENT_TYPES = new Set(['heal', 'calculatedheal'])
 
 type BaseEvent = DamageEvent | HealEvent
-type NormalisedEventTypes = 'normaliseddamage' | 'normalisedheal'
-type NormalisedEvent<E extends BaseEvent, T extends NormalisedEventTypes> = Omit<E, 'type'> & {
-	type: T,
-	targetsHit: number,
-	hits: number,
+
+interface NormalisedEvent extends AbilityEvent {
+	type: string
+	calculatedEvents: Array<BaseEvent | BuffEvent>
+	confirmedEvents: Array<BaseEvent | BuffEvent>
+}
+class NormalisedEvent {
+	get targetsHit(): number { return new Set((this.confirmedEvents as unknown as Event[]).map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
+	get hits(): number { return this.confirmedEvents.length }
+	get amount(): number | undefined {
+		if (NormalisedEvents.isBaseEventArray(this.confirmedEvents)) {
+			return this.confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
+		}
+		return undefined
+	}
 	/**
 	 * Number of damage events that did not do confirmed damage to the target.
 	 *  Typically due to target or source despawning before damage applied.
 	 */
-	ghostedHits: number,
+	get ghostedHits(): number | undefined {
+		if (NormalisedEvents.isBaseEventArray(this.calculatedEvents)) {
+			return this.calculatedEvents.filter((evt) => evt.unpaired).reduce((total, evt) => total + evt.amount, 0)
+		}
+		return undefined
+	}
 	/**
 	 * Total amount of damage from damage events that did not do confirmed damage to the target.
 	 *  Typically due to target or source despawning before damage applied.
 	 */
-	ghostedAmount: number,
-	calculatedEvents: E[],
-	confirmedEvents: E[],
+	get ghostedAmount(): number | undefined {
+		if (NormalisedEvents.isBaseEventArray(this.calculatedEvents)) {
+			return this.calculatedEvents.filter((evt) => evt.unpaired).length
+		}
+		return undefined
+	}
+	get successfulHit(): boolean | undefined {
+		if (NormalisedEvents.isBaseEventArray(this.confirmedEvents)) {
+			return this.confirmedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
+		}
+	}
+
+	attachEvent(event: BaseEvent | BuffEvent) {
+		if (event.type.includes('calculated')) {
+			this.calculatedEvents.push(event)
+		} else {
+			this.confirmedEvents.push(event)
+		}
+	}
 }
 
-export type NormalisedDamageEvent = Compute<NormalisedEvent<DamageEvent, 'normaliseddamage'>>
-export type NormalisedHealEvent = Compute<NormalisedEvent<HealEvent, 'normalisedheal'>>
+export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type' | 'amount' | 'successfulHit'>, NormalisedEvent {}
+export class NormalisedDamageEvent extends NormalisedEvent {
+	type = 'normaliseddamage'
+	calculatedEvents: DamageEvent[] = []
+	confirmedEvents: DamageEvent[] = []
+
+	constructor(event: DamageEvent) {
+		super()
+		Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
+	}
+}
+
+export interface NormalisedHealEvent extends Omit<HealEvent, 'type'| 'amount' | 'successfulHit'>, NormalisedEvent {}
+export class NormalisedHealEvent extends NormalisedEvent {
+	type = 'normalisedheal'
+	calculatedEvents: HealEvent[] = []
+	confirmedEvents: HealEvent[] = []
+
+	constructor(event: HealEvent) {
+		super()
+		Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
+	}
+}
+
+export interface NormalisedApplyBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
+export class NormalisedApplyBuffEvent extends NormalisedEvent {
+	type = 'normalisedapplybuff'
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
+export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
+export class NormalisedRefreshBuffEvent extends NormalisedEvent {
+	type = 'normalisedrefreshbuff'
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
 
 export class NormalisedEvents extends Module {
 	static handle = 'normalisedEvents'
+	static debug = false
 
-	private static generateNew<E extends BaseEvent, T extends NormalisedEventTypes>(event: E, type: T): NormalisedEvent<E, T> {
-		return {
-			...event,
-			type,
-			targetsHit: 0,
-			hits: 0,
-			ghostedHits: 0,
-			ghostedAmount: 0,
-			calculatedEvents: [],
-			confirmedEvents: [],
-		}
+	public static isBaseEventArray(array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] {
+		return array.length > 0 && this.isBaseEvent(array[0])
 	}
 
-	private static attachEvent<E extends BaseEvent, T extends NormalisedEventTypes>(event: E, normalisedEvent: NormalisedEvent<E, T>) {
-		if (event.type.includes('calculated')) {
-			normalisedEvent.calculatedEvents.push(event)
-		} else {
-			normalisedEvent.confirmedEvents.push(event)
-		}
-	}
+	static isBaseEvent(event: Event): event is BaseEvent { return this.isDamageEvent(event) || this.isHealEvent(event) }
+	static isDamageEvent(event: Event): event is DamageEvent { return (event as DamageEvent).type.includes('damage') }
+	static isHealEvent(event: Event): event is HealEvent { return (event as HealEvent).type.includes('heal') }
+	static isSupportedBuffEvent(event: Event): event is BuffEvent { return this.isApplyBuffEvent(event) || this.isRemoveBuffEvent(event) }
+	static isApplyBuffEvent(event: Event): event is BuffEvent { return (event as BuffEvent).type ==='applybuff' }
+	static isRemoveBuffEvent(event: Event): event is BuffEvent { return (event as BuffEvent).type ==='removebuff' }
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
 
-	_normalisedEvents = new Map<number, NormalisedEvent<BaseEvent, NormalisedEventTypes>>()
+	_normalisedEvents = new Map<number, NormalisedEvent>()
 
 	normalise(events: Event[]): Event[] {
-		events.forEach((event) => {
-			if (typeof event.type === 'string') {
-				if (DAMAGE_EVENT_TYPES.has(event.type)) {
-					this.normaliseEvent(event as DamageEvent, 'normaliseddamage')
-				}
-
-				if (HEAL_EVENT_TYPES.has(event.type)) {
-					this.normaliseEvent(event as HealEvent, 'normalisedheal')
-				}
-			}
-		})
-
-		this._normalisedEvents.forEach(this.summarize)
+		events.forEach(this.normaliseEvent)
 
 		return events.concat(Array.from(this._normalisedEvents.values()))
 	}
 
-	private normaliseEvent<E extends BaseEvent, T extends NormalisedEventTypes>(event: E, type: T) {
+	private normaliseEvent = (event: Event) => {
+		if (!NormalisedEvents.isBaseEvent(event) && !NormalisedEvents.isSupportedBuffEvent(event)) {
+			// Not a supported event type for normalisation
+			return
+		}
 		let normalisedEvent = this.findRelatedEvent(event)
 
 		if (!normalisedEvent) {
-			normalisedEvent = NormalisedEvents.generateNew(event, type)
-			this._normalisedEvents.set(event.packetID ?? event.timestamp, normalisedEvent)
+			this.debug('No matching event found, creating new event')
+			let identifier: number
+			if (NormalisedEvents.isDamageEvent(event)) {
+				normalisedEvent = new NormalisedDamageEvent(event)
+				identifier = event.packetID ?? event.timestamp
+			} else if (NormalisedEvents.isHealEvent(event)) {
+				normalisedEvent = new NormalisedHealEvent(event)
+				identifier = event.packetID ?? event.timestamp
+			} else {
+				identifier = event.timestamp
+				if (NormalisedEvents.isApplyBuffEvent(event)) {
+					normalisedEvent = new NormalisedApplyBuffEvent(event)
+				} else {
+					normalisedEvent = new NormalisedRefreshBuffEvent(event)
+				}
+			}
+			this._normalisedEvents.set(identifier, normalisedEvent)
 		}
 
-		NormalisedEvents.attachEvent(event, normalisedEvent)
+		normalisedEvent.attachEvent(event)
 	}
 
-	private findRelatedEvent<E extends BaseEvent>(event: E) {
-		if (event.packetID) {
+	private findRelatedEvent = (event: BaseEvent | BuffEvent) => {
+		this.debug(`Searching for related events for event ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)}`)
+		if (NormalisedEvents.isBaseEvent(event) && event.packetID) {
+			this.debug(`Searching by packetID ${event.packetID}`)
 			return this._normalisedEvents.get(event.packetID)
 		}
 
+		this.debug(`Searching by timestamp ${event.timestamp}`)
 		// No packetID set - match based on timestamps
 		const possibleRelatedEvents = Array.from(this._normalisedEvents.values())
 			.filter(normalisedEvent =>
@@ -104,19 +178,5 @@ export class NormalisedEvents extends Module {
 			.sort((a, b) => a.timestamp - b.timestamp)
 
 		return possibleRelatedEvents[0] || undefined
-	}
-
-	private summarize = (normalisedEvent: NormalisedEvent<BaseEvent, NormalisedEventTypes>) => {
-		const allEvents = normalisedEvent.calculatedEvents.concat(normalisedEvent.confirmedEvents)
-
-		const hitGhosted = (evt: BaseEvent) => evt.unpaired
-
-		normalisedEvent.hits = normalisedEvent.confirmedEvents.length
-		normalisedEvent.targetsHit = new Set(normalisedEvent.confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size
-		normalisedEvent.amount = normalisedEvent.confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
-		normalisedEvent.ghostedHits = normalisedEvent.calculatedEvents.filter(hitGhosted).length
-		normalisedEvent.ghostedAmount = normalisedEvent.calculatedEvents.filter(hitGhosted).reduce((total, evt) => total + evt.amount, 0)
-		normalisedEvent.successfulHit = normalisedEvent.calculatedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
-		normalisedEvent.timestamp = allEvents.map(evt => evt.timestamp).reduce((min, timestamp) => Math.min(min, timestamp))
 	}
 }

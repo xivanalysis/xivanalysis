@@ -23,6 +23,7 @@ export default class MultiHit extends Module {
 	static dependencies = [
 		'suggestions',
 	]
+	static debug = false
 
 	_incorrectMultihitSkills = {
 		[ACTIONS.FLOOD_OF_SHADOW.id]: 0,
@@ -38,6 +39,7 @@ export default class MultiHit extends Module {
 	}
 
 	_checkMultiHitSkill(event) {
+		this.debug(`Checking multi-hit skill ${event.ability.name} used at ${this.parser.formatTimestamp(event.timestamp)} -- Targets hit: ${event.targetsHit}`)
 		if (REQUIRED_MULTI_HIT_TARGETS.hasOwnProperty(event.ability.guid) && event.targetsHit < REQUIRED_MULTI_HIT_TARGETS[event.ability.guid]) {
 			this._incorrectMultihitSkills[event.ability.guid]++
 		}
