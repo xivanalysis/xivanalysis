@@ -1,7 +1,7 @@
 name: Labeler
 on:
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '0 * * * *'
 jobs:
   labeler:
     runs-on: ubuntu-latest
