@@ -16,6 +16,7 @@ const DFD_FIRST_USE_OFFSET = 21500		// before 10th gcd
 const LIFE_SURGE_FIRST_USE_OFFSET = 17500
 
 export default class OGCDDowntime extends CooldownDowntime {
+	defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.HIGH_JUMP],
@@ -33,13 +34,8 @@ export default class OGCDDowntime extends CooldownDowntime {
 			cooldowns: [ACTIONS.LIFE_SURGE],
 			firstUseOffset: LIFE_SURGE_FIRST_USE_OFFSET,
 		},
-		{
-			cooldowns: [
-				ACTIONS.LANCE_CHARGE,
-				ACTIONS.DRAGON_SIGHT,
-				ACTIONS.BATTLE_LITANY,
-			],
-			firstUseOffset: BUFF_FIRST_USE_OFFSET,
-		},
+		{cooldowns: [ACTIONS.LANCE_CHARGE]},
+		{cooldowns: [ACTIONS.DRAGON_SIGHT]},
+		{cooldowns: [ACTIONS.BATTLE_LITANY]},
 	]
 }
