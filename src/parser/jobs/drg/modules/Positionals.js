@@ -33,7 +33,6 @@ export default class Positionals extends Module {
 	static title = t('drg.positionals.title')`Positionals`
 	static dependencies = [
 		'brokenLog',
-		'combatants',
 		'suggestions',
 		'timeline',
 	]
@@ -75,7 +74,12 @@ export default class Positionals extends Module {
 		}
 
 		// close the window
-		this._rtCombos.push(this._currentCombo)
+		// if next action expected is RT this should be added to the combo list, otherwise it was dropped somewhere.
+		// if it was an actually broken combo, a different module will yell. otherwise, it was probably due to invuln
+		// or downtime and thus not a possible RT proc event.
+		if (this._currentCombo.next === ACTIONS.RAIDEN_THRUST.id) {
+			this._rtCombos.push(this._currentCombo)
+		}
 		this._currentCombo = null
 	}
 
@@ -86,15 +90,17 @@ export default class Positionals extends Module {
 				next: NEXT_COMBO[event.ability.guid],
 				success: false,
 				trueNorthCharges: this._tnCharges,
-				trueNorthCast1: this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id),
 				time: event.timestamp,
 			}
 		} else if (this._currentCombo) {
 			// add the time
 			this._currentCombo.time = event.timestamp
 
-			// check for true north still active
-			this._currentCombo.trueNorthCast2 = this.combatants.selected.hasStatus(STATUSES.TRUE_NORTH.id)
+			// set next to RT id for determining if combo completed.
+			this._currentCombo.next = ACTIONS.RAIDEN_THRUST.id
+
+			// update TN charges
+			this._currentCombo.trueNorthCharges = this._tnCharges
 		}
 	}
 
