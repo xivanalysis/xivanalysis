@@ -1258,10 +1258,11 @@
     react-is "^16.6.3"
 
 "@teamsupercell/typings-for-css-modules-loader@^2.0.0":
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/@teamsupercell/typings-for-css-modules-loader/-/typings-for-css-modules-loader-2.0.0.tgz#ceb6ee5979466f08b539140c3ba6056865079a51"
-  integrity sha512-YM18tMgUYXA4YoInSO7OaIK+p2/VwZAswPlYjlvs6rpAWKFhZtaR/2VtpE6GySQMk0a3am/fXErWSDNuTXw5dQ==
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/@teamsupercell/typings-for-css-modules-loader/-/typings-for-css-modules-loader-2.1.0.tgz#592bedc1ae9a0a334658eff2a57bdbf6229b1c42"
+  integrity sha512-6VKJrIVY+MQroCu92oTP/uQP515xXg1q/z53mFjT02ian9+sAtrPWbPgB7Wk2IVnJkNyt8hzefXyuf/OfDuosg==
   dependencies:
+    camelcase "^5.3.1"
     loader-utils "1.2.3"
     schema-utils "^2.0.1"
   optionalDependencies:
