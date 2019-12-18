@@ -26,6 +26,16 @@ export default new Meta({
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2019-12-07'),
+		Changes: () => <>Added tracking for oGCDs, including jumps, buffs, and Life Surge</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2019-11-21'),
+		Changes: () => <>Added Positionals module to track usage of Raiden Thrust.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2019-11-12'),
 		Changes: () => <>Updated Life of the Dragon to display active buffs during each window. Added a window delay note to help line up buffs.</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],
