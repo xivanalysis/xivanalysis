@@ -8,7 +8,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {getDataBy} from 'data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -73,7 +73,7 @@ export default class BloodOfTheDragon extends Module {
 			active.push(STATUSES.BATTLE_LITANY.id)
 		}
 
-		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO)) {
+		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO.id)) {
 			active.push(STATUSES.RIGHT_EYE.id)
 		}
 
@@ -228,6 +228,8 @@ export default class BloodOfTheDragon extends Module {
 		this._finishLifeWindow()
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
+		const noBuffSd = this._lifeWindows.history.map(window => window.stardivers).filter(stardivers => stardivers.length === 1 && stardivers[0].buffs.length === 0).length
+
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
 			description: <Fragment>
@@ -263,6 +265,24 @@ export default class BloodOfTheDragon extends Module {
 				You used Mirage Dive <Plural value={this._lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
 		}))
+
+		// depending on the fight, this may trigger because you can't delay the first life, and the downtime
+		// windows might be a bit long. A more sophisticated check for this would be to check that:
+		// - all stardivers cast during a window that could have a buff in it, were buffed.
+		// - a window that couldn't be delayed due to downtime or fight length is not counted towards the total.
+		if (noBuffSd > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.STARDIVER.icon,
+				content: <Trans id="drg.blood.suggestions.buffed-stardiver">
+					Try to ensure that <ActionLink {...ACTIONS.STARDIVER} /> always lands while at least one of <ActionLink {...ACTIONS.LANCE_CHARGE} />, <ActionLink {...ACTIONS.DRAGON_SIGHT} />, or <ActionLink {...ACTIONS.BATTLE_LITANY} /> is active.
+				</Trans>,
+				value: noBuffSd,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">
+					<ActionLink {...ACTIONS.STARDIVER} /> was used <Plural value={noBuffSd} one="# time" other="# times" /> without an active buff.
+				</Trans>,
+			}))
+		}
 	}
 
 	_windowTable(window) {
