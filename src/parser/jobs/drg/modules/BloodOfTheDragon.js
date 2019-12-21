@@ -29,6 +29,7 @@ export default class BloodOfTheDragon extends Module {
 		'combatants',
 		'cooldowns',
 		'death',
+		'downtime',
 		'suggestions',
 		'timeline',
 	]
@@ -285,6 +286,19 @@ export default class BloodOfTheDragon extends Module {
 		}
 	}
 
+	_intersectsDowntime(start) {
+		const windows = this.downtime.getDowntimeWindows(start)
+		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
+
+		for (const window of windows) {
+			if (window.start < end) {
+				return true
+			}
+		}
+
+		return false
+	}
+
 	_windowTable(window) {
 		const casts = window.nastronds.concat(window.stardivers)
 		casts.sort((a, b) => { return a.timestamp - b.timestamp })
@@ -302,7 +316,12 @@ export default class BloodOfTheDragon extends Module {
 		})
 
 		const buffsInDelayWindow = {}
-		let canBeDelayed = window.activeBuffs.length === 0
+
+		// the initial delay potential is determined by whether or not we have time before a downtime window to do so
+		// if the delayed downtime window (delayed by the jump cd b/c mirage dive procs) intersects a downtime window
+		// we can't delay it
+		let canBeDelayed = window.activeBuffs.length === 0 && !this._intersectsDowntime(window.start + ACTIONS.HIGH_JUMP.cooldown * 1000)
+
 		let couldBeDelayed = false
 
 		for (const id in window.timeToNextBuff) {
