@@ -73,7 +73,7 @@ export default class BloodOfTheDragon extends Module {
 			active.push(STATUSES.BATTLE_LITANY.id)
 		}
 
-		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO)) {
+		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO.id)) {
 			active.push(STATUSES.RIGHT_EYE.id)
 		}
 
