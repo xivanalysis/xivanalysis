@@ -201,6 +201,13 @@ const JOBS = {
 		colour: '#e87b7b',
 		role: ROLES.MAGICAL_RANGED.id,
 	},
+	BLUE_MAGE: {
+		name: t('game.job.blue-mage')`Blue Mage`,
+		logType: ActorType.BLUE_MAGE,
+		icon: 'blu',
+		colour: '#3366ff',
+		role: ROLES.MAGICAL_RANGED.id,
+	},
 }
 
 export default JOBS as Record<keyof typeof JOBS, Job>
