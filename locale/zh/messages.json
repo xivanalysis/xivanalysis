@@ -175,7 +175,7 @@
   "brd.pitch-perfect.no-cast-at-end.suggestion.reason": "你可能少放了至多 {missedPPs, plural, one {# 次} other {# 次}}的{0}.",
   "brd.pitch-perfect.no-cast-at-end.total-potency-lost": "<0/> 因为 <2/>结束时少放了技能，你可能损失了 <1>{0} - {1}</1> 的威力。",
   "brd.pitch-perfect.not-cast-at-end.potency-lost": "可能丢失了<0>{0} - {1}</0>的威力",
-  "brd.pitch-perfect.not-cast-at-end.time-left": "",
+  "brd.pitch-perfect.not-cast-at-end.time-left": "上次使用<2/>之后<1/>还剩<0>{0}</0>。",
   "brd.pitch-perfect.not-cast-at-end.title": "在{1} 结束前可能还有{0} 可用。",
   "brd.pitch-perfect.title": "完美音调",
   "brd.pitch-perfect.trigger.no-wm-cast": "没有使用<1/>的情况下使用了<0/>。",
