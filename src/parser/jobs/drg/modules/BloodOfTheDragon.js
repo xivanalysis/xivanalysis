@@ -48,6 +48,8 @@ export default class BloodOfTheDragon extends Module {
 	_lastEventTime = this.parser.fight.start_time
 	_eyes = 0
 	_lostEyes = 0
+	_gkCount = 0
+	_jumpCount = 0
 
 	constructor(...args) {
 		super(...args)
@@ -58,6 +60,7 @@ export default class BloodOfTheDragon extends Module {
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.GEIRSKOGUL.id}, this._onGeirskogulCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.NASTROND.id}, this._onNastrondCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.STARDIVER.id}, this._onStardiverCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HIGH_JUMP.id}, this._onJumpCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
@@ -138,6 +141,10 @@ export default class BloodOfTheDragon extends Module {
 		this._bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
 	}
 
+	_onJumpCast() {
+		this._jumpCount += 1
+	}
+
 	_onMirageDiveCast() {
 		this._updateGauge()
 		if (this._lifeWindows.current !== null || this._bloodDuration > 0) {
@@ -152,6 +159,8 @@ export default class BloodOfTheDragon extends Module {
 
 	_onGeirskogulCast() {
 		this._updateGauge()
+		this._gkCount += 1
+
 		if (this._eyes === MAX_EYES) {
 			// LotD tiiiiiime~
 			this._lifeDuration = DRAGON_DEFAULT_DURATION_MILLIS
@@ -320,6 +329,29 @@ export default class BloodOfTheDragon extends Module {
 				You used Mirage Dive <Plural value={this._lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
 		}))
+
+		// GK count should be within 1 of the number of jumps used in the fight
+		// (current balance tip reference, section 2)
+		const gkDiff = this._jumpCount - this._gkCount
+		// more jumps than GKs
+		if (gkDiff > 1) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.GEIRSKOGUL.icon,
+				content: <Trans id="drg.blood.suggestions.gk.content">
+					Remember to use <ActionLink {...ACTIONS.GEIRSKOGUL}/> as much as possible, without delaying your Life of the Dragon windows. The number of casts should be within 1 of the number of <ActionLink {...ACTIONS.HIGH_JUMP} /> casts.
+				</Trans>,
+				value: gkDiff,
+				tiers: {
+					2: SEVERITY.MINOR,
+					3: SEVERITY.MEDIUM,
+				},
+				why: <Trans id="drg.blood.suggestions.gk.why">
+					Your <ActionLink {...ACTIONS.GEIRSKOGUL}/> casts differed from your <ActionLink {...ACTIONS.HIGH_JUMP}/> casts by {gkDiff}.
+				</Trans>,
+			}))
+		}
+		// less jumps than GKs??? different tip then, which is basically use jumps more??
+		// not going to output something here as that should be covered by the oGCD downtime checklist
 
 		// depending on the fight, this may trigger because you can't delay the first life, and the downtime
 		// windows might be a bit long. A more sophisticated check for this would be to check that:
