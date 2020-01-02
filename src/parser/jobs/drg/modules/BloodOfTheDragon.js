@@ -386,10 +386,8 @@ export default class BloodOfTheDragon extends Module {
 		// less jumps than GKs??? different tip then, which is basically use jumps more??
 		// not going to output something here as that should be covered by the oGCD downtime checklist
 
-		// depending on the fight, this may trigger because you can't delay the first life, and the downtime
-		// windows might be a bit long. A more sophisticated check for this would be to check that:
-		// - all stardivers cast during a window that could have a buff in it, were buffed.
-		// - a window that couldn't be delayed due to downtime or fight length is not counted towards the total.
+		// this suggestion only counts places where a stardiver could be buffed
+		// if a window cannot be delayed and has no buffs, it doesn't count
 		if (noBuffSd > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.STARDIVER.icon,
