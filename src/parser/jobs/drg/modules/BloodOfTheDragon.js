@@ -7,6 +7,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {getDataBy} from 'data'
@@ -225,11 +226,64 @@ export default class BloodOfTheDragon extends Module {
 		this._lastEvent = event.timestamp
 	}
 
+	_intersectsDowntime(start) {
+		const windows = this.downtime.getDowntimeWindows(start)
+		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
+
+		for (const window of windows) {
+			if (window.start < end) {
+				return window.start
+			}
+		}
+
+		return null
+	}
+
+	_analyzeLifeWindows() {
+		for (const window of this._lifeWindows.history) {
+			// determine if it could be delayed
+			window.buffsInDelayWindow = {}
+
+			window.dtOverlapTime = this._intersectsDowntime((window.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+
+			// A window should be delayed if:
+			// - there are no buffs off cooldown at any point in this window
+			// - there are no upcoming downtime windows (checked here)
+			// - there are buffs off cooldown in the theoretical delayed window
+			let activeBuffsInWindow = window.activeBuffs.length > 0
+			const shouldBeDelayed = window.activeBuffs.length === 0 && window.dtOverlapTime === null
+
+			let buffsExistInDelayWindow = false
+
+			for (const id in window.timeToNextBuff) {
+				// check if the time to the next buff falls within the next expected window
+				window.buffsInDelayWindow[id] = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && window.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
+
+				// this is just a running or (instead of a map later)
+				buffsExistInDelayWindow = window.buffsInDelayWindow[id] || buffsExistInDelayWindow
+
+				// ok now check if the buff comes off cd during the current window
+				activeBuffsInWindow = window.timeToNextBuff[id] < window.duration || activeBuffsInWindow
+			}
+
+			// ok now use all the flags to determine if a window should be delayed
+			window.shouldDelay = !activeBuffsInWindow && buffsExistInDelayWindow && shouldBeDelayed
+
+			// if we're not delaying due to downtime in this fight, show an info note
+			window.showNoDelayNote = window.dtOverlapTime !== null && !activeBuffsInWindow && buffsExistInDelayWindow
+
+			// check the stardiver cast buffs
+			// count a miss if the window could be delayed
+			window.missedSdBuff = (activeBuffsInWindow || window.shouldDelay) && window.stardivers.length === 1 && window.stardivers[0].buffs.length === 0
+		}
+	}
+
 	_onComplete() {
 		this._finishLifeWindow()
+		this._analyzeLifeWindows()
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
-		const noBuffSd = this._lifeWindows.history.map(window => window.stardivers).filter(stardivers => stardivers.length === 1 && stardivers[0].buffs.length === 0).length
+		const noBuffSd = this._lifeWindows.history.filter(window => window.missedSdBuff).length
 
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
@@ -275,28 +329,15 @@ export default class BloodOfTheDragon extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.STARDIVER.icon,
 				content: <Trans id="drg.blood.suggestions.buffed-stardiver">
-					Try to ensure that <ActionLink {...ACTIONS.STARDIVER} /> always lands while at least one of <ActionLink {...ACTIONS.LANCE_CHARGE} />, <ActionLink {...ACTIONS.DRAGON_SIGHT} />, or <ActionLink {...ACTIONS.BATTLE_LITANY} /> is active.
+					Try to ensure that <ActionLink {...ACTIONS.STARDIVER} /> always lands while at least one of <ActionLink {...ACTIONS.LANCE_CHARGE} />, <ActionLink {...ACTIONS.DRAGON_SIGHT} />, or <ActionLink {...ACTIONS.BATTLE_LITANY} /> is active. Depending on the fight specifics, this may not always be possible. See the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for details.
 				</Trans>,
 				value: noBuffSd,
 				severity: SEVERITY.MINOR,
 				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">
-					<ActionLink {...ACTIONS.STARDIVER} /> was used <Plural value={noBuffSd} one="# time" other="# times" /> without an active buff.
+					When <ActionLink {...ACTIONS.STARDIVER} /> could have been buffed, you used it <Plural value={noBuffSd} one="# time" other="# times" /> without a buff.
 				</Trans>,
 			}))
 		}
-	}
-
-	_intersectsDowntime(start) {
-		const windows = this.downtime.getDowntimeWindows(start)
-		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
-
-		for (const window of windows) {
-			if (window.start < end) {
-				return true
-			}
-		}
-
-		return false
 	}
 
 	_windowTable(window) {
@@ -308,42 +349,34 @@ export default class BloodOfTheDragon extends Module {
 				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)} />
 			})
 
-			return <Table.Row key={cast.timestamp}>
+			return <Table.Row key={cast.timestamp} warning={cast.action.id === ACTIONS.STARDIVER.id && window.missedSdBuff}>
 				<Table.Cell>{this.createTimelineButton(cast.timestamp)}</Table.Cell>
 				<Table.Cell><ActionLink {...cast.action} /></Table.Cell>
 				<Table.Cell>{buffs}</Table.Cell>
 			</Table.Row>
 		})
 
-		const buffsInDelayWindow = {}
-
-		// the initial delay potential is determined by whether or not we have time before a downtime window to do so
-		// if the delayed downtime window (delayed by the jump cd b/c mirage dive procs) intersects a downtime window
-		// we can't delay it
-		let canBeDelayed = window.activeBuffs.length === 0 && !this._intersectsDowntime(window.start + ACTIONS.HIGH_JUMP.cooldown * 1000)
-
-		let couldBeDelayed = false
-
-		for (const id in window.timeToNextBuff) {
-			buffsInDelayWindow[id] = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && window.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
-			couldBeDelayed = buffsInDelayWindow[id] || couldBeDelayed
-			canBeDelayed = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && canBeDelayed
-		}
-
-		const delayBuffs = Object.keys(buffsInDelayWindow).filter(id => buffsInDelayWindow[id]).map((id, idx) => {
+		const delayBuffs = Object.keys(window.buffsInDelayWindow).filter(id => window.buffsInDelayWindow[id]).map((id, idx) => {
 			const action = getDataBy(ACTIONS, 'id', parseInt(id))
 			return <Message.Item key={idx}><Trans id="drg.blood.delay-buff"><ActionLink {...action} /> in {this.parser.formatDuration(window.timeToNextBuff[id])}</Trans></Message.Item>
 		})
 
 		return <Fragment>
-			{canBeDelayed && couldBeDelayed && (
+			{window.shouldDelay && (
 				<>
-					<Message>
-						<p><Trans id="drg.blood.delay-explain">Life of the Dragon windows should line up with your personal buffs, if possible. You might be able to delay this window to line up with:
+					<Message warning>
+						<p><Icon name="warning sign" /><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
 						</Trans></p>
 						<Message.List>
 							{delayBuffs}
 						</Message.List>
+					</Message>
+				</>
+			)}
+			{window.showNoDelayNote && (
+				<>
+					<Message info>
+						<p><Trans id="drg.blood.no-delay-explain"><Icon name="info" /> This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 					</Message>
 				</>
 			)}
@@ -360,15 +393,27 @@ export default class BloodOfTheDragon extends Module {
 		</Fragment>
 	}
 
+	_formatWindowTitle(window) {
+		// flag the row if we see either:
+		// - a non-buffed stardiver in any window, except the windows that cannot be delayed
+		// - a window that could be delayed but wasn't
+		const windowWarning = window.shouldDelay || window.missedSdBuff
+		const title = <>{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+
+		if (windowWarning) {
+			return <span className="text-warning">{title}</span>
+		}
+
+		return title
+	}
+
 	output() {
 		if (this._lifeWindows.history.length > 0) {
 			const lotdPanels = this._lifeWindows.history.map(window => {
 				return {
 					title: {
 						key: `title-${window.start}`,
-						content: <Fragment>
-							{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans>
-						</Fragment>,
+						content: this._formatWindowTitle(window),
 					},
 					content: {
 						key: `content-${window.start}`,
@@ -380,7 +425,8 @@ export default class BloodOfTheDragon extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="drg.blood.windows.preface">
-						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs.
+						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with possible issues are
+						highlighted.
 					</Trans>
 				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
