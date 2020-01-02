@@ -20,6 +20,7 @@ const LOTD_BUFF_DELAY_MIN = 30000
 const LOTD_BUFF_DELAY_MAX = 60000
 
 const MAX_EYES = 2
+const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
 export default class BloodOfTheDragon extends Module {
 	static handle = 'bloodOfTheDragon'
@@ -293,6 +294,8 @@ export default class BloodOfTheDragon extends Module {
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
 		const noBuffSd = this._lifeWindows.history.filter(window => window.missedSdBuff).length
+		const noLifeSd = this._lifeWindows.history.filter(window => window.stardivers.length === 0).length
+		const noFullNsLife = this._lifeWindows.history.filter(window => window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
 
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
@@ -328,6 +331,36 @@ export default class BloodOfTheDragon extends Module {
 			why: <Trans id="drg.blood.suggestions.eyes.why">
 				You used Mirage Dive <Plural value={this._lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
+		}))
+
+		// each window should have a stardiver
+		// 1 miss minor, in case enc. ends during life window
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.STARDIVER.icon,
+			content: <Trans id="drg.suggestions.stardiver.content">
+				Each Life of the Dragon window should contain 1 <ActionLink {...ACTIONS.STARDIVER}/> use.
+			</Trans>,
+			value: noLifeSd,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			why: <Trans id="drg.suggetions.stardiver.why">{noLifeSd} of your Life of the Dragon windows were missing a <ActionLink {...ACTIONS.STARDIVER}/> use.</Trans>,
+		}))
+
+		// each window should have 3 nastronds
+		// 1 miss minor, in case enc. ends during life window
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.NASTROND.icon,
+			content: <Trans id="drg.suggestions.nastrond.content">Each Life of the Dragon window should contain 3 <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
+			value: noFullNsLife,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+				3: SEVERITY.MAJOR,
+			},
+			why: <Trans id="drg.suggestions.nastrond.why">{noFullNsLife} of your Life of the Dragon windows were missing one or more <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
 		}))
 
 		// GK count should be within 1 of the number of jumps used in the fight
@@ -394,6 +427,27 @@ export default class BloodOfTheDragon extends Module {
 		})
 
 		return <Fragment>
+			{window.stardivers.length === 0 && (
+				<>
+					<Message error>
+						<p><Icon name="warning sign"/> <Trans id="drg.blood.no-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> during this window.</Trans></p>
+					</Message>
+				</>
+			)}
+			{window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW && (
+				<>
+					<Message error>
+						<p><Icon name="warning sign"/> <Trans id="drg.blood.no-nastrond-explain">You missed one or more uses of <ActionLink {...ACTIONS.NASTROND}/> during this window.</Trans></p>
+					</Message>
+				</>
+			)}
+			{window.missedSdBuff && (
+				<>
+					<Message warning>
+						<p><Icon name="warning sign"/><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
+					</Message>
+				</>
+			)}
 			{window.shouldDelay && (
 				<>
 					<Message warning>
@@ -408,7 +462,7 @@ export default class BloodOfTheDragon extends Module {
 			{window.showNoDelayNote && (
 				<>
 					<Message info>
-						<p><Trans id="drg.blood.no-delay-explain"><Icon name="info" /> This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+						<p><Icon name="info" /> <Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 					</Message>
 				</>
 			)}
@@ -430,7 +484,12 @@ export default class BloodOfTheDragon extends Module {
 		// - a non-buffed stardiver in any window, except the windows that cannot be delayed
 		// - a window that could be delayed but wasn't
 		const windowWarning = window.shouldDelay || window.missedSdBuff
+		const windowError = window.stardivers.length === 0 || window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
 		const title = <>{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+
+		if (windowError) {
+			return <span className="text-error">{title}</span>
+		}
 
 		if (windowWarning) {
 			return <span className="text-warning">{title}</span>
@@ -457,8 +516,8 @@ export default class BloodOfTheDragon extends Module {
 			return <Fragment>
 				<Message>
 					<Trans id="drg.blood.windows.preface">
-						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with possible issues are
-						highlighted.
+						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with issues are
+						highlighted, and provide additional detail when expanded.
 					</Trans>
 				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
