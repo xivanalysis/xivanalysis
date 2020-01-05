@@ -367,7 +367,7 @@
   "drg.debuffs.suggestions.clipping.content": "不要过早地刷新<0/>，这样通常意味着循环错误。龙骑士严格的10-GCD循环中樱花怒放应该会在还剩1~2秒的时候刷新，具体时间取决于你的技能速度。",
   "drg.debuffs.suggestions.clipping.why": "由于过早的刷新，你损失了 {0} 的樱花怒放 。",
   "drg.positionals.analysis.message": "在背位打出<0/>或在侧位打出<1/>能允许你使用<2/>取代<3/>。你应该在战斗中尽可能多的触发这个特性，当你在某些无法打到正确身位的情况下，使用<4/>。下方的图表显示打错的身位数量(如果有) 以及<5/>是否可用。",
-  "drg.positionals.analysis.missed": "",
+  "drg.positionals.analysis.missed": "<0/> 在可能的<2>{0}</2>次<3/>触发中，你丢失了<1>{missed}</1>次。",
   "drg.positionals.analysis.truenorth": "",
   "drg.positionals.suggestions.content": "以正确的身位打出<0/>和<1/>，会让你在打出更高伤害的同时，可在下一次循环中使用<2/>。尝试在这两个连击中打出正确的身位，或在可用的时候使用<3/>。",
   "drg.positionals.suggestions.why": "你浪费了 {missed} 个龙眼雷电的触发。",
