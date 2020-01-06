@@ -6,6 +6,7 @@ import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
 import Analyse from './Analyse'
+import Teatime from './Teatime'
 import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
@@ -113,6 +114,7 @@ class App extends Component {
 							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
 							<Route path="/find/:code/:fight?" component={Find}/>
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+							<Route path="/teatime/:code/:fight/:combatant" component={Teatime}/>
 						</Switch>
 					</ErrorBoundary>
 				</Container>

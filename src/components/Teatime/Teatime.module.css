@@ -1,0 +1,19 @@
+.header {
+	display: flex;
+}
+
+.header:first-child {
+	margin-top: 1em !important;
+}
+
+.header > img {
+	align-self: center;
+}
+
+.resultsContainer {
+	margin-bottom: 50vh;
+}
+
+.seeMore {
+	margin: 0 5px;
+}

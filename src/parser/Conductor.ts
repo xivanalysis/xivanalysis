@@ -8,13 +8,14 @@ import {Meta} from './core/Meta'
 import Parser, {Result} from './core/Parser'
 
 export class Conductor {
-	private parser?: Parser
-	private resultsCache?: ReadonlyArray<Result>
+	protected parser?: Parser
+	protected resultsCache?: ReadonlyArray<Result>
 
 	constructor(
-		private readonly report: Report,
-		private readonly fight: Fight,
-		private readonly combatant: Actor,
+		protected readonly report: Report,
+		protected readonly fight: Fight,
+		protected readonly combatant: Actor,
+		protected readonly noJob: boolean = false,
 	) {}
 
 	sanityCheck() {
@@ -39,11 +40,20 @@ export class Conductor {
 
 	async configure() {
 		// Build the final meta representation
-		const rawMetas = [
-			AVAILABLE_MODULES.CORE,
-			AVAILABLE_MODULES.BOSSES[this.fight.boss],
-			AVAILABLE_MODULES.JOBS[this.combatant.type],
-		]
+		let rawMetas
+		if (this.noJob) {
+			rawMetas = [
+				// AVAILABLE_MODULES.CORE,
+				// AVAILABLE_MODULES.BOSSES[this.fight.boss],
+				AVAILABLE_MODULES.JOBS[this.combatant.type],
+			]
+		} else {
+			rawMetas = [
+				AVAILABLE_MODULES.CORE,
+				AVAILABLE_MODULES.BOSSES[this.fight.boss],
+				AVAILABLE_MODULES.JOBS[this.combatant.type],
+			]
+		}
 		const meta = rawMetas
 			.filter(isDefined)
 			.reduce((acc, cur) => acc.merge(cur))
