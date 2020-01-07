@@ -60,7 +60,6 @@ class Breadcrumbs extends React.Component {
 				const patch = getPatch(edition, report.start / 1000)
 				subtitle = <>({editionName[edition]} {patch})</>
 			}
-
 			crumbs.push({
 				title,
 				subtitle,
@@ -102,6 +101,21 @@ class Breadcrumbs extends React.Component {
 				title,
 				url: `/analyse/${code}/${fightId}/${combatantId}/`,
 			})
+
+			// KC: Not great
+			if (pathMatch.path.includes('/teatime')) {
+				const nextTitle = 'Next Fight ➡️'
+				crumbs.push({
+					title: nextTitle,
+					url: `/teatime/${code}/${fightId+1}/${combatantId}/`,
+				})
+			} else {
+				const nextTitle = 'Teatime View ☕'
+				crumbs.push({
+					title: nextTitle,
+					url: `/teatime/${code}/${fightId}/${combatantId}/`,
+				})
+			}
 		}
 
 		return <>

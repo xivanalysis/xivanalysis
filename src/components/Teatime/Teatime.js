@@ -73,6 +73,27 @@ class Teatime extends Component {
 		))
 	}
 
+	componentDidUpdate(prevProps) {
+		// report.code, params.fight
+		const {match: {params: {code: prevCode, fight: prevFight}}} = prevProps
+		const {match: {params: {code, fight}}} = this.props
+
+		if (prevCode !== code || prevFight !== fight) {
+			const {reportStore} = this.context
+			const {match} = this.props
+			reportStore.fetchReportIfNeeded(match.params.code)
+
+			disposeOnUnmount(this, reaction(
+				() => ({
+					report: reportStore.report,
+					params: match.params,
+				}),
+				this.fetchEventsAndParseIfNeeded,
+				{fireImmediately: true},
+			))
+		}
+	}
+
 	fetchEventsAndParseIfNeeded = async ({report, params}) => {
 		// If we don't have everything we need, stop before we hit the api
 		// TODO: more checks
