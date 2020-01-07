@@ -1,26 +1,27 @@
-import { Conductor } from 'parser/Conductor'
-import { Meta } from 'parser/core/Meta'
+import {Conductor} from 'parser/Conductor'
+import {Meta} from 'parser/core/Meta'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Timeline from 'parser/core/modules/Timeline'
-import Parser, { Result } from 'parser/core/Parser'
-import { isDefined } from 'utilities'
+import Parser, {Result} from 'parser/core/Parser'
+import {isDefined} from 'utilities'
 
 import AdditionalEvents from 'parser/core/modules/AdditionalEvents'
 import CastTime from 'parser/core/modules/CastTime'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
-import { Data } from 'parser/core/modules/Data'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Enemies from 'parser/core/modules/Enemies'
-import { FFLogsEventNormaliser } from 'parser/core/modules/FFLogsEventNormaliser'
+import {FFLogsEventNormaliser} from 'parser/core/modules/FFLogsEventNormaliser'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import PrecastAction from 'parser/core/modules/PrecastAction'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import RaidBuffs from 'parser/core/modules/RaidBuffs'
 import Speedmod from 'parser/core/modules/Speedmod'
-import { Statistics } from 'parser/core/modules/Statistics'
+import {Statistics} from 'parser/core/modules/Statistics'
 import UnableToAct from 'parser/core/modules/UnableToAct'
 
 import AdditionalPartyEvents from './modules/AdditionalPartyEvents'
+import Friendlies from './modules/Friendlies'
 import PartyCooldowns from './modules/PartyCooldowns'
 
 // Top level things I want
@@ -58,7 +59,8 @@ const teaMeta = new Meta({
 			Enemies,
 			AdditionalEvents,
 			AdditionalPartyEvents,
-		]
+			Friendlies,
+		],
 	}),
 	changelog: [],
 })

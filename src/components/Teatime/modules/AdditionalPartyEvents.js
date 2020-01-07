@@ -3,8 +3,9 @@ import stable from 'stable'
 import {getFflogsEvents} from 'api'
 import Module from 'parser/core/Module'
 import {isDefined} from 'utilities'
+import {JOB_COOLDOWNS} from './PartyCooldowns'
 
-const buildQueryFilter = data => [
+const buildQueryFilter = (data, playerActions) => [
 	// Player-applied debuffs that don't get pulled when checking by actor
 	{
 		types: ['applydebuff', 'removedebuff'],
@@ -17,67 +18,7 @@ const buildQueryFilter = data => [
 		targetsOnly: true,
 	}, {
 		types: ['begincast', 'cast'],
-		abilities: [
-			//Tanks
-			data.actions.RAMPART.id,
-			data.actions.REPRISAL.id,
-
-			// Melee
-			data.actions.FEINT.id,
-
-			// Casters
-			data.actions.ADDLE.id,
-
-			// Ranged
-			// lol
-
-			//Jobs...
-			//DRK
-			// Personal
-			data.actions.SHADOW_WALL.id,
-			data.actions.DARK_MIND.id,
-			data.actions.LIVING_DEAD.id,
-			// Single
-			data.actions.THE_BLACKEST_NIGHT.id,
-			// AoE
-			data.actions.DARK_MISSIONARY.id,
-
-			//WAR
-			// Personal
-			data.actions.VENGEANCE.id,
-			data.actions.HOLMGANG.id,
-			data.actions.THRILL_OF_BATTLE.id,
-			data.actions.EQUILIBRIUM.id,
-			data.actions.RAW_INTUITION.id,
-			// Single
-			data.actions.NASCENT_FLASH.id,
-			// AoE
-			data.actions.SHAKE_IT_OFF.id,
-
-			//SCH
-			data.actions.SACRED_SOIL.id,
-			data.actions.SCH_FEY_ILLUMINATION.id,
-			// pet versions
-			data.actions.FEY_ILLUMINATION.id,
-			data.actions.SERAPHIC_ILLUMINATION.id,
-
-			//WHM
-			data.actions.TEMPERANCE.id,
-
-			//SMN
-			//nope
-
-			//BRD
-			data.actions.TROUBADOUR.id,
-			data.actions.THE_WARDENS_PAEAN.id,
-
-			//NIN
-			//nope
-
-			//SAM
-			//nope
-
-		],
+		abilities: playerActions,
 		targetsOnly: false,
 	},
 ]
@@ -107,6 +48,7 @@ export default class AdditionalPartyEvents extends Module {
 	static handle = 'additionalPartyEvents'
 	static dependencies = [
 		'enemies',
+		'friendlies',
 		'data',
 	]
 
@@ -129,8 +71,12 @@ export default class AdditionalPartyEvents extends Module {
 			.filter(isDefined)
 			.join(' or ')
 
+		const playerActions = this.friendlies.playerFriendlies.flatMap(player => (
+			JOB_COOLDOWNS[player.type].actions
+		))
+
 		// Build the filter string
-		let filter = buildQueryFilter(this.data).map(section => {
+		let filter = buildQueryFilter(this.data, playerActions).map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
 			const abilities = section.abilities.join(',')
 

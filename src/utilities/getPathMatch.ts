@@ -8,6 +8,7 @@ export function getPathMatch(pathname: string) {
 	switch (page !== null && page.params.page) {
 	case 'find':    path = '/find/:code/:fight?'; break
 	case 'analyse': path = '/analyse/:code/:fight/:combatant'; break
+	case 'teatime': path = '/teatime/:code/:fight/:combatant'; break
 	default:        // Do nothing
 	}
 
