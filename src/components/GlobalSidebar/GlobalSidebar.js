@@ -9,6 +9,8 @@ import Options from './Options'
 
 import styles from './GlobalSidebar.module.css'
 
+import TeaCooldownsSelector from '../Teatime/TeaCooldownsSelector'
+
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
 let contentRef = React.createRef() // eslint-disable-line prefer-const
 
@@ -38,6 +40,11 @@ class GlobalSidebar extends React.Component {
 
 			{/* Content */}
 			<div ref={contentRef} className={styles.content}/>
+
+			{/* Cooldowns input temporarily just bound to the sidebar */}
+			<div>
+				<TeaCooldownsSelector/>
+			</div>
 
 			{/* Options pinned to the bottom */}
 			<div className={styles.options}>

@@ -17,3 +17,9 @@
 .seeMore {
 	margin: 0 5px;
 }
+
+.cdselector {
+	position: relative;
+	cursor: pointer;
+	border-bottom: 1px dashed themeText;
+}
