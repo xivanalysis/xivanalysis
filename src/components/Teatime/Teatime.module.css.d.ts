@@ -2,6 +2,7 @@
 declare namespace TeatimeModuleCssModule {
   export interface ITeatimeModuleCss {
     cdselector: string;
+    cduselist: string;
     header: string;
     resultsContainer: string;
     seeMore: string;

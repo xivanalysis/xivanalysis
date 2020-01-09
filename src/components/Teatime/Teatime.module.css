@@ -23,3 +23,14 @@
 	cursor: pointer;
 	border-bottom: 1px dashed themeText;
 }
+
+.cduselist {
+	margin: 0;
+	padding: 0;
+}
+
+input[aria-invalid="true"] {
+	border: 1px solid #f00;
+	box-shadow: 0 0 4px 0 #f00;
+}
+

@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import React, {Component} from 'react'
 import {Modal, Menu, Input, Image, Segment, Grid} from 'semantic-ui-react'
 import styles from './Teatime.module.css'
@@ -7,21 +6,17 @@ import {JOB_COOLDOWNS} from './modules/PartyCooldowns'
 import ACTIONS from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import {getDataBy} from 'data'
+import PropTypes from 'prop-types'
 
-// TODO: Add the ability to select cooldowns
-// TODO: Add a time input for the selected cooldown
-// TODO: Add a way to save stuff
 // TODO: Break out ui components into better class structure
 export default class TeaCooldownsSelector extends Component {
-	static propTypes = {}
-
 	tankcds = 'tankcooldowns'
 	healcds = 'healercooldowns'
 	dpscds = 'dpscooldowns'
 	pleaseSelect = <Trans id="tea.cooldownselect.pleaseselect">Please select a category of cooldowns from above</Trans>
 
 	// TODO: figure out a better way to determine column count
-	maxGridColumns = 16 // eslint-disable-line no-magic-numbers
+	maxGridColumns = 4 // eslint-disable-line no-magic-numbers
 
 	state = {activeItem: this.tankcds}
 
@@ -51,10 +46,6 @@ export default class TeaCooldownsSelector extends Component {
 		// undef is an acceptable fallback; it means the actor type refer to a playable class
 	}
 
-	iconForCooldown(cooldownId) {
-		return getDataBy(ACTIONS, 'id', cooldownId).icon
-	}
-
 	gridForRole(roleId) {
 		const jobsInRole =
 			Object.keys(JOB_COOLDOWNS).filter(actorType => {
@@ -65,50 +56,28 @@ export default class TeaCooldownsSelector extends Component {
 				return roleId.includes(this.roleIdForActorType(actorType))
 			})
 
-		const cooldownsForRole = [...new Set(jobsInRole.flatMap(job => {
+		const cooldownIdsForRole = [...new Set(jobsInRole.flatMap(job => {
 			return JOB_COOLDOWNS[job].actions
 		}))]
 
-		return this.gridForCooldowns(cooldownsForRole)
+		return this.gridForCooldowns(cooldownIdsForRole)
 	}
 
-	gridForCooldowns(cooldowns) {
-		if (!cooldowns) {
+	gridForCooldowns(cooldownIds) {
+		if (!cooldownIds) {
 			return <div>
 				ERROR: No cooldowns found for the desired role. <br/>
 				This probably means something was implemented wrong with respect to what the roles you can choose from are.
 			</div>
 		}
 
-		if (cooldowns.length <= this.maxGridColumns) {
-			const columns = _.times(cooldowns.length, (i) => {
-				return <Grid.Column key={i}>
-					<Image src={this.iconForCooldown(cooldowns[i])}/>
-				</Grid.Column>
-			})
-			return <Grid>{columns}</Grid>
-		}
-
-		const rowsCount = Math.ceil(cooldowns.length / this.maxGridColumns)
-		const rows = _.times(rowsCount, (i) => {
-			const startIndex = i * this.maxGridColumns
-			let endIndex = startIndex + this.maxGridColumns
-			if (endIndex >= cooldowns.length) {
-				endIndex = cooldowns.length - 1
-			}
-			const columnsCount = endIndex - startIndex
-			const columns = _.times(columnsCount, (j) => {
-				return <Grid.Column key={j}>
-					<Image src={this.iconForCooldown(cooldowns[startIndex + j])}/>
-				</Grid.Column>
-			})
-
-			return <Grid.Row key={i}>
-				{columns}
-			</Grid.Row>
+		const columns = cooldownIds.map((cooldownId) => {
+			return <Grid.Column key={cooldownId}>
+				<TeaCooldownTimeForm cooldownId={cooldownId}/>
+			</Grid.Column>
 		})
 
-		return <Grid>{rows}</Grid>
+		return <Grid columns={this.maxGridColumns}>{columns}</Grid>
 	}
 
 	render() {
@@ -175,5 +144,130 @@ export default class TeaCooldownsSelector extends Component {
 			</Modal>
 
 		return modal
+	}
+}
+
+// TODO: Break out into separate file
+// TODO: Add a way to save stuff between sessions (currently lost when dismissing the modal)
+export class TeaCooldownTimeForm extends Component {
+	static propTypes = {
+		cooldownId: PropTypes.number,
+	}
+
+	constructor(props) {
+		super(props)
+		this.defaultTime = '00:00'
+		this.state = {
+			startTime: this.defaultTime,
+			endTime: this.defaultTime,
+			usages: [],
+		}
+		this.cooldown = getDataBy(ACTIONS, 'id', props.cooldownId)
+
+		this.startPlaceholder = 'Start time, e.g. 09:55'
+		this.endPlaceholder = 'End time, e.g. 10:05'
+
+		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleChangedStart = this.handleChangedStart.bind(this)
+		this.handleChangedEnd = this.handleChangedEnd.bind(this)
+		this.deleteUsage = this.deleteUsage.bind(this)
+		this.sortTimes = this.sortTimes.bind(this)
+	}
+
+	sortTimes(times) {
+		return times.sort((a, b) => {
+			const [aStartMin, aStartSec] = a.start.split(':')
+			const [aEndMin, aEndSec] = a.end.split(':')
+			const [bStartMin, bStartSec] = b.start.split(':')
+			const [bEndMin, bEndSec] = b.end.split(':')
+
+			if (aStartMin !== bStartMin) {
+				return aStartMin - bStartMin
+			}
+			if (aStartSec !== bStartSec) {
+				return aStartSec - bStartSec
+			}
+			if (aEndMin !== bEndMin) {
+				return aEndMin - bEndMin
+			}
+			return aEndSec - bEndSec
+		})
+	}
+
+	handleChangedStart(event) {
+		this.setState({startTime: event.target.value})
+	}
+
+	handleChangedEnd(event) {
+		this.setState({endTime: event.target.value})
+	}
+
+	handleSubmit(event) {
+		// Store the usage
+		this.setState({
+			usages: this.sortTimes(this.state.usages.concat({start: this.state.startTime, end: this.state.endTime})),
+		})
+		// Reset the time inputs
+		this.setState({
+			startTime: this.defaultTime,
+			endTime: this.defaultTime,
+		})
+		event.preventDefault()
+	}
+
+	deleteUsage(event) {
+		const {usages} = this.state
+		usages.splice(event.target.value, 1)
+		this.setState({usages: usages})
+	}
+
+	render() {
+		const {usages} = this.state
+
+		return <div>
+			<Image src={this.cooldown.icon}/>
+
+			<div>
+				<p><b>{this.cooldown.name} timings:</b></p>
+				{(() => {
+					if (usages.length > 0) {
+						return <ul className={styles.cduselist}>
+							{usages.map((usage, i) => {
+								return <li key={i}>
+									Between <b>{usage.start}</b> and <b>{usage.end}</b>
+									<button type="button" onClick={this.deleteUsage} value={i}>X</button>
+								</li>
+							})}
+						</ul>
+					}
+					return 'N/A'
+				})()}
+			</div>
+
+			<form onSubmit={this.handleSubmit}>
+				<input
+					type="text"
+					required="required"
+					aria-required="true"
+					value={this.state.startTime}
+					placeholder={this.startPlaceholder}
+					onChange={this.handleChangedStart}
+					pattern="\d\d:\d\d"
+				/>
+				<input
+					type="text"
+					required="required"
+					aria-required="true"
+					value={this.state.endTime}
+					placeholder={this.endPlaceholder}
+					onChange={this.handleChangedEnd}
+					pattern="\d\d:\d\d"
+				/>
+				<input
+					type="submit"
+					value={`Store ${this.cooldown.name} usage`}
+				/>
+			</form>
+		</div>
 	}
 }
