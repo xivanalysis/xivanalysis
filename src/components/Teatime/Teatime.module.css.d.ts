@@ -6,6 +6,7 @@ declare namespace TeatimeModuleCssModule {
     header: string;
     resultsContainer: string;
     seeMore: string;
+    timingIconSize: string;
   }
 }
 

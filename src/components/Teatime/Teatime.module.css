@@ -1,3 +1,5 @@
+@value timingIconSize: 40px;
+
 .header {
 	display: flex;
 }

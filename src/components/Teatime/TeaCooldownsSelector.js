@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Modal, Menu, Input, Image, Segment, Grid} from 'semantic-ui-react'
+import {Modal, Menu, Segment, Grid} from 'semantic-ui-react'
 import styles from './Teatime.module.css'
 import {Trans} from '@lingui/react'
 import {JOB_COOLDOWNS} from './modules/PartyCooldowns'
@@ -7,6 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS, {ROLES} from 'data/JOBS'
 import {getDataBy} from 'data'
 import PropTypes from 'prop-types'
+import {ActionLink} from 'components/ui/DbLink'
 
 // TODO: Break out ui components into better class structure
 export default class TeaCooldownsSelector extends Component {
@@ -106,19 +107,6 @@ export default class TeaCooldownsSelector extends Component {
 					content={<Trans id="tea.cooldownselect.dpstab">DPS CDs</Trans>}
 					onClick={this.handleTabSwitch}
 				/>
-				<Menu.Menu position="right">
-					<Menu.Item>
-						<Trans id="tea.cooldownselect.searchplaceholder" render={({translation}) => (
-							<Input
-								transparent
-								icon={{name: 'search', link: true}}
-								placeholder={translation}
-							/>
-						)}>
-							Search cooldowns
-						</Trans>
-					</Menu.Item>
-				</Menu.Menu>
 			</Menu>
 
 		const modal =
@@ -148,7 +136,6 @@ export default class TeaCooldownsSelector extends Component {
 }
 
 // TODO: Break out into separate file
-// TODO: Add a way to save stuff between sessions (currently lost when dismissing the modal)
 export class TeaCooldownTimeForm extends Component {
 	static propTypes = {
 		cooldownId: PropTypes.number,
@@ -162,16 +149,25 @@ export class TeaCooldownTimeForm extends Component {
 			endTime: this.defaultTime,
 			usages: [],
 		}
+
 		this.cooldown = getDataBy(ACTIONS, 'id', props.cooldownId)
+		this.storageName = `tea-cooldown-timings-${this.cooldown.id}`
 
 		this.startPlaceholder = 'Start time, e.g. 09:55'
 		this.endPlaceholder = 'End time, e.g. 10:05'
 
-		this.handleSubmit = this.handleSubmit.bind(this)
+		this.handleSubmitTiming = this.handleSubmitTiming.bind(this)
 		this.handleChangedStart = this.handleChangedStart.bind(this)
 		this.handleChangedEnd = this.handleChangedEnd.bind(this)
 		this.deleteUsage = this.deleteUsage.bind(this)
 		this.sortTimes = this.sortTimes.bind(this)
+	}
+
+	componentDidMount() {
+		const loadedUsages = localStorage.getItem(this.storageName)
+		if (loadedUsages) {
+			this.setState({usages: JSON.parse(loadedUsages)})
+		}
 	}
 
 	sortTimes(times) {
@@ -202,33 +198,37 @@ export class TeaCooldownTimeForm extends Component {
 		this.setState({endTime: event.target.value})
 	}
 
-	handleSubmit(event) {
-		// Store the usage
+	handleSubmitTiming(event) {
+		// Add the usage to the state and sort the list
+		const newUsages = this.sortTimes(this.state.usages.concat({start: this.state.startTime, end: this.state.endTime}))
 		this.setState({
-			usages: this.sortTimes(this.state.usages.concat({start: this.state.startTime, end: this.state.endTime})),
+			usages: newUsages,
 		})
-		// Reset the time inputs
-		this.setState({
-			startTime: this.defaultTime,
-			endTime: this.defaultTime,
-		})
+
+		// Update localStorage
+		localStorage.setItem(this.storageName, JSON.stringify(newUsages))
+
+		// Prevent the event from doing anything else like changing page or whatever
 		event.preventDefault()
 	}
 
 	deleteUsage(event) {
-		const {usages} = this.state
-		usages.splice(event.target.value, 1)
-		this.setState({usages: usages})
+		// Remove the usage from the state
+		const newUsages = this.state.usages
+		newUsages.splice(event.target.value, 1)
+		this.setState({usages: newUsages})
+
+		// Update localStorage
+		localStorage.setItem(this.storageName, JSON.stringify(newUsages))
 	}
 
 	render() {
 		const {usages} = this.state
 
 		return <div>
-			<Image src={this.cooldown.icon}/>
+			<ActionLink iconSize={styles.timingIconSize} {...this.cooldown}/>&nbsp;Timings
 
 			<div>
-				<p><b>{this.cooldown.name} timings:</b></p>
 				{(() => {
 					if (usages.length > 0) {
 						return <ul className={styles.cduselist}>
@@ -244,7 +244,7 @@ export class TeaCooldownTimeForm extends Component {
 				})()}
 			</div>
 
-			<form onSubmit={this.handleSubmit}>
+			<form onSubmit={this.handleSubmitTiming}>
 				<input
 					type="text"
 					required="required"
@@ -265,7 +265,7 @@ export class TeaCooldownTimeForm extends Component {
 				/>
 				<input
 					type="submit"
-					value={`Store ${this.cooldown.name} usage`}
+					value="Store Timing"
 				/>
 			</form>
 		</div>
