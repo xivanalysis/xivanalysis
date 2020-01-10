@@ -21,6 +21,7 @@ import {Statistics} from 'parser/core/modules/Statistics'
 import UnableToAct from 'parser/core/modules/UnableToAct'
 
 import AdditionalPartyEvents from './modules/AdditionalPartyEvents'
+import EnemyAttacks from './modules/EnemyAttacks'
 import Friendlies from './modules/Friendlies'
 import PartyCooldowns from './modules/PartyCooldowns'
 
@@ -60,6 +61,7 @@ const teaMeta = new Meta({
 			AdditionalEvents,
 			AdditionalPartyEvents,
 			Friendlies,
+			EnemyAttacks,
 		],
 	}),
 	changelog: [],

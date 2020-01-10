@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import stable from 'stable'
 
 import {getFflogsEvents} from 'api'
@@ -20,6 +21,8 @@ const buildQueryFilter = (data, playerActions) => [
 		types: ['begincast', 'cast'],
 		abilities: playerActions,
 		targetsOnly: false,
+	}, {
+		types: ['damage'], // This is probably double grabbing damage for one player
 	},
 ]
 
@@ -78,9 +81,12 @@ export default class AdditionalPartyEvents extends Module {
 		// Build the filter string
 		let filter = buildQueryFilter(this.data, playerActions).map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
-			const abilities = section.abilities.join(',')
 
-			let condition = `type in (${types}) and ability.id in (${abilities})`
+			let condition = `type in (${types})`
+			if (!_.isNil(section.abilities)) {
+				const abilities = section.abilities.join(',')
+				condition += `and ability.id in (${abilities})`
+			}
 			if (section.targetsOnly) {
 				condition += ` and (${targetQuery})`
 			}
