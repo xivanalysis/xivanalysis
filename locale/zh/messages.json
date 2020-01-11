@@ -789,7 +789,7 @@
   "smn.ruin-ii.suggestions.avoid.content": "倘若可能的话，请避免使用<0/>。优先使用你的其他瞬发技能以移动或滑步。或使用毁荡当你无需滑步或移动时。",
   "smn.ruin-ii.suggestions.avoid.why": "{totalCount}毁坏{totalCount, plural,one {吟唱}other {吟唱}}被使用",
   "smn.ruin-iv.bahamut.content": "",
-  "smn.ruin-iv.bahamut.why": "",
+  "smn.ruin-iv.bahamut.why": "有{0, plural, one {#次} other {#次}}召唤巴哈姆特时没有足够毁绝层数。",
   "smn.ruin-iv.leftover.content": "你应该在战斗结束之前用掉所有的<0/>。",
   "smn.ruin-iv.leftover.why": "{1, plural, one {层} other {层}}的{0}毁坏效果加强在战斗结束时没有使用。",
   "smn.ruin-iv.lost.content": "",
