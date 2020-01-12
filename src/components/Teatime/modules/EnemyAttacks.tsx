@@ -1,13 +1,15 @@
 import {t} from '@lingui/macro'
-import {Ability,  DamageEvent} from 'fflogs'
+import {NumberFormat} from '@lingui/react'
 import _ from 'lodash'
+import React from 'react'
+import {Table} from 'semantic-ui-react'
+
+import {Status} from 'data/STATUSES'
+import {Ability,  DamageEvent} from 'fflogs'
 import Enemy from 'parser/core/Enemy'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Enemies from 'parser/core/modules/Enemies'
 import Timeline, {Item, ItemGroup} from 'parser/core/modules/Timeline'
-import React from 'react'
-import {Table} from 'semantic-ui-react'
-import {formatDuration} from 'utilities'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import MultiStatuses from './multi/MultiStatuses'
 
@@ -34,7 +36,6 @@ export default class EnemyAttacks extends Module {
 
 	protected init() {
 		this.addHook('damage', {sourceIsFriendly: false}, this.onDamage)
-
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -48,7 +49,7 @@ export default class EnemyAttacks extends Module {
 		}
 	}
 
-	private _fixAbilityName(ability: Ability): string {
+	private fixAbilityName(ability: Ability): string {
 		// TODO: This is TEA specific data
 		const ABILITY_NAMES: {[key: number]: string} = {
 			18808 : 'Auto Attack', // LL
@@ -62,7 +63,7 @@ export default class EnemyAttacks extends Module {
 		const startTime = this.parser.fight.start_time
 
 		for (const event of this.damageEvents) {
-			const abilityName = this._fixAbilityName(event.ability)
+			const abilityName = this.fixAbilityName(event.ability)
 			this.timeline.addItem(new Item({
 				type: 'point',
 				group: event.targetID,
@@ -74,44 +75,84 @@ export default class EnemyAttacks extends Module {
 		}
 	}
 
-	private _damageCell(damageEvent: DamageEvent): React.ReactNode {
-		// name(sourceID)
-		// ability.name
-		// amount
-		// overkill
-		// absorbed)
+	private sourceCell(entity: Enemy, sourceStatuses: Status[], damageEvent: DamageEvent): React.ReactNode {
+		const sourceName = entity.name
+		const sourceStatusIcons = sourceStatuses.map((status, i) => (
+			<img key={i} src={status.icon} alt={status.name} title={status.name}/>
+		))
+
+		return <>
+			<div>
+				{sourceName}
+			</div>
+			<div>
+				{sourceStatusIcons}
+			</div>
+		</>
+	}
+
+	private attackCell(targetStatuses: Status[], damageEvent: DamageEvent): React.ReactNode {
+		const abilityName = this.fixAbilityName(damageEvent.ability)
+
+		const targetStatusIcons = targetStatuses.map((status, i) => (
+			<img key={i} src={status.icon} alt={status.name} title={status.name}/>
+		))
+		return <>
+			<div>
+				{abilityName}
+			</div>
+			<div>
+				{targetStatusIcons}
+			</div>
+		</>
+	}
+
+	private damageCell(damageEvent: DamageEvent): React.ReactNode {
+		this.debug(damageEvent)
+
+		return <NumberFormat value={damageEvent.amount} />
+	}
+
+	private attackRow(damageEvent: DamageEvent, index: number): React.ReactNode {
+		if (!damageEvent.targetID) {
+			return
+		}
 		const entity: Enemy | undefined = this.enemies.getEntity(damageEvent.sourceID)
 		if (!entity) {
 			return
 		}
-		if (!damageEvent.targetID) {
-			return
-		}
-		const sourceName = entity.name
-		const abilityName = damageEvent.ability.name
-		// damageEvent.overkill
-		const amount = damageEvent.amount + damageEvent.absorbed
 		const sourceStatuses = this.multiStatuses.getStatuses(entity.id, damageEvent.timestamp)
-		const sourceStatusIcons = sourceStatuses.map((status, i) => (
-			<img key={i} src={status.icon} alt={status.name}/>
-		))
 		const targetStatuses = this.multiStatuses.getStatuses(damageEvent.targetID, damageEvent.timestamp)
-		const targetStatusIcons = targetStatuses.map((status, i) => (
-			<img key={i} src={status.icon} alt={status.name}/>
-		))
-		return <>
-			{sourceName}{sourceStatusIcons}:<strong>{abilityName}</strong> ({amount}) {targetStatusIcons}
-		</>
+
+		return <Table.Row key={index}>
+			<Table.Cell textAlign="center">
+				<span style={{marginRight: 5}}>{this.parser.formatTimestamp(damageEvent.timestamp)}</span>
+			</Table.Cell>
+			<Table.Cell>
+				{this.sourceCell(entity, sourceStatuses, damageEvent)}
+			</Table.Cell>
+			<Table.Cell textAlign="right">
+				{this.damageCell(damageEvent)}
+			</Table.Cell>
+			<Table.Cell>
+				{this.attackCell(targetStatuses, damageEvent)}
+			</Table.Cell>
+		</Table.Row>
 	}
 
 	output(): React.ReactNode {
 		// KC: Translation
-		const startTime = this.parser.fight.start_time
-		return <Table compact unstackable celled>
+		return <Table compact unstackable collapsing>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell collapsing>
 						<strong>Time</strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong>Source</strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong>Damage</strong>
 					</Table.HeaderCell>
 					<Table.HeaderCell>
 						<strong>Attack</strong>
@@ -121,14 +162,7 @@ export default class EnemyAttacks extends Module {
 			<Table.Body>
 			{
 				this.targetDamageEvents[this.parser.player.id].map((damageEvent, i) =>
-					<Table.Row key={i}>
-						<Table.Cell textAlign="center">
-							<span style={{marginRight: 5}}>{formatDuration((damageEvent.timestamp - startTime) / 1000)}</span>
-						</Table.Cell>
-						<Table.Cell>
-							{this._damageCell(damageEvent)}
-						</Table.Cell>
-					</Table.Row>,
+					this.attackRow(damageEvent, i),
 				)
 			}
 			</Table.Body>
