@@ -97,6 +97,7 @@ export default class Positionals extends Module {
 			this._currentCombo.time = event.timestamp
 
 			// set next to RT id for determining if combo completed.
+			this._currentCombo.procEvent = event.ability.guid
 			this._currentCombo.next = ACTIONS.RAIDEN_THRUST.id
 
 			// update TN charges
@@ -171,7 +172,7 @@ export default class Positionals extends Module {
 
 	_procTable() {
 		return this._rtCombos.filter(combo => !combo.success).map(combo => {
-			const action = getDataBy(ACTIONS, 'id', combo.next)
+			const action = getDataBy(ACTIONS, 'id', combo.procEvent)
 
 			return <Table.Row key={combo.time}>
 				<Table.Cell>{this.createTimelineButton(combo.time)}</Table.Cell>
