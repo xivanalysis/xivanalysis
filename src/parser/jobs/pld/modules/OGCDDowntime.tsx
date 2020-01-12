@@ -14,6 +14,7 @@ const FIRST_USE_OFFSET_FOF = 24000
 const FIRST_USE_OFFSET_REQ = 31000
 
 export default class OGCDDowntime extends CooldownDowntime {
+	static debug = false
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.FIGHT_OR_FLIGHT],
@@ -27,6 +28,9 @@ export default class OGCDDowntime extends CooldownDowntime {
 		},
 		{cooldowns: [ACTIONS.SPIRITS_WITHIN]},
 		{cooldowns: [ACTIONS.CIRCLE_OF_SCORN]},
-		{cooldowns: [ACTIONS.INTERVENE]},
+		{
+			cooldowns: [ACTIONS.INTERVENE],
+			firstUseOffset: 15000,
+		},
 	]
 }
