@@ -109,7 +109,8 @@ class Teatime extends Component {
 
 		const combatants = this.groupedActors(report.friendlies, this.fightId)
 		// Temporary solution to just grab one user and party from them
-		const conductors = [new TeaConductor(report, fight, combatants[0])]
+		const combatant = combatants.find(friend => friend.id === this.combatantId)
+		const conductors = [new TeaConductor(report, fight, combatant)]
 		// const conductors = combatants.map(combatant => new TeaConductor(report, fight, combatant))
 
 		// const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
@@ -167,8 +168,8 @@ class Teatime extends Component {
 		const job = getDataBy(JOBS, 'logType', player.type)
 		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
 
-		const allResults = this.conductors.map(conductor => conductor.getResults())
-		const timelineResults = allResults.flat().filter(result => result.handle === 'timeline')
+		const allResults = this.conductors.map(conductor => conductor.getResults()).flat()
+		// const timelineResults = allResults.filter(result => result.handle === 'timeline')
 
 		return <SegmentPositionProvider>
 			<SidebarContent>
@@ -186,7 +187,7 @@ class Teatime extends Component {
 					</Header>
 				)}
 
-				{timelineResults.map((result, index) => (
+				{allResults.map((result, index) => (
 					<SegmentLinkItem
 						key={index}
 						index={index}
@@ -196,7 +197,7 @@ class Teatime extends Component {
 			</SidebarContent>
 
 			<div className={styles.resultsContainer}>
-				{timelineResults.map((result, index) => (
+				{allResults.map((result, index) => (
 					<ResultSegment index={index} result={result} key={index}/>
 				))}
 			</div>

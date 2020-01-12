@@ -20,9 +20,11 @@ import Speedmod from 'parser/core/modules/Speedmod'
 import {Statistics} from 'parser/core/modules/Statistics'
 import UnableToAct from 'parser/core/modules/UnableToAct'
 
+import Combatants from 'parser/core/modules/Combatants'
 import AdditionalPartyEvents from './modules/AdditionalPartyEvents'
 import EnemyAttacks from './modules/EnemyAttacks'
 import Friendlies from './modules/Friendlies'
+import MultiStatuses from './modules/multi/MultiStatuses'
 import PartyCooldowns from './modules/PartyCooldowns'
 
 // Top level things I want
@@ -62,6 +64,8 @@ const teaMeta = new Meta({
 			AdditionalPartyEvents,
 			Friendlies,
 			EnemyAttacks,
+			MultiStatuses,
+			Combatants,
 		],
 	}),
 	changelog: [],

@@ -9,7 +9,7 @@ export const WHM = ensureStatuses({
 	},
 
 	TEMPERANCE: {
-		id: 1872,
+		id: 1873,
 		name: 'Temperance',
 		icon: 'https://xivapi.com/i/012000/012634.png',
 		duration: 20,

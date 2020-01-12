@@ -15,6 +15,7 @@ const buildQueryFilter = (data, playerActions) => [
 			data.statuses.CHAIN_STRATAGEM.id,
 			data.statuses.RUINATION.id,
 			data.statuses.ADDLE.id,
+			data.statuses.FEINT.id,
 		],
 		targetsOnly: true,
 	}, {
@@ -35,16 +36,16 @@ const EVENT_TYPE_ORDER = {
 	damage: -1,
 	heal: -1,
 	default: 0,
-	removebuff: 1,
-	removebuffstack: 1,
-	removedebuff: 1,
-	removedebuffstack: 1,
-	refreshbuff: 2,
-	refreshdebuff: 2,
-	applybuff: 3,
-	applybuffstack: 3,
-	applydebuff: 3,
-	applydebuffstack: 3,
+	applybuff: 1,
+	applybuffstack: 1,
+	applydebuff: 1,
+	applydebuffstack: 1,
+	removebuff: 2,
+	removebuffstack: 2,
+	removedebuff: 2,
+	removedebuffstack: 2,
+	refreshbuff: 3,
+	refreshdebuff: 3,
 }
 
 export default class AdditionalPartyEvents extends Module {
@@ -99,7 +100,7 @@ export default class AdditionalPartyEvents extends Module {
 			this.parser.player.guid,
 			...this.parser.player.pets.map(pet => pet.guid),
 		].join(',')
-		filter =  `(${filter}) and source.id not in (${playerIds})`
+		filter =  `(${filter}) and source.id not in (${playerIds}) and target.id not in (${playerIds})`
 
 		// Request the new events
 		const newEvents = await getFflogsEvents(

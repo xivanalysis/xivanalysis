@@ -38,14 +38,14 @@ export const WAR = ensureStatuses({
 	SHAKE_IT_OFF: {
 		id: 1457,
 		name: 'Shake It Off',
-		icon: 'https://xivapi.com/i/002000/002563.png',
+		icon: 'https://xivapi.com/i/012000/012557.png',
 		duration: 15,
 	},
 
 	HOLMGANG: {
 		id: 409,
 		name: 'Holmgang',
-		icon: 'https://xivapi.com/i/000000/000266.png',
+		icon: 'https://xivapi.com/i/010000/010266.png',
 		duration: 6,
 	},
 

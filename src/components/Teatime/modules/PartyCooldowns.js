@@ -117,24 +117,32 @@ export const JOB_COOLDOWNS = {
 			// Global
 			ACTIONS.MANTRA.id,
 			ACTIONS.FEINT.id,
+			// Personal
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.DRAGOON]: {
 		actions: [
 			// Global
 			ACTIONS.FEINT.id,
+			// Personal
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.NINJA]: {
 		actions: [
 			// Global
 			ACTIONS.FEINT.id,
+			// Personal
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.SAMURAI]: {
 		actions: [
 			// Global
 			ACTIONS.FEINT.id,
+			// Personal
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.BARD]: {
@@ -143,12 +151,15 @@ export const JOB_COOLDOWNS = {
 			ACTIONS.TROUBADOUR.id,
 			// Personal
 			ACTIONS.THE_WARDENS_PAEAN.id,
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.MACHINIST]: {
 		actions: [
 			// Global
 			ACTIONS.TACTICIAN.id,
+			// Personal
+			ACTIONS.SECOND_WIND.id,
 		],
 	},
 	[ActorType.DANCER]: {
@@ -156,6 +167,7 @@ export const JOB_COOLDOWNS = {
 			// Global
 			ACTIONS.SHIELD_SAMBA.id,
 			ACTIONS.IMPROVISATION.id,
+
 		],
 	},
 	[ActorType.BLACK_MAGE]: {
