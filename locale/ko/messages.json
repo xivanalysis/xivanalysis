@@ -335,6 +335,7 @@
   "drg.blood.checklist.requirement.name": "적용시간 <0/>",
   "drg.blood.delay-buff": "<0/> 의 {0}",
   "drg.blood.delay-explain": "붉은 용혈 구간 사용시 가능한 개인 버프들과 정렬되도록 사용하십시오. 필요하다면 붉은 용혈 구간들 다음을 위해 미룰 수도 있습니다:",
+  "drg.blood.final-window-explain": "",
   "drg.blood.no-buff-stardiver-explain": "",
   "drg.blood.no-delay-explain": "",
   "drg.blood.no-nastrond-explain": "",

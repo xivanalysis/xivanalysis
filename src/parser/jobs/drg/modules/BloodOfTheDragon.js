@@ -430,7 +430,7 @@ export default class BloodOfTheDragon extends Module {
 			{window.isLast && (
 				<>
 					<Message info>
-						<p><Icon name="info" /> <Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
+						<p><Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
 					</Message>
 				</>
 			)}
@@ -451,14 +451,14 @@ export default class BloodOfTheDragon extends Module {
 			{window.missedSdBuff && (
 				<>
 					<Message warning>
-						<p><Icon name="warning sign"/><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
+						<p><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
 					</Message>
 				</>
 			)}
 			{window.shouldDelay && (
 				<>
 					<Message warning>
-						<p><Icon name="warning sign" /><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
+						<p><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
 						</Trans></p>
 						<Message.List>
 							{delayBuffs}
@@ -469,7 +469,7 @@ export default class BloodOfTheDragon extends Module {
 			{window.showNoDelayNote && (
 				<>
 					<Message info>
-						<p><Icon name="info" /> <Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+						<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 					</Message>
 				</>
 			)}

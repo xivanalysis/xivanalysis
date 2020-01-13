@@ -335,6 +335,7 @@
   "drg.blood.checklist.requirement.name": "<0/> uptime",
   "drg.blood.delay-buff": "<0/> in {0}",
   "drg.blood.delay-explain": "If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:",
+  "drg.blood.final-window-explain": "This window would last past the end of the fight and does not count against missing casts of <0/> and <1/> in the Suggestions. The warnings will still be shown for completeness.",
   "drg.blood.no-buff-stardiver-explain": "You did not use <0/> while buffed during this window.",
   "drg.blood.no-delay-explain": "This window cannot be delayed due to downtime occurring at {0}. This window would otherwise be delayed for better buff alignment.",
   "drg.blood.no-nastrond-explain": "You missed one or more uses of <0/> during this window.",
