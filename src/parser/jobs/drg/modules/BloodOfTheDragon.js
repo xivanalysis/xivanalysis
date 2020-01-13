@@ -285,6 +285,8 @@ export default class BloodOfTheDragon extends Module {
 			// check the stardiver cast buffs
 			// count a miss if the window could be delayed
 			window.missedSdBuff = (activeBuffsInWindow || window.shouldDelay) && window.stardivers.length === 1 && window.stardivers[0].buffs.length === 0
+
+			window.isLast = window.start + window.duration > this.parser.fight.end_time
 		}
 	}
 
@@ -293,9 +295,9 @@ export default class BloodOfTheDragon extends Module {
 		this._analyzeLifeWindows()
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
-		const noBuffSd = this._lifeWindows.history.filter(window => window.missedSdBuff).length
-		const noLifeSd = this._lifeWindows.history.filter(window => window.stardivers.length === 0).length
-		const noFullNsLife = this._lifeWindows.history.filter(window => window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
+		const noBuffSd = this._lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
+		const noLifeSd = this._lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
+		const noFullNsLife = this._lifeWindows.history.filter(window => !window.isLast && window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
 
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
@@ -425,6 +427,13 @@ export default class BloodOfTheDragon extends Module {
 		})
 
 		return <Fragment>
+			{window.isLast && (
+				<>
+					<Message info>
+						<p><Icon name="info" /> <Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
+					</Message>
+				</>
+			)}
 			{window.stardivers.length === 0 && (
 				<>
 					<Message error>
