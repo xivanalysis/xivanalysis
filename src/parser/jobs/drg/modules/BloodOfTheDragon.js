@@ -344,9 +344,8 @@ export default class BloodOfTheDragon extends Module {
 			</Trans>,
 			value: noLifeSd,
 			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 			why: <Trans id="drg.suggetions.stardiver.why">{noLifeSd} of your Life of the Dragon windows were missing a <ActionLink {...ACTIONS.STARDIVER}/> use.</Trans>,
 		}))
@@ -358,9 +357,8 @@ export default class BloodOfTheDragon extends Module {
 			content: <Trans id="drg.suggestions.nastrond.content">Each Life of the Dragon window should contain 3 <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
 			value: noFullNsLife,
 			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 			why: <Trans id="drg.suggestions.nastrond.why">{noFullNsLife} of your Life of the Dragon windows were missing one or more <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
 		}))
