@@ -336,7 +336,6 @@ export default class BloodOfTheDragon extends Module {
 		}))
 
 		// each window should have a stardiver
-		// 1 miss minor, in case enc. ends during life window
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.STARDIVER.icon,
 			content: <Trans id="drg.suggestions.stardiver.content">
@@ -351,7 +350,6 @@ export default class BloodOfTheDragon extends Module {
 		}))
 
 		// each window should have 3 nastronds
-		// 1 miss minor, in case enc. ends during life window
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.NASTROND.icon,
 			content: <Trans id="drg.suggestions.nastrond.content">Each Life of the Dragon window should contain 3 <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
