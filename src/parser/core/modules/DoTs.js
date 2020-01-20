@@ -8,6 +8,7 @@ export default class DoTs extends Module {
 	static dependencies = [
 		'data',
 		'enemies',
+		'entityStatuses',
 		'invuln',
 	]
 
@@ -92,7 +93,7 @@ export default class DoTs extends Module {
 
 	// These two functions are helpers for submodules and should be used but not overridden
 	getUptimePercent(statusId) {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
+		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightDuration) * 100
 	}

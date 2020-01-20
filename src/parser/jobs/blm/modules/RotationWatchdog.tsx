@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -19,6 +18,7 @@ import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/m
 import Timeline from 'parser/core/modules/Timeline'
 import UnableToAct from 'parser/core/modules/UnableToAct'
 
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
 import {BLM_GAUGE_EVENT} from './Gauge'
@@ -137,7 +137,7 @@ class Cycle {
 	}
 
 	constructor(start: number, gaugeState: GaugeState) {
-		this.startTime = start,
+		this.startTime = start
 		// Object.assign because this needs to be a by-value assignment, not by-reference
 		this.gaugeStateBeforeFire = Object.assign(this.gaugeStateBeforeFire, gaugeState)
 	}
@@ -181,6 +181,7 @@ export default class RotationWatchdog extends Module {
 	@dependency private timeline!: Timeline
 	@dependency private combatants!: Combatants
 	@dependency private unableToAct!: UnableToAct
+	@dependency private entityStatuses!: EntityStatuses
 
 	private currentGaugeState: GaugeState = new GaugeState()
 	private currentRotation: Cycle = new Cycle(this.parser.fight.start_time, this.currentGaugeState)
@@ -283,9 +284,9 @@ export default class RotationWatchdog extends Module {
 		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
 	}
 
-	// Get the uptime percentage for the Thunder status defbuff
+	// Get the uptime percentage for the Thunder status debuff
 	private getThunderUptime() {
-		const statusTime = this.enemies.getStatusUptime(STATUSES.THUNDER_III.id)
+		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
 		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusTime / uptime) * 100
