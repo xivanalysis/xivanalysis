@@ -318,6 +318,7 @@
   "dnc.procs.suggestions.drops.why": "你损失了  {droppedProcs, plural, one {# 次触发} other {# 次触发}}",
   "dnc.procs.suggestions.overwrite.content": "避免刷新触发。触发的威力高于普通连击，被刷新是很严重的DPS损失。",
   "dnc.procs.suggestions.overwrite.why": "{0, plural, one {# 次触发} other {# 次触发}}被覆盖掉",
+  "dnc.technicalities.rotation-table.header.buffed": "",
   "dnc.technicalities.rotation-table.header.missed": "<0/>是否准时？",
   "dnc.technicalities.rotation-table.header.pooled": "<0/>堆积了？",
   "dnc.technicalities.suggestions.bad-devilments.content": "在<1/>的持续时间外用<0/>会造成dps损失。除了部分特殊的开场起手，你都应该在<3/>的开始的时候用<2/>。",
