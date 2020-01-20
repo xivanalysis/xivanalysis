@@ -36,7 +36,7 @@ interface StatusInfoTracking {
 
 export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
-	static debug = true
+	static debug = false
 
 	@dependency private invuln!: Invulnerability
 	@dependency private data!: Data
