@@ -2,7 +2,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 // Time that Jump deems ok for a OGCD to be down : ^)
-const DEFAULT_ALLOWED_DOWNTIME = 4000
+const DEFAULT_ALLOWED_DOWNTIME = 1000
 export default class GeneralCDDowntime extends CooldownDowntime {
 	defaultAllowedAverageDowntime = DEFAULT_ALLOWED_DOWNTIME
 
@@ -12,19 +12,19 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		// hope that it's accurate enough
 		{
 			cooldowns: [ACTIONS.ACCELERATION],
-			allowedAverageDowntime: 20000,
+			allowedAverageDowntime: 4000,
 		},
 		{
 			cooldowns: [ACTIONS.SWIFTCAST],
-			firstUseOffset: 15000,
+			firstUseOffset: 31000,
 		},
 		{
 			cooldowns: [ACTIONS.MANAFICATION],
-			firstUseOffset: 25000,
+			firstUseOffset: 17500,
 		},
 		{
 			cooldowns: [ACTIONS.EMBOLDEN],
-			firstUseOffset: 15000,
+			firstUseOffset: 7500,
 		},
 		{
 			cooldowns: [ACTIONS.FLECHE],

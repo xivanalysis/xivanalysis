@@ -245,5 +245,6 @@ export const PLD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002520.png',
 		onGcd: false,
 		cooldown: 30,
+		charges: 2,
 	},
 })

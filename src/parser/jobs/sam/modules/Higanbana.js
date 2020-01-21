@@ -23,6 +23,7 @@ export default class Higanbana extends Module {
 	static dependencies = [
 		'checklist',
 		'enemies',
+		'entityStatuses',
 		'invuln',
 		'suggestions',
 	]
@@ -104,7 +105,7 @@ export default class Higanbana extends Module {
 		}))
 	}
 	getDotUptimePercent(statusId) {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
+		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100

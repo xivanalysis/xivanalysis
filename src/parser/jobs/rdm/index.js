@@ -31,6 +31,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-01-02'),
+			Changes: () => <>Adjusted Cooldown Downtime handling based on 3-8 Standard opener</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2019-11-03'),
 			Changes: () => <>Added basic support for 5.1.  Resolved issue with manafication overcap statistic</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
