@@ -240,9 +240,9 @@ export default class BloodOfTheDragon extends Module {
 		const windows = this.downtime.getDowntimeWindows(start)
 		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
 
-		for (const window of windows) {
-			if (window.start < end) {
-				return window.start
+		for (const dtWindow of windows) {
+			if (dtWindow.start < end) {
+				return dtWindow.start
 			}
 		}
 
@@ -250,43 +250,43 @@ export default class BloodOfTheDragon extends Module {
 	}
 
 	_analyzeLifeWindows() {
-		for (const window of this._lifeWindows.history) {
+		for (const lifeWindow of this._lifeWindows.history) {
 			// determine if it could be delayed
-			window.buffsInDelayWindow = {}
+			lifeWindow.buffsInDelayWindow = {}
 
-			window.dtOverlapTime = this._intersectsDowntime((window.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+			lifeWindow.dtOverlapTime = this._intersectsDowntime((lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
 			// - there are no upcoming downtime windows (checked here)
 			// - there are buffs off cooldown in the theoretical delayed window
-			let activeBuffsInWindow = window.activeBuffs.length > 0
-			const shouldBeDelayed = window.activeBuffs.length === 0 && window.dtOverlapTime === null
+			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null
 
 			let buffsExistInDelayWindow = false
 
-			for (const id in window.timeToNextBuff) {
+			for (const id in lifeWindow.timeToNextBuff) {
 				// check if the time to the next buff falls within the next expected window
-				window.buffsInDelayWindow[id] = window.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && window.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
+				lifeWindow.buffsInDelayWindow[id] = lifeWindow.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && lifeWindow.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
 
 				// this is just a running or (instead of a map later)
-				buffsExistInDelayWindow = window.buffsInDelayWindow[id] || buffsExistInDelayWindow
+				buffsExistInDelayWindow = lifeWindow.buffsInDelayWindow[id] || buffsExistInDelayWindow
 
 				// ok now check if the buff comes off cd during the current window
-				activeBuffsInWindow = window.timeToNextBuff[id] < window.duration || activeBuffsInWindow
+				activeBuffsInWindow = lifeWindow.timeToNextBuff[id] < lifeWindow.duration || activeBuffsInWindow
 			}
 
 			// ok now use all the flags to determine if a window should be delayed
-			window.shouldDelay = !activeBuffsInWindow && buffsExistInDelayWindow && shouldBeDelayed
+			lifeWindow.shouldDelay = !activeBuffsInWindow && buffsExistInDelayWindow && shouldBeDelayed
 
 			// if we're not delaying due to downtime in this fight, show an info note
-			window.showNoDelayNote = window.dtOverlapTime !== null && !activeBuffsInWindow && buffsExistInDelayWindow
+			lifeWindow.showNoDelayNote = lifeWindow.dtOverlapTime !== null && !activeBuffsInWindow && buffsExistInDelayWindow
 
 			// check the stardiver cast buffs
 			// count a miss if the window could be delayed
-			window.missedSdBuff = (activeBuffsInWindow || window.shouldDelay) && window.stardivers.length === 1 && window.stardivers[0].buffs.length === 0
+			lifeWindow.missedSdBuff = (activeBuffsInWindow || lifeWindow.shouldDelay) && lifeWindow.stardivers.length === 1 && lifeWindow.stardivers[0].buffs.length === 0
 
-			window.isLast = window.start + window.duration > this.parser.fight.end_time
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
 		}
 	}
 
@@ -401,8 +401,8 @@ export default class BloodOfTheDragon extends Module {
 		}
 	}
 
-	_windowTable(window) {
-		const casts = window.nastronds.concat(window.stardivers)
+	_windowTable(lifeWindow) {
+		const casts = lifeWindow.nastronds.concat(lifeWindow.stardivers)
 		casts.sort((a, b) => { return a.timestamp - b.timestamp })
 
 		const rows = casts.map(cast => {
@@ -410,64 +410,52 @@ export default class BloodOfTheDragon extends Module {
 				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)} />
 			})
 
-			return <Table.Row key={cast.timestamp} warning={cast.action.id === ACTIONS.STARDIVER.id && window.missedSdBuff}>
+			return <Table.Row key={cast.timestamp} warning={cast.action.id === ACTIONS.STARDIVER.id && lifeWindow.missedSdBuff}>
 				<Table.Cell>{this.createTimelineButton(cast.timestamp)}</Table.Cell>
 				<Table.Cell><ActionLink {...cast.action} /></Table.Cell>
 				<Table.Cell>{buffs}</Table.Cell>
 			</Table.Row>
 		})
 
-		const delayBuffs = Object.keys(window.buffsInDelayWindow).filter(id => window.buffsInDelayWindow[id]).map((id, idx) => {
+		const delayBuffs = Object.keys(lifeWindow.buffsInDelayWindow).filter(id => lifeWindow.buffsInDelayWindow[id]).map((id, idx) => {
 			const action = getDataBy(ACTIONS, 'id', parseInt(id))
-			return <Message.Item key={idx}><Trans id="drg.blood.delay-buff"><ActionLink {...action} /> in {this.parser.formatDuration(window.timeToNextBuff[id])}</Trans></Message.Item>
+			return <Message.Item key={idx}><Trans id="drg.blood.delay-buff"><ActionLink {...action} /> in {this.parser.formatDuration(lifeWindow.timeToNextBuff[id])}</Trans></Message.Item>
 		})
 
 		return <Fragment>
-			{window.isLast && (
-				<>
-					<Message info>
-						<p><Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
-					</Message>
-				</>
+			{lifeWindow.isLast && (
+				<Message info>
+					<p><Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
+				</Message>
 			)}
-			{window.stardivers.length === 0 && (
-				<>
-					<Message error>
-						<p><Icon name="warning sign"/> <Trans id="drg.blood.no-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> during this window.</Trans></p>
-					</Message>
-				</>
+			{lifeWindow.stardivers.length === 0 && (
+				<Message error>
+					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> during this window.</Trans></p>
+				</Message>
 			)}
-			{window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW && (
-				<>
-					<Message error>
-						<p><Icon name="warning sign"/> <Trans id="drg.blood.no-nastrond-explain">You missed one or more uses of <ActionLink {...ACTIONS.NASTROND}/> during this window.</Trans></p>
-					</Message>
-				</>
+			{lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW && (
+				<Message error>
+					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-nastrond-explain">You missed one or more uses of <ActionLink {...ACTIONS.NASTROND}/> during this window.</Trans></p>
+				</Message>
 			)}
-			{window.missedSdBuff && (
-				<>
-					<Message warning>
-						<p><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
-					</Message>
-				</>
+			{lifeWindow.missedSdBuff && (
+				<Message warning>
+					<p><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
+				</Message>
 			)}
-			{window.shouldDelay && (
-				<>
-					<Message warning>
-						<p><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
-						</Trans></p>
-						<Message.List>
-							{delayBuffs}
-						</Message.List>
-					</Message>
-				</>
+			{lifeWindow.shouldDelay && (
+				<Message warning>
+					<p><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
+					</Trans></p>
+					<Message.List>
+						{delayBuffs}
+					</Message.List>
+				</Message>
 			)}
-			{window.showNoDelayNote && (
-				<>
-					<Message info>
-						<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(window.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
-					</Message>
-				</>
+			{lifeWindow.showNoDelayNote && (
+				<Message info>
+					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(lifeWindow.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+				</Message>
 			)}
 			<Table>
 				<Table.Header>
@@ -482,13 +470,13 @@ export default class BloodOfTheDragon extends Module {
 		</Fragment>
 	}
 
-	_formatWindowTitle(window) {
+	_formatWindowTitle(lifeWindow) {
 		// flag the row if we see either:
 		// - a non-buffed stardiver in any window, except the windows that cannot be delayed
 		// - a window that could be delayed but wasn't
-		const windowWarning = window.shouldDelay || window.missedSdBuff
-		const windowError = window.stardivers.length === 0 || window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
-		const title = <>{this.parser.formatTimestamp(window.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+		const windowWarning = lifeWindow.shouldDelay || lifeWindow.missedSdBuff
+		const windowError = lifeWindow.stardivers.length === 0 || lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
+		const title = <>{this.parser.formatTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
 
 		if (windowError) {
 			return <span className="text-error">{title}</span>
