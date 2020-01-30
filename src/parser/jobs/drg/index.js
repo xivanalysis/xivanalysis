@@ -26,6 +26,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-01-12'),
+		Changes: () => <>Enhanced analysis for Life of the Dragon windows. Added suggestions for windows with missing casts and buffs.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2019-12-07'),
 		Changes: () => <>Added tracking for oGCDs, including jumps, buffs, and Life Surge</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],
