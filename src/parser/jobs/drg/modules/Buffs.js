@@ -1,14 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Accordion, Header, Message} from 'semantic-ui-react'
+import {Header, Message, Icon} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import {RotationTable} from 'components/ui/RotationTable'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -50,6 +50,7 @@ export default class Buffs extends Module {
 		'entityStatuses',
 		'invuln',
 		'suggestions',
+		'timeline',
 	]
 
 	_lastGcd = 0
@@ -140,16 +141,16 @@ export default class Buffs extends Module {
 	}
 
 	_closeLastWindow(statusId) {
-		// So we don't include partial windows
-		if (this.combatants.selected.hasStatus(statusId)) {
-			return
-		}
-
 		const tracker = this._buffWindows[statusId]
 
 		// If there's no current cast just stop here
 		if (!tracker.current) {
 			return
+		}
+
+		// Partial windows ok - end of fight use still optimal
+		if (this.combatants.selected.hasStatus(statusId)) {
+			tracker.current.partial = true
 		}
 
 		tracker.current.gcdCount = tracker.current.casts.filter(cast => {
@@ -251,70 +252,69 @@ export default class Buffs extends Module {
 		return count
 	}
 
+	_formatWindowTable(statusId) {
+		return this._buffWindows[statusId].history.map(buffWindow => {
+			const targetsData = {}
+			const notesMap = {}
+			targetsData.gcds = {
+				actual: buffWindow.gcdCount,
+				expected: BUFF_GCD_TARGET,
+			}
+
+			notesMap.start = buffWindow.isBad ? <Icon name="x" color="red" /> : <Icon name="check" color="green" />
+
+			if (buffWindow.partial) {
+				notesMap.notes = <Trans id="drg.buffs.note.partial">Partial Window</Trans>
+			}
+
+			return {
+				start: buffWindow.start - this.parser.fight.start_time,
+				targetsData,
+				rotation: buffWindow.casts,
+				notesMap,
+			}
+		})
+	}
+
 	output() {
-		const lcPanels = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.start)}
-						<span> - </span>
-						<Trans id="drg.buffs.panel-count">
-							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.casts}/>,
-				},
-			}
-		})
-		const dsPanels = this._buffWindows[STATUSES.RIGHT_EYE.id].history.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.start)}
-						<span> - </span>
-						<Trans id="drg.buffs.panel-count">
-							{this._formatGcdCount(window.gcdCount)} <Plural value={window.gcdCount} one="GCD" other="GCDs"/>
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.casts}/>,
-				},
-			}
-		})
+		const rotationTargets = [{
+			header: <Trans id="drg.buffs.gcd-count">GCDs</Trans>,
+			accessor: 'gcds',
+		}]
+		const notesData = [{
+			header: <Trans id="drg.buffs.bad-start">Start OK?</Trans>,
+			accessor: 'start',
+		},
+		{
+			header: <Trans id="drg.buffs.notes">Notes</Trans>,
+			accessor: 'notes',
+		}]
+
+		const lcRotationData = this._formatWindowTable(STATUSES.LANCE_CHARGE.id)
+		const dsRotationData = this._formatWindowTable(STATUSES.RIGHT_EYE.id)
 
 		return <Fragment>
 			<Message>
-				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each buff window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
+				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each row of the tables below indicates how many GCDs the window contained, the casts during the window, and if the window started on an optimal GCD.</Trans>
 			</Message>
-			{lcPanels.length > 0 && <>
-				<Header size="small">
-					<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
-				</Header>
-				<Accordion
-					exclusive={false}
-					panels={lcPanels}
-					styled
-					fluid
-				/>
-			</>}
-			{dsPanels.length > 0 && <>
-				<Header size="small">
-					<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
-				</Header>
-				<Accordion
-					exclusive={false}
-					panels={dsPanels}
-					styled
-					fluid
-				/>
-			</>}
+			<Header size="small">
+				<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
+			</Header>
+			<RotationTable
+				targets={rotationTargets}
+				data={lcRotationData}
+				onGoto={this.timeline.show}
+				notes={notesData}
+			/>
+			<Header size="small">
+				<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
+			</Header>
+			<RotationTable
+				targets={rotationTargets}
+				data={dsRotationData}
+				onGoto={this.timeline.show}
+				notes={notesData}
+			/>
 		</Fragment>
 	}
 }
