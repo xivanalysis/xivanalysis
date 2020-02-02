@@ -342,7 +342,7 @@
   "drg.blood.no-buff-stardiver-explain": "",
   "drg.blood.no-delay-explain": "",
   "drg.blood.no-nastrond-explain": "",
-  "drg.blood.no-stardiver-explain": "",
+  "drg.blood.no-stardiver-explain": "해당 구간에서 <0/>를 사용하지 않았습니다.",
   "drg.blood.suggestions.buffed-stardiver": "",
   "drg.blood.suggestions.buffsed-stardiver.why": "",
   "drg.blood.suggestions.eyes.content": "{MAX_EYES} 개의 눈이 있는 상태에서 <0/>를 사용하지 마세요. 눈을 낭비하는 것은 붉은 용혈 구간을 늦추며 상당한 DPS 손실이 될 가능성이 큽니다.",
