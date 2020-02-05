@@ -446,6 +446,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1,
 		cooldown: 90,
+		gcdRecast: 2.5,
 		statusesApplied: ['MAGIC_HAMMER'],
 	},
 	AVAIL: {
@@ -455,6 +456,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1,
 		cooldown: 120,
+		gcdRecast: 2.5,
 		statusesApplied: ['AVAIL_MEATILY_SHIELDED', 'AVAIL_MEAT_SHIELD'],
 	},
 	FROG_LEGS: {
@@ -500,6 +502,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 2,
 		cooldown: 180,
+		gcdRecast: 2.5,
 	},
 	LAUNCHER: {
 		id: 18313,
@@ -537,6 +540,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 10,
 		cooldown: 300,
+		gcdRecast: 2.5,
 	},
 	EXUVIATION: {
 		id: 18318,
@@ -559,6 +563,7 @@ export const BLU = ensureActions({
 		onGcd: true,
 		castTime: 1,
 		cooldown: 60,
+		gcdRecast: 2.5,
 		statusesApplied: ['DEVOUR'],
 	},
 	CONDENSED_LIBRA: {
