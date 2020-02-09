@@ -2,6 +2,7 @@ import {ACN} from 'data/ACTIONS/root/ACN'
 import {ARC} from 'data/ACTIONS/root/ARC'
 import {AST} from 'data/ACTIONS/root/AST'
 import {BLM} from 'data/ACTIONS/root/BLM'
+import {BLU} from 'data/ACTIONS/root/BLU'
 import {BRD} from 'data/ACTIONS/root/BRD'
 import {DNC} from 'data/ACTIONS/root/DNC'
 import {DRG} from 'data/ACTIONS/root/DRG'
@@ -62,6 +63,7 @@ export const root = {
 	...BLM,
 	...SMN,
 	...RDM,
+	...BLU,
 }
 
 export type ActionRoot = typeof root

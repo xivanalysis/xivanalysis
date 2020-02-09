@@ -1,6 +1,7 @@
 import {ACN} from './ACN'
 import {AST} from './AST'
 import {BLM} from './BLM'
+import {BLU} from './BLU'
 import {BRD} from './BRD'
 import {DNC} from './DNC'
 import {DRG} from './DRG'
@@ -47,6 +48,7 @@ export const root = {
 	...SMN,
 	...BLM,
 	...RDM,
+	...BLU,
 }
 
 export type StatusRoot = typeof root

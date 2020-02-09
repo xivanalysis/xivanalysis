@@ -15,6 +15,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
+import {EntityStatuses} from '../../../core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Gauge, {MAX_FASTER, MAX_STACKS} from './Gauge'
 
@@ -82,6 +83,7 @@ export default class Fists extends Module {
 	@dependency private gauge!: Gauge
 	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
+	@dependency private entityStatuses!: EntityStatuses
 
 	private fistory: Fist[] = []
 	private foulWinds: number = 0
@@ -238,7 +240,7 @@ export default class Fists extends Module {
 	}
 
 	getFistUptimePercent(fistId: number): string {
-		const statusUptime = this.combatants.getStatusUptime(fistId)
+		const statusUptime = this.entityStatuses.getStatusUptime(fistId, this.combatants.getEntities())
 
 		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
 	}
