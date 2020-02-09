@@ -23,6 +23,8 @@ const EVENT_TYPE_ORDER = {
 	cast: -2,
 	calculateddamage: -1.5,
 	calculatedheal: -1.5,
+	normaliseddamage: -1.25,
+	normalisedheal: -1.25,
 	damage: -1,
 	heal: -1,
 	default: 0,
