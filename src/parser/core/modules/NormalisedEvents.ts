@@ -17,38 +17,39 @@ interface NormalisedEvent extends AbilityEvent {
 	confirmedEvents: Array<BaseEvent | BuffEvent>
 }
 class NormalisedEvent {
-	get targetsHit(): number { return new Set((this.confirmedEvents as unknown as Event[]).map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
+	get targetsHit(): number { return new Set(this.confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
 	get hits(): number { return this.confirmedEvents.length }
-	get amount(): number | undefined {
+	get amount(): number {
 		if (isBaseEventArray(this.confirmedEvents)) {
 			return this.confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
 		}
-		return undefined
+		return 0
 	}
 	/**
 	 * Number of damage events that did not do confirmed damage to the target.
 	 *  Typically due to target or source despawning before damage applied.
 	 */
-	get ghostedHits(): number | undefined {
+	get ghostedHits(): number {
 		if (isBaseEventArray(this.calculatedEvents)) {
 			return this.calculatedEvents.filter((evt) => evt.unpaired).reduce((total, evt) => total + evt.amount, 0)
 		}
-		return undefined
+		return 0
 	}
 	/**
 	 * Total amount of damage from damage events that did not do confirmed damage to the target.
 	 *  Typically due to target or source despawning before damage applied.
 	 */
-	get ghostedAmount(): number | undefined {
+	get ghostedAmount(): number {
 		if (isBaseEventArray(this.calculatedEvents)) {
 			return this.calculatedEvents.filter((evt) => evt.unpaired).length
 		}
-		return undefined
+		return 0
 	}
-	get successfulHit(): boolean | undefined {
+	get successfulHit(): boolean {
 		if (isBaseEventArray(this.confirmedEvents)) {
 			return this.confirmedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
 		}
+		return false
 	}
 
 	attachEvent(event: BaseEvent | BuffEvent) {
@@ -118,7 +119,7 @@ export class NormalisedEvents extends Module {
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
 
-	_normalisedEvents = new Map<number, NormalisedEvent>()
+	private _normalisedEvents = new Map<number, NormalisedEvent>()
 
 	normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
