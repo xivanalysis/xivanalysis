@@ -1,23 +1,24 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
+// Expected time to drop Twin in GL4 (basically part way thru previous GCD)
 const TWIN_SNAKES_CYCLE_BUFFER = 3000
-const TWIN_SNAKES_CYCLE_LENGTH = 6
+
+// Expected GCDs between TS in GL3 or lower
+const TWIN_SNAKES_CYCLE_LENGTH = 5
 
 class TwinState {
 	casts: CastEvent[] = []
@@ -45,6 +46,7 @@ export default class TwinSnakes extends Module {
 	@dependency private enemies!: Enemies
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
+	@dependency private entityStatuses!: EntityStatuses
 
 	private history: TwinState[] = []
 	private twinSnake?: TwinState
@@ -207,15 +209,8 @@ export default class TwinSnakes extends Module {
 		}
 	}
 
-	private getDebuffUptimePercent(statusId: number): number {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusUptime / fightDuration) * 100
-	}
-
 	private getBuffUptimePercent(statusId: number): number {
-		const statusUptime = this.combatants.getStatusUptime(statusId, this.parser.player.id)
+		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.combatants.getEntities())
 		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightUptime) * 100

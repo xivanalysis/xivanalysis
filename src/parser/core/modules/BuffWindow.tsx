@@ -3,10 +3,9 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
-import {Action} from 'data/ACTIONS/ACTIONS'
+import {Action} from 'data/ACTIONS'
 import {getDataBy} from 'data/getDataBy'
-import {Status} from 'data/STATUSES/STATUSES'
+import {Status} from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
@@ -14,19 +13,24 @@ import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Data} from './Data'
 
 export class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
 
-	constructor(start: number) {
+	private data: Data
+
+	constructor(data: Data, start: number) {
+		this.data = data
 		this.start = start
 	}
 
 	get gcds(): number {
+		// TODO: Investigate removing the reliance on data here.
 		return this.rotation
-			.map(e => getDataBy(ACTIONS, 'id', e.ability.guid) as TODO)
+			.map(e => this.data.getAction(e.ability.guid))
 			.filter(a => a && a.onGcd)
 			.length
 	}
@@ -115,6 +119,7 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected rotationTableNotesColumnHeader?: JSX.Element
 
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 	@dependency private globalCooldown!: GlobalCooldown
@@ -137,7 +142,7 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private onCast(event: CastEvent) {
-		const action: Action | undefined = getDataBy(ACTIONS, 'id', event.ability.guid)
+		const action = this.data.getAction(event.ability.guid)
 
 		if (!action || action.autoAttack) {
 			// Disregard auto attacks for tracking rotations / events during buff windows
@@ -167,7 +172,7 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private startNewBuffWindow(startTime: number) {
-		this.buffWindows.push(new BuffWindowState(startTime))
+		this.buffWindows.push(new BuffWindowState(this.data, startTime))
 	}
 
 	private onRemoveBuff(event: BuffEvent) {

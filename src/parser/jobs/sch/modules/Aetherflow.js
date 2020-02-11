@@ -50,11 +50,11 @@ export default class Aetherflow extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RECITATION.id}, this._onGainRecitation)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.RECITATION.id}, this._removeRecitation)
-		this.addHook('death', {to: 'player'}, this._removeRecitation)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RECITATION.id}, this._onGainRecitation)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.RECITATION.id}, this._removeRecitation)
+		this.addEventHook('death', {to: 'player'}, this._removeRecitation)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onGainRecitation() {
@@ -209,7 +209,7 @@ export default class Aetherflow extends Module {
 							</Table.Cell>
 							<Table.Cell>{wasted || '-'}</Table.Cell>
 						</Table.Row>
-					}
+					},
 					)}
 				<Table.Row>
 					<Table.Cell colSpan="2" textAlign="right" col>Total Drift</Table.Cell>

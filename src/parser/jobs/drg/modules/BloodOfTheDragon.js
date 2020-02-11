@@ -1,20 +1,26 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Icon, Message, Table, Accordion, Button} from 'semantic-ui-react'
 
-import {ActionLink} from 'components/ui/DbLink'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const DRAGON_MAX_DURATION_MILLIS = 30000
 const DRAGON_DEFAULT_DURATION_MILLIS = 30000
 const BLOOD_EXTENSION_MILLIS = 10000
+const LOTD_BUFF_DELAY_MIN = 30000
+const LOTD_BUFF_DELAY_MAX = 60000
 
 const MAX_EYES = 2
+const EXPECTED_NASTRONDS_PER_WINDOW = 3
 
 export default class BloodOfTheDragon extends Module {
 	static handle = 'bloodOfTheDragon'
@@ -22,8 +28,12 @@ export default class BloodOfTheDragon extends Module {
 	static dependencies = [
 		'brokenLog',
 		'checklist',
+		'combatants',
+		'cooldowns',
 		'death',
+		'downtime',
 		'suggestions',
+		'timeline',
 	]
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
@@ -39,6 +49,8 @@ export default class BloodOfTheDragon extends Module {
 	_lastEventTime = this.parser.fight.start_time
 	_eyes = 0
 	_lostEyes = 0
+	_gkCount = 0
+	_jumpCount = 0
 
 	constructor(...args) {
 		super(...args)
@@ -49,10 +61,42 @@ export default class BloodOfTheDragon extends Module {
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.GEIRSKOGUL.id}, this._onGeirskogulCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.NASTROND.id}, this._onNastrondCast)
 		this.addHook('cast', {by: 'player', abilityId: ACTIONS.STARDIVER.id}, this._onStardiverCast)
+		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HIGH_JUMP.id}, this._onJumpCast)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('raise', {to: 'player'}, this._onRaise)
 		this.addHook('complete', this._onComplete)
 	}
+
+	// duplicate code from other PRs
+	getActiveDrgBuffs() {
+		const active = []
+
+		if (this.combatants.selected.hasStatus(STATUSES.LANCE_CHARGE.id)) {
+			active.push(STATUSES.LANCE_CHARGE.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.BATTLE_LITANY.id)) {
+			active.push(STATUSES.BATTLE_LITANY.id)
+		}
+
+		if (this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE.id) || this.combatants.selected.hasStatus(STATUSES.RIGHT_EYE_SOLO.id)) {
+			active.push(STATUSES.RIGHT_EYE.id)
+		}
+
+		return active
+	}
+
+	createTimelineButton(timestamp) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+	// end duplicate code
 
 	_finishLifeWindow() {
 		if (this._lifeWindows.current !== null) {
@@ -98,6 +142,10 @@ export default class BloodOfTheDragon extends Module {
 		this._bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
 	}
 
+	_onJumpCast() {
+		this._jumpCount += 1
+	}
+
 	_onMirageDiveCast() {
 		this._updateGauge()
 		if (this._lifeWindows.current !== null || this._bloodDuration > 0) {
@@ -112,6 +160,8 @@ export default class BloodOfTheDragon extends Module {
 
 	_onGeirskogulCast() {
 		this._updateGauge()
+		this._gkCount += 1
+
 		if (this._eyes === MAX_EYES) {
 			// LotD tiiiiiime~
 			this._lifeDuration = DRAGON_DEFAULT_DURATION_MILLIS
@@ -120,6 +170,12 @@ export default class BloodOfTheDragon extends Module {
 				duration: this._lifeDuration,
 				nastronds: [],
 				stardivers: [],
+				timeToNextBuff: {
+					[ACTIONS.LANCE_CHARGE.id]: this.cooldowns.getCooldownRemaining(ACTIONS.LANCE_CHARGE.id),
+					[ACTIONS.DRAGON_SIGHT.id]: this.cooldowns.getCooldownRemaining(ACTIONS.DRAGON_SIGHT.id),
+					[ACTIONS.BATTLE_LITANY.id]: this.cooldowns.getCooldownRemaining(ACTIONS.BATTLE_LITANY.id),
+				},
+				activeBuffs: this.getActiveDrgBuffs(),
 			}
 			this._eyes = 0
 		}
@@ -138,7 +194,11 @@ export default class BloodOfTheDragon extends Module {
 
 		if (!this._lifeWindows.current.nastronds.some(nastrond => nastrond.timestamp === event.timestamp)) {
 			// Dedupe Nastrond casts, since that can occasionally happen
-			this._lifeWindows.current.nastronds.push(event)
+			this._lifeWindows.current.nastronds.push({
+				timestamp: event.timestamp,
+				buffs: this.getActiveDrgBuffs(),
+				action: ACTIONS.NASTROND,
+			})
 		}
 	}
 
@@ -155,7 +215,11 @@ export default class BloodOfTheDragon extends Module {
 
 		if (!this._lifeWindows.current.stardivers.some(stardiver => stardiver.timestamp === event.timestamp)) {
 			// Dedupe Stardiver casts, it's also AoE so it's probably going to happen on occasion too
-			this._lifeWindows.current.stardivers.push(event)
+			this._lifeWindows.current.stardivers.push({
+				timestamp: event.timestamp,
+				buffs: this.getActiveDrgBuffs(),
+				action: ACTIONS.STARDIVER,
+			})
 		}
 	}
 
@@ -172,10 +236,69 @@ export default class BloodOfTheDragon extends Module {
 		this._lastEvent = event.timestamp
 	}
 
+	_intersectsDowntime(start) {
+		const windows = this.downtime.getDowntimeWindows(start)
+		const end = start + DRAGON_DEFAULT_DURATION_MILLIS
+
+		for (const dtWindow of windows) {
+			if (dtWindow.start < end) {
+				return dtWindow.start
+			}
+		}
+
+		return null
+	}
+
+	_analyzeLifeWindows() {
+		for (const lifeWindow of this._lifeWindows.history) {
+			// determine if it could be delayed
+			lifeWindow.buffsInDelayWindow = {}
+
+			lifeWindow.dtOverlapTime = this._intersectsDowntime((lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+
+			// A window should be delayed if:
+			// - there are no buffs off cooldown at any point in this window
+			// - there are no upcoming downtime windows (checked here)
+			// - there are buffs off cooldown in the theoretical delayed window
+			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null
+
+			let buffsExistInDelayWindow = false
+
+			for (const id in lifeWindow.timeToNextBuff) {
+				// check if the time to the next buff falls within the next expected window
+				lifeWindow.buffsInDelayWindow[id] = lifeWindow.timeToNextBuff[id] >= LOTD_BUFF_DELAY_MIN && lifeWindow.timeToNextBuff[id] <= LOTD_BUFF_DELAY_MAX
+
+				// this is just a running or (instead of a map later)
+				buffsExistInDelayWindow = lifeWindow.buffsInDelayWindow[id] || buffsExistInDelayWindow
+
+				// ok now check if the buff comes off cd during the current window
+				activeBuffsInWindow = lifeWindow.timeToNextBuff[id] < lifeWindow.duration || activeBuffsInWindow
+			}
+
+			// ok now use all the flags to determine if a window should be delayed
+			lifeWindow.shouldDelay = !activeBuffsInWindow && buffsExistInDelayWindow && shouldBeDelayed
+
+			// if we're not delaying due to downtime in this fight, show an info note
+			lifeWindow.showNoDelayNote = lifeWindow.dtOverlapTime !== null && !activeBuffsInWindow && buffsExistInDelayWindow
+
+			// check the stardiver cast buffs
+			// count a miss if the window could be delayed
+			lifeWindow.missedSdBuff = (activeBuffsInWindow || lifeWindow.shouldDelay) && lifeWindow.stardivers.length === 1 && lifeWindow.stardivers[0].buffs.length === 0
+
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
+		}
+	}
+
 	_onComplete() {
 		this._finishLifeWindow()
+		this._analyzeLifeWindows()
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
+		const noBuffSd = this._lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
+		const noLifeSd = this._lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
+		const noFullNsLife = this._lifeWindows.history.filter(window => !window.isLast && window.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW).length
+
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
 			description: <Fragment>
@@ -211,22 +334,184 @@ export default class BloodOfTheDragon extends Module {
 				You used Mirage Dive <Plural value={this._lostEyes} one="# time" other="# times"/> when you already had {MAX_EYES} Eyes.
 			</Trans>,
 		}))
+
+		// each window should have a stardiver
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.STARDIVER.icon,
+			content: <Trans id="drg.suggestions.stardiver.content">
+				Each Life of the Dragon window should contain 1 <ActionLink {...ACTIONS.STARDIVER}/> use.
+			</Trans>,
+			value: noLifeSd,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			why: <Trans id="drg.suggetions.stardiver.why">{noLifeSd} of your Life of the Dragon windows were missing a <ActionLink {...ACTIONS.STARDIVER}/> use.</Trans>,
+		}))
+
+		// each window should have 3 nastronds
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.NASTROND.icon,
+			content: <Trans id="drg.suggestions.nastrond.content">Each Life of the Dragon window should contain 3 <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
+			value: noFullNsLife,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			why: <Trans id="drg.suggestions.nastrond.why">{noFullNsLife} of your Life of the Dragon windows were missing one or more <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
+		}))
+
+		// GK count should be within 1 of the number of jumps used in the fight
+		// (current balance tip reference, section 2)
+		const gkDiff = this._jumpCount - this._gkCount
+		// more jumps than GKs
+		if (gkDiff > 1) {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.GEIRSKOGUL.icon,
+				content: <Trans id="drg.blood.suggestions.gk.content">
+					Remember to use <ActionLink {...ACTIONS.GEIRSKOGUL}/> as much as possible, without delaying your Life of the Dragon windows. The number of casts should be within 1 of the number of <ActionLink {...ACTIONS.HIGH_JUMP} /> casts.
+				</Trans>,
+				value: gkDiff,
+				tiers: {
+					2: SEVERITY.MINOR,
+					3: SEVERITY.MEDIUM,
+				},
+				why: <Trans id="drg.blood.suggestions.gk.why">
+					Your <ActionLink {...ACTIONS.GEIRSKOGUL}/> casts differed from your <ActionLink {...ACTIONS.HIGH_JUMP}/> casts by {gkDiff}.
+				</Trans>,
+			}))
+		}
+		// less jumps than GKs??? different tip then, which is basically use jumps more??
+		// not going to output something here as that should be covered by the oGCD downtime checklist
+
+		// this suggestion only counts places where a stardiver could be buffed
+		// if a window cannot be delayed and has no buffs, it doesn't count
+		if (noBuffSd > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.STARDIVER.icon,
+				content: <Trans id="drg.blood.suggestions.buffed-stardiver">
+					Try to ensure that <ActionLink {...ACTIONS.STARDIVER} /> always lands while at least one of <ActionLink {...ACTIONS.LANCE_CHARGE} />, <ActionLink {...ACTIONS.DRAGON_SIGHT} />, or <ActionLink {...ACTIONS.BATTLE_LITANY} /> is active. Depending on the fight specifics, this may not always be possible. See the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for details.
+				</Trans>,
+				value: noBuffSd,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="drg.blood.suggestions.buffsed-stardiver.why">
+					When <ActionLink {...ACTIONS.STARDIVER} /> could have been buffed, you used it <Plural value={noBuffSd} one="# time" other="# times" /> without a buff.
+				</Trans>,
+			}))
+		}
+	}
+
+	_windowTable(lifeWindow) {
+		const casts = lifeWindow.nastronds.concat(lifeWindow.stardivers)
+		casts.sort((a, b) => { return a.timestamp - b.timestamp })
+
+		const rows = casts.map(cast => {
+			const buffs = cast.buffs.map(id => {
+				return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', id)} />
+			})
+
+			return <Table.Row key={cast.timestamp} warning={cast.action.id === ACTIONS.STARDIVER.id && lifeWindow.missedSdBuff}>
+				<Table.Cell>{this.createTimelineButton(cast.timestamp)}</Table.Cell>
+				<Table.Cell><ActionLink {...cast.action} /></Table.Cell>
+				<Table.Cell>{buffs}</Table.Cell>
+			</Table.Row>
+		})
+
+		const delayBuffs = Object.keys(lifeWindow.buffsInDelayWindow).filter(id => lifeWindow.buffsInDelayWindow[id]).map((id, idx) => {
+			const action = getDataBy(ACTIONS, 'id', parseInt(id))
+			return <Message.Item key={idx}><Trans id="drg.blood.delay-buff"><ActionLink {...action} /> in {this.parser.formatDuration(lifeWindow.timeToNextBuff[id])}</Trans></Message.Item>
+		})
+
+		return <Fragment>
+			{lifeWindow.isLast && (
+				<Message info>
+					<p><Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
+				</Message>
+			)}
+			{lifeWindow.stardivers.length === 0 && (
+				<Message error>
+					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> during this window.</Trans></p>
+				</Message>
+			)}
+			{lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW && (
+				<Message error>
+					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-nastrond-explain">You missed one or more uses of <ActionLink {...ACTIONS.NASTROND}/> during this window.</Trans></p>
+				</Message>
+			)}
+			{lifeWindow.missedSdBuff && (
+				<Message warning>
+					<p><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
+				</Message>
+			)}
+			{lifeWindow.shouldDelay && (
+				<Message warning>
+					<p><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
+					</Trans></p>
+					<Message.List>
+						{delayBuffs}
+					</Message.List>
+				</Message>
+			)}
+			{lifeWindow.showNoDelayNote && (
+				<Message info>
+					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(lifeWindow.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
+				</Message>
+			)}
+			<Table>
+				<Table.Header>
+					<Table.Row key="header">
+						<Table.HeaderCell><Trans id="drg.blood.table.time">Time</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="drg.blood.table.action">Action</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="drg.blood.table.statuses">Personal Buffs</Trans></Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				{rows}
+			</Table>
+		</Fragment>
+	}
+
+	_formatWindowTitle(lifeWindow) {
+		// flag the row if we see either:
+		// - a non-buffed stardiver in any window, except the windows that cannot be delayed
+		// - a window that could be delayed but wasn't
+		const windowWarning = lifeWindow.shouldDelay || lifeWindow.missedSdBuff
+		const windowError = lifeWindow.stardivers.length === 0 || lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW
+		const title = <>{this.parser.formatTimestamp(lifeWindow.start)} <span> - </span> <Trans id="drg.blood.windows.hits"><Plural value={lifeWindow.nastronds.length} one="# Nastrond" other="# Nastronds" />, <Plural value={lifeWindow.stardivers.length} one="# Stardiver" other="# Stardivers" /></Trans></>
+
+		if (windowError) {
+			return <span className="text-error">{title}</span>
+		}
+
+		if (windowWarning) {
+			return <span className="text-warning">{title}</span>
+		}
+
+		return title
 	}
 
 	output() {
 		if (this._lifeWindows.history.length > 0) {
+			const lotdPanels = this._lifeWindows.history.map(window => {
+				return {
+					title: {
+						key: `title-${window.start}`,
+						content: this._formatWindowTitle(window),
+					},
+					content: {
+						key: `content-${window.start}`,
+						content: this._windowTable(window),
+					},
+				}
+			})
+
 			return <Fragment>
-				<Trans id="drg.blood.windows.preface">
-					Each of the bullets below represents a Life of the Dragon window, indicating when it started, how long it lasted, and how many window-restricted OGCDs it contained. Ideally, each window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast.
-				</Trans>
-				<ul>
-					{this._lifeWindows.history.map(window => <li key={window.start}>
-						<strong>{this.parser.formatTimestamp(window.start)}</strong>:&nbsp;
-						<Trans id="drg.blood.windows.hits">
-							{this.parser.formatDuration(window.duration)} long, <Plural value={window.nastronds.length} one="# Nastrond" other="# Nastronds"/>, <Plural value={window.stardivers.length} one="# Stardiver" other="# Stardivers"/>
-						</Trans>
-					</li>)}
-				</ul>
+				<Message>
+					<Trans id="drg.blood.windows.preface">
+						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with issues are
+						highlighted, and provide additional detail when expanded.
+					</Trans>
+				</Message>
+				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
 			</Fragment>
 		}
 

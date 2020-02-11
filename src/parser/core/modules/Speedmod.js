@@ -1,7 +1,7 @@
 import Module from 'parser/core/Module'
 import {
 	PARTYWIDE_SPEED_BUFF_FLAGS,
-	JOB_SPEED_BUFF_TO_SPEEDMOD_MAP,
+	getJobSpeedBuffToSpeedmodMap,
 	PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP,
 } from './SpeedmodConsts'
 
@@ -10,6 +10,7 @@ export default class Speedmod extends Module {
 	static dependencies = [
 		// We rely on these modules for normaliser logic
 		'precastStatus', // eslint-disable-line @xivanalysis/no-unused-dependencies
+		'data',
 	]
 
 	// List of statuses we natively handle (See SpeedmodConsts)
@@ -18,8 +19,10 @@ export default class Speedmod extends Module {
 	// Track history of speedmods
 	_history = [{speedmod: 1, start: -Infinity, end: Infinity}]
 
+	_jobSpeedBuffToSpeedmodMap = getJobSpeedBuffToSpeedmodMap(this.data)
+
 	_activePartywideSpeedBuffFlags = 0
-	_activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
+	_activeSpeedMap = this._jobSpeedBuffToSpeedmodMap[0]
 
 	// Override to handle extra logic during normalise, or to fill in _activeSpeedMap manually if not generating gauge-based buff events
 	// TODO: disabled due to TS typing
@@ -28,8 +31,9 @@ export default class Speedmod extends Module {
 	}
 
 	// Override for scalars that function outside of speedmod
-	// NOTE: Only Riddle of Fire (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
-	getJobAdditionalSpeedbuffScalar() {
+	// NOTE: Only Greased Lightning (MNK) and 3-stack Astral Fire/Umbral Ice (BLM) actually do this. Please use _activeSpeedMap for everything else
+	// eslint-disable-next-line no-unused-vars
+	getJobAdditionalSpeedbuffScalar(event) {
 		return 1.0
 	}
 
@@ -62,12 +66,12 @@ export default class Speedmod extends Module {
 				!this.parser.toPlayer(event)
 			) { continue }
 
-			const jobSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[event.ability.guid]
+			const jobSpeedMap = this._jobSpeedBuffToSpeedmodMap[event.ability.guid]
 			if (jobSpeedMap != null) {
 				if (event.type === 'applybuff') {
 					this._activeSpeedMap = jobSpeedMap
 				} else if (event.type === 'removebuff') {
-					this._activeSpeedMap = JOB_SPEED_BUFF_TO_SPEEDMOD_MAP[0]
+					this._activeSpeedMap = this._jobSpeedBuffToSpeedmodMap[0]
 				}
 			}
 

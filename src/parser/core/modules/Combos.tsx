@@ -3,8 +3,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {AoeEvent} from 'parser/core/modules/AoE'
@@ -12,6 +10,7 @@ import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Data} from './Data'
 
 const DEFAULT_GCD = 2.5
 const GCD_TIMEOUT_MILLIS = 15000
@@ -39,6 +38,7 @@ export default class Combos extends Module {
 	// This should be redefined by subclassing modules; the default is the basic 'Attack' icon
 	static suggestionIcon = 'https://xivapi.com/i/000000/000405.png'
 
+	@dependency private data!: Data
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
@@ -159,13 +159,14 @@ export default class Combos extends Module {
 	}
 
 	private onCast(event: AoeEvent) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // Should be an Action type
+		const action = this.data.getAction(event.ability.guid)
 
 		if (!action) {
 			return
 		}
 
-		if (action.onGcd) {
+		// Only track GCDs that either progress or break combos so actions like Drill and Shadow Fang don't falsely extend the simulated combo timer
+		if (action.onGcd && (action.combo || action.breaksCombo)) {
 			if (event.timestamp - this.lastGcdTime > GCD_TIMEOUT_MILLIS) {
 				// If we've had enough downtime between GCDs to let the combo expire, reset the state so we don't count erroneous combo breaks
 				this.currentComboChain = []
@@ -257,12 +258,12 @@ export default class Combos extends Module {
 
 				const startEvent = _.first(completeContext)
 				const endEvent = _.last(completeContext)
-				const startAction = getDataBy(ACTIONS, 'id', startEvent!.ability.guid) as TODO // Should be an Action type
-				const endAction = getDataBy(ACTIONS, 'id', endEvent!.ability.guid) as TODO // Should be an Action type
+				const startAction = this.data.getAction(startEvent!.ability.guid)
+				const endAction = this.data.getAction(endEvent!.ability.guid)
 
 				return ({
-					start: startEvent!.timestamp - startTime + (startAction.cooldown || DEFAULT_GCD),
-					end: endEvent!.timestamp - startTime + (endAction.cooldown || DEFAULT_GCD),
+					start: startEvent!.timestamp - startTime + (startAction?.cooldown ?? DEFAULT_GCD),
+					end: endEvent!.timestamp - startTime + (endAction?.cooldown ?? DEFAULT_GCD),
 					rotation: completeContext,
 					notesMap: {
 						reason: <span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>,

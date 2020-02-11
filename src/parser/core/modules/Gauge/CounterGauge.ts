@@ -1,5 +1,6 @@
 import {ChartDataSets} from 'chart.js'
 import Color from 'color'
+import _ from 'lodash'
 import {AbstractGauge, AbstractGaugeOptions} from './AbstractGauge'
 
 interface CounterHistory {
@@ -9,7 +10,7 @@ interface CounterHistory {
 	maximum: number
 }
 
-export interface CounterGaugeOptions {
+export interface CounterGaugeOptions extends AbstractGaugeOptions {
 	/** Initial value of the gauge. Defaults to the minimum value of the gauge. */
 	initialValue?: number,
 	/** Minimum value of the gauge. Defaults to 0. */
@@ -21,7 +22,7 @@ export interface CounterGaugeOptions {
 }
 
 export interface CounterChartOptions {
-	/** Label to display on the data set */
+	/** Label to display on the data set. */
 	label: string
 	/** Color to draw the data set in. Defaults to grey. */
 	color?: string | Color
@@ -41,7 +42,7 @@ export class CounterGauge extends AbstractGauge {
 		return this._value
 	}
 
-	constructor(opts: CounterGaugeOptions & AbstractGaugeOptions = {}) {
+	constructor(opts: CounterGaugeOptions = {}) {
 		super(opts)
 
 		this.minimum = opts.minimum || 0
@@ -49,6 +50,11 @@ export class CounterGauge extends AbstractGauge {
 		this.maximum = opts.maximum || 100
 
 		this.chartOptions = opts.chart
+	}
+
+	getValueAt(timestamp: number) {
+		const counter = _.findLast(this.history, gauge => gauge.timestamp <= timestamp)
+		return counter? counter.value : this.minimum
 	}
 
 	/** @inheritdoc */

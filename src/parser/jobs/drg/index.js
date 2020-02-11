@@ -18,13 +18,34 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.08',
+		to: '5.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
+		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-01-12'),
+		Changes: () => <>Enhanced analysis for Life of the Dragon windows. Added suggestions for windows with missing casts and buffs.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2019-12-07'),
+		Changes: () => <>Added tracking for oGCDs, including jumps, buffs, and Life Surge</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2019-11-21'),
+		Changes: () => <>Added Positionals module to track usage of Raiden Thrust.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2019-11-12'),
+		Changes: () => <>Updated Life of the Dragon to display active buffs during each window. Added a window delay note to help line up buffs.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2019-07-21'),
 		Changes: () => <>Updated Lance Charge/Dragon Sight window analysis logic, made some small text and data corrections.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

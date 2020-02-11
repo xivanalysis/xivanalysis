@@ -10,10 +10,18 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.NO_MERCY.id,
 		ACTIONS.BLOODFEST.id,
 
+		// Continuation
+		{
+			name: 'Continuation',
+			merge: true,
+			actions: [
+				ACTIONS.JUGULAR_RIP.id,
+				ACTIONS.ABDOMEN_TEAR.id,
+				ACTIONS.EYE_GOUGE.id,
+			],
+		},
+
 		// oGCD Damage
-		ACTIONS.JUGULAR_RIP.id,
-		ACTIONS.ABDOMEN_TEAR.id,
-		ACTIONS.EYE_GOUGE.id,
 		ACTIONS.DANGER_ZONE.id,
 		ACTIONS.BLASTING_ZONE.id,
 		ACTIONS.BOW_SHOCK.id,

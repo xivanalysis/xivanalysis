@@ -30,8 +30,8 @@ export default new Meta({
 		</Message>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.08',
+		from: '5.1',
+		to: '5.1',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
@@ -41,6 +41,18 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2019-11-8'),
+		Changes: () => <>Updated Ruin 2 suggestions to account for 5.1 changes and marked supported for 5.1.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2019-10-31'),
+		Changes: () => <>Added Aetherpact to tracked cooldowns and implemented 5.1 changes.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2019-10-28'),
+		Changes: () => <>Fix duplicate demi-summon entries by adding a brief buffer to pet simulation re-sync when swapping pets and demis.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	}, {
 		date: new Date('2019-08-23'),
 		Changes: () => <>Prevent raising weaving issues for triple weaving with <ActionLink {...ACTIONS.FIREBIRD_TRANCE}/></>,
 		contributors: [CONTRIBUTORS.ACKWELL],

@@ -5,8 +5,6 @@ import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosestLower} from 'utilities'
@@ -28,6 +26,7 @@ export default class Weaving extends Module {
 	static handle = 'weaving'
 	static dependencies = [
 		'castTime',
+		'data',
 		'gcd',
 		'invuln',
 		'speedmod',
@@ -54,7 +53,7 @@ export default class Weaving extends Module {
 	}
 
 	_onCast(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		const action = this.data.getAction(event.ability.guid)
 
 		// If the action is an auto, just ignore it
 		if (!action || action.autoAttack) {
@@ -146,7 +145,7 @@ export default class Weaving extends Module {
 	isBadWeave(weave, maxWeaves) {
 		// Calc. the no. of weaves - we're ignoring any made while the boss is untargetable
 		const weaveCount = weave.weaves.filter(
-			event => !this.invuln.isUntargetable('all', event.timestamp)
+			event => !this.invuln.isUntargetable('all', event.timestamp),
 		).length
 
 		// Just using maxWeaves to allow potential subclasses to utilise standard functionality with custom max

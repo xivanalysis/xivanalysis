@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
-const OPTIMAL_GCD_COUNT = 3 // Number of GCDs prior to the first TA in the opener
+const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
 
 export default class TrickAttackUsage extends Module {
 	static handle = 'taUsage'
@@ -31,7 +31,9 @@ export default class TrickAttackUsage extends Module {
 
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (action && action.onGcd) {
+		if (action && action.onGcd && !(
+			action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_KASSATSU.id || action.id === ACTIONS.CHI.id || action.id === ACTIONS.JIN.id)) {
+			// Don't count the individual mudras as GCDs for this - they'll make the count screw if Suiton wasn't set up pre-pull
 			this._gcdCount++
 		}
 	}
@@ -78,7 +80,7 @@ export default class TrickAttackUsage extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: ACTIONS.TRICK_ATTACK.icon,
 				content: <Trans id="nin.ta-usage.suggestions.opener.content">
-					Avoid unconventional timings for your first <ActionLink {...ACTIONS.TRICK_ATTACK}/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 10 seconds into the fight.
+					Avoid unconventional timings for your first <ActionLink {...ACTIONS.TRICK_ATTACK}/> of the fight in order to line it up with all the other raid and personal buffs. In most openers, Trick Attack should be weaved in approximately 8-9 seconds into the fight.
 				</Trans>,
 				value: distanceFromOptimal,
 				tiers: {

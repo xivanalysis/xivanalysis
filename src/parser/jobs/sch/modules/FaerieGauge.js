@@ -35,8 +35,7 @@ const BORDER_COLOR_FADE = 0.5
 // Severity markers for overcap
 // Start at 30 because you can overcap when seraph is out and you can't drain the gauge
 const GAUGE_WASTE_SEVERITY = {
-	30: SEVERITY.MINOR,
-	50: SEVERITY.MEDIUM,
+	50: SEVERITY.MINOR,
 }
 
 export default class FaerieGauge extends Module {
@@ -58,14 +57,14 @@ export default class FaerieGauge extends Module {
 		super(...args)
 
 		// consumers
-		this.addHook('heal', {by: 'pet', abilityId: STATUSES.FEY_UNION.id}, this._onGaugeSpend)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SCH_FEY_BLESSING.id}, this._onGaugeSpend)
-		this.addHook('death', {to: 'player'}, this._onDeath) // I mean.. it does consume all your gauge..
+		this.addEventHook('heal', {by: 'pet', abilityId: STATUSES.FEY_UNION.id}, this._onGaugeSpend)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.SCH_FEY_BLESSING.id}, this._onGaugeSpend)
+		this.addEventHook('death', {to: 'player'}, this._onDeath) // I mean.. it does consume all your gauge..
 		// generators
-		this.addHook('cast', {by: 'player', abilityId: GAUGE_GENERATORS}, this._onGaugeGenerate)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: GAUGE_GENERATORS}, this._onGaugeGenerate)
+		this.addEventHook('complete', this._onComplete)
 		// summoning a fairy
-		this.addHook('cast', {by: 'player', abilityId: SUMMON_ACTIONS}, this._onSummon)
+		this.addEventHook('cast', {by: 'player', abilityId: SUMMON_ACTIONS}, this._onSummon)
 	}
 
 	// Search through the events to figure out if there was a fairy out before logs started

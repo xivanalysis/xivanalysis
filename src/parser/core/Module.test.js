@@ -1,6 +1,11 @@
 import Module from './Module'
 import Parser from './Parser'
 import {Meta} from './Meta'
+import {Dispatcher} from './Dispatcher'
+
+jest.mock('./Dispatcher')
+
+/* eslint-disable no-magic-numbers */
 
 class TestModule extends Module {
 	static handle = 'test'
@@ -8,6 +13,8 @@ class TestModule extends Module {
 
 let module
 let hook
+
+let dispatcher
 
 // Testing data
 const player = {
@@ -25,6 +32,7 @@ const report = {
 }
 const fight = {
 	start_time: 0,
+	end_time: 100,
 }
 
 const event = {
@@ -34,10 +42,24 @@ const event = {
 }
 
 describe('Module', () => {
-	beforeEach(() => {
-		const meta = new Meta({modules: () => Promise.resolve([])})
-		const parser = new Parser({meta, report, fight, actor: player})
-		module = new TestModule(parser)
+	beforeEach(async () => {
+		Dispatcher.mockClear()
+
+		const meta = new Meta({
+			modules: () => Promise.resolve({default: [TestModule]}),
+		})
+		const parser = new Parser({
+			meta,
+			report,
+			fight,
+			actor: player,
+			dispatcher: new Dispatcher(),
+		})
+		await parser.configure()
+		module = parser.modules.test
+
+		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher.addEventHook.mockImplementation(x => x)
 
 		hook = jest.fn()
 	})
@@ -54,77 +76,74 @@ describe('Module', () => {
 		expect(result).toBe(events)
 	})
 
-	it('can hook all events', () => {
-		module.addHook('all', hook)
-		module.triggerEvent(event)
-		expect(hook)
-			.toHaveBeenCalledTimes(1)
-			.toHaveBeenCalledWith(event)
+	it('adds event hooks to the dispatcher', () => {
+		module.addEventHook(event.type, hook)
+
+		expect(dispatcher.addEventHook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+			module: module.constructor.handle,
+			filter: {},
+			event: event.type,
+		})
 	})
 
-	it('can hook a single event type', () => {
-		module.addHook(event.type, hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
-	})
+	it('adds multiple event hooks to the dispatcher', () => {
+		module.addEventHook([event.type, '__unused'], hook)
 
-	it('can hook multiple event types', () => {
-		module.addHook([event.type, '__unused'], hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
-	})
-
-	it('does not trigger non-matching hooks', () => {
-		module.addHook('__unused', hook)
-		module.triggerEvent(event)
-		expect(hook).not.toHaveBeenCalled()
-	})
-
-	it('does not trigger \'all\' hooks on symbols', () => {
-		const type = Symbol('test')
-		const symbolEvent = {...event, type}
-		module.addHook('all', hook)
-		module.addHook(type, hook)
-		module.triggerEvent(symbolEvent)
-		expect(hook).toHaveBeenCalledTimes(1)
-	})
-
-	it('can filter by event keys', () => {
-		module.addHook(event.type, hook)
-		module.addHook(event.type, {filterKey: event.filterKey}, hook)
-		module.addHook(event.type, {filterKey: 'incorrect'}, hook)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(2)
+		expect(dispatcher.addEventHook).toHaveBeenCalledTimes(2)
+		expect(dispatcher.addEventHook.mock.calls.map(params => params[0].event)).toEqual([event.type, '__unused'])
 	})
 
 	describe('QoL filter helpers', () => {
 		it('player', () => {
-			const playerEvent = {...event, sourceID: player.id}
-			module.addHook(playerEvent.type, {by: 'player'}, hook)
-			module.triggerEvent(playerEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			module.addEventHook(event.type, {by: 'player'}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {sourceID: player.id},
+			})
 		})
 
 		it('pet', () => {
-			const petEvent = {...event, targetID: pet.id}
-			module.addHook(petEvent.type, {to: 'pet'}, hook)
-			module.triggerEvent(petEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			module.addEventHook(event.type, {to: 'pet'}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {targetID: [pet.id]},
+			})
 		})
 
 		it('abilityId', () => {
-			const abilityEvent = {...event, ability: {guid: 1}}
-			module.addHook(abilityEvent.type, {abilityId: abilityEvent.ability.guid}, hook)
-			module.triggerEvent(abilityEvent)
-			expect(hook).toHaveBeenCalledTimes(1)
+			const abilityId = 1
+			module.addEventHook(event.type, {abilityId}, hook)
+			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
+				filter: {ability: {guid: abilityId}},
+			})
 		})
 	})
 
-	it('can remove hooks', () => {
-		const hookRef = module.addHook(event.type, hook)
-		module.triggerEvent(event)
-		module.removeHook(hookRef)
-		module.triggerEvent(event)
-		expect(hook).toHaveBeenCalledTimes(1)
+	it('can remove event hooks', () => {
+		const hookRefs = module.addEventHook(event.type, hook)
+		module.removeEventHook(hookRefs)
+
+		expect(dispatcher.removeEventHook)
+			.toHaveBeenCalledTimes(1)
+			.toHaveBeenCalledWith(hookRefs[0])
+	})
+
+	it('adds timestamp hooks to the dispatcher', () => {
+		const timestamp = 50
+		module.addTimestampHook(timestamp, hook)
+
+		expect(dispatcher.addTimestampHook).toHaveBeenCalledTimes(1)
+		expect(dispatcher.addTimestampHook.mock.calls[0][0]).toMatchObject({
+			module: module.constructor.handle,
+			timestamp,
+		})
+	})
+
+	it('removes timestamp hooks from the dispatcher', () => {
+		const hookRef = module.addTimestampHook(50, hook)
+		module.removeTimestampHook(hookRef)
+
+		expect(dispatcher.removeTimestampHook)
+			.toHaveBeenCalledTimes(1)
+			.toHaveBeenCalledWith(hookRef)
 	})
 })

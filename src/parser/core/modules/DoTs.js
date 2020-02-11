@@ -1,5 +1,3 @@
-import {getDataBy} from 'data'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 
 // Absurdly large fallback number, so missing duration properties will result in both a console warning and stupid suggestions
@@ -8,7 +6,9 @@ const DEFAULT_DURATION_MILLIS = 120000
 export default class DoTs extends Module {
 	static handle = 'dots'
 	static dependencies = [
+		'data',
 		'enemies',
+		'entityStatuses',
 		'invuln',
 	]
 
@@ -23,7 +23,7 @@ export default class DoTs extends Module {
 		super(...args)
 		// NOTE: All statuses submodules track should include a duration property, otherwise the results this produces will be very fucky
 		this.constructor.statusesToTrack.forEach(statusId => {
-			const status = getDataBy(STATUSES, 'id', statusId)
+			const status = this.data.getStatus(statusId)
 			if (!status) { return }
 			if (!status.hasOwnProperty('duration')) {
 				console.warn(`statusId ${statusId} is missing a duration property`)
@@ -93,7 +93,7 @@ export default class DoTs extends Module {
 
 	// These two functions are helpers for submodules and should be used but not overridden
 	getUptimePercent(statusId) {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
+		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightDuration) * 100
 	}

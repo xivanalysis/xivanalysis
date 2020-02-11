@@ -1,18 +1,17 @@
 import stable from 'stable'
 
 import {getFflogsEvents} from 'api'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {isDefined} from 'utilities'
 
-const QUERY_FILTER = [
+const buildQueryFilter = data => [
 	// Player-applied debuffs that don't get pulled when checking by actor
 	{
 		types: ['applydebuff', 'removedebuff'],
 		abilities: [
-			STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id,
-			STATUSES.CHAIN_STRATAGEM.id,
-			STATUSES.RUINATION.id,
+			data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
+			data.statuses.CHAIN_STRATAGEM.id,
+			data.statuses.RUINATION.id,
 		],
 		targetsOnly: true,
 	},
@@ -29,6 +28,8 @@ const EVENT_TYPE_ORDER = {
 	cast: -2,
 	calculateddamage: -1.5,
 	calculatedheal: -1.5,
+	normaliseddamage: -1.25,
+	normalisedheal: -1.25,
 	targetabilityupdate: -1,
 	damage: -0.5,
 	heal: -0.5,
@@ -49,6 +50,7 @@ export default class AdditionalEvents extends Module {
 	static handle = 'additionalEvents'
 	static dependencies = [
 		'enemies',
+		'data',
 	]
 
 	async normalise(events) {
@@ -71,7 +73,7 @@ export default class AdditionalEvents extends Module {
 			.join(' or ')
 
 		// Build the filter string
-		let filter = QUERY_FILTER.map(section => {
+		let filter = buildQueryFilter(this.data).map(section => {
 			const types = section.types.map(type => `'${type}'`).join(',')
 			let condition = `type in (${types})`
 			if (section.abilities) {
@@ -94,7 +96,7 @@ export default class AdditionalEvents extends Module {
 		const newEvents = await getFflogsEvents(
 			this.parser.report.code,
 			this.parser.fight,
-			{filter}
+			{filter},
 		)
 
 		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.

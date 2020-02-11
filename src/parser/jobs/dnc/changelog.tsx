@@ -46,4 +46,19 @@ export const changelog = [
 		Changes: () => <>Added proc buff display to timeline.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-10-29'),
+		Changes: () => <>Fix an issue where Technical Flourish windows still considered open if Devilment and Technical Finish fell off at the same instant.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-10-31'),
+		Changes: () => <>Updated dropped proc suggestion wording, and fixed a bug with broken combo allowances under Technical Finish.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2019-12-09'),
+		Changes: () => <>Technical Finish windows now display how many players were affected by your buff.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

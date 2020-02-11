@@ -1,44 +1,70 @@
 import React from 'react'
 
-import {getDataBy} from 'data'
-import STATUSES from 'data/STATUSES'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {Group, Item} from 'parser/core/modules/Timeline'
 
 // Are other jobs going to need to add to this?
-const RAID_BUFFS = {
-	[STATUSES.THE_BALANCE.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.THE_ARROW.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.THE_SPEAR.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.THE_BOLE.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.THE_EWER.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.THE_SPIRE.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.LORD_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.LADY_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
-	[STATUSES.DIVINATION.id]: {},
-	[STATUSES.BATTLE_LITANY.id]: {},
-	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
-	[STATUSES.BROTHERHOOD.id]: {},
-	[STATUSES.CHAIN_STRATAGEM.id]: {},
-	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
-	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
-	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
-	[STATUSES.DEVOTION.id]: {},
-	[STATUSES.TECHNICAL_FINISH.id]: {},
-	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
-	[STATUSES.DEVILMENT.id]: {},
-}
+// const OLD_RAID_BUFFS = {
+// 	[STATUSES.THE_BALANCE.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.THE_ARROW.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.THE_SPEAR.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.THE_BOLE.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.THE_EWER.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.THE_SPIRE.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.LORD_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.LADY_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
+// 	[STATUSES.DIVINATION.id]: {},
+// 	[STATUSES.BATTLE_LITANY.id]: {},
+// 	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
+// 	[STATUSES.BROTHERHOOD.id]: {},
+// 	[STATUSES.CHAIN_STRATAGEM.id]: {},
+// 	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
+// 	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
+// 	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
+// 	[STATUSES.DEVOTION.id]: {},
+// 	[STATUSES.TECHNICAL_FINISH.id]: {},
+// 	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
+// 	[STATUSES.DEVILMENT.id]: {},
+// }
+
+const RAID_BUFFS = [
+	{key: 'THE_BALANCE', group: 'arcanum', name: 'Arcanum'},
+	{key: 'THE_ARROW', group: 'arcanum', name: 'Arcanum'},
+	{key: 'THE_SPEAR', group: 'arcanum', name: 'Arcanum'},
+	{key: 'THE_BOLE', group: 'arcanum', name: 'Arcanum'},
+	{key: 'THE_EWER', group: 'arcanum', name: 'Arcanum'},
+	{key: 'THE_SPIRE', group: 'arcanum', name: 'Arcanum'},
+	{key: 'LORD_OF_CROWNS', group: 'arcanum', name: 'Arcanum'},
+	{key: 'LADY_OF_CROWNS', group: 'arcanum', name: 'Arcanum'},
+	{key: 'DIVINATION'},
+	{key: 'BATTLE_LITANY'},
+	{key: 'BATTLE_VOICE', exclude: [JOBS.BARD.logType]},
+	{key: 'BROTHERHOOD'},
+	{key: 'CHAIN_STRATAGEM'},
+	{key: 'EMBOLDEN_PHYSICAL'}, // phys only?
+	{key: 'LEFT_EYE', exclude: [JOBS.DRAGOON.logType]}, // notDRG
+	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
+	{key: 'DEVOTION'},
+	{key: 'TECHNICAL_FINISH'},
+	{key: 'STANDARD_FINISH_PARTNER'},
+	{key: 'DEVILMENT'},
+	{key: 'OFF_GUARD'},
+	{key: 'PECULIAR_LIGHT'},
+]
 
 export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
 	static dependencies = [
+		'data',
 		'timeline',
 		'enemies',
 	]
 
 	_group = null
 	_buffs = {}
+
+	_buffMap = new Map()
 
 	constructor(...args) {
 		super(...args)
@@ -52,8 +78,12 @@ export default class RaidBuffs extends Module {
 		})
 		this.timeline.addGroup(this._group)
 
+		RAID_BUFFS.forEach(obj => {
+			this._buffMap.set(this.data.statuses[obj.key].id, obj)
+		})
+
 		// Event hooks
-		const filter = {abilityId: Object.keys(RAID_BUFFS).map(key => parseInt(key, 10))}
+		const filter = {abilityId: [...this._buffMap.keys()]}
 		this.addHook('applybuff', {...filter, to: 'player'}, this._onApply)
 		this.addHook('applydebuff', filter, this._onApply)
 		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
@@ -69,7 +99,7 @@ export default class RaidBuffs extends Module {
 
 		const buffs = this.getTargetBuffs(event)
 		const statusId = event.ability.guid
-		const settings = RAID_BUFFS[statusId]
+		const settings = this._buffMap.get(statusId)
 
 		if (settings.exclude && settings.exclude.includes(this.parser.player.type)) {
 			return
@@ -88,7 +118,7 @@ export default class RaidBuffs extends Module {
 		// Generate an item for the buff
 		// TODO: startTime should probably be automated inside timeline
 		const startTime = this.parser.fight.start_time
-		const status = getDataBy(STATUSES, 'id', statusId)
+		const status = this.data.getStatus(statusId)
 		if (!status) { return }
 		buffs[statusId] = new Item({
 			type: 'background',

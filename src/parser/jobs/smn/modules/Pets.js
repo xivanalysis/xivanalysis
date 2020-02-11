@@ -15,6 +15,8 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const NO_PET_ID = -1
 
+const PET_RESYNC_BUFFER_MS = 3000
+
 const SUMMON_ACTIONS = {
 	[ACTIONS.SUMMON.id]: PETS.GARUDA_EGI.id,
 	[ACTIONS.SUMMON_II.id]: PETS.TITAN_EGI.id,
@@ -38,9 +40,10 @@ const IFRIT_AOE_CAPABLE_ACTIONS = [
 ]
 
 const TITAN_WARN_PERCENT = 5
+const GARUDA_MIN_TARGETS = 3
 
 const WIND_BLADE_RECAST = 3000
-const SLIPSTREAM_TICKS = 6 //5 from duration + 1 on cast
+const SLIPSTREAM_TICKS = 4 //3 from duration + 1 on cast
 const SLIPSTREAM_TICK_SPEED = 3000
 
 const SLIPSTREAM_SEVERITY = {
@@ -79,8 +82,6 @@ export default class Pets extends Module {
 	_currentPet = null
 	_history = []
 
-	_lastSummonDemi = -1
-
 	_slipstreams = []
 	_badWindBlades = 0
 	_ifritMultiHits = 0
@@ -92,8 +93,6 @@ export default class Pets extends Module {
 		this.addHook('init', this._onInit)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('aoedamage', {by: 'pet'}, this._onPetDamage)
-		// TODO: This event hook needs to be revisited once we have the ability to hook arbitrary timestamps.
-		this.addHook('all', this._onEvent)
 		this.addHook('summonpet', this._onChangePet)
 		// Hook changed from on pet death to on player death due to pet changes in Shadowbringers
 		// Pets now won't die unless their caster dies, so FFLogs API no longer emitting pet death events
@@ -156,17 +155,34 @@ export default class Pets extends Module {
 
 		// If it's a demi, we need to handle the timer
 		if (this.isDemiPet(petId)) {
-			this._lastSummonDemi = event.timestamp
+			this.addTimestampHook(event.timestamp + DEMI_SUMMON_LENGTH, this._onDemiExpire)
 		}
 
 		this.setPet(petId)
 	}
 
+	_onDemiExpire() {
+		this.setPet(this._lastPet.id)
+	}
+
 	_onPetDamage(event) {
 		const abilityId = event.ability.guid
 
+		// If the action is being cast by a pet that isn't the current pet, tracking has desynced - attempt to resync
+		// This usually happens if the player somehow had a demi out before the start of the log.
+		// Explicitly _prevent_ resync if there was a switch in the last 3s - actions from the previous pet may still be applying
+		const action = getDataBy(ACTIONS, 'id', abilityId)
+		if (
+			action &&
+			action.pet &&
+			action.pet !== this._currentPet.id &&
+			event.timestamp - this._currentPet.timestamp > PET_RESYNC_BUFFER_MS
+		) {
+			this.setPet(action.pet)
+		}
+
 		if (abilityId === ACTIONS.WIND_BLADE.id &&
-			event.hits.length < 2) {
+			event.hits.length < GARUDA_MIN_TARGETS) {
 			this._badWindBlades++
 		} else if (abilityId === ACTIONS.SLIPSTREAM.id) {
 			this._slipstreams.push({
@@ -184,33 +200,16 @@ export default class Pets extends Module {
 			this._slipstreams[this._slipstreams.length - 1].ticks.push(event)
 		} else if (
 			IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
-			event.hits.length > 1
+			event.hits.length >= GARUDA_MIN_TARGETS
 		) {
 			this._ifritMultiHits++
 		}
 	}
 
-	_onEvent(event) {
-		if (
-			(this._lastPet || this.parser.byPlayerPet(event)) &&
-			this._currentPet &&
-			this.isDemiPet(this._currentPet.id) &&
-			this._lastSummonDemi + DEMI_SUMMON_LENGTH <= event.timestamp
-		) {
-			let petId = null
-			if (this._lastPet) {
-				petId = this._lastPet.id
-			} else {
-				const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-				petId = action ? action.pet : undefined
-			}
-
-			this.setPet(petId, this._lastSummonDemi + DEMI_SUMMON_LENGTH)
-		}
-	}
-
 	_onChangePet(event) {
-		this._lastPet = this._currentPet
+		if (this._currentPet) {
+			this._lastPet = this._currentPet
+		}
 		this._currentPet = {
 			id: event.petId,
 			timestamp: event.timestamp,

@@ -52,7 +52,7 @@ class CombatantLookupRedirect extends React.Component {
 		const combatant = report.friendlies.find(friendly =>
 			friendly.name === params.name &&
 			friendly.type === params.job &&
-			friendly.fights.some(fight => fight.id === fightId)
+			friendly.fights.some(fight => fight.id === fightId),
 		)
 
 		// If we didn't find the combatant, take them to the report page as a fallback

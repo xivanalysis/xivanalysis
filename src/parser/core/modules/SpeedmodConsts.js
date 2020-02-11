@@ -1,5 +1,3 @@
-import STATUSES from 'data/STATUSES'
-
 /* eslint-disable no-magic-numbers */
 
 export const PARTYWIDE_SPEED_BUFF_FLAGS = {
@@ -13,39 +11,37 @@ export const PARTYWIDE_SPEED_BUFF_TO_FLAG_MAP = {}
 
 // Map combinations of {jobSpeedBuff} and arrow/feyWind, based on https://docs.google.com/spreadsheets/d/1JZE94VgMhXrPeoxJOrL8z6LTcxcpYS8so5wLBnhPeLw/
 // Uncomment entries when buff statuses are added or generated
-export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
+export const getJobSpeedBuffToSpeedmodMap = data => ({
+// export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 	0: {
 		[FLAGS.NONE]: 100,
 		[FLAGS.FEY_WIND]: 97,
 	},
-	[STATUSES.CIRCLE_OF_POWER.id]: {
+	[data.statuses.CIRCLE_OF_POWER.id]: {
 		[FLAGS.NONE]: 85,
 		[FLAGS.FEY_WIND]: 82,
 	},
-	[STATUSES.PRESENCE_OF_MIND.id]: {
+	[data.statuses.PRESENCE_OF_MIND.id]: {
 		[FLAGS.NONE]: 80,
 		[FLAGS.FEY_WIND]: 77,
 	},
-	[STATUSES.GREASED_LIGHTNING.id]: {
+	[data.statuses.GREASED_LIGHTNING.id]: {
 		[FLAGS.NONE]: 95,
-		[FLAGS.FEY_WIND]: 93,
 	},
-	[STATUSES.GREASED_LIGHTNING_II.id]: {
+	[data.statuses.GREASED_LIGHTNING_II.id]: {
 		[FLAGS.NONE]: 90,
-		[FLAGS.FEY_WIND]: 88,
 	},
-	[STATUSES.GREASED_LIGHTNING_III.id]: {
+	[data.statuses.GREASED_LIGHTNING_III.id]: {
 		[FLAGS.NONE]: 85,
-		[FLAGS.FEY_WIND]: 83,
 	},
-	[STATUSES.GREASED_LIGHTNING_IV.id]: {
+	[data.statuses.GREASED_LIGHTNING_IV.id]: {
 		[FLAGS.NONE]: 80,
 	},
-	[STATUSES.SHIFU.id]: {
+	[data.statuses.SHIFU.id]: {
 		[FLAGS.NONE]: 87,
 		[FLAGS.FEY_WIND]: 87,
 	},
-	//	[STATUSES.ARMYS_PAEON_I.id]: {
+	//	[data.statuses.ARMYS_PAEON_I.id]: {
 	//		[FLAGS.NONE]: 96,
 	//		[FLAGS.FEY_WIND]: 94,
 	//		[FLAGS.ARROW_5]: 92,
@@ -55,7 +51,7 @@ export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_10]: 84,
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_15]: 79,
 	//	},
-	//	[STATUSES.ARMYS_PAEON_II.id]: {
+	//	[data.statuses.ARMYS_PAEON_II.id]: {
 	//		[FLAGS.NONE]: 92,
 	//		[FLAGS.FEY_WIND]: 90,
 	//		[FLAGS.ARROW_5]: 88,
@@ -65,7 +61,7 @@ export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_10]: 81,
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_15]: 76,
 	//	},
-	//	[STATUSES.ARMYS_PAEON_III.id]: {
+	//	[data.statuses.ARMYS_PAEON_III.id]: {
 	//		[FLAGS.NONE]: 88,
 	//		[FLAGS.FEY_WIND]: 86,
 	//		[FLAGS.ARROW_5]: 84,
@@ -75,7 +71,7 @@ export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_10]: 77,
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_15]: 73,
 	//	},
-	//	[STATUSES.ARMYS_PAEON_IV.id]: {
+	//	[data.statuses.ARMYS_PAEON_IV.id]: {
 	//		[FLAGS.NONE]: 84,
 	//		[FLAGS.FEY_WIND]: 82,
 	//		[FLAGS.ARROW_5]: 80,
@@ -85,11 +81,11 @@ export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_10]: 74,
 	//		[FLAGS.FEY_WIND|FLAGS.ARROW_15]: 69,
 	//	},
-	[STATUSES.BLOOD_WEAPON.id]: {
+	[data.statuses.BLOOD_WEAPON.id]: {
 		[FLAGS.NONE]: 90,
 		[FLAGS.FEY_WIND]: 87,
 	},
-//	[STATUSES.HUTON.id]: {
+//	[data.statuses.HUTON.id]: {
 //		[FLAGS.NONE]: 85,
 //		[FLAGS.FEY_WIND]: 83,
 //		[FLAGS.ARROW_5]: 81,
@@ -99,4 +95,4 @@ export const JOB_SPEED_BUFF_TO_SPEEDMOD_MAP = {
 //		[FLAGS.FEY_WIND|FLAGS.ARROW_10]: 74,
 //		[FLAGS.FEY_WIND|FLAGS.ARROW_15]: 70,
 //	},
-}
+})

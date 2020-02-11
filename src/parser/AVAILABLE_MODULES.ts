@@ -6,6 +6,7 @@ import {Meta} from './core/Meta'
 
 import AST from './jobs/ast'
 import BLM from './jobs/blm'
+import BLU from './jobs/blu'
 import BRD from './jobs/brd'
 import DNC from './jobs/dnc'
 import DRG from './jobs/drg'
@@ -53,6 +54,7 @@ export default {
 		[JOBS.BLACK_MAGE.logType]: BLM,
 		[JOBS.SUMMONER.logType]: SMN,
 		[JOBS.RED_MAGE.logType]: RDM,
+		[JOBS.BLUE_MAGE.logType]: BLU,
 	},
 
 	BOSSES: {

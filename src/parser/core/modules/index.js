@@ -9,13 +9,16 @@ import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
+import {Data} from './Data'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
+import {EntityStatuses} from './EntityStatuses'
 import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
+import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
@@ -39,13 +42,16 @@ export default [
 	Combatants,
 	Combos,
 	Cooldowns,
+	Data,
 	Death,
 	Downtime,
 	Enemies,
+	EntityStatuses,
 	FFLogsEventNormaliser,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,
