@@ -9,6 +9,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 
 // At the start of the fight, the standard opener currently clips
 // the first tri-disaster so that the second one can benefit from
@@ -40,6 +41,7 @@ export default class DoTs extends Module {
 		'suggestions',
 	]
 
+	_lastCast = undefined
 	_lastApplication = {}
 	_clip = {
 		[STATUSES.BIO_III.id]: 0,
@@ -50,12 +52,17 @@ export default class DoTs extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const filter = {
+		const castFilter = {
+			by: 'player',
+			abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id, ACTIONS.TRI_DISASTER.id, ACTIONS.BANE.id],
+		}
+		this.addEventHook('cast', castFilter, this._onDotCast)
+		const statusFilter = {
 			by: 'player',
 			abilityId: [STATUSES.BIO_III.id, STATUSES.MIASMA_III.id],
 		}
-		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_createTargetApplicationList() {
@@ -67,7 +74,11 @@ export default class DoTs extends Module {
 
 	_pushApplication(targetKey, statusId, event, clip) {
 		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
-		target[statusId].push({event, clip})
+		target[statusId].push({event, clip, source: this._lastCast})
+	}
+
+	_onDotCast(event) {
+		this._lastCast = event.ability.guid
 	}
 
 	_onDotApply(event) {
@@ -175,16 +186,23 @@ export default class DoTs extends Module {
 									<Table.HeaderCell><ActionLink {...ACTIONS.MIASMA_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
 								{target[STATUSES.MIASMA_III.id].map(
 									(event) => {
 										totalMiasmaClip += event.clip
+										// Depending on latency of status application, the Bio III instant cast may have
+										// resolved before the previous Miasma III went off.  Assume that this the normal
+										// Miasma III -> Bio III cast pattern happened and adjust the id.
+										if (event.source === ACTIONS.BIO_III.id) { event.source = ACTIONS.MIASMA_III.id }
+										const action = getDataBy(ACTIONS, 'id', event.source)
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
 											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
 											<Table.Cell>{totalMiasmaClip ? this.parser.formatDuration(totalMiasmaClip) : '-'}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
@@ -197,16 +215,19 @@ export default class DoTs extends Module {
 									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
 								{target[STATUSES.BIO_III.id].map(
 									(event) => {
 										totalBioClip += event.clip
+										const action = getDataBy(ACTIONS, 'id', event.source)
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
 											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
 											<Table.Cell>{totalBioClip ? this.parser.formatDuration(totalBioClip) : '-'}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>

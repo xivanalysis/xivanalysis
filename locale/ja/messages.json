@@ -776,6 +776,7 @@
   "smn.dots.checklist.requirement.bio-iii.name": "アクティブ率: <0/>",
   "smn.dots.checklist.requirement.miasma-iii.name": "アクティブ率: <0/>",
   "smn.dots.clip": "",
+  "smn.dots.source": "",
   "smn.dots.suggestions.clipping.content": "開幕や戦闘終了直前以外にDoTの効果時間がまだ切れかけていないところで更新するという行為は避けてください。無意味な更新を付けると前にPTのバフ・デバフで強化されたDoTを更新してしまい、マニュアルでDoTを更新する頻繫も多くなります。",
   "smn.dots.suggestions.clipping.why": "早すぎる更新により{0}の{1}と{2}の{3}を失いました。",
   "smn.dots.suggestions.missing_dot_cast.content": "",
