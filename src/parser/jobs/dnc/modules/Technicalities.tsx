@@ -85,7 +85,7 @@ export default class Technicalities extends Module {
 
 		// Find out how many players we hit with the buff.
 		if (!lastWindow.playersBuffed) {
-			lastWindow.playersBuffed = event.hits
+			lastWindow.playersBuffed = event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
 		}
 	}
 
