@@ -27,12 +27,12 @@ export default class Ninjutsu extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
-		this.addHook('aoedamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onDotonCast() {
@@ -50,7 +50,7 @@ export default class Ninjutsu extends Module {
 			this._onDotonCast()
 		}
 
-		this._dotonCasts.current.ticks.push(event.hits.length) // Track the number of enemies hit per tick
+		this._dotonCasts.current.ticks.push(event.hits) // Track the number of enemies hit per tick
 	}
 
 	_finishDotonWindow() {

@@ -10,15 +10,14 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import CheckList, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Downtime from 'parser/core/modules/Downtime'
+import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import Invulnerability from 'parser/core/modules/Invulnerability'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-
-import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
@@ -115,11 +114,11 @@ export default class DirtyDancing extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
-		this.addHook('cast', {by: 'player'}, this.continueDance)
-		this.addHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
-		this.addHook('aoedamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: STEPS}, this.beginDance)
+		this.addEventHook('cast', {by: 'player'}, this.continueDance)
+		this.addEventHook('cast', {by: 'player', abilityId: FINISHES}, this.finishDance)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: FINISHES}, this.resolveDance)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	dancesInRange(startTime: number, endTime: number) {
@@ -171,7 +170,7 @@ export default class DirtyDancing extends Module {
 		dance.dancing = false
 	}
 
-	private resolveDance(event: AoeEvent) {
+	private resolveDance(event: NormalisedDamageEvent) {
 		const dance = this.lastDance
 
 		if (!dance || dance.resolved) {

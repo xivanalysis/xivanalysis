@@ -90,14 +90,14 @@ export default class Pets extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('init', this._onInit)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('aoedamage', {by: 'pet'}, this._onPetDamage)
-		this.addHook('summonpet', this._onChangePet)
+		this.addEventHook('init', this._onInit)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('normaliseddamage', {by: 'pet'}, this._onPetDamage)
+		this.addEventHook('summonpet', this._onChangePet)
 		// Hook changed from on pet death to on player death due to pet changes in Shadowbringers
 		// Pets now won't die unless their caster dies, so FFLogs API no longer emitting pet death events
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	normalise(events) {
@@ -182,7 +182,7 @@ export default class Pets extends Module {
 		}
 
 		if (abilityId === ACTIONS.WIND_BLADE.id &&
-			event.hits.length < GARUDA_MIN_TARGETS) {
+			event.hits < GARUDA_MIN_TARGETS) {
 			this._badWindBlades++
 		} else if (abilityId === ACTIONS.SLIPSTREAM.id) {
 			this._slipstreams.push({
@@ -200,7 +200,7 @@ export default class Pets extends Module {
 			this._slipstreams[this._slipstreams.length - 1].ticks.push(event)
 		} else if (
 			IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
-			event.hits.length >= GARUDA_MIN_TARGETS
+			event.hits >= GARUDA_MIN_TARGETS
 		) {
 			this._ifritMultiHits++
 		}
