@@ -179,7 +179,7 @@ export default class DoTs extends Module {
 		return <Table collapsing unstackable style={{border: 'none'}}>
 			<Table.Body>
 				<Table.Row>
-					<Table.Cell style={{padding: '0 1em 0 0'}}>
+					<Table.Cell style={{padding: '0 1em 0 0', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
@@ -208,7 +208,7 @@ export default class DoTs extends Module {
 							</Table.Body>
 						</Table>
 					</Table.Cell>
-					<Table.Cell style={{padding: '0 0 0 1em'}}>
+					<Table.Cell style={{padding: '0 0 0 1em', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
