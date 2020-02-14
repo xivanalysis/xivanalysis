@@ -64,6 +64,7 @@ export const SCH = ensureActions({
 		name: 'Consolation',
 		icon: 'https://xivapi.com/i/002000/002851.png',
 		cooldown: 30,
+		charges: 2,
 	},
 
 	SUCCOR: {
