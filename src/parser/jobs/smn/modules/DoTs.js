@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Table} from 'semantic-ui-react'
+import {Accordion, Table} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -45,10 +45,7 @@ export default class DoTs extends Module {
 		[STATUSES.BIO_III.id]: 0,
 		[STATUSES.MIASMA_III.id]: 0,
 	}
-	_application = {
-		[STATUSES.BIO_III.id]: [],
-		[STATUSES.MIASMA_III.id]: [],
-	}
+	_application = {}
 
 	constructor(...args) {
 		super(...args)
@@ -59,6 +56,18 @@ export default class DoTs extends Module {
 		}
 		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
 		this.addHook('complete', this._onComplete)
+	}
+
+	_createTargetApplicationList() {
+		return {
+			[STATUSES.BIO_III.id]: [],
+			[STATUSES.MIASMA_III.id]: [],
+		}
+	}
+
+	_pushApplication(targetKey, statusId, event, clip) {
+		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
+		target[statusId].push({event, clip})
 	}
 
 	_onDotApply(event) {
@@ -76,7 +85,7 @@ export default class DoTs extends Module {
 		) {
 			lastApplication[statusId] = event.timestamp
 			//save the application for later use in the output
-			this._application[statusId].push({event: event, clip: null})
+			this._pushApplication(applicationKey, statusId, event, null)
 			return
 		}
 
@@ -95,7 +104,7 @@ export default class DoTs extends Module {
 		this._clip[statusId] += clip
 
 		//save the application for later use in the output
-		this._application[statusId].push({event: event, clip: clip})
+		this._pushApplication(applicationKey, statusId, event, clip)
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -153,7 +162,7 @@ export default class DoTs extends Module {
 		return (statusUptime / fightDuration) * 100
 	}
 
-	output() {
+	_createTargetStatusTable(target) {
 		let totalBioClip = 0
 		let totalMiasmaClip = 0
 		return <Table collapsing unstackable style={{border: 'none'}}>
@@ -169,7 +178,7 @@ export default class DoTs extends Module {
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
-								{this._application[STATUSES.MIASMA_III.id].map(
+								{target[STATUSES.MIASMA_III.id].map(
 									(event) => {
 										totalMiasmaClip += event.clip
 										return <Table.Row key={event.event.timestamp}>
@@ -191,7 +200,7 @@ export default class DoTs extends Module {
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
-								{this._application[STATUSES.BIO_III.id].map(
+								{target[STATUSES.BIO_III.id].map(
 									(event) => {
 										totalBioClip += event.clip
 										return <Table.Row key={event.event.timestamp}>
@@ -206,5 +215,31 @@ export default class DoTs extends Module {
 				</Table.Row>
 			</Table.Body>
 		</Table>
+	}
+
+	output() {
+		if (Object.keys(this._application).length > 1) {
+			const panels = Object.keys(this._application).map(applicationKey => {
+				const targetId = applicationKey.split('|')[0]
+				const target = this.enemies.getEntity(targetId)
+				return {
+					key: applicationKey,
+					title: {
+						content: <>{target.name}</>,
+					},
+					content: {
+						content: this._createTargetStatusTable(this._application[applicationKey]),
+					},
+				}
+			})
+			return <Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		}
+
+		return this._createTargetStatusTable(Object.values(this._application)[0])
 	}
 }
