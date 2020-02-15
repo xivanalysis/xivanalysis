@@ -38,6 +38,7 @@ export const NIN = ensureActions({
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 0.5,
+		charges: 2,
 	},
 
 	TEN_KASSATSU: {
@@ -56,6 +57,7 @@ export const NIN = ensureActions({
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 0.5,
+		charges: 2,
 	},
 
 	JIN: {
@@ -65,6 +67,7 @@ export const NIN = ensureActions({
 		onGcd: true,
 		cooldown: 20,
 		gcdRecast: 0.5,
+		charges: 2,
 	},
 
 	NINJUTSU: {
@@ -264,6 +267,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002905.png',
 		onGcd: false,
 		cooldown: 60,
+		charges: 2,
 	},
 
 	MEISUI: {

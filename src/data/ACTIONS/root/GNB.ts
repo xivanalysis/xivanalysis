@@ -189,7 +189,7 @@ export const GNB = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003418.png',
 		onGcd: false,
 		cooldown: 30,
-		maxCharges: 2,
+		charges: 2,
 	},
 	ROYAL_GUARD: {
 		id: 16142,

@@ -205,6 +205,7 @@ export const DNC = ensureActions({
 		name: 'En Avant',
 		onGcd: false,
 		cooldown: 30,
+		charges: 3,
 	},
 	DEVILMENT: {
 		id: 16011,

@@ -58,6 +58,7 @@ export const MNK = ensureActions({
 		name: 'Shoulder Tackle',
 		icon: 'https://xivapi.com/i/002000/002526.png',
 		cooldown: 30,
+		charges: 2,
 	},
 
 	FISTS_OF_FIRE: {
