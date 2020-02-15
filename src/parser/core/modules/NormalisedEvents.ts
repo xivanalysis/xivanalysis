@@ -168,6 +168,7 @@ export class NormalisedEvents extends Module {
 		// No packetID set - match based on timestamps
 		const possibleRelatedEvents = Array.from(this._normalisedEvents.values())
 			.filter(normalisedEvent =>
+				event.type.includes(normalisedEvent.type.replace('normalised', '')) &&
 				event.ability.guid === normalisedEvent.ability.guid &&
 				event.sourceID === normalisedEvent.sourceID &&
 				normalisedEvent.timestamp <= event.timestamp &&
