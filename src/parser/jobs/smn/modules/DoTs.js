@@ -41,7 +41,8 @@ export default class DoTs extends Module {
 		'suggestions',
 	]
 
-	_lastCast = undefined
+	_lastBioCast = undefined
+	_lastMiasmaCast = undefined
 	_lastApplication = {}
 	_clip = {
 		[STATUSES.BIO_III.id]: 0,
@@ -74,11 +75,22 @@ export default class DoTs extends Module {
 
 	_pushApplication(targetKey, statusId, event, clip) {
 		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
-		target[statusId].push({event, clip, source: this._lastCast})
+		const source = (statusId === STATUSES.BIO_III.id) ? this._lastBioCast : this._lastMiasmaCast
+		target[statusId].push({event, clip, source})
 	}
 
 	_onDotCast(event) {
-		this._lastCast = event.ability.guid
+		// Casts are tracked separately due to the chance for the Miasma status to
+		// not be applied before the Bio cast.  Without separate tracking, you can
+		// end up with "Miasma III DoT applied by Bio III"
+		if (event.ability.guid === ACTIONS.BIO_III.id) {
+			this._lastBioCast = event.ability.guid
+		} else if (event.ability.guid === ACTIONS.MIASMA_III.id) {
+			this._lastMiasmaCast = event.ability.guid
+		} else {
+			this._lastBioCast = event.ability.guid
+			this._lastMiasmaCast = event.ability.guid
+		}
 	}
 
 	_onDotApply(event) {
@@ -193,10 +205,6 @@ export default class DoTs extends Module {
 								{target[STATUSES.MIASMA_III.id].map(
 									(event) => {
 										totalMiasmaClip += event.clip
-										// Depending on latency of status application, the Bio III instant cast may have
-										// resolved before the previous Miasma III went off.  Assume that this the normal
-										// Miasma III -> Bio III cast pattern happened and adjust the id.
-										if (event.source === ACTIONS.BIO_III.id) { event.source = ACTIONS.MIASMA_III.id }
 										const action = getDataBy(ACTIONS, 'id', event.source)
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
