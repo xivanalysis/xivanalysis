@@ -25,7 +25,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			ACTIONS.ASSAULT_I_EARTHEN_ARMOR,
 			ACTIONS.ASSAULT_I_CRIMSON_CYCLONE,
 		],
-		firstUseOffset: 1000,
+		firstUseOffset: 3500,
 		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [
@@ -34,6 +34,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			ACTIONS.ASSAULT_II_FLAMING_CRUSH,
 		],
 		firstUseOffset: 3500,
+		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [
 			ACTIONS.ENKINDLE_AERIAL_BLAST,
