@@ -776,6 +776,7 @@
   "smn.dots.checklist.requirement.bio-iii.name": "Temps total d'application de <0/>",
   "smn.dots.checklist.requirement.miasma-iii.name": "Temps total d'application de <0/>",
   "smn.dots.clip": "Clip",
+  "smn.dots.source": "",
   "smn.dots.suggestions.clipping.content": "Évitez de rafraichir vos DoTs bien avant leur expiration, excepté lors de votre opener ou à la fin d'une instance. Les réactualisations inutiles risquent d'écraser vos DoTs déjà appliqués et potentiellement buffés. Également, ceci augmente votre fréquence d'application de vos DoTs manuellement, c'est à dire sans recourir à Tri Désastre.",
   "smn.dots.suggestions.clipping.why": "{0} de {1} et {2} de {3} de perdus du aux rafraichissements précoces.",
   "smn.dots.suggestions.missing_dot_cast.content": "Pour avoir le meilleurs potentiel de <0/>s controler que <1/> et <2/> sont appliqués a votre cible.",
