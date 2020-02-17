@@ -41,6 +41,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-02-16'),
+		Changes: () => <>Updated DoT tables to separate applications by target and show which skill was used.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
 		date: new Date('2019-11-8'),
 		Changes: () => <>Updated Ruin 2 suggestions to account for 5.1 changes and marked supported for 5.1.</>,
 		contributors: [CONTRIBUTORS.KELOS],

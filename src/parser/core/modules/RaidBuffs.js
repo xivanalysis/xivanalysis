@@ -49,6 +49,8 @@ const RAID_BUFFS = [
 	{key: 'TECHNICAL_FINISH'},
 	{key: 'STANDARD_FINISH_PARTNER'},
 	{key: 'DEVILMENT'},
+	{key: 'OFF_GUARD'},
+	{key: 'PECULIAR_LIGHT'},
 ]
 
 export default class RaidBuffs extends Module {
