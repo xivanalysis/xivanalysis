@@ -247,7 +247,11 @@ export default class DoTs extends Module {
 	}
 
 	output() {
-		if (Object.keys(this._application).length > 1) {
+		const numTargets = Object.keys(this._application).length
+
+		if (numTargets === 0) { return null }
+
+		if (numTargets > 1) {
 			const panels = Object.keys(this._application).map(applicationKey => {
 				const targetId = applicationKey.split('|')[0]
 				const target = this.enemies.getEntity(targetId)
