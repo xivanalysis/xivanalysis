@@ -776,6 +776,7 @@
   "smn.dots.checklist.requirement.bio-iii.name": "<0/> uptime",
   "smn.dots.checklist.requirement.miasma-iii.name": "<0/> uptime",
   "smn.dots.clip": "Clip",
+  "smn.dots.source": "Source",
   "smn.dots.suggestions.clipping.content": "Avoid refreshing DoTs significantly before their expiration, except when rushing during your opener or the end of the fight. Unnecessary refreshes risk overwriting buff snapshots, and increase the frequency you'll need to hardcast your DoTs.",
   "smn.dots.suggestions.clipping.why": "{0} of {1} and {2} of {3} lost to early refreshes.",
   "smn.dots.suggestions.missing_dot_cast.content": "To get the most potency out of your <0/>s, ensure both <1/> and <2/> are applied to your target.",

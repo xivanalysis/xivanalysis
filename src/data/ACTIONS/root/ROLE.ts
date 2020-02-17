@@ -172,6 +172,7 @@ export const ROLE = ensureActions({
 		name: 'True North',
 		icon: 'https://xivapi.com/i/000000/000830.png',
 		cooldown: 45,
+		charges: 2,
 		statusesApplied: ['TRUE_NORTH'],
 	},
 })
