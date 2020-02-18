@@ -12,55 +12,55 @@ export default class AoeChecker extends AoEUsages {
 
 	suggestionIcon = ACTIONS.FUGA.icon
 
-	trackedAbilites = [
+	trackedAbilities = [
 		{
 			aoeAbility: ACTIONS.HISSATSU_GUREN,
-			stAbilties: [ACTIONS.HISSATSU_SENEI],
+			stAbilities: [ACTIONS.HISSATSU_SENEI],
 			minTargets: 2,
 		},
 
 		{
 			aoeAbility: ACTIONS.HISSATSU_KYUTEN,
-			stAbilties: [ACTIONS.HISSTASU_SHINTEN],
+			stAbilities: [ACTIONS.HISSATSU_SHINTEN],
 			minTargets: 3,
 		},
 
 		{
 			aoeAbility: ACTIONS.TENKA_GOKEN,
-			stAbilites: [ACTIONS.MIDARE_SETSUGEKKA],
+			stAbilities: [ACTIONS.MIDARE_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
 			aoeAbility: ACTIONS.KAESHI_GOKEN,
-			stAbilites: [ACTIONS.KAESHI_SETSUGEKKA],
+			stAbilities: [ACTIONS.KAESHI_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
 			aoeAbility: ACTIONS.FUGA,
-			stAbilites: [ACTIONS.HAKAZE],
+			stAbilities: [ACTIONS.HAKAZE],
 			minTargets: 3,
 
 		},
 
 		{
 			aoeAbility: ACTIONS.OKA,
-			stAbilites: [ACTIONS.KASHA],
+			stAbilities: [ACTIONS.KASHA],
 			minTargets: 3,
 
 		},
 
 		{
 			aoeAbility: ACTIONS.MANGETSU,
-			stAbilites: [ACTIONS.GEKKO],
+			stAbilities: [ACTIONS.GEKKO],
 			minTargets: 3,
 
 		},
 	]
 
 	adjustMinTargets(event, minTargets) {
-		if (event.ability.guid === (ACTIONS.MANGETSU || ACTIONS.OKA) && !this.combatants.hasStatus(STATUSES.MEIKYO_SHISUI.id)) {
+		if (event.ability.guid === (ACTIONS.MANGETSU.id || ACTIONS.OKA.id) && !(this.combatants.selected.hasStatus(STATUSES.MEIKYO_SHISUI.id))) {
 			return 1
 		}
 		return minTargets
