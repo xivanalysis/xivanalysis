@@ -222,7 +222,7 @@ class Parser {
 
 	hydrateFabrication(event: Partial<Event>): Event {
 		// TODO: they've got a 'triggered' prop too...?
-		return {
+		const clone = Object.assign({
 			// Provide default fields
 			timestamp: this.currentTimestamp,
 			type: 'fabrication',
@@ -231,10 +231,11 @@ class Parser {
 			targetID: -1,
 			targetInstance: -1,
 			targetIsFriendly: true,
-
-			// Fill out with any overwritten fields
-			...event,
+		}, event)
+		if (Object.getPrototypeOf(event)) {
+			Object.setPrototypeOf(clone, Object.getPrototypeOf(event))
 		}
+		return clone
 	}
 
 	fabricateEvent(event: Partial<Event>) {
