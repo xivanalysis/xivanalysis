@@ -10,7 +10,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent, BuffEvent, Event} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -31,6 +31,8 @@ const SPENDERS = {
 }
 
 const MAX_STACKS = 3
+const MEDITATE_TICK_FREQUENCY = 3000
+const MAX_MEDITATE_TICKS = 3
 
 interface StackState {
 	t?: number
@@ -43,6 +45,7 @@ export default class Shoha extends Module {
 	static displayMode = DISPLAY_MODE.FULL
 
 	private stacks = 0
+	private meditateStart = 0
 	private shohaUses = 0
 	private stackHistory: StackState[] = []
 	private wasteBySource = {
@@ -79,41 +82,42 @@ export default class Shoha extends Module {
 			},
 			this.onSpend,
 		)
-		this.addEventHook([
-			'applybuff', 'applybuffstack'],
-			{
-				to: 'player',
-				abilityId: STATUSES.MEDITATION.id,
-			},
-			this.onMeditateGain)
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id,}, this.onApplyMeditate,)
+		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id,}, this.onRemoveMeditate,)
 
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
 	}
 
 	private onGenerate(event: CastEvent) {
-		if (this.stacks === MAX_STACKS) {
 		const abilityId = event.ability.guid
 		const generatedStacks = GENERATORS[abilityId]
 
-		this.addWaste(generatedStacks, abilityId)
+		this.addStacks(generatedStacks, abilityId)
 		}
+
+		// back to time guessing we a go~
+	private onApplyMeditate(event: BuffEvent) {
+			this.meditateStart = event.timestamp
 	}
 
-		// the previous comment was a lie: This is for ALL meditation gains
-	private onMeditateGain() {
-			this.stacks++
-			this.totalGeneratedStacks++
+	private onRemoveMeditate(event: BuffEvent) {
+		const diff = event.timestamp - this.meditateStart
 
-			// just a safety net
-			if (this.stacks > MAX_STACKS) {
-				this.stacks = MAX_STACKS
-			}
+		const ticks = Math.min(Math.floor(diff / MEDITATE_TICK_FREQUENCY), MAX_MEDITATE_TICKS)
 
-			this.pushToHistory()
+		const generatedStacks = ticks
+
+		this.stacks += generatedStacks
+		this.totalGeneratedStacks += generatedStacks
+		if( this.stacks > MAX_STACKS) {
+			this.stacks = MAX_STACKS
+		}
+
+		this.pushToHistory()
 	}
 
-	private addWaste(generatedStacks: number, abilityId: number) {
+	private addStacks(generatedStacks: number, abilityId: number) {
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
 		if (this.stacks > MAX_STACKS) {
