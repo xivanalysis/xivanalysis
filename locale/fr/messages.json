@@ -695,8 +695,6 @@
   "sam.kaiten.suggestion.missedkaiten.content": "Toujours utiliser <0/> sur <1/> et <2/>. Le gain sur ces actions de Kaiten est trop grand pour le manquer.",
   "sam.kaiten.suggestion.missedkaiten.why": "Vous n'avez pas réussi à Kaiten {0, plural,one {#fois}other {#fois}} soit sur <0/> et/ou <1/>",
   "sam.kaiten.title": "Kaiten",
-  "sam.kenki.suggestion.badguren.content": "Evitez d'uitliser <0/> quand vous avez uniquement une cible , <1/> a un meilleur potentiel et peux etre utiliser pour le même cout.",
-  "sam.kenki.suggestion.badguren.why": "{0, plural,one {#utilisation}other {#utilisations}} de Guren a touché une seule cible",
   "sam.kenki.suggestion.content": "Kenki est votre principale ressource et une source importante de dommages. Évitez de gaspiller le kenki potentiel en l'utilisant avant d'atteindre le maximum de {MAX_KENKI}.",
   "sam.kenki.suggestion.why": "Tu as gaspillé entre {min} et {max} Kenki.",
   "sam.kenki.title": "Kenki",

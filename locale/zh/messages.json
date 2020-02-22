@@ -695,8 +695,6 @@
   "sam.kaiten.suggestion.missedkaiten.content": "始终在<1/>和<2/>上使用<0/>。在这些技能上使用回天的收益非常高，不应该错过。",
   "sam.kaiten.suggestion.missedkaiten.why": "你在使用<0/>和<1/>时少覆盖了 {0, plural, one {# 次} other {# 次}} 必杀剑·回天。",
   "sam.kaiten.title": "必杀剑·回天",
-  "sam.kenki.suggestion.badguren.content": "只有单体目标时不要用<0/>，<1/>在相同资源下有更高的威力。",
-  "sam.kenki.suggestion.badguren.why": "{0, plural, one {# 次} other {# 次}} 必杀剑：红莲只打了一个目标。",
   "sam.kenki.suggestion.content": "剑气是你的核心资源，也是伤害的重要来源。在剑气达到最大值 {MAX_KENKI} 前消耗它，以免浪费潜在的剑气。",
   "sam.kenki.suggestion.why": "你浪费了 {min} - {max} 点剑气。",
   "sam.kenki.title": "剑气",

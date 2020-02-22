@@ -695,8 +695,6 @@
   "sam.kaiten.suggestion.missedkaiten.content": "항상 <0/>은 <1/>와 <2/>에 사용하세요. 필살검: 회천을 사용시 이러한 행동들이 얻는 이점은 매우 큽니다.",
   "sam.kaiten.suggestion.missedkaiten.why": "필살검: 회천을 {0, plural, one {#회} other {#회}} <0/>나 <1/>에 사용하지 않았습니다.",
   "sam.kaiten.title": "필살검: 회천",
-  "sam.kenki.suggestion.badguren.content": "단일 대상에게 <0/>를 사용하는 것을 피하십시오. 오히려 똑같은 인법 소모를 하며 위력이 더 높은 <1/>를 쓰는게 좋습니다.",
-  "sam.kenki.suggestion.badguren.why": "단일 대상에게 사용한 홍련 {0, plural, other {#회}}",
   "sam.kenki.suggestion.content": "검기는 중요한 자원이며 딜량에 상당한 기여를 합니다. 검기 획득시 {MAX_KENKI}을 초과하여 낭비하지 않도록 제떄 검기를 소모하십시오.",
   "sam.kenki.suggestion.why": "{min}~{max} 의 검기를 낭비했습니다.",
   "sam.kenki.title": "검기",
