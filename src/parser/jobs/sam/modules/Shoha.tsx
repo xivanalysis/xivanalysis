@@ -10,7 +10,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {CastEvent, BuffEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent, Event} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -82,8 +82,8 @@ export default class Shoha extends Module {
 			},
 			this.onSpend,
 		)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id,}, this.onApplyMeditate,)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id,}, this.onRemoveMeditate,)
+		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onApplyMeditate)
+		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onRemoveMeditate)
 
 		this.addHook('death', {to: 'player'}, this.onDeath)
 		this.addHook('complete', this.onComplete)
@@ -110,7 +110,7 @@ export default class Shoha extends Module {
 
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
-		if( this.stacks > MAX_STACKS) {
+		if ( this.stacks > MAX_STACKS) {
 			this.stacks = MAX_STACKS
 		}
 
