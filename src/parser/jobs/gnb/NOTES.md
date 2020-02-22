@@ -2,7 +2,7 @@
 
 ## Ammo
 - [ ] Check for bad Burst Strikes - (i.e. when at 1 ammo + Bloodfest is on CD + Gnashing is off CD)
-- [ ] Check for uses of Fated Circle on a single target (requires infrastructure work for `DamageEvent` to accept `'aoedamage'`)
+- [X] Check for uses of Fated Circle on a single target (requires infrastructure work for `DamageEvent` to accept `'aoedamage'`)
 - [X] Fix bug where uncomboed Solid Barrel counts toward Cartridge generation
 - [X] Log waste by source somewhere in output
 - [ ] Include End of Fight as a potential waste source
@@ -16,4 +16,4 @@
 - [X] Ignore missed GCDs on No Mercy windows that would expire after the end of the fight
 
 ## OGCDDowntime
-- [ ] Figure out how charge systems work (requires infrastructure work)
+- [X] Figure out how charge systems work (requires infrastructure work)

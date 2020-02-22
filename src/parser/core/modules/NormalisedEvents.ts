@@ -1,4 +1,5 @@
 import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent, isDamageEvent, isHealEvent, isRemoveBuffEvent} from 'fflogs'
+import {SortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
 
@@ -68,7 +69,7 @@ export class NormalisedDamageEvent extends NormalisedEvent {
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
-	constructor(event: DamageEvent) {
+	constructor(event: DamageEvent | NormalisedDamageEvent) {
 		super()
 		Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
 	}
@@ -102,8 +103,8 @@ export class NormalisedApplyBuffEvent extends NormalisedEvent {
 
 export const isNormalisedRemoveBuffEvent = (event: NormalisedEvent): event is NormalisedRemoveBuffEvent => event.type === 'normalisedremovebuff'
 export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
-export class NormalisedRefreshBuffEvent extends NormalisedEvent {
-	type = 'normalisedrefreshbuff'
+export class NormalisedRemoveBuffEvent extends NormalisedEvent {
+	type = 'normalisedremovebuff'
 	calculatedEvents: BuffEvent[] = []
 	confirmedEvents: BuffEvent[] = []
 
@@ -119,12 +120,12 @@ export class NormalisedEvents extends Module {
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
 
-	private _normalisedEvents = new Map<number, NormalisedEvent>()
+	private _normalisedEvents = new Map<string, NormalisedEvent>()
 
 	normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
 
-		return events.concat(Array.from(this._normalisedEvents.values()))
+		return SortEvents(events.concat(Array.from(this._normalisedEvents.values())))
 	}
 
 	private normaliseEvent = (event: Event) => {
@@ -136,19 +137,19 @@ export class NormalisedEvents extends Module {
 
 		if (!normalisedEvent) {
 			this.debug('No matching event found, creating new event')
-			let identifier: number
+			let identifier: string
 			if (isDamageEvent(event)) {
 				normalisedEvent = new NormalisedDamageEvent(event)
-				identifier = event.packetID ?? event.timestamp
+				identifier = event.packetID ? `${event.packetID}` : `${event.timestamp}-${event.ability.guid}`
 			} else if (isHealEvent(event)) {
 				normalisedEvent = new NormalisedHealEvent(event)
-				identifier = event.packetID ?? event.timestamp
+				identifier = event.packetID ? `${event.packetID}` : `${event.timestamp}-${event.ability.guid}`
 			} else {
-				identifier = event.timestamp
+				identifier = `${event.timestamp}-${event.ability.guid}`
 				if (isApplyBuffEvent(event)) {
 					normalisedEvent = new NormalisedApplyBuffEvent(event)
 				} else {
-					normalisedEvent = new NormalisedRefreshBuffEvent(event)
+					normalisedEvent = new NormalisedRemoveBuffEvent(event)
 				}
 			}
 			this._normalisedEvents.set(identifier, normalisedEvent)
@@ -161,13 +162,14 @@ export class NormalisedEvents extends Module {
 		this.debug(`Searching for related events for event ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)}`)
 		if (isBaseEvent(event) && event.packetID) {
 			this.debug(`Searching by packetID ${event.packetID}`)
-			return this._normalisedEvents.get(event.packetID)
+			return this._normalisedEvents.get(`${event.packetID}`)
 		}
 
-		this.debug(`Searching by timestamp ${event.timestamp}`)
+		this.debug(`Searching by timestamp ${event.timestamp} and ability ID ${event.ability.guid}`)
 		// No packetID set - match based on timestamps
 		const possibleRelatedEvents = Array.from(this._normalisedEvents.values())
 			.filter(normalisedEvent =>
+				event.type.includes(normalisedEvent.type.replace('normalised', '')) &&
 				event.ability.guid === normalisedEvent.ability.guid &&
 				event.sourceID === normalisedEvent.sourceID &&
 				normalisedEvent.timestamp <= event.timestamp &&

@@ -176,6 +176,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003005.png',
 		onGcd: false,
 		cooldown: 30,
+		charges: 3,
 	},
 
 	HYPERCHARGE: {
@@ -192,6 +193,7 @@ export const MCH = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003017.png',
 		onGcd: false,
 		cooldown: 30,
+		charges: 3,
 	},
 
 	BARREL_STABILIZER: {

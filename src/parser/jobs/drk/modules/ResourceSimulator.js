@@ -119,15 +119,15 @@ export default class Resources extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook(['aoedamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
-		// Hook cast for Living Shadow, as it doesn't directly deal damage so doesn't have an aoedamage event
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.LIVING_SHADOW.id}, this._onEvent)
+		this.addEventHook(['normaliseddamage', 'combo'], {by: 'player', abilityId: this._resourceEvents}, this._onEvent)
+		// Hook cast for Living Shadow, as it doesn't directly deal damage so doesn't have a damage event
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.LIVING_SHADOW.id}, this._onEvent)
 		// Hook cast for TBN application
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.THE_BLACKEST_NIGHT.id}, this._onCastBlackestNight)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
-		this.addHook('death', {by: 'player'}, this._onDeath)
-		this.addHook('raise', {by: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.THE_BLACKEST_NIGHT.id}, this._onCastBlackestNight)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.BLACKEST_NIGHT.id}, this._onRemoveBlackestNight)
+		this.addEventHook('death', {by: 'player'}, this._onDeath)
+		this.addEventHook('raise', {by: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// -----

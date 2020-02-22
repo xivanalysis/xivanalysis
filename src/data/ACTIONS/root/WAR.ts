@@ -143,6 +143,7 @@ export const WAR = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002555.png',
 		cooldown: 60,
 		onGcd: false,
+		charges: 2,
 		statusesApplied: ['NASCENT_CHAOS'],
 	},
 

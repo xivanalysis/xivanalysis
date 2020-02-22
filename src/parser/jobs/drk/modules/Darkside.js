@@ -28,10 +28,10 @@ export default class Darkside extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('aoedamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('raise', {to: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('raise', {to: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_updateDarkside(event) {

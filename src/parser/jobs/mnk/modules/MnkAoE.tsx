@@ -1,11 +1,10 @@
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-
 import {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import {AoeAbility, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 export default class MnkAoE extends AoEUsages {
 	static handle = 'mnkaoe'
@@ -39,7 +38,7 @@ export default class MnkAoE extends AoEUsages {
 		},
 	]
 
-	protected adjustMinTargets(event: AoeEvent, minTargets: number): number {
+	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
 		// How in the fuck did we even get here tbh
