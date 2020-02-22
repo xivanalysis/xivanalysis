@@ -38,8 +38,6 @@ const BAD_GCD_SEVERITY = {
 export default class DWT extends Module {
 	static handle = 'dwt'
 	static dependencies = [
-		// Ensure AoE runs cleanup before us
-		'aoe', // eslint-disable-line @xivanalysis/no-unused-dependencies
 		'castTime',
 		'gauge',
 		'suggestions',
