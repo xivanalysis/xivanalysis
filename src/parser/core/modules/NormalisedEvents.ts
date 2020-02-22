@@ -1,5 +1,4 @@
 import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent, isDamageEvent, isHealEvent, isRemoveBuffEvent} from 'fflogs'
-import {SortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
 
@@ -125,7 +124,8 @@ export class NormalisedEvents extends Module {
 	normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
 
-		return SortEvents(events.concat(Array.from(this._normalisedEvents.values())))
+		// NOTE: This module relies on EventOrder to sort the normalised events into the array in the correct order.
+		return events.concat(Array.from(this._normalisedEvents.values()))
 	}
 
 	private normaliseEvent = (event: Event) => {

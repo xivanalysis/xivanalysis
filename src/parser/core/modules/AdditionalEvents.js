@@ -1,4 +1,3 @@
-import {SortEvents} from 'parser/core/EventSorting'
 import {getFflogsEvents} from 'api'
 import Module from 'parser/core/Module'
 import {isDefined} from 'utilities'
@@ -74,9 +73,9 @@ export default class AdditionalEvents extends Module {
 			{filter},
 		)
 
-		// Add them onto the end, then sort. Using stable to ensure order is kept, as it can be sensitive sometimes.
+		// Add them onto the end, and we're done.
+		// NOTE: This module relies on EventOrder to sort the additional events into the array in the correct order.
 		events.push(...newEvents)
-
-		return SortEvents(events)
+		return events
 	}
 }
