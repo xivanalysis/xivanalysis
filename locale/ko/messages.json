@@ -364,7 +364,7 @@
   "drg.buffs.checklist.description": "<0/>는 피해량을 10% 증가시키며 항상 켜져 있어야 합니다.",
   "drg.buffs.checklist.name": "항상 {0}가 유지되도록 하십시오.",
   "drg.buffs.checklist.requirement.name": "적용시간 <0/>",
-  "drg.buffs.gcd-count": "글쿨기 사용표",
+  "drg.buffs.gcd-count": "글쿨기",
   "drg.buffs.note.partial": "쪼개진 구간",
   "drg.buffs.notes": "노트",
   "drg.buffs.suggestions.bad-dss.content": "<0/>을 <1/> 혹은 <2/> 직후 사용하는것을 피하여 딜을 최대한 늘리십시오.",
