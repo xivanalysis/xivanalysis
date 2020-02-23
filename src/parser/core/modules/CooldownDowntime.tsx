@@ -185,6 +185,7 @@ export abstract class CooldownDowntime extends Module {
 		const step = gRep.cooldown * 1000 + ((maxCharges > 1) ? 0 : (group.allowedAverageDowntime || this.defaultAllowedAverageDowntime))
 
 		const gResets = this.resets.get(group) || []
+		const gUsages = (this.usages.get(group) || [])
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
@@ -193,10 +194,26 @@ export abstract class CooldownDowntime extends Module {
 		let charges = maxCharges
 		let count = 0
 		const expectedFirstUseTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
-		const actualFirstUseTime = (this.usages.get(group) || [])[0]
+		const actualFirstUseTime = gUsages[0]
 
 		let currentTime = expectedFirstUseTime
-		if (actualFirstUseTime) {
+		if ((group.firstUseOffset || 0) < 0 && maxCharges === 1) {
+			// check for pre-fight usages, which cause synthesized usage events
+			// that will have timestamps that don't accurartely indicated when
+			// exactly they were used pre-fight
+			const actualSecondUseTime = gUsages[1]
+			if (actualSecondUseTime && (actualSecondUseTime.timestamp - actualFirstUseTime.timestamp) < gRep.cooldown * 1000) {
+				this.debug(`Assumed first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp - gRep.cooldown * 1000)}`)
+				this.debug(`Actual second use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualSecondUseTime.timestamp)}`)
+				count += 1 // add in the pre-fight usage
+				currentTime = actualSecondUseTime.timestamp
+			} else if (actualFirstUseTime) {
+				// If the actual second usage isn't early enough to suggest an actual pre-fight usage, follow normal logic.
+				// Start at the earlier of the actual first use or the expected first use
+				this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualFirstUseTime.timestamp)}`)
+				currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
+			}
+		} else if (actualFirstUseTime) {
 			// Start at the earlier of the actual first use or the expected first use
 			this.debug(`Actual first use of skill ${gRep.name} at ${this.parser.formatTimestamp(actualFirstUseTime.timestamp)}`)
 			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
