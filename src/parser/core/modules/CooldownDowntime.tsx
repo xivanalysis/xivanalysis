@@ -186,6 +186,9 @@ export abstract class CooldownDowntime extends Module {
 
 		const gResets = this.resets.get(group) || []
 		const gUsages = (this.usages.get(group) || [])
+		const dtUsages = gUsages
+						.filter(u => this.downtime.isDowntime(u.timestamp))
+						.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
@@ -267,7 +270,19 @@ export abstract class CooldownDowntime extends Module {
 			if (this.downtime.isDowntime(currentTime)) {
 				const window = this.downtime.getDowntimeWindows(currentTime)[0]
 				this.debug(`Downtime detected at ${this.parser.formatTimestamp(currentTime)} in window from ${this.parser.formatTimestamp(window.start)} to ${this.parser.formatTimestamp(window.end)}`)
-				currentTime = window.end
+
+				const matchingDtUsage = dtUsages.find(uw => uw.end === window.end)
+				if (matchingDtUsage === undefined) {
+					currentTime = window.end
+				} else {
+					// remove this usage from the list to prevent an infinite loop
+					// if the skill comes back off cooldown during the same downtime.
+					dtUsages.splice(dtUsages.indexOf(matchingDtUsage), 1)
+
+					this.debug(`Usage detected during downtime at ${this.parser.formatTimestamp(matchingDtUsage.start)}.`)
+					currentTime = matchingDtUsage.start
+				}
+
 				// TODO: time after window end before usage.  should it just be first use offset? depends on what else was delayed and state in rotation
 			}
 		}
