@@ -148,7 +148,10 @@ export abstract class CooldownDowntime extends Module {
 		for (const cdGroup of this.trackedCds) {
 			const expected = this.calculateMaxUsages(cdGroup)
 			const actual = (this.usages.get(cdGroup) || []).length || 0
-			const percent = actual / expected * 100
+			let percent = actual / expected * 100
+			if (process.env.NODE_ENV === 'production') {
+				percent = (percent < 100) ? percent : 100
+			}
 			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>
 				{(ix > 0 ? ', ' : '')}
 				<ActionLink {...this.data.getAction(val.id)} />
