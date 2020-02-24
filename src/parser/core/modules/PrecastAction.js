@@ -10,7 +10,7 @@ const CAST_EVENT_TYPES = [
 export default class PrecastAction extends Module {
 	static handle = 'precastAction'
 	static dependencies = [
-		'fflogsEvents',
+		'normalisedEvents', // eslint-disable-line @xivanalysis/no-unused-dependencies
 	]
 
 	normalise(events) {
@@ -26,7 +26,7 @@ export default class PrecastAction extends Module {
 			if (CAST_EVENT_TYPES.includes(event.type)) { break }
 
 			// If we've got to here and it's a damage event, we need to fab cast events
-			if (event.type !== this.fflogsEvents.damageEventName) { continue }
+			if (event.type !== 'normaliseddamage') { continue }
 
 			// TODO: Is it worth fabricating a begincast?
 			events.splice(0, 0, {

@@ -81,14 +81,14 @@ export default class Ninki extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: NINKI_GCDS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
-		this.addHook('combo', {by: 'player', abilityId: NINKI_COMBOS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
-		this.addHook('cast', {by: 'player', abilityId: NINKI_OGCDS}, event => this._addNinki(event, OGCD_NINKI_GAIN[event.ability.guid]))
-		this.addHook('cast', {by: 'pet'}, event => this._addNinki(event, BUNSHIN_NINKI_GAIN))
-		this.addHook('cast', {by: 'player', abilityId: NINKI_SPENDERS}, this._onSpenderCast)
-		this.addHook('aoedamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this._onHellfrogAoe)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_GCDS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
+		this.addEventHook('combo', {by: 'player', abilityId: NINKI_COMBOS}, event => this._addNinki(event, GCD_NINKI_GAIN[event.ability.guid]))
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_OGCDS}, event => this._addNinki(event, OGCD_NINKI_GAIN[event.ability.guid]))
+		this.addEventHook('cast', {by: 'pet'}, event => this._addNinki(event, BUNSHIN_NINKI_GAIN))
+		this.addEventHook('cast', {by: 'player', abilityId: NINKI_SPENDERS}, this._onSpenderCast)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.HELLFROG_MEDIUM.id}, this._onHellfrogAoe)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 
 	}
 
@@ -111,7 +111,7 @@ export default class Ninki extends Module {
 	}
 
 	_onHellfrogAoe(event) {
-		if (event.hits.length === 1) {
+		if (event.hits === 1) {
 			// If we have a Hellfrog AoE event with only one target, it should've been a Bhava instead
 			this._erroneousFrogs++
 		}

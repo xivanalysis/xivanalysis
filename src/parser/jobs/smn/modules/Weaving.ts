@@ -1,14 +1,10 @@
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
-import {dependency} from 'parser/core/Module'
-import CastTime from 'parser/core/modules/CastTime'
 import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 
 const PERMITTED_PHOENIX_WEAVES = 3
 
 export class Weaving extends CoreWeaving {
-	@dependency private castTime!: CastTime
-
 	isBadWeave(weave: WeaveInfo, maxWeaves?: number) {
 		// Permit triple weaves with Firebid Trance because Phoenix will not
 		// trigger a Scarlet Flame for the first skill if it is the last weave

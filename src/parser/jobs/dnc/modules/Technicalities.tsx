@@ -11,8 +11,8 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import Combatants from 'parser/core/modules/Combatants'
+import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
@@ -39,7 +39,7 @@ class TechnicalWindow {
 	start: number
 	end?: number
 
-	rotation: Array<AoeEvent | CastEvent> = []
+	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
 	gcdCount: number = 0
 	trailingGcdEvent?: CastEvent
 
@@ -49,6 +49,7 @@ class TechnicalWindow {
 	poolingProblem: boolean = false
 
 	buffsRemoved: number[] = []
+	playersBuffed: number = 0
 
 	constructor(start: number) {
 		this.start = start
@@ -70,29 +71,42 @@ export default class Technicalities extends Module {
 	private lastDevilmentTimestamp: number = -1
 
 	protected init() {
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
-		this.addHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
+		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.countTechBuffs)
+		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private tryOpenWindow(event: BuffEvent) {
+	private countTechBuffs(event: NormalisedApplyBuffEvent) {
+		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
+		// If it was already open (because another Dancer went first), we'll keep using it
+		const lastWindow: TechnicalWindow | undefined = this.tryOpenWindow(event)
+
+		// Find out how many players we hit with the buff.
+		if (!lastWindow.playersBuffed) {
+			lastWindow.playersBuffed = event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		}
+	}
+
+	private tryOpenWindow(event: BuffEvent | NormalisedApplyBuffEvent): TechnicalWindow {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow) {
 			if (!lastWindow.end) {
-				return
+				return lastWindow
 			}
 			if (lastWindow.end === event.timestamp) {
 				lastWindow.end = undefined
-				return
+				return lastWindow
 			}
 		}
 
 		const newWindow = new TechnicalWindow(event.timestamp)
 		this.history.push(newWindow)
+		return newWindow
 	}
 
 	private tryCloseWindow(event: BuffEvent) {
@@ -253,6 +267,10 @@ export default class Technicalities extends Module {
 						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
 						accessor: 'pooled',
 					},
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
+						accessor: 'buffed',
+					},
 				]}
 				data={this.history.map(window => {
 					return ({
@@ -263,6 +281,7 @@ export default class Technicalities extends Module {
 							notesMap: {
 								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
 								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
+								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
 							},
 						rotation: window.rotation,
 					})

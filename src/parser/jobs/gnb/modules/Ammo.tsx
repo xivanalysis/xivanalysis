@@ -8,10 +8,11 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {ComboEvent} from 'parser/core/modules/Combos'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const ON_CAST_GENERATORS = {
@@ -63,8 +64,8 @@ export default class Ammo extends Module {
 	@dependency private suggestions!: Suggestions
 
 	protected init() {
-		this.addHook('init', this.pushToHistory)
-		this.addHook(
+		this.addEventHook('init', this.pushToHistory)
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -72,7 +73,7 @@ export default class Ammo extends Module {
 			},
 			this.onCastGenerator,
 		)
-		this.addHook(
+		this.addEventHook(
 			'combo',
 			{
 				by: 'player',
@@ -80,7 +81,7 @@ export default class Ammo extends Module {
 			},
 			this.onComboGenerator,
 		)
-		this.addHook(
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -88,14 +89,13 @@ export default class Ammo extends Module {
 			},
 			this.onSpender,
 		)
-		this.addHook('aoedamage', {by: 'player', abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
-		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.FATED_CIRCLE.id}, this.onFatedCircle)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onFatedCircle(event: Event) {
-		if (event.hasOwnProperty('hits') &&
-			(event as any).hits.length < 2) {
+	private onFatedCircle(event: NormalisedDamageEvent) {
+		if (event.hits < 2) {
 			this.erroneousCircles++
 		}
 	}

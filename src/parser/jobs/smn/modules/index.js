@@ -9,6 +9,7 @@ import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
+import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
 
 export default [
@@ -23,5 +24,6 @@ export default [
 	Pets,
 	Ruin2,
 	Ruin4,
+	TriDisaster,
 	Weaving,
 ]

@@ -1,7 +1,6 @@
 import About from './About'
 import AdditionalEvents from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
-import AoE from './AoE'
 import BrokenLog from './BrokenLog'
 import ChangeLog from './ChangeLog'
 import CastTime from './CastTime'
@@ -13,10 +12,11 @@ import {Data} from './Data'
 import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
-import {FFLogsEventNormaliser} from './FFLogsEventNormaliser'
+import {EntityStatuses} from './EntityStatuses'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import Invulnerability from './Invulnerability'
+import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
 import RaidBuffs from './RaidBuffs'
@@ -32,7 +32,6 @@ export default [
 	About,
 	AdditionalEvents,
 	AlwaysBeCasting,
-	AoE,
 	BrokenLog,
 	ChangeLog,
 	CastTime,
@@ -44,10 +43,11 @@ export default [
 	Death,
 	Downtime,
 	Enemies,
-	FFLogsEventNormaliser,
+	EntityStatuses,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,
+	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
 	RaidBuffs,

@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Table} from 'semantic-ui-react'
+import {Accordion, Table} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -9,6 +9,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {getDataBy} from 'data'
 
 // At the start of the fight, the standard opener currently clips
 // the first tri-disaster so that the second one can benefit from
@@ -34,30 +35,62 @@ export default class DoTs extends Module {
 	static dependencies = [
 		'checklist',
 		'enemies',
+		'entityStatuses',
 		'gauge',
 		'invuln',
 		'suggestions',
 	]
 
+	_lastBioCast = undefined
+	_lastMiasmaCast = undefined
 	_lastApplication = {}
 	_clip = {
 		[STATUSES.BIO_III.id]: 0,
 		[STATUSES.MIASMA_III.id]: 0,
 	}
-	_application = {
-		[STATUSES.BIO_III.id]: [],
-		[STATUSES.MIASMA_III.id]: [],
-	}
+	_application = {}
 
 	constructor(...args) {
 		super(...args)
 
-		const filter = {
+		const castFilter = {
+			by: 'player',
+			abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id, ACTIONS.TRI_DISASTER.id, ACTIONS.BANE.id],
+		}
+		this.addEventHook('cast', castFilter, this._onDotCast)
+		const statusFilter = {
 			by: 'player',
 			abilityId: [STATUSES.BIO_III.id, STATUSES.MIASMA_III.id],
 		}
-		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
+		this.addEventHook('complete', this._onComplete)
+	}
+
+	_createTargetApplicationList() {
+		return {
+			[STATUSES.BIO_III.id]: [],
+			[STATUSES.MIASMA_III.id]: [],
+		}
+	}
+
+	_pushApplication(targetKey, statusId, event, clip) {
+		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
+		const source = (statusId === STATUSES.BIO_III.id) ? this._lastBioCast : this._lastMiasmaCast
+		target[statusId].push({event, clip, source})
+	}
+
+	_onDotCast(event) {
+		// Casts are tracked separately due to the chance for the Miasma status to
+		// not be applied before the Bio cast.  Without separate tracking, you can
+		// end up with "Miasma III DoT applied by Bio III"
+		if (event.ability.guid === ACTIONS.BIO_III.id) {
+			this._lastBioCast = event.ability.guid
+		} else if (event.ability.guid === ACTIONS.MIASMA_III.id) {
+			this._lastMiasmaCast = event.ability.guid
+		} else {
+			this._lastBioCast = event.ability.guid
+			this._lastMiasmaCast = event.ability.guid
+		}
 	}
 
 	_onDotApply(event) {
@@ -75,7 +108,7 @@ export default class DoTs extends Module {
 		) {
 			lastApplication[statusId] = event.timestamp
 			//save the application for later use in the output
-			this._application[statusId].push({event: event, clip: null})
+			this._pushApplication(applicationKey, statusId, event, null)
 			return
 		}
 
@@ -94,7 +127,7 @@ export default class DoTs extends Module {
 		this._clip[statusId] += clip
 
 		//save the application for later use in the output
-		this._application[statusId].push({event: event, clip: clip})
+		this._pushApplication(applicationKey, statusId, event, clip)
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -146,57 +179,63 @@ export default class DoTs extends Module {
 	}
 
 	getDotUptimePercent(statusId) {
-		const statusUptime = this.enemies.getStatusUptime(statusId)
+		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
 	}
 
-	output() {
+	_createTargetStatusTable(target) {
 		let totalBioClip = 0
 		let totalMiasmaClip = 0
 		return <Table collapsing unstackable style={{border: 'none'}}>
 			<Table.Body>
 				<Table.Row>
-					<Table.Cell style={{padding: '0 1em 0 0'}}>
+					<Table.Cell style={{padding: '0 1em 0 0', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
 									<Table.HeaderCell><ActionLink {...ACTIONS.MIASMA_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
-								{this._application[STATUSES.MIASMA_III.id].map(
+								{target[STATUSES.MIASMA_III.id].map(
 									(event) => {
 										totalMiasmaClip += event.clip
+										const action = getDataBy(ACTIONS, 'id', event.source)
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
 											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
 											<Table.Cell>{totalMiasmaClip ? this.parser.formatDuration(totalMiasmaClip) : '-'}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
 						</Table>
 					</Table.Cell>
-					<Table.Cell style={{padding: '0 0 0 1em'}}>
+					<Table.Cell style={{padding: '0 0 0 1em', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
 									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.clip">Clip</Trans></Table.HeaderCell>
 									<Table.HeaderCell><Trans id="smn.dots.total-clip">Total Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
-								{this._application[STATUSES.BIO_III.id].map(
+								{target[STATUSES.BIO_III.id].map(
 									(event) => {
 										totalBioClip += event.clip
+										const action = getDataBy(ACTIONS, 'id', event.source)
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
 											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
 											<Table.Cell>{totalBioClip ? this.parser.formatDuration(totalBioClip) : '-'}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
@@ -205,5 +244,35 @@ export default class DoTs extends Module {
 				</Table.Row>
 			</Table.Body>
 		</Table>
+	}
+
+	output() {
+		const numTargets = Object.keys(this._application).length
+
+		if (numTargets === 0) { return null }
+
+		if (numTargets > 1) {
+			const panels = Object.keys(this._application).map(applicationKey => {
+				const targetId = applicationKey.split('|')[0]
+				const target = this.enemies.getEntity(targetId)
+				return {
+					key: applicationKey,
+					title: {
+						content: <>{target.name}</>,
+					},
+					content: {
+						content: this._createTargetStatusTable(this._application[applicationKey]),
+					},
+				}
+			})
+			return <Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		}
+
+		return this._createTargetStatusTable(Object.values(this._application)[0])
 	}
 }

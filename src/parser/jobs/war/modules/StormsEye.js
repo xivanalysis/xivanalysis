@@ -16,6 +16,7 @@ export default class StormsEye extends Module {
 	static dependencies = [
 		'checklist',
 		'combatants',
+		'entityStatuses',
 		'invuln',
 		'suggestions',
 	]
@@ -80,7 +81,7 @@ export default class StormsEye extends Module {
 
 	//
 	getUptimePercent() {
-		const statusUptime = this.combatants.getStatusUptime(STATUSES.STORMS_EYE.id, this.parser.player.id)
+		const statusUptime = this.entityStatuses.getStatusUptime(STATUSES.STORMS_EYE.id, this.combatants.getEntities())
 		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightUptime) * 100

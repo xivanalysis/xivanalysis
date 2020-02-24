@@ -1,9 +1,9 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import Combatants from 'parser/core/modules/Combatants'
 import CoreCombos from 'parser/core/modules/Combos'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import DirtyDancing from './DirtyDancing'
 
 const GCD_TIMEOUT_MILLIS = 15000
@@ -17,7 +17,7 @@ export default class Combos extends CoreCombos {
 
 	// Override check for allowable breaks. If two dances were started during the initial context's GCD timeout window,
 	// (ie, both Standard and Technical were danced), then we'll allow it
-	isAllowableComboBreak(event: AoeEvent, context: AoeEvent[]): boolean {
+	isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
 		// Shouldn't ever be the case, but protect against weird shit
 		if (context.length !== 1) {
 			return false
