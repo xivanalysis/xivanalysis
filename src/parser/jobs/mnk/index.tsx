@@ -40,6 +40,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2020-02-25'),
+			Changes: () => <>
+				Fix Fist chart and Bootshine incorrectly penalising post-PB crits.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
 			date: new Date('2019-11-20'),
 			Changes: () => <>
 				Mark MNK supported for Shadowbringers.
