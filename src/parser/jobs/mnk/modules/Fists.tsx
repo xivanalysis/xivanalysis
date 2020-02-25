@@ -248,7 +248,6 @@ export default class Fists extends Module {
 			return 'Fistless'
 		}
 
-		// If this fucking errors...
 		const status = this.data.getStatus(fistId)
 		return status.name
 	}
