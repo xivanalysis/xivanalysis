@@ -1,12 +1,12 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import Invulnerability from 'parser/core/modules/Invulnerability'
@@ -32,8 +32,8 @@ class TwinState {
 	// Mainly here in case we care about oGCDs being unbuffed later
 	public get gcds(): number {
 		return this.casts.filter(event => {
-			const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
-			return action && action.onGcd
+			const action = this.data.getAction(event.ability.guid)
+			return action?.onGcd
 		}).length
 	}
 }
@@ -43,6 +43,7 @@ export default class TwinSnakes extends Module {
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 	@dependency private enemies!: Enemies
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
@@ -74,10 +75,10 @@ export default class TwinSnakes extends Module {
 	}
 
 	private onCast(event: CastEvent): void {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+		const action = this.data.getAction(event.ability.guid)
 
 		// Only include GCDs
-		if (!action || !action.onGcd) {
+		if (!action?.onGcd) {
 			return
 		}
 
@@ -85,7 +86,7 @@ export default class TwinSnakes extends Module {
 		// Ignore TS itself, plus Form Shift and maybe 6SS?
 		// We use gcdsSinceTS because we don't want to double count FPF
 		case (ACTIONS.TWIN_SNAKES.id):
-			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
+			if (!this.twinSnake?.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
 				this.earlySnakes++
 			}
 
@@ -101,7 +102,7 @@ export default class TwinSnakes extends Module {
 
 		// Verify the window isn't closed, and count the GCDs
 		default:
-			if (this.twinSnake && !this.twinSnake.end) {
+			if (!this.twinSnake?.end) {
 				this.twinSnake.casts.push(event)
 			}
 
@@ -112,7 +113,7 @@ export default class TwinSnakes extends Module {
 	// Only happens from TS itself
 	// This might be better checking if the GCD before it was buffed but ehh
 	private onGain(event: BuffEvent): void {
-		if (this.twinSnake && this.twinSnake.end) {
+		if (this.twinSnake?.end) {
 			const unbuffedGcds = this.gcdsSinceTS - this.twinSnake.gcds
 			const unbuffedTime = event.timestamp - this.twinSnake.end
 			// TODO: some kind of downtime check, maybe a warning for non-GL4

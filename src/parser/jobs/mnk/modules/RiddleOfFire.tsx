@@ -4,11 +4,11 @@ import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 
@@ -52,8 +52,8 @@ class Riddle {
 
 	get gcds() {
 		return this.casts.filter(event => {
-			const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
-			return action && action.onGcd
+			const action = this.data.getAction(event.ability.guid)
+			return action?.onGcd
 		}).length
 	}
 
@@ -75,6 +75,7 @@ export default class RiddleOfFire extends Module {
 	static title = t('mnk.rof.title')`Riddle of Fire`
 	static displayOrder = DISPLAY_ORDER.RIDDLE_OF_FIRE
 
+	@dependency private data!: Data
 	@dependency private fists!: Fists
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -89,7 +90,7 @@ export default class RiddleOfFire extends Module {
 	}
 
 	onCast(event: CastEvent): void {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // should be Action type
+		const action = this.data.getAction(event.ability.guid)
 
 		if (!action) {
 			return
@@ -104,7 +105,7 @@ export default class RiddleOfFire extends Module {
 		}
 
 		// MNK mentors want the oGCDs :angryeyes:
-		if (this.riddle && this.riddle.active) {
+		if (this.riddle?.active) {
 			this.riddle.casts.push(event)
 
 			if (action.onGcd) {
@@ -120,7 +121,7 @@ export default class RiddleOfFire extends Module {
 
 	private onComplete(): void {
 		// Close up if RoF was active at the end of the fight
-		if (this.riddle && this.riddle.active) {
+		if (this.riddle?.active) {
 			this.stopAndSave()
 		}
 
@@ -185,7 +186,7 @@ export default class RiddleOfFire extends Module {
 	}
 
 	private stopAndSave(endTime: number = this.parser.currentTimestamp): void {
-		if (this.riddle && this.riddle.active) {
+		if (this.riddle?.active) {
 			// Check for any GCDs spent outside of Fists of Wind
 			// If the first RoF GCD is out of FoW (should be Snap/Demo/RB), they'll lose 1 GCD so we set 10
 			// If more than 1 GCD is out of FoW, they'll lose 2 so we set 9

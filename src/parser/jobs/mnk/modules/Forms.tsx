@@ -2,13 +2,13 @@ import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
@@ -31,6 +31,7 @@ export default class Forms extends Module {
 	static handle = 'forms'
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 	@dependency private downtime!: Downtime
 	@dependency private suggestions!: Suggestions
 
@@ -51,7 +52,7 @@ export default class Forms extends Module {
 	}
 
 	private onCast(event: CastEvent): void {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+		const action = this.data.getAction(event.ability.guid)
 
 		if (!action) {
 			return
@@ -64,9 +65,9 @@ export default class Forms extends Module {
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
 			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
-			const untargetable = this.lastFormChanged !== undefined ?
-				this.downtime.getDowntime(this.lastFormChanged, event.timestamp) :
-				0
+			const untargetable = this.lastFormChanged != null
+				? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
+				: 0
 
 			if (action === ACTIONS.FORM_SHIFT.id) {
 				// Only ignore Form Shift if we're in downtime
@@ -126,7 +127,7 @@ export default class Forms extends Module {
 			},
 			value: this.formless,
 			why: <Trans id="mnk.forms.suggestions.formless.why">
-				<Plural value={this.formless} one="# combo-starter was" other="# combo-starters were" />  used Formlessly, cancelling form bonus effects.
+				<Plural value={this.formless} one="# combo-starter was" other="# combo-starters were" /> used Formlessly, cancelling form bonus effects.
 			</Trans>,
 		}))
 

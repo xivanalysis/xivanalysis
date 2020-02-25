@@ -4,7 +4,6 @@ import _ from 'lodash'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
@@ -12,6 +11,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
@@ -80,6 +80,7 @@ export default class Fists extends Module {
 	static displayOrder = DISPLAY_ORDER.FISTS
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 	@dependency private gauge!: Gauge
 	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
@@ -100,16 +101,11 @@ export default class Fists extends Module {
 	}
 
 	// Public API to get the Fist in use at a given time.
-	public getFist(timestamp: number): Fist {
-		return this.fistory.filter(fist => fist.start <= timestamp
-			&& (typeof fist.end === 'undefined' // sanity check
-			|| fist.end >= timestamp))[0]
-	}
+	public getFist = (timestamp: number): Fist =>
+		this.fistory.filter(fist => fist.start <= timestamp && (fist.end ?? Infinity) >= timestamp)[0]
 
 	// Public API to get the currently active Fist.
-	public getActiveFist(): Fist {
-		return this.activeFist
-	}
+	public getActiveFist = (): Fist => this.activeFist
 
 	private handleFistChange(fistId: number): void {
 		// Initial state correction, set it and dip out
@@ -127,10 +123,10 @@ export default class Fists extends Module {
 	}
 
 	private onCast(event: CastEvent): void {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO // should be Action type
+		const action = this.data.getAction(event.ability.guid)
 
 		// If we don't have a valid action or it's not a GCD, skip
-		if (!action || !action.onGcd) {
+		if (!action?.onGcd) {
 			return
 		}
 
@@ -143,9 +139,9 @@ export default class Fists extends Module {
 	}
 
 	private onGain(event: BuffEvent): void {
-		const action = getDataBy(STATUSES, 'id', event.ability.guid) as TODO // should be Action type
+		const status = this.data.getStatus(event.ability.guid)
 
-		if (!action) {
+		if (!status) {
 			return
 		}
 
@@ -223,7 +219,7 @@ export default class Fists extends Module {
 					this.getFistName(id),
 					this.parser.formatDuration(value),
 					this.getFistUptimePercent(id) + '%',
-				] as TODO,
+				] as const,
 			}
 		}).filter(datum => datum.value > 0)
 
@@ -253,7 +249,7 @@ export default class Fists extends Module {
 		}
 
 		// If this fucking errors...
-		const status = getDataBy(STATUSES, 'id', fistId) as TODO // this should be a Status or Buff?
+		const status = this.data.getStatus(fistId)
 		return status.name
 	}
 }

@@ -1,15 +1,16 @@
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
 import {AoeAbility, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 export default class MnkAoE extends AoEUsages {
 	static handle = 'mnkaoe'
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 
 	// You awake to find yourself enlightened to the true power of AoE
 	suggestionIcon = ACTIONS.ENLIGHTENMENT.icon
@@ -39,7 +40,7 @@ export default class MnkAoE extends AoEUsages {
 	]
 
 	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+		const action = this.data.getAction(event.ability.guid)
 
 		// How in the fuck did we even get here tbh
 		if (!action) {
