@@ -157,8 +157,7 @@ export default class RiddleOfFire extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.ELIXIR_FIELD.icon,
 			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use 1 <ActionLink {...ACTIONS.ELIXIR_FIELD} /> and at least 1 <ActionLink {...ACTIONS.SHOULDER_TACKLE} />
-				during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
+				Aim to use 1 <ActionLink {...ACTIONS.ELIXIR_FIELD} /> and at least 1 <ActionLink {...ACTIONS.SHOULDER_TACKLE} /> during each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} />.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedExpectedOgcds,

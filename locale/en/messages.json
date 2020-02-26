@@ -523,7 +523,7 @@
   "mnk.roe.suggestions.missed.why": "<0/> was used {missedEarth, plural, one {# time} other {# times}} without triggering <1/>.",
   "mnk.rof.suggestions.gcd.content": "Aim to hit {0} GCDs under GL3, or {EXPECTED_GCDS} GCDs under GL4, during each <0/> window.",
   "mnk.rof.suggestions.gcd.why": "{droppedGcds, plural, one {# possible GCD was} other {# possible GCDs were}} missed during <0/>.",
-  "mnk.rof.suggestions.ogcd.content": "Aim to use 1 <0/> and at least 1 <1/>during each <2/>.",
+  "mnk.rof.suggestions.ogcd.content": "Aim to use 1 <0/> and at least 1 <1/> during each <2/>.",
   "mnk.rof.suggestions.ogcd.why": "{droppedExpectedOgcds, plural, one {# expected oGCD was} other {# expected oGCDs were}} dropped during <0/>.",
   "mnk.rof.suggestions.tackle.content": "Try to use both charges of <0/> during <1/>, unless you need to hold a charge for strategic purposes.",
   "mnk.rof.suggestions.tackle.why": "{riddlesWithOneTackle, plural, one {# use} other {# uses}} of <0/> contained only one use of <1/>.",
