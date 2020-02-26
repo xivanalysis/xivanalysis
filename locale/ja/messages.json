@@ -323,7 +323,7 @@
   "mnk.fists.suggestions.stanceless.why": "",
   "mnk.fists.title": "構え",
   "mnk.forms.suggestions.dropped.content": "",
-  "mnk.forms.suggestions.dropped.why": "",
+  "mnk.forms.suggestions.dropped.why": "型の効果時間が切れた回数：{0, plural, one {#回} other {#回}}。",
   "mnk.forms.suggestions.formless.content": "",
   "mnk.forms.suggestions.formless.why": "",
   "mnk.forms.suggestions.perfectbalance.content": "",
