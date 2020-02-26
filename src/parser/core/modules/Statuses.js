@@ -1,8 +1,5 @@
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
-import {getDataBy} from 'data'
 import React from 'react'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
@@ -11,6 +8,7 @@ const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
+		'data',
 		'timeline',
 		'cooldowns',
 		'gcd',
@@ -43,14 +41,12 @@ export default class Statuses extends Module {
 		})
 
 		// Map statuses to actions
-		Object.values(ACTIONS).forEach(ac => {
-			if (ac.statusesApplied) {
-				ac.statusesApplied.forEach(st => {
-					if (st) {
-						this._statusToActionMap[st.id] = ac
-					}
-				})
-			}
+		Object.values(this.data.actions).forEach(action => {
+			if (!action.statusesApplied) { return }
+			action.statusesApplied.forEach(statusKey => {
+				const status = this.data.statuses[statusKey]
+				this._statusToActionMap[status.id] = action
+			})
 		})
 	}
 
@@ -81,7 +77,7 @@ export default class Statuses extends Module {
 	}
 
 	_endPrevStatus(event) {
-		const status = getDataBy(STATUSES, 'id', event.ability.guid)
+		const status = this.data.getStatus(event.ability.guid)
 
 		if (!status) {
 			return
@@ -97,7 +93,7 @@ export default class Statuses extends Module {
 	}
 
 	_addStatus(event) {
-		const status = getDataBy(STATUSES, 'id', event.ability.guid)
+		const status = this.data.getStatus(event.ability.guid)
 
 		if (!status) {
 			return

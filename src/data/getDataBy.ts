@@ -16,6 +16,8 @@ You didn't see the anys.
 */
 const cache = new WeakMap<object, Map<any, Map<any, any>>>()
 
+type FlattenArray<T> = T extends Array<infer I> ? I : T
+
 export function getDataBy<
 	Data extends Record<string, object>,
 	Value extends Data[keyof Data],
@@ -23,7 +25,7 @@ export function getDataBy<
 >(
 	data: Data,
 	by: Key,
-	value: Value[Key],
+	value: FlattenArray<Value[Key]>,
 ): Value | undefined {
 	// Sanity check in case someone is using this from JS and misspelled a key
 	const dataKeys = Object.keys(data)

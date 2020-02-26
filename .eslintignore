@@ -4,3 +4,4 @@ scripts
 locale
 preset-react-app-custom
 build
+**/*.ts

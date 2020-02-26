@@ -1,78 +1,56 @@
-import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
-import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {Event} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
-import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import STATUSES from 'data/STATUSES'
+import {dependency} from 'parser/core/Module'
+import {AoeAbility, AoEUsages} from 'parser/core/modules/AoEUsages'
+import Combatants from 'parser/core/modules/Combatants'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
-// Assuming in correct forms
-const AOTD_MIN_TARGETS = 3 // this is kinda also 4 but only under Leaden Fist
-const ROCKBREAKER_MIN_TARGETS = 2
-
-export default class MnkAoE extends Module {
+export default class MnkAoE extends AoEUsages {
 	static handle = 'mnkaoe'
 
-	@dependency private suggestions!: Suggestions
+	@dependency private combatants!: Combatants
 
-	private badAotDs: Event[] = []
-	private badRocks: Event[] = []
+	// You awake to find yourself enlightened to the true power of AoE
+	suggestionIcon = ACTIONS.ENLIGHTENMENT.icon
 
-	protected init(): void {
-		this.addHook('aoedamage', {
-			by: 'player',
-			abilityId: ACTIONS.ARM_OF_THE_DESTROYER.id,
-		}, this.onAotDDamage)
+	// Assuming user is in the correct Form
+	trackedAbilities: AoeAbility[] = [
+		{
+			aoeAbility: ACTIONS.ARM_OF_THE_DESTROYER,
+			stAbilities: [ACTIONS.BOOTSHINE, ACTIONS.DRAGON_KICK],
+			minTargets: 3,
+		},
+		{
+			aoeAbility: ACTIONS.FOUR_POINT_FURY,
+			stAbilities: [ACTIONS.TRUE_STRIKE, ACTIONS.TWIN_SNAKES],
+			minTargets: 2,
+		},
+		{
+			aoeAbility: ACTIONS.ROCKBREAKER,
+			stAbilities: [ACTIONS.DEMOLISH, ACTIONS.SNAP_PUNCH],
+			minTargets: 2,
+		},
+		{
+			aoeAbility: ACTIONS.ENLIGHTENMENT,
+			stAbilities: [ACTIONS.THE_FORBIDDEN_CHAKRA],
+			minTargets: 2,
+		},
+	]
 
-		this.addHook('aoedamage', {
-			by: 'player',
-			abilityId: ACTIONS.ROCKBREAKER.id,
-		}, this.onRockbreakerDamage)
+	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
+		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
 
-		this.addHook('complete', this.onComplete)
-	}
-
-	// TODO: figure out when player uses this for Silence effect, need to calculate interrupts on target
-	private onAotDDamage(event: AoeEvent): void {
-		if (event.hits.length < AOTD_MIN_TARGETS) {
-			this.badAotDs.push(event)
-		}
-	}
-
-	// TODO: if player is out of melee range and doing a single target RB, note it as minor
-	private onRockbreakerDamage(event: AoeEvent): void {
-		if (event.hits.length < ROCKBREAKER_MIN_TARGETS) {
-			this.badRocks.push(event)
-		}
-	}
-
-	private onComplete(): void {
-		if (this.badAotDs.length >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ARM_OF_THE_DESTROYER.icon,
-				severity: SEVERITY.MEDIUM,
-				content: <Trans id="mnk.aoe.suggestions.aotd.content">
-					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> is only efficient when there are {AOTD_MIN_TARGETS} or more targets.
-				</Trans>,
-				why: <Trans id="mnk.aoe.suggestions.aotd.why">
-					<ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> used on too few targets <Plural value={this.badAotDs.length} one="# time" other="# times" />.
-				</Trans>,
-			}))
+		// How in the fuck did we even get here tbh
+		if (!action) {
+			return minTargets
 		}
 
-		if (this.badRocks.length >= 1) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ROCKBREAKER.icon,
-				severity: SEVERITY.MEDIUM,
-				content: <Trans id="mnk.aoe.suggestions.rockbreaker.content">
-					<ActionLink {...ACTIONS.ROCKBREAKER}/> is only efficient when there are {ROCKBREAKER_MIN_TARGETS} or more targets.
-				</Trans>,
-				why: <Trans id="mnk.aoe.suggestions.rockbreaker.why">
-					<ActionLink {...ACTIONS.ROCKBREAKER}/> used on too few targets <Plural value={this.badRocks.length} one="# time" other="# times" />.
-				</Trans>,
-			}))
+		// If Leaden Fist is up, Boot is extra strong
+		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
+			return minTargets + 1
 		}
+
+		return minTargets
 	}
 }

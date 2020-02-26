@@ -68,7 +68,7 @@ export default class BlmWeaving extends Weaving {
 	isBadWeave(weave, maxWeaves) {
 		if (weave.leadingGcdEvent.ability) {
 			const weaveCount = weave.weaves.filter(
-				event => !this.invuln.isUntargetable('all', event.timestamp)
+				event => !this.invuln.isUntargetable('all', event.timestamp),
 			).length
 
 			//allow a single weave of the OGCD exceptions

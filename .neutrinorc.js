@@ -80,8 +80,10 @@ module.exports = {
 				plugins: [
 					'macros',
 					'lodash',
-					'@lingui/babel-plugin-transform-js',
+					'@lingui/transform-js',
 					'./locale/babel-plugin-transform-react',
+					'@babel/proposal-optional-chaining',
+					'@babel/proposal-nullish-coalescing-operator',
 				],
 			},
 
@@ -204,6 +206,15 @@ module.exports = {
 					.use('tslint')
 						.loader('tslint-loader')
 		},
+
+		// Disable ES modules for images, we have synthetic imports, and use `require` on a bunch to inline code
+		neutrino => neutrino.config.module
+			.rule('image')
+				.use('url')
+					.tap(options => ({
+						...options,
+						esModule: false,
+					})),
 
 		// Copy static assets to the build directory
 		require('@neutrinojs/copy')({

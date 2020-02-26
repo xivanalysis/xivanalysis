@@ -8,71 +8,71 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const DOTON_TICK_TARGET = 6
-const TCJ_DOTON_TICK_TARGET = 7
 const JUSTIFIABLE_DOTON_TICKS = 10
 
 export default class Ninjutsu extends Module {
 	static handle = 'ninjutsu'
 	static dependencies = [
 		'combatants',
-		'downtime',
 		'suggestions',
 	]
 
 	_hyotonCount = 0
 	_rabbitCount = 0
-	_dotonCasts = []
+	_dotonCasts = {
+		current: null,
+		history: [],
+	}
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HYOTON.id}, this._onHyotonCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, this._onRabbitCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.DOTON.id}, this._onDotonCast)
-		this.addHook('aoedamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
-		this.addHook('complete', this._onComplete)
+
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
+		this.addEventHook('complete', this._onComplete)
 	}
 
-	_onHyotonCast() {
-		this._hyotonCount++
-	}
+	_onDotonCast() {
+		this._finishDotonWindow()
 
-	_onRabbitCast(event) {
-		if (!this.downtime.isDowntime(event.timestamp)) {
-			// Don't penalize for Rabbits during downtime - if a boss jumps mid-mudra, it's the most efficient way to get it on CD
-			this._rabbitCount++
-		}
-	}
-
-	_onDotonCast(event) {
-		this._dotonCasts.push({
-			cast: event,
-			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id), // STDs are only okay under TCJ
+		this._dotonCasts.current = {
+			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
 			ticks: [],
-		})
+		}
 	}
 
 	_onDotonDamage(event) {
 		// If there are no casts at all, use the damage event to fabricate one
-		if (this._dotonCasts.length === 0) {
-			this._onDotonCast(event)
+		if (!this._dotonCasts.current) {
+			this._onDotonCast()
 		}
 
-		this._dotonCasts[this._dotonCasts.length - 1].ticks.push(event.hits.length) // Track the number of enemies hit per tick
+		this._dotonCasts.current.ticks.push(event.hits) // Track the number of enemies hit per tick
+	}
+
+	_finishDotonWindow() {
+		if (!this._dotonCasts.current) {
+			return
+		}
+
+		this._dotonCasts.history.push(this._dotonCasts.current)
+		this._dotonCasts.current = null
 	}
 
 	_appraiseDotonCasts() {
 		const result = {
-			badTcjs: 0, // TCJ Dotons that fell short of 7 ticks (TCJ Suiton will be more damage)
+			badTcjs: 0, // Single-target TCJ Dotons (do not do this)
 			badAoes: 0, // AoE Dotons that fell short of 6 ticks (Katon will be more damage)
-			badStds: 0, // Single-target regular Dotons (do not do this)
+			badStds: 0, // Single-target regular Dotons (also do not do this)
 		}
 
-		this._dotonCasts.forEach(cast => {
+		this._dotonCasts.history.forEach(cast => {
 			if (cast.tcj && cast.ticks.every(tick => tick === 1)) {
-				// If it's a fully single-target TCJ that doesn't land every Doton tick, flag it
-				if (cast.ticks.length < TCJ_DOTON_TICK_TARGET) {
-					result.badTcjs++
-				}
+				// If it's a fully single-target TCJ, flag it
+				result.badTcjs++
 			} else if (cast.ticks.every(tick => tick > 1)) {
 				// If it's a fully multi-target Doton that misses at least 2 ticks, flag it
 				if (cast.ticks.length < DOTON_TICK_TARGET) {
@@ -89,6 +89,8 @@ export default class Ninjutsu extends Module {
 	}
 
 	_onComplete() {
+		this._finishDotonWindow()
+
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HYOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.hyoton.content">
@@ -123,15 +125,15 @@ export default class Ninjutsu extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.tcj-doton.content">
-				Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless at least {TCJ_DOTON_TICK_TARGET} ticks will hit or you're up against multiple targets. On a single target that's about to jump or move, using the <ActionLink {...ACTIONS.SUITON}/> combo will do more damage even if <ActionLink {...ACTIONS.TRICK_ATTACK}/> is on cooldown.
+				Avoid using <ActionLink {...ACTIONS.DOTON}/> under <ActionLink {...ACTIONS.TEN_CHI_JIN}/> unless you're up against multiple targets. On a single target, using the <ActionLink {...ACTIONS.SUITON}/> combo will do equivalent or better damage and keep it aligned with <ActionLink {...ACTIONS.MEISUI}/>.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 			value: badTcjs,
 			why: <Trans id="nin.ninjutsu.suggestions.tcj-doton.why">
-				You cast an unoptimized Doton under Ten Chi Jin <Plural value={badTcjs} one="# time" other="# times"/>.
+				You cast a single-target Doton under Ten Chi Jin <Plural value={badTcjs} one="# time" other="# times"/>.
 			</Trans>,
 		}))
 
@@ -151,9 +153,10 @@ export default class Ninjutsu extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DOTON.icon,
 			content: <Trans id="nin.ninjutsu.suggestions.st-doton.content">
-				Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets outside of <ActionLink {...ACTIONS.TEN_CHI_JIN}/>, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD clipping for no gain.
+				Avoid using <ActionLink {...ACTIONS.DOTON}/> on single targets, as it does less damage than <ActionLink {...ACTIONS.RAITON}/> if any ticks miss and uses more mudras, resulting in more GCD delay for no gain.
 			</Trans>,
 			tiers: {
+				1: SEVERITY.MINOR,
 				2: SEVERITY.MEDIUM,
 				3: SEVERITY.MAJOR,
 			},
