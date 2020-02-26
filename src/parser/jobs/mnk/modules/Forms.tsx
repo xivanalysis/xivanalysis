@@ -168,7 +168,7 @@ export default class Forms extends Module {
 					Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.dropped.why">
-					Form was broken <Plural value={this.droppedForms} one="# time." other="# times." />
+					Form was dropped <Plural value={this.droppedForms} one="# time." other="# times." />
 				</Trans>,
 			}))
 		}

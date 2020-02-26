@@ -508,7 +508,7 @@
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {# GCD} other {# GCDs}} had no Fists buff active.",
   "mnk.fists.title": "Fists",
   "mnk.forms.suggestions.dropped.content": "Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.",
-  "mnk.forms.suggestions.dropped.why": "Form was broken {0, plural, one {# time.} other {# times.}}",
+  "mnk.forms.suggestions.dropped.why": "Form was dropped {0, plural, one {# time.} other {# times.}}",
   "mnk.forms.suggestions.formless.content": "Avoid using <0/> outside of <1/>. The form bonus is only activated in the correct form and <2/> has higher potency when buffed.",
   "mnk.forms.suggestions.formless.why": "{0, plural, one {# combo-starter was} other {# combo-starters were}} used Formlessly, cancelling form bonus effects.",
   "mnk.forms.suggestions.reset.content": "Try not to cancel combos by using <0/>, <1/>, or <2/> mid-rotation.",
