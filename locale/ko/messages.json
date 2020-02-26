@@ -776,7 +776,7 @@
   "smn.dots.checklist.requirement.bio-iii.name": "적용시간 <0/>",
   "smn.dots.checklist.requirement.miasma-iii.name": "적용시간 <0/>",
   "smn.dots.clip": "손실시간",
-  "smn.dots.source": "",
+  "smn.dots.source": "사용자",
   "smn.dots.suggestions.clipping.content": "오프닝 혹은 전투종료 직전을 제외하고 이전에 부여한 도트가 끝나기 전에 갱신하는 것을 피해야합니다. 불필요한 갱신은 버프/디버프로 강화된 도트를 덮어씌우는 위험성과 도트를 하드캐스팅을 하는 빈도를 늘립니다.",
   "smn.dots.suggestions.clipping.why": "도트 데미지를 너무 이르게 갱신하여 {1} 은 {0} 만큼 그리고 {3} 은 {2} 만큼의 지속시간을 낭비하엿습니다.",
   "smn.dots.suggestions.missing_dot_cast.content": "<0/>의 최대 위력을 위해서 반드시 <1/> 그리고 <2/> 둘다 대상에게 적용되어 있는 상태에서 사용하십시오.",
