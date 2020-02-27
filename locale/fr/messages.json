@@ -415,8 +415,6 @@
   "drk.delirium.suggestions.badgcd.content": "GCDs utilisés durant <0/> doivent être limités à <1/> pour des dégâts optimaux (ou <2/> si trois ou plus de cibles sont présentes).",
   "drk.delirium.suggestions.missedgcd.content": "Essayez d'utiliser 5 GCDs à chaque <0/> fenêtre. Si vous ne pouvez pas le faire avec un temps de fonctionnement complet et sans clipper, pensez à ajuster vos rotations pour plus de vitesse de lancement d’habilité.",
   "drk.delirium.title": "Utilisation de delirium de sang",
-  "drk.multihit.suggestions.content": "N'utilisez pas de GCDs multi-cible ou <0/> à moins qu'ils ne puissent atteindre au moins 2 cibles, ou <1/> à moins qu'ils ne puissent atteindre au moins 3 cibles. Les GCD à plusieurs coups sont moins dommageables que les GCD à une seule cible contre une seule cible, et <2/> ou <3/> consomment des ressources qui peuvent être utilisées sur des attaques à une seule cible plus puissantes.",
-  "drk.multihit.suggestions.why": "{lowTargetAttacks}{lowTargetAttacks, plural,one {attaque multi-cible était}other {attaque multi-cible étaient}} utiliser contre trop peu de cible.",
   "drk.resourceanalyzer.blackestnight.content": "Une ou plusieurs applications <0/> n'ont pas pleinement utilisé le bouclier, et n'ont donc pas généré un proc d'art ténébreux pour permettre une utilisation libre de <1/> ou <2/>.",
   "drk.resourceanalyzer.blackestnight.why": "Vous avez raté {0, plural,one {#l'utilisation des arts ténébreux} other {# l'utilisation des arts ténébreux}} à cause des applications Blackest Night qui n'ont pas consommé le bouclier.",
   "drk.resourceanalyzer.title": "Analyseur de Ressource",
