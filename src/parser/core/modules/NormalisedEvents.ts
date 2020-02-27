@@ -62,7 +62,7 @@ class NormalisedEvent {
 	}
 }
 
-export const isNormalisedDamageEvent = (event: NormalisedEvent): event is NormalisedDamageEvent => event.type === 'normaliseddamage'
+export const isNormalisedDamageEvent = (event: Event): event is NormalisedDamageEvent => event.type === 'normaliseddamage'
 export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type' | 'amount' | 'successfulHit'>, NormalisedEvent {}
 export class NormalisedDamageEvent extends NormalisedEvent {
 	type = 'normaliseddamage'
@@ -75,7 +75,7 @@ export class NormalisedDamageEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedHealEvent = (event: NormalisedEvent): event is NormalisedHealEvent => event.type === 'normalisedheal'
+export const isNormalisedHealEvent = (event: Event): event is NormalisedHealEvent => event.type === 'normalisedheal'
 export interface NormalisedHealEvent extends Omit<HealEvent, 'type'| 'amount' | 'successfulHit'>, NormalisedEvent {}
 export class NormalisedHealEvent extends NormalisedEvent {
 	type = 'normalisedheal'
@@ -88,7 +88,7 @@ export class NormalisedHealEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedApplyBuffEvent = (event: NormalisedEvent): event is NormalisedApplyBuffEvent => event.type === 'normalisedapplybuff'
+export const isNormalisedApplyBuffEvent = (event: Event): event is NormalisedApplyBuffEvent => event.type === 'normalisedapplybuff'
 export interface NormalisedApplyBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
 export class NormalisedApplyBuffEvent extends NormalisedEvent {
 	type = 'normalisedapplybuff'
@@ -101,7 +101,7 @@ export class NormalisedApplyBuffEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedRemoveBuffEvent = (event: NormalisedEvent): event is NormalisedRemoveBuffEvent => event.type === 'normalisedremovebuff'
+export const isNormalisedRemoveBuffEvent = (event: Event): event is NormalisedRemoveBuffEvent => event.type === 'normalisedremovebuff'
 export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
 export class NormalisedRemoveBuffEvent extends NormalisedEvent {
 	type = 'normalisedremovebuff'

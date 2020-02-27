@@ -415,8 +415,6 @@
   "drk.delirium.suggestions.badgcd.content": "<0/>이 활성화 된 상태에서 글쿨기는 오직 <1/>만 사용되어야 합니다. (적이 다수일 경우 <2/>)",
   "drk.delirium.suggestions.missedgcd.content": "<0/>구간 마다 5회의 글쿨기를 포함하십시오. 글쿨이 밀리지 않는데도 불구하고 맞추지 못한다면 기술 시전 속도를 높여보십시오.",
   "drk.delirium.title": "피의 열광 사용",
-  "drk.multihit.suggestions.content": "타겟이 최소 2 마리 이상이 아닌경우 일대다 글쿨기 사용을 피하십시오. 2 마리 이상은 <0/>, 3마리 이상은 <1/>을 사용하십시오. 단일 타겟 상대로 일대다 글쿨기는 총 위력이 단일 글쿨기에 비해 부족합니다.<2/>와 <3/> 또한 더 강력한 단일 타겟 스킬과 자원을 공유 하기에 기피해야합니다.",
-  "drk.multihit.suggestions.why": "타겟이 적은 상태에서 사용한 일대다 스킬 {lowTargetAttacks} {lowTargetAttacks, plural, other {회}}",
   "drk.resourceanalyzer.blackestnight.content": "최소 1회 이상의 <0/>의 효과를 완전히 보지 못하여 <1/>이나 <2/> 프록을 주는 어둠의 기교를 받지 못하였습니다.",
   "drk.resourceanalyzer.blackestnight.why": "사용된 흑야의 보호막이 완전히 흡수되지 않아 어둠의 기교 사용 기회를 {0, plural, one {# 회} other {# 회}} 잃었습니다.",
   "drk.resourceanalyzer.title": "자원 사용 분석",
