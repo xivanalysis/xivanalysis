@@ -21,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
@@ -30,6 +30,11 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-02-26'),
+			Changes: () => <>Bump up supported version to 5.2</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2020-01-02'),
 			Changes: () => <>Adjusted Cooldown Downtime handling based on 3-8 Standard opener</>,
