@@ -311,7 +311,7 @@
   "mnk.demolish.checklist.description": "<0/> は最も強い3の型です。少なくとも4 DoT が入れるようにすべきである。",
   "mnk.demolish.checklist.name": "破砕拳の維持率",
   "mnk.demolish.checklist.requirement.name": "アクティブ率: <0/>",
-  "mnk.demolish.suggestion.content": "",
+  "mnk.demolish.suggestion.content": "火力がもったないから、効果時間が切れるところまで、<0/>の効果を更新しない方がいいです。もし、<1/>の効果更新が微妙だったら、<0/>は更新して大丈夫です。",
   "mnk.demolish.suggestion.why": "早すぎる更新により破砕拳が失った回数： {0} 回",
   "mnk.fists.chart.header.stance": "型",
   "mnk.fists.chart.header.uptime": "アクティブ率",
