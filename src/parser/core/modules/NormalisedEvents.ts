@@ -46,7 +46,18 @@ class NormalisedEvent {
 		}
 		return 0
 	}
+
+	/**
+	 * Did any of the events for this action generate a successful hit?
+	 * - Successful hits are hits that did not miss, and that did not hit an INVULNERABLE or IMMUNE target
+	 *     (e.g. due to filter debuffs that force you to attack a specific target)
+	 * - In game data from e6s confirms that an event is considered successful by the game for advancing combo
+	 *     or generating gauge as long as the calculateddamage event occurs, even if the confirming damage packet doesn't
+	 */
 	get successfulHit(): boolean {
+		if (isBaseEventArray(this.calculatedEvents) && this.calculatedEvents.length > 0) {
+			return this.calculatedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
+		}
 		if (isBaseEventArray(this.confirmedEvents)) {
 			return this.confirmedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
 		}
