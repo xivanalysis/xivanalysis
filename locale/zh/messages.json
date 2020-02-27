@@ -415,8 +415,6 @@
   "drk.delirium.suggestions.badgcd.content": "为了最大化伤害在<0/>里只能打<1/>（3个以上目标时用<2/>）。",
   "drk.delirium.suggestions.missedgcd.content": "每次<0/>时间里要打5个GCD技能，如果你的GCD完全没有空转也打不出5个的话，请考虑提高技速。",
   "drk.delirium.title": "血乱的使用",
-  "drk.multihit.suggestions.content": "有两个以上的目标时才能用<0/>和群体循环，3个以上目标时才能用<1/>。在打单体目标时，群体循环的威力远小于单体循环。<2/>和<3/>这些技能在对付单体目标时更强力。",
-  "drk.multihit.suggestions.why": "{lowTargetAttacks} {lowTargetAttacks, plural, one {次群体技能} other {次群体技能}} 打的目标太少。",
   "drk.resourceanalyzer.blackestnight.content": "一次或多次<0/>没有被打破，所有没有触发暗技允许<1/>或<2/>无消耗使用。",
   "drk.resourceanalyzer.blackestnight.why": "因为至黑之夜没有被打破，你失去了 {0, plural, one {# 次暗技} other {# 次暗技}}。",
   "drk.resourceanalyzer.title": "战斗资源分析",
