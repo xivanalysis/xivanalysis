@@ -241,7 +241,7 @@ export default class Procs extends Module {
 		const missedStone = this._history[STATUSES.VERSTONE_READY.id].missed || 0
 		const invulnStone = this._history[STATUSES.VERSTONE_READY.id].invuln || 0
 		const overWrittenStone = this._history[STATUSES.VERSTONE_READY.id].overWritten || 0
-		
+
 		PROCS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = this.getGroupIdForStatus(status)
