@@ -115,7 +115,7 @@ export class NormalisedEvent {
 	/**
 	 * Return the number of hits for this action that succeeded
 	 */
-	get successsfulHitCount(): number {
+	get successfulHitCount(): number {
 		return this.successfulHits.length
 	}
 	/**
