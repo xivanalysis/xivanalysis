@@ -841,7 +841,7 @@
   "whm.dots.requirement.uptime-dia.name": "<0/> 적용 시간",
   "whm.dots.rule.description": "백마도사의 디아는 지속딜량의 상당량을 차지합니다. 상시 유지하는 것을 목표하십시오.",
   "whm.dots.rule.name": "도트가 항상 유지되도록 하십시오",
-  "whm.dots.suggestion.clip-dia.content": "디아 지속시간이 끝나가기 전에 갱신하는것을 피하십시오. 광명의 사용 횟수가 줄어들게 됩니다.",
+  "whm.dots.suggestion.clip-dia.content": "",
   "whm.dots.suggestion.clip-dia.why": "{1} 를 너무 이르게 도트 데미지를 갱신하여 {0} 만큼의 지속시간을 낭비하였습니다.",
   "whm.lily-blood.suggestion.content": "<0/>을 사용하여 백합 스택을 초과하지않게 하십시오.",
   "whm.lily-blood.suggestion.why": "{0, plural, other {#개의}} 백합을 피우지 못하였습니다.",
