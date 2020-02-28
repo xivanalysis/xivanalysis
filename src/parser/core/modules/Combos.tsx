@@ -28,7 +28,9 @@ export class ComboEvent extends NormalisedEvent {
 
 	constructor(event: NormalisedDamageEvent) {
 		super()
-		Object.assign(this, event)
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+		this.calculatedEvents = event.calculatedEvents.slice(0)
+		this.confirmedEvents = event.confirmedEvents.slice(0)
 	}
 }
 

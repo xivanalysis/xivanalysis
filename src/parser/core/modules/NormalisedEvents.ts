@@ -128,14 +128,9 @@ export class NormalisedDamageEvent extends NormalisedEvent {
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
-	constructor(event: DamageEvent | NormalisedDamageEvent) {
+	constructor(event: DamageEvent) {
 		super()
-		if (isDamageEvent(event)) {
-			Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
-		}
-		if (isNormalisedDamageEvent(event)) {
-			Object.assign(this, event)
-		}
+		Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
 	}
 }
 
