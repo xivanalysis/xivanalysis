@@ -807,7 +807,7 @@
   "smn.pets.title": "Familiers",
   "smn.ruin-ii.suggestions.avoid.content": "Evitez d'utiliser <0/> si possible. Utilisez plutot vos autres sorts instantanés pour le deplacement et le weaving ou méga ruine si aucun deplacement et aucun weaving est necessaire.",
   "smn.ruin-ii.suggestions.avoid.why": "{totalCount} extra ruine{totalCount, plural,one {utilisé}other {utilisés}} durant le combat.",
-  "smn.ruin-iv.bahamut.content": "Controlait que vous ayait 4 niveau de <0/> quand vous invoquer Bahamut. les 4 niveau seront nécessaire pour obtenir le maximum de valeur de Bahamut.",
+  "smn.ruin-iv.bahamut.content": "Assurez-vous d'avoir 4 stacks de <0/> quand vous invoquez Bahamut. Les 4 stacks seront nécessaires pour obtenir le maximum de valeur de Bahamut.",
   "smn.ruin-iv.bahamut.why": "Bahamut a été inovqué sans assez de stacks {0, plural,one {#fois}other {#fois}}.",
   "smn.ruin-iv.leftover.content": "Vous devriez utiliser tous vos niveau de <0/> avant la fin du combat.",
   "smn.ruin-iv.leftover.why": "{0} ruine suplémentaire{1, plural,one {niveau était}other {niveaux étaient}}laissé inutilisé à la fin du combat.",
