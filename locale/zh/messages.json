@@ -841,7 +841,7 @@
   "whm.dots.requirement.uptime-dia.name": "<0/> 覆盖率",
   "whm.dots.rule.description": "作为白魔法师，Dia 将占你伤害量的很大一部分。尽量时刻保持 Boss 身上的 Dia的Dot 。",
   "whm.dots.rule.name": "保持 DoT 覆盖",
-  "whm.dots.suggestion.clip-dia.content": "避免地过早刷新 Dia，这样可以使你打出更多的Glare。",
+  "whm.dots.suggestion.clip-dia.content": "",
   "whm.dots.suggestion.clip-dia.why": "由于过早地刷新 DoT，你浪费了{0} {1}。",
   "whm.lily-blood.suggestion.content": "及时使用<0/>来避免blood lily浪费。",
   "whm.lily-blood.suggestion.why": "由于过早消耗了治疗百合，{0, plural, one {# 朵blood lily} other {# 朵blood lily}} 没有生成。 ",
