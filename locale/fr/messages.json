@@ -841,7 +841,7 @@
   "whm.dots.requirement.uptime-dia.name": "Temps total d'application de <0/>",
   "whm.dots.rule.description": "En tant que Mage Blanc, une grande partie de vos dégâts viennent de Lumen. Essayez de les garder actifs au maximum sur le boss.",
   "whm.dots.rule.name": "Vérifiez bien que vos DoTs soient bien appliqués à votre cible",
-  "whm.dots.suggestion.clip-dia.content": "Évitez de rafraichir Lumen bien avant qu'il n'expire, cela vous permettra d'utiliser plus de Chatoiements.",
+  "whm.dots.suggestion.clip-dia.content": "",
   "whm.dots.suggestion.clip-dia.why": "{0} de {1} perdus dû aux rafraîchissements effectués trop tôt.",
   "whm.lily-blood.suggestion.content": "Uitlisez <0/> pour éviter de perdre des Lys de sang.",
   "whm.lily-blood.suggestion.why": "{0, plural, one {# Lys de sang a été perdu} other {# Lys de sang ont été perdu}} du à une utilisation précoce de Lys.",
