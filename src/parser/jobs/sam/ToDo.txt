@@ -1,21 +1,27 @@
-TO DO LIST
--Add graphic to Meikyo Shisui
--Sen move used instead of Haga (confirm no common cases against first!)
+# SAM Feature Suggestions
 
-TO FIGURE HOW TO DO LIST
--postional check
--aoe damage checks (unsure of how to check if there was a time when doing ST that aoe would be better)
--holding ogcds too long check (unsure of how to handle, will look into later. Guren comes to mind for this)
+## Kenki
+- [X] Add a check for overcapping Kenki
+- [X] Add a check to make sure that Higanbana and Midare are always Kaiten'd
+- [X] Add a check to make sure that Kaiten isn't used on anything but Midare and Higanbana
+- [X] Add in a Meditation function that properly handles kenki and shoha stack gain
 
-TO MAYBE DO LIST
--slashing resitance down uptime. (again, would this even be useful?)
+## Sen
+- [X] Add a check for overcapping Sen
+- [X] Add a check for higanbana to make sure that it isn't overwritten early or dropped.
+- [X] Add a function for iai casts that adds a shoha stack
 
-TO DONE LIST
--Third Eye checker
--Meikyo Shisui checker
--shifu/jinpu buff time
--higanbana/midare outside of kaiten counter
--Fucking meditate
--Higanbana uptime
--kaiten on wrong gcds
--kenki/sen overflow (WILL NEED TO UPDATE AFTER COMBO/POSTIONAL CHECK IS ADDED)
+## Tsubame
+- [X] Add a check to make sure that only Midare is used under tsubame, No higanbana allowed!
+
+## Meikyo Shisui
+- [X] Add a check to make sure only Sen granting skills are used under the buff window
+- [X] Add a visual graphic to show what skills were used under meikyo
+
+##Other stuff
+- [X] Add in check for Shifu/jinpu uptime
+- [X] Add a check for AoE usage
+- [X] Add a third eye checker to make sure procs aren't dropped
+
+## OGCDDowntime
+- [X] Make sure all skills are used as much as possible.
