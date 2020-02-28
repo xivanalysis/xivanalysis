@@ -36,18 +36,13 @@ export default class Sidewinder extends Module {
 		'timeline',
 		'enemies',
 		'additionalStats',
-		'fflogsEvents',
 	]
 
-	_amountOfBadSidewinders = 0
-	_amountOfBadShadowbites = 0
-	_amountOfSingleTargetShadowbites = 0
 	//This is used to determine the severity of their mistakes
 	_notBothDotsPotencyLoss = 0
 	_singleTargetShadowbitesPotencyLoss = 0
 
 	_badCasts = []
-	_shadowbiteDamageTimestamps = new Map()
 
 	constructor(...args) {
 		super(...args)
@@ -59,12 +54,10 @@ export default class Sidewinder extends Module {
 
 		this.addHook('complete', this._onComplete)
 
-		this.addHook('init', () => {
-			this.addHook(this.fflogsEvents.damageEventName, {
-				by: 'player',
-				abilityId: ACTIONS.SHADOWBITE.id,
-			}, this._onShadowbiteDamage)
-		})
+		this.addHook('normaliseddamage', {
+			by: 'player',
+			abilityId: ACTIONS.SHADOWBITE.id,
+		}, this._onShadowbiteDamage)
 	}
 
 	_getDotsOnEnemy(enemy) {
@@ -81,8 +74,13 @@ export default class Sidewinder extends Module {
 
 	//For some reason, shadowbite's cast target doesn't work properly in dungeon trash pulls so we gotta do it the hard way
 	_onShadowbiteDamage(event) {
+		if (event.hits === 0) {
+			// Shadowbite did not hit any targets - action ghosted
+			return
+		}
+
 		const potencyDamageRatio = this.additionalStats.potencyDamageRatio
-		const rawDamage = this._getRawDamage(event)
+		const rawDamage = this._getRawDamage(event.confirmedEvents[0])
 
 		// We get the approximated potency and then match to the closest real potency
 		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
@@ -91,31 +89,29 @@ export default class Sidewinder extends Module {
 		// We then infer the amount of stacks
 		const dotsApplied = ACTIONS.SHADOWBITE.potency.indexOf(potency)
 
-		const timestamp = event.timestamp
-		const shadowbiteTimestampArray = this._shadowbiteDamageTimestamps.get(timestamp)
-
 		const shadowbiteDamageEvent = {
 			...event,
 			abilityId: event.ability.guid,
-			isSingleTargetShadowbite: false,
+			isSingleTargetShadowbite: event.hits === 1,
 			hasBothDots: dotsApplied > 1,
 			// Due to varience, a guess can be less then the actual raw damage, so we have to check to make sure they are actually losing damage first
-			missedDamage: dotsApplied < 2 ? (MAX_SHADOWBITE_POTENCY * potencyDamageRatio / 100) : 0,
-			missedPotency: MAX_SHADOWBITE_POTENCY - ACTIONS.SHADOWBITE.potency[dotsApplied],
-			targetsHit: 0,
+			missedDamage: event.hits * (dotsApplied < 2 ? (MAX_SHADOWBITE_POTENCY * potencyDamageRatio / 100) : 0),
+			missedPotency: event.hits * (MAX_SHADOWBITE_POTENCY - ACTIONS.SHADOWBITE.potency[dotsApplied]),
+			targetsHit: event.hits,
 			dotsApplied,
 		}
 
 		this._notBothDotsPotencyLoss += MAX_SHADOWBITE_POTENCY - matchClosest(ACTIONS.SHADOWBITE.potency, rawDamage * 100 / potencyDamageRatio)
 
-		if (!shadowbiteTimestampArray) {
-			if (!shadowbiteDamageEvent.hasBothDots) {
-				this._amountOfBadShadowbites++
-				this._badCasts.push(shadowbiteDamageEvent)
-			}
-			this._shadowbiteDamageTimestamps.set(timestamp, [shadowbiteDamageEvent])
-		} else {
-			shadowbiteTimestampArray.push(shadowbiteDamageEvent)
+		if (shadowbiteDamageEvent.isSingleTargetShadowbite) {
+			const missedPotency = ACTIONS.SIDEWINDER.potency[dotsApplied] - ACTIONS.SHADOWBITE.potency[dotsApplied]
+			shadowbiteDamageEvent.missedDamage += missedPotency * potencyDamageRatio / 100
+			shadowbiteDamageEvent.missedPotency += missedPotency
+
+			this._singleTargetShadowbitesPotencyLoss += missedPotency
+			this._badCasts.push(shadowbiteDamageEvent)
+		} else if (!shadowbiteDamageEvent.hasBothDots) {
+			this._badCasts.push(shadowbiteDamageEvent)
 		}
 	}
 
@@ -124,8 +120,6 @@ export default class Sidewinder extends Module {
 		const dotsApplied = this._getDotsOnEnemy(target)
 
 		if (dotsApplied.length < 2) {
-			this._amountOfBadSidewinders++
-
 			const potencyDamageRatio = this.additionalStats.potencyDamageRatio
 			const thisPotency = ACTIONS.SIDEWINDER.potency[dotsApplied.length]
 			this._notBothDotsPotencyLoss += MAX_SIDEWINDER_POTENCY - thisPotency
@@ -144,51 +138,43 @@ export default class Sidewinder extends Module {
 	}
 
 	_onComplete() {
-		this._amountOfSingleTargetShadowbites = this._addInSingleTargetShadowbites()
-
 		if (!this._badCasts.length) {
 			return
 		}
 
-		const badSidewinders = this._amountOfBadSidewinders
-		const badShadowbites = this._amountOfBadShadowbites
+		this._badCasts.sort((c1, c2) => c1.timestamp - c2.timestamp)
 
-		if (badSidewinders || badShadowbites) {
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SIDEWINDER.icon,
+			content: <Trans id="brd.sidewinder.suggestion.not-both-dots">
+		Only use <ActionLink {...ACTIONS.SIDEWINDER}/> and <ActionLink {...ACTIONS.SHADOWBITE}/> when you have both <ActionLink {...ACTIONS.CAUSTIC_BITE}/> and <ActionLink {...ACTIONS.STORMBITE}/> active on the target. Remember that a DoT doesn't apply as soon as you cast it, so you have to wait for it to apply before casting <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> or <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/>.
+			</Trans>,
+			tiers: {
+				1110: SEVERITY.MAJOR,
+				480: SEVERITY.MEDIUM,
+				160: SEVERITY.MINOR,
+			},
+			value: this._notBothDotsPotencyLoss,
+			why: <Trans id="brd.sidewinder.suggestion.not-both-dots.reason">
+				{this._notBothDotsPotencyLoss} potency lost to casts on targets missing DoTs
+			</Trans>,
+		}))
 
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SIDEWINDER.icon,
-				content: <Trans id="brd.sidewinder.suggestion.not-both-dots">
-			Only use <ActionLink {...ACTIONS.SIDEWINDER}/> and <ActionLink {...ACTIONS.SHADOWBITE}/> when you have both <ActionLink {...ACTIONS.CAUSTIC_BITE}/> and <ActionLink {...ACTIONS.STORMBITE}/> active on the target. Remember that a DoT doesn't apply as soon as you cast it, so you have to wait for it to apply before casting <ActionLink showIcon={false} {...ACTIONS.SIDEWINDER}/> or <ActionLink showIcon={false} {...ACTIONS.SHADOWBITE}/>.
-				</Trans>,
-				tiers: {
-					1110: SEVERITY.MAJOR,
-					480: SEVERITY.MEDIUM,
-					160: SEVERITY.MINOR,
-				},
-				value: this._notBothDotsPotencyLoss,
-				why: <Trans id="brd.sidewinder.suggestion.not-both-dots.reason">
-					{this._notBothDotsPotencyLoss} potency lost to casts on targets missing DoTs
-				</Trans>,
-			}))
-		}
-
-		if (this._amountOfSingleTargetShadowbites) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SIDEWINDER.icon,
-				content: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite">
-				Only cast <ActionLink {...ACTIONS.SHADOWBITE}/> when it will hit multiple targets. Otherwise you lose potency compared to casting <ActionLink {...ACTIONS.SIDEWINDER}/> instead.
-				</Trans>,
-				tiers: {
-					200: SEVERITY.MAJOR,
-					100: SEVERITY.MEDIUM,
-					40: SEVERITY.MINOR,
-				},
-				value: this._singleTargetShadowbitesPotencyLoss,
-				why: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite.reason">
-					{this._singleTargetShadowbitesPotencyLoss} potency lost on single target casts of <ActionLink {...ACTIONS.SHADOWBITE}/>
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.SIDEWINDER.icon,
+			content: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite">
+			Only cast <ActionLink {...ACTIONS.SHADOWBITE}/> when it will hit multiple targets. Otherwise you lose potency compared to casting <ActionLink {...ACTIONS.SIDEWINDER}/> instead.
+			</Trans>,
+			tiers: {
+				200: SEVERITY.MAJOR,
+				100: SEVERITY.MEDIUM,
+				40: SEVERITY.MINOR,
+			},
+			value: this._singleTargetShadowbitesPotencyLoss,
+			why: <Trans id="brd.sidewinder.suggestion.single-target-shadowbite.reason">
+				{this._singleTargetShadowbitesPotencyLoss} potency lost on single target casts of <ActionLink {...ACTIONS.SHADOWBITE}/>
+			</Trans>,
+		}))
 	}
 
 	_createTimelineButton(timestamp) {
@@ -276,51 +262,4 @@ export default class Sidewinder extends Module {
 		}
 		return rawDamage
 	}
-
-	_addInSingleTargetShadowbites() {
-		let singleTargetAmount = 0
-		let needsSort = false
-
-		this._shadowbiteDamageTimestamps.forEach(eventArray => {
-			const damageEvent = eventArray[0]
-			const dotsApplied = damageEvent.dotsApplied
-			if (eventArray.length === 1) {
-				singleTargetAmount++
-
-				damageEvent.isSingleTargetShadowbite = true
-
-				const missedPotency = ACTIONS.SIDEWINDER.potency[dotsApplied] - ACTIONS.SHADOWBITE.potency[dotsApplied]
-				damageEvent.missedDamage += missedPotency * this.additionalStats.potencyDamageRatio / 100
-				damageEvent.missedPotency += missedPotency
-
-				this._singleTargetShadowbitesPotencyLoss += missedPotency
-				if (damageEvent.hasBothDots) {
-					needsSort = true
-					this._badCasts.push(damageEvent)
-				}
-			} else if (!damageEvent.hasBothDots) {
-				let lostDamage = 0
-				for (const damageEvent of eventArray) {
-					lostDamage += damageEvent.missedDamage
-				}
-				damageEvent.missedDamage = lostDamage
-				damageEvent.missedPotency *= eventArray.length
-			}
-			damageEvent.targetsHit = eventArray.length
-		})
-
-		if (needsSort) {
-			this._badCasts.sort((cast1, cast2) => {
-				if (cast1.timestamp > cast2.timestamp) {
-					return 1
-				} if (cast1.timestamp < cast2.timestamp) {
-					return -1
-				}
-				return 0
-			})
-		}
-
-		return singleTargetAmount
-	}
-
 }

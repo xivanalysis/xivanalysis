@@ -1,10 +1,6 @@
 import Module from 'parser/core/Module'
 
 export default class Entities extends Module {
-	static dependencies = [
-		'fflogsEvents',
-	]
-
 	constructor(...args) {
 		super(...args)
 
@@ -20,11 +16,8 @@ export default class Entities extends Module {
 		this.addEventHook('refreshbuff', this.refreshBuff)
 		this.addEventHook('refreshdebuff', event => this.refreshBuff(event, true))
 
-		// Resources - hooked to init to make sure normaliser runs to determine damage event before hooking events
-		this.addEventHook('init', () => {
-			this.addEventHook(this.fflogsEvents.damageEventName, this.updateResources)
-			this.addEventHook(this.fflogsEvents.healEventName, this.updateResources)
-		})
+		this.addEventHook('normaliseddamage', this.updateResources)
+		this.addEventHook('normalisedheal', this.updateResources)
 	}
 
 	// -----
