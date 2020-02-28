@@ -105,8 +105,13 @@ export default class Shoha extends Module {
 		const diff = event.timestamp - this.meditateStart
 
 		const ticks = Math.min(Math.floor(diff / MEDITATE_TICK_FREQUENCY), MAX_MEDITATE_TICKS)
-
+ 
 		const generatedStacks = ticks
+		
+		if ( (ticks + this.stacks) > MAX_STACKS )
+		{
+			const generatedStacks = (MAX_STACKS - this.stacks)
+		}
 
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
