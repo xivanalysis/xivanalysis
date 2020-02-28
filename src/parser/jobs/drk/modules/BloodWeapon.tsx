@@ -8,7 +8,7 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-export default class BloodWeapon extends BuffWindowModule {
+export class BloodWeapon extends BuffWindowModule {
 	static handle = 'bloodweapon'
 	static title = t('drk.bloodweapon.title')`Blood Weapon Usage`
 	static displayOrder = DISPLAY_ORDER.BLOOD_WEAPON

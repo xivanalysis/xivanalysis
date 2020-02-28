@@ -8,7 +8,7 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {DISPLAY_ORDER} from './DISPLAY_ORDER'
 
-export default class Delirium extends BuffWindowModule {
+export class Delirium extends BuffWindowModule {
 	static handle = 'delirium'
 	static title = t('drk.delirium.title')`Delirium Usage`
 	static displayOrder = DISPLAY_ORDER.DELIRIUM

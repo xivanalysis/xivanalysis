@@ -1,17 +1,13 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-
-import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import {FFLogsEventNormaliser} from 'parser/core/modules/FFLogsEventNormaliser'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LEAD_BOOT_POTENCY = 300
@@ -47,21 +43,20 @@ export default class Steppies extends Module {
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
-	@dependency private fflogsEvents!: FFLogsEventNormaliser
 	@dependency private suggestions!: Suggestions
 
 	private steppies: Boot[] = []
 
 	protected init(): void {
-		this.addHook('init', () => {
-			this.addHook(this.fflogsEvents.damageEventName, {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
-		})
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.BOOTSHINE.id}, this.onDamage)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onDamage(event: DamageEvent): void {
-		const boot = new Boot(event.criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
-		this.steppies.push(boot)
+	private onDamage(event: NormalisedDamageEvent): void {
+		if (event.hits > 0) {
+			const boot = new Boot(event.criticalHits > 0, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
+			this.steppies.push(boot)
+		}
 	}
 
 	private onComplete(): void {

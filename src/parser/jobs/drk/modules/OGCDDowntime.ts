@@ -3,7 +3,7 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
 const DEFAULT_FIRST_USE_OFFSET = 17500
 
-export default class OGCDDowntime extends CooldownDowntime {
+export class OGCDDowntime extends CooldownDowntime {
 	defaultFirstUseOffset = DEFAULT_FIRST_USE_OFFSET
 	trackedCds = [
 		{

@@ -415,8 +415,6 @@
   "drk.delirium.suggestions.badgcd.content": "Solange <0/> aktiv ist, solltest du ausschließlich <1/> benutzen, um optimalen Schaden zu verursachen (oder <2/> wenn drei oder mehr Gegner zu treffen sind).",
   "drk.delirium.suggestions.missedgcd.content": "Während <0/> aktiv ist, solltest du 5 GCDs landen können und dies auch tunlichst versuchen. Ist das - trotz kompletter Uptime des Spells - nicht möglich ist, passe dein Equipment an um mehr in \"Schnelligkeit\" zu investieren.",
   "drk.delirium.title": "Blutdelirium-Nutzung",
-  "drk.multihit.suggestions.content": "Gruppenziel-GCDs sollten ausschließlich eingesetzt werden, wenn sie mindestens 2 oder mehr Ziele treffen können - <1/> sogar nur bei 3 oder mehr Zielen. Gruppenziel-GCDs versuchen - auf ein einzelnes Ziel gerechnet - weniger Schaden und zusätzlich verbrauchen <2/> und <3/> Resourcen, die eher für stärkere Einzelzielangriffe benutzt werden sollten.",
-  "drk.multihit.suggestions.why": "{lowTargetAttacks}-mal Gruppenangriffsfähigkeiten bei zu wenig Gegnern benutzt.",
   "drk.resourceanalyzer.blackestnight.content": "Eine oder mehrere <0/>-Anwendungen haben das erzeugte Schild nicht komplett ausgereizt und daher keinen Dunkle Künste-Proc erzeugt, der einen gratis Cast von <1/> oder <2/> ermöglichen würde.",
   "drk.resourceanalyzer.blackestnight.why": "Du hast {0, plural, one {# Dunkle Künste-Anwendung} other {# Dunkle Künste-Anwendungen}} versäumt, da das Schwärzeste Nacht-Schild nicht komplett aufgebraucht wurde.",
   "drk.resourceanalyzer.title": "Resourcenanalysator",
