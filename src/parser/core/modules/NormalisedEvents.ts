@@ -26,6 +26,18 @@ class NormalisedEvent {
 		}
 		return 0
 	}
+	get criticalHits(): number {
+		if (isBaseEventArray(this.confirmedEvents)) {
+			return this.confirmedEvents.filter(evt => evt.criticalHit).length
+		}
+		return 0
+	}
+	get directHits(): number {
+		if (isBaseEventArray(this.confirmedEvents)) {
+			return this.confirmedEvents.filter(evt => evt.directHit).length
+		}
+		return 0
+	}
 	/**
 	 * Number of damage events that did not do confirmed damage to the target.
 	 *  Typically due to target or source despawning before damage applied.
