@@ -80,7 +80,7 @@ export default class Procs extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: PROCS}, this._onRemove)
 		this.addHook('refreshbuff', {by: 'player', abilityId: PROCS}, this._onRefresh)
 		this.addHook('complete', this._onComplete)
-		//this.addHook('death', { to: 'player' }, this._onDeath)
+		this.addHook('death', {to: 'player'}, this._onDeath)
 		this._initializeHistory()
 
 		this._group = new Group({
@@ -232,6 +232,14 @@ export default class Procs extends Module {
 		tracker.current.stop = endTime
 		tracker.history.push(tracker.current)
 		tracker.current = null
+	}
+
+	_onDeath(event) {
+		PROCS.forEach(buff => {
+			if (this._buffWindows[buff].current) {
+				this._stopAndSave(buff, event.timestamp)
+			}
+		})
 	}
 
 	_onComplete() {
