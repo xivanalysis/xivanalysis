@@ -841,7 +841,7 @@
   "whm.dots.requirement.uptime-dia.name": "<0/> uptime",
   "whm.dots.rule.description": "As a White Mage, Dia is significant portion of your sustained damage. Aim to keep them it up at all times.",
   "whm.dots.rule.name": "Keep your DoTs up",
-  "whm.dots.suggestion.clip-dia.content": "Avoid refreshing Dia significantly before its expiration, this will allow you to cast more Glare.",
+  "whm.dots.suggestion.clip-dia.content": "Avoid refreshing Dia significantly before its expiration, this will allow you to cast more Glares.",
   "whm.dots.suggestion.clip-dia.why": "{0} of {1} lost to early refreshes.",
   "whm.lily-blood.suggestion.content": "Use <0/> to avoid wasting blood lily growth.",
   "whm.lily-blood.suggestion.why": "{0, plural, one {# blood lily} other {# blood lilies}} did not bloom due to early lily use.",
