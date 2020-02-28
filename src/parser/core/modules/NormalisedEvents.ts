@@ -29,7 +29,6 @@ export class NormalisedEvent {
 		}
 		return this.confirmedEvents
 	}
-
 	/**
 	 * Return the number of hits recorded for this actions, confirmed or ghosted
 	 */
@@ -42,6 +41,24 @@ export class NormalisedEvent {
 	get hitAmount(): number {
 		if (isBaseEventArray(this.hits)) {
 			return this.hits.reduce((total, evt) => total + evt.amount, 0)
+		}
+		return 0
+	}
+	/**
+	 * Return the number of critical hits recorded for this action, confirmed or ghosted
+	 */
+	get criticalHits(): number {
+		if (isBaseEventArray(this.hits)) {
+			return this.hits.filter(evt => evt.criticalHit).length
+		}
+		return 0
+	}
+	/**
+	 * Return the number of direct hits recorded for this action, confirmed or ghosted
+	 */
+	get directHits(): number {
+		if (isBaseEventArray(this.hits)) {
+			return this.hits.filter(evt => evt.directHit).length
 		}
 		return 0
 	}
