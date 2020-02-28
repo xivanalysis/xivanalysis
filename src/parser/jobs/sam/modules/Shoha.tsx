@@ -109,7 +109,7 @@ export default class Shoha extends Module {
 		let generatedStacks = ticks
 
 		if ( (ticks + this.stacks) > MAX_STACKS ) {
-			 generatedStacks = (MAX_STACKS - this.stacks)
+			generatedStacks = (MAX_STACKS - this.stacks)
 		}
 
 		this.stacks += generatedStacks
