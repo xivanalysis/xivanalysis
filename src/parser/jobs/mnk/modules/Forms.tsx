@@ -69,7 +69,7 @@ export default class Forms extends Module {
 				? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
 				: 0
 
-			if (action === ACTIONS.FORM_SHIFT.id) {
+			if (action.id === ACTIONS.FORM_SHIFT.id) {
 				// Only ignore Form Shift if we're in downtime
 				if (untargetable === 0) {
 					this.skippedForms++
@@ -86,12 +86,12 @@ export default class Forms extends Module {
 			// Using Opo-Opo skills resets form
 			case STATUSES.RAPTOR_FORM.id:
 			case STATUSES.COEURL_FORM.id:
-				if (OPO_OPO_SKILLS.includes(action)) { this.resetForms++ }
+				if (OPO_OPO_SKILLS.includes(action.id)) { this.resetForms++ }
 				break
 
 			default:
 				// No form used
-				if (OPO_OPO_SKILLS.includes(action)) {
+				if (OPO_OPO_SKILLS.includes(action.id)) {
 					this.formless++
 				}
 

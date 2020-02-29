@@ -249,6 +249,11 @@ export default class Fists extends Module {
 		}
 
 		const status = this.data.getStatus(fistId)
-		return status.name
+
+		if (status) {
+			return status.name
+		}
+
+		return 'Unknown'
 	}
 }

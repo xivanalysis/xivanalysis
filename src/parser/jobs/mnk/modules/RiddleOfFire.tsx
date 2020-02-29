@@ -32,6 +32,7 @@ const SUGGESTION_TIERS = {
 }
 
 class Riddle {
+	data: Data
 	casts: CastEvent[]
 	start: number
 	end?: number
@@ -45,7 +46,8 @@ class Riddle {
 	}
 	expectedGcds: number = EXPECTED_GCDS // Baseline GL4 RoFs are 11 GCDs
 
-	constructor(start: number) {
+	constructor(start: number, data: Data) {
+		this.data = data
 		this.start = start
 		this.casts = []
 	}
@@ -97,7 +99,7 @@ export default class RiddleOfFire extends Module {
 		}
 
 		if (action.id === ACTIONS.RIDDLE_OF_FIRE.id) {
-			this.riddle = new Riddle(event.timestamp)
+			this.riddle = new Riddle(event.timestamp, this.data)
 
 			this.riddle.active = true
 			this.riddle.rushing = ROF_DURATION >= this.parser.fight.end_time - event.timestamp

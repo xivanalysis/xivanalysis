@@ -21,11 +21,13 @@ const TWIN_SNAKES_CYCLE_BUFFER = 3000
 const TWIN_SNAKES_CYCLE_LENGTH = 5
 
 class TwinState {
+	data: Data
 	casts: CastEvent[] = []
 	start: number
 	end?: number
 
-	constructor(timestamp: number) {
+	constructor(timestamp: number, data: Data) {
+		this.data = data
 		this.start = timestamp
 	}
 
@@ -91,7 +93,7 @@ export default class TwinSnakes extends Module {
 			}
 
 		// Ignore Form Shift, theres probably forced downtime so we expect TS to get weird anyway
-		case (ACTIONS.FORM_SHIFT):
+		case (ACTIONS.FORM_SHIFT.id):
 			break
 
 		// Count FPF, but check if it's a bad one
@@ -102,7 +104,7 @@ export default class TwinSnakes extends Module {
 
 		// Verify the window isn't closed, and count the GCDs
 		default:
-			if (!this.twinSnake?.end) {
+			if (this.twinSnake && !this.twinSnake.end) {
 				this.twinSnake.casts.push(event)
 			}
 
@@ -123,7 +125,7 @@ export default class TwinSnakes extends Module {
 		}
 
 		// Start a new window
-		this.twinSnake = new TwinState(event.timestamp)
+		this.twinSnake = new TwinState(event.timestamp, this.data)
 		this.gcdsSinceTS = 0
 	}
 

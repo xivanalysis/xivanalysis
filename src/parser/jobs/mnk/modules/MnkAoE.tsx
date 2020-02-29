@@ -48,7 +48,7 @@ export default class MnkAoE extends AoEUsages {
 		}
 
 		// If Leaden Fist is up, Boot is extra strong
-		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
+		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER.id && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
 			return minTargets + 1
 		}
 
