@@ -3,10 +3,11 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
+import {DamageEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {NormalisedDamageEvent, NormalisedEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -20,10 +21,16 @@ const ISSUE_TYPENAMES = {
 	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export class ComboEvent extends NormalisedDamageEvent {
+export class ComboEvent extends NormalisedEvent {
+	type = 'combo'
+	calculatedEvents: DamageEvent[] = []
+	confirmedEvents: DamageEvent[] = []
+
 	constructor(event: NormalisedDamageEvent) {
-		super(event)
-		this.type = 'combo'
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+		this.calculatedEvents = event.calculatedEvents.slice(0)
+		this.confirmedEvents = event.confirmedEvents.slice(0)
 	}
 }
 
@@ -177,7 +184,7 @@ export default class Combos extends Module {
 
 		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
-			if (!event.successfulHit) {
+			if (!event.hasSuccessfulHit) {
 				// Failed attacks break combo
 				this.recordFailedCombo(event, this.currentComboChain)
 				return

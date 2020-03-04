@@ -50,7 +50,7 @@ export default class Ninjutsu extends Module {
 			this._onDotonCast()
 		}
 
-		this._dotonCasts.current.ticks.push(event.hits) // Track the number of enemies hit per tick
+		this._dotonCasts.current.ticks.push(event.hitCount) // Track the number of enemies hit per tick
 	}
 
 	_finishDotonWindow() {
