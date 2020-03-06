@@ -182,7 +182,7 @@ export default class Pets extends Module {
 		}
 
 		if (abilityId === ACTIONS.WIND_BLADE.id &&
-			event.hits < GARUDA_MIN_TARGETS) {
+			event.hitCount < GARUDA_MIN_TARGETS) {
 			this._badWindBlades++
 		} else if (abilityId === ACTIONS.SLIPSTREAM.id) {
 			this._slipstreams.push({
@@ -200,7 +200,7 @@ export default class Pets extends Module {
 			this._slipstreams[this._slipstreams.length - 1].ticks.push(event)
 		} else if (
 			IFRIT_AOE_CAPABLE_ACTIONS.includes(abilityId) &&
-			event.hits >= GARUDA_MIN_TARGETS
+			event.hitCount >= GARUDA_MIN_TARGETS
 		) {
 			this._ifritMultiHits++
 		}

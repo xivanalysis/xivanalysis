@@ -5,6 +5,7 @@ export const RDM = ensureStatuses({
 		id: 1249,
 		name: 'Dualcast',
 		icon: 'https://xivapi.com/i/013000/013406.png',
+		duration: 15,
 	},
 	VERSTONE_READY: {
 		id: 1235,

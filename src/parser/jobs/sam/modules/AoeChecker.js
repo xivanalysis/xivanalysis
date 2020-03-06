@@ -47,7 +47,7 @@ export default class AoeChecker extends Module {
 
 			//Step 2: Check break point
 
-			if (event.hits < GAIN2) {
+			if (event.hitCount < GAIN2) {
 				//Step 3: Check type of resource used and increment
 
 				if (AOE_GCDS.has(action)) {
@@ -66,7 +66,7 @@ export default class AoeChecker extends Module {
 
 			//Step 2: Check break point
 
-			if (event.hits < GAIN3) {
+			if (event.hitCount < GAIN3) {
 				//Step 3: Check type of resource used and increment
 
 				if (AOE_GCDS.has(action)) {

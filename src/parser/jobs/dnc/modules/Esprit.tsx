@@ -77,7 +77,7 @@ export default class EspritGauge extends Module {
 	}
 
 	private onDamage(event: NormalisedDamageEvent) {
-		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.successfulHit) {
+		if (!ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] || !event.hasSuccessfulHit) {
 			return
 		}
 		let generatedAmt = 0

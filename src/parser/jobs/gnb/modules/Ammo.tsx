@@ -95,7 +95,7 @@ export default class Ammo extends Module {
 	}
 
 	private onFatedCircle(event: NormalisedDamageEvent) {
-		if (event.hits < 2) {
+		if (event.hitCount < 2) {
 			this.erroneousCircles++
 		}
 	}
