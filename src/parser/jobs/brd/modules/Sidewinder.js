@@ -74,7 +74,7 @@ export default class Sidewinder extends Module {
 
 	//For some reason, shadowbite's cast target doesn't work properly in dungeon trash pulls so we gotta do it the hard way
 	_onShadowbiteDamage(event) {
-		if (event.hits === 0) {
+		if (event.hitCount === 0) {
 			// Shadowbite did not hit any targets - action ghosted
 			return
 		}
@@ -92,12 +92,12 @@ export default class Sidewinder extends Module {
 		const shadowbiteDamageEvent = {
 			...event,
 			abilityId: event.ability.guid,
-			isSingleTargetShadowbite: event.hits === 1,
+			isSingleTargetShadowbite: event.hitCount === 1,
 			hasBothDots: dotsApplied > 1,
 			// Due to varience, a guess can be less then the actual raw damage, so we have to check to make sure they are actually losing damage first
-			missedDamage: event.hits * (dotsApplied < 2 ? (MAX_SHADOWBITE_POTENCY * potencyDamageRatio / 100) : 0),
-			missedPotency: event.hits * (MAX_SHADOWBITE_POTENCY - ACTIONS.SHADOWBITE.potency[dotsApplied]),
-			targetsHit: event.hits,
+			missedDamage: event.hitCount * (dotsApplied < 2 ? (MAX_SHADOWBITE_POTENCY * potencyDamageRatio / 100) : 0),
+			missedPotency: event.hitCount * (MAX_SHADOWBITE_POTENCY - ACTIONS.SHADOWBITE.potency[dotsApplied]),
+			targetsHit: event.hitCount,
 			dotsApplied,
 		}
 

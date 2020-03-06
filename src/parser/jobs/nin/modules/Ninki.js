@@ -111,7 +111,7 @@ export default class Ninki extends Module {
 	}
 
 	_onHellfrogAoe(event) {
-		if (event.hits === 1) {
+		if (event.hitCount === 1) {
 			// If we have a Hellfrog AoE event with only one target, it should've been a Bhava instead
 			this._erroneousFrogs++
 		}
