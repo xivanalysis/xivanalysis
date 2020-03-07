@@ -9,7 +9,6 @@ export default class AoeChecker extends AoEUsages {
 		...AoEUsages.dependencies,
 		'combatants',
 	]
-
 	suggestionIcon = ACTIONS.FUGA.icon
 
 	trackedAbilities = [

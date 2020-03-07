@@ -93,7 +93,7 @@ export abstract class AoEUsages extends Module {
 		if (tracked === undefined) { return }
 
 		const minTargets = this.adjustMinTargets(event, tracked.minTargets)
-		if (event.successfulHit && event.hits < minTargets) {
+		if (event.hasSuccessfulHit && event.hitCount < minTargets) {
 			this.badUsages.set(event.ability.guid, (this.badUsages.get(event.ability.guid) || 0) + 1)
 		}
 	}

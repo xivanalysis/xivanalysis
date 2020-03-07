@@ -186,7 +186,7 @@ export default class DirtyDancing extends Module {
 		}
 		// If the finisher didn't hit anything, and something could've been, ding it.
 		// Don't gripe if the boss is invuln, there is use-case for finishing during the downtime
-		if (!event.successfulHit && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
+		if (!event.hasSuccessfulHit && !this.invuln.isInvulnerable('all', finisher.timestamp)) {
 			dance.missed = true
 		}
 		// Dancer messed up if more step actions were recorded than we expected

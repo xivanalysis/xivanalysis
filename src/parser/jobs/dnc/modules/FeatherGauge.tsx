@@ -59,7 +59,7 @@ export default class FeatherGauge extends Module {
 	}
 
 	private onCastGenerator(event: NormalisedDamageEvent) {
-		if (!event.successfulHit) {
+		if (!event.hasSuccessfulHit) {
 			return
 		}
 		this.avgGenerated += FEATHER_GENERATION_CHANCE
