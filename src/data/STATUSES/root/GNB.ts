@@ -53,7 +53,7 @@ export const GNB = ensureStatuses({
 		id: 1840,
 		name: 'Heart of Stone',
 		icon: 'https://xivapi.com/i/013000/013610.png',
-		duration: 10,
+		duration: 7,
 	},
 	HEART_OF_LIGHT: {
 		id: 1839,
