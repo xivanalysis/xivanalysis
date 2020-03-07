@@ -8,7 +8,7 @@ import {BuffEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
-import {Data} from 'parser/core/modules/data'
+import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
@@ -77,6 +77,9 @@ export default class Forms extends Module {
 
 				return
 			}
+
+			// If we have PB, we can just ignore forms
+			if (this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)) { return }
 
 			// Handle relevant actions per form
 			switch (currentForm) {

@@ -59,7 +59,7 @@ export default class Steppies extends Module {
 			const boot = new Boot(
 				event.criticalHits > 0,
 				this.combatants.selected.hasStatus(STATUSES.OPO_OPO_FORM.id),
-				this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id),
+				!this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id),
 				event.timestamp)
 
 			this.steppies.push(boot)

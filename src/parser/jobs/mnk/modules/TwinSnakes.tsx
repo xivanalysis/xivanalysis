@@ -88,7 +88,7 @@ export default class TwinSnakes extends Module {
 		// Ignore TS itself, plus Form Shift and maybe 6SS?
 		// We use gcdsSinceTS because we don't want to double count FPF
 		case (ACTIONS.TWIN_SNAKES.id):
-			if (!this.twinSnake?.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
+			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
 				this.earlySnakes++
 			}
 
