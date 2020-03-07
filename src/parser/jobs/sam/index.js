@@ -25,7 +25,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.1',
-		to: '5.1',
+		to: '5.2',
 	},
 
 	contributors: [
@@ -33,6 +33,17 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-2-21'),
+		Changes: () => <>
+			Updated SAM support for patch 5.2 along with some backend changes
+			<ul>
+				<li> Shoha tracking has been fixed after the gauge move. Damn you SE and hiding data! </li>
+				<li> AoE usage has been converted to core as requested </li>
+				<li> Guren/Senei has been moved to OGCD Tracker </li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2019-11-12'),
 		Changes: () => <>
 			Updated SAM support for patch 5.1 along with some user requested changes
