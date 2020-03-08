@@ -42,12 +42,14 @@ export default class Forms extends Module {
 
 	private lastFormChanged?: number
 	private lastFormDropped?: number
+	private perfectlyFresh?: number
 
 	protected init(): void {
 		this.addHook('cast', {by: 'player'}, this.onCast)
 		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
+		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.PERFECT_BALANCE.id}, this.onPerfectOut)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -93,9 +95,10 @@ export default class Forms extends Module {
 				break
 
 			default:
-				// No form used
-				if (OPO_OPO_SKILLS.includes(action.id)) {
-					this.formless++
+				// Fresh out of PB, they'll have no form
+				if (this.perfectlyFresh) {
+					this.perfectlyFresh = undefined
+					return
 				}
 
 				// Check if we timed out
@@ -103,6 +106,11 @@ export default class Forms extends Module {
 					if ((this.lastFormDropped - this.lastFormChanged) > FORM_TIMEOUT_MILLIS) {
 						this.droppedForms++
 					}
+				}
+
+				// No form used
+				if (OPO_OPO_SKILLS.includes(action.id)) {
+					this.formless++
 				}
 			}
 		}
@@ -117,12 +125,16 @@ export default class Forms extends Module {
 		this.lastFormDropped = event.timestamp
 	}
 
+	private onPerfectOut(event: BuffEvent): void {
+		this.perfectlyFresh = event.timestamp
+	}
+
 	private onComplete(): void {
 		// Using the wrong form
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FORM_SHIFT.icon,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
-				Avoid using <ActionLink {...ACTIONS.DRAGON_KICK}/> outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/>. The form bonus is only activated in the correct form and <ActionLink {...ACTIONS.BOOTSHINE} /> has higher potency when buffed.
+				Avoid using combo starters outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/> as the form bonus is only activated in the correct form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
