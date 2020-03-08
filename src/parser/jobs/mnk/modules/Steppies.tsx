@@ -55,7 +55,7 @@ export default class Steppies extends Module {
 	}
 
 	private onDamage(event: NormalisedDamageEvent): void {
-		if (event.hits > 0) {
+		if (event.hitCount > 0) {
 			const boot = new Boot(
 				event.criticalHits > 0,
 				this.combatants.selected.hasStatus(STATUSES.OPO_OPO_FORM.id),
