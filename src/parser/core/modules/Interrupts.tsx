@@ -24,13 +24,13 @@ export abstract class Interrupts extends Module {
 	static handle: string = 'interrupts'
 	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
-	@dependency private timeline!: Timeline
+	@dependency private data!: Data
 	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
-	@dependency private data!: Data
+	@dependency private timeline!: Timeline
 
-	private currentCast?: CastEvent | undefined
-	private droppedCasts?: CastEvent[] = []
+	private currentCast?: CastEvent
+	private droppedCasts: CastEvent[] = []
 	private missedTimeMS: number = 0
 
 	/**
@@ -91,16 +91,16 @@ export abstract class Interrupts extends Module {
 
 	private pushDropCasts(currentEvent: CastEvent) {
 		this.missedTimeMS += Math.min(this.globalCooldown.getEstimate(), currentEvent.timestamp - this.currentCast!.timestamp)
-		this.droppedCasts!.push(currentEvent)
+		this.droppedCasts.push(currentEvent)
 	}
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.icon,
 			tiers: this.severity,
-			value: this.droppedCasts!.length,
+			value: this.droppedCasts.length,
 			content: this.suggestionContent,
-			why: this.suggestionWhy(this.droppedCasts!, this.missedTimeMS),
+			why: this.suggestionWhy(this.droppedCasts, this.missedTimeMS),
 		}))
 	}
 
@@ -118,7 +118,7 @@ export abstract class Interrupts extends Module {
 		</Table.Header>
 		<Table.Body>
 			{
-				this.droppedCasts!.map((cast) =>
+				this.droppedCasts.map((cast) =>
 					<Table.Row key={cast.timestamp}>
 						<Table.Cell textAlign="center">
 							<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
