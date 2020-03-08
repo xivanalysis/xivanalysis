@@ -59,7 +59,7 @@ export abstract class Interrupts extends Module {
 	 * @param missedCasts
 	 * @param missedTime
 	 */
-	private suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element | string {
+	private suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
 	}
 
