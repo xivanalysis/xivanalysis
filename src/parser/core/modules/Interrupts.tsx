@@ -50,7 +50,7 @@ export abstract class Interrupts extends Module {
 	/**
 	 * Implementing modules MAY override the default suggestion text
 	 */
-	protected suggestionContent: JSX.Element | string = <Trans id="core.interrupts.suggestion.content">
+	protected suggestionContent: JSX.Element = <Trans id="core.interrupts.suggestion.content">
 		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible.
 	</Trans>
 
