@@ -89,9 +89,12 @@ export abstract class Interrupts extends Module {
 		this.currentCast = undefined
 	}
 
-	private pushDropCasts(currentEvent: CastEvent) {
-		this.missedTimeMS += Math.min(this.globalCooldown.getEstimate(), currentEvent.timestamp - this.currentCast!.timestamp)
-		this.droppedCasts.push(currentEvent)
+	private pushDropCasts(event: CastEvent) {
+		// we shouldn't hit this, since there has to be a valid event to compare to, but check just to be safe
+		if (this.currentCast) {
+			this.missedTimeMS += Math.min(this.globalCooldown.getEstimate(), event.timestamp - this.currentCast.timestamp)
+			this.droppedCasts.push(event)
+		}
 	}
 
 	private onComplete() {
