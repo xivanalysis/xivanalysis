@@ -25,7 +25,7 @@ export default class AbilityDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.NO_MERCY],
-			firstUseOffset: FIRST_USE_OFFSET_NO_MERCY, 
+			firstUseOffset: FIRST_USE_OFFSET_NO_MERCY,
 		},
 		{
 			cooldowns: [ACTIONS.BLOODFEST],
