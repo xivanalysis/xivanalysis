@@ -389,7 +389,7 @@
   "drg.positionals.analysis.message": "<0/>を背面で当てるか、<1/>を側面で当てると、<3/>の代わりに<2/>が使えます。あなたは可能な限りこのプロックを狙うべきで、そのままでは方向指定を取れない場合は<4/>を活用してください。方向指定をミスしたところがあれば、<5/>が使用可能であったかとともに以下の表に示します。",
   "drg.positionals.analysis.missed": "<0/> あなたは<2>{0}</2>回中<1>{missed}</1>回の<3/>プロックをミスしました。",
   "drg.positionals.analysis.truenorth": "ミスしたプロックのうち、<0>{withTn}</0>回は<1/>が使用可能でした。",
-  "drg.positionals.suggestions.content": "",
+  "drg.positionals.suggestions.content": "<0/>と<1/>の方向指定を正しくとれば、与えるダメージが増え<2/>が使えるようになります。使用可能なら<3/>も使い、これらの方向指定を取れるようにしましょう。",
   "drg.positionals.suggestions.why": "{missed, plural, one {# 回}other {# 回}}竜眼雷電をプロックできていません。",
   "drg.positionals.table.procact": "アクション",
   "drg.positionals.table.time": "時間",
