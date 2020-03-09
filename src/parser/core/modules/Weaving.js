@@ -105,15 +105,15 @@ export default class Weaving extends Module {
 		// Few triples is medium, any more is major
 		const badWeaves = this._badWeaves
 		this.suggestions.add(new TieredSuggestion({
-			icon: this._suggestionIcon,
-			content: this._suggestionContent,
+			icon: this.suggestionIcon,
+			content: this.suggestionContent,
 			why: <Plural
 				id="core.weaving.why"
 				value={badWeaves.length}
 				_1="# instance of incorrect weaving"
 				other="# instances of incorrect weaving"
 			/>,
-			tiers: this._severity,
+			tiers: this.severity,
 			value: badWeaves.length,
 		}))
 	}
