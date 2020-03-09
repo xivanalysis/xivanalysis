@@ -19,14 +19,14 @@ export const WAR = ensureStatuses({
 		id: 735,
 		name: 'Raw Intuition',
 		icon: 'https://xivapi.com/i/012000/012555.png',
-		duration: 5,
+		duration: 6,
 	},
 
 	VENGEANCE: {
 		id: 89,
 		name: 'Vengeance',
 		icon: 'https://xivapi.com/i/010000/010256.png',
-		duration: 10,
+		duration: 15,
 	},
 
 	DEFIANCE: {
@@ -46,7 +46,7 @@ export const WAR = ensureStatuses({
 		id: 409,
 		name: 'Holmgang',
 		icon: 'https://xivapi.com/i/000000/000266.png',
-		duration: 6,
+		duration: 8,
 	},
 
 	STORMS_EYE: {
