@@ -41,7 +41,7 @@ class GnashingComboState {
 	numAbdomen: number = 0
 	numWicked: number = 0
 	numEye: number = 0
-	numTotal: number = 0 //This is the filter, sub 6 = possible problem
+	numTotal: number = 0 // This is the filter, sub 6 = possible problem
 
 	constructor(start: number) {
 		this.start = start
@@ -57,13 +57,13 @@ export default class Continuation extends Module {
 	private buffs = 0
 	private actions = 0
 
-	private gnashingComboWindows: GnashingComboState[] = [] //Store all the gnashing fang combos to be output to the rotationTable
+	private gnashingComboWindows: GnashingComboState[] = [] // Store all the gnashing fang combos to be output to the rotationTable
 
 	private get lastGnashingCombo(): GnashingComboState | undefined {
 		return _.last(this.gnashingComboWindows)
 	}
 
-	protected init() { //TODO: Strip away the other hooks? I could roll them into the actual cast I have for tracking the combo, but won't be as nice looking IMO
+	protected init() { // TODO: Strip away the other hooks? I could roll them into the actual cast I have for tracking the combo, but won't be as nice looking IMO
 		this.addHook('cast',
 			{
 				by: 'player',
@@ -136,25 +136,25 @@ export default class Continuation extends Module {
 					case ACTIONS.EYE_GOUGE.id:
 						lastGnashingCombo.numEye++
 						lastGnashingCombo.numTotal++
-	
-						if (lastGnashingCombo.numTotal == 6) {
+
+						if (lastGnashingCombo.numTotal === 6) {
 							lastGnashingCombo.isProper = true
 						}
+
 						lastGnashingCombo.rotation.push(event)
 						this.onEndGnashingCombo(event)
 						break
 				}
 
-			}
+				}
 		 }
-
 
 	private onEndGnashingCombo(event: CastEvent) {
 		const lastGnashingCombo = this.lastGnashingCombo
 
-		 if (lastGnashingCombo != null) {
+		if (lastGnashingCombo != null) {
                         lastGnashingCombo.end = event.timestamp
-                 }
+		}
 
 	}
 
