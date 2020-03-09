@@ -25,6 +25,19 @@ export const changelog = [
 		</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
+	{
+		date: new Date('2020-03-09'),
+		Changes: () => <>
+			Updated GNB's Feedback and backend logic.
+			<ul>
+				<li> Added offsets to all ogcds based on the longest possible opener </li>
+				<li> Adjusted Blasting Zone to account for either zone based on the level of the player </li>
+				<li> Added leftover ammo feedback </li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,
