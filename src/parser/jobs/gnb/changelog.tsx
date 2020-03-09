@@ -37,7 +37,6 @@ export const changelog = [
 		</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
-
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,
