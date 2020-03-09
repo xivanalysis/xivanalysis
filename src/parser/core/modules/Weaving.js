@@ -36,11 +36,11 @@ export default class Weaving extends Module {
 	static title = t('core.weaving.title')`Weaving Issues`
 
 	// WVR Focused synth lmao
-	_suggestionIcon = 'https://xivapi.com/i/001000/001785.png'
-	_suggestionContent = <Trans id="core.weaving.content">
+	suggestionIcon = 'https://xivapi.com/i/001000/001785.png'
+	suggestionContent = <Trans id="core.weaving.content">
 		Avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module below for more detailed analysis.
 	</Trans>
-	_severity = WEAVING_SEVERITY
+	severity = WEAVING_SEVERITY
 
 	_weaves = []
 	_ongoingCastEvent = null

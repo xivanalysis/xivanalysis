@@ -14,6 +14,10 @@ interface JankFakeEvent {
 	timestamp: number
 }
 
+interface SeverityTiers {
+	[key: number]: number
+}
+
 export interface WeaveInfo {
 	leadingGcdEvent: CastEvent | JankFakeEvent
 	trailingGcdEvent: CastEvent
@@ -28,6 +32,10 @@ export default class Weaving extends Module {
 	protected invuln: Invulnerability
 	protected speedmod: Speedmod
 	protected suggestions: Suggestions
+
+	protected suggestionIcon: string
+	protected suggestionContent: JSX.Element
+	protected severity: SeverityTiers
 
 	isOgcd(action: Action): boolean
 	isBadWeave(weave: WeaveInfo, maxWeaves?: number): boolean
