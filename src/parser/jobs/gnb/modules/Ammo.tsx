@@ -36,6 +36,11 @@ const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
 	4: SEVERITY.MAJOR,
 }
 
+const LEFTOVER_AMMO_SEVERITY_TIERS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+}
+
 const MAX_AMMO = 2
 
 class AmmoState {
@@ -168,6 +173,18 @@ export default class Ammo extends Module {
 			</Trans>,
 			tiers: SINGLE_TARGET_CIRCLE_SEVERITY_TIERS,
 			value: this.erroneousCircles,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOODFEST.icon,
+			content: <Trans id="gnb.ammo.leftover-ammo.content">
+				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible.
+			</Trans>,
+			why: <Trans id="gnb.ammo.leftover-ammo.why">
+				you had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> leftover at the end of the fight.
+			</Trans>,
+			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
+			value: this.leftoverAmmo,
 		}))
 
 		this.checklist.add(new Rule({

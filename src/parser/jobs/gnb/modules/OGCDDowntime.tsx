@@ -11,6 +11,10 @@ const FIRST_USE_OFFSET_NO_MERCY = 10000
  */
 const FIRST_USE_OFFSET_BLOODFEST = 22000
 
+const FIRST_USE_OFFSET_BOWBLAST = 17500 // The BowBlast combo is appiled at a maximum of 7 GCDs in current viable openers but can be applied as soon as 5 GCDs
+
+const FIRST_USE_OFFSET_DIVIDE = 27500 // The rough divide is used at upto 11 GCDs out (single weave) but can be used as early as 8
+
 export default class AbilityDowntime extends CooldownDowntime {
 
 	firstUseOffsetPerOgcd = {
@@ -21,14 +25,23 @@ export default class AbilityDowntime extends CooldownDowntime {
 	trackedCds = [
 		{
 			cooldowns: [ACTIONS.NO_MERCY],
-			firstUseOffset: 10000,
+			firstUseOffset: FIRST_USE_OFFSET_NO_MERCY, 
 		},
 		{
 			cooldowns: [ACTIONS.BLOODFEST],
-			firstUseOffset: 22000,
+			firstUseOffset: FIRST_USE_OFFSET_BLOODFEST,
 		},
-		{cooldowns: [ACTIONS.BLASTING_ZONE]}, // Only track this one for now, assume level 80
-		{cooldowns: [ACTIONS.ROUGH_DIVIDE]},
-		{cooldowns: [ACTIONS.BOW_SHOCK]},
+		{
+			cooldowns: [ACTIONS.BLASTING_ZONE, ACTIONS.DANGER_ZONE],
+			firstUseOffset: FIRST_USE_OFFSET_BOWBLAST,
+		},
+		{
+			cooldowns: [ACTIONS.BOW_SHOCK],
+			firstUseOffset: FIRST_USE_OFFSET_BOWBLAST,
+		},
+		{
+			cooldowns: [ACTIONS.ROUGH_DIVIDE],
+			firstUseOffset: FIRST_USE_OFFSET_DIVIDE, // but not by 0.
+		},
 	]
 }
