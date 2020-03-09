@@ -1,7 +1,8 @@
-import {scaleTime} from 'd3-scale'
+import {scaleTime, ScaleTime} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {useCallback, useMemo, useRef, useState} from 'react'
+import styles from './Component.module.css'
 
 export interface ComponentProps {
 	/** Minimum bound of time region to display. */
@@ -10,28 +11,24 @@ export interface ComponentProps {
 	max?: number
 }
 
-const formatTick = (date: Date) => (
-	timeSecond(date) < date ? utcFormat('.%L') :
-	timeMinute(date) < date ? utcFormat('%-S') :
-	utcFormat('%-Mm')
-)(date)
-
-export const Component = ({
+export function Component({
 	min = 0,
 	max = 1000, // Infinity,
-}: ComponentProps) => {
-	// Build the initial scale object. Using `useRef` so we don't keep building new scales
+}: ComponentProps) {
+	// Build the initial scale object. Using `useRef` so we don't keep building new scales.
 	const {current: scale} = useRef(
-		scaleTime().range([0, 100]).domain([min, max]),
+		scaleTime().range([0, 100]),
 	)
 
 	// State of the current user domain
 	const [userDomain, setUserDomain] = useState([min, max])
 
-	const ticks = useMemo(() => {
+	// Using memo for synchronous conditional update
+	// TODO: Is the complexity from the above even worth it? Check what lifting d3 is doing here,
+	// it may be just be overkill.
+	useMemo(() => {
 		scale.domain(userDomain)
-		return scale.ticks()
-	}, userDomain)
+	}, [userDomain])
 
 	// Need to use a manual event for this, as react hooks _all_ events on doc root, and the chrome
 	// team in their infinite wisdom or lack thereof has made wheel events on the root passive by
@@ -46,27 +43,34 @@ export const Component = ({
 	}, [max]))
 
 	return (
-		<div ref={scrollParentRef} style={{border: '1px dashed red'}}>
+		<div ref={scrollParentRef} className={styles.container}>
+			{/* TODO: Group rows */}
 			bounds: {userDomain.join(', ')}
 
-			{/* Main scrolling body */}
-			<div>
-				{/* Rows need to go here? */}
-				{/* ... */}
-
-				{/* Scale row */}
-				<div style={{position: 'relative', height: '20px', border: '1px dotted blue'}}>
-					{/* Ticks */}
-					{ticks.map((tick, index) => (
-						<div key={index} style={{position: 'absolute', left: scale(tick) + '%'}}>
-							{formatTick(tick)}
-						</div>
-					))}
-				</div>
-			</div>
+			<Axis scale={scale}/>
 		</div>
 	)
 }
+
+interface AxisProps {
+	scale: ScaleTime<number, number>
+}
+
+const Axis = ({scale}: AxisProps) => (
+	<div className={styles.axis}>
+		{scale.ticks().map((tick, index) => (
+			<div key={index} className={styles.tick} style={{left: `${scale(tick)}%`}}>
+				{formatTick(tick)}
+			</div>
+		))}
+	</div>
+)
+
+const formatTick = (date: Date) => (
+	timeSecond(date) < date ? utcFormat('.%L') :
+	timeMinute(date) < date ? utcFormat('%-S') :
+	utcFormat('%-Mm')
+)(date)
 
 /**
  * Hook an event listener directly onto an element, bypassing react's synthetic event system.

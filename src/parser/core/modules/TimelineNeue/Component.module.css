@@ -1,0 +1,16 @@
+.container {
+	margin: -1px;
+	border: 1px dashed red;
+}
+
+.axis {
+	position: relative;
+	height: 1em;
+
+	margin: -1px;
+	border: 1px dotted blue;
+}
+
+.tick {
+	position: absolute;
+}
