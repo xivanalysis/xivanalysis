@@ -3,6 +3,8 @@ declare namespace ComponentModuleCssModule {
   export interface IComponentModuleCss {
     axis: string;
     container: string;
+    row: string;
+    rowThing: string;
     tick: string;
   }
 }

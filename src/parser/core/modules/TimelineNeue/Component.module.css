@@ -3,6 +3,19 @@
 	border: 1px dashed red;
 }
 
+.row {
+	position: relative;
+	height: 1em;
+
+	margin: -1px;
+	border: 1px dotted green;
+}
+
+/* TODO: What is this going to be called? Item? */
+.rowThing {
+	position: absolute;
+}
+
 .axis {
 	position: relative;
 	height: 1em;
