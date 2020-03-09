@@ -49,7 +49,7 @@ function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandler
 		// TODO: This, but better
 		setUserDomain(([uMin, uMax]) => [
 			uMin,
-			Math.max(Math.min(uMax + event.deltaY, max), 1),
+			Math.max(Math.min(uMax + event.deltaY * 10, max), 1),
 		])
 		event.preventDefault()
 	}, [max]))

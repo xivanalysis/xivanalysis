@@ -7,16 +7,6 @@ export class Timeline extends Module {
 	static displayOrder = -1000
 
 	output() {
-		return <TempWrapper/>
+		return <Component max={this.parser.fightDuration}/>
 	}
-}
-
-const TempWrapper = () => {
-	const [mult, setMult] = React.useState(1)
-	const tickMult = React.useCallback(() => setMult(mult => mult + 1), [])
-	return (
-		<div onClick={tickMult}>
-			<Component max={1000 * mult}/>
-		</div>
-	)
 }
