@@ -1,7 +1,7 @@
-import React from 'react'
-import {Trans} from '@lingui/react'
+import {Trans} from '@lingui/macro'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-drk" */),
@@ -14,7 +14,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},

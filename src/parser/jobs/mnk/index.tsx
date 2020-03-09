@@ -31,7 +31,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.1',
+		to: '5.2',
 	},
 
 	contributors: [
@@ -39,6 +39,13 @@ export default new Meta({
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-02-25'),
+			Changes: () => <>
+				Fix Fist chart and Bootshine incorrectly penalising post-PB crits.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2019-11-20'),
 			Changes: () => <>

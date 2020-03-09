@@ -9,7 +9,7 @@ import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
@@ -45,10 +45,10 @@ export default class FeatherGauge extends Module {
 	private featherOvercap = 0
 
 	protected init() {
-		this.addHook('aoedamage', {by: 'player', abilityId: FEATHER_GENERATORS}, this.onCastGenerator)
-		this.addHook('cast', {by: 'player', abilityId: FEATHER_CONSUMERS}, this.onConsumeFeather)
-		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: FEATHER_GENERATORS}, this.onCastGenerator)
+		this.addEventHook('cast', {by: 'player', abilityId: FEATHER_CONSUMERS}, this.onConsumeFeather)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	public feathersSpentInRange(start: number, end: number): number {
@@ -58,8 +58,8 @@ export default class FeatherGauge extends Module {
 		return this.history.filter(event => event.t >= start - this.parser.fight.start_time && event.t <= end - this.parser.fight.start_time && !event.isGenerator).length
 	}
 
-	private onCastGenerator(event: AoeEvent) {
-		if (!event.successfulHit) {
+	private onCastGenerator(event: NormalisedDamageEvent) {
+		if (!event.hasSuccessfulHit) {
 			return
 		}
 		this.avgGenerated += FEATHER_GENERATION_CHANCE

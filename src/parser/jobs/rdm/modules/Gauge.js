@@ -93,7 +93,7 @@ class GaugeAction {
 		const abilityId = event.ability.guid
 		const {white, black} = MANA_GAIN[abilityId] || {}
 		if (white || black) {
-			if (!event.successfulHit) {
+			if (!event.hasSuccessfulHit) {
 				// Melee combo skills will still consume mana but will not continue the combo, set an invuln/missed flag for downstream consumers
 				this.missOrInvuln = true
 
@@ -183,13 +183,13 @@ export default class Gauge extends Module {
 		constructor(...args) {
 			super(...args)
 
-			this.addHook('cast', {
+			this.addEventHook('cast', {
 				by: 'player',
 				abilityId: ACTIONS.MANAFICATION.id,
 			}, this._gaugeEvent)
-			this.addHook('aoedamage', {by: 'player'}, this._gaugeEvent)
-			this.addHook('death', {to: 'player'}, this._onDeath)
-			this.addHook('complete', this._onComplete)
+			this.addEventHook('normaliseddamage', {by: 'player'}, this._gaugeEvent)
+			this.addEventHook('death', {to: 'player'}, this._onDeath)
+			this.addEventHook('complete', this._onComplete)
 		}
 
 		_pushToGraph() {

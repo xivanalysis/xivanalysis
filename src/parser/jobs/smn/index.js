@@ -31,7 +31,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
@@ -43,6 +43,10 @@ export default new Meta({
 	changelog: [{
 		date: new Date('2020-02-16'),
 		Changes: () => <>Updated DoT tables to separate applications by target and show which skill was used.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2020-02-12'),
+		Changes: () => <>Added checks for Tri-disaster usage.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	}, {
 		date: new Date('2019-11-8'),

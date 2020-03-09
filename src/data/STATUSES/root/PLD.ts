@@ -38,7 +38,7 @@ export const PLD = ensureStatuses({
 	},
 	SWORD_OATH: {
 		id: 1902,
-		name: 'Sword Auth',
+		name: 'Sword Oath',
 		icon: 'https://xivapi.com/i/019000/019461.png',
 		duration: 15,
 	},

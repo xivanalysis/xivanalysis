@@ -35,7 +35,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.1',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.NIV, role: ROLES.MAINTAINER},
@@ -43,6 +43,16 @@ export default new Meta({
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-03-08'),
+			Changes: () => <>Add interrupt tracking to WHM – a big thank you to Levi and everyone in #whm_lounge for their help.</>,
+			contributors: [CONTRIBUTORS.NONO],
+		},
+		{
+			date: new Date('2020-02-27'),
+			Changes: () => <>Update WHM for 5.2 support.</>,
+			contributors: [CONTRIBUTORS.NONO],
+		},
 		{
 			date: new Date('2019-09-04'),
 			Changes: () => <>Track oGCDs with more clarity.</>,

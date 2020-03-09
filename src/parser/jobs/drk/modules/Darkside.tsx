@@ -1,10 +1,14 @@
-import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
-import ACTIONS from 'data/ACTIONS'
-import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import React from 'react'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
+import {Event} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist from 'parser/core/modules/Checklist'
+import {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Death from 'parser/core/modules/Death'
+import {isNormalisedDamageEvent, NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import React from 'react'
 
 const DARKSIDE_MAX_DURATION = 60000
 const DARKSIDE_EXTENSION = {
@@ -13,28 +17,25 @@ const DARKSIDE_EXTENSION = {
 }
 const INITIAL_APPLICATION_FORGIVENESS = 2500
 
-export default class Darkside extends Module {
+export class Darkside extends Module {
 	static handle = 'Darkside'
-	static dependencies = [
-		'checklist',
-		'death',
-	]
 
 	static title = t('drk.darkside.title')`Darkside`
+	@dependency private checklist!: Checklist
+	@dependency private death!: Death
 
-	_currentDuration = 0
-	_downtime = 0
-	_lastEventTime = null
+	private _currentDuration = 0
+	private _downtime = 0
+	private _lastEventTime: number | null = null
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('aoedamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('raise', {to: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+	protected init() {
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('raise', {to: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
-	_updateDarkside(event) {
+	_updateDarkside(event: Event | NormalisedDamageEvent) {
 		if (this._lastEventTime === null) {
 			// First application - allow up to 1 GCD to apply before counting downtime
 			const elapsedTime = event.timestamp - this.parser.fight.start_time
@@ -48,24 +49,24 @@ export default class Darkside extends Module {
 			}
 		}
 
-		if (event.hasOwnProperty('ability')) {
+		if (isNormalisedDamageEvent(event)) {
 			const abilityId = event.ability.guid
 			this._currentDuration = Math.min(this._currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
 			this._lastEventTime = event.timestamp
 		}
 	}
 
-	_onDeath(event) {
+	_onDeath(event: Event) {
 		this._updateDarkside(event)
 		this._currentDuration = 0
 	}
 
-	_onRaise(event) {
+	_onRaise(event: Event) {
 		// So floor time doesn't count against Darkside uptime
 		this._lastEventTime = event.timestamp
 	}
 
-	_onComplete(event) {
+	_onComplete(event: Event) {
 		this._updateDarkside(event)
 		const duration = this.parser.fightDuration - this.death.deadTime
 		const uptime = ((duration - this._downtime) / duration) * 100

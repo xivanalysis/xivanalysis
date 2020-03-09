@@ -3,10 +3,11 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
+import {DamageEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
+import {NormalisedDamageEvent, NormalisedEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -20,14 +21,23 @@ const ISSUE_TYPENAMES = {
 	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export interface ComboEvent extends AoeEvent {
-	type: 'combo'
+export class ComboEvent extends NormalisedEvent {
+	type = 'combo'
+	calculatedEvents: DamageEvent[] = []
+	confirmedEvents: DamageEvent[] = []
+
+	constructor(event: NormalisedDamageEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+		this.calculatedEvents = event.calculatedEvents.slice(0)
+		this.confirmedEvents = event.confirmedEvents.slice(0)
+	}
 }
 
 export interface ComboIssue {
 	type: keyof typeof ISSUE_TYPENAMES
-	context: AoeEvent[]
-	event: AoeEvent
+	context: NormalisedDamageEvent[]
+	event: NormalisedDamageEvent
 }
 
 export default class Combos extends Module {
@@ -43,15 +53,15 @@ export default class Combos extends Module {
 	@dependency private timeline!: Timeline
 
 	private lastGcdTime = this.parser.fight.start_time
-	private currentComboChain: AoeEvent[] = []
+	private currentComboChain: NormalisedDamageEvent[] = []
 	private issues: ComboIssue[] = []
 
 	protected init() {
-		this.addHook('aoedamage', {by: 'player'}, this.onCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player'}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	private get lastComboEvent(): AoeEvent | null {
+	private get lastComboEvent(): NormalisedDamageEvent | null {
 		return _.last(this.currentComboChain) || null
 	}
 
@@ -76,16 +86,13 @@ export default class Combos extends Module {
 			.map(issue => issue.event)
 	}
 
-	protected fabricateComboEvent(event: AoeEvent) {
-		const combo: ComboEvent = {
-			...event,
-			type: 'combo',
-		}
+	protected fabricateComboEvent(event: NormalisedDamageEvent) {
+		const combo = new ComboEvent(event)
 		delete combo.timestamp // Since fabricateEvent adds that in anyway
 		this.parser.fabricateEvent(combo)
 	}
 
-	protected recordBrokenCombo(event: AoeEvent, context: AoeEvent[]) {
+	protected recordBrokenCombo(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]) {
 		if (!this.isAllowableComboBreak(event, context)) {
 			this.issues.push({
 				type: 'combobreak',
@@ -96,7 +103,7 @@ export default class Combos extends Module {
 		this.currentComboChain = []
 	}
 
-	protected recordUncomboedGcd(event: AoeEvent) {
+	protected recordUncomboedGcd(event: NormalisedDamageEvent) {
 		this.issues.push({
 			type: 'uncomboed',
 			event,
@@ -105,7 +112,7 @@ export default class Combos extends Module {
 		this.currentComboChain = []
 	}
 
-	protected recordFailedCombo(event: AoeEvent, context: AoeEvent[]) {
+	protected recordFailedCombo(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]) {
 		this.issues.push({
 			type: 'failedcombo',
 			event,
@@ -120,7 +127,7 @@ export default class Combos extends Module {
 	 * @param event
 	 * @return true if combo, false otherwise
 	 */
-	protected checkCombo(combo: TODO /* Should be an Action type */, event: AoeEvent): boolean {
+	protected checkCombo(combo: TODO /* Should be an Action type */, event: NormalisedDamageEvent): boolean {
 		// Not in a combo
 		if (this.lastAction == null) {
 			// Combo starter, we good
@@ -158,7 +165,7 @@ export default class Combos extends Module {
 		return false
 	}
 
-	private onCast(event: AoeEvent) {
+	private onCast(event: NormalisedDamageEvent) {
 		const action = this.data.getAction(event.ability.guid)
 
 		if (!action) {
@@ -177,7 +184,7 @@ export default class Combos extends Module {
 
 		// If it's a combo action, run it through the combo checking logic
 		if (action.combo) {
-			if (!event.successfulHit) {
+			if (!event.hasSuccessfulHit) {
 				// Failed attacks break combo
 				this.recordFailedCombo(event, this.currentComboChain)
 				return
@@ -229,7 +236,7 @@ export default class Combos extends Module {
 	 * what particular actions were misused and when in the fight.
 	 * The overriding module should return true if the default suggestion is not wanted
 	 */
-	addJobSpecificSuggestions(comboBreakers: AoeEvent[], uncomboedGcds: AoeEvent[]) {
+	addJobSpecificSuggestions(comboBreakers: NormalisedDamageEvent[], uncomboedGcds: NormalisedDamageEvent[]) {
 		return false
 	}
 
@@ -239,7 +246,7 @@ export default class Combos extends Module {
 	 * the event and context will not be recorded, and the current combo will be cleared with no other side effects.
 	 * Returning false will allow the break to be recorded, and displayed to the user
 	 */
-	isAllowableComboBreak(event: AoeEvent, context: AoeEvent[]): boolean {
+	isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
 		return false
 	}
 

@@ -1,16 +1,16 @@
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-
 import {dependency} from 'parser/core/Module'
-import {AoeEvent} from 'parser/core/modules/AoE'
 import {AoeAbility, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 export default class MnkAoE extends AoEUsages {
 	static handle = 'mnkaoe'
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 
 	// You awake to find yourself enlightened to the true power of AoE
 	suggestionIcon = ACTIONS.ENLIGHTENMENT.icon
@@ -39,8 +39,8 @@ export default class MnkAoE extends AoEUsages {
 		},
 	]
 
-	protected adjustMinTargets(event: AoeEvent, minTargets: number): number {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number): number {
+		const action = this.data.getAction(event.ability.guid)
 
 		// How in the fuck did we even get here tbh
 		if (!action) {
@@ -48,7 +48,7 @@ export default class MnkAoE extends AoEUsages {
 		}
 
 		// If Leaden Fist is up, Boot is extra strong
-		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
+		if (action.id === ACTIONS.ARM_OF_THE_DESTROYER.id && this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id)) {
 			return minTargets + 1
 		}
 
