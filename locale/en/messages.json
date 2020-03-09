@@ -835,6 +835,7 @@
   "whm.dots.rule.name": "Keep your DoTs up",
   "whm.dots.suggestion.clip-dia.content": "Avoid refreshing Dia significantly before its expiration, this will allow you to cast more Glares.",
   "whm.dots.suggestion.clip-dia.why": "{0} of {1} lost to early refreshes.",
+  "whm.interrupts.suggestion.content": "Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible. Use windows created by normal <0/> refreshes to move in advance of mechanics. When that's not an option, try to plan and utilize Afflatus actions to simultaneously heal wherever needed and cover movement. Overwriting Dia early should be your last resort for movement.",
   "whm.lily-blood.suggestion.content": "Use <0/> to avoid wasting blood lily growth.",
   "whm.lily-blood.suggestion.why": "{0, plural, one {# blood lily} other {# blood lilies}} did not bloom due to early lily use.",
   "whm.lily-cap.suggestion.content": "Use <0/> or <1/> regularly to avoid capping your lilies.",

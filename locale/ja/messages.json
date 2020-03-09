@@ -835,6 +835,7 @@
   "whm.dots.rule.name": "常にDoTを切らさないようにしてください",
   "whm.dots.suggestion.clip-dia.content": "DoTの早すぎる更新は避けてください。効果時間が切れかけていないのに更新するとグレアの使用回数が減ることになります。",
   "whm.dots.suggestion.clip-dia.why": "",
+  "whm.interrupts.suggestion.content": "",
   "whm.lily-blood.suggestion.content": "ブラッドリリーを無駄にしないために <0/> を使ってください。",
   "whm.lily-blood.suggestion.why": "",
   "whm.lily-cap.suggestion.content": "ヒーリングリリーが最大にならないように <0/> または <1/> を使ってください。",

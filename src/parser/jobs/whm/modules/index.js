@@ -4,6 +4,7 @@ import oGCDs from './oGCDs'
 import Overheal from './Overheal'
 import Speedmod from './Speedmod'
 import Swiftcast from './Swiftcast'
+import WhmInterrupts from './Interrupts'
 
 export default [
 	DoTs,
@@ -12,4 +13,5 @@ export default [
 	Overheal,
 	Speedmod,
 	Swiftcast,
+	WhmInterrupts,
 ]
