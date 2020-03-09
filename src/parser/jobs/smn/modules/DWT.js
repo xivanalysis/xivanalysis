@@ -94,7 +94,7 @@ export default class DWT extends Module {
 	}
 
 	_onDeathflareDamage(event) {
-		this._stopAndSave(event.hits, event.timestamp)
+		this._stopAndSave(event.hitCount, event.timestamp)
 	}
 
 	_onApplyDwt(event) {

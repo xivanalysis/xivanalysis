@@ -4,7 +4,7 @@ import Weaving from './Weaving'
 import ChainStrat from './ChainStrat'
 import FaerieGauge from './FaerieGauge'
 import Swiftcast from './Swiftcast'
-import Interrupts from './Interrupts'
+import SchInterrupts from './Interrupts'
 
 export default [
 	Weaving,
@@ -13,5 +13,5 @@ export default [
 	ChainStrat,
 	FaerieGauge,
 	Swiftcast,
-	Interrupts,
+	SchInterrupts,
 ]

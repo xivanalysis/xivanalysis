@@ -1,6 +1,6 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {AoEUsages} from 'parser/core/modules/AoeUsages'
+import {AoEUsages} from 'parser/core/modules/AoEUsages'
 //const GAIN_AT_3 = new Set([ACTIONS.FUGA.id, ACTIONS.OKA.id, ACTIONS.MANGETSU.id, ACTIONS.HISSATSU_KYUTEN.id])
 //const GAIN_AT_2 = new Set([ACTIONS.HISSATSU_GUREN.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.KAESHI_GOKEN.id])
 
@@ -9,7 +9,6 @@ export default class AoeChecker extends AoEUsages {
 		...AoEUsages.dependencies,
 		'combatants',
 	]
-
 	suggestionIcon = ACTIONS.FUGA.icon
 
 	trackedAbilities = [

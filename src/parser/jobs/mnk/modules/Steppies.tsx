@@ -28,11 +28,13 @@ const WEAK_BOOT_SEVERITY = {
 
 class Boot {
 	crit: boolean
+	opo: boolean
 	weak: boolean
 	timestamp: number
 
-	constructor(crit: boolean, weak: boolean, timestamp: number) {
+	constructor(crit: boolean, opo: boolean, weak: boolean, timestamp: number) {
 		this.crit = crit
+		this.opo = opo
 		this.weak = weak
 		this.timestamp = timestamp
 	}
@@ -53,8 +55,13 @@ export default class Steppies extends Module {
 	}
 
 	private onDamage(event: NormalisedDamageEvent): void {
-		if (event.hits > 0) {
-			const boot = new Boot(event.confirmedEvents[0].criticalHit, this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id), event.timestamp)
+		if (event.hitCount > 0) {
+			const boot = new Boot(
+				event.criticalHits > 0,
+				this.combatants.selected.hasStatus(STATUSES.OPO_OPO_FORM.id),
+				!this.combatants.selected.hasStatus(STATUSES.LEADEN_FIST.id),
+				event.timestamp)
+
 			this.steppies.push(boot)
 		}
 	}
@@ -100,15 +107,9 @@ export default class Steppies extends Module {
 		}))
 	}
 
-	getUnbuffedCount(boots: Boot[]): number {
-		return boots.reduce((total, current) => current.weak ? total : total+1, 0)
-	}
+	getUnbuffedCount = (boots: Boot[]): number => boots.filter(boot => boot.weak).length
 
-	getUncritCount(boots: Boot[]): number {
-		return boots.reduce((total, current) => current.crit ? total : total+1, 0)
-	}
+	getUncritCount = (boots: Boot[]): number => boots.filter(boot => !boot.crit && boot.opo).length
 
-	getLeadenPercent(boots: Boot[]): number {
-		return 100 - (this.getUnbuffedCount(boots) / boots.length) * 100
-	}
+	getLeadenPercent = (boots: Boot[]): number => 100 - (this.getUnbuffedCount(boots) / boots.length) * 100
 }

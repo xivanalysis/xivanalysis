@@ -12,45 +12,121 @@ const isBaseEvent = (event: Event): event is BaseEvent => isDamageEvent(event) |
 const isSupportedEvent = (event: Event): event is BaseEvent | BuffEvent => isBaseEvent(event) || isSupportedBuffEvent(event)
 const isBaseEventArray = (array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] => array.length > 0 && isBaseEvent(array[0])
 
-interface NormalisedEvent extends AbilityEvent {
+export interface NormalisedEvent extends AbilityEvent {
 	type: string
 	calculatedEvents: Array<BaseEvent | BuffEvent>
 	confirmedEvents: Array<BaseEvent | BuffEvent>
 }
-class NormalisedEvent {
+export class NormalisedEvent {
 	get targetsHit(): number { return new Set(this.confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
-	get hits(): number { return this.confirmedEvents.length }
-	get amount(): number {
-		if (isBaseEventArray(this.confirmedEvents)) {
-			return this.confirmedEvents.reduce((total, evt) => total + evt.amount, 0)
+
+	/**
+	 * Return all hits, regardless of whether they were confirmed or were ghosted
+	 */
+	get hits(): Array<BaseEvent | BuffEvent> {
+		if (this.calculatedEvents.length > 0) {
+			return this.calculatedEvents
+		}
+		return this.confirmedEvents
+	}
+	/**
+	 * Return the number of hits recorded for this actions, confirmed or ghosted
+	 */
+	get hitCount(): number { return this.hits.length }
+
+	/**
+	 * For damage or heal actions, the total of all damage or healing done by all hits, confirmed or ghosted
+	 * For buff actions, 0
+	 */
+	get hitAmount(): number {
+		if (isBaseEventArray(this.hits)) {
+			return this.hits.reduce((total, evt) => total + evt.amount, 0)
 		}
 		return 0
 	}
 	/**
-	 * Number of damage events that did not do confirmed damage to the target.
-	 *  Typically due to target or source despawning before damage applied.
+	 * Return the number of critical hits recorded for this action, confirmed or ghosted
 	 */
-	get ghostedHits(): number {
-		if (isBaseEventArray(this.calculatedEvents)) {
-			return this.calculatedEvents.filter((evt) => evt.unpaired).reduce((total, evt) => total + evt.amount, 0)
+	get criticalHits(): number {
+		if (isBaseEventArray(this.hits)) {
+			return this.hits.filter(evt => evt.criticalHit).length
 		}
 		return 0
 	}
 	/**
-	 * Total amount of damage from damage events that did not do confirmed damage to the target.
-	 *  Typically due to target or source despawning before damage applied.
+	 * Return the number of direct hits recorded for this action, confirmed or ghosted
 	 */
-	get ghostedAmount(): number {
-		if (isBaseEventArray(this.calculatedEvents)) {
-			return this.calculatedEvents.filter((evt) => evt.unpaired).length
+	get directHits(): number {
+		if (isBaseEventArray(this.hits)) {
+			return this.hits.filter(evt => evt.directHit).length
 		}
 		return 0
 	}
-	get successfulHit(): boolean {
+	/**
+	 * For damage or heal actions, did any of the events (confirmed or ghosted) for this action generate a successful hit?
+	 * - Successful hits are hits that did not miss, and that did not hit an INVULNERABLE or IMMUNE target
+	 *     (e.g. due to filter debuffs that force you to attack a specific target)
+	 * - In game data from e6s confirms that an event is considered successful by the game for advancing combo
+	 *     or generating gauge as long as the calculateddamage event occurs, even if the confirming damage packet doesn't
+	 */
+	get hasSuccessfulHit(): boolean {
+		if (isBaseEventArray(this.calculatedEvents) && this.calculatedEvents.length > 0) {
+			return this.calculatedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
+		}
 		if (isBaseEventArray(this.confirmedEvents)) {
 			return this.confirmedEvents.reduce((successfulHit: boolean, evt) => successfulHit || evt.successfulHit, false)
 		}
 		return false
+	}
+
+	/**
+	 * For damage or heal actions, return all hits that ghosted for this action
+	 *  Ghosted hits generate a "prepares" packet but did not actually deal damage or apply healing
+	 *  Hits typically ghost due to target or source despawning before damage applied.
+	 * For buff events, returns an empty array
+	 */
+	get ghostedHits(): BaseEvent[] {
+		if (isBaseEventArray(this.calculatedEvents)) {
+			return this.calculatedEvents.filter(evt => evt.unpaired)
+		}
+		return []
+	}
+	/**
+	 * Return the number of hits for this action that ghosted.
+	 */
+	get ghostedHitCount(): number {
+		return this.ghostedHits.length
+	}
+	/**
+	 * For damage or heal actions, the total of all damage or healing that did not occur due to ghosted hits
+	 * For buff events, 0
+	 */
+	get ghostedHitAmount(): number {
+		return this.ghostedHits.reduce((total, evt) => total + evt.amount, 0)
+	}
+
+	/**
+	 * For damage or heal actions, return all hits that succeeded for this action (generated a confirming damage action)
+	 * For buff events, returns all events
+	 */
+	get successfulHits(): Array<BaseEvent | BuffEvent> {
+		return this.confirmedEvents
+	}
+	/**
+	 * Return the number of hits for this action that succeeded
+	 */
+	get successfulHitCount(): number {
+		return this.successfulHits.length
+	}
+	/**
+	 * For damage or heal actions, the total of all damage or healing that was confirmed
+	 * For buff events, 0
+	 */
+	get successfulHitAmount(): number {
+		if (isBaseEventArray(this.successfulHits)) {
+			return this.successfulHits.reduce((total, evt) => total + evt.amount, 0)
+		}
+		return 0
 	}
 
 	attachEvent(event: BaseEvent | BuffEvent) {
@@ -69,7 +145,7 @@ export class NormalisedDamageEvent extends NormalisedEvent {
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
-	constructor(event: DamageEvent | NormalisedDamageEvent) {
+	constructor(event: DamageEvent) {
 		super()
 		Object.assign(this, (({type, amount, successfulHit, ...props}) => ({...props}))(event))
 	}

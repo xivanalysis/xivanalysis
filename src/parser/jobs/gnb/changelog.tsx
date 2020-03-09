@@ -17,6 +17,14 @@ export const changelog = [
 		</>,
 		contributors: [CONTRIBUTORS.QAPHLA],
 	},
+	{
+		date: new Date('2020-03-07'),
+		Changes: () => <>
+			Updated GNB to 5.2 as there have been no changes to
+			GNB since 5.08 in terms of gameplay
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,

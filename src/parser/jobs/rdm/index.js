@@ -31,6 +31,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-02-27'),
+			Changes: () => <>Added Verstone and Verfire procs to the Timeline</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2020-02-26'),
 			Changes: () => <>Bump up supported version to 5.2</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
