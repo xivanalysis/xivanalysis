@@ -121,8 +121,16 @@ interface ItemProps {
 const Item = ({value, children}: PropsWithChildren<ItemProps>) => {
 	const scale = useContext(ScaleContext)
 
+	const left = scale(value)
+
+	// If the item would be out of the current bounds, don't bother rendering it
+	// TODO: also left container side once I get panning going etc
+	if (left > 100) {
+		return null
+	}
+
 	return (
-		<div className={styles.item} style={{left: `${scale(value)}%`}}>
+		<div className={styles.item} style={{left: `${left}%`}}>
 			{children}
 		</div>
 	)
