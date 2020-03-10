@@ -1,24 +1,24 @@
-.container {
+.scaleHandler {
 	margin: -1px;
 	border: 1px dashed red;
 }
 
 .row {
 	position: relative;
-	height: 1em;
+	height: 2em;
 
 	margin: -1px;
 	border: 1px dotted green;
 }
 
-/* TODO: What is this going to be called? Item? */
-.rowThing {
+.item {
 	position: absolute;
+	height: 100%;
 }
 
 .axis {
 	position: relative;
-	height: 1em;
+	height: 2em;
 
 	margin: -1px;
 	border: 1px dotted blue;

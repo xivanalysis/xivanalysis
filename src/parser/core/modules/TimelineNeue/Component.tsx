@@ -1,7 +1,7 @@
 import {scaleTime, ScaleTime} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
-import React, {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
 
@@ -21,7 +21,9 @@ export const Component = ({
 	max = 1000, // Infinity,
 }: ComponentProps) => (
 	<ScaleHandler min={min} max={max}>
-		<Row/>
+		<Row>
+			<Item/>
+		</Row>
 		<Axis/>
 	</ScaleHandler>
 )
@@ -31,7 +33,7 @@ interface ScaleHandlerProps {
 	max: number
 }
 
-function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandlerProps>) {
+function ScaleHandler({children, min, max}: PropsWithChildren<ScaleHandlerProps>) {
 	// State of the current domain, selected via pan/zoom by the user
 	const [userDomain, setUserDomain] = useState<[number, number]>([min, max])
 
@@ -58,7 +60,7 @@ function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandler
 	useEffect(bind, [bind])
 
 	return (
-		<div ref={scrollParentRef} className={styles.container}>
+		<div ref={scrollParentRef} className={styles.scaleHandler}>
 			<ScaleContext.Provider value={scale}>
 				{children}
 			</ScaleContext.Provider>
@@ -66,14 +68,20 @@ function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandler
 	)
 }
 
-const Row = () => {
+const Row = ({children}: PropsWithChildren<{}>) => {
+	return (
+		<div className={styles.row}>
+			{children}
+		</div>
+	)
+}
+
+const Item = () => {
 	const scale = useContext(ScaleContext)
 
 	return (
-		<div className={styles.row}>
-			<div className={styles.rowThing} style={{left: `${scale(741)}%`}}>
-				Thing
-			</div>
+		<div className={styles.item} style={{left: `${scale(741)}%`}}>
+			Thing
 		</div>
 	)
 }
