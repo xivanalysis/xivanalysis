@@ -1,7 +1,8 @@
 import {scaleTime, ScaleTime} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
-import React, {createContext, useCallback, useContext, useMemo, useRef, useState} from 'react'
+import React, {createContext, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
 
 type Scale = ScaleTime<number, number>
@@ -32,7 +33,7 @@ interface ScaleHandlerProps {
 
 function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandlerProps>) {
 	// State of the current domain, selected via pan/zoom by the user
-	const [userDomain, setUserDomain] = useState([min, max])
+	const [userDomain, setUserDomain] = useState<[number, number]>([min, max])
 
 	// Keep the scale up to date with the user's domain
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
@@ -42,17 +43,19 @@ function ScaleHandler({children, min, max}: React.PropsWithChildren<ScaleHandler
 		[userDomain],
 	)
 
-	// Need to use a manual event for this, as react hooks _all_ events on doc root, and the chrome
-	// team in their infinite wisdom or lack thereof has made wheel events on the root passive by
-	// default. Oh, and react doesn't let you change that.
-	const scrollParentRef = useEventListener('wheel', useCallback(event => {
-		// TODO: This, but better
+	const scrollParentRef = useRef(null)
+	const bind = useWheel(({delta: [_, deltaY], event}) => {
 		setUserDomain(([uMin, uMax]) => [
 			uMin,
-			Math.max(Math.min(uMax + event.deltaY * 10, max), 1),
+			Math.max(Math.min(uMax + deltaY * 10, max), 1),
 		])
-		event.preventDefault()
-	}, [max]))
+
+		event?.preventDefault()
+	}, {
+		domTarget: scrollParentRef,
+		eventOptions: {passive: false},
+	})
+	useEffect(bind, [bind])
 
 	return (
 		<div ref={scrollParentRef} className={styles.container}>
@@ -94,29 +97,3 @@ const formatTick = (date: Date) => (
 	timeMinute(date) < date ? utcFormat('%-S') :
 	utcFormat('%-Mm')
 )(date)
-
-/**
- * Hook an event listener directly onto an element, bypassing react's synthetic event system.
- * If you're not sure if you need this, you don't need it.
- *
- * @param type Event type to hook into
- * @param listener Listener to attach
- * @returns Callback ref that should be passed to the `ref` prop on the element to be listened on
- */
-function useEventListener<E extends keyof HTMLElementEventMap>(type: E, listener: (event: HTMLElementEventMap[E]) => void) {
-	const ref = useRef<HTMLElement | null>(null)
-
-	const setRef = useCallback((node: HTMLElement | null) => {
-		if (ref.current != null) {
-			ref.current.removeEventListener(type, listener)
-		}
-
-		if (node != null) {
-			node.addEventListener(type, listener)
-		}
-
-		ref.current = node
-	}, [type, listener])
-
-	return setRef
-}
