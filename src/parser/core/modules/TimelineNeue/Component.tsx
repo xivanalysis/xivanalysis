@@ -9,18 +9,30 @@ type Scale = ScaleTime<number, number>
 
 const ScaleContext = createContext<Scale>(scaleUtc())
 
+// TODO: Should? be able to remove this if I make module output a proper component
+// TODO: Look into cleaner implementations
+export type SetViewFn = React.Dispatch<React.SetStateAction<[number, number]>>
+type ExposeSetViewFn = (setter: SetViewFn) => void
+
 export interface ComponentProps {
 	/** Minimum bound of time region to display. */
 	min?: number
 	/** Maximum bound of time region to display. */
 	max?: number
+
+	/**
+	 * If provided, will be called with a function that can be used to adjust
+	 * the displayed view of the domain.
+	 */
+	exposeSetView?: ExposeSetViewFn
 }
 
 export const Component = ({
 	min = 0,
 	max = 1000, // Infinity,
+	exposeSetView,
 }: ComponentProps) => (
-	<ScaleHandler min={min} max={max}>
+	<ScaleHandler min={min} max={max} exposeSetView={exposeSetView}>
 		<Container>
 			<Row>
 				<Item value={741}>Test 1</Item>
@@ -37,11 +49,24 @@ export const Component = ({
 interface ScaleHandlerProps {
 	min: number
 	max: number
+
+	exposeSetView?: ExposeSetViewFn
 }
 
-function ScaleHandler({children, min, max}: PropsWithChildren<ScaleHandlerProps>) {
+function ScaleHandler({
+	children,
+	min,
+	max,
+	exposeSetView,
+}: PropsWithChildren<ScaleHandlerProps>) {
 	// State of the current domain, selected via pan/zoom by the user
 	const [userDomain, setUserDomain] = useState<[number, number]>([min, max])
+
+	// If able, expose our user domain setter so external code can adjust it
+	useEffect(
+		() => exposeSetView?.(setUserDomain),
+		[exposeSetView],
+	)
 
 	// Keep the scale up to date with the user's domain
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
