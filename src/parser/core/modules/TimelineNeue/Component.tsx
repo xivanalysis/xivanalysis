@@ -6,6 +6,7 @@ import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
 
 type Scale = ScaleTime<number, number>
+type Scalable = Parameters<Scale>[0]
 
 const ScaleContext = createContext<Scale>(scaleUtc())
 
@@ -35,12 +36,12 @@ export const Component = ({
 	<ScaleHandler min={min} max={max} exposeSetView={exposeSetView}>
 		<Container>
 			<Row>
-				<Item value={741}>Test 1</Item>
+				<Item time={741}>Test 1</Item>
 			</Row>
 			<Row>
-				<Item value={1563}>Test 2</Item>
+				<Item start={1563} end={4123}>Test 2</Item>
 			</Row>
-			<Item value={5341}>Test 3</Item>
+			<Item time={5341}>Test 3</Item>
 		</Container>
 		<Axis/>
 	</ScaleHandler>
@@ -113,15 +114,15 @@ const Row = ({children}: PropsWithChildren<{}>) => (
 	</div>
 )
 
-interface ItemProps {
-	// TODO: Need start/end value handling too tbh
-	value: Parameters<Scale>[0]
-}
+type ItemProps =
+	| {time: Scalable, start?: never, end?: never}
+	| {time?: never, start: Scalable, end: Scalable}
 
-const Item = ({value, children}: PropsWithChildren<ItemProps>) => {
+const Item = (props: PropsWithChildren<ItemProps>) => {
 	const scale = useContext(ScaleContext)
 
-	const left = scale(value)
+	const left = scale(props.time ?? props.start)
+	const right = props.end && scale(props.end)
 
 	// If the item would be out of the current bounds, don't bother rendering it
 	// TODO: also left container side once I get panning going etc
@@ -129,9 +130,14 @@ const Item = ({value, children}: PropsWithChildren<ItemProps>) => {
 		return null
 	}
 
+	const style = {
+		left: `${left}%`,
+		...right && {width: `${right - left}%`},
+	}
+
 	return (
-		<div className={styles.item} style={{left: `${left}%`}}>
-			{children}
+		<div className={styles.item} style={style}>
+			{props.children}
 		</div>
 	)
 }
@@ -142,7 +148,7 @@ const Axis = () => {
 	return (
 		<Row>
 			{scale.ticks().map((tick, index) => (
-				<Item key={index} value={tick}>
+				<Item key={index} time={tick}>
 					{formatTick(tick)}
 				</Item>
 			))}
