@@ -1,6 +1,7 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
+import _ from 'lodash'
 import React, {createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
@@ -8,11 +9,13 @@ import styles from './Component.module.css'
 type Scale = ScaleTime<number, number>
 type Scalable = Parameters<Scale>[0]
 
+type Vector2 = [number, number]
+
 const ScaleContext = createContext<Scale>(scaleUtc())
 
 // TODO: Should? be able to remove this if I make module output a proper component
 // TODO: Look into cleaner implementations
-export type SetViewFn = React.Dispatch<React.SetStateAction<[number, number]>>
+export type SetViewFn = React.Dispatch<React.SetStateAction<Vector2>>
 type ExposeSetViewFn = (setter: SetViewFn) => void
 
 export interface ComponentProps {
@@ -54,6 +57,24 @@ interface ScaleHandlerProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
+// Helper functions for modifying the user domain
+// TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
+// TODO: probably should calc delta in the wheel handler, and just act on a single value in these
+const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: number}) =>
+	([uMin, uMax]: Vector2): Vector2 => {
+		const dist = uMax - uMin
+		return [
+			_.clamp(uMin + dY, min, max - dist),
+			_.clamp(uMax + dY, min + dist, max),
+		]
+	}
+
+const zoom = ({delta: [, dY], max}: {delta: Vector2, max: number}) =>
+	([uMin, uMax]: Vector2): Vector2 => [
+		uMin,
+		_.clamp(uMax + dY * 10, uMin + 1, max),
+	]
+
 function ScaleHandler({
 	children,
 	min,
@@ -78,11 +99,11 @@ function ScaleHandler({
 	)
 
 	const scrollParentRef = useRef(null)
-	const bind = useWheel(({delta: [_, deltaY], event}) => {
-		setUserDomain(([uMin, uMax]) => [
-			uMin,
-			Math.max(Math.min(uMax + deltaY * 10, max), 1),
-		])
+	const bind = useWheel(({delta, ctrlKey, event}) => {
+		const action = ctrlKey
+			? zoom({delta, max})
+			: pan({delta, min, max})
+		setUserDomain(action)
 
 		event?.preventDefault()
 	}, {
