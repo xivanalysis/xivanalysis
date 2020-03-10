@@ -21,9 +21,15 @@ export const Component = ({
 	max = 1000, // Infinity,
 }: ComponentProps) => (
 	<ScaleHandler min={min} max={max}>
-		<Row>
-			<Item/>
-		</Row>
+		<div className={styles.container}>
+			<Row>
+				<Item value={741}>Test 1</Item>
+			</Row>
+			<Row>
+				<Item value={1563}>Test 2</Item>
+			</Row>
+			<Item value={5341}>Test 3</Item>
+		</div>
 		<Axis/>
 	</ScaleHandler>
 )
@@ -76,12 +82,17 @@ const Row = ({children}: PropsWithChildren<{}>) => {
 	)
 }
 
-const Item = () => {
+interface ItemProps {
+	// TODO: Need start/end value handling too tbh
+	value: number
+}
+
+const Item = ({value, children}: PropsWithChildren<ItemProps>) => {
 	const scale = useContext(ScaleContext)
 
 	return (
-		<div className={styles.item} style={{left: `${scale(741)}%`}}>
-			Thing
+		<div className={styles.item} style={{left: `${scale(value)}%`}}>
+			{children}
 		</div>
 	)
 }
