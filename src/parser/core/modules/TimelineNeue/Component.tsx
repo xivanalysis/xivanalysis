@@ -21,7 +21,7 @@ export const Component = ({
 	max = 1000, // Infinity,
 }: ComponentProps) => (
 	<ScaleHandler min={min} max={max}>
-		<div className={styles.container}>
+		<Container>
 			<Row>
 				<Item value={741}>Test 1</Item>
 			</Row>
@@ -29,7 +29,7 @@ export const Component = ({
 				<Item value={1563}>Test 2</Item>
 			</Row>
 			<Item value={5341}>Test 3</Item>
-		</div>
+		</Container>
 		<Axis/>
 	</ScaleHandler>
 )
@@ -74,17 +74,23 @@ function ScaleHandler({children, min, max}: PropsWithChildren<ScaleHandlerProps>
 	)
 }
 
-const Row = ({children}: PropsWithChildren<{}>) => {
-	return (
-		<div className={styles.row}>
-			{children}
-		</div>
-	)
-}
+const Container = ({children}: PropsWithChildren<{}>) => (
+	<div className={styles.container}>
+		{children}
+	</div>
+)
+
+// TODO: Row is only seperate from Container as I'm expecting Row will have a bunch of special handling for the key down the left.
+// If that isn't the case, one of the two can be removed.
+const Row = ({children}: PropsWithChildren<{}>) => (
+	<div className={styles.row}>
+		{children}
+	</div>
+)
 
 interface ItemProps {
 	// TODO: Need start/end value handling too tbh
-	value: number
+	value: Parameters<Scale>[0]
 }
 
 const Item = ({value, children}: PropsWithChildren<ItemProps>) => {
@@ -101,13 +107,13 @@ const Axis = () => {
 	const scale = useContext(ScaleContext)
 
 	return (
-		<div className={styles.axis}>
+		<Row>
 			{scale.ticks().map((tick, index) => (
-				<div key={index} className={styles.tick} style={{left: `${scale(tick)}%`}}>
+				<Item key={index} value={tick}>
 					{formatTick(tick)}
-				</div>
+				</Item>
 			))}
-		</div>
+		</Row>
 	)
 }
 

@@ -3,16 +3,13 @@
 	border: 1px dashed red;
 }
 
-/*
-TODO: Relative handling here is shared with row, and sorta axis too.
-Look into consolidating some of it if sane.
-*/
 .container {
 	position: relative;
 }
 
 .row {
-	position: relative;
+	composes: container;
+
 	height: 2em;
 
 	margin: -1px;
@@ -24,16 +21,4 @@ Look into consolidating some of it if sane.
 	top: 0;
 	height: 100%;
 	background: rgba(255, 0, 0, 0.3);
-}
-
-.axis {
-	position: relative;
-	height: 2em;
-
-	margin: -1px;
-	border: 1px dotted blue;
-}
-
-.tick {
-	position: absolute;
 }
