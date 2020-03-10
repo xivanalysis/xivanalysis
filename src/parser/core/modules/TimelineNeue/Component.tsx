@@ -1,4 +1,4 @@
-import {scaleTime, ScaleTime} from 'd3-scale'
+import {ScaleTime, scaleUtc} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState} from 'react'
@@ -7,7 +7,7 @@ import styles from './Component.module.css'
 
 type Scale = ScaleTime<number, number>
 
-const ScaleContext = createContext<Scale>(scaleTime())
+const ScaleContext = createContext<Scale>(scaleUtc())
 
 export interface ComponentProps {
 	/** Minimum bound of time region to display. */
@@ -47,7 +47,7 @@ function ScaleHandler({children, min, max}: PropsWithChildren<ScaleHandlerProps>
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
 	//       the easiest way to cascade updates over the context. It... should be fine?
 	const scale = useMemo(
-		() => scaleTime().range([0, 100]).domain(userDomain),
+		() => scaleUtc().range([0, 100]).domain(userDomain),
 		[userDomain],
 	)
 
