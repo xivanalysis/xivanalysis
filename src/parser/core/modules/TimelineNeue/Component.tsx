@@ -64,29 +64,6 @@ interface ScaleHandlerProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
-// Helper functions for modifying the user domain
-// TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
-// TODO: probably should calc delta in the wheel handler, and just act on a single value in these
-// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
-//       via a ref, but...
-// TODO: Work out how to do these params better
-const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: number}) =>
-	([uMin, uMax]: Vector2): Vector2 => {
-		const dist = uMax - uMin
-		return [
-			_.clamp(uMin + dY, min, max - dist),
-			_.clamp(uMax + dY, min + dist, max),
-		]
-	}
-
-const zoom = ({delta: [, dY], min, max, zoomMin, centre}: {delta: Vector2, min: number, max: number, zoomMin: number, centre: number}) =>
-	([uMin, uMax]: Vector2): Vector2 => {
-		const zoomBy = dY * 10
-		const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
-		const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
-		return [newMin, newMax]
-	}
-
 function ScaleHandler({
 	children,
 	min,
@@ -129,16 +106,40 @@ function ScaleHandler({
 		zoomCentre.current = _.clamp((event.clientX - elemX) / width, 0, 1)
 	}, [])
 
+	// Helper functions for modifying the user domain
+	// TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
+	// TODO: probably should calc delta in the wheel handler, and just act on a single value in these
+	// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
+	//       via a ref, but...
+	const pan = useCallback(
+		({delta: [, dY]}: {delta: Vector2}) => {
+			return ([uMin, uMax]: Vector2): Vector2 => {
+				const dist = uMax - uMin
+				return [
+					_.clamp(uMin + dY, min, max - dist),
+					_.clamp(uMax + dY, min + dist, max),
+				]
+			}
+		},
+		[min, max],
+	)
+
+	const zoom = useCallback(
+		({delta: [, dY], centre}: {delta: Vector2, centre: number}) => {
+			return ([uMin, uMax]: Vector2): Vector2 => {
+				const zoomBy = dY * 10
+				const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
+				const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
+				return [newMin, newMax]
+			}
+		},
+		[min, max, zoomMin],
+	)
+
 	const bind = useWheel(({delta, ctrlKey, event}) => {
 		const action = ctrlKey
-			? zoom({
-					delta,
-					min,
-					max,
-					zoomMin,
-					centre: zoomCentre.current,
-				})
-			: pan({delta, min, max})
+			? zoom({delta, centre: zoomCentre.current})
+			: pan({delta})
 		setUserDomain(action)
 
 		event?.preventDefault()
