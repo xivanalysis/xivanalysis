@@ -170,8 +170,11 @@ const Item = (props: PropsWithChildren<ItemProps>) => {
 	const right = props.end && scale(props.end)
 
 	// If the item would be out of the current bounds, don't bother rendering it
-	// TODO: also left container side once I get panning going etc
-	if (left > 100) {
+	// TODO: handle left side culling for items with no definitive `right` value
+	if (
+		left > 100 ||
+		(right && right < 0)
+	) {
 		return null
 	}
 
