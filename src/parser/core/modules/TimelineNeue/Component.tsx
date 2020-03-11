@@ -158,25 +158,25 @@ function ScaleHandler({
 	)
 }
 
-const Container = memo(({children}: PropsWithChildren<{}>) => (
+const Container = memo(function Container({children}) { return (
 	<div className={styles.container}>
 		{children}
 	</div>
-))
+) })
 
 // TODO: Row is only seperate from Container as I'm expecting Row will have a bunch of special handling for the key down the left.
 // If that isn't the case, one of the two can be removed.
-const Row = memo(({children}: PropsWithChildren<{}>) => (
+const Row = memo(function Row({children}) { return (
 	<div className={styles.row}>
 		{children}
 	</div>
-))
+) })
 
 type ItemProps =
 	| {time: Scalable, start?: never, end?: never}
 	| {time?: never, start: Scalable, end: Scalable}
 
-const Item = memo((props: PropsWithChildren<ItemProps>) => {
+const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	const scale = useContext(ScaleContext)
 
 	const left = scale(props.time ?? props.start)
@@ -203,7 +203,7 @@ const Item = memo((props: PropsWithChildren<ItemProps>) => {
 	)
 })
 
-const Axis = memo(() => {
+const Axis = memo(function Axis() {
 	const scale = useContext(ScaleContext)
 
 	return (
