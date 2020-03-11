@@ -43,17 +43,25 @@ export const Component = memo(({
 		exposeSetView={exposeSetView}
 	>
 		<Container>
-			<Row>
-				<Item time={741}>Test 1</Item>
-			</Row>
-			<Row>
-				<Item start={1563} end={4123}>Test 2</Item>
-			</Row>
-			<Item time={5341}>Test 3</Item>
+			<Container>
+				<Row>
+					<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
+				</Row>
+				<Row>
+					<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
+				</Row>
+				<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
+			</Container>
+			<Axis/>
 		</Container>
-		<Axis/>
 	</ScaleHandler>
 ))
+
+const TempShowSize = ({children}: {children: React.ReactNode}) => (
+	<div style={{background: 'rgba(255, 0, 0, 0.3)', width: '100%', height: '100%'}}>
+		{children}
+	</div>
+)
 
 // TODO: docs
 interface ScaleHandlerProps {
@@ -205,16 +213,24 @@ const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 
 const Axis = memo(function Axis() {
 	const scale = useContext(ScaleContext)
+	const ticks = scale.ticks()
 
-	return (
+	// Grid lines will expand to the height of the container,
+	// formatted tick labels are constrained to a row
+	return <>
+		{ticks.map((tick, index) => (
+			<Item key={index} time={tick}>
+				<div className={styles.gridLine}/>
+			</Item>
+		))}
 		<Row>
-			{scale.ticks().map((tick, index) => (
+			{ticks.map((tick, index) => (
 				<Item key={index} time={tick}>
 					{formatTick(tick)}
 				</Item>
 			))}
 		</Row>
-	)
+	</>
 })
 
 const formatTick = (date: Date) => (
