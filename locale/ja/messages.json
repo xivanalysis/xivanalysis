@@ -361,7 +361,7 @@
   "drg.blood.trigger.no-lotd-nastrond": "紅の竜血が無いと思われるときに<0/>が使用されました。",
   "drg.blood.trigger.no-lotd-stardiver": "紅の竜血が無いと思われるときに<0/>が使用されました。",
   "drg.blood.windows.hits": "",
-  "drg.blood.windows.preface": "",
+  "drg.blood.windows.preface": "以下の各セクションでは紅の竜血の効果時間それぞれの開始時間、効果中にしか使えないアビリティが何回使われたか、そして自己バフが乗っていたかを示します。30秒の効果時間中に<0/>が3回、<1/>が1回使用され、少なくとも1つの自己バフが乗っているのが理想です。問題があるものはハイライトされていて、開くと詳細が記載されています。",
   "drg.buffs.accordion.ds-header": "ドラゴンサイト",
   "drg.buffs.accordion.lc-header": "ランスチャージ",
   "drg.buffs.accordion.message": "理想的には、<0/> と<1/> のそれぞれ効果時間中に最低でも{BUFF_GCD_TARGET} 回GCDが入るようにしたいです。状況によりGCDを{0} 回入れることも可能ですが、Pingやスキルスピードによっては難しいかもしれません。以下の表の各行に、効果時間中に何回GCDが入ったかとその間に使用したアクション、そして最適なタイミングでバフを使用したかを示します。",
