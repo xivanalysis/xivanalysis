@@ -36,7 +36,12 @@ export const Component = memo(({
 	max = 1000, // Infinity,
 	exposeSetView,
 }: ComponentProps) => (
-	<ScaleHandler min={min} max={max} exposeSetView={exposeSetView}>
+	<ScaleHandler
+		min={min}
+		max={max}
+		zoomMin={10000}
+		exposeSetView={exposeSetView}
+	>
 		<Container>
 			<Row>
 				<Item time={741}>Test 1</Item>
@@ -50,9 +55,11 @@ export const Component = memo(({
 	</ScaleHandler>
 ))
 
+// TODO: docs
 interface ScaleHandlerProps {
 	min: number
 	max: number
+	zoomMin?: number
 
 	exposeSetView?: ExposeSetViewFn
 }
@@ -62,6 +69,7 @@ interface ScaleHandlerProps {
 // TODO: probably should calc delta in the wheel handler, and just act on a single value in these
 // TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
 //       via a ref, but...
+// TODO: Work out how to do these params better
 const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: number}) =>
 	([uMin, uMax]: Vector2): Vector2 => {
 		const dist = uMax - uMin
@@ -71,21 +79,19 @@ const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: numbe
 		]
 	}
 
-const zoom = ({delta: [, dY], min, max, centre}: {delta: Vector2, min: number, max: number, centre: number}) =>
+const zoom = ({delta: [, dY], min, max, zoomMin, centre}: {delta: Vector2, min: number, max: number, zoomMin: number, centre: number}) =>
 	([uMin, uMax]: Vector2): Vector2 => {
 		const zoomBy = dY * 10
-
-		// TODO: Clamping is jank at minimum bound
-		return [
-			_.clamp(uMin - zoomBy * centre, min, uMax - 1),
-			_.clamp(uMax + zoomBy * (1 - centre), uMin + 1, max),
-		]
+		const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
+		const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
+		return [newMin, newMax]
 	}
 
 function ScaleHandler({
 	children,
 	min,
 	max,
+	zoomMin = 1,
 	exposeSetView,
 }: PropsWithChildren<ScaleHandlerProps>) {
 	// State of the current domain, selected via pan/zoom by the user
@@ -125,7 +131,13 @@ function ScaleHandler({
 
 	const bind = useWheel(({delta, ctrlKey, event}) => {
 		const action = ctrlKey
-			? zoom({delta, min, max, centre: zoomCentre.current})
+			? zoom({
+					delta,
+					min,
+					max,
+					zoomMin,
+					centre: zoomCentre.current,
+				})
 			: pan({delta, min, max})
 		setUserDomain(action)
 
