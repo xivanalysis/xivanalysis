@@ -2,7 +2,7 @@ import {ScaleTime, scaleUtc} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import _ from 'lodash'
-import React, {createContext, PropsWithChildren, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
 
@@ -60,6 +60,8 @@ interface ScaleHandlerProps {
 // Helper functions for modifying the user domain
 // TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
 // TODO: probably should calc delta in the wheel handler, and just act on a single value in these
+// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
+//       via a ref, but...
 const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: number}) =>
 	([uMin, uMax]: Vector2): Vector2 => {
 		const dist = uMax - uMin
@@ -69,11 +71,16 @@ const pan = ({delta: [, dY], min, max}: {delta: Vector2, min: number, max: numbe
 		]
 	}
 
-const zoom = ({delta: [, dY], max}: {delta: Vector2, max: number}) =>
-	([uMin, uMax]: Vector2): Vector2 => [
-		uMin,
-		_.clamp(uMax + dY * 10, uMin + 1, max),
-	]
+const zoom = ({delta: [, dY], min, max, centre}: {delta: Vector2, min: number, max: number, centre: number}) =>
+	([uMin, uMax]: Vector2): Vector2 => {
+		const zoomBy = dY * 10
+
+		// TODO: Clamping is jank at minimum bound
+		return [
+			_.clamp(uMin - zoomBy * centre, min, uMax - 1),
+			_.clamp(uMax + zoomBy * (1 - centre), uMin + 1, max),
+		]
+	}
 
 function ScaleHandler({
 	children,
@@ -98,10 +105,27 @@ function ScaleHandler({
 		[userDomain],
 	)
 
-	const scrollParentRef = useRef(null)
+	// Ref that will be populated with the scroll parent element. We need access to this for some
+	// event binds, and location calculations
+	const scrollParentRef = useRef<HTMLDivElement>(null)
+
+	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
+	const zoomCentre = useRef<number>(0)
+	const onMouseMove = useCallback((event: React.MouseEvent) => {
+		// If there's no reference to the scroll parent yet, stop short
+		const {current: scrollParent} = scrollParentRef
+		if (scrollParent == null) { return }
+
+		// TODO: this isn't great - cache somehow?
+		// We're only using X - zoom is only on the X axis, so Y is unused
+		const {x: elemX, width} = scrollParent.getBoundingClientRect()
+
+		zoomCentre.current = _.clamp((event.clientX - elemX) / width, 0, 1)
+	}, [])
+
 	const bind = useWheel(({delta, ctrlKey, event}) => {
 		const action = ctrlKey
-			? zoom({delta, max})
+			? zoom({delta, min, max, centre: zoomCentre.current})
 			: pan({delta, min, max})
 		setUserDomain(action)
 
@@ -113,7 +137,7 @@ function ScaleHandler({
 	useEffect(bind, [bind])
 
 	return (
-		<div ref={scrollParentRef} className={styles.scaleHandler}>
+		<div ref={scrollParentRef} className={styles.scaleHandler} onMouseMove={onMouseMove}>
 			<ScaleContext.Provider value={scale}>
 				{children}
 			</ScaleContext.Provider>
