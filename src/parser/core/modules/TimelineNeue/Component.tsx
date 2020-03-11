@@ -2,7 +2,7 @@ import {ScaleTime, scaleUtc} from 'd3-scale'
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import _ from 'lodash'
-import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createContext, memo, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useWheel} from 'react-use-gesture'
 import styles from './Component.module.css'
 
@@ -31,7 +31,7 @@ export interface ComponentProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
-export const Component = ({
+export const Component = memo(({
 	min = 0,
 	max = 1000, // Infinity,
 	exposeSetView,
@@ -48,7 +48,7 @@ export const Component = ({
 		</Container>
 		<Axis/>
 	</ScaleHandler>
-)
+))
 
 interface ScaleHandlerProps {
 	min: number
@@ -145,25 +145,25 @@ function ScaleHandler({
 	)
 }
 
-const Container = ({children}: PropsWithChildren<{}>) => (
+const Container = memo(({children}: PropsWithChildren<{}>) => (
 	<div className={styles.container}>
 		{children}
 	</div>
-)
+))
 
 // TODO: Row is only seperate from Container as I'm expecting Row will have a bunch of special handling for the key down the left.
 // If that isn't the case, one of the two can be removed.
-const Row = ({children}: PropsWithChildren<{}>) => (
+const Row = memo(({children}: PropsWithChildren<{}>) => (
 	<div className={styles.row}>
 		{children}
 	</div>
-)
+))
 
 type ItemProps =
 	| {time: Scalable, start?: never, end?: never}
 	| {time?: never, start: Scalable, end: Scalable}
 
-const Item = (props: PropsWithChildren<ItemProps>) => {
+const Item = memo((props: PropsWithChildren<ItemProps>) => {
 	const scale = useContext(ScaleContext)
 
 	const left = scale(props.time ?? props.start)
@@ -188,9 +188,9 @@ const Item = (props: PropsWithChildren<ItemProps>) => {
 			{props.children}
 		</div>
 	)
-}
+})
 
-const Axis = () => {
+const Axis = memo(() => {
 	const scale = useContext(ScaleContext)
 
 	return (
@@ -202,7 +202,7 @@ const Axis = () => {
 			))}
 		</Row>
 	)
-}
+})
 
 const formatTick = (date: Date) => (
 	timeSecond(date) < date ? utcFormat('.%L') :
