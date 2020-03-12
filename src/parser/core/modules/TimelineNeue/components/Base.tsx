@@ -11,7 +11,7 @@ export const Container = memo(function Container({children}) { return (
 
 interface LabelContextValue {
 	width: number
-	reportWidth: (id: number) => void
+	reportWidth: (id: object, width?: number) => void
 }
 
 const LabelContext = createContext<LabelContextValue>({
@@ -22,8 +22,18 @@ const LabelContext = createContext<LabelContextValue>({
 export const LabelSpacer = memo(function LabelSpacer(props) {
 	const [width, setWidth] = useState(0)
 
-	const reportWidth =  useCallback(
-		(newWidth: number) => setWidth(curWidth => Math.max(newWidth, curWidth)),
+	// Map that will store all the current widths
+	const widthStore = useRef(new Map<object, number>())
+
+	const reportWidth = useCallback(
+		(id: object, newWidth?: number) => {
+			const curStore = widthStore.current
+			newWidth != null
+				? curStore.set(id, newWidth)
+				: curStore.delete(id)
+
+			setWidth(Math.max(...curStore.values()))
+		},
 		[],
 	)
 
@@ -45,15 +55,23 @@ export interface RowProps {
 export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	const {width, reportWidth} = useContext(LabelContext)
 
+	// We're using a... blank object... as a unique reference. Because that's Smort™.
+	const rowId = useRef({}).current
 	const onResize = ({bounds}: ContentRect) => {
 		if (!bounds?.width) { return }
-		reportWidth(bounds.width)
+		reportWidth(rowId, bounds.width)
+	}
+
+	// When the ref is nulled, report a lack of width so the context can wipe us
+	const ref = (elem: HTMLDivElement | null) => {
+		if (elem != null) { return }
+		reportWidth(rowId, undefined)
 	}
 
 	return (
 		<div className={styles.row}>
 			{props.label && (
-				<Measure bounds onResize={onResize}>
+				<Measure innerRef={ref} bounds onResize={onResize}>
 					{({measureRef}) => (
 						<div ref={measureRef} className={styles.label} style={{marginLeft: -width}}>
 							{props.label}
