@@ -1,28 +1,29 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
-import {timeMinute, timeSecond} from 'd3-time'
-import {utcFormat} from 'd3-time-format'
 import _ from 'lodash'
-import React, {createContext, memo, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import {useGesture} from 'react-use-gesture'
 import styles from './Component.module.css'
 
-type Scale = ScaleTime<number, number>
-type Scalable = Parameters<Scale>[0]
+export type Scale = ScaleTime<number, number>
+export type Scalable = Parameters<Scale>[0]
 
 type Vector2 = [number, number]
 
 const ScaleContext = createContext<Scale>(scaleUtc())
+export const useScale = () => useContext(ScaleContext)
 
 // TODO: Should? be able to remove this if I make module output a proper component
 // TODO: Look into cleaner implementations
 export type SetViewFn = (view: Vector2) => void
-type ExposeSetViewFn = (setter: SetViewFn) => void
+export type ExposeSetViewFn = (setter: SetViewFn) => void
 
-export interface ComponentProps {
+export interface ScaleHandlerProps {
 	/** Minimum bound of time region to display. */
-	min?: number
+	min: number
 	/** Maximum bound of time region to display. */
-	max?: number
+	max: number
+	/** Minimum time duration to display. */
+	zoomMin?: number
 
 	/**
 	 * If provided, will be called with a function that can be used to adjust
@@ -31,49 +32,7 @@ export interface ComponentProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
-// TODO: This should probably be composed in the Timeline component itself
-export const Component = memo(({
-	min = 0,
-	max = 1000, // Infinity,
-	exposeSetView,
-}: ComponentProps) => (
-	<ScaleHandler
-		min={min}
-		max={max}
-		zoomMin={10000}
-		exposeSetView={exposeSetView}
-	>
-		<Container>
-			<Container>
-				<Row>
-					<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
-				</Row>
-				<Row>
-					<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
-				</Row>
-				<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
-			</Container>
-			<Axis/>
-		</Container>
-	</ScaleHandler>
-))
-
-const TempShowSize = ({children}: {children: React.ReactNode}) => (
-	<div style={{background: 'rgba(255, 0, 0, 0.3)', width: '100%', height: '100%'}}>
-		{children}
-	</div>
-)
-
-// TODO: docs
-interface ScaleHandlerProps {
-	min: number
-	max: number
-	zoomMin?: number
-
-	exposeSetView?: ExposeSetViewFn
-}
-
-function ScaleHandler({
+export function ScaleHandler({
 	children,
 	min,
 	max,
@@ -119,7 +78,7 @@ function ScaleHandler({
 	const scrollParentRef = useRef<HTMLDivElement>(null)
 
 	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
-	const zoomCentre = useRef<number>(0)
+	const zoomCentre = useRef(0)
 	const onMouseMove = useCallback((event: React.MouseEvent) => {
 		// If there's no reference to the scroll parent yet, stop short
 		const {current: scrollParent} = scrollParentRef
@@ -190,76 +149,3 @@ function ScaleHandler({
 		</div>
 	)
 }
-
-const Container = memo(function Container({children}) { return (
-	<div className={styles.container}>
-		{children}
-	</div>
-) })
-
-// TODO: Row is only seperate from Container as I'm expecting Row will have a bunch of special handling for the key down the left.
-// If that isn't the case, one of the two can be removed.
-const Row = memo(function Row({children}) { return (
-	<div className={styles.row}>
-		{children}
-	</div>
-) })
-
-type ItemProps =
-	| {time: Scalable, start?: never, end?: never}
-	| {time?: never, start: Scalable, end: Scalable}
-
-const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
-	const scale = useContext(ScaleContext)
-
-	const left = scale(props.time ?? props.start)
-	const right = props.end && scale(props.end)
-
-	// If the item would be out of the current bounds, don't bother rendering it
-	// TODO: handle left side culling for items with no definitive `right` value
-	if (
-		left > 100 ||
-		(right && right < 0)
-	) {
-		return null
-	}
-
-	const style = {
-		left: `${left}%`,
-		...right && {width: `${right - left}%`},
-	}
-
-	return (
-		<div className={styles.item} style={style}>
-			{props.children}
-		</div>
-	)
-})
-
-const Axis = memo(function Axis() {
-	const scale = useContext(ScaleContext)
-	const ticks = scale.ticks()
-
-	// Grid lines will expand to the height of the container,
-	// formatted tick labels are constrained to a row
-	return <>
-		{ticks.map((tick, index) => (
-			<Item key={index} time={tick}>
-				<div className={styles.gridLine}/>
-			</Item>
-		))}
-		<Row>
-			{ticks.map((tick, index) => (
-				<Item key={index} time={tick}>
-					{formatTick(tick)}
-				</Item>
-			))}
-		</Row>
-	</>
-})
-
-const formatTick = (date: Date) => (
-	timeSecond(date) < date ? utcFormat('.%L') :
-	timeMinute(date) < date ? utcFormat('%-S') :
-	utcFormat('%-Mm')
-)(date)
