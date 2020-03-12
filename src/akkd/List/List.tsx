@@ -5,7 +5,9 @@ import styles from './List.module.css'
 // If someone can work out magic to generic this w/ React.ReactType that'd be awesome
 // Semantic doesn't so I gave up.
 interface ListItemProps {
-	as?: React.ReactType
+	as?: React.ReactType,
+	inverted?: boolean,
+	rounded?: boolean,
 	[key: string]: any
 }
 
@@ -13,6 +15,8 @@ class ListItem extends React.PureComponent<ListItemProps> {
 	render() {
 		const {
 			as: Component = 'div',
+			inverted,
+			rounded,
 			children,
 			...props
 		} = this.props
@@ -22,6 +26,8 @@ class ListItem extends React.PureComponent<ListItemProps> {
 				{...props}
 				className={classNames(
 					styles.listItem,
+					inverted && styles.inverted,
+					rounded && styles.rounded,
 					props.className,
 				)}
 			>

@@ -21,9 +21,11 @@
 
 .groupHeader {
 	position: relative;
-	background: none !important;
 	overflow: hidden;
-	border: 0 !important;
+	padding: 11px 14px;
+	font-weight: bold;
+	border-radius: .3rem .3rem 0 0;
+	margin-left: -1px;
 }
 
 .groupHeaderBackground {

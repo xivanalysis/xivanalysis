@@ -1,8 +1,9 @@
 import {Trans} from '@lingui/react'
+import {Header, List} from 'akkd'
 import {getCorrectedFight, getZoneBanner} from 'data/BOSSES'
 import {observer} from 'mobx-react'
 import React, {Component, Fragment} from 'react'
-import {Checkbox, Header, Icon, Menu} from 'semantic-ui-react'
+import {Checkbox, Icon, Menu} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import FightItem from './FightItem'
 import styles from './FightList.module.css'
@@ -79,7 +80,7 @@ class FightList extends Component {
 				<Trans id="core.find.select-pull">
 					Select a pull
 				</Trans>
-				<div className="pull-right">
+				<Header.Subheader className="pull-right">
 					<Checkbox
 						toggle
 						label={<label><Trans id="core.find.kills-only">Kills only</Trans></label>}
@@ -92,12 +93,11 @@ class FightList extends Component {
 							Refresh
 						</Trans>
 					</span>
-				</div>
+				</Header.Subheader>
 			</Header>
 
 			{fights.map((group, index) => <Fragment key={index}>
-				<Header
-					attached="top"
+				<List.Item
 					inverted
 					className={group.zone.id && styles.groupHeader}
 				>
@@ -106,7 +106,7 @@ class FightList extends Component {
 						style={{backgroundImage: `url(${getZoneBanner(group.zone.id)})`}}
 					/>}
 					{group.zone.name}
-				</Header>
+				</List.Item>
 				<Menu attached="bottom" fluid vertical>
 					{group.fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}
 				</Menu>

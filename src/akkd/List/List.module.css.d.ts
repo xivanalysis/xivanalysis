@@ -4,8 +4,10 @@ declare namespace ListModuleCssModule {
     block: string;
     gutter: string;
     highlight: string;
+    inverted: string;
     list: string;
     listItem: string;
+    rounded: string;
     themeHover: string;
   }
 }
