@@ -40,8 +40,10 @@ export function ScaleHandler({
 	zoomMin = 1,
 	exposeSetView,
 }: PropsWithChildren<ScaleHandlerProps>) {
-	// State of the current domain, selected via pan/zoom by the user
-	const [userDomain, setUserDomain] = useState<[number, number]>([min, max])
+	// States representing the scale's range & domain
+	// TODO: Should I just put the entire scale in the state and be done with it?
+	const [domain, setDomain] = useState<Vector2>([min, max])
+	const [range, setRange] = useState<Vector2>([0, 100])
 
 	// If able, expose our user domain setter so external code can adjust it
 	const setView = useCallback(
@@ -57,7 +59,7 @@ export function ScaleHandler({
 				right = Math.min(left + zoomMin, max)
 			}
 
-			setUserDomain([left, right])
+			setDomain([left, right])
 		},
 		[min, max, zoomMin],
 	)
@@ -70,8 +72,8 @@ export function ScaleHandler({
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
 	//       the easiest way to cascade updates over the context. It... should be fine?
 	const scale = useMemo(
-		() => scaleUtc().range([0, 100]).domain(userDomain),
-		[userDomain],
+		() => scaleUtc().range(range).domain(domain),
+		[range, domain],
 	)
 
 	// Ref that will be populated with the scroll parent element. We need access to this for some
@@ -82,6 +84,7 @@ export function ScaleHandler({
 	const parentBounds = useRef<BoundingRect>()
 	const onResize = useCallback(({bounds}: ContentRect) => {
 		parentBounds.current = bounds
+		if (bounds?.width != null) { setRange([0, bounds.width]) }
 	}, [])
 
 	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
@@ -104,7 +107,7 @@ export function ScaleHandler({
 	//       via a ref, but...
 	const pan = useCallback(
 		({delta: [, dY]}: {delta: Vector2}) => {
-			setUserDomain(([uMin, uMax]: Vector2): Vector2 => {
+			setDomain(([uMin, uMax]): Vector2 => {
 				const dist = uMax - uMin
 				return [
 					_.clamp(uMin + dY, min, max - dist),
@@ -117,7 +120,7 @@ export function ScaleHandler({
 
 	const zoom = useCallback(
 		({delta: [, dY], centre}: {delta: Vector2, centre: number}) => {
-			setUserDomain(([uMin, uMax]: Vector2): Vector2 => {
+			setDomain(([uMin, uMax]): Vector2 => {
 				const zoomBy = dY * 10
 				const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
 				const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)

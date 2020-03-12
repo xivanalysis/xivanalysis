@@ -22,6 +22,7 @@ export type ItemProps =
 
 export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	const scale = useScale()
+	const [min, max] = scale.range()
 
 	const left = scale(props.time ?? props.start)
 	const right = props.end && scale(props.end)
@@ -29,15 +30,15 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	// If the item would be out of the current bounds, don't bother rendering it
 	// TODO: handle left side culling for items with no definitive `right` value
 	if (
-		left > 100 ||
-		(right && right < 0)
+		left > max ||
+		(right && right < min)
 	) {
 		return null
 	}
 
 	const style = {
-		left: `${left}%`,
-		...right && {width: `${right - left}%`},
+		left,
+		...right && {width: right - left},
 	}
 
 	return (
