@@ -1,4 +1,5 @@
-import React, {memo, PropsWithChildren} from 'react'
+import React, {forwardRef, memo, PropsWithChildren, useRef} from 'react'
+import Measure, {ContentRect} from 'react-measure'
 import styles from './Component.module.css'
 import {Scalable, useScale} from './ScaleHandler'
 
@@ -24,26 +25,40 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	const scale = useScale()
 	const [min, max] = scale.range()
 
+	// Should this be a ref or state?
+	const width = useRef<number>()
+
 	const left = scale(props.time ?? props.start)
-	const right = props.end && scale(props.end)
+	const explicitRight = props.end && scale(props.end)
 
 	// If the item would be out of the current bounds, don't bother rendering it
-	// TODO: handle left side culling for items with no definitive `right` value
-	if (
-		left > max ||
-		(right && right < min)
-	) {
+	const cullRight = explicitRight ?? (width.current && left + width.current)
+	if (left > max || (cullRight && cullRight < min)) {
 		return null
 	}
 
 	const style = {
 		left,
-		...right && {width: right - left},
+		...explicitRight && {width: explicitRight - left},
+	}
+
+	const Content = forwardRef<HTMLDivElement>((_p, ref) => (
+		<div ref={ref} className={styles.item} style={style}>
+			{props.children}
+		</div>
+	))
+
+	if (explicitRight != null) {
+		return <Content/>
+	}
+
+	const onResize = ({bounds}: ContentRect) => {
+		width.current = bounds?.width
 	}
 
 	return (
-		<div className={styles.item} style={style}>
-			{props.children}
-		</div>
+		<Measure bounds onResize={onResize}>
+			{({measureRef}) => <Content ref={measureRef}/>}
+		</Measure>
 	)
 })
