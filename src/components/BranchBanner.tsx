@@ -1,10 +1,9 @@
 import {Trans} from '@lingui/react'
-import {Segment} from 'akkd'
+import {Header, Segment} from 'akkd'
 import PATCHES, {getPatch, languageToEdition} from 'data/PATCHES'
 import {observer} from 'mobx-react'
 import React from 'react'
 import {RouteComponentProps, withRouter} from 'react-router'
-import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './BranchBanner.module.css'
 
