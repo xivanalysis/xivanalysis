@@ -1,6 +1,6 @@
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Axis, Container, Item, Row, ScaleHandler, SetViewFn} from './components'
+import {Axis, Container, Item, LabelSpacer, Row, ScaleHandler, SetViewFn} from './components'
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
@@ -15,7 +15,9 @@ export class Timeline extends Module {
 	}
 
 	output() {
+		// TODO: ScaleHandler & LabelSpacer should probably be rolled together. Probably with a top level Container, too.
 		return <>
+			<LabelSpacer>
 			<ScaleHandler
 				min={0}
 				max={this.parser.fightDuration}
@@ -24,10 +26,10 @@ export class Timeline extends Module {
 			>
 				<Container>
 					<Container>
-						<Row>
+						<Row label="hello">
 							<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
 						</Row>
-						<Row>
+						<Row label="world!">
 							<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
 						</Row>
 						<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
@@ -35,6 +37,7 @@ export class Timeline extends Module {
 					<Axis/>
 				</Container>
 			</ScaleHandler>
+			</LabelSpacer>
 			<button onClick={() => this.setView?.([500, 1000])}>Don't press this.</button>
 		</>
 	}

@@ -1,4 +1,4 @@
-import React, {forwardRef, memo, PropsWithChildren, useRef} from 'react'
+import React, {createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useRef, useState} from 'react'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Component.module.css'
 import {Scalable, useScale} from './ScaleHandler'
@@ -9,13 +9,62 @@ export const Container = memo(function Container({children}) { return (
 	</div>
 ) })
 
-// TODO: Row is only seperate from Container as I'm expecting Row will have a bunch of special handling for the key down the left.
-// If that isn't the case, one of the two can be removed.
-export const Row = memo(function Row({children}) { return (
-	<div className={styles.row}>
-		{children}
-	</div>
-) })
+interface LabelContextValue {
+	width: number
+	reportWidth: (id: number) => void
+}
+
+const LabelContext = createContext<LabelContextValue>({
+	width: 0,
+	reportWidth: () => { throw new Error('Attempting to report width with no parent label context.') },
+})
+
+export const LabelSpacer = memo(function LabelSpacer(props) {
+	const [width, setWidth] = useState(0)
+
+	const reportWidth =  useCallback(
+		(newWidth: number) => setWidth(curWidth => Math.max(newWidth, curWidth)),
+		[],
+	)
+
+	const value = useMemo(() => ({width, reportWidth}), [width, reportWidth])
+
+	return (
+		<div style={{paddingLeft: width}}>
+			<LabelContext.Provider value={value}>
+				{props.children}
+			</LabelContext.Provider>
+		</div>
+	)
+})
+
+export interface RowProps {
+	label?: ReactNode
+}
+
+export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
+	const {width, reportWidth} = useContext(LabelContext)
+
+	const onResize = ({bounds}: ContentRect) => {
+		if (!bounds?.width) { return }
+		reportWidth(bounds.width)
+	}
+
+	return (
+		<div className={styles.row}>
+			{props.label && (
+				<Measure bounds onResize={onResize}>
+					{({measureRef}) => (
+						<div ref={measureRef} className={styles.label} style={{marginLeft: -width}}>
+							{props.label}
+						</div>
+					)}
+				</Measure>
+			)}
+			{props.children}
+		</div>
+	)
+})
 
 export type ItemProps = ItemTimeProps & {
 	/**

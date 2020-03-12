@@ -4,6 +4,7 @@ declare namespace ComponentModuleCssModule {
     container: string;
     gridLine: string;
     item: string;
+    label: string;
     row: string;
     scaleHandler: string;
   }

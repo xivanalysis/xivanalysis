@@ -16,6 +16,12 @@
 	border: 1px dotted green;
 }
 
+.label {
+	display: inline-block;
+	height: 100%;
+	background: rgba(0, 255, 0, 0.3)
+}
+
 .item {
 	position: absolute;
 	top: 0;
