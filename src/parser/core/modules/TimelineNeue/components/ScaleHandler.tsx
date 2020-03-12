@@ -1,6 +1,7 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
 import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import Measure, {BoundingRect, ContentRect} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 import styles from './Component.module.css'
 
@@ -77,6 +78,12 @@ export function ScaleHandler({
 	// event binds, and location calculations
 	const scrollParentRef = useRef<HTMLDivElement>(null)
 
+	// Track the current scroll parent bounds, this is primarily used for calculating mouse position for zooming below
+	const parentBounds = useRef<BoundingRect>()
+	const onResize = useCallback(({bounds}: ContentRect) => {
+		parentBounds.current = bounds
+	}, [])
+
 	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
 	const zoomCentre = useRef(0)
 	const onMouseMove = useCallback((event: React.MouseEvent) => {
@@ -84,11 +91,10 @@ export function ScaleHandler({
 		const {current: scrollParent} = scrollParentRef
 		if (scrollParent == null) { return }
 
-		// TODO: this isn't great - cache somehow?
 		// We're only using X - zoom is only on the X axis, so Y is unused
-		const {x: elemX, width} = scrollParent.getBoundingClientRect()
+		const {left = 0, width = 1} = parentBounds.current ?? {} as Partial<BoundingRect>
 
-		zoomCentre.current = _.clamp((event.clientX - elemX) / width, 0, 1)
+		zoomCentre.current = _.clamp((event.clientX - left) / width, 0, 1)
 	}, [])
 
 	// Helper functions for modifying the user domain
@@ -142,10 +148,14 @@ export function ScaleHandler({
 	useEffect(bindGestures, [bindGestures])
 
 	return (
-		<div ref={scrollParentRef} className={styles.scaleHandler}>
-			<ScaleContext.Provider value={scale}>
-				{children}
-			</ScaleContext.Provider>
-		</div>
+		<Measure innerRef={scrollParentRef} bounds onResize={onResize}>
+			{({measureRef}) => (
+				<div ref={measureRef} className={styles.scaleHandler}>
+					<ScaleContext.Provider value={scale}>
+						{children}
+					</ScaleContext.Provider>
+				</div>
+			)}
+		</Measure>
 	)
 }
