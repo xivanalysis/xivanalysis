@@ -17,7 +17,15 @@ export const Row = memo(function Row({children}) { return (
 	</div>
 ) })
 
-export type ItemProps =
+export type ItemProps = ItemTimeProps & {
+	/**
+	 * If true, the Item will not be culled when outside the visible range of the parent scale.
+	 * This has performance implications. Do not disable unless you are handling culling yourself.
+	 */
+	disableCulling?: boolean,
+}
+
+type ItemTimeProps =
 	| {time: Scalable, start?: never, end?: never}
 	| {time?: never, start: Scalable, end: Scalable}
 
@@ -33,7 +41,7 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 
 	// If the item would be out of the current bounds, don't bother rendering it
 	const cullRight = explicitRight ?? (width.current && left + width.current)
-	if (left > max || (cullRight && cullRight < min)) {
+	if (props.disableCulling !== true && (left > max || (cullRight && cullRight < min))) {
 		return null
 	}
 
@@ -48,7 +56,7 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 		</div>
 	))
 
-	if (explicitRight != null) {
+	if (props.disableCulling || explicitRight != null) {
 		return <Content/>
 	}
 
