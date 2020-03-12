@@ -3,7 +3,7 @@ import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import _ from 'lodash'
 import React, {createContext, memo, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import {useWheel} from 'react-use-gesture'
+import {useGesture} from 'react-use-gesture'
 import styles from './Component.module.css'
 
 type Scale = ScaleTime<number, number>
@@ -31,6 +31,7 @@ export interface ComponentProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
+// TODO: This should probably be composed in the Timeline component itself
 export const Component = memo(({
 	min = 0,
 	max = 1000, // Infinity,
@@ -121,44 +122,51 @@ function ScaleHandler({
 	//       via a ref, but...
 	const pan = useCallback(
 		({delta: [, dY]}: {delta: Vector2}) => {
-			return ([uMin, uMax]: Vector2): Vector2 => {
+			setUserDomain(([uMin, uMax]: Vector2): Vector2 => {
 				const dist = uMax - uMin
 				return [
 					_.clamp(uMin + dY, min, max - dist),
 					_.clamp(uMax + dY, min + dist, max),
 				]
-			}
+			})
 		},
 		[min, max],
 	)
 
 	const zoom = useCallback(
 		({delta: [, dY], centre}: {delta: Vector2, centre: number}) => {
-			return ([uMin, uMax]: Vector2): Vector2 => {
+			setUserDomain(([uMin, uMax]: Vector2): Vector2 => {
 				const zoomBy = dY * 10
 				const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
 				const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
 				return [newMin, newMax]
-			}
+			})
 		},
 		[min, max, zoomMin],
 	)
 
-	const bind = useWheel(({delta, ctrlKey, event}) => {
-		const action = ctrlKey
-			? zoom({delta, centre: zoomCentre.current})
-			: pan({delta})
-		setUserDomain(action)
-
-		event?.preventDefault()
-	}, {
+	// Need to set generic explicitly so TS types the return value correctly
+	const gestureConfig = {
 		domTarget: scrollParentRef,
 		eventOptions: {passive: false},
-	})
-	useEffect(bind, [bind])
+	}
+	const bindGestures = useGesture<typeof gestureConfig>({
+		onWheel: ({delta, event}) => {
+			pan({delta})
+
+			event?.preventDefault()
+		},
+		onPinch: ({delta, event}) => {
+			zoom({delta, centre: zoomCentre.current})
+
+			event?.preventDefault()
+		},
+		onMouseMove,
+	}, gestureConfig)
+	useEffect(bindGestures, [bindGestures])
 
 	return (
-		<div ref={scrollParentRef} className={styles.scaleHandler} onMouseMove={onMouseMove}>
+		<div ref={scrollParentRef} className={styles.scaleHandler}>
 			<ScaleContext.Provider value={scale}>
 				{children}
 			</ScaleContext.Provider>
