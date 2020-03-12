@@ -19,6 +19,5 @@
 }
 
 .active {
-	/* TODO: Themable? */
-	background: #e1e4e6;
+	background: var(--segment-link-active);
 }

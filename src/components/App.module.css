@@ -1,4 +1,4 @@
-@value gutter, md, lg, themeText, themeBackground, themeInverse from "theme.module.css";
+@value gutter, md, lg, themeInverse from "theme.module.css";
 
 @value headerHeight: 40px;
 
@@ -8,7 +8,7 @@
 	width: 100%;
 	height: headerHeight;
 	box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.1);
-	background: themeBackground;
+	background: var(--theme-background);
 	font-size: 18px;
 	line-height: headerHeight;
 }
@@ -27,11 +27,11 @@
 }
 
 .logo {
-	color: themeText;
+	color: var(--theme-text);
 }
 
 .logo:hover {
-	color: themeText;
+	color: var(--theme-text);
 }
 
 .logoImage {
@@ -93,7 +93,7 @@
 	width: inherit;
 	height: calc(100% - headerHeight);
 	overflow-y: auto;
-	background: themeBackground;
+	background: var(--theme-background);
 }
 
 .content {
@@ -133,7 +133,7 @@
 		display: block;
 		width: 50vw;
 		height: 100%;
-		background: themeBackground;
+		background: var(--theme-background);
 	}
 
 	.home .sidebar::before {

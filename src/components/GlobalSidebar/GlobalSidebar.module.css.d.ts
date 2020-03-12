@@ -9,7 +9,6 @@ declare namespace GlobalSidebarModuleCssModule {
     md: string;
     options: string;
     sidebar: string;
-    themeText: string;
   }
 }
 

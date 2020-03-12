@@ -6,7 +6,6 @@ declare namespace BranchBannerModuleCssModule {
     gutter: string;
     lg: string;
     text: string;
-    themeBackground: string;
   }
 }
 

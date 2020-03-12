@@ -16,9 +16,7 @@ declare namespace AppModuleCssModule {
     sidebar: string;
     sidebarBackdrop: string;
     sidebarWrapper: string;
-    themeBackground: string;
     themeInverse: string;
-    themeText: string;
   }
 }
 

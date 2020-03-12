@@ -45,8 +45,19 @@
 	--theme-text: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
 	--theme-background: themeWhite;
 	--theme-backdrop: themeLight;
+	--theme-text-muted: #666;
+	--segment-link-active: #e1e4e6;
+
 	--theme-inverse: themeBlack;
+
+	
+	/* --theme-text: white;
+	--theme-background: #2d2d2d;
+	--theme-backdrop: #3d3d3d;
+	--theme-text-muted: #aaa;
+	--segment-link-active: #202020; */
 }
+
 @value themeText: var(--theme-text);
 @value themeBackground: var(--theme-background);
 @value themeBackdrop: var(--theme-backdrop);

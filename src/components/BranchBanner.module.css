@@ -1,14 +1,11 @@
 @value gutter, lg from "theme.module.css";
-@value themeBackground from "theme.module.css";
 
 .container {
 	display: flex;
-
-	/* bloody semantic */
-	color: inherit;
+	color: var(--theme-text);
 }
 .container:hover {
-	color: inherit;
+	color: var(--theme-text);
 }
 
 .text {
@@ -38,5 +35,5 @@
 	left: 0;
 	width: 25%;
 	height: 100%;
-	background: linear-gradient(to right, themeBackground 0%, transparent 100%);
+	background: linear-gradient(to right, var(--theme-background) 0%, transparent 100%);
 }

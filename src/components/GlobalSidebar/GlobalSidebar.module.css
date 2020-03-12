@@ -1,4 +1,4 @@
-@value gutter, md, themeText from "theme.module.css";
+@value gutter, md from "theme.module.css";
 
 .sidebar {
 	display: flex;
@@ -13,13 +13,13 @@
 
 .logo {
 	display: none;
-	color: themeText;
+	color: var(--theme-text);
 	font-size: 24px;
 	font-weight: bold;
 }
 
 .logo:hover {
-	color: themeText;
+	color: var(--theme-text);
 }
 
 .logo.center {

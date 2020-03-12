@@ -1,13 +1,24 @@
-@value themeBackdrop from "theme.module.css";
+@value themeBackdrop, themeWhite, themeLight from "theme.module.css";
 
 body {
-	background: themeBackdrop;
-
 	/* Colours 'cus SUI doesn't for w/e reason */
 	--info: var(--blue, blue);
 	--success: var(--green, green);
 	--warning: var(--yellow, yellow);
 	--error: var(--red, red);
+
+	background-color: var(--theme-backdrop);
+}
+
+.theme-dark {
+	--theme-text: white;
+	--theme-background: #2d2d2d;
+	--theme-backdrop: #3d3d3d;
+	--text-muted: #aaa;
+	--segment-link-active: #202020;
+
+	color: var(--theme-text);
+	background-color: var(--theme-backdrop);
 }
 
 /* Apparently !important and calc() are SUI's favourite dish. Why the fuck am I using this thing again? */
