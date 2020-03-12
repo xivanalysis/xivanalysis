@@ -15,7 +15,7 @@ const ScaleContext = createContext<Scale>(scaleUtc())
 
 // TODO: Should? be able to remove this if I make module output a proper component
 // TODO: Look into cleaner implementations
-export type SetViewFn = React.Dispatch<React.SetStateAction<Vector2>>
+export type SetViewFn = (view: Vector2) => void
 type ExposeSetViewFn = (setter: SetViewFn) => void
 
 export interface ComponentProps {
@@ -84,9 +84,26 @@ function ScaleHandler({
 	const [userDomain, setUserDomain] = useState<[number, number]>([min, max])
 
 	// If able, expose our user domain setter so external code can adjust it
+	const setView = useCallback(
+		(view: Vector2) => {
+			let [left, right] = view
+			// Make sure the domain isn't flipped
+			right = Math.max(left, right)
+
+			// Make sure the domain isn't zoomed beyond zoomMin
+			const additionalZoom = zoomMin - (right - left)
+			if (additionalZoom > 0) {
+				left = Math.max(left - additionalZoom / 2, min)
+				right = Math.min(left + zoomMin, max)
+			}
+
+			setUserDomain([left, right])
+		},
+		[min, max, zoomMin],
+	)
 	useEffect(
-		() => exposeSetView?.(setUserDomain),
-		[exposeSetView],
+		() => exposeSetView?.(setView),
+		[setView, exposeSetView],
 	)
 
 	// Keep the scale up to date with the user's domain
