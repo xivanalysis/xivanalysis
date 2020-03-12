@@ -106,12 +106,12 @@ export function ScaleHandler({
 	// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
 	//       via a ref, but...
 	const pan = useCallback(
-		({delta: [, dY]}: {delta: Vector2}) => {
+		({delta}: {delta: number}) => {
 			setDomain(([uMin, uMax]): Vector2 => {
 				const dist = uMax - uMin
 				return [
-					_.clamp(uMin + dY, min, max - dist),
-					_.clamp(uMax + dY, min + dist, max),
+					_.clamp(uMin + delta, min, max - dist),
+					_.clamp(uMax + delta, min + dist, max),
 				]
 			})
 		},
@@ -119,9 +119,9 @@ export function ScaleHandler({
 	)
 
 	const zoom = useCallback(
-		({delta: [, dY], centre}: {delta: Vector2, centre: number}) => {
+		({delta, centre}: {delta: number, centre: number}) => {
 			setDomain(([uMin, uMax]): Vector2 => {
-				const zoomBy = dY * 10
+				const zoomBy = delta * 10
 				const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
 				const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
 				return [newMin, newMax]
@@ -136,13 +136,22 @@ export function ScaleHandler({
 		eventOptions: {passive: false},
 	}
 	const bindGestures = useGesture<typeof gestureConfig>({
-		onWheel: ({delta, event}) => {
-			pan({delta})
+		onWheel: ({delta: [, dY], event}) => {
+			pan({delta: dY})
 
 			event?.preventDefault()
 		},
-		onPinch: ({delta, event}) => {
-			zoom({delta, centre: zoomCentre.current})
+		onPinch: ({delta: [, dY], event}) => {
+			zoom({delta: dY, centre: zoomCentre.current})
+
+			event?.preventDefault()
+		},
+		onDrag: ({delta: [dX], event}) => {
+			const distance = scale.copy()
+				.domain([0, domain[1] - domain[0]])
+				.invert(dX)
+				.getTime()
+			pan({delta: -distance})
 
 			event?.preventDefault()
 		},

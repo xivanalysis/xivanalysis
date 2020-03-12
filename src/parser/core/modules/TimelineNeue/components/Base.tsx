@@ -63,6 +63,7 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	}
 
 	// When the ref is nulled, report a lack of width so the context can wipe us
+	// I'm not using a useEffect destructor here, as the label can be removed without unmounting
 	const ref = (elem: HTMLDivElement | null) => {
 		if (elem != null) { return }
 		reportWidth(rowId, undefined)
