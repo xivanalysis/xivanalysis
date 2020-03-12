@@ -50,14 +50,12 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 		...explicitRight && {width: explicitRight - left},
 	}
 
-	const Content = forwardRef<HTMLDivElement>((_p, ref) => (
-		<div ref={ref} className={styles.item} style={style}>
-			{props.children}
-		</div>
-	))
-
 	if (props.disableCulling || explicitRight != null) {
-		return <Content/>
+		return (
+			<div className={styles.item} style={style}>
+				{props.children}
+			</div>
+		)
 	}
 
 	const onResize = ({bounds}: ContentRect) => {
@@ -66,7 +64,11 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 
 	return (
 		<Measure bounds onResize={onResize}>
-			{({measureRef}) => <Content ref={measureRef}/>}
+			{({measureRef}) => (
+				<div ref={measureRef} className={styles.item} style={style}>
+					{props.children}
+				</div>
+			)}
 		</Measure>
 	)
 })
