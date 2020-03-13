@@ -1,8 +1,9 @@
 import {timeMinute, timeSecond} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {memo} from 'react'
-import {Item, Row} from './Base'
+import {Item} from './Base'
 import styles from './Component.module.css'
+import {Row} from './Row'
 import {useScale} from './ScaleHandler'
 
 const EXPAND_TICK_DOMAIN_BY = 0.05 // 5%
