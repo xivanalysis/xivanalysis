@@ -26,13 +26,15 @@ export class Timeline extends Module {
 			>
 				<Container>
 					<Container>
-						<Row label="hello">
-							<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
+						<Row label="parent">
+							<Row label="hello">
+								<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
+							</Row>
+							<Row label="world!">
+								<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
+							</Row>
+							<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
 						</Row>
-						<Row label="world!">
-							<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
-						</Row>
-						<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
 						<RowTest/>
 					</Container>
 					<Axis/>
