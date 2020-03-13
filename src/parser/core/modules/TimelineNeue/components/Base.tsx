@@ -19,29 +19,34 @@ const LabelContext = createContext<LabelContextValue>({
 	reportWidth: () => { throw new Error('Attempting to report width with no parent label context.') },
 })
 
-export const LabelSpacer = memo(function LabelSpacer(props) {
+function useMaxWidthCalculator() {
 	const [width, setWidth] = useState(0)
 
 	// Map that will store all the current widths
-	const widthStore = useRef(new Map<object, number>())
+	const widthStore = useRef(new Map<object, number>()).current
 
 	const reportWidth = useCallback(
 		(id: object, newWidth?: number) => {
-			const curStore = widthStore.current
 			newWidth != null
-				? curStore.set(id, newWidth)
-				: curStore.delete(id)
+				? widthStore.set(id, newWidth)
+				: widthStore.delete(id)
 
-			setWidth(Math.max(...curStore.values()))
+			const maxWidth = Math.max(...widthStore.values())
+			setWidth(maxWidth)
+			return maxWidth
 		},
 		[],
 	)
 
-	const value = useMemo(() => ({width, reportWidth}), [width, reportWidth])
+	return useMemo(() => ({width, reportWidth}), [width, reportWidth])
+}
+
+export const LabelSpacer = memo(function LabelSpacer(props) {
+	const widthContext = useMaxWidthCalculator()
 
 	return (
-		<div style={{paddingLeft: width}}>
-			<LabelContext.Provider value={value}>
+		<div style={{paddingLeft: widthContext.width}}>
+			<LabelContext.Provider value={widthContext}>
 				{props.children}
 			</LabelContext.Provider>
 		</div>
@@ -55,11 +60,15 @@ export interface RowProps {
 export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	const {width, reportWidth} = useContext(LabelContext)
 
+	const [ownWidth, setOwnWidth] = useState(0)
+	const widthContext = useMaxWidthCalculator()
+
 	// We're using a... blank object... as a unique reference. Because that's Smort™.
 	const rowId = useRef({}).current
 	const onResize = ({bounds}: ContentRect) => {
 		if (!bounds?.width) { return }
-		reportWidth(rowId, bounds.width)
+		setOwnWidth(bounds.width)
+		reportWidth(rowId, bounds.width + widthContext.width)
 	}
 
 	// When the ref is nulled, report a lack of width so the context can wipe us
@@ -67,6 +76,14 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	const ref = (elem: HTMLDivElement | null) => {
 		if (elem != null) { return }
 		reportWidth(rowId, undefined)
+	}
+
+	const childContext = {
+		width: width - ownWidth,
+		reportWidth: (childId: object, childWidth?: number) => {
+			const maxChildWidth = widthContext.reportWidth(childId, childWidth)
+			reportWidth(rowId, ownWidth + maxChildWidth)
+		},
 	}
 
 	return (
@@ -80,7 +97,9 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 					)}
 				</Measure>
 			)}
-			{props.children}
+			<LabelContext.Provider value={childContext}>
+				{props.children}
+			</LabelContext.Provider>
 		</div>
 	)
 })

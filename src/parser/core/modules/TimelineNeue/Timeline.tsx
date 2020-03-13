@@ -28,6 +28,7 @@ export class Timeline extends Module {
 					<Container>
 						<Row label="parent">
 							<Row label="hello">
+								<Row label="nested"></Row>
 								<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
 							</Row>
 							<Row label="world!">
@@ -48,7 +49,7 @@ export class Timeline extends Module {
 
 const RowTest = () => {
 	const [show, setShow] = useState(true)
-	if (!show) { return <button onClick={() => setShow(true)}>Click to unboom</button> }
+	if (!show) { return <Item time={10000}><button onClick={() => setShow(true)}>Click to unboom</button></Item> }
 	return (
 		<Row label="Really long label">
 			<Item time={10000}>
