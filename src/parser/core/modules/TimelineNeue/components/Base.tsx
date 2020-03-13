@@ -91,7 +91,7 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 			{props.label && (
 				<Measure innerRef={ref} bounds onResize={onResize}>
 					{({measureRef}) => (
-						<div ref={measureRef} className={styles.label} style={{marginLeft: -width}}>
+						<div ref={measureRef} className={styles.label} style={{left: -width}}>
 							{props.label}
 						</div>
 					)}

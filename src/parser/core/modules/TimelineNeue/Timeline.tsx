@@ -29,6 +29,9 @@ export class Timeline extends Module {
 						<Row label="parent">
 							<Row label="hello">
 								<Row label="nested"></Row>
+								<Row label="nested2">
+									<Item time={0}><TempShowSize>Test 4</TempShowSize></Item>
+								</Row>
 								<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
 							</Row>
 							<Row label="world!">
