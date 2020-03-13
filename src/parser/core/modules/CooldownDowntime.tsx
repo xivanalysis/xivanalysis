@@ -150,7 +150,7 @@ export abstract class CooldownDowntime extends Module {
 			const actual = (this.usages.get(cdGroup) || []).length || 0
 			let percent = actual / expected * 100
 			if (process.env.NODE_ENV === 'production') {
-				percent = (percent < 100) ? percent : 100
+				percent = Math.min(percent, 100)
 			}
 			const requirementDisplay = cdGroup.cooldowns.map((val, ix) => <>
 				{(ix > 0 ? ', ' : '')}
@@ -187,8 +187,8 @@ export abstract class CooldownDowntime extends Module {
 		const gResets = this.resets.get(group) || []
 		const gUsages = (this.usages.get(group) || [])
 		const dtUsages = gUsages
-						.filter(u => this.downtime.isDowntime(u.timestamp))
-						.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
+			.filter(u => this.downtime.isDowntime(u.timestamp))
+			.map(u => this.downtime.getDowntimeWindows(u.timestamp)[0])
 		const resetTime = (group.resetBy && group.resetBy.refundAmount) ? group.resetBy.refundAmount : 0
 
 		let timeLost = 0 // TODO: this variable is for logging only and does not actually affect the final count
