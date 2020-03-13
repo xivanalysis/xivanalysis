@@ -49,13 +49,6 @@
 	--segment-link-active: #e1e4e6;
 
 	--theme-inverse: themeBlack;
-
-	
-	/* --theme-text: white;
-	--theme-background: #2d2d2d;
-	--theme-backdrop: #3d3d3d;
-	--theme-text-muted: #aaa;
-	--segment-link-active: #202020; */
 }
 
 @value themeText: var(--theme-text);

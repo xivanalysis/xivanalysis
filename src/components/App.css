@@ -14,7 +14,7 @@ body {
 	--theme-text: white;
 	--theme-background: #2d2d2d;
 	--theme-backdrop: #3d3d3d;
-	--text-muted: #aaa;
+	--theme-text-muted: #aaa;
 	--segment-link-active: #202020;
 
 	color: var(--theme-text);
