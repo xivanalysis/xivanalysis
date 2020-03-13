@@ -71,8 +71,13 @@ export function ScaleHandler({
 	// Keep the scale up to date with the user's domain
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
 	//       the easiest way to cascade updates over the context. It... should be fine?
-	const scale = useMemo(
-		() => scaleUtc().range(range).domain(domain),
+	const {scale, deltaScale} = useMemo(
+		() => ({
+			// Primary scale for converting times to screen pixels
+			scale: scaleUtc().range(range).domain(domain),
+			// Delta scale maintains the primary scale's domain's distance, but zeroed such that delta values can be calculated
+			deltaScale: scaleUtc().range(range).domain([0, domain[1], - domain[0]]),
+		}),
 		[range, domain],
 	)
 
@@ -102,7 +107,6 @@ export function ScaleHandler({
 
 	// Helper functions for modifying the user domain
 	// TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
-	// TODO: probably should calc delta in the wheel handler, and just act on a single value in these
 	// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
 	//       via a ref, but...
 	const pan = useCallback(
@@ -138,21 +142,15 @@ export function ScaleHandler({
 	const bindGestures = useGesture<typeof gestureConfig>({
 		onWheel: ({delta: [, dY], event}) => {
 			pan({delta: dY})
-
 			event?.preventDefault()
 		},
 		onPinch: ({delta: [, dY], event}) => {
 			zoom({delta: dY, centre: zoomCentre.current})
-
 			event?.preventDefault()
 		},
 		onDrag: ({delta: [dX], event}) => {
-			const distance = scale.copy()
-				.domain([0, domain[1] - domain[0]])
-				.invert(dX)
-				.getTime()
+			const distance = deltaScale.invert(dX).getTime()
 			pan({delta: -distance})
-
 			event?.preventDefault()
 		},
 		onMouseMove,
