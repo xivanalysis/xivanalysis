@@ -47,6 +47,7 @@
 	--theme-backdrop: themeLight;
 	--theme-text-muted: #666;
 	--segment-link-active: #e1e4e6;
+	--theme-border: #dbdbdb;
 
 	--theme-inverse: themeBlack;
 }
