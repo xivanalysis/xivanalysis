@@ -33,5 +33,5 @@
 
 .extra {
 	margin-top: .5em;
-	color: rgba(0, 0, 0, .4);
+	color: var(--theme-text-muted);
 }
