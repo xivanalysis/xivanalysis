@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Accordion} from 'akkd'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 
@@ -36,12 +36,12 @@ export default class ChangeLog extends React.PureComponent {
 	render() {
 		const {activeIndexes} = this.state
 
-		return <Accordion fluid styled>
+		return <Accordion hasBullet={false}>
 			{this.props.changelog.map((item, index) => {
 				const dateString = item.date.toLocaleDateString()
 				const active = activeIndexes.has(index)
 
-				return <React.Fragment key={index}>
+				return <Accordion.Panel key={index}>
 					<Accordion.Title
 						index={index}
 						active={active}
@@ -64,7 +64,7 @@ export default class ChangeLog extends React.PureComponent {
 					<Accordion.Content active={active}>
 						<item.Changes/>
 					</Accordion.Content>
-				</React.Fragment>
+				</Accordion.Panel>
 			})}
 		</Accordion>
 	}

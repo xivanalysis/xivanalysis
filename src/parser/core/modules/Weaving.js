@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import {Accordion} from 'akkd'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
 
 import Rotation from 'components/ui/Rotation'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -203,8 +203,6 @@ export default class Weaving extends Module {
 		return <Accordion
 			exclusive={false}
 			panels={panels}
-			styled
-			fluid
 		/>
 	}
 }
