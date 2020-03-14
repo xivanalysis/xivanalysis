@@ -35,7 +35,7 @@ function useMaxWidthCalculator() {
 				? widthStore.set(id, newWidth)
 				: widthStore.delete(id)
 
-			const maxWidth = Math.max(...widthStore.values())
+			const maxWidth = Math.max(0, ...widthStore.values())
 			setWidth(maxWidth)
 			return maxWidth
 		},
@@ -73,7 +73,7 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 		reportWidth: parentReportWidth,
 		collapsed: parentCollapsed,
 	} = useContext(LabelContext)
-	const [ownWidth, setOwnWidth] = useState(0)
+	const ownWidth = useRef(0)
 	const childWidthContext = useMaxWidthCalculator()
 
 	// Track explicit collapsed status & read in the parent's state
@@ -86,7 +86,7 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	// When _we_ resize, track our width, and report it along side the max child width
 	const onResize = ({bounds}: ContentRect) => {
 		if (!bounds?.width) { return }
-		setOwnWidth(bounds.width)
+		ownWidth.current = (bounds.width)
 		parentReportWidth(rowId, bounds.width + childWidthContext.width)
 	}
 
@@ -94,15 +94,16 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	// I'm not using a useEffect destructor here, as the label can be removed without unmounting
 	const ref = (elem: HTMLDivElement | null) => {
 		if (elem != null) { return }
+		ownWidth.current = 0
 		parentReportWidth(rowId, undefined)
 	}
 
 	// "Proxy" over the parent context, adjusting the values to nest the children
 	const childContext = {
-		width: parentWidth - ownWidth,
+		width: parentWidth - ownWidth.current,
 		reportWidth: (childId: object, childWidth?: number) => {
 			const maxChildWidth = childWidthContext.reportWidth(childId, childWidth)
-			parentReportWidth(rowId, ownWidth + maxChildWidth)
+			parentReportWidth(rowId, ownWidth.current + maxChildWidth)
 		},
 		collapsed: collapsed || parentCollapsed,
 	}
