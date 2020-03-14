@@ -109,36 +109,41 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	}
 
 	const hasChildLabels = childWidthContext.width > 0
+	const clickable = hasChildLabels || collapsed
 	const labelWidth = hasChildLabels ? ownWidth.current : parentWidth
 
 	const onLabelClick = useCallback(() => setCollapsed(collapsed => !collapsed), [])
 
 	return (
 		<div className={parentCollapsed ? undefined : styles.row}>
-			{props.label && !parentCollapsed && <>
+			{props.label && !parentCollapsed && (
 				<div
-					className={classNames(
-						styles.labelBackground,
-						hasChildLabels && styles.collapsed,
-					)}
-					style={{left: -parentWidth, width: labelWidth}}
-				/>
-				<Measure innerRef={ref} bounds onResize={onResize}>
-					{({measureRef}) => (
-						<div
-							ref={measureRef}
-							onClick={hasChildLabels || collapsed ? onLabelClick : undefined}
-							className={styles.labelContent}
-							style={{left: -parentWidth}}
-						>
-							{/* TODO: These take up space that then needs to be re-measured. Look into fixing. */}
-							{collapsed && '⯈'}
-							{!collapsed && hasChildLabels && '⯆'}
-							{props.label}
-						</div>
-					)}
-				</Measure>
-			</>}
+					onClick={clickable ? onLabelClick : undefined}
+					className={classNames(clickable && styles.clickable)}
+				>
+					<div
+						className={classNames(
+							styles.labelBackground,
+							hasChildLabels && styles.collapsed,
+						)}
+						style={{left: -parentWidth, width: labelWidth}}
+					/>
+					<Measure innerRef={ref} bounds onResize={onResize}>
+						{({measureRef}) => (
+							<div
+								ref={measureRef}
+								className={styles.labelContent}
+								style={{left: -parentWidth}}
+							>
+								{/* TODO: These take up space that then needs to be re-measured. Look into fixing. */}
+								{collapsed && '⯈'}
+								{!collapsed && hasChildLabels && '⯆'}
+								{props.label}
+							</div>
+						)}
+					</Measure>
+				</div>
+			)}
 			<LabelContext.Provider value={childContext}>
 				{props.children}
 			</LabelContext.Provider>

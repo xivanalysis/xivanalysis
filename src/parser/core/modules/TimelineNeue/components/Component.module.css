@@ -16,6 +16,10 @@
 	border: 1px dotted green;
 }
 
+.clickable {
+	cursor: pointer;
+}
+
 .labelBackground {
 	position: absolute;
 	height: 100%;
