@@ -118,13 +118,16 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 					{({measureRef}) => (
 						<div
 							ref={measureRef}
-							onClick={onLabelClick}
+							onClick={hasChildLabels || collapsed ? onLabelClick : undefined}
 							className={classNames(
 								styles.label,
 								hasChildLabels && styles.collapsed,
 							)}
 							style={{left: -parentWidth}}
 						>
+							{/* TODO: These take up space that then needs to be re-measured. Look into fixing. */}
+							{collapsed && '⯈'}
+							{!collapsed && hasChildLabels && '⯆'}
 							{props.label}
 						</div>
 					)}
