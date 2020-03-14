@@ -73,17 +73,18 @@ export function ScaleHandler({
 		[setView, exposeSetView],
 	)
 
-	// Keep the scale up to date with the user's domain
 	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
 	//       the easiest way to cascade updates over the context. It... should be fine?
-	const {scale, deltaScale} = useMemo(
-		() => ({
-			// Primary scale for converting times to screen pixels
-			scale: scaleUtc().range(range).domain(domain),
-			// Delta scale maintains the primary scale's domain's distance, but zeroed such that delta values can be calculated
-			deltaScale: scaleUtc().range(range).domain([0, domain[1], - domain[0]]),
-		}),
+	// Primary scale for converting times to screen pixels
+	const scale = useMemo(
+		() => scaleUtc().range(range).domain(domain),
 		[range, domain],
+	)
+	const domainDistance = domain[1] - domain[0]
+	// Delta scale maintains the primary scale's domain's distance, but zeroed such that delta values can be calculated,
+	const deltaScale = useMemo(
+		() => scaleUtc().range(range).domain([0, domainDistance]),
+		[range, domainDistance],
 	)
 
 	// Ref that will be populated with the scroll parent element. We need access to this for some
