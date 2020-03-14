@@ -27,6 +27,8 @@ export interface ScaleHandlerProps {
 	zoomMin?: number
 	/** Factor used to determine distance moved when panning with indirect inputs. Defaults to 0.05 (5%). */
 	panFactor?: number
+	/** Factor used to determine distance zoomed with indirect inputs. Defaults to 0.2 (20%). */
+	zoomFactor?: number
 
 	/**
 	 * If provided, will be called with a function that can be used to adjust
@@ -36,6 +38,7 @@ export interface ScaleHandlerProps {
 }
 
 const DEFAULT_PAN_FACTOR = 0.05
+const DEFAULT_ZOOM_FACTOR = 0.2
 
 export function ScaleHandler({
 	children,
@@ -43,6 +46,7 @@ export function ScaleHandler({
 	max,
 	zoomMin = 1,
 	panFactor = DEFAULT_PAN_FACTOR,
+	zoomFactor = DEFAULT_ZOOM_FACTOR,
 	exposeSetView,
 }: PropsWithChildren<ScaleHandlerProps>) {
 	// States representing the scale's range & domain
@@ -153,9 +157,16 @@ export function ScaleHandler({
 			// Normalise the movement to a %age of the domain & pan
 			pan({delta: direction * domainDistance * panFactor})
 		},
-		onPinch: ({delta: [, dY], event}) => {
+		// TODO: Test this on a touchpad, and _especially_ on a phone
+		//       I expect this will need changes on phone so the zoom maintains connection to fingies
+		onPinch: ({delta: [, dY], direction, event, ...rest}) => {
 			event?.preventDefault()
-			zoom({delta: dY * 10, centre: zoomCentre.current})
+			// Direction is 0,0 on first tick, and sticks around a bit too long. Calc our own.
+			if (dY === 0) { return }
+			const scale = (dY / Math.abs(dY)) * zoomFactor
+			// We want zooming in to step at the same rate as zooming out, adjust the scale to ensure that.
+			const adjustedScale = scale > 0 ? scale : scale / (Math.abs(scale) + 1)
+			zoom({delta: domainDistance * adjustedScale, centre: zoomCentre.current})
 		},
 		onDrag: ({delta: [dX], event}) => {
 			event?.preventDefault()
