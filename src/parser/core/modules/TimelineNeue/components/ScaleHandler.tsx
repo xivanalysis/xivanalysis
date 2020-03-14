@@ -25,6 +25,8 @@ export interface ScaleHandlerProps {
 	max: number
 	/** Minimum time duration to display. */
 	zoomMin?: number
+	/** Factor used to determine distance moved when panning with indirect inputs. Defaults to 0.05 (5%). */
+	panFactor?: number
 
 	/**
 	 * If provided, will be called with a function that can be used to adjust
@@ -33,11 +35,14 @@ export interface ScaleHandlerProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
+const DEFAULT_PAN_FACTOR = 0.05
+
 export function ScaleHandler({
 	children,
 	min,
 	max,
 	zoomMin = 1,
+	panFactor = DEFAULT_PAN_FACTOR,
 	exposeSetView,
 }: PropsWithChildren<ScaleHandlerProps>) {
 	// States representing the scale's range & domain
@@ -140,9 +145,19 @@ export function ScaleHandler({
 		eventOptions: {passive: false},
 	}
 	const bindGestures = useGesture<typeof gestureConfig>({
-		onWheel: ({delta: [, dY], event}) => {
-			pan({delta: dY})
+		// TODO use test this on a touchpad
+		onWheel: ({delta: [dX, dY], direction: [dirX, dirY], event}) => {
 			event?.preventDefault()
+
+			// Get the larger of the two deltas. If it's 0, we don't want to do anything.
+			const [maxDelta, direction] = Math.abs(dX) > Math.abs(dY) ? [dX, dirX] : [dY, dirY]
+			if (maxDelta === 0) { return }
+
+			// Normalise the movement to a %age of the domain
+			const domainDistance = domain[1] - domain[0]
+			const distance = direction * domainDistance * panFactor
+
+			pan({delta: distance})
 		},
 		onPinch: ({delta: [, dY], event}) => {
 			zoom({delta: dY, centre: zoomCentre.current})
