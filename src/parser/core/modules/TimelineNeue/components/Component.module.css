@@ -23,6 +23,11 @@
 	border-left: 1px solid green;
 }
 
+.label.collapsed {
+	background: rgba(0, 0, 255, 0.3);
+	border-color: blue;
+}
+
 .item {
 	position: absolute;
 	top: 0;

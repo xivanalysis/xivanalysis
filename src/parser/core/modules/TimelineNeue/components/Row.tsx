@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import React, {createContext, memo, PropsWithChildren, ReactNode, useCallback, useContext, useMemo, useRef, useState} from 'react'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Component.module.css'
@@ -7,13 +8,15 @@ interface LabelContextValue {
 	width: number
 	/** Call to report own width, used to choose the final available width. */
 	reportWidth: (id: object, width?: number) => void
+	/** When true, the row should be in a collapsed state, deferring to parent for layout. */
+	collapsed?: boolean
 }
 
 const LabelContext = createContext<LabelContextValue>({
 	width: 0,
 	reportWidth: () => { throw new Error('Attempting to report width with no parent label context.') },
+	collapsed: false,
 })
-
 /**
  * Reuseable width calculator. Returned label context will represent the
  * widest reported width.
@@ -68,9 +71,14 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 	const {
 		width: parentWidth,
 		reportWidth: parentReportWidth,
+		collapsed: parentCollapsed,
 	} = useContext(LabelContext)
 	const [ownWidth, setOwnWidth] = useState(0)
 	const childWidthContext = useMaxWidthCalculator()
+
+	// Track explicit collapsed status & read in the parent's state
+	// TODO: Figure out how this will interact with props, if any
+	const [collapsed, setCollapsed] = useState(false)
 
 	// We're using a... blank object... as a unique reference. Because that's Smort™.
 	const rowId = useRef({}).current
@@ -96,16 +104,25 @@ export const Row = memo<PropsWithChildren<RowProps>>(function Row(props) {
 			const maxChildWidth = childWidthContext.reportWidth(childId, childWidth)
 			parentReportWidth(rowId, ownWidth + maxChildWidth)
 		},
+		collapsed: collapsed || parentCollapsed,
 	}
 
+	const hasChildLabels = childWidthContext.width > 0
+
+	const onLabelClick = useCallback(() => setCollapsed(collapsed => !collapsed), [])
+
 	return (
-		<div className={styles.row}>
-			{props.label && (
+		<div className={parentCollapsed ? undefined : styles.row}>
+			{props.label && !parentCollapsed && (
 				<Measure innerRef={ref} bounds onResize={onResize}>
 					{({measureRef}) => (
 						<div
 							ref={measureRef}
-							className={styles.label}
+							onClick={onLabelClick}
+							className={classNames(
+								styles.label,
+								hasChildLabels && styles.collapsed,
+							)}
 							style={{left: -parentWidth}}
 						>
 							{props.label}
