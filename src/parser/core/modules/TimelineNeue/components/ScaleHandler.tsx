@@ -112,9 +112,6 @@ export function ScaleHandler({
 	}, [])
 
 	// Helper functions for modifying the user domain
-	// TODO: These need to use %s for scales on the delta because direct 1:1 is jank af
-	// TODO: ...should I just pull in d3-zoom and call it a day? It'd be kind of disgusting and I'd still need to bind
-	//       via a ref, but...
 	const pan = useCallback(
 		({delta}: {delta: number}) => {
 			setDomain(([uMin, uMax]): Vector2 => {
@@ -131,9 +128,8 @@ export function ScaleHandler({
 	const zoom = useCallback(
 		({delta, centre}: {delta: number, centre: number}) => {
 			setDomain(([uMin, uMax]): Vector2 => {
-				const zoomBy = delta * 10
-				const newMin = _.clamp(uMin - zoomBy * centre, min, uMax - zoomMin)
-				const newMax = _.clamp(uMax + zoomBy * (1 - centre), newMin + zoomMin, max)
+				const newMin = _.clamp(uMin - delta * centre, min, uMax - zoomMin)
+				const newMax = _.clamp(uMax + delta * (1 - centre), newMin + zoomMin, max)
 				return [newMin, newMax]
 			})
 		},
@@ -154,20 +150,16 @@ export function ScaleHandler({
 			const [maxDelta, direction] = Math.abs(dX) > Math.abs(dY) ? [dX, dirX] : [dY, dirY]
 			if (maxDelta === 0) { return }
 
-			// Normalise the movement to a %age of the domain
-			const domainDistance = domain[1] - domain[0]
-			const distance = direction * domainDistance * panFactor
-
-			pan({delta: distance})
+			// Normalise the movement to a %age of the domain & pan
+			pan({delta: direction * domainDistance * panFactor})
 		},
 		onPinch: ({delta: [, dY], event}) => {
-			zoom({delta: dY, centre: zoomCentre.current})
 			event?.preventDefault()
+			zoom({delta: dY * 10, centre: zoomCentre.current})
 		},
 		onDrag: ({delta: [dX], event}) => {
-			const distance = deltaScale.invert(dX).getTime()
-			pan({delta: -distance})
 			event?.preventDefault()
+			pan({delta: -deltaScale.invert(dX).getTime()})
 		},
 		onMouseMove,
 	}, gestureConfig)
