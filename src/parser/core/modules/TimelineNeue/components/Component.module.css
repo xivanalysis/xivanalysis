@@ -16,16 +16,20 @@
 	border: 1px dotted green;
 }
 
-.label {
+.labelBackground {
 	position: absolute;
 	height: 100%;
 	background: rgba(0, 255, 0, 0.3);
 	border-left: 1px solid green;
 }
 
-.label.collapsed {
+.labelBackground.collapsed {
 	background: rgba(0, 0, 255, 0.3);
 	border-color: blue;
+}
+
+.labelContent {
+	position: absolute;
 }
 
 .item {
