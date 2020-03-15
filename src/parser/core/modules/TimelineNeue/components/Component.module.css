@@ -23,17 +23,25 @@
 .labelBackground {
 	position: absolute;
 	height: 100%;
-	background: rgba(0, 255, 0, 0.3);
-	border-left: 1px solid green;
+
+	border-left: 1px solid black;
+	background: rgba(0, 255, 0, 0.3)
 }
 
 .labelBackground.collapsed {
 	background: rgba(0, 0, 255, 0.3);
-	border-color: blue;
 }
 
 .labelContent {
 	position: absolute;
+	transform-origin: top left;
+}
+
+.labelContent.collapsed {
+	transform: rotate(-90deg) translateX(-100%);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	/* TODO: Maybe nowrap on text? */
 }
 
 .item {
