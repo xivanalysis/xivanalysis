@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
+import {Message} from 'akkd'
+import {Grid} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -48,16 +49,13 @@ export default class About extends Module {
 	output() {
 		// If they've not set the supported patch range, we're assuming it's not supported at all
 		if (!this.supportedPatches) {
-			return <Message warning icon>
-				<Icon name="warning sign" />
-				<Message.Content>
-					<Message.Header>
-						<Trans id="core.about.unsupported.title">This job is currently unsupported</Trans>
-					</Message.Header>
-					<Trans id="core.about.unsupported.description">
-						The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.
-					</Trans>
-				</Message.Content>
+			return <Message warning box icon="warning sign">
+				<Message.Header>
+					<Trans id="core.about.unsupported.title">This job is currently unsupported</Trans>
+				</Message.Header>
+				<Trans id="core.about.unsupported.description">
+					The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.
+				</Trans>
 			</Message>
 		}
 
@@ -73,23 +71,20 @@ export default class About extends Module {
 		return <Grid>
 			<Grid.Column mobile={16} computer={10}>
 				<this.Description/>
-				{!supported && <Message error icon>
-					<Icon name="times circle outline"/>
-					<Message.Content>
-						<Message.Header>
-							<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
-						</Message.Header>
-						<Trans id="core.about.patch-unsupported.description">
-							This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
-						</Trans>
-					</Message.Content>
+				{!supported && <Message error box icon="times circle outline">
+					<Message.Header>
+						<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
+					</Message.Header>
+					<Trans id="core.about.patch-unsupported.description">
+						This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+					</Trans>
 				</Message>}
 			</Grid.Column>
 
 			{/* Meta box */}
 			{/* TODO: This looks abysmal */}
 			<Grid.Column mobile={16} computer={6}>
-				<Segment as="dl" className={styles.meta}>
+				<Message as="dl" default box className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
 					<dd>{from}{from !== to && `–${to}`}</dd>
 
@@ -110,7 +105,7 @@ export default class About extends Module {
 							})}
 						</dd>
 					</>}
-				</Segment>
+				</Message>
 			</Grid.Column>
 		</Grid>
 	}
