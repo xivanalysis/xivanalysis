@@ -5,12 +5,14 @@ import {AccordionPanel} from './AccordionPanel'
 import {AccordionTitle} from './AccordionTitle'
 
 interface Panel {
-	key: number,
+	key: any,
 	title: {
-		className: string,
+		key?: any,
+		className?: string,
 		content: any,
 	},
 	content: {
+		key?: any,
 		content: any,
 	},
 }

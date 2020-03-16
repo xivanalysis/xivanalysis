@@ -20,10 +20,10 @@ export class AccordionPanel extends React.PureComponent<Props> {
 			)} open={isOpen}>
 				{panel ?
 					<>
-						<AccordionTitle index={panel.key} className={panel.title.className}>
+						<AccordionTitle index={panel.title.key || panel.key} className={panel.title.className}>
 							{panel.title.content}
 						</AccordionTitle>
-						<AccordionContent>
+						<AccordionContent key={panel.content.key}>
 							{panel.content.content}
 						</AccordionContent>
 					</>
