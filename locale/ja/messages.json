@@ -581,7 +581,7 @@
   "sch.weaving.suggestion.content": "",
   "sch.weaving.suggestion.why": "",
   "sch.weaving.title": "挟み込みの問題",
-  "smn.about.description": "",
+  "smn.about.description": "\nこのアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、召喚士の操作を手軽に改善できるようにすることを目指しています。\n\n召喚士のプレイングの性質上、以下に示すように _圧倒的な_ 数の提案があります。でも身構えないで。まずは1-2個の改善に集中しましょう。\n\nもっと召喚士について知りたい場合は、[The Balance](https://thebalanceffxiv.com/)上のガイドをチェックして、#smn_questionsチャンネルに入ってください。\n",
   "smn.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
   "smn.aetherflow.cast-time": "キャストタイム",
   "smn.aetherflow.checklist.description": "召喚士のスキル全体はエーテルフローのリキャストによって左右されています。なるべくエーテルフローの使用を無駄しないことを意識して回してください。",
