@@ -18,6 +18,17 @@ body {
 	--segment-link-active: #202020;
 	--theme-border: #7e7e7e;
 
+	--message-background: var(--message-dark);
+	--message-text: var(--message-light);
+	--info-background: var(--info-dark);
+	--info-text: var(--info-light);
+	--success-background: var(--success-dark);
+	--success-text: var(--success-text);
+	--warning-background: var(--warning-dark);
+	--warning-text: var(--warning-light);
+	--error-background: var(--error-dark);
+	--error-text: var(--error-light);
+
 	color: var(--theme-text);
 	background-color: var(--theme-backdrop);
 }

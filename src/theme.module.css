@@ -26,6 +26,9 @@
 @value themeBrown: #a5673f;
 @value themeGrey: #767676;
 
+@value backgroundLightness: 95%;
+@value colorLightness: 30%;
+
 /* Theming passthroughs */
 /* NOTE: Yes, I'm aware how redundant this all is. I've left it like this as prep for the Soon:tm: dark mode. CSS vars have pretty good broswer support, but there's some noticeable missing chunks - can gauge if the implementation is going to work based on how many people complain :blobmorning: */
 :root {
@@ -42,12 +45,38 @@
 	--brown: themeBrown;
 	--grey: themeGrey;
 
+	--message-light: color(themeGrey l(backgroundLightness));
+	--message-dark: color(themeGrey l(colorLightness));
+
+	--info-light: color(themeBlue l(backgroundLightness));
+	--info-dark: color(themeBlue l(colorLightness));
+	
+	--success-light: color(themeGreen l(backgroundLightness));
+	--success-dark: color(themeGreen l(colorLightness));
+	
+	--warning-light: color(themeYellow l(backgroundLightness));
+	--warning-dark: color(themeYellow l(colorLightness));
+
+	--error-light: color(themeRed l(backgroundLightness));
+	--error-dark: color(themeRed l(colorLightness));
+
 	--theme-text: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
 	--theme-background: themeWhite;
 	--theme-backdrop: themeLight;
 	--theme-text-muted: #666;
 	--segment-link-active: #e1e4e6;
 	--theme-border: #dbdbdb;
+
+	--message-background: var(--message-light);
+	--message-text: var(--message-dark);
+	--info-background: var(--info-light);
+	--info-text: var(--info-dark);
+	--success-background: var(--success-light);
+	--success-text: var(--success-dark);
+	--warning-background: var(--warning-light);
+	--warning-text: var(--warning-dark);
+	--error-background: var(--error-light);
+	--error-text: var(--error-dark);
 
 	--theme-inverse: themeBlack;
 }

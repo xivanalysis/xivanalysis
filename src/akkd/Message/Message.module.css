@@ -1,17 +1,12 @@
 @value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme.module.css';
 @value block from '../shared.module.css';
 
-@value backgroundLightness: 95%;
-@value colorLightness: 30%;
-
 .message {
 	composes: block;
 	display: flex;
 	align-items: center;
 	margin: 0 calc(-1 * gutter);
 	padding: gutter;
-	background: color(themeGrey l(backgroundLightness));
-	color: color(themeGrey l(colorLightness));
 }
 .message:first-child {
 	margin-top: calc(-1 * gutter);
@@ -21,21 +16,30 @@
 }
 
 /* Message type colours */
+.default {
+	background: var(--message-background);
+	color: var(--message-text);
+	border-color: var(--message-text);
+}
 .info {
-	background: color(themeBlue l(backgroundLightness));
-	color: color(themeBlue l(colorLightness));
+	background: var(--info-background);
+	color: var(--info-text);
+	border-color: var(--info-text);
 }
 .success {
-	background: color(themeGreen l(backgroundLightness));
-	color: color(themeGreen l(colorLightness));
+	background: var(--success-background);
+	color: var(--success-text);
+	border-color: var(--success-text);
 }
 .warning {
-	background: color(themeYellow l(backgroundLightness));
-	color: color(themeYellow l(colorLightness));
+	background: var(--warning-background);
+	color: var(--warning-text);
+	border-color: var(--warning-text);
 }
 .error {
-	background: color(themeRed l(backgroundLightness));
-	color: color(themeRed l(colorLightness));
+	background: var(--error-background);
+	color: var(--error-text);
+	border-color: var(--error-text);
 }
 
 .icon {
@@ -48,4 +52,15 @@
 .header {
 	font-weight: bold;
 	font-size: 1.1em;
+}
+
+.box {
+	composes: block;
+	display: flex;
+	align-items: center;
+	border-radius: 5px;
+	margin: 14px 0;
+	padding: 14px 21px;
+	border-width: 1px;
+	border-style: solid;
 }
