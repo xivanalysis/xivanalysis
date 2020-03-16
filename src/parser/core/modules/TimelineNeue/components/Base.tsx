@@ -1,6 +1,7 @@
 import React, {memo, PropsWithChildren, useRef} from 'react'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Component.module.css'
+import {ItemContainer} from './Row'
 import {Scalable, useScale} from './ScaleHandler'
 
 export const Container = memo(function Container({children}) { return (
@@ -44,9 +45,11 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 
 	if (props.disableCulling || explicitRight != null) {
 		return (
-			<div className={styles.item} style={style}>
-				{props.children}
-			</div>
+			<ItemContainer>
+				<div className={styles.item} style={style}>
+					{props.children}
+				</div>
+			</ItemContainer>
 		)
 	}
 
@@ -55,12 +58,14 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	}
 
 	return (
-		<Measure bounds onResize={onResize}>
-			{({measureRef}) => (
-				<div ref={measureRef} className={styles.item} style={style}>
-					{props.children}
-				</div>
-			)}
-		</Measure>
+		<ItemContainer>
+			<Measure bounds onResize={onResize}>
+				{({measureRef}) => (
+					<div ref={measureRef} className={styles.item} style={style}>
+						{props.children}
+					</div>
+				)}
+			</Measure>
+		</ItemContainer>
 	)
 })

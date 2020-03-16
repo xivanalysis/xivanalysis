@@ -1,6 +1,6 @@
 import Module from 'parser/core/Module'
 import React, {useState} from 'react'
-import {Axis, Container, Item, LabelSpacer, Row, ScaleHandler, SetViewFn} from './components'
+import {Axis, Item, LabelSpacer, Row, ScaleHandler, SetViewFn} from './components'
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
@@ -24,9 +24,10 @@ export class Timeline extends Module {
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			>
-				<Container>
-					<Container>
+				<Row>
+					<Row>
 						<Row label="parent">
+							<Row label="test"/>
 							<Row label="hello">
 								<Row label="nested"></Row>
 								<Row label="nested2">
@@ -40,9 +41,9 @@ export class Timeline extends Module {
 							<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
 						</Row>
 						<RowTest/>
-					</Container>
+					</Row>
 					<Axis/>
-				</Container>
+				</Row>
 			</ScaleHandler>
 			</LabelSpacer>
 			<button onClick={() => this.setView?.([500, 1000])}>Don't press this.</button>

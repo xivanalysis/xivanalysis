@@ -1,5 +1,6 @@
 import classNames from 'classnames'
 import React, {createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import ReactDOM from 'react-dom'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Component.module.css'
 
@@ -14,6 +15,14 @@ const RowContext = createContext<RowContextValue>({
 	siblingSize: 0,
 	reportSize: () => { throw new Error('No provider found') },
 })
+
+const ItemContainerContext = createContext<HTMLDivElement | null>(null)
+
+export function ItemContainer({children}: {children?: ReactNode}) {
+	const ref = useContext(ItemContainerContext)
+	if (ref == null) { return null }
+	return ReactDOM.createPortal(children, ref)
+}
 
 function useSizeCalculator() {
 	const [sizes, setSizes] = useState<Record<number, number>>({})
@@ -94,6 +103,8 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 		[],
 	)
 
+	const [itemsRef, setItemsRef] = useState<HTMLDivElement | null>(null)
+
 	const rowContextValue = {
 		collapse: collapse || collapseChildren,
 		siblingSize: siblingSize - labelSize,
@@ -113,8 +124,12 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 				</Label>
 			)}
 
+			<div ref={setItemsRef} className={styles.itemContainer}/>
+
 			<RowContext.Provider value={rowContextValue}>
-				{children}
+				<ItemContainerContext.Provider value={itemsRef}>
+					{children}
+				</ItemContainerContext.Provider>
 			</RowContext.Provider>
 		</div>
 	)
