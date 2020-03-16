@@ -1,8 +1,8 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
+import {Accordion} from 'akkd'
 import Color from 'color'
 import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
 
 import STATUSES from 'data/STATUSES'
 
@@ -259,8 +259,6 @@ export default class Shoha extends Module {
 			<Accordion
 				exclusive={false}
 				panels={meditationWastePanels}
-				styled
-				fluid
 			/>
 		</Fragment>
 	}

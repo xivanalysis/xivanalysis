@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Accordion, Table} from 'semantic-ui-react'
+import {Accordion} from 'akkd'
+import {Table} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -268,8 +269,6 @@ export default class DoTs extends Module {
 			return <Accordion
 				exclusive={false}
 				panels={panels}
-				styled
-				fluid
 			/>
 		}
 

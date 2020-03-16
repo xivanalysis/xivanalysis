@@ -3,9 +3,10 @@
  */
 import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
+import {Accordion} from 'akkd'
 import React from 'react'
 import Module from 'parser/core/Module'
-import {Accordion, Icon, Message, List, Button, Label} from 'semantic-ui-react'
+import {Icon, Message, List, Button, Label} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'

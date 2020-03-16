@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Accordion} from 'akkd'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -230,8 +230,6 @@ export default class DWT extends Module {
 		return <Accordion
 			exclusive={false}
 			panels={panels}
-			styled
-			fluid
 		/>
 	}
 }

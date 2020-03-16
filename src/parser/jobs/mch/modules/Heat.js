@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
+import {Accordion} from 'akkd'
 import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'

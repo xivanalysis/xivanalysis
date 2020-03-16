@@ -1,8 +1,8 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
+import {Accordion} from 'akkd'
 import Color from 'color'
 import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
@@ -271,8 +271,6 @@ export default class Ammo extends Module {
 			<Accordion
 				exclusive={false}
 				panels={cartridgeWastePanels}
-				styled
-				fluid
 			/>
 		</Fragment>
 	}

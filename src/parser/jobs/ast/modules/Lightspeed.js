@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
+import {Accordion} from 'akkd'
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
@@ -7,7 +8,6 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const LIGHTSPEED_CAST_TIME_MOD = -2.5

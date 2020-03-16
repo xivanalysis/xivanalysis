@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Accordion} from 'akkd'
 import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
@@ -203,8 +204,6 @@ export default class Demis extends Module {
 			<Accordion
 				exclusive={false}
 				panels={panels}
-				styled
-				fluid
 			/>
 		</>
 	}

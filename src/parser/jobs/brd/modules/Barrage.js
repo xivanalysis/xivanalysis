@@ -4,8 +4,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 
+import {Accordion} from 'akkd'
 import React, {Fragment} from 'react'
-import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
+import {Icon, Message, List, Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
