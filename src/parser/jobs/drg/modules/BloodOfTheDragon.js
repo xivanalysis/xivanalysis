@@ -1,8 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Accordion, Message} from 'akkd'
+import {Accordion, Message, Table} from 'akkd'
 import React, {Fragment} from 'react'
-import {Icon, Table, Button} from 'semantic-ui-react'
+import {Icon, Button} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'

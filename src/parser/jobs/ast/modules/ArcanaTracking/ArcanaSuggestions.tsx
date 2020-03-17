@@ -1,5 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Table} from 'akkd'
 import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
@@ -11,7 +12,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import {PLAY} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './ArcanaSuggestions.module.css'
@@ -90,7 +91,7 @@ export default class ArcanaSuggestions extends Module {
 				* No pre-pull actions are being represented aside from <ActionLink {...ACTIONS.PLAY} />, and this is only an approximation based on the buff duration.
 			</Trans>
 		</p>
-		<Table collapsing unstackable className={styles.cardActionTable}>
+		<Table className={styles.cardActionTable}>
 					<Table.Header>
 						<Table.Row>
 							<Table.HeaderCell width={1}>

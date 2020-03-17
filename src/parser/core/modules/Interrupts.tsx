@@ -1,8 +1,9 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Table} from 'akkd'
 import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'

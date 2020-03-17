@@ -1,8 +1,9 @@
 import {Trans} from '@lingui/react'
+import {Table} from 'akkd'
 import Rotation from 'components/ui/Rotation'
 import {AbilityEvent} from 'fflogs'
 import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
 
 export interface RotationTarget {

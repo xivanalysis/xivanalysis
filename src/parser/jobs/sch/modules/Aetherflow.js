@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
-import {Table, Grid} from 'semantic-ui-react'
+import {Table} from 'akkd'
+import {Grid} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
 
 import {ActionLink} from 'components/ui/DbLink'

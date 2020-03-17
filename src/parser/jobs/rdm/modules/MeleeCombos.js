@@ -1,6 +1,7 @@
 import React from 'react'
 
 //import CoreCombos from 'parser/core/modules/Combos'
+import {Table} from 'akkd'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
@@ -8,7 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 //import {matchClosestLower} from 'utilities'
-import {Button, Table} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import Rotation from 'components/ui/Rotation'
 import {Plural, Trans} from '@lingui/react'
 import {formatDuration} from 'utilities'
@@ -480,7 +481,7 @@ export default class MeleeCombos extends Module {
 						<Table.HeaderCell collapsing>
 							<strong><Trans id="rdm.meleecombos.table.header.starting-procs">Starting Procs</Trans></strong>
 						</Table.HeaderCell>
-						<Table.HeaderCell collapsing>
+						<Table.HeaderCell>
 							<strong><Trans id="rdm.meleecombos.table.header.rotation">Rotation</Trans></strong>
 						</Table.HeaderCell>
 						<Table.HeaderCell>

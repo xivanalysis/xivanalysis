@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Table} from 'akkd'
 import React from 'react'
-import {Table, Button} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'

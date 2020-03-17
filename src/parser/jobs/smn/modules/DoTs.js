@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Accordion} from 'akkd'
-import {Table} from 'semantic-ui-react'
+import {Accordion, Table} from 'akkd'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -189,10 +188,10 @@ export default class DoTs extends Module {
 	_createTargetStatusTable(target) {
 		let totalBioClip = 0
 		let totalMiasmaClip = 0
-		return <Table collapsing unstackable style={{border: 'none'}}>
-			<Table.Body>
-				<Table.Row>
-					<Table.Cell style={{padding: '0 1em 0 0', verticalAlign: 'top'}}>
+		return <table style={{border: 'none'}}>
+			<tbody>
+				<tr>
+					<td style={{padding: '0 1em 0 0', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
@@ -216,8 +215,8 @@ export default class DoTs extends Module {
 									})}
 							</Table.Body>
 						</Table>
-					</Table.Cell>
-					<Table.Cell style={{padding: '0 0 0 1em', verticalAlign: 'top'}}>
+					</td>
+					<td style={{padding: '0 0 0 1em', verticalAlign: 'top'}}>
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
@@ -241,10 +240,10 @@ export default class DoTs extends Module {
 									})}
 							</Table.Body>
 						</Table>
-					</Table.Cell>
-				</Table.Row>
-			</Table.Body>
-		</Table>
+					</td>
+				</tr>
+			</tbody>
+		</table>
 	}
 
 	output() {
