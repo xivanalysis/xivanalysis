@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
+import {Message} from 'akkd'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
@@ -12,11 +12,8 @@ export default new Meta({
 			<p>BOB! <strong>DO SOMETHING!</strong></p>
 			<p>This module aims to help you improve your MCH gameplay by analyzing things that are difficult to spot in raw logs and pointing out ways to keep your rotation tight, keep your tools on cooldown, make your Wildfire windows as strong as possible, and get the most out of the best pet any job has right now.</p>
 		</Trans>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="mch.about.description.warning"><strong>The module is a work in progress.</strong> It currently covers very few aspects of MCH gameplay, and while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues or have any concerns/feature requests, please drop by our Discord channel or report a bug on our github repository!</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="mch.about.description.warning"><strong>The module is a work in progress.</strong> It currently covers very few aspects of MCH gameplay, and while the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues or have any concerns/feature requests, please drop by our Discord channel or report a bug on our github repository!</Trans>
 		</Message>
 	</>,
 	supportedPatches: {

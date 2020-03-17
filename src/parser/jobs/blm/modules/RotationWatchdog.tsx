@@ -1,7 +1,8 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
+import {Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Icon} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
@@ -524,19 +525,16 @@ export default class RotationWatchdog extends Module {
 			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
 		if (outliers.length > 0 ) {
 			return <Fragment>
-				<Message>
+				<Message box default>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">
 						The core of BLM consists of six <ActionLink {...ACTIONS.FIRE_IV} />s and one <ActionLink {...ACTIONS.DESPAIR} /> per rotation (seven <ActionLink {...ACTIONS.FIRE_IV} />s and two <ActionLink {...ACTIONS.DESPAIR} />s with <ActionLink {...ACTIONS.MANAFONT} />).<br/>
 						Avoid missing Fire IV casts where possible.
 					</Trans>
 				</Message>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-							If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
-						</Trans>
-					</Message.Content>
+				<Message box warning icon="warning sign">
+					<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
+						If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
+					</Trans>
 				</Message>
 				<RotationTable
 					targets={[

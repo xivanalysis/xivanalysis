@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -106,7 +105,7 @@ export default class Heat extends Module {
 		})
 
 		return <Fragment>
-			<Message>
+			<Message box default>
 				<Trans id="mch.heat.accordion.message">Every overheat window should ideally include {OVERHEAT_GCD_TARGET} casts of <ActionLink {...ACTIONS.HEAT_BLAST}/> and enough casts of <ActionLink {...ACTIONS.GAUSS_ROUND}/> and <ActionLink {...ACTIONS.RICOCHET}/> to avoid overcapping their charges. If you clip a lot while weaving, overcapping is still preferable to dropping a Heat Blast. Each overheat window below indicates how many GCDs it contained and will display all the casts in the window if expanded.</Trans>
 			</Message>
 			<Accordion

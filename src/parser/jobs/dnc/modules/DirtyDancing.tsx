@@ -1,8 +1,9 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
+import {Message} from 'akkd'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Icon} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
@@ -294,7 +295,7 @@ export default class DirtyDancing extends Module {
 	output() {
 		if (this.danceHistory.some(dance => dance.error)) {
 			return <Fragment>
-				<Message>
+				<Message box default>
 					<Trans id="dnc.dirty-dancing.rotation-table.message">
 						One of Dancer's primary responsibilities is buffing the party's damage via dances.<br />
 						Each dance also contributes to the Dancer's own damage and should be performed correctly.

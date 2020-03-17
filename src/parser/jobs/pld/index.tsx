@@ -1,9 +1,9 @@
 import {t} from '@lingui/macro'
+import {Message} from 'akkd'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 const description = t('pld.about.description')`As the illegitimate child of a WHM and BLM, you chose the Gory Path of a shield lobing, sword swinging Mage, that also tries to help everybody out.
 
@@ -25,11 +25,8 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description} key="pld.about.description"/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<TransMarkdown source={descriptionWarning} key="'pld.about.description.warning'"/>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<TransMarkdown source={descriptionWarning} key="'pld.about.description.warning'"/>
 		</Message>
 	</>,
 	supportedPatches: {

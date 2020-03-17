@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
 
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
@@ -195,7 +194,7 @@ export default class Demis extends Module {
 		})
 
 		return <>
-			<Message>
+			<Message box default>
 				<Trans id="smn.demi.ghost-disclaimer">Demi-summon actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
 				You should be aiming for:<br />
 				8 Wyrmwave and 2 Akh Morn in each Summon Bahamut<br />

@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message} from 'akkd'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -18,18 +18,12 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description} key="sch.about.description"/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sch.about.description.warning.development">While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="sch.about.description.warning.development">While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
 		</Message>
 
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sch.about.description.warning.healer">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="sch.about.description.warning.healer">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
 		</Message>
 	</>,
 	supportedPatches: {

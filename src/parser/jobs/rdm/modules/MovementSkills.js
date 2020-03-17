@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
 
 import ACTIONS from 'data/ACTIONS'
 import Rotation from 'components/ui/Rotation'
@@ -195,7 +194,7 @@ export default class MovementSkills extends Module {
 		})
 
 		return <Fragment>
-			<Message>
+			<Message box default>
 				<Trans id="rdm.movementskills.accordion.message">The list below contains every Movement Skill used in your opener and after each <ActionLink {...getDataBy(ACTIONS, 'id', ACTIONS.MANAFICATION.id)} /></Trans>
 			</Message>
 			<Accordion

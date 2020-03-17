@@ -1,8 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Icon, Message, Table, Button} from 'semantic-ui-react'
+import {Icon, Table, Button} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -304,11 +304,8 @@ export default class BloodOfTheDragon extends Module {
 			name: <Trans id="drg.blood.checklist.name">Keep Blood of the Dragon up</Trans>,
 			description: <Fragment>
 				<Trans id="drg.blood.checklist.description"><ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> is at the heart of the DRG rotation and should be kept up at all times. Without it, your jumps are weakened and you can't use <ActionLink {...ACTIONS.NASTROND}/>.</Trans>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id="drg.blood.checklist.description.warning">As Blood of the Dragon is now a gauge instead of a buff, please bear in mind that the numbers here and in the Life of the Dragon windows below are simulated. As such, it may not line up perfectly with reality.</Trans>
-					</Message.Content>
+				<Message box warning icon="warning sign">
+					<Trans id="drg.blood.checklist.description.warning">As Blood of the Dragon is now a gauge instead of a buff, please bear in mind that the numbers here and in the Life of the Dragon windows below are simulated. As such, it may not line up perfectly with reality.</Trans>
 				</Message>
 			</Fragment>,
 			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON,
@@ -425,27 +422,27 @@ export default class BloodOfTheDragon extends Module {
 
 		return <Fragment>
 			{lifeWindow.isLast && (
-				<Message info>
+				<Message box info>
 					<p><Trans id="drg.blood.final-window-explain">This window would last past the end of the fight and does not count against missing casts of <ActionLink {...ACTIONS.NASTROND} /> and <ActionLink {...ACTIONS.STARDIVER} /> in the Suggestions. The warnings will still be shown for completeness.</Trans></p>
 				</Message>
 			)}
 			{lifeWindow.stardivers.length === 0 && (
-				<Message error>
+				<Message box error>
 					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> during this window.</Trans></p>
 				</Message>
 			)}
 			{lifeWindow.nastronds.length < EXPECTED_NASTRONDS_PER_WINDOW && (
-				<Message error>
+				<Message box error>
 					<p><Icon name="warning sign"/> <Trans id="drg.blood.no-nastrond-explain">You missed one or more uses of <ActionLink {...ACTIONS.NASTROND}/> during this window.</Trans></p>
 				</Message>
 			)}
 			{lifeWindow.missedSdBuff && (
-				<Message warning>
+				<Message box warning>
 					<p><Trans id="drg.blood.no-buff-stardiver-explain">You did not use <ActionLink {...ACTIONS.STARDIVER}/> while buffed during this window.</Trans></p>
 				</Message>
 			)}
 			{lifeWindow.shouldDelay && (
-				<Message warning>
+				<Message box warning>
 					<p><Trans id="drg.blood.delay-explain"> If possible, Life of the Dragon windows should line up with your personal buffs. This window could be delayed to line up with:
 					</Trans></p>
 					<Message.List>
@@ -454,7 +451,7 @@ export default class BloodOfTheDragon extends Module {
 				</Message>
 			)}
 			{lifeWindow.showNoDelayNote && (
-				<Message info>
+				<Message box info>
 					<p><Trans id="drg.blood.no-delay-explain">This window cannot be delayed due to downtime occurring at {this.parser.formatTimestamp(lifeWindow.dtOverlapTime)}. This window would otherwise be delayed for better buff alignment.</Trans></p>
 				</Message>
 			)}
@@ -506,7 +503,7 @@ export default class BloodOfTheDragon extends Module {
 			})
 
 			return <Fragment>
-				<Message>
+				<Message box default>
 					<Trans id="drg.blood.windows.preface">
 						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with issues are
 						highlighted, and provide additional detail when expanded.

@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
+import {Message} from 'akkd'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -22,11 +22,8 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description} key="mnk.about.description" />
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<TransMarkdown source={warning} key="mnk.about.description.warning" />
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<TransMarkdown source={warning} key="mnk.about.description.warning" />
 		</Message>
 	</>,
 	supportedPatches: {

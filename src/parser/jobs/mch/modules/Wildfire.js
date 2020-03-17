@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -188,7 +187,7 @@ export default class Wildfire extends Module {
 		})
 
 		return <Fragment>
-			<Message>
+			<Message box default>
 				<Trans id="mch.wildfire.accordion.message">Every <ActionLink {...ACTIONS.WILDFIRE}/> window should ideally contain at least {WILDFIRE_GCD_TARGET} GCDs to maximize its potency. Each Wildfire window below indicates how many GCDs it contained and the total damage it hit for, and will display all the damaging casts in the window if expanded.</Trans>
 			</Message>
 			<Accordion

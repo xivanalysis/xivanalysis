@@ -3,10 +3,10 @@
  */
 import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React from 'react'
 import Module from 'parser/core/Module'
-import {Icon, Message, List, Button, Label} from 'semantic-ui-react'
+import {Icon, List, Button, Label} from 'semantic-ui-react'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
@@ -267,7 +267,7 @@ export default class PitchPerfect extends Module {
 		// Output is an Accordion made with panels, one for each wrong PP event
 		return <>
 			{ this._lostPotencyFromMissedCast[0] ?
-				<Message attached="top">
+				<Message box default>
 					<Trans id="brd.pitch-perfect.estimate-note">
 						<Label color="orange" size="tiny" pointing="right">NOTE:</Label> We do not have access to how many unused stacks you had at the end of {ACTIONS.THE_WANDERERS_MINUET.name}, these are times you might have had some.
 					</Trans>
@@ -279,7 +279,7 @@ export default class PitchPerfect extends Module {
 				styled
 				fluid
 			/>
-			<Message attached="bottom" info>
+			<Message box info>
 				<List bulleted>
 					<List.Content>
 						{this._lostPotencyFromStacks ?
@@ -353,7 +353,7 @@ export default class PitchPerfect extends Module {
 		}
 
 		const issueElements = tuples && tuples.length && tuples.map(t => {
-			return t.issue && <Message key={tuples.indexOf(t)} error={pp.issue === PP_CAST_WIHTOUT_MAX_STACKS} warning={pp.issue === PP_NOT_CAST_AT_END}>
+			return t.issue && <Message box key={tuples.indexOf(t)} error={pp.issue === PP_CAST_WIHTOUT_MAX_STACKS} warning={pp.issue === PP_NOT_CAST_AT_END}>
 				<Icon name={'remove'}/>
 				<span>{t.issue}</span>
 			</Message>
@@ -382,7 +382,7 @@ export default class PitchPerfect extends Module {
 				content: <>
 					{issueElements}
 					{reasonElements}
-					<Message info>
+					<Message box info>
 						<List>
 							<List.Content>
 								<List.Item>

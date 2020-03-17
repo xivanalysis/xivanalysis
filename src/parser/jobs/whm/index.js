@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import {Message} from 'akkd'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -19,18 +19,12 @@ export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-whm" */),
 	Description: () => <>
 		<TransMarkdown source={description}/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="whm.about.description.devwarning">The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="whm.about.description.devwarning">The WHM module is still in a very early developement stage.  If you notice any issues, or have any concerns, or suggestions on what you would like this module to analyze next, please drop by our Discord channel!</Trans>
 		</Message>
 		<Trans id="whm.about.description.support">Currently this module can track DoT uptime, Lily and Blood Lily Usage, detect clipping, and report about missed oGCD casts.</Trans>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="whm.about.description.invulnwarning">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="whm.about.description.invulnwarning">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
 		</Message>
 	</>,
 	supportedPatches: {

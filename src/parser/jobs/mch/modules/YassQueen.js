@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Accordion} from 'akkd'
+import {Accordion, Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
@@ -117,7 +116,7 @@ export default class YassQueen extends Module {
 		})
 
 		return <Fragment>
-			<Message>
+			<Message box default>
 				<Trans id="mch.queen.accordion.message">The list below contains every <ActionLink {...ACTIONS.AUTOMATON_QUEEN}/> window from the fight, indicating when it started, its Battery cost and duration, and how much total damage the Queen did to its target. Expanding an individual window below will display every cast by the Automaton Queen made during it.</Trans>
 			</Message>
 			<Accordion

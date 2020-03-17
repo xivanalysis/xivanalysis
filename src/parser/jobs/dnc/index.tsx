@@ -1,6 +1,6 @@
 import {t, Trans} from '@lingui/macro'
+import {Message} from 'akkd'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -21,11 +21,8 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description}/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="dnc.about.description.warning"><strong>The module is a work in progress.</strong><br/>The details of proper DNC gameplay, and the random nature of the gauges, make it difficult to be definitive. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository!</Trans>
-			</Message.Content>
+		<Message box warning icon="warning sign">
+			<Trans id="dnc.about.description.warning"><strong>The module is a work in progress.</strong><br/>The details of proper DNC gameplay, and the random nature of the gauges, make it difficult to be definitive. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository!</Trans>
 		</Message>
 	</>,
 
