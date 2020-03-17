@@ -54,13 +54,18 @@
 	font-size: 1.1em;
 }
 
+.box > .text {
+	min-height: 1em;
+	margin: 1em 0;
+}
+
 .box {
 	composes: block;
 	display: flex;
 	align-items: center;
 	border-radius: 5px;
 	margin: 14px 0;
-	padding: 14px 21px;
+	padding: 0 21px;
 	border-width: 1px;
 	border-style: solid;
 }

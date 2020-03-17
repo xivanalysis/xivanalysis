@@ -44,7 +44,7 @@ export class Message extends React.PureComponent<Props> {
 				className,
 			)}>
 				{icon && <Icon className={styles.icon} name={icon}/>}
-				<div>
+				<div className={styles.text}>
 					{children}
 				</div>
 			</Component>

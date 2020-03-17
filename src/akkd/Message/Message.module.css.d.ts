@@ -11,6 +11,7 @@ declare namespace MessageModuleCssModule {
     info: string;
     message: string;
     success: string;
+    text: string;
     themeBlue: string;
     themeGreen: string;
     themeGrey: string;
