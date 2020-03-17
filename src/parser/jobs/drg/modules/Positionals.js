@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Message} from 'akkd'
+import {Header, Message, Table} from 'akkd'
 import React, {Fragment} from 'react'
 import Module from 'parser/core/Module'
 import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {getDataBy} from 'data'
 import {ActionLink} from 'components/ui/DbLink'
-import {Table, Icon, Button, Header} from 'semantic-ui-react'
+import {Icon, Button} from 'semantic-ui-react'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 const ROTATION_IDS = [
@@ -196,7 +196,7 @@ export default class Positionals extends Module {
 				{missed > 0 && <p><Trans id="drg.positionals.analysis.truenorth">Of these missed procs, <strong>{withTn}</strong> could be handled with <ActionLink {...ACTIONS.TRUE_NORTH} />.</Trans></p>}
 			</Message>
 			{missed > 0 && <>
-				<Header size="small"><Trans id="drg.positionals.table.title">Missed Positionals</Trans></Header>
+				<Header small><Trans id="drg.positionals.table.title">Missed Positionals</Trans></Header>
 				<Table>
 					<Table.Header>
 						<Table.Row key="pos-header">
@@ -211,7 +211,9 @@ export default class Positionals extends Module {
 							</Table.HeaderCell>
 						</Table.Row>
 					</Table.Header>
-					{this._procTable()}
+					<Table.Body>
+						{this._procTable()}
+					</Table.Body>
 				</Table>
 			</>}
 		</Fragment>
