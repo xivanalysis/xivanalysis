@@ -4,11 +4,22 @@
 	color: var(--theme-text);
 	position: relative;
 	margin: calc(2rem - .14em) 0 1rem;
-	font-size: 1.5em;
 }
 
 .header:first-child {
 	margin-top: -.14em;
+}
+
+.large {
+	font-size: 1.5em;
+}
+
+.medium {
+	font-size: 1.3em;
+}
+
+.small {
+	font-size: 1em;
 }
 
 .content {

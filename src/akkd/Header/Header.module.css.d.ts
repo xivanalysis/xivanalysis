@@ -5,7 +5,10 @@ declare namespace HeaderModuleCssModule {
     content: string;
     gutter: string;
     header: string;
+    large: string;
     md: string;
+    medium: string;
+    small: string;
     subheader: string;
   }
 }
