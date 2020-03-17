@@ -4,9 +4,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 
-import {Accordion} from 'akkd'
+import {Accordion, Message, Table} from 'akkd'
 import React, {Fragment} from 'react'
-import {Icon, Message, List, Table} from 'semantic-ui-react'
+import {Icon, List} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
@@ -293,7 +293,7 @@ export default class Barrage extends Module {
 				// Only adds the DPS loss table as a custom content in case it was any case of bad barrage (badBarrage, unalignedBarrage, worstBarrageNA)
 				// That's what the first 'if' is for
 				panelProperties.contents.push(<>
-					<Table collapsing unstackable celled>
+					<Table collapsing celled>
 						<Table.Header>
 							<Table.Row>
 								<Table.HeaderCell width={2}>
@@ -436,8 +436,8 @@ export default class Barrage extends Module {
 
 		// List of issues
 		const issueElements = tuples && tuples.length && tuples.map(t => {
-			return t.issue && <Message key={tuples.indexOf(t)} error={t.severity === ERROR} warning={t.severity === WARNING} success={t.severity === SUCCESS}>
-				<Icon name={SEVERITY[t.severity].icon}/>
+			return t.issue && <Message box key={tuples.indexOf(t)} error={t.severity === ERROR} warning={t.severity === WARNING} success={t.severity === SUCCESS}
+				icon={SEVERITY[t.severity].icon}>
 				<span>{t.issue}</span>
 			</Message>
 		}) || undefined
@@ -460,7 +460,7 @@ export default class Barrage extends Module {
 		}) || undefined
 
 		// Damage log
-		const damageElements = barrage.damageEvents && barrage.damageEvents.length && <Message info>
+		const damageElements = barrage.damageEvents && barrage.damageEvents.length && <Message box info>
 			<List>
 				<List.Header>
 					<Trans id="brd.barrage.panel.damage-elements.header">Damage:</Trans>
