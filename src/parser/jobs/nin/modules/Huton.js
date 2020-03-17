@@ -1,6 +1,6 @@
 import {Trans, Plural} from '@lingui/react'
+import {Message} from 'akkd'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 import {getDataBy} from 'data'
 
 import {ActionLink} from 'components/ui/DbLink'
@@ -136,11 +136,8 @@ export default class Huton extends Module {
 			name: <Trans id="nin.huton.checklist.name">Keep Huton up</Trans>,
 			description: <Fragment>
 				<Trans id="nin.huton.checklist.description"><ActionLink {...ACTIONS.HUTON}/> provides you with a 15% attack speed increase and as such is a <em>huge</em> part of a NIN's personal DPS. Do your best not to let it drop, and recover it as quickly as possible if it does.</Trans>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id="nin.huton.checklist.description.warning">As Huton is now a gauge instead of a buff, please bear in mind that this is an estimate, not an exact value. This also applies to any Huton-related suggestions below.</Trans>
-					</Message.Content>
+				<Message box warning icon="warning sign">
+					<Trans id="nin.huton.checklist.description.warning">As Huton is now a gauge instead of a buff, please bear in mind that this is an estimate, not an exact value. This also applies to any Huton-related suggestions below.</Trans>
 				</Message>
 			</Fragment>,
 			displayOrder: DISPLAY_ORDER.HUTON,
