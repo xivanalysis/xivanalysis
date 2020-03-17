@@ -49,16 +49,16 @@
 	--message-dark: color(themeGrey l(colorLightness));
 
 	--info-light: color(themeBlue l(backgroundLightness));
-	--info-dark: color(themeBlue l(colorLightness));
+	--info-dark: color(themeBlue s(colorLightness) l(colorLightness));
 	
 	--success-light: color(themeGreen l(backgroundLightness));
-	--success-dark: color(themeGreen l(colorLightness));
+	--success-dark: color(themeGreen s(colorLightness) l(colorLightness));
 	
 	--warning-light: color(themeYellow l(backgroundLightness));
-	--warning-dark: color(themeYellow l(colorLightness));
+	--warning-dark: color(themeYellow s(colorLightness) l(colorLightness));
 
 	--error-light: color(themeRed l(backgroundLightness));
-	--error-dark: color(themeRed l(colorLightness));
+	--error-dark: color(themeRed s(colorLightness) l(colorLightness));
 
 	--theme-text: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
 	--theme-background: themeWhite;
