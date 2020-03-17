@@ -35,10 +35,15 @@
 	left: -15%;
 	width: 130%;
 	height: 130%;
-	z-index: -1;
 
 	background: var(--grey);
 	background-size: 110%;
 	background-position: center;
 	filter: brightness(60%) blur(5px);
+}
+
+.groupHeaderText {
+	position: relative;
+	z-index: 1;
+	color: white;
 }

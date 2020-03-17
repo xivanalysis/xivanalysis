@@ -98,14 +98,13 @@ class FightList extends Component {
 
 			{fights.map((group, index) => <Fragment key={index}>
 				<List.Item
-					inverted
 					className={group.zone.id && styles.groupHeader}
 				>
 					{group.zone.id && <div
 						className={styles.groupHeaderBackground}
 						style={{backgroundImage: `url(${getZoneBanner(group.zone.id)})`}}
 					/>}
-					{group.zone.name}
+					<span className={styles.groupHeaderText}>{group.zone.name}</span>
 				</List.Item>
 				<Menu attached="bottom" fluid vertical>
 					{group.fights.map(fight => <FightItem key={fight.id} fight={fight} code={report.code}/>)}

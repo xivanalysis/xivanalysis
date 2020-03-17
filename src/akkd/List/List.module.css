@@ -14,10 +14,6 @@
 	min-height: calc(1.5 * gutter);
 }
 
-.inverted {
-	color: white;
-}
-
 .rounded {
 	border-radius: .3rem;
 }

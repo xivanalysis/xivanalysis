@@ -4,6 +4,7 @@ declare namespace FightListModuleCssModule {
     fightList: string;
     groupHeader: string;
     groupHeaderBackground: string;
+    groupHeaderText: string;
     gutter: string;
     md: string;
     refresh: string;
