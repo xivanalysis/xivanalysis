@@ -126,7 +126,7 @@ export default class Aetherflow extends Module {
 		let totalDrift = 0
 		let totalWasted = 0
 
-		return <Table collapsing unstackable>
+		return <Table>
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="sch.aetherflow.cast-time">Cast Times</Trans></Table.HeaderCell>
