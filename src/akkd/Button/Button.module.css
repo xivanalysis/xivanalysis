@@ -1,0 +1,38 @@
+.button {
+  background-color: var(--theme-border);
+  color: var(--theme-text);
+  text-align: center;
+  min-height: 1em;
+  line-height: 1em;
+  margin: 0 .25em 0 0;
+  padding: .75em 1.5em;
+  font-weight: 700;
+  border: 0;
+  outline: 0;
+  border-radius: .25rem;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.circular {
+  border-radius: 10em;
+}
+
+.compact {
+  padding: .6em 1.125em;
+}
+
+.icon {
+  padding: .6em;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.mini {
+  font-size: .75rem;
+}
+.small {
+  font-size: .9rem;
+}
