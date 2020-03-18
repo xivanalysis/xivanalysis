@@ -161,7 +161,7 @@ export default class Leylines extends Module {
 	}
 
 	output() {
-		return <Table collapsing unstackable compact="very">
+		return <Table collapsing compact="very">
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="blm.leylines.timestamp-header">Timestamp</Trans></Table.HeaderCell>

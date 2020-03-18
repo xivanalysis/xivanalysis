@@ -111,7 +111,7 @@ export default class NotCasting extends Module {
 	output() {
 		const gcdLength = this.gcd.getEstimate(true)
 		if (this._noCastWindows.history.length === 0) { return }
-		return <Table collapsing unstackable compact="very">
+		return <Table collapsing compact="very">
 			<Table.Header>
 				<Table.Row>
 					<Table.HeaderCell><Trans id="blm.notcasting.timestamp-header">Timestamp</Trans></Table.HeaderCell>
