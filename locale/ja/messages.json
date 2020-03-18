@@ -618,7 +618,7 @@
   "smn.dwt.suggestions.missed-deathflares.why": "デスフレア無しのトランス・バハムート使用数：{0}",
   "smn.dwt.suggestions.missed-gcds.content": "<1/>の一回につきGCDを撃てる可能回数が<0>{possibleGcds}</0>回です。従って、ボスが死ぬ直前或いはもう直にターゲット不可となる状態に入ったり、<2/>の準備が整った状態だったり、<3/>が複数ターゲットを一気に当たったり、という様々なケースではない以上トランス・バハムードを早く終わらせることはお勧めできません。",
   "smn.dwt.suggestions.missed-gcds.why": "トランス・バハムートの状態で追加GCDが回せる回数：{0}",
-  "smn.dwt.title": "",
+  "smn.dwt.title": "トランス・バハムート",
   "smn.gauge.suggestions.lost-aetherflow.content": "<0/>を毎回使うごとに必ずスタック数が3個にしてください。スタック数が一個足りなくなると全体のスキル回しが崩れる事態となり、<1/>の使用可能時間も一分ほど遅らせることになります。",
   "smn.gauge.suggestions.lost-aetherflow.why": "エーテルフローの失ったスタック数：{0, plural, one {#個} other {#個}}",
   "smn.gauge.suggestions.lost-dreadwyrm-aether.content": "次の<1/>ができる前に<0/>を先に使ってください。そうしないとバハムードフェーズまでの回しが同期できなくなる恐れがあり、次のバハムード召喚が大変遅らせることになります。",
