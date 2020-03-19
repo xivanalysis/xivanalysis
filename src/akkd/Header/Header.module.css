@@ -1,0 +1,40 @@
+@value gutter, md from 'theme.module.css';
+
+.header {
+	color: var(--theme-text);
+	position: relative;
+	margin: calc(2rem - .14em) 0 1rem;
+}
+
+.header:first-child {
+	margin-top: -.14em;
+}
+
+.large {
+	font-size: 1.5em;
+}
+
+.medium {
+	font-size: 1.3em;
+}
+
+.small {
+	font-size: 1em;
+}
+
+.content {
+	display: block;
+	font-size: 1.3rem;
+}
+
+.subheader {
+	display: block;
+	font-size: 1rem;
+	color: var(--theme-text-muted);
+}
+
+@media md {
+	.container {
+		margin: gutter;
+	}
+}
