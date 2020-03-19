@@ -2,12 +2,9 @@
 declare namespace ButtonModuleCssModule {
   export interface IButtonModuleCss {
     button: string;
-    circular: string;
-    compact: string;
     icon: string;
-    mini: string;
     nowrap: string;
-    small: string;
+    pill: string;
   }
 }
 

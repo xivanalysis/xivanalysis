@@ -14,12 +14,10 @@
   display: inline-block;
 }
 
-.circular {
+.pill {
   border-radius: 10em;
-}
-
-.compact {
-  padding: .6em 1.125em;
+  padding: .6em 1em;
+  font-size: 13px;
 }
 
 .icon {
@@ -28,11 +26,4 @@
 
 .nowrap {
   white-space: nowrap;
-}
-
-.mini {
-  font-size: .75rem;
-}
-.small {
-  font-size: .9rem;
 }
