@@ -44,7 +44,7 @@ export class Accordion extends React.PureComponent<Props> {
 	render() {
 		const {panels, hasBullet = true, children} = this.props
 		return (
-			<div>
+			<>
 				{panels ? panels.map(panel =>
 					<AccordionPanel
 						key={panel.key}
@@ -55,7 +55,7 @@ export class Accordion extends React.PureComponent<Props> {
 				:
 					children
 				}
-			</div>
+			</>
 		)
 	}
 }
