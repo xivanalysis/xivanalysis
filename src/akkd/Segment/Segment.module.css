@@ -1,4 +1,4 @@
-@value gutter, themeBackground from "theme.module.css";
+@value gutter from "theme.module.css";
 @value block from "../shared.module.css";
 
 @value transitionDuration: .2s;
@@ -7,7 +7,7 @@
 	composes: block;
 	position: relative;
 	padding: gutter;
-	background: themeBackground;
+	background: var(--theme-background);
 }
 
 .expandable {
@@ -25,7 +25,7 @@
 	background:
 		linear-gradient(
 			to top,
-			themeBackground 66%,
+			var(--theme-background) 66%,
 			transparent 100%
 		)
 		0 0
@@ -43,5 +43,5 @@
 .expandMarker {
 	border-radius: 100px;
 	padding: 2px 10px;
-	background: themeBackground;
+	background: var(--theme-background);
 }

@@ -7,7 +7,6 @@ declare namespace SegmentModuleCssModule {
     expandable: string;
     gutter: string;
     segment: string;
-    themeBackground: string;
     transitionDuration: string;
   }
 }
