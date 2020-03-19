@@ -1,0 +1,38 @@
+@value gutter from 'theme.module.css';
+
+.menu {
+  display: flex;
+  flex-direction: column;
+	border: 1px solid var(--theme-border);
+	border-radius: 5px;
+	background: var(--theme-background);
+	margin-bottom: gutter;
+}
+
+.item {
+  border-right: 0;
+	border-top: 0;
+	border-bottom: 1px solid var(--theme-border);
+  display: block;
+	padding: 13px 16px;
+	line-height: 1em;
+}
+a.item {
+	color: var(--theme-text);
+}
+a.item:hover {
+	background: var(--theme-backdrop);
+	color: var(--theme-text);
+}
+.item:last-child, .item:only-child {
+	border-bottom: 0;
+}
+
+.top {
+	border-radius: 5px 5px 0 0;
+	border-bottom: 0;
+}
+.bottom {
+	border-radius: 0 0 5px 5px;
+	border-top: 0;
+}
