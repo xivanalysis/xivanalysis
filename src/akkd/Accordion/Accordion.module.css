@@ -1,0 +1,47 @@
+@value gutter, md from 'theme.module.css';
+
+details.accordion {
+	margin: 0;
+	padding: 0;
+	position: relative;
+	border: 1px solid var(--theme-border);
+	border-bottom-width: 0;
+}
+
+.accordion:first-child {
+	border-radius: 5px 5px 0 0;
+}
+
+.accordion:last-child {
+	border-radius: 0 0 5px 5px;
+	border-bottom-width: 1px;
+}
+
+.accordion:only-child {
+	border-radius: 5px;
+	border-bottom-width: 1px;
+}
+
+.accordion-title {
+	margin: 0;
+	padding: 10px 14px;
+	cursor: pointer;
+}
+
+.accordion-content {
+	margin: 0;
+	padding: 7px 14px 21px 14px;
+}
+
+.no-bullet {
+	list-style: none;
+}
+details.no-bullet > summary::-webkit-details-marker {
+	display: none;
+}
+
+@media md {
+	.accordion {
+		margin: gutter;
+	}
+}
