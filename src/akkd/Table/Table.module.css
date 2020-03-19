@@ -1,0 +1,94 @@
+@value block from "../shared.module.css";
+
+.table {
+	composes: block;
+	border-spacing: 0;
+	border: 1px solid var(--theme-border);
+	border-radius: 5px;
+	width: 100%;
+}
+.collapsing {
+	width: 1px;
+	white-space: nowrap;
+}
+.not-compact th, .not-compact td {
+	padding: 10px;
+}
+.compact th {
+	padding: .7em;
+}
+.compact td {
+	padding: .5em .7em;
+}
+.very-compact th {
+	padding: .6em;
+}
+.very-compact td {
+	padding: .4em .6em;
+}
+
+.table tr:first-child th:first-child {
+	border-top-left-radius: 5px;
+}
+.table tr:first-child th:last-child {
+	border-top-right-radius: 5px;
+}
+.table tr:last-child td:first-child {
+	border-bottom-left-radius: 5px;
+}
+.table tr:last-child td:last-child {
+	border-bottom-right-radius: 5px;
+}
+
+.table thead {
+	background-color: var(--theme-backdrop);
+}
+
+.no-border th, .no-border td {
+	border: 0;
+	border-bottom: 1px solid var(--theme-border);
+}
+.no-border tr:last-child td {
+	border-bottom: 0;
+}
+.no-border tr:only-child td {
+	border-bottom: 1px solid var(--theme-border);
+}
+
+.celled th, .celled td {
+	border-right: 1px solid var(--theme-border);
+	border-bottom: 1px solid var(--theme-border);
+}
+.celled td:last-child {
+	border-right: 0;
+}
+.celled tr:last-child td {
+	border-bottom: 0;
+}
+
+.positive {
+	background-color: var(--success-background);
+	color: var(--success-text);
+}
+
+.negative {
+	background-color: var(--error-background);
+	color: var(--error-text);
+}
+
+.warning {
+	background-color: var(--warning-background);
+	color: var(--error-text);
+}
+
+.left {
+	text-align: left;
+}
+
+.center {
+	text-align: center;
+}
+
+.right {
+	text-align: right;
+}
