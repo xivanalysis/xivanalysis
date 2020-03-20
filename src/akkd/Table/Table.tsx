@@ -46,7 +46,7 @@ export class Table extends React.PureComponent<ListItemProps> {
 			<table {...props}
 				className={classNames(
 					celled ? styles.celled : styles.noBorder,
-					collapsing && styles.collapsing,
+					collapsing && styles.collapsingTable,
 					this.compactStatus(compact),
 					styles.table,
 					className,

@@ -4,7 +4,8 @@ declare namespace TableModuleCssModule {
     block: string;
     celled: string;
     center: string;
-    collapsing: string;
+    collapsingCell: string;
+    collapsingTable: string;
     compact: string;
     left: string;
     negative: string;

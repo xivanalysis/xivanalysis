@@ -35,7 +35,7 @@ export class TableHeaderCell extends React.PureComponent<ListItemProps> {
 			<th align={textAlign}
 				{...props}
 				className={classNames(
-					collapsing && styles.collapsing,
+					collapsing && styles.collapsingCell,
 					this.textAlignment(textAlign),
 					className,
 				)}>

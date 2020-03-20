@@ -40,7 +40,7 @@ export class TableCell extends React.PureComponent<ListItemProps> {
 		return (
 			<td {...props}
 					className={classNames(
-					collapsing && styles.collapsing,
+					collapsing && styles.collapsingCell,
 					positive && styles.positive,
 					negative && styles.negative,
 					warning && styles.warning,
