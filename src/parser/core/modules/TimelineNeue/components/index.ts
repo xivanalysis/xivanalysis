@@ -1,4 +1,4 @@
 export * from './Axis'
-export * from './Base'
+export * from './Item'
 export * from './Row'
 export * from './ScaleHandler'

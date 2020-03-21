@@ -3,7 +3,7 @@ import _ from 'lodash'
 import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import Measure, {BoundingRect, ContentRect} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
-import styles from './Component.module.css'
+import styles from './Timeline.module.css'
 
 export type Scale = ScaleTime<number, number>
 export type Scalable = Parameters<Scale>[0]

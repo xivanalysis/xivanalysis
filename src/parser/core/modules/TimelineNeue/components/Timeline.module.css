@@ -3,12 +3,8 @@
 	border: 1px dashed red;
 }
 
-.container {
-	position: relative;
-}
-
 .row {
-	composes: container;
+	position: relative;
 
 	min-height: 2em;
 

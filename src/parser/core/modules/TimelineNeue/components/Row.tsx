@@ -2,7 +2,7 @@ import classNames from 'classnames'
 import React, {createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 import Measure, {ContentRect} from 'react-measure'
-import styles from './Component.module.css'
+import styles from './Timeline.module.css'
 
 interface RowContextValue {
 	collapse: boolean

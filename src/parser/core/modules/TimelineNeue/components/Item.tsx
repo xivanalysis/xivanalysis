@@ -1,14 +1,8 @@
 import React, {memo, PropsWithChildren, useRef} from 'react'
 import Measure, {ContentRect} from 'react-measure'
-import styles from './Component.module.css'
 import {ItemContainer} from './Row'
 import {Scalable, useScale} from './ScaleHandler'
-
-export const Container = memo(function Container({children}) { return (
-	<div className={styles.container}>
-		{children}
-	</div>
-) })
+import styles from './Timeline.module.css'
 
 export type ItemProps = ItemTimeProps & {
 	/**
