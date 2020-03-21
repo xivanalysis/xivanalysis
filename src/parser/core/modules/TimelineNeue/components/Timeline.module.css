@@ -5,8 +5,7 @@
 
 .row {
 	position: relative;
-
-	min-height: 2em;
+	min-height: 30px;
 
 	margin: -1px;
 	border: 1px dotted green;

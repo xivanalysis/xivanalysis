@@ -73,9 +73,12 @@ export interface RowProps {
 	children?: ReactNode,
 	/** Label to display beside this row. */
 	label?: ReactNode
+	// TODO: Should I support em as well?
+	/** Height of the row, in pixels. Defaults to 30. */
+	height?: number
 }
 
-export const Row = memo<RowProps>(function Row({children, label}) {
+export const Row = memo<RowProps>(function Row({children, label, height}) {
 	const rowId = useUniqueId()
 
 	const {collapse, siblingSize, reportSize} = useContext(RowContext)
@@ -114,7 +117,10 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 	}
 
 	return (
-		<div className={collapse ? undefined : styles.row}>
+		<div
+			className={collapse ? undefined : styles.row}
+			style={{minHeight: height}}
+		>
 			{label != null && !collapse && (
 				<Label
 					collapsed={shouldCollapse}
