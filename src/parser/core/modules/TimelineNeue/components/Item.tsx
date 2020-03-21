@@ -4,17 +4,22 @@ import {ItemContainer} from './Row'
 import {Scalable, useScale} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
-export type ItemProps = ItemTimeProps & {
+export interface ItemProps {
+	/** Start point of the action. Defines the left-most bound. */
+	start: Scalable
+
+	/**
+	 * End point of the action. Defines the right-most bound. If unspecified, the item will expand
+	 * to fit its contnent.
+	 */
+	end?: Scalable
+
 	/**
 	 * If true, the Item will not be culled when outside the visible range of the parent scale.
 	 * This has performance implications. Do not disable unless you are handling culling yourself.
 	 */
 	disableCulling?: boolean,
 }
-
-type ItemTimeProps =
-	| {time: Scalable, start?: never, end?: never}
-	| {time?: never, start: Scalable, end: Scalable}
 
 export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	const scale = useScale()
@@ -23,7 +28,7 @@ export const Item = memo<PropsWithChildren<ItemProps>>(function Item(props) {
 	// Should this be a ref or state?
 	const width = useRef<number>()
 
-	const left = scale(props.time ?? props.start)
+	const left = scale(props.start)
 	const explicitRight = props.end && scale(props.end)
 
 	// If the item would be out of the current bounds, don't bother rendering it

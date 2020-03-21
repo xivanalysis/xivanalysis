@@ -31,14 +31,14 @@ export class Timeline extends Module {
 							<Row label="hello">
 								<Row label="nested"></Row>
 								<Row label="nested2">
-									<Item time={0}><TempShowSize>Test 4</TempShowSize></Item>
+									<Item start={0}><TempShowSize>Test 4</TempShowSize></Item>
 								</Row>
-								<Item time={741}><TempShowSize>Test 1</TempShowSize></Item>
+								<Item start={741}><TempShowSize>Test 1</TempShowSize></Item>
 							</Row>
 							<Row label="world!">
 								<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
 							</Row>
-							<Item time={5341}><TempShowSize>Test 3</TempShowSize></Item>
+							<Item start={5341}><TempShowSize>Test 3</TempShowSize></Item>
 						</Row>
 						<RowTest/>
 					</Row>
@@ -53,10 +53,10 @@ export class Timeline extends Module {
 
 const RowTest = () => {
 	const [show, setShow] = useState(true)
-	if (!show) { return <Item time={10000}><button onClick={() => setShow(true)}>Click to unboom</button></Item> }
+	if (!show) { return <Item start={10000}><button onClick={() => setShow(true)}>Click to unboom</button></Item> }
 	return (
 		<Row label="Really long label">
-			<Item time={10000}>
+			<Item start={10000}>
 				<button onClick={() => setShow(false)}>Click to boom</button>
 			</Item>
 		</Row>

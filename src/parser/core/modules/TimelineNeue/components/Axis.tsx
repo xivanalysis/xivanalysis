@@ -24,13 +24,13 @@ export const Axis = memo(function Axis() {
 	// We're disabling culling here, as the scale's axis does it for us.
 	return <>
 		{ticks.map((tick, index) => (
-			<Item key={index} time={tick} disableCulling>
+			<Item key={index} start={tick} disableCulling>
 				<div className={styles.gridLine}/>
 			</Item>
 		))}
 		<Row>
 			{ticks.map((tick, index) => (
-				<Item key={index} time={tick} disableCulling>
+				<Item key={index} start={tick} disableCulling>
 					{formatTick(tick)}
 				</Item>
 			))}
