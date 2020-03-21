@@ -1,6 +1,7 @@
 import Module from 'parser/core/Module'
-import React, {useState} from 'react'
+import React from 'react'
 import {Axis, Item, LabelSpacer, Row, ScaleHandler, SetViewFn} from './components'
+import {Item as ItemConfig, Row as RowConfig, SimpleItem, SimpleRow} from './config'
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
@@ -15,6 +16,8 @@ export class Timeline extends Module {
 	}
 
 	output() {
+		const rows = TEST_ROWS
+
 		// TODO: ScaleHandler & LabelSpacer should probably be rolled together. Probably with a top level Container, too.
 		return <>
 			<LabelSpacer>
@@ -26,21 +29,7 @@ export class Timeline extends Module {
 			>
 				<Row>
 					<Row>
-						<Row label="parent">
-							<Row label="test"/>
-							<Row label="hello">
-								<Row label="nested"></Row>
-								<Row label="nested2">
-									<Item start={0}><TempShowSize>Test 4</TempShowSize></Item>
-								</Row>
-								<Item start={741}><TempShowSize>Test 1</TempShowSize></Item>
-							</Row>
-							<Row label="world!">
-								<Item start={1563} end={4123}><TempShowSize>Test 2</TempShowSize></Item>
-							</Row>
-							<Item start={5341}><TempShowSize>Test 3</TempShowSize></Item>
-						</Row>
-						<RowTest/>
+						{rows.map(this.renderRow)}
 					</Row>
 					<Axis/>
 				</Row>
@@ -49,17 +38,18 @@ export class Timeline extends Module {
 			<button onClick={() => this.setView?.([500, 1000])}>Don't press this.</button>
 		</>
 	}
-}
 
-const RowTest = () => {
-	const [show, setShow] = useState(true)
-	if (!show) { return <Item start={10000}><button onClick={() => setShow(true)}>Click to unboom</button></Item> }
-	return (
-		<Row label="Really long label">
-			<Item start={10000}>
-				<button onClick={() => setShow(false)}>Click to boom</button>
-			</Item>
+	private renderRow = (row: RowConfig, index: number) => (
+		<Row key={index} label={row.label} height={row.height}>
+			{row.rows.map(this.renderRow)}
+			{row.items.map(this.renderItem)}
 		</Row>
+	)
+
+	private renderItem = (item: ItemConfig, index: number) => (
+		<Item key={index} start={item.start} end={item.end}>
+			{item.content}
+		</Item>
 	)
 }
 
@@ -68,3 +58,29 @@ const TempShowSize = ({children}: {children: React.ReactNode}) => (
 		{children}
 	</div>
 )
+
+const TEST_ROWS = [
+	new SimpleRow({
+		label: 'parent',
+		rows: [
+			new SimpleRow({label: 'test'}),
+			new SimpleRow({
+				label: 'hello',
+				rows: [
+					new SimpleRow({label: 'nested'}),
+					new SimpleRow({
+						label: 'nested2',
+						items: [new SimpleItem({start: 0, content: <TempShowSize>Test 4</TempShowSize>})],
+					}),
+				],
+				items: [new SimpleItem({start: 741, content: <TempShowSize>Test 1</TempShowSize>})],
+			}),
+			new SimpleRow({
+				label: 'world',
+				items: [new SimpleItem({start: 1563, end: 4123, content: <TempShowSize>Test 2</TempShowSize>})],
+			}),
+		],
+		items: [new SimpleItem({start: 5341, content: <TempShowSize>Test 3</TempShowSize>})],
+	}),
+	new SimpleRow({label: 'Really long label'}),
+]
