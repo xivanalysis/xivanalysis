@@ -13,36 +13,42 @@
 	pointer-events: none;
 }
 
-.clickable {
-	cursor: pointer;
-}
-
 .labelBackground {
 	position: absolute;
 	height: 100%;
+	pointer-events: all;
 
 	border-left: 1px solid black;
 	background: rgba(0, 255, 0, 0.3)
 }
 
-.labelBackground.collapsed {
+.labelBackground.minimised {
 	background: rgba(0, 0, 255, 0.3);
+}
+
+.labelBackground.collapsed {
+	background: rgba(255, 0, 0, 0.3)
 }
 
 .labelContent {
 	position: absolute;
 	top: 50%;
-	padding: 2px 5px;
 	transform-origin: top left;
 	transform: translateY(-50%);
 	pointer-events: all;
+
+	padding: 2px 5px;
 }
 
-.labelContent.collapsed {
+.labelContent.minimised {
 	transform: rotate(-90deg) translateX(-50%);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+}
+
+.interactive {
+	cursor: pointer;
 }
 
 .itemContainer {

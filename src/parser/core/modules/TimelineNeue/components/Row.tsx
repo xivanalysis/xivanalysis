@@ -92,9 +92,9 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 		[reportSize, maxChildSize, labelSize],
 	)
 
-	// A label is "collapsed" if it has active children
+	// A label is "minimised" if it has active children
 	// Active children take up space, so assume maxChildSize is representative
-	const labelCollapsed = maxChildSize > 0
+	const labelMinimised = maxChildSize > 0
 
 	// Clicking a label toggles collapsing its children
 	const [collapseChildren, setCollapseChildren] = useState(false)
@@ -105,8 +105,10 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 
 	const [itemsRef, setItemsRef] = useState<HTMLDivElement | null>(null)
 
+	const shouldCollapse = collapse || collapseChildren
+
 	const rowContextValue = {
-		collapse: collapse || collapseChildren,
+		collapse: shouldCollapse,
 		siblingSize: siblingSize - labelSize,
 		reportSize: reportChildSize,
 	}
@@ -115,7 +117,8 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 		<div className={collapse ? undefined : styles.row}>
 			{label != null && !collapse && (
 				<Label
-					collapsed={labelCollapsed}
+					collapsed={shouldCollapse}
+					minimised={labelMinimised}
 					offset={siblingSize}
 					reportSize={setLabelSize}
 					onClick={onClick}
@@ -138,6 +141,7 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 interface LabelProps {
 	children?: ReactNode
 	collapsed: boolean
+	minimised: boolean
 	offset: number
 	reportSize: (size: number) => void
 	onClick: () => void
@@ -146,6 +150,7 @@ interface LabelProps {
 const Label = memo<LabelProps>(function Label({
 	children,
 	collapsed,
+	minimised,
 	offset,
 	reportSize,
 	onClick,
@@ -167,8 +172,8 @@ const Label = memo<LabelProps>(function Label({
 
 	// When the content size changes, or is collapsed, report the new size to parent
 	useLayoutEffect(
-		() => reportSize(collapsed ? size.height : size.width),
-		[collapsed, size],
+		() => reportSize(minimised ? size.height : size.width),
+		[minimised, size],
 	)
 
 	// Using effect just for it's destructor, will trigger a report of 0 on unmount.
@@ -176,15 +181,20 @@ const Label = memo<LabelProps>(function Label({
 		reportSize(0)
 	}, [])
 
+	// Labels that are neither minimised nor collapsed aren't interactive
+	const interactive = minimised || collapsed || undefined
+
 	return <>
 		<Measure client onResize={onResizeBackground}>
 			{({measureRef}) => (
 				<div
 					ref={measureRef}
-					onClick={onClick}
+					onClick={interactive && onClick}
 					className={classNames(
 						styles.labelBackground,
+						minimised && styles.minimised,
 						collapsed && styles.collapsed,
+						interactive && styles.interactive,
 					)}
 					style={{left: -offset, width: offset}}
 				/>
@@ -194,14 +204,15 @@ const Label = memo<LabelProps>(function Label({
 			{({measureRef}) => (
 				<div
 					ref={measureRef}
-					onClick={onClick}
+					onClick={interactive && onClick}
 					className={classNames(
 						styles.labelContent,
-						collapsed && styles.collapsed,
+						minimised && styles.minimised,
+						interactive && styles.interactive,
 					)}
 					style={{
 						left: -offset,
-						maxWidth: collapsed ? availableHeight : undefined,
+						maxWidth: minimised ? availableHeight : undefined,
 					}}
 				>
 					{children}
