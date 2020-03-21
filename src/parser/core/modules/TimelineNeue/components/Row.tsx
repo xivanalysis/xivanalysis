@@ -1,5 +1,5 @@
 import classNames from 'classnames'
-import React, {createContext, memo, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import React, {createContext, memo, ReactNode, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState} from 'react'
 import ReactDOM from 'react-dom'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Timeline.module.css'
@@ -87,7 +87,7 @@ export const Row = memo<RowProps>(function Row({children, label}) {
 	const [maxChildSize, reportChildSize] = useSizeCalculator()
 
 	// Report when the total size of this label changes
-	useEffect(
+	useLayoutEffect(
 		() => reportSize(rowId, maxChildSize + labelSize),
 		[reportSize, maxChildSize, labelSize],
 	)
@@ -166,13 +166,13 @@ const Label = memo<LabelProps>(function Label({
 	}
 
 	// When the content size changes, or is collapsed, report the new size to parent
-	useEffect(
+	useLayoutEffect(
 		() => reportSize(collapsed ? size.height : size.width),
 		[collapsed, size],
 	)
 
 	// Using effect just for it's destructor, will trigger a report of 0 on unmount.
-	useEffect(() => () => {
+	useLayoutEffect(() => () => {
 		reportSize(0)
 	}, [])
 
