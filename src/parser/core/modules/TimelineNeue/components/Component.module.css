@@ -39,13 +39,14 @@
 	padding: 2px 5px;
 	transform-origin: top left;
 	transform: translateY(-50%);
+	pointer-events: all;
 }
 
 .labelContent.collapsed {
 	transform: rotate(-90deg) translateX(-50%);
 	overflow: hidden;
 	text-overflow: ellipsis;
-	/* TODO: Maybe nowrap on text? */
+	white-space: nowrap;
 }
 
 .itemContainer {
