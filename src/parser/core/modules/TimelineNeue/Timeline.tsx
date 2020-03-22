@@ -90,7 +90,7 @@ export class Timeline extends Module {
 
 	private renderItem = (item: ItemConfig, index: number) => (
 		<ItemComponent key={index} start={item.start} end={item.end}>
-			{item.content}
+			<item.Content/>
 		</ItemComponent>
 	)
 }

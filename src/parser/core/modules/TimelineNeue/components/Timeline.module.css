@@ -61,6 +61,7 @@
 	position: absolute;
 	top: 0;
 	height: 100%;
+	overflow: hidden;
 	white-space: nowrap;
 	pointer-events: all;
 }

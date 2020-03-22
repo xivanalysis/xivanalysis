@@ -1,4 +1,4 @@
-import {ReactNode} from 'react'
+import React, {ComponentType, ReactNode} from 'react'
 
 export interface Row {
 	readonly label?: ReactNode
@@ -24,18 +24,28 @@ export class SimpleRow implements Row {
 		this.rows = opts.rows?.slice() ?? []
 		this.items = opts.items?.slice() ?? []
 	}
+
+	addRow<T extends Row>(row: T): T {
+		this.rows.push(row)
+		return row
+	}
+
+	addItem<T extends Item>(item: T): T {
+		this.items.push(item)
+		return item
+	}
 }
 
 export interface Item {
 	readonly start: number
 	readonly end?: number
-	readonly content: ReactNode
+	readonly Content: ComponentType
 }
 
 export class SimpleItem implements Item {
-	start: number
-	end?: number
-	content: ReactNode
+	readonly start: number
+	readonly end?: number
+	private readonly content: ReactNode
 
 	constructor(opts: {
 		start: number
@@ -46,4 +56,6 @@ export class SimpleItem implements Item {
 		this.end = opts.end
 		this.content = opts.content
 	}
+
+	Content = () => <>{this.content}</>
 }
