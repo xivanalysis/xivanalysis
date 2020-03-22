@@ -30,7 +30,7 @@ export class Timeline extends Module {
 	private items: ItemConfig[] = []
 
 	protected init() {
-		this.rows = TEST_ROWS
+		this.rows = TEST_ROWS.slice()
 	}
 
 	/**
