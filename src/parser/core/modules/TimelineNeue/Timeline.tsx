@@ -93,12 +93,19 @@ export class Timeline extends Module {
 			.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
 			.map(this.renderRow)
 
-	private renderRow = (row: RowConfig, index: number) => (
-		<RowComponent key={index} label={row.label} height={row.height}>
-			{this.renderRows(row.rows)}
-			{row.items.map(this.renderItem)}
-		</RowComponent>
-	)
+	private renderRow = (row: RowConfig, index: number) => {
+		// If the row is entirely empty, ignore it so it doesn't clutter up the display
+		if (row.rows.length === 0 && row.items.length === 0) {
+			return null
+		}
+
+		return (
+			<RowComponent key={index} label={row.label} height={row.height}>
+				{this.renderRows(row.rows)}
+				{row.items.map(this.renderItem)}
+			</RowComponent>
+		)
+	}
 
 	private renderItem = (item: ItemConfig, index: number) => (
 		<ItemComponent key={index} start={item.start} end={item.end}>
