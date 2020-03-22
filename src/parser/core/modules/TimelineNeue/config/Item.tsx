@@ -1,4 +1,6 @@
+import {Action} from 'data/ACTIONS'
 import React, {ComponentType, ReactNode} from 'react'
+import styles from './Item.module.css'
 
 export interface Item {
 	readonly start: number
@@ -6,20 +8,49 @@ export interface Item {
 	readonly Content: ComponentType
 }
 
-export class SimpleItem implements Item {
+interface BaseItemOptions {
+	start: number
+	end?: number
+}
+
+abstract class BaseItem implements Item {
 	readonly start: number
 	readonly end?: number
-	private readonly content: ReactNode
 
-	constructor(opts: {
-		start: number
-		end?: number
-		content?: ReactNode,
-	} ) {
+	abstract Content: ComponentType
+
+	constructor(opts: BaseItemOptions) {
 		this.start = opts.start
 		this.end = opts.end
-		this.content = opts.content
+	}
+}
+
+export class SimpleItem extends BaseItem {
+	private readonly content: ReactNode
+
+	constructor({content, ...opts}: {content?: ReactNode} & BaseItemOptions) {
+		super(opts)
+		this.content = content
 	}
 
 	Content = () => <>{this.content}</>
+}
+
+export class ActionItem extends BaseItem {
+	private readonly action: Action
+
+	constructor({action, ...opts}: {action: Action} & BaseItemOptions) {
+		super(opts)
+		this.action = action
+	}
+
+	Content = () => (
+		<div className={styles.actionItem}>
+			<img
+				src={this.action.icon}
+				alt={this.action.name}
+				title={this.action.name}
+			/>
+		</div>
+	)
 }
