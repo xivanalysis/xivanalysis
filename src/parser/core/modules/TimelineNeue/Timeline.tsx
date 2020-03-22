@@ -1,7 +1,17 @@
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Item, Row, SetViewFn, Timeline as TimelineComponent} from './components'
-import {Item as ItemConfig, Row as RowConfig, SimpleItem, SimpleRow} from './config'
+import {
+	Item as ItemComponent,
+	Row as RowComponent,
+	SetViewFn,
+	Timeline as TimelineComponent,
+} from './components'
+import {
+	Item as ItemConfig,
+	Row as RowConfig,
+	SimpleItem,
+	SimpleRow,
+} from './config'
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
@@ -11,13 +21,37 @@ export class Timeline extends Module {
 
 	private setView?: SetViewFn
 
+	private rows: RowConfig[] = []
+	private items: ItemConfig[] = []
+
+	protected init() {
+		this.rows = TEST_ROWS
+	}
+
+	/**
+	 * Add a row to the timeline.
+	 * @returns the added row
+	 */
+	addRow<T extends RowConfig>(row: T): T {
+		this.rows.push(row)
+		return row
+	}
+
+	/**
+	 * Add a new global item to the timeline. The added item will not be scoped
+	 * to a row, and hence will span the height of the entire timeline.
+	 * @returns the added item
+	 */
+	addItem<T extends ItemConfig>(item: T): T {
+		this.items.push(item)
+		return item
+	}
+
 	private exposeSetView = (handler: SetViewFn) => {
 		this.setView = handler
 	}
 
 	output() {
-		const rows = TEST_ROWS
-
 		return <>
 			<TimelineComponent
 				min={0}
@@ -25,7 +59,8 @@ export class Timeline extends Module {
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			>
-				{rows.map(this.renderRow)}
+				{this.rows.map(this.renderRow)}
+				{this.items.map(this.renderItem)}
 			</TimelineComponent>
 
 			<button onClick={() => this.setView?.([500, 1000])}>Don't press this.</button>
@@ -33,16 +68,16 @@ export class Timeline extends Module {
 	}
 
 	private renderRow = (row: RowConfig, index: number) => (
-		<Row key={index} label={row.label} height={row.height}>
+		<RowComponent key={index} label={row.label} height={row.height}>
 			{row.rows.map(this.renderRow)}
 			{row.items.map(this.renderItem)}
-		</Row>
+		</RowComponent>
 	)
 
 	private renderItem = (item: ItemConfig, index: number) => (
-		<Item key={index} start={item.start} end={item.end}>
+		<ItemComponent key={index} start={item.start} end={item.end}>
 			{item.content}
-		</Item>
+		</ItemComponent>
 	)
 }
 
