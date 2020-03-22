@@ -185,7 +185,7 @@ export function ScaleHandler({
 	return (
 		<Measure innerRef={scrollParentRef} bounds onResize={onResize}>
 			{({measureRef}) => (
-				<div ref={measureRef} className={styles.scaleHandler}>
+				<div ref={measureRef}>
 					<ScaleContext.Provider value={scale}>
 						{children}
 					</ScaleContext.Provider>

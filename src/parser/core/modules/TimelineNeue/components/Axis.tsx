@@ -31,7 +31,7 @@ export const Axis = memo(function Axis() {
 		<Row>
 			{ticks.map((tick, index) => (
 				<Item key={index} start={tick} disableCulling>
-					{formatTick(tick)}
+					<div className={styles.axisTick}>{formatTick(tick)}</div>
 				</Item>
 			))}
 		</Row>

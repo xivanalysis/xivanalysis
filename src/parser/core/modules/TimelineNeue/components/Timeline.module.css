@@ -1,23 +1,30 @@
-.scaleHandler {
-	margin: -1px;
-	border: 1px dashed red;
+@value borderWidth: 1px;
+/* These colours are currently picked to mimic vis' UI */
+@value rowBorderColour: #bfbfbf;
+@value gridLineColour: #e5e5e5;
+
+.labelSpacer {
+	/* Offset the negative margins stemming from the rows */
+	padding: borderWidth;
 }
 
 .row {
 	position: relative;
 	min-height: 30px;
-
-	margin: -1px;
-	border: 1px dotted green;
+	margin: calc(-1 * borderWidth);
+	border: 1px solid rowBorderColour;
 	pointer-events: none;
 }
 
 .labelBackground {
 	position: absolute;
+	box-sizing: content-box;
+	margin: calc(-1 * borderWidth);
+	border: 1px solid rowBorderColour;
+	border-right: none;
 	height: 100%;
 	pointer-events: all;
 
-	border-left: 1px solid black;
 	background: rgba(0, 255, 0, 0.3)
 }
 
@@ -67,6 +74,10 @@
 }
 
 .gridLine {
-	border-left: 1px solid blue;
+	border-left: 1px solid gridLineColour;
 	height: 100%;
+}
+
+.axisTick {
+	padding: 3px;
 }
