@@ -13,6 +13,10 @@ import {
 	SimpleRow,
 } from './config'
 
+// We default to showing the first minute of the pull. Showing the entire fight at once
+// is overwhelming for an initial view.
+const INITIAL_END = 60000 // One minute
+
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Module {
@@ -72,6 +76,7 @@ export class Timeline extends Module {
 			<TimelineComponent
 				min={0}
 				max={this.parser.fightDuration}
+				end={Math.min(this.parser.fightDuration, INITIAL_END)}
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			>

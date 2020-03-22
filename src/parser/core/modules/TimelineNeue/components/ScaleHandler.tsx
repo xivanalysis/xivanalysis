@@ -23,6 +23,10 @@ export interface ScaleHandlerProps {
 	min: number
 	/** Maximum bound of time region to display. */
 	max: number
+	/** Start point of initial time region displayed. Defaults to min. */
+	start?: number
+	/** End point of initial time region displayed. Defaults to max. */
+	end?: number
 	/** Minimum time duration to display. */
 	zoomMin?: number
 	/** Factor used to determine distance moved when panning with indirect inputs. Defaults to 0.05 (5%). */
@@ -44,6 +48,8 @@ export function ScaleHandler({
 	children,
 	min,
 	max,
+	start,
+	end,
 	zoomMin = 1,
 	panFactor = DEFAULT_PAN_FACTOR,
 	zoomFactor = DEFAULT_ZOOM_FACTOR,
@@ -51,7 +57,7 @@ export function ScaleHandler({
 }: PropsWithChildren<ScaleHandlerProps>) {
 	// States representing the scale's range & domain
 	// TODO: Should I just put the entire scale in the state and be done with it?
-	const [domain, setDomain] = useState<Vector2>([min, max])
+	const [domain, setDomain] = useState<Vector2>([start ?? min, end ?? max])
 	const [range, setRange] = useState<Vector2>([0, 100])
 
 	// If able, expose our user domain setter so external code can adjust it
