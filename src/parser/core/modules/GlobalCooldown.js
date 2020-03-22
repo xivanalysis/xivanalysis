@@ -6,6 +6,7 @@ import React from 'react'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
+import {SimpleRow, ActionItem} from './TimelineNeue'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -31,6 +32,7 @@ export default class GlobalCooldown extends Module {
 		'speedmod',
 		'statistics',
 		'timeline',
+		'timelineNeue',
 	]
 
 	static title = t('core.gcd.title')`Global Cooldown`
@@ -114,7 +116,7 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-		// TODO: Look into adding items to groups? Maybe?
+		const row = this.timelineNeue.addRow(new SimpleRow({label: 'GCD'}))
 
 		this.timeline.addGroup(new Group({
 			id: this.gcdGroupId,
@@ -125,6 +127,14 @@ export default class GlobalCooldown extends Module {
 		this.gcds.forEach(gcd => {
 			const action = this.data.getAction(gcd.actionId)
 			if (!action) { return }
+
+			const start = gcd.timestamp - startTime
+			row.addItem(new ActionItem({
+				start,
+				end: start + this._getGcdLength(gcd),
+				action,
+			}))
+
 			this.timeline.addItem(new Item({
 				type: 'background',
 				start: gcd.timestamp - startTime,
