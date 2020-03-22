@@ -30,7 +30,8 @@ export class Timeline extends Module {
 
 	/**
 	 * Add a row to the timeline.
-	 * @returns the added row
+	 * @param row The row to add
+	 * @returns The added row
 	 */
 	addRow<T extends RowConfig>(row: T): T {
 		this.rows.push(row)
@@ -40,11 +41,26 @@ export class Timeline extends Module {
 	/**
 	 * Add a new global item to the timeline. The added item will not be scoped
 	 * to a row, and hence will span the height of the entire timeline.
-	 * @returns the added item
+	 * @param item The item to add globally
+	 * @returns The added item
 	 */
 	addItem<T extends ItemConfig>(item: T): T {
 		this.items.push(item)
 		return item
+	}
+
+	/**
+	 * Move & zoom the viewport to show the specified range
+	 * @param start Timestamp of the start of the range
+	 * @param end Timestamp of the end of the range
+	 * @param scrollTo If true, the page will be scrolled to reveal the timeline
+	 */
+	show(start: number, end: number, scrollTo: boolean = true) {
+		this.setView?.([start, end])
+
+		if (scrollTo) {
+			this.parser.scrollTo(Timeline.handle)
+		}
 	}
 
 	private exposeSetView = (handler: SetViewFn) => {
@@ -62,8 +78,6 @@ export class Timeline extends Module {
 				{this.rows.map(this.renderRow)}
 				{this.items.map(this.renderItem)}
 			</TimelineComponent>
-
-			<button onClick={() => this.setView?.([500, 1000])}>Don't press this.</button>
 		</>
 	}
 
