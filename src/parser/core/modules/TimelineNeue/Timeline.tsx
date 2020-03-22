@@ -1,4 +1,4 @@
-import Module from 'parser/core/Module'
+import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {
 	Item as ItemComponent,
@@ -22,6 +22,7 @@ const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 export class Timeline extends Module {
 	static handle = 'timelineNeue'
 	static displayOrder = -1000
+	static displayMode = DISPLAY_MODE.FULL
 
 	private setView?: SetViewFn
 
@@ -80,15 +81,21 @@ export class Timeline extends Module {
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			>
-				{this.rows.map(this.renderRow)}
+				{this.renderRows(this.rows)}
 				{this.items.map(this.renderItem)}
 			</TimelineComponent>
 		</>
 	}
 
+	private renderRows = (rows: RowConfig[]) =>
+		rows
+			.slice()
+			.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+			.map(this.renderRow)
+
 	private renderRow = (row: RowConfig, index: number) => (
 		<RowComponent key={index} label={row.label} height={row.height}>
-			{row.rows.map(this.renderRow)}
+			{this.renderRows(row.rows)}
 			{row.items.map(this.renderItem)}
 		</RowComponent>
 	)

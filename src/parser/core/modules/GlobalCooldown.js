@@ -116,7 +116,7 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-		const row = this.timelineNeue.addRow(new SimpleRow({label: 'GCD'}))
+		const row = this.timelineNeue.addRow(new SimpleRow({label: 'GCD', order: -99}))
 
 		this.timeline.addGroup(new Group({
 			id: this.gcdGroupId,

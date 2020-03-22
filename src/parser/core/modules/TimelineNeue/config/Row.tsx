@@ -4,6 +4,7 @@ import {Item} from './Item'
 export interface Row {
 	readonly label?: ReactNode
 	readonly height?: number
+	readonly order?: number
 	readonly rows: Row[]
 	readonly items: Item[]
 }
@@ -11,17 +12,20 @@ export interface Row {
 export class SimpleRow implements Row {
 	label?: ReactNode
 	height?: number
+	order?: number
 	rows: Row[]
 	items: Item[]
 
 	constructor(opts: {
 		label?: ReactNode,
 		height?: number
+		order?: number
 		rows?: readonly Row[],
 		items?: readonly Item[],
-	}) {
+	} = {}) {
 		this.label = opts.label
 		this.height = opts.height
+		this.order = opts.order
 		this.rows = opts.rows?.slice() ?? []
 		this.items = opts.items?.slice() ?? []
 	}
