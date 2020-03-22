@@ -2,6 +2,7 @@ import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import React from 'react'
+import {SimpleRow, ActionItem} from './TimelineNeue'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -10,6 +11,7 @@ export default class Cooldowns extends Module {
 		'data',
 		'downtime',
 		'timeline',
+		'timelineNeue',
 	]
 
 	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
@@ -23,6 +25,7 @@ export default class Cooldowns extends Module {
 	_currentAction = null
 	_cooldowns = {}
 	_groups = {}
+	_rows = {}
 
 	constructor(...args) {
 		super(...args)
@@ -31,6 +34,10 @@ export default class Cooldowns extends Module {
 
 		// Pre-build groups for actions explicitly set by subclasses
 		this._buildGroups(this.constructor.cooldownOrder)
+
+		if (this.constructor.cooldownOrder) {
+			this._buildRows(this.constructor.cooldownOrder)
+		}
 
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
@@ -83,6 +90,42 @@ export default class Cooldowns extends Module {
 		this.timeline.addGroup(group)
 		this._groups[opts.id] = group
 		return group
+	}
+
+	_buildRows(mappings) {
+		mappings.map((mapping, index) => {
+			const order = -(mappings.length - index)
+
+			// If it's just the ID of an action, build a row for it and bail
+			if (typeof mapping === 'number') {
+				const action = this.data.getAction(mapping)
+				return this._buildRow(mapping, {label: action?.name, order})
+			}
+
+			// Otherwise, it's a grouping - build a base row
+			const row = this._buildRow(mapping.name, {label: mapping.name, order})
+
+			if (mapping.merge) {
+				// If it's a merge group, it'll be absorbing all the child actions
+				// Register the group for each of the action IDs
+				mapping.actions.forEach(id => {
+					this._rows[id] = row
+				})
+			} else {
+				// Otherwise, build nested rows for each action in the mapping
+				this._buildRows(mapping.actions)
+					.forEach(subRow => row.addRow(subRow))
+			}
+
+			return row
+		})
+	}
+
+	_buildRow(id, opts) {
+		const row = new SimpleRow(opts)
+		this.timelineNeue.addRow(row)
+		this._rows[id] = row
+		return row
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -149,17 +192,28 @@ export default class Cooldowns extends Module {
 			})
 		}
 
+		if (!this._rows[actionId]) {
+			this._buildRow(actionId, {label: action.name, order: actionId})
+		}
+
 		// Add CD info to the timeline
 		cd.history
 			.forEach(use => {
-				if (!use.shared) {
-					this._groups[actionId].addItem(new Item({
-						type: 'background',
-						start: use.timestamp - this.parser.fight.start_time,
-						length: use.length,
-						content: <img src={action.icon} alt={action.name} />,
-					}))
-				}
+				if (use.shared) { return }
+
+				const start = use.timestamp - this.parser.fight.start_time
+				this._rows[actionId].addItem(new ActionItem({
+					start,
+					end: start + use.length,
+					action,
+				}))
+
+				this._groups[actionId].addItem(new Item({
+					type: 'background',
+					start: use.timestamp - this.parser.fight.start_time,
+					length: use.length,
+					content: <img src={action.icon} alt={action.name} />,
+				}))
 			})
 
 		return true
