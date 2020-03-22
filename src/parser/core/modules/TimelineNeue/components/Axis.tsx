@@ -1,4 +1,5 @@
-import {timeMinute, timeSecond} from 'd3-time'
+import classNames from 'classnames'
+import {timeMinute} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {memo} from 'react'
 import {Item} from './Item'
@@ -7,6 +8,7 @@ import {useScale} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
 const EXPAND_TICK_DOMAIN_BY = 0.05 // 5%
+const AXIS_ROW_HEIGHT = 50
 
 export const Axis = memo(function Axis() {
 	const scale = useScale()
@@ -25,21 +27,30 @@ export const Axis = memo(function Axis() {
 	return <>
 		{ticks.map((tick, index) => (
 			<Item key={index} start={tick} disableCulling>
-				<div className={styles.gridLine}/>
+				<div className={classNames(
+					styles.gridLine,
+					isMajorTick(tick) && styles.major,
+				)}/>
 			</Item>
 		))}
-		<Row>
+		<Row height={AXIS_ROW_HEIGHT}>
 			{ticks.map((tick, index) => (
 				<Item key={index} start={tick} disableCulling>
-					<div className={styles.axisTick}>{formatTick(tick)}</div>
+					<div className={styles.axisTick}>
+						{formatSeconds(tick)}
+						{isMajorTick(tick) && <>
+							<br/>{formatMinutes(tick)}
+						</>}
+					</div>
 				</Item>
 			))}
 		</Row>
 	</>
 })
 
-const formatTick = (date: Date) => (
-	timeSecond(date) < date ? utcFormat('.%L') :
-	timeMinute(date) < date ? utcFormat('%-S') :
-	utcFormat('%-Mm')
-)(date)
+// Major ticks are minute lines
+const isMajorTick = (date: Date) =>
+	Number(timeMinute(date)) === Number(date)
+
+const formatSeconds = utcFormat('%-S')
+const formatMinutes = utcFormat('%-Mm')

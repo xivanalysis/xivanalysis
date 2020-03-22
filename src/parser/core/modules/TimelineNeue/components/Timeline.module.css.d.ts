@@ -12,6 +12,8 @@ declare namespace TimelineModuleCssModule {
     labelBackground: string;
     labelContent: string;
     labelSpacer: string;
+    major: string;
+    majorGridLineColour: string;
     minimised: string;
     row: string;
     rowBorderColour: string;

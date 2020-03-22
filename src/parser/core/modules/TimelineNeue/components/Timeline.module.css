@@ -2,6 +2,7 @@
 /* These colours are currently picked to mimic vis' UI */
 @value rowBorderColour: #bfbfbf;
 @value gridLineColour: #e5e5e5;
+@value majorGridLineColour: #bfbfbf;
 
 .labelSpacer {
 	/* Offset the negative margins stemming from the rows */
@@ -76,6 +77,10 @@
 .gridLine {
 	border-left: 1px solid gridLineColour;
 	height: 100%;
+}
+
+.gridLine.major {
+	border-color: majorGridLineColour;
 }
 
 .axisTick {
