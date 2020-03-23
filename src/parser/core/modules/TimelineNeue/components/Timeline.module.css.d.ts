@@ -4,6 +4,7 @@ declare namespace TimelineModuleCssModule {
     axisTick: string;
     borderWidth: string;
     collapsed: string;
+    first: string;
     gridLine: string;
     gridLineColour: string;
     interactive: string;

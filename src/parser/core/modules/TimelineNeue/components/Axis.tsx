@@ -21,6 +21,11 @@ export const Axis = memo(function Axis() {
 
 	const ticks = extendedScale.ticks()
 
+	// Calculate values used for the "sticky" first major tick
+	const viewMin = scale.domain()[0]
+	const stickyTick = timeMinute(viewMin)
+	const stickyTickEnd = timeMinute.offset(stickyTick, 1)
+
 	// Grid lines will expand to the height of the container,
 	// formatted tick labels are constrained to a row
 	// We're disabling culling here, as the scale's axis does it for us.
@@ -34,16 +39,30 @@ export const Axis = memo(function Axis() {
 			</Item>
 		))}
 		<Row height={AXIS_ROW_HEIGHT}>
-			{ticks.map((tick, index) => (
-				<Item key={index} start={tick} disableCulling>
+			{ticks.map((tick) => <>
+				{/* Second ticks */}
+				<Item key={tick.toString()} start={tick} disableCulling>
 					<div className={styles.axisTick}>
 						{formatSeconds(tick)}
-						{isMajorTick(tick) && <>
-							<br/>{formatMinutes(tick)}
-						</>}
 					</div>
 				</Item>
-			))}
+
+				{/* Minute ticks. Skip ticks before stickyTickEnd to prevent dupes. */}
+				{isMajorTick(tick) && (tick >= stickyTickEnd) && (
+					<Item key={`${tick}-major`} start={tick}>
+						<div className={classNames(styles.axisTick, styles.major)}>
+							{formatMinutes(tick)}
+						</div>
+					</Item>
+				)}
+			</>)}
+
+			{/* "Sticky" minute tick */}
+			<Item start={viewMin} end={stickyTickEnd} disableCulling>
+				<div className={classNames(styles.axisTick, styles.major, styles.first)}>
+					{formatMinutes(stickyTick)}
+				</div>
+			</Item>
 		</Row>
 	</>
 })

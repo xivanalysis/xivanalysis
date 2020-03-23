@@ -86,3 +86,13 @@
 .axisTick {
 	padding: 3px;
 }
+
+.axisTick.major {
+	padding-top: 24px;
+}
+
+.axisTick.first {
+	display: inline-flex;
+	justify-content: flex-end;
+	max-width: 100%;
+}
