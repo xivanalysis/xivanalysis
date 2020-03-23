@@ -3,19 +3,40 @@ declare namespace ThemeModuleCssModule {
   export interface IThemeModuleCss {
     backgroundLightness: string;
     colorLightness: string;
+    "dark-mode": string;
+    darkMode: string;
+    errorBackground: string;
+    errorDark: string;
+    errorLight: string;
+    errorText: string;
     gutter: string;
     highlight: string;
+    infoBackground: string;
+    infoDark: string;
+    infoLight: string;
+    infoText: string;
     lg: string;
+    "light-mode": string;
+    lightMode: string;
     md: string;
+    messageBackground: string;
+    messageDark: string;
+    messageLight: string;
+    messageText: string;
+    segmentLinkActive: string;
     sm: string;
+    successBackground: string;
+    successDark: string;
+    successLight: string;
+    successText: string;
     themeBackdrop: string;
     themeBackground: string;
     themeBlack: string;
     themeBlue: string;
+    themeBorder: string;
     themeBrown: string;
     themeGreen: string;
     themeGrey: string;
-    themeInverse: string;
     themeLight: string;
     themeOlive: string;
     themeOrange: string;
@@ -24,9 +45,14 @@ declare namespace ThemeModuleCssModule {
     themeRed: string;
     themeTeal: string;
     themeText: string;
+    themeTextMuted: string;
     themeViolet: string;
     themeWhite: string;
     themeYellow: string;
+    warningBackground: string;
+    warningDark: string;
+    warningLight: string;
+    warningText: string;
     xl: string;
   }
 }
