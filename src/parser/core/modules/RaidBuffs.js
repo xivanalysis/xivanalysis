@@ -3,6 +3,7 @@ import React from 'react'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {Group, Item} from 'parser/core/modules/Timeline'
+import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
 
 // Are other jobs going to need to add to this?
 // const OLD_RAID_BUFFS = {
@@ -57,12 +58,15 @@ export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
 	static dependencies = [
 		'data',
-		'timeline',
 		'enemies',
+		'timeline',
+		'timelineNeue',
 	]
 
 	_group = null
 	_buffs = {}
+
+	_buffRows = new Map()
 
 	_buffMap = new Map()
 
@@ -134,12 +138,39 @@ export default class RaidBuffs extends Module {
 			return
 		}
 
-		const item = this.getTargetBuffs(event)[event.ability.guid]
+		const statusId = event.ability.guid
+
+		const item = this.getTargetBuffs(event)[statusId]
 		// This shouldn't happen, but it do.
 		if (!item) { return }
 
 		item.end = event.timestamp - this.parser.fight.start_time
 		this.timeline.addItem(item)
+
+		const settings = this._buffMap.get(statusId)
+		const status = this.data.getStatus(statusId)
+		if (!status) { return }
+
+		// Get the row for this buff/group, creating one if it doesn't exist yet.
+		// NOTE: Using start time as order, as otherwise adding here forces ordering by end time of the first buff
+		const rowId = settings.group || statusId
+		let row = this._buffRows.get(rowId)
+		if (row == null) {
+			row = new SimpleRow({
+				label: settings.name || event.ability.name,
+				order: item.start,
+			})
+			this._buffRows.set(rowId, row)
+		}
+
+		// Add an item for the buff to its row
+		// TODO: StatusItem
+		// TODO: Borrowing data from the Item for now. Fix when removing old timeline.
+		row.addItem(new ActionItem({
+			start: item.start,
+			end: item.end,
+			action: status,
+		}))
 	}
 
 	_onComplete() {
@@ -147,6 +178,13 @@ export default class RaidBuffs extends Module {
 		if (Object.keys(this._buffs).length === 0) {
 			this._group.visible = false
 		}
+
+		// Add the parent row. It will automatically hide if there's no children.
+		this.timelineNeue.addRow(new SimpleRow({
+			label: 'Raid Buffs',
+			order: -100,
+			rows: Array.from(this._buffRows.values()),
+		}))
 	}
 
 	getTargetBuffs(event) {
