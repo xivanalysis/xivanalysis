@@ -11,6 +11,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
 
 const LL_BUFFS = [
 	STATUSES.LEY_LINES.id,
@@ -23,8 +24,9 @@ export default class Leylines extends Module {
 	static displayOrder = DISPLAY_ORDER.LEY_LINES
 
 	static dependencies = [
-		'timeline',
 		'checklist',
+		'timeline',
+		'timelineNeue',
 	]
 
 	_buffWindows = {
@@ -124,10 +126,20 @@ export default class Leylines extends Module {
 			this._stopAndSave(STATUSES.LEY_LINES.id)
 		}
 
+		// Build the grouping row
+		const parentRow = this.timelineNeue.addRow(new SimpleRow({
+			label: 'Ley Lines Buffs',
+			order: 0,
+		}))
+
 		// For each buff, add it to timeline
 		LL_BUFFS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = 'leybuffs-' + status.id
+
+			const row = new SimpleRow({label: status.name})
+			parentRow.addRow(row)
+
 			const fightStart = this.parser.fight.start_time
 
 			this._buffWindows[buff].history.forEach(window => {
@@ -137,6 +149,13 @@ export default class Leylines extends Module {
 					end: window.stop - fightStart,
 					group: groupId,
 					content: <img src={status.icon} alt={status.name}/>,
+				}))
+
+				row.addItem(new ActionItem({
+					// TODO: You guessed it
+					action: status,
+					start: window.start - fightStart,
+					end: window.stop - fightStart,
 				}))
 			})
 		})
