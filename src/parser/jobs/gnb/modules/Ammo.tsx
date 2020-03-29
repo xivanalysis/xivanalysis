@@ -181,7 +181,7 @@ export default class Ammo extends Module {
 				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <ActionLink {...ACTIONS.BURST_STRIKE}/> is more potency than any of your <ActionLink {...ACTIONS.SOLID_BARREL}/> combo.
 			</Trans>,
 			why: <Trans id="gnb.ammo.leftover-ammo.why">
-				you had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> leftover at the end of the fight.
+				You had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> remaining at the end of the fight.
 			</Trans>,
 			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
 			value: this.leftoverAmmo,
