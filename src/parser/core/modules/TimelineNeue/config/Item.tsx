@@ -3,8 +3,11 @@ import React, {ComponentType, ReactNode} from 'react'
 import styles from './Item.module.css'
 
 export interface Item {
+	/** Start time of the item */
 	readonly start: number
+	/** End time of the item */
 	readonly end?: number
+	/** Component to render as the item */
 	readonly Content: ComponentType
 }
 
@@ -25,6 +28,10 @@ abstract class BaseItem implements Item {
 	}
 }
 
+/**
+ * Simple item that can be added to the timeline. You are expected to provide
+ * your own content to visualise.
+ */
 export class SimpleItem extends BaseItem {
 	private readonly content: ReactNode
 
@@ -36,6 +43,7 @@ export class SimpleItem extends BaseItem {
 	Content = () => <>{this.content}</>
 }
 
+/** Pre-fabricated item representing an action. */
 export class ActionItem extends BaseItem {
 	private readonly action: Action
 
