@@ -1,6 +1,7 @@
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import React from 'react'
+import {SimpleRow, ActionItem} from './TimelineNeue'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 
@@ -8,16 +9,18 @@ const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
-		'data',
-		'timeline',
 		'cooldowns',
+		'data',
 		'gcd',
+		'timeline',
+		'timelineNeue',
 	]
 
 	static statusesStackMapping = {}
 
 	_statuses = {}
 	_groups = {}
+	_rows = {}
 	_statusToActionMap = {}
 	_actionToMergeNameMap = {}
 
@@ -121,10 +124,13 @@ export default class Statuses extends Module {
 	_onComplete() {
 		Object.values(this._statuses).forEach(entry => {
 			const group = this._createGroupForStatus(entry.status)
+			const row = this._createRowForStatus(entry.status)
 
 			if (!group) {
 				return
 			}
+
+			if (row == null) { return }
 
 			entry.usages.forEach(st => {
 				group.addItem(new Item({
@@ -132,6 +138,12 @@ export default class Statuses extends Module {
 					start: st.start,
 					end: st.end || st.start + entry.status.duration * 1000,
 					content: <img src={entry.status.icon} alt={entry.status.name}/>,
+				}))
+
+				row.addItem(new ActionItem({
+					action: entry.status,
+					start: st.start,
+					end: st.end || st.start + entry.status.duration * 1000,
 				}))
 			})
 		})
@@ -162,6 +174,39 @@ export default class Statuses extends Module {
 		this.timeline.attachToGroup(action.onGcd ? this.gcd.gcdGroupId : (this._actionToMergeNameMap[action.id] || action.id), group)
 
 		return group
+	}
+
+	_createRowForStatus(status) {
+		const key = this.constructor.statusesStackMapping[status.id] ?? status.id
+
+		if (this._rows[key] != null) {
+			return this._rows[key]
+		}
+
+		// find action for status
+		const action = this._statusToActionMap[status.id]
+		if (!action) { return undefined }
+
+		const row = new SimpleRow({label: status.name})
+		this._rows[key] = row
+
+		// TODO: Replace with proper attach logic
+		this._temporaryStatusParentRow.addRow(row)
+
+		return row
+	}
+
+	// TODO: Remove
+	_tsprCache = undefined
+	get _temporaryStatusParentRow() {
+		if (this._tsprCache == null) {
+			this._tsprCache = this.timelineNeue.addRow(new SimpleRow({
+				label: 'TEMP: Statuses',
+				order: -Infinity,
+			}))
+		}
+
+		return this._tsprCache
 	}
 
 	_isStatusAppliedToPet(event) {
