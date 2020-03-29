@@ -8,7 +8,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Group, Item} from 'parser/core/modules/Timeline'
-import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 const PROC_STATUSES = [
 	STATUSES.FLOURISHING_FAN_DANCE.id,
@@ -176,8 +176,8 @@ export default class Procs extends Module {
 					content: <img src={status.icon} alt={status.name}/>,
 				}))
 
-				row.addItem(new ActionItem({
-					action: status,
+				row.addItem(new StatusItem({
+					status,
 					start: window.start - fightStart,
 					end: window.stop - fightStart,
 				}))

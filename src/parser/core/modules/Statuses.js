@@ -1,7 +1,7 @@
 import Module from 'parser/core/Module'
 import {ItemGroup, Item} from './Timeline'
 import React from 'react'
-import {SimpleRow, ActionItem} from './TimelineNeue'
+import {SimpleRow, StatusItem} from './TimelineNeue'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 
@@ -140,8 +140,8 @@ export default class Statuses extends Module {
 					content: <img src={entry.status.icon} alt={entry.status.name}/>,
 				}))
 
-				row.addItem(new ActionItem({
-					action: entry.status,
+				row.addItem(new StatusItem({
+					status: entry.status,
 					start: st.start,
 					end: st.end || st.start + entry.status.duration * 1000,
 				}))

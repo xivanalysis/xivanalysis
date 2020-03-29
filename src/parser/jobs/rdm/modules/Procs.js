@@ -8,7 +8,7 @@ import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {getDataBy} from 'data'
 import {Group, Item} from 'parser/core/modules/Timeline'
-import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
@@ -290,8 +290,8 @@ export default class Procs extends Module {
 						content: <img src={status.icon} alt={status.name} />,
 					}))
 
-					row.addItem(new ActionItem({
-						action: status,
+					row.addItem(new StatusItem({
+						status,
 						start: window.start - fightStart,
 						end: window.stop - fightStart,
 					}))

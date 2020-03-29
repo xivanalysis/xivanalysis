@@ -3,7 +3,7 @@ import React from 'react'
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
 import {Group, Item} from 'parser/core/modules/Timeline'
-import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 // Are other jobs going to need to add to this?
 // const OLD_RAID_BUFFS = {
@@ -164,12 +164,11 @@ export default class RaidBuffs extends Module {
 		}
 
 		// Add an item for the buff to its row
-		// TODO: StatusItem
 		// TODO: Borrowing data from the Item for now. Fix when removing old timeline.
-		row.addItem(new ActionItem({
+		row.addItem(new StatusItem({
 			start: item.start,
 			end: item.end,
-			action: status,
+			status,
 		}))
 	}
 

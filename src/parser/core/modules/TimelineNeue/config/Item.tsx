@@ -1,4 +1,5 @@
 import {Action} from 'data/ACTIONS'
+import {Status} from 'data/STATUSES'
 import React, {ComponentType, ReactNode} from 'react'
 import styles from './Item.module.css'
 
@@ -43,22 +44,37 @@ export class SimpleItem extends BaseItem {
 	Content = () => <>{this.content}</>
 }
 
-/** Pre-fabricated item representing an action. */
-export class ActionItem extends BaseItem {
-	private readonly action: Action
+// Heh. Hiding this 'cus I hate calling stuff an ability
+// Also maybe we wanna change UIs later iuno
+class AbilityItem extends BaseItem {
+	private readonly ability: Action | Status
 
-	constructor({action, ...opts}: {action: Action} & BaseItemOptions) {
+	constructor({ability, ...opts}: {ability: Action | Status} & BaseItemOptions) {
 		super(opts)
-		this.action = action
+		this.ability = ability
 	}
 
 	Content = () => (
 		<div className={styles.actionItem}>
 			<img
-				src={this.action.icon}
-				alt={this.action.name}
-				title={this.action.name}
+				src={this.ability.icon}
+				alt={this.ability.name}
+				title={this.ability.name}
 			/>
 		</div>
 	)
+}
+
+/** Pre-fabricated item representing an action. */
+export class ActionItem extends AbilityItem {
+	constructor({action, ...opts}: {action: Action} & BaseItemOptions) {
+		super({...opts, ability: action})
+	}
+}
+
+/** Pre-fabricated item representing a status */
+export class StatusItem extends AbilityItem {
+	constructor({status, ...opts}: {status: Status} & BaseItemOptions) {
+		super({...opts, ability: status})
+	}
 }

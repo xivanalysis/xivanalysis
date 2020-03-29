@@ -11,7 +11,7 @@ import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {Group, Item} from 'parser/core/modules/Timeline'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 const LL_BUFFS = [
 	STATUSES.LEY_LINES.id,
@@ -151,9 +151,8 @@ export default class Leylines extends Module {
 					content: <img src={status.icon} alt={status.name}/>,
 				}))
 
-				row.addItem(new ActionItem({
-					// TODO: You guessed it
-					action: status,
+				row.addItem(new StatusItem({
+					status,
 					start: window.start - fightStart,
 					end: window.stop - fightStart,
 				}))

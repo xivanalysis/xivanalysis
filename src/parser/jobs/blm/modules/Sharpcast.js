@@ -7,7 +7,7 @@ import {Item} from 'parser/core/modules/Timeline'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink, ActionLink} from 'components/ui/DbLink'
-import {ActionItem} from 'parser/core/modules/TimelineNeue'
+import {StatusItem} from 'parser/core/modules/TimelineNeue'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 
@@ -120,8 +120,8 @@ export default class Sharpcast extends Module {
 				content: <img src={STATUSES.SHARPCAST.icon} alt={STATUSES.SHARPCAST.name}/>,
 			}))
 
-			row.addItem(new ActionItem({
-				action: STATUSES.SHARPCAST,
+			row.addItem(new StatusItem({
+				status: STATUSES.SHARPCAST,
 				start: window.start - fightStart,
 				end: window.stop - fightStart,
 			}))

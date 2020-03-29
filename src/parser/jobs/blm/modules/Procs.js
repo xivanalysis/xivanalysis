@@ -7,7 +7,7 @@ import {Group, Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
@@ -225,8 +225,8 @@ export default class Procs extends Module {
 					content: <img src={status.icon} alt={status.name}/>,
 				}))
 
-				row.addItem(new ActionItem({
-					action: status,
+				row.addItem(new StatusItem({
+					status,
 					start: window.start - fightStart,
 					end: window.stop - fightStart,
 				}))
