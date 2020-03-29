@@ -7,6 +7,7 @@ import {Item} from 'parser/core/modules/Timeline'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink, ActionLink} from 'components/ui/DbLink'
+import {ActionItem} from 'parser/core/modules/TimelineNeue'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 
@@ -105,6 +106,8 @@ export default class Sharpcast extends Module {
 		}
 
 		const groupId = this.procs.getGroupIdForStatus(STATUSES.SHARPCAST)
+		const row = this.procs.getRowForStatus(STATUSES.SHARPCAST)
+
 		const fightStart = this.parser.fight.start_time
 
 		// Add buff windows to the timeline
@@ -115,6 +118,12 @@ export default class Sharpcast extends Module {
 				end: window.stop - fightStart,
 				group: groupId,
 				content: <img src={STATUSES.SHARPCAST.icon} alt={STATUSES.SHARPCAST.name}/>,
+			}))
+
+			row.addItem(new ActionItem({
+				action: STATUSES.SHARPCAST,
+				start: window.start - fightStart,
+				end: window.stop - fightStart,
 			}))
 		})
 
