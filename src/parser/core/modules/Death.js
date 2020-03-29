@@ -4,6 +4,7 @@ import {Plural, Trans} from '@lingui/react'
 import Module from 'parser/core/Module'
 import {Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {SimpleItem} from './TimelineNeue'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
@@ -17,6 +18,7 @@ export default class Death extends Module {
 		'data',
 		'suggestions',
 		'timeline',
+		'timelineNeue',
 	]
 
 	_count = 0
@@ -99,12 +101,21 @@ export default class Death extends Module {
 
 	addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
+
 		this.timeline.addItem(new Item({
 			type: 'background',
 			style: 'background-color: #ce909085;',
 			start: this._timestamp - startTime,
 			end: end - startTime,
 		}))
+
+		this.timelineNeue.addItem(new SimpleItem({
+			start: this._timestamp - startTime,
+			end: end - startTime,
+			// TODO: This but better
+			content: <div style={{width: '100%', height: '100%', backgroundColor: '#ce909085'}}/>,
+		}))
+
 		this._deadTime += (end - this._timestamp)
 		this._timestamp = null
 	}
