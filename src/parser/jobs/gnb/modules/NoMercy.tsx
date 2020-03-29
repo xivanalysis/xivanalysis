@@ -119,10 +119,7 @@ export default class NoMercy extends Module {
 			switch (actionId) {
 				// Blasting Zone is just a traited version of Danger Zone
 				// Impossible to see both in the same log outside of hacking
-				// Ryan Note: Because of this, I'm going to roll the logic of danger zone under blasting zone so lvl 70's still get their zone counted for.
 				case ACTIONS.BLASTING_ZONE.id:
-					lastNoMercy.numBlastingZones++
-					break
 				case ACTIONS.DANGER_ZONE.id:
 					lastNoMercy.numBlastingZones++
 					break

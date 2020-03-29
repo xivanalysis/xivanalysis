@@ -178,7 +178,7 @@ export default class Ammo extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.BLOODFEST.icon,
 			content: <Trans id="gnb.ammo.leftover-ammo.content">
-				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible.
+				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <ActionLink {...ACTIONS.BURST_STRIKE}/> is more potency than any of your <ActionLink {...ACTIONS.SOLID_BARREL}/> combo.
 			</Trans>,
 			why: <Trans id="gnb.ammo.leftover-ammo.why">
 				you had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> leftover at the end of the fight.
