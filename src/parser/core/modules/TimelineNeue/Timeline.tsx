@@ -9,8 +9,6 @@ import {
 import {
 	Item as ItemConfig,
 	Row as RowConfig,
-	SimpleItem,
-	SimpleRow,
 } from './config'
 
 // We default to showing the first minute of the pull. Showing the entire fight at once
@@ -28,10 +26,6 @@ export class Timeline extends Module {
 
 	private rows: RowConfig[] = []
 	private items: ItemConfig[] = []
-
-	protected init() {
-		this.rows = TEST_ROWS.slice()
-	}
 
 	/**
 	 * Add a row to the timeline.
@@ -113,35 +107,3 @@ export class Timeline extends Module {
 		</ItemComponent>
 	)
 }
-
-const TempShowSize = ({children}: {children: React.ReactNode}) => (
-	<div style={{background: 'rgba(255, 0, 0, 0.3)', width: '100%', height: '100%'}}>
-		{children}
-	</div>
-)
-
-const TEST_ROWS = [
-	new SimpleRow({
-		label: 'parent',
-		rows: [
-			new SimpleRow({label: 'test'}),
-			new SimpleRow({
-				label: 'hello',
-				rows: [
-					new SimpleRow({label: 'nested'}),
-					new SimpleRow({
-						label: 'nested2',
-						items: [new SimpleItem({start: 0, content: <TempShowSize>Test 4</TempShowSize>})],
-					}),
-				],
-				items: [new SimpleItem({start: 741, content: <TempShowSize>Test 1</TempShowSize>})],
-			}),
-			new SimpleRow({
-				label: 'world',
-				items: [new SimpleItem({start: 1563, end: 4123, content: <TempShowSize>Test 2</TempShowSize>})],
-			}),
-		],
-		items: [new SimpleItem({start: 5341, content: <TempShowSize>Test 3</TempShowSize>})],
-	}),
-	new SimpleRow({label: 'Really long label'}),
-]
