@@ -8,6 +8,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Group, Item} from 'parser/core/modules/Timeline'
+import {SimpleRow, ActionItem} from 'parser/core/modules/TimelineNeue'
 
 const PROC_STATUSES = [
 	STATUSES.FLOURISHING_FAN_DANCE.id,
@@ -23,6 +24,7 @@ export default class Procs extends Module {
 		'downtime',
 		'suggestions',
 		'timeline',
+		'timelineNeue',
 	]
 
 	_casts = { //the listing order is arbitrary
@@ -63,6 +65,8 @@ export default class Procs extends Module {
 		},
 	}
 	_group = null
+	_row = null
+	_rows = new Map()
 
 	_overwrittenProcs = 0
 	constructor(...args) {
@@ -81,6 +85,11 @@ export default class Procs extends Module {
 			nestedGroups: [],
 		})
 		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
+
+		this._row = this.timelineNeue.addRow(new SimpleRow({
+			label: 'Procs',
+			order: 0,
+		}))
 	}
 
 	_onCast(event) {
@@ -149,6 +158,7 @@ export default class Procs extends Module {
 		PROC_STATUSES.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
 			const groupId = this.getGroupIdForStatus(status)
+			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
 			// Finalise the buff if it was still active
@@ -164,6 +174,12 @@ export default class Procs extends Module {
 					end: window.stop - fightStart,
 					group: groupId,
 					content: <img src={status.icon} alt={status.name}/>,
+				}))
+
+				row.addItem(new ActionItem({
+					action: status,
+					start: window.start - fightStart,
+					end: window.stop - fightStart,
 				}))
 			})
 		})
@@ -199,5 +215,14 @@ export default class Procs extends Module {
 		}
 
 		return groupId
+	}
+
+	getRowForStatus(status) {
+		let row = this._rows.get(status.id)
+		if (row == null) {
+			row = this._row.addRow(new SimpleRow({label: status.name}))
+			this._rows.set(status.id, row)
+		}
+		return row
 	}
 }
