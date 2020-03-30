@@ -89,7 +89,7 @@ export class Timeline extends Module {
 
 	private renderRow = (row: RowConfig, index: number) => {
 		// If the row is entirely empty, ignore it so it doesn't clutter up the display
-		if (row.rows.length === 0 && row.items.length === 0) {
+		if (this.getRowItemCount(row) === 0) {
 			return null
 		}
 
@@ -106,4 +106,7 @@ export class Timeline extends Module {
 			<item.Content/>
 		</ItemComponent>
 	)
+
+	private getRowItemCount = (row: RowConfig): number =>
+		row.items.length + row.rows.reduce((acc, cur) => acc + this.getRowItemCount(cur), 0)
 }
