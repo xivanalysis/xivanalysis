@@ -25,7 +25,7 @@ export default class Cooldowns extends Module {
 	_currentAction = null
 	_cooldowns = {}
 	_groups = {}
-	_rows = {}
+	_rowData = {}
 
 	constructor(...args) {
 		super(...args)
@@ -99,33 +99,48 @@ export default class Cooldowns extends Module {
 			// If it's just the ID of an action, build a row for it and bail
 			if (typeof mapping === 'number') {
 				const action = this.data.getAction(mapping)
-				return this._buildRow(mapping, {label: action?.name, order})
+				return this._buildRowData(mapping, {label: action?.name, order})
 			}
 
 			// Otherwise, it's a grouping - build a base row
-			const row = this._buildRow(mapping.name, {label: mapping.name, order})
+			const rowData = this._buildRowData(mapping.name, {label: mapping.name, order})
 
 			if (mapping.merge) {
 				// If it's a merge group, it'll be absorbing all the child actions
 				// Register the group for each of the action IDs
 				mapping.actions.forEach(id => {
-					this._rows[id] = row
+					this._rowData[id] = rowData
 				})
 			} else {
 				// Otherwise, build nested rows for each action in the mapping
 				this._buildRows(mapping.actions)
-					.forEach(subRow => row.addRow(subRow))
+					.forEach(subRow => rowData.parent.addRow(subRow))
 			}
 
-			return row
+			return rowData
 		})
 	}
 
-	_buildRow(id, opts) {
-		const row = new SimpleRow(opts)
-		this.timelineNeue.addRow(row)
-		this._rows[id] = row
-		return row
+	_buildRowData(id, opts) {
+		if (this._rowData[id] != null) {
+			return this._rowData[id]
+		}
+
+		const parent = new SimpleRow(opts)
+		this.timelineNeue.addRow(parent)
+
+		const rowData = {
+			parent,
+			internal: parent.addRow(new SimpleRow({order: -1})),
+		}
+
+		this._rowData[id] = rowData
+		return rowData
+	}
+
+	getActionTimelineRow(action) {
+		const rowData = this._buildRowData(action.id, {label: action.name, order: action.id})
+		return rowData.parent
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -192,9 +207,7 @@ export default class Cooldowns extends Module {
 			})
 		}
 
-		if (!this._rows[actionId]) {
-			this._buildRow(actionId, {label: action.name, order: actionId})
-		}
+		const rowData = this._buildRowData(actionId, {label: action.name, order: actionId})
 
 		// Add CD info to the timeline
 		cd.history
@@ -202,7 +215,7 @@ export default class Cooldowns extends Module {
 				if (use.shared) { return }
 
 				const start = use.timestamp - this.parser.fight.start_time
-				this._rows[actionId].addItem(new ActionItem({
+				rowData.internal.addItem(new ActionItem({
 					start,
 					// NOTE: This jank ensures 0-length cooldowns are still visible.
 					// TODO: The above is basically a hack to remain compat with old timeline. Remove?

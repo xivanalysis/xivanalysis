@@ -13,7 +13,6 @@ export default class Statuses extends Module {
 		'data',
 		'gcd',
 		'timeline',
-		'timelineNeue',
 	]
 
 	static statusesStackMapping = {}
@@ -193,23 +192,10 @@ export default class Statuses extends Module {
 		// TODO: Replace with proper attach logic
 		const parentRow = action.onGcd
 			? this.gcd.timelineRow
-			: this._temporaryStatusParentRow
+			: this.cooldowns.getActionTimelineRow(action)
 		parentRow.addRow(row)
 
 		return row
-	}
-
-	// TODO: Remove
-	_tsprCache = undefined
-	get _temporaryStatusParentRow() {
-		if (this._tsprCache == null) {
-			this._tsprCache = this.timelineNeue.addRow(new SimpleRow({
-				label: 'TEMP: Statuses',
-				order: -Infinity,
-			}))
-		}
-
-		return this._tsprCache
 	}
 
 	_isStatusAppliedToPet(event) {
