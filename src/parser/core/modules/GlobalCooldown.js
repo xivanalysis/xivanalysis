@@ -49,10 +49,17 @@ export default class GlobalCooldown extends Module {
 	gcds = []
 	gcdGroupId  = 'gcd'
 
+	timelineRow = null
+
 	constructor(...args) {
 		super(...args)
 
 		this.addHook('complete', this._onComplete)
+
+		this.timelineRow = this.timelineNeue.addRow(new SimpleRow({
+			label: 'GCD',
+			order: -99,
+		}))
 	}
 
 	// Using normalise so the estimate can be used throughout the parse
@@ -116,7 +123,7 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-		const row = this.timelineNeue.addRow(new SimpleRow({label: 'GCD', order: -99}))
+		const row = this.timelineRow.addRow(new SimpleRow({order: -1}))
 
 		this.timeline.addGroup(new Group({
 			id: this.gcdGroupId,

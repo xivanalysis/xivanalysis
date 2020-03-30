@@ -191,7 +191,10 @@ export default class Statuses extends Module {
 		this._rows[key] = row
 
 		// TODO: Replace with proper attach logic
-		this._temporaryStatusParentRow.addRow(row)
+		const parentRow = action.onGcd
+			? this.gcd.timelineRow
+			: this._temporaryStatusParentRow
+		parentRow.addRow(row)
 
 		return row
 	}
