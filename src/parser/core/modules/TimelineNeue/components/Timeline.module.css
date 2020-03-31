@@ -13,17 +13,16 @@
 	position: relative;
 	min-height: 30px;
 	margin: calc(-1 * borderWidth);
-	border: 1px solid rowBorderColour;
+	border: borderWidth solid rowBorderColour;
 	pointer-events: none;
 }
 
 .labelBackground {
 	position: absolute;
-	box-sizing: content-box;
-	margin: calc(-1 * borderWidth);
-	border: 1px solid rowBorderColour;
+	margin: calc(-1 * borderWidth) 0;
+	border: borderWidth solid rowBorderColour;
 	border-right: none;
-	height: 100%;
+	height: calc(100% + (2 * borderWidth));
 	pointer-events: all;
 
 	background: rgba(0, 255, 0, 0.3)

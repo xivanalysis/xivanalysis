@@ -4,9 +4,6 @@ import ReactDOM from 'react-dom'
 import Measure, {ContentRect} from 'react-measure'
 import styles from './Timeline.module.css'
 
-// TODO: Rethink styling so this isn't required. It's kinda bloody jank.
-const borderWidth = parseInt(styles.borderWidth, 10)
-
 interface RowContextValue {
 	collapse: boolean
 	siblingSize: number
@@ -66,7 +63,7 @@ export const LabelSpacer = memo(function LabelSpacer({children}) {
 	return (
 		<div
 			className={styles.labelSpacer}
-			style={{paddingLeft: maxChildSize + borderWidth}}
+			style={{paddingLeft: maxChildSize}}
 		>
 			<RowContext.Provider value={rowContextValue}>
 				{children}
@@ -208,7 +205,7 @@ const Label = memo<LabelProps>(function Label({
 						collapsed && styles.collapsed,
 						interactive && styles.interactive,
 					)}
-					style={{left: -offset, width: offset - borderWidth}}
+					style={{left: -offset, width: offset}}
 				/>
 			)}
 		</Measure>
