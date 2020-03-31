@@ -130,7 +130,7 @@ export class EntityStatuses extends Module {
 				eventToAdjust.end = invuln.start
 				eventToAdjust.stackHistory.splice(-1, 1, {stacks: 0, timestamp: invuln.start, invuln: true})
 
-				if (invuln.end < eventToAdjust.end!) {
+				if (invuln.end < statusEvent.end!) {
 					this.debug('Invuln split the range - synthesizing second event for status time after invuln')
 					// Invuln ended before the status ended - create a second status for the time after the invuln ended
 					const newStackHistory = statusEvent.stackHistory.slice(0, -1)
