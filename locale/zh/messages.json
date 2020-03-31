@@ -694,6 +694,7 @@
   "sam.higanbana.suggestion.content": "请避免过早地刷新目标身上的<0/>。",
   "sam.higanbana.suggestion.why": "由于提前刷新，浪费了{0} 跳的 {1}。",
   "sam.higanbana.title": "彼岸花",
+  "sam.interrupts.suggestion.content": "",
   "sam.kaiten.suggestion.badkaiten.content": "除了<1/>之外，不要在任何GCD上使用<0/>。在居合术上使用是值得的，因为每点剑气能转化更高的威力。",
   "sam.kaiten.suggestion.missedkaiten.content": "始终在<1/>和<2/>上使用<0/>。在这些技能上使用回天的收益非常高，不应该错过。",
   "sam.kaiten.suggestion.missedkaiten.why": "你在使用<0/>和<1/>时少覆盖了 {0, plural, one {# 次} other {# 次}} 必杀剑·回天。",

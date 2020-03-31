@@ -694,6 +694,7 @@
   "sam.higanbana.suggestion.content": "이전에 부여한 <0/> 의 시간이 충분할 경우 갱신을 피하세요.",
   "sam.higanbana.suggestion.why": "{1} 를 너무 이르게 도트 데미지를 갱신하여 {0} 만큼의 지속시간을 낭비하였습니다.",
   "sam.higanbana.title": "피안화",
+  "sam.interrupts.suggestion.content": "",
   "sam.kaiten.suggestion.badkaiten.content": "<0/>사용시 <1/>외에는 어떤 스킬도 사용해서는 안됩니다. 이러한 행동들은 검기의 효율을 높이기 때문에 가치가 있습니다.",
   "sam.kaiten.suggestion.missedkaiten.content": "항상 <0/>은 <1/>와 <2/>에 사용하세요. 필살검: 회천을 사용시 이러한 행동들이 얻는 이점은 매우 큽니다.",
   "sam.kaiten.suggestion.missedkaiten.why": "필살검: 회천을 {0, plural, one {#회} other {#회}} <0/>나 <1/>에 사용하지 않았습니다.",

@@ -694,6 +694,7 @@
   "sam.higanbana.suggestion.content": "Avoid refreshing <0/> significantly before it expires.",
   "sam.higanbana.suggestion.why": "{0} of {1} lost to early refreshes.",
   "sam.higanbana.title": "Higanbana",
+  "sam.interrupts.suggestion.content": "Avoid interrupting <0/> casts. Despite the short cast time, moving immediately after casting can interrupt the skill, wasting any time spent doing so.",
   "sam.kaiten.suggestion.badkaiten.content": "Avoid using <0/> on any GCDs besides <1/> moves. These actions are worth it because of the potency gain per kenki spent.",
   "sam.kaiten.suggestion.missedkaiten.content": "Always use <0/> on <1/> and <2/>. The gain on these actions from kaiten is too great to miss.",
   "sam.kaiten.suggestion.missedkaiten.why": "You failed to Kaiten {0, plural, one {# time} other {# times}} on either  on <0/> and/or <1/>",
