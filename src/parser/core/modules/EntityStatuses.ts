@@ -133,7 +133,8 @@ export class EntityStatuses extends Module {
 				if (invuln.end < statusEvent.end!) {
 					this.debug('Invuln split the range - synthesizing second event for status time after invuln')
 					// Invuln ended before the status ended - create a second status for the time after the invuln ended
-					const newStackHistory = statusEvent.stackHistory.slice(0, -1)
+					// If the status overlaps the end of the fight or the disappearance of the boss, there may not be a stackHistory event for the end of the debuff - splice on to the end of the array as-is
+					const newStackHistory = statusEvent.stackHistory.some(history => history.stacks === 0) ? statusEvent.stackHistory.slice(0, -1) : statusEvent.stackHistory
 					const stacksBeforeInvuln = newStackHistory[newStackHistory.length - 1].stacks
 					newStackHistory.splice(-1, 1,
 						{stacks: 0, timestamp: invuln.start, invuln: true},
