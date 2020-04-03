@@ -752,7 +752,7 @@
   "sch.interrupts.suggestion.content": "",
   "sch.swiftcast.missed.suggestion.content": "",
   "sch.swiftcast.missed.suggestion.why": "",
-  "sch.swiftcast.title": "",
+  "sch.swiftcast.title": "迅速魔",
   "sch.weaving.content": "GCDの間に<0/>と<1/>を挟み込み、過度に挟み込む行為は避けてください。過度な挟み込みはGCDを遅延させてアクティブ率を低下させます。詳細は下にある <2><3/></2> モジュールをご覧ください。",
   "smn.about.description": "\nこのアナライザーは戦闘中に起きたことについてのより深い洞察を提供するとともに、召喚士の操作を手軽に改善できるようにすることを目指しています。\n\n召喚士のプレイングの性質上、以下に示すように _圧倒的な_ 数の提案があります。でも身構えないで。まずは1-2個の改善に集中しましょう。\n\nもっと召喚士について知りたい場合は、[The Balance](https://thebalanceffxiv.com/)上のガイドをチェックして、#smn_questionsチャンネルに入ってください。\n",
   "smn.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
@@ -832,7 +832,7 @@
   "whm.dots.requirement.uptime-dia.name": "アクティブ率: <0/>",
   "whm.dots.rule.description": "ディアによるDoTは白魔道士にとって重要なダメージ源です。常にDoTを切らさず維持してください。",
   "whm.dots.rule.name": "常にDoTを切らさないようにしてください",
-  "whm.dots.suggestion.clip-dia.content": "ディアの早すぎる更新を避けると、もっとグレアが打てるようになります。",
+  "whm.dots.suggestion.clip-dia.content": "効果時間が切れる前にディアを更新しなければ，より多くグレアをキャストできます。",
   "whm.dots.suggestion.clip-dia.why": "",
   "whm.interrupts.suggestion.content": "位置取りと場所によっては滑り撃ちの活用によって、詠唱中断は避けられます。<0/>の更新タイミングを使って、ギミックの前に移動しましょう。それができない場合は、ハートオブ系のアクションを活用し、ヒールと移動の両立を試みてください。ディアを早めに上書きすることは最後の手段です。",
   "whm.lily-blood.suggestion.content": "ブラッドリリーを無駄にしないために <0/> を使ってください。",
@@ -855,5 +855,5 @@
   "whm.overheal.rule.name": "オーバーヒールを避けてください。",
   "whm.swiftcast.missed.suggestion.content": "",
   "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": "迅速魔の使用"
+  "whm.swiftcast.title": "迅速魔"
 }
