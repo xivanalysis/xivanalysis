@@ -8,6 +8,8 @@ import STATUSES from 'data/STATUSES'
 import {RotationTable} from 'components/ui/RotationTable'
 import React from 'react'
 
+const PLAYERS_HIT_TARGET = 8
+
 export default class Devotion extends Module {
 	static displayOrder = DISPLAY_ORDER.DEVOTION
 	static handle = 'devotion'
@@ -21,6 +23,7 @@ export default class Devotion extends Module {
 
 	// {
 	//	start: Number
+	//	playersHit: [Number]
 	//	events: [Event]
 	// }
 	_currentWindow = null
@@ -31,6 +34,18 @@ export default class Devotion extends Module {
 		this.addEventHook('complete', this._closeWindow)
 		this.addEventHook('applybuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._onDevotionApplied)
 		this.addEventHook('removebuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._closeWindow)
+		this.addEventHook('normalisedapplybuff', {by: 'pet', abilityId: STATUSES.DEVOTION.id}, this._countDevotionTargets)
+	}
+
+	_countDevotionTargets(event) {
+		this._openWindow(event.timestamp)
+
+		const playersHit = event.confirmedEvents.map(hit => hit.targetID).filter(id => this.parser.fightFriendlies.findIndex(f => f.id === id) >= 0)
+		playersHit.forEach(id => {
+			if (!this._currentWindow.playersHit.includes(id)) {
+				this._currentWindow.playersHit.push(id)
+			}
+		})
 	}
 
 	_onDevotionApplied(event) {
@@ -56,12 +71,14 @@ export default class Devotion extends Module {
 
 	_openWindow(timestamp) {
 		if (this._currentWindow) {
-			this._closeWindow()
+			return this._currentWindow
 		}
 		this._currentWindow = {
 			start: timestamp - this.parser.fight.start_time,
 			events: [],
+			playersHit: [],
 		}
+		return this._currentWindow
 	}
 
 	_closeWindow() {
@@ -74,7 +91,12 @@ export default class Devotion extends Module {
 	output() {
 		const rotationData = this._devotionWindows.map(devotionWindow => {
 			if (!devotionWindow || !devotionWindow.events.length) {
-				return {}
+				return null
+			}
+			const targetsData = {}
+			targetsData.players = {
+				actual: devotionWindow.playersHit.length,
+				expected: PLAYERS_HIT_TARGET,
 			}
 			const events = devotionWindow.events
 			const windowStart = devotionWindow.start
@@ -84,9 +106,15 @@ export default class Devotion extends Module {
 				start: windowStart,
 				end: windowEnd,
 				rotation: devotionWindow.events,
+				targetsData,
 			}
-		})
+		}).filter(window => window !== null)
+		const rotationTargets = [{
+			header: <Trans id="smn.devotion.players-count">Players Buffed</Trans>,
+			accessor: 'players',
+		}]
 		return <RotationTable
+			targets={rotationTargets}
 			data={rotationData}
 			onGoto={this.timeline.show}
 			headerTitle={<Trans id="smn.devotion.table-header">Devotion Actions</Trans>}
