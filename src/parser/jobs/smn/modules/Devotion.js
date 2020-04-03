@@ -57,8 +57,9 @@ export default class Devotion extends Module {
 
 	_pushToWindow(event) {
 		if (!this._currentWindow) {
+			// If _currentWindow is not yet defined, assume Devotion was applied prepull
 			this._currentWindow = {
-				start: event.timestamp - this.parser.fight.start_time,
+				start: 0,
 				events: [],
 			}
 		}
