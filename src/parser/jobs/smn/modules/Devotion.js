@@ -18,6 +18,7 @@ export default class Devotion extends Module {
 	]
 
 	_devotionWindows = []
+
 	// {
 	//	start: Number
 	//	events: [Event]
@@ -27,15 +28,13 @@ export default class Devotion extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addEventHook('cast', {by: 'player'}, this._onCast)
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('complete', this._closeWindow)
 		this.addEventHook('applybuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._onDevotionApplied)
+		this.addEventHook('removebuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._closeWindow)
 	}
 
 	_onDevotionApplied(event) {
-		this._currentWindow = {
-			start: event.timestamp - this.parser.fight.start_time,
-			events: [],
-		}
+		this._openWindow(event.timestamp)
 	}
 
 	_onCast(event) {
@@ -44,26 +43,25 @@ export default class Devotion extends Module {
 		if (!action || action.autoAttack) {
 			return
 		}
-		if (this.combatants.selected.hasStatus(STATUSES.DEVOTION.id)) {
+		if (this._currentWindow && this.combatants.selected.hasStatus(STATUSES.DEVOTION.id)) {
 			this._pushToWindow(event)
-		} else {
-			this._closeWindow()
 		}
-	}
-
-	_onComplete() {
-		this._closeWindow()
 	}
 
 	_pushToWindow(event) {
-		if (!this._currentWindow) {
-			// If _currentWindow is not yet defined, assume Devotion was applied prepull
-			this._currentWindow = {
-				start: 0,
-				events: [],
-			}
+		if (this._currentWindow) {
+			this._currentWindow.events.push(event)
 		}
-		this._currentWindow.events.push(event)
+	}
+
+	_openWindow(timestamp) {
+		if (this._currentWindow) {
+			this._closeWindow()
+		}
+		this._currentWindow = {
+			start: timestamp - this.parser.fight.start_time,
+			events: [],
+		}
 	}
 
 	_closeWindow() {
