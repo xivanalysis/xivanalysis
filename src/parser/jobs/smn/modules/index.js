@@ -1,5 +1,6 @@
 import Cooldowns from './Cooldowns'
 import Demis from './Demis'
+import Devotion from './Devotion'
 import DoTs from './DoTs'
 import DWT from './DWT'
 import Gauge from './Gauge'
@@ -15,6 +16,7 @@ import {Weaving} from './Weaving'
 export default [
 	Cooldowns,
 	Demis,
+	Devotion,
 	DoTs,
 	DWT,
 	Gauge,
