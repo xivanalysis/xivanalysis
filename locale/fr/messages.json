@@ -456,6 +456,8 @@
   "glossary.proc.title": "proc",
   "gnb.about.description": "Cet analyseur recherche les problèmes faciles à repérer dans votre gameplay qui peuvent être corrigés pour améliorer vos dégâts lors d'un combat comme Gunbreaker.\nSi vous voulez en savoir plus sur le rôle et les fonctions de ce poste, jetez un coup d'œil à quelques guides de base :\n\n*[Guide général du ravitaillement par Aletin](https://goo.gl/nYzAnq)\n*[Guide du briseur d'armes par Aletin](https://docs.google.com/document/d/1gfsMbHP55N5e0UKyc9zfpAdL_uVco40YdBlVNGvyJ0k/edit?usp=sharing)\n\nSi vous avez des suggestions concernant le module, n'hésitez pas à me contacter sur Discord à Lhea#7581.\n",
   "gnb.ammo.checklist.requirement.waste.name": "Utilisez autant de vos tir chargés que possible.",
+  "gnb.ammo.leftover-ammo.content": "",
+  "gnb.ammo.leftover-ammo.why": "",
   "gnb.ammo.single-target-circle.content": "Évitez d'utiliser <0/> lorsque ceci ne ferait des dégâts qu'à une seule cible.",
   "gnb.ammo.single-target-circle.why": "{0, plural,one {#utilisation}other {#utilisations}} de <0/> met des dégats a seulement une cible.",
   "gnb.ammo.title": "Chronologie des cartouches",
