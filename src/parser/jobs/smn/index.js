@@ -41,6 +41,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-04-03'),
+		Changes: () => <>Converted demi ghost checking to use ghosting indications now provided in source data.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
 		date: new Date('2020-02-16'),
 		Changes: () => <>Updated DoT tables to separate applications by target and show which skill was used.</>,
 		contributors: [CONTRIBUTORS.KELOS],
