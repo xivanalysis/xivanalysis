@@ -36,7 +36,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.TROUBADOUR.id,
 		ACTIONS.NATURES_MINNE.id,
 		ACTIONS.THE_WARDENS_PAEAN.id,
-		ACTIONS.ARMS_LENGTH.id,
 		ACTIONS.REPELLING_SHOT.id,
 	]
 }
