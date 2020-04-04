@@ -456,6 +456,8 @@
   "glossary.proc.title": "触发",
   "gnb.about.description": "本分析器的目标是帮你找出使用绝枪战士时容易出现的问题，并给出提高输出的建议。\n\n如果你想要从头了解这个这个职业的功能和玩法，请看下面的几个攻略（英文）：\n* [坦克职能通用攻略](https://goo.gl/nYzAnq)\n* [绝枪战士攻略](https://docs.google.com/document/d/1gfsMbHP55N5e0UKyc9zfpAdL_uVco40YdBlVNGvyJ0k/edit?usp=sharing)\n\n对本程序有任何建议请通过discord联系Lhea#7581\n",
   "gnb.ammo.checklist.requirement.waste.name": "尽可能多地使用已经获得的晶壤。",
+  "gnb.ammo.leftover-ammo.content": "",
+  "gnb.ammo.leftover-ammo.why": "",
   "gnb.ammo.single-target-circle.content": "对单体目标时不要使用<0/>。",
   "gnb.ammo.single-target-circle.why": "{0, plural, one {# 次} other {# 次}} <0/> 只打了一个目标。",
   "gnb.ammo.title": "晶壤的使用记录",
