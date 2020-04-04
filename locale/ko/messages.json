@@ -456,6 +456,8 @@
   "glossary.proc.title": "프록",
   "gnb.about.description": "이 분석기는 놓치기 쉬운 문제점들을 포착해 건브레이커를 좀더 원활하게 플레이할 수 있도록 알려드립니다 \n\n건브레이커의 구성 및 기본부터 연마하는 정보가 필요하다면 다음 가이드들을 활용해보십시오. \n\n * [Aletin의 탱커의 기본](https://goo.gl/nYzAnq) (영어)\n * [Aletin의 건브레이커 가이드](https://docs.google.com/document/d/1gfsMbHP55N5e0UKyc9zfpAdL_uVco40YdBlVNGvyJ0k/edit?usp=sharing) (영어)\n\n이 모듈에 제안할 내용이 있다면 디스코드 아이디 Lhea#7581에게 메세지를 보내주십시오.\n",
   "gnb.ammo.checklist.requirement.waste.name": "장전된 소일을 최대한 많이 사용하십시오.",
+  "gnb.ammo.leftover-ammo.content": "",
+  "gnb.ammo.leftover-ammo.why": "",
   "gnb.ammo.single-target-circle.content": "단일 대상에게 <0/> 사용하는것을 피하십시오.",
   "gnb.ammo.single-target-circle.why": "단일 대상에게 <0/> {0, plural, other {#회}} 사용",
   "gnb.ammo.title": "소일 사용표",
