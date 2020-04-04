@@ -9,6 +9,7 @@ import {RotationTable} from 'components/ui/RotationTable'
 import React from 'react'
 
 const PLAYERS_HIT_TARGET = 8
+const MAX_DEVOTION_DURATION = 30000
 
 export default class Devotion extends Module {
 	static displayOrder = DISPLAY_ORDER.DEVOTION
@@ -23,6 +24,7 @@ export default class Devotion extends Module {
 
 	// {
 	//	start: Number
+	//	end: Number
 	//	playersHit: [Number]
 	//	events: [Event]
 	// }
@@ -31,25 +33,33 @@ export default class Devotion extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addEventHook('cast', {by: 'player'}, this._onCast)
-		this.addEventHook('complete', this._closeWindow)
-		this.addEventHook('applybuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._onDevotionApplied)
-		this.addEventHook('removebuff', {by: 'pet', to: 'player', abilityId: STATUSES.DEVOTION.id}, this._closeWindow)
+		this.addEventHook('cast', {by: 'pet', abilityId: ACTIONS.DEVOTION.id}, this._onPetDevotionCast)
+		this.addEventHook('complete', this._onComplete)
 		this.addEventHook('normalisedapplybuff', {by: 'pet', abilityId: STATUSES.DEVOTION.id}, this._countDevotionTargets)
+		this.parser.fightFriendlies.forEach(id => {
+			this.addEventHook('removebuff', {to: id, abilityId: STATUSES.DEVOTION.id}, this._onDevotionRemoved)
+		})
+	}
+
+	_onComplete() {
+		this._closeWindow(this.parser.fight.end_time - this.parser.fight.start_time)
+	}
+
+	_onDevotionRemoved(event) {
+		this._closeWindow(event.timestamp)
+	}
+
+	_onPetDevotionCast(event) {
+		this._openWindow(event.timestamp)
 	}
 
 	_countDevotionTargets(event) {
-		this._openWindow(event.timestamp)
-
 		const playersHit = event.confirmedEvents.map(hit => hit.targetID).filter(id => this.parser.fightFriendlies.findIndex(f => f.id === id) >= 0)
 		playersHit.forEach(id => {
 			if (!this._currentWindow.playersHit.includes(id)) {
 				this._currentWindow.playersHit.push(id)
 			}
 		})
-	}
-
-	_onDevotionApplied(event) {
-		this._openWindow(event.timestamp)
 	}
 
 	_onCast(event) {
@@ -71,18 +81,31 @@ export default class Devotion extends Module {
 
 	_openWindow(timestamp) {
 		if (this._currentWindow) {
-			return this._currentWindow
+			// Make sure we keep the window open if this is a duplicate application
+			if (this._currentWindow.start + MAX_DEVOTION_DURATION < timestamp) {
+				this._closeWindow(this._currentWindow.start + MAX_DEVOTION_DURATION)
+			} else {
+				return
+			}
 		}
-		this._currentWindow = {
-			start: timestamp - this.parser.fight.start_time,
-			events: [],
-			playersHit: [],
+
+		const lastWindow = this._devotionWindows[this._devotionWindows.length - 1]
+		if (lastWindow && lastWindow.end === timestamp) {
+			this._currentWindow = this._devotionWindows.pop()
+			this._currentWindow.end = undefined
+		} else {
+			this._currentWindow = {
+				start: timestamp,
+				events: [],
+				playersHit: [],
+			}
 		}
-		return this._currentWindow
+		return
 	}
 
-	_closeWindow() {
+	_closeWindow(timestamp) {
 		if (this._currentWindow) {
+			this._currentWindow.end = timestamp
 			this._devotionWindows.push(this._currentWindow)
 			this._currentWindow = null
 		}
@@ -93,19 +116,13 @@ export default class Devotion extends Module {
 			if (!devotionWindow) {
 				return null
 			}
-
 			const targetsData = {}
 			targetsData.players = {
 				actual: devotionWindow.playersHit.length,
 				expected: PLAYERS_HIT_TARGET,
 			}
-			const events = devotionWindow.events
-			const windowStart = devotionWindow.start
-
-			const windowEnd = devotionWindow.events.length ?
-				events[events.length - 1].timestamp - this.parser.fight.start_time :
-				this.parser.fight.end_time
-
+			const windowStart = devotionWindow.start - this.parser.fight.start_time
+			const windowEnd = devotionWindow.end - this.parser.fight.start_time
 			return {
 				start: windowStart,
 				end: windowEnd,
