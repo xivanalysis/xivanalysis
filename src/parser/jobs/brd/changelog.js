@@ -13,6 +13,7 @@ export const changelog = [
 			Marked support for up to patch 5.2:
 			<ul>
 				<li>Updated Straighter Shot status name to Straight Shot Ready</li>
+				<li>Added <StatusLink showIcon={false} {...STATUSES.STRAIGHT_SHOT_READY} /> to timeline and realigned <ActionLink showIcon={false} {...ACTIONS.BARRAGE} /> so it's easier to see</li>
 			</ul>
 		</>,
 		contributors: [CONTRIBUTORS.ACCHAN],
