@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {getDataBy} from 'data/getDataBy'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import ACTIONS from 'data/ACTIONS'
@@ -18,6 +17,7 @@ export default class Devotion extends Module {
 	static dependencies = [
 		'combatants',
 		'timeline',
+		'data',
 	]
 
 	_devotionWindows = []
@@ -54,16 +54,20 @@ export default class Devotion extends Module {
 	}
 
 	_countDevotionTargets(event) {
-		const playersHit = event.confirmedEvents.map(hit => hit.targetID).filter(id => this.parser.fightFriendlies.findIndex(f => f.id === id) >= 0)
-		playersHit.forEach(id => {
-			if (!this._currentWindow.playersHit.includes(id)) {
-				this._currentWindow.playersHit.push(id)
-			}
-		})
+		if (this._currentWindow) {
+			const playersHit = event.confirmedEvents
+				.map(hit => hit.targetID)
+				.filter(id => this.parser.fightFriendlies.findIndex(f => f.id === id) >= 0)
+			playersHit.forEach(id => {
+				if (!this._currentWindow.playersHit.includes(id)) {
+					this._currentWindow.playersHit.push(id)
+				}
+			})
+		}
 	}
 
 	_onCast(event) {
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
+		const action = this.data.getAction(event.ability.guid)
 		// Disregard auto attacks
 		if (!action || action.autoAttack) {
 			return
