@@ -30,7 +30,6 @@ export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
 		'brokenLog',
-		'cooldowns',
 		'pets',
 		'suggestions',
 	]
@@ -102,9 +101,8 @@ export default class Gauge extends Module {
 			}
 		}
 
+		// Check if they're (potentially) rushing DWT -> Demi
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
-			// DWT resets 3D
-			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
 			this._rushing = (DWT_LENGTH + DEMI_SUMMON_LENGTH) >= fightTimeRemaining
 		}
 	}

@@ -216,12 +216,12 @@ export class NormalisedEvents extends Module {
 			let identifier: string
 			if (isDamageEvent(event)) {
 				normalisedEvent = new NormalisedDamageEvent(event)
-				identifier = event.packetID ? `${event.packetID}` : `${event.timestamp}-${event.ability.guid}`
+				identifier = event.packetID ? `${event.packetID}` : this.getFallbackIdentifier(event)
 			} else if (isHealEvent(event)) {
 				normalisedEvent = new NormalisedHealEvent(event)
-				identifier = event.packetID ? `${event.packetID}` : `${event.timestamp}-${event.ability.guid}`
+				identifier = event.packetID ? `${event.packetID}` : this.getFallbackIdentifier(event)
 			} else {
-				identifier = `${event.timestamp}-${event.ability.guid}`
+				identifier = this.getFallbackIdentifier(event)
 				if (isApplyBuffEvent(event)) {
 					normalisedEvent = new NormalisedApplyBuffEvent(event)
 				} else {
@@ -233,6 +233,9 @@ export class NormalisedEvents extends Module {
 
 		normalisedEvent.attachEvent(event)
 	}
+
+	private getFallbackIdentifier = (event: AbilityEvent) =>
+		`${event.timestamp}-${event.ability.guid}-${event.type.toString()}`
 
 	private findRelatedEvent = (event: BaseEvent | BuffEvent) => {
 		this.debug(`Searching for related events for event ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)}`)
