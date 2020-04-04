@@ -1,19 +1,20 @@
 import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-/* This offset allows for four weaponskills to be used before No Mercy in the
- * opener, as is currently recommended. Should be updated if openers change to
- * have later No Mercy.
- */
-const FIRST_USE_OFFSET_NO_MERCY = 10000
-/* This offset is large to account for the (mostly) single-weave opener, in
- * which Bloodfest is used after nine weaponskills.
- */
-const FIRST_USE_OFFSET_BLOODFEST = 22000
+/*
+*Current offsets are based off: 5.21 openers
+*All values are seperate in case the current ones fall out of favor in the future
+*/
 
-const FIRST_USE_OFFSET_BOWBLAST = 17500 // The BowBlast combo is appiled at a maximum of 7 GCDs in current viable openers but can be applied as soon as 5 GCDs
+const FIRST_USE_OFFSET_NO_MERCY = 2500 // Current openers have no mercy be pre-pull or first GCD
 
-const FIRST_USE_OFFSET_DIVIDE = 27500 // The rough divide is used at upto 11 GCDs out (single weave) but can be used as early as 8
+const FIRST_USE_OFFSET_BLOODFEST = 2500 // Current Openers have bloodfest by after the first GCD
+
+const FIRST_USE_OFFSET_PEWPEWZONE = 10000 // Current openers have Zone being used somewhere between after 2nd GCD to after 4th GCD, set to maximum
+
+const FIRST_USE_OFFSET_BOWSHOCK = 10000 // Current Openers have Bowblast being used somewhere between after 2nd GCD to after 4th GCD, set to maximum
+
+const FIRST_USE_OFFSET_DIVIDE = 7500 // Current Openers have rough divide at 3rd GCD or literally on pull. set to 3rd GCD
 
 export default class AbilityDowntime extends CooldownDowntime {
 
@@ -33,11 +34,11 @@ export default class AbilityDowntime extends CooldownDowntime {
 		},
 		{
 			cooldowns: [ACTIONS.BLASTING_ZONE, ACTIONS.DANGER_ZONE],
-			firstUseOffset: FIRST_USE_OFFSET_BOWBLAST,
+			firstUseOffset: FIRST_USE_OFFSET_PEWPEWZONE,
 		},
 		{
 			cooldowns: [ACTIONS.BOW_SHOCK],
-			firstUseOffset: FIRST_USE_OFFSET_BOWBLAST,
+			firstUseOffset: FIRST_USE_OFFSET_BOWSHOCK,
 		},
 		{
 			cooldowns: [ACTIONS.ROUGH_DIVIDE],
