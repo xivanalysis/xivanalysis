@@ -14,6 +14,7 @@ export const changelog = [
 			<ul>
 				<li>Updated Straighter Shot status name to Straight Shot Ready</li>
 				<li>Added <StatusLink showIcon={false} {...STATUSES.STRAIGHT_SHOT_READY} /> to timeline and realigned <ActionLink showIcon={false} {...ACTIONS.BARRAGE} /> so it's easier to see</li>
+				<li>Added data layer for patch 5.1 changes</li>
 			</ul>
 		</>,
 		contributors: [CONTRIBUTORS.ACCHAN],
