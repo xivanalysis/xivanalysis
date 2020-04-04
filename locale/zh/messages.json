@@ -287,6 +287,7 @@
   "core.suggestions.title": "建议",
   "core.timeline.help-text": "使用滚轮或点击+拖动来移动，Ctrl+滚轮或触屏双指缩放。",
   "core.timeline.title": "时间轴",
+  "core.tincture.title": "",
   "core.ui.rotation-table.header.rotation": "循环",
   "core.ui.rotation-table.header.time": "时间",
   "core.weaving.between-gcds": "GCD之间",

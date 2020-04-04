@@ -9,6 +9,7 @@ import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
+import {Tincture} from 'parser/core/modules/Tincture'
 import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
 
@@ -24,6 +25,7 @@ export default [
 	Pets,
 	Ruin2,
 	Ruin4,
+	Tincture,
 	TriDisaster,
 	Weaving,
 ]
