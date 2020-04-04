@@ -90,9 +90,10 @@ export default class Devotion extends Module {
 
 	output() {
 		const rotationData = this._devotionWindows.map(devotionWindow => {
-			if (!devotionWindow || !devotionWindow.events.length) {
+			if (!devotionWindow) {
 				return null
 			}
+
 			const targetsData = {}
 			targetsData.players = {
 				actual: devotionWindow.playersHit.length,
@@ -100,7 +101,10 @@ export default class Devotion extends Module {
 			}
 			const events = devotionWindow.events
 			const windowStart = devotionWindow.start
-			const windowEnd = events[events.length - 1].timestamp - this.parser.fight.start_time
+
+			const windowEnd = devotionWindow.events.length ?
+				events[events.length - 1].timestamp - this.parser.fight.start_time :
+				this.parser.fight.end_time
 
 			return {
 				start: windowStart,
