@@ -19,6 +19,12 @@ export default class PetTimeline extends Module {
 	 */
 	protected timelineGroupName = 'Pet'
 	/**
+	 * Implementing modules MAY indicate that a pet has a specific summon action.
+	 * If canPetBeCommanded returns true, this field is not used.
+	 * If timelineSummonAction is set to an action ID, actions will be grouped under it.
+	 */
+	protected timelineSummonAction = 0
+	/**
 	 * Implementing modules MAY change the timeline row name for pet autos.
 	 * If canPetBeCommanded returns false, this field is not used.
 	 */
@@ -83,11 +89,20 @@ export default class PetTimeline extends Module {
 
 			this.addCastsToGroup(this.petCommandGroupId, this.commandCasts)
 		} else {
-			this.timeline.addGroup(new Group({
-				id: this.petAutoGroupId,
-				content: this.timelineGroupName,
-				order: -100,
-			}))
+			if (this.timelineSummonAction > 0) {
+				this.timeline.attachToGroup(this.timelineSummonAction,
+				new Group({
+					id: this.petAutoGroupId,
+					content: this.timelineGroupName,
+					order: -100,
+				}))
+			} else {
+				this.timeline.addGroup(new Group({
+					id: this.petAutoGroupId,
+					content: this.timelineGroupName,
+					order: -100,
+				}))
+			}
 		}
 
 		this.addCastsToGroup(this.petAutoGroupId, this.autoCasts)
