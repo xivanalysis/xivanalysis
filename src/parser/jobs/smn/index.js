@@ -42,6 +42,10 @@ export default new Meta({
 
 	changelog: [{
 		date: new Date('2020-04-03'),
+		Changes: () => <>Converted demi ghost checking to use ghosting indications now provided in source data.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2020-04-03'),
 		Changes: () => <>Added pet actions to timeline.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	}, {
