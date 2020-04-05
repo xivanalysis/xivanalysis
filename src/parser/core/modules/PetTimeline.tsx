@@ -1,7 +1,7 @@
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import Timeline, {Group, Item} from 'parser/core/modules/Timeline'
 import React from 'react'
 
@@ -9,6 +9,7 @@ import React from 'react'
 export default class PetTimeline extends Module {
 	static handle = 'pettimeline'
 
+	@dependency private data!: Data
 	@dependency private timeline!: Timeline
 
 	/**
@@ -94,7 +95,7 @@ export default class PetTimeline extends Module {
 
 	private addCastsToGroup(groupId: string, casts: CastEvent[]) {
 		casts.forEach(a => {
-			const action = getDataBy(ACTIONS, 'id', a.ability.guid)
+			const action = this.data.getAction(a.ability.guid)
 			if (!action) { return }
 			this.timeline.addItem(new Item({
 				type: 'background',
