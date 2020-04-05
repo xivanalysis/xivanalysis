@@ -1,8 +1,10 @@
 import React from 'react'
 import {Row as RowConfig} from '../config'
+import {Axis} from './Axis'
 import {Rows} from './Row'
 import {ScaleHandler, ScaleHandlerProps} from './ScaleHandler'
 import styles from './Timeline.module.css'
+import {getMaxChildren, getMaxDepth} from './utilities'
 
 export type TimelineProps =
 	& ScaleHandlerProps
@@ -13,6 +15,7 @@ export function Timeline({
 	...scaleHandlerProps
 }: TimelineProps) {
 	const maxDepth = getMaxDepth(rows)
+	const maxChildren = getMaxChildren({rows})
 
 	return (
 		<ScaleHandler {...scaleHandlerProps}>
@@ -27,11 +30,10 @@ export function Timeline({
 						top={1}
 						parentCollapsed={false}
 					/>
+
+					<Axis height={maxChildren}/>
 				</div>
 			)}
 		</ScaleHandler>
 	)
 }
-
-const getMaxDepth = (rows: RowConfig[]): number =>
-	rows.reduce((acc, cur) => Math.max(acc, getMaxDepth(cur.rows) + 1), 0)

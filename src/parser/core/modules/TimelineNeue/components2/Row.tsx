@@ -3,6 +3,7 @@ import React, {memo, useCallback, useMemo, useState} from 'react'
 import {Row as RowConfig} from '../config'
 import {Items} from './Item'
 import styles from './Timeline.module.css'
+import {getMaxChildren} from './utilities'
 
 // We're using an explicit grid for the primary timeline area, and a negative implicit grid
 // for labels. CSS grids count negatives _starting_ at -1 at the end of the _explicit_ grid.
@@ -132,6 +133,3 @@ const Row = memo(function Row({
 		/>}
 	</>
 })
-
-const getMaxChildren = (row: RowConfig): number =>
-	Math.max(1, row.rows.reduce((acc, cur) => acc + getMaxChildren(cur), 0))

@@ -1,6 +1,10 @@
 @value borderWidth: 1px;
+
 @value branchLabelWidth: 30px;
 @value defaultRowHeight: 30px;
+
+@value gridLineColour: #e5e5e5;
+@value majorGridLineColour: #bfbfbf;
 
 /*
 Notes:
@@ -70,4 +74,27 @@ Basic diagram:
 	top: 0;
 	height: 100%;
 	overflow: hidden;
+}
+
+.gridLine {
+	border-left: 1px solid gridLineColour;
+	height: 100%;
+}
+
+.gridLine.major {
+	border-color: majorGridLineColour;
+}
+
+.axisTick {
+	padding: 3px;
+}
+
+.axisTick.major {
+	padding-top: 24px; /* TODO: ??? */
+}
+
+.axisTick.first {
+	display: inline-flex;
+	justify-content: flex-end;
+	max-width: 100%;
 }

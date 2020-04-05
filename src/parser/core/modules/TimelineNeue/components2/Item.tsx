@@ -1,4 +1,4 @@
-import React, {memo} from 'react'
+import React, {memo, ReactNode} from 'react'
 import {Item as ItemConfig} from '../config'
 import {useScale} from './ScaleHandler'
 import styles from './Timeline.module.css'
@@ -27,33 +27,37 @@ export const Items = memo(function Items({
 		)
 
 	return <>
-		{filteredItems.map((itemDetails) => (
-			<Item
-				item={items[itemDetails.index]}
-				left={itemDetails.left}
-				right={itemDetails.right}
-			/>
-		))}
+		{filteredItems.map((itemDetails) => {
+			const {Content} = items[itemDetails.index]
+			return (
+				<Item left={itemDetails.left} right={itemDetails.right}>
+					<Content/>
+				</Item>
+			)
+		})}
 	</>
 })
 
-interface ItemProps {
-	item: ItemConfig
+export interface ItemProps {
+	children?: ReactNode,
 	left: number
-	right: number
+	right?: number
 }
 
-const Item = memo(function Item({
-	item,
+export const Item = memo(function Item({
+	children,
 	left,
 	right,
 }: ItemProps) {
 	return (
 		<div
 			className={styles.item}
-			style={{left, width: right - left}}
+			style={{
+				left,
+				width: right != null ? right - left : undefined,
+			}}
 		>
-			<item.Content/>
+			{children}
 		</div>
 	)
 })
