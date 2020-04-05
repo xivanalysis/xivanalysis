@@ -6,8 +6,11 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {RotationTable} from 'components/ui/RotationTable'
 import React from 'react'
+import {StatusLink} from 'components/ui/DbLink'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const PLAYERS_HIT_TARGET = 8
+const PLAYERS_HIT_SUGGESTION_THRESHOLD = 4
 const MAX_DEVOTION_DURATION = 30000
 
 export default class Devotion extends Module {
@@ -18,6 +21,7 @@ export default class Devotion extends Module {
 		'combatants',
 		'timeline',
 		'data',
+		'suggestions',
 	]
 
 	_devotionWindows = []
@@ -43,6 +47,7 @@ export default class Devotion extends Module {
 
 	_onComplete() {
 		this._closeWindow(this.parser.fight.end_time - this.parser.fight.start_time)
+		this._addSuggestionMissedPlayers()
 	}
 
 	_onDevotionRemoved(event) {
@@ -112,6 +117,35 @@ export default class Devotion extends Module {
 			this._currentWindow.end = timestamp
 			this._devotionWindows.push(this._currentWindow)
 			this._currentWindow = null
+		}
+	}
+
+	_addSuggestionMissedPlayers() {
+		if (this._devotionWindows) {
+			const missedPlayersWindows = this._devotionWindows
+				.filter(devotionWindow => devotionWindow.playersHit.length <= PLAYERS_HIT_SUGGESTION_THRESHOLD)
+				.length
+			const totalMissedPlayers = this._devotionWindows
+				.reduce((totalMissed, devotionWindow) => {
+					return totalMissed +
+						PLAYERS_HIT_TARGET - devotionWindow.playersHit.length
+				}, 0)
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.SMN_AETHERPACT.icon,
+				content: <Trans id="smn.devotion.suggestions.missed-players.content">
+					Make sure your <StatusLink {...STATUSES.DEVOTION}/> casts buff your full party with each use. Failing to do so is a raid damage loss.
+				</Trans>,
+				tiers: {
+					1: SEVERITY.MINOR,
+					4: SEVERITY.MEDIUM,
+					8: SEVERITY.MAJOR,
+				},
+				value: totalMissedPlayers,
+				why: <Trans id="smn.devotion.suggestions.missed-players.why">
+					{missedPlayersWindows} of your Devotion uses did not buff the full party.
+				</Trans>,
+			}))
 		}
 	}
 

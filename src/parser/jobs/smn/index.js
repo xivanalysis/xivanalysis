@@ -41,6 +41,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-04-05'),
+		Changes: () => <>Added a suggestion when Devotion does not hit all players.</>,
+		contributors: [CONTRIBUTORS.RITASHI],
+	}, {
 		date: new Date('2020-04-03'),
 		Changes: () => <>Converted demi ghost checking to use ghosting indications now provided in source data.</>,
 		contributors: [CONTRIBUTORS.KELOS],
