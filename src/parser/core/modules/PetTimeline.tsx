@@ -11,15 +11,37 @@ export default class PetTimeline extends Module {
 
 	@dependency private timeline!: Timeline
 
+	/**
+	 * Implementing modules MAY change the timeline group name.
+	 * If canPetBeCommanded returns false, this is the only name that will
+	 * appear on the timeline.
+	 */
+	protected timelineGroupName = 'Pet'
+	/**
+	 * Implementing modules MAY change the timeline row name for pet autos.
+	 * If canPetBeCommanded returns false, this field is not used.
+	 */
+	protected timelineAutosName = 'Autos'
+	/**
+	 * Implementing modules MAY change the timeline row name for pet commanded skills.
+	 * If canPetBeCommanded returns false, this field is not used.
+	 */
+	protected timelineCommandsName = 'Commands'
+	/**
+	 * Implementing modules MAY indicate that a pet has both "autos" and "command" skills.
+	 * If set to true, the autos and command skills will appear on separate lines in the
+	 * timeline.  If set to false, all skills will appear on the same row.
+	 *
+	 * If this is set to true, also override isCommandedEvent to determine which events are
+	 * command skills.
+	 */
+	protected canPetBeCommanded = false
+
 	private petContainerGroupId = 'pet'
 	private petAutoGroupId = 'petauto'
 	private petCommandGroupId = 'petcommand'
 	private autoCasts: CastEvent[] = []
 	private commandCasts: CastEvent[] = []
-
-	protected canPetBeCommanded() {
-		return false
-	}
 
 	protected isCommandedEvent(event: CastEvent) {
 		return false
@@ -39,22 +61,22 @@ export default class PetTimeline extends Module {
 	}
 
 	private onComplete() {
-		if (this.canPetBeCommanded()) {
+		if (this.canPetBeCommanded) {
 			this.timeline.addGroup(new Group({
 				id: this.petContainerGroupId,
-				content: 'Pet',
+				content: this.timelineGroupName,
 				order: -100,
 			}))
 			this.timeline.attachToGroup(this.petContainerGroupId,
 				new Group({
 					id: this.petAutoGroupId,
-					content: 'Autos',
+					content: this.timelineAutosName,
 					order: 1,
 				}))
 			this.timeline.attachToGroup(this.petContainerGroupId,
 				new Group({
 					id: this.petCommandGroupId,
-					content: 'Commands',
+					content: this.timelineCommandsName,
 					order: 2,
 				}))
 
@@ -62,7 +84,7 @@ export default class PetTimeline extends Module {
 		} else {
 			this.timeline.addGroup(new Group({
 				id: this.petAutoGroupId,
-				content: 'Pet',
+				content: this.timelineGroupName,
 				order: -100,
 			}))
 		}
