@@ -287,6 +287,7 @@
   "core.suggestions.title": "Empfehlungen",
   "core.timeline.help-text": "Zum Verschieben: Maustaste gedrückt halten oder scrollen; Zum Zoomen: Strg+Scrollen.",
   "core.timeline.title": "Zeitstrahl",
+  "core.tincture.title": "",
   "core.ui.rotation-table.header.rotation": "Rotation",
   "core.ui.rotation-table.header.time": "Zeit",
   "core.weaving.between-gcds": "zwischen GCDs",

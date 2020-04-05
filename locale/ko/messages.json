@@ -287,6 +287,7 @@
   "core.suggestions.title": "제안",
   "core.timeline.help-text": "스크롤 또는 클릭+드래그로 이동, ctrl+스크롤로 확대",
   "core.timeline.title": "타임라인",
+  "core.tincture.title": "",
   "core.ui.rotation-table.header.rotation": "딜사이클",
   "core.ui.rotation-table.header.time": "시간",
   "core.weaving.between-gcds": "글로벌 쿨타임 사이",

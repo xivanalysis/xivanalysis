@@ -287,6 +287,7 @@
   "core.suggestions.title": "Suggestions",
   "core.timeline.help-text": "Faites défiler ou cliquez + faites glisser pour descendre, ctrl + défilement pour zoomer.",
   "core.timeline.title": "Ligne du temps",
+  "core.tincture.title": "",
   "core.ui.rotation-table.header.rotation": "Rotation",
   "core.ui.rotation-table.header.time": "Temps",
   "core.weaving.between-gcds": "entre les GCDs",

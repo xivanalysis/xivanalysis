@@ -287,6 +287,7 @@
   "core.suggestions.title": "Suggestions",
   "core.timeline.help-text": "Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.",
   "core.timeline.title": "Timeline",
+  "core.tincture.title": "Tinctures",
   "core.ui.rotation-table.header.rotation": "Rotation",
   "core.ui.rotation-table.header.time": "Time",
   "core.weaving.between-gcds": "between GCDs",
