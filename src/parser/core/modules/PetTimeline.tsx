@@ -23,7 +23,7 @@ export default class PetTimeline extends Module {
 	 * If canPetBeCommanded returns true, this field is not used.
 	 * If timelineSummonAction is set to an action ID, actions will be grouped under it.
 	 */
-	protected timelineSummonAction = 0
+	protected timelineSummonAction?: number
 	/**
 	 * Implementing modules MAY change the timeline row name for pet autos.
 	 * If canPetBeCommanded returns false, this field is not used.
@@ -89,7 +89,7 @@ export default class PetTimeline extends Module {
 
 			this.addCastsToGroup(this.petCommandGroupId, this.commandCasts)
 		} else {
-			if (this.timelineSummonAction > 0) {
+			if (this.timelineSummonAction != null) {
 				this.timeline.attachToGroup(this.timelineSummonAction,
 				new Group({
 					id: this.petAutoGroupId,
