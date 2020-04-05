@@ -763,6 +763,8 @@
   "smn.demi.ghost-disclaimer": "Demi-summon actions can \"ghost\" - the action resolves, and appears to do damage, however no damage is actually applied to the target. <0>Red</0> highlighting has been applied to actions that ghosted.<1/>You should be aiming for:<2/>8 Wyrmwave and 2 Akh Morn in each Summon Bahamut<3/>8 Scarlet Flame, 2 Revelation, 4 Fountain Of Fire, and 4 Brand of Purgatory in each Firebird Trance.",
   "smn.demis.title": "Demi-summons",
   "smn.devotion.players-count": "Players Buffed",
+  "smn.devotion.suggestions.missed-players.content": "Make sure your <0/> casts buff your full party with each use. Failing to do so is a raid damage loss.",
+  "smn.devotion.suggestions.missed-players.why": "{missedPlayersWindows} of your Devotion uses did not buff the full party.",
   "smn.devotion.table-header": "Devotion Actions",
   "smn.devotion.title": "Devotion Actions",
   "smn.dots.applied": "Applied",
