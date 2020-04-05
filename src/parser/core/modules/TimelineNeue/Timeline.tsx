@@ -7,7 +7,6 @@ import {
 import {
 	Item as ItemConfig,
 	Row as RowConfig,
-	SimpleRow,
 } from './config'
 
 // We default to showing the first minute of the pull. Showing the entire fight at once
@@ -25,10 +24,6 @@ export class Timeline extends Module {
 
 	private rows: RowConfig[] = []
 	private items: ItemConfig[] = []
-
-	protected init() {
-		this.rows = fakeShit.slice()
-	}
 
 	/**
 	 * Add a row to the timeline.
@@ -84,27 +79,3 @@ export class Timeline extends Module {
 		)
 	}
 }
-
-const fakeShit = [new SimpleRow({
-	order: -Infinity,
-	label: 'One',
-	rows: [
-		new SimpleRow({
-			label: 'Two',
-			rows: [
-				new SimpleRow({
-					label: 'Three',
-					rows: [
-						new SimpleRow({
-							label: 'Four',
-						}),
-						new SimpleRow({
-							label: 'Five',
-						}),
-					],
-				}),
-			],
-		}),
-		new SimpleRow({label: 'Two Point Five'}),
-	],
-})]

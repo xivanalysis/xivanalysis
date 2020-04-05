@@ -84,6 +84,7 @@ Basic diagram:
 .track {
 	position: relative;
 	grid-column: 2 / span 1;
+	overflow: hidden;
 }
 
 .item {
