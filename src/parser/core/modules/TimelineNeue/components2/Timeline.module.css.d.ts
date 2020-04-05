@@ -6,6 +6,7 @@ declare namespace TimelineModuleCssModule {
     collapsed: string;
     defaultRowHeight: string;
     hasChildren: string;
+    item: string;
     label: string;
     timeline: string;
     track: string;

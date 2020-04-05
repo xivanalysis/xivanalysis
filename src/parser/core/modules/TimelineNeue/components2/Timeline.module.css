@@ -35,6 +35,7 @@ Basic diagram:
 .label,
 .track {
 	min-height: defaultRowHeight;
+	box-sizing: content-box;
 }
 
 .label {
@@ -58,7 +59,15 @@ Basic diagram:
 }
 
 .track {
+	position: relative;
 	grid-column: 2 / span 1;
 	border: solid magenta;
 	border-width: 0 0 borderWidth borderWidth;
+}
+
+.item {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	overflow: hidden;
 }

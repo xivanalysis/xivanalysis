@@ -7,19 +7,19 @@ export interface Item {
 	/** Start time of the item */
 	readonly start: number
 	/** End time of the item */
-	readonly end?: number
+	readonly end: number
 	/** Component to render as the item */
 	readonly Content: ComponentType
 }
 
 interface BaseItemOptions {
 	start: number
-	end?: number
+	end: number
 }
 
 abstract class BaseItem implements Item {
 	readonly start: number
-	readonly end?: number
+	readonly end: number
 
 	abstract Content: ComponentType
 

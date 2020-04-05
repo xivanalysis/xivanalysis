@@ -1,6 +1,7 @@
 import classNames from 'classnames'
 import React, {memo, useCallback, useMemo, useState} from 'react'
 import {Row as RowConfig} from '../config'
+import {Items} from './Item'
 import styles from './Timeline.module.css'
 
 // We're using an explicit grid for the primary timeline area, and a negative implicit grid
@@ -119,7 +120,7 @@ const Row = memo(function Row({
 
 		{/* Row */}
 		<div className={styles.track} style={rowStyles}>
-			aaa
+			<Items items={row.items}/>
 		</div>
 
 		{hasChildren && <Rows
