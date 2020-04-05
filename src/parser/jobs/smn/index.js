@@ -45,6 +45,10 @@ export default new Meta({
 		Changes: () => <>Added module to show tincture usage.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	}, {
+		date: new Date('2020-04-03'),
+		Changes: () => <>Added a Devotion Actions section to show player actions executed under the Devotion buff</>,
+		contributors: [CONTRIBUTORS.RITASHI],
+	}, {
 		date: new Date('2020-02-16'),
 		Changes: () => <>Updated DoT tables to separate applications by target and show which skill was used.</>,
 		contributors: [CONTRIBUTORS.KELOS],
