@@ -1,28 +1,35 @@
 import React from 'react'
 import {Row as RowConfig} from '../config'
 import {Rows} from './Row'
+import {ScaleHandler, ScaleHandlerProps} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
-export interface TimelineProps {
-	rows?: RowConfig[]
-}
+export type TimelineProps =
+	& ScaleHandlerProps
+	& {rows?: RowConfig[]}
 
 export function Timeline({
 	rows = [],
+	...scaleHandlerProps
 }: TimelineProps) {
 	const maxDepth = getMaxDepth(rows)
 
 	return (
-		<div className={styles.timeline}>
-			{/* Root row list */}
-			<Rows
-				rows={rows}
-				depth={0}
-				maxDepth={maxDepth}
-				top={1}
-				parentCollapsed={false}
-			/>
-		</div>
+		<ScaleHandler {...scaleHandlerProps}>
+			{({measureRef}) => (
+				<div className={styles.timeline}>
+					<div ref={measureRef} style={{gridColumnStart: 2, gridColumnEnd: 'span 1'}}/>
+
+					<Rows
+						rows={rows}
+						depth={0}
+						maxDepth={maxDepth}
+						top={1}
+						parentCollapsed={false}
+					/>
+				</div>
+			)}
+		</ScaleHandler>
 	)
 }
 

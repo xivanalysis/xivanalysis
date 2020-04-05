@@ -86,6 +86,12 @@ export class Timeline extends Module {
 			</TimelineComponent> */}
 			<TimelineComponent
 				rows={this.rows}
+
+				min={0}
+				max={this.parser.fightDuration}
+				end={Math.min(this.parser.fightDuration, INITIAL_END)}
+				zoomMin={MINIMUM_ZOOM}
+				exposeSetView={this.exposeSetView}
 			/>
 		</>
 	}
