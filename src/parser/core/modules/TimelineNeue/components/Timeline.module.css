@@ -1,67 +1,89 @@
+@value borderColour: #bfbfbf;
 @value borderWidth: 1px;
-/* These colours are currently picked to mimic vis' UI */
-@value rowBorderColour: #bfbfbf;
+
+@value branchLabelWidth: 30px;
+@value defaultRowHeight: 30px;
+
 @value gridLineColour: #e5e5e5;
 @value majorGridLineColour: #bfbfbf;
 
-.labelSpacer {
-	/* Offset the negative margins stemming from the rows */
-	padding: borderWidth;
+/*
+Notes:
+- Solid represents the explicit grid, dashed the implicit.
+- The item column is explicitly sized as at-most 1fr, allowing it to expand as
+  large as it can.
+- The _last_ label is an automatic width, allowing it to consume content width
+  from any labels that span into it. Given that _every_ "leaf" label (collapsed
+  or childless) will span into it, leaf labels will automatically consume the
+  space they require for their content up to the start items.
+- Remaining label columns are implicit, configured with a set pixel width. Non-
+  leaf labels will be constrained within in these fixed column width.
+
+Basic diagram:
+┌╶╶╶╶┌╶╶╶╶┬──────────────────┬────────────────────────────────────────────────┐
+┆ -4 ┆ -3 │ "last" label col │ item track col                                 │
+├    ┼╶╶╶╶┼──────────────────┼────────────────────────────────────────────────┤
+┆ -4 ┆ Less-nested label     │                                                │
+├╶╶╶╶┼╶╶╶╶┼──────────────────┼────────────────────────────────────────────────┤
+┆ Full-width label           │                                                │
+└╶╶╶╶┴╶╶╶╶┴──────────────────┴────────────────────────────────────────────────┘
+*/
+
+.timeline {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-auto-columns: branchLabelWidth;
+	border: solid borderColour;
+	border-width: borderWidth borderWidth 0 0;
 }
 
-.row {
+.label,
+.track {
+	min-height: defaultRowHeight;
+	box-sizing: content-box;
+	border: solid borderColour;
+	border-width: 0 0 borderWidth borderWidth;
+}
+
+.label {
 	position: relative;
-	min-height: 30px;
-	margin: calc(-1 * borderWidth);
-	border: borderWidth solid rowBorderColour;
-	pointer-events: none;
-}
-
-.labelBackground {
-	position: absolute;
-	margin: calc(-1 * borderWidth) 0;
-	border: borderWidth solid rowBorderColour;
-	border-right: none;
-	height: calc(100% + (2 * borderWidth));
-	pointer-events: all;
-
-	background: rgba(0, 255, 0, 0.3)
-}
-
-.labelBackground.minimised {
-	background: rgba(0, 0, 255, 0.3);
-}
-
-.labelBackground.collapsed {
-	background: rgba(255, 0, 0, 0.3)
-}
-
-.labelContent {
-	position: absolute;
-	top: 50%;
-	transform-origin: top left;
-	transform: translateY(-50%);
-	pointer-events: all;
-
-	padding: 2px 5px;
-}
-
-.labelContent.minimised {
-	transform: rotate(-90deg) translateX(-50%);
-	overflow: hidden;
-	text-overflow: ellipsis;
+	display: flex;
+	align-items: center;
+	background: rgba(0, 255, 0, 0.2);
 	white-space: nowrap;
 }
 
-.interactive {
+.label .content {
+	box-sizing: border-box;
+	padding: 0 3px;
+}
+
+.label.minimised,
+.label.collapsed {
 	cursor: pointer;
 }
 
-.itemContainer {
+.label.minimised {
+	background: rgba(0, 0, 255, 0.2);
+}
+
+.label.minimised .content {
 	position: absolute;
-	width: 100%;
-	height: 100%;
+	top: 50%;
+	left: 50%;
+	transform-origin: top left;
+	transform: rotate(-90deg) translate(-50%, -50%);
 	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.label.collapsed {
+	background: rgba(255, 0, 0, 0.2);
+}
+
+.track {
+	position: relative;
+	grid-column: 2 / span 1;
 }
 
 .item {
@@ -69,8 +91,6 @@
 	top: 0;
 	height: 100%;
 	overflow: hidden;
-	white-space: nowrap;
-	pointer-events: all;
 }
 
 .gridLine {
@@ -87,7 +107,7 @@
 }
 
 .axisTick.major {
-	padding-top: 24px;
+	padding-top: 24px; /* TODO: ??? */
 }
 
 .axisTick.first {

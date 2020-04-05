@@ -1,235 +1,174 @@
 import classNames from 'classnames'
-import React, {createContext, memo, ReactNode, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState} from 'react'
-import ReactDOM from 'react-dom'
-import Measure, {ContentRect} from 'react-measure'
+import React, {CSSProperties, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import Measure from 'react-measure'
+import {Row as RowConfig} from '../config'
+import {Items} from './Item'
 import styles from './Timeline.module.css'
+import {getMaxChildren} from './utilities'
 
-interface RowContextValue {
-	collapse: boolean
-	siblingSize: number
-	reportSize: (id: number, size: number) => void
+// We're using an explicit grid for the primary timeline area, and a negative implicit grid
+// for labels. CSS grids count negatives _starting_ at -1 at the end of the _explicit_ grid.
+// This is the offset we need to "ignore" the explicit grid when setting implicit locations.
+const LABEL_GRID_OFFSET = -2
+
+interface SharedRowProps {
+	depth: number,
+	maxDepth: number,
+	top: number,
+	parentCollapsed: boolean,
 }
 
-const RowContext = createContext<RowContextValue>({
-	collapse: false,
-	siblingSize: 0,
-	reportSize: () => { throw new Error('No provider found') },
-})
-
-const ItemContainerContext = createContext<HTMLDivElement | null>(null)
-
-export function ItemContainer({children}: {children?: ReactNode}) {
-	const ref = useContext(ItemContainerContext)
-	if (ref == null) { return null }
-	return ReactDOM.createPortal(children, ref)
+export type RowsProps = SharedRowProps & {
+	rows: RowConfig[],
 }
 
-function useSizeCalculator() {
-	const [sizes, setSizes] = useState<Record<number, number>>({})
-	const reportSize = useCallback(
-		(id: number, size: number) => {
-			setSizes(value => ({
-				...value,
-				[id]: size,
-			}))
-		},
-		[],
+export const Rows = memo(function Rows({
+	rows,
+	top,
+	parentCollapsed,
+	...rowProps
+}: RowsProps) {
+	const orderedRows = useMemo(
+		() => rows.slice().sort((a, b) => (a. order ?? 0) - (b.order ?? 0)),
+		[rows],
 	)
 
-	const maxSize = useMemo(
-		() => Math.max(0, ...Object.values(sizes)),
-		[sizes],
-	)
-
-	return [maxSize, reportSize] as const
-}
-
-/**
- * Root row handler, provides space beside the rest of the timeline for rows
- * to put their labels.
- */
-export const LabelSpacer = memo(function LabelSpacer({children}) {
-	const [maxChildSize, reportChildSize] = useSizeCalculator()
-
-	const rowContextValue = useMemo(
-		() => ({
-			collapse: false,
-			siblingSize: maxChildSize,
-			reportSize: reportChildSize,
-		}),
-		[maxChildSize, reportChildSize],
-	)
-
-	return (
-		<div
-			className={styles.labelSpacer}
-			style={{paddingLeft: maxChildSize}}
-		>
-			<RowContext.Provider value={rowContextValue}>
-				{children}
-			</RowContext.Provider>
-		</div>
-	)
-})
-
-export interface RowProps {
-	children?: ReactNode,
-	/** Label to display beside this row. */
-	label?: ReactNode
-	// TODO: Should I support em as well?
-	/** Height of the row, in pixels. Defaults to 30. */
-	height?: number
-}
-
-export const Row = memo<RowProps>(function Row({children, label, height}) {
-	const rowId = useUniqueId()
-
-	const {collapse, siblingSize, reportSize} = useContext(RowContext)
-
-	// Track own label size
-	const [labelSize, setLabelSize] = useState(0)
-
-	// Track the maximum size of child labels
-	const [maxChildSize, reportChildSize] = useSizeCalculator()
-
-	// Report when the total size of this label changes
-	useLayoutEffect(
-		() => reportSize(rowId, maxChildSize + labelSize),
-		[reportSize, maxChildSize, labelSize],
-	)
-
-	// A label is "minimised" if it has active children
-	// Active children take up space, so assume maxChildSize is representative
-	const labelMinimised = maxChildSize > 0
-
-	// Clicking a label toggles collapsing its children
-	const [collapseChildren, setCollapseChildren] = useState(false)
-	const onClick = useCallback(
-		() => setCollapseChildren(value => !value),
-		[],
-	)
-
-	const [itemsRef, setItemsRef] = useState<HTMLDivElement | null>(null)
-
-	const shouldCollapse = collapse || collapseChildren
-
-	const rowContextValue = {
-		collapse: shouldCollapse,
-		siblingSize: siblingSize - labelSize,
-		reportSize: reportChildSize,
-	}
-
-	return (
-		<div
-			className={collapse ? undefined : styles.row}
-			style={{minHeight: height}}
-		>
-			{label != null && !collapse && (
-				<Label
-					collapsed={shouldCollapse}
-					minimised={labelMinimised}
-					offset={siblingSize}
-					reportSize={setLabelSize}
-					onClick={onClick}
-				>
-					{label}
-				</Label>
-			)}
-
-			<div ref={setItemsRef} className={styles.itemContainer}/>
-
-			<RowContext.Provider value={rowContextValue}>
-				<ItemContainerContext.Provider value={itemsRef}>
-					{children}
-				</ItemContainerContext.Provider>
-			</RowContext.Provider>
-		</div>
-	)
-})
-
-interface LabelProps {
-	children?: ReactNode
-	collapsed: boolean
-	minimised: boolean
-	offset: number
-	reportSize: (size: number) => void
-	onClick: () => void
-}
-
-const Label = memo<LabelProps>(function Label({
-	children,
-	collapsed,
-	minimised,
-	offset,
-	reportSize,
-	onClick,
-}) {
-	// TODO: Maybe a ref?
-	const [availableHeight, setAvailableHeight] = useState(0)
-	const [size, setSize] = useState({width: 0, height: 0})
-
-	// Tracking background height so we can overflow the collapsed view
-	const onResizeBackground = ({client}: ContentRect) => {
-		setAvailableHeight(client?.height ?? 0)
-	}
-
-	// Track content size
-	const onResizeContent = ({client}: ContentRect) => {
-		if (client == null) { return }
-		setSize(client)
-	}
-
-	// When the content size changes, or is collapsed, report the new size to parent
-	useLayoutEffect(
-		() => reportSize(minimised ? size.height : size.width),
-		[minimised, size],
-	)
-
-	// Using effect just for it's destructor, will trigger a report of 0 on unmount.
-	useLayoutEffect(() => () => {
-		reportSize(0)
-	}, [])
-
-	// Labels that are neither minimised nor collapsed aren't interactive
-	const interactive = minimised || collapsed || undefined
+	// Calculate sizes
+	let currentTop = top
+	const sizes = orderedRows.map((row) => {
+		if (parentCollapsed) {
+			return {
+				top: currentTop,
+				height: rows.length,
+			}
+		} else {
+			const maxChildren = getMaxChildren(row)
+			const thisTop = currentTop
+			currentTop += maxChildren
+			return {
+				top: thisTop,
+				height: maxChildren,
+			}
+		}
+	})
 
 	return <>
-		<Measure client onResize={onResizeBackground}>
-			{({measureRef}) => (
-				<div
-					ref={measureRef}
-					onClick={interactive && onClick}
-					className={classNames(
-						styles.labelBackground,
-						minimised && styles.minimised,
-						collapsed && styles.collapsed,
-						interactive && styles.interactive,
-					)}
-					style={{left: -offset, width: offset}}
-				/>
-			)}
-		</Measure>
-		<Measure client onResize={onResizeContent}>
-			{({measureRef}) => (
-				<div
-					ref={measureRef}
-					onClick={interactive && onClick}
-					className={classNames(
-						styles.labelContent,
-						minimised && styles.minimised,
-						interactive && styles.interactive,
-					)}
-					style={{
-						left: -offset,
-						maxWidth: minimised ? availableHeight : undefined,
-					}}
-				>
-					{children}
-				</div>
-			)}
-		</Measure>
+		{orderedRows.map((row, index) => (
+			<Row
+				key={index}
+				row={row}
+				top={sizes[index].top}
+				height={sizes[index].height}
+				parentCollapsed={parentCollapsed}
+				{...rowProps}
+			/>
+		))}
 	</>
 })
 
-let nextId = 0
-const useUniqueId = () => useRef(nextId++).current
+type RowProps = SharedRowProps & {
+	row: RowConfig,
+	height: number,
+}
+
+const Row = memo(function Row({
+	row,
+	depth,
+	maxDepth,
+	top,
+	height,
+	parentCollapsed,
+}: RowProps) {
+	const hasChildren = row.rows.length > 0
+
+	// TODO hydrate from row once that has default collapsed state
+	const [selfCollapsed, setSelfCollapsed] = useState(false)
+	const toggleCollapsed = useCallback(
+		() => setSelfCollapsed(value => !value),
+		[],
+	)
+
+	// TODO: consider single child case
+	const collapsible = hasChildren || undefined
+	const collapsed = selfCollapsed || parentCollapsed
+
+	const rowStyles = {
+		gridRowStart: top,
+		gridRowEnd: `span ${height}`,
+		minHeight: parentCollapsed ? undefined : row.height,
+	}
+
+	const minimised = hasChildren && !selfCollapsed
+	const columnSpan = minimised ? 1 : maxDepth - depth
+
+	return <>
+		{/* Label */}
+		{parentCollapsed || (
+			<Label
+				minimised={minimised}
+				collapsed={collapsed}
+				onClick={collapsible && toggleCollapsed}
+				gridStyle={{ // TODO: Memo?
+					gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,
+					gridColumnEnd: `span ${columnSpan}`,
+					...rowStyles,
+				}}
+			>
+				{row.label}
+			</Label>
+		)}
+
+		{/* Row */}
+		<div className={styles.track} style={rowStyles}>
+			<Items items={row.items}/>
+		</div>
+
+		{hasChildren && <Rows
+			rows={row.rows}
+			depth={depth + 1}
+			maxDepth={maxDepth}
+			top={top}
+			parentCollapsed={collapsed}
+		/>}
+	</>
+})
+
+interface LabelProps {
+	minimised: boolean
+	collapsed: boolean
+	onClick?: () => void
+	gridStyle?: CSSProperties
+	children?: ReactNode
+}
+
+const Label = memo(function Label({
+	minimised,
+	collapsed,
+	onClick,
+	gridStyle,
+	children,
+}: LabelProps) {
+	return (
+		<Measure bounds>
+			{({measureRef, contentRect}) => (
+				<div
+					ref={measureRef}
+					className={classNames(
+						styles.label,
+						minimised && styles.minimised,
+						collapsed && styles.collapsed,
+					)}
+					style={gridStyle}
+					onClick={onClick}
+				>
+					<div
+						className={styles.content}
+						style={{maxWidth: minimised ? contentRect.bounds?.height : undefined}}
+					>
+						{children}
+					</div>
+				</div>
+			)}
+		</Measure>
+	)
+})

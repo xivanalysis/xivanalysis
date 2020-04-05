@@ -1,13 +1,15 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
-import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import Measure, {BoundingRect, ContentRect} from 'react-measure'
+import React, {createContext, ReactNode, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import Measure, {BoundingRect, ContentRect, MeasuredComponentProps, MeasureProps, Rect} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 
 export type Scale = ScaleTime<number, number>
 export type Scalable = Parameters<Scale>[0]
 
 type Vector2 = [number, number]
+
+type MeasureChildren = MeasureProps['children']
 
 const ScaleContext = createContext<Scale>(scaleUtc())
 export const useScale = () => useContext(ScaleContext)
@@ -40,6 +42,10 @@ export interface ScaleHandlerProps {
 	exposeSetView?: ExposeSetViewFn
 }
 
+export interface InternalScaleHandlerProps extends ScaleHandlerProps {
+	children: MeasureChildren
+}
+
 const DEFAULT_PAN_FACTOR = 0.05
 const DEFAULT_ZOOM_FACTOR = 0.2
 
@@ -53,7 +59,7 @@ export function ScaleHandler({
 	panFactor = DEFAULT_PAN_FACTOR,
 	zoomFactor = DEFAULT_ZOOM_FACTOR,
 	exposeSetView,
-}: PropsWithChildren<ScaleHandlerProps>) {
+}: InternalScaleHandlerProps) {
 	// States representing the scale's range & domain
 	// TODO: Should I just put the entire scale in the state and be done with it?
 	const [domain, setDomain] = useState<Vector2>([start ?? min, end ?? max])
@@ -100,11 +106,11 @@ export function ScaleHandler({
 	// event binds, and location calculations
 	const scrollParentRef = useRef<HTMLDivElement>(null)
 
-	// Track the current scroll parent bounds, this is primarily used for calculating mouse position for zooming below
-	const parentBounds = useRef<BoundingRect>()
-	const onResize = useCallback(({bounds}: ContentRect) => {
-		parentBounds.current = bounds
-		if (bounds?.width != null) { setRange([0, bounds.width]) }
+	// Track the current scroll parent bounds, we use this to calculate the mouse position and the range of the scale
+	const contentBounds = useRef<BoundingRect>()
+	const onContentResize = useCallback(({bounds}: ContentRect) => {
+		contentBounds.current = bounds
+		if (bounds?.width != null) { setRange([0, bounds.width])}
 	}, [])
 
 	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
@@ -115,7 +121,10 @@ export function ScaleHandler({
 		if (scrollParent == null) { return }
 
 		// We're only using X - zoom is only on the X axis, so Y is unused
-		const {left = 0, width = 1} = parentBounds.current ?? {} as Partial<BoundingRect>
+		const {left = 0, width = 1} = contentBounds.current ?? {} as Partial<BoundingRect>
+
+		// const offset = (parentBounds.current?.width ?? 0) - (contentBounds.current?.width ?? 0)
+		// console.log(contentBounds)
 
 		zoomCentre.current = _.clamp((event.clientX - left) / width, 0, 1)
 	}, [])
@@ -182,14 +191,10 @@ export function ScaleHandler({
 	useEffect(bindGestures, [bindGestures])
 
 	return (
-		<Measure innerRef={scrollParentRef} bounds onResize={onResize}>
-			{({measureRef}) => (
-				<div ref={measureRef}>
-					<ScaleContext.Provider value={scale}>
-						{children}
-					</ScaleContext.Provider>
-				</div>
-			)}
-		</Measure>
+		<div ref={scrollParentRef}>
+			<ScaleContext.Provider value={scale}>
+				<Measure bounds onResize={onContentResize}>{children}</Measure>
+			</ScaleContext.Provider>
+		</div>
 	)
 }

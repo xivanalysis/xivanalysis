@@ -1,16 +1,21 @@
 import classNames from 'classnames'
 import {timeMinute} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
-import React, {memo} from 'react'
+import React, {Fragment, memo} from 'react'
 import {Item} from './Item'
-import {Row} from './Row'
 import {useScale} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
 const EXPAND_TICK_DOMAIN_BY = 0.05 // 5%
 const AXIS_ROW_HEIGHT = 50
 
-export const Axis = memo(function Axis() {
+export interface AxisProps {
+	height: number
+}
+
+export const Axis = memo(function Axis({
+	height,
+}: AxisProps) {
 	const scale = useScale()
 
 	// Extend the domain slightly so ticks don't disappear the moment they hit the edge
@@ -26,22 +31,40 @@ export const Axis = memo(function Axis() {
 	const stickyTick = timeMinute(viewMin)
 	const stickyTickEnd = timeMinute.offset(stickyTick, 1)
 
-	// Grid lines will expand to the height of the container,
-	// formatted tick labels are constrained to a row
-	// We're disabling culling here, as the scale's axis does it for us.
+	// Pre-calculate scaled tick locations
+	const lefts = ticks.map(tick => scale(tick))
+
 	return <>
-		{ticks.map((tick, index) => (
-			<Item key={index} start={tick} disableCulling>
-				<div className={classNames(
-					styles.gridLine,
-					isMajorTick(tick) && styles.major,
-				)}/>
-			</Item>
-		))}
-		<Row height={AXIS_ROW_HEIGHT}>
-			{ticks.map((tick) => <>
+		{/* Grid lines */}
+		<div
+			className={styles.track}
+			style={{
+				gridRowStart: 1,
+				gridRowEnd: `span ${height + 1}`,
+			}}
+		>
+			{ticks.map((tick, index) => (
+				<Item key={index} left={lefts[index]}>
+					<div className={classNames(
+						styles.gridLine,
+						isMajorTick(tick) && styles.major,
+					)}/>
+				</Item>
+			))}
+		</div>
+
+		{/* Numeric ticks */}
+		<div
+			className={styles.track}
+			style={{
+				gridRowStart: height + 1,
+				gridRowEnd: 'span 1',
+				height: AXIS_ROW_HEIGHT,
+			}}
+		>
+			{ticks.map((tick, index) => <Fragment key={index}>
 				{/* Second ticks */}
-				<Item key={tick.toString()} start={tick} disableCulling>
+				<Item left={lefts[index]}>
 					<div className={styles.axisTick}>
 						{formatSeconds(tick)}
 					</div>
@@ -49,21 +72,21 @@ export const Axis = memo(function Axis() {
 
 				{/* Minute ticks. Skip ticks before stickyTickEnd to prevent dupes. */}
 				{isMajorTick(tick) && (tick >= stickyTickEnd) && (
-					<Item key={`${tick}-major`} start={tick}>
+					<Item left={lefts[index]}>
 						<div className={classNames(styles.axisTick, styles.major)}>
 							{formatMinutes(tick)}
 						</div>
 					</Item>
 				)}
-			</>)}
+			</Fragment>)}
 
 			{/* "Sticky" minute tick */}
-			<Item start={viewMin} end={stickyTickEnd} disableCulling>
+			<Item left={scale(viewMin)} right={scale(stickyTickEnd)}>
 				<div className={classNames(styles.axisTick, styles.major, styles.first)}>
 					{formatMinutes(stickyTick)}
 				</div>
 			</Item>
-		</Row>
+		</div>
 	</>
 })
 

@@ -2,22 +2,22 @@
 declare namespace TimelineModuleCssModule {
   export interface ITimelineModuleCss {
     axisTick: string;
+    borderColour: string;
     borderWidth: string;
+    branchLabelWidth: string;
     collapsed: string;
+    content: string;
+    defaultRowHeight: string;
     first: string;
     gridLine: string;
     gridLineColour: string;
-    interactive: string;
     item: string;
-    itemContainer: string;
-    labelBackground: string;
-    labelContent: string;
-    labelSpacer: string;
+    label: string;
     major: string;
     majorGridLineColour: string;
     minimised: string;
-    row: string;
-    rowBorderColour: string;
+    timeline: string;
+    track: string;
   }
 }
 

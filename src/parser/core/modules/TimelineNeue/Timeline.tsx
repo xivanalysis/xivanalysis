@@ -1,12 +1,9 @@
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
 import {
-	Item as ItemComponent,
-	Row as RowComponent,
 	SetViewFn,
-	// Timeline as TimelineComponent,
+	Timeline as TimelineComponent,
 } from './components'
-import {Timeline as TimelineComponent} from './components2'
 import {
 	Item as ItemConfig,
 	Row as RowConfig,
@@ -73,19 +70,10 @@ export class Timeline extends Module {
 	}
 
 	output() {
-		return <>
-			{/* <TimelineComponent
-				min={0}
-				max={this.parser.fightDuration}
-				end={Math.min(this.parser.fightDuration, INITIAL_END)}
-				zoomMin={MINIMUM_ZOOM}
-				exposeSetView={this.exposeSetView}
-			>
-				{this.renderRows(this.rows)}
-				{this.items.map(this.renderItem)}
-			</TimelineComponent> */}
+		return (
 			<TimelineComponent
 				rows={this.rows}
+				// TODO: ITEMS
 
 				min={0}
 				max={this.parser.fightDuration}
@@ -93,37 +81,8 @@ export class Timeline extends Module {
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			/>
-		</>
-	}
-
-	private renderRows = (rows: RowConfig[]) =>
-		rows
-			.slice()
-			.sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
-			.map(this.renderRow)
-
-	private renderRow = (row: RowConfig, index: number) => {
-		// If the row is entirely empty, ignore it so it doesn't clutter up the display
-		if (this.getRowItemCount(row) === 0) {
-			return null
-		}
-
-		return (
-			<RowComponent key={index} label={row.label} height={row.height}>
-				{this.renderRows(row.rows)}
-				{row.items.map(this.renderItem)}
-			</RowComponent>
 		)
 	}
-
-	private renderItem = (item: ItemConfig, index: number) => (
-		<ItemComponent key={index} start={item.start} end={item.end}>
-			<item.Content/>
-		</ItemComponent>
-	)
-
-	private getRowItemCount = (row: RowConfig): number =>
-		row.items.length + row.rows.reduce((acc, cur) => acc + this.getRowItemCount(cur), 0)
 }
 
 const fakeShit = [new SimpleRow({
