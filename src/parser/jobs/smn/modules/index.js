@@ -8,6 +8,7 @@ import GeneralCDDowntime from './GeneralCDDowntime'
 import MissingDoTs from './MissingDoTs'
 import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
+import {PetTimeline} from './PetTimeline'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
 import {Tincture} from 'parser/core/modules/Tincture'
@@ -25,6 +26,7 @@ export default [
 	MissingDoTs,
 	MultiHit,
 	Pets,
+	PetTimeline,
 	Ruin2,
 	Ruin4,
 	Tincture,

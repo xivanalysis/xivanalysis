@@ -42,6 +42,10 @@ export default new Meta({
 
 	changelog: [{
 		date: new Date('2020-04-03'),
+		Changes: () => <>Added pet actions to timeline.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
+		date: new Date('2020-04-03'),
 		Changes: () => <>Added module to show tincture usage.</>,
 		contributors: [CONTRIBUTORS.KELOS],
 	}, {
