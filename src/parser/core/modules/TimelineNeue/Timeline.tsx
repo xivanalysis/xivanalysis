@@ -4,11 +4,13 @@ import {
 	Item as ItemComponent,
 	Row as RowComponent,
 	SetViewFn,
-	Timeline as TimelineComponent,
+	// Timeline as TimelineComponent,
 } from './components'
+import {Timeline as TimelineComponent} from './components2'
 import {
 	Item as ItemConfig,
 	Row as RowConfig,
+	SimpleRow,
 } from './config'
 
 // We default to showing the first minute of the pull. Showing the entire fight at once
@@ -26,6 +28,10 @@ export class Timeline extends Module {
 
 	private rows: RowConfig[] = []
 	private items: ItemConfig[] = []
+
+	protected init() {
+		this.rows = fakeShit.slice()
+	}
 
 	/**
 	 * Add a row to the timeline.
@@ -68,7 +74,7 @@ export class Timeline extends Module {
 
 	output() {
 		return <>
-			<TimelineComponent
+			{/* <TimelineComponent
 				min={0}
 				max={this.parser.fightDuration}
 				end={Math.min(this.parser.fightDuration, INITIAL_END)}
@@ -77,7 +83,10 @@ export class Timeline extends Module {
 			>
 				{this.renderRows(this.rows)}
 				{this.items.map(this.renderItem)}
-			</TimelineComponent>
+			</TimelineComponent> */}
+			<TimelineComponent
+				rows={this.rows}
+			/>
 		</>
 	}
 
@@ -110,3 +119,27 @@ export class Timeline extends Module {
 	private getRowItemCount = (row: RowConfig): number =>
 		row.items.length + row.rows.reduce((acc, cur) => acc + this.getRowItemCount(cur), 0)
 }
+
+const fakeShit = [new SimpleRow({
+	order: -Infinity,
+	label: 'One',
+	rows: [
+		new SimpleRow({
+			label: 'Two',
+			rows: [
+				new SimpleRow({
+					label: 'Three',
+					rows: [
+						new SimpleRow({
+							label: 'Four',
+						}),
+						new SimpleRow({
+							label: 'Five',
+						}),
+					],
+				}),
+			],
+		}),
+		new SimpleRow({label: 'Two Point Five'}),
+	],
+})]
