@@ -1,5 +1,6 @@
 import Cooldowns from './Cooldowns'
 import Demis from './Demis'
+import Devotion from './Devotion'
 import DoTs from './DoTs'
 import DWT from './DWT'
 import Gauge from './Gauge'
@@ -10,12 +11,14 @@ import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
+import {Tincture} from 'parser/core/modules/Tincture'
 import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
 
 export default [
 	Cooldowns,
 	Demis,
+	Devotion,
 	DoTs,
 	DWT,
 	Gauge,
@@ -26,6 +29,7 @@ export default [
 	PetTimeline,
 	Ruin2,
 	Ruin4,
+	Tincture,
 	TriDisaster,
 	Weaving,
 ]
