@@ -1,5 +1,6 @@
 import classNames from 'classnames'
-import React, {memo, useCallback, useMemo, useState} from 'react'
+import React, {CSSProperties, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import Measure from 'react-measure'
 import {Row as RowConfig} from '../config'
 import {Items} from './Item'
 import styles from './Timeline.module.css'
@@ -97,27 +98,25 @@ const Row = memo(function Row({
 		minHeight: parentCollapsed ? undefined : row.height,
 	}
 
-	const columnSpan = hasChildren && !selfCollapsed
-		? 1
-		: maxDepth - depth
+	const minimised = hasChildren && !selfCollapsed
+	const columnSpan = minimised ? 1 : maxDepth - depth
 
 	return <>
 		{/* Label */}
-		{parentCollapsed || <div
-			className={classNames(
-				styles.label,
-				hasChildren && styles.hasChildren,
-				collapsed && styles.collapsed,
-			)}
-			style={{
-				gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,
-				gridColumnEnd: `span ${columnSpan}`,
-				...rowStyles,
-			}}
-			onClick={collapsible && toggleCollapsed}
-		>
-			{row.label}
-		</div>}
+		{parentCollapsed || (
+			<Label
+				minimised={minimised}
+				collapsed={collapsed}
+				onClick={collapsible && toggleCollapsed}
+				gridStyle={{ // TODO: Memo?
+					gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,
+					gridColumnEnd: `span ${columnSpan}`,
+					...rowStyles,
+				}}
+			>
+				{row.label}
+			</Label>
+		)}
 
 		{/* Row */}
 		<div className={styles.track} style={rowStyles}>
@@ -132,4 +131,44 @@ const Row = memo(function Row({
 			parentCollapsed={collapsed}
 		/>}
 	</>
+})
+
+interface LabelProps {
+	minimised: boolean
+	collapsed: boolean
+	onClick?: () => void
+	gridStyle?: CSSProperties
+	children?: ReactNode
+}
+
+const Label = memo(function Label({
+	minimised,
+	collapsed,
+	onClick,
+	gridStyle,
+	children,
+}: LabelProps) {
+	return (
+		<Measure bounds>
+			{({measureRef, contentRect}) => (
+				<div
+					ref={measureRef}
+					className={classNames(
+						styles.label,
+						minimised && styles.minimised,
+						collapsed && styles.collapsed,
+					)}
+					style={gridStyle}
+					onClick={onClick}
+				>
+					<div
+						className={styles.content}
+						style={{maxWidth: minimised ? contentRect.bounds?.height : undefined}}
+					>
+						{children}
+					</div>
+				</div>
+			)}
+		</Measure>
+	)
 })

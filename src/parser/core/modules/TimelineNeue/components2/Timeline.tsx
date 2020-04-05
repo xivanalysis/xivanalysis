@@ -23,6 +23,8 @@ export function Timeline({
 				<div className={styles.timeline}>
 					<div ref={measureRef} style={{gridColumnStart: 2, gridColumnEnd: 'span 1'}}/>
 
+					<Axis height={maxChildren}/>
+
 					<Rows
 						rows={rows}
 						depth={0}
@@ -30,8 +32,6 @@ export function Timeline({
 						top={1}
 						parentCollapsed={false}
 					/>
-
-					<Axis height={maxChildren}/>
 				</div>
 			)}
 		</ScaleHandler>
