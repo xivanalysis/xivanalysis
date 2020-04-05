@@ -10,7 +10,7 @@ import {StatusLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 const PLAYERS_HIT_TARGET = 8
-const PLAYERS_HIT_SUGGESTION_THRESHOLD = 4
+const PLAYERS_HIT_SUGGESTION_THRESHOLD = 7
 const MAX_DEVOTION_DURATION = 30000
 
 export default class Devotion extends Module {
