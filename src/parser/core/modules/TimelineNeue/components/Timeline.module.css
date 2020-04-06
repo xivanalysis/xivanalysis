@@ -33,16 +33,16 @@ Basic diagram:
 	display: grid;
 	grid-template-columns: auto minmax(0, 1fr);
 	grid-auto-columns: branchLabelWidth;
-	border: solid borderColour;
-	border-width: borderWidth borderWidth 0 0;
+	grid-gap: borderWidth;
+	padding: borderWidth;
 }
 
 .label,
 .track {
 	min-height: defaultRowHeight;
 	box-sizing: content-box;
-	border: solid borderColour;
-	border-width: 0 0 borderWidth borderWidth;
+	border: borderWidth solid borderColour;
+	margin: calc(-1 * borderWidth);
 }
 
 .label {
@@ -80,12 +80,6 @@ Basic diagram:
 
 .label.collapsed {
 	background: rgba(255, 0, 0, 0.2);
-}
-
-.label.empty {
-	border-left-width: 0;
-	background: none;
-	pointer-events: none;
 }
 
 .track {
