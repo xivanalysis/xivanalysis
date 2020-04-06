@@ -285,6 +285,9 @@
   "core.suggestions.severity.minor": "小ミス",
   "core.suggestions.severity.morbid": "致命的",
   "core.suggestions.title": "提案",
+  "core.swiftcast.missed.suggestion.content": "",
+  "core.swiftcast.table.title": "",
+  "core.swiftcast.title": "",
   "core.timeline.help-text": "スクロールまたはクリック＋ドラッグで移動／CTRL+スクロールまたはピンチで拡大縮小",
   "core.timeline.title": "タイムライン",
   "core.tincture.title": "",
@@ -755,8 +758,6 @@
   "sch.gauge.waste.suggestion.why": "",
   "sch.interrupts.suggestion.content": "",
   "sch.swiftcast.missed.suggestion.content": "",
-  "sch.swiftcast.missed.suggestion.why": "",
-  "sch.swiftcast.title": "",
   "sch.weaving.content": "GCDの間に<0/>と<1/>を挟み込み、過度に挟み込む行為は避けてください。過度な挟み込みはGCDを遅延させてアクティブ率を低下させます。詳細は下にある <2><3/></2> モジュールをご覧ください。",
   "smn.about.description": "",
   "smn.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
@@ -860,7 +861,5 @@
   "whm.overheal.requirement.nonhot": "オーバーヒール (非HoT)",
   "whm.overheal.rule.description": "対象のHP減少を補うために過大な回復をしないでください。避けられないオーバーヒールはありますが、オーバーヒールは回復をしない上に敵視が上昇します。さらに、効率的に回復を行うことはMP管理にも役立ちます。",
   "whm.overheal.rule.name": "オーバーヒールを避けてください。",
-  "whm.swiftcast.missed.suggestion.content": "",
-  "whm.swiftcast.missed.suggestion.why": "",
-  "whm.swiftcast.title": ""
+  "whm.swiftcast.missed.suggestion.content": ""
 }
