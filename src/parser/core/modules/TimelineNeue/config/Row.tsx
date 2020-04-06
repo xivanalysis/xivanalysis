@@ -8,6 +8,8 @@ export interface Row {
 	readonly height?: number
 	/** Override insertion order of row. Smaller numbers appear first. */
 	readonly order?: number
+	/** If true, the row will default to a collapsed state. Default `false`. */
+	readonly collapsed?: boolean
 	/** Child rows of this row */
 	readonly rows: Row[]
 	/** Items within this row */
@@ -19,6 +21,7 @@ export class SimpleRow implements Row {
 	label?: ReactNode
 	height?: number
 	order?: number
+	collapsed?: boolean
 	rows: Row[]
 	items: Item[]
 
@@ -26,12 +29,14 @@ export class SimpleRow implements Row {
 		label?: ReactNode,
 		height?: number
 		order?: number
+		collapsed?: boolean
 		rows?: readonly Row[],
 		items?: readonly Item[],
 	} = {}) {
 		this.label = opts.label
 		this.height = opts.height
 		this.order = opts.order
+		this.collapsed = opts.collapsed
 		this.rows = opts.rows?.slice() ?? []
 		this.items = opts.items?.slice() ?? []
 	}

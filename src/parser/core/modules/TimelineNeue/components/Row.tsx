@@ -84,16 +84,14 @@ const Row = memo(function Row({
 }: RowProps) {
 	const hasChildren = row.rows.length > 0
 
-	// TODO hydrate from row once that has default collapsed state
-	const [selfCollapsed, setSelfCollapsed] = useState(false)
+	const [selfCollapsed, setSelfCollapsed] = useState(row.collapsed ?? false)
 	const toggleCollapsed = useCallback(
 		() => setSelfCollapsed(value => !value),
 		[],
 	)
 
 	// TODO: consider single child case
-	const collapsible = hasChildren || undefined
-	const collapsed = selfCollapsed || parentCollapsed
+	const collapsed = hasChildren && (selfCollapsed || parentCollapsed)
 
 	const rowStyles = {
 		gridRowStart: top,
@@ -107,7 +105,7 @@ const Row = memo(function Row({
 			<Label
 				minimised={hasChildren && !selfCollapsed}
 				collapsed={collapsed}
-				onClick={collapsible && toggleCollapsed}
+				onClick={hasChildren ? toggleCollapsed : undefined}
 				gridStyle={{ // TODO: Memo?
 					gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,
 					...rowStyles,
