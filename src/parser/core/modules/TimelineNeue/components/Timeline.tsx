@@ -1,6 +1,7 @@
 import React from 'react'
-import {Row as RowConfig} from '../config'
+import {Item as ItemConfig, Row as RowConfig} from '../config'
 import {Axis} from './Axis'
+import {Items} from './Item'
 import {Rows} from './Row'
 import {ScaleHandler, ScaleHandlerProps} from './ScaleHandler'
 import styles from './Timeline.module.css'
@@ -8,10 +9,11 @@ import {getMaxChildren, getMaxDepth} from './utilities'
 
 export type TimelineProps =
 	& ScaleHandlerProps
-	& {rows?: RowConfig[]}
+	& {rows?: RowConfig[], items?: ItemConfig[]}
 
 export function Timeline({
 	rows = [],
+	items = [],
 	...scaleHandlerProps
 }: TimelineProps) {
 	const maxDepth = getMaxDepth(rows)
@@ -32,6 +34,19 @@ export function Timeline({
 						top={1}
 						parentCollapsed={false}
 					/>
+
+					{/* Root-level item track */}
+					{items.length > 0 && (
+						<div
+							className={styles.track}
+							style={{
+								gridRowStart: 1,
+								gridRowEnd: maxChildren,
+							}}
+						>
+							<Items items={items}/>
+						</div>
+					)}
 				</div>
 			)}
 		</ScaleHandler>

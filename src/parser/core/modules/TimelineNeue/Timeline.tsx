@@ -68,7 +68,7 @@ export class Timeline extends Module {
 		return (
 			<TimelineComponent
 				rows={this.rows}
-				// TODO: ITEMS
+				items={this.items}
 
 				min={0}
 				max={this.parser.fightDuration}
