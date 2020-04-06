@@ -82,13 +82,18 @@ const Row = memo(function Row({
 	height,
 	parentCollapsed,
 }: RowProps) {
-	const hasChildren = row.rows.length > 0
-
 	const [selfCollapsed, setSelfCollapsed] = useState(row.collapse ?? false)
 	const toggleCollapsed = useCallback(
 		() => setSelfCollapsed(value => !value),
 		[],
 	)
+
+	// If the parent is collapsed and this row hides when in such a parent, we can just noop
+	if (row.hideCollapsed && parentCollapsed) {
+		return null
+	}
+
+	const hasChildren = row.rows.length > 0
 
 	// TODO: consider single child case
 	const collapsed = hasChildren && (selfCollapsed || parentCollapsed)

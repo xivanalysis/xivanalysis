@@ -10,6 +10,8 @@ export interface Row {
 	readonly order?: number
 	/** If true, the row will default to a collapsed state. Default `false`. */
 	readonly collapse?: boolean
+	/** If true, items and rows within this row are hidden when the parent is collapsed. Default `false`. */
+	readonly hideCollapsed?: boolean
 	/** Child rows of this row */
 	readonly rows: Row[]
 	/** Items within this row */
@@ -22,6 +24,7 @@ export class SimpleRow implements Row {
 	height?: number
 	order?: number
 	collapse?: boolean
+	hideCollapsed?: boolean
 	rows: Row[]
 	items: Item[]
 
@@ -30,6 +33,7 @@ export class SimpleRow implements Row {
 		height?: number
 		order?: number
 		collapse?: boolean
+		hideCollapsed?: boolean
 		rows?: readonly Row[],
 		items?: readonly Item[],
 	} = {}) {
@@ -37,6 +41,7 @@ export class SimpleRow implements Row {
 		this.height = opts.height
 		this.order = opts.order
 		this.collapse = opts.collapse
+		this.hideCollapsed = opts.hideCollapsed
 		this.rows = opts.rows?.slice() ?? []
 		this.items = opts.items?.slice() ?? []
 	}

@@ -186,7 +186,7 @@ export default class Statuses extends Module {
 		const action = this._statusToActionMap[status.id]
 		if (!action) { return undefined }
 
-		const row = new SimpleRow({label: status.name})
+		const row = new SimpleRow({label: status.name, hideCollapsed: true})
 		this._rows[key] = row
 
 		// TODO: Replace with proper attach logic
