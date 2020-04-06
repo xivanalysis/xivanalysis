@@ -19,7 +19,7 @@ interface SharedRowProps {
 }
 
 export type RowsProps = SharedRowProps & {
-	rows: RowConfig[],
+	rows: readonly RowConfig[],
 }
 
 export const Rows = memo(function Rows({
@@ -30,7 +30,6 @@ export const Rows = memo(function Rows({
 }: RowsProps) {
 	const orderedRows = useMemo(
 		() => rows
-			.slice()
 			.filter(row => getItemCount(row) > 0)
 			.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)),
 		[rows],
@@ -118,7 +117,7 @@ const Row = memo(function Row({
 			</Label>
 		)}
 
-		{/* Row */}
+		{/* Item track */}
 		<div className={styles.track} style={rowStyles}>
 			<Items items={row.items}/>
 		</div>

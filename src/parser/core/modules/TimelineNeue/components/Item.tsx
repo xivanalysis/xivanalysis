@@ -4,7 +4,7 @@ import {useScale} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
 export interface ItemsProps {
-	items: ItemConfig[]
+	items: readonly ItemConfig[]
 }
 
 export const Items = memo(function Items({

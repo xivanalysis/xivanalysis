@@ -17,7 +17,7 @@ export function Timeline({
 	...scaleHandlerProps
 }: TimelineProps) {
 	const maxDepth = getMaxDepth(rows)
-	const maxChildren = getMaxChildren({rows})
+	const maxChildren = getMaxChildren({rows, items})
 
 	return (
 		<ScaleHandler {...scaleHandlerProps}>
