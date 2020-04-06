@@ -32,6 +32,7 @@ export function Timeline({
 						depth={0}
 						maxDepth={maxDepth}
 						top={1}
+						height={maxChildren}
 						parentCollapsed={false}
 					/>
 

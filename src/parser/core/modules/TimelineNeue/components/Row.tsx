@@ -15,6 +15,7 @@ interface SharedRowProps {
 	depth: number,
 	maxDepth: number,
 	top: number,
+	height: number,
 	parentCollapsed: boolean,
 }
 
@@ -25,6 +26,7 @@ export type RowsProps = SharedRowProps & {
 export const Rows = memo(function Rows({
 	rows,
 	top,
+	height,
 	parentCollapsed,
 	...rowProps
 }: RowsProps) {
@@ -41,7 +43,7 @@ export const Rows = memo(function Rows({
 		if (parentCollapsed) {
 			return {
 				top: currentTop,
-				height: rows.length,
+				height,
 			}
 		} else {
 			const maxChildren = getMaxChildren(row)
@@ -70,7 +72,6 @@ export const Rows = memo(function Rows({
 
 type RowProps = SharedRowProps & {
 	row: RowConfig,
-	height: number,
 }
 
 const Row = memo(function Row({
@@ -129,6 +130,7 @@ const Row = memo(function Row({
 				depth={depth + 1}
 				maxDepth={maxDepth}
 				top={top}
+				height={height}
 				parentCollapsed={collapsed}
 			/>
 		)}
