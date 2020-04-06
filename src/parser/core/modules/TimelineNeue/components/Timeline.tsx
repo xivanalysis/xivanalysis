@@ -42,7 +42,7 @@ export function Timeline({
 							className={styles.track}
 							style={{
 								gridRowStart: 1,
-								gridRowEnd: maxChildren,
+								gridRowEnd: `span ${maxChildren}`,
 							}}
 						>
 							<Items items={items}/>
