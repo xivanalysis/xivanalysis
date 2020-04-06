@@ -59,7 +59,7 @@ export default class GlobalCooldown extends Module {
 		this.timelineRow = this.timelineNeue.addRow(new ContainerRow({
 			label: 'GCD',
 			order: -99,
-			collapsed: true,
+			collapse: true,
 		}))
 	}
 

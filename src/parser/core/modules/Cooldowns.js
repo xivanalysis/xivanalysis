@@ -128,7 +128,7 @@ export default class Cooldowns extends Module {
 
 		const row = this.timelineNeue.addRow(new ContainerRow({
 			...opts,
-			collapsed: true,
+			collapse: true,
 		}))
 
 		this._rows[id] = row

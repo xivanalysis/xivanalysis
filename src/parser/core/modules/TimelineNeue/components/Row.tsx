@@ -84,7 +84,7 @@ const Row = memo(function Row({
 }: RowProps) {
 	const hasChildren = row.rows.length > 0
 
-	const [selfCollapsed, setSelfCollapsed] = useState(row.collapsed ?? false)
+	const [selfCollapsed, setSelfCollapsed] = useState(row.collapse ?? false)
 	const toggleCollapsed = useCallback(
 		() => setSelfCollapsed(value => !value),
 		[],
