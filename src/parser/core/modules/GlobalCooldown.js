@@ -6,7 +6,7 @@ import React from 'react'
 import Module from 'parser/core/Module'
 import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
-import {SimpleRow, ActionItem} from './TimelineNeue'
+import {ActionItem, ContainerRow} from './TimelineNeue'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -56,7 +56,7 @@ export default class GlobalCooldown extends Module {
 
 		this.addHook('complete', this._onComplete)
 
-		this.timelineRow = this.timelineNeue.addRow(new SimpleRow({
+		this.timelineRow = this.timelineNeue.addRow(new ContainerRow({
 			label: 'GCD',
 			order: -99,
 		}))
@@ -123,7 +123,6 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-		const row = this.timelineRow.addRow(new SimpleRow({order: -1}))
 
 		this.timeline.addGroup(new Group({
 			id: this.gcdGroupId,
@@ -136,7 +135,7 @@ export default class GlobalCooldown extends Module {
 			if (!action) { return }
 
 			const start = gcd.timestamp - startTime
-			row.addItem(new ActionItem({
+			this.timelineRow.addItem(new ActionItem({
 				start,
 				end: start + this._getGcdLength(gcd),
 				action,
