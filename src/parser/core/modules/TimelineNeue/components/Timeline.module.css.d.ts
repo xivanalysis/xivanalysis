@@ -8,6 +8,7 @@ declare namespace TimelineModuleCssModule {
     collapsed: string;
     content: string;
     defaultRowHeight: string;
+    empty: string;
     first: string;
     gridLine: string;
     gridLineColour: string;

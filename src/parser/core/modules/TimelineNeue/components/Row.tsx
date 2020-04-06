@@ -101,19 +101,16 @@ const Row = memo(function Row({
 		minHeight: parentCollapsed ? undefined : row.height,
 	}
 
-	const minimised = hasChildren && !selfCollapsed
-	const columnSpan = minimised ? 1 : maxDepth - depth
-
 	return <>
 		{/* Label */}
-		{parentCollapsed || (
+		{!parentCollapsed && (
 			<Label
-				minimised={minimised}
+				minimised={hasChildren && !selfCollapsed}
 				collapsed={collapsed}
+				empty={row.label == null}
 				onClick={collapsible && toggleCollapsed}
 				gridStyle={{ // TODO: Memo?
 					gridColumnStart: (LABEL_GRID_OFFSET-maxDepth) + depth,
-					gridColumnEnd: `span ${columnSpan}`,
 					...rowStyles,
 				}}
 			>
@@ -126,19 +123,22 @@ const Row = memo(function Row({
 			<Items items={row.items}/>
 		</div>
 
-		{hasChildren && <Rows
-			rows={row.rows}
-			depth={depth + 1}
-			maxDepth={maxDepth}
-			top={top}
-			parentCollapsed={collapsed}
-		/>}
+		{hasChildren && (
+			<Rows
+				rows={row.rows}
+				depth={depth + 1}
+				maxDepth={maxDepth}
+				top={top}
+				parentCollapsed={collapsed}
+			/>
+		)}
 	</>
 })
 
 interface LabelProps {
 	minimised: boolean
 	collapsed: boolean
+	empty: boolean
 	onClick?: () => void
 	gridStyle?: CSSProperties
 	children?: ReactNode
@@ -147,10 +147,20 @@ interface LabelProps {
 const Label = memo(function Label({
 	minimised,
 	collapsed,
+	empty,
 	onClick,
 	gridStyle,
 	children,
 }: LabelProps) {
+	if (empty) {
+		return (
+			<div
+				className={classNames(styles.label, styles.empty)}
+				style={gridStyle}
+			/>
+		)
+	}
+
 	return (
 		<Measure bounds>
 			{({measureRef, contentRect}) => (
