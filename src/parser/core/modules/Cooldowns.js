@@ -213,9 +213,7 @@ export default class Cooldowns extends Module {
 				const start = use.timestamp - this.parser.fight.start_time
 				row.addItem(new ActionItem({
 					start,
-					// NOTE: This jank ensures 0-length cooldowns are still visible.
-					// TODO: The above is basically a hack to remain compat with old timeline. Remove?
-					end: use.length > 0 ? start + use.length : undefined,
+					end: start + use.length,
 					action,
 				}))
 

@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import React, {ComponentType, ReactNode} from 'react'
@@ -55,7 +56,11 @@ class AbilityItem extends BaseItem {
 	}
 
 	Content = () => (
-		<div className={styles.actionItem}>
+		<div className={classNames(
+			styles.abilityItem,
+			// start === end is invisible, allow it to overflow
+			this.start === this.end && styles.zeroWidthAbility,
+		)}>
 			<img
 				src={this.ability.icon}
 				alt={this.ability.name}
