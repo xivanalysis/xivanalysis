@@ -1,7 +1,7 @@
 import {ScaleTime, scaleUtc} from 'd3-scale'
 import _ from 'lodash'
-import React, {createContext, ReactNode, Ref, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
-import Measure, {BoundingRect, ContentRect, MeasuredComponentProps, MeasureProps, Rect} from 'react-measure'
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
+import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 
 export type Scale = ScaleTime<number, number>
@@ -116,16 +116,8 @@ export function ScaleHandler({
 	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
 	const zoomCentre = useRef(0)
 	const onMouseMove = useCallback((event: React.MouseEvent) => {
-		// If there's no reference to the scroll parent yet, stop short
-		const {current: scrollParent} = scrollParentRef
-		if (scrollParent == null) { return }
-
 		// We're only using X - zoom is only on the X axis, so Y is unused
 		const {left = 0, width = 1} = contentBounds.current ?? {} as Partial<BoundingRect>
-
-		// const offset = (parentBounds.current?.width ?? 0) - (contentBounds.current?.width ?? 0)
-		// console.log(contentBounds)
-
 		zoomCentre.current = _.clamp((event.clientX - left) / width, 0, 1)
 	}, [])
 
@@ -160,7 +152,7 @@ export function ScaleHandler({
 		eventOptions: {passive: false},
 	}
 	const bindGestures = useGesture<typeof gestureConfig>({
-		// TODO use test this on a touchpad
+		// TODO: Test this on a touchpad
 		onWheel: ({delta: [dX, dY], direction: [dirX, dirY], event}) => {
 			event?.preventDefault()
 
@@ -173,7 +165,7 @@ export function ScaleHandler({
 		},
 		// TODO: Test this on a touchpad, and _especially_ on a phone
 		//       I expect this will need changes on phone so the zoom maintains connection to fingies
-		onPinch: ({delta: [, dY], direction, event, ...rest}) => {
+		onPinch: ({delta: [, dY], event}) => {
 			event?.preventDefault()
 			// Direction is 0,0 on first tick, and sticks around a bit too long. Calc our own.
 			if (dY === 0) { return }
