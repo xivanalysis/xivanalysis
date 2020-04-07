@@ -30,7 +30,7 @@ export const Items = memo(function Items({
 		{filteredItems.map((itemDetails) => {
 			const {Content} = items[itemDetails.index]
 			return (
-				<Item left={itemDetails.left} right={itemDetails.right}>
+				<Item key={itemDetails.index} left={itemDetails.left} right={itemDetails.right}>
 					<Content/>
 				</Item>
 			)
