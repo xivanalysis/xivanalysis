@@ -58,7 +58,7 @@ export default class Devotion extends Module {
 				.length
 			const totalMissedPlayers = this._devotionWindows
 				.reduce((totalMissed, devotionWindow) => {
-					totalMissed += PLAYERS_HIT_TARGET - devotionWindow.playersHit.length
+					return totalMissed + PLAYERS_HIT_TARGET - devotionWindow.playersHit.length
 				}, 0)
 
 			this.suggestions.add(new TieredSuggestion({
