@@ -184,4 +184,40 @@ export const DRK = ensureActions({
 		onGcd: true,
 		breaksCombo: false,
 	},
+	// Esteem
+	ESTEEM_ABYSSAL_DRAIN: {
+		id: 17904,
+		name: 'Abyssal Drain',
+		icon: 'https://xivapi.com/i/003000/003064.png',
+	},
+	ESTEEM_BLOODSPILLER: {
+		id: 17909,
+		name: 'Bloodspiller',
+		icon: 'https://xivapi.com/i/003000/003080.png',
+	},
+	ESTEEM_CARVE_AND_SPIT: {
+		id: 17915,
+		name: 'Carve and Spit',
+		icon: 'https://xivapi.com/i/003000/003058.png',
+	},
+	ESTEEM_EDGE_OF_SHADOW: {
+		id: 17908,
+		name: 'Edge of Shadow',
+		icon: 'https://xivapi.com/i/003000/003086.png',
+	},
+	ESTEEM_FLOOD_OF_SHADOW: {
+		id: 17907,
+		name: 'Flood of Shadow',
+		icon: 'https://xivapi.com/i/003000/003085.png',
+	},
+	ESTEEM_PLUNGE: {
+		id: 17905,
+		name: 'Plunge',
+		icon: 'https://xivapi.com/i/003000/003061.png',
+	},
+	ESTEEM_QUIETUS: {
+		id: 17906,
+		name: 'Quietus',
+		icon: 'https://xivapi.com/i/003000/003079.png',
+	},
 })

@@ -246,7 +246,7 @@ export const SCH = ensureActions({
 	SERAPHIC_VEIL: {
 		id: 16548,
 		name: 'Seraphic Veil',
-		icon: 'https://xivapi.com/i/0020000/002847.png',
+		icon: 'https://xivapi.com/i/002000/002847.png',
 		pet: true,
 	},
 
