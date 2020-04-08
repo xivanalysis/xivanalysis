@@ -50,22 +50,18 @@ Basic diagram:
 	grid-column-end: 2;
 	display: flex;
 	align-items: center;
-	background: rgba(0, 255, 0, 0.2);
+	background: rgba(0, 0, 0, 0.04);
 	white-space: nowrap;
 }
 
 .label .content {
 	box-sizing: border-box;
-	padding: 0 5px;
+	padding: 0 25px 0 5px;
 }
 
 .label.minimised,
 .label.collapsed {
 	cursor: pointer;
-}
-
-.label.minimised {
-	background: rgba(0, 0, 255, 0.2);
 }
 
 .label.minimised .content {
@@ -75,11 +71,28 @@ Basic diagram:
 	transform-origin: top left;
 	transform: rotate(-90deg) translate(-50%, -50%);
 	overflow: hidden;
+	/* TODO: Consider something other than ellipsis, the dots consume a lot of space. */
 	text-overflow: ellipsis;
 }
 
-.label.collapsed {
-	background: rgba(255, 0, 0, 0.2);
+.label.minimised::after,
+.label.collapsed::after {
+	opacity: .75;
+}
+
+/* TODO: Better definition for arrow size and padding - px is a bit fragile */
+.label.minimised::after {
+	content: '⯈';
+	position: absolute;
+	top: 5px;
+	left: calc(branchLabelWidth / 2);
+	transform: translateX(-50%);
+}
+
+.label.collapsed::after {
+	content: '⯆';
+	position: absolute;
+	right: 5px; /* ??? */
 }
 
 .track {
