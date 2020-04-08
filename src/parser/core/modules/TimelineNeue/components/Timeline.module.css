@@ -99,12 +99,14 @@ Basic diagram:
 	position: relative;
 	grid-column: 2 / span 1;
 	overflow: hidden;
+	pointer-events: none;
 }
 
 .item {
 	position: absolute;
 	top: 0;
 	height: 100%;
+	pointer-events: all;
 }
 
 .gridLine {
