@@ -285,6 +285,9 @@
   "core.suggestions.severity.minor": "중요도 : 낮음",
   "core.suggestions.severity.morbid": "형편없음",
   "core.suggestions.title": "제안",
+  "core.swiftcast.missed.suggestion.content": "",
+  "core.swiftcast.table.title": "",
+  "core.swiftcast.title": "",
   "core.timeline.help-text": "스크롤 또는 클릭+드래그로 이동, ctrl+스크롤로 확대",
   "core.timeline.title": "타임라인",
   "core.tincture.title": "",
@@ -754,9 +757,7 @@
   "sch.gauge.waste.suggestion.content": "에테르 순환기술 사용으로 자연스럽게 쌓이는 요정 에테르를 논글쿨 힐인 <0/>이나 <1/>에 활용하십시오.",
   "sch.gauge.waste.suggestion.why": "에테르 순환 축적 조과로 {0} 만큼을 얻지 못하였습니다.",
   "sch.interrupts.suggestion.content": "가능하면 이동을 최소화 할 수 있는 위치를 선점하십시오. 슬라이드 캐스팅을 적극적으로 활용하면 이동시 강제되는 <0/> 사용 혹은 마염법 시전이 취소되는 상황을 피할 수 있습니다.",
-  "sch.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 신속마는 즉시 시전을 해주며 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
-  "sch.swiftcast.missed.suggestion.why": "신속마 효과를 사용하지 않아 총 {missedSwifts} {missedSwifts, plural, other {회가}} 낭비 되었습니다.",
-  "sch.swiftcast.title": "신속마가 사용된 스킬들",
+  "sch.swiftcast.missed.suggestion.content": "",
   "sch.weaving.content": "<0/>과 <1/>을 활용하여 논글쿨기를 끼워넣으십시오. 무리하여 글쿨 사이의 논글쿨기 횟수를 초과할 경우 오히려 글쿨기가 밀려 전투 적용시간이 줄어들게됩니다. <2><3/></2> 모듈을 아래에서 확인하여 자세하게 알아보십시오.",
   "smn.about.description": "\n이 분석기는 가장 가까운 목표를 확인하고 소환사의 게임플레이를 개선하며, 또한 갑작스러운 상황에 대처할 수 있는 판단력을 높이는 것을 목표로 하고 있습니다.\n\n소환사의 플레이 특성상 많은 제안사항들이 아래 보일 수 있습니다. 하지만 조바심을 갖지말고, 차근차근 하나 둘씩 개선하는 걸 목표로 삼으세요.\n\n만약 소환사에 대해 자세히 알고싶다면, [The Balance](https://thebalanceffxiv.com/)에서 가이드를 확인해보시고 #smn_questions channel에서 대화를 해보세요.\n",
   "smn.about.description.warning": "분석 결과가 대체로 정확합니다만, 이 시스템은 아직 개발중입니다. 따라서 분석에 조금 혼란을 줄 수 있기 때문에, 만약 문제가 있거나 우려되는 부분이 있다면 저희 디스코드 채널로 와서 제보해주세요!",
@@ -862,7 +863,5 @@
   "whm.overheal.requirement.nonhot": "오버 힐 (단일 힐)",
   "whm.overheal.rule.description": "대상의 최대 체력 이상의 힐을 하는것을 피하십시오. 일부 오버힐은 불가피하지만 오버힐 자체는 이득이 없을뿐더러 적개심만 올립니다. 효율적 마나관리를 위해 효율적으로 힐을 하십시오.",
   "whm.overheal.rule.name": "오버힐을 피하세요",
-  "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 신속마는 즉시 시전을 해주며 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
-  "whm.swiftcast.missed.suggestion.why": "신속마 효과를 사용하지 않아 총 {missedSwifts} {missedSwifts, plural, other {회가}} 낭비 되었습니다.",
-  "whm.swiftcast.title": "신속마가 사용된 스킬들"
+  "whm.swiftcast.missed.suggestion.content": ""
 }
