@@ -5,7 +5,7 @@ import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES, {Status} from 'data/STATUSES'
-import {BuffWindowExpectedGCDs, BuffWindowModule} from 'parser/core/modules/BuffWindow'
+import {BuffWindowExpectedGCDs, BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 
 interface SeverityTiers {
@@ -45,6 +45,25 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 		expectedPerWindow: 1,
 		suggestionContent: this.suggestionContent,
 		severityTiers: this.severityTiers,
+	}
+
+	protected init() {
+		super.init()
+		// Inheriting the class doesn't update expectedGCDs's parameters when they
+		// override, so let's (re)define it here... feels mega jank tho
+		this.expectedGCDs = {
+			expectedPerWindow: 1,
+			suggestionContent: this.suggestionContent,
+			severityTiers: this.severityTiers,
+		}
+	}
+
+	// Provide our own logic for the end of the fight – even though the window is
+	// ~4 GCDs 'wide', we can only use one action with it anyway; this change should
+	// ding them only if they had enough time during the window to use a spell with
+	// swiftcast
+	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
+		return Math.min(1, super.reduceExpectedGCDsEndOfFight(buffWindow))
 	}
 
 	protected considerAction(action: Action) {
