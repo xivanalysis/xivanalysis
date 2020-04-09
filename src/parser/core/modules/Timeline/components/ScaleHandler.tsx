@@ -123,14 +123,6 @@ export function ScaleHandler({
 		if (bounds?.width != null) { setRange([0, bounds.width])}
 	}, [])
 
-	// Capture and store the mouse's position as a pct - we'll use this to handle zooming at the cursor position.
-	const zoomCentre = useRef(0)
-	const onMouseMove = useCallback((event: React.MouseEvent) => {
-		// We're only using X - zoom is only on the X axis, so Y is unused
-		const {left = 0, width = 1} = contentBounds.current ?? {} as Partial<BoundingRect>
-		zoomCentre.current = _.clamp((event.clientX - left) / width, 0, 1)
-	}, [])
-
 	// Helper functions for modifying the user domain
 	const pan = useCallback(
 		({delta}: {delta: number}) => {
@@ -173,27 +165,38 @@ export function ScaleHandler({
 			// Normalise the movement to a %age of the domain & pan
 			pan({delta: direction * domainDistance * panFactor})
 		},
-		// TODO: Test this on a touchpad, and _especially_ on a phone
-		//       I expect this will need changes on phone so the zoom maintains connection to fingies
-		onPinch: ({delta: [, dY], event}) => {
+		// TODO: Test this on a touchpad
+		onPinch: ({delta: [dX, dY], touches, origin, event}) => {
 			// Can't not cancel touch events on pinch, as we'll get full page zoom. Can't cancel, as it
 			// kills clicks. Delta is 0,0 on first tick (including click!?), which isn't really useful
 			// as a pinch - bail early in that instance to avoid PD on clicks.
-			if (dY === 0) { return }
+			if ((dX === 0 && dY === 0) || origin == null) { return }
 			event?.preventDefault()
+
+			// Calc the zoom centre as a %age of the range
+			const [oX] = origin
+			const {left = 0, width = 1} = contentBounds.current ?? {} as Partial<BoundingRect>
+			const centre = _.clamp((oX - left) / width, 0, 1)
+
+			// If there's touches, calculate zoom based on the X-axis delta
+			if (touches > 0) {
+				zoom({delta: -(deltaScale.invert(dX).getTime() * 2), centre})
+				return
+			}
+
+			// No touches, so probably mouse events. Delta is pretty arbitrary, so calc our own factor.
 
 			// Direction sticks around a bit too long. Calc our own.
 			const scale = (dY / Math.abs(dY)) * zoomFactor
 
 			// We want zooming in to step at the same rate as zooming out, adjust the scale to ensure that.
 			const adjustedScale = scale > 0 ? scale : scale / (Math.abs(scale) + 1)
-			zoom({delta: domainDistance * adjustedScale, centre: zoomCentre.current})
+			zoom({delta: domainDistance * adjustedScale, centre})
 		},
 		onDrag: ({delta: [dX], event}) => {
 			preventMouseEventDefault(event)
 			pan({delta: -deltaScale.invert(dX).getTime()})
 		},
-		onMouseMove,
 	}, gestureConfig)
 	useEffect(bindGestures, [bindGestures])
 
