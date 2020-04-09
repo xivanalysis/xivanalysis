@@ -2,7 +2,6 @@ import React from 'react'
 import {Plural, Trans} from '@lingui/react'
 
 import Module from 'parser/core/Module'
-import {Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {SimpleItem} from './TimelineNeue'
 
@@ -17,7 +16,6 @@ export default class Death extends Module {
 	static dependencies = [
 		'data',
 		'suggestions',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -102,17 +100,10 @@ export default class Death extends Module {
 	addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
 
-		this.timeline.addItem(new Item({
-			type: 'background',
-			style: 'background-color: #ce909085;',
-			start: this._timestamp - startTime,
-			end: end - startTime,
-		}))
-
 		this.timelineNeue.addItem(new SimpleItem({
 			start: this._timestamp - startTime,
 			end: end - startTime,
-			// TODO: This but better
+			// TODO: This but better?
 			content: <div style={{width: '100%', height: '100%', backgroundColor: '#ce909085'}}/>,
 		}))
 
