@@ -15,7 +15,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/TimelineNeue'
+import {Timeline} from 'parser/core/modules/Timeline'
 import UnableToAct from 'parser/core/modules/UnableToAct'
 
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'

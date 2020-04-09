@@ -5,7 +5,7 @@ import React from 'react'
 
 import Module from 'parser/core/Module'
 import {SimpleStatistic} from './Statistics'
-import {ActionItem, ContainerRow} from './TimelineNeue'
+import {ActionItem, ContainerRow} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -30,7 +30,7 @@ export default class GlobalCooldown extends Module {
 		'downtime',
 		'speedmod',
 		'statistics',
-		'timelineNeue',
+		'timeline',
 	]
 
 	static title = t('core.gcd.title')`Global Cooldown`
@@ -53,7 +53,7 @@ export default class GlobalCooldown extends Module {
 
 		this.addHook('complete', this._onComplete)
 
-		this.timelineRow = this.timelineNeue.addRow(new ContainerRow({
+		this.timelineRow = this.timeline.addRow(new ContainerRow({
 			label: 'GCD',
 			order: -99,
 			collapse: true,

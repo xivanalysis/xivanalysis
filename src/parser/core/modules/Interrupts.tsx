@@ -10,7 +10,7 @@ import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/TimelineNeue'
+import {Timeline} from 'parser/core/modules/Timeline'
 import {Data} from './Data'
 
 interface SeverityTiers {

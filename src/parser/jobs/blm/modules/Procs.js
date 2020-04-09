@@ -6,7 +6,7 @@ import React from 'react'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
@@ -39,7 +39,7 @@ export default class Procs extends Module {
 	static dependencies = [
 		'castTime',
 		'suggestions',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_castingSpellId = null
@@ -73,7 +73,7 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
-		this._row = this.timelineNeue.addRow(new SimpleRow({
+		this._row = this.timeline.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))

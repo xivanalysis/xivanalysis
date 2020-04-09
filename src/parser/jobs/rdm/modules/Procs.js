@@ -7,7 +7,7 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {getDataBy} from 'data'
-import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,
@@ -48,7 +48,7 @@ export default class Procs extends Module {
 		'enemies',
 		'invuln',
 		'suggestions',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_history = {}
@@ -86,7 +86,7 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this._initializeHistory()
 
-		this._row = this.timelineNeue.addRow(new SimpleRow({
+		this._row = this.timeline.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))

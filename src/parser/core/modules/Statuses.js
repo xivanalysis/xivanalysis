@@ -1,5 +1,5 @@
 import Module from 'parser/core/Module'
-import {SimpleRow, StatusItem} from './TimelineNeue'
+import {SimpleRow, StatusItem} from './Timeline'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 

@@ -1,6 +1,6 @@
 import JOBS from 'data/JOBS'
 import Module from 'parser/core/Module'
-import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 // Are other jobs going to need to add to this?
 const RAID_BUFFS = [
@@ -33,7 +33,7 @@ export default class RaidBuffs extends Module {
 	static dependencies = [
 		'data',
 		'enemies',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_buffs = {}
@@ -116,7 +116,7 @@ export default class RaidBuffs extends Module {
 
 	_onComplete() {
 		// Add the parent row. It will automatically hide if there's no children.
-		this.timelineNeue.addRow(new SimpleRow({
+		this.timeline.addRow(new SimpleRow({
 			label: 'Raid Buffs',
 			order: -100,
 			rows: Array.from(this._buffRows.values()),

@@ -3,7 +3,7 @@ import {Plural, Trans} from '@lingui/react'
 
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {SimpleItem} from './TimelineNeue'
+import {SimpleItem} from './Timeline'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
@@ -16,7 +16,7 @@ export default class Death extends Module {
 	static dependencies = [
 		'data',
 		'suggestions',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_count = 0
@@ -100,7 +100,7 @@ export default class Death extends Module {
 	addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
 
-		this.timelineNeue.addItem(new SimpleItem({
+		this.timeline.addItem(new SimpleItem({
 			start: this._timestamp - startTime,
 			end: end - startTime,
 			// TODO: This but better?

@@ -20,7 +20,7 @@ const INITIAL_END = 60000 // One minute
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Module {
-	static handle = 'timelineNeue'
+	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.TIMELINE
 	static displayMode = DISPLAY_MODE.FULL
 	static title = t('core.timeline.title')`Timeline`

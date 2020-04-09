@@ -15,7 +15,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-import {Timeline} from 'parser/core/modules/TimelineNeue'
+import {Timeline} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
 

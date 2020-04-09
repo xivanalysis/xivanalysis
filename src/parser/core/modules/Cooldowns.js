@@ -1,6 +1,6 @@
 import _ from 'lodash'
 import Module from 'parser/core/Module'
-import {ActionItem, ContainerRow} from './TimelineNeue'
+import {ActionItem, ContainerRow} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -8,7 +8,7 @@ export default class Cooldowns extends Module {
 	static dependencies = [
 		'data',
 		'downtime',
-		'timelineNeue',
+		'timeline',
 	]
 
 	// Array used to sort cooldowns in the timeline. Elements should be either IDs for
@@ -73,7 +73,7 @@ export default class Cooldowns extends Module {
 			return this._rows[id]
 		}
 
-		const row = this.timelineNeue.addRow(new ContainerRow({
+		const row = this.timeline.addRow(new ContainerRow({
 			...opts,
 			collapse: true,
 		}))

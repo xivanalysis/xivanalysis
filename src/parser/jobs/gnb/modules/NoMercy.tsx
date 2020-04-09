@@ -9,7 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {Timeline} from 'parser/core/modules/TimelineNeue'
+import {Timeline} from 'parser/core/modules/Timeline'
 
 import {getDataBy} from 'data'
 import {BuffEvent, CastEvent} from 'fflogs'

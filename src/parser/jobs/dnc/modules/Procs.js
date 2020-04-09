@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 const PROC_STATUSES = [
 	STATUSES.FLOURISHING_FAN_DANCE.id,
@@ -22,7 +22,7 @@ export default class Procs extends Module {
 	static dependencies = [
 		'downtime',
 		'suggestions',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_casts = { //the listing order is arbitrary
@@ -75,7 +75,7 @@ export default class Procs extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: PROC_STATUSES}, this._onProcRemoved)
 		this.addHook('complete', this._onComplete)
 
-		this._row = this.timelineNeue.addRow(new SimpleRow({
+		this._row = this.timeline.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))

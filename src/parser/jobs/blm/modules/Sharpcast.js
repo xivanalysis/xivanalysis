@@ -6,7 +6,7 @@ import React from 'react'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink, ActionLink} from 'components/ui/DbLink'
-import {StatusItem} from 'parser/core/modules/TimelineNeue'
+import {StatusItem} from 'parser/core/modules/Timeline'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 

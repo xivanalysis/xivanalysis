@@ -10,7 +10,7 @@ import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 const LL_BUFFS = [
 	STATUSES.LEY_LINES.id,
@@ -24,7 +24,7 @@ export default class Leylines extends Module {
 
 	static dependencies = [
 		'checklist',
-		'timelineNeue',
+		'timeline',
 	]
 
 	_buffWindows = {
@@ -104,7 +104,7 @@ export default class Leylines extends Module {
 		}
 
 		// Build the grouping row
-		const parentRow = this.timelineNeue.addRow(new SimpleRow({
+		const parentRow = this.timeline.addRow(new SimpleRow({
 			label: 'Ley Lines Buffs',
 			order: 0,
 		}))
@@ -171,7 +171,7 @@ export default class Leylines extends Module {
 						<Table.Cell>{thisPercent}%</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
-								this.timelineNeue.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
+								this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
 								<Trans id="blm.leylines.timelinelink-button">Jump to Timeline</Trans>
 							</Button>
 						</Table.Cell>
