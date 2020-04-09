@@ -7,7 +7,6 @@ import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {getDataBy} from 'data'
-import {Group, Item} from 'parser/core/modules/Timeline'
 import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
@@ -49,7 +48,6 @@ export default class Procs extends Module {
 		'enemies',
 		'invuln',
 		'suggestions',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -88,33 +86,10 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this._initializeHistory()
 
-		this._group = new Group({
-			id: 'procbuffs',
-			content: 'Procs',
-			order: 0,
-			nestedGroups: [],
-		})
-		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
-
 		this._row = this.timelineNeue.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))
-	}
-
-	getGroupIdForStatus(status) {
-		const groupId = 'procbuffs-' + status.id
-
-		// Make sure a timeline group exists for this buff
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
-		}
-
-		return groupId
 	}
 
 	getRowForStatus(status) {
@@ -271,7 +246,6 @@ export default class Procs extends Module {
 
 		PROCS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = this.getGroupIdForStatus(status)
 			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
@@ -282,14 +256,6 @@ export default class Procs extends Module {
 			//add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
 				if (window) {
-					this.timeline.addItem(new Item({
-						type: 'background',
-						start: window.start - fightStart,
-						end: window.stop - fightStart,
-						group: groupId,
-						content: <img src={status.icon} alt={status.name} />,
-					}))
-
 					row.addItem(new StatusItem({
 						status,
 						start: window.start - fightStart,
