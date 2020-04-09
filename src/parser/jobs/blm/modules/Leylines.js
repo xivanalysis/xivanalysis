@@ -8,7 +8,6 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Group, Item} from 'parser/core/modules/Timeline'
 import Module from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {SimpleRow, StatusItem} from 'parser/core/modules/TimelineNeue'
@@ -25,7 +24,6 @@ export default class Leylines extends Module {
 
 	static dependencies = [
 		'checklist',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -40,8 +38,6 @@ export default class Leylines extends Module {
 		},
 	}
 
-	_group = null
-
 	constructor(...args) {
 		super(...args)
 
@@ -49,15 +45,6 @@ export default class Leylines extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: LL_BUFFS}, this._onDrop)
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
-
-		this._group = new Group({
-			id: 'leybuffs',
-			content: 'Ley Lines Buffs',
-			order: 0,
-			nestedGroups: [],
-		})
-
-		this.timeline.addGroup(this._group)
 	}
 
 	// Manage buff windows
@@ -73,16 +60,6 @@ export default class Leylines extends Module {
 		const tracker = this._buffWindows[status.id]
 		tracker.current = {
 			start: event.timestamp,
-		}
-
-		// Manage timeline group
-		const groupId = 'leybuffs-' + status.id
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
 		}
 	}
 
@@ -135,22 +112,12 @@ export default class Leylines extends Module {
 		// For each buff, add it to timeline
 		LL_BUFFS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = 'leybuffs-' + status.id
 
-			const row = new SimpleRow({label: status.name})
-			parentRow.addRow(row)
+			const row = parentRow.addRow(new SimpleRow({label: status.name}))
 
 			const fightStart = this.parser.fight.start_time
 
 			this._buffWindows[buff].history.forEach(window => {
-				this.timeline.addItem(new Item({
-					type: 'background',
-					start: window.start - fightStart,
-					end: window.stop - fightStart,
-					group: groupId,
-					content: <img src={status.icon} alt={status.name}/>,
-				}))
-
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,
@@ -204,7 +171,7 @@ export default class Leylines extends Module {
 						<Table.Cell>{thisPercent}%</Table.Cell>
 						<Table.Cell>
 							<Button onClick={() =>
-								this.timeline.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
+								this.timelineNeue.show(leyLinesEvent.start - this.parser.fight.start_time, leyLinesEvent.stop - this.parser.fight.start_time)}>
 								<Trans id="blm.leylines.timelinelink-button">Jump to Timeline</Trans>
 							</Button>
 						</Table.Cell>
