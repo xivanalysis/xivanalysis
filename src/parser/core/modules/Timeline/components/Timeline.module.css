@@ -81,19 +81,25 @@ Basic diagram:
 	opacity: .75;
 }
 
-/* TODO: Better definition for arrow size and padding - px is a bit fragile */
+/* NOTE: 8.6 is an approximate value to get a nice triangle with the borders. Can't calculate in css, as we don't have sqrt. */
 .label.minimised::after {
-	content: '⯈';
+	content: '';
 	position: absolute;
 	top: 5px;
 	left: calc(branchLabelWidth / 2);
 	transform: translateX(-50%);
+	border: 5px solid transparent;
+	border-left: 8.6px solid currentcolor;
+	border-right-width: 0;
 }
 
 .label.collapsed::after {
-	content: '⯆';
+	content: '';
 	position: absolute;
-	right: 5px; /* ??? */
+	right: 5px;
+	border: 5px solid transparent;
+	border-top: 8.6px solid currentcolor;
+	border-bottom-width: 0;
 }
 
 .track {
