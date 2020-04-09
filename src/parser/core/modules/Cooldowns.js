@@ -1,7 +1,5 @@
 import _ from 'lodash'
 import Module from 'parser/core/Module'
-import {ItemGroup, Item} from './Timeline'
-import React from 'react'
 import {ActionItem, ContainerRow} from './TimelineNeue'
 
 // Track the cooldowns on actions and shit
@@ -10,7 +8,6 @@ export default class Cooldowns extends Module {
 	static dependencies = [
 		'data',
 		'downtime',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -32,9 +29,7 @@ export default class Cooldowns extends Module {
 
 		this._cooldownGroups = _.groupBy(this.data.actions, 'cooldownGroup')
 
-		// Pre-build groups for actions explicitly set by subclasses
-		this._buildGroups(this.constructor.cooldownOrder)
-
+		// Pre-build rows for actions explicitly set by subclasses
 		if (this.constructor.cooldownOrder) {
 			this._buildRows(this.constructor.cooldownOrder)
 		}
@@ -42,54 +37,6 @@ export default class Cooldowns extends Module {
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
-	}
-
-	_buildGroups(groups) {
-		// If there's no groups, noop
-		if (!groups) { return }
-
-		const ids = groups.map((data, i) => {
-			const order = -(groups.length - i)
-
-			// If it's just an action id, build a group for it and stop
-			if (typeof data === 'number') {
-				const action = this.data.getAction(data)
-				this._buildGroup({
-					id: data,
-					content: action && action.name,
-					order,
-				})
-				return data
-			}
-
-			// Build the base group
-			const group = this._buildGroup({
-				id: data.name,
-				content: data.name,
-				order,
-			})
-
-			if (data.merge) {
-				// If it's a merge group, we only need to register our group for each of the IDs
-				data.actions.forEach(id => {
-					this._groups[id] = group
-				})
-			} else {
-				// Otherwise, build nested groups for each action
-				group.nestedGroups = this._buildGroups(data.actions)
-			}
-
-			return data.name
-		})
-
-		return ids
-	}
-
-	_buildGroup(opts) {
-		const group = new ItemGroup({showNested: false, ...opts})
-		this.timeline.addGroup(group)
-		this._groups[opts.id] = group
-		return group
 	}
 
 	_buildRows(mappings) {
@@ -194,15 +141,7 @@ export default class Cooldowns extends Module {
 			return false
 		}
 
-		// Ensure we've got a group for this item
-		if (!this._groups[actionId]) {
-			this._buildGroup({
-				id: actionId,
-				content: action.name,
-				order: actionId,
-			})
-		}
-
+		// Ensure we've got a row for this item
 		const row = this._buildRow(actionId, {label: action.name, order: actionId})
 
 		// Add CD info to the timeline
@@ -215,13 +154,6 @@ export default class Cooldowns extends Module {
 					start,
 					end: start + use.length,
 					action,
-				}))
-
-				this._groups[actionId].addItem(new Item({
-					type: 'background',
-					start: use.timestamp - this.parser.fight.start_time,
-					length: use.length,
-					content: <img src={action.icon} alt={action.name} />,
 				}))
 			})
 
