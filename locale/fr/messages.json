@@ -285,6 +285,9 @@
   "core.suggestions.severity.minor": "Mineure",
   "core.suggestions.severity.morbid": "Grave",
   "core.suggestions.title": "Suggestions",
+  "core.swiftcast.missed.suggestion.content": "",
+  "core.swiftcast.table.title": "",
+  "core.swiftcast.title": "",
   "core.timeline.help-text": "Faites défiler ou cliquez + faites glisser pour descendre, ctrl + défilement pour zoomer.",
   "core.timeline.title": "Ligne du temps",
   "core.tincture.title": "",
@@ -755,8 +758,6 @@
   "sch.gauge.waste.suggestion.why": "Un total de {0} de la jauge a été perdus du au dépassement de la valeurs maximal de la jauge.",
   "sch.interrupts.suggestion.content": "Si vous le pouvez, essayez de vous prépositionner de façon à ne pas avoir à vous déplacer autant pendant la mécanique. L'utilisation de slidecasting(L'acte d'attendre que le sort lancé soit presque terminé et de commencer le mouvement, sans que le serveur n'interrompe le lancer. Ceci est possible, si le temps restant sur le cast est inférieur à la latence entre le serveur et le client.) réduit le besoin d'utiliser <0/> pour déplacer ou interrompre instantanément votre Loi de l'ébullition III",
   "sch.swiftcast.missed.suggestion.content": "Utiliser un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec temps de lancement, tel que <1/> pour une relance rapide , ou <2/> pour weave.",
-  "sch.swiftcast.missed.suggestion.why": "{missedSwifts} {missedSwifts, plural, one { magie prompte a été perdue} other { magie promptes ont été perdues}} car vous n'avez utilisé aucun sort à temps.",
-  "sch.swiftcast.title": "Action avec magie prompte",
   "sch.weaving.content": "Essayer d'utiliser <0/> et <1/> pouré vitez de faire plus d'actions par weaving que vous ne pouvez en faire durant une fenêtre de GCD. Cela retardera votre prochain GCD, réduisant ainsi le temps possible d'uptime. Vérifiez le module<2><3/></2> ci-dessous pour une analyse plus détaillée.",
   "smn.about.description": "\nCette analyse a pour but d'identifier quels sont vos leviers afin d'améliorer votre gameplay de SMN. Aussi, il vous permet d'aller un peu plus loin dans ce qui a pu se passer durant le combat.\n\nAu regard des caractéristiques propres au gameplay du SMN, il existe une pléthore de suggestion disponible ci-dessous. Ne vous inquiétez pas et concentrez-vous plutôt sur l’amélioration d'un ou deux éléments petit à petit.\n\nSi vous souhaitez en savoir plus sur le SMN, consultez les guides sur [The Balance] (https://thebalanceffxiv.com/), et venez discuter avec nous sur le canal #smn_questions.\n",
   "smn.about.description.warning": "Bien que cette analyse soit un temps soit peu précise, le système est toujours en développement et peut mélanger certains éléments quelques fois. Si vous remarquez des problèmes, ou si vous avez des préoccupations, merci de passer par notre chaîne Discord!",
@@ -862,7 +863,5 @@
   "whm.overheal.requirement.nonhot": "Soins en surplus (non-HoT)",
   "whm.overheal.rule.description": "Évitez de gaspiller des heals qui rempliront plus que la barre de vie du joueur ciblé. Bien que de l'overheal est inévitable, l'overheal ne fait que générer plus d'inimité, pour aucun autre gain. De plus, être efficace en soignant vous aide dans la gestion de votre Magie prompte.",
   "whm.overheal.rule.name": "Éviter l'overheal",
-  "whm.swiftcast.missed.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec temps de lancement, tel que <1/> pour une relance rapide , ou <2/> pour cast des hors Gcd.",
-  "whm.swiftcast.missed.suggestion.why": "{missedSwifts}{missedSwifts, plural,one {magie prompt était}other {magie prompt étaient}}perdu car vous n'avez utiliser aucun sort avant l'expiration de cette comptétence.",
-  "whm.swiftcast.title": "Action avec magie prompt"
+  "whm.swiftcast.missed.suggestion.content": "Lancer un sort avec <0/> avant qu'il expire. Cela vous permet d'utiliser directement un sort avec temps de lancement, tel que <1/> pour une relance rapide , ou <2/> pour cast des hors Gcd."
 }

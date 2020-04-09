@@ -46,7 +46,7 @@ interface SeverityTiers {
 	[key: number]: number
 }
 
-interface BuffWindowExpectedGCDs {
+export interface BuffWindowExpectedGCDs {
 	expectedPerWindow: number
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers

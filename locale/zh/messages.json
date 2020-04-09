@@ -285,6 +285,9 @@
   "core.suggestions.severity.minor": "轻微",
   "core.suggestions.severity.morbid": "致命",
   "core.suggestions.title": "建议",
+  "core.swiftcast.missed.suggestion.content": "",
+  "core.swiftcast.table.title": "",
+  "core.swiftcast.title": "",
   "core.timeline.help-text": "使用滚轮或点击+拖动来移动，Ctrl+滚轮或触屏双指缩放。",
   "core.timeline.title": "时间轴",
   "core.tincture.title": "",
@@ -755,8 +758,6 @@
   "sch.gauge.waste.suggestion.why": "由于溢出而浪费{0} 。",
   "sch.interrupts.suggestion.content": "如果可以的话，提前移动到你应该在的位置，这样就不用在处理机制时进行过多移动了。合理利用滑步可以减少为了移动而使用的 <0/> ，避免打断死炎法的咏唱。",
   "sch.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
-  "sch.swiftcast.missed.suggestion.why": "因为没有及时释放法术而浪费 {missedSwifts} {missedSwifts, plural, one {次} other {次}} 即刻咏唱。",
-  "sch.swiftcast.title": "即刻咏唱",
   "sch.weaving.content": "用<0/>和<1/>来插入能力技，不要在GCD之间插入过多的能力技能，否则会延后下一个GCD导致GCD利用率下降。下面的<2><3/></2>模块有详细分析。",
   "smn.about.description": "\n这个分析器旨在帮你找到一些触手可及的提升召唤的方法，也会提供一些战斗中的细节分析。\n\n由于召唤的游戏特性，下面可能会出现_海量_的建议。不要担心，每次只要关注其中的一到两条并改进就可以了。\n\n如果你想要更加了解召唤师，可以在[The Balance](https://thebalanceffxiv.com/)上查看召唤的攻略，也可以在#smn_questions频道聊聊。\n",
   "smn.about.description.warning": "虽然下面的分析在一定程度上应该是准确的，但这个系统还在开发中，有时可能会有含糊不清的问题存在。如果您发现了什么问题，或有什么疑问的话，请通过我们的Discord频道联系我们吧！",
@@ -862,7 +863,5 @@
   "whm.overheal.requirement.nonhot": "过量治疗（非HoT）",
   "whm.overheal.rule.description": "尽量避免在非必要的情况下进行抬血。虽然过量治疗有些时候不可避免，但它往往只会白白制造仇恨。此外，尽可能高效地进行治疗也有助于 MP 管理。",
   "whm.overheal.rule.name": "避免过量治疗",
-  "whm.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。",
-  "whm.swiftcast.missed.suggestion.why": "因为没有及时释放法术而浪费 {missedSwifts} {missedSwifts, plural, one {次} other {次}} 即刻咏唱。",
-  "whm.swiftcast.title": "即刻咏唱"
+  "whm.swiftcast.missed.suggestion.content": "在<0/>结束之前放一个法术。这样你就可以用<1/>秒拉人或者<2/>来插入能力技。"
 }
