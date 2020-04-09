@@ -3,7 +3,6 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Group, Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -40,7 +39,6 @@ export default class Procs extends Module {
 	static dependencies = [
 		'castTime',
 		'suggestions',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -62,8 +60,6 @@ export default class Procs extends Module {
 		[STATUSES.FIRESTARTER.id]: 0,
 	}
 
-	_group = null
-
 	_rows = new Map()
 	_row = null
 
@@ -77,33 +73,10 @@ export default class Procs extends Module {
 		this.addHook('death', {to: 'player'}, this._onDeath)
 		this.addHook('complete', this._onComplete)
 
-		this._group = new Group({
-			id: 'procbuffs',
-			content: 'Procs',
-			order: 0,
-			nestedGroups: [],
-		})
-		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
-
 		this._row = this.timelineNeue.addRow(new SimpleRow({
 			label: 'Procs',
 			order: 0,
 		}))
-	}
-
-	getGroupIdForStatus(status) {
-		const groupId = 'procbuffs-' + status.id
-
-		// Make sure a timeline group exists for this buff
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
-		}
-
-		return groupId
 	}
 
 	getRowForStatus(status) {
@@ -206,7 +179,6 @@ export default class Procs extends Module {
 	_onComplete() {
 		PROC_BUFFS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = this.getGroupIdForStatus(status)
 			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
@@ -217,14 +189,6 @@ export default class Procs extends Module {
 
 			// Add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
-				this.timeline.addItem(new Item({
-					type: 'background',
-					start: window.start - fightStart,
-					end: window.stop - fightStart,
-					group: groupId,
-					content: <img src={status.icon} alt={status.name}/>,
-				}))
-
 				row.addItem(new StatusItem({
 					status,
 					start: window.start - fightStart,

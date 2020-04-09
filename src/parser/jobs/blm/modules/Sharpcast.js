@@ -3,7 +3,6 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Item} from 'parser/core/modules/Timeline'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink, ActionLink} from 'components/ui/DbLink'
@@ -21,7 +20,6 @@ const SHARPCAST_CONSUMER_IDS = [
 export default class Sharpcast extends Module {
 	static handle = 'sharpcast'
 	static dependencies = [
-		'timeline',
 		'procs',
 		'suggestions',
 	]
@@ -105,21 +103,12 @@ export default class Sharpcast extends Module {
 			this._stopAndSave()
 		}
 
-		const groupId = this.procs.getGroupIdForStatus(STATUSES.SHARPCAST)
 		const row = this.procs.getRowForStatus(STATUSES.SHARPCAST)
 
 		const fightStart = this.parser.fight.start_time
 
 		// Add buff windows to the timeline
 		this._buffWindows.history.forEach(window => {
-			this.timeline.addItem(new Item({
-				type: 'background',
-				start: window.start - fightStart,
-				end: window.stop - fightStart,
-				group: groupId,
-				content: <img src={STATUSES.SHARPCAST.icon} alt={STATUSES.SHARPCAST.name}/>,
-			}))
-
 			row.addItem(new StatusItem({
 				status: STATUSES.SHARPCAST,
 				start: window.start - fightStart,
