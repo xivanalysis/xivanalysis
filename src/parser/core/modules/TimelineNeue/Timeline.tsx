@@ -1,5 +1,8 @@
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import React from 'react'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {
 	SetViewFn,
 	Timeline as TimelineComponent,
@@ -8,6 +11,7 @@ import {
 	Item as ItemConfig,
 	Row as RowConfig,
 } from './config'
+import styles from './Timeline.module.css'
 
 // We default to showing the first minute of the pull. Showing the entire fight at once
 // is overwhelming for an initial view.
@@ -17,8 +21,9 @@ const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Module {
 	static handle = 'timelineNeue'
-	static displayOrder = -1000
+	static displayOrder = DISPLAY_ORDER.TIMELINE
 	static displayMode = DISPLAY_MODE.FULL
+	static title = t('core.timeline.title')`Timeline`
 
 	private setView?: SetViewFn
 
@@ -65,7 +70,10 @@ export class Timeline extends Module {
 	}
 
 	output() {
-		return (
+		return <>
+			<Trans id="core.timeline.help-text" render="span" className={styles.helpText}>
+				Scroll or click+drag to pan, ctrl+scroll or pinch to zoom.
+			</Trans>
 			<TimelineComponent
 				rows={this.rows}
 				items={this.items}
@@ -76,6 +84,6 @@ export class Timeline extends Module {
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			/>
-		)
+		</>
 	}
 }

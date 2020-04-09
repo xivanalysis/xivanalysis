@@ -24,7 +24,6 @@ import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
 import Suggestions from './Suggestions'
-import Timeline from './Timeline'
 import {Timeline as TimelineNeue} from './TimelineNeue'
 import UnableToAct from './UnableToAct'
 import Weaving from './Weaving'
@@ -56,7 +55,6 @@ export default [
 	Statistics,
 	Statuses,
 	Suggestions,
-	Timeline,
 	TimelineNeue,
 	UnableToAct,
 	Weaving,
