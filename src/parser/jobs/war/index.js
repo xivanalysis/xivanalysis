@@ -25,7 +25,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.25',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SKYE, role: ROLES.MAINTAINER},
