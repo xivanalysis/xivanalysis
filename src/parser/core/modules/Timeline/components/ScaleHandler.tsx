@@ -3,6 +3,7 @@ import _ from 'lodash'
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useRef, useState} from 'react'
 import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
+import {UseGestureEvent} from 'react-use-gesture/dist/types'
 
 export type Scale = ScaleTime<number, number>
 export type Scalable = Parameters<Scale>[0]
@@ -48,6 +49,15 @@ export interface InternalScaleHandlerProps extends ScaleHandlerProps {
 
 const DEFAULT_PAN_FACTOR = 0.05
 const DEFAULT_ZOOM_FACTOR = 0.2
+
+/**
+ * We can't prevent default on touch events, as their default is _required_ to
+ * execute before non-touch events such as click fire. Handle it.
+ */
+function preventMouseEventDefault(event?: UseGestureEvent) {
+	if (event == null || event.type.includes('touch')) { return }
+	event.preventDefault()
+}
 
 export function ScaleHandler({
 	children,
@@ -154,7 +164,7 @@ export function ScaleHandler({
 	const bindGestures = useGesture<typeof gestureConfig>({
 		// TODO: Test this on a touchpad
 		onWheel: ({delta: [dX, dY], direction: [dirX, dirY], event}) => {
-			event?.preventDefault()
+			preventMouseEventDefault(event)
 
 			// Get the larger of the two deltas. If it's 0, we don't want to do anything.
 			const [maxDelta, direction] = Math.abs(dX) > Math.abs(dY) ? [dX, dirX] : [dY, dirY]
@@ -166,16 +176,21 @@ export function ScaleHandler({
 		// TODO: Test this on a touchpad, and _especially_ on a phone
 		//       I expect this will need changes on phone so the zoom maintains connection to fingies
 		onPinch: ({delta: [, dY], event}) => {
-			event?.preventDefault()
-			// Direction is 0,0 on first tick, and sticks around a bit too long. Calc our own.
+			// Can't not cancel touch events on pinch, as we'll get full page zoom. Can't cancel, as it
+			// kills clicks. Delta is 0,0 on first tick (including click!?), which isn't really useful
+			// as a pinch - bail early in that instance to avoid PD on clicks.
 			if (dY === 0) { return }
+			event?.preventDefault()
+
+			// Direction sticks around a bit too long. Calc our own.
 			const scale = (dY / Math.abs(dY)) * zoomFactor
+
 			// We want zooming in to step at the same rate as zooming out, adjust the scale to ensure that.
 			const adjustedScale = scale > 0 ? scale : scale / (Math.abs(scale) + 1)
 			zoom({delta: domainDistance * adjustedScale, centre: zoomCentre.current})
 		},
 		onDrag: ({delta: [dX], event}) => {
-			event?.preventDefault()
+			preventMouseEventDefault(event)
 			pan({delta: -deltaScale.invert(dX).getTime()})
 		},
 		onMouseMove,
