@@ -11,7 +11,7 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/TimelineNeue'
 import React from 'react'
 import {Data} from './Data'
 

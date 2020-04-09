@@ -10,7 +10,7 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Invulnerability from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/TimelineNeue'
 import React from 'react'
 import {matchClosestLower} from 'utilities'
 
