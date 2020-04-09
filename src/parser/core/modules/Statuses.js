@@ -1,6 +1,4 @@
 import Module from 'parser/core/Module'
-import {ItemGroup, Item} from './Timeline'
-import React from 'react'
 import {SimpleRow, StatusItem} from './TimelineNeue'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
@@ -12,7 +10,6 @@ export default class Statuses extends Module {
 		'cooldowns',
 		'data',
 		'gcd',
-		'timeline',
 	]
 
 	static statusesStackMapping = {}
@@ -122,23 +119,10 @@ export default class Statuses extends Module {
 
 	_onComplete() {
 		Object.values(this._statuses).forEach(entry => {
-			const group = this._createGroupForStatus(entry.status)
 			const row = this._createRowForStatus(entry.status)
-
-			if (!group) {
-				return
-			}
-
 			if (row == null) { return }
 
 			entry.usages.forEach(st => {
-				group.addItem(new Item({
-					type: 'background',
-					start: st.start,
-					end: st.end || st.start + entry.status.duration * 1000,
-					content: <img src={entry.status.icon} alt={entry.status.name}/>,
-				}))
-
 				row.addItem(new StatusItem({
 					status: entry.status,
 					start: st.start,
@@ -146,33 +130,6 @@ export default class Statuses extends Module {
 				}))
 			})
 		})
-	}
-
-	_createGroupForStatus(status) {
-		const stid = 'status-' + (this.constructor.statusesStackMapping[status.id] || status.id)
-
-		if (this._groups[stid]) {
-			return this._groups[stid]
-		}
-
-		// find action for status
-		const action = this._statusToActionMap[status.id]
-
-		if (!action) {
-			return undefined
-		}
-
-		const group = new ItemGroup({
-			id: stid,
-			content: status.name,
-			showNested: false,
-		})
-
-		this._groups[stid] = group
-
-		this.timeline.attachToGroup(action.onGcd ? this.gcd.gcdGroupId : (this._actionToMergeNameMap[action.id] || action.id), group)
-
-		return group
 	}
 
 	_createRowForStatus(status) {
