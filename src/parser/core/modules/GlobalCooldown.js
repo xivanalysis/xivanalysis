@@ -4,7 +4,6 @@ import math from 'mathjsCustom'
 import React from 'react'
 
 import Module from 'parser/core/Module'
-import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
 import {ActionItem, ContainerRow} from './TimelineNeue'
 
@@ -31,7 +30,6 @@ export default class GlobalCooldown extends Module {
 		'downtime',
 		'speedmod',
 		'statistics',
-		'timeline',
 		'timelineNeue',
 	]
 
@@ -47,7 +45,6 @@ export default class GlobalCooldown extends Module {
 		event: null,
 	}
 	gcds = []
-	gcdGroupId  = 'gcd'
 
 	timelineRow = null
 
@@ -124,13 +121,6 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-
-		this.timeline.addGroup(new Group({
-			id: this.gcdGroupId,
-			content: 'GCD',
-			order: -99,
-		}))
-
 		this.gcds.forEach(gcd => {
 			const action = this.data.getAction(gcd.actionId)
 			if (!action) { return }
@@ -140,15 +130,6 @@ export default class GlobalCooldown extends Module {
 				start,
 				end: start + this._getGcdLength(gcd),
 				action,
-			}))
-
-			this.timeline.addItem(new Item({
-				type: 'background',
-				start: gcd.timestamp - startTime,
-				length: this._getGcdLength(gcd),
-				title: action.name,
-				group: this.gcdGroupId,
-				content: <img src={action.icon} alt={action.name} title={action.name}/>,
 			}))
 		})
 
