@@ -2,6 +2,7 @@
 declare namespace ItemModuleCssModule {
   export interface IItemModuleCss {
     abilityItem: string;
+    backgroundColour: string;
     zeroWidthAbility: string;
   }
 }
