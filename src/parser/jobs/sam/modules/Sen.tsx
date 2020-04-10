@@ -3,40 +3,59 @@ import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent, BuffEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
 import Timeline from 'parser/core/modules/Timeline'
+import React from 'react'
 
 import Kenki from './Kenki'
+
+
+//God this grew outta control real fast
 
 class SenState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
-	isNonStandard: boolean = false //Aka Hagakure + Overwrites, used to filter later.
+	isNonStandard: boolean = false // Aka Hagakure + Overwrites, used to filter later.
+	isDone: boolean = false //I SWEAR TO GOD IF THIS JANK THING WORKS, I'M LEAVING IT
+	isDeath: boolean = false //DIE! DIE! DIE! -Reaper
+	isHaga: boolean = false //is it a haga or no?
+	isOverwrite: boolean = false //is it a overwrite or no?
 
-	//Sen State trackers, do I really need to explain?
+	// Sen State trackers, do I really need to explain?
 	currentSetsu: number = 0
 	currentGetsu: number = 0
 	currentKa: number = 0
-	
+
 	overwriteSetsus: number = 0
 	overwriteGetsus: number = 0
 	overwriteKas: number = 0
 
-	kenkiGained: number = 0 //Kenki # * 10
+	kenkiGained: number = 0 // Kenki # * 10
+
+	_senCode: {priority: number, message: TODO} = SEN_HANDLING.NONE
+
+	public set senCode(code) {
+		if (code.priority > this._senCode.priority) {
+			this._senCode = code
+		}
+	}
+	
+	public get senCode() {
+		return this._senCode
+	}
 
 	constructor(start: number) {
 		this.start = start
 	}
 }
 
-const SEN_ACTIONS = [ACTIONS.YUKIKAZE.id,ACTIONS.GEKKO.id,ACTIONS.MANGETSU.id,ACTIONS.KASHA.id,ACTIONS.OKA.id]
+const SEN_ACTIONS = [ACTIONS.YUKIKAZE.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id]
 
-//Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
+// Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
 
 const IAIJUTSU = [
 	ACTIONS.HIGANBANA.id,
@@ -45,6 +64,13 @@ const IAIJUTSU = [
 ]
 
 const KENKI_PER_SEN = 10
+
+const SEN_HANDLING = {
+	NONE: {priority: 0, message: 'No errors'},
+	OVERWROTE_SEN: {priority: 2, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Overriding your sens will slow down your <ActionLink {...ACTIONS.IAIJUTSU}/> and reduce your damage, avoid overriding if possible. </Trans>},
+	HAGAKURE: {priority: 1, message: <Trans id = "sam.sen.sen_handling.hagakure"> This window contained a hagakure. </Trans>},
+	DEATH: {priority: 3, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, //BET YOU WISH YOU USED THIRD EYE NOW RED!
+}
 
 export default class Sen extends Module {
 	static handle = 'Non-Standard Sen Windows'
@@ -62,7 +88,7 @@ export default class Sen extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addHook('cast', {by: 'player'}, this.onCast) 
 
 		// Death, as well as all Iaijutsu, remove all available sen
 		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
@@ -76,45 +102,45 @@ export default class Sen extends Module {
 			to: 'player',
 			abilityId: [STATUSES.RAISE.id]}, this.onRevive)
 
-		//this.addHook('death', {to: 'player'}, this.onDeath)
+		// this.addHook('death', {to: 'player'}, this.onDeath)
 
 		// Suggestion time~
 		this.addHook('complete', this.onComplete)
 	}
 
+// Function that handles SenState check, if no senState call the maker and then push to the rotation, add sen when applicable
 	private onCast(event: CastEvent) {
-		//step 1: set action
+		// step 1: set action
 		const action = event.ability.guid
 
-		if(action === ACTIONS.ATTACK.id) {return} //Who put these auto attacks here?
+		if (action === ACTIONS.ATTACK.id) {return} // Who put these auto attacks here?
 
-		//step 2: check the sen state, if undefined/not active, make one
+		// step 2: check the sen state, if undefined/not active, make one
 
 		let lastSenState = this.lastSenState
 
-		if ( (!lastSenState)) {
+		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ){
 
-			this.remove(event) //Remove the dead person's stuff
 			this.senStateMaker(event)
 		}
 
 		lastSenState = this.lastSenState
 
-		if (lastSenState != null && lastSenState.end == null) { //The state already exists
-			
-			//Push action
+		if (lastSenState != null && lastSenState.end == null) { // The state already exists
+
+			// Push action
 			lastSenState.rotation.push(event)
 
-			if(SEN_ACTIONS.hasOwnProperty(action))
-			{
-				switch(action) {
+			// if (SEN_ACTIONS.hasOwnProperty(action)) {
+				switch (action) {
                         	case ACTIONS.YUKIKAZE.id:
                                 	lastSenState.currentSetsu++
 
-                                	if(lastSenState.currentSetsu > 1) {
+                                	if (lastSenState.currentSetsu > 1) {
                                         	lastSenState.overwriteSetsus++
                                         	lastSenState.currentSetsu = 1
                                         	lastSenState.isNonStandard = true
+						lastSenState.isOverwrite = true
                                         	}
                                 	break
 
@@ -122,10 +148,11 @@ export default class Sen extends Module {
                 	        case ACTIONS.MANGETSU.id:
         	                        lastSenState.currentGetsu++
 
-	                                if(lastSenState.currentGetsu > 1 ) {
+	                                if (lastSenState.currentGetsu > 1 ) {
 	                                        lastSenState.overwriteGetsus++
 	                                        lastSenState.currentGetsu = 1
 	                                        lastSenState.isNonStandard = true
+						lastSenState.isOverwrite = true
 
                                         	}
                                 	break
@@ -134,62 +161,88 @@ export default class Sen extends Module {
                         	case ACTIONS.OKA.id:
                                 	lastSenState.currentKa++
 
-                        	        if(lastSenState.currentKa > 1) {
+                        	        if (lastSenState.currentKa > 1) {
                 	                        lastSenState.overwriteKas++
         	                                lastSenState.currentKa = 1
 	                                        lastSenState.isNonStandard = true
+						lastSenState.isOverwrite = true
 
                                 	        }
                         	        break
                         	}
 
-			}
+			//}
 		}
 
 	}
 
+// Make a new sen state!
 	private senStateMaker(event: CastEvent) {
 		const senState = new SenState(event.timestamp)
 		this.senStateWindows.push(senState)
 
 	}
 
+	private senCodeProcess() {
+		const lastSenState = this.lastSenState
+
+		if(lastSenState != null && lastSenState.end == null) {
+			//Drop down the totem pole
+
+			if(lastSenState.isDeath === true) {
+				lastSenState._senCode = SEN_HANDLING.DEATH	
+			}
+
+			if(lastSenState.isOverwrite === true) {
+				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
+			}
+
+			if(lastSenState.isHaga === true) {
+				lastSenState._senCode = SEN_HANDLING.HAGAKURE
+			}
+		}
+	}
+
+// End the state, count wastes, add it
 	private remove(event: CastEvent) {
 		const lastSenState = this.lastSenState
-		
-		if(lastSenState != null && lastSenState.end == null) {
-			
-			lastSenState.rotation.push(event)
+
+		if (lastSenState != null && lastSenState.end == null) {
 
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
-
+			
+			lastSenState.isDone = true
+			this.senCodeProcess()
 			lastSenState.end = event.timestamp
 		}
 	}
 
+// HAHA YOU DIED! literally just the same as above, but jank because I can't pass the buff into a cast event 
 	private onRevive(event: BuffEvent) {
 		const lastSenState = this.lastSenState
 
-                if(lastSenState != null && lastSenState.end == null) {
+  		if (lastSenState != null && lastSenState.end == null) {
                         this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
 
+			lastSenState.isDone = true
+			lastSenState.isDeath = true
+			this.senCodeProcess()
                         lastSenState.end = event.timestamp
                 }
 
 	}
 
-
-	
-
+// Convert Sen to kenki, then adjust kenki, then call remove to handle the end. also set to nonStandard end
 	private onHagakure(event: CastEvent) {
-		
+
 		const lastSenState = this.lastSenState
-		
-		if(lastSenState != null && lastSenState.end == null) {
+
+		if (lastSenState != null && lastSenState.end == null) {
 
 			lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
 
 			lastSenState.isNonStandard = true
+			lastSenState.isHaga = true
 
 			this.kenki.modify(lastSenState.kenkiGained)
 
@@ -229,40 +282,48 @@ export default class Sen extends Module {
 					accessor: 'ka',
 				},
 			]}
+			notes={[
+				{
+					header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
+					accessor: 'reason',
+				}
+			]}
 			data={this.senStateWindows
 				.filter(window => window.isNonStandard)
 				.map(window => {
 					return ({
 						start: window.start - this.parser.fight.start_time,
-					
+
 						end: window.end != null ?
 							window.end - this.parser.fight.start_time
 							: window.start - this.parser.fight.start_time,
-					
+
 						targetsData: {
 							setsu: {
 								actual: (window.currentSetsu + window.overwriteSetsus),
-								//expected: window.setsu,
+								// expected: window.setsu,
 							},
 							getsu: {
 								actual: (window.currentGetsu + window.overwriteGetsus),
-								//expected: window.getsu,
+								// expected: window.getsu,
 							},
 							ka: {
 								actual: (window.currentKa + window.overwriteKas),
-								//expected: window.ka,
+								// expected: window.ka,
 							},
-									
+
 						},
-					
+						noteMaps: {
+							reason: <>{window._senCode.message}</>
+						},
+
 						rotation: window.rotation,
-					
+
 						})
 					})
 				}
-		
+
 			onGoto={this.timeline.show}
 		/>
 	}
 }
-
