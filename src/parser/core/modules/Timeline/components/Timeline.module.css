@@ -36,6 +36,7 @@ Basic diagram:
 	grid-auto-columns: branchLabelWidth;
 	grid-gap: borderWidth;
 	padding: borderWidth;
+	user-select: none;
 }
 
 .label,
@@ -57,11 +58,12 @@ Basic diagram:
 
 .label .content {
 	box-sizing: border-box;
-	padding: 0 25px 0 5px;
+	padding: 0 5px;
 }
 
 .label.minimised,
 .label.collapsed {
+	padding-right: 20px;
 	cursor: pointer;
 }
 

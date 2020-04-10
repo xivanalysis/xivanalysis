@@ -181,8 +181,7 @@ export function ScaleHandler({
 		drag: {axis: 'x'},
 	} as const
 	const bindGestures = useGesture<typeof gestureConfig>({
-		// TODO: Test this on a touchpad
-		onWheel: ({delta: [dX, dY], direction: [dirX, dirY], event}) => {
+		onWheel: ({delta: [dX, dY], event}) => {
 			preventMouseEventDefault(event)
 
 			// Get the larger of the two deltas. If it's 0, we don't want to do anything.
@@ -197,7 +196,7 @@ export function ScaleHandler({
 			// Normalise the movement to a %age of the domain & pan
 			pan({delta: finalDelta * domainDistance * panFactor})
 		},
-		// TODO: Test this on a touchpad
+
 		onPinch: ({delta: [dX, dY], touches, origin, event}) => {
 			// Can't not cancel touch events on pinch, as we'll get full page zoom. Can't cancel, as it
 			// kills clicks. Delta is 0,0 on first tick (including click!?), which isn't really useful
@@ -225,6 +224,7 @@ export function ScaleHandler({
 			const adjustedScale = scale > 0 ? scale : scale / (Math.abs(scale) + 1)
 			zoom({delta: domainDistance * adjustedScale, centre})
 		},
+
 		onDrag: ({delta: [dX], event}) => {
 			preventMouseEventDefault(event)
 			pan({delta: -deltaScale.invert(dX).getTime()})
