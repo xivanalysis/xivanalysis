@@ -95,7 +95,6 @@ const Row = memo(function Row({
 
 	const hasChildren = row.rows.length > 0
 
-	// TODO: consider single child case
 	const collapsed = hasChildren && (selfCollapsed || parentCollapsed)
 
 	const rowStyles = {

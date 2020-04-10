@@ -16,7 +16,6 @@ const ScaleContext = createContext<Scale>(scaleUtc())
 export const useScale = () => useContext(ScaleContext)
 
 // TODO: Should? be able to remove this if I make module output a proper component
-// TODO: Look into cleaner implementations
 export type SetViewFn = (view: Vector2) => void
 export type ExposeSetViewFn = (setter: SetViewFn) => void
 
