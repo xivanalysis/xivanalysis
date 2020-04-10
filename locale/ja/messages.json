@@ -756,6 +756,8 @@
   "sch.weaving.content": "GCDの間に<0/>と<1/>を挟み込み、過度に挟み込む行為は避けてください。過度な挟み込みはGCDを遅延させてアクティブ率を低下させます。詳細は下にある <2><3/></2> モジュールをご覧ください。",
   "smn.about.description": "",
   "smn.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
+  "smn.cooldownDowntime.name": "",
+  "smn.cooldownDowntime.suggestion": "",
   "smn.demi.ghost-disclaimer": "",
   "smn.demis.title": "",
   "smn.dots.applied": "",
