@@ -136,6 +136,8 @@ Basic diagram:
 }
 
 .axisTick.major {
+	position: absolute;
+	top: 0;
 	padding-top: 24px; /* TODO: ??? */
 }
 

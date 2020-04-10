@@ -63,21 +63,19 @@ export const Axis = memo(function Axis({
 			}}
 		>
 			{ticks.map((tick, index) => <Fragment key={index}>
-				{/* Second ticks */}
 				<Item left={lefts[index]}>
+					{/* Second ticks */}
 					<div className={styles.axisTick}>
 						{formatSeconds(tick)}
 					</div>
-				</Item>
 
-				{/* Minute ticks. Skip ticks before stickyTickEnd to prevent dupes. */}
-				{isMajorTick(tick) && (tick >= stickyTickEnd) && (
-					<Item left={lefts[index]}>
+					{/* Minute ticks. Skip ticks before stickyTickEnd to prevent dupes. */}
+					{isMajorTick(tick) && (tick >= stickyTickEnd) && (
 						<div className={classNames(styles.axisTick, styles.major)}>
 							{formatMinutes(tick)}
 						</div>
-					</Item>
-				)}
+					)}
+				</Item>
 			</Fragment>)}
 
 			{/* "Sticky" minute tick */}
