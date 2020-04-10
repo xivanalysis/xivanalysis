@@ -361,7 +361,8 @@ export const SMN = ensureActions({
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/002000/002688.png',
 		// No pet reference, can't actually determine anything from it
-		statusesApplied: ['DEVOTION'],
+		// While this applies the status, we need to not list it so the correct action can be synthesized for a pre-pull Devotion
+		// statusesApplied: ['DEVOTION'],
 	},
 
 	// Demi-bahamut
