@@ -56,15 +56,19 @@ Basic diagram:
 	white-space: nowrap;
 }
 
+.label.minimised,
+.label.collapsed {
+	cursor: pointer;
+}
+
 .label .content {
 	box-sizing: border-box;
 	padding: 0 5px;
 }
 
-.label.minimised,
-.label.collapsed {
+.label.minimised .content,
+.label.collapsed .content {
 	padding-right: 20px;
-	cursor: pointer;
 }
 
 .label.minimised .content {
