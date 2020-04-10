@@ -46,7 +46,7 @@ interface SeverityTiers {
 	[key: number]: number
 }
 
-interface BuffWindowExpectedGCDs {
+export interface BuffWindowExpectedGCDs {
 	expectedPerWindow: number
 	suggestionContent: JSX.Element | string
 	severityTiers: SeverityTiers
@@ -136,8 +136,8 @@ export abstract class BuffWindowModule extends Module {
 
 	protected init() {
 		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('applybuff', {by: 'player'}, this.onApplyBuff)
-		this.addHook('removebuff', {by: 'player'}, this.onRemoveBuff)
+		this.addHook('applybuff', {to: 'player'}, this.onApplyBuff)
+		this.addHook('removebuff', {to: 'player'}, this.onRemoveBuff)
 		this.addHook('complete', this.onComplete)
 	}
 

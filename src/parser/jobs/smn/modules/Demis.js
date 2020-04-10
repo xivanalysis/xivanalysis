@@ -8,7 +8,6 @@ import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {DEMIS} from './Gauge'
-import {DEMI_SUMMON_LENGTH} from './Pets'
 
 const DEMI_ACTIONS = Object.values(ACTIONS)
 	.filter(action => action.pet && DEMIS.includes(action.pet))
@@ -56,19 +55,6 @@ const DEMI_CHECKED_ACTIONS = {
 	},
 }
 
-const GHOST_TIMEFRAME = 500
-
-const GHOST_CHANCE = {
-	NONE: 0,
-	LIKELY: 1,
-	ABSOLUTE: 2,
-}
-
-const GHOST_CLASSNAME = {
-	[GHOST_CHANCE.LIKELY]: 'text-warning',
-	[GHOST_CHANCE.ABSOLUTE]: 'text-error',
-}
-
 export default class Demis extends Module {
 	static handle = 'demis'
 	static title = t('smn.demis.title')`Demi-summons`
@@ -83,10 +69,10 @@ export default class Demis extends Module {
 	constructor(...args) {
 		super(...args)
 		this.addHook('cast', {by: 'player'}, this._onPlayerCast)
-		this.addHook('cast', {
+		this.addHook('normaliseddamage', {
 			by: 'pet',
 			abilityId: DEMI_ACTIONS,
-		}, this._onPetCast)
+		}, this._onPetDamage)
 		this.addHook('summonpet', this._onSummonPet)
 		this.addHook('complete', this._onComplete)
 	}
@@ -104,7 +90,7 @@ export default class Demis extends Module {
 		}
 	}
 
-	_onPetCast(event) {
+	_onPetDamage(event) {
 		// If we've _somehow_ not got a _current, fake one
 		if (!this._current) {
 			this._current = {
@@ -115,11 +101,9 @@ export default class Demis extends Module {
 			}
 		}
 
-		const timeSinceSummon = event.timestamp - this._current.timestamp
-		const ghostChance = timeSinceSummon >= DEMI_SUMMON_LENGTH? GHOST_CHANCE.ABSOLUTE : timeSinceSummon < DEMI_SUMMON_LENGTH - GHOST_TIMEFRAME? GHOST_CHANCE.NONE : GHOST_CHANCE.LIKELY
 		this._current.casts.push({
 			...event,
-			ghostChance,
+			ghosted: event.successfulHitCount === 0,
 		})
 	}
 
@@ -151,10 +135,14 @@ export default class Demis extends Module {
 		const panels = this._history.map(s => {
 			const checked = DEMI_CHECKED_ACTIONS[s.pet.id]
 			const counts = {}
+
 			s.casts.forEach(cast => {
-				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {}
-				const ghostIndex = cast.ghostChance || GHOST_CHANCE.NONE
-				obj[ghostIndex] = (obj[ghostIndex] || 0) + 1
+				const obj = counts[cast.ability.guid] = counts[cast.ability.guid] || {ghostCount: 0, hitCount: 0}
+				if (cast.ghosted) {
+					obj.ghostCount += 1
+				} else {
+					obj.hitCount += 1
+				}
 			})
 
 			const lastPetAction = s.casts.reduce((carry, cast, i) => this.parser.byPlayerPet(cast)? i : carry, null)
@@ -170,7 +158,7 @@ export default class Demis extends Module {
 								const curCounts = counts[Number(id)]
 								return <>
 									{index > 0 && ', '}
-									<span className={(curCounts && curCounts[GHOST_CHANCE.NONE] >= checked[id].expected) ? 'text-success' : ''}>
+									<span className={(curCounts && curCounts.hitCount >= checked[id].expected) ? 'text-success' : ''}>
 										{this.renderHeaderCount(curCounts)}
 									</span>
 									{' ' + checked[id].name}
@@ -183,7 +171,7 @@ export default class Demis extends Module {
 					content: <ul>
 						{s.casts.map((cast, i) => i <= lastPetAction && <li
 							key={cast.timestamp + '-' + cast.ability.guid}
-							className={GHOST_CLASSNAME[cast.ghostChance]}
+							className={this.getGhostClassName(cast.ghosted)}
 						>
 							<strong>{this.parser.formatDuration(cast.timestamp - s.timestamp, 2)}:</strong>&nbsp;
 							{cast.ability.name}
@@ -195,7 +183,7 @@ export default class Demis extends Module {
 
 		return <>
 			<Message>
-				<Trans id="smn.demi.ghost-disclaimer">Demi-summon actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-warning">Yellow</strong> highlighting has been applied to actions that likely ghosted, and <strong className="text-error">Red</strong> to those that ghosted without a doubt.<br/>
+				<Trans id="smn.demi.ghost-disclaimer">Demi-summon actions can &quot;ghost&quot; - the action resolves, and appears to do damage, however no damage is actually applied to the target. <strong className="text-error">Red</strong> highlighting has been applied to actions that ghosted.<br/>
 				You should be aiming for:<br />
 				8 Wyrmwave and 2 Akh Morn in each Summon Bahamut<br />
 				8 Scarlet Flame, 2 Revelation, 4 Fountain Of Fire, and 4 Brand of Purgatory in each Firebird Trance.</Trans>
@@ -214,13 +202,19 @@ export default class Demis extends Module {
 			return '0'
 		}
 
-		return [
-			GHOST_CHANCE.NONE,
-			GHOST_CHANCE.LIKELY,
-			GHOST_CHANCE.ABSOLUTE,
-		].map((chance, i) => counts[chance] && <Fragment key={chance}>
-			{i > 0 && '/'}
-			<span className={GHOST_CLASSNAME[chance]}>{counts[chance]}</span>
-		</Fragment>)
+		return <>
+			<Fragment key="demiHit">
+				<span className={this.getGhostClassName(false)}>{counts.hitCount}</span>
+			</Fragment>
+			{counts.ghostCount > 0 &&
+			<Fragment key="demiGhost">
+				/
+				<span className={this.getGhostClassName(true)}>{counts.ghostCount}</span>
+			</Fragment>}
+		</>
+	}
+
+	getGhostClassName(ghosted) {
+		return (ghosted) ? 'text-error' : ''
 	}
 }
