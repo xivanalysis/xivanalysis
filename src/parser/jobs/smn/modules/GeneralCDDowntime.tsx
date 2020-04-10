@@ -1,9 +1,7 @@
+import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-
-// Although the trance cooldown is 55s, it is better in many cases
-// to hold for a 60s alignment, so some downtime per use must be allowed.
-const TRANCE_ALLOWED_DOWNTIME = 5000
+import React from 'react'
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	trackedCds = [ {
@@ -11,7 +9,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			ACTIONS.DREADWYRM_TRANCE,
 			ACTIONS.FIREBIRD_TRANCE,
 		],
-		allowedAverageDowntime: TRANCE_ALLOWED_DOWNTIME,
 		firstUseOffset: 7500,
 	}, {
 		cooldowns: [
@@ -48,4 +45,8 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		],
 		firstUseOffset: 6750,
 	}]
+
+	checklistName = <Trans id="smn.cooldownDowntime.name">Use your cooldowns</Trans>
+	checklistDescription = <Trans id="smn.cooldownDowntime.suggestion">Always make sure to use your abilities
+		when they are available, but do not clip or delay your GCD to use them.</Trans>
 }
