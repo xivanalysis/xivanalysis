@@ -58,6 +58,33 @@ function preventMouseEventDefault(event?: UseGestureEvent) {
 	event.preventDefault()
 }
 
+// Different browsers and devices report deltas in different manners. Try to normalise the values.
+// These constants are copied from vis, which in turn copies them from a vast array of similar mouse
+// handling code in the wild. I trust it... kinda.
+const LINE_HEIGHT = 40
+const PAGE_HEIGHT = 800
+const PIXEL_DIVISOR = 120
+
+enum DeltaMode {
+	PIXEL = 0,
+	LINE = 1,
+	PAGE = 2,
+}
+
+const multipliers = new Map([
+	[DeltaMode.LINE, LINE_HEIGHT],
+	[DeltaMode.PAGE, PAGE_HEIGHT],
+])
+
+function normaliseWheelDelta(deltaMode: number, delta: number) {
+	const multiplier = multipliers.get(deltaMode) ?? 1
+	return (delta * multiplier) / PIXEL_DIVISOR
+}
+
+// I shouldn't need this but I do so here we are
+const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
+	event.type === 'wheel'
+
 export function ScaleHandler({
 	children,
 	min,
@@ -151,18 +178,24 @@ export function ScaleHandler({
 	const gestureConfig = {
 		domTarget: scrollParentRef,
 		eventOptions: {passive: false},
-	}
+		drag: {axis: 'x'},
+	} as const
 	const bindGestures = useGesture<typeof gestureConfig>({
 		// TODO: Test this on a touchpad
 		onWheel: ({delta: [dX, dY], direction: [dirX, dirY], event}) => {
 			preventMouseEventDefault(event)
 
 			// Get the larger of the two deltas. If it's 0, we don't want to do anything.
-			const [maxDelta, direction] = Math.abs(dX) > Math.abs(dY) ? [dX, dirX] : [dY, dirY]
+			const maxDelta = Math.abs(dX) > Math.abs(dY) ? dX : dY
 			if (maxDelta === 0) { return }
 
+			// If the wheel event is a wheel event (really, use-gesture?), try to normalise the delta
+			const finalDelta = event != null && isWheelEvent(event)
+				? normaliseWheelDelta(event.deltaMode, maxDelta)
+				: maxDelta
+
 			// Normalise the movement to a %age of the domain & pan
-			pan({delta: direction * domainDistance * panFactor})
+			pan({delta: finalDelta * domainDistance * panFactor})
 		},
 		// TODO: Test this on a touchpad
 		onPinch: ({delta: [dX, dY], touches, origin, event}) => {
