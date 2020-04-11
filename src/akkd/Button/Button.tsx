@@ -9,10 +9,11 @@ interface Props {
 	nowrap?: boolean,
 	onClick: ()=>void,
 	pill?: boolean,
+	children?: React.ReactNode,
 }
 
-export class Button extends React.PureComponent<Props> {
-	render() {
+export const Button = React.memo(
+	function Button(props: Props) {
 		const {
 			icon,
 			content,
@@ -20,7 +21,7 @@ export class Button extends React.PureComponent<Props> {
 			onClick,
 			pill,
 			children,
-		} = this.props
+		} = props
 
 		return (
 			<button
