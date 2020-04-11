@@ -146,7 +146,6 @@ export default class Statuses extends Module {
 		const row = new SimpleRow({label: status.name, hideCollapsed: true})
 		this._rows[key] = row
 
-		// TODO: Replace with proper attach logic
 		const parentRow = action.onGcd
 			? this.gcd.timelineRow
 			: this.cooldowns.getActionTimelineRow(action)

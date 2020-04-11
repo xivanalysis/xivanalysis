@@ -5,19 +5,63 @@ import Measure, {BoundingRect, ContentRect, MeasureProps} from 'react-measure'
 import {useGesture} from 'react-use-gesture'
 import {UseGestureEvent} from 'react-use-gesture/dist/types'
 
+// d3-based types
 export type Scale = ScaleTime<number, number>
 export type Scalable = Parameters<Scale>[0]
-
 type Vector2 = [number, number]
 
+// react-measure types
 type MeasureChildren = MeasureProps['children']
-
-const ScaleContext = createContext<Scale>(scaleUtc())
-export const useScale = () => useContext(ScaleContext)
 
 // TODO: Should? be able to remove this if I make module output a proper component
 export type SetViewFn = (view: Vector2) => void
 export type ExposeSetViewFn = (setter: SetViewFn) => void
+
+// Config constants
+const DEFAULT_PAN_FACTOR = 0.05
+const DEFAULT_ZOOM_FACTOR = 0.2
+
+// These constants are copied from vis, which in turn copies them from a vast
+// array of similar mouse handling code in the wild. I trust it... kinda.
+const LINE_HEIGHT = 40
+const PAGE_HEIGHT = 800
+const PIXEL_DIVISOR = 120
+
+enum DeltaMode {
+	PIXEL = 0,
+	LINE = 1,
+	PAGE = 2,
+}
+
+// Context for the d3 scale data, consumed primarily by items
+const ScaleContext = createContext<Scale>(scaleUtc())
+export const useScale = () => useContext(ScaleContext)
+
+// Utility functions
+
+// Different browsers and devices report deltas in different manners. Try to normalise the values.
+const multipliers = new Map([
+	[DeltaMode.LINE, LINE_HEIGHT],
+	[DeltaMode.PAGE, PAGE_HEIGHT],
+])
+
+function normaliseWheelDelta(deltaMode: number, delta: number) {
+	const multiplier = multipliers.get(deltaMode) ?? 1
+	return (delta * multiplier) / PIXEL_DIVISOR
+}
+
+// I shouldn't need this but I do so here we are
+const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
+	event.type === 'wheel'
+
+/**
+ * We can't prevent default on touch events, as their default is _required_ to
+ * execute before non-touch events such as click fire. Handle it.
+ */
+function preventMouseEventDefault(event?: UseGestureEvent) {
+	if (event == null || event.type.includes('touch')) { return }
+	event.preventDefault()
+}
 
 export interface ScaleHandlerProps {
 	/** Minimum bound of time region to display. */
@@ -45,45 +89,6 @@ export interface ScaleHandlerProps {
 export interface InternalScaleHandlerProps extends ScaleHandlerProps {
 	children: MeasureChildren
 }
-
-const DEFAULT_PAN_FACTOR = 0.05
-const DEFAULT_ZOOM_FACTOR = 0.2
-
-/**
- * We can't prevent default on touch events, as their default is _required_ to
- * execute before non-touch events such as click fire. Handle it.
- */
-function preventMouseEventDefault(event?: UseGestureEvent) {
-	if (event == null || event.type.includes('touch')) { return }
-	event.preventDefault()
-}
-
-// Different browsers and devices report deltas in different manners. Try to normalise the values.
-// These constants are copied from vis, which in turn copies them from a vast array of similar mouse
-// handling code in the wild. I trust it... kinda.
-const LINE_HEIGHT = 40
-const PAGE_HEIGHT = 800
-const PIXEL_DIVISOR = 120
-
-enum DeltaMode {
-	PIXEL = 0,
-	LINE = 1,
-	PAGE = 2,
-}
-
-const multipliers = new Map([
-	[DeltaMode.LINE, LINE_HEIGHT],
-	[DeltaMode.PAGE, PAGE_HEIGHT],
-])
-
-function normaliseWheelDelta(deltaMode: number, delta: number) {
-	const multiplier = multipliers.get(deltaMode) ?? 1
-	return (delta * multiplier) / PIXEL_DIVISOR
-}
-
-// I shouldn't need this but I do so here we are
-const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
-	event.type === 'wheel'
 
 export function ScaleHandler({
 	children,

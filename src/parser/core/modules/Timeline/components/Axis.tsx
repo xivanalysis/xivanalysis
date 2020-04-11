@@ -22,7 +22,7 @@ export const Axis = memo(function Axis({
 	const extendedScale = scale.copy()
 	const [dMin, dMax] = extendedScale.domain().map(date => date.getTime())
 	const expandBy = (dMax - dMin) * EXPAND_TICK_DOMAIN_BY
-	extendedScale.domain([dMin - expandBy, dMax + expandBy])
+	extendedScale.domain([dMin - expandBy, dMax])
 
 	const ticks = extendedScale.ticks()
 
