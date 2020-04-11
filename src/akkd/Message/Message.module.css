@@ -1,4 +1,4 @@
-@value gutter, themeGrey, themeBlue, themeGreen, themeYellow, themeRed from 'theme.module.css';
+@value gutter, messageBackground, messageText, infoBackground, infoText, successBackground, successText, warningBackground, warningText, errorBackground, errorText from 'theme.module.css';
 @value block from '../shared.module.css';
 
 .message {
@@ -17,29 +17,29 @@
 
 /* Message type colours */
 .default {
-	background: var(--message-background);
-	color: var(--message-text);
-	border-color: var(--message-text);
+	background: messageBackground;
+	color: messageText;
+	border-color: messageText;
 }
 .info {
-	background: var(--info-background);
-	color: var(--info-text);
-	border-color: var(--info-text);
+	background: infoBackground;
+	color: infoText;
+	border-color: infoText;
 }
 .success {
-	background: var(--success-background);
-	color: var(--success-text);
-	border-color: var(--success-text);
+	background: successBackground;
+	color: successText;
+	border-color: successText;
 }
 .warning {
-	background: var(--warning-background);
-	color: var(--warning-text);
-	border-color: var(--warning-text);
+	background: warningBackground;
+	color: warningText;
+	border-color: warningText;
 }
 .error {
-	background: var(--error-background);
-	color: var(--error-text);
-	border-color: var(--error-text);
+	background: errorBackground;
+	color: errorText;
+	border-color: errorText;
 }
 
 .icon {

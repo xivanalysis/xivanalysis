@@ -5,19 +5,24 @@ declare namespace MessageModuleCssModule {
     box: string;
     default: string;
     error: string;
+    errorBackground: string;
+    errorText: string;
     gutter: string;
     header: string;
     icon: string;
     info: string;
+    infoBackground: string;
+    infoText: string;
     message: string;
+    messageBackground: string;
+    messageText: string;
     success: string;
+    successBackground: string;
+    successText: string;
     text: string;
-    themeBlue: string;
-    themeGreen: string;
-    themeGrey: string;
-    themeRed: string;
-    themeYellow: string;
     warning: string;
+    warningBackground: string;
+    warningText: string;
   }
 }
 
