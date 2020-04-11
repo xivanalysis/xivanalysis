@@ -2,9 +2,9 @@ import {ensureStatuses} from '../type'
 
 export const BRD = ensureStatuses({
 	// Self statuses
-	STRAIGHTER_SHOT: {
+	STRAIGHT_SHOT_READY: {
 		id: 122,
-		name: 'Straighter Shot',
+		name: 'Straight Shot Ready',
 		icon: 'https://xivapi.com/i/010000/010365.png',
 		duration: 10,
 	},
