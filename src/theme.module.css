@@ -35,10 +35,10 @@
 
 @value infoLight: color(themeBlue l(backgroundLightness));
 @value infoDark: color(themeBlue s(colorLightness) l(colorLightness));
-	
+
 @value successLight: color(themeGreen l(backgroundLightness));
 @value successDark: color(themeGreen s(colorLightness) l(colorLightness));
-	
+
 @value warningLight: color(themeYellow l(backgroundLightness));
 @value warningDark: color(themeYellow s(colorLightness) l(colorLightness));
 
@@ -65,23 +65,23 @@
 }
 
 .light-mode {
-  /* Basic Light Mode values */
-  --text: rgba(0, 0, 0, 0.87);
-  --background: themeWhite;
-  --backdrop: themeLight;
-  --text-muted: #666;
-  --segment-active: #e1e4e6;
-  --border-color: #dbdbdb;
-  /* Light Mode Message Box values */
-  --message-background: messageLight;
-  --message-text: messageDark;
-  --info-background: infoLight;
-  --info-text: infoDark;
-  --success-background: successLight;
-  --success-text: successDark;
-  --warning-background: warningLight;
-  --warning-text: warningDark;
-  --error-background: errorLight;
+	/* Basic Light Mode values */
+	--text: rgba(0, 0, 0, 0.87);
+	--background: themeWhite;
+	--backdrop: themeLight;
+	--text-muted: #666;
+	--segment-active: #e1e4e6;
+	--border-color: #dbdbdb;
+	/* Light Mode Message Box values */
+	--message-background: messageLight;
+	--message-text: messageDark;
+	--info-background: infoLight;
+	--info-text: infoDark;
+	--success-background: successLight;
+	--success-text: successDark;
+	--warning-background: warningLight;
+	--warning-text: warningDark;
+	--error-background: errorLight;
 	--error-text: errorDark;
 
 	color: var(--text);
@@ -89,24 +89,24 @@
 }
 
 .dark-mode {
-  /* Basic Dark Mode values */
-  --text: rgba(255, 255, 255, 0.87);
-  --background: #2d2d2d;
-  --backdrop: #3d3d3d;
-  --text-muted: #aaa;
-  --segment-link-active: #202020;
-  --border-color: #7e7e7e;
-  /* Dark Mode Message Box values */
-  --message-background: messageDark;
-  --message-text: messageLight;
-  --info-background: infoDark;
-  --info-text: infoLight;
-  --success-background: successDark;
-  --success-text: successLight;
-  --warning-background: warningDark;
-  --warning-text: warningLight;
-  --error-background: errorDark;
-  --error-text: errorLight;
+	/* Basic Dark Mode values */
+	--text: rgba(255, 255, 255, 0.87);
+	--background: #2d2d2d;
+	--backdrop: #3d3d3d;
+	--text-muted: #aaa;
+	--segment-link-active: #202020;
+	--border-color: #7e7e7e;
+	/* Dark Mode Message Box values */
+	--message-background: messageDark;
+	--message-text: messageLight;
+	--info-background: infoDark;
+	--info-text: infoLight;
+	--success-background: successDark;
+	--success-text: successLight;
+	--warning-background: warningDark;
+	--warning-text: warningLight;
+	--error-background: errorDark;
+	--error-text: errorLight;
 
 	color: var(--text);
 	background: var(--backdrop);
