@@ -27,7 +27,7 @@ const EVENT_TYPE_ORDER: {[key: string]: number} = {
 	normalisedapplybuff: 3.5,
 }
 
-export function SortEvents(events: Event[]) {
+export function sortEvents(events: Event[]) {
 	return stable.inplace(events, (a, b) => {
 		if (a.timestamp === b.timestamp) {
 			const aTypeOrder = (typeof a.type === 'string' ? EVENT_TYPE_ORDER[a.type] : null) || EVENT_TYPE_ORDER.default
