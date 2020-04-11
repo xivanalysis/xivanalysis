@@ -4,11 +4,12 @@ import styles from './Header.module.css'
 
 interface Props {
 	className?: string,
+	children: React.ReactNode,
 }
 
-export class Content extends React.PureComponent<Props> {
-	render() {
-		const {className, children} = this.props
+export const Content = React.memo(
+	function Content(props: Props) {
+		const {className, children} = props
 		return (
 			<div className={classNames(
 				styles.content,
@@ -17,5 +18,5 @@ export class Content extends React.PureComponent<Props> {
 				{children}
 			</div>
 		)
-	}
-}
+	},
+)

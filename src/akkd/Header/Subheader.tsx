@@ -4,11 +4,12 @@ import styles from './Header.module.css'
 
 interface Props {
 	className?: string,
+	children: React.ReactNode,
 }
 
-export class Subheader extends React.PureComponent<Props> {
-	render() {
-		const {className, children} = this.props
+export const Subheader = React.memo(
+	function Subheader(props: Props) {
+		const {className, children} = props
 		return (
 			<div className={classNames(
 				styles.subheader,
@@ -17,5 +18,5 @@ export class Subheader extends React.PureComponent<Props> {
 				{children}
 			</div>
 		)
-	}
-}
+	},
+)
