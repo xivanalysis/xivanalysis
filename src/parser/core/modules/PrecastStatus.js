@@ -106,11 +106,6 @@ export default class PrecastStatus extends Module {
 			timestamp: this._startTime - 2,
 			type: 'cast',
 		}
-		if (this.parser.fightFriendlies.find(a => a.id === fabricated.sourceID) === undefined &&
-			this.parser.player.pets.find(p => p.id === fabricated.sourceID) !== undefined) {
-			fabricated.sourceID = this.parser.player.id
-			this.debug(`Event source ${event.sourceID} is a pet; changing fabricated source to owner ${fabricated.sourceID}.`)
-		}
 		this._actionsToSynth.push(fabricated)
 
 		this.markActionAsTracked(actionInfo.id)

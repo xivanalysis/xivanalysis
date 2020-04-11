@@ -89,7 +89,6 @@ export const SMN = ensureActions({
 		name: 'Aetherpact',
 		icon: 'https://xivapi.com/i/002000/002687.png',
 		cooldown: 180,
-		statusesApplied: ['DEVOTION'],
 	},
 
 	BIO_III: {
@@ -360,9 +359,7 @@ export const SMN = ensureActions({
 		id: 7450,
 		name: 'Devotion',
 		icon: 'https://xivapi.com/i/002000/002688.png',
-		// No pet reference, can't actually determine anything from it
-		// While this applies the status, we need to not list it so the correct action can be synthesized for a pre-pull Devotion
-		// statusesApplied: ['DEVOTION'],
+		statusesApplied: ['DEVOTION'],
 	},
 
 	// Demi-bahamut

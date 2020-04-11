@@ -2,6 +2,7 @@ import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent
 import {SortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
+import PrecastStatus from './PrecastStatus'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
@@ -195,6 +196,7 @@ export class NormalisedEvents extends Module {
 	static debug = false
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
+	@dependency private precastStatus!: PrecastStatus // Dependency to ensure events synthed by precast status are normalised
 
 	private _normalisedEvents = new Map<string, NormalisedEvent>()
 
