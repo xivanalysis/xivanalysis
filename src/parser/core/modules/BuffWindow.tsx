@@ -122,7 +122,7 @@ export abstract class BuffWindowModule extends Module {
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency private globalCooldown!: GlobalCooldown
+	@dependency protected globalCooldown!: GlobalCooldown
 
 	private buffWindows: BuffWindowState[] = []
 
