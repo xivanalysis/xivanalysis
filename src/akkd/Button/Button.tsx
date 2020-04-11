@@ -36,5 +36,5 @@ export class Button extends React.PureComponent<Props> {
 				{content ? content : children}
 			</button>
 		)
-	}
-}
+	},
+)
