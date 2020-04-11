@@ -8,6 +8,18 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-04-04'),
+		Changes: () => <>
+			Marked support for up to patch 5.2:
+			<ul>
+				<li>Updated Straighter Shot status name to Straight Shot Ready</li>
+				<li>Added <StatusLink showIcon={false} {...STATUSES.STRAIGHT_SHOT_READY} /> to timeline and realigned <ActionLink showIcon={false} {...ACTIONS.BARRAGE} /> so it's easier to see</li>
+				<li>Added data layer for patch 5.1 changes</li>
+			</ul>
+		</>,
+		contributors: [CONTRIBUTORS.ACCHAN],
+	},
+	{
 		date: new Date('2019-07-28'),
 		Changes: () => <>
 			Big <ActionLink showIcon={false} {...ACTIONS.PITCH_PERFECT}/> module update: Added checking for windows where there might have been stacks of <ActionLink showIcon={false} {...ACTIONS.PITCH_PERFECT}/> that went unused.

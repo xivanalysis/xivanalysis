@@ -43,6 +43,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-04-07'),
+		Changes: () => <>Add Faerie actions to timeline</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-02-18'),
 		Changes: () => <>Support for 5.2; happy raiding SCHs!</>,
 		contributors: [CONTRIBUTORS.NONO],
