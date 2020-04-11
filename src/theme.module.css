@@ -62,6 +62,27 @@
 	--grey: themeGrey;
 
 	--theme-inverse: themeBlack;
+	
+	/* Basic Light Mode values */
+	--text: rgba(0, 0, 0, 0.87);
+	--background: themeWhite;
+	--backdrop: themeLight;
+	--text-muted: #666;
+	--segment-active: #e1e4e6;
+	--border-color: #dbdbdb;
+	/* Light Mode Message Box values */
+	--message-background: messageLight;
+	--message-text: messageDark;
+	--info-background: infoLight;
+	--info-text: infoDark;
+	--success-background: successLight;
+	--success-text: successDark;
+	--warning-background: warningLight;
+	--warning-text: warningDark;
+	--error-background: errorLight;
+	--error-text: errorDark;
+
+	color: var(--text);
 }
 
 .light-mode {
