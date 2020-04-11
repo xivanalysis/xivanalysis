@@ -23,13 +23,15 @@ export class Button extends React.PureComponent<Props> {
 		} = this.props
 
 		return (
-			<button className={classNames(
-				icon && !(content || children) && styles.icon,
-				nowrap && styles.nowrap,
-				pill && styles.pill,
-				styles.button,
-			)}
-			onClick={onClick}>
+			<button
+				className={classNames(
+					icon && !(content || children) && styles.icon,
+					nowrap && styles.nowrap,
+					pill && styles.pill,
+					styles.button,
+				)}
+				onClick={onClick}
+			>
 				{icon && <Icon fitted={!(content || children) ? true : false} name={icon}/>}
 				{content ? content : children}
 			</button>
