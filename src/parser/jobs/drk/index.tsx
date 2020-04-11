@@ -22,6 +22,11 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2020-04-05'),
+			Changes: () => <>Add Esteem actions to Living Shadow timeline group</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
+		{
 			date: new Date('2019-07-28'),
 			Changes: () => <>Add i18n support</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
