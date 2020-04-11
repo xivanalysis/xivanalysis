@@ -27,12 +27,6 @@ const LINE_HEIGHT = 40
 const PAGE_HEIGHT = 800
 const PIXEL_DIVISOR = 120
 
-enum DeltaMode {
-	PIXEL = 0,
-	LINE = 1,
-	PAGE = 2,
-}
-
 // Context for the d3 scale data, consumed primarily by items
 const ScaleContext = createContext<Scale>(scaleUtc())
 export const useScale = () => useContext(ScaleContext)
@@ -41,18 +35,18 @@ export const useScale = () => useContext(ScaleContext)
 
 // Different browsers and devices report deltas in different manners. Try to normalise the values.
 const multipliers = new Map([
-	[DeltaMode.LINE, LINE_HEIGHT],
-	[DeltaMode.PAGE, PAGE_HEIGHT],
+	[WheelEvent.DOM_DELTA_LINE, LINE_HEIGHT],
+	[WheelEvent.DOM_DELTA_PAGE, PAGE_HEIGHT],
 ])
+
+// I shouldn't need this but I do so here we are
+const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
+	event.type === 'wheel'
 
 function normaliseWheelDelta(deltaMode: number, delta: number) {
 	const multiplier = multipliers.get(deltaMode) ?? 1
 	return (delta * multiplier) / PIXEL_DIVISOR
 }
-
-// I shouldn't need this but I do so here we are
-const isWheelEvent = (event: UseGestureEvent): event is React.WheelEvent =>
-	event.type === 'wheel'
 
 /**
  * We can't prevent default on touch events, as their default is _required_ to
