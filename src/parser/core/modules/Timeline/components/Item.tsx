@@ -11,20 +11,22 @@ export const Items = memo(function Items({
 	items,
 }: ItemsProps) {
 	const scale = useScale()
-	const [min, max] = scale.range()
 
 	// Calculate the positions of the items, and cull any that fall entirely outside
-	// the current visible range
-	const filteredItems = items
-		.map((item, index) => ({
+	// the current visible range. This isn't memo'd, as realistically almost every
+	// render pass will need to re-calculate this.
+	const [min, max] = scale.domain().map(t => t.getTime())
+	const filteredItems = []
+	for (const [index, item] of items.entries()) {
+		if (item.start > max || item.end < min) {
+			continue
+		}
+		filteredItems.push({
 			index,
 			left: scale(item.start),
 			right: scale(item.end),
-		}))
-		.filter(detail =>
-			detail.right >= min &&
-			detail.left <= max,
-		)
+		})
+	}
 
 	return <>
 		{filteredItems.map((itemDetails) => {
