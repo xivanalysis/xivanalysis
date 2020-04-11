@@ -1,6 +1,6 @@
 import React, {memo, ReactNode} from 'react'
 import {Item as ItemConfig} from '../config'
-import {useScale} from './ScaleHandler'
+import {useScales} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
 export interface ItemsProps {
@@ -10,12 +10,12 @@ export interface ItemsProps {
 export const Items = memo(function Items({
 	items,
 }: ItemsProps) {
-	const scale = useScale()
+	const scales = useScales()
 
 	// Calculate the positions of the items, and cull any that fall entirely outside
 	// the current visible range. This isn't memo'd, as realistically almost every
 	// render pass will need to re-calculate this.
-	const [min, max] = scale.domain().map(t => t.getTime())
+	const [min, max] = scales.extended.domain().map(t => t.getTime())
 	const filteredItems = []
 	for (const [index, item] of items.entries()) {
 		if (item.start > max || item.end < min) {
@@ -23,8 +23,8 @@ export const Items = memo(function Items({
 		}
 		filteredItems.push({
 			index,
-			left: scale(item.start),
-			right: scale(item.end),
+			left: scales.primary(item.start),
+			right: scales.primary(item.end),
 		})
 	}
 

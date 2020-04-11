@@ -21,6 +21,8 @@ export type ExposeSetViewFn = (setter: SetViewFn) => void
 const DEFAULT_PAN_FACTOR = 0.05
 const DEFAULT_ZOOM_FACTOR = 0.2
 
+const EXPAND_DOMAIN_BY = 0.05 // 5%
+
 // These constants are copied from vis, which in turn copies them from a vast
 // array of similar mouse handling code in the wild. I trust it... kinda.
 const LINE_HEIGHT = 40
@@ -28,8 +30,18 @@ const PAGE_HEIGHT = 800
 const PIXEL_DIVISOR = 120
 
 // Context for the d3 scale data, consumed primarily by items
-const ScaleContext = createContext<Scale>(scaleUtc())
-export const useScale = () => useContext(ScaleContext)
+interface ScaleContextValues {
+	/** Primary scale used to calculate positions within the range */
+	primary: Scale
+	/** Extended scale with additional domain to the LHS to counter minor falloff issues where pertinent */
+	extended: Scale
+}
+const fallbackScale = scaleUtc()
+const ScaleContext = createContext<ScaleContextValues>({
+	primary: fallbackScale,
+	extended: fallbackScale,
+})
+export const useScales = () => useContext(ScaleContext)
 
 // Utility functions
 
@@ -99,6 +111,7 @@ export function ScaleHandler({
 	// TODO: Should I just put the entire scale in the state and be done with it?
 	const [domain, setDomain] = useState<Vector2>([start ?? min, end ?? max])
 	const [range, setRange] = useState<Vector2>([0, 100])
+	const domainDistance = domain[1] - domain[0]
 
 	// If able, expose our user domain setter so external code can adjust it
 	const setView = useCallback(
@@ -123,15 +136,7 @@ export function ScaleHandler({
 		[setView, exposeSetView],
 	)
 
-	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
-	//       the easiest way to cascade updates over the context. It... should be fine?
-	// Primary scale for converting times to screen pixels
-	const scale = useMemo(
-		() => scaleUtc().range(range).domain(domain),
-		[range, domain],
-	)
-	const domainDistance = domain[1] - domain[0]
-	// Delta scale maintains the primary scale's domain's distance, but zeroed such that delta values can be calculated,
+	// Delta scale maintains the primary scale's domain's distance, but zeroed such that delta values can be calculated
 	const deltaScale = useMemo(
 		() => scaleUtc().range(range).domain([0, domainDistance]),
 		[range, domainDistance],
@@ -231,9 +236,21 @@ export function ScaleHandler({
 	}, gestureConfig)
 	useEffect(bindGestures, [bindGestures])
 
+	// TODO: Keep an eye on the perf here. I don't like regenning the scale every time, but it's
+	//       the easiest way to cascade updates over the context. It... should be fine?
+	const scales = useMemo(
+		() => {
+			const extendBy = domainDistance * EXPAND_DOMAIN_BY
+			const primary = scaleUtc().range(range).domain(domain)
+			const extended = primary.copy().domain([domain[0] - extendBy, domain[1]])
+			return {primary, extended}
+		},
+		[range, domain],
+	)
+
 	return (
 		<div ref={scrollParentRef}>
-			<ScaleContext.Provider value={scale}>
+			<ScaleContext.Provider value={scales}>
 				<Measure bounds onResize={onContentResize}>{children}</Measure>
 			</ScaleContext.Provider>
 		</div>

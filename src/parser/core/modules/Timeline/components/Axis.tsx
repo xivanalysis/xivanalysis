@@ -3,10 +3,9 @@ import {timeMinute} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {Fragment, memo} from 'react'
 import {Item} from './Item'
-import {useScale} from './ScaleHandler'
+import {useScales} from './ScaleHandler'
 import styles from './Timeline.module.css'
 
-const EXPAND_TICK_DOMAIN_BY = 0.05 // 5%
 const AXIS_ROW_HEIGHT = 50
 
 export interface AxisProps {
@@ -16,23 +15,18 @@ export interface AxisProps {
 export const Axis = memo(function Axis({
 	height,
 }: AxisProps) {
-	const scale = useScale()
+	const scales = useScales()
 
 	// Extend the domain slightly so ticks don't disappear the moment they hit the edge
-	const extendedScale = scale.copy()
-	const [dMin, dMax] = extendedScale.domain().map(date => date.getTime())
-	const expandBy = (dMax - dMin) * EXPAND_TICK_DOMAIN_BY
-	extendedScale.domain([dMin - expandBy, dMax])
-
-	const ticks = extendedScale.ticks()
+	const ticks = scales.extended.ticks()
 
 	// Calculate values used for the "sticky" first major tick
-	const viewMin = scale.domain()[0]
+	const viewMin = scales.primary.domain()[0]
 	const stickyTick = timeMinute(viewMin)
 	const stickyTickEnd = timeMinute.offset(stickyTick, 1)
 
 	// Pre-calculate scaled tick locations
-	const lefts = ticks.map(tick => scale(tick))
+	const lefts = ticks.map(tick => scales.primary(tick))
 
 	return <>
 		{/* Grid lines */}
@@ -79,7 +73,7 @@ export const Axis = memo(function Axis({
 			</Fragment>)}
 
 			{/* "Sticky" minute tick */}
-			<Item left={scale(viewMin)} right={scale(stickyTickEnd)}>
+			<Item left={scales.primary(viewMin)} right={scales.primary(stickyTickEnd)}>
 				<div className={classNames(styles.axisTick, styles.major, styles.first)}>
 					{formatMinutes(stickyTick)}
 				</div>
