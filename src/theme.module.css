@@ -116,6 +116,7 @@
 @value themeText: var(--text);
 @value themeBackground: var(--background);
 @value themeBackdrop: var(--backdrop);
+@value themeInverse: var(--theme-inverse);
 @value themeTextMuted: #aaa;
 @value segmentLinkActive: #202020;
 @value themeBorder: #7e7e7e;

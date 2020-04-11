@@ -37,6 +37,7 @@ declare namespace ThemeModuleCssModule {
     themeBrown: string;
     themeGreen: string;
     themeGrey: string;
+    themeInverse: string;
     themeLight: string;
     themeOlive: string;
     themeOrange: string;
