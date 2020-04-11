@@ -1,6 +1,8 @@
+@value themeText, themeBorder from 'theme.module.css';
+
 .button {
-  background-color: var(--theme-border);
-  color: var(--theme-text);
+  background-color: themeBorder;
+  color: themeText;
   text-align: center;
   min-height: 1em;
   line-height: 1em;

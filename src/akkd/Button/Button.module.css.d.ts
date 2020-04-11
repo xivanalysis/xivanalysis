@@ -5,6 +5,8 @@ declare namespace ButtonModuleCssModule {
     icon: string;
     nowrap: string;
     pill: string;
+    themeBorder: string;
+    themeText: string;
   }
 }
 
