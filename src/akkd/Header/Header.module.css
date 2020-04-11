@@ -1,13 +1,13 @@
-@value gutter, md, themeText from 'theme.module.css';
+@value gutter, headerMargin, md, themeText from 'theme.module.css';
 
 .header {
 	color: text;
 	position: relative;
-	margin: calc(2rem - .14em) 0 1rem;
+	margin: margin;
 }
 
 .header:first-child {
-	margin-top: -.14em;
+	margin-top: 0;
 }
 
 .large {

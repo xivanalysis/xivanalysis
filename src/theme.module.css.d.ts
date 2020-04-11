@@ -2,6 +2,7 @@
 declare namespace ThemeModuleCssModule {
   export interface IThemeModuleCss {
     gutter: string;
+    headerMargin: string;
     highlight: string;
     lg: string;
     md: string;
