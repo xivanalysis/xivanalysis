@@ -10,6 +10,7 @@ declare namespace HeaderModuleCssModule {
     medium: string;
     small: string;
     subheader: string;
+    themeText: string;
   }
 }
 

@@ -1,7 +1,7 @@
-@value gutter, md from 'theme.module.css';
+@value gutter, md, themeText from 'theme.module.css';
 
 .header {
-	color: var(--theme-text);
+	color: text;
 	position: relative;
 	margin: calc(2rem - .14em) 0 1rem;
 }
