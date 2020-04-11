@@ -22,7 +22,6 @@ const typePrecedence: ReadonlyArray<keyof MessageTypes> = [
 
 interface Props extends MessageTypes {
 	as?: React.ReactType,
-	className?: string,
 	// TODO: Replace with straight FA once we rip SUI out
 	icon?: SemanticICONS,
 	box?: boolean,
@@ -32,7 +31,7 @@ export class Message extends React.PureComponent<Props> {
 	static Header = MessageHeader
 
 	render() {
-		const {as: Component = 'div', className, icon, box = false, children} = this.props
+		const {as: Component = 'div', icon, box = false, children} = this.props
 
 		// Find the first message type that's truthy
 		const type = typePrecedence.find(prop => this.props[prop] === true)
@@ -41,7 +40,6 @@ export class Message extends React.PureComponent<Props> {
 			<Component className={classNames(
 				!box ? styles.message : styles.box,
 				type && styles[type],
-				className,
 			)}>
 				{icon && <Icon className={styles.icon} name={icon}/>}
 				<div className={styles.text}>
