@@ -33,6 +33,12 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-3-30'),
+		Changes: () => <>
+			Updated SAM support to include the interrupt module recently added to core.
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2020-2-21'),
 		Changes: () => <>
 			Updated SAM support for patch 5.2 along with some backend changes
