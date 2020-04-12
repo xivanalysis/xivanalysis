@@ -5,6 +5,10 @@ declare namespace MenuModuleCssModule {
     gutter: string;
     item: string;
     menu: string;
+    themeBackdrop: string;
+    themeBackground: string;
+    themeBorder: string;
+    themeText: string;
     top: string;
   }
 }

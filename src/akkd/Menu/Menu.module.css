@@ -1,28 +1,28 @@
-@value gutter from 'theme.module.css';
+@value gutter, themeBorder, themeBackground, themeBackdrop, themeText from 'theme.module.css';
 
 .menu {
   display: flex;
   flex-direction: column;
-	border: 1px solid var(--theme-border);
+	border: 1px solid themeBorder;
 	border-radius: 5px;
-	background: var(--theme-background);
+	background: themeBackground;
 	margin-bottom: gutter;
 }
 
 .item {
   border-right: 0;
 	border-top: 0;
-	border-bottom: 1px solid var(--theme-border);
+	border-bottom: 1px solid themeBorder;
   display: block;
 	padding: 13px 16px;
 	line-height: 1em;
 }
 a.item {
-	color: var(--theme-text);
+	color: themeText;
 }
 a.item:hover {
-	background: var(--theme-backdrop);
-	color: var(--theme-text);
+	background: themeBackdrop;
+	color: themeText;
 }
 .item:last-child, .item:only-child {
 	border-bottom: 0;
