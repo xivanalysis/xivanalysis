@@ -107,6 +107,7 @@ export default class TrickAttackWindow extends BuffWindowModule {
 	}
 
 	getBuffWindowNotes(buffWindow) {
-		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ? 'Yes' : 'No'
+		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ?
+			<Trans id="nin.taWindow.chart.notes.yes">Yes</Trans> : <Trans id="nin.taWindow.chart.notes.no">No</Trans>
 	}
 }
