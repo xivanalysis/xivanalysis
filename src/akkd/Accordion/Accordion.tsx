@@ -1,5 +1,4 @@
 import React from 'react'
-import styles from './Accordion.module.css'
 import {AccordionContent} from './AccordionContent'
 import {AccordionPanel} from './AccordionPanel'
 import {AccordionTitle} from './AccordionTitle'
