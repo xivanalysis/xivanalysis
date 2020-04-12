@@ -57,7 +57,7 @@ export class Timeline extends Module {
 	 * @param end Timestamp of the end of the range
 	 * @param scrollTo If true, the page will be scrolled to reveal the timeline
 	 */
-	show(start: number, end: number, scrollTo: boolean = true) {
+	show = (start: number, end: number, scrollTo: boolean = true) => {
 		this.setView?.([start, end])
 
 		if (scrollTo) {
