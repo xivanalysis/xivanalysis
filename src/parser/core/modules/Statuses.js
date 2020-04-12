@@ -1,6 +1,5 @@
 import Module from 'parser/core/Module'
-import {ItemGroup, Item} from './Timeline'
-import React from 'react'
+import {SimpleRow, StatusItem} from './Timeline'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 
@@ -8,9 +7,8 @@ const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 export default class Statuses extends Module {
 	static handle = 'statuses'
 	static dependencies = [
-		'data',
-		'timeline',
 		'cooldowns',
+		'data',
 		'gcd',
 	]
 
@@ -18,6 +16,7 @@ export default class Statuses extends Module {
 
 	_statuses = {}
 	_groups = {}
+	_rows = {}
 	_statusToActionMap = {}
 	_actionToMergeNameMap = {}
 
@@ -120,48 +119,39 @@ export default class Statuses extends Module {
 
 	_onComplete() {
 		Object.values(this._statuses).forEach(entry => {
-			const group = this._createGroupForStatus(entry.status)
-
-			if (!group) {
-				return
-			}
+			const row = this._createRowForStatus(entry.status)
+			if (row == null) { return }
 
 			entry.usages.forEach(st => {
-				group.addItem(new Item({
-					type: 'background',
+				row.addItem(new StatusItem({
+					status: entry.status,
 					start: st.start,
 					end: st.end || st.start + entry.status.duration * 1000,
-					content: <img src={entry.status.icon} alt={entry.status.name}/>,
 				}))
 			})
 		})
 	}
 
-	_createGroupForStatus(status) {
-		const stid = 'status-' + (this.constructor.statusesStackMapping[status.id] || status.id)
+	_createRowForStatus(status) {
+		const key = this.constructor.statusesStackMapping[status.id] ?? status.id
 
-		if (this._groups[stid]) {
-			return this._groups[stid]
+		if (this._rows[key] != null) {
+			return this._rows[key]
 		}
 
 		// find action for status
 		const action = this._statusToActionMap[status.id]
+		if (!action) { return undefined }
 
-		if (!action) {
-			return undefined
-		}
+		const row = new SimpleRow({label: status.name, hideCollapsed: true})
+		this._rows[key] = row
 
-		const group = new ItemGroup({
-			id: stid,
-			content: status.name,
-			showNested: false,
-		})
+		const parentRow = action.onGcd
+			? this.gcd.timelineRow
+			: this.cooldowns.getActionTimelineRow(action)
+		parentRow.addRow(row)
 
-		this._groups[stid] = group
-
-		this.timeline.attachToGroup(action.onGcd ? this.gcd.gcdGroupId : (this._actionToMergeNameMap[action.id] || action.id), group)
-
-		return group
+		return row
 	}
 
 	_isStatusAppliedToPet(event) {

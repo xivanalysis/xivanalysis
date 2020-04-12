@@ -4,6 +4,11 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	{
+		date: new Date('2020-04-10'),
+		Changes: () => <>Total rewrite of the timeline. While it looks and behaves in a similar manner to the previous timeline, it has been rewritten from scratch, allowing analysis to expose much more detailed information in the timeline with future changes.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2019-11-22'),
 		Changes: () => <>Rework calculations for tracked cooldowns to improve methodology for tracking actual uses and calculating expected uses.</>,
 		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.KELOS],

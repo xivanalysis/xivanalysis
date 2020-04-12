@@ -9,7 +9,7 @@ import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
 import {NormalisedDamageEvent, NormalisedEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Data} from './Data'
 
