@@ -66,6 +66,9 @@
 .celled td:last-child {
 	border-right: 0;
 }
+.celled th:last-child {
+	border-right: 0;
+}
 .celled tr:last-child td {
 	border-bottom: 0;
 }
