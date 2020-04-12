@@ -16,7 +16,7 @@ You didn't see the anys.
 */
 const cache = new WeakMap<object, Map<any, Map<any, any>>>()
 
-type FlattenArray<T> = T extends (infer I)[] ? I : T
+type FlattenArray<T> = T extends Array<infer I> ? I : T
 
 export function getDataBy<
 	Data extends Record<string, object>,

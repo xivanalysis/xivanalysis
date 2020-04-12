@@ -4,7 +4,7 @@ import _ from 'lodash'
 import React from 'react'
 import Module from './Module'
 
-type ModulesLoader = () => Promise<{default: typeof Module[]}>
+type ModulesLoader = () => Promise<{default: Array<typeof Module>}>
 
 /** Representation of patches supported by a meta instance. */
 export interface SupportedPatches {

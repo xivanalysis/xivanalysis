@@ -57,7 +57,7 @@ type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 }>
 
 export default class Module {
-	static dependencies: (string | MappedDependency)[] = []
+	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
 	static displayMode: DISPLAY_MODE
 	// TODO: Refactor this var
@@ -151,19 +151,19 @@ export default class Module {
 	protected readonly addHook = this.addEventHook
 
 	protected addEventHook<T extends Event>(
-		events: T['type'] | T['type'][],
+		events: T['type'] | Array<T['type']>,
 		cb: EventHookCallback<T>,
-	): EventHook<T>[]
+	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | T['type'][],
+		events: T['type'] | Array<T['type']>,
 		filter: ModuleFilter<T>,
 		cb: EventHookCallback<T>,
-	): EventHook<T>[]
+	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | T['type'][],
+		events: T['type'] | Array<T['type']>,
 		filterArg: ModuleFilter<T> | EventHookCallback<T>,
 		cbArg?: EventHookCallback<T>,
-	): EventHook<T>[] {
+	): Array<EventHook<T>> {
 		// I'm currently handling hooks at the module level
 		// Should performance become a concern, this can be moved up to the Parser without breaking the API
 		const cb = typeof filterArg === 'function'? filterArg : cbArg
@@ -235,7 +235,7 @@ export default class Module {
 	protected readonly removeHook = this.removeEventHook
 
 	/** Remove a previously added event hook. */
-	protected removeEventHook(hooks: EventHook<any>[]) {
+	protected removeEventHook(hooks: Array<EventHook<any>>) {
 		hooks.forEach(hook => this.parser.dispatcher.removeEventHook(hook))
 	}
 

@@ -25,7 +25,7 @@ export class Data extends Module {
 		return getDataBy(this.statuses, 'id', id)
 	}
 
-	private getAppliedData<R>(root: R, layers: Layer<R>[]): R {
+	private getAppliedData<R>(root: R, layers: Array<Layer<R>>): R {
 		const cached = this.appliedCache.get(root)
 		if (cached) {
 			return cached as R

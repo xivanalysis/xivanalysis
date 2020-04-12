@@ -10,12 +10,12 @@ type BaseEvent = DamageEvent | HealEvent
 const isSupportedBuffEvent = (event: Event): event is BuffEvent => isApplyBuffEvent(event) || isRemoveBuffEvent(event)
 const isBaseEvent = (event: Event): event is BaseEvent => isDamageEvent(event) || isHealEvent(event)
 const isSupportedEvent = (event: Event): event is BaseEvent | BuffEvent => isBaseEvent(event) || isSupportedBuffEvent(event)
-const isBaseEventArray = (array: (BaseEvent | BuffEvent)[]): array is BaseEvent[] => array.length > 0 && isBaseEvent(array[0])
+const isBaseEventArray = (array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] => array.length > 0 && isBaseEvent(array[0])
 
 export interface NormalisedEvent extends AbilityEvent {
 	type: string
-	calculatedEvents: (BaseEvent | BuffEvent)[]
-	confirmedEvents: (BaseEvent | BuffEvent)[]
+	calculatedEvents: Array<BaseEvent | BuffEvent>
+	confirmedEvents: Array<BaseEvent | BuffEvent>
 }
 export class NormalisedEvent {
 	get targetsHit(): number { return new Set(this.confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
@@ -23,7 +23,7 @@ export class NormalisedEvent {
 	/**
 	 * Return all hits, regardless of whether they were confirmed or were ghosted
 	 */
-	get hits(): (BaseEvent | BuffEvent)[] {
+	get hits(): Array<BaseEvent | BuffEvent> {
 		if (this.calculatedEvents.length > 0) {
 			return this.calculatedEvents
 		}
@@ -109,7 +109,7 @@ export class NormalisedEvent {
 	 * For damage or heal actions, return all hits that succeeded for this action (generated a confirming damage action)
 	 * For buff events, returns all events
 	 */
-	get successfulHits(): (BaseEvent | BuffEvent)[] {
+	get successfulHits(): Array<BaseEvent | BuffEvent> {
 		return this.confirmedEvents
 	}
 	/**

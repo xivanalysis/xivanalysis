@@ -8,7 +8,7 @@ const MockedParser = Parser as jest.Mock<Parser>
 
 describe('TimerGauge', () => {
 	let currentTimestamp: number
-	const timestampHooks: {timestamp: number}[] = []
+	const timestampHooks: Array<{timestamp: number}> = []
 	let parser: Parser
 	let addTimestampHook: jest.Mock
 	let removeTimestampHook: jest.Mock

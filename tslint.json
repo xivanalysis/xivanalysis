@@ -11,6 +11,7 @@
 	},
 	"rules": {
 		"arrow-parens": false,
+		"array-type": [true, "array-simple"],
 		"indent": {"options": "tabs"},
 		"interface-name": {"options": "never-prefix"},
 		"no-console": {
