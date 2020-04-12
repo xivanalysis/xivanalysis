@@ -7,6 +7,8 @@ declare namespace TableModuleCssModule {
     collapsingCell: string;
     collapsingTable: string;
     compact: string;
+    errorBackground: string;
+    errorText: string;
     left: string;
     negative: string;
     "no-border": string;
@@ -15,10 +17,16 @@ declare namespace TableModuleCssModule {
     notCompact: string;
     positive: string;
     right: string;
+    successBackground: string;
+    successText: string;
     table: string;
+    themeBackdrop: string;
+    themeBorder: string;
     "very-compact": string;
     veryCompact: string;
     warning: string;
+    warningBackground: string;
+    warningText: string;
   }
 }
 
