@@ -396,7 +396,7 @@
   "nin.kassatsu.suggestions.suiton.why": "活殺自在の状態にて水遁の術を{0, plural, other {# 回}}使いました。",
   "nin.kassatsu.suggestions.waste.content": " <0/>を落とすことは極限に避けておいてください。これを落とすことでクリティカル率100%効果が無駄になってしまい、忍術の詠唱を大きく延ばしたという意味とします。",
   "nin.kassatsu.suggestions.waste.why": "活殺自在を落とした回数：{0, plural, other { #回}}。",
-  "nin.ninjutsu.suggestions.aoe-doton.content": "",
+  "nin.ninjutsu.suggestions.aoe-doton.content": "<0/>の効果を高めるためには少なくとも敵に継続ダメージを{DOTON_TICK_TARGET} 回当てる必要があります。すく死んでしまう雑魚敵に対しては<1/>を使ってください。",
   "nin.ninjutsu.suggestions.aoe-doton.why": "最適でない土遁の術を {badAoes, plural, other {# 回}} やっちゃいましたよ！",
   "nin.ninjutsu.suggestions.hyoton.content": "<0/>は印の組み合わせの中では最も弱く、一般的にはレイドコンテンツ中には使用しないようにしましょう。",
   "nin.ninjutsu.suggestions.hyoton.why": "氷遁の術を{0, plural, other {# 回}}使いました。",
