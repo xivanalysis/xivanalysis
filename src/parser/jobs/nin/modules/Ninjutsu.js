@@ -9,7 +9,7 @@ import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Sugges
 
 const DOTON_TICK_TARGET = 6
 const JUSTIFIABLE_DOTON_TICKS = 10
-const PREPULL_DOTON_BUFFER = 3000
+const PREPULL_DOTON_BUFFER = 18000
 
 export default class Ninjutsu extends Module {
 	static handle = 'ninjutsu'
