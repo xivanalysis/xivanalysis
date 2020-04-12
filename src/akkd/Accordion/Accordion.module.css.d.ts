@@ -10,6 +10,7 @@ declare namespace AccordionModuleCssModule {
     md: string;
     "no-bullet": string;
     noBullet: string;
+    themeBorder: string;
   }
 }
 
