@@ -9,15 +9,20 @@ interface Props<T> {
 }
 
 export class AccordionTitle extends React.PureComponent<Props<any>> {
+	_onClick = (e: React.MouseEvent) => {
+		if (this.props.onClick) {
+			this.props.onClick(e, {index: this.props.index})
+		}
+	}
 	render() {
-		const {index, className, onClick = () => {}, children} = this.props
+		const {className, children} = this.props
 		return (
 			<summary
 				className={classNames(
 					styles.accordionTitle,
 					className,
 				)}
-				onClick={(e)=>onClick(e, {index})}
+				onClick={this._onClick}
 			>
 				{children}
 			</summary>
