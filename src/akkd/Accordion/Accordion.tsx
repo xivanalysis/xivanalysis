@@ -4,23 +4,23 @@ import {AccordionContent} from './AccordionContent'
 import {AccordionPanel} from './AccordionPanel'
 import {AccordionTitle} from './AccordionTitle'
 
-interface Panel {
-	key: any,
+export interface Panel {
+	key: React.Key,
 	title: {
-		key?: any,
+		key?: React.Key,
 		className?: string,
-		content: any,
+		content: React.ReactNode,
 	},
 	content: {
-		key?: any,
-		content: any,
+		key?: React.Key,
+		content: React.ReactNode,
 	},
 }
 
 interface Props {
 	exclusive?: boolean,
 	panels: Panel[],
-	defaultActiveIndex?: number|number[],
+	defaultActiveIndex?: React.Key[],
 	hasBullet?: boolean,
 }
 
@@ -29,16 +29,12 @@ export class Accordion extends React.PureComponent<Props> {
 	static Content = AccordionContent
 	static Panel = AccordionPanel
 
-	isPanelOpen(index: number) {
+	isPanelOpen(index: React.Key) {
 		const {defaultActiveIndex} = this.props
 		if (!defaultActiveIndex) {
 			return false
 		}
-		if (typeof defaultActiveIndex === 'number') {
-			return index === defaultActiveIndex ? true : false
-		} else {
-			return defaultActiveIndex?.indexOf(index) !== -1 ? true : false
-		}
+		return defaultActiveIndex?.indexOf(index) !== -1 ? true : false
 	}
 
 	render() {

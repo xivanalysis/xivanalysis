@@ -1,11 +1,12 @@
 import classNames from 'classnames'
 import React from 'react'
+import {Panel} from './Accordion'
 import styles from './Accordion.module.css'
 import {AccordionContent} from './AccordionContent'
 import {AccordionTitle} from './AccordionTitle'
 
 interface Props {
-	panel: any,
+	panel: Panel,
 	isOpen: boolean,
 	hasBullet: boolean,
 }
