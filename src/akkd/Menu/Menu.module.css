@@ -7,6 +7,7 @@
 	border-radius: 5px;
 	background: themeBackground;
 	margin-bottom: gutter;
+	overflow: hidden;
 }
 
 .item {
