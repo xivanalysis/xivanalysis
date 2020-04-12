@@ -10,8 +10,6 @@
 }
 
 .item {
-  border-right: 0;
-	border-top: 0;
 	border-bottom: 1px solid themeBorder;
   display: block;
 	padding: 13px 16px;
