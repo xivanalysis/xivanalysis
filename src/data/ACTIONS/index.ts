@@ -13,7 +13,7 @@ const DEFAULT_GCD_COOLDOWN = 2.5
  */
 function addDefaultValues(actions: ActionRoot): ActionRoot {
 	const applied = {...actions}
-	const keys = Object.keys(applied) as Array<keyof typeof applied>
+	const keys = Object.keys(applied) as (keyof typeof applied)[]
 	keys.forEach(key => {
 		const action = applied[key]
 		if (!action.onGcd) { return }

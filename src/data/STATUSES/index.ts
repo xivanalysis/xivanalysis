@@ -13,7 +13,7 @@ function correctIdsToMatchLogs(statuses: StatusRoot): StatusRoot
 function correctIdsToMatchLogs(statuses: LayerData<StatusRoot>): LayerData<StatusRoot>
 function correctIdsToMatchLogs(statuses: LayerData<StatusRoot> | StatusRoot) {
 	const applied = {...statuses}
-	const keys = Object.keys(applied) as Array<keyof typeof applied>
+	const keys = Object.keys(applied) as (keyof typeof applied)[]
 	keys.forEach(key => {
 		const status = applied[key]
 		if (!status?.id) { return }

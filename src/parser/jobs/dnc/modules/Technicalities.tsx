@@ -39,7 +39,7 @@ class TechnicalWindow {
 	start: number
 	end?: number
 
-	rotation: Array<NormalisedApplyBuffEvent | CastEvent> = []
+	rotation: (NormalisedApplyBuffEvent | CastEvent)[] = []
 	gcdCount: number = 0
 	trailingGcdEvent?: CastEvent
 

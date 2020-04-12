@@ -21,7 +21,7 @@ export const getMaxChildren = cached((
 ))
 
 // TODO: Tweak this so I can cache it.
-export const getMaxDepth = (rows: Array<Pick<RowConfig, 'rows'>>): number =>
+export const getMaxDepth = (rows: Pick<RowConfig, 'rows'>[]): number =>
 	rows.reduce((acc, cur) => Math.max(acc, getMaxDepth(cur.rows) + 1), 0)
 
 export const getItemCount = cached((

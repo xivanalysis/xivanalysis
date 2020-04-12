@@ -5,7 +5,7 @@ import Module from './Module'
 export type FilterPartial<T> = {
 	[K in keyof T]?: T[K] extends object
 		? FilterPartial<T[K]>
-		: FilterPartial<T[K]> | Array<FilterPartial<T[K]>>
+		: FilterPartial<T[K]> | FilterPartial<T[K]>[]
 }
 
 export type Filter<T extends Event> = FilterPartial<T>

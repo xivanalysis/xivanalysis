@@ -17,7 +17,7 @@ export interface Action {
 	castTime?: number
 	cooldown?: number
 	autoAttack?: boolean
-	statusesApplied?: Array<keyof StatusRoot>
+	statusesApplied?: (keyof StatusRoot)[]
 	charges?: number
 	// TODO: Do I need this still?
 	// [key: string]: unknown

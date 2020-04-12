@@ -113,7 +113,7 @@ class Parser {
 
 		// Build the values we need for the toposort
 		const nodes = Object.keys(ctors)
-		const edges: Array<[string, string]> = []
+		const edges: [string, string][] = []
 		nodes.forEach(mod => ctors[mod].dependencies.forEach(dep => {
 			edges.push([mod, this.getDepHandle(dep)])
 		}))
@@ -271,9 +271,9 @@ class Parser {
 		source: 'event' | 'output',
 		error: Error,
 		event?: Event,
-	): [Record<string, any>, Array<[string, Error]>] {
+	): [Record<string, any>, [string, Error][]] {
 		const output: Record<string, any> = {}
-		const errors: Array<[string, Error]> = []
+		const errors: [string, Error][] = []
 		const visited = new Set<string>()
 
 		const crawler = (m: string) => {

@@ -9,7 +9,7 @@ export interface Layer<R> {
 
 export function applyLayer<R>(base: R, layer: Layer<R>): R {
 	const applied = {...base}
-	const keys = Object.keys(layer.data) as Array<keyof R>
+	const keys = Object.keys(layer.data) as (keyof R)[]
 	keys.forEach(key => {
 		applied[key] = {...applied[key], ...layer.data[key]}
 	})
