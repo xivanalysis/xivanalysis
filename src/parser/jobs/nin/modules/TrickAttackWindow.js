@@ -79,7 +79,6 @@ export default class TrickAttackWindow extends BuffWindowModule {
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MINOR,
-			3: SEVERITY.MEDIUM,
 		},
 	}
 
