@@ -31,8 +31,8 @@ const RESOURCE_SPENDERS = {
 	[ACTIONS.THE_BLACKEST_NIGHT.id]: {mp: -3000, blood: 0},
 	[ACTIONS.FLOOD_OF_SHADOW.id]: {mp: -3000, blood: 0},
 	[ACTIONS.EDGE_OF_SHADOW.id]: {mp: -3000, blood: 0},
-	[ACTIONS.BLOODSPILLER.id]: {mp: 0, blood: -50},
-	[ACTIONS.QUIETUS.id]: {mp: 0, blood: -50},
+	[ACTIONS.BLOODSPILLER.id]: {mp: 0, blood: -50, affectsWithDelirium: true},
+	[ACTIONS.QUIETUS.id]: {mp: 0, blood: -50, affectsWithDelirium: true},
 	[ACTIONS.LIVING_SHADOW.id]: {mp: 0, blood: -50},
 }
 const RESOURCE_GENERATORS = {
@@ -227,7 +227,7 @@ export default class Resources extends Module {
 		let actionMPGain = 0
 
 		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
-			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id)) {
+			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id) && RESOURCE_SPENDERS[abilityId].affectsWithDelirium) {
 				// Blood spender under delirium - no change
 				actionBloodGain += 0
 			} else {
