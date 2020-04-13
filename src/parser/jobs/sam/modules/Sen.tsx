@@ -9,21 +9,40 @@ import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Message} from 'semantic-ui-react'
 
 import Kenki from './Kenki'
 
+const SEN_ACTIONS = [ACTIONS.YUKIKAZE.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id]
 
-//God this grew outta control real fast
+// Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
+
+const IAIJUTSU = [
+        ACTIONS.HIGANBANA.id,
+        ACTIONS.TENKA_GOKEN.id,
+        ACTIONS.MIDARE_SETSUGEKKA.id,
+]
+
+const KENKI_PER_SEN = 10
+
+const SEN_HANDLING = {
+        NONE: {priority: 0, message: 'No errors'},
+        OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Overriding your sens will slow down your <ActionLink {...ACTIONS.IAIJUTSU}/> and reduce your damage, avoid overriding if possible. </Trans>},
+        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> This window contained a hagakure. </Trans>},
+        DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
+}
+
+// God this grew outta control real fast
 
 class SenState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
 	isNonStandard: boolean = false // Aka Hagakure + Overwrites, used to filter later.
-	isDone: boolean = false //I SWEAR TO GOD IF THIS JANK THING WORKS, I'M LEAVING IT
-	isDeath: boolean = false //DIE! DIE! DIE! -Reaper
-	isHaga: boolean = false //is it a haga or no?
-	isOverwrite: boolean = false //is it a overwrite or no?
+	isDone: boolean = false // I SWEAR TO GOD IF THIS JANK THING WORKS, I'M LEAVING IT
+	isDeath: boolean = false // DIE! DIE! DIE! -Reaper
+	isHaga: boolean = false // is it a haga or no?
+	isOverwrite: boolean = false // is it a overwrite or no?
 
 	// Sen State trackers, do I really need to explain?
 	currentSetsu: number = 0
@@ -43,7 +62,7 @@ class SenState {
 			this._senCode = code
 		}
 	}
-	
+
 	public get senCode() {
 		return this._senCode
 	}
@@ -51,25 +70,6 @@ class SenState {
 	constructor(start: number) {
 		this.start = start
 	}
-}
-
-const SEN_ACTIONS = [ACTIONS.YUKIKAZE.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id]
-
-// Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
-
-const IAIJUTSU = [
-	ACTIONS.HIGANBANA.id,
-	ACTIONS.TENKA_GOKEN.id,
-	ACTIONS.MIDARE_SETSUGEKKA.id,
-]
-
-const KENKI_PER_SEN = 10
-
-const SEN_HANDLING = {
-	NONE: {priority: 0, message: 'No errors'},
-	OVERWROTE_SEN: {priority: 2, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Overriding your sens will slow down your <ActionLink {...ACTIONS.IAIJUTSU}/> and reduce your damage, avoid overriding if possible. </Trans>},
-	HAGAKURE: {priority: 1, message: <Trans id = "sam.sen.sen_handling.hagakure"> This window contained a hagakure. </Trans>},
-	DEATH: {priority: 3, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, //BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
 export default class Sen extends Module {
@@ -88,7 +88,7 @@ export default class Sen extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast) 
+		this.addHook('cast', {by: 'player'}, this.onCast)
 
 		// Death, as well as all Iaijutsu, remove all available sen
 		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
@@ -119,7 +119,7 @@ export default class Sen extends Module {
 
 		let lastSenState = this.lastSenState
 
-		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ){
+		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
 
 			this.senStateMaker(event)
 		}
@@ -132,7 +132,7 @@ export default class Sen extends Module {
 			lastSenState.rotation.push(event)
 
 			// if (SEN_ACTIONS.hasOwnProperty(action)) {
-				switch (action) {
+			switch (action) {
                         	case ACTIONS.YUKIKAZE.id:
                                 	lastSenState.currentSetsu++
 
@@ -140,7 +140,7 @@ export default class Sen extends Module {
                                         	lastSenState.overwriteSetsus++
                                         	lastSenState.currentSetsu = 1
                                         	lastSenState.isNonStandard = true
-						lastSenState.isOverwrite = true
+						                                   lastSenState.isOverwrite = true
                                         	}
                                 	break
 
@@ -152,7 +152,7 @@ export default class Sen extends Module {
 	                                        lastSenState.overwriteGetsus++
 	                                        lastSenState.currentGetsu = 1
 	                                        lastSenState.isNonStandard = true
-						lastSenState.isOverwrite = true
+						                                   lastSenState.isOverwrite = true
 
                                         	}
                                 	break
@@ -165,13 +165,13 @@ export default class Sen extends Module {
                 	                        lastSenState.overwriteKas++
         	                                lastSenState.currentKa = 1
 	                                        lastSenState.isNonStandard = true
-						lastSenState.isOverwrite = true
+						                                   lastSenState.isOverwrite = true
 
                                 	        }
                         	        break
                         	}
 
-			//}
+			// }
 		}
 
 	}
@@ -186,21 +186,23 @@ export default class Sen extends Module {
 	private senCodeProcess() {
 		const lastSenState = this.lastSenState
 
-		if(lastSenState != null && lastSenState.end == null) {
-			//Drop down the totem pole
+		if (lastSenState != null && lastSenState.end == null) {
+			// Drop down the totem pole
 
-			if(lastSenState.isDeath === true) {
-				lastSenState._senCode = SEN_HANDLING.DEATH	
+			if (lastSenState.isDeath === true) {
+				lastSenState._senCode = SEN_HANDLING.DEATH
 			}
 
-			if(lastSenState.isOverwrite === true) {
+			if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 			}
 
-			if(lastSenState.isHaga === true) {
+			if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 			}
+		 console.log('message post analysis: ' + lastSenState._senCode.message)
 		}
+
 	}
 
 // End the state, count wastes, add it
@@ -210,23 +212,23 @@ export default class Sen extends Module {
 		if (lastSenState != null && lastSenState.end == null) {
 
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
-			
+
 			lastSenState.isDone = true
 			this.senCodeProcess()
 			lastSenState.end = event.timestamp
 		}
 	}
 
-// HAHA YOU DIED! literally just the same as above, but jank because I can't pass the buff into a cast event 
+// HAHA YOU DIED! literally just the same as above, but jank because I can't pass the buff into a cast event
 	private onRevive(event: BuffEvent) {
 		const lastSenState = this.lastSenState
 
-  		if (lastSenState != null && lastSenState.end == null) {
+  if (lastSenState != null && lastSenState.end == null) {
                         this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
 
-			lastSenState.isDone = true
-			lastSenState.isDeath = true
-			this.senCodeProcess()
+			                     lastSenState.isDone = true
+			                     lastSenState.isDeath = true
+			                     this.senCodeProcess()
                         lastSenState.end = event.timestamp
                 }
 
@@ -286,7 +288,7 @@ export default class Sen extends Module {
 				{
 					header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
 					accessor: 'reason',
-				}
+				},
 			]}
 			data={this.senStateWindows
 				.filter(window => window.isNonStandard)
@@ -313,8 +315,8 @@ export default class Sen extends Module {
 							},
 
 						},
-						noteMaps: {
-							reason: <>{window._senCode.message}</>
+						notesMaps: {
+							reason: <>{window._senCode.message}</>,
 						},
 
 						rotation: window.rotation,
