@@ -1,2 +1,2 @@
 export * from './Timeline'
-export {ExposeSetViewFn, SetViewFn} from './ScaleHandler'
+export type {ExposeSetViewFn, SetViewFn} from './ScaleHandler'
