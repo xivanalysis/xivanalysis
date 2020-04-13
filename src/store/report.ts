@@ -1,7 +1,7 @@
 import {fflogsApi} from 'api'
 import * as Errors from 'errors'
 import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
-import {HTTPError} from 'ky'
+import ky from 'ky'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'
 import {globalErrorStore} from 'store/globalError'
@@ -53,7 +53,7 @@ export class ReportStore {
 			})
 
 			// TODO: Add more error handling to this if they start cropping up more
-			if (e instanceof HTTPError) {
+			if (e instanceof ky.HTTPError) {
 				const json: ErrorResponse | undefined = await e.response.json()
 				if (json && json.error === 'This report does not exist or is private.') {
 					globalErrorStore.setGlobalError(new Errors.ReportNotFoundError())
