@@ -318,7 +318,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedActions ) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + Math.max(0, trackedAction.expectedPerWindow - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
+						.reduce((sum, buffWindow) => sum + Math.max(0, this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction) - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedActions.icon,
@@ -326,7 +326,7 @@ export abstract class BuffWindowModule extends Module {
 				tiers: this.trackedActions.severityTiers,
 				value: missedActions,
 				why: <Trans id="core.buffwindow.suggestions.trackedaction.why">
-					<Plural value={missedActions} one="# use of a recommended cooldown was" other="# uses of recommended cooldowns were"/> missed during {this.buffAction.name} windows.
+					<Plural value={missedActions} one="# use of a recommended action was" other="# uses of recommended actions were"/> missed during {this.buffAction.name} windows.
 				</Trans>,
 			}))
 		}
@@ -342,7 +342,7 @@ export abstract class BuffWindowModule extends Module {
 				tiers: this.trackedBadActions.severityTiers,
 				value: badActions,
 				why: <Trans id="core.buffwindow.suggestions.trackedbadaction.why">
-					<Plural value={badActions} one="# use of" other="# uses of"/> cooldowns that should be avoided during {this.buffAction.name} windows.
+					<Plural value={badActions} one="# use of" other="# uses of"/> actions that should be avoided during {this.buffAction.name} windows.
 				</Trans>,
 			}))
 		}
