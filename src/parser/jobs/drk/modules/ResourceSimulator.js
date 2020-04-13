@@ -226,7 +226,7 @@ export default class Resources extends Module {
 		let actionBloodGain = 0
 		let actionMPGain = 0
 
-		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {			
+		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
 			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id) && RESOURCE_SPENDERS[abilityId].affectsWithDelirium) {
 				// Blood spender under delirium - no change
 				actionBloodGain += 0
