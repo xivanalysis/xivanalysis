@@ -169,8 +169,8 @@ export default class Ninki extends Module {
 					label: 'Ninki',
 					steppedLine: true,
 					data: this._ninkiHistory,
-					backgroundColor: ninkiColor.fade(0.8),
-					borderColor: ninkiColor.fade(0.5),
+					backgroundColor: ninkiColor.fade(0.8).toString(),
+					borderColor: ninkiColor.fade(0.5).toString(),
 				},
 			],
 		}

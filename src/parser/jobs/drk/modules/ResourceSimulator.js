@@ -347,8 +347,8 @@ export default class Resources extends Module {
 					label: 'Blood',
 					steppedLine: true,
 					data: this._history.blood,
-					backgroundColor: _bloodColor.fade(0.8),
-					borderColor: _bloodColor.fade(0.5),
+					backgroundColor: _bloodColor.fade(0.8).toString(),
+					borderColor: _bloodColor.fade(0.5).toString(),
 				},
 			],
 		}
@@ -358,8 +358,8 @@ export default class Resources extends Module {
 					label: 'MP',
 					steppedLine: true,
 					data: this._history.mp,
-					backgroundColor: _mpColor.fade(0.8),
-					borderColor: _mpColor.fade(0.5),
+					backgroundColor: _mpColor.fade(0.8).toString(),
+					borderColor: _mpColor.fade(0.5).toString(),
 				},
 			],
 		}

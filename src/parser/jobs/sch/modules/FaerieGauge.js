@@ -168,8 +168,8 @@ export default class FaerieGauge extends Module {
 					label: 'Faerie Gauge',
 					steppedLine: true,
 					data: this._history,
-					backgroundColor: GRAPH_COLOR.fade(BG_COLOR_FADE),
-					borderColor: GRAPH_COLOR.fade(BORDER_COLOR_FADE),
+					backgroundColor: GRAPH_COLOR.fade(BG_COLOR_FADE).toString(),
+					borderColor: GRAPH_COLOR.fade(BORDER_COLOR_FADE).toString(),
 				},
 			],
 		}

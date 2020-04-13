@@ -257,8 +257,8 @@ export default class Ammo extends Module {
 					label: 'Cartridges',
 					steppedLine: true,
 					data: this.ammoHistory,
-					backgroundColor: ammoColor.fade(0.8),
-					borderColor: ammoColor.fade(0.5),
+					backgroundColor: ammoColor.fade(0.8).toString(),
+					borderColor: ammoColor.fade(0.5).toString(),
 				},
 			],
 		}
