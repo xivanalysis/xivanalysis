@@ -9,7 +9,6 @@ import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Sugges
 
 const DOTON_TICK_TARGET = 6
 const JUSTIFIABLE_DOTON_TICKS = 10
-const PREPULL_DOTON_BUFFER = 18000
 
 export default class Ninjutsu extends Module {
 	static handle = 'ninjutsu'
@@ -36,21 +35,20 @@ export default class Ninjutsu extends Module {
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	_onDotonCast(event, fabricated) {
+	_onDotonCast(event) {
 		this._finishDotonWindow()
 
 		this._dotonCasts.current = {
 			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
 			ticks: [],
-			prepull: fabricated && (event.timestamp - PREPULL_DOTON_BUFFER) <= this.parser.fight.start_time,
-			// Flag Dotons with no cast event and a first damage tick at or before 3s as prepull so we don't ding on them
+			prepull: event.timestamp < this.parser.fight.start_time,
 		}
 	}
 
 	_onDotonDamage(event) {
 		// If there are no casts at all, use the damage event to fabricate one
 		if (!this._dotonCasts.current) {
-			this._onDotonCast(event, true)
+			this._onDotonCast(event)
 		}
 
 		this._dotonCasts.current.ticks.push(event.hitCount) // Track the number of enemies hit per tick
