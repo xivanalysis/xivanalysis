@@ -8,8 +8,8 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
-import React from 'react'
-import {Message} from 'semantic-ui-react'
+import React, {Fragment} from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 
 import Kenki from './Kenki'
 
@@ -27,8 +27,11 @@ const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
         NONE: {priority: 0, message: 'No errors'},
-        OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Overriding your sens will slow down your <ActionLink {...ACTIONS.IAIJUTSU}/> and reduce your damage, avoid overriding if possible. </Trans>},
-        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> This window contained a hagakure. </Trans>},
+	// HAGAKURE: {priority:10, message: 'Hagakure'},
+	// OVERWROTE_SEN: {priority:20, message: 'Overwrote sen.'},
+       // DEATH: {priority: 30, message: 'You Died'},
+	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwrote Sen. </Trans>},
+        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a possible filler Hagakure. </Trans>},
         DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
@@ -200,7 +203,7 @@ export default class Sen extends Module {
 			if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 			}
-		 console.log('message post analysis: ' + lastSenState._senCode.message)
+		 console.log('message post analysis: ' + lastSenState.senCode.message)
 		}
 
 	}
@@ -269,7 +272,20 @@ export default class Sen extends Module {
 	}
 
 	output() {
-		return <RotationTable
+		return <Fragment>
+			<Message>
+				<Trans id="san.sen.rotation-table.message"> This table serves a dual purpose, The table contains all hagakure windows for easier visuals of when/how your sen state was when you used Hagakure in the fight and to highlight any time periods where you overwrote a Sen.
+				</Trans>
+			</Message>
+				<Message warning icon>
+					<Icon name="warning sign"/>
+					<Message.Content>
+						<Trans id="sam.sen.rotation-table.disclaimer">This module labels a "Standard Sen Window" to be a window with no sen overwrites that ends on a Iaijutsu.
+							Please consult the balance discord's guides and this [infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.
+						</Trans>
+					</Message.Content>
+				</Message>
+		<RotationTable
 			targets={[
 				{
 					header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
@@ -315,8 +331,8 @@ export default class Sen extends Module {
 							},
 
 						},
-						notesMaps: {
-							reason: <>{window._senCode.message}</>,
+						notesMap: {
+							reason: <>{window.senCode.message}</>,
 						},
 
 						rotation: window.rotation,
@@ -327,5 +343,6 @@ export default class Sen extends Module {
 
 			onGoto={this.timeline.show}
 		/>
+	</Fragment>
 	}
 }
