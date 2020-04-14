@@ -82,8 +82,9 @@ export abstract class Interrupts extends Module {
 	private onCast(event: CastEvent) {
 		const guid = event.ability.guid
 		// if the thing they started casting doesn't match up with what they cast, then
-		// that's an interrupted cast
-		if (this.currentCast && guid !== this.currentCast.ability.guid) {
+		// that's an interrupted cast. Also, ignore attacks, since those can apparently happy during
+		// casting events..
+		if (this.currentCast && guid !== this.currentCast.ability.guid && guid !== ACTIONS.ATTACK.id) {
 			this.pushDropCasts(event)
 		}
 		this.currentCast = undefined
