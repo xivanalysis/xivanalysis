@@ -121,13 +121,14 @@ export default class Sharpcast extends Module {
 			}))
 		})
 
+		// Gather the data for actual / expected
 		const expected = this.cooldownDowntime.calculateMaxUsages({cooldowns: [ACTIONS.SHARPCAST]})
 		const actual = this._usedSharpcasts
 		let percent = actual / expected * 100
 		if (process.env.NODE_ENV === 'production') {
 			percent = Math.min(percent, 100)
 		}
-		console.log(`${expected}/${actual}`)
+
 		// Suggestions to use sharpcasts that wore off.
 		this.suggestions.add(new TieredSuggestion({
 			icon: STATUSES.SHARPCAST.icon,
