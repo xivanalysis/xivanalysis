@@ -133,6 +133,8 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "Vermeide mehr als ein <0/> in deiner Lichtfeuer-Phase zu zaubern, da dies MP kostet, welche eher für weitere <1/> eingesetzt werden sollten.",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "{0} Blitzra wurden unter Lichtfeuer normal gezaubert.",
   "blm.rotation-watchdog.title": "Rotationsübersicht",
+  "blm.sharpcast.statistic.info": "",
+  "blm.sharpcast.statistic.title": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "Da <2/> ablief, wurde mindestens ein garantierter <0/> oder <1/> Proc versäumt.",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, one {# Anwendung} other {# Anwendungen}} von Augmentierung versäumt.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "Du hast mindestens ein <0/> durch die Anwendung von <1/> verbraucht. Wenn auch besser, als den Buff auslaufen zu lassen, solltest du es dennoch allgemein verhindern.",

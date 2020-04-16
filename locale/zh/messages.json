@@ -133,6 +133,8 @@
   "blm.rotation-watchdog.suggestions.wrong-t3.content": "星级火状态下只能硬读一次<0/>，不然会消耗掉本该用来打<1/>的魔力。",
   "blm.rotation-watchdog.suggestions.wrong-t3.why": "星级火状态下硬读了{0, plural, one {# 次多余的暴雷} other {# 次多余的暴雷}}。",
   "blm.rotation-watchdog.title": "循环错误",
+  "blm.sharpcast.statistic.info": "",
+  "blm.sharpcast.statistic.title": "",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "你因为让<2/>过期，失去了一次必定触发<0/>或<1/>的机会。",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, one {# 次激情咏唱} other {# 次激情咏唱}}buff过期.",
   "blm.sharpcast.suggestions.sharpcasted-scathes.content": "你把<0/>用在了<1/>上。通常情况下让激情咏唱白白浪费也比用在崩溃上要好。",
