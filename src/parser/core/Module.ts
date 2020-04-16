@@ -45,6 +45,18 @@ export function dependency(target: Module, prop: string) {
 	})
 }
 
+/**
+ * DO NOT USE OR YOU WILL BE FIRED
+ * Totally spit in the face of the entire dependency system by forcing it
+ * to execute the decorated module before the module passed as an argument.
+ * If you have to think whether you need this or not, you don't need it.
+ */
+export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Module) =>
+	(source: typeof Module) => {
+		target.dependencies.push(source.handle)
+		return source
+	}
+
 export interface MappedDependency {
 	handle: string
 	prop: string
@@ -126,7 +138,7 @@ export default class Module {
 	// So TS peeps don't need to pass the parser down
 	protected init() {}
 
-	normalise(events: Event[]) {
+	normalise(events: Event[]): Event[] | Promise<Event[]> {
 		return events
 	}
 
