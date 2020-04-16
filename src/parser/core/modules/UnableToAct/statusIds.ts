@@ -66,3 +66,4 @@ export const STATUS_IDS = [
 	1533, // Airbound
 	1546, // Odder
 ]
+STATUS_IDS.push(...STATUS_IDS.map(i => i+1000000))
