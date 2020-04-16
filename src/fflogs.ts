@@ -202,6 +202,8 @@ export interface HealEvent extends EffectEvent {
 
 export const isApplyBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applybuff'
 export const isRemoveBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removebuff'
+export const isApplyDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applydebuff'
+export const isRemoveDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removedebuff'
 export interface BuffEvent extends AbilityEvent {
 	type: (
 		'applybuff' |
