@@ -13,7 +13,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 	defaultFirstUseOffset = FIRSTUSEOFFSETALL
 	trackedCds = [
 		{cooldowns: [ACTIONS.LEY_LINES]},
-		{cooldowns: [ACTIONS.SHARPCAST]},
 		{
 			cooldowns: [ACTIONS.MANAFONT],
 			firstUseOffset: 25000,
