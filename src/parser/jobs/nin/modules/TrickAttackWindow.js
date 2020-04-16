@@ -84,8 +84,8 @@ export default class TrickAttackWindow extends BuffWindowModule {
 
 	init() {
 		super.init()
-		this.addHook('applydebuff', {by: 'player'}, this.onApplyBuff)
-		this.addHook('removedebuff', {by: 'player'}, this.onRemoveBuff)
+		this.addHook('normalisedapplydebuff', {by: 'player'}, this.onApplyBuff)
+		this.addHook('normalisedremovedebuff', {by: 'player'}, this.onRemoveBuff)
 	}
 
 	considerAction(action) {
