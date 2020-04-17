@@ -2,7 +2,7 @@
 // TODO: Need to work out how I should handle amnesia/paci/silence
 //       Is it even relevant any more?
 // TODO: Automate this. Should be able to use a combination of the LockControl and LockActions fields in the EXD.
-export const STATUS_IDS = [
+const STATUS_IDS_BASE = [
 	2, // Stun
 	142,
 	149,
@@ -66,3 +66,4 @@ export const STATUS_IDS = [
 	1533, // Airbound
 	1546, // Odder
 ]
+export const STATUS_IDS = STATUS_IDS_BASE.map(i => i+1000000)
