@@ -36,12 +36,13 @@ export enum ActorType {
 	// Enemy
 	BOSS = 'Boss',
 	NPC = 'NPC',
+	UNKNOWN = 'Unknown', // ???
 
 	// Friendly
 	PALADIN = 'Paladin',
 	WARRIOR = 'Warrior',
 	DARK_KNIGHT = 'DarkKnight',
-	GUNBREAKER = 'Gunbreaker', // TODO: CONFIRM
+	GUNBREAKER = 'Gunbreaker',
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
@@ -51,7 +52,7 @@ export enum ActorType {
 	SAMURAI = 'Samurai',
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
-	DANCER = 'Dancer', // TODO: CONFIRM
+	DANCER = 'Dancer',
 	BLACK_MAGE = 'BlackMage',
 	SUMMONER = 'Summoner',
 	RED_MAGE = 'RedMage',
