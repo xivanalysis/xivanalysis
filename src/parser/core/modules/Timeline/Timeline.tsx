@@ -15,13 +15,13 @@ import styles from './Timeline.module.css'
 
 // We default to showing the first minute of the pull. Showing the entire fight at once
 // is overwhelming for an initial view.
-const INITIAL_END = Infinity // 60000 // One minute
+const INITIAL_END = 60000 // One minute
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
 export class Timeline extends Module {
 	static handle = 'timeline'
-	static displayOrder = -DISPLAY_ORDER.TIMELINE
+	static displayOrder = DISPLAY_ORDER.TIMELINE
 	static displayMode = DISPLAY_MODE.FULL
 	static title = t('core.timeline.title')`Timeline`
 
