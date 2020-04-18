@@ -30,6 +30,8 @@ import {exRuby1} from './bosses/exRuby1'
 import {exRuby2} from './bosses/exRuby2'
 import {exVaris} from './bosses/exVaris'
 import {e4s} from './bosses/e4s'
+import {e7s} from './bosses/e7s'
+import {e8s} from './bosses/e8s'
 
 interface AvailableModules {
 	CORE: Meta
@@ -74,5 +76,7 @@ export default {
 		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
 
 		[BOSSES.E4S.logId]: e4s,
+		[BOSSES.E7S.logId]: e7s,
+		[BOSSES.E8S.logId]: e8s,
 	},
 } as AvailableModules

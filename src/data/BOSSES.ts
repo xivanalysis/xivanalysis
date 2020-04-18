@@ -44,6 +44,10 @@ const BOSSES = ensureBosses({
 	E2S: {logId: 66},
 	E3S: {logId: 67},
 	E4S: {logId: 68},
+	E5S: {logId: 69},
+	E6S: {logId: 70},
+	E7S: {logId: 71},
+	E8S: {logId: 72},
 })
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>
