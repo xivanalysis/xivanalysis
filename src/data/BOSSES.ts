@@ -33,6 +33,11 @@ const BOSSES = ensureBosses({
 	// Reason you need to add override info
 	// SOME_BOSS: { logId, overrides... },
 
+	TITANIA: {logId: 1045},
+	INNOCENCE: {logId: 1046},
+	HADES: {logId: 1049},
+	RUBY_WEAPON_1: {logId: 1051},
+	RUBY_WEAPON_2: {logId: 1052},
 	VARIS_YAE_GALVUS: {logId: 1053},
 })
 
