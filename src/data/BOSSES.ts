@@ -39,6 +39,11 @@ const BOSSES = ensureBosses({
 	RUBY_WEAPON_1: {logId: 1051},
 	RUBY_WEAPON_2: {logId: 1052},
 	VARIS_YAE_GALVUS: {logId: 1053},
+
+	E1S: {logId: 65},
+	E2S: {logId: 66},
+	E3S: {logId: 67},
+	E4S: {logId: 68},
 })
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>
