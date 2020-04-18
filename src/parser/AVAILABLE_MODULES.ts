@@ -26,6 +26,8 @@ import WHM from './jobs/whm'
 import {exTitania} from './bosses/exTitania'
 import {exInnocence} from './bosses/exInnocence'
 import {exHades} from './bosses/exHades'
+import {exRuby1} from './bosses/exRuby1'
+import {exRuby2} from './bosses/exRuby2'
 import {exVaris} from './bosses/exVaris'
 
 interface AvailableModules {
@@ -66,6 +68,8 @@ export default {
 		[BOSSES.TITANIA.logId]: exTitania,
 		[BOSSES.INNOCENCE.logId]: exInnocence,
 		[BOSSES.HADES.logId]: exHades,
+		[BOSSES.RUBY_WEAPON_1.logId]: exRuby1,
+		[BOSSES.RUBY_WEAPON_2.logId]: exRuby2,
 		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
 	},
 } as AvailableModules
