@@ -224,6 +224,12 @@ export interface BuffStackEvent extends AbilityEvent {
 	stack: number
 }
 
+export const isTargetabilityUpdateEvent = (event: Event): event is TargetabilityUpdateEvent => hasStringType(event) && event.type === 'targetabilityupdate'
+export interface TargetabilityUpdateEvent extends AbilityEvent {
+	type: 'targetabilityupdate'
+	targetable: 0 | 1
+}
+
 // -----
 // Misc
 // -----
