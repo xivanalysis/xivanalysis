@@ -3,8 +3,10 @@ import {Fight} from 'fflogs'
 
 export interface Boss {
 	logId: number
-	overrides: Partial<Fight>
+	overrides?: Partial<Fight>
 }
+
+const ensureBosses = <T extends Record<string, Boss>>(bosses: T): {[K in keyof T]: T[K] & Boss} => bosses
 
 // Correct fight info with manual overrides
 export const getCorrectedFight = (fight: Fight): Fight => {
@@ -12,7 +14,7 @@ export const getCorrectedFight = (fight: Fight): Fight => {
 
 	return {
 		...fight,
-		...(boss? boss.overrides : {}),
+		...boss?.overrides,
 	}
 }
 
@@ -20,7 +22,7 @@ export const getCorrectedFight = (fight: Fight): Fight => {
 export const getZoneBanner = (zoneId: number) =>
 	zoneId >= 0 && `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
 
-const BOSSES = {
+const BOSSES = ensureBosses({
 	// Special case - FF Logs reports trash fights with a boss ID of 0
 	TRASH: {
 		logId: 0,
@@ -30,6 +32,8 @@ const BOSSES = {
 	// 5.0
 	// Reason you need to add override info
 	// SOME_BOSS: { logId, overrides... },
-}
+
+	VARIS_YAE_GALVUS: {logId: 1053},
+})
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>

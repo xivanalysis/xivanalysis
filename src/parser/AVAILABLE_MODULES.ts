@@ -1,4 +1,4 @@
-import {Boss} from 'data/BOSSES'
+import BOSSES, {Boss} from 'data/BOSSES'
 import JOBS, {Job} from 'data/JOBS'
 
 import CORE from './core'
@@ -22,6 +22,8 @@ import SCH from './jobs/sch'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
+
+import {exVaris} from './bosses/exVaris'
 
 interface AvailableModules {
 	CORE: Meta
@@ -58,6 +60,6 @@ export default {
 	},
 
 	BOSSES: {
-		// [BOSSES.SOME_BOSS.logId]: IMPORTED_BOSS_MODULES,
+		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
 	},
 } as AvailableModules
