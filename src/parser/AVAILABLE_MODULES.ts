@@ -24,6 +24,7 @@ import WAR from './jobs/war'
 import WHM from './jobs/whm'
 
 import {exTitania} from './bosses/exTitania'
+import {exInnocence} from './bosses/exInnocence'
 import {exVaris} from './bosses/exVaris'
 
 interface AvailableModules {
@@ -62,6 +63,7 @@ export default {
 
 	BOSSES: {
 		[BOSSES.TITANIA.logId]: exTitania,
+		[BOSSES.INNOCENCE.logId]: exInnocence,
 		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
 	},
 } as AvailableModules
