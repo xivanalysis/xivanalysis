@@ -19,6 +19,7 @@ import ArcanaTracking, {CardState, SealType, SleeveType} from './ArcanaTracking'
 import sealCelestial from './seal_celestial.png'
 import sealLunar from './seal_lunar.png'
 import sealSolar from './seal_solar.png'
+import {Data} from 'parser/core/modules/Data'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
 
@@ -46,6 +47,7 @@ export default class ArcanaSuggestions extends Module {
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
+	@dependency private data!: Data
 	@dependency private combatants!: Combatants
 	@dependency private arcanaTracking!: ArcanaTracking
 	@dependency private timeline!: Timeline
@@ -53,7 +55,13 @@ export default class ArcanaSuggestions extends Module {
 	private cardLogs: CardLog[] = []
 	private partyComp: string[] = []
 
+	private PLAY: number[] = []
+
 	protected init() {
+		PLAY.forEach(actionKey => {
+			this.PLAY.push(this.data.actions[actionKey].id)
+		})
+
 		this.addHook('complete', this._onComplete)
 	}
 
@@ -161,7 +169,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderAction(artifact: CardLog) {
-		if (artifact.lastEvent.type === 'cast' && PLAY.includes(artifact.lastEvent.ability.guid) ) {
+		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid) ) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
 			return <>
@@ -200,7 +208,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderSpreadState(artifact: CardLog) {
-		const drawnArcana = getDataBy(STATUSES, 'id', artifact.drawState)
+		const drawnArcana = artifact.drawState > 0 ? getDataBy(STATUSES, 'id', artifact.drawState) : undefined
 
 		return <Table.Cell>
 			<span style={{marginRight: 10, marginLeft: 0}}>
