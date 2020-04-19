@@ -23,6 +23,7 @@ import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
 
+import {neir3} from './bosses/nier3'
 import {exTitania} from './bosses/exTitania'
 import {exInnocence} from './bosses/exInnocence'
 import {exHades} from './bosses/exHades'
@@ -32,7 +33,7 @@ import {exVaris} from './bosses/exVaris'
 import {e4} from './bosses/e4'
 import {e7} from './bosses/e7'
 import {e8} from './bosses/e8'
-import {neir3} from './bosses/nier3'
+import {tea} from './bosses/tea'
 
 interface AvailableModules {
 	CORE: Meta
@@ -69,6 +70,8 @@ export default {
 	},
 
 	BOSSES: {
+		[BOSSES.NIER3.logId]: neir3,
+
 		[BOSSES.TITANIA.logId]: exTitania,
 		[BOSSES.INNOCENCE.logId]: exInnocence,
 		[BOSSES.HADES.logId]: exHades,
@@ -80,6 +83,6 @@ export default {
 		[BOSSES.E7.logId]: e7,
 		[BOSSES.E8.logId]: e8,
 
-		[BOSSES.NIER3.logId]: neir3,
+		[BOSSES.TEA.logId]: tea,
 	},
 } as AvailableModules

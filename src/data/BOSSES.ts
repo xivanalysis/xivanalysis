@@ -33,6 +33,12 @@ const BOSSES = ensureBosses({
 	// Reason you need to add override info
 	// SOME_BOSS: { logId, overrides... },
 
+	// 24mans
+	NIER1: {logId: 2020},
+	NIER2: {logId: 2021},
+	NIER3: {logId: 2022},
+	NIER4: {logId: 2023},
+
 	// Trials
 	TITANIA: {logId: 1045},
 	INNOCENCE: {logId: 1046},
@@ -51,11 +57,8 @@ const BOSSES = ensureBosses({
 	E7: {logId: 71},
 	E8: {logId: 72},
 
-	// 24mans
-	NIER1: {logId: 2020},
-	NIER2: {logId: 2021},
-	NIER3: {logId: 2022},
-	NIER4: {logId: 2023},
+	// Ultimates
+	TEA: {logId: 1050},
 })
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>
