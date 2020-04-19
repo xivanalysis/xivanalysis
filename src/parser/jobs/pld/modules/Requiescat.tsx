@@ -24,7 +24,7 @@ const SEVERITIES = {
 
 const CONSTANTS = {
 	HOLY_SPIRIT: {
-		EXPECTED: 4,
+		EXPECTED: 3,
 	},
 	CONFITEOR: {
 		EXPECTED: 1,
@@ -42,7 +42,7 @@ class RequiescatState {
 	start: number
 	end: number | null = null
 	rotation: CastEvent[] = []
-	hasAscociatedBuff: boolean = false
+	hasAssociatedBuff: boolean = false
 	isRushing: boolean = false
 
 	constructor(start: number) {
@@ -120,7 +120,7 @@ export default class Requiescat extends Module {
 		const lastRequiescat = this.lastRequiescat
 
 		if (lastRequiescat != null) {
-			lastRequiescat.hasAscociatedBuff = true
+			lastRequiescat.hasAssociatedBuff = true
 		}
 	}
 
@@ -136,10 +136,10 @@ export default class Requiescat extends Module {
 		// The difference between Holy Spirit and Confiteor is massive (450 potency before multipliers). For this reason, it condenses suggestions
 		// to just log any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
 		const missedCasts = this.requiescats
-			.filter(requiescat => requiescat.hasAscociatedBuff && !requiescat.isRushing)
+			.filter(requiescat => requiescat.hasAssociatedBuff && !requiescat.isRushing)
 			.reduce((sum, requiescat) =>
 				sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits) + Math.max(0, CONSTANTS.CONFITEOR.EXPECTED - requiescat.confiteors), 0)
-		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAscociatedBuff).length
+		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAssociatedBuff).length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HOLY_SPIRIT.icon,
@@ -147,7 +147,7 @@ export default class Requiescat extends Module {
 				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or
+				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 3-4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or 4 uses of
 				multi-hit <ActionLink {...ACTIONS.HOLY_CIRCLE}/>) and 1 use of <ActionLink {...ACTIONS.CONFITEOR}/> for optimal damage.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_CASTS,
@@ -184,7 +184,7 @@ export default class Requiescat extends Module {
 				},
 			]}
 			data={this.requiescats
-				.filter(requiescat => requiescat.hasAscociatedBuff)
+				.filter(requiescat => requiescat.hasAssociatedBuff)
 				.map(requiescat => ({
 					start: requiescat.start - this.parser.fight.start_time,
 					end: requiescat.end != null ?

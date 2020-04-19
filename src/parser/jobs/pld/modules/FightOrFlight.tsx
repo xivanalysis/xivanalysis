@@ -56,7 +56,7 @@ const CONSTANTS = {
 		EXPECTED: 1,
 	},
 	GCD: {
-		EXPECTED: 10,
+		EXPECTED: 11,
 	},
 }
 

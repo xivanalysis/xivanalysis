@@ -629,7 +629,7 @@
   "pld.goring.suggestions.goringblade.why": "{0} of <0/> lost to early refreshes.",
   "pld.requiescat.suggestions.nobuff.content": "<0/> should only be used when over 80% MP. Try to not miss on the 20% Magic Damage buff <1/> provides.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} while under 80% MP.",
-  "pld.requiescat.suggestions.wrong-gcd.content": "GCDs used during <0/> should consist of 4 uses of <1/> (or multi-hit <2/>) and 1 use of <3/> for optimal damage.",
+  "pld.requiescat.suggestions.wrong-gcd.content": "GCDs used during <0/> should consist of 3-4 uses of <1/> (or 4 uses of multi-hit <2/>) and 1 use of <3/> for optimal damage.",
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# missing cast} other {# missing casts}} during the <0/> buff window.",
   "pld.requiescat.title": "Requiescat Usage",
   "rdm.about.description": "<0>This analyzer aims to give you the information you need to turn your <1>parses</1> into <2>parses</2></0><3>If you would like to learn more about RDM, check the guides over at <4>The Balance</4>, and have a chat in the <5>#rdm_questions</5> channel.</3>",
