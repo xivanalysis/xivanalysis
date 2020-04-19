@@ -50,6 +50,12 @@ const BOSSES = ensureBosses({
 	E6: {logId: 70},
 	E7: {logId: 71},
 	E8: {logId: 72},
+
+	// 24mans
+	NIER1: {logId: 2020},
+	NIER2: {logId: 2021},
+	NIER3: {logId: 2022},
+	NIER4: {logId: 2023},
 })
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>
