@@ -33,6 +33,7 @@ const BOSSES = ensureBosses({
 	// Reason you need to add override info
 	// SOME_BOSS: { logId, overrides... },
 
+	// Trials
 	TITANIA: {logId: 1045},
 	INNOCENCE: {logId: 1046},
 	HADES: {logId: 1049},
@@ -40,14 +41,15 @@ const BOSSES = ensureBosses({
 	RUBY_WEAPON_2: {logId: 1052},
 	VARIS_YAE_GALVUS: {logId: 1053},
 
-	E1S: {logId: 65},
-	E2S: {logId: 66},
-	E3S: {logId: 67},
-	E4S: {logId: 68},
-	E5S: {logId: 69},
-	E6S: {logId: 70},
-	E7S: {logId: 71},
-	E8S: {logId: 72},
+	// Raids (savage and normal share log boss IDs)
+	E1: {logId: 65},
+	E2: {logId: 66},
+	E3: {logId: 67},
+	E4: {logId: 68},
+	E5: {logId: 69},
+	E6: {logId: 70},
+	E7: {logId: 71},
+	E8: {logId: 72},
 })
 
 export default BOSSES as Record<keyof typeof BOSSES, Boss>
