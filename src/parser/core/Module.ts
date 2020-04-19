@@ -279,7 +279,7 @@ export default class Module {
 	 */
 	protected debug(debugFn: DebugFn): void
 	protected debug(...messages: LogParams): void
-	protected debug(...messages: LogParams | [DebugFn]) {
+	protected debug(...messages: [DebugFn] | LogParams) {
 		const module = this.constructor as typeof Module
 
 		if (!module.debug || process.env.NODE_ENV === 'production') {
@@ -287,7 +287,7 @@ export default class Module {
 		}
 
 		typeof messages[0] === 'function'
-			?	messages[0]({log: this.debugLog})
+			? messages[0]({log: this.debugLog})
 			: this.debugLog(...messages)
 	}
 
