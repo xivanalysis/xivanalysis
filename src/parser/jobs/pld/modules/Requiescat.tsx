@@ -24,7 +24,7 @@ const SEVERITIES = {
 
 const CONSTANTS = {
 	HOLY_SPIRIT: {
-		EXPECTED: 4,
+		EXPECTED: 3,
 	},
 	CONFITEOR: {
 		EXPECTED: 1,
@@ -147,7 +147,7 @@ export default class Requiescat extends Module {
 				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or
+				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 3-4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or 4 uses of
 				multi-hit <ActionLink {...ACTIONS.HOLY_CIRCLE}/>) and 1 use of <ActionLink {...ACTIONS.CONFITEOR}/> for optimal damage.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_CASTS,
