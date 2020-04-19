@@ -629,7 +629,7 @@
   "pld.goring.suggestions.goringblade.why": "由于提前刷新，浪费了{0} <0/>。",
   "pld.requiescat.suggestions.nobuff.content": "<0/>应该只在蓝量高于80%的时候使用。尝试尽可能去触发由<1/>提供的20%魔法伤害提高buff。",
   "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
-  "pld.requiescat.suggestions.wrong-gcd.content": "为了最大化伤害，<0/>持续时间内的GCD应当由4个<1/>（多目标时用<2/>）以及1个<3/>构成。",
+  "pld.requiescat.suggestions.wrong-gcd.content": "",
   "pld.requiescat.suggestions.wrong-gcd.why": "在<0/>的持续时间内打了{missedCasts, plural, one {#个错误的技能} other {#个错误的技能}}。",
   "pld.requiescat.title": "安魂祈祷的使用",
   "rdm.about.description": "<0>本分析会把将你的<1>样本</1>再次<2>解析</2>，提供给你所需的信息。</0><3>如果你想了解更多有关赤魔的内容，可以在 <4>The Balance</4> Discord 群组中查看指南，在其中的 <5>#rdm_questions</5> 频道里与其他玩家相互沟通。</3>",
