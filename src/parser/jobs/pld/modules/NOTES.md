@@ -5,7 +5,7 @@
 # Casting Clemency
 * Interrupts combo, obvious flags.
 # Proper utilization of FoF
-* 10 total GCDs of FoF (Lead Goring, filler, end Goring) - see guide for a rotation image.
+* 11 total GCDs of FoF (Lead Goring, filler, end Goring) - see guide for a rotation image.
 * At most 2 Gorings per FoF use.
 * Ensure 1 Spirits Within, 1 Circle of Scorn, 1+ Intervene per FoF use. (barring add delay). Sometimes worth to not use an Intervene, but that's fight specific.
 * Naturally, they will be used every 63~ seconds, not 60. Requires a coding exceeption. With the intro of Atonement, possible to easily use every 60 seconds.
