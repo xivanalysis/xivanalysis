@@ -629,7 +629,7 @@
   "pld.goring.suggestions.goringblade.why": "{0} de <0/> perdu car rafraîchi trop tôt.",
   "pld.requiescat.suggestions.nobuff.content": "<0/> devrait seulement être utilisé à plus de 80% de vos PM. Essayez de ne pas rater les 20% de bonus de dommages magiques que <1/> vous donne.",
   "pld.requiescat.suggestions.nobuff.why": "{missedRequiescatBuffs, plural, one {# usage} other {# usages}} en dessous de 80% de vos PM.",
-  "pld.requiescat.suggestions.wrong-gcd.content": "Les GCD utilisés pendant <0/>> doivent consister en 4 utilisations de <1/> (ou multi-cibles <2/>) et 1 utilisation de <3/> pour un dommage optimal.",
+  "pld.requiescat.suggestions.wrong-gcd.content": "",
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# cast raté} other {# casts ratés}} durant <0/> fenêtres de buff.",
   "pld.requiescat.title": "Utilisation de Requiescat",
   "rdm.about.description": "<0>Cet analyseur a pour but de vous donner les informations nécessaires pour changer vos <1>parses</1> en<2>parses</2></0> <3>Si vous souhaitez en savoir plus sur Mage rouge, consultez les guides <4>The Balance</4>, et consultez le canal <5>#rdm_questions</5>.</3>",
