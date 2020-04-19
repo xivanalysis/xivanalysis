@@ -68,6 +68,12 @@ type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	by: 'player' | 'pet' | T['sourceID'],
 }>
 
+type LogParams = Parameters<typeof console.log>
+interface DebugFnOpts {
+	log: (...messages: LogParams) => void
+}
+type DebugFn = (opts: DebugFnOpts) => void
+
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
@@ -271,13 +277,22 @@ export default class Module {
 	 * Log a debug console message. Will only be printed if built in a non-production
 	 * environment, with `static debug = true` in the module it's being executed in.
 	 */
-	protected debug(...messages: Parameters<typeof console.log>) {
+	protected debug(debugFn: DebugFn): void
+	protected debug(...messages: LogParams): void
+	protected debug(...messages: [DebugFn] | LogParams) {
 		const module = this.constructor as typeof Module
 
 		if (!module.debug || process.env.NODE_ENV === 'production') {
 			return
 		}
 
+		typeof messages[0] === 'function'
+			? messages[0]({log: this.debugLog})
+			: this.debugLog(...messages)
+	}
+
+	private debugLog = (...messages: LogParams) => {
+		const module = this.constructor as typeof Module
 		// tslint:disable-next-line:no-console
 		console.log(
 			`[%c${module.handle}%c]`,
