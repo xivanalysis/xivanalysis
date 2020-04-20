@@ -33,7 +33,7 @@
   "ast.dots.rule.description": "Obwohl Astrologen nur einen DoT besitzen, bewirkt dieser einen guten Anteil deines Schadens. Die Wirkdauer von 30 Sekunden passt zu der Abklingzeit von (<0/>), womit du Zeit hast deine Karten zu managen. Er ermöglicht es dir außerdem, dich frei bewegen zu können, ohne die Uptime deiner GCDs zu verringern. Versuche diesen DoT permanent aufrecht zu erhalten.",
   "ast.dots.rule.name": "Halte deinen DoT aufrecht",
   "ast.dots.suggestion.clip.content": "Vermeide es <0/> zu erneuern, wenn er noch über eine lange Restlaufzeit verfügt.",
-  "ast.dots.suggestion.clip.why": "",
+  "ast.dots.suggestion.clip.why": "{0} von <0/> durch zu frühes Reaktivieren verloren.",
   "ast.draw.checklist.description": "Ziehen ist die Hauptmechanik des Astrologen, versuche es deshalb so oft wie möglich zu nutzen.",
   "ast.draw.checklist.name": "Benutze Ziehen regelmäßig",
   "ast.draw.checklist.requirement.name": "<0/> Nutzungen",
