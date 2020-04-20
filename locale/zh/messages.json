@@ -613,7 +613,7 @@
   "nin.taWindow.title": "背刺",
   "pld.about.description": "作为黑魔与白魔不被承认的后代，你选择了一条“沥血”之路，成为了一名举着盾牌，挥舞宝剑的法师，试着去帮助所有队友。\n\n这个分析器会帮助你成为一名令人畏惧的坦克，面对敌人时你没有丝毫的“深仁厚泽”，同时作为真正的“圣灵”激励着你的团队。\n",
   "pld.about.description.warning": "\n**这里是龙骑士**\n\n本分析器**仍在制作中**，有很多缺失的特性，另外很多地方做了简化。\n\n下方的建议不可全信。\n\n如果你发现有任何问题，或者有任何疑问、建议，请来我们的Discord频道！\n",
-  "pld.fightorflight.suggestions.gcds.content": "尝试在<0/>的持续时间内插入10个GCD技能。",
+  "pld.fightorflight.suggestions.gcds.content": "",
   "pld.fightorflight.suggestions.gcds.why": "在<0/>的持续时间内损失了{0, plural, one {#个GCD技能} other {#个GCD技能}}。",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "尝试在<2/>的持续时间内在9个GCD技能之后刷新第1个<1/>的<0/>DoT效果。",
   "pld.fightorflight.suggestions.goring-blade-clip.why": "在<0/>的持续时间内过早刷新了{0, plural, one {#次沥血剑} other {#次沥血剑}}。",
