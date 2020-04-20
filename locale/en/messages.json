@@ -613,7 +613,7 @@
   "nin.taWindow.title": "Trick Attack Windows",
   "pld.about.description": "As the illegitimate child of a WHM and BLM, you chose the Gory Path of a shield lobing, sword swinging Mage, that also tries to help everybody out.\n\nThis analyzer attempts to find just the right things to get you to be a fearsome Tank, that will show no [~action/CLEMENCY] to his enemies, while being the true [~action/HOLY_SPIRIT] of the Party.\n",
   "pld.about.description.warning": "\n**Here be Dragons**\n\nThis Analyzer is still **Work in Progress** and is missing a lot of features as well as simplifying a couple of things for now.\n\nMake sure to take the advice still with a grain of Salt.\n\nIf you notice any issues, have concerns or suggestions, please drop by our Discord channel!\n",
-  "pld.fightorflight.suggestions.gcds.content": "Try to land 10 GCDs during every <0/> window.",
+  "pld.fightorflight.suggestions.gcds.content": "Try to land 11 GCDs during every <0/> window.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# GCD} other {# GCDs}} missed during <0/> windows.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Try to refresh <0/> 9 GCDs after the first <1/> in a <2/> window.",
   "pld.fightorflight.suggestions.goring-blade-clip.why": "{0, plural, one {# application was} other {# applications were}} refreshed too early during <0/> windows.",
