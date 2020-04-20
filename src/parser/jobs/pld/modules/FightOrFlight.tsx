@@ -183,7 +183,7 @@ export default class FightOrFlight extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
 			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+				Try to land 11 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
 				<Plural value={this.fofErrorResult.missedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
