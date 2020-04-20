@@ -613,7 +613,7 @@
   "nin.taWindow.title": "",
   "pld.about.description": "En tant qu'enfant illégitime d'un Mage blanc et d'un mage noir, vous avez choisi le chemin sanglant du bouclier, vous êtes le Mage qui balance son épée et qui essaie aussi d'aider tout le monde.\n\nCet analyseur tente de trouver ce qu'il faut pour que vous soyez un tank redoutable, qui ne montrera aucun[~action/CLEMENCY] à ses ennemis, tout en étant le vrai[~action/HOLY_SPIRIT] de l'équipe.\n",
   "pld.about.description.warning": "\n**Ici devenz un dragon**\n\nCet analyseur est toujours **en cours d'élaboration** et il manque beaucoup de fonctionnalités et simplifie certaines choses pour l'instant.\n\nVeillez à suivre le conseil avec un grain de sel.\n\nSi vous remarquez des problèmes, avez des préoccupations ou des suggestions, n'hésitez pas à passer par notre canal Discord !\n",
-  "pld.fightorflight.suggestions.gcds.content": "Essayez d'utiliser 10 GCDs chaque <0/> {0, plural, one {# fenêtre} other {# fenêtres}}.",
+  "pld.fightorflight.suggestions.gcds.content": "",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# GCD raté} other {# GCDs ratés}} durant <0/> fenêtres.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Essayez de rafraîchir <0/> 9 GCDs après le premier <1/> dans <2/> fenêtre.",
   "pld.fightorflight.suggestions.goring-blade-clip.why": "{0, plural, one {# application a été rafraîchie} other {# applications ont été rafraîchies}} trop tôt durant <0/> fenêtres.",
