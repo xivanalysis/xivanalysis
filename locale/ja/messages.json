@@ -607,7 +607,7 @@
   "nin.taWindow.chart.notes.header": "",
   "nin.taWindow.chart.notes.no": "",
   "nin.taWindow.chart.notes.yes": "",
-  "nin.taWindow.suggestions.badtrackedactions.content": "",
+  "nin.taWindow.suggestions.badtrackedactions.content": "<2/>が切れそうなときや、側面しか取れないときでなければ、<0/>を<1/>効果中に使うのは避けましょう。<3/>の方が威力が高いです。",
   "nin.taWindow.suggestions.gcds.content": "",
   "nin.taWindow.suggestions.trackedactions.content": "",
   "nin.taWindow.title": "",
