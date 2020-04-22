@@ -10,26 +10,49 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import Timeline from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
+import {ComboEvent} from 'parser/core/modules/Combos'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 import Kenki from './Kenki'
 
-const SEN_ACTIONS = [ACTIONS.YUKIKAZE.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id]
+const SEN_ACTIONS = [
+	ACTIONS.YUKIKAZE.id,
+	ACTIONS.GEKKO.id,
+	ACTIONS.MANGETSU.id,
+	ACTIONS.KASHA.id,
+	ACTIONS.OKA.id
+]
 
 // Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
 
-const IAIJUTSU = [
+const SEN_REMOVERS = [
         ACTIONS.HIGANBANA.id,
         ACTIONS.TENKA_GOKEN.id,
         ACTIONS.MIDARE_SETSUGEKKA.id,
+	ACTIONS.HAGAKURE.id,
 ]
+
+const THINGS_WE_WANT_IN_THE_TABLE = [
+	ACTIONS.HAKAZE.id,
+	ACTIONS.JINPU.id,
+	ACTIONS.SHIFU.id,
+	ACTIONS.FUGA.id,
+	
+	// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
+	ACTIONS.ENPI.id,
+	ACTIONS.HISSATSU_YATEN.id,
+	ACTIONS.HISSATSU_GYOTEN.id,
+	
+	//OGCDS IGAF about.
+	ACTIONS.HISSATSU_KAITEN.id,
+	ACTIONS.MEIKYO_SHISUI.id,
+]
+
 
 const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
         NONE: {priority: 0, message: 'No errors'},
-	// HAGAKURE: {priority:10, message: 'Hagakure'},
-	// OVERWROTE_SEN: {priority:20, message: 'Overwrote sen.'},
-       // DEATH: {priority: 30, message: 'You Died'},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwrote Sen. </Trans>},
         HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a possible filler Hagakure. </Trans>},
         DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
@@ -91,91 +114,128 @@ export default class Sen extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-
-		// Death, as well as all Iaijutsu, remove all available sen
-		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
-		this.addHook(
-			'cast',
-			{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
-			this.onHagakure,
+		// Things that give
+		this.addEventHook(
+			'cast', 
+			{
+				by: 'player',
+				abilityId: THINGS_WE_WANT_IN_THE_TABLE
+			},
+			this.checkCastAndPush,
 		)
-		this.addHook(
-			'applybuff', {
-			to: 'player',
-			abilityId: [STATUSES.RAISE.id]}, this.onRevive)
+		
+		this.addEventHook(
+			['normaliseddamage', 'combo'],
+			{
+				by: 'player',
+				abilityId: SEN_ACTIONS,
+			},
+			this.onSenGen,
+			
+		)
 
-		// this.addHook('death', {to: 'player'}, this.onDeath)
+		
+		// Things that take
+		this.addEventHook(
+			'cast',
+			{
+				by: 'player',
+				abilityId: SEN_REMOVERS,
+			},
+			this.remove,
+		)
+
+		this.addEventHook('death', {to: 'player'}, this.onDeath,)
 
 		// Suggestion time~
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-// Function that handles SenState check, if no senState call the maker and then push to the rotation, add sen when applicable
-	private onCast(event: CastEvent) {
-		// step 1: set action
+//Handles Sen Gen
+	private onSenGen(event: ComboEvent)
+	{
 		const action = event.ability.guid
 
-		if (action === ACTIONS.ATTACK.id) {return} // Who put these auto attacks here?
+                // check the sen state, if undefined/not active, make one, I don't know how having 2 hooks fire will handle this, so safety.
 
-		// step 2: check the sen state, if undefined/not active, make one
-
-		let lastSenState = this.lastSenState
-
-		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
-
-			this.senStateMaker(event)
-		}
-
-		lastSenState = this.lastSenState
+                let lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
-			// Push action
-			lastSenState.rotation.push(event)
+                        switch (action) {
+                                case ACTIONS.YUKIKAZE.id:
+                                        lastSenState.currentSetsu++
 
-			// if (SEN_ACTIONS.hasOwnProperty(action)) {
-			switch (action) {
-                        	case ACTIONS.YUKIKAZE.id:
-                                	lastSenState.currentSetsu++
+                                        if (lastSenState.currentSetsu > 1) {
+                                                lastSenState.overwriteSetsus++
+                                                lastSenState.currentSetsu = 1
+                                                lastSenState.isNonStandard = true
+                                                lastSenState.isOverwrite = true
+                                                }
+                                        break
 
-                                	if (lastSenState.currentSetsu > 1) {
-                                        	lastSenState.overwriteSetsus++
-                                        	lastSenState.currentSetsu = 1
-                                        	lastSenState.isNonStandard = true
-						                                   lastSenState.isOverwrite = true
-                                        	}
-                                	break
+                                case ACTIONS.GEKKO.id:
+                                case ACTIONS.MANGETSU.id:
+                                        lastSenState.currentGetsu++
 
-                        	case ACTIONS.GEKKO.id:
-                	        case ACTIONS.MANGETSU.id:
-        	                        lastSenState.currentGetsu++
+                                        if (lastSenState.currentGetsu > 1 ) {
+                                                lastSenState.overwriteGetsus++
+                                                lastSenState.currentGetsu = 1
+                                                lastSenState.isNonStandard = true
+                                                lastSenState.isOverwrite = true
 
-	                                if (lastSenState.currentGetsu > 1 ) {
-	                                        lastSenState.overwriteGetsus++
-	                                        lastSenState.currentGetsu = 1
-	                                        lastSenState.isNonStandard = true
-						                                   lastSenState.isOverwrite = true
+                                                }
+                                        break
 
-                                        	}
-                                	break
+                                case ACTIONS.KASHA.id:
+                                case ACTIONS.OKA.id:
+                                        lastSenState.currentKa++
 
-                        	case ACTIONS.KASHA.id:
-                        	case ACTIONS.OKA.id:
-                                	lastSenState.currentKa++
+                                        if (lastSenState.currentKa > 1) {
+                                                lastSenState.overwriteKas++
+                                                lastSenState.currentKa = 1
+                                                lastSenState.isNonStandard = true
+                                                lastSenState.isOverwrite = true
 
-                        	        if (lastSenState.currentKa > 1) {
-                	                        lastSenState.overwriteKas++
-        	                                lastSenState.currentKa = 1
-	                                        lastSenState.isNonStandard = true
-						                                   lastSenState.isOverwrite = true
+                                                }
+                                        break
+                                }
 
-                                	        }
-                        	        break
-                        	}
+                }
 
-			// }
-		}
+		
+	}
+
+
+// Function that handles SenState check, if no senState call the maker and then push to the rotation
+	private checkCastAndPush(event: CastEvent) {
+		
+		// step 1: set action
+		const action = event.ability.guid
+
+		//step 2: FILTER EVERYTHING
+
+		if(THINGS_WE_WANT_IN_THE_TABLE.hasOwnProperty(action) || SEN_ACTIONS.hasOwnProperty(action) || SEN_REMOVERS.hasOwnProperty(action) ) {
+
+			// step 3: check the sen state, if undefined/not active, make one
+
+			let lastSenState = this.lastSenState
+
+			if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
+
+				this.senStateMaker(event)
+			}
+
+			lastSenState = this.lastSenState
+
+			if (lastSenState != null && lastSenState.end == null) { // The state already exists
+
+				// Push action
+				lastSenState.rotation.push(event)
+			}
+
+
+		}	
 
 	}
 
@@ -196,14 +256,13 @@ export default class Sen extends Module {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 			}
 
-			if (lastSenState.isOverwrite === true) {
+			else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 			}
 
-			if (lastSenState.isHaga === true) {
+			else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 			}
-		 console.log('message post analysis: ' + lastSenState.senCode.message)
 		}
 
 	}
@@ -214,6 +273,17 @@ export default class Sen extends Module {
 
 		if (lastSenState != null && lastSenState.end == null) {
 
+
+			if(event.ability.guid === ACTIONS.HAGAKURE.id) {
+				 lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
+
+                        	lastSenState.isNonStandard = true
+                        	lastSenState.isHaga = true
+
+                        	this.kenki.modify(lastSenState.kenkiGained)
+			}
+
+
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
 
 			lastSenState.isDone = true
@@ -222,37 +292,18 @@ export default class Sen extends Module {
 		}
 	}
 
-// HAHA YOU DIED! literally just the same as above, but jank because I can't pass the buff into a cast event
-	private onRevive(event: BuffEvent) {
+	private onDeath() {
 		const lastSenState = this.lastSenState
 
-  if (lastSenState != null && lastSenState.end == null) {
-                        this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
+  		if (lastSenState != null && lastSenState.end == null) {
+                        this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
 
-			                     lastSenState.isDone = true
-			                     lastSenState.isDeath = true
-			                     this.senCodeProcess()
-                        lastSenState.end = event.timestamp
+			lastSenState.isDone = true
+			lastSenState.isDeath = true
+			this.senCodeProcess()
+                        lastSenState.end = this.parser.currentTimestamp
                 }
 
-	}
-
-// Convert Sen to kenki, then adjust kenki, then call remove to handle the end. also set to nonStandard end
-	private onHagakure(event: CastEvent) {
-
-		const lastSenState = this.lastSenState
-
-		if (lastSenState != null && lastSenState.end == null) {
-
-			lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
-
-			lastSenState.isNonStandard = true
-			lastSenState.isHaga = true
-
-			this.kenki.modify(lastSenState.kenkiGained)
-
-			this.remove(event)
-		}
 	}
 
 	private onComplete() {
