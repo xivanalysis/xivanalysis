@@ -4,6 +4,19 @@ import {ChangelogEntry} from './Meta'
 
 export const changelog: ChangelogEntry[] = [
 	{
+		date: new Date('2020-04-19'),
+		Changes: () => <>
+			Overhaul of logic used to calculate when the boss is invulnerable and/or untargetable. This will have minimal impact on DPS and tanks with average or better play - however, it will have a <em>marked</em> impact on low-uptime play and healer accuracy.<br/>
+			This is a very large change that has been <em>years</em> in the making - and while no effort has been spared to ensure its accuracy, it may have some edge cases we missed. If you see something that looks wrong, please feel free to drop by the discord server, and we can double check to make sure its behaving as it should.
+		</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
+		date: new Date('2020-04-10'),
+		Changes: () => <>Total rewrite of the timeline. While it looks and behaves in a similar manner to the previous timeline, it has been rewritten from scratch, allowing analysis to expose much more detailed information in the timeline with future changes.</>,
+		contributors: [CONTRIBUTORS.ACKWELL],
+	},
+	{
 		date: new Date('2019-11-22'),
 		Changes: () => <>Rework calculations for tracked cooldowns to improve methodology for tracking actual uses and calculating expected uses.</>,
 		contributors: [CONTRIBUTORS.AZARIAH, CONTRIBUTORS.KELOS],

@@ -1,33 +1,10 @@
-import React from 'react'
-
 import JOBS from 'data/JOBS'
-import Module from 'parser/core/Module'
-import {Group, Item} from 'parser/core/modules/Timeline'
+import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
+import {AdditionalEvents} from './AdditionalEvents'
+import {SimpleRow, StatusItem} from './Timeline'
+import {isDefined} from 'utilities'
 
 // Are other jobs going to need to add to this?
-// const OLD_RAID_BUFFS = {
-// 	[STATUSES.THE_BALANCE.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.THE_ARROW.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.THE_SPEAR.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.THE_BOLE.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.THE_EWER.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.THE_SPIRE.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.LORD_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.LADY_OF_CROWNS.id]: {group: 'arcanum', name: 'Arcanum'},
-// 	[STATUSES.DIVINATION.id]: {},
-// 	[STATUSES.BATTLE_LITANY.id]: {},
-// 	[STATUSES.BATTLE_VOICE.id]: {exclude: [JOBS.BARD.logType]},
-// 	[STATUSES.BROTHERHOOD.id]: {},
-// 	[STATUSES.CHAIN_STRATAGEM.id]: {},
-// 	[STATUSES.EMBOLDEN_PHYSICAL.id]: {}, // phys only?
-// 	[STATUSES.LEFT_EYE.id]: {exclude: [JOBS.DRAGOON.logType]}, // notDRG
-// 	[STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id]: {name: 'Trick Attack'},
-// 	[STATUSES.DEVOTION.id]: {},
-// 	[STATUSES.TECHNICAL_FINISH.id]: {},
-// 	[STATUSES.STANDARD_FINISH_PARTNER.id]: {},
-// 	[STATUSES.DEVILMENT.id]: {},
-// }
-
 const RAID_BUFFS = [
 	{key: 'THE_BALANCE', group: 'arcanum', name: 'Arcanum'},
 	{key: 'THE_ARROW', group: 'arcanum', name: 'Arcanum'},
@@ -53,30 +30,65 @@ const RAID_BUFFS = [
 	{key: 'PECULIAR_LIGHT'},
 ]
 
+@executeBeforeDoNotUseOrYouWillBeFired(AdditionalEvents)
+class RaidBuffsQuery extends Module {
+	static handle = 'raidBuffsQuery'
+	static dependencies = [
+		'additionalEventQueries',
+		'data',
+		'enemies',
+	]
+
+	normalise(events) {
+		// Abilities we need more info on
+		const abilities = [
+			this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
+			this.data.statuses.CHAIN_STRATAGEM.id,
+			this.data.statuses.RUINATION.id,
+		]
+
+		this.additionalEventQueries.registerQuery(`type in ('applydebuff','removedebuff') and ability.id in (${abilities.join(',')}) and (${this._buildActiveTargetQuery()})`)
+
+		return events
+	}
+
+	// We only want events on "active" targets - lots of mirror copies used for mechanics that fluff up the data otherwise
+	_buildActiveTargetQuery = () =>
+		Object.keys(this.enemies.activeTargets)
+			.map(actorId => {
+				const actor = this.enemies.getEntity(Number(actorId))
+				if (!actor) {
+					return
+				}
+
+				const instances = this.enemies.activeTargets[actorId]
+				let query = '(target.id=' + actor.guid
+				if (instances.size > 0) {
+					query += ` and target.instance in (${Array.from(instances).join(',')})`
+				}
+				return query + ')'
+			})
+			.filter(isDefined)
+			.join(' or ')
+}
+export {RaidBuffsQuery}
+
 export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
 	static dependencies = [
 		'data',
-		'timeline',
 		'enemies',
+		'timeline',
 	]
 
-	_group = null
 	_buffs = {}
+
+	_buffRows = new Map()
 
 	_buffMap = new Map()
 
 	constructor(...args) {
 		super(...args)
-
-		// Set up a group that'll act as a parent for all our stuff
-		this._group = new Group({
-			id: 'raidbuffs',
-			content: 'Raid Buffs',
-			order: -100,
-			nestedGroups: [],
-		})
-		this.timeline.addGroup(this._group)
 
 		RAID_BUFFS.forEach(obj => {
 			this._buffMap.set(this.data.statuses[obj.key].id, obj)
@@ -105,27 +117,8 @@ export default class RaidBuffs extends Module {
 			return
 		}
 
-		// Make sure there's a nested group for us
-		const groupId = 'raidbuffs-' + (settings.group || statusId)
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: settings.name || event.ability.name,
-			}))
-			this._group.nestedGroups.push(groupId)
-		}
-
-		// Generate an item for the buff
-		// TODO: startTime should probably be automated inside timeline
-		const startTime = this.parser.fight.start_time
-		const status = this.data.getStatus(statusId)
-		if (!status) { return }
-		buffs[statusId] = new Item({
-			type: 'background',
-			start: event.timestamp - startTime,
-			group: groupId,
-			content: <img src={status.icon} alt={status.name}/>,
-		})
+		// Record the start time of the status
+		buffs[statusId] = event.timestamp - this.parser.fight.start_time
 	}
 
 	_onRemove(event) {
@@ -134,19 +127,45 @@ export default class RaidBuffs extends Module {
 			return
 		}
 
-		const item = this.getTargetBuffs(event)[event.ability.guid]
-		// This shouldn't happen, but it do.
-		if (!item) { return }
+		const statusId = event.ability.guid
 
-		item.end = event.timestamp - this.parser.fight.start_time
-		this.timeline.addItem(item)
+		const applyTime = this.getTargetBuffs(event)[statusId]
+		// This shouldn't happen, but it do.
+		if (!applyTime) { return }
+
+		const removeTime = event.timestamp - this.parser.fight.start_time
+
+		const settings = this._buffMap.get(statusId)
+		const status = this.data.getStatus(statusId)
+		if (!status) { return }
+
+		// Get the row for this buff/group, creating one if it doesn't exist yet.
+		// NOTE: Using application time as order, as otherwise adding here forces ordering by end time of the first buff
+		const rowId = settings.group || statusId
+		let row = this._buffRows.get(rowId)
+		if (row == null) {
+			row = new SimpleRow({
+				label: settings.name || event.ability.name,
+				order: applyTime,
+			})
+			this._buffRows.set(rowId, row)
+		}
+
+		// Add an item for the buff to its row
+		row.addItem(new StatusItem({
+			start: applyTime,
+			end: removeTime,
+			status,
+		}))
 	}
 
 	_onComplete() {
-		// If there's no buffs at all (:eyes:), hide the group
-		if (Object.keys(this._buffs).length === 0) {
-			this._group.visible = false
-		}
+		// Add the parent row. It will automatically hide if there's no children.
+		this.timeline.addRow(new SimpleRow({
+			label: 'Raid Buffs',
+			order: -100,
+			rows: Array.from(this._buffRows.values()),
+		}))
 	}
 
 	getTargetBuffs(event) {

@@ -36,6 +36,11 @@ const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
 	4: SEVERITY.MAJOR,
 }
 
+const LEFTOVER_AMMO_SEVERITY_TIERS = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+}
+
 const MAX_AMMO = 2
 
 class AmmoState {
@@ -170,6 +175,18 @@ export default class Ammo extends Module {
 			value: this.erroneousCircles,
 		}))
 
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.BLOODFEST.icon,
+			content: <Trans id="gnb.ammo.leftover-ammo.content">
+				Avoid having leftover ammo at the end of a fight, consider using the ammo earlier if possible. <ActionLink {...ACTIONS.BURST_STRIKE}/> is more potency than any of your <ActionLink {...ACTIONS.SOLID_BARREL}/> combo.
+			</Trans>,
+			why: <Trans id="gnb.ammo.leftover-ammo.why">
+				You had <Plural value={this.leftoverAmmo} one="# cartridge" other="# cartridges"/> remaining at the end of the fight.
+			</Trans>,
+			tiers: LEFTOVER_AMMO_SEVERITY_TIERS,
+			value: this.leftoverAmmo,
+		}))
+
 		this.checklist.add(new Rule({
 			name: 'Cartridge Usage',
 			description: <Trans id="gnb.ammo.waste.content">
@@ -240,8 +257,8 @@ export default class Ammo extends Module {
 					label: 'Cartridges',
 					steppedLine: true,
 					data: this.ammoHistory,
-					backgroundColor: ammoColor.fade(0.8),
-					borderColor: ammoColor.fade(0.5),
+					backgroundColor: ammoColor.fade(0.8).toString(),
+					borderColor: ammoColor.fade(0.5).toString(),
 				},
 			],
 		}

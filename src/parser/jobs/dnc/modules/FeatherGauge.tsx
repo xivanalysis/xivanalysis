@@ -135,8 +135,8 @@ export default class FeatherGauge extends Module {
 				label: 'Feathers',
 				data: this.history,
 				steppedLine: true,
-				backgroundColor: dncColor.fade(0.8),
-				borderColor: dncColor.fade(0.5),
+				backgroundColor: dncColor.fade(0.8).toString(),
+				borderColor: dncColor.fade(0.5).toString(),
 			}],
 		}
 		// tslint:enable:no-magic-numbers

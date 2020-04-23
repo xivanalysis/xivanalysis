@@ -1,0 +1,19 @@
+import {
+	Invulnerability as CoreInvulnerability,
+	ActorsConfig,
+} from 'parser/core/modules/Invulnerability'
+
+export class Invulnerability extends CoreInvulnerability {
+	protected actorConfig: ActorsConfig = {
+		// Bladesblood - TAU open, no TAU or death to close. Use overkill/1hp to check death
+		11595: {end: 'overkill'},
+		// Magitek turret I - No TAU, but has death events. Filter to the first possible event to work out when they were targetable(ish)
+		11596: {start: 'firstTap'},
+		// Magitek Turret II - actually not targetable, they cast the tether tank busters
+		11597: {exclude: true},
+		// Confines of memory - die too quick to be meaningfully fixable
+		11598: {exclude: true},
+		// Gunshield - No TAU _or_ death. All the fallbacks.
+		11692: {start: 'firstTap', end: 'overkill'},
+	}
+}

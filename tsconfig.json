@@ -6,6 +6,7 @@
 		"allowSyntheticDefaultImports": true,
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
+		"isolatedModules": true,
 		"target": "esnext",
 		"module": "esnext",
 		"moduleResolution": "node",

@@ -368,14 +368,14 @@ export default class Gauge extends Module {
 				datasets: [{
 					label: 'White Mana',
 					data: this._history.white,
-					backgroundColor: whm.fade(0.5),
-					borderColor: whm.fade(0.2),
+					backgroundColor: whm.fade(0.5).toString(),
+					borderColor: whm.fade(0.2).toString(),
 					steppedLine: true,
 				}, {
 					label: 'Black Mana',
 					data: this._history.black,
-					backgroundColor: blm.fade(0.5),
-					borderColor: blm.fade(0.2),
+					backgroundColor: blm.fade(0.5).toString(),
+					borderColor: blm.fade(0.2).toString(),
 					steppedLine: true,
 				}],
 			}

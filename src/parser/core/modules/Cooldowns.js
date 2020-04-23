@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import Module from 'parser/core/Module'
-import {ItemGroup, Item} from './Timeline'
-import React from 'react'
+import {ActionItem, ContainerRow} from './Timeline'
 
 // Track the cooldowns on actions and shit
 export default class Cooldowns extends Module {
@@ -23,66 +22,68 @@ export default class Cooldowns extends Module {
 	_currentAction = null
 	_cooldowns = {}
 	_groups = {}
+	_rows = {}
 
 	constructor(...args) {
 		super(...args)
 
 		this._cooldownGroups = _.groupBy(this.data.actions, 'cooldownGroup')
 
-		// Pre-build groups for actions explicitly set by subclasses
-		this._buildGroups(this.constructor.cooldownOrder)
+		// Pre-build rows for actions explicitly set by subclasses
+		if (this.constructor.cooldownOrder) {
+			this._buildRows(this.constructor.cooldownOrder)
+		}
 
 		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
 		this.addHook('cast', {by: 'player'}, this._onCast)
 		this.addHook('complete', this._onComplete)
 	}
 
-	_buildGroups(groups) {
-		// If there's no groups, noop
-		if (!groups) { return }
+	_buildRows(mappings) {
+		mappings.map((mapping, index) => {
+			const order = -(mappings.length - index)
 
-		const ids = groups.map((data, i) => {
-			const order = -(groups.length - i)
-
-			// If it's just an action id, build a group for it and stop
-			if (typeof data === 'number') {
-				const action = this.data.getAction(data)
-				this._buildGroup({
-					id: data,
-					content: action && action.name,
-					order,
-				})
-				return data
+			// If it's just the ID of an action, build a row for it and bail
+			if (typeof mapping === 'number') {
+				const action = this.data.getAction(mapping)
+				return this._buildRow(mapping, {label: action?.name, order})
 			}
 
-			// Build the base group
-			const group = this._buildGroup({
-				id: data.name,
-				content: data.name,
-				order,
-			})
+			// Otherwise, it's a grouping - build a base row
+			const row = this._buildRow(mapping.name, {label: mapping.name, order})
 
-			if (data.merge) {
-				// If it's a merge group, we only need to register our group for each of the IDs
-				data.actions.forEach(id => {
-					this._groups[id] = group
+			if (mapping.merge) {
+				// If it's a merge group, it'll be absorbing all the child actions
+				// Register the group for each of the action IDs
+				mapping.actions.forEach(id => {
+					this._rows[id] = row
 				})
 			} else {
-				// Otherwise, build nested groups for each action
-				group.nestedGroups = this._buildGroups(data.actions)
+				// Otherwise, build nested rows for each action in the mapping
+				this._buildRows(mapping.actions)
+					.forEach(subRow => row.addRow(subRow))
 			}
 
-			return data.name
+			return row
 		})
-
-		return ids
 	}
 
-	_buildGroup(opts) {
-		const group = new ItemGroup({showNested: false, ...opts})
-		this.timeline.addGroup(group)
-		this._groups[opts.id] = group
-		return group
+	_buildRow(id, opts) {
+		if (this._rows[id] != null) {
+			return this._rows[id]
+		}
+
+		const row = this.timeline.addRow(new ContainerRow({
+			...opts,
+			collapse: true,
+		}))
+
+		this._rows[id] = row
+		return row
+	}
+
+	getActionTimelineRow(action) {
+		return this._buildRow(action.id, {label: action.name, order: action.id})
 	}
 
 	// cooldown starts at the beginning of the casttime
@@ -140,26 +141,20 @@ export default class Cooldowns extends Module {
 			return false
 		}
 
-		// Ensure we've got a group for this item
-		if (!this._groups[actionId]) {
-			this._buildGroup({
-				id: actionId,
-				content: action.name,
-				order: actionId,
-			})
-		}
+		// Ensure we've got a row for this item
+		const row = this._buildRow(actionId, {label: action.name, order: actionId})
 
 		// Add CD info to the timeline
 		cd.history
 			.forEach(use => {
-				if (!use.shared) {
-					this._groups[actionId].addItem(new Item({
-						type: 'background',
-						start: use.timestamp - this.parser.fight.start_time,
-						length: use.length,
-						content: <img src={action.icon} alt={action.name} />,
-					}))
-				}
+				if (use.shared) { return }
+
+				const start = use.timestamp - this.parser.fight.start_time
+				row.addItem(new ActionItem({
+					start,
+					end: start + use.length,
+					action,
+				}))
 			})
 
 		return true

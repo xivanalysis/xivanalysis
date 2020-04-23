@@ -228,8 +228,8 @@ export default class Shoha extends Module {
 					label: 'Meditation Stacks',
 					steppedLine: true,
 					data: this.stackHistory,
-					backgroundColor: stackColor.fade(0.8),
-					borderColor: stackColor.fade(0.5),
+					backgroundColor: stackColor.fade(0.8).toString(),
+					borderColor: stackColor.fade(0.5).toString(),
 				},
 			],
 		}

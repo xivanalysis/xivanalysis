@@ -8,9 +8,9 @@ import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {matchClosestLower} from 'utilities'
 
@@ -56,7 +56,7 @@ const CONSTANTS = {
 		EXPECTED: 1,
 	},
 	GCD: {
-		EXPECTED: 10,
+		EXPECTED: 11,
 	},
 }
 
@@ -183,7 +183,7 @@ export default class FightOrFlight extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
 			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+				Try to land 11 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
 				<Plural value={this.fofErrorResult.missedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.

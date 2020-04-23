@@ -36,12 +36,13 @@ export enum ActorType {
 	// Enemy
 	BOSS = 'Boss',
 	NPC = 'NPC',
+	UNKNOWN = 'Unknown', // ???
 
 	// Friendly
 	PALADIN = 'Paladin',
 	WARRIOR = 'Warrior',
 	DARK_KNIGHT = 'DarkKnight',
-	GUNBREAKER = 'Gunbreaker', // TODO: CONFIRM
+	GUNBREAKER = 'Gunbreaker',
 	WHITE_MAGE = 'WhiteMage',
 	SCHOLAR = 'Scholar',
 	ASTROLOGIAN = 'Astrologian',
@@ -51,7 +52,7 @@ export enum ActorType {
 	SAMURAI = 'Samurai',
 	BARD = 'Bard',
 	MACHINIST = 'Machinist',
-	DANCER = 'Dancer', // TODO: CONFIRM
+	DANCER = 'Dancer',
 	BLACK_MAGE = 'BlackMage',
 	SUMMONER = 'Summoner',
 	RED_MAGE = 'RedMage',
@@ -202,6 +203,8 @@ export interface HealEvent extends EffectEvent {
 
 export const isApplyBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applybuff'
 export const isRemoveBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removebuff'
+export const isApplyDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applydebuff'
+export const isRemoveDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removedebuff'
 export interface BuffEvent extends AbilityEvent {
 	type: (
 		'applybuff' |
@@ -220,6 +223,12 @@ export interface BuffStackEvent extends AbilityEvent {
 		'removedebuffstack'
 	)
 	stack: number
+}
+
+export const isTargetabilityUpdateEvent = (event: Event): event is TargetabilityUpdateEvent => hasStringType(event) && event.type === 'targetabilityupdate'
+export interface TargetabilityUpdateEvent extends AbilityEvent {
+	type: 'targetabilityupdate'
+	targetable: 0 | 1
 }
 
 // -----

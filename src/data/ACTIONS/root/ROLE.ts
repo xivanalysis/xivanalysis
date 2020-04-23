@@ -138,7 +138,7 @@ export const ROLE = ensureActions({
 	// Melee DPS
 	ARMS_LENGTH: {
 		id: 7548,
-		name: 'Arm&apos;s Length',
+		name: 'Arm\'s Length',
 		icon: 'https://xivapi.com/i/000000/000822.png',
 		cooldown: 90,
 		statusesApplied: ['ARMS_LENGTH'],

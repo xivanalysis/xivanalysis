@@ -1,0 +1,17 @@
+/* Colours picked to mimic vis for now */
+@value backgroundColour: rgba(213, 221, 246, .4);
+
+.abilityItem {
+	width: 100%;
+	height: 100%;
+	background: backgroundColour;
+	overflow: hidden;
+}
+
+.abilityItem > img {
+	max-height: 100%;
+}
+
+.zeroWidthAbility {
+	overflow: visible;
+}

@@ -11,24 +11,3 @@
 		right: gutter;
 	}
 }
-
-:global .vis-background .vis-item-content {
-	padding: 0;
-	height: 100%;
-}
-
-:global .vis-item.vis-background .vis-item-content {
-	width: 100% !important;
-}
-
-:global .vis-group {
-	height: 28px;
-}
-
-:global .vis-background .vis-item-content img {
-	max-height: 100%;
-}
-
-.allowOverflow :global .vis-item-overflow {
-	overflow: visible;
-}

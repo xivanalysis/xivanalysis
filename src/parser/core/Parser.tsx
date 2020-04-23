@@ -198,30 +198,34 @@ class Parser {
 		}
 	}
 
-	*iterateEvents(events: Event[]) {
+	private *iterateEvents(events: Event[]) {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
-		yield this.hydrateFabrication({type: 'init'})
+		yield this.hydrateFabrication({
+			type: 'init',
+			timestamp: this.fight.start_time,
+		})
 
-		let obj
-		// eslint-disable-next-line no-cond-assign
-		while (!(obj = eventIterator.next()).done) {
+		let obj = eventIterator.next()
+		while (!obj.done) {
 			// Iterate over the actual event first
 			yield obj.value
+			obj = eventIterator.next()
 
 			// Iterate over any fabrications arising from the event and clear the queue
 			yield* this._fabricationQueue
 			this._fabricationQueue = []
-
 		}
 
 		// Finish with 'complete' fab
-		yield this.hydrateFabrication({type: 'complete'})
+		yield this.hydrateFabrication({
+			type: 'complete',
+			timestamp: this.fight.end_time,
+		})
 	}
 
 	hydrateFabrication(event: Partial<Event>): Event {
-		// TODO: they've got a 'triggered' prop too...?
 		const clone = Object.assign({
 			// Provide default fields
 			timestamp: this.currentTimestamp,
@@ -242,7 +246,7 @@ class Parser {
 		this._fabricationQueue.push(this.hydrateFabrication(event))
 	}
 
-	_setModuleError(mod: string, error: Error) {
+	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
 		if (moduleIndex !== -1 ) {
@@ -268,7 +272,7 @@ class Parser {
 	 * @param event The event that was being processed when the error occurred
 	 * @returns The resulting data along with an object containing errors that were encountered running getErrorContext methods.
 	 */
-	_gatherErrorContext(
+	private _gatherErrorContext(
 		mod: string,
 		source: 'event' | 'output',
 		error: Error,
