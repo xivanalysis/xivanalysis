@@ -246,7 +246,7 @@ export default class RotationWatchdog extends Module {
 
 		// For right now, we're assuming the main boss of an encounter is the first thing you hit. This isn't the case for Ultimates
 		// but we'll deal with that in the future (TODO)
-		if (!this.primaryTargetId && event.targetID) {
+		if (!this.primaryTargetId && event.targetID && !event.targetIsFriendly) {
 			this.primaryTargetId = event.targetID
 		}
 
