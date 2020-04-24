@@ -627,6 +627,7 @@
   "pld.goring.checklist.goringblade.requirement.uptime": "<0/>覆盖率",
   "pld.goring.suggestions.goringblade.content": "避免在<0/>消失前过早地刷新持续时间。",
   "pld.goring.suggestions.goringblade.why": "由于提前刷新，浪费了{0} <0/>。",
+  "pld.requiescat.message": "",
   "pld.requiescat.suggestions.nobuff.content": "<0/>应该只在蓝量高于80%的时候使用。尝试尽可能去触发由<1/>提供的20%魔法伤害提高buff。",
   "pld.requiescat.suggestions.nobuff.why": "在蓝量低于80%时使用了{missedRequiescatBuffs, plural, one {#次安魂祈祷} other {#次安魂祈祷}}。",
   "pld.requiescat.suggestions.wrong-gcd.content": "为了最大化伤害，<0/>持续时间内的GCD应当由4个<1/>（多目标时用<2/>）以及1个<3/>构成。",
