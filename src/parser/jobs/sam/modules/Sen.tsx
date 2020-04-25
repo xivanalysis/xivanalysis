@@ -6,12 +6,12 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import {ComboEvent} from 'parser/core/modules/Combos'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import Timeline from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {ComboEvent} from 'parser/core/modules/Combos'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 import Kenki from './Kenki'
 
@@ -20,7 +20,7 @@ const SEN_ACTIONS = [
 	ACTIONS.GEKKO.id,
 	ACTIONS.MANGETSU.id,
 	ACTIONS.KASHA.id,
-	ACTIONS.OKA.id
+	ACTIONS.OKA.id,
 ]
 
 // Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
@@ -37,17 +37,22 @@ const THINGS_WE_WANT_IN_THE_TABLE = [
 	ACTIONS.JINPU.id,
 	ACTIONS.SHIFU.id,
 	ACTIONS.FUGA.id,
-	
+
+	ACTIONS.GEKKO.id,
+	ACTIONS.KASHA.id,
+	ACTIONS.YUKIKAZE.id,
+	ACTIONS.MANGETSU.id,
+	ACTIONS.OKA.id,
+
 	// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
 	ACTIONS.ENPI.id,
 	ACTIONS.HISSATSU_YATEN.id,
 	ACTIONS.HISSATSU_GYOTEN.id,
-	
-	//OGCDS IGAF about.
+
+	// OGCDS IGAF about.
 	ACTIONS.HISSATSU_KAITEN.id,
 	ACTIONS.MEIKYO_SHISUI.id,
 ]
-
 
 const KENKI_PER_SEN = 10
 
@@ -116,14 +121,14 @@ export default class Sen extends Module {
 	protected init() {
 		// Things that give
 		this.addEventHook(
-			'cast', 
+			'cast',
 			{
 				by: 'player',
-				abilityId: THINGS_WE_WANT_IN_THE_TABLE
+				abilityId: THINGS_WE_WANT_IN_THE_TABLE,
 			},
 			this.checkCastAndPush,
 		)
-		
+
 		this.addEventHook(
 			['normaliseddamage', 'combo'],
 			{
@@ -131,10 +136,9 @@ export default class Sen extends Module {
 				abilityId: SEN_ACTIONS,
 			},
 			this.onSenGen,
-			
+
 		)
 
-		
 		// Things that take
 		this.addEventHook(
 			'cast',
@@ -145,20 +149,19 @@ export default class Sen extends Module {
 			this.remove,
 		)
 
-		this.addEventHook('death', {to: 'player'}, this.onDeath,)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 
 		// Suggestion time~
 		this.addEventHook('complete', this.onComplete)
 	}
 
-//Handles Sen Gen
-	private onSenGen(event: ComboEvent)
-	{
+// Handles Sen Gen
+	private onSenGen(event: ComboEvent) {
 		const action = event.ability.guid
 
                 // check the sen state, if undefined/not active, make one, I don't know how having 2 hooks fire will handle this, so safety.
 
-                let lastSenState = this.lastSenState
+  const lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
@@ -203,19 +206,17 @@ export default class Sen extends Module {
 
                 }
 
-		
 	}
-
 
 // Function that handles SenState check, if no senState call the maker and then push to the rotation
 	private checkCastAndPush(event: CastEvent) {
-		
+
 		// step 1: set action
 		const action = event.ability.guid
 
-		//step 2: FILTER EVERYTHING
+		// step 2: FILTER EVERYTHING
 
-		if(THINGS_WE_WANT_IN_THE_TABLE.hasOwnProperty(action) || SEN_ACTIONS.hasOwnProperty(action) || SEN_REMOVERS.hasOwnProperty(action) ) {
+		if (THINGS_WE_WANT_IN_THE_TABLE.hasOwnProperty(action) || SEN_ACTIONS.hasOwnProperty(action) || SEN_REMOVERS.hasOwnProperty(action) ) {
 
 			// step 3: check the sen state, if undefined/not active, make one
 
@@ -234,8 +235,7 @@ export default class Sen extends Module {
 				lastSenState.rotation.push(event)
 			}
 
-
-		}	
+		}
 
 	}
 
@@ -254,13 +254,9 @@ export default class Sen extends Module {
 
 			if (lastSenState.isDeath === true) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
-			}
-
-			else if (lastSenState.isOverwrite === true) {
+			} else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
-			}
-
-			else if (lastSenState.isHaga === true) {
+			} else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 			}
 		}
@@ -273,16 +269,14 @@ export default class Sen extends Module {
 
 		if (lastSenState != null && lastSenState.end == null) {
 
-
-			if(event.ability.guid === ACTIONS.HAGAKURE.id) {
+			if (event.ability.guid === ACTIONS.HAGAKURE.id) {
 				 lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
 
-                        	lastSenState.isNonStandard = true
-                        	lastSenState.isHaga = true
+     lastSenState.isNonStandard = true
+     lastSenState.isHaga = true
 
-                        	this.kenki.modify(lastSenState.kenkiGained)
+     this.kenki.modify(lastSenState.kenkiGained)
 			}
-
 
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
 
@@ -295,12 +289,12 @@ export default class Sen extends Module {
 	private onDeath() {
 		const lastSenState = this.lastSenState
 
-  		if (lastSenState != null && lastSenState.end == null) {
+  if (lastSenState != null && lastSenState.end == null) {
                         this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
 
-			lastSenState.isDone = true
-			lastSenState.isDeath = true
-			this.senCodeProcess()
+			                     lastSenState.isDone = true
+			                     lastSenState.isDeath = true
+			                     this.senCodeProcess()
                         lastSenState.end = this.parser.currentTimestamp
                 }
 
