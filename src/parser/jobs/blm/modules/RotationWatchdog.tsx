@@ -284,14 +284,6 @@ export default class RotationWatchdog extends Module {
 		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
 	}
 
-	// Get the uptime percentage for the Thunder status debuff
-	private getThunderUptime() {
-		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusTime / uptime) * 100
-	}
-
 	// Finish this parse and add the suggestions and checklist items
 	private onComplete() {
 		this.stopRecording(undefined)
@@ -385,37 +377,6 @@ export default class RotationWatchdog extends Module {
 			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
 				<Plural value={this.rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
 			</Trans>,
-		}))
-
-		// Suggestions to not spam T3 too much
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-		const maxThunders = Math.floor(uptime / THUNDERCLOUD_MILLIS)
-		if (this.thunder3Casts > maxThunders) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THUNDER_III.icon,
-				content: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.content">
-					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too many times can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
-				</Trans>,
-				severity: this.thunder3Casts > 2 * maxThunders ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.why">
-					At least <Plural value={this.thunder3Casts - maxThunders} one="# extra Thunder III was" other="# extra Thunder III were"/> cast.
-				</Trans>,
-			}))
-		}
-
-		// Checklist item for keeping Thunder 3 DoT rolling
-		this.checklist.add(new Rule({
-			name: <Trans id="blm.rotation-watchdog.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
-			description: <Trans id="blm.rotation-watchdog.checklist.dots.description">
-				Your <StatusLink {...STATUSES.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...STATUSES.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
-			</Trans>,
-			target: 95,
-			requirements: [
-				new Requirement({
-					name: <Trans id="blm.rotation-watchdog.checklist.dots.requirement.name"><StatusLink {...STATUSES.THUNDER_III} /> uptime</Trans>,
-					percent: () => this.getThunderUptime(),
-				}),
-			],
 		}))
 	}
 

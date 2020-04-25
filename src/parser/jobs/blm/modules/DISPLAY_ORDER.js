@@ -3,4 +3,5 @@ export default {
 	NOTCASTING: 2,
 	LEY_LINES: 3,
 	WEAVING: 4,
+	THUNDER: 5,
 }
