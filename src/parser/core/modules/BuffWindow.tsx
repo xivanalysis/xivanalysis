@@ -281,6 +281,17 @@ export abstract class BuffWindowModule extends Module {
 		return undefined
 	}
 
+
+	/**
+	 * This method will be called if and only if the buff was never used, to generate any desired output
+	 * to highlight that the user did not use the buff at all.
+	 * If desired, you may generate a Suggestion in this function and still return undefined to not
+	 * create a table.
+	 */
+	protected generateBuffNotUsedOutput(): JSX.Element | undefined {
+		return undefined
+	}
+
 	private onComplete() {
 		if ( this.expectedGCDs ) {
 			const missedGCDs = this.buffWindows
@@ -349,6 +360,10 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	output() {
+		if ( this.buffWindows.length === 0 ) {
+			return this.generateBuffNotUsedOutput()
+		}
+
 		const rotationTargets = []
 		const notesData = []
 
