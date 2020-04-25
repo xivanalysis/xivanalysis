@@ -31,9 +31,9 @@ const correctedRoot = addDefaultValues(root)
 export {
 	correctedRoot as root,
 	layers,
-	Action,
 	ITEM_ID_OFFSET,
 }
+export type {Action}
 
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat

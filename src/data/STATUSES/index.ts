@@ -32,8 +32,8 @@ const correctedLayers = layers.map(layer => ({
 export {
 	correctedRoot as root,
 	correctedLayers as layers,
-	Status,
 }
+export type {Status}
 
 // Everything below here is temp back compat
 // need to export a collated everything-applied as default for back compat

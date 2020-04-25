@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Group, Item} from 'parser/core/modules/Timeline'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 
 const PROC_STATUSES = [
 	STATUSES.FLOURISHING_FAN_DANCE.id,
@@ -62,7 +62,8 @@ export default class Procs extends Module {
 			history: [],
 		},
 	}
-	_group = null
+	_row = null
+	_rows = new Map()
 
 	_overwrittenProcs = 0
 	constructor(...args) {
@@ -74,13 +75,10 @@ export default class Procs extends Module {
 		this.addHook('removebuff', {by: 'player', abilityId: PROC_STATUSES}, this._onProcRemoved)
 		this.addHook('complete', this._onComplete)
 
-		this._group = new Group({
-			id: 'procbuffs',
-			content: 'Procs',
+		this._row = this.timeline.addRow(new SimpleRow({
+			label: 'Procs',
 			order: 0,
-			nestedGroups: [],
-		})
-		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
+		}))
 	}
 
 	_onCast(event) {
@@ -148,7 +146,7 @@ export default class Procs extends Module {
 
 		PROC_STATUSES.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = this.getGroupIdForStatus(status)
+			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
 			// Finalise the buff if it was still active
@@ -158,12 +156,10 @@ export default class Procs extends Module {
 
 			// Add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
-				this.timeline.addItem(new Item({
-					type: 'background',
+				row.addItem(new StatusItem({
+					status,
 					start: window.start - fightStart,
 					end: window.stop - fightStart,
-					group: groupId,
-					content: <img src={status.icon} alt={status.name}/>,
 				}))
 			})
 		})
@@ -186,18 +182,12 @@ export default class Procs extends Module {
 		tracker.current = null
 	}
 
-	getGroupIdForStatus(status) {
-		const groupId = 'procbuffs-' + status.id
-
-		// Make sure a timeline group exists for this buff
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
+	getRowForStatus(status) {
+		let row = this._rows.get(status.id)
+		if (row == null) {
+			row = this._row.addRow(new SimpleRow({label: status.name}))
+			this._rows.set(status.id, row)
 		}
-
-		return groupId
+		return row
 	}
 }

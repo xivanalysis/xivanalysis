@@ -484,7 +484,8 @@ exports.default = function (_ref2) {
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var pluralRules = ["zero", "one", "two", "few", "many", "other"];
-var commonProps = ["id", "className", "render"];
+var reservedProps = ["key", "ref", "__self", "__source"];
+var commonProps = ["id", "className", "render"].concat(reservedProps);
 
 // replace whitespace before/after newline with single space
 var nlRe = /\s*(?:\r\n|\r|\n)+\s*/g;

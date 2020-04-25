@@ -1,9 +1,8 @@
-import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import Timeline, {Group, Item} from 'parser/core/modules/Timeline'
-import React from 'react'
+import {ActionItem, ContainerRow, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
+import Cooldowns from './Cooldowns'
 
 // This module puts pet skills on the timeline beneath the GCD spells
 export default class PetTimeline extends Module {
@@ -11,6 +10,7 @@ export default class PetTimeline extends Module {
 
 	@dependency private data!: Data
 	@dependency private timeline!: Timeline
+	@dependency private cooldowns!: Cooldowns
 
 	/**
 	 * Implementing modules MAY change the timeline group name.
@@ -23,6 +23,7 @@ export default class PetTimeline extends Module {
 	 * If canPetBeCommanded returns true, this field is not used.
 	 * If timelineSummonAction is set to an action ID, actions will be grouped under it.
 	 */
+	// TODO: This should be transitioned to a stable action key type, rather than action ID
 	protected timelineSummonAction?: number
 	/**
 	 * Implementing modules MAY change the timeline row name for pet autos.
@@ -44,9 +45,6 @@ export default class PetTimeline extends Module {
 	 */
 	protected canPetBeCommanded = false
 
-	private petContainerGroupId = 'pet'
-	private petAutoGroupId = 'petauto'
-	private petCommandGroupId = 'petcommand'
 	private autoCasts: CastEvent[] = []
 	private commandCasts: CastEvent[] = []
 
@@ -68,57 +66,58 @@ export default class PetTimeline extends Module {
 	}
 
 	private onComplete() {
-		if (this.canPetBeCommanded) {
-			this.timeline.addGroup(new Group({
-				id: this.petContainerGroupId,
-				content: this.timelineGroupName,
-				order: -100,
-			}))
-			this.timeline.attachToGroup(this.petContainerGroupId,
-				new Group({
-					id: this.petAutoGroupId,
-					content: this.timelineAutosName,
-					order: 1,
-				}))
-			this.timeline.attachToGroup(this.petContainerGroupId,
-				new Group({
-					id: this.petCommandGroupId,
-					content: this.timelineCommandsName,
-					order: 2,
-				}))
+		let autoRow: SimpleRow
 
-			this.addCastsToGroup(this.petCommandGroupId, this.commandCasts)
+		if (this.canPetBeCommanded) {
+			const parentrow = this.timeline.addRow(new SimpleRow({
+				label: this.timelineGroupName,
+				order: -99,
+			}))
+
+			autoRow = parentrow.addRow(new SimpleRow({
+				label: this.timelineAutosName,
+				order: 1,
+			}))
+
+			const commandRow = parentrow.addRow(new SimpleRow({
+				label: this.timelineCommandsName,
+				order: 2,
+			}))
+
+			this.addCastsToRow(commandRow, this.commandCasts)
+
+		} else if (this.timelineSummonAction != null) {
+			const summonAction = this.data.getAction(this.timelineSummonAction)
+			if (summonAction == null) { throw new Error('Timeline summon action set to an invalid action ID') }
+
+			// TOOD: Type cooldowns so this cast isn't required
+			const parentRow: ContainerRow = this.cooldowns.getActionTimelineRow(summonAction)
+
+			autoRow = parentRow.addRow(new SimpleRow({
+				label: this.timelineGroupName,
+				order: -99,
+			}))
+
 		} else {
-			if (this.timelineSummonAction != null) {
-				this.timeline.attachToGroup(this.timelineSummonAction,
-				new Group({
-					id: this.petAutoGroupId,
-					content: this.timelineGroupName,
-					order: -100,
-				}))
-			} else {
-				this.timeline.addGroup(new Group({
-					id: this.petAutoGroupId,
-					content: this.timelineGroupName,
-					order: -100,
-				}))
-			}
+			autoRow = this.timeline.addRow(new SimpleRow({
+				label: this.timelineGroupName,
+				order: -99,
+			}))
 		}
 
-		this.addCastsToGroup(this.petAutoGroupId, this.autoCasts)
+		this.addCastsToRow(autoRow, this.autoCasts)
 	}
 
-	private addCastsToGroup(groupId: string, casts: CastEvent[]) {
-		casts.forEach(a => {
-			const action = this.data.getAction(a.ability.guid)
-			if (!action) { return }
-			this.timeline.addItem(new Item({
-				type: 'background',
-				start: a.timestamp - this.parser.fight.start_time,
-				length: 0,
-				title: action.name,
-				group: groupId,
-				content: <img src={action.icon} alt={action.name} title={action.name} />,
+	private addCastsToRow(row: SimpleRow, casts: CastEvent[]) {
+		casts.forEach(cast => {
+			const action = this.data.getAction(cast.ability.guid)
+			if (action == null) { return }
+
+			const start = cast.timestamp - this.parser.fight.start_time
+			row.addItem(new ActionItem({
+				action,
+				start,
+				end: start, // zero length intentional
 			}))
 		})
 	}

@@ -94,8 +94,8 @@ export default class PrecastStatus extends Module {
 	}
 
 	fabricateActionEvent(event, actionInfo) {
-		this.debug(`Fabricating cast event for action ${actionInfo.name}`)
-		this._actionsToSynth.push({
+		this.debug(`Fabricating cast event for action ${actionInfo.name} by ${event.sourceID}`)
+		const fabricated = {
 			...event,
 			ability: {
 				...event.ability,
@@ -105,7 +105,8 @@ export default class PrecastStatus extends Module {
 			},
 			timestamp: this._startTime - 2,
 			type: 'cast',
-		})
+		}
+		this._actionsToSynth.push(fabricated)
 
 		this.markActionAsTracked(actionInfo.id)
 	}

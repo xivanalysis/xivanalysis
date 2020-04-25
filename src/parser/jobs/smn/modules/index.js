@@ -11,6 +11,7 @@ import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
+import Swiftcast from './Swiftcast'
 import {Tincture} from 'parser/core/modules/Tincture'
 import TriDisaster from './TriDisaster'
 import {Weaving} from './Weaving'
@@ -29,6 +30,7 @@ export default [
 	PetTimeline,
 	Ruin2,
 	Ruin4,
+	Swiftcast,
 	Tincture,
 	TriDisaster,
 	Weaving,

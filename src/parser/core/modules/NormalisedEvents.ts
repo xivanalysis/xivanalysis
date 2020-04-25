@@ -1,13 +1,14 @@
-import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent, isDamageEvent, isHealEvent, isRemoveBuffEvent} from 'fflogs'
-import {SortEvents} from 'parser/core/EventSorting'
+import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent, isDamageEvent, isHealEvent, isRemoveBuffEvent, isApplyDebuffEvent, isRemoveDebuffEvent} from 'fflogs'
+import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
+import PrecastStatus from './PrecastStatus'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
 
 type BaseEvent = DamageEvent | HealEvent
-const isSupportedBuffEvent = (event: Event): event is BuffEvent => isApplyBuffEvent(event) || isRemoveBuffEvent(event)
+const isSupportedBuffEvent = (event: Event): event is BuffEvent => isApplyBuffEvent(event) || isRemoveBuffEvent(event) || isApplyDebuffEvent(event) || isRemoveDebuffEvent(event)
 const isBaseEvent = (event: Event): event is BaseEvent => isDamageEvent(event) || isHealEvent(event)
 const isSupportedEvent = (event: Event): event is BaseEvent | BuffEvent => isBaseEvent(event) || isSupportedBuffEvent(event)
 const isBaseEventArray = (array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] => array.length > 0 && isBaseEvent(array[0])
@@ -177,10 +178,36 @@ export class NormalisedApplyBuffEvent extends NormalisedEvent {
 	}
 }
 
+export const isNormalisedApplyDebuffEvent = (event: Event): event is NormalisedApplyDebuffEvent => event.type === 'normalisedapplydebuff'
+export interface NormalisedApplyDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
+export class NormalisedApplyDebuffEvent extends NormalisedEvent {
+	type = 'normalisedapplydebuff'
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
 export const isNormalisedRemoveBuffEvent = (event: Event): event is NormalisedRemoveBuffEvent => event.type === 'normalisedremovebuff'
 export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
 export class NormalisedRemoveBuffEvent extends NormalisedEvent {
 	type = 'normalisedremovebuff'
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
+export const isNormalisedRemoveDebuffEvent = (event: Event): event is NormalisedRemoveDebuffEvent => event.type === 'normalisedremovedebuff'
+export interface NormalisedRemoveDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
+export class NormalisedRemoveDebuffEvent extends NormalisedEvent {
+	type = 'normalisedremovedebuff'
 	calculatedEvents: BuffEvent[] = []
 	confirmedEvents: BuffEvent[] = []
 
@@ -195,13 +222,14 @@ export class NormalisedEvents extends Module {
 	static debug = false
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
+	@dependency private precastStatus!: PrecastStatus // Dependency to ensure events synthed by precast status are normalised
 
 	private _normalisedEvents = new Map<string, NormalisedEvent>()
 
 	normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
 
-		return SortEvents(events.concat(Array.from(this._normalisedEvents.values())))
+		return sortEvents(events.concat(Array.from(this._normalisedEvents.values())))
 	}
 
 	private normaliseEvent = (event: Event) => {
@@ -224,8 +252,13 @@ export class NormalisedEvents extends Module {
 				identifier = this.getFallbackIdentifier(event)
 				if (isApplyBuffEvent(event)) {
 					normalisedEvent = new NormalisedApplyBuffEvent(event)
-				} else {
+				} else if (isRemoveBuffEvent(event)) {
 					normalisedEvent = new NormalisedRemoveBuffEvent(event)
+				} else if (isApplyDebuffEvent(event)) {
+					normalisedEvent = new NormalisedApplyDebuffEvent(event)
+				} else {
+					// isRemoveDebuffEvent(event) - can't check or TS will flag normalisedEvent as possibly undefined
+					normalisedEvent = new NormalisedRemoveDebuffEvent(event)
 				}
 			}
 			this._normalisedEvents.set(identifier, normalisedEvent)
