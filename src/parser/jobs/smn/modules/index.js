@@ -5,6 +5,7 @@ import DoTs from './DoTs'
 import DWT from './DWT'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import MissingDoTs from './MissingDoTs'
 import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
@@ -24,6 +25,7 @@ export default [
 	DWT,
 	Gauge,
 	GeneralCDDowntime,
+	Interrupts,
 	MissingDoTs,
 	MultiHit,
 	Pets,
