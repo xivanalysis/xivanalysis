@@ -7,10 +7,11 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import React, {Fragment} from 'react'
+import {Message} from 'semantic-ui-react'
 
 const SEVERITIES = {
 	MISSED_CASTS: {
@@ -24,10 +25,13 @@ const SEVERITIES = {
 
 const CONSTANTS = {
 	HOLY_SPIRIT: {
-		EXPECTED: 4,
+		EXPECTED: 3,
 	},
 	CONFITEOR: {
 		EXPECTED: 1,
+	},
+	TOTAL_GCDS: {
+		EXPECTED: 4,
 	},
 }
 
@@ -42,7 +46,7 @@ class RequiescatState {
 	start: number
 	end: number | null = null
 	rotation: CastEvent[] = []
-	hasAscociatedBuff: boolean = false
+	hasAssociatedBuff: boolean = false
 	isRushing: boolean = false
 
 	constructor(start: number) {
@@ -120,7 +124,7 @@ export default class Requiescat extends Module {
 		const lastRequiescat = this.lastRequiescat
 
 		if (lastRequiescat != null) {
-			lastRequiescat.hasAscociatedBuff = true
+			lastRequiescat.hasAssociatedBuff = true
 		}
 	}
 
@@ -136,10 +140,10 @@ export default class Requiescat extends Module {
 		// The difference between Holy Spirit and Confiteor is massive (450 potency before multipliers). For this reason, it condenses suggestions
 		// to just log any missed Confiteor as a missed Holy Spirit, since Confiteor functionally just doubles your last Holy Spirit.
 		const missedCasts = this.requiescats
-			.filter(requiescat => requiescat.hasAscociatedBuff && !requiescat.isRushing)
+			.filter(requiescat => requiescat.hasAssociatedBuff && !requiescat.isRushing)
 			.reduce((sum, requiescat) =>
 				sum + Math.max(0, CONSTANTS.HOLY_SPIRIT.EXPECTED - requiescat.holySpirits) + Math.max(0, CONSTANTS.CONFITEOR.EXPECTED - requiescat.confiteors), 0)
-		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAscociatedBuff).length
+		const missedRequiescatBuffs = this.requiescats.filter(requiescat => !requiescat.hasAssociatedBuff).length
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HOLY_SPIRIT.icon,
@@ -147,7 +151,7 @@ export default class Requiescat extends Module {
 				<Plural value={missedCasts} one="# missing cast" other="# missing casts"/> during the <StatusLink {...STATUSES.REQUIESCAT}/> buff window.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.wrong-gcd.content">
-				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or
+				GCDs used during <ActionLink {...ACTIONS.REQUIESCAT}/> should consist of 3-4 uses of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> (or 4 uses of
 				multi-hit <ActionLink {...ACTIONS.HOLY_CIRCLE}/>) and 1 use of <ActionLink {...ACTIONS.CONFITEOR}/> for optimal damage.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_CASTS,
@@ -172,38 +176,43 @@ export default class Requiescat extends Module {
 	}
 
 	output() {
-		return <RotationTable
-			targets={[
-				{
-					header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
-					accessor: 'holySpirit',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
-					accessor: 'confiteor',
-				},
-			]}
-			data={this.requiescats
-				.filter(requiescat => requiescat.hasAscociatedBuff)
-				.map(requiescat => ({
-					start: requiescat.start - this.parser.fight.start_time,
-					end: requiescat.end != null ?
-						requiescat.end - this.parser.fight.start_time
-						: requiescat.start - this.parser.fight.start_time,
-					targetsData: {
-						holySpirit: {
-							actual: requiescat.holySpirits,
-							expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
-						},
-						confiteor: {
-							actual: requiescat.confiteors,
-							expected: CONSTANTS.CONFITEOR.EXPECTED,
-						},
+		return <Fragment>
+			<Message>
+				<Trans id="pld.requiescat.table.note">Each of your <ActionLink {...ACTIONS.REQUIESCAT}/> windows should contain {CONSTANTS.TOTAL_GCDS.EXPECTED} spells at minimum to maintain the alignment of your rotation. Most of the time, a window should consist of {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> or <ActionLink {...ACTIONS.HOLY_CIRCLE}/> and end with a cast of <ActionLink {...ACTIONS.CONFITEOR}/>. However, under some circumstances, it is useful to drop one <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per minute in order to better align your rotation with buffs or mechanics. If you don't have a specific plan to do this, you should aim for {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per <ActionLink {...ACTIONS.REQUIESCAT}/> window.</Trans>
+			</Message>
+			<RotationTable
+				targets={[
+					{
+						header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
+						accessor: 'holySpirit',
 					},
-					rotation: requiescat.rotation,
-				}))
-			}
-			onGoto={this.timeline.show}
-		/>
+					{
+						header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
+						accessor: 'confiteor',
+					},
+				]}
+				data={this.requiescats
+					.filter(requiescat => requiescat.hasAssociatedBuff)
+					.map(requiescat => ({
+						start: requiescat.start - this.parser.fight.start_time,
+						end: requiescat.end != null ?
+							requiescat.end - this.parser.fight.start_time
+							: requiescat.start - this.parser.fight.start_time,
+						targetsData: {
+							holySpirit: {
+								actual: requiescat.holySpirits,
+								expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
+							},
+							confiteor: {
+								actual: requiescat.confiteors,
+								expected: CONSTANTS.CONFITEOR.EXPECTED,
+							},
+						},
+						rotation: requiescat.rotation,
+					}))
+				}
+				onGoto={this.timeline.show}
+			/>
+		</Fragment>
 	}
 }

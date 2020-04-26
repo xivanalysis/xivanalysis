@@ -2,7 +2,7 @@ import {BuffEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 
 const APPLY = 'apply'
 const REMOVE = 'remove'
@@ -115,7 +115,7 @@ export class EntityStatuses extends Module {
 		const eventToAdjust = _.cloneDeep(statusEvent)
 		const adjustedEvents = [eventToAdjust]
 
-		const target = String(statusEvent.targetID)
+		const target = statusEvent.targetID
 		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end!, 1)}`)
 		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 

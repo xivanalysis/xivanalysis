@@ -29,7 +29,7 @@ export default new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.LAQI, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LAQI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
 	changelog: [{

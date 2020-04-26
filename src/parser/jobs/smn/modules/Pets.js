@@ -175,8 +175,10 @@ export default class Pets extends Module {
 		if (
 			action &&
 			action.pet &&
-			action.pet !== this._currentPet.id &&
-			event.timestamp - this._currentPet.timestamp > PET_RESYNC_BUFFER_MS
+			(this._currentPet === null ||
+				(action.pet !== this._currentPet.id &&
+				event.timestamp - this._currentPet.timestamp > PET_RESYNC_BUFFER_MS)
+			)
 		) {
 			this.setPet(action.pet)
 		}
