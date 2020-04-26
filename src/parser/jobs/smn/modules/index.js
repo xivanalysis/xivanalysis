@@ -9,6 +9,7 @@ import MissingDoTs from './MissingDoTs'
 import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
+import Physick from './Physick'
 import Ruin2 from './Ruin2'
 import Ruin4 from './Ruin4'
 import Swiftcast from './Swiftcast'
@@ -28,6 +29,7 @@ export default [
 	MultiHit,
 	Pets,
 	PetTimeline,
+	Physick,
 	Ruin2,
 	Ruin4,
 	Swiftcast,
