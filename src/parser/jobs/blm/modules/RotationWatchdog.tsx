@@ -7,7 +7,6 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {CastEvent, Event} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
@@ -30,7 +29,6 @@ const NO_UH_EXPECTED_FIRE4 = 5
 const FIRE4_FROM_MANAFONT = 1
 
 const MIN_MP_FOR_FULL_ROTATION = 9600
-const THUNDERCLOUD_MILLIS = 18000
 const ASTRAL_UMBRAL_DURATION = 15000
 
 const AF_UI_BUFF_MAX_STACK = 3
@@ -195,7 +193,6 @@ export default class RotationWatchdog extends Module {
 	private rotationsWithoutFire = 0
 	private manafontBeforeDespair = 0
 	private astralFiresMissingDespairs = 0
-	private thunder3Casts = 0
 	private primaryTargetId?: number
 
 	protected init() {
@@ -244,12 +241,6 @@ export default class RotationWatchdog extends Module {
 	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
-		// For right now, we're assuming the main boss of an encounter is the first thing you hit. This isn't the case for Ultimates
-		// but we'll deal with that in the future (TODO)
-		if (!this.primaryTargetId && event.targetID && !event.targetIsFriendly) {
-			this.primaryTargetId = event.targetID
-		}
-
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
@@ -273,10 +264,6 @@ export default class RotationWatchdog extends Module {
 		// If this is manafont, note that we used it so we don't have to cast.filter(...).length to find out
 		if (actionId === ACTIONS.MANAFONT.id) {
 			this.currentRotation.hasManafont = true
-		}
-		// Keep track of total thunder casts so we can include that in the thunder uptime checklist item
-		if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
-			this.thunder3Casts++
 		}
 	}
 
@@ -495,7 +482,7 @@ export default class RotationWatchdog extends Module {
 					<Icon name="warning sign"/>
 					<Message.Content>
 						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-							If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
+							If you are following the AI playstyle, this report and many of the suggestions may not be applicable.
 						</Trans>
 					</Message.Content>
 				</Message>

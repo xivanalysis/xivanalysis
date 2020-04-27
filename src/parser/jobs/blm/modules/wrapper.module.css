@@ -1,0 +1,19 @@
+.procOverlay {
+    position: relative;
+    display: inline-block;
+}
+
+.procOverlay::after {
+    content: '';
+    background-image: url(./proc_overlay.png);
+    background-size: cover;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+}
+
+.link {
+	border-bottom: 1px dotted currentColor;
+}
