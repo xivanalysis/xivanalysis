@@ -6,6 +6,7 @@ import DWT from './DWT'
 import EgiCommands from './EgiCommands'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import MissingDoTs from './MissingDoTs'
 import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
@@ -25,6 +26,7 @@ export default [
 	EgiCommands,
 	Gauge,
 	GeneralCDDowntime,
+	Interrupts,
 	MissingDoTs,
 	MultiHit,
 	Pets,
