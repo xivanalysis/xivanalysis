@@ -1,9 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {ActionRoot} from 'data/ACTIONS/root'
+import {StatusRoot} from 'data/STATUSES/root'
+import {Data} from 'parser/core/modules/Data'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -20,14 +21,14 @@ const SEVERETIES = {
 	},
 }
 
-const HELIOS_CASTS = [
-	ACTIONS.HELIOS.id,
-	ACTIONS.ASPECTED_HELIOS.id,
+const HELIOS_CASTS: Array<keyof ActionRoot> = [
+	'HELIOS',
+	'ASPECTED_HELIOS',
 ]
 
-const HOROSCOPE_STATUSES = [
-	STATUSES.HOROSCOPE.id,
-	STATUSES.HOROSCOPE_HELIOS.id,
+const HOROSCOPE_STATUSES: Array<keyof StatusRoot> = [
+	'HOROSCOPE',
+	'HOROSCOPE_HELIOS',
 ]
 
 interface HoroscopeWindow {
@@ -40,14 +41,15 @@ export default class Horoscope extends Module {
 	static handle = 'horoscope'
 	static title = t('ast.horoscope.title')`Horoscope`
 
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private uses = 0
 	private activations = 0
 
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
-		this.addHook('cast', {abilityId: ACTIONS.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
+		this.addHook('cast', {abilityId: this.data.actions.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
+		this.addHook('cast', {abilityId: this.data.actions.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
 		this.addHook('complete', this.onComplete)
 	}
 
@@ -64,9 +66,9 @@ export default class Horoscope extends Module {
 		*/
 		const missedActivations = this.uses - this.activations
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.HOROSCOPE_ACTIVATION.icon,
+			icon: this.data.actions.HOROSCOPE_ACTIVATION.icon,
 			content: <Trans id="ast.horoscope.suggestion.expired.content">
-				<ActionLink {...ACTIONS.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
+				<ActionLink {...this.data.actions.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
 			</Trans>,
 			why: <Trans id="ast.horoscope.suggestion.expired.why">
 				<Plural value={missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
