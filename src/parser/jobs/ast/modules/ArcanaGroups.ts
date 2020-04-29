@@ -1,5 +1,3 @@
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {StatusRoot} from 'data/STATUSES/root'
 // Grouped cards for future convenience - whatever processing desired

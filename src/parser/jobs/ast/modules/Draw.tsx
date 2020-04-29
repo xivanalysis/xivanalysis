@@ -1,8 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {Data} from 'parser/core/modules/Data'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
@@ -175,9 +173,7 @@ export default class Draw extends Module {
 
 		// Confirm they had preprepped a card on pull
 		const pullState = this.arcanaTracking.getPullState()
-		if (pullState.drawState > 0) {
-			this.prepullPrepped = true
-		}
+		this.prepullPrepped = !!pullState.drawState
 
 		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
 
@@ -192,7 +188,7 @@ export default class Draw extends Module {
 				Play as many cards as possible
 			</Trans>,
 			description: <><Trans id="ast.draw.checklist.description">
-				Playing cards will let you collect seals for <ActionLink {...ACTIONS.DIVINATION} /> and contribute to party damage.
+				Playing cards will let you collect seals for <ActionLink {...this.data.actions.DIVINATION} /> and contribute to party damage.
 			</Trans>
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
@@ -204,7 +200,7 @@ export default class Draw extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.name">
-						<ActionLink {...ACTIONS.PLAY} /> uses
+						<ActionLink {...this.data.actions.PLAY} /> uses
 					</Trans>,
 					value: this.plays,
 					target: theoreticalMaxPlays,
@@ -253,7 +249,7 @@ export default class Draw extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
-						Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...ACTIONS.DIVINATION} /> to stack buffs at the same time. <ActionLink {...ACTIONS.LIGHTSPEED} /> can be used to weave card abilities.
+						Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
 				</Trans>,
 				tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
 				value: sleevesMissed,
@@ -270,7 +266,7 @@ export default class Draw extends Module {
 				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
 						No uses of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> at all.
-						It should be paired with every other <ActionLink {...ACTIONS.DIVINATION} /> to stack buffs at the same time. <ActionLink {...ACTIONS.LIGHTSPEED} /> can be used to weave card abilities.
+						It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
 					No sleeve draws used.
