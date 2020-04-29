@@ -43,9 +43,10 @@ export class AdditionalEvents extends Module {
 			this.parser.player.guid,
 			...this.parser.player.pets.map(pet => pet.guid),
 		]
+		const playerFilter = `source.id not in (${playerIds.join(',')}) and target.id not in (${playerIds.join(',')})`
 
 		// Request the new events
-		const filter = `((${registeredQueries.join(') or (')})) and source.id not in (${playerIds.join(',')})`
+		const filter = `((${registeredQueries.join(') or (')})) and ${playerFilter}`
 		const newEvents = await getFflogsEvents(
 			this.parser.report.code,
 			this.parser.fight,

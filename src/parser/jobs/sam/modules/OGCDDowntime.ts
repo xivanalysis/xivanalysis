@@ -35,6 +35,9 @@ export default class OGCDDowntime extends CooldownDowntime {
 			],
 			firstUseOffset: FIRSTUSEOFFSET_50KENKI,
 		},
+		{
+			cooldowns: [ACTIONS.IKISHOTEN],
+		},
 
 	]
 }

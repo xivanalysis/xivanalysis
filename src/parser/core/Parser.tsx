@@ -202,7 +202,10 @@ class Parser {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
-		yield this.hydrateFabrication({type: 'init'})
+		yield this.hydrateFabrication({
+			type: 'init',
+			timestamp: this.fight.start_time,
+		})
 
 		let obj = eventIterator.next()
 		while (!obj.done) {
@@ -216,7 +219,10 @@ class Parser {
 		}
 
 		// Finish with 'complete' fab
-		yield this.hydrateFabrication({type: 'complete'})
+		yield this.hydrateFabrication({
+			type: 'complete',
+			timestamp: this.fight.end_time,
+		})
 	}
 
 	hydrateFabrication(event: Partial<Event>): Event {
