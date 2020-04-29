@@ -100,6 +100,7 @@ export const AST = ensureActions({
 		name: 'Essential Dignity',
 		icon: 'https://xivapi.com/i/003000/003141.png',
 		cooldown: 40,
+		charges: 2,
 	},
 
 	ASPECTED_HELIOS: {
