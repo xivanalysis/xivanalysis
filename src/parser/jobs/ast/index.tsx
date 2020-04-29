@@ -30,7 +30,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.08',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
