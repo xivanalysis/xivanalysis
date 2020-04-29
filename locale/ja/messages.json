@@ -2,7 +2,6 @@
   "ast.about.description-1": "",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "",
-  "ast.about.description.warning.healer": "現在、全ヒーラーについてボスの無敵状態のチェックが正しく機能していません。このことから、常に詠唱できているかのチェックやDoT稼働率等の時間に関係する機能の精度が悪くなっています。",
   "ast.arcana-suggestions.messages.explanation": "このセクションでは戦闘中の全てのカードアクションと分配を追跡します。",
   "ast.arcana-suggestions.messages.footnote": "",
   "ast.arcana-suggestions.messages.latest-action": "最後のアクション",
