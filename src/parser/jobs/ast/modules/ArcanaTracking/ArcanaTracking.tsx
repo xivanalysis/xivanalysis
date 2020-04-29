@@ -272,7 +272,6 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.lastEvent = lastEvent
 			cardStateItem.drawState = undefined
 			this.cardStateLog.push(cardStateItem)
-			console.log(this.cardStateLog)
 		}
 	}
 
@@ -298,7 +297,6 @@ export default class ArcanaTracking extends Module {
 		cardStateItem.lastEvent = event
 
 		if (this.PLAY.includes(actionId)) {
-			console.log(event)
 			// Make sure they have been holding onto this from the last instance of a DRAW/REDRAW/MINOR_ARCANA
 			this.retconSearch(actionId)
 
@@ -334,7 +332,6 @@ export default class ArcanaTracking extends Module {
 		}
 
 		this.cardStateLog.push(cardStateItem)
-		console.log(this.cardStateLog)
 	}
 
 	/**
@@ -390,7 +387,6 @@ export default class ArcanaTracking extends Module {
 					return this.pullStateInitialized = true
 				}
 			})
-			console.log(this.cardStateLog)
 		}
 	}
 
@@ -458,7 +454,6 @@ export default class ArcanaTracking extends Module {
 						stateItem.drawState = arcanaStatus
 					}
 				})
-			console.log(this.cardStateLog)
 		}
 	}
 
