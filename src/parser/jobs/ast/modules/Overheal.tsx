@@ -43,7 +43,7 @@ export default class Overheal extends Module {
 
 	protected init() {
 		HOT_STATUSES.forEach(actionKey => {
-			this.HOT_STATUSES.push(this.data.actions[actionKey].id)
+			this.HOT_STATUSES.push(this.data.statuses[actionKey].id)
 		})
 
 		this.addHook('heal', {by: 'player'}, this.onHeal)
