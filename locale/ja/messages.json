@@ -738,7 +738,6 @@
   "sam.tsubame.title": "燕飛",
   "sch.about.description": "",
   "sch.about.description.warning.development": "",
-  "sch.about.description.warning.healer": "現在、全ヒーラーについてボスの無敵状態のチェックが正しく機能していません。このことから、常に詠唱できているかのチェックやDoT稼働率等の時間に関係する機能の精度が悪くなっています。",
   "sch.aetherflow.abilities-used": "使用したアビリティ",
   "sch.aetherflow.cast-time": "詠唱時間",
   "sch.aetherflow.checklist.description-1": "",
