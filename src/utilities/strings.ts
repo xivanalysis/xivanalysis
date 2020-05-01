@@ -10,6 +10,9 @@ export function formatDuration(duration: number, options: {
 		secondPrecision?: number,
 		hideMinutesIfZero: boolean,
 	} = {secondPrecision: undefined, hideMinutesIfZero: false}): string {
+	if (duration == null || isNaN(duration)) {
+		throw Error('A non-numeric value was supplied to formatDuration')
+	}
 	/* tslint:disable:no-magic-numbers */
 	duration /= 1000
 
