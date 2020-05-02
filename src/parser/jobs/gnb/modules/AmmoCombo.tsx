@@ -64,22 +64,22 @@ export default class AmmoCombo extends Module {
 	}
 
 	protected init() { // TODO: Strip away the other hooks? I could roll them into the actual cast I have for tracking the combo, but won't be as nice looking IMO
-		this.addHook('cast',
+		this.addEventHook('cast',
 			{
 				by: 'player',
 				abilityId: RELEVANT_ACTIONS,
 			},
 			() => this.actions++)
 
-		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
-		this.addHook('applybuff',
+		this.addEventHook('applybuff',
 			{
 				by: 'player',
 				abilityId: RELEVANT_STATUSES,
 			},
 			() => this.buffs++)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {
