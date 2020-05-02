@@ -507,7 +507,7 @@ export default class MeleeCombos extends Module {
 
 							return (<Table.Row key={timestamp}>
 								<Table.Cell textAlign="center">
-									<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
+									<span style={{marginRight: 5}}>{formatDuration(start)}</span>
 									{<Button
 										circular
 										compact
