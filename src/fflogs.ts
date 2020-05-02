@@ -156,6 +156,7 @@ export interface Event {
 // TODO: Remove once symbol types are removed
 const hasStringType = <T extends Event>(event: T): event is T & {type: string} => typeof event.type === 'string'
 
+export const isAbilityEvent = (event: Event): event is AbilityEvent => hasStringType(event) && event.hasOwnProperty('ability')
 export interface AbilityEvent extends Event {
 	ability: Ability
 }
@@ -184,6 +185,7 @@ interface EffectEvent extends AbilityEvent {
 }
 
 export interface DeathEvent extends Event { type: 'death' }
+export const isCastEvent = (event: Event): event is CastEvent => hasStringType(event) && (event.type === 'cast' || event.type === 'begincast')
 export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
 
 export const isDamageEvent = (event: Event): event is DamageEvent => hasStringType(event) && event.type.includes('damage')
