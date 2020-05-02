@@ -1,7 +1,6 @@
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {getDataBy} from 'data'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -32,6 +31,7 @@ export default class Huton extends Module {
 	static handle = 'huton'
 	static dependencies = [
 		'checklist',
+		'data',
 		'death',
 		'suggestions',
 	]
@@ -93,7 +93,10 @@ export default class Huton extends Module {
 
 	_onHutonExtension(event) {
 		const elapsedTime = (event.timestamp - this._lastEventTime)
-		const extension = HUTON_EXTENSION_MILLIS[getDataBy(ACTIONS, 'id', event.ability.guid)]
+		const action = this.data.getAction(event.ability.guid)
+		if (action == null) { return }
+
+		const extension = HUTON_EXTENSION_MILLIS[action.id]
 		this._handleHutonExtension('high', extension, elapsedTime)
 		this._handleHutonExtension('low', extension, elapsedTime)
 		this._lastEventTime = event.timestamp
