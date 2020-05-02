@@ -60,17 +60,17 @@ export class Gauge extends CoreGauge {
 	protected init() {
 		super.init()
 
-		this.addHook(
+		this.addEventHook(
 			['combo', 'cast'],
 			{by: 'player', abilityId: Array.from(BEAST_MODIFIERS.keys())},
 			this.onGaugeModifier,
 		)
-		this.addHook(
+		this.addEventHook(
 			'cast',
 			{by: 'player', abilityId: INFURIATE_REDUCERS},
 			() => this.cooldowns.reduceCooldown(ACTIONS.INFURIATE.id, INFURIATE_CDR),
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGaugeModifier(event: ComboEvent | CastEvent) {

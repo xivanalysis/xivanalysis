@@ -13,7 +13,7 @@ export default class AlwaysBeCasting extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// Just using this for the suggestion for now

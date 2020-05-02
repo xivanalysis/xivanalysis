@@ -86,9 +86,9 @@ export default class RiddleOfFire extends Module {
 	private riddle?: Riddle
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this.onDrop)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this.onDrop)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	onCast(event: CastEvent): void {

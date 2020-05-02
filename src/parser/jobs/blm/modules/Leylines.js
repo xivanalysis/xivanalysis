@@ -41,10 +41,10 @@ export default class Leylines extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('applybuff', {by: 'player', abilityId: LL_BUFFS}, this._onGain)
-		this.addHook('removebuff', {by: 'player', abilityId: LL_BUFFS}, this._onDrop)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('applybuff', {by: 'player', abilityId: LL_BUFFS}, this._onGain)
+		this.addEventHook('removebuff', {by: 'player', abilityId: LL_BUFFS}, this._onDrop)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// Manage buff windows

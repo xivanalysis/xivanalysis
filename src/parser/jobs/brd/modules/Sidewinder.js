@@ -47,14 +47,14 @@ export default class Sidewinder extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.SIDEWINDER.id,
 		}, this._onSidewinderCast)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
-		this.addHook('normaliseddamage', {
+		this.addEventHook('normaliseddamage', {
 			by: 'player',
 			abilityId: ACTIONS.SHADOWBITE.id,
 		}, this._onShadowbiteDamage)

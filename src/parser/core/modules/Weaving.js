@@ -50,9 +50,9 @@ export default class Weaving extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onBeginCast(event) {

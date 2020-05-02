@@ -93,9 +93,9 @@ export default class Sect extends Module {
 	private gaveup = false
 
 	protected init() {
-		this.addHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
-		this.addHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {abilityId: [...SECT_ACTIONS], by: 'player'}, this.onCast)
+		this.addEventHook('applybuff', {abilityId: [...SECT_STATUSES], by: 'player'}, this.onApplySect)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	normalise(events: any) {

@@ -32,9 +32,9 @@ export default class LucidDreaming extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.LUCID_DREAMING.id],
 		}
-		this.addHook('cast', _filter, this._onCastLucid)
-		this.addHook('refreshbuff', {by: 'player', to: 'player'}, this._onRefreshLucid)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', _filter, this._onCastLucid)
+		this.addEventHook('refreshbuff', {by: 'player', to: 'player'}, this._onRefreshLucid)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCastLucid(event) {
