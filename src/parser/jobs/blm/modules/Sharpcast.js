@@ -3,10 +3,11 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Item} from 'parser/core/modules/Timeline'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {StatusLink, ActionLink} from 'components/ui/DbLink'
+import {StatusItem} from 'parser/core/modules/Timeline'
+import {SimpleStatistic} from 'parser/core/modules/Statistics'
 
 const SHARPCAST_DURATION_MILLIS = STATUSES.SHARPCAST.duration * 1000
 
@@ -20,9 +21,10 @@ const SHARPCAST_CONSUMER_IDS = [
 export default class Sharpcast extends Module {
 	static handle = 'sharpcast'
 	static dependencies = [
-		'timeline',
 		'procs',
 		'suggestions',
+		'cooldownDowntime',
+		'statistics',
 	]
 
 	_buffWindows = {
@@ -32,14 +34,15 @@ export default class Sharpcast extends Module {
 
 	_droppedSharpcasts = 0
 	_sharpedScathes = 0
+	_usedSharpcasts = 0
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onRemoveSharpcast)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onGainSharpcast)
-		this.addHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onRemoveSharpcast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onGainSharpcast)
+		this.addEventHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onRemoveSharpcast(event) {
@@ -47,6 +50,7 @@ export default class Sharpcast extends Module {
 	}
 
 	_onGainSharpcast(event) {
+		this._usedSharpcasts++
 		this._buffWindows.current = {
 			start: event.timestamp,
 		}
@@ -104,19 +108,26 @@ export default class Sharpcast extends Module {
 			this._stopAndSave()
 		}
 
-		const groupId = this.procs.getGroupIdForStatus(STATUSES.SHARPCAST)
+		const row = this.procs.getRowForStatus(STATUSES.SHARPCAST)
+
 		const fightStart = this.parser.fight.start_time
 
 		// Add buff windows to the timeline
 		this._buffWindows.history.forEach(window => {
-			this.timeline.addItem(new Item({
-				type: 'background',
+			row.addItem(new StatusItem({
+				status: STATUSES.SHARPCAST,
 				start: window.start - fightStart,
 				end: window.stop - fightStart,
-				group: groupId,
-				content: <img src={STATUSES.SHARPCAST.icon} alt={STATUSES.SHARPCAST.name}/>,
 			}))
 		})
+
+		// Gather the data for actual / expected
+		const expected = this.cooldownDowntime.calculateMaxUsages({cooldowns: [ACTIONS.SHARPCAST]})
+		const actual = this._usedSharpcasts
+		let percent = actual / expected * 100
+		if (process.env.NODE_ENV === 'production') {
+			percent = Math.min(percent, 100)
+		}
 
 		// Suggestions to use sharpcasts that wore off.
 		this.suggestions.add(new TieredSuggestion({
@@ -150,6 +161,18 @@ export default class Sharpcast extends Module {
 			why: <Trans id="blm.sharpcast.suggestions.sharpcasted-scathes.why">
 				<Plural value={this._sharpedScathes} one="# Sharpcast was" other="# Sharpcasts were"/> consumed by <ActionLink {...ACTIONS.SCATHE} />.
 			</Trans>,
+		}))
+
+		//add a statistic for used sharps
+		this.statistics.add(new SimpleStatistic({
+			title: <Trans id="blm.sharpcast.statistic.title">Used Sharpcasts</Trans>,
+			icon: ACTIONS.SHARPCAST.icon,
+			value: `${actual}/${expected} (${percent.toFixed(1)}%)`,
+			info: (
+				<Trans id="blm.sharpcast.statistic.info">
+					The number of Sharpcasts used versus the number of possible Sharpcast uses. Less than 100% is generally expected, but especially low usage could indicate misuse of the cooldown.
+				</Trans>
+			),
 		}))
 	}
 }

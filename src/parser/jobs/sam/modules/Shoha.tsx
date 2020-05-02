@@ -65,8 +65,8 @@ export default class Shoha extends Module {
 	@dependency private combatants!: Combatants
 
 	protected init() {
-		this.addHook('init', this.pushToHistory)
-		this.addHook(
+		this.addEventHook('init', this.pushToHistory)
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -74,7 +74,7 @@ export default class Shoha extends Module {
 			},
 			this.onGenerate,
 		)
-		this.addHook(
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -82,11 +82,11 @@ export default class Shoha extends Module {
 			},
 			this.onSpend,
 		)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onApplyMeditate)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onRemoveMeditate)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onApplyMeditate)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onRemoveMeditate)
 
-		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGenerate(event: CastEvent) {
@@ -228,8 +228,8 @@ export default class Shoha extends Module {
 					label: 'Meditation Stacks',
 					steppedLine: true,
 					data: this.stackHistory,
-					backgroundColor: stackColor.fade(0.8),
-					borderColor: stackColor.fade(0.5),
+					backgroundColor: stackColor.fade(0.8).toString(),
+					borderColor: stackColor.fade(0.5).toString(),
 				},
 			],
 		}

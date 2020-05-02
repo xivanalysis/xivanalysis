@@ -21,6 +21,7 @@ export default class NotCasting extends Module {
 		'timeline',
 		'gcd',
 		'invuln',
+		'unableToAct',
 	]
 
 	_noCastWindows = {
@@ -32,10 +33,10 @@ export default class NotCasting extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('begincast', {by: 'player'}, this._onBegin)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('begincast', {by: 'player'}, this._onBegin)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
@@ -102,6 +103,10 @@ export default class NotCasting extends Module {
 		//filter out invuln periods
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
 			return this.invuln.getInvulns('all', windows.start, windows.stop).length === 0
+		})
+		// Filter out periods where you got stunned, etc
+		this._noCastWindows.history = this._noCastWindows.history.filter(windows => {
+			return this.unableToAct.getDowntimes(windows.start, windows.stop).length === 0
 		})
 		//filter out negative durations
 		this._noCastWindows.history = this._noCastWindows.history.filter(windows => windows.stop - windows.start > gcdLength + GCD_ERROR_OFFSET)

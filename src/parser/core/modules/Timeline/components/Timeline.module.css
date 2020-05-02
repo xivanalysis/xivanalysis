@@ -1,0 +1,148 @@
+/* Colours picked to mimic vis for now */
+@value borderColour: #bfbfbf;
+@value borderWidth: 1px;
+
+@value branchLabelWidth: 30px;
+@value defaultRowHeight: 30px;
+
+@value gridLineColour: #e5e5e5;
+@value majorGridLineColour: #bfbfbf;
+
+/*
+Notes:
+- Solid represents the explicit grid, dashed the implicit.
+- The item column is explicitly sized as at-most 1fr, allowing it to expand as
+  large as it can.
+- The _last_ label is an automatic width, allowing it to consume content width
+  from any labels that span into it. Given that _every_ "leaf" label (collapsed
+  or childless) will span into it, leaf labels will automatically consume the
+  space they require for their content up to the start items.
+- Remaining label columns are implicit, configured with a set pixel width. Non-
+  leaf labels will be constrained within in these fixed column width.
+
+Basic diagram:
+┌╶╶╶╶┌╶╶╶╶┬──────────────────┬────────────────────────────────────────────────┐
+┆ -4 ┆ -3 │ "last" label col │ item track col                                 │
+├    ┼╶╶╶╶┼──────────────────┼────────────────────────────────────────────────┤
+┆ -4 ┆ Less-nested label     │                                                │
+├╶╶╶╶┼╶╶╶╶┼──────────────────┼────────────────────────────────────────────────┤
+┆ Full-width label           │                                                │
+└╶╶╶╶┴╶╶╶╶┴──────────────────┴────────────────────────────────────────────────┘
+*/
+
+.timeline {
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	grid-auto-columns: branchLabelWidth;
+	grid-gap: borderWidth;
+	padding: borderWidth;
+	user-select: none;
+}
+
+.label,
+.track {
+	min-height: defaultRowHeight;
+	box-sizing: content-box;
+	border: borderWidth solid borderColour;
+	margin: calc(-1 * borderWidth);
+}
+
+.label {
+	position: relative;
+	grid-column-end: 2;
+	display: flex;
+	align-items: center;
+	background: rgba(0, 0, 0, 0.04);
+	white-space: nowrap;
+}
+
+.label.minimised,
+.label.collapsed {
+	cursor: pointer;
+}
+
+.label .content {
+	box-sizing: border-box;
+	padding: 0 5px;
+}
+
+.label.minimised .content,
+.label.collapsed .content {
+	padding-right: 20px;
+}
+
+.label.minimised .content {
+	position: absolute;
+	top: 50%;
+	left: calc(branchLabelWidth / 2);
+	transform-origin: top left;
+	transform: rotate(-90deg) translate(-50%, -50%);
+	overflow: hidden;
+	/* TODO: Consider something other than ellipsis, the dots consume a lot of space. */
+	text-overflow: ellipsis;
+}
+
+.label.minimised::after,
+.label.collapsed::after {
+	opacity: .75;
+}
+
+/* NOTE: 8.6 is an approximate value to get a nice triangle with the borders. Can't calculate in css, as we don't have sqrt. */
+.label.minimised::after {
+	content: '';
+	position: absolute;
+	top: 5px;
+	left: calc(branchLabelWidth / 2);
+	transform: translateX(-50%);
+	border: 5px solid transparent;
+	border-left: 8.6px solid currentcolor;
+	border-right-width: 0;
+}
+
+.label.collapsed::after {
+	content: '';
+	position: absolute;
+	right: 5px;
+	border: 5px solid transparent;
+	border-top: 8.6px solid currentcolor;
+	border-bottom-width: 0;
+}
+
+.track {
+	position: relative;
+	grid-column: 2 / span 1;
+	overflow: hidden;
+	pointer-events: none;
+}
+
+.item {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	pointer-events: all;
+}
+
+.gridLine {
+	border-left: 1px solid gridLineColour;
+	height: 100%;
+}
+
+.gridLine.major {
+	border-color: majorGridLineColour;
+}
+
+.axisTick {
+	padding: 3px;
+}
+
+.axisTick.major {
+	position: absolute;
+	top: 0;
+	padding-top: 24px; /* TODO: ??? */
+}
+
+.axisTick.first {
+	display: inline-flex;
+	justify-content: flex-end;
+	max-width: 100%;
+}

@@ -38,7 +38,7 @@ export const ROLE = ensureStatuses({
 
 	ARMS_LENGTH: {
 		id: 1209,
-		name: 'Arm&apos;s Length',
+		name: 'Arm\'s Length',
 		icon: 'https://xivapi.com/i/013000/013915.png',
 		duration: 6,
 	},

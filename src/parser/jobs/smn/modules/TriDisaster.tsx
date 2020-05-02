@@ -4,6 +4,8 @@ import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -22,17 +24,20 @@ const TRI_DISASTER_COOLDOWN = ACTIONS.TRI_DISASTER.cooldown * 1000
 export default class TriDisaster extends Module {
 	static handle = 'tridisaster'
 	static title = t('smn.tridisaster.title')`Tri-disaster`
+	static debug = true
 
+	@dependency private cooldowns!: Cooldowns
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private lastTriDCast = -TRI_DISASTER_COOLDOWN
 	private badCastCount = 0
 
 	protected init() {
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRI_DISASTER.id}, this.onTridisaster)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.DREADWYRM_TRANCE.id, ACTIONS.FIREBIRD_TRANCE.id]}, this.onReset)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id]}, this.checkCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRI_DISASTER.id}, this.onTridisaster)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DREADWYRM_TRANCE.id, ACTIONS.FIREBIRD_TRANCE.id]}, this.onReset)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id]}, this.checkCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onTridisaster(event: CastEvent) {
@@ -40,6 +45,7 @@ export default class TriDisaster extends Module {
 	}
 
 	private onReset(event: CastEvent) {
+		this.cooldowns.resetCooldown(this.data.actions.TRI_DISASTER.id)
 		this.checkCast(event)
 		this.lastTriDCast = -TRI_DISASTER_COOLDOWN
 	}

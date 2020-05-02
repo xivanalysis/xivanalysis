@@ -2,7 +2,7 @@ import {BuffEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 
 const APPLY = 'apply'
 const REMOVE = 'remove'
@@ -115,7 +115,7 @@ export class EntityStatuses extends Module {
 		const eventToAdjust = _.cloneDeep(statusEvent)
 		const adjustedEvents = [eventToAdjust]
 
-		const target = String(statusEvent.targetID)
+		const target = statusEvent.targetID
 		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end!, 1)}`)
 		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 
@@ -130,10 +130,11 @@ export class EntityStatuses extends Module {
 				eventToAdjust.end = invuln.start
 				eventToAdjust.stackHistory.splice(-1, 1, {stacks: 0, timestamp: invuln.start, invuln: true})
 
-				if (invuln.end < eventToAdjust.end!) {
+				if (invuln.end < statusEvent.end!) {
 					this.debug('Invuln split the range - synthesizing second event for status time after invuln')
 					// Invuln ended before the status ended - create a second status for the time after the invuln ended
-					const newStackHistory = statusEvent.stackHistory.slice(0, -1)
+					// If the status overlaps the end of the fight or the disappearance of the boss, there may not be a stackHistory event for the end of the debuff - splice on to the end of the array as-is
+					const newStackHistory = statusEvent.stackHistory.some(history => history.stacks === 0) ? statusEvent.stackHistory.slice(0, -1) : statusEvent.stackHistory
 					const stacksBeforeInvuln = newStackHistory[newStackHistory.length - 1].stacks
 					newStackHistory.splice(-1, 1,
 						{stacks: 0, timestamp: invuln.start, invuln: true},

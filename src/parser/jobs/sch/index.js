@@ -24,25 +24,24 @@ export default new Meta({
 				<Trans id="sch.about.description.warning.development">While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
-
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sch.about.description.warning.healer">Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.0',
 		to: '5.2',
 	},
 	contributors: [
+		{user: CONTRIBUTORS.YUNI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-04-07'),
+		Changes: () => <>Add Faerie actions to timeline</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-02-18'),
 		Changes: () => <>Support for 5.2; happy raiding SCHs!</>,
 		contributors: [CONTRIBUTORS.NONO],

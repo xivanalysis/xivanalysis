@@ -48,11 +48,11 @@ export default class Positionals extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player', abilityId: ROTATION_IDS}, this._onGcd)
-		this.addHook('cast', {by: 'player', abilityId: PROC_IDS}, this._onProcGcd)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RAIDEN_THRUST_READY.id}, this._procSuccess)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRUE_NORTH.id}, this._tnUsed)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ROTATION_IDS}, this._onGcd)
+		this.addEventHook('cast', {by: 'player', abilityId: PROC_IDS}, this._onProcGcd)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RAIDEN_THRUST_READY.id}, this._procSuccess)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRUE_NORTH.id}, this._tnUsed)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// duplicate code - eventually may want in single location

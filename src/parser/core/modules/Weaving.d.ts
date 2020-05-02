@@ -4,7 +4,7 @@ import Module from 'parser/core/Module'
 import CastTime from './CastTime'
 import {Data} from './Data'
 import GlobalCooldown from './GlobalCooldown'
-import Invulnerability from './Invulnerability'
+import {Invulnerability} from './Invulnerability'
 import Speedmod from './Speedmod'
 import Suggestions from './Suggestions'
 
@@ -12,6 +12,10 @@ import Suggestions from './Suggestions'
 interface JankFakeEvent {
 	type: undefined
 	timestamp: number
+}
+
+interface SeverityTiers {
+	[key: number]: number
 }
 
 export interface WeaveInfo {
@@ -28,6 +32,10 @@ export default class Weaving extends Module {
 	protected invuln: Invulnerability
 	protected speedmod: Speedmod
 	protected suggestions: Suggestions
+
+	protected suggestionIcon: string
+	protected suggestionContent: JSX.Element
+	protected severity: SeverityTiers
 
 	isOgcd(action: Action): boolean
 	isBadWeave(weave: WeaveInfo, maxWeaves?: number): boolean

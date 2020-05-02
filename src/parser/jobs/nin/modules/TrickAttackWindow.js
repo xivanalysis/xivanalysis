@@ -1,95 +1,112 @@
-import {Trans, Plural} from '@lingui/react'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 
-export default class TrickAttackWindow extends Module {
+// Opener has 5 Ninjutsu + 3 weaponskills, non-TCJ windows will likely have 2-3 Ninjutsu + 4-5 weaponskills
+const BASE_GCDS_PER_WINDOW = 7
+
+const FIRST_WINDOW_BUFFER = 30000
+
+export default class TrickAttackWindow extends BuffWindowModule {
 	static handle = 'taWindow'
-	static dependencies = [
-		'enemies',
-		'suggestions',
-	]
+	static title = t('nin.taWindow.title')`Trick Attack Windows`
 
-	_dwadOutsideTa = 0
-	_assassinateOutsideTa = 0
-	_armorCrushInTa = 0
+	buffAction = ACTIONS.TRICK_ATTACK
+	buffStatus = STATUSES.TRICK_ATTACK_VULNERABILITY_UP
 
-	constructor(...args) {
-		super(...args)
-		this.addHook('combo', {by: 'player', abilityId: ACTIONS.ARMOR_CRUSH.id}, this._onArmorCrush)
-		this.addHook('complete', this._onComplete)
+	rotationTableNotesColumnHeader = <Trans id ="nin.taWindow.chart.notes.header">TCJ Used</Trans>
 
-		this.addHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.DREAM_WITHIN_A_DREAM.id}, this._onDwadHit)
-		this.addHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.ASSASSINATE.id}, this._onAssassinate)
+	expectedGCDs = {
+		expectedPerWindow: BASE_GCDS_PER_WINDOW,
+		suggestionContent: <Trans id="nin.taWindow.suggestions.gcds.content">
+			While the exact number of GCDs per window will vary depending on whether <ActionLink {...ACTIONS.TEN_CHI_JIN}/> is up, every <ActionLink {...ACTIONS.TRICK_ATTACK}/> window should contain at least {BASE_GCDS_PER_WINDOW} GCDs.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MEDIUM,
+			2: SEVERITY.MAJOR,
+		},
 	}
 
-	_targetHasVuln(targetId) {
-		const target = this.enemies.getEntity(targetId)
-		return target && target.hasStatus(STATUSES.TRICK_ATTACK_VULNERABILITY_UP.id)
-	}
-
-	_onArmorCrush(event) {
-		if (this._targetHasVuln(event.targetID)) {
-			this._armorCrushInTa++
-		}
-	}
-
-	_onDwadHit(event) {
-		if (!this._targetHasVuln(event.targetID)) {
-			this._dwadOutsideTa++
-		}
-	}
-
-	_onAssassinate(event) {
-		if (!this._targetHasVuln(event.targetID)) {
-			this._assassinateOutsideTa++
-		}
-	}
-
-	_onComplete() {
-		if (this._dwadOutsideTa > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DREAM_WITHIN_A_DREAM.icon,
-				content: <Trans id="nin.ta-window.suggestions.dream.content">
-					Avoid using <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> outside of Trick Attack windows. Since they're both on 60 second cooldowns, they should always be paired to maximize DPS.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.ta-window.suggestions.dream.why">
-					You used Dream Within A Dream <Plural value={this._dwadOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
-				</Trans>,
-			}))
-		}
-
-		if (this._assassinateOutsideTa > 0) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.ASSASSINATE.icon,
-				content: <Trans id="nin.ta-window.suggestions.assassinate.content">
-					Try to fit your <ActionLink {...ACTIONS.ASSASSINATE}/> casts inside your Trick Attack windows. Since it chains off of <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/>, you should be able to use them both in every window.
-				</Trans>,
-				severity: SEVERITY.MEDIUM,
-				why: <Trans id="nin.ta-window.suggestions.assassinate.why">
-					You used Assassinate <Plural value={this._assassinateOutsideTa} one="# time" other="# times"/> outside of Trick Attack.
-				</Trans>,
-			}))
-		}
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.ARMOR_CRUSH.icon,
-			content: <Trans id="nin.ta-window.suggestions.armor-crush.content">
-				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> during Trick Attack windows. Unless Huton would otherwise fall off, <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> or <ActionLink {...ACTIONS.SHADOW_FANG}/> are always preferable for the additional damage.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
+	trackedActions = {
+		icon: ACTIONS.TRICK_ATTACK.icon,
+		actions: [
+			{
+				action: ACTIONS.SHADOW_FANG,
+				expectedPerWindow: 1,
 			},
-			value: this._armorCrushInTa,
-			why: <Trans id="nin.ta-window.suggestions.armor-crush.why">
-				You used Armor Crush <Plural value={this._armorCrushInTa} one="# time" other="# times"/> during Trick Attack.
-			</Trans>,
-		}))
+			{
+				action: ACTIONS.HYOSHO_RANRYU,
+				expectedPerWindow: 1,
+			},
+			{
+				action: ACTIONS.RAITON,
+				expectedPerWindow: 2,
+			},
+			{
+				action: ACTIONS.DREAM_WITHIN_A_DREAM,
+				expectedPerWindow: 1,
+			},
+			{
+				action: ACTIONS.ASSASSINATE,
+				expectedPerWindow: 1,
+			},
+		],
+		suggestionContent: <Trans id="nin.taWindow.suggestions.trackedactions.content">
+			Every <ActionLink {...ACTIONS.TRICK_ATTACK}/> window should contain <ActionLink {...ACTIONS.SHADOW_FANG}/>, <ActionLink {...ACTIONS.HYOSHO_RANRYU}/>, 2 <ActionLink {...ACTIONS.RAITON}/> casts (or 1 if it's your opener), and <ActionLink {...ACTIONS.DREAM_WITHIN_A_DREAM}/> in order to maximize damage.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MEDIUM,
+			3: SEVERITY.MAJOR,
+		},
+	}
+
+	trackedBadActions = {
+		icon: ACTIONS.ARMOR_CRUSH.icon,
+		actions: [
+			{
+				action: ACTIONS.ARMOR_CRUSH,
+				expectedPerWindow: 0,
+			},
+		],
+		suggestionContent: <Trans id="nin.taWindow.suggestions.badtrackedactions.content">
+			Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> under <ActionLink {...ACTIONS.TRICK_ATTACK}/> unless <ActionLink {...ACTIONS.HUTON}/> is about to fall off or you can only hit the flank positional, as <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> is otherwise a higher potency finisher.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MINOR,
+		},
+	}
+
+	init() {
+		super.init()
+		this.addEventHook('normalisedapplydebuff', {by: 'player'}, this.onApplyBuff)
+		this.addEventHook('normalisedremovedebuff', {by: 'player'}, this.onRemoveBuff)
+	}
+
+	considerAction(action) {
+		// Ten, Chi, and Jin should be ignored for purposes of GCD counts
+		return !(action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_KASSATSU.id || action.id === ACTIONS.CHI.id || action.id === ACTIONS.JIN.id)
+	}
+
+	changeExpectedGCDsClassLogic(buffWindow) {
+		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ? 1 : 0
+	}
+
+	changeExpectedTrackedActionClassLogic(buffWindow, action) {
+		if (action.action.id === ACTIONS.RAITON.id && buffWindow.start - this.parser.fight.start_time < FIRST_WINDOW_BUFFER) {
+			return -1
+		}
+
+		return 0
+	}
+
+	getBuffWindowNotes(buffWindow) {
+		return buffWindow.rotation.find(cast => cast.ability.guid === ACTIONS.TEN_CHI_JIN.id) ?
+			<Trans id="nin.taWindow.chart.notes.yes">Yes</Trans> : <Trans id="nin.taWindow.chart.notes.no">No</Trans>
 	}
 }

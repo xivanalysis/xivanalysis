@@ -9,7 +9,7 @@ import STATUSES from 'data/STATUSES'
 import {ActorType} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {PLAY} from '../ArcanaGroups'
@@ -54,7 +54,7 @@ export default class ArcanaSuggestions extends Module {
 	private partyComp: string[] = []
 
 	protected init() {
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private _onComplete() {

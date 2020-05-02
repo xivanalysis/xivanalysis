@@ -2,8 +2,8 @@ import React from 'react'
 import {Plural, Trans} from '@lingui/react'
 
 import Module from 'parser/core/Module'
-import {Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {SimpleItem} from './Timeline'
 
 // One of these being applied to an actor signifies they're back up
 const RAISE_STATUSES = [
@@ -28,18 +28,18 @@ export default class Death extends Module {
 
 		const raiseStatuses = RAISE_STATUSES.map(key => this.data.statuses[key])
 
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('applydebuff', {
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('applydebuff', {
 			to: 'player',
 			abilityId: raiseStatuses,
 		}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 		// If they (begin)cast, they were probably LB3'd, just mark end of death
 		// TODO: I mean there's an actual LB3 action cast, it's just not in the logs because of my filter. Look into it.
 		const checkLb3 = event => this._timestamp && this._onRaise(event)
-		this.addHook('begincast', {by: 'player'}, checkLb3)
-		this.addHook('cast', {by: 'player'}, checkLb3)
+		this.addEventHook('begincast', {by: 'player'}, checkLb3)
+		this.addEventHook('cast', {by: 'player'}, checkLb3)
 	}
 
 	_onDeath(event) {
@@ -99,12 +99,14 @@ export default class Death extends Module {
 
 	addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
-		this.timeline.addItem(new Item({
-			type: 'background',
-			style: 'background-color: #ce909085;',
+
+		this.timeline.addItem(new SimpleItem({
 			start: this._timestamp - startTime,
 			end: end - startTime,
+			// TODO: This but better?
+			content: <div style={{width: '100%', height: '100%', backgroundColor: '#ce909085'}}/>,
 		}))
+
 		this._deadTime += (end - this._timestamp)
 		this._timestamp = null
 	}

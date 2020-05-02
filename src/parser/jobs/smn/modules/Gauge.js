@@ -30,7 +30,6 @@ export default class Gauge extends Module {
 	static handle = 'gauge'
 	static dependencies = [
 		'brokenLog',
-		'cooldowns',
 		'pets',
 		'suggestions',
 	]
@@ -49,13 +48,13 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('removebuff', {
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.DREADWYRM_TRANCE.id,
 		}, this._onRemoveDwt)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// -----
@@ -102,9 +101,8 @@ export default class Gauge extends Module {
 			}
 		}
 
+		// Check if they're (potentially) rushing DWT -> Demi
 		if (abilityId === ACTIONS.DREADWYRM_TRANCE.id) {
-			// DWT resets 3D
-			this.cooldowns.resetCooldown(ACTIONS.TRI_DISASTER.id)
 			this._rushing = (DWT_LENGTH + DEMI_SUMMON_LENGTH) >= fightTimeRemaining
 		}
 	}

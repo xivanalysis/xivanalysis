@@ -25,7 +25,7 @@ export default class Snapshots extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: [ACTIONS.CAUSTIC_BITE.id, ACTIONS.STORMBITE.id, ACTIONS.IRON_JAWS.id],
 		}, event => this._snapshotEvents.push(event))
