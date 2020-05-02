@@ -37,7 +37,7 @@ class FightItem extends Component {
 		return <Menu.Item as={Link} to={url}>
 			{name}
 			<span className="pull-right">
-				{formatDuration(duration)}
+				{formatDuration(duration ?? 0)}
 				{fightPercentage !== undefined && <Progress
 					percent={progress}
 					size="small"
