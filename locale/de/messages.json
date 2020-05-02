@@ -738,7 +738,6 @@
   "sam.tsubame.title": "",
   "sch.about.description": "",
   "sch.about.description.warning.development": "",
-  "sch.about.description.warning.healer": "Die Phasen, in denen Bosse Unverwundbar sind, werden in Heiler-Analysen aktuell nicht korrekt erfasst. Dies führt bei vielen zeitabhängige Einträgen - wie \"Verwende eine Fertigkeit zu jeder Zeit\" oder \"DoT-Uptime\" - zu Ungenauigkeiten.",
   "sch.aetherflow.abilities-used": "",
   "sch.aetherflow.cast-time": "",
   "sch.aetherflow.checklist.description-1": "",
