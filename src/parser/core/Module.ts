@@ -45,6 +45,18 @@ export function dependency(target: Module, prop: string) {
 	})
 }
 
+/**
+ * DO NOT USE OR YOU WILL BE FIRED
+ * Totally spit in the face of the entire dependency system by forcing it
+ * to execute the decorated module before the module passed as an argument.
+ * If you have to think whether you need this or not, you don't need it.
+ */
+export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Module) =>
+	(source: typeof Module) => {
+		target.dependencies.push(source.handle)
+		return source
+	}
+
 export interface MappedDependency {
 	handle: string
 	prop: string
@@ -55,6 +67,12 @@ type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	to: 'player' | 'pet' | T['targetID'],
 	by: 'player' | 'pet' | T['sourceID'],
 }>
+
+type LogParams = Parameters<typeof console.log>
+interface DebugFnOpts {
+	log: (...messages: LogParams) => void
+}
+type DebugFn = (opts: DebugFnOpts) => void
 
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
@@ -126,7 +144,7 @@ export default class Module {
 	// So TS peeps don't need to pass the parser down
 	protected init() {}
 
-	normalise(events: Event[]) {
+	normalise(events: Event[]): Event[] | Promise<Event[]> {
 		return events
 	}
 
@@ -259,13 +277,22 @@ export default class Module {
 	 * Log a debug console message. Will only be printed if built in a non-production
 	 * environment, with `static debug = true` in the module it's being executed in.
 	 */
-	protected debug(...messages: Parameters<typeof console.log>) {
+	protected debug(debugFn: DebugFn): void
+	protected debug(...messages: LogParams): void
+	protected debug(...messages: [DebugFn] | LogParams) {
 		const module = this.constructor as typeof Module
 
 		if (!module.debug || process.env.NODE_ENV === 'production') {
 			return
 		}
 
+		typeof messages[0] === 'function'
+			? messages[0]({log: this.debugLog})
+			: this.debugLog(...messages)
+	}
+
+	private debugLog = (...messages: LogParams) => {
+		const module = this.constructor as typeof Module
 		// tslint:disable-next-line:no-console
 		console.log(
 			`[%c${module.handle}%c]`,

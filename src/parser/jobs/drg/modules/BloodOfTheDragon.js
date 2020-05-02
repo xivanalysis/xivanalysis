@@ -54,17 +54,17 @@ export default class BloodOfTheDragon extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.FANG_AND_CLAW.id, ACTIONS.WHEELING_THRUST.id]}, this._onExtenderCast)
-		this.addHook('combo', {by: 'player', abilityId: ACTIONS.SONIC_THRUST.id}, this._onExtenderCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.BLOOD_OF_THE_DRAGON.id}, this._onBloodCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.MIRAGE_DIVE.id}, this._onMirageDiveCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.GEIRSKOGUL.id}, this._onGeirskogulCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.NASTROND.id}, this._onNastrondCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.STARDIVER.id}, this._onStardiverCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HIGH_JUMP.id}, this._onJumpCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('raise', {to: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.FANG_AND_CLAW.id, ACTIONS.WHEELING_THRUST.id]}, this._onExtenderCast)
+		this.addEventHook('combo', {by: 'player', abilityId: ACTIONS.SONIC_THRUST.id}, this._onExtenderCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.BLOOD_OF_THE_DRAGON.id}, this._onBloodCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.MIRAGE_DIVE.id}, this._onMirageDiveCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.GEIRSKOGUL.id}, this._onGeirskogulCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.NASTROND.id}, this._onNastrondCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.STARDIVER.id}, this._onStardiverCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.HIGH_JUMP.id}, this._onJumpCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('raise', {to: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// duplicate code from other PRs

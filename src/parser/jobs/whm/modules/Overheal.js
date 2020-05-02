@@ -16,8 +16,8 @@ export default class Overheal extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('heal', {by: 'player'}, this._onHeal)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('heal', {by: 'player'}, this._onHeal)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	healOverTimeStatuses = [STATUSES.REGEN.id, STATUSES.MEDICA_II.id]

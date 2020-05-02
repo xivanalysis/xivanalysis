@@ -54,19 +54,19 @@ export default class Gauge extends CoreGauge {
 	protected init(): void {
 		super.init()
 
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.FISTS_OF_WIND.id}, this.goFast)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.FISTS_OF_WIND.id}, this.slowDown)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.FISTS_OF_WIND.id}, this.goFast)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.FISTS_OF_WIND.id}, this.slowDown)
 
-		this.addHook('cast', {by: 'player', abilityId: GL_GRANTERS}, this.onGain)
-		this.addHook('cast', {by: 'player', abilityId: GL_REFRESHERS}, this.onRefresh)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this.onRefresh)
+		this.addEventHook('cast', {by: 'player', abilityId: GL_GRANTERS}, this.onGain)
+		this.addEventHook('cast', {by: 'player', abilityId: GL_REFRESHERS}, this.onRefresh)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this.onRefresh)
 
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this.onDrop)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TORNADO_KICK.id}, this.onDrop)
 
-		this.addHook('refreshbuff', {by: 'player', abilityId: FORMS}, this.onFleek)
+		this.addEventHook('refreshbuff', {by: 'player', abilityId: FORMS}, this.onFleek)
 
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.ANATMAN.id}, this.becomeAntman)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.ANATMAN.id}, this.becomeMortal)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.ANATMAN.id}, this.becomeAntman)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.ANATMAN.id}, this.becomeMortal)
 	}
 
 	public get stacks(): number {

@@ -173,7 +173,7 @@ export abstract class CooldownDowntime extends Module {
 		}))
 	}
 
-	private calculateMaxUsages(group: CooldownGroup): number {
+	protected calculateMaxUsages(group: CooldownGroup): number {
 		const gRep = group.cooldowns[0]
 		if (gRep.cooldown === undefined) {
 			return 0

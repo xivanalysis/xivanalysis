@@ -32,8 +32,8 @@ export default class DoTs extends Module {
 				this._statusDuration[statusId] = status.duration * 1000
 			}
 		})
-		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// *** FUNCTIONS TO OVERRIDE *** //

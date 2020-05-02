@@ -10,7 +10,7 @@ import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import {Data} from './Data'
 
 interface SeverityTiers {
@@ -82,8 +82,9 @@ export abstract class Interrupts extends Module {
 	private onCast(event: CastEvent) {
 		const guid = event.ability.guid
 		// if the thing they started casting doesn't match up with what they cast, then
-		// that's an interrupted cast
-		if (this.currentCast && guid !== this.currentCast.ability.guid) {
+		// that's an interrupted cast. Also, ignore attacks, since those can apparently happy during
+		// casting events..
+		if (this.currentCast && guid !== this.currentCast.ability.guid && guid !== ACTIONS.ATTACK.id) {
 			this.pushDropCasts(event)
 		}
 		this.currentCast = undefined

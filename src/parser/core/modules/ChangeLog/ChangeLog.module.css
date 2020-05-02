@@ -25,6 +25,10 @@
 	padding: 0;
 }
 
+.message br {
+	display: none;
+}
+
 .contributors {
 	flex-shrink: 0;
 	margin-left: auto;

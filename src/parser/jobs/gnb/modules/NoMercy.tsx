@@ -9,7 +9,7 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 
 import {getDataBy} from 'data'
 import {BuffEvent, CastEvent} from 'fflogs'
@@ -75,8 +75,8 @@ export default class NoMercy extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook(
 			'removebuff',
 			{
 				by: 'player',
@@ -85,7 +85,7 @@ export default class NoMercy extends Module {
 			},
 			this.onRemoveNoMercy,
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {

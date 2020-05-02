@@ -27,9 +27,9 @@ export default class DoTs extends Module {
 			abilityId: [STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id],
 		}*/
 
-		//this.addHook('applydebuff', dotFilter, this._onDotApply)
-		//this.addHook('removedebuff', dotFilter, this._onDotRemove)
-		this.addHook('complete', this._onComplete)
+		//this.addEventHook('applydebuff', dotFilter, this._onDotApply)
+		//this.addEventHook('removedebuff', dotFilter, this._onDotRemove)
+		this.addEventHook('complete', this._onComplete)
 
 	}
 

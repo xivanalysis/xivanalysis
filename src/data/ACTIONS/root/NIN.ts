@@ -180,6 +180,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
 		gcdRecast: 1.5,
+		statusesApplied: ['DOTON'],
 	},
 
 	DOTON_TCJ: {
@@ -188,6 +189,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002911.png',
 		onGcd: true,
 		gcdRecast: 1.5,
+		statusesApplied: ['DOTON'],
 	},
 
 	SUITON: {
@@ -196,6 +198,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
 		gcdRecast: 1.5,
+		statusesApplied: ['SUITON'],
 	},
 
 	SUITON_TCJ: {
@@ -204,6 +207,7 @@ export const NIN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002913.png',
 		onGcd: true,
 		gcdRecast: 1.5,
+		statusesApplied: ['SUITON'],
 	},
 
 	RABBIT_MEDIUM: {

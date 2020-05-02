@@ -3,10 +3,11 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import React from 'react'
-import {Group, Item} from 'parser/core/modules/Timeline'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import _ from 'lodash'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
@@ -38,8 +39,8 @@ export default class Procs extends Module {
 	static handle = 'procs'
 	static dependencies = [
 		'castTime',
-		'timeline',
 		'suggestions',
+		'timeline',
 	]
 
 	_castingSpellId = null
@@ -60,40 +61,40 @@ export default class Procs extends Module {
 		[STATUSES.FIRESTARTER.id]: 0,
 	}
 
-	_group = null
+	_rows = new Map()
+	_row = null
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('removebuff', {by: 'player', abilityId: PROC_BUFFS}, this._onLoseProc)
-		this.addHook('applybuff', {by: 'player', abilityId: PROC_BUFFS}, this._onGainProc)
-		this.addHook('refreshbuff', {by: 'player', abilityId: PROC_BUFFS}, this._onRefreshProc)
-		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('removebuff', {by: 'player', abilityId: PROC_BUFFS}, this._onLoseProc)
+		this.addEventHook('applybuff', {by: 'player', abilityId: PROC_BUFFS}, this._onGainProc)
+		this.addEventHook('refreshbuff', {by: 'player', abilityId: PROC_BUFFS}, this._onRefreshProc)
+		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 
-		this._group = new Group({
-			id: 'procbuffs',
-			content: 'Procs',
+		this._row = this.timeline.addRow(new SimpleRow({
+			label: 'Procs',
 			order: 0,
-			nestedGroups: [],
-		})
-		this.timeline.addGroup(this._group) // Group for showing procs on the timeline
+		}))
 	}
 
-	getGroupIdForStatus(status) {
-		const groupId = 'procbuffs-' + status.id
-
-		// Make sure a timeline group exists for this buff
-		if (!this._group.nestedGroups.includes(groupId)) {
-			this.timeline.addGroup(new Group({
-				id: groupId,
-				content: status.name,
-			}))
-			this._group.nestedGroups.push(groupId)
+	getRowForStatus(status) {
+		let row = this._rows.get(status.id)
+		if (row == null) {
+			row = this._row.addRow(new SimpleRow({label: status.name}))
+			this._rows.set(status.id, row)
 		}
+		return row
+	}
 
-		return groupId
+	checkProc(event, statusId) {
+		const tracker = this._buffWindows[statusId]
+		if (tracker.history.length > 0) {
+			const lastHistoryEntry = _.last(tracker.history).stop
+			return event.timestamp === lastHistoryEntry
+		}
 	}
 
 	_onLoseProc(event) {
@@ -187,7 +188,7 @@ export default class Procs extends Module {
 	_onComplete() {
 		PROC_BUFFS.forEach(buff => {
 			const status = getDataBy(STATUSES, 'id', buff)
-			const groupId = this.getGroupIdForStatus(status)
+			const row = this.getRowForStatus(status)
 			const fightStart = this.parser.fight.start_time
 
 			// Finalise the buff if it was still active
@@ -197,12 +198,10 @@ export default class Procs extends Module {
 
 			// Add buff windows to the timeline
 			this._buffWindows[buff].history.forEach(window => {
-				this.timeline.addItem(new Item({
-					type: 'background',
+				row.addItem(new StatusItem({
+					status,
 					start: window.start - fightStart,
 					end: window.stop - fightStart,
-					group: groupId,
-					content: <img src={status.icon} alt={status.name}/>,
 				}))
 			})
 		})

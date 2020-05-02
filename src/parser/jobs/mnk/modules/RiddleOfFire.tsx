@@ -10,7 +10,7 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Fists, {FISTLESS} from './Fists'
@@ -86,9 +86,9 @@ export default class RiddleOfFire extends Module {
 	private riddle?: Riddle
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this.onDrop)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.RIDDLE_OF_FIRE.id}, this.onDrop)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	onCast(event: CastEvent): void {

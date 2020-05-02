@@ -9,7 +9,7 @@ import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -66,14 +66,14 @@ export default class TwinSnakes extends Module {
 
 	protected init() {
 		// Hook all GCDs so we can count GCDs in buff windows
-		this.addHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
 		// This gets weird because, we don't wanna penalise if it was from FPF...
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onGain)
-		this.addHook('refreshbuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onRefresh)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onDrop)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onGain)
+		this.addEventHook('refreshbuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onRefresh)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onDrop)
 
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent): void {
