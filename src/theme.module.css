@@ -62,7 +62,7 @@
 	--grey: themeGrey;
 
 	--theme-inverse: themeBlack;
-	
+
 	/* Basic Light Mode values */
 	--text: rgba(0, 0, 0, 0.87);
 	--background: themeWhite;
@@ -70,6 +70,7 @@
 	--text-muted: #666;
 	--segment-active: #e1e4e6;
 	--border-color: #dbdbdb;
+
 	/* Light Mode Message Box values */
 	--message-background: messageLight;
 	--message-text: messageDark;
@@ -81,35 +82,9 @@
 	--warning-text: warningDark;
 	--error-background: errorLight;
 	--error-text: errorDark;
-
-	color: var(--text);
 }
 
-.light-mode {
-	/* Basic Light Mode values */
-	--text: rgba(0, 0, 0, 0.87);
-	--background: themeWhite;
-	--backdrop: themeLight;
-	--text-muted: #666;
-	--segment-active: #e1e4e6;
-	--border-color: #dbdbdb;
-	/* Light Mode Message Box values */
-	--message-background: messageLight;
-	--message-text: messageDark;
-	--info-background: infoLight;
-	--info-text: infoDark;
-	--success-background: successLight;
-	--success-text: successDark;
-	--warning-background: warningLight;
-	--warning-text: warningDark;
-	--error-background: errorLight;
-	--error-text: errorDark;
-
-	color: var(--text);
-	background: var(--backdrop);
-}
-
-.dark-mode {
+.darkMode {
 	/* Basic Dark Mode values */
 	--text: rgba(255, 255, 255, 0.87);
 	--background: #2d2d2d;
@@ -117,6 +92,7 @@
 	--text-muted: #aaa;
 	--segment-link-active: #202020;
 	--border-color: #7e7e7e;
+
 	/* Dark Mode Message Box values */
 	--message-background: messageDark;
 	--message-text: messageLight;
@@ -128,9 +104,6 @@
 	--warning-text: warningLight;
 	--error-background: errorDark;
 	--error-text: errorLight;
-
-	color: var(--text);
-	background: var(--backdrop);
 }
 
 
@@ -138,9 +111,9 @@
 @value themeBackground: var(--background);
 @value themeBackdrop: var(--backdrop);
 @value themeInverse: var(--theme-inverse);
-@value themeTextMuted: #aaa;
-@value segmentLinkActive: #202020;
-@value themeBorder: #7e7e7e;
+@value themeTextMuted: var(--text-muted);
+@value segmentLinkActive: var(--segment-link-active);
+@value themeBorder: var(--border-color);
 
 @value messageBackground: var(--message-background);
 @value messageText: var(--message-text);
