@@ -142,7 +142,7 @@ export default class Thunder extends Module {
 				icon: ACTIONS.THUNDER_III.icon,
 				content: <Trans id="blm.thunder.suggestions.excess-thunder.content">
 					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too frequently can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
-					Check the <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(this.constructor.handle)}><NormalisedMessage message={this.constructor.title}/></a> module for more information.
+					Check the <a href="#" onClick={e => { e.preventDefault(); this.parser.scrollTo(this.constructor.handle) }}><NormalisedMessage message={this.constructor.title}/></a> module for more information.
 				</Trans>,
 				severity: this.sumClip > 2 * maxExpectedClip ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
 				why: <Trans id="blm.thunder.suggestions.excess-thunder.why">
