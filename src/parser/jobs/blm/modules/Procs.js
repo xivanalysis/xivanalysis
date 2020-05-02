@@ -7,6 +7,7 @@ import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Trans, Plural} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import _ from 'lodash'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly
@@ -86,6 +87,14 @@ export default class Procs extends Module {
 			this._rows.set(status.id, row)
 		}
 		return row
+	}
+
+	checkProc(event, statusId) {
+		const tracker = this._buffWindows[statusId]
+		if (tracker.history.length > 0) {
+			const lastHistoryEntry = _.last(tracker.history).stop
+			return event.timestamp === lastHistoryEntry
+		}
 	}
 
 	_onLoseProc(event) {
