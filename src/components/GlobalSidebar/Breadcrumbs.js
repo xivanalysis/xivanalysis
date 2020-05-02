@@ -76,9 +76,11 @@ class Breadcrumbs extends React.Component {
 				const rawFight = report.fights.find(fight => fight.id === fightId)
 				if (rawFight) {
 					const fight = getCorrectedFight(rawFight)
-					const start_time = parseInt(fight.start_time, 10)
-					const end_time = parseInt(fight.end_time, 10)
-					subtitle = `(${formatDuration(end_time - start_time)})`
+					const startTime = parseInt(fight.start_time, 10)
+					const endTime = parseInt(fight.end_time, 10)
+					if (!isNaN(startTime) && !isNaN(endTime)) {
+						subtitle = `(${formatDuration(endTime - startTime)})`
+					}
 
 					crumbsBackground = getZoneBanner(fight.zoneID)
 					title = fight.name
