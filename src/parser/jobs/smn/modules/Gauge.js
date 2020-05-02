@@ -48,13 +48,13 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('removebuff', {
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.DREADWYRM_TRANCE.id,
 		}, this._onRemoveDwt)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// -----

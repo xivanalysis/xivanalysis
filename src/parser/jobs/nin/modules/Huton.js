@@ -56,11 +56,11 @@ export default class Huton extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HUTON.id}, this._onHutonCast)
-		this.addHook('combo', {by: 'player', abilityId: Object.keys(HUTON_EXTENSION_MILLIS).map(Number)}, this._onHutonExtension)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('raise', {to: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.HUTON.id}, this._onHutonCast)
+		this.addEventHook('combo', {by: 'player', abilityId: Object.keys(HUTON_EXTENSION_MILLIS).map(Number)}, this._onHutonExtension)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('raise', {to: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_handleHutonRecast(key, elapsedTime) {

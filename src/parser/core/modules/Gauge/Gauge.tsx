@@ -14,7 +14,7 @@ export class Gauge extends Module {
 	private gauges: AbstractGauge[] = []
 
 	protected init() {
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	/** Add & initialise a gauge implementation to be tracked as part of the core gauge handling. */

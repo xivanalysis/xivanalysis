@@ -196,10 +196,10 @@ export default class RotationWatchdog extends Module {
 	private primaryTargetId?: number
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('complete', this.onComplete)
-		this.addHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
+		this.addEventHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module

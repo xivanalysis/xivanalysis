@@ -91,13 +91,13 @@ export default class ArcanaTracking extends Module {
 	private prepullArcanas: BuffEvent[] = []
 
 	protected init() {
-		this.addHook('cast', {abilityId: CARD_ACTIONS, by: 'player'}, this.onCast)
+		this.addEventHook('cast', {abilityId: CARD_ACTIONS, by: 'player'}, this.onCast)
 
-		this.addHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
-		this.addHook('removebuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
+		this.addEventHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
+		this.addEventHook('removebuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
 
-		this.addHook('removebuff', {abilityId: DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('removebuff', {abilityId: DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	normalise(events: Event[]) {
