@@ -1,5 +1,5 @@
 import Parser from 'parser/core/Parser'
-import {TimerGauge} from './TimerGauge'
+import {TimerGauge} from 'parser/core/modules/Gauge'
 
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
