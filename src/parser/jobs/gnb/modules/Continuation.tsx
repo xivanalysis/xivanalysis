@@ -20,19 +20,19 @@ export default class Continuation extends Module {
 	private actions = 0
 
 	protected init() {
-		this.addHook('cast',
+		this.addEventHook('cast',
 			{
 				by: 'player',
 				abilityId: RELEVANT_ACTIONS,
 			},
 			() => this.actions++)
-		this.addHook('applybuff',
+		this.addEventHook('applybuff',
 			{
 				by: 'player',
 				abilityId: RELEVANT_STATUSES,
 			},
 			() => this.buffs++)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onComplete() {

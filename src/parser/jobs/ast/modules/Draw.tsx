@@ -75,7 +75,7 @@ export default class Draw extends Module {
 		this.addHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
 		this.addHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private onDraw(event: CastEvent) {

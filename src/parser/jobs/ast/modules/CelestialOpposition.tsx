@@ -30,9 +30,9 @@ export default class CelestialOpposition extends Module {
 	private activeSect: Status | undefined
 
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.CELESTIAL_OPPOSITION.id, by: 'player'}, this.onCast)
-		this.addHook('applybuff', {abilityId: [STATUSES.DIURNAL_SECT.id, STATUSES.NOCTURNAL_SECT.id], by: 'player'}, this.onSect)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {abilityId: ACTIONS.CELESTIAL_OPPOSITION.id, by: 'player'}, this.onCast)
+		this.addEventHook('applybuff', {abilityId: [STATUSES.DIURNAL_SECT.id, STATUSES.NOCTURNAL_SECT.id], by: 'player'}, this.onSect)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {

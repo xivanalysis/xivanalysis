@@ -71,10 +71,10 @@ export default class Buffs extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this._soloDragonSight = true)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this._soloDragonSight = true)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_pushToWindow(event, statusId, tracker) {
