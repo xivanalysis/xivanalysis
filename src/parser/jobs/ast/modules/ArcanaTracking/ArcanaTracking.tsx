@@ -112,14 +112,14 @@ export default class ArcanaTracking extends Module {
 		this.STATUS_TO_PLAY_LOOKUP = _.zipObject(this.ARCANA_STATUSES, this.PLAY)
 		this.DRAWN_TO_PLAY_LOOKUP = _.zipObject(this.DRAWN_ARCANA, this.PLAY)
 
-		this.addHook('cast', {abilityId: this.CARD_ACTIONS, by: 'player'}, this.onCast)
+		this.addEventHook('cast', {abilityId: this.CARD_ACTIONS, by: 'player'}, this.onCast)
 
-		this.addHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
-		this.addHook('removebuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
+		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
+		this.addEventHook('removebuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
 
-		this.addHook('applybuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
-		this.addHook('removebuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('applybuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
+		this.addEventHook('removebuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	normalise(events: Event[]) {

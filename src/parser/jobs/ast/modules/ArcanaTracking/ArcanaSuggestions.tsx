@@ -66,7 +66,7 @@ export default class ArcanaSuggestions extends Module {
 			[SleeveType.TWO_STACK]: 'https://xivapi.com/i/019000/019562.png',
 		}
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private _onComplete() {

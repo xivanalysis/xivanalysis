@@ -68,12 +68,12 @@ export default class Draw extends Module {
 			this.ARCANA_STATUSES.push(this.data.statuses[statusKey].id)
 		})
 
-		this.addHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
-		this.addHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
-		this.addHook('cast', {abilityId: this.PLAY, by: 'player'}, this.onPlay)
+		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
+		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
+		this.addEventHook('cast', {abilityId: this.PLAY, by: 'player'}, this.onPlay)
 
-		this.addHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
-		this.addHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
+		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
 
 		this.addEventHook('complete', this._onComplete)
 	}
