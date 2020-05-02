@@ -738,7 +738,6 @@
   "sam.tsubame.title": "Tsubame",
   "sch.about.description": "\nCet analyseur a pour but d'identifier certains sorts qui pourraient être utilisés pour améliorer votre gameplay Erudit, ainsi que de donner un aperçu plus profond de ce qui s'est passé pendant une rencontre.\n\nSi vous voulez en savoir plus sur Erudit, consultez les guides à[The Balance] (https://thebalanceffxiv.com/), et discutez dans le canal #sch_questions.\n",
   "sch.about.description.warning.development": "Bien que cette analyse soit un temps soit peu précise, le système <0> est </0>toujours en développement et peut mélanger certains éléments quelques fois. Si vous remarquez des problèmes, ou si vous avez des préoccupations, merci de passer par notre chaîne Discord!",
-  "sch.about.description.warning.healer": "Actuellement, pour tous les soigneurs, la vérification de l'état d'invulnérabilité des boss ne fonctionne pas convenablement. Cela se traduit par le manque de précision de certains pans de l'analyse comme le fait de toujours caster vos sorts, ou encore le temps d'application de vos DoTs.",
   "sch.aetherflow.abilities-used": "Utilisation de d'abilité",
   "sch.aetherflow.cast-time": "Temps d'Incantation",
   "sch.aetherflow.checklist.description-1": "Utiliser un flux d'éther on cooldown vous permet de regenerer votre mana plus vite.",
