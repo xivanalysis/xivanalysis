@@ -3,7 +3,6 @@ declare namespace ThemeModuleCssModule {
   export interface IThemeModuleCss {
     backgroundLightness: string;
     colorLightness: string;
-    "dark-mode": string;
     darkMode: string;
     errorBackground: string;
     errorDark: string;
@@ -16,8 +15,6 @@ declare namespace ThemeModuleCssModule {
     infoLight: string;
     infoText: string;
     lg: string;
-    "light-mode": string;
-    lightMode: string;
     md: string;
     messageBackground: string;
     messageDark: string;
