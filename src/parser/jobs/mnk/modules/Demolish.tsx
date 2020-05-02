@@ -57,7 +57,7 @@ export default class Demolish extends DoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: this.getClippingAmount(STATUSES.DEMOLISH.id),
 			why: <Trans id="mnk.demolish.suggestion.why">
-				You lost {this.parser.formatDuration(clip[STATUSES.DEMOLISH.id])} of Demolish to early refreshes.
+				You lost {this.parser.formatDuration(clip[STATUSES.DEMOLISH.id] ?? 0)} of Demolish to early refreshes.
 			</Trans>,
 		}))
 	}
