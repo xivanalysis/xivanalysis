@@ -66,13 +66,13 @@ export default class Procs extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('removebuff', {by: 'player', abilityId: PROC_BUFFS}, this._onLoseProc)
-		this.addHook('applybuff', {by: 'player', abilityId: PROC_BUFFS}, this._onGainProc)
-		this.addHook('refreshbuff', {by: 'player', abilityId: PROC_BUFFS}, this._onRefreshProc)
-		this.addHook('begincast', {by: 'player'}, this._onBeginCast)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('removebuff', {by: 'player', abilityId: PROC_BUFFS}, this._onLoseProc)
+		this.addEventHook('applybuff', {by: 'player', abilityId: PROC_BUFFS}, this._onGainProc)
+		this.addEventHook('refreshbuff', {by: 'player', abilityId: PROC_BUFFS}, this._onRefreshProc)
+		this.addEventHook('begincast', {by: 'player'}, this._onBeginCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 
 		this._row = this.timeline.addRow(new SimpleRow({
 			label: 'Procs',

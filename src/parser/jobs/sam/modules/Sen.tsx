@@ -51,23 +51,23 @@ export default class Sen extends Module {
 
 	protected init() {
 		// Track sen gain
-		this.addHook(
+		this.addEventHook(
 			'cast',
 			{by: 'player', abilityId: Object.keys(SEN_ACTIONS).map(Number)},
 			this.onAction,
 		)
 
 		// Death, as well as all Iaijutsu, remove all available sen
-		this.addHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player', abilityId: IAIJUTSU}, this.remove)
+		this.addEventHook(
 			'cast',
 			{by: 'player', abilityId: ACTIONS.HAGAKURE.id},
 			this.onHagakure,
 		)
-		this.addHook('death', {to: 'player'}, this.remove)
+		this.addEventHook('death', {to: 'player'}, this.remove)
 
 		// Suggestion time~
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onAction(event: CastEvent) {

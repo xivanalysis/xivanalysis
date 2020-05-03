@@ -76,27 +76,27 @@ export default class Barrage extends Module {
 		super(...args)
 
 		// Event hooks
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.BARRAGE.id,
 		}, this._onBarrageCast)
 
-		this.addHook('damage', {
+		this.addEventHook('damage', {
 			by: 'player',
 			abilityId: WEAPONSKILLS,
 		}, this._onStWeaponskillDamage)
 
-		this.addHook('applybuff', {
+		this.addEventHook('applybuff', {
 			by: 'player',
 			abilityId: STATUSES.STRAIGHT_SHOT_READY.id,
 		}, this._onSSApply)
 
-		this.addHook('removebuff', {
+		this.addEventHook('removebuff', {
 			by: 'player',
 			abilityId: STATUSES.STRAIGHT_SHOT_READY.id,
 		}, this._onSSRemove)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 	}
 

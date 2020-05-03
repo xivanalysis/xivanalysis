@@ -78,8 +78,8 @@ export default class OGCDs extends Module {
 		this.initCastFilter()
 		this.initCooldownUsage()
 
-		this.addHook('cast', {by: 'player', abilityId: this.castFilter}, this.onCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: this.castFilter}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private initSpellCooldowns() {

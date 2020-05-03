@@ -60,25 +60,25 @@ export default class PitchPerfect extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('damage', {
+		this.addEventHook('damage', {
 			by: 'player',
 			abilityId: ACTIONS.PITCH_PERFECT.id,
 		}, this._onPPDamage)
 
-		this.addHook('pitchPerfect', this._onPPEvent)
+		this.addEventHook('pitchPerfect', this._onPPEvent)
 
-		this.addHook('damage', {
+		this.addEventHook('damage', {
 			by: 'player',
 			abilityId: [STATUSES.CAUSTIC_BITE.id, STATUSES.STORMBITE.id],
 			tick: true,
 		}, this._onDotTick)
 
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.THE_WANDERERS_MINUET.id,
 		}, this._onWMCast)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 	}
 

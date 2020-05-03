@@ -29,10 +29,10 @@ export default class Procs extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
-		this.addHook('refreshbuff', {by: 'player', abilityId: STATUSES.DIVE_READY.id}, this._onReadyOverwritten) // The other two can't be overwritten due to how they drop
-		this.addHook('removebuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._onProcRemoved)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this._casts).map(Number)}, this._onCast)
+		this.addEventHook('refreshbuff', {by: 'player', abilityId: STATUSES.DIVE_READY.id}, this._onReadyOverwritten) // The other two can't be overwritten due to how they drop
+		this.addEventHook('removebuff', {by: 'player', abilityId: Object.keys(this._removedProcs).map(Number)}, this._onProcRemoved)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// For all of our cast/removal tracking, we only want to know if it happened outside of downtime to avoid errant penalization.

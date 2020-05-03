@@ -24,9 +24,9 @@ export default class TrickAttackUsage extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this._castHook = this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRICK_ATTACK.id}, this._onTrickAttack)
-		this.addHook('complete', this._onComplete)
+		this._castHook = this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRICK_ATTACK.id}, this._onTrickAttack)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

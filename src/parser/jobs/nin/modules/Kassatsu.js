@@ -29,9 +29,9 @@ export default class Kassatsu extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(this._kassatsuUses).map(Number)}, this._onNinjutsuCast)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.KASSATSU.id}, this._onRemoveKassatsu)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(this._kassatsuUses).map(Number)}, this._onNinjutsuCast)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.KASSATSU.id}, this._onRemoveKassatsu)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onNinjutsuCast(event) {

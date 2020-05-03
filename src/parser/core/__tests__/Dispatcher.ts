@@ -1,5 +1,5 @@
 import {Event} from 'fflogs'
-import {Dispatcher, EventHook, TimestampHook} from './Dispatcher'
+import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
 
 /* tslint:disable:no-magic-numbers */
 

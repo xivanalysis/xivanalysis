@@ -99,7 +99,7 @@ export default class EgiCommands extends Module {
 		this.addEventHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
 		this.addEventHook('cast', {by: 'player', abilityId: NON_FURTHER_RUIN_PLAYER_ACTIONS}, this.onCommandIssued)
 		this.addEventHook('cast', {by: 'pet', abilityId: NON_FURTHER_RUIN_PET_ACTIONS}, this.onCommandExecuted)
-		this.addHook('summonpet', this.onChangePet)
+		this.addEventHook('summonpet', this.onChangePet)
 		this.addEventHook('death', {to: 'player'}, this.onDeath)
 		this.addEventHook('complete', this.onComplete)
 	}

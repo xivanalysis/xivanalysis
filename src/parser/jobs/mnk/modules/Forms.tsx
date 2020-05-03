@@ -45,12 +45,12 @@ export default class Forms extends Module {
 	private perfectlyFresh?: number
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
-		this.addHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
-		this.addHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.PERFECT_BALANCE.id}, this.onPerfectOut)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
+		this.addEventHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
+		this.addEventHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.PERFECT_BALANCE.id}, this.onPerfectOut)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent): void {

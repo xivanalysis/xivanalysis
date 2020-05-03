@@ -33,10 +33,10 @@ export default class Wildfire extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('damage', {by: 'player'}, this._onDamage)
-		this.addHook('damage', {by: 'player', abilityId: STATUSES.WILDFIRE.id}, this._onWildfireDamage)
-		this.addHook('applydebuff', {by: 'player', abilityId: STATUSES.WILDFIRE.id}, this._onWildfireApplied)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('damage', {by: 'player'}, this._onDamage)
+		this.addEventHook('damage', {by: 'player', abilityId: STATUSES.WILDFIRE.id}, this._onWildfireDamage)
+		this.addEventHook('applydebuff', {by: 'player', abilityId: STATUSES.WILDFIRE.id}, this._onWildfireApplied)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onDamage(event) {
