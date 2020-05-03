@@ -1,6 +1,8 @@
 import Module, {dependency} from 'parser/core/Module'
 import UnableToAct from './UnableToAct'
 import {Invulnerability} from './Invulnerability'
+import {Timeline, SimpleItem} from './Timeline'
+import React from 'react'
 
 interface DowntimeWindow {
 	start: number,
@@ -12,6 +14,11 @@ export default class Downtime extends Module {
 
 	@dependency private readonly unableToAct!: UnableToAct
 	@dependency private readonly invuln!: Invulnerability
+	@dependency private readonly timeline!: Timeline
+
+	protected init() {
+		this.addEventHook('complete', this.onComplete)
+	}
 
 	private internalDowntime(start = 0, end = this.parser.currentTimestamp) {
 		// Get all the downtime from both unableToAct and invuln, and sort it
@@ -71,4 +78,18 @@ export default class Downtime extends Module {
 			},
 			[],
 		)
+
+	private onComplete() {
+		const startTime = this.parser.fight.start_time
+		const windows = this.getDowntimeWindows()
+
+		windows.forEach(window => {
+			this.timeline.addItem(new SimpleItem({
+				start: window.start - startTime,
+				end: window.end - startTime,
+				// TODO: This but better?
+				content: <div style={{width: '100%', height: '100%', backgroundColor: '#d5ddf666'}}/>,
+			}))
+		})
+	}
 }

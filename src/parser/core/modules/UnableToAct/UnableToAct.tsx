@@ -15,7 +15,7 @@ interface UTADowntime {
 
 export default class UnableToAct extends Module {
 	static handle = 'unableToAct'
-	static debug = true
+	static debug = false
 
 	@dependency private readonly data!: Data
 	@dependency private readonly timeline!: Timeline
