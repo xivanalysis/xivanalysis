@@ -39,7 +39,7 @@ export function formatDuration(duration: number, options: {
 		return `${secondsFormatter.format(seconds)}s`
 	} else {
 		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision})
-		return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(seconds)}`
+		return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(Math.abs(seconds))}`
 	}
 	/* tslint:enable:no-magic-numbers */
 }
