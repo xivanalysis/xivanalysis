@@ -7,3 +7,4 @@
 # Generated files
 locale/**/messages.json linguist-generated=true
 **/*.module.css.d.ts linguist-generated=true
+src/generated/**/* linguist-generated=true

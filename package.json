@@ -10,7 +10,9 @@
     "lint:js": "eslint src",
     "lint:ts": "tslint src/**/*.ts{,x}",
     "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
-    "compile": "lingui compile"
+    "compile": "lingui compile",
+    "generate": "yarn run generate:unable-to-act",
+    "generate:unable-to-act": "ts-node -s ./scripts/generate-unable-to-act"
   },
   "husky": {
     "hooks": {
@@ -86,6 +88,9 @@
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@kobold/core": "^0.0.1",
+    "@kobold/excel": "^0.0.2",
+    "@kobold/xiv": "^0.0.1",
     "@lingui/babel-plugin-transform-js": "^2.5.0",
     "@lingui/babel-plugin-transform-react": "^2.5.0",
     "@lingui/cli": "^2.5.0",
@@ -140,6 +145,7 @@
     "rimraf": "^3",
     "ts-jest": "^25",
     "ts-loader": "^6.0.2",
+    "ts-node": "^8.9.1",
     "tslint": "^6",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-loader": "^3.5.4",

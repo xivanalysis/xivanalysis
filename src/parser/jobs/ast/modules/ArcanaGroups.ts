@@ -1,55 +1,55 @@
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {ActionRoot} from 'data/ACTIONS/root'
+import {StatusRoot} from 'data/STATUSES/root'
 // Grouped cards for future convenience - whatever processing desired
 
 /* Grouped actions */
 
-export const PLAY = [
-	ACTIONS.THE_BALANCE.id,
-	ACTIONS.THE_BOLE.id,
-	ACTIONS.THE_ARROW.id,
-	ACTIONS.THE_SPEAR.id,
-	ACTIONS.THE_EWER.id,
-	ACTIONS.THE_SPIRE.id,
-	ACTIONS.LORD_OF_CROWNS.id,
-	ACTIONS.LADY_OF_CROWNS.id,
+export const PLAY: Array<keyof ActionRoot> = [
+	'THE_BALANCE',
+	'THE_BOLE',
+	'THE_ARROW',
+	'THE_SPEAR',
+	'THE_EWER',
+	'THE_SPIRE',
+	'LORD_OF_CROWNS',
+	'LADY_OF_CROWNS',
 ]
 
-export const SOLAR_SEAL_ARCANA = [
-	ACTIONS.THE_BALANCE.id,
-	ACTIONS.THE_BOLE.id,
+export const SOLAR_SEAL_ARCANA: Array<keyof ActionRoot> = [
+	'THE_BALANCE',
+	'THE_BOLE',
 ]
 
-export const LUNAR_SEAL_ARCANA = [
-	ACTIONS.THE_ARROW.id,
-	ACTIONS.THE_EWER.id,
+export const LUNAR_SEAL_ARCANA: Array<keyof ActionRoot> = [
+	'THE_ARROW',
+	'THE_EWER',
 ]
 
-export const CELESTIAL_SEAL_ARCANA = [
-	ACTIONS.THE_SPEAR.id,
-	ACTIONS.THE_SPIRE.id,
+export const CELESTIAL_SEAL_ARCANA: Array<keyof ActionRoot> = [
+	'THE_SPEAR',
+	'THE_SPIRE',
 ]
 
 /* Arcana spread states */
 
-export const DRAWN_ARCANA = [
-	STATUSES.BALANCE_DRAWN.id,
-	STATUSES.BOLE_DRAWN.id,
-	STATUSES.ARROW_DRAWN.id,
-	STATUSES.SPEAR_DRAWN.id,
-	STATUSES.EWER_DRAWN.id,
-	STATUSES.SPIRE_DRAWN.id,
-	STATUSES.LORD_OF_CROWNS_DRAWN.id,
-	STATUSES.LADY_OF_CROWNS_DRAWN.id,
+export const DRAWN_ARCANA: Array<keyof StatusRoot> = [
+	'BALANCE_DRAWN',
+	'BOLE_DRAWN',
+	'ARROW_DRAWN',
+	'SPEAR_DRAWN',
+	'EWER_DRAWN',
+	'SPIRE_DRAWN',
+	'LORD_OF_CROWNS_DRAWN',
+	'LADY_OF_CROWNS_DRAWN',
 ]
 
-export const ARCANA_STATUSES = [
-	STATUSES.THE_BALANCE.id,
-	STATUSES.THE_BOLE.id,
-	STATUSES.THE_ARROW.id,
-	STATUSES.THE_SPEAR.id,
-	STATUSES.THE_EWER.id,
-	STATUSES.THE_SPIRE.id,
-	STATUSES.LORD_OF_CROWNS.id,
-	STATUSES.LADY_OF_CROWNS.id,
+export const ARCANA_STATUSES: Array<keyof StatusRoot> = [
+	'THE_BALANCE',
+	'THE_BOLE',
+	'THE_ARROW',
+	'THE_SPEAR',
+	'THE_EWER',
+	'THE_SPIRE',
+	'LORD_OF_CROWNS',
+	'LADY_OF_CROWNS',
 ]
