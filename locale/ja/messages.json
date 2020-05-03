@@ -80,7 +80,7 @@
   "blm.about.description": "",
   "blm.about.description.warning": "このジョブのサポートはまだ対応していません。",
   "blm.gauge.suggestions.dropped-enochian.content": "",
-  "blm.gauge.suggestions.dropped-enochian.why": "落としたエノキアン回数：{0}{1, plural, other {回}}。",
+  "blm.gauge.suggestions.dropped-enochian.why": "落としたエノキアン回数：{droppedEno}{droppedEno, plural, other {回}}。",
   "blm.gauge.suggestions.lost-polyglot.content": "",
   "blm.gauge.suggestions.lost-polyglot.why": "",
   "blm.gauge.suggestions.overwritten-polyglot.content": "",
