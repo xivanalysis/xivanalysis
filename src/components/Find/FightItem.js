@@ -23,7 +23,7 @@ class FightItem extends Component {
 		const {
 			id,
 			kill, fightPercentage,
-			start_time, end_time,
+			start_time = 0, end_time = start_time,
 			name,
 		} = this.props.fight
 
@@ -37,7 +37,7 @@ class FightItem extends Component {
 		return <Menu.Item as={Link} to={url}>
 			{name}
 			<span className="pull-right">
-				{formatDuration(duration ?? 0)}
+				{formatDuration(duration)}
 				{fightPercentage !== undefined && <Progress
 					percent={progress}
 					size="small"
