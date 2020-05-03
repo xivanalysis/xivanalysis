@@ -1,4 +1,4 @@
-import {getDataBy} from 'data/getDataBy'
+import {getDataBy} from '../getDataBy'
 
 // tslint:disable no-magic-numbers
 
