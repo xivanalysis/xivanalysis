@@ -1,50 +1,52 @@
-import PrecastAction from 'parser/core/modules/PrecastAction'
-import Parser from 'parser/core/Parser'
+import PrecastAction from '../PrecastAction'
 import {AbilityType, CastEvent, DamageEvent, Event, HitType} from 'fflogs'
+import Parser from 'parser/core/Parser'
 
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
+const MockedData = jest.fn().mockImplementation(() => ({
+	getAction: jest.fn().mockImplementation((id: number) => {
+		return (id === 1) ? {autoAttack: true} : {autoAttack: false}
+	}),
+}))
 
 // tslint:disable:no-magic-numbers
 
 const fightStartTime = 0
-const mockCastEvent = (timestamp: number): CastEvent => {
-	return {
-		type: 'cast',
-		timestamp,
-		ability: {abilityIcon: '', guid: 0, name: '', type: AbilityType.PHYSICAL_DIRECT},
-		sourceIsFriendly: true,
-		targetIsFriendly: false,
-	}
-}
-const mockDamageEvent = (timestamp: number): DamageEvent => {
-	return {
-		type: 'damage',
-		absorbed: 0,
-		criticalHit: false,
-		directHit: false,
-		successfulHit: true,
-		hitType: HitType.NORMAL,
-		amount: 0,
-		targetResources: {
-			hitPoints: 0,
-			maxHitPoints: 0,
-			mp: 0,
-			maxMP: 0,
-			tp: 0,
-			maxTP: 0,
-			x: 0,
-			y: 0,
-		},
-		ability: {abilityIcon: '', guid: 0, name: '', type: AbilityType.PHYSICAL_DIRECT},
-		timestamp,
-		sourceIsFriendly: true,
-		targetIsFriendly: false,
-	}
-}
+const mockCastEvent = (timestamp: number): CastEvent => ({
+	type: 'cast',
+	timestamp,
+	ability: {abilityIcon: '', guid: 0, name: '', type: AbilityType.PHYSICAL_DIRECT},
+	sourceIsFriendly: true,
+	targetIsFriendly: false,
+})
+const mockDamageEvent = (timestamp: number): DamageEvent => ({
+	type: 'damage',
+	absorbed: 0,
+	criticalHit: false,
+	directHit: false,
+	successfulHit: true,
+	hitType: HitType.NORMAL,
+	amount: 0,
+	targetResources: {
+		hitPoints: 0,
+		maxHitPoints: 0,
+		mp: 0,
+		maxMP: 0,
+		tp: 0,
+		maxTP: 0,
+		x: 0,
+		y: 0,
+	},
+	ability: {abilityIcon: '', guid: 0, name: '', type: AbilityType.PHYSICAL_DIRECT},
+	timestamp,
+	sourceIsFriendly: true,
+	targetIsFriendly: false,
+})
+
 const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	const cast = mockCastEvent(timestamp)
-	cast.ability.name = 'attack'
+	cast.ability.guid = 1
 	return cast
 }
 const precastSyntheticCast = (timestamp: number): CastEvent => {
@@ -63,6 +65,7 @@ describe('The PrecastAction module', () => {
 	beforeEach(() => {
 		parser = new MockedParser()
 		Object.defineProperty(parser, 'fight', {value: {start_time: fightStartTime}})
+		Object.defineProperty(parser, 'modules', {value: {data: MockedData()}})
 		byPlayer = jest.spyOn(parser, 'byPlayer').mockReturnValue(true)
 
 		precastAction = new PrecastAction(parser)
