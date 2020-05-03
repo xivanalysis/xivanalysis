@@ -9,7 +9,7 @@ import Module, {dependency} from 'parser/core/Module'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
@@ -161,7 +161,7 @@ export default class Sen extends Module {
 
                 // check the sen state, if undefined/not active, make one, I don't know how having 2 hooks fire will handle this, so safety.
 
-  const lastSenState = this.lastSenState
+  		const lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
