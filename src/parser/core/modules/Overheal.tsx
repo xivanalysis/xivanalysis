@@ -89,8 +89,7 @@ export class TrackedOverheal {
 	}
 
 	/**
-	 * Pushes a heal event in for tracking. Returns true if the heal is accepted;
-	 * false
+	 * Pushes a heal event in for tracking
 	 * @param event - The heal event to track
 	 */
 	pushHeal(event: HealEvent) {
@@ -102,7 +101,6 @@ export class TrackedOverheal {
 
 export class CoreOverheal extends Module {
 	static handle: string = 'overheal'
-	static debug: boolean = true
 
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
@@ -225,6 +223,7 @@ export class CoreOverheal extends Module {
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
+				this.debug(`Heal from ${event.ability.name} at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
