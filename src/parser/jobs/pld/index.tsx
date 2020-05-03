@@ -34,7 +34,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.08',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
@@ -84,6 +84,13 @@ export default new Meta({
 				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
+		},
+		{
+			date: new Date('2020-04-19'),
+			Changes: () => <>
+				Adjust recommendations for Requiescat and Fight or Flight window lengths.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
 		},
 	],
 })

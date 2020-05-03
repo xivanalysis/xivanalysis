@@ -32,8 +32,8 @@ export default class Synastry extends Module {
 	private nonSynastryHeals = 0
 
 	protected init() {
-		this.addHook('cast', {abilityId: GCD_ST_HEAL, by: 'player'}, this.onSingleTargetHealCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {abilityId: GCD_ST_HEAL, by: 'player'}, this.onSingleTargetHealCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onSingleTargetHealCast(event: CastEvent) {

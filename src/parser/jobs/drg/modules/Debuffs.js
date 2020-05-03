@@ -50,7 +50,7 @@ export default class Debuffs extends DoTs {
 			},
 			value: this.getClippingAmount(STATUSES.CHAOS_THRUST.id),
 			why: <Trans id="drg.debuffs.suggestions.clipping.why">
-				You lost {this.parser.formatDuration(clip[STATUSES.CHAOS_THRUST.id])} of Chaos Thrust to early refreshes.
+				You lost {this.parser.formatDuration(clip[STATUSES.CHAOS_THRUST.id] ?? 0)} of Chaos Thrust to early refreshes.
 			</Trans>,
 		}))
 	}

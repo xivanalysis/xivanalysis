@@ -1,6 +1,8 @@
 import JOBS from 'data/JOBS'
-import Module from 'parser/core/Module'
-import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
+import {AdditionalEvents} from './AdditionalEvents'
+import {SimpleRow, StatusItem} from './Timeline'
+import {isDefined} from 'utilities'
 
 // Are other jobs going to need to add to this?
 const RAID_BUFFS = [
@@ -28,6 +30,49 @@ const RAID_BUFFS = [
 	{key: 'PECULIAR_LIGHT'},
 ]
 
+@executeBeforeDoNotUseOrYouWillBeFired(AdditionalEvents)
+class RaidBuffsQuery extends Module {
+	static handle = 'raidBuffsQuery'
+	static dependencies = [
+		'additionalEventQueries',
+		'data',
+		'enemies',
+	]
+
+	normalise(events) {
+		// Abilities we need more info on
+		const abilities = [
+			this.data.statuses.TRICK_ATTACK_VULNERABILITY_UP.id,
+			this.data.statuses.CHAIN_STRATAGEM.id,
+			this.data.statuses.RUINATION.id,
+		]
+
+		this.additionalEventQueries.registerQuery(`type in ('applydebuff','removedebuff') and ability.id in (${abilities.join(',')}) and (${this._buildActiveTargetQuery()})`)
+
+		return events
+	}
+
+	// We only want events on "active" targets - lots of mirror copies used for mechanics that fluff up the data otherwise
+	_buildActiveTargetQuery = () =>
+		Object.keys(this.enemies.activeTargets)
+			.map(actorId => {
+				const actor = this.enemies.getEntity(Number(actorId))
+				if (!actor) {
+					return
+				}
+
+				const instances = this.enemies.activeTargets[actorId]
+				let query = '(target.id=' + actor.guid
+				if (instances.size > 0) {
+					query += ` and target.instance in (${Array.from(instances).join(',')})`
+				}
+				return query + ')'
+			})
+			.filter(isDefined)
+			.join(' or ')
+}
+export {RaidBuffsQuery}
+
 export default class RaidBuffs extends Module {
 	static handle = 'raidBuffs'
 	static dependencies = [
@@ -51,11 +96,11 @@ export default class RaidBuffs extends Module {
 
 		// Event hooks
 		const filter = {abilityId: [...this._buffMap.keys()]}
-		this.addHook('applybuff', {...filter, to: 'player'}, this._onApply)
-		this.addHook('applydebuff', filter, this._onApply)
-		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
-		this.addHook('removedebuff', filter, this._onRemove)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('applybuff', {...filter, to: 'player'}, this._onApply)
+		this.addEventHook('applydebuff', filter, this._onApply)
+		this.addEventHook('removebuff', {...filter, to: 'player'}, this._onRemove)
+		this.addEventHook('removedebuff', filter, this._onRemove)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onApply(event) {

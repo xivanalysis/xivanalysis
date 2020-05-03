@@ -49,16 +49,16 @@ export default class DualCast extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('applybuff', {
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('applybuff', {
 			to: 'player',
 			abilityId: STATUSES.DUALCAST.id,
 		}, this._onGain)
-		this.addHook('removebuff', {
+		this.addEventHook('removebuff', {
 			to: 'player',
 			abilityId: STATUSES.DUALCAST.id,
 		}, this._onRemove)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

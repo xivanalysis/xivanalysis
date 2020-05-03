@@ -1,4 +1,4 @@
-import {Boss} from 'data/BOSSES'
+import BOSSES, {Boss} from 'data/BOSSES'
 import JOBS, {Job} from 'data/JOBS'
 
 import CORE from './core'
@@ -22,6 +22,18 @@ import SCH from './jobs/sch'
 import SMN from './jobs/smn'
 import WAR from './jobs/war'
 import WHM from './jobs/whm'
+
+import {neir3} from './bosses/nier3'
+import {exTitania} from './bosses/exTitania'
+import {exInnocence} from './bosses/exInnocence'
+import {exHades} from './bosses/exHades'
+import {exRuby1} from './bosses/exRuby1'
+import {exRuby2} from './bosses/exRuby2'
+import {exVaris} from './bosses/exVaris'
+import {e4} from './bosses/e4'
+import {e7} from './bosses/e7'
+import {e8} from './bosses/e8'
+import {tea} from './bosses/tea'
 
 interface AvailableModules {
 	CORE: Meta
@@ -58,6 +70,19 @@ export default {
 	},
 
 	BOSSES: {
-		// [BOSSES.SOME_BOSS.logId]: IMPORTED_BOSS_MODULES,
+		[BOSSES.NIER3.logId]: neir3,
+
+		[BOSSES.TITANIA.logId]: exTitania,
+		[BOSSES.INNOCENCE.logId]: exInnocence,
+		[BOSSES.HADES.logId]: exHades,
+		[BOSSES.RUBY_WEAPON_1.logId]: exRuby1,
+		[BOSSES.RUBY_WEAPON_2.logId]: exRuby2,
+		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
+
+		[BOSSES.E4.logId]: e4,
+		[BOSSES.E7.logId]: e7,
+		[BOSSES.E8.logId]: e8,
+
+		[BOSSES.TEA.logId]: tea,
 	},
 } as AvailableModules

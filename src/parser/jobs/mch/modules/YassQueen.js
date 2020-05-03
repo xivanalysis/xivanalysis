@@ -36,9 +36,9 @@ export default class YassQueen extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.AUTOMATON_QUEEN.id}, this._onQueenCast)
-		this.addHook('damage', {by: 'pet', abilityId: QUEEN_ATTACKS}, this._onQueenAttack)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.AUTOMATON_QUEEN.id}, this._onQueenCast)
+		this.addEventHook('damage', {by: 'pet', abilityId: QUEEN_ATTACKS}, this._onQueenAttack)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_finishQueenWindow() {

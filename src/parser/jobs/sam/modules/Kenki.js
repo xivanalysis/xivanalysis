@@ -82,7 +82,7 @@ export default class Kenki extends Module {
 		super(...args)
 
 		// Kenki actions
-		this.addHook(
+		this.addEventHook(
 			['cast', 'combo'],
 			{by: 'player', abilityId: Object.keys(KENKI_ACTIONS).map(Number)},
 			this._onAction,
@@ -90,14 +90,14 @@ export default class Kenki extends Module {
 
 		// Meditate
 		const filter = {by: 'player', abilityId: STATUSES.MEDITATE.id}
-		this.addHook('applybuff', filter, this._onApplyMeditate)
-		this.addHook('removebuff', filter, this._onRemoveMeditate)
+		this.addEventHook('applybuff', filter, this._onApplyMeditate)
+		this.addEventHook('removebuff', filter, this._onRemoveMeditate)
 
 		// Death just flat out resets everything. Stop dying.
-		this.addHook('death', {to: 'player'}, () => this._set(0, 0))
+		this.addEventHook('death', {to: 'player'}, () => this._set(0, 0))
 
 		// Misc
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	/**

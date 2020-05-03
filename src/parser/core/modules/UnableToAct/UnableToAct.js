@@ -11,12 +11,12 @@ export default class UnableToAct extends Module {
 		super(...args)
 
 		const filter = {abilityId: STATUS_IDS}
-		this.addHook('applybuff', filter, this._onApply)
-		this.addHook('applydebuff', filter, this._onApply)
-		this.addHook('removebuff', filter, this._onRemove)
-		this.addHook('removedebuff', filter, this._onRemove)
+		this.addEventHook('applybuff', filter, this._onApply)
+		this.addEventHook('applydebuff', filter, this._onApply)
+		this.addEventHook('removebuff', filter, this._onRemove)
+		this.addEventHook('removedebuff', filter, this._onRemove)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onApply(event) {

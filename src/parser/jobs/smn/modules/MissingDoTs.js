@@ -79,8 +79,8 @@ export default class MissingDoTs extends Module {
 		} else {
 			POTENCY_PER_DOT = POTENCY_PER_DOT_508_TO_NOW
 		}
-		this.addHook('complete', this._onComplete)
-		this.addHook('cast', {
+		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: Object.keys(POTENCY_PER_DOT).map(Number),
 		}, this._onDotReqCast)

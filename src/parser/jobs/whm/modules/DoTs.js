@@ -43,8 +43,8 @@ export default class DoTs extends Module {
 			by: 'player',
 			abilityId: [STATUSES.DIA.id],
 		}
-		this.addHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], filter, this._onDotApply)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onDotApply(event) {

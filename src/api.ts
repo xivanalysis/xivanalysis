@@ -5,6 +5,8 @@ import {Fight, ReportEventsQuery, ReportEventsResponse} from './fflogs'
 
 const options: Options = {
 	prefixUrl: process.env.REACT_APP_LOGS_BASE_URL,
+	// We're dealing with some potentially slow endpoints - avoid throwing obtuse errors if it takes a bit
+	timeout: false,
 }
 
 if (process.env.REACT_APP_LOGS_API_KEY) {

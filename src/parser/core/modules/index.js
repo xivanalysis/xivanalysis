@@ -1,5 +1,5 @@
 import About from './About'
-import AdditionalEvents from './AdditionalEvents'
+import {AdditionalEvents, AdditionalEventQueries} from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import BrokenLog from './BrokenLog'
 import ChangeLog from './ChangeLog'
@@ -15,11 +15,11 @@ import Enemies from './Enemies'
 import {EntityStatuses} from './EntityStatuses'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
-import Invulnerability from './Invulnerability'
+import {Invulnerability} from './Invulnerability'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
-import RaidBuffs from './RaidBuffs'
+import RaidBuffs, {RaidBuffsQuery} from './RaidBuffs'
 import Speedmod from './Speedmod'
 import {Statistics} from './Statistics'
 import Statuses from './Statuses'
@@ -30,6 +30,7 @@ import Weaving from './Weaving'
 
 export default [
 	About,
+	AdditionalEventQueries,
 	AdditionalEvents,
 	AlwaysBeCasting,
 	BrokenLog,
@@ -50,6 +51,7 @@ export default [
 	NormalisedEvents,
 	PrecastAction,
 	PrecastStatus,
+	RaidBuffsQuery,
 	RaidBuffs,
 	Speedmod,
 	Statistics,

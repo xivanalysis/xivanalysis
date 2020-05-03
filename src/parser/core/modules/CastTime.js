@@ -16,8 +16,8 @@ export default class CastTime extends Module {
 			to: 'player',
 			abilityId: this.data.statuses.SWIFTCAST.id,
 		}
-		this.addHook('applybuff', filter, this._onApplySwiftcast)
-		this.addHook('removebuff', filter, this._onRemoveSwiftcast)
+		this.addEventHook('applybuff', filter, this._onApplySwiftcast)
+		this.addEventHook('removebuff', filter, this._onRemoveSwiftcast)
 	}
 
 	_onApplySwiftcast() {

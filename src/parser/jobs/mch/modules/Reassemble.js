@@ -32,9 +32,9 @@ export default class Reassemble extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: Object.keys(REASSEMBLE_GCDS).map(Number)}, this._onCast)
-		this.addHook('removedebuff', {by: 'player', abilityId: STATUSES.REASSEMBLED.id}, this._onRemoveReassemble)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: Object.keys(REASSEMBLE_GCDS).map(Number)}, this._onCast)
+		this.addEventHook('removedebuff', {by: 'player', abilityId: STATUSES.REASSEMBLED.id}, this._onRemoveReassemble)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

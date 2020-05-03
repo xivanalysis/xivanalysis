@@ -51,7 +51,7 @@ export default class GlobalCooldown extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 		this.timelineRow = this.timeline.addRow(new ContainerRow({
 			label: 'GCD',

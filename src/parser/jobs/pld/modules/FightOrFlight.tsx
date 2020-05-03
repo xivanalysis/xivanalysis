@@ -8,7 +8,7 @@ import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import Invulnerability from 'parser/core/modules/Invulnerability'
+import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -56,9 +56,18 @@ const CONSTANTS = {
 		EXPECTED: 1,
 	},
 	GCD: {
-		EXPECTED: 10,
+		EXPECTED: 11,
 	},
 }
+
+// These GCDs should not count towards the FoF GCD counter, as they are not
+// physical damage (weaponskill) GCDs.
+const EXCLUDED_GCD_IDS = [
+	ACTIONS.CLEMENCY.id,
+	ACTIONS.HOLY_SPIRIT.id,
+	ACTIONS.HOLY_CIRCLE.id,
+	ACTIONS.CONFITEOR.id,
+]
 
 const FOF_DURATION_MILLIS = STATUSES.FIGHT_OR_FLIGHT.duration * 1000
 
@@ -97,8 +106,8 @@ export default class FightOrFlight extends Module {
 	private fofErrorResult = new FightOrFlightErrorResult()
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook(
 			'removebuff',
 			{
 				by: 'player',
@@ -107,7 +116,7 @@ export default class FightOrFlight extends Module {
 			},
 			this.onRemoveFightOrFlight,
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {
@@ -130,7 +139,7 @@ export default class FightOrFlight extends Module {
 			const action = getDataBy(ACTIONS, 'id', actionId) as TODO // Should be an Action type
 			if (!action) { return }
 
-			if (action.onGcd) {
+			if (action.onGcd && !EXCLUDED_GCD_IDS.includes(action.id)) {
 				this.fofState.gcdCounter++
 			}
 
@@ -183,10 +192,10 @@ export default class FightOrFlight extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FIGHT_OR_FLIGHT.icon,
 			content: <Trans id="pld.fightorflight.suggestions.gcds.content">
-				Try to land 10 GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+				Try to land 11 physical GCDs during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
-				<Plural value={this.fofErrorResult.missedGcds} one="# GCD" other="# GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
+				<Plural value={this.fofErrorResult.missedGcds} one="# physical GCD" other="# physical GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
 			tiers: SEVERETIES.MISSED_GCD,
 			value: this.fofErrorResult.missedGcds,
@@ -241,7 +250,8 @@ export default class FightOrFlight extends Module {
 	private countGCDs(rotation: CastEvent[]) {
 		return rotation.reduce((sum, event) => {
 			const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
-			return sum + (action && action.onGcd ? 1 : 0)
+			const include = (action.onGcd && !EXCLUDED_GCD_IDS.includes(action.id)) ? 1 : 0
+			return sum + include
 		}, 0)
 	}
 

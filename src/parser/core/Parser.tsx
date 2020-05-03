@@ -13,6 +13,7 @@ import {Dispatcher} from './Dispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
+import {formatDuration} from 'utilities'
 
 interface Player extends Actor {
 	pets: Pet[]
@@ -202,7 +203,10 @@ class Parser {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
-		yield this.hydrateFabrication({type: 'init'})
+		yield this.hydrateFabrication({
+			type: 'init',
+			timestamp: this.fight.start_time,
+		})
 
 		let obj = eventIterator.next()
 		while (!obj.done) {
@@ -216,7 +220,10 @@ class Parser {
 		}
 
 		// Finish with 'complete' fab
-		yield this.hydrateFabrication({type: 'complete'})
+		yield this.hydrateFabrication({
+			type: 'complete',
+			timestamp: this.fight.end_time,
+		})
 	}
 
 	hydrateFabrication(event: Partial<Event>): Event {
@@ -455,19 +462,7 @@ class Parser {
 	}
 
 	formatDuration(duration: number, secondPrecision?: number) {
-		/* tslint:disable:no-magic-numbers */
-		duration /= 1000
-		const seconds = duration % 60
-		if (duration < 60) {
-			const precision = secondPrecision !== undefined? secondPrecision : seconds < 10? 2 : 0
-			return seconds.toFixed(precision) + 's'
-		}
-		const precision = secondPrecision !== undefined ? secondPrecision : 0
-		const secondsText = precision ? seconds.toFixed(precision) : '' + Math.floor(seconds)
-		let pointPos = secondsText.indexOf('.')
-		if (pointPos === -1) { pointPos = secondsText.length }
-		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
-		/* tslint:enable:no-magic-numbers */
+		return formatDuration(duration, {hideMinutesIfZero: true})
 	}
 
 	/**
