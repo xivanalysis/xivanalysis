@@ -872,7 +872,10 @@
   "whm.ogcds.suggestions.why": "Vous avez rater a peu près {missed} sur {maxUses} utilisation.",
   "whm.ogcds.suggestions.whyHeld": "Vous avez rater a peu près {missed} sur {maxUses} utilisation car vous l'avez garder pour un total de {0}.",
   "whm.ogcds.title": "Temps de rechargement global",
-  "whm.overheal.assize.name": "",
-  "whm.overheal.hot.name": "",
+  "whm.overheal.requirement.all": "",
+  "whm.overheal.requirement.hot": "",
+  "whm.overheal.requirement.nonhot": "",
+  "whm.overheal.rule.description": "",
+  "whm.overheal.rule.name": "",
   "whm.swiftcast.missed.suggestion.content": ""
 }

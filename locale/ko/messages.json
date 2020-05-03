@@ -872,7 +872,10 @@
   "whm.ogcds.suggestions.why": "총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.suggestions.whyHeld": "스킬 사용을 총 {0} 초를 미루어 총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.title": "논글로벌 기술",
-  "whm.overheal.assize.name": "",
-  "whm.overheal.hot.name": "",
+  "whm.overheal.requirement.all": "",
+  "whm.overheal.requirement.hot": "",
+  "whm.overheal.requirement.nonhot": "",
+  "whm.overheal.rule.description": "",
+  "whm.overheal.rule.name": "",
   "whm.swiftcast.missed.suggestion.content": ""
 }
