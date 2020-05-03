@@ -54,13 +54,13 @@ export default class MeleeCombos extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.ACCELERATION.id,
 		}, this._onCast)
-		this.addHook('rdmcast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('rdmcast', {by: 'player'}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_meleeCombos = {}
@@ -507,7 +507,7 @@ export default class MeleeCombos extends Module {
 
 							return (<Table.Row key={timestamp}>
 								<Table.Cell textAlign="center">
-									<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
+									<span style={{marginRight: 5}}>{formatDuration(start)}</span>
 									{<Button
 										circular
 										compact

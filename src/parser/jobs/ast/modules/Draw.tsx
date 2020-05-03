@@ -57,14 +57,14 @@ export default class Draw extends Module {
 	private prepullSleeve = false
 
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this.onDraw)
-		this.addHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
-		this.addHook('cast', {abilityId: PLAY, by: 'player'}, this.onPlay)
+		this.addEventHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this.onDraw)
+		this.addEventHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
+		this.addEventHook('cast', {abilityId: PLAY, by: 'player'}, this.onPlay)
 
-		this.addHook('applybuff', {abilityId: STATUSES.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
-		this.addHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+		this.addEventHook('applybuff', {abilityId: STATUSES.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
+		this.addEventHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private onDraw(event: CastEvent) {

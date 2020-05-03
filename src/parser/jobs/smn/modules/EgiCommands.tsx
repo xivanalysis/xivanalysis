@@ -1,12 +1,14 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {CastEvent, Event} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 
 const SEVERITY_STACK_COUNT = {
@@ -32,15 +34,51 @@ const FURTHER_RUIN_PET_ACTIONS = [
 	ACTIONS.MOUNTAIN_BUSTER.id,
 ]
 
+const NON_FURTHER_RUIN_PLAYER_ACTIONS = [
+	ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id,
+	ACTIONS.ENKINDLE_AERIAL_BLAST.id,
+	ACTIONS.ENKINDLE_INFERNO.id,
+	ACTIONS.ENKINDLE_EARTHEN_FURY.id,
+	ACTIONS.SMN_AETHERPACT.id,
+]
+
+const NON_FURTHER_RUIN_PET_ACTIONS = [
+	ACTIONS.EARTHEN_ARMOR.id,
+	ACTIONS.AERIAL_BLAST.id,
+	ACTIONS.INFERNO.id,
+	ACTIONS.EARTHEN_FURY.id,
+	ACTIONS.DEVOTION.id,
+]
+
+const PLAYER_TO_PET_MAP = {
+	[ACTIONS.ASSAULT_I_AERIAL_SLASH.id]: ACTIONS.AERIAL_SLASH.id,
+	[ACTIONS.ASSAULT_II_SLIIPSTREAM.id]: ACTIONS.SLIPSTREAM.id,
+	[ACTIONS.ASSAULT_I_CRIMSON_CYCLONE.id]: ACTIONS.CRIMSON_CYCLONE.id,
+	[ACTIONS.ASSAULT_II_FLAMING_CRUSH.id]: ACTIONS.FLAMING_CRUSH.id,
+	[ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id]: ACTIONS.EARTHEN_ARMOR.id,
+	[ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER.id]: ACTIONS.MOUNTAIN_BUSTER.id,
+	[ACTIONS.ENKINDLE_AERIAL_BLAST.id]: ACTIONS.AERIAL_BLAST.id,
+	[ACTIONS.ENKINDLE_INFERNO.id]: ACTIONS.INFERNO.id,
+	[ACTIONS.ENKINDLE_EARTHEN_FURY.id]: ACTIONS.EARTHEN_FURY.id,
+	[ACTIONS.SMN_AETHERPACT.id]: ACTIONS.DEVOTION.id,
+}
+
 const MAX_FURTHER_RUIN_COUNT = 4
 const EXPECTED_BAHAMUT_SUMMON_STACKS = 4
 const END_OF_FIGHT_LEEWAY = 5000
 
-export default class Ruin4 extends Module {
-	static handle = 'ruin4'
-	static title = t('smn.ruin-iv.title')`Ruin IV`
+class UnexecutedCommands {
+	swapTimestamp: number = 0
+	commands: CastEvent[] = []
+}
+
+export default class EgiCommands extends Module {
+	static handle = 'egicommands'
+	static title = t('smn.egicommands.title')`Unexecuted Egi Commands`
+	static debug = true
 
 	@dependency private suggestions!: Suggestions
+	@dependency private timeline!: Timeline
 	@dependency private invuln!: Invulnerability
 
 	private currentStackCount = 0
@@ -50,14 +88,20 @@ export default class Ruin4 extends Module {
 	private playerSkillCount = 0
 	private petSkillCount = 0
 
+	private activeCommands: CastEvent[] = []
+	private unexecutedCommands: UnexecutedCommands[] = []
+
 	protected init() {
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.RUIN_IV.id}, this.onRuin4)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.SUMMON_BAHAMUT.id}, this.onSummonBahamut)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id}, this.onPlayerEarthenArmor)
-		this.addHook('cast', {by: 'player', abilityId: FURTHER_RUIN_PLAYER_ACTIONS}, this.onPlayerOtherEgiAssault)
-		this.addHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
-		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RUIN_IV.id}, this.onRuin4)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.SUMMON_BAHAMUT.id}, this.onSummonBahamut)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id}, this.onPlayerEarthenArmor)
+		this.addEventHook('cast', {by: 'player', abilityId: FURTHER_RUIN_PLAYER_ACTIONS}, this.onPlayerOtherEgiAssault)
+		this.addEventHook('cast', {by: 'pet', abilityId: FURTHER_RUIN_PET_ACTIONS}, this.onPetCast)
+		this.addEventHook('cast', {by: 'player', abilityId: NON_FURTHER_RUIN_PLAYER_ACTIONS}, this.onCommandIssued)
+		this.addEventHook('cast', {by: 'pet', abilityId: NON_FURTHER_RUIN_PET_ACTIONS}, this.onCommandExecuted)
+		this.addEventHook('summonpet', this.onChangePet)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onRuin4(event: CastEvent) {
@@ -78,6 +122,7 @@ export default class Ruin4 extends Module {
 		const fightTimeRemaining = this.parser.fight.end_time - event.timestamp
 		if (fightTimeRemaining > END_OF_FIGHT_LEEWAY) {
 			this.playerSkillCount++
+			this.onCommandIssued(event)
 		}
 	}
 
@@ -90,10 +135,39 @@ export default class Ruin4 extends Module {
 		} else {
 			this.currentStackCount++
 		}
+
+		this.onCommandExecuted(event)
+	}
+
+	private onCommandIssued(event: CastEvent) {
+		this.activeCommands.push(event)
+		this.debug(`Issued ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)} (${event.timestamp}). ${this.activeCommands.length} commands now pending.`)
+	}
+
+	private onCommandExecuted(event: CastEvent) {
+		const index = this.activeCommands.findIndex(command => PLAYER_TO_PET_MAP[command.ability.guid] === event.ability.guid)
+		this.debug(`Executed ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)} (${event.timestamp}). Position ${index} of ${this.activeCommands.length} active commands.`)
+		if (index < 0) { return }
+
+		this.activeCommands.splice(index, 1)
+	}
+
+	private onChangePet(event: Event)	{
+		const ghostedCommands = this.activeCommands.filter(command => command.timestamp < event.timestamp)
+
+		if (ghostedCommands.length === 0) { return }
+
+		this.debug(`Swapped pet at ${this.parser.formatTimestamp(event.timestamp)} (${event.timestamp}).  ${ghostedCommands.length} commands lost.`)
+		this.unexecutedCommands.push({
+			swapTimestamp: event.timestamp,
+			commands: ghostedCommands,
+		})
+		this.activeCommands = this.activeCommands.filter(command => command.timestamp >= event.timestamp)
 	}
 
 	private onDeath() {
 		this.currentStackCount = 0
+		this.activeCommands = []
 	}
 
 	private onComplete() {
@@ -155,4 +229,21 @@ export default class Ruin4 extends Module {
 			}))
 		}
 	}
+
+	output() {
+		if (this.unexecutedCommands.length === 0) { return false }
+
+		return <RotationTable data={this.unexecutedCommands
+			.map(pet => {
+				return {
+					start: pet.commands[0].timestamp - this.parser.fight.start_time,
+					end: pet.swapTimestamp - this.parser.fight.start_time,
+					rotation: pet.commands,
+				}
+			})
+		}
+		onGoto={this.timeline.show}
+		/>
+	}
+
 }

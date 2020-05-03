@@ -160,7 +160,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static Row = ({onGoto, targets, notes, notesMap, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) =>
 		<Table.Row>
 			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
+				<span style={{marginRight: 5}}>{formatDuration(start)}</span>
 				{typeof onGoto === 'function' && <Button
 					circular
 					compact

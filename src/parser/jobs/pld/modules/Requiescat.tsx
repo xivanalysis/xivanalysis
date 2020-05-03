@@ -10,7 +10,8 @@ import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import React from 'react'
+import React, {Fragment} from 'react'
+import {Message} from 'semantic-ui-react'
 
 const SEVERITIES = {
 	MISSED_CASTS: {
@@ -28,6 +29,9 @@ const CONSTANTS = {
 	},
 	CONFITEOR: {
 		EXPECTED: 1,
+	},
+	TOTAL_GCDS: {
+		EXPECTED: 4,
 	},
 }
 
@@ -74,18 +78,18 @@ export default class Requiescat extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook(
 			'applybuff',
 			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
 			this.onApplyRequiescat,
 		)
-		this.addHook(
+		this.addEventHook(
 			'removebuff',
 			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
 			this.onRemoveRequiescat,
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {
@@ -172,38 +176,43 @@ export default class Requiescat extends Module {
 	}
 
 	output() {
-		return <RotationTable
-			targets={[
-				{
-					header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
-					accessor: 'holySpirit',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
-					accessor: 'confiteor',
-				},
-			]}
-			data={this.requiescats
-				.filter(requiescat => requiescat.hasAssociatedBuff)
-				.map(requiescat => ({
-					start: requiescat.start - this.parser.fight.start_time,
-					end: requiescat.end != null ?
-						requiescat.end - this.parser.fight.start_time
-						: requiescat.start - this.parser.fight.start_time,
-					targetsData: {
-						holySpirit: {
-							actual: requiescat.holySpirits,
-							expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
-						},
-						confiteor: {
-							actual: requiescat.confiteors,
-							expected: CONSTANTS.CONFITEOR.EXPECTED,
-						},
+		return <Fragment>
+			<Message>
+				<Trans id="pld.requiescat.table.note">Each of your <ActionLink {...ACTIONS.REQUIESCAT}/> windows should contain {CONSTANTS.TOTAL_GCDS.EXPECTED} spells at minimum to maintain the alignment of your rotation. Most of the time, a window should consist of {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> or <ActionLink {...ACTIONS.HOLY_CIRCLE}/> and end with a cast of <ActionLink {...ACTIONS.CONFITEOR}/>. However, under some circumstances, it is useful to drop one <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per minute in order to better align your rotation with buffs or mechanics. If you don't have a specific plan to do this, you should aim for {CONSTANTS.HOLY_SPIRIT.EXPECTED + 1} casts of <ActionLink {...ACTIONS.HOLY_SPIRIT}/> per <ActionLink {...ACTIONS.REQUIESCAT}/> window.</Trans>
+			</Message>
+			<RotationTable
+				targets={[
+					{
+						header: <ActionLink showName={false} {...ACTIONS.HOLY_SPIRIT}/>,
+						accessor: 'holySpirit',
 					},
-					rotation: requiescat.rotation,
-				}))
-			}
-			onGoto={this.timeline.show}
-		/>
+					{
+						header: <ActionLink showName={false} {...ACTIONS.CONFITEOR}/>,
+						accessor: 'confiteor',
+					},
+				]}
+				data={this.requiescats
+					.filter(requiescat => requiescat.hasAssociatedBuff)
+					.map(requiescat => ({
+						start: requiescat.start - this.parser.fight.start_time,
+						end: requiescat.end != null ?
+							requiescat.end - this.parser.fight.start_time
+							: requiescat.start - this.parser.fight.start_time,
+						targetsData: {
+							holySpirit: {
+								actual: requiescat.holySpirits,
+								expected: CONSTANTS.HOLY_SPIRIT.EXPECTED,
+							},
+							confiteor: {
+								actual: requiescat.confiteors,
+								expected: CONSTANTS.CONFITEOR.EXPECTED,
+							},
+						},
+						rotation: requiescat.rotation,
+					}))
+				}
+				onGoto={this.timeline.show}
+			/>
+		</Fragment>
 	}
 }

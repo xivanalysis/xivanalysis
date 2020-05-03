@@ -32,12 +32,12 @@ class FightItem extends Component {
 		const url = `/find/${code}/${id}/`
 		const colour = kill? 'green' : 'red'
 		const progress = Math.round(100 - (fightPercentage/100))
-		const duration = Math.round((end_time - start_time)/1000)
+		const duration = end_time - start_time
 
 		return <Menu.Item as={Link} to={url}>
 			{name}
 			<span className="pull-right">
-				{formatDuration(duration)}
+				{formatDuration(duration ?? 0)}
 				{fightPercentage !== undefined && <Progress
 					percent={progress}
 					size="small"

@@ -33,10 +33,10 @@ export default class NotCasting extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('begincast', {by: 'player'}, this._onBegin)
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('begincast', {by: 'player'}, this._onBegin)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

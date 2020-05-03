@@ -23,8 +23,8 @@ export default class CelestialIntersection extends Module {
 	private totalHeld = 0
 
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.CELESTIAL_INTERSECTION.id, by: 'player'}, this.onCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {abilityId: ACTIONS.CELESTIAL_INTERSECTION.id, by: 'player'}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {

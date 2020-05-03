@@ -94,7 +94,7 @@ export default class Gauge extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	normalise(events) {

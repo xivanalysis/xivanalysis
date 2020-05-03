@@ -94,10 +94,10 @@ export default class Fists extends Module {
 	private activeFist: Fist = new Fist(FISTLESS, this.parser.fight.start_time)
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
-		this.addHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
+		this.addEventHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	// Public API to get the Fist in use at a given time.

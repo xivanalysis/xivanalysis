@@ -30,7 +30,7 @@ export default class Ninjutsu extends Module {
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, event => { this._dotonCasts.current.ticks.push(event.hitCount) })
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, event => { this._dotonCasts.current?.ticks.push(event.hitCount) })
 		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
 		this.addEventHook('complete', this._onComplete)
 	}

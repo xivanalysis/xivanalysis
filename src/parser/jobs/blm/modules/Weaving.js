@@ -37,11 +37,11 @@ export default class BlmWeaving extends Weaving {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook(BLM_GAUGE_EVENT, this._onGaugeChange)
-		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.FIRE_III.id}, this._beginFire3)
-		this.addHook('begincast', {by: 'player', abilityId: ACTIONS.BLIZZARD_III.id}, this._beginBlizzard3)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onApplyTriple)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onRemoveTriple)
+		this.addEventHook(BLM_GAUGE_EVENT, this._onGaugeChange)
+		this.addEventHook('begincast', {by: 'player', abilityId: ACTIONS.FIRE_III.id}, this._beginFire3)
+		this.addEventHook('begincast', {by: 'player', abilityId: ACTIONS.BLIZZARD_III.id}, this._beginBlizzard3)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onApplyTriple)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.TRIPLECAST.id}, this._onRemoveTriple)
 	}
 
 	_beginFire3() {

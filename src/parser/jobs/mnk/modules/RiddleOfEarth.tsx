@@ -29,11 +29,11 @@ export default class RiddleOfEarth extends Module {
 	private riddle?: Riddle
 
 	protected init(): void {
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this.onGain)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this.onReply)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this.onDrop)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this.onGain)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.EARTHS_REPLY.id}, this.onReply)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.RIDDLE_OF_EARTH.id}, this.onDrop)
 
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGain(event: BuffEvent): void {

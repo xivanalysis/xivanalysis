@@ -33,8 +33,8 @@ export default class SleeveDraw extends Module {
 			by: 'player',
 			abilityId: [ACTIONS.SLEEVE_DRAW.id],
 		}
-		this.addHook('cast', _filter, this._onCast)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', _filter, this._onCast)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

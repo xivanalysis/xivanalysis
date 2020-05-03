@@ -26,6 +26,25 @@
 @value themeBrown: #a5673f;
 @value themeGrey: #767676;
 
+@value backgroundLightness: 95%;
+@value colorLightness: 30%;
+
+/* Message Box colors */
+@value messageLight: color(themeGrey l(backgroundLightness));
+@value messageDark: color(themeGrey l(colorLightness));
+
+@value infoLight: color(themeBlue l(backgroundLightness));
+@value infoDark: color(themeBlue s(colorLightness) l(colorLightness));
+
+@value successLight: color(themeGreen l(backgroundLightness));
+@value successDark: color(themeGreen s(colorLightness) l(colorLightness));
+
+@value warningLight: color(themeYellow l(backgroundLightness));
+@value warningDark: color(themeYellow s(colorLightness) l(colorLightness));
+
+@value errorLight: color(themeRed l(backgroundLightness));
+@value errorDark: color(themeRed s(colorLightness) l(colorLightness));
+
 /* Theming passthroughs */
 /* NOTE: Yes, I'm aware how redundant this all is. I've left it like this as prep for the Soon:tm: dark mode. CSS vars have pretty good broswer support, but there's some noticeable missing chunks - can gauge if the implementation is going to work based on how many people complain :blobmorning: */
 :root {
@@ -42,12 +61,67 @@
 	--brown: themeBrown;
 	--grey: themeGrey;
 
-	--theme-text: rgba(0, 0, 0, 0.87); /* Matching semantic for now */
-	--theme-background: themeWhite;
-	--theme-backdrop: themeLight;
 	--theme-inverse: themeBlack;
+
+	/* Basic Light Mode values */
+	--text: rgba(0, 0, 0, 0.87);
+	--background: themeWhite;
+	--backdrop: themeLight;
+	--text-muted: #666;
+	--segment-active: #e1e4e6;
+	--border-color: #dbdbdb;
+
+	/* Light Mode Message Box values */
+	--message-background: messageLight;
+	--message-text: messageDark;
+	--info-background: infoLight;
+	--info-text: infoDark;
+	--success-background: successLight;
+	--success-text: successDark;
+	--warning-background: warningLight;
+	--warning-text: warningDark;
+	--error-background: errorLight;
+	--error-text: errorDark;
 }
-@value themeText: var(--theme-text);
-@value themeBackground: var(--theme-background);
-@value themeBackdrop: var(--theme-backdrop);
+
+.darkMode {
+	/* Basic Dark Mode values */
+	--text: rgba(255, 255, 255, 0.87);
+	--background: #2d2d2d;
+	--backdrop: #3d3d3d;
+	--text-muted: #aaa;
+	--segment-link-active: #202020;
+	--border-color: #7e7e7e;
+
+	/* Dark Mode Message Box values */
+	--message-background: messageDark;
+	--message-text: messageLight;
+	--info-background: infoDark;
+	--info-text: infoLight;
+	--success-background: successDark;
+	--success-text: successLight;
+	--warning-background: warningDark;
+	--warning-text: warningLight;
+	--error-background: errorDark;
+	--error-text: errorLight;
+}
+
+
+@value themeText: var(--text);
+@value themeBackground: var(--background);
+@value themeBackdrop: var(--backdrop);
 @value themeInverse: var(--theme-inverse);
+@value themeTextMuted: var(--text-muted);
+@value segmentLinkActive: var(--segment-link-active);
+@value themeBorder: var(--border-color);
+
+@value messageBackground: var(--message-background);
+@value messageText: var(--message-text);
+@value infoBackground: var(--info-background);
+@value infoText: var(--info-text);
+@value successBackground: var(--success-background);
+@value successText: var(--success-text);
+@value warningBackground: var(--warning-background);
+@value warningText: var(--warning-text);
+@value errorBackground: var(--error-background);
+@value errorText: var(--error-text);

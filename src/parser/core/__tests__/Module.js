@@ -1,9 +1,9 @@
-import Module from './Module'
-import Parser from './Parser'
-import {Meta} from './Meta'
-import {Dispatcher} from './Dispatcher'
+import Module from '../Module'
+import Parser from '../Parser'
+import {Meta} from '../Meta'
+import {Dispatcher} from '../Dispatcher'
 
-jest.mock('./Dispatcher')
+jest.mock('../Dispatcher')
 
 /* eslint-disable no-magic-numbers */
 
