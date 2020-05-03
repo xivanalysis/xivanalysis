@@ -1,7 +1,7 @@
 {
   "ast.about.description-1": "",
   "ast.about.description-2": "",
-  "ast.about.description.warning.development": "",
+  "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
   "ast.about.description.warning.healer": "現在、全ヒーラーについてボスの無敵状態のチェックが正しく機能していません。このことから、常に詠唱できているかのチェックやDoT稼働率等の時間に関係する機能の精度が悪くなっています。",
   "ast.arcana-suggestions.messages.accordion-title": "全てのアルカナログ",
   "ast.arcana-suggestions.messages.disclaimer": "カード管理についての評価はまだ作業中です。おすすめはまだ作成されていません。<0/>このセクションの目的はベストプラクティスを通じたアドバイスを与える事であります。パーティーメンバーのプレイ状態やバーストタイミングは考慮しません。",
@@ -47,7 +47,7 @@
   "ast.lightspeed.messages.no-casts": "<0/>が1回も使用されていません。",
   "ast.lightspeed.rotation.extended": "(延長)",
   "ast.lightspeed.rotation.gcd": "",
-  "ast.lightspeed.rotation.mp-saved": "",
+  "ast.lightspeed.rotation.mp-saved": "節約した MP",
   "ast.lightspeed.title": "ライトスピード",
   "ast.lucid-dreaming.checklist.content": "占星術師はヒーリングスペルのMP使用コストが高いため、他のヒーラーと比べればの最大MPがかなり低く方です。「常に詠唱する」という理論に執着して油断するとMPがより早く枯渇してしまうので、<0/>と「ルーシッドドリーム」というヒーラーロールアクションを併せて常時使用することはMP全体に有利になるのでお勧めします。",
   "ast.lucid-dreaming.checklist.name": "ルーシッドドリームを使いましょう",
