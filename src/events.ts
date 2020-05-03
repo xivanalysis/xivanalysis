@@ -1,5 +1,5 @@
 /*
-Welcome to the magic events file!
+Welcome to the *｡･ﾟ★｡ magic ☆ﾟ･｡° events file!
 You're probably here to add your new fabricated event to the event type!
 Don't. I'm a big meanie and _will_ block your PR.
 
@@ -20,11 +20,10 @@ making it available and discoverable throughout the rest of the parser.
 
 /**
  * Declaration merge target. You don't want to use this directly unless you are
- * delcaring a new type of event. If you're importing this, you're doing it wrong.
+ * declaring a new type of event. If you're importing this, you're doing it wrong.
  */
 // tslint:disable-next-line no-empty-interface
 export interface EventTypeRepository {}
 
-// *｡･ﾟ★｡ magic ☆ﾟ･｡°
 /** Union of every event type declared in the application */
 export type Event = EventTypeRepository[keyof EventTypeRepository]
