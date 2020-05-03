@@ -62,7 +62,7 @@ export const WHM = ensureStatuses({
 	},
 
 	ASYLUM: {
-		id: 739,
+		id: 1911,
 		name: 'Asylum',
 		icon: 'https://xivapi.com/i/012000/012629.png',
 		duration: 24,
