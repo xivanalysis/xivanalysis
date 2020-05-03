@@ -2,6 +2,7 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
@@ -217,17 +218,28 @@ export class CoreOverheal extends Module {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
+	private isRegeneration(event: HealEvent): boolean {
+		const guid = event.ability.guid
+		// ignore regeneration events
+		// tslint:disable-next-line: no-magic-numbers
+		if (guid === 1302) {
+			return true
+		}
+		return false
+	}
+
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
-		if (! this.considerHeal(event, petHeal)) return
+		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) return
 
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
 			if (trackedHeal.idIsTracked(guid)) {
-				this.debug(`Heal from ${event.ability.name} at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
+				this.debug(`Heal from ${event.ability.name} (${event.ability.guid}) at ${event.timestamp} matched into category ${trackedHeal.name.props.defaults}`)
 				trackedHeal.pushHeal(event)
 				return
 			}
 		}
+		this.debug(`Heal from ${event.ability.name} (${event.ability.guid}) at ${event.timestamp} matched into direct healing`)
 		this.direct.pushHeal(event)
 	}
 
