@@ -32,7 +32,9 @@
     "not op_mini all"
   ],
   "lingui": {
-    "srcPathDirs": ["src"],
+    "srcPathDirs": [
+      "src"
+    ],
     "fallbackLocale": "en",
     "sourceLocale": "en",
     "format": "minimal"
