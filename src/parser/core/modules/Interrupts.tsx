@@ -56,8 +56,10 @@ export abstract class Interrupts extends Module {
 
 	/**
 	 * Implementing modules MAY override this function to provide specific text if they wish for the 'why'
-	 * @param missedCasts
-	 * @param missedTime
+	 * The default is to complain that they missed a number of casts and give them an estimate
+	 * @param missedCasts The array of missed casts
+	 * @param missedTime The approximate time wasted via interrupts
+	 * @returns JSX that conforms to your suggestion content
 	 */
 	protected suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
