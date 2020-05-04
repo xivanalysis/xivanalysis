@@ -59,8 +59,16 @@ export abstract class Interrupts extends Module {
 	 * @param missedCasts
 	 * @param missedTime
 	 */
-	private suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
+	protected suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
+	}
+
+	/**
+	 * Implementing modules MAY override this function to provide alternative output if there's 0 interrupted
+	 * casts (in lieu of an empty table)
+	 */
+	protected noInterruptsOutput(): JSX.Element | undefined {
+		return undefined
 	}
 
 	protected init() {
@@ -109,6 +117,10 @@ export abstract class Interrupts extends Module {
 	}
 
 	output() {
+		if (this.droppedCasts.length === 0) {
+			return this.noInterruptsOutput()
+		}
+
 		return <Table compact unstackable celled collapsing>
 		<Table.Header>
 			<Table.Row>
