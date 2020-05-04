@@ -75,6 +75,7 @@ export default class AmmoCombo extends Module {
 		return _.last(this.gnashingComboWindows)
 	}
 
+
 	protected init() {
 		this.addEventHook('cast',
 			{
@@ -216,7 +217,7 @@ export default class AmmoCombo extends Module {
 				},
 			]}
 			data={this.gnashingComboWindows
-				.filter(window => !window.isProper)
+				// .filter(window => !window.isProper)
 				.map(window => {
 					return ({
 						start: window.startTime - this.parser.fight.start_time,
