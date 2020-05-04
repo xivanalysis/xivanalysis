@@ -61,6 +61,7 @@ class GnashingComboState {
 
 export default class AmmoCombo extends Module {
 	static handle = 'Gnashing Fang Combo issues'
+	static debug = false
 
 	@dependency private checklist!: Checklist
 	@dependency private timeline!: Timeline
@@ -107,10 +108,11 @@ export default class AmmoCombo extends Module {
 
 		let lastGnashingCombo = this.lastGnashingCombo
 
+		this.debug(`Checking if action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
+
 		if (actionId === ACTIONS.GNASHING_FANG.id) {
 
-
-			// THIS SHIT IS BREAKING PUSHING THINGS?
+		this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
 
 			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
 				this.onEndGnashingCombo(event)
@@ -120,7 +122,7 @@ export default class AmmoCombo extends Module {
 			this.gnashingComboWindows.push(gnashingComboState)
 		}
 
-		if (COMBO_BREAKERS.hasOwnProperty(actionId) ) {
+		if (COMBO_BREAKERS.includes(actionId) ) {
 
 			this.onEndGnashingCombo(event)
 		}
@@ -131,8 +133,7 @@ export default class AmmoCombo extends Module {
 
 		if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
 
-			if (COMBO_ACTIONS.hasOwnProperty(actionId) ) {
-
+			if (COMBO_ACTIONS.includes(actionId) ) {
 				lastGnashingCombo.rotation.push(event)
 
 				if (actionId === ACTIONS.EYE_GOUGE.id) {
@@ -158,9 +159,7 @@ export default class AmmoCombo extends Module {
 			if (lastGnashingCombo.isProper === false) {
 				this.errors++
 			}
-
 		}
-
 	}
 
 	private onComplete() {
@@ -191,7 +190,7 @@ export default class AmmoCombo extends Module {
 
 	output() {
 
-		// if (this.errors !== 0) {
+		if (this.errors !== 0) {
 
 			return <RotationTable
 				targets={[
@@ -217,7 +216,7 @@ export default class AmmoCombo extends Module {
 					},
 				]}
 				data={this.gnashingComboWindows
-					// .filter(window => !window.isProper)
+					.filter(window => !window.isProper)
 					.map(window => {
 						return ({
 							start: window.startTime - this.parser.fight.start_time,
@@ -251,5 +250,5 @@ export default class AmmoCombo extends Module {
 				onGoto={this.timeline.show}
 			/>
 		}
-	// }
+	}
 }
