@@ -1,3 +1,5 @@
+import {Event} from 'events'
+
 // -----
 // Fight
 // -----
@@ -139,7 +141,7 @@ interface EventActor extends BaseActor {
 }
 
 /** Fields potentially present on all fflogs events */
-interface BaseEventFields {
+export interface BaseEventFields {
 	timestamp: number
 
 	source?: EventActor
@@ -153,7 +155,7 @@ interface BaseEventFields {
 }
 
 /** Fields present on events caused by, or in relation to an "ability" being executed */
-interface AbilityEventFields extends BaseEventFields {
+export interface AbilityEventFields extends BaseEventFields {
 	ability: Ability
 }
 
@@ -219,20 +221,28 @@ export interface TargetabilityUpdateEvent extends AbilityEventFields {
 	targetable: 0 | 1
 }
 
+const damageEventTypes = [
+	'calculateddamage',
+	'damage',
+] as const
+export const isDamageEvent = (event: Event): event is DamageEvent =>
+	(damageEventTypes as readonly string[]).includes(event.type)
 export interface DamageEvent extends EffectEventFields {
-	type:
-		| 'calculateddamage'
-		| 'damage'
+	type: typeof damageEventTypes[number]
 	overkill?: number
 	absorbed: number
 	multistrike?: boolean
 	blocked?: number
 }
 
+const healEventTypes = [
+	'calculatedheal',
+	'heal',
+] as const
+export const isHealEvent = (event: Event): event is HealEvent =>
+	(healEventTypes as readonly string[]).includes(event.type)
 export interface HealEvent extends EffectEventFields {
-	type:
-		| 'calculatedheal'
-		| 'heal'
+	type: typeof healEventTypes[number]
 	overheal: number
 }
 

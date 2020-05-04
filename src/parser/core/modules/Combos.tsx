@@ -3,11 +3,11 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
-import {DamageEvent} from 'fflogs'
+import {DamageEvent} from 'fflogs2'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
-import {NormalisedDamageEvent, NormalisedEvent} from 'parser/core/modules/NormalisedEvents'
+import {NormalisedDamageEvent, NormalisedEventFields} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
@@ -21,8 +21,8 @@ const ISSUE_TYPENAMES = {
 	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export class ComboEvent extends NormalisedEvent {
-	type = 'combo'
+export class ComboEvent extends NormalisedEventFields {
+	type = 'combo' as const
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
@@ -31,6 +31,12 @@ export class ComboEvent extends NormalisedEvent {
 		Object.assign(this, (({type, ...props}) => ({...props}))(event))
 		this.calculatedEvents = event.calculatedEvents.slice(0)
 		this.confirmedEvents = event.confirmedEvents.slice(0)
+	}
+}
+
+declare module 'events' {
+	interface EventTypeRepository {
+		combos: ComboEvent
 	}
 }
 
