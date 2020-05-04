@@ -171,16 +171,16 @@ export default class Module {
 	protected readonly addHook = this.addEventHook
 
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filter: ModuleFilter<T>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filterArg: ModuleFilter<T> | EventHookCallback<T>,
 		cbArg?: EventHookCallback<T>,
 	): Array<EventHook<T>> {

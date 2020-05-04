@@ -1,6 +1,6 @@
 import Module from 'parser/core/Module'
 
-declare module 'fflogs' {
+declare module 'fflogs2' {
 	interface DamageEvent {
 		criticalHit: boolean
 		directHit: boolean
