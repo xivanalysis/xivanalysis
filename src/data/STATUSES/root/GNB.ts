@@ -53,7 +53,7 @@ export const GNB = ensureStatuses({
 		id: 1840,
 		name: 'Heart of Stone',
 		icon: 'https://xivapi.com/i/013000/013610.png',
-		duration: 18,
+		duration: 7,
 	},
 	HEART_OF_LIGHT: {
 		id: 1839,
@@ -65,13 +65,13 @@ export const GNB = ensureStatuses({
 		id: 1832,
 		name: 'Camouflage',
 		icon: 'https://xivapi.com/i/013000/013602.png',
-		duration: 18,
+		duration: 20,
 	},
 	NEBULA: {
 		id: 1834,
 		name: 'Nebula',
 		icon: 'https://xivapi.com/i/013000/013604.png',
-		duration: 18,
+		duration: 15,
 	},
 	SUPERBOLIDE: {
 		id: 1836,
