@@ -191,65 +191,65 @@ export default class AmmoCombo extends Module {
 
 	output() {
 
-		if (this.errors !== 0) {
+		// if (this.errors !== 0) {
 
-		return <RotationTable
-			targets={[
-				{
-					header: <ActionLink showName={false} {...ACTIONS.JUGULAR_RIP}/>,
-					accessor: 'jugularRip',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.SAVAGE_CLAW}/>,
-					accessor: 'savageClaw',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.ABDOMEN_TEAR}/>,
-					accessor: 'abdomenTear',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.WICKED_TALON}/>,
-					accessor: 'wickedTalon',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.EYE_GOUGE}/>,
-					accessor: 'eyeGouge',
-				},
-			]}
-			data={this.gnashingComboWindows
-				// .filter(window => !window.isProper)
-				.map(window => {
-					return ({
-						start: window.startTime - this.parser.fight.start_time,
-						end: window.endTime != null ? window.endTime - this.parser.fight.start_time : window.startTime - this.parser.fight.start_time,
-						targetsData: {
-							jugularRip: {
-								actual: window.actualJug,
-								expected: EXPECTED_USES.JUGULAR_RIP,
+			return <RotationTable
+				targets={[
+					{
+						header: <ActionLink showName={false} {...ACTIONS.JUGULAR_RIP}/>,
+						accessor: 'jugularRip',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.SAVAGE_CLAW}/>,
+						accessor: 'savageClaw',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.ABDOMEN_TEAR}/>,
+						accessor: 'abdomenTear',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.WICKED_TALON}/>,
+						accessor: 'wickedTalon',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.EYE_GOUGE}/>,
+						accessor: 'eyeGouge',
+					},
+				]}
+				data={this.gnashingComboWindows
+					// .filter(window => !window.isProper)
+					.map(window => {
+						return ({
+							start: window.startTime - this.parser.fight.start_time,
+							end: window.endTime != null ? window.endTime - this.parser.fight.start_time : window.startTime - this.parser.fight.start_time,
+							targetsData: {
+								jugularRip: {
+									actual: window.actualJug,
+									expected: EXPECTED_USES.JUGULAR_RIP,
+								},
+								savageClaw: {
+									actual: window.actualSavage,
+									expected: EXPECTED_USES.SAVAGE_CLAW,
+								},
+								abdomenTear: {
+									actual: window.actualTear,
+									expected: EXPECTED_USES.ABDOMEN_TEAR,
+								},
+								wickedTalon: {
+									actual: window.actualTalon,
+									expected: EXPECTED_USES.WICKED_TALON,
+								},
+								eyeGouge: {
+									actual: window.actualEye,
+									expected: EXPECTED_USES.EYE_GOUGE,
+								},
 							},
-							savageClaw: {
-								actual: window.actualSavage,
-								expected: EXPECTED_USES.SAVAGE_CLAW,
-							},
-							abdomenTear: {
-								actual: window.actualTear,
-								expected: EXPECTED_USES.ABDOMEN_TEAR,
-							},
-							wickedTalon: {
-								actual: window.actualTalon,
-								expected: EXPECTED_USES.WICKED_TALON,
-							},
-							eyeGouge: {
-								actual: window.actualEye,
-								expected: EXPECTED_USES.EYE_GOUGE,
-							},
-						},
-						rotation: window.rotation,
+							rotation: window.rotation,
+						})
 					})
-				})
-			}
-			onGoto={this.timeline.show}
-		/>
-	}
-	}
+				}
+				onGoto={this.timeline.show}
+			/>
+		}
+	// }
 }
