@@ -1,7 +1,7 @@
 import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
 import _ from 'lodash'
-import {Fight, ReportEventsQuery, ReportEventsResponse} from './fflogs'
+import {Fight, ReportEventsQuery, ReportEventsResponse} from './fflogs2'
 
 const options: Options = {
 	prefixUrl: process.env.REACT_APP_LOGS_BASE_URL,

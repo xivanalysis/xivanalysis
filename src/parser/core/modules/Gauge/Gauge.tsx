@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import {DeathEvent} from 'fflogs'
+import {DeathEvent} from 'fflogs2'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {isDefined} from 'utilities'

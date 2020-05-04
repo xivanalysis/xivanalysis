@@ -1,4 +1,4 @@
-import {BuffEvent} from 'fflogs'
+import {BuffEvent} from 'fflogs2'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'

@@ -1,4 +1,4 @@
-import {CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs2'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 import {ActionItem, ContainerRow, SimpleRow, Timeline} from 'parser/core/modules/Timeline'
