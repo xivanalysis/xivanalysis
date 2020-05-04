@@ -9,6 +9,7 @@
 	vertical-align: top;
 	text-align: left;
 	border-collapse: collapse;
+	margin-top: -20px;
 }
 
 .legend td,
