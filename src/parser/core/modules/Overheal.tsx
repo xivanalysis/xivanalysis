@@ -19,6 +19,8 @@ interface TrackedOverhealOpts {
 	trackedHealIds?: number[],
 }
 
+const REGENERATION_ID: number = 1302
+
 const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 	0: SEVERITY.MINOR,
 	35: SEVERITY.MEDIUM,
@@ -219,13 +221,7 @@ export class CoreOverheal extends Module {
 	}
 
 	private isRegeneration(event: HealEvent): boolean {
-		const guid = event.ability.guid
-		// ignore regeneration events
-		// tslint:disable-next-line: no-magic-numbers
-		if (guid === 1302) {
-			return true
-		}
-		return false
+		return event.ability.guid === REGENERATION_ID
 	}
 
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
