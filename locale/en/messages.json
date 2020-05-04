@@ -759,7 +759,7 @@
   "sch.aetherflow.drift": "Drift",
   "sch.aetherflow.stacks-wasted": "Stacks Wasted",
   "sch.chainstrat.cooldown.description": "Try to use <0/> on cooldown throughout the fight, particularly when your team has other buffs up for maximum effect.",
-  "sch.dots.checklist.description": "As a Scholar, Biolysis is a notable porition of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.",
+  "sch.dots.checklist.description": "As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.",
   "sch.dots.checklist.name": "Keep your DoT up",
   "sch.dots.checklist.requirement.bio-ii.name": "<0/> uptime",
   "sch.dots.suggestions.clipping.content": "Avoid refreshing Biolysis significantly before its expiration, except when at the end of the fight. Unnecessary refreshes use up your mana more than necessary, and may cause you to go out of mana.",
