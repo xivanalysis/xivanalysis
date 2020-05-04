@@ -16,7 +16,7 @@ const INPUT_EXPRESSIONS = [
 	 * 1234567890abcdef#source=1
 	 * 1234567890abcdef#fight=1&source=1
 	 */
-	/^(?:.*fflogs\.com\/reports\/)?(?<code>[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<player>[^&]*))?).*)?$/,
+	/^(?:.*fflogs\.com\/reports\/)?(?<code>(?:a:)?[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<player>[^&]*))?).*)?$/,
 
 	/**
 	 * xivanalysis
@@ -24,13 +24,13 @@ const INPUT_EXPRESSIONS = [
 	 * /find/1234567890abcdef/1/
 	 * /analyse/1234567890abcdef/1/1/
 	 */
-	/\/(?:analyse|find)\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
+	/\/(?:analyse|find)\/(?<code>(?:a:)?[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
 
 	/**
 	 * xivrdps
 	 * http://www.xivrdps.com/encounters/1234567890abcdef/1
 	 */
-	/xivrdps(?:\.herokuapp)?\.com\/encounters\/(?<code>[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+))?/,
+	/xivrdps(?:\.herokuapp)?\.com\/encounters\/(?<code>(?:a:)?[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+))?/,
 ]
 
 @observer
