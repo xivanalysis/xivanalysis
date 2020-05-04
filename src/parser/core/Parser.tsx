@@ -462,7 +462,7 @@ class Parser {
 	}
 
 	formatDuration(duration: number, secondPrecision?: number) {
-		return formatDuration(duration, {hideMinutesIfZero: true})
+		return formatDuration(duration, {secondPrecision, hideMinutesIfZero: true, showNegative: true})
 	}
 
 	/**
