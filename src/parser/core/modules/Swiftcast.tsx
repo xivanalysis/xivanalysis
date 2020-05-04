@@ -47,6 +47,17 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 		severityTiers: this.severityTiers,
 	}
 
+	/**
+	 * Implementing modules MAY override this if they have special cases not covered
+	 * by the standard 'considerAction' method – for example, SMN with instant ruins during
+	 * DWT.
+	 * @param action - the action to consider
+	 * @returns true to allow the spell; false to ignore the spell
+	 */
+	protected considerSwiftAction(action: Action): boolean {
+		return true
+	}
+
 	protected init() {
 		super.init()
 		// Inheriting the class doesn't update expectedGCDs's parameters when they
@@ -73,11 +84,11 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	}
 
 	protected considerAction(action: Action) {
+		this.debug('Evaluating action during window:', action)
 		// ignore actions that don't have a castTime
-		if (!action.castTime) {
+		if (!action.castTime ) {
 			return false
 		}
-
-		return true
+		return this.considerSwiftAction(action)
 	}
 }

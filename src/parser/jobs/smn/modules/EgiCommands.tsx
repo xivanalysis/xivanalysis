@@ -75,7 +75,6 @@ class UnexecutedCommands {
 export default class EgiCommands extends Module {
 	static handle = 'egicommands'
 	static title = t('smn.egicommands.title')`Unexecuted Egi Commands`
-	static debug = true
 
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
