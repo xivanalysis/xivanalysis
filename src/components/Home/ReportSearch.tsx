@@ -30,7 +30,7 @@ const INPUT_EXPRESSIONS = [
 	 * xivrdps
 	 * http://www.xivrdps.com/encounters/1234567890abcdef/1
 	 */
-	/xivrdps(?:\.herokuapp)?\.com\/encounters\/(?<code>(?:a:)[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+))?/,
+	/xivrdps(?:\.herokuapp)?\.com\/encounters\/(?<code>(?:a:)?[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+))?/,
 ]
 
 @observer
