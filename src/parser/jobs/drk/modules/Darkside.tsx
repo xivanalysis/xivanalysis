@@ -2,12 +2,12 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {Event} from 'fflogs'
+import {Event} from 'events'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist from 'parser/core/modules/Checklist'
 import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Death from 'parser/core/modules/Death'
-import {isNormalisedDamageEvent, NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import React from 'react'
 
 const DARKSIDE_MAX_DURATION = 60000
@@ -49,7 +49,7 @@ export class Darkside extends Module {
 			}
 		}
 
-		if (isNormalisedDamageEvent(event)) {
+		if (event.type === 'normaliseddamage') {
 			const abilityId = event.ability.guid
 			this._currentDuration = Math.min(this._currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
 			this._lastEventTime = event.timestamp

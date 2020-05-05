@@ -94,7 +94,6 @@ export default class Combos extends Module {
 
 	protected fabricateComboEvent(event: NormalisedDamageEvent) {
 		const combo = new ComboEvent(event)
-		delete combo.timestamp // Since fabricateEvent adds that in anyway
 		this.parser.fabricateEvent(combo)
 	}
 
