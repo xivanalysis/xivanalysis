@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityType, CastEvent} from 'fflogs2'
+import {AbilityType, CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'

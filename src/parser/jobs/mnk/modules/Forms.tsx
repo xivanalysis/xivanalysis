@@ -4,7 +4,7 @@ import React from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs2'
+import {BuffEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'

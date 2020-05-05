@@ -1,5 +1,5 @@
 import {Action} from 'data/ACTIONS'
-import {CastEvent} from 'fflogs2'
+import {CastEvent} from 'fflogs'
 import Module from 'parser/core/Module'
 import CastTime from './CastTime'
 import {Data} from './Data'

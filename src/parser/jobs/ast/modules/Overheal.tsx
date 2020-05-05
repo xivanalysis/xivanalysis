@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import STATUSES from 'data/STATUSES'
-import {HealEvent} from 'fflogs2'
+import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import Checklist from 'parser/core/modules/Checklist'

@@ -1,5 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs2'
+import {CastEvent} from 'fflogs'
 import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 
 const SSS_MAX_WEAVES = 4

@@ -1,4 +1,4 @@
-import {ProcessedReportFightsResponse, ReportLanguage} from 'fflogs2'
+import {ProcessedReportFightsResponse, ReportLanguage} from 'fflogs'
 import _ from 'lodash'
 
 export enum GameEdition {

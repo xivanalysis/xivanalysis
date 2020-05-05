@@ -2,7 +2,7 @@ import cn from 'classnames'
 import {ActionLink, ItemLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS, {ITEM_ID_OFFSET} from 'data/ACTIONS'
-import {Ability} from 'fflogs2'
+import {Ability} from 'fflogs'
 import React, {Component} from 'react'
 import styles from './Rotation.module.css'
 

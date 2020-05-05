@@ -3,7 +3,7 @@ import {t} from '@lingui/macro'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs2'
+import {BuffEvent, CastEvent} from 'fflogs'
 
 import {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'

@@ -1,4 +1,4 @@
-import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isDamageEvent, isHealEvent} from 'fflogs2'
+import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isDamageEvent, isHealEvent} from 'fflogs'
 import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'

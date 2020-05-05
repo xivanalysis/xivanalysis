@@ -3,7 +3,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {RotationTable} from 'components/ui/RotationTable'
-import {DamageEvent} from 'fflogs2'
+import {DamageEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'

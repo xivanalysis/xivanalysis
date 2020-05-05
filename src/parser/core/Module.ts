@@ -1,6 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import Color from 'color'
-import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs2'
+import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
 import {Event} from 'events'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
