@@ -652,7 +652,7 @@
   "rdm.combos.suggestions.notenoughmanacombos.why": "{notEnoughManaCount, plural, one {#개} other {#개}}의 강화 콤보가 마나가 충분하지 않은 상태에서 콤보를 시작하여 손실되었습니다.",
   "rdm.combos.suggestions.therestcombos.content": "근접 콤보를 잇는 중 다른 GCD 스킬을 사용하거나, 시간 제한을 넘기거나, 마나 증량을 사용하여 콤보가 끊기는 일이 없어야 합니다.",
   "rdm.combos.suggestions.therestcombos.why": "{theRest, number} 개의 강화 근접 콤보가 일반적인 콤보 공격 중단 혹은 콤보 시간 초과로 인해 손실되었습니다.",
-  "rdm.dualcast.suggestions.missed.content": "연속 마법 효과를 사용하지 않은 채 낭비하지 않도록 하십시오.",
+  "rdm.dualcast.suggestions.missed.content": "",
   "rdm.dualcast.suggestions.missed.why": "{0} {1, plural,one {개의 연속 마법 효과가} other {개의 연속 마법 효과가}} 스킬을 사용하지 않아 사라졌습니다.",
   "rdm.dualcast.suggestions.wasted.content": "<0/> 상태에서는 <1/>, <2/>, <3/> 마법만 사용하여야 합니다.",
   "rdm.dualcast.suggestions.wasted.why": "{0}개의 연속 마법이 시전 시간이 짧은 스킬 사용에 낭비되었습니다.",
