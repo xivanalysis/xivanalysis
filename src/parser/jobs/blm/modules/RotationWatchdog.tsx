@@ -3,13 +3,13 @@ import {Plural, Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent, BaseEventFields} from 'fflogs2'
 import Module, {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -147,8 +147,8 @@ class Cycle {
 
 // TS typedef for BLM Gauge events so it doesn't choke
 // TODO: Move to Gauge if that gets converted to TS
-interface BLMGaugeEvent extends Event {
-	type: symbol,
+interface BLMGaugeEvent extends BaseEventFields {
+	type: typeof BLM_GAUGE_EVENT,
 	timestamp: number,
 	insertAfter: number,
 	astralFire: number,
@@ -157,6 +157,12 @@ interface BLMGaugeEvent extends Event {
 	enochian: boolean,
 	polyglot: number,
 	lastGaugeEvent: BLMGaugeEvent,
+}
+
+declare module 'events' {
+	interface EventTypeRepository {
+		blmRotationWatchdog: BLMGaugeEvent
+	}
 }
 
 // typedef for the subset of the data contained in BLMGaugeEvent that we're going to keep track of for suggestions
