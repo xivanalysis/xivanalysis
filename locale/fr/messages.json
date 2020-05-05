@@ -652,7 +652,7 @@
   "rdm.combos.suggestions.notenoughmanacombos.why": "{notEnoughManaCount, plural, one {# combo enchanté perdu du au lancement du combo avant d'avoir assez de mana} other {# combos enchantés perdus du au lancement du combo avant d'avoir assez de mana}}",
   "rdm.combos.suggestions.therestcombos.content": "Ne laissez pas votre combo se terminer ni n'utilisez de GCDs ou Manifaction durant vos combos enchantés",
   "rdm.combos.suggestions.therestcombos.why": "{theRest, plural, one {# combo enchanté perdu du à l'utilisation d'un autre combo ou d'un mauvais timing} other {# combos enchantés perdus du à l'utilisation d'un autre combo ou d'un mauvais timing}}",
-  "rdm.dualcast.suggestions.missed.content": "Vous devriez éviter de gâcher les procs de Chaîne de sorts, cela vous fait perdre des dégâts sur le long terme.",
+  "rdm.dualcast.suggestions.missed.content": "",
   "rdm.dualcast.suggestions.missed.why": "{0} {0, plural, one {Chaîne de sorts a été perdue, car non lancée} other {Chaînes de sorts ont été perdues, car non lancées}}.",
   "rdm.dualcast.suggestions.wasted.content": "Sorts utilisés alors que <0/> est actif devrait être limité à <1/>, <2/>, or <3/>",
   "rdm.dualcast.suggestions.wasted.why": "{0} {0, plural, one {Chaîne de sorts a été gâchée du à un temps de cast trop court} other {Chaînes de sorts ont été gâchées du à un temps de cast trop court}}.",
