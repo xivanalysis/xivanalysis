@@ -1,10 +1,11 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityType, CastEvent, Event} from 'fflogs'
+import {AbilityType, CastEvent} from 'fflogs2'
 import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import React from 'react'
+import {Event} from 'events'
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	// Need dependency to ensure proper ordering of normalise calls
