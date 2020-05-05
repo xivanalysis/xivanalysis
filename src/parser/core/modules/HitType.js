@@ -1,5 +1,5 @@
 import Module from 'parser/core/Module'
-import {HitType as EventHitType} from 'fflogs'
+import {HitType as EventHitType} from 'fflogs2'
 
 const ACTION_EVENT_TYPES = [
 	'damage',

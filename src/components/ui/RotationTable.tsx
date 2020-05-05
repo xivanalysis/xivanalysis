@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
-import {AbilityEvent} from 'fflogs'
+import {AbilityEvent} from 'fflogs2'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'

@@ -1,5 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs2'
 import CorePetTimeline from 'parser/core/modules/PetTimeline'
 
 const COMMANDED_SKILLS: number[] = [

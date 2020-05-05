@@ -1,6 +1,6 @@
 import {fflogsApi} from 'api'
 import * as Errors from 'errors'
-import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs'
+import {ProcessedReportFightsResponse, ReportFightsQuery, ReportFightsResponse} from 'fflogs2'
 import ky from 'ky'
 import _ from 'lodash'
 import {action, observable, runInAction} from 'mobx'

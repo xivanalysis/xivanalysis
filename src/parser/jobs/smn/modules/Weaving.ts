@@ -1,5 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs2'
 import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 
 const PERMITTED_PHOENIX_WEAVES = 3

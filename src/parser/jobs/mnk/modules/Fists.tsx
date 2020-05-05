@@ -8,7 +8,7 @@ import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 
-import {BuffEvent, CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs2'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'

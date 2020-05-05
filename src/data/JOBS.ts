@@ -1,6 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
-import {ActorType} from 'fflogs'
+import {ActorType} from 'fflogs2'
 
 export interface Role {
 	id: number

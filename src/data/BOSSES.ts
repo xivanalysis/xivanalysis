@@ -1,5 +1,5 @@
 import {getDataBy} from 'data'
-import {Fight} from 'fflogs'
+import {Fight} from 'fflogs2'
 
 export interface Boss {
 	logId: number

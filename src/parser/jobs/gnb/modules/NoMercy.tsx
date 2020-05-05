@@ -12,7 +12,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 
 import {getDataBy} from 'data'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs2'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
