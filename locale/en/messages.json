@@ -652,7 +652,7 @@
   "rdm.combos.suggestions.notenoughmanacombos.why": "{notEnoughManaCount, plural, one {# enchanted combo was lost due to entering the combo before having enough mana} other {# enchanted combos were lost due to entering the combo before having enough mana}}",
   "rdm.combos.suggestions.therestcombos.content": "Do not allow your combo to timeout or use GCD Skills or Manafication during your enchanted combos",
   "rdm.combos.suggestions.therestcombos.why": "{theRest, plural, one {# enchanted combo was lost due to general combo breakage or combo timing out} other {# enchanted combos were lost due to general combo breakage or combo timing out}}",
-  "rdm.dualcast.suggestions.missed.content": "You should avoid wasting DualCast procs entirely as it is lost potency overtime.",
+  "rdm.dualcast.suggestions.missed.content": "You should avoid wasting Dualcast procs entirely as it is lost potency overtime.",
   "rdm.dualcast.suggestions.missed.why": "{0} {1, plural, one {Dualcast was} other {Dualcasts were}} lost due to not casting.",
   "rdm.dualcast.suggestions.wasted.content": "Spells used while <0/> is up should be limited to <1/>, <2/>, or <3/>",
   "rdm.dualcast.suggestions.wasted.why": "{0} {1, plural, one {Dualcast was} other {Dualcasts were}} wasted on low cast-time spells.",
