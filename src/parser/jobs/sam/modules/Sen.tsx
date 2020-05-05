@@ -44,6 +44,12 @@ const THINGS_WE_WANT_IN_THE_TABLE = [
 	ACTIONS.MANGETSU.id,
 	ACTIONS.OKA.id,
 
+	//Sen Spenders
+	ACTIONS.HIGANBANA.id,
+        ACTIONS.TENKA_GOKEN.id,
+        ACTIONS.MIDARE_SETSUGEKKA.id,
+        ACTIONS.HAGAKURE.id,
+
 	// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
 	ACTIONS.ENPI.id,
 	ACTIONS.HISSATSU_YATEN.id,
@@ -59,7 +65,7 @@ const KENKI_PER_SEN = 10
 const SEN_HANDLING = {
         NONE: {priority: 0, message: 'No errors'},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwrote Sen. </Trans>},
-        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a possible filler Hagakure. </Trans>},
+        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Hagakure. </Trans>},
         DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
@@ -130,7 +136,7 @@ export default class Sen extends Module {
 		)
 
 		this.addEventHook(
-			['normaliseddamage', 'combo'],
+			'combo',
 			{
 				by: 'player',
 				abilityId: SEN_ACTIONS,
@@ -165,6 +171,8 @@ export default class Sen extends Module {
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
+			if(event.hasSuccessfulHit === true) {
+
                         switch (action) {
                                 case ACTIONS.YUKIKAZE.id:
                                         lastSenState.currentSetsu++
@@ -172,9 +180,8 @@ export default class Sen extends Module {
                                         if (lastSenState.currentSetsu > 1) {
                                                 lastSenState.overwriteSetsus++
                                                 lastSenState.currentSetsu = 1
-                                                lastSenState.isNonStandard = true
                                                 lastSenState.isOverwrite = true
-                                                }
+					}
                                         break
 
                                 case ACTIONS.GEKKO.id:
@@ -184,10 +191,9 @@ export default class Sen extends Module {
                                         if (lastSenState.currentGetsu > 1 ) {
                                                 lastSenState.overwriteGetsus++
                                                 lastSenState.currentGetsu = 1
-                                                lastSenState.isNonStandard = true
                                                 lastSenState.isOverwrite = true
+                                        }
 
-                                                }
                                         break
 
                                 case ACTIONS.KASHA.id:
@@ -197,14 +203,13 @@ export default class Sen extends Module {
                                         if (lastSenState.currentKa > 1) {
                                                 lastSenState.overwriteKas++
                                                 lastSenState.currentKa = 1
-                                                lastSenState.isNonStandard = true
                                                 lastSenState.isOverwrite = true
-
-                                                }
+					}
                                         break
                                 }
 
-                }
+                	}
+		}
 
 	}
 
@@ -216,7 +221,7 @@ export default class Sen extends Module {
 
 		// step 2: FILTER EVERYTHING
 
-		if (THINGS_WE_WANT_IN_THE_TABLE.hasOwnProperty(action) || SEN_ACTIONS.hasOwnProperty(action) || SEN_REMOVERS.hasOwnProperty(action) ) {
+		if (THINGS_WE_WANT_IN_THE_TABLE.includes(action) || SEN_ACTIONS.includes(action) || SEN_REMOVERS.includes(action) ) {
 
 			// step 3: check the sen state, if undefined/not active, make one
 
@@ -254,10 +259,15 @@ export default class Sen extends Module {
 
 			if (lastSenState.isDeath === true) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
-			} else if (lastSenState.isOverwrite === true) {
+				lastSenState.isNonStandard = true
+			} 
+			else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
-			} else if (lastSenState.isHaga === true) {
+				lastSenState.isNonStandard = true
+			} 
+			else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
+				lastSenState.isNonStandard = true
 			}
 		}
 
@@ -270,12 +280,11 @@ export default class Sen extends Module {
 		if (lastSenState != null && lastSenState.end == null) {
 
 			if (event.ability.guid === ACTIONS.HAGAKURE.id) {
-				 lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
+				lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
+     				
+				lastSenState.isHaga = true
 
-     lastSenState.isNonStandard = true
-     lastSenState.isHaga = true
-
-     this.kenki.modify(lastSenState.kenkiGained)
+     				this.kenki.modify(lastSenState.kenkiGained)
 			}
 
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
@@ -289,12 +298,12 @@ export default class Sen extends Module {
 	private onDeath() {
 		const lastSenState = this.lastSenState
 
-  if (lastSenState != null && lastSenState.end == null) {
-                        this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
+  		if (lastSenState != null && lastSenState.end == null) {
+			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
 
-			                     lastSenState.isDone = true
-			                     lastSenState.isDeath = true
-			                     this.senCodeProcess()
+			lastSenState.isDone = true
+			lastSenState.isDeath = true
+			this.senCodeProcess()
                         lastSenState.end = this.parser.currentTimestamp
                 }
 
