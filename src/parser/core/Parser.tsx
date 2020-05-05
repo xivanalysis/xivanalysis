@@ -28,11 +28,11 @@ export interface Result {
 	markup: React.ReactNode
 }
 
-interface InitEvent {
+export interface InitEvent {
 	type: 'init'
 	timestamp: number
 }
-interface CompleteEvent {
+export interface CompleteEvent {
 	type: 'complete'
 	timestamp: number
 }

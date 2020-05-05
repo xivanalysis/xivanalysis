@@ -2,12 +2,14 @@ import {t} from '@lingui/macro'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent, DeathEvent, isCastEvent} from 'fflogs2'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {Event} from 'events'
+import {InitEvent} from 'parser/core/Parser'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
@@ -55,12 +57,8 @@ export enum SleeveType {
 	TWO_STACK = 2,
 }
 
-interface PullEvent extends Event {
-	type: 'pull'
-}
-
 export interface CardState {
-	lastEvent: CastEvent | PullEvent | DeathEvent
+	lastEvent: InitEvent | CastEvent | DeathEvent
 	drawState: DrawnType
 	sealState: SealType[]
 	sleeveState: SleeveType
@@ -76,10 +74,8 @@ export default class ArcanaTracking extends Module {
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
-			type: 'pull',
+			type: 'init',
 			timestamp: this.parser.fight.start_time,
-			targetIsFriendly: true,
-			sourceIsFriendly: true,
 		},
 		drawState: DrawnType.NOTHING,
 		sealState: CLEAN_SEAL_STATE,
@@ -109,10 +105,10 @@ export default class ArcanaTracking extends Module {
 				) {
 					// End loop if: 1. Max duration of sleeve draw status passed
 					break
-				} else if ( event.type === 'cast' && this.isCastEvent(event) && ACTIONS.SLEEVE_DRAW.id === event.ability.guid) {
+				} else if ( event.type === 'cast' && isCastEvent(event) && ACTIONS.SLEEVE_DRAW.id === event.ability.guid) {
 					// they used sleeve so it can't have been prepull
 					prepullSleeve = false
-				} else if (event.type === 'cast' && this.isCastEvent(event) && ACTIONS.DRAW.id === event.ability.guid) {
+				} else if (event.type === 'cast' && isCastEvent(event) && ACTIONS.DRAW.id === event.ability.guid) {
 					sleeveDrawLog.push(event)
 			}  else {
 				continue
@@ -145,7 +141,7 @@ export default class ArcanaTracking extends Module {
 	 * @returns {CardState} - object containing the card state of the pull
 	 */
 	public getPullState(): CardState {
-		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && artifact.lastEvent.type === 'pull') as CardState
+		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && artifact.lastEvent.type === 'init') as CardState
 		return stateItem
 	}
 
@@ -353,7 +349,7 @@ export default class ArcanaTracking extends Module {
 			// They had something in the draw slot
 			const drawnStatus = this.arcanaActionToStatus(actionId)
 			this.cardStateLog.forEach((cardState, index) => {
-				if (cardState.lastEvent.type === 'pull') {
+				if (cardState.lastEvent.type === 'init') {
 					this.cardStateLog[index].drawState = drawnStatus ? drawnStatus : DrawnType.NOTHING
 					return this.pullStateInitialized = true
 				}
@@ -376,7 +372,7 @@ export default class ArcanaTracking extends Module {
 		let searchLatest = true
 		const lastLog = _.last(this.cardStateLog) as CardState
 		let lastEvent = lastLog.lastEvent
-		if (lastEvent.type === 'pull') {
+		if (lastEvent.type === 'init') {
 			return
 		}
 		lastEvent = lastLog.lastEvent as CastEvent
@@ -396,7 +392,7 @@ export default class ArcanaTracking extends Module {
 		// Looking for those abilities in CARD_GRANTING_ABILITIES that could possibly get us this card
 		let lastIndex = _.findLastIndex(searchLog,
 			stateItem =>
-				this.isCastEvent(stateItem.lastEvent) && CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
+				isCastEvent(stateItem.lastEvent) && CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
 		)
 
 		// There were no finds of specified abilities, OR it wasn't logged.
@@ -492,8 +488,4 @@ export default class ArcanaTracking extends Module {
 
 		return arcanaId
 	}
-
-	public isCastEvent = (event: Event): event is CastEvent => event.type === 'cast'
-	public isBuffEvent = (event: Event): event is BuffEvent => event.type === 'buff'
-
 }

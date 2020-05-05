@@ -191,10 +191,14 @@ export interface DeathEvent extends BaseEventFields {
 	type: 'death'
 }
 
+const castEventTypes = [
+	'begincast',
+	'cast',
+] as const
+export const isCastEvent = (event: Event): event is CastEvent =>
+	(castEventTypes as readonly string[]).includes(event.type)
 export interface CastEvent extends AbilityEventFields {
-	type:
-		| 'begincast'
-		| 'cast'
+	type: typeof castEventTypes[number]
 }
 
 export interface BuffEvent extends AbilityEventFields {
