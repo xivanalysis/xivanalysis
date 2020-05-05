@@ -652,7 +652,7 @@
   "rdm.combos.suggestions.notenoughmanacombos.why": "{notEnoughManaCount, plural, one {# 次} other {# 次}}开始连击时黑白魔元不足而使魔连击断连。",
   "rdm.combos.suggestions.therestcombos.content": "不要断连击，或者在魔连击中使用倍增及其他 GCD 魔法。",
   "rdm.combos.suggestions.therestcombos.why": "{theRest, plural, one {# 次} other {# 次}}魔连击因为连击错误或是连击超时而中断。",
-  "rdm.dualcast.suggestions.missed.content": "请避免浪费连续咏唱 Buff，这会让你掉输出。",
+  "rdm.dualcast.suggestions.missed.content": "",
   "rdm.dualcast.suggestions.missed.why": "由于没有施法而损失 {0} {1, plural, one {次} other {次}} 连续咏唱。",
   "rdm.dualcast.suggestions.wasted.content": "<0/>存在时只应该使用<1/>、<2/>、或者<3/>。",
   "rdm.dualcast.suggestions.wasted.why": "在连续咏唱触发时，使用了 {0} {1, plural, one {次} other {次}}咏唱时间较短的魔法。",
