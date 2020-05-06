@@ -1,10 +1,12 @@
 import {MessageDescriptor} from '@lingui/core'
 import Color from 'color'
-import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
+import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
+import {Event} from 'events'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import Parser from './Parser'
+import {ensureArray} from 'utilities'
 
 export enum DISPLAY_ORDER {
 	TOP = 0,
@@ -64,8 +66,8 @@ export interface MappedDependency {
 
 type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	abilityId: Ability['guid'],
-	to: 'player' | 'pet' | T['targetID'],
-	by: 'player' | 'pet' | T['sourceID'],
+	to: 'player' | 'pet' | FflogsEvent['targetID'],
+	by: 'player' | 'pet' | FflogsEvent['sourceID'],
 }>
 
 type LogParams = Parameters<typeof console.log>
@@ -169,16 +171,16 @@ export default class Module {
 	protected readonly addHook = this.addEventHook
 
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filter: ModuleFilter<T>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filterArg: ModuleFilter<T> | EventHookCallback<T>,
 		cbArg?: EventHookCallback<T>,
 	): Array<EventHook<T>> {
@@ -189,6 +191,8 @@ export default class Module {
 
 		// If there's no callback just... stop
 		if (!cb) { return [] }
+
+		const eventTypes = ensureArray(events)
 
 		// QoL filter transforms
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
@@ -202,12 +206,7 @@ export default class Module {
 			delete abilityFilter.abilityId
 		}
 
-		// Make sure events is an array
-		if (!Array.isArray(events)) {
-			events = [events]
-		}
-
-		const hooks = events.map(event => ({
+		const hooks = eventTypes.map(event => ({
 			event,
 			filter,
 			module: (this.constructor as typeof Module).handle,
@@ -219,17 +218,18 @@ export default class Module {
 		return hooks
 	}
 
+	// We don't talk about the type casts here
 	private mapFilterEntity<T extends Event>(
 		filterArg: ModuleFilter<T>,
 		qol: keyof ModuleFilter<T>,
-		raw: keyof T,
-	) {
+		raw: keyof FflogsEvent,
+	): ModuleFilter<T> {
 		if (!filterArg[qol]) { return filterArg }
 
-		const filter = cloneDeep(filterArg)
+		const filter = cloneDeep(filterArg) as Filter<FflogsEvent>
 
 		// Sorry not sorry for the `any`s. Ceebs working out this filter _again_.
-		switch (filter[qol]) {
+		switch (filterArg[qol]) {
 			case 'player':
 				filter[raw] = this.parser.player.id as any
 				break
@@ -237,12 +237,12 @@ export default class Module {
 				filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
 				break
 			default:
-				filter[raw] = filter[qol] as any
+				filter[raw] = filterArg[qol] as any
 		}
 
-		delete filter[qol]
+		delete filter[qol as keyof typeof filter]
 
-		return filter
+		return filter as ModuleFilter<T>
 	}
 
 	/**
