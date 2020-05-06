@@ -1,5 +1,5 @@
 import PrecastAction from '../PrecastAction'
-import {AbilityType, CastEvent, DamageEvent, Event, HitType} from 'fflogs'
+import {AbilityType, CastEvent, DamageEvent, HitType} from 'fflogs'
 import Parser from 'parser/core/Parser'
 
 jest.mock('parser/core/Parser')
@@ -50,17 +50,18 @@ const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	return cast
 }
 const precastSyntheticCast = (timestamp: number): CastEvent => {
-	const synthEvent = mockDamageEvent(timestamp) as Event
-	synthEvent.timestamp = fightStartTime
-	synthEvent.type = 'cast'
-	return synthEvent as CastEvent
+	return {
+		...mockDamageEvent(timestamp),
+		type: 'cast',
+		timestamp: fightStartTime,
+	}
 }
 
 describe('The PrecastAction module', () => {
 	let precastAction: PrecastAction
 	let parser: Parser
-	let events: Array<Event | CastEvent | DamageEvent>
-	let byPlayer: jest.SpyInstance<boolean, [Event, (number | undefined)?]>
+	let events: Array<CastEvent | DamageEvent>
+	let byPlayer: jest.SpyInstance<boolean, [{ sourceID?: number | undefined }, (number | undefined)?]>
 
 	beforeEach(() => {
 		parser = new MockedParser()
