@@ -1,4 +1,5 @@
-import {Event, isAbilityEvent, isCastEvent, isDamageEvent} from 'fflogs'
+import {Event} from 'events'
+import {CastEvent, isCastEvent, isDamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 
@@ -14,10 +15,10 @@ export default class PrecastAction extends Module {
 		const startTime = this.parser.fight.start_time
 
 		for (const event of events) {
-			this.debug(`Timestamp: ${event.timestamp} - Event Type: ${String(event.type)} - Action: ${isAbilityEvent(event) ? event.ability.name : ''}`)
+			this.debug(`Timestamp: ${event.timestamp} - Event Type: ${String(event.type)} - Action: ${(event.ability != null) ? event.ability.name : ''}`)
 
 			// Only care about ability events by the player
-			if (!this.parser.byPlayer(event) || !isAbilityEvent(event))
+			if (!this.parser.byPlayer(event) || event.ability == null)
 				continue
 
 			// Check if action is an autoattack, ignore if it is
@@ -31,11 +32,8 @@ export default class PrecastAction extends Module {
 			// If this is a damage event, fabricate a cast event for it and end
 			if (isDamageEvent(event)) {
 				this.debug('Synthesizing cast event for damage event')
-				events.splice(0, 0, {
-					...event,
-					timestamp: startTime,
-					type: 'cast',
-				})
+				const synthesizedEvent: CastEvent = {...event, type: 'cast', timestamp: startTime}
+				events.splice(0, 0, synthesizedEvent)
 				break
 			}
 		}
