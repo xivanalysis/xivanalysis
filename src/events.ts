@@ -41,7 +41,7 @@ type InvalidKeys<K extends string | number | symbol> = { [P in K]?: never }
 // For each member of union U, add all _other_ possible keys available within U as InvalidKeys
 type BackfillUnionInternal<U, UAll> =
 	U extends unknown
-		?	U & InvalidKeys<Exclude<UnionKeys<UAll>, keyof U>>
+		? U & InvalidKeys<Exclude<UnionKeys<UAll>, keyof U>>
 		: never
 
 // Helper type used to duplicate the union U for use in the type above
