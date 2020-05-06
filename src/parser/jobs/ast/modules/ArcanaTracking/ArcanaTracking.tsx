@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {getDataBy} from 'data'
 import {Data} from 'parser/core/modules/Data'
 import {ActionRoot} from 'data/ACTIONS/root'
-import {BuffEvent, CastEvent, DeathEvent, isCastEvent} from 'fflogs'
+import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
@@ -127,10 +127,10 @@ export default class ArcanaTracking extends Module {
 			) {
 				// End loop if: 1. Max duration of sleeve draw status passed
 				break
-			} else if (event.type === 'cast' && isCastEvent(event) && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
+			} else if (event.type === 'cast' && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
 				// they used sleeve so it can't have been prepull
 				prepullSleeve = false
-			} else if (event.type === 'cast' && isCastEvent(event) && this.data.actions.DRAW.id === event.ability.guid) {
+			} else if (event.type === 'cast' && this.data.actions.DRAW.id === event.ability.guid) {
 				sleeveDrawLog.push(event)
 			} else {
 				continue
@@ -424,7 +424,7 @@ export default class ArcanaTracking extends Module {
 		// Looking for those abilities in CARD_GRANTING_ABILITIES that could possibly get us this card
 		let lastIndex = _.findLastIndex(searchLog,
 			stateItem =>
-				isCastEvent(stateItem.lastEvent) && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
+				stateItem.lastEvent.type === 'cast' && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
 		)
 
 		// There were no finds of specified abilities, OR it wasn't logged.
