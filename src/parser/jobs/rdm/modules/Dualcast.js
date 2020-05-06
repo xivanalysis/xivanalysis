@@ -134,7 +134,7 @@ export default class DualCast extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: STATUSES.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.missed.content">
-					You should avoid wasting DualCast procs entirely as it is lost potency overtime.
+					You should avoid wasting Dualcast procs entirely as it is lost potency overtime.
 				</Trans>,
 				tiers: this._severityMissedDualcast,
 				value: this._missedDualCasts,

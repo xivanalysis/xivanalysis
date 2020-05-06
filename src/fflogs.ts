@@ -1,3 +1,5 @@
+import {Event} from 'events'
+
 // -----
 // Fight
 // -----
@@ -96,7 +98,7 @@ export interface ActorResources {
 }
 
 // -----
-// Events
+// Event field data
 // -----
 
 export enum AbilityType {
@@ -133,15 +135,14 @@ export interface Ability {
 	type: AbilityType
 }
 
-// Hell if I know. Seems to be used for 'Environment', and that's about it.
+// Used for inlined actors, typically those that are unranked / uncounted
 interface EventActor extends BaseActor {
 	icon: string,
 }
 
-export interface Event {
+/** Fields potentially present on all fflogs events */
+export interface BaseEventFields {
 	timestamp: number
-	// TODO: Remove symbol types, they're just unessecary complication to the event handling system
-	type: string | symbol
 
 	source?: EventActor
 	sourceID?: number
@@ -153,15 +154,13 @@ export interface Event {
 	targetIsFriendly: boolean
 }
 
-// TODO: Remove once symbol types are removed
-const hasStringType = <T extends Event>(event: T): event is T & {type: string} => typeof event.type === 'string'
-
-export const isAbilityEvent = (event: Event): event is AbilityEvent => hasStringType(event) && event.hasOwnProperty('ability')
-export interface AbilityEvent extends Event {
+/** Fields present on events caused by, or in relation to an "ability" being executed */
+export interface AbilityEventFields extends BaseEventFields {
 	ability: Ability
 }
 
-interface EffectEvent extends AbilityEvent {
+/** Fields present on events wherein a discrete effect has taken place */
+interface EffectEventFields extends AbilityEventFields {
 	hitType: HitType
 	tick?: boolean
 
@@ -184,53 +183,92 @@ interface EffectEvent extends AbilityEvent {
 	multiplier?: number
 }
 
-export interface DeathEvent extends Event { type: 'death' }
-export const isCastEvent = (event: Event): event is CastEvent => hasStringType(event) && (event.type === 'cast' || event.type === 'begincast')
-export interface CastEvent extends AbilityEvent { type: 'begincast' | 'cast' }
+// -----
+// Events
+// -----
 
-export const isDamageEvent = (event: Event): event is DamageEvent => hasStringType(event) && event.type.includes('damage')
-export interface DamageEvent extends EffectEvent {
-	type: 'calculateddamage' | 'damage'
+export interface DeathEvent extends BaseEventFields {
+	type: 'death'
+}
+
+const castEventTypes = [
+	'begincast',
+	'cast',
+] as const
+export const isCastEvent = (event: Event): event is CastEvent =>
+	(castEventTypes as readonly any[]).includes(event.type)
+export interface CastEvent extends AbilityEventFields {
+	type: typeof castEventTypes[number]
+}
+
+export interface BuffEvent extends AbilityEventFields {
+	type:
+		| 'applybuff'
+		| 'applydebuff'
+		| 'refreshbuff'
+		| 'refreshdebuff'
+		| 'removebuff'
+		| 'removedebuff'
+}
+
+export interface BuffStackEvent extends AbilityEventFields {
+	type:
+		| 'applybuffstack'
+		| 'applydebuffstack'
+		| 'removebuffstack'
+		| 'removedebuffstack'
+	stack: number
+}
+
+export interface TargetabilityUpdateEvent extends AbilityEventFields {
+	type: 'targetabilityupdate'
+	targetable: 0 | 1
+}
+
+const damageEventTypes = [
+	'calculateddamage',
+	'damage',
+] as const
+export const isDamageEvent = (event: Event): event is DamageEvent =>
+	(damageEventTypes as readonly any[]).includes(event.type)
+export interface DamageEvent extends EffectEventFields {
+	type: typeof damageEventTypes[number]
 	overkill?: number
 	absorbed: number
 	multistrike?: boolean
 	blocked?: number
 }
 
-export const isHealEvent = (event: Event): event is HealEvent => hasStringType(event) && event.type.includes('heal')
-export interface HealEvent extends EffectEvent {
-	type: 'calculatedheal' | 'heal'
+const healEventTypes = [
+	'calculatedheal',
+	'heal',
+] as const
+export const isHealEvent = (event: Event): event is HealEvent =>
+	(healEventTypes as readonly any[]).includes(event.type)
+export interface HealEvent extends EffectEventFields {
+	type: typeof healEventTypes[number]
 	overheal: number
 }
 
-export const isApplyBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applybuff'
-export const isRemoveBuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removebuff'
-export const isApplyDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='applydebuff'
-export const isRemoveDebuffEvent = (event: Event): event is BuffEvent => hasStringType(event) && event.type ==='removedebuff'
-export interface BuffEvent extends AbilityEvent {
-	type: (
-		'applybuff' |
-		'applydebuff' |
-		'refreshbuff' |
-		'refreshdebuff' |
-		'removebuff' |
-		'removedebuff'
-	)
-}
-export interface BuffStackEvent extends AbilityEvent {
-	type: (
-		'applybuffstack' |
-		'applydebuffstack' |
-		'removebuffstack' |
-		'removedebuffstack'
-	)
-	stack: number
-}
+type EffectEvent =
+	| DamageEvent
+	| HealEvent
 
-export const isTargetabilityUpdateEvent = (event: Event): event is TargetabilityUpdateEvent => hasStringType(event) && event.type === 'targetabilityupdate'
-export interface TargetabilityUpdateEvent extends AbilityEvent {
-	type: 'targetabilityupdate'
-	targetable: 0 | 1
+export type AbilityEvent =
+	| EffectEvent
+	| CastEvent
+	| BuffEvent
+	| BuffStackEvent
+	| TargetabilityUpdateEvent
+
+export type FflogsEvent =
+	| AbilityEvent
+	| DeathEvent
+
+declare module 'events' {
+	interface EventTypeRepository {
+		fflogs: FflogsEvent
+	}
 }
 
 // -----
@@ -302,7 +340,7 @@ export interface ReportEventsQuery {
 }
 
 interface CorrectReportEventsResponse {
-	events: Event[]
+	events: FflogsEvent[]
 	nextPageTimestamp?: number
 }
 

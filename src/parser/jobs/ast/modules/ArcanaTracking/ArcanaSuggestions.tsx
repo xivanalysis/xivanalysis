@@ -3,9 +3,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import JobIcon from 'components/ui/JobIcon'
 import {getDataBy} from 'data'
-import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import STATUSES from 'data/STATUSES'
 import {ActorType} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
@@ -19,20 +17,19 @@ import ArcanaTracking, {CardState, SealType, SleeveType} from './ArcanaTracking'
 import sealCelestial from './seal_celestial.png'
 import sealLunar from './seal_lunar.png'
 import sealSolar from './seal_solar.png'
+import {Data} from 'parser/core/modules/Data'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
-
-const SLEEVE_ICON = {
-	[SleeveType.NOTHING]: '',
-	[SleeveType.ONE_STACK]: STATUSES.SLEEVE_DRAW.icon,
-	[SleeveType.TWO_STACK]: 'https://xivapi.com/i/019000/019562.png',
-}
 
 const SEAL_ICON = {
 	[SealType.NOTHING]: '',
 	[SealType.SOLAR]: sealSolar,
 	[SealType.LUNAR]: sealLunar,
 	[SealType.CELESTIAL]: sealCelestial,
+}
+
+interface SleeveIcon {
+	[key: number]: string
 }
 
 interface CardLog extends CardState {
@@ -46,6 +43,7 @@ export default class ArcanaSuggestions extends Module {
 	static title = t('ast.arcana-suggestions.title')`Arcana Logs`
 	static displayOrder = DISPLAY_ORDER.ARCANA_TRACKING
 
+	@dependency private data!: Data
 	@dependency private combatants!: Combatants
 	@dependency private arcanaTracking!: ArcanaTracking
 	@dependency private timeline!: Timeline
@@ -53,7 +51,21 @@ export default class ArcanaSuggestions extends Module {
 	private cardLogs: CardLog[] = []
 	private partyComp: string[] = []
 
+	private PLAY: number[] = []
+
+	private SLEEVE_ICON: SleeveIcon = {}
+
 	protected init() {
+		PLAY.forEach(actionKey => {
+			this.PLAY.push(this.data.actions[actionKey].id)
+		})
+
+		this.SLEEVE_ICON = {
+			[SleeveType.NOTHING]: '',
+			[SleeveType.ONE_STACK]: this.data.statuses.SLEEVE_DRAW.icon,
+			[SleeveType.TWO_STACK]: 'https://xivapi.com/i/019000/019562.png',
+		}
+
 		this.addEventHook('complete', this._onComplete)
 	}
 
@@ -67,7 +79,12 @@ export default class ArcanaSuggestions extends Module {
 		}
 
 		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
-			const target = artifact.lastEvent.targetID !== this.parser.player.id ? this.combatants.getEntity(artifact.lastEvent.targetID) : this.combatants.selected
+			const targetId = artifact.lastEvent.type !== 'init'
+				? artifact.lastEvent.targetID
+				: undefined
+			const target = targetId !== this.parser.player.id
+				? this.combatants.getEntity(targetId)
+				: this.combatants.selected
 
 			const cardLog: CardLog = {
 				...artifact,
@@ -87,7 +104,7 @@ export default class ArcanaSuggestions extends Module {
 		</p>
 		<p>
 			<Trans id="ast.arcana-suggestions.messages.footnote">
-				* No pre-pull actions are being represented aside from <ActionLink {...ACTIONS.PLAY} />, and this is only an approximation based on the buff duration.
+				* No pre-pull actions are being represented aside from <ActionLink {...this.data.actions.PLAY} />, and this is only an approximation based on the buff duration.
 			</Trans>
 		</p>
 		<Table collapsing unstackable className={styles.cardActionTable}>
@@ -111,7 +128,7 @@ export default class ArcanaSuggestions extends Module {
 					</Table.Header>
 					<Table.Body>
 						{this.cardLogs.map(artifact => {
-							if (artifact.lastEvent.type === 'pull') {
+							if (artifact.lastEvent.type === 'init') {
 								return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
 										<Table.Cell>
 											<Button
@@ -161,12 +178,12 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderAction(artifact: CardLog) {
-		if (artifact.lastEvent.type === 'cast' && PLAY.includes(artifact.lastEvent.ability.guid) ) {
+		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid) ) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
 			return <>
 			<Table.Cell>
-				<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastEvent.ability.guid)} />
+				<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 			</Table.Cell>
 			<Table.Cell>
 				{targetJob && <JobIcon job={targetJob}/>}
@@ -176,7 +193,7 @@ export default class ArcanaSuggestions extends Module {
 		} else if (artifact.lastEvent.type === 'cast' ) {
 			return <>
 				<Table.Cell>
-					<ActionLink {...getDataBy(ACTIONS, 'id', artifact.lastEvent.ability.guid)} />
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
 				</Table.Cell>
 				<Table.Cell>
 				</Table.Cell>
@@ -200,7 +217,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderSpreadState(artifact: CardLog) {
-		const drawnArcana = getDataBy(STATUSES, 'id', artifact.drawState)
+		const drawnArcana = artifact.drawState ? this.data.getStatus(artifact.drawState) : undefined
 
 		return <Table.Cell>
 			<span style={{marginRight: 10, marginLeft: 0}}>
@@ -222,9 +239,9 @@ export default class ArcanaSuggestions extends Module {
 			</span>
 			<span style={{marginLeft: 5}}>
 			{artifact.sleeveState > 0 && <img
-				src={SLEEVE_ICON[artifact.sleeveState]}
+				src={this.SLEEVE_ICON[artifact.sleeveState]}
 				className={styles.buffIcon}
-				alt={ACTIONS.SLEEVE_DRAW.name}
+				alt={this.data.actions.SLEEVE_DRAW.name}
 			/>}
 			</span>
 		</Table.Cell>

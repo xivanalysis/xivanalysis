@@ -32,7 +32,7 @@ const EXPECTED_ABILITY_EVENTS = [
 	'applydebuffstack',
 	'removebuffstack',
 	'removedebuffstack',
-]
+] as const
 
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'

@@ -10,9 +10,11 @@
 
 ## Continuation
 - [ ] Add checks for if the next Continuation was even usable before the fight ended - if not, don't penalize
-- [ ] Consider keeping track of missed Continuations and logging them in a collapsed Rotation table
+	[Ryan's note: Find test cases of this, seems EXTREMELY niche]
+- [ ] Consider keeping track of missed Continuations and logging them in a collapsed Rotation table (WIP)
 
 ## No Mercy
+
 - [x] Show Danger Zone instead of Blasting Zone if we detect that the combatant is sub-80 (e.g., there is a Danger Zone used instead of a Blasting Zone)
 	[Ryan note: Still uses Blasting Zone Icon, but the counter for the zone skill is incremented]
 - [X] Ignore missed GCDs on No Mercy windows that would expire after the end of the fight
