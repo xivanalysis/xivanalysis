@@ -86,7 +86,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	protected considerAction(action: Action) {
 		this.debug('Evaluating action during window:', action)
 		// ignore actions that don't have a castTime
-		if (!action.castTime ) {
+		if (!action.castTime) {
 			return false
 		}
 		return this.considerSwiftAction(action)

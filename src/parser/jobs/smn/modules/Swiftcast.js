@@ -1,6 +1,5 @@
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {SwiftcastModule} from 'parser/core/modules/Swiftcast'
-// eslint-disable-next-line no-unused-vars
 import {DWT_LENGTH, DWT_CAST_TIME_MOD} from './DWT'
 
 const MISSED_SEVERITIES = {
@@ -28,7 +27,7 @@ export default class Swiftcast extends SwiftcastModule {
 		const guid = event.ability.guid
 
 		if (guid === this.data.actions.DREADWYRM_TRANCE.id) {
-			this.debug(`dwt now active ${this.parser.formatTimestamp(event.timestamp)}`)
+			this.debug(`DWT now active ${this.parser.formatTimestamp(event.timestamp)}`)
 			this._dwtActive = true
 			this._dwtActiveTimestamp = event.timestamp
 			return
@@ -46,10 +45,7 @@ export default class Swiftcast extends SwiftcastModule {
 
 	considerSwiftAction(event) {
 		this.debug(`DWT Active (${this._dwtActive}): ${event.name}`)
-		if (this._dwtActive) {
-			if (event.castTime + DWT_CAST_TIME_MOD > 0) {
-				return true
-			}
+		if (this._dwtActive && event.castTime + DWT_CAST_TIME_MOD <= 0) {
 			return false
 		}
 		return true
