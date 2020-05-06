@@ -271,6 +271,8 @@
   "core.home.about.title": "xivanalysisについて",
   "core.home.analyse": "分析",
   "core.home.paste-url": "ログURLをここに貼り付けてください。",
+  "core.home.report-search.invalid-query": "",
+  "core.home.report-search.unknown-query-error": "",
   "core.i18n.help-translate": "翻訳をお手伝ってください！",
   "core.i18n.hide-overlay": "多言語対応オーバレイを隠す",
   "core.i18n.show-overlay": "多言語対応オーバレイを表示する",
