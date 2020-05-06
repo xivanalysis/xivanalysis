@@ -1,5 +1,5 @@
 import React from 'react'
-import {Trans} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -14,7 +14,7 @@ export default class Overheal extends CoreOverheal {
 
 	trackedHealCategories = [
 		{
-			name: <Trans id="whm.overheal.hot.name">Healing over time</Trans>,
+			name: <Trans id="whm.overheal.hot.name">Healing Over Time</Trans>,
 			color: SuggestedColors[1],
 			trackedHealIds: [STATUSES.REGEN.id, STATUSES.MEDICA_II.id, STATUSES.ASYLUM.id],
 		},
