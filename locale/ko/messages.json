@@ -271,6 +271,8 @@
   "core.home.about.title": "xivanalysis에 대하여",
   "core.home.analyse": "분석",
   "core.home.paste-url": "로그 URL 붙여넣기",
+  "core.home.report-search.invalid-query": "",
+  "core.home.report-search.unknown-query-error": "",
   "core.i18n.help-translate": "번역을 도와주세요!",
   "core.i18n.hide-overlay": "i18n 오버레이 숨기기",
   "core.i18n.show-overlay": "i18n 오버레이 표시",
