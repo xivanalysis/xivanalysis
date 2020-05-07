@@ -271,6 +271,8 @@
   "core.home.about.title": "Über xivanalysis",
   "core.home.analyse": "Analysieren",
   "core.home.paste-url": "Füge deine Log URL ein um anzufangen",
+  "core.home.report-search.invalid-query": "",
+  "core.home.report-search.unknown-query-error": "",
   "core.i18n.help-translate": "Hilf beim Übersetzen!",
   "core.i18n.hide-overlay": "Übersetzungshilfe verstecken",
   "core.i18n.show-overlay": "Übersetzungshilfe anzeigen",
