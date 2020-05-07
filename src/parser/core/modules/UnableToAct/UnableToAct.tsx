@@ -23,7 +23,7 @@ export default class UnableToAct extends Module {
 	private current?: UTADowntime
 
 	protected init() {
-		const filter = {abilityId: STATUS_IDS}
+		const filter = {abilityId: STATUS_IDS, to: 'player'} as const
 		this.addEventHook('applybuff', filter, this.onApply)
 		this.addEventHook('applydebuff', filter, this.onApply)
 		this.addEventHook('removebuff', filter, this.onRemove)
