@@ -6,13 +6,13 @@ import React from 'react'
 import Module from 'parser/core/Module'
 import {SimpleStatistic} from './Statistics'
 import {ActionItem, ContainerRow} from './Timeline'
-
+import _ from 'lodash'
 const MIN_GCD = 1500
 const MAX_GCD = 2500
 const BASE_GCD = 2500
 const CASTER_TAX = 100
 
-const DEBUG_LOG_SAVED_GCDS = false && process.env.NODE_ENV !== 'production'
+const DEBUG_LOG_SAVED_GCDS = true && process.env.NODE_ENV !== 'production'
 
 // NOTE: Caster tax refers to spells taking 0.1s longer than their tooltip claims if their cast time is at least as long as their recast time.
 // See https://www.reddit.com/r/ffxiv/comments/8s05rn/the_recast_time_on_your_tooltip_can_be_up_to_85/, specifically:
@@ -187,10 +187,11 @@ export default class GlobalCooldown extends Module {
 			: castTime
 
 		const normalizedGcd = Math.round(
-			gcdLength
-			* ((BASE_GCD / 1000) / normaliseWith)
-			* (1 / speedMod),
-		)
+			Math.round(
+				gcdLength
+				* ((BASE_GCD / 1000) / normaliseWith)
+				* (1 / speedMod),
+			)/10)*10
 
 		this.gcds.push({
 			timestamp: gcdInfo.event.timestamp,
@@ -211,8 +212,18 @@ export default class GlobalCooldown extends Module {
 		// If we don't have cache, need to recaculate it
 		if (this._estimatedBaseGcd === null || gcdLength !== this._estimateGcdCount) {
 			// Calculate the lengths of the GCD
-			const lengths = this.gcds.map(gcd => gcd.normalizedLength)
-
+			let lengths = this.gcds.map(gcd => gcd.normalizedLength)
+			//get the count of how often each length appears and sort it
+			const lengthsHisto = _.countBy(lengths, num =>  num)
+			console.log(lengthsHisto)
+			const lengthsHistoSorted = Object.keys(lengthsHisto).sort((a, b) => lengthsHisto[b] - lengthsHisto[a]).map(x => +x)
+			//take the 3 highest peaks...
+			for (let i = 0; i < 2; i++) {
+				// ... and rebin them to make them 30 ms wide
+				lengths = lengths.map(gcd => Math.abs(gcd - lengthsHistoSorted[i]) <= 10 ? lengthsHistoSorted[i] : gcd)
+			}
+			console.log(lengths)
+			console.log(_.countBy(lengths, num =>  num))
 			// Mode seems to get best results. Using mean in case there's multiple modes.
 			this._estimatedBaseGcd = lengths.length? math.mean(math.mode(lengths)) : MAX_GCD
 			this._estimateGcdCount = gcdLength
