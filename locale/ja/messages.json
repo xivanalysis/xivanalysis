@@ -436,7 +436,7 @@
   "nin.utility.suggestions.no-shade.why": "あなたは影渡を戦闘前や戦闘開始 {0} 間に使用しませんでした。",
   "nin.utility.suggestions.no-smoke.content": "",
   "nin.utility.suggestions.no-smoke.why": "あなたは煙玉を戦闘前や戦闘開始 {0} 間に使用しませんでした。",
-  "pld.about.description": "",
+  "pld.about.description": "白魔と黒魔の隠し子として生まれたあなたは、盾を投げ剣を振り回す魔道士としての輝ける道を選び、皆を助けようとするものです。\n\nこのアナライザーは、敵に[~action/CLEMENCY] をかけない、パーティーの真なる[~action/HOLY_SPIRIT] として恐るべきタンクになるための真理を見出そうとするものです。\n",
   "pld.about.description.warning": "",
   "pld.fightorflight.suggestions.circle-of-scorn.content": "",
   "pld.fightorflight.suggestions.circle-of-scorn.why": "{0, plural, other {# 回}} <0/>の効果時間中に使えませんでした。",
