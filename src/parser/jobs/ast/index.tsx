@@ -27,23 +27,22 @@ export default new Meta({
 				please pop by our Discord channel!</Trans>
 			</Message.Content>
 		</Message>
-		<Message warning icon>
-			<Icon name="warning sign" />
-			<Message.Content>
-				<Trans id="ast.about.description.warning.healer">
-				Currently, for all healers, boss invulnerability checking doesn't function properly. This results in inaccuracy for many time-related functions such as the Always be casting checklist item or DoT uptime.
-				</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.08',
+		to: '5.2',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-04-29'),
+			Changes: () => <>
+				Updated AST for 5.1 & 5.2
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 			date: new Date('2019-10-08'),
 			Changes: () => <>

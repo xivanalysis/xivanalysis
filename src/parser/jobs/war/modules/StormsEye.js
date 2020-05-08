@@ -31,9 +31,9 @@ export default class StormsEye extends Module {
 			by: 'player',
 			abilityId: STATUSES.STORMS_EYE.id,
 		}
-		this.addHook('applybuff', filter, this._onStormsEyeApplication)
-		this.addHook('refreshbuff', filter, this._onStormsEyeApplication)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('applybuff', filter, this._onStormsEyeApplication)
+		this.addEventHook('refreshbuff', filter, this._onStormsEyeApplication)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onStormsEyeApplication(event) {

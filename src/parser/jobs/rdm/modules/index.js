@@ -6,6 +6,7 @@ import Combos from './Combos'
 import MeleeCombos from './MeleeCombos'
 import MovementSkills from './MovementSkills'
 export {DualStatistic} from 'parser/jobs/rdm/statistics/DualStatistic'
+import {Tincture} from 'parser/core/modules/Tincture'
 
 export default [
 	Gauge,
@@ -15,4 +16,5 @@ export default [
 	Combos,
 	MeleeCombos,
 	MovementSkills,
+	Tincture,
 ]

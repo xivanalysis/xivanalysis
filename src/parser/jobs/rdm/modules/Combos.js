@@ -26,9 +26,7 @@ export default class Combos extends CoreCombos {
 		ACTIONS.REDOUBLEMENT.id,
 	]
 	_severityNotEnoughManaActions = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MAJOR,
 	}
 	//Generics, not handled by the rest
 	_severityGenericActions = {

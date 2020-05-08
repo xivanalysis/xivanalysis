@@ -125,7 +125,7 @@ export default class Sen extends Module {
 	}
 
 	protected init() {
-		// Things that give
+
 		this.addEventHook(
 			'cast',
 			{
@@ -145,7 +145,6 @@ export default class Sen extends Module {
 
 		)
 
-		// Things that take
 		this.addEventHook(
 			'cast',
 			{
@@ -324,7 +323,7 @@ export default class Sen extends Module {
 	output() {
 		return <Fragment>
 			<Message>
-				<Trans id="san.sen.rotation-table.message"> This table serves a dual purpose, The table contains all hagakure windows for easier visuals of when/how your sen state was when you used Hagakure in the fight and to highlight any time periods where you overwrote a Sen.
+				<Trans id="sam.sen.rotation-table.message"> This table serves a dual purpose, The table contains all hagakure windows for easier visuals of when/how your sen state was when you used Hagakure in the fight and to highlight any time periods where you overwrote a Sen.
 				</Trans>
 			</Message>
 				<Message warning icon>

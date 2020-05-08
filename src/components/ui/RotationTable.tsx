@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import Rotation from 'components/ui/Rotation'
-import {AbilityEvent} from 'fflogs'
+import {Ability} from 'fflogs'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
@@ -74,7 +74,7 @@ export interface RotationTableEntry {
 	/**
 	 * Rotation to display that occurs during this entry
 	 */
-	rotation: AbilityEvent[]
+	rotation: Array<{ability: Ability}>
 }
 
 interface RotationTableProps {
@@ -160,7 +160,7 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static Row = ({onGoto, targets, notes, notesMap, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) =>
 		<Table.Row>
 			<Table.Cell textAlign="center">
-				<span style={{marginRight: 5}}>{formatDuration(start / 1000)}</span>
+				<span style={{marginRight: 5}}>{formatDuration(start, {secondPrecision: 0})}</span>
 				{typeof onGoto === 'function' && <Button
 					circular
 					compact

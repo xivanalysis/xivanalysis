@@ -8,7 +8,8 @@ import React from 'react'
 
 const HOT_STATUSES = [
 	STATUSES.ASPECTED_HELIOS.id,
-	STATUSES.WHEEL_OF_FORTUNE.id,
+	STATUSES.WHEEL_OF_FORTUNE_DIURNAL.id,
+	STATUSES.WHEEL_OF_FORTUNE_NOCTURNAL.id,
 	STATUSES.ASPECTED_BENEFIC.id,
 	STATUSES.DIURNAL_OPPOSITION.id,
 	STATUSES.DIURNAL_INTERSECTION.id,
@@ -37,9 +38,9 @@ export default class Overheal extends Module {
 	private overhealPet = 0
 
 	protected init() {
-		this.addHook('heal', {by: 'player'}, this.onHeal)
-		this.addHook('heal', {by: 'pet'}, this.onPetHeal)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('heal', {by: 'player'}, this.onHeal)
+		this.addEventHook('heal', {by: 'pet'}, this.onPetHeal)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onHeal(event: HealEvent) {

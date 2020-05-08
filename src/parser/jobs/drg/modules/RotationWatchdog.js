@@ -73,7 +73,7 @@ export default class RotationWatchdog extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
 	}
 
 	_onCast(event) {

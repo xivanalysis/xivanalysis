@@ -37,6 +37,14 @@ export const changelog = [
 		</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
+	{
+		date: new Date('2020-4-23'),
+		Changes: () => <>
+			Expanded feedback on Gnashing Fang combos that do not
+			contain the expected 6 actions.
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,

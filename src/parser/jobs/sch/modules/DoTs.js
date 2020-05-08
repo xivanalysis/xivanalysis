@@ -39,7 +39,7 @@ export default class DoTs extends CoreDoTs {
 		this.checklist.add(new TieredRule({
 			name: <Trans id="sch.dots.checklist.name">Keep your DoT up</Trans>,
 			description: <Trans id="sch.dots.checklist.description">
-				As a Scholar, Biolysis is a notable porition of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.
+				As a Scholar, Biolysis is a notable portion of your damage. Aim to keep it up as much as possible, so long as you can get at least 15 seconds of uptime per application.
 			</Trans>,
 			tiers: SEVERITIES.UPTIME,
 			requirements: [
@@ -61,7 +61,7 @@ export default class DoTs extends CoreDoTs {
 			tiers: SEVERITIES.CLIPPING,
 			value: clipPerMinute,
 			why: <Trans id="sch.dots.suggestions.clipping.why">
-				An average of {this.parser.formatDuration(clipPerMinute * 1000)} of <StatusLink {...STATUSES.BIOLYSIS}/> clipped every minute, for a total of {this.parser.formatDuration(clip[STATUSES.BIOLYSIS.id])} lost to early refreshes.
+				An average of {this.parser.formatDuration(clipPerMinute * 1000)} of <StatusLink {...STATUSES.BIOLYSIS}/> clipped every minute, for a total of {this.parser.formatDuration(clip[STATUSES.BIOLYSIS.id] ?? 0)} lost to early refreshes.
 			</Trans>,
 		}))
 	}

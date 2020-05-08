@@ -1,8 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
+import {Data} from 'parser/core/modules/Data'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
@@ -37,6 +36,7 @@ export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
 
+	@dependency private data!: Data
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 	@dependency private arcanaTracking!: ArcanaTracking
@@ -56,15 +56,26 @@ export default class Draw extends Module {
 
 	private prepullSleeve = false
 
+	private PLAY: number[] = []
+	private ARCANA_STATUSES: number[] = []
+
 	protected init() {
-		this.addHook('cast', {abilityId: ACTIONS.DRAW.id, by: 'player'}, this.onDraw)
-		this.addHook('cast', {abilityId: ACTIONS.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
-		this.addHook('cast', {abilityId: PLAY, by: 'player'}, this.onPlay)
+		PLAY.forEach(actionKey => {
+			this.PLAY.push(this.data.actions[actionKey].id)
+		})
 
-		this.addHook('applybuff', {abilityId: STATUSES.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
-		this.addHook('applybuff', {abilityId: ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+		ARCANA_STATUSES.forEach(statusKey => {
+			this.ARCANA_STATUSES.push(this.data.statuses[statusKey].id)
+		})
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
+		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
+		this.addEventHook('cast', {abilityId: this.PLAY, by: 'player'}, this.onPlay)
+
+		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
+		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private onDraw(event: CastEvent) {
@@ -76,7 +87,7 @@ export default class Draw extends Module {
 
 		} else {
 			// Take holding as from the time it comes off cooldown
-			this.drawDrift = event.timestamp - this.lastDrawTimestamp - (ACTIONS.DRAW.cooldown * 1000)
+			this.drawDrift = event.timestamp - this.lastDrawTimestamp - (this.data.actions.DRAW.cooldown * 1000)
 		}
 
 		// Keep track of total drift time not using Draw
@@ -109,7 +120,7 @@ export default class Draw extends Module {
 
 		} else {
 			// Take holding as from the time it comes off cooldown
-			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - (ACTIONS.SLEEVE_DRAW.cooldown * 1000)
+			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - (this.data.actions.SLEEVE_DRAW.cooldown * 1000)
 		}
 
 		// Keep track of total drift time not using sleeve
@@ -133,13 +144,13 @@ export default class Draw extends Module {
 	private _onComplete() {
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (ACTIONS.SLEEVE_DRAW.cooldown * 1000)) {
-			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + (ACTIONS.SLEEVE_DRAW.cooldown * 1000)))
+		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {
+			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + (this.data.actions.SLEEVE_DRAW.cooldown * 1000)))
 		}
 
 		// If they stopped using Draw at any point in the fight, this'll calculate the drift "accurately"
-		if (this.parser.fight.end_time - this.lastDrawTimestamp > (ACTIONS.DRAW.cooldown * 1000)) {
-			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + ACTIONS.DRAW.cooldown * 1000)))
+		if (this.parser.fight.end_time - this.lastDrawTimestamp > (this.data.actions.DRAW.cooldown * 1000)) {
+			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + this.data.actions.DRAW.cooldown * 1000)))
 		}
 
 		// Max plays:
@@ -152,9 +163,9 @@ export default class Draw extends Module {
 
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const maxSleeveUses = Math.floor((fightDuration - (CARD_DURATION*2)) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000)) + 1
+		const maxSleeveUses = Math.floor((fightDuration - (CARD_DURATION*2)) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
 		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (ACTIONS.DRAW.cooldown * 1000)) + 1
+		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (this.data.actions.DRAW.cooldown * 1000)) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
 		// TODO: Include downtime calculation for each fight??
@@ -162,9 +173,7 @@ export default class Draw extends Module {
 
 		// Confirm they had preprepped a card on pull
 		const pullState = this.arcanaTracking.getPullState()
-		if (pullState.drawState > 0) {
-			this.prepullPrepped = true
-		}
+		this.prepullPrepped = !!pullState.drawState
 
 		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
 
@@ -179,19 +188,19 @@ export default class Draw extends Module {
 				Play as many cards as possible
 			</Trans>,
 			description: <><Trans id="ast.draw.checklist.description">
-				Playing cards will let you collect seals for <ActionLink {...ACTIONS.DIVINATION} /> and contribute to party damage.
+				Playing cards will let you collect seals for <ActionLink {...this.data.actions.DIVINATION} /> and contribute to party damage.
 			</Trans>
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
-				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...ACTIONS.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...ACTIONS.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
 				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
 				new Requirement({
 					name: <Trans id="ast.draw.checklist.requirement.name">
-						<ActionLink {...ACTIONS.PLAY} /> uses
+						<ActionLink {...this.data.actions.PLAY} /> uses
 					</Trans>,
 					value: this.plays,
 					target: theoreticalMaxPlays,
@@ -202,17 +211,17 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't use draw enough
 		*/
-		const drawsMissed = Math.floor(this.drawTotalDrift / (ACTIONS.DRAW.cooldown * 1000))
+		const drawsMissed = Math.floor(this.drawTotalDrift / (this.data.actions.DRAW.cooldown * 1000))
 		if (this.draws > 0 && drawsMissed > 0) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.DRAW.icon,
+				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Use <ActionLink {...ACTIONS.DRAW} /> as soon as its available to maximize the number of cards played.
+						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize the number of cards played.
 				</Trans>,
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,
 				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one=" # use" other="# uses" /> of <ActionLink {...ACTIONS.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+					About <Plural value={drawsMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
 				</Trans>,
 			}))
 		}
@@ -221,9 +230,9 @@ export default class Draw extends Module {
 		*/
 		if (this.draws === 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DRAW.icon,
+				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-no-usage.content">
-						No uses of <ActionLink {...ACTIONS.DRAW} /> at all.
+						No uses of <ActionLink {...this.data.actions.DRAW} /> at all.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.draw-no-usage.why">
 					No draws used.
@@ -235,17 +244,17 @@ export default class Draw extends Module {
 		/*
 			SUGGESTION: Didn't use sleeve draw enough
 		*/
-		const sleevesMissed = Math.floor(this.sleeveTotalDrift / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
+		const sleevesMissed = Math.floor(this.sleeveTotalDrift / (this.data.actions.SLEEVE_DRAW.cooldown * 1000))
 		if (this.sleeveUses > 0 && sleevesMissed > 0) {
 			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.SLEEVE_DRAW.icon,
+				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
-						Use <ActionLink {...ACTIONS.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...ACTIONS.DIVINATION} /> to stack buffs at the same time. <ActionLink {...ACTIONS.LIGHTSPEED} /> can be used to weave card abilities.
+						Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
 				</Trans>,
 				tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
 				value: sleevesMissed,
 				why: <Trans id="ast.draw.suggestions.sleeve-uses.why">
-					About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <ActionLink {...ACTIONS.SLEEVE_DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
+					About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
 				</Trans>,
 			}))
 		}
@@ -254,10 +263,10 @@ export default class Draw extends Module {
 		*/
 		if (this.sleeveUses === 0) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.SLEEVE_DRAW.icon,
+				icon: this.data.actions.SLEEVE_DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.sleeve-no-usage.content">
-						No uses of <ActionLink {...ACTIONS.SLEEVE_DRAW} /> at all.
-						It should be paired with every other <ActionLink {...ACTIONS.DIVINATION} /> to stack buffs at the same time. <ActionLink {...ACTIONS.LIGHTSPEED} /> can be used to weave card abilities.
+						No uses of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> at all.
+						It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
 				</Trans>,
 				why: <Trans id="ast.draw.suggestions.sleeve-no-usage.why">
 					No sleeve draws used.

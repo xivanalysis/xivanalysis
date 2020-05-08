@@ -1,11 +1,12 @@
-import {Event} from 'fflogs'
-import {Dispatcher, EventHook, TimestampHook} from './Dispatcher'
+import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
+import {DeathEvent} from 'fflogs'
 
 /* tslint:disable:no-magic-numbers */
+// TODO: This file should be using @ts-expect-error, not @ts-ignore, once TS3.9 drops
 
-const event: Event = {
+const event: DeathEvent = {
 	timestamp: 50,
-	type: '__test',
+	type: 'death',
 	sourceIsFriendly: false,
 	targetIsFriendly: false,
 
@@ -15,7 +16,7 @@ const event: Event = {
 describe('Dispatcher', () => {
 	let dispatcher: Dispatcher
 	let callback: jest.Mock
-	let eventHook: EventHook<Event>
+	let eventHook: EventHook<DeathEvent>
 	let timestampHook: TimestampHook
 
 	beforeEach(() => {
@@ -43,6 +44,7 @@ describe('Dispatcher', () => {
 	})
 
 	it('does not trigger non-matching hooks', () => {
+		// @ts-ignore
 		dispatcher.addEventHook({...eventHook, event: '__unused'})
 
 		dispatcher.dispatch(event, ['test'])

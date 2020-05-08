@@ -19,6 +19,7 @@ export interface Action {
 	autoAttack?: boolean
 	statusesApplied?: Array<keyof StatusRoot>
 	charges?: number
+	mpCost?: number
 	// TODO: Do I need this still?
 	// [key: string]: unknown
 }

@@ -49,7 +49,7 @@ export default class ShadowFang extends DoTs {
 			},
 			value: this.getClippingAmount(STATUSES.SHADOW_FANG.id),
 			why: <Trans id="nin.shadowfang.suggestions.clipping.why">
-				You lost {this.parser.formatDuration(clip[STATUSES.SHADOW_FANG.id])} of Shadow Fang to early refreshes.
+				You lost {this.parser.formatDuration(clip[STATUSES.SHADOW_FANG.id] ?? 0)} of Shadow Fang to early refreshes.
 			</Trans>,
 		}))
 	}

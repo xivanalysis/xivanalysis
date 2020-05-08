@@ -1,4 +1,4 @@
-import {Event} from 'fflogs'
+import {Event} from 'events'
 import _ from 'lodash'
 import Module from './Module'
 

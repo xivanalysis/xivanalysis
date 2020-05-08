@@ -50,6 +50,13 @@ export const SCH = ensureStatuses({
 		duration: 45,
 	},
 
+	SACRED_SOIL: {
+		id: 1944,
+		name: 'Sacred Soil',
+		icon: 'https://xivapi.com/i/012000/012802.png',
+		duration: 15,
+	},
+
 	EMERGENCY_TACTICS: {
 		id: 792,
 		name: 'Emergency Tactics',
@@ -71,6 +78,13 @@ export const SCH = ensureStatuses({
 		id: 315,
 		name: 'Whispering Dawn',
 		icon: 'https://xivapi.com/i/012000/012826.png',
+		duration: 21,
+	},
+
+	ANGELS_WHISPER: {
+		id: 1874,
+		name: 'Angel\'s Whisper',
+		icon: 'https://xivapi.com/i/012000/012846.png',
 		duration: 21,
 	},
 })

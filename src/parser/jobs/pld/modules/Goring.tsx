@@ -51,7 +51,7 @@ export default class Goring extends DoTs {
 				Avoid refreshing <ActionLink {...ACTIONS.GORING_BLADE} /> significantly before it's expiration.
 			</Trans>,
 			why: <Trans id="pld.goring.suggestions.goringblade.why">
-				{this.parser.formatDuration(clip[STATUSES.GORING_BLADE.id])} of <StatusLink {...STATUSES.GORING_BLADE}/> lost
+				{this.parser.formatDuration(clip[STATUSES.GORING_BLADE.id] ?? 0)} of <StatusLink {...STATUSES.GORING_BLADE}/> lost
 				to early refreshes.
 			</Trans>,
 			tiers: SEVERITIES.CLIPPING,

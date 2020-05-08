@@ -32,7 +32,7 @@ const EXPECTED_ABILITY_EVENTS = [
 	'applydebuffstack',
 	'removebuffstack',
 	'removedebuffstack',
-]
+] as const
 
 export default class BrokenLog extends Module {
 	static handle = 'brokenLog'
@@ -46,7 +46,7 @@ export default class BrokenLog extends Module {
 
 	init() {
 		// Unknown actions are unparseable
-		this.addHook(
+		this.addEventHook(
 			EXPECTED_ABILITY_EVENTS,
 			{by: 'player', abilityId: this.data.actions.UNKNOWN.id},
 			() => {
