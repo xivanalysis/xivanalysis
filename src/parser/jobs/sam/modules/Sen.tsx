@@ -26,9 +26,9 @@ const SEN_ACTIONS = [
 // Setsu = Yuki, Getsu = Gekko Man, Ka = Kasha Oka
 
 const SEN_REMOVERS = [
-        ACTIONS.HIGANBANA.id,
-        ACTIONS.TENKA_GOKEN.id,
-        ACTIONS.MIDARE_SETSUGEKKA.id,
+	ACTIONS.HIGANBANA.id,
+	ACTIONS.TENKA_GOKEN.id,
+	ACTIONS.MIDARE_SETSUGEKKA.id,
 	ACTIONS.HAGAKURE.id,
 ]
 
@@ -44,11 +44,11 @@ const THINGS_WE_WANT_IN_THE_TABLE = [
 	ACTIONS.MANGETSU.id,
 	ACTIONS.OKA.id,
 
-	//Sen Spenders
+	// Sen Spenders
 	ACTIONS.HIGANBANA.id,
-        ACTIONS.TENKA_GOKEN.id,
-        ACTIONS.MIDARE_SETSUGEKKA.id,
-        ACTIONS.HAGAKURE.id,
+	ACTIONS.TENKA_GOKEN.id,
+	ACTIONS.MIDARE_SETSUGEKKA.id,
+	ACTIONS.HAGAKURE.id,
 
 	// I'm leaving these in as they are a way to handle Filler. not the usual way, but a way
 	ACTIONS.ENPI.id,
@@ -63,10 +63,10 @@ const THINGS_WE_WANT_IN_THE_TABLE = [
 const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
-        NONE: {priority: 0, message: 'No errors'},
+	NONE: {priority: 0, message: 'No errors'},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwrote Sen. </Trans>},
-        HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Hagakure. </Trans>},
-        DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> You died. Don't. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
+	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Hagakure. </Trans>},
+	DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> Contains your death. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
 // God this grew outta control real fast
@@ -165,52 +165,49 @@ export default class Sen extends Module {
 	private onSenGen(event: ComboEvent) {
 		const action = event.ability.guid
 
-                // check the sen state, if undefined/not active, make one, I don't know how having 2 hooks fire will handle this, so safety.
-
-  		const lastSenState = this.lastSenState
+		const lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
-			if(event.hasSuccessfulHit === true) {
+			if (event.hasSuccessfulHit === true) {
 
-                        switch (action) {
-                                case ACTIONS.YUKIKAZE.id:
-                                        lastSenState.currentSetsu++
+				switch (action) {
+					case ACTIONS.YUKIKAZE.id:
+					lastSenState.currentSetsu++
 
-                                        if (lastSenState.currentSetsu > 1) {
-                                                lastSenState.overwriteSetsus++
-                                                lastSenState.currentSetsu = 1
-                                                lastSenState.isOverwrite = true
+					if (lastSenState.currentSetsu > 1) {
+						lastSenState.overwriteSetsus++
+						lastSenState.currentSetsu = 1
+						lastSenState.isOverwrite = true
 					}
-                                        break
+					break
 
-                                case ACTIONS.GEKKO.id:
-                                case ACTIONS.MANGETSU.id:
-                                        lastSenState.currentGetsu++
+					case ACTIONS.GEKKO.id:
+					case ACTIONS.MANGETSU.id:
+						lastSenState.currentGetsu++
 
-                                        if (lastSenState.currentGetsu > 1 ) {
-                                                lastSenState.overwriteGetsus++
-                                                lastSenState.currentGetsu = 1
-                                                lastSenState.isOverwrite = true
-                                        }
+						if (lastSenState.currentGetsu > 1 ) {
+							lastSenState.overwriteGetsus++
+							lastSenState.currentGetsu = 1
+							lastSenState.isOverwrite = true
+						}
 
-                                        break
+						break
 
-                                case ACTIONS.KASHA.id:
-                                case ACTIONS.OKA.id:
-                                        lastSenState.currentKa++
+					case ACTIONS.KASHA.id:
+					case ACTIONS.OKA.id:
+						lastSenState.currentKa++
 
-                                        if (lastSenState.currentKa > 1) {
-                                                lastSenState.overwriteKas++
-                                                lastSenState.currentKa = 1
-                                                lastSenState.isOverwrite = true
-					}
-                                        break
-                                }
+						if (lastSenState.currentKa > 1) {
+							lastSenState.overwriteKas++
+							lastSenState.currentKa = 1
+							lastSenState.isOverwrite = true
+						}
 
-                	}
+						break
+				}
+			}
 		}
-
 	}
 
 // Function that handles SenState check, if no senState call the maker and then push to the rotation
@@ -260,11 +257,11 @@ export default class Sen extends Module {
 			if (lastSenState.isDeath === true) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 				lastSenState.isNonStandard = true
-			} 
+			}
 			else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 				lastSenState.isNonStandard = true
-			} 
+			}
 			else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 				lastSenState.isNonStandard = true
@@ -281,10 +278,9 @@ export default class Sen extends Module {
 
 			if (event.ability.guid === ACTIONS.HAGAKURE.id) {
 				lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
-     				
 				lastSenState.isHaga = true
 
-     				this.kenki.modify(lastSenState.kenkiGained)
+				this.kenki.modify(lastSenState.kenkiGained)
 			}
 
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
@@ -298,14 +294,14 @@ export default class Sen extends Module {
 	private onDeath() {
 		const lastSenState = this.lastSenState
 
-  		if (lastSenState != null && lastSenState.end == null) {
+		if (lastSenState != null && lastSenState.end == null) {
 			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
 
 			lastSenState.isDone = true
 			lastSenState.isDeath = true
 			this.senCodeProcess()
-                        lastSenState.end = this.parser.currentTimestamp
-                }
+			lastSenState.end = this.parser.currentTimestamp
+		}
 
 	}
 
