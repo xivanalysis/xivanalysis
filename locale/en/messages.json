@@ -716,7 +716,7 @@
   "sam.ms.suggestions.missedgcd.content": "Try to land 3 GCDs during every <0/> window.",
   "sam.ms.title": "Meikyo Shisui Windows",
   "sam.sen.rotation-table.disclaimer": "This module labels a \"Standard Sen Window\" to be a window with no sen overwrites that ends on a Iaijutsu. Please consult the balance discord's guides and this [infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.",
-  "sam.sen.sen_handling.death": "You died. Don't.",
+  "sam.sen.sen_handling.death": "Contains your death.",
   "sam.sen.sen_handling.hagakure": "Contains a Hagakure.",
   "sam.sen.sen_handling.overwrote_sen": "Contains a Overwrote Sen.",
   "sam.sen.sen_handling.why": "Why Non-Standard",
