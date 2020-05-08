@@ -323,14 +323,13 @@ export default class Sen extends Module {
 	output() {
 		return <Fragment>
 			<Message>
-				<Trans id="sam.sen.rotation-table.message"> This table serves a dual purpose, The table contains all hagakure windows for easier visuals of when/how your sen state was when you used Hagakure in the fight and to highlight any time periods where you overwrote a Sen.
+				<Trans id="sam.sen.rotation-table.message"> This table serves as a way a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
 				</Trans>
 			</Message>
 				<Message warning icon>
 					<Icon name="warning sign"/>
 					<Message.Content>
-						<Trans id="sam.sen.rotation-table.disclaimer">This module labels a "Standard Sen Window" to be a window with no sen overwrites that ends on a Iaijutsu.
-							Please consult the balance discord's guides and this [infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.
+						<Trans id = "sam.sen.rotation-table.disclaimer">This module labels a "Standard Sen Window" to be a window with no Sen overwrites that ends on a Iaijutsu. Please consult The Balance Discord's guides for more details on looping Samurai gameplay.
 						</Trans>
 					</Message.Content>
 				</Message>
