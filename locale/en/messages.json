@@ -530,7 +530,7 @@
   "mnk.fists.suggestions.foe.why": "<0/> was active for {0, plural, one {# GCD} other {# GCDs}}.",
   "mnk.fists.suggestions.fow.content": "Avoid swapping to <0/> while below {MAX_STACKS} stacks until you're about to execute a <1/> skill. <2/> offers more damage until you can get to GL{MAX_FASTER}.",
   "mnk.fists.suggestions.fow.why": "<0/> was activated {0, plural, one {# time} other {# times}} below max stacks.",
-  "mnk.fists.suggestions.stanceless.content": "Fist buffs are one of your biggest DPS contributors, either directly with <0/>, <1/> manipulation with <2/>, and outright more GCDs with <3/>.",
+  "mnk.fists.suggestions.stanceless.content": "Fist buffs are one of your biggest DPS contributors, either directly with <0/>, or outright more GCDs with <1/>.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {# GCD} other {# GCDs}} had no Fists buff active.",
   "mnk.fists.title": "Fists",
   "mnk.forms.suggestions.dropped.content": "Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.",
