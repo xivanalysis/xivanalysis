@@ -107,7 +107,7 @@ export default class Drift extends Module {
 	}
 
 	private onComplete() {
-		const drillDrift = Math.round(this.totalDrift[ACTIONS.DRILL.id] / 1000)
+		const drillDriftSeconds = Math.round(this.totalDrift[ACTIONS.DRILL.id] / 1000)
 		const possibleLostDrills = Math.ceil(this.totalDrift[ACTIONS.DRILL.id] / COOLDOWN_MS[ACTIONS.DRILL.id])
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.DRILL.icon,
@@ -115,13 +115,13 @@ export default class Drift extends Module {
 				<Plural value={possibleLostDrills} one="You may have lost a cast" other="You lost multiple potential casts"/> of <ActionLink {...ACTIONS.DRILL} /> by letting the cooldown drift. Try to always use it as soon as it's off cooldown.
 			</Trans>,
 			tiers: DRIFT_SEVERITY_TIERS,
-			value: drillDrift,
+			value: drillDriftSeconds,
 			why: <Trans id="mch.drift.suggestions.drill-drift.why">
-				Drill was drifted for {drillDrift} seconds in total.
+				Drill was drifted for {drillDriftSeconds} seconds in total.
 			</Trans>,
 		}))
 
-		const anchorDrift = Math.round(this.totalDrift[ACTIONS.AIR_ANCHOR.id] / 1000)
+		const anchorDriftSeconds = Math.round(this.totalDrift[ACTIONS.AIR_ANCHOR.id] / 1000)
 		const possibleLostAnchors = Math.ceil(this.totalDrift[ACTIONS.AIR_ANCHOR.id] / COOLDOWN_MS[ACTIONS.AIR_ANCHOR.id])
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.AIR_ANCHOR.icon,
@@ -129,9 +129,9 @@ export default class Drift extends Module {
 				<Plural value={possibleLostAnchors} one="You may have lost a cast" other="You lost multiple potential casts"/> of <ActionLink {...ACTIONS.AIR_ANCHOR} /> by letting the cooldown drift. Try to always use it as soon as it's off cooldown.
 			</Trans>,
 			tiers: DRIFT_SEVERITY_TIERS,
-			value: anchorDrift,
+			value: anchorDriftSeconds,
 			why: <Trans id="mch.drift.suggestions.anchor-drift.why">
-				Air Anchor was drifted for {anchorDrift} seconds in total.
+				Air Anchor was drifted for {anchorDriftSeconds} seconds in total.
 			</Trans>,
 		}))
 	}
