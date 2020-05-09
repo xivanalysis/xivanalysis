@@ -530,7 +530,7 @@
   "mnk.fists.suggestions.foe.why": "<0/>가 {0, plural, one {#개} other {#개}}의 글쿨 동안 켜져있었습니다.",
   "mnk.fists.suggestions.fow.content": "{MAX_STACKS} 스택 미만인 상태에서 <1/>을 사용하기 전까진 <0/> 전환을 기피 하십시오. <2/>는 {MAX_FASTER} 스택 미만일 경우 오히려 딜이득을 봅니다.",
   "mnk.fists.suggestions.fow.why": "최대 스택미만 상태에서 <0/> 전환하는 실수를 {0, plural, one {# 회} other {# 회}} 하였습니다.",
-  "mnk.fists.suggestions.stanceless.content": "태세는 <0/>에 직접적인 영향을 주거나 <1/>과 <2/>를 연계시키거나 <3/>으로 글쿨기 횟수를 늘리는등 딜 기여에 가장 중요한 요소입니다.",
+  "mnk.fists.suggestions.stanceless.content": "",
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {#개} other {#개}}의 글쿨 동안 아무 태세도 켜지지 않았습니다.",
   "mnk.fists.title": "태세",
   "mnk.forms.suggestions.dropped.content": "품새를 상시 유지하십시오. 돌진기를 사용하거나 보스에 붙어있어야 유지가능하며 실패시 이는 일반적으로 더 큰 문제점이 있기 떄문입니다.",
