@@ -530,7 +530,7 @@
   "mnk.fists.suggestions.foe.why": "<0/> était actif pour {0, plural,one {#GCD}other {#GCDs}}.",
   "mnk.fists.suggestions.fow.content": "Évitez de changer de position à <0/> tant que vous êtes en dessous de {MAX_STACKS} jusqu'à ce que vous soyez sur le point d'exécuter une compétence <1/>. <2/> offre plus de dommages jusqu'à ce que vous puissiez atteindre GL{MAX_FASTER}.",
   "mnk.fists.suggestions.fow.why": "<0/> était actif durant {0, plural,one {fois}other {#fois}} en dessous du niveau max.",
-  "mnk.fists.suggestions.stanceless.content": "Les fist buffs sont l'un de vos plus grands contributeurs de DPS, soit directement avec <0/> ou <1/> manipulé avec <2/> et carrément plus de GCDs avec <3/>.",
+  "mnk.fists.suggestions.stanceless.content": "",
   "mnk.fists.suggestions.stanceless.why": "{0, plural,one {#GCD}other {#GCDs}} n'a pas de buff de poings activé.",
   "mnk.fists.title": "Poings",
   "mnk.forms.suggestions.dropped.content": "Évitez de laisser tomber les formes. Vous devrez peut-être utiliser un espace plus proche ou rester plus près de l'ennemi pour éviter que votre combo ne s'arrête. Cela indique généralement un problème plus important.",
