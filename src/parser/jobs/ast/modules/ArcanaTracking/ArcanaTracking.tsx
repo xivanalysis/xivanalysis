@@ -162,8 +162,7 @@ export default class ArcanaTracking extends Module {
 					targetIsFriendly: true,
 					type: 'cast',
 					timestamp: startTime,
-				} as Event)
-				// Forcing it as Event because unlike in precastAction, TS thinks this is an Event[]
+				})
 			}
 		}
 
