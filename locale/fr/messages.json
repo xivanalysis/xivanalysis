@@ -492,6 +492,8 @@
   "gnb.nomercy.title": "Fenêtre d'utilisation de Sans pitié",
   "mch.about.description": "<0>BOB!<1>fait qu'elle que chose</1></0><2> Ce module vise à vous aider à améliorer votre gameplay du MCH en analysant ce qui est difficile à repérer dans les logs bruts et en vous indiquant des moyens de garder votre rotation serrée, de garder vos outils en charge, de rendre vos fenêtres de flambée aussi solides que possible et de tirer le meilleur parti de la meilleur invocation que vous pouvez avoir actuellement",
   "mch.about.description.warning": "<0>Le module est en cours de travail.</0>Il couvre présentement très peu d'aspect à propos de la manière de jouer du machiniste, et bien que les spécifications ci-dessous devraient être raisonnablement précises, ce système <1>est</1> encore en cours de développement et peut certaines fois être un peu sens dessus dessous. Si vous voyez un problème ou avez des questions/requêtes spécifiques, veuillez nous contacter via notre Discord channel ou signalez-nous un bogue sur notre dépôt github!",
+  "mch.drift.accordion.message": "",
+  "mch.drift.panel-drift": "",
   "mch.drift.suggestions.anchor-drift.content": "",
   "mch.drift.suggestions.anchor-drift.why": "",
   "mch.drift.suggestions.drill-drift.content": "",
