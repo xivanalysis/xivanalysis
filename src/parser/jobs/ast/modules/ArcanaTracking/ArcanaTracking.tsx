@@ -121,13 +121,20 @@ export default class ArcanaTracking extends Module {
 	normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
 		let prepullSleeve = true
+		let prepullSleeveFabbed = false
 		const sleeveDrawLog: CastEvent[] = []
 		for (const event of events) {
+			if (event.timestamp < startTime && event.type === 'cast' && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
+				// sleeve was already fabbed
+				prepullSleeveFabbed = true
+			}
 			if (event.timestamp - startTime >= (this.data.statuses.SLEEVE_DRAW.duration * 1000)
 			) {
 				// End loop if: 1. Max duration of sleeve draw status passed
 				break
-			} else if (event.type === 'cast' && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
+			} else if (event.type === 'cast'
+				&& this.data.actions.SLEEVE_DRAW.id === event.ability.guid
+				&& event.timestamp >= startTime) {
 				// they used sleeve so it can't have been prepull
 				prepullSleeve = false
 			} else if (event.type === 'cast' && this.data.actions.DRAW.id === event.ability.guid) {
@@ -139,7 +146,24 @@ export default class ArcanaTracking extends Module {
 
 		// if they drew 2-3 cards in the first 30 sec, we can assume they had a sleeve draw
 		if (prepullSleeve && _.inRange(sleeveDrawLog.length, SleeveType.TWO_STACK, SleeveType.TWO_STACK + 2)) {
-			this.cardStateLog[0].sleeveState = sleeveDrawLog.length - 1
+			this.cardStateLog[0].sleeveState = sleeveDrawLog.length
+			// prefab a sleeve draw if there isn't already
+			if (!prepullSleeveFabbed) {
+				events.splice(0, 0, {
+					ability: {
+						abilityIcon: sleeveDrawLog.length > 2 ? '019000/019562.png' : '019000/019561.png',
+						guid: 7448,
+						name: 'Sleeve Draw',
+						type: 1,
+					},
+					sourceID: this.parser.player.id,
+					sourceIsFriendly: true,
+					targetID: this.parser.player.id,
+					targetIsFriendly: true,
+					type: 'cast',
+					timestamp: startTime,
+				})
+			}
 		}
 
 		return events
@@ -400,13 +424,7 @@ export default class ArcanaTracking extends Module {
 	private retconSearch(cardActionId: number) {
 		let searchLatest = true
 		const lastLog = _.last(this.cardStateLog) as CardState
-		let lastEvent = lastLog.lastEvent
-		if (lastEvent.type === 'init') {
-			return
-		}
-		lastEvent = lastLog.lastEvent as CastEvent
-
-		const latestActionId = lastEvent.ability.guid
+		const latestActionId = lastLog.lastEvent.type === 'cast' ? lastLog.lastEvent.ability.guid : -1
 
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
@@ -423,8 +441,7 @@ export default class ArcanaTracking extends Module {
 
 		// Looking for those abilities in CARD_GRANTING_ABILITIES that could possibly get us this card
 		let lastIndex = _.findLastIndex(searchLog,
-			stateItem =>
-				stateItem.lastEvent.type === 'cast' && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
+			stateItem => stateItem.lastEvent.type === 'init' || stateItem.lastEvent.type === 'cast' && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
 		)
 
 		// There were no finds of specified abilities, OR it wasn't logged.
