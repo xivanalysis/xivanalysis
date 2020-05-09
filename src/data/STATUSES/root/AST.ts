@@ -260,6 +260,7 @@ export const AST = ensureStatuses({
 		name: 'Sleeve Draw',
 		icon: 'https://xivapi.com/i/019000/019561.png',
 		duration: 30,
+		stacksApplied: 2,
 	},
 
 	// -----
