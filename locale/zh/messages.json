@@ -271,6 +271,8 @@
   "core.home.about.title": "关于XivAnalysis",
   "core.home.analyse": "分析",
   "core.home.paste-url": "粘贴你的Logs日志网址，开始分析",
+  "core.home.report-search.invalid-query": "",
+  "core.home.report-search.unknown-query-error": "",
   "core.i18n.help-translate": "帮助翻译！",
   "core.i18n.hide-overlay": "隐藏本地化遮罩",
   "core.i18n.show-overlay": "显示本地化遮罩",

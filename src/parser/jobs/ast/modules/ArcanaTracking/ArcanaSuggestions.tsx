@@ -79,7 +79,12 @@ export default class ArcanaSuggestions extends Module {
 		}
 
 		this.cardLogs = this.arcanaTracking.cardLogs.map(artifact => {
-			const target = artifact.lastEvent.targetID !== this.parser.player.id ? this.combatants.getEntity(artifact.lastEvent.targetID) : this.combatants.selected
+			const targetId = artifact.lastEvent.type !== 'init'
+				? artifact.lastEvent.targetID
+				: undefined
+			const target = targetId !== this.parser.player.id
+				? this.combatants.getEntity(targetId)
+				: this.combatants.selected
 
 			const cardLog: CardLog = {
 				...artifact,
@@ -123,7 +128,7 @@ export default class ArcanaSuggestions extends Module {
 					</Table.Header>
 					<Table.Body>
 						{this.cardLogs.map(artifact => {
-							if (artifact.lastEvent.type === 'pull') {
+							if (artifact.lastEvent.type === 'init') {
 								return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
 										<Table.Cell>
 											<Button

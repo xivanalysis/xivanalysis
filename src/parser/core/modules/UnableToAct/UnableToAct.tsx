@@ -1,30 +1,29 @@
 import Module, {dependency} from 'parser/core/Module'
 import {STATUS_IDS} from './statusIds'
-import {AbilityEvent, Event, AbilityType} from 'fflogs'
+import {AbilityEvent} from 'fflogs'
 import {SimpleRow, Timeline, SimpleItem} from '../Timeline'
 import React from 'react'
-import {Data} from '../Data'
+import {CompleteEvent} from 'parser/core/Parser'
 
 interface UTADowntime {
 	depth: number
 	start: number
 	end: number
 	applyEvents: AbilityEvent[]
-	removeEvents: AbilityEvent[]
+	removeEvents: Array<AbilityEvent | CompleteEvent>
 }
 
 export default class UnableToAct extends Module {
 	static handle = 'unableToAct'
 	static debug = false
 
-	@dependency private readonly data!: Data
 	@dependency private readonly timeline!: Timeline
 
 	private downtimes: UTADowntime[] = []
 	private current?: UTADowntime
 
 	protected init() {
-		const filter = {abilityId: STATUS_IDS}
+		const filter = {abilityId: STATUS_IDS, to: 'player'} as const
 		this.addEventHook('applybuff', filter, this.onApply)
 		this.addEventHook('applydebuff', filter, this.onApply)
 		this.addEventHook('removebuff', filter, this.onRemove)
@@ -47,7 +46,7 @@ export default class UnableToAct extends Module {
 		this.current = downtime
 	}
 
-	private onRemove(event: AbilityEvent) {
+	private onRemove(event: AbilityEvent | CompleteEvent) {
 		const downtime = this.current
 		if (!downtime) { return }
 
@@ -61,20 +60,11 @@ export default class UnableToAct extends Module {
 		}
 	}
 
-	private onComplete(event: Event) {
+	private onComplete(event: CompleteEvent) {
 		// If there's a current downtime, just force clear it
-		const unknown = this.data.actions.UNKNOWN
 		if (this.current) {
 			for (let i = this.current.depth; i > 0; i--) {
-				this.onRemove({
-					...event,
-					ability: {
-						abilityIcon: unknown.icon,
-						guid: unknown.id,
-						name: unknown.name,
-						type: AbilityType.SPECIAL,
-					},
-				})
+				this.onRemove(event)
 			}
 		}
 

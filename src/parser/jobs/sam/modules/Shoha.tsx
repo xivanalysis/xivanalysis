@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
@@ -10,12 +10,11 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {BuffEvent, CastEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import {ComboEvent} from 'parser/core/modules/Combos'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions from 'parser/core/modules/Suggestions'
 
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,

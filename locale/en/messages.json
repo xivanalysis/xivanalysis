@@ -271,6 +271,8 @@
   "core.home.about.title": "About xivanalysis",
   "core.home.analyse": "Analyse",
   "core.home.paste-url": "Paste your log URL to get started",
+  "core.home.report-search.invalid-query": "The provided query does not match any of the expected formats.",
+  "core.home.report-search.unknown-query-error": "An unknown error occured when parsing the provided query.",
   "core.i18n.help-translate": "Help translate!",
   "core.i18n.hide-overlay": "Hide i18n overlay",
   "core.i18n.show-overlay": "Show i18n overlay",
