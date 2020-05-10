@@ -35,10 +35,10 @@ export function formatDuration(duration: number, options: {
 	const seconds = duration % 60
 	const minutes = (duration < 0) ? Math.ceil(duration / 60) : Math.floor(duration / 60)
 	if (minutes === 0 && options.hideMinutesIfZero) {
-		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 1, maximumFractionDigits: precision})
+		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 1, maximumFractionDigits: precision, minimumFractionDigits: precision})
 		return `${secondsFormatter.format(seconds)}s`
 	} else {
-		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision})
+		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision, minimumFractionDigits: precision})
 		return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(Math.abs(seconds))}`
 	}
 	/* tslint:enable:no-magic-numbers */
