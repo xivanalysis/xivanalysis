@@ -2,6 +2,7 @@ import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Drift from './Drift'
 import Gauge from './Gauge'
+import GeneralCDDowntime from './GeneralCDDowntime'
 import Heat from './Heat'
 import YassQueen from './YassQueen'
 import Reassemble from './Reassemble'
@@ -11,6 +12,7 @@ export default [
 	Cooldowns,
 	Drift,
 	Gauge,
+	GeneralCDDowntime,
 	Heat,
 	Reassemble,
 	Wildfire,
