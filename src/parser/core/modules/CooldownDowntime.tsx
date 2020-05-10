@@ -73,8 +73,8 @@ export abstract class CooldownDowntime extends Module {
 	private usages = new Map<CooldownGroup, CastEvent[]>()
 	private resets = new Map<CooldownGroup, CastEvent[]>()
 
-	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your OGCDs</Trans>
-	protected checklistDescription = <Trans id="core.cooldownDowntime.ogcd-cd-metric">Always make sure to use your OGCDs
+	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
+	protected checklistDescription = <Trans id="core.cooldownDowntime.ogcd-cd-metric">Always make sure to use your abilities
 		when they are available, but do not clip your GCD to use them.</Trans>
 	protected checklistTarget = 95
 

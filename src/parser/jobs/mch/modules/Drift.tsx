@@ -115,7 +115,7 @@ export default class Drift extends Module {
 				<Trans id="mch.drift.accordion.message">
 					<ActionLink {...ACTIONS.DRILL}/> and <ActionLink {...ACTIONS.AIR_ANCHOR}/> are your strongest GCDs and ideally they should always be kept on cooldown,
 					unless you need to insert a filler GCD to adjust for skill speed. Avoid casting <ActionLink {...ACTIONS.HYPERCHARGE}/> if
-					Drill or Air Anchor will come off cooldown within 8-10 seconds.
+					Drill or Air Anchor will come off cooldown within 8 seconds.
 				</Trans>
 			</Message>
 			<Accordion

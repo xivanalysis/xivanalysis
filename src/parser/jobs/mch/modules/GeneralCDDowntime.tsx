@@ -21,6 +21,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		cooldowns: [ACTIONS.AIR_ANCHOR],
 		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
 		firstUseOffset: 9000,
+		// Currently, this property is not used due to the low reliability of GCD estimates.
 		// isAffectedBySpeed: true,
 	}, {
 		cooldowns: [
@@ -39,9 +40,4 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		firstUseOffset: 3000,
 		resetBy: {actions: [ACTIONS.HEAT_BLAST], refundAmount: 15000},
 	}]
-
-	checklistName = <Trans id="mch.cooldownDowntime.name">Use your cooldowns</Trans>
-	checklistDescription = <Trans id="mch.cooldownDowntime.suggestion">
-		Always make sure to use your abilities when they are available, but do not clip or delay your GCD to use them.
-	</Trans>
 }
