@@ -1,4 +1,4 @@
-import {Event} from 'fflogs'
+import {Event} from 'events'
 import stable from 'stable'
 
 const EVENT_TYPE_ORDER: {[key: string]: number} = {

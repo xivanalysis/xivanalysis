@@ -4,12 +4,13 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {Event} from 'events'
 
 const SEVERITY_STACK_COUNT = {
 	1: SEVERITY.MEDIUM,

@@ -4,7 +4,8 @@ import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import {Actor, Event, Fight, Pet} from 'fflogs'
+import type {Event} from 'events'
+import type {Actor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
@@ -25,6 +26,21 @@ export interface Result {
 	name: string | MessageDescriptor
 	mode: DISPLAY_MODE
 	markup: React.ReactNode
+}
+
+export interface InitEvent {
+	type: 'init'
+	timestamp: number
+}
+export interface CompleteEvent {
+	type: 'complete'
+	timestamp: number
+}
+
+declare module 'events' {
+	interface EventTypeRepository {
+		parser: InitEvent | CompleteEvent
+	}
 }
 
 class Parser {
@@ -199,14 +215,14 @@ class Parser {
 		}
 	}
 
-	private *iterateEvents(events: Event[]) {
+	private *iterateEvents(events: Event[]): Generator<Event, void, undefined> {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
-		yield this.hydrateFabrication({
+		yield {
 			type: 'init',
 			timestamp: this.fight.start_time,
-		})
+		}
 
 		let obj = eventIterator.next()
 		while (!obj.done) {
@@ -220,31 +236,14 @@ class Parser {
 		}
 
 		// Finish with 'complete' fab
-		yield this.hydrateFabrication({
+		yield {
 			type: 'complete',
 			timestamp: this.fight.end_time,
-		})
-	}
-
-	hydrateFabrication(event: Partial<Event>): Event {
-		const clone = Object.assign({
-			// Provide default fields
-			timestamp: this.currentTimestamp,
-			type: 'fabrication',
-			sourceID: -1,
-			sourceIsFriendly: true,
-			targetID: -1,
-			targetInstance: -1,
-			targetIsFriendly: true,
-		}, event)
-		if (Object.getPrototypeOf(event)) {
-			Object.setPrototypeOf(clone, Object.getPrototypeOf(event))
 		}
-		return clone
 	}
 
-	fabricateEvent(event: Partial<Event>) {
-		this._fabricationQueue.push(this.hydrateFabrication(event))
+	fabricateEvent(event: Event) {
+		this._fabricationQueue.push(event)
 	}
 
 	private _setModuleError(mod: string, error: Error) {
@@ -439,20 +438,20 @@ class Parser {
 	// Utilities
 	// -----
 
-	byPlayer(event: Event, playerId = this.player.id) {
+	byPlayer(event: {sourceID?: number}, playerId = this.player.id) {
 		return event.sourceID === playerId
 	}
 
-	toPlayer(event: Event, playerId = this.player.id) {
+	toPlayer(event: {targetID?: number}, playerId = this.player.id) {
 		return event.targetID === playerId
 	}
 
-	byPlayerPet(event: Event, playerId = this.player.id) {
+	byPlayerPet(event: {sourceID?: number}, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
 		return pet && pet.petOwner === playerId
 	}
 
-	toPlayerPet(event: Event, playerId = this.player.id) {
+	toPlayerPet(event: {targetID?: number}, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
 		return pet && pet.petOwner === playerId
 	}
@@ -462,7 +461,7 @@ class Parser {
 	}
 
 	formatDuration(duration: number, secondPrecision?: number) {
-		return formatDuration(duration, {hideMinutesIfZero: true})
+		return formatDuration(duration, {secondPrecision, hideMinutesIfZero: true, showNegative: true})
 	}
 
 	/**

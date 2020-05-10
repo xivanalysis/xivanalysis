@@ -23,7 +23,7 @@ class FightItem extends Component {
 		const {
 			id,
 			kill, fightPercentage,
-			start_time, end_time,
+			start_time = 0, end_time = start_time,
 			name,
 		} = this.props.fight
 

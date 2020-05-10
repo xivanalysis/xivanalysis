@@ -102,7 +102,7 @@ export default class DoTs extends Module {
 		// This normalises clipping as seconds clipped per minute, since some level of clipping is expected and we need tiers that work for both long and short fights
 		const fightDurationMillis = (this.parser.fightDuration - this.invuln.getInvulnerableUptime())
 		// eslint-disable-next-line no-magic-numbers
-		const clipSecsPerMin = Math.round((this._clip[statusId] * 60) / fightDurationMillis)
+		const clipSecsPerMin = Math.round(((this._clip[statusId] ?? 0) * 60) / fightDurationMillis)
 		return clipSecsPerMin
 	}
 }
