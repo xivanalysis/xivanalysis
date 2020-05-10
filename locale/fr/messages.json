@@ -577,7 +577,7 @@
   "nin.huton.checklist.description.warning": "Étant donné que Fûton est maintenant une jauge au lieu d'un buff, veuillez garder en tête que ceci n'est qu'un estimé, et non une valeur exacte. Ceci s'applique également pour chaque suggestions qui sont en lien avec Fûton.",
   "nin.huton.checklist.name": "Gardez le buff de Fûton le plus possible",
   "nin.huton.checklist.requirement.name": "Temps d'activité total de <0/>",
-  "nin.huton.suggestions.clipping.content": "Évitez d'utiliser <0/> quand il y a plus de 40 secondes restantes à <1/>. L'excès de temps est gaspillé, alors vos deux autres finisseurs de combos sont de meilleures options.",
+  "nin.huton.suggestions.clipping.content": "",
   "nin.huton.suggestions.clipping.why": "Vous avez dépassé le maximum de Fûton de {0} car vous avez lancé Perce-armure trop tôt.",
   "nin.huton.suggestions.futile-ac.content": "Évitez d'utiliser <0/> quand <1/> est inactif, car cela n'a aucun bénéfice et fait moins de DPS que vous autres finisseurs de combos.",
   "nin.huton.suggestions.futile-ac.why": "Vous avez utilisé Perce-Armure {futileArmorCrushes, plural,one {# fois} other {# fois}} quand Fûton était inactif.",
