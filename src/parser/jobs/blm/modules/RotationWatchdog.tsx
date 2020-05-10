@@ -3,13 +3,13 @@ import {Plural, Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -20,7 +20,7 @@ import UnableToAct from 'parser/core/modules/UnableToAct'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {BLM_GAUGE_EVENT} from './Gauge'
+import {BLM_GAUGE_EVENT, BLMGaugeEvent} from './Gauge'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -143,20 +143,6 @@ class Cycle {
 	public overrideErrorCode(code: {priority: number, message: TODO}) {
 		this._errorCode = code
 	}
-}
-
-// TS typedef for BLM Gauge events so it doesn't choke
-// TODO: Move to Gauge if that gets converted to TS
-interface BLMGaugeEvent extends Event {
-	type: symbol,
-	timestamp: number,
-	insertAfter: number,
-	astralFire: number,
-	umbralIce: number,
-	umbralHearts: number,
-	enochian: boolean,
-	polyglot: number,
-	lastGaugeEvent: BLMGaugeEvent,
 }
 
 // typedef for the subset of the data contained in BLMGaugeEvent that we're going to keep track of for suggestions

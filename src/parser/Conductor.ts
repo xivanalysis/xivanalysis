@@ -4,7 +4,6 @@ import {Actor, Fight} from 'fflogs'
 import {Report} from 'store/report'
 import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
-import {Meta} from './core/Meta'
 import Parser, {Result} from './core/Parser'
 
 export class Conductor {
