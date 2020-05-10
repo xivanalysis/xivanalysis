@@ -5,19 +5,6 @@ export const NIN = ensureActions({
 	// Player GCDs
 	// -----
 
-	AEOLIAN_EDGE: {
-		id: 2255,
-		name: 'Aeolian Edge',
-		icon: 'https://xivapi.com/i/000000/000605.png',
-		onGcd: true,
-		potency: 100,
-		combo: {
-			from: 2242,
-			potency: 480,
-			end: true,
-		},
-	},
-
 	ARMOR_CRUSH: {
 		id: 3563,
 		name: 'Armor Crush',
