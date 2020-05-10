@@ -6,7 +6,7 @@ export const NIN = ensureActions({
 	// -----
 
 	AEOLIAN_EDGE: {
-		id: 3563,
+		id: 2255,
 		name: 'Aeolian Edge',
 		icon: 'https://xivapi.com/i/000000/000605.png',
 		onGcd: true,
