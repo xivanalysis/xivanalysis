@@ -878,10 +878,7 @@
   "whm.ogcds.suggestions.why": "총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.suggestions.whyHeld": "스킬 사용을 총 {0} 초를 미루어 총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.title": "논글로벌 기술",
-  "whm.overheal.requirement.all": "오버 힐 (전체)",
-  "whm.overheal.requirement.hot": "오버 힐 (지속 힐)",
-  "whm.overheal.requirement.nonhot": "오버 힐 (단일 힐)",
-  "whm.overheal.rule.description": "대상의 최대 체력 이상의 힐을 하는것을 피하십시오. 일부 오버힐은 불가피하지만 오버힐 자체는 이득이 없을뿐더러 적개심만 올립니다. 효율적 마나관리를 위해 효율적으로 힐을 하십시오.",
-  "whm.overheal.rule.name": "오버힐을 피하세요",
+  "whm.overheal.assize.name": "",
+  "whm.overheal.hot.name": "",
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다."
 }
