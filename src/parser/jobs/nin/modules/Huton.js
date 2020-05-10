@@ -159,7 +159,7 @@ export default class Huton extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HUTON.icon,
 			content: <Trans id="nin.huton.suggestions.clipping.content">
-				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.
+				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so using <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> is typically the better option.
 			</Trans>,
 			tiers: {
 				5000: SEVERITY.MINOR,
