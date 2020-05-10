@@ -1,12 +1,10 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import React from 'react'
 
 // Strict downtime allowance for drill/bio blaster/air anchor
-const DOWNTIME_ALLOWED_GCD = 500
+const DOWNTIME_ALLOWED_GCD = 100
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	trackedCds = [ {
@@ -21,7 +19,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		firstUseOffset: 0,
 	}, {
 		cooldowns: [ACTIONS.AIR_ANCHOR],
-		allowedAverageDowntime: 100,
+		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
 		firstUseOffset: 9000,
 		// isAffectedBySpeed: true,
 	}, {
@@ -29,7 +27,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 			ACTIONS.DRILL,
 			ACTIONS.BIOBLASTER,
 		],
-		allowedAverageDowntime: 100,
+		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
 		firstUseOffset: 0,
 		// isAffectedBySpeed: true,
 	}, {
