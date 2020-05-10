@@ -283,7 +283,7 @@
   "core.interrupts.table.time": "시간",
   "core.interrupts.title": "취소된 시전 기술들",
   "core.overheal.direct.name": "직격",
-  "core.overheal.requirement.all": "",
+  "core.overheal.requirement.all": "종합 (전체)",
   "core.overheal.rule.description": "오버힐을 자제하세요. 오버힐이 될 것 같으면 캐스팅을 끊고, 동료 힐러와 마나관리에 신경쓰세요.",
   "core.overheal.rule.name": "오버힐을 피하세요.",
   "core.overheal.suggestion.content": "오버힐을 자제하세요. 오버힐이 될 것 같으면 캐스팅을 끊고, 동료 힐러와 마나관리에 신경쓰세요.",
@@ -775,7 +775,7 @@
   "sch.interrupts.suggestion.content": "가능하면 이동을 최소화 할 수 있는 위치를 선점하십시오. 슬라이드 캐스팅을 적극적으로 활용하면 이동시 강제되는 <0/> 사용 혹은 마염법 시전이 취소되는 상황을 피할 수 있습니다.",
   "sch.overheal.hot.name": "야전치유진",
   "sch.overheal.pet.name": "요정",
-  "sch.overheal.pethot.name": "",
+  "sch.overheal.pethot.name": "요정의 시간당 힐량",
   "sch.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. 적용되는 스킬은 즉시 시전이 되므로 <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다.",
   "sch.weaving.content": "<0/>과 <1/>을 활용하여 논글쿨기를 끼워넣으십시오. 무리하여 글쿨 사이의 논글쿨기 횟수를 초과할 경우 오히려 글쿨기가 밀려 전투 적용시간이 줄어들게됩니다. <2><3/></2> 모듈을 아래에서 확인하여 자세하게 알아보십시오.",
   "smn.about.description": "\n이 분석기는 쓸데없이 카벙클을 갈구지 않고도 손쉽게 딜향상을 꾀할 수 있도록 분석할 뿐만 아니라 여러 상황들을 자세하게 분석하여 일목요연하게 정리해드립니다. \n\n소환사 플레이 특성상 매우 많은 분석 사항들이 보일 수 있습니다만 조바심을 갖지 마시고 차근차근 하나 둘씩 개선하십시오.\n\n이이 소환사에 대해 자세히 알고 싶으시다면 아크모닝 [Akhmorning] (http://www.akhmorning.com/guide/intro/) 혹은 [The Balance](https://thebalanceffxiv.com/)에서 가이드를 확인해보시고 #smn_questions channel에서 질문해주십시오.\n",
@@ -878,7 +878,7 @@
   "whm.ogcds.suggestions.why": "총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.suggestions.whyHeld": "스킬 사용을 총 {0} 초를 미루어 총 시전 기회 {maxUses} 회 중 {missed} 회를 놓쳤습니다.",
   "whm.ogcds.title": "논글로벌 기술",
-  "whm.overheal.assize.name": "",
-  "whm.overheal.hot.name": "",
+  "whm.overheal.assize.name": "심판",
+  "whm.overheal.hot.name": "시간당 힐량",
   "whm.swiftcast.missed.suggestion.content": "<0/> 지속시간이 만료되기전에 사용하십시오. <1/>과 병행하여 빠른 부활 혹은 <2/>와 병행하여 논글쿨기를 끼워넣는 응용을 할 수 있습니다."
 }
