@@ -246,7 +246,7 @@
   "core.combos.rotationtable.header.reason": "Reason",
   "core.combos.title": "Combo Issues",
   "core.combos.why": "{0, plural, one {You misused # combo action.} other {You misused # combo actions.}}",
-  "core.cooldownDowntime.ogcd-cd-metric": "Always make sure to use your abilities when they are available, but do not clip your GCD to use them.",
+  "core.cooldownDowntime.ogcd-cd-metric": "Always make sure to use your actions when they are available, but do not clip your GCD to use them.",
   "core.cooldownDowntime.title": "Cooldown Downtime",
   "core.cooldownDowntime.use-ogcd-cds": "Use your cooldowns",
   "core.dblink.loading": "Loading...",
