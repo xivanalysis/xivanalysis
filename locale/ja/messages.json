@@ -577,7 +577,7 @@
   "nin.huton.checklist.description.warning": "風遁の術は現在バフではなくジョブHUDになっているため、正確な値ではなく、推定値であることをご理解ください。これは他の風遁関連の提案にもあてはまります。",
   "nin.huton.checklist.name": "風遁の術を切らさないようにしてください。",
   "nin.huton.checklist.requirement.name": "アクティブ率: <0/>",
-  "nin.huton.suggestions.clipping.content": "<1/>の残り時間が40秒を超えている場合は<0/>を使用しないようにしましょう。余った時間を無駄にしてしまうので、他のコンボを使用した方が一般的には良い選択肢になります。",
+  "nin.huton.suggestions.clipping.content": "",
   "nin.huton.suggestions.clipping.why": "",
   "nin.huton.suggestions.futile-ac.content": "<1/>の効果中でないときに<0/>を使用する事は他のコンボよりもメリットがなく、DPSが低くなるため使用を避けましょう。",
   "nin.huton.suggestions.futile-ac.why": "強甲破点突を{futileArmorCrushes, plural, other {# 回}} 風遁の術が切れているときに使用しました。",
