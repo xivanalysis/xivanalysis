@@ -82,7 +82,7 @@ export default class Drift extends Module {
 	}
 
 	private onCast(event: CastEvent) {
-		for (const [, window] of Object.entries(this.currentWindows)) {
+		for (const window of Object.values(this.currentWindows)) {
 			window.addGcd(event)
 		}
 	}
