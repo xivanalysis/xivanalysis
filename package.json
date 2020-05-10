@@ -42,8 +42,7 @@
     "format": "minimal"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0",
-    "@babel/parser": "7.7.5"
+    "babel-core": "7.0.0-bridge.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
