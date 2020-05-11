@@ -13,18 +13,20 @@ const EVENT_TYPE_ORDER: {[key: string]: number} = {
 	damage: -0.5,
 	heal: -0.5,
 	default: 0,
+	// Keep apply/remove/refresh (de)buff events in the same order as they were originally sent by the FFLogs API
 	applybuff: 1,
 	applybuffstack: 1,
 	applydebuff: 1,
 	applydebuffstack: 1,
+	removebuff: 1,
+	removebuffstack: 1,
+	removedebuff: 1,
+	removedebuffstack: 1,
+	refreshbuff: 1,
+	refreshdebuff: 1,
+	// Since normalised apply/removebuff events will be generated in the same order as the underlying events were presented, preserve that order
 	normalisedapplybuff: 1.5,
-	removebuff: 2,
-	removebuffstack: 2,
-	removedebuff: 2,
-	removedebuffstack: 2,
-	normalisedremovebuff: 2.5,
-	refreshbuff: 3,
-	refreshdebuff: 3,
+	normalisedremovebuff: 1.5,
 }
 
 export function sortEvents(events: Event[]) {
