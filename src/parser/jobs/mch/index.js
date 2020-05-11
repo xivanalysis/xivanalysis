@@ -25,8 +25,14 @@ export default new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-05-10'),
+		Changes: () => <>Added a module for tracking GCD drift and a 'Use your cooldowns' checklist item.</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2019-07-23'),
 		Changes: () => <>Added a module for tracking Automaton Queen use.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],
