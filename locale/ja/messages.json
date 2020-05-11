@@ -636,7 +636,7 @@
   "pld.fightorflight.suggestions.ogcds.why": "{missedOgcds, plural, other {# 回}} <0/>の効果時間中に使えませんでした。",
   "pld.fightorflight.table.header.gcds": "GCD回",
   "pld.fightorflight.title": "ファイト・オブ・フライトの使用状況",
-  "pld.goring.checklist.goringblade.description": "パラディンにとって<0/>は継続ダメージのかなりの部分を占めており、最大ダメージを出すためには可能な限り維持している必要があります。",
+  "pld.goring.checklist.goringblade.description": "ナイトにとって<0/>は継続ダメージのかなりの部分を占めており、最大ダメージを出すためには可能な限り維持している必要があります。",
   "pld.goring.checklist.goringblade.requirement.uptime": "アクティブ率: <0/>",
   "pld.goring.suggestions.goringblade.content": "以前に付与した <0/> の時間が十分な場合、更新を控えて下さい。",
   "pld.goring.suggestions.goringblade.why": "早すぎる更新により{0}回の<0/>を失いました。",
