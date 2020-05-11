@@ -16,10 +16,11 @@ import Downtime from 'parser/core/modules/Downtime'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {getDataBy} from 'data'
 
 // Slightly different than normal severity. Start at minor in case it's just a math error, but upgrade
 // Severity with every additional calculated drift since it's a more important issue than others
@@ -47,14 +48,17 @@ const EXPECTED_DANCE_MOVE_COUNT = {
 	[-1]: 0,
 }
 
+// All of the dance moves have the same cooldown, so we'll just use one of them for this...
+const DANCE_MOVE_COOLDOWN_MILLIS = ACTIONS.JETE.cooldown * 1000
+
 const STEP_COOLDOWN_MILLIS = {
 	[ACTIONS.STANDARD_STEP.id]: ACTIONS.STANDARD_STEP.cooldown * 1000,
 	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown * 1000,
 }
 
 class Dance {
-	start: number
 	end?: number
+	initiatingStep: CastEvent
 	rotation: CastEvent[] = []
 	dancing: boolean = false
 	resolved: boolean = false
@@ -71,17 +75,28 @@ class Dance {
 		const actualFinish = _.last(this.rotation)
 		let expectedFinish = -1
 		if (actualFinish) {
-			if (TECHNICAL_FINISHES.includes(actualFinish.ability.guid)) {
+			if (this.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id) {
 				expectedFinish =  ACTIONS.QUADRUPLE_TECHNICAL_FINISH.id
-			} else if (STANDARD_FINISHES.includes(actualFinish.ability.guid)) {
+			} else if (this.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id) {
 				expectedFinish = ACTIONS.DOUBLE_STANDARD_FINISH.id
 			}
 		}
 		return expectedFinish
 	}
 
-	constructor(start: number) {
-		this.start = start
+	public get expectedEndTime(): number {
+		const actionData = getDataBy(ACTIONS, 'id', this.initiatingStep.ability.guid) as TODO
+		return this.start + actionData.gcdRecast * 1000
+			+ EXPECTED_DANCE_MOVE_COUNT[this.initiatingStep.ability.guid] * DANCE_MOVE_COOLDOWN_MILLIS
+			+ 1000 // Additional 1s leniency to account for network latency
+	}
+
+	public get start(): number {
+		return this.initiatingStep.timestamp
+	}
+
+	constructor(danceEvent: CastEvent) {
+		this.initiatingStep = danceEvent
 		this.dancing = true
 	}
 }
@@ -126,7 +141,7 @@ export default class DirtyDancing extends Module {
 	}
 
 	private addDanceToHistory(event: CastEvent): Dance {
-		const newDance = new Dance(event.timestamp)
+		const newDance = new Dance(event)
 		newDance.rotation.push(event)
 		this.danceHistory.push(newDance)
 		const stepId = event.ability.guid
@@ -180,8 +195,8 @@ export default class DirtyDancing extends Module {
 		const finisher = dance.rotation[dance.rotation.length-1]
 		dance.end = finisher.timestamp
 
-		// Count dance as dirty if we didn't get the expected finisher
-		if (finisher.ability.guid !== dance.expectedFinishId) {
+		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended before we could have
+		if (finisher.ability.guid !== dance.expectedFinishId && this.parser.fight.end_time < dance.expectedEndTime) {
 			dance.dirty = true
 		}
 		// If the finisher didn't hit anything, and something could've been, ding it.
@@ -289,6 +304,36 @@ export default class DirtyDancing extends Module {
 				<Plural value={driftedTechnicals} one="# Technical Step was" other="# Technical Steps were"/> lost due to drift.
 			</Trans>,
 		}))
+
+		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id).length
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.STANDARD_STEP.icon,
+			content: <Trans id="dnc.dirty-dancing.suggestions.zero-standard.content">
+				Using <ActionLink {...ACTIONS.STANDARD_FINISH} /> without completing any steps provides no damage buff to you and your <StatusLink {...STATUSES.DANCE_PARTNER} />, which is a core part of the job. Make sure to perform your dances correctly.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
+			},
+			value: zeroStandards,
+			why: <Trans id="dnc.dirty-dancing.suggestions.zero-standard.why">
+				<Plural value={zeroStandards} one="# Standard Step was" other="# Standard Steps were"/> completed with no dance steps.
+			</Trans>,
+		}))
+
+		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id).length
+		if (zeroTechnicals > 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.TECHNICAL_STEP.icon,
+				content: <Trans id="dnc.dirty-dancing.suggestions.zero-technical.content">
+					Using <ActionLink {...ACTIONS.TECHNICAL_FINISH} /> without completing any steps provides no damage buff to you and your party, which is a core part of the job. Make sure to perform your dances correctly.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="dnc.dirty-dancing.suggestions.zero-technical.why">
+					<Plural value={zeroTechnicals} one="# Technical Step was" other="# Technical Steps were"/> completed with no dance steps.
+				</Trans>,
+			}))
+		}
 	}
 
 	output() {
