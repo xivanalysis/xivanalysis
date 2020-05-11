@@ -26,7 +26,9 @@ const EVENT_TYPE_ORDER: {[key: string]: number} = {
 	refreshdebuff: 1,
 	// Since normalised apply/removebuff events will be generated in the same order as the underlying events were presented, preserve that order
 	normalisedapplybuff: 1.5,
+	normalisedapplydebuff: 1.5,
 	normalisedremovebuff: 1.5,
+	normalisedremovedebuff: 1.5,
 }
 
 export function sortEvents(events: Event[]) {
