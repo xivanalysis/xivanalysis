@@ -305,7 +305,8 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
-		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id).length
+		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
+			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.STANDARD_STEP.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.zero-standard.content">
@@ -321,7 +322,8 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
-		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id).length
+		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id &&
+			_.last(dance.rotation)?.ability.guid === ACTIONS.TECHNICAL_FINISH.id).length
 		if (zeroTechnicals > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TECHNICAL_STEP.icon,
