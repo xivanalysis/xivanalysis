@@ -49,13 +49,11 @@ const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	cast.ability.guid = 1
 	return cast
 }
-const precastSyntheticCast = (timestamp: number): CastEvent => {
-	return {
+const precastSyntheticCast = (timestamp: number): CastEvent => ({
 		...mockDamageEvent(timestamp),
 		type: 'cast',
 		timestamp: fightStartTime,
-	}
-}
+})
 
 describe('The PrecastAction module', () => {
 	let precastAction: PrecastAction
