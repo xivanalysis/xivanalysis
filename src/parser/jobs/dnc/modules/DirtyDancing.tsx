@@ -87,7 +87,7 @@ class Dance {
 	public get expectedEndTime(): number {
 		const actionData = getDataBy(ACTIONS, 'id', this.initiatingStep.ability.guid) as TODO
 		return this.start + actionData.gcdRecast * 1000
-			+ EXPECTED_DANCE_MOVE_COUNT[this.initiatingStep.ability.guid] * DANCE_MOVE_COOLDOWN_MILLIS
+			+ EXPECTED_DANCE_MOVE_COUNT[this.expectedFinishId] * DANCE_MOVE_COOLDOWN_MILLIS
 			+ 1000 // Additional 1s leniency to account for network latency
 	}
 
@@ -196,7 +196,7 @@ export default class DirtyDancing extends Module {
 		dance.end = finisher.timestamp
 
 		// Count dance as dirty if we didn't get the expected finisher, and the fight wouldn't have ended before we could have
-		if (finisher.ability.guid !== dance.expectedFinishId && this.parser.fight.end_time < dance.expectedEndTime) {
+		if (finisher.ability.guid !== dance.expectedFinishId && this.parser.fight.end_time > dance.expectedEndTime) {
 			dance.dirty = true
 		}
 		// If the finisher didn't hit anything, and something could've been, ding it.
