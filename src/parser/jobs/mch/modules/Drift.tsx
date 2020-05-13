@@ -1,18 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
-
-import {Action} from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
-import {getDataBy} from 'data'
 import Downtime from 'parser/core/modules/Downtime'
+import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
+import React, {Fragment} from 'react'
 import Rotation from 'components/ui/Rotation'
-
 
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
