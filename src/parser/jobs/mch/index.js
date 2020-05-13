@@ -28,6 +28,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-05-13'),
+		Changes: () => <>Added a module that shows misused AoE actions.</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-05-10'),
 		Changes: () => <>Added a module for tracking GCD drift and a 'Use your cooldowns' checklist item.</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
