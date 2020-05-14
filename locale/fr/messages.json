@@ -347,6 +347,7 @@
   "dnc.technicalities.rotation-table.header.buffed": "Buff du joueurs",
   "dnc.technicalities.rotation-table.header.missed": "<0/> dans les temps ?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> Combiné ?",
+  "dnc.technicalities.rotation-table.message": "",
   "dnc.technicalities.suggestions.bad-devilments.content": "L'utilisation de <0/> en dehors de vos fenêtres <1/> entraîne une perte évitable de DPS. En dehors de certaines situations d'ouverture, vous devriez utiliser <2/> au début de vos fenêtres <3/>.",
   "dnc.technicalities.suggestions.bad-devilments.why": "{0, plural,one {#Tango endiablé}other {#Tango endiablés}} utiliser en dehors <0/>.",
   "dnc.technicalities.suggestions.late-devilments.content": "Utiliser <0/> aussi tôt que possible durant votre fenêtre de <1/> vous permet de maximiser les bonus multiplicatifs que les deux status vous octroient. Essayez de l'utiliser durant les deux premiers GCDs de votre fenêtre.",
