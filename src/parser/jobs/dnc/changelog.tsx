@@ -61,4 +61,9 @@ export const changelog = [
 		Changes: () => <>Technical Finish windows now display how many players were affected by your buff.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2019-05-13'),
+		Changes: () => <>Adjust Esprit generation simulation and Technical Windows table to account for multi-dancer parties.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]

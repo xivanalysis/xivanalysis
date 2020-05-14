@@ -2,7 +2,7 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Icon} from 'semantic-ui-react'
+import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
@@ -257,6 +257,15 @@ export default class Technicalities extends Module {
 
 	output() {
 		return <Fragment>
+			{this.history.filter(window => window.playersBuffed < 1).length > 0 && (
+				<Message>
+					<Trans id="dnc.technicalities.rotation-table.message">
+						This log contains <ActionLink showIcon={false} {...ACTIONS.TECHNICAL_STEP}/> windows from other Dancers, noted by the 'N/A' Players Buffed.<br />
+						Use your best judgement about which windows you should be dumping <ActionLink showIcon={false} {...ACTIONS.DEVILMENT}/>, Feathers, and Esprit under.<br />
+						Try to make sure they line up with other raid buffs to maximize damage.
+					</Trans>
+				</Message>
+			)}
 			<RotationTable
 				notes={[
 					{
