@@ -1,4 +1,6 @@
 import {Trans} from '@lingui/react'
+import {t} from '@lingui/macro'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
@@ -14,6 +16,11 @@ import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
 import Kenki from './Kenki'
+
+// defining a const message to assign later via markdown
+
+const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.`
+
 
 const SEN_ACTIONS = [
 	ACTIONS.YUKIKAZE.id,
@@ -64,8 +71,10 @@ const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
 	NONE: {priority: 0, message: 'No errors'},
-	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwrote Sen. </Trans>},
-	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Hagakure. </Trans>},
+	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwritten Sen. </Trans>},
+	OVERWROTE_SENS: {priority: 25, message: <Trans id = "sam.sen.sen_handling.overwrote_sens"> Contains Overwritten Sens. </Trans>},
+	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
+	D_HAGAKURE: {priority: 15, message: <Trans id = "sam.sen.sen_handling.d_hagakure"> Contains a Non-Standard use of Hagakure. </Trans>},
 	DEATH: {priority: 30, message: <Trans id = "sam.sen.sen_handling.death"> Contains your death. </Trans>}, // BET YOU WISH YOU USED THIRD EYE NOW RED!
 }
 
@@ -104,13 +113,27 @@ class SenState {
 		return this._senCode
 	}
 
+	// This includes waste
+	public get totalSenGenerated() {
+		return (this.overwriteSetsus + this.overwriteGetsus + this.overwriteKas) + (this.currentSetsu + this.currentGetsu + this.currentKa)
+	}
+
+	public get wastedSens() {
+		return (this.overwriteSetsus + this.overwriteGetsus + this.overwriteKas)
+	}
+
+	public get currentSens() {
+		return (this.currentSetsu + this.currentGetsu + this.currentKa)
+	}
+
 	constructor(start: number) {
 		this.start = start
 	}
 }
 
 export default class Sen extends Module {
-	static handle = 'Non-Standard Sen Windows'
+	static handle = 'sen'
+	static title = t('sam.sen.title')`Non-Standard Sen Windows`
 
 	@dependency private suggestions!: Suggestions
 	@dependency private kenki!: Kenki
@@ -215,27 +238,21 @@ export default class Sen extends Module {
 		// step 1: set action
 		const action = event.ability.guid
 
-		// step 2: FILTER EVERYTHING
+		// step 2: check the sen state, if undefined/not active, make one
 
-		if (THINGS_WE_WANT_IN_THE_TABLE.includes(action) || SEN_ACTIONS.includes(action) || SEN_REMOVERS.includes(action) ) {
+		let lastSenState = this.lastSenState
 
-			// step 3: check the sen state, if undefined/not active, make one
+		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
 
-			let lastSenState = this.lastSenState
+			this.senStateMaker(event)
+		}
 
-			if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
+		lastSenState = this.lastSenState
 
-				this.senStateMaker(event)
-			}
+		if (lastSenState != null && lastSenState.end == null) { // The state already exists
 
-			lastSenState = this.lastSenState
-
-			if (lastSenState != null && lastSenState.end == null) { // The state already exists
-
-				// Push action
-				lastSenState.rotation.push(event)
-			}
-
+			// Push action
+			lastSenState.rotation.push(event)
 		}
 
 	}
@@ -253,12 +270,20 @@ export default class Sen extends Module {
 		if (lastSenState != null && lastSenState.end == null) {
 			// Drop down the totem pole
 
-			if (lastSenState.isDeath === true) {
+			if (lastSenState.isDeath === true && (lastSenState.totalSenGenerated > 0) ) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
+				lastSenState.isNonStandard = true
+			}
+			else if (lastSenState.isOverwrite === true && lastSenState.wastedSens > 1) {
+				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SENS
 				lastSenState.isNonStandard = true
 			}
 			else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
+				lastSenState.isNonStandard = true
+			}
+			else if (lastSenState.isHaga === true && lastSenState.currentSens > 1) {
+				lastSenState._senCode = SEN_HANDLING.D_HAGAKURE
 				lastSenState.isNonStandard = true
 			}
 			else if (lastSenState.isHaga === true) {
@@ -276,13 +301,13 @@ export default class Sen extends Module {
 		if (lastSenState != null && lastSenState.end == null) {
 
 			if (event.ability.guid === ACTIONS.HAGAKURE.id) {
-				lastSenState.kenkiGained = (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa) * KENKI_PER_SEN
+				lastSenState.kenkiGained = lastSenState.currentSens * KENKI_PER_SEN
 				lastSenState.isHaga = true
 
 				this.kenki.modify(lastSenState.kenkiGained)
 			}
 
-			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas)
+			this.wasted = this.wasted + lastSenState.wastedSens
 
 			lastSenState.isDone = true
 			this.senCodeProcess()
@@ -294,7 +319,7 @@ export default class Sen extends Module {
 		const lastSenState = this.lastSenState
 
 		if (lastSenState != null && lastSenState.end == null) {
-			this.wasted = this.wasted + (lastSenState.overwriteSetsus + lastSenState.overwriteGetsus + lastSenState.overwriteKas) + (lastSenState.currentSetsu + lastSenState.currentGetsu + lastSenState.currentKa)
+			this.wasted = this.wasted + lastSenState.totalSenGenerated
 
 			lastSenState.isDone = true
 			lastSenState.isDeath = true
@@ -308,7 +333,7 @@ export default class Sen extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.MEIKYO_SHISUI.icon,
 			content: <Trans id ="sam.sen.suggestion.content">
-				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, or <ActionLink {...ACTIONS.YUKIKAZE} /> at a time when you already had that sen, thus wasting a combo because it did not give you sen.
+				You used <ActionLink {...ACTIONS.GEKKO} />, <ActionLink {...ACTIONS.KASHA} />, or <ActionLink {...ACTIONS.YUKIKAZE} /> at a time when you already had that sen, thus wasting a combo because it did not give you sen or you died while holding sen thus wasting it as well.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -326,13 +351,13 @@ export default class Sen extends Module {
 				<Trans id="sam.sen.rotation-table.message"> This table serves as a way a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
 				</Trans>
 			</Message>
-				<Message warning icon>
-					<Icon name="warning sign"/>
-					<Message.Content>
-						<Trans id = "sam.sen.rotation-table.disclaimer">This module labels a "Standard Sen Window" to be a window with no Sen overwrites that ends on a Iaijutsu. Please consult The Balance Discord's guides for more details on looping Samurai gameplay.
-						</Trans>
-					</Message.Content>
-				</Message>
+
+			<Message warning icon>
+				<Icon name ="warning sign"/>
+				<Message.Content>
+					<TransMarkdown source ={samWarningMessage}/>
+				</Message.Content>
+			</Message>
 		<RotationTable
 			targets={[
 				{
