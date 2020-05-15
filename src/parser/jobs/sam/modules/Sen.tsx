@@ -10,7 +10,7 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
@@ -20,7 +20,6 @@ import Kenki from './Kenki'
 // defining a const message to assign later via markdown
 
 const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.`
-
 
 const SEN_ACTIONS = [
 	ACTIONS.YUKIKAZE.id,
@@ -140,6 +139,8 @@ export default class Sen extends Module {
 	@dependency private timeline!: Timeline
 
 	private wasted = 0
+	private nonStandardCount = 0
+	private hagakureCount = 0
 
 	private senStateWindows: SenState[] = []
 
@@ -273,22 +274,29 @@ export default class Sen extends Module {
 			if (lastSenState.isDeath === true && (lastSenState.totalSenGenerated > 0) ) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 				lastSenState.isNonStandard = true
+				this.nonStandardCount++
 			}
 			else if (lastSenState.isOverwrite === true && lastSenState.wastedSens > 1) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SENS
 				lastSenState.isNonStandard = true
+				this.nonStandardCount++
 			}
 			else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 				lastSenState.isNonStandard = true
+				this.nonStandardCount++
 			}
 			else if (lastSenState.isHaga === true && lastSenState.currentSens > 1) {
 				lastSenState._senCode = SEN_HANDLING.D_HAGAKURE
 				lastSenState.isNonStandard = true
+				this.nonStandardCount++
+				this.hagakureCount++
 			}
 			else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 				lastSenState.isNonStandard = true
+				this.nonStandardCount++
+				this.hagakureCount++
 			}
 		}
 
@@ -343,79 +351,90 @@ export default class Sen extends Module {
 			value: this.wasted,
 			why: <Trans id = "sam.sen.suggestion.why">You wasted {this.wasted} sen.</Trans>,
 		}))
+	if (this.hagakureCount === 0) {
+		this.suggestions.add(new Suggestion({
+			icon: ACTIONS.HAGAKURE.icon,
+			content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...ACTIONS.HAGAKURE}/> is a powerful tool that should be used to help keep <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on cooldown. Use it to handle your filler phase of your rotation. </Trans>,
+			severity: SEVERITY.MAJOR,
+			why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
+		}))
+	}
+
 	}
 
 	output() {
-		return <Fragment>
-			<Message>
-				<Trans id="sam.sen.rotation-table.message"> This table serves as a way a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
-				</Trans>
-			</Message>
+		if (this.nonStandardCount !== 0) {
+			return <Fragment>
+				<Message>
+					<Trans id="sam.sen.rotation-table.message"> This table serves as a way a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
+					</Trans>
+				</Message>
 
-			<Message warning icon>
-				<Icon name ="warning sign"/>
-				<Message.Content>
-					<TransMarkdown source ={samWarningMessage}/>
-				</Message.Content>
-			</Message>
-		<RotationTable
-			targets={[
-				{
-					header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
-					accessor: 'setsu',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.GEKKO}/>,
-					accessor: 'getsu',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.KASHA}/>,
-					accessor: 'ka',
-				},
-			]}
-			notes={[
-				{
-					header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
-					accessor: 'reason',
-				},
-			]}
-			data={this.senStateWindows
-				.filter(window => window.isNonStandard)
-				.map(window => {
-					return ({
-						start: window.start - this.parser.fight.start_time,
+				<Message warning icon>
+					<Icon name ="warning sign"/>
+					<Message.Content>
+						<TransMarkdown source ={samWarningMessage}/>
+					</Message.Content>
+				</Message>
+			<RotationTable
+				targets={[
+					{
+						header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
+						accessor: 'setsu',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.GEKKO}/>,
+						accessor: 'getsu',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.KASHA}/>,
+						accessor: 'ka',
+					},
+				]}
+				notes={[
+					{
+						header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
+						accessor: 'reason',
+					},
+				]}
+				data={this.senStateWindows
+					.filter(window => window.isNonStandard)
+					.map(window => {
+						return ({
+							start: window.start - this.parser.fight.start_time,
 
-						end: window.end != null ?
-							window.end - this.parser.fight.start_time
-							: window.start - this.parser.fight.start_time,
+							end: window.end != null ?
+								window.end - this.parser.fight.start_time
+								: window.start - this.parser.fight.start_time,
 
-						targetsData: {
-							setsu: {
-								actual: (window.currentSetsu + window.overwriteSetsus),
-								// expected: window.setsu,
+							targetsData: {
+								setsu: {
+									actual: (window.currentSetsu + window.overwriteSetsus),
+									// expected: window.setsu,
+								},
+								getsu: {
+									actual: (window.currentGetsu + window.overwriteGetsus),
+									// expected: window.getsu,
+								},
+								ka: {
+									actual: (window.currentKa + window.overwriteKas),
+									// expected: window.ka,
+								},
+
 							},
-							getsu: {
-								actual: (window.currentGetsu + window.overwriteGetsus),
-								// expected: window.getsu,
-							},
-							ka: {
-								actual: (window.currentKa + window.overwriteKas),
-								// expected: window.ka,
+							notesMap: {
+								reason: <>{window.senCode.message}</>,
 							},
 
-						},
-						notesMap: {
-							reason: <>{window.senCode.message}</>,
-						},
+							rotation: window.rotation,
 
-						rotation: window.rotation,
-
+							})
 						})
-					})
-				}
+					}
 
-			onGoto={this.timeline.show}
-		/>
-	</Fragment>
+				onGoto={this.timeline.show}
+			/>
+		</Fragment>
+		}
 	}
 }

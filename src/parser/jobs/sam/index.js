@@ -1,15 +1,24 @@
 import React from 'react'
+import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 
+const samDescript = t('sam.about.description')`So you study the blade do you? Well consider this analysis the exam to see exactly how much you have learned about the basics of Samurai. This tool will track your Sen and Kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight. Study guides for the exam:
+
+- [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)
+
+- [Visual Guide to Samurai rotation](https://i.imgur.com/L0Y7d6C.png)
+`
+
 export default new Meta({
 	modules: () => import('./modules' /*webpackChunkName: "jobs-sam" */),
 
 	Description: () => <>
-		<Trans id="sam.about.description"> <p>So you study the blade do you? Well consider this analysis the exam to see exactly how much you have learned about the basics of Samurai. This tool will track your sen and kenki gains/uses to see if you are missing possible resources to gain or you have failed to make the most out of what you gained over the course of the fight.</p> </Trans>
+		<TransMarkdown source={samDescript}/>
 		<Message>
 			<Icon name="info"/>
 			<Trans id="sam.about.description.info"><strong>Note</strong> Unfortunately, positionals cannot be tracked at this time, and as such, Kenki values are <em>estimates</em>. Care has been taken to keep them as accurate as possible, however some innacuracies may be present.</Trans>
@@ -33,6 +42,12 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-5-14'),
+		Changes: () => <>
+			Updated feedback on Samurai Sen usage, also updated the header with text guides
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2020-3-30'),
 		Changes: () => <>
 			Updated SAM support to include the interrupt module recently added to core.
