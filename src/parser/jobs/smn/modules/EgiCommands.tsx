@@ -4,7 +4,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {CastEvent} from 'fflogs'
+import {AbilityType, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -141,6 +141,9 @@ export default class EgiCommands extends Module {
 	}
 
 	private onCommandIssued(event: CastEvent) {
+		// Ignore fabricated casts
+		if (event.ability.type === AbilityType.SPECIAL) { return }
+
 		this.activeCommands.push(event)
 		this.debug(`Issued ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp)} (${event.timestamp}). ${this.activeCommands.length} commands now pending.`)
 	}
