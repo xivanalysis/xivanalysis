@@ -3,7 +3,7 @@ import ACTIONS from 'data/ACTIONS'
 import {AbilityType, CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import PrecastStatus from 'parser/core/modules/PrecastStatus'
+import {PrecastStatus} from 'parser/core/modules/PrecastStatus'
 import React from 'react'
 import {Event} from 'events'
 

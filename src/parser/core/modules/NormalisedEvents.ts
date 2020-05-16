@@ -2,7 +2,7 @@ import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isD
 import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
-import PrecastStatus from './PrecastStatus'
+import {PrecastStatus} from './PrecastStatus'
 import {Event} from 'events'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
