@@ -779,6 +779,8 @@
   "sch.overheal.hot.name": "",
   "sch.overheal.pet.name": "",
   "sch.overheal.pethot.name": "",
+  "sch.recitation.suggestion.content": "",
+  "sch.recitation.suggestion.why": "",
   "sch.swiftcast.missed.suggestion.content": "Utiliser des sorts avec <0/> avant qu'ils expirent. Cela vous permet d'utiliser directement des sorts avec des temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
   "sch.weaving.content": "Essayer d'utiliser <0/> et <1/> pouré vitez de faire plus d'actions par weaving que vous ne pouvez en faire durant une fenêtre de GCD. Cela retardera votre prochain GCD, réduisant ainsi le temps possible d'uptime. Vérifiez le module<2><3/></2> ci-dessous pour une analyse plus détaillée.",
   "smn.about.description": "",

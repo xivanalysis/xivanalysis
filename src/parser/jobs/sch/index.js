@@ -37,6 +37,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-05-16'),
+		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balace for feedback with content!</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-04-07'),
 		Changes: () => <>Add Faerie actions to timeline</>,
 		contributors: [CONTRIBUTORS.NONO],
