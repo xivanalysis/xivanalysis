@@ -494,7 +494,7 @@
   "mch.about.description.warning": "<0>本模块还在开发中。</0>目前只涵盖了机工的一小部分，虽然下面的分析一般而言是准确的，但这个系统仍<1>在开发中</1>，也许有时会有些混乱。如果您有任何问题或请求，请加入我们的Discord频道或者在GitHub页面反映bug。",
   "mch.drift.accordion.message": "<0/>和<1/>是你最强的GCD技能，应该尽量保持它们总是处于冷却时间，除非你需要插入一个GCD填充技能以适应你的技能速度。应当避免钻头和空气锚在冷却时间少于8秒的时候使用<2/>。",
   "mch.drift.panel-drift": "",
-  "mch.drift.title": "",
+  "mch.drift.title": "GCD偏移",
   "mch.gauge.suggestions.battery-waste.content": "不要让电量溢出，不然会影响<0/>的使用。",
   "mch.gauge.suggestions.battery-waste.why": "因为电量溢出，你损失了{0}电量",
   "mch.gauge.suggestions.heat-waste.content": "不要让热量槽溢出，不然会影响过热技能的使用。",
