@@ -15,7 +15,10 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: -1000,
 		},
 		{
-			cooldowns: [ACTIONS.SIDEWINDER],
+			cooldowns: [
+				ACTIONS.SIDEWINDER,
+				ACTIONS.SHADOWBITE,
+			],
 			firstUseOffset: 12000,
 		},
 	]
