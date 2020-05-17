@@ -9,10 +9,12 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [ACTIONS.BARRAGE],
 			firstUseOffset: 12000,
-		}, {
+		},
+		{
 			cooldowns: [ACTIONS.RAGING_STRIKES],
 			firstUseOffset: -1000,
-		}, {
+		},
+		{
 			cooldowns: [ACTIONS.SIDEWINDER],
 			firstUseOffset: 12000,
 		},
