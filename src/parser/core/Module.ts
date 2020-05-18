@@ -25,9 +25,15 @@ export function dependency(target: Module, prop: string) {
 	const dependency = Reflect.getMetadata('design:type', target, prop)
 	const constructor = target.constructor as typeof Module
 
+	// DO NOT REMOVE
+	// This totally-redundant line is a workaround for an issue in FF ~73 which causes the
+	// assignment in the conditional below to completely kludge the entire array regardless
+	// of it's contents if this isn't here.
+	const constructorDependencies = constructor.dependencies
+
 	// Make sure we're not modifying every single module
 	if (!constructor.hasOwnProperty('dependencies')) {
-		constructor.dependencies = [...constructor.dependencies]
+		constructor.dependencies = [...constructorDependencies]
 	}
 
 	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
