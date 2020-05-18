@@ -38,7 +38,7 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2020-05-16'),
-		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balace for feedback with content!</>,
+		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balance for feedback with content!</>,
 		contributors: [CONTRIBUTORS.NONO],
 	},
 	{

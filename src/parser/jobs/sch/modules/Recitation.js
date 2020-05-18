@@ -52,7 +52,7 @@ const MISSED_RECITATION_SEVERITIES = {
 
 export default class Recitation extends Module {
 	static handle = 'recitation'
-	static debug = true
+	static debug = false
 
 	@dependency statistics
 	@dependency suggestions
