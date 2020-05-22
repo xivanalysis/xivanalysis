@@ -1,23 +1,33 @@
-import {AbilityEvent, BuffEvent, DamageEvent, Event, HealEvent, isApplyBuffEvent, isDamageEvent, isHealEvent, isRemoveBuffEvent} from 'fflogs'
-import {SortEvents} from 'parser/core/EventSorting'
+import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isDamageEvent, isHealEvent} from 'fflogs'
+import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
+import PrecastStatus from './PrecastStatus'
+import {Event} from 'events'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
 
 type BaseEvent = DamageEvent | HealEvent
-const isSupportedBuffEvent = (event: Event): event is BuffEvent => isApplyBuffEvent(event) || isRemoveBuffEvent(event)
-const isBaseEvent = (event: Event): event is BaseEvent => isDamageEvent(event) || isHealEvent(event)
-const isSupportedEvent = (event: Event): event is BaseEvent | BuffEvent => isBaseEvent(event) || isSupportedBuffEvent(event)
-const isBaseEventArray = (array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] => array.length > 0 && isBaseEvent(array[0])
 
-export interface NormalisedEvent extends AbilityEvent {
-	type: string
+const supportedBuffEventTypes = ['applybuff', 'removebuff', 'applydebuff', 'removedebuff']
+const isSupportedBuffEvent = (event: Event): event is BuffEvent =>
+	(supportedBuffEventTypes as any[]).includes(event.type)
+
+const isBaseEvent = (event: Event): event is BaseEvent =>
+	isDamageEvent(event) || isHealEvent(event)
+
+const isSupportedEvent = (event: Event): event is BaseEvent | BuffEvent =>
+	isBaseEvent(event) || isSupportedBuffEvent(event)
+
+const isBaseEventArray = (array: Array<BaseEvent | BuffEvent>): array is BaseEvent[] =>
+	array.length > 0 && isBaseEvent(array[0])
+
+export interface NormalisedEventFields extends AbilityEventFields {
 	calculatedEvents: Array<BaseEvent | BuffEvent>
 	confirmedEvents: Array<BaseEvent | BuffEvent>
 }
-export class NormalisedEvent {
+export class NormalisedEventFields {
 	get targetsHit(): number { return new Set(this.confirmedEvents.map(evt => `${evt.targetID}-${evt.targetInstance}`)).size }
 
 	/**
@@ -138,10 +148,9 @@ export class NormalisedEvent {
 	}
 }
 
-export const isNormalisedDamageEvent = (event: Event): event is NormalisedDamageEvent => event.type === 'normaliseddamage'
-export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type' | 'amount' | 'successfulHit'>, NormalisedEvent {}
-export class NormalisedDamageEvent extends NormalisedEvent {
-	type = 'normaliseddamage'
+export interface NormalisedDamageEvent extends Omit<DamageEvent, 'type' | 'amount' | 'successfulHit'>, NormalisedEventFields {}
+export class NormalisedDamageEvent extends NormalisedEventFields {
+	type = 'normaliseddamage' as const
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
@@ -151,10 +160,9 @@ export class NormalisedDamageEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedHealEvent = (event: Event): event is NormalisedHealEvent => event.type === 'normalisedheal'
-export interface NormalisedHealEvent extends Omit<HealEvent, 'type'| 'amount' | 'successfulHit'>, NormalisedEvent {}
-export class NormalisedHealEvent extends NormalisedEvent {
-	type = 'normalisedheal'
+export interface NormalisedHealEvent extends Omit<HealEvent, 'type'| 'amount' | 'successfulHit'>, NormalisedEventFields {}
+export class NormalisedHealEvent extends NormalisedEventFields {
+	type = 'normalisedheal' as const
 	calculatedEvents: HealEvent[] = []
 	confirmedEvents: HealEvent[] = []
 
@@ -164,10 +172,9 @@ export class NormalisedHealEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedApplyBuffEvent = (event: Event): event is NormalisedApplyBuffEvent => event.type === 'normalisedapplybuff'
-export interface NormalisedApplyBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
-export class NormalisedApplyBuffEvent extends NormalisedEvent {
-	type = 'normalisedapplybuff'
+export interface NormalisedApplyBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
+export class NormalisedApplyBuffEvent extends NormalisedEventFields {
+	type = 'normalisedapplybuff' as const
 	calculatedEvents: BuffEvent[] = []
 	confirmedEvents: BuffEvent[] = []
 
@@ -177,16 +184,55 @@ export class NormalisedApplyBuffEvent extends NormalisedEvent {
 	}
 }
 
-export const isNormalisedRemoveBuffEvent = (event: Event): event is NormalisedRemoveBuffEvent => event.type === 'normalisedremovebuff'
-export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEvent {}
-export class NormalisedRemoveBuffEvent extends NormalisedEvent {
-	type = 'normalisedremovebuff'
+
+
+export interface NormalisedApplyDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
+export class NormalisedApplyDebuffEvent extends NormalisedEventFields {
+	type = 'normalisedapplydebuff' as const
 	calculatedEvents: BuffEvent[] = []
 	confirmedEvents: BuffEvent[] = []
 
 	constructor(event: BuffEvent) {
 		super()
 		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
+export interface NormalisedRemoveBuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
+export class NormalisedRemoveBuffEvent extends NormalisedEventFields {
+	type = 'normalisedremovebuff' as const
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
+export interface NormalisedRemoveDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
+export class NormalisedRemoveDebuffEvent extends NormalisedEventFields {
+	type = 'normalisedremovedebuff' as const
+	calculatedEvents: BuffEvent[] = []
+	confirmedEvents: BuffEvent[] = []
+
+	constructor(event: BuffEvent) {
+		super()
+		Object.assign(this, (({type, ...props}) => ({...props}))(event))
+	}
+}
+
+export type NormalisedEvent =
+	| NormalisedDamageEvent
+	| NormalisedHealEvent
+	| NormalisedApplyBuffEvent
+	| NormalisedApplyDebuffEvent
+	| NormalisedRemoveBuffEvent
+	| NormalisedRemoveDebuffEvent
+
+declare module 'events' {
+	interface EventTypeRepository {
+		normalisedEvents: NormalisedEvent
 	}
 }
 
@@ -195,13 +241,14 @@ export class NormalisedEvents extends Module {
 	static debug = false
 
 	@dependency private hitType!: HitType // Dependency to ensure HitType properties are available for determining hit success
+	@dependency private precastStatus!: PrecastStatus // Dependency to ensure events synthed by precast status are normalised
 
 	private _normalisedEvents = new Map<string, NormalisedEvent>()
 
 	normalise(events: Event[]): Event[] {
 		events.forEach(this.normaliseEvent)
 
-		return SortEvents(events.concat(Array.from(this._normalisedEvents.values())))
+		return sortEvents(events.concat(Array.from(this._normalisedEvents.values())))
 	}
 
 	private normaliseEvent = (event: Event) => {
@@ -222,10 +269,15 @@ export class NormalisedEvents extends Module {
 				identifier = event.packetID ? `${event.packetID}` : this.getFallbackIdentifier(event)
 			} else {
 				identifier = this.getFallbackIdentifier(event)
-				if (isApplyBuffEvent(event)) {
+				if (event.type === 'applybuff') {
 					normalisedEvent = new NormalisedApplyBuffEvent(event)
-				} else {
+				} else if (event.type === 'removebuff') {
 					normalisedEvent = new NormalisedRemoveBuffEvent(event)
+				} else if (event.type === 'applydebuff') {
+					normalisedEvent = new NormalisedApplyDebuffEvent(event)
+				} else {
+					// isRemoveDebuffEvent(event) - can't check or TS will flag normalisedEvent as possibly undefined
+					normalisedEvent = new NormalisedRemoveDebuffEvent(event)
 				}
 			}
 			this._normalisedEvents.set(identifier, normalisedEvent)

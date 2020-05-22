@@ -1,10 +1,12 @@
 import {MessageDescriptor} from '@lingui/core'
 import Color from 'color'
-import {Ability, AbilityEvent, Event, Pet} from 'fflogs'
+import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
+import {Event} from 'events'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import Parser from './Parser'
+import {ensureArray} from 'utilities'
 
 export enum DISPLAY_ORDER {
 	TOP = 0,
@@ -23,9 +25,15 @@ export function dependency(target: Module, prop: string) {
 	const dependency = Reflect.getMetadata('design:type', target, prop)
 	const constructor = target.constructor as typeof Module
 
+	// DO NOT REMOVE
+	// This totally-redundant line is a workaround for an issue in FF ~73 which causes the
+	// assignment in the conditional below to completely kludge the entire array regardless
+	// of it's contents if this isn't here.
+	const constructorDependencies = constructor.dependencies
+
 	// Make sure we're not modifying every single module
 	if (!constructor.hasOwnProperty('dependencies')) {
-		constructor.dependencies = [...constructor.dependencies]
+		constructor.dependencies = [...constructorDependencies]
 	}
 
 	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
@@ -45,6 +53,18 @@ export function dependency(target: Module, prop: string) {
 	})
 }
 
+/**
+ * DO NOT USE OR YOU WILL BE FIRED
+ * Totally spit in the face of the entire dependency system by forcing it
+ * to execute the decorated module before the module passed as an argument.
+ * If you have to think whether you need this or not, you don't need it.
+ */
+export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Module) =>
+	(source: typeof Module) => {
+		target.dependencies.push(source.handle)
+		return source
+	}
+
 export interface MappedDependency {
 	handle: string
 	prop: string
@@ -52,9 +72,15 @@ export interface MappedDependency {
 
 type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	abilityId: Ability['guid'],
-	to: 'player' | 'pet' | T['targetID'],
-	by: 'player' | 'pet' | T['sourceID'],
+	to: 'player' | 'pet' | FflogsEvent['targetID'],
+	by: 'player' | 'pet' | FflogsEvent['sourceID'],
 }>
+
+type LogParams = Parameters<typeof console.log>
+interface DebugFnOpts {
+	log: (...messages: LogParams) => void
+}
+type DebugFn = (opts: DebugFnOpts) => void
 
 export default class Module {
 	static dependencies: Array<string | MappedDependency> = []
@@ -126,7 +152,7 @@ export default class Module {
 	// So TS peeps don't need to pass the parser down
 	protected init() {}
 
-	normalise(events: Event[]) {
+	normalise(events: Event[]): Event[] | Promise<Event[]> {
 		return events
 	}
 
@@ -151,16 +177,16 @@ export default class Module {
 	protected readonly addHook = this.addEventHook
 
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filter: ModuleFilter<T>,
 		cb: EventHookCallback<T>,
 	): Array<EventHook<T>>
 	protected addEventHook<T extends Event>(
-		events: T['type'] | Array<T['type']>,
+		events: T['type'] | ReadonlyArray<T['type']>,
 		filterArg: ModuleFilter<T> | EventHookCallback<T>,
 		cbArg?: EventHookCallback<T>,
 	): Array<EventHook<T>> {
@@ -171,6 +197,8 @@ export default class Module {
 
 		// If there's no callback just... stop
 		if (!cb) { return [] }
+
+		const eventTypes = ensureArray(events)
 
 		// QoL filter transforms
 		filter = this.mapFilterEntity(filter, 'to', 'targetID')
@@ -184,12 +212,7 @@ export default class Module {
 			delete abilityFilter.abilityId
 		}
 
-		// Make sure events is an array
-		if (!Array.isArray(events)) {
-			events = [events]
-		}
-
-		const hooks = events.map(event => ({
+		const hooks = eventTypes.map(event => ({
 			event,
 			filter,
 			module: (this.constructor as typeof Module).handle,
@@ -201,17 +224,18 @@ export default class Module {
 		return hooks
 	}
 
+	// We don't talk about the type casts here
 	private mapFilterEntity<T extends Event>(
 		filterArg: ModuleFilter<T>,
 		qol: keyof ModuleFilter<T>,
-		raw: keyof T,
-	) {
+		raw: keyof FflogsEvent,
+	): ModuleFilter<T> {
 		if (!filterArg[qol]) { return filterArg }
 
-		const filter = cloneDeep(filterArg)
+		const filter = cloneDeep(filterArg) as Filter<FflogsEvent>
 
 		// Sorry not sorry for the `any`s. Ceebs working out this filter _again_.
-		switch (filter[qol]) {
+		switch (filterArg[qol]) {
 			case 'player':
 				filter[raw] = this.parser.player.id as any
 				break
@@ -219,12 +243,12 @@ export default class Module {
 				filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
 				break
 			default:
-				filter[raw] = filter[qol] as any
+				filter[raw] = filterArg[qol] as any
 		}
 
-		delete filter[qol]
+		delete filter[qol as keyof typeof filter]
 
-		return filter
+		return filter as ModuleFilter<T>
 	}
 
 	/**
@@ -259,13 +283,22 @@ export default class Module {
 	 * Log a debug console message. Will only be printed if built in a non-production
 	 * environment, with `static debug = true` in the module it's being executed in.
 	 */
-	protected debug(...messages: Parameters<typeof console.log>) {
+	protected debug(debugFn: DebugFn): void
+	protected debug(...messages: LogParams): void
+	protected debug(...messages: [DebugFn] | LogParams) {
 		const module = this.constructor as typeof Module
 
 		if (!module.debug || process.env.NODE_ENV === 'production') {
 			return
 		}
 
+		typeof messages[0] === 'function'
+			? messages[0]({log: this.debugLog})
+			: this.debugLog(...messages)
+	}
+
+	private debugLog = (...messages: LogParams) => {
+		const module = this.constructor as typeof Module
 		// tslint:disable-next-line:no-console
 		console.log(
 			`[%c${module.handle}%c]`,

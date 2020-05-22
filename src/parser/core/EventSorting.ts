@@ -1,4 +1,4 @@
-import {Event} from 'fflogs'
+import {Event} from 'events'
 import stable from 'stable'
 
 const EVENT_TYPE_ORDER: {[key: string]: number} = {
@@ -13,21 +13,25 @@ const EVENT_TYPE_ORDER: {[key: string]: number} = {
 	damage: -0.5,
 	heal: -0.5,
 	default: 0,
+	// Keep apply/remove/refresh (de)buff events in the same order as they were originally sent by the FFLogs API
+	applybuff: 1,
+	applybuffstack: 1,
+	applydebuff: 1,
+	applydebuffstack: 1,
 	removebuff: 1,
 	removebuffstack: 1,
 	removedebuff: 1,
 	removedebuffstack: 1,
-	refreshbuff: 2,
-	refreshdebuff: 2,
-	normalisedremovebuff: 2.5,
-	applybuff: 3,
-	applybuffstack: 3,
-	applydebuff: 3,
-	applydebuffstack: 3,
-	normalisedapplybuff: 3.5,
+	refreshbuff: 1,
+	refreshdebuff: 1,
+	// Since normalised apply/removebuff events will be generated in the same order as the underlying events were presented, preserve that order
+	normalisedapplybuff: 1.5,
+	normalisedapplydebuff: 1.5,
+	normalisedremovebuff: 1.5,
+	normalisedremovedebuff: 1.5,
 }
 
-export function SortEvents(events: Event[]) {
+export function sortEvents(events: Event[]) {
 	return stable.inplace(events, (a, b) => {
 		if (a.timestamp === b.timestamp) {
 			const aTypeOrder = (typeof a.type === 'string' ? EVENT_TYPE_ORDER[a.type] : null) || EVENT_TYPE_ORDER.default

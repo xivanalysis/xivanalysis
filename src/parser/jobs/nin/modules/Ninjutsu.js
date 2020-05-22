@@ -30,27 +30,19 @@ export default class Ninjutsu extends Module {
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HYOTON.id, ACTIONS.HYOTON_TCJ.id]}, () => { this._hyotonCount++ })
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.RABBIT_MEDIUM.id}, () => { this._rabbitCount++ })
 		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DOTON.id, ACTIONS.DOTON_TCJ.id]}, this._onDotonCast)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, this._onDotonDamage)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: STATUSES.DOTON.id}, event => { this._dotonCasts.current?.ticks.push(event.hitCount) })
 		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.DOTON.id}, this._finishDotonWindow)
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	_onDotonCast() {
+	_onDotonCast(event) {
 		this._finishDotonWindow()
 
 		this._dotonCasts.current = {
 			tcj: this.combatants.selected.hasStatus(STATUSES.TEN_CHI_JIN.id),
 			ticks: [],
+			prepull: event.timestamp < this.parser.fight.start_time,
 		}
-	}
-
-	_onDotonDamage(event) {
-		// If there are no casts at all, use the damage event to fabricate one
-		if (!this._dotonCasts.current) {
-			this._onDotonCast()
-		}
-
-		this._dotonCasts.current.ticks.push(event.hitCount) // Track the number of enemies hit per tick
 	}
 
 	_finishDotonWindow() {
@@ -78,7 +70,7 @@ export default class Ninjutsu extends Module {
 				if (cast.ticks.length < DOTON_TICK_TARGET) {
 					result.badAoes++
 				}
-			} else if (cast.ticks.reduce((accum, value) => accum + value, 0) < JUSTIFIABLE_DOTON_TICKS) {
+			} else if (!cast.prepull && cast.ticks.reduce((accum, value) => accum + value, 0) < JUSTIFIABLE_DOTON_TICKS) {
 				// If it's a partial or entirely single-target and it doesn't reach the hit threshold for a good Doton, flag it
 				// Note: Fully single-target Dotons will never reach this threshold
 				result.badStds++

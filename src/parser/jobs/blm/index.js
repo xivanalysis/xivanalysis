@@ -29,7 +29,7 @@ export default new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.FURST, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.LAQI, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.LAQI, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.AKAIRYU, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
@@ -66,5 +66,10 @@ export default new Meta({
 		date: new Date('2019-10-22'),
 		Changes: () => <>Enochian buffs lost during extended cutscenes, and certain Astral Fire phase optimizations, will no longer be unintentionally penalized.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2020-04-27'),
+		Changes: () => <>Added a Thunder module that lists how much you clipped your DoT.</>,
+		contributors: [CONTRIBUTORS.FURST],
 	}],
 })

@@ -31,15 +31,15 @@ export default class LIGHTSPEED extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
 
 		const lsBuffFilter = {
 			by: 'player',
 			abilityId: STATUSES.LIGHTSPEED.id,
 		}
-		this.addHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
-		this.addHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('applybuff', lsBuffFilter, this._onApplyLightspeed)
+		this.addEventHook('removebuff', lsBuffFilter, this._onRemoveLightspeed)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {

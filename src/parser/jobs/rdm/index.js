@@ -31,6 +31,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-05-05'),
+			Changes: () => <>Adjusted Combo Severity when you aren't 80|80 going in to always be major.  Fixed a typo; added the Tincture module.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2020-02-27'),
 			Changes: () => <>Added Verstone and Verfire procs to the Timeline</>,
 			contributors: [CONTRIBUTORS.LEYLIA],

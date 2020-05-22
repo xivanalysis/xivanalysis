@@ -4,8 +4,8 @@ import math from 'mathjsCustom'
 import React from 'react'
 
 import Module from 'parser/core/Module'
-import {Group, Item} from './Timeline'
 import {SimpleStatistic} from './Statistics'
+import {ActionItem, ContainerRow} from './Timeline'
 
 const MIN_GCD = 1500
 const MAX_GCD = 2500
@@ -45,12 +45,19 @@ export default class GlobalCooldown extends Module {
 		event: null,
 	}
 	gcds = []
-	gcdGroupId  = 'gcd'
+
+	timelineRow = null
 
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
+
+		this.timelineRow = this.timeline.addRow(new ContainerRow({
+			label: 'GCD',
+			order: -98,
+			collapse: true,
+		}))
 	}
 
 	// Using normalise so the estimate can be used throughout the parse
@@ -114,24 +121,15 @@ export default class GlobalCooldown extends Module {
 		const startTime = this.parser.fight.start_time
 
 		// Timeline output
-		// TODO: Look into adding items to groups? Maybe?
-
-		this.timeline.addGroup(new Group({
-			id: this.gcdGroupId,
-			content: 'GCD',
-			order: -99,
-		}))
-
 		this.gcds.forEach(gcd => {
 			const action = this.data.getAction(gcd.actionId)
 			if (!action) { return }
-			this.timeline.addItem(new Item({
-				type: 'background',
-				start: gcd.timestamp - startTime,
-				length: this._getGcdLength(gcd),
-				title: action.name,
-				group: this.gcdGroupId,
-				content: <img src={action.icon} alt={action.name} title={action.name}/>,
+
+			const start = gcd.timestamp - startTime
+			this.timelineRow.addItem(new ActionItem({
+				start,
+				end: start + this._getGcdLength(gcd),
+				action,
 			}))
 		})
 

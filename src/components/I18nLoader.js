@@ -33,7 +33,7 @@ class I18nLoader extends React.Component {
 		const promises = [import(
 			/* webpackMode: 'lazy' */
 			/* webpackChunkName: 'i18n-[index]' */
-			`../../locale/${language}/messages.json` // eslint-disable-line comma-dangle
+			'../../locale/' + language + '/messages.json' // eslint-disable-line comma-dangle
 		)]
 
 		// Polyfill
@@ -67,7 +67,7 @@ class I18nLoader extends React.Component {
 					/* webpackMode: 'lazy' */
 					/* webpackChunkName: 'nv-intl-polyfill-[index]' */
 					/* webpackInclude: /(?:de|en|fr|ja|ko|zh).js/ */
-					`intl/locale-data/jsonp/${language}.js` // eslint-disable-line comma-dangle
+					'intl/locale-data/jsonp/' + language + '.js' // eslint-disable-line comma-dangle
 				)
 			} catch {
 				runInAction(() => this.errored = true)

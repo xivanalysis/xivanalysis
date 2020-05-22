@@ -34,10 +34,10 @@ export default class TriDisaster extends Module {
 	private badCastCount = 0
 
 	protected init() {
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRI_DISASTER.id}, this.onTridisaster)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.DREADWYRM_TRANCE.id, ACTIONS.FIREBIRD_TRANCE.id]}, this.onReset)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id]}, this.checkCast)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRI_DISASTER.id}, this.onTridisaster)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.DREADWYRM_TRANCE.id, ACTIONS.FIREBIRD_TRANCE.id]}, this.onReset)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.BIO_III.id, ACTIONS.MIASMA_III.id]}, this.checkCast)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onTridisaster(event: CastEvent) {

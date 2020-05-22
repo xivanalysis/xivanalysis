@@ -7,6 +7,7 @@ import Speedmod from './Speedmod'
 import Leylines from './Leylines'
 import NotCasting from './NotCasting'
 import Sharpcast from './Sharpcast'
+import Thunder from './Thunder'
 
 export default [
 	Gauge,
@@ -18,4 +19,5 @@ export default [
 	Leylines,
 	NotCasting,
 	Sharpcast,
+	Thunder,
 ]

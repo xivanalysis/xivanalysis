@@ -4,7 +4,8 @@ import ResultSegment from 'components/Analyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import {Actor, Event, Fight, Pet} from 'fflogs'
+import type {Event} from 'events'
+import type {Actor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report} from 'store/report'
 import toposort from 'toposort'
@@ -13,6 +14,7 @@ import {Dispatcher} from './Dispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
+import {formatDuration} from 'utilities'
 
 interface Player extends Actor {
 	pets: Pet[]
@@ -24,6 +26,21 @@ export interface Result {
 	name: string | MessageDescriptor
 	mode: DISPLAY_MODE
 	markup: React.ReactNode
+}
+
+export interface InitEvent {
+	type: 'init'
+	timestamp: number
+}
+export interface CompleteEvent {
+	type: 'complete'
+	timestamp: number
+}
+
+declare module 'events' {
+	interface EventTypeRepository {
+		parser: InitEvent | CompleteEvent
+	}
 }
 
 class Parser {
@@ -198,51 +215,38 @@ class Parser {
 		}
 	}
 
-	*iterateEvents(events: Event[]) {
+	private *iterateEvents(events: Event[]): Generator<Event, void, undefined> {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
-		yield this.hydrateFabrication({type: 'init'})
+		yield {
+			type: 'init',
+			timestamp: this.fight.start_time,
+		}
 
-		let obj
-		// eslint-disable-next-line no-cond-assign
-		while (!(obj = eventIterator.next()).done) {
+		let obj = eventIterator.next()
+		while (!obj.done) {
 			// Iterate over the actual event first
 			yield obj.value
+			obj = eventIterator.next()
 
 			// Iterate over any fabrications arising from the event and clear the queue
 			yield* this._fabricationQueue
 			this._fabricationQueue = []
-
 		}
 
 		// Finish with 'complete' fab
-		yield this.hydrateFabrication({type: 'complete'})
-	}
-
-	hydrateFabrication(event: Partial<Event>): Event {
-		// TODO: they've got a 'triggered' prop too...?
-		const clone = Object.assign({
-			// Provide default fields
-			timestamp: this.currentTimestamp,
-			type: 'fabrication',
-			sourceID: -1,
-			sourceIsFriendly: true,
-			targetID: -1,
-			targetInstance: -1,
-			targetIsFriendly: true,
-		}, event)
-		if (Object.getPrototypeOf(event)) {
-			Object.setPrototypeOf(clone, Object.getPrototypeOf(event))
+		yield {
+			type: 'complete',
+			timestamp: this.fight.end_time,
 		}
-		return clone
 	}
 
-	fabricateEvent(event: Partial<Event>) {
-		this._fabricationQueue.push(this.hydrateFabrication(event))
+	fabricateEvent(event: Event) {
+		this._fabricationQueue.push(event)
 	}
 
-	_setModuleError(mod: string, error: Error) {
+	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
 		if (moduleIndex !== -1 ) {
@@ -268,7 +272,7 @@ class Parser {
 	 * @param event The event that was being processed when the error occurred
 	 * @returns The resulting data along with an object containing errors that were encountered running getErrorContext methods.
 	 */
-	_gatherErrorContext(
+	private _gatherErrorContext(
 		mod: string,
 		source: 'event' | 'output',
 		error: Error,
@@ -434,20 +438,20 @@ class Parser {
 	// Utilities
 	// -----
 
-	byPlayer(event: Event, playerId = this.player.id) {
+	byPlayer(event: {sourceID?: number}, playerId = this.player.id) {
 		return event.sourceID === playerId
 	}
 
-	toPlayer(event: Event, playerId = this.player.id) {
+	toPlayer(event: {targetID?: number}, playerId = this.player.id) {
 		return event.targetID === playerId
 	}
 
-	byPlayerPet(event: Event, playerId = this.player.id) {
+	byPlayerPet(event: {sourceID?: number}, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.sourceID)
 		return pet && pet.petOwner === playerId
 	}
 
-	toPlayerPet(event: Event, playerId = this.player.id) {
+	toPlayerPet(event: {targetID?: number}, playerId = this.player.id) {
 		const pet = this.report.friendlyPets.find(pet => pet.id === event.targetID)
 		return pet && pet.petOwner === playerId
 	}
@@ -457,19 +461,7 @@ class Parser {
 	}
 
 	formatDuration(duration: number, secondPrecision?: number) {
-		/* tslint:disable:no-magic-numbers */
-		duration /= 1000
-		const seconds = duration % 60
-		if (duration < 60) {
-			const precision = secondPrecision !== undefined? secondPrecision : seconds < 10? 2 : 0
-			return seconds.toFixed(precision) + 's'
-		}
-		const precision = secondPrecision !== undefined ? secondPrecision : 0
-		const secondsText = precision ? seconds.toFixed(precision) : '' + Math.floor(seconds)
-		let pointPos = secondsText.indexOf('.')
-		if (pointPos === -1) { pointPos = secondsText.length }
-		return `${Math.floor(duration / 60)}:${pointPos === 1? '0' : ''}${secondsText}`
-		/* tslint:enable:no-magic-numbers */
+		return formatDuration(duration, {secondPrecision, hideMinutesIfZero: true, showNegative: true})
 	}
 
 	/**

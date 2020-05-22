@@ -10,7 +10,7 @@ import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import {Data} from './Data'
 
 interface SeverityTiers {
@@ -56,11 +56,21 @@ export abstract class Interrupts extends Module {
 
 	/**
 	 * Implementing modules MAY override this function to provide specific text if they wish for the 'why'
-	 * @param missedCasts
-	 * @param missedTime
+	 * The default is to complain that they missed a number of casts and give them an estimate
+	 * @param missedCasts The array of missed casts
+	 * @param missedTime The approximate time wasted via interrupts
+	 * @returns JSX that conforms to your suggestion content
 	 */
-	private suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
+	protected suggestionWhy(missedCasts: CastEvent[], missedTime: number): JSX.Element {
 		return <Trans id="core.interrupts.suggestion.why">You missed { missedCasts.length } casts (approximately { this.parser.formatDuration(missedTime) } of total casting time) due to interruption.</Trans>
+	}
+
+	/**
+	 * Implementing modules MAY override this function to provide alternative output if there's 0 interrupted
+	 * casts (in lieu of an empty table)
+	 */
+	protected noInterruptsOutput(): JSX.Element | undefined {
+		return undefined
 	}
 
 	protected init() {
@@ -82,8 +92,9 @@ export abstract class Interrupts extends Module {
 	private onCast(event: CastEvent) {
 		const guid = event.ability.guid
 		// if the thing they started casting doesn't match up with what they cast, then
-		// that's an interrupted cast
-		if (this.currentCast && guid !== this.currentCast.ability.guid) {
+		// that's an interrupted cast. Also, ignore attacks, since those can apparently happy during
+		// casting events..
+		if (this.currentCast && guid !== this.currentCast.ability.guid && guid !== ACTIONS.ATTACK.id) {
 			this.pushDropCasts(event)
 		}
 		this.currentCast = undefined
@@ -108,6 +119,10 @@ export abstract class Interrupts extends Module {
 	}
 
 	output() {
+		if (this.droppedCasts.length === 0) {
+			return this.noInterruptsOutput()
+		}
+
 		return <Table compact unstackable celled collapsing>
 		<Table.Header>
 			<Table.Row>

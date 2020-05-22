@@ -76,27 +76,27 @@ export default class Barrage extends Module {
 		super(...args)
 
 		// Event hooks
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: ACTIONS.BARRAGE.id,
 		}, this._onBarrageCast)
 
-		this.addHook('damage', {
+		this.addEventHook('damage', {
 			by: 'player',
 			abilityId: WEAPONSKILLS,
 		}, this._onStWeaponskillDamage)
 
-		this.addHook('applybuff', {
+		this.addEventHook('applybuff', {
 			by: 'player',
-			abilityId: STATUSES.STRAIGHTER_SHOT.id,
+			abilityId: STATUSES.STRAIGHT_SHOT_READY.id,
 		}, this._onSSApply)
 
-		this.addHook('removebuff', {
+		this.addEventHook('removebuff', {
 			by: 'player',
-			abilityId: STATUSES.STRAIGHTER_SHOT.id,
+			abilityId: STATUSES.STRAIGHT_SHOT_READY.id,
 		}, this._onSSRemove)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 	}
 
@@ -169,7 +169,7 @@ export default class Barrage extends Module {
 						weight: UNALIGNED_BARRAGE_WEIGHT,
 					}),
 					new WeightedRequirement({
-						name: <Trans id="brd.barrage.checklist.granted-refulgent"><ActionLink {...ACTIONS.BARRAGE} />s that granted <StatusLink {...STATUSES.STRAIGHTER_SHOT} /></Trans>,
+						name: <Trans id="brd.barrage.checklist.granted-refulgent"><ActionLink {...ACTIONS.BARRAGE} />s that granted <StatusLink {...STATUSES.STRAIGHT_SHOT_READY} /></Trans>,
 						percent: () => { return  100 - ((wastedProcs.length) * 100 / this._barrageEvents.length) },
 						weight: PROC_WASTED_WEIGHT,
 					}),
@@ -217,11 +217,11 @@ export default class Barrage extends Module {
 				// Adds the {issue, severity, reason} tuple corresponding a wastedProc to the panel
 				panelProperties.tuples.push({
 					issue: <Trans id="brd.barrage.issue.wasted-proc">
-						There was a <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc that went <strong>unused</strong>.
+						There was a <StatusLink {...STATUSES.STRAIGHT_SHOT_READY} /> proc that went <strong>unused</strong>.
 					</Trans>,
 					severity: WARNING,
 					reason: <Trans id="brd.barrage.issue.wasted-proc.reason">
-						{ACTIONS.BARRAGE.name} gives you a guaranteed <StatusLink {...STATUSES.STRAIGHTER_SHOT} /> proc.  If you already have a proc avaliable, use it before using {ACTIONS.BARRAGE.name}.
+						{ACTIONS.BARRAGE.name} gives you a guaranteed <StatusLink {...STATUSES.STRAIGHT_SHOT_READY} /> proc.  If you already have a proc avaliable, use it before using {ACTIONS.BARRAGE.name}.
 					</Trans>,
 				})
 			}

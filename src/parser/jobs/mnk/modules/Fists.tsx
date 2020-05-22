@@ -94,10 +94,10 @@ export default class Fists extends Module {
 	private activeFist: Fist = new Fist(FISTLESS, this.parser.fight.start_time)
 
 	protected init(): void {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
-		this.addHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('applybuff', {to: 'player', abilityId: FISTS}, this.onGain)
+		this.addEventHook('removebuff', {to: 'player', abilityId: FISTS}, this.onRemove)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	// Public API to get the Fist in use at a given time.
@@ -172,7 +172,7 @@ export default class Fists extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.FISTS_OF_FIRE.icon,
 			content: <Trans id="mnk.fists.suggestions.stanceless.content">
-				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} />, <StatusLink {...STATUSES.GREASED_LIGHTNING} /> manipulation with <ActionLink {...ACTIONS.FISTS_OF_EARTH} />, and outright more GCDs with <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} />, or outright more GCDs with <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
 			</Trans>,
 			why: <Trans id="mnk.fists.suggestions.stanceless.why">
 				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.

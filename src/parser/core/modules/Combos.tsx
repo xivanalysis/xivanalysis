@@ -7,9 +7,9 @@ import {DamageEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import DISPLAY_ORDER from 'parser/core/modules/DISPLAY_ORDER'
-import {NormalisedDamageEvent, NormalisedEvent} from 'parser/core/modules/NormalisedEvents'
+import {NormalisedDamageEvent, NormalisedEventFields} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import Timeline from 'parser/core/modules/Timeline'
+import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Data} from './Data'
 
@@ -21,8 +21,8 @@ const ISSUE_TYPENAMES = {
 	failedcombo: <Trans id="core.combos.issuetypenames.failed">Missed or Invulnerable</Trans>,
 }
 
-export class ComboEvent extends NormalisedEvent {
-	type = 'combo'
+export class ComboEvent extends NormalisedEventFields {
+	type = 'combo' as const
 	calculatedEvents: DamageEvent[] = []
 	confirmedEvents: DamageEvent[] = []
 
@@ -31,6 +31,12 @@ export class ComboEvent extends NormalisedEvent {
 		Object.assign(this, (({type, ...props}) => ({...props}))(event))
 		this.calculatedEvents = event.calculatedEvents.slice(0)
 		this.confirmedEvents = event.confirmedEvents.slice(0)
+	}
+}
+
+declare module 'events' {
+	interface EventTypeRepository {
+		combos: ComboEvent
 	}
 }
 
@@ -88,7 +94,6 @@ export default class Combos extends Module {
 
 	protected fabricateComboEvent(event: NormalisedDamageEvent) {
 		const combo = new ComboEvent(event)
-		delete combo.timestamp // Since fabricateEvent adds that in anyway
 		this.parser.fabricateEvent(combo)
 	}
 

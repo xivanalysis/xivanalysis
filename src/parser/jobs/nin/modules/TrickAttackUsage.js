@@ -24,14 +24,14 @@ export default class TrickAttackUsage extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this._castHook = this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.TRICK_ATTACK.id}, this._onTrickAttack)
-		this.addHook('complete', this._onComplete)
+		this._castHook = this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.TRICK_ATTACK.id}, this._onTrickAttack)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (action && action.onGcd && !(
+		if (event.timestamp >= this.parser.fight.start_time && action && action.onGcd && !(
 			action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_KASSATSU.id || action.id === ACTIONS.CHI.id || action.id === ACTIONS.JIN.id)) {
 			// Don't count the individual mudras as GCDs for this - they'll make the count screw if Suiton wasn't set up pre-pull
 			this._gcdCount++
