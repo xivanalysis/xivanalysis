@@ -845,7 +845,7 @@
   "war.about.description.warning": "While the analysis below should be reasonably accurate, this system is still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel.",
   "war.gauge.suggestions.loss.content": "Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.",
   "war.gauge.suggestions.loss.why": "{overCap} beast gauge lost to an overcapped gauge.",
-  "war.gauge.title": "Gauge Usage",
+  "war.gauge.title": "Beast Gauge",
   "war.ir.suggestions.badgcd.content": "GCDs used during <0/> should be limited to <1/> for optimal damage (or <2/> if three or more targets are present).",
   "war.ir.suggestions.missedgcd.content": "Try to land 5 GCDs during every <0/> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "war.ir.suggestions.trackedActions.content": "One use of <0/> and one use of <1/> should occur during every <2/> window.",
