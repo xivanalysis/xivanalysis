@@ -89,10 +89,10 @@ export class Gauge extends CoreGauge {
 		const {overCap} = this.beastGauge
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.INFURIATE.icon,
-			content: <Trans id="war.gauge.suggestions.gaugeloss.content">
+			content: <Trans id="war.gauge.suggestions.loss.content">
 					Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
 			</Trans>,
-			why: <Trans id="war.gauge.suggestions.gaugeloss.why">
+			why: <Trans id="war.gauge.suggestions.loss.why">
 				{overCap} beast gauge lost to an overcapped gauge.
 			</Trans>,
 			tiers: BEAST_USAGE_SEVERITY,
