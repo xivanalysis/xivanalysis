@@ -850,7 +850,7 @@
   "war.ir.suggestions.missedgcd.content": "<0/>の効果時間中に5回GCDを回してみてください。食い込みなしで全力で回してもこれができないのであれば、装備を調整してスキルスピードを上げることも検討してください。",
   "war.ir.suggestions.trackedActions.content": "<0/>と<1/>は<2/>の効果時間中に毎回使いましょう。",
   "war.ir.suggestions.trackedBadActions.content": "<0/>および<1/>を<2/>中に使用することは絶対に避けるべきです。これらのスキルはクリダイが保証されており、<3/>の効果を活かせません。",
-  "war.ir.title": "",
+  "war.ir.title": "原初の開放",
   "war.stormseye.checklist.description": "ブレハは与ダメージを10%アップするため、大部分のダメージを占めることになります。",
   "war.stormseye.checklist.name": "ブレハの維持率",
   "war.stormseye.checklist.uptime": "アクティブ率: <0/>",
