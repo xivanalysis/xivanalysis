@@ -30,7 +30,7 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{
 			cooldowns: [ACTIONS.UPHEAVAL],
 			// With delayed IR, and weaving many defence CDs, final weavable CD in IR (ie before 11th GCD)
-			firstUseOffset: 24300,
+			firstUseOffset: 18500,
 		},
 	]
 }
