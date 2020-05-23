@@ -34,6 +34,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-05-22'),
+			contributors: [CONTRIBUTORS.ACCHAN],
+			Changes: () => <>
+				Add Cooldown Downtime support for Infuriate, Inner Release, and Upheaval.
+			</>,
+		},
+		{
 			date: new Date('2019-07-30'),
 			contributors: [CONTRIBUTORS.SKYE],
 			Changes: () => <>
