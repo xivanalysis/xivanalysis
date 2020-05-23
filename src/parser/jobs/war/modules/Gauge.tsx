@@ -33,7 +33,7 @@ const BEAST_MODIFIERS = new Map<number, GaugeModifier>([
 	[ACTIONS.INNER_CHAOS.id, {cast: -50}],
 ])
 
-const RAGE_USAGE_SEVERITY = {
+const BEAST_USAGE_SEVERITY = {
 	20: SEVERITY.MINOR,
 	50: SEVERITY.MAJOR,
 }
@@ -47,7 +47,7 @@ const INFURIATE_REDUCERS = [
 const INFURIATE_CDR = 5
 
 export class Gauge extends CoreGauge {
-	static title = t('war.gauge.title')`Gauge Usage`
+	static title = t('war.gauge.title')`Beast Gauge`
 
 	@dependency private combatants!: Combatants
 	@dependency private cooldowns!: Cooldowns
@@ -89,13 +89,13 @@ export class Gauge extends CoreGauge {
 		const {overCap} = this.beastGauge
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.INFURIATE.icon,
-			content: <Trans id="war.gauge.suggestions.lost-rage.content">
+			content: <Trans id="war.gauge.suggestions.gaugeloss.content">
 					Avoid letting your Beast Gauge overcap - the wasted resources may cost you uses of your spenders over the course of the fight.
 			</Trans>,
-			why: <Trans id="war.gauge.suggestions.lost-rage.why">
+			why: <Trans id="war.gauge.suggestions.gaugeloss.why">
 				{overCap} beast gauge lost to an overcapped gauge.
 			</Trans>,
-			tiers: RAGE_USAGE_SEVERITY,
+			tiers: BEAST_USAGE_SEVERITY,
 			value: overCap,
 		}))
 	}
