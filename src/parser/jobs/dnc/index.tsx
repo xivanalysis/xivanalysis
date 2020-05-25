@@ -24,7 +24,7 @@ export default new Meta({
 		<Message warning icon>
 			<Icon name="warning sign"/>
 			<Message.Content>
-				<Trans id="dnc.about.description.warning"><strong>The module is a work in progress.</strong><br/>The details of proper DNC gameplay, and the random nature of the gauges, make it difficult to be definitive. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository!</Trans>
+				<Trans id="dnc.about.description.warning">The random nature of both of dancer's gauges make it difficult to be definitive about suggestions related to them. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository!</Trans>
 			</Message.Content>
 		</Message>
 	</>,
