@@ -261,7 +261,7 @@ export const NIN = ensureActions({
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
-		cooldown: 100,
+		cooldown: 120,
 		statusesApplied: ['TEN_CHI_JIN'],
 	},
 
