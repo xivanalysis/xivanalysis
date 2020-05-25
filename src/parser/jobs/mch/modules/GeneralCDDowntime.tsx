@@ -16,7 +16,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 	}, {
 		cooldowns: [ACTIONS.REASSEMBLE],
 		allowedAverageDowntime: 5000,
-		firstUseOffset: 0,
+		firstUseOffset: -3000,
 	}, {
 		cooldowns: [ACTIONS.AIR_ANCHOR],
 		allowedAverageDowntime: DOWNTIME_ALLOWED_GCD,
