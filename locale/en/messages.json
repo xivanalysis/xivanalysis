@@ -779,6 +779,8 @@
   "sch.overheal.hot.name": "Sacred Soil",
   "sch.overheal.pet.name": "Fairy",
   "sch.overheal.pethot.name": "Fairy HoTs",
+  "sch.recitation.suggestion.content": "Use a corresponding healing skill within Recitation's duration. Not using a corresponding action wastes the CD and a weave slot.",
+  "sch.recitation.suggestion.why": "{missedCount} {missedCount, plural, one {use} other {uses}} of Recitation had no corresponding action cast to trigger its effect.",
   "sch.swiftcast.missed.suggestion.content": "Use spells with <0/> before it expires. This allows you to use spells with cast times instantly, such as <1/> for a quick revive, or <2/> for weaving.",
   "sch.weaving.content": "Try to use <0/> and <1/> to weave your actions, and avoid weaving more actions than you have time for in a single GCD window. Doing so will delay your next GCD, reducing possible uptime. Check the <2><3/></2> module below for more detailed analysis.",
   "smn.about.description": "\nThis analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.\n\nDue to the nature of how SMN plays, there may be a near _overwhelming_ number of suggestions showing up below. Don't fret it, just focus on one or two improvements at a time.\n\nIf you would like to learn more about SMN, check the guides over at [Akhmorning](http://www.akhmorning.com/guide/intro/), the resources at [The Balance](https://thebalanceffxiv.com/), and have a chat in the #smn channels.\n",
