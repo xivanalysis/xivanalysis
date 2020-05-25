@@ -430,7 +430,7 @@
   "drg.suggestions.nastrond.why": "{noFullNsLife} of your Life of the Dragon windows were missing one or more <0/> uses.",
   "drg.suggestions.stardiver.content": "Each Life of the Dragon window should contain 1 <0/> use.",
   "drg.suggetions.stardiver.why": "{noLifeSd} of your Life of the Dragon windows were missing a <0/> use.",
-  "drk.about.description": "<0>This analyzer focuses on blood and mana usage, and then further explores common resource generation problems such as Blood Weapon usage and dropping GCDs.</0><1>Most of the data in this evaluation tool is simulated, and edge cases from FFLogs can cause weird results.  If something doesn't look right, please report it in the discord.</1>",
+  "drk.about.description": "<0>This analyzer aims to help you unleash your inner edge. The core of Dark Knight offense focuses on maximizing blood and MP utilization, in raid buff windows where available. In addition, you should aim to land five hits in each Blood Weapon and Delirium window.</0><1>Defensively, <2/> is a powerful cooldown that can mitigate heavy damage on you or a target, and grants a free use of Edge of Shadow or Flood of Shadow as long as the shield is fully consumed.</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "Try to land 5 GCDs during every <0/> window.  If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.",
   "drk.bloodweapon.title": "Blood Weapon Usage",
   "drk.darkside.title": "Darkside",
