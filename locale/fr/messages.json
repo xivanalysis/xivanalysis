@@ -779,6 +779,8 @@
   "sch.overheal.hot.name": "Dogme de survie",
   "sch.overheal.pet.name": "Fée",
   "sch.overheal.pethot.name": "Soins sur la durée de la fée",
+  "sch.recitation.suggestion.content": "",
+  "sch.recitation.suggestion.why": "",
   "sch.swiftcast.missed.suggestion.content": "Utiliser des sorts avec <0/> avant qu'ils expirent. Cela vous permet d'utiliser directement des sorts avec des temps de lancement, tel que <1/> pour une résurrection rapide , ou <2/> pour weave.",
   "sch.weaving.content": "Essayer d'utiliser <0/> et <1/> pouré vitez de faire plus d'actions par weaving que vous ne pouvez en faire durant une fenêtre de GCD. Cela retardera votre prochain GCD, réduisant ainsi le temps possible d'uptime. Vérifiez le module<2><3/></2> ci-dessous pour une analyse plus détaillée.",
   "smn.about.description": "\nCette analyse a pour but d'identifier quels sont vos leviers afin d'améliorer votre gameplay de SMN. Aussi, il vous permet d'aller un peu plus loin dans ce qui a pu se passer durant le combat.\n\nAu regard des caractéristiques propres au gameplay du SMN, il existe une pléthore de suggestion disponible ci-dessous. Ne vous inquiétez pas et concentrez-vous plutôt sur l’amélioration d'un ou deux éléments petit à petit.\n\nSi vous souhaitez en savoir plus sur le SMN, consultez les guides sur [Akhmorning] (http://www.akhmorning.com/guide/intro/) ou les ressources sur [The Balance] (https://thebalanceffxiv.com/), et venez discuter avec nous sur le canal #smn_questions.\n",
