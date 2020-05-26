@@ -56,6 +56,8 @@ const STEP_COOLDOWN_MILLIS = {
 	[ACTIONS.TECHNICAL_STEP.id]: ACTIONS.TECHNICAL_STEP.cooldown * 1000,
 }
 
+const DANCE_COMPLETION_LENIENCY_MILLIS = 1000
+
 class Dance {
 	end?: number
 	initiatingStep: CastEvent
@@ -88,7 +90,7 @@ class Dance {
 		const actionData = getDataBy(ACTIONS, 'id', this.initiatingStep.ability.guid) as TODO
 		return this.start + actionData.gcdRecast * 1000
 			+ EXPECTED_DANCE_MOVE_COUNT[this.expectedFinishId] * DANCE_MOVE_COOLDOWN_MILLIS
-			+ 1000 // Additional 1s leniency to account for network latency
+			+ DANCE_COMPLETION_LENIENCY_MILLIS // Additional leniency to account for network latency
 	}
 
 	public get start(): number {
@@ -224,8 +226,12 @@ export default class DirtyDancing extends Module {
 	}
 
 	private onComplete() {
+		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
+			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
+		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id &&
+			_.last(dance.rotation)?.ability.guid === ACTIONS.TECHNICAL_FINISH.id).length
 		this.missedDances = this.danceHistory.filter(dance => dance.missed).length
-		this.dirtyDances = this.danceHistory.filter(dance => dance.dirty).length
+		this.dirtyDances = Math.max(this.danceHistory.filter(dance => dance.dirty).length - (zeroStandards + zeroTechnicals), 0)
 		this.footlooseDances = this.danceHistory.filter(dance => dance.footloose).length
 
 		// Suggest to move closer for finishers.
@@ -305,8 +311,6 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
-		const zeroStandards = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.STANDARD_STEP.id &&
-			_.last(dance.rotation)?.ability.guid === ACTIONS.STANDARD_FINISH.id).length
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.STANDARD_STEP.icon,
 			content: <Trans id="dnc.dirty-dancing.suggestions.zero-standard.content">
@@ -322,8 +326,6 @@ export default class DirtyDancing extends Module {
 			</Trans>,
 		}))
 
-		const zeroTechnicals = this.danceHistory.filter(dance => dance.dirty && dance.initiatingStep.ability.guid === ACTIONS.TECHNICAL_STEP.id &&
-			_.last(dance.rotation)?.ability.guid === ACTIONS.TECHNICAL_FINISH.id).length
 		if (zeroTechnicals > 0) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.TECHNICAL_STEP.icon,
