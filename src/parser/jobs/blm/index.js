@@ -64,5 +64,10 @@ export default new Meta({
 		date: new Date('2020-04-27'),
 		Changes: () => <>Added a Thunder module that lists how much you clipped your DoT.</>,
 		contributors: [CONTRIBUTORS.FURST],
+	},
+	{
+		date: new Date('2020-05-26'),
+		Changes: () => <>(Modified) Jp Opener is no longer falsely flagged.</>,
+		contributors: [CONTRIBUTORS.FURST],
 	}],
 })
