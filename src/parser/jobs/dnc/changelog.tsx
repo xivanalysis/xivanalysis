@@ -64,8 +64,8 @@ export const changelog = [
 	{
 		date: new Date('2019-05-13'),
 		Changes: () => <>Adjust Esprit generation simulation and Technical Windows table to account for multi-dancer parties.</>,
-  },
-  {
+	},
+	{
 		date: new Date('2020-05-10'),
 		Changes: () => <>Leniency for rushing finishes at the end of the fight or before a downtime, and suggestions to avoid 0-step finishes.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
