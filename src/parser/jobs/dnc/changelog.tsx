@@ -61,4 +61,9 @@ export const changelog = [
 		Changes: () => <>Technical Finish windows now display how many players were affected by your buff.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2020-05-10'),
+		Changes: () => <>Leniency for rushing finishes at the end of the fight or before a downtime, and suggestions to avoid 0-step finishes.</>,
+		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
 ]
