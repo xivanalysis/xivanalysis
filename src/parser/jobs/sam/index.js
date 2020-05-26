@@ -23,13 +23,6 @@ export default new Meta({
 			<Icon name="info"/>
 			<Trans id="sam.about.description.info"><strong>Note</strong> Unfortunately, positionals cannot be tracked at this time, and as such, Kenki values are <em>estimates</em>. Care has been taken to keep them as accurate as possible, however some innacuracies may be present.</Trans>
 		</Message>
-
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sam.about.description.warning">	<strong>The module is incomplete, and only supports <em>basic</em> analysis of SAM gameplay.</strong> While the existing features below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel or report a bug on our github repository! </Trans>
-			</Message.Content>
-		</Message>
 	</>,
 
 	supportedPatches: {
