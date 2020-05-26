@@ -1,5 +1,5 @@
 {
-  "ast.about.description-1": "",
+  "ast.about.description-1": "占星術師における<0/>の最大の魅力は、味方のパーティー全体の火力をアルカナを使って強化する能力です。 このアナライザーは、星座があなたのために、どう作用するかを示し、その逆ではありません。",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば、余った GCD でより DPS が高くなるでしょう。\n\nこのツールは、通常攻撃可能な時間とGCDの推奨を表示します。 またあなたが付与したバフとあなたが使ったカードアクションの簡単な一覧を提供します。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
   "ast.about.description.warning.healer": "現在、全ヒーラーについてボスの無敵状態のチェックが正しく機能していません。このことから、常に詠唱できているかのチェックやDoT稼働率等の時間に関係する機能の精度が悪くなっています。",
@@ -84,9 +84,9 @@
   "blm.ogcd-downtime.ogcd-cd-buffer": "ランダム要素は分析の範囲内に計算を含めてあるため、アクションやアビリティの抱えられる可能な時間を一回につき{0}です。",
   "blm.ogcd-downtime.ogcd-cd-metric": "アビリティを使えるときは必ず使用するようにしましょう。ただし、GCDに食い込まないようにしてください。 procもしくは詠唱の早いブリザジャやファイガを利用したときに使いましょう。 {0}",
   "blm.procs.suggestions.dropped-f3ps.content": "<1/>を使用せずに時間切れで失ったために、1つ以上の<0/>procを失いました。",
-  "blm.procs.suggestions.dropped-f3ps.why": "",
+  "blm.procs.suggestions.dropped-f3ps.why": "{0, plural, one {# 個のファイガproc} other {# 個のファイガproc}} が失われた。",
   "blm.procs.suggestions.dropped-t3ps.content": "<1/>を使用せずに時間切れで失ったために、1つ以上の<0/>procを失いました。",
-  "blm.procs.suggestions.dropped-t3ps.why": "",
+  "blm.procs.suggestions.dropped-t3ps.why": "{0, plural, one {# 個のサンダガproc} other {# 個のサンダガproc}} が失われた。",
   "blm.rotation-watchdog.accordion.message": "",
   "blm.rotation-watchdog.suggestions.extra-f1s.content": "",
   "blm.rotation-watchdog.suggestions.extra-f1s.why": "ファイアのキャスト総数：{0, plural, one {#個} other {#個}}",
