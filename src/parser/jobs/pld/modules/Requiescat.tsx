@@ -78,18 +78,18 @@ export default class Requiescat extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook(
 			'applybuff',
 			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
 			this.onApplyRequiescat,
 		)
-		this.addHook(
+		this.addEventHook(
 			'removebuff',
 			{by: 'player', abilityId: STATUSES.REQUIESCAT.id},
 			this.onRemoveRequiescat,
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {

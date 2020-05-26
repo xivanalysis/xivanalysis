@@ -29,14 +29,14 @@ export default class SongUptime extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {
+		this.addEventHook('cast', {
 			by: 'player',
 			abilityId: [ACTIONS.THE_WANDERERS_MINUET.id, ACTIONS.MAGES_BALLAD.id, ACTIONS.ARMYS_PAEON.id],
 		}, this._onSongCast)
-		this.addHook('death', {
+		this.addEventHook('death', {
 			to: 'player',
 		}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onSongCast(event) {

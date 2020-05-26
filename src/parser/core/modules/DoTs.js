@@ -32,8 +32,8 @@ export default class DoTs extends Module {
 				this._statusDuration[statusId] = status.duration * 1000
 			}
 		})
-		this.addHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], {by: 'player', abilityId: this.constructor.statusesToTrack}, this._onDotApply)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	// *** FUNCTIONS TO OVERRIDE *** //
@@ -102,7 +102,7 @@ export default class DoTs extends Module {
 		// This normalises clipping as seconds clipped per minute, since some level of clipping is expected and we need tiers that work for both long and short fights
 		const fightDurationMillis = (this.parser.fightDuration - this.invuln.getInvulnerableUptime())
 		// eslint-disable-next-line no-magic-numbers
-		const clipSecsPerMin = Math.round((this._clip[statusId] * 60) / fightDurationMillis)
+		const clipSecsPerMin = Math.round(((this._clip[statusId] ?? 0) * 60) / fightDurationMillis)
 		return clipSecsPerMin
 	}
 }

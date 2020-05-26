@@ -1,7 +1,6 @@
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import {getDataBy} from 'data'
 
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
@@ -32,6 +31,7 @@ export default class Huton extends Module {
 	static handle = 'huton'
 	static dependencies = [
 		'checklist',
+		'data',
 		'death',
 		'suggestions',
 	]
@@ -56,11 +56,11 @@ export default class Huton extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: ACTIONS.HUTON.id}, this._onHutonCast)
-		this.addHook('combo', {by: 'player', abilityId: Object.keys(HUTON_EXTENSION_MILLIS).map(Number)}, this._onHutonExtension)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('raise', {to: 'player'}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.HUTON.id}, this._onHutonCast)
+		this.addEventHook('combo', {by: 'player', abilityId: Object.keys(HUTON_EXTENSION_MILLIS).map(Number)}, this._onHutonExtension)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('raise', {to: 'player'}, this._onRaise)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_handleHutonRecast(key, elapsedTime) {
@@ -93,7 +93,10 @@ export default class Huton extends Module {
 
 	_onHutonExtension(event) {
 		const elapsedTime = (event.timestamp - this._lastEventTime)
-		const extension = HUTON_EXTENSION_MILLIS[getDataBy(ACTIONS, 'id', event.ability.guid)]
+		const action = this.data.getAction(event.ability.guid)
+		if (action == null) { return }
+
+		const extension = HUTON_EXTENSION_MILLIS[action.id]
 		this._handleHutonExtension('high', extension, elapsedTime)
 		this._handleHutonExtension('low', extension, elapsedTime)
 		this._lastEventTime = event.timestamp
@@ -156,7 +159,7 @@ export default class Huton extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.HUTON.icon,
 			content: <Trans id="nin.huton.suggestions.clipping.content">
-				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so your other two combo finishers are typically better options.
+				Avoid using <ActionLink {...ACTIONS.ARMOR_CRUSH}/> when <ActionLink {...ACTIONS.HUTON}/> has more than 40 seconds left on its duration. The excess time is wasted, so using <ActionLink {...ACTIONS.AEOLIAN_EDGE}/> is typically the better option.
 			</Trans>,
 			tiers: {
 				5000: SEVERITY.MINOR,

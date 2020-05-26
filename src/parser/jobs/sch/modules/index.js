@@ -6,6 +6,8 @@ import FaerieGauge from './FaerieGauge'
 import Swiftcast from './Swiftcast'
 import SchInterrupts from './Interrupts'
 import Pets from './Pets'
+import Overheal from './Overheal'
+import Recitation from './Recitation'
 
 export default [
 	Weaving,
@@ -16,4 +18,6 @@ export default [
 	Swiftcast,
 	SchInterrupts,
 	Pets,
+	Overheal,
+	Recitation,
 ]

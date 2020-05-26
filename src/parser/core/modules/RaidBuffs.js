@@ -96,11 +96,11 @@ export default class RaidBuffs extends Module {
 
 		// Event hooks
 		const filter = {abilityId: [...this._buffMap.keys()]}
-		this.addHook('applybuff', {...filter, to: 'player'}, this._onApply)
-		this.addHook('applydebuff', filter, this._onApply)
-		this.addHook('removebuff', {...filter, to: 'player'}, this._onRemove)
-		this.addHook('removedebuff', filter, this._onRemove)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('applybuff', {...filter, to: 'player'}, this._onApply)
+		this.addEventHook('applydebuff', filter, this._onApply)
+		this.addEventHook('removebuff', {...filter, to: 'player'}, this._onRemove)
+		this.addEventHook('removedebuff', filter, this._onRemove)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onApply(event) {
@@ -109,7 +109,7 @@ export default class RaidBuffs extends Module {
 			return
 		}
 
-		const buffs = this.getTargetBuffs(event)
+		const buffs = this.getTargetBuffs(event.targetID)
 		const statusId = event.ability.guid
 		const settings = this._buffMap.get(statusId)
 
@@ -127,13 +127,17 @@ export default class RaidBuffs extends Module {
 			return
 		}
 
-		const statusId = event.ability.guid
+		this._endStatus(event.targetID, event.ability.guid)
+	}
 
-		const applyTime = this.getTargetBuffs(event)[statusId]
+	_endStatus(targetId, statusId) {
+		const targetBuffs = this.getTargetBuffs(targetId)
+		const applyTime = targetBuffs[statusId]
 		// This shouldn't happen, but it do.
 		if (!applyTime) { return }
+		delete targetBuffs[statusId]
 
-		const removeTime = event.timestamp - this.parser.fight.start_time
+		const removeTime = this.parser.currentTimestamp - this.parser.fight.start_time
 
 		const settings = this._buffMap.get(statusId)
 		const status = this.data.getStatus(statusId)
@@ -145,7 +149,7 @@ export default class RaidBuffs extends Module {
 		let row = this._buffRows.get(rowId)
 		if (row == null) {
 			row = new SimpleRow({
-				label: settings.name || event.ability.name,
+				label: settings.name || status.name,
 				order: applyTime,
 			})
 			this._buffRows.set(rowId, row)
@@ -160,6 +164,13 @@ export default class RaidBuffs extends Module {
 	}
 
 	_onComplete() {
+		// Clean up any remnant statuses
+		Object.entries(this._buffs).forEach(([targetId, buffs]) =>
+			Object.keys(buffs).forEach(buffId =>
+				this._endStatus(targetId, Number(buffId)),
+			),
+		)
+
 		// Add the parent row. It will automatically hide if there's no children.
 		this.timeline.addRow(new SimpleRow({
 			label: 'Raid Buffs',
@@ -168,7 +179,7 @@ export default class RaidBuffs extends Module {
 		}))
 	}
 
-	getTargetBuffs(event) {
-		return this._buffs[event.targetID] = this._buffs[event.targetID] || {}
+	getTargetBuffs(targetId) {
+		return this._buffs[targetId] = this._buffs[targetId] || {}
 	}
 }

@@ -1,6 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
 import CoreCooldowns from 'parser/core/modules/Cooldowns'
-import {PLAY} from './ArcanaGroups'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
@@ -25,7 +24,16 @@ export default class Cooldowns extends CoreCooldowns {
 		{
 			name: 'Play',
 			merge: true,
-			actions: [...PLAY],
+			actions: [
+				ACTIONS.THE_BALANCE.id,
+				ACTIONS.THE_BOLE.id,
+				ACTIONS.THE_ARROW.id,
+				ACTIONS.THE_SPEAR.id,
+				ACTIONS.THE_EWER.id,
+				ACTIONS.THE_SPIRE.id,
+				ACTIONS.LORD_OF_CROWNS.id,
+				ACTIONS.LADY_OF_CROWNS.id,
+			],
 		},
 		ACTIONS.DIVINATION.id,
 		ACTIONS.LIGHTSPEED.id,

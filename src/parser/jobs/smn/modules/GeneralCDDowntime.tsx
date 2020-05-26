@@ -1,10 +1,11 @@
 import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
-import {AbilityType, CastEvent, Event} from 'fflogs'
+import {AbilityType, CastEvent} from 'fflogs'
 import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import React from 'react'
+import {Event} from 'events'
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	// Need dependency to ensure proper ordering of normalise calls
@@ -51,10 +52,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		],
 		firstUseOffset: 6750,
 	}]
-
-	checklistName = <Trans id="smn.cooldownDowntime.name">Use your cooldowns</Trans>
-	checklistDescription = <Trans id="smn.cooldownDowntime.suggestion">Always make sure to use your abilities
-		when they are available, but do not clip or delay your GCD to use them.</Trans>
 
 	normalise(events: Event[]) {
 		// Egis will not execute an order while they are moving, so it is possible to

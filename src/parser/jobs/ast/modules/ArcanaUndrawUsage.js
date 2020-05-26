@@ -15,8 +15,8 @@ export default class ArcanaUndrawUsage extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('complete', this._onComplete)
 		this._badUndraws = []
 	}
 

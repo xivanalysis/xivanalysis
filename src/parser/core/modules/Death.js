@@ -28,18 +28,18 @@ export default class Death extends Module {
 
 		const raiseStatuses = RAISE_STATUSES.map(key => this.data.statuses[key])
 
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('applydebuff', {
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('applydebuff', {
 			to: 'player',
 			abilityId: raiseStatuses,
 		}, this._onRaise)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 
 		// If they (begin)cast, they were probably LB3'd, just mark end of death
 		// TODO: I mean there's an actual LB3 action cast, it's just not in the logs because of my filter. Look into it.
 		const checkLb3 = event => this._timestamp && this._onRaise(event)
-		this.addHook('begincast', {by: 'player'}, checkLb3)
-		this.addHook('cast', {by: 'player'}, checkLb3)
+		this.addEventHook('begincast', {by: 'player'}, checkLb3)
+		this.addEventHook('cast', {by: 'player'}, checkLb3)
 	}
 
 	_onDeath(event) {
@@ -50,9 +50,10 @@ export default class Death extends Module {
 	}
 
 	_onRaise(event) {
-		this.addDeathToTimeline(event.timestamp)
+		this._addDeathToTimeline(event.timestamp)
 		this.parser.fabricateEvent({
 			type: 'raise',
+			timestamp: event.timestamp,
 			targetID: event.targetID,
 		})
 	}
@@ -69,7 +70,7 @@ export default class Death extends Module {
 		}
 
 		if (this._timestamp) {
-			this.addDeathToTimeline(this.parser.fight.end_time)
+			this._addDeathToTimeline(this.parser.fight.end_time)
 		}
 
 		if (!this._count) {
@@ -97,7 +98,7 @@ export default class Death extends Module {
 		return true
 	}
 
-	addDeathToTimeline(end) {
+	_addDeathToTimeline(end) {
 		const startTime = this.parser.fight.start_time
 
 		this.timeline.addItem(new SimpleItem({

@@ -49,16 +49,16 @@ export default class DualCast extends Module {
 	constructor(...args) {
 		super(...args)
 
-		this.addHook('cast', {by: 'player'}, this._onCast)
-		this.addHook('applybuff', {
+		this.addEventHook('cast', {by: 'player'}, this._onCast)
+		this.addEventHook('applybuff', {
 			to: 'player',
 			abilityId: STATUSES.DUALCAST.id,
 		}, this._onGain)
-		this.addHook('removebuff', {
+		this.addEventHook('removebuff', {
 			to: 'player',
 			abilityId: STATUSES.DUALCAST.id,
 		}, this._onRemove)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onCast(event) {
@@ -134,7 +134,7 @@ export default class DualCast extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: STATUSES.DUALCAST.icon,
 				content: <Trans id="rdm.dualcast.suggestions.missed.content">
-					You should avoid wasting DualCast procs entirely as it is lost potency overtime.
+					You should avoid wasting Dualcast procs entirely as it is lost potency overtime.
 				</Trans>,
 				tiers: this._severityMissedDualcast,
 				value: this._missedDualCasts,

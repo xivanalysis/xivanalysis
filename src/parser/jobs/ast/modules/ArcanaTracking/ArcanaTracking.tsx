@@ -2,12 +2,14 @@ import {t} from '@lingui/macro'
 import {getDataBy} from 'data'
 import {Data} from 'parser/core/modules/Data'
 import {ActionRoot} from 'data/ACTIONS/root'
-import {BuffEvent, CastEvent, DeathEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import {Event} from 'events'
+import {InitEvent} from 'parser/core/Parser'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000
@@ -42,12 +44,8 @@ export enum SleeveType {
 	TWO_STACK = 2,
 }
 
-interface PullEvent extends Event {
-	type: 'pull'
-}
-
 export interface CardState {
-	lastEvent: CastEvent | PullEvent | DeathEvent
+	lastEvent: InitEvent | CastEvent | DeathEvent
 	drawState?: number // typeof DRAWN_ARCANA status ID. Only loaded at runtime. TODO: Types
 	sealState: SealType[]
 	sleeveState: SleeveType
@@ -79,10 +77,8 @@ export default class ArcanaTracking extends Module {
 
 	private cardStateLog: CardState[] = [{
 		lastEvent: {
-			type: 'pull',
+			type: 'init',
 			timestamp: this.parser.fight.start_time,
-			targetIsFriendly: true,
-			sourceIsFriendly: true,
 		},
 		drawState: undefined,
 		sealState: CLEAN_SEAL_STATE,
@@ -112,29 +108,36 @@ export default class ArcanaTracking extends Module {
 		this.STATUS_TO_PLAY_LOOKUP = _.zipObject(this.ARCANA_STATUSES, this.PLAY)
 		this.DRAWN_TO_PLAY_LOOKUP = _.zipObject(this.DRAWN_ARCANA, this.PLAY)
 
-		this.addHook('cast', {abilityId: this.CARD_ACTIONS, by: 'player'}, this.onCast)
+		this.addEventHook('cast', {abilityId: this.CARD_ACTIONS, by: 'player'}, this.onCast)
 
-		this.addHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
-		this.addHook('removebuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
+		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPrepullArcana)
+		this.addEventHook('removebuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.offPrepullArcana)
 
-		this.addHook('applybuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
-		this.addHook('removebuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('applybuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.onDrawnStatus)
+		this.addEventHook('removebuff', {abilityId: this.DRAWN_ARCANA, by: 'player'}, this.offDrawnStatus)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
 		let prepullSleeve = true
+		let prepullSleeveFabbed = false
 		const sleeveDrawLog: CastEvent[] = []
 		for (const event of events) {
+			if (event.timestamp < startTime && event.type === 'cast' && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
+				// sleeve was already fabbed
+				prepullSleeveFabbed = true
+			}
 			if (event.timestamp - startTime >= (this.data.statuses.SLEEVE_DRAW.duration * 1000)
 			) {
 				// End loop if: 1. Max duration of sleeve draw status passed
 				break
-			} else if (event.type === 'cast' && this.isCastEvent(event) && this.data.actions.SLEEVE_DRAW.id === event.ability.guid) {
+			} else if (event.type === 'cast'
+				&& this.data.actions.SLEEVE_DRAW.id === event.ability.guid
+				&& event.timestamp >= startTime) {
 				// they used sleeve so it can't have been prepull
 				prepullSleeve = false
-			} else if (event.type === 'cast' && this.isCastEvent(event) && this.data.actions.DRAW.id === event.ability.guid) {
+			} else if (event.type === 'cast' && this.data.actions.DRAW.id === event.ability.guid) {
 				sleeveDrawLog.push(event)
 			} else {
 				continue
@@ -143,7 +146,24 @@ export default class ArcanaTracking extends Module {
 
 		// if they drew 2-3 cards in the first 30 sec, we can assume they had a sleeve draw
 		if (prepullSleeve && _.inRange(sleeveDrawLog.length, SleeveType.TWO_STACK, SleeveType.TWO_STACK + 2)) {
-			this.cardStateLog[0].sleeveState = sleeveDrawLog.length - 1
+			this.cardStateLog[0].sleeveState = sleeveDrawLog.length
+			// prefab a sleeve draw if there isn't already
+			if (!prepullSleeveFabbed) {
+				events.splice(0, 0, {
+					ability: {
+						abilityIcon: sleeveDrawLog.length > 2 ? '019000/019562.png' : '019000/019561.png',
+						guid: 7448,
+						name: 'Sleeve Draw',
+						type: 1,
+					},
+					sourceID: this.parser.player.id,
+					sourceIsFriendly: true,
+					targetID: this.parser.player.id,
+					targetIsFriendly: true,
+					type: 'cast',
+					timestamp: startTime,
+				})
+			}
 		}
 
 		return events
@@ -167,7 +187,7 @@ export default class ArcanaTracking extends Module {
 	 * @returns {CardState} - object containing the card state of the pull
 	 */
 	public getPullState(): CardState {
-		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && artifact.lastEvent.type === 'pull') as CardState
+		const stateItem = this.cardStateLog.find(artifact => artifact.lastEvent && artifact.lastEvent.type === 'init') as CardState
 		return stateItem
 	}
 
@@ -382,7 +402,7 @@ export default class ArcanaTracking extends Module {
 			// They had something in the draw slot
 			const drawnStatus = this.arcanaActionToStatus(actionId)
 			this.cardStateLog.forEach((cardState, index) => {
-				if (cardState.lastEvent.type === 'pull') {
+				if (cardState.lastEvent.type === 'init') {
 					this.cardStateLog[index].drawState = drawnStatus ? drawnStatus : undefined
 					return this.pullStateInitialized = true
 				}
@@ -404,13 +424,7 @@ export default class ArcanaTracking extends Module {
 	private retconSearch(cardActionId: number) {
 		let searchLatest = true
 		const lastLog = _.last(this.cardStateLog) as CardState
-		let lastEvent = lastLog.lastEvent
-		if (lastEvent.type === 'pull') {
-			return
-		}
-		lastEvent = lastLog.lastEvent as CastEvent
-
-		const latestActionId = lastEvent.ability.guid
+		const latestActionId = lastLog.lastEvent.type === 'cast' ? lastLog.lastEvent.ability.guid : -1
 
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
@@ -427,8 +441,7 @@ export default class ArcanaTracking extends Module {
 
 		// Looking for those abilities in CARD_GRANTING_ABILITIES that could possibly get us this card
 		let lastIndex = _.findLastIndex(searchLog,
-			stateItem =>
-				this.isCastEvent(stateItem.lastEvent) && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
+			stateItem => stateItem.lastEvent.type === 'init' || stateItem.lastEvent.type === 'cast' && this.CARD_GRANTING_ABILITIES.includes(stateItem.lastEvent.ability.guid),
 		)
 
 		// There were no finds of specified abilities, OR it wasn't logged.
@@ -531,8 +544,4 @@ export default class ArcanaTracking extends Module {
 
 		return arcanaId
 	}
-
-	public isCastEvent = (event: Event): event is CastEvent => event.type === 'cast'
-	public isBuffEvent = (event: Event): event is BuffEvent => event.type === 'buff'
-
 }

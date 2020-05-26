@@ -46,9 +46,9 @@ export default class Overheal extends Module {
 			this.HOT_STATUSES.push(this.data.statuses[actionKey].id)
 		})
 
-		this.addHook('heal', {by: 'player'}, this.onHeal)
-		this.addHook('heal', {by: 'pet'}, this.onPetHeal)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('heal', {by: 'player'}, this.onHeal)
+		this.addEventHook('heal', {by: 'pet'}, this.onPetHeal)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onHeal(event: HealEvent) {

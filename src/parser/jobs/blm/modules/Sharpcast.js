@@ -38,11 +38,11 @@ export default class Sharpcast extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onRemoveSharpcast)
-		this.addHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onGainSharpcast)
-		this.addHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this._onCast)
-		this.addHook('death', {to: 'player'}, this._onDeath)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('removebuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onRemoveSharpcast)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.SHARPCAST.id}, this._onGainSharpcast)
+		this.addEventHook('cast', {by: 'player', abilityId: SHARPCAST_CONSUMER_IDS}, this._onCast)
+		this.addEventHook('death', {to: 'player'}, this._onDeath)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onRemoveSharpcast(event) {

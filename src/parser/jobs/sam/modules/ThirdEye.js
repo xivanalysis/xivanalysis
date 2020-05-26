@@ -21,13 +21,13 @@ export default class ThirdEye extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.MERCIFUL_EYES.id]}, this._onBadSpend)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.HISSATSU_SEIGAN.id]}, this._onSpend)
-		this.addHook('cast', {by: 'player', abilityId: [ACTIONS.THIRD_EYE.id]}, this._onEye)
-		this.addHook('applybuff', {
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.MERCIFUL_EYES.id]}, this._onBadSpend)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.HISSATSU_SEIGAN.id]}, this._onSpend)
+		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.THIRD_EYE.id]}, this._onEye)
+		this.addEventHook('applybuff', {
 			to: 'player',
 			abilityId: [STATUSES.EYES_OPEN.id]}, this._onGain)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onEye() {

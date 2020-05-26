@@ -41,11 +41,11 @@ export default class EarthlyStar extends Module {
 
 	protected init() {
 		this.PET_CASTS = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
-		this.addHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onSet)
-		this.addHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
+		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onSet)
+		this.addEventHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
 		// this.addHook('applybuff', {abilityId: PLAYER_STATUSES, by: 'player'}, this._onDominance)
 
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	private onSet(event: CastEvent) {

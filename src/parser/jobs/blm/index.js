@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import TransMarkdown from 'components/ui/TransMarkdown'
@@ -16,12 +15,6 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description}/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="blm.about.description.warning">This isn&apos;t even remotely done.</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.0',
@@ -66,5 +59,15 @@ export default new Meta({
 		date: new Date('2019-10-22'),
 		Changes: () => <>Enochian buffs lost during extended cutscenes, and certain Astral Fire phase optimizations, will no longer be unintentionally penalized.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
+	},
+	{
+		date: new Date('2020-04-27'),
+		Changes: () => <>Added a Thunder module that lists how much you clipped your DoT.</>,
+		contributors: [CONTRIBUTORS.FURST],
+	},
+	{
+		date: new Date('2020-05-26'),
+		Changes: () => <>(Modified) Jp Opener is no longer falsely flagged.</>,
+		contributors: [CONTRIBUTORS.FURST],
 	}],
 })

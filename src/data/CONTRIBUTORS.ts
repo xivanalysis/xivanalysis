@@ -164,6 +164,16 @@ const CONTRIBUTORS = {
 		name: 'Ritashi',
 		jobs: [JOBS.SUMMONER],
 	},
+	YUMIYAFANGIRL: {
+		name: 'yumiyafangirl',
+		avatar: require('./avatar/yumiyafangirl.png'),
+		jobs: [JOBS.MACHINIST],
+	},
+	YUNI: {
+		name: 'Yuni Azure',
+		avatar: require('./avatar/yuni.png'),
+		jobs: [JOBS.SCHOLAR],
+	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 

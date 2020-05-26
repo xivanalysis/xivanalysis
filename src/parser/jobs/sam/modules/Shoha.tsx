@@ -1,5 +1,5 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import Color from 'color'
 import React, {Fragment} from 'react'
 import {Accordion} from 'semantic-ui-react'
@@ -10,12 +10,11 @@ import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
-import {BuffEvent, CastEvent, Event} from 'fflogs'
+import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import {ComboEvent} from 'parser/core/modules/Combos'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions from 'parser/core/modules/Suggestions'
 
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,
@@ -65,8 +64,8 @@ export default class Shoha extends Module {
 	@dependency private combatants!: Combatants
 
 	protected init() {
-		this.addHook('init', this.pushToHistory)
-		this.addHook(
+		this.addEventHook('init', this.pushToHistory)
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -74,7 +73,7 @@ export default class Shoha extends Module {
 			},
 			this.onGenerate,
 		)
-		this.addHook(
+		this.addEventHook(
 			'cast',
 			{
 				by: 'player',
@@ -82,11 +81,11 @@ export default class Shoha extends Module {
 			},
 			this.onSpend,
 		)
-		this.addHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onApplyMeditate)
-		this.addHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onRemoveMeditate)
+		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onApplyMeditate)
+		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.MEDITATE.id}, this.onRemoveMeditate)
 
-		this.addHook('death', {to: 'player'}, this.onDeath)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onGenerate(event: CastEvent) {

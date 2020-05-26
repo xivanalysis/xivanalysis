@@ -26,10 +26,10 @@ export default class Statuses extends Module {
 		const ids = [this.parser.player.id, ...this.parser.player.pets.map(p => p.id)]
 		const byFilter = {by: ids}
 
-		this.addHook('complete', this._onComplete)
-		this.addHook(['applybuff', 'applydebuff'], byFilter, this._onApply)
-		this.addHook(['refreshdebuff', 'refreshbuff'], byFilter, this._onRefresh)
-		this.addHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
+		this.addEventHook('complete', this._onComplete)
+		this.addEventHook(['applybuff', 'applydebuff'], byFilter, this._onApply)
+		this.addEventHook(['refreshdebuff', 'refreshbuff'], byFilter, this._onRefresh)
+		this.addEventHook(['removebuff', 'removedebuff'], byFilter, this._onRemove)
 
 		this.cooldowns.constructor.cooldownOrder.forEach(cd => {
 			if (cd && typeof cd === 'object' && cd.merge) {

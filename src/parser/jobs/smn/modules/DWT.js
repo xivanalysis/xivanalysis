@@ -24,7 +24,7 @@ const CORRECT_GCDS = [
 	ACTIONS.ASSAULT_II_FLAMING_CRUSH.id,
 ]
 
-const DWT_CAST_TIME_MOD = -2.5
+export const DWT_CAST_TIME_MOD = -2.5
 
 export const DWT_LENGTH = 15000
 

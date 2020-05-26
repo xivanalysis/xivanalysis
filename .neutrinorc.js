@@ -121,8 +121,8 @@ module.exports = {
 		// Add module resolution using NODE_PATH so absolutes work
 		neutrino => {
 			const modules = neutrino.config.resolve.modules
-			modules.add('node_modules')
 			modules.add(process.env.NODE_PATH)
+			modules.add('node_modules')
 		},
 
 		// Tweak the name mangling performed by css-loader

@@ -48,9 +48,9 @@ export default class Horoscope extends Module {
 	private activations = 0
 
 	protected init() {
-		this.addHook('cast', {abilityId: this.data.actions.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
-		this.addHook('cast', {abilityId: this.data.actions.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('cast', {abilityId: this.data.actions.HOROSCOPE.id, by: 'player'}, this.onHoroscope)
+		this.addEventHook('cast', {abilityId: this.data.actions.HOROSCOPE_ACTIVATION.id, by: 'player'}, this.onActivate)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onHoroscope(event: CastEvent) {

@@ -3,14 +3,13 @@ import {Plural, Trans} from '@lingui/react'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {CastEvent, Event} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Checklist from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import Enemies from 'parser/core/modules/Enemies'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
@@ -21,7 +20,7 @@ import UnableToAct from 'parser/core/modules/UnableToAct'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {FIRE_SPELLS} from './Elements'
-import {BLM_GAUGE_EVENT} from './Gauge'
+import {BLM_GAUGE_EVENT, BLMGaugeEvent} from './Gauge'
 
 const DEBUG_SHOW_ALL_CYCLES = false && process.env.NODE_ENV !== 'production'
 
@@ -30,7 +29,6 @@ const NO_UH_EXPECTED_FIRE4 = 5
 const FIRE4_FROM_MANAFONT = 1
 
 const MIN_MP_FOR_FULL_ROTATION = 9600
-const THUNDERCLOUD_MILLIS = 18000
 const ASTRAL_UMBRAL_DURATION = 15000
 
 const AF_UI_BUFF_MAX_STACK = 3
@@ -113,6 +111,11 @@ class Cycle {
 		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length === 0)
 			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
+		/**
+		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
+		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
+		 */
+		expectedCount -= (this.casts.filter(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)).length === 0 ? 1 : 0)
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 
@@ -145,20 +148,6 @@ class Cycle {
 	public overrideErrorCode(code: {priority: number, message: TODO}) {
 		this._errorCode = code
 	}
-}
-
-// TS typedef for BLM Gauge events so it doesn't choke
-// TODO: Move to Gauge if that gets converted to TS
-interface BLMGaugeEvent extends Event {
-	type: symbol,
-	timestamp: number,
-	insertAfter: number,
-	astralFire: number,
-	umbralIce: number,
-	umbralHearts: number,
-	enochian: boolean,
-	polyglot: number,
-	lastGaugeEvent: BLMGaugeEvent,
 }
 
 // typedef for the subset of the data contained in BLMGaugeEvent that we're going to keep track of for suggestions
@@ -195,14 +184,13 @@ export default class RotationWatchdog extends Module {
 	private rotationsWithoutFire = 0
 	private manafontBeforeDespair = 0
 	private astralFiresMissingDespairs = 0
-	private thunder3Casts = 0
 	private primaryTargetId?: number
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook('complete', this.onComplete)
-		this.addHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
-		this.addHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('complete', this.onComplete)
+		this.addEventHook(BLM_GAUGE_EVENT, this.onGaugeEvent)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 	}
 
 	// Handle events coming from BLM's Gauge module
@@ -244,12 +232,6 @@ export default class RotationWatchdog extends Module {
 	private onCast(event: CastEvent) {
 		const actionId = event.ability.guid
 
-		// For right now, we're assuming the main boss of an encounter is the first thing you hit. This isn't the case for Ultimates
-		// but we'll deal with that in the future (TODO)
-		if (!this.primaryTargetId && event.targetID) {
-			this.primaryTargetId = event.targetID
-		}
-
 		// If this action is signifies the beginning of a new cycle, unless this is the first
 		// cast of the log, stop the current cycle, and begin a new one. If Transposing from ice
 		// to fire, keep this cycle going
@@ -274,22 +256,10 @@ export default class RotationWatchdog extends Module {
 		if (actionId === ACTIONS.MANAFONT.id) {
 			this.currentRotation.hasManafont = true
 		}
-		// Keep track of total thunder casts so we can include that in the thunder uptime checklist item
-		if (actionId === ACTIONS.THUNDER_III.id && event.targetID === this.primaryTargetId) {
-			this.thunder3Casts++
-		}
 	}
 
 	private onDeath() {
 		this.currentRotation.errorCode = CYCLE_ERRORS.DIED
-	}
-
-	// Get the uptime percentage for the Thunder status debuff
-	private getThunderUptime() {
-		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusTime / uptime) * 100
 	}
 
 	// Finish this parse and add the suggestions and checklist items
@@ -385,37 +355,6 @@ export default class RotationWatchdog extends Module {
 			why: <Trans id="blm.rotation-watchdog.suggestions.icemage.why">
 				<Plural value={this.rotationsWithoutFire} one="# rotation was" other="# rotations were"/> performed with no fire spells.
 			</Trans>,
-		}))
-
-		// Suggestions to not spam T3 too much
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
-		const maxThunders = Math.floor(uptime / THUNDERCLOUD_MILLIS)
-		if (this.thunder3Casts > maxThunders) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.THUNDER_III.icon,
-				content: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.content">
-					Casting <ActionLink {...ACTIONS.THUNDER_III} /> too many times can cause you to lose DPS by casting fewer <ActionLink {...ACTIONS.FIRE_IV} />. Try not to cast <ActionLink showIcon={false} {...ACTIONS.THUNDER_III} /> unless your <StatusLink {...STATUSES.THUNDER_III} /> DoT or <StatusLink {...STATUSES.THUNDERCLOUD} /> proc are about to wear off.
-				</Trans>,
-				severity: this.thunder3Casts > 2 * maxThunders ? SEVERITY.MAJOR : SEVERITY.MEDIUM,
-				why: <Trans id="blm.rotation-watchdog.suggestions.excess-thunder.why">
-					At least <Plural value={this.thunder3Casts - maxThunders} one="# extra Thunder III was" other="# extra Thunder III were"/> cast.
-				</Trans>,
-			}))
-		}
-
-		// Checklist item for keeping Thunder 3 DoT rolling
-		this.checklist.add(new Rule({
-			name: <Trans id="blm.rotation-watchdog.checklist.dots.name">Keep your <StatusLink {...STATUSES.THUNDER_III} /> DoT up</Trans>,
-			description: <Trans id="blm.rotation-watchdog.checklist.dots.description">
-				Your <StatusLink {...STATUSES.THUNDER_III} /> DoT contributes significantly to your overall damage, both on its own, and from additional <StatusLink {...STATUSES.THUNDERCLOUD} /> procs. Try to keep the DoT applied.
-			</Trans>,
-			target: 95,
-			requirements: [
-				new Requirement({
-					name: <Trans id="blm.rotation-watchdog.checklist.dots.requirement.name"><StatusLink {...STATUSES.THUNDER_III} /> uptime</Trans>,
-					percent: () => this.getThunderUptime(),
-				}),
-			],
 		}))
 	}
 
@@ -534,7 +473,7 @@ export default class RotationWatchdog extends Module {
 					<Icon name="warning sign"/>
 					<Message.Content>
 						<Trans id="blm.rotation-watchdog.rotation-table.disclaimer">This module assumes you are following the standard BLM playstyle.<br/>
-							If you are following the Megumin playstyle, this report and many of the suggestions may not be applicable.
+							If you are following the AI playstyle, this report and many of the suggestions may not be applicable.
 						</Trans>
 					</Message.Content>
 				</Message>

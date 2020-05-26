@@ -10,7 +10,9 @@
     "lint:js": "eslint src",
     "lint:ts": "tslint src/**/*.ts{,x}",
     "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
-    "compile": "lingui compile"
+    "compile": "lingui compile",
+    "generate": "yarn run generate:unable-to-act",
+    "generate:unable-to-act": "ts-node -s ./scripts/generate-unable-to-act"
   },
   "husky": {
     "hooks": {
@@ -32,14 +34,15 @@
     "not op_mini all"
   ],
   "lingui": {
-    "srcPathDirs": ["src"],
+    "srcPathDirs": [
+      "src"
+    ],
     "fallbackLocale": "en",
     "sourceLocale": "en",
     "format": "minimal"
   },
   "resolutions": {
-    "babel-core": "7.0.0-bridge.0",
-    "@babel/parser": "7.7.5"
+    "babel-core": "7.0.0-bridge.0"
   },
   "dependencies": {
     "@babel/polyfill": "^7.0.0",
@@ -53,11 +56,11 @@
     "d3-time": "^1.1.0",
     "d3-time-format": "^2.2.3",
     "es6-error": "^4.1.1",
-    "intersection-observer": "^0.7.0",
+    "intersection-observer": "^0.10",
     "intl": "^1.2.5",
     "ky": "^0.19",
     "lodash": "^4.17.13",
-    "mathjs": "^6",
+    "mathjs": "^7",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.3",
     "prop-types": "^15.6.1",
@@ -84,6 +87,9 @@
     "@babel/plugin-proposal-decorators": "^7.2.3",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.4.4",
     "@babel/plugin-proposal-optional-chaining": "^7.6.0",
+    "@kobold/core": "^0.0.1",
+    "@kobold/excel": "^0.0.2",
+    "@kobold/xiv": "^0.0.1",
     "@lingui/babel-plugin-transform-js": "^2.5.0",
     "@lingui/babel-plugin-transform-react": "^2.5.0",
     "@lingui/cli": "^2.5.0",
@@ -119,11 +125,11 @@
     "cssnano": "^4.1.7",
     "dotenv": "^8.0.0",
     "dotenv-expand": "^5.1.0",
-    "eslint": "^6",
+    "eslint": "^7",
     "glob": "^7.1.3",
     "husky": "^4",
     "identity-obj-proxy": "^3.0.0",
-    "jest": "^25",
+    "jest": "^26",
     "jest-chain": "^1.0.3",
     "jest-extended": "^0.11",
     "jest-junit": "^10",
@@ -137,7 +143,8 @@
     "raw-loader": "^4",
     "rimraf": "^3",
     "ts-jest": "^25",
-    "ts-loader": "^6.0.2",
+    "ts-loader": "^7",
+    "ts-node": "^8.9.1",
     "tslint": "^6",
     "tslint-eslint-rules": "^5.4.0",
     "tslint-loader": "^3.5.4",

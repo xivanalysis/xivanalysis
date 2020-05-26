@@ -75,8 +75,8 @@ export default class NoMercy extends Module {
 	}
 
 	protected init() {
-		this.addHook('cast', {by: 'player'}, this.onCast)
-		this.addHook(
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook(
 			'removebuff',
 			{
 				by: 'player',
@@ -85,7 +85,7 @@ export default class NoMercy extends Module {
 			},
 			this.onRemoveNoMercy,
 		)
-		this.addHook('complete', this.onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onCast(event: CastEvent) {

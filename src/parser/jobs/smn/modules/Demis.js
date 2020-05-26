@@ -68,13 +68,13 @@ export default class Demis extends Module {
 
 	constructor(...args) {
 		super(...args)
-		this.addHook('cast', {by: 'player'}, this._onPlayerCast)
-		this.addHook('normaliseddamage', {
+		this.addEventHook('cast', {by: 'player'}, this._onPlayerCast)
+		this.addEventHook('normaliseddamage', {
 			by: 'pet',
 			abilityId: DEMI_ACTIONS,
 		}, this._onPetDamage)
-		this.addHook('summonpet', this._onSummonPet)
-		this.addHook('complete', this._onComplete)
+		this.addEventHook('summonpet', this._onSummonPet)
+		this.addEventHook('complete', this._onComplete)
 	}
 
 	_onPlayerCast(event) {
