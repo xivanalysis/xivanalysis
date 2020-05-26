@@ -350,6 +350,7 @@
   "dnc.technicalities.rotation-table.header.buffed": "收到增益的队员",
   "dnc.technicalities.rotation-table.header.missed": "<0/>是否准时？",
   "dnc.technicalities.rotation-table.header.pooled": "<0/>堆积了？",
+  "dnc.technicalities.rotation-table.message": "",
   "dnc.technicalities.suggestions.bad-devilments.content": "在<1/>的持续时间外用<0/>会造成dps损失。除了部分特殊的开场起手，你都应该在<3/>的开始的时候用<2/>。",
   "dnc.technicalities.suggestions.bad-devilments.why": "{0, plural, one {# 次 进攻之探戈} other {# 次 进攻之探戈}} 在<0/>以外使用.",
   "dnc.technicalities.suggestions.late-devilments.content": "在<1/>持续时间内尽早使用<0/>可以最大化伤害倍率。试着在持续时间开始的两个GCD内使用。",

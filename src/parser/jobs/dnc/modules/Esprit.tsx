@@ -81,7 +81,7 @@ export default class EspritGauge extends Module {
 			return
 		}
 		let generatedAmt = 0
-		if (this.combatants.selected.hasStatus(STATUSES.TECHNICAL_FINISH.id)) {
+		if (this.combatants.selected.hasStatus({statusId: STATUSES.TECHNICAL_FINISH.id, sourceID: this.combatants.selected.guid})) {
 			generatedAmt += ESPRIT_GENERATION_MULTIPLIERS[event.ability.guid] * ESPRIT_GENERATION_AMOUNT * ESPRIT_RATE_PARTY * (Object.keys(this.combatants.getEntities()).length-1)
 			// Finishes aren't a weaponskill, so they don't generate esprit
 			if (!FINISHES[event.ability.guid]) {

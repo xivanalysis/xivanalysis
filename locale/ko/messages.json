@@ -350,6 +350,7 @@
   "dnc.technicalities.rotation-table.header.buffed": "버프받은 파티원들",
   "dnc.technicalities.rotation-table.header.missed": "<0/>이 제떄 사용되었습니까?",
   "dnc.technicalities.rotation-table.header.pooled": "<0/>이 축적되었습니까?",
+  "dnc.technicalities.rotation-table.message": "",
   "dnc.technicalities.suggestions.bad-devilments.content": "<1/> 구간외 <0/>를 사용할시 반드시 딜 손해를 받습니다. 전투에 다른 오프닝같은 특별한 상황이 아니라면 <3/> 구간에 진입할떄마다 <2/>를 사용하십시오.",
   "dnc.technicalities.suggestions.bad-devilments.why": "<0/>구간 외에서 공세의 탱고를 {0, plural, other {# 회}} 사용하였습니다.",
   "dnc.technicalities.suggestions.late-devilments.content": "<0/>을 <1/>에 맞춰 버프 중첩효과를 최대한 받도록 일찍 사용하십시오. 첫 글쿨기 2회 사이에 맞춰 사용하는것이 알맞습니다.",
