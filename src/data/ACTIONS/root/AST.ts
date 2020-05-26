@@ -100,6 +100,7 @@ export const AST = ensureActions({
 		name: 'Essential Dignity',
 		icon: 'https://xivapi.com/i/003000/003141.png',
 		cooldown: 40,
+		charges: 2,
 	},
 
 	ASPECTED_HELIOS: {
@@ -229,6 +230,7 @@ export const AST = ensureActions({
 		name: 'Redraw',
 		icon: 'https://xivapi.com/i/003000/003105.png',
 		cooldown: 30,
+		charges: 3,
 	},
 
 	SLEEVE_DRAW: {
