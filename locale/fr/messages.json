@@ -346,6 +346,7 @@
   "dnc.procs.suggestions.overwrite.why": "Vous avez écrasé {0, plural,one {# proc}other {# procs}}",
   "dnc.technicalities.rotation-table.header.buffed": "Buff du joueurs",
   "dnc.technicalities.rotation-table.header.missed": "<0/> dans les temps ?",
+  "dnc.technicalities.rotation-table.header.otherdancer": "",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> Combiné ?",
   "dnc.technicalities.rotation-table.message": "",
   "dnc.technicalities.suggestions.bad-devilments.content": "L'utilisation de <0/> en dehors de vos fenêtres <1/> entraîne une perte évitable de DPS. En dehors de certaines situations d'ouverture, vous devriez utiliser <2/> au début de vos fenêtres <3/>.",

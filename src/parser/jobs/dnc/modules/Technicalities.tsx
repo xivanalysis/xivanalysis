@@ -18,6 +18,7 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import {Timeline} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
+import {TECHNICAL_FINISHES} from '../CommonData'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {
@@ -50,6 +51,7 @@ class TechnicalWindow {
 
 	buffsRemoved: number[] = []
 	playersBuffed: number = 0
+	startedByOtherDNC: boolean = false
 
 	constructor(start: number) {
 		this.start = start
@@ -129,6 +131,9 @@ export default class Technicalities extends Module {
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
 			}
+			else {
+				lastWindow.poolingProblem = false
+			}
 
 			// If this is the first window, and we didn't catch a devilment use in the window, but we *have* used it,
 			// treat it as a timely usage due to party composition
@@ -177,6 +182,9 @@ export default class Technicalities extends Module {
 			}
 			if (action.onGcd) {
 				lastWindow.gcdCount++
+			}
+			if (TECHNICAL_FINISHES.includes(event.ability.guid) || lastWindow.playersBuffed < 1) {
+				lastWindow.startedByOtherDNC = true
 			}
 			return
 		}
@@ -256,42 +264,56 @@ export default class Technicalities extends Module {
 	}
 
 	output() {
+		const otherDancers = this.history.filter(window => window.startedByOtherDNC).length > 0
+		const notesData = [
+			{
+				header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...ACTIONS.DEVILMENT}/> On Time?</Trans>,
+				accessor: 'timely',
+			},
+			{
+				header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
+				accessor: 'pooled',
+			},
+			{
+				header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
+				accessor: 'buffed',
+			},
+		]
+		if (otherDancers) {
+			notesData.push({
+				header: <Trans id="dnc.technicalities.rotation-table.header.otherdancer">You opened?</Trans>,
+				accessor: 'otherdancer',
+			})
+		}
 		return <Fragment>
-			{this.history.filter(window => window.playersBuffed < 1).length > 0 && (
+			{otherDancers && (
 				<Message>
 					<Trans id="dnc.technicalities.rotation-table.message">
-						This log contains <ActionLink showIcon={false} {...ACTIONS.TECHNICAL_STEP}/> windows from other Dancers, noted by the 'N/A' Players Buffed.<br />
+						This log contains <ActionLink showIcon={false} {...ACTIONS.TECHNICAL_STEP}/> windows from other Dancers. Windows you started are noted in the 'You opened?' column.<br />
 						Use your best judgement about which windows you should be dumping <ActionLink showIcon={false} {...ACTIONS.DEVILMENT}/>, Feathers, and Esprit under.<br />
 						Try to make sure they line up with other raid buffs to maximize damage.
 					</Trans>
 				</Message>
 			)}
 			<RotationTable
-				notes={[
-					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...ACTIONS.DEVILMENT}/> On Time?</Trans>,
-						accessor: 'timely',
-					},
-					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
-						accessor: 'pooled',
-					},
-					{
-						header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
-						accessor: 'buffed',
-					},
-				]}
+				notes={notesData}
 				data={this.history.map(window => {
+					let mappedNotes: TODO = {
+						timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
+						pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
+						buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
+					}
+					if (otherDancers) {
+						mappedNotes = {...mappedNotes,
+							otherdancer: <>{this.getNotesIcon(window.startedByOtherDNC)}</>,
+						}
+					}
 					return ({
 						start: window.start - this.parser.fight.start_time,
 						end: window.end != null ?
 							window.end - this.parser.fight.start_time :
 							window.start - this.parser.fight.start_time,
-							notesMap: {
-								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
-								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
-								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
-							},
+							notesMap: mappedNotes,
 						rotation: window.rotation,
 					})
 				})}
