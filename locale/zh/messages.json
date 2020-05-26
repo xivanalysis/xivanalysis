@@ -705,7 +705,6 @@
   "rdm.procs.title": "触发问题",
   "sam.about.description": "<0>所以你是个研究武士刀的？把这个分析看成是考试，看看你对武士的基础知识到底了解多少吧。这个工具将会追踪你的闪和剑气的获得和使用情况，从而看出你是否少获取了资源，以及你能否充分利用你在战斗过程中获得的资源。</0>",
   "sam.about.description.info": "<0>注意</0> 很遗憾，目前还无法追踪身位。因此，剑气的值是<1>估算</1>的。我们已经尽可能使它保持准确，但仍可能存在误差。",
-  "sam.about.description.warning": "<0>本模块还不完善，目前只支持对武士的手法进行<1>基本的</1>分析。</0>虽然下面的分析一般来说是准确的，但这个系统仍在<2>开发中</2>，有时候也许会出现一些问题。如果你需要反馈任何问题或者相关事项，请加入我们的Discord频道或者在Github页面反馈bug。",
   "sam.buffs.checklist.name": "保持士风和阵风不断",
   "sam.buffs.checklist.requirement.jinpu.name": "<0/> 覆盖率",
   "sam.buffs.checklist.requirement.shifu.name": "<0/> 覆盖率",

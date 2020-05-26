@@ -705,7 +705,6 @@
   "rdm.procs.title": "Problème de procs",
   "sam.about.description": "<0>Vous étudiez donc la lame ? Considérez cette analyse comme l'examen pour voir exactement ce que vous avez appris sur les bases du samouraï. Cet outil suivra vos gains/utilisations de sen et de kenki pour voir s'il vous manque des ressources possibles à gagner ou si vous n'avez pas réussi à tirer le meilleur parti de ce que vous avez gagné au cours du combat.</0>",
   "sam.about.description.info": "<0>Note</0> Malheureusement, les positions ne peuvent pas être suivies pour le moment et, par conséquent, les valeurs de Kenki sont <1>estimations</1>. On a pris soin de les garder aussi exactes que possible, mais certaines inexactitudes peuvent être présentes.",
-  "sam.about.description.warning": "<0>Le module est incomplet, et ne supporte que <1>basic</1> analyse du gameplay SAM.</0> Alors que les fonctionnalités existantes ci-dessous devraient être raisonnablement précises, ce système <2>est</2> encore en développement, et peut parfois être un peu mélangé. Si vous remarquez des problèmes, ou si vous avez des inquiétudes, veuillez passer par notre canal Discord ou signaler un bug sur notre dépôt github !",
   "sam.buffs.checklist.name": "Garder Shifu et Jinpu actif",
   "sam.buffs.checklist.requirement.jinpu.name": "<0/> temps d'activité",
   "sam.buffs.checklist.requirement.shifu.name": "<0/> temps d'activité",
