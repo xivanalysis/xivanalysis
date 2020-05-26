@@ -97,12 +97,12 @@ export default class EarthlyStar extends Module {
 		if (usesMissed > 1 || this.uses === 0) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.EARTHLY_STAR.icon,
-				content: <Trans id="ast.earthyl-star.suggestion.missed-use.content">
+				content: <Trans id="ast.earthly-star.suggestion.missed-use.content">
 					Use <ActionLink {...this.data.actions.EARTHLY_STAR} /> more frequently. It may save a healing GCD and results in more damage output.
 				</Trans>,
 				tiers: SEVERETIES.USES_MISSED,
 				value: this.uses === 0 ? 100 : usesMissed,
-				why: <Trans id="ast.earthyl-star.suggestion.missed-use.why">
+				why: <Trans id="ast.earthly-star.suggestion.missed-use.why">
 					About {usesMissed} uses of Earthly Star were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Trans>,
 			}))
