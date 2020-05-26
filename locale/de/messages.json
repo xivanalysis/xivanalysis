@@ -346,7 +346,6 @@
   "dnc.procs.suggestions.overwrite.why": "Du hast {0, plural, one {# proc} other {# procs}} überschrieben",
   "dnc.technicalities.rotation-table.header.buffed": "Spieler gebufft",
   "dnc.technicalities.rotation-table.header.missed": "<0/> rechtzeitig benutzt?",
-  "dnc.technicalities.rotation-table.header.otherdancer": "",
   "dnc.technicalities.rotation-table.header.pooled": "<0/> angesammelt?",
   "dnc.technicalities.rotation-table.message": "",
   "dnc.technicalities.suggestions.bad-devilments.content": "<0/> außerhalb deiner <1/>-Phasen zu nutzen führt zu vermeidbarem Schadensverlust. Von gewissen speziellen Openersituationen abgesehen, solltest du grundsätzlich <2/> am Anfang von <3/>-Phasen nutzen.",

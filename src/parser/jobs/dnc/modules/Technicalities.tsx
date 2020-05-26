@@ -51,7 +51,7 @@ class TechnicalWindow {
 
 	buffsRemoved: number[] = []
 	playersBuffed: number = 0
-	startedByOtherDNC: boolean = false
+	containsOtherDNC: boolean = false
 
 	constructor(start: number) {
 		this.start = start
@@ -73,7 +73,7 @@ export default class Technicalities extends Module {
 	private lastDevilmentTimestamp: number = -1
 
 	protected init() {
-		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
+		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.tryOpenWindow)
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.TECHNICAL_FINISH.id}, this.countTechBuffs)
 		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
@@ -91,12 +91,15 @@ export default class Technicalities extends Module {
 		}
 	}
 
-	private tryOpenWindow(event: BuffEvent | NormalisedApplyBuffEvent): TechnicalWindow {
+	private tryOpenWindow(event: NormalisedApplyBuffEvent): TechnicalWindow {
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow) {
+			if (event.source?.guid !== this.parser.player.guid) {
+				lastWindow.containsOtherDNC = true
+			}
 			if (!lastWindow.end) {
 				return lastWindow
 			}
@@ -184,7 +187,7 @@ export default class Technicalities extends Module {
 				lastWindow.gcdCount++
 			}
 			if (TECHNICAL_FINISHES.includes(event.ability.guid) || lastWindow.playersBuffed < 1) {
-				lastWindow.startedByOtherDNC = true
+				lastWindow.containsOtherDNC = true
 			}
 			return
 		}
@@ -264,56 +267,43 @@ export default class Technicalities extends Module {
 	}
 
 	output() {
-		const otherDancers = this.history.filter(window => window.startedByOtherDNC).length > 0
-		const notesData = [
-			{
-				header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...ACTIONS.DEVILMENT}/> On Time?</Trans>,
-				accessor: 'timely',
-			},
-			{
-				header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
-				accessor: 'pooled',
-			},
-			{
-				header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
-				accessor: 'buffed',
-			},
-		]
-		if (otherDancers) {
-			notesData.push({
-				header: <Trans id="dnc.technicalities.rotation-table.header.otherdancer">You opened?</Trans>,
-				accessor: 'otherdancer',
-			})
-		}
+		const otherDancers = this.history.filter(window => window.containsOtherDNC).length > 0
 		return <Fragment>
 			{otherDancers && (
 				<Message>
 					<Trans id="dnc.technicalities.rotation-table.message">
-						This log contains <ActionLink showIcon={false} {...ACTIONS.TECHNICAL_STEP}/> windows from other Dancers. Windows you started are noted in the 'You opened?' column.<br />
+						This log contains <ActionLink showIcon={false} {...ACTIONS.TECHNICAL_STEP}/> windows that were started or extended by other Dancers.<br />
 						Use your best judgement about which windows you should be dumping <ActionLink showIcon={false} {...ACTIONS.DEVILMENT}/>, Feathers, and Esprit under.<br />
 						Try to make sure they line up with other raid buffs to maximize damage.
 					</Trans>
 				</Message>
 			)}
 			<RotationTable
-				notes={notesData}
+				notes={[
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.missed"><ActionLink showName={false} {...ACTIONS.DEVILMENT}/> On Time?</Trans>,
+						accessor: 'timely',
+					},
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.pooled"><ActionLink showName={false} {...ACTIONS.FAN_DANCE}/> Pooled?</Trans>,
+						accessor: 'pooled',
+					},
+					{
+						header: <Trans id="dnc.technicalities.rotation-table.header.buffed">Players Buffed</Trans>,
+						accessor: 'buffed',
+					},
+				]}
 				data={this.history.map(window => {
-					let mappedNotes: TODO = {
-						timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
-						pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
-						buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
-					}
-					if (otherDancers) {
-						mappedNotes = {...mappedNotes,
-							otherdancer: <>{this.getNotesIcon(window.startedByOtherDNC)}</>,
-						}
-					}
 					return ({
 						start: window.start - this.parser.fight.start_time,
 						end: window.end != null ?
 							window.end - this.parser.fight.start_time :
 							window.start - this.parser.fight.start_time,
-							notesMap: mappedNotes,
+							notesMap: {
+								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
+								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
+								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
+							},
 						rotation: window.rotation,
 					})
 				})}
