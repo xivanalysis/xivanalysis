@@ -69,7 +69,7 @@ const THINGS_WE_WANT_IN_THE_TABLE = [
 const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
-	NONE: {priority: 0, message: 'No errors'},
+	NONE: {priority: 0, message: <> No errors </>},
 	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwritten Sen. </Trans>},
 	OVERWROTE_SENS: {priority: 25, message: <Trans id = "sam.sen.sen_handling.overwrote_sens"> Contains Overwritten Sens. </Trans>},
 	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
@@ -100,7 +100,7 @@ class SenState {
 
 	kenkiGained: number = 0 // Kenki # * 10
 
-	_senCode: {priority: number, message: TODO} = SEN_HANDLING.NONE
+	_senCode: {priority: number, message: JSX.Element} = SEN_HANDLING.NONE
 
 	public set senCode(code) {
 		if (code.priority > this._senCode.priority) {
