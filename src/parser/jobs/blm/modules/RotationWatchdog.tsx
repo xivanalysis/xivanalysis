@@ -111,6 +111,11 @@ class Cycle {
 		let expectedCount = (this.gaugeStateBeforeFire.umbralHearts === 0 && this.casts.filter(cast => cast.ability.guid === ACTIONS.FIRE_I.id).length === 0)
 			? NO_UH_EXPECTED_FIRE4 : EXPECTED_FIRE4
 
+		/**
+		 * A bit hacky but, when we are in the opener and start with F3 it will be the only cycle that doesn't include any B3, Freeze, US.
+		 * Since we are in the opener, and specifically opening with F3, we are doing the (mod) Jp Opener, which drops the expected count by 1
+		 */
+		expectedCount -= (this.casts.filter(cast => CYCLE_ENDPOINTS.includes(cast.ability.guid)).length === 0 ? 1 : 0)
 		// Adjust expected count if the cycle included manafont
 		expectedCount += this.hasManafont ? FIRE4_FROM_MANAFONT : 0
 
