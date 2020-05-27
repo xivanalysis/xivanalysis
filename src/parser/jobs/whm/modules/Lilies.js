@@ -76,7 +76,7 @@ export default class Lilies extends Module {
 				icon: ACTIONS.AFFLATUS_SOLACE.icon,
 				content: <Fragment>
 					<Trans id="whm.lily-cap.suggestion.content">
-						Use <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> or <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> regularly to avoid capping your lilies.
+						Use <ActionLink {...ACTIONS.AFFLATUS_RAPTURE} /> or <ActionLink {...ACTIONS.AFFLATUS_SOLACE} /> before using other GCD heals. It's okay to cap your lilies if you don't need to heal, move, or weave with them.
 					</Trans>
 				</Fragment>,
 				severity: SEVERITY.MINOR,
