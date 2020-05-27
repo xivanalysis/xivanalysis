@@ -877,7 +877,7 @@
   "whm.interrupts.suggestion.content": "通过预先跑位或充分利用滑步来避免咏唱中断。使用正常的 <0/> 刷新创造的瞬发窗口来躲避机制。当刷新时机对不上的时候，尝试规划并利用百合技来兼顾跑位和治疗。提前覆盖天辉应是最后的跑位手段。",
   "whm.lily-blood.suggestion.content": "及时使用<0/>来避免blood lily浪费。",
   "whm.lily-blood.suggestion.why": "由于过早消耗了治疗百合，{0, plural, one {# 朵blood lily} other {# 朵blood lily}} 没有生成。 ",
-  "whm.lily-cap.suggestion.content": "",
+  "whm.lily-cap.suggestion.content": "及时使用<0/>或<1/>避免治疗百合溢出",
   "whm.lily-cap.suggestion.why": "{0, plural, one {# 朵治疗百合} other {# 朵治疗百合}} 溢出.",
   "whm.ogcds.checklist.name": "使用有伤害的能力技",
   "whm.ogcds.content": "在战斗中尽可能多的使用这些技能来最大化你的DPS。但是，请避免单独使用他们。如果你能在战斗中不失去一次使用的情况下进行有效的治疗和处理伤害，那么你可以让法令空转，但是要注意对齐和单独使用的问题。",
