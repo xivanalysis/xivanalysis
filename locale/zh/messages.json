@@ -525,7 +525,6 @@
   "mch.wildfire.title": "野火",
   "mch.wildfire.trigger.no-buff-wf": "<0/> 伤害是在没有相应的 <1/> Debuff时被记录的。",
   "mnk.about.description": "\n哟，亲爱的武僧！你的连击是不是没暴击？你的六合星导脚是不是永远成谜？\n\n这个武僧分析器应该能帮你找到你真正的潜力，让队里的武士不会再跟你抢装备！\n",
-  "mnk.about.description.warning": "\n**本模块还在开发中**可能偶尔会给你带来不良的使用体验。\n如果你发现了任何问题，或有任何错误反馈，请通过我们的Discord频道联系我们吧！\n",
   "mnk.demolish.checklist.description": "<0/>是你最强力的第三连击（假设你的 Dot 至少生效了4次）。",
   "mnk.demolish.checklist.name": "保持破碎拳DoT不断",
   "mnk.demolish.checklist.requirement.name": "<0/> 覆盖率",
