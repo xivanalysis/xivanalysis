@@ -97,7 +97,7 @@ export default class Technicalities extends Module {
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow) {
-			if (event.source?.guid !== this.parser.player.guid) {
+			if (event.sourceID && event.sourceID !== this.parser.player.id) {
 				lastWindow.containsOtherDNC = true
 			}
 			if (!lastWindow.end) {
