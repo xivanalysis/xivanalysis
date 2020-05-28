@@ -525,7 +525,6 @@
   "mch.wildfire.title": "Flambée",
   "mch.wildfire.trigger.no-buff-wf": "<0/> des dommages ont été enregistrés sans qu'il y ait eu un debuff correspondant <1/>.",
   "mnk.about.description": "\nBonjour moine amical ! Vous n'avez pas fait l'hématocrite de la botte ? Votre rêve de l'Étoile à six faces reste-t-il une légende?\n\nCet analyseur de moine devrait vous aider à réaliser votre véritable potentiel et à vous assurer qu'aucune partie ne laissera un Samouraï voler votre butin plus jamais !\n",
-  "mnk.about.description.warning": "\n**Le module est encore en cours d'élaboration** et peut occasionnellement vous donner de mauvais commentaires.\nSi vous remarquez des problèmes, ou si vous avez des questions ou des commentaires, n'hésitez pas à passer par notre canal Discord !\n",
   "mnk.demolish.checklist.description": "<0/> est votre coup final le plus puissant (pour peu que 4 ticks de DoT s'applique).",
   "mnk.demolish.checklist.name": "Garder Démolition actif",
   "mnk.demolish.checklist.requirement.name": "Temps d'activité total de <0/>",
