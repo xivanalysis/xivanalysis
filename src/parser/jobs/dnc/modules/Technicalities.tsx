@@ -85,19 +85,28 @@ export default class Technicalities extends Module {
 		// If it was already open (because another Dancer went first), we'll keep using it
 		const lastWindow: TechnicalWindow | undefined = this.tryOpenWindow(event)
 
+		if (!lastWindow) {
+			return
+		}
+
 		// Find out how many players we hit with the buff.
 		if (!lastWindow.playersBuffed) {
 			lastWindow.playersBuffed = event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
 		}
 	}
 
-	private tryOpenWindow(event: NormalisedApplyBuffEvent): TechnicalWindow {
+	private tryOpenWindow(event: NormalisedApplyBuffEvent): TechnicalWindow | undefined {
+		// There've been a few logs that have odd extra application events that don't hit the player, don't count those...
+		// Seems to mostly come as a passthrough from countTechBuffs
+		if (event.successfulHits.filter(applyEvent => applyEvent.targetID === this.parser.player.id).length !== 1) {
+			return
+		}
 		const lastWindow: TechnicalWindow | undefined = _.last(this.history)
 
 		// Handle multiple dancer's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
 		// If that happens, re-open the last window and keep tracking
 		if (lastWindow) {
-			if (event.source?.guid !== this.parser.player.guid) {
+			if (event.sourceID && event.sourceID !== this.parser.player.id) {
 				lastWindow.containsOtherDNC = true
 			}
 			if (!lastWindow.end) {
