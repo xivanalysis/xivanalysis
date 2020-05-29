@@ -246,7 +246,7 @@
   "core.combos.title": "コンボの問題",
   "core.combos.why": "{0, plural, one {スキルコンボを # 回破ってしまいました。} other {スキルコンボを # 回破ってしまいました。}}",
   "core.cooldownDowntime.ogcd-cd-metric": "常にアビリティを使えているか確認しましょう。ただし、GCDに食い込ませてはいけません。",
-  "core.cooldownDowntime.title": "",
+  "core.cooldownDowntime.title": "クールダウンの停止時間",
   "core.cooldownDowntime.use-ogcd-cds": "アビリティを使いましょう",
   "core.dblink.loading": "読み込み中...",
   "core.deaths.content": "無駄死は避けてください。戦闘途中で死亡してしまうとトランスゲージのリセット・再構成によるロストタイムや蘇生による弱体化など様々な原因で火力の出力に<0>悪い</0>影響が出ます。",
