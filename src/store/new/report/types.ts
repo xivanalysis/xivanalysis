@@ -22,6 +22,8 @@ export interface Encounter {
 
 /** */
 export interface Duty {
+	// TODO: Handle trash. -1?
+	/** ID of the duty. This should match an ID from the TerritoryType game table. */
 	id: number
 	name: string
 }
