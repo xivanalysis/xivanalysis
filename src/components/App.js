@@ -14,7 +14,7 @@ import Find from './Find'
 import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
-import {FflogsLegacy} from './reportSource/FflogsLegacy'
+import {FflogsLegacy} from './reportSource'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'

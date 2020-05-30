@@ -1,12 +1,10 @@
-import React, {useRef, MutableRefObject, createContext, useContext} from 'react'
+import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
-import {ReportStore, FflogsLegacyReportStore} from 'store/new/report'
+import {FflogsLegacyReportStore} from 'store/new/report'
 import {observer} from 'mobx-react'
 import {Loader} from 'semantic-ui-react'
-
-// TODO: this should be somewhere else, probably alongside the reportflow
-class NoOpReportStore extends ReportStore { report = undefined }
-const ReportStoreContext = createContext<ReportStore>(new NoOpReportStore())
+import {ReportStoreContext, ReportFlow} from 'components/reportFlow'
+import {useLazyRef} from 'utilities/react'
 
 interface RouteParams {
 	code: string
@@ -46,23 +44,3 @@ const WithCode = observer(function WithCode() {
 		</ReportStoreContext.Provider>
 	)
 })
-
-// TODO: this is obviously not going to live here
-function ReportFlow() {
-	const reportStore = useContext(ReportStoreContext)
-
-	if (reportStore.report == null) {
-		return <>TODO: YOU DONE FUCKED UP</>
-	}
-
-	return <pre>{JSON.stringify(reportStore.report, undefined, 2)}</pre>
-}
-
-// TODO: put this in utilities or something
-function useLazyRef<T>(init: () => T) {
-	const ref = useRef<T | undefined>()
-	if (ref.current == null) {
-		ref.current = init()
-	}
-	return ref as MutableRefObject<T>
-}
