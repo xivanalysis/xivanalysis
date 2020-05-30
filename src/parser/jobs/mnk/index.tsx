@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/macro'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
