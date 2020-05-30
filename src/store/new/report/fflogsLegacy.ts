@@ -14,11 +14,13 @@ import {Pull, Actor, Team} from './types'
 export class FflogsLegacyReportStore extends ReportStore {
 	@computed
 	get report() {
+		// If the report hasn't finished loading yet, bail early
 		const report = legacyReportStore.report
 		if (report?.loading !== false) {
 			return
 		}
 
+		// Build the full actor structure ahead of time
 		const actorsByFight = this.buildActorsByFight(report)
 
 		return {
@@ -33,6 +35,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 	}
 
 	async fetchReport(code: string) {
+		// Pass through directly to the legacy store. It handles caching for us.
 		await legacyReportStore.fetchReportIfNeeded(code)
 	}
 

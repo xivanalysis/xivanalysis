@@ -10,6 +10,10 @@ interface RouteParams {
 	code: string
 }
 
+/**
+ * Report source component for adapting the legacy report store into the new flow.
+ * This should be removed once migration away from the legacy report store is complete.
+ */
 export function FflogsLegacy() {
 	const {path} = useRouteMatch()
 	return (
@@ -25,6 +29,7 @@ export function FflogsLegacy() {
 const WithCode = observer(function WithCode() {
 	const {code} = useParams<RouteParams>()
 
+	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new FflogsLegacyReportStore()).current
 	reportStore.fetchReport(code)
 

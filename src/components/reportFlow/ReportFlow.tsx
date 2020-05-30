@@ -8,6 +8,11 @@ import {PullList} from './PullList'
 class NoOpReportStore extends ReportStore { report = undefined }
 export const ReportStoreContext = createContext<ReportStore>(new NoOpReportStore())
 
+/**
+ * Generic report flow component, to be nested inside a report source providing
+ * source-specific report handling. Parent report sources must provide a report
+ * store over context for consumption by the flow.
+ */
 export function ReportFlow() {
 	const reportStore = useContext(ReportStoreContext)
 	const {path} = useRouteMatch()

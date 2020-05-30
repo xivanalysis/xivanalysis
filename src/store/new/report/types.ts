@@ -17,6 +17,8 @@ export interface Pull {
 
 /** Each encounter takes place within a duty */
 export interface Encounter {
+	// TODO: work out a generic way to ID encounters.
+	// There's a bunch of stuff (such as the boss module system) that explicitly relies on FFLogs' boss IDs.
 	name: string
 	duty: Duty
 }
