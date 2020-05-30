@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
 import {ReportStoreContext} from './ReportFlow'
 import {Duty, Pull} from 'store/new/report'
-
+import {Link, useRouteMatch} from 'react-router-dom'
 
 interface PullGroup {
 	duty: Duty
@@ -10,6 +10,7 @@ interface PullGroup {
 
 export function PullList() {
 	const reportStore = useContext(ReportStoreContext)
+	const {url} = useRouteMatch()
 
 	// TODO: How can I avoid this constant repetition of existence check?
 	//       Do I want to?
@@ -38,7 +39,11 @@ export function PullList() {
 			<h3>{group.duty.name}</h3>
 			<ul>
 				{group.pulls.map(pull => (
-					<li>{pull.encounter.name}</li>
+					<li>
+						<Link to={`${url}/${pull.id}`}>
+							{pull.encounter.name}
+						</Link>
+					</li>
 				))}
 			</ul>
 		</>)}

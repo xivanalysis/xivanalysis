@@ -96,6 +96,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 	})
 
 	private convertFight = (fight: Fight, actors: Actor[]): Pull => ({
+		id: fight.id.toString(),
 		encounter: {
 			name: fight.name,
 			duty: {
