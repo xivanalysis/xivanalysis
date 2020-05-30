@@ -5,6 +5,7 @@ import {Link, Route, Switch, withRouter} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
+import {StoreContext} from 'store'
 import Analyse from './Analyse'
 import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
@@ -13,12 +14,12 @@ import Find from './Find'
 import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
+import {FflogsLegacy} from './reportSource/FflogsLegacy'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
-import {StoreContext} from 'store'
 
 class App extends Component {
 	static propTypes = {
@@ -113,6 +114,9 @@ class App extends Component {
 							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
 							<Route path="/find/:code/:fight?" component={Find}/>
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+
+							{/* New report source handling. Paths above this point should be migrated to redirects to those beneath it. */}
+							<Route path="/fflogs" component={FflogsLegacy}/>
 						</Switch>
 					</ErrorBoundary>
 				</Container>
