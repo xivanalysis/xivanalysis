@@ -99,6 +99,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 		encounter: {
 			name: fight.name,
 			duty: {
+				id: fight.zoneID,
 				name: fight.zoneName,
 			},
 		},

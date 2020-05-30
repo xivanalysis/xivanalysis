@@ -45,16 +45,16 @@ function PullList() {
 		return null
 	}
 
+	// Group encounters by the duty they took place in
+	// We're maintaining chronological order, so only tracking the latest duty
 	const groups: PullGroup[] = []
-	// TODO: duty id? add?
-	let currentDuty: Duty | undefined
+	let currentDuty: Duty['id'] | undefined
 
 	for (const pull of reportStore.report.pulls) {
-		// todo yeah yeah
 		const {duty} = pull.encounter
-		if (duty !== currentDuty) {
+		if (duty.id !== currentDuty) {
 			groups.push({duty, pulls: []})
-			currentDuty = duty
+			currentDuty = duty.id
 		}
 
 		groups[groups.length - 1].pulls.push(pull)

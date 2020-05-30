@@ -22,6 +22,7 @@ export interface Encounter {
 
 /** */
 export interface Duty {
+	id: number
 	name: string
 }
 
