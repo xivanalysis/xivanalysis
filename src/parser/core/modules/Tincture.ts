@@ -7,6 +7,6 @@ export class Tincture extends BuffWindowModule {
 	static handle = 'tincture'
 	static title = t('core.tincture.title')`Tinctures`
 
-	buffAction = ACTIONS.INFUSION_INT
+	buffAction = ACTIONS.INFUSION_STR
 	buffStatus = STATUSES.MEDICATED
 }

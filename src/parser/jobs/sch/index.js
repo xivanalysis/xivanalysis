@@ -1,7 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -18,12 +16,6 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description} key="sch.about.description"/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sch.about.description.warning.development">While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.0',
@@ -37,6 +29,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-05-16'),
+		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balance for feedback with content!</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-04-07'),
 		Changes: () => <>Add Faerie actions to timeline</>,
 		contributors: [CONTRIBUTORS.NONO],

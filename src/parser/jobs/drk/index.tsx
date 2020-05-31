@@ -1,4 +1,6 @@
 import {Trans} from '@lingui/macro'
+import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 import React from 'react'
@@ -8,8 +10,11 @@ export default new Meta({
 
 	Description: () => <>
 		<Trans id="drk.about.description">
-			<p>This analyzer focuses on blood and mana usage, and then further explores common resource generation problems such as Blood Weapon usage and dropping GCDs.</p>
-			<p>Most of the data in this evaluation tool is simulated, and edge cases from FFLogs can cause weird results.  If something doesn't look right, please report it in the discord.</p>
+			<p>This analyzer aims to help you unleash your inner edge.
+				The core of Dark Knight offense focuses on maximizing blood and MP utilization, in raid buff windows where available.
+				In addition, you should aim to land five hits in each Blood Weapon and Delirium window.</p>
+			<p>Defensively, <ActionLink {...ACTIONS.THE_BLACKEST_NIGHT}/> is a powerful cooldown that can mitigate heavy damage on you or a target,
+				and grants a free use of Edge of Shadow or Flood of Shadow as long as the shield is fully consumed.</p>
 		</Trans>
 	</>,
 	supportedPatches: {
