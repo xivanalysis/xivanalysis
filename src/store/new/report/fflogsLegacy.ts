@@ -28,12 +28,12 @@ export class FflogsLegacyReportStore extends ReportStore {
 		}
 
 		// Build the full actor structure ahead of time
-		const actorsByFight = this.buildActorsByFight(report)
+		const actorsByFight = buildActorsByFight(report)
 
 		return {
 			name: report.title,
 			pulls: report.fights.map(
-				fight => this.convertFight(fight, actorsByFight.get(fight.id) ?? []),
+				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),
 			),
 
 			// TODO: remove
@@ -45,82 +45,80 @@ export class FflogsLegacyReportStore extends ReportStore {
 		// Pass through directly to the legacy store. It handles caching for us.
 		await legacyReportStore.fetchReportIfNeeded(code)
 	}
+}
 
-	// TODO: These privates don't actually need class context - move outside?
+function buildActorsByFight(report: LegacyReport) {
+	const actors = new Map<FflogsActor['id'], Actor>()
+	const actorsByFight = new Map<Fight['id'], Actor[]>()
 
-	private buildActorsByFight(report: LegacyReport) {
-		const actors = new Map<FflogsActor['id'], Actor>()
-		const actorsByFight = new Map<Fight['id'], Actor[]>()
-
-		function pushToFight(fightId: Fight['id'], actor: Actor) {
-			let actors = actorsByFight.get(fightId)
-			if (actors == null) {
-				actors = []
-				actorsByFight.set(fightId, actors)
-			}
-			actors.push(actor)
+	function pushToFight(fightId: Fight['id'], actor: Actor) {
+		let actors = actorsByFight.get(fightId)
+		if (actors == null) {
+			actors = []
+			actorsByFight.set(fightId, actors)
 		}
-
-		// TODO: Handle instances and groups
-		// TODO: How the _fuck_ am i going to handle instances? dupes?
-		function pushToFights(fights: ActorFightInstance[], actor: Actor) {
-			fights.forEach(fight => pushToFight(fight.id, actor))
-		}
-
-		function buildActors<A extends FflogsActor>(
-			fflogsActors: A[],
-			convert: (fflogsActor: A) => Actor,
-		) {
-			fflogsActors.forEach(fflogsActor => {
-				const actor = convert(fflogsActor)
-				actors.set(fflogsActor.id, actor)
-				pushToFights(fflogsActor.fights, actor)
-			})
-		}
-
-		buildActors(report.friendlies, friendly => this.convertActor(friendly, {
-			team: Team.FRIEND,
-			playerControlled: !NPC_FRIENDLY_TYPES.includes(friendly.type),
-			job: convertActorType(friendly.type),
-		}))
-
-		buildActors(report.enemies, enemy => this.convertActor(enemy, {team: Team.FOE}))
-
-		buildActors(report.friendlyPets, friendlyPet => this.convertActor(friendlyPet, {
-			team: Team.FRIEND,
-			owner: actors.get(friendlyPet.petOwner),
-		}))
-
-		buildActors(report.enemyPets, enemyPet => this.convertActor(enemyPet, {
-			team: Team.FOE,
-			owner: actors.get(enemyPet.petOwner),
-		}))
-
-		return actorsByFight
+		actors.push(actor)
 	}
 
-	private convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
-		// TODO: Instances?
-		id: actor.id.toString(),
-		name: actor.name,
-		team: Team.UNKNOWN,
-		playerControlled: false,
-		job: Job.UNKNOWN,
-		...overrides,
-	})
+	// TODO: Handle instances and groups
+	// TODO: How the _fuck_ am i going to handle instances? dupes?
+	function pushToFights(fights: ActorFightInstance[], actor: Actor) {
+		fights.forEach(fight => pushToFight(fight.id, actor))
+	}
 
-	private convertFight = (fight: Fight, actors: Actor[]): Pull => ({
-		id: fight.id.toString(),
-		encounter: {
-			name: fight.name,
-			duty: {
-				id: fight.zoneID,
-				name: fight.zoneName,
-			},
-		},
-		actors,
-	})
+	function buildActors<A extends FflogsActor>(
+		fflogsActors: A[],
+		convert: (fflogsActor: A) => Actor,
+	) {
+		fflogsActors.forEach(fflogsActor => {
+			const actor = convert(fflogsActor)
+			actors.set(fflogsActor.id, actor)
+			pushToFights(fflogsActor.fights, actor)
+		})
+	}
+
+	buildActors(report.friendlies, friendly => convertActor(friendly, {
+		team: Team.FRIEND,
+		playerControlled: !NPC_FRIENDLY_TYPES.includes(friendly.type),
+		job: convertActorType(friendly.type),
+	}))
+
+	buildActors(report.enemies, enemy => convertActor(enemy, {team: Team.FOE}))
+
+	buildActors(report.friendlyPets, friendlyPet => convertActor(friendlyPet, {
+		team: Team.FRIEND,
+		owner: actors.get(friendlyPet.petOwner),
+	}))
+
+	buildActors(report.enemyPets, enemyPet => convertActor(enemyPet, {
+		team: Team.FOE,
+		owner: actors.get(enemyPet.petOwner),
+	}))
+
+	return actorsByFight
 }
+
+const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
+	// TODO: Instances?
+	id: actor.id.toString(),
+	name: actor.name,
+	team: Team.UNKNOWN,
+	playerControlled: false,
+	job: Job.UNKNOWN,
+	...overrides,
+})
+
+const convertFight = (fight: Fight, actors: Actor[]): Pull => ({
+	id: fight.id.toString(),
+	encounter: {
+		name: fight.name,
+		duty: {
+			id: fight.zoneID,
+			name: fight.zoneName,
+		},
+	},
+	actors,
+})
 
 const actorTypeMap: Record<ActorType, Job> = {
 	// Enemy
