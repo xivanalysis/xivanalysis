@@ -1,7 +1,7 @@
 import React, {useContext, createContext} from 'react'
 import {ReportStore} from 'store/new/report'
 import {Message} from 'akkd'
-import {Switch, useRouteMatch, Route} from 'react-router-dom'
+import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 
 // TODO: I am _not_ convinced by needing the context. Think about it.
@@ -28,17 +28,48 @@ export function ReportFlow() {
 
 	return (
 		<Switch>
-			<Route path={`${path}/:pull/:actor`} component={Analyse}/>
-			<Route path={`${path}/:pull`} component={ActorList}/>
-			<Route path={path} component={PullList}/>
+			<Route path={`${path}/:pullId/:actorId`}><Analyse/></Route>
+			<Route path={`${path}/:pullId`}><ActorList/></Route>
+			<Route path={path}><PullList/></Route>
 		</Switch>
 	)
 }
 
 // These probably should be moved to their own files
 
+// Keep in sync with Route path in ReportFlow
+interface ActorListRouteParams {
+	pullId: string
+}
+
 function ActorList() {
-	return <>ActorList</>
+	const reportStore = useContext(ReportStoreContext)
+	const {pullId} = useParams<ActorListRouteParams>()
+
+	// TODO: Same as pull list. What do?
+	if (reportStore.report == null) {
+		return null
+	}
+
+	const pull = reportStore.report.pulls.find(pull => pull.id === pullId)
+
+	// TODO: can likely be combined with the null above
+	if (pull == null) {
+		return <>TODO: message pull not found</>
+	}
+
+	const actors = pull.actors
+		.filter(actor => actor.playerControlled)
+
+	return (
+		<ul>
+			{actors.map(actor => (
+				<li>
+					{actor.name}
+				</li>
+			))}
+		</ul>
+	)
 }
 
 function Analyse() {

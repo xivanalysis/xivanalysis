@@ -21,7 +21,7 @@ export function FflogsLegacy() {
 			{/* Can't do anything without a report code, redirect to the home page */}
 			<Redirect path={path} exact to="/"/>
 
-			<Route path={`${path}/:code`} component={WithCode}/>
+			<Route path={`${path}/:code`}><WithCode/></Route>
 		</Switch>
 	)
 }
