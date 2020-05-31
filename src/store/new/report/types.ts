@@ -41,6 +41,8 @@ export enum Team {
 	FOE,
 }
 
+// TODO: DO WE WANT THIS?
+//       It's an extra layer of abstraction over the existing data/JOBs stuff...
 /** Possible jobs for an actor */
 export enum Job {
 	// Misc
@@ -102,6 +104,7 @@ export enum Job {
 
 /** An actor represents a single combatant within a pull */
 export interface Actor {
+	id: string
 	name: string
 	team: Team
 	playerControlled: boolean
