@@ -1,8 +1,10 @@
 import React, {useContext, createContext} from 'react'
-import {ReportStore, Job} from 'store/new/report'
+import {ReportStore} from 'store/new/report'
 import {Message} from 'akkd'
-import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
+import {Switch, useRouteMatch, Route} from 'react-router-dom'
 import {PullList} from './PullList'
+import {ActorList} from './ActorList'
+import {Analyse} from './Analyse'
 
 // TODO: I am _not_ convinced by needing the context. Think about it.
 class NoOpReportStore extends ReportStore { report = undefined }
@@ -33,45 +35,4 @@ export function ReportFlow() {
 			<Route path={path}><PullList/></Route>
 		</Switch>
 	)
-}
-
-// These probably should be moved to their own files
-
-// Keep in sync with Route path in ReportFlow
-interface ActorListRouteParams {
-	pullId: string
-}
-
-function ActorList() {
-	const reportStore = useContext(ReportStoreContext)
-	const {pullId} = useParams<ActorListRouteParams>()
-
-	// TODO: Same as pull list. What do?
-	if (reportStore.report == null) {
-		return null
-	}
-
-	const pull = reportStore.report.pulls.find(pull => pull.id === pullId)
-
-	// TODO: can likely be combined with the null above
-	if (pull == null) {
-		return <>TODO: message pull not found</>
-	}
-
-	const actors = pull.actors
-		.filter(actor => actor.playerControlled)
-
-	return (
-		<ul>
-			{actors.map((actor, index) => (
-				<li key={index}> {/* TODO: actor id */}
-					{actor.name} ({Job[actor.job]})
-				</li>
-			))}
-		</ul>
-	)
-}
-
-function Analyse() {
-	return <>Analyse</>
 }
