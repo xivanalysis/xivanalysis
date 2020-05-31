@@ -8,8 +8,15 @@ import {
 	Fight,
 	Actor as FflogsActor,
 	ActorFightInstance,
+	ActorType,
 } from 'fflogs'
 import {Pull, Actor, Team} from './types'
+
+// Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
+const NPC_FRIENDLY_TYPES: ActorType[] = [
+	ActorType.NPC,
+	ActorType.LIMIT_BREAK,
+]
 
 export class FflogsLegacyReportStore extends ReportStore {
 	@computed
@@ -40,8 +47,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 	}
 
 	private buildActorsByFight(report: LegacyReport) {
-		// TODO: string id?
-		const actors = new Map<number, Actor>()
+		const actors = new Map<FflogsActor['id'], Actor>()
 		const actorsByFight = new Map<Fight['id'], Actor[]>()
 
 		function pushToFight(fightId: Fight['id'], actor: Actor) {
@@ -65,7 +71,6 @@ export class FflogsLegacyReportStore extends ReportStore {
 		) {
 			fflogsActors.forEach(fflogsActor => {
 				const actor = convert(fflogsActor)
-				// TODO: this should use actor.id once i add the fucking thing
 				actors.set(fflogsActor.id, actor)
 				pushToFights(fflogsActor.fights, actor)
 			})
@@ -73,7 +78,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 
 		buildActors(report.friendlies, friendly => this.convertActor(friendly, {
 			team: Team.FRIEND,
-			playerControlled: true,
+			playerControlled: !NPC_FRIENDLY_TYPES.includes(friendly.type),
 		}))
 
 		buildActors(report.enemies, enemy => this.convertActor(enemy, {team: Team.FOE}))
