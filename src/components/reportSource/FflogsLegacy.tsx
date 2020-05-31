@@ -3,7 +3,7 @@ import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-do
 import {FflogsLegacyReportStore} from 'store/new/report'
 import {observer} from 'mobx-react'
 import {Loader} from 'semantic-ui-react'
-import {ReportStoreContext, ReportFlow} from 'components/ReportFlowfoo'
+import {ReportStoreContext, ReportFlow} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
 
 interface RouteParams {
