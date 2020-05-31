@@ -1,3 +1,6 @@
+// This should probably be moved to a more central location so stuff isn't
+// importing shit from the stores all the time
+
 /**
  * A report contains one or more pulls, across one or more encounters
  */
@@ -38,10 +41,70 @@ export enum Team {
 	FOE,
 }
 
+/** Possible jobs for an actor */
+export enum Job {
+	// Misc
+	UNKNOWN,
+	ADVENTURER,
+
+	// Tank
+	GLADIATOR,
+	PALADIN,
+	MARAUDER,
+	WARRIOR,
+	DARK_KNIGHT,
+	GUNBREAKER,
+
+	// Healer
+	CONJURER,
+	WHITE_MAGE,
+	SCHOLAR,
+	ASTROLOGIAN,
+
+	// Melee DPS
+	PUGILIST,
+	MONK,
+	LANCER,
+	DRAGOON,
+	ROGUE,
+	NINJA,
+	SAMURAI,
+
+	// Physical ranged DPS
+	ARCHER,
+	BARD,
+	MACHINIST,
+	DANCER,
+
+	// Magical ranged DPS
+	THAUMATURGE,
+	BLACK_MAGE,
+	ARCANIST,
+	SUMMONER,
+	RED_MAGE,
+	BLUE_MAGE,
+
+	// Crafter
+	CARPENTER,
+	BLACKSMITH,
+	ARMORER,
+	GOLDSMITH,
+	LEATHERWORKER,
+	WEAVER,
+	ALCHEMIST,
+	CULINARIAN,
+
+	// Gathrer
+	MINER,
+	BOTANIST,
+	FISHER,
+}
+
 /** An actor represents a single combatant within a pull */
 export interface Actor {
 	name: string
 	team: Team
 	playerControlled: boolean
 	owner?: Actor
+	job: Job
 }

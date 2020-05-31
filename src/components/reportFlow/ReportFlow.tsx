@@ -1,5 +1,5 @@
 import React, {useContext, createContext} from 'react'
-import {ReportStore} from 'store/new/report'
+import {ReportStore, Job} from 'store/new/report'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
@@ -65,7 +65,7 @@ function ActorList() {
 		<ul>
 			{actors.map(actor => (
 				<li>
-					{actor.name}
+					{actor.name} ({Job[actor.job]})
 				</li>
 			))}
 		</ul>
