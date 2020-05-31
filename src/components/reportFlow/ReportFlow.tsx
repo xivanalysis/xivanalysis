@@ -63,8 +63,8 @@ function ActorList() {
 
 	return (
 		<ul>
-			{actors.map(actor => (
-				<li>
+			{actors.map((actor, index) => (
+				<li key={index}> {/* TODO: actor id */}
 					{actor.name} ({Job[actor.job]})
 				</li>
 			))}

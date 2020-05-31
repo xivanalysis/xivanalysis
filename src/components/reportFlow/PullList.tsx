@@ -39,7 +39,7 @@ export function PullList() {
 			<h3>{group.duty.name}</h3>
 			<ul>
 				{group.pulls.map(pull => (
-					<li>
+					<li key={pull.id}>
 						<Link to={`${url}/${pull.id}`}>
 							{pull.encounter.name}
 						</Link>
