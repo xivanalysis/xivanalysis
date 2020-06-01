@@ -15,6 +15,7 @@ import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 import {FflogsLegacy} from './reportSource'
+import {Breadcrumbs} from './Breadcrumbs'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
@@ -106,6 +107,9 @@ class App extends Component {
 
 				<Container className={styles.content}>
 					<BranchBanner/>
+
+					{/* TODO: Move into sidebar */}
+					<Breadcrumbs/>
 
 					<ErrorBoundary>
 						<Switch>

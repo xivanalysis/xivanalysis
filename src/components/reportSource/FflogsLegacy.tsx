@@ -33,7 +33,7 @@ const WithCode = observer(function WithCode() {
 	const reportStore = useLazyRef(() => new FflogsLegacyReportStore()).current
 	reportStore.fetchReport(code)
 
-	// We can safely assume that a null report means we're loading due to the  legacy store semantics.
+	// We can safely assume that a null report means we're loading due to the legacy store semantics.
 	if (reportStore.report == null) {
 		return (
 			<Loader active>

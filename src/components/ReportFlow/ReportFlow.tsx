@@ -1,10 +1,20 @@
 import React, {useContext, createContext} from 'react'
-import {ReportStore} from 'store/new/report'
+import {ReportStore, Report} from 'store/new/report'
 import {Message} from 'akkd'
-import {Switch, useRouteMatch, Route} from 'react-router-dom'
+import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
+import {Breadcrumb} from 'components/Breadcrumbs'
+
+export interface ActorListRouteParams {
+	pullId: string
+}
+
+export interface AnalyseRouteParams {
+	pullId: string
+	actorId: string
+}
 
 // TODO: I am _not_ convinced by needing the context. Think about it.
 class NoOpReportStore extends ReportStore { report = undefined }
@@ -28,11 +38,52 @@ export function ReportFlow() {
 		)
 	}
 
-	return (
+	return <>
+		<Breadcrumb path={path}>
+			<ReportCrumb report={reportStore.report}/>
+		</Breadcrumb>
+		<Breadcrumb path={`${path}/:pullId`}>
+			<PullCrumb report={reportStore.report}/>
+		</Breadcrumb>
+		<Breadcrumb path={`${path}/:pullId/:actorId`}>
+			<ActorCrumb report={reportStore.report}/>
+		</Breadcrumb>
+
 		<Switch>
 			<Route path={`${path}/:pullId/:actorId`}><Analyse/></Route>
 			<Route path={`${path}/:pullId`}><ActorList/></Route>
 			<Route path={path}><PullList/></Route>
 		</Switch>
-	)
+	</>
+}
+
+interface CrumbProps {
+	report: Report
+}
+
+function ReportCrumb({report}: CrumbProps) {
+	return <>{report.name}</>
+}
+
+function PullCrumb({report}: CrumbProps) {
+	const {pullId} = useParams<ActorListRouteParams>()
+
+	const name = report.pulls
+		.find(pull => pull.id === pullId)
+		?.encounter
+		.name
+
+	return <>{name ?? 'Unknown'}</>
+}
+
+function ActorCrumb({report}: CrumbProps) {
+	const {pullId, actorId} = useParams<AnalyseRouteParams>()
+
+	const name = report.pulls
+		.find(pull => pull.id === pullId)
+		?.actors
+		.find(actor => actor.id === actorId)
+		?.name
+
+	return <>{name ?? 'Unknown'}</>
 }
