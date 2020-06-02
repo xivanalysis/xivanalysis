@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "{0} Angriffspotenz durch Anwendungen von <0/> auf ein einziges Ziel versäumt",
   "brd.sidewinder.title": "Seitenschneider und Schattenbiss",
   "brd.sidewinder.total-mistakes": "Durch {0, plural, one {# Fehler} other {# Fehler}} insgesamt <0>{1}</0> Schadenspotenz verloren",
+  "brd.snapshots.dots": "",
   "brd.snapshots.snapshotter": "Bildaufnehmer",
   "brd.snapshots.statuses": "Status",
   "brd.snapshots.time": "Zeit",
