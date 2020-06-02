@@ -11,11 +11,11 @@ import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
-import GlobalSidebar from './GlobalSidebar'
+import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 import {FflogsLegacy} from './reportSource'
-import {Breadcrumbs} from './Breadcrumbs'
+import {Breadcrumbs, Breadcrumb} from './Breadcrumbs'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
@@ -112,6 +112,11 @@ class App extends Component {
 					<Breadcrumbs/>
 
 					<ErrorBoundary>
+						{/* TODO: Remove alongside respective legacy routes */}
+						<Breadcrumb path="/(find|analyse)/:code"><ReportCrumb/></Breadcrumb>
+						<Breadcrumb path="/(find|analyse)/:code/:fight"><FightCrumb/></Breadcrumb>
+						<Breadcrumb path="/analyse/:code/:fight/:combatant"><CombatantCrumb/></Breadcrumb>
+
 						<Switch>
 							<Route exact path="/" component={Home}/>
 							<Route path="/:section/:code/last/:combatant*" component={LastFightRedirect}/>
