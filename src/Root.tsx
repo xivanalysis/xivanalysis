@@ -1,5 +1,5 @@
 import App from 'components/App'
-import {BreadcrumbProvider} from 'components/Breadcrumbs'
+import {BreadcrumbProvider} from 'components/GlobalSidebar'
 import I18nLoader from 'components/I18nLoader'
 import {Provider as TooltipProvider} from 'components/ui/DbLink'
 import React from 'react'

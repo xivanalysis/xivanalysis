@@ -5,7 +5,7 @@ import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
-import {Breadcrumb} from 'components/Breadcrumbs'
+import {Breadcrumb} from 'components/GlobalSidebar'
 
 export interface ActorListRouteParams {
 	pullId: string

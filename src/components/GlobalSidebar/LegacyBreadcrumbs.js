@@ -8,7 +8,7 @@ import {Link, withRouter} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import {formatDuration, getPathMatch} from 'utilities'
-import styles from './Breadcrumbs.module.css'
+import styles from './LegacyBreadcrumbs.module.css'
 
 const editionName = {
 	[GameEdition.GLOBAL]: <Icon name="globe"/>,
