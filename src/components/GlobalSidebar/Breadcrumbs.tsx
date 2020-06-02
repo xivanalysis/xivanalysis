@@ -5,6 +5,8 @@ type BreadcrumbRegistry = Record<string, ReactNode>
 interface BreadcrumbContextValue {
 	registry: BreadcrumbRegistry
 	setRegistry: React.Dispatch<React.SetStateAction<BreadcrumbRegistry>>
+	banner: string | undefined
+	setBanner: React.Dispatch<React.SetStateAction<string | undefined>>
 }
 
 const BreadcrumbContext = createContext<BreadcrumbContextValue | undefined>(undefined)
@@ -15,10 +17,11 @@ interface BreadcrumbsProps {
 
 export function BreadcrumbProvider({children}: BreadcrumbsProps) {
 	const [registry, setRegistry] = useState<BreadcrumbRegistry>({})
+	const [banner, setBanner] = useState<string>()
 
 	const contextValue = useMemo(
-		() => ({registry, setRegistry}),
-		[registry, setRegistry],
+		() => ({registry, setRegistry, banner, setBanner}),
+		[registry, setRegistry, banner, setBanner],
 	)
 
 	return (
@@ -29,7 +32,7 @@ export function BreadcrumbProvider({children}: BreadcrumbsProps) {
 }
 
 export function Breadcrumbs() {
-	const {registry} = useContext(BreadcrumbContext) ?? {}
+	const {registry, banner} = useContext(BreadcrumbContext) ?? {}
 
 	const {pathname} = useLocation()
 	const segments = useMemo(
@@ -53,6 +56,7 @@ export function Breadcrumbs() {
 
 	return (
 		<ul>
+			<li>Banner: {banner}</li>
 			{segments.map((segment, index) => (
 				<li key={index}>
 					<Link to={segment.url}>
@@ -92,6 +96,21 @@ export function Breadcrumb({path, children}: BreadcrumbProps) {
 			})
 		},
 		[setRegistry, url, crumb],
+	)
+
+	return null
+}
+
+// Should this just be a hook?
+export function BreadcrumbsBanner({banner}: {banner?: string}) {
+	const {setBanner} = useContext(BreadcrumbContext) ?? {}
+
+	useEffect(
+		() => {
+			setBanner?.(banner)
+			return () => setBanner?.(undefined)
+		},
+		[setBanner, banner],
 	)
 
 	return null

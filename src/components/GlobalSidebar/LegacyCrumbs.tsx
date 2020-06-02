@@ -4,8 +4,9 @@ import {StoreContext} from 'store'
 import {observer} from 'mobx-react'
 import {languageToEdition, getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
-import {getCorrectedFight} from 'data/BOSSES'
+import {getCorrectedFight, getZoneBanner} from 'data/BOSSES'
 import {formatDuration} from 'utilities'
+import {BreadcrumbsBanner} from './Breadcrumbs'
 
 const editionName = {
 	[GameEdition.GLOBAL]: <Icon name="globe"/>,
@@ -45,18 +46,23 @@ export const FightCrumb = observer(function FightCrumb() {
 
 	let title = fight
 	let subtitle: string | undefined
+	let banner: string | undefined
 
 	const fightId = parseInt(fight, 10)
 	const fightData = report?.fights.find(fight => fight.id === fightId)
 	if (fightData != null) {
 		const correctedFight = getCorrectedFight(fightData)
-		const {start_time, end_time} = correctedFight
+		const {start_time, end_time, zoneID} = correctedFight
 
 		title = correctedFight.name
 		subtitle = `(${formatDuration(end_time - start_time)})`
+		banner = getZoneBanner(zoneID)
 	}
 
-	return <CrumbItem title={title} subtitle={subtitle}/>
+	return <>
+		<CrumbItem title={title} subtitle={subtitle}/>
+		<BreadcrumbsBanner banner={banner}/>
+	</>
 })
 
 export const CombatantCrumb = observer(function ObserverCrumb() {

@@ -108,6 +108,7 @@ const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => 
 	...overrides,
 })
 
+// TODO: Should this be using getCorrectedFight?
 const convertFight = (fight: Fight, actors: Actor[]): Pull => ({
 	id: fight.id.toString(),
 	encounter: {

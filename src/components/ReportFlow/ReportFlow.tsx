@@ -5,7 +5,8 @@ import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
-import {Breadcrumb} from 'components/GlobalSidebar'
+import {Breadcrumb, BreadcrumbsBanner} from 'components/GlobalSidebar'
+import {getZoneBanner} from 'data/BOSSES'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -68,12 +69,18 @@ function ReportCrumb({report}: CrumbProps) {
 function PullCrumb({report}: CrumbProps) {
 	const {pullId} = useParams<ActorListRouteParams>()
 
-	const name = report.pulls
+	const encounter = report.pulls
 		.find(pull => pull.id === pullId)
 		?.encounter
-		.name
 
-	return <>{name ?? 'Unknown'}</>
+	const banner = encounter?.duty.id != null
+		? getZoneBanner(encounter.duty.id)
+		: undefined
+
+	return <>
+		{encounter?.name ?? 'Unknown'}
+		<BreadcrumbsBanner banner={banner}/>
+	</>
 }
 
 function ActorCrumb({report}: CrumbProps) {
