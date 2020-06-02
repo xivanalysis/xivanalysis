@@ -856,7 +856,6 @@
   "smn.tridisaster.title": "トライディザスター",
   "smn.tridisaster.why": "トライディザスターが戻ってきているときに{0, plural, other {# 回}}アビリティを使いました。",
   "war.about.description": "このアナライザーは、戦士のゲームプレイを手軽に向上させるとともに、戦闘中に起こったことのより深い洞察を提供することを目指しています。\n今のところ必要最低限のモジュールでかなりの機能を備えています。もっと戦士について知りたい場合は[The Balance](https://thebalanceffxiv.com/)をチェックしてください。\nバグや不満、提案等はXivAのDiscordにjoinして私(SKYE#6666)にご連絡ください。",
-  "war.about.description.warning": "以下の分析結果が概ね正確ですが、このシステム的にはまだ最適化中です。よって分析に少々混乱や誤解を招きやすい情報が入る可能性がありので、もし不正な情報や問題を発見したのなら是非私達に報告してください。問題の報告やお問い合わせはDiscordでお願いします。",
   "war.gauge.suggestions.loss.content": "インナービーストを溢れさせるのは避けましょう。リソースを無駄にしたせいで、戦闘を通してインナービースト使用に影響があるかもしれません。",
   "war.gauge.suggestions.loss.why": "{overCap} のインナービーストを上限を超えたため失いました。",
   "war.gauge.title": "インナービースト使用状況",
