@@ -5,7 +5,6 @@ import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 
 import {Breadcrumbs} from './Breadcrumbs'
-import LegacyBreadcrumbs from './LegacyBreadcrumbs'
 import Options from './Options'
 
 import styles from './GlobalSidebar.module.css'
@@ -35,7 +34,6 @@ class GlobalSidebar extends React.Component {
 				xivanalysis
 			</Link>
 
-			<LegacyBreadcrumbs/>
 			<Breadcrumbs/>
 
 			{/* Content */}

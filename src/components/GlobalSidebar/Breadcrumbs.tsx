@@ -1,6 +1,7 @@
 import React, {ReactNode, createContext, useContext, useState, useEffect, useMemo} from 'react'
 import {useRouteMatch, matchPath, useLocation, Link} from 'react-router-dom'
 import {Helmet} from 'react-helmet'
+import style from './Breadcrumbs.module.css'
 
 interface BreadcrumbValue {
 	title: string
@@ -67,17 +68,29 @@ export function Breadcrumbs() {
 			</title>
 		</Helmet>
 
-		<ul>
-			<li>Banner: {banner}</li>
-			{segments.map(({url, crumb}, index) => (
-				<li key={index}>
-					<Link to={url}>
+		{segments.length > 0 && (
+			<div className={style.container}>
+				{banner && (
+					<div
+						className={style.background}
+						style={{backgroundImage: `url(${banner})`}}
+					/>
+				)}
+
+				{segments.map(({url, crumb}) => (
+					<Link
+						key={url}
+						to={url}
+						className={style.link}
+					>
 						{crumb.title}
-						{crumb.subtitle && <>&nbsp;<small>{crumb.subtitle}</small></>}
+						{crumb.subtitle && <>
+							&nbsp;<span className={style.subtitle}>{crumb.subtitle}</span>
+						</>}
 					</Link>
-				</li>
-			))}
-		</ul>
+				))}
+			</div>
+		)}
 	</>
 }
 

@@ -1,13 +1,13 @@
 @value gutter, md, themeText, themeBackground from "theme.module.css";
 
-.crumbs {
+.container {
 	position: relative;
 	margin: calc(-1 * gutter) calc(-1 * gutter) 0;
 	padding: 15px gutter;
 	overflow: hidden;
 }
 
-.crumbsBackground {
+.background {
 	position: absolute;
 	top: -5px;
 	bottom: -5px;
@@ -19,7 +19,7 @@
 	filter: blur(5px);
 }
 
-.crumbsBackground::after {
+.background::after {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -47,12 +47,12 @@
 .link:first-of-type { padding-top: 0; }
 .link:last-of-type { padding-bottom: 0; }
 
-.linkSubtitle {
+.subtitle {
 	opacity: .5;
 }
 
 @media md {
-	.crumbs {
+	.container {
 		margin-top: gutter;
 	}
 }
