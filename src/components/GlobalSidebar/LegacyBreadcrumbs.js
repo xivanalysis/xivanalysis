@@ -3,7 +3,6 @@ import {GameEdition, getPatch, languageToEdition} from 'data/PATCHES'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Helmet} from 'react-helmet'
 import {Link, withRouter} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
@@ -107,13 +106,6 @@ class Breadcrumbs extends React.Component {
 		}
 
 		return <>
-			<Helmet>
-				<title>
-					{crumbs.length ? crumbs[crumbs.length - 1].title + ' | ' : ''}
-					xivanalysis
-				</title>
-			</Helmet>
-
 			{crumbs.length > 0 && (
 				<div className={styles.crumbs}>
 					{crumbsBackground && (

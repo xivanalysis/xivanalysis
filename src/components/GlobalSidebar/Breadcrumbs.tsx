@@ -1,5 +1,6 @@
 import React, {ReactNode, createContext, useContext, useState, useEffect, useMemo} from 'react'
 import {useRouteMatch, matchPath, useLocation, Link} from 'react-router-dom'
+import {Helmet} from 'react-helmet'
 
 interface BreadcrumbValue {
 	title: string
@@ -59,6 +60,13 @@ export function Breadcrumbs() {
 	)
 
 	return <>
+		<Helmet>
+			<title>
+				{segments.length > 0 ? `${segments[segments.length - 1].crumb.title} | ` : ''}
+				xivanalysis
+			</title>
+		</Helmet>
+
 		<ul>
 			<li>Banner: {banner}</li>
 			{segments.map(({url, crumb}, index) => (
