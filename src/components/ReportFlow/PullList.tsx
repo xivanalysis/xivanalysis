@@ -18,6 +18,9 @@ export function PullList() {
 		return null
 	}
 
+	// Ensure pulls are up to date
+	reportStore.fetchPulls()
+
 	// Group encounters by the duty they took place in
 	// We're maintaining chronological order, so only tracking the latest duty
 	const groups: PullGroup[] = []

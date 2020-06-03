@@ -19,6 +19,9 @@ export function ActorList() {
 		return <>TODO: message pull not found</>
 	}
 
+	// Ensure actors are up to date
+	reportStore.fetchActors(pull)
+
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)
 
