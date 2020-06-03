@@ -11,7 +11,7 @@ import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
-import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb, Breadcrumbs, Breadcrumb} from './GlobalSidebar'
+import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb, Breadcrumb} from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 import {FflogsLegacy} from './reportSource'
@@ -106,9 +106,6 @@ class App extends Component {
 
 				<Container className={styles.content}>
 					<BranchBanner/>
-
-					{/* TODO: Move into sidebar */}
-					<Breadcrumbs/>
 
 					<ErrorBoundary>
 						{/* TODO: Remove alongside respective legacy routes */}

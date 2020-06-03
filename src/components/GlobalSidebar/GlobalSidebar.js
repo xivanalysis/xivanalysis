@@ -4,6 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 
+import {Breadcrumbs} from './Breadcrumbs'
 import LegacyBreadcrumbs from './LegacyBreadcrumbs'
 import Options from './Options'
 
@@ -35,6 +36,7 @@ class GlobalSidebar extends React.Component {
 			</Link>
 
 			<LegacyBreadcrumbs/>
+			<Breadcrumbs/>
 
 			{/* Content */}
 			<div ref={contentRef} className={styles.content}/>
