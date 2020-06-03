@@ -1,7 +1,11 @@
 import React, {ReactNode, createContext, useContext, useState, useEffect, useMemo} from 'react'
-import {useRouteMatch, matchPath, Route, useLocation, Link} from 'react-router-dom'
+import {useRouteMatch, matchPath, useLocation, Link} from 'react-router-dom'
 
-type BreadcrumbRegistry = Record<string, ReactNode>
+interface BreadcrumbValue {
+	title: string
+	subtitle?: ReactNode
+}
+type BreadcrumbRegistry = Record<string, BreadcrumbValue>
 interface BreadcrumbContextValue {
 	registry: BreadcrumbRegistry
 	setRegistry: React.Dispatch<React.SetStateAction<BreadcrumbRegistry>>
@@ -40,13 +44,13 @@ export function Breadcrumbs() {
 			let path = ''
 			let url: string | undefined
 			let escapeHatch = 0
-			const segments: Array<{url: string, node: ReactNode}> = []
+			const segments: Array<{url: string, crumb: BreadcrumbValue}> = []
 			while (true) {
 				path += '/:segment'
 				url = matchPath(pathname, {path})?.url
 				if (url == null || escapeHatch > 100) { break }
-				const node = registry?.[url]
-				if (node != null) { segments.push({url, node}) }
+				const crumb = registry?.[url]
+				if (crumb != null) { segments.push({url, crumb}) }
 				escapeHatch++
 			}
 			return segments
@@ -54,40 +58,30 @@ export function Breadcrumbs() {
 		[pathname, registry],
 	)
 
-	return (
+	return <>
 		<ul>
 			<li>Banner: {banner}</li>
-			{segments.map((segment, index) => (
+			{segments.map(({url, crumb}, index) => (
 				<li key={index}>
-					<Link to={segment.url}>
-						{segment.node}
+					<Link to={url}>
+						{crumb.title}
+						{crumb.subtitle && <>&nbsp;<small>{crumb.subtitle}</small></>}
 					</Link>
 				</li>
 			))}
 		</ul>
-	)
+	</>
 }
 
-export interface BreadcrumbProps {
-	path: string
-	children?: ReactNode
-}
-
-export function Breadcrumb({path, children}: BreadcrumbProps) {
+export function Breadcrumb({title, subtitle}: BreadcrumbValue) {
 	const {setRegistry} = useContext(BreadcrumbContext) ?? {}
-	const match = useRouteMatch(path)
-	const url = match?.url
-
-	const crumb = useMemo(
-		() => <Route path={path}>{children}</Route>,
-		[path, children],
-	)
+	const {url} = useRouteMatch()
 
 	useEffect(
 		() => {
-			if (url == null || setRegistry == null) { return }
+			if (setRegistry == null) { return }
 
-			setRegistry(registry => ({...registry, [url]: crumb}))
+			setRegistry(registry => ({...registry, [url]: {title, subtitle}}))
 
 			return () => setRegistry(registry => {
 				const newRegistry = {...registry}
@@ -95,7 +89,7 @@ export function Breadcrumb({path, children}: BreadcrumbProps) {
 				return newRegistry
 			})
 		},
-		[setRegistry, url, crumb],
+		[setRegistry, url, title, subtitle],
 	)
 
 	return null

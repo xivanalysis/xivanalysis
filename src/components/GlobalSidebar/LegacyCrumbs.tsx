@@ -6,7 +6,7 @@ import {languageToEdition, getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
 import {getCorrectedFight, getZoneBanner} from 'data/BOSSES'
 import {formatDuration} from 'utilities'
-import {BreadcrumbsBanner} from './Breadcrumbs'
+import {BreadcrumbsBanner, Breadcrumb} from './Breadcrumbs'
 
 const editionName = {
 	[GameEdition.GLOBAL]: <Icon name="globe"/>,
@@ -37,7 +37,7 @@ export const ReportCrumb = observer(function ReportCrumb() {
 		subtitle = <>({editionName[edition]} {patch})</>
 	}
 
-	return <CrumbItem title={title} subtitle={subtitle}/>
+	return <Breadcrumb title={title} subtitle={subtitle}/>
 })
 
 export const FightCrumb = observer(function FightCrumb() {
@@ -60,7 +60,7 @@ export const FightCrumb = observer(function FightCrumb() {
 	}
 
 	return <>
-		<CrumbItem title={title} subtitle={subtitle}/>
+		<Breadcrumb title={title} subtitle={subtitle}/>
 		<BreadcrumbsBanner banner={banner}/>
 	</>
 })
@@ -73,10 +73,5 @@ export const CombatantCrumb = observer(function ObserverCrumb() {
 	const combatantData = report?.friendlies.find(friendly => friendly.id === combatantId)
 	const title = combatantData?.name ?? combatant
 
-	return <CrumbItem title={title}/>
+	return <Breadcrumb title={title}/>
 })
-
-const CrumbItem = ({title, subtitle}: {title: ReactNode, subtitle?: ReactNode}) => <>
-	{title}
-	{subtitle && <>&nbsp;<small>{subtitle}</small></>}
-</>

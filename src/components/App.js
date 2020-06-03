@@ -11,7 +11,7 @@ import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
-import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb, Breadcrumb} from './GlobalSidebar'
+import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
 import {FflogsLegacy} from './reportSource'
@@ -109,9 +109,9 @@ class App extends Component {
 
 					<ErrorBoundary>
 						{/* TODO: Remove alongside respective legacy routes */}
-						<Breadcrumb path="/(find|analyse)/:code"><ReportCrumb/></Breadcrumb>
-						<Breadcrumb path="/(find|analyse)/:code/:fight"><FightCrumb/></Breadcrumb>
-						<Breadcrumb path="/analyse/:code/:fight/:combatant"><CombatantCrumb/></Breadcrumb>
+						<Route path="/(find|analyse)/:code"><ReportCrumb/></Route>
+						<Route path="/(find|analyse)/:code/:fight"><FightCrumb/></Route>
+						<Route path="/analyse/:code/:fight/:combatant"><CombatantCrumb/></Route>
 
 						<Switch>
 							<Route exact path="/" component={Home}/>

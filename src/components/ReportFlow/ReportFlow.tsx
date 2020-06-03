@@ -5,7 +5,7 @@ import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
-import {Breadcrumb, BreadcrumbsBanner} from 'components/GlobalSidebar'
+import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
 import {getZoneBanner} from 'data/BOSSES'
 
 export interface ActorListRouteParams {
@@ -40,15 +40,15 @@ export function ReportFlow() {
 	}
 
 	return <>
-		<Breadcrumb path={path}>
+		<Route path={path}>
 			<ReportCrumb report={reportStore.report}/>
-		</Breadcrumb>
-		<Breadcrumb path={`${path}/:pullId`}>
+		</Route>
+		<Route path={`${path}/:pullId`}>
 			<PullCrumb report={reportStore.report}/>
-		</Breadcrumb>
-		<Breadcrumb path={`${path}/:pullId/:actorId`}>
+		</Route>
+		<Route path={`${path}/:pullId/:actorId`}>
 			<ActorCrumb report={reportStore.report}/>
-		</Breadcrumb>
+		</Route>
 
 		<Switch>
 			<Route path={`${path}/:pullId/:actorId`}><Analyse/></Route>
@@ -63,7 +63,7 @@ interface CrumbProps {
 }
 
 function ReportCrumb({report}: CrumbProps) {
-	return <>{report.name}</>
+	return <Breadcrumb title={report.name}/>
 }
 
 function PullCrumb({report}: CrumbProps) {
@@ -78,7 +78,7 @@ function PullCrumb({report}: CrumbProps) {
 		: undefined
 
 	return <>
-		{encounter?.name ?? 'Unknown'}
+		<Breadcrumb title={encounter?.name ?? 'Unknown'}/>
 		<BreadcrumbsBanner banner={banner}/>
 	</>
 }
@@ -92,5 +92,5 @@ function ActorCrumb({report}: CrumbProps) {
 		.find(actor => actor.id === actorId)
 		?.name
 
-	return <>{name ?? 'Unknown'}</>
+	return <Breadcrumb title={name ?? 'Unknown'}/>
 }
