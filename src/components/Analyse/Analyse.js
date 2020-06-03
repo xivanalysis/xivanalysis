@@ -16,6 +16,20 @@ import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
 
+export default function AnalyseRouteWrapper({match: {params}}) {
+	return <Analyse {...params}/>
+}
+
+AnalyseRouteWrapper.propTypes = {
+	match: PropTypes.shape({
+		params: PropTypes.shape({
+			code: PropTypes.string.isRequired,
+			fight: PropTypes.string.isRequired,
+			combatant: PropTypes.string.isRequired,
+		}).isRequired,
+	}).isRequired,
+}
+
 @observer
 class Analyse extends Component {
 	static contextType = StoreContext
@@ -23,34 +37,28 @@ class Analyse extends Component {
 	@observable conductor;
 	@observable complete = false;
 
-	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
-		match: PropTypes.shape({
-			params: PropTypes.shape({
-				code: PropTypes.string.isRequired,
-				fight: PropTypes.string.isRequired,
-				combatant: PropTypes.string.isRequired,
-			}).isRequired,
-		}).isRequired,
+		code: PropTypes.string.isRequired,
+		fight: PropTypes.string.isRequired,
+		combatant: PropTypes.string.isRequired,
 	}
 
 	get fightId() {
-		return parseInt(this.props.match.params.fight, 10)
+		return parseInt(this.props.fight, 10)
 	}
 
 	get combatantId() {
-		return parseInt(this.props.match.params.combatant, 10)
+		return parseInt(this.props.combatant, 10)
 	}
 
 	componentDidMount() {
 		const {reportStore} = this.context
-		const {match} = this.props
-		reportStore.fetchReportIfNeeded(match.params.code)
+		reportStore.fetchReportIfNeeded(this.props.code)
 
 		disposeOnUnmount(this, reaction(
 			() => ({
 				report: reportStore.report,
-				params: match.params,
+				params: this.props,
 			}),
 			this.fetchEventsAndParseIfNeeded,
 			{fireImmediately: true},
@@ -93,8 +101,8 @@ class Analyse extends Component {
 	}
 
 	getReportUrl() {
-		const {match: {params}} = this.props
-		return `https://www.fflogs.com/reports/${params.code}#fight=${params.fight}&source=${params.combatant}`
+		const {code, fight, combatant} = this.props
+		return `https://www.fflogs.com/reports/${code}#fight=${fight}&source=${combatant}`
 	}
 
 	render() {
@@ -153,4 +161,4 @@ class Analyse extends Component {
 	}
 }
 
-export default Analyse
+export {Analyse}
