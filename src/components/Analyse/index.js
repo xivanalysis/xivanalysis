@@ -1,1 +1,1 @@
-export {default} from './Analyse'
+export {default, Analyse} from './Analyse'
