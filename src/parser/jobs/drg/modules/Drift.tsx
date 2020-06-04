@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Accordion, Message, Table} from 'semantic-ui-react'
+import {Message, Table, Button, Header, Icon} from 'semantic-ui-react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
@@ -8,8 +8,7 @@ import Downtime from 'parser/core/modules/Downtime'
 import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
 import React, {Fragment} from 'react'
-import Rotation from 'components/ui/Rotation'
-
+import {Timeline} from 'parser/core/modules/Timeline'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
@@ -37,7 +36,7 @@ class DriftWindow {
 		this.start = start
 	}
 
-	public addGcd(event: CastEvent) {
+	public addAbility(event: CastEvent) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (action) {
 			this.abilityRotation.push(event)
@@ -54,6 +53,7 @@ export default class Drift extends Module {
 	static title = t('drg.drift.title')`Ability Drift`
 
 	@dependency private downtime!: Downtime
+	@dependency private timeline!: Timeline
 
 	private driftedWindows: DriftWindow[] = []
 
@@ -80,7 +80,7 @@ export default class Drift extends Module {
 		// Forgive "drift" in reopener situations
 		if (window.drift > DRIFT_BUFFER && downtime < cd) {
 			this.driftedWindows.push(window)
-			window.addGcd(event)
+			window.addAbility(event)
 		}
 
 		this.currentWindows[actionId] = new DriftWindow(actionId, event.timestamp)
@@ -88,32 +88,48 @@ export default class Drift extends Module {
 
 	private onCast(event: CastEvent) {
 		for (const window of Object.values(this.currentWindows)) {
-			window.addGcd(event)
+			window.addAbility(event)
 		}
+	}
+
+	private createTimelineButton(timestamp: number) {
+		return <Button
+			circular
+			compact
+			icon="time"
+			size="small"
+			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
+			content={this.parser.formatTimestamp(timestamp)}
+		/>
+	}
+
+	private createDriftTable(casts: DriftWindow[]) {
+		let totalDrift = 0
+		const action = getDataBy(ACTIONS, 'id', casts[0].actionId)
+		return <Table>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell><ActionLink {...action} /> Casts</Table.HeaderCell>
+					<Table.HeaderCell>Drift</Table.HeaderCell>
+					<Table.HeaderCell>Total Drift</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{casts.map((event) => {
+					totalDrift += event.drift
+					return <Table.Row key={event.start}>
+						<Table.Cell>{this.createTimelineButton(event.start)}</Table.Cell>
+						<Table.Cell>{event.drift !== null ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
+						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
+					</Table.Row>
+				})}
+			</Table.Body>
+		</Table>
 	}
 
 	output() {
 		// Nothing to show
 		if (!this.driftedWindows.length) return
-
-		const panels = this.driftedWindows.map(window => {
-			return {
-				title: {
-					key: 'title-' + window.start,
-					content: <Fragment>
-						{this.parser.formatTimestamp(window.end)}
-						<span> - </span>
-						<Trans id="drg.drift.panel-drift">
-							<ActionLink {...getDataBy(ACTIONS, 'id', window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
-						</Trans>
-					</Fragment>,
-				},
-				content: {
-					key: 'content-' + window.start,
-					content: <Rotation events={window.abilityRotation}/>,
-				},
-			}
-		})
 
 		return <Fragment>
 			<Message>
@@ -121,12 +137,12 @@ export default class Drift extends Module {
 					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose life windows.
 				</Trans>
 			</Message>
-			<Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
+			{this.createDriftTable(this.driftedWindows.filter((ability) => {
+				return ability.actionId === ACTIONS.HIGH_JUMP.id
+			}))}
+			{this.createDriftTable(this.driftedWindows.filter((ability) => {
+				return ability.actionId === ACTIONS.GEIRSKOGUL.id
+			}))}
 		</Fragment>
 	}
 }
