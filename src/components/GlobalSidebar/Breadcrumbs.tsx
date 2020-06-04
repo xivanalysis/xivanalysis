@@ -6,6 +6,7 @@ import style from './Breadcrumbs.module.css'
 interface BreadcrumbValue {
 	title: string
 	subtitle?: ReactNode
+	url?: string
 }
 type BreadcrumbRegistry = Record<string, BreadcrumbValue>
 interface BreadcrumbContextValue {
@@ -46,13 +47,13 @@ export function Breadcrumbs() {
 			let path = ''
 			let url: string | undefined
 			let escapeHatch = 0
-			const segments: Array<{url: string, crumb: BreadcrumbValue}> = []
+			const segments: Array<BreadcrumbValue & {url: string}> = []
 			while (true) {
 				path += '/:segment'
 				url = matchPath(pathname, {path})?.url
 				if (url == null || escapeHatch > 100) { break }
 				const crumb = registry?.[url]
-				if (crumb != null) { segments.push({url, crumb}) }
+				if (crumb != null) { segments.push({...crumb, url: crumb.url ?? url}) }
 				escapeHatch++
 			}
 			return segments
@@ -63,7 +64,7 @@ export function Breadcrumbs() {
 	return <>
 		<Helmet>
 			<title>
-				{segments.length > 0 ? `${segments[segments.length - 1].crumb.title} | ` : ''}
+				{segments.length > 0 ? `${segments[segments.length - 1].title} | ` : ''}
 				xivanalysis
 			</title>
 		</Helmet>
@@ -77,15 +78,15 @@ export function Breadcrumbs() {
 					/>
 				)}
 
-				{segments.map(({url, crumb}) => (
+				{segments.map(({url, title, subtitle}) => (
 					<Link
 						key={url}
 						to={url}
 						className={style.link}
 					>
-						{crumb.title}
-						{crumb.subtitle && <>
-							&nbsp;<span className={style.subtitle}>{crumb.subtitle}</span>
+						{title}
+						{subtitle && <>
+							&nbsp;<span className={style.subtitle}>{subtitle}</span>
 						</>}
 					</Link>
 				))}
@@ -94,7 +95,7 @@ export function Breadcrumbs() {
 	</>
 }
 
-export function Breadcrumb({title, subtitle}: BreadcrumbValue) {
+export function Breadcrumb(crumb: BreadcrumbValue) {
 	const {setRegistry} = useContext(BreadcrumbContext) ?? {}
 	const {url} = useRouteMatch()
 
@@ -102,7 +103,7 @@ export function Breadcrumb({title, subtitle}: BreadcrumbValue) {
 		() => {
 			if (setRegistry == null) { return }
 
-			setRegistry(registry => ({...registry, [url]: {title, subtitle}}))
+			setRegistry(registry => ({...registry, [url]: crumb}))
 
 			return () => setRegistry(registry => {
 				const newRegistry = {...registry}
@@ -110,7 +111,7 @@ export function Breadcrumb({title, subtitle}: BreadcrumbValue) {
 				return newRegistry
 			})
 		},
-		[setRegistry, url, title, subtitle],
+		[setRegistry, url, crumb],
 	)
 
 	return null

@@ -37,7 +37,13 @@ export const ReportCrumb = observer(function ReportCrumb() {
 		subtitle = <>({editionName[edition]} {patch})</>
 	}
 
-	return <Breadcrumb title={title} subtitle={subtitle}/>
+	return (
+		<Breadcrumb
+			title={title}
+			subtitle={subtitle}
+			url={`/find/${code}`}
+		/>
+	)
 })
 
 export const FightCrumb = observer(function FightCrumb() {
@@ -60,7 +66,11 @@ export const FightCrumb = observer(function FightCrumb() {
 	}
 
 	return <>
-		<Breadcrumb title={title} subtitle={subtitle}/>
+		<Breadcrumb
+			title={title}
+			subtitle={subtitle}
+			url={`/find/${code}/${fight}`}
+		/>
 		<BreadcrumbsBanner banner={banner}/>
 	</>
 })
