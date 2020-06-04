@@ -1,4 +1,7 @@
 {
+  "Casts": "",
+  "Drift": "",
+  "Total Drift": "",
   "ast.about.description-1": "",
   "ast.about.description-2": "\nどのヒーラーでも効率的にパーティを維持するには MP とリキャストタイムとを慎重に管理する必要があります。ヒールを計画し相方とコミュニケーションをとれば，余った GCD でより DPS が高くなるでしょう。\n",
   "ast.about.description.warning.development": "このツールを包括的にするには、まだやらなければならないことがたくさんあります！ 　トラッキングする価値のある項目がある場合は、Discordチャンネルにアクセスしてください！",
@@ -409,6 +412,8 @@
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "アクティブ率: <0/>",
   "drg.debuffs.suggestions.clipping.content": "<0/>の効果が満了するまでの早すぎる更新は避けましょう。普通はスキル回しの間違いです。竜騎士は10GCDのスキル回しが決まっており、あなたのスキルスピードに応じて1～2秒残しで桜花狂咲を更新しましょう。",
   "drg.debuffs.suggestions.clipping.why": "早すぎる更新により桜華狂咲を失った回数: {0} 回",
+  "drg.drift.accordion.message": "",
+  "drg.drift.title": "",
   "drg.positionals.analysis.message": "<0/>を背面で当てるか、<1/>を側面で当てると、<3/>の代わりに<2/>が使えます。あなたは可能な限りこのプロックを狙うべきで、そのままでは方向指定を取れない場合は<4/>を活用してください。方向指定をミスしたところがあれば、<5/>が使用可能であったかとともに以下の表に示します。",
   "drg.positionals.analysis.missed": "<0/> あなたは<2>{0}</2>回中<1>{missed}</1>回の<3/>プロックをミスしました。",
   "drg.positionals.analysis.truenorth": "ミスしたプロックのうち、<0>{withTn}</0>回は<1/>が使用可能でした。",

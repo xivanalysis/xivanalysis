@@ -109,9 +109,9 @@ export default class Drift extends Module {
 		return <Table>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell><ActionLink {...action} /> Casts</Table.HeaderCell>
-					<Table.HeaderCell>Drift</Table.HeaderCell>
-					<Table.HeaderCell>Total Drift</Table.HeaderCell>
+					<Table.HeaderCell><ActionLink {...action} /> <Trans>Casts</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans>Drift</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans>Total Drift</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
@@ -134,7 +134,7 @@ export default class Drift extends Module {
 		return <Fragment>
 			<Message>
 				<Trans id="drg.drift.accordion.message">
-					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose life windows.
+					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
 				</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
