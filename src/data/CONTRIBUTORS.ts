@@ -175,7 +175,7 @@ const CONTRIBUTORS = {
 		jobs: [JOBS.SCHOLAR],
 	},
 	RIETTY: {
-		name: 'Rietty Lavoie',
+		name: 'Rietty',
 		avatar: require('./avatar/rietty.png'),
 		jobs: [JOBS.DRAGOON],
 	},
