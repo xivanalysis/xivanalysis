@@ -19,8 +19,14 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.RIETTY, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-04'),
+		Changes: () => <>Added module to calculate and display drifting of High Jump and Geirskogul, which affects possible Life of the Dragon windows that may have been missed.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
 		date: new Date('2020-01-12'),
 		Changes: () => <>Enhanced analysis for Life of the Dragon windows. Added suggestions for windows with missing casts and buffs.</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],
