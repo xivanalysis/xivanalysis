@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "于每一个单体目标吟唱<0/>所导致的{0}威力损失",
   "brd.sidewinder.title": "侧风诱导箭和影噬箭",
   "brd.sidewinder.total-mistakes": "{0, plural, one {# 次失误} other {# 次失误}} 共损失<0>{1}</0>威力。",
+  "brd.snapshots.dots": "DoTs",
   "brd.snapshots.snapshotter": "Dot的buff利用",
   "brd.snapshots.statuses": "状态",
   "brd.snapshots.time": "时间",
