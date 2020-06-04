@@ -1,12 +1,25 @@
 // This should probably be moved to a more central location so stuff isn't
 // importing shit from the stores all the time
 
+import {Compute} from 'utilities'
+
+// tslint:disable-next-line no-empty-interface
+export interface ReportMetaRepository {}
+
+type ReportMetaUnion<S extends keyof ReportMetaRepository> =
+	S extends any
+		? {source: S} & ReportMetaRepository[S]
+		: never
+export type ReportMeta = Compute<ReportMetaUnion<keyof ReportMetaRepository>>
+
 /**
  * A report contains one or more pulls, across one or more encounters
  */
 export interface Report {
 	name: string
 	pulls: Pull[]
+
+	meta?: ReportMeta
 }
 
 /** A pull is a single attempt at clearing an encounter */

@@ -18,6 +18,12 @@ const NPC_FRIENDLY_TYPES: ActorType[] = [
 	ActorType.LIMIT_BREAK,
 ]
 
+declare module './types' {
+	interface ReportMetaRepository {
+		fflogsLegacy: LegacyReport
+	}
+}
+
 export class FflogsLegacyReportStore extends ReportStore {
 	@computed
 	get report() {
@@ -36,8 +42,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),
 			),
 
-			// TODO: remove
-			meta: report,
+			meta: {...report, source: 'fflogsLegacy' as const},
 		}
 	}
 
