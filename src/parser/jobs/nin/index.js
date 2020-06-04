@@ -1,6 +1,5 @@
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
@@ -13,12 +12,6 @@ export default new Meta({
 			<p>As NIN tends to be more fluid than rotational, this module contains mostly suggestions for ways you can improve your gameplay, rather than strict checklist requirements. If you see a lot, don't panic - just tackle them one at a time.</p>
 			<p>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</p>
 		</Trans>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="nin.about.description.warning">While the existing features below should be reasonably accurate, this system is still in development and may get a little mixed up sometimes. If you notice any issues or have any concerns/feature requests, please drop by our Discord channel or report a bug on our github repository!</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.1',
@@ -28,6 +21,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2020-05-25'),
+		Changes: () => <>Included OGCD usage tracking in the checklist.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-11-22'),
 		Changes: () => <>Updated the Kassatsu module to check for Fuma/Raiton uses.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

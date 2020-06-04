@@ -256,6 +256,12 @@ export class NormalisedEvents extends Module {
 			// Not a supported event type for normalisation
 			return
 		}
+
+		if (this.parser.report.friendlyPets.filter(pet => pet.id === event.targetID).length > 0) {
+			// We're choosing to ignore events that only target pets, since those aren't useful to keep track of
+			return
+		}
+
 		let normalisedEvent = this.findRelatedEvent(event)
 
 		if (!normalisedEvent) {

@@ -86,8 +86,25 @@ export const NIN = ensureActions({
 		gcdRecast: 1.5,
 	},
 
-	FUMA_SHURIKEN_TCJ: {
+	// I swear to shit, SE
+	FUMA_SHURIKEN_TCJ_TEN: {
 		id: 18873,
+		name: 'Fuma Shuriken',
+		icon: 'https://xivapi.com/i/002000/002907.png',
+		onGcd: true,
+		gcdRecast: 1,
+	},
+
+	FUMA_SHURIKEN_TCJ_CHI: {
+		id: 18874,
+		name: 'Fuma Shuriken',
+		icon: 'https://xivapi.com/i/002000/002907.png',
+		onGcd: true,
+		gcdRecast: 1,
+	},
+
+	FUMA_SHURIKEN_TCJ_JIN: {
+		id: 18875,
 		name: 'Fuma Shuriken',
 		icon: 'https://xivapi.com/i/002000/002907.png',
 		onGcd: true,
@@ -261,7 +278,7 @@ export const NIN = ensureActions({
 		name: 'Ten Chi Jin',
 		icon: 'https://xivapi.com/i/002000/002922.png',
 		onGcd: false,
-		cooldown: 100,
+		cooldown: 120,
 		statusesApplied: ['TEN_CHI_JIN'],
 	},
 

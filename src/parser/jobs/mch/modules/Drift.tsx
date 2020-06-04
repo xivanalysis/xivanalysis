@@ -1,24 +1,24 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
 import {Accordion, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
-import Rotation from 'components/ui/Rotation'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
 import Downtime from 'parser/core/modules/Downtime'
+import {getDataBy} from 'data'
+import Module, {dependency} from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import Rotation from 'components/ui/Rotation'
+
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
 const DRIFT_BUFFER = 1500
 
 const DRIFT_GCDS = [
-	ACTIONS.DRILL.id,
 	ACTIONS.AIR_ANCHOR.id,
+	ACTIONS.BIOBLASTER.id,
+	ACTIONS.DRILL.id,
 ]
 
 const COOLDOWN_MS = {
@@ -44,6 +44,10 @@ class DriftWindow {
 			this.gcdRotation.push(event)
 		}
 	}
+
+	public getLastActionId(): number {
+		return this.gcdRotation.slice(-1)[0].ability.guid
+	}
 }
 
 export default class Drift extends Module {
@@ -55,8 +59,8 @@ export default class Drift extends Module {
 	private driftedWindows: DriftWindow[] = []
 
 	private currentWindows = {
-		[ACTIONS.DRILL.id]: new DriftWindow(ACTIONS.DRILL.id, this.parser.fight.start_time),
 		[ACTIONS.AIR_ANCHOR.id]: new DriftWindow(ACTIONS.AIR_ANCHOR.id, this.parser.fight.start_time),
+		[ACTIONS.DRILL.id]: new DriftWindow(ACTIONS.DRILL.id, this.parser.fight.start_time),
 	}
 
 	protected init() {
@@ -65,7 +69,13 @@ export default class Drift extends Module {
 	}
 
 	private onDriftableCast(event: CastEvent) {
-		const actionId = event.ability.guid
+		let actionId: number
+		if (event.ability.guid === ACTIONS.BIOBLASTER.id) {
+			actionId = ACTIONS.DRILL.id
+		} else {
+			actionId = event.ability.guid
+		}
+
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
 		const downtime = this.downtime.getDowntime(window.start, window.end)
@@ -99,7 +109,7 @@ export default class Drift extends Module {
 						{this.parser.formatTimestamp(window.end)}
 						<span> - </span>
 						<Trans id="mch.drift.panel-drift">
-							<ActionLink {...getDataBy(ACTIONS, 'id', window.actionId)}/> drifted by {this.parser.formatDuration(window.drift)}
+							<ActionLink {...getDataBy(ACTIONS, 'id', window.getLastActionId())}/> drifted by {this.parser.formatDuration(window.drift)}
 						</Trans>
 					</Fragment>,
 				},

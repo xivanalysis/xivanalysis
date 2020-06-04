@@ -9,7 +9,7 @@ import React from 'react'
 
 export default class InnerRelease extends BuffWindowModule {
 	static handle = 'ir'
-	static title = t('war.ir.title')`Inner Release Usage`
+	static title = t('war.ir.title')`Inner Release`
 
 	buffAction = ACTIONS.INNER_RELEASE
 	buffStatus = STATUSES.INNER_RELEASE
