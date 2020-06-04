@@ -115,11 +115,11 @@ export default class Drift extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{casts.map((event) => {
-					totalDrift += event.drift
+				{casts.map((event, index) => {
+					totalDrift += (index > 0) ? event.drift : 0
 					return <Table.Row key={event.start}>
 						<Table.Cell>{this.createTimelineButton(event.start)}</Table.Cell>
-						<Table.Cell>{event.drift !== null ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
+						<Table.Cell>{event.drift !== null && index > 0 ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
 					</Table.Row>
 				})}
@@ -137,12 +137,22 @@ export default class Drift extends Module {
 					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose life windows.
 				</Trans>
 			</Message>
-			{this.createDriftTable(this.driftedWindows.filter((ability) => {
-				return ability.actionId === ACTIONS.HIGH_JUMP.id
-			}))}
-			{this.createDriftTable(this.driftedWindows.filter((ability) => {
-				return ability.actionId === ACTIONS.GEIRSKOGUL.id
-			}))}
+			<Table style={{border: 'none'}}>
+				<Table.Body>
+					<Table.Row>
+						<Table.Cell style={{verticalAlign: 'top'}}>
+							{this.createDriftTable(this.driftedWindows.filter((ability) => {
+								return ability.actionId === ACTIONS.HIGH_JUMP.id
+							}))}
+						</Table.Cell>
+						<Table.Cell style={{verticalAlign: 'top'}}>
+							{this.createDriftTable(this.driftedWindows.filter((ability) => {
+								return ability.actionId === ACTIONS.GEIRSKOGUL.id
+							}))}
+						</Table.Cell>
+					</Table.Row>
+				</Table.Body>
+			</Table>
 		</Fragment>
 	}
 }
