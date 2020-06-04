@@ -134,8 +134,7 @@ export default class Drift extends Module {
 		return <Fragment>
 			<Message>
 				<Trans id="drg.drift.table.message">
-					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
-					The highlighted rows in the table below indicate casts where the drift is substantial.
+					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows. The highlighted rows in the table below indicate casts where the drift is substantial.
 				</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
