@@ -1,6 +1,6 @@
 import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
-import {FflogsLegacyReportStore} from 'store/new/report'
+import {LegacyFflogsReportStore} from 'store/new/report'
 import {observer} from 'mobx-react'
 import {Loader} from 'semantic-ui-react'
 import {ReportStoreContext, ReportFlow} from 'components/ReportFlow'
@@ -14,7 +14,7 @@ interface RouteParams {
  * Report source component for adapting the legacy report store into the new flow.
  * This should be removed once migration away from the legacy report store is complete.
  */
-export function FflogsLegacy() {
+export function LegacyFflogs() {
 	const {path} = useRouteMatch()
 	return (
 		<Switch>
@@ -30,7 +30,7 @@ const WithCode = observer(function WithCode() {
 	const {code} = useParams<RouteParams>()
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
-	const reportStore = useLazyRef(() => new FflogsLegacyReportStore()).current
+	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
 	reportStore.fetchReport(code)
 
 	// We can safely assume that a null report means we're loading due to the legacy store semantics.

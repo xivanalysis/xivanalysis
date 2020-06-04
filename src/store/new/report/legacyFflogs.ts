@@ -20,11 +20,11 @@ const NPC_FRIENDLY_TYPES: ActorType[] = [
 
 declare module './types' {
 	interface ReportMetaRepository {
-		fflogsLegacy: LegacyReport
+		legacyFflogs: LegacyReport
 	}
 }
 
-export class FflogsLegacyReportStore extends ReportStore {
+export class LegacyFflogsReportStore extends ReportStore {
 	@computed
 	get report() {
 		// If the report hasn't finished loading yet, bail early
@@ -42,7 +42,7 @@ export class FflogsLegacyReportStore extends ReportStore {
 				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),
 			),
 
-			meta: {...report, source: 'fflogsLegacy' as const},
+			meta: {...report, source: 'legacyFflogs' as const},
 		}
 	}
 

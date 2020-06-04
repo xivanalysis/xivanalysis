@@ -14,7 +14,7 @@ import Find from './Find'
 import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
-import {FflogsLegacy} from './reportSource'
+import {LegacyFflogs} from './reportSource'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
@@ -121,7 +121,7 @@ class App extends Component {
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 
 							{/* New report source handling. Paths above this point should be migrated to redirects to those beneath it. */}
-							<Route path="/fflogs" component={FflogsLegacy}/>
+							<Route path="/fflogs" component={LegacyFflogs}/>
 						</Switch>
 					</ErrorBoundary>
 				</Container>

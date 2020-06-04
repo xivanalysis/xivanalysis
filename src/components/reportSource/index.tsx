@@ -1,1 +1,1 @@
-export * from './FflogsLegacy'
+export * from './LegacyFflogs'

@@ -16,7 +16,7 @@ export function Analyse() {
 		return null
 	}
 
-	if (report.meta?.source !== 'fflogsLegacy') {
+	if (report.meta?.source !== 'legacyFflogs') {
 		return <>TODO: Error message about only supporting legacy mode at the moment</>
 	}
 
