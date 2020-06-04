@@ -74,11 +74,11 @@ export default class Drift extends Module {
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
 		const downtime = this.downtime.getDowntime(window.start, window.end)
-		const cd = COOLDOWN_MS[actionId]
-		window.drift = Math.max(0, window.end - window.start - cd - downtime)
+		const cooldown = COOLDOWN_MS[actionId]
+		window.drift = Math.max(0, window.end - window.start - cooldown - downtime)
 
 		// Forgive "drift" in reopener situations
-		if (window.drift > DRIFT_BUFFER && downtime < cd) {
+		if (window.drift > DRIFT_BUFFER && downtime > cooldown) {
 			this.driftedWindows.push(window)
 			window.addAbility(event)
 		}
