@@ -1,3 +1,4 @@
+import BattleLitany from './BattleLitany'
 import BloodOfTheDragon from './BloodOfTheDragon'
 import Buffs from './Buffs'
 import Combos from './Combos'
@@ -9,6 +10,7 @@ import Procs from './Procs'
 //import RotationWatchdog from './RotationWatchdog'
 import Weaving from './Weaving'
 export default [
+	BattleLitany,
 	BloodOfTheDragon,
 	Buffs,
 	Combos,
