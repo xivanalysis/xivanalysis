@@ -78,7 +78,7 @@ export default class Drift extends Module {
 		window.drift = Math.max(0, window.end - window.start - cooldown - downtime)
 
 		// Forgive "drift" in reopener situations
-		if (window.drift > DRIFT_BUFFER && downtime > cooldown) {
+		if (window.drift > 0 && cooldown > downtime) {
 			this.driftedWindows.push(window)
 			window.addAbility(event)
 		}
@@ -117,7 +117,7 @@ export default class Drift extends Module {
 			<Table.Body>
 				{casts.map((event, index) => {
 					totalDrift += (index > 0) ? event.drift : 0
-					return <Table.Row key={event.start}>
+					return <Table.Row key={event.start} warning={event.drift > DRIFT_BUFFER}>
 						<Table.Cell>{this.createTimelineButton(event.start)}</Table.Cell>
 						<Table.Cell>{event.drift !== null && index > 0 ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
@@ -135,6 +135,7 @@ export default class Drift extends Module {
 			<Message>
 				<Trans id="drg.drift.table.message">
 					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
+					The highlighted rows in the table below indicate casts where the drift is substantial.
 				</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
