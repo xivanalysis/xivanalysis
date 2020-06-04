@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "{0} de puissance de perdue sur des lancements sur cible unique de <0/>",
   "brd.sidewinder.title": "Vent venimeux et Morsure de l'ombre",
   "brd.sidewinder.total-mistakes": "{0, plural, one {# erreur vous a} other {# erreurs vous ont}} fait perdre un total de <0>{1}</0> de puissance",
+  "brd.snapshots.dots": "",
   "brd.snapshots.snapshotter": "Instantanés",
   "brd.snapshots.statuses": "Statuts",
   "brd.snapshots.time": "Temps",

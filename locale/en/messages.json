@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "{0} potency lost on single target casts of <0/>",
   "brd.sidewinder.title": "Sidewinders and Shadowbites",
   "brd.sidewinder.total-mistakes": "{0, plural, one {# mistake} other {# mistakes}} lost a total of <0>{1}</0> potency",
+  "brd.snapshots.dots": "DoTs",
   "brd.snapshots.snapshotter": "Snapshotter",
   "brd.snapshots.statuses": "Statuses",
   "brd.snapshots.time": "Time",
