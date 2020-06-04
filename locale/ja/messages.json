@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "",
   "brd.sidewinder.title": "サイドワインダーとシャドウバイト",
   "brd.sidewinder.total-mistakes": "{0, plural, other {# 回のミスで}} <0>{1}</0>の威力を失いました",
+  "brd.snapshots.dots": "DoT",
   "brd.snapshots.snapshotter": "スナップシューター",
   "brd.snapshots.statuses": "ステータス",
   "brd.snapshots.time": "時間",
