@@ -198,6 +198,7 @@
   "brd.sidewinder.suggestion.single-target-shadowbite.reason": "단일 대상에게 <0/>을 사용하여 총 {0} 위력을 잃었습니다.",
   "brd.sidewinder.title": "독사 강습과 맹독 화살",
   "brd.sidewinder.total-mistakes": "전투 동안 {0, plural, other {#회}}의 실수로 인해 <0>{1}</0> 위력 손해를 보았습니다.",
+  "brd.snapshots.dots": "도트",
   "brd.snapshots.snapshotter": "스냅삿",
   "brd.snapshots.statuses": "상태이상들",
   "brd.snapshots.time": "시간",
