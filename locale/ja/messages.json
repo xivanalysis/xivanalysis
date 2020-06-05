@@ -434,7 +434,7 @@
   "drg.suggestions.nastrond.why": "{noFullNsLife} 回の紅の竜血中に1回以上の <0/> を使えていません。",
   "drg.suggestions.stardiver.content": "紅の竜血使用中に<0/>を1回使ってください。",
   "drg.suggetions.stardiver.why": "{noLifeSd} 回の紅の竜血中に1回以上の <0/> を使えていません。",
-  "drk.about.description": "",
+  "drk.about.description": "<0>このアナライザはあなたの内に眠る刃を開放する手助けをすることを目的としたものです。暗黒騎士に攻撃面で求められる行動は、最大限ブラッドゲージとMPを活用することです。特にレイドにおいてはシナジーの効果時間中にブラッドゲージとMPを使い切るほうがよいでしょう。加えて、ブラッドウェポンとブラッドデリリアムの効果時間中に攻撃を5回当てられるよう意識しましょう。</0><1>防御面においては、<2/>は非常に短いリキャストタイムで使用でき、かつ強力な攻撃を軽減可能なバリアを自分を含めたパーティーメンバー1人に対して付与することが出来ます。また、付与したバリアが効果時間中に消費された場合、漆黒の剣もしくは漆黒の波動を一度だけMP消費なしで撃つことが出来るようになります。</1>",
   "drk.bloodweapon.suggestions.missedgcd.content": "",
   "drk.bloodweapon.title": "",
   "drk.darkside.title": "ダークサイド",
