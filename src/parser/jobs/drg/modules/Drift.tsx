@@ -78,7 +78,7 @@ export default class Drift extends Module {
 		window.drift = Math.max(0, window.end - window.start - cooldown - downtime)
 
 		// Forgive "drift" in reopener situations
-		if (window.drift > 0 && cooldown > downtime) {
+		if (window.drift > 0 && !(downtime > cooldown)) {
 			this.driftedWindows.push(window)
 			window.addAbility(event)
 		}
