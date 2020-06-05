@@ -68,21 +68,20 @@ export default class Drift extends Module {
 	}
 
 	private onDriftableCast(event: CastEvent) {
+		// Get skill info.
 		let actionId: number
 		actionId = event.ability.guid
 
+		// Calculate drift
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
 		const downtime = this.downtime.getDowntime(window.start, window.end)
 		const cooldown = COOLDOWN_MS[actionId]
 		window.drift = Math.max(0, window.end - window.start - cooldown - downtime)
 
-		// Forgive "drift" in reopener situations
-		if (!(downtime > cooldown)) {
-			this.driftedWindows.push(window)
-			window.addAbility(event)
-		}
-
+		// Push to table.
+		this.driftedWindows.push(window)
+		window.addAbility(event)
 		this.currentWindows[actionId] = new DriftWindow(actionId, event.timestamp)
 	}
 
@@ -117,11 +116,11 @@ export default class Drift extends Module {
 			<Table.Body>
 				{casts.map((event, index) => {
 					totalDrift += (index > 0) ? event.drift : 0
-					return (index > 0) ? <Table.Row key={event.start} warning={event.drift > DRIFT_BUFFER}>
-						<Table.Cell>{this.createTimelineButton(event.start)}</Table.Cell>
+					return <Table.Row key={event.end} warning={event.drift > DRIFT_BUFFER}>
+						<Table.Cell>{this.createTimelineButton(event.end)}</Table.Cell>
 						<Table.Cell>{event.drift !== null && index > 0 ? this.parser.formatDuration(event.drift) : '-'}</Table.Cell>
 						<Table.Cell>{totalDrift ? this.parser.formatDuration(totalDrift) : '-'}</Table.Cell>
-					</Table.Row> : null
+					</Table.Row>
 				})}
 			</Table.Body>
 		</Table>
