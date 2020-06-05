@@ -37,6 +37,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 		const actorsByFight = buildActorsByFight(report)
 
 		return {
+			timestamp: report.start,
 			name: report.title,
 			pulls: report.fights.map(
 				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),

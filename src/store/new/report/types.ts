@@ -16,6 +16,7 @@ export type ReportMeta = Compute<ReportMetaUnion<keyof ReportMetaRepository>>
  * A report contains one or more pulls, across one or more encounters
  */
 export interface Report {
+	timestamp: number
 	name: string
 	pulls: Pull[]
 
