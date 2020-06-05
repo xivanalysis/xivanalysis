@@ -8,6 +8,8 @@ import {Analyse} from './Analyse'
 import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
 import {getZoneBanner} from 'data/BOSSES'
 import {Report} from 'report'
+import {getPatch, GameEdition} from 'data/PATCHES'
+import {Icon} from 'semantic-ui-react'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -63,8 +65,18 @@ interface CrumbProps {
 	report: Report
 }
 
+const editionName = {
+	[GameEdition.GLOBAL]: <Icon name="globe"/>,
+	[GameEdition.KOREAN]: 'KR',
+	[GameEdition.CHINESE]: 'CN',
+}
+
 function ReportCrumb({report}: CrumbProps) {
-	return <Breadcrumb title={report.name}/>
+	const {edition, timestamp, name} = report
+	const patch = getPatch(edition, timestamp / 1000)
+	const subtitle = <>({editionName[edition]} {patch})</>
+
+	return <Breadcrumb title={name} subtitle={subtitle}/>
 }
 
 function PullCrumb({report}: CrumbProps) {
