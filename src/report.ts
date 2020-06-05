@@ -27,6 +27,10 @@ export interface Report {
 /** A pull is a single attempt at clearing an encounter */
 export interface Pull {
 	id: string
+
+	timestamp: number
+	duration: number
+
 	encounter: Encounter
 
 	/** One or more actors are involved in each pull */

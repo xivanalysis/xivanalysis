@@ -10,6 +10,7 @@ import {getZoneBanner} from 'data/BOSSES'
 import {Report} from 'report'
 import {getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
+import {formatDuration} from 'utilities'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -82,16 +83,20 @@ function ReportCrumb({report}: CrumbProps) {
 function PullCrumb({report}: CrumbProps) {
 	const {pullId} = useParams<ActorListRouteParams>()
 
-	const encounter = report.pulls
+	const pull = report.pulls
 		.find(pull => pull.id === pullId)
-		?.encounter
+
+	const encounter = pull?.encounter
+
+	const title = encounter?.name ?? 'Unknown'
+	const subtitle = pull?.duration && `(${formatDuration(pull.duration)})`
 
 	const banner = encounter?.duty.id != null
 		? getZoneBanner(encounter.duty.id)
 		: undefined
 
 	return <>
-		<Breadcrumb title={encounter?.name ?? 'Unknown'}/>
+		<Breadcrumb title={title} subtitle={subtitle}/>
 		<BreadcrumbsBanner banner={banner}/>
 	</>
 }

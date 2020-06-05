@@ -44,7 +44,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 
 			name: report.title,
 			pulls: report.fights.map(
-				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),
+				fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
 			),
 
 			meta: {...report, source: 'legacyFflogs' as const},
@@ -119,8 +119,16 @@ const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => 
 })
 
 // TODO: Should this be using getCorrectedFight?
-const convertFight = (fight: Fight, actors: Actor[]): Pull => ({
+const convertFight = (
+	report: LegacyReport,
+	fight: Fight,
+	actors: Actor[],
+): Pull => ({
 	id: fight.id.toString(),
+
+	timestamp: report.start + fight.start_time,
+	duration: fight.end_time - fight.start_time,
+
 	encounter: {
 		name: fight.name,
 		duty: {
@@ -128,6 +136,7 @@ const convertFight = (fight: Fight, actors: Actor[]): Pull => ({
 			name: fight.zoneName,
 		},
 	},
+
 	actors,
 })
 
