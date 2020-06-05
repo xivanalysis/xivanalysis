@@ -1,4 +1,5 @@
 import {JobType} from 'data/JOBS'
+import {GameEdition} from 'data/PATCHES'
 import {Compute} from 'utilities'
 
 // tslint:disable-next-line no-empty-interface
@@ -15,6 +16,8 @@ export type ReportMeta = Compute<ReportMetaUnion<keyof ReportMetaRepository>>
  */
 export interface Report {
 	timestamp: number
+	edition: GameEdition
+
 	name: string
 	pulls: Pull[]
 

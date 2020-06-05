@@ -12,6 +12,7 @@ import {
 } from 'fflogs'
 import {Pull, Actor, Team} from 'report'
 import JOBS, {JobType} from 'data/JOBS'
+import {languageToEdition} from 'data/PATCHES'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -39,6 +40,8 @@ export class LegacyFflogsReportStore extends ReportStore {
 
 		return {
 			timestamp: report.start,
+			edition: languageToEdition(report.lang),
+
 			name: report.title,
 			pulls: report.fights.map(
 				fight => convertFight(fight, actorsByFight.get(fight.id) ?? []),
