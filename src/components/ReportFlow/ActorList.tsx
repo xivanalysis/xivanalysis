@@ -1,7 +1,6 @@
 import React, {useContext} from 'react'
 import {ReportStoreContext, ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
-import {Job} from 'report'
 
 export function ActorList() {
 	const reportStore = useContext(ReportStoreContext)
@@ -30,7 +29,7 @@ export function ActorList() {
 			{actors.map(actor => (
 				<li key={actor.id}>
 					<Link to={`${url}/${actor.id}`}>
-						{actor.name} ({Job[actor.job]})
+						{actor.name} ({actor.job})
 					</Link>
 				</li>
 			))}

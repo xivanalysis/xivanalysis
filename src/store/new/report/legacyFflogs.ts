@@ -10,7 +10,8 @@ import {
 	ActorFightInstance,
 	ActorType,
 } from 'fflogs'
-import {Pull, Actor, Team, Job} from 'report'
+import {Pull, Actor, Team} from 'report'
+import JOBS, {JobType} from 'data/JOBS'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -110,7 +111,7 @@ const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => 
 	name: actor.name,
 	team: Team.UNKNOWN,
 	playerControlled: false,
-	job: Job.UNKNOWN,
+	job: 'UNKNOWN',
 	...overrides,
 })
 
@@ -127,34 +128,9 @@ const convertFight = (fight: Fight, actors: Actor[]): Pull => ({
 	actors,
 })
 
-const actorTypeMap: Record<ActorType, Job> = {
-	// Enemy
-	[ActorType.BOSS]: Job.UNKNOWN,
-	[ActorType.NPC]: Job.UNKNOWN,
-	[ActorType.UNKNOWN]: Job.UNKNOWN,
-
-	// Friendly
-	[ActorType.PALADIN]: Job.PALADIN,
-	[ActorType.WARRIOR]: Job.WARRIOR,
-	[ActorType.DARK_KNIGHT]: Job.DARK_KNIGHT,
-	[ActorType.GUNBREAKER]: Job.GUNBREAKER,
-	[ActorType.WHITE_MAGE]: Job.WHITE_MAGE,
-	[ActorType.SCHOLAR]: Job.SCHOLAR,
-	[ActorType.ASTROLOGIAN]: Job.ASTROLOGIAN,
-	[ActorType.MONK]: Job.MONK,
-	[ActorType.DRAGOON]: Job.DRAGOON,
-	[ActorType.NINJA]: Job.NINJA,
-	[ActorType.SAMURAI]: Job.SAMURAI,
-	[ActorType.BARD]: Job.BARD,
-	[ActorType.MACHINIST]: Job.MACHINIST,
-	[ActorType.DANCER]: Job.DANCER,
-	[ActorType.BLACK_MAGE]: Job.BLACK_MAGE,
-	[ActorType.SUMMONER]: Job.SUMMONER,
-	[ActorType.RED_MAGE]: Job.RED_MAGE,
-	[ActorType.BLUE_MAGE]: Job.BLUE_MAGE,
-	[ActorType.LIMIT_BREAK]: Job.UNKNOWN,
-
-	// Pet
-	[ActorType.PET]: Job.UNKNOWN,
+const actorTypeMap = new Map<ActorType, JobType>()
+for (const [key, job] of Object.entries(JOBS)) {
+	actorTypeMap.set(job.logType, key as JobType)
 }
-const convertActorType = (actorType: ActorType) => actorTypeMap[actorType]
+const convertActorType = (actorType: ActorType) =>
+	actorTypeMap.get(actorType) ?? 'UNKNOWN'

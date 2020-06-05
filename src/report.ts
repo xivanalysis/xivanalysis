@@ -1,3 +1,4 @@
+import {JobType} from 'data/JOBS'
 import {Compute} from 'utilities'
 
 // tslint:disable-next-line no-empty-interface
@@ -52,67 +53,6 @@ export enum Team {
 	FOE,
 }
 
-// TODO: DO WE WANT THIS?
-//       It's an extra layer of abstraction over the existing data/JOBs stuff...
-/** Possible jobs for an actor */
-export enum Job {
-	// Misc
-	UNKNOWN,
-	ADVENTURER,
-
-	// Tank
-	GLADIATOR,
-	PALADIN,
-	MARAUDER,
-	WARRIOR,
-	DARK_KNIGHT,
-	GUNBREAKER,
-
-	// Healer
-	CONJURER,
-	WHITE_MAGE,
-	SCHOLAR,
-	ASTROLOGIAN,
-
-	// Melee DPS
-	PUGILIST,
-	MONK,
-	LANCER,
-	DRAGOON,
-	ROGUE,
-	NINJA,
-	SAMURAI,
-
-	// Physical ranged DPS
-	ARCHER,
-	BARD,
-	MACHINIST,
-	DANCER,
-
-	// Magical ranged DPS
-	THAUMATURGE,
-	BLACK_MAGE,
-	ARCANIST,
-	SUMMONER,
-	RED_MAGE,
-	BLUE_MAGE,
-
-	// Crafter
-	CARPENTER,
-	BLACKSMITH,
-	ARMORER,
-	GOLDSMITH,
-	LEATHERWORKER,
-	WEAVER,
-	ALCHEMIST,
-	CULINARIAN,
-
-	// Gathrer
-	MINER,
-	BOTANIST,
-	FISHER,
-}
-
 /** An actor represents a single combatant within a pull */
 export interface Actor {
 	id: string
@@ -120,5 +60,5 @@ export interface Actor {
 	team: Team
 	playerControlled: boolean
 	owner?: Actor
-	job: Job
+	job: JobType
 }
