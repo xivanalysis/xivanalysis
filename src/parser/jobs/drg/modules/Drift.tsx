@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Message, Table, Button, Header, Icon} from 'semantic-ui-react'
+import {Message, Table, Button} from 'semantic-ui-react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
@@ -133,7 +133,7 @@ export default class Drift extends Module {
 		return <Fragment>
 			<Message>
 				<Trans id="drg.drift.table.message">
-					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows. The highlighted rows in the table below indicate casts where the drift is substantial.
+					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
 				</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
