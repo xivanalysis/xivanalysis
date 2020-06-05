@@ -733,7 +733,7 @@
   "sam.ms.title": "명경지수 구간",
   "sam.sen.no_hagakure.message": "<0/>은 <1/>이 항상 쿨이 돌아가도록 도와주는 매우 강력한 기술입니다. 딜싸의 빈틈을 매꿀 수 있도록 활용하십시오.",
   "sam.sen.rotation-table.disclaimer": " 이 모듈은 거합술 직전까지 섬이 전혀 덮어씌워지지않는 딜싸를 \"표준 섬 구간\"으로 정리할것입니다. 사무라이의 딜싸 운용에 대해서 설명이 되어있는 [Infograph](https://i.imgur.com/L0Y7d6C.png)에 추가 설명이 필요하시다면 밸런스(영어) 혹은 에오르제아 찻점(한국어)을 찾아주십시오.",
-  "sam.sen.rotation-table.message": "아래의 표는 어떻게 표준 섬 구간에 포함되지 않게 됬는지 정리하여 보여드립니다. 사망, 섬 덮어씌우기, 무사도 사용 구간 모두 비표준 섬 구간에 포함됩니다.",
+  "sam.sen.rotation-table.message": "",
   "sam.sen.sen_handling.d_hagakure": "표준적인 무사도 사용 포함.",
   "sam.sen.sen_handling.death": "사망 포함.",
   "sam.sen.sen_handling.hagakure": "비표준적인 무사도 사용 포함.",
