@@ -10,7 +10,7 @@ import {
 	ActorFightInstance,
 	ActorType,
 } from 'fflogs'
-import {Pull, Actor, Team, Job} from './types'
+import {Pull, Actor, Team, Job} from 'report'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -18,7 +18,7 @@ const NPC_FRIENDLY_TYPES: ActorType[] = [
 	ActorType.LIMIT_BREAK,
 ]
 
-declare module './types' {
+declare module 'report' {
 	interface ReportMetaRepository {
 		legacyFflogs: LegacyReport
 	}

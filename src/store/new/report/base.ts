@@ -1,4 +1,4 @@
-import {Report, Pull} from './types'
+import {Report, Pull} from 'report'
 
 /**
  * Base ReportStore implementation, defining the report interface accessible to

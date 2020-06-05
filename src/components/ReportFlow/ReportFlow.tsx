@@ -1,5 +1,5 @@
 import React, {useContext, createContext} from 'react'
-import {ReportStore, Report} from 'store/new/report'
+import {ReportStore} from 'store/new/report'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
@@ -7,6 +7,7 @@ import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
 import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
 import {getZoneBanner} from 'data/BOSSES'
+import {Report} from 'report'
 
 export interface ActorListRouteParams {
 	pullId: string

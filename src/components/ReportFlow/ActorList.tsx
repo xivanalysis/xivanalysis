@@ -1,7 +1,7 @@
 import React, {useContext} from 'react'
 import {ReportStoreContext, ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
-import {Job} from 'store/new/report'
+import {Job} from 'report'
 
 export function ActorList() {
 	const reportStore = useContext(ReportStoreContext)

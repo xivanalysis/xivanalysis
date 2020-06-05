@@ -1,6 +1,3 @@
-// This should probably be moved to a more central location so stuff isn't
-// importing shit from the stores all the time
-
 import {Compute} from 'utilities'
 
 // tslint:disable-next-line no-empty-interface

@@ -1,6 +1,6 @@
 import React, {useContext} from 'react'
 import {ReportStoreContext} from './ReportFlow'
-import {Duty, Pull} from 'store/new/report'
+import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 
 interface PullGroup {
