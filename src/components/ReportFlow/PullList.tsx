@@ -15,8 +15,6 @@ export interface PullListProps {
 export function PullList({reportStore}: PullListProps) {
 	const {url} = useRouteMatch()
 
-	// TODO: How can I avoid this constant repetition of existence check?
-	//       Do I want to?
 	if (reportStore.report == null) {
 		return null
 	}

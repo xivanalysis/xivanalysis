@@ -20,12 +20,19 @@ const NPC_FRIENDLY_TYPES: ActorType[] = [
 	ActorType.LIMIT_BREAK,
 ]
 
+// We're storing the entire legacy report interface in the meta field so that
+// we can pull it back out again for the legacy analysis page, while it gets upgraded
+// to work with the new system.
 declare module 'report' {
 	interface ReportMetaRepository {
 		legacyFflogs: LegacyReport
 	}
 }
 
+/**
+ * Report source acting as an adapter to the old report store system while we port
+ * the rest of the analysis logic across.
+ */
 export class LegacyFflogsReportStore extends ReportStore {
 	@computed
 	get report() {
@@ -140,6 +147,7 @@ const convertFight = (
 	actors,
 })
 
+// Build a mapping between fflogs actor types and our internal job keys
 const actorTypeMap = new Map<ActorType, JobType>()
 for (const [key, job] of Object.entries(JOBS)) {
 	actorTypeMap.set(job.logType, key as JobType)
