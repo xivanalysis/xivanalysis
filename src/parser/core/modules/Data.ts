@@ -3,6 +3,8 @@ import {Action, layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
 import {applyLayer, Layer} from 'data/layer'
 import {layers as statusLayers, root as statusRoot, Status} from 'data/STATUSES'
 import Module from 'parser/core/Module'
+import _ from 'lodash'
+import {StatusRoot} from 'data/STATUSES/root'
 
 export class Data extends Module {
 	static handle = 'data'
@@ -23,6 +25,11 @@ export class Data extends Module {
 
 	getStatus(id: Status['id']) {
 		return getDataBy(this.statuses, 'id', id)
+	}
+
+	getActionAppliedByStatus(status: Status) {
+		const statusKey = (_.findKey(this.statuses, status) as (undefined | keyof StatusRoot))
+		return getDataBy(this.actions, 'statusesApplied', statusKey)
 	}
 
 	private getAppliedData<R>(root: R, layers: Array<Layer<R>>): R {

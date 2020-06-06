@@ -1,10 +1,7 @@
 import Module, {dependency} from 'parser/core/Module'
-import _ from 'lodash'
 import {Event} from 'events'
 import {Data} from 'parser/core/modules/Data'
-import {getDataBy} from 'data'
 import {Status} from 'data/STATUSES'
-import {StatusRoot} from 'data/STATUSES/root'
 import {AbilityEvent, CastEvent} from 'fflogs'
 
 const trackedBuffEventTypes = ['applybuff', 'applybuffstack', 'removebuff', 'removebuffstack', 'refreshbuff']
@@ -17,17 +14,14 @@ export class PrecastStatus extends Module {
 
 	@dependency private data!: Data
 
-	private trackedStatuses: number[] = []
-	private trackedActions: number[] = []
-	private buffEventsToSynth: AbilityEvent[] = []
-	private castEventsToSynth: CastEvent[] = []
+	trackedStatuses = new Map<number, number[]>()
+	trackedActions: number[] = []
+	buffEventsToSynth: AbilityEvent[] = []
+	castEventsToSynth: CastEvent[] = []
 	private startTime = this.parser.fight.start_time
 
 	normalise(events: Event[]) {
 		for (const event of events) {
-			if (event.ability && event.ability.name === 'Barrage') {
-				this.debug(`${event.ability.name} ${event.type} event at ${event.timestamp} on target ${event.targetID}`)
-			}
 			if (event.type === 'cast') {
 				const action = this.data.getAction(event.ability.guid)
 				if (action && !this.trackedActions.includes(action.id)) {
@@ -37,34 +31,49 @@ export class PrecastStatus extends Module {
 			}
 
 			if (isTrackedBuffEvent(event)) {
-				const statusInfo = this.data.getStatus(event.ability.guid) as Status
-				if (!statusInfo) {
-					// No valid status data for this event, skip to next event
-					continue
-				}
-
 				if (event.targetID) {
-					if (this.trackedStatuses.includes(statusInfo.id)) {
-						// Status is already tracked and no synth needs to take place
+					const trackedStatusesForTarget = this.trackedStatuses.get(event.targetID)
+					if (trackedStatusesForTarget != null && trackedStatusesForTarget.includes(event.ability.guid)) {
+						// Status is already tracked for this target and no synth needs to take place
 						continue
 					}
 
-					this.debug(`Checking ${event.type} of ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp, 1)}`)
-
-					if (event.type === 'applybuff' && !statusInfo.hasOwnProperty('stacksApplied')) {
-						// First event for this status is an apply buff, synthesize the cast event
-						this.fabricateCastEvent(event, statusInfo)
+					const statusInfo = this.data.getStatus(event.ability.guid) as Status
+					if (!statusInfo) {
+						// No valid status data for this event, skip to next event
+						continue
 					}
 
-					if (event.type === 'applybuffstack' && statusInfo.hasOwnProperty('stacksApplied')) {
-						// Synth an event if the first buff stacks seen was fewer than max for this action
-						if (statusInfo.stacksApplied && event.stack < statusInfo.stacksApplied) {
-							this.fabricateBuffEvent(event, statusInfo)
+					this.debug(`Checking ${event.type} of ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp, 1)} with stacks ${event.stack ?? 0}`)
+
+					if (statusInfo.stacksApplied && statusInfo.stacksApplied > 0) {
+						// This action applies stacks, expected first cast will have an applybuff and an applybuffstack with max stacks at the same timestamp
+						// Ignore the applybuff event and check the applybuffstack event for validity
+						if (event.type === 'applybuff') { continue }
+						if (event.type === 'applybuffstack')
+						{
+							if (event.stack < statusInfo.stacksApplied) {
+								// First applybuffstack seen with less than max stacks, synth the initial buff event
+								this.fabricateBuffEvent(event, statusInfo)
+							}
+							else {
+								// First applybuff stack seen with max stacks, check if cast event needs to be synthesized
+								this.fabricateCastEvent(event, statusInfo)
+							}
+							this.markStatusAsTracked(event.ability.guid, event.targetID)
+						}
+					} else {
+						// This action does not apply stacks, check to see if this is an applybuff event
+						if (event.type === 'applybuff') {
+							// First event for this status is an apply buff, check if cast event needs to be synthesized
+							this.fabricateCastEvent(event, statusInfo)
+							this.markStatusAsTracked(event.ability.guid, event.targetID)
 						}
 					}
 
 					if (['removebuff', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
 						this.fabricateBuffEvent(event, statusInfo)
+						this.markStatusAsTracked(event.ability.guid, event.targetID)
 					}
 				}
 			}
@@ -73,8 +82,8 @@ export class PrecastStatus extends Module {
 		return [...this.castEventsToSynth, ...this.buffEventsToSynth, ...events]
 	}
 
-	fabricateBuffEvent(event: AbilityEvent, statusInfo: Status) {
-		this.debug(`Fabricating applybuff event for status ${statusInfo.name}`)
+	private fabricateBuffEvent(event: AbilityEvent, statusInfo: Status) {
+		this.debug(`Fabricating applybuff event for status ${statusInfo.name} on target ${event.targetID}`)
 		// Fab an event and splice it in at the start of the fight
 		this.buffEventsToSynth.push({
 			...event,
@@ -95,16 +104,14 @@ export class PrecastStatus extends Module {
 			})
 		}
 
-		this.markStatusAsTracked(statusInfo.id)
 		// Determine if this buff comes from a known action, fab a cast event
 		this.fabricateCastEvent(event, statusInfo)
 	}
 
-	fabricateCastEvent(event: AbilityEvent, statusInfo: Status) {
+	private fabricateCastEvent(event: AbilityEvent, statusInfo: Status) {
 		this.debug(`Determining if status ${statusInfo.name} was applied by a known action`)
 		// Determine if this buff comes from a known action, fab a cast event
-		const statusKey = (_.findKey(this.data.statuses, statusInfo) as (undefined | keyof StatusRoot))
-		const actionInfo = getDataBy(this.data.actions, 'statusesApplied', statusKey)
+		const actionInfo = this.data.getActionAppliedByStatus(statusInfo)
 
 		if (!actionInfo) {
 			this.debug('No known action found, no cast event to synthesize')
@@ -131,11 +138,16 @@ export class PrecastStatus extends Module {
 
 	}
 
-	markStatusAsTracked(statusId: number) {
-		this.trackedStatuses.push(statusId)
+	private markStatusAsTracked(statusId: number, targetId: number) {
+		let trackedStatusesForTarget = this.trackedStatuses.get(targetId)
+		if (trackedStatusesForTarget == null) {
+			trackedStatusesForTarget = []
+			this.trackedStatuses.set(targetId, trackedStatusesForTarget)
+		}
+		trackedStatusesForTarget.push(statusId)
 	}
 
-	markActionAsTracked(actionId: number) {
+	private markActionAsTracked(actionId: number) {
 		this.trackedActions.push(actionId)
 	}
 }

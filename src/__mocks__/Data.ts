@@ -1,8 +1,12 @@
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 
+interface MockAction extends Omit<Action, 'statusesApplied'> {
+	statusesApplied?: string[]
+}
+
 export class MockedData {
-	private actionData: Action[] = []
+	private actionData: MockAction[] = []
 	private statusData: Status[] = []
 
 	getAction(id: Action['id']) {
@@ -10,10 +14,15 @@ export class MockedData {
 	}
 
 	getStatus(id: Status['id']) {
-		return this.statusData.find(a => a.id === id)
+		// tslint:disable-next-line:no-magic-numbers
+		return this.statusData.find(a => a.id + 1000000 === id)
 	}
 
-	mockAction(action: Action) {
+	getActionAppliedByStatus(status: Status) {
+		return this.actionData.find(a => a.statusesApplied && a.statusesApplied.includes(status.name))
+	}
+
+	mockAction(action: MockAction) {
 		this.actionData.push(action)
 	}
 
