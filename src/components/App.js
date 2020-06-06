@@ -6,7 +6,7 @@ import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
 import {StoreContext} from 'store'
-import Analyse from './Analyse'
+import Analyse from './LegacyAnalyse'
 import {BranchBanner} from './BranchBanner'
 import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
