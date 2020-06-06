@@ -13,6 +13,7 @@ import OGCDDowntime from './OGCDDowntime'
 import SamInterrupts from './SamInterrupts'
 import Shoha from './Shoha'
 import Statuses from './Statuses'
+import Tincture from './Tincture'
 
 export default [
 	AoeChecker,
@@ -30,4 +31,5 @@ export default [
 	SamInterrupts,
 	Shoha,
 	Statuses,
+	Tincture,
 ]
