@@ -366,7 +366,7 @@ export default class Sen extends Module {
 		if (this.nonStandardCount !== 0) {
 			return <Fragment>
 				<Message>
-					<Trans id="sam.sen.rotation-table.message"> This table serves as a way a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
+					<Trans id="sam.sen.rotation-table.message"> This table serves as a way to better see the events that lend up to a Sen window that has been deemed "Non-Standard" as explained below. Dying, overwriting a sen, or using hagakure will cause a window to be flagged as Non-Standard.
 					</Trans>
 				</Message>
 
