@@ -2,9 +2,9 @@ import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
 import {LegacyFflogsReportStore} from 'store/new/report'
 import {observer} from 'mobx-react'
-import {Loader} from 'semantic-ui-react'
 import {ReportStoreContext, ReportFlow} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
+import {ReportLoader} from 'components/ui/SharedLoaders'
 
 interface RouteParams {
 	code: string
@@ -35,12 +35,7 @@ const WithCode = observer(function WithCode() {
 
 	// We can safely assume that a null report means we're loading due to the legacy store semantics.
 	if (reportStore.report == null) {
-		return (
-			<Loader active>
-				{/* TODO: Trans */}
-				Loading report
-			</Loader>
-		)
+		return <ReportLoader/>
 	}
 
 	return (

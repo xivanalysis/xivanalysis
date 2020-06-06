@@ -1,4 +1,3 @@
-import {Trans} from '@lingui/react'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -9,12 +8,13 @@ import {disposeOnUnmount, observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
 import PropTypes from 'prop-types'
 import React, {Component, useContext} from 'react'
-import {Header, Loader} from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
+import {ReportLoader, AnalysisLoader} from 'components/ui/SharedLoaders'
 
 function AnalyseRouteWrapper({match: {params}}) {
 	const {reportStore} = useContext(StoreContext)
@@ -25,7 +25,7 @@ function AnalyseRouteWrapper({match: {params}}) {
 		report?.loading !== false
 		|| report.code !== params.code
 	) {
-		return <>TODO: Message about report loading or some shit</>
+		return <ReportLoader/>
 	}
 
 	return (
@@ -126,13 +126,7 @@ class Analyse extends Component {
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
 		if (!this.conductor || !this.complete) {
-			return (
-				<Loader active>
-					<Trans id="core.analyse.load-analysis">
-						Loading analysis
-					</Trans>
-				</Loader>
-			)
+			return <AnalysisLoader/>
 		}
 
 		// Report's done, build output
