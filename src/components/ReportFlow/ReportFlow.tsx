@@ -11,6 +11,7 @@ import {Report} from 'report'
 import {getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
+import {Trans} from '@lingui/react'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -31,13 +32,17 @@ export interface ReportFlowProps {
  * store over context for consumption by the flow.
  */
 export function ReportFlow({reportStore}: ReportFlowProps) {
-	const {path} = useRouteMatch()
+	const {path, url} = useRouteMatch()
 
+	// This is intentionally quite generic. If a specific report source can provide
+	// more information, it should do so in the report source itself.
 	if (reportStore.report == null) {
 		return (
-			// TODO: i18n
-			<Message error>
-				TODO: Helpful error message about there being no report data found
+			<Message error icon="times circle outline">
+				<Trans id="core.report-flow.report-not-found">
+					<Message.Header>Report not found.</Message.Header>
+					No report data was found for "{url}".
+				</Trans>
 			</Message>
 		)
 	}

@@ -17,7 +17,7 @@ export function ActorList({reportStore}: ActorListProps) {
 		return (
 			<Message warning icon="warning sign">
 				<Trans id="core.report-flow.pull-not-found">
-					<Message.Header>Not found.</Message.Header>
+					<Message.Header>Pull not found.</Message.Header>
 					No pull was found with ID "{pullId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
 				</Trans>
 			</Message>

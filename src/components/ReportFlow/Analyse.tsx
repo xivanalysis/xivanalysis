@@ -3,6 +3,7 @@ import {useParams} from 'react-router-dom'
 import {AnalyseRouteParams} from './ReportFlow'
 import {Analyse as LegacyAnalyse} from 'components/Analyse'
 import {ReportStore} from 'store/new/report'
+import {Message} from 'akkd'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
@@ -22,7 +23,13 @@ export function Analyse({reportStore}: AnalyseProps) {
 	}
 
 	if (report.meta?.source !== 'legacyFflogs') {
-		return <>TODO: Error message about only supporting legacy mode at the moment</>
+		// This is intentionally not translated at the moment.
+		return (
+			<Message error>
+				<Message.Header>Unsupported report source.</Message.Header>
+				This report was sourced from "{report.meta?.source}", which is not supported at this time.
+			</Message>
+		)
 	}
 
 	const legacyReport = report.meta
