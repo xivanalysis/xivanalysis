@@ -1,15 +1,18 @@
-import React, {useContext} from 'react'
-import {ReportStoreContext} from './ReportFlow'
+import React from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
+import {ReportStore} from 'store/new/report'
 
 interface PullGroup {
 	duty: Duty
 	pulls: Pull[]
 }
 
-export function PullList() {
-	const reportStore = useContext(ReportStoreContext)
+export interface PullListProps {
+	reportStore: ReportStore
+}
+
+export function PullList({reportStore}: PullListProps) {
 	const {url} = useRouteMatch()
 
 	// TODO: How can I avoid this constant repetition of existence check?

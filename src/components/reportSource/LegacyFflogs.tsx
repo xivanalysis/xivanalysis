@@ -2,7 +2,7 @@ import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
 import {LegacyFflogsReportStore} from 'store/new/report'
 import {observer} from 'mobx-react'
-import {ReportStoreContext, ReportFlow} from 'components/ReportFlow'
+import {ReportFlow} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
 import {ReportLoader} from 'components/ui/SharedLoaders'
 
@@ -38,9 +38,5 @@ const WithCode = observer(function WithCode() {
 		return <ReportLoader/>
 	}
 
-	return (
-		<ReportStoreContext.Provider value={reportStore}>
-			<ReportFlow/>
-		</ReportStoreContext.Provider>
-	)
+	return <ReportFlow reportStore={reportStore}/>
 })

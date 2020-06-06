@@ -1,9 +1,13 @@
-import React, {useContext} from 'react'
-import {ReportStoreContext, ActorListRouteParams} from './ReportFlow'
+import React from 'react'
+import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
+import {ReportStore} from 'store/new/report'
 
-export function ActorList() {
-	const reportStore = useContext(ReportStoreContext)
+export interface ActorListProps {
+	reportStore: ReportStore
+}
+
+export function ActorList({reportStore}: ActorListProps) {
 	const {params: {pullId}, url} = useRouteMatch<ActorListRouteParams>()
 
 	// TODO: Same as pull list. What do?

@@ -117,7 +117,6 @@ export function Breadcrumb(crumb: BreadcrumbValue) {
 	return null
 }
 
-// Should this just be a hook?
 export function BreadcrumbsBanner({banner}: {banner?: string}) {
 	const {setBanner} = useContext(BreadcrumbContext) ?? {}
 

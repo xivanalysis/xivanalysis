@@ -1,4 +1,4 @@
-import React, {useContext, createContext} from 'react'
+import React from 'react'
 import {ReportStore} from 'store/new/report'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
@@ -21,17 +21,16 @@ export interface AnalyseRouteParams {
 	actorId: string
 }
 
-// TODO: I am _not_ convinced by needing the context. Think about it.
-class NoOpReportStore extends ReportStore { report = undefined }
-export const ReportStoreContext = createContext<ReportStore>(new NoOpReportStore())
+export interface ReportFlowProps {
+	reportStore: ReportStore
+}
 
 /**
  * Generic report flow component, to be nested inside a report source providing
  * source-specific report handling. Parent report sources must provide a report
  * store over context for consumption by the flow.
  */
-export function ReportFlow() {
-	const reportStore = useContext(ReportStoreContext)
+export function ReportFlow({reportStore}: ReportFlowProps) {
 	const {path} = useRouteMatch()
 
 	if (reportStore.report == null) {
@@ -55,9 +54,15 @@ export function ReportFlow() {
 		</Route>
 
 		<Switch>
-			<Route path={`${path}/:pullId/:actorId`}><Analyse/></Route>
-			<Route path={`${path}/:pullId`}><ActorList/></Route>
-			<Route path={path}><PullList/></Route>
+			<Route path={`${path}/:pullId/:actorId`}>
+				<Analyse reportStore={reportStore}/>
+			</Route>
+			<Route path={`${path}/:pullId`}>
+				<ActorList reportStore={reportStore}/>
+			</Route>
+			<Route path={path}>
+				<PullList reportStore={reportStore}/>
+			</Route>
 		</Switch>
 	</>
 }
