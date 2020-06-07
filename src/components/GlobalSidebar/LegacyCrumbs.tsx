@@ -58,9 +58,8 @@ export const FightCrumb = observer(function FightCrumb() {
 	const fightData = report?.fights.find(fight => fight.id === fightId)
 	if (fightData != null) {
 		const correctedFight = getCorrectedFight(fightData)
-		console.warn('corrected fight')
-		console.warn(correctedFight)
-		const {start_time, end_time, zoneID} = correctedFight
+		// Defaults on always-set fields because fflogs? wut?
+		const {start_time = 0, end_time = start_time, zoneID} = correctedFight
 
 		title = correctedFight.name
 		subtitle = `(${formatDuration(end_time - start_time)})`
