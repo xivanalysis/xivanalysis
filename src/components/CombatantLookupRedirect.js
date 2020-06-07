@@ -1,10 +1,10 @@
-import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Redirect} from 'react-router'
-import {Container, Loader} from 'semantic-ui-react'
+import {Container} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import {ReportLoader} from './ui/SharedLoaders'
 
 @observer
 class CombatantLookupRedirect extends React.Component {
@@ -37,13 +37,7 @@ class CombatantLookupRedirect extends React.Component {
 
 		// Show a loader if we're still loading the main report
 		if (!report || report.code !== params.code || report.loading) {
-			return <Container>
-				<Loader active>
-					<Trans id="core.analyse.load-report">
-						Loading report
-					</Trans>
-				</Loader>
-			</Container>
+			return <Container><ReportLoader/></Container>
 		}
 
 		// Find the ID of the player matching the params

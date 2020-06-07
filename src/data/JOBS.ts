@@ -73,6 +73,14 @@ export interface Job {
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
 const JOBS = {
+	UNKNOWN: {
+		name: t('game.job.unknown')`Unknown`,
+		logType: ActorType.UNKNOWN,
+		icon: '?',
+		colour: '#767676',
+		role: ROLES.UNSUPPORTED.id,
+	},
+
 	// Tank
 	PALADIN: {
 		name: t('game.job.paladin')`Paladin`,
@@ -210,4 +218,5 @@ const JOBS = {
 	},
 }
 
-export default JOBS as Record<keyof typeof JOBS, Job>
+export type JobType = keyof typeof JOBS
+export default JOBS as Record<JobType, Job>

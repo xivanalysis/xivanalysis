@@ -1,4 +1,3 @@
-import {Trans} from '@lingui/react'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
@@ -8,13 +7,45 @@ import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
 import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {Header, Loader} from 'semantic-ui-react'
+import React, {Component, useContext} from 'react'
+import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
+import {ReportLoader, AnalysisLoader} from 'components/ui/SharedLoaders'
+
+function AnalyseRouteWrapper({match: {params}}) {
+	const {reportStore} = useContext(StoreContext)
+	reportStore.fetchReportIfNeeded(params.code)
+	const report = reportStore.report
+
+	if (
+		report?.loading !== false
+		|| report.code !== params.code
+	) {
+		return <ReportLoader/>
+	}
+
+	return (
+		<Analyse
+			report={report}
+			fight={params.fight}
+			combatant={params.combatant}
+		/>
+	)
+}
+AnalyseRouteWrapper.propTypes = {
+	match: PropTypes.shape({
+		params: PropTypes.shape({
+			code: PropTypes.string.isRequired,
+			fight: PropTypes.string.isRequired,
+			combatant: PropTypes.string.isRequired,
+		}).isRequired,
+	}).isRequired,
+}
+export default observer(AnalyseRouteWrapper)
 
 @observer
 class Analyse extends Component {
@@ -23,34 +54,27 @@ class Analyse extends Component {
 	@observable conductor;
 	@observable complete = false;
 
-	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
-		match: PropTypes.shape({
-			params: PropTypes.shape({
-				code: PropTypes.string.isRequired,
-				fight: PropTypes.string.isRequired,
-				combatant: PropTypes.string.isRequired,
-			}).isRequired,
-		}).isRequired,
+		report: PropTypes.object.isRequired,
+		fight: PropTypes.string.isRequired,
+		combatant: PropTypes.string.isRequired,
 	}
 
 	get fightId() {
-		return parseInt(this.props.match.params.fight, 10)
+		return parseInt(this.props.fight, 10)
 	}
 
 	get combatantId() {
-		return parseInt(this.props.match.params.combatant, 10)
+		return parseInt(this.props.combatant, 10)
 	}
 
 	componentDidMount() {
-		const {reportStore} = this.context
-		const {match} = this.props
-		reportStore.fetchReportIfNeeded(match.params.code)
+		const {report, fight, combatant} = this.props
 
 		disposeOnUnmount(this, reaction(
 			() => ({
-				report: reportStore.report,
-				params: match.params,
+				report,
+				params: {fight, combatant},
 			}),
 			this.fetchEventsAndParseIfNeeded,
 			{fireImmediately: true},
@@ -62,7 +86,6 @@ class Analyse extends Component {
 		// TODO: more checks
 		const valid = report
 				&& !report.loading
-				&& report.code === params.code
 				&& params.fight
 				&& params.combatant
 		if (!valid) { return }
@@ -93,24 +116,17 @@ class Analyse extends Component {
 	}
 
 	getReportUrl() {
-		const {match: {params}} = this.props
-		return `https://www.fflogs.com/reports/${params.code}#fight=${params.fight}&source=${params.combatant}`
+		const {report, fight, combatant} = this.props
+		return `https://www.fflogs.com/reports/${report.code}#fight=${fight}&source=${combatant}`
 	}
 
 	render() {
-		const {reportStore} = this.context
-		const report = reportStore.report
+		const report = this.props.report
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
 		if (!this.conductor || !this.complete) {
-			return (
-				<Loader active>
-					<Trans id="core.analyse.load-analysis">
-						Loading analysis
-					</Trans>
-				</Loader>
-			)
+			return <AnalysisLoader/>
 		}
 
 		// Report's done, build output
@@ -153,4 +169,4 @@ class Analyse extends Component {
 	}
 }
 
-export default Analyse
+export {Analyse}
