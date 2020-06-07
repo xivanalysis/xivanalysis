@@ -1,19 +1,17 @@
 import {t} from '@lingui/macro'
-import {Plural, Trans} from '@lingui/react'
+import {Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
+import {Message} from 'semantic-ui-react'
 
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
-import Combatants from 'parser/core/modules/Combatants'
 import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {Timeline} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -40,14 +38,16 @@ class BLWindow {
 	}
 }
 
+
+// in this module we only want to track battle litany windows opened by
+// the character selected for analysis. windows that clip into or overwrite other
+// DRG litanies will be marked.
+// Used DNC technical step as basis for this module.
 export default class BattleLitany extends Module {
 	static handle = 'battlelitany'
 	static title = t('drg.battlelitany.title')`Battle Litany`
-	// hmm yeah drg should sort modules properly at some point
 	static displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
-	@dependency private combatants!: Combatants
-	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
 	private history: BLWindow[] = []
@@ -57,43 +57,48 @@ export default class BattleLitany extends Module {
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.countLitBuffs)
 		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('complete', this.onComplete)
 	}
 
 	private countLitBuffs(event: NormalisedApplyBuffEvent) {
 		// Get this from tryOpenWindow. If a window wasn't open, we'll open one.
-		// If it was already open (because another Dancer went first), we'll keep using it
 		const lastWindow: BLWindow | undefined = this.tryOpenWindow(event)
 
 		// Find out how many players we hit with the buff.
 		// BL has two normalized windows? seems weird...
-		lastWindow.playersBuffed += event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		if (lastWindow) {
+			lastWindow.playersBuffed += event.confirmedEvents.filter(hit => this.parser.fightFriendlies.findIndex(f => f.id === hit.targetID) >= 0).length
+		}
 	}
 
-	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow {
+	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
 		// Handle multiple drg's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
-		// If that happens, re-open the last window and keep tracking
+		// If that happens, mark the other window and return
 		if (lastWindow) {
 			if (event.sourceID && event.sourceID !== this.parser.player.id) {
-				lastWindow.containsOtherDRG = true
+				lastWindow.containsOtherDRG = !!(lastWindow.end && (event.timestamp < lastWindow.end))
+				return undefined
 			}
 			if (!lastWindow.end) {
 				return lastWindow
 			}
-			if (lastWindow.end === event.timestamp) {
-				lastWindow.end = undefined
-				return lastWindow
-			}
 		}
 
-		const newWindow = new BLWindow(event.timestamp)
-		this.history.push(newWindow)
-		return newWindow
+		if (event.sourceID && event.sourceID === this.parser.player.id) {
+			const newWindow = new BLWindow(event.timestamp)
+			this.history.push(newWindow)
+			return newWindow
+		}
+
+		return undefined
 	}
 
 	private tryCloseWindow(event: BuffEvent) {
+		// only track the things one player added
+		if (event.sourceID && event.sourceID !== this.parser.player.id)
+			return
+
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
 		if (!lastWindow) {
@@ -150,17 +155,56 @@ export default class BattleLitany extends Module {
 		}
 	}
 
-	private onComplete() {
-		// drg suggestions tbd
-	}
-
+	// just output, no suggestions for now.
+	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
 	output() {
-		const otherDRG = this.history.filter(window => window.containsOtherDRG).length > 0
+		const tableData = this.history.map(window => {
+			const end = window.end != null ?
+				window.end - this.parser.fight.start_time :
+				window.start - this.parser.fight.start_time
+			const start = window.start - this.parser.fight.start_time
+			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < (STATUSES.BATTLE_LITANY.duration * 1000 - 2000)))
+
+			return ({
+				start,
+				end,
+				overlap,
+				notesMap: {
+					buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
+					overlapped: <>{overlap ? 'Yes' : 'No'}</>,
+				},
+				rotation: window.rotation,
+				targetsData: {
+					gcds: {
+						actual: window.gcdCount,
+						expected: BL_GCD_TARGET,
+					},
+				},
+			})
+		})
+
+		const notes = [
+			{
+				header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
+				accessor: 'buffed',
+			},
+		]
+		const overlap = tableData.filter(window => window.overlap).length > 0
+
+		if (overlap) {
+			notes.push({
+				header: <Trans id="drg.battlelitany.rotation-table.header.interfered">Overlapped?</Trans>,
+				accessor: 'overlapped',
+			})
+		}
+
 		return <Fragment>
-			{otherDRG && (
-				<Message>
+			{overlap && (
+				<Message warning>
 					<Trans id="drg.battlelitany.rotation-table.message">
-						This log contains <ActionLink showIcon={false} {...ACTIONS.BATTLE_LITANY}/> windows that were started or extended by other Dragoons. Try to make sure they do not overlap in order to maximize damage.
+						This log contains <ActionLink {...ACTIONS.BATTLE_LITANY}/> windows that interfered with windows
+						started by other Dragoons. Try to make sure that casts of <ActionLink showIcon={false} {...ACTIONS.BATTLE_LITANY} />
+						do not overlap in order to maximize damage.
 					</Trans>
 				</Message>
 			)}
@@ -171,30 +215,8 @@ export default class BattleLitany extends Module {
 						accessor: 'gcds',
 					},
 				]}
-				notes={[
-					{
-						header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
-						accessor: 'buffed',
-					},
-				]}
-				data={this.history.map(window => {
-					return ({
-						start: window.start - this.parser.fight.start_time,
-						end: window.end != null ?
-							window.end - this.parser.fight.start_time :
-							window.start - this.parser.fight.start_time,
-							notesMap: {
-								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
-							},
-						rotation: window.rotation,
-						targetsData: {
-							gcds: {
-								actual: window.gcdCount,
-								expected: BL_GCD_TARGET,
-							},
-						},
-					})
-				})}
+				notes={notes}
+				data={tableData}
 				onGoto={this.timeline.show}
 			/>
 		</Fragment>
