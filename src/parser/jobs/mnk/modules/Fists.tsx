@@ -152,8 +152,9 @@ export default class Fists extends Module {
 
 		// If player switches to FoW but they're not about to GL4
 		const coeurl: boolean = this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)
+		const perbal: boolean = this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)
 
-		if (this.gauge.stacks < MAX_STACKS || (this.gauge.stacks === MAX_STACKS && !coeurl)) {
+		if (this.gauge.stacks < MAX_STACKS || (this.gauge.stacks === MAX_STACKS && (!coeurl && !perbal))) {
 			this.foulWinds++
 		}
 	}

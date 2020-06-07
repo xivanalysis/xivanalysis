@@ -59,7 +59,7 @@ export async function getFflogsEvents(
 	const events = data.events
 
 	// Handle pagination
-	while (data.nextPageTimestamp) {
+	while (data.nextPageTimestamp && data.events.length > 0) {
 		searchParams.start = data.nextPageTimestamp
 		data = await requestEvents(code, searchParams)
 		events.push(...data.events)

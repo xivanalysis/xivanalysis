@@ -12,19 +12,12 @@ import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugges
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const CORRECT_GCDS = [
-	ACTIONS.RUIN_III.id,
-	ACTIONS.RUIN_IV.id,
-	ACTIONS.OUTBURST.id,
-	ACTIONS.ASSAULT_I_AERIAL_SLASH.id,
-	ACTIONS.ASSAULT_I_EARTHEN_ARMOR.id,
-	ACTIONS.ASSAULT_I_CRIMSON_CYCLONE.id,
-	ACTIONS.ASSAULT_II_SLIIPSTREAM.id,
-	ACTIONS.ASSAULT_II_MOUNTAIN_BUSTER.id,
-	ACTIONS.ASSAULT_II_FLAMING_CRUSH.id,
+const INCORRECT_GCDS = [
+	ACTIONS.SMN_RUIN_II.id,
+	ACTIONS.PHYSICK.id,
 ]
 
-const DWT_CAST_TIME_MOD = -2.5
+export const DWT_CAST_TIME_MOD = -2.5
 
 export const DWT_LENGTH = 15000
 
@@ -122,7 +115,7 @@ export default class DWT extends Module {
 			badGcds += dwt.casts
 				.filter(cast => {
 					const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
-					return action && action.onGcd && !CORRECT_GCDS.includes(action.id)
+					return action && action.onGcd && INCORRECT_GCDS.includes(action.id)
 				})
 				.length
 		})

@@ -53,10 +53,6 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 		firstUseOffset: 6750,
 	}]
 
-	checklistName = <Trans id="smn.cooldownDowntime.name">Use your cooldowns</Trans>
-	checklistDescription = <Trans id="smn.cooldownDowntime.suggestion">Always make sure to use your abilities
-		when they are available, but do not clip or delay your GCD to use them.</Trans>
-
 	normalise(events: Event[]) {
 		// Egis will not execute an order while they are moving, so it is possible to
 		// issue a pre-pull Aetherpact and delay the Devotion cast by the pet until

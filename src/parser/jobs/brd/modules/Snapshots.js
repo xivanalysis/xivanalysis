@@ -8,6 +8,7 @@ import {Table} from 'semantic-ui-react'
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
+import {SNAPSHOT_BLACKLIST} from 'parser/jobs/brd/modules/SnapshotBlacklist'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 
@@ -47,13 +48,46 @@ export default class Snapshots extends Module {
 				// So we can show they did cast it, I'm going to generate an empty snapshot
 				snapshot = {statuses: []}
 			}
-			const snapshotCell = <Table.Cell>
+
+			const dotStatuses = [
+				STATUSES.CAUSTIC_BITE.id,
+				STATUSES.STORMBITE.id,
+				STATUSES.VENOMOUS_BITE.id,
+				STATUSES.WINDBITE.id,
+			]
+
+			const personalStatuses = [
+				STATUSES.MEDICATED.id,
+				STATUSES.RAGING_STRIKES.id,
+			]
+
+			// Sort personal buffs to the front of the status list (why do I have to cast this to Array???? JS explain??)
+			Array(snapshot.statuses).some((status, index) => {
+				personalStatuses.includes(Number(status.id)) &&
+				snapshot.statuses.unshift(
+					snapshot.statuses.splice(index, 1)[0],
+				)
+			})
+
+			const snapshotDotCell = <Table.Cell>
 				{
 					Object.keys(snapshot.statuses).map(id => {
-						//To avoid showing statuses we do not currently know of, as that will cause an infinite loading circle
-						if (snapshot.statuses[id].isActive && getDataBy(STATUSES, 'id', Number(id))) {
-							//35px is a purely arbitrary value that I think looks nice.  The default icon size for statuses are too small.
-							return <StatusLink  key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', Number(id))}/>
+						const status = getDataBy(STATUSES, 'id', Number(id))
+						if (snapshot.statuses[id].isActive && dotStatuses.includes(Number(id))) {
+							return <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
+						}
+					})
+				}
+			</Table.Cell>
+
+			const snapshotBuffCell = <Table.Cell>
+				{
+					Object.keys(snapshot.statuses).map(id => {
+						// Avoid showing statuses we do not currently know of and statuses known not to affect bard DoTs
+						if (snapshot.statuses[id].isActive && getDataBy(STATUSES, 'id', Number(id)) &&
+								!dotStatuses.includes(Number(id)) && !SNAPSHOT_BLACKLIST.includes(Number(id))) {
+							// 35px is a purely arbitrary value that I think looks nice.  The default icon size for statuses are too small.
+							return <StatusLink key={id} showName={false} iconSize="35px" {...getDataBy(STATUSES, 'id', Number(id))}/>
 						}
 					})
 				}
@@ -66,7 +100,8 @@ export default class Snapshots extends Module {
 				<Table.Cell>
 					<ActionLink {...getDataBy(ACTIONS, 'id', snapshotEvent.ability.guid)}/>
 				</Table.Cell>
-				{snapshotCell}
+				{snapshotDotCell}
+				{snapshotBuffCell}
 			</Table.Row>
 		})
 
@@ -76,6 +111,7 @@ export default class Snapshots extends Module {
 				<Table.Row key="header">
 					<Table.HeaderCell><Trans id="brd.snapshots.time">Time</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="brd.snapshots.snapshotter">Snapshotter</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="brd.snapshots.dots">DoTs</Trans></Table.HeaderCell>
 					<Table.HeaderCell><Trans id="brd.snapshots.statuses">Statuses</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>

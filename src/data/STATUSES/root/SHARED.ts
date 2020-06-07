@@ -7,6 +7,11 @@ export const SHARED = ensureStatuses({
 		// System action - red background, gold cross
 		icon: 'https://xivapi.com/i/000000/000026.png',
 	},
+	RAISE: {
+		id: 148,
+		name: 'Raise',
+		icon: 'https://xivapi.com/i/010000/010406.png',
+	},
 
 	WEAKNESS: {
 		id: 43,
