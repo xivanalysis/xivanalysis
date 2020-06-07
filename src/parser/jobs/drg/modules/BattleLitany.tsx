@@ -21,6 +21,10 @@ const WINDOW_STATUSES = [
 	STATUSES.BATTLE_LITANY.id,
 ]
 
+// how long (or short, really) a window needs to be in order to be considered truncated
+// tslint:disable-next-line:no-magic-numbers
+const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
+
 class BLWindow {
 	start: number
 	end?: number
@@ -163,7 +167,7 @@ export default class BattleLitany extends Module {
 				window.end - this.parser.fight.start_time :
 				window.start - this.parser.fight.start_time
 			const start = window.start - this.parser.fight.start_time
-			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < (STATUSES.BATTLE_LITANY.duration * 1000 - 2000)))
+			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < BL_TRUNCATE_DURATION))
 
 			return ({
 				start,
@@ -203,8 +207,8 @@ export default class BattleLitany extends Module {
 				<Message warning>
 					<Trans id="drg.battlelitany.rotation-table.message">
 						This log contains <ActionLink {...ACTIONS.BATTLE_LITANY}/> windows that interfered with windows
-						started by other Dragoons. Try to make sure that casts of <ActionLink showIcon={false} {...ACTIONS.BATTLE_LITANY} />
-						do not overlap in order to maximize damage.
+						started by other Dragoons. Try to make sure that casts of <ActionLink showIcon={false} {...ACTIONS.BATTLE_LITANY} /> do
+						not overlap in order to maximize damage.
 					</Trans>
 				</Message>
 			)}
