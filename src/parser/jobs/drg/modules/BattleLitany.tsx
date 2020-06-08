@@ -55,6 +55,7 @@ export default class BattleLitany extends Module {
 	@dependency private timeline!: Timeline
 
 	private history: BLWindow[] = []
+	private lastLitFalloffTime: number = 0
 
 	protected init() {
 		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.tryOpenWindow)
@@ -77,20 +78,18 @@ export default class BattleLitany extends Module {
 	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
-		// Handle multiple drg's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
-		// If that happens, mark the other window and return
-		if (lastWindow) {
-			if (event.sourceID && event.sourceID !== this.parser.player.id) {
-				lastWindow.containsOtherDRG = !!(lastWindow.end && (event.timestamp < lastWindow.end))
-				return undefined
-			}
-			if (!lastWindow.end) {
-				return lastWindow
-			}
+
+		if (lastWindow && !lastWindow.end) {
+			return lastWindow
 		}
 
 		if (event.sourceID && event.sourceID === this.parser.player.id) {
 			const newWindow = new BLWindow(event.timestamp)
+
+			// Handle multiple drg's buffs overwriting each other, we'll have a remove then an apply with the same timestamp
+			// If that happens, mark the window and return
+			newWindow.containsOtherDRG = this.lastLitFalloffTime === event.timestamp
+
 			this.history.push(newWindow)
 			return newWindow
 		}
@@ -99,6 +98,9 @@ export default class BattleLitany extends Module {
 	}
 
 	private tryCloseWindow(event: BuffEvent) {
+		// for determining overwrite, cache the status falloff time
+		this.lastLitFalloffTime = event.timestamp
+
 		// only track the things one player added
 		if (event.sourceID && event.sourceID !== this.parser.player.id)
 			return
@@ -168,13 +170,13 @@ export default class BattleLitany extends Module {
 				window.start - this.parser.fight.start_time
 			const start = window.start - this.parser.fight.start_time
 			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < BL_TRUNCATE_DURATION))
+			console.log(window.containsOtherDRG)
 
 			return ({
 				start,
 				end,
 				overlap,
 				notesMap: {
-					buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
 					overlapped: <>{overlap ? 'Yes' : 'No'}</>,
 				},
 				rotation: window.rotation,
@@ -183,16 +185,15 @@ export default class BattleLitany extends Module {
 						actual: window.gcdCount,
 						expected: BL_GCD_TARGET,
 					},
+					buffed: {
+						actual: window.playersBuffed,
+						expected: 8,
+					},
 				},
 			})
 		})
 
-		const notes = [
-			{
-				header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
-				accessor: 'buffed',
-			},
-		]
+		const notes = []
 		const overlap = tableData.filter(window => window.overlap).length > 0
 
 		if (overlap) {
@@ -217,6 +218,10 @@ export default class BattleLitany extends Module {
 					{
 						header: <Trans id="drg.battlelitany.rotation-table.header.gcd-count">GCDs</Trans>,
 						accessor: 'gcds',
+					},
+					{
+						header: <Trans id="drg.battlelitany.rotation-table.header.buffed">Players Buffed</Trans>,
+						accessor: 'buffed',
 					},
 				]}
 				notes={notes}
