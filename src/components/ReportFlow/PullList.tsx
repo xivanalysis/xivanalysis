@@ -3,7 +3,7 @@ import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
 
-interface PullGroup {
+interface PullGroupData {
 	duty: Duty
 	pulls: Pull[]
 }
@@ -13,8 +13,6 @@ export interface PullListProps {
 }
 
 export function PullList({reportStore}: PullListProps) {
-	const {url} = useRouteMatch()
-
 	if (reportStore.report == null) {
 		return null
 	}
@@ -24,7 +22,7 @@ export function PullList({reportStore}: PullListProps) {
 
 	// Group encounters by the duty they took place in
 	// We're maintaining chronological order, so only tracking the latest duty
-	const groups: PullGroup[] = []
+	const groups: PullGroupData[] = []
 	let currentDuty: Duty['id'] | undefined
 
 	for (const pull of reportStore.report.pulls) {
@@ -37,19 +35,27 @@ export function PullList({reportStore}: PullListProps) {
 		groups[groups.length - 1].pulls.push(pull)
 	}
 
+	return <>{groups.map(group => <PullGroup group={group}/>)}</>
+}
+
+interface PullGroupProps {
+	group: PullGroupData
+}
+
+function PullGroup({group}: PullGroupProps) {
+	const {url} = useRouteMatch()
+
 	// TODO: this nicer
 	return <>
-		{groups.map(group => <>
-			<h3>{group.duty.name}</h3>
-			<ul>
-				{group.pulls.map(pull => (
-					<li key={pull.id}>
-						<Link to={`${url}/${pull.id}`}>
-							{pull.encounter.name}
-						</Link>
-					</li>
-				))}
-			</ul>
-		</>)}
+		<h3>{group.duty.name}</h3>
+		<ul>
+			{group.pulls.map(pull => (
+				<li key={pull.id}>
+					<Link to={`${url}/${pull.id}`}>
+						{pull.encounter.name}
+					</Link>
+				</li>
+			))}
+		</ul>
 	</>
 }
