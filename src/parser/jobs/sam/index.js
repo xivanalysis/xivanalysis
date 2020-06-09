@@ -11,7 +11,7 @@ const samDescript = t('sam.about.description')`So you study the blade do you? We
 
 - [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)
 
-- [Visual Guide to Samurai rotation](https://i.imgur.com/L0Y7d6C.png)
+- [Visual Guide to Samurai rotation](https://i.imgur.com/eHRXiZW.png)
 `
 
 export default new Meta({
