@@ -2,6 +2,9 @@ import React from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
+import {Segment} from 'akkd'
+import styles from './PullList.module.css'
+import {getZoneBanner} from 'data/BOSSES'
 
 interface PullGroupData {
 	duty: Duty
@@ -46,16 +49,25 @@ function PullGroup({group}: PullGroupProps) {
 	const {url} = useRouteMatch()
 
 	// TODO: this nicer
-	return <>
-		<h3>{group.duty.name}</h3>
-		<ul>
-			{group.pulls.map(pull => (
-				<li key={pull.id}>
-					<Link to={`${url}/${pull.id}`}>
-						{pull.encounter.name}
-					</Link>
-				</li>
-			))}
-		</ul>
-	</>
+	return (
+		<Segment>
+			<div className={styles.groupHeader}>
+				<div
+					className={styles.banner}
+					style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
+				/>
+				<h2>{group.duty.name}</h2>
+			</div>
+
+			<ul>
+				{group.pulls.map(pull => (
+					<li key={pull.id}>
+						<Link to={`${url}/${pull.id}`}>
+							{pull.encounter.name}
+						</Link>
+					</li>
+				))}
+			</ul>
+		</Segment>
+	)
 }
