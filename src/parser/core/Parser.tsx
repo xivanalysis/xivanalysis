@@ -1,6 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import * as Sentry from '@sentry/browser'
-import ResultSegment from 'components/Analyse/ResultSegment'
+import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'

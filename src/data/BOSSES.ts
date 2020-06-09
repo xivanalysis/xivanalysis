@@ -19,8 +19,9 @@ export const getCorrectedFight = (fight: Fight): Fight => {
 }
 
 // Helper to calculate the URL to a zone banner (using my proxy)
-export const getZoneBanner = (zoneId: number) =>
-	zoneId >= 0 && `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
+export const getZoneBanner = (zoneId: number) => zoneId >= 0
+	? `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
+	: undefined
 
 const BOSSES = ensureBosses({
 	// Special case - FF Logs reports trash fights with a boss ID of 0

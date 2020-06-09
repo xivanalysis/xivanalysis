@@ -1,11 +1,10 @@
-import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Loader} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import CombatantList from './CombatantList'
 import FightList from './FightList'
+import {ReportLoader} from 'components/ui/SharedLoaders'
 
 @observer
 class Find extends React.Component {
@@ -36,13 +35,7 @@ class Find extends React.Component {
 
 		// If report is null, we're probably waiting for an api call to complete
 		if (!report || report.code !== params.code || report.loading) {
-			return (
-				<Loader active>
-					<Trans id="core.find.load-report">
-						Loading report
-					</Trans>
-				</Loader>
-			)
+			return <ReportLoader/>
 		}
 
 		return params.fight
