@@ -1,9 +1,19 @@
-@value gutter, messageBackground from 'theme.module.css';
+@value gutter from 'theme.module.css';
+@value messageBackground from 'theme.module.css';
+@value segmentLinkActive from 'theme.module.css';
+@value themeBackground from 'theme.module.css';
+
+.group {
+	background-color: themeBackground;
+}
+
+.group + .group {
+	margin-top: gutter;
+}
 
 .groupHeader {
 	position: relative;
 	z-index: 0;
-	margin: calc(-1 * gutter);
 	margin-bottom: 0;
 	padding: calc(0.5 * gutter) gutter;
 	overflow: hidden;
@@ -27,7 +37,7 @@
 	background: messageBackground;
 	background-size: 110%;
 	background-position: center;
-	filter:  blur(5px);
+	filter: blur(5px);
 }
 
 .banner:after {
@@ -40,4 +50,17 @@
 	z-index: 1;
 	background-color: white;
 	opacity: 0.5;
+}
+
+.link {
+	display: block;
+	padding: 0 gutter;
+	line-height: 30px;
+	color: inherit;
+}
+
+.link:hover {
+	background: segmentLinkActive;
+	color: inherit;
+	font-weight: bold;
 }
