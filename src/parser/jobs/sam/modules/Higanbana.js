@@ -1,6 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
+import {Accordion, Table} from 'semantic-ui-react'
+
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
@@ -32,6 +34,7 @@ export default class Higanbana extends Module {
 	_clip = {
 		[STATUSES.HIGANBANA.id]: 0,
 	}
+	_application = {}
 
 	constructor(...args) {
 		super(...args)
@@ -45,6 +48,17 @@ export default class Higanbana extends Module {
 		this.addEventHook('complete', this._onComplete)
 	}
 
+	_createTargetApplicationList() {
+		return {
+			[STATUSES.HIGANBANA.id]: [],
+		}
+	}
+
+	_pushApplication(targetKey, statusId, event, clip) {
+		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
+		target[statusId].push({event, clip})
+	}
+
 	_onDotApply(event) {
 		const statusId = event.ability.guid
 
@@ -55,6 +69,7 @@ export default class Higanbana extends Module {
 		// If it's not been applied yet, or we're rushing, set it and skip out
 		if (!lastApplication[statusId]) {
 			lastApplication[statusId] = event.timestamp
+			this._pushApplication(applicationKey, statusId, event, null)
 			return
 		}
 
@@ -67,9 +82,12 @@ export default class Higanbana extends Module {
 		// Also remove invuln time in the future that casting later would just push dots into
 		// TODO: This relies on a full set of invuln data ahead of time. Can this be trusted?
 		clip -= this.invuln.getInvulnerableUptime('all', event.timestamp, event.timestamp + STATUS_DURATION[statusId] + clip)
+		clip = Math.max(0, clip)
 
 		// Capping clip at 0 - less than that is downtime, which is handled by the checklist requirement
-		this._clip[statusId] += Math.max(0, clip)
+		this._clip[statusId] += clip
+
+		this._pushApplication(applicationKey, statusId, event, clip)
 
 		lastApplication[statusId] = event.timestamp
 	}
@@ -109,5 +127,67 @@ export default class Higanbana extends Module {
 		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
+	}
+
+	_createTargetStatusTable(target) {
+		let totalDotClip = 0
+		return <Table collapsing unstackable style={{border: 'none'}}>
+			<Table.Body>
+				<Table.Row>
+					<Table.Cell style={{padding: '0 1em 0 0', verticalAlign: 'top'}}>
+						<Table collapsing unstackable>
+							<Table.Header>
+								<Table.Row>
+									<Table.HeaderCell><ActionLink {...ACTIONS.HIGANBANA} /> <Trans id="sam.higanbana.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="sam.higanbana.clip">Clip</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="sam.higanbana.total-clip">Total Clip</Trans></Table.HeaderCell>
+								</Table.Row>
+							</Table.Header>
+							<Table.Body>
+								{target[STATUSES.HIGANBANA.id].map(
+									(event) => {
+										totalDotClip += event.clip
+										return <Table.Row key={event.event.timestamp}>
+											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
+											<Table.Cell>{event.clip !== null ? this.parser.formatDuration(event.clip) : '-'}</Table.Cell>
+											<Table.Cell>{totalDotClip ? this.parser.formatDuration(totalDotClip) : '-'}</Table.Cell>
+										</Table.Row>
+									})}
+							</Table.Body>
+						</Table>
+					</Table.Cell>
+				</Table.Row>
+			</Table.Body>
+		</Table>
+	}
+
+	output() {
+		const numTargets = Object.keys(this._application).length
+
+		if (numTargets === 0) { return null }
+
+		if (numTargets > 1) {
+			const panels = Object.keys(this._application).map(applicationKey => {
+				const targetId = applicationKey.split('|')[0]
+				const target = this.enemies.getEntity(targetId)
+				return {
+					key: applicationKey,
+					title: {
+						content: <>{target.name}</>,
+					},
+					content: {
+						content: this._createTargetStatusTable(this._application[applicationKey]),
+					},
+				}
+			})
+			return <Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		}
+
+		return this._createTargetStatusTable(Object.values(this._application)[0])
 	}
 }
