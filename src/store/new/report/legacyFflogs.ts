@@ -135,6 +135,9 @@ const convertFight = (
 
 	timestamp: report.start + fight.start_time,
 	duration: fight.end_time - fight.start_time,
+	progress: fight.fightPercentage != null
+		? 100 - fight.fightPercentage / 100
+		: undefined,
 
 	encounter: {
 		name: fight.name,

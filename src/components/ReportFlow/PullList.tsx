@@ -4,6 +4,7 @@ import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
 import styles from './PullList.module.css'
 import {getZoneBanner} from 'data/BOSSES'
+import {formatDuration} from 'utilities'
 
 interface PullGroupData {
 	duty: Duty
@@ -64,7 +65,7 @@ function PullGroup({group}: PullGroupProps) {
 					to={`${url}/${pull.id}`}
 					className={styles.link}
 				>
-					{pull.encounter.name}
+					{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
 				</Link>
 			))}
 		</div>

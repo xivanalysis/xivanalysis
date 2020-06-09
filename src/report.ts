@@ -53,6 +53,11 @@ export interface Pull {
 	timestamp: number
 	/** Duration of the pull (ms). */
 	duration: number
+	/**
+	 * Progress through the fight at end of log, as a percentage (0-100).
+	 * If undefined, progress was indeterminate.
+	 */
+	progress?: number
 
 	/** The encounter the pull was an attempt at clearing. */
 	encounter: Encounter
