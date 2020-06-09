@@ -49,6 +49,7 @@ class DriftWindow {
 }
 
 export default class Drift extends Module {
+	static debug = false
 	static handle = 'drift'
 	static title = t('drg.drift.title')`Ability Drift`
 
@@ -72,12 +73,26 @@ export default class Drift extends Module {
 		let actionId: number
 		actionId = event.ability.guid
 
+		const cooldown = COOLDOWN_MS[actionId]
+		// this.debug(cooldown)
+
 		// Calculate drift
 		const window = this.currentWindows[actionId]
 		window.end = event.timestamp
-		const downtime = this.downtime.getDowntime(window.start, window.end)
-		const cooldown = COOLDOWN_MS[actionId]
-		window.drift = Math.max(0, window.end - window.start - cooldown - downtime)
+
+		const plannedUseTime = window.start + cooldown
+		this.debug(this.parser.formatTimestamp(plannedUseTime))
+
+		let expectedUseTime = 0
+
+		if (this.downtime.isDowntime(plannedUseTime)) {
+			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime)[0]
+			expectedUseTime = downtimeWindow.end
+		} else {
+			expectedUseTime = plannedUseTime
+		}
+
+		window.drift = Math.max(0, window.end - expectedUseTime)
 
 		// Push to table.
 		this.driftedWindows.push(window)
@@ -133,7 +148,7 @@ export default class Drift extends Module {
 		return <Fragment>
 			<Message>
 				<Trans id="drg.drift.table.message">
-					<ActionLink {...ACTIONS.HIGH_JUMP}/> and <ActionLink {...ACTIONS.GEIRSKOGUL}/> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
+					<ActionLink {...ACTIONS.HIGH_JUMP} /> and <ActionLink {...ACTIONS.GEIRSKOGUL} /> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
 				</Trans>
 			</Message>
 			<Table style={{border: 'none'}}>
