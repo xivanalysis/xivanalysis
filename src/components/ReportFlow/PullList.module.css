@@ -75,11 +75,20 @@
 
 .text {
 	flex-grow: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.duration {
+	padding-left: gutter;
+	opacity: .5;
 }
 
 .progress {
 	display: inline-block;
 	flex-shrink: 0;
+	margin-left: gutter;
 	width: 200px;
 	height: 1em;
 	background: rgba(0, 0, 0, 0.1);

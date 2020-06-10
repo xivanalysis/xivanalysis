@@ -76,7 +76,11 @@ function PullLink({pull}: PullLinkProps) {
 			className={styles.link}
 		>
 			<span className={styles.text}>
-				{pull.encounter.name} - {formatDuration(pull.duration)}
+				{pull.encounter.name}
+			</span>
+
+			<span className={styles.duration}>
+				{formatDuration(pull.duration)}
 			</span>
 
 			{pull.progress != null && (

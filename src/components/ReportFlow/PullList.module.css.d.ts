@@ -2,6 +2,7 @@
 declare namespace PullListModuleCssModule {
   export interface IPullListModuleCss {
     banner: string;
+    duration: string;
     group: string;
     groupHeader: string;
     gutter: string;
