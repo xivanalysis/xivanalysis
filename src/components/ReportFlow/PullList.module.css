@@ -27,6 +27,11 @@
 	font-size: 1em;
 }
 
+/* Game has a habit of not capitalising the first letter if it's the "t" from "the". */
+.groupHeader h2::first-letter {
+	text-transform: uppercase;
+}
+
 .banner {
 	position: absolute;
 
