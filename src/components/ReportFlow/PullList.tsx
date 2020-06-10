@@ -45,31 +45,36 @@ interface PullGroupProps {
 	group: PullGroupData
 }
 
-function PullGroup({group}: PullGroupProps) {
+const PullGroup = ({group}: PullGroupProps) => (
+	<div className={styles.group}>
+		<div className={styles.groupHeader}>
+			<div
+				className={styles.banner}
+				style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
+			/>
+			<h2>{group.duty.name}</h2>
+		</div>
+
+		<div className={styles.links}>
+			{group.pulls.map(pull => <PullLink pull={pull}/>)}
+		</div>
+	</div>
+)
+
+interface PullLinkProps {
+	pull: Pull
+}
+
+function PullLink({pull}: PullLinkProps) {
 	const {url} = useRouteMatch()
 
-	// TODO: this nicer
 	return (
-		<div className={styles.group}>
-			<div className={styles.groupHeader}>
-				<div
-					className={styles.banner}
-					style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
-				/>
-				<h2>{group.duty.name}</h2>
-			</div>
-
-			<div className={styles.links}>
-				{group.pulls.map(pull => (
-					<Link
-						key={pull.id}
-						to={`${url}/${pull.id}`}
-						className={styles.link}
-					>
-						{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
-					</Link>
-				))}
-			</div>
-		</div>
+		<Link
+			key={pull.id}
+			to={`${url}/${pull.id}`}
+			className={styles.link}
+		>
+			{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
+		</Link>
 	)
 }
