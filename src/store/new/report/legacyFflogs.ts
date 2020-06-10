@@ -13,6 +13,7 @@ import {
 import {Pull, Actor, Team} from 'report'
 import JOBS, {JobType} from 'data/JOBS'
 import {languageToEdition} from 'data/PATCHES'
+import {getCorrectedFight} from 'data/BOSSES'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -51,7 +52,12 @@ export class LegacyFflogsReportStore extends ReportStore {
 
 			name: report.title,
 			pulls: report.fights.map(
-				fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
+				fight => convertFight(
+					report,
+					// TODO: Need to work out a source agnostic trash encounter representation
+					getCorrectedFight(fight),
+					actorsByFight.get(fight.id) ?? [],
+				),
 			),
 
 			meta: {...report, source: 'legacyFflogs' as const},
