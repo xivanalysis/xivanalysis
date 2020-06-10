@@ -5,6 +5,7 @@ import {ReportStore} from 'store/new/report'
 import styles from './PullList.module.css'
 import {getZoneBanner} from 'data/BOSSES'
 import {formatDuration} from 'utilities'
+import classNames from 'classnames'
 
 interface PullGroupData {
 	duty: Duty
@@ -74,7 +75,21 @@ function PullLink({pull}: PullLinkProps) {
 			to={`${url}/${pull.id}`}
 			className={styles.link}
 		>
-			{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
+			<span className={styles.text}>
+				{pull.encounter.name} - {formatDuration(pull.duration)}
+			</span>
+
+			{pull.progress != null && (
+				<div className={styles.progress}>
+					<div
+						className={classNames(
+							styles.progressBar,
+							pull.progress >= 100 && styles.success,
+						)}
+						style={{width: `${pull.progress}%`}}
+					/>
+				</div>
+			)}
 		</Link>
 	)
 }

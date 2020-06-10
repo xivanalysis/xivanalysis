@@ -2,6 +2,8 @@
 @value messageBackground from 'theme.module.css';
 @value segmentLinkActive from 'theme.module.css';
 @value themeBackground from 'theme.module.css';
+@value themeGreen from 'theme.module.css';
+@value themeRed from 'theme.module.css';
 
 .group {
 	background-color: themeBackground;
@@ -57,7 +59,9 @@
 }
 
 .link {
-	display: block;
+	/* position: relative; */
+	display: flex;
+	align-items: center;
 	padding: 0 gutter;
 	line-height: 30px;
 	color: inherit;
@@ -67,4 +71,26 @@
 	background: segmentLinkActive;
 	color: inherit;
 	font-weight: bold;
+}
+
+.text {
+	flex-grow: 1;
+}
+
+.progress {
+	display: inline-block;
+	flex-shrink: 0;
+	width: 200px;
+	height: 1em;
+	background: rgba(0, 0, 0, 0.1);
+	vertical-align: middle;
+}
+
+.progressBar {
+	height: 100%;
+	background: themeRed;
+}
+
+.success {
+	background: themeGreen;
 }

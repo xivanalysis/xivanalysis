@@ -8,8 +8,14 @@ declare namespace PullListModuleCssModule {
     link: string;
     links: string;
     messageBackground: string;
+    progress: string;
+    progressBar: string;
     segmentLinkActive: string;
+    success: string;
+    text: string;
     themeBackground: string;
+    themeGreen: string;
+    themeRed: string;
   }
 }
 
