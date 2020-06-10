@@ -14,6 +14,7 @@ import {Pull, Actor, Team} from 'report'
 import JOBS, {JobType} from 'data/JOBS'
 import {languageToEdition} from 'data/PATCHES'
 import {getCorrectedFight} from 'data/BOSSES'
+import {getEncounter} from 'data/ENCOUNTERS'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -131,7 +132,6 @@ const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => 
 	...overrides,
 })
 
-// TODO: Should this be using getCorrectedFight?
 const convertFight = (
 	report: LegacyReport,
 	fight: Fight,
@@ -146,6 +146,7 @@ const convertFight = (
 		: undefined,
 
 	encounter: {
+		key: getEncounter('legacyFflogs', fight.boss.toString()),
 		name: fight.name,
 		duty: {
 			id: fight.zoneID,

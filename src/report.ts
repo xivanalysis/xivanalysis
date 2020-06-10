@@ -1,3 +1,4 @@
+import {EncounterKey} from 'data/ENCOUNTERS'
 import {JobType} from 'data/JOBS'
 import {GameEdition} from 'data/PATCHES'
 import {Compute} from 'utilities'
@@ -15,8 +16,11 @@ type ReportMetaUnion<S extends keyof ReportMetaRepository> =
 		? {source: S} & ReportMetaRepository[S]
 		: never
 
-/** Union of valid report meta shapes */
+/** Union of valid report meta shapes. */
 export type ReportMeta = Compute<ReportMetaUnion<keyof ReportMetaRepository>>
+
+/** Union of registered report sources. */
+export type ReportSource = keyof ReportMetaRepository
 
 /**
  * Type representation of a report. Reports provide metadata for a session of
@@ -35,7 +39,7 @@ export interface Report {
 	pulls: Pull[]
 
 	/** Metadata specific to the source this report was retrieved from. */
-	meta?: ReportMeta
+	meta: ReportMeta
 }
 
 /**
@@ -71,8 +75,9 @@ export interface Pull {
  * i.e. a trial boss fight, or the trash between bosses in a dungeon.
  */
 export interface Encounter {
-	// TODO: work out a generic way to ID encounters.
-	// There's a bunch of stuff (such as the boss module system) that explicitly relies on FFLogs' boss IDs.
+	/** Key of ENCOUNTERS for use as a stable reference and internal metadata representation. */
+	key?: EncounterKey
+
 	/**
 	 * Name of the encounter. Note that, especially for trials, the name of the encounter
 	 * is _not_ the name of the duty.
