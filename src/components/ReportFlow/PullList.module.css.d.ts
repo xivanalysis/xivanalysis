@@ -6,6 +6,7 @@ declare namespace PullListModuleCssModule {
     groupHeader: string;
     gutter: string;
     link: string;
+    links: string;
     messageBackground: string;
     segmentLinkActive: string;
     themeBackground: string;

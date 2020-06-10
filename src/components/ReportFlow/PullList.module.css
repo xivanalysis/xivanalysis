@@ -52,6 +52,10 @@
 	opacity: 0.5;
 }
 
+.links {
+	padding: calc(0.5 * gutter) 0;
+}
+
 .link {
 	display: block;
 	padding: 0 gutter;

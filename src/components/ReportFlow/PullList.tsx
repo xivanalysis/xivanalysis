@@ -59,15 +59,17 @@ function PullGroup({group}: PullGroupProps) {
 				<h2>{group.duty.name}</h2>
 			</div>
 
-			{group.pulls.map(pull => (
-				<Link
-					key={pull.id}
-					to={`${url}/${pull.id}`}
-					className={styles.link}
-				>
-					{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
-				</Link>
-			))}
+			<div className={styles.links}>
+				{group.pulls.map(pull => (
+					<Link
+						key={pull.id}
+						to={`${url}/${pull.id}`}
+						className={styles.link}
+					>
+						{pull.encounter.name} - {pull.progress} - {formatDuration(pull.duration)}
+					</Link>
+				))}
+			</div>
 		</div>
 	)
 }
