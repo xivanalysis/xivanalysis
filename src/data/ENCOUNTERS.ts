@@ -30,6 +30,9 @@ export function getEncounterKey(source: ReportSource, id: string) {
 	}
 }
 
+// Duties are in this file alongside encounters due to the heavily related nature
+// of the data they represent. If this file gets too unweildy, split.
+
 export interface Duty {
 	territoryType: number
 }
@@ -56,3 +59,6 @@ export const DUTIES = ensureDuties({
 	// Ultimates
 	TEA: {territoryType: 887},
 })
+
+export const getDutyBanner = (territoryType: number) =>
+	`https://xivanalysis.com/xivapi/zone-banner/${territoryType}`

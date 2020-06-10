@@ -89,7 +89,6 @@ export interface Encounter {
 
 /** Representation of a duty. Duties should align with those defined by the game. */
 export interface Duty {
-	// TODO: Handle trash. -1?
 	/** ID of the duty. This should match an ID from the TerritoryType game table. */
 	id: number
 	/**

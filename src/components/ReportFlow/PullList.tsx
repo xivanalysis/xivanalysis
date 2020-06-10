@@ -3,9 +3,9 @@ import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
 import styles from './PullList.module.css'
-import {getZoneBanner} from 'data/BOSSES'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
+import {getDutyBanner} from 'data/ENCOUNTERS'
 
 const TRASH_DUTY: Duty = {
 	id: -1,
@@ -68,7 +68,7 @@ const PullGroup = ({group}: PullGroupProps) => (
 			{group.duty.id > 0 && (
 				<div
 					className={styles.banner}
-					style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
+					style={{backgroundImage: `url(${getDutyBanner(group.duty.id)})`}}
 				/>
 			)}
 			<h2>{group.duty.name}</h2>
