@@ -55,7 +55,7 @@ export function PullList({reportStore}: PullListProps) {
 		groups.push(trashPulls)
 	}
 
-	return <>{groups.map(group => <PullGroup group={group}/>)}</>
+	return <>{groups.map((group, index) => <PullGroup key={index} group={group}/>)}</>
 }
 
 interface PullGroupProps {
@@ -75,7 +75,7 @@ const PullGroup = ({group}: PullGroupProps) => (
 		</div>
 
 		<div className={styles.links}>
-			{group.pulls.map(pull => <PullLink pull={pull}/>)}
+			{group.pulls.map(pull => <PullLink key={pull.id} pull={pull}/>)}
 		</div>
 	</div>
 )
@@ -89,7 +89,6 @@ function PullLink({pull}: PullLinkProps) {
 
 	return (
 		<Link
-			key={pull.id}
 			to={`${url}/${pull.id}`}
 			className={styles.link}
 		>
