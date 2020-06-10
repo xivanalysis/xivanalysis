@@ -23,13 +23,11 @@ export const getZoneBanner = (zoneId: number) => zoneId >= 0
 	? `https://xivanalysis.com/xivapi/zone-banner/${zoneId}`
 	: undefined
 
-export const TRASH_ZONE_ID = -1
-
 const BOSSES = ensureBosses({
 	// Special case - FF Logs reports trash fights with a boss ID of 0
 	TRASH: {
 		logId: 0,
-		overrides: {zoneID: TRASH_ZONE_ID, zoneName: 'Trash'},
+		overrides: {zoneID: -1, zoneName: 'Trash'},
 	},
 
 	// 5.0

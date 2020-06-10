@@ -22,7 +22,7 @@ export const ENCOUNTERS = ensureEncounters({
 
 export type EncounterKey = keyof typeof ENCOUNTERS
 
-export function getEncounter(source: ReportSource, id: string) {
+export function getEncounterKey(source: ReportSource, id: string) {
 	for (const [key, encounter] of Object.entries(ENCOUNTERS)) {
 		if (encounter.ids[source] === id) {
 			return key as EncounterKey

@@ -19,6 +19,7 @@
 	margin-bottom: 0;
 	padding: calc(0.5 * gutter) gutter;
 	overflow: hidden;
+	background: messageBackground;
 }
 
 .groupHeader h2 {
@@ -36,7 +37,6 @@
 	height: 130%;
 	z-index: -1;
 
-	background: messageBackground;
 	background-size: 110%;
 	background-position: center;
 	filter: blur(5px);

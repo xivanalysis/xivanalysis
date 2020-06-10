@@ -3,9 +3,14 @@ import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
 import styles from './PullList.module.css'
-import {getZoneBanner, TRASH_ZONE_ID} from 'data/BOSSES'
+import {getZoneBanner} from 'data/BOSSES'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
+
+const TRASH_DUTY: Duty = {
+	id: -1,
+	name: 'Trash',
+}
 
 interface PullGroupData {
 	duty: Duty
@@ -29,21 +34,15 @@ export function PullList({reportStore}: PullListProps) {
 	const groups: PullGroupData[] = []
 	let currentDuty: Duty['id'] | undefined
 
-	let trashPulls: PullGroupData | undefined
+	const trashPulls: PullGroupData = {duty: TRASH_DUTY, pulls: []}
 
 	for (const pull of reportStore.report.pulls) {
-		const {duty} = pull.encounter
-
-		// TODO: Work out how to model "trash" pulls, to seperate this further
-		// from the fflogs-source-specific logic of eld.
-		if (duty.id === TRASH_ZONE_ID) {
-			if (trashPulls == null) {
-				trashPulls = {duty, pulls: []}
-			}
+		if (pull.encounter.key === 'TRASH') {
 			trashPulls.pulls.push(pull)
 			continue
 		}
 
+		const {duty} = pull.encounter
 		if (duty.id !== currentDuty) {
 			groups.push({duty, pulls: []})
 			currentDuty = duty.id
@@ -52,7 +51,7 @@ export function PullList({reportStore}: PullListProps) {
 		groups[groups.length - 1].pulls.push(pull)
 	}
 
-	if (trashPulls != null) {
+	if (trashPulls.pulls.length > 0) {
 		groups.push(trashPulls)
 	}
 
@@ -66,10 +65,12 @@ interface PullGroupProps {
 const PullGroup = ({group}: PullGroupProps) => (
 	<div className={styles.group}>
 		<div className={styles.groupHeader}>
-			<div
-				className={styles.banner}
-				style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
-			/>
+			{group.duty.id > 0 && (
+				<div
+					className={styles.banner}
+					style={{backgroundImage: `url(${getZoneBanner(group.duty.id)})`}}
+				/>
+			)}
 			<h2>{group.duty.name}</h2>
 		</div>
 
