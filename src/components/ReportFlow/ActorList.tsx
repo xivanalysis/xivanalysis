@@ -7,6 +7,8 @@ import {Trans} from '@lingui/react'
 import JOBS, {Role, RoleKey, ROLES} from 'data/JOBS'
 import {Actor} from 'report'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import styles from './ActorList.module.css'
+import Color from 'color'
 
 interface RoleGroupData {
 	role: Role
@@ -18,7 +20,7 @@ export interface ActorListProps {
 }
 
 export function ActorList({reportStore}: ActorListProps) {
-	const {params: {pullId}, url} = useRouteMatch<ActorListRouteParams>()
+	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
 
 	const pull = reportStore.report?.pulls.find(pull => pull.id === pullId)
 	if (pull == null) {
@@ -65,22 +67,29 @@ interface RoleGroupProps {
 	group: RoleGroupData
 }
 
-function RoleGroup({group}: RoleGroupProps) {
+function RoleGroup({group: {role, actors}}: RoleGroupProps) {
 	const {url} = useRouteMatch()
 
-	return <>
-		<h2>
-			<NormalisedMessage message={group.role.name}/>
-		</h2>
+	// tslint:disable:no-magic-numbers
+	const background = Color(role.colour).fade(0.8).toString()
+	const color = Color(role.colour).darken(0.5).toString()
+	// tslint:enable:no-magic-numbers
 
-		<ul>
-			{group.actors.map(actor => (
-				<li key={actor.id}>
-					<Link to={`${url}/${actor.id}`}>
-						{actor.name} ({actor.job})
-					</Link>
-				</li>
-			))}
-		</ul>
-	</>
+	return (
+		<div className={styles.group}>
+			<h2 style={{background, color}}>
+				<NormalisedMessage message={role.name}/>
+			</h2>
+
+			<ul>
+				{actors.map(actor => (
+					<li key={actor.id}>
+						<Link to={`${url}/${actor.id}`}>
+							{actor.name} ({actor.job})
+						</Link>
+					</li>
+				))}
+			</ul>
+		</div>
+	)
 }
