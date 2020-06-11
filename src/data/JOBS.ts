@@ -61,14 +61,15 @@ const roleData = {
 	},
 }
 
-export const ROLES = roleData as Record<keyof typeof roleData, Role>
+export type RoleKey = keyof typeof roleData
+export const ROLES = roleData as Record<RoleKey, Role>
 
 export interface Job {
 	name: MessageDescriptor
 	logType: ActorType
 	icon: string
 	colour: string
-	role: Role['id']
+	role: RoleKey
 }
 
 // Yeah I know there's lots of repetition but they're all different apis and endpoints and shit and I don't wanna pull it apart later to fix a desync
@@ -78,7 +79,7 @@ const JOBS = {
 		logType: ActorType.UNKNOWN,
 		icon: '?',
 		colour: '#767676',
-		role: ROLES.UNSUPPORTED.id,
+		role: 'UNSUPPORTED',
 	},
 
 	// Tank
@@ -87,28 +88,28 @@ const JOBS = {
 		logType: ActorType.PALADIN,
 		icon: 'pld',
 		colour: '#a8d2e6',
-		role: ROLES.TANK.id,
+		role: 'TANK',
 	},
 	WARRIOR: {
 		name: t('game.job.warrior')`Warrior`,
 		logType: ActorType.WARRIOR,
 		icon: 'war',
 		colour: '#cf2621',
-		role: ROLES.TANK.id,
+		role: 'TANK',
 	},
 	DARK_KNIGHT: {
 		name: t('game.job.dark-knight')`Dark Knight`,
 		logType: ActorType.DARK_KNIGHT,
 		icon: 'drk',
 		colour: '#d126cc',
-		role: ROLES.TANK.id,
+		role: 'TANK',
 	},
 	GUNBREAKER: {
 		name: t('game.job.gunbreaker')`Gunbreaker`,
 		logType: ActorType.GUNBREAKER,
 		icon: 'gnb',
 		colour: '#796d30',
-		role: ROLES.TANK.id,
+		role: 'TANK',
 	},
 
 	// Healer
@@ -117,21 +118,21 @@ const JOBS = {
 		logType: ActorType.WHITE_MAGE,
 		icon: 'whm',
 		colour: '#fff0dc',
-		role: ROLES.HEALER.id,
+		role: 'HEALER',
 	},
 	SCHOLAR: {
 		name: t('game.job.scholar')`Scholar`,
 		logType: ActorType.SCHOLAR,
 		icon: 'sch',
 		colour: '#8657ff',
-		role: ROLES.HEALER.id,
+		role: 'HEALER',
 	},
 	ASTROLOGIAN: {
 		name: t('game.job.astrologian')`Astrologian`,
 		logType: ActorType.ASTROLOGIAN,
 		icon: 'ast',
 		colour: '#ffe74a',
-		role: ROLES.HEALER.id,
+		role: 'HEALER',
 	},
 
 	// Melee
@@ -140,28 +141,28 @@ const JOBS = {
 		logType: ActorType.MONK,
 		icon: 'mnk',
 		colour: '#d69c00',
-		role: ROLES.MELEE.id,
+		role: 'MELEE',
 	},
 	DRAGOON: {
 		name: t('game.job.dragoon')`Dragoon`,
 		logType: ActorType.DRAGOON,
 		icon: 'drg',
 		colour: '#4164cd',
-		role: ROLES.MELEE.id,
+		role: 'MELEE',
 	},
 	NINJA: {
 		name: t('game.job.ninja')`Ninja`,
 		logType: ActorType.NINJA,
 		icon: 'nin',
 		colour: '#af1964',
-		role: ROLES.MELEE.id,
+		role: 'MELEE',
 	},
 	SAMURAI: {
 		name: t('game.job.samurai')`Samurai`,
 		logType: ActorType.SAMURAI,
 		icon: 'sam',
 		colour: '#e46d04',
-		role: ROLES.MELEE.id,
+		role: 'MELEE',
 	},
 
 	// Phys Ranged
@@ -170,21 +171,21 @@ const JOBS = {
 		logType: ActorType.BARD,
 		icon: 'brd',
 		colour: '#91ba5e',
-		role: ROLES.PHYSICAL_RANGED.id,
+		role: 'PHYSICAL_RANGED',
 	},
 	MACHINIST: {
 		name: t('game.job.machinist')`Machinist`,
 		logType: ActorType.MACHINIST,
 		icon: 'mch',
 		colour: '#6ee1d6',
-		role: ROLES.PHYSICAL_RANGED.id,
+		role: 'PHYSICAL_RANGED',
 	},
 	DANCER: {
 		name: t('game.job.dancer')`Dancer`,
 		logType: ActorType.DANCER,
 		icon: 'dnc',
 		colour: '#e2b0af',
-		role: ROLES.PHYSICAL_RANGED.id,
+		role: 'PHYSICAL_RANGED',
 	},
 
 	// Magic Ranged
@@ -193,28 +194,28 @@ const JOBS = {
 		logType: ActorType.BLACK_MAGE,
 		icon: 'blm',
 		colour: '#a579d6',
-		role: ROLES.MAGICAL_RANGED.id,
+		role: 'MAGICAL_RANGED',
 	},
 	SUMMONER: {
 		name: t('game.job.summoner')`Summoner`,
 		logType: ActorType.SUMMONER,
 		icon: 'smn',
 		colour: '#2d9b78',
-		role: ROLES.MAGICAL_RANGED.id,
+		role: 'MAGICAL_RANGED',
 	},
 	RED_MAGE: {
 		name: t('game.job.red-mage')`Red Mage`,
 		logType: ActorType.RED_MAGE,
 		icon: 'rdm',
 		colour: '#e87b7b',
-		role: ROLES.MAGICAL_RANGED.id,
+		role: 'MAGICAL_RANGED',
 	},
 	BLUE_MAGE: {
 		name: t('game.job.blue-mage')`Blue Mage`,
 		logType: ActorType.BLUE_MAGE,
 		icon: 'blu',
 		colour: '#3366ff',
-		role: ROLES.MAGICAL_RANGED.id,
+		role: 'MAGICAL_RANGED',
 	},
 }
 

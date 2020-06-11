@@ -132,7 +132,7 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = getDataBy(JOBS, 'logType', player.type)
-		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
+		const role = job? ROLES[job.role] : undefined
 		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
