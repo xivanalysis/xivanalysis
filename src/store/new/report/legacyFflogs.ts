@@ -139,9 +139,7 @@ const convertFight = (
 
 	timestamp: report.start + fight.start_time,
 	duration: fight.end_time - fight.start_time,
-	progress: fight.fightPercentage != null
-		? 100 - fight.fightPercentage / 100
-		: undefined,
+	progress: getFightProgress(fight),
 
 	encounter: {
 		key: getEncounterKey('legacyFflogs', fight.boss.toString()),
@@ -154,6 +152,19 @@ const convertFight = (
 
 	actors,
 })
+
+function getFightProgress(fight: Fight) {
+	// Always mark kills as 100% progress
+	if (fight.kill) {
+		return 100
+	}
+
+	if (fight.fightPercentage == null) {
+		return
+	}
+
+	return 100 - fight.fightPercentage / 100
+}
 
 // Build a mapping between fflogs actor types and our internal job keys
 const actorTypeMap = new Map<ActorType, JobType>()
