@@ -7,7 +7,7 @@ import {Trans} from '@lingui/react'
 import JOBS, {Role, RoleKey, ROLES} from 'data/JOBS'
 import {Actor} from 'report'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import styles from './ActorList.module.css'
+import styles from './ReportFlow.module.css'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 
@@ -57,11 +57,13 @@ export function ActorList({reportStore}: ActorListProps) {
 	const sortedGroups = [...groups.values()]
 		.sort((a, b) => a.role.id - b.role.id)
 
-	return <>
-		{sortedGroups.map(group => (
-			<RoleGroup key={group.role.id} group={group}/>
-		))}
-	</>
+	return (
+		<div className={styles.actorList}>
+			{sortedGroups.map(group => (
+				<RoleGroup key={group.role.id} group={group}/>
+			))}
+		</div>
+	)
 }
 
 interface RoleGroupProps {

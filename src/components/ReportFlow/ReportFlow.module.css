@@ -18,8 +18,18 @@
 }
 
 .group {
-	margin-top: gutter;
 	background-color: themeBackground;
+}
+
+.pullList .group,
+.actorList .group + .group {
+	margin-top: gutter;
+}
+
+.actorList .group h2 {
+	margin: 0;
+	padding: calc(0.5 * gutter) gutter;
+	font-size: 1em;
 }
 
 .groupHeader {
