@@ -218,5 +218,5 @@ const JOBS = {
 	},
 }
 
-export type JobType = keyof typeof JOBS
-export default JOBS as Record<JobType, Job>
+export type JobKey = keyof typeof JOBS
+export default JOBS as Record<JobKey, Job>

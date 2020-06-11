@@ -1,5 +1,5 @@
 import {EncounterKey} from 'data/ENCOUNTERS'
-import {JobType} from 'data/JOBS'
+import {JobKey} from 'data/JOBS'
 import {GameEdition} from 'data/PATCHES'
 import {Compute} from 'utilities'
 
@@ -127,5 +127,5 @@ export interface Actor {
 	/** Actor that controls this actor, if applicable. i.e. player pets. */
 	owner?: Actor
 	/** Combat job of the actor. */
-	job: JobType
+	job: JobKey
 }

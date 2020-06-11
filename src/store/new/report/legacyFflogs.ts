@@ -11,7 +11,7 @@ import {
 	ActorType,
 } from 'fflogs'
 import {Pull, Actor, Team} from 'report'
-import JOBS, {JobType} from 'data/JOBS'
+import JOBS, {JobKey} from 'data/JOBS'
 import {languageToEdition} from 'data/PATCHES'
 import {getEncounterKey} from 'data/ENCOUNTERS'
 
@@ -171,9 +171,9 @@ function getFightProgress(fight: Fight) {
 }
 
 // Build a mapping between fflogs actor types and our internal job keys
-const actorTypeMap = new Map<ActorType, JobType>()
+const actorTypeMap = new Map<ActorType, JobKey>()
 for (const [key, job] of Object.entries(JOBS)) {
-	actorTypeMap.set(job.logType, key as JobType)
+	actorTypeMap.set(job.logType, key as JobKey)
 }
 const convertActorType = (actorType: ActorType) =>
 	actorTypeMap.get(actorType) ?? 'UNKNOWN'
