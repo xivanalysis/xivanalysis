@@ -2,6 +2,7 @@
 declare namespace PullListModuleCssModule {
   export interface IPullListModuleCss {
     banner: string;
+    controls: string;
     duration: string;
     group: string;
     groupHeader: string;
@@ -11,6 +12,7 @@ declare namespace PullListModuleCssModule {
     messageBackground: string;
     progress: string;
     progressBar: string;
+    refresh: string;
     segmentLinkActive: string;
     success: string;
     text: string;

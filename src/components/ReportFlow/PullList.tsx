@@ -6,6 +6,8 @@ import styles from './PullList.module.css'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
+import {Checkbox, Icon} from 'semantic-ui-react'
+import {Trans} from '@lingui/react'
 
 const TRASH_DUTY: Duty = {
 	id: -1,
@@ -55,8 +57,23 @@ export function PullList({reportStore}: PullListProps) {
 		groups.push(trashPulls)
 	}
 
-	return <>{groups.map((group, index) => <PullGroup key={index} group={group}/>)}</>
-}
+	return <>
+		<div className={styles.controls}>
+			<Checkbox
+				label={(
+					<label>
+						<Trans id="core.report-flow.kills-only">Kills only</Trans>
+					</label>
+				)}
+			/>
+			<button className={styles.refresh}>
+				<Icon name="refresh"/>
+				<Trans id="core.report-flow.refresh">Refresh</Trans>
+			</button>
+		</div>
+
+		{groups.map((group, index) => <PullGroup key={index} group={group}/>)}
+	</>
 
 interface PullGroupProps {
 	group: PullGroupData

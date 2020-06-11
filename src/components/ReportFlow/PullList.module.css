@@ -5,12 +5,21 @@
 @value themeGreen from 'theme.module.css';
 @value themeRed from 'theme.module.css';
 
-.group {
-	background-color: themeBackground;
+.controls {
+	text-align: right;
 }
 
-.group + .group {
+.refresh {
+	outline: none;
+	border: none;
+	margin-left: gutter;
+	background: none;
+	cursor: pointer;
+}
+
+.group {
 	margin-top: gutter;
+	background-color: themeBackground;
 }
 
 .groupHeader {
