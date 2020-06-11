@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useContext, useCallback} from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
@@ -6,8 +6,10 @@ import styles from './PullList.module.css'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
-import {Checkbox, Icon} from 'semantic-ui-react'
+import {Checkbox, Icon, CheckboxProps} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
+import {StoreContext} from 'store'
+import {observer} from 'mobx-react'
 
 const TRASH_DUTY: Duty = {
 	id: -1,
@@ -17,13 +19,22 @@ const TRASH_DUTY: Duty = {
 interface PullGroupData {
 	duty: Duty
 	pulls: Pull[]
+	key: React.Key
 }
 
 export interface PullListProps {
 	reportStore: ReportStore
 }
 
-export function PullList({reportStore}: PullListProps) {
+export const PullList = observer(function PullList({reportStore}: PullListProps) {
+	const {settingsStore} = useContext(StoreContext)
+
+	const onToggleKillsOnly = useCallback(
+		(_, data: CheckboxProps) =>
+			settingsStore.setViewKillsOnly(data.checked ?? false),
+		[settingsStore],
+	)
+
 	if (reportStore.report == null) {
 		return null
 	}
@@ -36,7 +47,11 @@ export function PullList({reportStore}: PullListProps) {
 	const groups: PullGroupData[] = []
 	let currentDuty: Duty['id'] | undefined
 
-	const trashPulls: PullGroupData = {duty: TRASH_DUTY, pulls: []}
+	const trashPulls: PullGroupData = {
+		duty: TRASH_DUTY,
+		pulls: [],
+		key: 'trash',
+	}
 
 	for (const pull of reportStore.report.pulls) {
 		if (pull.encounter.key === 'TRASH') {
@@ -46,16 +61,22 @@ export function PullList({reportStore}: PullListProps) {
 
 		const {duty} = pull.encounter
 		if (duty.id !== currentDuty) {
-			groups.push({duty, pulls: []})
+			groups.push({duty, pulls: [], key: pull.id})
 			currentDuty = duty.id
+		}
+
+		if (settingsStore.killsOnly && (pull.progress ?? 0) < 100) {
+			continue
 		}
 
 		groups[groups.length - 1].pulls.push(pull)
 	}
 
-	if (trashPulls.pulls.length > 0) {
+	if (!settingsStore.killsOnly) {
 		groups.push(trashPulls)
 	}
+
+	const filteredGroups = groups.filter(group => group.pulls.length > 0)
 
 	return <>
 		<div className={styles.controls}>
@@ -65,6 +86,8 @@ export function PullList({reportStore}: PullListProps) {
 						<Trans id="core.report-flow.kills-only">Kills only</Trans>
 					</label>
 				)}
+				checked={settingsStore.killsOnly}
+				onChange={onToggleKillsOnly}
 			/>
 			<button className={styles.refresh}>
 				<Icon name="refresh"/>
@@ -72,8 +95,9 @@ export function PullList({reportStore}: PullListProps) {
 			</button>
 		</div>
 
-		{groups.map((group, index) => <PullGroup key={index} group={group}/>)}
+		{filteredGroups.map(group => <PullGroup key={group.key} group={group}/>)}
 	</>
+})
 
 interface PullGroupProps {
 	group: PullGroupData
