@@ -9,6 +9,7 @@ import {Actor} from 'report'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import styles from './ActorList.module.css'
 import Color from 'color'
+import JobIcon from 'components/ui/JobIcon'
 
 interface RoleGroupData {
 	role: Role
@@ -81,15 +82,16 @@ function RoleGroup({group: {role, actors}}: RoleGroupProps) {
 				<NormalisedMessage message={role.name}/>
 			</h2>
 
-			<ul>
+			<div className={styles.links}>
 				{actors.map(actor => (
-					<li key={actor.id}>
-						<Link to={`${url}/${actor.id}`}>
-							{actor.name} ({actor.job})
-						</Link>
-					</li>
+					<Link to={`${url}/${actor.id}`} className={styles.link}>
+						<span className={styles.text}>
+							<JobIcon job={JOBS[actor.job]}/>
+							{actor.name}
+						</span>
+					</Link>
 				))}
-			</ul>
+			</div>
 		</div>
 	)
 }

@@ -3,6 +3,10 @@ declare namespace ActorListModuleCssModule {
   export interface IActorListModuleCss {
     group: string;
     gutter: string;
+    link: string;
+    links: string;
+    segmentLinkActive: string;
+    text: string;
     themeBackground: string;
   }
 }
