@@ -1,4 +1,4 @@
-import {ReportStore} from './base'
+import {ReportStore, FetchOptions} from './base'
 import {
 	reportStore as legacyReportStore,
 	Report as LegacyReport,
@@ -13,6 +13,7 @@ import {
 import {Pull, Actor, Team} from 'report'
 import JOBS, {JobType} from 'data/JOBS'
 import {languageToEdition} from 'data/PATCHES'
+import {getEncounterKey} from 'data/ENCOUNTERS'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -58,9 +59,17 @@ export class LegacyFflogsReportStore extends ReportStore {
 		}
 	}
 
-	async fetchReport(code: string) {
+	fetchReport(code: string) {
 		// Pass through directly to the legacy store. It handles caching for us.
-		await legacyReportStore.fetchReportIfNeeded(code)
+		legacyReportStore.fetchReportIfNeeded(code)
+	}
+
+	fetchPulls(options?: FetchOptions) {
+		// `fetchReport` gets the full set of pulls for us, only fire fetches
+		// if bypassing the cache.
+		if (options?.bypassCache !== true) { return }
+
+		legacyReportStore.refreshReport()
 	}
 }
 
@@ -125,7 +134,6 @@ const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => 
 	...overrides,
 })
 
-// TODO: Should this be using getCorrectedFight?
 const convertFight = (
 	report: LegacyReport,
 	fight: Fight,
@@ -135,8 +143,10 @@ const convertFight = (
 
 	timestamp: report.start + fight.start_time,
 	duration: fight.end_time - fight.start_time,
+	progress: getFightProgress(fight),
 
 	encounter: {
+		key: getEncounterKey('legacyFflogs', fight.boss.toString()),
 		name: fight.name,
 		duty: {
 			id: fight.zoneID,
@@ -146,6 +156,19 @@ const convertFight = (
 
 	actors,
 })
+
+function getFightProgress(fight: Fight) {
+	// Always mark kills as 100% progress
+	if (fight.kill) {
+		return 100
+	}
+
+	if (fight.fightPercentage == null) {
+		return
+	}
+
+	return 100 - fight.fightPercentage / 100
+}
 
 // Build a mapping between fflogs actor types and our internal job keys
 const actorTypeMap = new Map<ActorType, JobType>()

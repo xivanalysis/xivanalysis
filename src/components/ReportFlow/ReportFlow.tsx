@@ -6,12 +6,12 @@ import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
 import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
-import {getZoneBanner} from 'data/BOSSES'
 import {Report} from 'report'
 import {getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
 import {Trans} from '@lingui/react'
+import {getDutyBanner} from 'data/ENCOUNTERS'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -103,7 +103,7 @@ function PullCrumb({report}: CrumbProps) {
 	const subtitle = pull?.duration && `(${formatDuration(pull.duration)})`
 
 	const banner = encounter?.duty.id != null
-		? getZoneBanner(encounter.duty.id)
+		? getDutyBanner(encounter.duty.id)
 		: undefined
 
 	return <>
