@@ -56,7 +56,7 @@
 	filter: blur(5px);
 }
 
-.banner:after {
+.banner::after {
 	content: '';
 	position: absolute;
 	top: 0;
@@ -73,7 +73,6 @@
 }
 
 .link {
-	/* position: relative; */
 	display: flex;
 	align-items: center;
 	padding: 0 gutter;

@@ -1,4 +1,5 @@
 import {ReportSource} from 'report'
+import _ from 'lodash'
 
 export interface Encounter {
 	ids?: Partial<Record<ReportSource, string>>
@@ -22,13 +23,8 @@ export const ENCOUNTERS = ensureEncounters({
 
 export type EncounterKey = keyof typeof ENCOUNTERS
 
-export function getEncounterKey(source: ReportSource, id: string) {
-	for (const [key, encounter] of Object.entries(ENCOUNTERS)) {
-		if (encounter.ids[source] === id) {
-			return key as EncounterKey
-		}
-	}
-}
+export const getEncounterKey = (source: ReportSource, id: string) =>
+	_.findKey(ENCOUNTERS, encounter => encounter.ids[source] === id) as EncounterKey
 
 // Duties are in this file alongside encounters due to the heavily related nature
 // of the data they represent. If this file gets too unweildy, split.

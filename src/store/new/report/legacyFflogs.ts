@@ -52,11 +52,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 
 			name: report.title,
 			pulls: report.fights.map(
-				fight => convertFight(
-					report,
-					fight,
-					actorsByFight.get(fight.id) ?? [],
-				),
+				fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
 			),
 
 			meta: {...report, source: 'legacyFflogs' as const},
