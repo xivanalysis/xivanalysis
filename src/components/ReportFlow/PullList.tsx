@@ -35,6 +35,11 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 		[settingsStore],
 	)
 
+	const onRefresh = useCallback(
+		() => reportStore.fetchPulls({bypassCache: true}),
+		[reportStore],
+	)
+
 	if (reportStore.report == null) {
 		return null
 	}
@@ -89,7 +94,7 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 				checked={settingsStore.killsOnly}
 				onChange={onToggleKillsOnly}
 			/>
-			<button className={styles.refresh}>
+			<button className={styles.refresh} onClick={onRefresh}>
 				<Icon name="refresh"/>
 				<Trans id="core.report-flow.refresh">Refresh</Trans>
 			</button>

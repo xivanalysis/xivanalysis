@@ -1,4 +1,4 @@
-import {ReportStore} from './base'
+import {ReportStore, FetchOptions} from './base'
 import {
 	reportStore as legacyReportStore,
 	Report as LegacyReport,
@@ -63,9 +63,17 @@ export class LegacyFflogsReportStore extends ReportStore {
 		}
 	}
 
-	async fetchReport(code: string) {
+	fetchReport(code: string) {
 		// Pass through directly to the legacy store. It handles caching for us.
-		await legacyReportStore.fetchReportIfNeeded(code)
+		legacyReportStore.fetchReportIfNeeded(code)
+	}
+
+	fetchPulls(options?: FetchOptions) {
+		// `fetchReport` gets the full set of pulls for us, only fire fetches
+		// if bypassing the cache.
+		if (options?.bypassCache !== true) { return }
+
+		legacyReportStore.refreshReport()
 	}
 }
 
