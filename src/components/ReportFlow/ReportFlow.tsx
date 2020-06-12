@@ -47,7 +47,6 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		)
 	}
 
-	// TODO: Refresh button - avoid on analyse? dunno
 	return <>
 		<Route path={path}>
 			<ReportCrumb report={reportStore.report}/>

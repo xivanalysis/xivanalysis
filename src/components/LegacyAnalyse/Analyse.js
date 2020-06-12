@@ -115,11 +115,6 @@ class Analyse extends Component {
 		})
 	}
 
-	getReportUrl() {
-		const {report, fight, combatant} = this.props
-		return `https://www.fflogs.com/reports/${report.code}#fight=${fight}&source=${combatant}`
-	}
-
 	render() {
 		const report = this.props.report
 
