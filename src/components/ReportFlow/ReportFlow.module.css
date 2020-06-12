@@ -104,6 +104,7 @@
 }
 
 .meta {
+	flex-shrink: 0;
 	padding-left: gutter;
 	opacity: .5;
 }

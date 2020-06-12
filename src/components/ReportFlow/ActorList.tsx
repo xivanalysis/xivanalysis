@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
@@ -10,6 +10,7 @@ import NormalisedMessage from 'components/ui/NormalisedMessage'
 import styles from './ReportFlow.module.css'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
+import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 
 interface RoleGroupData {
 	role: Role
@@ -96,12 +97,32 @@ interface ActorLinkProps {
 function ActorLink({actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
+	const job = JOBS[actor.job]
+	// TODO: THIS WILL NEED TO BE CHANGED ONCE AVAILABLE MODULES IS USING JOB KEYS
+	const jobMeta = AVAILABLE_MODULES.JOBS[job.logType]
+
+	let supportedPatches: ReactNode
+	if (jobMeta?.supportedPatches != null) {
+		const {from, to = from} = jobMeta.supportedPatches
+		supportedPatches = (
+			<Trans id="core.report-flow.supported-patches">
+				Patch {from}{from !== to ? `-${to}` : ''}
+			</Trans>
+		)
+	}
+
 	return (
 		<Link key={actor.id} to={`${url}/${actor.id}`} className={styles.link}>
 			<span className={styles.text}>
-				<JobIcon job={JOBS[actor.job]}/>
+				<JobIcon job={job}/>
 				{actor.name}
 			</span>
+
+			{supportedPatches && (
+				<span className={styles.meta}>
+					{supportedPatches}
+				</span>
+			)}
 		</Link>
 	)
 }
