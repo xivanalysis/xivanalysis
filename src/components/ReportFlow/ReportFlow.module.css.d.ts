@@ -4,13 +4,13 @@ declare namespace ReportFlowModuleCssModule {
     actorList: string;
     banner: string;
     controls: string;
-    duration: string;
     group: string;
     groupHeader: string;
     gutter: string;
     link: string;
     links: string;
     messageBackground: string;
+    meta: string;
     progress: string;
     progressBar: string;
     pullList: string;

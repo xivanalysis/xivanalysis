@@ -103,7 +103,7 @@
 	text-overflow: ellipsis;
 }
 
-.duration {
+.meta {
 	padding-left: gutter;
 	opacity: .5;
 }

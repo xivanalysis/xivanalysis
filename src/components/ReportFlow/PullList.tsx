@@ -144,7 +144,7 @@ function PullLink({pull}: PullLinkProps) {
 				{pull.encounter.name}
 			</span>
 
-			<span className={styles.duration}>
+			<span className={styles.meta}>
 				{formatDuration(pull.duration)}
 			</span>
 

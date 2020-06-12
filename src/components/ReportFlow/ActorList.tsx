@@ -71,8 +71,6 @@ interface RoleGroupProps {
 }
 
 function RoleGroup({group: {role, actors}}: RoleGroupProps) {
-	const {url} = useRouteMatch()
-
 	// tslint:disable:no-magic-numbers
 	const background = Color(role.colour).fade(0.8).toString()
 	const color = Color(role.colour).darken(0.5).toString()
@@ -85,15 +83,25 @@ function RoleGroup({group: {role, actors}}: RoleGroupProps) {
 			</h2>
 
 			<div className={styles.links}>
-				{actors.map(actor => (
-					<Link to={`${url}/${actor.id}`} className={styles.link}>
-						<span className={styles.text}>
-							<JobIcon job={JOBS[actor.job]}/>
-							{actor.name}
-						</span>
-					</Link>
-				))}
+				{actors.map(actor => <ActorLink key={actor.id} actor={actor}/>)}
 			</div>
 		</div>
+	)
+}
+
+interface ActorLinkProps {
+	actor: Actor
+}
+
+function ActorLink({actor}: ActorLinkProps) {
+	const {url} = useRouteMatch()
+
+	return (
+		<Link key={actor.id} to={`${url}/${actor.id}`} className={styles.link}>
+			<span className={styles.text}>
+				<JobIcon job={JOBS[actor.job]}/>
+				{actor.name}
+			</span>
+		</Link>
 	)
 }
