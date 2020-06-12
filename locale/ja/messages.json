@@ -447,7 +447,7 @@
   "drk.resourceanalyzer.blackestnight.content": "",
   "drk.resourceanalyzer.blackestnight.why": "",
   "drk.resourceanalyzer.title": "",
-  "drk.resourceanalyzer.wastedblood.content": "",
+  "drk.resourceanalyzer.wastedblood.content": "ブラッドゲージは消費することによって<0/>などの強力なウェポンスキルを実行することが出来ます。ブラックブラッドがブラッドゲージの上限である100を超える前に必ず消費しましょう。",
   "drk.resourceanalyzer.wastedblood.why": "",
   "drk.resourceanalyzer.wastedmp.content": "MPを消費することによって強力な与ダメージと与ダメージUPのバフを得られる<0/>と、強力な被ダメージ軽減効果を持つ<1/>を使うことが出来ます。\n自然回復やメインコンボスキルによるMP回復の恩恵を必ず得られるようにするために、常にMPを消費してください。",
   "drk.resourceanalyzer.wastedmp.why": "",
