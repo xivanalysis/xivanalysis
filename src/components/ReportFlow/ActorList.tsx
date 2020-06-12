@@ -37,7 +37,7 @@ export function ActorList({reportStore}: ActorListProps) {
 	}
 
 	// Ensure actors are up to date
-	reportStore.fetchActors(pull)
+	reportStore.fetchActors(pullId)
 
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)

@@ -13,5 +13,5 @@ export abstract class ReportStore {
 	abstract readonly report?: Report
 
 	fetchPulls(options?: FetchOptions) {}
-	fetchActors(pull: Pull, options?: FetchOptions) {} // pull id?
+	fetchActors(pullId: Pull['id'], options?: FetchOptions) {}
 }
