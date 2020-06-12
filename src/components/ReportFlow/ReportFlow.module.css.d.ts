@@ -7,6 +7,7 @@ declare namespace ReportFlowModuleCssModule {
     group: string;
     groupHeader: string;
     gutter: string;
+    icon: string;
     link: string;
     links: string;
     messageBackground: string;
@@ -15,12 +16,14 @@ declare namespace ReportFlowModuleCssModule {
     progressBar: string;
     pullList: string;
     refresh: string;
+    reportLink: string;
     segmentLinkActive: string;
     success: string;
     text: string;
     themeBackground: string;
     themeGreen: string;
     themeRed: string;
+    themeText: string;
   }
 }
 

@@ -4,6 +4,7 @@
 @value themeBackground from 'theme.module.css';
 @value themeGreen from 'theme.module.css';
 @value themeRed from 'theme.module.css';
+@value themeText from 'theme.module.css';
 
 .controls {
 	text-align: right;
@@ -126,4 +127,21 @@
 
 .success {
 	background: themeGreen;
+}
+
+.reportLink {
+	display: block;
+	color: themeText;
+	height: 40px;
+}
+.reportLink:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.reportLink .icon {
+	display: inline-block;
+	margin-right: calc(0.5 * gutter);
+	height: 30px;
+	vertical-align: middle;
 }

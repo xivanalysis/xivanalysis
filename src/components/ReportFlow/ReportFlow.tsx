@@ -5,13 +5,14 @@ import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
-import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
+import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/GlobalSidebar'
 import {Report} from 'report'
 import {getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
 import {Trans} from '@lingui/react'
 import {getDutyBanner} from 'data/ENCOUNTERS'
+import styles from './ReportFlow.module.css'
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -138,7 +139,25 @@ function ReportLink({reportStore}: ReportLinkProps) {
 
 	const link = reportStore.getReportLink(pullId, actorId)
 
-	return <>
-		<pre>{JSON.stringify(link, undefined, 2)}</pre>
-	</>
+	if (link == null) {
+		return null
+	}
+
+	return (
+		<ReportLinkContent>
+			<a
+				href={link.url}
+				target="_blank"
+				rel="noopener noreferrer"
+				className={styles.reportLink}
+			>
+				{link.icon && (
+					<img src={link.icon} alt={link.name} className={styles.icon}/>
+				)}
+				<Trans>
+					View report on {link.name}
+				</Trans>
+			</a>
+		</ReportLinkContent>
+	)
 }
