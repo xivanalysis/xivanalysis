@@ -14,6 +14,8 @@ import {Pull, Actor, Team} from 'report'
 import JOBS, {JobKey} from 'data/JOBS'
 import {languageToEdition} from 'data/PATCHES'
 import {getEncounterKey} from 'data/ENCOUNTERS'
+import {isDefined} from 'utilities'
+import fflogsIcon from './fflogs.png'
 
 // Some actor types represent NPCs, but show up in the otherwise player-controlled "friendlies" array.
 const NPC_FRIENDLY_TYPES: ActorType[] = [
@@ -70,6 +72,29 @@ export class LegacyFflogsReportStore extends ReportStore {
 		if (options?.bypassCache !== true) { return }
 
 		legacyReportStore.refreshReport()
+	}
+
+	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {
+		if (this.report == null) {
+			return
+		}
+
+		let url = `https://www.fflogs.com/reports/${this.report.meta.code}`
+
+		const params = [
+			pullId && `fight=${pullId}`,
+			actorId && `source=${actorId}`,
+		].filter(isDefined)
+
+		if (params.length > 0) {
+			url = `${url}#${params.join('&')}`
+		}
+
+		return {
+			icon: fflogsIcon,
+			name: 'FF Logs',
+			url,
+		}
 	}
 }
 

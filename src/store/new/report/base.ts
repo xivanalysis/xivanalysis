@@ -1,7 +1,13 @@
-import {Report, Pull} from 'report'
+import {Report, Pull, Actor} from 'report'
 
 export interface FetchOptions {
 	bypassCache?: boolean
+}
+
+export interface ReportLink {
+	icon?: string
+	name: string
+	url: string
 }
 
 /**
@@ -14,4 +20,9 @@ export abstract class ReportStore {
 
 	fetchPulls(options?: FetchOptions) {}
 	fetchActors(pullId: Pull['id'], options?: FetchOptions) {}
+
+	getReportLink(
+		pullId?: Pull['id'],
+		actorId?: Actor['id'],
+	): ReportLink | undefined { return }
 }

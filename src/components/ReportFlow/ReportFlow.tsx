@@ -22,6 +22,8 @@ export interface AnalyseRouteParams {
 	actorId: string
 }
 
+type ReportListRouteParams = Partial<AnalyseRouteParams>
+
 export interface ReportFlowProps {
 	reportStore: ReportStore
 }
@@ -56,6 +58,10 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		</Route>
 		<Route path={`${path}/:pullId/:actorId`}>
 			<ActorCrumb report={reportStore.report}/>
+		</Route>
+
+		<Route path={`${path}/:pullId?/:actorId?`}>
+			<ReportLink reportStore={reportStore}/>
 		</Route>
 
 		<Switch>
@@ -121,4 +127,18 @@ function ActorCrumb({report}: CrumbProps) {
 		?.name
 
 	return <Breadcrumb title={name ?? 'Unknown'}/>
+}
+
+interface ReportLinkProps {
+	reportStore: ReportStore
+}
+
+function ReportLink({reportStore}: ReportLinkProps) {
+	const {pullId, actorId} = useParams<ReportListRouteParams>()
+
+	const link = reportStore.getReportLink(pullId, actorId)
+
+	return <>
+		<pre>{JSON.stringify(link, undefined, 2)}</pre>
+	</>
 }
