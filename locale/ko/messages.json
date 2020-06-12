@@ -289,6 +289,8 @@
   "core.report-flow.pull-not-found": "",
   "core.report-flow.refresh": "",
   "core.report-flow.report-not-found": "",
+  "core.report-flow.supported-patches": "",
+  "core.report-flow.view-report": "",
   "core.role.developer": "개발자",
   "core.role.maintainer": "관리자",
   "core.role.theorycraft": "이론",

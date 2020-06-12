@@ -154,7 +154,7 @@ function ReportLink({reportStore}: ReportLinkProps) {
 				{link.icon && (
 					<img src={link.icon} alt={link.name} className={styles.icon}/>
 				)}
-				<Trans>
+				<Trans id="core.report-flow.view-report">
 					View report on {link.name}
 				</Trans>
 			</a>
