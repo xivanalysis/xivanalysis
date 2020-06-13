@@ -12,9 +12,18 @@ export const legacyFflogsSearchHandlers: SearchHandler[] = [
 	 */
 	{
 		regexp: /^(?:.*fflogs\.com\/reports\/)?(?<code>(?:a:)?[a-zA-Z0-9]{16})\/?(?:#(?=(?:.*fight=(?<fight>[^&]*))?)(?=(?:.*source=(?<source>[^&]*))?).*)?$/,
-		handler: ({code, fight, source}) => ({
-			valid: true,
-			path: `/${code}${buildReportFlowPath(fight, source)}`,
-		}),
+		handler: ({code, fight, source}) => {
+			if (fight === 'last') {
+				return {
+					valid: true,
+					path: `/last/${code}/${source ?? ''}`,
+				}
+			}
+
+			return {
+				valid: true,
+				path: `/${code}${buildReportFlowPath(fight, source)}`,
+			}
+		},
 	},
 ]

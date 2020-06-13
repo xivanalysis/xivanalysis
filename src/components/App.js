@@ -15,7 +15,7 @@ import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
 import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
-import LastFightRedirect from './LastFightRedirect'
+// import LastFightRedirect from './LastFightRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
@@ -121,7 +121,6 @@ class App extends Component {
 
 						<Switch>
 							<Route exact path="/" component={Home}/>
-							<Route path="/:section/:code/last/:combatant*" component={LastFightRedirect}/>
 							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
 							<Route path="/find/:code/:fight?" component={Find}/>
 							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>

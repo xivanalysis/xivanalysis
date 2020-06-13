@@ -2,12 +2,18 @@ import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
 import {LegacyFflogsReportStore} from './store'
 import {observer} from 'mobx-react'
-import {ReportFlow} from 'components/ReportFlow'
+import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
 import {ReportLoader} from 'components/ui/SharedLoaders'
+import {ReportStore} from 'reportSource'
+import _ from 'lodash'
 
-interface RouteParams {
+interface WithCodeParams {
 	code: string
+}
+
+interface LastFightRedirectParams extends WithCodeParams {
+	source?: string
 }
 
 /**
@@ -15,19 +21,37 @@ interface RouteParams {
  * This should be removed once migration away from the legacy report store is complete.
  */
 export function LegacyFflogs() {
-	const {path} = useRouteMatch()
+	const {path, url} = useRouteMatch()
 	return (
 		<Switch>
 			{/* Can't do anything without a report code, redirect to the home page */}
 			<Redirect path={path} exact to="/"/>
 
-			<Route path={`${path}/:code`}><WithCode/></Route>
+			<Route path={`${path}/last/:code/:source?`}>
+				<WithReport Component={LastFightRedirect} baseUrl={url}/>
+			</Route>
+
+			<Route path={`${path}/:code`}>
+				<WithReport Component={ReportFlow} baseUrl={url}/>
+			</Route>
 		</Switch>
 	)
 }
 
-const WithCode = observer(function WithCode() {
-	const {code} = useParams<RouteParams>()
+interface WithReportComponentProps {
+	reportStore: ReportStore
+	baseUrl: string
+}
+
+interface WithReportProps {
+	Component: React.ComponentType<WithReportComponentProps>
+	baseUrl: string
+}
+
+const WithReport = observer(function WithCode(
+	{Component, baseUrl}: WithReportProps,
+) {
+	const {code} = useParams<WithCodeParams>()
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
@@ -38,5 +62,14 @@ const WithCode = observer(function WithCode() {
 		return <ReportLoader/>
 	}
 
-	return <ReportFlow reportStore={reportStore}/>
+	return <Component reportStore={reportStore} baseUrl={baseUrl}/>
 })
+
+function LastFightRedirect({reportStore, baseUrl}: WithReportComponentProps) {
+	const {code, source} = useParams<LastFightRedirectParams>()
+
+	const lastPull = _.last(reportStore.report?.pulls)?.id
+	const path = `${baseUrl}/${code}${buildReportFlowPath(lastPull, source)}`
+
+	return <Redirect to={path}/>
+}
