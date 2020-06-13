@@ -87,10 +87,12 @@ export function ActorList({reportStore}: ActorListProps) {
 					&& UNSUPPORTED_ROLES.includes(group.role)
 				if (showWarning) { warningDisplayed = true }
 
-				return <>
-					{showWarning && <UnsupportedWarning/>}
-					<RoleGroup key={group.role.id} group={group}/>
-				</>
+				return (
+					<React.Fragment key={group.role.id}>
+						{showWarning && <UnsupportedWarning/>}
+						<RoleGroup group={group}/>
+					</React.Fragment>
+				)
 			})}
 		</div>
 	)
