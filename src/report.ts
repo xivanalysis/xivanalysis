@@ -20,7 +20,7 @@ type ReportMetaUnion<S extends keyof ReportMetaRepository> =
 export type ReportMeta = Compute<ReportMetaUnion<keyof ReportMetaRepository>>
 
 /** Union of registered report sources. */
-export type ReportSource = keyof ReportMetaRepository
+export type ReportMetaKey = keyof ReportMetaRepository
 
 /**
  * Type representation of a report. Reports provide metadata for a session of
