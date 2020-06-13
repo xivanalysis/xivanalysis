@@ -88,7 +88,7 @@ Options.propTypes = {
 export const ReportLinkContent = observer(({children}) => {
 	const {sidebarStore: {reportLinkRef}} = useContext(StoreContext)
 
-	if (reportLinkRef == null) {
+	if (reportLinkRef?.current == null) {
 		return null
 	}
 
