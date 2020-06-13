@@ -1,4 +1,5 @@
 import classNames from 'classnames'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {useRef, useEffect, useContext} from 'react'
 import ReactDOM from 'react-dom'
@@ -84,7 +85,7 @@ Options.propTypes = {
 	]),
 }
 
-export function ReportLinkContent({children}) {
+export const ReportLinkContent = observer(({children}) => {
 	const {sidebarStore: {reportLinkRef}} = useContext(StoreContext)
 
 	if (reportLinkRef == null) {
@@ -95,4 +96,4 @@ export function ReportLinkContent({children}) {
 		children,
 		reportLinkRef.current,
 	)
-}
+})
