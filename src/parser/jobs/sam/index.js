@@ -35,6 +35,12 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-6-9'),
+		Changes: () => <>
+			Added a visual history of Higanbana that shows when and on what the dot was applied to and clipping
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2020-5-14'),
 		Changes: () => <>
 			Updated feedback on Samurai Sen usage, also updated the header with text guides
