@@ -14,6 +14,17 @@ import {Trans} from '@lingui/react'
 import {getDutyBanner} from 'data/ENCOUNTERS'
 import styles from './ReportFlow.module.css'
 
+export function buildReportFlowPath(pullId?: string, actorId?: string) {
+	let path = ''
+	if (pullId != null) {
+		path += `/${pullId}`
+		if (actorId != null) {
+			path += `/${actorId}`
+		}
+	}
+	return path
+}
+
 export interface ActorListRouteParams {
 	pullId: string
 }
