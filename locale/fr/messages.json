@@ -285,6 +285,8 @@
   "core.overheal.rule.name": "Éviter l'overheal",
   "core.overheal.suggestion.content": "Évitez de soigner votre équipe plus que nécessaire. Réduisez le nombre de soins inutiles et coordonnez-vous avec votre co-soigneur pour planifier efficacement les ressources utilisez.",
   "core.overheal.suggestion.why": "Vous un surplus de heal de {0}%",
+  "core.report-flow.job-unsupported.description": "",
+  "core.report-flow.job-unsupported.title": "",
   "core.report-flow.kills-only": "",
   "core.report-flow.pull-not-found": "",
   "core.report-flow.refresh": "",
