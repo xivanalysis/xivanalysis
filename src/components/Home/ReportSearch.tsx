@@ -18,6 +18,7 @@ type ParseResult =
 
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
 
+// TODO: This will need to be refactored and generalised when we ever support more than one primary report source
 const INPUT_EXPRESSIONS = [
 	/**
 	 * FF Logs
@@ -35,7 +36,7 @@ const INPUT_EXPRESSIONS = [
 	 * /find/1234567890abcdef/1/
 	 * /analyse/1234567890abcdef/1/1/
 	 */
-	/\/(?:analyse|find)\/(?<code>(?:a:)?[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
+	/\/(?:analyse|find|fflogs)\/(?<code>(?:a:)?[a-zA-Z0-9]{16})(?:\/(?<fight>[^\/]+)(?:\/(?<player>[^\/]+))?)?/,
 
 	/**
 	 * xivrdps
@@ -104,14 +105,13 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 	}
 
 	private goToReport({code, fight, player}: ReportSpecifier) {
-		let url = `/${code}`
+		let url = `/fflogs/${code}`
 		if (fight) {
 			url += `/${fight}`
 			if (player) {
 				url += `/${player}`
 			}
 		}
-		url = ((fight && player)? 'analyse' : 'find') + url
 
 		this.props.history.push(url)
 	}
