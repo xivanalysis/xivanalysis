@@ -4,7 +4,7 @@ import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {getDataBy} from 'data'
-import JOBS, {Role, ROLES} from 'data/JOBS'
+import JOBS, {Role, ROLES, RoleKey} from 'data/JOBS'
 import {languageToEdition, PatchNumber, patchSupported} from 'data/PATCHES'
 import * as Errors from 'errors'
 import {Actor, ActorType} from 'fflogs'
@@ -53,31 +53,31 @@ class CombatantList extends React.Component<Props> {
 				return groups
 			}
 
-			const role = this.findRole(type)
+			const role = ROLES[this.findRole(type)]
 
-			if (!groups[role]) {
-				groups[role] = []
+			if (!groups[role.id]) {
+				groups[role.id] = []
 			}
 
-			groups[role].push(friendly)
+			groups[role.id].push(friendly)
 
 			return groups
 		}, [] as Actor[][])
 	}
 
-	findRole(type: ActorType): Role['id'] {
+	findRole(type: ActorType): RoleKey {
 		const jobMeta = AVAILABLE_MODULES.JOBS[type]
 
 		// If we don't have any meta for the job, shortcut with UNSUPPORTED
 		if (!jobMeta) {
-			return ROLES.UNSUPPORTED.id
+			return 'UNSUPPORTED'
 		}
 
 		const {supportedPatches} = jobMeta
 
 		// If there's no supported patches, shortcut with UNSUPPORTED
 		if (!supportedPatches) {
-			return ROLES.UNSUPPORTED.id
+			return 'UNSUPPORTED'
 		}
 
 		// Get patch suport data, and check if it's outdated
@@ -85,7 +85,7 @@ class CombatantList extends React.Component<Props> {
 		const from = supportedPatches.from as PatchNumber
 		const to = (supportedPatches.to as PatchNumber) || from
 		if (!patchSupported(languageToEdition(lang), from, to, start / 1000)) {
-			return ROLES.OUTDATED.id
+			return 'OUTDATED'
 		}
 
 		// We got this far - must support it. Return the job's in-game role.

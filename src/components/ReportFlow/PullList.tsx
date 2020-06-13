@@ -2,7 +2,7 @@ import React, {useContext, useCallback} from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
-import styles from './PullList.module.css'
+import styles from './ReportFlow.module.css'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
 import {getDutyBanner} from 'data/ENCOUNTERS'
@@ -83,25 +83,27 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 
 	const filteredGroups = groups.filter(group => group.pulls.length > 0)
 
-	return <>
-		<div className={styles.controls}>
-			<Checkbox
-				label={(
-					<label>
-						<Trans id="core.report-flow.kills-only">Kills only</Trans>
-					</label>
-				)}
-				checked={settingsStore.killsOnly}
-				onChange={onToggleKillsOnly}
-			/>
-			<button className={styles.refresh} onClick={onRefresh}>
-				<Icon name="refresh"/>
-				<Trans id="core.report-flow.refresh">Refresh</Trans>
-			</button>
-		</div>
+	return (
+		<div className={styles.pullList}>
+			<div className={styles.controls}>
+				<Checkbox
+					label={(
+						<label>
+							<Trans id="core.report-flow.kills-only">Kills only</Trans>
+						</label>
+					)}
+					checked={settingsStore.killsOnly}
+					onChange={onToggleKillsOnly}
+				/>
+				<button className={styles.refresh} onClick={onRefresh}>
+					<Icon name="refresh"/>
+					<Trans id="core.report-flow.refresh">Refresh</Trans>
+				</button>
+			</div>
 
-		{filteredGroups.map(group => <PullGroup key={group.key} group={group}/>)}
-	</>
+			{filteredGroups.map(group => <PullGroup key={group.key} group={group}/>)}
+		</div>
+	)
 })
 
 interface PullGroupProps {
@@ -142,7 +144,7 @@ function PullLink({pull}: PullLinkProps) {
 				{pull.encounter.name}
 			</span>
 
-			<span className={styles.duration}>
+			<span className={styles.meta}>
 				{formatDuration(pull.duration)}
 			</span>
 

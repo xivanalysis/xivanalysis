@@ -115,11 +115,6 @@ class Analyse extends Component {
 		})
 	}
 
-	getReportUrl() {
-		const {report, fight, combatant} = this.props
-		return `https://www.fflogs.com/reports/${report.code}#fight=${fight}&source=${combatant}`
-	}
-
 	render() {
 		const report = this.props.report
 
@@ -132,7 +127,7 @@ class Analyse extends Component {
 		// Report's done, build output
 		const player = report.friendlies.find(friend => friend.id === this.combatantId)
 		const job = getDataBy(JOBS, 'logType', player.type)
-		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
+		const role = job? ROLES[job.role] : undefined
 		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
