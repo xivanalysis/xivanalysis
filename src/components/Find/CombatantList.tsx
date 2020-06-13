@@ -182,7 +182,7 @@ class CombatantList extends React.Component<Props> {
 		return (
 			<List.Item
 				as={Link}
-				to={`/analyse/${report.code}/${currentFight}/${friend.id}/`}
+				to={`/analyse/${report.code}/${currentFight}/${friend.id}`}
 				className={styles.friendLink}
 			>
 				{job && <JobIcon job={job}/>}

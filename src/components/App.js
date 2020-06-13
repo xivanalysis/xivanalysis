@@ -1,7 +1,8 @@
 import classnames from 'classnames'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Link, Route, Switch, withRouter} from 'react-router-dom'
+import {Link, Route, Switch, withRouter, useRouteMatch, Redirect} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
@@ -67,6 +68,11 @@ class App extends Component {
 		const onHome = pathname === '/'
 
 		return <>
+			{/* If there's a trailing slash, strip it */}
+			<Route path="/*/" exact strict>
+				<StripTrailingSlash/>
+			</Route>
+
 			<div className={classnames(
 				styles.mobileHeader,
 				onHome && styles.home,
@@ -131,3 +137,9 @@ class App extends Component {
 }
 
 export default withRouter(App)
+
+function StripTrailingSlash() {
+	const {url} = useRouteMatch()
+	const trimmedUrl = _.trimEnd(url, '/')
+	return <Redirect to={trimmedUrl}/>
+}

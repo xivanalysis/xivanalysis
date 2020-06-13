@@ -104,11 +104,11 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 	}
 
 	private goToReport({code, fight, player}: ReportSpecifier) {
-		let url = `/${code}/`
+		let url = `/${code}`
 		if (fight) {
-			url += `${fight}/`
+			url += `/${fight}`
 			if (player) {
-				url += `${player}/`
+				url += `/${player}`
 			}
 		}
 		url = ((fight && player)? 'analyse' : 'find') + url
