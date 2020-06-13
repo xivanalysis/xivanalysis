@@ -16,6 +16,13 @@
 	margin-left: gutter;
 	background: none;
 	cursor: pointer;
+	color: inherit;
+}
+
+.refresh.block {
+	display: block;
+	margin: 0;
+	margin-top: calc(0.5 * gutter);
 }
 
 .group {

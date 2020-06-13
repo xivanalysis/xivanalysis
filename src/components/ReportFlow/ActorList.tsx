@@ -1,4 +1,4 @@
-import React, {ReactNode} from 'react'
+import React, {ReactNode, useCallback} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
@@ -12,6 +12,8 @@ import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
 import {patchSupported} from 'data/PATCHES'
+import {Icon} from 'semantic-ui-react'
+import classNames from 'classnames'
 
 interface RoleGroupData {
 	role: Role
@@ -30,6 +32,11 @@ export interface ActorListProps {
 export function ActorList({reportStore}: ActorListProps) {
 	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
 
+	const onRefreshPulls = useCallback(
+		() => reportStore.fetchPulls({bypassCache: true}),
+		[reportStore],
+	)
+
 	const {report} = reportStore
 	const pull = report?.pulls.find(pull => pull.id === pullId)
 	if (report == null || pull == null) {
@@ -39,6 +46,11 @@ export function ActorList({reportStore}: ActorListProps) {
 					<Message.Header>Pull not found.</Message.Header>
 					No pull was found with ID "{pullId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
 				</Trans>
+
+				<button className={classNames(styles.refresh, styles.block)} onClick={onRefreshPulls}>
+					<Icon name="refresh"/>
+					<Trans id="core.report-flow.refresh">Refresh</Trans>
+				</button>
 			</Message>
 		)
 	}
