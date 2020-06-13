@@ -2,7 +2,7 @@ import React, {ReactNode} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
-import {Message} from 'akkd'
+import {Message, Segment} from 'akkd'
 import {Trans} from '@lingui/react'
 import JOBS, {Role, RoleKey, ROLES, Job} from 'data/JOBS'
 import {Report, Actor, Pull} from 'report'
@@ -17,6 +17,11 @@ interface RoleGroupData {
 	role: Role
 	actors: Actor[]
 }
+
+const UNSUPPORTED_ROLES = [
+	ROLES.UNSUPPORTED,
+	ROLES.OUTDATED,
+]
 
 export interface ActorListProps {
 	reportStore: ReportStore
@@ -61,11 +66,20 @@ export function ActorList({reportStore}: ActorListProps) {
 	const sortedGroups = [...groups.values()]
 		.sort((a, b) => a.role.id - b.role.id)
 
+	let warningDisplayed = false
 	return (
 		<div className={styles.actorList}>
-			{sortedGroups.map(group => (
-				<RoleGroup key={group.role.id} group={group}/>
-			))}
+			{sortedGroups.map(group => {
+				const showWarning = true
+					&& !warningDisplayed
+					&& UNSUPPORTED_ROLES.includes(group.role)
+				if (showWarning) { warningDisplayed = true }
+
+				return <>
+					{showWarning && <UnsupportedWarning/>}
+					<RoleGroup key={group.role.id} group={group}/>
+				</>
+			})}
 		</div>
 	)
 }
@@ -84,6 +98,13 @@ function getJobRole(job: Job, pull: Pull, report: Report): RoleKey {
 		? job.role
 		: 'OUTDATED'
 }
+
+const UnsupportedWarning = () => (
+	<Segment><Message info icon="code">
+		<Message.Header><Trans id="core.report-flow.job-unsupported.title" render="strong">Favourite job unsupported?</Trans></Message.Header>
+		<Trans id="core.report-flow.job-unsupported.description">We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!</Trans>
+	</Message></Segment>
+)
 
 interface RoleGroupProps {
 	group: RoleGroupData
