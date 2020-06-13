@@ -4,13 +4,14 @@ import {useRouteMatch, Link} from 'react-router-dom'
 import {ReportStore} from 'store/new/report'
 import {Message} from 'akkd'
 import {Trans} from '@lingui/react'
-import JOBS, {Role, RoleKey, ROLES} from 'data/JOBS'
-import {Actor} from 'report'
+import JOBS, {Role, RoleKey, ROLES, Job} from 'data/JOBS'
+import {Report, Actor, Pull} from 'report'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import styles from './ReportFlow.module.css'
 import Color from 'color'
 import JobIcon from 'components/ui/JobIcon'
 import AVAILABLE_MODULES from 'parser/AVAILABLE_MODULES'
+import {patchSupported} from 'data/PATCHES'
 
 interface RoleGroupData {
 	role: Role
@@ -24,8 +25,9 @@ export interface ActorListProps {
 export function ActorList({reportStore}: ActorListProps) {
 	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
 
-	const pull = reportStore.report?.pulls.find(pull => pull.id === pullId)
-	if (pull == null) {
+	const {report} = reportStore
+	const pull = report?.pulls.find(pull => pull.id === pullId)
+	if (report == null || pull == null) {
 		return (
 			<Message warning icon="warning sign">
 				<Trans id="core.report-flow.pull-not-found">
@@ -45,11 +47,12 @@ export function ActorList({reportStore}: ActorListProps) {
 	const groups = new Map<RoleKey, RoleGroupData>()
 	for (const actor of actors) {
 		const job = JOBS[actor.job]
+		const role = getJobRole(job, pull, report)
 
-		let group = groups.get(job.role)
+		let group = groups.get(role)
 		if (group == null) {
-			group = {role: ROLES[job.role], actors: []}
-			groups.set(job.role, group)
+			group = {role: ROLES[role], actors: []}
+			groups.set(role, group)
 		}
 
 		group.actors.push(actor)
@@ -65,6 +68,21 @@ export function ActorList({reportStore}: ActorListProps) {
 			))}
 		</div>
 	)
+}
+
+function getJobRole(job: Job, pull: Pull, report: Report): RoleKey {
+	// TODO: THIS WILL NEED TO BE CHANGED ONCE AVAILABLE MODULES IS USING JOB KEYS
+	const jobMeta = AVAILABLE_MODULES.JOBS[job.logType]
+	if (jobMeta == null) { return 'UNSUPPORTED' }
+
+	const {supportedPatches} = jobMeta
+	if (supportedPatches == null) { return 'UNSUPPORTED' }
+
+	const {from, to = from} = supportedPatches
+
+	return patchSupported( report.edition, from, to, pull.timestamp / 1000)
+		? job.role
+		: 'OUTDATED'
 }
 
 interface RoleGroupProps {
