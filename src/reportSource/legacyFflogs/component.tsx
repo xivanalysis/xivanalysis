@@ -1,6 +1,6 @@
 import React from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
-import {LegacyFflogsReportStore} from 'store/new/report'
+import {LegacyFflogsReportSource} from 'reportSource'
 import {observer} from 'mobx-react'
 import {ReportFlow} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
@@ -30,13 +30,13 @@ const WithCode = observer(function WithCode() {
 	const {code} = useParams<RouteParams>()
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
-	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
-	reportStore.fetchReport(code)
+	const reportSource = useLazyRef(() => new LegacyFflogsReportSource()).current
+	reportSource.fetchReport(code)
 
 	// We can safely assume that a null report means we're loading due to the legacy store semantics.
-	if (reportStore.report == null) {
+	if (reportSource.report == null) {
 		return <ReportLoader/>
 	}
 
-	return <ReportFlow reportStore={reportStore}/>
+	return <ReportFlow reportSource={reportSource}/>
 })

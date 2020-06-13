@@ -2,11 +2,11 @@ import React from 'react'
 import {useParams} from 'react-router-dom'
 import {AnalyseRouteParams} from './ReportFlow'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
-import {ReportStore} from 'store/new/report'
+import {ReportSource} from 'reportSource'
 import {Message} from 'akkd'
 
 export interface AnalyseProps {
-	reportStore: ReportStore
+	reportSource: ReportSource
 }
 
 /**
@@ -14,8 +14,8 @@ export interface AnalyseProps {
  * component. It'll need to be replaced in due time, once the new report system
  * is adopted.
  */
-export function Analyse({reportStore}: AnalyseProps) {
-	const {report} = reportStore
+export function Analyse({reportSource}: AnalyseProps) {
+	const {report} = reportSource
 	const {pullId, actorId} = useParams<AnalyseRouteParams>()
 
 	if (report == null) {

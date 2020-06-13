@@ -1,5 +1,5 @@
 import React from 'react'
-import {ReportStore} from 'store/new/report'
+import {ReportSource} from 'reportSource'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
@@ -26,7 +26,7 @@ export interface AnalyseRouteParams {
 type ReportLinkRouteParams = Partial<AnalyseRouteParams>
 
 export interface ReportFlowProps {
-	reportStore: ReportStore
+	reportSource: ReportSource
 }
 
 /**
@@ -34,12 +34,12 @@ export interface ReportFlowProps {
  * source-specific report handling. Parent report sources must provide a report
  * store over context for consumption by the flow.
  */
-export function ReportFlow({reportStore}: ReportFlowProps) {
+export function ReportFlow({reportSource}: ReportFlowProps) {
 	const {path, url} = useRouteMatch()
 
 	// This is intentionally quite generic. If a specific report source can provide
 	// more information, it should do so in the report source itself.
-	if (reportStore.report == null) {
+	if (reportSource.report == null) {
 		return (
 			<Message error icon="times circle outline">
 				<Trans id="core.report-flow.report-not-found">
@@ -52,28 +52,28 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 
 	return <>
 		<Route path={path}>
-			<ReportCrumb report={reportStore.report}/>
+			<ReportCrumb report={reportSource.report}/>
 		</Route>
 		<Route path={`${path}/:pullId`}>
-			<PullCrumb report={reportStore.report}/>
+			<PullCrumb report={reportSource.report}/>
 		</Route>
 		<Route path={`${path}/:pullId/:actorId`}>
-			<ActorCrumb report={reportStore.report}/>
+			<ActorCrumb report={reportSource.report}/>
 		</Route>
 
 		<Route path={`${path}/:pullId?/:actorId?`}>
-			<ReportLink reportStore={reportStore}/>
+			<ReportLink reportSource={reportSource}/>
 		</Route>
 
 		<Switch>
 			<Route path={`${path}/:pullId/:actorId`}>
-				<Analyse reportStore={reportStore}/>
+				<Analyse reportSource={reportSource}/>
 			</Route>
 			<Route path={`${path}/:pullId`}>
-				<ActorList reportStore={reportStore}/>
+				<ActorList reportSource={reportSource}/>
 			</Route>
 			<Route path={path}>
-				<PullList reportStore={reportStore}/>
+				<PullList reportSource={reportSource}/>
 			</Route>
 		</Switch>
 	</>
@@ -131,13 +131,13 @@ function ActorCrumb({report}: CrumbProps) {
 }
 
 interface ReportLinkProps {
-	reportStore: ReportStore
+	reportSource: ReportSource
 }
 
-function ReportLink({reportStore}: ReportLinkProps) {
+function ReportLink({reportSource}: ReportLinkProps) {
 	const {pullId, actorId} = useParams<ReportLinkRouteParams>()
 
-	const link = reportStore.getReportLink(pullId, actorId)
+	const link = reportSource.getReportLink(pullId, actorId)
 
 	if (link == null) {
 		return null

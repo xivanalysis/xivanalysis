@@ -6,6 +6,7 @@ import {Link, Route, Switch, withRouter, useRouteMatch, Redirect} from 'react-ro
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
+import {LegacyFflogs} from 'reportSource'
 import {StoreContext} from 'store'
 import Analyse from './LegacyAnalyse'
 import {BranchBanner} from './BranchBanner'
@@ -15,7 +16,6 @@ import Find from './Find'
 import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
 import LastFightRedirect from './LastFightRedirect'
-import {LegacyFflogs} from './reportSource'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'

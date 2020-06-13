@@ -11,11 +11,11 @@ export interface ReportLink {
 }
 
 /**
- * Base ReportStore implementation, defining the report interface accessible to
+ * Base ReportSource implementation, defining the report interface accessible to
  * most of the application. Source-specific implementation details are handled
  * exclusively by subclasses of this class and their respective component(s).
  */
-export abstract class ReportStore {
+export abstract class ReportSource {
 	abstract readonly report?: Report
 
 	fetchPulls(options?: FetchOptions) {}

@@ -1,7 +1,7 @@
 import React, {useContext, useCallback} from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
-import {ReportStore} from 'store/new/report'
+import {ReportSource} from 'reportSource'
 import styles from './ReportFlow.module.css'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'
@@ -23,10 +23,10 @@ interface PullGroupData {
 }
 
 export interface PullListProps {
-	reportStore: ReportStore
+	reportSource: ReportSource
 }
 
-export const PullList = observer(function PullList({reportStore}: PullListProps) {
+export const PullList = observer(function PullList({reportSource}: PullListProps) {
 	const {settingsStore} = useContext(StoreContext)
 
 	const onToggleKillsOnly = useCallback(
@@ -36,16 +36,16 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 	)
 
 	const onRefresh = useCallback(
-		() => reportStore.fetchPulls({bypassCache: true}),
-		[reportStore],
+		() => reportSource.fetchPulls({bypassCache: true}),
+		[reportSource],
 	)
 
-	if (reportStore.report == null) {
+	if (reportSource.report == null) {
 		return null
 	}
 
 	// Ensure pulls are up to date
-	reportStore.fetchPulls()
+	reportSource.fetchPulls()
 
 	// Group encounters by the duty they took place in
 	// We're maintaining chronological order, so only tracking the latest duty
@@ -58,7 +58,7 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 		key: 'trash',
 	}
 
-	for (const pull of reportStore.report.pulls) {
+	for (const pull of reportSource.report.pulls) {
 		if (pull.encounter.key === 'TRASH') {
 			trashPulls.pulls.push(pull)
 			continue
