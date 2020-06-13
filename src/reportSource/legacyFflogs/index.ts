@@ -1,2 +1,2 @@
-export * from './source'
+export * from './store'
 export * from './component'

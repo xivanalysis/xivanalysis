@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
-import {ReportSource} from 'reportSource'
+import {ReportStore} from 'reportSource'
 import {Message, Segment} from 'akkd'
 import {Trans} from '@lingui/react'
 import JOBS, {Role, RoleKey, ROLES, Job} from 'data/JOBS'
@@ -26,18 +26,18 @@ const UNSUPPORTED_ROLES = [
 ]
 
 export interface ActorListProps {
-	reportSource: ReportSource
+	reportStore: ReportStore
 }
 
-export function ActorList({reportSource}: ActorListProps) {
+export function ActorList({reportStore}: ActorListProps) {
 	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
 
 	const onRefreshPulls = useCallback(
-		() => reportSource.fetchPulls({bypassCache: true}),
-		[reportSource],
+		() => reportStore.fetchPulls({bypassCache: true}),
+		[reportStore],
 	)
 
-	const {report} = reportSource
+	const {report} = reportStore
 	const pull = report?.pulls.find(pull => pull.id === pullId)
 	if (report == null || pull == null) {
 		return (
@@ -56,7 +56,7 @@ export function ActorList({reportSource}: ActorListProps) {
 	}
 
 	// Ensure actors are up to date
-	reportSource.fetchActors(pullId)
+	reportStore.fetchActors(pullId)
 
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)

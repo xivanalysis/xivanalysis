@@ -1,4 +1,4 @@
-import {ReportSource, FetchOptions} from '../base'
+import {ReportStore, FetchOptions} from '../base'
 import {
 	reportStore as legacyReportStore,
 	Report as LegacyReport,
@@ -36,7 +36,7 @@ declare module 'report' {
  * Report source acting as an adapter to the old report store system while we port
  * the rest of the analysis logic across.
  */
-export class LegacyFflogsReportSource extends ReportSource {
+export class LegacyFflogsReportStore extends ReportStore {
 	@computed
 	get report() {
 		// If the report hasn't finished loading yet, bail early
