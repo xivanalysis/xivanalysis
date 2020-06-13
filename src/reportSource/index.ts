@@ -1,5 +1,4 @@
 export * from './base'
-export * from './legacyFflogs'
 
 import {SearchHandler} from './base'
 import {LegacyFflogs, legacyFflogsSearchHandlers} from './legacyFflogs'
@@ -12,7 +11,7 @@ export interface ReportSource {
 
 export const reportSources: ReportSource[] = [
 	{
-		path: 'fflogs',
+		path: '/fflogs',
 		Component: LegacyFflogs,
 		searchHandlers: legacyFflogsSearchHandlers,
 	},

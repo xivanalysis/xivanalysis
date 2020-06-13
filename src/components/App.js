@@ -6,7 +6,7 @@ import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} fro
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
-import {LegacyFflogs} from 'reportSource'
+import {reportSources} from 'reportSource'
 import {StoreContext} from 'store'
 import {BranchBanner} from './BranchBanner'
 import ErrorBoundary from './ErrorBoundary'
@@ -112,14 +112,18 @@ class App extends Component {
 
 					<ErrorBoundary>
 						<Switch>
-							<Route exact path="/" component={Home}/>
+							<Route exact path="/"><Home/></Route>
 
 							<Route path="/(find|analyse)/:code/:fight?/:combatant?">
 								<LegacyXivaRouteRedirect/>
 							</Route>
 
-							{/* Report sources. TODO: loop this from the SOT.*/}
-							<Route path="/fflogs" component={LegacyFflogs}/>
+							{/* Report sources*/}
+							{reportSources.map(source => (
+								<Route key={source.path} path={source.path}>
+									<source.Component/>
+								</Route>
+							))}
 						</Switch>
 					</ErrorBoundary>
 				</Container>

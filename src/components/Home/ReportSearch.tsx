@@ -48,7 +48,7 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 
 				return {
 					valid: true,
-					path: `/${source.path}${result.path}`,
+					path: `${source.path}${result.path}`,
 				}
 			}
 		}
