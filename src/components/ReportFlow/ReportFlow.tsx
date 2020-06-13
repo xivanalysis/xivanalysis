@@ -23,7 +23,7 @@ export interface AnalyseRouteParams {
 	actorId: string
 }
 
-type ReportListRouteParams = Partial<AnalyseRouteParams>
+type ReportLinkRouteParams = Partial<AnalyseRouteParams>
 
 export interface ReportFlowProps {
 	reportStore: ReportStore
@@ -135,7 +135,7 @@ interface ReportLinkProps {
 }
 
 function ReportLink({reportStore}: ReportLinkProps) {
-	const {pullId, actorId} = useParams<ReportListRouteParams>()
+	const {pullId, actorId} = useParams<ReportLinkRouteParams>()
 
 	const link = reportStore.getReportLink(pullId, actorId)
 
