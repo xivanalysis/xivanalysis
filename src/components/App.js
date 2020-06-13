@@ -2,7 +2,7 @@ import classnames from 'classnames'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Link, Route, Switch, withRouter, useRouteMatch, Redirect} from 'react-router-dom'
+import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
@@ -15,12 +15,13 @@ import ErrorBoundary from './ErrorBoundary'
 import Find from './Find'
 import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
 import Home from './Home'
-// import LastFightRedirect from './LastFightRedirect'
+import LastFightRedirect from './LastFightRedirect'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
+import {buildReportFlowPath} from './ReportFlow'
 
 class App extends Component {
 	static propTypes = {
@@ -114,18 +115,14 @@ class App extends Component {
 					<BranchBanner/>
 
 					<ErrorBoundary>
-						{/* TODO: Remove alongside respective legacy routes */}
-						<Route path="/(find|analyse)/:code"><ReportCrumb/></Route>
-						<Route path="/(find|analyse)/:code/:fight"><FightCrumb/></Route>
-						<Route path="/analyse/:code/:fight/:combatant"><CombatantCrumb/></Route>
-
 						<Switch>
 							<Route exact path="/" component={Home}/>
-							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
-							<Route path="/find/:code/:fight?" component={Find}/>
-							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
 
-							{/* New report source handling. Paths above this point should be migrated to redirects to those beneath it. */}
+							<Route path="/(find|analyse)/:code/:fight?/:combatant?">
+								<LegacyXivaRouteRedirect/>
+							</Route>
+
+							{/* Report sources. TODO: loop this from the SOT.*/}
 							<Route path="/fflogs" component={LegacyFflogs}/>
 						</Switch>
 					</ErrorBoundary>
@@ -139,6 +136,12 @@ export default withRouter(App)
 
 function StripTrailingSlash() {
 	const {url} = useRouteMatch()
-	const trimmedUrl = _.trimEnd(url, '/')
-	return <Redirect to={trimmedUrl}/>
+	return <Redirect to={_.trimEnd(url, '/')}/>
+}
+
+// TODO: This can probably removed in, like, a few weeks. Hold me to that people.
+//       Relies on fflogs = fflogs. Unstable in the long run.
+function LegacyXivaRouteRedirect() {
+	const {code, fight, combatant} = useParams()
+	return <Redirect to={`/fflogs/${code}${buildReportFlowPath(fight, combatant)}`}/>
 }
