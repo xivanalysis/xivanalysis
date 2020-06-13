@@ -7,7 +7,7 @@ import {RouteComponentProps, withRouter, Redirect} from 'react-router-dom'
 import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import styles from './ReportSearch.module.css'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {reportSources, SearchHandlerResult} from 'reportSource'
+import {reportSources, SearchHandlerResult} from 'reportSources'
 import _ from 'lodash'
 
 // Localhost is... a bit generous. But we'll let the rest of the app fail out on that for us.

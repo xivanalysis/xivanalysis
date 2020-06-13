@@ -1,5 +1,5 @@
 import React from 'react'
-import {ReportStore} from 'reportSource'
+import {ReportStore} from 'reportSources'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'

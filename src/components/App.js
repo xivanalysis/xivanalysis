@@ -6,7 +6,7 @@ import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} fro
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
-import {reportSources} from 'reportSource'
+import {reportSources} from 'reportSources'
 import {StoreContext} from 'store'
 import {BranchBanner} from './BranchBanner'
 import ErrorBoundary from './ErrorBoundary'

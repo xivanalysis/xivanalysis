@@ -1,7 +1,7 @@
 import React, {useContext, useCallback} from 'react'
 import {Duty, Pull} from 'report'
 import {Link, useRouteMatch} from 'react-router-dom'
-import {ReportStore} from 'reportSource'
+import {ReportStore} from 'reportSources'
 import styles from './ReportFlow.module.css'
 import {formatDuration} from 'utilities'
 import classNames from 'classnames'

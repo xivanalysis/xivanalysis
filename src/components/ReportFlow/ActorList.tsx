@@ -1,7 +1,7 @@
 import React, {ReactNode, useCallback} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
 import {useRouteMatch, Link} from 'react-router-dom'
-import {ReportStore} from 'reportSource'
+import {ReportStore} from 'reportSources'
 import {Message, Segment} from 'akkd'
 import {Trans} from '@lingui/react'
 import JOBS, {Role, RoleKey, ROLES, Job} from 'data/JOBS'

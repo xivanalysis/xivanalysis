@@ -5,7 +5,7 @@ import {observer} from 'mobx-react'
 import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
 import {useLazyRef} from 'utilities/react'
 import {ReportLoader} from 'components/ui/SharedLoaders'
-import {ReportStore} from 'reportSource'
+import {ReportStore} from 'reportSources'
 import _ from 'lodash'
 
 interface WithCodeParams {

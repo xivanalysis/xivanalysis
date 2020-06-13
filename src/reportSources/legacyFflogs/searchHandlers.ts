@@ -1,4 +1,4 @@
-import {SearchHandler} from 'reportSource'
+import {SearchHandler} from 'reportSources'
 import {buildReportFlowPath} from 'components/ReportFlow'
 
 export const legacyFflogsSearchHandlers: SearchHandler[] = [
