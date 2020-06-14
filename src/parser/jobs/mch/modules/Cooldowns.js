@@ -11,6 +11,7 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.REASSEMBLE.id,
 		ACTIONS.AUTOMATON_QUEEN.id,
 		ACTIONS.QUEEN_OVERDRIVE.id,
+		ACTIONS.DETONATOR.id,
 		ACTIONS.TACTICIAN.id,
 		ACTIONS.FLAMETHROWER.id,
 	]
