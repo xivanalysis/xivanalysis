@@ -4,6 +4,7 @@ import ACTIONS from 'data/ACTIONS'
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		ACTIONS.WILDFIRE.id,
+		ACTIONS.DETONATOR.id,
 		ACTIONS.GAUSS_ROUND.id,
 		ACTIONS.RICOCHET.id,
 		ACTIONS.HYPERCHARGE.id,
@@ -11,7 +12,6 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.REASSEMBLE.id,
 		ACTIONS.AUTOMATON_QUEEN.id,
 		ACTIONS.QUEEN_OVERDRIVE.id,
-		ACTIONS.DETONATOR.id,
 		ACTIONS.TACTICIAN.id,
 		ACTIONS.FLAMETHROWER.id,
 	]
