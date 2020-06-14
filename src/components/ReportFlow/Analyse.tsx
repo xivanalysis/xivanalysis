@@ -2,7 +2,7 @@ import React from 'react'
 import {useParams} from 'react-router-dom'
 import {AnalyseRouteParams} from './ReportFlow'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
-import {ReportStore} from 'store/new/report'
+import {ReportStore} from 'reportSources'
 import {Message} from 'akkd'
 
 export interface AnalyseProps {

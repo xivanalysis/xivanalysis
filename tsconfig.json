@@ -11,14 +11,7 @@
 		"module": "esnext",
 		"moduleResolution": "node",
 		"jsx": "preserve",
-		"lib": [
-			"es2015",
-			"es2016",
-			"es2017",
-			"es2018",
-			"dom",
-			"dom.iterable"
-		],
+		"lib": ["ESNext"],
 		"noEmitHelpers": true,
 		"importHelpers": true,
 

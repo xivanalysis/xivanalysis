@@ -1,25 +1,23 @@
 import classnames from 'classnames'
+import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Link, Route, Switch, withRouter} from 'react-router-dom'
+import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} from 'react-router-dom'
 import {Icon} from 'semantic-ui-react'
 
 import {Container} from 'akkd'
+import {reportSources} from 'reportSources'
 import {StoreContext} from 'store'
-import Analyse from './LegacyAnalyse'
 import {BranchBanner} from './BranchBanner'
-import CombatantLookupRedirect from './CombatantLookupRedirect'
 import ErrorBoundary from './ErrorBoundary'
-import Find from './Find'
-import GlobalSidebar, {ReportCrumb, FightCrumb, CombatantCrumb} from './GlobalSidebar'
+import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
-import LastFightRedirect from './LastFightRedirect'
-import {LegacyFflogs} from './reportSource'
 
 import 'semantic-ui-css/semantic.min.css'
 import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
+import {buildReportFlowPath} from './ReportFlow'
 
 class App extends Component {
 	static propTypes = {
@@ -67,6 +65,11 @@ class App extends Component {
 		const onHome = pathname === '/'
 
 		return <>
+			{/* If there's a trailing slash, strip it */}
+			<Route path="/*/" exact strict>
+				<StripTrailingSlash/>
+			</Route>
+
 			<div className={classnames(
 				styles.mobileHeader,
 				onHome && styles.home,
@@ -108,20 +111,19 @@ class App extends Component {
 					<BranchBanner/>
 
 					<ErrorBoundary>
-						{/* TODO: Remove alongside respective legacy routes */}
-						<Route path="/(find|analyse)/:code"><ReportCrumb/></Route>
-						<Route path="/(find|analyse)/:code/:fight"><FightCrumb/></Route>
-						<Route path="/analyse/:code/:fight/:combatant"><CombatantCrumb/></Route>
-
 						<Switch>
-							<Route exact path="/" component={Home}/>
-							<Route path="/:section/:code/last/:combatant*" component={LastFightRedirect}/>
-							<Route path="/lookup/:code/:fight/:job/:name" component={CombatantLookupRedirect}/>
-							<Route path="/find/:code/:fight?" component={Find}/>
-							<Route path="/analyse/:code/:fight/:combatant" component={Analyse}/>
+							<Route exact path="/"><Home/></Route>
 
-							{/* New report source handling. Paths above this point should be migrated to redirects to those beneath it. */}
-							<Route path="/fflogs" component={LegacyFflogs}/>
+							<Route path="/(find|analyse)/:code/:fight?/:combatant?">
+								<LegacyXivaRouteRedirect/>
+							</Route>
+
+							{/* Report sources*/}
+							{reportSources.map(source => (
+								<Route key={source.path} path={source.path}>
+									<source.Component/>
+								</Route>
+							))}
 						</Switch>
 					</ErrorBoundary>
 				</Container>
@@ -131,3 +133,15 @@ class App extends Component {
 }
 
 export default withRouter(App)
+
+function StripTrailingSlash() {
+	const {url} = useRouteMatch()
+	return <Redirect to={_.trimEnd(url, '/')}/>
+}
+
+// TODO: This can probably removed in, like, a few weeks. Hold me to that people.
+//       Relies on fflogs = fflogs. Unstable in the long run.
+function LegacyXivaRouteRedirect() {
+	const {code, fight, combatant} = useParams()
+	return <Redirect to={`/fflogs/${code}${buildReportFlowPath(fight, combatant)}`}/>
+}

@@ -7,45 +7,14 @@ import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
 import PropTypes from 'prop-types'
-import React, {Component, useContext} from 'react'
+import React, {Component} from 'react'
 import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
-import {ReportLoader, AnalysisLoader} from 'components/ui/SharedLoaders'
-
-function AnalyseRouteWrapper({match: {params}}) {
-	const {reportStore} = useContext(StoreContext)
-	reportStore.fetchReportIfNeeded(params.code)
-	const report = reportStore.report
-
-	if (
-		report?.loading !== false
-		|| report.code !== params.code
-	) {
-		return <ReportLoader/>
-	}
-
-	return (
-		<Analyse
-			report={report}
-			fight={params.fight}
-			combatant={params.combatant}
-		/>
-	)
-}
-AnalyseRouteWrapper.propTypes = {
-	match: PropTypes.shape({
-		params: PropTypes.shape({
-			code: PropTypes.string.isRequired,
-			fight: PropTypes.string.isRequired,
-			combatant: PropTypes.string.isRequired,
-		}).isRequired,
-	}).isRequired,
-}
-export default observer(AnalyseRouteWrapper)
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 @observer
 class Analyse extends Component {

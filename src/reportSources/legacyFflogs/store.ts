@@ -1,4 +1,4 @@
-import {ReportStore, FetchOptions} from './base'
+import {ReportStore, FetchOptions} from '../base'
 import {
 	reportStore as legacyReportStore,
 	Report as LegacyReport,

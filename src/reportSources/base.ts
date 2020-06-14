@@ -1,4 +1,14 @@
 import {Report, Pull, Actor} from 'report'
+import {MessageDescriptor} from '@lingui/core'
+
+export type SearchHandlerResult =
+	| {valid: false, reason?: MessageDescriptor}
+	| {valid: true, path: string}
+
+export interface SearchHandler {
+	regexp: RegExp
+	handler: (match: Record<string, string>) => SearchHandlerResult
+}
 
 export interface FetchOptions {
 	bypassCache?: boolean

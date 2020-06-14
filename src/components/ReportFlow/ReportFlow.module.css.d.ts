@@ -3,6 +3,7 @@ declare namespace ReportFlowModuleCssModule {
   export interface IReportFlowModuleCss {
     actorList: string;
     banner: string;
+    block: string;
     controls: string;
     group: string;
     groupHeader: string;

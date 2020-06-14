@@ -1,8 +1,8 @@
-import {ReportSource} from 'report'
+import {ReportMetaKey} from 'report'
 import _ from 'lodash'
 
 export interface Encounter {
-	ids?: Partial<Record<ReportSource, string>>
+	ids?: Partial<Record<ReportMetaKey, string>>
 }
 
 const ensureEncounters = <T extends Record<string, Encounter>>(encounters: T): {[K in keyof T]: T[K] & Encounter} => encounters
@@ -23,7 +23,7 @@ export const ENCOUNTERS = ensureEncounters({
 
 export type EncounterKey = keyof typeof ENCOUNTERS
 
-export const getEncounterKey = (source: ReportSource, id: string) =>
+export const getEncounterKey = (source: ReportMetaKey, id: string) =>
 	_.findKey(ENCOUNTERS, encounter => encounter.ids[source] === id) as EncounterKey
 
 // Duties are in this file alongside encounters due to the heavily related nature
