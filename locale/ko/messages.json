@@ -536,6 +536,8 @@
   "mnk.fists.suggestions.fow.why": "최대 스택미만 상태에서 <0/> 전환하는 실수를 {0, plural, one {# 회} other {# 회}} 하였습니다.",
   "mnk.fists.suggestions.stanceless.content": "태세는 <0/>에 직접적인 영향을 주거나 <1/>과 연계하여 글쿨기 횟수를 늘리는등 딜 기여에 가장 중요한 요소입니다.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {#개} other {#개}}의 글쿨 동안 아무 태세도 켜지지 않았습니다.",
+  "mnk.fists.suggestions.unknownfist.content": "",
+  "mnk.fists.suggestions.unknownfist.why": "",
   "mnk.fists.title": "태세",
   "mnk.forms.suggestions.dropped.content": "품새를 상시 유지하십시오. 돌진기를 사용하거나 보스에 붙어있어야 유지가능하며 실패시 이는 일반적으로 더 큰 문제점이 있기 떄문입니다.",
   "mnk.forms.suggestions.dropped.why": "품새 유지를 {0, plural, other {# 회}} 실패하엿습니다.",

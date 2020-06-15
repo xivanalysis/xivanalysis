@@ -536,6 +536,8 @@
   "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "",
   "mnk.fists.suggestions.stanceless.why": "存在 {0} 个GCD无体势加成。",
+  "mnk.fists.suggestions.unknownfist.content": "",
+  "mnk.fists.suggestions.unknownfist.why": "",
   "mnk.fists.title": "体势",
   "mnk.forms.suggestions.dropped.content": "避免失去身形。你可能需要突进技或保持更小的距离来避免你的连击因超时而中断。这通常意味着更大的问题",
   "mnk.forms.suggestions.dropped.why": "",
