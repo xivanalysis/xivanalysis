@@ -560,6 +560,7 @@
   "mnk.rof.suggestions.tackle.content": "특별한 전략적 이유가 없다면 <0/> 스택 둘다 <1/> 구간 안에 사용을 목표하십시오.",
   "mnk.rof.suggestions.tackle.why": "<1/> 구간내에 사용된 <0/> 횟수 {riddlesWithOneTackle, plural, one {# use} other {# 회}} ",
   "mnk.rof.table.header.gcds": "글쿨기",
+  "mnk.rof.table.unknownfist": "",
   "mnk.rof.title": "홍련의 극의",
   "mnk.steppies.checklist.description": "<1/> 버프가 적용된 <0/>은 가장 강력한 위력을 가진 글쿨기 입니다.",
   "mnk.steppies.checklist.name": "강화 연격",

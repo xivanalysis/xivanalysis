@@ -560,6 +560,7 @@
   "mnk.rof.suggestions.tackle.content": "<1/>の一定時間に、できれば<0/>を２回実行してください。ギミックや状況によって、チャージは残して大丈夫です。",
   "mnk.rof.suggestions.tackle.why": "<0/>の一定時間に、<1/>は1回しか実行していないことが {riddlesWithOneTackle, plural, other {#}} 回行いました。",
   "mnk.rof.table.header.gcds": "GCD回",
+  "mnk.rof.table.unknownfist": "",
   "mnk.rof.title": "紅蓮の極意",
   "mnk.steppies.checklist.description": "先に<1/>でバフしたら、<0/>はあなたの一番強い型のGCDなのです。",
   "mnk.steppies.checklist.name": "連撃をバフ",

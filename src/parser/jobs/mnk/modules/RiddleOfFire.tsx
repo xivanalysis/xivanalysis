@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import React from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
@@ -207,45 +208,60 @@ export default class RiddleOfFire extends Module {
 	}
 
 	output() {
-		return <RotationTable
-			targets={[
-				{
-					header: <Trans id="mnk.rof.table.header.gcds">GCDs</Trans>,
-					accessor: 'gcds',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.ELIXIR_FIELD}/>,
-					accessor: 'elixirField',
-				},
-				{
-					header: <ActionLink showName={false} {...ACTIONS.SHOULDER_TACKLE}/>,
-					accessor: 'shoulderTackle',
-				},
-			]}
-			data={this.history
-				.map(riddle => ({
-					start: riddle.start - this.parser.fight.start_time,
-					end: riddle.end != null ?
-						riddle.end - this.parser.fight.start_time
-						: riddle.start - this.parser.fight.start_time,
-					targetsData: {
-						gcds: {
-							actual: riddle.gcds,
-							expected: riddle.expectedGcds,
-						},
-						elixirField: {
-							actual: riddle.elixirFields,
-							expected: EXPECTED_ELIXIR_FIELDS,
-						},
-						shoulderTackle: {
-							actual: riddle.tackles,
-							expected: EXPECTED_SHOULDER_TACKLES,
-						},
+		const unknownFist = this.history.reduce((total, riddle) => total + riddle.gcds - riddle.gcdsByFist(FISTLESS), 0) === 0
+
+		return <>
+			{unknownFist && (
+				<Message warning icon>
+					<Icon name="warning sign" />
+					<Message.Content>
+						<Trans id="mnk.rof.table.unknownfist">
+							No Fist transition was detected over the fight. The expected number of GCDs in each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window are most likely inaccurate.
+						</Trans>
+					</Message.Content>
+				</Message>
+			)}
+
+			<RotationTable
+				targets={[
+					{
+						header: <Trans id="mnk.rof.table.header.gcds">GCDs</Trans>,
+						accessor: 'gcds',
 					},
-					rotation: riddle.casts,
-				}))
-			}
-			onGoto={this.timeline.show}
-		/>
+					{
+						header: <ActionLink showName={false} {...ACTIONS.ELIXIR_FIELD}/>,
+						accessor: 'elixirField',
+					},
+					{
+						header: <ActionLink showName={false} {...ACTIONS.SHOULDER_TACKLE}/>,
+						accessor: 'shoulderTackle',
+					},
+				]}
+				data={this.history
+					.map(riddle => ({
+						start: riddle.start - this.parser.fight.start_time,
+						end: riddle.end != null ?
+							riddle.end - this.parser.fight.start_time
+							: riddle.start - this.parser.fight.start_time,
+						targetsData: {
+							gcds: {
+								actual: riddle.gcds,
+								expected: riddle.expectedGcds,
+							},
+							elixirField: {
+								actual: riddle.elixirFields,
+								expected: EXPECTED_ELIXIR_FIELDS,
+							},
+							shoulderTackle: {
+								actual: riddle.tackles,
+								expected: EXPECTED_SHOULDER_TACKLES,
+							},
+						},
+						rotation: riddle.casts,
+					}))
+				}
+				onGoto={this.timeline.show}
+			/>
+		</>
 	}
 }

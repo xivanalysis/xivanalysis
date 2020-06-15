@@ -560,6 +560,7 @@
   "mnk.rof.suggestions.tackle.content": "Try to use both charges of <0/> during <1/>, unless you need to hold a charge for strategic purposes.",
   "mnk.rof.suggestions.tackle.why": "{riddlesWithOneTackle, plural, one {# use} other {# uses}} of <0/> contained only one use of <1/>.",
   "mnk.rof.table.header.gcds": "GCDs",
+  "mnk.rof.table.unknownfist": "No Fist transition was detected over the fight. The expected number of GCDs in each <0/> window are most likely inaccurate.",
   "mnk.rof.title": "Riddle of Fire",
   "mnk.steppies.checklist.description": "<0/> is your strongest form GCD when you buff it by using <1/> beforehand.",
   "mnk.steppies.checklist.name": "Buff Bootshine",

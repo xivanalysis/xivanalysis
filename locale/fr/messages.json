@@ -560,6 +560,7 @@
   "mnk.rof.suggestions.tackle.content": "Essayez d'utiliser les deux charges de <0/> pendant <1/>, à moins que vous n'ayez besoin de garder une charge à des fins stratégiques.",
   "mnk.rof.suggestions.tackle.why": "{riddlesWithOneTackle, plural,one {#utilisation}other {#utilisations}} de <0/> contenant seulement une utilisation de <1/>.",
   "mnk.rof.table.header.gcds": "GCDs",
+  "mnk.rof.table.unknownfist": "",
   "mnk.rof.title": "Énigme du feu",
   "mnk.steppies.checklist.description": "<0/> est votre plus puissant GCD quand vous le buffer en utilisant <1/> avant lancement.",
   "mnk.steppies.checklist.name": "Bonus de Volée de coups",
