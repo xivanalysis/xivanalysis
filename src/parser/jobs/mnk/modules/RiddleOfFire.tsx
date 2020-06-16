@@ -216,7 +216,7 @@ export default class RiddleOfFire extends Module {
 					<Icon name="warning sign" />
 					<Message.Content>
 						<Trans id="mnk.rof.table.unknownfist">
-							No Fist transition was detected over the fight. The expected number of GCDs in each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window are most likely inaccurate.
+							No Fist transition was detected over the fight. The expected number of GCDs in each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window is most likely inaccurate.
 						</Trans>
 					</Message.Content>
 				</Message>
