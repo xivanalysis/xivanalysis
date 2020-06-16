@@ -54,7 +54,6 @@ class App extends Component {
 	}
 
 	_toggleSidebar = () => {
-		console.log('a')
 		this.setState(state => ({sidebarOpen: !state.sidebarOpen}))
 	}
 

@@ -59,6 +59,11 @@ class Analyse extends Component {
 				&& params.combatant
 		if (!valid) { return }
 
+		// NOTE: This is here in an attempt to get some log data for an otherwise unreproducable bug.
+		if (report.fights == null) {
+			console.warn('Report fights null, error incoming.', report)
+		}
+
 		// We've got this far, boot up the conductor
 		const fight = report.fights.find(fight => fight.id === this.fightId)
 		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
