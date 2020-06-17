@@ -307,7 +307,14 @@ interface SharedReportFightsResponse {
 
 interface ProcessingReportFightsResponse extends SharedReportFightsResponse {
 	exportedCharacters: unknown[]
-	processing: true
+	enemies?: undefined
+	enemyPets?: undefined
+	fights?: undefined
+	friendlies?: undefined
+	friendlyPets?: undefined
+	lang?: undefined
+	phases?: undefined
+	processing?: true
 }
 
 export interface ProcessedReportFightsResponse extends SharedReportFightsResponse {
