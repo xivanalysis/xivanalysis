@@ -3,7 +3,7 @@ import {
 	reportStore as legacyReportStore,
 	Report as LegacyReport,
 } from 'store/report'
-import {computed} from 'mobx'
+import {computed, toJS} from 'mobx'
 import {
 	Fight,
 	Actor as FflogsActor,
@@ -57,7 +57,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 				fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
 			),
 
-			meta: {...report, source: 'legacyFflogs' as const},
+			meta: {...toJS(report), source: 'legacyFflogs' as const},
 		}
 	}
 
