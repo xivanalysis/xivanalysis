@@ -285,7 +285,7 @@
   "core.report-flow.refresh": "Actualiser",
   "core.report-flow.report-not-found": "<0> Rapport non trouvé.</0> aucun rapport trouvé pour \"{url}\".",
   "core.report-flow.supported-patches": "Patch {from}{0}",
-  "core.report-flow.view-report": "",
+  "core.report-flow.view-report": "Voir le rapport sur {0}",
   "core.role.developer": "Développeur",
   "core.role.maintainer": "Mainteneur",
   "core.role.theorycraft": "Theorycraft",
