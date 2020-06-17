@@ -219,7 +219,13 @@ export abstract class BuffWindowModule extends Module {
 
 			if (windowDurationMillis >= fightTimeRemaining) {
 				const gcdEstimate = this.globalCooldown.getEstimate()
-				return Math.ceil((windowDurationMillis - fightTimeRemaining) / gcdEstimate)
+				const newExpectedGCDs = Math.ceil((windowDurationMillis - fightTimeRemaining) / gcdEstimate)
+
+				if ( this.expectedGCDs ) {
+					if ( newExpectedGCDs <= this.expectedGCDs.expectedPerWindow ) {
+						return newExpectedGCDs
+					}
+				}
 			}
 		}
 
