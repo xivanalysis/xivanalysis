@@ -1,7 +1,6 @@
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
 import {observable, reaction, runInAction} from 'mobx'
 import {disposeOnUnmount, observer} from 'mobx-react'
@@ -25,6 +24,7 @@ class Analyse extends Component {
 
 	static propTypes = {
 		report: PropTypes.object.isRequired,
+		legacyReport: PropTypes.object.isRequired,
 		fight: PropTypes.string.isRequired,
 		combatant: PropTypes.string.isRequired,
 	}
@@ -38,11 +38,11 @@ class Analyse extends Component {
 	}
 
 	componentDidMount() {
-		const {report, fight, combatant} = this.props
+		const {legacyReport, fight, combatant} = this.props
 
 		disposeOnUnmount(this, reaction(
 			() => ({
-				report,
+				legacyReport,
 				params: {fight, combatant},
 			}),
 			this.fetchEventsAndParseIfNeeded,
@@ -50,19 +50,19 @@ class Analyse extends Component {
 		))
 	}
 
-	fetchEventsAndParseIfNeeded = async ({report, params}) => {
+	fetchEventsAndParseIfNeeded = async ({legacyReport, params}) => {
 		// If we don't have everything we need, stop before we hit the api
 		// TODO: more checks
-		const valid = report
-				&& !report.loading
+		const valid = legacyReport
+				&& !legacyReport.loading
 				&& params.fight
 				&& params.combatant
 		if (!valid) { return }
 
 		// We've got this far, boot up the conductor
-		const fight = report.fights.find(fight => fight.id === this.fightId)
-		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
-		const conductor = new Conductor(report, fight, combatant)
+		const fight = legacyReport.fights.find(fight => fight.id === this.fightId)
+		const combatant = legacyReport.friendlies.find(friend => friend.id === this.combatantId)
+		const conductor = new Conductor(legacyReport, fight, combatant)
 
 		// Run checks, then the parse. Throw any errors up to the error store.
 		try {
@@ -85,7 +85,7 @@ class Analyse extends Component {
 	}
 
 	render() {
-		const report = this.props.report
+		const {report, fight, combatant} = this.props
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
@@ -94,8 +94,10 @@ class Analyse extends Component {
 		}
 
 		// Report's done, build output
-		const player = report.friendlies.find(friend => friend.id === this.combatantId)
-		const job = getDataBy(JOBS, 'logType', player.type)
+		const actor = report
+			.pulls.find(pull => pull.id === fight)
+			?.actors.find(actor => actor.id === combatant)
+		const job = JOBS[actor.job]
 		const role = job? ROLES[job.role] : undefined
 		const results = this.conductor.getResults()
 

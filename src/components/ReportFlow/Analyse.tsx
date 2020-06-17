@@ -36,7 +36,8 @@ export function Analyse({reportStore}: AnalyseProps) {
 
 	return (
 		<LegacyAnalyse
-			report={legacyReport}
+			report={report}
+			legacyReport={legacyReport}
 			fight={pullId}
 			combatant={actorId}
 		/>
