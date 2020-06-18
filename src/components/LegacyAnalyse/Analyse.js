@@ -40,17 +40,16 @@ class Analyse extends Component {
 		const valid = legacyReport && !legacyReport.loading
 		if (!valid) { return }
 
-		// We've got this far, boot up the conductor
-		const conductor = new Conductor({
-			report,
-			legacyReport,
-
-			pullId,
-			actorId,
-		})
-
 		// Run checks, then the parse. Throw any errors up to the error store.
+		let conductor
 		try {
+			conductor = new Conductor({
+				report,
+				legacyReport,
+				pullId,
+				actorId,
+			})
+
 			conductor.sanityCheck()
 			await conductor.configure()
 			await conductor.parse()

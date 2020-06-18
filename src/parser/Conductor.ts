@@ -29,6 +29,7 @@ export class Conductor {
 		this.report = opts.report
 
 		// TODO: Remove fight/combatant logic here.
+		// TODO: Move pull/actor logic up to final analyse component?
 		const fight = this.legacyReport.fights
 			.find(fight => fight.id === parseInt(opts.pullId, 10))
 		const pull = this.report.pulls.find(pull => pull.id === opts.pullId)
