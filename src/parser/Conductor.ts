@@ -49,16 +49,6 @@ export class Conductor {
 		this.actor = actor
 	}
 
-	sanityCheck() {
-		// Combatant took part in fight
-		if (!this.combatant.fights.find(fight => fight.id === this.fight.id)) {
-			throw new Errors.DidNotParticipateError({
-				combatant: this.combatant.name,
-				fight: this.fight.id,
-			})
-		}
-	}
-
 	async configure() {
 		// Build the final meta representation
 		const rawMetas = [

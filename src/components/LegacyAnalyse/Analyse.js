@@ -50,7 +50,6 @@ class Analyse extends Component {
 				actorId,
 			})
 
-			conductor.sanityCheck()
 			await conductor.configure()
 			await conductor.parse()
 		} catch (error) {
