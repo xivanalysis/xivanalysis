@@ -62,7 +62,11 @@ class Analyse extends Component {
 		// We've got this far, boot up the conductor
 		const fight = legacyReport.fights.find(fight => fight.id === this.fightId)
 		const combatant = legacyReport.friendlies.find(friend => friend.id === this.combatantId)
-		const conductor = new Conductor(legacyReport, fight, combatant)
+		const conductor = new Conductor({
+			report: legacyReport,
+			fight,
+			combatant,
+		})
 
 		// Run checks, then the parse. Throw any errors up to the error store.
 		try {

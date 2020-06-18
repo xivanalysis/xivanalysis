@@ -10,11 +10,19 @@ export class Conductor {
 	private parser?: Parser
 	private resultsCache?: ReadonlyArray<Result>
 
-	constructor(
-		private readonly report: Report,
-		private readonly fight: Fight,
-		private readonly combatant: Actor,
-	) {}
+	private readonly report: Report
+	private readonly fight: Fight
+	private readonly combatant: Actor
+
+	constructor(opts: {
+		report: Report,
+		fight: Fight,
+		combatant: Actor,
+	}) {
+		this.report = opts.report
+		this.fight = opts.fight
+		this.combatant = opts.combatant
+	}
 
 	sanityCheck() {
 		// Fight exists
