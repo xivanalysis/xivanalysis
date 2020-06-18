@@ -25,43 +25,32 @@ class Analyse extends Component {
 	static propTypes = {
 		report: PropTypes.object.isRequired,
 		legacyReport: PropTypes.object.isRequired,
-		fight: PropTypes.string.isRequired,
-		combatant: PropTypes.string.isRequired,
-	}
-
-	get fightId() {
-		return parseInt(this.props.fight, 10)
-	}
-
-	get combatantId() {
-		return parseInt(this.props.combatant, 10)
+		pullId: PropTypes.string.isRequired,
+		actorId: PropTypes.string.isRequired,
 	}
 
 	componentDidMount() {
-		const {legacyReport, fight, combatant} = this.props
+		const {legacyReport} = this.props
 
 		disposeOnUnmount(this, reaction(
-			() => ({
-				legacyReport,
-				params: {fight, combatant},
-			}),
+			() => ({legacyReport}),
 			this.fetchEventsAndParseIfNeeded,
 			{fireImmediately: true},
 		))
 	}
 
-	fetchEventsAndParseIfNeeded = async ({legacyReport, params}) => {
+	fetchEventsAndParseIfNeeded = async ({legacyReport}) => {
 		// If we don't have everything we need, stop before we hit the api
-		// TODO: more checks
-		const valid = legacyReport
-				&& !legacyReport.loading
-				&& params.fight
-				&& params.combatant
+		const valid = legacyReport && !legacyReport.loading
 		if (!valid) { return }
 
+		const {pullId, actorId} = this.props
+
 		// We've got this far, boot up the conductor
-		const fight = legacyReport.fights.find(fight => fight.id === this.fightId)
-		const combatant = legacyReport.friendlies.find(friend => friend.id === this.combatantId)
+		const fight = legacyReport.fights
+			.find(fight => fight.id === parseInt(pullId, 10))
+		const combatant = legacyReport.friendlies
+			.find(friend => friend.id === parseInt(actorId, 10))
 		const conductor = new Conductor({
 			report: legacyReport,
 			fight,
@@ -89,7 +78,7 @@ class Analyse extends Component {
 	}
 
 	render() {
-		const {report, fight, combatant} = this.props
+		const {report, pullId, actorId} = this.props
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
@@ -99,8 +88,8 @@ class Analyse extends Component {
 
 		// Report's done, build output
 		const actor = report
-			.pulls.find(pull => pull.id === fight)
-			?.actors.find(actor => actor.id === combatant)
+			.pulls.find(pull => pull.id === pullId)
+			?.actors.find(actor => actor.id === actorId)
 		const job = JOBS[actor.job]
 		const role = job? ROLES[job.role] : undefined
 		const results = this.conductor.getResults()
