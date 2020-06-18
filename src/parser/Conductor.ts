@@ -65,7 +65,11 @@ export class Conductor {
 			meta,
 			report: this.legacyReport,
 			fight: this.fight,
-			actor: this.combatant,
+			fflogsActor: this.combatant,
+
+			newReport: this.report,
+			pull: this.pull,
+			actor: this.actor,
 		})
 
 		// Get the parser all built up and stuff
