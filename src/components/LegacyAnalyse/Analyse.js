@@ -2,8 +2,8 @@ import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import JOBS, {ROLES} from 'data/JOBS'
-import {observable, reaction, runInAction} from 'mobx'
-import {disposeOnUnmount, observer} from 'mobx-react'
+import {observable, runInAction} from 'mobx'
+import {observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
@@ -30,31 +30,23 @@ class Analyse extends Component {
 	}
 
 	componentDidMount() {
-		const {legacyReport} = this.props
-
-		disposeOnUnmount(this, reaction(
-			() => ({legacyReport}),
-			this.fetchEventsAndParseIfNeeded,
-			{fireImmediately: true},
-		))
+		this.fetchEventsAndParseIfNeeded()
 	}
 
-	fetchEventsAndParseIfNeeded = async ({legacyReport}) => {
+	fetchEventsAndParseIfNeeded = async () => {
+		const {report, legacyReport, pullId, actorId} = this.props
+
 		// If we don't have everything we need, stop before we hit the api
 		const valid = legacyReport && !legacyReport.loading
 		if (!valid) { return }
 
-		const {pullId, actorId} = this.props
-
 		// We've got this far, boot up the conductor
-		const fight = legacyReport.fights
-			.find(fight => fight.id === parseInt(pullId, 10))
-		const combatant = legacyReport.friendlies
-			.find(friend => friend.id === parseInt(actorId, 10))
 		const conductor = new Conductor({
-			report: legacyReport,
-			fight,
-			combatant,
+			report,
+			legacyReport,
+
+			pullId,
+			actorId,
 		})
 
 		// Run checks, then the parse. Throw any errors up to the error store.

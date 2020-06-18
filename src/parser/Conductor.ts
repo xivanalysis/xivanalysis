@@ -1,40 +1,54 @@
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
-import {Actor, Fight} from 'fflogs'
-import {Report} from 'store/report'
+import {Actor as FflogsActor, Fight} from 'fflogs'
+import {Report as LegacyReport} from 'store/report'
 import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import Parser, {Result} from './core/Parser'
+import {Report, Pull, Actor} from 'report'
 
 export class Conductor {
 	private parser?: Parser
 	private resultsCache?: ReadonlyArray<Result>
 
-	private readonly report: Report
+	private readonly legacyReport: LegacyReport
 	private readonly fight: Fight
-	private readonly combatant: Actor
+	private readonly combatant: FflogsActor
+
+	private readonly report: Report
+	private readonly pull: Pull
+	private readonly actor: Actor
 
 	constructor(opts: {
+		legacyReport: LegacyReport,
 		report: Report,
-		fight: Fight,
-		combatant: Actor,
+		pullId: string,
+		actorId: string,
 	}) {
+		this.legacyReport = opts.legacyReport
 		this.report = opts.report
-		this.fight = opts.fight
-		this.combatant = opts.combatant
+
+		// TODO: Remove fight/combatant logic here.
+		const fight = this.legacyReport.fights
+			.find(fight => fight.id === parseInt(opts.pullId, 10))
+		const pull = this.report.pulls.find(pull => pull.id === opts.pullId)
+		if (fight == null || pull == null) {
+			throw new Errors.NotFoundError({type: 'pull'})
+		}
+		this.fight = fight
+		this.pull = pull
+
+		const combatant = this.legacyReport.friendlies
+			.find(friend => friend.id === parseInt(opts.actorId, 10))
+		const actor = pull.actors.find(actor => actor.id === opts.actorId)
+		if (combatant == null || actor == null) {
+			throw new Errors.NotFoundError({type: 'friendly combatant'})
+		}
+		this.combatant = combatant
+		this.actor = actor
 	}
 
 	sanityCheck() {
-		// Fight exists
-		if (!this.fight) {
-			throw new Errors.NotFoundError({type: 'fight'})
-		}
-
-		// Combatant exists
-		if (!this.combatant) {
-			throw new Errors.NotFoundError({type: 'friendly combatant'})
-		}
-
 		// Combatant took part in fight
 		if (!this.combatant.fights.find(fight => fight.id === this.fight.id)) {
 			throw new Errors.DidNotParticipateError({
@@ -58,7 +72,7 @@ export class Conductor {
 		// Build the base parser instance
 		const parser = new Parser({
 			meta,
-			report: this.report,
+			report: this.legacyReport,
 			fight: this.fight,
 			actor: this.combatant,
 		})
@@ -79,7 +93,7 @@ export class Conductor {
 
 		// Fetch events
 		const events = await getFflogsEvents(
-			this.report.code,
+			this.legacyReport.code,
 			this.fight,
 			{actorid: this.combatant.id},
 		)
