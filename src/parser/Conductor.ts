@@ -54,7 +54,7 @@ export class Conductor {
 		const rawMetas = [
 			AVAILABLE_MODULES.CORE,
 			AVAILABLE_MODULES.BOSSES[this.fight.boss],
-			AVAILABLE_MODULES.JOBS[this.combatant.type],
+			AVAILABLE_MODULES.JOBS[this.actor.job],
 		]
 		const meta = rawMetas
 			.filter(isDefined)

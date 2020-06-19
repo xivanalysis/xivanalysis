@@ -109,7 +109,7 @@ class Parser {
 
 		dispatcher?: Dispatcher,
 	}) {
-		this.dispatcher = opts.dispatcher || new Dispatcher()
+		this.dispatcher = opts.dispatcher ?? new Dispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
