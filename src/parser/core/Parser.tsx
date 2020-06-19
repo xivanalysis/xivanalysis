@@ -415,14 +415,14 @@ class Parser {
 		// Gather info for Sentry
 		const tags = {
 			type: opts.type,
-			job: this.player && this.player.type,
+			job: this.actor.job,
 			module: opts.module,
 		}
 
 		const extra: Record<string, any> = {
-			report: this.report && this.report.code,
-			fight: this.fight && this.fight.id,
-			player: this.player && this.player.id,
+			source: this.newReport.meta.source,
+			pull: this.pull.id,
+			actor: this.actor.id,
 			event: opts.event,
 		}
 
