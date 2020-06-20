@@ -22,6 +22,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.RIETTY, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-20'),
+		Changes: () => <>Fixed a small issue with the Ability Drift module. It won't break now on using it on lower level content/or logs that have no casts of GSK or HJ.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
 		date: new Date('2020-06-04'),
 		Changes: () => <>Added module to calculate and display drifting of High Jump and Geirskogul, which affects possible Life of the Dragon windows that may have been missed.</>,
 		contributors: [CONTRIBUTORS.RIETTY],
