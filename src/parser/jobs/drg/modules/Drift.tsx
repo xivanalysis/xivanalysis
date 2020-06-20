@@ -99,6 +99,9 @@ export default class Drift extends Module {
 
 	private createDriftTable(casts: DriftWindow[]) {
 		let totalDrift = 0
+		if (casts.length === 0) { // Don't draw table if nothing was cast.
+			return
+		}
 		const action = getDataBy(ACTIONS, 'id', casts[0].actionId)
 		return <Table>
 			<Table.Header>
