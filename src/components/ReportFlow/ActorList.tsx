@@ -4,7 +4,7 @@ import {useRouteMatch, Link} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {Message, Segment} from 'akkd'
 import {Trans} from '@lingui/react'
-import JOBS, {Role, RoleKey, ROLES, Job} from 'data/JOBS'
+import JOBS, {Role, RoleKey, ROLES, JobKey} from 'data/JOBS'
 import {Report, Actor, Pull} from 'report'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import styles from './ReportFlow.module.css'
@@ -63,8 +63,7 @@ export function ActorList({reportStore}: ActorListProps) {
 
 	const groups = new Map<RoleKey, RoleGroupData>()
 	for (const actor of actors) {
-		const job = JOBS[actor.job]
-		const role = getJobRole(job, pull, report)
+		const role = getJobRole(actor.job, pull, report)
 
 		let group = groups.get(role)
 		if (group == null) {
@@ -98,9 +97,8 @@ export function ActorList({reportStore}: ActorListProps) {
 	)
 }
 
-function getJobRole(job: Job, pull: Pull, report: Report): RoleKey {
-	// TODO: THIS WILL NEED TO BE CHANGED ONCE AVAILABLE MODULES IS USING JOB KEYS
-	const jobMeta = AVAILABLE_MODULES.JOBS[job.logType]
+function getJobRole(jobKey: JobKey, pull: Pull, report: Report): RoleKey {
+	const jobMeta = AVAILABLE_MODULES.JOBS[jobKey]
 	if (jobMeta == null) { return 'UNSUPPORTED' }
 
 	const {supportedPatches} = jobMeta
@@ -108,8 +106,8 @@ function getJobRole(job: Job, pull: Pull, report: Report): RoleKey {
 
 	const {from, to = from} = supportedPatches
 
-	return patchSupported( report.edition, from, to, pull.timestamp / 1000)
-		? job.role
+	return patchSupported(report.edition, from, to, pull.timestamp / 1000)
+		? JOBS[jobKey].role
 		: 'OUTDATED'
 }
 
@@ -151,8 +149,7 @@ function ActorLink({actor}: ActorLinkProps) {
 	const {url} = useRouteMatch()
 
 	const job = JOBS[actor.job]
-	// TODO: THIS WILL NEED TO BE CHANGED ONCE AVAILABLE MODULES IS USING JOB KEYS
-	const jobMeta = AVAILABLE_MODULES.JOBS[job.logType]
+	const jobMeta = AVAILABLE_MODULES.JOBS[actor.job]
 
 	let supportedPatches: ReactNode
 	if (jobMeta?.supportedPatches != null) {

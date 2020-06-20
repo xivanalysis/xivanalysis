@@ -5,9 +5,9 @@ import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import type {Event} from 'events'
-import type {Actor, Fight, Pet} from 'fflogs'
+import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
-import {Report} from 'store/report'
+import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Dispatcher} from './Dispatcher'
@@ -15,8 +15,9 @@ import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
 import {formatDuration} from 'utilities'
+import {Report, Pull, Actor} from 'report'
 
-interface Player extends Actor {
+interface Player extends FflogsActor {
 	pets: Pet[]
 }
 
@@ -49,10 +50,14 @@ class Parser {
 	// -----
 	readonly dispatcher: Dispatcher
 
-	readonly report: Report
+	readonly report: LegacyReport
 	readonly fight: Fight
 	readonly player: Player
 	readonly patch: Patch
+
+	readonly newReport: Report
+	readonly pull: Pull
+	readonly actor: Actor
 
 	readonly meta: Meta
 
@@ -94,24 +99,32 @@ class Parser {
 
 	constructor(opts: {
 		meta: Meta,
-		report: Report,
+		report: LegacyReport,
 		fight: Fight,
+		fflogsActor: FflogsActor,
+
+		newReport: Report,
+		pull: Pull,
 		actor: Actor,
 
 		dispatcher?: Dispatcher,
 	}) {
-		this.dispatcher = opts.dispatcher || new Dispatcher()
+		this.dispatcher = opts.dispatcher ?? new Dispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
 		this.fight = opts.fight
 
+		this.newReport = opts.newReport
+		this.pull = opts.pull
+		this.actor = opts.actor
+
 		// Get a list of the current player's pets and set it on the player instance for easy reference
 		const pets = opts.report.friendlyPets
-			.filter(pet => pet.petOwner === opts.actor.id)
+			.filter(pet => pet.petOwner === opts.fflogsActor.id)
 
 		this.player = {
-			...opts.actor,
+			...opts.fflogsActor,
 			pets,
 		}
 
@@ -402,14 +415,14 @@ class Parser {
 		// Gather info for Sentry
 		const tags = {
 			type: opts.type,
-			job: this.player && this.player.type,
+			job: this.actor.job,
 			module: opts.module,
 		}
 
 		const extra: Record<string, any> = {
-			report: this.report && this.report.code,
-			fight: this.fight && this.fight.id,
-			player: this.player && this.player.id,
+			source: this.newReport.meta.source,
+			pull: this.pull.id,
+			actor: this.actor.id,
 			event: opts.event,
 		}
 
