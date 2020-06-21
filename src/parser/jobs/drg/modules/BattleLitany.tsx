@@ -170,7 +170,6 @@ export default class BattleLitany extends Module {
 				window.start - this.parser.fight.start_time
 			const start = window.start - this.parser.fight.start_time
 			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < BL_TRUNCATE_DURATION))
-			console.log(window.containsOtherDRG)
 
 			return ({
 				start,
