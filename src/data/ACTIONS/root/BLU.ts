@@ -3,7 +3,7 @@ import {ensureActions} from '../type'
 export const BLU_COOLDOWN_GROUP = {
 	OFF_GUARD: 11411,
 	FEATHER_RAIN: 11426,
-	MOUNTAIN_BUSTER: 11428,
+	BLU_MOUNTAIN_BUSTER: 11428,
 	GLASS_DANCE: 11430,
 	QUASAR: 18324,
 }
@@ -339,19 +339,19 @@ export const BLU = ensureActions({
 		cooldown: 30,
 		cooldownGroup: BLU_COOLDOWN_GROUP.FEATHER_RAIN,
 	},
-	MOUNTAIN_BUSTER: {
+	BLU_MOUNTAIN_BUSTER: {
 		id: 11428,
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/003000/003296.png',
 		cooldown: 60,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
 	},
 	SHOCK_STRIKE: {
 		id: 11429,
 		name: 'Shock Strike',
 		icon: 'https://xivapi.com/i/003000/003297.png',
 		cooldown: 60,
-		cooldownGroup: BLU_COOLDOWN_GROUP.MOUNTAIN_BUSTER,
+		cooldownGroup: BLU_COOLDOWN_GROUP.BLU_MOUNTAIN_BUSTER,
 	},
 	GLASS_DANCE: {
 		id: 11430,
