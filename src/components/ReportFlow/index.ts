@@ -1,1 +1,1 @@
-export {ReportFlow} from './ReportFlow'
+export {ReportFlow, buildReportFlowPath} from './ReportFlow'
