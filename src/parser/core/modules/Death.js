@@ -63,7 +63,7 @@ export default class Death extends Module {
 		// pretty meaningless to complain about.
 		// Max at 0 because dummy parses aren't counted as kills, though.
 		if (
-			!this.parser.fight.kill &&
+			(this.parser.pull.progress ?? 0) < 100 &&
 			this._timestamp
 		) {
 			this._count = Math.max(this._count - 1, 0)
