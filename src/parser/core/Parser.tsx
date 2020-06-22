@@ -408,7 +408,7 @@ class Parser {
 		}
 
 		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
-		if (getReportPatch(this.report).branch) {
+		if (getReportPatch(this.newReport).branch) {
 			return
 		}
 

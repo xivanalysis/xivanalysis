@@ -155,6 +155,7 @@ export default class Statuses extends Module {
 	}
 
 	_isStatusAppliedToPet(event) {
-		return (this.parser.report.friendlyPets.some(p => p.id === event.targetID))
+		return this.parser.pull.actors
+			.some(actor => actor.id === event.targetID?.toString() && actor.owner?.playerControlled)
 	}
 }
