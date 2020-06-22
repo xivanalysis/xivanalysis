@@ -86,7 +86,7 @@ export default class Statuses extends Module {
 		if (statusEntry) {
 			const prev = statusEntry.usages[statusEntry.usages.length - 1]
 			if (!prev.end) {
-				prev.end = event.timestamp - this.parser.fight.start_time
+				prev.end = event.timestamp - this.parser.eventTimeOffset
 			}
 		}
 	}
@@ -106,14 +106,14 @@ export default class Statuses extends Module {
 			}
 		}
 		if (statusEntry.usages.some(it => {
-			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
+			const diff = Math.abs(event.timestamp - this.parser.eventTimeOffset - it.start)
 			return diff <= STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS
 		})) {
 			return
 		}
 
 		statusEntry.usages.push({
-			start: event.timestamp - this.parser.fight.start_time,
+			start: event.timestamp - this.parser.eventTimeOffset,
 		})
 	}
 

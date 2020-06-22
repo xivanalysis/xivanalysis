@@ -93,6 +93,14 @@ class Parser {
 		return Math.round((this.report.start + this.fight.start_time) / 1000)
 	}
 
+	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
+	get eventTimeOffset() {
+		// TODO: This is _wholly_ reliant on fflog's timestamp handling. Once everyone
+		// is using this instead of start_time, we can start normalising event timestamps
+		// at the source level.
+		return this.pull.timestamp - this.newReport.timestamp
+	}
+
 	// -----
 	// Constructor
 	// -----

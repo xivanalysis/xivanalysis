@@ -113,7 +113,7 @@ export default class PetTimeline extends Module {
 			const action = this.data.getAction(cast.ability.guid)
 			if (action == null) { return }
 
-			const start = cast.timestamp - this.parser.fight.start_time
+			const start = cast.timestamp - this.parser.eventTimeOffset
 			row.addItem(new ActionItem({
 				action,
 				start,

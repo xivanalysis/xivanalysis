@@ -12,7 +12,7 @@ export default class PrecastAction extends Module {
 	@dependency private data!: Data
 
 	normalise(events: Event[]): Event[] {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		for (const event of events) {
 			this.debug(`Timestamp: ${event.timestamp} - Event Type: ${String(event.type)} - Action: ${(event.ability != null) ? event.ability.name : ''}`)

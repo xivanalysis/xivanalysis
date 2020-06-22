@@ -99,7 +99,7 @@ export default class Death extends Module {
 	}
 
 	_addDeathToTimeline(end) {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		this.timeline.addItem(new SimpleItem({
 			start: this._timestamp - startTime,

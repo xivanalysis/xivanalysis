@@ -119,7 +119,7 @@ export default class Weaving extends Module {
 	}
 
 	_saveIfBad() {
-		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.fight.start_time}
+		const leadingGcdEvent =	this._leadingGcdEvent || {timestamp: this.parser.eventTimeOffset}
 		const gcdTimeDiff = this._trailingGcdEvent.timestamp -
 			leadingGcdEvent.timestamp -
 			this.invuln.getUntargetableUptime('all', 	leadingGcdEvent.timestamp, this._trailingGcdEvent.timestamp)

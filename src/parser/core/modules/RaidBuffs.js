@@ -117,7 +117,7 @@ export default class RaidBuffs extends Module {
 		}
 
 		// Record the start time of the status
-		buffs[statusId] = event.timestamp - this.parser.fight.start_time
+		buffs[statusId] = event.timestamp - this.parser.eventTimeOffset
 	}
 
 	_onRemove(event) {
@@ -136,7 +136,7 @@ export default class RaidBuffs extends Module {
 		if (!applyTime) { return }
 		delete targetBuffs[statusId]
 
-		const removeTime = this.parser.currentTimestamp - this.parser.fight.start_time
+		const removeTime = this.parser.currentTimestamp - this.parser.eventTimeOffset
 
 		const settings = this._buffMap.get(statusId)
 		const status = this.data.getStatus(statusId)

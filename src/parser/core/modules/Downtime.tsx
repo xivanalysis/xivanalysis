@@ -80,7 +80,7 @@ export default class Downtime extends Module {
 		)
 
 	private onComplete() {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 		const windows = this.getDowntimeWindows()
 
 		windows.forEach(window => {

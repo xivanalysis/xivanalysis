@@ -395,8 +395,8 @@ export abstract class BuffWindowModule extends Module {
 
 		const rotationData = this.buffWindows
 			.map(buffWindow => {
-				const windowStart = buffWindow.start - this.parser.fight.start_time
-				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.fight.start_time
+				const windowStart = buffWindow.start - this.parser.eventTimeOffset
+				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.eventTimeOffset
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
 
