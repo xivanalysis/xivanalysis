@@ -23,7 +23,9 @@ export default class Statuses extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const ids = [this.parser.player.id, ...this.parser.player.pets.map(p => p.id)]
+		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor)
+		const ids = [this.parser.actor.id, ...pets.map(pet => pet.id)]
+
 		const byFilter = {by: ids}
 
 		this.addEventHook('complete', this._onComplete)
