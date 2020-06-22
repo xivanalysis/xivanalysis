@@ -50,7 +50,7 @@ export default class Death extends Module {
 	}
 
 	_onRaise(event) {
-		this._addDeathToTimeline(event.timestamp)
+		this._addDeathToTimeline(event.timestamp - this.parser.eventTimeOffset)
 		this.parser.fabricateEvent({
 			type: 'raise',
 			timestamp: event.timestamp,
@@ -70,7 +70,7 @@ export default class Death extends Module {
 		}
 
 		if (this._timestamp) {
-			this._addDeathToTimeline(this.parser.fight.end_time)
+			this._addDeathToTimeline(this.parser.pull.duration)
 		}
 
 		if (!this._count) {
@@ -99,11 +99,9 @@ export default class Death extends Module {
 	}
 
 	_addDeathToTimeline(end) {
-		const startTime = this.parser.eventTimeOffset
-
 		this.timeline.addItem(new SimpleItem({
-			start: this._timestamp - startTime,
-			end: end - startTime,
+			start: this._timestamp - this.parser.eventTimeOffset,
+			end,
 			// TODO: This but better?
 			content: <div style={{width: '100%', height: '100%', backgroundColor: '#ce909085'}}/>,
 		}))

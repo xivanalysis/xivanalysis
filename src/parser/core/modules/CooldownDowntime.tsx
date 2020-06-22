@@ -222,7 +222,7 @@ export abstract class CooldownDowntime extends Module {
 			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
 		}
 
-		while (currentTime < this.parser.fight.end_time) {
+		while (currentTime - this.parser.eventTimeOffset < this.parser.pull.duration) {
 			// spend accumulated charges
 			count += charges
 			this.debug(`Expected ${charges} usages at ${this.parser.formatTimestamp(currentTime)}. Count: ${count}`)
