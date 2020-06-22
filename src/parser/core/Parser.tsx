@@ -75,10 +75,16 @@ class Parser {
 		return Math.min(end_time, Math.max(start_time, this.dispatcher.timestamp))
 	}
 
-	get fightDuration() {
-		// TODO: should i have like... currentDuration and fightDuration?
-		//       this seems a bit jank
+	get currentDuration() {
 		return this.currentTimestamp - this.fight.start_time
+	}
+
+	// TODO: REMOVE
+	get fightDuration() {
+		if (process.env.NODE_ENV === 'development') {
+			throw new Error('Please migrate your calls to `parser.fightDuration` to either `parser.pull.duration` (if you need the full pull duration) or `parser.currentDuration` if you need the zeroed current timestamp.')
+		}
+		return this.currentDuration
 	}
 
 	// Get the friendlies that took part in the current fight

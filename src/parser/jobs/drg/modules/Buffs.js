@@ -136,7 +136,7 @@ export default class Buffs extends Module {
 
 	_getDisembowelUptimePercent() {
 		const statusUptime = this.entityStatuses.getStatusUptime(STATUSES.DISEMBOWEL.id, this.combatants.getEntities())
-		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightUptime) * 100
 	}
 

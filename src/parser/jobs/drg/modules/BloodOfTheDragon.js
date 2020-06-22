@@ -293,7 +293,7 @@ export default class BloodOfTheDragon extends Module {
 	_onComplete() {
 		this._finishLifeWindow()
 		this._analyzeLifeWindows()
-		const duration = this.parser.fightDuration - this.death.deadTime
+		const duration = this.parser.currentDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
 		const noBuffSd = this._lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
 		const noLifeSd = this._lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length

@@ -56,7 +56,7 @@ export default class SleeveDraw extends Module {
 	}
 
 	_onComplete() {
-		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
+		const holdDuration = this._uses === 0 ? this.parser.currentDuration : this._totalHeld
 		const _usesMissed = Math.floor((holdDuration - this._excusedHeld) / (ACTIONS.SLEEVE_DRAW.cooldown * 1000))
 		const maxUses = this._uses + _usesMissed
 
