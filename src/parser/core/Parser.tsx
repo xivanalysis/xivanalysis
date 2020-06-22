@@ -71,12 +71,13 @@ class Parser {
 	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
-		const {end_time, start_time} = this.fight
-		return Math.min(end_time, Math.max(start_time, this.dispatcher.timestamp))
+		const start = this.eventTimeOffset
+		const end = start + this.pull.duration
+		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
 	get currentDuration() {
-		return this.currentTimestamp - this.fight.start_time
+		return this.currentTimestamp - this.eventTimeOffset
 	}
 
 	// TODO: REMOVE
@@ -95,8 +96,8 @@ class Parser {
 	}
 
 	get parseDate() {
-		// The report timestamp is relative to the report timestamp, and in ms. Convert.
-		return Math.round((this.report.start + this.fight.start_time) / 1000)
+		// TODO: normalise time to ms across the board
+		return Math.round(this.pull.timestamp / 1000)
 	}
 
 	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
