@@ -239,7 +239,7 @@ export default class Fists extends Module {
 	getFistUptimePercent(fistId: number): string {
 		const statusUptime = this.entityStatuses.getStatusUptime(fistId, this.combatants.getEntities())
 
-		return ((statusUptime / this.parser.fightDuration) * 100).toFixed(2)
+		return ((statusUptime / this.parser.currentDuration) * 100).toFixed(2)
 	}
 
 	getFistName(fistId: number): string {

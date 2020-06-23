@@ -23,14 +23,14 @@ export default class Util extends Module {
 
 	getDebuffUptime(status) {
 		const statusTime = this.entityStatuses.getStatusUptime(status.id, this.enemies.getEntities())
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusTime / uptime) * 100
 	}
 
 	getBuffUptime(status) {
 		const statusTime = this.entityStatuses.getStatusUptime(status.id, this.combatants.getEntities())
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusTime / uptime) * 100
 	}

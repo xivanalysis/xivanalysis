@@ -1,5 +1,6 @@
-import {ProcessedReportFightsResponse, ReportLanguage} from 'fflogs'
+import {ReportLanguage} from 'fflogs'
 import _ from 'lodash'
+import {Report} from 'report'
 
 export enum GameEdition {
 	GLOBAL,
@@ -127,8 +128,8 @@ export function getPatchDate(edition: GameEdition, patch: PatchNumber) {
 	return date || Infinity
 }
 
-export const getReportPatch = (report: ProcessedReportFightsResponse) =>
-	patchData[getPatch(languageToEdition(report.lang), report.start / 1000)]
+export const getReportPatch = (report: Report) =>
+	patchData[getPatch(report.edition, report.timestamp / 1000)]
 
 export function patchSupported(
 	edition: GameEdition,

@@ -149,7 +149,7 @@ export default class Cooldowns extends Module {
 			.forEach(use => {
 				if (use.shared) { return }
 
-				const start = use.timestamp - this.parser.fight.start_time
+				const start = use.timestamp - this.parser.eventTimeOffset
 				row.addItem(new ActionItem({
 					start,
 					end: start + use.length,
@@ -186,8 +186,8 @@ export default class Cooldowns extends Module {
 		// If there's a current object, move it into the history
 		// TODO: handle errors on CD overlap
 		if (cd.current) {
-			const currentFightDuration = this.parser.currentTimestamp - this.parser.fight.start_time
-			if (cd.current.timestamp < this.parser.fight.start_time && cd.current.length > currentFightDuration) {
+			const currentFightDuration = this.parser.currentTimestamp - this.parser.eventTimeOffset
+			if (cd.current.timestamp < this.parser.eventTimeOffset && cd.current.length > currentFightDuration) {
 				// Pre-pull usage, reset the cooldown to prevent overlap on timeline since we don't know exactly when cooldown was used pre-pull
 				this.resetCooldown(actionId)
 			} else {
@@ -232,7 +232,7 @@ export default class Cooldowns extends Module {
 
 	setInvulnTime(actionId) {
 		const cd = this.getCooldown(actionId)
-		let previousEndTimestamp = this.parser.fight.start_time
+		let previousEndTimestamp = this.parser.eventTimeOffset
 		let previousCooldown = {}
 		let isFirst = true
 

@@ -20,8 +20,11 @@ describe('TimerGauge', () => {
 		Object.defineProperty(parser, 'currentTimestamp', {
 			get: () => currentTimestamp,
 		})
-		Object.defineProperty(parser, 'fight', {
-			get: () => ({start_time: 0, end_time: 1000}),
+		Object.defineProperty(parser, 'pull', {
+			get: () => ({timestamp: 0, duration: 1000}),
+		})
+		Object.defineProperty(parser, 'eventTimeOffset', {
+			get: () => 0,
 		})
 
 		addTimestampHook = jest.fn().mockImplementation(() => {

@@ -118,7 +118,7 @@ export default class GlobalCooldown extends Module {
 	}
 
 	_onComplete() {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		// Timeline output
 		this.gcds.forEach(gcd => {
