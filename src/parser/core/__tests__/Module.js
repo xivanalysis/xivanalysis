@@ -5,7 +5,7 @@ import {Dispatcher} from '../Dispatcher'
 import {Team} from 'report'
 import {GameEdition} from 'data/PATCHES'
 
-jest.mock('../Dispatcher')//
+jest.mock('../Dispatcher')
 
 /* eslint-disable no-magic-numbers */
 

@@ -2,7 +2,7 @@ import Parser from 'parser/core/Parser'
 import {TimerGauge} from 'parser/core/modules/Gauge'
 
 jest.mock('parser/core/Parser')
-const MockedParser = Parser as jest.Mock<Parser>//
+const MockedParser = Parser as jest.Mock<Parser>
 
 // tslint:disable:no-magic-numbers
 
