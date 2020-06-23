@@ -2,7 +2,7 @@ import Parser from 'parser/core/Parser'
 import {TimerGauge} from 'parser/core/modules/Gauge'
 
 jest.mock('parser/core/Parser')
-const MockedParser = Parser as jest.Mock<Parser>
+const MockedParser = Parser as jest.Mock<Parser>//
 
 // tslint:disable:no-magic-numbers
 
@@ -20,8 +20,11 @@ describe('TimerGauge', () => {
 		Object.defineProperty(parser, 'currentTimestamp', {
 			get: () => currentTimestamp,
 		})
-		Object.defineProperty(parser, 'fight', {
-			get: () => ({start_time: 0, end_time: 1000}),
+		Object.defineProperty(parser, 'pull', {
+			get: () => ({timestamp: 0, duration: 1000}),
+		})
+		Object.defineProperty(parser, 'eventTimeOffset', {
+			get: () => 0,
 		})
 
 		addTimestampHook = jest.fn().mockImplementation(() => {
