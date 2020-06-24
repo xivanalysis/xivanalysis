@@ -36,19 +36,18 @@ export default class EarthlyStar extends Module {
 	private totalHeld = 0
 	private earlyBurstCount = 0
 
-	private PET_CASTS: number[] = []
+	private PET_CASTS: number[] = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
 
 
 	protected init() {
-		this.PET_CASTS = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
-		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onSet)
+		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onPlace)
 		this.addEventHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
 		// this.addHook('applybuff', {abilityId: PLAYER_STATUSES, by: 'player'}, this._onDominance)
 
 		this.addEventHook('complete', this._onComplete)
 	}
 
-	private onSet(event: CastEvent) {
+	private onPlace(event: CastEvent) {
 		this.uses++
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
 		if (this.lastUse === 0) { this.lastUse = this.parser.fight.start_time }
@@ -94,14 +93,14 @@ export default class EarthlyStar extends Module {
 		*/
 		const holdDuration = this.uses === 0 ? this.parser.fightDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.EARTHLY_STAR.cooldown * 1000))
-		if (usesMissed > 1 || this.uses === 0) {
+		if (usesMissed > 1) {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.EARTHLY_STAR.icon,
 				content: <Trans id="ast.earthly-star.suggestion.missed-use.content">
 					Use <ActionLink {...this.data.actions.EARTHLY_STAR} /> more frequently. It may save a healing GCD and results in more damage output.
 				</Trans>,
 				tiers: SEVERETIES.USES_MISSED,
-				value: this.uses === 0 ? 100 : usesMissed,
+				value: usesMissed,
 				why: <Trans id="ast.earthly-star.suggestion.missed-use.why">
 					About {usesMissed} uses of Earthly Star were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
 				</Trans>,

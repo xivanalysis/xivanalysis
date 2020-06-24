@@ -21,16 +21,6 @@ const SEVERETIES = {
 	},
 }
 
-const HELIOS_CASTS: Array<keyof ActionRoot> = [
-	'HELIOS',
-	'ASPECTED_HELIOS',
-]
-
-const HOROSCOPE_STATUSES: Array<keyof StatusRoot> = [
-	'HOROSCOPE',
-	'HOROSCOPE_HELIOS',
-]
-
 interface HoroscopeWindow {
 	start: number,
 	end: number | null,
