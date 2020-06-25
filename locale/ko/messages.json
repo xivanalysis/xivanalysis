@@ -730,7 +730,7 @@
   "sam.interrupts.suggestion.content": "<0/> 시전이 끊기지 않게 하도록 조심하십시오. 짧은 시전 시간을 가지고 있지만 섲불리 움직였다간 끊길 위험이 있으며 끊기면 다시 재시전 해야하는 만큼 시간을 낭비하게 됩니다.",
   "sam.kaiten.suggestion.badkaiten.content": "<0/>사용시 <1/>외에는 어떤 스킬도 사용해서는 안됩니다. 이러한 행동들은 검기의 효율을 높이기 때문에 가치가 있습니다.",
   "sam.kaiten.suggestion.missedkaiten.content": "항상 <0/>은 <1/>와 <2/>에 사용하세요. 필살검: 회천을 사용시 이러한 행동들이 얻는 이점은 매우 큽니다.",
-  "sam.kaiten.suggestion.missedkaiten.why": "필살검: 회천을 {0, plural, one {#회} other {#회}} <0/>나 <1/>에 사용하지 않았습니다.",
+  "sam.kaiten.suggestion.missedkaiten.why": "",
   "sam.kaiten.title": "필살검: 회천",
   "sam.kenki.suggestion.content": "검기는 중요한 자원이며 딜량에 상당한 기여를 합니다. 검기 획득시 {MAX_KENKI}을 초과하여 낭비하지 않도록 제떄 검기를 소모하십시오.",
   "sam.kenki.suggestion.why": "{min}~{max} 의 검기를 낭비했습니다.",
