@@ -8,16 +8,16 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import {Table} from 'semantic-ui-react'
 
-export interface AoeAbility {
+export interface AoeAction {
 	/**
-	 * The AoE ability to check usages of.
+	 * The AoE action to check usages of.
 	 */
-	aoeAbility: Action
+	aoeAction: Action
 	/**
 	 * The single target abilities that should be used in place of the AoE
 	 * ability when there are not enough targets present.
 	 */
-	stAbilities: Action[]
+	stActions: Action[]
 	/**
 	 * The minimum number of targets the AoE ability should hit per cast.
 	 */
@@ -43,7 +43,7 @@ interface SeverityTiers {
  */
 export abstract class AoEUsages extends Module {
 	static handle = 'aoeusages'
-	static title = t('core.aoeusages.title')`Incorrect AoE Ability Usage`
+	static title = t('core.aoeusages.title')`Incorrect AoE Action Usage`
 
 	@dependency private suggestions!: Suggestions
 
@@ -52,9 +52,9 @@ export abstract class AoEUsages extends Module {
 	 */
 	abstract suggestionIcon: string
 	/**
-	 * Implementing modules MUST define the abilities that are to be monitored.
+	 * Implementing modules MUST define the actions that are to be monitored.
 	 */
-	abstract trackedAbilities: AoeAbility[]
+	abstract trackedActions: AoeAction[]
 
 	/**
 	 * Implementing modules MAY override the severity tiers for incorrect AoE usages.
@@ -66,14 +66,14 @@ export abstract class AoEUsages extends Module {
 	}
 
 	protected suggestionContent: JSX.Element | string = <Trans id="core.aoeusages.suggestion.content">
-		Avoid using AoE abilities when they would do less damage than an alternative single-target ability that shares a resource cost or cooldown.
+		Avoid using AoE actions when they would do less damage than an alternative single-target ability that shares a resource cost or cooldown.
 		If the AoE skill cannot hit enough targets, the single-target ability will do more total damage and should be used instead.
 	</Trans>
 
 	private badUsages = new Map<number, number>()
 
 	protected init() {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedAbilities.map(a => a.aoeAbility.id)}, this.onAbility)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedActions.map(a => a.aoeAction.id)}, this.onAbility)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -81,14 +81,14 @@ export abstract class AoEUsages extends Module {
 	 * Implementing modules that have special logic where the number of minimum
 	 * targets for a skill is not constant may override this as needed.
 	 * @param event The event for which the number of minimum targets is being adjusted.
-	 * @param minTargets The default number of minimum targets for the ability as defined in trackedAbilities.
+	 * @param minTargets The default number of minimum targets for the action as defined in trackedActions.
 	 */
 	protected adjustMinTargets(event: NormalisedDamageEvent, minTargets: number) {
 		return minTargets
 	}
 
 	private onAbility(event: NormalisedDamageEvent) {
-		const tracked = this.trackedAbilities.find(a => a.aoeAbility.id === event.ability.guid)
+		const tracked = this.trackedActions.find(a => a.aoeAction.id === event.ability.guid)
 
 		if (tracked === undefined) { return }
 
@@ -107,7 +107,7 @@ export abstract class AoEUsages extends Module {
 			tiers: this.severity,
 			value: totalBadUsages,
 			why: <Trans id="core.aoeusages.suggestion.why">
-				AoE abilities were used against too few targets <Plural value={totalBadUsages} one="# time" other="# times" />.
+				AoE actions were used against too few targets <Plural value={totalBadUsages} one="# time" other="# times" />.
 			</Trans>,
 		}))
 	}
@@ -122,19 +122,21 @@ export abstract class AoEUsages extends Module {
 		<Table collapsing unstackable>
 			<Table.Header>
 				<Table.Row>
-					<Table.HeaderCell><Trans id="core.aoeusages.aoe-ability">AoE Ability Used</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="core.aoeusages.st-alternative">Single Target Alternative</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="core.aoeusages.number-bad-usages">Number of Usages Against Too Few Targets</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="core.aoeusages.aoe-ability">AoE action used</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="core.aoeusages.st-alternative">Single target alternative</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="core.aoeusages.min-targets">Minimum targets</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="core.aoeusages.number-bad-usages">Incorrect usages</Trans></Table.HeaderCell>
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-				{this.trackedAbilities
-				.filter(a => this.badUsages.has(a.aoeAbility.id))
+				{this.trackedActions
+				.filter(a => this.badUsages.has(a.aoeAction.id))
 				.map(a => {
-					return <Table.Row key={a.aoeAbility.id}>
-						<Table.Cell><ActionLink {...a.aoeAbility} /></Table.Cell>
-						<Table.Cell>{a.stAbilities.map(s => <ActionLink {...s} />)}</Table.Cell>
-						<Table.Cell>{this.badUsages.get(a.aoeAbility.id)}</Table.Cell>
+					return <Table.Row key={a.aoeAction.id}>
+						<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
+						<Table.Cell>{a.stActions.map(s => <ActionLink {...s} />)}</Table.Cell>
+						<Table.Cell>{a.minTargets}+</Table.Cell>
+						<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
 					</Table.Row>
 				})}
 			</Table.Body>

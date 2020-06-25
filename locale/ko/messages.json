@@ -216,6 +216,7 @@
   "core.analyse.see-more": "더 보기",
   "core.analyse.view-on-fflogs": "FF Logs에서 기록 보기",
   "core.aoeusages.aoe-ability": "사용된 광역 기술",
+  "core.aoeusages.min-targets": "",
   "core.aoeusages.number-bad-usages": "소수 개체에게 사용된 횟수",
   "core.aoeusages.st-alternative": "대체 기술 추천",
   "core.aoeusages.suggestion.content": "단일 대상 딜 사이클을 사용하면서도 총 데미지가 낮다면 광역 기술 딜사이클 사용을 기피하십시오. 광역 대상 개체가 적을 경우 최종 데미지는 더 적으므로 단일 대상 딜 사이클을 사용하십시오.",

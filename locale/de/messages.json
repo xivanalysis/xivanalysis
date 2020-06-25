@@ -216,6 +216,7 @@
   "core.analyse.see-more": "Siehe mehr",
   "core.analyse.view-on-fflogs": "Bericht auf FF Logs ansehen",
   "core.aoeusages.aoe-ability": "Flächenfähigkeit genutzt",
+  "core.aoeusages.min-targets": "",
   "core.aoeusages.number-bad-usages": "Anzahl der Fähigkeiten, die gegen zu wenige Ziele genutzt wurden",
   "core.aoeusages.st-alternative": "Alternative für Einzielangriffe",
   "core.aoeusages.suggestion.content": "Vermeide es, Flächenfähigkeiten zu nutzen sofern Einzelangriffe, die die gleiche Resource oder Abklingzeit verwenden, mehr Schaden anrichten. Wenn der Flächenangriff nicht genug Gegner trifft, wird ein Einzelangriff insgesamt mehr Schaden anrichten und sollte genutzt werden.",
