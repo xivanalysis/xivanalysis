@@ -730,7 +730,7 @@
   "sam.interrupts.suggestion.content": "Avoid interrupting <0/> casts. Despite the short cast time, moving too early can interrupt the skill causing you to have to waste time re-casting it.",
   "sam.kaiten.suggestion.badkaiten.content": "Avoid using <0/> on any GCDs besides <1/> moves. These actions are worth it because of the potency gain per kenki spent.",
   "sam.kaiten.suggestion.missedkaiten.content": "Always use <0/> on <1/> and <2/>. The gain on these actions from kaiten is too great to miss.",
-  "sam.kaiten.suggestion.missedkaiten.why": "You failed to Kaiten {0, plural, one {# time} other {# times}} on either  on <0/> and/or <1/>",
+  "sam.kaiten.suggestion.missedkaiten.why": "You failed to Kaiten {0, plural, one {# time} other {# times}} on either <0/> or <1/>",
   "sam.kaiten.title": "Kaiten",
   "sam.kenki.suggestion.content": "Kenki is your primary resource, and a significant source of damage. Avoid wasting potential kenki by using it before you hit the maximum of {MAX_KENKI}.",
   "sam.kenki.suggestion.why": "You wasted between {min} and {max} kenki.",
