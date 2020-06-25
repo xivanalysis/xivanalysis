@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-06-25'),
+		Changes: () => <>
+			Added a module that shows misused AoE actions.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-06-03'),
 		Changes: () => <>
 			Updated the Snapshots module to show DoTs separately and filter out unnecessary statuses.
