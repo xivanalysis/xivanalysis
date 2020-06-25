@@ -730,7 +730,7 @@
   "sam.interrupts.suggestion.content": "Evitez d'interrompre les utilisations de <0/>. Malgré la brièveté de la durée du casting, un déplacement trop précoce peut interrompre la compétence et vous faire perdre du temps à la refaire.",
   "sam.kaiten.suggestion.badkaiten.content": "Évitez d'utiliser <0/> sur tous les GCDs en plus des mouvements <1/>. Ces actions en valent la peine en raison du gain de puissance par kenki dépensé.",
   "sam.kaiten.suggestion.missedkaiten.content": "Toujours utiliser <0/> sur <1/> et <2/>. Le gain sur ces actions de Kaiten est trop grand pour le manquer.",
-  "sam.kaiten.suggestion.missedkaiten.why": "Vous n'avez pas réussi à Kaiten {0, plural,one {#fois}other {#fois}} soit sur <0/> et/ou <1/>",
+  "sam.kaiten.suggestion.missedkaiten.why": "",
   "sam.kaiten.title": "Kaiten",
   "sam.kenki.suggestion.content": "Kenki est votre principale ressource et une source importante de dommages. Évitez de gaspiller le kenki potentiel en l'utilisant avant d'atteindre le maximum de {MAX_KENKI}.",
   "sam.kenki.suggestion.why": "Tu as gaspillé entre {min} et {max} Kenki.",
