@@ -6,10 +6,12 @@ import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import {BuffWindowState} from 'parser/core/modules/BuffWindow'
 
 // Set for stuff to ignore TODO: revisit this and get it to show iaijutsu properly
 // const IGNORE_THIS = new Set([ACTIONS.MIDARE_SETSUGEKKA.id, ACTIONS.TENKA_GOKEN.id, ACTIONS.HIGANBANA.id, ACTIONS.KAESHI_SETSUGEKKA.id, ACTIONS.KAESHI_GOKEN.id, ACTIONS.KAESHI_HIGANBANA])
 const ONLY_SHOW = new Set([ACTIONS.HAKAZE.id, ACTIONS.JINPU.id, ACTIONS.ENPI.id, ACTIONS.SHIFU.id, ACTIONS.FUGA.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id, ACTIONS.YUKIKAZE.id])
+const SEN_GCDS = 3
 
 export default class MeikyoShisui extends BuffWindowModule {
 	static handle = 'Meikyo'
@@ -19,7 +21,7 @@ export default class MeikyoShisui extends BuffWindowModule {
 	buffStatus = STATUSES.MEIKYO_SHISUI
 
 expectedGCDs = {
-	expectedPerWindow: 3,
+	expectedPerWindow: SEN_GCDS,
 	suggestionContent: <Trans id="sam.ms.suggestions.missedgcd.content">
 			Try to land 3 GCDs during every <ActionLink {...ACTIONS.MEIKYO_SHISUI} /> window. </Trans>,
 	severityTiers: {
@@ -58,4 +60,27 @@ considerAction(action: Action) {
 	return false
 
 }
+
+// override for end of fight reducing
+
+reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
+		if ( this.buffStatus.duration ) {
+			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
+			const windowDurationMillis = this.buffStatus.duration * 1000
+			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+
+			if (windowDurationMillis >= fightTimeRemaining) {
+				const gcdEstimate = this.globalCooldown.getEstimate()
+				const possibleGCDs = Math.ceil(fightTimeRemaining / gcdEstimate)
+
+				if (possibleGCDs < SEN_GCDS) {
+					const reduceGCDsBy = (SEN_GCDS - possibleGCDs)
+					return reduceGCDsBy
+				}
+			}
+		}
+
+		// Default: no rushing reduction
+		return 0
+	}
 }
