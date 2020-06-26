@@ -74,8 +74,8 @@ reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 			if (windowDurationMillis >= fightTimeRemaining) {
-				// const gcdEstimate = this.globalCooldown.getEstimate()
-				const possibleGCDs = Math.ceil(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
+				// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
+				const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
 				if (possibleGCDs < SEN_GCDS) {
 					const reduceGCDsBy = (SEN_GCDS - possibleGCDs)
