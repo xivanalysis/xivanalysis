@@ -13,6 +13,10 @@ import {BuffWindowState} from 'parser/core/modules/BuffWindow'
 const ONLY_SHOW = new Set([ACTIONS.HAKAZE.id, ACTIONS.JINPU.id, ACTIONS.ENPI.id, ACTIONS.SHIFU.id, ACTIONS.FUGA.id, ACTIONS.GEKKO.id, ACTIONS.MANGETSU.id, ACTIONS.KASHA.id, ACTIONS.OKA.id, ACTIONS.YUKIKAZE.id])
 const SEN_GCDS = 3
 
+// A set const for SAM speed with 0 speed and shifu up, not sure I like this idea tbh but Aza requested it.
+// TODO: Check when adding Iais to table that this set speed doesn't cause missed skills to be not counted against
+const SAM_BASE_GCD_SPEED_BUFFED = 2.18
+
 export default class MeikyoShisui extends BuffWindowModule {
 	static handle = 'Meikyo'
 	static title = t('sam.ms.title')`Meikyo Shisui Windows`
@@ -70,8 +74,8 @@ reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 			if (windowDurationMillis >= fightTimeRemaining) {
-				const gcdEstimate = this.globalCooldown.getEstimate()
-				const possibleGCDs = Math.ceil(fightTimeRemaining / gcdEstimate)
+				// const gcdEstimate = this.globalCooldown.getEstimate()
+				const possibleGCDs = Math.ceil(fightTimeRemaining / SAM_GCD_SPEED_BUFFED)
 
 				if (possibleGCDs < SEN_GCDS) {
 					const reduceGCDsBy = (SEN_GCDS - possibleGCDs)
