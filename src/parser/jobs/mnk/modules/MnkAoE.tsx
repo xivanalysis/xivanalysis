@@ -18,22 +18,22 @@ export default class MnkAoE extends AoEUsages {
 	// Assuming user is in the correct Form
 	trackedActions: AoEAction[] = [
 		{
-			AoEAction: ACTIONS.ARM_OF_THE_DESTROYER,
+			aoeAction: ACTIONS.ARM_OF_THE_DESTROYER,
 			stActions: [ACTIONS.BOOTSHINE, ACTIONS.DRAGON_KICK],
 			minTargets: 3,
 		},
 		{
-			AoEAction: ACTIONS.FOUR_POINT_FURY,
+			aoeAction: ACTIONS.FOUR_POINT_FURY,
 			stActions: [ACTIONS.TRUE_STRIKE, ACTIONS.TWIN_SNAKES],
 			minTargets: 2,
 		},
 		{
-			AoEAction: ACTIONS.ROCKBREAKER,
+			aoeAction: ACTIONS.ROCKBREAKER,
 			stActions: [ACTIONS.DEMOLISH, ACTIONS.SNAP_PUNCH],
 			minTargets: 2,
 		},
 		{
-			AoEAction: ACTIONS.ENLIGHTENMENT,
+			aoeAction: ACTIONS.ENLIGHTENMENT,
 			stActions: [ACTIONS.THE_FORBIDDEN_CHAKRA],
 			minTargets: 2,
 		},

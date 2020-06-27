@@ -11,17 +11,17 @@ export default class MultiHit extends AoEUsages {
 
 	trackedActions = [
 		{
-			AoEAction: ACTIONS.OUTBURST,
+			aoeAction: ACTIONS.OUTBURST,
 			stActions: [ACTIONS.RUIN_III],
 			minTargets: 3,
 		},
 		{
-			AoEAction: ACTIONS.PAINFLARE,
+			aoeAction: ACTIONS.PAINFLARE,
 			stActions: [ACTIONS.FESTER],
 			minTargets: 3,
 		},
 		{
-			AoEAction: ACTIONS.ENERGY_SIPHON,
+			aoeAction: ACTIONS.ENERGY_SIPHON,
 			stActions: [ACTIONS.ENERGY_DRAIN],
 			minTargets: 3,
 		},

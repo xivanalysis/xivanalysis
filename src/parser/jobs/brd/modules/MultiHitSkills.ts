@@ -6,15 +6,15 @@ export default class MultiHitSkills extends AoEUsages {
 
 	trackedActions = [
 		{
-			AoEAction: ACTIONS.QUICK_NOCK,
+			aoeAction: ACTIONS.QUICK_NOCK,
 			stActions: [ACTIONS.BURST_SHOT],
 			minTargets: 2,
 		}, {
-			AoEAction: ACTIONS.RAIN_OF_DEATH,
+			aoeAction: ACTIONS.RAIN_OF_DEATH,
 			stActions: [ACTIONS.BLOODLETTER],
 			minTargets: 2,
 		}, {
-			AoEAction: ACTIONS.SHADOWBITE,
+			aoeAction: ACTIONS.SHADOWBITE,
 			stActions: [ACTIONS.SIDEWINDER],
 			minTargets: 2,
 		},

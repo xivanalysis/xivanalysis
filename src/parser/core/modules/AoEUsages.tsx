@@ -12,7 +12,7 @@ export interface AoEAction {
 	/**
 	 * The AoE action to check usages of.
 	 */
-	AoEAction: Action
+	aoeAction: Action
 	/**
 	 * The single target abilities that should be used in place of the AoE
 	 * ability when there are not enough targets present.
@@ -73,7 +73,7 @@ export abstract class AoEUsages extends Module {
 	private badUsages = new Map<number, number>()
 
 	protected init() {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedActions.map(a => a.AoEAction.id)}, this.onAbility)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.trackedActions.map(a => a.aoeAction.id)}, this.onAbility)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -88,7 +88,7 @@ export abstract class AoEUsages extends Module {
 	}
 
 	private onAbility(event: NormalisedDamageEvent) {
-		const tracked = this.trackedActions.find(a => a.AoEAction.id === event.ability.guid)
+		const tracked = this.trackedActions.find(a => a.aoeAction.id === event.ability.guid)
 
 		if (tracked === undefined) { return }
 
@@ -130,13 +130,13 @@ export abstract class AoEUsages extends Module {
 			</Table.Header>
 			<Table.Body>
 				{this.trackedActions
-				.filter(a => this.badUsages.has(a.AoEAction.id))
+				.filter(a => this.badUsages.has(a.aoeAction.id))
 				.map(a => {
-					return <Table.Row key={a.AoEAction.id}>
-						<Table.Cell><ActionLink {...a.AoEAction} /></Table.Cell>
+					return <Table.Row key={a.aoeAction.id}>
+						<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
 						<Table.Cell>{a.stActions.map(s => <ActionLink {...s} />)}</Table.Cell>
 						<Table.Cell>{a.minTargets}</Table.Cell>
-						<Table.Cell>{this.badUsages.get(a.AoEAction.id)}</Table.Cell>
+						<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
 					</Table.Row>
 				})}
 			</Table.Body>

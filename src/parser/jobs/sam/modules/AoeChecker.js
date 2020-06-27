@@ -13,45 +13,45 @@ export default class AoeChecker extends AoEUsages {
 
 	trackedActions = [
 		{
-			AoEAction: ACTIONS.HISSATSU_GUREN,
+			aoeAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
 			minTargets: 2,
 		},
 
 		{
-			AoEAction: ACTIONS.HISSATSU_KYUTEN,
+			aoeAction: ACTIONS.HISSATSU_KYUTEN,
 			stActions: [ACTIONS.HISSATSU_SHINTEN],
 			minTargets: 3,
 		},
 
 		{
-			AoEAction: ACTIONS.TENKA_GOKEN,
+			aoeAction: ACTIONS.TENKA_GOKEN,
 			stActions: [ACTIONS.MIDARE_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
-			AoEAction: ACTIONS.KAESHI_GOKEN,
+			aoeAction: ACTIONS.KAESHI_GOKEN,
 			stActions: [ACTIONS.KAESHI_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
-			AoEAction: ACTIONS.FUGA,
+			aoeAction: ACTIONS.FUGA,
 			stActions: [ACTIONS.HAKAZE],
 			minTargets: 3,
 
 		},
 
 		{
-			AoEAction: ACTIONS.OKA,
+			aoeAction: ACTIONS.OKA,
 			stActions: [ACTIONS.KASHA],
 			minTargets: 3,
 
 		},
 
 		{
-			AoEAction: ACTIONS.MANGETSU,
+			aoeAction: ACTIONS.MANGETSU,
 			stActions: [ACTIONS.GEKKO],
 			minTargets: 3,
 
