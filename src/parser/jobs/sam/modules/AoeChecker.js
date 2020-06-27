@@ -13,46 +13,46 @@ export default class AoeChecker extends AoEUsages {
 
 	trackedAbilities = [
 		{
-			aoeAbility: ACTIONS.HISSATSU_GUREN,
-			stAbilities: [ACTIONS.HISSATSU_SENEI],
+			AoEAction: ACTIONS.HISSATSU_GUREN,
+			stActions: [ACTIONS.HISSATSU_SENEI],
 			minTargets: 2,
 		},
 
 		{
-			aoeAbility: ACTIONS.HISSATSU_KYUTEN,
-			stAbilities: [ACTIONS.HISSATSU_SHINTEN],
+			AoEAction: ACTIONS.HISSATSU_KYUTEN,
+			stActions: [ACTIONS.HISSATSU_SHINTEN],
 			minTargets: 3,
 		},
 
 		{
-			aoeAbility: ACTIONS.TENKA_GOKEN,
-			stAbilities: [ACTIONS.MIDARE_SETSUGEKKA],
+			AoEAction: ACTIONS.TENKA_GOKEN,
+			stActions: [ACTIONS.MIDARE_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
-			aoeAbility: ACTIONS.KAESHI_GOKEN,
-			stAbilities: [ACTIONS.KAESHI_SETSUGEKKA],
+			AoEAction: ACTIONS.KAESHI_GOKEN,
+			stActions: [ACTIONS.KAESHI_SETSUGEKKA],
 			minTargets: 2,
 		},
 
 		{
-			aoeAbility: ACTIONS.FUGA,
-			stAbilities: [ACTIONS.HAKAZE],
-			minTargets: 3,
-
-		},
-
-		{
-			aoeAbility: ACTIONS.OKA,
-			stAbilities: [ACTIONS.KASHA],
+			AoEAction: ACTIONS.FUGA,
+			stActions: [ACTIONS.HAKAZE],
 			minTargets: 3,
 
 		},
 
 		{
-			aoeAbility: ACTIONS.MANGETSU,
-			stAbilities: [ACTIONS.GEKKO],
+			AoEAction: ACTIONS.OKA,
+			stActions: [ACTIONS.KASHA],
+			minTargets: 3,
+
+		},
+
+		{
+			AoEAction: ACTIONS.MANGETSU,
+			stActions: [ACTIONS.GEKKO],
 			minTargets: 3,
 
 		},

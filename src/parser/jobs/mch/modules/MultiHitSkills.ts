@@ -6,15 +6,15 @@ export default class MultiHitSkills extends AoEUsages {
 
 	trackedActions = [
 		{
-			aoeAction: ACTIONS.BIOBLASTER,
+			AoEAction: ACTIONS.BIOBLASTER,
 			stActions: [ACTIONS.DRILL],
 			minTargets: 2,
 		}, {
-			aoeAction: ACTIONS.AUTO_CROSSBOW,
+			AoEAction: ACTIONS.AUTO_CROSSBOW,
 			stActions: [ACTIONS.HEAT_BLAST],
 			minTargets: 3,
 		}, {
-			aoeAction: ACTIONS.SPREAD_SHOT,
+			AoEAction: ACTIONS.SPREAD_SHOT,
 			stActions: [
 				ACTIONS.HEATED_SPLIT_SHOT,
 				ACTIONS.HEATED_SLUG_SHOT,

@@ -9,20 +9,20 @@ export default class MultiHit extends AoEUsages {
 
 	suggestionIcon = ACTIONS.OUTBURST.icon
 
-	trackedAbilities = [
+	trackedActions = [
 		{
-			aoeAbility: ACTIONS.OUTBURST,
-			stAbilities: [ACTIONS.RUIN_III],
+			AoEAction: ACTIONS.OUTBURST,
+			stActions: [ACTIONS.RUIN_III],
 			minTargets: 3,
 		},
 		{
-			aoeAbility: ACTIONS.PAINFLARE,
-			stAbilities: [ACTIONS.FESTER],
+			AoEAction: ACTIONS.PAINFLARE,
+			stActions: [ACTIONS.FESTER],
 			minTargets: 3,
 		},
 		{
-			aoeAbility: ACTIONS.ENERGY_SIPHON,
-			stAbilities: [ACTIONS.ENERGY_DRAIN],
+			AoEAction: ACTIONS.ENERGY_SIPHON,
+			stActions: [ACTIONS.ENERGY_DRAIN],
 			minTargets: 3,
 		},
 	]

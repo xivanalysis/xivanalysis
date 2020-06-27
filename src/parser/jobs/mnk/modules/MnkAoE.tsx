@@ -1,7 +1,7 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {dependency} from 'parser/core/Module'
-import {AoeAction, AoEUsages} from 'parser/core/modules/AoEUsages'
+import {AoEAction, AoEUsages} from 'parser/core/modules/AoEUsages'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
@@ -16,24 +16,24 @@ export default class MnkAoE extends AoEUsages {
 	suggestionIcon = ACTIONS.ENLIGHTENMENT.icon
 
 	// Assuming user is in the correct Form
-	trackedActions: AoeAction[] = [
+	trackedActions: AoEAction[] = [
 		{
-			aoeAction: ACTIONS.ARM_OF_THE_DESTROYER,
+			AoEAction: ACTIONS.ARM_OF_THE_DESTROYER,
 			stActions: [ACTIONS.BOOTSHINE, ACTIONS.DRAGON_KICK],
 			minTargets: 3,
 		},
 		{
-			aoeAction: ACTIONS.FOUR_POINT_FURY,
+			AoEAction: ACTIONS.FOUR_POINT_FURY,
 			stActions: [ACTIONS.TRUE_STRIKE, ACTIONS.TWIN_SNAKES],
 			minTargets: 2,
 		},
 		{
-			aoeAction: ACTIONS.ROCKBREAKER,
+			AoEAction: ACTIONS.ROCKBREAKER,
 			stActions: [ACTIONS.DEMOLISH, ACTIONS.SNAP_PUNCH],
 			minTargets: 2,
 		},
 		{
-			aoeAction: ACTIONS.ENLIGHTENMENT,
+			AoEAction: ACTIONS.ENLIGHTENMENT,
 			stActions: [ACTIONS.THE_FORBIDDEN_CHAKRA],
 			minTargets: 2,
 		},

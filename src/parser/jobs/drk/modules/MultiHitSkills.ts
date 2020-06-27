@@ -6,22 +6,22 @@ export class MultiHitSkills extends AoEUsages {
 
 	trackedActions = [
 		{
-			aoeAction: ACTIONS.FLOOD_OF_SHADOW,
+			AoEAction: ACTIONS.FLOOD_OF_SHADOW,
 			stActions: [ACTIONS.EDGE_OF_SHADOW],
 			minTargets: 2,
 		},
 		{
-			aoeAction: ACTIONS.QUIETUS,
+			AoEAction: ACTIONS.QUIETUS,
 			stActions: [ACTIONS.BLOODSPILLER],
 			minTargets: 3,
 		},
 		{
-			aoeAction: ACTIONS.UNLEASH,
+			AoEAction: ACTIONS.UNLEASH,
 			stActions: [ACTIONS.HARD_SLASH, ACTIONS.SYPHON_STRIKE, ACTIONS.SOULEATER],
 			minTargets: 2,
 		},
 		{
-			aoeAction: ACTIONS.STALWART_SOUL,
+			AoEAction: ACTIONS.STALWART_SOUL,
 			stActions: [ACTIONS.HARD_SLASH, ACTIONS.SYPHON_STRIKE, ACTIONS.SOULEATER],
 			minTargets: 2,
 		},
