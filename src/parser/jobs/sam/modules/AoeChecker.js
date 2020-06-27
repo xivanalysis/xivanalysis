@@ -11,7 +11,7 @@ export default class AoeChecker extends AoEUsages {
 	]
 	suggestionIcon = ACTIONS.FUGA.icon
 
-	trackedAbilities = [
+	trackedActions = [
 		{
 			AoEAction: ACTIONS.HISSATSU_GUREN,
 			stActions: [ACTIONS.HISSATSU_SENEI],
