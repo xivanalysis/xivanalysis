@@ -13,7 +13,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {EntityStatuses} from '../../../core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -170,41 +170,56 @@ export default class Fists extends Module {
 		// Flush the last stance
 		this.fistory.push({...this.activeFist, end: this.parser.fight.end_time})
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FISTS_OF_FIRE.icon,
-			content: <Trans id="mnk.fists.suggestions.stanceless.content">
-				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} />, or outright more GCDs with <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
-			</Trans>,
-			why: <Trans id="mnk.fists.suggestions.stanceless.why">
-				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
-			</Trans>,
-			tiers: FIST_SEVERITY.FISTLESS,
-			value: this.getFistGCDCount(FISTLESS),
-		}))
+		const unknownFist = this.fistory.length === 1 && this.fistory[0].id === FISTLESS
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FISTS_OF_EARTH.icon,
-			content: <Trans id="mnk.fists.suggestions.foe.content">
-				When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_WIND} /> as soon as possible.
-			</Trans>,
-			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
-			why: <Trans id="mnk.fists.suggestions.foe.why">
-				<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
-			</Trans>,
-			value: this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id),
-		}))
+		if (unknownFist) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.FISTS_OF_FIRE.icon,
+				content: <Trans id="mnk.fists.suggestions.unknownfist.content">
+					Try to use <StatusLink {...STATUSES.FISTS_OF_FIRE} /> up to GL{MAX_STACKS} and <StatusLink {...STATUSES.FISTS_OF_WIND}/> for GL{MAX_FASTER}.
+				</Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id="mnk.fists.suggestions.unknownfist.why">
+					No Fist transition was detected over the fight.
+				</Trans>,
+			}))
+		} else {
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.FISTS_OF_FIRE.icon,
+				content: <Trans id="mnk.fists.suggestions.stanceless.content">
+					Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} />, or outright more GCDs with <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
+				</Trans>,
+				why: <Trans id="mnk.fists.suggestions.stanceless.why">
+					<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
+				</Trans>,
+				tiers: FIST_SEVERITY.FISTLESS,
+				value: this.getFistGCDCount(FISTLESS),
+			}))
 
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FISTS_OF_WIND.icon,
-			content: <Trans id="mnk.fists.suggestions.fow.content">
-				Avoid swapping to <StatusLink {...STATUSES.FISTS_OF_WIND}/> while below {MAX_STACKS} stacks until you're about to execute a <StatusLink {...STATUSES.COEURL_FORM} /> skill. <StatusLink {...STATUSES.FISTS_OF_FIRE} /> offers more damage until you can get to GL{MAX_FASTER}.
-			</Trans>,
-			why: <Trans id="mnk.fists.suggestions.fow.why">
-				<StatusLink {...STATUSES.FISTS_OF_WIND}/> was activated <Plural value={this.foulWinds} one="# time" other="# times" /> below max stacks.
-			</Trans>,
-			tiers: FIST_SEVERITY.FISTS_OF_WIND,
-			value: this.foulWinds,
-		}))
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.FISTS_OF_EARTH.icon,
+				content: <Trans id="mnk.fists.suggestions.foe.content">
+					When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_WIND} /> as soon as possible.
+				</Trans>,
+				tiers: FIST_SEVERITY.FISTS_OF_EARTH,
+				why: <Trans id="mnk.fists.suggestions.foe.why">
+					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
+				</Trans>,
+				value: this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id),
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: ACTIONS.FISTS_OF_WIND.icon,
+				content: <Trans id="mnk.fists.suggestions.fow.content">
+					Avoid swapping to <StatusLink {...STATUSES.FISTS_OF_WIND}/> while below {MAX_STACKS} stacks until you're about to execute a <StatusLink {...STATUSES.COEURL_FORM} /> skill. <StatusLink {...STATUSES.FISTS_OF_FIRE} /> offers more damage until you can get to GL{MAX_FASTER}.
+				</Trans>,
+				why: <Trans id="mnk.fists.suggestions.fow.why">
+					<StatusLink {...STATUSES.FISTS_OF_WIND}/> was activated <Plural value={this.foulWinds} one="# time" other="# times" /> below max stacks.
+				</Trans>,
+				tiers: FIST_SEVERITY.FISTS_OF_WIND,
+				value: this.foulWinds,
+			}))
+		}
 
 		// Statistics
 		const uptimeKeys = _.uniq(this.fistory.map(fist => fist.id))
@@ -217,7 +232,7 @@ export default class Fists extends Module {
 				value,
 				color: CHART_COLOURS[id],
 				columns: [
-					this.getFistName(id),
+					this.getFistName(id, unknownFist),
 					this.parser.formatDuration(value),
 					this.getFistUptimePercent(id) + '%',
 				] as const,
@@ -242,17 +257,19 @@ export default class Fists extends Module {
 		return ((statusUptime / this.parser.currentDuration) * 100).toFixed(2)
 	}
 
-	getFistName(fistId: number): string {
-		if (fistId === FISTLESS) {
-			// NOTE: Do /not/ return a <Trans> here - it will cause Chart.js to try and clone the entire react tree.
-			// TODO: Work out how to translate this shit.
-			return 'Fistless'
-		}
+	getFistName(fistId: number, missingData: boolean): string {
+		if (!missingData) {
+			if (fistId === FISTLESS) {
+				// NOTE: Do /not/ return a <Trans> here - it will cause Chart.js to try and clone the entire react tree.
+				// TODO: Work out how to translate this shit.
+				return 'Fistless'
+			}
 
-		const status = this.data.getStatus(fistId)
+			const status = this.data.getStatus(fistId)
 
-		if (status) {
-			return status.name
+			if (status) {
+				return status.name
+			}
 		}
 
 		return 'Unknown'
