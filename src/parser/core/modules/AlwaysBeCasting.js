@@ -23,7 +23,7 @@ export default class AlwaysBeCasting extends Module {
 			return
 		}
 
-		const fightDuration = this.parser.fightDuration - this.downtime.getDowntime()
+		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 
 		this.checklist.add(new Rule({
 			name: <Trans id="core.always-cast.title">Always be casting</Trans>,

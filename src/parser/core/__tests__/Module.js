@@ -131,7 +131,7 @@ describe('Module', () => {
 		it('player', () => {
 			module.addEventHook(event.type, {by: 'player'}, hook)
 			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
-				filter: {sourceID: player.id},
+				filter: {sourceID: [player.id]},
 			})
 		})
 

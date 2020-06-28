@@ -214,7 +214,7 @@ export default class TwinSnakes extends Module {
 
 	private getBuffUptimePercent(statusId: number): number {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.combatants.getEntities())
-		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightUptime) * 100
 	}

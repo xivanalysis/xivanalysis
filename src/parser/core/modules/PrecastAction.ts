@@ -12,22 +12,25 @@ export default class PrecastAction extends Module {
 	@dependency private data!: Data
 
 	normalise(events: Event[]): Event[] {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		for (const event of events) {
 			this.debug(`Timestamp: ${event.timestamp} - Event Type: ${String(event.type)} - Action: ${(event.ability != null) ? event.ability.name : ''}`)
 
 			// Only care about ability events by the player
-			if (!this.parser.byPlayer(event) || event.ability == null)
+			if (!this.parser.byPlayer(event) || event.ability == null) {
 				continue
+			}
 
 			// Check if action is an autoattack, ignore if it is
-			if (this.data.getAction(event.ability.guid)?.autoAttack)
+			if (this.data.getAction(event.ability.guid)?.autoAttack) {
 				continue
+			}
 
 			// Once we hit a non-auto cast event, there are no other pre-cast actions to synthesize, bail out
-			if (isCastEvent(event))
+			if (isCastEvent(event)) {
 				break
+			}
 
 			// If this is a damage event, fabricate a cast event for it and end
 			if (isDamageEvent(event)) {

@@ -169,11 +169,6 @@ const CONTRIBUTORS = {
 		avatar: require('./avatar/yumiyafangirl.png'),
 		jobs: [JOBS.MACHINIST],
 	},
-	YUNI: {
-		name: 'Yuni Azure',
-		avatar: require('./avatar/yuni.png'),
-		jobs: [JOBS.SCHOLAR],
-	},
 	RIETTY: {
 		name: 'Rietty',
 		avatar: require('./avatar/rietty.png'),

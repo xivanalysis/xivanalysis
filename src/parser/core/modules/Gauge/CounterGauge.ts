@@ -129,7 +129,7 @@ export class CounterGauge extends AbstractGauge {
 
 		// Map the data into something the chart will understand
 		const data = this.history.map(entry => ({
-			t: entry.timestamp - this.parser.fight.start_time,
+			t: entry.timestamp - this.parser.eventTimeOffset,
 			y: entry.value,
 		}))
 

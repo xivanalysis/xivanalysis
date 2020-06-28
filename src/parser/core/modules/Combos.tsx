@@ -58,7 +58,7 @@ export default class Combos extends Module {
 	@dependency protected suggestions!: Suggestions
 	@dependency private timeline!: Timeline
 
-	private lastGcdTime = this.parser.fight.start_time
+	private lastGcdTime = this.parser.eventTimeOffset
 	private currentComboChain: NormalisedDamageEvent[] = []
 	private issues: ComboIssue[] = []
 
@@ -261,7 +261,7 @@ export default class Combos extends Module {
 		}
 
 		// Access Alias
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		const data = this.issues
 			.sort((a, b) => a.event.timestamp - b.event.timestamp)

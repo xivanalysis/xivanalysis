@@ -23,7 +23,9 @@ export default class Statuses extends Module {
 	constructor(...args) {
 		super(...args)
 
-		const ids = [this.parser.player.id, ...this.parser.player.pets.map(p => p.id)]
+		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor)
+		const ids = [this.parser.actor.id, ...pets.map(pet => pet.id)]
+
 		const byFilter = {by: ids}
 
 		this.addEventHook('complete', this._onComplete)
@@ -86,7 +88,7 @@ export default class Statuses extends Module {
 		if (statusEntry) {
 			const prev = statusEntry.usages[statusEntry.usages.length - 1]
 			if (!prev.end) {
-				prev.end = event.timestamp - this.parser.fight.start_time
+				prev.end = event.timestamp - this.parser.eventTimeOffset
 			}
 		}
 	}
@@ -106,14 +108,14 @@ export default class Statuses extends Module {
 			}
 		}
 		if (statusEntry.usages.some(it => {
-			const diff = Math.abs(event.timestamp - this.parser.fight.start_time - it.start)
+			const diff = Math.abs(event.timestamp - this.parser.eventTimeOffset - it.start)
 			return diff <= STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS
 		})) {
 			return
 		}
 
 		statusEntry.usages.push({
-			start: event.timestamp - this.parser.fight.start_time,
+			start: event.timestamp - this.parser.eventTimeOffset,
 		})
 	}
 
@@ -155,6 +157,7 @@ export default class Statuses extends Module {
 	}
 
 	_isStatusAppliedToPet(event) {
-		return (this.parser.report.friendlyPets.some(p => p.id === event.targetID))
+		return this.parser.pull.actors
+			.some(actor => actor.id === event.targetID?.toString() && actor.owner?.playerControlled)
 	}
 }

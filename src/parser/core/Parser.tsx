@@ -71,14 +71,21 @@ class Parser {
 	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
-		const {end_time, start_time} = this.fight
-		return Math.min(end_time, Math.max(start_time, this.dispatcher.timestamp))
+		const start = this.eventTimeOffset
+		const end = start + this.pull.duration
+		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
+	get currentDuration() {
+		return this.currentTimestamp - this.eventTimeOffset
+	}
+
+	// TODO: REMOVE
 	get fightDuration() {
-		// TODO: should i have like... currentDuration and fightDuration?
-		//       this seems a bit jank
-		return this.currentTimestamp - this.fight.start_time
+		if (process.env.NODE_ENV === 'development') {
+			throw new Error('Please migrate your calls to `parser.fightDuration` to either `parser.pull.duration` (if you need the full pull duration) or `parser.currentDuration` if you need the zeroed current timestamp.')
+		}
+		return this.currentDuration
 	}
 
 	// Get the friendlies that took part in the current fight
@@ -89,8 +96,16 @@ class Parser {
 	}
 
 	get parseDate() {
-		// The report timestamp is relative to the report timestamp, and in ms. Convert.
-		return Math.round((this.report.start + this.fight.start_time) / 1000)
+		// TODO: normalise time to ms across the board
+		return Math.round(this.pull.timestamp / 1000)
+	}
+
+	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
+	get eventTimeOffset() {
+		// TODO: This is _wholly_ reliant on fflog's timestamp handling. Once everyone
+		// is using this instead of start_time, we can start normalising event timestamps
+		// at the source level.
+		return this.pull.timestamp - this.newReport.timestamp
 	}
 
 	// -----
@@ -408,7 +423,7 @@ class Parser {
 		}
 
 		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
-		if (getReportPatch(this.report).branch) {
+		if (getReportPatch(this.newReport).branch) {
 			return
 		}
 
