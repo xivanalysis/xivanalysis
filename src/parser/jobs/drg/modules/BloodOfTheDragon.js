@@ -35,7 +35,7 @@ export default class BloodOfTheDragon extends Module {
 		'suggestions',
 		'timeline',
 	]
-	static displayOrder = DISPLAY_ORDER.LIFE_OF_THE_DRAGON_GAUGE
+	static displayOrder = DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_GAUGE
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 30s anyway.
