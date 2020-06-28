@@ -220,7 +220,7 @@ export default class DirtyDancing extends Module {
 	private getStandardFinishUptimePercent() {
 		// Exclude downtime from both the status time and expected uptime
 		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.STANDARD_FINISH.id, this.combatants.getEntities()) - this.downtime.getDowntime()
-		const uptime = this.parser.fightDuration - this.downtime.getDowntime()
+		const uptime = this.parser.currentDuration - this.downtime.getDowntime()
 
 		return (statusTime / uptime) * 100
 	}

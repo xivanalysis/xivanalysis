@@ -50,7 +50,7 @@ export default class Death extends Module {
 	}
 
 	_onRaise(event) {
-		this._addDeathToTimeline(event.timestamp)
+		this._addDeathToTimeline(event.timestamp - this.parser.eventTimeOffset)
 		this.parser.fabricateEvent({
 			type: 'raise',
 			timestamp: event.timestamp,
@@ -63,14 +63,14 @@ export default class Death extends Module {
 		// pretty meaningless to complain about.
 		// Max at 0 because dummy parses aren't counted as kills, though.
 		if (
-			!this.parser.fight.kill &&
+			(this.parser.pull.progress ?? 0) < 100 &&
 			this._timestamp
 		) {
 			this._count = Math.max(this._count - 1, 0)
 		}
 
 		if (this._timestamp) {
-			this._addDeathToTimeline(this.parser.fight.end_time)
+			this._addDeathToTimeline(this.parser.pull.duration)
 		}
 
 		if (!this._count) {
@@ -99,11 +99,9 @@ export default class Death extends Module {
 	}
 
 	_addDeathToTimeline(end) {
-		const startTime = this.parser.fight.start_time
-
 		this.timeline.addItem(new SimpleItem({
-			start: this._timestamp - startTime,
-			end: end - startTime,
+			start: this._timestamp - this.parser.eventTimeOffset,
+			end,
 			// TODO: This but better?
 			content: <div style={{width: '100%', height: '100%', backgroundColor: '#ce909085'}}/>,
 		}))

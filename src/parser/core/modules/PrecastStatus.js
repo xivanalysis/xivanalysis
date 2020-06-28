@@ -17,7 +17,7 @@ export default class PrecastStatus extends Module {
 	_combatantActions = []
 	_statusesToSynth = []
 	_actionsToSynth = []
-	_startTime = this.parser.fight.start_time
+	_startTime = this.parser.eventTimeOffset
 
 	normalise(events) {
 		for (let i = 0; i < events.length; i++) {

@@ -1,9 +1,12 @@
 import classNames from 'classnames'
+import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
-import React from 'react'
+import React, {useRef, useEffect, useContext} from 'react'
+import ReactDOM from 'react-dom'
 import {Icon, Popup} from 'semantic-ui-react'
 
 import I18nMenu from 'components/ui/I18nMenu'
+import {StoreContext} from 'store'
 import ReportLink from './ReportLink'
 
 import styles from './Options.module.css'
@@ -13,19 +16,25 @@ const version = process.env.REACT_APP_VERSION || 'DEV'
 const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
 const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
 
-export default class Options extends React.Component {
-	static propTypes = {
-		view: PropTypes.oneOf([
-			'vertial',
-			'horizontal',
-		]),
-	}
+export default function Options(props) {
+	const {view = 'vertical'} = props
 
-	render() {
-		const {view = 'vertical'} = this.props
+	const {sidebarStore} = useContext(StoreContext)
 
-		return <div className={view === 'horizontal' ? styles.horizontal : undefined}>
+	const reportLinkRef = useRef()
+	useEffect(
+		() => {
+			sidebarStore.setReportLinkRef(reportLinkRef)
+			return () => sidebarStore.setReportLinkRef(undefined)
+		},
+		[sidebarStore],
+	)
+
+	return (
+		<div className={view === 'horizontal' ? styles.horizontal : undefined}>
 			<div className={styles.row}>
+				<div ref={reportLinkRef}/>
+
 				<ReportLink/>
 			</div>
 
@@ -66,5 +75,25 @@ export default class Options extends React.Component {
 				</Popup>
 			</div>
 		</div>
-	}
+	)
 }
+
+Options.propTypes = {
+	view: PropTypes.oneOf([
+		'vertial',
+		'horizontal',
+	]),
+}
+
+export const ReportLinkContent = observer(({children}) => {
+	const {sidebarStore: {reportLinkRef}} = useContext(StoreContext)
+
+	if (reportLinkRef?.current == null) {
+		return null
+	}
+
+	return ReactDOM.createPortal(
+		children,
+		reportLinkRef.current,
+	)
+})

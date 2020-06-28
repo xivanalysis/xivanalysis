@@ -217,8 +217,8 @@ export default class FightOrFlight extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.SPIRITS_WITHIN.icon,
 			content: <Trans id="pld.fightorflight.suggestions.ogcds.content">
-				Try to land at least one cast of each of your off-GCD skills during
-				every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
+				Try to land at least one cast of each of your physical off-GCD skills (<ActionLink {...ACTIONS.SPIRITS_WITHIN}/> and
+				<ActionLink {...ACTIONS.CIRCLE_OF_SCORN}/>) during every <ActionLink {...ACTIONS.FIGHT_OR_FLIGHT}/> window.
 			</Trans>,
 			why: <Trans id="pld.fightorflight.suggestions.ogcds.why">
 				<Plural value={missedOgcds} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.

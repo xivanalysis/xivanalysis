@@ -2,6 +2,8 @@ import Module from '../Module'
 import Parser from '../Parser'
 import {Meta} from '../Meta'
 import {Dispatcher} from '../Dispatcher'
+import {GameEdition} from 'data/PATCHES'
+import {Team} from 'report'
 
 jest.mock('../Dispatcher')
 
@@ -50,11 +52,41 @@ const event = {
 	timestamp: 50,
 }
 
+const actor = {
+	id: '1',
+	name: 'In Fight',
+	team: Team.FRIEND,
+	playerControlled: true,
+	job: 'UNKNOWN',
+}
+const pull = {
+	id: '1',
+	timestamp: 0,
+	duration: 100,
+	encounter: {
+		name: 'Test encounter',
+		duty: {id: -1, name: 'Test duty'}
+	},
+	actors: [actor]
+}
+const newReport = {
+	timestamp: 0,
+	edition: GameEdition.GLOBAL,
+	name: 'Test report',
+	pulls: [pull],
+	meta: {source: '__test'}
+}
+
 const buildParser = (modules = []) => new Parser({
 	meta: new Meta({modules: () => Promise.resolve({default: modules})}),
 	report,
 	fight,
-	actor: friendlyInFight,
+	fflogsActor: friendlyInFight,
+
+	newReport,
+	pull,
+	actor,
+
 	dispatcher: new Dispatcher(),
 })
 

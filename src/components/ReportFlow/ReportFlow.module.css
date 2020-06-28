@@ -1,0 +1,154 @@
+@value gutter from 'theme.module.css';
+@value messageBackground from 'theme.module.css';
+@value segmentLinkActive from 'theme.module.css';
+@value themeBackground from 'theme.module.css';
+@value themeGreen from 'theme.module.css';
+@value themeRed from 'theme.module.css';
+@value themeText from 'theme.module.css';
+
+.controls {
+	text-align: right;
+}
+
+.refresh {
+	outline: none;
+	border: none;
+	margin-left: gutter;
+	background: none;
+	cursor: pointer;
+	color: inherit;
+}
+
+.refresh.block {
+	display: block;
+	margin: 0;
+	margin-top: calc(0.5 * gutter);
+}
+
+.group {
+	background-color: themeBackground;
+}
+
+.pullList .group,
+.actorList .group + .group {
+	margin-top: gutter;
+}
+
+.actorList .group h2 {
+	margin: 0;
+	padding: calc(0.5 * gutter) gutter;
+	font-size: 1em;
+}
+
+.groupHeader {
+	position: relative;
+	z-index: 0;
+	margin-bottom: 0;
+	padding: calc(0.5 * gutter) gutter;
+	overflow: hidden;
+	background: messageBackground;
+}
+
+.groupHeader h2 {
+	margin: 0;
+	font-size: 1em;
+}
+
+/* Game has a habit of not capitalising the first letter if it's the "t" from "the". */
+.groupHeader h2::first-letter {
+	text-transform: uppercase;
+}
+
+.banner {
+	position: absolute;
+
+	/* Game image has a pre-baked blur, making larger to crop that. */
+	top: -15%;
+	left: -15%;
+	width: 130%;
+	height: 130%;
+	z-index: -1;
+
+	background-size: 110%;
+	background-position: center;
+	filter: blur(5px);
+}
+
+.banner::after {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	background-color: white;
+	opacity: 0.5;
+}
+
+.links {
+	padding: calc(0.5 * gutter) 0;
+}
+
+.link {
+	display: flex;
+	align-items: center;
+	padding: 0 gutter;
+	line-height: 30px;
+	color: inherit;
+}
+
+.link:hover {
+	background: segmentLinkActive;
+	color: inherit;
+	font-weight: bold;
+}
+
+.text {
+	flex-grow: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.meta {
+	flex-shrink: 0;
+	padding-left: gutter;
+	opacity: .5;
+}
+
+.progress {
+	display: inline-block;
+	flex-shrink: 0;
+	margin-left: gutter;
+	width: 200px;
+	height: 1em;
+	background: rgba(0, 0, 0, 0.1);
+	vertical-align: middle;
+}
+
+.progressBar {
+	height: 100%;
+	background: themeRed;
+}
+
+.success {
+	background: themeGreen;
+}
+
+.reportLink {
+	display: block;
+	color: themeText;
+	height: 40px;
+}
+.reportLink:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.reportLink .icon {
+	display: inline-block;
+	margin-right: calc(0.5 * gutter);
+	height: 30px;
+	vertical-align: middle;
+}

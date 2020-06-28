@@ -1,20 +1,19 @@
-import {Trans} from '@lingui/react'
 import {SidebarContent} from 'components/GlobalSidebar'
 import JobIcon from 'components/ui/JobIcon'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {getDataBy} from 'data'
 import JOBS, {ROLES} from 'data/JOBS'
-import {observable, reaction, runInAction} from 'mobx'
-import {disposeOnUnmount, observer} from 'mobx-react'
+import {observable, runInAction} from 'mobx'
+import {observer} from 'mobx-react'
 import {Conductor} from 'parser/Conductor'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {Header, Loader} from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 import {StoreContext} from 'store'
 import styles from './Analyse.module.css'
 import ResultSegment from './ResultSegment'
 import SegmentLinkItem from './SegmentLinkItem'
 import {SegmentPositionProvider} from './SegmentPositionContext'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 @observer
 class Analyse extends Component {
@@ -23,58 +22,34 @@ class Analyse extends Component {
 	@observable conductor;
 	@observable complete = false;
 
-	// TODO: I should really make a definitions file for this shit
 	static propTypes = {
-		match: PropTypes.shape({
-			params: PropTypes.shape({
-				code: PropTypes.string.isRequired,
-				fight: PropTypes.string.isRequired,
-				combatant: PropTypes.string.isRequired,
-			}).isRequired,
-		}).isRequired,
-	}
-
-	get fightId() {
-		return parseInt(this.props.match.params.fight, 10)
-	}
-
-	get combatantId() {
-		return parseInt(this.props.match.params.combatant, 10)
+		report: PropTypes.object.isRequired,
+		legacyReport: PropTypes.object.isRequired,
+		pullId: PropTypes.string.isRequired,
+		actorId: PropTypes.string.isRequired,
 	}
 
 	componentDidMount() {
-		const {reportStore} = this.context
-		const {match} = this.props
-		reportStore.fetchReportIfNeeded(match.params.code)
-
-		disposeOnUnmount(this, reaction(
-			() => ({
-				report: reportStore.report,
-				params: match.params,
-			}),
-			this.fetchEventsAndParseIfNeeded,
-			{fireImmediately: true},
-		))
+		this.fetchEventsAndParseIfNeeded()
 	}
 
-	fetchEventsAndParseIfNeeded = async ({report, params}) => {
+	fetchEventsAndParseIfNeeded = async () => {
+		const {report, legacyReport, pullId, actorId} = this.props
+
 		// If we don't have everything we need, stop before we hit the api
-		// TODO: more checks
-		const valid = report
-				&& !report.loading
-				&& report.code === params.code
-				&& params.fight
-				&& params.combatant
+		const valid = legacyReport && !legacyReport.loading
 		if (!valid) { return }
 
-		// We've got this far, boot up the conductor
-		const fight = report.fights.find(fight => fight.id === this.fightId)
-		const combatant = report.friendlies.find(friend => friend.id === this.combatantId)
-		const conductor = new Conductor(report, fight, combatant)
-
 		// Run checks, then the parse. Throw any errors up to the error store.
+		let conductor
 		try {
-			conductor.sanityCheck()
+			conductor = new Conductor({
+				report,
+				legacyReport,
+				pullId,
+				actorId,
+			})
+
 			await conductor.configure()
 			await conductor.parse()
 		} catch (error) {
@@ -92,31 +67,21 @@ class Analyse extends Component {
 		})
 	}
 
-	getReportUrl() {
-		const {match: {params}} = this.props
-		return `https://www.fflogs.com/reports/${params.code}#fight=${params.fight}&source=${params.combatant}`
-	}
-
 	render() {
-		const {reportStore} = this.context
-		const report = reportStore.report
+		const {report, pullId, actorId} = this.props
 
 		// Still loading the parser or running the parse
 		// TODO: Nice loading bar and shit
 		if (!this.conductor || !this.complete) {
-			return (
-				<Loader active>
-					<Trans id="core.analyse.load-analysis">
-						Loading analysis
-					</Trans>
-				</Loader>
-			)
+			return <AnalysisLoader/>
 		}
 
 		// Report's done, build output
-		const player = report.friendlies.find(friend => friend.id === this.combatantId)
-		const job = getDataBy(JOBS, 'logType', player.type)
-		const role = job? getDataBy(ROLES, 'id', job.role) : undefined
+		const actor = report
+			.pulls.find(pull => pull.id === pullId)
+			?.actors.find(actor => actor.id === actorId)
+		const job = JOBS[actor.job]
+		const role = job? ROLES[job.role] : undefined
 		const results = this.conductor.getResults()
 
 		return <SegmentPositionProvider>
@@ -153,4 +118,4 @@ class Analyse extends Component {
 	}
 }
 
-export default Analyse
+export {Analyse}

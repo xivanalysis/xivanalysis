@@ -180,7 +180,7 @@ export default class DoTs extends Module {
 
 	getDotUptimePercent(statusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightDuration) * 100
 	}

@@ -79,8 +79,8 @@ export class Timeline extends Module {
 				items={this.items}
 
 				min={0}
-				max={this.parser.fightDuration}
-				end={Math.min(this.parser.fightDuration, INITIAL_END)}
+				max={this.parser.currentDuration}
+				end={Math.min(this.parser.currentDuration, INITIAL_END)}
 				zoomMin={MINIMUM_ZOOM}
 				exposeSetView={this.exposeSetView}
 			/>

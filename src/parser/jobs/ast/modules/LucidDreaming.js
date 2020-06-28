@@ -67,7 +67,7 @@ export default class LucidDreaming extends Module {
 
 	_onComplete() {
 		//uses missed reported in 1 decimal
-		const holdDuration = this._uses === 0 ? this.parser.fightDuration : this._totalHeld
+		const holdDuration = this._uses === 0 ? this.parser.currentDuration : this._totalHeld
 		const _usesMissed = Math.floor(holdDuration / (ACTIONS.LUCID_DREAMING.cooldown * 1000))
 
 		if (_usesMissed > 1 || this._uses === 0) {

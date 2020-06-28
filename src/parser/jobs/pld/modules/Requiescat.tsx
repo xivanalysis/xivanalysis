@@ -164,7 +164,10 @@ export default class Requiescat extends Module {
 				<Plural value={missedRequiescatBuffs} one="# usage" other="# usages"/> while under 80% MP.
 			</Trans>,
 			content: <Trans id="pld.requiescat.suggestions.nobuff.content">
-				<ActionLink {...ACTIONS.REQUIESCAT}/> should only be used when over 80% MP. Try to not miss on the 20% Magic Damage buff <StatusLink {...STATUSES.REQUIESCAT}/> provides.
+				<ActionLink {...ACTIONS.REQUIESCAT}/> should only be used when over 80% MP.
+				Otherwise, you will not get the <StatusLink {...STATUSES.REQUIESCAT}/> buff,
+				which provides 50% increased magic damage, instant cast times,
+				and allows you to cast <ActionLink {...ACTIONS.CONFITEOR}/>.
 			</Trans>,
 			tiers: SEVERITIES.MISSED_BUFF_REQUIESCAT,
 			value: missedRequiescatBuffs,

@@ -5,7 +5,7 @@ import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {patchSupported, languageToEdition} from 'data/PATCHES'
+import {patchSupported} from 'data/PATCHES'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -64,7 +64,7 @@ export default class About extends Module {
 		// Work out the supported patch range (and if we're in it)
 		const {from, to = from} = this.supportedPatches
 		const supported = patchSupported(
-			languageToEdition(this.parser.report.lang),
+			this.parser.newReport.edition,
 			from,
 			to,
 			this.parser.parseDate,

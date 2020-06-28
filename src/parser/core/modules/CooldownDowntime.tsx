@@ -196,7 +196,7 @@ export abstract class CooldownDowntime extends Module {
 		this.debug(`Checking downtime for group ${gRep.name} with default first use ${group.firstUseOffset} and step ${step} and ${maxCharges} charges`)
 		let charges = maxCharges
 		let count = 0
-		const expectedFirstUseTime = this.parser.fight.start_time + (group.firstUseOffset || this.defaultFirstUseOffset)
+		const expectedFirstUseTime = this.parser.eventTimeOffset + (group.firstUseOffset || this.defaultFirstUseOffset)
 		const actualFirstUseTime = gUsages[0]
 
 		let currentTime = expectedFirstUseTime
@@ -222,7 +222,7 @@ export abstract class CooldownDowntime extends Module {
 			currentTime = Math.min(actualFirstUseTime.timestamp, expectedFirstUseTime)
 		}
 
-		while (currentTime < this.parser.fight.end_time) {
+		while (currentTime - this.parser.eventTimeOffset < this.parser.pull.duration) {
 			// spend accumulated charges
 			count += charges
 			this.debug(`Expected ${charges} usages at ${this.parser.formatTimestamp(currentTime)}. Count: ${count}`)

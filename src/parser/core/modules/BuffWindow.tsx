@@ -215,7 +215,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.buffStatus.duration ) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const windowDurationMillis = this.buffStatus.duration * 1000
-			const fightTimeRemaining = this.parser.fight.end_time - buffWindow.start
+			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 			if (windowDurationMillis >= fightTimeRemaining) {
 				const gcdEstimate = this.globalCooldown.getEstimate()
@@ -395,8 +395,8 @@ export abstract class BuffWindowModule extends Module {
 
 		const rotationData = this.buffWindows
 			.map(buffWindow => {
-				const windowStart = buffWindow.start - this.parser.fight.start_time
-				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.fight.start_time
+				const windowStart = buffWindow.start - this.parser.eventTimeOffset
+				const windowEnd = (buffWindow.end != null ? buffWindow.end : buffWindow.start) - this.parser.eventTimeOffset
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
 

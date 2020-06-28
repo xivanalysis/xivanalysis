@@ -3,6 +3,7 @@ import Buffs from './Buffs'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Debuffs from './Debuffs'
+import Drift from './Drift'
 import OGCDDowntime from './OGCDDowntime'
 import Positionals from './Positionals'
 import Procs from './Procs'
@@ -14,6 +15,7 @@ export default [
 	Combos,
 	Cooldowns,
 	Debuffs,
+	Drift,
 	OGCDDowntime,
 	Positionals,
 	Procs,

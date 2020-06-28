@@ -239,7 +239,7 @@ export default class Barrage extends Module {
 
 				// Calculates the total damage, total DPS, and potential damage for each "good" barrage skill
 				const totalDamage = barrage.damageEvents.reduce((x, y) => x + y.amount, 0)
-				const totalDPS = this.util.formatDecimal(totalDamage * 1000 / this.parser.fightDuration)
+				const totalDPS = this.util.formatDecimal(totalDamage * 1000 / this.parser.currentDuration)
 
 				let potentialDamage = totalDamage
 				let potentialRefulgentDamage = Math.trunc(ACTIONS.REFULGENT_ARROW.potency * totalDamage / barrage.skillBarraged.potency)
@@ -266,8 +266,8 @@ export default class Barrage extends Module {
 				// Now that it's gone through the Raging Strikes check, can actually calculate the potential DPS
 				// Calculating it beforehand could potentially give rounding errors
 				// (It's still not the best way of doing it, but gives me some peace of mind)
-				const potentialDPS = this.util.formatDecimal(potentialDamage * 1000 / this.parser.fightDuration)
-				const potentialRefulgentDPS = this.util.formatDecimal(potentialRefulgentDamage * 1000 / this.parser.fightDuration)
+				const potentialDPS = this.util.formatDecimal(potentialDamage * 1000 / this.parser.currentDuration)
+				const potentialRefulgentDPS = this.util.formatDecimal(potentialRefulgentDamage * 1000 / this.parser.currentDuration)
 
 				// DPS loss is the difference between potential DPS and total DPS (duh)
 				let dpsLoss = this.util.formatDecimal(potentialDPS - totalDPS)
