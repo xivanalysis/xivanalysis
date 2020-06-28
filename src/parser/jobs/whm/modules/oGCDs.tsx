@@ -94,14 +94,14 @@ export default class OGCDs extends Module {
 	}
 
 	private getCooldownUsage(id: number) {
-		return this.cooldownUsage[id] ?? {held: 0, lastUsed: 0, uses: 0}
+		return this.cooldownUsage[id] ?? {held: 0, lastUsed: this.parser.fight.start_time, uses: 0}
 	}
 
 	private initCooldownUsage() {
 		this.cooldownUsage = [...DPS_COOLDOWNS_TRACKED, ...OTHER_COOLDOWNS_TRACKED].reduce((obj, action) => {
 			obj[action.id] = {
 				held: 0,
-				lastUsed: 0,
+				lastUsed: this.parser.fight.start_time,
 				uses: 0,
 			}
 			return obj
@@ -153,7 +153,7 @@ export default class OGCDs extends Module {
 			// set up for suggestion(s)
 			const maxUses = Math.ceil(this.parser.fightDuration / (action.cooldown * 1000))
 			const uses = cooldownUsage.uses
-			const held = uses > 0 ? cooldownUsage.held : pullDuration
+			const held = cooldownUsage.held
 			const showHeld = OTHER_ALLOWED_MISSES[action.id].showHeld
 			const missed = maxUses - uses
 			const severities = OTHER_ALLOWED_MISSES[action.id]
