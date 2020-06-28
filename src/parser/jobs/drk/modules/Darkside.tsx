@@ -68,7 +68,7 @@ export class Darkside extends Module {
 
 	_onComplete(event: Event) {
 		this._updateDarkside(event)
-		const duration = this.parser.fightDuration - this.death.deadTime
+		const duration = this.parser.currentDuration - this.death.deadTime
 		const uptime = ((duration - this._downtime) / duration) * 100
 		this.checklist.add(new Rule({
 			name: 'Keep Darkside up',

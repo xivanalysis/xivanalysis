@@ -82,7 +82,7 @@ export default class StormsEye extends Module {
 	//
 	getUptimePercent() {
 		const statusUptime = this.entityStatuses.getStatusUptime(STATUSES.STORMS_EYE.id, this.combatants.getEntities())
-		const fightUptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightUptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 
 		return (statusUptime / fightUptime) * 100
 	}

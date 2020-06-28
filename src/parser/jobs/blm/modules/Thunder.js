@@ -114,7 +114,7 @@ export default class Thunder extends Module {
 	// Get the uptime percentage for the Thunder status debuff
 	getThunderUptime() {
 		const statusTime = this.entityStatuses.getStatusUptime(STATUSES.THUNDER_III.id, this.enemies.getEntities())
-		const uptime = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 		return (statusTime / uptime) * 100
 	}
 

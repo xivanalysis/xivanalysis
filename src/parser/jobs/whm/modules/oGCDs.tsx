@@ -128,7 +128,7 @@ export default class OGCDs extends Module {
 		const requirements = DPS_COOLDOWNS_TRACKED.map(action => new Requirement({
 			name: <ActionLink {...action}/>,
 			value: this.getCooldownUsage(action.id).uses,
-			target: Math.ceil(this.parser.fightDuration / (action.cooldown * 1000)),
+			target: Math.ceil(this.parser.currentDuration / (action.cooldown * 1000)),
 		}))
 
 		this.checklist.add(new Rule({
@@ -143,11 +143,12 @@ export default class OGCDs extends Module {
 		}))
 
 		OTHER_COOLDOWNS_TRACKED.forEach(action => {
+
 			const cooldownUsage = this.getCooldownUsage(action.id)
 			// calculate final held amount
 			cooldownUsage.held += this.calculateHeldTime(this.parser.currentTimestamp, cooldownUsage.lastUsed, this.spellCooldowns[action.id])
 			// set up for suggestion(s)
-			const maxUses = Math.ceil(this.parser.fightDuration / (action.cooldown * 1000))
+			const maxUses = Math.ceil(this.parser.currentDuration / (action.cooldown * 1000))
 			const uses = cooldownUsage.uses
 			const held = cooldownUsage.held
 			const showHeld = OTHER_ALLOWED_MISSES[action.id].showHeld

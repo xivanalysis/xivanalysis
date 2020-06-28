@@ -66,7 +66,13 @@ export class ReportStore {
 		}
 
 		// Report is still processing - clear the state and error
-		if (response.processing) {
+		if (
+			response.processing
+			|| response.enemies == null
+			|| response.fights == null
+			|| response.friendlies == null
+			|| response.lang == null
+		) {
 			runInAction(() => this.report = undefined)
 			globalErrorStore.setGlobalError(new Errors.ReportProcessingError())
 			settingsStore.setBypassCacheNextRequest(true)

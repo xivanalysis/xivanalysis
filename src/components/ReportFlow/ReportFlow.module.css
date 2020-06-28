@@ -4,6 +4,7 @@
 @value themeBackground from 'theme.module.css';
 @value themeGreen from 'theme.module.css';
 @value themeRed from 'theme.module.css';
+@value themeText from 'theme.module.css';
 
 .controls {
 	text-align: right;
@@ -15,11 +16,28 @@
 	margin-left: gutter;
 	background: none;
 	cursor: pointer;
+	color: inherit;
+}
+
+.refresh.block {
+	display: block;
+	margin: 0;
+	margin-top: calc(0.5 * gutter);
 }
 
 .group {
-	margin-top: gutter;
 	background-color: themeBackground;
+}
+
+.pullList .group,
+.actorList .group + .group {
+	margin-top: gutter;
+}
+
+.actorList .group h2 {
+	margin: 0;
+	padding: calc(0.5 * gutter) gutter;
+	font-size: 1em;
 }
 
 .groupHeader {
@@ -93,7 +111,8 @@
 	text-overflow: ellipsis;
 }
 
-.duration {
+.meta {
+	flex-shrink: 0;
 	padding-left: gutter;
 	opacity: .5;
 }
@@ -115,4 +134,21 @@
 
 .success {
 	background: themeGreen;
+}
+
+.reportLink {
+	display: block;
+	color: themeText;
+	height: 40px;
+}
+.reportLink:hover {
+	color: themeText;
+	font-weight: bold;
+}
+
+.reportLink .icon {
+	display: inline-block;
+	margin-right: calc(0.5 * gutter);
+	height: 30px;
+	vertical-align: middle;
 }

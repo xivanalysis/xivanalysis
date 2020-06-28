@@ -22,7 +22,6 @@ export default new Meta({
 		to: '5.2',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.YUNI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},

@@ -183,8 +183,8 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		// Translate state history into a dataset that makes sense for the chart
-		const startTime = this.parser.fight.start_time
-		const endTime = this.parser.fight.end_time
+		const startTime = this.parser.eventTimeOffset
+		const endTime = startTime + this.parser.pull.duration
 		const data: Array<{t: number, y?: number}> = []
 		this.history.forEach(entry => {
 			const relativeTimestamp = entry.timestamp - startTime

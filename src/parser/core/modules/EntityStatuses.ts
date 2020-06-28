@@ -165,7 +165,7 @@ export class EntityStatuses extends Module {
 				this.debug(`Updating status event for status ${statusInfo.name}.  Adding ${statusInfo.duration} seconds, effective end time set to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
 			} else {
 				this.debug(`No matching status duration information found for status ${statusEvent.ability.guid}, setting to end of fight so invuln detection can clip the end to when the target went untargetable`)
-				statusEvent.end = this.parser.fight.end_time
+				statusEvent.end = this.parser.pull.duration + this.parser.eventTimeOffset
 			}
 		}
 	}

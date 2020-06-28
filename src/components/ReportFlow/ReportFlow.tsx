@@ -1,17 +1,29 @@
 import React from 'react'
-import {ReportStore} from 'store/new/report'
+import {ReportStore} from 'reportSources'
 import {Message} from 'akkd'
 import {Switch, useRouteMatch, Route, useParams} from 'react-router-dom'
 import {PullList} from './PullList'
 import {ActorList} from './ActorList'
 import {Analyse} from './Analyse'
-import {BreadcrumbsBanner, Breadcrumb} from 'components/GlobalSidebar'
+import {BreadcrumbsBanner, Breadcrumb, ReportLinkContent} from 'components/GlobalSidebar'
 import {Report} from 'report'
 import {getPatch, GameEdition} from 'data/PATCHES'
 import {Icon} from 'semantic-ui-react'
 import {formatDuration} from 'utilities'
 import {Trans} from '@lingui/react'
 import {getDutyBanner} from 'data/ENCOUNTERS'
+import styles from './ReportFlow.module.css'
+
+export function buildReportFlowPath(pullId?: string, actorId?: string) {
+	let path = ''
+	if (pullId != null) {
+		path += `/${pullId}`
+		if (actorId != null) {
+			path += `/${actorId}`
+		}
+	}
+	return path
+}
 
 export interface ActorListRouteParams {
 	pullId: string
@@ -21,6 +33,8 @@ export interface AnalyseRouteParams {
 	pullId: string
 	actorId: string
 }
+
+type ReportLinkRouteParams = Partial<AnalyseRouteParams>
 
 export interface ReportFlowProps {
 	reportStore: ReportStore
@@ -47,7 +61,6 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		)
 	}
 
-	// TODO: Refresh button - avoid on analyse? dunno
 	return <>
 		<Route path={path}>
 			<ReportCrumb report={reportStore.report}/>
@@ -57,6 +70,10 @@ export function ReportFlow({reportStore}: ReportFlowProps) {
 		</Route>
 		<Route path={`${path}/:pullId/:actorId`}>
 			<ActorCrumb report={reportStore.report}/>
+		</Route>
+
+		<Route path={`${path}/:pullId?/:actorId?`}>
+			<ReportLink reportStore={reportStore}/>
 		</Route>
 
 		<Switch>
@@ -122,4 +139,36 @@ function ActorCrumb({report}: CrumbProps) {
 		?.name
 
 	return <Breadcrumb title={name ?? 'Unknown'}/>
+}
+
+interface ReportLinkProps {
+	reportStore: ReportStore
+}
+
+function ReportLink({reportStore}: ReportLinkProps) {
+	const {pullId, actorId} = useParams<ReportLinkRouteParams>()
+
+	const link = reportStore.getReportLink(pullId, actorId)
+
+	if (link == null) {
+		return null
+	}
+
+	return (
+		<ReportLinkContent>
+			<a
+				href={link.url}
+				target="_blank"
+				rel="noopener noreferrer"
+				className={styles.reportLink}
+			>
+				{link.icon && (
+					<img src={link.icon} alt={link.name} className={styles.icon}/>
+				)}
+				<Trans id="core.report-flow.view-report">
+					View report on {link.name}
+				</Trans>
+			</a>
+		</ReportLinkContent>
+	)
 }
