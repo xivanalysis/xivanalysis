@@ -59,7 +59,7 @@ interface CooldownTrack {
 }
 
 interface CooldownTrackCollection {
-	[id: number]: CooldownTrack
+	[id: number]: CooldownTrack | undefined
 }
 
 export default class OGCDs extends Module {
@@ -93,36 +93,41 @@ export default class OGCDs extends Module {
 		this.castFilter = [...DPS_COOLDOWNS_TRACKED, ...OTHER_COOLDOWNS_TRACKED].map(act => act.id)
 	}
 
+	private getCooldownUsage(id: number) {
+		return this.cooldownUsage[id] ?? {held: 0, lastUsed: this.parser.fight.start_time, uses: 0}
+	}
+
 	private initCooldownUsage() {
 		this.cooldownUsage = [...DPS_COOLDOWNS_TRACKED, ...OTHER_COOLDOWNS_TRACKED].reduce((obj, action) => {
 			obj[action.id] = {
 				held: 0,
-				lastUsed: 0,
+				lastUsed: this.parser.fight.start_time,
 				uses: 0,
 			}
 			return obj
 		}, this.cooldownUsage)
 	}
 
+	private calculateHeldTime(timestamp: number, lastUsed: number, cooldownTime: number) {
+		const held = timestamp - lastUsed - cooldownTime
+		return Math.max(0, held)
+	}
+
 	private onCast(event: CastEvent) {
 		const id = event.ability.guid
-		this.cooldownUsage[id].uses++
+		const cooldownUsage = this.getCooldownUsage(id)
+		cooldownUsage.uses++
 
-		if (this.cooldownUsage[id].lastUsed === 0) {
-			this.cooldownUsage[id].lastUsed = this.parser.fight.start_time
-		}
-
-		const held = event.timestamp - this.cooldownUsage[id].lastUsed - this.spellCooldowns[id]
-		if (held > 0) {
-			this.cooldownUsage[id].held += held
-		}
-		this.cooldownUsage[id].lastUsed = event.timestamp
+		cooldownUsage.held += this.calculateHeldTime(event.timestamp, cooldownUsage.lastUsed, this.spellCooldowns[id])
+		cooldownUsage.lastUsed = event.timestamp
+		this.cooldownUsage[id] = cooldownUsage
 	}
 
 	private onComplete() {
+		const pullDuration = this.parser.fight.end_time - this.parser.fight.start_time
 		const requirements = DPS_COOLDOWNS_TRACKED.map(action => new Requirement({
 			name: <ActionLink {...action}/>,
-			value: this.cooldownUsage[action.id].uses,
+			value: this.getCooldownUsage(action.id).uses,
 			target: Math.ceil(this.parser.currentDuration / (action.cooldown * 1000)),
 		}))
 
@@ -138,9 +143,14 @@ export default class OGCDs extends Module {
 		}))
 
 		OTHER_COOLDOWNS_TRACKED.forEach(action => {
+
+			const cooldownUsage = this.getCooldownUsage(action.id)
+			// calculate final held amount
+			cooldownUsage.held += this.calculateHeldTime(this.parser.currentTimestamp, cooldownUsage.lastUsed, this.spellCooldowns[action.id])
+			// set up for suggestion(s)
 			const maxUses = Math.ceil(this.parser.currentDuration / (action.cooldown * 1000))
-			const uses = this.cooldownUsage[action.id].uses
-			const held = this.cooldownUsage[action.id].held
+			const uses = cooldownUsage.uses
+			const held = cooldownUsage.held
 			const showHeld = OTHER_ALLOWED_MISSES[action.id].showHeld
 			const missed = maxUses - uses
 			const severities = OTHER_ALLOWED_MISSES[action.id]
