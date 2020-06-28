@@ -1,7 +1,7 @@
 {
   "ast.about.description-1": "对占星术士而言，<0/>最大的作用是使用奥秘卡为队伍提供DPS辅助的能力。这个分析器将会教你如何掌控群星而不是被群星牵着鼻子走。",
   "ast.about.description-2": "\n使用任何治疗职业都需要你认真管理你的MP和能力技使用，以有效地保证队伍的生存。如果你能规划好你的治疗技能，并积极和你的搭档交流，你自然就能够省下更多的治疗GCD，并打出更高的DPS。\n\n这个工具会给出常规的覆盖率以及GCD使用建议。它也能简单列出你延长的buff以及卡牌操作的情况。\n",
-  "ast.about.description.warning.development": "要让这个工具更为全面，还要很多的工作需要完成！如果你有任何值得关注的建议，请加入我们的Discord频道！",
+  "ast.about.description.warning.development": "要让这个工具更为全面，仍有大量的内容需要完善！如果你有任何值得关注的建议，请加入我们的Discord频道！",
   "ast.about.description.warning.healer": "对于所有治疗职业来说，检测 Boss 无敌时间的机制目前都无法正常工作。这会使得很多时间相关的检测失效，例如“总在读条”和“DoT 覆盖率”检测项。",
   "ast.arcana-suggestions.messages.accordion-title": "奥秘卡抽取记录",
   "ast.arcana-suggestions.messages.disclaimer": "卡片管理评价仍在制作中，目前仍不能给出任何建议。<0/>本段主要是就最佳做法给出一般性建议。这些建议不会考虑队员的临场表现，或对方是否处于爆发阶段。",
