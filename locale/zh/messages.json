@@ -216,6 +216,7 @@
   "core.analyse.see-more": "查看更多",
   "core.analyse.view-on-fflogs": "在FFlogs上查看报告",
   "core.aoeusages.aoe-ability": "使用过的AoE能力技",
+  "core.aoeusages.min-targets": "",
   "core.aoeusages.number-bad-usages": "对数目过低的敌人的使用次数",
   "core.aoeusages.st-alternative": "单体目标替代项",
   "core.aoeusages.suggestion.content": "当AoE能力技造成的伤害不如与他共享冷却或资源消耗的替代性单体技能时，不要使用AoE能力技。如果这个AoE技能不能击中足够的目标数，那么单体能力技将能造成更多的总伤害并且应当代替AoE技能打出",

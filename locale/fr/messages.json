@@ -216,6 +216,7 @@
   "core.analyse.see-more": "Voir plus",
   "core.analyse.view-on-fflogs": "Afficher le rapport sur FF Logs",
   "core.aoeusages.aoe-ability": "Sort de zone utilisé",
+  "core.aoeusages.min-targets": "",
   "core.aoeusages.number-bad-usages": "Nombre d'usage contre un groupe trop petit d'ennemis",
   "core.aoeusages.st-alternative": "Altenative pour du mono-cible",
   "core.aoeusages.suggestion.content": "Évitez d'utiliser des capacités de zone lorsqu'elles feraient moins de dégâts qu'une capacité alternative à cible unique qui partage un coût de ressources ou un cooldown. Si la compétence de zone ne peut pas atteindre suffisamment de cibles, la compétence à cible unique fera plus de dégâts totaux et doit être utilisée à la place.",
