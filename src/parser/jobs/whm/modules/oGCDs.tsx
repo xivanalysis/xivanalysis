@@ -118,10 +118,6 @@ export default class OGCDs extends Module {
 		const cooldownUsage = this.getCooldownUsage(id)
 		cooldownUsage.uses++
 
-		if (cooldownUsage.lastUsed === 0) {
-			cooldownUsage.lastUsed = this.parser.fight.start_time
-		}
-
 		cooldownUsage.held += this.calculateHeldTime(event.timestamp, cooldownUsage.lastUsed, this.spellCooldowns[id])
 		cooldownUsage.lastUsed = event.timestamp
 		this.cooldownUsage[id] = cooldownUsage
