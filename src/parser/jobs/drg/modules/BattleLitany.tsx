@@ -2,17 +2,17 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import _ from 'lodash'
 import React, {Fragment} from 'react'
-import {Message} from 'semantic-ui-react'
+import {Message, Icon} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
+
 import Module, {dependency} from 'parser/core/Module'
 import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
-
+import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -53,6 +53,7 @@ export default class BattleLitany extends Module {
 	static displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private timeline!: Timeline
+	@dependency private data!: Data
 
 	private history: BLWindow[] = []
 	private lastLitFalloffTime: number = 0
@@ -135,7 +136,7 @@ export default class BattleLitany extends Module {
 			return
 		}
 
-		const action = getDataBy(ACTIONS, 'id', event.ability.guid) as TODO
+		const action = this.data.getAction(event.ability.guid)
 
 		// Can't do anything else if we didn't get a valid action object
 		if (!action) {
@@ -176,7 +177,7 @@ export default class BattleLitany extends Module {
 				end,
 				overlap,
 				notesMap: {
-					overlapped: <>{overlap ? 'Yes' : 'No'}</>,
+					overlapped: <>{overlap ? <Icon name="x" color="red" /> : ''}</>,
 				},
 				rotation: window.rotation,
 				targetsData: {
