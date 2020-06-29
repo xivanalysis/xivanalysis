@@ -379,8 +379,6 @@
   "drg.blood.suggestions.buffsed-stardiver.why": "<0/>需要在持有buff的情况下使用，你一共有{noBuffSd, plural,one {#次}other {#次}}在没有buff的情况下使用了该技能。",
   "drg.blood.suggestions.eyes.content": "不要在已经有 {MAX_EYES} 档龙眼的时候使用<0/>。浪费龙眼会延后你的红莲龙血状态，可能会使你的DPS明显降低。",
   "drg.blood.suggestions.eyes.why": "你在已经有 {MAX_EYES} 档龙眼的时候使用了{0, plural, other {# 次}}幻象冲。",
-  "drg.blood.suggestions.gk.content": "为了不延后你的红龙血，你应该尽可能的使用<0/>，并且和使用<1/>的次数差应该控制在1次以内。",
-  "drg.blood.suggestions.gk.why": "<0/>和<1/>的使用次数差了{gkDiff}。",
   "drg.blood.table.action": "技能",
   "drg.blood.table.statuses": "个人增益",
   "drg.blood.table.time": "时间",
