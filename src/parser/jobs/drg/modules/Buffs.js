@@ -52,6 +52,7 @@ export default class Buffs extends Module {
 		'suggestions',
 		'timeline',
 	]
+	static displayOrder = DISPLAY_ORDER.BUFFS;
 
 	_lastGcd = 0
 	_badLifeSurges = 0

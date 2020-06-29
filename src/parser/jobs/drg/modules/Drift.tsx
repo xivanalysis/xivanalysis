@@ -9,6 +9,7 @@ import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
 import React, {Fragment} from 'react'
 import {Timeline} from 'parser/core/modules/Timeline'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
@@ -40,6 +41,8 @@ export default class Drift extends Module {
 	static debug = false
 	static handle = 'drift'
 	static title = t('drg.drift.title')`Ability Drift`
+	static displayOrder = DISPLAY_ORDER.DRIFT
+
 
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline

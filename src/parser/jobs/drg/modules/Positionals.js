@@ -8,6 +8,7 @@ import {getDataBy} from 'data'
 import {ActionLink} from 'components/ui/DbLink'
 import {Table, Message, Icon, Button, Header} from 'semantic-ui-react'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const ROTATION_IDS = [
 	ACTIONS.RAIDEN_THRUST.id,
@@ -36,6 +37,7 @@ export default class Positionals extends Module {
 		'suggestions',
 		'timeline',
 	]
+	static displayOrder = DISPLAY_ORDER.POSITIONALS
 
 	// tracking raiden thrust procs
 	_rtCombos = []
