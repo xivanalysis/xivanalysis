@@ -38,6 +38,7 @@ Suggestions contain two text fields; the "content", and the "why":
 - The "why" field should act as an extension of the content, _briefly_ outlining the collected data from the analysis that led to this suggestion being displayed.
 
 **Important:** When writing suggestions, remember that they're _suggestions_ on how to improve. Don't tell the user off for making a mistake - suggest to them how to mitigate that mistake, instead.
+{: .admonition .caution}
 
 Suggestions also contain a "severity", which is used both to prioritise which suggestions rise to the top, as well as help guide the user towards what needs fixing. The available severities are:
 
