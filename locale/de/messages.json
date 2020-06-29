@@ -359,6 +359,7 @@
   "dnc.technicalities.suggestions.unpooled.why": "{unpooledWindows, plural, one {Ein Einsatz} other {# Einsätze}} mit fehlendem potentiellen Einsatz von <0/>.",
   "dnc.technicalities.title": "\"Komplexe\"-Aktionen",
   "drg.about.description": "",
+  "drg.battlelitany.accordion.message": "",
   "drg.battlelitany.rotation-table.header.buffed": "",
   "drg.battlelitany.rotation-table.header.gcd-count": "",
   "drg.battlelitany.rotation-table.header.interfered": "",
