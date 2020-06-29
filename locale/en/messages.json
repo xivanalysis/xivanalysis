@@ -379,8 +379,6 @@
   "drg.blood.suggestions.buffsed-stardiver.why": "When <0/> could have been buffed, you used it {noBuffSd, plural, one {# time} other {# times}} without a buff.",
   "drg.blood.suggestions.eyes.content": "Avoid using <0/> when you already have {MAX_EYES} Eyes. Wasting Eyes will delay your Life of the Dragon windows and potentially cost you a lot of DPS.",
   "drg.blood.suggestions.eyes.why": "You used Mirage Dive {0, plural, one {# time} other {# times}} when you already had {MAX_EYES} Eyes.",
-  "drg.blood.suggestions.gk.content": "Remember to use <0/> as much as possible, without delaying your Life of the Dragon windows. The number of casts should be within 1 of the number of <1/> casts.",
-  "drg.blood.suggestions.gk.why": "Your <0/> casts differed from your <1/> casts by {gkDiff}.",
   "drg.blood.table.action": "Action",
   "drg.blood.table.statuses": "Personal Buffs",
   "drg.blood.table.time": "Time",

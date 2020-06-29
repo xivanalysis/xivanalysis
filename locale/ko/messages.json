@@ -379,8 +379,6 @@
   "drg.blood.suggestions.buffsed-stardiver.why": "<0/>이 버프로 강화될 수 있는데도 불구하고 {noBuffSd, plural, one {# 회} other {# 회}}를 버프 없이 사용하였습니다.",
   "drg.blood.suggestions.eyes.content": "{MAX_EYES} 개의 눈이 있는 상태에서 <0/>를 사용하지 마세요. 눈을 낭비하는 것은 붉은 용혈 구간을 늦추며 상당한 DPS 손실이 될 가능성이 큽니다.",
   "drg.blood.suggestions.eyes.why": "이미 {MAX_EYES} 개의 눈이 있는 상태에서 {0, plural, one {#회} other {#회}}의 환영 강타를 사용했습니다.",
-  "drg.blood.suggestions.gk.content": "붉은 용혈 구간이 미루어지는것을 피하되 최대한 <0/>을 자주 사용하십시오. <1/> 사용 횟수 기준 1회 이내 정도 차이가 나야합니다.",
-  "drg.blood.suggestions.gk.why": "<0/> 시전 타이밍이 <1/>과 {gkDiff} 만큼 차이가 있습니다.",
   "drg.blood.table.action": "사용 기술",
   "drg.blood.table.statuses": "개인 버프",
   "drg.blood.table.time": "시간",
