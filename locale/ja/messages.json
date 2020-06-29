@@ -379,8 +379,6 @@
   "drg.blood.suggestions.buffsed-stardiver.why": "<0/>をバフありで使えたときに、{noBuffSd, plural, other {# 回}}バフなしで使いました。",
   "drg.blood.suggestions.eyes.content": "</>がプロックしている時は<0/> と</> の使用は避けて下さい。使用すると上書きされ、紅の竜血になることを遅延させ、潜在的に多くのDPSを犠牲にする可能性があります。",
   "drg.blood.suggestions.eyes.why": "{MAX_EYES} があったのに、ミラージュダイブを {0, plural, other {# 回}}使ってしまいました。",
-  "drg.blood.suggestions.gk.content": "紅の竜血を遅らせないように、<0/>を可能な限り使うようにしましょう。<1/>の使用回数との差は1以内であるべきです。",
-  "drg.blood.suggestions.gk.why": "<0/>と<1/>の使用回数の差が{gkDiff} です。",
   "drg.blood.table.action": "アクション",
   "drg.blood.table.statuses": "自己バフ",
   "drg.blood.table.time": "時間",
