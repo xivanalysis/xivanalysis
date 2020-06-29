@@ -177,7 +177,7 @@ export default class BattleLitany extends Module {
 				end,
 				overlap,
 				notesMap: {
-					overlapped: <>{overlap ? <Icon name="x" color="red" /> : ''}</>,
+					overlapped: <>{overlap ? <Icon name="x" color="red" /> : <Icon name="check" color="green" />}</>,
 				},
 				rotation: window.rotation,
 				targetsData: {
@@ -198,7 +198,7 @@ export default class BattleLitany extends Module {
 
 		if (overlap) {
 			notes.push({
-				header: <Trans id="drg.battlelitany.rotation-table.header.interfered">Overlapped?</Trans>,
+				header: <Trans id="drg.battlelitany.rotation-table.header.interfered">No Overlap</Trans>,
 				accessor: 'overlapped',
 			})
 		}
