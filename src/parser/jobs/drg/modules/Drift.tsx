@@ -13,7 +13,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
-const DRIFT_BUFFER = 1200
+const DRIFT_BUFFER = 1250
 
 const DRIFT_ABILITIES = [
 	ACTIONS.HIGH_JUMP.id,
