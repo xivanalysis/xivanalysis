@@ -24,6 +24,9 @@ export default class OGCDDowntime extends CooldownDowntime {
 			firstUseOffset: JUMP_FIRST_USE_OFFSET,
 		},
 		{
+			cooldowns: [ACTIONS.GEIRSKOGUL],
+		},
+		{
 			cooldowns: [ACTIONS.SPINESHATTER_DIVE],
 			firstUseOffset: SSD_FIRST_USE_OFFSET,
 		},

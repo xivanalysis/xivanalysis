@@ -22,6 +22,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.RIETTY, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-29'),
+		Changes: () => <>Added Geirskogul to cooldowns section & enabled Tincture module.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
 		date: new Date('2020-06-20'),
 		Changes: () => <>Added module to track Battle Litany.</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],
