@@ -72,7 +72,7 @@ export default class UnableToAct extends Module {
 	}
 
 	private renderDebugTimelineData() {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 		const row = this.timeline.addRow(new SimpleRow({
 			label: 'UTA Debug',
 			order: -Infinity,

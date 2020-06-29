@@ -5,9 +5,9 @@ import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
 import type {Event} from 'events'
-import type {Actor, Fight, Pet} from 'fflogs'
+import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
-import {Report} from 'store/report'
+import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext} from 'utilities'
 import {Dispatcher} from './Dispatcher'
@@ -15,8 +15,9 @@ import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
 import {formatDuration} from 'utilities'
+import {Report, Pull, Actor} from 'report'
 
-interface Player extends Actor {
+interface Player extends FflogsActor {
 	pets: Pet[]
 }
 
@@ -49,10 +50,14 @@ class Parser {
 	// -----
 	readonly dispatcher: Dispatcher
 
-	readonly report: Report
+	readonly report: LegacyReport
 	readonly fight: Fight
 	readonly player: Player
 	readonly patch: Patch
+
+	readonly newReport: Report
+	readonly pull: Pull
+	readonly actor: Actor
 
 	readonly meta: Meta
 
@@ -66,14 +71,21 @@ class Parser {
 	_fabricationQueue: Event[] = []
 
 	get currentTimestamp() {
-		const {end_time, start_time} = this.fight
-		return Math.min(end_time, Math.max(start_time, this.dispatcher.timestamp))
+		const start = this.eventTimeOffset
+		const end = start + this.pull.duration
+		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
 	}
 
+	get currentDuration() {
+		return this.currentTimestamp - this.eventTimeOffset
+	}
+
+	// TODO: REMOVE
 	get fightDuration() {
-		// TODO: should i have like... currentDuration and fightDuration?
-		//       this seems a bit jank
-		return this.currentTimestamp - this.fight.start_time
+		if (process.env.NODE_ENV === 'development') {
+			throw new Error('Please migrate your calls to `parser.fightDuration` to either `parser.pull.duration` (if you need the full pull duration) or `parser.currentDuration` if you need the zeroed current timestamp.')
+		}
+		return this.currentDuration
 	}
 
 	// Get the friendlies that took part in the current fight
@@ -84,8 +96,16 @@ class Parser {
 	}
 
 	get parseDate() {
-		// The report timestamp is relative to the report timestamp, and in ms. Convert.
-		return Math.round((this.report.start + this.fight.start_time) / 1000)
+		// TODO: normalise time to ms across the board
+		return Math.round(this.pull.timestamp / 1000)
+	}
+
+	/** Offset for events to zero their timestamp to the start of the pull being analysed. */
+	get eventTimeOffset() {
+		// TODO: This is _wholly_ reliant on fflog's timestamp handling. Once everyone
+		// is using this instead of start_time, we can start normalising event timestamps
+		// at the source level.
+		return this.pull.timestamp - this.newReport.timestamp
 	}
 
 	// -----
@@ -94,24 +114,32 @@ class Parser {
 
 	constructor(opts: {
 		meta: Meta,
-		report: Report,
+		report: LegacyReport,
 		fight: Fight,
+		fflogsActor: FflogsActor,
+
+		newReport: Report,
+		pull: Pull,
 		actor: Actor,
 
 		dispatcher?: Dispatcher,
 	}) {
-		this.dispatcher = opts.dispatcher || new Dispatcher()
+		this.dispatcher = opts.dispatcher ?? new Dispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
 		this.fight = opts.fight
 
+		this.newReport = opts.newReport
+		this.pull = opts.pull
+		this.actor = opts.actor
+
 		// Get a list of the current player's pets and set it on the player instance for easy reference
 		const pets = opts.report.friendlyPets
-			.filter(pet => pet.petOwner === opts.actor.id)
+			.filter(pet => pet.petOwner === opts.fflogsActor.id)
 
 		this.player = {
-			...opts.actor,
+			...opts.fflogsActor,
 			pets,
 		}
 
@@ -395,21 +423,21 @@ class Parser {
 		}
 
 		// If the log should be analysed on a different branch, we'll probably be getting a bunch of errors - safe to ignore, as the logic will be fundamentally different.
-		if (getReportPatch(this.report).branch) {
+		if (getReportPatch(this.newReport).branch) {
 			return
 		}
 
 		// Gather info for Sentry
 		const tags = {
 			type: opts.type,
-			job: this.player && this.player.type,
+			job: this.actor.job,
 			module: opts.module,
 		}
 
 		const extra: Record<string, any> = {
-			report: this.report && this.report.code,
-			fight: this.fight && this.fight.id,
-			player: this.player && this.player.id,
+			source: this.newReport.meta.source,
+			pull: this.pull.id,
+			actor: this.actor.id,
 			event: opts.event,
 		}
 

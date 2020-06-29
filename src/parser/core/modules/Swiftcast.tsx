@@ -76,7 +76,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
 		if ( this.buffStatus.duration ) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-			const fightTimeRemaining = this.parser.fight.end_time - buffWindow.start
+			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 			const gcdEstimate = this.globalCooldown.getEstimate()
 			return ( fightTimeRemaining > gcdEstimate ) ? 0 : 1
 		}

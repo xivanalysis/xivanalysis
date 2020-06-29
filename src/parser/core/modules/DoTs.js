@@ -94,13 +94,13 @@ export default class DoTs extends Module {
 	// These two functions are helpers for submodules and should be used but not overridden
 	getUptimePercent(statusId) {
 		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.fightDuration - this.invuln.getInvulnerableUptime()
+		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
 		return (statusUptime / fightDuration) * 100
 	}
 
 	getClippingAmount(statusId) {
 		// This normalises clipping as seconds clipped per minute, since some level of clipping is expected and we need tiers that work for both long and short fights
-		const fightDurationMillis = (this.parser.fightDuration - this.invuln.getInvulnerableUptime())
+		const fightDurationMillis = (this.parser.currentDuration - this.invuln.getInvulnerableUptime())
 		// eslint-disable-next-line no-magic-numbers
 		const clipSecsPerMin = Math.round(((this._clip[statusId] ?? 0) * 60) / fightDurationMillis)
 		return clipSecsPerMin

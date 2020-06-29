@@ -136,7 +136,7 @@ export default class Entities extends Module {
 	}
 
 	synthesizeBuff(event, isDebuff) {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 		return {
 			...event,
 			start: startTime,

@@ -1,0 +1,10 @@
+.site-title-logo {
+	flex-shrink: 0;
+	height: 100%;
+	max-height: $header-height;
+	padding-right: 10px;
+}
+
+.site-title-text {
+	flex-grow: 1;
+}

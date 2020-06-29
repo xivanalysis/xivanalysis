@@ -212,6 +212,19 @@ export default class Module {
 			delete abilityFilter.abilityId
 		}
 
+		// Fflogs actor IDs are numbers, generic report structure actor IDs
+		// are strings. While we're trying to deal with both, normalise
+		// filter actor IDs to numbers to patch over the difference.
+		// TODO: REMOVE
+		const fixTypeDiscrepancy = (base: any): any =>
+			ensureArray(base).map(val => parseInt(val, 10))
+		if (filter.sourceID != null) {
+			filter.sourceID = fixTypeDiscrepancy(filter.sourceID)
+		}
+		if (filter.targetID != null) {
+			filter.targetID = fixTypeDiscrepancy(filter.targetID)
+		}
+
 		const hooks = eventTypes.map(event => ({
 			event,
 			filter,

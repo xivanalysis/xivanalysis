@@ -35,6 +35,7 @@ export default class BloodOfTheDragon extends Module {
 		'suggestions',
 		'timeline',
 	]
+	static displayOrder = DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_GAUGE
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 30s anyway.
@@ -293,7 +294,7 @@ export default class BloodOfTheDragon extends Module {
 	_onComplete() {
 		this._finishLifeWindow()
 		this._analyzeLifeWindows()
-		const duration = this.parser.fightDuration - this.death.deadTime
+		const duration = this.parser.currentDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
 		const noBuffSd = this._lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
 		const noLifeSd = this._lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
@@ -310,7 +311,7 @@ export default class BloodOfTheDragon extends Module {
 					</Message.Content>
 				</Message>
 			</Fragment>,
-			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON,
+			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_CHECKLIST,
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.blood.checklist.requirement.name"><ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> uptime</Trans>,

@@ -133,7 +133,7 @@ export default class Huton extends Module {
 
 	_onComplete() {
 		const {clippedDuration, downtime, futileArmorCrushes} = this._getHutonAverages()
-		const duration = this.parser.fightDuration - this.death.deadTime
+		const duration = this.parser.currentDuration - this.death.deadTime
 		const uptime = ((duration - downtime) / duration) * 100
 		this.checklist.add(new Rule({
 			name: <Trans id="nin.huton.checklist.name">Keep Huton up</Trans>,

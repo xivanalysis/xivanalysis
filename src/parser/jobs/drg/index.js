@@ -23,6 +23,11 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2020-06-20'),
+		Changes: () => <>Added module to track Battle Litany.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2020-06-20'),
 		Changes: () => <>Fixed a small issue with the Ability Drift module. It won't break now on using it on lower level content/or logs that have no casts of GSK or HJ.</>,
 		contributors: [CONTRIBUTORS.RIETTY],
 	},

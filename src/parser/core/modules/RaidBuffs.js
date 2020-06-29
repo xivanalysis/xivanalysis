@@ -1,4 +1,3 @@
-import JOBS from 'data/JOBS'
 import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
 import {AdditionalEvents} from './AdditionalEvents'
 import {SimpleRow, StatusItem} from './Timeline'
@@ -16,11 +15,11 @@ const RAID_BUFFS = [
 	{key: 'LADY_OF_CROWNS', group: 'arcanum', name: 'Arcanum'},
 	{key: 'DIVINATION'},
 	{key: 'BATTLE_LITANY'},
-	{key: 'BATTLE_VOICE', exclude: [JOBS.BARD.logType]},
+	{key: 'BATTLE_VOICE', exclude: ['BARD']},
 	{key: 'BROTHERHOOD'},
 	{key: 'CHAIN_STRATAGEM'},
 	{key: 'EMBOLDEN_PHYSICAL'}, // phys only?
-	{key: 'LEFT_EYE', exclude: [JOBS.DRAGOON.logType]}, // notDRG
+	{key: 'LEFT_EYE', exclude: ['DRAGOON']}, // notDRG
 	{key: 'TRICK_ATTACK_VULNERABILITY_UP', name: 'Trick Attack'},
 	{key: 'DEVOTION'},
 	{key: 'TECHNICAL_FINISH'},
@@ -113,12 +112,12 @@ export default class RaidBuffs extends Module {
 		const statusId = event.ability.guid
 		const settings = this._buffMap.get(statusId)
 
-		if (settings.exclude && settings.exclude.includes(this.parser.player.type)) {
+		if (settings.exclude && settings.exclude.includes(this.parser.actor.job)) {
 			return
 		}
 
 		// Record the start time of the status
-		buffs[statusId] = event.timestamp - this.parser.fight.start_time
+		buffs[statusId] = event.timestamp - this.parser.eventTimeOffset
 	}
 
 	_onRemove(event) {
@@ -137,7 +136,7 @@ export default class RaidBuffs extends Module {
 		if (!applyTime) { return }
 		delete targetBuffs[statusId]
 
-		const removeTime = this.parser.currentTimestamp - this.parser.fight.start_time
+		const removeTime = this.parser.currentTimestamp - this.parser.eventTimeOffset
 
 		const settings = this._buffMap.get(statusId)
 		const status = this.data.getStatus(statusId)

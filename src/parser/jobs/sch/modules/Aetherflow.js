@@ -66,7 +66,7 @@ export default class Aetherflow extends Module {
 	}
 
 	_durationWithAetherflowOnCooldown() {
-		return this.parser.fightDuration - FIRST_FLOW_TIMESTAMP
+		return this.parser.currentDuration - FIRST_FLOW_TIMESTAMP
 	}
 
 	_possibleAetherflowCasts() {
