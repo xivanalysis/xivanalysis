@@ -475,12 +475,6 @@ export default class BloodOfTheDragon extends Module {
 			})
 
 			return <Fragment>
-				<Message>
-					<Trans id="drg.blood.windows.preface">
-						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with issues are
-						highlighted, and provide additional detail when expanded.
-					</Trans>
-				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
 			</Fragment>
 		}

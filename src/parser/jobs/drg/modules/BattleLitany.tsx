@@ -204,9 +204,6 @@ export default class BattleLitany extends Module {
 		}
 
 		return <Fragment>
-			<Message>
-				<Trans id="drg.battlelitany.accordion.message"><ActionLink {...ACTIONS.BATTLE_LITANY}/> windows should ideally contain {BL_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BL_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each row of the tables below indicates how many GCDs the window contained, the casts during the window and how many party members are buffed.</Trans>
-			</Message>
 			{overlap && (
 				<Message warning>
 					<Trans id="drg.battlelitany.rotation-table.message">
