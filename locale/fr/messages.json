@@ -379,8 +379,6 @@
   "drg.blood.suggestions.buffsed-stardiver.why": "Lorsque <0/> aurait pu être buffé, vous l'avez utilisé {noBuffSd} fois sans buff.",
   "drg.blood.suggestions.eyes.content": "Éviter d'utiliser <0/> quand vous avez déjà {MAX_EYES} yeux. Gâcher des yeux retarde votre fenêtre de Vie du Dragon et peut potentiellement vous faire perdre beaucoup de DPS.",
   "drg.blood.suggestions.eyes.why": "Vous avez utiliser Piqué mirage {0, plural,one {#fois}other {#fois}} quand vous aviez déja vos {MAX_EYES} yeux.",
-  "drg.blood.suggestions.gk.content": "Rappellez vous d'utilisez <0/> autant que possible, sans pour autant retarder votre fenêtre de vie du dragon. le nombre d'utilisation doit être dans 1 d'un des <1/> utilisations.",
-  "drg.blood.suggestions.gk.why": "Vos utilisations de <0/> sont différent de vos utilisation de <1/> utilser par {gkDiff}.",
   "drg.blood.table.action": "Action",
   "drg.blood.table.statuses": "Buff personel",
   "drg.blood.table.time": "Temps",

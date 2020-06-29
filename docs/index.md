@@ -1,7 +1,10 @@
 ---
-layout: default
 title: Home
 nav_exclude: true
 ---
 
-TODO
+# xivanalysis developer documentation
+
+This site aims to provide the documentation, guides, and resources you need to get up and running with the xivanalysis codebase, and reference to assist a smooth contribution workflow.
+
+The documentation is, like the website it serves, an ever-changing beast. Make sure to drop by once in a while to check for updates and new pages!
