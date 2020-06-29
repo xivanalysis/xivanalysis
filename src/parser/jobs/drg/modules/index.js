@@ -8,7 +8,7 @@ import Drift from './Drift'
 import OGCDDowntime from './OGCDDowntime'
 import Positionals from './Positionals'
 import Procs from './Procs'
-import {Tincture} from 'parser/core/modules/Tincture'
+import Tincture from './Tinctures'
 //import RotationWatchdog from './RotationWatchdog'
 import Weaving from './Weaving'
 export default [
