@@ -4,7 +4,7 @@ import Buffs from './Buffs'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Debuffs from './Debuffs'
-import Tinctures from './Tinctures'
+import Tincture from './Tincture'
 import Drift from './Drift'
 import OGCDDowntime from './OGCDDowntime'
 import Positionals from './Positionals'
@@ -22,7 +22,7 @@ export default [
 	OGCDDowntime,
 	Positionals,
 	Procs,
-	Tinctures,
+	Tincture,
 	//RotationWatchdog, // TODO - Restore this module after making it actually correct for ShB
 	Weaving,
 ]

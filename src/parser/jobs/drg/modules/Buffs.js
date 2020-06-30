@@ -283,7 +283,7 @@ export default class Buffs extends Module {
 			accessor: 'gcds',
 		}]
 		const notesData = [{
-			header: <Trans id="drg.buffs.bad-start">Optimal Start?</Trans>,
+			header: <Trans id="drg.buffs.bad-start">Optimal Start</Trans>,
 			accessor: 'start',
 		},
 		{
