@@ -388,7 +388,7 @@
   "drg.blood.windows.hits": "{0, plural, one {# Nastrond} other {# Nastronds}}, {1, plural, one {# Stardiver} other {# Stardivers}}",
   "drg.buffs.accordion.ds-header": "Dragon Sight",
   "drg.buffs.accordion.lc-header": "Lance Charge",
-  "drg.buffs.bad-start": "Start GCD OK?",
+  "drg.buffs.bad-start": "Optimal Start?",
   "drg.buffs.checklist.description": "<0/> provides a 10% boost to your personal damage and should always be kept up.",
   "drg.buffs.checklist.name": "Keep {0} up",
   "drg.buffs.checklist.requirement.name": "<0/> uptime",
