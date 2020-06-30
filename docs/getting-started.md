@@ -1,6 +1,10 @@
+---
+nav_order: 1
+---
+
 # Getting Started
 
-Before starting, you will need to install a few tools:
+Before contributing, you will need to install a few tools:
 
 - [git](https://git-scm.com/)<br>
   We use `git` to manage the source code and facilitate contributions.
