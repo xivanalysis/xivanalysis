@@ -1,6 +1,6 @@
 # Composing job analysis
 
-Long overdue; this document aims to provide an outline for composing the various tools available into a consistent experience. Where possible, this document will avoid delving into the implementation details - instead focusing on the broad strokes, in the hope it may also prove helpful for translators and such.
+This document aims to provide an outline for composing the various tools available into a consistent experience. Where possible, this document will avoid delving into the implementation details - instead focusing on the broad strokes, in the hope it may also prove helpful for translators and the like.
 
 ## Overview of the module structure
 
