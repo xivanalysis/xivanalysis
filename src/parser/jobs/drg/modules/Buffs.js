@@ -1,7 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import React, {Fragment} from 'react'
-import {Header, Message, Icon} from 'semantic-ui-react'
+import {Header, Icon} from 'semantic-ui-react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
@@ -283,7 +283,7 @@ export default class Buffs extends Module {
 			accessor: 'gcds',
 		}]
 		const notesData = [{
-			header: <Trans id="drg.buffs.bad-start">Start OK?</Trans>,
+			header: <Trans id="drg.buffs.bad-start">Optimal Start</Trans>,
 			accessor: 'start',
 		},
 		{
@@ -295,9 +295,6 @@ export default class Buffs extends Module {
 		const dsRotationData = this._formatWindowTable(STATUSES.RIGHT_EYE.id)
 
 		return <Fragment>
-			<Message>
-				<Trans id="drg.buffs.accordion.message">Each of your <ActionLink {...ACTIONS.LANCE_CHARGE}/> and <ActionLink {...ACTIONS.DRAGON_SIGHT}/> windows should ideally contain {BUFF_GCD_TARGET} GCDs at minimum. In an optimal situation, you should be able to fit {BUFF_GCD_TARGET + 1}, but it may be difficult depending on ping and skill speed. Each row of the tables below indicates how many GCDs the window contained, the casts during the window, and if the window started on an optimal GCD.</Trans>
-			</Message>
 			<Header size="small">
 				<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
 			</Header>
