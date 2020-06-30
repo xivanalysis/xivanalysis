@@ -14,7 +14,7 @@ sass:
 
 # JTD config
 logo: https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png
-color_scheme: dark
+color_scheme: xiva
 aux_links:
   "xivanalysis on GitHub": "//github.com/xivanalysis/xivanalysis"
 aux_links_new_tab: true
