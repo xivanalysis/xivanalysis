@@ -28,6 +28,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-30'),
+		Changes: () => <>Add potions as a module – show up with all the move used under them.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-05-16'),
 		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balance for feedback with content!</>,
 		contributors: [CONTRIBUTORS.NONO],
