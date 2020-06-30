@@ -8,6 +8,7 @@ import SchInterrupts from './Interrupts'
 import Pets from './Pets'
 import Overheal from './Overheal'
 import Recitation from './Recitation'
+import Tincture from './Tincture'
 
 export default [
 	Weaving,
@@ -20,4 +21,5 @@ export default [
 	Pets,
 	Overheal,
 	Recitation,
+	Tincture,
 ]
