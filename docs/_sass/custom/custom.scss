@@ -1,3 +1,4 @@
+// Tweak the site title to support image _and_ text
 .site-title-logo {
 	flex-shrink: 0;
 	height: 100%;
@@ -9,6 +10,7 @@
 	flex-grow: 1;
 }
 
+// Admonitions for content
 .admonition {
 	border-radius: 5px;
 	padding: 10px 15px;
@@ -19,3 +21,8 @@
 .admonition.info { background-color: $blue-200; }
 .admonition.caution { background-color: darken($yellow-300, 20%); }
 .admonition.danger { background-color: darken($red-300, 15%); }
+
+// Fix up code styling for dark theme
+.highlight .nx,
+.highlight .na
+{ color: $grey-lt-300; }
