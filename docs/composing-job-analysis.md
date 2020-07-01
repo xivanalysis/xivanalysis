@@ -67,6 +67,6 @@ Also consider using the tools available to link down _to_ the timeline from othe
 
 ## Changelog
 
-Akin the the About module, the Changelog shouldn't contain any analysis results. It's situated permanently beneath all other content on the page, and should display a list of changes that have been made to both core, and the job being analysed.
+Akin to the About module, the Changelog shouldn't contain any analysis results. It's situated permanently beneath all other content on the page, and should display a list of changes that have been made to both core, and the job being analysed.
 
 If you're making changes to anything in the parser, make sure you include a changelog entry outlining the changes you've made!
