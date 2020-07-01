@@ -55,7 +55,7 @@ While Checklist and Suggestions are about presenting the user ways to improve, S
 
 As such, being the "gateway" to the analysis, statistics should provide - akin the the checklist - an at-a-glance overview of a few important metrics that were calculated. By default, the GCD estimate calculated by core is included here, but you can add many of your own. Consider displaying some statistics about job-specific mechanics such as stances, pets, or gauges here!
 
-Given how they are configured and displayed, aim to always provide content for a suggestion, rather than conditionally display one. They're there to provide information, and a lack of information is information in and of itself!
+Given how they are configured and displayed, aim to always provide content for a statistic, rather than conditionally display one. They're there to provide information, and a lack of information is information in and of itself!
 
 ## Timeline
 
