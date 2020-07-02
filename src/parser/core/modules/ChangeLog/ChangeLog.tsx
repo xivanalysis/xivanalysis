@@ -20,7 +20,7 @@ export default class ChangeLog extends Module {
 		}
 
 		// Sorts the changelog by date. New to old.
-		changelog.sort((a, b) => b.date - a.date)
+		changelog.sort((a, b) => b.date.valueOf() - a.date.valueOf())
 
 		return <ChangelogComponent changelog={changelog}/>
 	}

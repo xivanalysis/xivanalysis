@@ -36,7 +36,6 @@ class Home extends Component {
 				<img
 					src={process.env.PUBLIC_URL + '/logo.png'}
 					alt="logo"
-					className={styles.logoImage}
 				/>
 				xivanalysis
 			</div>
