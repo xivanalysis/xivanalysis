@@ -118,10 +118,10 @@ module.exports = {
 		// Load env vars. Not using the `env` option for react 'cus it doesn't expand the way I'd like it to
 		envConfig,
 
-		// Add module resolution using NODE_PATH so absolutes work
+		// Add module resolution using NODE_SRC_PATH so absolutes work
 		neutrino => {
 			const modules = neutrino.config.resolve.modules
-			modules.add(process.env.NODE_PATH)
+			modules.add(process.env.NODE_SRC_PATH)
 			modules.add('node_modules')
 		},
 
