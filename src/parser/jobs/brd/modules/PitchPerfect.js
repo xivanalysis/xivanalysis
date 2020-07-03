@@ -300,6 +300,7 @@ export default class PitchPerfect extends Module {
 			</Message>
 		</>
 	}
+
 	// Builds a panel for each cast of Pitch Perfect and its respectives issues, to be provided to the final Accordion
 	// Each panel has the following components:
 	// - A title, containing:
@@ -398,7 +399,9 @@ export default class PitchPerfect extends Module {
 			},
 		}
 	}
+
 	_getEnemy(targetId) {
+
 		if (!this._enemies[targetId]) {
 			this._enemies[targetId] = {
 				tick: {
@@ -412,25 +415,32 @@ export default class PitchPerfect extends Module {
 						&& this.tick[STATUSES.STORMBITE.id].timestamp
 				},
 			}
+
 		}
 		return this._enemies[targetId]
 	}
+
 	_isAMissedPP(lastPPInWM, missedPPGracePeriod) {
 		return lastPPInWM.timeLeftOnSong > missedPPGracePeriod && !this.downtime.getDowntime(lastPPInWM.timestamp, lastPPInWM.timestamp + missedPPGracePeriod)
 	}
+
 	_cleanUpPPs() {
 		let lastPP = this._ppEvents[0]
+
 		let badCastInCurrentWM = false
 		let stacksUsedInCurrentWM = 0
 		const stacksUsedInWM = []
 		const castsInWM = []
 		let castsInCurrentWM = []
+
 		// It's the length of two dot ticks to have a better chance of being right.
 		const missedPPGracePeriod = DOT_TICK_FREQUENCY * 2
+
 		// They didn't use their PP
 		if (!this._ppEvents.length) {
 			return
 		}
+
 		// TODO: Add in checking for EA use after last PP cast for better accuracy
 		for (const pp of this._ppEvents) {
 			//This means a new Wanderers Minuet was cast since the last one
@@ -456,9 +466,11 @@ export default class PitchPerfect extends Module {
 			if (this.downtime.isDowntime(pp.lastTickOnEnemy + DOT_TICK_FREQUENCY + ANIMATION_LOCK)) {
 				this._ppEvents.splice(this._ppEvents.indexOf(pp), 1)
 			}
+
 			if (pp.issue === PP_CAST_WIHTOUT_MAX_STACKS) {
 				badCastInCurrentWM = true
 			}
+
 			stacksUsedInCurrentWM += pp.stacks
 			castsInCurrentWM.push(pp)
 			lastPP = pp
@@ -467,6 +479,7 @@ export default class PitchPerfect extends Module {
 			stacksUsedInWM.push(stacksUsedInCurrentWM)
 			castsInWM.push(castsInCurrentWM)
 		}
+
 		//To catch if the missed PP was after the last use of PP in the log
 		if (this._isAMissedPP(lastPP, missedPPGracePeriod)) {
 			this._ppEvents.push({
@@ -476,6 +489,7 @@ export default class PitchPerfect extends Module {
 			this._lostPotencyFromMissedCast[0] += PP_POTENCY[0]
 			this._lostPotencyFromMissedCast[1] += PP_MAX_POTENCY
 		}
+
 		//To properly find how much potency was lost due to missed stacks
 		for (const wmIndex in stacksUsedInWM) {
 			const casts = castsInWM[wmIndex]
@@ -494,10 +508,12 @@ export default class PitchPerfect extends Module {
 			this._lostPotencyFromStacks += maxPotencyInWM - totalPotencyInWM
 		}
 	}
+
 	// Allows for proper localization of potency numbers, aka proper thousands separators and things like that.
 	_formatPotency(potency) {
 		return potency.toLocaleString()
 	}
+
 	_createTimelineButton(timestamp) {
 		return <Button
 			circular
