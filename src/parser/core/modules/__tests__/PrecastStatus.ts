@@ -1,8 +1,8 @@
-// region CodeUnderTest
+// #region CodeUnderTest
 import {PrecastStatus} from '../PrecastStatus'
-// endregion
+// #endregion
 // tslint:disable:no-magic-numbers
-// region Mocks
+// #region Mocks
 import {MockedParser} from '__mocks__/Parser'
 import Parser from 'parser/core/Parser'
 import {MockedData} from '__mocks__/Data'
@@ -10,9 +10,9 @@ import {MockedData} from '__mocks__/Data'
 let precastStatus: PrecastStatus
 let parser: Parser
 
-// region MockedData
+// #region MockedData
 import {Ability, AbilityType} from 'fflogs'
-// region MockedEvents
+// #region MockedEvents
 import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from '__mocks__/Events'
 import {Event} from 'events'
 
@@ -73,32 +73,24 @@ const mockStatusStackData = {
 	stacksApplied: 3,
 }
 data.mockStatus(mockStatusStackData)
-// endregion
+// #endregion
 
-// endregion
+// #endregion
 
-// endregion
+// #endregion
 
+let results: Event[] = []
 
-describe('The PrecastStatus module', () => {
+describe('PrecastStatus', () => {
 	beforeEach(() => {
 		parser = new MockedParser()
 		Object.defineProperty(parser, 'fight', {value: {start_time: 0}})
 		Object.defineProperty(parser, 'modules', {value: {data}})
 
 		precastStatus = new PrecastStatus(parser)
-		jest.spyOn(data, 'getAction')
-		jest.spyOn(data, 'getActionAppliedByStatus')
-		jest.spyOn(data, 'getStatus')
 	})
 
-	afterEach(() => {
-		jest.clearAllMocks()
-	})
-
-	it('has a normalise method', () => {
-		expect(precastStatus).toHaveProperty('normalise')
-	})
+	const act = () => { results = precastStatus.normalise(events) }
 
 	describe('when an apply buff event on a single target has a matching cast event first', () => {
 		beforeEach(() => {
@@ -107,32 +99,11 @@ describe('The PrecastStatus module', () => {
 				mockApplyBuffEvent(100, mockStatusEvent, 1),
 				mockRemoveBuffEvent(1100, mockStatusEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the action', () => {
-			expect(data.getAction).toBeCalledWith(1).toHaveBeenCalledTimes(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
-		})
-
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(1)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-		})
-
-		it('does not fabricate a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(0)
-		})
-
-		it('does not fabricate a buff event', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('does not fabricate any events', () => {
+			act()
+			expect(results).toHaveLength(events.length)
 		})
 	})
 
@@ -142,32 +113,12 @@ describe('The PrecastStatus module', () => {
 				mockApplyBuffEvent(100, mockStatusEvent, 1),
 				mockRemoveBuffEvent(1100, mockStatusEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(1)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-		})
-
-		it('looks up the action', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusData)).toHaveBeenCalledTimes(1)
-		})
-
-		it('fabricates a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
-		})
-
-		it('does not fabricate a buff event', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('fabricates a cast event at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 1)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionEvent}))
 		})
 	})
 
@@ -176,32 +127,13 @@ describe('The PrecastStatus module', () => {
 			events = [
 				mockRemoveBuffEvent(1100, mockStatusEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(1)
-		})
-
-		it('fabricates a buff event', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-		})
-
-		it('looks up the action', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusData)).toHaveBeenCalledTimes(1)
-		})
-
-		it('fabricates a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
+		it('fabricates cast and applybuff events at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 2)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionEvent}))
+			expect(results[1]).toEqual(jasmine.objectContaining({type: 'applybuff', timestamp: -1, ability: mockStatusEvent}))
 		})
 	})
 
@@ -226,39 +158,11 @@ describe('The PrecastStatus module', () => {
 				mockRemoveBuffEvent(1100, mockStatusEvent, 7),
 				mockRemoveBuffEvent(1100, mockStatusEvent, 8),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the action', () => {
-			expect(data.getAction).toBeCalledWith(1).toHaveBeenCalledTimes(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
-		})
-
-		it('looks up the status for each target', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(8)
-		})
-
-		it('marks the status as tracked for each target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(2)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(3)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(4)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(5)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(6)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(7)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(8)).toContain(1000001)
-		})
-
-		it('does not fabricate a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(0)
-		})
-
-		it('does not fabricate any buff events', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('does not fabricate any events', () => {
+			act()
+			expect(results).toHaveLength(events.length)
 		})
 	})
 
@@ -282,39 +186,12 @@ describe('The PrecastStatus module', () => {
 				mockRemoveBuffEvent(1100, mockStatusEvent, 7),
 				mockRemoveBuffEvent(1100, mockStatusEvent, 8),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the status for each target', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(8)
-		})
-
-		it('marks the status as tracked for each target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(2)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(3)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(4)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(5)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(6)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(7)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(8)).toContain(1000001)
-		})
-
-		it('looks up the action for each buff event', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusData)).toHaveBeenCalledTimes(8)
-		})
-
-		it('fabricates a single cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
-		})
-
-		it('does not fabricate any buff events', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('fabricates a cast event at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 1)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionEvent}))
 		})
 	})
 
@@ -334,35 +211,11 @@ describe('The PrecastStatus module', () => {
 			precastStatus.normalise(events)
 		})
 
-		it('looks up the status for each target', () => {
-			expect(data.getStatus).toBeCalledWith(1000001).toHaveBeenCalledTimes(8)
-		})
-
-		it('fabricates an apply buff event for each target', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(8)
-		})
-
-		it('marks the status as tracked for each target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(2)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(3)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(4)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(5)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(6)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(7)).toContain(1000001)
-			expect(precastStatus.trackedStatuses.get(8)).toContain(1000001)
-		})
-
-		it('looks up the action for each buff event', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusData)).toHaveBeenCalledTimes(8)
-		})
-
-		it('fabricates a single cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(1)
+		it('fabricates a cast event plus an applybuff event for each target at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 9)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionEvent}))
+			expect(results[1]).toEqual(jasmine.objectContaining({type: 'applybuff', timestamp: -1, ability: mockStatusEvent}))
 		})
 	})
 
@@ -374,32 +227,11 @@ describe('The PrecastStatus module', () => {
 				mockApplyBuffStackEvent(100, mockStatusStackEvent, 1, 3),
 				mockRemoveBuffEvent(1100, mockStatusStackEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the action', () => {
-			expect(data.getAction).toBeCalledWith(2).toHaveBeenCalledTimes(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(2)
-		})
-
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000002).toHaveBeenCalledTimes(2)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000002)
-		})
-
-		it('does not fabricate a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(0)
-		})
-
-		it('does not fabricate a buff event', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('does not fabricate any events', () => {
+			act()
+			expect(results).toHaveLength(events.length)
 		})
 	})
 
@@ -410,32 +242,12 @@ describe('The PrecastStatus module', () => {
 				mockApplyBuffStackEvent(100, mockStatusStackEvent, 1, 3),
 				mockRemoveBuffEvent(1100, mockStatusStackEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000002).toHaveBeenCalledTimes(2)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000002)
-		})
-
-		it('looks up the action', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusStackData)).toHaveBeenCalledTimes(1)
-		})
-
-		it('fabricates a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(2)
-		})
-
-		it('does not fabricate a buff event', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(0)
+		it('fabricates a cast event at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 1)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionStackEvent}))
 		})
 	})
 
@@ -446,32 +258,14 @@ describe('The PrecastStatus module', () => {
 				mockApplyBuffStackEvent(100, mockStatusStackEvent, 1, 2),
 				mockRemoveBuffEvent(1100, mockStatusStackEvent, 1),
 			]
-
-			precastStatus.normalise(events)
 		})
 
-		it('looks up the status', () => {
-			expect(data.getStatus).toBeCalledWith(1000002).toHaveBeenCalledTimes(2)
-		})
-
-		it('marks the status as tracked for the target', () => {
-			expect(precastStatus.trackedStatuses.get(1)).toContain(1000002)
-		})
-
-		it('looks up the action', () => {
-			expect(data.getActionAppliedByStatus).toBeCalledWith(jasmine.objectContaining(mockStatusStackData)).toHaveBeenCalledTimes(1)
-		})
-
-		it('fabricates a cast event', () => {
-			expect(precastStatus.castEventsToSynth).toHaveLength(1)
-		})
-
-		it('marks the action as tracked', () => {
-			expect(precastStatus.trackedActions).toContain(2)
-		})
-
-		it('fabricates a buff event and an applybuff event with max stacks', () => {
-			expect(precastStatus.buffEventsToSynth).toHaveLength(2)
+		it('fabricates a cast event, an applybuff event, and an applybuffstack event with maximum stacks at the beginning of the array', () => {
+			act()
+			expect(results).toHaveLength(events.length + 3)
+			expect(results[0]).toEqual(jasmine.objectContaining({type: 'cast', timestamp: -2, ability: mockActionStackEvent}))
+			expect(results[1]).toEqual(jasmine.objectContaining({type: 'applybuff', timestamp: -1, ability: mockStatusStackEvent}))
+			expect(results[2]).toEqual(jasmine.objectContaining({type: 'applybuffstack', timestamp: -1, ability: mockStatusStackEvent, stack: 3}))
 		})
 	})
 })

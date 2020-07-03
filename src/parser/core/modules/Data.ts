@@ -27,7 +27,7 @@ export class Data extends Module {
 		return getDataBy(this.statuses, 'id', id)
 	}
 
-	getActionAppliedByStatus(status: Status) {
+	getActionThatAppliesStatus(status: Status) {
 		const statusKey = (_.findKey(this.statuses, status) as (undefined | keyof StatusRoot))
 		return getDataBy(this.actions, 'statusesApplied', statusKey)
 	}

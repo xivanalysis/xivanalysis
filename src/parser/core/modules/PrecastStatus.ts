@@ -10,76 +10,82 @@ const isTrackedBuffEvent = (event: Event): event is AbilityEvent => (trackedBuff
 // Fake buff applications so modules don't need to take it into account
 export class PrecastStatus extends Module {
 	static handle = 'precastStatus'
-	static debug = true
+	static debug = false
 
 	@dependency private data!: Data
 
-	trackedStatuses = new Map<number, number[]>()
-	trackedActions: number[] = []
-	buffEventsToSynth: AbilityEvent[] = []
-	castEventsToSynth: CastEvent[] = []
+	private trackedStatuses = new Map<number, number[]>()
+	private trackedActions: number[] = []
+	private buffEventsToSynth: AbilityEvent[] = []
+	private castEventsToSynth: CastEvent[] = []
 	private startTime = this.parser.fight.start_time
 
 	normalise(events: Event[]) {
 		for (const event of events) {
-			if (event.type === 'cast') {
-				const action = this.data.getAction(event.ability.guid)
-				if (action && !this.trackedActions.includes(action.id)) {
-					this.markActionAsTracked(action.id)
-					continue
-				}
-			}
-
-			if (isTrackedBuffEvent(event)) {
-				if (event.targetID) {
-					const trackedStatusesForTarget = this.trackedStatuses.get(event.targetID)
-					if (trackedStatusesForTarget != null && trackedStatusesForTarget.includes(event.ability.guid)) {
-						// Status is already tracked for this target and no synth needs to take place
-						continue
-					}
-
-					const statusInfo = this.data.getStatus(event.ability.guid) as Status
-					if (!statusInfo) {
-						// No valid status data for this event, skip to next event
-						continue
-					}
-
-					this.debug(`Checking ${event.type} of ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp, 1)} with stacks ${event.stack ?? 0}`)
-
-					if (statusInfo.stacksApplied && statusInfo.stacksApplied > 0) {
-						// This action applies stacks, expected first cast will have an applybuff and an applybuffstack with max stacks at the same timestamp
-						// Ignore the applybuff event and check the applybuffstack event for validity
-						if (event.type === 'applybuff') { continue }
-						if (event.type === 'applybuffstack')
-						{
-							if (event.stack < statusInfo.stacksApplied) {
-								// First applybuffstack seen with less than max stacks, synth the initial buff event
-								this.fabricateBuffEvent(event, statusInfo)
-							}
-							else {
-								// First applybuff stack seen with max stacks, check if cast event needs to be synthesized
-								this.fabricateCastEvent(event, statusInfo)
-							}
-							this.markStatusAsTracked(event.ability.guid, event.targetID)
-						}
-					} else {
-						// This action does not apply stacks, check to see if this is an applybuff event
-						if (event.type === 'applybuff') {
-							// First event for this status is an apply buff, check if cast event needs to be synthesized
-							this.fabricateCastEvent(event, statusInfo)
-							this.markStatusAsTracked(event.ability.guid, event.targetID)
-						}
-					}
-
-					if (['removebuff', 'removebuffstack', 'refreshbuff'].includes(event.type)) {
-						this.fabricateBuffEvent(event, statusInfo)
-						this.markStatusAsTracked(event.ability.guid, event.targetID)
-					}
-				}
-			}
+			this.CheckForPrecastStatuses(event)
 		}
 
 		return [...this.castEventsToSynth, ...this.buffEventsToSynth, ...events]
+	}
+
+	private CheckForPrecastStatuses(event: Event) {
+		if (event.type === 'cast') {
+			this.markActionAsTracked(event.ability.guid)
+			return
+		}
+
+		if (isTrackedBuffEvent(event) && event.targetID) {
+			this.debug(`Checking ${event.type} of ${event.ability.name} at ${this.parser.formatTimestamp(event.timestamp, 1)} with stacks ${event.stack ?? 0}`)
+			this.fabricateBuffEventIfRequired(event, event.targetID)
+		}
+	}
+
+	private fabricateBuffEventIfRequired(event: AbilityEvent, targetId: number) {
+		if (this.statusEventIsTrackedForTarget(event.ability.guid, targetId)) {
+			return
+		}
+
+		const statusInfo = this.data.getStatus(event.ability.guid)
+		if (!statusInfo) {
+			// No valid status data for this event, skip to next event
+			return
+		}
+
+		if (statusInfo.stacksApplied != null && statusInfo.stacksApplied > 0) {
+			this.handleBuffStackEvent(event, statusInfo)
+		} else {
+			this.handleBuffEvent(event, statusInfo)
+		}
+	}
+
+	private handleBuffEvent(event: AbilityEvent, statusInfo: Status) {
+		if (event.type === 'applybuffstack') {
+			this.debug(`Unexpected applybuffstack event seen - check the data files and determine if a stacksApplied property is missing for status ${statusInfo.name}`)
+		}
+
+		// This action does not apply stacks, check to see if this is an applybuff event
+		if (event.type !== 'applybuff') {
+			// First event for this status is an apply buff, check if cast event needs to be synthesized
+			this.fabricateBuffEvent(event, statusInfo)
+		}
+		this.fabricateCastEventIfRequired(event, statusInfo)
+		this.markStatusAsTracked(event.ability.guid, event.targetID!)
+	}
+
+	private handleBuffStackEvent(event: AbilityEvent, statusInfo: Status) {
+		if (event.type === 'applybuff') {
+			// This action applies stacks, expected first cast will have an applybuff and an applybuffstack with max stacks at the same timestamp
+			// Ignore the applybuff event and check the applybuffstack event for validity
+			return
+		}
+
+		if (!(event.type === 'applybuffstack' && event.stack === statusInfo.stacksApplied!)) {
+			this.fabricateBuffEvent(event, statusInfo)
+			this.fabricateBuffStackEvent(event, statusInfo)
+		}
+
+		this.fabricateCastEventIfRequired(event, statusInfo)
+		this.markStatusAsTracked(event.ability.guid, event.targetID!)
 	}
 
 	private fabricateBuffEvent(event: AbilityEvent, statusInfo: Status) {
@@ -90,28 +96,25 @@ export class PrecastStatus extends Module {
 			timestamp: this.startTime - 1,
 			type: 'applybuff',
 		})
-
-		if (statusInfo.stacksApplied && statusInfo.stacksApplied > 0) {
-			this.debug(`Fabricating applybuff event for status ${statusInfo.name} with ${statusInfo.stacksApplied} stacks`)
-			// Status applies multiple stacks - fab an applybuffstack event
-			this.buffEventsToSynth.push({
-				// Can inherit most of the event data from the current one
-				...event,
-				// Override a few vals
-				timestamp: this.startTime - 1,
-				type: 'applybuffstack',
-				stack: statusInfo.stacksApplied,
-			})
-		}
-
-		// Determine if this buff comes from a known action, fab a cast event
-		this.fabricateCastEvent(event, statusInfo)
 	}
 
-	private fabricateCastEvent(event: AbilityEvent, statusInfo: Status) {
+	private fabricateBuffStackEvent(event: AbilityEvent, statusInfo: Status) {
+		this.debug(`Fabricating applybuff event for status ${statusInfo.name} with ${statusInfo.stacksApplied} stacks`)
+		// Status applies multiple stacks - fab an applybuffstack event
+		this.buffEventsToSynth.push({
+			// Can inherit most of the event data from the current one
+			...event,
+			// Override a few vals
+			timestamp: this.startTime - 1,
+			type: 'applybuffstack',
+			stack: statusInfo.stacksApplied!,
+		})
+	}
+
+	private fabricateCastEventIfRequired(event: AbilityEvent, statusInfo: Status) {
 		this.debug(`Determining if status ${statusInfo.name} was applied by a known action`)
 		// Determine if this buff comes from a known action, fab a cast event
-		const actionInfo = this.data.getActionAppliedByStatus(statusInfo)
+		const actionInfo = this.data.getActionThatAppliesStatus(statusInfo)
 
 		if (!actionInfo) {
 			this.debug('No known action found, no cast event to synthesize')
@@ -138,6 +141,11 @@ export class PrecastStatus extends Module {
 
 	}
 
+	private statusEventIsTrackedForTarget(eventId: number, targetId: number) {
+		const trackedStatusesForTarget = this.trackedStatuses.get(targetId)
+		return (trackedStatusesForTarget != null && trackedStatusesForTarget.includes(eventId))
+	}
+
 	private markStatusAsTracked(statusId: number, targetId: number) {
 		let trackedStatusesForTarget = this.trackedStatuses.get(targetId)
 		if (trackedStatusesForTarget == null) {
@@ -147,7 +155,10 @@ export class PrecastStatus extends Module {
 		trackedStatusesForTarget.push(statusId)
 	}
 
-	private markActionAsTracked(actionId: number) {
-		this.trackedActions.push(actionId)
+	private markActionAsTracked(eventAbilityId: number) {
+		const action = this.data.getAction(eventAbilityId)
+		if (action && !this.trackedActions.includes(action.id)) {
+			this.trackedActions.push(action.id)
+		}
 	}
 }

@@ -1,5 +1,5 @@
 import {Action} from 'data/ACTIONS'
-import {Status} from 'data/STATUSES'
+import {Status, STATUS_ID_OFFSET} from 'data/STATUSES'
 
 interface MockAction extends Omit<Action, 'statusesApplied'> {
 	statusesApplied?: string[]
@@ -14,11 +14,10 @@ export class MockedData {
 	}
 
 	getStatus(id: Status['id']) {
-		// tslint:disable-next-line:no-magic-numbers
-		return this.statusData.find(a => a.id + 1000000 === id)
+		return this.statusData.find(a => a.id + STATUS_ID_OFFSET === id)
 	}
 
-	getActionAppliedByStatus(status: Status) {
+	getActionThatAppliesStatus(status: Status) {
 		return this.actionData.find(a => a.statusesApplied && a.statusesApplied.includes(status.name))
 	}
 
