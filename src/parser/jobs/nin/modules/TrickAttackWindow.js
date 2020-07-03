@@ -90,7 +90,9 @@ export default class TrickAttackWindow extends BuffWindowModule {
 
 	considerAction(action) {
 		// Ten, Chi, and Jin should be ignored for purposes of GCD counts
-		return !(action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_KASSATSU.id || action.id === ACTIONS.CHI.id || action.id === ACTIONS.JIN.id)
+		return !(action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_NEW.id ||
+			action.id === ACTIONS.CHI.id || action.id === ACTIONS.CHI_NEW.id ||
+			action.id === ACTIONS.JIN.id || action.id === ACTIONS.JIN_NEW.id)
 	}
 
 	changeExpectedGCDsClassLogic(buffWindow) {
