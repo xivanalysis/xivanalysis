@@ -104,6 +104,7 @@ export default class Snapshots extends Module {
 	}
 
 	private _onDotTick(event: NormalisedDamageEvent) {
+		// This will come in handy in the future
 		this.currentSnapshot?.ticks.push(event)
 	}
 
