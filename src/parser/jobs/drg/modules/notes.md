@@ -10,7 +10,7 @@
 
 ### Jumps
 - [x] Not double weaving with Jump actions (Weaving.js)
-- [ ] Using Jumps on cooldown (with more leniance for Dragonfire than the other two)
+- [/] Using Jumps on cooldown (with more leniance for Dragonfire than the other two) (Partially implemented with Ability Drift module)
 - [ ] Only using Jumps under BotD for that sweet damage buff
 
 ### Buffs
@@ -26,4 +26,4 @@
 - [x] Chaos Thrust uptime and clipping (Debuffs.js)
 
 ### Rotation
-- [ ] Adhering to the standard 11-GCD rotation
+- [-] Adhering to the standard 11-GCD rotation (This has been removed.)
