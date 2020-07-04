@@ -39,7 +39,7 @@ interface Snapshot {
 	snapEvent: CastEvent
 
 	// All statuses observed at the time of casting the snapshot.
-	statusIds: number[]
+	statusIDs: number[]
 
 	// DoT ticks that occurred under the current snapshot.
 	ticks: NormalisedDamageEvent[]
@@ -48,6 +48,7 @@ interface Snapshot {
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static title = t('brd.snapshots.title')`Snapshots`
+	static debug = true
 
 	@dependency private combatants!: Combatants
 	@dependency private util!: Util
@@ -55,36 +56,53 @@ export default class Snapshots extends Module {
 	private snapshots: Snapshot[] = []
 	private currentSnapshot?: Snapshot
 
-	private targets = new Map<number, number[]>()
+	private targets = new Map<string, AbilityEvent[]>()
 
 	protected init() {
 		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this._onSnapshot)
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: DOT_STATUSES}, this._onDotTick)
-		this.addEventHook('applydebuff', this._onApply)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], this._onApply)
 		this.addEventHook('removedebuff', this._onRemove)
 	}
 
 	private _onApply(event: AbilityEvent) {
-		const targetID = event.targetID ?? -1
-		if (!this.targets.has(targetID)) {
-			this.targets.set(targetID, [])
+		const targetKey = `${event.targetID}-${event.targetInstance}`
+
+		if (!this.targets.has(targetKey)) {
+			this.targets.set(targetKey, [])
 		}
 
-		this.targets.get(targetID)?.push(event.ability.guid)
+		const target = this.targets.get(targetKey)
+		if (target) {
+			const index = target.findIndex(statusEvent =>
+				statusEvent.ability.guid === event.ability.guid)
+
+			if (index === -1) {
+				target.push(event)
+			}
+		}
 	}
 
 	private _onRemove(event: AbilityEvent) {
-		const targetID = event.targetID || -1
-		const targetStatuses = this.targets.get(targetID)
-		const index = (targetStatuses ?? []).indexOf(event.ability.guid)
-		if (index > -1) {
-			targetStatuses?.splice(index, 1)
+		const targetKey = `${event.targetID}-${event.targetInstance}`
+		const targetStatuses = this.targets.get(targetKey)
+
+		if (targetStatuses) {
+			const index = targetStatuses.findIndex(status =>
+				status.ability.guid === event.ability.guid)
+
+			if (index > -1) {
+				targetStatuses.splice(index, 1)
+			}
 		}
 	}
 
 	private _getStatuses(event: CastEvent) {
-		const playerStatuses = this.combatants.selected.getStatuses().map((status: AbilityEvent) => status.ability.guid)
-		const targetStatuses = this.targets.get(event.targetID || -1) || []
+		const targetKey = `${event.targetID}-${event.targetInstance}`
+		const playerStatuses = this.combatants.selected.getStatuses().map(
+			(status: AbilityEvent) => status.ability.guid)
+		const targetStatuses = this.targets.get(targetKey)?.map(
+			(status: AbilityEvent) => status.ability.guid) || []
 
 		return [...playerStatuses, ...targetStatuses]
 	}
@@ -96,11 +114,9 @@ export default class Snapshots extends Module {
 
 		this.currentSnapshot = {
 			snapEvent: event,
-			statusIds: this._getStatuses(event),
+			statusIDs: this._getStatuses(event),
 			ticks: [],
 		}
-
-		this.debug(this.currentSnapshot)
 	}
 
 	private _onDotTick(event: NormalisedDamageEvent) {
@@ -116,20 +132,20 @@ export default class Snapshots extends Module {
 		// Builds a row for each snapshot event
 		const rows = this.snapshots.map(snap => {
 
-			snap.statusIds.sort()
+			snap.statusIDs.sort()
 
 			// Move personal buffs to the front of the status list
-			snap.statusIds.map((status, index) => {
+			snap.statusIDs.map((status, index) => {
 				if (PERSONAL_STATUSES.includes(status)) {
-					snap.statusIds.unshift(
-						snap.statusIds.splice(index, 1)[0],
+					snap.statusIDs.unshift(
+						snap.statusIDs.splice(index, 1)[0],
 					)
 				}
 			})
 
 			const snapshotDotCell = <Table.Cell>
 				{
-					snap.statusIds.map(id => {
+					snap.statusIDs.map(id => {
 						const status = getDataBy(STATUSES, 'id', id)
 						if (status && DOT_STATUSES.includes(id)) {
 							return <StatusLink key={status.name} showName={false} iconSize="35px" {...status}/>
@@ -140,7 +156,7 @@ export default class Snapshots extends Module {
 
 			const snapshotBuffCell = <Table.Cell>
 				{
-					snap.statusIds.map(id => {
+					snap.statusIDs.map(id => {
 						// Avoid showing statuses we do not currently know of and statuses known not to affect bard DoTs
 						const status = getDataBy(STATUSES, 'id', id)
 						if (status && !DOT_STATUSES.includes(id) && !SNAPSHOT_BLACKLIST.includes(id)) {
