@@ -13,20 +13,17 @@ import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Combatants from 'parser/core/modules/Combatants'
 import {AbilityEvent} from 'fflogs'
 import Util from './Util'
+import {Data} from 'parser/core/modules/Data'
 
 const SNAPSHOTTERS = [
 	ACTIONS.IRON_JAWS.id,
 	ACTIONS.CAUSTIC_BITE.id,
 	ACTIONS.STORMBITE.id,
-	ACTIONS.VENOMOUS_BITE.id,
-	ACTIONS.WINDBITE.id,
 ]
 
 const DOT_STATUSES = [
 	STATUSES.CAUSTIC_BITE.id,
 	STATUSES.STORMBITE.id,
-	STATUSES.VENOMOUS_BITE.id,
-	STATUSES.WINDBITE.id,
 ]
 
 const PERSONAL_STATUSES = [
@@ -39,7 +36,7 @@ interface Snapshot {
 	snapEvent: CastEvent
 
 	// All statuses observed at the time of casting the snapshot.
-	statusIDs: number[]
+	statuses: AbilityEvent[]
 
 	// DoT ticks that occurred under the current snapshot.
 	ticks: NormalisedDamageEvent[]
@@ -51,6 +48,7 @@ export default class Snapshots extends Module {
 	static debug = true
 
 	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 	@dependency private util!: Util
 
 	private snapshots: Snapshot[] = []
@@ -59,13 +57,13 @@ export default class Snapshots extends Module {
 	private targets = new Map<string, AbilityEvent[]>()
 
 	protected init() {
-		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this._onSnapshot)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: DOT_STATUSES}, this._onDotTick)
-		this.addEventHook(['applydebuff', 'refreshdebuff'], this._onApply)
-		this.addEventHook('removedebuff', this._onRemove)
+		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this.onSnapshot)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: DOT_STATUSES}, this.onDotTick)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], this.onApply)
+		this.addEventHook('removedebuff', this.onRemove)
 	}
 
-	private _onApply(event: AbilityEvent) {
+	private onApply(event: AbilityEvent) {
 		const targetKey = `${event.targetID}-${event.targetInstance}`
 
 		if (!this.targets.has(targetKey)) {
@@ -83,7 +81,7 @@ export default class Snapshots extends Module {
 		}
 	}
 
-	private _onRemove(event: AbilityEvent) {
+	private onRemove(event: AbilityEvent) {
 		const targetKey = `${event.targetID}-${event.targetInstance}`
 		const targetStatuses = this.targets.get(targetKey)
 
@@ -97,29 +95,31 @@ export default class Snapshots extends Module {
 		}
 	}
 
-	private _getStatuses(event: CastEvent) {
-		const targetKey = `${event.targetID}-${event.targetInstance}`
-		const playerStatuses = this.combatants.selected.getStatuses().map(
-			(status: AbilityEvent) => status.ability.guid)
-		const targetStatuses = this.targets.get(targetKey)?.map(
-			(status: AbilityEvent) => status.ability.guid) || []
+	private getStatuses(event: CastEvent): AbilityEvent[] {
+		const playerStatuses = this.combatants.selected
+			.getStatuses()
+			.filter((status: AbilityEvent) => !SNAPSHOT_BLACKLIST.includes(status.ability.guid))
 
+		const targetKey = `${event.targetID}-${event.targetInstance}`
+		const targetStatuses = this.targets.get(targetKey) || []
+
+		// Purge the undesirables
 		return [...playerStatuses, ...targetStatuses]
 	}
 
-	private _onSnapshot(event: CastEvent) {
+	private onSnapshot(event: CastEvent) {
 		if (this.currentSnapshot) {
 			this.snapshots.push(this.currentSnapshot)
 		}
 
 		this.currentSnapshot = {
 			snapEvent: event,
-			statusIDs: this._getStatuses(event),
+			statuses: this.getStatuses(event),
 			ticks: [],
 		}
 	}
 
-	private _onDotTick(event: NormalisedDamageEvent) {
+	private onDotTick(event: NormalisedDamageEvent) {
 		// This will come in handy in the future
 		this.currentSnapshot?.ticks.push(event)
 	}
@@ -132,39 +132,32 @@ export default class Snapshots extends Module {
 		// Builds a row for each snapshot event
 		const rows = this.snapshots.map(snap => {
 
-			snap.statusIDs.sort()
+			snap.statuses.sort((a, b) => a.ability.name.localeCompare(b.ability.name))
 
 			// Move personal buffs to the front of the status list
-			snap.statusIDs.map((status, index) => {
-				if (PERSONAL_STATUSES.includes(status)) {
-					snap.statusIDs.unshift(
-						snap.statusIDs.splice(index, 1)[0],
+			snap.statuses.map((event, index) => {
+				if (PERSONAL_STATUSES.includes(event.ability.guid)) {
+					snap.statuses.unshift(
+						snap.statuses.splice(index, 1)[0],
 					)
 				}
 			})
 
-			const snapshotDotCell = <Table.Cell>
-				{
-					snap.statusIDs.map(id => {
-						const status = getDataBy(STATUSES, 'id', id)
-						if (status && DOT_STATUSES.includes(id)) {
-							return <StatusLink key={status.name} showName={false} iconSize="35px" {...status}/>
-						}
-					})
-				}
-			</Table.Cell>
+			const dotStatusLinks: JSX.Element[] = []
+			const buffStatusLinks: JSX.Element[] = []
 
-			const snapshotBuffCell = <Table.Cell>
-				{
-					snap.statusIDs.map(id => {
-						// Avoid showing statuses we do not currently know of and statuses known not to affect bard DoTs
-						const status = getDataBy(STATUSES, 'id', id)
-						if (status && !DOT_STATUSES.includes(id) && !SNAPSHOT_BLACKLIST.includes(id)) {
-							return <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
-						}
-					})
+			snap.statuses.map(event => {
+				const id = event.ability.guid
+				const status = this.data.getStatus(id)
+				if (status) {
+					const statusLink = <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
+					if (DOT_STATUSES.includes(id)) {
+						dotStatusLinks.push(statusLink)
+					} else {
+						buffStatusLinks.push(statusLink)
+					}
 				}
-			</Table.Cell>
+			})
 
 			const event = snap.snapEvent
 			return <Table.Row key={event.timestamp}>
@@ -172,10 +165,10 @@ export default class Snapshots extends Module {
 					{this.util.createTimelineButton(event.timestamp)}
 				</Table.Cell>
 				<Table.Cell>
-					<ActionLink {...getDataBy(ACTIONS, 'id', event.ability.guid)}/>
+					<ActionLink {...this.data.getAction(event.ability.guid)}/>
 				</Table.Cell>
-				{snapshotDotCell}
-				{snapshotBuffCell}
+				<Table.Cell> {dotStatusLinks} </Table.Cell>
+				<Table.Cell> {buffStatusLinks} </Table.Cell>
 			</Table.Row>
 		})
 
