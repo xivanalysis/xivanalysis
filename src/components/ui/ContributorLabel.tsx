@@ -1,44 +1,21 @@
 import Color from 'color'
 import {Contributor} from 'data/CONTRIBUTORS'
-import PropTypes from 'prop-types'
-import React, {CSSProperties, PureComponent} from 'react'
+import React, {CSSProperties, PureComponent, ReactNode} from 'react'
 import {Label} from 'semantic-ui-react'
 
 interface ContributorLabelProps {
-	contributor: string | Contributor
-	detail?: React.ReactNode
+	contributor: Contributor
+	detail?: ReactNode
 }
 
 export default class ContributorLabel extends PureComponent<ContributorLabelProps> {
-	static propTypes = {
-		contributor: PropTypes.oneOfType([
-			PropTypes.string,
-			PropTypes.shape({
-				name: PropTypes.string.isRequired,
-				avatar: PropTypes.string,
-			}),
-		]).isRequired,
-		detail: PropTypes.node,
-	}
-
-	normalizeContributor = (contributor: string | Contributor): Contributor => {
-		if (typeof contributor === 'string') {
-			return {
-				name: contributor,
-				jobs: [],
-			}
-		} else {
-			return contributor
-		}
-	}
-
 	render() {
 		const {contributor, detail} = this.props
 
-		const {avatar, name, jobs} = this.normalizeContributor(contributor)
+		const {avatar, name, jobs} = contributor
 
 		const style: CSSProperties = {}
-		if (jobs && jobs.length) {
+		if (jobs.length) {
 			// I'm assuming the first job they list is their 'main'
 			const job = jobs[0]
 			style.backgroundColor = job.colour
