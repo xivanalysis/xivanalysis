@@ -23,35 +23,6 @@ const CRIT_MODIFIERS = [
 	},
 ]
 
-// Skills that snapshot dots and their respective dot statuses (let's do it BRD only for now)
-// TODO: Populate with other jobs DoTs and Snapshotters
-const SNAPSHOTTERS = {
-	[ACTIONS.IRON_JAWS.id]: [
-		STATUSES.CAUSTIC_BITE.id,
-		STATUSES.STORMBITE.id,
-	],
-	[ACTIONS.CAUSTIC_BITE.id]: [
-		STATUSES.CAUSTIC_BITE.id,
-	],
-	[ACTIONS.STORMBITE.id]: [
-		STATUSES.STORMBITE.id,
-	],
-	[ACTIONS.VENOMOUS_BITE.id]: [
-		STATUSES.VENOMOUS_BITE.id,
-	],
-	[ACTIONS.WINDBITE.id]: [
-		STATUSES.WINDBITE.id,
-	],
-}
-
-// Relevant dot statuses (let's do it BRD only for now)
-const DOTS = [
-	STATUSES.CAUSTIC_BITE.id,
-	STATUSES.STORMBITE.id,
-	STATUSES.VENOMOUS_BITE.id,
-	STATUSES.WINDBITE.id,
-]
-
 const DHIT_MOD = 1.25
 
 const TRAIT_STRENGTH = 0.20
@@ -78,9 +49,6 @@ export default class AdditionalStats extends Module {
 		statuses: {},
 	}
 
-	// Represents a map of IDs and statuses for each snapshotter skill in this parse
-	_snapshotters = {}
-
 	// Let's store these in the class like normal people
 	_damageInstances = {}
 	_critFromDots = []
@@ -104,23 +72,6 @@ export default class AdditionalStats extends Module {
 					actor = this._player
 				} else if (!event.targetIsFriendly) {
 					actor = this._getEnemy(event.targetID)
-
-					// Separately checks for dot application on enemies, too
-					if (
-						DOTS.includes(event.ability.guid)
-						&& (event.type.startsWith('apply') || event.type.startsWith('refresh'))
-					) {
-						// We fetch only the most recent snapshotter that affects the current dot
-						const snapshotter = Object.keys(SNAPSHOTTERS)
-							.filter(action => SNAPSHOTTERS[action].includes(event.ability.guid))
-							.map(action => this._getSnapshotter(action))
-							.reduce((a, b) => { return a.timestamp > b.timestamp ? a : b })
-
-						// We get the dot component from the enemy
-						const dot = this._getDot(actor, event.ability.guid)
-
-						this._snapshotStatuses(dot, snapshotter)
-					}
 				}
 
 				// If it's a status on either the selected player or on an enemy
@@ -161,25 +112,15 @@ export default class AdditionalStats extends Module {
 					}
 
 					// Collects the damage instances, to be used for calculating crit and 'potencyDamageRatio'
-					// TODO: Have a filtered array with skills
-
-					// ...let's not count Spears for now
-					if (!this._getStatus(this._player, STATUSES.THE_SPEAR.id)) {
-
-						const critTier = this._parseCritBuffs(event)
-
-						// We store the damage event, grouping them by Δcrit tiers
-						if (!this._damageInstances[critTier]) {
-							this._damageInstances[critTier] = []
-						}
-
-						this._damageInstances[critTier].push({event: event, rawDamage: event.amount / fixedMultiplier})
+					const critTier = this._parseCritBuffs(event)
+					// We store the damage event, grouping them by Δcrit tiers
+					if (!this._damageInstances[critTier]) {
+						this._damageInstances[critTier] = []
 					}
+					this._damageInstances[critTier].push({event: event, rawDamage: event.amount / fixedMultiplier})
 
 				// If it's a dot tick (yay, they have/used a dot!), we will collect the data to get a better critMod approximation
 				} else {
-					const enemy = this._getEnemy(event.targetID)
-					const dot = this._getDot(enemy, event.ability.guid)
 					const accumulatedCritBuffs = this._parseDotCritBuffs(event)
 
 					// First of all, let's fix cases of broken crit
@@ -190,37 +131,7 @@ export default class AdditionalStats extends Module {
 					}
 
 					event.expectedCritRate += accumulatedCritBuffs * 1000
-
-					// Not comfortable with counting Spears just yet
-					if (!this._getStatus(dot, STATUSES.THE_SPEAR.id)) {
-
-						const accumulatedCritBuffs = this._parseDotCritBuffs(event)
-						const critRate = event.expectedCritRate / 1000 - accumulatedCritBuffs
-
-						this._critFromDots.push(critRate)
-
-					}
 				}
-			// We also register the last snapshotter cast, to... snapshot the statuses on the dots
-			} else if (
-				event.type === 'cast'
-				&& event.sourceID === this.combatants.selected.id
-				&& event.ability
-				&& Object.keys(SNAPSHOTTERS).includes(event.ability.guid.toString()) // Why do I have to use toString() here? This is dumb
-			) {
-				//We make a new one here to avoid issues caused by it being a reference that can be updated after the fact.
-				const newSnapshotter = {
-					statuses: {},
-					timestamp: 0,
-				}
-				const player = this._player
-				const enemy = this._getEnemy(event.targetID)
-
-				this._snapshotStatuses(newSnapshotter, player, enemy)
-
-				newSnapshotter.timestamp = event.timestamp
-				this._snapshotters[event.ability.guid] = newSnapshotter
-				event.snapshot = newSnapshotter
 			}
 		}
 
@@ -258,33 +169,8 @@ export default class AdditionalStats extends Module {
 		return enemy.dots[statusId]
 	}
 
-	// Returns the latest snapshotter state
-	_getSnapshotter(skillId) {
-		if (!this._snapshotters[skillId]) {
-			this._snapshotters[skillId] = {
-				statuses: {},
-				timestamp: 0,
-			}
-		}
-
-		return this._snapshotters[skillId]
-	}
-
 	_getStatus(entity, status) {
 		return entity.statuses[status] || false
-	}
-
-	// Copies all the statuses from multiple sources to a target entity
-	_snapshotStatuses(target, ...sources) {
-		sources.forEach(source => {
-			Object.keys(source.statuses).forEach(status => {
-				//To avoid having it be a reference.
-				target.statuses[status] = {
-					isActive: source.statuses[status].isActive,
-					strength: source.statuses[status].strength,
-				}
-			})
-		})
 	}
 
 	// Returns the accumulated crit modifier from all the currently active crit buffs/debuffs
@@ -427,5 +313,4 @@ export default class AdditionalStats extends Module {
 
 		return math.mean(dataset.filter(v => v >= mean - n * standardDeviation && v <= mean + n * standardDeviation))
 	}
-
 }
