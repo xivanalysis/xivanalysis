@@ -74,7 +74,12 @@ const CONTRIBUTORS = {
 	MIKEMATRIX: {
 		name: 'MikeMatrix',
 		avatar: require('./avatar/mikematrix.png'),
-		jobs: [JOBS.PALADIN, JOBS.WARRIOR],
+		jobs: [
+			JOBS.GUNBREAKER,
+			JOBS.DARK_KNIGHT,
+			JOBS.WARRIOR,
+			JOBS.PALADIN,
+		],
 	},
 	YUMIYA: {
 		name: 'Yumiya',

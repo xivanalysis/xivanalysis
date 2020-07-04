@@ -1,9 +1,10 @@
+import type {ChartData as PureChartData, ChartOptions} from 'chart.js'
 import _ from 'lodash'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
-import {Line} from 'react-chartjs-2'
+import {ChartData, Line} from 'react-chartjs-2'
 
-const DEFAULT_OPTIONS = {
+const DEFAULT_OPTIONS: ChartOptions = {
 	aspectRatio: 3,
 	scales: {
 		xAxes: [{
@@ -22,7 +23,12 @@ const DEFAULT_OPTIONS = {
 	},
 }
 
-export default class TimeLineChart extends PureComponent {
+interface TimeLineChartProps {
+	data: ChartData<PureChartData>
+	options?: ChartOptions
+}
+
+export default class TimeLineChart extends PureComponent<TimeLineChartProps> {
 	static propTypes = {
 		data: PropTypes.object.isRequired,
 		options: PropTypes.object,
