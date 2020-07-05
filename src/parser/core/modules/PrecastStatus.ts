@@ -118,27 +118,28 @@ export class PrecastStatus extends Module {
 
 		if (!actionInfo) {
 			this.debug('No known action found, no cast event to synthesize')
-		} else {
-			if (this.trackedActions.includes(actionInfo.id)) {
-				this.debug(`Cast event already seen for ${actionInfo.name}, no synth necessary`)
-			} else {
-				this.debug(`Fabricating cast event for action ${actionInfo.name} by ${event.sourceID}`)
-				const fabricated: CastEvent = {
-					...event,
-					ability: {
-						type: event.ability.type,
-						name: actionInfo.name,
-						abilityIcon: actionInfo.icon,
-						guid: actionInfo.id,
-					},
-					timestamp: this.startTime - 2,
-					type: 'cast',
-				}
-				this.castEventsToSynth.push(fabricated)
-				this.markActionAsTracked(actionInfo.id)
-			}
+			return
 		}
 
+		if (this.trackedActions.includes(actionInfo.id)) {
+			this.debug(`Cast event already seen for ${actionInfo.name}, no synth necessary`)
+			return
+		}
+
+		this.debug(`Fabricating cast event for action ${actionInfo.name} by ${event.sourceID}`)
+		const fabricated: CastEvent = {
+			...event,
+			ability: {
+				type: event.ability.type,
+				name: actionInfo.name,
+				abilityIcon: actionInfo.icon,
+				guid: actionInfo.id,
+			},
+			timestamp: this.startTime - 2,
+			type: 'cast',
+		}
+		this.castEventsToSynth.push(fabricated)
+		this.markActionAsTracked(actionInfo.id)
 	}
 
 	private statusEventIsTrackedForTarget(eventId: number, targetId: number) {
