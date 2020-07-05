@@ -297,7 +297,7 @@ export const SMN = ensureActions({
 		pet: PETS.TITAN_EGI.id,
 	},
 
-	MOUNTAIN_BUSTER: {
+	SMN_MOUNTAIN_BUSTER: {
 		id: 788,
 		name: 'Mountain Buster',
 		icon: 'https://xivapi.com/i/002000/002702.png',

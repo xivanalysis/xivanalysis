@@ -30,6 +30,7 @@ export default new Meta({
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.RIRIAN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })

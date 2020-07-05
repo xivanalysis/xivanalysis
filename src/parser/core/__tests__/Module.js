@@ -2,6 +2,8 @@ import Module from '../Module'
 import Parser from '../Parser'
 import {Meta} from '../Meta'
 import {Dispatcher} from '../Dispatcher'
+import {Team} from 'report'
+import {GameEdition} from 'data/PATCHES'
 
 jest.mock('../Dispatcher')
 
@@ -35,6 +37,32 @@ const fight = {
 	end_time: 100,
 }
 
+// TODO: Dedupe this, it's copied between here and the parser tests
+const actor = {
+	id: '1',
+	name: 'In Fight',
+	team: Team.FRIEND,
+	playerControlled: true,
+	job: 'UNKNOWN',
+}
+const pull = {
+	id: '1',
+	timestamp: 0,
+	duration: 100,
+	encounter: {
+		name: 'Test encounter',
+		duty: {id: -1, name: 'Test duty'}
+	},
+	actors: [actor]
+}
+const newReport = {
+	timestamp: 0,
+	edition: GameEdition.GLOBAL,
+	name: 'Test report',
+	pulls: [pull],
+	meta: {source: '__test'}
+}
+
 const event = {
 	type: '__test',
 	timestamp: 50,
@@ -52,7 +80,12 @@ describe('Module', () => {
 			meta,
 			report,
 			fight,
-			actor: player,
+			fflogsActor: player,
+
+			newReport,
+			pull,
+			actor,
+
 			dispatcher: new Dispatcher(),
 		})
 		await parser.configure()
@@ -98,7 +131,7 @@ describe('Module', () => {
 		it('player', () => {
 			module.addEventHook(event.type, {by: 'player'}, hook)
 			expect(dispatcher.addEventHook.mock.calls[0][0]).toMatchObject({
-				filter: {sourceID: player.id},
+				filter: {sourceID: [player.id]},
 			})
 		})
 

@@ -1,0 +1,20 @@
+title: xiva docs
+description: >-
+  Documentation and guides for developers working on the xivanalyis codebase.
+baseurl: "" # the subpath of your site, e.g. /blog
+url: "" # the base hostname & protocol for your site, e.g. http://example.com
+
+permalink: /:title
+
+# Build settings
+markdown: kramdown
+remote_theme: pmarsceill/just-the-docs
+sass:
+  style: compressed
+
+# JTD config
+logo: https://raw.githubusercontent.com/ackwell/xivanalysis/master/public/logo.png
+color_scheme: xiva
+aux_links:
+  "xivanalysis on GitHub": "//github.com/xivanalysis/xivanalysis"
+aux_links_new_tab: true

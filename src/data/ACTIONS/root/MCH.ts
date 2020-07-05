@@ -162,6 +162,14 @@ export const MCH = ensureActions({
 		statusesApplied: ['WILDFIRE'],
 	},
 
+	DETONATOR: {
+		id: 16766,
+		name: 'Detonator',
+		icon: 'https://xivapi.com/i/003000/003039.png',
+		onGCD: false,
+		cooldown: 1,
+	},
+
 	ROOK_AUTOTURRET: {
 		id: 2864,
 		name: 'Rook Autoturret',

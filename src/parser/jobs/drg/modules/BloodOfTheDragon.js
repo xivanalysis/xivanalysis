@@ -35,6 +35,7 @@ export default class BloodOfTheDragon extends Module {
 		'suggestions',
 		'timeline',
 	]
+	static displayOrder = DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_GAUGE
 
 	// Null assumption, in case they precast. In all likelyhood, this will actually be incorrect, but there's no harm if
 	// that's the case since BotD should be the very first weave in the fight and that'll reset the duration to 30s anyway.
@@ -49,8 +50,6 @@ export default class BloodOfTheDragon extends Module {
 	_lastEventTime = this.parser.fight.start_time
 	_eyes = 0
 	_lostEyes = 0
-	_gkCount = 0
-	_jumpCount = 0
 
 	constructor(...args) {
 		super(...args)
@@ -61,7 +60,6 @@ export default class BloodOfTheDragon extends Module {
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.GEIRSKOGUL.id}, this._onGeirskogulCast)
 		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.NASTROND.id}, this._onNastrondCast)
 		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.STARDIVER.id}, this._onStardiverCast)
-		this.addEventHook('cast', {by: 'player', abilityId: ACTIONS.HIGH_JUMP.id}, this._onJumpCast)
 		this.addEventHook('death', {to: 'player'}, this._onDeath)
 		this.addEventHook('raise', {to: 'player'}, this._onRaise)
 		this.addEventHook('complete', this._onComplete)
@@ -142,10 +140,6 @@ export default class BloodOfTheDragon extends Module {
 		this._bloodDuration = DRAGON_DEFAULT_DURATION_MILLIS
 	}
 
-	_onJumpCast() {
-		this._jumpCount += 1
-	}
-
 	_onMirageDiveCast() {
 		this._updateGauge()
 		if (this._lifeWindows.current !== null || this._bloodDuration > 0) {
@@ -160,7 +154,6 @@ export default class BloodOfTheDragon extends Module {
 
 	_onGeirskogulCast() {
 		this._updateGauge()
-		this._gkCount += 1
 
 		if (this._eyes === MAX_EYES) {
 			// LotD tiiiiiime~
@@ -293,7 +286,7 @@ export default class BloodOfTheDragon extends Module {
 	_onComplete() {
 		this._finishLifeWindow()
 		this._analyzeLifeWindows()
-		const duration = this.parser.fightDuration - this.death.deadTime
+		const duration = this.parser.currentDuration - this.death.deadTime
 		const uptime = ((duration - this._bloodDowntime) / duration) * 100
 		const noBuffSd = this._lifeWindows.history.filter(window => !window.isLast && window.missedSdBuff).length
 		const noLifeSd = this._lifeWindows.history.filter(window => !window.isLast && window.stardivers.length === 0).length
@@ -310,7 +303,7 @@ export default class BloodOfTheDragon extends Module {
 					</Message.Content>
 				</Message>
 			</Fragment>,
-			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON,
+			displayOrder: DISPLAY_ORDER.BLOOD_OF_THE_DRAGON_CHECKLIST,
 			requirements: [
 				new Requirement({
 					name: <Trans id="drg.blood.checklist.requirement.name"><ActionLink {...ACTIONS.BLOOD_OF_THE_DRAGON}/> uptime</Trans>,
@@ -360,29 +353,6 @@ export default class BloodOfTheDragon extends Module {
 			},
 			why: <Trans id="drg.suggestions.nastrond.why">{noFullNsLife} of your Life of the Dragon windows were missing one or more <ActionLink {...ACTIONS.NASTROND}/> uses.</Trans>,
 		}))
-
-		// GK count should be within 1 of the number of jumps used in the fight
-		// (current balance tip reference, section 2)
-		const gkDiff = this._jumpCount - this._gkCount
-		// more jumps than GKs
-		if (gkDiff > 1) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.GEIRSKOGUL.icon,
-				content: <Trans id="drg.blood.suggestions.gk.content">
-					Remember to use <ActionLink {...ACTIONS.GEIRSKOGUL}/> as much as possible, without delaying your Life of the Dragon windows. The number of casts should be within 1 of the number of <ActionLink {...ACTIONS.HIGH_JUMP} /> casts.
-				</Trans>,
-				value: gkDiff,
-				tiers: {
-					2: SEVERITY.MINOR,
-					3: SEVERITY.MEDIUM,
-				},
-				why: <Trans id="drg.blood.suggestions.gk.why">
-					Your <ActionLink {...ACTIONS.GEIRSKOGUL}/> casts differed from your <ActionLink {...ACTIONS.HIGH_JUMP}/> casts by {gkDiff}.
-				</Trans>,
-			}))
-		}
-		// less jumps than GKs??? different tip then, which is basically use jumps more??
-		// not going to output something here as that should be covered by the oGCD downtime checklist
 
 		// this suggestion only counts places where a stardiver could be buffed
 		// if a window cannot be delayed and has no buffs, it doesn't count
@@ -505,12 +475,6 @@ export default class BloodOfTheDragon extends Module {
 			})
 
 			return <Fragment>
-				<Message>
-					<Trans id="drg.blood.windows.preface">
-						Each of the sections below represents a Life of the Dragon window, indicating when it started, how many window-restricted OGCDs it contained, and which personal buffs were active during each cast. Ideally, each 30 second window should contain a full three <ActionLink {...ACTIONS.NASTROND}/> casts and one <ActionLink {...ACTIONS.STARDIVER}/> cast, while overlapping with at least one of your personal buffs. Windows with issues are
-						highlighted, and provide additional detail when expanded.
-					</Trans>
-				</Message>
 				<Accordion exclusive={false} panels={lotdPanels} styled fluid />
 			</Fragment>
 		}

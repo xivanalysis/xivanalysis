@@ -350,7 +350,7 @@ export default class Pets extends Module {
 	}
 
 	getPetUptimePercent(petId) {
-		const percent = (this._petUptime.get(petId) || 0) / this.parser.fightDuration
+		const percent = (this._petUptime.get(petId) || 0) / this.parser.currentDuration
 		return (percent * 100).toFixed(2)
 	}
 

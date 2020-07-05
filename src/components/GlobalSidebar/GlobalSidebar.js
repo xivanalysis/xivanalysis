@@ -4,7 +4,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
 
-import Breadcrumbs from './Breadcrumbs'
+import {Breadcrumbs} from './Breadcrumbs'
 import Options from './Options'
 
 import styles from './GlobalSidebar.module.css'

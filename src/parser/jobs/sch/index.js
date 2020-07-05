@@ -22,13 +22,17 @@ export default new Meta({
 		to: '5.2',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.YUNI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-30'),
+		Changes: () => <>Add potions as a module – show up with all the move used under them.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-05-16'),
 		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balance for feedback with content!</>,
 		contributors: [CONTRIBUTORS.NONO],

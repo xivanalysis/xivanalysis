@@ -90,7 +90,7 @@
 	--background: #2d2d2d;
 	--backdrop: #3d3d3d;
 	--text-muted: #aaa;
-	--segment-link-active: #202020;
+	--segment-active: #202020;
 	--border-color: #7e7e7e;
 
 	/* Dark Mode Message Box values */
@@ -112,7 +112,7 @@
 @value themeBackdrop: var(--backdrop);
 @value themeInverse: var(--theme-inverse);
 @value themeTextMuted: var(--text-muted);
-@value segmentLinkActive: var(--segment-link-active);
+@value segmentLinkActive: var(--segment-active);
 @value themeBorder: var(--border-color);
 
 @value messageBackground: var(--message-background);

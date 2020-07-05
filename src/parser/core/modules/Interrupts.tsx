@@ -145,7 +145,7 @@ export abstract class Interrupts extends Module {
 								compact
 								size="mini"
 								icon="time"
-								onClick={() => this.timeline.show(cast.timestamp - this.parser.fight.start_time, cast.timestamp - this.parser.fight.start_time + TIMELINE_UPPER_MOD)}
+								onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
 							/>
 						</Table.Cell>
 						<Table.Cell>
