@@ -2,9 +2,9 @@
 import {PrecastStatus} from '../PrecastStatus'
 let precastStatus: PrecastStatus
 
-import {MockedParser} from 'parser/core/__tests__/ParserHelper'
 import Parser from 'parser/core/Parser'
-let parser: Parser
+jest.mock('parser/core/Parser')
+const MockedParser = Parser as jest.Mock<Parser>
 
 import {MockedData} from 'parser/core/__tests__/DataHelper'
 import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from 'parser/core/__tests__/EventsHelpers'
@@ -72,8 +72,7 @@ let results: Event[] = []
 
 describe('PrecastStatus', () => {
 	beforeEach(() => {
-		parser = new MockedParser()
-		Object.defineProperty(parser, 'eventTimeOffset', {value: 0})
+		const parser = new MockedParser({})
 		Object.defineProperty(parser, 'modules', {value: {data}})
 
 		precastStatus = new PrecastStatus(parser)
