@@ -3,9 +3,8 @@ import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
 import {Table} from 'semantic-ui-react'
 import Module, {dependency} from 'parser/core/Module'
-import {getDataBy} from 'data'
 import {CastEvent} from 'fflogs'
-import STATUSES from 'data/STATUSES'
+import STATUSES, {Status} from 'data/STATUSES'
 import {SNAPSHOT_BLACKLIST} from 'parser/jobs/brd/modules/SnapshotBlacklist'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
@@ -36,7 +35,7 @@ interface Snapshot {
 	snapEvent: CastEvent
 
 	// All statuses observed at the time of casting the snapshot.
-	statuses: AbilityEvent[]
+	statuses: Status[]
 
 	// DoT ticks that occurred under the current snapshot.
 	ticks: NormalisedDamageEvent[]
@@ -45,7 +44,7 @@ interface Snapshot {
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static title = t('brd.snapshots.title')`Snapshots`
-	static debug = true
+	static debug = false
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -95,16 +94,19 @@ export default class Snapshots extends Module {
 		}
 	}
 
-	private getStatuses(event: CastEvent): AbilityEvent[] {
-		const playerStatuses = this.combatants.selected
-			.getStatuses()
-			.filter((status: AbilityEvent) => !SNAPSHOT_BLACKLIST.includes(status.ability.guid))
-
+	private getStatuses(event: CastEvent): Status[] {
+		const playerStatuses = this.combatants.selected.getStatuses()
 		const targetKey = `${event.targetID}-${event.targetInstance}`
 		const targetStatuses = this.targets.get(targetKey) || []
 
-		// Purge the undesirables
-		return [...playerStatuses, ...targetStatuses]
+		const statuses = [...playerStatuses, ...targetStatuses]
+			.map((event: AbilityEvent) =>  this.data.getStatus(event.ability.guid) as Status)
+			.filter(status => status)
+			.filter(status => !SNAPSHOT_BLACKLIST.includes(status.id))
+
+		this.debug(statuses)
+
+		return statuses
 	}
 
 	private onSnapshot(event: CastEvent) {
@@ -132,11 +134,11 @@ export default class Snapshots extends Module {
 		// Builds a row for each snapshot event
 		const rows = this.snapshots.map(snap => {
 
-			snap.statuses.sort((a, b) => a.ability.name.localeCompare(b.ability.name))
+			snap.statuses.sort((a, b) => a.name.localeCompare(b.name))
 
 			// Move personal buffs to the front of the status list
-			snap.statuses.map((event, index) => {
-				if (PERSONAL_STATUSES.includes(event.ability.guid)) {
+			snap.statuses.map((status, index) => {
+				if (PERSONAL_STATUSES.includes(status.id)) {
 					snap.statuses.unshift(
 						snap.statuses.splice(index, 1)[0],
 					)
@@ -146,16 +148,13 @@ export default class Snapshots extends Module {
 			const dotStatusLinks: JSX.Element[] = []
 			const buffStatusLinks: JSX.Element[] = []
 
-			snap.statuses.map(event => {
-				const id = event.ability.guid
-				const status = this.data.getStatus(id)
-				if (status) {
-					const statusLink = <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
-					if (DOT_STATUSES.includes(id)) {
-						dotStatusLinks.push(statusLink)
-					} else {
-						buffStatusLinks.push(statusLink)
-					}
+			snap.statuses.map(status => {
+				const id = status.id
+				const statusLink = <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
+				if (DOT_STATUSES.includes(id)) {
+					dotStatusLinks.push(statusLink)
+				} else {
+					buffStatusLinks.push(statusLink)
 				}
 			})
 
