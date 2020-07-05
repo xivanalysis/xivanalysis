@@ -13,6 +13,8 @@ import Combatants from 'parser/core/modules/Combatants'
 import {AbilityEvent} from 'fflogs'
 import Util from './Util'
 import {Data} from 'parser/core/modules/Data'
+import {isDefined} from 'utilities'
+
 
 const SNAPSHOTTERS = [
 	ACTIONS.IRON_JAWS.id,
@@ -44,7 +46,7 @@ interface Snapshot {
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static title = t('brd.snapshots.title')`Snapshots`
-	static debug = false
+	static debug = true
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
@@ -100,11 +102,9 @@ export default class Snapshots extends Module {
 		const targetStatuses = this.targets.get(targetKey) || []
 
 		const statuses = [...playerStatuses, ...targetStatuses]
-			.map((event: AbilityEvent) =>  this.data.getStatus(event.ability.guid) as Status)
-			.filter(status => status)
-			.filter(status => !SNAPSHOT_BLACKLIST.includes(status.id))
-
-		this.debug(statuses)
+			.map((event: AbilityEvent) => this.data.getStatus(event.ability.guid))
+			.filter(isDefined)
+			.filter(status => status != null && !SNAPSHOT_BLACKLIST.includes(status.id))
 
 		return statuses
 	}
