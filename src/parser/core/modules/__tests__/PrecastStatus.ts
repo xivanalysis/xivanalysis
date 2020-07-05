@@ -73,7 +73,7 @@ let results: Event[] = []
 describe('PrecastStatus', () => {
 	beforeEach(() => {
 		parser = new MockedParser()
-		Object.defineProperty(parser, 'fight', {value: {start_time: 0}})
+		Object.defineProperty(parser, 'eventTimeOffset', {value: 0})
 		Object.defineProperty(parser, 'modules', {value: {data}})
 
 		precastStatus = new PrecastStatus(parser)

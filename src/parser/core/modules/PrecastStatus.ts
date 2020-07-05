@@ -18,7 +18,7 @@ export class PrecastStatus extends Module {
 	private trackedActions: number[] = []
 	private buffEventsToSynth: AbilityEvent[] = []
 	private castEventsToSynth: CastEvent[] = []
-	private startTime = this.parser.fight.start_time
+	private startTime = this.parser.eventTimeOffset
 
 	normalise(events: Event[]) {
 		for (const event of events) {
