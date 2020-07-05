@@ -1,23 +1,17 @@
-// #region CodeUnderTest
-import {PrecastStatus} from '../PrecastStatus'
-// #endregion
 // tslint:disable:no-magic-numbers
-// #region Mocks
-import {MockedParser} from '__mocks__/Parser'
-import Parser from 'parser/core/Parser'
-import {MockedData} from '__mocks__/Data'
-
+import {PrecastStatus} from '../PrecastStatus'
 let precastStatus: PrecastStatus
+
+import {MockedParser} from 'parser/core/__tests__/ParserHelper'
+import Parser from 'parser/core/Parser'
 let parser: Parser
 
-// #region MockedData
-import {Ability, AbilityType} from 'fflogs'
-// #region MockedEvents
-import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from '__mocks__/Events'
+import {MockedData} from 'parser/core/__tests__/DataHelper'
+import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from 'parser/core/__tests__/EventsHelpers'
 import {Event} from 'events'
+import {Ability, AbilityType} from 'fflogs'
 
 let events: Event[] = []
-
 const data = new MockedData()
 
 const mockActionEvent: Ability = {
@@ -73,11 +67,6 @@ const mockStatusStackData = {
 	stacksApplied: 3,
 }
 data.mockStatus(mockStatusStackData)
-// #endregion
-
-// #endregion
-
-// #endregion
 
 let results: Event[] = []
 
