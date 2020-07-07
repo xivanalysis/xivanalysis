@@ -1,20 +1,20 @@
 import React from 'react'
 import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
-import {Table} from 'semantic-ui-react'
+import {Table, Accordion} from 'semantic-ui-react'
+
 import Module, {dependency} from 'parser/core/Module'
 import {CastEvent} from 'fflogs'
 import STATUSES, {Status} from 'data/STATUSES'
 import {SNAPSHOT_BLACKLIST} from 'parser/jobs/brd/modules/SnapshotBlacklist'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Combatants from 'parser/core/modules/Combatants'
 import {AbilityEvent} from 'fflogs'
 import Util from './Util'
 import {Data} from 'parser/core/modules/Data'
-import {isDefined} from 'utilities'
 
+import styles from './Snapshots.module.css'
 
 const SNAPSHOTTERS = [
 	ACTIONS.IRON_JAWS.id,
@@ -38,9 +38,35 @@ interface Snapshot {
 
 	// All statuses observed at the time of casting the snapshot.
 	statuses: Status[]
+}
 
-	// DoT ticks that occurred under the current snapshot.
-	ticks: NormalisedDamageEvent[]
+class Target {
+	public name: string
+	public key: string
+	public snapshots: Snapshot[] = []
+	private currentSnapshot?: Snapshot
+	private statuses = new Set<Status>()
+
+	constructor(name: string, key: string) {
+		this.name = name
+		this.key = key
+	}
+
+	public addStatus(status: Status) {
+		this.statuses.add(status)
+	}
+
+	public removeStatus(status: Status) {
+		this.statuses.delete(status)
+	}
+
+	public addSnapshot(snap: CastEvent, playerStatuses: Status[]) {
+		this.currentSnapshot = {
+			snapEvent: snap,
+			statuses: [...Array.from(this.statuses), ...playerStatuses],
+		}
+		this.snapshots.push(this.currentSnapshot)
+	}
 }
 
 export default class Snapshots extends Module {
@@ -52,85 +78,64 @@ export default class Snapshots extends Module {
 	@dependency private data!: Data
 	@dependency private util!: Util
 
-	private snapshots: Snapshot[] = []
-	private currentSnapshot?: Snapshot
-
-	private targets = new Map<string, AbilityEvent[]>()
+	private targets: Map<string, Target> = new Map()
 
 	protected init() {
 		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this.onSnapshot)
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: DOT_STATUSES}, this.onDotTick)
 		this.addEventHook(['applydebuff', 'refreshdebuff'], this.onApply)
 		this.addEventHook('removedebuff', this.onRemove)
 	}
 
 	private onApply(event: AbilityEvent) {
-		const targetKey = `${event.targetID}-${event.targetInstance}`
+		if (event.targetIsFriendly) { return }
 
-		if (!this.targets.has(targetKey)) {
-			this.targets.set(targetKey, [])
-		}
-
-		const target = this.targets.get(targetKey)
-		if (target) {
-			const index = target.findIndex(statusEvent =>
-				statusEvent.ability.guid === event.ability.guid)
-
-			if (index === -1) {
-				target.push(event)
-			}
+		const target = this.getTarget(event)
+		const status = this.data.getStatus(event.ability.guid)
+		if (status) {
+			target.addStatus(status)
 		}
 	}
 
 	private onRemove(event: AbilityEvent) {
-		const targetKey = `${event.targetID}-${event.targetInstance}`
-		const targetStatuses = this.targets.get(targetKey)
+		if (event.targetIsFriendly) { return }
 
-		if (targetStatuses) {
-			const index = targetStatuses.findIndex(status =>
-				status.ability.guid === event.ability.guid)
-
-			if (index > -1) {
-				targetStatuses.splice(index, 1)
-			}
+		const target = this.getTarget(event)
+		const status = this.data.getStatus(event.ability.guid)
+		if (status) {
+			target.removeStatus(status)
 		}
 	}
 
-	private getStatuses(event: CastEvent): Status[] {
-		const playerStatuses = this.combatants.selected.getStatuses()
-		const targetKey = `${event.targetID}-${event.targetInstance}`
-		const targetStatuses = this.targets.get(targetKey) || []
+	private onSnapshot(event: CastEvent) {
+		const target = this.getTarget(event)
+		target.addSnapshot(event, this.playerStatuses)
+	}
 
-		const statuses = [...playerStatuses, ...targetStatuses]
+	private getTarget(fields: {targetID?: number, targetInstance?: number}): Target {
+		const targetKey = `${fields.targetID}-${fields.targetInstance}`
+
+		if (!this.targets.has(targetKey)) {
+			const targetName = this.parser.pull.actors
+				.find(actor => actor.id === fields.targetID?.toString())
+				?.name ?? 'Unknown Enemy' // Default to "Unknown Enemy" if we can't find a name
+
+			this.targets.set(targetKey, new Target(targetName, targetKey))
+		}
+
+		return this.targets.get(targetKey)!
+	}
+
+	private get playerStatuses(): Status[] {
+		const statuses = this.combatants.selected.getStatuses()
 			.map((event: AbilityEvent) => this.data.getStatus(event.ability.guid))
-			.filter(isDefined)
-			.filter(status => status != null && !SNAPSHOT_BLACKLIST.includes(status.id))
+			.filter((status: Status | null) => status != null && !SNAPSHOT_BLACKLIST.includes(status.id))
 
 		return statuses
 	}
 
-	private onSnapshot(event: CastEvent) {
-		this.currentSnapshot = {
-			snapEvent: event,
-			statuses: this.getStatuses(event),
-			ticks: [],
-		}
-
-		this.snapshots.push(this.currentSnapshot)
-	}
-
-	private onDotTick(event: NormalisedDamageEvent) {
-		// This will come in handy in the future
-		this.currentSnapshot?.ticks.push(event)
-	}
-
-	output() {
-		if (this.snapshots.length === 0) {
-			return
-		}
-
-		// Builds a row for each snapshot event
-		const rows = this.snapshots.map(snap => {
+	private createSnapshotTable(target: Target): JSX.Element {
+		// Returns a collapsable snapshot table for the target
+		const rows = target.snapshots.map(snap => {
 
 			snap.statuses.sort((a, b) => a.name.localeCompare(b.name))
 
@@ -169,7 +174,6 @@ export default class Snapshots extends Module {
 			</Table.Row>
 		})
 
-		// Output is a Table, where every row after the header contains individual snapshots
 		return <Table>
 			<Table.Header>
 				<Table.Row key="header">
@@ -183,5 +187,34 @@ export default class Snapshots extends Module {
 				{rows}
 			</Table.Body>
 		</Table>
+	}
+
+	output() {
+		if (this.targets.size === 0) {
+			return null
+		}
+
+		if (this.targets.size === 1) {
+			return this.createSnapshotTable(this.targets.values().next().value)
+
+		} else {
+			const panels = Array.from(this.targets.values(), target => {
+				return {
+					key: target.key,
+					title: {
+						content: <span className={styles.name}> {target.name} </span>,
+					},
+					content: {
+						content: this.createSnapshotTable(target),
+					},
+				}
+			})
+			return <Accordion
+				exclusive={false}
+				panels={panels}
+				styled
+				fluid
+			/>
+		}
 	}
 }
