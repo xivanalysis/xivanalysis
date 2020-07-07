@@ -110,15 +110,13 @@ export default class Snapshots extends Module {
 	}
 
 	private onSnapshot(event: CastEvent) {
-		if (this.currentSnapshot) {
-			this.snapshots.push(this.currentSnapshot)
-		}
-
 		this.currentSnapshot = {
 			snapEvent: event,
 			statuses: this.getStatuses(event),
 			ticks: [],
 		}
+
+		this.snapshots.push(this.currentSnapshot)
 	}
 
 	private onDotTick(event: NormalisedDamageEvent) {
