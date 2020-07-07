@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-07-07'),
+		Changes: () => <>
+			Snapshots module tranches if multiple targets are present in the log.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-06-25'),
 		Changes: () => <>
 			Added a module that shows misused AoE actions.
