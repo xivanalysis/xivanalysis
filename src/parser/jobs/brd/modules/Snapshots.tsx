@@ -137,7 +137,7 @@ export default class Snapshots extends Module {
 			snap.statuses.sort((a, b) => a.name.localeCompare(b.name))
 
 			// Move personal buffs to the front of the status list
-			snap.statuses.map((status, index) => {
+			snap.statuses.forEach((status, index) => {
 				if (PERSONAL_STATUSES.includes(status.id)) {
 					snap.statuses.unshift(
 						snap.statuses.splice(index, 1)[0],
@@ -148,7 +148,7 @@ export default class Snapshots extends Module {
 			const dotStatusLinks: JSX.Element[] = []
 			const buffStatusLinks: JSX.Element[] = []
 
-			snap.statuses.map(status => {
+			snap.statuses.forEach(status => {
 				const id = status.id
 				const statusLink = <StatusLink key={id} showName={false} iconSize="35px" {...status}/>
 				if (DOT_STATUSES.includes(id)) {
