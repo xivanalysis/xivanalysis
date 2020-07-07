@@ -46,7 +46,7 @@ interface Snapshot {
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static title = t('brd.snapshots.title')`Snapshots`
-	static debug = true
+	static debug = false
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
