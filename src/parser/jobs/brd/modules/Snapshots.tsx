@@ -1,5 +1,5 @@
 import React from 'react'
-import {Trans} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import {Table, Accordion} from 'semantic-ui-react'
 
@@ -9,10 +9,12 @@ import STATUSES, {Status} from 'data/STATUSES'
 import {SNAPSHOT_BLACKLIST} from 'parser/jobs/brd/modules/SnapshotBlacklist'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import Combatants from 'parser/core/modules/Combatants'
 import {AbilityEvent} from 'fflogs'
 import Util from './Util'
 import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import styles from './Snapshots.module.css'
 
@@ -32,12 +34,21 @@ const PERSONAL_STATUSES = [
 	STATUSES.RAGING_STRIKES.id,
 ]
 
+const BAD_REFRESH_SEVERITY = {
+	1: SEVERITY.MINOR,
+	2: SEVERITY.MEDIUM,
+	3: SEVERITY.MAJOR,
+}
+
 interface Snapshot {
 	// The event that applied the DoT(s).
 	snapEvent: CastEvent
 
 	// All statuses observed at the time of casting the snapshot.
 	statuses: Status[]
+
+	// Indicates whether the snap was an IJ that did not refresh DoTs.
+	badRefresh: boolean
 }
 
 class Target {
@@ -61,9 +72,15 @@ class Target {
 	}
 
 	public addSnapshot(snap: CastEvent, playerStatuses: Status[]) {
+		// If IJ didn't refresh a caustic bite, it was a misuse
+		// (IJ on storm bite is technically potency neutral, though odd)
+		const isBadRefresh = (snap.ability.guid === ACTIONS.IRON_JAWS.id)
+							&& !this.statuses.has(STATUSES.CAUSTIC_BITE)
+
 		this.currentSnapshot = {
 			snapEvent: snap,
 			statuses: [...Array.from(this.statuses), ...playerStatuses],
+			badRefresh: isBadRefresh,
 		}
 		this.snapshots.push(this.currentSnapshot)
 	}
@@ -76,6 +93,7 @@ export default class Snapshots extends Module {
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
+	@dependency private suggestions!: Suggestions
 	@dependency private util!: Util
 
 	private targets: Map<string, Target> = new Map()
@@ -84,6 +102,7 @@ export default class Snapshots extends Module {
 		this.addEventHook('cast', {by: 'player', abilityId: SNAPSHOTTERS}, this.onSnapshot)
 		this.addEventHook(['applydebuff', 'refreshdebuff'], this.onApply)
 		this.addEventHook('removedebuff', this.onRemove)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onApply(event: AbilityEvent) {
@@ -133,6 +152,27 @@ export default class Snapshots extends Module {
 		return statuses
 	}
 
+	private onComplete() {
+		const badRefreshes = Array.from(this.targets.values(), target => target.snapshots)
+			.reduce((acc, snap) => acc.concat(snap))
+			.filter(snap => snap.badRefresh)
+			.length
+
+		const moduleLink = <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(Snapshots.handle)}><NormalisedMessage message={Snapshots.title}/></a>
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: ACTIONS.IRON_JAWS.icon,
+			content: <Trans id="brd.snapshots.suggestions.content">
+				Avoid using <ActionLink {...ACTIONS.IRON_JAWS} /> when <ActionLink {...ACTIONS.CAUSTIC_BITE} /> and <ActionLink {...ACTIONS.STORMBITE} /> are not present on the target. These Iron Jaws are highlighted in the {moduleLink} module below.
+			</Trans>,
+			why: <Trans id="brd.snapshots.suggestions.why">
+				Iron Jaws was used without DoTs up <Plural value={1} one="# time" other="# times"/>
+			</Trans>,
+			tiers: BAD_REFRESH_SEVERITY,
+			value: badRefreshes,
+		}))
+	}
+
 	private createSnapshotTable(target: Target): JSX.Element {
 		// Returns a collapsable snapshot table for the target
 		const rows = target.snapshots.map(snap => {
@@ -162,7 +202,7 @@ export default class Snapshots extends Module {
 			})
 
 			const event = snap.snapEvent
-			return <Table.Row key={event.timestamp}>
+			return <Table.Row key={event.timestamp} warning={snap.badRefresh}>
 				<Table.Cell>
 					{this.util.createTimelineButton(event.timestamp)}
 				</Table.Cell>

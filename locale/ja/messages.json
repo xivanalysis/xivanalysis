@@ -201,6 +201,8 @@
   "brd.snapshots.dots": "DoT",
   "brd.snapshots.snapshotter": "スナップシューター",
   "brd.snapshots.statuses": "ステータス",
+  "brd.snapshots.suggestions.content": "",
+  "brd.snapshots.suggestions.why": "",
   "brd.snapshots.time": "時間",
   "brd.snapshots.title": "スナップショット",
   "core.about.contributors": "貢献者:",

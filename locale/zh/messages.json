@@ -201,6 +201,8 @@
   "brd.snapshots.dots": "DoTs",
   "brd.snapshots.snapshotter": "Dot的buff利用",
   "brd.snapshots.statuses": "状态",
+  "brd.snapshots.suggestions.content": "",
+  "brd.snapshots.suggestions.why": "",
   "brd.snapshots.time": "时间",
   "brd.snapshots.title": "快照",
   "core.about.contributors": "贡献者：",

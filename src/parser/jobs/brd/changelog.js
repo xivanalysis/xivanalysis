@@ -10,7 +10,7 @@ export const changelog = [
 	{
 		date: new Date('2020-07-07'),
 		Changes: () => <>
-			Snapshots module tranches if multiple targets are present in the log.
+			Snapshots module now displays enemies separately. Suggestion added for <ActionLink {...ACTIONS.IRON_JAWS}/> that did not refresh DoTs.
 		</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},
