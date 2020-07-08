@@ -399,7 +399,7 @@
   "drg.buffs.suggestions.bad-dss.why": "",
   "drg.buffs.suggestions.bad-lcs.content": "<0/> sollte nicht direkt nach <1/> oder <2/> benutzt werden, um den größtmöglichen Schaden zu garantieren.",
   "drg.buffs.suggestions.bad-lcs.why": "",
-  "drg.buffs.suggestions.life-surge.content": "",
+  "drg.buffs.suggestions.life-surge.content": "Benutze <0/> möglichst nicht für andere GCDs als <1/> oder einen 5. Komboskill. Alle anderen Komboskills haben einen deutlich geringeren Attacke-Wert, was in verschwendetem Potential des garantierten Crits resultiert.",
   "drg.buffs.suggestions.life-surge.why": "",
   "drg.buffs.suggestions.solo-ds.content": "Obwohl es deinen persönlichen DPS nicht beeinflusst, solltest du Drachenblick immer auf einen Partner in deiner Gruppe benutzen, damit auch andere von dem Schadensbonus profitieren können.",
   "drg.buffs.suggestions.solo-ds.why": "Mindestens 1 Drachenblick hatte keinen Partner.",
