@@ -208,7 +208,7 @@
   "drg.buffs.panel-count": "{0} {1, plural, one {GCD} other {GCDs}}",
   "drg.buffs.suggestions.bad-bfbs.content": "",
   "drg.buffs.suggestions.bad-bfbs.why": "",
-  "drg.buffs.suggestions.life-surge.content": "",
+  "drg.buffs.suggestions.life-surge.content": "Benutze <0/> möglichst nicht für andere GCDs als <1/> oder einen 5. Komboskill. Alle anderen Komboskills haben einen deutlich geringeren Attacke-Wert, was in verschwendetem Potential des garantierten Crits resultiert.",
   "drg.buffs.suggestions.life-surge.why": "",
   "drg.buffs.title": "Zahn um Zahn & Drachenblick",
   "drg.debuffs.checklist.description": "",
