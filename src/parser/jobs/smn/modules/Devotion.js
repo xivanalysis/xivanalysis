@@ -45,8 +45,8 @@ export default class Devotion extends Module {
 		this.addEventHook('cast', {by: 'pet', abilityId: ACTIONS.DEVOTION.id}, this._onPetDevotionCast)
 		this.addEventHook('complete', this._onComplete)
 		this.addEventHook('normalisedapplybuff', {by: 'pet', abilityId: STATUSES.DEVOTION.id}, this._countDevotionTargets)
-		this.parser.fightFriendlies.forEach(id => {
-			this.addEventHook('removebuff', {to: id, abilityId: STATUSES.DEVOTION.id}, this._onDevotionRemoved)
+		this.parser.fightFriendlies.forEach(f => {
+			this.addEventHook('removebuff', {to: f.id, abilityId: STATUSES.DEVOTION.id}, this._onDevotionRemoved)
 		})
 	}
 
