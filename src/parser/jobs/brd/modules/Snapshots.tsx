@@ -1,20 +1,18 @@
 import React from 'react'
-import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import {Table, Accordion} from 'semantic-ui-react'
-
-import Module, {dependency} from 'parser/core/Module'
-import {CastEvent} from 'fflogs'
-import STATUSES, {Status} from 'data/STATUSES'
-import {SNAPSHOT_BLACKLIST} from 'parser/jobs/brd/modules/SnapshotBlacklist'
-import ACTIONS from 'data/ACTIONS'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES, {Status} from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
 import Combatants from 'parser/core/modules/Combatants'
-import {AbilityEvent} from 'fflogs'
-import Util from './Util'
 import {Data} from 'parser/core/modules/Data'
+import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import {SNAPSHOT_BLACKLIST} from './SnapshotBlacklist'
+import Util from './Util'
 
 import styles from './Snapshots.module.css'
 
@@ -42,7 +40,7 @@ const BAD_REFRESH_SEVERITY = {
 
 interface Snapshot {
 	// The event that applied the DoT(s).
-	snapEvent: CastEvent
+	snapshotter: CastEvent
 
 	// All statuses observed at the time of casting the snapshot.
 	statuses: Status[]
@@ -54,9 +52,9 @@ interface Snapshot {
 class Target {
 	public name: string
 	public key: string
-	public snapshots: Snapshot[] = []
+	readonly snapshots: Snapshot[] = []
 	private currentSnapshot?: Snapshot
-	private statuses = new Set<Status>()
+	private statuses: Status[] = []
 
 	constructor(name: string, key: string) {
 		this.name = name
@@ -64,22 +62,29 @@ class Target {
 	}
 
 	public addStatus(status: Status) {
-		this.statuses.add(status)
+		if (!this.statuses.includes(status)) {
+			this.statuses.push(status)
+		}
 	}
 
 	public removeStatus(status: Status) {
-		this.statuses.delete(status)
+		const index = this.statuses.indexOf(status)
+		if (index > -1) {
+			this.statuses.splice(index, 1)
+		}
 	}
 
 	public addSnapshot(snap: CastEvent, playerStatuses: Status[]) {
-		// If IJ didn't refresh a caustic bite, it was a misuse
-		// (IJ on storm bite is technically potency neutral, though odd)
-		const isBadRefresh = (snap.ability.guid === ACTIONS.IRON_JAWS.id)
-							&& !this.statuses.has(STATUSES.CAUSTIC_BITE)
+		// If IJ didn't refresh both DoTs, it was a misuse
+		const isBadRefresh = (
+			snap.ability.guid === ACTIONS.IRON_JAWS.id &&
+			!this.statuses.includes(STATUSES.CAUSTIC_BITE) &&
+			!this.statuses.includes(STATUSES.STORMBITE)
+		)
 
 		this.currentSnapshot = {
-			snapEvent: snap,
-			statuses: [...Array.from(this.statuses), ...playerStatuses],
+			snapshotter: snap,
+			statuses: [...this.statuses, ...playerStatuses],
 			badRefresh: isBadRefresh,
 		}
 		this.snapshots.push(this.currentSnapshot)
@@ -105,7 +110,7 @@ export default class Snapshots extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onApply(event: AbilityEvent) {
+	private onApply(event: BuffEvent) {
 		if (event.targetIsFriendly) { return }
 
 		const target = this.getTarget(event)
@@ -115,7 +120,7 @@ export default class Snapshots extends Module {
 		}
 	}
 
-	private onRemove(event: AbilityEvent) {
+	private onRemove(event: BuffEvent) {
 		if (event.targetIsFriendly) { return }
 
 		const target = this.getTarget(event)
@@ -132,21 +137,23 @@ export default class Snapshots extends Module {
 
 	private getTarget(fields: {targetID?: number, targetInstance?: number}): Target {
 		const targetKey = `${fields.targetID}-${fields.targetInstance}`
+		let target = this.targets.get(targetKey)
 
-		if (!this.targets.has(targetKey)) {
+		if (target == null) {
 			const targetName = this.parser.pull.actors
 				.find(actor => actor.id === fields.targetID?.toString())
 				?.name ?? 'Unknown Enemy' // Default to "Unknown Enemy" if we can't find a name
 
-			this.targets.set(targetKey, new Target(targetName, targetKey))
+			target = new Target(targetName, targetKey)
+			this.targets.set(targetKey, target)
 		}
 
-		return this.targets.get(targetKey)!
+		return target
 	}
 
 	private get playerStatuses(): Status[] {
 		const statuses = this.combatants.selected.getStatuses()
-			.map((event: AbilityEvent) => this.data.getStatus(event.ability.guid))
+			.map((event: BuffEvent) => this.data.getStatus(event.ability.guid))
 			.filter((status: Status | null) => status != null && !SNAPSHOT_BLACKLIST.includes(status.id))
 
 		return statuses
@@ -158,7 +165,10 @@ export default class Snapshots extends Module {
 			.filter(snap => snap.badRefresh)
 			.length
 
-		const moduleLink = <a href="javascript:void(0);" onClick={() => this.parser.scrollTo(Snapshots.handle)}><NormalisedMessage message={Snapshots.title}/></a>
+		const moduleLink = <a
+			style={{cursor: 'pointer'}}
+			onClick={() => this.parser.scrollTo(Snapshots.handle)}><NormalisedMessage message={Snapshots.title}/>
+		</a>
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.IRON_JAWS.icon,
@@ -166,7 +176,7 @@ export default class Snapshots extends Module {
 				Avoid using <ActionLink {...ACTIONS.IRON_JAWS} /> when <ActionLink {...ACTIONS.CAUSTIC_BITE} /> and <ActionLink {...ACTIONS.STORMBITE} /> are not present on the target. These Iron Jaws are highlighted in the {moduleLink} module below.
 			</Trans>,
 			why: <Trans id="brd.snapshots.suggestions.why">
-				Iron Jaws was used without DoTs up <Plural value={1} one="# time" other="# times"/>
+				Iron Jaws was used on a target with at least one missing DoT <Plural value={badRefreshes} one="# time" other="# times"/>.
 			</Trans>,
 			tiers: BAD_REFRESH_SEVERITY,
 			value: badRefreshes,
@@ -201,7 +211,7 @@ export default class Snapshots extends Module {
 				}
 			})
 
-			const event = snap.snapEvent
+			const event = snap.snapshotter
 			return <Table.Row key={event.timestamp} warning={snap.badRefresh}>
 				<Table.Cell>
 					{this.util.createTimelineButton(event.timestamp)}
