@@ -201,6 +201,8 @@
   "brd.snapshots.dots": "",
   "brd.snapshots.snapshotter": "Bildaufnehmer",
   "brd.snapshots.statuses": "Status",
+  "brd.snapshots.suggestions.content": "",
+  "brd.snapshots.suggestions.why": "",
   "brd.snapshots.time": "Zeit",
   "brd.snapshots.title": "Snapshotting",
   "core.about.contributors": "Mitwirkende:",

@@ -201,6 +201,8 @@
   "brd.snapshots.dots": "DoTs",
   "brd.snapshots.snapshotter": "Snapshotter",
   "brd.snapshots.statuses": "Statuses",
+  "brd.snapshots.suggestions.content": "Avoid using <0/> when <1/> and <2/> are not present on the target. These Iron Jaws are highlighted in the {moduleLink} module below.",
+  "brd.snapshots.suggestions.why": "Iron Jaws was used on a target with at least one missing DoT {badRefreshes, plural, one {# time} other {# times}}.",
   "brd.snapshots.time": "Time",
   "brd.snapshots.title": "Snapshots",
   "core.about.contributors": "Contributors:",

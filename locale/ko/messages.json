@@ -201,6 +201,8 @@
   "brd.snapshots.dots": "도트",
   "brd.snapshots.snapshotter": "스냅삿",
   "brd.snapshots.statuses": "상태이상들",
+  "brd.snapshots.suggestions.content": "",
+  "brd.snapshots.suggestions.why": "",
   "brd.snapshots.time": "시간",
   "brd.snapshots.title": "스냅샷",
   "core.about.contributors": "기여자:",

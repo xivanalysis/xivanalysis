@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-07-07'),
+		Changes: () => <>
+			Snapshots module now displays enemies separately. Suggestion added for <ActionLink {...ACTIONS.IRON_JAWS}/> that did not refresh DoTs.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-06-25'),
 		Changes: () => <>
 			Added a module that shows misused AoE actions.
