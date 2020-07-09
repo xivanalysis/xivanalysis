@@ -53,7 +53,6 @@ class Target {
 	public name: string
 	public key: string
 	readonly snapshots: Snapshot[] = []
-	private currentSnapshot?: Snapshot
 	private statuses: Status[] = []
 
 	constructor(name: string, key: string) {
@@ -82,12 +81,11 @@ class Target {
 			!this.statuses.includes(STATUSES.STORMBITE))
 		)
 
-		this.currentSnapshot = {
+		this.snapshots.push({
 			snapshotter: snap,
 			statuses: [...this.statuses, ...playerStatuses],
 			badRefresh: isBadRefresh,
-		}
-		this.snapshots.push(this.currentSnapshot)
+		})
 	}
 }
 
