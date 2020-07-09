@@ -10,6 +10,15 @@ import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Sugges
 const TA_COOLDOWN_MILLIS = ACTIONS.TRICK_ATTACK.cooldown * 1000
 const OPTIMAL_GCD_COUNT = 5 // Opener should be Suiton > AE combo > SE before Trick
 
+const MUDRAS = [
+	ACTIONS.TEN.id,
+	ACTIONS.TEN_NEW.id,
+	ACTIONS.CHI.id,
+	ACTIONS.CHI_NEW.id,
+	ACTIONS.JIN.id,
+	ACTIONS.JIN_NEW.id,
+]
+
 export default class TrickAttackUsage extends Module {
 	static handle = 'taUsage'
 	static dependencies = [
@@ -31,10 +40,7 @@ export default class TrickAttackUsage extends Module {
 
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
-		if (event.timestamp >= this.parser.fight.start_time && action && action.onGcd && !(
-			action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_NEW.id ||
-			action.id === ACTIONS.CHI.id || action.id === ACTIONS.CHI_NEW.id ||
-			action.id === ACTIONS.JIN.id || action.id === ACTIONS.JIN_NEW.id)) {
+		if (event.timestamp >= this.parser.fight.start_time && action && action.onGcd && MUDRAS.indexOf(action.id) === -1) {
 			// Don't count the individual mudras as GCDs for this - they'll make the count screw if Suiton wasn't set up pre-pull
 			this._gcdCount++
 		}
