@@ -78,8 +78,8 @@ class Target {
 		// If IJ didn't refresh both DoTs, it was a misuse
 		const isBadRefresh = (
 			snap.ability.guid === ACTIONS.IRON_JAWS.id &&
-			!this.statuses.includes(STATUSES.CAUSTIC_BITE) &&
-			!this.statuses.includes(STATUSES.STORMBITE)
+			(!this.statuses.includes(STATUSES.CAUSTIC_BITE) ||
+			!this.statuses.includes(STATUSES.STORMBITE))
 		)
 
 		this.currentSnapshot = {
