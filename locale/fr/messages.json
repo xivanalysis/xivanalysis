@@ -409,7 +409,7 @@
   "drg.debuffs.checklist.description": "<0/> fournit un DoT puissant qui doit être maintenu en tout temps.",
   "drg.debuffs.checklist.name": "Maintenez vos débuffs actifs",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "Temps d'activité total de <0/>",
-  "drg.debuffs.suggestions.clipping.content": "Évitez de rafraîchir <0/> trop tôt avant son expiration. En règle générale, cela indique une erreur dans votre rotation. Sachant que la rotation du DRG comporte 10 GCDs, vous devriez ré-appliquer l'effet de Percée Chaotique que lorsqu'il ne reste 1 ou 2 secondes avant son expiration (selon votre vivacité).",
+  "drg.debuffs.suggestions.clipping.content": "",
   "drg.debuffs.suggestions.clipping.why": "Vous avez perdu {0} utilisations de Percée Chaotique à cause de ré-applications précipitées.",
   "drg.drift.table.heading-1": "Sorts",
   "drg.drift.table.heading-2": "Delta",
