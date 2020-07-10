@@ -409,7 +409,7 @@
   "drg.debuffs.checklist.description": "<0/>提供强力的DoT伤害所以请保持常驻。",
   "drg.debuffs.checklist.name": "维持你的Debuff覆盖",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> 覆盖率",
-  "drg.debuffs.suggestions.clipping.content": "不要过早地刷新<0/>，这样通常意味着循环错误。龙骑士严格的10-GCD循环中樱花怒放应该会在还剩1~2秒的时候刷新，具体时间取决于你的技能速度。",
+  "drg.debuffs.suggestions.clipping.content": "",
   "drg.debuffs.suggestions.clipping.why": "由于过早的刷新，你损失了 {0} 的樱花怒放 。",
   "drg.drift.table.heading-1": "咏唱",
   "drg.drift.table.heading-2": "推移",
