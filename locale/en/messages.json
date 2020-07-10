@@ -409,7 +409,7 @@
   "drg.debuffs.checklist.description": "<0/> provides a potent DoT which should be maintained at all times.",
   "drg.debuffs.checklist.name": "Keep your debuffs up",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> uptime",
-  "drg.debuffs.suggestions.clipping.content": "Avoid refreshing <0/> significantly before its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust with 1-2 seconds remaining, depending on your skill speed.",
+  "drg.debuffs.suggestions.clipping.content": "Avoid refreshing <0/> significantly earlier or later than its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust within 2 seconds before or after expiry, depending on your skill speed.",
   "drg.debuffs.suggestions.clipping.why": "You lost {0} of Chaos Thrust to early refreshes.",
   "drg.drift.table.heading-1": "Casts",
   "drg.drift.table.heading-2": "Drift",

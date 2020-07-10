@@ -24,13 +24,13 @@ export default class Debuffs extends DoTs {
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.debuffs.checklist.name">Keep your debuffs up</Trans>,
 			description: <Trans id="drg.debuffs.checklist.description">
-				<ActionLink {...ACTIONS.CHAOS_THRUST}/> provides a potent DoT which should be maintained at all times.
+				<ActionLink {...ACTIONS.CHAOS_THRUST} /> provides a potent DoT which should be maintained at all times.
 			</Trans>,
 			displayOrder: DISPLAY_ORDER.DEBUFFS,
 			target: 90,
 			requirements: [
 				new Requirement({
-					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...ACTIONS.CHAOS_THRUST}/> uptime</Trans>,
+					name: <Trans id="drg.debuffs.checklist.requirement.chaos-thrust.name"><ActionLink {...ACTIONS.CHAOS_THRUST} /> uptime</Trans>,
 					percent: () => this.getUptimePercent(STATUSES.CHAOS_THRUST.id),
 				}),
 			],
@@ -41,7 +41,7 @@ export default class Debuffs extends DoTs {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.CHAOS_THRUST.icon,
 			content: <Trans id="drg.debuffs.suggestions.clipping.content">
-				Avoid refreshing <ActionLink {...ACTIONS.CHAOS_THRUST}/> significantly before its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust with 1-2 seconds remaining, depending on your skill speed.
+				Avoid refreshing <ActionLink {...ACTIONS.CHAOS_THRUST} /> significantly earlier or later than its expiration, as it usually indicates rotational errors. DRG's strict 10-GCD rotation should have you refreshing Chaos Thrust within 2 seconds before or after expiry, depending on your skill speed.
 			</Trans>,
 			tiers: {
 				5: SEVERITY.MINOR,
