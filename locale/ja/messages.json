@@ -409,7 +409,7 @@
   "drg.debuffs.checklist.description": "<0/> は強力なDoTで、常に維持されるべきです。",
   "drg.debuffs.checklist.name": "デバフを常に切らさないようにしてください。",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "アクティブ率: <0/>",
-  "drg.debuffs.suggestions.clipping.content": "<0/>の効果が満了するまでの早すぎる更新は避けましょう。普通はスキル回しの間違いです。竜騎士は10GCDのスキル回しが決まっており、あなたのスキルスピードに応じて1～2秒残しで桜花狂咲を更新しましょう。",
+  "drg.debuffs.suggestions.clipping.content": "",
   "drg.debuffs.suggestions.clipping.why": "早すぎる更新により桜華狂咲を失った回数: {0} 回",
   "drg.drift.table.heading-1": "",
   "drg.drift.table.heading-2": "遅延",
