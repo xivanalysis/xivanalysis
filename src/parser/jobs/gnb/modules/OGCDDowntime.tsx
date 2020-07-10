@@ -16,12 +16,9 @@ const FIRST_USE_OFFSET_BOWSHOCK = 10000 // Current Openers have Bowblast being u
 
 const FIRST_USE_OFFSET_DIVIDE = 7500 // Current Openers have rough divide at 3rd GCD or literally on pull. set to 3rd GCD
 
-export default class AbilityDowntime extends CooldownDowntime {
+const FIRST_USE_OFFSET_SONIC_BREAK = 12500 // Current Openers have the longest delay for Sonic break being on 5th GCD (Raid Buffer Opener)
 
-	firstUseOffsetPerOgcd = {
-		[ACTIONS.NO_MERCY.id]: FIRST_USE_OFFSET_NO_MERCY,
-		[ACTIONS.BLOODFEST.id]: FIRST_USE_OFFSET_BLOODFEST,
-	}
+export default class AbilityDowntime extends CooldownDowntime {
 
 	trackedCds = [
 		{
@@ -31,6 +28,10 @@ export default class AbilityDowntime extends CooldownDowntime {
 		{
 			cooldowns: [ACTIONS.BLOODFEST],
 			firstUseOffset: FIRST_USE_OFFSET_BLOODFEST,
+		},
+		{
+			cooldowns: [ACTIONS.SONIC_BREAK],
+			firseUseOffset: FIRST_USE_OFFSET_SONIC_BREAK,
 		},
 		{
 			cooldowns: [ACTIONS.BLASTING_ZONE, ACTIONS.DANGER_ZONE],
