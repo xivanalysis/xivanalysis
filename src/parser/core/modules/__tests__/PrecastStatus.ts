@@ -6,8 +6,8 @@ import Parser from 'parser/core/Parser'
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
 
-import {MockedData} from 'parser/core/__tests__/DataHelper'
-import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from 'parser/core/__tests__/EventsHelpers'
+import {MockedData} from 'parser/core/modules/__helpers__/DataHelper'
+import {mockApplyBuffEvent, mockApplyBuffStackEvent, mockCastEvent, mockRemoveBuffEvent} from '__helpers__/EventsHelpers'
 import {Event} from 'events'
 import {Ability, AbilityType} from 'fflogs'
 
