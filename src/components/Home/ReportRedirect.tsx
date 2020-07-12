@@ -1,5 +1,5 @@
 import React from 'react'
-import {useParams, Redirect} from 'react-router-dom'
+import {useParams, Redirect, useLocation} from 'react-router-dom'
 import {parseInput} from './parseInput'
 
 interface ReportRedirectParams {
@@ -8,8 +8,11 @@ interface ReportRedirectParams {
 
 export const ReportRedirect = () => {
 	const {input} = useParams<ReportRedirectParams>()
+	const location = useLocation()
 
-	const result = parseInput(input)
+	const fullInput = `${input}${location.search}${location.hash}`
+
+	const result = parseInput(fullInput)
 
 	// TODO: Handle errors more gracefully?
 	return result.valid
