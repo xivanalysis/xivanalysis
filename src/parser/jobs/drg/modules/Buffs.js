@@ -1,16 +1,14 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Header, Icon} from 'semantic-ui-react'
+import React from 'react'
 
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {RotationTable} from 'components/ui/RotationTable'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS = [
@@ -28,53 +26,24 @@ const FINAL_COMBO_HITS = [
 	ACTIONS.FANG_AND_CLAW.id,
 	ACTIONS.WHEELING_THRUST.id,
 ]
-const BAD_BUFF_ACTIONS = [
-	ACTIONS.CHAOS_THRUST.id,
-	ACTIONS.FULL_THRUST.id,
-]
-const STATUS_MAP = {
-	[ACTIONS.LANCE_CHARGE.id]: STATUSES.LANCE_CHARGE.id,
-	[ACTIONS.DRAGON_SIGHT.id]: STATUSES.RIGHT_EYE.id,
-}
-
-const BUFF_GCD_TARGET = 8
-const BUFF_GCD_WARNING = 7
-const BUFF_GCD_ERROR = 0
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
-	static title = t('drg.buffs.title')`Lance Charge & Dragon Sight`
+	static title = t('drg.buffs.title')`Buffs`
 	static dependencies = [
 		'checklist',
 		'combatants',
 		'entityStatuses',
 		'invuln',
 		'suggestions',
-		'timeline',
 	]
-	static displayOrder = DISPLAY_ORDER.BUFFS;
 
-	_lastGcd = 0
 	_badLifeSurges = 0
 	_fifthGcd = false
-	_soloDragonSight = false
-
-	_buffWindows = {
-		[STATUSES.LANCE_CHARGE.id]: {
-			current: null,
-			history: [],
-		},
-		[STATUSES.RIGHT_EYE.id]: {
-			current: null,
-			history: [],
-		},
-	}
 
 	constructor(...args) {
 		super(...args)
 		this.addEventHook('cast', {by: 'player'}, this._onCast)
-		this.addEventHook('cast', {by: 'player', abilityId: [ACTIONS.LANCE_CHARGE.id, ACTIONS.DRAGON_SIGHT.id]}, this._onBuffCast)
-		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this._soloDragonSight = true)
 		this.addEventHook('complete', this._onComplete)
 	}
 
@@ -96,7 +65,6 @@ export default class Buffs extends Module {
 	_onCast(event) {
 		const action = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (action && action.onGcd) {
-			this._lastGcd = action.id
 			if (BAD_LIFE_SURGE_CONSUMERS.includes(action.id)) {
 				this._fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
 				if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id)) {
@@ -112,27 +80,6 @@ export default class Buffs extends Module {
 				}
 			}
 		}
-
-		this._pushToWindow(event, STATUSES.LANCE_CHARGE.id, this._buffWindows[STATUSES.LANCE_CHARGE.id])
-		this._pushToWindow(event, STATUSES.RIGHT_EYE.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
-		this._pushToWindow(event, STATUSES.RIGHT_EYE_SOLO.id, this._buffWindows[STATUSES.RIGHT_EYE.id])
-	}
-
-	_onBuffCast(event) {
-		const tracker = this._buffWindows[STATUS_MAP[event.ability.guid]]
-		if (tracker.current !== null) {
-			tracker.current.gcdCount = tracker.current.casts.filter(cast => {
-				const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
-				return action && action.onGcd
-			}).length
-			tracker.history.push(tracker.current)
-		}
-
-		tracker.current = {
-			start: event.timestamp,
-			casts: [],
-			isBad: BAD_BUFF_ACTIONS.includes(this._lastGcd),
-		}
 	}
 
 	_getDisembowelUptimePercent() {
@@ -141,29 +88,7 @@ export default class Buffs extends Module {
 		return (statusUptime / fightUptime) * 100
 	}
 
-	_closeLastWindow(statusId) {
-		const tracker = this._buffWindows[statusId]
-
-		// If there's no current cast just stop here
-		if (!tracker.current) {
-			return
-		}
-
-		// Partial windows ok - end of fight use still optimal
-		if (this.combatants.selected.hasStatus(statusId)) {
-			tracker.current.partial = true
-		}
-
-		tracker.current.gcdCount = tracker.current.casts.filter(cast => {
-			const action = getDataBy(ACTIONS, 'id', cast.ability.guid)
-			return action && action.onGcd
-		}).length
-		tracker.history.push(tracker.current)
-	}
-
 	_onComplete() {
-		this._closeLastWindow(STATUSES.LANCE_CHARGE.id)
-		this._closeLastWindow(STATUSES.RIGHT_EYE.id)
 		this.checklist.add(new Rule({
 			name: <Trans id="drg.buffs.checklist.name">Keep {ACTIONS.DISEMBOWEL.name} up</Trans>,
 			description: <Trans id="drg.buffs.checklist.description">
@@ -193,126 +118,5 @@ export default class Buffs extends Module {
 				You used {ACTIONS.LIFE_SURGE.name} on a non-optimal GCD <Plural value={this._badLifeSurges} one="# time" other="# times"/>.
 			</Trans>,
 		}))
-
-		const badLanceCharges = this._buffWindows[STATUSES.LANCE_CHARGE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.LANCE_CHARGE.icon,
-			content: <Trans id="drg.buffs.suggestions.bad-lcs.content">
-				Avoid using <ActionLink {...ACTIONS.LANCE_CHARGE}/> immediately after <ActionLink {...ACTIONS.CHAOS_THRUST}/> or <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-			},
-			value: badLanceCharges,
-			why: <Trans id="drg.buffs.suggestions.bad-lcs.why">
-				{badLanceCharges} of your Lance Charge windows started right after a standard combo finisher.
-			</Trans>,
-		}))
-
-		// I'm not going to say how close I came to naming this variable badDragons
-		const badDragonSights = this._buffWindows[STATUSES.RIGHT_EYE.id].history.filter(window => window.casts.length > 0 && window.isBad).length
-		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.DRAGON_SIGHT.icon,
-			content: <Trans id="drg.buffs.suggestions.bad-dss.content">
-				Avoid using <ActionLink {...ACTIONS.DRAGON_SIGHT}/> immediately after <ActionLink {...ACTIONS.CHAOS_THRUST}/> or <ActionLink {...ACTIONS.FULL_THRUST}/> in order to get the most possible damage out of each window.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MINOR,
-				3: SEVERITY.MEDIUM,
-			},
-			value: badDragonSights,
-			why: <Trans id="drg.buffs.suggestions.bad-dss.why">
-				{badDragonSights} of your Dragon Sight windows started right after a standard combo finisher.
-			</Trans>,
-		}))
-
-		if (this._soloDragonSight) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DRAGON_SIGHT.icon,
-				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
-					Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
-					At least 1 of your Dragon Sight casts didn't have a tether partner.
-				</Trans>,
-			}))
-		}
-	}
-
-	_formatGcdCount(count) {
-		if (count === BUFF_GCD_ERROR) {
-			return <span className="text-error">{count}</span>
-		}
-
-		if (count <= BUFF_GCD_WARNING) {
-			return <span className="text-warning">{count}</span>
-		}
-
-		return count
-	}
-
-	_formatWindowTable(statusId) {
-		return this._buffWindows[statusId].history.map(buffWindow => {
-			const targetsData = {}
-			const notesMap = {}
-			targetsData.gcds = {
-				actual: buffWindow.gcdCount,
-				expected: BUFF_GCD_TARGET,
-			}
-
-			notesMap.start = buffWindow.isBad ? <Icon name="x" color="red" /> : <Icon name="check" color="green" />
-
-			if (buffWindow.partial) {
-				notesMap.notes = <Trans id="drg.buffs.note.partial">Partial Window</Trans>
-			}
-
-			return {
-				start: buffWindow.start - this.parser.fight.start_time,
-				targetsData,
-				rotation: buffWindow.casts,
-				notesMap,
-			}
-		})
-	}
-
-	output() {
-		const rotationTargets = [{
-			header: <Trans id="drg.buffs.gcd-count">GCDs</Trans>,
-			accessor: 'gcds',
-		}]
-		const notesData = [{
-			header: <Trans id="drg.buffs.bad-start">Optimal Start</Trans>,
-			accessor: 'start',
-		},
-		{
-			header: <Trans id="drg.buffs.notes">Notes</Trans>,
-			accessor: 'notes',
-		}]
-
-		const lcRotationData = this._formatWindowTable(STATUSES.LANCE_CHARGE.id)
-		const dsRotationData = this._formatWindowTable(STATUSES.RIGHT_EYE.id)
-
-		return <Fragment>
-			<Header size="small">
-				<Trans id="drg.buffs.accordion.lc-header">Lance Charge</Trans>
-			</Header>
-			<RotationTable
-				targets={rotationTargets}
-				data={lcRotationData}
-				onGoto={this.timeline.show}
-				notes={notesData}
-			/>
-			<Header size="small">
-				<Trans id="drg.buffs.accordion.ds-header">Dragon Sight</Trans>
-			</Header>
-			<RotationTable
-				targets={rotationTargets}
-				data={dsRotationData}
-				onGoto={this.timeline.show}
-				notes={notesData}
-			/>
-		</Fragment>
 	}
 }
