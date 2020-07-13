@@ -128,13 +128,6 @@ export abstract class DrgBuffWindowModule extends Module {
 
 	// this is a helper because onCast might need to make a new window due to pre-pull buffs?
 	private startNewBuffWindow(startTime: number) {
-		// if we, for some reason, have a buff window already, we might want to flag it
-		if (this.current) {
-			// error
-			// TODO: use actual error functions
-			console.log('Error: multiple buff windows active')
-		}
-
 		this.current = new BuffWindowHistory(this.data, startTime, this.lastGcdIsBad)
 	}
 

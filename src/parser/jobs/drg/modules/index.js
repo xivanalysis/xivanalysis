@@ -1,7 +1,6 @@
 import BattleLitany from './BattleLitany'
 import BloodOfTheDragon from './BloodOfTheDragon'
 import Buffs from './Buffs'
-import BuffWindows from './DrgBuffWindows'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import Debuffs from './Debuffs'
@@ -18,7 +17,6 @@ export default [
 	BattleLitany,
 	BloodOfTheDragon,
 	Buffs,
-	BuffWindows,
 	Combos,
 	Cooldowns,
 	Debuffs,
