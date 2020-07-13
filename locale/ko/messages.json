@@ -409,7 +409,7 @@
   "drg.debuffs.checklist.description": "<0/>는 상당한 지속 데미지를 주며 상시 유지시켜야 합니다.",
   "drg.debuffs.checklist.name": "항상 디버프가 유지되도록 하십시오",
   "drg.debuffs.checklist.requirement.chaos-thrust.name": "<0/> 지속시간",
-  "drg.debuffs.suggestions.clipping.content": "",
+  "drg.debuffs.suggestions.clipping.content": "<0/>을 너무 이르거나 늦게 갱신하지 마십시오. 이는 딜사이클이 꼬엿다는 증거이며 용기사의 10글쿨 딜사이클은 매우 엄격하므로 정상적으로 딜사이클을 사용하고있다면 기술 시전 속도에 따라 꽃잎 폭풍이 1-2초 정도 남긴 상태에서 자연스럽게 갱신될것입니다.",
   "drg.debuffs.suggestions.clipping.why": "너무 이르게 갱신하여 {0} 만큼의 꽃잎 폭풍 지속시간을 잃었습니다.",
   "drg.drift.table.heading-1": "시전 기술",
   "drg.drift.table.heading-2": "지연된 시간",
