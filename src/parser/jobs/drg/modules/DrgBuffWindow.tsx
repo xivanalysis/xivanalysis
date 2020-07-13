@@ -161,7 +161,7 @@ export abstract class DrgBuffWindowModule extends Module {
 		}))
 	}
 
-	output() {
+	renderTable() {
 		if (this.windows.length > 0) {
 			const rotationTargets = [{
 				header: <Trans id="drg.buffs.gcd-count">GCDs</Trans>,
@@ -202,6 +202,10 @@ export abstract class DrgBuffWindowModule extends Module {
 					onGoto={this.timeline.show}
 					notes={notesData}
 				/>
+			</Fragment>
+		} else {
+			return <Fragment>
+				No buffs used
 			</Fragment>
 		}
 	}

@@ -50,7 +50,6 @@ class BLWindow {
 export default class BattleLitany extends Module {
 	static handle = 'battlelitany'
 	static title = t('drg.battlelitany.title')`Battle Litany`
-	static displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
@@ -164,7 +163,7 @@ export default class BattleLitany extends Module {
 
 	// just output, no suggestions for now.
 	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
-	output() {
+	renderTable() {
 		const tableData = this.history.map(window => {
 			const end = window.end != null ?
 				window.end - this.parser.fight.start_time :
