@@ -1,18 +1,18 @@
+import React, {Fragment} from 'react'
+import {MessageDescriptor} from '@lingui/core'
+import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
+import {CastEvent, BuffEvent} from 'fflogs'
+import {Icon, Message} from 'semantic-ui-react'
+
 import ACTIONS, {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {Data} from 'parser/core/modules/Data'
-import React, {Fragment} from 'react'
-
 import Module, {dependency} from 'parser/core/Module'
-import {MessageDescriptor} from '@lingui/core'
-import {t} from '@lingui/macro'
-import {CastEvent, BuffEvent} from 'fflogs'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import {ActionLink} from 'components/ui/DbLink'
-import {Trans} from '@lingui/react'
 import {RotationTable, RotationTableTargetData, RotationTableNotesMap} from 'components/ui/RotationTable'
-import {Icon} from 'semantic-ui-react'
 
 // generally, you're not supposed to use drg buffs immediately after these
 const BAD_BUFF_ACTIONS = [
@@ -90,7 +90,6 @@ export abstract class DrgBuffWindowModule extends Module {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {to: 'player', abilityId: this.buffStatusIds}, this.onApplyBuff)
 		this.addEventHook('removebuff', {to: 'player', abilityId: this.buffStatusIds}, this.onRemoveBuff)
-		// this.addEventHook('cast', {by: 'player', abilityId: this.buffActions.map(action => action.id)}, this.onApplyBuff)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -198,7 +197,9 @@ export abstract class DrgBuffWindowModule extends Module {
 			</Fragment>
 		} else {
 			return <Fragment>
-				No buffs used
+				<Message warning>
+					<Trans id="drg.buffs.unused"><ActionLink {...this.buffAction} /> was not used during this fight.</Trans>
+				</Message>
 			</Fragment>
 		}
 	}

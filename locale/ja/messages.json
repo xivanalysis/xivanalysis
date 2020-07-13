@@ -401,6 +401,7 @@
   "drg.buffs.suggestions.solo-ds.content": "あなた個人のDPSには影響しませんが、パーティーメンバーのだれかがダメージボーナスを得られるように、常にドラゴンサイトを使うようにしてみてください。",
   "drg.buffs.suggestions.solo-ds.why": "最低でも1回のドラゴンサイトに対象のメンバーが指定されませんでした。",
   "drg.buffs.title": "ランスチャージ＆ドラゴンサイト",
+  "drg.buffs.unused": "",
   "drg.buffwindow.suggestions.bad-gcd": "",
   "drg.buffwindow.suggestions.bad-gcd.why": "",
   "drg.buffwindow.title": "",

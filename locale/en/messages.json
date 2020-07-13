@@ -401,6 +401,7 @@
   "drg.buffs.suggestions.solo-ds.content": "Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.",
   "drg.buffs.suggestions.solo-ds.why": "At least 1 of your Dragon Sight casts didn't have a tether partner.",
   "drg.buffs.title": "Buffs",
+  "drg.buffs.unused": "<0/> was not used during this fight.",
   "drg.buffwindow.suggestions.bad-gcd": "Avoid using <0/> immediately after <1/> or <2/> in order to get the most possible damage out of each window.",
   "drg.buffwindow.suggestions.bad-gcd.why": "{badBuffs} of your <0/> windows started right after a standard combo finisher.",
   "drg.buffwindow.title": "Dragoon Buff Window",

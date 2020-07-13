@@ -401,6 +401,7 @@
   "drg.buffs.suggestions.solo-ds.content": "대상을 지정하지 않은 용의 시선은 파티원에게 용의 왼눈 버프를 주지 못합니다. 개인 딜에 영향이 안끼치더라도 최대한 대상을 지정하여 사용하십시오.",
   "drg.buffs.suggestions.solo-ds.why": "대상을 지정하지 않은 용의 시선이 최소 1 회 이상 사용되었습니다.",
   "drg.buffs.title": "돌격하는 창 & 용의 눈",
+  "drg.buffs.unused": "",
   "drg.buffwindow.suggestions.bad-gcd": "",
   "drg.buffwindow.suggestions.bad-gcd.why": "",
   "drg.buffwindow.title": "",
