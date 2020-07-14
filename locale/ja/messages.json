@@ -837,7 +837,7 @@
   "smn.gauge.suggestions.lost-aetherflow.content": "エーテルフロー使用時に2スタックを確実に得るようにしましょう。スタックを失うたびにかなりの威力を失っています。",
   "smn.gauge.suggestions.lost-aetherflow.why": "エーテルフローの失ったスタック数：{0, plural, one {#個} other {#個}}",
   "smn.missingdots.title": "DoTの抜け",
-  "smn.pets.suggestions.garuda-st.content": "",
+  "smn.pets.suggestions.garuda-st.content": "ガルーダ・エギは範囲攻撃しか使いません。イフリート・エギは敵が1人しかいない場合に使役するとより多くのダメージを与えることができます。",
   "smn.pets.suggestions.garuda-st.why": "",
   "smn.pets.suggestions.ifrit-aoe.content": "",
   "smn.pets.suggestions.ifrit-aoe.why": "",
