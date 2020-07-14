@@ -10,6 +10,7 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 export default class DragonSight extends DrgBuffWindowModule {
 	static handle = 'dragonsight'
 	static title = t('drg.dragonsight.title')`Dragon Sight`
+	static displayOrder = DISPLAY_ORDER.DRAGON_SIGHT
 
 	buffAction = ACTIONS.DRAGON_SIGHT
 	buffStatus = [STATUSES.RIGHT_EYE, STATUSES.RIGHT_EYE_SOLO]

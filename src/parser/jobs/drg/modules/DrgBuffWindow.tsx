@@ -203,4 +203,8 @@ export abstract class DrgBuffWindowModule extends Module {
 			</Fragment>
 		}
 	}
+
+	output() {
+		return this.renderTable()
+	}
 }

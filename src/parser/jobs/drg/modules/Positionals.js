@@ -186,6 +186,11 @@ export default class Positionals extends Module {
 
 	output() {
 		const missed = this._rtCombos.filter(combo => !combo.success).length
+
+		if (missed === 0) {
+			return
+		}
+
 		const withTn = this._rtCombos.filter(combo => !combo.success && combo.trueNorthCharges > 0).length
 
 		return <Fragment>

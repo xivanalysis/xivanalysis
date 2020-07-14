@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react'
+import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
 import {CastEvent} from 'fflogs'
-import {Accordion} from 'semantic-ui-react'
 
-import ACTIONS, {Action} from 'data/ACTIONS'
+import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {ActionLink} from 'components/ui/DbLink'
 import Module, {dependency} from 'parser/core/Module'
@@ -15,9 +14,6 @@ import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {Data} from 'parser/core/modules/Data'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import DragonSight from './DragonSight'
-import LanceCharge from './LanceCharge'
-import BattleLitany from './BattleLitany'
 
 const BAD_LIFE_SURGE_CONSUMERS: number[] = [
 	ACTIONS.TRUE_THRUST.id,
@@ -39,7 +35,6 @@ const FINAL_COMBO_HITS: number[] = [
 export default class Buffs extends Module {
 	static handle = 'buffs'
 	static title = t('drg.buffs.title')`Buffs`
-	static displayOrder = DISPLAY_ORDER.BUFFS
 
 	private badLifeSurges: number = 0
 	private fifthGcd: boolean = false
@@ -50,12 +45,6 @@ export default class Buffs extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private data!: Data
-
-	// buff window rendering
-	@dependency private lanceCharge!: LanceCharge
-	@dependency private dragonSight!: DragonSight
-	@dependency private battleLitany!: BattleLitany
-
 
 	init(){
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
@@ -118,44 +107,5 @@ export default class Buffs extends Module {
 				You used {ACTIONS.LIFE_SURGE.name} on a non-optimal GCD <Plural value={this.badLifeSurges} one="# time" other="# times"/>.
 			</Trans>,
 		}))
-	}
-
-	output() {
-		const buffPanels = [
-			{
-				title: {
-					key: 'title-lc',
-					content: <Trans id="drg.buffs.lance-charge.header">Lance Charge</Trans>,
-				},
-				content: {
-					key: 'content-lc',
-					content: this.lanceCharge.renderTable(),
-				},
-			},
-			{
-				title: {
-					key: 'title-ds',
-					content: <Trans id="drg.buffs.dragon-sight.header">Dragon Sight</Trans>,
-				},
-				content: {
-					key: 'content-ds',
-					content: this.dragonSight.renderTable(),
-				},
-			},
-			{
-				title: {
-					key: 'title-bl',
-					content: <Trans id="drg.buffs.battle-lit.header">Battle Litany</Trans>,
-				},
-				content: {
-					key: 'content-bl',
-					content: this.battleLitany.renderTable(),
-				},
-			},
-		]
-
-		return <Fragment>
-			<Accordion exclusive={false} panels={buffPanels} styled fluid />
-		</Fragment>
 	}
 }

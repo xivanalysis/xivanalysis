@@ -50,6 +50,7 @@ class BLWindow {
 export default class BattleLitany extends Module {
 	static handle = 'battlelitany'
 	static title = t('drg.battlelitany.title')`Battle Litany`
+	static displayOrder = DISPLAY_ORDER.BATTLE_LITANY
 
 	@dependency private timeline!: Timeline
 	@dependency private data!: Data
@@ -228,5 +229,9 @@ export default class BattleLitany extends Module {
 				onGoto={this.timeline.show}
 			/>
 		</Fragment>
+	}
+
+	output() {
+		return this.renderTable()
 	}
 }
