@@ -754,7 +754,7 @@
   "sam.sen.title": "",
   "sam.shoha.checklist.requirement.waste.name": "尽可能的多使用你的以太",
   "sam.shoha.title": "默想时间轴",
-  "sam.shoha.waste.by-source.key": "默想深度浪费",
+  "sam.shoha.waste.by-source.key": "",
   "sam.shoha.waste.content": "浪费默想的时间，满值结束战斗或者在值满的时候死亡，都是直接的输出损失。使用<0/>来避免浪费。",
   "sam.suggestion.badkaiten.why": "你在错误的GCD技能上使用了 {0, plural, one {# 次} other {# 次}} 必杀剑·回天。",
   "sam.thirdeye.suggestion.badeyes.content": "通常情况下，用<0/>奶自己比起用<1/>来攻击是亏的。",
