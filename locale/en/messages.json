@@ -754,7 +754,7 @@
   "sam.sen.title": "Non-Standard Sen Windows",
   "sam.shoha.checklist.requirement.waste.name": "Use as many of your meditation stacks as possible.",
   "sam.shoha.title": "Meditation Timeline",
-  "sam.shoha.waste.by-source.key": "Meditation Stack Waste By Source",
+  "sam.shoha.waste.by-source.key": "Meditation Stack Waste by Source",
   "sam.shoha.waste.content": "Wasted meditation generation, ending the fight with stacks fully charged, or dying with stacks charged is a direct potency loss. Use <0/> to avoid wasting stacks.",
   "sam.suggestion.badkaiten.why": "You used Kaiten  {0, plural, one {# time} other {# times}} on non-optimal GCDs.",
   "sam.thirdeye.suggestion.badeyes.content": "<0/>'s heal is not worth the damage loss of not using <1/>.",
