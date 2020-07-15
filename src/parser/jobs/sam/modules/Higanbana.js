@@ -10,6 +10,8 @@ import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
+import styles from './Higanbana.module.css'
+
 const STATUS_DURATION = {
 	[STATUSES.HIGANBANA.id]: 60000,
 }
@@ -173,7 +175,7 @@ export default class Higanbana extends Module {
 				return {
 					key: applicationKey,
 					title: {
-						content: <>{target.name}</>,
+						content: <span className={styles.name}> {target.name} </span>,
 					},
 					content: {
 						content: this._createTargetStatusTable(this._application[applicationKey]),
