@@ -190,7 +190,7 @@ export default class Shoha extends Module {
 			return <></>
 		}
 
-		const panels = [{
+		const panel = [{
 			key: 'key-wastebysource',
 			title: {
 				key: 'title-wastebysource',
@@ -210,7 +210,7 @@ export default class Shoha extends Module {
 
 		return <Accordion
 			exclusive={false}
-			panels={panels}
+			panels={panel}
 			styled
 			fluid />
 	}
