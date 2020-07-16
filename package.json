@@ -59,7 +59,7 @@
     "intersection-observer": "^0.10",
     "intl": "^1.2.5",
     "ky": "^0.19",
-    "lodash": "^4.17.13",
+    "lodash": "^4.17.19",
     "mathjs": "^7",
     "mobx": "^5.10.1",
     "mobx-react": "^6.1.3",
