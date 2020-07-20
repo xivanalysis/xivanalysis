@@ -18,6 +18,7 @@ import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
 import {buildReportFlowPath} from './ReportFlow'
+import {ReportRedirect} from './Home/ReportRedirect'
 
 class App extends Component {
 	static propTypes = {
@@ -112,6 +113,7 @@ class App extends Component {
 					<ErrorBoundary>
 						<Switch>
 							<Route exact path="/"><Home/></Route>
+							<Route path="/report-redirect/:input(.+)"><ReportRedirect/></Route>
 
 							<Route path="/(find|analyse)/:code/:fight?/:combatant?">
 								<LegacyXivaRouteRedirect/>

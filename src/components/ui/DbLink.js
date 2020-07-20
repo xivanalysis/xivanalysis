@@ -110,6 +110,8 @@ export const ItemLink = props => <Tooltip
 
 StatusLink.propTypes = {
 	id: PropTypes.number.isRequired,
+	showName: PropTypes.bool,
+	iconSize: PropTypes.string,
 }
 
 ItemLink.propTypes = {

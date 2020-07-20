@@ -7,11 +7,9 @@ import {RouteComponentProps, withRouter, Redirect} from 'react-router-dom'
 import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import styles from './ReportSearch.module.css'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import {reportSources, SearchHandlerResult} from 'reportSources'
+import {SearchHandlerResult} from 'reportSources'
 import _ from 'lodash'
-
-// Localhost is... a bit generous. But we'll let the rest of the app fail out on that for us.
-const XIVA_URL_EXPRESSION = /(?:xivanalysis.com|localhost(?::\d+)?)\/(.+)/
+import {parseInput} from './parseInput'
 
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`
 
@@ -30,42 +28,7 @@ class ReportSearch extends React.Component<RouteComponentProps> {
 
 	@action.bound
 	private onSearch() {
-		this.result = this.parseInput(this.value)
-	}
-
-	private parseInput(input: string): SearchHandlerResult {
-		// Check if any report sources provide a matching search handler
-		for (const source of reportSources) {
-			if (source.searchHandlers == null) { continue }
-
-			for (const handler of source.searchHandlers) {
-				const match = handler.regexp.exec(input)
-				if (match == null) { continue }
-
-				const result = handler.handler(match.groups ?? {})
-
-				if (!result.valid) { return result }
-
-				return {
-					valid: true,
-					path: `${source.path}${result.path}`,
-				}
-			}
-		}
-
-		// No report source matches, check if it's a xiva link we can blindly copy
-		const match = XIVA_URL_EXPRESSION.exec(input)
-		if (match != null) {
-			return {
-				valid: true,
-				path: match[1],
-			}
-		}
-
-		return {
-			valid: false,
-			reason: t('core.home.report-search.invalid-query')`The provided query does not match any of the expected formats.`,
-		}
+		this.result = parseInput(this.value)
 	}
 
 	render() {
