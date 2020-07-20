@@ -25,6 +25,7 @@ const SEVERETIES = {
 // const PLAYER_CASTS = [ACTIONS.EARTHLY_STAR.id, ACTIONS.STELLAR_DETONATION.id]
 const PET_CASTS = [ACTIONS.STELLAR_BURST.id, ACTIONS.STELLAR_EXPLOSION.id]
 // const PLAYER_STATUSES = [STATUSES.EARTHLY_DOMINANCE.id, STATUSES.GIANT_DOMINANCE.id]
+const COOK_TIME = 10000 // The time it takes for a star to get fully cooked
 
 export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
@@ -37,6 +38,8 @@ export default class EarthlyStar extends Module {
 	_totalHeld = 0
 	_earlyBurstCount = 0
 
+	_isRush = false // Boolean that when impossible to fully cook a star, turns true to avoid counting EoF rushing
+
 	protected init() {
 		this.addEventHook('cast', {abilityId: ACTIONS.EARTHLY_STAR.id, by: 'player'}, this._onSet)
 		this.addEventHook('cast', {abilityId: PET_CASTS, by: 'pet'}, this._onPetCast)
@@ -47,6 +50,7 @@ export default class EarthlyStar extends Module {
 
 	_onSet(event: CastEvent) {
 		this._uses++
+		this._isRush = false // this should be 100% unneeded, but just be to safe, set it to false on each set
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
 		if (this._lastUse === 0) { this._lastUse = this.parser.fight.start_time }
 
@@ -54,14 +58,19 @@ export default class EarthlyStar extends Module {
 		if (_held > 0) {
 			this._totalHeld += _held
 		}
-		// update the last use
+		// update the last use and check if end of rush
 		this._lastUse = event.timestamp
+
+		if (this.parser.pull.duration - event.timestamp < COOK_TIME) {
+			this._isRush = true
+		}
+
 	}
 
 	_onPetCast(event: CastEvent) {
 		const actionID = event.ability.guid
 
-		if (actionID === ACTIONS.STELLAR_BURST.id) {
+		if (actionID === ACTIONS.STELLAR_BURST.id && (this._isRush !== true) ) {
 			this._earlyBurstCount++
 		}
 	}

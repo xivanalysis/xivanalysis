@@ -37,6 +37,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2020-7-20'),
+			Changes: () => <>
+				Added End of Fight rushing checks on Earthly Star, so that denoating early when the star was place with less than 10 seconds left in the fight is not counted when denoted early.
+			</>,
+			contributors: [CONTRIBUTORS.RYAN],
+		},
+		{
 			date: new Date('2020-04-29'),
 			Changes: () => <>
 				Updated AST for 5.1 & 5.2
