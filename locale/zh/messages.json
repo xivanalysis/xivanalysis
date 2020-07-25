@@ -365,7 +365,7 @@
   "drg.battlelitany.rotation-table.header.gcd-count": "GCD技能",
   "drg.battlelitany.rotation-table.header.interfered": "",
   "drg.battlelitany.rotation-table.message": "",
-  "drg.battlelitany.title": "",
+  "drg.battlelitany.title": "战斗连祷",
   "drg.blood.checklist.description": "<0/>是龙骑士循环的核心，应该始终维持。没有它时，你的跳跃威力会减弱，且无法使用<1/>。",
   "drg.blood.checklist.description.warning": "由于苍天龙血现在是以量谱而不是Buff形式存在，请注意此处以及下面的红莲龙血状态中的数字是模拟的。因此，它不一定和真实情况完全一致。",
   "drg.blood.checklist.name": "维持苍天龙血状态",
