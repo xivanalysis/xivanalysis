@@ -164,7 +164,7 @@ export default class BattleLitany extends Module {
 
 	// just output, no suggestions for now.
 	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
-	renderTable() {
+	output() {
 		const tableData = this.history.map(window => {
 			const end = window.end != null ?
 				window.end - this.parser.fight.start_time :
@@ -229,9 +229,5 @@ export default class BattleLitany extends Module {
 				onGoto={this.timeline.show}
 			/>
 		</Fragment>
-	}
-
-	output() {
-		return this.renderTable()
 	}
 }

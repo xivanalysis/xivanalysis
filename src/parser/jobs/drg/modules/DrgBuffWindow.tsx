@@ -153,7 +153,7 @@ export abstract class DrgBuffWindowModule extends Module {
 		}))
 	}
 
-	renderTable() {
+	output() {
 		if (this.windows.length > 0) {
 			const rotationTargets = [{
 				header: <Trans id="drg.buffs.gcd-count">GCDs</Trans>,
@@ -202,9 +202,5 @@ export abstract class DrgBuffWindowModule extends Module {
 				</Message>
 			</Fragment>
 		}
-	}
-
-	output() {
-		return this.renderTable()
 	}
 }
