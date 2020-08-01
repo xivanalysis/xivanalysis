@@ -133,6 +133,7 @@ workflows:
               only:
                 - master
                 - stormblood
+                - ui
       - deploy:
           requires:
             - build
