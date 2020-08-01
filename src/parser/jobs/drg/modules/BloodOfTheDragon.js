@@ -247,14 +247,19 @@ export default class BloodOfTheDragon extends Module {
 			// determine if it could be delayed
 			lifeWindow.buffsInDelayWindow = {}
 
+			// downtime overlap
 			lifeWindow.dtOverlapTime = this._intersectsDowntime((lifeWindow.start + ACTIONS.HIGH_JUMP.cooldown * 1000))
+
+			// flag for last life window
+			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
 
 			// A window should be delayed if:
 			// - there are no buffs off cooldown at any point in this window
 			// - there are no upcoming downtime windows (checked here)
 			// - there are buffs off cooldown in the theoretical delayed window
+			// - there could be another window in 30s (end of fight check)
 			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
-			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MIN < this.parser.fight.end_time
 
 			let buffsExistInDelayWindow = false
 
@@ -278,8 +283,6 @@ export default class BloodOfTheDragon extends Module {
 			// check the stardiver cast buffs
 			// count a miss if the window could be delayed
 			lifeWindow.missedSdBuff = (activeBuffsInWindow || lifeWindow.shouldDelay) && lifeWindow.stardivers.length === 1 && lifeWindow.stardivers[0].buffs.length === 0
-
-			lifeWindow.isLast = lifeWindow.start + lifeWindow.duration > this.parser.fight.end_time
 		}
 	}
 
