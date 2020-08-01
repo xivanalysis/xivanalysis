@@ -259,7 +259,7 @@ export default class BloodOfTheDragon extends Module {
 			// - there are buffs off cooldown in the theoretical delayed window
 			// - there could be another window in 30s (end of fight check)
 			let activeBuffsInWindow = lifeWindow.activeBuffs.length > 0
-			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MIN < this.parser.fight.end_time
+			const shouldBeDelayed = lifeWindow.activeBuffs.length === 0 && lifeWindow.dtOverlapTime === null && lifeWindow.start + LOTD_BUFF_DELAY_MAX < this.parser.fight.end_time
 
 			let buffsExistInDelayWindow = false
 
