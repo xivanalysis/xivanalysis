@@ -32,6 +32,7 @@ export const WAR = ensureActions({
 		combo: {
 			from: 41,
 			potency: 200,
+			end: true,
 		},
 	},
 
