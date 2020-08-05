@@ -22,7 +22,9 @@ export const MRD = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000254.png',
 		onGcd: true,
 		potency: 130,
-		breaksCombo: true,
+		combo: {
+			start: true,
+		},
 	},
 
 	TOMAHAWK: {
