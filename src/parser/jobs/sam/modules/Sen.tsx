@@ -10,7 +10,6 @@ import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -71,7 +70,7 @@ const KENKI_PER_SEN = 10
 
 const SEN_HANDLING = {
 	NONE: {priority: 0, message: <> No errors </>},
-	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains an Overwritten Sen. </Trans>},
+	OVERWROTE_SEN: {priority: 20, message: <Trans id = "sam.sen.sen_handling.overwrote_sen"> Contains a Overwritten Sen. </Trans>},
 	OVERWROTE_SENS: {priority: 25, message: <Trans id = "sam.sen.sen_handling.overwrote_sens"> Contains Overwritten Sens. </Trans>},
 	HAGAKURE: {priority: 10, message: <Trans id = "sam.sen.sen_handling.hagakure"> Contains a Standard Filler Hagakure. </Trans>},
 	D_HAGAKURE: {priority: 15, message: <Trans id = "sam.sen.sen_handling.d_hagakure"> Contains a Non-Standard use of Hagakure. </Trans>},
@@ -135,9 +134,8 @@ export default class Sen extends Module {
 	static handle = 'sen'
 	static title = t('sam.sen.title')`Non-Standard Sen Windows`
 
-	@dependency private downtime!: Downtime
-	@dependency private kenki!: Kenki
 	@dependency private suggestions!: Suggestions
+	@dependency private kenki!: Kenki
 	@dependency private timeline!: Timeline
 
 	private wasted = 0
@@ -237,8 +235,6 @@ export default class Sen extends Module {
 
 // Function that handles SenState check, if no senState call the maker and then push to the rotation
 	private checkCastAndPush(event: CastEvent) {
-
-		if (this.downtime.isDowntime()) { return }
 
 		// step 1: set action
 		const action = event.ability.guid
@@ -414,7 +410,7 @@ export default class Sen extends Module {
 							targetsData: {
 								setsu: {
 									actual: (window.currentSetsu + window.overwriteSetsus),
-									expected: 3,
+									// expected: window.setsu,
 								},
 								getsu: {
 									actual: (window.currentGetsu + window.overwriteGetsus),
