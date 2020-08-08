@@ -25,6 +25,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-08-08'),
+			contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+			Changes: () => <>
+				Add AoEUsages support for Chaotic Cyclone, Decimate, Mythril Tempest, and Overpower.
+			</>,
+		},
+		{
 			date: new Date('2020-05-22'),
 			contributors: [CONTRIBUTORS.ACCHAN],
 			Changes: () => <>

@@ -134,7 +134,7 @@ export abstract class AoEUsages extends Module {
 				.map(a => {
 					return <Table.Row key={a.aoeAction.id}>
 						<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
-						<Table.Cell>{a.stActions.map(s => <ActionLink {...s} />)}</Table.Cell>
+						<Table.Cell>{a.stActions.map(s => <><ActionLink {...s} /> </>)}</Table.Cell>
 						<Table.Cell>{a.minTargets}</Table.Cell>
 						<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
 					</Table.Row>
