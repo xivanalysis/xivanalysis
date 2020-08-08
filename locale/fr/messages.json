@@ -521,6 +521,7 @@
   "mch.reassemble.suggestions.bad-gcds.why": "Vous avez utilisé Réassemblage sur un GCD non optimal {0, plural, one {# fois} other {# fois}}.",
   "mch.reassemble.suggestions.dropped.content": "Évitez d'utiliser <0/> lorsqu'un boss est sur le point de devenir non ciblable pour ne pas gaspiller le buff.",
   "mch.reassemble.suggestions.dropped.why": "Vous avez laissé tombé l'effet de Réassemblage{0, plural,one {# fois}other {# fois}}.",
+  "mch.tincture.suggestions.trackedActions.content": "",
   "mch.wildfire.accordion.message": "Chaque fenêtre <0/> doit idéalement contenir au moins {WILDFIRE_GCD_TARGET}. GCDs pour maximiser le potentiel. Chaque fenêtre de flambée ci-dessous indique le nombre de GCD qu'elle contenait et les dégâts totaux qu'elle a subis, et affichera tous les plâtres dommageables dans la fenêtre si elle est agrandie.",
   "mch.wildfire.panel-count": "{0} {1, plural, one {GCD} other {GCDs}},{2} dégats",
   "mch.wildfire.panel-count-spoofed": "? GCDs, {0} dégâts",

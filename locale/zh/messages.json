@@ -521,6 +521,7 @@
   "mch.reassemble.suggestions.bad-gcds.why": "{0, plural, one {# 次} other {# 次}}整备没有用在正确的技能上.",
   "mch.reassemble.suggestions.dropped.content": "在Boss下一秒即将进入不可选中状态时，不要使用<0/>，避免浪费掉这个buff。",
   "mch.reassemble.suggestions.dropped.why": "你有 {0, plural, one {# time} other {# 次}}整备buff结束了都没使用过战技。",
+  "mch.tincture.suggestions.trackedActions.content": "",
   "mch.wildfire.accordion.message": "理想情况下，每次<0/>都应该包含至少 {WILDFIRE_GCD_TARGET} 个GCD技能，下面的表格展示了每次野火中所包含的GCD技能，以及它们的伤害总和，展开后能看到全部内容。",
   "mch.wildfire.panel-count": "{1} 个 GCD，{2} 点伤害",
   "mch.wildfire.panel-count-spoofed": "？个GCD，{0} 点伤害",
