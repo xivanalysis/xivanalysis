@@ -65,7 +65,7 @@ interface BuffWindowTrackedActions {
 	severityTiers: SeverityTiers
 }
 
-interface BuffWindowTrackedAction {
+export interface BuffWindowTrackedAction {
 	action: Action
 	expectedPerWindow: number
 }
@@ -135,6 +135,7 @@ export abstract class BuffWindowModule extends Module {
 
 	protected init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('cast', {by: 'pet'}, this.onPetCast)
 		this.addEventHook('applybuff', {to: 'player'}, this.onApplyBuff)
 		this.addEventHook('removebuff', {to: 'player'}, this.onRemoveBuff)
 		this.addEventHook('complete', this.onComplete)
@@ -160,6 +161,24 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected considerAction(action: Action) {
 		return true
+	}
+
+	private onPetCast(event: CastEvent) {
+		const action = this.data.getAction(event.ability.guid)
+		if (!action) { return }
+
+		if (this.activeBuffWindow && this.considerPetAction(action)) {
+			this.activeBuffWindow.rotation.push(event)
+		}
+	}
+
+	/**
+	 * This method MAY be overridden to return true or false, indicating whether or not this action should be considered within the buff window
+	 * If false is returned, the action will not be tracked AT ALL within the buff window, and will NOT appear within the Rotation column
+	 * @param action
+	 */
+	protected considerPetAction(action: Action) {
+		return false
 	}
 
 	private onApplyBuff(event: BuffEvent) {

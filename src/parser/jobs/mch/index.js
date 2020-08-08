@@ -21,6 +21,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-08-08'),
+		Changes: () => <>Added a module that shows Tincture windows.</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-05-13'),
 		Changes: () => <>Added a module that shows misused AoE actions.</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
