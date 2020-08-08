@@ -3,9 +3,10 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
+import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 
 export default class InnerRelease extends BuffWindowModule {
 	static handle = 'ir'

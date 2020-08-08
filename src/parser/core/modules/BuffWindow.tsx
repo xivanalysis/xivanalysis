@@ -2,7 +2,7 @@ import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {RotationTable, RotationTableNotesMap, RotationTableTargetData} from 'components/ui/RotationTable'
+import {RotationTable, RotationTableNotesMap, RotationTableTargetData, RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
@@ -65,7 +65,7 @@ interface BuffWindowTrackedActions {
 	severityTiers: SeverityTiers
 }
 
-interface BuffWindowTrackedAction {
+export interface BuffWindowTrackedAction {
 	action: Action
 	expectedPerWindow: number
 }
@@ -253,6 +253,17 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	/**
+	 * Implementing modules MAY provide class-specific logic to change the highlighting of tracked action uses per BuffWindow
+	 * Return a function that consumes expected and actual uses and returns a RotationTargetOutcome
+	 * @param buffWindow
+	 * @param action
+	 */
+	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction):
+	((actual: number, expected?: number) => RotationTargetOutcome) | undefined {
+		return undefined
+	}
+
+	/**
 	 * This method MAY be overridden to provide class-specific logic to determine if the required GCD(s) were used during a given BuffWindow
 	 * Classes whose required GCD list vary per window should override this function.
 	 * Function MUST return a number of CORRECT GCDs used within the window
@@ -419,6 +430,7 @@ export abstract class BuffWindowModule extends Module {
 						targetsData[trackedAction.action.name] = {
 							actual: buffWindow.getActionCountByIds([trackedAction.action.id]),
 							expected: this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction),
+							targetComparator: this.changeComparisonClassLogic(buffWindow, trackedAction),
 						}
 					})
 				}
