@@ -2,7 +2,7 @@ import ACTIONS from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
 
 export default class MultiHitSkills extends AoEUsages {
-	suggestionIcon = ACTIONS.CHAOTIC_CYCLONE.icon
+	suggestionIcon = ACTIONS.OVERPOWER.icon
 
 	trackedActions = [
 		{
