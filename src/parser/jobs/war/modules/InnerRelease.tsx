@@ -3,7 +3,7 @@ import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
+import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
