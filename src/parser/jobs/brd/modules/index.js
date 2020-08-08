@@ -5,6 +5,7 @@ import DoTs from './DoTs'
 import MultiHitSkills from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import PitchPerfect from './PitchPerfect'
+import RagingStrikes from './RagingStrikes'
 import Sidewinder from './Sidewinder'
 import Snapshots from './Snapshots'
 import SongUptime from './SongUptime'
@@ -19,6 +20,7 @@ export default [
 	MultiHitSkills,
 	OGCDDowntime,
 	PitchPerfect,
+	RagingStrikes,
 	Sidewinder,
 	Snapshots,
 	SongUptime,
