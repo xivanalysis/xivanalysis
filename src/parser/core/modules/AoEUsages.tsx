@@ -5,7 +5,7 @@ import {Action} from 'data/ACTIONS'
 import Module, {dependency} from 'parser/core/Module'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React, {Fragment} from 'react'
+import React from 'react'
 import {Table} from 'semantic-ui-react'
 
 export interface AoEAction {
@@ -134,7 +134,7 @@ export abstract class AoEUsages extends Module {
 				.map(a => {
 					return <Table.Row key={a.aoeAction.id}>
 						<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
-						<Table.Cell>{a.stActions.map(s => <Fragment><ActionLink {...s} /> </Fragment>)}</Table.Cell>
+						<Table.Cell>{a.stActions.map(s => <><ActionLink {...s} /> </>)}</Table.Cell>
 						<Table.Cell>{a.minTargets}</Table.Cell>
 						<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
 					</Table.Row>
