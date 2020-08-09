@@ -15,11 +15,7 @@ export default class MultiHitSkills extends AoEUsages {
 			minTargets: 3,
 		}, {
 			aoeAction: ACTIONS.OVERPOWER,
-			stActions: [ACTIONS.HEAVY_SWING, ACTIONS.MAIM, ACTIONS.STORMS_EYE, ACTIONS.STORMS_PATH],
-			minTargets: 2,
-		}, {
-			aoeAction: ACTIONS.MYTHRIL_TEMPEST,
-			stActions: [ACTIONS.HEAVY_SWING, ACTIONS.MAIM, ACTIONS.STORMS_EYE, ACTIONS.STORMS_PATH],
+			stActions: [ACTIONS.HEAVY_SWING],
 			minTargets: 2,
 		},
 	]
