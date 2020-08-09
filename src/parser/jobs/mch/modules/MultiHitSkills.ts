@@ -15,11 +15,7 @@ export default class MultiHitSkills extends AoEUsages {
 			minTargets: 3,
 		}, {
 			aoeAction: ACTIONS.SPREAD_SHOT,
-			stActions: [
-				ACTIONS.HEATED_SPLIT_SHOT,
-				ACTIONS.HEATED_SLUG_SHOT,
-				ACTIONS.HEATED_CLEAN_SHOT,
-			],
+			stActions: [ACTIONS.HEATED_CLEAN_SHOT],
 			minTargets: 3,
 		},
 	]
