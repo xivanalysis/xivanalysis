@@ -37,8 +37,8 @@ interface SeverityTiers {
  * not have alternatives, such as DRGs Dragonfire Dive or SMNs Deathflare, as it is
  * correct to use those skills on single targets.
  *
- * For the AoE combos of melee DPS and Tanks, define a trackedAbility with the first
- * abilities of the AoE and single target combos.  This is to provide leeway to finishing
+ * For the AoE combos of melee DPS and Tanks, define a trackedAction with the first
+ * actions of the AoE and single target combos.  This is to provide leeway to finishing
  * AoE combos when the number of targets may drop below the minimum during the combo.
  */
 export abstract class AoEUsages extends Module {
