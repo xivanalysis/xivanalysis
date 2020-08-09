@@ -17,12 +17,12 @@ export class MultiHitSkills extends AoEUsages {
 		},
 		{
 			aoeAction: ACTIONS.UNLEASH,
-			stActions: [ACTIONS.HARD_SLASH, ACTIONS.SYPHON_STRIKE, ACTIONS.SOULEATER],
+			stActions: [ACTIONS.HARD_SLASH],
 			minTargets: 2,
 		},
 		{
 			aoeAction: ACTIONS.STALWART_SOUL,
-			stActions: [ACTIONS.HARD_SLASH, ACTIONS.SYPHON_STRIKE, ACTIONS.SOULEATER],
+			stActions: [ACTIONS.HARD_SLASH],
 			minTargets: 2,
 		},
 	]
