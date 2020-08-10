@@ -25,7 +25,7 @@ const GL_GRANTERS: number[] = [
 
 // Actions that refresh the timer without granting stacks.
 const GL_REFRESHERS: number[] = [
-	// kinda weird, only when going Coeurl->Opo-Opo and you need at least one stack
+	// kinda weird, only when going Coeurl->Opo-Opo (pre-5.3) and you need at least one stack
 	ACTIONS.FORM_SHIFT.id,
 	ACTIONS.SIX_SIDED_STAR.id,
 ]
@@ -94,11 +94,13 @@ export default class Gauge extends CoreGauge {
 		this._timer.start()
 	}
 
-	// If they're using Form Shift but don't have Coeurl Form, it does nothing
+	// If they're using Form Shift but don't have Coeurl Form, it does nothing before 5.3
 	private onRefresh(event: BuffEvent | CastEvent): void {
-		if (event.ability.guid === ACTIONS.FORM_SHIFT.id && !this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)) {
-			return
-		}
+		if (
+			event.ability.guid === ACTIONS.FORM_SHIFT.id &&
+			this.parser.patch.before('5.3') &&
+			!this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)
+		) { return }
 
 		this._timer.refresh()
 	}
