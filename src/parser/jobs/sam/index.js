@@ -27,7 +27,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.1',
-		to: '5.2',
+		to: '5.3',
 	},
 
 	contributors: [
@@ -35,6 +35,12 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-8-10'),
+		Changes: () => <>
+			Samurai support updated to 5.3
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	}, {
 		date: new Date('2020-6-9'),
 		Changes: () => <>
 			Added a visual history of Higanbana that shows when and on what the dot was applied to and clipping
