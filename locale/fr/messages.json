@@ -221,7 +221,7 @@
   "core.aoeusages.min-targets": "Cibles mimimum",
   "core.aoeusages.number-bad-usages": "Usages incorects",
   "core.aoeusages.st-alternative": "Altenative pour du mono-cible",
-  "core.aoeusages.suggestion.content": "Evitez d'utiliser des AoE lorsqu'elles font moins de dégâts que d'autres sorts à cible unique qui partagent le même coût de ressource ou temps de recharge. Si l'AoE ne peut toucher assez de cibles, les sorts à cible unique feront plus de dégâts au total et devraient-être utilisés à la place.",
+  "core.aoeusages.suggestion.content": "",
   "core.aoeusages.suggestion.why": "Les AoE ayant été utilisé sur trop peu de cible{totalBadUsages, plural,one {#fois}other {#fois}}.",
   "core.aoeusages.title": "Mauvaise utilisation d'AoE",
   "core.branch-banner.description": "Cette version de xivanalysis ne peut pas fournir d'analyse significatives pour les rapports faire durant {patchKey}. Cliquez ici pour analyser ce log en utilisant le version {patchKey} du site.",
