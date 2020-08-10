@@ -72,7 +72,7 @@ export const BRD = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002610.png',
 		onGcd: false,
 		cooldown: 60,
-		potency: [100, 200, 350],
+		potency: [100, 175, 260],
 		cooldownGroup: 3562, // Sidewinder Group
 	},
 	PITCH_PERFECT: {
@@ -136,13 +136,13 @@ export const BRD = ensureActions({
 		name: 'Burst Shot',
 		icon: 'https://xivapi.com/i/002000/002618.png',
 		onGcd: true,
-		potency: 240,
+		potency: 230,
 	},
 	APEX_ARROW: {
 		id: 16496,
 		name: 'Apex Arow',
 		icon: 'https://xivapi.com/i/002000/002619.png',
 		onGcd: true,
-		potency: 600,
+		potency: 500,
 	},
 })
