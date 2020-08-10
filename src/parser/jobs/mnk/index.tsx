@@ -18,7 +18,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 
 	contributors: [
@@ -26,6 +26,13 @@ export default new Meta({
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-08-11'),
+			Changes: () => <>
+				Update MNK support for patch 5.3.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-02-25'),
 			Changes: () => <>
