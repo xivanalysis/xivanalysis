@@ -143,6 +143,6 @@ export const BRD = ensureActions({
 		name: 'Apex Arow',
 		icon: 'https://xivapi.com/i/002000/002619.png',
 		onGcd: true,
-		potency: 500,
+		potency: 600,
 	},
 })
