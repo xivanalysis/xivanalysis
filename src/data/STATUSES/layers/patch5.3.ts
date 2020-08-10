@@ -4,7 +4,7 @@ import {StatusRoot} from '../root'
 export const patch530: Layer<StatusRoot> = {
 	patch: '5.3',
 	data: {
-		// Brutal Shell updated duration
+		// 5.3 GNB Changes - Brutal Shell updated duration
 		BRUTAL_SHELL: {duration: 30},
 	},
 }
