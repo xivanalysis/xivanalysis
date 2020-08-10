@@ -98,6 +98,12 @@ const PATCHES = {
 	'5.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1582016400, // 08/02/20 09:00:00 GMT
+			[GameEdition.KOREAN]: 1598947200, // 01/09/20 08:00:00 GMT
+		},
+	},
+	'5.3': {
+		date: {
+			[GameEdition.GLOBAL]: 1597140000, // 11/08/20 10:00:00 GMT
 		},
 	},
 	'5.3': {
