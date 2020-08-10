@@ -54,9 +54,7 @@ export const changelog = [
 	},
 	{
 		date: new Date('2020-08-11'),
-		Changes: () => <>
-			Brutal Shell duration has been extended in patch 5.3.
-		</>,
+		Changes: () => <>Brutal Shell duration changes and added support for patch 5.3</>,
 		contributors: [CONTRIBUTORS.CADENCE],
 	},
 
