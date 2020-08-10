@@ -221,7 +221,7 @@
   "core.aoeusages.min-targets": "최소 개체 수",
   "core.aoeusages.number-bad-usages": "올바르지 않은 사용",
   "core.aoeusages.st-alternative": "대체 기술 추천",
-  "core.aoeusages.suggestion.content": "동일한 글쿨 및 쿨타임내에서 단일 대상 딜 사이클보다 약한 광역기 딜 사이클을 기피하십시오. 최소 개체 수 이상을 상대하지 않는다면 오히려 단일 대상 딜 사이클이 위력상 더 이득을 볼 수 있습니다.",
+  "core.aoeusages.suggestion.content": "",
   "core.aoeusages.suggestion.why": "상대 개체 수가 충분하지 않은 상태에서 광역 기술들을 {totalBadUsages, plural, other {# 회}} 사용하였습니다.",
   "core.aoeusages.title": "올바르지않은 광역 기술 사용",
   "core.branch-banner.description": "현재 버전의 xivanalysis는 {patchKey} 당시 등록된 로그들을 제대로 분석할 수 없습니다. 여기를 눌러 해당 버전에 알맞은 {patchKey} 버전의 xivanalysis으로 분석하십시오.",
