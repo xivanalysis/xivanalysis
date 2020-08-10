@@ -181,7 +181,7 @@ const CONTRIBUTORS = {
 	},
 	CADENCE: {
 		name: 'Cadence',
-		avatar: require('/avatar/cadence.png'),
+		avatar: require('./avatar/cadence.png'),
 		jobs: [JOBS.GUNBREAKER],
 	},
 }
