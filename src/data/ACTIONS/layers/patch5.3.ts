@@ -10,5 +10,8 @@ export const patch530: Layer<ActionRoot> = {
 		BURST_SHOT: {potency: 240},
 		SIDEWINDER: {potency: [100, 200, 350]},
 		REFULGENT_ARROW: {potency: 340},
+
+		// MNK 5.3 cooldown changes
+		PERFECT_BALANCE: {cooldown: 90},
 	},
 }
