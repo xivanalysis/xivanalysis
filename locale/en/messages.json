@@ -221,7 +221,7 @@
   "core.aoeusages.min-targets": "Minimum Targets",
   "core.aoeusages.number-bad-usages": "Incorrect Usages",
   "core.aoeusages.st-alternative": "Single Target Alternative",
-  "core.aoeusages.suggestion.content": "Avoid using AoE actions when they would do less damage than an alternative single-target ability that shares a resource cost or cooldown. If the AoE skill cannot hit enough targets, the single-target ability will do more total damage and should be used instead.",
+  "core.aoeusages.suggestion.content": "Avoid using AoE actions when they would do less damage than an alternative single-target action that shares a resource cost or cooldown. If the AoE skill cannot hit enough targets, the single-target action will do more total damage and should be used instead.",
   "core.aoeusages.suggestion.why": "AoE actions were used against too few targets {totalBadUsages, plural, one {# time} other {# times}}.",
   "core.aoeusages.title": "Incorrect AoE Action Usage",
   "core.branch-banner.description": "This version of xivanalysis cannot provide meaningful analysis for reports that were logged during {patchKey}. Please click here to analyse this log using the {patchKey} version of the site.",
