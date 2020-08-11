@@ -1,19 +1,20 @@
 import {Trans} from '@lingui/react'
-import STATUSES from 'data/STATUSES'
 import {HealEvent} from 'fflogs'
+import {Data} from 'parser/core/modules/Data'
+import {StatusRoot} from 'data/STATUSES/root'
 import Module, {dependency} from 'parser/core/Module'
 import {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import Checklist from 'parser/core/modules/Checklist'
 import React from 'react'
 
-const HOT_STATUSES = [
-	STATUSES.ASPECTED_HELIOS.id,
-	STATUSES.WHEEL_OF_FORTUNE_DIURNAL.id,
-	STATUSES.WHEEL_OF_FORTUNE_NOCTURNAL.id,
-	STATUSES.ASPECTED_BENEFIC.id,
-	STATUSES.DIURNAL_OPPOSITION.id,
-	STATUSES.DIURNAL_INTERSECTION.id,
-	STATUSES.DIURNAL_BALANCE.id,
+const HOT_STATUSES: Array<keyof StatusRoot> = [
+	'ASPECTED_HELIOS',
+	'WHEEL_OF_FORTUNE_DIURNAL',
+	'WHEEL_OF_FORTUNE_NOCTURNAL',
+	'ASPECTED_BENEFIC',
+	'DIURNAL_OPPOSITION',
+	'DIURNAL_INTERSECTION',
+	'DIURNAL_BALANCE',
 ]
 
 // doing 100-x where x is the overheal % for clarity
@@ -28,6 +29,7 @@ const SEVERITY_TIERS = {
 export default class Overheal extends Module {
 	static handle = 'overheal'
 
+	@dependency private data!: Data
 	@dependency private checklist!: Checklist
 
 	private healingDirect = 0
@@ -37,7 +39,13 @@ export default class Overheal extends Module {
 	private healingPet = 0
 	private overhealPet = 0
 
+	private HOT_STATUSES: number[] = []
+
 	protected init() {
+		HOT_STATUSES.forEach(actionKey => {
+			this.HOT_STATUSES.push(this.data.statuses[actionKey].id)
+		})
+
 		this.addEventHook('heal', {by: 'player'}, this.onHeal)
 		this.addEventHook('heal', {by: 'pet'}, this.onPetHeal)
 		this.addEventHook('complete', this.onComplete)
@@ -45,7 +53,7 @@ export default class Overheal extends Module {
 
 	private onHeal(event: HealEvent) {
 		const guid = event.ability.guid
-		if (HOT_STATUSES.includes(guid)) {
+		if (this.HOT_STATUSES.includes(guid)) {
 			this.healingOverTime += event.amount
 			this.overhealOverTime += event.overheal || 0
 		} else {

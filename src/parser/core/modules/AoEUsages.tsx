@@ -14,12 +14,12 @@ export interface AoEAction {
 	 */
 	aoeAction: Action
 	/**
-	 * The single target abilities that should be used in place of the AoE
-	 * ability when there are not enough targets present.
+	 * The single target actions that should be used in place of the AoE
+	 * action when there are not enough targets present.
 	 */
 	stActions: Action[]
 	/**
-	 * The minimum number of targets the AoE ability should hit per cast.
+	 * The minimum number of targets the AoE action should hit per cast.
 	 */
 	minTargets: number
 }
@@ -37,8 +37,8 @@ interface SeverityTiers {
  * not have alternatives, such as DRGs Dragonfire Dive or SMNs Deathflare, as it is
  * correct to use those skills on single targets.
  *
- * For the AoE combos of melee DPS and Tanks, define a trackedAbility with the first
- * abilities of the AoE and single target combos.  This is to provide leeway to finishing
+ * For the AoE combos of melee DPS and Tanks, define a trackedAction with the first
+ * actions of the AoE and single target combos.  This is to provide leeway to finishing
  * AoE combos when the number of targets may drop below the minimum during the combo.
  */
 export abstract class AoEUsages extends Module {
@@ -66,8 +66,8 @@ export abstract class AoEUsages extends Module {
 	}
 
 	protected suggestionContent: JSX.Element | string = <Trans id="core.aoeusages.suggestion.content">
-		Avoid using AoE actions when they would do less damage than an alternative single-target ability that shares a resource cost or cooldown.
-		If the AoE skill cannot hit enough targets, the single-target ability will do more total damage and should be used instead.
+		Avoid using AoE actions when they would do less damage than an alternative single-target action that shares a resource cost or cooldown.
+		If the AoE skill cannot hit enough targets, the single-target action will do more total damage and should be used instead.
 	</Trans>
 
 	private badUsages = new Map<number, number>()

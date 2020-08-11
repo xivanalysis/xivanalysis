@@ -1,6 +1,8 @@
+import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
 import {Event} from 'events'
 import Module, {dependency} from 'parser/core/Module'
@@ -9,6 +11,7 @@ import {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Death from 'parser/core/modules/Death'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import React from 'react'
+import {Table} from 'semantic-ui-react'
 
 const DARKSIDE_MAX_DURATION = 60000
 const DARKSIDE_EXTENSION = {
@@ -17,6 +20,11 @@ const DARKSIDE_EXTENSION = {
 }
 const INITIAL_APPLICATION_FORGIVENESS = 2500
 
+interface DarksideDrop {
+	timestamp: number,
+	reason: MessageDescriptor
+}
+
 export class Darkside extends Module {
 	static handle = 'Darkside'
 
@@ -24,52 +32,60 @@ export class Darkside extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private death!: Death
 
-	private _currentDuration = 0
-	private _downtime = 0
-	private _lastEventTime: number | null = null
+	private currentDuration = 0
+	private downtime = 0
+	private lastEventTime: number | null = null
+	private darksideDrops: DarksideDrop[] = []
 
 	protected init() {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this._updateDarkside)
-		this.addEventHook('death', {to: 'player'}, this._onDeath)
-		this.addEventHook('raise', {to: 'player'}, this._onRaise)
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: Object.keys(DARKSIDE_EXTENSION).map(Number)}, this.updateDarkside)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
+		this.addEventHook('raise', {to: 'player'}, this.onRaise)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	_updateDarkside(event: Event | NormalisedDamageEvent) {
-		if (this._lastEventTime === null) {
+	private updateDarkside(event: Event | NormalisedDamageEvent) {
+		if (this.lastEventTime === null) {
 			// First application - allow up to 1 GCD to apply before counting downtime
 			const elapsedTime = event.timestamp - this.parser.fight.start_time
-			this._downtime = Math.max(elapsedTime - INITIAL_APPLICATION_FORGIVENESS, 0)
+			this.downtime = Math.max(elapsedTime - INITIAL_APPLICATION_FORGIVENESS, 0)
 		} else {
-			const elapsedTime = event.timestamp - this._lastEventTime
-			this._currentDuration -= elapsedTime
-			if (this._currentDuration < 0) {
-				this._downtime += Math.abs(this._currentDuration)
-				this._currentDuration = 0
+			const elapsedTime = event.timestamp - this.lastEventTime
+			this.currentDuration -= elapsedTime
+			if (this.currentDuration <= 0) {
+				this.downtime += Math.abs(this.currentDuration)
+
+				if (event.type !== 'death') {
+					const droppedAt = event.timestamp + this.currentDuration
+					this.darksideDrops.push({timestamp: droppedAt, reason: t('drk.darkside.drop.reason.timeout')`Timeout`})
+				}
+
+				this.currentDuration = 0
 			}
 		}
 
 		if (event.type === 'normaliseddamage') {
 			const abilityId = event.ability.guid
-			this._currentDuration = Math.min(this._currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
-			this._lastEventTime = event.timestamp
+			this.currentDuration = Math.min(this.currentDuration + DARKSIDE_EXTENSION[abilityId], DARKSIDE_MAX_DURATION)
+			this.lastEventTime = event.timestamp
 		}
 	}
 
-	_onDeath(event: Event) {
-		this._updateDarkside(event)
-		this._currentDuration = 0
+	private onDeath(event: Event) {
+		this.darksideDrops.push({timestamp: event.timestamp, reason: t('drk.darkside.drop.reason.death')`Death`})
+		this.updateDarkside(event)
+		this.currentDuration = 0
 	}
 
-	_onRaise(event: Event) {
+	private onRaise(event: Event) {
 		// So floor time doesn't count against Darkside uptime
-		this._lastEventTime = event.timestamp
+		this.lastEventTime = event.timestamp
 	}
 
-	_onComplete(event: Event) {
-		this._updateDarkside(event)
+	private onComplete(event: Event) {
+		this.updateDarkside(event)
 		const duration = this.parser.currentDuration - this.death.deadTime
-		const uptime = ((duration - this._downtime) / duration) * 100
+		const uptime = ((duration - this.downtime) / duration) * 100
 		this.checklist.add(new Rule({
 			name: 'Keep Darkside up',
 			description: <Trans id="drk.darkside.uptime.why">
@@ -83,5 +99,30 @@ export class Darkside extends Module {
 			],
 			target: 99,
 		}))
+	}
+
+	output() {
+		if (this.darksideDrops.length > 0) {
+			return <>
+			<Table collapsing unstackable>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell><Trans id="drk.darkside.drop.at">Dropped Time</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="drk.darkside.drop.reason">Reason</Trans></Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{this.darksideDrops
+						.map((d, idx) => {
+							return <Table.Row key={`darksidedrop-${idx}`}>
+								<Table.Cell>{this.parser.formatTimestamp(d.timestamp)}</Table.Cell>
+								<Table.Cell><NormalisedMessage message={d.reason} id={Module.i18n_id}/></Table.Cell>
+							</Table.Row>
+						})
+					}
+				</Table.Body>
+			</Table>
+			</>
+		}
 	}
 }

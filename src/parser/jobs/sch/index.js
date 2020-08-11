@@ -19,7 +19,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
@@ -28,6 +28,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-08-10'),
+		Changes: () => <>Support for 5.3 added – no breaking changes to current analysis.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-06-30'),
 		Changes: () => <>Add potions as a module – show up with all the move used under them.</>,
 		contributors: [CONTRIBUTORS.NONO],

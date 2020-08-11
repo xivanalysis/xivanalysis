@@ -11,6 +11,10 @@ export const changelog = [
 		date: new Date('2020-08-08'),
 		Changes: () => <>
 			Added suggestions for ghosted and very weak Apex Arrow casts.
+  },
+		date: new Date('2020-08-10'),
+		Changes: () => <>
+			Support for patch 5.3 - potencies for Burst Shot, Refulgent Arrow, and Sidewinder adjusted.
 		</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},
