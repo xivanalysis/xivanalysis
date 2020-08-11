@@ -9,9 +9,11 @@ import React from 'react'
 import {BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 
 export default class MchTincture extends Tincture {
+	@dependency private downtime!: Downtime
+
 	buffAction = ACTIONS.INFUSION_DEX
 
-	@dependency private downtime!: Downtime
+	petActions = [ACTIONS.PILE_BUNKER]
 
 	trackedActions = {
 		icon: ACTIONS.INFUSION_DEX.icon,
@@ -43,13 +45,11 @@ export default class MchTincture extends Tincture {
 		},
 	}
 
-	protected petActions = [ACTIONS.PILE_BUNKER]
-
-	protected considerPetAction(action: Action) {
+	considerPetAction(action: Action) {
 		return action === ACTIONS.PILE_BUNKER
 	}
 
-	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		if (action.action === ACTIONS.REASSEMBLE) {
 			// Reassemble might be used prepull or during downtime
 			if (buffWindow.start <= this.parser.fight.start_time || this.downtime.isDowntime(buffWindow.start)) {
