@@ -43,6 +43,8 @@ export default class MchTincture extends Tincture {
 		},
 	}
 
+	protected petActions = [ACTIONS.PILE_BUNKER]
+
 	protected considerPetAction(action: Action) {
 		return action === ACTIONS.PILE_BUNKER
 	}

@@ -106,6 +106,11 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected trackedBadActions?: BuffWindowTrackedActions
 	/**
+	 * Optionally, you can also specify pet actions to track. These actions will show up in the rotation section and can be
+	 *   included in trackedActions
+	 */
+	protected petActions?: Action[]
+	/**
 	 * Implementing modules MAY provide a value to override the "Rotation" title in the header of the rotation section
 	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
 	 */
@@ -135,10 +140,13 @@ export abstract class BuffWindowModule extends Module {
 
 	protected init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('cast', {by: 'pet'}, this.onPetCast)
 		this.addEventHook('applybuff', {to: 'player'}, this.onApplyBuff)
 		this.addEventHook('removebuff', {to: 'player'}, this.onRemoveBuff)
 		this.addEventHook('complete', this.onComplete)
+
+		if (this.petActions && this.petActions.length) {
+			this.addEventHook('cast', {by: 'pet', abilityId: this.petActions.map(a => a.id)}, this.onCast)
+		}
 	}
 
 	private onCast(event: CastEvent) {
@@ -161,24 +169,6 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected considerAction(action: Action) {
 		return true
-	}
-
-	private onPetCast(event: CastEvent) {
-		const action = this.data.getAction(event.ability.guid)
-		if (!action) { return }
-
-		if (this.activeBuffWindow && this.considerPetAction(action)) {
-			this.activeBuffWindow.rotation.push(event)
-		}
-	}
-
-	/**
-	 * This method MAY be overridden to return true or false, indicating whether or not this action should be considered within the buff window
-	 * If false is returned, the action will not be tracked AT ALL within the buff window, and will NOT appear within the Rotation column
-	 * @param action
-	 */
-	protected considerPetAction(action: Action) {
-		return false
 	}
 
 	private onApplyBuff(event: BuffEvent) {
