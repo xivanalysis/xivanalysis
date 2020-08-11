@@ -13,14 +13,35 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.ASTRALEAH, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.FALINDRITH, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.RIETTY, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-06-29'),
+		Changes: () => <>Added Geirskogul to cooldowns section & enabled Tincture module.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
+		date: new Date('2020-06-20'),
+		Changes: () => <>Added module to track Battle Litany.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
+		date: new Date('2020-06-20'),
+		Changes: () => <>Fixed a small issue with the Ability Drift module. It won't break now on using it on lower level content/or logs that have no casts of GSK or HJ.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
+		date: new Date('2020-06-04'),
+		Changes: () => <>Added module to calculate and display drifting of High Jump and Geirskogul, which affects possible Life of the Dragon windows that may have been missed.</>,
+		contributors: [CONTRIBUTORS.RIETTY],
+	},
+	{
 		date: new Date('2020-01-12'),
 		Changes: () => <>Enhanced analysis for Life of the Dragon windows. Added suggestions for windows with missing casts and buffs.</>,
 		contributors: [CONTRIBUTORS.FALINDRITH],

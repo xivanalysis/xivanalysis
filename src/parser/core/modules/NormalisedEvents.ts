@@ -256,6 +256,14 @@ export class NormalisedEvents extends Module {
 			// Not a supported event type for normalisation
 			return
 		}
+
+		const targetsPet = this.parser.pull.actors
+			.some(actor => actor.id === event.targetID?.toString() && actor.owner?.playerControlled)
+		if (targetsPet) {
+			// We're choosing to ignore events that only target pets, since those aren't useful to keep track of
+			return
+		}
+
 		let normalisedEvent = this.findRelatedEvent(event)
 
 		if (!normalisedEvent) {

@@ -11,6 +11,7 @@ import MissingDoTs from './MissingDoTs'
 import MultiHit from './MultiHitSkills'
 import Pets from './Pets'
 import {PetTimeline} from './PetTimeline'
+import Physick from './Physick'
 import Ruin2 from './Ruin2'
 import Swiftcast from './Swiftcast'
 import {Tincture} from 'parser/core/modules/Tincture'
@@ -31,6 +32,7 @@ export default [
 	MultiHit,
 	Pets,
 	PetTimeline,
+	Physick,
 	Ruin2,
 	Swiftcast,
 	Tincture,

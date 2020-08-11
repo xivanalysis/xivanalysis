@@ -9,9 +9,9 @@ export const SEVERITY = {
 export class BaseError extends ExtendableError {
 	severity = SEVERITY.ERROR
 
-	constructor(options) {
+	constructor(options = {}) {
 		super()
-		Object.keys(options || {}).forEach(key => {
+		Object.keys(options).forEach(key => {
 			this[key] = options[key]
 		})
 	}

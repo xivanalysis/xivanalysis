@@ -99,7 +99,7 @@ export default class EarthlyStar extends Module {
 		/*
 			SUGGESTION: Missed uses
 		*/
-		const holdDuration = this.uses === 0 ? this.parser.fightDuration : this.totalHeld
+		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.EARTHLY_STAR.cooldown * 1000))
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.EARTHLY_STAR.icon,

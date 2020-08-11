@@ -8,6 +8,34 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-08-10'),
+		Changes: () => <>
+			Support for patch 5.3 - potencies for Burst Shot, Refulgent Arrow, and Sidewinder adjusted.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-07-07'),
+		Changes: () => <>
+			Snapshots module now displays enemies separately. Suggestion added for <ActionLink {...ACTIONS.IRON_JAWS}/> that did not refresh DoTs.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-06-25'),
+		Changes: () => <>
+			Added a module that shows misused AoE actions.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-06-03'),
+		Changes: () => <>
+			Updated the Snapshots module to show DoTs separately and filter out unnecessary statuses.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-04-04'),
 		Changes: () => <>
 			Marked support for up to patch 5.2:
@@ -31,9 +59,9 @@ export const changelog = [
 	{
 		date: new Date('2019-07-24'),
 		Changes: () => <>
-		Added a new <ActionLink {...ACTIONS.SIDEWINDER}/> and <ActionLink {...ACTIONS.SHADOWBITE}/> module that will
-		let you know when you cast either of them on a target that doesn't have both <StatusLink {...STATUSES.CAUSTIC_BITE}/> and <StatusLink {...STATUSES.STORMBITE}/> applied.
-		It will also let you know when you cast {ACTIONS.SHADOWBITE.name} on only one target.
+			Added a new <ActionLink {...ACTIONS.SIDEWINDER}/> and <ActionLink {...ACTIONS.SHADOWBITE}/> module that will
+			let you know when you cast either of them on a target that doesn't have both <StatusLink {...STATUSES.CAUSTIC_BITE}/> and <StatusLink {...STATUSES.STORMBITE}/> applied.
+			It will also let you know when you cast {ACTIONS.SHADOWBITE.name} on only one target.
 		</>,
 		contributors: [CONTRIBUTORS.RIRIAN],
 	},

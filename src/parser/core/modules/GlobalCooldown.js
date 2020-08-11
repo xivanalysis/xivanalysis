@@ -113,12 +113,12 @@ export default class GlobalCooldown extends Module {
 			const action = this.data.getAction(gcd.actionId)
 			const instant = gcd.isInstant ? ' Instant' : ''
 			const taxed = gcd.casterTaxed ? ' CasterTaxed' : ''
-			console.log(`${timestamp} ${action.name}[${gcd.length}|${gcd.normalizedLength}] Speedmod[${gcd.speedMod}]${instant}${taxed}`)
+			this.debug(`${timestamp} ${action.name}[${gcd.length}|${gcd.normalizedLength}] Speedmod[${gcd.speedMod}]${instant}${taxed}`)
 		})
 	}
 
 	_onComplete() {
-		const startTime = this.parser.fight.start_time
+		const startTime = this.parser.eventTimeOffset
 
 		// Timeline output
 		this.gcds.forEach(gcd => {

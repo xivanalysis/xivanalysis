@@ -63,8 +63,9 @@ describe('The PrecastAction module', () => {
 
 	beforeEach(() => {
 		parser = new MockedParser()
-		Object.defineProperty(parser, 'fight', {value: {start_time: fightStartTime}})
+		Object.defineProperty(parser, 'pull', {value: {timestamp: fightStartTime}})
 		Object.defineProperty(parser, 'modules', {value: {data: MockedData()}})
+		Object.defineProperty(parser, 'eventTimeOffset', {value: 0})
 		byPlayer = jest.spyOn(parser, 'byPlayer').mockReturnValue(true)
 
 		precastAction = new PrecastAction(parser)

@@ -8,6 +8,7 @@ import {getDataBy} from 'data'
 import {ActionLink} from 'components/ui/DbLink'
 import {Table, Message, Icon, Button, Header} from 'semantic-ui-react'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const ROTATION_IDS = [
 	ACTIONS.RAIDEN_THRUST.id,
@@ -25,7 +26,7 @@ const NEXT_COMBO = {
 }
 
 const TRUE_NORTH_CHARGES = 2
-const TRUE_NORTH_CD_BUFFER = 200
+const TRUE_NORTH_CD_BUFFER = 500
 const TRUE_NORTH_CD = ACTIONS.TRUE_NORTH.cooldown * 1000 - TRUE_NORTH_CD_BUFFER
 
 export default class Positionals extends Module {
@@ -36,6 +37,7 @@ export default class Positionals extends Module {
 		'suggestions',
 		'timeline',
 	]
+	static displayOrder = DISPLAY_ORDER.POSITIONALS
 
 	// tracking raiden thrust procs
 	_rtCombos = []
@@ -177,19 +179,21 @@ export default class Positionals extends Module {
 			return <Table.Row key={combo.time}>
 				<Table.Cell>{this.createTimelineButton(combo.time)}</Table.Cell>
 				<Table.Cell><ActionLink {...action} /></Table.Cell>
-				<Table.Cell textAlign="center">{this._checkIcon(combo.trueNorthCharges > 0, '')} (<Plural id="drg.positionals.tn-charges" value={combo.trueNorthCharges} one="# charge" other="# charges" />)</Table.Cell>
+				<Table.Cell>{this._checkIcon(combo.trueNorthCharges > 0, '')} (<Plural id="drg.positionals.tn-charges" value={combo.trueNorthCharges} one="# charge" other="# charges" />)</Table.Cell>
 			</Table.Row>
 		})
 	}
 
 	output() {
 		const missed = this._rtCombos.filter(combo => !combo.success).length
+
+		if (missed === 0) {
+			return
+		}
+
 		const withTn = this._rtCombos.filter(combo => !combo.success && combo.trueNorthCharges > 0).length
 
 		return <Fragment>
-			<Message>
-				<Trans id="drg.positionals.analysis.message">Being at the rear when using <ActionLink {...ACTIONS.WHEELING_THRUST} /> or on the flank when using <ActionLink {...ACTIONS.FANG_AND_CLAW} /> will allow you to use <ActionLink {...ACTIONS.RAIDEN_THRUST} /> instead of <ActionLink {...ACTIONS.TRUE_THRUST} />. You should be trying to proc this ability as much as possible, relying on <ActionLink {...ACTIONS.TRUE_NORTH} /> in situations where you cannot reach the proper position. The table below displays missed positionals (if any), and whether or not <ActionLink {...ACTIONS.TRUE_NORTH} /> was available to use.</Trans>
-			</Message>
 			<Message info>
 				<p><Trans id="drg.positionals.analysis.missed"><Icon name="info" /> You missed <strong>{missed}</strong> of <strong>{this._rtCombos.length}</strong> possible <ActionLink {...ACTIONS.RAIDEN_THRUST} /> procs.</Trans></p>
 				{missed > 0 && <p><Trans id="drg.positionals.analysis.truenorth">Of these missed procs, <strong>{withTn}</strong> could be handled with <ActionLink {...ACTIONS.TRUE_NORTH} />.</Trans></p>}

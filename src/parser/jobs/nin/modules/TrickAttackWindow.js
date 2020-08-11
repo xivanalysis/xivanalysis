@@ -13,6 +13,15 @@ const BASE_GCDS_PER_WINDOW = 7
 
 const FIRST_WINDOW_BUFFER = 30000
 
+const MUDRAS = [
+	ACTIONS.TEN.id,
+	ACTIONS.TEN_NEW.id,
+	ACTIONS.CHI.id,
+	ACTIONS.CHI_NEW.id,
+	ACTIONS.JIN.id,
+	ACTIONS.JIN_NEW.id,
+]
+
 export default class TrickAttackWindow extends BuffWindowModule {
 	static handle = 'taWindow'
 	static title = t('nin.taWindow.title')`Trick Attack Windows`
@@ -90,7 +99,7 @@ export default class TrickAttackWindow extends BuffWindowModule {
 
 	considerAction(action) {
 		// Ten, Chi, and Jin should be ignored for purposes of GCD counts
-		return !(action.id === ACTIONS.TEN.id || action.id === ACTIONS.TEN_KASSATSU.id || action.id === ACTIONS.CHI.id || action.id === ACTIONS.JIN.id)
+		return MUDRAS.indexOf(action.id) === -1
 	}
 
 	changeExpectedGCDsClassLogic(buffWindow) {

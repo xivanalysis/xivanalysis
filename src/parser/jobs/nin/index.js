@@ -15,12 +15,17 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.TOASTDEIB, role: ROLES.MAINTAINER},
 	],
 	changelog: [{
+		date: new Date('2020-05-25'),
+		Changes: () => <>Included OGCD usage tracking in the checklist.</>,
+		contributors: [CONTRIBUTORS.TOASTDEIB],
+	},
+	{
 		date: new Date('2019-11-22'),
 		Changes: () => <>Updated the Kassatsu module to check for Fuma/Raiton uses.</>,
 		contributors: [CONTRIBUTORS.TOASTDEIB],

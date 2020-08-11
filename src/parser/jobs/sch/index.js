@@ -1,7 +1,5 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
@@ -18,25 +16,28 @@ export default new Meta({
 
 	Description: () => <>
 		<TransMarkdown source={description} key="sch.about.description"/>
-		<Message warning icon>
-			<Icon name="warning sign"/>
-			<Message.Content>
-				<Trans id="sch.about.description.warning.development">While the analysis below should be reasonably accurate, this system <em>is</em> still in development, and may get a little mixed up sometimes. If you notice any issues, or have any concerns, please drop by our Discord channel!</Trans>
-			</Message.Content>
-		</Message>
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.YUNI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.LIMA, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.NONO, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.NIV, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-08-10'),
+		Changes: () => <>Support for 5.3 added – no breaking changes to current analysis.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
+		date: new Date('2020-06-30'),
+		Changes: () => <>Add potions as a module – show up with all the move used under them.</>,
+		contributors: [CONTRIBUTORS.NONO],
+	},
+	{
 		date: new Date('2020-05-16'),
 		Changes: () => <>Added Recitation and Overheal visualization to SCH – huge thanks to people in #sch_lounge in the balance for feedback with content!</>,
 		contributors: [CONTRIBUTORS.NONO],

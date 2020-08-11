@@ -165,7 +165,7 @@ export const PLD = ensureActions({
 		name: 'Sentinel',
 		icon: 'https://xivapi.com/i/000000/000151.png',
 		onGcd: false,
-		cooldown: 180,
+		cooldown: 120,
 		statusesApplied: ['SENTINEL'],
 	},
 	CIRCLE_OF_SCORN: {
