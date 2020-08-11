@@ -21,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
@@ -30,6 +30,11 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-08-10'),
+			Changes: () => <>Added support for patch 5.3</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2020-05-05'),
 			Changes: () => <>Adjusted Combo Severity when you aren't 80|80 going in to always be major.  Fixed a typo; added the Tincture module.</>,
