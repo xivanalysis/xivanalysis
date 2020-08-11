@@ -33,7 +33,7 @@ export default new Meta({
 			</>,
 			contributors: [CONTRIBUTORS.ACCHAN],
 		},
-    {
+		{
 			date: new Date('2020-07-27'),
 			Changes: () => <>Add table to output times that Darkside dropped</>,
 			contributors: [CONTRIBUTORS.AZARIAH],
