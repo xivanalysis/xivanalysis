@@ -6,6 +6,7 @@ import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import PrecastStatus from 'parser/core/modules/PrecastStatus'
 
 // Tiny module to count the number of early detonations on Earthly Star.
 // TODO: Could expand to analyse Earthly Star usage, timing, overheal, etc - Sushi
@@ -30,6 +31,7 @@ export default class EarthlyStar extends Module {
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
+	@dependency private precastStatus!: PrecastStatus
 
 	private uses = 0
 	private lastUse = 0
@@ -48,9 +50,15 @@ export default class EarthlyStar extends Module {
 	}
 
 	private onPlace(event: CastEvent) {
-		this.uses++
+		// this was prepull
+		if (event.timestamp < this.parser.fight.start_time) {
+			console.log('prepull')
+		}
+
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
-		if (this.lastUse === 0) { this.lastUse = this.parser.fight.start_time }
+		if (this.lastUse === 0) {
+			this.lastUse = this.parser.fight.start_time
+		}
 
 		const held = event.timestamp - this.lastUse - (this.data.actions.EARTHLY_STAR.cooldown * 1000)
 		if (held > 0) {
@@ -93,19 +101,17 @@ export default class EarthlyStar extends Module {
 		*/
 		const holdDuration = this.uses === 0 ? this.parser.fightDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.EARTHLY_STAR.cooldown * 1000))
-		if (usesMissed > 1) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.EARTHLY_STAR.icon,
-				content: <Trans id="ast.earthly-star.suggestion.missed-use.content">
-					Use <ActionLink {...this.data.actions.EARTHLY_STAR} /> more frequently. It may save a healing GCD and results in more damage output.
-				</Trans>,
-				tiers: SEVERETIES.USES_MISSED,
-				value: usesMissed,
-				why: <Trans id="ast.earthly-star.suggestion.missed-use.why">
-					About {usesMissed} uses of Earthly Star were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
-				</Trans>,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.EARTHLY_STAR.icon,
+			content: <Trans id="ast.earthly-star.suggestion.missed-use.content">
+				Use <ActionLink {...this.data.actions.EARTHLY_STAR} /> more frequently. It may save a healing GCD and results in more damage output.
+			</Trans>,
+			tiers: SEVERETIES.USES_MISSED,
+			value: usesMissed,
+			why: <Trans id="ast.earthly-star.suggestion.missed-use.why">
+				About {usesMissed} uses of Earthly Star were missed by holding it for at least a total of {this.parser.formatDuration(holdDuration)}.
+			</Trans>,
+		}))
 	}
 
 }
