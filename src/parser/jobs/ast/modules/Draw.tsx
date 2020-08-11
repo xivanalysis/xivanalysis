@@ -216,7 +216,7 @@ export default class Draw extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize the number of cards played.
+						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize both MP regen and the number of cards played.
 				</Trans>,
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,

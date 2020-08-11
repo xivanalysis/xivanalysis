@@ -354,7 +354,7 @@ export default class ArcanaTracking extends Module {
 
 		if (actionId === this.data.actions.SLEEVE_DRAW.id
 			&& this.parser.patch.before('5.3')) {
-				// only happens pre 5.3
+			// only happens pre 5.3
 			cardStateItem.sleeveState = this.startSleeve()
 		}
 
