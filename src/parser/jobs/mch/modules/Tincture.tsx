@@ -45,10 +45,6 @@ export default class MchTincture extends Tincture {
 		},
 	}
 
-	considerPetAction(action: Action) {
-		return action === ACTIONS.PILE_BUNKER
-	}
-
 	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		if (action.action === ACTIONS.REASSEMBLE) {
 			// Reassemble might be used prepull or during downtime
