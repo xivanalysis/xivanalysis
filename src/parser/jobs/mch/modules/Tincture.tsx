@@ -34,7 +34,7 @@ export default class MchTincture extends Tincture {
 			},
 		],
 		suggestionContent: <Trans id="mch.tincture.suggestions.trackedActions.content">
-			Try to cover as much damage as possible with your Infusions of Dexterity.
+			Try to cover as much damage as possible with your Tinctures of Dexterity.
 		</Trans>,
 		severityTiers: {
 			2: SEVERITY.MINOR,
