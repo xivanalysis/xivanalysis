@@ -6,5 +6,11 @@ export const patch530: Layer<StatusRoot> = {
 	data: {
 		// 5.3 GNB Changes - Brutal Shell updated duration
 		BRUTAL_SHELL: {duration: 30},
+
+		// 5.3 AST Changes - Neutral Sect (Noct)
+		DIURNAL_BALANCE: {
+			name: 'Diurnal Balance (Benefic)',
+		},
+
 	},
 }
