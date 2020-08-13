@@ -19,13 +19,20 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-08-11'),
+			Changes: () => <>
+				Mark patch 5.3 supported.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-07-27'),
 			Changes: () => <>Add table to output times that Darkside dropped</>,
