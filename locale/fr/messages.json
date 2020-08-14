@@ -41,7 +41,7 @@
   "ast.draw.suggestions.sleeve-uses.content": "Utilisez <0/> plus souvent. Il devrait être couplé avec tout les autres <1/> pour accumuler les Buffs au même moment. <2/> peux être utiliser pour jouer des cartes entre GCD.",
   "ast.draw.suggestions.sleeve-uses.why": "Environ {sleevesMissed, plural, one { # utilisation} other {# utilisations}} of <0/> ont été perdues en le gardant pour un total de {0}.",
   "ast.draw.title": "Tirage",
-  "ast.earthly-star.suggestion.missed-use.content": "",
+  "ast.earthly-star.suggestion.missed-use.content": "Utilisez <0/> plus souvent. Cela pourrai sauver une GCD de soin et donc permettre de faire plus de dégâts.",
   "ast.earthly-star.suggestion.missed-use.why": "",
   "ast.earthly-star.suggestion.uncooked.content": "Préparer le placement de <0/> de sorte qu'il soit toujours utilisé avec le maximum de puissance quand vous en avez besoin.",
   "ast.earthly-star.suggestion.uncooked.why": "{earlyBurstCount, plural, one {# détonation} other {# detonations}} d'une Etoile Terrestre déclenchée trop rapidement.",
