@@ -41,7 +41,7 @@ export const NIN = ensureActions({
 		charges: 2,
 	},
 
-	TEN_KASSATSU: {
+	TEN_NEW: {
 		id: 18805,
 		name: 'Ten',
 		icon: 'https://xivapi.com/i/002000/002901.png',
@@ -51,6 +51,16 @@ export const NIN = ensureActions({
 	},
 
 	CHI: {
+		id: 2261,
+		name: 'Chi',
+		icon: 'https://xivapi.com/i/002000/002902.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
+		charges: 2,
+	},
+
+	CHI_NEW: {
 		id: 18806,
 		name: 'Chi',
 		icon: 'https://xivapi.com/i/002000/002902.png',
@@ -61,6 +71,16 @@ export const NIN = ensureActions({
 	},
 
 	JIN: {
+		id: 2263,
+		name: 'Jin',
+		icon: 'https://xivapi.com/i/002000/002903.png',
+		onGcd: true,
+		cooldown: 20,
+		gcdRecast: 0.5,
+		charges: 2,
+	},
+
+	JIN_NEW: {
 		id: 18807,
 		name: 'Jin',
 		icon: 'https://xivapi.com/i/002000/002903.png',

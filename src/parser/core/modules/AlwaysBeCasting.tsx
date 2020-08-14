@@ -1,25 +1,24 @@
-import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import React from 'react'
 import {Trans} from '@lingui/react'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
+import Downtime from 'parser/core/modules/Downtime'
+import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
+import React from 'react'
 
 export default class AlwaysBeCasting extends Module {
 	static handle = 'abc'
-	static dependencies = [
-		'checklist',
-		'downtime',
-		'gcd',
-	]
 
-	constructor(...args) {
-		super(...args)
-		this.addEventHook('complete', this._onComplete)
+	@dependency private checklist!: Checklist
+	@dependency private downtime!: Downtime
+	@dependency private gcd!: GlobalCooldown
+
+	protected init() {
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	// Just using this for the suggestion for now
-	_onComplete() {
-		const numGcds = this.gcd.gcds.length
-		if (!numGcds) {
+	protected onComplete() {
+		if (!this.gcd.gcds.length) {
 			return
 		}
 

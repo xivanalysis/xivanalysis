@@ -8,61 +8,16 @@
 
 Automated performance analysis and suggestion platform for Final Fantasy XIV: Shadowbringers, using data sourced from [FF Logs](https://www.fflogs.com/).
 
+If you'd like to contribute, check past [our developer documentation](https://docs.xivanalysis.com/) for an introduction to the project and steps to get started!
+
 ## Table of Contents
 
-- [Getting started](#getting-started)
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
-- [Internationalization](#internationalization-i18n)
-- [API Reference](#api-reference)
+- [API Reference](#api-reference) (outdated)
 	- [Module](#module)
 	- [Parser](#parser)
-
-## Getting Started
-
-Before starting, you will need:
-
-- [git](https://git-scm.com/)
-- [node.js](https://nodejs.org/en/)
-- [yarn](https://yarnpkg.com/lang/en/)
-
-Once you've set those up, you'll need to pull down the codebase. If you plan to contribute code, you'll need to [create a fork](https://help.github.com/articles/fork-a-repo/) of the project first, and use your fork's URL in place of the main project's when cloning.
-
-```bash
-# Clone the project
-git clone https://github.com/xivanalysis/xivanalysis.git
-cd xivanalysis
-```
-
-***NOTE:*** *Drop past our Discord channel before you get too into it, have a chat! Duping up on implementations is never fun.*
-
-If you are working with a fork, I would highly suggest [configuring an upstream](https://help.github.com/articles/configuring-a-remote-for-a-fork/) remote, and making sure you [sync it down](https://help.github.com/articles/syncing-a-fork/) reasonably frequently - you can check the #automations channel on Discord to get an idea of what's been changed.
-
-You've now got the primary codebase locally, next you'll need to download all the project's dependencies. Please do use `yarn` for this - using `npm` will ignore the lockfile, and potentially pull down untested updates.
-
-```bash
-yarn
-```
-
-While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Make a few changes in it:
-
-- Replace `TODO_FINAL_DEPLOY_URL` with `https://www.fflogs.com/v1/`.
-- Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile). Don't forget to set your Application Name there as well.
-
-***NOTE:*** *If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can use `[server url]/proxy/fflogs/` as the base url, and omit the api key.*
-
-Once that's done, you're ready to go! To start the development server, just run
-
-```bash
-yarn start
-```
-
-If you would like to compile a production copy of the assets (for example, to be served when testing the server), run
-
-```bash
-yarn build
-```
 
 ## Structure of the parser
 
@@ -88,86 +43,7 @@ Each module should be in charge of analysing a single statistic or feature, so a
 
 For more details, check out the API Reference below, and have a look through the `core` and `jobs/smn` modules.
 
-## Internationalization (i18n)
-
-This project makes use of [jsLingui](https://github.com/lingui/js-lingui) with a dash of custom logic to make dynamic content a bit easier. It's recommended to familiaise yourself with [its available components](https://lingui.js.org/ref/react.html#components) to help implementation.
-
-All text displayed to the end-user should be passed through this translation layer. See below for a few examples.
-
-### i18n IDs
-
-All translated strings should be given an explicit ID, to help keep things consistent. This project formats i18n IDs using the syntax: `[job].[module].[thing]`
-
-As an example, for a Red Mage you might end up with the key `rdm.gauge.white-mana`. These
-keys should be somewhat descriptive to make it clear for translators what exactly they're editing.
-
-### Examples
-
-#### Module titles
-
-If your module has `output`, it should also be given a translated title. This title will be shown above its output, as well as used for the link in the sidebar.
-
-```javascript
-import {t} from '@lingui/macro'
-import Module from 'parser/core/Module'
-
-export default class MyModule extends Module {
-	// ...
-	static title = t('my-job.my-module.title')`My Module`
-	// ...
-}
-```
-
-#### JSX content
-
-In most cases, you can skip the peculiar syntax shown above, and use the `Trans` JSX tag, which automates a _lot_ of the hard yards for you. This is commonly seen in use in module output and suggestions, among other things. There's a number of other utility tags besides `Trans`, such as `Plural` - see [the lingui documentation](https://lingui.js.org/ref/react.html#components) for more info.
-
-```javascript
-import {Trans, Plural} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-const supportedLanguages = 6
-this.suggestions.add(new Suggestion({
-	icon: ACTIONS.RAISE.icon,
-	severity: SEVERITY.MORBID,
-	content: <Trans id="my-job.my-module.suggestions.my-suggestion.content">
-		You should <strong>really</strong> use localization.
-	</Trans>,
-	why: <Trans id="my-job.my-module.suggestions.my-suggestion.why">
-		Localization is important, we support
-		<Plural
-			value={supportedLanguages}
-			one="# language"
-			other="# languages"
-		/>
-	</Trans>,
-}))
-```
-
-#### Markdown
-
-Sometimes, you _really_ gotta put a lot of content in - it's cases like this that markdown comes in handy. We use a slightly extended syntax based on [CommonMark](https://commonmark.org/).
-
-Key differences:
-
-* `[~action/ACTION_KEY]` will automatically turn into an `ActionLink` with icon, tooltip, and similar.
-* `[~status/STATUS_KEY]` will likewise automatically turn into a `StatusLink`.
-* Don't use code blocks (`` `...` ``). Just... don't. Please. It breaks everything.
-
-```javascript
-import {t} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
-
-const description = t('your-job.about.description')`
-This is an _example_ of using **markdown** in conjunction with the TransMarkdown component.
-
-I am also [contractually](https://some-url.com/) obliged to remind you to [~action/RUIN_III] everything.
-`
-const rendered = <TransMarkdown source={description}/>
-```
-
-## API Reference
+## API Reference (outdated)
 ### Module
 
 All modules should extend this class at some point in their hierarchy. It provides helpers to handle events, and provides a standard interface for the parser to work with.

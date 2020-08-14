@@ -1,5 +1,6 @@
 import CoreWeaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const JUMPS = [
 	ACTIONS.JUMP.id,
@@ -10,6 +11,7 @@ const JUMPS = [
 ]
 
 export default class Weaving extends CoreWeaving {
+	static displayOrder = DISPLAY_ORDER.WEAVING
 	isBadWeave(weave/*, maxWeaves*/) {
 		for (let i = 0; i < weave.weaves.length; i++) {
 			if (JUMPS.includes(weave.weaves[i].ability.guid)) {
@@ -17,7 +19,6 @@ export default class Weaving extends CoreWeaving {
 				return weave.weaves.length > 1
 			}
 		}
-
 		return super.isBadWeave(weave)
 	}
 }

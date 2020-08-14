@@ -38,13 +38,26 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.RYAN],
 	},
 	{
-		date: new Date('2020-4-23'),
+		date: new Date('2020-04-23'),
 		Changes: () => <>
 			Expanded feedback on Gnashing Fang combos that do not
 			contain the expected 6 actions.
 		</>,
 		contributors: [CONTRIBUTORS.RYAN],
 	},
+	{
+		date: new Date('2020-07-09'),
+		Changes: () => <>
+			Sonic Break has been added to cooldown tracker.
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},
+	{
+		date: new Date('2020-08-11'),
+		Changes: () => <>Brutal Shell duration changes and added support for patch 5.3</>,
+		contributors: [CONTRIBUTORS.CADENCE],
+	},
+
 	// {
 	// 	date: new Date('2020-04-20'),
 	// 	Changes: () => <>The changes you made</>,

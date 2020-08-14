@@ -9,10 +9,11 @@ import {getDataBy} from 'data'
 import Module, {dependency} from 'parser/core/Module'
 import React, {Fragment} from 'react'
 import {Timeline} from 'parser/core/modules/Timeline'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
-const DRIFT_BUFFER = 1200
+const DRIFT_BUFFER = 1250
 
 const DRIFT_ABILITIES = [
 	ACTIONS.HIGH_JUMP.id,
@@ -40,6 +41,8 @@ export default class Drift extends Module {
 	static debug = false
 	static handle = 'drift'
 	static title = t('drg.drift.title')`Ability Drift`
+	static displayOrder = DISPLAY_ORDER.DRIFT
+
 
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline
@@ -129,11 +132,6 @@ export default class Drift extends Module {
 		if (!this.driftedWindows.length) return
 
 		return <Fragment>
-			<Message>
-				<Trans id="drg.drift.table.message">
-					<ActionLink {...ACTIONS.HIGH_JUMP} /> and <ActionLink {...ACTIONS.GEIRSKOGUL} /> are two of the most critical damaging abilities on Dragoon, and should be kept on cooldown as much as possible in order to not lose Life of the Dragon windows.
-				</Trans>
-			</Message>
 			<Table style={{border: 'none'}}>
 				<Table.Body>
 					<Table.Row>

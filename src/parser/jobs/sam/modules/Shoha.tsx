@@ -13,8 +13,7 @@ import JOBS from 'data/JOBS'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Combatants from 'parser/core/modules/Combatants'
-import Suggestions from 'parser/core/modules/Suggestions'
+import {Data} from 'parser/core/modules/Data'
 
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,
@@ -56,12 +55,10 @@ export default class Shoha extends Module {
 		[ACTIONS.KAESHI_SETSUGEKKA.id]: 0,
 		[ACTIONS.RAISE.id]: 0,
 	}
-	private leftoverStacks = 0
 	private totalGeneratedStacks = 0 // Keep track of the total amount of generated stacks over the fight
 
 	@dependency private checklist!: Checklist
-	@dependency private suggestions!: Suggestions
-	@dependency private combatants!: Combatants
+	@dependency private data!: Data
 
 	protected init() {
 		this.addEventHook('init', this.pushToHistory)
@@ -176,49 +173,49 @@ export default class Shoha extends Module {
 		}))
 	}
 
-	private convertWasteMapToTable() {
-		const rows = [
-			this.convertWasteEntryToRow(ACTIONS.HIGANBANA),
-			this.convertWasteEntryToRow(ACTIONS.TENKA_GOKEN),
-			this.convertWasteEntryToRow(ACTIONS.MIDARE_SETSUGEKKA),
-			this.convertWasteEntryToRow(ACTIONS.KAESHI_HIGANBANA),
-			this.convertWasteEntryToRow(ACTIONS.KAESHI_GOKEN),
-			this.convertWasteEntryToRow(ACTIONS.KAESHI_SETSUGEKKA),
-			this.convertWasteEntryToRow(ACTIONS.RAISE),
-		]
+	private convertWasteMapToPanel(): JSX.Element {
+		const rows = Object.entries(this.wasteBySource)
+			.map(([id, waste]) => {
+				if (waste > 0) {
+					const actionId = Number(id)
+					return <tr key={actionId + '-row'} style={{margin: 0, padding: 0}}>
+						<td key={actionId + '-name'}><ActionLink {...this.data.getAction(actionId)}/></td>
+						<td key={actionId + '-value'}>{waste}</td>
+					</tr>
+				}
+			})
+			.filter(row => row)
 
-		return <Fragment key="wasteBySource-fragment">
-			<table key="wasteBySource-table">
-				<tbody key="wasteBySource-tbody">
-					{rows}
-				</tbody>
-			</table>
-		</Fragment>
-	}
+		if (!rows.length) {
+			return <></>
+		}
 
-	private convertWasteEntryToRow(action: TODO) {
-		const actionName = action.name
-
-		return <tr key={action.id + '-row'} style={{margin: 0, padding: 0}}>
-			<td key={action.id + '-name'}><ActionLink name={actionName} {...action}/></td>
-			<td key={action.id + '-value'}>{this.wasteBySource[action.id]}</td>
-		</tr>
-	}
-
-	output() {
-		const meditationWastePanels = []
-		meditationWastePanels.push({
+		const panel = [{
 			key: 'key-wastebysource',
 			title: {
 				key: 'title-wastebysource',
-				content: <Trans id="sam.shoha.waste.by-source.key">Meditation Stack Waste By Source</Trans>,
+				content: <Trans id="sam.shoha.waste.by-source.key">Meditation Stack Waste by Source</Trans>,
 			},
 			content: {
 				key: 'content-wastebysource',
-				content: this.convertWasteMapToTable(),
+				content: <Fragment key="wasteBySource-fragment">
+					<table key="wasteBySource-table">
+						<tbody key="wasteBySource-tbody">
+							{rows}
+						</tbody>
+					</table>
+				</Fragment>,
 			},
-		})
+		}]
 
+		return <Accordion
+			exclusive={false}
+			panels={panel}
+			styled
+			fluid />
+	}
+
+	output() {
 		const stackColor = Color(JOBS.SAMURAI.colour)
 		/* tslint:disable:no-magic-numbers */
 		const chartData = {
@@ -255,12 +252,7 @@ export default class Shoha extends Module {
 			<TimeLineChart
 				data={chartData}
 				options={chartOptions} />
-			<Accordion
-				exclusive={false}
-				panels={meditationWastePanels}
-				styled
-				fluid
-			/>
+			{this.convertWasteMapToPanel()}
 		</Fragment>
 	}
 }

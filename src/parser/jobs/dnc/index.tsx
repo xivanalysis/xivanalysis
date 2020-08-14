@@ -31,7 +31,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 
 	contributors: [

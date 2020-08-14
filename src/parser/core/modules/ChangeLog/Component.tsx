@@ -1,12 +1,17 @@
+import {ChangelogEntry} from 'parser/core/Meta'
 import PropTypes from 'prop-types'
 import React from 'react'
-import {Accordion} from 'semantic-ui-react'
+import {Accordion, AccordionTitleProps} from 'semantic-ui-react'
 
 import ContributorLabel from 'components/ui/ContributorLabel'
 
 import styles from './ChangeLog.module.css'
 
-export default class ChangeLog extends React.PureComponent {
+interface ChangeLogProps {
+	changelog: ChangelogEntry[]
+}
+
+export default class ChangeLog extends React.PureComponent<ChangeLogProps> {
 	static propTypes = {
 		changelog: PropTypes.arrayOf(PropTypes.shape({
 			date: PropTypes.instanceOf(Date),
@@ -19,8 +24,8 @@ export default class ChangeLog extends React.PureComponent {
 		activeIndexes: new Set(),
 	}
 
-	handleClick = (event, props) => {
-		const {index} = props
+	handleClick = (event: React.MouseEvent<HTMLDivElement>, data: AccordionTitleProps) => {
+		const {index} = data
 		const {activeIndexes} = this.state
 
 		const newIndexes = new Set(activeIndexes)

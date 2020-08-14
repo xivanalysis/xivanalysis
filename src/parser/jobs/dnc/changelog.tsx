@@ -71,4 +71,9 @@ export const changelog = [
 		Changes: () => <>Leniency for rushing finishes at the end of the fight or before a downtime, and suggestions to avoid 0-step finishes.</>,
 		contributors: [CONTRIBUTORS.AKAIRYU],
 	},
+	{
+		date: new Date('2020-08-11'),
+		Changes: () => <>Added support for patch 5.3</>,
+		contributors: [CONTRIBUTORS.CADENCE],
+	},
 ]
