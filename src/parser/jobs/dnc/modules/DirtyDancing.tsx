@@ -295,7 +295,7 @@ export default class DirtyDancing extends Module {
 			tiers: DRIFT_SEVERITY_TIERS,
 			value: driftedStandards,
 			why: <Trans id="dnc.dirty-dancing.suggestions.standard-drift.why">
-				<Plural value={driftedStandards} one="# Stanard Step was" other="# Standard Steps were"/> lost due to drift.
+				<Plural value={driftedStandards} one="# Standard Step was" other="# Standard Steps were"/> lost due to drift.
 			</Trans>,
 		}))
 
