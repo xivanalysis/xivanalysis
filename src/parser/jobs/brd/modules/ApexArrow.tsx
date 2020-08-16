@@ -1,10 +1,11 @@
 import React from 'react'
-import {Trans, Plural, NumberFormat} from '@lingui/react'
+import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
@@ -20,16 +21,16 @@ const APEX_POTENCY_THRESHOLDS = {
 export default class ApexArrow extends Module {
 	static handle = 'Apex'
 	static title = t('brd.apex.title')`Apex Arrow`
-	static debug = false
 
 	@dependency private stats!: AdditionalStats
+	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
 	private ghostedApexCasts: number = 0
 	private badApexCasts: number = 0
 
 	protected init() {
-		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.APEX_ARROW.id}, this.onApex)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.data.actions.APEX_ARROW.id}, this.onApex)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -98,9 +99,8 @@ export default class ApexArrow extends Module {
 				Apex Arrow dealt very low damage <Plural value={this.badApexCasts} one="# time" other="# times"/>.
 			</Trans>,
 			tiers: {
-				1: SEVERITY.MINOR,
-				2: SEVERITY.MEDIUM,
-				3: SEVERITY.MAJOR,
+				1: SEVERITY.MEDIUM,
+				2: SEVERITY.MAJOR,
 			},
 			value: this.badApexCasts,
 		}))
