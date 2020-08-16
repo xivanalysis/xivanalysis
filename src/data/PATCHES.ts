@@ -76,11 +76,13 @@ const PATCHES = {
 	'5.01': {
 		date: {
 			[GameEdition.GLOBAL]: 1563267600, // 16/07/19 09:00:00 GMT
+			[GameEdition.CHINESE]: 1574150400, // 19/11/19 08:00:00 GMT
 		},
 	},
 	'5.05': {
 		date: {
 			[GameEdition.GLOBAL]: 1564477200, // 30/07/19 09:00:00 GMT
+			[GameEdition.CHINESE]: 1577174400, // 24/12/19 08:00:00 GMT
 		},
 	},
 	'5.08': {
@@ -93,12 +95,14 @@ const PATCHES = {
 		date: {
 			[GameEdition.GLOBAL]: 1572339600, // 29/10/19 09:00:00 GMT
 			[GameEdition.KOREAN]: 1585036800, // 24/03/20 08:00:00 GMT
+			[GameEdition.CHINESE]: 1580803200, // 04/02/20 08:00:00 GMT
 		},
 	},
 	'5.2': {
 		date: {
 			[GameEdition.GLOBAL]: 1582016400, // 08/02/20 09:00:00 GMT
 			[GameEdition.KOREAN]: 1598947200, // 01/09/20 08:00:00 GMT
+			[GameEdition.CHINESE]: 1595318400, // 21/07/20 08:00:00 GMT
 		},
 	},
 	'5.3': {
