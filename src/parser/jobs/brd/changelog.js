@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-08-15'),
+		Changes: () => <>
+			Added a module that tracks actions used during Raging Strikes windows.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-08-10'),
 		Changes: () => <>
 			Support for patch 5.3 - potencies for Burst Shot, Refulgent Arrow, and Sidewinder adjusted.

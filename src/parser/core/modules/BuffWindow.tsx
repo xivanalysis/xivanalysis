@@ -302,6 +302,25 @@ export abstract class BuffWindowModule extends Module {
 		return undefined
 	}
 
+	private countMissedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		const expected = this.getBuffWindowExpectedTrackedActions(buffWindow, action)
+		const actual = buffWindow.getActionCountByIds([action.action.id])
+		const comparator = this.changeComparisonClassLogic(buffWindow, action)
+
+		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
+		if ( comparator && !comparator(actual, expected).negative ) { return 0 }
+
+		// If this buff window was rushed, again don't count it
+		if ( this.buffStatus.duration ) {
+			const windowDurationMillis = this.buffStatus.duration * 1000
+			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+
+			if ( windowDurationMillis >= fightTimeRemaining ) { return 0 }
+		}
+
+		return Math.max(0, expected - actual)
+	}
+
 	private onComplete() {
 		if ( this.expectedGCDs ) {
 			const missedGCDs = this.buffWindows
@@ -339,7 +358,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedActions ) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + Math.max(0, this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction) - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
+						.reduce((sum, buffWindow) => sum + this.countMissedTrackedActions(buffWindow, trackedAction), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedActions.icon,
