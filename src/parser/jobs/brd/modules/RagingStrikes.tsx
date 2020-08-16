@@ -89,14 +89,14 @@ export default class RagingStrikes extends BuffWindowModule {
 	protected getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		// If the action was Iron Jaws, the upper limit = the number of enemies we cast something on during this RS window
 		if (action.action === ACTIONS.IRON_JAWS) {
-			const enemyIds = new Set<string>()
+			const enemyIDs = new Set<string>()
 			buffWindow.rotation.forEach((e: CastEvent) => {
 				if (e.targetID && !e.targetIsFriendly) {
-					enemyIds.add(this.getEventTargetKey(e))
+					enemyIDs.add(this.getEventTargetKey(e))
 				}
 			})
 
-			return enemyIds.size
+			return enemyIDs.size
 		}
 
 		return action.expectedPerWindow || 0
