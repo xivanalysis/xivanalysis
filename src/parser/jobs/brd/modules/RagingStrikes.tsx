@@ -8,7 +8,6 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {Data} from 'parser/core/modules/Data'
 
 const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'ARMS_LENGTH',
