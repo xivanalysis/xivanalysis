@@ -1,40 +1,43 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS, {Action} from 'data/ACTIONS'
+import {Action} from 'data/ACTIONS'
+import {ActionRoot} from 'data/ACTIONS/root'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {Data} from 'parser/core/modules/Data'
 
-const SUPPORT_ACTIONS = [
-	ACTIONS.ARMS_LENGTH,
-	ACTIONS.FOOT_GRAZE,
-	ACTIONS.HEAD_GRAZE,
-	ACTIONS.LEG_GRAZE,
-	ACTIONS.NATURES_MINNE,
-	ACTIONS.PELOTON,
-	ACTIONS.REPELLING_SHOT,
-	ACTIONS.SECOND_WIND,
-	ACTIONS.SPRINT,
-	ACTIONS.THE_WARDENS_PAEAN,
-	ACTIONS.TROUBADOUR,
+const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
+	'ARMS_LENGTH',
+	'FOOT_GRAZE',
+	'HEAD_GRAZE',
+	'LEG_GRAZE',
+	'NATURES_MINNE',
+	'PELOTON',
+	'REPELLING_SHOT',
+	'SECOND_WIND',
+	'SPRINT',
+	'THE_WARDENS_PAEAN',
+	'TROUBADOUR',
 ]
 
 export default class RagingStrikes extends BuffWindowModule {
 	static handle = 'rs'
 	static title = t('brd.rs.title')`Raging Strikes`
 
-	buffAction = ACTIONS.RAGING_STRIKES
+	buffAction = this.data.actions.RAGING_STRIKES
 	buffStatus = STATUSES.RAGING_STRIKES
 
-	museTimestamps: number[] = []
+	private museTimestamps: number[] = []
+	private SUPPORT_ACTIONS: number[] = []
 
 	expectedGCDs = {
 		expectedPerWindow: 8,
 		suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
-			Try to land 8 GCDs (9 GCDs with <StatusLink {...STATUSES.ARMYS_MUSE}/>) during every <ActionLink {...ACTIONS.RAGING_STRIKES}/> window.
+			Try to land 8 GCDs (9 GCDs with <StatusLink {...STATUSES.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MINOR,
@@ -44,19 +47,19 @@ export default class RagingStrikes extends BuffWindowModule {
 	}
 
 	trackedActions = {
-		icon: ACTIONS.BARRAGE.icon,
+		icon: this.data.actions.BARRAGE.icon,
 		actions: [
 			{
-				action: ACTIONS.BARRAGE,
+				action: this.data.actions.BARRAGE,
 				expectedPerWindow: 1,
 			},
 			{
-				action: ACTIONS.IRON_JAWS,
+				action: this.data.actions.IRON_JAWS,
 				expectedPerWindow: 1,
 			},
 		],
 		suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
-			One use of <ActionLink {...ACTIONS.BARRAGE}/> and one use of <ActionLink {...ACTIONS.IRON_JAWS}/> should occur during every <ActionLink {...ACTIONS.RAGING_STRIKES}/> window.
+			One use of <ActionLink {...this.data.actions.BARRAGE}/> and one use of <ActionLink {...this.data.actions.IRON_JAWS}/> should occur during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MINOR,
@@ -67,12 +70,14 @@ export default class RagingStrikes extends BuffWindowModule {
 
 	protected init() {
 		super.init()
+
+		this.SUPPORT_ACTIONS = SUPPORT_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
 		this.addEventHook('applybuff', {to: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onApplyMuse)
 	}
 
 	private onApplyMuse = (event: BuffEvent) => this.museTimestamps.push(event.timestamp)
 
-	protected considerAction = (action: Action) => !SUPPORT_ACTIONS.includes(action)
+	protected considerAction = (action: Action) => !this.SUPPORT_ACTIONS.includes(action.id)
 
 	protected changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
 		// Expect one extra GCD if we had muse up for this RS
@@ -87,19 +92,19 @@ export default class RagingStrikes extends BuffWindowModule {
 	private getEventTargetKey = (event: CastEvent): string => `${event.targetID}-${event.targetInstance}`
 
 	protected getBaselineExpectedTrackedAction(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
-		// If the action was Iron Jaws, the upper limit = the number of enemies we cast something on during this RS window
-		if (action.action === ACTIONS.IRON_JAWS) {
-			const enemyIDs = new Set<string>()
-			buffWindow.rotation.forEach((e: CastEvent) => {
-				if (e.targetID && !e.targetIsFriendly) {
-					enemyIDs.add(this.getEventTargetKey(e))
-				}
-			})
-
-			return enemyIDs.size
+		if (action.action !== this.data.actions.IRON_JAWS) {
+			return action.expectedPerWindow || 0
 		}
 
-		return action.expectedPerWindow || 0
+		// If the action was Iron Jaws, the upper limit = the number of enemies we cast something on during this RS window
+		const enemyIDs = new Set<string>()
+		buffWindow.rotation.forEach((e: CastEvent) => {
+			if (e.targetID && !e.targetIsFriendly) {
+				enemyIDs.add(this.getEventTargetKey(e))
+			}
+		})
+
+		return enemyIDs.size
 	}
 
 	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
@@ -107,7 +112,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		 * Positive only if we had exactly one Iron Jaws in this RS
 		 * If expected > 1, we're in AoE and there is no clear rotation target, so don't highlight this cell
 		 */
-		if (action.action === ACTIONS.IRON_JAWS) {
+		if (action.action === this.data.actions.IRON_JAWS) {
 			return (actual: number, expected?: number) => ({
 				positive: expected === 1 && actual === 1,
 				negative: expected === 1 && actual !== 1,
