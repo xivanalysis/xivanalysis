@@ -120,7 +120,7 @@ export default class ArcanaTracking extends Module {
 
 	normalise(events: Event[]) {
 		// The whole point of this module was to support "pre-5.3" Three-card Sleeve Draw
-		if (this.parser.patch.before('5.3')) {
+		if (!this.parser.patch.before('5.3')) {
 			return events
 		}
 
@@ -352,8 +352,7 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.drawState = undefined
 		}
 
-		if (actionId === this.data.actions.SLEEVE_DRAW.id
-			&& this.parser.patch.before('5.3')) {
+		if (actionId === this.data.actions.SLEEVE_DRAW.id && this.parser.patch.before('5.3')) {
 			// only happens pre 5.3
 			cardStateItem.sleeveState = this.startSleeve()
 		}

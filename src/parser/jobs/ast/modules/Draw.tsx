@@ -15,7 +15,8 @@ import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 15000
-const SLEEVE_DRAW_PLAYS_GIVEN = 1
+const SLEEVE_DRAW_PLAYS_GIVEN_500 = 3
+const SLEEVE_DRAW_PLAYS_GIVEN_530 = 1
 
 const WARN_TARGET_MAXPLAYS = 2
 const FAIL_TARGET_MAXPLAYS = 3
@@ -59,7 +60,13 @@ export default class Draw extends Module {
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
 
+	private SLEEVE_DRAW_PLAYS_GIVEN: number = SLEEVE_DRAW_PLAYS_GIVEN_530
+
 	protected init() {
+		this.SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
+
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
 		})
@@ -170,7 +177,7 @@ export default class Draw extends Module {
 		// Begin Theoretical Max Plays calc
 		const fightDuration = this.parser.pull.duration
 		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
-		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
+		const playsFromSleeveDraw = maxSleeveUses * this.SLEEVE_DRAW_PLAYS_GIVEN
 		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
@@ -181,7 +188,7 @@ export default class Draw extends Module {
 		const pullState = this.arcanaTracking.getPullState()
 		this.prepullPrepped = !!pullState.drawState
 
-		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
+		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * this.SLEEVE_DRAW_PLAYS_GIVEN)
 
 		/*
 			CHECKLIST: Number of cards played
@@ -199,7 +206,7 @@ export default class Draw extends Module {
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
 				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * this.SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
 				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
