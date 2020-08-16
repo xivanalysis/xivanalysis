@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Data} from 'parser/core/modules/Data'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Cooldowns from 'parser/core/modules/Cooldowns'
-import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 

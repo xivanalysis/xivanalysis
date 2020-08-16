@@ -29,6 +29,17 @@ export interface RotationNotes {
 	accessor: string | ((entry: RotationTableEntry) => React.ReactNode)
 }
 
+export interface RotationTargetOutcome {
+	/**
+	 * True if the target was reached
+	 */
+	positive: boolean
+	/**
+	 * True if the target was not reached
+	 */
+	negative: boolean
+}
+
 export interface RotationTargetData {
 	/**
 	 * Expected target number
@@ -38,6 +49,10 @@ export interface RotationTargetData {
 	 * Recorded number
 	 */
 	actual: number
+	/**
+	 * Optional function to override the default positive/negative highlighting
+	 */
+	targetComparator?: (actual: number, expected?: number) => RotationTargetOutcome
 }
 
 export interface RotationTableTargetData {
@@ -125,6 +140,13 @@ interface RotationTableRowProps {
 }
 
 export class RotationTable extends React.Component<RotationTableProps> {
+	static defaultTargetComparator(actual: number, expected?: number): RotationTargetOutcome {
+		return {
+			positive: expected === undefined ? false : actual >= expected,
+			negative: expected === undefined ? false : actual < expected,
+		}
+	}
+
 	static targetAccessorResolver = (entry: RotationTableEntry, target: RotationTarget): RotationTargetData => {
 		if (typeof target.accessor === 'string' && entry.targetsData != null) {
 			return entry.targetsData[target.accessor]
@@ -148,14 +170,20 @@ export class RotationTable extends React.Component<RotationTableProps> {
 		}
 	}
 
-	static TargetCell = ({actual, expected}: RotationTargetData) =>
-		<Table.Cell
+	static TargetCell = ({actual, expected, targetComparator}: RotationTargetData) => {
+		if (targetComparator === undefined) {
+			targetComparator = RotationTable.defaultTargetComparator
+		}
+		const targetOutcome = targetComparator(actual, expected)
+
+		return <Table.Cell
 			textAlign="center"
-			positive={expected === undefined ? false : actual >= expected}
-			negative={expected === undefined ? false : actual < expected}
+			positive={targetOutcome.positive}
+			negative={targetOutcome.negative}
 		>
 			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>
+	}
 
 	static Row = ({onGoto, targets, notes, notesMap, start, end, targetsData, rotation}: RotationTableRowProps & RotationTableEntry) =>
 		<Table.Row>
