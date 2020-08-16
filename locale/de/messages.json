@@ -189,7 +189,7 @@
   "brd.pitch-perfect.trigger.no-wm-cast": "<0/> wurde eingesetzt, während keine Anwendung von <1/> zuvor kam.",
   "brd.pitch-perfect.without-max-stacks.total-potency-lost": "<0/> Anwendungen ohne volle Aufladungen haben einen Gesamtschadensverlust von <1>{0}</1> Potenz verursacht",
   "brd.rs.suggestions.missedgcd.content": "",
-  "brd.rs.suggestions.trackedactions": "",
+  "brd.rs.suggestions.trackedactions.content": "",
   "brd.rs.title": "",
   "brd.sidewinder.list.missed-potency": "<0/> {0} Potenz verloren",
   "brd.sidewinder.list.shadowbite.missing-dots": "<0/> wurde mit {0, plural, one {nur einem} other {keinem}} DoT auf deinem Ziel benutzt und traf {1, plural, one {nur einen Gegner} other {# Gegner}}.",

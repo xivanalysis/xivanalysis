@@ -189,7 +189,7 @@
   "brd.pitch-perfect.trigger.no-wm-cast": "<0/> a été utilisé quand il n'y avait plus de lancement de <1/> disponible.",
   "brd.pitch-perfect.without-max-stacks.total-potency-lost": "<0/> Lancé sans être au maximum de stack vous a fait perdre en tout <1>{0}</1> de puissance",
   "brd.rs.suggestions.missedgcd.content": "",
-  "brd.rs.suggestions.trackedactions": "",
+  "brd.rs.suggestions.trackedactions.content": "",
   "brd.rs.title": "",
   "brd.sidewinder.list.missed-potency": "<0/>{0} de puissance de perdu",
   "brd.sidewinder.list.shadowbite.missing-dots": "<0/> a été lancé avec {0, plural, one {juste un DoT} other {aucun DoTs}} appliqué sur la cible et {1, plural, one {n'a touché qu'un ennemi} other {a touché # ennemis}}.",
