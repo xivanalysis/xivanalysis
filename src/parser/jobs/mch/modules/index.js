@@ -4,6 +4,7 @@ import Drift from './Drift'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import Heat from './Heat'
+import MchTincture from './Tincture'
 import MultiHitSkills from './MultiHitSkills'
 import Reassemble from './Reassemble'
 import Wildfire from './Wildfire'
@@ -16,6 +17,7 @@ export default [
 	Gauge,
 	GeneralCDDowntime,
 	Heat,
+	MchTincture,
 	MultiHitSkills,
 	Reassemble,
 	Wildfire,

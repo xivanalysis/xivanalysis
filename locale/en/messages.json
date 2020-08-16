@@ -521,6 +521,7 @@
   "mch.reassemble.suggestions.bad-gcds.why": "You used Reassemble on a non-optimal GCD {0, plural, one {# time} other {# times}}.",
   "mch.reassemble.suggestions.dropped.content": "Avoid using <0/> when a boss is about to go untargetable so you don't waste the buff.",
   "mch.reassemble.suggestions.dropped.why": "You allowed Reassemble to fall off unused {0, plural, one {# time} other {# times}}.",
+  "mch.tincture.suggestions.trackedActions.content": "Try to cover as much damage as possible with your Tinctures of Dexterity.",
   "mch.wildfire.accordion.message": "Every <0/> window should ideally contain at least {WILDFIRE_GCD_TARGET} GCDs to maximize its potency. Each Wildfire window below indicates how many GCDs it contained and the total damage it hit for, and will display all the damaging casts in the window if expanded.",
   "mch.wildfire.panel-count": "{0} {1, plural, one {GCD} other {GCDs}}, {2} damage",
   "mch.wildfire.panel-count-spoofed": "? GCDs, {0} damage",
