@@ -55,7 +55,7 @@ export default class RagingStrikes extends BuffWindowModule {
 				expectedPerWindow: 1,
 			},
 		],
-		suggestionContent: <Trans id="brd.rs.suggestions.trackedactions">
+		suggestionContent: <Trans id="brd.rs.suggestions.trackedactions.content">
 			One use of <ActionLink {...ACTIONS.BARRAGE}/> and one use of <ActionLink {...ACTIONS.IRON_JAWS}/> should occur during every <ActionLink {...ACTIONS.RAGING_STRIKES}/> window.
 		</Trans>,
 		severityTiers: {
