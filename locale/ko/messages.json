@@ -49,6 +49,7 @@
   "ast.horoscope.suggestion.expired.content": "<0/>는 지속 시간 만료시 효과가 발동되지 않습니다. 시전 후 만료되기에 잊지 말고 반드시 사용하십시오.",
   "ast.horoscope.suggestion.expired.why": "별점운 사용 후 발동하는 것을 잊어 총 {missedActivations, plural, other {# 회를}} 놓쳤습니다.",
   "ast.horoscope.suggestion.usage.content": "",
+  "ast.horoscope.suggestion.usage.why": "",
   "ast.horoscope.title": "별점운",
   "ast.lightspeed.messages.explanation": "<0/>의 주 사용처는 <1/>과 <2/> 구간에서 카드들을 끼워넣기 위해 사용됩니다. <3/>마나 소모가 심한 치유 구간에서 마나를 관리하기 위해 사용되거나 이동이 강제되는 구간에서 글쿨 손해를 보지 않기 위해 사용 및 기타 상황에 사용될 수 있습니다. 또한 <4/>사용시 광속 시전 쿨타임을 줄일 수 있습니다. 전투마다 다른 사용 전략이 요구되기를 앞서 최대한 사용 횟수를 늘리십시오. <5/><6/>을 위한 구간을 제외하면 <7/>광속 시전은 최소한 6회의 글쿨기를 사용해야 합니다.",
   "ast.lightspeed.messages.explanation.post5_3": "",
