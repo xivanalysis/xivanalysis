@@ -129,8 +129,7 @@ export default class LIGHTSPEED extends Module {
 			// pre-5.3 mp savings calcuation
 			let mpSavingsDisplay
 			if (this.parser.patch.before('5.3')) {
-				const mpSavings = gcdActions
-					.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)
+				const mpSavings = gcdActions.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)
 
 				mpSavingsDisplay = <>&nbsp;-&nbsp; {mpSavings} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans></>
 			}
