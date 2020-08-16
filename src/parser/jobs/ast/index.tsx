@@ -37,6 +37,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2020-07-13'),
+			Changes: () => <>
+				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
+		{
 			date: new Date('2020-04-29'),
 			Changes: () => <>
 				Updated AST for 5.1 & 5.2

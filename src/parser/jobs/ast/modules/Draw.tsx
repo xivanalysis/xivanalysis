@@ -15,7 +15,7 @@ import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 15000
-const SLEEVE_DRAW_PLAYS_GIVEN = 3
+const SLEEVE_DRAW_PLAYS_GIVEN = 1
 
 const WARN_TARGET_MAXPLAYS = 2
 const FAIL_TARGET_MAXPLAYS = 3
@@ -79,6 +79,12 @@ export default class Draw extends Module {
 	}
 
 	private onDraw(event: CastEvent) {
+
+		// ignore precasted draws
+		if (event.timestamp < this.parser.fight.start_time) {
+			return
+		}
+
 		this.draws++
 
 		if (this.draws === 1) {
@@ -162,10 +168,10 @@ export default class Draw extends Module {
 		// Prepull consideration: + 1 play
 
 		// Begin Theoretical Max Plays calc
-		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const maxSleeveUses = Math.floor((fightDuration - (CARD_DURATION*2)) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
+		const fightDuration = this.parser.pull.duration
+		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
 		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (this.data.actions.DRAW.cooldown * 1000)) + 1
+		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
 		// TODO: Include downtime calculation for each fight??
