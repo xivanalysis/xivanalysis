@@ -20,6 +20,7 @@ const APEX_POTENCY_THRESHOLDS = {
 export default class ApexArrow extends Module {
 	static handle = 'Apex'
 	static title = t('brd.apex.title')`Apex Arrow`
+	static debug = false
 
 	@dependency private stats!: AdditionalStats
 	@dependency private data!: Data
@@ -65,7 +66,11 @@ export default class ApexArrow extends Module {
 		const rawDamage = this.getRawDamage(event.confirmedEvents[0])
 		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
 
-		this.debug(approximatedPotency)
+		this.debug('Apex Event', {
+			timestamp: event.timestamp,
+			potency: approximatedPotency,
+			hitCount: event.hitCount,
+		})
 
 		if ((event.hitCount === 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.singleTarget) ||
 			(event.hitCount > 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.multiTarget)) {
