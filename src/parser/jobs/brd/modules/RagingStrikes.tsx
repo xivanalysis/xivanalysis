@@ -2,15 +2,11 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS, {Action} from 'data/ACTIONS'
-import STATUSES, {Status} from 'data/STATUSES'
+import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
-import Module, {dependency} from 'parser/core/Module'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
-import Enemies from 'parser/core/modules/Enemies'
-import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {any} from 'prop-types'
 
 const SUPPORT_ACTIONS = [
 	ACTIONS.ARMS_LENGTH,
@@ -29,7 +25,6 @@ const SUPPORT_ACTIONS = [
 export default class RagingStrikes extends BuffWindowModule {
 	static handle = 'rs'
 	static title = t('brd.rs.title')`Raging Strikes`
-	static debug = true
 
 	buffAction = ACTIONS.RAGING_STRIKES
 	buffStatus = STATUSES.RAGING_STRIKES
