@@ -2,7 +2,6 @@ import React from 'react'
 import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
 import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
 import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
@@ -76,9 +75,9 @@ export default class ApexArrow extends Module {
 
 	private onComplete() {
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.APEX_ARROW.icon,
+			icon: this.data.actions.APEX_ARROW.icon,
 			content: <Trans id="brd.apex.suggestions.ghost.content">
-				Avoid using <ActionLink {...ACTIONS.APEX_ARROW} /> when the target is about to disappear.
+				Avoid using <ActionLink {...this.data.actions.APEX_ARROW} /> when the target is about to disappear.
 			</Trans>,
 			why: <Trans id="brd.apex.suggestions.ghost.why">
 				Apex Arrow ghosted and dealt no damage <Plural value={this.ghostedApexCasts} one="# time" other="# times"/>.
@@ -91,9 +90,9 @@ export default class ApexArrow extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.APEX_ARROW.icon,
+			icon: this.data.actions.APEX_ARROW.icon,
 			content: <Trans id="brd.apex.suggestions.bad.content">
-				Avoid using <ActionLink {...ACTIONS.APEX_ARROW} /> without a sufficient amount of Soul Voice.
+				Avoid using <ActionLink {...this.data.actions.APEX_ARROW} /> without a sufficient amount of Soul Voice.
 			</Trans>,
 			why: <Trans id="brd.apex.suggestions.bad.why">
 				Apex Arrow dealt very low damage <Plural value={this.badApexCasts} one="# time" other="# times"/>.
