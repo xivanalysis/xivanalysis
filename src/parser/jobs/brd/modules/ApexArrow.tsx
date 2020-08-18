@@ -57,7 +57,7 @@ export default class ApexArrow extends Module {
 	}
 
 	private onApex(event: NormalisedDamageEvent) {
-		if (event.hitCount === 0) {
+		if (event.confirmedEvents.length === 0) {
 			this.ghostedApexCasts++
 			return
 		}
