@@ -169,7 +169,7 @@ export default class Barrage extends Module {
 
 		const barrageAL = <ActionLink {...this.data.actions.BARRAGE} />
 
-		this.checklist.add(new TieredRule({
+		this.checklist.add(new WeightedTieredRule({
 			name: <Trans id="brd.barrage.checklist.default-name">Barrage usage</Trans>,
 			description: <Trans id="brd.barrage.checklist.description">
 				As Bard's strongest damage cooldown, make sure you get the most out of your {barrageAL} casts. More details in the MODULE LINK below.
@@ -179,18 +179,22 @@ export default class Barrage extends Module {
 				new Requirement({
 					name: <Trans id="brd.barrage.checklist.dealt-damage">{barrageAL}s that dealt damage</Trans>,
 					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.dropped).length / this.barrageHistory.length),
+					weight: SeverityWeights.DROPPED_BUFF,
 				}),
 				new Requirement({
 					name: <Trans id="brd.barrage.checklist.used-on-refulgent">{barrageAL}s used on <ActionLink {...this.data.actions.REFULGENT_ARROW}/></Trans>,
 					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.badGcd).length / this.barrageHistory.length),
+					weight: SeverityWeights.BAD_GCD,
 				}),
 				new Requirement({
 					name: <Trans id="brd.barrage.checklist.granted-refulgent">{barrageAL}s that granted <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY}/></Trans>,
 					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.overwrite).length / this.barrageHistory.length),
+					weight: SeverityWeights.PROC_OVERWRITE,
 				}),
 				new Requirement({
 					name: <Trans id="brd.barrage.checklist.aligned-barrage">{barrageAL}s aligned with <ActionLink {...this.data.actions.RAGING_STRIKES}/></Trans>,
 					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.unaligned).length / this.barrageHistory.length),
+					weight: SeverityWeights.UNALIGNED,
 				}),
 			],
 		}))
@@ -198,5 +202,22 @@ export default class Barrage extends Module {
 
 	output() {
 		return undefined
+	}
+}
+
+/**
+ * A WeightedTieredRule is a TieredRule where each requirement is assigned a weight
+ * corresponding to its relative importance
+ */
+class WeightedTieredRule extends TieredRule {
+	constructor(options: TODO) {
+		super({...options})
+
+		const totalWeight = this.requirements.reduce((acc, req) => acc + req.weight, 0)
+		this.requirements.map(req => req.weight = req.weight / totalWeight)
+	}
+
+	public get percent(): number {
+		return this.requirements.reduce((acc, req) => acc + (req.percent * req.weight), 0)
 	}
 }
