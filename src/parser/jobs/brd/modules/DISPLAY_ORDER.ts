@@ -1,0 +1,7 @@
+export default {
+	RAGING_STRIKES: 1,
+	BARRAGE: 2,
+	PITCH_PERFECT: 3,
+	SIDEWINDER: 4,
+	SNAPSHOTS: 5,
+}
