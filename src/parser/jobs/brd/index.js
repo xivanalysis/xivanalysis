@@ -20,9 +20,9 @@ export default new Meta({
 		to: '5.3',
 	},
 	contributors: [
+		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.MAINTAINER},
 		{user: CONTRIBUTORS.YUMIYA, role: ROLES.DEVELOPER},
 		{user: CONTRIBUTORS.RIRIAN, role: ROLES.DEVELOPER},
-		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.DEVELOPER},
 	],
 	changelog,
 })
