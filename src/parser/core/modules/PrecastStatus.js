@@ -34,6 +34,7 @@ export default class PrecastStatus extends Module {
 
 			if (event.type === 'applybuff' && !statusInfo.hasOwnProperty('stacksApplied')) {
 				// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
+				this.fabricateActionEventIfNew(event, statusInfo)
 				this.markStatusAsTracked(statusInfo.id, targetId)
 			}
 
@@ -44,6 +45,7 @@ export default class PrecastStatus extends Module {
 					this.fabricateStatusEvent(event, statusInfo)
 				}
 
+				this.fabricateActionEventIfNew(event, statusInfo)
 				this.markStatusAsTracked(statusInfo.id, targetId)
 			}
 
@@ -85,15 +87,25 @@ export default class PrecastStatus extends Module {
 			})
 		}
 
+		this.fabricateActionEventIfNew(event, statusInfo)
+	}
+
+	fabricateActionEventIfNew(event, statusInfo) {
+		this.debug(`Checking action associated with status ${statusInfo.name}`)
 		// Determine if this buff comes from a known action, fab a cast event
 		const statusKey = _.findKey(this.data.statuses, statusInfo)
 		const actionInfo = getDataBy(this.data.actions, 'statusesApplied', statusKey)
-		if (actionInfo && this._combatantActions.indexOf(actionInfo.id) === -1) {
-			this.fabricateActionEvent(event, actionInfo)
+		if (!actionInfo) {
+			this.debug('No action is applied by status, no action to synthesize')
+			return
 		}
-	}
 
-	fabricateActionEvent(event, actionInfo) {
+		this.debug(`Checking if action ${actionInfo.name} has been observed`)
+		if (this._combatantActions.includes(actionInfo.id)) {
+			this.debug('Action has already occurred, no action to synthesize')
+			return
+		}
+
 		this.debug(`Fabricating cast event for action ${actionInfo.name} by ${event.sourceID}`)
 		const fabricated = {
 			...event,
