@@ -11,7 +11,6 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import {Timeline} from 'parser/core/modules/Timeline'
 import Util from './Util'
 
 // Arbitrary threshold (in ms) to accept that three damage events were from the same cast
@@ -41,7 +40,7 @@ const enum SeverityWeights {
 
 const SEVERITY_TIERS = {
 	// tslint:disable-next-line: no-magic-numbers
-	[91-99]: TARGET.WARN,
+	[90]: TARGET.WARN,
 	[100]: TARGET.SUCCESS,
 }
 
