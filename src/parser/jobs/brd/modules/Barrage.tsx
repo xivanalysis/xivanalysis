@@ -1,24 +1,18 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-
-import React, {Fragment} from 'react'
-import {Accordion, Icon, Message, List, Table} from 'semantic-ui-react'
-import Module, {dependency} from 'parser/core/Module'
-import {getDataBy} from 'data'
-import STATUSES from 'data/STATUSES'
-import ACTIONS from 'data/ACTIONS'
-import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
+import _ from 'lodash'
+import React from 'react'
+import {Icon, Table} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-
-// import styles from './Barrage.module.css'
 import {ActionRoot} from 'data/ACTIONS/root'
-import Util from './Util'
-import {Data} from 'parser/core/modules/Data'
 import {CastEvent, BuffEvent, DamageEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
+import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
-import _ from 'lodash'
-import {warning} from 'akkd/Message/Message.module.css'
+import {Data} from 'parser/core/modules/Data'
+import {Timeline} from 'parser/core/modules/Timeline'
+import Util from './Util'
 
 // Arbitrary threshold (in ms) to accept that three damage events were from the same cast
 const TRIPLE_HIT_THRESHOLD = 500
@@ -33,13 +27,10 @@ const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 
 const enum SeverityWeights {
 	// a barrage that went unused
-	DROPPED_BUFF = 5,
-
-	// a barrage that dealt no damage
-	GHOSTED = 5,
+	DROPPED_BUFF = 4,
 
 	// a barrage that wasn't used on refulgent arrow
-	BAD_GCD = 4,
+	BAD_GCD = 3,
 
 	// a barrage that overwrote a natural straight shot proc
 	PROC_OVERWRITE = 2,
@@ -77,7 +68,6 @@ interface BarrageWindow {
 export default class Barrage extends Module {
 	static handle = 'barrage'
 	static title = t('brd.barrage.title')`Barrage`
-	static debug = true
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -131,17 +121,9 @@ export default class Barrage extends Module {
 		}
 	}
 
-	private get severity(): number {
-		return 1
-	}
-
 	private onComplete() {
 		// Ignore barrages with no expire timestamp (i.e., right at the end of the fight)
 		this.barrageHistory = this.barrageHistory.filter(barrage => barrage.expireTimestamp !== undefined)
-
-		if (this.barrageHistory.length === 0) {
-			return
-		}
 
 		this.barrageHistory.map(barrage => {
 			if (barrage.damageEvents[2] && barrage.damageEvents[0].timestamp + TRIPLE_HIT_THRESHOLD > barrage.damageEvents[2].timestamp) {
@@ -169,45 +151,106 @@ export default class Barrage extends Module {
 
 		const barrageAL = <ActionLink {...this.data.actions.BARRAGE} />
 
-		this.checklist.add(new WeightedTieredRule({
-			name: <Trans id="brd.barrage.checklist.default-name">Barrage usage</Trans>,
-			description: <Trans id="brd.barrage.checklist.description">
-				As Bard's strongest damage cooldown, make sure you get the most out of your {barrageAL} casts. More details in the MODULE LINK below.
-			</Trans>,
-			tiers: SEVERITY_TIERS,
-			requirements: [
-				new Requirement({
-					name: <Trans id="brd.barrage.checklist.dealt-damage">{barrageAL}s that dealt damage</Trans>,
-					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.dropped).length / this.barrageHistory.length),
-					weight: SeverityWeights.DROPPED_BUFF,
-				}),
-				new Requirement({
-					name: <Trans id="brd.barrage.checklist.used-on-refulgent">{barrageAL}s used on <ActionLink {...this.data.actions.REFULGENT_ARROW}/></Trans>,
-					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.badGcd).length / this.barrageHistory.length),
-					weight: SeverityWeights.BAD_GCD,
-				}),
-				new Requirement({
-					name: <Trans id="brd.barrage.checklist.granted-refulgent">{barrageAL}s that granted <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY}/></Trans>,
-					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.overwrite).length / this.barrageHistory.length),
-					weight: SeverityWeights.PROC_OVERWRITE,
-				}),
-				new Requirement({
-					name: <Trans id="brd.barrage.checklist.aligned-barrage">{barrageAL}s aligned with <ActionLink {...this.data.actions.RAGING_STRIKES}/></Trans>,
-					percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.unaligned).length / this.barrageHistory.length),
-					weight: SeverityWeights.UNALIGNED,
-				}),
-			],
-		}))
+		const moduleLink = <a
+			style={{cursor: 'pointer'}}
+			onClick={() => this.parser.scrollTo(Barrage.handle)}><NormalisedMessage message={Barrage.title}/>
+		</a>
+
+		if (this.barrageHistory.length > 0) {
+			this.checklist.add(new WeightedTieredRule({
+				name: <Trans id="brd.barrage.checklist.default-name">Barrage usage</Trans>,
+				description: <Trans id="brd.barrage.checklist.description">
+					As Bard's strongest damage cooldown, make sure you get the most out of your {barrageAL} casts. More details in the {moduleLink} module below.
+				</Trans>,
+				tiers: SEVERITY_TIERS,
+				requirements: [
+					new Requirement({
+						name: <Trans id="brd.barrage.checklist.dealt-damage">{barrageAL}s that dealt damage</Trans>,
+						percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.dropped).length / this.barrageHistory.length),
+						weight: SeverityWeights.DROPPED_BUFF,
+					}),
+					new Requirement({
+						name: <Trans id="brd.barrage.checklist.used-on-refulgent">{barrageAL}s used on <ActionLink {...this.data.actions.REFULGENT_ARROW}/></Trans>,
+						percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.badGcd).length / this.barrageHistory.length),
+						weight: SeverityWeights.BAD_GCD,
+					}),
+					new Requirement({
+						name: <Trans id="brd.barrage.checklist.granted-refulgent">{barrageAL}s that granted <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY}/></Trans>,
+						percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.overwrite).length / this.barrageHistory.length),
+						weight: SeverityWeights.PROC_OVERWRITE,
+					}),
+					new Requirement({
+						name: <Trans id="brd.barrage.checklist.aligned-barrage">{barrageAL}s aligned with <ActionLink {...this.data.actions.RAGING_STRIKES}/></Trans>,
+						percent: () => (100 - 100 * this.barrageHistory.filter(b => b.info.unaligned).length / this.barrageHistory.length),
+						weight: SeverityWeights.UNALIGNED,
+					}),
+				],
+			}))
+
+		} else {
+			this.checklist.add(new Rule({
+				name: <Trans id="brd.barrage.no-barrage-checklist.name">No Barrage usage</Trans>,
+				description: <Trans id="brd.barrage.no-barrage-checklist.description">{barrageAL} into <ActionLink {...this.data.actions.REFULGENT_ARROW}/> is Bard's strongest damage cooldown. Make sure to use it during a fight.</Trans>,
+				target: 95,
+				requirements: [
+					new Requirement({
+						name: <Trans id="brd.barrage.no-barrage-checklist.no-barrage-cast">{barrageAL}s cast</Trans>,
+						percent: () => 0,
+					}),
+				],
+			}))
+		}
+	}
+
+	private getIcon(failed: boolean): JSX.Element {
+		if (failed) {
+			return <Icon name="remove" className="text-error"/>
+		} else {
+			return <Icon name="checkmark" className="text-success"/>
+		}
 	}
 
 	output() {
-		return undefined
+		if (this.barrageHistory.length === 0) {
+			return null
+		}
+
+		return <Table collapsing>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell><Trans id="brd.barrage.table.header.time">Time</Trans></Table.HeaderCell>
+					<Table.HeaderCell><Trans id="brd.barrage.table.header.dealt-damage">Dealt Damage?</Trans></Table.HeaderCell>
+					<Table.HeaderCell>
+						<Trans id="brd.barrage.table.header.used-on-refulgent">Used on <ActionLink {...this.data.actions.REFULGENT_ARROW}/>?</Trans>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<Trans id="brd.barrage.table.header.granted-refulgent">Granted <StatusLink {...this.data.statuses.STRAIGHT_SHOT_READY}/>?</Trans>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<Trans id="brd.barrage.table.header.aligned">Aligned with <StatusLink {...this.data.statuses.RAGING_STRIKES}/>?</Trans>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+			{
+				this.barrageHistory.map(barrage => {
+					return <Table.Row key={barrage.castTimestamp} warning={barrage.info.dropped}>
+						<Table.Cell>{this.util.createTimelineButton(barrage.castTimestamp)}</Table.Cell>
+						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped)}</Table.Cell>
+						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.badGcd)}</Table.Cell>
+						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.overwrite)}</Table.Cell>
+						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.unaligned)}</Table.Cell>
+					</Table.Row>
+				})
+			}
+			</Table.Body>
+		</Table>
 	}
 }
 
 /**
- * A WeightedTieredRule is a TieredRule where each requirement is assigned a weight
- * corresponding to its relative importance
+ * A WeightedTieredRule is a TieredRule where each requirement has a weight
+ * corresponding to its relative importance toward the rule
  */
 class WeightedTieredRule extends TieredRule {
 	constructor(options: TODO) {
