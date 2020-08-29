@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {Data} from 'parser/core/modules/Data'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Cooldowns from 'parser/core/modules/Cooldowns'
-import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 
@@ -70,7 +70,7 @@ export default class Horoscope extends Module {
 
 	onComplete() {
 
-		if (this.parser.patch.before('5.3')) {
+		if (this.parser.patch.before('5.3')){
 			/*
 				SUGGESTION: Didn't activate
 			*/
@@ -94,7 +94,7 @@ export default class Horoscope extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
-					Try to plan ahead and have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} /> .
+					Plan to have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} /> .
 				<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
 			</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,

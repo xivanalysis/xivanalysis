@@ -127,7 +127,12 @@ export default class LIGHTSPEED extends Module {
 			const numGcds = gcdActions.length
 
 			// pre-5.3 mp savings calcuation
-			const  mpSavingsDisplay = <>&nbsp;-&nbsp; {gcdActions.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans></>
+			let mpSavingsDisplay
+			if (this.parser.patch.before('5.3')) {
+				const mpSavings = gcdActions.reduce((totalSavings, action) => action.mpCost / 2 + totalSavings, 0)
+
+				mpSavingsDisplay = <>&nbsp;-&nbsp; {mpSavings} <Trans id="ast.lightspeed.rotation.mp-saved">MP saved</Trans></>
+			}
 
 			return {
 				key: lightspeed.start,
@@ -135,7 +140,7 @@ export default class LIGHTSPEED extends Module {
 					content: <>
 						{this.parser.formatTimestamp(lightspeed.start)}
 						&nbsp;-&nbsp;<Trans id="ast.lightspeed.rotation.gcd"><Plural value={numGcds} one="# GCD" other="# GCDs"/></Trans>
-						{this.parser.patch.before('5.3') && mpSavingsDisplay}
+						{mpSavingsDisplay}
 					</>,
 				},
 				content: {

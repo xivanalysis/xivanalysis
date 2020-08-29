@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
+import {Data} from 'parser/core/modules/Data'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
@@ -63,9 +63,9 @@ export default class Draw extends Module {
 	private SLEEVE_DRAW_PLAYS_GIVEN: number = SLEEVE_DRAW_PLAYS_GIVEN_530
 
 	protected init() {
-		if (this.parser.patch.before('5.3')) {
-			this.SLEEVE_DRAW_PLAYS_GIVEN = SLEEVE_DRAW_PLAYS_GIVEN_500
-		}
+		this.SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
