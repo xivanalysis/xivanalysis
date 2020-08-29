@@ -26,7 +26,7 @@ export default class PrecastStatus extends Module {
 
 			const statusInfo = this.data.getStatus(event.ability?.guid)
 			if (!statusInfo) {
-				if (event.type === 'cast' && event.ability.guid) {
+				if (event.type === 'cast' && event.ability?.guid) {
 					// Add cast to list of observed actions
 					this._combatantActions.push(event.ability.guid)
 				}
