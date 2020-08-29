@@ -28,7 +28,7 @@ export default class PrecastStatus extends Module {
 			if (!statusInfo) {
 				if (event.type === 'cast' && event.ability?.guid) {
 					// Add cast to list of observed actions
-					this._combatantActions.push(event.ability.guid)
+					this.markActionAsTracked(event.ability.guid)
 				}
 
 				// No valid status data, skip to next event
