@@ -16,7 +16,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SKYE, role: ROLES.MAINTAINER},
@@ -24,6 +24,13 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-08-11'),
+			contributors: [CONTRIBUTORS.ACCHAN],
+			Changes: () => <>
+				Add patch 5.3 support.
+			</>,
+		},
 		{
 			date: new Date('2020-08-08'),
 			contributors: [CONTRIBUTORS.YUMIYAFANGIRL],

@@ -106,6 +106,11 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected trackedBadActions?: BuffWindowTrackedActions
 	/**
+	 * Optionally, you can also specify pet actions to track. These actions will show up in the rotation section and can be
+	 *   included in trackedActions
+	 */
+	protected petActions?: Action[]
+	/**
 	 * Implementing modules MAY provide a value to override the "Rotation" title in the header of the rotation section
 	 * If implementing, you MUST provide a JSX.Element <Trans> or <Fragment> tag (Trans tag preferred)
 	 */
@@ -138,6 +143,10 @@ export abstract class BuffWindowModule extends Module {
 		this.addEventHook('applybuff', {to: 'player'}, this.onApplyBuff)
 		this.addEventHook('removebuff', {to: 'player'}, this.onRemoveBuff)
 		this.addEventHook('complete', this.onComplete)
+
+		if (this.petActions && this.petActions.length) {
+			this.addEventHook('cast', {by: 'pet', abilityId: this.petActions.map(a => a.id)}, this.onCast)
+		}
 	}
 
 	private onCast(event: CastEvent) {
