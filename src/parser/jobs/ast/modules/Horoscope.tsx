@@ -100,7 +100,7 @@ export default class Horoscope extends Module {
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 				value: this.nonHoroscopeHeals,
 				why: <Trans id="ast.horoscope.suggestion.usage.why">
-					<Plural value={this.nonHoroscopeHeals} one="# single-target GCD heal was cast" other="# single-target GCD heals were cast" /> without synastry even though it was available.
+					<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without horoscope even though it was available.
 			</Trans>,
 			}))
 		}
