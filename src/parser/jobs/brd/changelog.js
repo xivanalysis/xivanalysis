@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-09-06'),
+		Changes: () => <>
+			GCDs under <ActionLink {...ACTIONS.ARMYS_PAEON}/> and <StatusLink {...STATUSES.ARMYS_MUSE}/> are now dropped from the 'Always Be Casting' uptime calculation.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-08-10'),
 		Changes: () => <>
 			Support for patch 5.3 - potencies for Burst Shot, Refulgent Arrow, and Sidewinder adjusted.
