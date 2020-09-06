@@ -37,7 +37,10 @@ export default class BardABC extends AlwaysBeCasting {
 	}
 
 	private onMuse(event: BuffEvent) {
-		this.currentMuse = {start: event.timestamp, end: event.timestamp + STATUSES.ARMYS_MUSE.duration}
+		this.currentMuse = {
+			start: event.timestamp,
+			end: Math.min(this.parser.fight.end_time, event.timestamp + STATUSES.ARMYS_MUSE.duration),
+		}
 	}
 
 	private onRemoveMuse(event: BuffEvent) {
@@ -49,7 +52,10 @@ export default class BardABC extends AlwaysBeCasting {
 
 	private onSong(event: CastEvent) {
 		if (event.ability.guid === ACTIONS.ARMYS_PAEON.id) {
-			this.currentPaeon = {start: event.timestamp, end: event.timestamp + SONG_DURATION_MS}
+			this.currentPaeon = {
+				start: event.timestamp,
+				end: Math.min(this.parser.fight.end_time, event.timestamp + SONG_DURATION_MS),
+			}
 		} else if (this.currentPaeon) {
 			this.currentPaeon.end = event.timestamp
 			this.endPaeon()
