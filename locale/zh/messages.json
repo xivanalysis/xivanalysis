@@ -417,7 +417,7 @@
   "drg.drift.table.heading-2": "推移",
   "drg.drift.table.heading-3": "总推移时间",
   "drg.drift.title": "能力技偏移",
-  "drg.lancecharge.title": "",
+  "drg.lancecharge.title": "猛枪",
   "drg.positionals.analysis.missed": "<0/> 在可能的<2>{0}</2>次<3/>触发中，你丢失了<1>{missed}</1>次。",
   "drg.positionals.analysis.truenorth": "在你失误的触发类技能中，你可以多打<0>{withTn}</0>次<1/>。",
   "drg.positionals.suggestions.content": "以正确的身位打出<0/>和<1/>，会让你在打出更高伤害的同时，可在下一次循环中使用<2/>。尝试在这两个连击中打出正确的身位，或在可用的时候使用<3/>。",
