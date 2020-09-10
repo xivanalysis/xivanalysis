@@ -36,7 +36,7 @@ interface StatusInfoTracking {
 
 export class EntityStatuses extends Module {
 	static handle = 'entityStatuses'
-	static debug = false
+	static debug = true
 
 	@dependency private invuln!: Invulnerability
 	@dependency private data!: Data
@@ -64,13 +64,13 @@ export class EntityStatuses extends Module {
 		return this.getUptime(statusEvents)
 	}
 
-	getSelectedStatusEvents = (statusId: number, sourceId: number, targetBuffs: BuffTrackingEvent[]) => {
+	private getSelectedStatusEvents = (statusId: number, sourceId: number, targetBuffs: BuffTrackingEvent[]) => {
 		return targetBuffs.filter((statusEvent: BuffTrackingEvent) => {
 			return statusEvent.ability.guid === statusId && (statusEvent.sourceID === null || statusEvent.sourceID === sourceId)
 		})
 	}
 
-	getUptime = (statusEvents: BuffTrackingEvent[]) => {
+	private getUptime = (statusEvents: BuffTrackingEvent[]) => {
 		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
 				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
 			}, [])
@@ -81,7 +81,7 @@ export class EntityStatuses extends Module {
 		return statusInfo.uptime
 	}
 
-	getStatusRangesForEvent = (statusEvent: BuffTrackingEvent) => {
+	private getStatusRangesForEvent = (statusEvent: BuffTrackingEvent) => {
 		this.debug(`Determining active time range for status ${statusEvent.ability.name} - started at: ${this.parser.formatTimestamp(statusEvent.start, 1)} - ended at: ${(statusEvent.end)? this.parser.formatTimestamp(statusEvent.end, 1) : ''}`)
 		return this.splitStatusEventForInvulns(statusEvent).reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
 			statusRanges.push({timestamp: statusEvent.start, type: APPLY, stackHistory: statusEvent.stackHistory})
@@ -90,7 +90,7 @@ export class EntityStatuses extends Module {
 		}, [])
 	}
 
-	totalStatusUptime = (statusTracking: StatusInfoTracking, rangeEndpoint: StatusRangeEndpoint) => {
+	private totalStatusUptime = (statusTracking: StatusInfoTracking, rangeEndpoint: StatusRangeEndpoint) => {
 		this.debug(`Status change ${rangeEndpoint.type} at time ${this.parser.formatTimestamp(rangeEndpoint.timestamp, 1)}`)
 		if (rangeEndpoint.type === APPLY) {
 			if (statusTracking.activeOn === 0) {
@@ -109,7 +109,7 @@ export class EntityStatuses extends Module {
 		return statusTracking
 	}
 
-	splitStatusEventForInvulns = (statusEvent: BuffTrackingEvent) => {
+	private splitStatusEventForInvulns = (statusEvent: BuffTrackingEvent) => {
 		this.setEndTimeIfUnfinished(statusEvent)
 
 		const eventToAdjust = _.cloneDeep(statusEvent)
