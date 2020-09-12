@@ -12,6 +12,7 @@ import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
 import {matchClosest} from 'utilities'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // All of Bards DoTs
 const DOTS = [
@@ -31,6 +32,7 @@ const MAX_SIDEWINDER_POTENCY = ACTIONS.SIDEWINDER.potency[2]
 export default class Sidewinder extends Module {
 	static handle = 'sidewinder'
 	static title = t('brd.sidewinder.title')`Sidewinders and Shadowbites`
+	static displayOrder = DISPLAY_ORDER.SIDEWINDER
 	static dependencies = [
 		'suggestions',
 		'timeline',

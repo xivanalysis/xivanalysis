@@ -15,6 +15,7 @@ import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 
 import styles from './Barrage.module.css'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SUCCESS = TARGET.SUCCESS
 const WARNING = TARGET.WARN
@@ -64,6 +65,7 @@ const WEAPONSKILLS = [
 export default class Barrage extends Module {
 	static handle = 'barrage'
 	static title = t('brd.barrage.title')`Barrage`
+	static displayOrder = DISPLAY_ORDER.BARRAGE
 	static dependencies = [
 		'checklist',
 		'util',
