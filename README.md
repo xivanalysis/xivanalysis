@@ -27,11 +27,11 @@ If you would like to contribute new or corrected translation strings, please joi
 
 We support the languages that FFXIV officially supports:
 
-- Chinese Simplified :cn:
-- French :fr:
-- German :de:
-- Japanese :jp:
-- Korean :kr:
+- Chinese Simplified
+- French
+- German
+- Japanese
+- Korean
 
 ## Structure of the parser
 
