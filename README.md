@@ -25,6 +25,14 @@ If you'd like to contribute, check past [our developer documentation](https://do
 We use [Crowdin](https://crowdin.com/project/xivanalysis) to manage and maintain our translations.
 If you would like to contribute new or corrected translation strings, please join our [CrowdIn project](https://crowdin.com/project/xivanalysis).
 
+We support the languages that FFXIV officially supports:
+
+- Chinese Simplified ![CN](https://d2srrzh48sp2nh.cloudfront.net/1120e9fa/images/flags/zh-CN.png)
+- French ![FR](https://d2srrzh48sp2nh.cloudfront.net/1120e9fa/images/flags/fr.png)
+- German ![DE](https://d2srrzh48sp2nh.cloudfront.net/1120e9fa/images/flags/de.png)
+- Japanese ![JP](https://d2srrzh48sp2nh.cloudfront.net/1120e9fa/images/flags/ja.png)
+- Korean ![KR] (https://d2srrzh48sp2nh.cloudfront.net/1120e9fa/images/flags/ko.png)
+
 ## Structure of the parser
 
 The parser is the meat of xivanalysis. Its primary job is to orchestrate modules, which read event data and output the final analysis.
