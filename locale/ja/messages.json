@@ -385,6 +385,7 @@
   "gnb.nomercy.title": "ノー・マーシー効果時間",
   "mch.drift.title": "GCDの挟み込み",
   "mch.heat.panel-count": "{0, plural, one {GCD使用数: #} other {GCD使用数: #}}",
+  "mch.reassemble.suggestions.bad-gcds.content": "<1/>や<2/>は最も強力なGCDなので、敵が単体の場合は<0/>に使ってください。",
   "mch.wildfire.panel-count": "{0, plural, other {GCD使用数: #}}",
   "mch.wildfire.panel-count-spoofed": "?GCD、 ダメージ: {0}",
   "mch.wildfire.title": "ワイルドファイア",
