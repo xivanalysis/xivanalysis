@@ -1,6 +1,4 @@
 import {Trans} from '@lingui/react'
-import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {Action} from 'data/ACTIONS'
 import Downtime from 'parser/core/modules/Downtime'
 import {dependency} from 'parser/core/Module'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -8,30 +6,33 @@ import {Tincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 import {BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 
+// Arbitrary 1 GCD buffer for the tincture buff application
+const TINCTURE_BUFFER = 2500
+
 export default class MchTincture extends Tincture {
 	@dependency private downtime!: Downtime
 
-	buffAction = ACTIONS.INFUSION_DEX
+	buffAction = this.data.actions.INFUSION_DEX
 
-	petActions = [ACTIONS.PILE_BUNKER]
+	petActions = [this.data.actions.PILE_BUNKER]
 
 	trackedActions = {
-		icon: ACTIONS.INFUSION_DEX.icon,
+		icon: this.data.actions.INFUSION_DEX.icon,
 		actions: [
 			{
-				action: ACTIONS.WILDFIRE,
+				action: this.data.actions.WILDFIRE,
 				expectedPerWindow: 1,
 			},
 			{
-				action: ACTIONS.REASSEMBLE,
+				action: this.data.actions.REASSEMBLE,
 				expectedPerWindow: 1,
 			},
 			{
-				action: ACTIONS.PILE_BUNKER,
+				action: this.data.actions.PILE_BUNKER,
 				expectedPerWindow: 1,
 			},
 			{
-				action: ACTIONS.DRILL,
+				action: this.data.actions.DRILL,
 				expectedPerWindow: 2,
 			},
 		],
@@ -46,15 +47,17 @@ export default class MchTincture extends Tincture {
 	}
 
 	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
-		if (action.action === ACTIONS.REASSEMBLE) {
+		const bufferedWindowStart = buffWindow.start - TINCTURE_BUFFER
+
+		if (action.action === this.data.actions.REASSEMBLE) {
 			// Reassemble might be used prepull or during downtime
-			if (buffWindow.start <= this.parser.fight.start_time || this.downtime.isDowntime(buffWindow.start)) {
+			if (bufferedWindowStart <= this.parser.fight.start_time || this.downtime.isDowntime(bufferedWindowStart)) {
 				return -1
 			}
 
-		} else if (action.action === ACTIONS.PILE_BUNKER) {
+		} else if (action.action === this.data.actions.PILE_BUNKER) {
 			// We don't have queen in the opener
-			if (buffWindow.start <= this.parser.fight.start_time) {
+			if (bufferedWindowStart <= this.parser.fight.start_time) {
 				return -1
 			}
 		}

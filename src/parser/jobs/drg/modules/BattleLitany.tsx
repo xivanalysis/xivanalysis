@@ -8,7 +8,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
 import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
@@ -36,6 +36,7 @@ class BLWindow {
 	buffsRemoved: number[] = []
 	playersBuffed: number = 0
 	containsOtherDRG: boolean = false
+	deathTruncated: boolean = false
 
 	constructor(start: number) {
 		this.start = start
@@ -62,6 +63,7 @@ export default class BattleLitany extends Module {
 		this.addEventHook('normalisedapplybuff', {to: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.tryOpenWindow)
 		this.addEventHook('normalisedapplybuff', {by: 'player', abilityId: STATUSES.BATTLE_LITANY.id}, this.countLitBuffs)
 		this.addEventHook('removebuff', {to: 'player', abilityId: WINDOW_STATUSES}, this.tryCloseWindow)
+		this.addEventHook('death', {to: 'player'}, this.onDeath)
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 	}
 
@@ -162,6 +164,21 @@ export default class BattleLitany extends Module {
 		}
 	}
 
+	private onDeath(event: DeathEvent) {
+		// end the window and set a flag to not count as overlapping if times are different
+		const lastWindow: BLWindow | undefined = _.last(this.history)
+
+		if (!lastWindow) {
+			return
+		}
+
+		// if there was a death within an expected window duration, we can assume the player died while
+		// lit was active.
+		if (event.timestamp < lastWindow.start + STATUSES.BATTLE_LITANY.duration * 1000) {
+			lastWindow.deathTruncated = true
+		}
+	}
+
 	// just output, no suggestions for now.
 	// open to maybe putting a suggestion not to clip into other DRG windows? hitting everyone with litany?
 	output() {
@@ -170,7 +187,10 @@ export default class BattleLitany extends Module {
 				window.end - this.parser.fight.start_time :
 				window.start - this.parser.fight.start_time
 			const start = window.start - this.parser.fight.start_time
-			const overlap = window.containsOtherDRG || ((end !== start) && (end - start < BL_TRUNCATE_DURATION))
+
+			// overlapped if: we detected an overwrite of this player onto another player, or if
+			// this player's buff had a duration that was too short and they didn't die
+			const overlap = window.containsOtherDRG || (!window.deathTruncated && (end !== start) && (end - start < BL_TRUNCATE_DURATION))
 
 			return ({
 				start,
