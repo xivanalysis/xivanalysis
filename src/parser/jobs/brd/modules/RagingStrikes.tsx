@@ -13,7 +13,6 @@ import {isDefined} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-
 const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'ARMS_LENGTH',
 	'FOOT_GRAZE',
