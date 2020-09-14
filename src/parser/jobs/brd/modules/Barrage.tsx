@@ -126,7 +126,7 @@ export default class Barrage extends Module {
 		this.barrageHistory = this.barrageHistory.filter(barrage => barrage.expireTimestamp !== undefined)
 
 		this.barrageHistory.map(barrage => {
-			if (!barrage.damageEvent) {
+			if (!barrage.damageEvent || barrage.damageEvent.finalizedAmount === 0) {
 				barrage.info.dropped = true
 
 			} else {
