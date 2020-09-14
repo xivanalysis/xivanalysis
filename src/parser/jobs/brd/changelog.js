@@ -10,7 +10,7 @@ export const changelog = [
 	{
 		date: new Date('2020-08-24'),
 		Changes: () => <>
-			Simplified the Barrage module and squashed some longstanding bugs with RS alignment / SSR procs.
+			Simplified the Barrage module and squashed some longstanding bugs with <StatusLink {...STATUSES.RAGING_STRIKES}/> alignment and <StatusLink {...STATUSES.STRAIGHT_SHOT_READY}/> procs.
 		</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},

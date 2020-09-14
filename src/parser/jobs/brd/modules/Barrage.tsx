@@ -11,10 +11,10 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Util from './Util'
 
-// Arbitrary threshold (in ms) to accept that three damage events were from the same cast
-const TRIPLE_HIT_THRESHOLD = 500
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 	'BURST_SHOT',
@@ -58,8 +58,8 @@ interface BarrageWindow {
 	// The timestamp when barrage expired
 	expireTimestamp: number | undefined,
 
-	// Up to three damage events following this barrage
-	damageEvents: DamageEvent[],
+	// The single target hits following a barraged GCD
+	damageEvent: NormalisedDamageEvent | undefined,
 
 	info: BarrageInfo,
 }
@@ -67,6 +67,7 @@ interface BarrageWindow {
 export default class Barrage extends Module {
 	static handle = 'barrage'
 	static title = t('brd.barrage.title')`Barrage`
+	static displayOrder = DISPLAY_ORDER.BARRAGE
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -82,13 +83,13 @@ export default class Barrage extends Module {
 
 		this.addEventHook('cast', {by: 'player', abilityId: this.data.actions.BARRAGE.id}, this.onBarrageCast)
 		this.addEventHook('removebuff', {by: 'player', abilityId: this.data.statuses.BARRAGE.id}, this.onBarrageExpire)
-		this.addEventHook('damage', {by: 'player', abilityId: this.BARRAGE_GCDS}, this.onStDamage)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: this.BARRAGE_GCDS}, this.onStDamage)
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private get activeBarrage(): BarrageWindow | undefined {
 		const lastBarrage = _.last(this.barrageHistory)
-		if (lastBarrage && lastBarrage.damageEvents.length <= 2) {
+		if (lastBarrage && !lastBarrage.expireTimestamp) {
 			return lastBarrage
 		}
 		return undefined
@@ -98,7 +99,7 @@ export default class Barrage extends Module {
 		this.barrageHistory.push({
 			castTimestamp: event.timestamp,
 			expireTimestamp: undefined,
-			damageEvents: [],
+			damageEvent: undefined,
 			info: {
 				dropped: false,
 				badGcd: false,
@@ -114,9 +115,9 @@ export default class Barrage extends Module {
 		}
 	}
 
-	private onStDamage(event: DamageEvent) {
-		if (this.activeBarrage && this.activeBarrage.expireTimestamp) {
-			this.activeBarrage.damageEvents.push(event)
+	private onStDamage(event: NormalisedDamageEvent) {
+		if (this.activeBarrage && this.BARRAGE_GCDS.includes(event.ability.guid)) {
+			this.activeBarrage.damageEvent = event
 		}
 	}
 
@@ -125,9 +126,12 @@ export default class Barrage extends Module {
 		this.barrageHistory = this.barrageHistory.filter(barrage => barrage.expireTimestamp !== undefined)
 
 		this.barrageHistory.map(barrage => {
-			if (barrage.damageEvents[2] && barrage.damageEvents[0].timestamp + TRIPLE_HIT_THRESHOLD > barrage.damageEvents[2].timestamp) {
+			if (!barrage.damageEvent) {
+				barrage.info.dropped = true
+
+			} else {
 				// Successful triple hit
-				const action = this.data.getAction(barrage.damageEvents[0].ability.guid)
+				const action = this.data.getAction(barrage.damageEvent.ability.guid)
 
 				if (action !== this.data.actions.REFULGENT_ARROW) {
 					// Barrage used on the wrong GCD
@@ -141,10 +145,6 @@ export default class Barrage extends Module {
 					// Barrage used outside of raging
 					barrage.info.unaligned = true
 				}
-
-			} else {
-				// No triple hit, barrage went unused
-				barrage.info.dropped = true
 			}
 		})
 
