@@ -22,6 +22,13 @@ export const changelog = [
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},
 	{
+		date: new Date('2020-08-08'),
+		Changes: () => <>
+			Added suggestions for ghosted and very weak Apex Arrow casts.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-07-07'),
 		Changes: () => <>
 			Snapshots module now displays enemies separately. Suggestion added for <ActionLink {...ACTIONS.IRON_JAWS}/> that did not refresh DoTs.
