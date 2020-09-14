@@ -513,7 +513,7 @@
   "mch.queen.suggestions.missing-bunker.why": "{missingBunkers} of your Automaton Queen windows ended without a Pile Bunker.",
   "mch.queen.title": "Automaton Queen Usage",
   "mch.queen.trigger.queenless-queen-attack": "A cast of <0/> was recorded without the Automaton Queen on the field.",
-  "mch.reassemble.suggestions.bad-gcds.content": "On single targets, <0/> should only ever be used on <1/> and <2/>, as they're your strongest GCDs by a large margin.",
+  "mch.reassemble.suggestions.bad-gcds.content": "On single targets <0/> should only ever be used on <1/> and <2/>, as they're your strongest GCDs by a large margin.",
   "mch.reassemble.suggestions.bad-gcds.why": "You used Reassemble on a non-optimal GCD {0, plural, one {# time} other {# times}}.",
   "mch.reassemble.suggestions.dropped.content": "Avoid using <0/> when a boss is about to go untargetable so you don't waste the buff.",
   "mch.reassemble.suggestions.dropped.why": "You allowed Reassemble to fall off unused {0, plural, one {# time} other {# times}}.",
