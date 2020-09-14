@@ -317,7 +317,7 @@ export abstract class BuffWindowModule extends Module {
 		const comparator = this.changeComparisonClassLogic(buffWindow, action)
 
 		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
-		if ( comparator && !comparator(actual, expected).negative ) { return 0 }
+		if ( comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE ) { return 0 }
 
 		// If this buff window was rushed, again don't count it
 		if ( this.buffStatus.duration ) {

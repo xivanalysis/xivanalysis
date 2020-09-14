@@ -1,6 +1,7 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import STATUSES from 'data/STATUSES'
@@ -8,6 +9,8 @@ import {BuffEvent, CastEvent} from 'fflogs'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
+import {isDefined} from 'utilities'
+
 
 const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'ARMS_LENGTH',
@@ -112,10 +115,15 @@ export default class RagingStrikes extends BuffWindowModule {
 		 * If expected > 1, we're in AoE and there is no clear rotation target, so don't highlight this cell
 		 */
 		if (action.action === this.data.actions.IRON_JAWS) {
-			return (actual: number, expected?: number) => ({
-				positive: expected === 1 && actual === 1,
-				negative: expected === 1 && actual !== 1,
-			})
+			return (actual: number, expected?: number) => {
+				if (!isDefined(expected) || expected > 1) {
+					return RotationTargetOutcome.NEUTRAL
+				} else if (actual === 1) {
+					return RotationTargetOutcome.POSITIVE
+				} else {
+					return RotationTargetOutcome.NEGATIVE
+				}
+			}
 		}
 	}
 }
