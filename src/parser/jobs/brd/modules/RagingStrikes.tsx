@@ -11,6 +11,8 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {isDefined} from 'utilities'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 
 const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'ARMS_LENGTH',
@@ -29,6 +31,7 @@ const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 export default class RagingStrikes extends BuffWindowModule {
 	static handle = 'rs'
 	static title = t('brd.rs.title')`Raging Strikes`
+	static displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
 	buffAction = this.data.actions.RAGING_STRIKES
 	buffStatus = STATUSES.RAGING_STRIKES
