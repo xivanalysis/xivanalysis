@@ -288,7 +288,7 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private getBuffWindowExpectedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
-		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action)
+		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action) - this.reduceExpectedGCDsEndOfFight(buffWindow)
 	}
 
 	/**
@@ -318,14 +318,6 @@ export abstract class BuffWindowModule extends Module {
 
 		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
 		if ( comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE ) { return 0 }
-
-		// If this buff window was rushed, again don't count it
-		if ( this.buffStatus.duration ) {
-			const windowDurationMillis = this.buffStatus.duration * 1000
-			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
-
-			if ( windowDurationMillis >= fightTimeRemaining ) { return 0 }
-		}
 
 		return Math.max(0, expected - actual)
 	}
