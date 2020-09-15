@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
+import _ from 'lodash'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
-import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
@@ -12,6 +12,9 @@ import React from 'react'
 import {isDefined} from 'utilities'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+
+// Minimum muse GCDs needed to expect an RS window to have 9 GCDs
+const MIN_MUSE_GCDS = 3
 
 const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'ARMS_LENGTH',
@@ -27,6 +30,11 @@ const SUPPORT_ACTIONS: Array<keyof ActionRoot> = [
 	'TROUBADOUR',
 ]
 
+interface MuseWindow {
+	start: number,
+	end?: number | undefined,
+}
+
 export default class RagingStrikes extends BuffWindowModule {
 	static handle = 'rs'
 	static title = t('brd.rs.title')`Raging Strikes`
@@ -35,13 +43,13 @@ export default class RagingStrikes extends BuffWindowModule {
 	buffAction = this.data.actions.RAGING_STRIKES
 	buffStatus = this.data.statuses.RAGING_STRIKES
 
-	private museTimestamps: number[] = []
+	private museHistory: MuseWindow[] = []
 	private SUPPORT_ACTIONS: number[] = []
 
 	expectedGCDs = {
 		expectedPerWindow: 8,
 		suggestionContent: <Trans id="brd.rs.suggestions.missedgcd.content">
-			Try to land 8 GCDs (9 GCDs with <StatusLink {...STATUSES.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
+			Try to land 8 GCDs (9 GCDs with <StatusLink {...this.data.statuses.ARMYS_MUSE}/>) during every <ActionLink {...this.data.actions.RAGING_STRIKES}/> window.
 		</Trans>,
 		severityTiers: {
 			1: SEVERITY.MINOR,
@@ -76,21 +84,39 @@ export default class RagingStrikes extends BuffWindowModule {
 		super.init()
 
 		this.SUPPORT_ACTIONS = SUPPORT_ACTIONS.map(actionKey => this.data.actions[actionKey].id)
-		this.addEventHook('applybuff', {to: 'player', abilityId: [STATUSES.ARMYS_MUSE.id]}, this.onApplyMuse)
+		this.addEventHook('applybuff', {to: 'player', abilityId: [this.data.statuses.ARMYS_MUSE.id]}, this.onApplyMuse)
+		this.addEventHook('removebuff', {to: 'player', abilityId: [this.data.statuses.ARMYS_MUSE.id]}, this.onRemoveMuse)
 	}
 
-	private onApplyMuse = (event: BuffEvent) => this.museTimestamps.push(event.timestamp)
+	private get activeMuse(): MuseWindow | undefined {
+		const last = _.last(this.museHistory)
+		if (last && !isDefined(last.end)) {
+			return last
+		}
+		return undefined
+	}
+
+	private onApplyMuse(event: BuffEvent) {
+		this.museHistory.push({start: event.timestamp})
+	}
+
+	private onRemoveMuse(event: BuffEvent) {
+		if (this.activeMuse) {
+			this.activeMuse.end = event.timestamp
+		}
+	}
 
 	protected considerAction = (action: Action) => !this.SUPPORT_ACTIONS.includes(action.id)
 
 	protected changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
-		// Expect one extra GCD if we had muse up for this RS
-		const museDuration = STATUSES.ARMYS_MUSE.duration * 1000
-		const isMuseUp = this.museTimestamps
-			.filter(ts => ts < buffWindow.start && ts > buffWindow.start - museDuration)
-			.length === 1
+		// Check if muse was up for at least 3 GCDs in this buffWindow
+		const museOverlap = this.museHistory.some(muse => (
+			buffWindow.rotation.filter(event => this.data.getAction(event.ability.guid)?.onGcd &&
+					event.timestamp > muse.start && (!muse.end || event.timestamp < muse.end))
+				.length >= MIN_MUSE_GCDS
+		))
 
-		return isMuseUp ? 1 : 0
+		return museOverlap ? 1 : 0
 	}
 
 	private getEventTargetKey = (event: CastEvent): string => `${event.targetID}-${event.targetInstance}`
