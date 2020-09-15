@@ -33,7 +33,7 @@ export default class RagingStrikes extends BuffWindowModule {
 	static displayOrder = DISPLAY_ORDER.RAGING_STRIKES
 
 	buffAction = this.data.actions.RAGING_STRIKES
-	buffStatus = STATUSES.RAGING_STRIKES
+	buffStatus = this.data.statuses.RAGING_STRIKES
 
 	private museTimestamps: number[] = []
 	private SUPPORT_ACTIONS: number[] = []
@@ -109,6 +109,21 @@ export default class RagingStrikes extends BuffWindowModule {
 		})
 
 		return enemyIDs.size
+	}
+
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		const windowDurationMillis = this.buffStatus.duration * 1000
+		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+
+		/**
+		 * IJ definitely shouldn't be used at the end of the fight, so reduce by 1
+		 * Barrage might have floated to the end of the RS window, so reduce by 1
+		 */
+		if (windowDurationMillis >= fightTimeRemaining) {
+			return 1
+		}
+
+		return 0
 	}
 
 	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
