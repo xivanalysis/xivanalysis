@@ -8,9 +8,16 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
-		date: new Date('2020-08-15'),
+		date: new Date('2020-09-14'),
 		Changes: () => <>
 			Added a module that tracks actions used during Raging Strikes windows.
+    </>,
+    contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+  },
+  {
+		date: new Date('2020-08-24'),
+		Changes: () => <>
+			Simplified the Barrage module and squashed some longstanding bugs with <StatusLink {...STATUSES.RAGING_STRIKES}/> alignment and <StatusLink {...STATUSES.STRAIGHT_SHOT_READY}/> procs.
 		</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},
