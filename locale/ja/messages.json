@@ -504,7 +504,6 @@
   "rdm.procs.invuln.target": "ターゲット",
   "rdm.procs.suggestions.overwritten.content": "<1/>や<3/>が付与されているときは、<0/>や<2/>をキャストしないようにしましょう。",
   "rdm.procs.title": "プロックの問題",
-  "sam.about.description": "刀の勉強をしているんですか？この分析は、どのくらい侍の基本について知っているのかを確認するためのテストとして考えてください。このツールは閃と剣気の獲得および消費状況を追跡し、戦闘中に獲得したリソースは不足していないか、あるいは獲得したリソースを十分に使用できていないかを知ることができます。テストのための勉強ガイド：\n- [Bushido, a PVE Samurai Guide](http://bit.ly/SAM-Guide)\n\n- [Visual Guide to Samurai rotation](https://i.imgur.com/eHRXiZW.png)\n",
   "sam.about.description.info": "<0>注意</0> 残念ながら、現在はプレイヤーの位置を追跡できないため、剣気の獲得量は<1>推定</1>です。 なるべく正確に記載するようにしていますが、いくつか不正確な点があるかもしれません。",
   "sam.buffs.checklist.name": "士風及び陣風を維持する",
   "sam.buffs.checklist.requirement.jinpu.name": "アクティブ率: <0/>",
