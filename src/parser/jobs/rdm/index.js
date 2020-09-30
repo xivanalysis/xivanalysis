@@ -32,7 +32,7 @@ export default new Meta({
 	changelog: [
 		{
 			date: new Date('2020-09-29'),
-			Changes: () => <>Changed Severity ratings for Missed Dualcasts per Meru 1 missed is now medium, 2 missed is now major.</>,
+			Changes: () => <>Changed Severity ratings for Missed Dualcasts 1 missed is now medium, 2 missed is now major.</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
 		},
 		{
