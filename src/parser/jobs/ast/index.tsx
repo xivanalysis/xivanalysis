@@ -34,6 +34,7 @@ export default new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
 	],
 	changelog: [
 		{
@@ -41,7 +42,7 @@ export default new Meta({
 			Changes: () => <>
 				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays.
 			</>,
-			contributors: [CONTRIBUTORS.SUSHIROU],
+			contributors: [CONTRIBUTORS.SUSHIROU, CONTRIBUTORS.CASUALSUPERMAN],
 		},
 		{
 			date: new Date('2020-04-29'),
