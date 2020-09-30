@@ -83,13 +83,8 @@ export default class Draw extends Module {
 
 	protected init() {
 
-		PLAY.forEach(actionKey => {
-			this.PLAY.push(this.data.actions[actionKey].id)
-		})
-
-		ARCANA_STATUSES.forEach(statusKey => {
-			this.ARCANA_STATUSES.push(this.data.statuses[statusKey].id)
-		})
+		this.PLAY = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.ARCANA_STATUSES = ARCANA_STATUSES.map(actionKey => this.data.statuses[actionKey].id)
 
 		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
 		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
