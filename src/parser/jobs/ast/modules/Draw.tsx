@@ -201,7 +201,7 @@ export default class Draw extends Module {
 		const gcdMs = this.gcd.getEstimate(true)
 		const maxPlaysFromSleeveDraw = maxCardsFromAbility(fightDurationMs, gcdMs, this.data.actions.SLEEVE_DRAW.cooldown * 1000, SLEEVE_DRAW_PLAYS_GIVEN)
 		// Starting in 5.3, we expect a pre-pull draw at ~15s. This means it won't come off of cooldown until 15s into the fight.
-		// If there wasn't a prepull draw, then we should also expect them to draw imemdiately.
+		// If there wasn't a prepull draw, then we should also expect them to draw immediately.
 		const expectedStartCooldownMs = BEFORE_5_3_REWORK || !this.prepullPrepped ? 0 : PREPULL_TIMER
 		const maxPlaysFromDraw = maxCardsFromAbility(Math.max(0, fightDurationMs - expectedStartCooldownMs), gcdMs, this.data.actions.DRAW.cooldown * 1000, 1)
 		// Expect a pre-pull starting in 5.3, or if we actually saw one pre-5.3
