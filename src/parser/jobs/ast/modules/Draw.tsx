@@ -204,7 +204,7 @@ export default class Draw extends Module {
 		// If there wasn't a prepull draw, then we should also expect them to draw immediately.
 		const expectedStartCooldownMs = BEFORE_5_3_REWORK || !this.prepullPrepped ? 0 : PREPULL_TIMER
 		const maxPlaysFromDraw = maxCardsFromAbility(Math.max(0, fightDurationMs - expectedStartCooldownMs), gcdMs, this.data.actions.DRAW.cooldown * 1000, 1)
-		// Expect a pre-pull starting in 5.3, or if we actually saw one pre-5.3
+		// Expect a pre-pull starting in 5.3
 		const expectedPrePull = BEFORE_5_3_REWORK ? 0 : 1
 		// Pre-Pull + Draw + Sleeve Draw
 		const theoreticalMaxPlays = expectedPrePull + maxPlaysFromDraw + maxPlaysFromSleeveDraw
