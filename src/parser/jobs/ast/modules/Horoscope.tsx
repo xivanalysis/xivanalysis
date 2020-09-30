@@ -94,13 +94,13 @@ export default class Horoscope extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
-					Plan to have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} /> .
+					Plan to have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
 				<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
 			</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 				value: this.nonHoroscopeHeals,
 				why: <Trans id="ast.horoscope.suggestion.usage.why">
-					<Plural value={this.nonHoroscopeHeals} one="# single-target GCD heal was cast" other="# single-target GCD heals were cast" /> without synastry even though it was available.
+					<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without horoscope even though it was available.
 			</Trans>,
 			}))
 		}
