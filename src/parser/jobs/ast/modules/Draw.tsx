@@ -10,6 +10,8 @@ import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
 import {ARCANA_STATUSES, PLAY} from './ArcanaGroups'
 import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
+import GlobalCooldown from '../../../core/modules/GlobalCooldown'
+import {Action} from '../../../../data/ACTIONS'
 
 // TODO THINGS TO TRACK:
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
@@ -33,11 +35,29 @@ const SEVERITIES = {
 	},
 }
 
+function maxCardsFromAbility(fightDurationMs: number, gcdMs: number, cooldownMs: number, cardsToPlay: number) : number {
+	// See how many times the ability can come off of cooldown
+	const timesCooledDown = Math.floor(fightDurationMs / cooldownMs)
+
+	// This is how much time is left over after all of our cooldowns. See if it's enough to squeeze in another one.
+	// If we got 0 timesCooledDown in the last step, then we are checking if there was enough time for even a single full cast.
+	const timeRemainingAfterLastCooldownMs = fightDurationMs - (timesCooledDown * cooldownMs)
+
+	// Convert to GCDs so we can use counts instead of working in ms.
+	// I think the cast/animation time may actually be lower than a GCD, but we also need time to pick targets
+	const gcdsAfterLastCooldown = Math.floor(timeRemainingAfterLastCooldownMs / gcdMs)
+	// We also have to spend a GCD on actually activating the ability, so subtract a gcd from gcdsAfterLastCooldown
+	const maxPlaysFromFinalCooldown = Math.max(0, Math.min(gcdsAfterLastCooldown - 1, cardsToPlay))
+	// Multiply the number of non-final casts with the plays per cast, and add how many we got in our final activation
+	return (timesCooledDown * cardsToPlay) + maxPlaysFromFinalCooldown
+}
+
 export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
 
 	@dependency private data!: Data
+	@dependency private gcd!: GlobalCooldown
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 	@dependency private arcanaTracking!: ArcanaTracking
@@ -151,7 +171,8 @@ export default class Draw extends Module {
 	}
 
 	private onComplete() {
-		const SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
+		const BEFORE_5_3_REWORK = this.parser.patch.before('5.3')
+		const SLEEVE_DRAW_PLAYS_GIVEN = BEFORE_5_3_REWORK
 		? SLEEVE_DRAW_PLAYS_GIVEN_500
 		: SLEEVE_DRAW_PLAYS_GIVEN_530
 
@@ -165,6 +186,10 @@ export default class Draw extends Module {
 			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + this.data.actions.DRAW.cooldown * 1000)))
 		}
 
+		// Confirm they had preprepped a card on pull
+		const pullState = this.arcanaTracking.getPullState()
+		this.prepullPrepped = !!pullState.drawState
+
 		// Max plays:
 		// [(fight time / 30s draw time + 1) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
 		// eg 7:00: 14 -1 = 13  draws by default. 7:17 fight time would mean 14 draws, since they can play the last card at least.
@@ -174,18 +199,17 @@ export default class Draw extends Module {
 		// Prepull consideration: + 1 play
 
 		// Begin Theoretical Max Plays calc
-		const fightDuration = this.parser.pull.duration
-		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
-		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
-		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
+		const fightDurationMs = this.parser.pull.duration
+		const gcdMs = this.gcd.getEstimate(true)
+		const maxPlaysFromSleeveDraw = maxCardsFromAbility(fightDurationMs, gcdMs, this.data.actions.SLEEVE_DRAW.cooldown * 1000, SLEEVE_DRAW_PLAYS_GIVEN)
+		const maxPlaysFromDraw = maxCardsFromAbility(fightDurationMs, gcdMs, this.data.actions.DRAW.cooldown * 1000, 1)
+		// Expect a pre-pull if we're 5.3, or if we saw one pre-5.3
+		const expectedPrePull = BEFORE_5_3_REWORK && !this.prepullPrepped ? 0 : 1
+		// Pre-Pull + Draw + Sleeve Draw
+		const theoreticalMaxPlays = expectedPrePull + maxPlaysFromDraw + maxPlaysFromSleeveDraw
 
 		// TODO: Include downtime calculation for each fight??
 		// TODO: Suggest how to redraw effectively (maybe in ArcanaSuggestions)
-
-		// Confirm they had preprepped a card on pull
-		const pullState = this.arcanaTracking.getPullState()
-		this.prepullPrepped = !!pullState.drawState
 
 		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
 
@@ -204,8 +228,8 @@ export default class Draw extends Module {
 			</Trans>
 			<ul>
 				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
-				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{maxPlaysFromDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{maxPlaysFromSleeveDraw}</li>
 				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
@@ -221,23 +245,6 @@ export default class Draw extends Module {
 		}))
 
 		/*
-			SUGGESTION: Didn't use draw enough
-		*/
-		const drawsMissed = Math.floor(this.drawTotalDrift / (this.data.actions.DRAW.cooldown * 1000))
-		if (this.draws > 0 && drawsMissed > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize both MP regen and the number of cards played.
-				</Trans>,
-				tiers: SEVERITIES.DRAW_HOLDING,
-				value: drawsMissed,
-				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
-				</Trans>,
-			}))
-		}
-		/*
 			SUGGESTION: Didn't use draw at all
 		*/
 		if (this.draws === 0) {
@@ -251,25 +258,42 @@ export default class Draw extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
+		} else {
+			/*
+				SUGGESTION: Didn't use draw enough
+			*/
+			const drawsMissed = Math.floor(this.drawTotalDrift / (this.data.actions.DRAW.cooldown * 1000))
+			if (drawsMissed > 0) {
+				this.suggestions.add(new TieredSuggestion({
+					icon: this.data.actions.DRAW.icon,
+					content: <Trans id="ast.draw.suggestions.draw-uses.content">
+							Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize both MP regen and the number of cards played.
+					</Trans>,
+					tiers: SEVERITIES.DRAW_HOLDING,
+					value: drawsMissed,
+					why: <Trans id="ast.draw.suggestions.draw-uses.why">
+						About <Plural value={drawsMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+					</Trans>,
+				}))
+			}
+
+			/*
+	 			SUGGESTION: Pre-pull draw
+	 		*/
+			if (!BEFORE_5_3_REWORK && !this.prepullPrepped) {
+				this.suggestions.add(new Suggestion({
+					icon: this.data.actions.DRAW.icon,
+					content: <Trans id="ast.draw.suggestions.draw-no-prepull.content">
+							Use <ActionLink {...this.data.actions.DRAW} /> before the pull to align <ActionLink {...this.data.actions.DIVINATION} /> with other raid buffs.
+					</Trans>,
+					why: <Trans id="ast.draw.suggestions.draw-no-prepull.why">
+						No <ActionLink {...this.data.actions.DRAW} /> use was detected before the pull.
+					</Trans>,
+					severity: SEVERITY.MAJOR,
+				}))
+			}
 		}
 
-		/*
-			SUGGESTION: Didn't use sleeve draw enough
-		*/
-		const sleevesMissed = Math.floor(this.sleeveTotalDrift / (this.data.actions.SLEEVE_DRAW.cooldown * 1000))
-		if (this.sleeveUses > 0 && sleevesMissed > 0) {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.SLEEVE_DRAW.icon,
-				content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
-						Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
-				</Trans>,
-				tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
-				value: sleevesMissed,
-				why: <Trans id="ast.draw.suggestions.sleeve-uses.why">
-					About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
-				</Trans>,
-			}))
-		}
 		/*
 			SUGGESTION: Didn't use sleeve draw at all
 		*/
@@ -285,6 +309,24 @@ export default class Draw extends Module {
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 			}))
+		} else {
+			/*
+				SUGGESTION: Didn't use sleeve draw enough
+			*/
+			const sleevesMissed = Math.floor(this.sleeveTotalDrift / (this.data.actions.SLEEVE_DRAW.cooldown * 1000))
+			if (sleevesMissed > 0) {
+				this.suggestions.add(new TieredSuggestion({
+					icon: this.data.actions.SLEEVE_DRAW.icon,
+					content: <Trans id="ast.draw.suggestions.sleeve-uses.content">
+							Use <ActionLink {...this.data.actions.SLEEVE_DRAW} /> more frequently. It should be paired with every other <ActionLink {...this.data.actions.DIVINATION} /> to stack buffs at the same time. <ActionLink {...this.data.actions.LIGHTSPEED} /> can be used to weave card abilities.
+					</Trans>,
+					tiers: SEVERITIES.SLEEVE_DRAW_HOLDING,
+					value: sleevesMissed,
+					why: <Trans id="ast.draw.suggestions.sleeve-uses.why">
+						About <Plural value={sleevesMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.SLEEVE_DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.sleeveTotalDrift)}.
+					</Trans>,
+				}))
+			}
 		}
 
 	}
