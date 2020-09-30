@@ -32,6 +32,8 @@
   "ast.draw.checklist.description.total": "총 획득한 카드:",
   "ast.draw.checklist.name": "카드 사용 횟수를 최대한 늘리십시오.",
   "ast.draw.checklist.requirement.name": "사용횟수: <0/>",
+  "ast.draw.suggestions.draw-no-prepull.content": "",
+  "ast.draw.suggestions.draw-no-prepull.why": "",
   "ast.draw.suggestions.draw-no-usage.content": "<0/>이 전혀 사용되지 않음.",
   "ast.draw.suggestions.draw-no-usage.why": "점지가 사용되지 않았습니다.",
   "ast.draw.suggestions.draw-uses.content": "<0/>는 사용가능한 즉시 바로 사용하여 최대 카드 사용 횟수를 늘리십시오.",
