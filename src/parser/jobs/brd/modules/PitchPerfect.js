@@ -12,6 +12,7 @@ import {ActionLink} from 'components/ui/DbLink'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import {matchClosest} from 'utilities'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './PitchPerfect.module.css'
 
 const DOT_TICK_FREQUENCY = 3000 // 3s
@@ -42,6 +43,7 @@ const PP_NOT_CAST_AT_END = 2
 export default class PitchPerfect extends Module {
 	static handle = 'pitchPerfect'
 	static title = t('brd.pitch-perfect.title')`Pitch Perfect`
+	static displayOrder = DISPLAY_ORDER.PITCH_PERFECT
 	static dependencies = [
 		'additionalStats',
 		'downtime',

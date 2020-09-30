@@ -170,9 +170,9 @@ const CONTRIBUTORS = {
 		jobs: [JOBS.SUMMONER],
 	},
 	YUMIYAFANGIRL: {
-		name: 'yumiyafangirl',
+		name: 'Ciel',
 		avatar: require('./avatar/yumiyafangirl.png'),
-		jobs: [JOBS.MACHINIST],
+		jobs: [JOBS.BARD, JOBS.MACHINIST],
 	},
 	RIETTY: {
 		name: 'Rietty',
