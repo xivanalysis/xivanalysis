@@ -94,7 +94,7 @@ export default class Horoscope extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
-					Plan to have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
+					Try to have <ActionLink {...this.data.actions.HOROSCOPE} /> up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
 				<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
 			</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
