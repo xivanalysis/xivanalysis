@@ -40,7 +40,7 @@ export default new Meta({
 		{
 			date: new Date('2020-08-13'),
 			Changes: () => <>
-				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays.
+				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays, fixed bug where starting stance was always reported forgotten.
 			</>,
 			contributors: [CONTRIBUTORS.SUSHIROU, CONTRIBUTORS.CASUALSUPERMAN],
 		},
