@@ -16,7 +16,7 @@ import {Action} from '../../../../data/ACTIONS'
 // TODO THINGS TO TRACK:
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
-const CARD_DURATION = 15000
+const PREPULL_TIMER = 15000
 const SLEEVE_DRAW_PLAYS_GIVEN_500 = 3
 const SLEEVE_DRAW_PLAYS_GIVEN_530 = 1
 
@@ -136,7 +136,9 @@ export default class Draw extends Module {
 		if (event.timestamp > this.parser.fight.start_time) {
 			return
 		}
-		this.prepullPrepped = true
+		if (this.draws === 0 && this.sleeveUses === 0) {
+			this.prepullPrepped = true
+		}
 		this.plays++
 	}
 
@@ -173,8 +175,8 @@ export default class Draw extends Module {
 	private onComplete() {
 		const BEFORE_5_3_REWORK = this.parser.patch.before('5.3')
 		const SLEEVE_DRAW_PLAYS_GIVEN = BEFORE_5_3_REWORK
-		? SLEEVE_DRAW_PLAYS_GIVEN_500
-		: SLEEVE_DRAW_PLAYS_GIVEN_530
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
 		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {
@@ -185,10 +187,6 @@ export default class Draw extends Module {
 		if (this.parser.fight.end_time - this.lastDrawTimestamp > (this.data.actions.DRAW.cooldown * 1000)) {
 			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + this.data.actions.DRAW.cooldown * 1000)))
 		}
-
-		// Confirm they had preprepped a card on pull
-		const pullState = this.arcanaTracking.getPullState()
-		this.prepullPrepped = !!pullState.drawState
 
 		// Max plays:
 		// [(fight time / 30s draw time + 1) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
@@ -202,9 +200,12 @@ export default class Draw extends Module {
 		const fightDurationMs = this.parser.pull.duration
 		const gcdMs = this.gcd.getEstimate(true)
 		const maxPlaysFromSleeveDraw = maxCardsFromAbility(fightDurationMs, gcdMs, this.data.actions.SLEEVE_DRAW.cooldown * 1000, SLEEVE_DRAW_PLAYS_GIVEN)
-		const maxPlaysFromDraw = maxCardsFromAbility(fightDurationMs, gcdMs, this.data.actions.DRAW.cooldown * 1000, 1)
-		// Expect a pre-pull if we're 5.3, or if we saw one pre-5.3
-		const expectedPrePull = BEFORE_5_3_REWORK && !this.prepullPrepped ? 0 : 1
+		// Starting in 5.3, we expect a pre-pull draw at ~15s. This means it won't come off of cooldown until 15s into the fight.
+		// If there wasn't a prepull draw, then we should also expect them to draw imemdiately.
+		const expectedStartCooldownMs = BEFORE_5_3_REWORK || !this.prepullPrepped ? 0 : PREPULL_TIMER
+		const maxPlaysFromDraw = maxCardsFromAbility(Math.max(0, fightDurationMs - expectedStartCooldownMs), gcdMs, this.data.actions.DRAW.cooldown * 1000, 1)
+		// Expect a pre-pull starting in 5.3, or if we actually saw one pre-5.3
+		const expectedPrePull = BEFORE_5_3_REWORK ? 0 : 1
 		// Pre-Pull + Draw + Sleeve Draw
 		const theoreticalMaxPlays = expectedPrePull + maxPlaysFromDraw + maxPlaysFromSleeveDraw
 
@@ -218,8 +219,10 @@ export default class Draw extends Module {
 		*/
 		const warnTarget = Math.floor(((theoreticalMaxPlays - WARN_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
 		const failTarget = Math.floor(((theoreticalMaxPlays - FAIL_TARGET_MAXPLAYS) / theoreticalMaxPlays) * 100)
+		const prepullChecklistDisplay = expectedPrePull === 0
+			? ''
+			: <><li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li></>
 
-		const prepullChecklistDisplay = expectedPrePull === 0 ? '' : <><li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/{expectedPrePull}</li></>
 		this.checklist.add(new TieredRule({
 			displayOrder: DISPLAY_ORDER.DRAW_CHECKLIST,
 			name: <Trans id="ast.draw.checklist.name">
