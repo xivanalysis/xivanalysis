@@ -15,7 +15,8 @@ import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
 const CARD_DURATION = 15000
-const SLEEVE_DRAW_PLAYS_GIVEN = 3
+const SLEEVE_DRAW_PLAYS_GIVEN_500 = 3
+const SLEEVE_DRAW_PLAYS_GIVEN_530 = 1
 
 const WARN_TARGET_MAXPLAYS = 2
 const FAIL_TARGET_MAXPLAYS = 3
@@ -59,7 +60,9 @@ export default class Draw extends Module {
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
 
+
 	protected init() {
+
 		PLAY.forEach(actionKey => {
 			this.PLAY.push(this.data.actions[actionKey].id)
 		})
@@ -75,10 +78,16 @@ export default class Draw extends Module {
 		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
 		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
 
-		this.addEventHook('complete', this._onComplete)
+		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onDraw(event: CastEvent) {
+
+		// ignore precasted draws
+		if (event.timestamp < this.parser.fight.start_time) {
+			return
+		}
+
 		this.draws++
 
 		if (this.draws === 1) {
@@ -141,7 +150,10 @@ export default class Draw extends Module {
 		this.lastSleeveTimestamp = this.parser.fight.start_time
 	}
 
-	private _onComplete() {
+	private onComplete() {
+		const SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
+		? SLEEVE_DRAW_PLAYS_GIVEN_500
+		: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
 		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {
@@ -162,10 +174,10 @@ export default class Draw extends Module {
 		// Prepull consideration: + 1 play
 
 		// Begin Theoretical Max Plays calc
-		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const maxSleeveUses = Math.floor((fightDuration - (CARD_DURATION*2)) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
+		const fightDuration = this.parser.pull.duration
+		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
 		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor((fightDuration - CARD_DURATION) / (this.data.actions.DRAW.cooldown * 1000)) + 1
+		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
 		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
 
 		// TODO: Include downtime calculation for each fight??
@@ -216,7 +228,7 @@ export default class Draw extends Module {
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.data.actions.DRAW.icon,
 				content: <Trans id="ast.draw.suggestions.draw-uses.content">
-						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize the number of cards played.
+						Use <ActionLink {...this.data.actions.DRAW} /> as soon as its available to maximize both MP regen and the number of cards played.
 				</Trans>,
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,

@@ -30,12 +30,19 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.2',
+		to: '5.3',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-08-13'),
+			Changes: () => <>
+				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 			date: new Date('2020-04-29'),
 			Changes: () => <>
