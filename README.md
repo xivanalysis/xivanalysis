@@ -12,12 +12,26 @@ If you'd like to contribute, check past [our developer documentation](https://do
 
 ## Table of Contents
 
+- [Translations](#translations)
 - [Structure of the parser](#structure-of-the-parser)
 	- [Module groups](#module-groups)
 	- [Modules](#modules)
 - [API Reference](#api-reference) (outdated)
 	- [Module](#module)
 	- [Parser](#parser)
+
+## Translations
+
+We use [Crowdin](https://crowdin.com/project/xivanalysis) to manage and maintain our translations.
+If you would like to contribute new or corrected translation strings, please join our [CrowdIn project](https://crowdin.com/project/xivanalysis).
+
+We support the languages that FFXIV officially supports:
+
+- Japanese (日本語)
+- German (Deutsch)
+- French (Français)
+- Korean (한국어)
+- Chinese Simplified (简体中文)
 
 ## Structure of the parser
 
