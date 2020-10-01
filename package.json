@@ -75,7 +75,7 @@
     "reactjs-popup": "^1.5.0",
     "reflect-metadata": "^0.1.12",
     "semantic-ui-css": "^2.4.0",
-    "semantic-ui-react": "^0.88",
+    "semantic-ui-react": "^1",
     "stable": "^0.1.8",
     "toposort": "^2",
     "tslib": "^2",
