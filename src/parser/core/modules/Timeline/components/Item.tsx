@@ -23,7 +23,7 @@ export const Items = memo(function Items({
 		}
 		filteredItems.push({
 			index,
-			left: scales.primary(item.start),
+			left: scales.primary(item.start) ?? 0,
 			right: scales.primary(item.end),
 		})
 	}
