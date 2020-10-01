@@ -233,7 +233,7 @@ export default class Draw extends Module {
 				tiers: SEVERITIES.DRAW_HOLDING,
 				value: drawsMissed,
 				why: <Trans id="ast.draw.suggestions.draw-uses.why">
-					About <Plural value={drawsMissed} one=" # use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
+					About <Plural value={drawsMissed} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.DRAW} /> were missed by holding it for at least a total of {this.parser.formatDuration(this.drawTotalDrift)}.
 				</Trans>,
 			}))
 		}
