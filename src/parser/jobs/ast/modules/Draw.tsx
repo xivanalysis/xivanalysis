@@ -14,9 +14,6 @@ import GlobalCooldown from '../../../core/modules/GlobalCooldown'
 import {Event} from '../../../../events'
 import {Action} from '../../../../data/ACTIONS'
 
-// TODO THINGS TO TRACK:
-// Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
-
 const SLEEVE_DRAW_PLAYS_GIVEN_500 = 3
 const SLEEVE_DRAW_PLAYS_GIVEN_530 = 1
 
@@ -33,11 +30,17 @@ const SEVERITIES = {
 		1: SEVERITY.MEDIUM,
 		2: SEVERITY.MAJOR,
 	},
+	CARD_OVERWRITING: {
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
+	},
 }
 
 export default class Draw extends Module {
 	static handle = 'draw'
 	static title = t('ast.draw.title')`Draw`
+
+	static debug = true
 
 	@dependency private data!: Data
 	@dependency private gcd!: GlobalCooldown
@@ -63,7 +66,12 @@ export default class Draw extends Module {
 
 	private draws = 0
 	private plays = 0
+	private undraws = 0
+	private redraws = 0
 	private sleeveUses = 0
+
+	private hasCardInFold = false
+	private cardsOverwritten = 0
 
 	private cardsPerSleeveDraw = SLEEVE_DRAW_PLAYS_GIVEN_530
 
@@ -84,6 +92,8 @@ export default class Draw extends Module {
 		// Handles after the pull
 		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
 		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
+		this.addEventHook('cast', {abilityId: this.data.actions.REDRAW.id, by: 'player'}, this.onRedraw)
+		this.addEventHook('cast', {abilityId: this.data.actions.UNDRAW.id, by: 'player'}, this.onUndraw)
 		this.addEventHook('cast', {abilityId: this.PLAY_CARD_CASTS, by: 'player'}, this.onPlay)
 
 		this.addEventHook('complete', this.onComplete)
@@ -103,13 +113,22 @@ export default class Draw extends Module {
 
 	private playCard() {
 		this.plays++
+		this.hasCardInFold = false
 	}
 
 	private drawCard() {
+		if (this.hasCardInFold) {
+			this.cardsOverwritten++
+		}
+		this.hasCardInFold = true
 		this.draws++
 	}
 
 	private sleeveDrawCards() {
+		if (this.hasCardInFold) {
+			this.cardsOverwritten++
+		}
+		this.hasCardInFold = true
 		this.sleeveUses++
 	}
 
@@ -137,6 +156,17 @@ export default class Draw extends Module {
 			this.lastSleeveTimestamp = this.parser.fight.start_time
 			this.sleeveDrawCards()
 		}
+	}
+
+	// TODO: Why would you ever
+	private onUndraw(event: CastEvent) {
+		// If we had a card prepped to be played, we don't anymore.
+		this.hasCardInFold = false
+		this.undraws++
+	}
+
+	private onRedraw(event: CastEvent) {
+		this.redraws++
 	}
 
 	private onPlay(event: CastEvent) {
@@ -358,6 +388,22 @@ export default class Draw extends Module {
 					No draws used.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
+			}))
+		}
+
+		/*
+			SUGGESTION: Overwrote cards
+		*/
+		if (this.cardsOverwritten !== 0) {
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.PLAY.icon,
+				content: <Trans id="ast.draw.suggestions.card-overwritten.content">
+					Avoid using <ActionLink {...this.data.actions.DRAW} /> or <ActionLink {...this.data.actions.SLEEVE_DRAW} /> with a card already in the fold. Overwriting a card is leaving damage on the floor.
+				</Trans>,
+				tiers: SEVERITIES.CARD_OVERWRITING,
+				why: <Trans id="ast.draw.suggestions.card-overwritten.why">
+					<Plural value={this.cardsOverwritten} one="# card was" other="# cards were" /> lost by using <ActionLink {...this.data.actions.DRAW} /> or <ActionLink {...this.data.actions.SLEEVE_DRAW} /> with a card in the fold.
+				</Trans>,
 			}))
 		}
 
