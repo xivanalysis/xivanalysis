@@ -40,7 +40,7 @@ export default new Meta({
 		{
 			date: new Date('2020-09-30'),
 			Changes: () => <>
-				Fixed bug where starting stance was always reported forgotten.
+				Fixed bug where starting stance was always reported forgotten. Improved maximum card draws/plays calculations.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
 		},
