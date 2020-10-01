@@ -2,6 +2,7 @@ import classNames from 'classnames'
 import {timeMinute} from 'd3-time'
 import {utcFormat} from 'd3-time-format'
 import React, {Fragment, memo} from 'react'
+import {isDefined} from 'utilities'
 import {Item} from './Item'
 import {useScales} from './ScaleHandler'
 import styles from './Timeline.module.css'
@@ -26,7 +27,9 @@ export const Axis = memo(function Axis({
 	const stickyTickEnd = timeMinute.offset(stickyTick, 1)
 
 	// Pre-calculate scaled tick locations
-	const lefts = ticks.map(tick => scales.primary(tick))
+	const lefts = ticks
+		.map(tick => scales.primary(tick))
+		.filter(isDefined)
 
 	return <>
 		{/* Grid lines */}
@@ -73,7 +76,7 @@ export const Axis = memo(function Axis({
 			</Fragment>)}
 
 			{/* "Sticky" minute tick */}
-			<Item left={scales.primary(viewMin)} right={scales.primary(stickyTickEnd)}>
+			<Item left={scales.primary(viewMin) ?? 0} right={scales.primary(stickyTickEnd)}>
 				<div className={classNames(styles.axisTick, styles.major, styles.first)}>
 					{formatMinutes(stickyTick)}
 				</div>
