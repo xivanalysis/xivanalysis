@@ -32,6 +32,8 @@
   "ast.draw.checklist.description.total": "Total cards obtained:",
   "ast.draw.checklist.name": "Play as many cards as possible",
   "ast.draw.checklist.requirement.name": "<0/> uses",
+  "ast.draw.suggestions.draw-no-prepull.content": "Use <0/> before the pull to align <1/> with other raid buffs.",
+  "ast.draw.suggestions.draw-no-prepull.why": "No <0/> use was detected before the pull.",
   "ast.draw.suggestions.draw-no-usage.content": "No uses of <0/> at all.",
   "ast.draw.suggestions.draw-no-usage.why": "No draws used.",
   "ast.draw.suggestions.draw-uses.content": "Use <0/> as soon as its available to maximize both MP regen and the number of cards played.",
