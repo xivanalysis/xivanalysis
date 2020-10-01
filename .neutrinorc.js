@@ -154,7 +154,7 @@ module.exports = {
 
 		// Set up postcss
 		neutrino => {
-			const options = {
+			const postcssOptions = {
 				plugins: [
 					require('autoprefixer'),
 					require('postcss-modules-values-replace')({
@@ -176,10 +176,10 @@ module.exports = {
 			}
 			neutrino.config.module
 				.rule('style').oneOf('normal').use('postcss')
-					.loader('postcss-loader').options(options)
+					.loader('postcss-loader').options({postcssOptions})
 			neutrino.config.module
 				.rule('style').oneOf('modules').use('postcss')
-					.loader('postcss-loader').options(options)
+					.loader('postcss-loader').options({postcssOptions})
 
 			const addExtraImport = options => ({...options, importLoaders: options.importLoaders + 1})
 			neutrino.config.module
