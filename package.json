@@ -119,7 +119,7 @@
     "@types/react-scroll": "^1.5.4",
     "@types/webpack-env": "^1.13.6",
     "@xivanalysis/eslint-plugin": "^0.0.2",
-    "autoprefixer": "^9.3.1",
+    "autoprefixer": "^10",
     "babel-plugin-lodash": "^3.3.4",
     "babel-plugin-macros": "^2.5.0",
     "cross-env": "^7",
