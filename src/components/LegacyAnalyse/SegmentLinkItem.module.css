@@ -7,11 +7,9 @@
 }
 .link:first-of-type {
 	margin-top: gutter;
-	padding-top: 0;
 }
 .link:last-of-type {
 	margin-bottom: calc(gutter + 40px);
-	padding-bottom: 0;
 }
 
 .active, .link:hover {
