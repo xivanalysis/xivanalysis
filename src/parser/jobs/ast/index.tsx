@@ -34,8 +34,16 @@ export default new Meta({
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-09-30'),
+			Changes: () => <>
+				Fixed bug where starting stance was always reported forgotten.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
 		{
 			date: new Date('2020-08-13'),
 			Changes: () => <>
