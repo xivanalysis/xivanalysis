@@ -362,6 +362,22 @@ export default class Draw extends Module {
 		}
 
 		/*
+			 SUGGESTION: Pre-pull draw
+		*/
+		if (this.draws > 0 && !this.isBeforeSleeveDrawRework() && !this.prepullDraw) {
+			this.suggestions.add(new Suggestion({
+				icon: this.data.actions.DRAW.icon,
+				content: <Trans id="ast.draw.suggestions.draw-no-prepull.content">
+					Use <ActionLink {...this.data.actions.DRAW} /> before the pull to align <ActionLink {...this.data.actions.DIVINATION} /> with other raid buffs.
+				</Trans>,
+				why: <Trans id="ast.draw.suggestions.draw-no-prepull.why">
+					No <ActionLink {...this.data.actions.DRAW} /> use was detected before the pull.
+				</Trans>,
+				severity: SEVERITY.MEDIUM,
+			}))
+		}
+
+		/*
 			SUGGESTION: Didn't use sleeve draw enough
 		*/
 		const sleevesMissed = Math.floor(this.sleeveTotalDrift / (this.data.actions.SLEEVE_DRAW.cooldown * 1000))
