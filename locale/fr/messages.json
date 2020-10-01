@@ -34,7 +34,6 @@
   "ast.draw.checklist.requirement.name": "<0/> utilisations",
   "ast.draw.suggestions.draw-no-usage.content": "Aucune utilisation de <0/>.",
   "ast.draw.suggestions.draw-no-usage.why": "Aucun tirage utilisé.",
-  "ast.draw.suggestions.draw-uses.content": "Utilisez <0/> dès que possible pour maximiser le nombre de cartes jouées.",
   "ast.draw.suggestions.draw-uses.why": "Environ {drawsMissed, plural, one { # utilisation} other {# utilisations}} of <0/> ont été perdues en le gardant pour un total de {0}.",
   "ast.draw.suggestions.sleeve-no-usage.content": "Aucune utilisation de <0/>. Il devrait être coupler avec tout les <1/> pour accumuler les buffs en même temps. <2/> peux être utiliser pour jouer des cartes entre GCD.",
   "ast.draw.suggestions.sleeve-no-usage.why": "Aucun grand sabot utilisé.",
