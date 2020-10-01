@@ -32,6 +32,8 @@
   "ast.draw.checklist.description.total": "Gesamtanzahl von erhaltenen Karten:",
   "ast.draw.checklist.name": "Spiele so viele Karten wie möglich",
   "ast.draw.checklist.requirement.name": "<0/> Nutzungen",
+  "ast.draw.suggestions.card-overwritten.content": "",
+  "ast.draw.suggestions.card-overwritten.why": "",
   "ast.draw.suggestions.draw-no-prepull.content": "",
   "ast.draw.suggestions.draw-no-prepull.why": "",
   "ast.draw.suggestions.draw-no-usage.content": "Keinerlei Anwendungen von <0/>.",

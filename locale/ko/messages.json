@@ -32,6 +32,8 @@
   "ast.draw.checklist.description.total": "총 획득한 카드:",
   "ast.draw.checklist.name": "카드 사용 횟수를 최대한 늘리십시오.",
   "ast.draw.checklist.requirement.name": "사용횟수: <0/>",
+  "ast.draw.suggestions.card-overwritten.content": "",
+  "ast.draw.suggestions.card-overwritten.why": "",
   "ast.draw.suggestions.draw-no-prepull.content": "",
   "ast.draw.suggestions.draw-no-prepull.why": "",
   "ast.draw.suggestions.draw-no-usage.content": "<0/>이 전혀 사용되지 않음.",
