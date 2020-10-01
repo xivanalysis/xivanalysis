@@ -30,7 +30,6 @@
   "ast.draw.checklist.requirement.name": "使用回数：<0/>",
   "ast.draw.suggestions.draw-no-usage.content": "全然<0/>を使わなかった。",
   "ast.draw.suggestions.draw-no-usage.why": "ドローを使わなかった。",
-  "ast.draw.suggestions.draw-uses.content": "使用するカードの数を最大にするには、利用可能になったらすぐに<0/>を使用してください。",
   "ast.draw.suggestions.sleeve-no-usage.content": "<0/>をまったく使用しません。 同時にバフをスタックするには、他のすべての<1/>とペアにする必要があります。 <2/>はカードの能力を織り込むために使用できます。",
   "ast.draw.suggestions.sleeve-no-usage.why": "スリーヴドローを使わなかった。",
   "ast.draw.title": "ドロー",
