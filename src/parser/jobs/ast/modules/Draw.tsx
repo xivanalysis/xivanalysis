@@ -8,13 +8,15 @@ import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Ch
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
-import {ARCANA_STATUSES, PLAY} from './ArcanaGroups'
+import {ARCANA_STATUSES, PLAY, DRAWN_ARCANA} from './ArcanaGroups'
 import ArcanaTracking from './ArcanaTracking/ArcanaTracking'
+import GlobalCooldown from '../../../core/modules/GlobalCooldown'
+import {Event} from '../../../../events'
+import {Action} from '../../../../data/ACTIONS'
 
 // TODO THINGS TO TRACK:
 // Track them using Draw when they still have a minor arcana (oopsie) or a card in the spread
 
-const CARD_DURATION = 15000
 const SLEEVE_DRAW_PLAYS_GIVEN_500 = 3
 const SLEEVE_DRAW_PLAYS_GIVEN_530 = 1
 
@@ -38,123 +40,222 @@ export default class Draw extends Module {
 	static title = t('ast.draw.title')`Draw`
 
 	@dependency private data!: Data
+	@dependency private gcd!: GlobalCooldown
 	@dependency private checklist!: Checklist
 	@dependency private suggestions!: Suggestions
 	@dependency private arcanaTracking!: ArcanaTracking
 
+	private prepullDraw = false
+	private prepullSleeve = false
+	private prepullPlay = false
+
+	// First draw we did after the pull
+	private firstDrawTimestamp: number | null = null
 	private lastDrawTimestamp = 0
-	private draws = 0
 	private drawDrift = 0
 	private drawTotalDrift = 0
 
-	private plays = 0
-	private prepullPrepped = false
-
+	// First sleeve draw we did after the pull
+	private firstSleeveDrawTimestamp: number | null = null
 	private lastSleeveTimestamp = 0
-	private sleeveUses = 0
 	private sleeveDrift = 0
 	private sleeveTotalDrift = 0
 
-	private prepullSleeve = false
+	private draws = 0
+	private plays = 0
+	private sleeveUses = 0
 
-	private PLAY: number[] = []
-	private ARCANA_STATUSES: number[] = []
+	private cardsPerSleeveDraw = SLEEVE_DRAW_PLAYS_GIVEN_530
 
+	private PLAY_CARD_CASTS: number[] = []
+	private ARCANA_BUFF_STATUSES: number[] = []
+	private DRAWN_ARCANA_STATUSES: number[] = []
 
 	protected init() {
+		this.PLAY_CARD_CASTS = PLAY.map(actionKey => this.data.actions[actionKey].id)
+		this.ARCANA_BUFF_STATUSES = ARCANA_STATUSES.map(statusKey => this.data.statuses[statusKey].id)
+		this.DRAWN_ARCANA_STATUSES = DRAWN_ARCANA.map(statusKey => this.data.statuses[statusKey].id)
 
-		PLAY.forEach(actionKey => {
-			this.PLAY.push(this.data.actions[actionKey].id)
-		})
+		// Handles before the pull
+		this.addEventHook('applybuff', {abilityId: this.ARCANA_BUFF_STATUSES, by: 'player'}, this.onPlayBuff)
+		this.addEventHook('applybuff', {abilityId: this.DRAWN_ARCANA_STATUSES, by: 'player'}, this.onDrawBuff)
+		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
 
-		ARCANA_STATUSES.forEach(statusKey => {
-			this.ARCANA_STATUSES.push(this.data.statuses[statusKey].id)
-		})
-
+		// Handles after the pull
 		this.addEventHook('cast', {abilityId: this.data.actions.DRAW.id, by: 'player'}, this.onDraw)
 		this.addEventHook('cast', {abilityId: this.data.actions.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveDraw)
-		this.addEventHook('cast', {abilityId: this.PLAY, by: 'player'}, this.onPlay)
-
-		this.addEventHook('applybuff', {abilityId: this.data.statuses.SLEEVE_DRAW.id, by: 'player'}, this.onSleeveBuff)
-		this.addEventHook('applybuff', {abilityId: this.ARCANA_STATUSES, by: 'player'}, this.onPlayBuff)
+		this.addEventHook('cast', {abilityId: this.PLAY_CARD_CASTS, by: 'player'}, this.onPlay)
 
 		this.addEventHook('complete', this.onComplete)
+		this.cardsPerSleeveDraw = this.parser.patch.before('5.3')
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
 	}
 
-	private onDraw(event: CastEvent) {
-
-		// ignore precasted draws
-		if (event.timestamp < this.parser.fight.start_time) {
-			return
-		}
-
-		this.draws++
-
-		if (this.draws === 1) {
-			// The first use, take holding as from the start of the fight
-			this.drawDrift = event.timestamp - this.parser.fight.start_time
-
-		} else {
-			// Take holding as from the time it comes off cooldown
-			this.drawDrift = event.timestamp - this.lastDrawTimestamp - (this.data.actions.DRAW.cooldown * 1000)
-		}
-
-		// Keep track of total drift time not using Draw
-		if (this.drawDrift > 0) {
-			this.drawTotalDrift += this.drawDrift
-		}
-
-		// update the last use
-		this.lastDrawTimestamp = event.timestamp
+	private isBeforeSleeveDrawRework() : boolean {
+		return this.parser.patch.before('5.3')
 	}
 
-	private onPlay() {
+	// Just checks if a given event happened before the pull
+	private isBeforePull(event: Event) : boolean {
+		return event.timestamp < this.parser.fight.start_time
+	}
+
+	private playCard() {
 		this.plays++
+	}
+
+	private drawCard() {
+		this.draws++
+	}
+
+	private sleeveDrawCards() {
+		this.sleeveUses++
 	}
 
 	private onPlayBuff(event: BuffEvent) {
-		if (event.timestamp > this.parser.fight.start_time) {
-			return
+		// Only handle before the pull
+		if (this.isBeforePull(event)) {
+			this.prepullPlay = true
+			this.playCard()
 		}
-		this.prepullPrepped = true
-		this.plays++
 	}
 
-	private onSleeveDraw(event: CastEvent) {
-		this.sleeveUses++
-
-		if (this.sleeveUses === 1 && !this.prepullSleeve) {
-			// The first use, take holding as from the start of the fight
-			this.sleeveDrift = event.timestamp - this.parser.fight.start_time
-
-		} else {
-			// Take holding as from the time it comes off cooldown
-			this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - (this.data.actions.SLEEVE_DRAW.cooldown * 1000)
+	private onDrawBuff(event: BuffEvent) {
+		// Only handle before the pull
+		if (this.isBeforePull(event)) {
+			this.prepullDraw = true
+			this.lastDrawTimestamp = this.parser.fight.start_time
+			this.drawCard()
 		}
-
-		// Keep track of total drift time not using sleeve
-		if (this.sleeveDrift > 0) {
-			this.sleeveTotalDrift += this.sleeveDrift
-		}
-
-		// update the last use
-		this.lastSleeveTimestamp = event.timestamp
 	}
 
 	private onSleeveBuff(event: BuffEvent) {
-		if (event.timestamp > this.parser.fight.start_time) {
-			return
+		// Only handle before the pull
+		if (this.isBeforePull(event)) {
+			this.prepullSleeve = true
+			this.lastSleeveTimestamp = this.parser.fight.start_time
+			this.sleeveDrawCards()
 		}
-		this.prepullSleeve = true
-		this.sleeveUses++
-		this.lastSleeveTimestamp = this.parser.fight.start_time
+	}
+
+	private onPlay(event: CastEvent) {
+		if (!this.isBeforePull(event)) {
+			this.playCard()
+		}
+	}
+
+	private onDraw(event: CastEvent) {
+		// ignore precasted draws
+		if (!this.isBeforePull(event)) {
+			if (this.firstDrawTimestamp === null) {
+				this.firstDrawTimestamp = event.timestamp
+			}
+			this.drawCard()
+
+			if (this.draws === 1) {
+				// The first use, take holding as from the start of the fight
+				this.drawDrift = event.timestamp - this.parser.fight.start_time
+
+			} else {
+				// Take holding as from the time it comes off cooldown
+				this.drawDrift = event.timestamp - this.lastDrawTimestamp - (this.data.actions.DRAW.cooldown * 1000)
+			}
+
+			// Keep track of total drift time not using Draw
+			if (this.drawDrift > 0) {
+				this.drawTotalDrift += this.drawDrift
+			}
+
+			// update the last use
+			this.lastDrawTimestamp = event.timestamp
+		}
+	}
+
+	private onSleeveDraw(event: CastEvent) {
+		if (!this.isBeforePull(event)) {
+			if (this.firstSleeveDrawTimestamp === null) {
+				this.firstSleeveDrawTimestamp = event.timestamp
+			}
+			this.sleeveDrawCards()
+
+			if (this.sleeveUses === 1 && !this.prepullSleeve) {
+				// The first use, take holding as from the start of the fight
+				this.sleeveDrift = event.timestamp - this.parser.fight.start_time
+
+			} else {
+				// Take holding as from the time it comes off cooldown
+				this.sleeveDrift = event.timestamp - this.lastSleeveTimestamp - (this.data.actions.SLEEVE_DRAW.cooldown * 1000)
+			}
+
+			// Keep track of total drift time not using sleeve
+			if (this.sleeveDrift > 0) {
+				this.sleeveTotalDrift += this.sleeveDrift
+			}
+
+			// update the last use
+			this.lastSleeveTimestamp = event.timestamp
+		}
+	}
+
+	/**
+	 * Determine the largest possible number of cards we could sleeve draw during the fight, without doing weird things
+	 * like using it pre-pull. If we did use it pre-pull, try to account for that, though. (We explicitly decline to
+	 * handle accounting for if it's still on CD from a previous fight)
+	 */
+	private maxSleeveDrawCards() : number {
+		const lowestPossibleCooldownMs = this.getLowestPossibleCooldownMs(this.prepullSleeve, this.data.actions.SLEEVE_DRAW, this.firstSleeveDrawTimestamp)
+		const fightDurationMs = Math.max(0, this.parser.pull.duration - lowestPossibleCooldownMs)
+		return this.maxCardsFromAbility(fightDurationMs, this.data.actions.SLEEVE_DRAW.cooldown * 1000, this.cardsPerSleeveDraw)
+	}
+
+	/**
+	 * Determine the largest possible number of cards we could draw during the fight, accounting for it being used
+	 * pre-pull.
+	 */
+	private maxDrawCards() : number {
+		const lowestPossibleCooldownMs = this.getLowestPossibleCooldownMs(this.prepullDraw, this.data.actions.DRAW, this.firstDrawTimestamp)
+		const fightDurationMs = Math.max(0, this.parser.pull.duration - lowestPossibleCooldownMs)
+		return this.maxCardsFromAbility(fightDurationMs, this.data.actions.DRAW.cooldown * 1000, 1)
+	}
+
+	/**
+	 * Determine the smallest possible remaining cooldown time remaining for the provided ability.
+	 */
+	private getLowestPossibleCooldownMs(usedPrePull: boolean, action: Action, firstDrawTimestamp: number | null) : number {
+		// If we didn't use it pre-pull, then we can use it immediately
+		let lowestPossibleCooldownMs = 0
+		if (action.cooldown && usedPrePull) {
+			// Worst case scenario, we activated it moments before the pull
+			lowestPossibleCooldownMs = action.cooldown * 1000
+			// If we saw a use after the pull, it should give us an estimate for when it was actually first used.
+			if (firstDrawTimestamp !== null) {
+				const timeBetweenStartAndFirstActivationMs = firstDrawTimestamp - this.parser.fight.start_time
+				// Use the earlier of the two times.
+				lowestPossibleCooldownMs = Math.min(lowestPossibleCooldownMs, timeBetweenStartAndFirstActivationMs)
+			}
+		}
+		return lowestPossibleCooldownMs
+	}
+
+	private maxCardsFromAbility(durationMs: number, cooldownMs: number, cardsPerActivation: number) : number {
+		const gcdMs = this.gcd.getEstimate(true)
+		// See how many times the ability can come off of cooldown
+		const timesCooledDown = Math.floor(durationMs / cooldownMs)
+
+		// This is how much time is left over after all of our cooldowns. See if it's enough to squeeze in another one.
+		// If we got 0 timesCooledDown in the last step, then we are checking if there was enough time for even a single full cast.
+		const timeRemainingAfterLastCooldownMs = durationMs - (timesCooledDown * cooldownMs)
+
+		// Convert to GCDs so we can use counts instead of working in ms.
+		// The cast/animation time is lower than a GCD, but we also need time to pick targets
+		const gcdsAfterLastCooldown = Math.floor(timeRemainingAfterLastCooldownMs / gcdMs)
+		const maxPlaysFromFinalCooldown = Math.max(0, Math.min(gcdsAfterLastCooldown, cardsPerActivation))
+		// Multiply the number of non-final casts with the plays per cast, and add how many we got in our final activation
+		return (timesCooledDown * cardsPerActivation) + maxPlaysFromFinalCooldown
 	}
 
 	private onComplete() {
-		const SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
-		? SLEEVE_DRAW_PLAYS_GIVEN_500
-		: SLEEVE_DRAW_PLAYS_GIVEN_530
-
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
 		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {
 			this.sleeveTotalDrift += (this.parser.fight.end_time - (this.lastSleeveTimestamp + (this.data.actions.SLEEVE_DRAW.cooldown * 1000)))
@@ -165,29 +266,36 @@ export default class Draw extends Module {
 			this.drawTotalDrift += (this.parser.fight.end_time - ((this.lastDrawTimestamp + this.data.actions.DRAW.cooldown * 1000)))
 		}
 
-		// Max plays:
-		// [(fight time / 30s draw time + 1) - 1 if fight time doesn't end between xx:05-xx:29s, and xx:45-xx:60s]
-		// eg 7:00: 14 -1 = 13  draws by default. 7:17 fight time would mean 14 draws, since they can play the last card at least.
-		// in otherwords, fightDuration - 15s (for the buff @ CARD_DURATION)
-		// SleeveDraw consideration:
-		// fight time / 180s sleeve time + 1: each sleeve gives an extra 3 plays 7:00 = 9 extra plays.
-		// Prepull consideration: + 1 play
-
-		// Begin Theoretical Max Plays calc
-		const fightDuration = this.parser.pull.duration
-		const maxSleeveUses = Math.floor(Math.max(0, (fightDuration - (CARD_DURATION*2))) / (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) + 1
-		const playsFromSleeveDraw = maxSleeveUses * SLEEVE_DRAW_PLAYS_GIVEN
-		const playsFromDraw = Math.floor(Math.max(0, (fightDuration - CARD_DURATION)) / (this.data.actions.DRAW.cooldown * 1000)) + 1
-		const theoreticalMaxPlays = playsFromDraw + playsFromSleeveDraw + 1
-
+		// Theoretical Max Plays Calc
 		// TODO: Include downtime calculation for each fight??
+		const maxCardsFromDraw = this.maxDrawCards()
+		const maxCardsFromSleeveDraw = this.maxSleeveDrawCards()
+
+		// Pre-pull cards
+		const cardsDrawnPrePull = this.prepullDraw ? 1 : 0
+		const cardsSleeveDrawnPrePull = this.prepullSleeve ? this.cardsPerSleeveDraw : 0
+		// Post-pull cards. Use the counters and subtract pre-pulls.
+		const expectedCardsDrawPostPull = this.draws - cardsDrawnPrePull
+		const expectedCardsSleeveDrawnPostPull = this.sleeveUses * this.cardsPerSleeveDraw - cardsSleeveDrawnPrePull
+		// We didn't do any fancy GCD calculations on these, so cap them at our actual calculated maximum, just in case
+		const cardsDrawnPostPull = Math.min(maxCardsFromDraw, expectedCardsDrawPostPull)
+		const cardsSleeveDrawnPostPull = Math.min(maxCardsFromSleeveDraw, expectedCardsSleeveDrawnPostPull)
+
+		// Number of cards actually drawn
+		const totalCardsDrawn = cardsDrawnPrePull + cardsDrawnPostPull + cardsSleeveDrawnPrePull + cardsSleeveDrawnPostPull
+
+		// Expect Draw pre-pull starting in 5.3
+		const expectedCardsPrePull = this.isBeforeSleeveDrawRework() ? 0 : 1
+		// If they pre-pulled more cards than we were going to request, avoid displaying something like 1/0 or 4/1
+		const maxCardsPrePull = Math.max(expectedCardsPrePull, cardsDrawnPrePull + cardsSleeveDrawnPrePull)
+
+		// Pre-Pull + Draw + Sleeve Draw
+		const theoreticalMaxCards = maxCardsPrePull + maxCardsFromDraw + maxCardsFromSleeveDraw
+		// Really, we can't play more than we actually drew, but it's sort of disingenuous to let them off the hook if they suck at using draw.
+		// TODO: Maybe separate draw and play suggestions?
+		const theoreticalMaxPlays = theoreticalMaxCards
+
 		// TODO: Suggest how to redraw effectively (maybe in ArcanaSuggestions)
-
-		// Confirm they had preprepped a card on pull
-		const pullState = this.arcanaTracking.getPullState()
-		this.prepullPrepped = !!pullState.drawState
-
-		const totalCardsObtained = (this.prepullPrepped ? 1 : 0) + this.draws + (this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN)
 
 		/*
 			CHECKLIST: Number of cards played
@@ -203,10 +311,10 @@ export default class Draw extends Module {
 				Playing cards will let you collect seals for <ActionLink {...this.data.actions.DIVINATION} /> and contribute to party damage.
 			</Trans>
 			<ul>
-				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{this.prepullPrepped ? 1 : 0}/1</li>
-				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{this.draws}/{playsFromDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{this.sleeveUses * SLEEVE_DRAW_PLAYS_GIVEN}/{playsFromSleeveDraw}</li>
-				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsObtained}/{theoreticalMaxPlays}</li>
+				<li><Trans id="ast.draw.checklist.description.prepull">Prepared before pull:</Trans>&nbsp;{cardsDrawnPrePull + cardsSleeveDrawnPrePull}/{maxCardsPrePull}</li>
+				<li><Trans id="ast.draw.checklist.description.draws">Obtained from <ActionLink {...this.data.actions.DRAW} />:</Trans>&nbsp;{cardsDrawnPostPull}/{maxCardsFromDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.sleeve-draws">Obtained from <ActionLink {...this.data.actions.SLEEVE_DRAW} />:</Trans>&nbsp;{cardsSleeveDrawnPostPull}/{maxCardsFromSleeveDraw}</li>
+				<li><Trans id="ast.draw.checklist.description.total">Total cards obtained:</Trans>&nbsp;{totalCardsDrawn}/{theoreticalMaxCards}</li>
 			</ul></>,
 			tiers: {[warnTarget]: TARGET.WARN, [failTarget]: TARGET.FAIL, [100]: TARGET.SUCCESS},
 			requirements: [
