@@ -52,7 +52,7 @@ export default class EarthlyStar extends Module {
 	private onPlace(event: CastEvent) {
 		// this was prepull
 		if (event.timestamp < this.parser.fight.start_time) {
-			console.log('prepull')
+			this.debug('prepull')
 		}
 
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
