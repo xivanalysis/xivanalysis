@@ -29,7 +29,7 @@ export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
 	static title = t('ast.earthly-star.title')`Earthly Star`
 
-	static debug = true
+	static debug = false
 
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
