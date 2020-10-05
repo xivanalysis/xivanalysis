@@ -142,12 +142,9 @@ export default class Sect extends Module {
 	}
 
 	private onCast(event: CastEvent) {
-		if (event.timestamp < this.parser.eventTimeOffset) {
-			// This was before the pull and likely added by the PrecastStatus module.
-		} else {
-			// If they casted a sect at anytime it means they pulled without one on
-			this.pullWithoutSect = true
-		}
+		// If they used a sect after the fight started, it means they pulled without one on; otherwise, it was likely added by the PrecastStatus module.
+		this.pullWithoutSect = event.timestamp >= this.parser.eventTimeOffset
+
 		const sect = getDataBy(ACTIONS, 'id', event.ability.guid)
 		if (sect) {
 			this.activeSectId = sect.id
