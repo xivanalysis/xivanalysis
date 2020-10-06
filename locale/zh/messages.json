@@ -34,7 +34,6 @@
   "ast.draw.checklist.requirement.name": "<0/> 的使用次数",
   "ast.draw.suggestions.draw-no-usage.content": "根本没有使用过<0/>。",
   "ast.draw.suggestions.draw-no-usage.why": "没有使用抽卡",
-  "ast.draw.suggestions.draw-uses.why": "由于 CD 空转至少 {0}，你大约损失了{drawsMissed}次<0/>。",
   "ast.draw.suggestions.sleeve-no-usage.content": "没有使用任何的<0/>。<0/>应当与其余的<1/>用来同时叠buff。<2/>可以被用来穿插卡片技。",
   "ast.draw.suggestions.sleeve-no-usage.why": "没有使用过袖内抽卡。",
   "ast.draw.suggestions.sleeve-uses.content": "请更为频繁的使用<0/>。<0/>应当与其余的<1/>用来同时叠buff。<2/>可以被用来穿插卡片技。",
