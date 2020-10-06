@@ -38,9 +38,9 @@ export default new Meta({
 	],
 	changelog: [
 		{
-			date: new Date('2020-09-30'),
+			date: new Date('2020-10-05'),
 			Changes: () => <>
-				Fixed bug where starting stance was always reported forgotten.
+				Fixed bug where sect was always reported forgotten, even when it wasn't.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
 		},
