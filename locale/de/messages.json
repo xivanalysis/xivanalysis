@@ -34,7 +34,6 @@
   "ast.draw.checklist.requirement.name": "<0/> Nutzungen",
   "ast.draw.suggestions.draw-no-usage.content": "Keinerlei Anwendungen von <0/>.",
   "ast.draw.suggestions.draw-no-usage.why": "Keine Karten gezogen.",
-  "ast.draw.suggestions.draw-uses.why": "Ungefähr {drawsMissed, plural, one {eine Anwendung} other {# Anwendungen}} von <0/> wurden versäumt, da es für insgesamt {0} auf Bereitschaft lag.",
   "ast.draw.suggestions.sleeve-no-usage.content": "Keinerlei Anwendungen von <0/>. Du solltest es parallel zu jeder zweiten <1/>-Anwendung benutzen, um währenddessen Buffs zu stapeln. <2/> kann benutzt werden, um Karten zu weaven (zwischen Cooldowns anderer Fähigkeiten einzusetzen).",
   "ast.draw.suggestions.sleeve-no-usage.why": "Legeschema wurde nicht eingesetzt.",
   "ast.draw.suggestions.sleeve-uses.content": "Setze <0/> häufiger ein. Du solltest es parallel zu jeder zweiten <1/>-Anwendung benutzen, um währenddessen Buffs zu stapeln. <2/> kann benutzt werden, um Karten zu weaven (zwischen Cooldowns anderer Fähigkeiten einzusetzen).",
