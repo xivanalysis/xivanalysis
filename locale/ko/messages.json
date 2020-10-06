@@ -34,7 +34,6 @@
   "ast.draw.checklist.requirement.name": "사용횟수: <0/>",
   "ast.draw.suggestions.draw-no-usage.content": "<0/>이 전혀 사용되지 않음.",
   "ast.draw.suggestions.draw-no-usage.why": "점지가 사용되지 않았습니다.",
-  "ast.draw.suggestions.draw-uses.why": "<0/>를 {0}초 이상 사용 하지않아 대략 {drawsMissed, plural, other {# 회}}의 사용 횟수를 잃었습니다.",
   "ast.draw.suggestions.sleeve-no-usage.content": "<0/>를 전혀 사용하지 않았습니다. 항상 <1/>과 병행하여 버프 효율을 최대한 늘리십시오. <2/>는 카드를 끼워넣는 사용을 가능하게합니다.",
   "ast.draw.suggestions.sleeve-no-usage.why": "묘수를 전혀 사용하지 않았습니다.",
   "ast.draw.suggestions.sleeve-uses.content": "<0/>를 더 자주 사용하십시오. 항상 <1/>과 병행하여 버프 효율을 최대한 늘리십시오. <2/>는 카드를 끼워넣는 사용을 가능하게합니다.",
