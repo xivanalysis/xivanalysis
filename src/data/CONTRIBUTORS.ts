@@ -184,6 +184,11 @@ const CONTRIBUTORS = {
 		avatar: require('./avatar/cadence.png'),
 		jobs: [JOBS.GUNBREAKER],
 	},
+	CASUALSUPERMAN: {
+		name: 'CasualSuperman',
+		avatar: require('./avatar/casualsuperman.png'),
+		jobs: [JOBS.ASTROLOGIAN],
+	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>
 
