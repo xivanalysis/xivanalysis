@@ -301,6 +301,7 @@
   "smn.dots.suggestions.clipping.content": "Vermeide es, deine DoTs deutlich vor ihrem Ablauf zu erneuern, außer während der Eröffnung oder am Ende des Kampfes. Durch unnötige Erneuerungen riskierst du \"Buff Snapshots\" ( => glossary stuff???) zu überschreiben und erhöhst die Anzahl an normal gezauberten DoTs.",
   "smn.dots.suggestions.clipping.why": "{0} von {1} und {2} von {3} durch zu frühes Reaktivieren verloren.",
   "smn.dots.total-clip": "Insgesamt Überschrieben",
+  "smn.dwt.died": "(gestorben)",
   "smn.dwt.no-deathflare": "(keine Todesflamme)",
   "smn.dwt.suggestions.bad-gcds.content": "Während Bahamut-Trance sollten sich deine GCDs auf <0/> und <1/> (oder <2/< für AoE Schaden) begrenzen.",
   "smn.dwt.suggestions.bad-gcds.why": "{badGcds} falsche GCDs während Bahamut-Trance benutzt.",
