@@ -1,4 +1,10 @@
+.detail {
+	/* This is shit. This is also copied from semantic. What a coinkydink. */
+	z-index: 1900;
+}
+
 .link {
+	color: inherit;
 	border-bottom: 1px dotted currentColor;
 }
 
