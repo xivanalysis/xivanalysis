@@ -12,7 +12,7 @@ export interface Contributor {
 const CONTRIBUTORS = {
 	ACKWELL: {
 		name: 'ackwell',
-		avatar: require('./avatar/ackwell.png'),
+		avatar: require('./avatar/ackwell.jpg'),
 		jobs: [
 			JOBS.SUMMONER,
 			JOBS.RED_MAGE,
