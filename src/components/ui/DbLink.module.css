@@ -4,6 +4,7 @@
 }
 
 .link {
+	color: inherit;
 	border-bottom: 1px dotted currentColor;
 }
 

@@ -132,7 +132,15 @@ function Label({
 	return <>
 		{showIcon && icon}
 		{showName && (
-			<span className={styles.link}>{name}</span>
+			<a
+				// <3 u garland
+				href={`http://www.garlandtools.org/db/#${sheet.toLowerCase()}/${id}`}
+				target="_blank"
+				rel="noopener noreferrer"
+				className={styles.link}
+			>
+				{name}
+			</a>
 		)}
 	</>
 }
