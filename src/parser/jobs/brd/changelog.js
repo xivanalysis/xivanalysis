@@ -8,9 +8,23 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-08-24'),
+		Changes: () => <>
+			Simplified the Barrage module and squashed some longstanding bugs with <StatusLink {...STATUSES.RAGING_STRIKES}/> alignment and <StatusLink {...STATUSES.STRAIGHT_SHOT_READY}/> procs.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-08-10'),
 		Changes: () => <>
 			Support for patch 5.3 - potencies for Burst Shot, Refulgent Arrow, and Sidewinder adjusted.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-08-08'),
+		Changes: () => <>
+			Added suggestions for ghosted and very weak Apex Arrow casts.
 		</>,
 		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
 	},

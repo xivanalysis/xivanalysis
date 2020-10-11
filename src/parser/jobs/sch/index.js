@@ -29,7 +29,7 @@ export default new Meta({
 	],
 	changelog: [{
 		date: new Date('2020-08-10'),
-		Changes: () => <>Support for 5.3 added – no breaking changes to current analysis.</>,
+		Changes: () => <>Support for 5.3 added – no breaking changes to current analysis.</>,
 		contributors: [CONTRIBUTORS.NONO],
 	},
 	{

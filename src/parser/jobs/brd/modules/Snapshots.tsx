@@ -11,10 +11,11 @@ import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {SNAPSHOT_BLACKLIST} from './SnapshotBlacklist'
-import Util from './Util'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {SNAPSHOT_BLACKLIST} from './SnapshotBlacklist'
 import styles from './Snapshots.module.css'
+import Util from './Util'
 
 const SNAPSHOTTERS = [
 	ACTIONS.IRON_JAWS.id,
@@ -92,7 +93,7 @@ class Target {
 export default class Snapshots extends Module {
 	static handle = 'snapshots'
 	static title = t('brd.snapshots.title')`Snapshots`
-	static debug = false
+	static displayOrder = DISPLAY_ORDER.SNAPSHOTS
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data

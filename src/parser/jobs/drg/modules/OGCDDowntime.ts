@@ -7,10 +7,11 @@ import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 const BUFF_FIRST_USE_OFFSET = 7000
 
 // ordering for jumps and GSK can shift, though LS is constant
-const JUMP_FIRST_USE_OFFSET = 17500
+// Currenly, last jump (DFD usually) is used before 9th GCD
+const JUMP_FIRST_USE_OFFSET = 24500
 
 // always before Full Thrust, the 8th GCD
-const LIFE_SURGE_FIRST_USE_OFFSET = 20000
+const LIFE_SURGE_FIRST_USE_OFFSET = 22000
 
 export default class OGCDDowntime extends CooldownDowntime {
 	defaultFirstUseOffset = BUFF_FIRST_USE_OFFSET
