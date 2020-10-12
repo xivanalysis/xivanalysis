@@ -2123,13 +2123,12 @@
     requireindex "^1.1.0"
 
 "@xivanalysis/tooltips@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.1.0.tgz#7a2f7d04e36f6185038a5d16ae22aec4f095cf54"
-  integrity sha512-SqlB1xkayyzV9ubIicShE6VzloxIYc8iHZhFAe4c1IjiDgcfo4GoN6MGYYBMGO1X7tfSkoZ+2kfj1ZYrTi/Ggw==
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.1.1.tgz#e949cbf517a7cc3857467693488b38dab7a4ee70"
+  integrity sha512-j/7PIxsAJeONfnktWJgIWitkISvKNlHsqPwRXxZxvABdu2uPPifj+Yt/vbF4bUBbBn2KqimuL+LrD81gHZePqg==
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@compiled/css-in-js" "^0.4.7"
-    debounce "^1.2.0"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -3974,11 +3973,6 @@ date-fns@^1.29.0:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
   integrity sha512-hBSVCvSmWC+QypYObzwGOd9wqdDpOt+0wl0KbU+R+uuZBS1jN8VsD1ss3irQDknRj5NvxiTF6oj/nDRnN/UQNw==
-
-debounce@^1.2.0:
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
-  integrity sha512-mYtLl1xfZLi1m4RtQYlZgJUNQjl4ZxVnHzIR8nLLgi4q1YT8o/WM+MK/f8yfcc9s5Ir5zRaPZyZU6xs1Syoocg==
 
 debug@2.6.9, debug@^2.2.0, debug@^2.3.3:
   version "2.6.9"
