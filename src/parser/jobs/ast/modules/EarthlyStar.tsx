@@ -29,8 +29,6 @@ export default class EarthlyStar extends Module {
 	static handle = 'earthlystar'
 	static title = t('ast.earthly-star.title')`Earthly Star`
 
-	static debug = false
-
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 	@dependency private precastStatus!: PrecastStatus
@@ -76,9 +74,7 @@ export default class EarthlyStar extends Module {
 		}
 
 		// Keep track of total drift time not using star
-		if (drift > 0) {
-			this.totalHeld += drift
-		}
+		this.totalHeld += Math.max(0, drift)
 
 		// update the last use
 		this.lastUse = event.timestamp
