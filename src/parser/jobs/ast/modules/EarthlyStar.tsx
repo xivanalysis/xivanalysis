@@ -33,6 +33,7 @@ export default class EarthlyStar extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private precastStatus!: PrecastStatus
 
+	private prepull = false
 	private uses = 0
 	private lastUse = 0
 	private totalHeld = 0
@@ -50,9 +51,11 @@ export default class EarthlyStar extends Module {
 	}
 
 	private onPlace(event: CastEvent) {
+		this.uses++
+
 		// this was prepull
 		if (event.timestamp < this.parser.fight.start_time) {
-			this.debug('prepull')
+			this.prepull = true
 		}
 
 		// TODO: Instead determine how far back they used it prepull by checking explosion time.
@@ -60,10 +63,19 @@ export default class EarthlyStar extends Module {
 			this.lastUse = this.parser.fight.start_time
 		}
 
-		const held = event.timestamp - this.lastUse - (this.data.actions.EARTHLY_STAR.cooldown * 1000)
-		if (held > 0) {
-			this.totalHeld += held
+		let drift = 0
+
+		if (this.uses === 1 && !this.prepull) {
+			// The first use, take holding as from the start of the fight
+			drift = event.timestamp - this.parser.fight.start_time
+		} else {
+			// Take holding as from the time it comes off cooldown
+			drift = event.timestamp - this.lastUse - (this.data.actions.EARTHLY_STAR.cooldown * 1000)
 		}
+
+		// Keep track of total drift time not using star
+		this.totalHeld += Math.max(0, drift)
+
 		// update the last use
 		this.lastUse = event.timestamp
 	}
@@ -94,6 +106,11 @@ export default class EarthlyStar extends Module {
 				tiers: SEVERETIES.UNCOOKED,
 				value: earlyBurstCount,
 			}))
+		}
+
+		// If they stopped using Star at any point in the fight, this'll calculate the drift "accurately"
+		if (this.parser.fight.end_time - this.lastUse > (this.data.actions.EARTHLY_STAR.cooldown * 1000)) {
+			this.totalHeld += (this.parser.fight.end_time - (this.lastUse + (this.data.actions.EARTHLY_STAR.cooldown * 1000)))
 		}
 
 		/*

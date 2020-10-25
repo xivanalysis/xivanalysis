@@ -40,6 +40,13 @@ export default new Meta({
 		{
 			date: new Date('2020-10-05'),
 			Changes: () => <>
+				Fixed <ActionLink {...ACTIONS.EARTHLY_STAR} /> drift calculation.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
+			date: new Date('2020-10-05'),
+			Changes: () => <>
 				Fixed bug where sect was always reported forgotten, even when it wasn't.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
