@@ -258,7 +258,6 @@
   "core.gcd.estimated-gcd": "FFLOG 기준 글로벌 쿨타임",
   "core.gcd.no-statistics": "FFLogs는 개인 통계를 기록하지 않으며 이에 따라 실질적인 글로벌 쿨다운 길이를 정확히 판단 할 수 업습니다. <0>분석한</0> 글로벌 쿨다운 길이가 실제보다 <1>느리게</1> 보고되었다면 이는 글쿨이 그만큼 밀렸다는 뜻이므로 이에 주의하여야 합니다.",
   "core.gcd.title": "글로벌 쿨타임 기술",
-  "core.home.about.content": "\nxivanalysis는 분석하여 실력향상을 목적으로 하는 툴입니다. 모든 잡에게 통용되는 바닥 눕는것 따위의 공통적인 지적부터 각 직업에 맞추어 특별 분석 및 문제 점검을 할수있습니다.\n\n이를 위해선 [FF Logs](https://www.fflogs.com/)의 전투 로그의 데이터를 바탕으로 가능케 합니다. 아직 FF Logs를 사용하지 않으셨다면 [here](https://old.reddit.com/r/ACTOverlayPlugin/comments/3b7ogz/)나 [here](https://www.fflogs.com/client/download)에 FF Logs 및 ACT 다운후 사용법을 알수있습니다.\n\n로그 URL을 붙여넣고 직접 확인해보세요!\n\n질문이나, 제안이 있거나, 또는 대화를 하고싶다면 사이드바에 링크된 저희 디스코드 채널을 방문해주세요.\n",
   "core.home.about.link": "이 사이트에 대해서",
   "core.home.about.title": "xivanalysis에 대하여",
   "core.home.analyse": "분석",
