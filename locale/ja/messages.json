@@ -115,7 +115,7 @@
   "blm.sharpcast.statistic.title": "使った激成魔",
   "blm.sharpcast.suggestions.dropped-sharpcasts.content": "<2/>が撃ち漏らしたため、少なくとも一回の<0/>や<1/>が失いました。",
   "blm.sharpcast.suggestions.dropped-sharpcasts.why": "{0, plural, other {# 回の激成魔}}が消費していないまま期限切れた。",
-  "blm.sharpcast.suggestions.sharpcasted-scathes.content": "<0/>を<1/>で消費しました。一般的に、激成魔が消費せずに期限切れてもコラプスで消費したほうが良いです。",
+  "blm.sharpcast.suggestions.sharpcasted-scathes.content": "<0/>を<1/>に消費しました。激成魔を無駄にするよりは良いのですが、それをしないようにしましょう。",
   "blm.sharpcast.suggestions.sharpcasted-scathes.why": "{0, plural, other {# 回の激成魔}}が<0/>で消費しまいました。",
   "blm.thunder.applied": "適用",
   "blm.thunder.checklist.dots.description": "<0/>DoT自身と<1/>特性が与えた追加ダメージは、全体的なダメージに大きく貢献します。常にDoTを切らさず維持してください。",
