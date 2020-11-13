@@ -329,6 +329,7 @@
   "rdm.combos.suggestions.therestcombos.content": "Lass deine Kombo nicht auslaufen oder nutze GCDs/Manafizierung während deiner magischen Kombo",
   "rdm.combos.suggestions.therestcombos.why": "{theRest, plural, one {# magische Kombo durch andere Fehler verloren} other {# magische Kombos durch andere Fehler verloren}}",
   "rdm.dualcast.suggestions.missed.why": "{0} {1, plural, one {Doppelzauber wurde} other {Doppelzauber wurden}} nicht genutzt.",
+  "rdm.dualcast.suggestions.wasted.content": "Mit <0/> solltest du nur <1/>,<2/> oder <3/> benutzen",
   "rdm.dualcast.title": "Doppelzauber",
   "rdm.gauge.suggestions.black-mana-lost-why": "Du hast {0} Schwarzes Mana verloren durch einen Überschuss von Weißem Mana",
   "rdm.gauge.suggestions.white-mana-lost-why": "Du hast {0} Weißes Mana verloren durch einen Überschuss von Schwarzem Mana",
