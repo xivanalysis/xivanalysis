@@ -22,7 +22,7 @@ export const ROLE = ensureActions({
 		id: 7533,
 		name: 'Provoke',
 		icon: 'https://xivapi.com/i/000000/000803.png',
-		cooldown: 40,
+		cooldown: 30,
 	},
 
 	REPRISAL: {
