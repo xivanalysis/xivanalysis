@@ -1,4 +1,5 @@
 import AdditionalStats from './AdditionalStats'
+import AlwaysBeCasting from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
 import Barrage from './Barrage'
 import Cooldowns from './Cooldowns'
@@ -14,6 +15,7 @@ import Weaving from './Weaving'
 
 export default [
 	AdditionalStats,
+	AlwaysBeCasting,
 	ApexArrow,
 	Barrage,
 	Cooldowns,
