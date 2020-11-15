@@ -1,6 +1,6 @@
 import AdditionalStats from './AdditionalStats'
+import AlwaysBeCasting from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
-import BardABC from './AlwaysBeCasting'
 import Barrage from './Barrage'
 import Cooldowns from './Cooldowns'
 import DoTs from './DoTs'
@@ -15,8 +15,8 @@ import Weaving from './Weaving'
 
 export default [
 	AdditionalStats,
+	AlwaysBeCasting,
 	ApexArrow,
-	BardABC,
 	Barrage,
 	Cooldowns,
 	DoTs,

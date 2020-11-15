@@ -1,8 +1,9 @@
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import AlwaysBeCasting from 'parser/core/modules/AlwaysBeCasting'
+import CoreAlwaysBeCasting from 'parser/core/modules/AlwaysBeCasting'
 import {BuffEvent, CastEvent} from 'fflogs'
 
+// tslint:disable-next-line:no-magic-numbers
 const SONG_DURATION_MS = 30 * 1000
 
 interface ArmyWindow {
@@ -10,7 +11,7 @@ interface ArmyWindow {
 	end: number
 }
 
-export default class BardABC extends AlwaysBeCasting {
+export default class AlwaysBeCasting extends CoreAlwaysBeCasting {
 	armyHistory: ArmyWindow[] = []
 	currentMuse: ArmyWindow | undefined
 	currentPaeon: ArmyWindow | undefined
