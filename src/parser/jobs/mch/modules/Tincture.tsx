@@ -2,14 +2,14 @@ import {Trans} from '@lingui/react'
 import Downtime from 'parser/core/modules/Downtime'
 import {dependency} from 'parser/core/Module'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import {Tincture} from 'parser/core/modules/Tincture'
+import {Tincture as CoreTincture} from 'parser/core/modules/Tincture'
 import React from 'react'
 import {BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 
 // Arbitrary 1 GCD buffer for the tincture buff application
 const TINCTURE_BUFFER = 2500
 
-export default class MchTincture extends Tincture {
+export default class Tincture extends CoreTincture {
 	@dependency private downtime!: Downtime
 
 	buffAction = this.data.actions.INFUSION_DEX

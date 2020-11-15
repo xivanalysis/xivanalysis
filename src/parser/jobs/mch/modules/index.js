@@ -4,9 +4,9 @@ import Drift from './Drift'
 import Gauge from './Gauge'
 import GeneralCDDowntime from './GeneralCDDowntime'
 import Heat from './Heat'
-import MchTincture from './Tincture'
 import MultiHitSkills from './MultiHitSkills'
 import Reassemble from './Reassemble'
+import Tincture from './Tincture'
 import Wildfire from './Wildfire'
 import YassQueen from './YassQueen'
 
@@ -17,9 +17,9 @@ export default [
 	Gauge,
 	GeneralCDDowntime,
 	Heat,
-	MchTincture,
 	MultiHitSkills,
 	Reassemble,
+	Tincture,
 	Wildfire,
 	YassQueen,
 ]
