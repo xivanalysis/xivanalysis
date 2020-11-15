@@ -31,6 +31,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-09-29'),
+			Changes: () => <>Changed Severity ratings for Missed Dualcasts 1 missed is now medium, 2 missed is now major.</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2020-08-10'),
 			Changes: () => <>Added support for patch 5.3</>,
 			contributors: [CONTRIBUTORS.LEYLIA],

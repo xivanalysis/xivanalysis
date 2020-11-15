@@ -14,7 +14,6 @@ import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
 
 import 'semantic-ui-css/semantic.min.css'
-import '@xivanalysis/tooltips/dist/index.es.css'
 import './App.css'
 import styles from './App.module.css'
 import {buildReportFlowPath} from './ReportFlow'

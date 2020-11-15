@@ -174,6 +174,13 @@ export const AST = ensureStatuses({
 		duration: 20,
 	},
 
+	DIURNAL_BALANCE_ASPECTED_HELIOS: {
+		id: 1247,
+		name: 'Diurnal Balance (Helios)',
+		icon: 'https://xivapi.com/i/013000/013254.png',
+		duration: 15,
+	},
+
 	DIURNAL_BALANCE: {
 		id: 1920,
 		name: 'Diurnal Balance',

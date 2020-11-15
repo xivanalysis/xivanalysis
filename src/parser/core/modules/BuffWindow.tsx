@@ -123,10 +123,10 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected rotationTableNotesColumnHeader?: JSX.Element
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
+	@dependency protected globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
-	@dependency protected globalCooldown!: GlobalCooldown
 
 	private buffWindows: BuffWindowState[] = []
 

@@ -17,10 +17,6 @@ export default class Util extends Module {
 		'timeline',
 	]
 
-	hasBuff(status) {
-		return this.combatants.selected.hasStatus(status.id)
-	}
-
 	getDebuffUptime(status) {
 		const statusTime = this.entityStatuses.getStatusUptime(status.id, this.enemies.getEntities())
 		const uptime = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
@@ -49,25 +45,6 @@ export default class Util extends Module {
 		return Math.round(number * Math.pow(BASE, precision))/Math.pow(BASE, precision)
 	}
 
-	formatDamageLog(event) {
-
-		if (event && event.type && event.type !== 'damage') {
-			return
-		}
-
-		let modifier = ''
-
-		if (event.multistrike && event.hitType && event.hitType === 2) {
-			modifier = 'Critical direct hit! '
-		} else if (!event.multistrike && event.hitType && event.hitType === 2) {
-			modifier = 'Critical! '
-		} else if (event.multistrike && !event.hitType || event.hitType === 1) {
-			modifier = 'Direct hit! '
-		}
-		return `${modifier}${event.target && event.target.name ? event.target.name : this.enemies.getEntity(event.targetID).name || 'Target'} takes ${event.amount} damage.`
-
-	}
-
 	formatTimestamp(timestamp) {
 		timestamp = Math.max(timestamp, this.parser.fight.start_time)
 		return this.parser.formatTimestamp(timestamp)
@@ -75,14 +52,6 @@ export default class Util extends Module {
 
 	milliToSeconds(time, precision) {
 		return this.formatDecimal(time / 1000, precision)
-	}
-
-	timeSince(timestamp) {
-		return this.parser.currentTimestamp - timestamp
-	}
-
-	timeUntilFinish(timestamp) {
-		return this.parser.fight.end_time - timestamp
 	}
 
 	createTimelineButton(timestamp) {
@@ -94,9 +63,5 @@ export default class Util extends Module {
 			onClick={() => this.timeline.show(timestamp - this.parser.fight.start_time, timestamp - this.parser.fight.start_time)}
 			content={this.parser.formatTimestamp(timestamp)}
 		/>
-	}
-
-	formatDamageNumber(damageNumber) {
-		return damageNumber.toLocaleString({maximumFractionDigits: 2})
 	}
 }
