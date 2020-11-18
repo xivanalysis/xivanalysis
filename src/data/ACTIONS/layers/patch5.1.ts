@@ -17,6 +17,7 @@ export const patch510: Layer<ActionRoot> = {
 
 		// AST 5.1 mp changes and CU additional noct statuses
 		COLLECTIVE_UNCONSCIOUS: {
+			cooldown: 60,
 			statusesApplied: [
 				'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
 				'COLLECTIVE_UNCONSCIOUS',
@@ -24,7 +25,6 @@ export const patch510: Layer<ActionRoot> = {
 				'COLLECTIVE_UNCONSCIOUS_NOCTURNAL',
 				'WHEEL_OF_FORTUNE_NOCTURNAL',
 			],
-                        cooldown: 60,
 		},
 		ASPECTED_HELIOS: {mpCost: 1000},
 		ASPECTED_HELIOS_NOCTURNAL: {mpCost: 1000},
