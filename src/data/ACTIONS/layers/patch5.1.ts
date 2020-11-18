@@ -24,6 +24,7 @@ export const patch510: Layer<ActionRoot> = {
 				'COLLECTIVE_UNCONSCIOUS_NOCTURNAL',
 				'WHEEL_OF_FORTUNE_NOCTURNAL',
 			],
+                        cooldown: 60,
 		},
 		ASPECTED_HELIOS: {mpCost: 1000},
 		ASPECTED_HELIOS_NOCTURNAL: {mpCost: 1000},
