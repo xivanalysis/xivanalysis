@@ -17,6 +17,7 @@ export const patch510: Layer<ActionRoot> = {
 
 		// AST 5.1 mp changes and CU additional noct statuses
 		COLLECTIVE_UNCONSCIOUS: {
+			cooldown: 60,
 			statusesApplied: [
 				'COLLECTIVE_UNCONSCIOUS_DIURNAL_MITIGATION',
 				'COLLECTIVE_UNCONSCIOUS',
