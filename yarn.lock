@@ -2122,10 +2122,10 @@
     eslint-plugin-react "^7.11.1"
     requireindex "^1.1.0"
 
-"@xivanalysis/tooltips@^0.1.0":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.1.1.tgz#e949cbf517a7cc3857467693488b38dab7a4ee70"
-  integrity sha512-j/7PIxsAJeONfnktWJgIWitkISvKNlHsqPwRXxZxvABdu2uPPifj+Yt/vbF4bUBbBn2KqimuL+LrD81gHZePqg==
+"@xivanalysis/tooltips@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@xivanalysis/tooltips/-/tooltips-0.1.2.tgz#137cc16b740424ed1a2bca9234d4aa46a3f1ada2"
+  integrity sha512-BitEKjbPBhCCi8WxQ5Pnt9HnI7sAp4yHJj1pG6uLKEDlwsgvyHlzZaX7LlJ6BWHhef0yeZPyEsL7gTt8WfZFDw==
   dependencies:
     "@babel/runtime" "^7.11.2"
     "@compiled/css-in-js" "^0.4.7"
