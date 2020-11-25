@@ -7,7 +7,6 @@ export const ARC = ensureActions({
 		icon: 'https://xivapi.com/i/000000/000358.png',
 		onGcd: true,
 		potency: 180,
-		statusesApplied: ['STRAIGHT_SHOT_READY'],
 	},
 	VENOMOUS_BITE: {
 		id: 100,
