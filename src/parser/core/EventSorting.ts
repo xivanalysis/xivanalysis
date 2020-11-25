@@ -1,4 +1,4 @@
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 import stable from 'stable'
 
 const EVENT_TYPE_ORDER: {[key: string]: number} = {

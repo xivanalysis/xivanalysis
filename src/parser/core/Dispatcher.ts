@@ -1,4 +1,4 @@
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 import _ from 'lodash'
 import Module from './Module'
 

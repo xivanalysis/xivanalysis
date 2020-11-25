@@ -10,7 +10,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 
 const SEVERITY_STACK_COUNT = {
 	1: SEVERITY.MEDIUM,

@@ -7,7 +7,7 @@ export interface SummonPetEvent {
 	petId: number
 }
 
-declare module 'events' {
+declare module 'legacyEvents' {
 	interface EventTypeRepository {
 		smnPets: SummonPetEvent
 	}

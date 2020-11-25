@@ -1,4 +1,4 @@
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 
 // -----
 // Fight
@@ -265,7 +265,7 @@ export type FflogsEvent =
 	| AbilityEvent
 	| DeathEvent
 
-declare module 'events' {
+declare module 'legacyEvents' {
 	interface EventTypeRepository {
 		fflogs: FflogsEvent
 	}

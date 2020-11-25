@@ -1,4 +1,4 @@
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 import {CastEvent, isCastEvent, isDamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'

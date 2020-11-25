@@ -1,7 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import Color from 'color'
 import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'

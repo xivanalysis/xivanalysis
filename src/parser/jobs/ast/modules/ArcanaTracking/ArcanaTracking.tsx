@@ -8,7 +8,7 @@ import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import {Event} from 'events'
+import {Event} from 'legacyEvents'
 import {InitEvent} from 'parser/core/Parser'
 
 const LINKED_EVENT_THRESHOLD = 20
