@@ -22,12 +22,12 @@ export class LegacyFflogsReportStore extends ReportStore {
 		return adaptReport(report)
 	}
 
-	fetchReport(code: string) {
+	requestReport(code: string) {
 		// Pass through directly to the legacy store. It handles caching for us.
 		legacyReportStore.fetchReportIfNeeded(code)
 	}
 
-	fetchPulls(options?: FetchOptions) {
+	requestPulls(options?: FetchOptions) {
 		// `fetchReport` gets the full set of pulls for us, only fire fetches
 		// if bypassing the cache.
 		if (options?.bypassCache !== true) { return }

@@ -36,7 +36,7 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 	)
 
 	const onRefresh = useCallback(
-		() => reportStore.fetchPulls({bypassCache: true}),
+		() => reportStore.requestPulls({bypassCache: true}),
 		[reportStore],
 	)
 
@@ -45,7 +45,7 @@ export const PullList = observer(function PullList({reportStore}: PullListProps)
 	}
 
 	// Ensure pulls are up to date
-	reportStore.fetchPulls()
+	reportStore.requestPulls()
 
 	// Group encounters by the duty they took place in
 	// We're maintaining chronological order, so only tracking the latest duty

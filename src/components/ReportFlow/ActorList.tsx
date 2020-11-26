@@ -33,7 +33,7 @@ export function ActorList({reportStore}: ActorListProps) {
 	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
 
 	const onRefreshPulls = useCallback(
-		() => reportStore.fetchPulls({bypassCache: true}),
+		() => reportStore.requestPulls({bypassCache: true}),
 		[reportStore],
 	)
 
@@ -56,7 +56,7 @@ export function ActorList({reportStore}: ActorListProps) {
 	}
 
 	// Ensure actors are up to date
-	reportStore.fetchActors(pullId)
+	reportStore.requestActors(pullId)
 
 	const actors = pull.actors
 		.filter(actor => actor.playerControlled)

@@ -28,8 +28,8 @@ export interface ReportLink {
 export abstract class ReportStore {
 	abstract readonly report?: Report
 
-	fetchPulls(options?: FetchOptions) {}
-	fetchActors(pullId: Pull['id'], options?: FetchOptions) {}
+	requestPulls(options?: FetchOptions) {}
+	requestActors(pullId: Pull['id'], options?: FetchOptions) {}
 
 	getReportLink(
 		pullId?: Pull['id'],
