@@ -25,15 +25,20 @@ export default class PerfectBalance extends BuffWindowModule {
 	buffAction: Action = ACTIONS.PERFECT_BALANCE
 	buffStatus: Status = STATUSES.PERFECT_BALANCE
 
+	const message = <Trans id="mnk.pb.suggestions.missedgcd.content">
+		Try to land 5 GCDs in GL3, or 6 GCDs in GL4, during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
+	</Trans>
+
+	const message540 = <Trans id="mnk.pb.suggestions.missedgcd.content.540">
+		Try to land 6 GCDs during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window.
+	</Trans>
+
 	expectedGCDs = {
 		expectedPerWindow: 5,
-		suggestionContent: <Trans id="mnk.pb.suggestions.missedgcd.content">
-			Try to land 5 GCDs in GL3, or 6 GCDs in GL4, during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-		</Trans>,
+		suggestionContent: this.parser.patch.before('5.4') ? message : message540,
 		severityTiers: {
-			1: SEVERITY.MINOR,
-			2: SEVERITY.MEDIUM,
-			3: SEVERITY.MAJOR,
+			1: SEVERITY.MEDIUM,
+			2: SEVERITY.MAJOR,
 		},
 	}
 
@@ -58,13 +63,13 @@ export default class PerfectBalance extends BuffWindowModule {
 	}
 
 	changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
-		// If we changed Fist, we know we don't have GL4 the whole way
-		if (buffWindow.getActionCountByIds(FISTS) > 0) {
-			return 0
+		if (this.parser.patch.before('5.4') {
+			// If we changed Fist, we know we don't have GL4 the whole way, or if they started below GL4
+			if (buffWindow.getActionCountByIds(FISTS) > 0 || this.gauge.getStacksAt(buffWindow.start) < MAX_FASTER) {
+				return 0
+			}
 		}
 
-		// For now let's go with if they were in GL4 at the start,
-		// since it less GCDs than expected implies a mistake like GL dropping
-		return this.gauge.getStacksAt(buffWindow.start) < MAX_FASTER ? 0 : 1
+		return 1
 	}
 }
