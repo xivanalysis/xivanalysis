@@ -4,6 +4,7 @@ import {AnalyseRouteParams} from './ReportFlow'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
 import {ReportStore} from 'reportSources'
 import {Message} from 'akkd'
+import {Event} from 'events'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
@@ -30,6 +31,19 @@ export function Analyse({reportStore}: AnalyseProps) {
 				This report was sourced from "{report.meta?.source}", which is not supported at this time.
 			</Message>
 		)
+	}
+
+	// TODO: Obviously not a good idea to merge with this here.
+	const [events, setEvents] = React.useState<Event[]>()
+	React.useEffect(() => {
+		reportStore.fetchEvents(pullId, actorId).then(setEvents)
+	}, [pullId, actorId])
+	if (process.env.NODE_ENV === 'development') {
+		// const events = reportStore.fetchEvents(pullId, actorId)
+		return <>
+			<h1>EVENT DEBUG</h1>
+			<pre><code>{JSON.stringify(events, undefined, 2)}</code></pre>
+		</>
 	}
 
 	const legacyReport = report.meta

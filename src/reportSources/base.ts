@@ -1,5 +1,6 @@
 import {Report, Pull, Actor} from 'report'
 import {MessageDescriptor} from '@lingui/core'
+import {Event} from 'events'
 
 export type SearchHandlerResult =
 	| {valid: false, reason?: MessageDescriptor}
@@ -30,6 +31,8 @@ export abstract class ReportStore {
 
 	requestPulls(options?: FetchOptions) {}
 	requestActors(pullId: Pull['id'], options?: FetchOptions) {}
+
+	abstract fetchEvents(pullId: Pull['id'], actorId: Actor['id']): Promise<Event[]>
 
 	getReportLink(
 		pullId?: Pull['id'],

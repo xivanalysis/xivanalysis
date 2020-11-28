@@ -5,6 +5,8 @@ import {Pull, Actor} from 'report'
 import {isDefined} from 'utilities'
 import fflogsIcon from './fflogs.png'
 import {adaptReport} from './reportAdapter'
+import {adaptEvents} from './eventAdapter'
+import {getFflogsEvents} from 'api'
 
 /**
  * Report source acting as an adapter to the old report store system while we port
@@ -33,6 +35,25 @@ export class LegacyFflogsReportStore extends ReportStore {
 		if (options?.bypassCache !== true) { return }
 
 		legacyReportStore.refreshReport()
+	}
+
+	// todo: clean up
+	async fetchEvents(pullId: Pull['id'], actorId: Actor['id']) {
+		if (this.report == null) {
+			// todo: wait for report?
+			throw new Error('no report')
+		}
+		const legacyReport = this.report.meta
+		const legacyFight = legacyReport.fights.find(fight => fight.id.toString() === pullId)
+		if (legacyFight == null) {
+			throw new Error('no fight')
+		}
+		const legacyEvents = await getFflogsEvents(
+			legacyReport.code,
+			legacyFight,
+			{actorid: parseInt(actorId, 10)},
+		)
+		return adaptEvents(this.report, legacyEvents)
 	}
 
 	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {

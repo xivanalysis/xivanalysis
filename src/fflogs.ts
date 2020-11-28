@@ -136,7 +136,7 @@ export interface Ability {
 }
 
 // Used for inlined actors, typically those that are unranked / uncounted
-interface EventActor extends BaseActor {
+export interface EventActor extends BaseActor {
 	icon: string,
 }
 
