@@ -1,4 +1,5 @@
 import {ensureStatuses} from '../type'
+import {SHARED} from './SHARED'
 
 export const MNK = ensureStatuses({
 	PERFECT_BALANCE: {
@@ -143,4 +144,6 @@ export const MNK = ensureStatuses({
 		icon: 'https://xivapi.com/i/012000/012534.png',
 		duration: 30,
 	},
+
+	FORMLESS_FIST: SHARED.UNKNOWN,
 })
