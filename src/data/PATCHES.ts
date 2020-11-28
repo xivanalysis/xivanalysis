@@ -107,7 +107,13 @@ const PATCHES = {
 	},
 	'5.3': {
 		date: {
-			[GameEdition.GLOBAL]: 1597140000, // 11/08/20 10:00:00 GMT
+			[GameEdition.GLOBAL]: 1597140000, // 11/08/20 09:00:00 GMT
+			[GameEdition.CHINESE]: 1606809600, // 01/12/20 08:00:00 GMT
+		},
+	},
+	'5.4': {
+		date: {
+			[GameEdition.GLOBAL]: 1607418000, // 08/12/20 09:00:00 GMT
 		},
 	},
 }
