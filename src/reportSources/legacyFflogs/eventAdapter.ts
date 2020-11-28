@@ -45,10 +45,8 @@ class EventAdapter {
 
 	private adaptCastEvent(event: CastEvent): Events['prepare'] | Events['action'] {
 		return {
+			...this.adaptTargetedFields(event),
 			type: event.type === 'begincast' ? 'prepare' : 'action',
-			timestamp: this.report.timestamp + event.timestamp,
-			source: resolveActorId(event.sourceID, event.source),
-			target: resolveActorId(event.targetID, event.target),
 			action: event.ability.guid,
 		}
 	}
@@ -57,11 +55,8 @@ class EventAdapter {
 		const overkill = event.overkill ?? 0
 
 		return {
+			...this.adaptTargetedFields(event),
 			type: 'damage',
-			// TODO: abstract fieldsbase/fieldstargeted
-			timestamp: this.report.timestamp + event.timestamp,
-			source: resolveActorId(event.sourceID, event.source),
-			target: resolveActorId(event.targetID, event.target),
 			// TODO: status
 			hit: {type: 'action', action: event.ability.guid},
 			// fflogs subtracts overkill from amount, amend
@@ -73,6 +68,18 @@ class EventAdapter {
 			sourceModifer: 0, // TODO: adapt
 			targetModifier: 0, // TODO: adapt
 		}
+	}
+
+	private adaptTargetedFields(event: FflogsEvent) {
+		return {
+			...this.adaptBaseFields(event),
+			source: resolveActorId(event.sourceID, event.source),
+			target: resolveActorId(event.targetID, event.target),
+		}
+	}
+
+	private adaptBaseFields(event: FflogsEvent) {
+		return {timestamp: this.report.timestamp + event.timestamp}
 	}
 }
 

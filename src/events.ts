@@ -53,6 +53,9 @@ type Hit =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
 
+// TODO: do i even want to keep this and aspect?
+// it's in the game data under the action id, and fflogs doesn't
+// expose sanely.
 enum AttackType {
 	UNKNOWN, // ?
 	SLASHING,
@@ -89,6 +92,7 @@ enum TargetModifier {
 	PARRY,
 	BLOCK,
 	DODGE,
+	// TODO: Reflect?
 }
 
 interface EventDamage extends FieldsTargeted {
