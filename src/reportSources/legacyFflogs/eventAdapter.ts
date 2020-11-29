@@ -1,8 +1,19 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events} from 'event'
-import {CastEvent, DamageEvent, EventActor, FflogsEvent} from 'fflogs'
+import {Event, Events, SourceModifier, TargetModifier} from 'event'
+import {CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
+
+const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
+	[HitType.MISS]: SourceModifier.MISS,
+	[HitType.CRITICAL]: SourceModifier.CRITICAL,
+	// Marking dodge as miss 'cus it seems to be mis-used as such on fflogs
+	[HitType.DODGE]: SourceModifier.MISS,
+}
+const targetHitType: Partial<Record<HitType, TargetModifier>> = {
+	[HitType.BLOCK]: TargetModifier.BLOCK,
+	[HitType.PARRY]: TargetModifier.PARRY,
+}
 
 export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report})
@@ -55,6 +66,14 @@ class EventAdapter {
 	private adaptDamageEvent(event: DamageEvent): Events['damage'] {
 		const overkill = event.overkill ?? 0
 
+		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
+
+		if (event.multistrike) {
+			sourceModifier = sourceModifier === SourceModifier.CRITICAL
+				? SourceModifier.CRITICAL_DIRECT
+				: SourceModifier.DIRECT
+		}
+
 		return {
 			...this.adaptTargetedFields(event),
 			type: 'damage',
@@ -67,8 +86,8 @@ class EventAdapter {
 			resolved: false, // TODO: check w/ calc damage
 			attackType: 0, // TODO: adapt?
 			aspect: 0, // TODO: adapt?
-			sourceModifer: 0, // TODO: adapt
-			targetModifier: 0, // TODO: adapt
+			sourceModifier,
+			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}
 	}
 

@@ -79,7 +79,7 @@ enum Aspect {
 	UNASPECTED, // 7?
 }
 
-enum SourceModifier {
+export enum SourceModifier {
 	NORMAL,
 	MISS,
 	CRITICAL,
@@ -87,7 +87,7 @@ enum SourceModifier {
 	CRITICAL_DIRECT,
 }
 
-enum TargetModifier {
+export enum TargetModifier {
 	NORMAL,
 	PARRY,
 	BLOCK,
@@ -102,7 +102,8 @@ interface EventDamage extends FieldsTargeted {
 	resolved: boolean
 	attackType: AttackType
 	aspect: Aspect
-	sourceModifer: SourceModifier
+	// TODO: Are these exclusive? Merge?
+	sourceModifier: SourceModifier
 	targetModifier: TargetModifier
 }
 
