@@ -1,4 +1,4 @@
-import {Event} from 'legacyEvents'
+import {Event} from 'legacyEvent'
 import Module from '../Module'
 
 interface RaiseEvent {
@@ -7,7 +7,7 @@ interface RaiseEvent {
 	targetID: number
 }
 
-declare module 'legacyEvents' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		death: RaiseEvent
 	}

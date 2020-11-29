@@ -7,7 +7,7 @@ Instead, you'll want to set it up from your module file, using declaration mergi
 (https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
 It'll look something like this:
 ```ts
-declare module 'legacyEvents' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		yourModuleHandle: UnionOf | YourFabricated | EventTypes
 	}

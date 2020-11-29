@@ -4,7 +4,7 @@ import {AnalyseRouteParams} from './ReportFlow'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
 import {ReportStore} from 'reportSources'
 import {Message} from 'akkd'
-import {Event} from 'events'
+import {Event} from 'event'
 
 export interface AnalyseProps {
 	reportStore: ReportStore

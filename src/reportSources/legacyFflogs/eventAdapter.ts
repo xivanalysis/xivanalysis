@@ -1,5 +1,5 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events} from 'events'
+import {Event, Events} from 'event'
 import {CastEvent, DamageEvent, EventActor, FflogsEvent} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'

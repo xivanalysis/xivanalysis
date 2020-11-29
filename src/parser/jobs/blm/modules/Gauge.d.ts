@@ -15,7 +15,7 @@ interface BLMGaugeEvent extends BaseEventFields {
 	lastGaugeEvent: BLMGaugeEvent,
 }
 
-declare module 'legacyEvents' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		blmRotationWatchdog: BLMGaugeEvent
 	}

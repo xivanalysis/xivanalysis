@@ -1,5 +1,5 @@
 import Module, {dependency} from 'parser/core/Module'
-import {Event} from 'legacyEvents'
+import {Event} from 'legacyEvent'
 import {getFflogsEvents} from 'api'
 import {sortEvents} from '../EventSorting'
 

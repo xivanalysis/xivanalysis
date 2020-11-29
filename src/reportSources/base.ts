@@ -1,6 +1,6 @@
 import {Report, Pull, Actor} from 'report'
 import {MessageDescriptor} from '@lingui/core'
-import {Event} from 'events'
+import {Event} from 'event'
 
 export type SearchHandlerResult =
 	| {valid: false, reason?: MessageDescriptor}

@@ -4,7 +4,7 @@ import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import type {Event} from 'legacyEvents'
+import type {Event} from 'legacyEvent'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report as LegacyReport} from 'store/report'
@@ -38,7 +38,7 @@ export interface CompleteEvent {
 	timestamp: number
 }
 
-declare module 'legacyEvents' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		parser: InitEvent | CompleteEvent
 	}
