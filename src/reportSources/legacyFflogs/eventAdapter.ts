@@ -1,3 +1,4 @@
+import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events} from 'events'
 import {CastEvent, DamageEvent, EventActor, FflogsEvent} from 'fflogs'
 import {Actor, Report} from 'report'
@@ -57,14 +58,15 @@ class EventAdapter {
 		return {
 			...this.adaptTargetedFields(event),
 			type: 'damage',
-			// TODO: status
-			hit: {type: 'action', action: event.ability.guid},
+			hit: event.ability.guid < STATUS_ID_OFFSET
+				? {type: 'action', action: event.ability.guid}
+				: {type: 'status', status: event.ability.guid - STATUS_ID_OFFSET},
 			// fflogs subtracts overkill from amount, amend
 			amount: event.amount + overkill,
 			overkill,
 			resolved: false, // TODO: check w/ calc damage
-			attackType: 0, // TODO: Adapt
-			aspect: 0, // TODO: adapt
+			attackType: 0, // TODO: adapt?
+			aspect: 0, // TODO: adapt?
 			sourceModifer: 0, // TODO: adapt
 			targetModifier: 0, // TODO: adapt
 		}
