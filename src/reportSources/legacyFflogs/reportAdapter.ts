@@ -51,10 +51,19 @@ function buildActorsByFight(report: LegacyReport) {
 		actors.push(actor)
 	}
 
-	// TODO: Handle instances and groups
-	// TODO: How the _fuck_ am i going to handle instances? dupes?
+	// TODO: Do we need to handle groups, or can we assume that's an fflogs UI concern we can ignore?
 	function pushToFights(fights: ActorFightInstance[], actor: Actor) {
-		fights.forEach(fight => pushToFight(fight.id, actor))
+		fights.forEach(fight => {
+			// Add copies of the actor for each seperate "instance" in the fight
+			// TODO: Should I bother preserving instances across multiple fights or nah?
+			const instances = fight.instances ?? 1
+			for (let instance = 1; instance <= instances; instance++) {
+				const instanceActor: Actor = instance === 1
+					? actor
+					: {...actor, id: `${actor.id}:${instance}`}
+				pushToFight(fight.id, instanceActor)
+			}
+		})
 	}
 
 	function buildActors<A extends FflogsActor>(
