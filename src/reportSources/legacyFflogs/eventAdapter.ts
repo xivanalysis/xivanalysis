@@ -93,30 +93,52 @@ class EventAdapter {
 
 		// If there's no packet ID, I'm opting to throw - If sentry/people complain about it, we can try to
 		// match up with a fallback - but animation delays can push the resolution out for 2s (or more?), so...
-		if (event.packetID == null) {
+		const resolutionKey = getResolutionKey(event)
+		if (resolutionKey == null) {
 			throw new Error('Calculated damage event encountered with no packet ID. Cannot resolve damage, bailing.')
 		}
 
 		// Save the unresolved event out to the map
-		this.eventResolutionMap.set(`packet:${event.packetID}`, newEvent)
+		this.eventResolutionMap.set(resolutionKey, newEvent)
 
 		return newEvent
 	}
 
 	private adaptDamageEvent(event: DamageEvent): undefined {
 		// Try to find a matching event that needs resolution - if there is none, bail
-		const pendingEvent = event.packetID != null
-			? this.eventResolutionMap.get(`packet:${event.packetID}`)
-			: undefined
+		// TODO: can probably just bail instead of throwing
+		const resolutionKey = getResolutionKey(event)
+		if (resolutionKey == null) {
+			// These are known cases where no packet ID is recieved - and i'm okay with. This is only here for dev so I can debug when something unknown comes in
+			// TODO: DO NOT RELEASE WITH THIS CODE
+			// TODO: THIS IS EATING ALL TICK DAMAGE, RESOLVE
+			if (
+				event.tick ||
+				event.hitType === HitType.DODGE
+			) {
+				return
+			}
+			console.log(event)
+			console.log(this.eventResolutionMap)
+			throw new Error('???')
+		}
 
+		const pendingEvent = this.eventResolutionMap.get(resolutionKey)
 		if (pendingEvent == null) {
 			// TODO: handle
+			console.log(event)
+			console.log(resolutionKey)
+			console.log(this.eventResolutionMap)
+
+			// TODO: This is due to duplicated actor IDs stemming from instances. Need to split instances in report adapter first.
 			throw new Error('This shouldnt happen. Check!')
 		}
 
+		this.eventResolutionMap.delete(resolutionKey)
+
 		Object.assign(pendingEvent, {
 			resolved: true,
-			// TODO: Should we use the new timestamp?
+			// TODO: Should we use the new timestamp? Will need to sort results if we do.
 			// Calculated events seem to have no amount at all, fix.
 			...resolveAmountFields(event),
 		})
@@ -127,8 +149,7 @@ class EventAdapter {
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
 			...this.adaptBaseFields(event),
-			source: resolveActorId(event.sourceID, event.source),
-			target: resolveActorId(event.targetID, event.target),
+			...resolveActorIds(event),
 		}
 	}
 
@@ -137,8 +158,24 @@ class EventAdapter {
 	}
 }
 
-const resolveActorId = (id?: number, actor?: EventActor): Actor['id'] =>
-	(id ?? actor?.id ?? -1).toString()
+function getResolutionKey(event: DamageEvent) {
+	if (event.packetID == null) { return }
+	const {source, target} = resolveActorIds(event)
+	return `${event.packetID}|${source}|${target}`
+}
+
+const resolveActorIds = (event: FflogsEvent) => ({
+	source: resolveActorId({id: event.sourceID, instance: event.sourceInstance, actor: event.source}),
+	target: resolveActorId({id: event.targetID, instance: event.targetInstance, actor: event.target}),
+})
+
+const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActor}): Actor['id'] => {
+	const id = (opts.id ?? opts.actor?.id ?? -1).toString()
+	const instance = opts.instance ?? 1
+	return instance > 1
+		? `${id}:${instance}`
+		: id
+}
 
 function resolveAmountFields(event: DamageEvent) {
 	const overkill = event.overkill ?? 0
