@@ -39,7 +39,7 @@ export function Analyse({reportStore}: AnalyseProps) {
 		reportStore.fetchEvents(pullId, actorId).then(setEvents)
 	}, [pullId, actorId])
 	if (process.env.NODE_ENV === 'development') {
-		// const events = reportStore.fetchEvents(pullId, actorId)
+		console.log('event count', events?.length)
 		return <>
 			<h1>EVENT DEBUG</h1>
 			<pre><code>{JSON.stringify(events, undefined, 2)}</code></pre>

@@ -125,6 +125,7 @@ interface Position {
 }
 
 interface EventActorUpdate extends FieldsBase {
+	actor: Actor['id']
 	hp: Resource
 	mp: Resource
 	position: Position

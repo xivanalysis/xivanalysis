@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, SourceModifier, TargetModifier} from 'event'
-import {CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
+import {ActorResources, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -34,11 +34,11 @@ class EventAdapter {
 
 	adaptEvents(events: FflogsEvent[]): Event[] {
 		return events
-			.map(event => this.adaptEvent(event))
+			.flatMap(event => this.adaptEvent(event))
 			.filter(isDefined)
 	}
 
-	private adaptEvent(event: FflogsEvent): Event | undefined {
+	private adaptEvent(event: FflogsEvent): Event | Event[] | undefined {
 		switch (event.type) {
 		case 'begincast':
 		case 'cast':
@@ -59,7 +59,7 @@ class EventAdapter {
 		}
 	}
 
-	private adaptCastEvent(event: CastEvent): Events['prepare'] | Events['action'] {
+	private adaptCastEvent(event: CastEvent): Events['prepare' | 'action'] {
 		return {
 			...this.adaptTargetedFields(event),
 			type: event.type === 'begincast' ? 'prepare' : 'action',
@@ -67,7 +67,7 @@ class EventAdapter {
 		}
 	}
 
-	private adaptCalculatedDamageEvent(event: DamageEvent): Events['damage'] {
+	private adaptCalculatedDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
 		const newEvent = this.buildDamageEvent(event)
 
 		// If there's no packet ID, I'm opting to throw - If sentry/people complain about it, we can try to
@@ -80,15 +80,17 @@ class EventAdapter {
 		// Save the unresolved event out to the map
 		this.eventResolutionMap.set(resolutionKey, newEvent)
 
-		return newEvent
+		return [newEvent, ...this.buildActorUpdateEvents(event)]
 	}
 
-	private adaptDamageEvent(event: DamageEvent): Events['damage'] | undefined {
+	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']>  {
+		const updateEvents = this.buildActorUpdateEvents(event)
+
 		// Status damage ticks do not have a separate calculation phase. Skip resolution attempt.
 		if (event.tick) {
 			const newEvent = this.buildDamageEvent(event)
 			newEvent.resolved = true
-			return newEvent
+			return [newEvent, ...updateEvents]
 		}
 
 		// Try to find a matching event that needs resolution - if there is none, bail
@@ -99,7 +101,7 @@ class EventAdapter {
 			// not sure what do do with dodges...
 			// TODO: DO NOT RELEASE WITH THIS CODE
 			if (event.hitType === HitType.DODGE) {
-				return
+				return updateEvents
 			}
 			console.log(event)
 			console.log(this.eventResolutionMap)
@@ -125,7 +127,7 @@ class EventAdapter {
 			...resolveAmountFields(event),
 		})
 
-		return
+		return updateEvents
 	}
 
 	private buildDamageEvent(event: DamageEvent): Events['damage'] {
@@ -154,6 +156,39 @@ class EventAdapter {
 
 		return newEvent
 	}
+
+	private buildActorUpdateEvents(event: DamageEvent) {
+		const {source, target} = resolveActorIds(event)
+
+		const newEvents: Array<Events['actorUpdate']> = [
+			this.buildResourceActorUpdateEvent(target, event.targetResources, event),
+		]
+
+		if (event.sourceResources) {
+			newEvents.push(this.buildResourceActorUpdateEvent(source, event.sourceResources, event))
+		}
+
+		return newEvents
+	}
+
+	private buildResourceActorUpdateEvent(
+		actor: Actor['id'],
+		resources: ActorResources,
+		event: FflogsEvent,
+	): Events['actorUpdate'] {
+		// TODO: Do we want to bother tracking actor resources to prevent duplicate updates?
+		return {
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			actor,
+			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
+			mp: {current: resources.mp, maximum: resources.maxMP},
+			position: {x: resources.x, y: resources.y},
+			targetable: true, // ???????
+		}
+	}
+
+
 
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
