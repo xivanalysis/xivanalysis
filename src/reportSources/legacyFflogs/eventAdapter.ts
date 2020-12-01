@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -55,6 +55,14 @@ class EventAdapter {
 		case 'refreshbuff':
 		case 'refreshdebuff':
 			return this.adaptStatusApplyEvent(event)
+
+		// TODO: Due to FFLogs™️ Quality™️, this effectively results in a double application
+		// of every stacked status. Probably should resolve that out.
+		case 'applybuffstack':
+		case 'applydebuffstack':
+		case 'removebuffstack':
+		case 'removedebuffstack':
+			return this.adaptStatusApplyDataEvent(event)
 
 		default:
 			// TODO: on prod, this should probably post to sentry
@@ -140,14 +148,19 @@ class EventAdapter {
 		return updateEvents
 	}
 
-	private adaptStatusApplyEvent(event: BuffEvent): Events['statusApply'] {
+	private adaptStatusApplyEvent(event: BuffEvent | BuffStackEvent): Events['statusApply'] {
 		return {
 			...this.adaptTargetedFields(event),
 			type: 'statusApply',
 			status: event.ability.guid - STATUS_ID_OFFSET,
 			// duration,
-			// data,
 		}
+	}
+
+	private adaptStatusApplyDataEvent(event: BuffStackEvent): Events['statusApply'] {
+		const newEvent = this.adaptStatusApplyEvent(event)
+		newEvent.data = event.stack
+		return newEvent
 	}
 
 	private buildDamageEvent(event: DamageEvent): Events['damage'] {
