@@ -81,7 +81,7 @@ class EventAdapter {
 		// Save the unresolved event out to the map
 		this.eventResolutionMap.set(resolutionKey, newEvent)
 
-		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
+		return [...this.buildActorUpdateResourceEvents(event), newEvent]
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']>  {
@@ -91,7 +91,7 @@ class EventAdapter {
 		if (event.tick) {
 			const newEvent = this.buildDamageEvent(event)
 			newEvent.resolved = true
-			return [newEvent, ...updateEvents]
+			return [...updateEvents, newEvent]
 		}
 
 		// Try to find a matching event that needs resolution - if there is none, bail
