@@ -6,6 +6,7 @@ import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
 import PrecastAction from 'parser/core/modules/PrecastAction'
 import {Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
@@ -13,6 +14,13 @@ import React from 'react'
 import SectStatistic from './SectStatistic'
 
 const NO_SECT_ICON = 'https://xivapi.com/i/064000/064017.png'
+
+const ASPECTED_ACTIONS = [
+	ACTIONS.ASPECTED_BENEFIC.id,
+	ACTIONS.ASPECTED_HELIOS.id,
+	ACTIONS.CELESTIAL_INTERSECTION.id,
+	ACTIONS.CELESTIAL_OPPOSITION.id,
+]
 
 const DIURNAL_SECT_STATUSES = [
 	STATUSES.ASPECTED_BENEFIC.id,
@@ -29,32 +37,24 @@ const NOCTURNAL_SECT_STATUSES = [
 	STATUSES.DIURNAL_BALANCE.id,
 ]
 
-const SECT_BUFF_STATUSES = [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES]
-
-const ACTION_STATUS_MAP: Map<number, number[]> = new Map([
-	[ACTIONS.ASPECTED_HELIOS.id, [
-		STATUSES.ASPECTED_HELIOS.id,
-	]],
-	[ACTIONS.ASPECTED_HELIOS_NOCTURNAL.id, [
-		STATUSES.NOCTURNAL_FIELD.id,
-	]],
-	[ACTIONS.ASPECTED_BENEFIC.id, [
+const ACTION_STATUS_MAP = {
+	[ACTIONS.ASPECTED_BENEFIC.id]: [
 		STATUSES.ASPECTED_BENEFIC.id,
-	]],
-	[ACTIONS.ASPECTED_BENEFIC_NOCTURNAL.id, [
 		STATUSES.NOCTURNAL_FIELD.id,
-	]],
-	[ACTIONS.CELESTIAL_INTERSECTION.id, [
+	],
+	[ACTIONS.ASPECTED_HELIOS.id]: [
+		STATUSES.ASPECTED_HELIOS.id,
+		STATUSES.NOCTURNAL_FIELD.id,
+	],
+	[ACTIONS.CELESTIAL_INTERSECTION.id]: [
 		STATUSES.DIURNAL_INTERSECTION.id,
 		STATUSES.NOCTURNAL_INTERSECTION.id,
-	]],
-	[ACTIONS.CELESTIAL_OPPOSITION.id, [
+	],
+	[ACTIONS.CELESTIAL_OPPOSITION.id]: [
 		STATUSES.DIURNAL_OPPOSITION.id,
 		STATUSES.NOCTURNAL_OPPOSITION.id,
-	]],
-])
-
-const ASPECTED_ACTIONS: number[] = [...ACTION_STATUS_MAP.keys()]
+	],
+}
 
 const SECT_ACTIONS = [
 	ACTIONS.DIURNAL_SECT.id,
@@ -113,10 +113,12 @@ export default class Sect extends Module {
 				aspectedCast = event
 
 			} else if (aspectedCast
-				&& (event.type === 'applybuff' || event.type === 'refreshbuff') && SECT_BUFF_STATUSES.includes(event.ability.guid)) {
+				&& (event.type === 'applybuff' || event.type === 'refreshbuff') && [...NOCTURNAL_SECT_STATUSES, ...DIURNAL_SECT_STATUSES].includes(event.ability.guid)) {
 				// This is an applybuff event of a sect buff that came after an aspected action
 
-				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)) {
+				if (this.mapCastToBuff(aspectedCast.ability.guid).includes(event.ability.guid)
+					&& [...DIURNAL_SECT_STATUSES, ...NOCTURNAL_SECT_STATUSES].includes(event.ability.guid)) {
+
 					const SECT_ABILITY = DIURNAL_SECT_STATUSES.includes(event.ability.guid) ? DIURNAL_SECT_BUFF_ABILITY : NOCTURNAL_SECT_BUFF_ABILITY
 
 					// Fab a sect buff event at the start of the fight
@@ -215,12 +217,10 @@ export default class Sect extends Module {
 	}
 
 	// Helpers
-	public mapCastToBuff(actionId: number) : number[] {
-		const match = ACTION_STATUS_MAP.get(actionId)
-		if (match) {
-			return match
+	public mapCastToBuff(actionId: number) {
+		if (ASPECTED_ACTIONS.includes(actionId)) {
+			return ACTION_STATUS_MAP[actionId]
 		}
-		this.debug('Failed to identify cast from buff', actionId)
 		return []
 	}
 
