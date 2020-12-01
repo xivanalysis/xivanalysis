@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
+import {ActorResources, BuffEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -45,11 +45,16 @@ class EventAdapter {
 		case 'cast':
 			return this.adaptCastEvent(event)
 
-		// TODO: calculateddamage
 		case 'calculateddamage':
 			return this.adaptCalculatedDamageEvent(event)
 		case 'damage':
 			return this.adaptDamageEvent(event)
+
+		case 'applybuff':
+		case 'applydebuff':
+		case 'refreshbuff':
+		case 'refreshdebuff':
+			return this.adaptStatusApplyEvent(event)
 
 		default:
 			// TODO: on prod, this should probably post to sentry
@@ -133,6 +138,16 @@ class EventAdapter {
 		})
 
 		return updateEvents
+	}
+
+	private adaptStatusApplyEvent(event: BuffEvent): Events['statusApply'] {
+		return {
+			...this.adaptTargetedFields(event),
+			type: 'statusApply',
+			status: event.ability.guid - STATUS_ID_OFFSET,
+			// duration,
+			// data,
+		}
 	}
 
 	private buildDamageEvent(event: DamageEvent): Events['damage'] {
