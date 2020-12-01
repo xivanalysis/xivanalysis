@@ -68,6 +68,67 @@ class EventAdapter {
 	}
 
 	private adaptCalculatedDamageEvent(event: DamageEvent): Events['damage'] {
+		const newEvent = this.buildDamageEvent(event)
+
+		// If there's no packet ID, I'm opting to throw - If sentry/people complain about it, we can try to
+		// match up with a fallback - but animation delays can push the resolution out for 2s (or more?), so...
+		const resolutionKey = getResolutionKey(event)
+		if (resolutionKey == null) {
+			throw new Error('Calculated damage event encountered with no packet ID. Cannot resolve damage, bailing.')
+		}
+
+		// Save the unresolved event out to the map
+		this.eventResolutionMap.set(resolutionKey, newEvent)
+
+		return newEvent
+	}
+
+	private adaptDamageEvent(event: DamageEvent): Events['damage'] | undefined {
+		// Status damage ticks do not have a separate calculation phase. Skip resolution attempt.
+		if (event.tick) {
+			const newEvent = this.buildDamageEvent(event)
+			newEvent.resolved = true
+			return newEvent
+		}
+
+		// Try to find a matching event that needs resolution - if there is none, bail
+		// TODO: can probably just bail instead of throwing
+		const resolutionKey = getResolutionKey(event)
+		if (resolutionKey == null) {
+			// These are known cases where no packet ID is recieved - and i'm okay with. This is only here for dev so I can debug when something unknown comes in
+			// not sure what do do with dodges...
+			// TODO: DO NOT RELEASE WITH THIS CODE
+			if (event.hitType === HitType.DODGE) {
+				return
+			}
+			console.log(event)
+			console.log(this.eventResolutionMap)
+			throw new Error('???')
+		}
+
+		const pendingEvent = this.eventResolutionMap.get(resolutionKey)
+		if (pendingEvent == null) {
+			// TODO: handle
+			console.log(event)
+			console.log(resolutionKey)
+			console.log(this.eventResolutionMap)
+
+			throw new Error('This shouldnt happen. Check!')
+		}
+
+		this.eventResolutionMap.delete(resolutionKey)
+
+		Object.assign(pendingEvent, {
+			resolved: true,
+			// TODO: Should we use the new timestamp? Will need to sort results if we do.
+			// Calculated events seem to have no amount at all, fix.
+			...resolveAmountFields(event),
+		})
+
+		return
+	}
+
+	private buildDamageEvent(event: DamageEvent): Events['damage'] {
 		// Calculate modifier
 		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
 		if (event.multistrike) {
@@ -91,59 +152,7 @@ class EventAdapter {
 			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}
 
-		// If there's no packet ID, I'm opting to throw - If sentry/people complain about it, we can try to
-		// match up with a fallback - but animation delays can push the resolution out for 2s (or more?), so...
-		const resolutionKey = getResolutionKey(event)
-		if (resolutionKey == null) {
-			throw new Error('Calculated damage event encountered with no packet ID. Cannot resolve damage, bailing.')
-		}
-
-		// Save the unresolved event out to the map
-		this.eventResolutionMap.set(resolutionKey, newEvent)
-
 		return newEvent
-	}
-
-	private adaptDamageEvent(event: DamageEvent): undefined {
-		// Try to find a matching event that needs resolution - if there is none, bail
-		// TODO: can probably just bail instead of throwing
-		const resolutionKey = getResolutionKey(event)
-		if (resolutionKey == null) {
-			// These are known cases where no packet ID is recieved - and i'm okay with. This is only here for dev so I can debug when something unknown comes in
-			// TODO: DO NOT RELEASE WITH THIS CODE
-			// TODO: THIS IS EATING ALL TICK DAMAGE, RESOLVE
-			if (
-				event.tick ||
-				event.hitType === HitType.DODGE
-			) {
-				return
-			}
-			console.log(event)
-			console.log(this.eventResolutionMap)
-			throw new Error('???')
-		}
-
-		const pendingEvent = this.eventResolutionMap.get(resolutionKey)
-		if (pendingEvent == null) {
-			// TODO: handle
-			console.log(event)
-			console.log(resolutionKey)
-			console.log(this.eventResolutionMap)
-
-			// TODO: This is due to duplicated actor IDs stemming from instances. Need to split instances in report adapter first.
-			throw new Error('This shouldnt happen. Check!')
-		}
-
-		this.eventResolutionMap.delete(resolutionKey)
-
-		Object.assign(pendingEvent, {
-			resolved: true,
-			// TODO: Should we use the new timestamp? Will need to sort results if we do.
-			// Calculated events seem to have no amount at all, fix.
-			...resolveAmountFields(event),
-		})
-
-		return
 	}
 
 	private adaptTargetedFields(event: FflogsEvent) {
