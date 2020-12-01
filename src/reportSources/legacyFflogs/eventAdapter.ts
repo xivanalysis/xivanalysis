@@ -13,6 +13,7 @@ const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
 const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.BLOCK]: TargetModifier.BLOCK,
 	[HitType.PARRY]: TargetModifier.PARRY,
+	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
 export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
@@ -80,11 +81,11 @@ class EventAdapter {
 		// Save the unresolved event out to the map
 		this.eventResolutionMap.set(resolutionKey, newEvent)
 
-		return [newEvent, ...this.buildActorUpdateEvents(event)]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']>  {
-		const updateEvents = this.buildActorUpdateEvents(event)
+		const updateEvents = this.buildActorUpdateResourceEvents(event)
 
 		// Status damage ticks do not have a separate calculation phase. Skip resolution attempt.
 		if (event.tick) {
@@ -100,7 +101,11 @@ class EventAdapter {
 			// These are known cases where no packet ID is recieved - and i'm okay with. This is only here for dev so I can debug when something unknown comes in
 			// not sure what do do with dodges...
 			// TODO: DO NOT RELEASE WITH THIS CODE
-			if (event.hitType === HitType.DODGE) {
+			//       Seems to be a pattern of 0 damage -> no packetid. confirm?
+			if (
+				event.hitType === HitType.DODGE ||
+				event.hitType === HitType.IMMUNE
+			) {
 				return updateEvents
 			}
 			console.log(event)
@@ -157,21 +162,21 @@ class EventAdapter {
 		return newEvent
 	}
 
-	private buildActorUpdateEvents(event: DamageEvent) {
+	private buildActorUpdateResourceEvents(event: DamageEvent) {
 		const {source, target} = resolveActorIds(event)
 
 		const newEvents: Array<Events['actorUpdate']> = [
-			this.buildResourceActorUpdateEvent(target, event.targetResources, event),
+			this.buildActorUpdateResourceEvent(target, event.targetResources, event),
 		]
 
 		if (event.sourceResources) {
-			newEvents.push(this.buildResourceActorUpdateEvent(source, event.sourceResources, event))
+			newEvents.push(this.buildActorUpdateResourceEvent(source, event.sourceResources, event))
 		}
 
 		return newEvents
 	}
 
-	private buildResourceActorUpdateEvent(
+	private buildActorUpdateResourceEvent(
 		actor: Actor['id'],
 		resources: ActorResources,
 		event: FflogsEvent,
@@ -184,7 +189,6 @@ class EventAdapter {
 			hp: {current: resources.hitPoints, maximum: resources.maxHitPoints},
 			mp: {current: resources.mp, maximum: resources.maxMP},
 			position: {x: resources.x, y: resources.y},
-			targetable: true, // ???????
 		}
 	}
 

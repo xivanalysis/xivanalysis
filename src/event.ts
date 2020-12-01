@@ -92,6 +92,7 @@ export enum TargetModifier {
 	PARRY,
 	BLOCK,
 	DODGE,
+	INVULNERABLE,
 	// TODO: Reflect?
 }
 
@@ -126,10 +127,10 @@ interface Position {
 
 interface EventActorUpdate extends FieldsBase {
 	actor: Actor['id']
-	hp: Resource
-	mp: Resource
-	position: Position
-	targetable: boolean
+	hp?: Resource
+	mp?: Resource
+	position?: Position
+	targetable?: boolean
 }
 
 // decl mod
