@@ -38,6 +38,13 @@ export default new Meta({
 	],
 	changelog: [
 		{
+			date: new Date('2020-12-01'),
+			Changes: () => <>
+				Fix incorrect action ID and timeline view for Diurnal Sect <ActionLink {...ACTIONS.ASPECTED_BENEFIC} />.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
 			date: new Date('2020-10-05'),
 			Changes: () => <>
 				Fixed <ActionLink {...ACTIONS.EARTHLY_STAR} /> drift calculation.
