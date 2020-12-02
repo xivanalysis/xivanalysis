@@ -2,7 +2,6 @@ import Cooldowns from './Cooldowns'
 import Demolish from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
-import Gauge from './Gauge'
 import MnkAoE from './MnkAoE'
 import OGCDDowntime from './OGCDDowntime'
 import PerfectBalance from './PerfectBalance'
@@ -18,7 +17,6 @@ export default [
 	Demolish,
 	Fists,
 	Forms,
-	Gauge,
 	MnkAoE,
 	OGCDDowntime,
 	PerfectBalance,
