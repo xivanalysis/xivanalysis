@@ -40,7 +40,7 @@ export default new Meta({
 		{
 			date: new Date('2020-12-01'),
 			Changes: () => <>
-				Fixed <ActionLink {...ACTIONS.ASPECTED_BENEFIC} /> detection.
+				Fix incorrect action ID and timeline view for Diurnal Sect <ActionLink {...ACTIONS.ASPECTED_BENEFIC} />.
 			</>,
 			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
 		},
