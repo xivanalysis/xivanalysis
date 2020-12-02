@@ -5,7 +5,10 @@ export const patch540: Layer<StatusRoot> = {
 	patch: '5.4',
 	data: {
 		// MNK 5.4 status updates
+		GREASED_LIGHTNING: {duration: undefined},
 		PERFECT_BALANCE: {duration: 18},
+
+		// MNK 5.4 status additions
 		FORMLESS_FIST: {
 			id: 0,
 			name: 'Formless Fist',

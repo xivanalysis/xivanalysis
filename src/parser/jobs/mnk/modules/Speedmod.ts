@@ -1,19 +1,32 @@
+import {Event} from 'events'
+import {BuffEvent, AbilityType} from 'fflogs'
+
 import {dependency} from 'parser/core/Module'
-import CoreSpeedmod from 'parser/core/modules/Speedmod'
+import {Data} from 'parser/core/modules/Data'
+import PrecastStatus from 'parser/core/modules/PrecastStatus'
 
-import Gauge from './Gauge'
+export default class Speedmod extends PrecastStatus {
+	@dependency private data!: Data
 
-const SPEED_INCREASE_PER_STACK = 5
-const SPEED_INCREASE_TRAITED_GL = 80
+	normalise(events: Event[]): Event[] {
+		const greasedLighting = this.data.statuses.GREASED_LIGHTNING
 
-export default class Speedmod extends CoreSpeedmod {
-	@dependency private gauge!: Gauge
-
-	getJobAdditionalSpeedbuffScalar(event: TODO) {
-		if (this.parser.patch.before('5.4')) {
-			return (100 - (this.gauge.getStacksAt(event.timestamp) * SPEED_INCREASE_PER_STACK)) / 100
+		const event: BuffEvent = {
+			type: 'applybuff',
+			ability: {
+				abilityIcon: '010000-010207.png',
+				guid: greasedLighting.id,
+				name: greasedLighting.name,
+				type: AbilityType.PHYSICAL_DIRECT,
+			},
+			sourceID: this.parser.player.id,
+			sourceIsFriendly: true,
+			targetID: this.parser.player.id,
+			targetIsFriendly: true,
+			timestamp: this.parser.fight.start_time,
 		}
 
-		return SPEED_INCREASE_TRAITED_GL
+		this.fabricateStatusEvent(event, greasedLighting)
+		return super.normalise(events)
 	}
 }

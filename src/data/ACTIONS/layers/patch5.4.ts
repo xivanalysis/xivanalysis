@@ -7,6 +7,6 @@ export const patch540: Layer<ActionRoot> = {
 	patch: '5.4',
 	data: {
 		// MNK 5.4 cooldown changes
-		TORNADO_KICK: {cooldown: 40},
+		TORNADO_KICK: {cooldown: 45},
 	},
 }
