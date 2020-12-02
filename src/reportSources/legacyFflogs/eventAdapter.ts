@@ -64,6 +64,10 @@ class EventAdapter {
 		case 'removedebuffstack':
 			return this.adaptStatusApplyDataEvent(event)
 
+		case 'removebuff':
+		case 'removedebuff':
+			return this.adaptStatusRemoveEvent(event)
+
 		default:
 			// TODO: on prod, this should probably post to sentry
 			if (!this.unhandledTypes.has(event.type)) {
@@ -152,7 +156,7 @@ class EventAdapter {
 		return {
 			...this.adaptTargetedFields(event),
 			type: 'statusApply',
-			status: event.ability.guid - STATUS_ID_OFFSET,
+			status: resolveStatusId(event.ability.guid),
 			// duration,
 		}
 	}
@@ -161,6 +165,14 @@ class EventAdapter {
 		const newEvent = this.adaptStatusApplyEvent(event)
 		newEvent.data = event.stack
 		return newEvent
+	}
+
+	private adaptStatusRemoveEvent(event: BuffEvent): Events['statusRemove'] {
+		return {
+			...this.adaptTargetedFields(event),
+			type: 'statusRemove',
+			status: resolveStatusId(event.ability.guid),
+		}
 	}
 
 	private buildDamageEvent(event: DamageEvent): Events['damage'] {
@@ -178,7 +190,7 @@ class EventAdapter {
 			type: 'damage',
 			hit: event.ability.guid < STATUS_ID_OFFSET
 				? {type: 'action', action: event.ability.guid}
-				: {type: 'status', status: event.ability.guid - STATUS_ID_OFFSET},
+				: {type: 'status', status: resolveStatusId(event.ability.guid)},
 			...resolveAmountFields(event),
 			resolved: false, // TODO: check w/ calc damage
 			attackType: 0, // TODO: adapt?
@@ -261,3 +273,6 @@ function resolveAmountFields(event: DamageEvent) {
 		overkill,
 	}
 }
+
+const resolveStatusId = (fflogsStatusId: number) =>
+	fflogsStatusId - STATUS_ID_OFFSET
