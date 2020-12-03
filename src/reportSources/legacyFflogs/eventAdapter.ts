@@ -24,8 +24,6 @@ export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
 class EventAdapter {
 	private report: Report
 
-	private eventResolutionMap = new Map<string, Events['damage']>()
-
 	// TODO: Remove?
 	private unhandledTypes = new Set<FflogsEvent['type']>()
 
@@ -46,7 +44,8 @@ class EventAdapter {
 			return this.adaptCastEvent(event)
 
 		case 'calculateddamage':
-			return this.adaptCalculatedDamageEvent(event)
+			return this.adaptSnapshotEvent(event)
+
 		case 'damage':
 			return this.adaptDamageEvent(event)
 
@@ -85,71 +84,51 @@ class EventAdapter {
 		}
 	}
 
-	private adaptCalculatedDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
-		const newEvent = this.buildDamageEvent(event)
-
-		// If there's no packet ID, I'm opting to throw - If sentry/people complain about it, we can try to
-		// match up with a fallback - but animation delays can push the resolution out for 2s (or more?), so...
-		const resolutionKey = getResolutionKey(event)
-		if (resolutionKey == null) {
-			throw new Error('Calculated damage event encountered with no packet ID. Cannot resolve damage, bailing.')
+	private adaptSnapshotEvent(event: DamageEvent): Array<Events['snapshot' | 'actorUpdate']> {
+		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
+		const sequence = event.packetID
+		if (sequence == null) {
+			throw new Error('Calculated damage event encountered with no packet ID.')
 		}
 
-		// Save the unresolved event out to the map
-		this.eventResolutionMap.set(resolutionKey, newEvent)
+		const newEvent: Events['snapshot'] = {
+			...this.adaptTargetedFields(event),
+			type: 'snapshot',
+			action: event.ability.guid,
+			sequence,
+		}
 
 		return [...this.buildActorUpdateResourceEvents(event), newEvent]
 	}
 
-	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']>  {
-		const updateEvents = this.buildActorUpdateResourceEvents(event)
-
-		// Status damage ticks do not have a separate calculation phase. Skip resolution attempt.
-		if (event.tick) {
-			const newEvent = this.buildDamageEvent(event)
-			newEvent.resolved = true
-			return [...updateEvents, newEvent]
+	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
+		// Calculate source modifier
+		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
+		if (event.multistrike) {
+			sourceModifier = sourceModifier === SourceModifier.CRITICAL
+				? SourceModifier.CRITICAL_DIRECT
+				: SourceModifier.DIRECT
 		}
 
-		// Try to find a matching event that needs resolution - if there is none, bail
-		// TODO: can probably just bail instead of throwing
-		const resolutionKey = getResolutionKey(event)
-		if (resolutionKey == null) {
-			// These are known cases where no packet ID is recieved - and i'm okay with. This is only here for dev so I can debug when something unknown comes in
-			// not sure what do do with dodges...
-			// TODO: DO NOT RELEASE WITH THIS CODE
-			//       Seems to be a pattern of 0 damage -> no packetid. confirm?
-			if (
-				event.hitType === HitType.DODGE ||
-				event.hitType === HitType.IMMUNE
-			) {
-				return updateEvents
-			}
-			console.log(event)
-			console.log(this.eventResolutionMap)
-			throw new Error('???')
+		// Build the new event
+		const overkill = event.overkill ?? 0
+		const newEvent: Events['damage'] = {
+			...this.adaptTargetedFields(event),
+			type: 'damage',
+			hit: event.ability.guid < STATUS_ID_OFFSET
+				? {type: 'action', action: event.ability.guid}
+				: {type: 'status', status: resolveStatusId(event.ability.guid)},
+			// fflogs subtracts overkill from amount, amend
+			amount: event.amount + overkill,
+			overkill,
+			sequence: event.packetID,
+			attackType: 0, // TODO: adapt?
+			aspect: 0, // TODO: adapt?
+			sourceModifier,
+			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}
 
-		const pendingEvent = this.eventResolutionMap.get(resolutionKey)
-		if (pendingEvent == null) {
-			// TODO: handle
-			console.log(event)
-			console.log(resolutionKey)
-			console.log(this.eventResolutionMap)
-
-			throw new Error('This shouldnt happen. Check!')
-		}
-
-		this.eventResolutionMap.delete(resolutionKey)
-
-		Object.assign(pendingEvent, {
-			resolved: true,
-			// TODO: Should we use the new timestamp? Will need to sort results if we do.
-			// Calculated events seem to have no amount at all, fix.
-			...resolveAmountFields(event),
-		})
-
-		return updateEvents
+		return [...this.buildActorUpdateResourceEvents(event), newEvent]
 	}
 
 	private adaptStatusApplyEvent(event: BuffEvent | BuffStackEvent): Events['statusApply'] {
@@ -173,33 +152,6 @@ class EventAdapter {
 			type: 'statusRemove',
 			status: resolveStatusId(event.ability.guid),
 		}
-	}
-
-	private buildDamageEvent(event: DamageEvent): Events['damage'] {
-		// Calculate modifier
-		let sourceModifier = sourceHitType[event.hitType] ?? SourceModifier.NORMAL
-		if (event.multistrike) {
-			sourceModifier = sourceModifier === SourceModifier.CRITICAL
-				? SourceModifier.CRITICAL_DIRECT
-				: SourceModifier.DIRECT
-		}
-
-		// Build the new event
-		const newEvent: Events['damage'] = {
-			...this.adaptTargetedFields(event),
-			type: 'damage',
-			hit: event.ability.guid < STATUS_ID_OFFSET
-				? {type: 'action', action: event.ability.guid}
-				: {type: 'status', status: resolveStatusId(event.ability.guid)},
-			...resolveAmountFields(event),
-			resolved: false, // TODO: check w/ calc damage
-			attackType: 0, // TODO: adapt?
-			aspect: 0, // TODO: adapt?
-			sourceModifier,
-			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
-		}
-
-		return newEvent
 	}
 
 	private buildActorUpdateResourceEvents(event: DamageEvent) {
@@ -232,8 +184,6 @@ class EventAdapter {
 		}
 	}
 
-
-
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
 			...this.adaptBaseFields(event),
@@ -244,12 +194,6 @@ class EventAdapter {
 	private adaptBaseFields(event: FflogsEvent) {
 		return {timestamp: this.report.timestamp + event.timestamp}
 	}
-}
-
-function getResolutionKey(event: DamageEvent) {
-	if (event.packetID == null) { return }
-	const {source, target} = resolveActorIds(event)
-	return `${event.packetID}|${source}|${target}`
 }
 
 const resolveActorIds = (event: FflogsEvent) => ({
@@ -263,15 +207,6 @@ const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActo
 	return instance > 1
 		? `${id}:${instance}`
 		: id
-}
-
-function resolveAmountFields(event: DamageEvent) {
-	const overkill = event.overkill ?? 0
-	return {
-		// fflogs subtracts overkill from amount, amend
-		amount: event.amount + overkill,
-		overkill,
-	}
 }
 
 const resolveStatusId = (fflogsStatusId: number) =>

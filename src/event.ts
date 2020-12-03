@@ -49,6 +49,11 @@ interface EventStatusRemove extends FieldsTargeted {
 	status: number
 }
 
+interface EventSnapshot extends FieldsTargeted {
+	action: number
+	sequence: number
+}
+
 type Hit =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
@@ -100,7 +105,7 @@ interface EventDamage extends FieldsTargeted {
 	hit: Hit
 	amount: number
 	overkill: number // applied damage = amount - overkill
-	resolved: boolean
+	sequence?: number
 	attackType: AttackType
 	aspect: Aspect
 	// TODO: Are these exclusive? Merge?
@@ -139,6 +144,7 @@ export interface EventTypeRepository {
 	action: EventAction
 	statusApply: EventStatusApply
 	statusRemove: EventStatusRemove
+	snapshot: EventSnapshot
 	damage: EventDamage
 	heal: EventHeal
 	actorUpdate: EventActorUpdate
