@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HitType} from 'fflogs'
+import {Event, Events, Hit, SourceModifier, TargetModifier} from 'event'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HealEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -44,10 +44,14 @@ class EventAdapter {
 			return this.adaptCastEvent(event)
 
 		case 'calculateddamage':
+		case 'calculatedheal':
 			return this.adaptSnapshotEvent(event)
 
 		case 'damage':
 			return this.adaptDamageEvent(event)
+
+		case 'heal':
+			return this.adaptHealEvent(event)
 
 		case 'applybuff':
 		case 'applydebuff':
@@ -84,7 +88,7 @@ class EventAdapter {
 		}
 	}
 
-	private adaptSnapshotEvent(event: DamageEvent): Array<Events['snapshot' | 'actorUpdate']> {
+	private adaptSnapshotEvent(event: DamageEvent | HealEvent): Array<Events['snapshot' | 'actorUpdate']> {
 		// Calc events should all have a packet ID for sequence purposes. Let sentry catch outliers.
 		const sequence = event.packetID
 		if (sequence == null) {
@@ -115,9 +119,7 @@ class EventAdapter {
 		const newEvent: Events['damage'] = {
 			...this.adaptTargetedFields(event),
 			type: 'damage',
-			hit: event.ability.guid < STATUS_ID_OFFSET
-				? {type: 'action', action: event.ability.guid}
-				: {type: 'status', status: resolveStatusId(event.ability.guid)},
+			hit: resolveHit(event.ability.guid),
 			// fflogs subtracts overkill from amount, amend
 			amount: event.amount + overkill,
 			overkill,
@@ -126,6 +128,21 @@ class EventAdapter {
 			aspect: 0, // TODO: adapt?
 			sourceModifier,
 			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
+		}
+
+		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+	}
+
+	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
+		const overheal = event.overheal ?? 0
+		const newEvent: Events['heal'] = {
+			...this.adaptTargetedFields(event),
+			type: 'heal',
+			hit: resolveHit(event.ability.guid),
+			amount: event.amount + overheal,
+			overheal,
+			sequence: event.packetID,
+			sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 		}
 
 		return [...this.buildActorUpdateResourceEvents(event), newEvent]
@@ -154,7 +171,7 @@ class EventAdapter {
 		}
 	}
 
-	private buildActorUpdateResourceEvents(event: DamageEvent) {
+	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent) {
 		const {source, target} = resolveActorIds(event)
 
 		const newEvents: Array<Events['actorUpdate']> = [
@@ -208,6 +225,11 @@ const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActo
 		? `${id}:${instance}`
 		: id
 }
+
+const resolveHit = (fflogsAbilityId: number): Hit =>
+	fflogsAbilityId < STATUS_ID_OFFSET
+		? {type: 'action', action: fflogsAbilityId}
+		: {type: 'status', status: resolveStatusId(fflogsAbilityId)}
 
 const resolveStatusId = (fflogsStatusId: number) =>
 	fflogsStatusId - STATUS_ID_OFFSET

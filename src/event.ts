@@ -54,7 +54,7 @@ interface EventSnapshot extends FieldsTargeted {
 	sequence: number
 }
 
-type Hit =
+export type Hit =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
 
@@ -117,6 +117,7 @@ interface EventHeal extends FieldsTargeted {
 	hit: Hit
 	amount: number
 	overheal: number
+	sequence?: number
 	sourceModifier: SourceModifier
 }
 
