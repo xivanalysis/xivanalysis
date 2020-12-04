@@ -174,9 +174,11 @@ class EventAdapter {
 	private buildActorUpdateResourceEvents(event: DamageEvent | HealEvent) {
 		const {source, target} = resolveActorIds(event)
 
-		const newEvents: Array<Events['actorUpdate']> = [
-			this.buildActorUpdateResourceEvent(target, event.targetResources, event),
-		]
+		const newEvents: Array<Events['actorUpdate']> = []
+
+		if (event.targetResources) {
+			newEvents.push(this.buildActorUpdateResourceEvent(target, event.targetResources, event))
+		}
 
 		if (event.sourceResources) {
 			newEvents.push(this.buildActorUpdateResourceEvent(source, event.sourceResources, event))
