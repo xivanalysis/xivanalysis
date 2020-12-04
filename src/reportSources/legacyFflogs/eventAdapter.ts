@@ -74,6 +74,10 @@ class EventAdapter {
 		case 'death':
 			return this.adaptDeathEvent(event)
 
+		// Dispels are already modelled by other events, and aren't something we really care about
+		case 'dispel':
+			break
+
 		default:
 			// TODO: on prod, this should probably post to sentry
 			if (!this.unhandledTypes.has(event.type)) {

@@ -51,7 +51,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 		const legacyEvents = await getFflogsEvents(
 			legacyReport.code,
 			legacyFight,
-			{actorid: parseInt(actorId, 10)},
+			{/* actorid: parseInt(actorId, 10) */},
 		)
 		return adaptEvents(this.report, legacyEvents)
 	}

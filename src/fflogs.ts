@@ -191,6 +191,12 @@ export interface DeathEvent extends BaseEventFields {
 	type: 'death'
 }
 
+export interface DispelEvent extends AbilityEventFields {
+	type: 'dispel',
+	extraAbility: Ability,
+	isBuff: boolean,
+}
+
 const castEventTypes = [
 	'begincast',
 	'cast',
@@ -264,6 +270,7 @@ export type AbilityEvent =
 export type FflogsEvent =
 	| AbilityEvent
 	| DeathEvent
+	| DispelEvent
 
 declare module 'legacyEvent' {
 	interface EventTypeRepository {
