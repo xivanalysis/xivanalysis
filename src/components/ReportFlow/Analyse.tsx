@@ -40,9 +40,10 @@ export function Analyse({reportStore}: AnalyseProps) {
 	}, [pullId, actorId])
 	if (process.env.NODE_ENV === 'development') {
 		console.log('event count', events?.length)
+		console.log(events)
 		return <>
 			<h1>EVENT DEBUG</h1>
-			<pre><code>{JSON.stringify(events, undefined, 2)}</code></pre>
+			count: {events?.length}
 		</>
 	}
 

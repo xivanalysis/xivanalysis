@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Hit, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, EventActor, FflogsEvent, HealEvent, HitType} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -70,6 +70,9 @@ class EventAdapter {
 		case 'removebuff':
 		case 'removedebuff':
 			return this.adaptStatusRemoveEvent(event)
+
+		case 'death':
+			return this.adaptDeathEvent(event)
 
 		default:
 			// TODO: on prod, this should probably post to sentry
@@ -203,6 +206,20 @@ class EventAdapter {
 		}
 	}
 
+	private adaptDeathEvent(event: DeathEvent): Events['actorUpdate'] {
+		return {
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			actor: resolveActorId({
+				id: event.targetID,
+				instance: event.targetInstance,
+				actor: event.target,
+			}),
+			hp: {current: 0},
+			mp: {current: 0},
+		}
+	}
+
 	private adaptTargetedFields(event: FflogsEvent) {
 		return {
 			...this.adaptBaseFields(event),
@@ -216,8 +233,16 @@ class EventAdapter {
 }
 
 const resolveActorIds = (event: FflogsEvent) => ({
-	source: resolveActorId({id: event.sourceID, instance: event.sourceInstance, actor: event.source}),
-	target: resolveActorId({id: event.targetID, instance: event.targetInstance, actor: event.target}),
+	source: resolveActorId({
+		id: event.sourceID,
+		instance: event.sourceInstance,
+		actor: event.source,
+	}),
+	target: resolveActorId({
+		id: event.targetID,
+		instance: event.targetInstance,
+		actor: event.target,
+	}),
 })
 
 const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActor}): Actor['id'] => {

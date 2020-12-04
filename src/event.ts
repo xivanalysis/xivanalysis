@@ -122,8 +122,8 @@ interface EventHeal extends FieldsTargeted {
 }
 
 interface Resource {
-	maximum: number
-	current: number
+	maximum?: number
+	current?: number
 }
 
 interface Position {
