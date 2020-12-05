@@ -22,38 +22,58 @@ export type Event = Events[keyof EventTypeRepository]
 // TODO: Need to work out where the base event structure is going to live - presumably not here.
 // -------------------
 
+/** Fields shared by every event. */
 interface FieldsBase {
+	/** Timestamp of the event, in ms since unix epoch. */
 	timestamp: number
 }
 
+/** Fields shared by events that travel between two actors. */
 interface FieldsTargeted extends FieldsBase {
+	/** Actor ID of the source of this event. */
 	source: Actor['id']
+	/** Actor ID of the target of this event. */
 	target: Actor['id']
 }
 
+/** An actor has begun preparing an action with a cast time. */
 interface EventPrepare extends FieldsTargeted {
+	/** XIV Action ID */
 	action: number
 }
 
+/** An actor has executed an action. */
 interface EventAction extends FieldsTargeted {
+	/** XIV Action ID */
 	action: number
 }
 
+/** A status has been applied to an actor. */
 interface EventStatusApply extends FieldsTargeted {
+	/** XIV Status ID */
 	status: number
+	/** Duration of the status effect, if any and known. If not present, lasts until explicitly removed. */
 	duration?: number
+	/** Extra data associated with the status. Meaning of value, if any, is dependant on the status. */
 	data?: number
 }
 
+/** A status has been removed or expired from an actor. */
 interface EventStatusRemove extends FieldsTargeted {
+	/** XIV Status ID */
 	status: number
 }
 
+/** The server has snapshot the effects of an action on its target. */
 interface EventSnapshot extends FieldsTargeted {
+	/** XIV Action ID */
 	action: number
+	/** Unique numeric ID that will match the snapshot to each of the resulting effects. */
 	sequence: number
 }
 
+/** The cause of an effect. */
+// TODO: Rename?
 export type Hit =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
@@ -84,6 +104,7 @@ enum Aspect {
 	UNASPECTED, // 7?
 }
 
+/** Calculation modifiers stemming from the source of the effect. */
 export enum SourceModifier {
 	NORMAL,
 	MISS,
@@ -92,6 +113,7 @@ export enum SourceModifier {
 	CRITICAL_DIRECT,
 }
 
+/** Calculation modifiers stemming from the target of the effect. */
 export enum TargetModifier {
 	NORMAL,
 	PARRY,
@@ -101,41 +123,64 @@ export enum TargetModifier {
 	// TODO: Reflect?
 }
 
+/** An actor has taken damage. */
 interface EventDamage extends FieldsTargeted {
+	/** Cause of this damage. */
 	hit: Hit
+	/** Total amount of damage dealt. */
 	amount: number
-	overkill: number // applied damage = amount - overkill
+	/** Amount of total damage that was overkill. */
+	overkill: number
+	/** Unique numeric ID that will match this damage to the snapshot it stems from. If omitted, no snapshot was performed (status ticks, etc). */
 	sequence?: number
+	/** Overarching type of damage dealt. */
 	attackType: AttackType
+	/** Elemental aspect of damage dealt. */
 	aspect: Aspect
 	// TODO: Are these exclusive? Merge?
+	/** Source damage modifier. */
 	sourceModifier: SourceModifier
+	/** Target damage modifier. */
 	targetModifier: TargetModifier
 }
 
+/** An actor has been healed. */
 interface EventHeal extends FieldsTargeted {
+	/** Cause of this heal. */
 	hit: Hit
+	/** Total amount of healing administered. */
 	amount: number
+	/** Amount of total healing that was overheal. */
 	overheal: number
+	/** Unique numeric ID that will match this heal to the snapshot it stems from. If omitted, no snapshot was performed (status ticks, etc). */
 	sequence?: number
+	/** Source healing modifier. */
 	sourceModifier: SourceModifier
 }
 
+/** Status of a single numeric resource. */
 interface Resource {
 	maximum?: number
 	current?: number
 }
 
+/** Position of an actor. */
 interface Position {
 	x: number
 	y: number
 }
 
+/** An actors parameters have been updated. */
 interface EventActorUpdate extends FieldsBase {
+	/** ID of the updated actor. */
 	actor: Actor['id']
+	/** Updated HP status. */
 	hp?: Resource
+	/** Updated MP status. */
 	mp?: Resource
+	/** Updated position. */
 	position?: Position
+	/** Current targetability. */
 	targetable?: boolean
 }
 

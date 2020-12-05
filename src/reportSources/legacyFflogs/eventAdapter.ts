@@ -17,6 +17,7 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.IMMUNE]: TargetModifier.INVULNERABLE,
 }
 
+/** Adapt an array of FFLogs APIv1 events to xiva representation. */
 export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
 	const adapter = new EventAdapter({report})
 	return adapter.adaptEvents(events)
@@ -182,7 +183,7 @@ class EventAdapter {
 			...this.adaptTargetedFields(event),
 			type: 'statusApply',
 			status: resolveStatusId(event.ability.guid),
-			// duration,
+			// Omitting duration, as it's not exposed by fflogs in any way.
 		}
 	}
 
