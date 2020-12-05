@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Hit, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
@@ -17,7 +18,6 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 }
 
 export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
-	console.log('before', events)
 	const adapter = new EventAdapter({report})
 	return adapter.adaptEvents(events)
 }
@@ -88,13 +88,24 @@ class EventAdapter {
 			break
 
 		default:
-			// TODO: on prod, this should probably post to sentry
-			// Anything that reaches this point is unknown
+			// Anything that reaches this point is unknown. If we've already notified, just noop
 			const unknownEvent = event as any
-			if (!this.unhandledTypes.has(unknownEvent.type)) {
-				console.log(`Unhandled event type "${unknownEvent.type}"`)
-				this.unhandledTypes.add(unknownEvent.type)
+			if (this.unhandledTypes.has(unknownEvent.type)) {
+				break
 			}
+
+			// Report missing event types to sentry & mark as reported
+			Sentry.withScope(scope => {
+				scope.setExtras({
+					report: this.report.meta.code,
+					event,
+				})
+				Sentry.captureMessage(`adapter.fflogs.unhandled.${unknownEvent.type}`)
+			})
+			if (process.env.NODE_ENV === 'development') {
+				console.warn(`Unhandled FFLogs event type "${unknownEvent.type}".`)
+			}
+			this.unhandledTypes.add(unknownEvent.type)
 		}
 	}
 
