@@ -1,6 +1,6 @@
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {Event, Events, Hit, SourceModifier, TargetModifier} from 'event'
-import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType} from 'fflogs'
+import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
@@ -75,6 +75,9 @@ class EventAdapter {
 		case 'death':
 			return this.adaptDeathEvent(event)
 
+		case 'targetabilityupdate':
+			return this.adaptTargetableEvent(event)
+
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// Encounter events don't expose anything particularly useful for us
@@ -84,9 +87,11 @@ class EventAdapter {
 
 		default:
 			// TODO: on prod, this should probably post to sentry
-			if (!this.unhandledTypes.has(event.type)) {
-				console.log(`Unhandled event type "${event.type}"`)
-				this.unhandledTypes.add(event.type)
+			// Anything that reaches this point is unknown
+			const unknownEvent = event as any
+			if (!this.unhandledTypes.has(unknownEvent.type)) {
+				console.log(`Unhandled event type "${unknownEvent.type}"`)
+				this.unhandledTypes.add(unknownEvent.type)
 			}
 		}
 	}
@@ -225,6 +230,19 @@ class EventAdapter {
 			}),
 			hp: {current: 0},
 			mp: {current: 0},
+		}
+	}
+
+	private adaptTargetableEvent(event: TargetabilityUpdateEvent): Events['actorUpdate'] {
+		return {
+			...this.adaptBaseFields(event),
+			type: 'actorUpdate',
+			actor: resolveActorId({
+				id: event.targetID,
+				instance: event.targetInstance,
+				actor: event.target,
+			}),
+			targetable: !!event.targetable,
 		}
 	}
 
