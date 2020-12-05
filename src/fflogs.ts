@@ -216,6 +216,12 @@ export interface DeathEvent extends BaseEventFields {
 	type: 'death'
 }
 
+export interface LimitBreakUpdateEvent extends BaseEventFields {
+	type: 'limitbreakupdate'
+	bars: number
+	value: number
+}
+
 export interface DispelEvent extends AbilityEventFields {
 	type: 'dispel',
 	extraAbility: Ability,
@@ -300,6 +306,7 @@ export type FflogsEvent =
 	| EncounterEvent
 	| AbilityEvent
 	| DeathEvent
+	| LimitBreakUpdateEvent
 	| DispelEvent
 
 declare module 'legacyEvent' {

@@ -83,6 +83,8 @@ class EventAdapter {
 		// Encounter events don't expose anything particularly useful for us
 		case 'encounterstart':
 		case 'encounterend':
+		// We don't have much need for limit break, at least for now
+		case 'limitbreakupdate':
 			break
 
 		default:
