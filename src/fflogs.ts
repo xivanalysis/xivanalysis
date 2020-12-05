@@ -154,6 +154,17 @@ export interface BaseEventFields {
 	targetIsFriendly: boolean
 }
 
+/**
+ * These will NEVER have source/target fields. Only extending so I don't cause
+ * a massive ripple of broken types on a retrofit.
+ */
+interface EncounterFields extends BaseEventFields {
+	timestamp: number
+	encounterID: number
+	name: string
+	size: number
+}
+
 /** Fields present on events caused by, or in relation to an "ability" being executed */
 export interface AbilityEventFields extends BaseEventFields {
 	ability: Ability
@@ -186,6 +197,20 @@ interface EffectEventFields extends AbilityEventFields {
 // -----
 // Events
 // -----
+
+export interface EncounterStartEvent extends EncounterFields {
+	type: 'encounterstart'
+	affixes: unknown[]
+	level: number
+}
+
+export interface EncounterEndEvent extends EncounterFields {
+	type: 'encounterend'
+	completion: number
+	difficulty: number
+	kill: boolean
+	medal: number
+}
 
 export interface DeathEvent extends BaseEventFields {
 	type: 'death'
@@ -256,6 +281,10 @@ export interface HealEvent extends EffectEventFields {
 	overheal: number
 }
 
+type EncounterEvent =
+	| EncounterStartEvent
+	| EncounterEndEvent
+
 type EffectEvent =
 	| DamageEvent
 	| HealEvent
@@ -268,6 +297,7 @@ export type AbilityEvent =
 	| TargetabilityUpdateEvent
 
 export type FflogsEvent =
+	| EncounterEvent
 	| AbilityEvent
 	| DeathEvent
 	| DispelEvent

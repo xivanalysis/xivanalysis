@@ -17,6 +17,7 @@ const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 }
 
 export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
+	console.log('before', events)
 	const adapter = new EventAdapter({report})
 	return adapter.adaptEvents(events)
 }
@@ -76,6 +77,9 @@ class EventAdapter {
 
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
+		// Encounter events don't expose anything particularly useful for us
+		case 'encounterstart':
+		case 'encounterend':
 			break
 
 		default:
