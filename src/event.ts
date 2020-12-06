@@ -73,8 +73,7 @@ interface EventSnapshot extends FieldsTargeted {
 }
 
 /** The cause of an effect. */
-// TODO: Rename?
-export type Hit =
+export type Cause =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
 
@@ -126,7 +125,7 @@ export enum TargetModifier {
 /** An actor has taken damage. */
 interface EventDamage extends FieldsTargeted {
 	/** Cause of this damage. */
-	hit: Hit
+	cause: Cause
 	/** Total amount of damage dealt. */
 	amount: number
 	/** Amount of total damage that was overkill. */
@@ -147,7 +146,7 @@ interface EventDamage extends FieldsTargeted {
 /** An actor has been healed. */
 interface EventHeal extends FieldsTargeted {
 	/** Cause of this heal. */
-	hit: Hit
+	cause: Cause
 	/** Total amount of healing administered. */
 	amount: number
 	/** Amount of total healing that was overheal. */

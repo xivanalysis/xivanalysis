@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/browser'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
-import {Event, Events, Hit, SourceModifier, TargetModifier} from 'event'
+import {Event, Events, Cause, SourceModifier, TargetModifier} from 'event'
 import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, DeathEvent, EventActor, FflogsEvent, HealEvent, HitType, TargetabilityUpdateEvent} from 'fflogs'
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
@@ -149,7 +149,7 @@ class EventAdapter {
 		const newEvent: Events['damage'] = {
 			...this.adaptTargetedFields(event),
 			type: 'damage',
-			hit: resolveHit(event.ability.guid),
+			cause: resolveCause(event.ability.guid),
 			// fflogs subtracts overkill from amount, amend
 			amount: event.amount + overkill,
 			overkill,
@@ -168,7 +168,7 @@ class EventAdapter {
 		const newEvent: Events['heal'] = {
 			...this.adaptTargetedFields(event),
 			type: 'heal',
-			hit: resolveHit(event.ability.guid),
+			cause: resolveCause(event.ability.guid),
 			amount: event.amount + overheal,
 			overheal,
 			sequence: event.packetID,
@@ -293,7 +293,7 @@ const resolveActorId = (opts: {id?: number, instance?: number, actor?: EventActo
 		: id
 }
 
-const resolveHit = (fflogsAbilityId: number): Hit =>
+const resolveCause = (fflogsAbilityId: number): Cause =>
 	fflogsAbilityId < STATUS_ID_OFFSET
 		? {type: 'action', action: fflogsAbilityId}
 		: {type: 'status', status: resolveStatusId(fflogsAbilityId)}
