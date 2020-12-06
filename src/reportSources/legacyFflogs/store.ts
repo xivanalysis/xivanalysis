@@ -61,7 +61,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 			legacyFight,
 			{/* actorid: parseInt(actorId, 10) */},
 		)
-		return adaptEvents(this.report, legacyEvents)
+		return adaptEvents(report, legacyEvents)
 	}
 
 	getReportLink(pullId?: Pull['id'], actorId?: Actor['id']) {
