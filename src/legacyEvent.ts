@@ -1,5 +1,5 @@
 /*
-Welcome to the *｡･ﾟ★｡ magic ☆ﾟ･｡° events file!
+Welcome to the *｡･ﾟ★｡ magic ☆ﾟ･｡° legacyEvent file!
 You're probably here to add your new fabricated event to the event type!
 Don't. I'm a big meanie and _will_ block your PR.
 

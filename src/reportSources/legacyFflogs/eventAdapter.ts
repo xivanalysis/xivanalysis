@@ -5,12 +5,15 @@ import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, Death
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
+/** Mapping from FFLogs hit types to source-originating modifiers. */
 const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
 	[HitType.MISS]: SourceModifier.MISS,
 	[HitType.CRITICAL]: SourceModifier.CRITICAL,
 	// Marking dodge as miss 'cus it seems to be mis-used as such on fflogs
 	[HitType.DODGE]: SourceModifier.MISS,
 }
+
+/** Mapping from FFLogs hit types to target-originating modifiers. */
 const targetHitType: Partial<Record<HitType, TargetModifier>> = {
 	[HitType.BLOCK]: TargetModifier.BLOCK,
 	[HitType.PARRY]: TargetModifier.PARRY,
@@ -24,9 +27,10 @@ export function adaptEvents(report: Report, events: FflogsEvent[]): Event[] {
 }
 
 class EventAdapter {
+	/** xiva report representation. */
 	private report: Report
 
-	// TODO: Remove?
+	/** Set of event types marked as unhandled. Used to prevent duplicate warnings. */
 	private unhandledTypes = new Set<FflogsEvent['type']>()
 
 	constructor(opts: {report: Report}) {
@@ -39,6 +43,7 @@ class EventAdapter {
 			.filter(isDefined)
 	}
 
+	/** Adapt an FFLogs APIv1 event to xiva representation if any. */
 	private adaptEvent(event: FflogsEvent): Event | Event[] | undefined {
 		switch (event.type) {
 		case 'begincast':

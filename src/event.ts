@@ -1,26 +1,52 @@
 import {Actor} from 'report'
 
-// TODO DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS DOCS
+/*
+Welcome to the *｡･ﾟ★｡ magic ☆ﾟ･｡° event file!
+You're probably here to add your new fabricated event to the event type!
+Don't. I'm a big meanie and _will_ block your PR.
 
+Instead, you'll want to set it up from your module file, using declaration merging
+(https://www.typescriptlang.org/docs/handbook/declaration-merging.html).
+It'll look something like this:
+```ts
+declare module 'event' {
+	interface EventTypeRepository {
+		newEventType: FieldsInNewEventType
+		otherNewEventType: FieldsButForTheOtherEventType
+	}
+}
+```
+
+Doing the above will automatically merge it into the `Event` type exported below,
+making it available and discoverable throughout the rest of the parser.
+*/
+
+/**
+ * Declaration merge target. You don't want to use this directly unless you are
+ * declaring a new type of event. If you're importing this, you're doing it wrong.
+ */
 // tslint:disable-next-line no-empty-interface
 export interface EventTypeRepository {}
 
-// Shorthand named type to clean up the type rendered by Event
-// TODO: better name
+/** Event fields with merged type discrimination field. */
 type E<T, S> = {type: T} & S
 
+/** For each field of interface T, merge the key into the value as a discrimation field. */
 type MergeType<T> = {
 	[K in keyof T]: E<K, T[K]>
 }
 
+/**
+ * Object type of every event type declared throughout the application.
+ * To access a specific type, use `Events['eventType']`.
+ */
 export type Events = MergeType<EventTypeRepository>
+/** Union of every event type declared throughout the application. */
 export type Event = Events[keyof EventTypeRepository]
 
-
-
-// -------------------
-// TODO: Need to work out where the base event structure is going to live - presumably not here.
-// -------------------
+// -----
+// #region Core xivanalysis parser event definitions.
+// -----
 
 /** Fields shared by every event. */
 interface FieldsBase {
@@ -183,7 +209,8 @@ interface EventActorUpdate extends FieldsBase {
 	targetable?: boolean
 }
 
-// decl mod
+// Merge core events into the repository.
+// No declare module, as we're in the same file as the root repository.
 export interface EventTypeRepository {
 	prepare: EventPrepare
 	action: EventAction
@@ -194,3 +221,7 @@ export interface EventTypeRepository {
 	heal: EventHeal
 	actorUpdate: EventActorUpdate
 }
+
+// -----
+// #endregion
+// ----
