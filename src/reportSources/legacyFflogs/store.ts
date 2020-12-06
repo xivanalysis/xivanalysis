@@ -1,6 +1,6 @@
 import {ReportStore, FetchOptions} from '../base'
 import {reportStore as legacyReportStore} from 'store/report'
-import {computed} from 'mobx'
+import {computed, toJS} from 'mobx'
 import {Pull, Actor} from 'report'
 import {isDefined} from 'utilities'
 import fflogsIcon from './fflogs.png'
@@ -43,11 +43,19 @@ export class LegacyFflogsReportStore extends ReportStore {
 			// todo: wait for report?
 			throw new Error('no report')
 		}
-		const legacyReport = this.report.meta
+
+		// Clone the report - if the user navigates in a way that clears the legacy store before the fetch is complete,
+		// using the computed report directly will cause a race condition.
+		const report = toJS(this.report)
+
+		// Dig into the fflogs report data to build the request
+		const legacyReport = report.meta
 		const legacyFight = legacyReport.fights.find(fight => fight.id.toString() === pullId)
 		if (legacyFight == null) {
 			throw new Error('no fight')
 		}
+
+		// Request the full event set & adapt to xiva events
 		const legacyEvents = await getFflogsEvents(
 			legacyReport.code,
 			legacyFight,
