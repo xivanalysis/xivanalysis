@@ -159,8 +159,6 @@ class EventAdapter {
 			amount: event.amount + overkill,
 			overkill,
 			sequence: event.packetID,
-			attackType: 0, // TODO: adapt?
-			aspect: 0, // TODO: adapt?
 			sourceModifier,
 			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}

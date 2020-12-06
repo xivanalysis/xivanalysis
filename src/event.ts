@@ -103,32 +103,6 @@ export type Cause =
 	| {type: 'action', action: number}
 	| {type: 'status', status: number}
 
-// TODO: do i even want to keep this and aspect?
-// it's in the game data under the action id, and fflogs doesn't
-// expose sanely.
-enum AttackType {
-	UNKNOWN, // ?
-	SLASHING,
-	PIERCING,
-	BLUNT,
-	MAGIC,
-	BREATH,
-	PHYSICAL,
-	LIMIT_BREAK,
-}
-
-// unaspected -> damage, none -> no damage
-enum Aspect {
-	NONE, // ?
-	FIRE, // 1
-	ICE, // 2
-	WIND, // 3
-	EARTH, // 4
-	LIGHTNING, // 5
-	WATER, // 6
-	UNASPECTED, // 7?
-}
-
 /** Calculation modifiers stemming from the source of the effect. */
 export enum SourceModifier {
 	NORMAL,
@@ -158,10 +132,6 @@ interface EventDamage extends FieldsTargeted {
 	overkill: number
 	/** Unique numeric ID that will match this damage to the snapshot it stems from. If omitted, no snapshot was performed (status ticks, etc). */
 	sequence?: number
-	/** Overarching type of damage dealt. */
-	attackType: AttackType
-	/** Elemental aspect of damage dealt. */
-	aspect: Aspect
 	// TODO: Are these exclusive? Merge?
 	/** Source damage modifier. */
 	sourceModifier: SourceModifier
