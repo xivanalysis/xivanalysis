@@ -49,13 +49,13 @@ export type Event = Events[keyof EventTypeRepository]
 // -----
 
 /** Fields shared by every event. */
-interface FieldsBase {
+export interface FieldsBase {
 	/** Timestamp of the event, in ms since unix epoch. */
 	timestamp: number
 }
 
 /** Fields shared by events that travel between two actors. */
-interface FieldsTargeted extends FieldsBase {
+export interface FieldsTargeted extends FieldsBase {
 	/** Actor ID of the source of this event. */
 	source: Actor['id']
 	/** Actor ID of the target of this event. */
@@ -154,13 +154,13 @@ interface EventHeal extends FieldsTargeted {
 }
 
 /** Status of a single numeric resource. */
-interface Resource {
+export interface Resource {
 	maximum?: number
 	current?: number
 }
 
 /** Position of an actor. */
-interface Position {
+export interface Position {
 	x: number
 	y: number
 }
