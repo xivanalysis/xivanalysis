@@ -99,7 +99,6 @@ function buildActorsByFight(report: LegacyReport) {
 }
 
 const convertActor = (actor: FflogsActor, overrides?: Partial<Actor>): Actor => ({
-	// TODO: Instances?
 	id: actor.id.toString(),
 	name: actor.name,
 	team: Team.UNKNOWN,
