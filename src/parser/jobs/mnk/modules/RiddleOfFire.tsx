@@ -24,6 +24,7 @@ const EXPECTED = {
 	GCDS: 11,
 	ELIXIRS: 1,
 	TACKLES: 1,
+	TORNADOES: 1,
 }
 
 const SUGGESTION_TIERS = {
@@ -60,11 +61,15 @@ class Riddle {
 	}
 
 	get elixirFields() {
-		return this.casts.filter(event => event.ability.guid === ACTIONS.ELIXIR_FIELD.id).length
+		return this.casts.filter(event => event.ability.guid === this.data.actions.ELIXIR_FIELD.id).length
 	}
 
 	get tackles() {
-		return this.casts.filter(event => event.ability.guid === ACTIONS.SHOULDER_TACKLE.id).length
+		return this.casts.filter(event => event.ability.guid === this.data.actions.SHOULDER_TACKLE.id).length
+	}
+
+	get tornadoKicks() {
+		return this.casts.filter(event => event.ability.guid === this.data.actions.TORNADO_KICK.id).length
 	}
 
 	public gcdsByFist(fistId: number) {
@@ -136,11 +141,14 @@ export default class RiddleOfFire extends Module {
 		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirFields, 0)
 
+		const droppedTornadoKicks = (nonRushedRiddles.length) // should be 1 per Riddle
+		- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.tornadoKicks, 0)
+
 		// Keep these seperate for different suggestions; our baseline is 1 charge, but the MNK mentors
 		// want a minor suggestion to track Riddles that only had 1 Tackle
 		const riddlesWithOneTackle = nonRushedRiddles.filter(riddle => riddle.tackles === 1).length
 		const riddlesWithZeroTackles = nonRushedRiddles.filter(riddle => riddle.tackles === 0).length
-		const droppedExpectedOgcds = droppedElixirFields + riddlesWithZeroTackles
+		const droppedExpectedOgcds = droppedElixirFields + droppedTornadoKicks + riddlesWithZeroTackles
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.RIDDLE_OF_FIRE.icon,
@@ -157,7 +165,7 @@ export default class RiddleOfFire extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.ELIXIR_FIELD.icon,
 			content: <Trans id="mnk.rof.suggestions.ogcd.content">
-				Aim to use 1 <ActionLink {...this.data.actions.ELIXIR_FIELD} /> and at least 1 <ActionLink {...this.data.actions.SHOULDER_TACKLE} /> during each <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
+				Aim to use <ActionLink {...this.data.actions.TORNADO_KICK} />, <ActionLink {...this.data.actions.ELIXIR_FIELD} />, and at least 1 <ActionLink {...this.data.actions.SHOULDER_TACKLE} /> during each <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
 			</Trans>,
 			tiers: SUGGESTION_TIERS,
 			value: droppedExpectedOgcds,
@@ -237,6 +245,10 @@ export default class RiddleOfFire extends Module {
 							elixirField: {
 								actual: riddle.elixirFields,
 								expected: EXPECTED.ELIXIRS,
+							},
+							tornadoField: {
+								actual: riddle.tornadoKicks,
+								expected: EXPECTED.TORNADOES,
 							},
 							shoulderTackle: {
 								actual: riddle.tackles,
