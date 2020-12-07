@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-12-07'),
+		Changes: () => <>
+			Support for patch 5.4 - Burst Shot potency adjusted.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-11-15'),
 		Changes: () => <>
 			GCDs under <ActionLink {...ACTIONS.ARMYS_PAEON}/> and <StatusLink {...STATUSES.ARMYS_MUSE}/> are now dropped from the 'Always Be Casting' uptime calculation.

@@ -6,6 +6,9 @@ import {ActionRoot} from '../root'
 export const patch540: Layer<ActionRoot> = {
 	patch: '5.4',
 	data: {
+		// BRD 5.4 potency changes
+		BURST_SHOT: {potency: 250},
+
 		// NIN 5.4 potency changes
 		SPINNING_EDGE: {potency: 230},
 		GUST_SLASH: {combo: {
