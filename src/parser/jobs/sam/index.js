@@ -3,7 +3,6 @@ import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import {Icon, Message} from 'semantic-ui-react'
-
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
 
@@ -27,7 +26,7 @@ export default new Meta({
 
 	supportedPatches: {
 		from: '5.1',
-		to: '5.3',
+		to: '5.4',
 	},
 
 	contributors: [
@@ -35,6 +34,12 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-12-17'),
+		Changes: () => <>
+			Samurai Support updated to 5.4
+		</>,
+		contributors: [CONTRIBUTORS.RYAN],
+	},	{
 		date: new Date('2020-8-10'),
 		Changes: () => <>
 			Samurai support updated to 5.3
