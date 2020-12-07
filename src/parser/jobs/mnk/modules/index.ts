@@ -2,7 +2,7 @@ import Cooldowns from './Cooldowns'
 import Demolish from './Demolish'
 import Fists from './Fists'
 import Forms from './Forms'
-import MnkAoE from './MnkAoE'
+import AoE from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import PerfectBalance from './PerfectBalance'
 import RiddleOfEarth from './RiddleOfEarth'
@@ -17,7 +17,7 @@ export default [
 	Demolish,
 	Fists,
 	Forms,
-	MnkAoE,
+	AoE,
 	OGCDDowntime,
 	PerfectBalance,
 	RiddleOfEarth,
