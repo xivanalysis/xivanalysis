@@ -13,5 +13,6 @@ export default class OGCDDowntime extends CooldownDowntime {
 		{cooldowns: [ACTIONS.PERFECT_BALANCE]},
 		{cooldowns: [ACTIONS.RIDDLE_OF_FIRE]},
 		{cooldowns: [ACTIONS.SHOULDER_TACKLE]},
+		{cooldowns: [ACTIONS.TORNADO_KICK]},
 	]
 }
