@@ -216,10 +216,28 @@ export interface DeathEvent extends BaseEventFields {
 	type: 'death'
 }
 
+/* These likewise do not have source/target fields */
 export interface LimitBreakUpdateEvent extends BaseEventFields {
 	type: 'limitbreakupdate'
 	bars: number
 	value: number
+}
+
+export interface ChecksumMismatchEvent extends BaseEventFields {
+	type: 'checksummismatch'
+	data: number
+}
+
+export interface ZoneChangeEvent extends BaseEventFields {
+	type: 'zonechange'
+	zoneDifficulty: number
+	zoneID: number
+	zoneName: string,
+}
+/* End no source/target */
+
+export interface UnknownEvent extends AbilityEventFields {
+	type: 'unknown'
 }
 
 export interface DispelEvent extends AbilityEventFields {
@@ -307,6 +325,9 @@ export type FflogsEvent =
 	| AbilityEvent
 	| DeathEvent
 	| LimitBreakUpdateEvent
+	| ChecksumMismatchEvent
+	| ZoneChangeEvent
+	| UnknownEvent
 	| DispelEvent
 
 declare module 'legacyEvent' {

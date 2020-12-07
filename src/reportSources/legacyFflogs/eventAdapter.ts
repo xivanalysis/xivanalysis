@@ -91,6 +91,12 @@ class EventAdapter {
 		case 'encounterend':
 		// We don't have much need for limit break, at least for now
 		case 'limitbreakupdate':
+		// We are _technically_ limiting down to a single zone, so any zonechange should be fluff
+		case 'zonechange':
+		// Not My Problem™️
+		case 'checksummismatch':
+		// I mean if Kihra doesn't know, how am I supposed to?
+		case 'unknown':
 			break
 
 		default:
