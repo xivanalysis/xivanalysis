@@ -280,6 +280,7 @@
   "core.overheal.rule.name": "오버힐을 피하세요.",
   "core.overheal.suggestion.content": "필요 이상의 힐을 자제하십시오. 힐을 남발하지 않도록 횟수를 줄이거나 짝힐러합을 맞춰 힐러 자원을 최대한 효율있게 관리할 수 있도록 조율하십시오.",
   "core.overheal.suggestion.why": "오버힐을 {0}% 했습니다.",
+  "core.report-flow.actor-not-found": "",
   "core.report-flow.job-unsupported.description": "높은 정확도 및 폭넓은 지원을 위해 항상 지원자들을 모집하고있습니다. 도움을 원하신다면 저희 디스코드로 오십시오!",
   "core.report-flow.job-unsupported.title": "선호하는 직업을 지원하지 않나요?",
   "core.report-flow.kills-only": "클리어한 트라이 한정",

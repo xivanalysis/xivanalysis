@@ -280,6 +280,7 @@
   "core.overheal.rule.name": "Éviter l'overheal",
   "core.overheal.suggestion.content": "Évitez de soigner votre équipe plus que nécessaire. Réduisez le nombre de soins inutiles et coordonnez-vous avec votre co-soigneur pour planifier efficacement les ressources utilisez.",
   "core.overheal.suggestion.why": "Vous un surplus de heal de {0}%",
+  "core.report-flow.actor-not-found": "",
   "core.report-flow.job-unsupported.description": "Nous sommes toujours à la recherche de compagnons afin d'améliorer la qualité et la précision de nos analyses. N'hésitez pas à passer sur notre chaîne Discord et voyez comment vous pourriez aider !",
   "core.report-flow.job-unsupported.title": "Votre job préféré n'est pas pris en charge?",
   "core.report-flow.kills-only": "Missions terminées seulement",

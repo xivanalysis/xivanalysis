@@ -280,6 +280,7 @@
   "core.overheal.rule.name": "注意避免过量治疗",
   "core.overheal.suggestion.content": "注意避免过量治疗你的队伍，减少不必要的治疗，并和你的搭档沟通协调，最大化利用治疗资源。",
   "core.overheal.suggestion.why": "你有{0}%的过量治疗",
+  "core.report-flow.actor-not-found": "",
   "core.report-flow.job-unsupported.description": "我们一直追求更广泛的支持和更精准的分析。欢迎加入我们的Discord频道，找到参与帮助我们的方式！",
   "core.report-flow.job-unsupported.title": "尚未支持你最喜欢的职业？",
   "core.report-flow.kills-only": "仅显示击杀场次",

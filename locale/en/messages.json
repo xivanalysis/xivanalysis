@@ -280,6 +280,7 @@
   "core.overheal.rule.name": "Avoid Overheal",
   "core.overheal.suggestion.content": "Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.",
   "core.overheal.suggestion.why": "You had an overheal of {0}%",
+  "core.report-flow.actor-not-found": "<0>Actor not found.</0>No actor was found with ID \"{actorId}\". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.",
   "core.report-flow.job-unsupported.description": "We're always looking to expand our support and accuracy. Come drop by our Discord channel and see how you could help out!",
   "core.report-flow.job-unsupported.title": "Favourite job unsupported?",
   "core.report-flow.kills-only": "Kills only",
