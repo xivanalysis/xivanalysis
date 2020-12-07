@@ -1,10 +1,14 @@
-import React from 'react'
-import {useParams} from 'react-router-dom'
-import {AnalyseRouteParams} from './ReportFlow'
-import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
-import {ReportStore} from 'reportSources'
+import React, {useCallback} from 'react'
+import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
+import classNames from 'classnames'
+import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
 import {Event} from 'event'
+import {useParams} from 'react-router-dom'
+import {ReportStore} from 'reportSources'
+import {Icon} from 'semantic-ui-react'
+import {AnalyseRouteParams} from './ReportFlow'
+import styles from './ReportFlow.module.css'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
@@ -19,8 +23,29 @@ export function Analyse({reportStore}: AnalyseProps) {
 	const {report} = reportStore
 	const {pullId, actorId} = useParams<AnalyseRouteParams>()
 
-	if (report == null) {
-		return null
+	const onRefreshActors = useCallback(
+		() => reportStore.requestActors(pullId, {bypassCache: true}),
+		[reportStore, pullId],
+	)
+
+	const actor = report
+		?.pulls.find(pull => pull.id === pullId)
+		?.actors.find(actor => actor.id === actorId)
+
+	if (report == null || actor == null) {
+		return (
+			<Message warning icon="warning sign">
+				<Trans id="core.report-flow.actor-not-found">
+					<Message.Header>Actor not found.</Message.Header>
+					No actor was found with ID "{actorId}". If this report has been updated recently, it may have been cached - try pressing Refresh to retrieve the latest data.
+				</Trans>
+
+				<button className={classNames(styles.refresh, styles.block)} onClick={onRefreshActors}>
+					<Icon name="refresh"/>
+					<Trans id="core.report-flow.refresh">Refresh</Trans>
+				</button>
+			</Message>
+		)
 	}
 
 	if (report.meta?.source !== 'legacyFflogs') {
