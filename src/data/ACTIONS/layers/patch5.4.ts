@@ -11,6 +11,6 @@ export const patch540: Layer<ActionRoot> = {
 		TRUE_STRIKE: {potency: 270},
 		TWIN_SNAKES: {potency: 230},
 		RIDDLE_OF_EARTH: {charges: 3},
-		TORNADO_KICK: {cooldown: 45, potency: 400},
+		TORNADO_KICK: {cooldown: 45},
 	},
 }
