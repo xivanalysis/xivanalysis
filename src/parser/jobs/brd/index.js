@@ -17,7 +17,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.YUMIYAFANGIRL, role: ROLES.MAINTAINER},
