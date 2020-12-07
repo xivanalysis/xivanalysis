@@ -17,8 +17,8 @@ export default new Meta({
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.3',
+		from: '5.4',
+		to: '5.4',
 	},
 
 	contributors: [
@@ -26,6 +26,13 @@ export default new Meta({
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-12-08'),
+			Changes: () => <>
+				Update MNK support for patch 5.4, this marks previous patches unsupported due to the scope of the changes.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-08-11'),
 			Changes: () => <>
