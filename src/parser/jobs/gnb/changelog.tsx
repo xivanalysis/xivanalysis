@@ -4,6 +4,13 @@ import CONTRIBUTORS from 'data/CONTRIBUTORS'
 
 export const changelog = [
 	{
+		date: new Date('2020-12-08'),
+		Changes: () => <>
+			Mark patch 5.4 supported.
+		</>,
+		contributors: [CONTRIBUTORS.ACCHAN],
+	},
+	{
 		date: new Date('2019-07-02'),
 		Changes: () => <>
 			Initial pass through support for Gunbreaker.
