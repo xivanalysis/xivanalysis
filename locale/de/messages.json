@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "Doppelviper erhöht deinen ausgeteilten Schaden schnell um 10%.",
   "mnk.twinsnakes.checklist.name": "Halte Doppelviper aktiv",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> Gesamtanwendungszeit",
+  "mnk.twinsnakes.suggestions.antman.content": "",
+  "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "Vermeide es, <0/> deutlich vor dem Auslaufen zu erneuern; dadurch verlierst du die Nutzung des besseren <1/>.",
   "mnk.twinsnakes.suggestions.early.why": "{lostTruePotency} Attacke verloren durch {0, plural, one {# vorzeitige Erneuerung} other {# vorzeitige Erneuerungen}}.",
   "mnk.twinsnakes.suggestions.late.content": "<0/> während jeder dritten Kombo aufzufrischen, erhöht deine Schadenspotenz nur, wenn der Buff nicht abläuft, bevor du den Angriff mit globaler Abklingzeit einsetzt. Dies funktioniert nur mit weniger als 4 Aufladungen von <1/>.",

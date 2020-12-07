@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "Utiliser Serpents Jumeaux permet d'augmenter facilement vos dégâts de 10%.",
   "mnk.twinsnakes.checklist.name": "Garder Serpent Jumeaux actif",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> temps d'activité",
+  "mnk.twinsnakes.suggestions.antman.content": "",
+  "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "Éviter de rafraichir <0/> trop tôt avant sa fin car vous pourriez utiliser un autre sort qui fait plus de dégats <1/>.",
   "mnk.twinsnakes.suggestions.early.why": "{lostTruePotency} de puissance perdu pour {0, plural, one {# rafraîchissement précoce} other {# rafraîchissements précoces}}.",
   "mnk.twinsnakes.suggestions.late.content": "Le rafraîchissement <0/> sur une combinaison de 3 abilité est un gain de puissance, mais seulement lorsque vous ne laissez pas tomber le buff pour le GCD avant lui. Ceci ne fonctionne que sous 4 niveau de <1/>.",

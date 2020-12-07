@@ -1,8 +1,9 @@
 import {Plural, Trans} from '@lingui/react'
+import React from 'react'
+
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
+
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -10,14 +11,14 @@ import {Data} from 'parser/core/modules/Data'
 import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import React from 'react'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// Expected time to drop Twin in GL4 (basically part way thru previous GCD)
+// Expected time to drop Twin (basically part way thru previous GCD)
 const TWIN_SNAKES_CYCLE_BUFFER = 3000
 
-// Expected GCDs between TS in GL3 or lower
+// Expected GCDs between TS for looping combos
 const TWIN_SNAKES_CYCLE_LENGTH = 5
 
 class TwinState {
@@ -57,6 +58,9 @@ export default class TwinSnakes extends Module {
 	// Fury used without TS active
 	private failedFury: number = 0
 
+	// Antman used without TS active
+	private failedAnts: number = 0
+
 	// Clipping the duration, or dropping for more than TS itself
 	private earlySnakes: number = 0
 	private lateSnakes: number = 0
@@ -69,9 +73,9 @@ export default class TwinSnakes extends Module {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 
 		// This gets weird because, we don't wanna penalise if it was from FPF...
-		this.addEventHook('applybuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onGain)
-		this.addEventHook('refreshbuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onRefresh)
-		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.TWIN_SNAKES.id}, this.onDrop)
+		this.addEventHook('applybuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onGain)
+		this.addEventHook('refreshbuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onRefresh)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.TWIN_SNAKES.id}, this.onDrop)
 
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -87,20 +91,28 @@ export default class TwinSnakes extends Module {
 		switch (action.id) {
 		// Ignore TS itself, plus Form Shift and maybe 6SS?
 		// We use gcdsSinceTS because we don't want to double count FPF
-		case (ACTIONS.TWIN_SNAKES.id):
+		case (this.data.actions.TWIN_SNAKES.id):
 			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
 				this.earlySnakes++
 			}
 
-		// Ignore Form Shift, theres probably forced downtime so we expect TS to get weird anyway
-		case (ACTIONS.FORM_SHIFT.id):
+		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
+		case (this.data.actions.FORM_SHIFT.id):
 			break
 
 		// Count FPF, but check if it's a bad one
-		case (ACTIONS.FOUR_POINT_FURY.id):
-			if (!this.combatants.selected.hasStatus(STATUSES.TWIN_SNAKES.id)) {
+		case (this.data.actions.FOUR_POINT_FURY.id):
+			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
 				this.failedFury++
 			}
+
+		// Ignore Antman, but check if it's a bad one
+		case (this.data.actions.ANATMAN.id):
+			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+				this.failedAnts++
+			}
+
+			break
 
 		// Verify the window isn't closed, and count the GCDs
 		default:
@@ -118,7 +130,7 @@ export default class TwinSnakes extends Module {
 		if (this.twinSnake?.end) {
 			const unbuffedGcds = this.gcdsSinceTS - this.twinSnake.gcds
 			const unbuffedTime = event.timestamp - this.twinSnake.end
-			// TODO: some kind of downtime check, maybe a warning for non-GL4
+			// TODO: some kind of downtime check
 			if (unbuffedGcds > 1 || unbuffedTime > TWIN_SNAKES_CYCLE_BUFFER) {
 				this.lateSnakes++
 			}
@@ -129,8 +141,7 @@ export default class TwinSnakes extends Module {
 		this.gcdsSinceTS = 0
 	}
 
-	// Can be TS or FPF - just reset the GCD count
-	// This is ok even with the reduced duration from FPF provided user is in GL3/4
+	// Can be TS, FPF, or Antman - just reset the GCD count
 	private onRefresh(): void {
 		this.gcdsSinceTS = 0
 	}
@@ -144,7 +155,7 @@ export default class TwinSnakes extends Module {
 		this.stopAndSave(this.parser.fight.end_time)
 
 		// Calculate derped potency to early refreshes
-		const lostTruePotency = this.earlySnakes * (ACTIONS.TRUE_STRIKE.potency - ACTIONS.TWIN_SNAKES.potency)
+		const lostTruePotency = this.earlySnakes * (this.data.actions.TRUE_STRIKE.potency - this.data.actions.TWIN_SNAKES.potency)
 
 		this.checklist.add(new Rule({
 			name: <Trans id="mnk.twinsnakes.checklist.name">Keep Twin Snakes up</Trans>,
@@ -152,16 +163,16 @@ export default class TwinSnakes extends Module {
 			displayOrder: DISPLAY_ORDER.TWIN_SNAKES,
 			requirements: [
 				new Requirement({
-					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><ActionLink {...ACTIONS.TWIN_SNAKES} /> uptime</Trans>,
-					percent: () => this.getBuffUptimePercent(STATUSES.TWIN_SNAKES.id),
+					name: <Trans id="mnk.twinsnakes.checklist.requirement.name"><ActionLink {...this.data.actions.TWIN_SNAKES} /> uptime</Trans>,
+					percent: () => this.getBuffUptimePercent(this.data.statuses.TWIN_SNAKES.id),
 				}),
 			],
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.TWIN_SNAKES.icon,
+			icon: this.data.actions.TWIN_SNAKES.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.early.content">
-				Avoid refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...ACTIONS.TRUE_STRIKE} />.
+				Avoid refreshing <ActionLink {...this.data.actions.TWIN_SNAKES} /> signficantly before its expiration as you're losing uses of the higher potency <ActionLink {...this.data.actions.TRUE_STRIKE} />.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -174,10 +185,10 @@ export default class TwinSnakes extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.TWIN_SNAKES.icon,
+			icon: this.data.actions.TWIN_SNAKES.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.late.content">
-				Refreshing <ActionLink {...ACTIONS.TWIN_SNAKES} /> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it.
-				This only works under 4 stacks of <StatusLink {...STATUSES.GREASED_LIGHTNING} />.
+				Refreshing <ActionLink {...this.data.actions.TWIN_SNAKES} /> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it.
+				This only works under 4 stacks of <StatusLink {...this.data.statuses.GREASED_LIGHTNING} />.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MEDIUM,
@@ -190,9 +201,9 @@ export default class TwinSnakes extends Module {
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FOUR_POINT_FURY.icon,
+			icon: this.data.actions.FOUR_POINT_FURY.icon,
 			content: <Trans id="mnk.twinsnakes.suggestions.toocalm.content">
-				Try to get <StatusLink {...STATUSES.TWIN_SNAKES} /> up before using <ActionLink {...ACTIONS.FOUR_POINT_FURY} /> to take advantage of its free refresh.
+				Try to get <StatusLink {...this.data.statuses.TWIN_SNAKES} /> up before using <ActionLink {...this.data.actions.FOUR_POINT_FURY} /> to take advantage of its free refresh.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -200,7 +211,22 @@ export default class TwinSnakes extends Module {
 			},
 			value: this.failedFury,
 			why: <Trans id="mnk.twinsnakes.suggestions.toocalm.why">
-				<Plural value={this.failedFury} one="# use" other="# uses" /> of <ActionLink {...ACTIONS.FOUR_POINT_FURY} /> failed to refresh <StatusLink {...STATUSES.TWIN_SNAKES} />.
+				<Plural value={this.failedFury} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.FOUR_POINT_FURY} /> failed to refresh <StatusLink {...this.data.statuses.TWIN_SNAKES} />.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.ANATMAN.icon,
+			content: <Trans id="mnk.twinsnakes.suggestions.antman.content">
+				Try to get <StatusLink {...this.data.statuses.TWIN_SNAKES} /> up before using <ActionLink {...this.data.actions.ANATMAN} /> to take advantage of its free refresh.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+				2: SEVERITY.MEDIUM,
+			},
+			value: this.failedAnts,
+			why: <Trans id="mnk.twinsnakes.suggestions.antman.why">
+				<Plural value={this.failedAnts} one="# use" other="# uses" /> of <ActionLink {...this.data.actions.ANATMAN} /> failed to refresh <StatusLink {...this.data.statuses.TWIN_SNAKES} />.
 			</Trans>,
 		}))
 	}

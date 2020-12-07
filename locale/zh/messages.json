@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "双掌打能让自己的所有伤害直接提高10%。",
   "mnk.twinsnakes.checklist.name": "保持双掌打 Buff",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> 覆盖率",
+  "mnk.twinsnakes.suggestions.antman.content": "",
+  "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "避免在时间结束之前过早地刷新<0/>，因为你可以选择<1/>来换取更高的伤害。",
   "mnk.twinsnakes.suggestions.early.why": "{lostTruePotency} 威力由于{0} 次提前刷新而被浪费。",
   "mnk.twinsnakes.suggestions.late.content": "在每三个连击刷新<0/>能够获得威力的提升，但这需要在你保证不丢失buff的前提下。这仅在你拥有4层<1/>的情况下有效。",

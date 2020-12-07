@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "双掌打は10％のバフを加えることができます。",
   "mnk.twinsnakes.checklist.name": "双掌打の維持率",
   "mnk.twinsnakes.checklist.requirement.name": "アクティブ率: <0/>",
+  "mnk.twinsnakes.suggestions.antman.content": "",
+  "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "<1/>の高火力をロスすることになるので、効果時間切れ前にむやみに更新することは避けましょう。",
   "mnk.twinsnakes.suggestions.early.why": "{0, plural, other {# 回}} 早すぎる更新により、{lostTruePotency} 威力が失った",
   "mnk.twinsnakes.suggestions.late.content": "スキル回しの3回目ずつのコンボには、前のGCDのバフの効果が落ちなければ、<0/>の効果が更新されたら、威力があがるわけです。注意：<1/>のスタックが４つの場合のみです。",

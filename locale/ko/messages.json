@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "쌍장타는 DPS를 위해 간단하게 추가할 수 있는 10% 버프입니다.",
   "mnk.twinsnakes.checklist.name": "항상 쌍장타가 유지되도록 하십시오",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> 지속시간",
+  "mnk.twinsnakes.suggestions.antman.content": "",
+  "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "더 높은 위력의 <1/> 대신 <0/>를 너무 일찍 갱신하는 것을 피하세요.",
   "mnk.twinsnakes.suggestions.early.why": "이른 쌍장타를 총 {0, plural, one {#회} other {#회}} 사용하여 {lostTruePotency}만큼의 위력을 낭비하였습니다.",
   "mnk.twinsnakes.suggestions.late.content": "<1/> 스택이 4개가 쌓인 상태에선 <0/> 버프를 3번째 콤보마다 갱신하는것이 딜 이득이지만 버프 소멸 직전 글쿨이 효과를 받지 않으면 오히려 손해를 볼 수 있습니다.",

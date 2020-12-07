@@ -578,6 +578,8 @@
   "mnk.twinsnakes.checklist.description": "Twin Snakes is an easy 10% buff to your DPS.",
   "mnk.twinsnakes.checklist.name": "Keep Twin Snakes up",
   "mnk.twinsnakes.checklist.requirement.name": "<0/> uptime",
+  "mnk.twinsnakes.suggestions.antman.content": "Try to get <0/> up before using <1/> to take advantage of its free refresh.",
+  "mnk.twinsnakes.suggestions.antman.why": "{0, plural, one {# use} other {# uses}} of <0/> failed to refresh <1/>.",
   "mnk.twinsnakes.suggestions.early.content": "Avoid refreshing <0/> signficantly before its expiration as you're losing uses of the higher potency <1/>.",
   "mnk.twinsnakes.suggestions.early.why": "{lostTruePotency} potency lost to {0, plural, one {# early refresh} other {# early refreshes}}.",
   "mnk.twinsnakes.suggestions.late.content": "Refreshing <0/> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it. This only works under 4 stacks of <1/>.",
