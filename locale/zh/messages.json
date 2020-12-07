@@ -538,8 +538,6 @@
   "mnk.demolish.suggestion.why": "由于提前刷新破碎拳，你损失了 {0} 跳 Dot 伤害。",
   "mnk.fists.suggestions.foe.content": "在使用<0/>时，不要忘记尽快转回<1/>。",
   "mnk.fists.suggestions.foe.why": "<0/> 状态持续了{0} 个GCD。",
-  "mnk.fists.suggestions.fow.content": "当低于{MAX_STACKS}层数时，避免切换至<0/>，直到你能够使用一个<1/>。<2/>能够提供更多的输出直到你能够达到GL{MAX_FASTER}。",
-  "mnk.fists.suggestions.fow.why": "在疾风迅雷未达到最大层数时使用了{0, plural,one {#次}other {#次}}<0/>。",
   "mnk.fists.suggestions.stanceless.content": "体势 Buff 是你输出最大的来源之一，可以直接使用<0/>，或者使用<1/>来加快你的GCD。",
   "mnk.fists.suggestions.stanceless.why": "存在 {0} 个GCD无体势加成。",
   "mnk.fists.suggestions.unknownfist.content": "尝试使用<0/>来达到疾风迅雷{MAX_STACKS}，并使用<1/>到达疾风迅雷{MAX_FASTER}。",

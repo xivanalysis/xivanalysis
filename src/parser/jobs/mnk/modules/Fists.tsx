@@ -146,7 +146,7 @@ export default class Fists extends Module {
 			this.suggestions.add(new Suggestion({
 				icon: this.data.actions.FISTS_OF_FIRE.icon,
 				content: <Trans id="mnk.fists.suggestions.unknownfist.content">
-					Try to use <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as you can entityStatusesas it provides a strong boost to your damage output.
+					Try to use <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as you can, as it provides a strong boost to your damage output.
 				</Trans>,
 				severity: SEVERITY.MAJOR,
 				why: <Trans id="mnk.fists.suggestions.unknownfist.why">
