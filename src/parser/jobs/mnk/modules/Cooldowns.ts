@@ -26,6 +26,7 @@ export default class Cooldowns extends CoreCooldowns {
 		ACTIONS.ELIXIR_FIELD.id,
 		ACTIONS.SHOULDER_TACKLE.id,
 		ACTIONS.TORNADO_KICK.id,
+		ACTIONS.ANATMAN.id,
 		ACTIONS.RIDDLE_OF_EARTH.id,
 		ACTIONS.MANTRA.id,
 	]

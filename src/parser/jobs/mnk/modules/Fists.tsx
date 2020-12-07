@@ -32,6 +32,7 @@ const CHART_COLOURS = {
 	[STATUSES.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
 }
 
+// TODO: Add some shit back in here for RoFs with too few FoF idk
 const FIST_SEVERITY = {
 	FISTLESS: {
 		1: SEVERITY.MEDIUM,
