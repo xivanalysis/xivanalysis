@@ -10,7 +10,7 @@ export const ROG = ensureActions({
 		name: 'Spinning Edge',
 		icon: 'https://xivapi.com/i/000000/000601.png',
 		onGcd: true,
-		potency: 220,
+		potency: 230,
 		combo: {
 			start: true,
 		},
@@ -24,7 +24,7 @@ export const ROG = ensureActions({
 		potency: 100,
 		combo: {
 			from: 2240,
-			potency: 330,
+			potency: 340,
 		},
 	},
 
