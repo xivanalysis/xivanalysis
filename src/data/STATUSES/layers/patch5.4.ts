@@ -1,5 +1,6 @@
 import {Layer} from 'data/layer'
 import {StatusRoot} from '../root'
+import {SHARED} from '../root/SHARED'
 
 export const patch540: Layer<StatusRoot> = {
 	patch: '5.4',
@@ -17,5 +18,11 @@ export const patch540: Layer<StatusRoot> = {
 			duration: 15,
 		},
 		// Some shit for 6SS's speed buff
+
+		// MNK 5.4 status deletions
+		GREASED_LIGHTNING_II: SHARED.UNKNOWN,
+		GREASED_LIGHTNING_III: SHARED.UNKNOWN,
+		GREASED_LIGHTNING_IV: SHARED.UNKNOWN,
+		EARTHS_REPLY: SHARED.UNKNOWN,
 	},
 }
