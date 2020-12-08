@@ -61,11 +61,6 @@ export function Analyse({reportStore}: AnalyseProps) {
 	const legacyReport = report.meta
 
 	return <>
-		<NewEventAdaptionDryRun
-			reportStore={reportStore}
-			pullId={pullId}
-			actorId={actorId}
-		/>
 		<LegacyAnalyse
 			report={report}
 			legacyReport={legacyReport}
