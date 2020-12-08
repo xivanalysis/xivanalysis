@@ -260,7 +260,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 300, // Increase Black by 9
+		potency: 310, // Increase Black by 9
 		breaksCombo: true,
 	},
 	VERAERO: {
@@ -290,7 +290,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 300, // Increase White by 9
+		potency: 310, // Increase White by 9
 		breaksCombo: true,
 	},
 	TETHER: {
