@@ -18,7 +18,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
@@ -27,6 +27,13 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-12-07'),
+			Changes: () => <>
+				Mark patch 5.4 supported.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
+		},
 		{
 			date: new Date('2020-08-11'),
 			Changes: () => <>
