@@ -86,7 +86,7 @@ export const RDM = ensureActions({
 		icon: 'https://xivapi.com/i/003000/003225.png',
 		onGcd: true,
 		cooldown: 1.5,
-		potency: 210, // consumes 30 white, 30 black
+		potency: 220, // consumes 30 white, 30 black
 		combo: {
 			start: true,
 		},
@@ -210,7 +210,7 @@ export const RDM = ensureActions({
 		onGcd: true,
 		cooldown: 2.5,
 		castTime: 2,
-		potency: 280, // Increase White and Black by 3
+		potency: 290, // Increase White and Black by 3
 		breaksCombo: true,
 	},
 	// IMPACT: {
