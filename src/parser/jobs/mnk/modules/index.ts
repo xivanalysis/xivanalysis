@@ -5,7 +5,6 @@ import Forms from './Forms'
 import AoE from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import PerfectBalance from './PerfectBalance'
-import RiddleOfEarth from './RiddleOfEarth'
 import RiddleOfFire from './RiddleOfFire'
 import Speedmod from './Speedmod'
 import Steppies from './Steppies'
@@ -20,7 +19,6 @@ export default [
 	AoE,
 	OGCDDowntime,
 	PerfectBalance,
-	RiddleOfEarth,
 	RiddleOfFire,
 	Speedmod,
 	Steppies,
