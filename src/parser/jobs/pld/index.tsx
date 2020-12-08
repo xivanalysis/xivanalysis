@@ -18,7 +18,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.MIKEMATRIX, role: ROLES.MAINTAINER},
@@ -28,6 +28,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2020-12-07'),
+			Changes: () => <>
+				Mark patch 5.4 supported.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
+		},
+		{
 			date: new Date('2020-08-11'),
 			Changes: () => <>
 				Mark patch 5.3 supported.
@@ -35,23 +42,23 @@ export default new Meta({
 			contributors: [CONTRIBUTORS.ACCHAN],
 		},
 		{
-			date: new Date('2019-07-18'),
+			date: new Date('2020-04-19'),
 			Changes: () => <>
-				Basic 5.0 support for Paladin.
+				Adjust recommendations for Requiescat and Fight or Flight window lengths.
+			</>,
+			contributors: [CONTRIBUTORS.QAPHLA],
+		},
+		{
+			date: new Date('2019-09-01'),
+			Changes: () => <>
+				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
 		{
-			date: new Date('2019-07-23'),
+			date: new Date('2019-08-21'),
 			Changes: () => <>
-				Fix penalties for double-weaving during an active Requiescat window.
-			</>,
-			contributors: [CONTRIBUTORS.LHEA],
-		},
-		{
-			date: new Date('2019-07-25'),
-			Changes: () => <>
-				Minor fix for weaving case where player leads on oGCDs.
+				Don't penalize for rushed Requiescat windows due to expected downtime or end-of-fight.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
@@ -63,25 +70,25 @@ export default new Meta({
 			contributors: [CONTRIBUTORS.QAPHLA],
 		},
 		{
-			date: new Date('2019-08-21'),
+			date: new Date('2019-07-25'),
 			Changes: () => <>
-				Don't penalize for rushed Requiescat windows due to expected downtime or end-of-fight.
+				Minor fix for weaving case where player leads on oGCDs.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
 		{
-			date: new Date('2019-09-01'),
+			date: new Date('2019-07-23'),
 			Changes: () => <>
-				Don't penalize for rushed Fight or Flight windows due to expected downtime or end-of-fight.
+				Fix penalties for double-weaving during an active Requiescat window.
 			</>,
 			contributors: [CONTRIBUTORS.LHEA],
 		},
 		{
-			date: new Date('2020-04-19'),
+			date: new Date('2019-07-18'),
 			Changes: () => <>
-				Adjust recommendations for Requiescat and Fight or Flight window lengths.
+				Basic 5.0 support for Paladin.
 			</>,
-			contributors: [CONTRIBUTORS.QAPHLA],
+			contributors: [CONTRIBUTORS.LHEA],
 		},
 	],
 })
