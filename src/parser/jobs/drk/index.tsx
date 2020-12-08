@@ -19,13 +19,20 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACRI, role: ROLES.THEORYCRAFT},
 		{user: CONTRIBUTORS.AZARIAH, role: ROLES.MAINTAINER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-12-08'),
+			Changes: () => <>
+				Mark patch 5.4 supported.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-08-11'),
 			Changes: () => <>

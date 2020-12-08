@@ -23,7 +23,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.ACKWELL, role: ROLES.MAINTAINER},
@@ -33,6 +33,10 @@ export default new Meta({
 	],
 
 	changelog: [{
+		date: new Date('2020-12-07'),
+		Changes: () => <>Removed DoT clipping suggestion and calculations, since some clipping is required, especially for 110s rotation.</>,
+		contributors: [CONTRIBUTORS.KELOS],
+	}, {
 		date: new Date('2020-04-05'),
 		Changes: () => <>Added a suggestion when Devotion does not hit all players.</>,
 		contributors: [CONTRIBUTORS.RITASHI],
