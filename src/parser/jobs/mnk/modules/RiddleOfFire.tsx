@@ -72,6 +72,10 @@ class Riddle {
 		return this.casts.filter(event => event.ability.guid === this.data.actions.TORNADO_KICK.id).length
 	}
 
+	get stars() {
+		return this.casts.filter(event => event.ability.guid === this.data.actions.SIX_SIDED_STAR.id).length
+	}
+
 	public gcdsByFist(fistId: number) {
 		return this.gcdsInEachFist[fistId]
 	}
@@ -136,7 +140,7 @@ export default class RiddleOfFire extends Module {
 			.filter(riddle => !riddle.rushing)
 
 		const droppedGcds = (nonRushedRiddles.length * EXPECTED.GCDS)
-			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds, 0)
+			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds - riddle.stars, 0)
 
 		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirFields, 0)
@@ -240,7 +244,7 @@ export default class RiddleOfFire extends Module {
 						targetsData: {
 							gcds: {
 								actual: riddle.gcds,
-								expected: EXPECTED.GCDS,
+								expected: EXPECTED.GCDS - riddle.stars,
 							},
 							elixirField: {
 								actual: riddle.elixirFields,
