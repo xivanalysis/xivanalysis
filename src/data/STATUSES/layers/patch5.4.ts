@@ -12,9 +12,9 @@ export const patch540: Layer<StatusRoot> = {
 
 		// MNK 5.4 status additions
 		FORMLESS_FIST: {
-			id: 0,
+			id: 2513,
 			name: 'Formless Fist',
-			icon: 'https://xivapi.com/i/000000/000000.png',
+			icon: 'https://xivapi.com/i/012000/012535.png',
 			duration: 15,
 		},
 		// Some shit for 6SS's speed buff
