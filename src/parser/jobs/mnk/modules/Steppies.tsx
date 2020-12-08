@@ -10,10 +10,10 @@ import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Sugge
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-const LEAD_BOOT_POTENCY = 300
+const LEAD_BOOT_POTENCY = 370
 
 // Typically a player with lag can derp positional in opener, this usually happens 2 times per fight.
-// With 60s CD on RoE for a 30s no positionals buff, and True North every 45s tho, this shouldn't be
+// With 3 charges of RoE for a 6s no positionals buff, and True North every 45s tho, this shouldn't be
 // an issue even if the player is lagging worse than the author of this comment.
 const CRIT_BOOT_SEVERITY = {
 	1: SEVERITY.MEDIUM,
