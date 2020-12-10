@@ -33,6 +33,7 @@ import {exVaris} from './bosses/exVaris'
 import {e4} from './bosses/e4'
 import {e7} from './bosses/e7'
 import {e8} from './bosses/e8'
+import {e9} from './bosses/e9'
 import {tea} from './bosses/tea'
 
 interface AvailableModules {
@@ -82,6 +83,7 @@ const AVAILABLE_MODULES: AvailableModules = {
 		[BOSSES.E4.logId]: e4,
 		[BOSSES.E7.logId]: e7,
 		[BOSSES.E8.logId]: e8,
+		[BOSSES.E9.logId]: e9,
 
 		[BOSSES.TEA.logId]: tea,
 	},

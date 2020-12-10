@@ -57,6 +57,7 @@ const BOSSES = ensureBosses({
 	E6: {logId: 70},
 	E7: {logId: 71},
 	E8: {logId: 72},
+	E9: {logId: 73},
 
 	// Ultimates
 	TEA: {logId: 1050},
