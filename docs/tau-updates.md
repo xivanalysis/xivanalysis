@@ -84,9 +84,15 @@ const AVAILABLE_MODULES: AvailableModules = {
 
 In the `Invulnerability.ts` file for your fight, there are 3 options per actor ID:
 
-* start (takes a string)
-* end (takes a string)
-* exclude (takes a boolean)
+
+| Param | Option | Description |
+| ----- | ---------: | ----------- |
+| start | 'tau'      | Use targetability update from fflogs (the default) |
+|       | 'firstTap' | Use the first registered hit on the enemy as a synthetic targetability update |
+| end   | 'tau'   | use targetability update from fflogs (the default) |
+|       | 'overkill' | Use the last hit registered on a boss (that causes overkill) as a synthetic targetability update |
+| mirrorToInvuln | boolean | "mirrors" untargetable moments with invulnerable moments. Set to 'false' for enemies that can be untargetable but still take damage (dot tickets, other effects, etc). Defaults to true. |
+| exclude | boolean | exclude the target from the fight in terms of targeting (default is false) |
 
 For example, let's say there are 3 actors (4567, 4568, and 4569) with different properties:
 
