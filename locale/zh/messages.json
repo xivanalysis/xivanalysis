@@ -360,6 +360,7 @@
   "drg.about.description": "<0>这个分析工具旨在帮助你告别躺尸龙的刻板印象，并打出赏心悦目的数据。因为龙骑士的循环非常严格，这里的建议主要着眼于如何维持流畅的循环，同时指出你在红莲龙血和buff对齐等方面的问题。</0>",
   "drg.battlelitany.rotation-table.header.buffed": "收到增益的队员",
   "drg.battlelitany.rotation-table.header.gcd-count": "GCD技能",
+  "drg.battlelitany.rotation-table.header.interfered": "无重叠部分",
   "drg.battlelitany.title": "战斗连祷",
   "drg.blood.checklist.description": "<0/>是龙骑士循环的核心，应该始终维持。没有它时，你的跳跃威力会减弱，且无法使用<1/>。",
   "drg.blood.checklist.description.warning": "由于苍天龙血现在是以量谱而不是Buff形式存在，请注意此处以及下面的红莲龙血状态中的数字是模拟的。因此，它不一定和真实情况完全一致。",
