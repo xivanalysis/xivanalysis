@@ -34,7 +34,7 @@ export class ComboEvent extends NormalisedEventFields {
 	}
 }
 
-declare module 'events' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		combos: ComboEvent
 	}

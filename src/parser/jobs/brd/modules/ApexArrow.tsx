@@ -37,20 +37,23 @@ export default class ApexArrow extends Module {
 	/**
 	 * Summons the yumicode, hopefully this will be rewritten at some point but for now it's a necessary evil
 	 */
-	private getRawDamage(event: DamageEvent): number {
+	private getRawDamage(event: NormalisedDamageEvent): number {
 		if (!event.debugMultiplier) { return 0 }
 
 		const fixedMultiplier = Math.trunc((event.debugMultiplier + TRAIT_STRENGTH) * 100) / 100
 
+		const bestEvent = event.confirmedEvents.reduce((max, curr) =>
+			(curr.amount > max.amount ? curr : max), event.confirmedEvents[0])
+
 		// We get the unbuffed damage
-		let rawDamage = event.amount / fixedMultiplier
+		let rawDamage = bestEvent.amount / fixedMultiplier
 
 		// And then strip off critical hit and direct hit mods
-		if (event.criticalHit) {
+		if (bestEvent.criticalHit) {
 			rawDamage = Math.trunc(rawDamage / this.stats.critMod)
 		}
 
-		if (event.directHit) {
+		if (bestEvent.directHit) {
 			rawDamage = Math.trunc(rawDamage / DHIT_MOD)
 		}
 		return rawDamage
@@ -63,7 +66,7 @@ export default class ApexArrow extends Module {
 		}
 
 		const potencyDamageRatio = this.stats.potencyDamageRatio
-		const rawDamage = this.getRawDamage(event.confirmedEvents[0])
+		const rawDamage = this.getRawDamage(event)
 		const approximatedPotency = rawDamage * 100 / potencyDamageRatio
 
 		this.debug('Apex Event', {

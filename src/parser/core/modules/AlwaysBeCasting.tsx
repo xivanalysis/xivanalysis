@@ -9,11 +9,16 @@ export default class AlwaysBeCasting extends Module {
 	static handle = 'abc'
 
 	@dependency private checklist!: Checklist
-	@dependency private downtime!: Downtime
-	@dependency private gcd!: GlobalCooldown
+	@dependency protected downtime!: Downtime
+	@dependency protected gcd!: GlobalCooldown
 
 	protected init() {
 		this.addEventHook('complete', this.onComplete)
+	}
+
+	protected getUptimePercent(): number {
+		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
+		return this.gcd.getUptime() / fightDuration * 100
 	}
 
 	// Just using this for the suggestion for now
@@ -21,8 +26,6 @@ export default class AlwaysBeCasting extends Module {
 		if (!this.gcd.gcds.length) {
 			return
 		}
-
-		const fightDuration = this.parser.currentDuration - this.downtime.getDowntime()
 
 		this.checklist.add(new Rule({
 			name: <Trans id="core.always-cast.title">Always be casting</Trans>,
@@ -34,7 +37,7 @@ export default class AlwaysBeCasting extends Module {
 			requirements: [
 				new Requirement({
 					name: <Trans id="core.always-cast.gcd-uptime">GCD Uptime</Trans>,
-					percent: this.gcd.getUptime() / fightDuration * 100,
+					percent: this.getUptimePercent(),
 				}),
 			],
 		}))

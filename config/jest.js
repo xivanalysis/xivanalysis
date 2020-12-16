@@ -79,7 +79,7 @@ module.exports = neutrino => { neutrino.register('jest', neutrino => {
 			[extensionsToNames(media)]: require.resolve('./fileTransformer'),
 		},
 		transformIgnorePatterns: [
-			'node_modules/(?!(ky))'
+			'node_modules\/(?!ky|@compiled)'
 		]
 	}
 })}

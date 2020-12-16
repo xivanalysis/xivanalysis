@@ -8,7 +8,7 @@ import Module, {dependency} from 'parser/core/Module'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
 import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import {Event} from 'events'
+import {Event} from 'legacyEvent'
 import {InitEvent} from 'parser/core/Parser'
 
 const LINKED_EVENT_THRESHOLD = 20
@@ -119,6 +119,11 @@ export default class ArcanaTracking extends Module {
 	}
 
 	normalise(events: Event[]) {
+		// The whole point of this module was to support "pre-5.3" Three-card Sleeve Draw
+		if (!this.parser.patch.before('5.3')) {
+			return events
+		}
+
 		const startTime = this.parser.fight.start_time
 		let prepullSleeve = true
 		let prepullSleeveFabbed = false
@@ -334,7 +339,7 @@ export default class ArcanaTracking extends Module {
 			const sealState = [...cardStateItem.sealState]
 			cardStateItem.sealState = this.addSeal(sealObtained, sealState)
 
-			if (cardStateItem.sleeveState > SleeveType.NOTHING) {
+			if (cardStateItem.sleeveState > SleeveType.NOTHING && this.parser.patch.before('5.3')) {
 				cardStateItem.sleeveState = this.consumeSleeve(cardStateItem.sleeveState)
 			}
 		}
@@ -347,7 +352,8 @@ export default class ArcanaTracking extends Module {
 			cardStateItem.drawState = undefined
 		}
 
-		if (actionId === this.data.actions.SLEEVE_DRAW.id) {
+		if (actionId === this.data.actions.SLEEVE_DRAW.id && this.parser.patch.before('5.3')) {
+			// only happens pre 5.3
 			cardStateItem.sleeveState = this.startSleeve()
 		}
 

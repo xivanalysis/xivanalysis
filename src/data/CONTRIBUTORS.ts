@@ -12,7 +12,7 @@ export interface Contributor {
 const CONTRIBUTORS = {
 	ACKWELL: {
 		name: 'ackwell',
-		avatar: require('./avatar/ackwell.png'),
+		avatar: require('./avatar/ackwell.jpg'),
 		jobs: [
 			JOBS.SUMMONER,
 			JOBS.RED_MAGE,
@@ -183,6 +183,11 @@ const CONTRIBUTORS = {
 		name: 'Cadence',
 		avatar: require('./avatar/cadence.png'),
 		jobs: [JOBS.GUNBREAKER],
+	},
+	CASUALSUPERMAN: {
+		name: 'CasualSuperman',
+		avatar: require('./avatar/casualsuperman.png'),
+		jobs: [JOBS.ASTROLOGIAN],
 	},
 }
 export default CONTRIBUTORS as Record<keyof typeof CONTRIBUTORS, Contributor>

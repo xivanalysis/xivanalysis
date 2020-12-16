@@ -13,5 +13,13 @@ export const patch530: Layer<ActionRoot> = {
 
 		// MNK 5.3 cooldown changes
 		PERFECT_BALANCE: {cooldown: 90},
+
+		// AST 5.3 mp changes
+		HELIOS: {mpCost: 700},
+		BENEFIC_II: {mpCost: 700},
+		ASPECTED_BENEFIC: {mpCost: 400},
+		ASPECTED_BENEFIC_NOCTURNAL: {mpCost: 700},
+		ASPECTED_HELIOS: {mpCost: 800},
+		COMBUST_II: {mpCost: 400},
 	},
 }

@@ -30,12 +30,48 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.05',
-		to: '5.2',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.CASUALSUPERMAN, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-12-07'),
+			Changes: () => <>
+				Astrologian support updated to 5.4
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
+			date: new Date('2020-12-01'),
+			Changes: () => <>
+				Fix incorrect action ID and timeline view for Diurnal Sect <ActionLink {...ACTIONS.ASPECTED_BENEFIC} />.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
+			date: new Date('2020-10-05'),
+			Changes: () => <>
+				Fixed <ActionLink {...ACTIONS.EARTHLY_STAR} /> drift calculation.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
+			date: new Date('2020-10-05'),
+			Changes: () => <>
+				Fixed bug where sect was always reported forgotten, even when it wasn't.
+			</>,
+			contributors: [CONTRIBUTORS.CASUALSUPERMAN],
+		},
+		{
+			date: new Date('2020-08-13'),
+			Changes: () => <>
+				Updated AST for 5.3, adjustments to calculations for counting theoretical maximum card draws/plays.
+			</>,
+			contributors: [CONTRIBUTORS.SUSHIROU],
+		},
 		{
 			date: new Date('2020-04-29'),
 			Changes: () => <>

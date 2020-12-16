@@ -36,9 +36,8 @@ export default class DualCast extends Module {
 	//The last timestamp for a change in CastType
 	_castTypeLastChanged = null
 	_severityMissedDualcast = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
 	}
 	_severityWastedDualcast = {
 		1: SEVERITY.MINOR,
