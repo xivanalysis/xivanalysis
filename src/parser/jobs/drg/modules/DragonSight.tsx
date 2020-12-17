@@ -1,41 +1,74 @@
-import {DrgBuffWindowModule} from './DrgBuffWindow'
-import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+
 import ACTIONS from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
+import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import {SEVERITY} from 'parser/core/modules/Suggestions'
 import STATUSES from 'data/STATUSES'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-export default class DragonSight extends DrgBuffWindowModule {
+export default class DragonSight extends BuffWindowModule {
 	static handle = 'dragonsight'
 	static title = t('drg.dragonsight.title')`Dragon Sight`
 	static displayOrder = DISPLAY_ORDER.DRAGON_SIGHT
 
 	buffAction = ACTIONS.DRAGON_SIGHT
-	buffStatus = [STATUSES.RIGHT_EYE, STATUSES.RIGHT_EYE_SOLO]
+	buffStatus = STATUSES.RIGHT_EYE
+	secondaryBuffStatus = STATUSES.RIGHT_EYE_SOLO
 
-	private soloDragonSight: boolean = false
-
-	protected init() {
-		super.init()
-		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)
+	expectedGCDs = {
+		expectedPerWindow: 8,
+		suggestionContent: <Trans id="drg.lc.suggestions.missedgcd.content">
+			Try to land at least 8 GCDs during every <ActionLink {...ACTIONS.DRAGON_SIGHT} /> window.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MINOR,
+			2: SEVERITY.MEDIUM,
+			4: SEVERITY.MAJOR,
+		},
 	}
 
-	protected onComplete() {
-		super.onComplete()
+	trackedActions = {
+		icon: ACTIONS.DRAGON_SIGHT.icon,
+		actions: [
+			{
+				action: ACTIONS.CHAOS_THRUST,
+				expectedPerWindow: 1,
+			},
+			{
+				action: ACTIONS.FULL_THRUST,
+				expectedPerWindow: 1,
+			},
+			{
+				action: ACTIONS.FANG_AND_CLAW,
+				expectedPerWindow: 1,
+			},
+			{
+				action: ACTIONS.WHEELING_THRUST,
+				expectedPerWindow: 1,
+			},
+		],
+		suggestionContent: <Trans id="drg.lc.suggestions.trackedactions.content">
+			Each <ActionLink {...ACTIONS.DRAGON_SIGHT} /> window should contain at least one use each of <ActionLink {...ACTIONS.CHAOS_THRUST} />, <ActionLink {...ACTIONS.FULL_THRUST} />, <ActionLink {...ACTIONS.FANG_AND_CLAW} />, and <ActionLink {...ACTIONS.WHEELING_THRUST} />. In order to ensure that these actions fall within the buff window, try to avoid using <ActionLink {...ACTIONS.DRAGON_SIGHT} /> after <ActionLink {...ACTIONS.CHAOS_THRUST} /> or <ActionLink {...ACTIONS.FULL_THRUST} />.
+		</Trans>,
+		severityTiers: {
+			1: SEVERITY.MINOR,
+			3: SEVERITY.MEDIUM,
+			5: SEVERITY.MAJOR,
+		},
+	}
 
-		if (this.soloDragonSight) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.DRAGON_SIGHT.icon,
-				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
-					Although it doesn't impact your personal DPS, try to always use Dragon Sight on a partner in group content so that someone else can benefit from the damage bonus too.
-				</Trans>,
-				severity: SEVERITY.MINOR,
-				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
-					At least 1 of your Dragon Sight casts didn't have a tether partner.
-				</Trans>,
-			}))
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		const windowDurationMillis = this.buffStatus.duration * 1000
+		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+
+		// so if a drg is rushing we don't really have expectations of specific actions that get fit in the window, we just want the buff used.
+		if (windowDurationMillis >= fightTimeRemaining) {
+			return 1
 		}
+
+		return 0
 	}
 }

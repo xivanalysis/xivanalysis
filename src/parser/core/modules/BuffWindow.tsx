@@ -84,6 +84,11 @@ export abstract class BuffWindowModule extends Module {
 	abstract buffStatus: Status
 
 	/**
+	 * Optional. Added because DRG is special and has a second status id for solo dragon sight.
+	 */
+	protected secondaryBuffStatus?: Status
+
+	/**
 	 * Most implementing modules will pass an expectedGCDs object to indicate the number of GCDs expected within the buff window
 	 * 	 and the suggestion "content" copy and severity tiers for failing to meet the number of expected GCDs.
 	 */
@@ -172,7 +177,8 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private onApplyBuff(event: BuffEvent) {
-		if (!this.buffStatus || event.ability.guid !== this.buffStatus.id) {
+		if ((!this.buffStatus || event.ability.guid !== this.buffStatus.id) &&
+				(!this.secondaryBuffStatus || event.ability.guid !== this.secondaryBuffStatus.id)) {
 			return
 		}
 
@@ -184,7 +190,8 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
-		if (!this.buffStatus || event.ability.guid !== this.buffStatus.id) {
+		if ((!this.buffStatus || event.ability.guid !== this.buffStatus.id) &&
+				(!this.secondaryBuffStatus || event.ability.guid !== this.secondaryBuffStatus.id)) {
 			return
 		}
 
@@ -221,6 +228,8 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 */
 	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
+		// note: currently the assumption is that the secondary buff status has the same duration as the primary
+		// this is true in the case of DRG, but might not be in the future?
 		if ( this.buffStatus.duration ) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const windowDurationMillis = this.buffStatus.duration * 1000
