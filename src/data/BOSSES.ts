@@ -47,6 +47,8 @@ const BOSSES = ensureBosses({
 	RUBY_WEAPON_1: {logId: 1051},
 	RUBY_WEAPON_2: {logId: 1052},
 	VARIS_YAE_GALVUS: {logId: 1053},
+	EMERALD_WEAPON_1: {logId: 1056},
+	EMERALD_WEAPON_2: {logId: 1055}, // Yes, they're in the wrong order.
 
 	// Raids (savage and normal share log boss IDs)
 	E1: {logId: 65},
@@ -58,6 +60,10 @@ const BOSSES = ensureBosses({
 	E7: {logId: 71},
 	E8: {logId: 72},
 	E9: {logId: 73},
+	E10: {logId: 74},
+	E11: {logId: 75},
+	E12_1: {logId: 76},
+	E12_2: {logId: 77},
 
 	// Ultimates
 	TEA: {logId: 1050},
