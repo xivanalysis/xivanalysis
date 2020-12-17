@@ -79,7 +79,6 @@ export default class Drift extends Module {
 			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime)[0]
 
 			// there's a case where getDowntimeWindows will return null even though the planned use time is marked as downtime
-			// unsure the root cause but it looks like this occurs when invulns aren't properly configed for a fight yet
 			// adding a fallback to ensure the parse is still viewable.
 			expectedUseTime = (downtimeWindow) ? downtimeWindow.end : plannedUseTime
 		} else {
