@@ -187,6 +187,7 @@
   "brd.pitch-perfect.title": "절대음감",
   "brd.pitch-perfect.trigger.no-wm-cast": "미리 <1/>사용을 하지 않은 상태에서 <0/>을 사용하였습니다.",
   "brd.pitch-perfect.without-max-stacks.total-potency-lost": "최대 스택이 아닌 상태에서 <0/>을 사용하여 <1/>{0}</1> 위력을 손해 보았습니다.",
+  "brd.rs.suggestions.trackedactions.content": "<2/> 구간마다 <0/> 1회 그리고 <1/> 1회를 사용해야 합니다.",
   "brd.sidewinder.list.missed-potency": "<0/> 위력 손해 {0}",
   "brd.sidewinder.list.shadowbite.missing-dots": "<0/>이 {0, plural, other {도트 없이 적용된 }} 대상 {1, plural, other {# 기}}에 사용됨.",
   "brd.sidewinder.list.shadowbite.one-target": "<0/>이 단일 대상에게 사용됨.",
