@@ -132,7 +132,6 @@ export const SCH = ensureActions({
 		name: 'Dissipation',
 		icon: 'https://xivapi.com/i/002000/002810.png',
 		cooldown: 180,
-		statusesApplied: ['DISSIPATION'],
 	},
 
 	EXCOGITATION: {
