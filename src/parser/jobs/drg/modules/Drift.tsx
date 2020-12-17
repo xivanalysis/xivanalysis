@@ -80,7 +80,7 @@ export default class Drift extends Module {
 
 			// there's a case where getDowntimeWindows will return null even though the planned use time is marked as downtime
 			// adding a fallback to ensure the parse is still viewable.
-			expectedUseTime = (downtimeWindow) ? downtimeWindow.end : plannedUseTime
+			expectedUseTime = downtimeWindow?.end ?? plannedUseTime
 		} else {
 			expectedUseTime = plannedUseTime
 		}
