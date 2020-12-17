@@ -8,6 +8,13 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-12-16'),
+		Changes: () => <>
+			Added a module that tracks actions used during <ActionLink {...ACTIONS.RAGING_STRIKES}/> windows.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-12-07'),
 		Changes: () => <>
 			Support for patch 5.4 - Burst Shot potency adjusted.

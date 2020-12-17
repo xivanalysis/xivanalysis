@@ -237,6 +237,16 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	/**
+	 * Handles rushing logic to reduce tracked actions in a window for end of fight rushing
+	 * This method MAY be overridden if class rules for end of fight rushing vary
+	 * @param buffWindow
+	 * @param action
+	 */
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		return 0
+	}
+
+	/**
 	 * For consumers that have tracked actions that expect the same number of usages per window, this will use the
 	 *   expectedPerWindow property on that action as the baseline
 	 * This method MAY be overridden if the logic of expected tracked actions per window is variable
@@ -288,7 +298,8 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private getBuffWindowExpectedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
-		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action)
+		return this.getBaselineExpectedTrackedAction(buffWindow, action) + this.changeExpectedTrackedActionClassLogic(buffWindow, action) -
+				this.reduceTrackedActionsEndOfFight(buffWindow, action)
 	}
 
 	/**
@@ -309,6 +320,17 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected generateBuffNotUsedOutput(): JSX.Element | undefined {
 		return undefined
+	}
+
+	private countMissedTrackedActions(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		const expected = this.getBuffWindowExpectedTrackedActions(buffWindow, action)
+		const actual = buffWindow.getActionCountByIds([action.action.id])
+		const comparator = this.changeComparisonClassLogic(buffWindow, action)
+
+		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
+		if ( comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE ) { return 0 }
+
+		return Math.max(0, expected - actual)
 	}
 
 	private onComplete() {
@@ -348,7 +370,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedActions ) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + Math.max(0, this.getBuffWindowExpectedTrackedActions(buffWindow, trackedAction) - buffWindow.getActionCountByIds([trackedAction.action.id])), 0), 0)
+						.reduce((sum, buffWindow) => sum + this.countMissedTrackedActions(buffWindow, trackedAction), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedActions.icon,
