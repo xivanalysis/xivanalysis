@@ -76,10 +76,9 @@ export default class Drift extends Module {
 		let expectedUseTime = 0
 
 		if (this.downtime.isDowntime(plannedUseTime)) {
-			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime)[0]
+			const downtimeWindow = this.downtime.getDowntimeWindows(plannedUseTime, plannedUseTime)[0]
 
-			// there's a case where getDowntimeWindows will return null even though the planned use time is marked as downtime
-			// adding a fallback to ensure the parse is still viewable.
+			// in theory the second case shouldn't trigger, but just in case since we've had this break before...
 			expectedUseTime = downtimeWindow?.end ?? plannedUseTime
 		} else {
 			expectedUseTime = plannedUseTime
