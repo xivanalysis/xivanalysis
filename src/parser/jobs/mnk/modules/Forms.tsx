@@ -137,7 +137,7 @@ export default class Forms extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.FORM_SHIFT.icon,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
-				Avoid using combo starters outside of <StatusLink {...this.data.statuses.OPO_OPO_FORM}/> as the form bonus is only activated in the correct form.
+				Avoid using combo starters outside of <StatusLink {...this.data.statuses.OPO_OPO_FORM}/> as the Form bonus is only activated in the correct form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -169,7 +169,7 @@ export default class Forms extends Module {
 				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.skipped.content">
-					Avoid skipping Forms outside of downtime. You could be missing important buffs or refreshing <StatusLink {...this.data.statuses.GREASED_LIGHTNING}/> by skipping.
+					Avoid skipping Forms outside of downtime. A skipped GCD could otherwise be used for damage.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.skipped.why">
 					<Plural value={this.skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
