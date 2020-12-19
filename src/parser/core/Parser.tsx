@@ -16,6 +16,7 @@ import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
 import {formatDuration} from 'utilities'
 import {Report, Pull, Actor} from 'report'
+import {Injectable} from './Injectable'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -61,10 +62,9 @@ class Parser {
 
 	readonly meta: Meta
 
-	modules: Record<string, Module> = {}
-	_constructors: Record<string, typeof Module> = {}
+	container: Record<string, Injectable> = {}
 
-	moduleOrder: string[] = []
+	private executionOrder: string[] = []
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
@@ -154,31 +154,36 @@ class Parser {
 	// -----
 
 	async configure() {
-		const ctors = await this.loadModuleConstructors()
+		const constructors = await this.loadModuleConstructors()
 
 		// Build the values we need for the toposort
-		const nodes = Object.keys(ctors)
+		const nodes = Object.keys(constructors)
 		const edges: Array<[string, string]> = []
-		nodes.forEach(mod => ctors[mod].dependencies.forEach(dep => {
+		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, this.getDepHandle(dep)])
 		}))
 
 		// Sort modules to load dependencies first
 		// Reverse is required to switch it into depencency order instead of sequence
 		// This will naturally throw an error on cyclic deps
-		this.moduleOrder = toposort.array(nodes, edges).reverse()
+		this.executionOrder = toposort.array(nodes, edges).reverse()
 
 		// Initialise the modules
-		this.moduleOrder.forEach(mod => {
-			const ctdMod = new ctors[mod](this)
-			this.modules[mod] = ctdMod
-			ctdMod.doTheMagicInitDance()
+		this.executionOrder.forEach(handle => {
+			const injectable = new constructors[handle](this)
+			this.container[handle] = injectable
+
+			if (injectable instanceof Module) {
+				injectable.doTheMagicInitDance()
+			} else {
+				throw new Error(`Unhandled injectable type for initialisation: ${handle}`)
+			}
 		})
 	}
 
 	private async loadModuleConstructors() {
 		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
-		let allCtors: ReadonlyArray<typeof Module>
+		let allCtors: ReadonlyArray<typeof Injectable>
 		try {
 			allCtors = await this.meta.getModules()
 		} catch (error) {
@@ -190,12 +195,11 @@ class Parser {
 
 		// Build a final contructor mapping. Modules later in the list with
 		// the same handle with override earlier ones.
-		const ctors: Record<string, typeof Module> = {}
+		const ctors: Record<string, typeof Injectable> = {}
 		allCtors.forEach(ctor => {
 			ctors[ctor.handle] = ctor
 		})
 
-		this._constructors = ctors
 		return ctors
 	}
 
@@ -211,8 +215,16 @@ class Parser {
 	async normalise(events: Event[]) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		for (const mod of this.moduleOrder) {
-			events = await this.modules[mod].normalise(events)
+		for (const handle of this.executionOrder) {
+			const injectable = this.container[handle]
+
+			// TODO: Not a fan of needing to special case every way of normalising -
+			//       resolve this more generically
+			if (injectable instanceof Module) {
+				events = await injectable.normalise(events)
+			} else {
+				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
+			}
 		}
 
 		return events
@@ -220,7 +232,7 @@ class Parser {
 
 	parseEvents(events: Event[]) {
 		// Create a copy of the module order that we'll use while parsing
-		this._triggerModules = this.moduleOrder.slice(0)
+		this._triggerModules = this.executionOrder.slice(0)
 
 		// Loop & trigger all the events & fabrications
 		for (const event of this.iterateEvents(events)) {
@@ -284,8 +296,8 @@ class Parser {
 		this._moduleErrors[mod] = error
 
 		// Cascade via dependencies
-		Object.keys(this._constructors).forEach(key => {
-			const constructor = this._constructors[key]
+		Object.keys(this.container).forEach(key => {
+			const constructor = this.container[key].constructor as typeof Injectable
 			if (constructor.dependencies.some(dep => this.getDepHandle(dep) === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
@@ -310,22 +322,23 @@ class Parser {
 		const errors: Array<[string, Error]> = []
 		const visited = new Set<string>()
 
-		const crawler = (m: string) => {
-			visited.add(m)
+		const crawler = (handle: string) => {
+			visited.add(handle)
 
-			const constructor = this._constructors[m]
-			const module = this.modules[m]
+			const injectable = this.container[handle]
+			const constructor = injectable as typeof Injectable
 
-			if (typeof module.getErrorContext === 'function') {
+			// TODO: Should Injectable also contain rudimentary error logic?
+			if (injectable instanceof Module) {
 				try {
-					output[m] = module.getErrorContext(source, error, event)
+					output[handle] = injectable.getErrorContext(source, error, event)
 				} catch (error) {
-					errors.push([m, error])
+					errors.push([handle, error])
 				}
 			}
 
-			if (output[m] === undefined) {
-				output[m] = extractErrorContext(module)
+			if (output[handle] === undefined) {
+				output[handle] = extractErrorContext(injectable)
 			}
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
@@ -348,27 +361,19 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = [...this.moduleOrder]
-		displayOrder.sort((a, b) => {
-			const aConstructor = this.modules[a].constructor as typeof Module
-			const bConstructor = this.modules[b].constructor as typeof Module
-			return aConstructor.displayOrder - bConstructor.displayOrder
-		})
+		const displayOrder = [...this.executionOrder]
+		displayOrder.sort((a, b) =>
+			this.getDisplayOrder(this.container[a]) - this.getDisplayOrder(this.container[b]),
+		)
 
 		const results: Result[] = []
-		displayOrder.forEach(mod => {
-			const module = this.modules[mod]
-			const constructor = module.constructor as typeof Module
-			const resultMeta = {
-				name: constructor.title,
-				handle: constructor.handle,
-				mode: constructor.displayMode,
-				i18n_id: constructor.i18n_id,
-			}
+		displayOrder.forEach(handle => {
+			const injectable = this.container[handle]
+			const resultMeta = this.getResultMeta(injectable)
 
 			// If there's an error, override output handling to show it
-			if (this._moduleErrors[mod]) {
-				const error = this._moduleErrors[mod]
+			if (this._moduleErrors[handle]) {
+				const error = this._moduleErrors[handle]
 				results.push({
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
@@ -377,15 +382,14 @@ class Parser {
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
-			/** @type {import('./Module').ModuleOutput|null} */
-			let output = null
+			let output: React.ReactNode = null
 			try {
-				output = module.output()
+				output = this.getOutput(injectable)
 			} catch (error) {
 				this.captureError({
 					error,
 					type: 'output',
-					module: mod,
+					module: handle,
 				})
 
 				// Also add the error to the results to be displayed.
@@ -405,6 +409,41 @@ class Parser {
 		})
 
 		return results
+	}
+
+	private getDisplayOrder(injectable: Injectable): number {
+		if (injectable instanceof Module) {
+			const constructor = injectable.constructor as typeof Module
+			return constructor.displayOrder
+		}
+
+		const constructor = injectable.constructor as typeof Injectable
+		throw new Error(`Unhandled injectable type for display order: ${constructor.handle}`)
+	}
+
+	private getResultMeta(injectable: Injectable): Result {
+		if (injectable instanceof Module) {
+			const constructor = injectable.constructor as typeof Module
+			return {
+				name: constructor.title,
+				handle: constructor.handle,
+				mode: constructor.displayMode,
+				i18n_id: constructor.i18n_id,
+				markup: null,
+			}
+		}
+
+		const constructor = injectable.constructor as typeof Injectable
+		throw new Error(`Unhandled injectable type for result meta: ${constructor.handle}`)
+	}
+
+	private getOutput(injectable: Injectable): React.ReactNode {
+		if (injectable instanceof Module) {
+			return injectable.output()
+		}
+
+		const constructor = injectable.constructor as typeof Injectable
+		throw new Error(`Unhandled injectable type for output: ${constructor.handle}`)
 	}
 
 	// -----
@@ -497,8 +536,8 @@ class Parser {
 	 * @param handle - Handle of the module to scroll to
 	 */
 	scrollTo(handle: string) {
-		const module = this.modules[handle]
-		ResultSegment.scrollIntoView((module.constructor as typeof Module).handle)
+		const module = this.container[handle]
+		ResultSegment.scrollIntoView((module.constructor as typeof Injectable).handle)
 	}
 }
 

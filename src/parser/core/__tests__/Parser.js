@@ -128,8 +128,8 @@ describe('Parser', () => {
 		parser = buildParser([BasicModule])
 		await parser.configure()
 
-		expect(parser.modules).toHaveProperty('test_basic')
-		expect(parser.modules.test_basic).toBeInstanceOf(BasicModule)
+		expect(parser.container).toHaveProperty('test_basic')
+		expect(parser.container.test_basic).toBeInstanceOf(BasicModule)
 	})
 
 	it('runs normalisers', async () => {
@@ -137,7 +137,7 @@ describe('Parser', () => {
 		await parser.configure()
 		parser.normalise([event])
 
-		const mock = parser.modules.test_basic.normalise.mock
+		const mock = parser.container.test_basic.normalise.mock
 		expect(mock.calls).toHaveLength(1)
 		expect(mock.calls[0][0]).toEqual([event])
 	})
@@ -169,13 +169,13 @@ describe('Parser', () => {
 		parser = buildParser([BasicModule, DependentModule, RenamedModule])
 		await parser.configure()
 
-		const module = parser.modules.test_dependent
+		const module = parser.container.test_dependent
 		expect(module.test_basic)
 			.toBeInstanceOf(BasicModule)
-			.toBe(parser.modules.test_basic)
+			.toBe(parser.container.test_basic)
 		expect(module.renamed)
 			.toBeInstanceOf(RenamedModule)
-			.toBe(parser.modules.test_renamed)
+			.toBe(parser.container.test_renamed)
 	})
 
 	it('cascades errors to dependents', async () => {

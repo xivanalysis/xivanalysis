@@ -2,9 +2,9 @@ import {Contributor, Role} from 'data/CONTRIBUTORS'
 import {PatchNumber} from 'data/PATCHES'
 import _ from 'lodash'
 import React from 'react'
-import Module from './Module'
+import {Injectable} from './Injectable'
 
-type ModulesLoader = () => Promise<{default: Array<typeof Module>}>
+type ModulesLoader = () => Promise<{default: Array<typeof Injectable>}>
 
 /** Representation of patches supported by a meta instance. */
 export interface SupportedPatches {
@@ -32,7 +32,7 @@ export class Meta {
 	readonly changelog: ChangelogEntry[]
 
 	private readonly modulesLoader: ModulesLoader
-	private loadedModules?: ReadonlyArray<typeof Module>
+	private loadedModules?: ReadonlyArray<typeof Injectable>
 
 	constructor(opts: {
 		modules: ModulesLoader,

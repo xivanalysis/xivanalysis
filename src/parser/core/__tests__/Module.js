@@ -89,7 +89,7 @@ describe('Module', () => {
 			dispatcher: new Dispatcher(),
 		})
 		await parser.configure()
-		module = parser.modules.test
+		module = parser.container.test
 
 		dispatcher = Dispatcher.mock.instances[0]
 		dispatcher.addEventHook.mockImplementation(x => x)

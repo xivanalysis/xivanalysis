@@ -70,7 +70,7 @@ export default class Module extends Injectable {
 	constructor(
 		protected readonly parser: Parser,
 	) {
-		super({container: parser.modules})
+		super({container: parser.container})
 	}
 
 	/**
