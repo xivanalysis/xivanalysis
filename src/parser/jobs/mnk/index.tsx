@@ -11,9 +11,10 @@ export default new Meta({
 		<Trans id="mnk.about.description">
 			<p>Hello friendly monk! Do you not Crit the Boot? Does your Six-Sided Star dream remain a meme?</p>
 			<p>This monk analyser aims to help you realise your true potential as a monk by highlighting issues that can
-				be difficult to spot in a raw log. The main focus is on your buff windows,
-				gauge and buff uptime, and ensuring your cooldowns are used.</p>
-			<p>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #support channel.</p>
+				be difficult to spot in a raw log. The main focus is on your buff windows, buff uptime,
+				and ensuring your cooldowns are used while providing tips on utility skill usage.
+			</p>
+			<p>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</p>
 		</Trans>
 	</>,
 	supportedPatches: {
