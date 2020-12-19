@@ -16,6 +16,7 @@ import {EntityStatuses} from './EntityStatuses'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
+import {NewAnalyserTest} from './NewAnalyserTest'
 import {NormalisedEvents} from './NormalisedEvents'
 import PrecastAction from './PrecastAction'
 import PrecastStatus from './PrecastStatus'
@@ -60,4 +61,7 @@ export default [
 	Timeline,
 	UnableToAct,
 	Weaving,
+
+	// DO NOT MERGE THIS
+	NewAnalyserTest,
 ]

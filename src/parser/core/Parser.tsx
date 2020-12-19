@@ -17,6 +17,7 @@ import {Patch} from './Patch'
 import {formatDuration} from 'utilities'
 import {Report, Pull, Actor} from 'report'
 import {Injectable} from './Injectable'
+import {Analyser} from './Analyser'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -175,6 +176,8 @@ class Parser {
 
 			if (injectable instanceof Module) {
 				injectable.doTheMagicInitDance()
+			} else if (injectable instanceof Analyser) {
+				injectable.initialise()
 			} else {
 				throw new Error(`Unhandled injectable type for initialisation: ${handle}`)
 			}
@@ -222,6 +225,8 @@ class Parser {
 			//       resolve this more generically
 			if (injectable instanceof Module) {
 				events = await injectable.normalise(events)
+			} else if (injectable instanceof Analyser) {
+				// No.
 			} else {
 				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
 			}
@@ -417,6 +422,11 @@ class Parser {
 			return constructor.displayOrder
 		}
 
+		if (injectable instanceof Analyser) {
+			console.error('TODO: Analyser display order')
+			return -Infinity
+		}
+
 		const constructor = injectable.constructor as typeof Injectable
 		throw new Error(`Unhandled injectable type for display order: ${constructor.handle}`)
 	}
@@ -433,6 +443,16 @@ class Parser {
 			}
 		}
 
+		if (injectable instanceof Analyser) {
+			const constructor = injectable.constructor as typeof Analyser
+			return {
+				name: 'TODO',
+				handle: constructor.handle,
+				mode: DISPLAY_MODE.FULL,
+				markup: null,
+			}
+		}
+
 		const constructor = injectable.constructor as typeof Injectable
 		throw new Error(`Unhandled injectable type for result meta: ${constructor.handle}`)
 	}
@@ -440,6 +460,10 @@ class Parser {
 	private getOutput(injectable: Injectable): React.ReactNode {
 		if (injectable instanceof Module) {
 			return injectable.output()
+		}
+
+		if (injectable instanceof Analyser) {
+			return <>TODO</>
 		}
 
 		const constructor = injectable.constructor as typeof Injectable
