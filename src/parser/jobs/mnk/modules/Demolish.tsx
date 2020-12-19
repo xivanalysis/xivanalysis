@@ -23,7 +23,7 @@ export default class Demolish extends DoTs {
 	static handle = 'demolish'
 
 	static statusesToTrack = [
-		STATUSES.DEMOLISH.id
+		STATUSES.DEMOLISH.id,
 	]
 
 	@dependency private checklist!: Checklist
