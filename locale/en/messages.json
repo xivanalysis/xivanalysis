@@ -543,8 +543,6 @@
   "mnk.fists.suggestions.fow.why": "<0/> was active for {0, plural, one {# GCD} other {# GCDs}}.",
   "mnk.fists.suggestions.stanceless.content": "Fist buffs are one of your biggest DPS contributors, either directly with <0/> or by avoiding death with <1/>.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {# GCD} other {# GCDs}} had no Fists buff active.",
-  "mnk.fists.suggestions.unknownfist.content": "Try to use <0/> as much as you can, as it provides a strong boost to your damage output.",
-  "mnk.fists.suggestions.unknownfist.why": "No Fist transition was detected over the fight.",
   "mnk.fists.title": "Fists",
   "mnk.forms.suggestions.dropped.content": "Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.",
   "mnk.forms.suggestions.dropped.why": "Form was dropped {0, plural, one {# time.} other {# times.}}",

@@ -67,9 +67,9 @@ export default class Fists extends Module {
 
 	private fistory: Fist[] = []
 
-	// Assume stanceless by default
+	// Assume FoF by default
 	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
-	private activeFist: Fist = new Fist(FISTLESS, this.parser.fight.start_time)
+	private activeFist: Fist = new Fist(this.data.statuses.FISTS_OF_FIRE.id, this.parser.fight.start_time)
 
 	protected init(): void {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
@@ -139,54 +139,41 @@ export default class Fists extends Module {
 
 		const unknownFist = this.fistory.length === 1 && this.fistory[0].id === FISTLESS
 
-		if (unknownFist) {
-			this.suggestions.add(new Suggestion({
-				icon: this.data.actions.FISTS_OF_FIRE.icon,
-				content: <Trans id="mnk.fists.suggestions.unknownfist.content">
-					Try to use <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as you can, as it provides a strong boost to your damage output.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="mnk.fists.suggestions.unknownfist.why">
-					No Fist transition was detected over the fight.
-				</Trans>,
-			}))
-		} else {
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.FISTS_OF_FIRE.icon,
-				content: <Trans id="mnk.fists.suggestions.stanceless.content">
-					Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...this.data.actions.FISTS_OF_FIRE} /> or by avoiding death with <ActionLink {...this.data.actions.FISTS_OF_EARTH} />.
-				</Trans>,
-				why: <Trans id="mnk.fists.suggestions.stanceless.why">
-					<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
-				</Trans>,
-				tiers: FIST_SEVERITY.DOUSED,
-				value: this.getFistGCDCount(FISTLESS),
-			}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_FIRE.icon,
+			content: <Trans id="mnk.fists.suggestions.stanceless.content">
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...this.data.actions.FISTS_OF_FIRE} /> or by avoiding death with <ActionLink {...this.data.actions.FISTS_OF_EARTH} />.
+			</Trans>,
+			why: <Trans id="mnk.fists.suggestions.stanceless.why">
+				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
+			</Trans>,
+			tiers: FIST_SEVERITY.DOUSED,
+			value: this.getFistGCDCount(FISTLESS),
+		}))
 
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.FISTS_OF_EARTH.icon,
-				content: <Trans id="mnk.fists.suggestions.foe.content">
-					When using <ActionLink {...this.data.actions.FISTS_OF_EARTH} />, remember to change back to <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as soon as possible.
-				</Trans>,
-				tiers: FIST_SEVERITY.FISTS_OF_EARTH,
-				why: <Trans id="mnk.fists.suggestions.foe.why">
-					<StatusLink {...this.data.statuses.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
-				</Trans>,
-				value: this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id),
-			}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_EARTH.icon,
+			content: <Trans id="mnk.fists.suggestions.foe.content">
+				When using <ActionLink {...this.data.actions.FISTS_OF_EARTH} />, remember to change back to <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as soon as possible.
+			</Trans>,
+			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
+			why: <Trans id="mnk.fists.suggestions.foe.why">
+				<StatusLink {...this.data.statuses.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
+			</Trans>,
+			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id),
+		}))
 
-			this.suggestions.add(new TieredSuggestion({
-				icon: this.data.actions.FISTS_OF_WIND.icon,
-				content: <Trans id="mnk.fists.suggestions.fow.content">
-					Using <ActionLink {...this.data.actions.FISTS_OF_WIND} /> provides no combat benefit. Try to stay in <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as possible.
-				</Trans>,
-				tiers: FIST_SEVERITY.DOUSED,
-				why: <Trans id="mnk.fists.suggestions.fow.why">
-					<StatusLink {...this.data.statuses.FISTS_OF_WIND} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
-				</Trans>,
-				value: this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id),
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_WIND.icon,
+			content: <Trans id="mnk.fists.suggestions.fow.content">
+				Using <ActionLink {...this.data.actions.FISTS_OF_WIND} /> provides no combat benefit. Try to stay in <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as possible.
+			</Trans>,
+			tiers: FIST_SEVERITY.DOUSED,
+			why: <Trans id="mnk.fists.suggestions.fow.why">
+				<StatusLink {...this.data.statuses.FISTS_OF_WIND} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
+			</Trans>,
+			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id),
+		}))
 
 		// Statistics
 		const uptimeKeys = _.uniq(this.fistory.map(fist => fist.id))

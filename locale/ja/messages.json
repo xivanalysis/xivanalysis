@@ -543,8 +543,6 @@
   "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "",
   "mnk.fists.suggestions.stanceless.why": "構えの型が付与されてい状態で、{0, plural, other {#}} つのGCDが実行してしまいました。",
-  "mnk.fists.suggestions.unknownfist.content": "",
-  "mnk.fists.suggestions.unknownfist.why": "",
   "mnk.fists.title": "構え",
   "mnk.forms.suggestions.dropped.content": "型の効果が落ちないように頑張ってください。GCDやコンボが続けるめに、できれば敵から離れないようにしてください。そうすると型の効果が更新されます。",
   "mnk.forms.suggestions.dropped.why": "型の効果時間が切れた回数：{0, plural, one {#回} other {#回}}",

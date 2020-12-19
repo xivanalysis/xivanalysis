@@ -543,8 +543,6 @@
   "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "Les bonus de poing sont l'un de vos plus grands contributeurs de DPS, soit directement avec <0/> ou avec plus de Gcd avec <1/>.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural,one {#GCD}other {#GCDs}} n'a pas de buff de poings activé.",
-  "mnk.fists.suggestions.unknownfist.content": "Essayez d'utiliser <0/> jusqu'à GL{MAX_STACKS} et <1/> pour GL{MAX_FASTER}.",
-  "mnk.fists.suggestions.unknownfist.why": "Pas de transition de Poing détectée au cours du combat.",
   "mnk.fists.title": "Poings",
   "mnk.forms.suggestions.dropped.content": "Évitez de laisser tomber les formes. Vous devrez peut-être utiliser un espace plus proche ou rester plus près de l'ennemi pour éviter que votre combo ne s'arrête. Cela indique généralement un problème plus important.",
   "mnk.forms.suggestions.dropped.why": "Position perdu {0, plural,one {fois.}other {#fois.}}",
