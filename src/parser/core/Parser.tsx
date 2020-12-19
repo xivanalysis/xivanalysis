@@ -9,7 +9,7 @@ import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
-import {extractErrorContext} from 'utilities'
+import {extractErrorContext, isDefined} from 'utilities'
 import {Dispatcher} from './Dispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
@@ -28,6 +28,7 @@ export interface Result {
 	handle: string
 	name: string | MessageDescriptor
 	mode: DISPLAY_MODE
+	order: number
 	markup: React.ReactNode
 }
 
@@ -366,24 +367,17 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = [...this.executionOrder]
-		displayOrder.sort((a, b) =>
-			this.getDisplayOrder(this.container[a]) - this.getDisplayOrder(this.container[b]),
-		)
-
-		const results: Result[] = []
-		displayOrder.forEach(handle => {
+		const results: Result[] = this.executionOrder.map(handle => {
 			const injectable = this.container[handle]
 			const resultMeta = this.getResultMeta(injectable)
 
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[handle]) {
 				const error = this._moduleErrors[handle]
-				results.push({
+				return{
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
-				})
-				return
+				}
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
@@ -398,37 +392,23 @@ class Parser {
 				})
 
 				// Also add the error to the results to be displayed.
-				results.push({
+				return{
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
-				})
-				return
+				}
 			}
 
 			if (output) {
-				results.push({
+				return ({
 					...resultMeta,
 					markup: output,
 				})
 			}
-		})
+		}).filter(isDefined)
+
+		results.sort((a, b) => a.order - b.order)
 
 		return results
-	}
-
-	private getDisplayOrder(injectable: Injectable): number {
-		if (injectable instanceof Module) {
-			const constructor = injectable.constructor as typeof Module
-			return constructor.displayOrder
-		}
-
-		if (injectable instanceof Analyser) {
-			console.error('TODO: Analyser display order')
-			return -Infinity
-		}
-
-		const constructor = injectable.constructor as typeof Injectable
-		throw new Error(`Unhandled injectable type for display order: ${constructor.handle}`)
 	}
 
 	private getResultMeta(injectable: Injectable): Result {
@@ -438,6 +418,7 @@ class Parser {
 				name: constructor.title,
 				handle: constructor.handle,
 				mode: constructor.displayMode,
+				order: constructor.displayOrder,
 				i18n_id: constructor.i18n_id,
 				markup: null,
 			}
@@ -449,6 +430,7 @@ class Parser {
 				name: 'TODO',
 				handle: constructor.handle,
 				mode: DISPLAY_MODE.FULL,
+				order: -Infinity,
 				markup: null,
 			}
 		}
