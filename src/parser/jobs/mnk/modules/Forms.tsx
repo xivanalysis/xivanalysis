@@ -12,8 +12,7 @@ import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
-const FORM_TIMEOUT_MILLIS_200 = 10000
-const FORM_TIMEOUT_MILLIS_505 = 15000
+const FORM_TIMEOUT_MILLIS = 15000
 
 export const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
@@ -59,10 +58,6 @@ export default class Forms extends Module {
 		if (!action) {
 			return
 		}
-
-		const FORM_TIMEOUT_MILLIS = this.parser.patch.before('5.05')
-			? FORM_TIMEOUT_MILLIS_200
-			: FORM_TIMEOUT_MILLIS_505
 
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
