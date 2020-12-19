@@ -91,6 +91,12 @@ export default class PerfectBalance extends Module {
 	}
 
 	private onComplete(): void {
+		if (this.current) {
+			this.history.push(this.current)
+
+			this.current = undefined
+		}
+
 		// Stacks counts down, so drops+stacks will be adding remaining stacks that are unused
 		const droppedGcds = this.history.reduce((drops, current) => drops + current.stacks, 0)
 		const badActions = this.history.reduce((bads, current) => bads + current.bads, 0)
