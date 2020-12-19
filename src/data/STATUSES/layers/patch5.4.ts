@@ -7,7 +7,7 @@ export const patch540: Layer<StatusRoot> = {
 	data: {
 		// MNK 5.4 status updates
 		GREASED_LIGHTNING: {duration: undefined},
-		PERFECT_BALANCE: {duration: 18, stacksApplied: 6},
+		PERFECT_BALANCE: {duration: 15, stacksApplied: 6},
 		RIDDLE_OF_EARTH: {duration: 6},
 
 		// MNK 5.4 status additions
