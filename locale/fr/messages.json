@@ -539,6 +539,8 @@
   "mnk.demolish.suggestion.why": "Vous avez perdu {0} Démolitions à cause de ré-applications précipitées.",
   "mnk.fists.suggestions.foe.content": "Si vous utilisez <0/>, n'oubliez pas de revenir à <1/> dès que possible.",
   "mnk.fists.suggestions.foe.why": "<0/> était actif pour {0, plural,one {#GCD}other {#GCDs}}.",
+  "mnk.fists.suggestions.fow.content": "",
+  "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "Les bonus de poing sont l'un de vos plus grands contributeurs de DPS, soit directement avec <0/> ou avec plus de Gcd avec <1/>.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural,one {#GCD}other {#GCDs}} n'a pas de buff de poings activé.",
   "mnk.fists.suggestions.unknownfist.content": "Essayez d'utiliser <0/> jusqu'à GL{MAX_STACKS} et <1/> pour GL{MAX_FASTER}.",

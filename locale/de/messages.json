@@ -539,6 +539,8 @@
   "mnk.demolish.suggestion.why": "Du hast {0} von Demolieren verloren durch frühe Erneuerung.",
   "mnk.fists.suggestions.foe.content": "Wenn du <0/> nutzt, denke daran so schnell wie möglich zu <1/> zurück zu ändern.",
   "mnk.fists.suggestions.foe.why": "<0/> war aktiv für {0, plural, one {# GCD} other {# GCDs}}.",
+  "mnk.fists.suggestions.fow.content": "",
+  "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "Auras bringen den meisten Schaden, entweder direkt mit <0/> oder schlichtweg mehr GCDs mit <1/>.",
   "mnk.fists.suggestions.stanceless.why": "{0, plural, one {# GCD hatte} other {# GCDs hatten}} keine Aura aktiv.",
   "mnk.fists.suggestions.unknownfist.content": "Versuche, <0/> bis zu GL{MAX_STACKS} und <1/> bei GL{MAX_FASTER} zu nutzen.",

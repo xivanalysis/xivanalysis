@@ -539,6 +539,8 @@
   "mnk.demolish.suggestion.why": "早すぎる更新により破砕拳が失った回数： {0} 回",
   "mnk.fists.suggestions.foe.content": "<0/>を使ったら、可能な限り素早く<1/>に戻しましょう。",
   "mnk.fists.suggestions.foe.why": "<0/>中に使用した{0, plural, other {# 回GCD}}.",
+  "mnk.fists.suggestions.fow.content": "",
+  "mnk.fists.suggestions.fow.why": "",
   "mnk.fists.suggestions.stanceless.content": "",
   "mnk.fists.suggestions.stanceless.why": "構えの型が付与されてい状態で、{0, plural, other {#}} つのGCDが実行してしまいました。",
   "mnk.fists.suggestions.unknownfist.content": "",
