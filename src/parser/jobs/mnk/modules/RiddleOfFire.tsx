@@ -68,6 +68,10 @@ class Riddle {
 		return this.casts.filter(event => event.ability.guid === this.data.actions.ELIXIR_FIELD.id).length
 	}
 
+	get meditations() {
+		return this.casts.filter(event => event.ability.guid === this.data.actions.MEDITATION.id).length
+	}
+
 	get tackles() {
 		return this.casts.filter(event => event.ability.guid === this.data.actions.SHOULDER_TACKLE.id).length
 	}
@@ -143,8 +147,10 @@ export default class RiddleOfFire extends Module {
 		const nonRushedRiddles = this.history
 			.filter(riddle => !riddle.rushing)
 
+		// We count 6SS as 2 GCDs, since it's sometimes not a bad thing
+		// We remove Meditation since it's effectively a dropped GCD anyway
 		const droppedGcds = (nonRushedRiddles.length * EXPECTED.GCDS)
-			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds - riddle.stars, 0)
+			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.gcds + riddle.stars - riddle.meditations, 0)
 
 		const droppedElixirFields = (nonRushedRiddles.length) // should be 1 per Riddle
 			- nonRushedRiddles.reduce((sum, riddle) => sum + riddle.elixirFields, 0)
@@ -166,7 +172,7 @@ export default class RiddleOfFire extends Module {
 			tiers: SUGGESTION_TIERS,
 			value: droppedGcds,
 			why: <Trans id="mnk.rof.suggestions.gcd.why">
-				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed during <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
+				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed or wasted on <ActionLink {...this.data.actions.MEDITATION} /> during <StatusLink {...this.data.statuses.RIDDLE_OF_FIRE} />.
 			</Trans>,
 		}))
 
@@ -210,75 +216,60 @@ export default class RiddleOfFire extends Module {
 	}
 
 	output() {
-		const unknownFist = this.history.reduce((total, riddle) => total + riddle.gcds - riddle.gcdsByFist(FISTLESS), 0) === 0
-
-		return <>
-			{unknownFist && (
-				<Message warning icon>
-					<Icon name="warning sign" />
-					<Message.Content>
-						<Trans id="mnk.rof.table.unknownfist">
-							No Fist transition was detected over the fight. The expected number of GCDs in each <StatusLink {...STATUSES.RIDDLE_OF_FIRE} /> window is most likely inaccurate.
-						</Trans>
-					</Message.Content>
-				</Message>
-			)}
-
-			<RotationTable
-				targets={[
-					{
-						header: <Trans id="mnk.rof.table.header.gcds">GCDs</Trans>,
-						accessor: 'gcds',
-					},
-					{
-						header: <ActionLink showName={false} {...this.data.actions.THE_FORBIDDEN_CHAKRA}/>,
-						accessor: 'forbiddenChakra',
-					},
-					{
-						header: <ActionLink showName={false} {...this.data.actions.TORNADO_KICK}/>,
-						accessor: 'tornadoKick',
-					},
-					{
-						header: <ActionLink showName={false} {...this.data.actions.ELIXIR_FIELD}/>,
-						accessor: 'elixirField',
-					},
-					{
-						header: <ActionLink showName={false} {...this.data.actions.SHOULDER_TACKLE}/>,
-						accessor: 'shoulderTackle',
-					},
-				]}
-				data={this.history
-					.map(riddle => ({
-						start: riddle.start - this.parser.fight.start_time,
-						end: riddle.end != null ?
-							riddle.end - this.parser.fight.start_time
-							: riddle.start - this.parser.fight.start_time,
-						targetsData: {
-							gcds: {
-								actual: riddle.gcds,
-								expected: EXPECTED.GCDS - riddle.stars,
-							},
-							forbiddenChakra: {
-								actual: riddle.chakras,
-							},
-							tornadoKick: {
-								actual: riddle.tornadoKicks,
-								expected: EXPECTED.TORNADOES,
-							},
-							elixirField: {
-								actual: riddle.elixirFields,
-								expected: EXPECTED.ELIXIRS,
-							},
-							shoulderTackle: {
-								actual: riddle.tackles,
-								expected: EXPECTED.TACKLES,
-							},
+		return <RotationTable
+			targets={[
+				{
+					header: <Trans id="mnk.rof.table.header.gcds">GCDs</Trans>,
+					accessor: 'gcds',
+				},
+				{
+					header: <ActionLink showName={false} {...this.data.actions.THE_FORBIDDEN_CHAKRA}/>,
+					accessor: 'forbiddenChakra',
+				},
+				{
+					header: <ActionLink showName={false} {...this.data.actions.TORNADO_KICK}/>,
+					accessor: 'tornadoKick',
+				},
+				{
+					header: <ActionLink showName={false} {...this.data.actions.ELIXIR_FIELD}/>,
+					accessor: 'elixirField',
+				},
+				{
+					header: <ActionLink showName={false} {...this.data.actions.SHOULDER_TACKLE}/>,
+					accessor: 'shoulderTackle',
+				},
+			]}
+			data={this.history
+				.map(riddle => ({
+					start: riddle.start - this.parser.fight.start_time,
+					end: riddle.end != null ?
+						riddle.end - this.parser.fight.start_time
+						: riddle.start - this.parser.fight.start_time,
+					targetsData: {
+						gcds: {
+							actual: riddle.gcds - riddle.meditations,
+							expected: EXPECTED.GCDS - riddle.stars,
 						},
-						rotation: riddle.casts,
-					}))
-				}
-				onGoto={this.timeline.show}
-			/>
-		</>
+						forbiddenChakra: {
+							actual: riddle.chakras,
+						},
+						tornadoKick: {
+							actual: riddle.tornadoKicks,
+							expected: EXPECTED.TORNADOES,
+						},
+						elixirField: {
+							actual: riddle.elixirFields,
+							expected: EXPECTED.ELIXIRS,
+						},
+						shoulderTackle: {
+							actual: riddle.tackles,
+							expected: EXPECTED.TACKLES,
+						},
+					},
+					rotation: riddle.casts,
+				}))
+			}
+			onGoto={this.timeline.show}
+		/>
 	}
 }

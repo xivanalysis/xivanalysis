@@ -564,7 +564,6 @@
   "mnk.rof.suggestions.tackle.content": "Versuche, beide Aufladungen von <0/> während <1/> zu benutzen, außer du musst beide Ladungen aus strategischen Gründen behalten.",
   "mnk.rof.suggestions.tackle.why": "{riddlesWithOneTackle, plural, one {# Nutzen} other {# Nutzen}} von <0/> haben nur einen Nutzen von <1/> enthalten.",
   "mnk.rof.table.header.gcds": "GCDs",
-  "mnk.rof.table.unknownfist": "Keine Aura-Wechsel wurden während des Kampfes gefunden. Die erwartete Number von GCDs in jedem <0/>-Fenster ist vermutlich ungenau.",
   "mnk.rof.title": "Flammendes Enigma",
   "mnk.steppies.checklist.description": "<0/> ist dein stärkster Form-Angriff mit globaler Abklingzeit, wenn du ihn vorab mit <1/> buffst.",
   "mnk.steppies.checklist.name": "Schlag auf Schlag buffen",

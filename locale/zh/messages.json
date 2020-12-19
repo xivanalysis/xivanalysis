@@ -564,7 +564,6 @@
   "mnk.rof.suggestions.tackle.content": "尽可能在<1/>的持续时间内打出2次<0/>。根据机制的具体情况，可以允许保留一层充能。",
   "mnk.rof.suggestions.tackle.why": "{riddlesWithOneTackle, plural,one {#次}other {#次}}<0/>期间只使用了一次<1/>。",
   "mnk.rof.table.header.gcds": "GCD技能",
-  "mnk.rof.table.unknownfist": "在战斗中没有切换过体势。在每个<0/>期间应该打出的GCD数量预估很可能不准确。",
   "mnk.rof.title": "红莲极意",
   "mnk.steppies.checklist.description": "当您提前使用<1/>以增益<0/>时，该技能就是您威力最高的GCD技能。",
   "mnk.steppies.checklist.name": "连击效果提高",
