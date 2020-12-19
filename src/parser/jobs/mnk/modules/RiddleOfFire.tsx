@@ -60,6 +60,10 @@ class Riddle {
 		}).length
 	}
 
+	get chakras() {
+		return this.casts.filter(event => event.ability.guid === this.data.actions.THE_FORBIDDEN_CHAKRA.id).length
+	}
+
 	get elixirFields() {
 		return this.casts.filter(event => event.ability.guid === this.data.actions.ELIXIR_FIELD.id).length
 	}
@@ -227,6 +231,14 @@ export default class RiddleOfFire extends Module {
 						accessor: 'gcds',
 					},
 					{
+						header: <ActionLink showName={false} {...this.data.actions.THE_FORBIDDEN_CHAKRA}/>,
+						accessor: 'forbiddenChakra',
+					},
+					{
+						header: <ActionLink showName={false} {...this.data.actions.TORNADO_KICK}/>,
+						accessor: 'tornadoKick',
+					},
+					{
 						header: <ActionLink showName={false} {...this.data.actions.ELIXIR_FIELD}/>,
 						accessor: 'elixirField',
 					},
@@ -246,13 +258,16 @@ export default class RiddleOfFire extends Module {
 								actual: riddle.gcds,
 								expected: EXPECTED.GCDS - riddle.stars,
 							},
+							forbiddenChakra: {
+								actual: riddle.chakras,
+							},
+							tornadoKick: {
+								actual: riddle.tornadoKicks,
+								expected: EXPECTED.TORNADOES,
+							},
 							elixirField: {
 								actual: riddle.elixirFields,
 								expected: EXPECTED.ELIXIRS,
-							},
-							tornadoField: {
-								actual: riddle.tornadoKicks,
-								expected: EXPECTED.TORNADOES,
 							},
 							shoulderTackle: {
 								actual: riddle.tackles,
