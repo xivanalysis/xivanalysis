@@ -580,8 +580,6 @@
   "mnk.twinsnakes.suggestions.antman.why": "",
   "mnk.twinsnakes.suggestions.early.content": "<1/>の高火力をロスすることになるので、効果時間切れ前にむやみに更新することは避けましょう。",
   "mnk.twinsnakes.suggestions.early.why": "{0, plural, other {# 回}} 早すぎる更新により、{lostTruePotency} 威力が失った",
-  "mnk.twinsnakes.suggestions.late.content": "スキル回しの3回目ずつのコンボには、前のGCDのバフの効果が落ちなければ、<0/>の効果が更新されたら、威力があがるわけです。注意：<1/>のスタックが４つの場合のみです。",
-  "mnk.twinsnakes.suggestions.late.why": "更新が遅いため、{0, plural, other {#}}GCDがなくなりました。",
   "mnk.twinsnakes.suggestions.toocalm.content": "<1/>を使う前、先に<0/>の効果を追加してください。",
   "mnk.twinsnakes.suggestions.toocalm.why": "<0/>は<1/>の効果を {0, plural, other {#}}回更新できませんでした。",
   "nin.about.description": "<0>おーい、忍者さんたち！ モンクや黒の友達に軽んじられていますか？それを飽きていますよね。 そして、固定にきみも魅力じゃなくて、だまし討ちが持ってるから選べられるのも嫌ですよね。じゃ、心配しないで！。私達は手伝います！ 自分のログが<1>この色</1> から <2>この色</2>になるように頑張りましょう！</0><3>忍者はスキル回しを厳しく従う職じゃなくて、状態に合わせる職なので、基本的な提案が現れますね。 もしかして、問題がいっぱい出たら、パニックせずに一つずつ乗り越えましょう！</3>",

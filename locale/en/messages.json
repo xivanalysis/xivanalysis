@@ -580,8 +580,6 @@
   "mnk.twinsnakes.suggestions.antman.why": "{0, plural, one {# use} other {# uses}} of <0/> failed to refresh <1/>.",
   "mnk.twinsnakes.suggestions.early.content": "Avoid refreshing <0/> signficantly before its expiration as you're losing uses of the higher potency <1/>.",
   "mnk.twinsnakes.suggestions.early.why": "{lostTruePotency} potency lost to {0, plural, one {# early refresh} other {# early refreshes}}.",
-  "mnk.twinsnakes.suggestions.late.content": "Refreshing <0/> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it. This only works under 4 stacks of <1/>.",
-  "mnk.twinsnakes.suggestions.late.why": "{0, plural, one {# GCD was} other {# GCDs were}} lost to delayed refreshing.",
   "mnk.twinsnakes.suggestions.toocalm.content": "Try to get <0/> up before using <1/> to take advantage of its free refresh.",
   "mnk.twinsnakes.suggestions.toocalm.why": "{0, plural, one {# use} other {# uses}} of <0/> failed to refresh <1/>.",
   "nin.about.description": "<0>Hey there, NIN friend! Are you tired of being looked down on by your MNK and BLM peers? Wish your raid team would stop using you for your Trick Attacks and appreciate you for who you really are? Well look no further! We'll help you bring yourself all the way up from <1>this</1> to <2>this</2>*!</0><3>As NIN tends to be more fluid than rotational, this module contains mostly suggestions for ways you can improve your gameplay, rather than strict checklist requirements. If you see a lot, don't panic - just tackle them one at a time.</3><4>*Results not guaranteed. Offer void where prohibited. Please don't sue us.</4>",

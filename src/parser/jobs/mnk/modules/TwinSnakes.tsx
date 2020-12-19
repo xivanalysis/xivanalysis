@@ -8,17 +8,13 @@ import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import Enemies from 'parser/core/modules/Enemies'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
-// Expected time to drop Twin (basically part way thru previous GCD)
-const TWIN_SNAKES_CYCLE_BUFFER = 3000
-
-// Expected GCDs between TS for looping combos
+// Expected GCDs between TS
 const TWIN_SNAKES_CYCLE_LENGTH = 5
 
 class TwinState {
@@ -47,7 +43,6 @@ export default class TwinSnakes extends Module {
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
-	@dependency private enemies!: Enemies
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private entityStatuses!: EntityStatuses
@@ -61,7 +56,7 @@ export default class TwinSnakes extends Module {
 	// Antman used without TS active
 	private failedAnts: number = 0
 
-	// Clipping the duration, or dropping for more than TS itself
+	// Clipping the duration
 	private earlySnakes: number = 0
 	private lateSnakes: number = 0
 
@@ -127,16 +122,6 @@ export default class TwinSnakes extends Module {
 	// Only happens from TS itself
 	// This might be better checking if the GCD before it was buffed but ehh
 	private onGain(event: BuffEvent): void {
-		if (this.twinSnake?.end) {
-			const unbuffedGcds = this.gcdsSinceTS - this.twinSnake.gcds
-			const unbuffedTime = event.timestamp - this.twinSnake.end
-			// TODO: some kind of downtime check
-			if (unbuffedGcds > 1 || unbuffedTime > TWIN_SNAKES_CYCLE_BUFFER) {
-				this.lateSnakes++
-			}
-		}
-
-		// Start a new window
 		this.twinSnake = new TwinState(event.timestamp, this.data)
 		this.gcdsSinceTS = 0
 	}
@@ -181,22 +166,6 @@ export default class TwinSnakes extends Module {
 			value: this.earlySnakes,
 			why: <Trans id="mnk.twinsnakes.suggestions.early.why">
 				{lostTruePotency} potency lost to <Plural value={this.earlySnakes} one="# early refresh" other="# early refreshes" />.
-			</Trans>,
-		}))
-
-		this.suggestions.add(new TieredSuggestion({
-			icon: this.data.actions.TWIN_SNAKES.icon,
-			content: <Trans id="mnk.twinsnakes.suggestions.late.content">
-				Refreshing <ActionLink {...this.data.actions.TWIN_SNAKES} /> on every third combo is a potency gain but only when you don't drop the buff for the GCD before it.
-				This only works under 4 stacks of <StatusLink {...this.data.statuses.GREASED_LIGHTNING} />.
-			</Trans>,
-			tiers: {
-				1: SEVERITY.MEDIUM,
-				4: SEVERITY.MAJOR,
-			},
-			value: this.lateSnakes,
-			why: <Trans id="mnk.twinsnakes.suggestions.late.why">
-				<Plural value={this.lateSnakes} one="# GCD was" other="# GCDs were" /> lost to delayed refreshing.
 			</Trans>,
 		}))
 
