@@ -4,6 +4,14 @@ import CoreCooldowns from 'parser/core/modules/Cooldowns'
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [
 		{
+			name: 'Chakras',
+			merge: true,
+			actions: [
+				ACTIONS.THE_FORBIDDEN_CHAKRA.id,
+				ACTIONS.ENLIGHTENMENT.id,
+			],
+		},
+		{
 			name: 'Fists',
 			merge: true,
 			actions: [
@@ -12,20 +20,12 @@ export default class Cooldowns extends CoreCooldowns {
 				ACTIONS.FISTS_OF_EARTH.id,
 			],
 		},
-		ACTIONS.PERFECT_BALANCE.id,
 		ACTIONS.RIDDLE_OF_FIRE.id,
 		ACTIONS.BROTHERHOOD.id,
-		{
-			name: 'Chakras',
-			merge: true,
-			actions: [
-				ACTIONS.THE_FORBIDDEN_CHAKRA.id,
-				ACTIONS.ENLIGHTENMENT.id,
-			],
-		},
+		ACTIONS.PERFECT_BALANCE.id,
 		ACTIONS.ELIXIR_FIELD.id,
-		ACTIONS.SHOULDER_TACKLE.id,
 		ACTIONS.TORNADO_KICK.id,
+		ACTIONS.SHOULDER_TACKLE.id,
 		ACTIONS.ANATMAN.id,
 		ACTIONS.RIDDLE_OF_EARTH.id,
 		ACTIONS.MANTRA.id,
