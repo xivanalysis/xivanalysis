@@ -8,8 +8,9 @@ import ACTIONS from 'data/ACTIONS'
 import {BuffEvent, BuffStackEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
@@ -21,7 +22,6 @@ const SUGGESTION_TIERS = {
 // Naive ding on bad actions, technically some AoE or normal GCD actions are bad too, adjust if people actually care
 const PB_BAD_ACTIONS = [
 	ACTIONS.FORM_SHIFT.id,
-	ACTIONS.MEDITATION.id,
 	ACTIONS.ANATMAN.id,
 ]
 
@@ -36,6 +36,7 @@ export default class PerfectBalance extends Module {
 	static title = t('mnk.pb.title')`Perfect Balance`
 	static displayOrder = DISPLAY_ORDER.PERFECT_BALANCE
 
+	@dependency private combatants!: Combatants
 	@dependency private data!: Data
 	@dependency private suggestions!: Suggestions
 
@@ -44,7 +45,7 @@ export default class PerfectBalance extends Module {
 
 	init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
-		this.addEventHook('applybuffstack', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onStacc)
+		this.addEventHook('applybuffstack', {to: 'player', abilityId: PB_BAD_ACTIONS}, this.onStacc)
 		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onDrop)
 		this.addEventHook('complete', this.onComplete)
 	}
@@ -60,10 +61,8 @@ export default class PerfectBalance extends Module {
 			return
 		}
 
-		if (this.current) {
-			if (PB_BAD_ACTIONS.includes(action.id)) {
-				this.current.bads++
-			}
+		if (this.current && this.combatants.selected.hasStatus(this.data.statuses.PERFECT_BALANCE.id)) {
+			this.current.bads++
 		}
 	}
 
@@ -108,15 +107,17 @@ export default class PerfectBalance extends Module {
 			</Trans>,
 		}))
 
-		this.suggestions.add(new Suggestion({
+		this.suggestions.add(new TieredSuggestion({
 			icon: this.data.actions.PERFECT_BALANCE.icon,
 			content: <Trans id="mnk.pb.suggestions.badActions.content">
-				Using <ActionLink {...this.data.actions.FORM_SHIFT} />, <ActionLink {...this.data.actions.MEDITATION} />, or <ActionLink {...this.data.actions.ANATMAN} /> inside of <StatusLink {...this.data.statuses.PERFECT_BALANCE} /> does no damage and does not change your Form.
+				Using <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> inside of <StatusLink {...this.data.statuses.PERFECT_BALANCE} /> does no damage and does not change your Form.
 			</Trans>,
-			tiers: SUGGESTION_TIERS,
+			tiers: {
+				1: SEVERITY.MINOR,
+			},
 			value: badActions,
 			why: <Trans id="mnk.pb.suggestions.badActions.why">
-				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <ActionLink {...this.data.actions.FORM_SHIFT} />, <ActionLink {...this.data.actions.MEDITATION} />, or <ActionLink {...this.data.actions.ANATMAN} /> were used during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
+				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> were used during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
 			</Trans>,
 		}))
 	}
