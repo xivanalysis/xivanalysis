@@ -32,16 +32,13 @@ const CHART_COLOURS = {
 	[STATUSES.FISTS_OF_WIND.id]: JOBS.PALADIN.colour, // only good for utility
 }
 
-// TODO: Add some shit back in here for RoFs with too few FoF idk
 const FIST_SEVERITY = {
-	FISTLESS: {
-		1: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+	DOUSED: {
+		1: SEVERITY.MAJOR,
 	},
-	// Forced disengaging is rarely more than 2 GCDs
 	FISTS_OF_EARTH: {
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MEDIUM,
+		2: SEVERITY.MAJOR,
 	},
 }
 
@@ -162,7 +159,7 @@ export default class Fists extends Module {
 				why: <Trans id="mnk.fists.suggestions.stanceless.why">
 					<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
 				</Trans>,
-				tiers: FIST_SEVERITY.FISTLESS,
+				tiers: FIST_SEVERITY.DOUSED,
 				value: this.getFistGCDCount(FISTLESS),
 			}))
 
@@ -176,6 +173,18 @@ export default class Fists extends Module {
 					<StatusLink {...this.data.statuses.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
 				</Trans>,
 				value: this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id),
+			}))
+
+			this.suggestions.add(new TieredSuggestion({
+				icon: this.data.actions.FISTS_OF_WIND.icon,
+				content: <Trans id="mnk.fists.suggestions.fow.content">
+					Using <ActionLink {...this.data.actions.FISTS_OF_WIND} /> provides no combat benefit. Try to stay in <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as possible.
+				</Trans>,
+				tiers: FIST_SEVERITY.DOUSED,
+				why: <Trans id="mnk.fists.suggestions.fow.why">
+					<StatusLink {...this.data.statuses.FISTS_OF_WIND} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
+				</Trans>,
+				value: this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id),
 			}))
 		}
 
