@@ -27,6 +27,9 @@ class Analyse extends Component {
 		legacyReport: PropTypes.object.isRequired,
 		pullId: PropTypes.string.isRequired,
 		actorId: PropTypes.string.isRequired,
+		// Should really just be "events", but I'm discriminating the name here as this
+		// entire component should be removed eventually.
+		reportFlowEvents: PropTypes.arrayOf(PropTypes.object).isRequired,
 	}
 
 	componentDidMount() {
@@ -34,7 +37,7 @@ class Analyse extends Component {
 	}
 
 	fetchEventsAndParseIfNeeded = async () => {
-		const {report, legacyReport, pullId, actorId} = this.props
+		const {report, legacyReport, pullId, actorId, reportFlowEvents} = this.props
 
 		// If we don't have everything we need, stop before we hit the api
 		const valid = legacyReport && !legacyReport.loading
@@ -51,7 +54,7 @@ class Analyse extends Component {
 			})
 
 			await conductor.configure()
-			await conductor.parse()
+			await conductor.parse({reportFlowEvents})
 		} catch (error) {
 			this.context.globalErrorStore.setGlobalError(error)
 			if (process.env.NODE_ENV === 'development') {

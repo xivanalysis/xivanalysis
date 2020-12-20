@@ -6,6 +6,7 @@ import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import Parser, {Result} from './core/Parser'
 import {Report, Pull, Actor} from 'report'
+import {Event} from 'event'
 
 export class Conductor {
 	private parser?: Parser
@@ -78,7 +79,7 @@ export class Conductor {
 		this.parser = parser
 	}
 
-	async parse() {
+	async parse({reportFlowEvents}: {reportFlowEvents: Event[]}) {
 		if (!this.parser) {
 			throw new Error('Conductor not configured.')
 		}

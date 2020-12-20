@@ -4,7 +4,7 @@ import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import type {Event} from 'legacyEvent'
+import type {Event as LegacyEvent} from 'legacyEvent'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report as LegacyReport} from 'store/report'
@@ -70,7 +70,7 @@ class Parser {
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	_fabricationQueue: Event[] = []
+	_fabricationQueue: LegacyEvent[] = []
 
 	get currentTimestamp() {
 		const start = this.eventTimeOffset
@@ -216,7 +216,7 @@ class Parser {
 	// Event handling
 	// -----
 
-	async normalise(events: Event[]) {
+	async normalise(events: LegacyEvent[]) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
 		for (const handle of this.executionOrder) {
@@ -236,7 +236,7 @@ class Parser {
 		return events
 	}
 
-	parseEvents(events: Event[]) {
+	parseEvents(events: LegacyEvent[]) {
 		// Create a copy of the module order that we'll use while parsing
 		this._triggerModules = this.executionOrder.slice(0)
 
@@ -261,7 +261,7 @@ class Parser {
 		}
 	}
 
-	private *iterateEvents(events: Event[]): Generator<Event, void, undefined> {
+	private *iterateEvents(events: LegacyEvent[]): Generator<LegacyEvent, void, undefined> {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
@@ -288,7 +288,7 @@ class Parser {
 		}
 	}
 
-	fabricateEvent(event: Event) {
+	fabricateEvent(event: LegacyEvent) {
 		this._fabricationQueue.push(event)
 	}
 
@@ -322,7 +322,7 @@ class Parser {
 		mod: string,
 		source: 'event' | 'output',
 		error: Error,
-		event?: Event,
+		event?: LegacyEvent,
 	): [Record<string, any>, Array<[string, Error]>] {
 		const output: Record<string, any> = {}
 		const errors: Array<[string, Error]> = []
@@ -460,7 +460,7 @@ class Parser {
 		error: Error,
 		type: 'event' | 'output',
 		module: string,
-		event?: Event,
+		event?: LegacyEvent,
 	}) {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {

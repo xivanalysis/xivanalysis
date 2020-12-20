@@ -9,6 +9,8 @@ import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {AnalyseRouteParams} from './ReportFlow'
 import styles from './ReportFlow.module.css'
+import {Report} from 'report'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
@@ -60,32 +62,39 @@ export function Analyse({reportStore}: AnalyseProps) {
 
 	const legacyReport = report.meta
 
-	return <>
-		<LegacyAnalyse
+	return (
+		<AnalyseEvents
+			reportStore={reportStore}
 			report={report}
-			legacyReport={legacyReport}
-			pullId={pullId}
-			actorId={actorId}
 		/>
-	</>
+	)
 }
 
-// DEBUG!
-// This component _intentionally_ does nothing with the retrieved data. We're
-// running this baby in prod to catch potential adaption errors before I try
-// to start wiring them into the parser itself.
-function NewEventAdaptionDryRun({reportStore, pullId, actorId}: {reportStore: ReportStore, pullId: string, actorId: string}) {
-	const [events, setEvents] = React.useState<Event[]>([])
+interface AnalyseEventsProps {
+	reportStore: ReportStore
+	report: Report
+}
+
+function AnalyseEvents({report, reportStore}: AnalyseEventsProps) {
+	const {pullId, actorId} = useParams<AnalyseRouteParams>()
+
+	// We have a definitive report that's ready to go - fetch the events and start the analysis
+	const [events, setEvents] = React.useState<Event[]>()
 	React.useEffect(() => {
 		reportStore.fetchEvents(pullId, actorId).then(setEvents)
 	}, [pullId, actorId])
 
-	if (events.length > 0) {
-		console.info(`Adaption dry run complete, recieved ${events.length} events.`)
-		if (process.env.NODE_ENV === 'development') {
-			console.info('events:', events)
-		}
+	if (events == null) {
+		return <AnalysisLoader/>
 	}
 
-	return null
+	return (
+		<LegacyAnalyse
+			report={report}
+			legacyReport={report.meta}
+			pullId={pullId}
+			actorId={actorId}
+			reportFlowEvents={events}
+		/>
+	)
 }

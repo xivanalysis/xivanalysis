@@ -1,6 +1,6 @@
 import React, {ReactNode, useCallback} from 'react'
 import {ActorListRouteParams} from './ReportFlow'
-import {useRouteMatch, Link} from 'react-router-dom'
+import {useRouteMatch, Link, useParams} from 'react-router-dom'
 import {ReportStore} from 'reportSources'
 import {Message, Segment} from 'akkd'
 import {Trans} from '@lingui/react'
@@ -30,7 +30,7 @@ export interface ActorListProps {
 }
 
 export function ActorList({reportStore}: ActorListProps) {
-	const {params: {pullId}} = useRouteMatch<ActorListRouteParams>()
+	const {pullId} = useParams<ActorListRouteParams>()
 
 	const onRefreshPulls = useCallback(
 		() => reportStore.requestPulls({bypassCache: true}),
