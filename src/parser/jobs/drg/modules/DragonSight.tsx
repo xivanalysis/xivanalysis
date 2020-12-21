@@ -9,6 +9,8 @@ import {SEVERITY} from 'parser/core/modules/Suggestions'
 import STATUSES from 'data/STATUSES'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {DeathEvent} from 'fflogs'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
+import {isDefined} from 'utilities'
 
 // give it a gcd for marking as truncated window
 const SHORT_WINDOW_BUFFER: number = 2500
@@ -29,9 +31,7 @@ export default class DragonSight extends BuffWindowModule {
 	buffStatus = STATUSES.RIGHT_EYE
 	secondaryBuffStatus = STATUSES.RIGHT_EYE_SOLO
 
-	protected rotationTableNotesColumnHeader = <Trans id="drg.ds.notes.header">Short Window Cause</Trans>
-
-	private deathTimes: number[] = []
+	deathTimes: number[] = []
 
 	expectedGCDs = {
 		expectedPerWindow: 8,
@@ -113,11 +113,34 @@ export default class DragonSight extends BuffWindowModule {
 		return 0
 	}
 
+	// adjust expected tracked gcds for partner dying
+	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
+			return -1
+		}
+
+		return 0
+	}
+
+	// adjust highlighting for partner dying
+	// if partner dies, we reduce expected to 0 but still highlight a 0 in the table
+	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction) {
+		if (this.buffTargetDied(buffWindow) === SHORT_WINDOW_FAULT.PARTNER) {
+			return (actual: number, expected?: number) => {
+				if (!isDefined(expected) || actual <= expected) {
+					return RotationTargetOutcome.NEGATIVE
+				} else {
+					return RotationTargetOutcome.POSITIVE
+				}
+			}
+		}
+	}
+
 	// check for a truncated window if not rushing, which would indicate that the tether partner (or the DRG) died
 	protected getBuffWindowNotes(buffWindow: BuffWindowState): JSX.Element | undefined {
 		const fault = this.buffTargetDied(buffWindow)
 		if (fault === SHORT_WINDOW_FAULT.PARTNER) {
-			return <Trans id="drg.ds.notes.partnerdead">Partner Died</Trans>
+			return <Trans id="drg.ds.notes.partnerdied">Partner Died</Trans>
 		}
 		else if (fault === SHORT_WINDOW_FAULT.DRG) {
 			return <Trans id="drg.ds.notes.drgdied">You Died</Trans>
@@ -132,16 +155,19 @@ export default class DragonSight extends BuffWindowModule {
 	private buffTargetDied(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
 
-		// rushing, not due to deaths
-		if (windowDurationMillis >= fightTimeRemaining) {
+		// first check if the window would go past the end, and then check if the actual buff duration was
+		// shorter than expected
+		if (windowDurationMillis >= fightTimeRemaining && actualWindowDuration < fightTimeRemaining) {
 			return SHORT_WINDOW_FAULT.NONE
 		}
 
 		// if the window duration does not match the actual time (within a reasonable threshold)
 		// mark it
-		const actualWindowDuration = (buffWindow?.end ?? buffWindow.start) - buffWindow.start
 		if (actualWindowDuration < (windowDurationMillis - SHORT_WINDOW_BUFFER)) {
+			this.rotationTableNotesColumnHeader = <Trans id="drg.ds.notes.header">Short Window Cause</Trans>
+
 			// ok now check to see if a player death happened within the expected window.
 			const playerDeath = this.deathTimes.filter(deathTime => {
 				// check if time is within reasonable distance of the window end
