@@ -18,6 +18,7 @@ import {formatDuration} from 'utilities'
 import {Report, Pull, Actor} from 'report'
 import {Injectable} from './Injectable'
 import {Analyser} from './Analyser'
+import {Event} from 'event'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -236,32 +237,46 @@ class Parser {
 		return events
 	}
 
-	parseEvents(events: LegacyEvent[]) {
-		// Create a copy of the module order that we'll use while parsing
+	parseEvents(legacyEvents: LegacyEvent[]) {
+		// Required for legacy execution.
+		// TODO: Maybe we should just reuse the trigger system for new too?
 		this._triggerModules = this.executionOrder.slice(0)
 
-		// Loop & trigger all the events & fabrications
-		for (const event of this.iterateEvents(events)) {
-			// TODO: Do I need to keep a history?
-			const moduleErrors = this.dispatcher.dispatch(event, this._triggerModules)
+		const xivaIterator = this.iterateXivaEvents([])[Symbol.iterator]()
+		const legacyIterator = this.iterateLegacyEvents(legacyEvents)[Symbol.iterator]()
 
-			for (const handle in moduleErrors) {
-				if (!moduleErrors.hasOwnProperty(handle)) { continue }
-				const error = moduleErrors[handle]
+		let xivaResult = xivaIterator.next()
+		let legacyResult = legacyIterator.next()
 
-				this.captureError({
-					error,
-					type: 'event',
-					module: handle,
-					event,
-				})
+		while (!xivaResult.done || !legacyResult.done) {
+			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
+			const legacyTimestamp = legacyResult.done ? Infinity : legacyResult.value.timestamp
 
-				this._setModuleError(handle, error)
+			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
+			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
+				this.dispatchXivaEvent(xivaResult.value)
+				xivaResult = xivaIterator.next()
+			} else if (!legacyResult.done && legacyTimestamp < xivaTimestamp) {
+				this.dispatchLegacyEvent(legacyResult.value)
+				legacyResult = legacyIterator.next()
+			} else {
+				throw new Error('Impossible condition in event interleaving.')
 			}
 		}
 	}
 
-	private *iterateEvents(events: LegacyEvent[]): Generator<LegacyEvent, void, undefined> {
+	private iterateXivaEvents(events: Event[]): Iterable<Event> {
+		// TODO: Do we want start/end events as well?
+		// TODO: Work out how to interlace events. Will need tests, big time
+		// Fabrication for new events?
+		return events
+	}
+
+	private dispatchXivaEvent(event: Event) {
+		throw new Error('TODO')
+	}
+
+	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
@@ -285,6 +300,24 @@ class Parser {
 		yield {
 			type: 'complete',
 			timestamp: this.fight.end_time,
+		}
+	}
+
+	private dispatchLegacyEvent(event: LegacyEvent) {
+		const moduleErrors = this.dispatcher.dispatch(event, this._triggerModules)
+
+		for (const handle in moduleErrors) {
+			if (!moduleErrors.hasOwnProperty(handle)) { continue }
+			const error = moduleErrors[handle]
+
+			this.captureError({
+				error,
+				type: 'event',
+				module: handle,
+				event,
+			})
+
+			this._setModuleError(handle, error)
 		}
 	}
 
