@@ -5,7 +5,7 @@ import {Event} from 'legacyEvent'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {ensureArray} from 'utilities'
-import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'
+import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
 import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
 import Parser from './Parser'
 
@@ -165,7 +165,7 @@ export default class Module extends Injectable {
 			callback: cb.bind(this),
 		}))
 
-		hooks.forEach(hook => this.parser.dispatcher.addEventHook(hook))
+		hooks.forEach(hook => this.parser.legacyDispatcher.addEventHook(hook))
 
 		return hooks
 	}
@@ -206,7 +206,7 @@ export default class Module extends Injectable {
 
 	/** Remove a previously added event hook. */
 	protected removeEventHook(hooks: Array<EventHook<any>>) {
-		hooks.forEach(hook => this.parser.dispatcher.removeEventHook(hook))
+		hooks.forEach(hook => this.parser.legacyDispatcher.removeEventHook(hook))
 	}
 
 	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. */
@@ -216,13 +216,13 @@ export default class Module extends Injectable {
 			module: (this.constructor as typeof Module).handle,
 			callback: cb.bind(this),
 		}
-		this.parser.dispatcher.addTimestampHook(hook)
+		this.parser.legacyDispatcher.addTimestampHook(hook)
 		return hook
 	}
 
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
-		this.parser.dispatcher.removeTimestampHook(hook)
+		this.parser.legacyDispatcher.removeTimestampHook(hook)
 	}
 
 	/**

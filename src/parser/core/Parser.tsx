@@ -10,7 +10,7 @@ import React from 'react'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
 import {extractErrorContext, isDefined} from 'utilities'
-import {Dispatcher} from './Dispatcher'
+import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
@@ -52,7 +52,7 @@ class Parser {
 	// -----
 	// Properties
 	// -----
-	readonly dispatcher: Dispatcher
+	readonly legacyDispatcher: LegacyDispatcher
 
 	readonly report: LegacyReport
 	readonly fight: Fight
@@ -76,7 +76,7 @@ class Parser {
 	get currentTimestamp() {
 		const start = this.eventTimeOffset
 		const end = start + this.pull.duration
-		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
+		return Math.min(end, Math.max(start, this.legacyDispatcher.timestamp))
 	}
 
 	get currentDuration() {
@@ -125,9 +125,9 @@ class Parser {
 		pull: Pull,
 		actor: Actor,
 
-		dispatcher?: Dispatcher,
+		legacyDispatcher?: LegacyDispatcher,
 	}) {
-		this.dispatcher = opts.dispatcher ?? new Dispatcher()
+		this.legacyDispatcher = opts.legacyDispatcher ?? new LegacyDispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
@@ -304,7 +304,7 @@ class Parser {
 	}
 
 	private dispatchLegacyEvent(event: LegacyEvent) {
-		const moduleErrors = this.dispatcher.dispatch(event, this._triggerModules)
+		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
 
 		for (const handle in moduleErrors) {
 			if (!moduleErrors.hasOwnProperty(handle)) { continue }

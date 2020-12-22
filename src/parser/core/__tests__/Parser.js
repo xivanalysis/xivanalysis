@@ -1,11 +1,11 @@
 import Module from '../Module'
 import Parser from '../Parser'
 import {Meta} from '../Meta'
-import {Dispatcher} from '../Dispatcher'
+import {LegacyDispatcher} from '../LegacyDispatcher'
 import {GameEdition} from 'data/PATCHES'
 import {Team} from 'report'
 
-jest.mock('../Dispatcher')
+jest.mock('../LegacyDispatcher')
 
 /* eslint-disable @xivanalysis/no-unused-dependencies, no-magic-numbers */
 
@@ -87,7 +87,7 @@ const buildParser = (modules = []) => new Parser({
 	pull,
 	actor,
 
-	dispatcher: new Dispatcher(),
+	legacyDispatcher: new LegacyDispatcher(),
 })
 
 describe('Parser', () => {
@@ -95,9 +95,9 @@ describe('Parser', () => {
 	let dispatcher
 
 	beforeEach(() => {
-		Dispatcher.mockClear()
+		LegacyDispatcher.mockClear()
 		parser = buildParser()
-		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher = LegacyDispatcher.mock.instances[0]
 	})
 
 	it('exposes metadata', () => {
@@ -155,7 +155,7 @@ describe('Parser', () => {
 
 	it('stops dispatching to modules that error', async () => {
 		parser = buildParser([BasicModule])
-		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
 		parser.parseEvents([event])
@@ -180,7 +180,7 @@ describe('Parser', () => {
 
 	it('cascades errors to dependents', async () => {
 		parser = buildParser([BasicModule, RenamedModule, DependentModule])
-		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
 		parser.parseEvents([event])
@@ -192,7 +192,7 @@ describe('Parser', () => {
 
 	it('cascades errors to dependents while renamed', async () => {
 		parser = buildParser([BasicModule, RenamedModule, DependentModule])
-		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
 		await parser.configure()
 		parser.parseEvents([event])

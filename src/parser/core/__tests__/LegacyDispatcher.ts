@@ -1,4 +1,4 @@
-import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
+import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 import {DeathEvent} from 'fflogs'
 
 /* tslint:disable:no-magic-numbers */
@@ -14,13 +14,13 @@ const event: DeathEvent = {
 }
 
 describe('Dispatcher', () => {
-	let dispatcher: Dispatcher
+	let dispatcher: LegacyDispatcher
 	let callback: jest.Mock
 	let eventHook: EventHook<DeathEvent>
 	let timestampHook: TimestampHook
 
 	beforeEach(() => {
-		dispatcher = new Dispatcher()
+		dispatcher = new LegacyDispatcher()
 		callback = jest.fn()
 		eventHook = {
 			event: event.type,

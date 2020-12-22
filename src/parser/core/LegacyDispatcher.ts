@@ -31,7 +31,7 @@ export interface TimestampHook {
 
 type ModuleErrors = Record<ModuleHandle, Error>
 
-export class Dispatcher {
+export class LegacyDispatcher {
 	private _timestamp = 0
 
 	/** The timestamp of the last hook executed. */
