@@ -19,6 +19,7 @@ import {Report, Pull, Actor} from 'report'
 import {Injectable} from './Injectable'
 import {Analyser} from './Analyser'
 import {Event} from 'event'
+import {Dispatcher} from './Dispatcher'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -52,6 +53,7 @@ class Parser {
 	// -----
 	// Properties
 	// -----
+	readonly dispatcher: Dispatcher
 	readonly legacyDispatcher: LegacyDispatcher
 
 	readonly report: LegacyReport
@@ -76,6 +78,7 @@ class Parser {
 	get currentTimestamp() {
 		const start = this.eventTimeOffset
 		const end = start + this.pull.duration
+		// TODO: use max of dispatch timestamps?
 		return Math.min(end, Math.max(start, this.legacyDispatcher.timestamp))
 	}
 
@@ -125,8 +128,10 @@ class Parser {
 		pull: Pull,
 		actor: Actor,
 
+		dispatcher?: Dispatcher
 		legacyDispatcher?: LegacyDispatcher,
 	}) {
+		this.dispatcher = opts.dispatcher ?? new Dispatcher()
 		this.legacyDispatcher = opts.legacyDispatcher ?? new LegacyDispatcher()
 
 		this.meta = opts.meta
@@ -273,13 +278,13 @@ class Parser {
 
 	private iterateXivaEvents(events: Event[]): Iterable<Event> {
 		// TODO: Do we want start/end events as well?
-		// TODO: Work out how to interlace events. Will need tests, big time
 		// Fabrication for new events?
 		return events
 	}
 
 	private dispatchXivaEvent(event: Event) {
-		throw new Error('TODO')
+		this.dispatcher.dispatch(event, this._triggerModules)
+		// TODO: Error handling?
 	}
 
 	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
