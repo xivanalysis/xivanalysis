@@ -12,7 +12,7 @@ export function dependency(target: Injectable, prop: string) {
 	// of it's contents if this isn't here.
 	const constructorDependencies = constructor.dependencies
 
-	// Make sure we're not modifying every single module
+	// Make sure we're not modifying every single instance
 	if (!constructor.hasOwnProperty('dependencies')) {
 		constructor.dependencies = [...constructorDependencies]
 	}
@@ -23,9 +23,9 @@ export function dependency(target: Injectable, prop: string) {
 		return
 	}
 
-	// Check that the dep is actually a module
+	// Check that the dep is actually an injectable
 	if (!Injectable.isPrototypeOf(dependency)) {
-		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Module\`, got \`${dependency.name}\`.`)
+		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Injectable\`, got \`${dependency.name}\`.`)
 	}
 
 	constructor.dependencies.push({
@@ -37,7 +37,7 @@ export function dependency(target: Injectable, prop: string) {
 /**
  * DO NOT USE OR YOU WILL BE FIRED
  * Totally spit in the face of the entire dependency system by forcing it
- * to execute the decorated module before the module passed as an argument.
+ * to execute the decorated injectable before the module passed as an argument.
  * If you have to think whether you need this or not, you don't need it.
  */
 export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Injectable) =>
