@@ -79,7 +79,8 @@ class Parser {
 		const start = this.eventTimeOffset
 		const end = start + this.pull.duration
 		// TODO: use max of dispatch timestamps?
-		return Math.min(end, Math.max(start, this.legacyDispatcher.timestamp))
+		const timestamp = Math.max(this.dispatcher.timestamp, this.legacyDispatcher.timestamp)
+		return Math.min(end, Math.max(start, timestamp))
 	}
 
 	get currentDuration() {

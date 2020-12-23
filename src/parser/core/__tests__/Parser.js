@@ -111,9 +111,11 @@ describe('Parser', () => {
 		parser = buildParser()
 
 		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher.timestamp = 0
 		dispatcher.dispatch.mockReturnValue([])
 
 		legacyDispatcher = LegacyDispatcher.mock.instances[0]
+		legacyDispatcher.timestamp = 0
 	})
 
 	it('exposes metadata', () => {
@@ -124,11 +126,13 @@ describe('Parser', () => {
 	})
 
 	it('starts at beginning of fight', () => {
+		dispatcher.timestamp = -Infinity
 		legacyDispatcher.timestamp = -Infinity
 		expect(parser.currentTimestamp).toBe(fight.start_time)
 	})
 
 	it('does not exceed fight end time', () => {
+		dispatcher.timestamp = Infinity
 		legacyDispatcher.timestamp = Infinity
 		expect(parser.currentTimestamp).toBe(fight.end_time)
 		expect(parser.fightDuration).toBe(fight.end_time - fight.start_time)
@@ -240,32 +244,48 @@ describe('Parser', () => {
 			name: 'equal timestamp',
 			events: [{timestamp: 50, type: '__rfEvent'}],
 			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
-			expected: ['init', '__rfEvent', '__lEvent', 'complete'],
+			expected: {
+				type: ['init', '__rfEvent', '__lEvent', 'complete'],
+				timestamp: [0, 50, 50, 100],
+			},
 		}, {
 			name: 'flow first',
 			events: [{timestamp: -100, type: '__rfEvent'}],
 			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
-			expected: ['__rfEvent', 'init', '__lEvent', 'complete'],
+			expected: {
+				type: ['__rfEvent', 'init', '__lEvent', 'complete'],
+				timestamp: [0, 0, 50, 100],
+			},
 		}, {
 			name: 'flow last',
 			events: [{timestamp: 200, type: '__rfEvent'}],
 			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
-			expected: ['init', '__lEvent', 'complete', '__rfEvent'],
+			expected: {
+				type: ['init', '__lEvent', 'complete', '__rfEvent'],
+				timestamp: [0, 50, 100, 100],
+			},
 		}, {
 			name: 'no flow',
 			events: [],
 			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
-			expected: ['init', '__lEvent', 'complete'],
+			expected: {
+				type: ['init', '__lEvent', 'complete'],
+				timestamp: [0, 50, 100],
+			},
 		}, {
 			name: 'no legacy',
 			events: [{timestamp: 50, type: '__rfEvent'}],
 			legacyEvents: [],
-			expected: ['init', '__rfEvent', 'complete'],
+			expected: {
+				type: ['init', '__rfEvent', 'complete'],
+				timestamp: [0, 50,100],
+			},
 		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
 			const dispatchedEvents = []
 
 			function mockDispatch(event) {
-				dispatchedEvents.push(event)
+				this.timestamp = event.timestamp
+				dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
 				return []
 			}
 			dispatcher.dispatch.mockImplementation(mockDispatch)
@@ -277,7 +297,8 @@ describe('Parser', () => {
 				legacyEvents: opts.legacyEvents
 			})
 
-			expect(dispatchedEvents.map(event => event.type)).toEqual(opts.expected)
+			expect(dispatchedEvents.map(({event}) => event.type)).toEqual(opts.expected.type)
+			expect(dispatchedEvents.map(({timestamp}) => timestamp)).toEqual(opts.expected.timestamp)
 		}))
 	})
 })
