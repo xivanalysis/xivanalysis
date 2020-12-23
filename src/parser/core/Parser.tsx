@@ -237,12 +237,18 @@ class Parser {
 		return events
 	}
 
-	parseEvents(legacyEvents: LegacyEvent[]) {
+	parseEvents({
+		events,
+		legacyEvents,
+	}: {
+		events: Event[],
+		legacyEvents: LegacyEvent[],
+	}) {
 		// Required for legacy execution.
 		// TODO: Maybe we should just reuse the trigger system for new too?
 		this._triggerModules = this.executionOrder.slice(0)
 
-		const xivaIterator = this.iterateXivaEvents([])[Symbol.iterator]()
+		const xivaIterator = this.iterateXivaEvents(events)[Symbol.iterator]()
 		const legacyIterator = this.iterateLegacyEvents(legacyEvents)[Symbol.iterator]()
 
 		let xivaResult = xivaIterator.next()

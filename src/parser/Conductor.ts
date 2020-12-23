@@ -96,8 +96,12 @@ export class Conductor {
 
 		// Normalise & parse
 		// TODO: Batching?
+		// TODO: Normalise report flow?
 		const normalisedEvents = await this.parser.normalise(events)
-		this.parser.parseEvents(normalisedEvents)
+		this.parser.parseEvents({
+			events: reportFlowEvents,
+			legacyEvents: normalisedEvents,
+		})
 	}
 
 	getResults() {

@@ -144,7 +144,7 @@ describe('Parser', () => {
 
 	it('dispatches events', async () => {
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
 		expect(dispatcher.dispatch).toHaveBeenCalledTimes(3)
 		const {calls} = dispatcher.dispatch.mock
@@ -158,7 +158,7 @@ describe('Parser', () => {
 		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_basic'])
@@ -183,7 +183,7 @@ describe('Parser', () => {
 		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
@@ -195,7 +195,7 @@ describe('Parser', () => {
 		dispatcher = LegacyDispatcher.mock.instances[1]
 		dispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
