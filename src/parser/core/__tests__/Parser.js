@@ -5,6 +5,7 @@ import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Dispatcher} from '../Dispatcher'
 import {GameEdition} from 'data/PATCHES'
 import {Team} from 'report'
+import {Analyser} from '../Analyser'
 
 jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')
@@ -25,6 +26,11 @@ class DependentModule extends Module {
 		'test_basic',
 		{handle: 'test_renamed', prop: 'renamed'},
 	]
+}
+
+// Testing analysers
+class BasicAnalyser extends Analyser {
+	static handle = 'basic_analyser'
 }
 
 // Bunch of basic testing data
@@ -101,8 +107,12 @@ describe('Parser', () => {
 	beforeEach(() => {
 		Dispatcher.mockClear()
 		LegacyDispatcher.mockClear()
+
 		parser = buildParser()
+
 		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher.dispatch.mockReturnValue([])
+
 		legacyDispatcher = LegacyDispatcher.mock.instances[0]
 	})
 
@@ -168,6 +178,23 @@ describe('Parser', () => {
 
 		const {calls} = legacyDispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_basic'])
+		expect(calls[1][1]).toEqual([])
+	})
+
+	it('stops dispatching to analysers that error', async () => {
+		parser = buildParser([BasicAnalyser])
+		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher.dispatch
+			.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
+			.mockReturnValueOnce([])
+		await parser.configure()
+		parser.parseEvents({events: [
+			{type: 'test', timestamp: 50},
+			{type: 'test', timestamp: 60},
+		], legacyEvents: []})
+
+		const {calls} = dispatcher.dispatch.mock
+		expect(calls[0][1]).toEqual(['basic_analyser'])
 		expect(calls[1][1]).toEqual([])
 	})
 
@@ -237,8 +264,12 @@ describe('Parser', () => {
 		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
 			const dispatchedEvents = []
 
-			dispatcher.dispatch.mockImplementation(event => { dispatchedEvents.push(event) })
-			legacyDispatcher.dispatch.mockImplementation(event => { dispatchedEvents.push(event) })
+			function mockDispatch(event) {
+				dispatchedEvents.push(event)
+				return []
+			}
+			dispatcher.dispatch.mockImplementation(mockDispatch)
+			legacyDispatcher.dispatch.mockImplementation(mockDispatch)
 
 			await parser.configure()
 			parser.parseEvents({

@@ -283,8 +283,18 @@ class Parser {
 	}
 
 	private dispatchXivaEvent(event: Event) {
-		this.dispatcher.dispatch(event, this._triggerModules)
-		// TODO: Error handling?
+		const issues = this.dispatcher.dispatch(event, this._triggerModules)
+
+		for (const {handle, error} of issues) {
+			this.captureError({
+				error,
+				type: 'event',
+				module: handle,
+				event,
+			})
+
+			this._setModuleError(handle, error)
+		}
 	}
 
 	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
@@ -504,7 +514,7 @@ class Parser {
 		error: Error,
 		type: 'event' | 'output',
 		module: string,
-		event?: LegacyEvent,
+		event?: Event | LegacyEvent,
 	}) {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {

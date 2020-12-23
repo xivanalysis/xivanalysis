@@ -44,7 +44,7 @@ describe('Dispatcher', () => {
 	})
 
 	it('does not trigger non-matching hooks', () => {
-		// @ts-ignore
+		// @ts-expect-error
 		dispatcher.addEventHook({...eventHook, event: '__unused'})
 
 		dispatcher.dispatch(event, ['test'])

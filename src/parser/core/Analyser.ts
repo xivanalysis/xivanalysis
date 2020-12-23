@@ -17,6 +17,9 @@ export class Analyser extends Injectable {
 		}
 	}
 
-	/** TODO DOCS */
+	/**
+	 * Called when the analyser has been successfully instantiated and configured,
+	 * before any analysis is run. This is the recommended location to configure hooks.
+	 */
 	initialise() {}
 }

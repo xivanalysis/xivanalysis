@@ -3,6 +3,16 @@ import {Injectable} from './Injectable'
 
 type Handle = (typeof Injectable)['handle']
 
+/** DOCS */
+export interface DispatchIssue {
+	handle: Handle,
+	error: Error
+}
+
 export class Dispatcher {
-	dispatch(event: Event, handles: Handle[]) {}
+	/** DOCS */
+	dispatch(event: Event, handles: Handle[]): DispatchIssue[] {
+		return []
+	}
+	}
 }
