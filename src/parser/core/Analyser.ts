@@ -13,7 +13,7 @@ export class Analyser extends Injectable {
 			.map(dependency => typeof dependency === 'string' ? dependency : dependency.handle)
 			.filter(handle => parser.container[handle] instanceof Module)
 		if (illegalDependencies.length > 0) {
-			throw new Error(`Analyzers must never depend on legacy modules. Illegal dependencies on ${analyser.handle} found: ${illegalDependencies.join(', ')}.`)
+			throw new Error(`Analyzers must never depend on legacy modules. Illegal dependencies found on ${analyser.handle}: ${illegalDependencies.join(', ')}.`)
 		}
 	}
 

@@ -19,9 +19,11 @@ describe('Analyser', () => {
 
 	it('cannot depend on legacy modules', () => {
 		class ThrowingAnalyser extends Analyser {
+			static handle = 'throwing'
 			static dependencies = ['analyser', 'module']
 		}
 
-		expect(() => new ThrowingAnalyser(parser)).toThrow('Illegal dependencies found: module')
+		expect(() => new ThrowingAnalyser(parser))
+			.toThrow('Illegal dependencies found on throwing: module')
 	})
 })
