@@ -2,7 +2,6 @@ import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 import {DeathEvent} from 'fflogs'
 
 /* tslint:disable:no-magic-numbers */
-// TODO: This file should be using @ts-expect-error, not @ts-ignore, once TS3.9 drops
 
 const event: DeathEvent = {
 	timestamp: 50,
@@ -13,7 +12,7 @@ const event: DeathEvent = {
 	targetID: 0xDEADBEEF,
 }
 
-describe('Dispatcher', () => {
+describe('LegacyDispatcher', () => {
 	let dispatcher: LegacyDispatcher
 	let callback: jest.Mock
 	let eventHook: EventHook<DeathEvent>
