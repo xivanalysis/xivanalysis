@@ -154,7 +154,7 @@ describe('LegacyDispatcher', () => {
 		const error = new Error('test error')
 		dispatcher.addTimestampHook({
 			...timestampHook,
-			callback: () => { throw error},
+			callback: () => { throw error },
 		})
 
 		const errors = dispatcher.dispatch(event, ['test'])

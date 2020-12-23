@@ -17,7 +17,7 @@ export interface EventFilter<T extends Event> {
 	execute: (event: T) => boolean
 }
 
-/** Type of callbacks on event hooks. */
+/** Callback signature for event hooks. */
 export type EventHookCallback<T extends Event> = (event: T) => void
 
 /** Configuration for an event hook. */
@@ -25,6 +25,16 @@ export interface EventHook<T extends Event> {
 	filter: EventFilter<T>
 	handle: Handle
 	callback: EventHookCallback<T>
+}
+
+/** Callback signature for timestamp hooks. */
+export type TimestampHookCallback = (opts: {timestamp: number}) => void
+
+/** Configuration for a timestamp hook */
+export interface TimestampHook {
+	timestamp: number
+	handle: Handle
+	callback: TimestampHookCallback
 }
 
 /** An issue that occured during dispatch. */
@@ -44,6 +54,9 @@ export class Dispatcher {
 
 	private eventHooks = new Map<Handle, Set<EventHook<any>>>()
 
+	// Stored nearest-last so we can use the significantly-faster pop
+	private timestampHookQueue: TimestampHook[] = []
+
 	/**
 	 * Dispatch an event.
 	 *
@@ -52,8 +65,35 @@ export class Dispatcher {
 	 * @return Array of issues that occured during dispatch.
 	 */
 	dispatch(event: Event, handles: Handle[]): DispatchIssue[] {
-		// TODO: timestamp hooks?
-		return this.dispatchEvent(event, handles)
+		return [
+			...this.dispatchTimestamp(event.timestamp, handles),
+			...this.dispatchEvent(event, handles),
+		]
+	}
+
+	private dispatchTimestamp(timestamp: number, handles: Handle[]) {
+		const issues: DispatchIssue[] = []
+
+		// Execute any timestamp hooks that are ready to execute
+		const queue = this.timestampHookQueue
+		while (queue.length > 0 && queue[queue.length - 1].timestamp <= timestamp) {
+			const hook = queue.pop()!
+
+			// If we're not trigering on this module, skip the hook. This effectively removes it.
+			// TODO: This is pretty naive, and doesn't actually respect trigger _order_.
+			//       Ideally, should be grouped by timestamp and executed in handle order.
+			if (!handles.includes(hook.handle)) { continue }
+
+			this._timestamp = hook.timestamp
+
+			try {
+				hook.callback({timestamp: hook.timestamp})
+			} catch (error) {
+				issues.push({handle: hook.handle, error})
+			}
+		}
+
+		return issues
 	}
 
 	private dispatchEvent(event: Event, handles: Handle[]) {
@@ -99,7 +139,7 @@ export class Dispatcher {
 	}
 
 	/**
-	 * Remove a registered hook, preventing it from executing further. Hook
+	 * Remove a registered event hook, preventing it from executing further. Hook
 	 * registration is checked via strict equality.
 	 *
 	 * @param hook The hook to remove.
@@ -110,5 +150,44 @@ export class Dispatcher {
 		if (handleHooks == null) { return false }
 
 		return handleHooks.delete(hook)
+	}
+
+	/**
+	 * Add a new timestamp hook. The provided callback will be executed a single
+	 * time once the dispatcher reaches the specified timestamp. Hooks for
+	 * timestamps in the past will be ignored.
+	 *
+	 * @param hook The hook to register.
+	 */
+	addTimestampHook(hook: TimestampHook) {
+		// If the hook is in the past, do nothing
+		if (hook.timestamp < this._timestamp) {
+			return
+		}
+
+		// Splice the event into the queue
+		const index = this.timestampHookQueue.findIndex(
+			queueHook => queueHook.timestamp < hook.timestamp,
+		)
+		if (index === -1) {
+			this.timestampHookQueue.push(hook)
+		} else {
+			this.timestampHookQueue.splice(index, 0, hook)
+		}
+	}
+
+	/**
+	 * Remove a registered timestamp hook, preventing it from executing. Hook
+	 * registration is checked via strict equality.
+	 *
+	 * @param hook The hook to remove.
+	 * @return `true` if the hook was removed successfully.
+	 */
+	removeTimestampHook(hook: TimestampHook): boolean {
+		const index = this.timestampHookQueue.indexOf(hook)
+		if (index === -1) { return false }
+
+		this.timestampHookQueue.splice(index, 1)
+		return true
 	}
 }
