@@ -21,7 +21,7 @@ describe('Dispatcher', () => {
 		dispatcher = new Dispatcher()
 		callback = jest.fn()
 		eventHook = {
-			filter: {execute: () => true},
+			filter: () => true,
 			handle: 'test',
 			callback,
 		}
@@ -44,7 +44,7 @@ describe('Dispatcher', () => {
 	it('does not trigger non-matching hooks', () => {
 		dispatcher.addEventHook({
 			...eventHook,
-			filter: {execute: () => false},
+			filter: () => false,
 		})
 
 		dispatcher.dispatch(event, ['test'])

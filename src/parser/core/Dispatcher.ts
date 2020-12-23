@@ -3,26 +3,12 @@ import {Injectable} from './Injectable'
 
 type Handle = (typeof Injectable)['handle']
 
-/**
- * Representation of filter object, used by the dispatcher to determine if a
- * hook should be executed.
- */
-export interface EventFilter<T extends Event> {
-	/**
-	 * Execute the filter to determine if the related hook should be executed.
-	 *
-	 * @param event The event to test against.
-	 * @return `true` for a matching filter, `false` otherwise.
-	 */
-	execute: (event: T) => boolean
-}
-
 /** Callback signature for event hooks. */
 export type EventHookCallback<T extends Event> = (event: T) => void
 
 /** Configuration for an event hook. */
 export interface EventHook<T extends Event> {
-	filter: EventFilter<T>
+	filter: (event: T) => boolean
 	handle: Handle
 	callback: EventHookCallback<T>
 }
@@ -109,7 +95,7 @@ export class Dispatcher {
 			try {
 				// Try to execute any matching hooks for the current handle
 				for (const hook of handleHooks.values()) {
-					if (!hook.filter.execute(event)) { continue }
+					if (!hook.filter(event)) { continue }
 					hook.callback(event)
 				}
 			} catch (error) {
