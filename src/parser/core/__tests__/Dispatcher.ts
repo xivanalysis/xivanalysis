@@ -1,4 +1,4 @@
-import {Events} from 'event'
+import {Event, Events} from 'event'
 import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
 
 /* tslint:disable:no-magic-numbers */
@@ -21,7 +21,7 @@ describe('Dispatcher', () => {
 		dispatcher = new Dispatcher()
 		callback = jest.fn()
 		eventHook = {
-			filter: () => true,
+			predicate: (event: Event): event is Events['action'] => true,
 			handle: 'test',
 			callback,
 		}
@@ -44,7 +44,7 @@ describe('Dispatcher', () => {
 	it('does not trigger non-matching hooks', () => {
 		dispatcher.addEventHook({
 			...eventHook,
-			filter: () => false,
+			predicate: (event: Event): event is Events['action'] => false,
 		})
 
 		dispatcher.dispatch(event, ['test'])

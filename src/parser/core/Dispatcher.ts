@@ -3,13 +3,16 @@ import {Injectable} from './Injectable'
 
 type Handle = (typeof Injectable)['handle']
 
+/** Signature of event filter predicate functions. */
+export type EventFilterPredicate<T extends Event> = (event: Event) => event is T
+
 /** Callback signature for event hooks. */
 export type EventHookCallback<T extends Event> = (event: T) => void
 
 /** Configuration for an event hook. */
 export interface EventHook<T extends Event> {
-	filter: (event: T) => boolean
 	handle: Handle
+	predicate: EventFilterPredicate<T>
 	callback: EventHookCallback<T>
 }
 
@@ -18,8 +21,8 @@ export type TimestampHookCallback = (opts: {timestamp: number}) => void
 
 /** Configuration for a timestamp hook */
 export interface TimestampHook {
-	timestamp: number
 	handle: Handle
+	timestamp: number
 	callback: TimestampHookCallback
 }
 
@@ -95,7 +98,7 @@ export class Dispatcher {
 			try {
 				// Try to execute any matching hooks for the current handle
 				for (const hook of handleHooks.values()) {
-					if (!hook.filter(event)) { continue }
+					if (!hook.predicate(event)) { continue }
 					hook.callback(event)
 				}
 			} catch (error) {
