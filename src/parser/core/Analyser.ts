@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import _ from 'lodash'
-import {EventFilterPredicate, EventHook, EventHookCallback} from './Dispatcher'
+import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
 import Module from './Module'
 import Parser from './Parser'
@@ -100,5 +100,35 @@ export class Analyser extends Injectable {
 	 */
 	protected removeEventHook<T extends Event>(hook: EventHook<T>) {
 		return this.parser.dispatcher.removeEventHook(hook)
+	}
+
+	/**
+	 * Add a new timestamp hook. The provided callback will be executed a single
+	 * time once the dispatcher reaches the specified timestamp. Hooks for
+	 * timestamps in the past will be ignored.
+	 *
+	 * @param timestamp Timestamp the callback should be called at.
+	 * @param callback Function called at the specified timestamp.
+	 * @returns Hook object. Hook objects should be considered a black box value.
+	 */
+	protected addTimestampHook(timestamp: number, callback: TimestampHookCallback): TimestampHook {
+		const hook: TimestampHook = {
+			handle: (this.constructor as typeof Analyser).handle,
+			timestamp,
+			callback,
+		}
+		this.parser.dispatcher.addTimestampHook(hook)
+		return hook
+	}
+
+	/**
+	 * Remove a registered timestamp hook, preventing it from executing. Hook
+	 * registration is checked via strict equality.
+	 *
+	 * @param hook The hook to remove.
+	 * @returns `true` if hook was removed successfully.
+	 */
+	protected removeTimestampHook(hook: TimestampHook): boolean {
+		return this.parser.dispatcher.removeTimestampHook(hook)
 	}
 }

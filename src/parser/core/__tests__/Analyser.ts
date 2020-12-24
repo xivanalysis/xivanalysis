@@ -1,6 +1,6 @@
 import {Event} from 'event'
 import {Analyser} from '../Analyser'
-import {EventHook} from '../Dispatcher'
+import {EventHook, TimestampHook} from '../Dispatcher'
 import Module from '../Module'
 import Parser from '../Parser'
 
@@ -13,6 +13,8 @@ describe('Analyser', () => {
 				dispatcher: {
 					addEventHook: jest.fn(),
 					removeEventHook: jest.fn(),
+					addTimestampHook: jest.fn(),
+					removeTimestampHook: jest.fn(),
 				},
 			}) as unknown as Parser
 			parser.container = {
@@ -35,7 +37,7 @@ describe('Analyser', () => {
 	})
 
 	describe('event hooks', () => {
-		it('registers event hooks with the dispatcher', () => {
+		it('adds event hooks to the dispatcher', () => {
 			const predicate = (event: Event): event is Event => true
 			const callback = () => {}
 
@@ -99,6 +101,49 @@ describe('Analyser', () => {
 
 			expect(partialEventPredicate({type: 'action'})).toBeTrue()
 			expect(partialEventPredicate({type: 'prepare'})).toBeFalse()
+		})
+	})
+
+	describe('timestamp hooks', () => {
+		it('adds timestamp hooks to the dispatcher', () => {
+			const timestamp = 50
+			const callback = () => {}
+
+			class TestAnalyser extends Analyser {
+				static handle = 'test'
+				test() { this.addTimestampHook(timestamp, callback) }
+			}
+
+			const analyser = new TestAnalyser(parser)
+			analyser.test()
+
+			expect(parser.dispatcher.addTimestampHook).toHaveBeenLastCalledWith({
+				handle: 'test',
+				timestamp,
+				callback,
+			})
+		})
+
+		it('removes event hooks from the dispatcher', () => {
+			const timestamp = 50
+			const callback = () => {}
+			let hook: TimestampHook
+
+			class TestAnalyser extends Analyser {
+				static handle = 'test'
+				add() { hook = this.addTimestampHook(timestamp, callback) }
+				remove() { this.removeTimestampHook(hook) }
+			}
+
+			const analyser = new TestAnalyser(parser)
+			analyser.add()
+			analyser.remove()
+
+			expect(parser.dispatcher.removeTimestampHook).toHaveBeenLastCalledWith({
+				handle: 'test',
+				timestamp,
+				callback,
+			})
 		})
 	})
 })
