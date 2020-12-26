@@ -4,6 +4,8 @@ declare namespace HomeModuleCssNamespace {
     about: string;
     background: string;
     gutter: string;
+    i18NMenu: string;
+    i18nMenu: string;
     logo: string;
     md: string;
     options: string;
