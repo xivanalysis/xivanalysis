@@ -3,6 +3,7 @@ import {Analyser} from '../Analyser'
 
 export class NewAnalyserTest extends Analyser {
 	static handle = 'newTest'
+	static debug = true
 
 	initialise() {
 		// TESTS
@@ -10,6 +11,8 @@ export class NewAnalyserTest extends Analyser {
 		// this.addEventHook({type: 'damage'}, event => {})
 		const hook = this.addEventHook({amount: 0}, event => console.log(event))
 		this.removeEventHook(hook)
+
+		this.debug('thing')
 	}
 
 	output() {

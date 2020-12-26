@@ -8,6 +8,7 @@ import {ensureArray} from 'utilities'
 import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
 import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
 import Parser from './Parser'
+import {seededColor} from 'utilities/color'
 
 export enum DISPLAY_ORDER {
 	TOP = 0,
@@ -54,17 +55,6 @@ export default class Module extends Injectable {
 	}
 	static set title(value) {
 		this._title = value
-	}
-
-	private _debugHeaderColor?: Color
-	private get debugHeaderColor() {
-		if (!this._debugHeaderColor) {
-			const handle = (this.constructor as typeof Module).handle
-			const seed = handle.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0)
-			// tslint:disable-next-line:no-magic-numbers
-			this._debugHeaderColor = Color.hsl(seed % 255, 255, 65)
-		}
-		return this._debugHeaderColor
 	}
 
 	constructor(
@@ -248,7 +238,7 @@ export default class Module extends Injectable {
 		// tslint:disable-next-line:no-console
 		console.log(
 			`[%c${module.handle}%c]`,
-			`color: ${this.debugHeaderColor}`,
+			`color: ${seededColor(module.handle)}`,
 			'color: inherit',
 			...messages,
 		)
