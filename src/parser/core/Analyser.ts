@@ -1,9 +1,14 @@
+import {MessageDescriptor} from '@lingui/core'
 import {Event} from 'event'
 import _ from 'lodash'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
-import Module from './Module'
+import Module, {DISPLAY_MODE as DisplayMode} from './Module'
 import Parser from './Parser'
+
+// This needs to be imported from the legacy module file due to dependency cycles.
+// TODO:  When Module is removed, it should be moved here, or to the parser.
+export {DisplayMode}
 
 /** Resolve F to a Partial<Event> if it is a plain string type. */
 type ResolveType<F> =
@@ -22,6 +27,29 @@ const buildFilterPredicate = <T extends Event>(filter: Partial<Event>) =>
 	_.matches(filter) as EventFilterPredicate<T>
 
 export class Analyser extends Injectable {
+	private static _title?: string | MessageDescriptor
+	/**
+	 * Title displayed above analysis output, and in the sidebar. If omitted, a
+	 * title cased version of the handle will be used.
+	 */
+	static get title() {
+		return this._title != null
+			? this._title
+			: _.startCase(this.handle)
+	}
+	static set title(value) {
+		this._title = value
+	}
+
+	/**
+	 * Value used to control the order in which output is displayed in the results
+	 * view. Lower numbers are rendered closer to the top of the page. Typical
+	 * range spans 0 - 100.
+	 */
+	static displayOrder = 50
+	/** The style of the wrapper that analysis output should be rendered in. */
+	static displayMode = DisplayMode.COLLAPSIBLE
+
 	/** The parser for the current analysis. */
 	protected readonly parser: Parser
 
@@ -47,6 +75,16 @@ export class Analyser extends Injectable {
 	 * before any analysis is run. This is the recommended location to configure hooks.
 	 */
 	initialise() {}
+
+	/**
+	 * Called at the end of an analysis run to retrieve any output that should be rendered to the
+	 * results view. Omit or return `null` to prevent the analyser from being displayed.
+	 */
+	output?(): React.ReactNode
+
+	// -----
+	// #region Hook management
+	// -----
 
 	/**
 	 * Add a new event hook. The provided callback will be executed with any
@@ -131,4 +169,8 @@ export class Analyser extends Injectable {
 	protected removeTimestampHook(hook: TimestampHook): boolean {
 		return this.parser.dispatcher.removeTimestampHook(hook)
 	}
+
+	// -----
+	// #endregion
+	// -----
 }

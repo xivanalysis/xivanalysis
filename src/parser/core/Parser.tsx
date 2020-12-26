@@ -482,10 +482,10 @@ class Parser {
 		if (injectable instanceof Analyser) {
 			const constructor = injectable.constructor as typeof Analyser
 			return {
-				name: 'TODO',
+				name: constructor.title,
 				handle: constructor.handle,
-				mode: DISPLAY_MODE.FULL,
-				order: -Infinity,
+				mode: constructor.displayMode,
+				order: constructor.displayOrder,
 				markup: null,
 			}
 		}
@@ -500,7 +500,7 @@ class Parser {
 		}
 
 		if (injectable instanceof Analyser) {
-			return <>TODO</>
+			return injectable.output?.()
 		}
 
 		const constructor = injectable.constructor as typeof Injectable

@@ -11,4 +11,8 @@ export class NewAnalyserTest extends Analyser {
 		const hook = this.addEventHook({amount: 0}, event => console.log(event))
 		this.removeEventHook(hook)
 	}
+
+	output() {
+		return 'hi'
+	}
 }

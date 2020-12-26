@@ -64,6 +64,7 @@ export class Injectable {
 	static dependencies: Array<string | MappedDependency> = []
 
 	private static _handle: string
+	/** Name to be used throughout the dependency system to refer to this injectable. */
 	static get handle() {
 		if (!this._handle) {
 			throw new Error(`Injectable \`${this.name}\` does not have an explicitly set handle. You can use \`static handle = '${this.name.toLowerCase()}'\` to specify a handle.`)
