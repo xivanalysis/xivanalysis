@@ -48,7 +48,7 @@ export class AdditionalEvents extends Module {
 		// Request the new events
 		const filter = `((${registeredQueries.join(') or (')})) and ${playerFilter}`
 		const newEvents = await getFflogsEvents(
-			this.parser.report.code,
+			this.parser.report,
 			this.parser.fight,
 			{filter},
 		)

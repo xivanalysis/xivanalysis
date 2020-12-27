@@ -57,9 +57,10 @@ export class LegacyFflogsReportStore extends ReportStore {
 
 		// Request the full event set & adapt to xiva events
 		const legacyEvents = await getFflogsEvents(
-			legacyReport.code,
+			legacyReport,
 			legacyFight,
 			{/* actorid: parseInt(actorId, 10) */},
+			true,
 		)
 		return adaptEvents(report, legacyEvents)
 	}

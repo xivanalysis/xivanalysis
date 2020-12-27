@@ -89,7 +89,7 @@ export class Conductor {
 
 		// Fetch events
 		const events = await getFflogsEvents(
-			this.legacyReport.code,
+			this.legacyReport,
 			this.fight,
 			{actorid: this.combatant.id},
 		)
