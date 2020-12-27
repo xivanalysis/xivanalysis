@@ -3,9 +3,14 @@ import {GameEdition} from 'data/PATCHES'
 import {action, observable} from 'mobx'
 import {getUserLanguage} from 'utilities'
 
+export const gameLanguageEditions: GameEdition[] = [
+	GameEdition.GLOBAL,
+	GameEdition.CHINESE, // Cafemaker
+]
+
 function getGameLanguage(language: Language): Language {
 	// Check if the language is a game language, fall back to EN
-	if (LANGUAGES[language].gameEdition === GameEdition.GLOBAL) {
+	if (gameLanguageEditions.includes(LANGUAGES[language].gameEdition)) {
 		return language
 	}
 	return Language.ENGLISH
