@@ -8,6 +8,7 @@ import {
 	useGameData,
 } from '@xivanalysis/tooltips'
 import {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {Language} from 'data/LANGUAGES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {useObserver} from 'mobx-react'
 import React, {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
@@ -25,8 +26,15 @@ export interface ProviderProps {
 export function Provider({children}: ProviderProps) {
 	const {i18nStore} = useContext(StoreContext)
 
+	const baseUrl = i18nStore.gameLanguage === Language.CHINESE
+		? 'https://cafemaker.wakingsands.com'
+		: undefined
+
 	return useObserver(() => (
-		<TooltipProvider language={i18nStore.gameLanguage}>
+		<TooltipProvider
+			language={i18nStore.gameLanguage}
+			baseUrl={baseUrl}
+		>
 			{children}
 		</TooltipProvider>
 	))
