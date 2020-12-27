@@ -2,18 +2,17 @@ import {ReportProcessingError} from 'errors'
 import ky, {Options} from 'ky'
 import _ from 'lodash'
 import {Report} from 'store/report'
-import {isDefined} from 'utilities'
 import {FflogsEvent, Fight, Pet, ReportEventsQuery, ReportEventsResponse} from './fflogs'
 
 const options: Options = {
-	prefixUrl: process.env.REACT_APP_LOGS_BASE_URL,
+	prefixUrl: process.env.REACT_APP_FFLOGS_V1_BASE_URL,
 	// We're dealing with some potentially slow endpoints - avoid throwing obtuse errors if it takes a bit
 	timeout: false,
 }
 
-if (process.env.REACT_APP_LOGS_API_KEY) {
+if (process.env.REACT_APP_FFLOGS_V1_API_KEY) {
 	options.searchParams = {
-		api_key: process.env.REACT_APP_LOGS_API_KEY,
+		api_key: process.env.REACT_APP_FFLOGS_V1_API_KEY,
 	}
 }
 

@@ -16,7 +16,7 @@ Before contributing, you will need to install a few tools:
 Once you've got those set up, you'll need to create a personal copy of the codebase and pull it down. Start by [creating a fork](https://help.github.com/en/github/getting-started-with-github/fork-a-repo) of xivanalysis. This will create a copy of the xivanalysis codebase at `[username]/xivanalysis` - replace `[username]` in remaining examples with your username from the fork. Then, you can clone the repository:
 
 ```bash
-$ git clone https://github.com/[username]]/xivanalysis.git
+$ git clone https://github.com/[username]/xivanalysis.git
 $ cd xivanalysis
 ```
 
@@ -31,9 +31,7 @@ You've now got the primary codebase locally, next you'll need to download all th
 $ yarn
 ```
 
-While `yarn` is running, copy the `.env.local.example` file in the project root, and call it `.env.local`. Replace `INSERT_API_KEY_HERE` with your public fflogs api key. If you don't have one, you can [get yours here](https://www.fflogs.com/profile). Don't forget to set your Application Name there as well.
-
-**NOTE:** If you are also configuring the [server](https://github.com/xivanalysis/server) locally, you can replace the default value of `REACT_APP_LOGS_BASE_URL` with `[server url]/proxy/fflogs/` as the base url, and omit the api key.
+**NOTE:** If you are configuring the [server](https://github.com/xivanalysis/server) locally, you can create an `.env.local` file and set `REACT_APP_FFLOGS_V1_BASE_URL` to point to your local instance at `[server url]/proxy/fflogs/`.
 {: .admonition .info}
 
 Once that's done, you're ready to go! To start the development server, just run
