@@ -50,15 +50,14 @@ export default class TwinSnakes extends Module {
 	private history: TwinState[] = []
 	private twinSnake?: TwinState
 
+	// Clipping the duration
+	private earlySnakes: number = 0
+
 	// Fury used without TS active
 	private failedFury: number = 0
 
 	// Antman used without TS active
 	private failedAnts: number = 0
-
-	// Clipping the duration
-	private earlySnakes: number = 0
-	private lateSnakes: number = 0
 
 	// Separate accounting from the window, to handle counting while TS is down
 	private gcdsSinceTS: number = 0
@@ -84,22 +83,27 @@ export default class TwinSnakes extends Module {
 		}
 
 		switch (action.id) {
-		// Ignore TS itself, plus Form Shift and maybe 6SS?
+		// Ignore TS itself, plus Form Shift, Anatman, and Meditation
+		// Should we double count 6SS?
 		// We use gcdsSinceTS because we don't want to double count FPF
 		case (this.data.actions.TWIN_SNAKES.id):
 			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
 				this.earlySnakes++
 			}
 
-		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
-		case (this.data.actions.FORM_SHIFT.id):
-			break
-
 		// Count FPF, but check if it's a bad one
 		case (this.data.actions.FOUR_POINT_FURY.id):
 			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
 				this.failedFury++
 			}
+
+		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
+		case (this.data.actions.FORM_SHIFT.id):
+			break
+
+		// Ignore Meditation, it's not really a GCD even tho it kinda is
+		case (this.data.actions.MEDITATION.id):
+			break
 
 		// Ignore Antman, but check if it's a bad one
 		case (this.data.actions.ANATMAN.id):
