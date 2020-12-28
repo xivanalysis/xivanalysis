@@ -14,6 +14,8 @@ export default class AoE extends AoEUsages {
 	suggestionIcon = this.data.actions.ENLIGHTENMENT.icon
 
 	// Assuming user is in the correct Form
+	// Technically, FPF is 3 however if the buff is about to fall off, it's 2.
+	// Tracking remaining duration is kind of a pain here due to Anatman so eh.
 	trackedActions: AoEAction[] = [
 		{
 			aoeAction: this.data.actions.ARM_OF_THE_DESTROYER,
@@ -23,7 +25,7 @@ export default class AoE extends AoEUsages {
 		{
 			aoeAction: this.data.actions.FOUR_POINT_FURY,
 			stActions: [this.data.actions.TRUE_STRIKE, this.data.actions.TWIN_SNAKES],
-			minTargets: 2,
+			minTargets: 3,
 		},
 		{
 			aoeAction: this.data.actions.ROCKBREAKER,
