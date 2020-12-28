@@ -1,19 +1,9 @@
-import {Event, Events} from 'event'
+import {Event} from 'event'
+import {Analyser} from 'parser/core/Analyser'
 import React, {CSSProperties, useState} from 'react'
 import Measure from 'react-measure'
 import {FixedSizeList} from 'react-window'
-import {Analyser} from '../Analyser'
-
-// TODO: break formatters into own file
-
-type EventFormatter<E extends Event> = (event: E) => string
-const eventFormatters = new Map<string, EventFormatter<Event>>()
-
-export function registerEventFormatter<T extends keyof Events>(type: T, formatter: EventFormatter<Events[T]>) {
-	eventFormatters.set(type, formatter as EventFormatter<Event>)
-}
-
-registerEventFormatter('snapshot', event => 'SNAPSHOT')
+import {eventFormatters} from './eventFormatter'
 
 export class EventsView extends Analyser {
 	static title = 'Events View'
