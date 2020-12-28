@@ -73,7 +73,7 @@ class Parser {
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	_fabricationQueue: LegacyEvent[] = []
+	private legacyFabricationQueue: LegacyEvent[] = []
 
 	get currentTimestamp() {
 		const start = this.eventTimeOffset
@@ -251,7 +251,6 @@ class Parser {
 		legacyEvents: LegacyEvent[],
 	}) {
 		// Required for legacy execution.
-		// TODO: Maybe we should just reuse the trigger system for new too?
 		this._triggerModules = this.executionOrder.slice(0)
 
 		const xivaIterator = this.iterateXivaEvents(events)[Symbol.iterator]()
@@ -314,8 +313,8 @@ class Parser {
 			obj = eventIterator.next()
 
 			// Iterate over any fabrications arising from the event and clear the queue
-			yield* this._fabricationQueue
-			this._fabricationQueue = []
+			yield* this.legacyFabricationQueue
+			this.legacyFabricationQueue = []
 		}
 
 		// Finish with 'complete' fab
@@ -343,8 +342,8 @@ class Parser {
 		}
 	}
 
-	fabricateEvent(event: LegacyEvent) {
-		this._fabricationQueue.push(event)
+	fabricateLegacyEvent(event: LegacyEvent) {
+		this.legacyFabricationQueue.push(event)
 	}
 
 	private _setModuleError(mod: string, error: Error) {

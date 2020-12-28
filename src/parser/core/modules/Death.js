@@ -51,7 +51,7 @@ export default class Death extends Module {
 
 	_onRaise(event) {
 		this._addDeathToTimeline(event.timestamp - this.parser.eventTimeOffset)
-		this.parser.fabricateEvent({
+		this.parser.fabricateLegacyEvent({
 			type: 'raise',
 			timestamp: event.timestamp,
 			targetID: event.targetID,
