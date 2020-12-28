@@ -26,15 +26,6 @@ export const getJobSpeedBuffToSpeedmodMap = data => ({
 		[FLAGS.FEY_WIND]: 77,
 	},
 	[data.statuses.GREASED_LIGHTNING.id]: {
-		[FLAGS.NONE]: 95,
-	},
-	[data.statuses.GREASED_LIGHTNING_II.id]: {
-		[FLAGS.NONE]: 90,
-	},
-	[data.statuses.GREASED_LIGHTNING_III.id]: {
-		[FLAGS.NONE]: 85,
-	},
-	[data.statuses.GREASED_LIGHTNING_IV.id]: {
 		[FLAGS.NONE]: 80,
 	},
 	[data.statuses.SHIFU.id]: {

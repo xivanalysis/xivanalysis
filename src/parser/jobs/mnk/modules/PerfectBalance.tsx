@@ -1,70 +1,130 @@
 import {t} from '@lingui/macro'
-import {Trans} from '@lingui/react'
+import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
-import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS, {Action} from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {Status} from 'data/STATUSES'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 
-import {dependency} from 'parser/core/Module'
-import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
-import {SEVERITY} from 'parser/core/modules/Suggestions'
+import {BuffEvent, BuffStackEvent, CastEvent} from 'fflogs'
+
+import Module, {dependency} from 'parser/core/Module'
+import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {FISTS} from './Fists'
-import Gauge, {MAX_FASTER} from './Gauge'
 
-export default class PerfectBalance extends BuffWindowModule {
+const SUGGESTION_TIERS = {
+	1: SEVERITY.MEDIUM,
+	2: SEVERITY.MAJOR,
+}
+
+// Naive ding on bad actions, technically some AoE or normal GCD actions are bad too, adjust if people actually care
+const PB_BAD_ACTIONS = [
+	ACTIONS.FORM_SHIFT.id,
+	ACTIONS.ANATMAN.id,
+]
+
+interface Balance {
+	stacks: number
+	bads: number
+}
+
+export default class PerfectBalance extends Module {
+	static debug = false
 	static handle = 'perfectBalance'
 	static title = t('mnk.pb.title')`Perfect Balance`
 	static displayOrder = DISPLAY_ORDER.PERFECT_BALANCE
 
-	@dependency private gauge!: Gauge
+	@dependency private combatants!: Combatants
+	@dependency private data!: Data
+	@dependency private suggestions!: Suggestions
 
-	buffAction: Action = ACTIONS.PERFECT_BALANCE
-	buffStatus: Status = STATUSES.PERFECT_BALANCE
+	private current: Balance | undefined
+	private history: Balance[] = []
 
-	expectedGCDs = {
-		expectedPerWindow: 5,
-		suggestionContent: <Trans id="mnk.pb.suggestions.missedgcd.content">
-			Try to land 5 GCDs in GL3, or 6 GCDs in GL4, during every <ActionLink {...ACTIONS.PERFECT_BALANCE} /> window. If you cannot do this with full uptime and no clipping, consider adjusting your gearset for more Skill Speed.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MINOR,
-			2: SEVERITY.MEDIUM,
-			3: SEVERITY.MAJOR,
-		},
+	init() {
+		this.addEventHook('cast', {by: 'player'}, this.onCast)
+		this.addEventHook('applybuffstack', {to: 'player', abilityId: PB_BAD_ACTIONS}, this.onStacc)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onDrop)
+		this.addEventHook('complete', this.onComplete)
 	}
 
-	trackedBadActions = {
-		icon: ACTIONS.PERFECT_BALANCE.icon,
-		actions: [
-			{
-				action: ACTIONS.FORM_SHIFT,
-				expectedPerWindow: 0,
-			},
-			{
-				action: ACTIONS.MEDITATION,
-				expectedPerWindow: 0,
-			},
-		],
-		suggestionContent: <Trans id="mnk.pb.suggestions.trackedBadActions.content">
-			Using <ActionLink {...ACTIONS.FORM_SHIFT} /> and <ActionLink {...ACTIONS.MEDITATION} /> inside of <ActionLink {...ACTIONS.PERFECT_BALANCE} /> does no damage and does not change your Form.
-		</Trans>,
-		severityTiers: {
-			1: SEVERITY.MEDIUM,
-		},
-	}
+	private onCast(event: CastEvent): void {
+		const action = this.data.getAction(event.ability.guid)
 
-	changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
-		// If we changed Fist, we know we don't have GL4 the whole way
-		if (buffWindow.getActionCountByIds(FISTS) > 0) {
-			return 0
+		if (!action) {
+			return
 		}
 
-		// For now let's go with if they were in GL4 at the start,
-		// since it less GCDs than expected implies a mistake like GL dropping
-		return this.gauge.getStacksAt(buffWindow.start) < MAX_FASTER ? 0 : 1
+		if (!action.onGcd) {
+			return
+		}
+
+		if (this.current && this.combatants.selected.hasStatus(this.data.statuses.PERFECT_BALANCE.id)) {
+			this.current.bads++
+		}
+	}
+
+	private onStacc(event: BuffStackEvent): void {
+		if (this.current) {
+			this.current.stacks = event.stack
+			return
+		}
+
+		// New window who dis
+		if (event.stack === this.data.statuses.PERFECT_BALANCE.stacksApplied) {
+			this.current = {bads: 0, stacks: event.stack}
+			return
+		}
+
+		this.debug('New PB window with incorrect initial stacks')
+	}
+
+	private onDrop(event: BuffEvent): void {
+		// If it's not current for some reason, something is wrong anyway
+		if (this.current) {
+			this.history.push(this.current)
+		}
+
+		this.current = undefined
+	}
+
+	private onComplete(): void {
+		if (this.current) {
+			this.history.push(this.current)
+
+			this.current = undefined
+		}
+
+		// Stacks counts down, so drops+stacks will be adding remaining stacks that are unused
+		const droppedGcds = this.history.reduce((drops, current) => drops + current.stacks, 0)
+		const badActions = this.history.reduce((bads, current) => bads + current.bads, 0)
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.PERFECT_BALANCE.icon,
+			content: <Trans id="mnk.pb.suggestions.stacks.content">
+				Try to consume all 6 stacks during every <ActionLink {...this.data.actions.PERFECT_BALANCE} /> window.
+			</Trans>,
+			tiers: SUGGESTION_TIERS,
+			value: droppedGcds,
+			why: <Trans id="mnk.pb.suggestions.stacks.why">
+				<Plural value={droppedGcds} one="# possible GCD was" other="# possible GCDs were" /> missed during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
+			</Trans>,
+		}))
+
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.PERFECT_BALANCE.icon,
+			content: <Trans id="mnk.pb.suggestions.badActions.content">
+				Using <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> inside of <StatusLink {...this.data.statuses.PERFECT_BALANCE} /> does no damage and does not change your Form.
+			</Trans>,
+			tiers: {
+				1: SEVERITY.MINOR,
+			},
+			value: badActions,
+			why: <Trans id="mnk.pb.suggestions.badActions.why">
+				<Plural value={badActions} one="# use of" other="# uses of"/> uses of <ActionLink {...this.data.actions.FORM_SHIFT} /> or <ActionLink {...this.data.actions.ANATMAN} /> were used during <StatusLink {...this.data.statuses.PERFECT_BALANCE} />.
+			</Trans>,
+		}))
 	}
 }
