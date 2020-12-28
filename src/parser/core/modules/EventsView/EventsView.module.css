@@ -1,0 +1,28 @@
+.row {
+	display: flex;
+	width: 100%;
+}
+
+.timestamp,
+.type {
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+
+.timestamp {
+	width: 80px;
+}
+
+.type {
+	width: 100px;
+}
+
+.description {
+	min-width: 0;
+	flex-basis: 0;
+	flex-grow: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}

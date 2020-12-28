@@ -3,7 +3,10 @@ import {Analyser} from 'parser/core/Analyser'
 import React, {CSSProperties, useState} from 'react'
 import Measure from 'react-measure'
 import {FixedSizeList} from 'react-window'
+import {Pull} from 'report'
+import {formatDuration} from 'utilities/strings'
 import {eventFormatters} from './eventFormatter'
+import styles from './EventsView.module.css'
 
 export class EventsView extends Analyser {
 	static title = 'Events View'
@@ -21,16 +24,32 @@ export class EventsView extends Analyser {
 	}
 
 	output() {
-		return <EventsViewComponent events={this.events}/>
+		const data = {
+			events: this.events,
+			pull: this.parser.pull,
+		}
+
+		return <EventsViewComponent data={data}/>
 	}
 }
 
-interface EventsViewComponentProps {
+interface EventsViewData {
 	events: Event[]
+	pull: Pull
 }
 
-function EventsViewComponent({events}: EventsViewComponentProps) {
+interface EventsViewComponentProps {
+	data: EventsViewData
+}
+
+function EventsViewComponent({data}: EventsViewComponentProps) {
 	const [width, setWidth] = useState<number>()
+
+	const height = 500
+	// TODO: Better way of defining this?
+	const itemHeight = 24
+	// Bumped overscan to handle scrolling nicer for the large data set.
+	const overscanCount = 10
 
 	return <>
 		<Measure
@@ -42,10 +61,11 @@ function EventsViewComponent({events}: EventsViewComponentProps) {
 		{width != null && (
 			<FixedSizeList
 				width={width}
-				height={500} // todo?
-				itemSize={40}
-				itemCount={events.length}
-				itemData={events}
+				height={height}
+				itemSize={itemHeight}
+				itemCount={data.events.length}
+				overscanCount={overscanCount}
+				itemData={data}
 				children={EventItem}
 			/>
 		)}
@@ -53,21 +73,29 @@ function EventsViewComponent({events}: EventsViewComponentProps) {
 }
 
 interface EventItemProps {
-	data: Event[]
+	data: EventsViewData
 	index: number
 	style: CSSProperties
 }
 
-function EventItem({data: events, index, style}: EventItemProps) {
+function EventItem({data: {events, pull}, index, style}: EventItemProps) {
 	const event = events[index]
+
+	const timestamp = formatDuration(
+		event.timestamp - pull.timestamp,
+		{secondPrecision: 3},
+	)
+
 	const formatter = eventFormatters.get(event.type)
 	const formatted = formatter != null
 		? formatter(event)
 		: JSON.stringify(event)
 
 	return (
-		<pre style={style}>
-			{formatted}
-		</pre>
+		<div className={styles.row} style={style}>
+			<div className={styles.timestamp}>{timestamp}</div>
+			<div className={styles.type}>{event.type}</div>
+			<div className={styles.description}>{formatted}</div>
+		</div>
 	)
 }

@@ -12,7 +12,7 @@ export function registerEventFormatter<T extends keyof Events>(type: T, formatte
 // #region Stock event formatters
 // -----
 
-registerEventFormatter('snapshot', event => 'SNAPSHOT')
+// registerEventFormatter('snapshot', event => 'SNAPSHOT')
 
 // -----
 // #endregion
