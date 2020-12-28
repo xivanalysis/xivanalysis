@@ -12,18 +12,21 @@ import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
+import {ensureArray} from 'utilities'
 import {Data} from './Data'
 
 export class BuffWindowState {
 	start: number
 	end?: number
 	rotation: CastEvent[] = []
+	status: Status
 
 	private data: Data
 
-	constructor(data: Data, start: number) {
+	constructor(data: Data, start: number, status: Status) {
 		this.data = data
 		this.start = start
+		this.status = status
 	}
 
 	get gcds(): number {
@@ -81,12 +84,12 @@ export abstract class BuffWindowModule extends Module {
 	/**
 	 * Implementing modules MUST define the STATUS object for the status that represents the buff window
 	 */
-	abstract buffStatus: Status
+	abstract buffStatus: Status | Status[]
 
 	/**
-	 * Optional. Added because DRG is special and has a second status id for solo dragon sight.
+	 * Converted buffStatus, computed once at component init
 	 */
-	protected secondaryBuffStatus?: Status
+	private buffStatusArray: readonly Status[] = []
 
 	/**
 	 * Most implementing modules will pass an expectedGCDs object to indicate the number of GCDs expected within the buff window
@@ -144,6 +147,9 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	protected init() {
+		// ensure array
+		this.buffStatusArray = ensureArray(this.buffStatus)
+
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('applybuff', {to: 'player'}, this.onApplyBuff)
 		this.addEventHook('removebuff', {to: 'player'}, this.onRemoveBuff)
@@ -177,21 +183,21 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	private onApplyBuff(event: BuffEvent) {
-		if ((!this.buffStatus || event.ability.guid !== this.buffStatus.id) &&
-				(!this.secondaryBuffStatus || event.ability.guid !== this.secondaryBuffStatus.id)) {
+		const status = this.buffStatusArray.find(s => event.ability.guid === s.id)
+
+		if (!this.buffStatus || !status) {
 			return
 		}
 
-		this.startNewBuffWindow(event.timestamp)
+		this.startNewBuffWindow(event.timestamp, status)
 	}
 
-	private startNewBuffWindow(startTime: number) {
-		this.buffWindows.push(new BuffWindowState(this.data, startTime))
+	private startNewBuffWindow(startTime: number, status: Status) {
+		this.buffWindows.push(new BuffWindowState(this.data, startTime, status))
 	}
 
 	private onRemoveBuff(event: BuffEvent) {
-		if ((!this.buffStatus || event.ability.guid !== this.buffStatus.id) &&
-				(!this.secondaryBuffStatus || event.ability.guid !== this.secondaryBuffStatus.id)) {
+		if (!this.buffStatus || !this.buffStatusArray.find(s => event.ability.guid === s.id)) {
 			return
 		}
 
@@ -228,11 +234,10 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 */
 	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
-		// note: currently the assumption is that the secondary buff status has the same duration as the primary
-		// this is true in the case of DRG, but might not be in the future?
-		if ( this.buffStatus.duration ) {
+		// the applied status is saved to the window, so we just use the duration in that object
+		if (buffWindow.status.duration ) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-			const windowDurationMillis = this.buffStatus.duration * 1000
+			const windowDurationMillis = buffWindow.status.duration * 1000
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
 			if (windowDurationMillis >= fightTimeRemaining) {
