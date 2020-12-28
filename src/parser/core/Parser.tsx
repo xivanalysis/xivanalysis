@@ -75,10 +75,12 @@ class Parser {
 
 	private legacyFabricationQueue: LegacyEvent[] = []
 
+	// Stored soonest-last for performance
+	private eventDispatchQueue: Event[] = []
+
 	get currentTimestamp() {
 		const start = this.eventTimeOffset
 		const end = start + this.pull.duration
-		// TODO: use max of dispatch timestamps?
 		const timestamp = Math.max(this.dispatcher.timestamp, this.legacyDispatcher.timestamp)
 		return Math.min(end, Math.max(start, timestamp))
 	}
@@ -276,10 +278,28 @@ class Parser {
 		}
 	}
 
-	private iterateXivaEvents(events: Event[]): Iterable<Event> {
+	private *iterateXivaEvents(events: Event[]): Iterable<Event> {
 		// TODO: Do we want start/end events as well?
-		// Fabrication for new events?
-		return events
+		const eventIterator = events[Symbol.iterator]()
+
+		// Iterate the primary event source
+		let result = eventIterator.next()
+		while (!result.done) {
+			const event = result.value
+
+			// Check for, and yield, any queued events prior to the current timestamp
+			// Using < rather than <= so that queued events execute after source events
+			// of the same timestamp. Seems sane to me, but if it causes issue, change
+			// the below to use <= instead - effectively weaving queue into source.
+			const queue = this.eventDispatchQueue
+			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
+				yield queue.pop()!
+			}
+
+			// Yield the source event and prep for next iteration
+			yield event
+			result = eventIterator.next()
+		}
 	}
 
 	private dispatchXivaEvent(event: Event) {
@@ -339,6 +359,26 @@ class Parser {
 			})
 
 			this._setModuleError(handle, error)
+		}
+	}
+
+	queueEvent(event: Event) {
+		// If the event is in the past, noop.
+		if (event.timestamp < this.currentTimestamp) {
+			if (process.env.NODE_ENV === 'development') {
+				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
+			}
+			return
+		}
+
+		// TODO: This logic is 1:1 with timestamp hook queue. Abstract?
+		const index = this.eventDispatchQueue.findIndex(
+			queueEvent => queueEvent.timestamp < event.timestamp,
+		)
+		if (index === -1) {
+			this.eventDispatchQueue.push(event)
+		} else {
+			this.eventDispatchQueue.splice(index, 0, event)
 		}
 	}
 

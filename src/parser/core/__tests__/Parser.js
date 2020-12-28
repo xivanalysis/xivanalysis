@@ -239,6 +239,44 @@ describe('Parser', () => {
 		expect(calls[1][1]).toEqual(['test_basic'])
 	})
 
+	it('queues new events for dispatch', async () => {
+		const toQueue = [
+			{timestamp: 50, type: '__queuedEvent'},
+			{timestamp: 70, type: '__queuedEvent'},
+			{timestamp: 0, type: '__queuedEvent'},
+		]
+		const dispatchedEvents = []
+
+		function mockDispatch(event) {
+			this.timestamp = event.timestamp
+			dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
+			if (toQueue.length > 0) { parser.queueEvent(toQueue.shift()) }
+			return []
+		}
+
+		dispatcher.dispatch.mockImplementation(mockDispatch)
+
+		await parser.configure()
+		parser.parseEvents({
+			events: [
+				{timestamp: 0, type: '__sourceEvent'},
+				{timestamp: 50, type: '__sourceEvent'},
+				{timestamp: 100, type: '__sourceEvent'},
+			],
+			legacyEvents: [],
+		})
+
+		expect(dispatchedEvents.map(({event}) => event.type)).toEqual([
+			'__sourceEvent',
+			'__sourceEvent',
+			'__queuedEvent',
+			'__queuedEvent',
+			'__sourceEvent',
+		])
+		expect(dispatchedEvents.map(({timestamp}) => timestamp))
+			.toEqual([0, 50, 50, 70, 100])
+	})
+
 	describe('event migration', () => {
 		[{
 			name: 'equal timestamp',
