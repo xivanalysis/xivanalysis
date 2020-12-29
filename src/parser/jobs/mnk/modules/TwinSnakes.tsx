@@ -2,6 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import {BuffEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
@@ -16,6 +17,11 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Expected GCDs between TS
 const TWIN_SNAKES_CYCLE_LENGTH = 5
+
+const TWIN_IGNORED_GCDS = [
+	ACTIONS.FORM_SHIFT.id,
+	ACTIONS.MEDITATION.id,
+]
 
 class TwinState {
 	data: Data
@@ -82,45 +88,40 @@ export default class TwinSnakes extends Module {
 			return
 		}
 
-		switch (action.id) {
-		// Ignore TS itself, plus Form Shift, Anatman, and Meditation
-		// Should we double count 6SS?
-		// We use gcdsSinceTS because we don't want to double count FPF
-		case (this.data.actions.TWIN_SNAKES.id):
-			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
-				this.earlySnakes++
-			}
+		// Ignore FS and Meditation
+		if (TWIN_IGNORED_GCDS.includes(action.id)) { return }
 
-		// Count FPF, but check if it's a bad one
-		case (this.data.actions.FOUR_POINT_FURY.id):
-			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
-				this.failedFury++
-			}
-
-		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
-		case (this.data.actions.FORM_SHIFT.id):
-			break
-
-		// Ignore Meditation, it's not really a GCD even tho it kinda is
-		case (this.data.actions.MEDITATION.id):
-			break
-
-		// Ignore Antman, but check if it's a bad one
-		case (this.data.actions.ANATMAN.id):
-			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+		// Check for actions used without TS up. In the case of TS, the window will be opened
+		// by the gain hook, so this GCD won't count anyway. For anything else, there's no
+		// window so no need to count them. We check on status rather than window being active
+		// to make sure we don't get caught by any event ordering issues.
+		if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+			// Did Anatman refresh TS?
+			if (action.id === this.data.actions.ANATMAN.id) {
 				this.failedAnts++
 			}
 
-			break
-
-		// Verify the window isn't closed, and count the GCDs
-		default:
-			if (this.twinSnake && !this.twinSnake.end) {
-				this.twinSnake.casts.push(event)
+			// Did FPF refresh TS?
+			if (action.id === this.data.actions.FOUR_POINT_FURY.id) {
+				this.failedFury++
 			}
 
-			this.gcdsSinceTS++
+			// Since TS isn't active, we always return early
+			return
 		}
+
+		// Verify the window isn't closed, and count the GCDs:
+		if (this.twinSnake && !this.twinSnake.end) {
+			// We still count TS in the GCD list of the window, just flag if it's early
+			if (action.id === this.data.actions.TWIN_SNAKES.id && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
+				this.earlySnakes++
+			}
+
+			this.twinSnake.casts.push(event)
+		}
+
+		// This will get reset by the buff refresh hook
+		this.gcdsSinceTS++
 	}
 
 	// Only happens from TS itself
