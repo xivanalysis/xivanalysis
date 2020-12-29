@@ -91,11 +91,7 @@ export default class TwinSnakes extends Module {
 				this.earlySnakes++
 			}
 
-		// Count FPF, but check if it's a bad one
-		case (this.data.actions.FOUR_POINT_FURY.id):
-			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
-				this.failedFury++
-			}
+			break
 
 		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
 		case (this.data.actions.FORM_SHIFT.id):
@@ -112,6 +108,13 @@ export default class TwinSnakes extends Module {
 			}
 
 			break
+
+		// Count FPF, but check if it's a bad one
+		// Fall thru to default case to count GCDs as well
+		case (this.data.actions.FOUR_POINT_FURY.id):
+			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+				this.failedFury++
+			}
 
 		// Verify the window isn't closed, and count the GCDs
 		default:
