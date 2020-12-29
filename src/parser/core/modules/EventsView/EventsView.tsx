@@ -88,7 +88,7 @@ function EventItem({data: {events, pull}, index, style}: EventItemProps) {
 
 	const formatter = eventFormatters.get(event.type)
 	const formatted = formatter != null
-		? formatter(event)
+		? formatter({event, pull})
 		: JSON.stringify(event)
 
 	return (
