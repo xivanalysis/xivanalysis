@@ -2,6 +2,7 @@ import {Plural, Trans} from '@lingui/react'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
 import {BuffEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
@@ -16,6 +17,11 @@ import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Expected GCDs between TS
 const TWIN_SNAKES_CYCLE_LENGTH = 5
+
+const TWIN_IGNORED_GCDS = [
+	ACTIONS.ANATMAN.id,
+	ACTIONS.MEDITATION.id,
+]
 
 class TwinState {
 	data: Data
@@ -82,48 +88,33 @@ export default class TwinSnakes extends Module {
 			return
 		}
 
-		switch (action.id) {
-		// Ignore TS itself, plus Form Shift, Anatman, and Meditation
-		// Should we double count 6SS?
-		// We use gcdsSinceTS because we don't want to double count FPF
-		case (this.data.actions.TWIN_SNAKES.id):
-			if (this.twinSnake && !this.twinSnake.end && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
-				this.earlySnakes++
-			}
+		// Ignore FS and Meditation
+		if (TWIN_IGNORED_GCDS.includes(action.id)) { return }
 
-			break
-
-		// Ignore Form Shift, for forced downtime can expect Anatman, or it'll just drop anyway
-		case (this.data.actions.FORM_SHIFT.id):
-			break
-
-		// Ignore Meditation, it's not really a GCD even tho it kinda is
-		case (this.data.actions.MEDITATION.id):
-			break
-
-		// Ignore Antman, but check if it's a bad one
-		case (this.data.actions.ANATMAN.id):
-			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+		if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+			if (action.id === this.data.actions.ANATMAN.id) {
 				this.failedAnts++
 			}
 
-			break
-
-		// Count FPF, but check if it's a bad one
-		// Fall thru to default case to count GCDs as well
-		case (this.data.actions.FOUR_POINT_FURY.id):
-			if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+			if (action.id === this.data.actions.FOUR_POINT_FURY.id) {
 				this.failedFury++
 			}
 
+			return
+		}
+
 		// Verify the window isn't closed, and count the GCDs
-		default:
-			if (this.twinSnake && !this.twinSnake.end) {
+		if (this.twinSnake && !this.twinSnake.end) {
+			// If it's TS but not too early, it'll get added as a cast in the current window
+			if (action.id === this.data.actions.TWIN_SNAKES.id && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
+				this.earlySnakes++
+			} else {
 				this.twinSnake.casts.push(event)
 			}
-
-			this.gcdsSinceTS++
 		}
+
+		// This will get reset by the buff refresh hook
+		this.gcdsSinceTS++
 	}
 
 	// Only happens from TS itself
