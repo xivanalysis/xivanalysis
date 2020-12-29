@@ -5,8 +5,9 @@ import React, {CSSProperties, useState} from 'react'
 import Measure from 'react-measure'
 import {FixedSizeList} from 'react-window'
 import {Pull} from 'report'
-import {Icon, Modal, Popup} from 'semantic-ui-react'
+import {Icon, Popup} from 'semantic-ui-react'
 import {formatDuration} from 'utilities/strings'
+import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {eventFormatters} from './eventFormatter'
 import styles from './EventsView.module.css'
 
@@ -15,7 +16,7 @@ const rowHeight = parseInt(styles.rowHeight, 10)
 export class EventsView extends Analyser {
 	static title = 'Events View'
 	static handle = 'eventsView'
-	static displayOrder = -Infinity
+	static displayOrder = DISPLAY_ORDER.EVENTS_VIEW
 	static debug = true
 
 	private events: Event[] = []
