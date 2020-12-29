@@ -91,26 +91,33 @@ export default class TwinSnakes extends Module {
 		// Ignore FS and Meditation
 		if (TWIN_IGNORED_GCDS.includes(action.id)) { return }
 
+		// Check for actions used without TS up. In the case of TS, the window will be opened
+		// by the gain hook, so this GCD won't count anyway. For anything else, there's no
+		// window so no need to count them. We check on status rather than window being active
+		// to make sure we don't get caught by any event ordering issues.
 		if (!this.combatants.selected.hasStatus(this.data.statuses.TWIN_SNAKES.id)) {
+			// Did Anatman refresh TS?
 			if (action.id === this.data.actions.ANATMAN.id) {
 				this.failedAnts++
 			}
 
+			// Did FPF refresh TS?
 			if (action.id === this.data.actions.FOUR_POINT_FURY.id) {
 				this.failedFury++
 			}
 
+			// Since TS isn't active, we always return early
 			return
 		}
 
-		// Verify the window isn't closed, and count the GCDs
+		// Verify the window isn't closed, and count the GCDs:
 		if (this.twinSnake && !this.twinSnake.end) {
-			// If it's TS but not too early, it'll get added as a cast in the current window
+			// We still count TS in the GCD list of the window, just flag if it's early
 			if (action.id === this.data.actions.TWIN_SNAKES.id && this.gcdsSinceTS < TWIN_SNAKES_CYCLE_LENGTH) {
 				this.earlySnakes++
-			} else {
-				this.twinSnake.casts.push(event)
 			}
+
+			this.twinSnake.casts.push(event)
 		}
 
 		// This will get reset by the buff refresh hook
