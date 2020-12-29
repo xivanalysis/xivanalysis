@@ -1,6 +1,15 @@
+@value themeBackdrop from "theme.module.css";
+
+@value rowHeight: 24px;
+
 .row {
 	display: flex;
+	align-items: center;
 	width: 100%;
+}
+
+.row.odd {
+	background: themeBackdrop;
 }
 
 .timestamp,
@@ -25,4 +34,8 @@
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
+}
+
+.showData {
+	cursor: pointer;
 }

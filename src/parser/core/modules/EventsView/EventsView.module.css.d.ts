@@ -2,7 +2,11 @@
 declare namespace EventsViewModuleCssNamespace {
   export interface IEventsViewModuleCss {
     description: string;
+    odd: string;
     row: string;
+    rowHeight: string;
+    showData: string;
+    themeBackdrop: string;
     timestamp: string;
     type: string;
   }

@@ -1,12 +1,16 @@
+import cx from 'classnames'
 import {Event} from 'event'
 import {Analyser} from 'parser/core/Analyser'
 import React, {CSSProperties, useState} from 'react'
 import Measure from 'react-measure'
 import {FixedSizeList} from 'react-window'
 import {Pull} from 'report'
+import {Icon, Modal, Popup} from 'semantic-ui-react'
 import {formatDuration} from 'utilities/strings'
 import {eventFormatters} from './eventFormatter'
 import styles from './EventsView.module.css'
+
+const rowHeight = parseInt(styles.rowHeight, 10)
 
 export class EventsView extends Analyser {
 	static title = 'Events View'
@@ -46,8 +50,6 @@ function EventsViewComponent({data}: EventsViewComponentProps) {
 	const [width, setWidth] = useState<number>()
 
 	const height = 500
-	// TODO: Better way of defining this?
-	const itemHeight = 24
 	// Bumped overscan to handle scrolling nicer for the large data set.
 	const overscanCount = 10
 
@@ -62,7 +64,7 @@ function EventsViewComponent({data}: EventsViewComponentProps) {
 			<FixedSizeList
 				width={width}
 				height={height}
-				itemSize={itemHeight}
+				itemSize={rowHeight}
 				itemCount={data.events.length}
 				overscanCount={overscanCount}
 				itemData={data}
@@ -92,10 +94,18 @@ function EventItem({data: {events, pull}, index, style}: EventItemProps) {
 		: JSON.stringify(event)
 
 	return (
-		<div className={styles.row} style={style}>
+		<div className={cx(styles.row, index % 2 === 1 && styles.odd)} style={style}>
 			<div className={styles.timestamp}>{timestamp}</div>
 			<div className={styles.type}>{event.type}</div>
 			<div className={styles.description}>{formatted}</div>
+			<div className={styles.showData}>
+				<Popup
+					trigger={<Icon name="code"/>}
+					content={<pre>{JSON.stringify(event, undefined, 2)}</pre>}
+					position="left center"
+					on="click"
+				/>
+			</div>
 		</div>
 	)
 }
