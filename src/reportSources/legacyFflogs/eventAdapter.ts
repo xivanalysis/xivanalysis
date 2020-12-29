@@ -143,7 +143,7 @@ class EventAdapter {
 			sequence,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
@@ -169,7 +169,7 @@ class EventAdapter {
 			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
@@ -184,7 +184,7 @@ class EventAdapter {
 			sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptStatusApplyEvent(event: BuffEvent | BuffStackEvent): Events['statusApply'] {
