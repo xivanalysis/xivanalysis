@@ -3,13 +3,13 @@ import React from 'react'
 
 import Suggestion, {SEVERITY} from './Suggestion'
 import SuggestionsComponent from './Component'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
-export default class Suggestions extends Module {
+export default class Suggestions extends Analyser {
 	static handle = 'suggestions'
 	static displayOrder = DISPLAY_ORDER.SUGGESTIONS
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DisplayMode.FULL
 	static title = t('core.suggestions.title')`Suggestions`
 
 	_suggestions = []
