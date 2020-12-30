@@ -134,7 +134,7 @@ export class Analyser extends Injectable {
 		const hook: EventHook<R> = {
 			predicate,
 			handle: (this.constructor as typeof Analyser).handle,
-			callback,
+			callback: callback.bind(this),
 		}
 
 		this.parser.dispatcher.addEventHook(hook)
@@ -167,7 +167,7 @@ export class Analyser extends Injectable {
 		const hook: TimestampHook = {
 			handle: (this.constructor as typeof Analyser).handle,
 			timestamp,
-			callback,
+			callback: callback.bind(this),
 		}
 		this.parser.dispatcher.addTimestampHook(hook)
 		return hook
