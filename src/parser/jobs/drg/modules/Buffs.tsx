@@ -13,6 +13,8 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 const BAD_LIFE_SURGE_CONSUMERS: number[] = [
 	ACTIONS.TRUE_THRUST.id,
@@ -23,13 +25,30 @@ const BAD_LIFE_SURGE_CONSUMERS: number[] = [
 	ACTIONS.PIERCING_TALON.id,
 	ACTIONS.DOOM_SPIKE.id,
 	ACTIONS.SONIC_THRUST.id,
-	ACTIONS.COERTHAN_TORMENT.id,
 ]
 
 const FINAL_COMBO_HITS: number[] = [
 	ACTIONS.FANG_AND_CLAW.id,
 	ACTIONS.WHEELING_THRUST.id,
 ]
+
+// these are the consumers we care to show in the chart
+const CHART_LIFE_SURGE_CONSUMERS: number[] = [
+	ACTIONS.FULL_THRUST.id,
+	ACTIONS.FANG_AND_CLAW.id,
+	ACTIONS.WHEELING_THRUST.id,
+	ACTIONS.COERTHAN_TORMENT.id,
+]
+
+const CHART_COLORS: {[actionId: number]: string} = {
+	[ACTIONS.FULL_THRUST.id]: '#0e81f7',
+	[ACTIONS.FANG_AND_CLAW.id]: '#b36b00',
+	[ACTIONS.WHEELING_THRUST.id]: '#b36b00',
+	[ACTIONS.COERTHAN_TORMENT.id]: '#b36b00',
+}
+
+const OTHER_ACTION_COLOR: string = '#660000'
+const MIN_COT_HITS: number = 3
 
 export default class Buffs extends Module {
 	static handle = 'buffs'
@@ -38,6 +57,7 @@ export default class Buffs extends Module {
 	private badLifeSurges: number = 0
 	private fifthGcd: boolean = false
 	private soloDragonSight: boolean = false
+	private lifeSurgeCasts: number[] = []
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -45,16 +65,24 @@ export default class Buffs extends Module {
 	@dependency private invuln!: Invulnerability
 	@dependency private suggestions!: Suggestions
 	@dependency private data!: Data
+	@dependency private statistics!: Statistics
 
 	init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)
+		this.addEventHook('normaliseddamage', {by: 'player', abilityId: ACTIONS.COERTHAN_TORMENT.id}, this.onCot)
 	}
 
 	private onCast(event: CastEvent) {
 		const action = this.data.getAction(event.ability.guid)
 		if (action && action.onGcd) {
+			// always mark consumed buff for stat chart
+			if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id)) {
+				this.lifeSurgeCasts.push(action.id)
+			}
+
+			// 4-5 combo hit checks
 			if (BAD_LIFE_SURGE_CONSUMERS.includes(action.id)) {
 				this.fifthGcd = false // Reset the 4-5 combo hit flag on other GCDs
 				if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id)) {
@@ -68,6 +96,16 @@ export default class Buffs extends Module {
 						this.badLifeSurges++
 					}
 				}
+			}
+		}
+	}
+
+	private onCot(event: NormalisedDamageEvent) {
+		if (event.ability.guid === ACTIONS.COERTHAN_TORMENT.id) {
+			// this action is pushed onto the statistic graph data by onCast, don't duplicate that
+			// if coerthan torment is life surged and hits less than three targets, it's no good
+			if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id) && event.hitCount < MIN_COT_HITS) {
+				this.badLifeSurges++
 			}
 		}
 	}
@@ -96,7 +134,7 @@ export default class Buffs extends Module {
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.LIFE_SURGE.icon,
 			content: <Trans id="drg.buffs.suggestions.life-surge.content">
-				Avoid using <ActionLink {...ACTIONS.LIFE_SURGE}/> on any GCD that isn't <ActionLink {...ACTIONS.FULL_THRUST}/> or a 5th combo hit. Any other combo action will have significantly less potency, losing a lot of the benefit of the guaranteed crit.
+				<ActionLink {...ACTIONS.LIFE_SURGE}/> should be used on <ActionLink {...ACTIONS.FULL_THRUST}/>, your highest potency ability, as much as possible. In order to keep <ActionLink {...ACTIONS.LIFE_SURGE} /> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <ActionLink {...ACTIONS.LIFE_SURGE} /> can be used on <ActionLink {...ACTIONS.COERTHAN_TORMENT} /> if you hit at least three targets.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -121,5 +159,59 @@ export default class Buffs extends Module {
 				</Trans>,
 			}))
 		}
+
+		// make a lil graph of life surge uses
+		// get total LS casts
+		const totalLsCasts = this.lifeSurgeCasts.length
+
+		// format for graph
+		const data = []
+
+		// count the things we care about (total - tracked should equal bad LS uses)
+		let trackedCastCount = 0
+		for (const actionId of CHART_LIFE_SURGE_CONSUMERS) {
+			const value = this.lifeSurgeCasts.filter(i => actionId === i).length
+
+			// don't put 0s in the chart
+			if (value === 0)
+				continue
+
+			data.push({
+				value,
+				color: CHART_COLORS[actionId],
+				columns: [
+					this.data.getAction(actionId)?.name,
+					value,
+					this.lsCastPercent(value, totalLsCasts),
+				] as const,
+			})
+
+			trackedCastCount += value
+		}
+
+		// push other column if bad use
+		const otherCasts = totalLsCasts - trackedCastCount
+		if (otherCasts > 0) {
+			data.push({
+				value: otherCasts,
+				color: OTHER_ACTION_COLOR,
+				columns: [
+					'Other',
+					otherCasts,
+					this.lsCastPercent(otherCasts, totalLsCasts),
+				] as const,
+			})
+		}
+
+		if (data.length > 0) {
+			this.statistics.add(new PieChartStatistic({
+				headings: ['Life Surge Consumer', 'Count', '%'],
+				data,
+			}))
+		}
+	}
+
+	private lsCastPercent(value: number, total: number): string {
+		return ((value / total) * 100).toFixed(2) + '%'
 	}
 }
