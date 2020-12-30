@@ -1,6 +1,7 @@
 import {MessageDescriptor} from '@lingui/core'
 import {Event} from 'event'
 import _ from 'lodash'
+import {Compute} from 'utilities'
 import {seededColor} from 'utilities/color'
 import {EventFilterPredicate, EventHook, EventHookCallback, TimestampHook, TimestampHookCallback} from './Dispatcher'
 import {Injectable} from './Injectable'
@@ -17,10 +18,20 @@ type ResolveType<F> =
 		? {type: F}
 		: F
 
-/** For the given union U, filter to entries that extend F. */
+/** For the given type T, remove optional marking on all properties recursively. */
+// This is a pretty naive implementation - use something like ts-toolbelt if required.
+type DeepRequired<T> = {
+	[K in keyof T]-?: DeepRequired<T[K]>
+}
+
+/** For the given union U, filter to entries that match F structurally */
+// Outer `U extends unknown` is used to force distribution over the union.
+// Using `DeepRequired` to remove optionals from the union entry, as `{a?: string}` does not extend `{a: string}`
 type FilterUnion<U, F> =
-	U extends F
-		? U
+	U extends unknown
+		? DeepRequired<U> extends F
+			? U
+			: never
 		: never
 
 /** Builds a predicate function that will filter to events that match the provided partial. */
@@ -116,7 +127,7 @@ export class Analyser extends Injectable {
 	protected addEventHook<
 		F extends Event['type'] | Partial<Event>,
 		G extends Event,
-		R extends FilterUnion<Event, ResolveType<F> & G>,
+		R extends Compute<FilterUnion<Event, ResolveType<F> & G> & ResolveType<F>>,
 	>(
 		filter: F | EventFilterPredicate<G>,
 		callback: EventHookCallback<R>,
@@ -127,7 +138,7 @@ export class Analyser extends Injectable {
 			: filter
 
 		const predicate = typeof resolvedType === 'function'
-			? resolvedType as EventFilterPredicate<R>
+			? resolvedType as unknown as EventFilterPredicate<R>
 			: buildFilterPredicate<R>(resolvedType as Partial<Event>)
 
 		// Build & add the hook to the dispatcher
