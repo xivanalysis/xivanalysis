@@ -1,3 +1,25 @@
+@value gutter from "theme.module.css";
+@value md from "theme.module.css";
+@value themeBackground from "theme.module.css";
+
+.container {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: calc(gutter / 4);
+}
+
+@media md {
+	.container {
+		grid-template-columns: 2fr 1fr;
+		gap: gutter;
+	}
+}
+
+.container > * {
+	padding: gutter;
+	background: themeBackground;
+}
+
 .meta {
 	margin: 0;
 }
