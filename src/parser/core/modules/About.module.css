@@ -2,26 +2,16 @@
 @value md from "theme.module.css";
 @value themeBackground from "theme.module.css";
 
-.container {
-	display: grid;
-	grid-template-columns: 1fr;
-	gap: calc(gutter / 4);
-}
-
-@media md {
-	.container {
-		grid-template-columns: 2fr 1fr;
-		gap: gutter;
-	}
-}
-
-.container > * {
+.description,
+.meta {
 	padding: gutter;
 	background: themeBackground;
+	flex-basis: 0;
 }
 
 .meta {
 	margin: 0;
+	margin-top: calc(gutter / 4);
 }
 
 .meta dt {
@@ -42,4 +32,21 @@
 
 .contributor + .contributor {
 	margin-top: 4px;
+}
+
+@media md {
+	.container {
+		display: flex;
+		align-items: baseline;
+	}
+
+	.description {
+		flex-grow: 2;
+	}
+
+	.meta {
+		flex-grow: 1;
+		margin-top: 0;
+		margin-left: gutter;
+	}
 }

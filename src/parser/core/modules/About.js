@@ -74,7 +74,7 @@ export default class About extends Module {
 
 		return (
 			<div className={styles.container}>
-				<div>
+				<div className={styles.description}>
 					<Header><NormalisedMessage message={this.constructor.title}/></Header>
 
 					<this.Description/>

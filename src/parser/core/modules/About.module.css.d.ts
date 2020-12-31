@@ -3,6 +3,7 @@ declare namespace AboutModuleCssNamespace {
   export interface IAboutModuleCss {
     container: string;
     contributor: string;
+    description: string;
     gutter: string;
     md: string;
     meta: string;
