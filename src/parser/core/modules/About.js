@@ -1,8 +1,9 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import React from 'react'
-import {Grid, Message, Icon, Segment} from 'semantic-ui-react'
+import {Header} from 'semantic-ui-react'
 
+import {Message, Segment} from 'akkd'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
@@ -14,7 +15,7 @@ import styles from './About.module.css'
 export default class About extends Module {
 	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DISPLAY_MODE.RAW
 	static title = t('core.about.title')`About`
 
 	Description = null
@@ -47,18 +48,19 @@ export default class About extends Module {
 
 	output() {
 		// If they've not set the supported patch range, we're assuming it's not supported at all
-		if (!this.supportedPatches) {
-			return <Message warning icon>
-				<Icon name="warning sign" />
-				<Message.Content>
-					<Message.Header>
-						<Trans id="core.about.unsupported.title">This job is currently unsupported</Trans>
-					</Message.Header>
-					<Trans id="core.about.unsupported.description">
-						The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.
-					</Trans>
-				</Message.Content>
-			</Message>
+		if (this.supportedPatches == null) {
+			return (
+				<Segment>
+					<Message error icon="times circle outline">
+						<Message.Header>
+							<Trans id="core.about.unsupported.title">This job is currently unsupported</Trans>
+						</Message.Header>
+						<Trans id="core.about.unsupported.description">
+							The output shown below will not contain any job-specific analysis, and may be missing critical data required to generate an accurate result.
+						</Trans>
+					</Message>
+				</Segment>
+			)
 		}
 
 		// Work out the supported patch range (and if we're in it)
@@ -70,26 +72,26 @@ export default class About extends Module {
 			this.parser.parseDate,
 		)
 
-		return <Grid>
-			<Grid.Column mobile={16} computer={10}>
-				<this.Description/>
-				{!supported && <Message error icon>
-					<Icon name="times circle outline"/>
-					<Message.Content>
-						<Message.Header>
-							<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
-						</Message.Header>
-						<Trans id="core.about.patch-unsupported.description">
-							This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
-						</Trans>
-					</Message.Content>
-				</Message>}
-			</Grid.Column>
+		return (
+			<div className={styles.container}>
+				<div className={styles.description}>
+					<Header><NormalisedMessage message={this.constructor.title}/></Header>
 
-			{/* Meta box */}
-			{/* TODO: This looks abysmal */}
-			<Grid.Column mobile={16} computer={6}>
-				<Segment as="dl" className={styles.meta}>
+					<this.Description/>
+
+					{!supported && (
+						<Message error icon="times circle outline">
+							<Message.Header>
+								<Trans id="core.about.patch-unsupported.title">Report patch unsupported</Trans>
+							</Message.Header>
+							<Trans id="core.about.patch-unsupported.description">
+								This report was logged during patch {this.parser.patch.key}, which is not supported by the analyser. Calculations and suggestions may be impacted by changes in the interim.
+							</Trans>
+						</Message>
+					)}
+				</div>
+
+				<dl className={styles.meta}>
 					<dt><Trans id="core.about.supported-patches">Supported Patches:</Trans></dt>
 					<dd>{from}{from !== to && `–${to}`}</dd>
 
@@ -110,8 +112,8 @@ export default class About extends Module {
 							})}
 						</dd>
 					</>}
-				</Segment>
-			</Grid.Column>
-		</Grid>
+				</dl>
+			</div>
+		)
 	}
 }
