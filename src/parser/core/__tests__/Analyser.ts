@@ -52,7 +52,7 @@ describe('Analyser', () => {
 			expect(parser.dispatcher.addEventHook).toHaveBeenLastCalledWith({
 				handle: 'test',
 				predicate,
-				callback,
+				callback: expect.any(Function),
 			})
 		})
 
@@ -74,7 +74,7 @@ describe('Analyser', () => {
 			expect(parser.dispatcher.removeEventHook).toHaveBeenLastCalledWith({
 				handle: 'test',
 				predicate,
-				callback,
+				callback: expect.any(Function),
 			})
 		})
 
@@ -120,7 +120,7 @@ describe('Analyser', () => {
 			expect(parser.dispatcher.addTimestampHook).toHaveBeenLastCalledWith({
 				handle: 'test',
 				timestamp,
-				callback,
+				callback: expect.any(Function),
 			})
 		})
 
@@ -142,7 +142,7 @@ describe('Analyser', () => {
 			expect(parser.dispatcher.removeTimestampHook).toHaveBeenLastCalledWith({
 				handle: 'test',
 				timestamp,
-				callback,
+				callback: expect.any(Function),
 			})
 		})
 	})
