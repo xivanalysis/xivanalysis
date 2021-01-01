@@ -1,11 +1,11 @@
 import Module from '../Module'
 import Parser from '../Parser'
 import {Meta} from '../Meta'
-import {Dispatcher} from '../Dispatcher'
+import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Team} from 'report'
 import {GameEdition} from 'data/PATCHES'
 
-jest.mock('../Dispatcher')
+jest.mock('../LegacyDispatcher')
 
 /* eslint-disable no-magic-numbers */
 
@@ -71,7 +71,7 @@ const event = {
 
 describe('Module', () => {
 	beforeEach(async () => {
-		Dispatcher.mockClear()
+		LegacyDispatcher.mockClear()
 
 		const meta = new Meta({
 			modules: () => Promise.resolve({default: [TestModule]}),
@@ -86,12 +86,12 @@ describe('Module', () => {
 			pull,
 			actor,
 
-			dispatcher: new Dispatcher(),
+			legacyDispatcher: new LegacyDispatcher(),
 		})
 		await parser.configure()
-		module = parser.modules.test
+		module = parser.container.test
 
-		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher = LegacyDispatcher.mock.instances[0]
 		dispatcher.addEventHook.mockImplementation(x => x)
 
 		hook = jest.fn()

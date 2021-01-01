@@ -13,6 +13,7 @@ import Death from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
 import {EntityStatuses} from './EntityStatuses'
+import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
@@ -45,6 +46,7 @@ export default [
 	Downtime,
 	Enemies,
 	EntityStatuses,
+	EventsView,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,

@@ -124,7 +124,7 @@ export default class PitchPerfect extends Module {
 		const stacks = PP_POTENCY.indexOf(potency) + 1
 
 		// And finally we fabricate the event
-		this.parser.fabricateEvent({
+		this.parser.fabricateLegacyEvent({
 			...event,
 			type: 'pitchPerfect',
 			stacks: stacks,

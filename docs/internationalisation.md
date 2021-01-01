@@ -13,15 +13,15 @@ keys should be somewhat descriptive to make it clear for translators what exactl
 
 ## Examples
 
-### Module titles
+### Analyser titles
 
 If your module has `output`, it should also be given a translated title. This title will be shown above its output, as well as used for the link in the sidebar.
 
-```javascript
+```typescript
 import {t} from '@lingui/macro'
-import Module from 'parser/core/Module'
+import {Analyser} from 'parser/core/Module'
 
-export default class MyModule extends Module {
+export default class MyModule extends Analyser {
 	// ...
 	static title = t('my-job.my-module.title')`My Module`
 	// ...
@@ -32,14 +32,15 @@ export default class MyModule extends Module {
 
 In most cases, you can skip the peculiar syntax shown above, and use the `Trans` JSX tag, which automates a _lot_ of the hard yards for you. This is commonly seen in use in module output and suggestions, among other things. There's a number of other utility tags besides `Trans`, such as `Plural` - see [the lingui documentation](https://lingui.js.org/ref/react.html#components) for more info.
 
-```jsx
+```tsx
 import {Trans, Plural} from '@lingui/react'
-import ACTIONS from 'data/ACTIONS'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+
+// ...
 
 const supportedLanguages = 6
 this.suggestions.add(new Suggestion({
-	icon: ACTIONS.RAISE.icon,
+	icon: this.data.actions.RAISE.icon,
 	severity: SEVERITY.MORBID,
 	content: <Trans id="my-job.my-module.suggestions.my-suggestion.content">
 		You should <strong>really</strong> use localization.

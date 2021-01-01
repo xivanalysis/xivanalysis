@@ -7,15 +7,15 @@ import {Message, Segment} from 'akkd'
 import ContributorLabel from 'components/ui/ContributorLabel'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {patchSupported} from 'data/PATCHES'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 import styles from './About.module.css'
 
-export default class About extends Module {
+export default class About extends Analyser {
 	static handle = 'about'
 	static displayOrder = DISPLAY_ORDER.ABOUT
-	static displayMode = DISPLAY_MODE.RAW
+	static displayMode = DisplayMode.RAW
 	static title = t('core.about.title')`About`
 
 	Description = null

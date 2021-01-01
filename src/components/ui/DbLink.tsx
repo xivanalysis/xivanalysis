@@ -160,7 +160,7 @@ export const StatusLink = (props: TooltipHelperProps) => (
 	<Tooltip
 		{...props}
 		sheet="Status"
-		id={props.id && props.id - STATUS_ID_OFFSET}
+		id={props.id && (props.id > STATUS_ID_OFFSET ? props.id - STATUS_ID_OFFSET : props.id)}
 	/>
 )
 export const ItemLink = (props: TooltipHelperProps) => (
