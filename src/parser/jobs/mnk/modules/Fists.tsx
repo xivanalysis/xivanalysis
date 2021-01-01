@@ -4,7 +4,6 @@ import _ from 'lodash'
 import React from 'react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 
@@ -17,7 +16,6 @@ import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/m
 
 import {EntityStatuses} from '../../../core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import Gauge, {MAX_FASTER, MAX_STACKS} from './Gauge'
 
 export const FISTLESS = 0
 
@@ -35,30 +33,12 @@ const CHART_COLOURS = {
 }
 
 const FIST_SEVERITY = {
-	FISTLESS: {
-		1: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+	DOUSED: {
+		1: SEVERITY.MAJOR,
 	},
-	// Opener is 7 FoF GCDs, a user might also get forced into a GL3 burst at the end of a fight
-	// but if they can hit 9 there, they can probably hit 10-11 in GL4 anyway since they're getting
-	// a full RoF window. 10+ is always going to be a mistake. This is kinda weird tho since it's
-	// severity per window rather than a whole fight unlike FoE or no fist.
-	FISTS_OF_FIRE: {
-		8: SEVERITY.MINOR,
-		9: SEVERITY.MEDIUM,
-		10: SEVERITY.MAJOR,
-	},
-	// Forced disengaging is rarely more than 2 GCDs
 	FISTS_OF_EARTH: {
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
-	},
-	// Allow one in case of borked openers but flag it.
-	// Yes, I know it's a fart joke. I am 12 and what is this?
-	// 6 for major mostly because it's half as bad as Fistless.
-	FISTS_OF_WIND: {
 		1: SEVERITY.MEDIUM,
-		6: SEVERITY.MAJOR,
+		2: SEVERITY.MAJOR,
 	},
 }
 
@@ -81,17 +61,15 @@ export default class Fists extends Module {
 
 	@dependency private combatants!: Combatants
 	@dependency private data!: Data
-	@dependency private gauge!: Gauge
 	@dependency private statistics!: Statistics
 	@dependency private suggestions!: Suggestions
 	@dependency private entityStatuses!: EntityStatuses
 
 	private fistory: Fist[] = []
-	private foulWinds: number = 0
 
-	// Assume stanceless by default
+	// Assume FoF by default
 	//  if there's a pre-start applybuff, it'll get corrected, and if not, it's already correct
-	private activeFist: Fist = new Fist(FISTLESS, this.parser.fight.start_time)
+	private activeFist: Fist = new Fist(this.data.statuses.FISTS_OF_FIRE.id, this.parser.fight.start_time)
 
 	protected init(): void {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
@@ -131,7 +109,7 @@ export default class Fists extends Module {
 		}
 
 		// Ignore Meditation and Form Shift
-		if ([ACTIONS.MEDITATION.id, ACTIONS.FORM_SHIFT.id].includes(action.id)) {
+		if ([this.data.actions.MEDITATION.id, this.data.actions.FORM_SHIFT.id].includes(action.id)) {
 			return
 		}
 
@@ -146,17 +124,6 @@ export default class Fists extends Module {
 		}
 
 		this.handleFistChange(event.ability.guid)
-
-		// We only care about FoW from this point on
-		if (event.ability.guid !== STATUSES.FISTS_OF_WIND.id) { return }
-
-		// If player switches to FoW but they're not about to GL4
-		const coeurl: boolean = this.combatants.selected.hasStatus(STATUSES.COEURL_FORM.id)
-		const perbal: boolean = this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)
-
-		if (this.gauge.stacks < MAX_STACKS || (this.gauge.stacks === MAX_STACKS && (!coeurl && !perbal))) {
-			this.foulWinds++
-		}
 	}
 
 	private onRemove(event: BuffEvent): void {
@@ -172,54 +139,41 @@ export default class Fists extends Module {
 
 		const unknownFist = this.fistory.length === 1 && this.fistory[0].id === FISTLESS
 
-		if (unknownFist) {
-			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FISTS_OF_FIRE.icon,
-				content: <Trans id="mnk.fists.suggestions.unknownfist.content">
-					Try to use <StatusLink {...STATUSES.FISTS_OF_FIRE} /> up to GL{MAX_STACKS} and <StatusLink {...STATUSES.FISTS_OF_WIND}/> for GL{MAX_FASTER}.
-				</Trans>,
-				severity: SEVERITY.MAJOR,
-				why: <Trans id="mnk.fists.suggestions.unknownfist.why">
-					No Fist transition was detected over the fight.
-				</Trans>,
-			}))
-		} else {
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.FISTS_OF_FIRE.icon,
-				content: <Trans id="mnk.fists.suggestions.stanceless.content">
-					Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...ACTIONS.FISTS_OF_FIRE} />, or outright more GCDs with <ActionLink {...ACTIONS.FISTS_OF_WIND} />.
-				</Trans>,
-				why: <Trans id="mnk.fists.suggestions.stanceless.why">
-					<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
-				</Trans>,
-				tiers: FIST_SEVERITY.FISTLESS,
-				value: this.getFistGCDCount(FISTLESS),
-			}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_FIRE.icon,
+			content: <Trans id="mnk.fists.suggestions.stanceless.content">
+				Fist buffs are one of your biggest DPS contributors, either directly with <ActionLink {...this.data.actions.FISTS_OF_FIRE} /> or by avoiding death with <ActionLink {...this.data.actions.FISTS_OF_EARTH} />.
+			</Trans>,
+			why: <Trans id="mnk.fists.suggestions.stanceless.why">
+				<Plural value={this.getFistGCDCount(FISTLESS)} one="# GCD" other="# GCDs"	/> had no Fists buff active.
+			</Trans>,
+			tiers: FIST_SEVERITY.DOUSED,
+			value: this.getFistGCDCount(FISTLESS),
+		}))
 
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.FISTS_OF_EARTH.icon,
-				content: <Trans id="mnk.fists.suggestions.foe.content">
-					When using <ActionLink {...ACTIONS.RIDDLE_OF_EARTH} />, remember to change back to <StatusLink {...STATUSES.FISTS_OF_WIND} /> as soon as possible.
-				</Trans>,
-				tiers: FIST_SEVERITY.FISTS_OF_EARTH,
-				why: <Trans id="mnk.fists.suggestions.foe.why">
-					<StatusLink {...STATUSES.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
-				</Trans>,
-				value: this.getFistGCDCount(STATUSES.FISTS_OF_EARTH.id),
-			}))
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_EARTH.icon,
+			content: <Trans id="mnk.fists.suggestions.foe.content">
+				When using <ActionLink {...this.data.actions.FISTS_OF_EARTH} />, remember to change back to <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as soon as possible.
+			</Trans>,
+			tiers: FIST_SEVERITY.FISTS_OF_EARTH,
+			why: <Trans id="mnk.fists.suggestions.foe.why">
+				<StatusLink {...this.data.statuses.FISTS_OF_EARTH} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id)} one="# GCD" other="# GCDs"/>.
+			</Trans>,
+			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_EARTH.id),
+		}))
 
-			this.suggestions.add(new TieredSuggestion({
-				icon: ACTIONS.FISTS_OF_WIND.icon,
-				content: <Trans id="mnk.fists.suggestions.fow.content">
-					Avoid swapping to <StatusLink {...STATUSES.FISTS_OF_WIND}/> while below {MAX_STACKS} stacks until you're about to execute a <StatusLink {...STATUSES.COEURL_FORM} /> skill. <StatusLink {...STATUSES.FISTS_OF_FIRE} /> offers more damage until you can get to GL{MAX_FASTER}.
-				</Trans>,
-				why: <Trans id="mnk.fists.suggestions.fow.why">
-					<StatusLink {...STATUSES.FISTS_OF_WIND}/> was activated <Plural value={this.foulWinds} one="# time" other="# times" /> below max stacks.
-				</Trans>,
-				tiers: FIST_SEVERITY.FISTS_OF_WIND,
-				value: this.foulWinds,
-			}))
-		}
+		this.suggestions.add(new TieredSuggestion({
+			icon: this.data.actions.FISTS_OF_WIND.icon,
+			content: <Trans id="mnk.fists.suggestions.fow.content">
+				Using <ActionLink {...this.data.actions.FISTS_OF_WIND} /> provides no combat benefit. Try to stay in <StatusLink {...this.data.statuses.FISTS_OF_FIRE} /> as much as possible.
+			</Trans>,
+			tiers: FIST_SEVERITY.DOUSED,
+			why: <Trans id="mnk.fists.suggestions.fow.why">
+				<StatusLink {...this.data.statuses.FISTS_OF_WIND} /> was active for <Plural value={this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id)} one="# GCD" other="# GCDs"/>.
+			</Trans>,
+			value: this.getFistGCDCount(this.data.statuses.FISTS_OF_WIND.id),
+		}))
 
 		// Statistics
 		const uptimeKeys = _.uniq(this.fistory.map(fist => fist.id))

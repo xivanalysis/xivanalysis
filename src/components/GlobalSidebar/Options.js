@@ -1,24 +1,17 @@
 import classNames from 'classnames'
 import {observer} from 'mobx-react'
-import PropTypes from 'prop-types'
 import React, {useRef, useEffect, useContext} from 'react'
 import ReactDOM from 'react-dom'
-import {Icon, Popup} from 'semantic-ui-react'
 
 import I18nMenu from 'components/ui/I18nMenu'
 import {StoreContext} from 'store'
+import {LinkDiscord, LinkGitHub} from './Links'
 import ReportLink from './ReportLink'
+import {VersionInfo} from './Version'
 
 import styles from './Options.module.css'
 
-// Version info
-const version = process.env.REACT_APP_VERSION || 'DEV'
-const gitCommit = process.env.REACT_APP_GIT_COMMIT || 'DEV'
-const gitBranch = process.env.REACT_APP_GIT_BRANCH || 'DEV'
-
-export default function Options(props) {
-	const {view = 'vertical'} = props
-
+export default function Options() {
 	const {sidebarStore} = useContext(StoreContext)
 
 	const reportLinkRef = useRef()
@@ -30,59 +23,23 @@ export default function Options(props) {
 		[sidebarStore],
 	)
 
-	return (
-		<div className={view === 'horizontal' ? styles.horizontal : undefined}>
-			<div className={styles.row}>
-				<div ref={reportLinkRef}/>
+	return <>
+		<div className={styles.row}>
+			<div ref={reportLinkRef}/>
 
-				<ReportLink/>
-			</div>
-
-			<div className={styles.row}>
-				<I18nMenu/>
-			</div>
-
-			<div className={classNames(styles.row, styles.meta)}>
-				<a
-					href="https://discord.gg/jVbVe44"
-					target="_blank"
-					rel="noopener noreferrer"
-					className={styles.icon}
-				>
-					<Icon name="discord"/>
-				</a>
-				<a
-					href="https://github.com/xivanalysis/xivanalysis"
-					target="_blank"
-					rel="noopener noreferrer"
-					className={styles.icon}
-				>
-					<Icon name="github"/>
-				</a>
-
-				<Popup
-					trigger={<span className={styles.version}>{'#' + version}</span>}
-					position="bottom center"
-				>
-					<Popup.Content>
-						<dl className={styles.versionInfo}>
-							<dt>Commit</dt>
-							<dd>{gitCommit}</dd>
-							<dt>Branch</dt>
-							<dd>{gitBranch}</dd>
-						</dl>
-					</Popup.Content>
-				</Popup>
-			</div>
+			<ReportLink/>
 		</div>
-	)
-}
 
-Options.propTypes = {
-	view: PropTypes.oneOf([
-		'vertial',
-		'horizontal',
-	]),
+		<div className={styles.row}>
+			<I18nMenu/>
+		</div>
+
+		<div className={classNames(styles.row, styles.meta)}>
+			<LinkDiscord/>
+			<LinkGitHub/>
+			<VersionInfo/>
+		</div>
+	</>
 }
 
 export const ReportLinkContent = observer(({children}) => {

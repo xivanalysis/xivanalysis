@@ -1,0 +1,13 @@
+.version {
+	flex-grow: 1;
+	opacity: .5;
+	text-align: right;
+}
+
+.versionInfo, .versionInfo dd {
+	margin: 0;
+}
+
+.versionInfo dt {
+	font-weight: bold;
+}

@@ -1,11 +1,11 @@
 import {Trans} from '@lingui/react'
 import {LANGUAGES} from 'data/LANGUAGES'
-import {GameEdition} from 'data/PATCHES'
 import {computed} from 'mobx'
 import {observer} from 'mobx-react'
 import React, {Component} from 'react'
 import {Dropdown, Icon, Image} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import {gameLanguageEditions} from 'store/i18n'
 import crowdinLogo from './crowdin-dark-symbol.png'
 import styles from './I18nMenu.module.css'
 
@@ -31,7 +31,7 @@ class I18nMenu extends Component {
 	@computed
 	get gameLanguageOptions() {
 		return Object.entries(LANGUAGES)
-			.filter(([, data]) => data.gameEdition === GameEdition.GLOBAL)
+			.filter(([, data]) => gameLanguageEditions.includes(data.gameEdition))
 			.map(([lang, data]) => ({
 				...data.menu,
 				value: lang,
