@@ -19,8 +19,8 @@ export default new Meta({
 		to: '5.4',
 	},
 	contributors: [
-		{user: CONTRIBUTORS.SKYE, role: ROLES.MAINTAINER},
-		{user: CONTRIBUTORS.ACCHAN, role: ROLES.DEVELOPER},
+		{user: CONTRIBUTORS.ACCHAN, role: ROLES.MAINTAINER},
+		{user: CONTRIBUTORS.SKYE, role: ROLES.DEVELOPER},
 	],
 
 	changelog: [
