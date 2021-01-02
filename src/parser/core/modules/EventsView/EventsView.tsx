@@ -33,6 +33,10 @@ export class EventsView extends Analyser {
 	}
 
 	output() {
+		if (this.events.length === 0) {
+			return null
+		}
+
 		const data = {
 			events: this.events,
 			pull: this.parser.pull,
