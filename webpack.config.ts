@@ -2,9 +2,13 @@ import {CleanWebpackPlugin} from 'clean-webpack-plugin'
 import CopyWebpackPlugin from 'copy-webpack-plugin'
 import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
-import * as path from 'path'
-import * as webpack from 'webpack'
+import path from 'path'
+import webpack from 'webpack'
+import {getReactAppEnvironment} from './config/environment'
 import indexMetadata from './config/indexMetadata.json'
+import {calculateLocaleCompletion} from './config/locale'
+
+import './config/loadDotenv'
 
 interface Environment {
 	[key: string]: unknown
@@ -42,6 +46,15 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 	},
 
 	plugins: [
+		new webpack.DefinePlugin({
+			'process.env': {
+				NODE_ENV: JSON.stringify(process.env.NODE_ENV ?? 'development'),
+				PUBLIC_URL: JSON.stringify(''),
+				LOCALE_COMPLETION: calculateLocaleCompletion(),
+				...getReactAppEnvironment(),
+			}
+		}),
+
 		new HtmlWebpackPlugin({
 			// Cribbed template from neutrino
 			template: './config/template.ejs',

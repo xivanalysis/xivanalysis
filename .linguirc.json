@@ -1,0 +1,8 @@
+{
+	"srcPathDirs": [
+		"src"
+	],
+	"fallbackLocale": "en",
+	"sourceLocale": "en",
+	"format": "minimal"
+}
