@@ -72,7 +72,7 @@ export default class Overheal extends Module {
 		const petOverhealPercent = 100 * this.healingPet / (this.healingPet + this.overhealPet)
 		const hotOverhealPercent = 100 * this.healingOverTime / (this.healingOverTime + this.overhealOverTime)
 		const sourcesSum = this.healingOverTime + this.healingDirect + this.healingPet
-		const sourcesSumOverheal =  this.overhealOverTime + this.overhealPet + this.healingOverTime
+		const sourcesSumOverheal =  this.overhealOverTime + this.overhealPet + this.overhealDirect
 
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.overheal.rule.name">Avoid overheal</Trans>,
