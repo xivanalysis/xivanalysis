@@ -27,13 +27,23 @@ export default (env: Environment, {
 	output: {
 		path: path.resolve(__dirname, 'build'),
 		publicPath: '/',
-		filename: 'assets/[name].[contenthash:8].js',
+		filename: mode === 'development'
+			? 'assets/[name].js'
+			: 'assets/[name].[contenthash:8].js',
 	},
 	target: 'browserslist',
 
 	devtool: mode === 'development'
 		? 'eval-cheap-module-source-map'
 		: 'source-map',
+	devServer: {
+		host: 'localhost',
+		port: 3000,
+		historyApiFallback: true,
+		overlay: true,
+		// TODO:
+		// hot: true,
+	},
 
 	resolve: {
 		extensions: [
@@ -50,9 +60,12 @@ export default (env: Environment, {
 	},
 
 	optimization: {
+		minimize: mode !== 'development',
 		splitChunks: {
 			chunks: 'all',
-			maxInitialRequests: 5,
+			maxInitialRequests: mode === 'development'
+				? Infinity
+				: 5,
 		},
 		runtimeChunk: 'single',
 	},
@@ -83,7 +96,7 @@ export default (env: Environment, {
 			filename: 'assets/[name].[contenthash:8].css',
 		}),
 		new CleanWebpackPlugin(),
-	],
+	].filter(Boolean),
 
 	module: {
 		rules: [{

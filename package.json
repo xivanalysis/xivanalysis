@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "webpack-dev-server --mode development --open",
+    "start": "webpack serve --mode development --open",
     "build": "webpack --mode production",
     "test": "jest",
     "lint": "yarn run lint:js && yarn run lint:ts",
@@ -92,6 +92,7 @@
     "@types/react-scroll": "^1.5.4",
     "@types/react-window": "^1.8.2",
     "@types/webpack": "^4.41.25",
+    "@types/webpack-dev-server": "^3.11.1",
     "@types/webpack-env": "^1.13.6",
     "autoprefixer": "^10.1.0",
     "babel-loader": "^8.2.2",
@@ -115,6 +116,7 @@
     "raw-loader": "^4.0.2",
     "url-loader": "^4.1.1",
     "webpack": "^5.11.1",
-    "webpack-cli": "^4.3.1"
+    "webpack-cli": "^4.3.1",
+    "webpack-dev-server": "^4.0.0-beta.0"
   }
 }
