@@ -1,3 +1,17 @@
+const getPlugins = ({
+	isTypescript = false,
+	isTSX = false,
+} = {}) => [
+	'./config/babel-plugin-xiva-dependency',
+	isTypescript && ['@babel/plugin-transform-typescript', {
+		isTSX,
+		allowDeclareFields: true,
+	}],
+	['@babel/plugin-proposal-decorators', {legacy: true}],
+	['@babel/plugin-proposal-class-properties', {loose: true}],
+	'babel-plugin-macros',
+].filter(item => !!item)
+
 module.exports = api => ({
 	presets: [
 		'@babel/preset-env',
@@ -5,11 +19,16 @@ module.exports = api => ({
 			development: api.env('development'),
 			runtime: 'automatic',
 		}],
-		'@babel/preset-typescript',
 	],
-	plugins: [
-		['@babel/plugin-proposal-decorators', {legacy: true}],
-		['@babel/plugin-proposal-class-properties', {loose: true}],
-		'babel-plugin-macros',
-	],
+
+	overrides: [{
+		test: /\.jsx?$/,
+		plugins: getPlugins()
+	}, {
+		test: /\.ts$/,
+		plugins: getPlugins({isTypescript: true})
+	}, {
+		test: /\.tsx$/,
+		plugins: getPlugins({isTypescript: true, isTSX: true})
+	}]
 })

@@ -2,6 +2,7 @@ import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import 'intersection-observer'
 import 'whatwg-fetch'
+import 'reflect-metadata'
 
 import * as Sentry from '@sentry/browser'
 import React from 'react'
