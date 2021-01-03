@@ -10,6 +10,7 @@ const getPlugins = ({
 	['@babel/plugin-proposal-decorators', {legacy: true}],
 	['@babel/plugin-proposal-class-properties', {loose: true}],
 	'babel-plugin-macros',
+	'./locale/babel-plugin-transform-react.js',
 ].filter(item => !!item)
 
 module.exports = api => ({

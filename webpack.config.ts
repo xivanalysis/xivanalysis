@@ -73,6 +73,9 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 		rules: [{
 			// JS/TS (via babel)
 			test: /\.[tj]sx?$/,
+			include: [
+				path.resolve(__dirname, 'src'),
+			],
 			use: [{
 				loader: 'babel-loader',
 				options: {
