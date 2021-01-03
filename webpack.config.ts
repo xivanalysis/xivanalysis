@@ -39,10 +39,6 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 			path.resolve(__dirname, 'src'),
 			'node_modules',
 		],
-		fallback: {
-			// Required for `vfile` :/
-			path: require.resolve('path-browserify')
-		},
 	},
 
 	plugins: [
