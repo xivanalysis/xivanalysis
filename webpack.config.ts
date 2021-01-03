@@ -85,6 +85,7 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 			}],
 		}, {
 			// CSS
+			// TODO: Typings?
 			test: /\.css$/,
 			use: [{
 				loader: MiniCssExtractPlugin.loader,
@@ -92,6 +93,7 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 			}, {
 				loader: 'css-loader',
 				options: {
+					importLoaders: 1,
 					modules: {
 						auto: true,
 						// TODO: Switch this to `[hash:base64]` in prod?
@@ -100,6 +102,8 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 						exportLocalsConvention: 'camelCase',
 					},
 				}
+			}, {
+				loader: 'postcss-loader',
 			}],
 		}, {
 			// Lingui message files
@@ -125,8 +129,7 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 				options: {
 					limit: 8192,
 					name: 'assets/[name].[hash:8].[ext]',
-					// TODO: ?
-					// esModule: false,
+					esModule: false,
 				}
 			}]
 		}],
