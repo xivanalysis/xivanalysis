@@ -4,6 +4,7 @@ import HtmlWebpackPlugin from 'html-webpack-plugin'
 import MiniCssExtractPlugin from 'mini-css-extract-plugin'
 import path from 'path'
 import webpack from 'webpack'
+import WebpackBar from 'webpackbar'
 import {getReactAppEnvironment} from './config/environment'
 import indexMetadata from './config/indexMetadata.json'
 import {calculateLocaleCompletion} from './config/locale'
@@ -44,6 +45,8 @@ export default (env: Environment, {
 		// TODO:
 		// hot: true,
 	},
+
+	stats: 'summary',
 
 	resolve: {
 		extensions: [
@@ -96,6 +99,8 @@ export default (env: Environment, {
 			filename: 'assets/[name].[contenthash:8].css',
 		}),
 		new CleanWebpackPlugin(),
+
+		new WebpackBar({profile: true}),
 	].filter(Boolean),
 
 	module: {
