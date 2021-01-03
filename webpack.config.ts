@@ -15,17 +15,25 @@ interface Environment {
 }
 
 interface Arguments {
-	mode: 'production' | 'development'
+	mode?: 'production' | 'development'
 	[key: string]: unknown
 }
 
-export default (env: Environment, argv: Arguments): webpack.Configuration => ({
+export default (env: Environment, {
+	mode = 'development'
+}: Arguments): webpack.Configuration => ({
+	mode,
 	entry: {index: './src/index'},
 	output: {
 		path: path.resolve(__dirname, 'build'),
 		publicPath: '/',
 		filename: 'assets/[name].[contenthash:8].js',
 	},
+	target: 'browserslist',
+
+	devtool: mode === 'development'
+		? 'eval-cheap-module-source-map'
+		: 'source-map',
 
 	resolve: {
 		extensions: [
@@ -39,6 +47,14 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 			path.resolve(__dirname, 'src'),
 			'node_modules',
 		],
+	},
+
+	optimization: {
+		splitChunks: {
+			chunks: 'all',
+			maxInitialRequests: 5,
+		},
+		runtimeChunk: 'single',
 	},
 
 	plugins: [
@@ -80,7 +96,7 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 				loader: 'babel-loader',
 				options: {
 					cacheDirectory: true,
-					envName: argv.mode,
+					envName: mode,
 				},
 			}],
 		}, {
@@ -134,12 +150,4 @@ export default (env: Environment, argv: Arguments): webpack.Configuration => ({
 			}]
 		}],
 	},
-
-	// TODO: mode
-	// TODO: devtool
-	// TODO: target
-	// TODO: context
-	// TODO: stats
-	// TODO: node?
-	// TODO: optimization
 })
