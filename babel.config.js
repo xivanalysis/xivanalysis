@@ -10,7 +10,14 @@ const getPlugins = ({
 	['@babel/plugin-proposal-decorators', {legacy: true}],
 	['@babel/plugin-proposal-class-properties', {loose: true}],
 	'babel-plugin-macros',
+	'babel-plugin-lodash',
 	'./locale/babel-plugin-transform-react.js',
+	['@babel/plugin-transform-runtime', {
+		corejs: {version: 3},
+		// TODO: Enable for web build only?
+		// useESModules: true,
+		version: '^7.12.5',
+	}],
 ].filter(item => !!item)
 
 module.exports = api => ({
