@@ -42,11 +42,11 @@ export default (env: Environment, {
 		port: 3000,
 		historyApiFallback: true,
 		overlay: true,
-		// TODO:
-		// hot: true,
+		liveReload: false,
+		// `hot: true` implied by --hot cli arg
 	},
 
-	stats: 'summary',
+	stats: 'errors-warnings',
 
 	resolve: {
 		extensions: [
@@ -95,77 +95,90 @@ export default (env: Environment, {
 		new CopyWebpackPlugin({
 			patterns: ['public'],
 		}),
-		new MiniCssExtractPlugin({
+		mode !== 'development' && new MiniCssExtractPlugin({
 			filename: 'assets/[name].[contenthash:8].css',
 		}),
 		new CleanWebpackPlugin(),
 
-		new WebpackBar({profile: true}),
+		new WebpackBar({}),
 	].filter(Boolean),
 
 	module: {
-		rules: [{
+		rules: [
 			// JS/TS (via babel)
-			test: /\.[tj]sx?$/,
-			include: [
-				path.resolve(__dirname, 'src'),
-			],
-			use: [{
-				loader: 'babel-loader',
-				options: {
-					cacheDirectory: true,
-					envName: mode,
-				},
-			}],
-		}, {
-			// CSS
-			// TODO: Typings?
-			test: /\.css$/,
-			use: [{
-				loader: MiniCssExtractPlugin.loader,
-				options: {esModule: true},
-			}, {
-				loader: 'css-loader',
-				options: {
-					importLoaders: 1,
-					modules: {
-						auto: true,
-						// TODO: Switch this to `[hash:base64]` in prod?
-						localIdentName: '[name]_[local]__[md5:hash:base64:5]',
-						// TODO: camelCaseOnly?
-						exportLocalsConvention: 'camelCase',
+			{
+				test: /\.[tj]sx?$/,
+				include: [
+					path.resolve(__dirname, 'src'),
+				],
+				use: [
+					{
+						loader: 'babel-loader',
+						options: {
+							cacheDirectory: true,
+							envName: mode,
+						},
 					},
-				}
-			}, {
-				loader: 'postcss-loader',
-			}],
-		}, {
+				],
+			},
+			// CSS
+			{
+				test: /\.css$/,
+				use: [
+					mode !== 'development'
+						? {loader: MiniCssExtractPlugin.loader, options: {esModule: true}}
+						: {loader: 'style-loader'},
+					// TODO: Typings?
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+							modules: {
+								auto: true,
+								// TODO: Switch this to `[hash:base64]` in prod?
+								localIdentName: '[name]_[local]__[md5:hash:base64:5]',
+								// TODO: camelCaseOnly?
+								exportLocalsConvention: 'camelCase',
+							},
+						}
+					},
+					{loader: 'postcss-loader'},
+				],
+			},
 			// Lingui message files
-			test: /locale.+\.json$/,
-			type: 'javascript/auto',
-			use: [{
-				loader: '@lingui/loader',
-			}]
-		}, {
+			{
+				test: /locale.+\.json$/,
+				type: 'javascript/auto',
+				use: [
+					{loader: '@lingui/loader'},
+				],
+			},
 			// Fonts
-			test: /\.(eot|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
-			use: [{
-				loader: 'file-loader',
-				options: {
-					name: 'assets/[name].[hash:8].[ext]',
-				},
-			}],
-		}, {
+			{
+				test: /\.(eot|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+				use: [
+					{
+						loader: 'file-loader',
+						options: {
+							name: 'assets/[name].[hash:8].[ext]',
+						},
+					},
+				],
+			},
 			// Images
-			test: /\.(ico|png|jpg|jpeg|gif|svg|webp)(\?v=\d+\.\d+\.\d+)?$/,
-			use: [{
-				loader: 'url-loader',
-				options: {
-					limit: 8192,
-					name: 'assets/[name].[hash:8].[ext]',
-					esModule: false,
-				}
-			}]
-		}],
+			{
+				test: /\.(ico|png|jpg|jpeg|gif|svg|webp)(\?v=\d+\.\d+\.\d+)?$/,
+				use: [
+					{
+						loader: 'url-loader',
+						options: {
+							limit: 8192,
+							name: 'assets/[name].[hash:8].[ext]',
+							esModule: false,
+						},
+					},
+				],
+			},
+		],
 	},
 })
