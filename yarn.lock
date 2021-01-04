@@ -1240,10 +1240,10 @@
     "@types/binary-parser" "^1.5.0"
     binary-parser "^1.6.2"
 
-"@kobold/xiv@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@kobold/xiv/-/xiv-0.0.1.tgz#70499db071c91fa6fb679bde4965122eeb2b3458"
-  integrity sha512-31okayl/2WLbsG8atkl6UcjcuJRaPyiW3kD0yLxMrVWLCLDheVwtSrLUtPXfIOtkAPXH59cYnSngM3k3f4w+Ow==
+"@kobold/xiv@^0.0.2":
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/@kobold/xiv/-/xiv-0.0.2.tgz#3a91acd3e221989740e786fc7f5cd23cd46feea2"
+  integrity sha512-CSm495/GYP7aeCD5kvpAYL7qKS6sYmZFEjsumlx5TcmWVP4T4jefHP1qVAYSWMQO/MziM6QT0BfMtZNzP9T2qw==
   dependencies:
     "@babel/runtime-corejs3" "^7.9.2"
 

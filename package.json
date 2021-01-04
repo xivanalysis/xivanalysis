@@ -68,7 +68,7 @@
     "@babel/register": "^7.12.10",
     "@kobold/core": "^0.0.1",
     "@kobold/excel": "^0.0.2",
-    "@kobold/xiv": "^0.0.1",
+    "@kobold/xiv": "^0.0.2",
     "@lingui/loader": "^2.5.0",
     "@lingui/macro": "^2.7.4",
     "@types/chart.js": "^2.7.37",
