@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"baseUrl": "./src",
+		"noEmit": true,
+
+		"strict": true,
+
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleResolution": "node",
+
+		"allowJs": true,
+		"esModuleInterop": true,
+		"isolatedModules": true,
+
+		"jsx": "preserve",
+		"experimentalDecorators": true,
+
+		"types": [
+			"webpack-env",
+			"jest"
+		]
+	},
+	"include": ["src/**/*"]
+}
