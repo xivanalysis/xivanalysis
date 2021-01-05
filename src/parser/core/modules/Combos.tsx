@@ -34,7 +34,7 @@ export class ComboEvent extends NormalisedEventFields {
 	}
 }
 
-declare module 'events' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		combos: ComboEvent
 	}
@@ -94,7 +94,7 @@ export default class Combos extends Module {
 
 	protected fabricateComboEvent(event: NormalisedDamageEvent) {
 		const combo = new ComboEvent(event)
-		this.parser.fabricateEvent(combo)
+		this.parser.fabricateLegacyEvent(combo)
 	}
 
 	protected recordBrokenCombo(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]) {

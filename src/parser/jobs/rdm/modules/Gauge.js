@@ -260,7 +260,7 @@ export default class Gauge extends Module {
 				missOrInvlun: gaugeAction.missOrInvuln,
 			}
 			//console.log(`${JSON.stringify(fabricatedEvent, null, 4)}`)
-			this.parser.fabricateEvent(fabricatedEvent)
+			this.parser.fabricateLegacyEvent(fabricatedEvent)
 		}
 
 		_onDeath() {

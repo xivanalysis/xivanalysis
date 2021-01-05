@@ -2,13 +2,8 @@
 declare namespace OptionsModuleCssNamespace {
   export interface IOptionsModuleCss {
     gutter: string;
-    horizontal: string;
-    icon: string;
     meta: string;
     row: string;
-    themeText: string;
-    version: string;
-    versionInfo: string;
   }
 }
 

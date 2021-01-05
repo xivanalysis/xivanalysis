@@ -147,7 +147,7 @@ export default class Entities extends Module {
 	}
 
 	triggerChangeBuffStack(buff, timestamp, oldStacks, newStacks) {
-		this.parser.fabricateEvent({
+		this.parser.fabricateLegacyEvent({
 			...buff,
 			type: buff.isDebuff? 'changedebuffstack' : 'changebuffstack',
 			timestamp,

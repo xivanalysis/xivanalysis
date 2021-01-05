@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {
@@ -19,10 +19,10 @@ const INITIAL_END = 60000 // One minute
 
 const MINIMUM_ZOOM = 10000 // 10 seconds (~4 gcds)
 
-export class Timeline extends Module {
+export class Timeline extends Analyser {
 	static handle = 'timeline'
 	static displayOrder = DISPLAY_ORDER.TIMELINE
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DisplayMode.FULL
 	static title = t('core.timeline.title')`Timeline`
 
 	private setView?: SetViewFn

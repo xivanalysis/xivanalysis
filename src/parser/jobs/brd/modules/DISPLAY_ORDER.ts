@@ -4,4 +4,5 @@ export default {
 	PITCH_PERFECT: 3,
 	SIDEWINDER: 4,
 	SNAPSHOTS: 5,
+	MULTI_HIT_SKILLS: 6,
 }

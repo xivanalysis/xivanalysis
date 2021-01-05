@@ -1,10 +1,13 @@
 import Module from '../Module'
 import Parser from '../Parser'
 import {Meta} from '../Meta'
+import {LegacyDispatcher} from '../LegacyDispatcher'
 import {Dispatcher} from '../Dispatcher'
 import {GameEdition} from 'data/PATCHES'
 import {Team} from 'report'
+import {Analyser} from '../Analyser'
 
+jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')
 
 /* eslint-disable @xivanalysis/no-unused-dependencies, no-magic-numbers */
@@ -23,6 +26,11 @@ class DependentModule extends Module {
 		'test_basic',
 		{handle: 'test_renamed', prop: 'renamed'},
 	]
+}
+
+// Testing analysers
+class BasicAnalyser extends Analyser {
+	static handle = 'basic_analyser'
 }
 
 // Bunch of basic testing data
@@ -48,7 +56,7 @@ const fight = {
 	end_time: 100,
 }
 const event = {
-	type: '__test',
+	type: '__testLegacy',
 	timestamp: 50,
 }
 
@@ -87,17 +95,27 @@ const buildParser = (modules = []) => new Parser({
 	pull,
 	actor,
 
+	legacyDispatcher: new LegacyDispatcher(),
 	dispatcher: new Dispatcher(),
 })
 
 describe('Parser', () => {
 	let parser
 	let dispatcher
+	let legacyDispatcher
 
 	beforeEach(() => {
 		Dispatcher.mockClear()
+		LegacyDispatcher.mockClear()
+
 		parser = buildParser()
+
 		dispatcher = Dispatcher.mock.instances[0]
+		dispatcher.timestamp = 0
+		dispatcher.dispatch.mockReturnValue([])
+
+		legacyDispatcher = LegacyDispatcher.mock.instances[0]
+		legacyDispatcher.timestamp = 0
 	})
 
 	it('exposes metadata', () => {
@@ -109,11 +127,13 @@ describe('Parser', () => {
 
 	it('starts at beginning of fight', () => {
 		dispatcher.timestamp = -Infinity
+		legacyDispatcher.timestamp = -Infinity
 		expect(parser.currentTimestamp).toBe(fight.start_time)
 	})
 
 	it('does not exceed fight end time', () => {
 		dispatcher.timestamp = Infinity
+		legacyDispatcher.timestamp = Infinity
 		expect(parser.currentTimestamp).toBe(fight.end_time)
 		expect(parser.fightDuration).toBe(fight.end_time - fight.start_time)
 	})
@@ -128,8 +148,8 @@ describe('Parser', () => {
 		parser = buildParser([BasicModule])
 		await parser.configure()
 
-		expect(parser.modules).toHaveProperty('test_basic')
-		expect(parser.modules.test_basic).toBeInstanceOf(BasicModule)
+		expect(parser.container).toHaveProperty('test_basic')
+		expect(parser.container.test_basic).toBeInstanceOf(BasicModule)
 	})
 
 	it('runs normalisers', async () => {
@@ -137,17 +157,17 @@ describe('Parser', () => {
 		await parser.configure()
 		parser.normalise([event])
 
-		const mock = parser.modules.test_basic.normalise.mock
+		const mock = parser.container.test_basic.normalise.mock
 		expect(mock.calls).toHaveLength(1)
 		expect(mock.calls[0][0]).toEqual([event])
 	})
 
 	it('dispatches events', async () => {
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
-		expect(dispatcher.dispatch).toHaveBeenCalledTimes(3)
-		const {calls} = dispatcher.dispatch.mock
+		expect(legacyDispatcher.dispatch).toHaveBeenCalledTimes(3)
+		const {calls} = legacyDispatcher.dispatch.mock
 		expect(calls[0][0]).toContainEntry(['type', 'init'])
 		expect(calls[1][0]).toEqual(event)
 		expect(calls[2][0]).toContainEntry(['type', 'complete'])
@@ -155,13 +175,30 @@ describe('Parser', () => {
 
 	it('stops dispatching to modules that error', async () => {
 		parser = buildParser([BasicModule])
-		dispatcher = Dispatcher.mock.instances[1]
-		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
+		legacyDispatcher = LegacyDispatcher.mock.instances[1]
+		legacyDispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
+
+		const {calls} = legacyDispatcher.dispatch.mock
+		expect(calls[0][1]).toEqual(['test_basic'])
+		expect(calls[1][1]).toEqual([])
+	})
+
+	it('stops dispatching to analysers that error', async () => {
+		parser = buildParser([BasicAnalyser])
+		dispatcher = Dispatcher.mock.instances[1]
+		dispatcher.dispatch
+			.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
+			.mockReturnValueOnce([])
+		await parser.configure()
+		parser.parseEvents({events: [
+			{type: 'test', timestamp: 50},
+			{type: 'test', timestamp: 60},
+		], legacyEvents: []})
 
 		const {calls} = dispatcher.dispatch.mock
-		expect(calls[0][1]).toEqual(['test_basic'])
+		expect(calls[0][1]).toEqual(['basic_analyser'])
 		expect(calls[1][1]).toEqual([])
 	})
 
@@ -169,36 +206,137 @@ describe('Parser', () => {
 		parser = buildParser([BasicModule, DependentModule, RenamedModule])
 		await parser.configure()
 
-		const module = parser.modules.test_dependent
+		const module = parser.container.test_dependent
 		expect(module.test_basic)
 			.toBeInstanceOf(BasicModule)
-			.toBe(parser.modules.test_basic)
+			.toBe(parser.container.test_basic)
 		expect(module.renamed)
 			.toBeInstanceOf(RenamedModule)
-			.toBe(parser.modules.test_renamed)
+			.toBe(parser.container.test_renamed)
 	})
 
 	it('cascades errors to dependents', async () => {
 		parser = buildParser([BasicModule, RenamedModule, DependentModule])
-		dispatcher = Dispatcher.mock.instances[1]
-		dispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
+		legacyDispatcher = LegacyDispatcher.mock.instances[1]
+		legacyDispatcher.dispatch.mockReturnValueOnce({test_basic: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
-		const {calls} = dispatcher.dispatch.mock
+		const {calls} = legacyDispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
 		expect(calls[1][1]).toEqual(['test_renamed'])
 	})
 
 	it('cascades errors to dependents while renamed', async () => {
 		parser = buildParser([BasicModule, RenamedModule, DependentModule])
-		dispatcher = Dispatcher.mock.instances[1]
-		dispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
+		legacyDispatcher = LegacyDispatcher.mock.instances[1]
+		legacyDispatcher.dispatch.mockReturnValueOnce({test_renamed: new Error('test')})
 		await parser.configure()
-		parser.parseEvents([event])
+		parser.parseEvents({events: [], legacyEvents: [event]})
 
-		const {calls} = dispatcher.dispatch.mock
+		const {calls} = legacyDispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['test_renamed', 'test_basic', 'test_dependent'])
 		expect(calls[1][1]).toEqual(['test_basic'])
+	})
+
+	it('queues new events for dispatch', async () => {
+		const toQueue = [
+			{timestamp: 50, type: '__queuedEvent'},
+			{timestamp: 70, type: '__queuedEvent'},
+			{timestamp: 0, type: '__queuedEvent'},
+		]
+		const dispatchedEvents = []
+
+		function mockDispatch(event) {
+			this.timestamp = event.timestamp
+			dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
+			if (toQueue.length > 0) { parser.queueEvent(toQueue.shift()) }
+			return []
+		}
+
+		dispatcher.dispatch.mockImplementation(mockDispatch)
+
+		await parser.configure()
+		parser.parseEvents({
+			events: [
+				{timestamp: 0, type: '__sourceEvent'},
+				{timestamp: 50, type: '__sourceEvent'},
+				{timestamp: 100, type: '__sourceEvent'},
+			],
+			legacyEvents: [],
+		})
+
+		expect(dispatchedEvents.map(({event}) => event.type)).toEqual([
+			'__sourceEvent',
+			'__sourceEvent',
+			'__queuedEvent',
+			'__queuedEvent',
+			'__sourceEvent',
+		])
+		expect(dispatchedEvents.map(({timestamp}) => timestamp))
+			.toEqual([0, 50, 50, 70, 100])
+	})
+
+	describe('event migration', () => {
+		[{
+			name: 'equal timestamp',
+			events: [{timestamp: 50, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			expected: {
+				type: ['init', '__rfEvent', '__lEvent', 'complete'],
+				timestamp: [0, 50, 50, 100],
+			},
+		}, {
+			name: 'flow first',
+			events: [{timestamp: -100, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			expected: {
+				type: ['__rfEvent', 'init', '__lEvent', 'complete'],
+				timestamp: [0, 0, 50, 100],
+			},
+		}, {
+			name: 'flow last',
+			events: [{timestamp: 200, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			expected: {
+				type: ['init', '__lEvent', 'complete', '__rfEvent'],
+				timestamp: [0, 50, 100, 100],
+			},
+		}, {
+			name: 'no flow',
+			events: [],
+			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			expected: {
+				type: ['init', '__lEvent', 'complete'],
+				timestamp: [0, 50, 100],
+			},
+		}, {
+			name: 'no legacy',
+			events: [{timestamp: 50, type: '__rfEvent'}],
+			legacyEvents: [],
+			expected: {
+				type: ['init', '__rfEvent', 'complete'],
+				timestamp: [0, 50,100],
+			},
+		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
+			const dispatchedEvents = []
+
+			function mockDispatch(event) {
+				this.timestamp = event.timestamp
+				dispatchedEvents.push({event, timestamp: parser.currentTimestamp})
+				return []
+			}
+			dispatcher.dispatch.mockImplementation(mockDispatch)
+			legacyDispatcher.dispatch.mockImplementation(mockDispatch)
+
+			await parser.configure()
+			parser.parseEvents({
+				events: opts.events,
+				legacyEvents: opts.legacyEvents
+			})
+
+			expect(dispatchedEvents.map(({event}) => event.type)).toEqual(opts.expected.type)
+			expect(dispatchedEvents.map(({timestamp}) => timestamp)).toEqual(opts.expected.timestamp)
+		}))
 	})
 })

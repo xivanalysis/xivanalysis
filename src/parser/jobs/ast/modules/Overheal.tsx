@@ -72,7 +72,7 @@ export default class Overheal extends Module {
 		const petOverhealPercent = 100 * this.healingPet / (this.healingPet + this.overhealPet)
 		const hotOverhealPercent = 100 * this.healingOverTime / (this.healingOverTime + this.overhealOverTime)
 		const sourcesSum = this.healingOverTime + this.healingDirect + this.healingPet
-		const sourcesSumOverheal =  this.overhealOverTime + this.overhealPet + this.healingOverTime
+		const sourcesSumOverheal =  this.overhealOverTime + this.overhealPet + this.overhealDirect
 
 		this.checklist.add(new TieredRule({
 			name: <Trans id="ast.overheal.rule.name">Avoid overheal</Trans>,
@@ -80,9 +80,9 @@ export default class Overheal extends Module {
 				Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.
 			</Trans>
 			<ul>
-				<li><Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT): </Trans>{this.invertPercent(nonHotOverhealPercent)}%{}</li>
-				{petOverhealPercent > 0 && <li><Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star): </Trans>{this.invertPercent(petOverhealPercent)}%</li>}
-				<li><Trans id="ast.overheal.requirement.hot"> Overheal (HoT): </Trans>{this.invertPercent(hotOverhealPercent)}%</li>
+				<li><Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT): {this.invertPercent(nonHotOverhealPercent)}%</Trans></li>
+				{petOverhealPercent > 0 && <li><Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star): {this.invertPercent(petOverhealPercent)}%</Trans></li>}
+				<li><Trans id="ast.overheal.requirement.hot"> Overheal (HoT): {this.invertPercent(hotOverhealPercent)}%</Trans></li>
 			</ul></>,
 			tiers: SEVERITY_TIERS,
 			requirements: [

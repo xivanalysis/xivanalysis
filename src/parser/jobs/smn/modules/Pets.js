@@ -355,7 +355,7 @@ export default class Pets extends Module {
 	}
 
 	setPet(petId, timestamp) {
-		this.parser.fabricateEvent({
+		this.parser.fabricateLegacyEvent({
 			type: 'summonpet',
 			timestamp: timestamp || this.parser.currentTimestamp,
 			petId: petId,

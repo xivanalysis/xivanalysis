@@ -2,9 +2,9 @@ import {getDataBy} from 'data'
 import {Action, layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
 import {applyLayer, Layer} from 'data/layer'
 import {layers as statusLayers, root as statusRoot, Status} from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import {Analyser} from 'parser/core/Analyser'
 
-export class Data extends Module {
+export class Data extends Analyser {
 	static handle = 'data'
 
 	private appliedCache = new Map<unknown, unknown>()

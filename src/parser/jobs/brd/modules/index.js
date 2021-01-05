@@ -1,4 +1,5 @@
 import AdditionalStats from './AdditionalStats'
+import AlwaysBeCasting from './AlwaysBeCasting'
 import ApexArrow from './ApexArrow'
 import Barrage from './Barrage'
 import Cooldowns from './Cooldowns'
@@ -6,6 +7,7 @@ import DoTs from './DoTs'
 import MultiHitSkills from './MultiHitSkills'
 import OGCDDowntime from './OGCDDowntime'
 import PitchPerfect from './PitchPerfect'
+import RagingStrikes from './RagingStrikes'
 import Sidewinder from './Sidewinder'
 import Snapshots from './Snapshots'
 import SongUptime from './SongUptime'
@@ -14,6 +16,7 @@ import Weaving from './Weaving'
 
 export default [
 	AdditionalStats,
+	AlwaysBeCasting,
 	ApexArrow,
 	Barrage,
 	Cooldowns,
@@ -21,6 +24,7 @@ export default [
 	MultiHitSkills,
 	OGCDDowntime,
 	PitchPerfect,
+	RagingStrikes,
 	Sidewinder,
 	Snapshots,
 	SongUptime,

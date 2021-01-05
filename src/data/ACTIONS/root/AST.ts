@@ -103,7 +103,7 @@ export const AST = ensureActions({
 		charges: 2,
 	},
 
-	ASPECTED_HELIOS: {
+	ASPECTED_HELIOS: { // Diurnal Variant
 		id: 3601,
 		name: 'Aspected Helios',
 		icon: 'https://xivapi.com/i/003000/003130.png',
@@ -121,8 +121,8 @@ export const AST = ensureActions({
 		mpCost: 1000,
 	},
 
-	ASPECTED_BENEFIC: {
-		id: 835,
+	ASPECTED_BENEFIC: { // Diurnal Variant
+		id: 3595,
 		name: 'Aspected Benefic',
 		icon: 'https://xivapi.com/i/003000/003127.png',
 		onGcd: true,

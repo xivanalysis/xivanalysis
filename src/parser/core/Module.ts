@@ -1,12 +1,14 @@
 import {MessageDescriptor} from '@lingui/core'
 import Color from 'color'
 import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
-import {Event} from 'events'
+import {Event} from 'legacyEvent'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
-import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './Dispatcher'
-import Parser from './Parser'
 import {ensureArray} from 'utilities'
+import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
+import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
+import Parser from './Parser'
+import {seededColor} from 'utilities/color'
 
 export enum DISPLAY_ORDER {
 	TOP = 0,
@@ -21,54 +23,9 @@ export enum DISPLAY_MODE {
 	RAW,
 }
 
-export function dependency(target: Module, prop: string) {
-	const dependency = Reflect.getMetadata('design:type', target, prop)
-	const constructor = target.constructor as typeof Module
-
-	// DO NOT REMOVE
-	// This totally-redundant line is a workaround for an issue in FF ~73 which causes the
-	// assignment in the conditional below to completely kludge the entire array regardless
-	// of it's contents if this isn't here.
-	const constructorDependencies = constructor.dependencies
-
-	// Make sure we're not modifying every single module
-	if (!constructor.hasOwnProperty('dependencies')) {
-		constructor.dependencies = [...constructorDependencies]
-	}
-
-	// If the dep is Object, it's _probably_ from a JS file. Fall back to simple handling
-	if (dependency === Object) {
-		constructor.dependencies.push(prop)
-		return
-	}
-
-	// Check that the dep is actually a module
-	if (!Module.isPrototypeOf(dependency)) {
-		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Module\`, got \`${dependency.name}\`.`)
-	}
-
-	constructor.dependencies.push({
-		handle: dependency.handle,
-		prop,
-	})
-}
-
-/**
- * DO NOT USE OR YOU WILL BE FIRED
- * Totally spit in the face of the entire dependency system by forcing it
- * to execute the decorated module before the module passed as an argument.
- * If you have to think whether you need this or not, you don't need it.
- */
-export const executeBeforeDoNotUseOrYouWillBeFired = (target: typeof Module) =>
-	(source: typeof Module) => {
-		target.dependencies.push(source.handle)
-		return source
-	}
-
-export interface MappedDependency {
-	handle: string
-	prop: string
-}
+// Re-exports from injectable for back compat
+export {dependency, executeBeforeDoNotUseOrYouWillBeFired}
+export type {MappedDependency}
 
 type ModuleFilter<T extends Event> = Filter<T> & FilterPartial<{
 	abilityId: Ability['guid'],
@@ -82,26 +39,12 @@ interface DebugFnOpts {
 }
 type DebugFn = (opts: DebugFnOpts) => void
 
-export default class Module {
-	static dependencies: Array<string | MappedDependency> = []
+export default class Module extends Injectable {
 	static displayOrder: number = DISPLAY_ORDER.DEFAULT
 	static displayMode: DISPLAY_MODE
 	// TODO: Refactor this var
 	static i18n_id?: string // tslint:disable-line
 	static debug: boolean = false
-
-	private static _handle: string
-	static get handle() {
-		if (!this._handle) {
-			const handle = this.name.charAt(0).toLowerCase() + this.name.slice(1)
-			console.error(`\`${this.name}\` does not have an explicitly set handle. Using \`${handle}\`. This WILL break in minified builds.`)
-			this._handle = handle
-		}
-		return this._handle
-	}
-	static set handle(value) {
-		this._handle = value
-	}
 
 	private static _title: string | MessageDescriptor
 	static get title() {
@@ -114,30 +57,10 @@ export default class Module {
 		this._title = value
 	}
 
-	private _debugHeaderColor?: Color
-	private get debugHeaderColor() {
-		if (!this._debugHeaderColor) {
-			const handle = (this.constructor as typeof Module).handle
-			const seed = handle.split('').reduce((acc, cur) => acc + cur.charCodeAt(0), 0)
-			// tslint:disable-next-line:no-magic-numbers
-			this._debugHeaderColor = Color.hsl(seed % 255, 255, 65)
-		}
-		return this._debugHeaderColor
-	}
-
 	constructor(
 		protected readonly parser: Parser,
 	) {
-		const module = this.constructor as typeof Module
-		module.dependencies.forEach(dep => {
-			if (typeof dep === 'string') {
-				dep = {handle: dep, prop: dep}
-			}
-
-			// TS Modules should use the @dependency decorator to pull them in,
-			// but this is still required for JS modules (and internal handling)
-			(this as any)[dep.prop] = parser.modules[dep.handle]
-		})
+		super({container: parser.container})
 	}
 
 	/**
@@ -232,7 +155,7 @@ export default class Module {
 			callback: cb.bind(this),
 		}))
 
-		hooks.forEach(hook => this.parser.dispatcher.addEventHook(hook))
+		hooks.forEach(hook => this.parser.legacyDispatcher.addEventHook(hook))
 
 		return hooks
 	}
@@ -273,7 +196,7 @@ export default class Module {
 
 	/** Remove a previously added event hook. */
 	protected removeEventHook(hooks: Array<EventHook<any>>) {
-		hooks.forEach(hook => this.parser.dispatcher.removeEventHook(hook))
+		hooks.forEach(hook => this.parser.legacyDispatcher.removeEventHook(hook))
 	}
 
 	/** Add a hook for a timestamp. The provided callback will be fired a single time when the parser reaches the specified timestamp. */
@@ -283,13 +206,13 @@ export default class Module {
 			module: (this.constructor as typeof Module).handle,
 			callback: cb.bind(this),
 		}
-		this.parser.dispatcher.addTimestampHook(hook)
+		this.parser.legacyDispatcher.addTimestampHook(hook)
 		return hook
 	}
 
 	/** Remove a previously added timestamp hook */
 	protected removeTimestampHook(hook: TimestampHook) {
-		this.parser.dispatcher.removeTimestampHook(hook)
+		this.parser.legacyDispatcher.removeTimestampHook(hook)
 	}
 
 	/**
@@ -315,7 +238,7 @@ export default class Module {
 		// tslint:disable-next-line:no-console
 		console.log(
 			`[%c${module.handle}%c]`,
-			`color: ${this.debugHeaderColor}`,
+			`color: ${seededColor(module.handle)}`,
 			'color: inherit',
 			...messages,
 		)

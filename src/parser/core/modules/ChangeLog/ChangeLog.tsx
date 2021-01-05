@@ -2,13 +2,13 @@ import {t} from '@lingui/macro'
 import React from 'react'
 
 import {default as ChangelogComponent} from './Component'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 
-export default class ChangeLog extends Module {
+export default class ChangeLog extends Analyser {
 	static handle = 'changelog'
 	static displayOrder = DISPLAY_ORDER.CHANGELOG
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DisplayMode.FULL
 
 	static title = t('core.changelog.title')`Changelog`
 

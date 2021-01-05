@@ -3,7 +3,7 @@ import Rotation from 'components/ui/Rotation'
 import {Ability} from 'fflogs'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {formatDuration} from 'utilities'
+import {isDefined, formatDuration} from 'utilities'
 
 export interface RotationTarget {
 	/**
@@ -29,16 +29,10 @@ export interface RotationNotes {
 	accessor: string | ((entry: RotationTableEntry) => React.ReactNode)
 }
 
-export interface RotationTargetOutcome {
-	/**
-	 * True if the target was reached
-	 */
-	positive: boolean
-	/**
-	 * True if the target was not reached
-	 */
-	negative: boolean
-}
+/**
+ * Determines how a rotation target gets highlighted (negative = red, positive = green)
+ */
+export enum RotationTargetOutcome { NEGATIVE, NEUTRAL, POSITIVE }
 
 export interface RotationTargetData {
 	/**
@@ -141,9 +135,12 @@ interface RotationTableRowProps {
 
 export class RotationTable extends React.Component<RotationTableProps> {
 	static defaultTargetComparator(actual: number, expected?: number): RotationTargetOutcome {
-		return {
-			positive: expected === undefined ? false : actual >= expected,
-			negative: expected === undefined ? false : actual < expected,
+		if (!isDefined(expected)) {
+			return RotationTargetOutcome.NEUTRAL
+		} else if (actual >= expected) {
+			return RotationTargetOutcome.POSITIVE
+		} else {
+			return RotationTargetOutcome.NEGATIVE
 		}
 	}
 
@@ -178,8 +175,8 @@ export class RotationTable extends React.Component<RotationTableProps> {
 
 		return <Table.Cell
 			textAlign="center"
-			positive={targetOutcome.positive}
-			negative={targetOutcome.negative}
+			positive={targetOutcome === RotationTargetOutcome.POSITIVE}
+			negative={targetOutcome === RotationTargetOutcome.NEGATIVE}
 		>
 			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>

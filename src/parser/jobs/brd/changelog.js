@@ -8,6 +8,27 @@ import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{
+		date: new Date('2020-12-16'),
+		Changes: () => <>
+			Added a module that tracks actions used during <ActionLink {...ACTIONS.RAGING_STRIKES}/> windows.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-12-07'),
+		Changes: () => <>
+			Support for patch 5.4 - Burst Shot potency adjusted.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
+		date: new Date('2020-11-15'),
+		Changes: () => <>
+			GCDs under <ActionLink {...ACTIONS.ARMYS_PAEON}/> and <StatusLink {...STATUSES.ARMYS_MUSE}/> are now dropped from the 'Always Be Casting' uptime calculation.
+		</>,
+		contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+	},
+	{
 		date: new Date('2020-08-24'),
 		Changes: () => <>
 			Simplified the Barrage module and squashed some longstanding bugs with <StatusLink {...STATUSES.RAGING_STRIKES}/> alignment and <StatusLink {...STATUSES.STRAIGHT_SHOT_READY}/> procs.

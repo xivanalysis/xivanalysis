@@ -1,4 +1,4 @@
-import {Event} from 'events'
+import {Event} from 'legacyEvent'
 
 // -----
 // Fight
@@ -136,7 +136,7 @@ export interface Ability {
 }
 
 // Used for inlined actors, typically those that are unranked / uncounted
-interface EventActor extends BaseActor {
+export interface EventActor extends BaseActor {
 	icon: string,
 }
 
@@ -152,6 +152,17 @@ export interface BaseEventFields {
 	targetID?: number
 	targetInstance?: number
 	targetIsFriendly: boolean
+}
+
+/**
+ * These will NEVER have source/target fields. Only extending so I don't cause
+ * a massive ripple of broken types on a retrofit.
+ */
+interface EncounterFields extends BaseEventFields {
+	timestamp: number
+	encounterID: number
+	name: string
+	size: number
 }
 
 /** Fields present on events caused by, or in relation to an "ability" being executed */
@@ -187,8 +198,52 @@ interface EffectEventFields extends AbilityEventFields {
 // Events
 // -----
 
+export interface EncounterStartEvent extends EncounterFields {
+	type: 'encounterstart'
+	affixes: unknown[]
+	level: number
+}
+
+export interface EncounterEndEvent extends EncounterFields {
+	type: 'encounterend'
+	completion: number
+	difficulty: number
+	kill: boolean
+	medal: number
+}
+
 export interface DeathEvent extends BaseEventFields {
 	type: 'death'
+}
+
+/* These likewise do not have source/target fields */
+export interface LimitBreakUpdateEvent extends BaseEventFields {
+	type: 'limitbreakupdate'
+	bars: number
+	value: number
+}
+
+export interface ChecksumMismatchEvent extends BaseEventFields {
+	type: 'checksummismatch'
+	data: number
+}
+
+export interface ZoneChangeEvent extends BaseEventFields {
+	type: 'zonechange'
+	zoneDifficulty: number
+	zoneID: number
+	zoneName: string,
+}
+/* End no source/target */
+
+export interface UnknownEvent extends AbilityEventFields {
+	type: 'unknown'
+}
+
+export interface DispelEvent extends AbilityEventFields {
+	type: 'dispel',
+	extraAbility: Ability,
+	isBuff: boolean,
 }
 
 const castEventTypes = [
@@ -250,6 +305,10 @@ export interface HealEvent extends EffectEventFields {
 	overheal: number
 }
 
+type EncounterEvent =
+	| EncounterStartEvent
+	| EncounterEndEvent
+
 type EffectEvent =
 	| DamageEvent
 	| HealEvent
@@ -262,10 +321,16 @@ export type AbilityEvent =
 	| TargetabilityUpdateEvent
 
 export type FflogsEvent =
+	| EncounterEvent
 	| AbilityEvent
 	| DeathEvent
+	| LimitBreakUpdateEvent
+	| ChecksumMismatchEvent
+	| ZoneChangeEvent
+	| UnknownEvent
+	| DispelEvent
 
-declare module 'events' {
+declare module 'legacyEvent' {
 	interface EventTypeRepository {
 		fflogs: FflogsEvent
 	}

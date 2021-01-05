@@ -21,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.1',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.LEYLIA, role: ROLES.MAINTAINER},
@@ -30,6 +30,11 @@ export default new Meta({
 	],
 
 	changelog: [
+		{
+			date: new Date('2020-12-07'),
+			Changes: () => <>Bump up for patch 5.4</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
 		{
 			date: new Date('2020-09-29'),
 			Changes: () => <>Changed Severity ratings for Missed Dualcasts 1 missed is now medium, 2 missed is now major.</>,

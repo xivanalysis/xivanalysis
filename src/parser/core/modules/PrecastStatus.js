@@ -1,6 +1,7 @@
 import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import _ from 'lodash'
+import {sortEvents} from 'parser/core/EventSorting'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
 // Fake buff applications so modules don't need to take it into account
@@ -20,6 +21,8 @@ export default class PrecastStatus extends Module {
 	_startTime = this.parser.eventTimeOffset
 
 	normalise(events) {
+		sortEvents(events)
+
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 			const targetId = event.targetID

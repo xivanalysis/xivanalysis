@@ -46,7 +46,7 @@ export default class ApexArrow extends Module {
 			(curr.amount > max.amount ? curr : max), event.confirmedEvents[0])
 
 		// We get the unbuffed damage
-		let rawDamage = bestEvent.amount / fixedMultiplier
+		let rawDamage = (bestEvent.amount + (bestEvent.overkill ?? 0)) / fixedMultiplier
 
 		// And then strip off critical hit and direct hit mods
 		if (bestEvent.criticalHit) {
