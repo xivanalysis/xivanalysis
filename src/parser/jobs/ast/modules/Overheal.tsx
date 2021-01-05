@@ -80,9 +80,9 @@ export default class Overheal extends Module {
 				Avoid wasting heals by healing for more than required to fill a target's HP bar. While some overheal is inevitable, overheal only serves to generate more enmity, for no gain. Being efficient with healing additionally helps with your MP management.
 			</Trans>
 			<ul>
-				<li><Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT): </Trans>{this.invertPercent(nonHotOverhealPercent)}%{}</li>
-				{petOverhealPercent > 0 && <li><Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star): </Trans>{this.invertPercent(petOverhealPercent)}%</li>}
-				<li><Trans id="ast.overheal.requirement.hot"> Overheal (HoT): </Trans>{this.invertPercent(hotOverhealPercent)}%</li>
+				<li><Trans id="ast.overheal.requirement.nonhot"> Overheal (non-HoT): {this.invertPercent(nonHotOverhealPercent)}%</Trans></li>
+				{petOverhealPercent > 0 && <li><Trans id="ast.overheal.requirement.earthly-star"> Overheal (Earthly Star): {this.invertPercent(petOverhealPercent)}%</Trans></li>}
+				<li><Trans id="ast.overheal.requirement.hot"> Overheal (HoT): {this.invertPercent(hotOverhealPercent)}%</Trans></li>
 			</ul></>,
 			tiers: SEVERITY_TIERS,
 			requirements: [
