@@ -14,6 +14,8 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import kenkiIcon from './kenki.png'
 import styles from './Kenki.module.css'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const MAX_KENKI = 100
 
 const KENKI_ACTIONS = {
@@ -52,6 +54,7 @@ const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_TICKS = 5
 
 export default class Kenki extends Module {
+	static displayOrder = DISPLAY_ORDER.KENKI
 	static handle = 'kenki'
 	static title = t('sam.kenki.title')`Kenki`
 	static dependencies = [

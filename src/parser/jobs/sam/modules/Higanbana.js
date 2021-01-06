@@ -12,6 +12,8 @@ import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 
 import styles from './Higanbana.module.css'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const STATUS_DURATION = {
 	[STATUSES.HIGANBANA.id]: 60000,
 }
@@ -22,6 +24,7 @@ const CLIPPING_SEVERITY = {
 	60000: SEVERITY.MAJOR,
 }
 export default class Higanbana extends Module {
+	static displayOrder = DISPLAY_ORDER.HIGANBANA
 	static handle = 'higanbana'
 	static title = t('sam.higanbana.title')`Higanbana`
 	static dependencies = [
