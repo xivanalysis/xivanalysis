@@ -7,6 +7,7 @@ type RandomRollFnc = () => typeof RANDOM_NUMBER
  * Akk hates this
  * @returns a *random* number
  */
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const random: RandomRollFnc = () => RANDOM_NUMBER
 
 export {}

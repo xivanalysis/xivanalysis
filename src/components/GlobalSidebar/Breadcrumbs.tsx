@@ -48,6 +48,7 @@ export function Breadcrumbs() {
 			let url: string | undefined
 			let escapeHatch = 0
 			const segments: Array<BreadcrumbValue & {url: string}> = []
+			// eslint-disable-next-line no-constant-condition
 			while (true) {
 				path += '/:segment'
 				url = matchPath(pathname, {path})?.url

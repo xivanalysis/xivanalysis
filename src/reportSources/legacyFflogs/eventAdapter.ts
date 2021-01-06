@@ -84,6 +84,7 @@ class EventAdapter {
 		case 'targetabilityupdate':
 			return this.adaptTargetableEvent(event)
 
+		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// Encounter events don't expose anything particularly useful for us
@@ -98,6 +99,7 @@ class EventAdapter {
 		// I mean if Kihra doesn't know, how am I supposed to?
 		case 'unknown':
 			break
+		/** eslint-enable no-fallthrough */
 
 		default:
 			// Anything that reaches this point is unknown. If we've already notified, just noop
