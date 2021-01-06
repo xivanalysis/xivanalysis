@@ -11,6 +11,8 @@ module.exports = {
 	plugins: [
 		'@typescript-eslint',
 		'react',
+		// TODO: Remove this, bring rule into xiva/xiva repo.
+		'@xivanalysis',
 	],
 
 	settings: {
@@ -60,6 +62,7 @@ module.exports = {
 		'react/display-name': 'off',
 		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
 		'react/no-children-prop': 'off',
+		'@xivanalysis/no-unused-dependencies': 'error',
 	},
 
 	overrides: [
