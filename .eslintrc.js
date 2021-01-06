@@ -3,11 +3,19 @@ module.exports = {
 	extends: [
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
+		'plugin:react/recommended',
 	],
 
 	// TODO: Might need to use both babel-eslint and typescript-eslint depending on filetype?
 	parser: '@typescript-eslint/parser',
-	plugins: ['@typescript-eslint'],
+	plugins: [
+		'@typescript-eslint',
+		'react',
+	],
+
+	settings: {
+		react: {version: 'detect'},
+	},
 
 	env: {
 		browser: true,
@@ -33,7 +41,7 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'off',
 		// TODO: Should probably enable
 		'no-case-declarations': 'off',
-		// TODO: Enable
+		// TODO: Enable?
 		'no-prototype-builtins': 'off',
 		// TODO: Enable
 		'@typescript-eslint/no-non-null-assertion': 'off',
@@ -45,7 +53,13 @@ module.exports = {
 		'@typescript-eslint/ban-ts-comment': 'off',
 		// TODO: Hmm??
 		'@typescript-eslint/no-this-alias': 'off',
+		// TODO: ts-eslint docs recc. turning this off. probably enable for js only?
+		'no-undef': 'off',
 		// #endregion
+
+		'react/display-name': 'off',
+		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
+		'react/no-children-prop': 'off',
 	},
 
 	overrides: [
