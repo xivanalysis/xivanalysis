@@ -58,6 +58,10 @@ module.exports = {
 		'@typescript-eslint/no-this-alias': 'off',
 		// TODO: ts-eslint docs recc. turning this off. probably enable for js only?
 		'no-undef': 'off',
+		// TODO: Enable for at least .log (debug exists)
+		'no-console': 'off',
+		// TODO: Enable at _minimum_ {default: 'array-simple'}
+		'@typescript-eslint/array-type': 'off',
 		// #endregion
 
 		'array-bracket-spacing': 'warn',
@@ -81,7 +85,6 @@ module.exports = {
 		'newline-per-chained-call': ['warn', {ignoreChainWithDepth: 3}],
 		'new-parens': 'error',
 		'no-alert': 'error',
-		'no-console': 'off',
 		'no-duplicate-imports': 'error',
 		'no-else-return': ['error', {allowElseIf: false}],
 		'no-implicit-globals': 'error',
