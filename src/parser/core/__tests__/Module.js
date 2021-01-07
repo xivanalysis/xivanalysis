@@ -51,16 +51,16 @@ const pull = {
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
-		duty: {id: -1, name: 'Test duty'}
+		duty: {id: -1, name: 'Test duty'},
 	},
-	actors: [actor]
+	actors: [actor],
 }
 const newReport = {
 	timestamp: 0,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
-	meta: {source: '__test'}
+	meta: {source: '__test'},
 }
 
 const event = {
