@@ -31,11 +31,7 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          # I love how tslint needs its hand held with making directories
-          command: |
-            yarn lint:js --format junit -o reports/eslint/results.xml
-            mkdir -p reports/tslint
-            yarn lint:ts --format junit -o reports/tslint/results.xml
+          command: yarn lint --format junit -o reports/eslint/results.xml
       - run:
           name: Ensure extract
           command: |
