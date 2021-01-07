@@ -17,6 +17,8 @@ import {Icon, Message} from 'semantic-ui-react'
 
 import Kenki from './Kenki'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 // defining a const message to assign later via markdown
 
 const samWarningMessage = t('sam.sen.rotation-table.disclaimer')` This module labels a "Standard Sen Window" to be a window that with no Sen overwrites that ends on an Iaijutsu. Please consult The Balance Discord and this [Infograph](https://i.imgur.com/L0Y7d6C.png) for more details on looping Samurai gameplay.`
@@ -131,6 +133,7 @@ class SenState {
 }
 
 export default class Sen extends Module {
+	static displayOrder = DISPLAY_ORDER.SEN
 	static handle = 'sen'
 	static title = t('sam.sen.title')`Non-Standard Sen Windows`
 

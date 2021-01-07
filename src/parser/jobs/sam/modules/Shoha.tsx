@@ -15,6 +15,8 @@ import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 
+import DISPLAY_ORDER from './DISPLAY_ORDER'
+
 const GENERATORS = {
 	[ACTIONS.HIGANBANA.id]: 1,
 	[ACTIONS.KAESHI_HIGANBANA.id]: 1,
@@ -38,6 +40,7 @@ interface StackState {
 }
 
 export default class Shoha extends Module {
+	static displayOrder = DISPLAY_ORDER.SHOHA
 	static handle = 'shoha'
 	static title = t('sam.shoha.title')`Meditation Timeline`
 	static displayMode = DISPLAY_MODE.FULL
