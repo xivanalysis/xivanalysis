@@ -66,7 +66,7 @@ jobs:
             export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
             export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
             export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
-            CI=false yarn build
+            CI=false NODE_ENV=production yarn build
       - persist_to_workspace:
           root: /tmp
           paths:
