@@ -60,8 +60,7 @@ export default class Drift extends Module {
 
 	private onDriftableCast(event: CastEvent) {
 		// Get skill info.
-		let actionId: number
-		actionId = event.ability.guid
+		const actionId = event.ability.guid
 
 		const cooldown = COOLDOWN_MS[actionId]
 		// this.debug(cooldown)

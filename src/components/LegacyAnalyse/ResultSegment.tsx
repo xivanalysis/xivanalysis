@@ -54,6 +54,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		// semantic-ui-react doesn't support refs at all, so we'd either need a wrapping div that's there
 		// just to be ref'd, or we need the ReactDOM hacks. We _need_ the element to have a size so we can't
 		// just jam it in as a 0-size child that wouldn't cause any trouble.
+		// eslint-disable-next-line react/no-find-dom-node
 		this.ref = ReactDOM.findDOMNode(this) as HTMLElement
 		this.observer.observe(this.ref)
 
@@ -67,6 +68,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 			this.positionContext.unregister(prevProps.index)
 		}
 
+		// eslint-disable-next-line react/no-find-dom-node
 		const ref = ReactDOM.findDOMNode(this) as HTMLElement
 
 		if (ref !== this.ref) {

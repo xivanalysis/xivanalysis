@@ -1,7 +1,11 @@
-import React from 'react'
+import React, {ReactNode} from 'react'
 import styles from './Message.module.css'
 
-export class MessageHeader extends React.PureComponent {
+interface MessageHeaderProps {
+	children?: ReactNode
+}
+
+export class MessageHeader extends React.PureComponent<MessageHeaderProps> {
 	render() {
 		return (
 			<div className={styles.header}>

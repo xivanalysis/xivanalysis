@@ -73,16 +73,16 @@ const pull = {
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
-		duty: {id: -1, name: 'Test duty'}
+		duty: {id: -1, name: 'Test duty'},
 	},
-	actors: [actor]
+	actors: [actor],
 }
 const newReport = {
 	timestamp: 0,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
-	meta: {source: '__test'}
+	meta: {source: '__test'},
 }
 
 const buildParser = (modules = []) => new Parser({
@@ -192,10 +192,13 @@ describe('Parser', () => {
 			.mockReturnValueOnce([{handle: 'basic_analyser', error: new Error('test')}])
 			.mockReturnValueOnce([])
 		await parser.configure()
-		parser.parseEvents({events: [
-			{type: 'test', timestamp: 50},
-			{type: 'test', timestamp: 60},
-		], legacyEvents: []})
+		parser.parseEvents({
+			events: [
+				{type: 'test', timestamp: 50},
+				{type: 'test', timestamp: 60},
+			],
+			legacyEvents: [],
+		})
 
 		const {calls} = dispatcher.dispatch.mock
 		expect(calls[0][1]).toEqual(['basic_analyser'])
@@ -316,7 +319,7 @@ describe('Parser', () => {
 			legacyEvents: [],
 			expected: {
 				type: ['init', '__rfEvent', 'complete'],
-				timestamp: [0, 50,100],
+				timestamp: [0, 50, 100],
 			},
 		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
 			const dispatchedEvents = []
@@ -332,7 +335,7 @@ describe('Parser', () => {
 			await parser.configure()
 			parser.parseEvents({
 				events: opts.events,
-				legacyEvents: opts.legacyEvents
+				legacyEvents: opts.legacyEvents,
 			})
 
 			expect(dispatchedEvents.map(({event}) => event.type)).toEqual(opts.expected.type)

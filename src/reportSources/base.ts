@@ -27,7 +27,7 @@ export interface ReportLink {
  * exclusively by subclasses of this class and their respective component(s).
  */
 export abstract class ReportStore {
-	abstract readonly report?: Report
+	declare abstract readonly report?: Report
 
 	requestPulls(options?: FetchOptions) {}
 	requestActors(pullId: Pull['id'], options?: FetchOptions) {}

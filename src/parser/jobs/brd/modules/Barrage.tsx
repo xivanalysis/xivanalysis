@@ -24,7 +24,7 @@ const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 	'STORMBITE',
 ]
 
-const enum SeverityWeights {
+enum SeverityWeights {
 	// a barrage that went unused
 	DROPPED_BUFF = 4,
 
