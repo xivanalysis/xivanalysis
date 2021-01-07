@@ -2,7 +2,7 @@
 defaults: &defaults
   working_directory: /tmp/xiva-client
   docker:
-    - image: circleci/node:10
+    - image: cimg/node:lts
 
 version: 2
 jobs:
