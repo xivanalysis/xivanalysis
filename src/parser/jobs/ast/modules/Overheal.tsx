@@ -3,8 +3,7 @@ import {HealEvent} from 'fflogs'
 import {Data} from 'parser/core/modules/Data'
 import {StatusRoot} from 'data/STATUSES/root'
 import Module, {dependency} from 'parser/core/Module'
-import {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import Checklist from 'parser/core/modules/Checklist'
+import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import React from 'react'
 
 const HOT_STATUSES: Array<keyof StatusRoot> = [

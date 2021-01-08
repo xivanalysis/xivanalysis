@@ -143,7 +143,6 @@ module.exports = {
 				'brace-style': 'off',
 				'prefer-arrow-callback': 'off',
 				'no-multiple-empty-lines': 'off',
-				'no-duplicate-imports': 'off',
 				'@typescript-eslint/quotes': 'off',
 				'react-hooks/rules-of-hooks': 'off',
 				'react-hooks/exhaustive-deps': 'off',
