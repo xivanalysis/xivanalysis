@@ -99,7 +99,7 @@ class EventAdapter {
 		// I mean if Kihra doesn't know, how am I supposed to?
 		case 'unknown':
 			break
-		/** eslint-enable no-fallthrough */
+		/* eslint-enable no-fallthrough */
 
 		default:
 			// Anything that reaches this point is unknown. If we've already notified, just noop

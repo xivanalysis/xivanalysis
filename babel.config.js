@@ -31,12 +31,12 @@ module.exports = api => ({
 
 	overrides: [{
 		test: /\.jsx?$/,
-		plugins: getPlugins()
+		plugins: getPlugins(),
 	}, {
 		test: /\.ts$/,
-		plugins: getPlugins({isTypescript: true})
+		plugins: getPlugins({isTypescript: true}),
 	}, {
 		test: /\.tsx$/,
-		plugins: getPlugins({isTypescript: true, isTSX: true})
-	}]
+		plugins: getPlugins({isTypescript: true, isTSX: true}),
+	}],
 })
