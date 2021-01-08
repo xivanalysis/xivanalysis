@@ -76,7 +76,6 @@ export default class AmmoCombo extends Module {
 		return _.last(this.gnashingComboWindows)
 	}
 
-
 	protected init() {
 		this.addEventHook('cast',
 			{

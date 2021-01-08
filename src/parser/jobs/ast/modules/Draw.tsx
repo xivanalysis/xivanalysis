@@ -60,7 +60,6 @@ export default class Draw extends Module {
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
 
-
 	protected init() {
 
 		PLAY.forEach(actionKey => {

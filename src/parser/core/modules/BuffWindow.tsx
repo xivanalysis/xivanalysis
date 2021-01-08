@@ -325,7 +325,6 @@ export abstract class BuffWindowModule extends Module {
 		return undefined
 	}
 
-
 	/**
 	 * This method will be called if and only if the buff was never used, to generate any desired output
 	 * to highlight that the user did not use the buff at all.

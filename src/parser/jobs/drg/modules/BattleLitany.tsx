@@ -43,7 +43,6 @@ class BLWindow {
 	}
 }
 
-
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
 // DRG litanies will be marked.
@@ -80,7 +79,6 @@ export default class BattleLitany extends Module {
 
 	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
-
 
 		if (lastWindow && !lastWindow.end) {
 			return lastWindow

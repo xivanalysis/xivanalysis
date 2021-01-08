@@ -43,7 +43,6 @@ export default class Drift extends Module {
 	static title = t('drg.drift.title')`Ability Drift`
 	static displayOrder = DISPLAY_ORDER.DRIFT
 
-
 	@dependency private downtime!: Downtime
 	@dependency private timeline!: Timeline
 

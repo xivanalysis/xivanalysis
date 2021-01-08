@@ -10,7 +10,6 @@ import Module, {dependency} from 'parser/core/Module'
 import React, {Fragment} from 'react'
 import Rotation from 'components/ui/Rotation'
 
-
 // Buffer (ms) to forgive insignificant drift, we really only care about GCD drift here
 // and not log inconsistencies / sks issues / misguided weaving
 const DRIFT_BUFFER = 1500

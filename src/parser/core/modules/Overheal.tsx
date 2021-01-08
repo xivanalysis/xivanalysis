@@ -297,7 +297,6 @@ export class CoreOverheal extends Module {
 			}))
 		}
 
-
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []
 			if (this.checklistRuleBreakout) {

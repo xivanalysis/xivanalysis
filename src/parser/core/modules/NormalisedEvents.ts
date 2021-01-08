@@ -184,8 +184,6 @@ export class NormalisedApplyBuffEvent extends NormalisedEventFields {
 	}
 }
 
-
-
 export interface NormalisedApplyDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedApplyDebuffEvent extends NormalisedEventFields {
 	type = 'normalisedapplydebuff' as const

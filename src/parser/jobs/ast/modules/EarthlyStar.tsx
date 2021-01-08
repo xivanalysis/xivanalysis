@@ -41,7 +41,6 @@ export default class EarthlyStar extends Module {
 
 	private PET_CASTS: number[] = [this.data.actions.STELLAR_BURST.id, this.data.actions.STELLAR_EXPLOSION.id]
 
-
 	protected init() {
 		this.addEventHook('cast', {abilityId: this.data.actions.EARTHLY_STAR.id, by: 'player'}, this.onPlace)
 		this.addEventHook('cast', {abilityId: this.PET_CASTS, by: 'pet'}, this.onPetCast)
