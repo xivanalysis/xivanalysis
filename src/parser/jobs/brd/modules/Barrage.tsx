@@ -231,8 +231,7 @@ export default class Barrage extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-			{
-				this.barrageHistory.map(barrage => {
+				{this.barrageHistory.map(barrage => {
 					return <Table.Row key={barrage.castTimestamp} warning={barrage.info.dropped}>
 						<Table.Cell>{this.util.createTimelineButton(barrage.castTimestamp)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped)}</Table.Cell>
@@ -240,8 +239,7 @@ export default class Barrage extends Module {
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.overwrite)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.unaligned)}</Table.Cell>
 					</Table.Row>
-				})
-			}
+				})}
 			</Table.Body>
 		</Table>
 	}

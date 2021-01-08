@@ -79,10 +79,10 @@ export default class Horoscope extends Module {
 				icon: this.data.actions.HOROSCOPE_ACTIVATION.icon,
 				content: <Trans id="ast.horoscope.suggestion.expired.content">
 					<ActionLink {...this.data.actions.HOROSCOPE} /> does not activate by itself, so don't forget to use it again or it will expire for no potency.
-			</Trans>,
+				</Trans>,
 				why: <Trans id="ast.horoscope.suggestion.expired.why">
 					<Plural value={missedActivations} one="# expiration" other="# expirations" />  of Horoscope without reading fortunes again.
-			</Trans>,
+				</Trans>,
 				tiers: SEVERITIES.ACTIVATES_MISSED,
 				value: missedActivations,
 			}))
@@ -95,13 +95,13 @@ export default class Horoscope extends Module {
 				icon: this.data.actions.HOROSCOPE.icon,
 				content: <Trans id="ast.horoscope.suggestion.usage.content">
 					Try to plan your <ActionLink {...this.data.actions.HOROSCOPE} /> usages to have it up before you need to cast <ActionLink {...this.data.actions.HELIOS} /> or <ActionLink {...this.data.actions.ASPECTED_HELIOS} />.
-				<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
-			</Trans>,
+					<StatusLink {...this.data.statuses.HOROSCOPE_HELIOS} /> may help to cover more damage later without needing to cast more AOE heals.
+				</Trans>,
 				tiers: SEVERITIES.WASTED_AOE_HEAL_TIERS,
 				value: this.nonHoroscopeHeals,
 				why: <Trans id="ast.horoscope.suggestion.usage.why">
 					<Plural value={this.nonHoroscopeHeals} one="# AOE GCD heal was cast" other="# AOE GCD heals were cast" /> without horoscope even though it was available.
-			</Trans>,
+				</Trans>,
 			}))
 		}
 	}

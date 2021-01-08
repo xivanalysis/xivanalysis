@@ -124,38 +124,38 @@ export abstract class Interrupts extends Module {
 		}
 
 		return <Table compact unstackable celled collapsing>
-		<Table.Header>
-			<Table.Row>
-				<Table.HeaderCell collapsing>
-					<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
-				</Table.HeaderCell>
-				<Table.HeaderCell>
-					<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
-				</Table.HeaderCell>
-			</Table.Row>
-		</Table.Header>
-		<Table.Body>
-			{
-				this.droppedCasts.map((cast) =>
-					<Table.Row key={cast.timestamp}>
-						<Table.Cell textAlign="center">
-							<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
-							<Button
-								circular
-								compact
-								size="mini"
-								icon="time"
-								onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
-							/>
-						</Table.Cell>
-						<Table.Cell>
-							<ActionLink {...this.data.getAction(cast.ability.guid)} />
-						</Table.Cell>
-					</Table.Row>,
-				)
-			}
-		</Table.Body>
-	</Table>
+			<Table.Header>
+				<Table.Row>
+					<Table.HeaderCell collapsing>
+						<strong><Trans id="core.interrupts.table.time">Time</Trans></strong>
+					</Table.HeaderCell>
+					<Table.HeaderCell>
+						<strong><Trans id="core.interrupts.table.cast">Cast</Trans></strong>
+					</Table.HeaderCell>
+				</Table.Row>
+			</Table.Header>
+			<Table.Body>
+				{
+					this.droppedCasts.map((cast) =>
+						<Table.Row key={cast.timestamp}>
+							<Table.Cell textAlign="center">
+								<span style={{marginRight: 5}}>{this.parser.formatTimestamp(cast.timestamp)}</span>
+								<Button
+									circular
+									compact
+									size="mini"
+									icon="time"
+									onClick={() => this.timeline.show(cast.timestamp - this.parser.eventTimeOffset, cast.timestamp - this.parser.eventTimeOffset + TIMELINE_UPPER_MOD)}
+								/>
+							</Table.Cell>
+							<Table.Cell>
+								<ActionLink {...this.data.getAction(cast.ability.guid)} />
+							</Table.Cell>
+						</Table.Row>,
+					)
+				}
+			</Table.Body>
+		</Table>
 
 	}
 }

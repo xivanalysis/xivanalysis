@@ -97,8 +97,8 @@ export class TrackedOverheal {
 	 */
 	pushHeal(event: HealEvent) {
 		const guid = event.ability.guid
-			this.heal += event.amount
-			this.overheal += event.overheal || 0
+		this.heal += event.amount
+		this.overheal += event.overheal || 0
 	}
 }
 

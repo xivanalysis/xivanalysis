@@ -50,9 +50,9 @@ const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	return cast
 }
 const precastSyntheticCast = (timestamp: number): CastEvent => ({
-		...mockDamageEvent(timestamp),
-		type: 'cast',
-		timestamp: fightStartTime,
+	...mockDamageEvent(timestamp),
+	type: 'cast',
+	timestamp: fightStartTime,
 })
 
 describe('The PrecastAction module', () => {

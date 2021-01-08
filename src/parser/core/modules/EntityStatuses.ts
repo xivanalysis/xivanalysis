@@ -72,8 +72,8 @@ export class EntityStatuses extends Module {
 
 	private getUptime = (statusEvents: BuffTrackingEvent[]) => {
 		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
-				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
-			}, [])
+			return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
+		}, [])
 
 		const statusInfo = statusRanges.sort((a, b) => a.timestamp - b.timestamp)
 			.reduce(this.totalStatusUptime, {uptime: 0, activeOn: 0, activeWindowStart: 0})

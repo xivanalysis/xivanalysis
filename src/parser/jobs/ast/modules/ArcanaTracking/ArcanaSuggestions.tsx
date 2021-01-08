@@ -97,82 +97,82 @@ export default class ArcanaSuggestions extends Module {
 
 	output() {
 		return <>
-		<p>
-			<Trans id="ast.arcana-suggestions.messages.explanation">
+			<p>
+				<Trans id="ast.arcana-suggestions.messages.explanation">
 				This section keeps track of every card action made during the fight, and the state of the spread after each action.
-			</Trans>
-		</p>
-		<p>
-			<Trans id="ast.arcana-suggestions.messages.footnote">
+				</Trans>
+			</p>
+			<p>
+				<Trans id="ast.arcana-suggestions.messages.footnote">
 				* No pre-pull actions are being represented aside from <ActionLink {...this.data.actions.PLAY} />, and this is only an approximation based on the buff duration.
-			</Trans>
-		</p>
-		<Table collapsing unstackable className={styles.cardActionTable}>
-					<Table.Header>
-						<Table.Row>
-							<Table.HeaderCell width={1}>
-								<Trans id="ast.arcana-suggestions.messages.time">
+				</Trans>
+			</p>
+			<Table collapsing unstackable className={styles.cardActionTable}>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell width={1}>
+							<Trans id="ast.arcana-suggestions.messages.time">
 											Time
-								</Trans>
-							</Table.HeaderCell>
-							<Table.HeaderCell width={1}>
-								<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
-							</Table.HeaderCell>
-							<Table.HeaderCell width={2}>
-								<Trans id="ast.arcana-suggestions.messages.target">Target</Trans>
-							</Table.HeaderCell>
-							<Table.HeaderCell width={2}>
-								<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
-							</Table.HeaderCell>
-						</Table.Row>
-					</Table.Header>
-					<Table.Body>
-						{this.cardLogs.map(artifact => {
-							if (artifact.lastEvent.type === 'init') {
-								return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
-										<Table.Cell>
-											<Button
-												circular
-												compact
-												size="mini"
-												icon="time"
-												onClick={() => this.timeline.show(0, TIMELINE_UPPER_MOD)}
-											/>
-										{this.parser.formatTimestamp(artifact.lastEvent.timestamp)}</Table.Cell>
-										<Table.Cell>
-											<Trans id="ast.arcana-suggestions.messages.pull">
+							</Trans>
+						</Table.HeaderCell>
+						<Table.HeaderCell width={1}>
+							<Trans id="ast.arcana-suggestions.messages.latest-action">Lastest Action</Trans>
+						</Table.HeaderCell>
+						<Table.HeaderCell width={2}>
+							<Trans id="ast.arcana-suggestions.messages.target">Target</Trans>
+						</Table.HeaderCell>
+						<Table.HeaderCell width={2}>
+							<Trans id="ast.arcana-suggestions.messages.spread-state">Spread State</Trans>
+						</Table.HeaderCell>
+					</Table.Row>
+				</Table.Header>
+				<Table.Body>
+					{this.cardLogs.map(artifact => {
+						if (artifact.lastEvent.type === 'init') {
+							return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
+								<Table.Cell>
+									<Button
+										circular
+										compact
+										size="mini"
+										icon="time"
+										onClick={() => this.timeline.show(0, TIMELINE_UPPER_MOD)}
+									/>
+									{this.parser.formatTimestamp(artifact.lastEvent.timestamp)}</Table.Cell>
+								<Table.Cell>
+									<Trans id="ast.arcana-suggestions.messages.pull">
 												Pull
-											</Trans>
-										</Table.Cell>
-										<Table.Cell>
-										</Table.Cell>
-										{this.RenderSpreadState(artifact)}
-									</Table.Row>
-							} else {
-								const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
-								const end = start + TIMELINE_UPPER_MOD
-								const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
-								return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
-										<Table.Cell>
-											{start >= 0 && <Button
-												circular
-												compact
-												size="mini"
-												icon="time"
-												onClick={() => this.timeline.show(start, end)}
-											/>}
-											<span style={{marginRight: 10}}>{formattedTime}</span>
-										</Table.Cell>
-										{this.RenderAction(artifact)}
-										{this.RenderSpreadState(artifact)}
-									</Table.Row>
-							}
-						})}
-					</Table.Body>
-				</Table>
-				<Button onClick={() => this.parser.scrollTo(ArcanaSuggestions.handle)}>
-					<Trans id="ast.arcana-suggestions.scroll-to-top-button">Jump to start of Arcana Logs</Trans>
-				</Button>
+									</Trans>
+								</Table.Cell>
+								<Table.Cell>
+								</Table.Cell>
+								{this.RenderSpreadState(artifact)}
+							</Table.Row>
+						} else {
+							const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
+							const end = start + TIMELINE_UPPER_MOD
+							const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
+							return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
+								<Table.Cell>
+									{start >= 0 && <Button
+										circular
+										compact
+										size="mini"
+										icon="time"
+										onClick={() => this.timeline.show(start, end)}
+									/>}
+									<span style={{marginRight: 10}}>{formattedTime}</span>
+								</Table.Cell>
+								{this.RenderAction(artifact)}
+								{this.RenderSpreadState(artifact)}
+							</Table.Row>
+						}
+					})}
+				</Table.Body>
+			</Table>
+			<Button onClick={() => this.parser.scrollTo(ArcanaSuggestions.handle)}>
+				<Trans id="ast.arcana-suggestions.scroll-to-top-button">Jump to start of Arcana Logs</Trans>
+			</Button>
 		</>
 	}
 
@@ -182,13 +182,13 @@ export default class ArcanaSuggestions extends Module {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
 			return <>
-			<Table.Cell>
-				<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
-			</Table.Cell>
-			<Table.Cell>
-				{targetJob && <JobIcon job={targetJob}/>}
-				{artifact.targetName}
-			</Table.Cell>
+				<Table.Cell>
+					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
+				</Table.Cell>
+				<Table.Cell>
+					{targetJob && <JobIcon job={targetJob}/>}
+					{artifact.targetName}
+				</Table.Cell>
 			</>
 		} else if (artifact.lastEvent.type === 'cast' ) {
 			return <>
@@ -221,28 +221,28 @@ export default class ArcanaSuggestions extends Module {
 
 		return <Table.Cell>
 			<span style={{marginRight: 10, marginLeft: 0}}>
-			{drawnArcana && <img
-				src={drawnArcana.icon}
-				className={styles.buffIcon}
-				alt={drawnArcana.name}
-			/>}
-			{!drawnArcana && <span className={styles.buffPlaceholder} />}
+				{drawnArcana && <img
+					src={drawnArcana.icon}
+					className={styles.buffIcon}
+					alt={drawnArcana.name}
+				/>}
+				{!drawnArcana && <span className={styles.buffPlaceholder} />}
 			</span>
 			<span className={styles.sealIconContainer}>
-			{artifact.sealState.map(sealType => {
-				if (sealType > 0) {
-					return <img src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />
-				} else {
-					return <span className={styles.sealIcon}></span>
-				}
-			})}
+				{artifact.sealState.map(sealType => {
+					if (sealType > 0) {
+						return <img src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />
+					} else {
+						return <span className={styles.sealIcon}></span>
+					}
+				})}
 			</span>
 			<span style={{marginLeft: 5}}>
-			{artifact.sleeveState > 0 && <img
-				src={this.SLEEVE_ICON[artifact.sleeveState]}
-				className={styles.buffIcon}
-				alt={this.data.actions.SLEEVE_DRAW.name}
-			/>}
+				{artifact.sleeveState > 0 && <img
+					src={this.SLEEVE_ICON[artifact.sleeveState]}
+					className={styles.buffIcon}
+					alt={this.data.actions.SLEEVE_DRAW.name}
+				/>}
 			</span>
 		</Table.Cell>
 	}

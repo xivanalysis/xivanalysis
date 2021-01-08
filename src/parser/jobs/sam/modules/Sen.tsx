@@ -187,7 +187,7 @@ export default class Sen extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-// Handles Sen Gen
+	// Handles Sen Gen
 	private onSenGen(event: ComboEvent) {
 		const action = event.ability.guid
 
@@ -198,7 +198,7 @@ export default class Sen extends Module {
 			if (event.hasSuccessfulHit === true) {
 
 				switch (action) {
-					case ACTIONS.YUKIKAZE.id:
+				case ACTIONS.YUKIKAZE.id:
 					lastSenState.currentSetsu++
 
 					if (lastSenState.currentSetsu > 1) {
@@ -208,35 +208,35 @@ export default class Sen extends Module {
 					}
 					break
 
-					case ACTIONS.GEKKO.id:
-					case ACTIONS.MANGETSU.id:
-						lastSenState.currentGetsu++
+				case ACTIONS.GEKKO.id:
+				case ACTIONS.MANGETSU.id:
+					lastSenState.currentGetsu++
 
-						if (lastSenState.currentGetsu > 1 ) {
-							lastSenState.overwriteGetsus++
-							lastSenState.currentGetsu = 1
-							lastSenState.isOverwrite = true
-						}
+					if (lastSenState.currentGetsu > 1 ) {
+						lastSenState.overwriteGetsus++
+						lastSenState.currentGetsu = 1
+						lastSenState.isOverwrite = true
+					}
 
-						break
+					break
 
-					case ACTIONS.KASHA.id:
-					case ACTIONS.OKA.id:
-						lastSenState.currentKa++
+				case ACTIONS.KASHA.id:
+				case ACTIONS.OKA.id:
+					lastSenState.currentKa++
 
-						if (lastSenState.currentKa > 1) {
-							lastSenState.overwriteKas++
-							lastSenState.currentKa = 1
-							lastSenState.isOverwrite = true
-						}
+					if (lastSenState.currentKa > 1) {
+						lastSenState.overwriteKas++
+						lastSenState.currentKa = 1
+						lastSenState.isOverwrite = true
+					}
 
-						break
+					break
 				}
 			}
 		}
 	}
 
-// Function that handles SenState check, if no senState call the maker and then push to the rotation
+	// Function that handles SenState check, if no senState call the maker and then push to the rotation
 	private checkCastAndPush(event: CastEvent) {
 
 		// step 1: set action
@@ -261,7 +261,7 @@ export default class Sen extends Module {
 
 	}
 
-// Make a new sen state!
+	// Make a new sen state!
 	private senStateMaker(event: CastEvent) {
 		const senState = new SenState(event.timestamp)
 		this.senStateWindows.push(senState)
@@ -305,7 +305,7 @@ export default class Sen extends Module {
 
 	}
 
-// End the state, count wastes, add it
+	// End the state, count wastes, add it
 	private remove(event: CastEvent) {
 		const lastSenState = this.lastSenState
 
@@ -354,14 +354,14 @@ export default class Sen extends Module {
 			value: this.wasted,
 			why: <Trans id = "sam.sen.suggestion.why">You wasted {this.wasted} sen.</Trans>,
 		}))
-	if (this.hagakureCount === 0) {
-		this.suggestions.add(new Suggestion({
-			icon: ACTIONS.HAGAKURE.icon,
-			content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...ACTIONS.HAGAKURE}/> is a powerful tool that should be used to help keep <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on cooldown. Use it to handle your filler phase of your rotation. </Trans>,
-			severity: SEVERITY.MAJOR,
-			why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
-		}))
-	}
+		if (this.hagakureCount === 0) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.HAGAKURE.icon,
+				content: <Trans id = "sam.sen.no_hagakure.message"> <ActionLink {...ACTIONS.HAGAKURE}/> is a powerful tool that should be used to help keep <ActionLink {...ACTIONS.TSUBAME_GAESHI}/> on cooldown. Use it to handle your filler phase of your rotation. </Trans>,
+				severity: SEVERITY.MAJOR,
+				why: <Trans id = "sam.sen.suggestion.no_hagakure.why"> You never cast hagakure this fight. </Trans>,
+			}))
+		}
 
 	}
 
@@ -379,65 +379,65 @@ export default class Sen extends Module {
 						<TransMarkdown source ={samWarningMessage}/>
 					</Message.Content>
 				</Message>
-			<RotationTable
-				targets={[
-					{
-						header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
-						accessor: 'setsu',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.GEKKO}/>,
-						accessor: 'getsu',
-					},
-					{
-						header: <ActionLink showName={false} {...ACTIONS.KASHA}/>,
-						accessor: 'ka',
-					},
-				]}
-				notes={[
-					{
-						header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
-						accessor: 'reason',
-					},
-				]}
-				data={this.senStateWindows
-					.filter(window => window.isNonStandard)
-					.map(window => {
-						return ({
-							start: window.start - this.parser.fight.start_time,
+				<RotationTable
+					targets={[
+						{
+							header: <ActionLink showName={false} {...ACTIONS.YUKIKAZE}/>,
+							accessor: 'setsu',
+						},
+						{
+							header: <ActionLink showName={false} {...ACTIONS.GEKKO}/>,
+							accessor: 'getsu',
+						},
+						{
+							header: <ActionLink showName={false} {...ACTIONS.KASHA}/>,
+							accessor: 'ka',
+						},
+					]}
+					notes={[
+						{
+							header: <Trans id = "sam.sen.sen_handling.why"> Why Non-Standard </Trans>,
+							accessor: 'reason',
+						},
+					]}
+					data={this.senStateWindows
+						.filter(window => window.isNonStandard)
+						.map(window => {
+							return ({
+								start: window.start - this.parser.fight.start_time,
 
-							end: window.end != null ?
-								window.end - this.parser.fight.start_time
-								: window.start - this.parser.fight.start_time,
+								end: window.end != null ?
+									window.end - this.parser.fight.start_time
+									: window.start - this.parser.fight.start_time,
 
-							targetsData: {
-								setsu: {
-									actual: (window.currentSetsu + window.overwriteSetsus),
+								targetsData: {
+									setsu: {
+										actual: (window.currentSetsu + window.overwriteSetsus),
 									// expected: window.setsu,
-								},
-								getsu: {
-									actual: (window.currentGetsu + window.overwriteGetsus),
+									},
+									getsu: {
+										actual: (window.currentGetsu + window.overwriteGetsus),
 									// expected: window.getsu,
-								},
-								ka: {
-									actual: (window.currentKa + window.overwriteKas),
+									},
+									ka: {
+										actual: (window.currentKa + window.overwriteKas),
 									// expected: window.ka,
+									},
+
+								},
+								notesMap: {
+									reason: <>{window.senCode.message}</>,
 								},
 
-							},
-							notesMap: {
-								reason: <>{window.senCode.message}</>,
-							},
-
-							rotation: window.rotation,
+								rotation: window.rotation,
 
 							})
 						})
 					}
 
-				onGoto={this.timeline.show}
-			/>
-		</Fragment>
+					onGoto={this.timeline.show}
+				/>
+			</Fragment>
 		}
 	}
 }

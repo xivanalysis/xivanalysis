@@ -103,26 +103,26 @@ export class Darkside extends Module {
 
 	output() {
 		if (this.darksideDrops.length > 0) {
-			return <>
-			<Table collapsing unstackable>
-				<Table.Header>
-					<Table.Row>
-						<Table.HeaderCell><Trans id="drk.darkside.drop.at">Dropped Time</Trans></Table.HeaderCell>
-						<Table.HeaderCell><Trans id="drk.darkside.drop.reason">Reason</Trans></Table.HeaderCell>
-					</Table.Row>
-				</Table.Header>
-				<Table.Body>
-					{this.darksideDrops
-						.map((d, idx) => {
-							return <Table.Row key={`darksidedrop-${idx}`}>
-								<Table.Cell>{this.parser.formatTimestamp(d.timestamp)}</Table.Cell>
-								<Table.Cell><NormalisedMessage message={d.reason} id={Module.i18n_id}/></Table.Cell>
-							</Table.Row>
-						})
-					}
-				</Table.Body>
-			</Table>
-			</>
+			return (
+				<Table collapsing unstackable>
+					<Table.Header>
+						<Table.Row>
+							<Table.HeaderCell><Trans id="drk.darkside.drop.at">Dropped Time</Trans></Table.HeaderCell>
+							<Table.HeaderCell><Trans id="drk.darkside.drop.reason">Reason</Trans></Table.HeaderCell>
+						</Table.Row>
+					</Table.Header>
+					<Table.Body>
+						{this.darksideDrops
+							.map((d, idx) => {
+								return <Table.Row key={`darksidedrop-${idx}`}>
+									<Table.Cell>{this.parser.formatTimestamp(d.timestamp)}</Table.Cell>
+									<Table.Cell><NormalisedMessage message={d.reason} id={Module.i18n_id}/></Table.Cell>
+								</Table.Row>
+							})
+						}
+					</Table.Body>
+				</Table>
+			)
 		}
 	}
 }

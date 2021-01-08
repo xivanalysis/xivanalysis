@@ -70,22 +70,22 @@ considerAction(action: Action) {
 // override for end of fight reducing
 
 reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number  {
-		let reduceGCDsBy = 0
+	let reduceGCDsBy = 0
 
-		// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
-		const windowDurationMillis = this.buffStatus.duration * 1000
-		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
+	// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
+	const windowDurationMillis = this.buffStatus.duration * 1000
+	const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 
-		if (windowDurationMillis >= fightTimeRemaining) {
-			// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
-			const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
+	if (windowDurationMillis >= fightTimeRemaining) {
+		// This is using floor instead of ceiling to grant some forgiveness to first weave slot casts at the cost of 2nd weaves might be too forgiven
+		const possibleGCDs = Math.floor(fightTimeRemaining / SAM_BASE_GCD_SPEED_BUFFED)
 
-			if (possibleGCDs < SEN_GCDS) {
-				reduceGCDsBy += (SEN_GCDS - possibleGCDs)
-			}
+		if (possibleGCDs < SEN_GCDS) {
+			reduceGCDsBy += (SEN_GCDS - possibleGCDs)
 		}
+	}
 
-		return reduceGCDsBy
+	return reduceGCDsBy
 }
 
 }

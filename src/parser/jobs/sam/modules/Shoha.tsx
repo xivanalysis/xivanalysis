@@ -93,11 +93,11 @@ export default class Shoha extends Module {
 		const generatedStacks = GENERATORS[abilityId]
 
 		this.addStacks(generatedStacks, abilityId)
-		}
+	}
 
-		// back to time guessing we a go~
+	// back to time guessing we a go~
 	private onApplyMeditate(event: BuffEvent) {
-			this.meditateStart = event.timestamp
+		this.meditateStart = event.timestamp
 	}
 
 	private onRemoveMeditate(event: BuffEvent) {

@@ -384,7 +384,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedActions ) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + this.countMissedTrackedActions(buffWindow, trackedAction), 0), 0)
+					.reduce((sum, buffWindow) => sum + this.countMissedTrackedActions(buffWindow, trackedAction), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedActions.icon,
@@ -400,7 +400,7 @@ export abstract class BuffWindowModule extends Module {
 		if ( this.trackedBadActions ) {
 			const badActions = this.trackedBadActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
-						.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
+					.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
 
 			this.suggestions.add(new TieredSuggestion({
 				icon: this.trackedBadActions.icon,

@@ -141,7 +141,6 @@ module.exports = {
 				'no-else-return': 'off',
 				'no-magic-numbers': 'off',
 				'brace-style': 'off',
-				'indent': 'off',
 				'semi': 'off',
 				'prefer-arrow-callback': 'off',
 				'no-multiple-empty-lines': 'off',

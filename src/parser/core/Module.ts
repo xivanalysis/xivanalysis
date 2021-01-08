@@ -172,14 +172,14 @@ export default class Module extends Injectable {
 
 		// Sorry not sorry for the `any`s. Ceebs working out this filter _again_.
 		switch (filterArg[qol]) {
-			case 'player':
-				filter[raw] = this.parser.player.id as any
-				break
-			case 'pet':
-				filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
-				break
-			default:
-				filter[raw] = filterArg[qol] as any
+		case 'player':
+			filter[raw] = this.parser.player.id as any
+			break
+		case 'pet':
+			filter[raw] = this.parser.player.pets.map((pet: Pet) => pet.id) as any
+			break
+		default:
+			filter[raw] = filterArg[qol] as any
 		}
 
 		delete filter[qol as keyof typeof filter]

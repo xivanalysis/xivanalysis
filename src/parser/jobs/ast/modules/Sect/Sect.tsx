@@ -129,7 +129,7 @@ export default class Sect extends Module {
 						ability: SECT_ABILITY,
 						targetID: event.sourceID,
 						targetIsFriendly: true,
-						})
+					})
 					break
 				}
 			} else {
@@ -198,12 +198,12 @@ export default class Sect extends Module {
 
 		// Statistic box
 		const icon = !this.activeSectId ? NO_SECT_ICON
-						: ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon
-							: ACTIONS.NOCTURNAL_SECT.icon
+			: ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.icon
+				: ACTIONS.NOCTURNAL_SECT.icon
 		const noSectValue = <Trans id="ast.sect.info.no-sect-detected">No sect detected</Trans>
 		const value = !this.activeSectId ? noSectValue :
-						ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.name
-							: ACTIONS.NOCTURNAL_SECT.name
+			ACTIONS.DIURNAL_SECT.id === this.activeSectId ? ACTIONS.DIURNAL_SECT.name
+				: ACTIONS.NOCTURNAL_SECT.name
 		this.statistics.add(new SectStatistic({
 			icon,
 			value,
@@ -226,12 +226,12 @@ export default class Sect extends Module {
 
 	public mapBuffToCast(statusId: number) {
 		switch (statusId) {
-			case STATUSES.NOCTURNAL_SECT.id:
-				return ACTIONS.NOCTURNAL_SECT.id
-			case STATUSES.DIURNAL_SECT.id:
-				return ACTIONS.DIURNAL_SECT.id
-			default:
-				return -1
+		case STATUSES.NOCTURNAL_SECT.id:
+			return ACTIONS.NOCTURNAL_SECT.id
+		case STATUSES.DIURNAL_SECT.id:
+			return ACTIONS.DIURNAL_SECT.id
+		default:
+			return -1
 		}
 	}
 

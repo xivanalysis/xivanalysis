@@ -112,7 +112,7 @@ export default class AmmoCombo extends Module {
 
 		if (actionId === ACTIONS.GNASHING_FANG.id) {
 
-		this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
+			this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
 
 			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
 				this.onEndGnashingCombo(event)
