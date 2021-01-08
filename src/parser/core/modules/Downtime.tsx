@@ -1,8 +1,8 @@
 import Module, {dependency} from 'parser/core/Module'
-import UnableToAct from './UnableToAct'
+import React from 'react'
 import {Invulnerability} from './Invulnerability'
 import {Timeline, SimpleItem} from './Timeline'
-import React from 'react'
+import UnableToAct from './UnableToAct'
 
 interface DowntimeWindow {
 	start: number,

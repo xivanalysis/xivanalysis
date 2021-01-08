@@ -1,12 +1,10 @@
 import {t} from '@lingui/macro'
-
-import React from 'react'
-
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import TransMarkdown from 'components/ui/TransMarkdown'
-import {Meta} from 'parser/core/Meta'
 import {StatusLink} from 'components/ui/DbLink'
+import TransMarkdown from 'components/ui/TransMarkdown'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import STATUSES from 'data/STATUSES'
+import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 const description = t('blm.about.description')`This analyser aims to identify how you're not actually casting [~action/FIRE_IV] as much as you think you are.`
 

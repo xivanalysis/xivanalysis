@@ -3,11 +3,9 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Link} from 'react-router-dom'
-
 import {Breadcrumbs} from './Breadcrumbs'
-import Options from './Options'
-
 import styles from './GlobalSidebar.module.css'
+import Options from './Options'
 
 // TODO: This assumes there's only ever one GlobalSidebar. Which, I mean... there is. But what if there /isn't/!
 let contentRef = React.createRef() // eslint-disable-line prefer-const

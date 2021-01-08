@@ -1,11 +1,11 @@
 /**
  * @author Yumiya
  */
-import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import math from 'mathjsCustom'
+import Module from 'parser/core/Module'
 
 // Relevant crit buffs
 const CRIT_MODIFIERS = [

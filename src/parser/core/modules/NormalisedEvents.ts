@@ -1,9 +1,9 @@
 import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isDamageEvent, isHealEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
 import PrecastStatus from './PrecastStatus'
-import {Event} from 'legacyEvent'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500

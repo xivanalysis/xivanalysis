@@ -1,9 +1,9 @@
+import {GameEdition} from 'data/PATCHES'
+import {Team} from 'report'
+import {LegacyDispatcher} from '../LegacyDispatcher'
+import {Meta} from '../Meta'
 import Module from '../Module'
 import Parser from '../Parser'
-import {Meta} from '../Meta'
-import {LegacyDispatcher} from '../LegacyDispatcher'
-import {Team} from 'report'
-import {GameEdition} from 'data/PATCHES'
 
 jest.mock('../LegacyDispatcher')
 

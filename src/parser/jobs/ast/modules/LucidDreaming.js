@@ -1,11 +1,10 @@
-import React, {Fragment} from 'react'
-
+import {Plural, Trans} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
-import {Plural, Trans} from '@lingui/react'
+import React, {Fragment} from 'react'
 
 const WASTED_USES_MAX_MEDIUM = 2
 

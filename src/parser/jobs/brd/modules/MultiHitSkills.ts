@@ -1,6 +1,5 @@
 import ACTIONS from 'data/ACTIONS'
 import {AoEUsages} from 'parser/core/modules/AoEUsages'
-
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 export default class MultiHitSkills extends AoEUsages {

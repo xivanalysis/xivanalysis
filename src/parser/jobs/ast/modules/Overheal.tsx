@@ -1,9 +1,9 @@
 import {Trans} from '@lingui/react'
-import {HealEvent} from 'fflogs'
-import {Data} from 'parser/core/modules/Data'
 import {StatusRoot} from 'data/STATUSES/root'
+import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import React from 'react'
 
 const HOT_STATUSES: Array<keyof StatusRoot> = [

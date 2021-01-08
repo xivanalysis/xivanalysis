@@ -1,14 +1,13 @@
 import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
+import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
 import PropTypes from 'prop-types'
 import React from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
 // Direct path import 'cus it'll be a dep loop otherwise
-import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import {SettingsStore} from 'store/settings'
-
-import styles from './Suggestions.module.css'
 import {StoreContext} from 'store'
+import {SettingsStore} from 'store/settings'
+import styles from './Suggestions.module.css'
 
 const SEVERITY_LABEL_PROPS = {
 	[SEVERITY.MORBID]: {content: <Trans id="core.suggestions.severity.morbid">Morbid</Trans>, color: 'black', icon: 'times'},

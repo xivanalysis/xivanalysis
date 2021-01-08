@@ -1,13 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 // Constants
 const OVERHEAT_DURATION_MILLIS = 8000

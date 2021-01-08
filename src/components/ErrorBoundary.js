@@ -1,15 +1,15 @@
 import {Trans} from '@lingui/react'
 import * as Sentry from '@sentry/browser'
 import classNames from 'classnames'
+import {NotFoundError} from 'errors'
 import {action, observable} from 'mobx'
 import {observer} from 'mobx-react'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Container, Header, Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
-import ErrorMessage from './ui/ErrorMessage'
 import styles from './ErrorBoundary.module.css'
-import {NotFoundError} from 'errors'
+import ErrorMessage from './ui/ErrorMessage'
 
 @observer
 class ErrorBoundary extends Component {

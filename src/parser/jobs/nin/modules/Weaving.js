@@ -1,5 +1,5 @@
-import CoreWeaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
+import CoreWeaving from 'parser/core/modules/Weaving'
 
 export default class Weaving extends CoreWeaving {
 	isBadWeave(weave/*, maxWeaves*/) {

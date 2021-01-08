@@ -1,20 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import _ from 'lodash'
-import React from 'react'
-
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
+import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-import kenkiIcon from './kenki.png'
-import styles from './Kenki.module.css'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import styles from './Kenki.module.css'
+import kenkiIcon from './kenki.png'
 
 const MAX_KENKI = 100
 

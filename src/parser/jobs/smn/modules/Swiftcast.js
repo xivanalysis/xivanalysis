@@ -1,7 +1,7 @@
+import {dependency} from 'parser/core/Module'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import {SwiftcastModule} from 'parser/core/modules/Swiftcast'
 import {DWT_CAST_TIME_MOD} from './DWT'
-import {dependency} from 'parser/core/Module'
 
 const MISSED_SEVERITIES = {
 	1: SEVERITY.MINOR,

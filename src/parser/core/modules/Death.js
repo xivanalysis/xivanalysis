@@ -1,8 +1,7 @@
-import React from 'react'
 import {Plural, Trans} from '@lingui/react'
-
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import {SimpleItem} from './Timeline'
 
 // One of these being applied to an actor signifies they're back up

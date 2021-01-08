@@ -1,12 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
-
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 import {DEMIS} from './Gauge'
 
 const DEMI_ACTIONS = Object.values(ACTIONS)

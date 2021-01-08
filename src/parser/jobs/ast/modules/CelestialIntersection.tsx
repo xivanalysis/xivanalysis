@@ -1,8 +1,8 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {CastEvent} from 'fflogs'
-import {Data} from 'parser/core/modules/Data'
 import Module, {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 

@@ -2,10 +2,10 @@
  * @author Yumiya
  */
 
-import React, {Fragment} from 'react'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
 
 const SETUP_TIME = 3200 // Assuming song being used after second GCD (2.50s from first GCD + 0.70s from second GCD animation lock)
 const SONG_DURATION = 30000

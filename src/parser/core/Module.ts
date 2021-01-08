@@ -4,10 +4,10 @@ import {Event} from 'legacyEvent'
 import {cloneDeep} from 'lodash'
 import 'reflect-metadata'
 import {ensureArray} from 'utilities'
-import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
-import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
-import Parser from './Parser'
 import {seededColor} from 'utilities/color'
+import {Injectable, MappedDependency, dependency, executeBeforeDoNotUseOrYouWillBeFired} from './Injectable'
+import {EventHook, EventHookCallback, Filter, FilterPartial, TimestampHook, TimestampHookCallback} from './LegacyDispatcher'
+import Parser from './Parser'
 
 export enum DISPLAY_ORDER {
 	TOP = 0,

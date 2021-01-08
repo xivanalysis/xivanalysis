@@ -1,7 +1,5 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import STATUSES from 'data/STATUSES'
@@ -10,7 +8,7 @@ import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import Fists, {FISTLESS, Fist} from './Fists'
 

@@ -1,18 +1,17 @@
-import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {CastEvent} from 'fflogs'
-
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {ActionLink} from 'components/ui/DbLink'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import {Data} from 'parser/core/modules/Data'
+import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS: number[] = [

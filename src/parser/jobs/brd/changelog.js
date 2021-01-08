@@ -1,10 +1,9 @@
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
+import CONTRIBUTORS from 'data/CONTRIBUTORS'
+import STATUSES from 'data/STATUSES'
 import React from 'react'
 import {Label} from 'semantic-ui-react'
-
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import CONTRIBUTORS from 'data/CONTRIBUTORS'
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 
 export const changelog = [
 	{

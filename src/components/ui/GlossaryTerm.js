@@ -1,12 +1,10 @@
+import TERMS from 'data/GLOSSARY'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {Popup, Icon} from 'semantic-ui-react'
-
 import styles from './GlossaryTerm.module.css'
-import TERMS from 'data/GLOSSARY'
-
-import TransMarkdown from './TransMarkdown'
 import NormalisedMessage from './NormalisedMessage'
+import TransMarkdown from './TransMarkdown'
 
 export default class GlossaryTerm extends PureComponent {
 	static propTypes = {

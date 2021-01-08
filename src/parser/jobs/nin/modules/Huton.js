@@ -1,12 +1,11 @@
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const HUTON_MAX_DURATION_MILLIS = 70000 // Not in STATUSES/NIN.js because lolgauges

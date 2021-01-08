@@ -1,10 +1,7 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {BuffEvent, CastEvent} from 'fflogs'
-
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
@@ -12,7 +9,7 @@ import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Expected GCDs between TS

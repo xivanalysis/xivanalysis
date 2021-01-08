@@ -1,13 +1,11 @@
 import {withI18n} from '@lingui/react'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
-
-import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-
-import GlossaryTerm from './GlossaryTerm'
 import {ActionLink, StatusLink} from './DbLink'
+import GlossaryTerm from './GlossaryTerm'
 
 // This line is required because eslint thinks LINK_TYPES is
 // full of React components when it's not.

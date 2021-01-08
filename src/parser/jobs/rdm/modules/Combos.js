@@ -1,8 +1,8 @@
-import CoreCombos from 'parser/core/modules/Combos'
+import {Plural, Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
+import CoreCombos from 'parser/core/modules/Combos'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
-import {Plural, Trans} from '@lingui/react'
 
 export default class Combos extends CoreCombos {
 	// Overrides

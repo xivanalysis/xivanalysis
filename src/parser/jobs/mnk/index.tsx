@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/macro'
-import React from 'react'
-
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),

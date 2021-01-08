@@ -3,9 +3,8 @@ import PropTypes from 'prop-types'
 import React from 'react'
 import {withRouter} from 'react-router'
 import {getPathMatch} from 'utilities'
-
-import styles from './ReportLink.module.css'
 import fflogsLogo from './fflogs.png'
+import styles from './ReportLink.module.css'
 
 class ReportLink extends React.Component {
 	static propTypes = {

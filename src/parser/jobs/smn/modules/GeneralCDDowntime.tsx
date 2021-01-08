@@ -1,9 +1,9 @@
 import ACTIONS from 'data/ACTIONS'
 import {AbilityType, CastEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import {dependency} from 'parser/core/Module'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
-import {Event} from 'legacyEvent'
 
 export default class GeneralCDDowntime extends CooldownDowntime {
 	// Need dependency to ensure proper ordering of normalise calls

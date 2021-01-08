@@ -1,12 +1,11 @@
-import React from 'react'
-
 import {Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import CoreDoTs from 'parser/core/modules/DoTs'
 import {TieredRule, TARGET, Requirement} from 'parser/core/modules/Checklist'
+import CoreDoTs from 'parser/core/modules/DoTs'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // In seconds

@@ -1,16 +1,15 @@
-import React, {Fragment} from 'react'
-import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
+import {Trans} from '@lingui/react'
 import Color from 'color'
-
+import {ActionLink} from 'components/ui/DbLink'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import {getDataBy} from 'data'
-import JOBS from 'data/JOBS'
 import ACTIONS from 'data/ACTIONS'
+import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
-import TimeLineChart from 'components/ui/TimeLineChart'
+import React, {Fragment} from 'react'
 
 const SUMMON_ACTIONS = [
 	ACTIONS.SUMMON_EOS.id,

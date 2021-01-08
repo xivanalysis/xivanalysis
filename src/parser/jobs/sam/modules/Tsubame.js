@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 export default class Tsubame  extends Module {
         static handle = 'tsubame'

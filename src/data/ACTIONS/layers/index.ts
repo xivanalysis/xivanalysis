@@ -1,6 +1,5 @@
 import {Layer} from 'data/layer'
 import {ActionRoot} from '../root'
-
 import {patch501} from './patch5.01'
 import {patch510} from './patch5.1'
 import {patch530} from './patch5.3'

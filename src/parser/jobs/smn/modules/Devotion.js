@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import Module from 'parser/core/Module'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {StatusLink} from 'components/ui/DbLink'
+import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {RotationTable} from 'components/ui/RotationTable'
-import React from 'react'
-import {StatusLink} from 'components/ui/DbLink'
+import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const PLAYERS_HIT_TARGET = 8
 const PLAYERS_HIT_SUGGESTION_THRESHOLD = 7

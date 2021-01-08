@@ -1,10 +1,9 @@
 import {t, Trans} from '@lingui/macro'
-import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
-
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
+import {Icon, Message} from 'semantic-ui-react'
 import {changelog} from './changelog'
 
 const description = t('blu.about.description')`This is a limited analyzer for a limited job. It's not ready yet, but please look forward to it.

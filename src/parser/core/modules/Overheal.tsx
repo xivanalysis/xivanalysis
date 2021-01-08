@@ -1,12 +1,11 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import ACTIONS from 'data/ACTIONS'
 import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
-import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 interface SeverityTiers {
 	[key: number]: number

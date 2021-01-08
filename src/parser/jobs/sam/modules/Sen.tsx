@@ -1,8 +1,8 @@
-import {Trans} from '@lingui/react'
 import {t} from '@lingui/macro'
-import TransMarkdown from 'components/ui/TransMarkdown'
+import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
+import TransMarkdown from 'components/ui/TransMarkdown'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import _ from 'lodash'
@@ -12,10 +12,8 @@ import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/m
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-
-import Kenki from './Kenki'
-
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Kenki from './Kenki'
 
 // defining a const message to assign later via markdown
 

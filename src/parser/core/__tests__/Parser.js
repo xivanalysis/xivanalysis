@@ -1,11 +1,11 @@
-import Module from '../Module'
-import Parser from '../Parser'
-import {Meta} from '../Meta'
-import {LegacyDispatcher} from '../LegacyDispatcher'
-import {Dispatcher} from '../Dispatcher'
 import {GameEdition} from 'data/PATCHES'
 import {Team} from 'report'
 import {Analyser} from '../Analyser'
+import {Dispatcher} from '../Dispatcher'
+import {LegacyDispatcher} from '../LegacyDispatcher'
+import {Meta} from '../Meta'
+import Module from '../Module'
+import Parser from '../Parser'
 
 jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')

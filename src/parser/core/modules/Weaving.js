@@ -1,12 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
-import {Accordion} from 'semantic-ui-react'
-
-import Rotation from 'components/ui/Rotation'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
+import Rotation from 'components/ui/Rotation'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
+import {Accordion} from 'semantic-ui-react'
 import {matchClosestLower} from 'utilities'
 
 // BRD weaves, ninjustsu, etc. should be handled by subclasses w/ isBadWeave overrides

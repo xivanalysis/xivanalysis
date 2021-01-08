@@ -1,8 +1,8 @@
-import Weaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {BLM_GAUGE_EVENT} from './Gauge'
+import Weaving from 'parser/core/modules/Weaving'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import {BLM_GAUGE_EVENT} from './Gauge'
 
 const OGCD_EXCEPTIONS = [
 	ACTIONS.LUCID_DREAMING.id,

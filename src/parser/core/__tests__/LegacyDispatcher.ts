@@ -1,5 +1,5 @@
-import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 import {DeathEvent} from 'fflogs'
+import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 
 /* eslint-disable @typescript-eslint/no-magic-numbers */
 

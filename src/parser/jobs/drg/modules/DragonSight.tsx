@@ -1,16 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-
-import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
+import {RotationTargetOutcome} from 'components/ui/RotationTable'
+import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
+import {DeathEvent} from 'fflogs'
 import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-import STATUSES from 'data/STATUSES'
-import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {DeathEvent} from 'fflogs'
-import {RotationTargetOutcome} from 'components/ui/RotationTable'
+import React from 'react'
 import {isDefined} from 'utilities'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // give it a gcd for marking as truncated window
 const SHORT_WINDOW_BUFFER: number = 2500

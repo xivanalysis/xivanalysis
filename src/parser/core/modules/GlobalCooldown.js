@@ -1,9 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
-import React from 'react'
-
 import Module from 'parser/core/Module'
+import React from 'react'
 import {SimpleStatistic} from './Statistics'
 import {ActionItem, ContainerRow} from './Timeline'
 

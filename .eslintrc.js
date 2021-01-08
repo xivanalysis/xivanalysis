@@ -12,6 +12,7 @@ module.exports = {
 		'@typescript-eslint',
 		'react',
 		'react-hooks',
+		'import',
 		// TODO: Remove this, bring rule into xiva/xiva repo.
 		'@xivanalysis',
 	],
@@ -109,6 +110,16 @@ module.exports = {
 		'template-curly-spacing': ['warn', 'never'],
 		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
+
+		// Imports
+		'import/order': ['error', {
+			groups: [
+				// Pull non-relative imports above relative
+				['builtin', 'external', 'internal', 'unknown', 'index', 'object'],
+			],
+			'newlines-between': 'never',
+			alphabetize: {order: 'asc', caseInsensitive: true},
+		}],
 
 		// React-specific rules
 		'react/display-name': 'off',

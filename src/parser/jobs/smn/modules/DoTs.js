@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Accordion, Table} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {getDataBy} from 'data'
+import React from 'react'
+import {Accordion, Table} from 'semantic-ui-react'
 
 export default class DoTs extends Module {
 	static handle = 'dots'

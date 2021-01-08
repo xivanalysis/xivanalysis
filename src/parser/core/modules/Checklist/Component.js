@@ -1,9 +1,7 @@
+import {TARGET} from 'parser/core/modules/Checklist/Rule'
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Accordion, Icon, Progress} from 'semantic-ui-react'
-
-import {TARGET} from 'parser/core/modules/Checklist/Rule'
-
 import styles from './Checklist.module.css'
 
 const RULE_STYLES = {

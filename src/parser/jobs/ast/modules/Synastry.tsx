@@ -1,10 +1,10 @@
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionRoot} from 'data/ACTIONS/root'
-import {Data} from 'parser/core/modules/Data'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import Cooldowns from 'parser/core/modules/Cooldowns'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
 

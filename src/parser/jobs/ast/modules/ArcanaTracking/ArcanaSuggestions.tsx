@@ -7,6 +7,7 @@ import JOBS from 'data/JOBS'
 import {ActorType} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
@@ -17,7 +18,6 @@ import ArcanaTracking, {CardState, SealType, SleeveType} from './ArcanaTracking'
 import sealCelestial from './seal_celestial.png'
 import sealLunar from './seal_lunar.png'
 import sealSolar from './seal_solar.png'
-import {Data} from 'parser/core/modules/Data'
 
 const TIMELINE_UPPER_MOD = 30000 // in ms
 

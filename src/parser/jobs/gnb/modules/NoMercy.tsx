@@ -1,18 +1,16 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-
-import {getDataBy} from 'data'
-import {BuffEvent, CastEvent} from 'fflogs'
+import React from 'react'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
