@@ -29,8 +29,8 @@ export interface ReportLink {
 export abstract class ReportStore {
 	declare abstract readonly report?: Report
 
-	requestPulls(options?: FetchOptions) {}
-	requestActors(pullId: Pull['id'], options?: FetchOptions) {}
+	requestPulls(options?: FetchOptions) { /* noop */ }
+	requestActors(pullId: Pull['id'], options?: FetchOptions) { /* noop */ }
 
 	abstract fetchEvents(pullId: Pull['id'], actorId: Actor['id']): Promise<Event[]>
 

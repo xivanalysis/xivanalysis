@@ -73,7 +73,7 @@ export default class Module extends Injectable {
 	}
 
 	// So TS peeps don't need to pass the parser down
-	protected init() {}
+	protected init() { /* noop */ }
 
 	normalise(events: Event[]): Event[] | Promise<Event[]> {
 		return events

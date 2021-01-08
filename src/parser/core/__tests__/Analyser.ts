@@ -41,7 +41,7 @@ describe('Analyser', () => {
 	describe('event hooks', () => {
 		it('adds event hooks to the dispatcher', () => {
 			const predicate = (event: Event): event is Event => true
-			const callback = () => {}
+			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
 				static handle = 'test'
@@ -60,7 +60,7 @@ describe('Analyser', () => {
 
 		it('removes event hooks from the dispatcher', () => {
 			const predicate = (event: Event): event is Event => true
-			const callback = () => {}
+			const callback = () => { /* noop */ }
 			let hook: EventHook<Event>
 
 			class TestAnalyser extends Analyser {
@@ -81,7 +81,7 @@ describe('Analyser', () => {
 		})
 
 		it('builds event filter predicates', () => {
-			const callback = () => {}
+			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
 				static handle = 'test'
@@ -109,7 +109,7 @@ describe('Analyser', () => {
 	describe('timestamp hooks', () => {
 		it('adds timestamp hooks to the dispatcher', () => {
 			const timestamp = 50
-			const callback = () => {}
+			const callback = () => { /* noop */ }
 
 			class TestAnalyser extends Analyser {
 				static handle = 'test'
@@ -128,7 +128,7 @@ describe('Analyser', () => {
 
 		it('removes event hooks from the dispatcher', () => {
 			const timestamp = 50
-			const callback = () => {}
+			const callback = () => { /* noop */ }
 			let hook: TimestampHook
 
 			class TestAnalyser extends Analyser {

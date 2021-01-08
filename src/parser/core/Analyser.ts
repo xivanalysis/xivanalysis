@@ -101,7 +101,7 @@ export class Analyser extends Injectable {
 	 * Called when the analyser has been successfully instantiated and configured,
 	 * before any analysis is run. This is the recommended location to configure hooks.
 	 */
-	initialise() {}
+	initialise() { /* noop */ }
 
 	/**
 	 * Called at the end of an analysis run to retrieve any output that should be rendered to the
