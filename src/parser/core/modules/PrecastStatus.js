@@ -40,13 +40,13 @@ export default class PrecastStatus extends Module {
 
 			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
 
-			if (event.type === 'applybuff' && !statusInfo.hasOwnProperty('stacksApplied')) {
+			if (event.type === 'applybuff' && statusInfo.stacksApplied == null) {
 				// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
 				this.fabricateActionEventIfNew(event, statusInfo)
 				this.markStatusAsTracked(statusInfo.id, targetId)
 			}
 
-			if (event.type === 'applybuffstack' && statusInfo.hasOwnProperty('stacksApplied')) {
+			if (event.type === 'applybuffstack' && statusInfo.stacksApplied == null) {
 				// Determine if this is applying fewer than the max stacks
 				if (event.stack < statusInfo.stacksApplied) {
 					// Synth the precast status event if this applied fewer than max stacks

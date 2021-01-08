@@ -179,7 +179,7 @@ export class LegacyDispatcher {
 	): boolean {
 		return Object.keys(filter).every(key => {
 			// If the event doesn't have the key we're looking for, just shortcut out
-			if (!object.hasOwnProperty(key)) {
+			if (!Object.hasOwnProperty.call(object, key)) {
 				return false
 			}
 

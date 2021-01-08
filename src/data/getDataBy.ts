@@ -30,7 +30,7 @@ export function getDataBy<
 	// Sanity check in case someone is using this from JS and misspelled a key
 	const dataKeys = Object.keys(data)
 	const testEntry = data[dataKeys[0]]
-	if (!testEntry.hasOwnProperty(by)) {
+	if (!Object.hasOwnProperty.call(testEntry, by)) {
 		const correctKeys = Object.keys(testEntry).join('|')
 		throw new Error(`Invalid 'by' value provided: got '${by}', expected '${correctKeys}'`)
 	}

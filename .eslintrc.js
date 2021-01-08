@@ -37,8 +37,6 @@ module.exports = {
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		// TODO: Enable
 		'@typescript-eslint/no-explicit-any': 'off',
-		// TODO: Enable?
-		'no-prototype-builtins': 'off',
 		// TODO: Enable, might need tweaks
 		'@typescript-eslint/ban-types': 'off',
 		// #endregion

@@ -349,7 +349,7 @@ class Parser {
 		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
 
 		for (const handle in moduleErrors) {
-			if (!moduleErrors.hasOwnProperty(handle)) { continue }
+			if (moduleErrors[handle] == null) { continue }
 			const error = moduleErrors[handle]
 
 			this.captureError({

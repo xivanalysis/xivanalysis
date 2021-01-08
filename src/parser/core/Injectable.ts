@@ -13,7 +13,7 @@ export function dependency(target: Injectable, prop: string) {
 	const constructorDependencies = constructor.dependencies
 
 	// Make sure we're not modifying every single instance
-	if (!constructor.hasOwnProperty('dependencies')) {
+	if (!Object.hasOwnProperty.call(constructor, 'dependencies')) {
 		constructor.dependencies = [...constructorDependencies]
 	}
 
@@ -24,7 +24,7 @@ export function dependency(target: Injectable, prop: string) {
 	}
 
 	// Check that the dep is actually an injectable
-	if (!Injectable.isPrototypeOf(dependency)) {
+	if (!Object.isPrototypeOf.call(Injectable, dependency)) {
 		throw new Error(`${constructor.name}'s dependency \`${prop}\` is invalid. Expected \`Injectable\`, got \`${dependency.name}\`.`)
 	}
 

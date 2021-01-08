@@ -48,7 +48,7 @@ export default class Kaiten extends Module {
 	_onCast(event) {
 		const abilityId = event.ability.guid
 
-		if (this.combatants.selected.hasStatus(STATUSES.KAITEN.id) && KAITEN_GCDS.hasOwnProperty(abilityId)) {
+		if (this.combatants.selected.hasStatus(STATUSES.KAITEN.id) && KAITEN_GCDS[abilityId] != null) {
 			this._badKaitenCasts += KAITEN_GCDS[abilityId] // Sen moves won't increment this, everything else will
 		}
 

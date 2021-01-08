@@ -25,7 +25,7 @@ export default class DoTs extends Module {
 		this.constructor.statusesToTrack.forEach(statusId => {
 			const status = this.data.getStatus(statusId)
 			if (!status) { return }
-			if (!status.hasOwnProperty('duration')) {
+			if (status.duration == null) {
 				console.warn(`statusId ${statusId} is missing a duration property`)
 				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
 			} else {
