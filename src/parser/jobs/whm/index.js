@@ -21,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.NIV, role: ROLES.MAINTAINER},
@@ -29,6 +29,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-01-08'),
+			Changes: () => <>Add 5.4 support for WHM</>,
+			contributors: [CONTRIBUTORS.SHIRK],
+		},
 		{
 			date: new Date('2020-08-12'),
 			Changes: () => <>Add 5.3 support for WHM</>,
