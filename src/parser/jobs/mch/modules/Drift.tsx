@@ -99,7 +99,7 @@ export default class Drift extends Module {
 
 	output() {
 		// Nothing to show
-		if (!this.driftedWindows.length) return
+		if (!this.driftedWindows.length) {return}
 
 		const panels = this.driftedWindows.map(window => {
 			return {

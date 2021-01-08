@@ -146,7 +146,6 @@ module.exports = {
 				'array-bracket-spacing': 'off',
 				'key-spacing': 'off',
 				'space-in-parens': 'off',
-				'curly': 'off',
 				'linebreak-style': 'off',
 				'no-duplicate-imports': 'off',
 				'space-before-blocks': 'off',

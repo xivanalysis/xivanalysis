@@ -59,8 +59,8 @@ export class TrackedOverheal {
 	 * Get current overheal as a percentage
 	 */
 	get percent(): number {
-		if (this.heal > 0) return 100 * (this.overheal) / (this.heal + this.overheal)
-		else return 0
+		if (this.heal > 0) {return 100 * (this.overheal) / (this.heal + this.overheal)}
+		else {return 0}
 	}
 
 	/**
@@ -225,7 +225,7 @@ export class CoreOverheal extends Module {
 	}
 
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
-		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) return
+		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) {return}
 
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
