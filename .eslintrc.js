@@ -33,8 +33,6 @@ module.exports = {
 
 	rules: {
 		// #region Migration required
-		// TODO: Migrate disable to JS-only
-		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		// TODO: Enable
 		'@typescript-eslint/no-explicit-any': 'off',
 		// TODO: Enable, might need tweaks
@@ -43,6 +41,7 @@ module.exports = {
 
 		// Disabled recommended rules
 		'default-case': 'off',
+		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-inferrable-types': 'off',
 
 		// Primary shared rules
