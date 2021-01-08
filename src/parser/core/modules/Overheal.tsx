@@ -6,7 +6,7 @@ import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -259,7 +259,8 @@ export class CoreOverheal extends Module {
 
 		if (this.displayPieChart) {
 			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
-			const data = [{
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			const data: DataSet<React.ReactNode, 3> = [{
 				value: directPercentage,
 				color: this.direct.color,
 				columns: [
@@ -290,7 +291,7 @@ export class CoreOverheal extends Module {
 					'% of total overheal',
 					'Overheal % per type',
 				],
-				data,
+				data: data,
 				width: 3, // chart's wide, yo
 			}))
 		}

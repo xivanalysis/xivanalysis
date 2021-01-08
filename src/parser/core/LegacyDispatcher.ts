@@ -70,7 +70,8 @@ export class LegacyDispatcher {
 	 * Removal is performed via strict equality, the hook being removed must have
 	 * been explicitly added prior.
 	 */
-	removeEventHook(hook: EventHook<Event>) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	removeEventHook(hook: EventHook<any>) {
 		const eventTypeHooks = this.eventHooks.get(hook.event)
 		if (!eventTypeHooks) { return }
 
