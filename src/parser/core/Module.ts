@@ -235,7 +235,7 @@ export default class Module extends Injectable {
 
 	private debugLog = (...messages: LogParams) => {
 		const module = this.constructor as typeof Module
-		// tslint:disable-next-line:no-console
+		// eslint-disable-next-line no-console
 		console.log(
 			`[%c${module.handle}%c]`,
 			`color: ${seededColor(module.handle)}`,

@@ -219,7 +219,7 @@ export class Analyser extends Injectable {
 
 	private debugLog = (...data: LogParameters) => {
 		const constructor = this.constructor as typeof Module
-		// tslint:disable-next-line:no-console
+		// eslint-disable-next-line no-console
 		console.log(
 			`[%c${constructor.handle}%c]`,
 			`color: ${seededColor(constructor.handle)}`,
