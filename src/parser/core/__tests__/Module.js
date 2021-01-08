@@ -7,7 +7,7 @@ import {GameEdition} from 'data/PATCHES'
 
 jest.mock('../LegacyDispatcher')
 
-/* eslint-disable no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 class TestModule extends Module {
 	static handle = 'test'

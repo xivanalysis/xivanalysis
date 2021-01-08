@@ -93,11 +93,11 @@ export default class Shoha extends Module {
 		const generatedStacks = GENERATORS[abilityId]
 
 		this.addStacks(generatedStacks, abilityId)
-		}
+	}
 
-		// back to time guessing we a go~
+	// back to time guessing we a go~
 	private onApplyMeditate(event: BuffEvent) {
-			this.meditateStart = event.timestamp
+		this.meditateStart = event.timestamp
 	}
 
 	private onRemoveMeditate(event: BuffEvent) {
@@ -107,13 +107,13 @@ export default class Shoha extends Module {
 
 		let generatedStacks = ticks
 
-		if ( (ticks + this.stacks) > MAX_STACKS ) {
+		if ((ticks + this.stacks) > MAX_STACKS) {
 			generatedStacks = (MAX_STACKS - this.stacks)
 		}
 
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
-		if ( this.stacks > MAX_STACKS) {
+		if (this.stacks > MAX_STACKS) {
 			this.stacks = MAX_STACKS
 		}
 
@@ -220,7 +220,7 @@ export default class Shoha extends Module {
 
 	output() {
 		const stackColor = Color(JOBS.SAMURAI.colour)
-		/* tslint:disable:no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartData = {
 			datasets: [
 				{
@@ -234,7 +234,7 @@ export default class Shoha extends Module {
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,
@@ -249,7 +249,7 @@ export default class Shoha extends Module {
 				}],
 			},
 		}
-		/* tslint:enable:no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<TimeLineChart

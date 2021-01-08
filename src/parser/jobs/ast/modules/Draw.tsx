@@ -60,7 +60,6 @@ export default class Draw extends Module {
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
 
-
 	protected init() {
 
 		PLAY.forEach(actionKey => {
@@ -152,8 +151,8 @@ export default class Draw extends Module {
 
 	private onComplete() {
 		const SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
-		? SLEEVE_DRAW_PLAYS_GIVEN_500
-		: SLEEVE_DRAW_PLAYS_GIVEN_530
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
 		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {

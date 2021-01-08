@@ -133,8 +133,7 @@ export default class Technicalities extends Module {
 				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.fight.start_time)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
-			}
-			else {
+			} else {
 				lastWindow.poolingProblem = false
 			}
 
@@ -299,11 +298,11 @@ export default class Technicalities extends Module {
 						end: window.end != null ?
 							window.end - this.parser.fight.start_time :
 							window.start - this.parser.fight.start_time,
-							notesMap: {
-								timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
-								pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
-								buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
-							},
+						notesMap: {
+							timely: <>{this.getNotesIcon(!window.timelyDevilment)}</>,
+							pooled: <>{this.getNotesIcon(window.poolingProblem)}</>,
+							buffed: <>{window.playersBuffed ? window.playersBuffed : 'N/A'}</>,
+						},
 						rotation: window.rotation,
 					})
 				})}

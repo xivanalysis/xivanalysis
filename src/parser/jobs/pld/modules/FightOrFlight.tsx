@@ -144,26 +144,25 @@ export default class FightOrFlight extends Module {
 			}
 
 			switch (actionId) {
-				case ACTIONS.GORING_BLADE.id:
-					this.fofState.goringCounter++
+			case ACTIONS.GORING_BLADE.id:
+				this.fofState.goringCounter++
 
-					if (this.fofState.lastGoringGcd !== null) {
-						if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE
-							&& !this.fofState.isRushed) {
-							this.fofErrorResult.goringTooCloseCounter++
-						}
+				if (this.fofState.lastGoringGcd !== null) {
+					if (this.fofState.gcdCounter - this.fofState.lastGoringGcd < CONSTANTS.GORING.MINIMUM_DISTANCE && !this.fofState.isRushed) {
+						this.fofErrorResult.goringTooCloseCounter++
 					}
-					this.fofState.lastGoringGcd = this.fofState.gcdCounter
-					break
-				case ACTIONS.CIRCLE_OF_SCORN.id:
-					this.fofState.circleOfScornCounter++
-					break
-				case ACTIONS.SPIRITS_WITHIN.id:
-					this.fofState.spiritsWithinCounter++
-					break
-				case ACTIONS.INTERVENE.id:
-					this.fofState.interveneCounter++
-					break
+				}
+				this.fofState.lastGoringGcd = this.fofState.gcdCounter
+				break
+			case ACTIONS.CIRCLE_OF_SCORN.id:
+				this.fofState.circleOfScornCounter++
+				break
+			case ACTIONS.SPIRITS_WITHIN.id:
+				this.fofState.spiritsWithinCounter++
+				break
+			case ACTIONS.INTERVENE.id:
+				this.fofState.interveneCounter++
+				break
 			}
 
 			if (!Array.isArray(this.fofRotations[this.fofState.start])) {

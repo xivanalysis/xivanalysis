@@ -245,25 +245,25 @@ export default class Snapshots extends Module {
 
 		if (this.targets.size === 1) {
 			return this.createSnapshotTable(this.targets.values().next().value)
-
-		} else {
-			const panels = Array.from(this.targets.values(), target => {
-				return {
-					key: target.key,
-					title: {
-						content: <span className={styles.name}> {target.name} </span>,
-					},
-					content: {
-						content: this.createSnapshotTable(target),
-					},
-				}
-			})
-			return <Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
 		}
+
+		const panels = Array.from(this.targets.values(), target => {
+			return {
+				key: target.key,
+				title: {
+					content: <span className={styles.name}> {target.name} </span>,
+				},
+				content: {
+					content: this.createSnapshotTable(target),
+				},
+			}
+		})
+
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
 	}
 }

@@ -184,7 +184,7 @@ export default class Kenki extends Module {
 		const sam = Color(JOBS.SAMURAI.colour)
 
 		// Disabling magic numbers for the chart, 'cus it's a chart
-		/* eslint-disable no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const data = {
 			datasets: [{
 				label: 'Minimum',
@@ -205,7 +205,7 @@ export default class Kenki extends Module {
 				pointHitRadius: 10,
 			}],
 		}
-		/* eslint-enable no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <>
 			<span className={styles.helpText}>

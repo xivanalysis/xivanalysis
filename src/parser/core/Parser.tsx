@@ -9,12 +9,11 @@ import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import React from 'react'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
-import {extractErrorContext, isDefined} from 'utilities'
+import {extractErrorContext, isDefined, formatDuration} from 'utilities'
 import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
-import {formatDuration} from 'utilities'
 import {Report, Pull, Actor} from 'report'
 import {Injectable} from './Injectable'
 import {Analyser} from './Analyser'
@@ -389,7 +388,7 @@ class Parser {
 	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
-		if (moduleIndex !== -1 ) {
+		if (moduleIndex !== -1) {
 			this._triggerModules = this._triggerModules.slice(0)
 			this._triggerModules.splice(moduleIndex, 1)
 		}
@@ -468,7 +467,7 @@ class Parser {
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[handle]) {
 				const error = this._moduleErrors[handle]
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}
@@ -486,7 +485,7 @@ class Parser {
 				})
 
 				// Also add the error to the results to be displayed.
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}

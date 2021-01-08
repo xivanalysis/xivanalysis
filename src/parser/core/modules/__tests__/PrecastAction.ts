@@ -10,7 +10,7 @@ const MockedData = jest.fn().mockImplementation(() => ({
 	}),
 }))
 
-// tslint:disable:no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const fightStartTime = 0
 const mockCastEvent = (timestamp: number): CastEvent => ({
@@ -50,9 +50,9 @@ const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	return cast
 }
 const precastSyntheticCast = (timestamp: number): CastEvent => ({
-		...mockDamageEvent(timestamp),
-		type: 'cast',
-		timestamp: fightStartTime,
+	...mockDamageEvent(timestamp),
+	type: 'cast',
+	timestamp: fightStartTime,
 })
 
 describe('The PrecastAction module', () => {

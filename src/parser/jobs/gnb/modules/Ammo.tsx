@@ -250,7 +250,7 @@ export default class Ammo extends Module {
 		})
 
 		const ammoColor = Color(JOBS.GUNBREAKER.colour)
-		/* tslint:disable:no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartData = {
 			datasets: [
 				{
@@ -264,7 +264,7 @@ export default class Ammo extends Module {
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,
@@ -279,7 +279,7 @@ export default class Ammo extends Module {
 				}],
 			},
 		}
-		/* tslint:enable:no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<TimeLineChart

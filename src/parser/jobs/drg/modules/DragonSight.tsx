@@ -129,9 +129,8 @@ export default class DragonSight extends BuffWindowModule {
 			return (actual: number, expected?: number) => {
 				if (!isDefined(expected) || actual <= expected) {
 					return RotationTargetOutcome.NEGATIVE
-				} else {
-					return RotationTargetOutcome.POSITIVE
 				}
+				return RotationTargetOutcome.POSITIVE
 			}
 		}
 	}
@@ -142,7 +141,8 @@ export default class DragonSight extends BuffWindowModule {
 		if (fault === SHORT_WINDOW_FAULT.PARTNER) {
 			return <Trans id="drg.ds.notes.partnerdied">Partner Died</Trans>
 		}
-		else if (fault === SHORT_WINDOW_FAULT.DRG) {
+
+		if (fault === SHORT_WINDOW_FAULT.DRG) {
 			return <Trans id="drg.ds.notes.drgdied">You Died</Trans>
 		}
 

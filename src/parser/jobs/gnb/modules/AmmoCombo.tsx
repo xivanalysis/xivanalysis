@@ -36,7 +36,7 @@ class GnashingComboState {
 		this.startTime = start
 	}
 
-	public get totalHits(): number {return this.rotation.length}
+	public get totalHits(): number { return this.rotation.length }
 
 	public get actualJug() : number {
 		return this.rotation.filter(cast => cast.ability.guid === ACTIONS.JUGULAR_RIP.id).length
@@ -76,7 +76,6 @@ export default class AmmoCombo extends Module {
 		return _.last(this.gnashingComboWindows)
 	}
 
-
 	protected init() {
 		this.addEventHook('cast',
 			{
@@ -102,7 +101,7 @@ export default class AmmoCombo extends Module {
 
 		// cases to ignore, No Mercy any other modules will handle the latter 2 and FUCK sprint.
 
-		if (actionId === ACTIONS.ATTACK.id || actionId === ACTIONS.SPRINT.id || actionId === ACTIONS.BURST_STRIKE.id || actionId === ACTIONS.SONIC_BREAK.id ) {
+		if (actionId === ACTIONS.ATTACK.id || actionId === ACTIONS.SPRINT.id || actionId === ACTIONS.BURST_STRIKE.id || actionId === ACTIONS.SONIC_BREAK.id) {
 			return
 		}
 
@@ -112,7 +111,7 @@ export default class AmmoCombo extends Module {
 
 		if (actionId === ACTIONS.GNASHING_FANG.id) {
 
-		this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
+			this.debug(`Action ${event.ability.name} (${actionId}) is a Gnashing Fang action`)
 
 			if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) { // They dropped the combo via timeout
 				this.onEndGnashingCombo(event)
@@ -122,7 +121,7 @@ export default class AmmoCombo extends Module {
 			this.gnashingComboWindows.push(gnashingComboState)
 		}
 
-		if (COMBO_BREAKERS.includes(actionId) ) {
+		if (COMBO_BREAKERS.includes(actionId)) {
 
 			this.onEndGnashingCombo(event)
 		}
@@ -133,7 +132,7 @@ export default class AmmoCombo extends Module {
 
 		if (lastGnashingCombo != null && lastGnashingCombo.endTime == null) {
 
-			if (COMBO_ACTIONS.includes(actionId) ) {
+			if (COMBO_ACTIONS.includes(actionId)) {
 				lastGnashingCombo.rotation.push(event)
 
 				if (actionId === ACTIONS.EYE_GOUGE.id) {

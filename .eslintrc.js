@@ -89,8 +89,11 @@ module.exports = {
 		'no-else-return': ['error', {allowElseIf: false}],
 		'no-implicit-globals': 'error',
 		'no-lonely-if': 'error',
-		'no-magic-numbers': ['warn', {
+		'@typescript-eslint/no-magic-numbers': ['warn', {
 			ignoreArrayIndexes: true,
+			ignoreDefaultValues: true,
+			ignoreEnums: true,
+			ignoreReadonlyClassProperties: true,
 			ignore: [
 				-1,   // Used by a lot of stuff (inc stdlib) to represent not found
 				0,    // I prefer .length===0 checks most of the time
@@ -109,14 +112,14 @@ module.exports = {
 		'no-whitespace-before-property': 'warn',
 		'object-curly-spacing': 'warn',
 		'object-property-newline': ['error', {allowAllPropertiesOnSameLine: true}],
-		'prefer-arrow-callback': 'error',
+		'prefer-arrow-callback': ['error', {allowNamedFunctions: true}],
 		'prefer-const': 'warn',
 		'prefer-spread': 'error',
 		'semi': ['error', 'never'],
 		'space-before-blocks': 'warn',
 		'space-in-parens': 'warn',
 		'template-curly-spacing': ['warn', 'never'],
-		'@typescript-eslint/quotes': ['error', 'single'],
+		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
 
 		'react/display-name': 'off',
@@ -133,31 +136,6 @@ module.exports = {
 			files: ['**/*.ts?(x)'],
 			// Empty override so --ext doesn't need to be passed on the CLI - eslint will
 			// include anything matching overrides
-
-			// TODO: Reevaluate and remove these. These disables are simply to get the build green
-			// for the primary tooling PR, and stem from rule mismatch and poor tooling with the
-			// previous tslint harness.
-			rules: {
-				'no-else-return': 'off',
-				'no-magic-numbers': 'off',
-				'brace-style': 'off',
-				'indent': 'off',
-				'semi': 'off',
-				'prefer-arrow-callback': 'off',
-				'no-multiple-empty-lines': 'off',
-				'array-bracket-spacing': 'off',
-				'key-spacing': 'off',
-				'space-in-parens': 'off',
-				'curly': 'off',
-				'linebreak-style': 'off',
-				'no-duplicate-imports': 'off',
-				'space-before-blocks': 'off',
-				'block-spacing': 'off',
-				'keyword-spacing': 'off',
-				'@typescript-eslint/quotes': 'off',
-				'react-hooks/rules-of-hooks': 'off',
-				'react-hooks/exhaustive-deps': 'off',
-			},
 		},
 		// Test files
 		{
@@ -170,6 +148,14 @@ module.exports = {
 				'jest/no-identical-title': 'error',
 				'jest/prefer-to-have-length': 'warn',
 				'jest/valid-expect': 'error',
+			},
+		},
+		// Data files
+		{
+			files: ['src/data/**/*.[tj]s?(x)'],
+			rules: {
+				// Data inherently contains a lot of magic numbers
+				'@typescript-eslint/no-magic-numbers': 'off',
 			},
 		},
 	],

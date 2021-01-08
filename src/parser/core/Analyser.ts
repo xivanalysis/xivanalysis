@@ -8,6 +8,8 @@ import {Injectable} from './Injectable'
 import Module, {DISPLAY_MODE as DisplayMode} from './Module'
 import Parser from './Parser'
 
+const DEFAULT_DISPLAY_ORDER = 50
+
 // This needs to be imported from the legacy module file due to dependency cycles.
 // TODO:  When Module is removed, it should be moved here, or to the parser.
 export {DisplayMode}
@@ -65,7 +67,7 @@ export class Analyser extends Injectable {
 	 * view. Lower numbers are rendered closer to the top of the page. Typical
 	 * range spans 0 - 100.
 	 */
-	static displayOrder = 50
+	static displayOrder = DEFAULT_DISPLAY_ORDER
 	/** The style of the wrapper that analysis output should be rendered in. */
 	static displayMode = DisplayMode.COLLAPSIBLE
 

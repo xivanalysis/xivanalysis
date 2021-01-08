@@ -22,20 +22,20 @@ declare module 'report' {
 }
 
 export function adaptReport(report: LegacyReport): Report {
-		// Build the full actor structure ahead of time
-		const actorsByFight = buildActorsByFight(report)
+	// Build the full actor structure ahead of time
+	const actorsByFight = buildActorsByFight(report)
 
-		return {
-			timestamp: report.start,
-			edition: languageToEdition(report.lang),
+	return {
+		timestamp: report.start,
+		edition: languageToEdition(report.lang),
 
-			name: report.title,
-			pulls: report.fights.map(
-				fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
-			),
+		name: report.title,
+		pulls: report.fights.map(
+			fight => convertFight(report, fight, actorsByFight.get(fight.id) ?? []),
+		),
 
-			meta: {...toJS(report), source: 'legacyFflogs' as const},
-		}
+		meta: {...toJS(report), source: 'legacyFflogs' as const},
+	}
 }
 
 function buildActorsByFight(report: LegacyReport) {

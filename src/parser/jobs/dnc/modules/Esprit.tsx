@@ -159,7 +159,7 @@ export default class EspritGauge extends Module {
 	output() {
 		const dncColor = Color(JOBS.DANCER.colour)
 
-		// tslint:disable:no-magic-numbers
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const data = {
 			datasets: [{
 				label: 'Esprit',
@@ -169,7 +169,7 @@ export default class EspritGauge extends Module {
 				borderColor: dncColor.fade(0.5).toString(),
 			}],
 		}
-		// tslint:enable:no-magic-numbers
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<span className={styles.helpText}>

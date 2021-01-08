@@ -44,7 +44,7 @@ export default class CelestialIntersection extends Module {
 		const holdDuration = this.uses === 0 ? this.parser.currentDuration : this.totalHeld
 		const usesMissed = Math.floor(holdDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000))
 		const fightDuration = this.parser.fight.end_time - this.parser.fight.start_time
-		const maxUses = (fightDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000) ) - 1
+		const maxUses = (fightDuration / (this.data.actions.CELESTIAL_INTERSECTION.cooldown * 1000)) - 1
 
 		const WASTED_USE_TIERS = {
 			[maxUses * SEVERITY_MOD.MINOR]: SEVERITY.MINOR,

@@ -6,7 +6,6 @@ import {patch510} from './patch5.1'
 import {patch530} from './patch5.3'
 import {patch540} from './patch5.4'
 
-
 export const layers: Array<Layer<StatusRoot>> = [
 	// Layers should be in their own files, and imported for use here.
 	// Example layer:

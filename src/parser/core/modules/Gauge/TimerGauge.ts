@@ -235,11 +235,11 @@ export class TimerGauge extends AbstractGauge {
 		}
 
 		if (color) {
-			/* tslint:disable:no-magic-numbers */
+			/* eslint-disable @typescript-eslint/no-magic-numbers */
 			const chartColor = Color(color)
 			dataSet.backgroundColor = chartColor.fade(0.8).toString()
 			dataSet.borderColor = chartColor.fade(0.5).toString()
-			/* tslint:enable:no-magic-numbers */
+			/* eslint-enable @typescript-eslint/no-magic-numbers */
 		}
 
 		return dataSet

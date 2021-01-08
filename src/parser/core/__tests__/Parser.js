@@ -10,7 +10,7 @@ import {Analyser} from '../Analyser'
 jest.mock('../LegacyDispatcher')
 jest.mock('../Dispatcher')
 
-/* eslint-disable @xivanalysis/no-unused-dependencies, no-magic-numbers */
+/* eslint-disable @xivanalysis/no-unused-dependencies, @typescript-eslint/no-magic-numbers */
 
 // Testing modules
 class BasicModule extends Module {

@@ -82,7 +82,7 @@ function AnalyseEvents({report, reportStore}: AnalyseEventsProps) {
 	const [events, setEvents] = React.useState<Event[]>()
 	React.useEffect(() => {
 		reportStore.fetchEvents(pullId, actorId).then(setEvents)
-	}, [pullId, actorId])
+	}, [pullId, actorId, reportStore])
 
 	if (events == null) {
 		return <AnalysisLoader/>

@@ -461,7 +461,7 @@ export default class RotationWatchdog extends Module {
 	output() {
 		const outliers: Cycle[] = this.history.filter(cycle => cycle.errorCode.priority >
 			CYCLE_ERRORS.SHORT.priority || DEBUG_SHOW_ALL_CYCLES)
-		if (outliers.length > 0 ) {
+		if (outliers.length > 0) {
 			return <Fragment>
 				<Message>
 					<Trans id="blm.rotation-watchdog.rotation-table.message">

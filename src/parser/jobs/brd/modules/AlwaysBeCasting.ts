@@ -3,7 +3,7 @@ import STATUSES from 'data/STATUSES'
 import CoreAlwaysBeCasting from 'parser/core/modules/AlwaysBeCasting'
 import {BuffEvent, CastEvent} from 'fflogs'
 
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 const SONG_DURATION_MS = 30 * 1000
 
 interface ArmyWindow {

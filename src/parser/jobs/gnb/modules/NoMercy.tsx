@@ -117,24 +117,24 @@ export default class NoMercy extends Module {
 			}
 
 			switch (actionId) {
-				// Blasting Zone is just a traited version of Danger Zone
-				// Impossible to see both in the same log outside of hacking
-				case ACTIONS.BLASTING_ZONE.id:
-				case ACTIONS.DANGER_ZONE.id:
-					lastNoMercy.numBlastingZones++
-					break
-				case ACTIONS.SONIC_BREAK.id:
-					lastNoMercy.numSonicBreaks++
-					break
-				case ACTIONS.ROUGH_DIVIDE.id:
-					lastNoMercy.numRoughDivides++
-					break
-				case ACTIONS.GNASHING_FANG.id:
-					lastNoMercy.numGnashingFangs++
-					break
-				case ACTIONS.BOW_SHOCK.id:
-					lastNoMercy.numBowShocks++
-					break
+			// Blasting Zone is just a traited version of Danger Zone
+			// Impossible to see both in the same log outside of hacking
+			case ACTIONS.BLASTING_ZONE.id:
+			case ACTIONS.DANGER_ZONE.id:
+				lastNoMercy.numBlastingZones++
+				break
+			case ACTIONS.SONIC_BREAK.id:
+				lastNoMercy.numSonicBreaks++
+				break
+			case ACTIONS.ROUGH_DIVIDE.id:
+				lastNoMercy.numRoughDivides++
+				break
+			case ACTIONS.GNASHING_FANG.id:
+				lastNoMercy.numGnashingFangs++
+				break
+			case ACTIONS.BOW_SHOCK.id:
+				lastNoMercy.numBowShocks++
+				break
 			}
 		}
 	}

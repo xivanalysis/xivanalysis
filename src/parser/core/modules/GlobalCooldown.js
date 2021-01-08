@@ -170,7 +170,7 @@ export default class GlobalCooldown extends Module {
 		let isCasterTaxed = false
 
 		// GCD is only to two decimal places, so round it there. Storing in Ms.
-		// eslint-disable-next-line no-magic-numbers
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		let gcdLength = Math.round((timestamp - gcdInfo.event.timestamp)/10)*10
 
 		if (!gcdInfo.isInstant && castTime >= action.cooldown) {

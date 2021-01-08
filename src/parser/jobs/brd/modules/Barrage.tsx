@@ -39,7 +39,7 @@ enum SeverityWeights {
 }
 
 const SEVERITY_TIERS = {
-	// tslint:disable-next-line: no-magic-numbers
+	// tslint:disable-next-line: @typescript-eslint/no-magic-numbers
 	[90]: TARGET.WARN,
 	[100]: TARGET.SUCCESS,
 }
@@ -204,9 +204,9 @@ export default class Barrage extends Module {
 	private getIcon(failed: boolean): JSX.Element {
 		if (failed) {
 			return <Icon name="remove" className="text-error"/>
-		} else {
-			return <Icon name="checkmark" className="text-success"/>
 		}
+
+		return <Icon name="checkmark" className="text-success"/>
 	}
 
 	output() {
@@ -231,8 +231,7 @@ export default class Barrage extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-			{
-				this.barrageHistory.map(barrage => {
+				{this.barrageHistory.map(barrage => {
 					return <Table.Row key={barrage.castTimestamp} warning={barrage.info.dropped}>
 						<Table.Cell>{this.util.createTimelineButton(barrage.castTimestamp)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped)}</Table.Cell>
@@ -240,8 +239,7 @@ export default class Barrage extends Module {
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.overwrite)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.unaligned)}</Table.Cell>
 					</Table.Row>
-				})
-			}
+				})}
 			</Table.Body>
 		</Table>
 	}

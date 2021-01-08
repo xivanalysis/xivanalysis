@@ -47,7 +47,7 @@ export default class Buffs extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private data!: Data
 
-	init(){
+	init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
 		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)

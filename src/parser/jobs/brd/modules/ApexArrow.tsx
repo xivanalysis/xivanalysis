@@ -77,7 +77,7 @@ export default class ApexArrow extends Module {
 
 		if ((event.hitCount === 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.singleTarget) ||
 			(event.hitCount > 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.multiTarget)) {
-				this.badApexCasts++
+			this.badApexCasts++
 		}
 	}
 

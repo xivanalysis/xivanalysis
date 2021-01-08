@@ -28,9 +28,9 @@ const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 }
 
 const CHECKLIST_SEVERITY_TIERS: SeverityTiers = {
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-35]: TARGET.SUCCESS,
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-50]: TARGET.WARN,
 }
 
@@ -59,8 +59,8 @@ export class TrackedOverheal {
 	 * Get current overheal as a percentage
 	 */
 	get percent(): number {
-		if (this.heal > 0) return 100 * (this.overheal) / (this.heal + this.overheal)
-		else return 0
+		if (this.heal > 0) { return 100 * (this.overheal) / (this.heal + this.overheal) }
+		return 0
 	}
 
 	/**
@@ -97,8 +97,8 @@ export class TrackedOverheal {
 	 */
 	pushHeal(event: HealEvent) {
 		const guid = event.ability.guid
-			this.heal += event.amount
-			this.overheal += event.overheal || 0
+		this.heal += event.amount
+		this.overheal += event.overheal || 0
 	}
 }
 
@@ -225,7 +225,7 @@ export class CoreOverheal extends Module {
 	}
 
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
-		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) return
+		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
 
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
@@ -296,7 +296,6 @@ export class CoreOverheal extends Module {
 				width: 3, // chart's wide, yo
 			}))
 		}
-
 
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []

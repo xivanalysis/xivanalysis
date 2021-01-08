@@ -22,7 +22,7 @@ const WINDOW_STATUSES = [
 ]
 
 // how long (or short, really) a window needs to be in order to be considered truncated
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
 
 class BLWindow {
@@ -42,7 +42,6 @@ class BLWindow {
 		this.start = start
 	}
 }
-
 
 // in this module we only want to track battle litany windows opened by
 // the character selected for analysis. windows that clip into or overwrite other
@@ -81,7 +80,6 @@ export default class BattleLitany extends Module {
 	private tryOpenWindow(event: NormalisedApplyBuffEvent): BLWindow | undefined {
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
-
 		if (lastWindow && !lastWindow.end) {
 			return lastWindow
 		}
@@ -105,8 +103,7 @@ export default class BattleLitany extends Module {
 		this.lastLitFalloffTime = event.timestamp
 
 		// only track the things one player added
-		if (event.sourceID && event.sourceID !== this.parser.player.id)
-			return
+		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
 
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 
