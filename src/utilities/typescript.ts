@@ -1,6 +1,6 @@
 export const isDefined = <T>(val?: T | null): val is T => val != null
 
-export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+export function ensureArray<T>(val: T | readonly T[]): readonly T[] {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}

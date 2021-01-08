@@ -10,7 +10,7 @@ import {Event} from 'event'
 
 export class Conductor {
 	private parser?: Parser
-	private resultsCache?: ReadonlyArray<Result>
+	private resultsCache?: readonly Result[]
 
 	private readonly legacyReport: LegacyReport
 	private readonly fight: Fight

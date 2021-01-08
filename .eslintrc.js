@@ -56,8 +56,6 @@ module.exports = {
 		'@typescript-eslint/no-this-alias': 'off',
 		// TODO: ts-eslint docs recc. turning this off. probably enable for js only?
 		'no-undef': 'off',
-		// TODO: Enable at _minimum_ {default: 'array-simple'}
-		'@typescript-eslint/array-type': 'off',
 		// #endregion
 
 		// Disabled recommended rules
@@ -66,6 +64,7 @@ module.exports = {
 
 		// Primary shared rules
 		'array-bracket-spacing': 'warn',
+		'@typescript-eslint/array-type': ['error', {default: 'array-simple'}],
 		'block-spacing': 'warn',
 		'brace-style': ['error', '1tbs', {allowSingleLine: true}],
 		'comma-dangle': ['error', 'always-multiline'],
