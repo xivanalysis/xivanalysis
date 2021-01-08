@@ -27,8 +27,7 @@ export function formatDuration(duration: number, options: {
 
 	const minutesFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: 0, useGrouping: false})
 
-	if (duration < 0 && !options.showNegative)
-	{
+	if (duration < 0 && !options.showNegative) {
 		return '< 0s'
 	}
 

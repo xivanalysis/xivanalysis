@@ -140,7 +140,6 @@ module.exports = {
 			rules: {
 				'no-else-return': 'off',
 				'no-magic-numbers': 'off',
-				'brace-style': 'off',
 				'prefer-arrow-callback': 'off',
 				'no-multiple-empty-lines': 'off',
 				'@typescript-eslint/quotes': 'off',

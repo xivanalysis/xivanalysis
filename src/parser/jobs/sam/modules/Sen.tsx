@@ -278,24 +278,20 @@ export default class Sen extends Module {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			}
-			else if (lastSenState.isOverwrite === true && lastSenState.wastedSens > 1) {
+			} else if (lastSenState.isOverwrite === true && lastSenState.wastedSens > 1) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SENS
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			}
-			else if (lastSenState.isOverwrite === true) {
+			} else if (lastSenState.isOverwrite === true) {
 				lastSenState._senCode = SEN_HANDLING.OVERWROTE_SEN
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
-			}
-			else if (lastSenState.isHaga === true && lastSenState.currentSens > 1) {
+			} else if (lastSenState.isHaga === true && lastSenState.currentSens > 1) {
 				lastSenState._senCode = SEN_HANDLING.D_HAGAKURE
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++
 				this.hagakureCount++
-			}
-			else if (lastSenState.isHaga === true) {
+			} else if (lastSenState.isHaga === true) {
 				lastSenState._senCode = SEN_HANDLING.HAGAKURE
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++

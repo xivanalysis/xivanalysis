@@ -133,8 +133,7 @@ export default class Technicalities extends Module {
 				const feathersBeforeWindow = this.feathers.feathersSpentInRange((previousWindow && previousWindow.end || this.parser.fight.start_time)
 					+ POST_WINDOW_GRACE_PERIOD_MILLIS, lastWindow.start)
 				lastWindow.poolingProblem = feathersBeforeWindow > 0
-			}
-			else {
+			} else {
 				lastWindow.poolingProblem = false
 			}
 

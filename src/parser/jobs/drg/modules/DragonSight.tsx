@@ -141,8 +141,7 @@ export default class DragonSight extends BuffWindowModule {
 		const fault = this.buffTargetDied(buffWindow)
 		if (fault === SHORT_WINDOW_FAULT.PARTNER) {
 			return <Trans id="drg.ds.notes.partnerdied">Partner Died</Trans>
-		}
-		else if (fault === SHORT_WINDOW_FAULT.DRG) {
+		} else if (fault === SHORT_WINDOW_FAULT.DRG) {
 			return <Trans id="drg.ds.notes.drgdied">You Died</Trans>
 		}
 
