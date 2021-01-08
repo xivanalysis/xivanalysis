@@ -33,7 +33,7 @@ export default new Meta({
 		{
 			date: new Date('2021-01-08'),
 			Changes: () => <>Add 5.4 support for WHM</>,
-			contributors: [CONTRIBUTORS.NONO],
+			contributors: [CONTRIBUTORS.SHIRK],
 		},
 		{
 			date: new Date('2020-08-12'),
