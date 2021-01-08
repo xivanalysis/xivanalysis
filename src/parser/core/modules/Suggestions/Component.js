@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {observer} from 'mobx-react'
 import {SEVERITY} from 'parser/core/modules/Suggestions/Suggestion'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React from 'react'
 import {Checkbox, Label} from 'semantic-ui-react'
 // Direct path import 'cus it'll be a dep loop otherwise

@@ -1,5 +1,5 @@
 import {Trans} from '@lingui/react'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React from 'react'
 import {withRouter} from 'react-router'
 import {getPathMatch} from 'utilities'

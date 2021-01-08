@@ -1,6 +1,6 @@
 import ContributorLabel from 'components/ui/ContributorLabel'
 import {ChangelogEntry} from 'parser/core/Meta'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React from 'react'
 import {Accordion, AccordionTitleProps} from 'semantic-ui-react'
 import styles from './ChangeLog.module.css'

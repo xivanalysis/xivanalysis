@@ -1,7 +1,7 @@
 import {withI18n} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import ReactMarkdown from 'react-markdown'
 import {ActionLink, StatusLink} from './DbLink'

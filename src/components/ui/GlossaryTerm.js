@@ -1,5 +1,5 @@
 import TERMS from 'data/GLOSSARY'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {PureComponent} from 'react'
 import {Popup, Icon} from 'semantic-ui-react'
 import styles from './GlossaryTerm.module.css'

@@ -1,6 +1,6 @@
 import {Trans} from '@lingui/react'
 import {SEVERITY} from 'errors'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React from 'react'
 import {Message} from 'semantic-ui-react'
 

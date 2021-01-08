@@ -4,6 +4,8 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react/recommended',
+		'plugin:import/errors',
+		'plugin:import/typescript',
 	],
 
 	// TODO: Might need to use both babel-eslint and typescript-eslint depending on filetype?
@@ -19,6 +21,9 @@ module.exports = {
 
 	settings: {
 		react: {version: 'detect'},
+		'import/resolver': {
+			typescript: {alwaysTryTypes: true},
+		},
 	},
 
 	env: {

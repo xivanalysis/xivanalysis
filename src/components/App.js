@@ -1,7 +1,7 @@
 import {Container} from 'akkd'
 import classnames from 'classnames'
 import _ from 'lodash'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} from 'react-router-dom'
 import {reportSources} from 'reportSources'

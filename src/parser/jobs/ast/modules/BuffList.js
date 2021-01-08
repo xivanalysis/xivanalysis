@@ -1,6 +1,6 @@
 import {getDataBy} from 'data'
 import STATUSES from 'data/STATUSES'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {Component} from 'react'
 
 // import styles from './BuffList.module.css'
