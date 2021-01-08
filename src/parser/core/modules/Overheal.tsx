@@ -259,7 +259,7 @@ export class CoreOverheal extends Module {
 
 		if (this.displayPieChart) {
 			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
-			const data: any = [{
+			const data = [{
 				value: directPercentage,
 				color: this.direct.color,
 				columns: [

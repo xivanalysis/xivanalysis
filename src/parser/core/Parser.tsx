@@ -418,8 +418,8 @@ class Parser {
 		source: 'event' | 'output',
 		error: Error,
 		event?: LegacyEvent,
-	): [Record<string, any>, Array<[string, Error]>] {
-		const output: Record<string, any> = {}
+	): [Record<string, unknown>, Array<[string, Error]>] {
+		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
 		const visited = new Set<string>()
 
@@ -574,7 +574,7 @@ class Parser {
 			module: opts.module,
 		}
 
-		const extra: Record<string, any> = {
+		const extra: Record<string, unknown> = {
 			source: this.newReport.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,

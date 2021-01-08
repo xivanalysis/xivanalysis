@@ -12,7 +12,7 @@ export interface ReportMetaRepository {}
  * `({source: 'foo'} & Foo) | ({source: 'bar'} & Bar)`
  */
 type ReportMetaUnion<S extends keyof ReportMetaRepository> =
-	S extends any
+	S extends unknown
 		? {source: S} & ReportMetaRepository[S]
 		: never
 

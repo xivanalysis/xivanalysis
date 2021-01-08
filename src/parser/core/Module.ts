@@ -87,7 +87,7 @@ export default class Module extends Injectable {
 	 * @param event The event that was being processed when the error occurred, if source is 'event'
 	 * @returns The data to attach to automatic error reports, or undefined to rely on primitive value detection
 	 */
-	getErrorContext(_source: 'event' | 'output', _error: Error, _event?: Event): any {
+	getErrorContext(_source: 'event' | 'output', _error: Error, _event?: Event): unknown {
 		return
 	}
 
@@ -138,6 +138,7 @@ export default class Module extends Injectable {
 		// are strings. While we're trying to deal with both, normalise
 		// filter actor IDs to numbers to patch over the difference.
 		// TODO: REMOVE
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const fixTypeDiscrepancy = (base: any): any =>
 			ensureArray(base).map(val => parseInt(val, 10))
 		if (filter.sourceID != null) {
@@ -170,6 +171,7 @@ export default class Module extends Injectable {
 		const filter = cloneDeep(filterArg) as Filter<FflogsEvent>
 
 		// Sorry not sorry for the `any`s. Ceebs working out this filter _again_.
+		/* eslint-disable @typescript-eslint/no-explicit-any */
 		switch (filterArg[qol]) {
 		case 'player':
 			filter[raw] = this.parser.player.id as any
@@ -180,6 +182,7 @@ export default class Module extends Injectable {
 		default:
 			filter[raw] = filterArg[qol] as any
 		}
+		/* eslint-enable @typescript-eslint/no-explicit-any */
 
 		delete filter[qol as keyof typeof filter]
 
@@ -194,7 +197,7 @@ export default class Module extends Injectable {
 	protected readonly removeHook = this.removeEventHook
 
 	/** Remove a previously added event hook. */
-	protected removeEventHook(hooks: Array<EventHook<any>>) {
+	protected removeEventHook(hooks: Array<EventHook<Event>>) {
 		hooks.forEach(hook => this.parser.legacyDispatcher.removeEventHook(hook))
 	}
 

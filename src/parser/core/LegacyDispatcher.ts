@@ -39,6 +39,7 @@ export class LegacyDispatcher {
 	}
 
 	// eventHooks[eventType][moduleHandle]: Set<Hook>
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private eventHooks = new Map<Event['type'], Map<ModuleHandle, Set<EventHook<any>>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
@@ -69,7 +70,7 @@ export class LegacyDispatcher {
 	 * Removal is performed via strict equality, the hook being removed must have
 	 * been explicitly added prior.
 	 */
-	removeEventHook(hook: EventHook<any>) {
+	removeEventHook(hook: EventHook<Event>) {
 		const eventTypeHooks = this.eventHooks.get(hook.event)
 		if (!eventTypeHooks) { return }
 
@@ -184,8 +185,10 @@ export class LegacyDispatcher {
 			}
 
 			// Just trust me 'aite
+			/* eslint-disable @typescript-eslint/no-explicit-any */
 			const filterVal: any = filter[key as keyof typeof filter]
 			const objectVal: any = object[key as keyof typeof object]
+			/* eslint-enable @typescript-eslint/no-explicit-any */
 
 			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
 			if (Array.isArray(filterVal)) {

@@ -4,6 +4,7 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import PrecastAction from 'parser/core/modules/PrecastAction'
@@ -97,7 +98,7 @@ export default class Sect extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	normalise(events: any) {
+	normalise(events: Event[]) {
 		const startTime = this.parser.fight.start_time
 		let aspectedCast: CastEvent | null = null
 

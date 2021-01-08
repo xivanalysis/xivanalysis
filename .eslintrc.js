@@ -32,11 +32,6 @@ module.exports = {
 	},
 
 	rules: {
-		// #region Migration required
-		// TODO: Enable
-		'@typescript-eslint/no-explicit-any': 'off',
-		// #endregion
-
 		// Disabled recommended rules
 		'default-case': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',

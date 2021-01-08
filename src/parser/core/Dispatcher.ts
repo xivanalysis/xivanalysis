@@ -41,6 +41,7 @@ export class Dispatcher {
 	/** The timestamp of the hook currently being executed. */
 	get timestamp() { return this._timestamp }
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private eventHooks = new Map<Handle, Set<EventHook<any>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop

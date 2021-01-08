@@ -11,9 +11,8 @@ WeakMap<
 		>
 	>
 >
-
-You didn't see the anys.
 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cache = new WeakMap<object, Map<any, Map<any, any>>>()
 
 type FlattenArray<T> = T extends Array<infer I> ? I : T

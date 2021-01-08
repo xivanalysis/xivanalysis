@@ -35,4 +35,5 @@ type EnsuredActions<T extends Record<string, Action>> = {
 	[K in keyof T]: Compute<ReplaceFrom<T[K] & Action, Action, TroublesomeProperties>>
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const ensureActions = <T extends Record<string, Action>>(actions: T): EnsuredActions<T> => actions as any // trust me

@@ -84,6 +84,7 @@ export class Injectable {
 				: dependency
 
 			// Assign the dependency to the class instance
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			; (this as any)[mapped.prop] = container[mapped.handle]
 		}
 	}
