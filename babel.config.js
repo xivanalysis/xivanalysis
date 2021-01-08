@@ -19,14 +19,17 @@ const getPlugins = ({
 	}],
 ].filter(item => !!item)
 
-const isBabelRegister = caller => caller?.name === '@babel/register'
+const needsNodeTarget = caller => false
+	|| caller?.name === '@babel/register'
+	|| caller?.name === '@babel/node'
+	|| caller?.name === 'babel-jest'
 
 module.exports = api => ({
 	presets: [
 		['@babel/preset-env', {
 			// If running under register, we need to swap down to node target, otherwise
 			// permit fallback to browserslist config handling.
-			targets: api.caller(isBabelRegister)
+			targets: api.caller(needsNodeTarget)
 				? {node: true}
 				: undefined,
 		}],
