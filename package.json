@@ -7,6 +7,7 @@
     "build": "webpack --mode production",
     "test": "jest",
     "lint": "eslint src",
+    "types": "tsc",
     "extract": "rimraf locale/_build && rimraf locale/en && lingui add-locale en && cross-env NODE_ENV=development lingui extract --clean",
     "compile": "lingui compile",
     "generate": "yarn run generate:unable-to-act",
