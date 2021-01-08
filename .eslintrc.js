@@ -116,7 +116,7 @@ module.exports = {
 		'space-before-blocks': 'warn',
 		'space-in-parens': 'warn',
 		'template-curly-spacing': ['warn', 'never'],
-		'@typescript-eslint/quotes': ['error', 'single'],
+		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
 
 		'react/display-name': 'off',
@@ -139,9 +139,9 @@ module.exports = {
 			// previous tslint harness.
 			rules: {
 				'no-magic-numbers': 'off',
+				// TODO: Sometimes we want a fn callback in react for displayname purposes. Consider for JS, too.
 				'prefer-arrow-callback': 'off',
 				'no-multiple-empty-lines': 'off',
-				'@typescript-eslint/quotes': 'off',
 				'react-hooks/rules-of-hooks': 'off',
 				'react-hooks/exhaustive-deps': 'off',
 			},
