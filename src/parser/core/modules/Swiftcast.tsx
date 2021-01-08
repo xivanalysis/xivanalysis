@@ -1,12 +1,11 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t, Trans} from '@lingui/macro'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES, {Status} from 'data/STATUSES'
 import {BuffWindowExpectedGCDs, BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 interface SeverityTiers {
 	[key: number]: number

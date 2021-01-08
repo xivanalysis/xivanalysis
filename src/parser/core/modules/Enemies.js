@@ -1,7 +1,6 @@
 import _ from 'lodash'
-
-import Entities from './Entities'
 import Enemy from '../Enemy'
+import Entities from './Entities'
 
 const TARGET_CHECK_EVENT_TYPES = ['damage', 'heal']
 

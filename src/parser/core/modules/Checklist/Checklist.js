@@ -1,10 +1,9 @@
 import {t} from '@lingui/macro'
-import React from 'react'
-
-import Rule from './Rule'
-import ChecklistComponent from './Component'
 import {Analyser, DisplayMode} from 'parser/core/Analyser'
+import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import ChecklistComponent from './Component'
+import Rule from './Rule'
 
 export default class Checklist extends Analyser {
 	static handle = 'checklist'

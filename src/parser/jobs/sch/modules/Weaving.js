@@ -1,12 +1,10 @@
 import {Trans} from '@lingui/react'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
-import CoreWeaving from 'parser/core/modules/Weaving'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-
+import CoreWeaving from 'parser/core/modules/Weaving'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const WEAVING_SEVERITY = {

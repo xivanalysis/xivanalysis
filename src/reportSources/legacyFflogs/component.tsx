@@ -1,12 +1,12 @@
+import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
+import {ReportLoader} from 'components/ui/SharedLoaders'
+import _ from 'lodash'
+import {observer} from 'mobx-react'
 import React, {useEffect} from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
-import {LegacyFflogsReportStore} from './store'
-import {observer} from 'mobx-react'
-import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
-import {useLazyRef} from 'utilities/react'
-import {ReportLoader} from 'components/ui/SharedLoaders'
 import {ReportStore} from 'reportSources'
-import _ from 'lodash'
+import {useLazyRef} from 'utilities/react'
+import {LegacyFflogsReportStore} from './store'
 
 interface WithCodeParams {
 	code: string

@@ -1,19 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
-import {Message, Icon} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
-
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
-import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Data} from 'parser/core/modules/Data'
+import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React, {Fragment} from 'react'
+import {Message, Icon} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BL_GCD_TARGET = 8

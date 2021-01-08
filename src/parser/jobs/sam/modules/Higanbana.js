@@ -1,18 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Accordion, Table} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-import styles from './Higanbana.module.css'
-
+import React from 'react'
+import {Accordion, Table} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import styles from './Higanbana.module.css'
 
 const STATUS_DURATION = {
 	[STATUSES.HIGANBANA.id]: 60000,

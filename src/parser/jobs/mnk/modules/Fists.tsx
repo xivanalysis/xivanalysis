@@ -1,19 +1,16 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
-
 import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import {EntityStatuses} from '../../../core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 

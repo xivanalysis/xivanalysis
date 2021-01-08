@@ -1,12 +1,11 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffWindowModule} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 // Opener has 5 Ninjutsu + 3 weaponskills, non-TCJ windows will likely have 2-3 Ninjutsu + 4-5 weaponskills
 const BASE_GCDS_PER_WINDOW = 7

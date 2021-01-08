@@ -1,20 +1,19 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-import {Icon, Table} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {CastEvent, BuffEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import Util from './Util'
-
+import React from 'react'
+import {Icon, Table} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Util from './Util'
 
 const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 	'BURST_SHOT',

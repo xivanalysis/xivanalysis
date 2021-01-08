@@ -1,9 +1,6 @@
 import {MessageDescriptor} from '@lingui/core'
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-import {Button, Table} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
@@ -11,6 +8,8 @@ import Module, {dependency} from 'parser/core/Module'
 import GlobalCooldown from 'parser/core/modules/GlobalCooldown'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React from 'react'
+import {Button, Table} from 'semantic-ui-react'
 import {Data} from './Data'
 
 interface SeverityTiers {

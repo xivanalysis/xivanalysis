@@ -1,13 +1,13 @@
+import {Trans, Plural} from '@lingui/react'
+import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import Module from 'parser/core/Module'
-import React from 'react'
-import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {Trans, Plural} from '@lingui/react'
-import {ActionLink, StatusLink} from 'components/ui/DbLink'
-import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
 import _ from 'lodash'
+import Module from 'parser/core/Module'
+import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import React from 'react'
 
 // TODO: Very certain this doesn't catch all procs correctly
 // Use DEBUG_LOG_ALL_FIRE_COUNTS to display procs more easily and figure out why some aren't flagged correctly

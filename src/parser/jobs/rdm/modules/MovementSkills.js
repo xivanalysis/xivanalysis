@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
-
-import ACTIONS from 'data/ACTIONS'
+import {ActionLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
+import {getDataBy} from 'data'
+import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 const CACS_PER_MANAFICATION = 3
 const DISPS_PER_MANAFICATION = 3

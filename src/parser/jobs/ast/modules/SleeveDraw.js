@@ -1,11 +1,10 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
+import React from 'react'
 
 // TODO: Figure out how to check CD of Draw before Sleeve Draw is cast
 // TODO: Ensure Sleeve Draw is used with an empty hand

@@ -1,8 +1,8 @@
+import {Trans} from '@lingui/react'
+import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
+import {Meta} from 'parser/core/Meta'
 import React from 'react'
 import {Icon, Message} from 'semantic-ui-react'
-import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
-import {Trans} from '@lingui/react'
-import {Meta} from 'parser/core/Meta'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-rdm" */),

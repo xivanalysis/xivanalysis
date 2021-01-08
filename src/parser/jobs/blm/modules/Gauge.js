@@ -1,12 +1,11 @@
 //I've heard it's cool to build your own job gauge.
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 const GAUGE_EVENTS = [
 	'begincast',

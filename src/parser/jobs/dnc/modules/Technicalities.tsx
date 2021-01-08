@@ -1,24 +1,22 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
-import {Icon, Message} from 'semantic-ui-react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {NormalisedApplyBuffEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
 import {Timeline} from 'parser/core/modules/Timeline'
+import React, {Fragment} from 'react'
+import {Icon, Message} from 'semantic-ui-react'
+import {TECHNICAL_FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import FeatherGauge from './FeatherGauge'
-import {TECHNICAL_FINISHES} from '../CommonData'
 
 // Harsher than the default since you'll only have 4-5 total windows anyways
 const TECHNICAL_SEVERITY_TIERS = {

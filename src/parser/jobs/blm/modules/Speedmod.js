@@ -1,8 +1,7 @@
-import CoreSpeedmod from 'parser/core/modules/Speedmod'
-
 import STATUSES from 'data/STATUSES'
-import {BLM_GAUGE_EVENT} from './Gauge'
+import CoreSpeedmod from 'parser/core/modules/Speedmod'
 import {FIRE_SPELLS, ICE_SPELLS} from './Elements'
+import {BLM_GAUGE_EVENT} from './Gauge'
 
 const MAX_ASTRAL_UMBRAL_STACKS = 3
 const FAST_CAST_SCALAR = 0.5

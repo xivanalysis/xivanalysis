@@ -1,5 +1,5 @@
-import CoreCooldowns from 'parser/core/modules/Cooldowns'
 import ACTIONS from 'data/ACTIONS'
+import CoreCooldowns from 'parser/core/modules/Cooldowns'
 
 export default class Cooldowns extends CoreCooldowns {
 	static cooldownOrder = [

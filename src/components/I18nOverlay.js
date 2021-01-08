@@ -1,12 +1,11 @@
+import {Trans} from '@lingui/react'
 import classNames from 'classnames'
 import _ from 'lodash'
 import {observable, action} from 'mobx'
 import {observer} from 'mobx-react'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React from 'react'
 import {Popup, List, Icon} from 'semantic-ui-react'
-import {Trans} from '@lingui/react'
-
 import styles from './I18nOverlay.module.css'
 
 @observer

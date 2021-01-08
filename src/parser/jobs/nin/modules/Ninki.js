@@ -1,14 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
+import JOBS from 'data/JOBS'
 import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import Color from 'color'
-import JOBS from 'data/JOBS'
-import TimeLineChart from 'components/ui/TimeLineChart'
+import React, {Fragment} from 'react'
 
 // Constants
 const MAX_NINKI = 100

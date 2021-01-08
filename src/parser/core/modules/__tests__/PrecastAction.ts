@@ -1,6 +1,6 @@
-import PrecastAction from '../PrecastAction'
 import {AbilityType, CastEvent, DamageEvent, HitType} from 'fflogs'
 import Parser from 'parser/core/Parser'
+import PrecastAction from '../PrecastAction'
 
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>

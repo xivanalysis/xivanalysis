@@ -25,7 +25,7 @@ making it available and discoverable throughout the rest of the parser.
  * Declaration merge target. You don't want to use this directly unless you are
  * declaring a new type of event. If you're importing this, you're doing it wrong.
  */
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface,import/export
 export interface EventTypeRepository {}
 
 /** Event fields with merged type discrimination field. */
@@ -181,6 +181,7 @@ interface EventActorUpdate extends FieldsBase {
 
 // Merge core events into the repository.
 // No declare module, as we're in the same file as the root repository.
+// eslint-disable-next-line import/export
 export interface EventTypeRepository {
 	prepare: EventPrepare
 	action: EventAction

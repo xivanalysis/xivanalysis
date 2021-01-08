@@ -1,6 +1,5 @@
 import {BuffEvent, AbilityType} from 'fflogs'
 import {Event} from 'legacyEvent'
-
 import {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'

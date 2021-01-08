@@ -1,16 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTargetOutcome} from 'components/ui/RotationTable'
 import {Action} from 'data/ACTIONS'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import {isDefined} from 'utilities'
-
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Minimum muse GCDs needed to expect an RS window to have 9 GCDs

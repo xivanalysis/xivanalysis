@@ -1,10 +1,9 @@
-import React, {Fragment} from 'react'
-
+import {Trans, Plural} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
-import {Trans, Plural} from '@lingui/react'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {ActionLink} from 'components/ui/DbLink'
+import React, {Fragment} from 'react'
 
 const LILY_CONSUMERS = [ACTIONS.AFFLATUS_SOLACE.id, ACTIONS.AFFLATUS_RAPTURE.id]
 const BLOOD_LILY_CONSUMERS = [ACTIONS.AFFLATUS_MISERY.id]

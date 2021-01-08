@@ -1,6 +1,6 @@
 import math from 'mathjsCustom'
-import {matchClosestLower} from 'utilities'
 import {DISPLAY_ORDER} from 'parser/core/Module'
+import {matchClosestLower} from 'utilities'
 
 export const TARGET = {
 	SUCCESS: 2,

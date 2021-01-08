@@ -4,6 +4,8 @@ module.exports = {
 		'eslint:recommended',
 		'plugin:@typescript-eslint/recommended',
 		'plugin:react/recommended',
+		'plugin:import/errors',
+		'plugin:import/typescript',
 	],
 
 	// TODO: Might need to use both babel-eslint and typescript-eslint depending on filetype?
@@ -12,12 +14,16 @@ module.exports = {
 		'@typescript-eslint',
 		'react',
 		'react-hooks',
+		'import',
 		// TODO: Remove this, bring rule into xiva/xiva repo.
 		'@xivanalysis',
 	],
 
 	settings: {
 		react: {version: 'detect'},
+		'import/resolver': {
+			typescript: {alwaysTryTypes: true},
+		},
 	},
 
 	env: {
@@ -109,6 +115,17 @@ module.exports = {
 		'template-curly-spacing': ['warn', 'never'],
 		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
+
+		// Imports
+		'import/first': 'error',
+		'import/order': ['error', {
+			groups: [
+				// Pull non-relative imports above relative
+				['builtin', 'external', 'internal', 'unknown', 'index', 'object'],
+			],
+			'newlines-between': 'never',
+			alphabetize: {order: 'asc', caseInsensitive: true},
+		}],
 
 		// React-specific rules
 		'react/display-name': 'off',

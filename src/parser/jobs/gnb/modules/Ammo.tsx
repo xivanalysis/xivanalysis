@@ -1,9 +1,6 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
@@ -14,6 +11,8 @@ import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {ComboEvent} from 'parser/core/modules/Combos'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 
 const ON_CAST_GENERATORS = {
 	[ACTIONS.BLOODFEST.id]: 2,

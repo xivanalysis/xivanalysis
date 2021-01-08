@@ -1,20 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import React, {Fragment} from 'react'
-import {Accordion} from 'semantic-ui-react'
-
-import STATUSES from 'data/STATUSES'
-
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
+import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency, DISPLAY_MODE} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
-
+import React, {Fragment} from 'react'
+import {Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const GENERATORS = {

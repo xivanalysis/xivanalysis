@@ -1,15 +1,14 @@
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Timeline} from 'parser/core/modules/Timeline'
+import React from 'react'
 
 const RELEVANT_ACTIONS = [ACTIONS.JUGULAR_RIP.id, ACTIONS.ABDOMEN_TEAR.id, ACTIONS.EYE_GOUGE.id]
 const RELEVANT_STATUSES = [STATUSES.READY_TO_RIP.id, STATUSES.READY_TO_TEAR.id, STATUSES.READY_TO_GOUGE.id]

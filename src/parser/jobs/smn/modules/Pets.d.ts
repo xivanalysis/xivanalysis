@@ -1,5 +1,5 @@
-import Module from 'parser/core/Module'
 import {Pet} from 'data/PETS'
+import Module from 'parser/core/Module'
 
 export interface SummonPetEvent {
 	type: 'summonpet'

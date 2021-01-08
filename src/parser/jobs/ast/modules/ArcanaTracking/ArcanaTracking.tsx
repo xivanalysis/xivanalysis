@@ -1,15 +1,15 @@
 import {t} from '@lingui/macro'
 import {getDataBy} from 'data'
-import {Data} from 'parser/core/modules/Data'
 import {ActionRoot} from 'data/ACTIONS/root'
 import {BuffEvent, CastEvent, DeathEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
+import {Data} from 'parser/core/modules/Data'
 import PrecastStatus from 'parser/core/modules/PrecastStatus'
+import {InitEvent} from 'parser/core/Parser'
 import {ARCANA_STATUSES, CELESTIAL_SEAL_ARCANA, DRAWN_ARCANA, LUNAR_SEAL_ARCANA, PLAY, SOLAR_SEAL_ARCANA} from '../ArcanaGroups'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
-import {Event} from 'legacyEvent'
-import {InitEvent} from 'parser/core/Parser'
 
 const LINKED_EVENT_THRESHOLD = 20
 const DEATH_EVENT_STATUS_DROP_DELAY = 2000

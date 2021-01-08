@@ -1,5 +1,4 @@
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
 import {ActionLink} from 'components/ui/DbLink'
 import {ActionRoot} from 'data/ACTIONS/root'
 import STATUSES from 'data/STATUSES'
@@ -8,6 +7,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 // These are the only GCDs that should be reassembled under normal circumstances
 const REASSEMBLE_GCDS: Array<keyof ActionRoot> = [

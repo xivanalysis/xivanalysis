@@ -1,5 +1,3 @@
-import React, {Fragment} from 'react'
-
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
@@ -8,6 +6,7 @@ import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
 
 const DPS_COOLDOWNS_TRACKED = [ACTIONS.ASSIZE, ACTIONS.PRESENCE_OF_MIND]
 const DPS_TARGET_PERCENT = 75

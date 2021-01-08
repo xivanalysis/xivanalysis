@@ -1,12 +1,10 @@
 import {t, Trans} from '@lingui/macro'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS, {Action} from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Set for stuff to ignore TODO: revisit this and get it to show iaijutsu properly

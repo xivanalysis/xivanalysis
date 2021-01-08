@@ -5,7 +5,6 @@ import 'reflect-metadata'
 import * as Sentry from '@sentry/browser'
 import React from 'react'
 import ReactDOM from 'react-dom'
-
 import Root from './Root'
 
 // If we're in prod, boot up sentry

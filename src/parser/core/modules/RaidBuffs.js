@@ -1,7 +1,7 @@
 import Module, {executeBeforeDoNotUseOrYouWillBeFired} from 'parser/core/Module'
+import {isDefined} from 'utilities'
 import {AdditionalEvents} from './AdditionalEvents'
 import {SimpleRow, StatusItem} from './Timeline'
-import {isDefined} from 'utilities'
 
 // Are other jobs going to need to add to this?
 const RAID_BUFFS = [

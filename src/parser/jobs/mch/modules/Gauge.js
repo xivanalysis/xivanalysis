@@ -1,13 +1,12 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import React, {Fragment} from 'react'
-
+import Color from 'color'
 import {ActionLink} from 'components/ui/DbLink'
+import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import Color from 'color'
-import TimeLineChart from 'components/ui/TimeLineChart'
+import React, {Fragment} from 'react'
 
 // Constants
 const MAX_GAUGE = 100

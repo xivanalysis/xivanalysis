@@ -1,14 +1,12 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import STATUSES from 'data/STATUSES'
-
 import {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
 import {Data} from 'parser/core/modules/Data'
 import DoTs from 'parser/core/modules/DoTs'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const SEVERITIES = {

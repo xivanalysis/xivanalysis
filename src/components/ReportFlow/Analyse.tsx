@@ -1,16 +1,16 @@
-import React, {useCallback} from 'react'
 import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
 import classNames from 'classnames'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {Event} from 'event'
+import React, {useCallback} from 'react'
 import {useParams} from 'react-router-dom'
+import {Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {AnalyseRouteParams} from './ReportFlow'
 import styles from './ReportFlow.module.css'
-import {Report} from 'report'
-import {AnalysisLoader} from 'components/ui/SharedLoaders'
 
 export interface AnalyseProps {
 	reportStore: ReportStore
