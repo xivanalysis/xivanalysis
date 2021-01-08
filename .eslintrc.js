@@ -46,8 +46,6 @@ module.exports = {
 		'@typescript-eslint/no-non-null-assertion': 'off',
 		// TODO: Enable, might need tweaks
 		'@typescript-eslint/ban-types': 'off',
-		// TODO: Consider?
-		'@typescript-eslint/ban-ts-comment': 'off',
 		// TODO: Hmm??
 		'@typescript-eslint/no-this-alias': 'off',
 		// #endregion

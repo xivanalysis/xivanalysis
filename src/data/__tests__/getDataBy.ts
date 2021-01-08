@@ -23,8 +23,7 @@ describe('DATA', () => {
 
 		it('errors when an invalid `by` is passed', () => {
 			function erraneousCall() {
-				// Need to disable TS for the next line - the mistake is only possible in JS
-				// @ts-ignore
+				// @ts-expect-error This mistake is only possible in JS
 				getDataBy(ExampleData, 'invalid', 'one')
 			}
 			expect(erraneousCall).toThrowError('invalid')
