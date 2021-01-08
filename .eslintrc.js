@@ -112,7 +112,7 @@ module.exports = {
 		'no-whitespace-before-property': 'warn',
 		'object-curly-spacing': 'warn',
 		'object-property-newline': ['error', {allowAllPropertiesOnSameLine: true}],
-		'prefer-arrow-callback': 'error',
+		'prefer-arrow-callback': ['error', {allowNamedFunctions: true}],
 		'prefer-const': 'warn',
 		'prefer-spread': 'error',
 		'semi': ['error', 'never'],
@@ -136,14 +136,6 @@ module.exports = {
 			files: ['**/*.ts?(x)'],
 			// Empty override so --ext doesn't need to be passed on the CLI - eslint will
 			// include anything matching overrides
-
-			// TODO: Reevaluate and remove these. These disables are simply to get the build green
-			// for the primary tooling PR, and stem from rule mismatch and poor tooling with the
-			// previous tslint harness.
-			rules: {
-				// TODO: Sometimes we want a fn callback in react for displayname purposes. Consider for JS, too.
-				'prefer-arrow-callback': 'off',
-			},
 		},
 		// Test files
 		{
