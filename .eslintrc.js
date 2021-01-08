@@ -112,6 +112,7 @@ module.exports = {
 		'yoda': ['error', 'never', {exceptRange: true}],
 
 		// Imports
+		'import/first': 'error',
 		'import/order': ['error', {
 			groups: [
 				// Pull non-relative imports above relative

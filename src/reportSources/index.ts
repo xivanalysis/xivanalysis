@@ -1,7 +1,7 @@
-export * from './base'
-
 import {SearchHandler} from './base'
 import {LegacyFflogs, legacyFflogsSearchHandlers} from './legacyFflogs'
+
+export * from './base'
 
 export interface ReportSource {
 	path: string,
