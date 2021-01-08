@@ -36,8 +36,6 @@ module.exports = {
 		// TODO: Migrate disable to JS-only
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		// TODO: Enable
-		'@typescript-eslint/no-inferrable-types': 'off',
-		// TODO: Enable
 		'@typescript-eslint/no-explicit-any': 'off',
 		// TODO: Enable for JS.
 		// TODO: Enable for TS, will likely need arg pattern allow for base classes &c
@@ -64,6 +62,11 @@ module.exports = {
 		'@typescript-eslint/array-type': 'off',
 		// #endregion
 
+		// Disabled recommended rules
+		'default-case': 'off',
+		'@typescript-eslint/no-inferrable-types': 'off',
+
+		// Primary shared rules
 		'array-bracket-spacing': 'warn',
 		'block-spacing': 'warn',
 		'brace-style': ['error', '1tbs', {allowSingleLine: true}],
@@ -72,7 +75,6 @@ module.exports = {
 		'comma-style': 'warn',
 		'computed-property-spacing': 'warn',
 		'curly': ['error', 'all'],
-		'default-case': 'off',
 		'dot-notation': 'error',
 		'eol-last': 'error',
 		'eqeqeq': ['error', 'smart'],
@@ -122,12 +124,14 @@ module.exports = {
 		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
 
+		// React-specific rules
 		'react/display-name': 'off',
 		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
 		'react/no-children-prop': 'off',
 		'react-hooks/rules-of-hooks': 'error',
 		'react-hooks/exhaustive-deps': 'warn',
 
+		// xiva special sauce
 		'@xivanalysis/no-unused-dependencies': 'error',
 	},
 
