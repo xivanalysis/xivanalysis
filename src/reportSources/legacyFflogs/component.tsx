@@ -55,7 +55,7 @@ const WithReport = observer(function WithCode(
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
-	useEffect(() => reportStore.requestReport(code), [code])
+	useEffect(() => reportStore.requestReport(code), [code, reportStore])
 
 	// We can safely assume that a null report means we're loading due to the legacy store semantics.
 	if (reportStore.report == null) {

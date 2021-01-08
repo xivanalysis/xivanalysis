@@ -245,7 +245,7 @@ export function ScaleHandler({
 			const extended = primary.copy().domain([domain[0] - extendBy, domain[1]])
 			return {primary, extended}
 		},
-		[range, domain],
+		[domainDistance, range, domain],
 	)
 
 	return (

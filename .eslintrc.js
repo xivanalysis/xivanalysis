@@ -141,8 +141,6 @@ module.exports = {
 				'no-magic-numbers': 'off',
 				// TODO: Sometimes we want a fn callback in react for displayname purposes. Consider for JS, too.
 				'prefer-arrow-callback': 'off',
-				'react-hooks/rules-of-hooks': 'off',
-				'react-hooks/exhaustive-deps': 'off',
 			},
 		},
 		// Test files

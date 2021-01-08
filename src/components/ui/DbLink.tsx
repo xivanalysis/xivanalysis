@@ -50,12 +50,12 @@ export const Tooltip = memo(function Tooltip({
 	showTooltip = true,
 	...labelProps
 }: TooltipProps) {
+	const [hovering, setHovering] = useState(false)
+
 	if (id == null) { return null }
 
 	const label = <Label sheet={sheet} id={id} {...labelProps}/>
 	if (!showTooltip) { return label }
-
-	const [hovering, setHovering] = useState(false)
 
 	// We're currently using an oooold version of react-popper here (1.3.7), so we're able to re-use the version semantic is pulling in.
 	// TODO: Upgrade to react-popper@2 when semantic is nuked.
