@@ -4,7 +4,7 @@ import React from 'react'
 
 import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
-import {BuffWindowModule, BuffWindowState, BuffWindowTrackedAction} from 'parser/core/modules/BuffWindow'
+import {BuffWindowModule, BuffWindowState} from 'parser/core/modules/BuffWindow'
 import {SEVERITY} from 'parser/core/modules/Suggestions'
 import STATUSES from 'data/STATUSES'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
@@ -59,7 +59,7 @@ export default class LanceCharge extends BuffWindowModule {
 		},
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 

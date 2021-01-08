@@ -29,13 +29,13 @@ export interface ReportLink {
 export abstract class ReportStore {
 	declare abstract readonly report?: Report
 
-	requestPulls(options?: FetchOptions) { /* noop */ }
-	requestActors(pullId: Pull['id'], options?: FetchOptions) { /* noop */ }
+	requestPulls(_options?: FetchOptions) { /* noop */ }
+	requestActors(_pullId: Pull['id'], _options?: FetchOptions) { /* noop */ }
 
 	abstract fetchEvents(pullId: Pull['id'], actorId: Actor['id']): Promise<Event[]>
 
 	getReportLink(
-		pullId?: Pull['id'],
-		actorId?: Actor['id'],
+		_pullId?: Pull['id'],
+		_actorId?: Actor['id'],
 	): ReportLink | undefined { return }
 }

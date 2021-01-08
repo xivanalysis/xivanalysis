@@ -54,7 +54,7 @@ export abstract class SwiftcastModule extends BuffWindowModule {
 	 * @param action - the action to consider
 	 * @returns true to allow the spell; false to ignore the spell
 	 */
-	protected considerSwiftAction(action: Action): boolean {
+	protected considerSwiftAction(_action: Action): boolean {
 		return true
 	}
 

@@ -1,6 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Message, Table, Button} from 'semantic-ui-react'
+import {Table, Button} from 'semantic-ui-react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'

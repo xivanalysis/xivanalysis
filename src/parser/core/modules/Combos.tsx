@@ -241,7 +241,7 @@ export default class Combos extends Module {
 	 * what particular actions were misused and when in the fight.
 	 * The overriding module should return true if the default suggestion is not wanted
 	 */
-	addJobSpecificSuggestions(comboBreakers: NormalisedDamageEvent[], uncomboedGcds: NormalisedDamageEvent[]) {
+	addJobSpecificSuggestions(_comboBreakers: NormalisedDamageEvent[], _uncomboedGcds: NormalisedDamageEvent[]) {
 		return false
 	}
 
@@ -251,7 +251,7 @@ export default class Combos extends Module {
 	 * the event and context will not be recorded, and the current combo will be cleared with no other side effects.
 	 * Returning false will allow the break to be recorded, and displayed to the user
 	 */
-	isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
+	isAllowableComboBreak(_event: NormalisedDamageEvent, _context: NormalisedDamageEvent[]): boolean {
 		return false
 	}
 

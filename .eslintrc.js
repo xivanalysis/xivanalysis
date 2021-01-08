@@ -37,9 +37,6 @@ module.exports = {
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		// TODO: Enable
 		'@typescript-eslint/no-explicit-any': 'off',
-		// TODO: Enable for JS.
-		// TODO: Enable for TS, will likely need arg pattern allow for base classes &c
-		'@typescript-eslint/no-unused-vars': 'off',
 		// TODO: Enable?
 		'no-prototype-builtins': 'off',
 		// TODO: Enable, might need tweaks
@@ -95,6 +92,10 @@ module.exports = {
 		'no-return-await': 'error',
 		'no-trailing-spaces': 'error',
 		'no-unneeded-ternary': 'error',
+		'@typescript-eslint/no-unused-vars': ['error', {
+			argsIgnorePattern: '^_',
+			ignoreRestSiblings: true,
+		}],
 		'no-useless-rename': 'error',
 		'no-var': 'error',
 		'no-whitespace-before-property': 'warn',

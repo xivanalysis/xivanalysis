@@ -12,7 +12,7 @@ import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 
 import {EntityStatuses} from '../../../core/modules/EntityStatuses'
 import DISPLAY_ORDER from './DISPLAY_ORDER'

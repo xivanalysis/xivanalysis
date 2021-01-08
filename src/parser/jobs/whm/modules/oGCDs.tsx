@@ -7,7 +7,7 @@ import ACTIONS from 'data/ACTIONS'
 import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, Rule} from 'parser/core/modules/Checklist'
-import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 
 const DPS_COOLDOWNS_TRACKED = [ACTIONS.ASSIZE, ACTIONS.PRESENCE_OF_MIND]
 const DPS_TARGET_PERCENT = 75
@@ -124,7 +124,6 @@ export default class OGCDs extends Module {
 	}
 
 	private onComplete() {
-		const pullDuration = this.parser.fight.end_time - this.parser.fight.start_time
 		const requirements = DPS_COOLDOWNS_TRACKED.map(action => new Requirement({
 			name: <ActionLink {...action}/>,
 			value: this.getCooldownUsage(action.id).uses,

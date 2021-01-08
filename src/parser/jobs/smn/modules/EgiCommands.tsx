@@ -104,15 +104,15 @@ export default class EgiCommands extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onRuin4(event: CastEvent) {
+	private onRuin4() {
 		if (this.currentStackCount > 0) { this.currentStackCount-- }
 	}
 
-	private onSummonBahamut(event: CastEvent) {
+	private onSummonBahamut() {
 		if (this.currentStackCount < EXPECTED_BAHAMUT_SUMMON_STACKS) { this.bahamutMissingStackCount++ }
 	}
 
-	private onPlayerEarthenArmor(event: CastEvent) {
+	private onPlayerEarthenArmor() {
 		this.earthenArmorCount++
 	}
 

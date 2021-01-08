@@ -1,5 +1,4 @@
 import {MessageDescriptor} from '@lingui/core'
-import Color from 'color'
 import {Ability, AbilityEvent, Pet, FflogsEvent} from 'fflogs'
 import {Event} from 'legacyEvent'
 import {cloneDeep} from 'lodash'
@@ -88,7 +87,7 @@ export default class Module extends Injectable {
 	 * @param event The event that was being processed when the error occurred, if source is 'event'
 	 * @returns The data to attach to automatic error reports, or undefined to rely on primitive value detection
 	 */
-	getErrorContext(source: 'event' | 'output', error: Error, event?: Event): any {
+	getErrorContext(_source: 'event' | 'output', _error: Error, _event?: Event): any {
 		return
 	}
 

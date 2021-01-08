@@ -1,6 +1,5 @@
 import {t} from '@lingui/macro'
 import TimeLineChart from 'components/ui/TimeLineChart'
-import {DeathEvent} from 'fflogs'
 import Module from 'parser/core/Module'
 import React from 'react'
 import {isDefined} from 'utilities'
@@ -31,7 +30,7 @@ export class Gauge extends Module {
 		return gauge
 	}
 
-	private onDeath(event: DeathEvent) {
+	private onDeath() {
 		this.gauges.forEach(gauge => gauge.reset())
 	}
 

@@ -4,12 +4,10 @@ import TransMarkdown from 'components/ui/TransMarkdown'
 import {ActionLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
-import {BuffEvent, CastEvent} from 'fflogs'
+import {CastEvent} from 'fflogs'
 import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {ComboEvent} from 'parser/core/modules/Combos'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
 import React, {Fragment} from 'react'
@@ -238,11 +236,7 @@ export default class Sen extends Module {
 
 	// Function that handles SenState check, if no senState call the maker and then push to the rotation
 	private checkCastAndPush(event: CastEvent) {
-
-		// step 1: set action
-		const action = event.ability.guid
-
-		// step 2: check the sen state, if undefined/not active, make one
+		// check the sen state, if undefined/not active, make one
 
 		let lastSenState = this.lastSenState
 

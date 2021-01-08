@@ -435,8 +435,6 @@ export default class ArcanaTracking extends Module {
 		// We can skip search+replace for the latest card event if that was a way to lose a card in draw slot.
 		// 1. The standard ways of losing something in draw slot.
 		// 2. If they used Draw while holding a Minor Arcana or Draw
-		const drawnStatusId = lastLog.drawState ? this.data.getStatus(lastLog.drawState) : undefined
-		const isDrawnArcana = !!drawnStatusId
 		if ([this.data.actions.UNDRAW.id, ...this.PLAY, this.data.actions.REDRAW.id].includes(latestActionId)
 			|| (this.data.actions.DRAW.id === latestActionId && lastLog.drawState && this.DRAWN_ARCANA.includes(lastLog.drawState))
 			|| (this.parser.patch.before('5.1') && [this.data.actions.MINOR_ARCANA.id].includes(latestActionId))) {

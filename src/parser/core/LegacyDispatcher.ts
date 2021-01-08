@@ -1,5 +1,4 @@
 import {Event} from 'legacyEvent'
-import _ from 'lodash'
 import Module from './Module'
 
 export type FilterPartial<T> = {

@@ -1,6 +1,5 @@
 import classnames from 'classnames'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
-import _ from 'lodash'
 import {Result} from 'parser/core/Parser'
 import React from 'react'
 import styles from './SegmentLinkItem.module.css'

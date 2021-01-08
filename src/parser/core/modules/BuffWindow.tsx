@@ -178,7 +178,7 @@ export abstract class BuffWindowModule extends Module {
 	 * If false is returned, the action will not be tracked AT ALL within the buff window, and will NOT appear within the Rotation column
 	 * @param action
 	 */
-	protected considerAction(action: Action) {
+	protected considerAction(_action: Action) {
 		return true
 	}
 
@@ -212,7 +212,7 @@ export abstract class BuffWindowModule extends Module {
 	 * This method MAY be overridden if the logic of expected GCDs per window is variable
 	 * @param buffWindow
 	 */
-	protected getBaselineExpectedGCDs(buffWindow: BuffWindowState): number {
+	protected getBaselineExpectedGCDs(_buffWindow: BuffWindowState): number {
 		if (this.expectedGCDs) {
 			return this.expectedGCDs.expectedPerWindow
 		}
@@ -224,7 +224,7 @@ export abstract class BuffWindowModule extends Module {
 	 * Return a positive number to INCREASE expected GCDs for this window, or a negative number to DECREASE
 	 * @param buffWindow
 	 */
-	protected changeExpectedGCDsClassLogic(buffWindow: BuffWindowState): number {
+	protected changeExpectedGCDsClassLogic(_buffWindow: BuffWindowState): number {
 		return 0
 	}
 
@@ -256,7 +256,7 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 * @param action
 	 */
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected reduceTrackedActionsEndOfFight(_buffWindow: BuffWindowState, _action: BuffWindowTrackedAction): number {
 		return 0
 	}
 
@@ -277,7 +277,7 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 * @param action
 	 */
-	protected changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected changeExpectedTrackedActionClassLogic(_buffWindow: BuffWindowState, _action: BuffWindowTrackedAction): number {
 		return 0
 	}
 
@@ -291,7 +291,7 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 * @param action
 	 */
-	protected changeComparisonClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction):
+	protected changeComparisonClassLogic(_buffWindow: BuffWindowState, _action: BuffWindowTrackedAction):
 	((actual: number, expected?: number) => RotationTargetOutcome) | undefined {
 		return undefined
 	}
@@ -321,7 +321,7 @@ export abstract class BuffWindowModule extends Module {
 	 * Implementing classes MUST define their logic to determine what note to display for each buff window within this method
 	 * @param buffWindow
 	 */
-	protected getBuffWindowNotes(buffWindow: BuffWindowState): JSX.Element | undefined {
+	protected getBuffWindowNotes(_buffWindow: BuffWindowState): JSX.Element | undefined {
 		return undefined
 	}
 
