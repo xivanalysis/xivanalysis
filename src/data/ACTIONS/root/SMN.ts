@@ -135,6 +135,7 @@ export const SMN = ensureActions({
 		icon: 'https://xivapi.com/i/002000/002734.png',
 		cooldown: 55,
 		cooldownGroup: SMN_COOLDOWN_GROUP.TRANCE,
+		statusesApplied: ['EVERLASTING_FLIGHT'],
 	},
 
 	FOUNTAIN_OF_FIRE: {
@@ -156,7 +157,6 @@ export const SMN = ensureActions({
 		name: 'Enkindle Phoenix',
 		icon: 'https://xivapi.com/i/002000/002737.png',
 		cooldown: 10,
-		statusesApplied: ['EVERLASTING_FLIGHT'],
 	},
 
 	// Egi Assault, Egi Assault II, and Enkindle have unique ids depending on the summoned pet.
