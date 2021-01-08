@@ -35,8 +35,6 @@ module.exports = {
 		// #region Migration required
 		// TODO: Enable
 		'@typescript-eslint/no-explicit-any': 'off',
-		// TODO: Enable, might need tweaks
-		'@typescript-eslint/ban-types': 'off',
 		// #endregion
 
 		// Disabled recommended rules
@@ -47,6 +45,15 @@ module.exports = {
 		// Primary shared rules
 		'array-bracket-spacing': 'warn',
 		'@typescript-eslint/array-type': ['error', {default: 'array-simple'}],
+		'@typescript-eslint/ban-types': ['error', {
+			extendDefaults: true,
+			types: {
+				// Disable object type bans, they're pretty heavily used upstream.
+				Object: false,
+				'{}': false,
+				object: false,
+			},
+		}],
 		'block-spacing': 'warn',
 		'brace-style': ['error', '1tbs', {allowSingleLine: true}],
 		'comma-dangle': ['error', 'always-multiline'],
