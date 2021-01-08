@@ -7,7 +7,7 @@ import React from 'react'
 const DOWNTIME_ALLOWED_GCD = 100
 
 export default class GeneralCDDowntime extends CooldownDowntime {
-	trackedCds = [ {
+	trackedCds = [{
 		cooldowns: [ACTIONS.WILDFIRE],
 		firstUseOffset: 10000,
 	}, {

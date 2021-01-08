@@ -50,7 +50,7 @@ export const Tooltip = memo(function Tooltip({
 	showTooltip = true,
 	...labelProps
 }: TooltipProps) {
-	if (id == null) {return null}
+	if (id == null) { return null }
 
 	const label = <Label sheet={sheet} id={id} {...labelProps}/>
 	if (!showTooltip) { return label }

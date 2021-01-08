@@ -212,7 +212,7 @@ export default class Sen extends Module {
 				case ACTIONS.MANGETSU.id:
 					lastSenState.currentGetsu++
 
-					if (lastSenState.currentGetsu > 1 ) {
+					if (lastSenState.currentGetsu > 1) {
 						lastSenState.overwriteGetsus++
 						lastSenState.currentGetsu = 1
 						lastSenState.isOverwrite = true
@@ -246,7 +246,7 @@ export default class Sen extends Module {
 
 		let lastSenState = this.lastSenState
 
-		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true) ) {
+		if ((typeof lastSenState === 'undefined') || (lastSenState.isDone === true)) {
 
 			this.senStateMaker(event)
 		}
@@ -274,7 +274,7 @@ export default class Sen extends Module {
 		if (lastSenState != null && lastSenState.end == null) {
 			// Drop down the totem pole
 
-			if (lastSenState.isDeath === true && (lastSenState.totalSenGenerated > 0) ) {
+			if (lastSenState.isDeath === true && (lastSenState.totalSenGenerated > 0)) {
 				lastSenState._senCode = SEN_HANDLING.DEATH
 				lastSenState.isNonStandard = true
 				this.nonStandardCount++

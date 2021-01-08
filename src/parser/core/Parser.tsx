@@ -389,7 +389,7 @@ class Parser {
 	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
-		if (moduleIndex !== -1 ) {
+		if (moduleIndex !== -1) {
 			this._triggerModules = this._triggerModules.slice(0)
 			this._triggerModules.splice(moduleIndex, 1)
 		}
@@ -468,7 +468,7 @@ class Parser {
 			// If there's an error, override output handling to show it
 			if (this._moduleErrors[handle]) {
 				const error = this._moduleErrors[handle]
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}
@@ -486,7 +486,7 @@ class Parser {
 				})
 
 				// Also add the error to the results to be displayed.
-				return{
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
 				}

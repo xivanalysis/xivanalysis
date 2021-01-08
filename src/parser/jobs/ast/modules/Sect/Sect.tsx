@@ -183,7 +183,7 @@ export default class Sect extends Module {
 			SUGGESTION: Noct with Scholar
 		*/
 		const withScholar = this.parser.fightFriendlies.some(friendly => friendly.type === 'Scholar')
-		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && withScholar ) {
+		if (this.activeSectId === ACTIONS.NOCTURNAL_SECT.id && withScholar) {
 			this.suggestions.add(new Suggestion({
 				icon: ACTIONS.NOCTURNAL_SECT.icon,
 				content: <Trans id="ast.sect.suggestions.noct-with-sch.content">

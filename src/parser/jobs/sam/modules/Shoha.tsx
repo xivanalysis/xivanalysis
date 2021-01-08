@@ -107,13 +107,13 @@ export default class Shoha extends Module {
 
 		let generatedStacks = ticks
 
-		if ( (ticks + this.stacks) > MAX_STACKS ) {
+		if ((ticks + this.stacks) > MAX_STACKS) {
 			generatedStacks = (MAX_STACKS - this.stacks)
 		}
 
 		this.stacks += generatedStacks
 		this.totalGeneratedStacks += generatedStacks
-		if ( this.stacks > MAX_STACKS) {
+		if (this.stacks > MAX_STACKS) {
 			this.stacks = MAX_STACKS
 		}
 
@@ -234,7 +234,7 @@ export default class Shoha extends Module {
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,

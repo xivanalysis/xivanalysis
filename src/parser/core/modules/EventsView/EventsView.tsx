@@ -28,7 +28,7 @@ export class EventsView extends Analyser {
 			this.addEventHook((event): event is never => {
 				this.events.push(event)
 				return false
-			}, () => {/* noop - this will never be called */})
+			}, () => { /* noop - this will never be called */ })
 		})
 	}
 

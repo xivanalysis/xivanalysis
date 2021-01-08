@@ -105,7 +105,7 @@ export default class BattleLitany extends Module {
 		this.lastLitFalloffTime = event.timestamp
 
 		// only track the things one player added
-		if (event.sourceID && event.sourceID !== this.parser.player.id){return}
+		if (event.sourceID && event.sourceID !== this.parser.player.id) { return }
 
 		const lastWindow: BLWindow | undefined = _.last(this.history)
 

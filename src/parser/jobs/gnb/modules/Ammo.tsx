@@ -264,7 +264,7 @@ export default class Ammo extends Module {
 		}
 
 		const chartOptions = {
-			scales : {
+			scales: {
 				yAxes: [{
 					ticks: {
 						beginAtZero: true,

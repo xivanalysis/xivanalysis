@@ -11,7 +11,7 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 	// Need dependency to ensure proper ordering of normalise calls
 	@dependency private precastStatus!: PrecastStatus
 
-	trackedCds = [ {
+	trackedCds = [{
 		cooldowns: [
 			ACTIONS.DREADWYRM_TRANCE,
 			ACTIONS.FIREBIRD_TRANCE,

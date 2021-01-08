@@ -178,7 +178,7 @@ export default class ArcanaSuggestions extends Module {
 
 	// Helper for output()
 	RenderAction(artifact: CardLog) {
-		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid) ) {
+		if (artifact.lastEvent.type === 'cast' && this.PLAY.includes(artifact.lastEvent.ability.guid)) {
 			const targetJob = getDataBy(JOBS, 'logType', artifact.targetJob as ActorType)
 
 			return <>
@@ -190,7 +190,7 @@ export default class ArcanaSuggestions extends Module {
 					{artifact.targetName}
 				</Table.Cell>
 			</>
-		} else if (artifact.lastEvent.type === 'cast' ) {
+		} else if (artifact.lastEvent.type === 'cast') {
 			return <>
 				<Table.Cell>
 					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />

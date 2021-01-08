@@ -150,7 +150,7 @@ export function ScaleHandler({
 	const contentBounds = useRef<BoundingRect>()
 	const onContentResize = useCallback(({bounds}: ContentRect) => {
 		contentBounds.current = bounds
-		if (bounds?.width != null) { setRange([0, bounds.width])}
+		if (bounds?.width != null) { setRange([0, bounds.width]) }
 	}, [])
 
 	// Helper functions for modifying the user domain

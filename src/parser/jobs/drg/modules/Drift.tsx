@@ -130,7 +130,7 @@ export default class Drift extends Module {
 
 	output() {
 		// Nothing to show
-		if (!this.driftedWindows.length) {return}
+		if (!this.driftedWindows.length) { return }
 
 		return <Fragment>
 			<Table style={{border: 'none'}}>

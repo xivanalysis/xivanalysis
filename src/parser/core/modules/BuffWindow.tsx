@@ -140,7 +140,7 @@ export abstract class BuffWindowModule extends Module {
 
 	private get activeBuffWindow(): BuffWindowState | undefined {
 		const lastBuffWindow = _.last(this.buffWindows)
-		if ( lastBuffWindow && lastBuffWindow.end == null ) {
+		if (lastBuffWindow && lastBuffWindow.end == null) {
 			return lastBuffWindow
 		}
 		return undefined
@@ -213,7 +213,7 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 */
 	protected getBaselineExpectedGCDs(buffWindow: BuffWindowState): number {
-		if ( this.expectedGCDs ) {
+		if (this.expectedGCDs) {
 			return this.expectedGCDs.expectedPerWindow
 		}
 		return 0
@@ -235,7 +235,7 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected reduceExpectedGCDsEndOfFight(buffWindow: BuffWindowState): number {
 		// the applied status is saved to the window, so we just use the duration in that object
-		if (buffWindow.status.duration ) {
+		if (buffWindow.status.duration) {
 			// Check to see if this window is rushing due to end of fight - reduce expected GCDs accordingly
 			const windowDurationMillis = buffWindow.status.duration * 1000
 			const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
@@ -303,7 +303,7 @@ export abstract class BuffWindowModule extends Module {
 	 * @param buffWindow
 	 */
 	protected getBuffWindowRequiredGCDsUsed(buffWindow: BuffWindowState): number {
-		if ( !this.requiredGCDs ) {
+		if (!this.requiredGCDs) {
 			return 0
 		}
 
@@ -342,13 +342,13 @@ export abstract class BuffWindowModule extends Module {
 		const comparator = this.changeComparisonClassLogic(buffWindow, action)
 
 		// If a custom comparator is defined for this action, and it didn't return negative, don't count this window
-		if ( comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE ) { return 0 }
+		if (comparator && comparator(actual, expected) !== RotationTargetOutcome.NEGATIVE) { return 0 }
 
 		return Math.max(0, expected - actual)
 	}
 
 	private onComplete() {
-		if ( this.expectedGCDs ) {
+		if (this.expectedGCDs) {
 			const missedGCDs = this.buffWindows
 				.reduce((sum, buffWindow) => {
 					const expectedGCDs = this.getBuffWindowExpectedGCDs(buffWindow)
@@ -366,7 +366,7 @@ export abstract class BuffWindowModule extends Module {
 			}))
 		}
 
-		if ( this.requiredGCDs ) {
+		if (this.requiredGCDs) {
 			const invalidGCDs = this.buffWindows
 				.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.gcds - this.getBuffWindowRequiredGCDsUsed(buffWindow)), 0)
 
@@ -381,7 +381,7 @@ export abstract class BuffWindowModule extends Module {
 			}))
 		}
 
-		if ( this.trackedActions ) {
+		if (this.trackedActions) {
 			const missedActions = this.trackedActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
 					.reduce((sum, buffWindow) => sum + this.countMissedTrackedActions(buffWindow, trackedAction), 0), 0)
@@ -397,7 +397,7 @@ export abstract class BuffWindowModule extends Module {
 			}))
 		}
 
-		if ( this.trackedBadActions ) {
+		if (this.trackedBadActions) {
 			const badActions = this.trackedBadActions.actions
 				.reduce((sum, trackedAction) => sum + this.buffWindows
 					.reduce((sum, buffWindow) => sum + Math.max(0, buffWindow.getActionCountByIds([trackedAction.action.id]) - trackedAction.expectedPerWindow), 0), 0)
@@ -415,26 +415,26 @@ export abstract class BuffWindowModule extends Module {
 	}
 
 	output() {
-		if ( this.buffWindows.length === 0 ) {
+		if (this.buffWindows.length === 0) {
 			return this.generateBuffNotUsedOutput()
 		}
 
 		const rotationTargets = []
 		const notesData = []
 
-		if ( this.expectedGCDs ) {
+		if (this.expectedGCDs) {
 			rotationTargets.push({
 				header: <Trans id="core.buffwindow.table.header.gcds">GCDs</Trans>,
 				accessor: 'missedgcd',
 			})
 		}
-		if ( this.requiredGCDs ) {
+		if (this.requiredGCDs) {
 			rotationTargets.push({
 				header: <img src={this.requiredGCDs.icon} alt="" style={{height: '20px'}}/>,
 				accessor: 'badgcd',
 			})
 		}
-		if ( this.trackedActions ) {
+		if (this.trackedActions) {
 			this.trackedActions.actions.forEach((trackedAction) => {
 				rotationTargets.push({
 					header: <ActionLink showName={false} {...trackedAction.action}/>,
@@ -442,7 +442,7 @@ export abstract class BuffWindowModule extends Module {
 				})
 			})
 		}
-		if ( this.rotationTableNotesColumnHeader ) {
+		if (this.rotationTableNotesColumnHeader) {
 			notesData.push({
 				header: this.rotationTableNotesColumnHeader,
 				accessor: 'notes',
@@ -456,21 +456,21 @@ export abstract class BuffWindowModule extends Module {
 				const targetsData: RotationTableTargetData = {}
 				const notesMap: RotationTableNotesMap = {}
 
-				if ( this.expectedGCDs ) {
+				if (this.expectedGCDs) {
 					targetsData.missedgcd = {
 						actual: buffWindow.gcds,
 						expected: this.getBuffWindowExpectedGCDs(buffWindow),
 					}
 				}
 
-				if ( this.requiredGCDs ) {
+				if (this.requiredGCDs) {
 					targetsData.badgcd = {
 						actual: this.getBuffWindowRequiredGCDsUsed(buffWindow),
 						expected: this.getBuffWindowExpectedGCDs(buffWindow),
 					}
 				}
 
-				if ( this.trackedActions ) {
+				if (this.trackedActions) {
 					this.trackedActions.actions.forEach((trackedAction) => {
 						targetsData[trackedAction.action.name] = {
 							actual: buffWindow.getActionCountByIds([trackedAction.action.id]),
@@ -480,7 +480,7 @@ export abstract class BuffWindowModule extends Module {
 					})
 				}
 
-				if ( this.rotationTableNotesColumnHeader ) {
+				if (this.rotationTableNotesColumnHeader) {
 					notesMap.notes = this.getBuffWindowNotes(buffWindow)
 				}
 

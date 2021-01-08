@@ -70,7 +70,7 @@ export default class Horoscope extends Module {
 
 	onComplete() {
 
-		if (this.parser.patch.before('5.3')){
+		if (this.parser.patch.before('5.3')) {
 			/*
 				SUGGESTION: Didn't activate
 			*/
