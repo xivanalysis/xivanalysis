@@ -39,7 +39,7 @@ enum SeverityWeights {
 }
 
 const SEVERITY_TIERS = {
-	// tslint:disable-next-line: no-magic-numbers
+	// tslint:disable-next-line: @typescript-eslint/no-magic-numbers
 	[90]: TARGET.WARN,
 	[100]: TARGET.SUCCESS,
 }

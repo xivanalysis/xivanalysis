@@ -340,7 +340,7 @@ export default class Resources extends Module {
 		const _bloodColor = Color(JOBS.DARK_KNIGHT.colour)
 		const _mpColor = Color('#f266a2')
 
-		/* eslint-disable no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const bloodchartdata = {
 			datasets: [
 				{
@@ -363,7 +363,7 @@ export default class Resources extends Module {
 				},
 			],
 		}
-		/* eslint-enable no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		const mpChartOptions = {
 			scales: {

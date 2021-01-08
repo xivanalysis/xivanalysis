@@ -10,7 +10,7 @@ const MockedData = jest.fn().mockImplementation(() => ({
 	}),
 }))
 
-// tslint:disable:no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const fightStartTime = 0
 const mockCastEvent = (timestamp: number): CastEvent => ({

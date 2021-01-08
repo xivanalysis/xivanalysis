@@ -56,6 +56,9 @@ interface CooldownGroup {
 	resetBy?: CooldownReset
 }
 
+const DEFAULT_CHECKLIST_TARGET = 95
+const DEFAULT_ALLOWED_AVERAGE_DOWNTIME = 1250
+
 export abstract class CooldownDowntime extends Module {
 	static handle = 'cooldownDowntime'
 	static title = t('core.cooldownDowntime.title')`Cooldown Downtime`
@@ -76,9 +79,9 @@ export abstract class CooldownDowntime extends Module {
 	protected checklistName = <Trans id="core.cooldownDowntime.use-ogcd-cds">Use your cooldowns</Trans>
 	protected checklistDescription = <Trans id="core.cooldownDowntime.ogcd-cd-metric">Always make sure to use your actions
 		when they are available, but do not clip your GCD to use them.</Trans>
-	protected checklistTarget = 95
+	protected checklistTarget = DEFAULT_CHECKLIST_TARGET
 
-	protected defaultAllowedAverageDowntime = 1250
+	protected defaultAllowedAverageDowntime = DEFAULT_ALLOWED_AVERAGE_DOWNTIME
 	protected defaultFirstUseOffset = 0
 
 	/**

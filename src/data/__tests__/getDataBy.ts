@@ -1,6 +1,6 @@
 import {getDataBy} from '../getDataBy'
 
-// tslint:disable no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const ExampleData = {
 	ONE: {value: 'one', arr: [0, 1, 2, 3, 4]},

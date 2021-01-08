@@ -89,8 +89,11 @@ module.exports = {
 		'no-else-return': ['error', {allowElseIf: false}],
 		'no-implicit-globals': 'error',
 		'no-lonely-if': 'error',
-		'no-magic-numbers': ['warn', {
+		'@typescript-eslint/no-magic-numbers': ['warn', {
 			ignoreArrayIndexes: true,
+			ignoreDefaultValues: true,
+			ignoreEnums: true,
+			ignoreReadonlyClassProperties: true,
 			ignore: [
 				-1,   // Used by a lot of stuff (inc stdlib) to represent not found
 				0,    // I prefer .length===0 checks most of the time
@@ -138,7 +141,6 @@ module.exports = {
 			// for the primary tooling PR, and stem from rule mismatch and poor tooling with the
 			// previous tslint harness.
 			rules: {
-				'no-magic-numbers': 'off',
 				// TODO: Sometimes we want a fn callback in react for displayname purposes. Consider for JS, too.
 				'prefer-arrow-callback': 'off',
 			},
@@ -154,6 +156,14 @@ module.exports = {
 				'jest/no-identical-title': 'error',
 				'jest/prefer-to-have-length': 'warn',
 				'jest/valid-expect': 'error',
+			},
+		},
+		// Data files
+		{
+			files: ['src/data/**/*.[tj]s?(x)'],
+			rules: {
+				// Data inherently contains a lot of magic numbers
+				'@typescript-eslint/no-magic-numbers': 'off',
 			},
 		},
 	],

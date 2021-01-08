@@ -145,7 +145,7 @@ export default class Gauge extends Module {
 		const heatColor = Color('#D35A10')
 		const batteryColor = Color('#2C9FCB')
 
-		/* eslint-disable no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartdata = {
 			datasets: [
 				{
@@ -164,7 +164,7 @@ export default class Gauge extends Module {
 				},
 			],
 		}
-		/* eslint-enable no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		const options = {
 			scales: {

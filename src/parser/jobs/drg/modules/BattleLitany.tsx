@@ -22,7 +22,7 @@ const WINDOW_STATUSES = [
 ]
 
 // how long (or short, really) a window needs to be in order to be considered truncated
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 const BL_TRUNCATE_DURATION = (STATUSES.BATTLE_LITANY.duration * 1000) - 2000
 
 class BLWindow {

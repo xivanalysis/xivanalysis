@@ -123,10 +123,10 @@ interface RoleGroupProps {
 }
 
 function RoleGroup({group: {role, actors}}: RoleGroupProps) {
-	// tslint:disable:no-magic-numbers
+	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	const background = Color(role.colour).fade(0.8).toString()
 	const color = Color(role.colour).darken(0.5).toString()
-	// tslint:enable:no-magic-numbers
+	/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 	return (
 		<div className={styles.group}>

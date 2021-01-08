@@ -1,7 +1,7 @@
 import {LegacyDispatcher, EventHook, TimestampHook} from '../LegacyDispatcher'
 import {DeathEvent} from 'fflogs'
 
-/* tslint:disable:no-magic-numbers */
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const event: DeathEvent = {
 	timestamp: 50,

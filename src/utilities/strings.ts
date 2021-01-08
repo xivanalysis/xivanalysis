@@ -17,7 +17,7 @@ export function formatDuration(duration: number, options: {
 	if (duration == null || isNaN(duration)) {
 		throw Error('A non-numeric value was supplied to formatDuration')
 	}
-	/* tslint:disable:no-magic-numbers */
+	/* eslint-disable @typescript-eslint/no-magic-numbers */
 	duration /= 1000
 
 	const defaultSecondPrecision = duration < 10 ? 2 : 0
@@ -39,7 +39,7 @@ export function formatDuration(duration: number, options: {
 	}
 	const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision, minimumFractionDigits: precision})
 	return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(Math.abs(seconds))}`
-	/* tslint:enable:no-magic-numbers */
+	/* eslint-enable @typescript-eslint/no-magic-numbers */
 }
 
 /**

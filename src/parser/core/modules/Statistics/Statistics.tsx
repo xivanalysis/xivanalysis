@@ -5,7 +5,7 @@ import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
 
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export type ColumnSpan = 1 | 2 | 3 | 4
 
 export interface Statistic {

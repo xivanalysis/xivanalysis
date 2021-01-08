@@ -18,9 +18,9 @@ const HOT_STATUSES: Array<keyof StatusRoot> = [
 
 // doing 100-x where x is the overheal % for clarity
 const SEVERITY_TIERS = {
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-35]: TARGET.SUCCESS,
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-50]: TARGET.WARN,
 }
 

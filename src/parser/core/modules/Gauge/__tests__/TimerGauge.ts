@@ -4,7 +4,7 @@ import {TimerGauge} from 'parser/core/modules/Gauge'
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
 
-// tslint:disable:no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 describe('TimerGauge', () => {
 	let currentTimestamp: number

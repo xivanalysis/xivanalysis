@@ -28,9 +28,9 @@ const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 }
 
 const CHECKLIST_SEVERITY_TIERS: SeverityTiers = {
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-35]: TARGET.SUCCESS,
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-50]: TARGET.WARN,
 }
 

@@ -162,7 +162,7 @@ export default class Ninki extends Module {
 	output() {
 		const ninkiColor = Color(JOBS.NINJA.colour)
 
-		/* eslint-disable no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const chartdata = {
 			datasets: [
 				{
@@ -174,7 +174,7 @@ export default class Ninki extends Module {
 				},
 			],
 		}
-		/* eslint-enable no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<TimeLineChart data={chartdata} />
