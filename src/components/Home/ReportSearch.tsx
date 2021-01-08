@@ -8,7 +8,6 @@ import {Button, Input, InputOnChangeData} from 'semantic-ui-react'
 import styles from './ReportSearch.module.css'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {SearchHandlerResult} from 'reportSources'
-import _ from 'lodash'
 import {parseInput} from './parseInput'
 
 const DEFAULT_REASON = t('core.home.report-search.unknown-query-error')`An unknown error occured when parsing the provided query.`

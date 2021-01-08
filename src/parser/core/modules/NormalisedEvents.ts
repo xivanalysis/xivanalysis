@@ -12,7 +12,7 @@ type BaseEvent = DamageEvent | HealEvent
 
 const supportedBuffEventTypes = ['applybuff', 'removebuff', 'applydebuff', 'removedebuff']
 const isSupportedBuffEvent = (event: Event): event is BuffEvent =>
-	(supportedBuffEventTypes as any[]).includes(event.type)
+	(supportedBuffEventTypes as unknown[]).includes(event.type)
 
 const isBaseEvent = (event: Event): event is BaseEvent =>
 	isDamageEvent(event) || isHealEvent(event)

@@ -32,6 +32,10 @@ jobs:
       - run:
           name: Lint
           command: yarn lint --format junit -o reports/eslint/results.xml
+      # TODO: Move this into its own step if it starts chewing time.
+      - run:
+          name: Check types
+          command: yarn types
       - run:
           name: Ensure extract
           command: |

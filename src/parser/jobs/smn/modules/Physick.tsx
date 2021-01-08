@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, Suggestion} from 'parser/core/modules/Suggestions'
 import React from 'react'
@@ -20,7 +19,7 @@ export default class Physick extends Module {
 		this.addHook('complete', this.onComplete)
 	}
 
-	private onPhysick(event: CastEvent) {
+	private onPhysick() {
 		this.phyisckCount += 1
 	}
 

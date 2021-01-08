@@ -38,7 +38,7 @@ export class LegacyFflogsReportStore extends ReportStore {
 	}
 
 	// todo: clean up
-	async fetchEvents(pullId: Pull['id'], actorId: Actor['id']) {
+	async fetchEvents(pullId: Pull['id']) {
 		if (this.report == null) {
 			// todo: wait for report?
 			throw new Error('no report')

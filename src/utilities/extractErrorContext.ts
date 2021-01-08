@@ -4,7 +4,7 @@
  * @param {Object} object The object to extra data from.
  * @returns {Object} Data that should be safe to JSON encode.
  */
-export function extractErrorContext(object: any) {
+export function extractErrorContext(object: object) {
 	const result: Record<string, string|number|boolean|null> = {}
 
 	for (const [key, val] of Object.entries(object)) {

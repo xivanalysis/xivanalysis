@@ -137,7 +137,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		return enemyIDs.size
 	}
 
-	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
+	protected reduceTrackedActionsEndOfFight(buffWindow: BuffWindowState): number {
 		const windowDurationMillis = this.buffStatus.duration * 1000
 		const fightTimeRemaining = this.parser.pull.duration - (buffWindow.start - this.parser.eventTimeOffset)
 

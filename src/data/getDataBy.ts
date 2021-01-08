@@ -11,9 +11,8 @@ WeakMap<
 		>
 	>
 >
-
-You didn't see the anys.
 */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const cache = new WeakMap<object, Map<any, Map<any, any>>>()
 
 type FlattenArray<T> = T extends Array<infer I> ? I : T
@@ -30,7 +29,7 @@ export function getDataBy<
 	// Sanity check in case someone is using this from JS and misspelled a key
 	const dataKeys = Object.keys(data)
 	const testEntry = data[dataKeys[0]]
-	if (!testEntry.hasOwnProperty(by)) {
+	if (!Object.hasOwnProperty.call(testEntry, by)) {
 		const correctKeys = Object.keys(testEntry).join('|')
 		throw new Error(`Invalid 'by' value provided: got '${by}', expected '${correctKeys}'`)
 	}

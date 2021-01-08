@@ -32,39 +32,23 @@ module.exports = {
 	},
 
 	rules: {
-		// #region Migration required
-		// TODO: Migrate disable to JS-only
+		// Disabled recommended rules
+		'default-case': 'off',
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
-		// TODO: Enable
 		'@typescript-eslint/no-inferrable-types': 'off',
-		// TODO: Enable
-		'@typescript-eslint/no-explicit-any': 'off',
-		// TODO: Enable for JS.
-		// TODO: Enable for TS, will likely need arg pattern allow for base classes &c
-		'@typescript-eslint/no-unused-vars': 'off',
-		// TODO: Should probably enable
-		'no-case-declarations': 'off',
-		// TODO: Enable?
-		'no-prototype-builtins': 'off',
-		// TODO: Enable
-		'@typescript-eslint/no-non-null-assertion': 'off',
-		// TODO: Enable, might need tweaks
-		'@typescript-eslint/ban-types': 'off',
-		// TODO: Enable
-		'@typescript-eslint/no-empty-function': 'off',
-		// TODO: Consider?
-		'@typescript-eslint/ban-ts-comment': 'off',
-		// TODO: Hmm??
-		'@typescript-eslint/no-this-alias': 'off',
-		// TODO: ts-eslint docs recc. turning this off. probably enable for js only?
-		'no-undef': 'off',
-		// TODO: Enable for at least .log (debug exists)
-		'no-console': 'off',
-		// TODO: Enable at _minimum_ {default: 'array-simple'}
-		'@typescript-eslint/array-type': 'off',
-		// #endregion
 
+		// Primary shared rules
 		'array-bracket-spacing': 'warn',
+		'@typescript-eslint/array-type': ['error', {default: 'array-simple'}],
+		'@typescript-eslint/ban-types': ['error', {
+			extendDefaults: true,
+			types: {
+				// Disable object type bans, they're pretty heavily used upstream.
+				Object: false,
+				'{}': false,
+				object: false,
+			},
+		}],
 		'block-spacing': 'warn',
 		'brace-style': ['error', '1tbs', {allowSingleLine: true}],
 		'comma-dangle': ['error', 'always-multiline'],
@@ -72,7 +56,6 @@ module.exports = {
 		'comma-style': 'warn',
 		'computed-property-spacing': 'warn',
 		'curly': ['error', 'all'],
-		'default-case': 'off',
 		'dot-notation': 'error',
 		'eol-last': 'error',
 		'eqeqeq': ['error', 'smart'],
@@ -85,6 +68,7 @@ module.exports = {
 		'newline-per-chained-call': ['warn', {ignoreChainWithDepth: 3}],
 		'new-parens': 'error',
 		'no-alert': 'error',
+		'no-console': ['error', {allow: ['warn', 'error']}],
 		'no-duplicate-imports': 'error',
 		'no-else-return': ['error', {allowElseIf: false}],
 		'no-implicit-globals': 'error',
@@ -107,6 +91,10 @@ module.exports = {
 		'no-return-await': 'error',
 		'no-trailing-spaces': 'error',
 		'no-unneeded-ternary': 'error',
+		'@typescript-eslint/no-unused-vars': ['error', {
+			argsIgnorePattern: '^_',
+			ignoreRestSiblings: true,
+		}],
 		'no-useless-rename': 'error',
 		'no-var': 'error',
 		'no-whitespace-before-property': 'warn',
@@ -122,20 +110,25 @@ module.exports = {
 		'@typescript-eslint/quotes': ['error', 'single', {avoidEscape: true}],
 		'yoda': ['error', 'never', {exceptRange: true}],
 
+		// React-specific rules
 		'react/display-name': 'off',
 		'react/no-unescaped-entities': ['error', {forbid: ['>', '}']}],
 		'react/no-children-prop': 'off',
 		'react-hooks/rules-of-hooks': 'error',
 		'react-hooks/exhaustive-deps': 'warn',
 
+		// xiva special sauce
 		'@xivanalysis/no-unused-dependencies': 'error',
 	},
 
 	overrides: [
+		// TypeScript files
 		{
 			files: ['**/*.ts?(x)'],
-			// Empty override so --ext doesn't need to be passed on the CLI - eslint will
-			// include anything matching overrides
+			rules: {
+				// TypeScript provides this as part of its type system, much better than lint can.
+				'no-undef': 'off',
+			},
 		},
 		// Test files
 		{

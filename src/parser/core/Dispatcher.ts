@@ -41,6 +41,7 @@ export class Dispatcher {
 	/** The timestamp of the hook currently being executed. */
 	get timestamp() { return this._timestamp }
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private eventHooks = new Map<Handle, Set<EventHook<any>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
@@ -66,6 +67,8 @@ export class Dispatcher {
 		// Execute any timestamp hooks that are ready to execute
 		const queue = this.timestampHookQueue
 		while (queue.length > 0 && queue[queue.length - 1].timestamp <= timestamp) {
+			// Enforced by the while loop.
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const hook = queue.pop()!
 
 			// If we're not trigering on this module, skip the hook. This effectively removes it.

@@ -38,5 +38,5 @@ export class TieredSuggestion extends Suggestion {
 	}
 
 	// noop setter so it doesn't die from the base class
-	set severity(value) {}
+	set severity(value) { /* noop */ }
 }

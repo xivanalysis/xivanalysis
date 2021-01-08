@@ -182,6 +182,7 @@ export default class I18nOverlay extends React.Component {
 
 		Trans._wrapped = this
 
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
 		const self = this
 		const old_render = this.old_render = Trans.prototype.render
 

@@ -16,7 +16,7 @@ class BranchBannerComponent extends React.Component<RouteComponentProps> {
 	render() {
 		const {reportStore} = this.context
 		const {location} = this.props
-		const {report} = reportStore!
+		const {report} = reportStore
 
 		// If there's no report, or it's still loading, there's not much we can display
 		if (!report || report.loading) {

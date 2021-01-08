@@ -5,7 +5,7 @@ import React from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 
-import {BuffEvent, BuffStackEvent, CastEvent} from 'fflogs'
+import {BuffStackEvent, CastEvent} from 'fflogs'
 
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
@@ -81,7 +81,7 @@ export default class PerfectBalance extends Module {
 		this.debug('New PB window with incorrect initial stacks')
 	}
 
-	private onDrop(event: BuffEvent): void {
+	private onDrop(): void {
 		// If it's not current for some reason, something is wrong anyway
 		if (this.current) {
 			this.history.push(this.current)

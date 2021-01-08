@@ -132,7 +132,7 @@ export default class Shoha extends Module {
 		this.pushToHistory()
 	}
 
-	private onSpend(event: CastEvent) {
+	private onSpend() {
 		this.stacks = 0
 		this.shohaUses++
 

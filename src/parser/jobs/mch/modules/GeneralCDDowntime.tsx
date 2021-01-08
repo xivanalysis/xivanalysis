@@ -1,7 +1,5 @@
-import {Trans} from '@lingui/react'
 import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
-import React from 'react'
 
 // Strict downtime allowance for drill/bio blaster/air anchor
 const DOWNTIME_ALLOWED_GCD = 100

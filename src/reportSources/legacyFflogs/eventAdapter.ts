@@ -31,7 +31,7 @@ class EventAdapter {
 	private report: Report
 
 	/** Set of event types marked as unhandled. Used to prevent duplicate warnings. */
-	private unhandledTypes = new Set<FflogsEvent['type']>()
+	private unhandledTypes = new Set<string>()
 
 	constructor(opts: {report: Report}) {
 		this.report = opts.report
@@ -101,9 +101,9 @@ class EventAdapter {
 			break
 			/* eslint-enable no-fallthrough */
 
-		default:
+		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = event as any
+			const unknownEvent = event as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}
@@ -120,6 +120,7 @@ class EventAdapter {
 				console.warn(`Unhandled FFLogs event type "${unknownEvent.type}".`)
 			}
 			this.unhandledTypes.add(unknownEvent.type)
+		}
 		}
 	}
 

@@ -60,8 +60,6 @@ export function Analyse({reportStore}: AnalyseProps) {
 		)
 	}
 
-	const legacyReport = report.meta
-
 	return (
 		<AnalyseEvents
 			reportStore={reportStore}

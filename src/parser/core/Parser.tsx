@@ -292,6 +292,8 @@ class Parser {
 			// the below to use <= instead - effectively weaving queue into source.
 			const queue = this.eventDispatchQueue
 			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
+				// Enforced by the while loop.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				yield queue.pop()!
 			}
 
@@ -347,7 +349,7 @@ class Parser {
 		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
 
 		for (const handle in moduleErrors) {
-			if (!moduleErrors.hasOwnProperty(handle)) { continue }
+			if (moduleErrors[handle] == null) { continue }
 			const error = moduleErrors[handle]
 
 			this.captureError({
@@ -416,8 +418,8 @@ class Parser {
 		source: 'event' | 'output',
 		error: Error,
 		event?: LegacyEvent,
-	): [Record<string, any>, Array<[string, Error]>] {
-		const output: Record<string, any> = {}
+	): [Record<string, unknown>, Array<[string, Error]>] {
+		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
 		const visited = new Set<string>()
 
@@ -572,7 +574,7 @@ class Parser {
 			module: opts.module,
 		}
 
-		const extra: Record<string, any> = {
+		const extra: Record<string, unknown> = {
 			source: this.newReport.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,

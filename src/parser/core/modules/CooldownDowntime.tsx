@@ -97,7 +97,7 @@ export abstract class CooldownDowntime extends Module {
 	 * @returns True if the event should be counted or false if the event
 	 * should not be counted as a usage of the cooldown.
 	 */
-	protected countUsage(event: CastEvent): boolean {
+	protected countUsage(_event: CastEvent): boolean {
 		return true
 	}
 

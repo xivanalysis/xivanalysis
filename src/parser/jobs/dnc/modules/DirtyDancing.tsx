@@ -18,7 +18,7 @@ import {Invulnerability} from 'parser/core/modules/Invulnerability'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {SEVERITY, TieredSuggestion, Suggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-import {DEFAULT_SEVERITY_TIERS, FINISHES, STANDARD_FINISHES, TECHNICAL_FINISHES} from '../CommonData'
+import {DEFAULT_SEVERITY_TIERS, FINISHES} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {getDataBy} from 'data'
 

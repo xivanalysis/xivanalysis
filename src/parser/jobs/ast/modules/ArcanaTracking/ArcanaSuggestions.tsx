@@ -71,7 +71,7 @@ export default class ArcanaSuggestions extends Module {
 
 	private _onComplete() {
 		const combatants = this.combatants.getEntities()
-		for (const [key, combatant] of Object.entries(combatants)) {
+		for (const [, combatant] of Object.entries(combatants)) {
 			if (combatant.type === 'LimitBreak') {
 				continue
 			}

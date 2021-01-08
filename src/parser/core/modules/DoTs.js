@@ -25,7 +25,7 @@ export default class DoTs extends Module {
 		this.constructor.statusesToTrack.forEach(statusId => {
 			const status = this.data.getStatus(statusId)
 			if (!status) { return }
-			if (!status.hasOwnProperty('duration')) {
+			if (status.duration == null) {
 				console.warn(`statusId ${statusId} is missing a duration property`)
 				this._statusDuration[statusId] = DEFAULT_DURATION_MILLIS
 			} else {
@@ -49,8 +49,7 @@ export default class DoTs extends Module {
 	}
 
 	// Allow Typescript overrides using the parameter
-	// eslint-disable-next-line no-unused-vars
-	addClippingSuggestions(clip) {
+	addClippingSuggestions(_clip) {
 		// To be overridden by submodules to display any clipping suggestions. This should also be handled on a job-by-job
 		// basis, since different jobs have different thresholds for what constitutes bad clipping with varying explanations
 		// for why.

@@ -101,7 +101,7 @@ export class Analyser extends Injectable {
 	 * Called when the analyser has been successfully instantiated and configured,
 	 * before any analysis is run. This is the recommended location to configure hooks.
 	 */
-	initialise() {}
+	initialise() { /* noop */ }
 
 	/**
 	 * Called at the end of an analysis run to retrieve any output that should be rendered to the
@@ -219,7 +219,7 @@ export class Analyser extends Injectable {
 
 	private debugLog = (...data: LogParameters) => {
 		const constructor = this.constructor as typeof Module
-		// tslint:disable-next-line:no-console
+		// eslint-disable-next-line no-console
 		console.log(
 			`[%c${constructor.handle}%c]`,
 			`color: ${seededColor(constructor.handle)}`,

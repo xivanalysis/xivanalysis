@@ -2,12 +2,11 @@ import {Trans} from '@lingui/react'
 import React from 'react'
 
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -96,7 +95,6 @@ export class TrackedOverheal {
 	 * @param event - The heal event to track
 	 */
 	pushHeal(event: HealEvent) {
-		const guid = event.ability.guid
 		this.heal += event.amount
 		this.overheal += event.overheal || 0
 	}
@@ -208,7 +206,7 @@ export class CoreOverheal extends Module {
 	 * false ignores the heal entirely.
 	 * @param event
 	 */
-	protected considerHeal(event: HealEvent, pet: boolean = false): boolean {
+	protected considerHeal(_event: HealEvent, _pet: boolean = false): boolean {
 		return true
 	}
 
@@ -216,7 +214,7 @@ export class CoreOverheal extends Module {
 	 * This method MAY be overridden to provide an alternative checklist description
 	 * @param overheals - an array of all the categories of overheals you're tracking, starting with direct
 	 */
-	protected checklistDescription(overheals: TrackedOverheal[]): JSX.Element {
+	protected checklistDescription(_overheals: TrackedOverheal[]): JSX.Element {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
@@ -261,7 +259,8 @@ export class CoreOverheal extends Module {
 
 		if (this.displayPieChart) {
 			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
-			const data: any = [{
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			const data: DataSet<React.ReactNode, 3> = [{
 				value: directPercentage,
 				color: this.direct.color,
 				columns: [
@@ -292,7 +291,7 @@ export class CoreOverheal extends Module {
 					'% of total overheal',
 					'Overheal % per type',
 				],
-				data,
+				data: data,
 				width: 3, // chart's wide, yo
 			}))
 		}

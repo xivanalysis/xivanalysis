@@ -28,12 +28,12 @@ export default class Downtime extends Module {
 		].sort((a, b) => a.start - b.start)
 
 		// If there's nothing, just stop now
-		if (downtimePeriods.length === 0) {
+		const firstElement = downtimePeriods.shift()
+		if (firstElement == null) {
 			return []
 		}
 
-		// Merge the downtimes that overlap
-		const finalDowntimes = [downtimePeriods.shift()!]
+		const finalDowntimes = [firstElement]
 		downtimePeriods.forEach(dt => {
 			const last = finalDowntimes[finalDowntimes.length - 1]
 			if (dt.start <= last.end) {

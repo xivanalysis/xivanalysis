@@ -44,7 +44,7 @@ export class ExpandableSegment extends React.PureComponent<Props, State> {
 		}
 	}
 
-	componentDidUpdate(prevProps: Props, prevState: State) {
+	componentDidUpdate(prevProps: Props) {
 		// Animate the expand the first time it's requested
 		if (
 			prevProps.collapsed !== false &&

@@ -43,7 +43,7 @@ describe('LegacyDispatcher', () => {
 	})
 
 	it('does not trigger non-matching hooks', () => {
-		// @ts-expect-error
+		// @ts-expect-error This mistake is only possible in JS
 		dispatcher.addEventHook({...eventHook, event: '__unused'})
 
 		dispatcher.dispatch(event, ['test'])

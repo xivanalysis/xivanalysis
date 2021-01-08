@@ -2,7 +2,6 @@ import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {Data} from 'parser/core/modules/Data'
-import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Cooldowns from 'parser/core/modules/Cooldowns'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
@@ -21,12 +20,6 @@ const SEVERITIES = {
 		1: SEVERITY.MINOR,
 		5: SEVERITY.MEDIUM,
 	},
-}
-
-interface HoroscopeWindow {
-	start: number,
-	end: number | null,
-	casts: CastEvent[],
 }
 
 export default class Horoscope extends Module {
@@ -54,14 +47,14 @@ export default class Horoscope extends Module {
 		this.addEventHook('complete', this.onComplete)
 	}
 
-	private onHoroscope(event: CastEvent) {
+	private onHoroscope() {
 		this.uses++
 	}
-	private onActivate(event: CastEvent) {
+	private onActivate() {
 		this.activations++
 	}
 
-	private onHeliosCast(event: CastEvent) {
+	private onHeliosCast() {
 		if (this.cooldowns.getCooldownRemaining(this.data.actions.HOROSCOPE.id) > 0) {
 			return
 		}

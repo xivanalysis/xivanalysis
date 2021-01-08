@@ -1,6 +1,6 @@
 export const isDefined = <T>(val?: T | null): val is T => val != null
 
-export function ensureArray<T>(val: T | ReadonlyArray<T>): ReadonlyArray<T> {
+export function ensureArray<T>(val: T | readonly T[]): readonly T[] {
 	if (!Array.isArray(val)) {
 		return [val as T]
 	}
@@ -28,8 +28,8 @@ export function enumify(obj: SortaEnum): Readonly<SortaEnum> {
 export type ReplaceFrom<Target, Source, Props extends keyof Source> =
 	Omit<Target, Props> & {[K in Props]: Source[K]}
 
-/* eslint-disable @typescript-eslint/ban-types */
+/* eslint-disable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */
 /** Force typescript to compute a type for display purposes. */
 export type Compute<A extends any> =
 	A extends Function? A : {[K in keyof A]: A[K]} & {}
-/* eslint-enable @typescript-eslint/ban-types */
+/* eslint-enable @typescript-eslint/ban-types,@typescript-eslint/no-explicit-any */

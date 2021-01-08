@@ -1,11 +1,9 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import React from 'react'
-import {Icon, Message} from 'semantic-ui-react'
 
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
-import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'

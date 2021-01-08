@@ -226,7 +226,7 @@ export default class Resources extends Module {
 		let actionBloodGain = 0
 		let actionMPGain = 0
 
-		if (RESOURCE_SPENDERS.hasOwnProperty(abilityId)) {
+		if (RESOURCE_SPENDERS[abilityId] != null) {
 			if (RESOURCE_SPENDERS[abilityId].blood < 0 && this.combatants.selected.hasStatus(STATUSES.DELIRIUM.id) && RESOURCE_SPENDERS[abilityId].affectsWithDelirium) {
 				// Blood spender under delirium - no change
 				actionBloodGain += 0
@@ -243,14 +243,14 @@ export default class Resources extends Module {
 			}
 		}
 
-		if (event.hasSuccessfulHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS.hasOwnProperty(abilityId))) {
+		if (event.hasSuccessfulHit && (event.type !== 'combo' && this.combatants.selected.hasStatus(STATUSES.BLOOD_WEAPON.id) && BLOOD_WEAPON_GENERATORS[abilityId] != null)) {
 			// Actions that did not hit do not generate resources
 			// Don't double count blood weapon gains on comboed events
 			actionBloodGain += BLOOD_WEAPON_GENERATORS[abilityId].blood
 			actionMPGain += BLOOD_WEAPON_GENERATORS[abilityId].mp
 		}
 
-		if (event.hasSuccessfulHit && RESOURCE_GENERATORS.hasOwnProperty(abilityId)) {
+		if (event.hasSuccessfulHit && RESOURCE_GENERATORS[abilityId] != null) {
 			// Actions that did not hit do not generate resources
 			const actionInfo = RESOURCE_GENERATORS[abilityId]
 			if ((!actionInfo.requiresCombo && event.type !== 'combo') || event.type === 'combo') {
@@ -262,14 +262,14 @@ export default class Resources extends Module {
 
 		this.checkBloodOvercap(actionBloodGain)
 
-		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
+		const afterActionMP = event.sourceResources?.mp ?? 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
 	}
 
 	_onCastBlackestNight(event) {
 		const abilityId = event.ability.guid
 		const actionMPGain = RESOURCE_SPENDERS[abilityId].mp
-		const afterActionMP = (event.hasOwnProperty('sourceResources')) ? event.sourceResources.mp : 0
+		const afterActionMP = event.sourceResources?.mp ?? 0
 		this.checkMPOvercap(event, afterActionMP, actionMPGain)
 		this._pushToMPGraph()
 	}

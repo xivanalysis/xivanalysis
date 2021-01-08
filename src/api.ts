@@ -131,9 +131,9 @@ function buildEventFilter(
 			.concat(petFilter(report.friendlyPets))
 			.concat(petFilter(report.enemyPets))
 
-		predicates.push((event: FflogsEvent) =>
-			involvedActors.includes(event.sourceID!)
-			|| involvedActors.includes(event.targetID!),
+		predicates.push((event: FflogsEvent) => false
+			|| involvedActors.includes(event.sourceID ?? NaN)
+			|| involvedActors.includes(event.targetID ?? NaN),
 		)
 	}
 

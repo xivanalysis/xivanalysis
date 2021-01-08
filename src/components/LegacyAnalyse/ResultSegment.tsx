@@ -72,7 +72,7 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 		const ref = ReactDOM.findDOMNode(this) as HTMLElement
 
 		if (ref !== this.ref) {
-			this.observer.unobserve(this.ref!)
+			this.ref != null && this.observer.unobserve(this.ref)
 			this.ref = ref
 			this.observer.observe(ref)
 		}
@@ -139,8 +139,10 @@ export default class ResultSegment extends React.PureComponent<Props, State> imp
 	}
 
 	scrollIntoView() {
+		if (this.ref == null) { return }
+
 		// Try to use the smooth scrolling, fall back to the old method
-		const scrollAmount = this.ref!.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP
+		const scrollAmount = this.ref.getBoundingClientRect().top - OFFSET_FROM_VIEWPORT_TOP
 		try {
 			scrollBy({top: scrollAmount, behavior: 'smooth'})
 		} catch {
