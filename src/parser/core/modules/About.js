@@ -72,12 +72,14 @@ export default class About extends Analyser {
 			this.parser.parseDate,
 		)
 
+		const {Description} = this
+
 		return (
 			<div className={styles.container}>
 				<div className={styles.description}>
 					<Header><NormalisedMessage message={this.constructor.title}/></Header>
 
-					<this.Description/>
+					<Description/>
 
 					{!supported && (
 						<Message error icon="times circle outline">

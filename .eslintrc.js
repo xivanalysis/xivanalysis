@@ -52,8 +52,6 @@ module.exports = {
 		'@typescript-eslint/ban-ts-comment': 'off',
 		// TODO: Hmm??
 		'@typescript-eslint/no-this-alias': 'off',
-		// TODO: ts-eslint docs recc. turning this off. probably enable for js only?
-		'no-undef': 'off',
 		// #endregion
 
 		// Disabled recommended rules
@@ -132,10 +130,13 @@ module.exports = {
 	},
 
 	overrides: [
+		// TypeScript files
 		{
 			files: ['**/*.ts?(x)'],
-			// Empty override so --ext doesn't need to be passed on the CLI - eslint will
-			// include anything matching overrides
+			rules: {
+				// TypeScript provides this as part of its type system, much better than lint can.
+				'no-undef': 'off',
+			},
 		},
 		// Test files
 		{
