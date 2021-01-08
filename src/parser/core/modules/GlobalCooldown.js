@@ -78,7 +78,7 @@ export default class GlobalCooldown extends Module {
 				this._castingEvent = event
 				break
 
-			case 'cast':
+			case 'cast': {
 				const hasBeginCast = this._castingEvent !== null && this._castingEvent.ability.guid === action.id
 				const relevantEvent = hasBeginCast ? this._castingEvent : event
 				this.saveGcd({...this._lastGcd}, relevantEvent.timestamp) // Save last gcd with current timestamp
@@ -88,6 +88,7 @@ export default class GlobalCooldown extends Module {
 
 				this._castingEvent = null
 				break
+			}
 			}
 		}
 

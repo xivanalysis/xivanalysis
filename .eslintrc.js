@@ -40,8 +40,6 @@ module.exports = {
 		// TODO: Enable for JS.
 		// TODO: Enable for TS, will likely need arg pattern allow for base classes &c
 		'@typescript-eslint/no-unused-vars': 'off',
-		// TODO: Should probably enable
-		'no-case-declarations': 'off',
 		// TODO: Enable?
 		'no-prototype-builtins': 'off',
 		// TODO: Enable

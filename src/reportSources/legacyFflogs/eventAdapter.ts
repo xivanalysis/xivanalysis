@@ -101,7 +101,7 @@ class EventAdapter {
 			break
 			/* eslint-enable no-fallthrough */
 
-		default:
+		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
 			const unknownEvent = event as any
 			if (this.unhandledTypes.has(unknownEvent.type)) {
@@ -120,6 +120,7 @@ class EventAdapter {
 				console.warn(`Unhandled FFLogs event type "${unknownEvent.type}".`)
 			}
 			this.unhandledTypes.add(unknownEvent.type)
+		}
 		}
 	}
 
