@@ -148,25 +148,25 @@ export default class ArcanaSuggestions extends Module {
 								</Table.Cell>
 								{this.RenderSpreadState(artifact)}
 							</Table.Row>
-						} else {
-							const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
-							const end = start + TIMELINE_UPPER_MOD
-							const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
-							return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
-								<Table.Cell>
-									{start >= 0 && <Button
-										circular
-										compact
-										size="mini"
-										icon="time"
-										onClick={() => this.timeline.show(start, end)}
-									/>}
-									<span style={{marginRight: 10}}>{formattedTime}</span>
-								</Table.Cell>
-								{this.RenderAction(artifact)}
-								{this.RenderSpreadState(artifact)}
-							</Table.Row>
 						}
+
+						const start = artifact.lastEvent.timestamp - this.parser.fight.start_time
+						const end = start + TIMELINE_UPPER_MOD
+						const formattedTime = this.parser.formatTimestamp(artifact.lastEvent.timestamp)
+						return <Table.Row key={artifact.lastEvent.timestamp} className={styles.cardActionRow}>
+							<Table.Cell>
+								{start >= 0 && <Button
+									circular
+									compact
+									size="mini"
+									icon="time"
+									onClick={() => this.timeline.show(start, end)}
+								/>}
+								<span style={{marginRight: 10}}>{formattedTime}</span>
+							</Table.Cell>
+							{this.RenderAction(artifact)}
+							{this.RenderSpreadState(artifact)}
+						</Table.Row>
 					})}
 				</Table.Body>
 			</Table>
@@ -190,7 +190,9 @@ export default class ArcanaSuggestions extends Module {
 					{artifact.targetName}
 				</Table.Cell>
 			</>
-		} else if (artifact.lastEvent.type === 'cast') {
+		}
+
+		if (artifact.lastEvent.type === 'cast') {
 			return <>
 				<Table.Cell>
 					<ActionLink {...getDataBy(this.data.actions, 'id', artifact.lastEvent.ability.guid)} />
@@ -198,21 +200,23 @@ export default class ArcanaSuggestions extends Module {
 				<Table.Cell>
 				</Table.Cell>
 			</>
-		} else if (artifact.lastEvent.type === 'death') {
+		}
+
+		if (artifact.lastEvent.type === 'death') {
 			return <><Table.Cell>
 				<Trans id="ast.arcana-tracking.messages.death">Death</Trans>
 			</Table.Cell>
 			<Table.Cell>
 			</Table.Cell>
 			</>
-		} else {
-			return <>
-				<Table.Cell>
-				</Table.Cell>
-				<Table.Cell>
-				</Table.Cell>
-			</>
 		}
+
+		return <>
+			<Table.Cell>
+			</Table.Cell>
+			<Table.Cell>
+			</Table.Cell>
+		</>
 	}
 
 	// Helper for output()
@@ -229,12 +233,11 @@ export default class ArcanaSuggestions extends Module {
 				{!drawnArcana && <span className={styles.buffPlaceholder} />}
 			</span>
 			<span className={styles.sealIconContainer}>
-				{artifact.sealState.map(sealType => {
+				{artifact.sealState.map((sealType, index) => {
 					if (sealType > 0) {
-						return <img src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />
-					} else {
-						return <span className={styles.sealIcon}></span>
+						return <img key={index} src={SEAL_ICON[sealType]} className={styles.sealIcon} alt="Seal icon" />
 					}
+					return <span key={index} className={styles.sealIcon}></span>
 				})}
 			</span>
 			<span style={{marginLeft: 5}}>

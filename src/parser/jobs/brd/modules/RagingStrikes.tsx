@@ -161,11 +161,13 @@ export default class RagingStrikes extends BuffWindowModule {
 			return (actual: number, expected?: number) => {
 				if (!isDefined(expected) || expected > 1) {
 					return RotationTargetOutcome.NEUTRAL
-				} else if (actual === expected) {
-					return RotationTargetOutcome.POSITIVE
-				} else {
-					return RotationTargetOutcome.NEGATIVE
 				}
+
+				if (actual === expected) {
+					return RotationTargetOutcome.POSITIVE
+				}
+
+				return RotationTargetOutcome.NEGATIVE
 			}
 		}
 	}

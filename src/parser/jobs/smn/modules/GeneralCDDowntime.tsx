@@ -73,7 +73,9 @@ export default class GeneralCDDowntime extends CooldownDowntime {
 				this.debug('Aetherpact found first')
 				// Aetherpact was found first, everything is in order
 				return events
-			} else if (cast.ability.guid === ACTIONS.DEVOTION.id) {
+			}
+
+			if (cast.ability.guid === ACTIONS.DEVOTION.id) {
 				this.debug('Devotion found first')
 				// Devotion was found first, need to synth an Aetherpact
 				const preCast: CastEvent = {

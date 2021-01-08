@@ -138,7 +138,6 @@ module.exports = {
 			// for the primary tooling PR, and stem from rule mismatch and poor tooling with the
 			// previous tslint harness.
 			rules: {
-				'no-else-return': 'off',
 				'no-magic-numbers': 'off',
 				'prefer-arrow-callback': 'off',
 				'no-multiple-empty-lines': 'off',

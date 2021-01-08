@@ -59,7 +59,8 @@ export class TrackedOverheal {
 	 * Get current overheal as a percentage
 	 */
 	get percent(): number {
-		if (this.heal > 0) { return 100 * (this.overheal) / (this.heal + this.overheal) } else { return 0 }
+		if (this.heal > 0) { return 100 * (this.overheal) / (this.heal + this.overheal) }
+		return 0
 	}
 
 	/**

@@ -204,9 +204,9 @@ export default class Barrage extends Module {
 	private getIcon(failed: boolean): JSX.Element {
 		if (failed) {
 			return <Icon name="remove" className="text-error"/>
-		} else {
-			return <Icon name="checkmark" className="text-success"/>
 		}
+
+		return <Icon name="checkmark" className="text-success"/>
 	}
 
 	output() {

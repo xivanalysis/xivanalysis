@@ -45,14 +45,14 @@ export const Rows = memo(function Rows({
 				top: currentTop,
 				height,
 			}
-		} else {
-			const maxChildren = getMaxChildren(row)
-			const thisTop = currentTop
-			currentTop += maxChildren
-			return {
-				top: thisTop,
-				height: maxChildren,
-			}
+		}
+
+		const maxChildren = getMaxChildren(row)
+		const thisTop = currentTop
+		currentTop += maxChildren
+		return {
+			top: thisTop,
+			height: maxChildren,
 		}
 	})
 

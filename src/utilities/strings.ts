@@ -36,10 +36,9 @@ export function formatDuration(duration: number, options: {
 	if (minutes === 0 && options.hideMinutesIfZero) {
 		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 1, maximumFractionDigits: precision, minimumFractionDigits: precision})
 		return `${secondsFormatter.format(seconds)}s`
-	} else {
-		const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision, minimumFractionDigits: precision})
-		return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(Math.abs(seconds))}`
 	}
+	const secondsFormatter = new Intl.NumberFormat(undefined, {minimumIntegerDigits: 2, maximumFractionDigits: precision, minimumFractionDigits: precision})
+	return `${minutesFormatter.format(minutes)}:${secondsFormatter.format(Math.abs(seconds))}`
 	/* tslint:enable:no-magic-numbers */
 }
 

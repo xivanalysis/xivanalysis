@@ -137,34 +137,40 @@ export class RotationTable extends React.Component<RotationTableProps> {
 	static defaultTargetComparator(actual: number, expected?: number): RotationTargetOutcome {
 		if (!isDefined(expected)) {
 			return RotationTargetOutcome.NEUTRAL
-		} else if (actual >= expected) {
-			return RotationTargetOutcome.POSITIVE
-		} else {
-			return RotationTargetOutcome.NEGATIVE
 		}
+
+		if (actual >= expected) {
+			return RotationTargetOutcome.POSITIVE
+		}
+
+		return RotationTargetOutcome.NEGATIVE
 	}
 
 	static targetAccessorResolver = (entry: RotationTableEntry, target: RotationTarget): RotationTargetData => {
 		if (typeof target.accessor === 'string' && entry.targetsData != null) {
 			return entry.targetsData[target.accessor]
-		} else if (typeof target.accessor === 'function') {
+		}
+
+		if (typeof target.accessor === 'function') {
 			return target.accessor(entry)
-		} else {
-			return {
-				actual: 0,
-				expected: 0,
-			}
+		}
+
+		return {
+			actual: 0,
+			expected: 0,
 		}
 	}
 
 	static notesAccessorResolver = (entry: RotationTableEntry, note: RotationNotes): React.ReactNode => {
 		if (typeof note.accessor === 'string' && entry.notesMap != null) {
 			return entry.notesMap[note.accessor]
-		} else if (typeof note.accessor === 'function') {
-			return note.accessor(entry)
-		} else {
-			return null
 		}
+
+		if (typeof note.accessor === 'function') {
+			return note.accessor(entry)
+		}
+
+		return null
 	}
 
 	static TargetCell = ({actual, expected, targetComparator}: RotationTargetData) => {
