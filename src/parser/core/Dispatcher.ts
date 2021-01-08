@@ -66,6 +66,8 @@ export class Dispatcher {
 		// Execute any timestamp hooks that are ready to execute
 		const queue = this.timestampHookQueue
 		while (queue.length > 0 && queue[queue.length - 1].timestamp <= timestamp) {
+			// Enforced by the while loop.
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const hook = queue.pop()!
 
 			// If we're not trigering on this module, skip the hook. This effectively removes it.

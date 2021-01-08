@@ -121,6 +121,8 @@ export class LegacyDispatcher {
 		// Fire off any timestamp hooks that are ready
 		const thq = this.timestampHookQueue
 		while (thq.length > 0 && thq[thq.length - 1].timestamp <= timestamp) {
+			// Enforced by the while loop
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 			const hook = thq.pop()!
 
 			// If we're not triggering on this module, skip the hook - removing it entirely

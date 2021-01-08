@@ -42,8 +42,6 @@ module.exports = {
 		'@typescript-eslint/no-unused-vars': 'off',
 		// TODO: Enable?
 		'no-prototype-builtins': 'off',
-		// TODO: Enable
-		'@typescript-eslint/no-non-null-assertion': 'off',
 		// TODO: Enable, might need tweaks
 		'@typescript-eslint/ban-types': 'off',
 		// #endregion

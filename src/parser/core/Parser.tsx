@@ -292,6 +292,8 @@ class Parser {
 			// the below to use <= instead - effectively weaving queue into source.
 			const queue = this.eventDispatchQueue
 			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
+				// Enforced by the while loop.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				yield queue.pop()!
 			}
 
