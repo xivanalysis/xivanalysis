@@ -14,15 +14,22 @@ const getPlugins = ({
 	'./locale/babel-plugin-transform-react.js',
 	['@babel/plugin-transform-runtime', {
 		corejs: {version: 3},
-		// TODO: Enable for web build only?
-		// useESModules: true,
+		useESModules: true,
 		version: '^7.12.5',
 	}],
 ].filter(item => !!item)
 
+const isBabelRegister = caller => caller?.name === '@babel/register'
+
 module.exports = api => ({
 	presets: [
-		'@babel/preset-env',
+		['@babel/preset-env', {
+			// If running under register, we need to swap down to node target, otherwise
+			// permit fallback to browserslist config handling.
+			targets: api.caller(isBabelRegister)
+				? {node: true}
+				: undefined,
+		}],
 		['@babel/preset-react', {
 			development: api.env('development'),
 			runtime: 'automatic',
