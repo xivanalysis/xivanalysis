@@ -10,6 +10,7 @@ export function calculateLocaleCompletion(): Record<string, number> {
 	const localeCount = {}
 	localeFiles.forEach(file => {
 		const localeKey = localeKeyRegex.exec(file)[1]
+		// eslint-disable-next-line @typescript-eslint/no-var-requires
 		const data = require(file) as Record<string, string>
 		localeCount[localeKey] = Object.values(data)
 			.reduce((carry, value) => carry + (value? 1 : 0), 0)

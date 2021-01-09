@@ -1,4 +1,4 @@
-import dotenv from 'dotenv'
+import * as dotenv from 'dotenv'
 import dotenvExpand from 'dotenv-expand'
 import fs from 'fs'
 
@@ -9,7 +9,7 @@ const envFiles = [
 	`${envFile}.${NODE_ENV}.local`,
 	`${envFile}.${NODE_ENV}`,
 	NODE_ENV !== 'test' && `${envFile}.local`,
-	envFile
+	envFile,
 ].filter(Boolean)
 envFiles.forEach(path => {
 	if (!fs.existsSync(path)) { return }

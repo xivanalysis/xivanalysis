@@ -17,6 +17,7 @@ module.exports = function({
 	assertVersion,
 	types: t,
 }) {
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	assertVersion(7)
 
 	function toMemberExpression(identifierPath) {
@@ -101,6 +102,6 @@ module.exports = function({
 					ClassDeclaration: visitClassDeclaration,
 				})
 			},
-		}
+		},
 	}
 }

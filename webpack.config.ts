@@ -11,6 +11,8 @@ import {calculateLocaleCompletion} from './config/locale'
 
 import './config/loadDotenv'
 
+/* eslint-disable @typescript-eslint/no-magic-numbers */
+
 interface Environment {
 	[key: string]: unknown
 }
@@ -90,6 +92,7 @@ export default (env: Environment, {
 			filename: 'index.html',
 			chunks: ['index'],
 			// Doesn't even know what it supports smh
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			...(indexMetadata as any),
 		}),
 		new CopyWebpackPlugin({

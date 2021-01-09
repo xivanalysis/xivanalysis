@@ -1,4 +1,5 @@
 const getPlugins = ({
+	isDevelopment = false,
 	isTypescript = false,
 	isTSX = false,
 } = {}) => [
@@ -11,6 +12,9 @@ const getPlugins = ({
 	['@babel/plugin-proposal-class-properties', {loose: true}],
 	'babel-plugin-macros',
 	'babel-plugin-lodash',
+	!isDevelopment && ['babel-plugin-transform-react-remove-prop-types', {
+		removeImport: true,
+	}],
 	'./locale/babel-plugin-transform-react.js',
 	['@babel/plugin-transform-runtime', {
 		corejs: {version: 3},
@@ -41,12 +45,12 @@ module.exports = api => ({
 
 	overrides: [{
 		test: /\.jsx?$/,
-		plugins: getPlugins(),
+		plugins: getPlugins({isDevelopment: api.env('development')}),
 	}, {
 		test: /\.ts$/,
-		plugins: getPlugins({isTypescript: true}),
+		plugins: getPlugins({isDevelopment: api.env('development'), isTypescript: true}),
 	}, {
 		test: /\.tsx$/,
-		plugins: getPlugins({isTypescript: true, isTSX: true}),
+		plugins: getPlugins({isDevelopment: api.env('development'), isTypescript: true, isTSX: true}),
 	}],
 })
