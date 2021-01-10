@@ -53,33 +53,7 @@ ${statusLines.join('\n')}
 class Status extends Row {
 	static sheet = 'Status'
 
-	name = this.string()
-	description = this.string()
-	icon = this.number()
-	maxStacks = this.number()
-	// unknown UINT_8
-	category = this.number({column: 5})
-	hitEffect = this.number()
-	vfx = this.number()
-	lockMovement = this.boolean()
-	// unknown PACKED_BOOL_2
+	name = this.string({column: 0})
 	lockActions = this.boolean({column: 10})
-	lockControl = this.boolean()
-	transfiguration = this.boolean()
-	// unknown PACKED_BOOL_5
-	canDispel = this.boolean({column: 14})
-	inflictedByActor = this.boolean()
-	isPermanent = this.boolean()
-	partyListPriority = this.number()
-	// unknown PACKED_BOOL_1
-	// unknown PACKED_BOOL_2
-	// unknown INT_16
-	// unknown UINT_8
-	// unknown PACKED_BOOL_3
-	log = this.number({column: 23})
-	isFcBuff = this.boolean()
-	invisiblity = this.boolean()
-	// unknown UINT_8
-	// unknown UINT_8
-	// unknown PACKED_BOOL_6
+	lockControl = this.boolean({column: 11})
 }
