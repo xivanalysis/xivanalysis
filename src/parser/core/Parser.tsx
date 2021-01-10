@@ -77,15 +77,31 @@ class Parser {
 	// Stored soonest-last for performance
 	private eventDispatchQueue: Event[] = []
 
-	get currentTimestamp() {
-		const start = this.eventTimeOffset
+	/** Get the unix epoch timestamp of the current state of the parser. */
+	get currentEpochTimestamp() {
+		const start = this.pull.timestamp
 		const end = start + this.pull.duration
-		const timestamp = Math.max(this.dispatcher.timestamp, this.legacyDispatcher.timestamp)
+
+		// Adjust for fflog's bullshit
+		const legacyTimestamp = this.legacyDispatcher.timestamp + this.report.start
+
+		const timestamp = Math.max(this.dispatcher.timestamp, legacyTimestamp)
 		return Math.min(end, Math.max(start, timestamp))
 	}
 
+	/**
+	 * Get the current timestamp as per the legacy event system. Values are
+	 * zeroed to the start of the legacy FF Logs report.
+	 *
+	 * If writing an Analyser for the new event system, you should use
+	 * currentEpochTimestamp.
+	 */
+	get currentTimestamp() {
+		return this.currentEpochTimestamp - this.report.start
+	}
+
 	get currentDuration() {
-		return this.currentTimestamp - this.eventTimeOffset
+		return this.currentEpochTimestamp - this.pull.timestamp
 	}
 
 	// TODO: REMOVE
@@ -262,7 +278,9 @@ class Parser {
 
 		while (!xivaResult.done || !legacyResult.done) {
 			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
-			const legacyTimestamp = legacyResult.done ? Infinity : legacyResult.value.timestamp
+			const legacyTimestamp = legacyResult.done
+				? Infinity
+				: legacyResult.value.timestamp + this.report.start
 
 			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
 			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
@@ -365,7 +383,7 @@ class Parser {
 
 	queueEvent(event: Event) {
 		// If the event is in the past, noop.
-		if (event.timestamp < this.currentTimestamp) {
+		if (event.timestamp < this.currentEpochTimestamp) {
 			if (process.env.NODE_ENV === 'development') {
 				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
 			}

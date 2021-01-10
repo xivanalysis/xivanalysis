@@ -33,6 +33,11 @@ class BasicAnalyser extends Analyser {
 	static handle = 'basic_analyser'
 }
 
+const REPORT_START_TIME = 10000
+const PULL_START_TIME_OFFSET = 1000
+const OLD_EVENT_OFFSET = PULL_START_TIME_OFFSET
+const NEW_EVENT_OFFSET = REPORT_START_TIME + PULL_START_TIME_OFFSET
+
 // Bunch of basic testing data
 const friendlyInFight = {
 	id: 1,
@@ -46,14 +51,14 @@ const friendlyNotInFight = {
 }
 const report = {
 	lang: 'en',
-	start: 0,
+	start: REPORT_START_TIME,
 	friendlies: [friendlyInFight, friendlyNotInFight],
 	friendlyPets: [],
 }
 const fight = {
 	id: 1,
-	start_time: 0,
-	end_time: 100,
+	start_time: PULL_START_TIME_OFFSET,
+	end_time: PULL_START_TIME_OFFSET+100,
 }
 const event = {
 	type: '__testLegacy',
@@ -69,7 +74,7 @@ const actor = {
 }
 const pull = {
 	id: '1',
-	timestamp: 0,
+	timestamp: REPORT_START_TIME+PULL_START_TIME_OFFSET,
 	duration: 100,
 	encounter: {
 		name: 'Test encounter',
@@ -78,7 +83,7 @@ const pull = {
 	actors: [actor],
 }
 const newReport = {
-	timestamp: 0,
+	timestamp: REPORT_START_TIME,
 	edition: GameEdition.GLOBAL,
 	name: 'Test report',
 	pulls: [pull],
@@ -244,9 +249,9 @@ describe('Parser', () => {
 
 	it('queues new events for dispatch', async () => {
 		const toQueue = [
-			{timestamp: 50, type: '__queuedEvent'},
-			{timestamp: 70, type: '__queuedEvent'},
-			{timestamp: 0, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+50, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+70, type: '__queuedEvent'},
+			{timestamp: NEW_EVENT_OFFSET+0, type: '__queuedEvent'},
 		]
 		const dispatchedEvents = []
 
@@ -262,9 +267,9 @@ describe('Parser', () => {
 		await parser.configure()
 		parser.parseEvents({
 			events: [
-				{timestamp: 0, type: '__sourceEvent'},
-				{timestamp: 50, type: '__sourceEvent'},
-				{timestamp: 100, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+0, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+50, type: '__sourceEvent'},
+				{timestamp: NEW_EVENT_OFFSET+100, type: '__sourceEvent'},
 			],
 			legacyEvents: [],
 		})
@@ -277,49 +282,49 @@ describe('Parser', () => {
 			'__sourceEvent',
 		])
 		expect(dispatchedEvents.map(({timestamp}) => timestamp))
-			.toEqual([0, 50, 50, 70, 100])
+			.toEqual([0, 50, 50, 70, 100].map(n => OLD_EVENT_OFFSET+n))
 	})
 
 	describe('event migration', () => {
 		[{
 			name: 'equal timestamp',
-			events: [{timestamp: 50, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
 				type: ['init', '__rfEvent', '__lEvent', 'complete'],
-				timestamp: [0, 50, 50, 100],
+				timestamp: [0, 50, 50, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'flow first',
-			events: [{timestamp: -100, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET-100, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
 				type: ['__rfEvent', 'init', '__lEvent', 'complete'],
-				timestamp: [0, 0, 50, 100],
+				timestamp: [0, 0, 50, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'flow last',
-			events: [{timestamp: 200, type: '__rfEvent'}],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+200, type: '__rfEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
 				type: ['init', '__lEvent', 'complete', '__rfEvent'],
-				timestamp: [0, 50, 100, 100],
+				timestamp: [0, 50, 100, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'no flow',
 			events: [],
-			legacyEvents: [{timestamp: 50, type: '__lEvent'}],
+			legacyEvents: [{timestamp: OLD_EVENT_OFFSET+50, type: '__lEvent'}],
 			expected: {
 				type: ['init', '__lEvent', 'complete'],
-				timestamp: [0, 50, 100],
+				timestamp: [0, 50, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}, {
 			name: 'no legacy',
-			events: [{timestamp: 50, type: '__rfEvent'}],
+			events: [{timestamp: NEW_EVENT_OFFSET+50, type: '__rfEvent'}],
 			legacyEvents: [],
 			expected: {
 				type: ['init', '__rfEvent', 'complete'],
-				timestamp: [0, 50, 100],
+				timestamp: [0, 50, 100].map(n => OLD_EVENT_OFFSET+n),
 			},
 		}].forEach(opts => it(`interleaves events: ${opts.name}`, async () => {
 			const dispatchedEvents = []
