@@ -5,6 +5,7 @@ import FeatherGauge from './FeatherGauge'
 import OGCDDowntime from './OGCDDowntime'
 import Procs from './Procs'
 import Technicalities from './Technicalities'
+import Weaving from './Weaving'
 
 export default [
 	Combos,
@@ -14,4 +15,5 @@ export default [
 	FeatherGauge,
 	OGCDDowntime,
 	Technicalities,
+	Weaving,
 ]
