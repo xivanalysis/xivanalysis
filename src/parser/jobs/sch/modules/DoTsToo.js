@@ -76,7 +76,7 @@ export default class DoTsToo extends Module {
 									(event, index, array) => {
 										const timestamp = event.event.timestamp
 										let drift = 0
-										if (index != 0) {
+										if (index !== 0) {
 											const previous = array[index-1].event.timestamp
 											const delta =  timestamp - previous
 											drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
