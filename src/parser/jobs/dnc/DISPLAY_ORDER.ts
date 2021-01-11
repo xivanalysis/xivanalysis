@@ -3,4 +3,5 @@ export default {
 	TECHNICALITIES: 2,
 	ESPRIT: 3,
 	FEATHERS: 4,
+	WEAVING: 5,
 }
