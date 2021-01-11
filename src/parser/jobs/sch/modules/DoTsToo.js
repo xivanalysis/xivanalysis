@@ -13,7 +13,7 @@ export default class DoTsToo extends Module {
 	static dependencies = [
 		'enemies',
 		'entityStatuses',
-		'invuln',
+		'downtime',
 	]
 
 	_lastBioCast = undefined
@@ -59,13 +59,6 @@ export default class DoTsToo extends Module {
 		this._pushApplication(applicationKey, statusId, event)
 	}
 
-	getDotUptimePercent(statusId) {
-		const statusUptime = this.entityStatuses.getStatusUptime(statusId, this.enemies.getEntities())
-		const fightDuration = this.parser.currentDuration - this.invuln.getInvulnerableUptime()
-
-		return (statusUptime / fightDuration) * 100
-	}
-
 	_createTargetStatusTable(target) {
 		return <Table collapsing unstackable style={{border: 'none'}}>
 			<Table.Body>
@@ -87,6 +80,12 @@ export default class DoTsToo extends Module {
 											const previous = array[index-1].event.timestamp
 											const delta =  timestamp - previous
 											drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
+											if (drift > (STATUSES.BIOLYSIS.duration * 1000)) {
+												const windows = this.downtime.getDowntimeWindows(timestamp - (STATUSES.BIOLYSIS.duration * 1000))
+												if (windows.length > 0) {
+													drift = 0
+												}
+											}
 										} else {
 											drift = 0
 										}
