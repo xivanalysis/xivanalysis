@@ -5,7 +5,6 @@ import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import React from 'react'
 import {Accordion, Table} from 'semantic-ui-react'
 
@@ -35,7 +34,7 @@ export default class DoTsToo extends Module {
 			abilityId: [STATUSES.BIOLYSIS.id],
 		}
 		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
-		this.addEventHook('complete', this._onComplete)
+		// this.addEventHook('complete', this._onComplete)
 	}
 
 	_createTargetApplicationList() {
@@ -63,6 +62,7 @@ export default class DoTsToo extends Module {
 		// 	this._lastBioCast = event.ability.guid
 		// 	this._lastMiasmaCast = event.ability.guid
 		// }
+		this._lastBioCast = event.ability.guid
 	}
 
 	_onDotApply(event) {
@@ -72,38 +72,6 @@ export default class DoTsToo extends Module {
 		const applicationKey = `${event.targetID}|${event.targetInstance}`
 		//save the application for later use in the output
 		this._pushApplication(applicationKey, statusId, event)
-	}
-
-	_onComplete() {
-		// Checklist rule for dot uptime
-		let description = <></>
-		if (this.parser.patch.before('5.08')) {
-			description = <Trans id="smn.dots.checklist.description_505">
-				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from your Ruin spells and <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
-			</Trans>
-		} else {
-			description = <Trans id="smn.dots.checklist.description">
-				As a Summoner, DoTs are significant portion of your sustained damage, and are required for optimal damage from <ActionLink {...ACTIONS.FESTER} />, your primary stack spender. Aim to keep them up at all times.
-			</Trans>
-		}
-		this.checklist.add(new Rule({
-			name: <Trans id="smn.dots.checklist.name">Keep your DoTs up</Trans>,
-			description: description,
-			requirements: [
-				new Requirement({
-					name: <Trans id="smn.dots.checklist.requirement.bio-iii.name">
-						<ActionLink {...ACTIONS.BIO_III} /> uptime
-					</Trans>,
-					percent: () => this.getDotUptimePercent(STATUSES.BIO_III.id),
-				}),
-				new Requirement({
-					name: <Trans id="smn.dots.checklist.requirement.miasma-iii.name">
-						<ActionLink {...ACTIONS.MIASMA_III} /> uptime
-					</Trans>,
-					percent: () => this.getDotUptimePercent(STATUSES.MIASMA_III.id),
-				}),
-			],
-		}))
 	}
 
 	getDotUptimePercent(statusId) {
@@ -122,41 +90,35 @@ export default class DoTsToo extends Module {
 							<Table.Header>
 								<Table.Row>
 									<Table.HeaderCell><ActionLink {...ACTIONS.BIOLYSIS} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="smn.dots.source">Drift</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
 								{target[STATUSES.BIOLYSIS.id].map(
-									(event) => {
-										const action = getDataBy(ACTIONS, 'id', event.source)
+									(event, index, array) => {
+										const timestamp = event.event.timestamp
+										let drift = 0
+										if (index != 0) {
+											const previous = array[index-1].event.timestamp
+											const delta =  timestamp - previous
+											drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
+											console.log(this.parser.formatTimestamp(timestamp) + ' - ' + this.parser.formatTimestamp(previous) + ' = ' + this.parser.formatDuration(drift))
+										} else {
+											drift = 0
+										}
+
+										let earlyorlate = ' early'
+										if (drift > 0) {
+											earlyorlate = ' late'
+										}
 										return <Table.Row key={event.event.timestamp}>
-											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
-											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
+											<Table.Cell>{this.parser.formatTimestamp(timestamp)}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}>{this.parser.formatDuration(drift)}{earlyorlate}</Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
 						</Table>
 					</Table.Cell>
-					{/* <Table.Cell style={{padding: '0 0 0 1em', verticalAlign: 'top'}}>
-						<Table collapsing unstackable>
-							<Table.Header>
-								<Table.Row>
-									<Table.HeaderCell><ActionLink {...ACTIONS.BIO_III} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id="smn.dots.source">Source</Trans></Table.HeaderCell>
-								</Table.Row>
-							</Table.Header>
-							<Table.Body>
-								{target[STATUSES.BIO_III.id].map(
-									(event) => {
-										const action = getDataBy(ACTIONS, 'id', event.source)
-										return <Table.Row key={event.event.timestamp}>
-											<Table.Cell>{this.parser.formatTimestamp(event.event.timestamp)}</Table.Cell>
-											<Table.Cell style={{textAlign: 'center'}}><ActionLink showName={false} {...action} /></Table.Cell>
-										</Table.Row>
-									})}
-							</Table.Body>
-						</Table>
-					</Table.Cell> */}
 				</Table.Row>
 			</Table.Body>
 		</Table>
