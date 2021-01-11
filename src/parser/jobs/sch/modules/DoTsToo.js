@@ -9,7 +9,7 @@ import {Accordion, Table} from 'semantic-ui-react'
 
 export default class DoTsToo extends Module {
 	static handle = 'dots'
-	static title = t('smn.dots.title')`DoTs`
+	static title = t('sch.dots.title')`DoTs`
 	static dependencies = [
 		'enemies',
 		'entityStatuses',
@@ -74,8 +74,8 @@ export default class DoTsToo extends Module {
 						<Table collapsing unstackable>
 							<Table.Header>
 								<Table.Row>
-									<Table.HeaderCell><ActionLink {...ACTIONS.BIOLYSIS} /> <Trans id="smn.dots.applied">Applied</Trans></Table.HeaderCell>
-									<Table.HeaderCell><Trans id="smn.dots.source">Drift</Trans></Table.HeaderCell>
+									<Table.HeaderCell><ActionLink {...ACTIONS.BIOLYSIS} /> <Trans id="sch.dots.applied">Applied</Trans></Table.HeaderCell>
+									<Table.HeaderCell><Trans id="sch.dots.source">Drift</Trans></Table.HeaderCell>
 								</Table.Row>
 							</Table.Header>
 							<Table.Body>
