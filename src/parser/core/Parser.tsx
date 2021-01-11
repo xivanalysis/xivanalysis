@@ -4,7 +4,7 @@ import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import {Event} from 'event'
+import {Event, FieldsBase} from 'event'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
 import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
@@ -31,6 +31,12 @@ export interface Result {
 	mode: DISPLAY_MODE
 	order: number
 	markup: React.ReactNode
+}
+
+declare module 'event' {
+	interface EventTypeRepository {
+		complete: FieldsBase,
+	}
 }
 
 export interface InitEvent {
@@ -296,7 +302,6 @@ class Parser {
 	}
 
 	private *iterateXivaEvents(events: Event[]): Iterable<Event> {
-		// TODO: Do we want start/end events as well?
 		const eventIterator = events[Symbol.iterator]()
 
 		// Iterate the primary event source
@@ -318,6 +323,12 @@ class Parser {
 			// Yield the source event and prep for next iteration
 			yield event
 			result = eventIterator.next()
+		}
+
+		// Mark the end of the pull with a completion event
+		yield {
+			type: 'complete',
+			timestamp: this.pull.timestamp + this.pull.duration,
 		}
 	}
 

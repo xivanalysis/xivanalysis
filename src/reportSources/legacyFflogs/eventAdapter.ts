@@ -5,6 +5,12 @@ import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, Death
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
+/*
+NOTES:
+- FFLogs uses an ID offset for statuses. It's currently handled throughout the application - once legacy handling is removed, we can safely contain the offset in the adaption.
+- FFLogs re-attributes limit break results to a special actor, resulting in two actions (one from the original, one from fabricated), then all follow-up data being on the fabricated actor. We should adapt that back to the caster.
+*/
+
 /** Mapping from FFLogs hit types to source-originating modifiers. */
 const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
 	[HitType.MISS]: SourceModifier.MISS,
@@ -310,5 +316,6 @@ const resolveCause = (fflogsAbilityId: number): Cause =>
 		? {type: 'action', action: fflogsAbilityId}
 		: {type: 'status', status: resolveStatusId(fflogsAbilityId)}
 
+// TODO: When removing legacy, resolve status IDs without the offset
 const resolveStatusId = (fflogsStatusId: number) =>
-	fflogsStatusId - STATUS_ID_OFFSET
+	fflogsStatusId
