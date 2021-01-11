@@ -1,7 +1,7 @@
 import Aetherflow from './Aetherflow'
 import ChainStrat from './ChainStrat'
 import DoTs from './DoTs'
-import DoTsToo from './DoTsToo'
+// import DoTsToo from './DoTsToo'
 import FaerieGauge from './FaerieGauge'
 import SchInterrupts from './Interrupts'
 import Overheal from './Overheal'
@@ -23,5 +23,5 @@ export default [
 	Overheal,
 	Recitation,
 	Tincture,
-	DoTsToo,
+	// DoTsToo,
 ]
