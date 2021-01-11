@@ -46,12 +46,12 @@ export default class DoTs extends CoreDoTs {
 			by: 'player',
 			abilityId: ACTIONS.BIOLYSIS.id,
 		}
-		this.addEventHook('cast', castFilter, this._onDotCast)
+		this.addEventHook('cast', castFilter, this._onTrackedDotCast)
 		const statusFilter = {
 			by: 'player',
 			abilityId: [STATUSES.BIOLYSIS.id],
 		}
-		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
+		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onTrackedDotApply)
 	}
 
 	_createTargetApplicationList() {
@@ -66,11 +66,11 @@ export default class DoTs extends CoreDoTs {
 		target[statusId].push({event, source})
 	}
 
-	_onDotCast(event) {
+	_onTrackedDotCast(event) {
 		this._lastBioCast = event.ability.guid
 	}
 
-	_onDotApply(event) {
+	_onTrackedDotApply(event) {
 		const statusId = event.ability.guid
 
 		// Make sure we're tracking for this target
@@ -113,10 +113,14 @@ export default class DoTs extends CoreDoTs {
 										let earlyorlate = ' early'
 										if (drift > 0) {
 											earlyorlate = ' late'
+										} else if (drift === 0) {
+											earlyorlate = 'application'
 										}
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(timestamp)}</Table.Cell>
-											<Table.Cell style={{textAlign: 'center'}}>{this.parser.formatDuration(Math.abs(drift))}{earlyorlate}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}>{
+												drift !== 0 ? this.parser.formatDuration(Math.abs(drift)) : ''
+											}{earlyorlate}</Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
