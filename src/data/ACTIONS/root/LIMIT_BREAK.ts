@@ -129,6 +129,13 @@ export const LIMIT_BREAK = ensureActions({
 		icon,
 	},
 
+	// Ranged LB2
+	DESPERADO: {
+		id: 4239,
+		name: 'Desperado',
+		icon,
+	},
+
 	// BRD LB3
 	SAGITTARIUS_ARROW: {
 		id: 4244,
@@ -147,13 +154,6 @@ export const LIMIT_BREAK = ensureActions({
 	CRIMSON_LOTUS: {
 		id: 17106,
 		name: 'Crimson Lotus',
-		icon,
-	},
-
-	// Ranged LB2
-	DESPERADO: {
-		id: 4239,
-		name: 'Desperado',
 		icon,
 	},
 

@@ -126,7 +126,7 @@ export class Death extends Analyser {
 		})
 		this.parser.fabricateLegacyEvent({
 			type: 'raise',
-			timestamp: event.timestamp,
+			timestamp: this.parser.currentTimestamp,
 			targetID: this.parser.player.id,
 		})
 
