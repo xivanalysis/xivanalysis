@@ -1,7 +1,6 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
@@ -12,7 +11,6 @@ export default class DoTsToo extends Module {
 	static handle = 'dots'
 	static title = t('smn.dots.title')`DoTs`
 	static dependencies = [
-		'checklist',
 		'enemies',
 		'entityStatuses',
 		'invuln',
@@ -34,7 +32,6 @@ export default class DoTsToo extends Module {
 			abilityId: [STATUSES.BIOLYSIS.id],
 		}
 		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onDotApply)
-		// this.addEventHook('complete', this._onComplete)
 	}
 
 	_createTargetApplicationList() {
@@ -45,23 +42,11 @@ export default class DoTsToo extends Module {
 
 	_pushApplication(targetKey, statusId, event) {
 		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
-		// const source = (statusId === STATUSES.BIO_III.id) ? this._lastBioCast : this._lastMiasmaCast
 		const source = this._lastBioCast
 		target[statusId].push({event, source})
 	}
 
 	_onDotCast(event) {
-		// Casts are tracked separately due to the chance for the Miasma status to
-		// not be applied before the Bio cast.  Without separate tracking, you can
-		// end up with "Miasma III DoT applied by Bio III"
-		// if (event.ability.guid === ACTIONS.BIO_III.id) {
-		// 	this._lastBioCast = event.ability.guid
-		// } else if (event.ability.guid === ACTIONS.MIASMA_III.id) {
-		// 	this._lastMiasmaCast = event.ability.guid
-		// } else {
-		// 	this._lastBioCast = event.ability.guid
-		// 	this._lastMiasmaCast = event.ability.guid
-		// }
 		this._lastBioCast = event.ability.guid
 	}
 
@@ -102,7 +87,6 @@ export default class DoTsToo extends Module {
 											const previous = array[index-1].event.timestamp
 											const delta =  timestamp - previous
 											drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
-											console.log(this.parser.formatTimestamp(timestamp) + ' - ' + this.parser.formatTimestamp(previous) + ' = ' + this.parser.formatDuration(drift))
 										} else {
 											drift = 0
 										}
@@ -113,7 +97,7 @@ export default class DoTsToo extends Module {
 										}
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(timestamp)}</Table.Cell>
-											<Table.Cell style={{textAlign: 'center'}}>{this.parser.formatDuration(drift)}{earlyorlate}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}>{this.parser.formatDuration(Math.abs(drift))}{earlyorlate}</Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
