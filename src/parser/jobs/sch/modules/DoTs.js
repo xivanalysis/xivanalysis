@@ -146,7 +146,7 @@ export default class DoTs extends CoreDoTs {
 
 		if (numTargets === 0) { return null }
 
-		if (numTargets > 1) {
+		if (numTargets > 0) {
 			const panels = Object.keys(this._application).map(applicationKey => {
 				const targetId = applicationKey.split('|')[0]
 				const target = this.enemies.getEntity(targetId)
