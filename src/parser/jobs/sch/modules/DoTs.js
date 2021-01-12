@@ -79,6 +79,31 @@ export default class DoTs extends CoreDoTs {
 		this._pushApplication(applicationKey, statusId, event)
 	}
 
+	_formatDriftText(timestamp, previous=0) {
+		let drift = 0
+		let earlyorlate = <></>
+		if (previous !== 0) {
+			const delta = timestamp - previous
+			drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
+			if (drift > (STATUSES.BIOLYSIS.duration * 1000)) {
+				const windows = this.downtime.getDowntimeWindows(timestamp - (STATUSES.BIOLYSIS.duration * 1000))
+				if (windows.length > 0) {
+					drift = 0
+				}
+			}
+			if (drift > 0) {
+				earlyorlate = <Trans id="sch.dots.drift.late">{this.parser.formatDuration(Math.abs(drift))} late</Trans>
+			} else if (drift === 0) {
+				earlyorlate = <Trans id="sch.dots.drift.application">reapplication</Trans>
+			} else {
+				earlyorlate = <Trans id="sch.dots.drift.early">{this.parser.formatDuration(Math.abs(drift))} early</Trans>
+			}
+
+			return earlyorlate
+		}
+		return <Trans id="sch.dots.drift.application">application</Trans>
+	}
+
 	_createTargetStatusTable(target) {
 		return <Table collapsing unstackable style={{border: 'none'}}>
 			<Table.Body>
@@ -95,32 +120,15 @@ export default class DoTs extends CoreDoTs {
 								{target[STATUSES.BIOLYSIS.id].map(
 									(event, index, array) => {
 										const timestamp = event.event.timestamp
-										let drift = 0
+										let drift = <></>
 										if (index !== 0) {
-											const previous = array[index-1].event.timestamp
-											const delta =  timestamp - previous
-											drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
-											if (drift > (STATUSES.BIOLYSIS.duration * 1000)) {
-												const windows = this.downtime.getDowntimeWindows(timestamp - (STATUSES.BIOLYSIS.duration * 1000))
-												if (windows.length > 0) {
-													drift = 0
-												}
-											}
+											drift = this._formatDriftText(timestamp, array[index-1].event.timestamp)
 										} else {
-											drift = 0
-										}
-
-										let earlyorlate = ' early'
-										if (drift > 0) {
-											earlyorlate = ' late'
-										} else if (drift === 0) {
-											earlyorlate = 'application'
+											drift = this._formatDriftText(timestamp)
 										}
 										return <Table.Row key={event.event.timestamp}>
 											<Table.Cell>{this.parser.formatTimestamp(timestamp)}</Table.Cell>
-											<Table.Cell style={{textAlign: 'center'}}>{
-												drift !== 0 ? this.parser.formatDuration(Math.abs(drift)) : ''
-											}{earlyorlate}</Table.Cell>
+											<Table.Cell style={{textAlign: 'center'}}>{drift}</Table.Cell>
 										</Table.Row>
 									})}
 							</Table.Body>
