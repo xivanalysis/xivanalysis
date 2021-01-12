@@ -81,7 +81,8 @@ export default class DoTs extends CoreDoTs {
 
 	_formatDriftText(timestamp, previous=0) {
 		let drift = 0
-		let earlyorlate = <></>
+		const lateAllow = 1000
+		const earlyAllow = -2500
 		if (previous !== 0) {
 			const delta = timestamp - previous
 			drift = delta - (STATUSES.BIOLYSIS.duration * 1000)
@@ -91,17 +92,17 @@ export default class DoTs extends CoreDoTs {
 					drift = 0
 				}
 			}
-			if (drift > 0) {
-				earlyorlate = <Trans id="sch.dots.drift.late">{this.parser.formatDuration(Math.abs(drift))} late</Trans>
-			} else if (drift === 0) {
-				earlyorlate = <Trans id="sch.dots.drift.application">reapplication</Trans>
-			} else {
-				earlyorlate = <Trans id="sch.dots.drift.early">{this.parser.formatDuration(Math.abs(drift))} early</Trans>
+			if (drift === 0) {
+				return <Trans id="sch.dots.drift.application">reapplication</Trans>
 			}
-
-			return earlyorlate
+			if (drift > lateAllow) {
+				return <Trans id="sch.dots.drift.late">{this.parser.formatDuration(Math.abs(drift))} late</Trans>
+			}
+			if (drift < earlyAllow) {
+				return <Trans id="sch.dots.drift.early">{this.parser.formatDuration(Math.abs(drift))} early</Trans>
+			}
 		}
-		return <Trans id="sch.dots.drift.application">application</Trans>
+		return <Trans id="sch.dots.drift.application">normal application</Trans>
 	}
 
 	_createTargetStatusTable(target) {
