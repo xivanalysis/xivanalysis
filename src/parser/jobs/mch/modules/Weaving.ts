@@ -1,17 +1,24 @@
-import ACTIONS from 'data/ACTIONS'
+import {ActionRoot} from 'data/ACTIONS/root'
 import {CastEvent} from 'fflogs'
 import CoreWeaving, {WeaveInfo} from 'parser/core/modules/Weaving'
 
-const HYPERCHARGE_ACTION_IDS = [
-	ACTIONS.AUTO_CROSSBOW.id,
-	ACTIONS.HEAT_BLAST.id,
+const HYPERCHARGE_ACTION_IDS: Array<keyof ActionRoot> = [
+	'AUTO_CROSSBOW',
+	'HEAT_BLAST',
 ]
 
 export default class Weaving extends CoreWeaving {
+	private HYPERCHARGE_ACTION_IDS: number[] = []
+
+	protected init() {
+		super.init()
+		this.HYPERCHARGE_ACTION_IDS = HYPERCHARGE_ACTION_IDS.map(actionKey => this.data.actions[actionKey].id)
+	}
+
 	isBadWeave(weave: WeaveInfo) {
 		const leadingGcd = weave.leadingGcdEvent as CastEvent
 
-		if (leadingGcd && leadingGcd.ability && HYPERCHARGE_ACTION_IDS.includes(leadingGcd.ability.guid)) {
+		if (leadingGcd && leadingGcd.ability && this.HYPERCHARGE_ACTION_IDS.includes(leadingGcd.ability.guid)) {
 			// Only permit single weaves after heat blast / ACB
 			return weave.weaves.length > 1
 		}
