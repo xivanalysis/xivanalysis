@@ -3,6 +3,14 @@ import * as TB from 'ts-toolbelt'
 
 const proxyInner = (() => { /* unused */ }) as object
 
+const customiser: _.isMatchWithCustomizer = (objValue, filterValue) => {
+	// TODO: This effectively means we can't match against a function, but I'm not sure
+	// that's really a _problem_. If it _is_, can mark it with a unique symbol or something.
+	if (typeof filterValue === 'function') {
+		return filterValue(objValue)
+	}
+}
+
 // Actual filter logic
 const filterInternal = <Base, Current extends Partial<Base>>(current: Current) =>
 	new Proxy(proxyInner, {
@@ -14,7 +22,7 @@ const filterInternal = <Base, Current extends Partial<Base>>(current: Current) =
 
 		// Calling the filter directly execute the filter on the value passed in
 		// the first argument. The exposed return type is a predicate.
-		apply: (target, thisArg, [toCheck]) => _.isMatch(toCheck, current),
+		apply: (target, thisArg, [toCheck]) => _.isMatchWith(toCheck, current, customiser),
 	}) as Filter<Base, Current>
 
 /** Create a filter builder for the shape of Base. */
@@ -67,6 +75,10 @@ type ResolveValue<Value, Shape, Key extends keyof Shape> =
 		: SelectMatchingBases<Shape[Key], Value>
 	: never
 
+// Matchers are predicate functions
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type Matcher<Type> = (input: any) => input is Type
+
 // Build a filter function for Key in Base, given constraints in Current
 type FilterFunction<
 	Base,
@@ -80,7 +92,7 @@ type FilterFunction<
 		WithKey extends HasKey<TB.Union.Select<Required<Base>, Current>, Key>,
 		Value extends WithKey[Key]
 	>(
-		_value: Value
+		_value: Value | Matcher<Value>
 	) => (
 		Filter<Base, TB.Any.Compute<
 			& Current
