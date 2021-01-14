@@ -1,4 +1,6 @@
-import {filter} from '../filter'
+import {filter, oneOf} from '../filter'
+
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 type TestShape = typeof testShape
 const testShape = {
@@ -43,5 +45,14 @@ describe('filter', () => {
 		expect(called).toBeFalse()
 		expect(testFilter(testShape)).toBeTrue()
 		expect(called).toBeTrue()
+	})
+})
+
+describe('matchers', () => {
+	test('oneOf', () => {
+		const matcher = oneOf(1, 2)
+		expect(matcher(1)).toBeTrue()
+		expect(matcher(2)).toBeTrue()
+		expect(matcher(3)).toBeFalse()
 	})
 })

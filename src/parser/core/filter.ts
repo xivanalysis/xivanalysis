@@ -1,6 +1,10 @@
 import _ from 'lodash'
 import * as TB from 'ts-toolbelt'
 
+// -----
+// #region Core filter logic
+// ----
+
 const proxyInner = (() => { /* unused */ }) as object
 
 const customiser: _.isMatchWithCustomizer = (objValue, filterValue) => {
@@ -29,6 +33,19 @@ const filterInternal = <Base, Current extends Partial<Base>>(current: Current) =
 // This is just a pass-through to fitlerInternal for type wrangling purposes.
 export const filter = <Base>() => filterInternal<Base, {}>({})
 
+// -----
+// #endregion
+// #region Matchers
+// -----
+
+// Extending primitive so TS narrows the type as far as it can
+export const oneOf = <T extends TB.Misc.Primitive>(...values: T[]): Matcher<T> =>
+	(objValue): objValue is T => values.includes(objValue)
+
+// -----
+// #endregion
+// #region Filter types
+// -----
 /*
 -------------------------------- W A R N I N G --------------------------------
 While I've tried to document it as best I can, the "code" below is some pretty
@@ -114,3 +131,7 @@ export type Filter<Base, Current extends Partial<Base> = {}> =
 	}
 	// Call signature for the filter
 	& {(value: Base): value is TB.Any.Compute<TB.Union.Select<Required<Base>, Current>>}
+
+// -----
+// #endregion
+// -----
