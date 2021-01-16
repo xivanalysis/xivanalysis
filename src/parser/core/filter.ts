@@ -70,26 +70,10 @@ type HasKey<Union, Key extends DistributedKeyof<Union>> =
 			: never
 		: never
 
-// For union BaseValues, select members which Value extends
-type SelectMatchingBases<BaseValues, Value> =
-	BaseValues extends unknown
-		? Value extends BaseValues
-			? BaseValues
-			: never
-		: never
-
 // Resolve Value to the loosest type matching the type of each Shape at Key
-// The actual logic of this resolution is primarily encapsulated in SelectMatchingBases,
-// This is effectively a wrapper to handle the special case of boolean widening
 type ResolveValue<Value, Shape, Key extends keyof Shape> =
-	Shape extends unknown ?
-		// If boolean extends the target, then the target contains at least a full
-		// boolean union. If it does, and Value is at least partially boolean, widen
-		// to the full type.
-		boolean extends Shape[Key] ? Value extends boolean ? boolean
-		// Otherwise, fall back to the non-special cased check
-		: SelectMatchingBases<Shape[Key], Value>
-		: SelectMatchingBases<Shape[Key], Value>
+	Shape extends unknown
+	? Value extends Shape[Key] ? Shape[Key] : never
 	: never
 
 // Matchers are predicate functions
