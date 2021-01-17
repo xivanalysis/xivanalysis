@@ -15,6 +15,13 @@ export const MCH = ensureStatuses({
 		duration: 10,
 	},
 
+	WILDFIRE_SELF: {
+		id: 1946,
+		name: 'Wildfire',
+		icon: 'https://xivapi.com/i/013000/013019.png',
+		duration: 10,
+	},
+
 	FLAMETHROWER: {
 		id: 1205,
 		name: 'Flamethrower',
