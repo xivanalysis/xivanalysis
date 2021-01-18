@@ -102,15 +102,15 @@ export abstract class BuffWindowModule extends Module {
 	 */
 	protected requiredGCDs?: BuffWindowRequiredGCDs
 	/**
-	 * Optionally, you can also specify additional cooldowns to track usage of, indicating the number of expected usages per window.
-	 * - trackedCooldowns will require a MINIMUM of trackedCooldown.expectedPerWindow uses of the specified action in each window
+	 * Optionally, you can also specify additional actions to track usage of, indicating the number of expected usages per window.
+	 * - trackedActions will require a MINIMUM of trackedAction.expectedPerWindow uses of the specified action in each window
 	 *     and will provide data in the RotationTable about the number used as well as a suggestion based on missed uses
 	 */
 	protected trackedActions?: BuffWindowTrackedActions
 	/**
-	 * Optionally, you can also specify additional cooldowns to track usage of, indicating the number of expected usages per window.
-	 *  - trackedBadCooldowns will require NO MORE THAN trackedBadCooldown.expectedPerWindow uses of the specified action in each window
-	 *     (usually, this number should be 0), and will provide a suggestion if the BadCooldown is being used more than the expected threshold
+	 * Optionally, you can also specify additional actions to track usage of, indicating the number of expected usages per window.
+	 *  - trackedBadActions will require NO MORE THAN trackedBadAction.expectedPerWindow uses of the specified action in each window
+	 *     (usually, this number should be 0), and will provide a suggestion if the BadAction is being used more than the expected threshold
 	 */
 	protected trackedBadActions?: BuffWindowTrackedActions
 	/**
