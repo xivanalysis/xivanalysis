@@ -59,6 +59,7 @@ export class Death extends Analyser {
 	}
 
 	private currentDeathTimestamp?: Event['timestamp']
+	private currentTranscendentTimestamp?: Event['timestamp']
 	private count = 0
 	private _deadTime = 0
 
@@ -75,14 +76,25 @@ export class Death extends Analyser {
 			type: 'statusApply',
 			status: this.data.statuses.TRANSCENDENT.id,
 			target: this.parser.actor.id,
-		}, this.onRaise)
+		}, this.onTranscendentApply)
+
+		// Any possible death events before transcendent falls off are flakes
+		this.addEventHook({
+			type: 'statusRemove',
+			status: this.data.statuses.TRANSCENDENT.id,
+			target: this.parser.actor.id,
+		}, this.onTranscendentRemove)
 
 		this.addEventHook('complete', this.onComplete)
 	}
 
 	private onDeath(event: Events['actorUpdate']) {
-		// If we already have a death being tracked, likely duplicate info, noop
-		if (this.currentDeathTimestamp != null) { return }
+		// If we already have a death being tracked, or the player is still
+		// transcendent, it's likely duplicate info, noop
+		if (
+			this.currentDeathTimestamp != null
+			|| this.currentTranscendentTimestamp != null
+		) { return }
 
 		const counted = this.shouldCountDeath(event)
 
@@ -109,6 +121,15 @@ export class Death extends Analyser {
 	 */
 	protected shouldCountDeath(_event: Events['actorUpdate']) {
 		return true
+	}
+
+	private onTranscendentApply(event: Events['statusApply']) {
+		this.currentTranscendentTimestamp = event.timestamp
+		this.onRaise(event)
+	}
+
+	private onTranscendentRemove(_event: Events['statusRemove']) {
+		this.currentTranscendentTimestamp = undefined
 	}
 
 	private onRaise(event: Event) {
