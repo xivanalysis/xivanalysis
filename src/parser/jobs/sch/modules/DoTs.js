@@ -54,14 +54,8 @@ export default class DoTs extends CoreDoTs {
 		this.addEventHook(['applydebuff', 'refreshdebuff'], statusFilter, this._onTrackedDotApply)
 	}
 
-	_createTargetApplicationList() {
-		return {
-			[STATUSES.BIOLYSIS.id]: [],
-		}
-	}
-
 	_pushApplication(targetKey, statusId, event) {
-		const target = this._application[targetKey] = this._application[targetKey] || this._createTargetApplicationList()
+		const target = this._application[targetKey] = this._application[targetKey] || {[STATUSES.BIOLYSIS.id]: []}
 		const source = this._lastBioCast
 		target[statusId].push({event, source})
 	}
@@ -93,7 +87,7 @@ export default class DoTs extends CoreDoTs {
 				}
 			}
 			if (drift === 0) {
-				return <Trans id="sch.dots.drift.application">reapplication</Trans>
+				return <Trans id="sch.dots.drift.reapplication">reapplication</Trans>
 			}
 			if (drift > lateAllow) {
 				return <Trans id="sch.dots.drift.late">{this.parser.formatDuration(Math.abs(drift))} late</Trans>
