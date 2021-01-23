@@ -30,8 +30,8 @@ const EXTRA_AETHERFLOWS = 3
 
 const AETHERFLOW_COOLDOWN = 60000
 
-// Flow needs to be burnt before first use - estimate at 10s for now
-const FIRST_FLOW_TIMESTAMP = 10000
+// Aetherflow should typically be used immediately at the start of fights
+const FIRST_FLOW_TIMESTAMP = 2000
 
 export default class Aetherflow extends Module {
 	static displayOrder = DISPLAY_ORDER.AETHERFLOW
