@@ -45,13 +45,15 @@ export class BuffWindowState {
 	}
 
 	getTrackedActionCount(action: BuffWindowTrackedAction): number {
-		if (!action.status) {
-			return this.getActionCountByIds([action.action.id])
-		} else {
+		if (action.status) {
+			const status = action.status as Status
+
 			return this.expiredStatuses
-				.filter(e => e.ability.guid === action.status!.id)
+				.filter(e => e.ability.guid === status.id)
 				.length
 		}
+
+		return this.getActionCountByIds([action.action.id])
 	}
 }
 
