@@ -77,23 +77,22 @@ export default class Aetherflow extends Module {
 	}
 
 	_onCast(event) {
-		const abilityId = event.ability.guid
-
 		// don't include aetherflow events that occur before or at
 		// the start of the fight
-		if (event.timestamp > this.parser.fight.start_time) {
-			if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
-			// should be the standard case
-				if (!this._recitationActive) {
-					this._updateAetherflowUses(event.timestamp, abilityId)
-				} else if (!RECITATION_ACTIONS.includes(abilityId)) {
-					this._updateAetherflowUses(event.timestamp, abilityId)
-				}
-			}
+		if (event.timestamp <= this.parser.fight.start_time) {
+			return
+		}
+		const abilityId = event.ability.guid
 
-			if (abilityId === ACTIONS.DISSIPATION.id) {
-				this._extraAetherflows += EXTRA_AETHERFLOWS
+		if (AETHERFLOW_CD_ACTIONS.includes(abilityId)) {
+			// should be the standard case
+			if (!this._recitationActive || !RECITATION_ACTIONS.includes(abilityId))  {
+				this._updateAetherflowUses(event.timestamp, abilityId)
 			}
+		}
+
+		if (abilityId === ACTIONS.DISSIPATION.id) {
+			this._extraAetherflows += EXTRA_AETHERFLOWS
 		}
 	}
 
