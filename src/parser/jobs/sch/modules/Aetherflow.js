@@ -191,7 +191,7 @@ export default class Aetherflow extends Module {
 
 						let wasted = 0
 						// if either aetherflow or dissipation then check whether the previous aetherflow usages where used
-						if (id.includes(ACTIONS.AETHERFLOW.id || id.includes(ACTIONS.DISSIPATION.id))) {
+						if (id.includes(ACTIONS.AETHERFLOW.id) || id.includes(ACTIONS.DISSIPATION.id)) {
 							wasted = EXTRA_AETHERFLOWS - debit || 0
 							totalWasted += wasted
 						}
