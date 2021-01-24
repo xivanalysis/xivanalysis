@@ -46,8 +46,12 @@ export class BuffWindowState {
 
 	getTrackedActionCount(action: BuffWindowTrackedAction): number {
 		if (action.status) {
+			const gcdTimestamps = this.rotation
+				.filter(e => this.data.getAction(e.ability.guid)?.onGcd)
+				.map(e => e.timestamp)
+
 			return this.expiredStatuses
-				.filter(e => e.ability.guid === action.status?.id)
+				.filter(e => e.ability.guid === action.status?.id && gcdTimestamps.includes(e.timestamp))
 				.length
 		}
 
@@ -81,6 +85,10 @@ interface BuffWindowTrackedActions {
 
 export interface BuffWindowTrackedAction {
 	action: Action
+	/**
+	 * Implementing modules can optionally specify a Status if the trackedAction is a weaponskill modifier
+	 * (e.g. Barrage, Life Surge, Reassemble)
+	 */
 	status?: Status
 	expectedPerWindow: number
 }
