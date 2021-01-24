@@ -159,6 +159,17 @@ export default class Aetherflow extends Module {
 						return [...prev, curr]
 					}, [])
 					.map(({timestamp, debit = 0, id}, index, all) => {
+						if (!Array.isArray(timestamp)) {
+							// I mean, they should be doing more than one AF cast per stack
+							// but who am I to judge?
+							timestamp = [timestamp]
+						}
+
+						// don't include or output events that occured at or before the start of the fight
+						if (timestamp[0] <= this.parser.fight.start_time) {
+							return
+						}
+
 						let downtime = 0
 						let drift = 0
 						if (id.includes(ACTIONS.AETHERFLOW.id)) {
@@ -194,12 +205,6 @@ export default class Aetherflow extends Module {
 						if (id.includes(ACTIONS.AETHERFLOW.id) || id.includes(ACTIONS.DISSIPATION.id)) {
 							wasted = EXTRA_AETHERFLOWS - debit || 0
 							totalWasted += wasted
-						}
-
-						if (!Array.isArray(timestamp)) {
-							// I mean, they should be doing more than one AF cast per stack
-							// but who am I to judge?
-							timestamp = [timestamp]
 						}
 
 						return <Table.Row key={timestamp}>
