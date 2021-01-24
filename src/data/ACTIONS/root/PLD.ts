@@ -58,8 +58,10 @@ export const PLD = ensureActions({
 		name: 'Total Eclipse',
 		icon: 'https://xivapi.com/i/002000/002511.png',
 		onGcd: true,
-		breaksCombo: true,
 		potency: 110,
+		combo: {
+			start: true,
+		},
 	},
 	PROMINENCE: {
 		id: 16457,
