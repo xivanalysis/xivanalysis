@@ -1,9 +1,10 @@
 import {Action} from 'data/ACTIONS'
 import {Status} from 'data/STATUSES'
-import {Events} from 'event'
+import {Event, Events} from 'event'
 import _ from 'lodash'
 import {Analyser} from 'parser/core/Analyser'
 import {Data} from 'parser/core/modules/Data'
+import {filter, oneOf} from '../filter'
 import {dependency} from '../Injectable'
 import Cooldowns from './Cooldowns'
 import GlobalCooldown from './GlobalCooldown'
@@ -36,10 +37,10 @@ export default class Statuses extends Analyser {
 		const pets = this.parser.pull.actors.filter(actor => actor.owner === this.parser.actor)
 		const ids = [this.parser.actor.id, ...pets.map(pet => pet.id)]
 
-		ids.forEach(id => {
-			this.addEventHook({type: 'statusApply', source: id}, this.onApply)
-			this.addEventHook({type: 'statusRemove', source: id}, this.onRemove)
-		})
+		const base = filter<Event>().source(oneOf(...ids))
+
+		this.addEventHook(base.type('statusApply'), this.onApply)
+		this.addEventHook(base.type('statusRemove'), this.onRemove)
 		this.addEventHook('complete', this.onComplete)
 
 		// Map statuses to actions
