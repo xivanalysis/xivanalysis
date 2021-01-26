@@ -1,19 +1,16 @@
 import {Plural, Trans} from '@lingui/react'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
-
 import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import Downtime from 'parser/core/modules/Downtime'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
-const FORM_TIMEOUT_MILLIS_200 = 10000
-const FORM_TIMEOUT_MILLIS_505 = 15000
+const FORM_TIMEOUT_MILLIS = 15000
 
 export const FORMS = [
 	STATUSES.OPO_OPO_FORM.id,
@@ -49,7 +46,7 @@ export default class Forms extends Module {
 		this.addEventHook('applybuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addEventHook('refreshbuff', {to: 'player', abilityId: FORMS}, this.onGain)
 		this.addEventHook('removebuff', {to: 'player', abilityId: FORMS}, this.onRemove)
-		this.addEventHook('removebuff', {to: 'player', abilityId: STATUSES.PERFECT_BALANCE.id}, this.onPerfectOut)
+		this.addEventHook('removebuff', {to: 'player', abilityId: this.data.statuses.PERFECT_BALANCE.id}, this.onPerfectOut)
 		this.addEventHook('complete', this.onComplete)
 	}
 
@@ -60,10 +57,6 @@ export default class Forms extends Module {
 			return
 		}
 
-		const FORM_TIMEOUT_MILLIS = this.parser.patch.before('5.05')
-			? FORM_TIMEOUT_MILLIS_200
-			: FORM_TIMEOUT_MILLIS_505
-
 		if (action.onGcd) {
 			// Check the current form and stacks, or zero for no form
 			const currentForm = FORMS.find(form => this.combatants.selected.hasStatus(form)) || 0
@@ -71,7 +64,7 @@ export default class Forms extends Module {
 				? this.downtime.getDowntime(this.lastFormChanged, event.timestamp)
 				: 0
 
-			if (action.id === ACTIONS.FORM_SHIFT.id) {
+			if (action.id === this.data.actions.FORM_SHIFT.id) {
 				// Only ignore Form Shift if we're in downtime
 				if (untargetable === 0) {
 					this.skippedForms++
@@ -80,17 +73,20 @@ export default class Forms extends Module {
 				return
 			}
 
-			// If we have PB, we can just ignore forms
-			if (this.combatants.selected.hasStatus(STATUSES.PERFECT_BALANCE.id)) { return }
+			// If we have PB/FS, we can just ignore forms
+			if (
+				this.combatants.selected.hasStatus(this.data.statuses.PERFECT_BALANCE.id) ||
+				this.combatants.selected.hasStatus(this.data.statuses.FORMLESS_FIST.id)
+			) { return }
 
 			// Handle relevant actions per form
 			switch (currentForm) {
-			case STATUSES.OPO_OPO_FORM.id:
+			case this.data.statuses.OPO_OPO_FORM.id:
 				break
 
 			// Using Opo-Opo skills resets form
-			case STATUSES.RAPTOR_FORM.id:
-			case STATUSES.COEURL_FORM.id:
+			case this.data.statuses.RAPTOR_FORM.id:
+			case this.data.statuses.COEURL_FORM.id:
 				if (OPO_OPO_SKILLS.includes(action.id)) { this.resetForms++ }
 				break
 
@@ -132,9 +128,9 @@ export default class Forms extends Module {
 	private onComplete(): void {
 		// Using the wrong form
 		this.suggestions.add(new TieredSuggestion({
-			icon: ACTIONS.FORM_SHIFT.icon,
+			icon: this.data.actions.FORM_SHIFT.icon,
 			content: <Trans id="mnk.forms.suggestions.formless.content">
-				Avoid using combo starters outside of <StatusLink {...STATUSES.OPO_OPO_FORM}/> as the form bonus is only activated in the correct form.
+				Avoid using combo starters outside of <StatusLink {...this.data.statuses.OPO_OPO_FORM}/> as the Form bonus is only activated in the correct form.
 			</Trans>,
 			tiers: {
 				1: SEVERITY.MINOR,
@@ -149,10 +145,10 @@ export default class Forms extends Module {
 		// Cancelling forms
 		if (this.resetForms >= 1) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FORM_SHIFT.icon,
+				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.reset.content">
-					Try not to cancel combos by using <ActionLink {...ACTIONS.BOOTSHINE}/>, <ActionLink {...ACTIONS.DRAGON_KICK}/>, or <ActionLink {...ACTIONS.ARM_OF_THE_DESTROYER}/> mid-rotation.
+					Try not to cancel combos by using <ActionLink {...this.data.actions.BOOTSHINE}/>, <ActionLink {...this.data.actions.DRAGON_KICK}/>, or <ActionLink {...this.data.actions.ARM_OF_THE_DESTROYER}/> mid-rotation.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.reset.why">
 					<Plural value={this.resetForms} one="# combo was" other="# combos were" /> reset by an Opo-Opo Form skill.
@@ -163,10 +159,10 @@ export default class Forms extends Module {
 		// Skipping a form
 		if (this.skippedForms >= 1) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FORM_SHIFT.icon,
+				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MEDIUM,
 				content: <Trans id="mnk.forms.suggestions.skipped.content">
-					Avoid skipping Forms outside of downtime. You could be missing important buffs or refreshing <StatusLink {...STATUSES.GREASED_LIGHTNING}/> by skipping.
+					Avoid skipping Forms outside of downtime. A skipped GCD could otherwise be used for damage.
 				</Trans>,
 				why: <Trans id="mnk.forms.suggestions.skipped.why">
 					<Plural value={this.skippedForms} one="# form was" other="# forms were" /> skipped by Form Shift unnecessarily.
@@ -177,7 +173,7 @@ export default class Forms extends Module {
 		// Form timeout
 		if (this.droppedForms >= 1) {
 			this.suggestions.add(new Suggestion({
-				icon: ACTIONS.FORM_SHIFT.icon,
+				icon: this.data.actions.FORM_SHIFT.icon,
 				severity: SEVERITY.MAJOR,
 				content: <Trans id="mnk.forms.suggestions.dropped.content">
 					Avoid dropping Forms. You may need to use a gap closer or stay closer to the enemy to avoid your combo timing out. This usually indicates a bigger problem.

@@ -1,14 +1,12 @@
-import React, {Fragment} from 'react'
-import {Table, Grid} from 'semantic-ui-react'
 import {Trans} from '@lingui/react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
-
+import React, {Fragment} from 'react'
+import {Table, Grid} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 // Actions that reduce Aetherflow's cooldown.

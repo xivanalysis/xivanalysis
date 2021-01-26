@@ -1,20 +1,15 @@
-import React from 'react'
-
-//import CoreCombos from 'parser/core/modules/Combos'
+import {Plural, Trans} from '@lingui/react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
-import STATUSES from 'data/STATUSES'
 import ACTIONS from 'data/ACTIONS'
+import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-//import {matchClosestLower} from 'utilities'
+import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import Rotation from 'components/ui/Rotation'
-import {Plural, Trans} from '@lingui/react'
 import {formatDuration} from 'utilities'
 import {MANA_GAIN, MANA_CAP, MANA_DIFFERENCE_THRESHOLD} from './Gauge'
-
-//const util = require('util')
 
 const FINISHERS = [
 	ACTIONS.VERHOLY,

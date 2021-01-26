@@ -1,23 +1,21 @@
 import {t} from '@lingui/macro'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
-
-import Rule from './Rule'
-import ChecklistComponent from './Component'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
+import ChecklistComponent from './Component'
+import Rule from './Rule'
 
-export default class Checklist extends Module {
+export default class Checklist extends Analyser {
 	static handle = 'checklist'
 	static title = t('core.checklist.title')`Checklist`
 	static displayOrder = DISPLAY_ORDER.CHECKLIST
-	static displayMode = DISPLAY_MODE.FULL
+	static displayMode = DisplayMode.FULL
 
 	_rules = []
 
 	add(rule) {
 		if (!(rule instanceof Rule)) {
-			console.error('TODO: This error message')
-			return
+			throw new Error('Invalid rule provided to checklist.')
 		}
 
 		this._rules.push(rule)

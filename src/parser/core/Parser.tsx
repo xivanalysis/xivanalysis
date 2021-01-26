@@ -4,18 +4,21 @@ import ResultSegment from 'components/LegacyAnalyse/ResultSegment'
 import ErrorMessage from 'components/ui/ErrorMessage'
 import {getReportPatch, languageToEdition} from 'data/PATCHES'
 import {DependencyCascadeError, ModulesNotFoundError} from 'errors'
-import type {Event} from 'legacyEvent'
+import {Event, FieldsBase} from 'event'
 import type {Actor as FflogsActor, Fight, Pet} from 'fflogs'
+import type {Event as LegacyEvent} from 'legacyEvent'
 import React from 'react'
+import {Report, Pull, Actor} from 'report'
 import {Report as LegacyReport} from 'store/report'
 import toposort from 'toposort'
-import {extractErrorContext} from 'utilities'
+import {extractErrorContext, isDefined, formatDuration} from 'utilities'
+import {Analyser} from './Analyser'
 import {Dispatcher} from './Dispatcher'
+import {Injectable} from './Injectable'
+import {LegacyDispatcher} from './LegacyDispatcher'
 import {Meta} from './Meta'
 import Module, {DISPLAY_MODE, MappedDependency} from './Module'
 import {Patch} from './Patch'
-import {formatDuration} from 'utilities'
-import {Report, Pull, Actor} from 'report'
 
 interface Player extends FflogsActor {
 	pets: Pet[]
@@ -26,7 +29,14 @@ export interface Result {
 	handle: string
 	name: string | MessageDescriptor
 	mode: DISPLAY_MODE
+	order: number
 	markup: React.ReactNode
+}
+
+declare module 'event' {
+	interface EventTypeRepository {
+		complete: FieldsBase,
+	}
 }
 
 export interface InitEvent {
@@ -49,6 +59,7 @@ class Parser {
 	// Properties
 	// -----
 	readonly dispatcher: Dispatcher
+	readonly legacyDispatcher: LegacyDispatcher
 
 	readonly report: LegacyReport
 	readonly fight: Fight
@@ -61,23 +72,42 @@ class Parser {
 
 	readonly meta: Meta
 
-	modules: Record<string, Module> = {}
-	_constructors: Record<string, typeof Module> = {}
+	container: Record<string, Injectable> = {}
 
-	moduleOrder: string[] = []
+	private executionOrder: string[] = []
 	_triggerModules: string[] = []
 	_moduleErrors: Record<string, Error/* | {toString(): string } */> = {}
 
-	_fabricationQueue: Event[] = []
+	private legacyFabricationQueue: LegacyEvent[] = []
 
-	get currentTimestamp() {
-		const start = this.eventTimeOffset
+	// Stored soonest-last for performance
+	private eventDispatchQueue: Event[] = []
+
+	/** Get the unix epoch timestamp of the current state of the parser. */
+	get currentEpochTimestamp() {
+		const start = this.pull.timestamp
 		const end = start + this.pull.duration
-		return Math.min(end, Math.max(start, this.dispatcher.timestamp))
+
+		// Adjust for fflog's bullshit
+		const legacyTimestamp = this.legacyDispatcher.timestamp + this.report.start
+
+		const timestamp = Math.max(this.dispatcher.timestamp, legacyTimestamp)
+		return Math.min(end, Math.max(start, timestamp))
+	}
+
+	/**
+	 * Get the current timestamp as per the legacy event system. Values are
+	 * zeroed to the start of the legacy FF Logs report.
+	 *
+	 * If writing an Analyser for the new event system, you should use
+	 * currentEpochTimestamp.
+	 */
+	get currentTimestamp() {
+		return this.currentEpochTimestamp - this.report.start
 	}
 
 	get currentDuration() {
-		return this.currentTimestamp - this.eventTimeOffset
+		return this.currentEpochTimestamp - this.pull.timestamp
 	}
 
 	// TODO: REMOVE
@@ -122,9 +152,11 @@ class Parser {
 		pull: Pull,
 		actor: Actor,
 
-		dispatcher?: Dispatcher,
+		dispatcher?: Dispatcher
+		legacyDispatcher?: LegacyDispatcher,
 	}) {
 		this.dispatcher = opts.dispatcher ?? new Dispatcher()
+		this.legacyDispatcher = opts.legacyDispatcher ?? new LegacyDispatcher()
 
 		this.meta = opts.meta
 		this.report = opts.report
@@ -154,31 +186,38 @@ class Parser {
 	// -----
 
 	async configure() {
-		const ctors = await this.loadModuleConstructors()
+		const constructors = await this.loadModuleConstructors()
 
 		// Build the values we need for the toposort
-		const nodes = Object.keys(ctors)
+		const nodes = Object.keys(constructors)
 		const edges: Array<[string, string]> = []
-		nodes.forEach(mod => ctors[mod].dependencies.forEach(dep => {
+		nodes.forEach(mod => constructors[mod].dependencies.forEach(dep => {
 			edges.push([mod, this.getDepHandle(dep)])
 		}))
 
 		// Sort modules to load dependencies first
 		// Reverse is required to switch it into depencency order instead of sequence
 		// This will naturally throw an error on cyclic deps
-		this.moduleOrder = toposort.array(nodes, edges).reverse()
+		this.executionOrder = toposort.array(nodes, edges).reverse()
 
 		// Initialise the modules
-		this.moduleOrder.forEach(mod => {
-			const ctdMod = new ctors[mod](this)
-			this.modules[mod] = ctdMod
-			ctdMod.doTheMagicInitDance()
+		this.executionOrder.forEach(handle => {
+			const injectable = new constructors[handle](this)
+			this.container[handle] = injectable
+
+			if (injectable instanceof Module) {
+				injectable.doTheMagicInitDance()
+			} else if (injectable instanceof Analyser) {
+				injectable.initialise()
+			} else {
+				throw new Error(`Unhandled injectable type for initialisation: ${handle}`)
+			}
 		})
 	}
 
 	private async loadModuleConstructors() {
 		// If this throws, then there was probably a deploy between page load and this call. Tell them to refresh.
-		let allCtors: ReadonlyArray<typeof Module>
+		let allCtors: ReadonlyArray<typeof Injectable>
 		try {
 			allCtors = await this.meta.getModules()
 		} catch (error) {
@@ -190,12 +229,11 @@ class Parser {
 
 		// Build a final contructor mapping. Modules later in the list with
 		// the same handle with override earlier ones.
-		const ctors: Record<string, typeof Module> = {}
+		const ctors: Record<string, typeof Injectable> = {}
 		allCtors.forEach(ctor => {
 			ctors[ctor.handle] = ctor
 		})
 
-		this._constructors = ctors
 		return ctors
 	}
 
@@ -208,42 +246,108 @@ class Parser {
 	// Event handling
 	// -----
 
-	async normalise(events: Event[]) {
+	async normalise(events: LegacyEvent[]) {
 		// Run normalisers
 		// This intentionally does not have error handling - modules may be relying on normalisers without even realising it. If something goes wrong, it could totally throw off results.
-		for (const mod of this.moduleOrder) {
-			events = await this.modules[mod].normalise(events)
+		for (const handle of this.executionOrder) {
+			const injectable = this.container[handle]
+
+			// TODO: Not a fan of needing to special case every way of normalising -
+			//       resolve this more generically
+			if (injectable instanceof Module) {
+				events = await injectable.normalise(events)
+			} else if (injectable instanceof Analyser) {
+				// No.
+			} else {
+				throw new Error(`Unhandled injectable type for normalisation: ${handle}`)
+			}
 		}
 
 		return events
 	}
 
-	parseEvents(events: Event[]) {
-		// Create a copy of the module order that we'll use while parsing
-		this._triggerModules = this.moduleOrder.slice(0)
+	parseEvents({
+		events,
+		legacyEvents,
+	}: {
+		events: Event[],
+		legacyEvents: LegacyEvent[],
+	}) {
+		// Required for legacy execution.
+		this._triggerModules = this.executionOrder.slice(0)
 
-		// Loop & trigger all the events & fabrications
-		for (const event of this.iterateEvents(events)) {
-			// TODO: Do I need to keep a history?
-			const moduleErrors = this.dispatcher.dispatch(event, this._triggerModules)
+		const xivaIterator = this.iterateXivaEvents(events)[Symbol.iterator]()
+		const legacyIterator = this.iterateLegacyEvents(legacyEvents)[Symbol.iterator]()
 
-			for (const handle in moduleErrors) {
-				if (!moduleErrors.hasOwnProperty(handle)) { continue }
-				const error = moduleErrors[handle]
+		let xivaResult = xivaIterator.next()
+		let legacyResult = legacyIterator.next()
 
-				this.captureError({
-					error,
-					type: 'event',
-					module: handle,
-					event,
-				})
+		while (!xivaResult.done || !legacyResult.done) {
+			const xivaTimestamp = xivaResult.done ? Infinity : xivaResult.value.timestamp
+			const legacyTimestamp = legacyResult.done
+				? Infinity
+				: legacyResult.value.timestamp + this.report.start
 
-				this._setModuleError(handle, error)
+			// Preference xiva events when equal timestamps, as we're doing a trunk-first migration.
+			if (!xivaResult.done && xivaTimestamp <= legacyTimestamp) {
+				this.dispatchXivaEvent(xivaResult.value)
+				xivaResult = xivaIterator.next()
+			} else if (!legacyResult.done && legacyTimestamp < xivaTimestamp) {
+				this.dispatchLegacyEvent(legacyResult.value)
+				legacyResult = legacyIterator.next()
+			} else {
+				throw new Error('Impossible condition in event interleaving.')
 			}
 		}
 	}
 
-	private *iterateEvents(events: Event[]): Generator<Event, void, undefined> {
+	private *iterateXivaEvents(events: Event[]): Iterable<Event> {
+		const eventIterator = events[Symbol.iterator]()
+
+		// Iterate the primary event source
+		let result = eventIterator.next()
+		while (!result.done) {
+			const event = result.value
+
+			// Check for, and yield, any queued events prior to the current timestamp
+			// Using < rather than <= so that queued events execute after source events
+			// of the same timestamp. Seems sane to me, but if it causes issue, change
+			// the below to use <= instead - effectively weaving queue into source.
+			const queue = this.eventDispatchQueue
+			while (queue.length > 0 && queue[queue.length -1].timestamp < event.timestamp) {
+				// Enforced by the while loop.
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+				yield queue.pop()!
+			}
+
+			// Yield the source event and prep for next iteration
+			yield event
+			result = eventIterator.next()
+		}
+
+		// Mark the end of the pull with a completion event
+		yield {
+			type: 'complete',
+			timestamp: this.pull.timestamp + this.pull.duration,
+		}
+	}
+
+	private dispatchXivaEvent(event: Event) {
+		const issues = this.dispatcher.dispatch(event, this._triggerModules)
+
+		for (const {handle, error} of issues) {
+			this.captureError({
+				error,
+				type: 'event',
+				module: handle,
+				event,
+			})
+
+			this._setModuleError(handle, error)
+		}
+	}
+
+	private *iterateLegacyEvents(events: LegacyEvent[]): Iterable<LegacyEvent> {
 		const eventIterator = events[Symbol.iterator]()
 
 		// Start the parse with an 'init' fab
@@ -259,8 +363,8 @@ class Parser {
 			obj = eventIterator.next()
 
 			// Iterate over any fabrications arising from the event and clear the queue
-			yield* this._fabricationQueue
-			this._fabricationQueue = []
+			yield* this.legacyFabricationQueue
+			this.legacyFabricationQueue = []
 		}
 
 		// Finish with 'complete' fab
@@ -270,22 +374,60 @@ class Parser {
 		}
 	}
 
-	fabricateEvent(event: Event) {
-		this._fabricationQueue.push(event)
+	private dispatchLegacyEvent(event: LegacyEvent) {
+		const moduleErrors = this.legacyDispatcher.dispatch(event, this._triggerModules)
+
+		for (const handle in moduleErrors) {
+			if (moduleErrors[handle] == null) { continue }
+			const error = moduleErrors[handle]
+
+			this.captureError({
+				error,
+				type: 'event',
+				module: handle,
+				event,
+			})
+
+			this._setModuleError(handle, error)
+		}
+	}
+
+	queueEvent(event: Event) {
+		// If the event is in the past, noop.
+		if (event.timestamp < this.currentEpochTimestamp) {
+			if (process.env.NODE_ENV === 'development') {
+				console.warn(`Attempted to queue an event in the past. Current timestamp: ${this.currentTimestamp}. Event: ${JSON.stringify(event)}`)
+			}
+			return
+		}
+
+		// TODO: This logic is 1:1 with timestamp hook queue. Abstract?
+		const index = this.eventDispatchQueue.findIndex(
+			queueEvent => queueEvent.timestamp < event.timestamp,
+		)
+		if (index === -1) {
+			this.eventDispatchQueue.push(event)
+		} else {
+			this.eventDispatchQueue.splice(index, 0, event)
+		}
+	}
+
+	fabricateLegacyEvent(event: LegacyEvent) {
+		this.legacyFabricationQueue.push(event)
 	}
 
 	private _setModuleError(mod: string, error: Error) {
 		// Set the error for the current module
 		const moduleIndex = this._triggerModules.indexOf(mod)
-		if (moduleIndex !== -1 ) {
+		if (moduleIndex !== -1) {
 			this._triggerModules = this._triggerModules.slice(0)
 			this._triggerModules.splice(moduleIndex, 1)
 		}
 		this._moduleErrors[mod] = error
 
 		// Cascade via dependencies
-		Object.keys(this._constructors).forEach(key => {
-			const constructor = this._constructors[key]
+		Object.keys(this.container).forEach(key => {
+			const constructor = this.container[key].constructor as typeof Injectable
 			if (constructor.dependencies.some(dep => this.getDepHandle(dep) === mod)) {
 				this._setModuleError(key, new DependencyCascadeError({dependency: mod}))
 			}
@@ -304,28 +446,29 @@ class Parser {
 		mod: string,
 		source: 'event' | 'output',
 		error: Error,
-		event?: Event,
-	): [Record<string, any>, Array<[string, Error]>] {
-		const output: Record<string, any> = {}
+		event?: LegacyEvent,
+	): [Record<string, unknown>, Array<[string, Error]>] {
+		const output: Record<string, unknown> = {}
 		const errors: Array<[string, Error]> = []
 		const visited = new Set<string>()
 
-		const crawler = (m: string) => {
-			visited.add(m)
+		const crawler = (handle: string) => {
+			visited.add(handle)
 
-			const constructor = this._constructors[m]
-			const module = this.modules[m]
+			const injectable = this.container[handle]
+			const constructor = injectable as typeof Injectable
 
-			if (typeof module.getErrorContext === 'function') {
+			// TODO: Should Injectable also contain rudimentary error logic?
+			if (injectable instanceof Module) {
 				try {
-					output[m] = module.getErrorContext(source, error, event)
+					output[handle] = injectable.getErrorContext(source, error, event)
 				} catch (error) {
-					errors.push([m, error])
+					errors.push([handle, error])
 				}
 			}
 
-			if (output[m] === undefined) {
-				output[m] = extractErrorContext(module)
+			if (output[handle] === undefined) {
+				output[handle] = extractErrorContext(injectable)
 			}
 
 			if (constructor && Array.isArray(constructor.dependencies)) {
@@ -348,63 +491,89 @@ class Parser {
 	// -----
 
 	generateResults() {
-		const displayOrder = [...this.moduleOrder]
-		displayOrder.sort((a, b) => {
-			const aConstructor = this.modules[a].constructor as typeof Module
-			const bConstructor = this.modules[b].constructor as typeof Module
-			return aConstructor.displayOrder - bConstructor.displayOrder
-		})
-
-		const results: Result[] = []
-		displayOrder.forEach(mod => {
-			const module = this.modules[mod]
-			const constructor = module.constructor as typeof Module
-			const resultMeta = {
-				name: constructor.title,
-				handle: constructor.handle,
-				mode: constructor.displayMode,
-				i18n_id: constructor.i18n_id,
-			}
+		const results: Result[] = this.executionOrder.map(handle => {
+			const injectable = this.container[handle]
+			const resultMeta = this.getResultMeta(injectable)
 
 			// If there's an error, override output handling to show it
-			if (this._moduleErrors[mod]) {
-				const error = this._moduleErrors[mod]
-				results.push({
+			if (this._moduleErrors[handle]) {
+				const error = this._moduleErrors[handle]
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
-				})
-				return
+				}
 			}
 
 			// Use the ErrorMessage component for errors in the output too (and sentry)
-			/** @type {import('./Module').ModuleOutput|null} */
-			let output = null
+			let output: React.ReactNode = null
 			try {
-				output = module.output()
+				output = this.getOutput(injectable)
 			} catch (error) {
 				this.captureError({
 					error,
 					type: 'output',
-					module: mod,
+					module: handle,
 				})
 
 				// Also add the error to the results to be displayed.
-				results.push({
+				return {
 					...resultMeta,
 					markup: <ErrorMessage error={error} />,
-				})
-				return
+				}
 			}
 
 			if (output) {
-				results.push({
+				return ({
 					...resultMeta,
 					markup: output,
 				})
 			}
-		})
+		}).filter(isDefined)
+
+		results.sort((a, b) => a.order - b.order)
 
 		return results
+	}
+
+	private getResultMeta(injectable: Injectable): Result {
+		if (injectable instanceof Module) {
+			const constructor = injectable.constructor as typeof Module
+			return {
+				name: constructor.title,
+				handle: constructor.handle,
+				mode: constructor.displayMode,
+				order: constructor.displayOrder,
+				i18n_id: constructor.i18n_id,
+				markup: null,
+			}
+		}
+
+		if (injectable instanceof Analyser) {
+			const constructor = injectable.constructor as typeof Analyser
+			return {
+				name: constructor.title,
+				handle: constructor.handle,
+				mode: constructor.displayMode,
+				order: constructor.displayOrder,
+				markup: null,
+			}
+		}
+
+		const constructor = injectable.constructor as typeof Injectable
+		throw new Error(`Unhandled injectable type for result meta: ${constructor.handle}`)
+	}
+
+	private getOutput(injectable: Injectable): React.ReactNode {
+		if (injectable instanceof Module) {
+			return injectable.output()
+		}
+
+		if (injectable instanceof Analyser) {
+			return injectable.output?.()
+		}
+
+		const constructor = injectable.constructor as typeof Injectable
+		throw new Error(`Unhandled injectable type for output: ${constructor.handle}`)
 	}
 
 	// -----
@@ -415,7 +584,7 @@ class Parser {
 		error: Error,
 		type: 'event' | 'output',
 		module: string,
-		event?: Event,
+		event?: Event | LegacyEvent,
 	}) {
 		// Bypass error handling in dev
 		if (process.env.NODE_ENV === 'development') {
@@ -434,7 +603,7 @@ class Parser {
 			module: opts.module,
 		}
 
-		const extra: Record<string, any> = {
+		const extra: Record<string, unknown> = {
 			source: this.newReport.meta.source,
 			pull: this.pull.id,
 			actor: this.actor.id,
@@ -497,8 +666,8 @@ class Parser {
 	 * @param handle - Handle of the module to scroll to
 	 */
 	scrollTo(handle: string) {
-		const module = this.modules[handle]
-		ResultSegment.scrollIntoView((module.constructor as typeof Module).handle)
+		const module = this.container[handle]
+		ResultSegment.scrollIntoView((module.constructor as typeof Injectable).handle)
 	}
 }
 

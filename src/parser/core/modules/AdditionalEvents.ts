@@ -1,6 +1,6 @@
-import Module, {dependency} from 'parser/core/Module'
-import {Event} from 'legacyEvent'
 import {getFflogsEvents} from 'api'
+import {Event} from 'legacyEvent'
+import Module, {dependency} from 'parser/core/Module'
 import {sortEvents} from '../EventSorting'
 
 // Unexported symbols so I can have properties that are inaccessible outside this file
@@ -48,7 +48,7 @@ export class AdditionalEvents extends Module {
 		// Request the new events
 		const filter = `((${registeredQueries.join(') or (')})) and ${playerFilter}`
 		const newEvents = await getFflogsEvents(
-			this.parser.report.code,
+			this.parser.report,
 			this.parser.fight,
 			{filter},
 		)

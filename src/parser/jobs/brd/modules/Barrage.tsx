@@ -1,20 +1,19 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-import {Icon, Table} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {ActionRoot} from 'data/ACTIONS/root'
-import {CastEvent, BuffEvent, DamageEvent} from 'fflogs'
+import {CastEvent, BuffEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, TieredRule, Requirement, TARGET} from 'parser/core/modules/Checklist'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
-import Util from './Util'
-
+import React from 'react'
+import {Icon, Table} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
+import Util from './Util'
 
 const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 	'BURST_SHOT',
@@ -24,7 +23,7 @@ const BARRAGE_GCDS: Array<keyof ActionRoot> = [
 	'STORMBITE',
 ]
 
-const enum SeverityWeights {
+enum SeverityWeights {
 	// a barrage that went unused
 	DROPPED_BUFF = 4,
 
@@ -39,7 +38,7 @@ const enum SeverityWeights {
 }
 
 const SEVERITY_TIERS = {
-	// tslint:disable-next-line: no-magic-numbers
+	// tslint:disable-next-line: @typescript-eslint/no-magic-numbers
 	[90]: TARGET.WARN,
 	[100]: TARGET.SUCCESS,
 }
@@ -204,9 +203,9 @@ export default class Barrage extends Module {
 	private getIcon(failed: boolean): JSX.Element {
 		if (failed) {
 			return <Icon name="remove" className="text-error"/>
-		} else {
-			return <Icon name="checkmark" className="text-success"/>
 		}
+
+		return <Icon name="checkmark" className="text-success"/>
 	}
 
 	output() {
@@ -231,8 +230,7 @@ export default class Barrage extends Module {
 				</Table.Row>
 			</Table.Header>
 			<Table.Body>
-			{
-				this.barrageHistory.map(barrage => {
+				{this.barrageHistory.map(barrage => {
 					return <Table.Row key={barrage.castTimestamp} warning={barrage.info.dropped}>
 						<Table.Cell>{this.util.createTimelineButton(barrage.castTimestamp)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped)}</Table.Cell>
@@ -240,8 +238,7 @@ export default class Barrage extends Module {
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.overwrite)}</Table.Cell>
 						<Table.Cell textAlign="center">{this.getIcon(barrage.info.dropped || barrage.info.unaligned)}</Table.Cell>
 					</Table.Row>
-				})
-			}
+				})}
 			</Table.Body>
 		</Table>
 	}

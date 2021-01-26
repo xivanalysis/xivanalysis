@@ -13,27 +13,27 @@ const DEFAULT_CHART_OPTIONS = {
 }
 const MISSING_COLOUR_FALLBACK = '#888'
 
-interface FixedLengthArray<T extends any, L extends number> extends ReadonlyArray<T> {
+interface FixedLengthArray<T, L extends number> extends ReadonlyArray<T> {
 	0: T
 	length: L
 }
 
-type DataSet<T> = ReadonlyArray<DataPoint<T>>
+export type DataSet<T, L extends number> = Array<DataPoint<T, L>>
 
-interface DataPoint<T> {
+export interface DataPoint<T, L extends number> {
 	value: number
 	color?: string,
-	columns: T
+	columns: FixedLengthArray<T, L>
 }
 
 export class PieChartStatistic<L extends number> extends AbstractStatistic {
 	private readonly headings: FixedLengthArray<React.ReactNode, L>
-	private readonly data: DataSet<FixedLengthArray<React.ReactNode, L>>
+	private readonly data: DataSet<React.ReactNode, L>
 	private readonly options: Chart.ChartOptions
 
 	constructor(opts: {
 		headings: FixedLengthArray<React.ReactNode, L>,
-		data: DataSet<FixedLengthArray<React.ReactNode, L>>,
+		data: DataSet<React.ReactNode, L>,
 		options?: Chart.ChartOptions,
 	} & AbstractStatisticOptions) {
 		super({

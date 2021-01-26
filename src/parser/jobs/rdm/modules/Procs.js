@@ -1,13 +1,13 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {getDataBy} from 'data'
 import {SimpleRow, StatusItem} from 'parser/core/modules/Timeline'
+import React, {Fragment} from 'react'
 
 const SEVERITY_OVERWRITTEN_PROCS = {
 	1: SEVERITY.MINOR,

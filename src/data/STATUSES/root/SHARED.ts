@@ -7,6 +7,7 @@ export const SHARED = ensureStatuses({
 		// System action - red background, gold cross
 		icon: 'https://xivapi.com/i/000000/000026.png',
 	},
+
 	RAISE: {
 		id: 148,
 		name: 'Raise',
@@ -23,6 +24,13 @@ export const SHARED = ensureStatuses({
 		id: 44,
 		name: 'Brink of Death',
 		icon: 'https://xivapi.com/i/015000/015011.png',
+	},
+
+	TRANSCENDENT: {
+		id: 418,
+		name: 'Transcendent',
+		icon: 'https://xivapi.com/i/015000/015273.png',
+		duration: 5,
 	},
 
 	MEDICATED: {

@@ -1,12 +1,12 @@
+import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
+import {ReportLoader} from 'components/ui/SharedLoaders'
+import _ from 'lodash'
+import {observer} from 'mobx-react'
 import React, {useEffect} from 'react'
 import {useRouteMatch, Switch, Route, Redirect, useParams} from 'react-router-dom'
-import {LegacyFflogsReportStore} from './store'
-import {observer} from 'mobx-react'
-import {ReportFlow, buildReportFlowPath} from 'components/ReportFlow'
-import {useLazyRef} from 'utilities/react'
-import {ReportLoader} from 'components/ui/SharedLoaders'
 import {ReportStore} from 'reportSources'
-import _ from 'lodash'
+import {useLazyRef} from 'utilities/react'
+import {LegacyFflogsReportStore} from './store'
 
 interface WithCodeParams {
 	code: string
@@ -55,7 +55,7 @@ const WithReport = observer(function WithCode(
 
 	// Get a stable reference to the store and ensure we've requested a report for the current code
 	const reportStore = useLazyRef(() => new LegacyFflogsReportStore()).current
-	useEffect(() => reportStore.requestReport(code), [code])
+	useEffect(() => reportStore.requestReport(code), [code, reportStore])
 
 	// We can safely assume that a null report means we're loading due to the legacy store semantics.
 	if (reportStore.report == null) {

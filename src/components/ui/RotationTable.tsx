@@ -3,7 +3,7 @@ import Rotation from 'components/ui/Rotation'
 import {Ability} from 'fflogs'
 import React from 'react'
 import {Button, Table} from 'semantic-ui-react'
-import {formatDuration} from 'utilities'
+import {isDefined, formatDuration} from 'utilities'
 
 export interface RotationTarget {
 	/**
@@ -29,16 +29,10 @@ export interface RotationNotes {
 	accessor: string | ((entry: RotationTableEntry) => React.ReactNode)
 }
 
-export interface RotationTargetOutcome {
-	/**
-	 * True if the target was reached
-	 */
-	positive: boolean
-	/**
-	 * True if the target was not reached
-	 */
-	negative: boolean
-}
+/**
+ * Determines how a rotation target gets highlighted (negative = red, positive = green)
+ */
+export enum RotationTargetOutcome { NEGATIVE, NEUTRAL, POSITIVE }
 
 export interface RotationTargetData {
 	/**
@@ -141,33 +135,42 @@ interface RotationTableRowProps {
 
 export class RotationTable extends React.Component<RotationTableProps> {
 	static defaultTargetComparator(actual: number, expected?: number): RotationTargetOutcome {
-		return {
-			positive: expected === undefined ? false : actual >= expected,
-			negative: expected === undefined ? false : actual < expected,
+		if (!isDefined(expected)) {
+			return RotationTargetOutcome.NEUTRAL
 		}
+
+		if (actual >= expected) {
+			return RotationTargetOutcome.POSITIVE
+		}
+
+		return RotationTargetOutcome.NEGATIVE
 	}
 
 	static targetAccessorResolver = (entry: RotationTableEntry, target: RotationTarget): RotationTargetData => {
 		if (typeof target.accessor === 'string' && entry.targetsData != null) {
 			return entry.targetsData[target.accessor]
-		} else if (typeof target.accessor === 'function') {
+		}
+
+		if (typeof target.accessor === 'function') {
 			return target.accessor(entry)
-		} else {
-			return {
-				actual: 0,
-				expected: 0,
-			}
+		}
+
+		return {
+			actual: 0,
+			expected: 0,
 		}
 	}
 
 	static notesAccessorResolver = (entry: RotationTableEntry, note: RotationNotes): React.ReactNode => {
 		if (typeof note.accessor === 'string' && entry.notesMap != null) {
 			return entry.notesMap[note.accessor]
-		} else if (typeof note.accessor === 'function') {
-			return note.accessor(entry)
-		} else {
-			return null
 		}
+
+		if (typeof note.accessor === 'function') {
+			return note.accessor(entry)
+		}
+
+		return null
 	}
 
 	static TargetCell = ({actual, expected, targetComparator}: RotationTargetData) => {
@@ -178,8 +181,8 @@ export class RotationTable extends React.Component<RotationTableProps> {
 
 		return <Table.Cell
 			textAlign="center"
-			positive={targetOutcome.positive}
-			negative={targetOutcome.negative}
+			positive={targetOutcome === RotationTargetOutcome.POSITIVE}
+			negative={targetOutcome === RotationTargetOutcome.NEGATIVE}
 		>
 			{actual}/{expected === undefined ? '-' : expected}
 		</Table.Cell>

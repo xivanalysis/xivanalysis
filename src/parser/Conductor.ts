@@ -1,15 +1,16 @@
 import {getFflogsEvents} from 'api'
 import * as Errors from 'errors'
+import {Event} from 'event'
 import {Actor as FflogsActor, Fight} from 'fflogs'
+import {Report, Pull, Actor} from 'report'
 import {Report as LegacyReport} from 'store/report'
 import {isDefined} from 'utilities'
 import AVAILABLE_MODULES from './AVAILABLE_MODULES'
 import Parser, {Result} from './core/Parser'
-import {Report, Pull, Actor} from 'report'
 
 export class Conductor {
 	private parser?: Parser
-	private resultsCache?: ReadonlyArray<Result>
+	private resultsCache?: readonly Result[]
 
 	private readonly legacyReport: LegacyReport
 	private readonly fight: Fight
@@ -78,7 +79,7 @@ export class Conductor {
 		this.parser = parser
 	}
 
-	async parse() {
+	async parse({reportFlowEvents}: {reportFlowEvents: Event[]}) {
 		if (!this.parser) {
 			throw new Error('Conductor not configured.')
 		}
@@ -88,15 +89,19 @@ export class Conductor {
 
 		// Fetch events
 		const events = await getFflogsEvents(
-			this.legacyReport.code,
+			this.legacyReport,
 			this.fight,
 			{actorid: this.combatant.id},
 		)
 
 		// Normalise & parse
 		// TODO: Batching?
+		// TODO: Normalise report flow?
 		const normalisedEvents = await this.parser.normalise(events)
-		this.parser.parseEvents(normalisedEvents)
+		this.parser.parseEvents({
+			events: reportFlowEvents,
+			legacyEvents: normalisedEvents,
+		})
 	}
 
 	getResults() {

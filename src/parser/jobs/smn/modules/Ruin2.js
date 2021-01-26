@@ -1,12 +1,11 @@
 import {Trans, Plural} from '@lingui/react'
-import React from 'react'
-
+import {ActionLink} from 'components/ui/DbLink'
 import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
-import {ActionLink} from 'components/ui/DbLink'
+import PETS from 'data/PETS'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import PETS from 'data/PETS'
+import React from 'react'
 
 // Severity, in no. casts
 const BAD_CAST_SEVERITY = {

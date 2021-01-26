@@ -1,7 +1,6 @@
 import ACTIONS from 'data/ACTIONS'
 import {CooldownDowntime} from 'parser/core/modules/CooldownDowntime'
 
-
 export default class OGCDDowntime extends CooldownDowntime {
 	trackedCds = [
 		{

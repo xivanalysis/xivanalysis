@@ -1,6 +1,6 @@
-import PrecastAction from '../PrecastAction'
 import {AbilityType, CastEvent, DamageEvent, HitType} from 'fflogs'
 import Parser from 'parser/core/Parser'
+import PrecastAction from '../PrecastAction'
 
 jest.mock('parser/core/Parser')
 const MockedParser = Parser as jest.Mock<Parser>
@@ -10,7 +10,7 @@ const MockedData = jest.fn().mockImplementation(() => ({
 	}),
 }))
 
-// tslint:disable:no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const fightStartTime = 0
 const mockCastEvent = (timestamp: number): CastEvent => ({
@@ -50,9 +50,9 @@ const mockAutoAttackCast = (timestamp: number): CastEvent => {
 	return cast
 }
 const precastSyntheticCast = (timestamp: number): CastEvent => ({
-		...mockDamageEvent(timestamp),
-		type: 'cast',
-		timestamp: fightStartTime,
+	...mockDamageEvent(timestamp),
+	type: 'cast',
+	timestamp: fightStartTime,
 })
 
 describe('The PrecastAction module', () => {
@@ -64,7 +64,7 @@ describe('The PrecastAction module', () => {
 	beforeEach(() => {
 		parser = new MockedParser()
 		Object.defineProperty(parser, 'pull', {value: {timestamp: fightStartTime}})
-		Object.defineProperty(parser, 'modules', {value: {data: MockedData()}})
+		Object.defineProperty(parser, 'container', {value: {data: MockedData()}})
 		Object.defineProperty(parser, 'eventTimeOffset', {value: 0})
 		byPlayer = jest.spyOn(parser, 'byPlayer').mockReturnValue(true)
 

@@ -1,10 +1,12 @@
-import React, {useCallback} from 'react'
 import {Trans} from '@lingui/react'
 import {Message} from 'akkd'
 import classNames from 'classnames'
 import {Analyse as LegacyAnalyse} from 'components/LegacyAnalyse'
+import {AnalysisLoader} from 'components/ui/SharedLoaders'
 import {Event} from 'event'
+import React, {useCallback} from 'react'
 import {useParams} from 'react-router-dom'
+import {Report} from 'report'
 import {ReportStore} from 'reportSources'
 import {Icon} from 'semantic-ui-react'
 import {AnalyseRouteParams} from './ReportFlow'
@@ -58,39 +60,39 @@ export function Analyse({reportStore}: AnalyseProps) {
 		)
 	}
 
-	const legacyReport = report.meta
-
-	return <>
-		<NewEventAdaptionDryRun
+	return (
+		<AnalyseEvents
 			reportStore={reportStore}
-			pullId={pullId}
-			actorId={actorId}
-		/>
-		<LegacyAnalyse
 			report={report}
-			legacyReport={legacyReport}
-			pullId={pullId}
-			actorId={actorId}
 		/>
-	</>
+	)
 }
 
-// DEBUG!
-// This component _intentionally_ does nothing with the retrieved data. We're
-// running this baby in prod to catch potential adaption errors before I try
-// to start wiring them into the parser itself.
-function NewEventAdaptionDryRun({reportStore, pullId, actorId}: {reportStore: ReportStore, pullId: string, actorId: string}) {
-	const [events, setEvents] = React.useState<Event[]>([])
+interface AnalyseEventsProps {
+	reportStore: ReportStore
+	report: Report
+}
+
+function AnalyseEvents({report, reportStore}: AnalyseEventsProps) {
+	const {pullId, actorId} = useParams<AnalyseRouteParams>()
+
+	// We have a definitive report that's ready to go - fetch the events and start the analysis
+	const [events, setEvents] = React.useState<Event[]>()
 	React.useEffect(() => {
 		reportStore.fetchEvents(pullId, actorId).then(setEvents)
-	}, [pullId, actorId])
+	}, [pullId, actorId, reportStore])
 
-	if (events.length > 0) {
-		console.info(`Adaption dry run complete, recieved ${events.length} events.`)
-		if (process.env.NODE_ENV === 'development') {
-			console.info('events:', events)
-		}
+	if (events == null) {
+		return <AnalysisLoader/>
 	}
 
-	return null
+	return (
+		<LegacyAnalyse
+			report={report}
+			legacyReport={report.meta}
+			pullId={pullId}
+			actorId={actorId}
+			reportFlowEvents={events}
+		/>
+	)
 }

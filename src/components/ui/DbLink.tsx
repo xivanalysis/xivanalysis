@@ -8,6 +8,7 @@ import {
 	useGameData,
 } from '@xivanalysis/tooltips'
 import {ITEM_ID_OFFSET} from 'data/ACTIONS'
+import {Language} from 'data/LANGUAGES'
 import {STATUS_ID_OFFSET} from 'data/STATUSES'
 import {useObserver} from 'mobx-react'
 import React, {CSSProperties, memo, ReactNode, useContext, useState} from 'react'
@@ -25,8 +26,15 @@ export interface ProviderProps {
 export function Provider({children}: ProviderProps) {
 	const {i18nStore} = useContext(StoreContext)
 
+	const baseUrl = i18nStore.gameLanguage === Language.CHINESE
+		? 'https://cafemaker.wakingsands.com'
+		: undefined
+
 	return useObserver(() => (
-		<TooltipProvider language={i18nStore.gameLanguage}>
+		<TooltipProvider
+			language={i18nStore.gameLanguage}
+			baseUrl={baseUrl}
+		>
 			{children}
 		</TooltipProvider>
 	))
@@ -42,12 +50,12 @@ export const Tooltip = memo(function Tooltip({
 	showTooltip = true,
 	...labelProps
 }: TooltipProps) {
-	if (id == null) {return null}
+	const [hovering, setHovering] = useState(false)
+
+	if (id == null) { return null }
 
 	const label = <Label sheet={sheet} id={id} {...labelProps}/>
 	if (!showTooltip) { return label }
-
-	const [hovering, setHovering] = useState(false)
 
 	// We're currently using an oooold version of react-popper here (1.3.7), so we're able to re-use the version semantic is pulling in.
 	// TODO: Upgrade to react-popper@2 when semantic is nuked.
@@ -152,7 +160,7 @@ export const StatusLink = (props: TooltipHelperProps) => (
 	<Tooltip
 		{...props}
 		sheet="Status"
-		id={props.id && props.id - STATUS_ID_OFFSET}
+		id={props.id && (props.id > STATUS_ID_OFFSET ? props.id - STATUS_ID_OFFSET : props.id)}
 	/>
 )
 export const ItemLink = (props: TooltipHelperProps) => (

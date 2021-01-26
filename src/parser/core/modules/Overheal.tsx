@@ -1,13 +1,11 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import ACTIONS from 'data/ACTIONS'
-import STATUSES from 'data/STATUSES'
 import {HealEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import {DataSet, PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
+import React from 'react'
 
 interface SeverityTiers {
 	[key: number]: number
@@ -28,9 +26,9 @@ const SUGGESTION_SEVERITY_TIERS: SeverityTiers = {
 }
 
 const CHECKLIST_SEVERITY_TIERS: SeverityTiers = {
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-35]: TARGET.SUCCESS,
-	// tslint:disable-next-line: no-magic-numbers
+	// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 	[100-50]: TARGET.WARN,
 }
 
@@ -59,8 +57,8 @@ export class TrackedOverheal {
 	 * Get current overheal as a percentage
 	 */
 	get percent(): number {
-		if (this.heal > 0) return 100 * (this.overheal) / (this.heal + this.overheal)
-		else return 0
+		if (this.heal > 0) { return 100 * (this.overheal) / (this.heal + this.overheal) }
+		return 0
 	}
 
 	/**
@@ -96,9 +94,8 @@ export class TrackedOverheal {
 	 * @param event - The heal event to track
 	 */
 	pushHeal(event: HealEvent) {
-		const guid = event.ability.guid
-			this.heal += event.amount
-			this.overheal += event.overheal || 0
+		this.heal += event.amount
+		this.overheal += event.overheal || 0
 	}
 }
 
@@ -208,7 +205,7 @@ export class CoreOverheal extends Module {
 	 * false ignores the heal entirely.
 	 * @param event
 	 */
-	protected considerHeal(event: HealEvent, pet: boolean = false): boolean {
+	protected considerHeal(_event: HealEvent, _pet: boolean = false): boolean {
 		return true
 	}
 
@@ -216,7 +213,7 @@ export class CoreOverheal extends Module {
 	 * This method MAY be overridden to provide an alternative checklist description
 	 * @param overheals - an array of all the categories of overheals you're tracking, starting with direct
 	 */
-	protected checklistDescription(overheals: TrackedOverheal[]): JSX.Element {
+	protected checklistDescription(_overheals: TrackedOverheal[]): JSX.Element {
 		return <Trans id="core.overheal.rule.description">Avoid healing your party for more than is needed. Cut back on unnecessary heals and coordinate with your co-healer to plan resources efficiently.</Trans>
 	}
 
@@ -225,7 +222,7 @@ export class CoreOverheal extends Module {
 	}
 
 	private onHeal(event: HealEvent, petHeal: boolean = false) {
-		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) return
+		if (this.isRegeneration(event) || ! this.considerHeal(event, petHeal)) { return }
 
 		const guid = event.ability.guid
 		for (const trackedHeal of this.trackedOverheals) {
@@ -261,7 +258,8 @@ export class CoreOverheal extends Module {
 
 		if (this.displayPieChart) {
 			const directPercentage = this.percentageOf(this.direct.overheal, overhealtotal)
-			const data: any = [{
+			// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+			const data: DataSet<React.ReactNode, 3> = [{
 				value: directPercentage,
 				color: this.direct.color,
 				columns: [
@@ -292,11 +290,10 @@ export class CoreOverheal extends Module {
 					'% of total overheal',
 					'Overheal % per type',
 				],
-				data,
+				data: data,
 				width: 3, // chart's wide, yo
 			}))
 		}
-
 
 		if (this.displayChecklist) {
 			const requirements: InvertedRequirement[] = []

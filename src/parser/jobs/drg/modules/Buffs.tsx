@@ -1,18 +1,17 @@
-import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {CastEvent} from 'fflogs'
-
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
-import {ActionLink} from 'components/ui/DbLink'
+import {CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Rule, Requirement} from 'parser/core/modules/Checklist'
-import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import Combatants from 'parser/core/modules/Combatants'
+import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
-import {Data} from 'parser/core/modules/Data'
+import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const BAD_LIFE_SURGE_CONSUMERS: number[] = [
@@ -38,6 +37,7 @@ export default class Buffs extends Module {
 
 	private badLifeSurges: number = 0
 	private fifthGcd: boolean = false
+	private soloDragonSight: boolean = false
 
 	@dependency private checklist!: Checklist
 	@dependency private combatants!: Combatants
@@ -46,9 +46,10 @@ export default class Buffs extends Module {
 	@dependency private suggestions!: Suggestions
 	@dependency private data!: Data
 
-	init(){
+	init() {
 		this.addEventHook('cast', {by: 'player'}, this.onCast)
 		this.addEventHook('complete', this.onComplete)
+		this.addEventHook('applybuff', {by: 'player', abilityId: STATUSES.RIGHT_EYE_SOLO.id}, () => this.soloDragonSight = true)
 	}
 
 	private onCast(event: CastEvent) {
@@ -107,5 +108,18 @@ export default class Buffs extends Module {
 				You used {ACTIONS.LIFE_SURGE.name} on a non-optimal GCD <Plural value={this.badLifeSurges} one="# time" other="# times"/>.
 			</Trans>,
 		}))
+
+		if (this.soloDragonSight) {
+			this.suggestions.add(new Suggestion({
+				icon: ACTIONS.DRAGON_SIGHT.icon,
+				content: <Trans id="drg.buffs.suggestions.solo-ds.content">
+					Although it doesn't impact your personal DPS, try to always use <ActionLink {...ACTIONS.DRAGON_SIGHT} /> on a partner in group content so that someone else can benefit from the damage bonus too.
+				</Trans>,
+				severity: SEVERITY.MINOR,
+				why: <Trans id="drg.buffs.suggestions.solo-ds.why">
+					At least 1 of your Dragon Sight casts didn't have a tether partner.
+				</Trans>,
+			}))
+		}
 	}
 }

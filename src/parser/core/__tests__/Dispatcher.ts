@@ -1,35 +1,33 @@
+import {Event, Events} from 'event'
 import {Dispatcher, EventHook, TimestampHook} from '../Dispatcher'
-import {DeathEvent} from 'fflogs'
 
-/* tslint:disable:no-magic-numbers */
-// TODO: This file should be using @ts-expect-error, not @ts-ignore, once TS3.9 drops
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
-const event: DeathEvent = {
+const event: Events['action'] = {
+	type: 'action',
 	timestamp: 50,
-	type: 'death',
-	sourceIsFriendly: false,
-	targetIsFriendly: false,
-
-	targetID: 0xDEADBEEF,
+	source: 'source',
+	target: 'target',
+	action: 0,
 }
 
 describe('Dispatcher', () => {
 	let dispatcher: Dispatcher
 	let callback: jest.Mock
-	let eventHook: EventHook<DeathEvent>
+	let eventHook: EventHook<Events['action']>
 	let timestampHook: TimestampHook
 
 	beforeEach(() => {
 		dispatcher = new Dispatcher()
 		callback = jest.fn()
 		eventHook = {
-			event: event.type,
-			module: 'test',
+			predicate: (event: Event): event is Events['action'] => true,
+			handle: 'test',
 			callback,
 		}
 		timestampHook = {
 			timestamp: 0,
-			module: 'test',
+			handle: 'test',
 			callback,
 		}
 	})
@@ -44,22 +42,14 @@ describe('Dispatcher', () => {
 	})
 
 	it('does not trigger non-matching hooks', () => {
-		// @ts-ignore
-		dispatcher.addEventHook({...eventHook, event: '__unused'})
+		dispatcher.addEventHook({
+			...eventHook,
+			predicate: (event: Event): event is Events['action'] => false,
+		})
 
 		dispatcher.dispatch(event, ['test'])
 
 		expect(callback).not.toHaveBeenCalled()
-	})
-
-	it('can filter by event keys', () => {
-		dispatcher.addEventHook(eventHook)
-		dispatcher.addEventHook({...eventHook, filter: {targetID: event.targetID}})
-		dispatcher.addEventHook({...eventHook, filter: {targetID: 0xF00}})
-
-		dispatcher.dispatch(event, ['test'])
-
-		expect(callback).toHaveBeenCalledTimes(2)
 	})
 
 	it('reports the event timestamp during event callback execution', () => {
@@ -83,16 +73,16 @@ describe('Dispatcher', () => {
 		expect(callback).toHaveBeenCalledTimes(1)
 	})
 
-	it('reports errors from event hooks', () => {
+	it('reports dispatch issues', () => {
 		const error = new Error('test error')
 		dispatcher.addEventHook({
 			...eventHook,
 			callback: () => { throw error },
 		})
 
-		const errors = dispatcher.dispatch(event, ['test'])
+		const issues = dispatcher.dispatch(event, ['test'])
 
-		expect(errors).toMatchObject({test: error})
+		expect(issues).toIncludeSameMembers([{error, handle: 'test'}])
 	})
 
 	it('does not trigger event hooks from unspecified modules', () => {
@@ -155,12 +145,12 @@ describe('Dispatcher', () => {
 		const error = new Error('test error')
 		dispatcher.addTimestampHook({
 			...timestampHook,
-			callback: () => { throw error},
+			callback: () => { throw error },
 		})
 
-		const errors = dispatcher.dispatch(event, ['test'])
+		const issues = dispatcher.dispatch(event, ['test'])
 
-		expect(errors).toMatchObject({test: error})
+		expect(issues).toIncludeSameMembers([{error, handle: 'test'}])
 	})
 
 	it('does not trigger timestamp hooks from unspecified modules', () => {

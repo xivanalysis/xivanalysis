@@ -1,6 +1,5 @@
-import CoreSpeedmod from 'parser/core/modules/Speedmod'
-
 import STATUSES from 'data/STATUSES'
+import CoreSpeedmod from 'parser/core/modules/Speedmod'
 
 export default class Speedmod extends CoreSpeedmod {
 	constructor(...args) {

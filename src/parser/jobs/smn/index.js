@@ -1,11 +1,10 @@
 import {t} from '@lingui/macro'
-import React from 'react'
-
+import {ActionLink} from 'components/ui/DbLink'
 import TransMarkdown from 'components/ui/TransMarkdown'
+import ACTIONS from 'data/ACTIONS'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
-import {ActionLink} from 'components/ui/DbLink'
-import ACTIONS from 'data/ACTIONS'
+import React from 'react'
 
 const description = t('smn.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your SMN gameplay, as well as give a deeper insight into what happened during an encounter.

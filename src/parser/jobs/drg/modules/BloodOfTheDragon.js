@@ -1,16 +1,15 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Icon, Message, Table, Accordion, Button} from 'semantic-ui-react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
+import NormalisedMessage from 'components/ui/NormalisedMessage'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
-import NormalisedMessage from 'components/ui/NormalisedMessage'
 import {Rule, Requirement} from 'parser/core/modules/Checklist'
 import {TieredSuggestion, Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-import {getDataBy} from 'data'
+import React, {Fragment} from 'react'
+import {Icon, Message, Table, Accordion, Button} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const DRAGON_MAX_DURATION_MILLIS = 30000

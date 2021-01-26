@@ -1,18 +1,17 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import Color from 'color'
-import _ from 'lodash'
-import React from 'react'
-
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
 import STATUSES from 'data/STATUSES'
+import _ from 'lodash'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
-import kenkiIcon from './kenki.png'
+import React from 'react'
+import DISPLAY_ORDER from './DISPLAY_ORDER'
 import styles from './Kenki.module.css'
+import kenkiIcon from './kenki.png'
 
 const MAX_KENKI = 100
 
@@ -52,6 +51,7 @@ const MEDITATE_TICK_FREQUENCY = 3000
 const MAX_MEDITATE_TICKS = 5
 
 export default class Kenki extends Module {
+	static displayOrder = DISPLAY_ORDER.KENKI
 	static handle = 'kenki'
 	static title = t('sam.kenki.title')`Kenki`
 	static dependencies = [
@@ -181,7 +181,7 @@ export default class Kenki extends Module {
 		const sam = Color(JOBS.SAMURAI.colour)
 
 		// Disabling magic numbers for the chart, 'cus it's a chart
-		/* eslint-disable no-magic-numbers */
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const data = {
 			datasets: [{
 				label: 'Minimum',
@@ -202,7 +202,7 @@ export default class Kenki extends Module {
 				pointHitRadius: 10,
 			}],
 		}
-		/* eslint-enable no-magic-numbers */
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <>
 			<span className={styles.helpText}>

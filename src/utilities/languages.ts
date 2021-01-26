@@ -11,7 +11,7 @@ const SHORT_LANGUAGE_MAP = Object.keys(LANGUAGES).reduce(
 	{} as Record<string, Language>,
 )
 
-function getNavigatorLanguages(): ReadonlyArray<string> {
+function getNavigatorLanguages(): readonly string[] {
 	if (Array.isArray(navigator.languages)) {
 		return navigator.languages
 	}
@@ -24,7 +24,7 @@ function getNavigatorLanguages(): ReadonlyArray<string> {
  * @param {String[]} [languagesInput] An array of languages to check, defaults to `navigator.languages`
  * @returns {String} Language Code
  */
-export function getUserLanguage(languagesInput: ReadonlyArray<string> = getNavigatorLanguages()): Language {
+export function getUserLanguage(languagesInput: readonly string[] = getNavigatorLanguages()): Language {
 	const languages = languagesInput.filter((lang): lang is Language => lang in LANGUAGES)
 	for (const lang of languages) {
 		if (LANGUAGES[lang].enable) {

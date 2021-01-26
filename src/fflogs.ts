@@ -251,7 +251,7 @@ const castEventTypes = [
 	'cast',
 ] as const
 export const isCastEvent = (event: Event): event is CastEvent =>
-	(castEventTypes as readonly any[]).includes(event.type)
+	(castEventTypes as readonly unknown[]).includes(event.type)
 export interface CastEvent extends AbilityEventFields {
 	type: typeof castEventTypes[number]
 }
@@ -285,7 +285,7 @@ const damageEventTypes = [
 	'damage',
 ] as const
 export const isDamageEvent = (event: Event): event is DamageEvent =>
-	(damageEventTypes as readonly any[]).includes(event.type)
+	(damageEventTypes as readonly unknown[]).includes(event.type)
 export interface DamageEvent extends EffectEventFields {
 	type: typeof damageEventTypes[number]
 	overkill?: number
@@ -299,7 +299,7 @@ const healEventTypes = [
 	'heal',
 ] as const
 export const isHealEvent = (event: Event): event is HealEvent =>
-	(healEventTypes as readonly any[]).includes(event.type)
+	(healEventTypes as readonly unknown[]).includes(event.type)
 export interface HealEvent extends EffectEventFields {
 	type: typeof healEventTypes[number]
 	overheal: number

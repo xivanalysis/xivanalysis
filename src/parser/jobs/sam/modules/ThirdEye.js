@@ -1,11 +1,11 @@
 import {t} from '@lingui/macro'
-import {ActionLink} from 'components/ui/DbLink'
-import React from 'react'
 import {Trans, Plural} from '@lingui/react'
+import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {Suggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React from 'react'
 
 export default class ThirdEye extends Module {
 	static handle = 'thirdEye'

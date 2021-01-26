@@ -6,6 +6,8 @@ import {Action} from './type'
 const DEFAULT_GCD_CASTTIME = 0
 const DEFAULT_GCD_COOLDOWN = 2.5
 
+export type ActionKey = keyof ActionRoot
+
 /**
  * Adds default (re)cast times to GCD actions.
  * Note that this _only_ operates on the root data set. Actions that are changed to GCD in a layer

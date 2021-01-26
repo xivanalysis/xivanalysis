@@ -1,8 +1,5 @@
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import React, {Fragment} from 'react'
-import {Accordion, Message} from 'semantic-ui-react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import Rotation from 'components/ui/Rotation'
 import {getDataBy} from 'data'
@@ -10,6 +7,8 @@ import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
 import Module from 'parser/core/Module'
 import {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
+import React, {Fragment} from 'react'
+import {Accordion, Message} from 'semantic-ui-react'
 
 const DEBUFF_APPLICATION_BUFFER = 1000 // Buffer for the empty window check, since debuff applications always happen 9 times in the logs for some ungodly reason
 

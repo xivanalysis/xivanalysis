@@ -7,7 +7,8 @@ enum DISPLAY_ORDER {
 	// Module DO is 0-100
 	COMBOS = 110,
 	TIMELINE = 120,
-	CHANGELOG = 130,
+	EVENTS_VIEW = 130,
+	CHANGELOG = 140,
 }
 
 export default DISPLAY_ORDER

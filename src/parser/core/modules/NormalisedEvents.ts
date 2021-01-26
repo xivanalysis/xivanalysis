@@ -1,9 +1,9 @@
 import {AbilityEvent, BuffEvent, DamageEvent, HealEvent, AbilityEventFields, isDamageEvent, isHealEvent} from 'fflogs'
+import {Event} from 'legacyEvent'
 import {sortEvents} from 'parser/core/EventSorting'
 import Module, {dependency} from 'parser/core/Module'
 import HitType from 'parser/core/modules/HitType'
 import PrecastStatus from './PrecastStatus'
-import {Event} from 'legacyEvent'
 
 // Based on multi-hit margin previously in use for barrage and AOE modules
 const LEGACY_MUTLIHIT_DEDUPLICATION_TIME_WINDOW = 500
@@ -12,7 +12,7 @@ type BaseEvent = DamageEvent | HealEvent
 
 const supportedBuffEventTypes = ['applybuff', 'removebuff', 'applydebuff', 'removedebuff']
 const isSupportedBuffEvent = (event: Event): event is BuffEvent =>
-	(supportedBuffEventTypes as any[]).includes(event.type)
+	(supportedBuffEventTypes as unknown[]).includes(event.type)
 
 const isBaseEvent = (event: Event): event is BaseEvent =>
 	isDamageEvent(event) || isHealEvent(event)
@@ -183,8 +183,6 @@ export class NormalisedApplyBuffEvent extends NormalisedEventFields {
 		Object.assign(this, (({type, ...props}) => ({...props}))(event))
 	}
 }
-
-
 
 export interface NormalisedApplyDebuffEvent extends Omit<BuffEvent, 'type'>, NormalisedEventFields {}
 export class NormalisedApplyDebuffEvent extends NormalisedEventFields {

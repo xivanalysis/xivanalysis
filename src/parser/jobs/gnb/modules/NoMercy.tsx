@@ -1,18 +1,16 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
-import _ from 'lodash'
-import React from 'react'
-
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import {RotationTable} from 'components/ui/RotationTable'
+import {getDataBy} from 'data'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES from 'data/STATUSES'
+import {BuffEvent, CastEvent} from 'fflogs'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import {Timeline} from 'parser/core/modules/Timeline'
-
-import {getDataBy} from 'data'
-import {BuffEvent, CastEvent} from 'fflogs'
+import React from 'react'
 
 const SEVERITIES = {
 	MISSING_EXPECTED_USES: {
@@ -117,24 +115,24 @@ export default class NoMercy extends Module {
 			}
 
 			switch (actionId) {
-				// Blasting Zone is just a traited version of Danger Zone
-				// Impossible to see both in the same log outside of hacking
-				case ACTIONS.BLASTING_ZONE.id:
-				case ACTIONS.DANGER_ZONE.id:
-					lastNoMercy.numBlastingZones++
-					break
-				case ACTIONS.SONIC_BREAK.id:
-					lastNoMercy.numSonicBreaks++
-					break
-				case ACTIONS.ROUGH_DIVIDE.id:
-					lastNoMercy.numRoughDivides++
-					break
-				case ACTIONS.GNASHING_FANG.id:
-					lastNoMercy.numGnashingFangs++
-					break
-				case ACTIONS.BOW_SHOCK.id:
-					lastNoMercy.numBowShocks++
-					break
+			// Blasting Zone is just a traited version of Danger Zone
+			// Impossible to see both in the same log outside of hacking
+			case ACTIONS.BLASTING_ZONE.id:
+			case ACTIONS.DANGER_ZONE.id:
+				lastNoMercy.numBlastingZones++
+				break
+			case ACTIONS.SONIC_BREAK.id:
+				lastNoMercy.numSonicBreaks++
+				break
+			case ACTIONS.ROUGH_DIVIDE.id:
+				lastNoMercy.numRoughDivides++
+				break
+			case ACTIONS.GNASHING_FANG.id:
+				lastNoMercy.numGnashingFangs++
+				break
+			case ACTIONS.BOW_SHOCK.id:
+				lastNoMercy.numBowShocks++
+				break
 			}
 		}
 	}

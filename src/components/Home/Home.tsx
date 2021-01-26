@@ -1,6 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
-import {Options} from 'components/GlobalSidebar'
+import {LinkDiscord, LinkGitHub} from 'components/GlobalSidebar/Links'
+import {VersionInfo} from 'components/GlobalSidebar/Version'
+import I18nMenu from 'components/ui/I18nMenu'
 import TransMarkdown from 'components/ui/TransMarkdown'
 import {observer} from 'mobx-react'
 import React, {Component} from 'react'
@@ -58,7 +60,13 @@ class Home extends Component {
 			</div>
 
 			<div className={styles.options}>
-				<Options view="horizontal"/>
+				<div className={styles.i18nMenu}><I18nMenu/></div>
+
+				<div>
+					<LinkDiscord/>
+					<LinkGitHub/>
+					<VersionInfo/>
+				</div>
 			</div>
 		</>
 	}

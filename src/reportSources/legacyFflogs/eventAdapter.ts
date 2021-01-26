@@ -5,6 +5,12 @@ import {ActorResources, BuffEvent, BuffStackEvent, CastEvent, DamageEvent, Death
 import {Actor, Report} from 'report'
 import {isDefined} from 'utilities'
 
+/*
+NOTES:
+- FFLogs uses an ID offset for statuses. It's currently handled throughout the application - once legacy handling is removed, we can safely contain the offset in the adaption.
+- FFLogs re-attributes limit break results to a special actor, resulting in two actions (one from the original, one from fabricated), then all follow-up data being on the fabricated actor. We should adapt that back to the caster.
+*/
+
 /** Mapping from FFLogs hit types to source-originating modifiers. */
 const sourceHitType: Partial<Record<HitType, SourceModifier>> = {
 	[HitType.MISS]: SourceModifier.MISS,
@@ -31,7 +37,7 @@ class EventAdapter {
 	private report: Report
 
 	/** Set of event types marked as unhandled. Used to prevent duplicate warnings. */
-	private unhandledTypes = new Set<FflogsEvent['type']>()
+	private unhandledTypes = new Set<string>()
 
 	constructor(opts: {report: Report}) {
 		this.report = opts.report
@@ -84,6 +90,7 @@ class EventAdapter {
 		case 'targetabilityupdate':
 			return this.adaptTargetableEvent(event)
 
+		/* eslint-disable no-fallthrough */
 		// Dispels are already modelled by other events, and aren't something we really care about
 		case 'dispel':
 		// Encounter events don't expose anything particularly useful for us
@@ -98,10 +105,11 @@ class EventAdapter {
 		// I mean if Kihra doesn't know, how am I supposed to?
 		case 'unknown':
 			break
+			/* eslint-enable no-fallthrough */
 
-		default:
+		default: {
 			// Anything that reaches this point is unknown. If we've already notified, just noop
-			const unknownEvent = event as any
+			const unknownEvent = event as {type: string}
 			if (this.unhandledTypes.has(unknownEvent.type)) {
 				break
 			}
@@ -118,6 +126,7 @@ class EventAdapter {
 				console.warn(`Unhandled FFLogs event type "${unknownEvent.type}".`)
 			}
 			this.unhandledTypes.add(unknownEvent.type)
+		}
 		}
 	}
 
@@ -143,7 +152,7 @@ class EventAdapter {
 			sequence,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptDamageEvent(event: DamageEvent): Array<Events['damage' | 'actorUpdate']> {
@@ -169,7 +178,7 @@ class EventAdapter {
 			targetModifier: targetHitType[event.hitType] ?? TargetModifier.NORMAL,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptHealEvent(event: HealEvent): Array<Events['heal' | 'actorUpdate']> {
@@ -184,7 +193,7 @@ class EventAdapter {
 			sourceModifier: sourceHitType[event.hitType] ?? SourceModifier.NORMAL,
 		}
 
-		return [...this.buildActorUpdateResourceEvents(event), newEvent]
+		return [newEvent, ...this.buildActorUpdateResourceEvents(event)]
 	}
 
 	private adaptStatusApplyEvent(event: BuffEvent | BuffStackEvent): Events['statusApply'] {
@@ -307,5 +316,6 @@ const resolveCause = (fflogsAbilityId: number): Cause =>
 		? {type: 'action', action: fflogsAbilityId}
 		: {type: 'status', status: resolveStatusId(fflogsAbilityId)}
 
+// TODO: When removing legacy, resolve status IDs without the offset
 const resolveStatusId = (fflogsStatusId: number) =>
-	fflogsStatusId - STATUS_ID_OFFSET
+	fflogsStatusId

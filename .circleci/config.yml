@@ -2,7 +2,7 @@
 defaults: &defaults
   working_directory: /tmp/xiva-client
   docker:
-    - image: circleci/node:10
+    - image: cimg/node:lts
 
 version: 2
 jobs:
@@ -31,11 +31,11 @@ jobs:
           at: /tmp
       - run:
           name: Lint
-          # I love how tslint needs its hand held with making directories
-          command: |
-            yarn lint:js --format junit -o reports/eslint/results.xml
-            mkdir -p reports/tslint
-            yarn lint:ts --format junit -o reports/tslint/results.xml
+          command: yarn lint --format junit -o reports/eslint/results.xml
+      # TODO: Move this into its own step if it starts chewing time.
+      - run:
+          name: Check types
+          command: yarn types
       - run:
           name: Ensure extract
           command: |
@@ -70,7 +70,7 @@ jobs:
             export REACT_APP_VERSION=$CIRCLE_BUILD_NUM
             export REACT_APP_GIT_COMMIT=$(git rev-parse --short HEAD)
             export REACT_APP_GIT_BRANCH=$CIRCLE_BRANCH
-            CI=false yarn build
+            CI=false NODE_ENV=production yarn build
       - persist_to_workspace:
           root: /tmp
           paths:

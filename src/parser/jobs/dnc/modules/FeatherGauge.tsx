@@ -1,17 +1,15 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import Color from 'color'
-import _ from 'lodash'
-import React, {Fragment} from 'react'
-
 import {ActionLink} from 'components/ui/DbLink'
 import TimeLineChart from 'components/ui/TimeLineChart'
 import ACTIONS from 'data/ACTIONS'
 import JOBS from 'data/JOBS'
+import _ from 'lodash'
 import Module, {dependency} from 'parser/core/Module'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React, {Fragment} from 'react'
 import {GAUGE_SEVERITY_TIERS, GaugeGraphEntry} from '../CommonData'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import styles from './DNCGauges.module.css'
@@ -129,7 +127,7 @@ export default class FeatherGauge extends Module {
 	output() {
 		const dncColor = Color(JOBS.DANCER.colour)
 
-		// tslint:disable:no-magic-numbers
+		/* eslint-disable @typescript-eslint/no-magic-numbers */
 		const data = {
 			datasets: [{
 				label: 'Feathers',
@@ -139,7 +137,7 @@ export default class FeatherGauge extends Module {
 				borderColor: dncColor.fade(0.5).toString(),
 			}],
 		}
-		// tslint:enable:no-magic-numbers
+		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
 		return <Fragment>
 			<span className={styles.helpText}>

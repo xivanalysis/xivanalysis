@@ -1,0 +1,13 @@
+@value themeText from "theme.module.css";
+
+.icon {
+	color: themeText;
+	font-size: 20px;
+	vertical-align: middle;
+	overflow: hidden;
+}
+
+.icon:hover {
+	color: themeText;
+	opacity: .75;
+}

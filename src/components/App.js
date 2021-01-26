@@ -1,23 +1,22 @@
+import {Container} from 'akkd'
 import classnames from 'classnames'
 import _ from 'lodash'
-import PropTypes from 'prop-types'
+import * as PropTypes from 'prop-types'
 import React, {Component} from 'react'
 import {Link, Route, Switch, withRouter, useRouteMatch, Redirect, useParams} from 'react-router-dom'
-import {Icon} from 'semantic-ui-react'
-
-import {Container} from 'akkd'
 import {reportSources} from 'reportSources'
+import {Icon} from 'semantic-ui-react'
 import {StoreContext} from 'store'
+import styles from './App.module.css'
 import {BranchBanner} from './BranchBanner'
 import ErrorBoundary from './ErrorBoundary'
 import GlobalSidebar from './GlobalSidebar'
 import Home from './Home'
+import {ReportRedirect} from './Home/ReportRedirect'
+import {buildReportFlowPath} from './ReportFlow'
 
 import 'semantic-ui-css/semantic.min.css'
 import './App.css'
-import styles from './App.module.css'
-import {buildReportFlowPath} from './ReportFlow'
-import {ReportRedirect} from './Home/ReportRedirect'
 
 class App extends Component {
 	static propTypes = {

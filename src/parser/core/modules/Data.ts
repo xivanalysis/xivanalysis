@@ -1,10 +1,21 @@
 import {getDataBy} from 'data'
-import {Action, layers as actionLayers, root as actionRoot} from 'data/ACTIONS'
+import {
+	Action,
+	ActionKey,
+	layers as actionLayers,
+	root as actionRoot,
+} from 'data/ACTIONS'
 import {applyLayer, Layer} from 'data/layer'
-import {layers as statusLayers, root as statusRoot, Status} from 'data/STATUSES'
-import Module from 'parser/core/Module'
+import {
+	layers as statusLayers,
+	root as statusRoot,
+	Status,
+	StatusKey,
+} from 'data/STATUSES'
+import {Analyser} from 'parser/core/Analyser'
+import {oneOf} from 'parser/core/filter'
 
-export class Data extends Module {
+export class Data extends Analyser {
 	static handle = 'data'
 
 	private appliedCache = new Map<unknown, unknown>()
@@ -23,6 +34,14 @@ export class Data extends Module {
 
 	getStatus(id: Status['id']) {
 		return getDataBy(this.statuses, 'id', id)
+	}
+
+	matchActionId(...keys: ActionKey[]) {
+		return oneOf(...keys.map(key => this.actions[key].id))
+	}
+
+	matchStatusId(...keys: StatusKey[]) {
+		return oneOf(...keys.map(key => this.statuses[key].id))
 	}
 
 	private getAppliedData<R>(root: R, layers: Array<Layer<R>>): R {

@@ -1,10 +1,10 @@
 import {t} from '@lingui/macro'
 import {Plural, Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {Data} from 'parser/core/modules/Data'
 import {BuffEvent, CastEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import Checklist, {Requirement, TARGET, TieredRule} from 'parser/core/modules/Checklist'
+import {Data} from 'parser/core/modules/Data'
 import Suggestions, {SEVERITY, Suggestion, TieredSuggestion} from 'parser/core/modules/Suggestions'
 import DISPLAY_ORDER from 'parser/jobs/ast/modules/DISPLAY_ORDER'
 import React from 'react'
@@ -59,7 +59,6 @@ export default class Draw extends Module {
 
 	private PLAY: number[] = []
 	private ARCANA_STATUSES: number[] = []
-
 
 	protected init() {
 
@@ -152,8 +151,8 @@ export default class Draw extends Module {
 
 	private onComplete() {
 		const SLEEVE_DRAW_PLAYS_GIVEN = this.parser.patch.before('5.3')
-		? SLEEVE_DRAW_PLAYS_GIVEN_500
-		: SLEEVE_DRAW_PLAYS_GIVEN_530
+			? SLEEVE_DRAW_PLAYS_GIVEN_500
+			: SLEEVE_DRAW_PLAYS_GIVEN_530
 
 		// If they stopped using Sleeve at any point in the fight, this'll calculate the drift "accurately"
 		if (this.parser.fight.end_time - this.lastSleeveTimestamp > (this.data.actions.SLEEVE_DRAW.cooldown * 1000)) {

@@ -1,9 +1,22 @@
 import BOSSES, {Boss} from 'data/BOSSES'
 import {JobKey} from 'data/JOBS'
-
+import {e121} from './bosses/e12_1'
+import {e4} from './bosses/e4'
+import {e7} from './bosses/e7'
+import {e8} from './bosses/e8'
+import {e9} from './bosses/e9'
+import {exEmerald1} from './bosses/exEmerald1'
+import {exEmerald2} from './bosses/exEmerald2'
+import {exHades} from './bosses/exHades'
+import {exInnocence} from './bosses/exInnocence'
+import {exRuby1} from './bosses/exRuby1'
+import {exRuby2} from './bosses/exRuby2'
+import {exTitania} from './bosses/exTitania'
+import {exVaris} from './bosses/exVaris'
+import {neir3} from './bosses/nier3'
+import {tea} from './bosses/tea'
 import CORE from './core'
 import {Meta} from './core/Meta'
-
 import ASTROLOGIAN from './jobs/ast'
 import BLACK_MAGE from './jobs/blm'
 import BLUE_MAGE from './jobs/blu'
@@ -22,18 +35,6 @@ import SCHOLAR from './jobs/sch'
 import SUMMONER from './jobs/smn'
 import WARRIOR from './jobs/war'
 import WHITE_MAGE from './jobs/whm'
-
-import {neir3} from './bosses/nier3'
-import {exTitania} from './bosses/exTitania'
-import {exInnocence} from './bosses/exInnocence'
-import {exHades} from './bosses/exHades'
-import {exRuby1} from './bosses/exRuby1'
-import {exRuby2} from './bosses/exRuby2'
-import {exVaris} from './bosses/exVaris'
-import {e4} from './bosses/e4'
-import {e7} from './bosses/e7'
-import {e8} from './bosses/e8'
-import {tea} from './bosses/tea'
 
 interface AvailableModules {
 	CORE: Meta
@@ -78,10 +79,14 @@ const AVAILABLE_MODULES: AvailableModules = {
 		[BOSSES.RUBY_WEAPON_1.logId]: exRuby1,
 		[BOSSES.RUBY_WEAPON_2.logId]: exRuby2,
 		[BOSSES.VARIS_YAE_GALVUS.logId]: exVaris,
+		[BOSSES.EMERALD_WEAPON_1.logId]: exEmerald1,
+		[BOSSES.EMERALD_WEAPON_2.logId]: exEmerald2,
 
 		[BOSSES.E4.logId]: e4,
 		[BOSSES.E7.logId]: e7,
 		[BOSSES.E8.logId]: e8,
+		[BOSSES.E9.logId]: e9,
+		[BOSSES.E12_1.logId]: e121,
 
 		[BOSSES.TEA.logId]: tea,
 	},

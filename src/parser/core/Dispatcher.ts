@@ -1,98 +1,166 @@
-import {Event} from 'legacyEvent'
-import _ from 'lodash'
-import Module from './Module'
+import {Event} from 'event'
+import {Injectable} from './Injectable'
 
-export type FilterPartial<T> = {
-	[K in keyof T]?: T[K] extends object
-		? FilterPartial<T[K]>
-		: FilterPartial<T[K]> | Array<FilterPartial<T[K]>>
-}
+type Handle = (typeof Injectable)['handle']
 
-export type Filter<T extends Event> = FilterPartial<T>
+/** Signature of event filter predicate functions. */
+export type EventFilterPredicate<T extends Event> = (event: Event) => event is T
 
-type ModuleHandle = (typeof Module)['handle']
-
+/** Callback signature for event hooks. */
 export type EventHookCallback<T extends Event> = (event: T) => void
 
+/** Configuration for an event hook. */
 export interface EventHook<T extends Event> {
-	event: T['type']
-	filter?: Filter<T>
-	module: ModuleHandle // TODO: Should this be the entire module ref?
+	handle: Handle
+	predicate: EventFilterPredicate<T>
 	callback: EventHookCallback<T>
 }
 
+/** Callback signature for timestamp hooks. */
 export type TimestampHookCallback = (opts: {timestamp: number}) => void
 
+/** Configuration for a timestamp hook */
 export interface TimestampHook {
+	handle: Handle
 	timestamp: number
-	module: ModuleHandle
 	callback: TimestampHookCallback
 }
 
-type ModuleErrors = Record<ModuleHandle, Error>
+/** An issue that occured during dispatch. */
+export interface DispatchIssue {
+	handle: Handle,
+	error: Error
+}
 
+/**
+ * Dispatcher is in charge of consuming events from the parser and fanning them
+ * out to matching hooks where required.
+ */
 export class Dispatcher {
 	private _timestamp = 0
+	/** The timestamp of the hook currently being executed. */
+	get timestamp() { return this._timestamp }
 
-	/** The timestamp of the last hook executed. */
-	get timestamp() {
-		return this._timestamp
-	}
-
-	// eventHooks[eventType][moduleHandle]: Set<Hook>
-	private eventHooks = new Map<Event['type'], Map<ModuleHandle, Set<EventHook<any>>>>()
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	private eventHooks = new Map<Handle, Set<EventHook<any>>>()
 
 	// Stored nearest-last so we can use the significantly-faster pop
 	private timestampHookQueue: TimestampHook[] = []
 
 	/**
-	 * Register an event hook. The callback provided on the hook will be executed
-	 * each time a matching event is dispatched.
+	 * Dispatch an event.
+	 *
+	 * @param event The event to dispatch.
+	 * @param handles An array of hook handles that should be considered for dispatch.
+	 * @return Array of issues that occured during dispatch.
+	 */
+	dispatch(event: Event, handles: Handle[]): DispatchIssue[] {
+		return [
+			...this.dispatchTimestamp(event.timestamp, handles),
+			...this.dispatchEvent(event, handles),
+		]
+	}
+
+	private dispatchTimestamp(timestamp: number, handles: Handle[]) {
+		const issues: DispatchIssue[] = []
+
+		// Execute any timestamp hooks that are ready to execute
+		const queue = this.timestampHookQueue
+		while (queue.length > 0 && queue[queue.length - 1].timestamp <= timestamp) {
+			// Enforced by the while loop.
+			// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+			const hook = queue.pop()!
+
+			// If we're not trigering on this module, skip the hook. This effectively removes it.
+			// TODO: This is pretty naive, and doesn't actually respect trigger _order_.
+			//       Ideally, should be grouped by timestamp and executed in handle order.
+			if (!handles.includes(hook.handle)) { continue }
+
+			this._timestamp = hook.timestamp
+
+			try {
+				hook.callback({timestamp: hook.timestamp})
+			} catch (error) {
+				issues.push({handle: hook.handle, error})
+			}
+		}
+
+		return issues
+	}
+
+	private dispatchEvent(event: Event, handles: Handle[]) {
+		this._timestamp = event.timestamp
+
+		const issues: DispatchIssue[] = []
+
+		// Iterate over the handles provided, looking for registered hooks
+		for (const handle of handles) {
+			const handleHooks = this.eventHooks.get(handle)
+			if (handleHooks == null) { continue }
+
+			try {
+				// Try to execute any matching hooks for the current handle
+				for (const hook of handleHooks.values()) {
+					if (!hook.predicate(event)) { continue }
+					hook.callback(event)
+				}
+			} catch (error) {
+				// If there was an error in any, stop immediately & report
+				issues.push({handle, error})
+				continue
+			}
+		}
+
+		return issues
+	}
+
+	/**
+	 * Add a new event hook. The provided callback will be executed with any
+	 * events matching the specified filter.
+	 *
+	 * @param hook The hook to register.
 	 */
 	addEventHook<T extends Event>(hook: EventHook<T>) {
-		let eventTypeHooks = this.eventHooks.get(hook.event)
-		if (!eventTypeHooks) {
-			eventTypeHooks = new Map()
-			this.eventHooks.set(hook.event, eventTypeHooks)
+		let handleHooks = this.eventHooks.get(hook.handle)
+		if (handleHooks == null) {
+			handleHooks = new Set()
+			this.eventHooks.set(hook.handle, handleHooks)
 		}
 
-		let moduleHooks = eventTypeHooks.get(hook.module)
-		if (!moduleHooks) {
-			moduleHooks = new Set()
-			eventTypeHooks.set(hook.module, moduleHooks)
-		}
-
-		moduleHooks.add(hook)
+		handleHooks.add(hook)
 	}
 
 	/**
-	 * Remove an existing event hook, preventing it from executing any further.
-	 * Removal is performed via strict equality, the hook being removed must have
-	 * been explicitly added prior.
+	 * Remove a registered event hook, preventing it from executing further. Hook
+	 * registration is checked via strict equality.
+	 *
+	 * @param hook The hook to remove.
+	 * @return `true` if the hook was removed successfully.
 	 */
-	removeEventHook(hook: EventHook<any>) {
-		const eventTypeHooks = this.eventHooks.get(hook.event)
-		if (!eventTypeHooks) { return }
+	removeEventHook<T extends Event>(hook: EventHook<T>): boolean {
+		const handleHooks = this.eventHooks.get(hook.handle)
+		if (handleHooks == null) { return false }
 
-		const moduleHooks = eventTypeHooks.get(hook.module)
-		if (!moduleHooks) { return }
-
-		moduleHooks.delete(hook)
+		return handleHooks.delete(hook)
 	}
 
 	/**
-	 * Add a hook for a timestamp. The provided callback will be fired a single
-	 * time when the parser reaches the specified timestamp. Hooks for a timestamp
-	 * in the past will be ignored.
+	 * Add a new timestamp hook. The provided callback will be executed a single
+	 * time once the dispatcher reaches the specified timestamp. Hooks for
+	 * timestamps in the past will be ignored.
+	 *
+	 * @param hook The hook to register.
 	 */
 	addTimestampHook(hook: TimestampHook) {
-		// If we're already past this hook's timestamp, do nothing
+		// If the hook is in the past, do nothing
 		if (hook.timestamp < this._timestamp) {
 			return
 		}
 
-		const index = this.timestampHookQueue.findIndex(qh => qh.timestamp < hook.timestamp)
-
+		// Splice the event into the queue
+		const index = this.timestampHookQueue.findIndex(
+			queueHook => queueHook.timestamp < hook.timestamp,
+		)
 		if (index === -1) {
 			this.timestampHookQueue.push(hook)
 		} else {
@@ -100,104 +168,18 @@ export class Dispatcher {
 		}
 	}
 
-	/** Remove a previously added timestamp hook. */
-	removeTimestampHook(hook: TimestampHook) {
+	/**
+	 * Remove a registered timestamp hook, preventing it from executing. Hook
+	 * registration is checked via strict equality.
+	 *
+	 * @param hook The hook to remove.
+	 * @return `true` if the hook was removed successfully.
+	 */
+	removeTimestampHook(hook: TimestampHook): boolean {
 		const index = this.timestampHookQueue.indexOf(hook)
-		if (index === -1) { return }
+		if (index === -1) { return false }
+
 		this.timestampHookQueue.splice(index, 1)
-	}
-
-	/** Dispatch hooks for the provided event. */
-	dispatch(event: Event, triggerOrder: ModuleHandle[]): ModuleErrors {
-		return {
-			...this.dispatchTimestamp(event.timestamp, triggerOrder),
-			...this.dispatchEvent(event, triggerOrder),
-		}
-	}
-
-	private dispatchTimestamp(timestamp: number, triggerOrder: ModuleHandle[]) {
-		const moduleErrors: ModuleErrors = {}
-
-		// Fire off any timestamp hooks that are ready
-		const thq = this.timestampHookQueue
-		while (thq.length > 0 && thq[thq.length - 1].timestamp <= timestamp) {
-			const hook = thq.pop()!
-
-			// If we're not triggering on this module, skip the hook - removing it entirely
-			if (!triggerOrder.includes(hook.module)) { continue }
-
-			this._timestamp = hook.timestamp
-
-			try {
-				hook.callback({timestamp: hook.timestamp})
-			} catch (error) {
-				moduleErrors[hook.module] = error
-			}
-		}
-
-		return moduleErrors
-	}
-
-	private dispatchEvent(event: Event, triggerOrder: ModuleHandle[]) {
-		// Update the internal timestamp to the event we're dispatching
-		this._timestamp = event.timestamp
-
-		// Get registered hooks for this event type, if there are any
-		const eventTypeHooks = this.eventHooks.get(event.type)
-		if (!eventTypeHooks) { return }
-
-		// Check for hooks on each of the modules we're triggering events on
-		return triggerOrder.reduce(
-			(moduleErrors, handle) => {
-				const moduleHooks = eventTypeHooks.get(handle)
-				if (!moduleHooks) { return moduleErrors }
-
-				try {
-					moduleHooks.forEach(hook => {
-						// Ensure the hook's filter matches before triggering
-						if (hook.filter && !this.checkFilterMatches(event, hook.filter)) {
-							return
-						}
-
-						hook.callback(event)
-					})
-				} catch (error) {
-					moduleErrors[handle] = error
-				}
-
-				return moduleErrors
-			},
-			{} as ModuleErrors,
-		)
-	}
-
-	// TODO: Look into using _.isMatchWith for this - it's incorrectly typed in DT at the moment, though.
-	private checkFilterMatches<T extends object, F extends FilterPartial<T>>(
-		object: T,
-		filter: F,
-	): boolean {
-		return Object.keys(filter).every(key => {
-			// If the event doesn't have the key we're looking for, just shortcut out
-			if (!object.hasOwnProperty(key)) {
-				return false
-			}
-
-			// Just trust me 'aite
-			const filterVal: any = filter[key as keyof typeof filter]
-			const objectVal: any = object[key as keyof typeof object]
-
-			// FFLogs doesn't use arrays inside events themselves, so I'm using them to handle multiple possible values
-			if (Array.isArray(filterVal)) {
-				return filterVal.includes(objectVal)
-			}
-
-			// If it's an object, I need to dig down. Mostly for the `ability` key
-			if (typeof filterVal === 'object') {
-				return this.checkFilterMatches(objectVal, filterVal)
-			}
-
-			// Basic value check
-			return filterVal === objectVal
-		})
+		return true
 	}
 }

@@ -1,11 +1,11 @@
 import {t} from '@lingui/macro'
-import Module, {DISPLAY_MODE} from 'parser/core/Module'
+import {Analyser, DisplayMode} from 'parser/core/Analyser'
 import React from 'react'
 import DISPLAY_ORDER from '../DISPLAY_ORDER'
 import {StatisticComponent} from './StatisticComponent'
 import styles from './Statistics.module.css'
 
-// tslint:disable-next-line:no-magic-numbers
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 export type ColumnSpan = 1 | 2 | 3 | 4
 
 export interface Statistic {
@@ -15,12 +15,12 @@ export interface Statistic {
 	height?: number
 }
 
-export class Statistics extends Module {
+export class Statistics extends Analyser {
 	static handle = 'statistics'
 	// tslint:disable-next-line:variable-name
 	static title = t('core.statistics.title')`Statistics`
 	static displayOrder = DISPLAY_ORDER.STATISTICS
-	static displayMode = DISPLAY_MODE.RAW
+	static displayMode = DisplayMode.RAW
 
 	private statistics: Statistic[] = []
 

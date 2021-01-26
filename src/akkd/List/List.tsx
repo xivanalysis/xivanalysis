@@ -5,8 +5,9 @@ import styles from './List.module.css'
 // If someone can work out magic to generic this w/ React.ReactType that'd be awesome
 // Semantic doesn't so I gave up.
 interface ListItemProps {
-	as?: React.ReactType
-	[key: string]: any
+	as?: React.ElementType
+	className?: string
+	[key: string]: unknown
 }
 
 class ListItem extends React.PureComponent<ListItemProps> {

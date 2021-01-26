@@ -1,9 +1,8 @@
 import {t} from '@lingui/macro'
-import React from 'react'
-
 import TransMarkdown from 'components/ui/TransMarkdown'
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 const description = t('whm.about.description')`
 This analyser aims to identify some of the low-hanging fruit that could be used to improve your WHM gameplay, as well as give a deeper insight into what happened during an encounter.
@@ -22,7 +21,7 @@ export default new Meta({
 	</>,
 	supportedPatches: {
 		from: '5.0',
-		to: '5.3',
+		to: '5.4',
 	},
 	contributors: [
 		{user: CONTRIBUTORS.NIV, role: ROLES.MAINTAINER},
@@ -30,6 +29,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.SUSHIROU, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2021-01-08'),
+			Changes: () => <>Add 5.4 support for WHM</>,
+			contributors: [CONTRIBUTORS.SHIRK],
+		},
 		{
 			date: new Date('2020-08-12'),
 			Changes: () => <>Add 5.3 support for WHM</>,

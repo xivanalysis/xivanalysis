@@ -1,10 +1,10 @@
 import DoTs from './DoTs'
+import WhmInterrupts from './Interrupts'
 import Lilies from './Lilies'
 import oGCDs from './oGCDs'
 import Overheal from './Overheal'
 import Speedmod from './Speedmod'
 import Swiftcast from './Swiftcast'
-import WhmInterrupts from './Interrupts'
 
 export default [
 	DoTs,

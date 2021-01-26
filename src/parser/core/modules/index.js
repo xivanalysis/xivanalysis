@@ -2,17 +2,18 @@ import About from './About'
 import {AdditionalEvents, AdditionalEventQueries} from './AdditionalEvents'
 import AlwaysBeCasting from './AlwaysBeCasting'
 import BrokenLog from './BrokenLog'
-import ChangeLog from './ChangeLog'
 import CastTime from './CastTime'
+import ChangeLog from './ChangeLog'
 import Checklist from './Checklist'
 import Combatants from './Combatants'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import {Data} from './Data'
-import Death from './Death'
+import {Death} from './Death'
 import Downtime from './Downtime'
 import Enemies from './Enemies'
 import {EntityStatuses} from './EntityStatuses'
+import {EventsView} from './EventsView'
 import GlobalCooldown from './GlobalCooldown'
 import HitType from './HitType'
 import {Invulnerability} from './Invulnerability'
@@ -45,6 +46,7 @@ export default [
 	Downtime,
 	Enemies,
 	EntityStatuses,
+	EventsView,
 	GlobalCooldown,
 	HitType,
 	Invulnerability,

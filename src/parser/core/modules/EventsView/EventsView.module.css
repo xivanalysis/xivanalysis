@@ -1,0 +1,41 @@
+@value themeBackdrop from "theme.module.css";
+
+@value rowHeight: 24px;
+
+.row {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+
+.row.odd {
+	background: themeBackdrop;
+}
+
+.timestamp,
+.type {
+	flex-grow: 0;
+	flex-shrink: 0;
+}
+
+.timestamp {
+	width: 80px;
+}
+
+.type {
+	width: 100px;
+}
+
+.description {
+	min-width: 0;
+	flex-basis: 0;
+	flex-grow: 1;
+	flex-shrink: 1;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+}
+
+.showData {
+	cursor: pointer;
+}

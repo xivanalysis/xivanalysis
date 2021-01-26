@@ -1,6 +1,6 @@
 import {getDataBy} from '../getDataBy'
 
-// tslint:disable no-magic-numbers
+/* eslint-disable @typescript-eslint/no-magic-numbers */
 
 const ExampleData = {
 	ONE: {value: 'one', arr: [0, 1, 2, 3, 4]},
@@ -23,8 +23,7 @@ describe('DATA', () => {
 
 		it('errors when an invalid `by` is passed', () => {
 			function erraneousCall() {
-				// Need to disable TS for the next line - the mistake is only possible in JS
-				// @ts-ignore
+				// @ts-expect-error This mistake is only possible in JS
 				getDataBy(ExampleData, 'invalid', 'one')
 			}
 			expect(erraneousCall).toThrowError('invalid')

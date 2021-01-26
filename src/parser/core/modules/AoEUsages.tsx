@@ -119,28 +119,28 @@ export abstract class AoEUsages extends Module {
 		// if any bad usages were found, tell them which ones, how many times,
 		// and tell them what they should have used instead
 		return <>
-		<Table collapsing unstackable>
-			<Table.Header>
-				<Table.Row>
-					<Table.HeaderCell><Trans id="core.aoeusages.aoe-ability">AoE Action Used</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="core.aoeusages.st-alternative">Single Target Alternative</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="core.aoeusages.min-targets">Minimum Targets</Trans></Table.HeaderCell>
-					<Table.HeaderCell><Trans id="core.aoeusages.number-bad-usages">Incorrect Usages</Trans></Table.HeaderCell>
-				</Table.Row>
-			</Table.Header>
-			<Table.Body>
-				{this.trackedActions
-				.filter(a => this.badUsages.has(a.aoeAction.id))
-				.map(a => {
-					return <Table.Row key={a.aoeAction.id}>
-						<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
-						<Table.Cell>{a.stActions.map(s => <><ActionLink {...s} /> </>)}</Table.Cell>
-						<Table.Cell>{a.minTargets}</Table.Cell>
-						<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
+			<Table collapsing unstackable>
+				<Table.Header>
+					<Table.Row>
+						<Table.HeaderCell><Trans id="core.aoeusages.aoe-ability">AoE Action Used</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="core.aoeusages.st-alternative">Single Target Alternative</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="core.aoeusages.min-targets">Minimum Targets</Trans></Table.HeaderCell>
+						<Table.HeaderCell><Trans id="core.aoeusages.number-bad-usages">Incorrect Usages</Trans></Table.HeaderCell>
 					</Table.Row>
-				})}
-			</Table.Body>
-		</Table>
+				</Table.Header>
+				<Table.Body>
+					{this.trackedActions
+						.filter(a => this.badUsages.has(a.aoeAction.id))
+						.map(a => {
+							return <Table.Row key={a.aoeAction.id}>
+								<Table.Cell><ActionLink {...a.aoeAction} /></Table.Cell>
+								<Table.Cell>{a.stActions.map(s => <><ActionLink {...s} /> </>)}</Table.Cell>
+								<Table.Cell>{a.minTargets}</Table.Cell>
+								<Table.Cell>{this.badUsages.get(a.aoeAction.id)}</Table.Cell>
+							</Table.Row>
+						})}
+				</Table.Body>
+			</Table>
 		</>
 	}
 }

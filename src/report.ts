@@ -4,7 +4,7 @@ import {GameEdition} from 'data/PATCHES'
 import {Compute} from 'utilities'
 
 /** Declaration merge target for report meta types. */
-// tslint:disable-next-line no-empty-interface
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface ReportMetaRepository {}
 
 /**
@@ -12,7 +12,7 @@ export interface ReportMetaRepository {}
  * `({source: 'foo'} & Foo) | ({source: 'bar'} & Bar)`
  */
 type ReportMetaUnion<S extends keyof ReportMetaRepository> =
-	S extends any
+	S extends unknown
 		? {source: S} & ReportMetaRepository[S]
 		: never
 

@@ -1,9 +1,9 @@
 /**
  * @author Yumiya
  */
-import CoreWeaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
 import _ from 'lodash'
+import CoreWeaving from 'parser/core/modules/Weaving'
 
 const SPECIAL_WEAVE = 3
 const ALLOWED_WEAVES = [

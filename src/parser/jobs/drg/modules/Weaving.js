@@ -1,5 +1,5 @@
-import CoreWeaving from 'parser/core/modules/Weaving'
 import ACTIONS from 'data/ACTIONS'
+import CoreWeaving from 'parser/core/modules/Weaving'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 
 const JUMPS = [

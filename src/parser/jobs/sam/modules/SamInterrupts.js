@@ -1,9 +1,8 @@
-import React from 'react'
 import {Trans} from '@lingui/react'
-
-import {Interrupts} from 'parser/core/modules/Interrupts'
-import ACTIONS from 'data/ACTIONS'
 import {ActionLink} from 'components/ui/DbLink'
+import ACTIONS from 'data/ACTIONS'
+import {Interrupts} from 'parser/core/modules/Interrupts'
+import React from 'react'
 
 export default class SamInterrupts extends Interrupts {
 	suggestionContent = <Trans id="sam.interrupts.suggestion.content">

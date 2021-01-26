@@ -1,6 +1,7 @@
-import Module from 'parser/core/Module'
 import {getDataBy} from 'data'
 import _ from 'lodash'
+import {sortEvents} from 'parser/core/EventSorting'
+import Module from 'parser/core/Module'
 
 // Statuses applied before the pull won't have an apply(de)?buff event
 // Fake buff applications so modules don't need to take it into account
@@ -20,6 +21,8 @@ export default class PrecastStatus extends Module {
 	_startTime = this.parser.eventTimeOffset
 
 	normalise(events) {
+		sortEvents(events)
+
 		for (let i = 0; i < events.length; i++) {
 			const event = events[i]
 			const targetId = event.targetID
@@ -37,13 +40,13 @@ export default class PrecastStatus extends Module {
 
 			this._combatantStatuses[targetId] = this._combatantStatuses[targetId] || []
 
-			if (event.type === 'applybuff' && !statusInfo.hasOwnProperty('stacksApplied')) {
+			if (event.type === 'applybuff' && statusInfo.stacksApplied == null) {
 				// If status applies stacks, check applybuffstack for applying full stacks before considering this the first application of this status
 				this.fabricateActionEventIfNew(event, statusInfo)
 				this.markStatusAsTracked(statusInfo.id, targetId)
 			}
 
-			if (event.type === 'applybuffstack' && statusInfo.hasOwnProperty('stacksApplied')) {
+			if (event.type === 'applybuffstack' && statusInfo.stacksApplied == null) {
 				// Determine if this is applying fewer than the max stacks
 				if (event.stack < statusInfo.stacksApplied) {
 					// Synth the precast status event if this applied fewer than max stacks

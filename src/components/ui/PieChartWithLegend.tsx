@@ -1,7 +1,6 @@
 import {merge} from 'lodash'
 import React from 'react'
 import {ChartComponentProps, Pie} from 'react-chartjs-2'
-
 import * as styles from './PieChartWithLegend.module.css'
 
 interface DataPoint {

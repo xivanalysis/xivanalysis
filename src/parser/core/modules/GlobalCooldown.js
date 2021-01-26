@@ -1,9 +1,8 @@
 import {t} from '@lingui/macro'
 import {Trans} from '@lingui/react'
 import math from 'mathjsCustom'
-import React from 'react'
-
 import Module from 'parser/core/Module'
+import React from 'react'
 import {SimpleStatistic} from './Statistics'
 import {ActionItem, ContainerRow} from './Timeline'
 
@@ -78,7 +77,7 @@ export default class GlobalCooldown extends Module {
 				this._castingEvent = event
 				break
 
-			case 'cast':
+			case 'cast': {
 				const hasBeginCast = this._castingEvent !== null && this._castingEvent.ability.guid === action.id
 				const relevantEvent = hasBeginCast ? this._castingEvent : event
 				this.saveGcd({...this._lastGcd}, relevantEvent.timestamp) // Save last gcd with current timestamp
@@ -88,6 +87,7 @@ export default class GlobalCooldown extends Module {
 
 				this._castingEvent = null
 				break
+			}
 			}
 		}
 
@@ -170,7 +170,7 @@ export default class GlobalCooldown extends Module {
 		let isCasterTaxed = false
 
 		// GCD is only to two decimal places, so round it there. Storing in Ms.
-		// eslint-disable-next-line no-magic-numbers
+		// eslint-disable-next-line @typescript-eslint/no-magic-numbers
 		let gcdLength = Math.round((timestamp - gcdInfo.event.timestamp)/10)*10
 
 		if (!gcdInfo.isInstant && castTime >= action.cooldown) {

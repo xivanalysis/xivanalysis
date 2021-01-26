@@ -94,7 +94,7 @@ export default class Combos extends Module {
 
 	protected fabricateComboEvent(event: NormalisedDamageEvent) {
 		const combo = new ComboEvent(event)
-		this.parser.fabricateEvent(combo)
+		this.parser.fabricateLegacyEvent(combo)
 	}
 
 	protected recordBrokenCombo(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]) {
@@ -241,7 +241,7 @@ export default class Combos extends Module {
 	 * what particular actions were misused and when in the fight.
 	 * The overriding module should return true if the default suggestion is not wanted
 	 */
-	addJobSpecificSuggestions(comboBreakers: NormalisedDamageEvent[], uncomboedGcds: NormalisedDamageEvent[]) {
+	addJobSpecificSuggestions(_comboBreakers: NormalisedDamageEvent[], _uncomboedGcds: NormalisedDamageEvent[]) {
 		return false
 	}
 
@@ -251,7 +251,7 @@ export default class Combos extends Module {
 	 * the event and context will not be recorded, and the current combo will be cleared with no other side effects.
 	 * Returning false will allow the break to be recorded, and displayed to the user
 	 */
-	isAllowableComboBreak(event: NormalisedDamageEvent, context: NormalisedDamageEvent[]): boolean {
+	isAllowableComboBreak(_event: NormalisedDamageEvent, _context: NormalisedDamageEvent[]): boolean {
 		return false
 	}
 
@@ -268,14 +268,14 @@ export default class Combos extends Module {
 			.map(issue => {
 				const completeContext = [...(issue.context || []), issue.event]
 
-				const startEvent = _.first(completeContext)
-				const endEvent = _.last(completeContext)
-				const startAction = this.data.getAction(startEvent!.ability.guid)
-				const endAction = this.data.getAction(endEvent!.ability.guid)
+				const startEvent = completeContext[0]
+				const endEvent = completeContext[completeContext.length-1]
+				const startAction = this.data.getAction(startEvent.ability.guid)
+				const endAction = this.data.getAction(endEvent.ability.guid)
 
 				return ({
-					start: startEvent!.timestamp - startTime + (startAction?.cooldown ?? DEFAULT_GCD),
-					end: endEvent!.timestamp - startTime + (endAction?.cooldown ?? DEFAULT_GCD),
+					start: startEvent.timestamp - startTime + (startAction?.cooldown ?? DEFAULT_GCD),
+					end: endEvent.timestamp - startTime + (endAction?.cooldown ?? DEFAULT_GCD),
 					rotation: completeContext,
 					notesMap: {
 						reason: <span style={{whiteSpace: 'nowrap'}}>{ISSUE_TYPENAMES[issue.type]}</span>,

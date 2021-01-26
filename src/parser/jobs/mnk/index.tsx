@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/macro'
-import React from 'react'
-
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-mnk" */),
@@ -11,14 +10,15 @@ export default new Meta({
 		<Trans id="mnk.about.description">
 			<p>Hello friendly monk! Do you not Crit the Boot? Does your Six-Sided Star dream remain a meme?</p>
 			<p>This monk analyser aims to help you realise your true potential as a monk by highlighting issues that can
-				be difficult to spot in a raw log. The main focus is on your buff windows,
-				gauge and buff uptime, and ensuring your cooldowns are used.</p>
-			<p>If you notice anything that looks particularly wrong, please visit our Discord server and report it in the #support channel.</p>
+				be difficult to spot in a raw log. The main focus is on your buff windows, buff uptime,
+				and ensuring your cooldowns are used while providing tips on utility skill usage.
+			</p>
+			<p>If you notice anything that looks wrong or have a feature idea, please visit our Discord server and report it in the #fb-monk channel.</p>
 		</Trans>
 	</>,
 	supportedPatches: {
-		from: '5.0',
-		to: '5.3',
+		from: '5.4',
+		to: '5.4',
 	},
 
 	contributors: [
@@ -26,6 +26,13 @@ export default new Meta({
 		{user: CONTRIBUTORS.LHEA, role: ROLES.DEVELOPER},
 	],
 	changelog: [
+		{
+			date: new Date('2020-12-08'),
+			Changes: () => <>
+				Update MNK support for patch 5.4, this marks previous patches unsupported due to the scope of the changes.
+			</>,
+			contributors: [CONTRIBUTORS.ACCHAN],
+		},
 		{
 			date: new Date('2020-08-11'),
 			Changes: () => <>

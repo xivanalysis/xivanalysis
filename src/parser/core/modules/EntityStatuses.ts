@@ -10,7 +10,7 @@ const REMOVE = 'remove'
 interface BuffTrackingEvent extends BuffEvent {
 	start: number,
 	lastRefreshed: number,
-	end: number | undefined,
+	end?: number,
 	stacks: number,
 	stackHistory: StackHistoryEvent[],
 	isDebuff: boolean,
@@ -72,8 +72,8 @@ export class EntityStatuses extends Module {
 
 	private getUptime = (statusEvents: BuffTrackingEvent[]) => {
 		const statusRanges = statusEvents.reduce((statusRanges: StatusRangeEndpoint[], statusEvent) => {
-				return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
-			}, [])
+			return statusRanges.concat(this.getStatusRangesForEvent(statusEvent))
+		}, [])
 
 		const statusInfo = statusRanges.sort((a, b) => a.timestamp - b.timestamp)
 			.reduce(this.totalStatusUptime, {uptime: 0, activeOn: 0, activeWindowStart: 0})
@@ -109,14 +109,14 @@ export class EntityStatuses extends Module {
 		return statusTracking
 	}
 
-	private splitStatusEventForInvulns = (statusEvent: BuffTrackingEvent) => {
-		this.setEndTimeIfUnfinished(statusEvent)
+	private splitStatusEventForInvulns = (maybeUnfinishedEvent: BuffTrackingEvent) => {
+		const statusEvent = this.setEndTimeIfUnfinished(maybeUnfinishedEvent)
 
 		const eventToAdjust = _.cloneDeep(statusEvent)
 		const adjustedEvents = [eventToAdjust]
 
 		const target = statusEvent.targetID
-		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end!, 1)}`)
+		this.debug(`Searching for invulns against target ID ${target} from ${this.parser.formatTimestamp(statusEvent.start, 1)} to ${this.parser.formatTimestamp(statusEvent.end, 1)}`)
 		const invulns = this.invuln.getInvulns(target, statusEvent.start, statusEvent.end, 'invulnerable')
 
 		// TODO: Export an interface for invulnerable events from Invulnerability.js
@@ -130,7 +130,7 @@ export class EntityStatuses extends Module {
 				eventToAdjust.end = invuln.start
 				eventToAdjust.stackHistory.splice(-1, 1, {stacks: 0, timestamp: invuln.start, invuln: true})
 
-				if (invuln.end < statusEvent.end!) {
+				if (invuln.end < statusEvent.end) {
 					this.debug('Invuln split the range - synthesizing second event for status time after invuln')
 					// Invuln ended before the status ended - create a second status for the time after the invuln ended
 					// If the status overlaps the end of the fight or the disappearance of the boss, there may not be a stackHistory event for the end of the debuff - splice on to the end of the array as-is
@@ -139,7 +139,7 @@ export class EntityStatuses extends Module {
 					newStackHistory.splice(-1, 1,
 						{stacks: 0, timestamp: invuln.start, invuln: true},
 						{stacks: stacksBeforeInvuln, timestamp: invuln.end, invuln: false},
-						{stacks: 0, timestamp: statusEvent.end!, invuln: false})
+						{stacks: 0, timestamp: statusEvent.end, invuln: false})
 
 					adjustedEvents.push({
 						...statusEvent,
@@ -152,12 +152,14 @@ export class EntityStatuses extends Module {
 			}
 		})
 
-		adjustedEvents.forEach(event => this.debug(`Active time after adjusting for invulns - start at: ${this.parser.formatTimestamp(event.start)} - end at: ${this.parser.formatTimestamp(event.end!)}`))
+		this.debug(({log}) => {
+			adjustedEvents.forEach(event => log(`Active time after adjusting for invulns - start at: ${this.parser.formatTimestamp(event.start)} - end at: ${this.parser.formatTimestamp(event.end)}`))
+		})
 		return adjustedEvents
 	}
 
 	private setEndTimeIfUnfinished = (statusEvent: BuffTrackingEvent) => {
-		if (!statusEvent.end) {
+		if (statusEvent.end == null) {
 			this.debug('Unfinished status event detected.  Applying ability duration after last refresh event.')
 			const statusInfo = this.data.getStatus(statusEvent.ability.guid)
 			if (statusInfo?.duration) {
@@ -168,5 +170,7 @@ export class EntityStatuses extends Module {
 				statusEvent.end = this.parser.pull.duration + this.parser.eventTimeOffset
 			}
 		}
+
+		return statusEvent as Required<BuffTrackingEvent>
 	}
 }

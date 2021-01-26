@@ -43,7 +43,7 @@ export default class Goring extends DoTs {
 		}))
 	}
 
-	addClippingSuggestions(clip: any) {
+	addClippingSuggestions(clip: TODO) {
 		// Suggestion for Goring Blade DoT clipping
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,

@@ -1,13 +1,11 @@
-import React from 'react'
-import {Trans, Plural} from '@lingui/react'
 import {t} from '@lingui/macro'
+import {Trans, Plural} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
-import {DamageEvent} from 'fflogs'
 import Module, {dependency} from 'parser/core/Module'
 import {Data} from 'parser/core/modules/Data'
 import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 import Suggestions, {TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
 import AdditionalStats from './AdditionalStats'
 
 const DHIT_MOD = 1.25
@@ -46,7 +44,7 @@ export default class ApexArrow extends Module {
 			(curr.amount > max.amount ? curr : max), event.confirmedEvents[0])
 
 		// We get the unbuffed damage
-		let rawDamage = bestEvent.amount / fixedMultiplier
+		let rawDamage = (bestEvent.amount + (bestEvent.overkill ?? 0)) / fixedMultiplier
 
 		// And then strip off critical hit and direct hit mods
 		if (bestEvent.criticalHit) {
@@ -77,7 +75,7 @@ export default class ApexArrow extends Module {
 
 		if ((event.hitCount === 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.singleTarget) ||
 			(event.hitCount > 1 && approximatedPotency < APEX_POTENCY_THRESHOLDS.multiTarget)) {
-				this.badApexCasts++
+			this.badApexCasts++
 		}
 	}
 

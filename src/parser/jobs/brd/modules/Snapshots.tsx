@@ -1,17 +1,16 @@
-import React from 'react'
 import {t} from '@lingui/macro'
 import {Trans, Plural} from '@lingui/react'
-import {Table, Accordion} from 'semantic-ui-react'
 import {ActionLink, StatusLink} from 'components/ui/DbLink'
 import NormalisedMessage from 'components/ui/NormalisedMessage'
 import ACTIONS from 'data/ACTIONS'
 import STATUSES, {Status} from 'data/STATUSES'
 import {BuffEvent, CastEvent} from 'fflogs'
+import Module, {dependency} from 'parser/core/Module'
 import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
-import Module, {dependency} from 'parser/core/Module'
 import Suggestions, {SEVERITY, TieredSuggestion} from 'parser/core/modules/Suggestions'
-
+import React from 'react'
+import {Table, Accordion} from 'semantic-ui-react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
 import {SNAPSHOT_BLACKLIST} from './SnapshotBlacklist'
 import styles from './Snapshots.module.css'
@@ -245,25 +244,25 @@ export default class Snapshots extends Module {
 
 		if (this.targets.size === 1) {
 			return this.createSnapshotTable(this.targets.values().next().value)
-
-		} else {
-			const panels = Array.from(this.targets.values(), target => {
-				return {
-					key: target.key,
-					title: {
-						content: <span className={styles.name}> {target.name} </span>,
-					},
-					content: {
-						content: this.createSnapshotTable(target),
-					},
-				}
-			})
-			return <Accordion
-				exclusive={false}
-				panels={panels}
-				styled
-				fluid
-			/>
 		}
+
+		const panels = Array.from(this.targets.values(), target => {
+			return {
+				key: target.key,
+				title: {
+					content: <span className={styles.name}> {target.name} </span>,
+				},
+				content: {
+					content: this.createSnapshotTable(target),
+				},
+			}
+		})
+
+		return <Accordion
+			exclusive={false}
+			panels={panels}
+			styled
+			fluid
+		/>
 	}
 }

@@ -1,8 +1,7 @@
 import {Trans} from '@lingui/react'
-import React from 'react'
-
 import CONTRIBUTORS, {ROLES} from 'data/CONTRIBUTORS'
 import {Meta} from 'parser/core/Meta'
+import React from 'react'
 
 export default new Meta({
 	modules: () => import('./modules' /* webpackChunkName: "jobs-drg" */),
@@ -22,6 +21,11 @@ export default new Meta({
 		{user: CONTRIBUTORS.RIETTY, role: ROLES.DEVELOPER},
 	],
 	changelog: [{
+		date: new Date('2020-12-17'),
+		Changes: () => <>Updated Buff Window logic and suggestions for Lance Charge and Dragon Sight.</>,
+		contributors: [CONTRIBUTORS.FALINDRITH],
+	},
+	{
 		date: new Date('2020-06-29'),
 		Changes: () => <>Added Geirskogul to cooldowns section & enabled Tincture module.</>,
 		contributors: [CONTRIBUTORS.RIETTY],
