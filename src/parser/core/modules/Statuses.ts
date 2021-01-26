@@ -12,8 +12,6 @@ import {SimpleRow, StatusItem} from './Timeline'
 
 const STATUS_APPLY_ON_PARTY_THRESHOLD_MILLISECONDS = 2 * 1000
 
-type StatusEvent = Events['statusApply'] | Events['statusRemove']
-
 interface StatusUsage {
 	start: number,
 	end?: number,
@@ -69,7 +67,7 @@ export default class Statuses extends Analyser {
 		this.endPrevStatus(event)
 	}
 
-	private addStatus(event: StatusEvent) {
+	private addStatus(event: Events['statusApply']) {
 		let usages = this.statusUsages.get(event.status)
 
 		if (!usages) {
@@ -88,7 +86,7 @@ export default class Statuses extends Analyser {
 		})
 	}
 
-	private endPrevStatus(event: StatusEvent) {
+	private endPrevStatus(event: Events['statusRemove']) {
 		const usages = this.statusUsages.get(event.status)
 
 		if (usages) {
@@ -141,7 +139,7 @@ export default class Statuses extends Analyser {
 		return newRow
 	}
 
-	private isStatusAppliedToPet(event: StatusEvent) {
+	private isStatusAppliedToPet(event: Events['statusApply'] | Events['statusRemove']) {
 		return this.parser.pull.actors
 			.some(actor => actor.id === event.target && actor.owner?.playerControlled)
 	}
