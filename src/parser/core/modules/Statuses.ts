@@ -26,7 +26,7 @@ export default class Statuses extends Analyser {
 	@dependency private data!: Data
 	@dependency private gcd!: GlobalCooldown
 
-	static statusesStackMapping = new Map<number, number>()
+	static statusesStackMapping: Record<number, number> = {}
 
 	private statusUsages: Map<number, StatusUsage[]> = new Map()
 	private rows: Map<number, SimpleRow> = new Map()
@@ -118,7 +118,7 @@ export default class Statuses extends Analyser {
 	}
 
 	private createRowForStatus(status: Status) {
-		const key = Statuses.statusesStackMapping.get(status.id) ?? status.id
+		const key = Statuses.statusesStackMapping[status.id] ?? status.id
 		const row = this.rows.get(key)
 
 		if (row != null) {
