@@ -54,6 +54,12 @@ interface CooldownGroup {
 	 * Any skills that deduct from charge time for this group.
 	 */
 	resetBy?: CooldownReset
+	/**
+	 * The weighted importance of the given CooldownGroup
+	 * Set this higher or lower than the other CooldownGroups to adjust the priority
+	 * when calculating the checklist percentage
+	 */
+	weight?: number
 }
 
 const DEFAULT_CHECKLIST_TARGET = 95
@@ -163,12 +169,13 @@ export abstract class CooldownDowntime extends Module {
 
 			cdRequirements.push(new Requirement({
 				name: requirementDisplay,
-				percent,
+				percent: percent,
 				overrideDisplay: `${actual} / ${expected} (${percent.toFixed(2)}%)`,
+				weight: cdGroup.weight ?? 1,
 			}))
 		}
 
-		this.checklist.add(new Rule({
+		this.checklist.add(new WeightedRule({
 			name: this.checklistName,
 			description: this.checklistDescription,
 			requirements: cdRequirements,
@@ -292,5 +299,18 @@ export abstract class CooldownDowntime extends Module {
 		this.debug(`Total count for group ${gRep.name} is ${count}. Total reset time lost is ${this.parser.formatDuration(timeLost)}.`)
 
 		return count
+	}
+}
+
+class WeightedRule extends Rule {
+	constructor(options: TODO) {
+		super({...options})
+
+		const totalWeight = this.requirements.reduce((acc, req) => acc + req.weight, 0)
+		this.requirements.map(req => req.weight = req.weight / totalWeight)
+	}
+
+	public get percent(): number {
+		return this.requirements.reduce((acc, req) => acc + (req.percent * req.weight), 0)
 	}
 }
