@@ -637,7 +637,6 @@
   "nin.taWindow.suggestions.gcds.content": "While the exact number of GCDs per window will vary depending on whether <0/> is up, every <1/> window should contain at least {BASE_GCDS_PER_WINDOW} GCDs.",
   "nin.taWindow.suggestions.trackedactions.content": "Every <0/> window should contain <1/>, <2/>, 2 <3/> casts (or 1 if it's your opener), and <4/> in order to maximize damage.",
   "nin.taWindow.title": "Trick Attack Windows",
-  "pld.about.description": "As the illegitimate child of a WHM and BLM, you chose the Gory Path of a shield lobing, sword swinging Mage, that also tries to help everybody out.\n\nThis analyzer attempts to find just the right things to get you to be a fearsome Tank, that will show no [~action/CLEMENCY] to his enemies, while being the true [~action/HOLY_SPIRIT] of the Party.\n",
   "pld.fightorflight.suggestions.gcds.content": "Try to land 11 physical GCDs during every <0/> window.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# physical GCD} other {# physical GCDs}} missed during <0/> windows.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Try to refresh <0/> 9 GCDs after the first <1/> in a <2/> window.",

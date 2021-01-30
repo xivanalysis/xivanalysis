@@ -637,7 +637,6 @@
   "nin.taWindow.suggestions.gcds.content": "Bien que le nombre exact de GCD par fenêtre varie selon que <0/> est en hausse, chaque fenêtre <1/> devrait contenir au moins {BASE_GCDS_PER_WINDOW} de GCDs.",
   "nin.taWindow.suggestions.trackedactions.content": "Chaque fenêtre <0/> devrait contenir <1/>, <2/>, 2 <3/> lancement de sort (ou 1 si c'est votre opener), et <4/> afin de maximiser les dégâts.",
   "nin.taWindow.title": "Fenêtre d'attaque sournoise",
-  "pld.about.description": "En tant qu'enfant illégitime d'un Mage blanc et d'un mage noir, vous avez choisi le chemin sanglant du bouclier, vous êtes le Mage qui balance son épée et qui essaie aussi d'aider tout le monde.\n\nCet analyseur tente de trouver ce qu'il faut pour que vous soyez un tank redoutable, qui ne montrera aucun[~action/CLEMENCY] à ses ennemis, tout en étant le vrai[~action/HOLY_SPIRIT] de l'équipe.\n",
   "pld.fightorflight.suggestions.gcds.content": "Essayez d'utiliser 11 GCDs physique chaque <0/> fenêtre.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# GCD physique} other {# GCDs phisiques}} perdu durant <0/> fenêtres.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Essayez de rafraîchir <0/> 9 GCDs après le premier <1/> dans <2/> fenêtre.",
