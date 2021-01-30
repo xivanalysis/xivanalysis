@@ -394,7 +394,7 @@
   "drg.buffs.checklist.description": "<0/> provides a 10% boost to your personal damage and should always be kept up.",
   "drg.buffs.checklist.name": "Keep {0} up",
   "drg.buffs.checklist.requirement.name": "<0/> uptime",
-  "drg.buffs.suggestions.life-surge.content": "Avoid using <0/> on any GCD that isn't <1/> or a 5th combo hit. Any other combo action will have significantly less potency, losing a lot of the benefit of the guaranteed crit.",
+  "drg.buffs.suggestions.life-surge.content": "<0/> should be used on <1/>, your highest potency ability, as much as possible. In order to keep <2/> on cooldown, it may sometimes be necessary to use it on a 5th combo hit. In multi-target scenarios, <3/> can be used on <4/> if you hit at least three targets.",
   "drg.buffs.suggestions.life-surge.why": "You used {0} on a non-optimal GCD {1, plural, one {# time} other {# times}}.",
   "drg.buffs.suggestions.solo-ds.content": "Although it doesn't impact your personal DPS, try to always use <0/> on a partner in group content so that someone else can benefit from the damage bonus too.",
   "drg.buffs.suggestions.solo-ds.why": "At least 1 of your Dragon Sight casts didn't have a tether partner.",
