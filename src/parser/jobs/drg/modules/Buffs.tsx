@@ -101,12 +101,10 @@ export default class Buffs extends Module {
 	}
 
 	private onCot(event: NormalisedDamageEvent) {
-		if (event.ability.guid === ACTIONS.COERTHAN_TORMENT.id) {
-			// this action is pushed onto the statistic graph data by onCast, don't duplicate that
-			// if coerthan torment is life surged and hits less than three targets, it's no good
-			if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id) && event.hitCount < MIN_COT_HITS) {
-				this.badLifeSurges++
-			}
+		// this action is pushed onto the statistic graph data by onCast, don't duplicate that
+		// if coerthan torment is life surged and hits less than three targets, it's no good
+		if (this.combatants.selected.hasStatus(STATUSES.LIFE_SURGE.id) && event.hitCount < MIN_COT_HITS) {
+			this.badLifeSurges++
 		}
 	}
 
@@ -167,7 +165,7 @@ export default class Buffs extends Module {
 		// format for graph
 		const data = []
 
-		// count the things we care about (total - tracked should equal bad LS uses)
+		// count the things we care about (total - tracked should usually equal bad LS uses)
 		let trackedCastCount = 0
 		for (const actionId of CHART_LIFE_SURGE_CONSUMERS) {
 			const value = this.lifeSurgeCasts.filter(i => actionId === i).length
