@@ -92,7 +92,6 @@ export default class PetTimeline extends Module {
 
 			// TOOD: Type cooldowns so this cast isn't required
 			const parentRow: ContainerRow = this.cooldowns.getActionTimelineRow(summonAction)
-			parentRow.order = -99
 
 			autoRow = parentRow.addRow(new SimpleRow({
 				label: this.timelineGroupName,
