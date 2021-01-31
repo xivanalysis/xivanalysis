@@ -658,6 +658,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# cast raté} other {# casts ratés}} durant <0/> fenêtres de buff.",
   "pld.requiescat.table.note": "Chacune de vos fenêtres <0/> doit contenir au minimum des sorts {0} pour maintenir l'alignement de votre rotation. La plupart du temps, une fenêtre devrait être composée de {1} sorts de <1/> ou <2/> et se terminer par un sort de <3/>. Cependant, dans certaines circonstances, il est utile de lâcher un <4/> par minute afin de mieux aligner votre rotation avec les buffs ou les mécaniques. Si vous n'avez pas de plan précis pour ce faire, vous devriez viser {2} lancement de sort de <5/> par fenêtre de <6/>.",
   "pld.requiescat.title": "Utilisation de Requiescat",
+  "pld.tincture.suggestions.missedgcd.content": "",
+  "pld.tincture.suggestions.trackedactions.content": "",
   "rdm.about.description": "<0>Cet analyseur a pour but de vous donner les informations nécessaires pour changer vos <1>parses</1> en<2>parses</2></0> <3>Si vous souhaitez en savoir plus sur Mage rouge, consultez les guides <4>The Balance</4>, et consultez le canal <5>#rdm_questions</5>.</3>",
   "rdm.about.description.warning": "L'opener est actuellement pas pris en compte.",
   "rdm.combos.suggestions.derpcombos.content": "Faites attention à ne pas utiliser vos combos dans le mauvais ordre.",

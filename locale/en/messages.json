@@ -658,6 +658,8 @@
   "pld.requiescat.suggestions.wrong-gcd.why": "{missedCasts, plural, one {# missing cast} other {# missing casts}} during the <0/> buff window.",
   "pld.requiescat.table.note": "Each of your <0/> windows should contain {0} spells at minimum to maintain the alignment of your rotation. Most of the time, a window should consist of {1} casts of <1/> or <2/> and end with a cast of <3/>. However, under some circumstances, it is useful to drop one <4/> per minute in order to better align your rotation with buffs or mechanics. If you don't have a specific plan to do this, you should aim for {2} casts of <5/> per <6/> window.",
   "pld.requiescat.title": "Requiescat Usage",
+  "pld.tincture.suggestions.missedgcd.content": "Try to land 13 GCDs during every <0/> window.",
+  "pld.tincture.suggestions.trackedactions.content": "One use of <0/> and one use of <1/> should occur during every <2/> window.",
   "rdm.about.description": "<0>This analyzer aims to give you the information you need to turn your <1>parses</1> into <2>parses</2></0><3>If you would like to learn more about RDM, check the guides over at <4>The Balance</4>, and have a chat in the <5>#rdm_questions</5> channel.</3>",
   "rdm.about.description.warning": "Openers are currently not supported at this time.",
   "rdm.combos.suggestions.derpcombos.content": "Be sure not to use combo actions out of order.",
