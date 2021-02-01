@@ -32,7 +32,7 @@ export default class Tincture extends CoreTincture {
 			},
 		],
 		suggestionContent: <Trans id="pld.tincture.suggestions.trackedactions.content">
-			One use of <ActionLink {...this.data.actions.SPIRITS_WITHIN}/> and one use of <ActionLink {...this.data.actions.CIRCLE_OF_SCORN}/> should occur during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
+			One use of <ActionLink {...this.data.actions.SPIRITS_WITHIN}/> and at least one use of <ActionLink {...this.data.actions.CIRCLE_OF_SCORN}/> should occur during every <ActionLink {...this.data.actions.INFUSION_STR}/> window.
 		</Trans>,
 		severityTiers: {
 			2: SEVERITY.MINOR,
