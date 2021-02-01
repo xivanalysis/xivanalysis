@@ -62,6 +62,7 @@ export default class RagingStrikes extends BuffWindowModule {
 		actions: [
 			{
 				action: this.data.actions.BARRAGE,
+				status: this.data.statuses.BARRAGE,
 				expectedPerWindow: 1,
 			},
 			{
