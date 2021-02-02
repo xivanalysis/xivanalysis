@@ -1,4 +1,4 @@
-import {Interrupts} from 'parser/core/modules/Interrupts'
+import Interrupts from 'parser/core/modules/Interrupts'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'

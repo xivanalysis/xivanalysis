@@ -19,7 +19,7 @@ interface SeverityTiers {
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
 
-export abstract class Interrupts extends Module {
+export default class Interrupts extends Module {
 	static handle: string = 'interrupts'
 	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
