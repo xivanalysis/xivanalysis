@@ -1,3 +1,4 @@
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import Combos from './Combos'
 import Cooldowns from './Cooldowns'
 import FightOrFlight from './FightOrFlight'
@@ -12,6 +13,7 @@ export default [
 	Cooldowns,
 	FightOrFlight,
 	Goring,
+	Interrupts,
 	OGCDDowntime,
 	Requiescat,
 	Statuses,

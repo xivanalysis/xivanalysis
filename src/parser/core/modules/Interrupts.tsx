@@ -23,7 +23,7 @@ export abstract class Interrupts extends Module {
 	static handle: string = 'interrupts'
 	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
