@@ -50,7 +50,7 @@ export class Interrupts extends Module {
 	 * Implementing modules MAY override the default suggestion text
 	 */
 	protected suggestionContent: JSX.Element = <Trans id="core.interrupts.suggestion.content">
-		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible.
+		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible. If you have to move, try to save an instant cast to keep your GCD rolling.
 	</Trans>
 
 	/**

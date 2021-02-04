@@ -836,7 +836,6 @@
   "smn.gauge.aetherflow-action-at-0": "에테르 순환이 준비되지 않는 상태에서 <0/>사용이 확인되었습니다.",
   "smn.gauge.suggestions.lost-aetherflow.content": "에테르 순환을 사용 할때마다 2스택이 온전히 충전되도록 하십시오. 무의미하게 잃은 스택은 곧 위력 손해를 의미합니다.",
   "smn.gauge.suggestions.lost-aetherflow.why": "손해 본 에테르 스택수 : {0, plural, one {#개} other {#개}}",
-  "smn.interrupts.suggestion.content": "",
   "smn.missingdots.title": "도트기가 적용되지 않음",
   "smn.pets.suggestions.garuda-st.content": "가루다-에기는 광역 데미지에 유효하지만 개인 대상에겐 더 강력한 이프리트-에기를 사용하십시오.",
   "smn.pets.suggestions.garuda-st.why": "가루다-에기의 전투 시간중 {0}%를 개인 대상과 전투를 하였습니다.",
