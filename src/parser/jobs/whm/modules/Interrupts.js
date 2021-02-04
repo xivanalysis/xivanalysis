@@ -1,7 +1,7 @@
 import {Trans} from '@lingui/react'
 import {ActionLink} from 'components/ui/DbLink'
 import ACTIONS from 'data/ACTIONS'
-import CoreInterrupts from 'parser/core/modules/Interrupts'
+import {Interrupts as CoreInterrupts} from 'parser/core/modules/Interrupts'
 import React from 'react'
 
 export default class Interrupts extends CoreInterrupts {

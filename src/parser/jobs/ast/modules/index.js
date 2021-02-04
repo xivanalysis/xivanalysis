@@ -1,4 +1,4 @@
-import Interrupts from 'parser/core/modules/Interrupts'
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import CelestialIntersection from './CelestialIntersection'
