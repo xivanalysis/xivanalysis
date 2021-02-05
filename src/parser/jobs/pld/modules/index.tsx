@@ -6,6 +6,7 @@ import Goring from './Goring'
 import OGCDDowntime from './OGCDDowntime'
 import Requiescat from './Requiescat'
 import Statuses from './Statuses'
+import Tincture from './Tincture'
 import Weaving from './Weaving'
 
 export default [
@@ -17,5 +18,6 @@ export default [
 	OGCDDowntime,
 	Requiescat,
 	Statuses,
+	Tincture,
 	Weaving,
 ]

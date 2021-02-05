@@ -18,7 +18,7 @@ interface TimestampRotationMap {
 	[timestamp: number]: CastEvent[]
 }
 
-const SEVERETIES = {
+const SEVERITIES = {
 	MISSED_OGCDS: {
 		1: SEVERITY.MINOR,
 		4: SEVERITY.MEDIUM,
@@ -196,7 +196,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.gcds.why">
 				<Plural value={this.fofErrorResult.missedGcds} one="# physical GCD" other="# physical GCDs"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_GCD,
+			tiers: SEVERITIES.MISSED_GCD,
 			value: this.fofErrorResult.missedGcds,
 		}))
 
@@ -209,7 +209,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade.why">
 				<Plural value={this.fofErrorResult.missedGorings} one="# application" other="# applications"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_GORING,
+			tiers: SEVERITIES.MISSED_GORING,
 			value: this.fofErrorResult.missedGorings,
 		}))
 
@@ -222,13 +222,13 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.ogcds.why">
 				<Plural value={missedOgcds} one="# usage" other="# usages"/> missed during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.MISSED_OGCDS,
+			tiers: SEVERITIES.MISSED_OGCDS,
 			value: missedOgcds,
 		}))
 
 		this.suggestions.add(new TieredSuggestion({
 			icon: ACTIONS.GORING_BLADE.icon,
-			severity: matchClosestLower(SEVERETIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
+			severity: matchClosestLower(SEVERITIES.MISSED_GCD, this.fofErrorResult.goringTooCloseCounter),
 			content: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.content">
 				Try to refresh <ActionLink {...ACTIONS.GORING_BLADE}/> 9 GCDs after the
 				first <ActionLink {...ACTIONS.GORING_BLADE}/> in
@@ -237,7 +237,7 @@ export default class FightOrFlight extends Module {
 			why: <Trans id="pld.fightorflight.suggestions.goring-blade-clip.why">
 				<Plural value={this.fofErrorResult.goringTooCloseCounter} one="# application was" other="# applications were"/> refreshed too early during <StatusLink {...STATUSES.FIGHT_OR_FLIGHT}/> windows.
 			</Trans>,
-			tiers: SEVERETIES.GORING_CLIP,
+			tiers: SEVERITIES.GORING_CLIP,
 			value: this.fofErrorResult.goringTooCloseCounter,
 		}))
 	}
