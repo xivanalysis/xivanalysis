@@ -230,7 +230,6 @@
   "core.i18n.hide-overlay": "多言語対応オーバレイを隠す",
   "core.i18n.show-overlay": "多言語対応オーバレイを表示する",
   "core.i18n.translation-error": "翻訳データの読み込みに失敗しました：{id}",
-  "core.interrupts.suggestion.content": "できる限り位置取りやすべり撃ちを活用して詠唱中断を避けましょう。",
   "core.interrupts.suggestion.why": "{0} 回の詠唱(詠唱時間にしておよそ{1}) を詠唱中断によって失いました。",
   "core.interrupts.table.cast": "キャスト",
   "core.interrupts.table.time": "タイム",
