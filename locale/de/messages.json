@@ -637,6 +637,7 @@
   "nin.taWindow.suggestions.gcds.content": "Obwohl die exakte Anzahl an GCDs pro Fenster je nach <0/> unterschiedlich ist, sollte jedes <1/>-Fenster mindestens {BASE_GCDS_PER_WINDOW} GCDs enthalten.",
   "nin.taWindow.suggestions.trackedactions.content": "Jedes <0/>-Fenster sollte mindestens <1/>, <2/>, 2 <3/> Casts (oder einen im Opener) und <4/> enthalten, um Schaden zu maximieren.",
   "nin.taWindow.title": "Trickattacke-Fenster",
+  "pld.about.description": "",
   "pld.fightorflight.suggestions.gcds.content": "Versuche während jedes <0/>-Zeitfensters 11 physische GCD-Angriffe unterzubringen.",
   "pld.fightorflight.suggestions.gcds.why": "{0, plural, one {# physische GCD} other {# physische GCDs}} verpasst unter <0/>-Fenstern.",
   "pld.fightorflight.suggestions.goring-blade-clip.content": "Versuche, <0/> 9 GCDs nach dem ersten <1/> in einem <2/>-Fenster zu erneuern.",
