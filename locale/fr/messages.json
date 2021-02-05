@@ -694,6 +694,7 @@
   "rdm.gauge.title-mana-lost-to-manafication": "Manafication perdus:",
   "rdm.gauge.white-mana-lost-to-manafication": "Blanc",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "Il est normal de perdre un peu de mana à cause de la manafication au cours d'un combat, vous devriez cependant vous efforcer de garder ce nombre aussi bas que possible.",
+  "rdm.interrupts.suggestion.content": "",
   "rdm.meleecombos.recommendation.delay": "Retardez votre combo de mêlée pour garantir un proc de votre finisher, si vous perdez {IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD} ou moins de mana a l'overcapping.",
   "rdm.meleecombos.recommendation.incorrect": "Regardez la section Suggestions pour connaître les instructions relatives à votre finisher.",
   "rdm.meleecombos.table.header.recommended": "Recommandé",

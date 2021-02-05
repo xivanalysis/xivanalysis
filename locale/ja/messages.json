@@ -694,6 +694,7 @@
   "rdm.gauge.title-mana-lost-to-manafication": "マナフィケーションの損失：",
   "rdm.gauge.white-mana-lost-to-manafication": "白い",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "",
+  "rdm.interrupts.suggestion.content": "",
   "rdm.meleecombos.recommendation.delay": "",
   "rdm.meleecombos.recommendation.incorrect": "",
   "rdm.meleecombos.table.header.recommended": "提案",

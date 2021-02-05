@@ -1,3 +1,4 @@
+import {Interrupts} from 'parser/core/modules/Interrupts'
 import {ArcanaSuggestions, ArcanaTracking} from './ArcanaTracking'
 import ArcanaUndrawUsage from './ArcanaUndrawUsage'
 import CelestialIntersection from './CelestialIntersection'
@@ -16,21 +17,22 @@ import Statuses from './Statuses'
 import Synastry from './Synastry'
 
 export default [
-	Cooldowns,
-	Combust,
-	Lightspeed,
-	EarthlyStar,
-	LucidDreaming,
-	Draw,
-	ArcanaUndrawUsage,
-	Horoscope,
-	ArcanaTracking,
 	ArcanaSuggestions,
-	Sect,
+	ArcanaTracking,
+	ArcanaUndrawUsage,
 	CelestialIntersection,
-	Overheal,
-	DivinationDowntime,
 	CelestialOpposition,
+	Combust,
+	Cooldowns,
+	DivinationDowntime,
+	Draw,
+	EarthlyStar,
+	Horoscope,
+	Interrupts,
+	Lightspeed,
+	LucidDreaming,
+	Overheal,
+	Sect,
 	Statuses,
 	Synastry,
 ]

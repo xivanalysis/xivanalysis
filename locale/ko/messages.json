@@ -694,6 +694,7 @@
   "rdm.gauge.title-mana-lost-to-manafication": "마나증량 손해:",
   "rdm.gauge.white-mana-lost-to-manafication": "백마나",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "마나 증량으로 인해 초과하여 손해받는 마나 손실은 감당가능 하지만 손실을 가능하면 최소화 하십시오.",
+  "rdm.interrupts.suggestion.content": "",
   "rdm.meleecombos.recommendation.delay": "근접 콤보 후 프록을 확정적으로 얻기 위해, {IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD} 이하의 마나를 손실하는 경우에는 콤보 공격을 늦추는 것이 좋습니다.",
   "rdm.meleecombos.recommendation.incorrect": "제안 섹션의 버플레어/버홀리 가이드를 참고하세요.",
   "rdm.meleecombos.table.header.recommended": "권고사항",

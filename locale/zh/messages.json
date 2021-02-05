@@ -694,6 +694,7 @@
   "rdm.gauge.title-mana-lost-to-manafication": "倍增损失：",
   "rdm.gauge.white-mana-lost-to-manafication": "白魔元",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "在战斗中使用倍增造成魔元溢出是正常的，但请尽量溢出少一点。",
+  "rdm.interrupts.suggestion.content": "",
   "rdm.meleecombos.recommendation.delay": "如果打掉魔元较低一方的触发只会溢出不到 {IGNORE_FINISHER_PROCS_MANA_LOSS_THRESHOLD} 点魔元，请推迟使用魔连击以将它打掉。",
   "rdm.meleecombos.recommendation.incorrect": "有关触发的指导请参阅建议部分。",
   "rdm.meleecombos.table.header.recommended": "推荐",

@@ -694,6 +694,7 @@
   "rdm.gauge.title-mana-lost-to-manafication": "Verlust bei Manafizierung:",
   "rdm.gauge.white-mana-lost-to-manafication": "Weiß",
   "rdm.gauge.white-mana-lost-to-manafication-statistics": "Über den gesamten Kampf verteilt, ist es nicht schlimm, durch das Benutzen von Manafizierung überschüssiges Mana zu generieren. Du solltest jedoch versuchen, diese Zahl möglichst gering zu halten.",
+  "rdm.interrupts.suggestion.content": "",
   "rdm.meleecombos.recommendation.delay": "",
   "rdm.meleecombos.recommendation.incorrect": "",
   "rdm.meleecombos.table.header.recommended": "Empfohlen",
