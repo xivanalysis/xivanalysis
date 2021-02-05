@@ -272,7 +272,6 @@
   "core.i18n.hide-overlay": "i18n 오버레이 숨기기",
   "core.i18n.show-overlay": "i18n 오버레이 표시",
   "core.i18n.translation-error": "\"{id}\" 를 불러오는 중에 오류가 발생하였습니다.",
-  "core.interrupts.suggestion.content": "가능하다면 슬라이드 캐스팅이나 위치 선점을 통해 시전이 취소되는 것을 최소화 하십시오.",
   "core.interrupts.suggestion.why": "캐스팅을 중지함으로써 {0} 회의 캐스팅(대략 {1} 의 캐스팅 시간) 을 날렸습니다.",
   "core.interrupts.table.cast": "시전 기술",
   "core.interrupts.table.time": "시간",
