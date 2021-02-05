@@ -272,7 +272,6 @@
   "core.i18n.hide-overlay": "隐藏本地化遮罩",
   "core.i18n.show-overlay": "显示本地化遮罩",
   "core.i18n.translation-error": "加载“{id}”的翻译时出错。",
-  "core.interrupts.suggestion.content": "你可以使用预先站位或者尽可能地使用滑步来避免打断自己的咏唱",
   "core.interrupts.suggestion.why": "你因为打断而丢失了 {0} 次咏唱 (大约占总咏唱时间的 {1}) 。",
   "core.interrupts.table.cast": "吟唱",
   "core.interrupts.table.time": "时间",
