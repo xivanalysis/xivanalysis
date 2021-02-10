@@ -41,14 +41,25 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 }
 
 const MAX_AMMO = 2
+
 const ACTION_GENERATOR = 0
 const ACTION_SPENDER = 1
+
+const TIMING_BEFORE = 0
+const TIMING_AFTER = 1
 
 class AmmoState {
 	t?: number
 	y?: number
 	source: String
 	action: number
+}
+
+class OvercapState {
+	t?: number
+	y?: number
+	source: String
+	timing: number
 }
 
 export default class Ammo extends Module {
@@ -59,12 +70,14 @@ export default class Ammo extends Module {
 	private ammo = 0
 	private currentAbility = ''
 	private ammoHistory: AmmoState[] = []
+	private overcapHistory: OvercapState[] = []
 	private wasteBySource = {
 		[ACTIONS.SOLID_BARREL.id]: 0,
 		[ACTIONS.DEMON_SLAUGHTER.id]: 0,
 		[ACTIONS.BLOODFEST.id]: 0,
 		[ACTIONS.RAISE.id]: 0,
 	}
+	private ammoMaxWithOvercap = MAX_AMMO
 	private leftoverAmmo = 0
 	private totalGeneratedAmmo = 0 // Keep track of the total amount of generated ammo over the fight
 	private erroneousCircles = 0 // This is my new NEW band name.
@@ -126,12 +139,16 @@ export default class Ammo extends Module {
 	}
 
 	private addGeneratedAmmoAndPush(generatedAmmo: number, abilityId: number) {
+		const originalAmmo = this.ammo
 		this.ammo += generatedAmmo
 		this.totalGeneratedAmmo += generatedAmmo
 		if (this.ammo > MAX_AMMO) {
 			const waste = this.ammo - MAX_AMMO
 			this.wasteBySource[abilityId] += waste
 			this.ammo = MAX_AMMO
+
+			this.pushToOvercapHistory(originalAmmo, TIMING_BEFORE)
+			this.pushToOvercapHistory(originalAmmo + generatedAmmo, TIMING_AFTER)
 		}
 
 		this.pushToHistory(ACTION_GENERATOR)
@@ -159,6 +176,16 @@ export default class Ammo extends Module {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this.ammoHistory.push({t: timestamp, y: this.ammo, 
 			source: this.currentAbility, action: actionIndicator})
+	}
+
+	private pushToOvercapHistory(ammo: number, timing: number) {
+		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
+		this.overcapHistory.push({t: timestamp, y: ammo, 
+			source: this.currentAbility, timing: timing})
+
+		if (this.ammoMaxWithOvercap < ammo) {
+			this.ammoMaxWithOvercap = ammo
+		}
 	}
 
 	private onComplete() {
@@ -268,6 +295,13 @@ export default class Ammo extends Module {
 					backgroundColor: ammoColor.fade(0.8).toString(),
 					borderColor: ammoColor.fade(0.5).toString(),
 				},
+				{
+					label: 'Overcap',
+					steppedLine: true,
+					data: this.overcapHistory,
+					backgroundColor: Color('#db2828').fade(0.8).toString(),
+					borderColor: Color('#db2828').fade(0.5).toString(),
+				},
 			],
 		}
 
@@ -277,7 +311,7 @@ export default class Ammo extends Module {
 					ticks: {
 						beginAtZero: true,
 						min: 0,
-						max: 2,
+						max: this.ammoMaxWithOvercap,
 						callback: ((value: number) => {
 							if (value % 1 === 0) {
 								return value
@@ -289,13 +323,23 @@ export default class Ammo extends Module {
 			tooltips: {
 				callbacks: {
 					afterBody: function(t, y) {
-						const hovered = y.datasets[0].data[t[0].index]
-						if (hovered.action == ACTION_GENERATOR) {
-							return 'Generator: ' + hovered.source;
-						} else if (hovered.action == ACTION_SPENDER) {
-							return 'Spender: ' + hovered.source;
+						const datasetIndex = t[0].datasetIndex
+						const valueIndex = t[0].index
+						if (datasetIndex === 0) {
+							const hoveredAmmoHistory = y.datasets[0].data[valueIndex]
+							if (hoveredAmmoHistory.action === ACTION_GENERATOR) {
+								return 'Generator: ' + hoveredAmmoHistory.source
+							} else if (hoveredAmmoHistory.action === ACTION_SPENDER) {
+								return 'Spender: ' + hoveredAmmoHistory.source
+							}
+ 						} else if (datasetIndex === 1) {
+							const hoveredOvercapHistory = y.datasets[1].data[valueIndex]
+							if (hoveredOvercapHistory.timing == TIMING_BEFORE) {
+								return 'Before ' + hoveredOvercapHistory.source
+							} else if (hoveredOvercapHistory.timing == TIMING_AFTER) {
+								return 'After ' + hoveredOvercapHistory.source
+							}
 						}
-					  
 				   }
 				}
 			 },
