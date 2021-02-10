@@ -41,10 +41,14 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 }
 
 const MAX_AMMO = 2
+const ACTION_GENERATOR = 0
+const ACTION_SPENDER = 1
 
 class AmmoState {
 	t?: number
 	y?: number
+	source: String
+	action: number
 }
 
 export default class Ammo extends Module {
@@ -53,6 +57,7 @@ export default class Ammo extends Module {
 	static displayMode = DISPLAY_MODE.FULL
 
 	private ammo = 0
+	private currentAbility = ''
 	private ammoHistory: AmmoState[] = []
 	private wasteBySource = {
 		[ACTIONS.SOLID_BARREL.id]: 0,
@@ -107,6 +112,7 @@ export default class Ammo extends Module {
 	private onCastGenerator(event: CastEvent) {
 		const abilityId = event.ability.guid
 		const generatedAmmo = ON_CAST_GENERATORS[abilityId]
+		this.currentAbility = event.ability.name
 
 		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
 	}
@@ -114,6 +120,7 @@ export default class Ammo extends Module {
 	private onComboGenerator(event: ComboEvent) {
 		const abilityId = event.ability.guid
 		const generatedAmmo = ON_COMBO_GENERATORS[abilityId]
+		this.currentAbility = event.ability.name
 
 		this.addGeneratedAmmoAndPush(generatedAmmo, abilityId)
 	}
@@ -127,13 +134,13 @@ export default class Ammo extends Module {
 			this.ammo = MAX_AMMO
 		}
 
-		this.pushToHistory()
+		this.pushToHistory(ACTION_GENERATOR)
 	}
 
 	private onSpender(event: CastEvent) {
 		this.ammo = this.ammo - AMMO_SPENDERS[event.ability.guid]
-
-		this.pushToHistory()
+		this.currentAbility = event.ability.name
+		this.pushToHistory(ACTION_SPENDER)
 	}
 
 	private onDeath() {
@@ -144,12 +151,14 @@ export default class Ammo extends Module {
 	private dumpRemainingResources() {
 		this.leftoverAmmo = this.ammo
 		this.ammo = 0
-		this.pushToHistory()
+		this.currentAbility = 'Death'
+		this.pushToHistory(ACTION_SPENDER)
 	}
 
-	private pushToHistory() {
+	private pushToHistory(actionIndicator: number) {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.ammoHistory.push({t: timestamp, y: this.ammo})
+		this.ammoHistory.push({t: timestamp, y: this.ammo, 
+			source: this.currentAbility, action: actionIndicator})
 	}
 
 	private onComplete() {
@@ -277,6 +286,19 @@ export default class Ammo extends Module {
 					},
 				}],
 			},
+			tooltips: {
+				callbacks: {
+					afterBody: function(t, y) {
+						const hovered = y.datasets[0].data[t[0].index]
+						if (hovered.action == ACTION_GENERATOR) {
+							return 'Generator: ' + hovered.source;
+						} else if (hovered.action == ACTION_SPENDER) {
+							return 'Spender: ' + hovered.source;
+						}
+					  
+				   }
+				}
+			 },
 		}
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
