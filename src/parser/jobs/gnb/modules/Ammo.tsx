@@ -66,6 +66,7 @@ class AmmoState {
 class OvercapState {
 	t?: number
 	y?: number
+	wasted: number
 	source: string
 	timing: number
 }
@@ -155,8 +156,8 @@ export default class Ammo extends Module {
 			this.wasteBySource[abilityId] += waste
 			this.ammo = MAX_AMMO
 
-			this.pushToOvercapHistory(originalAmmo, OvercapTiming.BEFORE)
-			this.pushToOvercapHistory(originalAmmo + generatedAmmo, OvercapTiming.AFTER)
+			this.pushToOvercapHistory(originalAmmo, 0, OvercapTiming.BEFORE)
+			this.pushToOvercapHistory(originalAmmo + generatedAmmo, waste, OvercapTiming.AFTER)
 		}
 
 		this.pushToHistory(ActionImpact.GENERATOR)
@@ -190,11 +191,12 @@ export default class Ammo extends Module {
 		})
 	}
 
-	private pushToOvercapHistory(ammo: number, timing: number) {
+	private pushToOvercapHistory(ammo: number, waste: number, timing: number) {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
 		this.overcapHistory.push({
 			t: timestamp,
 			y: ammo,
+			wasted: waste,
 			source: this.currentAbility,
 			timing: timing,
 		})
@@ -358,7 +360,8 @@ export default class Ammo extends Module {
 								return 'Before ' + hoveredOvercapHistory.source
 							}
 							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
-								return 'After ' + hoveredOvercapHistory.source
+								return 'After ' + hoveredOvercapHistory.source + 
+								' \nWasted ' + hoveredOvercapHistory.wasted + ' Cartridge'
 							}
 						}
 
