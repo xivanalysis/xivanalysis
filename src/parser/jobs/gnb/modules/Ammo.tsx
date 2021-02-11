@@ -28,7 +28,6 @@ const AMMO_SPENDERS = {
 	[ACTIONS.BURST_STRIKE.id]: 1,
 	[ACTIONS.FATED_CIRCLE.id]: 1,
 }
-
 const SINGLE_TARGET_CIRCLE_SEVERITY_TIERS = {
 	1: SEVERITY.MINOR,
 	2: SEVERITY.MEDIUM,
@@ -42,23 +41,32 @@ const LEFTOVER_AMMO_SEVERITY_TIERS = {
 
 const MAX_AMMO = 2
 
-const ACTION_GENERATOR = 0
-const ACTION_SPENDER = 1
+const TimelineDatasetIndex = Object.freeze({
+	AMMO_HISTORY: 0,
+	OVERCAP_HISTORY: 1,
+})
 
-const TIMING_BEFORE = 0
-const TIMING_AFTER = 1
+const ActionImpact = Object.freeze({
+	GENERATOR: 1,
+	SPENDER: -1,
+})
+
+const OvercapTiming = Object.freeze({
+	BEFORE: -1,
+	AFTER: 1,
+})
 
 class AmmoState {
 	t?: number
 	y?: number
-	source: String
+	source: string
 	action: number
 }
 
 class OvercapState {
 	t?: number
 	y?: number
-	source: String
+	source: string
 	timing: number
 }
 
@@ -147,17 +155,17 @@ export default class Ammo extends Module {
 			this.wasteBySource[abilityId] += waste
 			this.ammo = MAX_AMMO
 
-			this.pushToOvercapHistory(originalAmmo, TIMING_BEFORE)
-			this.pushToOvercapHistory(originalAmmo + generatedAmmo, TIMING_AFTER)
+			this.pushToOvercapHistory(originalAmmo, OvercapTiming.BEFORE)
+			this.pushToOvercapHistory(originalAmmo + generatedAmmo, OvercapTiming.AFTER)
 		}
 
-		this.pushToHistory(ACTION_GENERATOR)
+		this.pushToHistory(ActionImpact.GENERATOR)
 	}
 
 	private onSpender(event: CastEvent) {
 		this.ammo = this.ammo - AMMO_SPENDERS[event.ability.guid]
 		this.currentAbility = event.ability.name
-		this.pushToHistory(ACTION_SPENDER)
+		this.pushToHistory(ActionImpact.SPENDER)
 	}
 
 	private onDeath() {
@@ -169,19 +177,27 @@ export default class Ammo extends Module {
 		this.leftoverAmmo = this.ammo
 		this.ammo = 0
 		this.currentAbility = 'Death'
-		this.pushToHistory(ACTION_SPENDER)
+		this.pushToHistory(ActionImpact.SPENDER)
 	}
 
 	private pushToHistory(actionIndicator: number) {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.ammoHistory.push({t: timestamp, y: this.ammo, 
-			source: this.currentAbility, action: actionIndicator})
+		this.ammoHistory.push({
+			t: timestamp,
+			y: this.ammo,
+			source: this.currentAbility,
+			action: actionIndicator,
+		})
 	}
 
 	private pushToOvercapHistory(ammo: number, timing: number) {
 		const timestamp = this.parser.currentTimestamp - this.parser.fight.start_time
-		this.overcapHistory.push({t: timestamp, y: ammo, 
-			source: this.currentAbility, timing: timing})
+		this.overcapHistory.push({
+			t: timestamp,
+			y: ammo,
+			source: this.currentAbility,
+			timing: timing,
+		})
 
 		if (this.ammoMaxWithOvercap < ammo) {
 			this.ammoMaxWithOvercap = ammo
@@ -322,27 +338,34 @@ export default class Ammo extends Module {
 			},
 			tooltips: {
 				callbacks: {
-					afterBody: function(t, y) {
+					afterBody: function(t: TooltipItem[], y: object) {
 						const datasetIndex = t[0].datasetIndex
 						const valueIndex = t[0].index
-						if (datasetIndex === 0) {
-							const hoveredAmmoHistory = y.datasets[0].data[valueIndex]
-							if (hoveredAmmoHistory.action === ACTION_GENERATOR) {
+
+						if (datasetIndex === TimelineDatasetIndex.AMMO_HISTORY) {
+							const hoveredAmmoHistory = y.datasets[datasetIndex].data[valueIndex]
+
+							if (hoveredAmmoHistory.action === ActionImpact.GENERATOR) {
 								return 'Generator: ' + hoveredAmmoHistory.source
-							} else if (hoveredAmmoHistory.action === ACTION_SPENDER) {
+							}
+							if (hoveredAmmoHistory.action === ActionImpact.SPENDER) {
 								return 'Spender: ' + hoveredAmmoHistory.source
 							}
- 						} else if (datasetIndex === 1) {
-							const hoveredOvercapHistory = y.datasets[1].data[valueIndex]
-							if (hoveredOvercapHistory.timing == TIMING_BEFORE) {
+						} else if (datasetIndex === TimelineDatasetIndex.OVERCAP_HISTORY) {
+							const hoveredOvercapHistory = y.datasets[datasetIndex].data[valueIndex]
+
+							if (hoveredOvercapHistory.timing === OvercapTiming.BEFORE) {
 								return 'Before ' + hoveredOvercapHistory.source
-							} else if (hoveredOvercapHistory.timing == TIMING_AFTER) {
+							}
+							if (hoveredOvercapHistory.timing === OvercapTiming.AFTER) {
 								return 'After ' + hoveredOvercapHistory.source
 							}
 						}
-				   }
-				}
-			 },
+
+						return ''
+					},
+				},
+			},
 		}
 		/* eslint-enable @typescript-eslint/no-magic-numbers */
 
