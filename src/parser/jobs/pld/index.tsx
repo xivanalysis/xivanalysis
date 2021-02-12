@@ -27,6 +27,13 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-01-31'),
+			Changes: () => <>
+				Add a Tincture of Strength module.
+			</>,
+			contributors: [CONTRIBUTORS.YUMIYAFANGIRL],
+		},
+		{
 			date: new Date('2020-12-07'),
 			Changes: () => <>
 				Mark patch 5.4 supported.
