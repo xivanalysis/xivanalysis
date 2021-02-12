@@ -15,9 +15,7 @@ export default class Combos extends CoreCombos {
 		ACTIONS.ENCHANTED_REDOUBLEMENT.id,
 	]
 	_severityDerpComboActions = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		3: SEVERITY.MAJOR,
+		1: SEVERITY.MAJOR,
 	}
 	//These actions mean you went in without enough mana
 	_notEnoughManaActions = [
@@ -30,9 +28,7 @@ export default class Combos extends CoreCombos {
 	}
 	//Generics, not handled by the rest
 	_severityGenericActions = {
-		1: SEVERITY.MINOR,
-		2: SEVERITY.MEDIUM,
-		4: SEVERITY.MAJOR,
+		1: SEVERITY.MAJOR,
 	}
 
 	//Overrides

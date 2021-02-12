@@ -31,6 +31,11 @@ export default new Meta({
 
 	changelog: [
 		{
+			date: new Date('2021-02-11'),
+			Changes: () => <>Severity for all broken melee combos is now Major</>,
+			contributors: [CONTRIBUTORS.LEYLIA],
+		},
+		{
 			date: new Date('2020-12-07'),
 			Changes: () => <>Bump up for patch 5.4</>,
 			contributors: [CONTRIBUTORS.LEYLIA],
