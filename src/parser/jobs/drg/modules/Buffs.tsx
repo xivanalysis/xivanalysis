@@ -10,11 +10,11 @@ import Combatants from 'parser/core/modules/Combatants'
 import {Data} from 'parser/core/modules/Data'
 import {EntityStatuses} from 'parser/core/modules/EntityStatuses'
 import {Invulnerability} from 'parser/core/modules/Invulnerability'
+import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
+import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
 import Suggestions, {Suggestion, TieredSuggestion, SEVERITY} from 'parser/core/modules/Suggestions'
 import React from 'react'
 import DISPLAY_ORDER from './DISPLAY_ORDER'
-import {PieChartStatistic, Statistics} from 'parser/core/modules/Statistics'
-import {NormalisedDamageEvent} from 'parser/core/modules/NormalisedEvents'
 
 const BAD_LIFE_SURGE_CONSUMERS: number[] = [
 	ACTIONS.TRUE_THRUST.id,
@@ -171,8 +171,7 @@ export default class Buffs extends Module {
 			const value = this.lifeSurgeCasts.filter(i => actionId === i).length
 
 			// don't put 0s in the chart
-			if (value === 0)
-				continue
+			if (value === 0) { continue }
 
 			data.push({
 				value,
