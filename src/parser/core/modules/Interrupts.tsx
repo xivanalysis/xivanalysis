@@ -19,11 +19,11 @@ interface SeverityTiers {
 // used for timeline viewing by giving you a nice 30s window
 const TIMELINE_UPPER_MOD: number = 30000
 
-export abstract class Interrupts extends Module {
+export class Interrupts extends Module {
 	static handle: string = 'interrupts'
 	static title: MessageDescriptor = t('core.interrupts.title')`Interrupted Casts`
 
-	@dependency private data!: Data
+	@dependency protected data!: Data
 	@dependency private globalCooldown!: GlobalCooldown
 	@dependency private suggestions!: Suggestions
 	@dependency private timeline!: Timeline
@@ -50,7 +50,7 @@ export abstract class Interrupts extends Module {
 	 * Implementing modules MAY override the default suggestion text
 	 */
 	protected suggestionContent: JSX.Element = <Trans id="core.interrupts.suggestion.content">
-		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible.
+		Avoid interrupting casts by either prepositioning yourself or utilizing slidecasting where possible. If you have to move, try to save an instant cast to keep your GCD rolling.
 	</Trans>
 
 	/**

@@ -25,6 +25,7 @@ export default class Tincture extends CoreTincture {
 			},
 			{
 				action: this.data.actions.REASSEMBLE,
+				status: this.data.statuses.REASSEMBLED,
 				expectedPerWindow: 1,
 			},
 			{
@@ -49,13 +50,7 @@ export default class Tincture extends CoreTincture {
 	changeExpectedTrackedActionClassLogic(buffWindow: BuffWindowState, action: BuffWindowTrackedAction): number {
 		const bufferedWindowStart = buffWindow.start - TINCTURE_BUFFER
 
-		if (action.action === this.data.actions.REASSEMBLE) {
-			// Reassemble might be used prepull or during downtime
-			if (bufferedWindowStart <= this.parser.fight.start_time || this.downtime.isDowntime(bufferedWindowStart)) {
-				return -1
-			}
-
-		} else if (action.action === this.data.actions.PILE_BUNKER) {
+		if (action.action === this.data.actions.PILE_BUNKER) {
 			// We don't have queen in the opener
 			if (bufferedWindowStart <= this.parser.fight.start_time) {
 				return -1
